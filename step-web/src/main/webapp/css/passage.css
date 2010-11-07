@@ -1,0 +1,182 @@
+.passageText {
+	overflow: auto;
+	height: 100%;
+	position: relative;
+	text-align: left;
+}
+
+/** Some interlinear rules */
+/* Define the nature of a "word" */
+span.verse span { /* Make each word follow the other */
+	float: left;
+	/* Make sure that there is spacing between words */
+	/* And extra spacing between lines */
+	padding: 0em 0.5em 0.5em 0em;
+	white-space: nowrap;
+}
+
+/* Make the different views of a word stack. */
+span.verse span span { /* Make this stack on top of each other. */
+	display: block;
+	/* Turn off floating and padding that was added by the previous rule. */
+	float: none;
+	padding: 0;
+}
+
+/* Allow for spans to be nested more deeply */
+span.verse span span span {
+	/* Turn off block display that was added by the previous rule. */
+	display: inline;
+}
+
+span.verseNumber {
+	text-align: super;
+	font-size: x-small;	
+}
+
+A {
+	text-decoration: none;
+}
+
+A.strongs {
+	color: black;
+	text-decoration: none;
+}
+
+SUB.strongs {
+	font-size: 75%;
+	color: red;
+}
+
+SUB.morph {
+	font-size: 75%;
+	color: blue;
+}
+
+SUB.lemma {
+	font-size: 75%;
+	color: red;
+}
+
+SUP.verseNumber {
+	font-size: 75%;
+	color: gray;
+}
+
+SUP.note {
+	font-size: 75%;
+	color: green;
+}
+
+FONT.lex {
+	color: red;
+}
+
+FONT.jesus {
+	color: red;
+}
+
+FONT.speech {
+	color: blue;
+}
+
+FONT.strike {
+	text-decoration: line-through;
+}
+
+FONT.small-caps {
+	font-variant: small-caps;
+}
+
+FONT.inscription {
+	font-weight: bold;
+	font-variant: small-caps;
+}
+
+FONT.divineName {
+	font-variant: small-caps;
+}
+
+FONT.normal {
+	font-variant: normal;
+}
+
+FONT.caps {
+	text-transform: uppercase;
+}
+
+H1.level {
+	text-align: center;
+	font-size: 115%;
+	color: #000000;
+}
+
+H2.level {
+	text-align: center;
+	font-size: 110%;
+	color: #000000;
+}
+
+H3.level {
+	text-align: center;
+	font-size: 100%;
+}
+
+H4.level {
+	text-align: center;
+	font-size: 90%;
+}
+
+H5.level {
+	text-align: center;
+	font-size: 85%;
+}
+
+H6.level {
+	text-align: center;
+	font-size: 80%;
+}
+
+H3.heading {
+	font-size: 110%;
+	color: #666699;
+	font-weight: bold;
+	clear: both;
+}
+
+H2.heading {
+	font-size: 115%;
+	color: #669966;
+	font-weight: bold;
+}
+
+div.margin {
+	font-size: 90%;
+}
+
+TD.notes {
+	width: 20%;
+	background: #f4f4e8;
+}
+
+TD.text {
+	width: 80%;
+}
+
+-->
+<!--
+the following are for dictionary entries -->FONT.orth {
+	font-weight: bold;
+}
+
+FONT.pron {
+	font-style: italic;
+}
+
+FONT.def {
+	font-style: italic;
+}
+
+FONT.usg {
+	font-style: plain;
+}

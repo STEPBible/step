@@ -1,0 +1,34 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.tyndalehouse.step</groupId>
+		<artifactId>step-parent</artifactId>
+		<version>1.0-SNAPSHOT</version>
+		<relativePath>step-parent/pom.xml</relativePath>
+	</parent>
+
+	<groupId>com.tyndalehouse.step</groupId>
+	<artifactId>step-mvn</artifactId>
+	<packaging>pom</packaging>
+	<version>1.0-SNAPSHOT</version>
+	<name>STEP :: Scripture Tools for Every pastor</name>
+
+	<url>http://crosswire.org/~chrisburrell/step</url>
+	<issueManagement>
+		<system>JIRA</system>
+		<url>http://www.crosswire.org/bugs</url>
+	</issueManagement>
+	
+	<organization>
+		<name>Tyndale House Cambridge &amp; Crosswire</name>
+	</organization>
+	
+	<modules>
+		<module>step-parent</module>
+		<module>step-build</module>
+		<module>step-core</module>
+		<module>step-web</module>
+	</modules>
+</project>

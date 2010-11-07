@@ -1,0 +1,26 @@
+body {
+	font-size: 70%;
+	font-family: Verdana;
+}
+
+.inactive {
+	color: #ccc;
+}
+
+
+.ui-widget {
+	font-family: Verdana;
+}
+	
+.ui-menu-item {
+	font-size: small;	
+}
+
+.logo {
+	text-align: center;
+	font-size: xx-small;
+}
+
+.toolbarContainer span {
+	font-size: x-small;
+}

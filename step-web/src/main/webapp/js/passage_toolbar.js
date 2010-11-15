@@ -5,7 +5,7 @@
  */
 	//static id
 var toolbarId = 0;
-function Toolbar(passage, buttonOptions) {
+function Toolbar(passage, buttonOptions, strongedVersions) {
 
 	var self = this;
 	this.passage = passage;
@@ -15,6 +15,7 @@ function Toolbar(passage, buttonOptions) {
 	$(passage.getPassageContainer()).prepend('<div class="toolbarContainer ui-widget-content ui-corner-all" />');
 	this.toolbarContainer = $(".toolbarContainer", passageContainer);
 
+	
 	//create a button for each option
 	$.each(buttonOptions, function(index) {
 		self.toolbarContainer.append(
@@ -22,9 +23,44 @@ function Toolbar(passage, buttonOptions) {
 				+ toolbarId + '">' + this.displayName + '</label></input>');
 
 		//find the newly created button
-		$('#sb' + toolbarId, self.toolbarContainer).button().click(function() { self.passage.changePassage(); });
+		var newButton = $('#sb' + toolbarId, self.toolbarContainer);
+		newButton.button().click(function() { self.passage.changePassage(); });
+	
 		
+		//finally, if we're looking at the interlinear, then create a dropdown with potential versions
+		if (this.key == "INTERLINEAR") {
+			self.createInterlinearDropdown(toolbarId, strongedVersions, newButton);
+		}
 		toolbarId++;
+	});
+}
+
+Toolbar.prototype.createInterlinearDropdown = function(toolbarId, strongedVersions, interlinearButton) {
+	this.toolbarContainer.append("<input id='interlinear" + toolbarId
+			+ "' type='text' class='interlinearVersion' value='Interlinear version' disabled='disabled' />");
+
+	var self = this;
+	var interlinearSelector = $('#interlinear' + toolbarId);
+	interlinearSelector.autocomplete({
+		source : strongedVersions,
+		minLength : 0,
+		delay: 0,
+		select : function(event, ui) {
+			$(this).val(ui.item.value);
+			self.passage.changePassage();
+			return false;
+		}
+	});
+	
+	addDefaultValue(interlinearSelector);
+	
+	interlinearButton.click(function() {
+		if($(this).attr('checked')) {
+			interlinearSelector.removeAttr("disabled");
+			interlinearSelector.focus();
+		} else {
+			interlinearSelector.attr("disabled", "disabled");
+		}
 	});
 }
 
@@ -37,14 +73,25 @@ Toolbar.prototype.refreshButtons = function(version) {
 	//query the server for features
 	$.getJSON("rest/bible/features/" + version, function (features) {
 		//for each button, if in array, then enable, otherwise disable
-		$("input", self.toolbarContainer).each(function() {
-			$(this).button("disable");
-			for(var i = 0; i < features.length; i++) {
-				if(features[i] == this.value) {
-					$(this).button("enable");
+
+		//TODO: for some reason there are sometime some initialisation issues which throw an exception
+		try {
+			$("input", self.toolbarContainer).each(function() {
+				$(this).button("disable");
+				for(var i = 0; i < features.length; i++) {
+					if(features[i] == this.value) {
+						$(this).button("enable");
+					}
 				}
-			}
-		});
+				
+				if($(this).button( "option", "disabled" )) {
+					$(this).removeAttr("checked");
+				}
+				$(this).button("refresh");
+			});
+		} finally {
+			self.passage.changePassage();
+		}
 	});
 }
 
@@ -56,6 +103,16 @@ Toolbar.prototype.getSelectedOptions = function() {
 	});
 	
 	return options;
+}
+
+Toolbar.prototype.getSelectedInterlinearVersion = function() {
+	var version = $(".interlinearVersion", this.toolbarContainer).val();
+	
+	if(version && !$(".interlinearVersion", this.toolbarContainer).hasClass("inactive")) {
+		return version;
+	}
+	
+	return "";
 }
 
 

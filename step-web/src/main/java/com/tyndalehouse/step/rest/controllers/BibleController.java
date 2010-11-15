@@ -1,10 +1,13 @@
 package com.tyndalehouse.step.rest.controllers;
 
+import static org.apache.commons.lang.StringUtils.isNotBlank;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,12 +19,14 @@ import com.tyndalehouse.step.core.models.BibleVersion;
 import com.tyndalehouse.step.core.models.EnrichedLookupOption;
 import com.tyndalehouse.step.core.models.LookupOption;
 import com.tyndalehouse.step.core.service.BibleInformationService;
+import com.tyndalehouse.step.rest.wrappers.HtmlWrapper;
 
 @RequestMapping(value = "/bible", method = RequestMethod.GET)
 @Controller
 public class BibleController {
     @Autowired
     private BibleInformationService bibleInformation;
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     /**
      * a REST method that returns version of the Bible that are available
@@ -35,7 +40,7 @@ public class BibleController {
     }
 
     /**
-     * a REST method that returns
+     * a REST method that returns text from the Bible
      * 
      * @param version the initials identifying the version
      * @param reference the reference to lookup
@@ -43,8 +48,22 @@ public class BibleController {
      */
     @RequestMapping(value = "/text/{version}/{reference}")
     public @ResponseBody
-    String getBibleText(@PathVariable final String version, @PathVariable final String reference) {
-        return getBibleText(version, reference, null);
+    HtmlWrapper getBibleText(@PathVariable final String version, @PathVariable final String reference) {
+        return getBibleText(version, reference, null, null);
+    }
+
+    /**
+     * a REST method that returns text from the Bible
+     * 
+     * @param version the initials identifying the version
+     * @param reference the reference to lookup
+     * @return the text to be displayed, formatted as HTML
+     */
+    @RequestMapping(value = "/text/{version}/{reference}/{options}")
+    public @ResponseBody
+    HtmlWrapper getBibleText(@PathVariable final String version, @PathVariable final String reference,
+            @PathVariable final String options) {
+        return getBibleText(version, reference, options, null);
     }
 
     /**
@@ -55,15 +74,15 @@ public class BibleController {
      * @param options a list of options to be passed in
      * @return the text to be displayed, formatted as HTML
      */
-    @RequestMapping(value = "/text/{version}/{reference}/{options}")
+    @RequestMapping(value = "/text/{version}/{reference}/{options}/{interlinearVersion}")
     public @ResponseBody
-    String getBibleText(@PathVariable final String version, @PathVariable final String reference,
-            @PathVariable final String options) {
+    HtmlWrapper getBibleText(@PathVariable final String version, @PathVariable final String reference,
+            @PathVariable final String options, @PathVariable final String interlinearVersion) {
         Validate.notEmpty(version, "You need to provide a version");
         Validate.notEmpty(reference, "You need to provide a reference");
 
         String[] userOptions = null;
-        if (StringUtils.isNotBlank(options)) {
+        if (isNotBlank(options)) {
             userOptions = options.split(",");
         }
 
@@ -74,7 +93,8 @@ public class BibleController {
             }
         }
 
-        return this.bibleInformation.getPassageText(version, reference, lookupOptions);
+        return new HtmlWrapper(this.bibleInformation.getPassageText(version, reference, lookupOptions,
+                interlinearVersion));
     }
 
     /**

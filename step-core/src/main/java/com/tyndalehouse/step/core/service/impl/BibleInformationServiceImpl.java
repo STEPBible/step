@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.BookCategory;
+import org.crosswire.jsword.book.FeatureType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,7 @@ public class BibleInformationServiceImpl implements BibleInformationService {
             v.setName(b.getName());
             v.setInitials(b.getInitials());
             v.setLanguage(b.getLanguage().getName());
+            v.setHasStrongs(b.hasFeature(FeatureType.STRONGS_NUMBERS));
             versions.add(v);
         }
 
@@ -48,8 +50,9 @@ public class BibleInformationServiceImpl implements BibleInformationService {
         return versions;
     }
 
-    public String getPassageText(final String version, final String reference, final List<LookupOption> options) {
-        return this.jsword.getOsisText(version, reference, options);
+    public String getPassageText(final String version, final String reference, final List<LookupOption> options,
+            final String interlinearVersion) {
+        return this.jsword.getOsisText(version, reference, options, interlinearVersion);
     }
 
     public List<EnrichedLookupOption> getAllFeatures() {

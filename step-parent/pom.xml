@@ -26,6 +26,7 @@
 		<servlet-api.version>2.5</servlet-api.version>
 		<jsp-api.version>2.1</jsp-api.version>
 		<jstl.version>1.2</jstl.version>
+		<pjl-comp-filter.version>1.6.4</pjl-comp-filter.version>
 
 		<!-- Commons -->
 		<commons-beanutils.version>1.8.3</commons-beanutils.version>
@@ -130,6 +131,11 @@
 				<groupId>javax.servlet</groupId>
 				<artifactId>jstl</artifactId>
 				<version>${jstl.version}</version>
+			</dependency>
+			<dependency>
+			    <groupId>net.sourceforge.pjl-comp-filter</groupId>
+			    <artifactId>pjl-comp-filter</artifactId>
+			    <version>${pjl-comp-filter.version}</version>
 			</dependency>
 
 			<dependency>

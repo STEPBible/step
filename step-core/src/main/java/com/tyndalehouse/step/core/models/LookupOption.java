@@ -1,5 +1,9 @@
 package com.tyndalehouse.step.core.models;
 
+import static com.tyndalehouse.step.core.xsl.XslConversionType.DEFAULT;
+
+import com.tyndalehouse.step.core.xsl.XslConversionType;
+
 /**
  * Outlines a list of options available in lookup
  * 
@@ -8,25 +12,31 @@ package com.tyndalehouse.step.core.models;
  */
 public enum LookupOption {
     /** Strong numbers */
-    STRONG_NUMBERS("StrongsNumbers", "Strongs"),
+    STRONG_NUMBERS("StrongsNumbers", "Strongs", XslConversionType.INTERLINEAR),
 
     /** Morphology */
-    MORPHOLOGY("Morph", "Morphology"),
+    MORPHOLOGY("Morph", "Morphology", XslConversionType.INTERLINEAR),
     /**
      * Interlinears are available when Strongs are available.
      */
-    INTERLINEAR("Interlinear");
+    INTERLINEAR("Interlinear", XslConversionType.INTERLINEAR);
 
     private final String xsltParameterName;
     private final String displayName;
+    private XslConversionType stylesheet;
 
     private LookupOption(final String xsltParameterName) {
-        this(xsltParameterName, xsltParameterName);
+        this(xsltParameterName, xsltParameterName, DEFAULT);
     }
 
-    private LookupOption(final String xsltParameterName, final String displayName) {
+    private LookupOption(final String xsltParameterName, final XslConversionType stylesheet) {
+        this(xsltParameterName, xsltParameterName, stylesheet);
+    }
+
+    private LookupOption(final String xsltParameterName, final String displayName, final XslConversionType stylesheet) {
         this.xsltParameterName = xsltParameterName;
         this.displayName = displayName;
+        this.stylesheet = stylesheet;
     }
 
     /**
@@ -38,5 +48,9 @@ public enum LookupOption {
 
     public String getDisplayName() {
         return this.displayName;
+    }
+
+    public XslConversionType getStylesheet() {
+        return this.stylesheet;
     }
 }

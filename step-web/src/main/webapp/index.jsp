@@ -54,6 +54,10 @@
 
     <div class="passageText ui-widget"></div>
 </div>
+
+<div id="loading"><img alt="Loading..." src="images/wait16.gif" />Loading...</div>
+<div id="error" class="ui-state-highlight">A placeholder for error messages</div>
+
 </body>
 
 </HTML>

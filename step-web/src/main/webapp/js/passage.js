@@ -31,15 +31,26 @@ function Passage(passageContainer, versions) {
 	this.version.autocomplete({
 		source : versions,
 		minLength : 0,
-		select : function(event, ui) {
+		delay: 0,
+		select: function(event, ui) {
+			//force change?
+			$(this).val(ui.item.value);
+			self.reference.focus();
 			self.toolbar.refreshButtons(ui.item.value);
-			self.changePassage();
-		}
+
+			//we do not change the passage here, as we need to have refreshed the buttons 
+			//so the refresh buttons will fire instead
+			return false;
+		},
+	}).focus(function() {
+		this.select();
 	});
 	
 	//set up blur for textbox
-	this.reference.blur(function(){
+	this.reference.change(function(){
 		self.changePassage();
+	}).focus(function() {
+		this.select();
 	});
 }
 
@@ -48,19 +59,45 @@ function Passage(passageContainer, versions) {
  * @param version the version passed in (optional - otherwise takes this.version)
  * @param reference the reference to lookup (optional - otherwise takes this.reference)
  */
-Passage.prototype.changePassage = function(version, reference) {
-	var newVersion = version ? version : (!this.version.hasClass("inactive") ? this.version.val() : null);
-	var newReference = reference ? reference : (!this.reference.hasClass("inactive") ? this.reference.val() : null);
-
+Passage.prototype.changePassage = function(/* optional */ version, /* optional */reference) {
+	//if this was called from somewhere else, rather than as a reaction to an event,
+	//we change the values of the textboxes
+	if(version && this.version.val() != version) {
+		this.version.val(version);
+		this.version.removeClass("inactive");
+		this.toolbar.refreshButtons(version);
+	}
+	
+	if(reference && this.reference.val() != reference) {
+		this.reference.val(reference);
+		this.reference.removeClass("inactive");
+	}
+	
+	if(this.reference.hasClass("inactive") || this.version.hasClass("inactive")) {
+		raiseError("You need to provide both a version and a reference to lookup a passage");
+		return;
+	}
+	
 	//now get the options from toolbar
 	var options = this.toolbar.getSelectedOptions();
+	var interlinearVersion = this.toolbar.getSelectedInterlinearVersion();
 	
 	var self = this;
-	if(newVersion && newReference && newVersion != "" && newReference != "") {
+	if(this.version.val() && this.reference.val() && this.version.val() != "" && this.reference.val() != "") {
+		var url = "rest/bible/text/" + this.version.val() + "/" + this.reference.val();
+		
+		if(options && options.length != 0) {
+			url += "/" + options ;
+
+			if(interlinearVersion && interlinearVersion.length != 0) {
+				url += "/" + interlinearVersion;
+			}
+		}
+		
 		//send to server
-		$.get("rest/bible/text/" + newVersion + "/" + newReference + "/" + options, function (text) {
+		$.get(url, function (text) {
 			//we get html back, so we insert into passage:
-			self.passage.html(text);
+			self.passage.html(text.value);
 		});
 	}
 }

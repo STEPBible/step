@@ -29,9 +29,10 @@ public interface BibleInformationService {
      * @param version the initials that identify the bible version
      * @param reference the reference
      * @param lookupOptions options to set for retrieval
+     * @param interlinearVersion version to use as the interlinear
      * @return the HTML string passed back for consumption
      */
-    String getPassageText(String version, String reference, List<LookupOption> lookupOptions);
+    String getPassageText(String version, String reference, List<LookupOption> lookupOptions, String interlinearVersion);
 
     /**
      * 

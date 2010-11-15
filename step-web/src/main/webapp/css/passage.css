@@ -1,13 +1,14 @@
 .passageText {
+	margin-top: 1px;
 	overflow: auto;
-	height: 100%;
+	height: 96%;
 	position: relative;
 	text-align: left;
 }
 
 /** Some interlinear rules */
 /* Define the nature of a "word" */
-span.verse span { /* Make each word follow the other */
+span.interlinear span { /* Make each word follow the other */
 	float: left;
 	/* Make sure that there is spacing between words */
 	/* And extra spacing between lines */
@@ -16,7 +17,7 @@ span.verse span { /* Make each word follow the other */
 }
 
 /* Make the different views of a word stack. */
-span.verse span span { /* Make this stack on top of each other. */
+span.interlinear span span { /* Make this stack on top of each other. */
 	display: block;
 	/* Turn off floating and padding that was added by the previous rule. */
 	float: none;
@@ -24,14 +25,19 @@ span.verse span span { /* Make this stack on top of each other. */
 }
 
 /* Allow for spans to be nested more deeply */
-span.verse span span span {
+span.interlinear span span span {
 	/* Turn off block display that was added by the previous rule. */
 	display: inline;
 }
 
-span.verseNumber {
-	text-align: super;
-	font-size: x-small;	
+.verseNumber {
+	vertical-align: top;
+	font-size: 6pt;
+	padding-right: 2px;
+}
+
+br.paragraph {
+	padding-top: 2px;	
 }
 
 A {
@@ -72,36 +78,31 @@ FONT.lex {
 	color: red;
 }
 
-FONT.jesus {
+span.jesus {
 	color: red;
 }
 
-FONT.speech {
+span.speech {
 	color: blue;
 }
 
-FONT.strike {
+span.strike {
 	text-decoration: line-through;
 }
 
-FONT.small-caps {
+span.small-caps {
 	font-variant: small-caps;
 }
 
-FONT.inscription {
-	font-weight: bold;
-	font-variant: small-caps;
+span.underline {
+	text-decoration: underline;
 }
 
-FONT.divineName {
-	font-variant: small-caps;
-}
-
-FONT.normal {
+span.normal {
 	font-variant: normal;
 }
 
-FONT.caps {
+span.caps {
 	text-transform: uppercase;
 }
 
@@ -163,9 +164,9 @@ TD.text {
 	width: 80%;
 }
 
--->
-<!--
-the following are for dictionary entries -->FONT.orth {
+
+/* the following are for dictionary entries */
+FONT.orth {
 	font-weight: bold;
 }
 

@@ -64,6 +64,10 @@
 			<groupId>javax.servlet</groupId>
 			<artifactId>jstl</artifactId>
 		</dependency>
+		<dependency>
+		    <groupId>net.sourceforge.pjl-comp-filter</groupId>
+		    <artifactId>pjl-comp-filter</artifactId>
+		</dependency>
 	
 		<dependency>
 			<groupId>junit</groupId>

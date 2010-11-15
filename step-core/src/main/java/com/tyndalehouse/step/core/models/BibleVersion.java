@@ -3,8 +3,7 @@ package com.tyndalehouse.step.core.models;
 import java.io.Serializable;
 
 /**
- * Contains information about a bible version to be displayed on the screen in
- * the UI
+ * Contains information about a bible version to be displayed on the screen in the UI
  * 
  * @author CJBurrell
  * 
@@ -14,17 +13,25 @@ public class BibleVersion implements Serializable {
     private String initials;
     private String name;
     private String language;
+    private boolean hasStrongs;
+
+    public boolean isHasStrongs() {
+        return this.hasStrongs;
+    }
+
+    public void setHasStrongs(final boolean hasStrongs) {
+        this.hasStrongs = hasStrongs;
+    }
 
     /**
      * @return the initials
      */
     public String getInitials() {
-        return initials;
+        return this.initials;
     }
 
     /**
-     * @param initials
-     *            the initials to set
+     * @param initials the initials to set
      */
     public void setInitials(final String initials) {
         this.initials = initials;
@@ -34,12 +41,11 @@ public class BibleVersion implements Serializable {
      * @return the name
      */
     public String getName() {
-        return name;
+        return this.name;
     }
 
     /**
-     * @param name
-     *            the name to set
+     * @param name the name to set
      */
     public void setName(final String name) {
         this.name = name;
@@ -49,12 +55,11 @@ public class BibleVersion implements Serializable {
      * @return the language
      */
     public String getLanguage() {
-        return language;
+        return this.language;
     }
 
     /**
-     * @param language
-     *            the language to set
+     * @param language the language to set
      */
     public void setLanguage(final String language) {
         this.language = language;

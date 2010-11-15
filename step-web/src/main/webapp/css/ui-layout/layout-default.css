@@ -14,20 +14,6 @@
  * NOTE: For best code readability, view this with a fixed-space font and tabs equal to 4-chars
  */
 /*
-*	BASIC PAGE COSMETICS
-*/
-/*
-body {
-	font-family:	Lucida Grande, Lucida Sans, Geneva, Arial, Helvetica, sans-serif;
-	font-size:		100%;
-	*font-size:		80%;
-	background-color: #EEE;
-}
-p {
-	margin: 1em 0;
-}
-*/
-/*
 *	PANES
 */
 .ui-layout-pane { /* all 'panes' */
@@ -129,13 +115,8 @@ p {
 	display: none;
 }
 
-/*
-	*	style the text we put INSIDE the east/west togglers
-	*/
 .ui-layout-toggler .content {
-	/* font-size: 12px; */
 	font-weight: bold;
 	color: #666;
 	padding-bottom: 0.35ex;
-	/* to 'vertically center' text inside text-span */
 }

@@ -37,8 +37,8 @@ public class JSwordServiceImplTest {
      */
     @Test
     public void testInterlinearTransformation() throws Exception {
-        final Book currentBook = Books.installed().getBook("ChiUns");
-        final BookData bookData = new BookData(currentBook, currentBook.getKey("Romans 1-2"));
+        final Book currentBook = Books.installed().getBook("KJV");
+        final BookData bookData = new BookData(currentBook, currentBook.getKey("Romans 1:1-3"));
         final Element osisFragment = bookData.getOsisFragment();
 
         final XMLOutputter xmlOutputter = new XMLOutputter(Format.getPrettyFormat());
@@ -49,12 +49,12 @@ public class JSwordServiceImplTest {
         final ArrayList<LookupOption> options = new ArrayList<LookupOption>();
         options.add(INTERLINEAR);
 
-        final String osisText = jsi.getOsisText("ChiUns", "Romans 1-2", options, "");
+        final String osisText = jsi.getOsisText("KJV", "Romans 1:1-3", options, "KJV");
         final SAXBuilder sb = new SAXBuilder();
         final Document d = sb.build(new StringReader(osisText));
 
         this.logger.debug("\n {}", xmlOutputter.outputString(d));
-        Assert.assertTrue(osisText.contains("<span>"));
+        Assert.assertTrue(osisText.contains("span"));
 
     }
 
@@ -82,6 +82,6 @@ public class JSwordServiceImplTest {
         final Document d = sb.build(new StringReader(osisText));
 
         this.logger.debug("\n {}", xmlOutputter.outputString(d));
-        Assert.assertTrue(osisText.contains("<span>"));
+        Assert.assertTrue(osisText.contains("span"));
     }
 }

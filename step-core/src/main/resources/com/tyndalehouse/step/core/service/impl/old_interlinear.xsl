@@ -21,7 +21,7 @@
  * ID: $Id: default.xsl 1943 2009-03-25 11:43:28Z dmsmith $
  -->
  <!--
- * Transforms OSIS to HTML for viewing within Web browsers.
+ * Transforms OSIS to HTML for viewing within JSword browsers.
  * Note: There are custom protocols which the browser must handle.
  * 
  * @see gnu.lgpl.License for license details.
@@ -49,6 +49,12 @@
        but font does not. Therefore we use font as a span.
     -->
   <!-- gdef and hdef refer to hebrew and greek definitions keyed by strongs -->
+  <xsl:param name="greek.def.protocol" select="'gdef:'"/>
+  <xsl:param name="hebrew.def.protocol" select="'hdef:'"/>
+  <xsl:param name="lex.def.protocol" select="'lex:'"/>
+  <!-- currently these are not used, but they are for morphologic forms -->
+  <xsl:param name="greek.morph.protocol" select="'gmorph:'"/>
+  <xsl:param name="hebrew.morph.protocol" select="'hmorph:'"/>
 
   <!-- The absolute base for relative references. -->
   <xsl:param name="baseURL" select="''"/>
@@ -90,10 +96,7 @@
   <xsl:param name="direction" select="'ltr'"/>
 
   <!-- Whether to show an interlinear and the provider helping with the lookup -->
-  <xsl:param name="strongFunctionCall" select="'javascript:showStrong'" />
-  <xsl:param name="morphFunctionCall" select="'javascript:showMorph'" />
-  
-  <!--  a comma separated list of versions to display, if provided, then we display the interlinear -->
+  <xsl:param name="Interlinear" select="'false'" />
   <xsl:param name="interlinearVersion" select="''" />
   <xsl:param name="interlinearReference" select="''" />
 
@@ -103,7 +106,7 @@
   <xsl:variable name="shaper" select="jsword:org.crosswire.common.icu.NumberShaper.new()"/>
   
   <!--  set up interlinear provider, if we have requested it -->
-  <xsl:variable name="interlinearProvider" select="jsword:com.tyndalehouse.step.core.xsl.impl.MultiInterlinearProviderImpl.new(string($interlinearVersion), string($interlinearReference))" />
+  <xsl:variable name="interlinearProvider" select="jsword:com.tyndalehouse.step.core.xsl.impl.InterlinearProviderImpl.new(string($interlinearVersion), string($interlinearReference))" />
 
   <!--=======================================================================-->
   <xsl:template match="/">
@@ -462,103 +465,221 @@
   </xsl:template>
 
   <!--=======================================================================-->
-	<xsl:template match="w">
-		<!-- Output the content followed by all the lemmas and then all the morphs. 
-			So, we know we have a number of lines to create, therefore, we'll create 
-			that many! -->
-		<xsl:variable name="innerWordText">
-			<xsl:apply-templates />
-		</xsl:variable>
-	
-		<!-- we check the next node too, since it might be punctuation, etc. In 
-			that case, it makes sense to include it in the bit word part that gets past 
-			down TODO TODO TODO -->
-
-		<!-- start the block -->
-		<span class="w">
-			<!-- 1st - Output first line or a blank if no text available. -->
-			<span class="text">
-				<xsl:call-template name="outputNonBlank">
-					<xsl:with-param name="string">
-						<xsl:value-of select="$innerWordText" />
-					</xsl:with-param>
-				</xsl:call-template>
-			</span>
-
-			<!-- 2nd - Output strongs if turned on. If turned on and no Strong then 
-				we need a blank. So always call template if turned on -->
-			<xsl:if test="$StrongsNumbers = 'true'">
-				<span class="strongs">
-					<xsl:value-of
-						select="jsword:com.tyndalehouse.step.core.utils.XslHelper.getSpanFromAttributeName(@lemma, $strongFunctionCall)" />
-				</span>
-			</xsl:if>
-
-			<!-- 3rd - Output morphology if turned on. If turned on and no morphology, 
-				we need a blank. -->
-			<xsl:if test="$Morph = 'true'">
-				<span class="morphs">
-					<xsl:value-of
-						select="jsword:com.tyndalehouse.step.core.utils.XslHelper.getSpanFromAttributeName(@morph, $morphFunctionCall)" />
-				</span>
-			</xsl:if>
-
-
-			<!-- 4th - We output the interlinears if provided and we do so recursively -->
-			<xsl:if test="normalize-space($interlinearVersion) != ''">
-				<xsl:call-template name="interlinear">
-					<xsl:with-param name="versions" select="$interlinearVersion" />
-				</xsl:call-template>
-			</xsl:if>
-			<!-- end the block -->
-		</span>
-	</xsl:template>
+  <xsl:template match="w">
+    <!-- Output the content followed by all the lemmas and then all the morphs. -->
+    <xsl:variable name="innerWordText"><xsl:apply-templates/></xsl:variable>
+    <xsl:variable name="isNextSiblingText" select="following-sibling::*[1]/text() = ''" />    
+  	<xsl:variable name="nextNodeCharClass" select="''" />
+  	<xsl:if test="following-sibling::*[1]/text() != ''">
+  		<xsl:variable name="nextNodeCharClass" select="'punctuNext'" />
+  	</xsl:if>
+  	<span class="w">
+  	<span class="text">
+    <xsl:choose>
+    	<xsl:when test="not(normalize-space($innerWordText))">&#160;</xsl:when>
+    	<xsl:otherwise><xsl:value-of select="$innerWordText" /></xsl:otherwise>	
+    </xsl:choose></span>
+    <xsl:if test="$StrongsNumbers = 'true' and (starts-with(@lemma, 'x-Strongs:') or starts-with(@lemma, 'strong:'))">
+      <xsl:call-template name="lemma">
+        <xsl:with-param name="lemma" select="@lemma"/>
+      </xsl:call-template>
+    </xsl:if>
+    <xsl:if test="$Morph = 'true' and (starts-with(@morph, 'x-Robinson:') or starts-with(@morph, 'robinson:'))">
+      <xsl:call-template name="morph">
+        <xsl:with-param name="morph" select="@morph"/>
+      </xsl:call-template>
+    </xsl:if>
+    <xsl:if test="$StrongsNumbers = 'true' and starts-with(@lemma, 'lemma.Strong:')">
+      <xsl:call-template name="lemma">
+        <xsl:with-param name="lemma" select="@lemma"/>
+      </xsl:call-template>
+    </xsl:if>
+    <xsl:if test="$Interlinear = 'true'">
+      <xsl:call-template name="interlinear">
+        <xsl:with-param name="lemma" select="@lemma" />
+        <xsl:with-param name="morph" select="@morph" />
+        <xsl:with-param name="osisID" select="../@osisID" />
+      </xsl:call-template>
+    </xsl:if>
+    
+    <!--
+        except when followed by a text node or non-printing node.
+        This is true whether the href is output or not.
+    -->
+    <xsl:variable name="siblings" select="../child::node()"/>
+    <xsl:variable name="next-position" select="position() + 1"/>
+    <xsl:if test="$siblings[$next-position] and name($siblings[$next-position]) != ''">
+      <xsl:text> </xsl:text>
+    </xsl:if>
+    </span>
+  </xsl:template>
   
+  <xsl:template match="w" mode="jesus">
+    <!-- Output the content followed by all the lemmas and then all the morphs. -->
+    <xsl:apply-templates mode="jesus"/>
+    <xsl:if test="$StrongsNumbers = 'true' and (starts-with(@lemma, 'x-Strongs:') or starts-with(@lemma, 'strong:'))">
+      <xsl:call-template name="lemma">
+        <xsl:with-param name="lemma" select="@lemma"/>
+      </xsl:call-template>
+    </xsl:if>
+    <xsl:if test="$Morph = 'true' and (starts-with(@morph, 'x-Robinson:') or starts-with(@morph, 'robinson:'))">
+      <xsl:call-template name="morph">
+        <xsl:with-param name="morph" select="@morph"/>
+      </xsl:call-template>
+    </xsl:if>
+    <!--
+        except when followed by a text node or non-printing node.
+        This is true whether the href is output or not.
+    -->
+    <xsl:variable name="siblings" select="../child::node()"/>
+    <xsl:variable name="next-position" select="position() + 1"/>
+    <xsl:if test="$siblings[$next-position] and name($siblings[$next-position]) != ''">
+      <xsl:text> </xsl:text>
+    </xsl:if>
+  </xsl:template>
+  
+  <xsl:template name="lemma">
+    <xsl:param name="lemma"/>
+    <xsl:param name="part" select="0"/>
+    <xsl:param name="className" />
+    <xsl:param name="finalText" />
+    
+    <xsl:variable name="orig-lemma" select="substring-after($lemma, ':')"/>
+    <xsl:variable name="protocol">
+      <xsl:choose>
+        <xsl:when test="substring($orig-lemma, 1, 1) = 'H'">
+          <xsl:value-of select="$hebrew.def.protocol"/>
+        </xsl:when>
+        <xsl:when test="substring($orig-lemma, 1, 1) = 'G'">
+          <xsl:value-of select="$greek.def.protocol"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="$lex.def.protocol"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="separator">
+      <xsl:choose>
+        <xsl:when test="contains($orig-lemma, '|') ">
+          <xsl:value-of select="'|'"/>
+        </xsl:when>
+        <xsl:when test="contains($orig-lemma, ' ')">
+          <xsl:value-of select="' '"/>
+        </xsl:when>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="sub">
+      <xsl:choose>
+        <xsl:when test="$separator != '' and $part = '0'">
+          <xsl:value-of select="$part + 1"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="$part"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:choose>
+    <!--  TODO, we change this and put a condition above to determine whether we chop off from 1, or 2 -->
+      <xsl:when test="$protocol = $lex.def.protocol">
+        <font class="lex">[<xsl:value-of select="$orig-lemma"/>]</font>
+      </xsl:when>
+      <xsl:when test="$separator = ''">
+        <span class="strongs {$className} {$orig-lemma}"><xsl:value-of select="concat($finalText, ' ', format-number(substring($orig-lemma, 2), '#'))" />
+        </span>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:variable name="processedLemma" select="substring-before($orig-lemma, $separator)" />
+        <xsl:call-template name="lemma">
+          <xsl:with-param name="lemma" select="substring-after($lemma, $separator)"/>
+          <xsl:with-param name="className" select="concat($className, $processedLemma)" />
+          <xsl:with-param name="finalText" select="concat($finalText, ' ', format-number(substring($processedLemma,2),'#'))" />
+          <xsl:with-param name="part">
+            <xsl:choose>
+              <xsl:when test="$sub">
+                <xsl:value-of select="$sub + 1"/>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:value-of select="1"/>
+              </xsl:otherwise>
+            </xsl:choose>
+          </xsl:with-param>
+        </xsl:call-template>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template name="morph">
+    <xsl:param name="morph"/>
+    <xsl:param name="part" select="0"/>
+    <xsl:variable name="orig-work" select="substring-before($morph, ':')"/>
+    <xsl:variable name="orig-morph" select="substring-after($morph, ':')"/>
+    <xsl:variable name="protocol">
+      <xsl:choose>
+        <xsl:when test="starts-with($orig-work, 'x-Robinson') or starts-with($orig-work, 'robinson')">
+          <xsl:value-of select="$greek.morph.protocol"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="$hebrew.morph.protocol"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="separator">
+      <xsl:choose>
+        <xsl:when test="contains($orig-morph, '|')">
+          <xsl:value-of select="'|'"/>
+        </xsl:when>
+        <xsl:when test="contains($orig-morph, ' ')">
+          <xsl:value-of select="' '"/>
+        </xsl:when>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="sub">
+      <xsl:choose>
+        <xsl:when test="$separator != '' and $part = '0'">
+          <xsl:value-of select="$part + 1"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="$part"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:choose>
+      <xsl:when test="$separator = ''">
+        <!-- <sub class="morph"><a href="{$protocol}{$orig-morph}">M<xsl:number level="any" from="/osis//verse" format="1"/><xsl:number value="$sub" format="a"/></a></sub> -->
+        <sub class="morph"><a href="{$protocol}{$orig-morph}"><xsl:value-of select="$orig-morph"/></a></sub>
+      </xsl:when>
+      <xsl:otherwise>
+        <!-- <sub class="morph"><a href="{$protocol}{substring-before($orig-morph, $separator)}">M<xsl:number level="single" from="/osis//verse" format="1"/><xsl:number value="$sub" format="a"/></a>, </sub> -->
+        <sub class="morph"><a href="{$protocol}{substring-before($orig-morph, $separator)}"><xsl:value-of select="substring-before($orig-morph, $separator)"/></a>, </sub>
+        <xsl:call-template name="morph">
+          <xsl:with-param name="morph" select="substring-after($morph, $separator)"/>
+          <xsl:with-param name="part">
+            <xsl:choose>
+              <xsl:when test="$sub">
+                <xsl:value-of select="$sub + 1"/>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:value-of select="1"/>
+              </xsl:otherwise>
+            </xsl:choose>
+          </xsl:with-param>
+        </xsl:call-template>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
   <xsl:template name="interlinear">
-  	<xsl:param name="versions" />  	
-
-	<xsl:variable name="nextVersion" select="normalize-space(substring-before($versions, ','))" />
-
-	<!--  if next version is not empty, then there was a comma, so we output this version and call template again -->
-	<xsl:choose>
-		<xsl:when test="normalize-space($nextVersion) != ''">
-			<span class="interlinear">
-				<xsl:call-template name="outputNonBlank">
-					<xsl:with-param name="string">
-						<xsl:value-of select="jsword:getWord($interlinearProvider, normalize-space($nextVersion), ../@osisID, @lemma, @morph)"></xsl:value-of>
-					</xsl:with-param>
-				</xsl:call-template>
-			</span>
-			<xsl:call-template name="interlinear">
-				<xsl:with-param name="versions" select="substring-after($versions, ',')" />
-			</xsl:call-template>
-		</xsl:when>
-		<!-- otherwise, then we can use the remainder as the version, as long as version not empty (for e.g. a trailing comma) -->
-		<xsl:otherwise>
-		    <xsl:if test="normalize-space($versions) != ''" >
-				<span class="interlinear">
-					<xsl:call-template name="outputNonBlank">
-						<xsl:with-param name="string">
-							<xsl:value-of select="jsword:getWord($interlinearProvider, normalize-space($versions), ../@osisID, @lemma, @morph)"></xsl:value-of>
-						</xsl:with-param>
-					</xsl:call-template>
-				</span>
-			</xsl:if>
-		</xsl:otherwise>
-	</xsl:choose>
+    <xsl:param name="lemma" select="''"/>
+    <xsl:param name="morph" select="''"/>
+    <xsl:param name="osisID" />
+    <xsl:variable name="interlinearWord" select="jsword:getWord($interlinearProvider, $osisID, $lemma, $morph)"/>
+    <xsl:choose>
+    	<xsl:when test="normalize-space($interlinearWord) = ''" >&#160;</xsl:when>
+    	<xsl:otherwise><span class="interlinearText"><xsl:value-of select="$interlinearWord"/></span></xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
-  
-  <xsl:template name="outputNonBlank">
-  	<xsl:param name="string" />
-  	<xsl:choose>
-  		<xsl:when test="normalize-space($string) != ''">
-  			<xsl:value-of select="$string" />
-  		</xsl:when>
-  		<xsl:otherwise><xsl:value-of select="'&#160;'" /></xsl:otherwise>
-  	</xsl:choose>
-  	
-  </xsl:template>
-  
+
+
   <!--=======================================================================-->
   <xsl:template match="seg">
     <xsl:choose>
@@ -1208,7 +1329,7 @@
   </xsl:template>
 
   <xsl:template match="transChange">
-    <span class="w"><em><xsl:apply-templates/></em></span>
+    <span><em><xsl:apply-templates/></em></span>
   </xsl:template>
   <xsl:template match="transChange" mode="jesus">
     <span class="w"><em><xsl:apply-templates/></em></span>

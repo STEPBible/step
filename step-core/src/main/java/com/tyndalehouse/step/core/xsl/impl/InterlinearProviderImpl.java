@@ -1,5 +1,7 @@
 package com.tyndalehouse.step.core.xsl.impl;
 
+import static com.tyndalehouse.step.core.utils.StringConversionUtils.getAnyKey;
+import static com.tyndalehouse.step.core.utils.StringConversionUtils.getStrongKey;
 import static org.apache.commons.lang.StringUtils.isBlank;
 import static org.apache.commons.lang.StringUtils.isNotBlank;
 import static org.apache.commons.lang.StringUtils.split;
@@ -37,10 +39,6 @@ import com.tyndalehouse.step.core.xsl.InterlinearProvider;
  * 
  */
 public class InterlinearProviderImpl implements InterlinearProvider {
-    /**
-     * set of characters used to distinguish one strong from another
-     */
-    private static final String STRONG_SEPARATORS = " []";
 
     /**
      * bestAccuracy gives a word by its dual key (strong,morph)
@@ -100,28 +98,18 @@ public class InterlinearProviderImpl implements InterlinearProvider {
 
         // the keys passed in may have multiple references and morphologies, therefore, we need to lookup
         // multiple items.
-
-        // ///////////////////////////
-        // TODO we need to remove the strong:[G/H] from the string, since some versions don't have it
-        // and key things differently
-        // ////////////////////////////
-        final String[] strongs = split(strong, STRONG_SEPARATORS);
-        final String[] morphs = split(morph, STRONG_SEPARATORS);
-
-        // if we have no morphs, then might as well call getWord(verseNumber, strong) straight away
-        if (morphs == null || morphs.length == 0) {
-            results.add(getWord(verseNumber, strong));
-            return convertToString(results);
-        }
+        final String[] strongs = split(strong);
+        final String[] morphs = morph == null ? new String[0] : split(morph);
 
         // There are at most strongs.length words, and we might have morphological data to help
         for (final String s : strongs) {
             boolean foundMatchForStrong = false;
+            final String strongKey = getAnyKey(s);
 
-            // each could be using the morphs we have, so try them all
+            // each could be using the morphs we have, so try them all - this gets skipped if we have no morphs
             for (final String m : morphs) {
                 // lookup (strong,morph) -> word first
-                final DualKey<String, String> key = new DualKey<String, String>(s, m);
+                final DualKey<String, String> key = new DualKey<String, String>(getStrongKey(strongKey), m);
                 final String word = this.bestAccuracy.get(key);
 
                 if (word != null) {
@@ -132,7 +120,7 @@ public class InterlinearProviderImpl implements InterlinearProvider {
 
             // have we found a match? if not, we better try and find one using the verse
             if (!foundMatchForStrong) {
-                results.add(getWord(verseNumber, strong));
+                results.add(getWord(verseNumber, strongKey));
             }
         }
 
@@ -143,7 +131,7 @@ public class InterlinearProviderImpl implements InterlinearProvider {
      * Takes a set, and outputs the strings concatenated together (and separated by a space.
      * 
      * @param results the results that should be converted to a string
-     * @return
+     * @return a String containing results to be displayed
      */
     private String convertToString(final Set<String> results) {
         final Iterator<String> iterator = results.iterator();
@@ -245,13 +233,8 @@ public class InterlinearProviderImpl implements InterlinearProvider {
         // comparing against other OSIS XML texts which should be formatted in the same way!
         // however, some attributes may contain multiple strongs and morphs tagged to one word.
         // therefore we do need to split the text.
-        final String[] strongs = split(strong, STRONG_SEPARATORS);
-        final String[] morphs = split(morph, STRONG_SEPARATORS);
-
-        // ///////////////////////////
-        // TODO we need to remove the strong:[G/H] from the string, since some versions don't have it
-        // and key things differently
-        // ////////////////////////////
+        final String[] strongs = split(strong);
+        final String[] morphs = split(morph);
 
         if (strongs == null) {
             return;
@@ -290,13 +273,14 @@ public class InterlinearProviderImpl implements InterlinearProvider {
      * @param word the word to be stored
      */
     void addTextualInfo(final String verseReference, final String strong, final String morph, final String word) {
+        final String strongKey = getAnyKey(strong);
 
-        if (isNotBlank(strong) && isNotBlank(morph)) {
-            final DualKey<String, String> strongMorphKey = new DualKey<String, String>(strong, morph);
+        if (isNotBlank(strongKey) && isNotBlank(morph)) {
+            final DualKey<String, String> strongMorphKey = new DualKey<String, String>(strongKey, morph);
             this.bestAccuracy.put(strongMorphKey, word);
         }
 
-        final DualKey<String, String> strongVerseKey = new DualKey<String, String>(strong, verseReference);
+        final DualKey<String, String> strongVerseKey = new DualKey<String, String>(strongKey, verseReference);
 
         List<String> verseKeyedStrongs = this.limitedAccuracy.get(strongVerseKey);
         if (verseKeyedStrongs == null) {
@@ -306,6 +290,6 @@ public class InterlinearProviderImpl implements InterlinearProvider {
         verseKeyedStrongs.add(word);
 
         // finally add it to the worst accuracy - i.e. just based on strongs (could probably refactor)
-        this.worstAccuracy.put(strong, word);
+        this.worstAccuracy.put(strongKey, word);
     }
 }

@@ -44,25 +44,24 @@ A {
 	text-decoration: none;
 }
 
-A.strongs {
-	color: black;
+span.w {
+	margin-top: 20px;	
+}
+
+span.strongs a {
+	color: orange;
 	text-decoration: none;
+	font-size: xx-small;
+	text-align: center;
 }
 
-SUB.strongs {
-	font-size: 75%;
-	color: red;
+span.morphs a {
+	color: green;
+	text-decoration: none;
+	font-size: xx-small;
+	text-align: center;
 }
 
-SUB.morph {
-	font-size: 75%;
-	color: blue;
-}
-
-SUB.lemma {
-	font-size: 75%;
-	color: red;
-}
 
 SUP.verseNumber {
 	font-size: 75%;
@@ -110,32 +109,38 @@ H1.level {
 	text-align: center;
 	font-size: 115%;
 	color: #000000;
+	clear: both;
 }
 
 H2.level {
 	text-align: center;
 	font-size: 110%;
 	color: #000000;
+	clear: both;
 }
 
 H3.level {
 	text-align: center;
 	font-size: 100%;
+	clear: both;
 }
 
 H4.level {
 	text-align: center;
 	font-size: 90%;
+	clear: both;
 }
 
 H5.level {
 	text-align: center;
 	font-size: 85%;
+	clear: both;
 }
 
 H6.level {
 	text-align: center;
 	font-size: 80%;
+	clear: both;
 }
 
 H3.heading {
@@ -143,12 +148,14 @@ H3.heading {
 	color: #666699;
 	font-weight: bold;
 	clear: both;
+	clear: both;
 }
 
 H2.heading {
 	font-size: 115%;
 	color: #669966;
 	font-weight: bold;
+	clear: both;
 }
 
 div.margin {

@@ -21,6 +21,7 @@ body {
 	font-size: xx-small;
 }
 
-.toolbarContainer span {
+.toolbarContainer label {
 	font-size: x-small;
+	padding: 0px 3px 0px 3px;
 }

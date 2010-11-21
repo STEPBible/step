@@ -103,7 +103,9 @@ function initData() {
 	//get data for passages
 	// make call to server first and once, to cache all passages:
 	var strongedVersions = [];
-	var ii = 0;
+
+	//we reserve the first spot for "ALL Versions"
+	var ii = 1;
 	
 	$.getJSON("rest/bible/versions", function(data) {
 		var parsedResponse = $.map(data, function(item) {
@@ -121,10 +123,20 @@ function initData() {
 			}
 		});
 		
+		//add the ALL Version, by iterating through all found versions and adding them as the value
+		var allVersionsKey = "";
+		for(var jj = 1; jj < ii; jj++) {
+			allVersionsKey += strongedVersions[jj].value;
+			if(jj + 1 < ii) {
+				allVersionsKey += ',';
+			}
+		}
+		strongedVersions[0] = {label: "All available versions", value: allVersionsKey };
+
 		
 		//set up initial passages with reference data:
-		var versions = ["ESV" ];
-		var passages = ["Romans 1"];
+		var versions = ["KJV" ];
+		var passages = ["Romans 1:1-3"];
 		$(".passageContainer").each(
 				function(index) {
 					var passage = new Passage(this, parsedResponse);

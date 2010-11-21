@@ -35,6 +35,13 @@ function Toolbar(passage, buttonOptions, strongedVersions) {
 	});
 }
 
+//function split( val ) {
+//	return val.split( /,\s*/ );
+//}
+function extractLast( term ) {
+	return split( term ).pop();
+}
+
 Toolbar.prototype.createInterlinearDropdown = function(toolbarId, strongedVersions, interlinearButton) {
 	this.toolbarContainer.append("<input id='interlinear" + toolbarId
 			+ "' type='text' class='interlinearVersion' value='Interlinear version' disabled='disabled' />");
@@ -46,13 +53,48 @@ Toolbar.prototype.createInterlinearDropdown = function(toolbarId, strongedVersio
 		minLength : 0,
 		delay: 0,
 		select : function(event, ui) {
-			$(this).val(ui.item.value);
+			var terms = this.value.split( /,\s*/ );
+			
+			// remove the current input
+			terms.pop();
+			
+			// add the selected item
+			terms.push( ui.item.value );
+			
+			// add placeholder to get the comma-and-space at the end
+			terms.push( "" );
+			this.value = terms.join( ", " );
 			self.passage.changePassage();
 			return false;
 		}
 	});
 	
 	addDefaultValue(interlinearSelector);
+	
+	//todo, make utility function
+	//set up dropdown button next to it
+	$( "<button>&nbsp;</button>" ).attr( "tabIndex", -1 )
+	.attr( "title", "Show all Bible versions" )
+	.insertAfter( interlinearSelector )
+	.button({
+		icons: {
+			primary: "ui-icon-triangle-1-s"
+		},
+		text: false
+	})
+	.removeClass( "ui-corner-all" )
+	.addClass( "ui-corner-right ui-button-icon no-left-border" )
+	.click(function() {
+		// close if already visible
+		if ( interlinearSelector.autocomplete( "widget" ).is( ":visible" ) ) {
+			interlinearSelector.autocomplete( "close" );
+			return;
+		}
+
+		// pass empty string as value to search for, displaying all results
+		interlinearSelector.autocomplete( "search", "" );
+		interlinearSelector.focus();
+	});
 	
 	interlinearButton.click(function() {
 		if($(this).attr('checked')) {

@@ -14,10 +14,10 @@
     <script src="libs/jquery-1.4.2.min.js" type="text/javascript"></script>
     <script src="libs/jquery-ui-1.8.5.custom.min.js" type="text/javascript"></script>
     <script src="libs/jquery.layout-latest.js" type="text/javascript"></script>
+    <script src="js/util.js" type="text/javascript"></script>
     <script src="js/passage_toolbar.js" type="text/javascript"></script>
     <script src="js/passage.js" type="text/javascript"></script>
     <script src="js/init.js" type="text/javascript"></script>
-    
 </HEAD>
 <body>
 
@@ -25,8 +25,7 @@
 <div class="passageContainer leftPassage">
 	<div>
 	    <input class="passageVersion defaultValue" type="text" value="Select a Bible version, e.g. ESV" />
-	    <input class="passageReference defaultValue" type="text"  value="Select a reference, e.g. Gen 1:1" />
-	    <button class="searchButton">Search</button>
+	    <input class="passageReference defaultValue" type="text"  value="Select a reference, e.g. Gen 1:1" /><button class="searchButton">Search</button>
 	    <input id="leftCheck" type="checkbox" class="toolbarButton"><label for="leftCheck">Toolbar</label></input>
 	</div>
 
@@ -47,8 +46,7 @@
 <div class="passageContainer rightPassage">
 	<div>
 	    <input class="passageVersion defaultValue" type="text" value="Select a Bible version, e.g. ESV" />
-	    <input class="passageReference defaultValue" type="text"  value="Select a reference, e.g. Gen 1:1" />
-	    <button class="searchButton">Search</button>
+	    <input class="passageReference defaultValue" type="text"  value="Select a reference, e.g. Gen 1:1" /><button class="searchButton">Search</button>
 	    <input id="rightCheck" type="checkbox" class="toolbarButton"><label for="rightCheck">Toolbar</label></input>
 	</div>
 

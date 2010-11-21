@@ -10,7 +10,7 @@
 	<properties>
 		<project.build.sourceEncoding>iso-8859-1</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>iso-8859-1</project.reporting.outputEncoding>
-		<java.version>1.5</java.version>
+		<java.version>1.6</java.version>
 
 		<db.directory>${user.home}/TyndaleStep/StepDB</db.directory>
 		<db.driver>org.apache.derby.jdbc.EmbeddedDriver</db.driver>

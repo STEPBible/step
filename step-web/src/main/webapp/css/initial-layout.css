@@ -8,6 +8,15 @@ body {
 	background: #F6F6F6;
 }
 
+.ui-button-text {
+	padding: 1px 0px 1px 0px !important;
+}
+
+.no-left-border {
+	/* border-left: none; */
+	margin-left: -1px; 
+}
+
 .bookmarksContent {
 	background: #EEF;
 }
@@ -48,12 +57,14 @@ body {
 
 .toolbarContainer {
 	display: none;
+	margin-top: 3px;
 	margin-bottom: 3px;
 	text-align: left;
+	padding: 3px;
 }
 
-.toolbarContainer {
-	padding: 5px;
+.toolbarContainer label {
+	margin-right: 3px;
 }
 
 .inactive {

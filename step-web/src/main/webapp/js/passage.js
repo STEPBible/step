@@ -15,7 +15,10 @@ function Passage(passageContainer, versions) {
 	$(".searchButton", passageContainer).button({
 		icons: { primary: "ui-icon-search" }, 
 		text: false
-	}).click(function() {
+	})
+	.removeClass( "ui-corner-all" )
+	.addClass( "ui-corner-right ui-button-icon no-left-border" )
+	.click(function() {
 		self.changePassage();
 	});
 	
@@ -46,11 +49,12 @@ function Passage(passageContainer, versions) {
 		this.select();
 	});
 	
+	//set up dropdown button next to it
+	addButtonToAutoComplete(this.version, "ui-icon-triangle-1-s");
+	
 	//set up blur for textbox
 	this.reference.change(function(){
 		self.changePassage();
-	}).focus(function() {
-		this.select();
 	});
 }
 

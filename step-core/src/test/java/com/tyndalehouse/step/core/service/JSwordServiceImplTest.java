@@ -37,8 +37,8 @@ public class JSwordServiceImplTest {
      */
     @Test
     public void testInterlinearTransformation() throws Exception {
-        final Book currentBook = Books.installed().getBook("esv");
-        final BookData bookData = new BookData(currentBook, currentBook.getKey("Romans 1"));
+        final Book currentBook = Books.installed().getBook("ChiUns");
+        final BookData bookData = new BookData(currentBook, currentBook.getKey("Romans 1-2"));
         final Element osisFragment = bookData.getOsisFragment();
 
         final XMLOutputter xmlOutputter = new XMLOutputter(Format.getPrettyFormat());
@@ -49,7 +49,7 @@ public class JSwordServiceImplTest {
         final ArrayList<LookupOption> options = new ArrayList<LookupOption>();
         options.add(INTERLINEAR);
 
-        final String osisText = jsi.getOsisText("KJV", "Romans 1:4", options, "");
+        final String osisText = jsi.getOsisText("ChiUns", "Romans 1-2", options, "");
         final SAXBuilder sb = new SAXBuilder();
         final Document d = sb.build(new StringReader(osisText));
 

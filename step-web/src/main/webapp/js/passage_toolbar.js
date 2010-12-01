@@ -75,14 +75,15 @@ Toolbar.prototype.createInterlinearDropdown = function(toolbarId, strongedVersio
 	
 	//todo, make utility function
 	//set up dropdown button next to it
-	$( "<button>&nbsp;</button>" ).attr( "tabIndex", -1 )
+	var interlinearDropdownButton = $( "<button>&nbsp;</button>" ).attr( "tabIndex", -1 )
 	.attr( "title", "Show all Bible versions" )
 	.insertAfter( interlinearSelector )
 	.button({
 		icons: {
 			primary: "ui-icon-triangle-1-s"
 		},
-		text: false
+		text: false,
+		disabled: true
 	})
 	.removeClass( "ui-corner-all" )
 	.addClass( "ui-corner-right ui-button-icon no-left-border" )
@@ -101,9 +102,12 @@ Toolbar.prototype.createInterlinearDropdown = function(toolbarId, strongedVersio
 	interlinearButton.click(function() {
 		if($(this).attr('checked')) {
 			interlinearSelector.removeAttr("disabled");
+			interlinearDropdownButton.button("enable");
 			interlinearSelector.focus();
 		} else {
 			interlinearSelector.attr("disabled", "disabled");
+			interlinearDropdownButton.attr("disabled", "disabled");
+			interlinearDropdownButton.button("disable");
 		}
 	});
 }

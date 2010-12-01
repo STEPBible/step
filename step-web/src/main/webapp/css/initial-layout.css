@@ -30,6 +30,13 @@ body {
     overflow: hidden !important;
 }
 
+.column .ui-layout-pane-north {
+	border: 0 !important;
+	padding-top: 0px;
+	padding-bottom: 0px;
+}
+
+
 .ui-autocomplete {
 	max-height: 500px;
 	overflow-y: auto;
@@ -56,7 +63,7 @@ body {
 }
 
 .toolbarContainer {
-	display: none;
+/*	display: none; */
 	margin-top: 3px;
 	margin-bottom: 3px;
 	text-align: left;
@@ -74,7 +81,7 @@ body {
 #loading { 
 	margin-top: 3px;
 	display: none;
-	z-index: 9999; /** always on top */
+	z-index: 9998; /** always on top, but not on top of lexicon def? */
 }
 
 #error {
@@ -82,4 +89,14 @@ body {
 	padding-left: 1px;
 	margin: 0px;
 }
+
+#lexiconDefinition {
+	display: inline-block;
+	z-index: 9999;
+	width: 400px;
+	bottom: 0px;
+	right: 0px;
+	left: -1000px;
+}
+
 

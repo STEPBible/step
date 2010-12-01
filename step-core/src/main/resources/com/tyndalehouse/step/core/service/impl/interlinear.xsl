@@ -63,7 +63,7 @@
   <xsl:param name="VLine" select="'false'"/>
 
   <!-- Whether to show non-canonical "headings" or not -->
-  <xsl:param name="Headings" select="'true'"/>
+  <xsl:param name="Headings" select="'false'"/>
 
   <!-- Whether to show notes or not -->
   <xsl:param name="Notes" select="'false'"/>
@@ -71,11 +71,8 @@
   <!-- Whether to have linking cross references or not -->
   <xsl:param name="XRef" select="'false'"/>
 
-  <!-- Whether to output no Verse numbers -->
-  <xsl:param name="NoVNum" select="'false'"/>
-
   <!-- Whether to output Verse numbers or not -->
-  <xsl:param name="VNum" select="'true'"/>
+  <xsl:param name="VNum" select="'false'"/>
 
   <!-- Whether to output Chapter and Verse numbers or not -->
   <xsl:param name="CVNum" select="'false'"/>
@@ -84,7 +81,7 @@
   <xsl:param name="BCVNum" select="'false'"/>
 
   <!-- Whether to output superscript verse numbers or normal size ones -->
-  <xsl:param name="TinyVNum" select="'true'"/>
+  <xsl:param name="TinyVNum" select="'false'"/>
 
   <!-- The order of display. Hebrew is rtl (right to left) -->
   <xsl:param name="direction" select="'ltr'"/>
@@ -104,6 +101,7 @@
   
   <!--  set up interlinear provider, if we have requested it -->
   <xsl:variable name="interlinearProvider" select="jsword:com.tyndalehouse.step.core.xsl.impl.MultiInterlinearProviderImpl.new(string($interlinearVersion), string($interlinearReference))" />
+  <xsl:variable name="punctuation" select="'|\,./&lt;&gt;?;\#:@~[]{}-=_+`¬!£$%^&amp;*()&quot;'" />
 
   <!--=======================================================================-->
   <xsl:template match="/">
@@ -318,7 +316,7 @@
 
   <xsl:template name="versenum">
     <!-- Are verse numbers wanted? -->
-    <xsl:if test="$NoVNum = 'false'">
+    <xsl:if test="$VNum = 'true'">
       <!-- An osisID can be a space separated list of them -->
       <xsl:variable name="firstOsisID" select="substring-before(concat(@osisID, ' '), ' ')"/>
       <xsl:variable name="book" select="substring-before($firstOsisID, '.')"/>
@@ -470,17 +468,18 @@
 			<xsl:apply-templates />
 		</xsl:variable>
 	
-		<!-- we check the next node too, since it might be punctuation, etc. In 
-			that case, it makes sense to include it in the bit word part that gets past 
-			down TODO TODO TODO -->
+		<xsl:variable name="nextText" select="normalize-space(following-sibling::node()[1][self::text()])" />
+		<xsl:if test="not(jsword:org.apache.commons.lang.StringUtils.containsOnly($nextText, $punctuation))">
+			<xsl:variable name="nextText" select="''"/>
+		</xsl:if>
 
 		<!-- start the block -->
-		<span class="w">
+		<span class="w" onclick="javascript:showAllStrongMorphs(&quot;{@lemma} {@morph}&quot;)">
 			<!-- 1st - Output first line or a blank if no text available. -->
 			<span class="text">
 				<xsl:call-template name="outputNonBlank">
 					<xsl:with-param name="string">
-						<xsl:value-of select="$innerWordText" />
+						<xsl:value-of select="concat($innerWordText, $nextText)" />
 					</xsl:with-param>
 				</xsl:call-template>
 			</span>
@@ -1385,6 +1384,7 @@
   to any punctuation really, since all other words should be contained in a W  -->
   <xsl:template match="text()">
   		<xsl:choose>
+			<xsl:when test="jsword:org.apache.commons.lang.StringUtils.containsOnly(normalize-space(.), $punctuation)" />
 	  		<xsl:when test="name(..) = 'verse' and normalize-space(.) != ''"><span class="w"><span class="text"><xsl:value-of select="."/></span></span></xsl:when>
 	  		<xsl:when test="normalize-space(.) != ''"><xsl:value-of select="."/></xsl:when>
   		</xsl:choose>

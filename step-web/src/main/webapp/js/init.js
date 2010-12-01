@@ -1,3 +1,5 @@
+
+
 // call the initialisation functions
 init();
 
@@ -6,6 +8,7 @@ function init() {
 		initLayout();
 		initGlobalHandlers();
 		initDefaultValues();
+		initLexicon();
 		initData();
 	});
 }
@@ -23,9 +26,9 @@ function initLayout() {
 		autoReopen : true, // auto-open panes that were previously
 		autoBindCustomButtons : true,
 		north__paneSelector: '#error',
-		west__paneSelector : '.leftPassage',
+		west__paneSelector : '#leftColumn',
 		center__paneSelector : '.bookmarks',
-		east__paneSelector : '.rightPassage',
+		east__paneSelector : '#rightColumn',
 		west__size : .45, // percentage size expresses as a decimal
 		east__size : .45,
 		north__minSize : 0,
@@ -132,22 +135,58 @@ function initData() {
 			}
 		}
 		strongedVersions[0] = {label: "All available versions", value: allVersionsKey };
+		initPassages(parsedResponse, strongedVersions, options);
+	});
+}
 
+/**
+ * creates the passages components
+ * @param allVersions the list of versions to be given to a dropdown
+ * @param strongedVersions a list of version containing strong tagging
+ * @param options a list of options to be displayed in the toolbar
+ */
+function initPassages(allVersions, strongedVersions, options) {
+	//set up the left column
+	var columnLayouts = [
+	                     createColumnLayout('#leftColumn', 'leftColumnLayout', '.toolbar', '.leftPassage'),
+	                     createColumnLayout('#rightColumn', 'rightColumnLayout', '.toolbar', '.rightPassage')
+	                     ];
+	
+	//set up initial passages with reference data:
+	var versions = ["KJV" ];
+	var passages = ["Romans 1:1-3"];
+	$(".column").each(
+		function(index) {
+			var passage = new Passage($(".passageContainer", this), allVersions, columnLayouts[index]);
+			var toolbar = new Toolbar(passage, $(".toolbar", this), options, strongedVersions);
+			passage.setToolbar(toolbar);
+			
+			if(index < versions.length) {
+				passage.changePassage(versions[index], passages[index]);
+			}
+		}
+	);
+}
+
+function createColumnLayout(container, name, north, center) {
+	return $(container).layout({
+		name : name, 
+		resizable: false, 
+		closable: true,
+		slidable: true,
+		spacing_open: 0,
+		spacing_closed: 0,
 		
-		//set up initial passages with reference data:
-		var versions = ["KJV" ];
-		var passages = ["Romans 1:1-3"];
-		$(".passageContainer").each(
-				function(index) {
-					var passage = new Passage(this, parsedResponse);
-					var toolbar = new Toolbar(passage, options, strongedVersions);
-					passage.setToolbar(toolbar);
-					
-					if(index < versions.length) {
-						passage.changePassage(versions[index], passages[index]);
-					}
-				})
-		});
+		autoResize : true, // try to maintain pane-percentages
+		autoReopen : true, // auto-open panes that were previously
+		autoBindCustomButtons : true,
+		north__initClosed: true,
+		north__paneSelector : north,
+		center__paneSelector : center,
+		north__size : 50,
+		
+		noRoomToOpenAction : "hide"
+	});
 }
 
 function initGlobalHandlers() {
@@ -177,6 +216,10 @@ function initGlobalHandlers() {
 			raiseError(currentResponse.error)
 		}
 	});
+}
+
+function initLexicon() {
+	var lexicon = new LexiconDefinition();
 }
 
 function raiseError(error) {

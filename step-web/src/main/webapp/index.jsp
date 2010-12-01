@@ -14,24 +14,31 @@
     <script src="libs/jquery-1.4.2.min.js" type="text/javascript"></script>
     <script src="libs/jquery-ui-1.8.5.custom.min.js" type="text/javascript"></script>
     <script src="libs/jquery.layout-latest.js" type="text/javascript"></script>
+    <script src="libs/jquery-shout.js" type="text/javascript"></script>
     <script src="js/util.js" type="text/javascript"></script>
     <script src="js/passage_toolbar.js" type="text/javascript"></script>
     <script src="js/passage.js" type="text/javascript"></script>
+<!--    <script src="js/bookmark.js" type="text/javascript"></script>-->
+    <script src="js/lexicon_definition.js" type="text/javascript"></script>
+    <script src="js/ui_hooks.js" type="text/javascript"></script>
     <script src="js/init.js" type="text/javascript"></script>
 </HEAD>
 <body>
 
+<div id="leftColumn" class="column">
+	<!--  the toolbar -->
+	<div class="ui-layout-north toolbar"></div>
 
-<div class="passageContainer leftPassage">
-	<div>
-	    <input class="passageVersion defaultValue" type="text" value="Select a Bible version, e.g. ESV" />
-	    <input class="passageReference defaultValue" type="text"  value="Select a reference, e.g. Gen 1:1" /><button class="searchButton">Search</button>
-	    <input id="leftCheck" type="checkbox" class="toolbarButton"><label for="leftCheck">Toolbar</label></input>
+	<div class="passageContainer leftPassage ui-layout-center">
+		<div id="leftPassagePane">
+		    <input class="passageVersion defaultValue" type="text" value="Select a Bible version, e.g. ESV" />
+		    <input class="passageReference defaultValue" type="text"  value="Select a reference, e.g. Gen 1:1" /><button class="searchButton">Search</button>
+		    <input id="leftCheck" type="checkbox" class="toolbarButton"><label for="leftCheck">Toolbar</label></input>
+		</div>
+	    <div class="passageText ui-widget"></div>
 	</div>
-
-    <div class="passageText ui-widget"></div>
-    
 </div>
+
 
 <div class="ui-layout-center bookmarks" id="bookmarkPane">
 	<div class="ui-layout-north northBookmark">
@@ -43,14 +50,19 @@
 	</div>
 </div>
 
-<div class="passageContainer rightPassage">
-	<div>
-	    <input class="passageVersion defaultValue" type="text" value="Select a Bible version, e.g. ESV" />
-	    <input class="passageReference defaultValue" type="text"  value="Select a reference, e.g. Gen 1:1" /><button class="searchButton">Search</button>
-	    <input id="rightCheck" type="checkbox" class="toolbarButton"><label for="rightCheck">Toolbar</label></input>
-	</div>
-
-    <div class="passageText ui-widget"></div>
+<div id="rightColumn" class="column">
+	<!--  the toolbar -->
+	<div class="ui-layout-north toolbar"></div>
+	<div class="passageContainer rightPassage ui-layout-center">
+		<div id="rightPassagePane">
+		    <input class="passageVersion defaultValue" type="text" value="Select a Bible version, e.g. ESV" />
+		    <input class="passageReference defaultValue" type="text"  value="Select a reference, e.g. Gen 1:1" /><button class="searchButton">Search</button>
+		    <input id="rightCheck" type="checkbox" class="toolbarButton"><label for="rightCheck">Toolbar</label></input>
+		</div>
+	
+	    <div class="passageText ui-widget"></div>
+    </div>
+	
 </div>
 
 <div id="loading"><img alt="Loading..." src="images/wait16.gif" />Loading...</div>

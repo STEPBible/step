@@ -30,5 +30,6 @@
 		<module>step-build</module>
 		<module>step-core</module>
 		<module>step-web</module>
+		<module>step-server</module>
 	</modules>
 </project>

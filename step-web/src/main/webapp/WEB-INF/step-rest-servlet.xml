@@ -10,7 +10,18 @@
 	<context:component-scan base-package="com.tyndalehouse.step.rest" />
 	<context:annotation-config />
 	
-	<bean id="bibleInformation" class="com.tyndalehouse.step.core.service.impl.BibleInformationServiceImpl" />
+	<bean id="bibleInformation" class="com.tyndalehouse.step.core.service.impl.BibleInformationServiceImpl">
+	</bean>
+	
+	<bean id="moduleService" class="com.tyndalehouse.step.core.service.impl.ModuleServiceImpl">
+		<property name="defaultModuleLexicons">
+			<map>
+				<entry key="strong:H" value="StrongsHebrew" />
+				<entry key="strong:G" value="StrongsGreek" />
+				<entry key="robinson:" value="Robinson" />
+			</map>
+		</property>
+	</bean>
 
 	<!-- Configures Spring MVC -->
 	<import resource="mvc-config.xml" />

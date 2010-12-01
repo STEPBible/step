@@ -2,6 +2,8 @@ package com.tyndalehouse.step.core.service.impl;
 
 import static com.tyndalehouse.step.core.xsl.XslConversionType.DEFAULT;
 import static org.apache.commons.lang.StringUtils.isNotBlank;
+import static org.apache.commons.lang.StringUtils.isNotEmpty;
+import static org.crosswire.jsword.book.BookCategory.BIBLE;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -56,6 +58,11 @@ public class JSwordServiceImpl implements JSwordService {
         return Books.installed().getBooks(bf);
     }
 
+    public String getOsisText(final String version, final String reference) {
+        final List<LookupOption> options = new ArrayList<LookupOption>();
+        return getOsisText(version, reference, options, null);
+    }
+
     public String getOsisText(final String version, final String reference, final List<LookupOption> options,
             final String interlinearVersion) {
         this.logger.debug("Retrieving text for ({}, {})", version, reference);
@@ -72,6 +79,7 @@ public class JSwordServiceImpl implements JSwordService {
                 public SAXEventProvider convert(final SAXEventProvider provider) throws TransformerException {
                     try {
                         // for now, we just assume that we'll only have one option, but this may change later
+                        // TODO, we can probably cache the resource
                         final TransformingSAXEventProvider tsep = new TransformingSAXEventProvider(getClass()
                                 .getResource(requiredTransformation.iterator().next().getFile()).toURI(), osissep);
 
@@ -100,6 +108,12 @@ public class JSwordServiceImpl implements JSwordService {
         }
     }
 
+    /**
+     * returns the stylesheet that should be used to generate the text
+     * 
+     * @param options the list of options that are currently applied to the passage
+     * @return the stylesheet (of stylesheets)
+     */
     private Set<XslConversionType> identifyStyleSheet(final List<LookupOption> options) {
         final Set<XslConversionType> chosenOptions = new HashSet<XslConversionType>();
 
@@ -107,18 +121,30 @@ public class JSwordServiceImpl implements JSwordService {
             chosenOptions.add(lo.getStylesheet());
         }
 
-        if (chosenOptions.isEmpty()) {
+        // remove from the list any default:
+        if (chosenOptions.contains(DEFAULT) && chosenOptions.size() > 1) {
+            chosenOptions.remove(DEFAULT);
+        } else if (chosenOptions.isEmpty()) {
             chosenOptions.add(DEFAULT);
         }
+
         return chosenOptions;
     }
 
     public List<LookupOption> getFeatures(final String version) {
+        // obtain the book
         final Book book = Books.installed().getBook(version);
-        final List<LookupOption> options = new ArrayList<LookupOption>(3);
+        final List<LookupOption> options = new ArrayList<LookupOption>(LookupOption.values().length + 1);
+
+        // some options are always there for Bibles:
+        if (BIBLE.equals(book.getBookCategory())) {
+            options.add(LookupOption.VERSE_NUMBERS);
+        }
+
+        // cycle through each option
         for (final LookupOption lo : LookupOption.values()) {
             final FeatureType ft = FeatureType.fromString(lo.getXsltParameterName());
-            if (ft != null) {
+            if (ft != null && isNotEmpty(lo.getDisplayName())) {
                 if (book.getBookMetaData().hasFeature(ft)) {
                     options.add(lo);
                 }
@@ -154,6 +180,11 @@ public class JSwordServiceImpl implements JSwordService {
             final String version, final String textScope) {
         for (final LookupOption lookupOption : options) {
             tsep.setParameter(lookupOption.getXsltParameterName(), true);
+
+            if (LookupOption.VERSE_NUMBERS.equals(lookupOption)) {
+                tsep.setParameter(LookupOption.TINY_VERSE_NUMBERS.getXsltParameterName(), true);
+            }
         }
     }
+
 }

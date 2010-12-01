@@ -52,22 +52,34 @@ public final class StringConversionUtils {
      * @return the shortened key
      */
     public static String getAnyKey(final String potentialKey) {
+        return getAnyKey(potentialKey, true);
+    }
+
+    /**
+     * in this case, we assume that a key starts shortly after the last ':' with a number
+     * 
+     * @param potentialKey a key that can potentially be shortened
+     * @param trimInitial trim initial character after ':'
+     * @return the shortened key
+     */
+    public static String getAnyKey(final String potentialKey, final boolean trimInitial) {
         // find first colon and start afterwards, -1 yields 0, which is the beginning of the string
         // so we can work with that.
         int start = potentialKey.lastIndexOf(KEY_SEPARATOR) + 1;
 
         // start at the first char after the colon
         // int start = lastColon + 1;
-        final char protocol = potentialKey.charAt(start);
-        if (protocol == 'G' || protocol == 'H') {
-            start++;
-        }
+        if (trimInitial) {
+            final char protocol = potentialKey.charAt(start);
+            if (protocol == 'G' || protocol == 'H') {
+                start++;
+            }
 
-        // finally, we may have 0s:
-        while (potentialKey.charAt(start) == '0') {
-            start++;
+            // finally, we may have 0s:
+            while (potentialKey.charAt(start) == '0') {
+                start++;
+            }
         }
-
         return potentialKey.substring(start);
     }
 }

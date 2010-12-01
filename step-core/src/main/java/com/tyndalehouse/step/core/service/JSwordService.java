@@ -9,7 +9,7 @@ import com.tyndalehouse.step.core.models.LookupOption;
 
 public interface JSwordService {
     /**
-     * returns the biblical text as xml dom
+     * returns the Osis Text as a String
      * 
      * @param version version to lookup
      * @param reference the reference to lookup
@@ -18,6 +18,15 @@ public interface JSwordService {
      * @return the OSIS text in an HTML form
      */
     String getOsisText(String version, String reference, List<LookupOption> options, String interlinearVersion);
+
+    /**
+     * returns the biblical text as xml dom
+     * 
+     * @param version version to lookup
+     * @param reference the reference to lookup
+     * @return the OSIS text in an HTML form
+     */
+    String getOsisText(String version, String reference);
 
     /**
      * looks up any installed module
@@ -34,4 +43,5 @@ public interface JSwordService {
      * @return the list of supported features
      */
     List<LookupOption> getFeatures(String version);
+
 }

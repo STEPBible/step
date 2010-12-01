@@ -2,10 +2,14 @@
  * Definition of the Passage component responsible for displaying
  * OSIS passages appropriately. Ties the search box for the reference
  * and the version together to the passage displayed
+ * @param passageContainer the passage Container containing the whole control
+ * @param versions the list of versions to use to populate the dropdown
+ * @param columnLayout a handle to the layout manager to activate various panels
  */
-function Passage(passageContainer, versions) {
+function Passage(passageContainer, versions, columnLayout) {
 	var self = this;
 	this.container = passageContainer;
+	this.columnLayout = columnLayout;
 	this.version = $(".passageVersion", passageContainer);
 	this.reference = $(".passageReference", passageContainer);
 	this.passage = $(".passageText", passageContainer);
@@ -26,7 +30,8 @@ function Passage(passageContainer, versions) {
 		icons: { primary: "ui-icon-wrench" }, 
 		text: false
 	}).change(function() {
-		this.checked ? self.toolbar.open() : self.toolbar.close();
+		this.checked ? self.columnLayout.open("north") : self.columnLayout.close("north");
+//		this.checked ? self.toolbar.open() : self.toolbar.close();
 	});
 	
 	

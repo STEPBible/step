@@ -5,15 +5,14 @@
  */
 	//static id
 var toolbarId = 0;
-function Toolbar(passage, buttonOptions, strongedVersions) {
+function Toolbar(passage, columnContainer, buttonOptions, strongedVersions) {
 
 	var self = this;
 	this.passage = passage;
 	
 	//create toolbar
-	var passageContainer = passage.getPassageContainer();
-	$(passage.getPassageContainer()).prepend('<div class="toolbarContainer ui-widget-content ui-corner-all" />');
-	this.toolbarContainer = $(".toolbarContainer", passageContainer);
+	columnContainer.append('<div class="toolbarContainer ui-widget-content ui-corner-all" />');
+	this.toolbarContainer = $(".toolbarContainer", columnContainer);
 
 	
 	//create a button for each option
@@ -25,7 +24,10 @@ function Toolbar(passage, buttonOptions, strongedVersions) {
 		//find the newly created button
 		var newButton = $('#sb' + toolbarId, self.toolbarContainer);
 		newButton.button().click(function() { self.passage.changePassage(); });
-	
+		
+		if(this.enabledByDefault) {
+			newButton.attr("checked", "checked");
+		}
 		
 		//finally, if we're looking at the interlinear, then create a dropdown with potential versions
 		if (this.key == "INTERLINEAR") {

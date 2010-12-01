@@ -2,6 +2,7 @@ package com.tyndalehouse.step.core.service.impl;
 
 import static com.tyndalehouse.step.core.models.LookupOption.INTERLINEAR;
 import static com.tyndalehouse.step.core.models.LookupOption.STRONG_NUMBERS;
+import static org.apache.commons.lang.StringUtils.isNotBlank;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +61,10 @@ public class BibleInformationServiceImpl implements BibleInformationService {
         final List<EnrichedLookupOption> elo = new ArrayList<EnrichedLookupOption>(lo.length + 1);
 
         for (int ii = 0; ii < lo.length; ii++) {
-            elo.add(new EnrichedLookupOption(lo[ii].getDisplayName(), lo[ii].toString()));
+            final String displayName = lo[ii].getDisplayName();
+            if (isNotBlank(displayName)) {
+                elo.add(new EnrichedLookupOption(displayName, lo[ii].toString(), lo[ii].isEnabledByDefault()));
+            }
         }
 
         return elo;

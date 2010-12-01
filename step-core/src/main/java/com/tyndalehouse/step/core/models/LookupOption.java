@@ -11,6 +11,14 @@ import com.tyndalehouse.step.core.xsl.XslConversionType;
  * 
  */
 public enum LookupOption {
+    /**
+     * Showing headings
+     */
+    HEADINGS("Headings", "Headings", XslConversionType.DEFAULT, true),
+    /**
+     * Showing headings
+     */
+    VERSE_NUMBERS("VNum", "Verse Nums.", XslConversionType.DEFAULT, true),
     /** Strong numbers */
     STRONG_NUMBERS("StrongsNumbers", "Strongs", XslConversionType.INTERLINEAR),
 
@@ -19,24 +27,56 @@ public enum LookupOption {
     /**
      * Interlinears are available when Strongs are available.
      */
-    INTERLINEAR("Interlinear", XslConversionType.INTERLINEAR);
+    INTERLINEAR("Interlinear", "Interlinear", XslConversionType.INTERLINEAR),
+
+    /**
+     * Showing headings
+     */
+    TINY_VERSE_NUMBERS("TinyVNum", XslConversionType.DEFAULT);
 
     private final String xsltParameterName;
     private final String displayName;
-    private XslConversionType stylesheet;
+    private final XslConversionType stylesheet;
+    private final boolean enabledByDefault;
 
+    /**
+     * sets up the the lookup option
+     * 
+     * @param xsltParameterName the corresponding parameter name in the XSLT stylesheet
+     */
     private LookupOption(final String xsltParameterName) {
         this(xsltParameterName, xsltParameterName, DEFAULT);
     }
 
+    /**
+     * @param xsltParameterName the name of the parameter in the stylesheet
+     * @param stylesheet the stylesheet to use
+     */
     private LookupOption(final String xsltParameterName, final XslConversionType stylesheet) {
-        this(xsltParameterName, xsltParameterName, stylesheet);
+        this(xsltParameterName, null, stylesheet);
     }
 
+    /**
+     * @param xsltParameterName the name of the parameter in the stylesheet
+     * @param stylesheet the stylesheet to use
+     * @param displayName the name to display on the user interface
+     */
     private LookupOption(final String xsltParameterName, final String displayName, final XslConversionType stylesheet) {
+        this(xsltParameterName, displayName, stylesheet, false);
+    }
+
+    /**
+     * @param xsltParameterName the name of the parameter in the stylesheet
+     * @param stylesheet the stylesheet to use
+     * @param displayName the name to display on the user interface
+     * @param enabledByDefault true to have the UI display the option by default
+     */
+    private LookupOption(final String xsltParameterName, final String displayName, final XslConversionType stylesheet,
+            final boolean enabledByDefault) {
         this.xsltParameterName = xsltParameterName;
         this.displayName = displayName;
         this.stylesheet = stylesheet;
+        this.enabledByDefault = enabledByDefault;
     }
 
     /**
@@ -52,5 +92,12 @@ public enum LookupOption {
 
     public XslConversionType getStylesheet() {
         return this.stylesheet;
+    }
+
+    /**
+     * @return the enabledByDefault
+     */
+    public boolean isEnabledByDefault() {
+        return this.enabledByDefault;
     }
 }

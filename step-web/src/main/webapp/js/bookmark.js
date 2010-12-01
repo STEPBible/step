@@ -10,6 +10,7 @@ function Bookmark(bookmarkContainer) {
 	//we will store the elements in here, with their jquery wrapper
 	this.currentBookmarks = [];
 }
+
 //
 ///**
 // * Adding a bookmark

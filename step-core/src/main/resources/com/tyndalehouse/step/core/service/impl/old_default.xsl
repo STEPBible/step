@@ -457,14 +457,8 @@
   <!--=======================================================================-->
   <xsl:template match="w">
     <!-- Output the content followed by all the lemmas and then all the morphs. -->
-    <xsl:choose>
-	    <xsl:when test="normalize-space(@lemma) != '' or normalize-space(@morph) != ''">
-	    	<span onclick="javascript:showAllStrongMorphs(&quot;{@lemma} {@morph}&quot;)"><xsl:apply-templates/></span>
-	    </xsl:when>
-		<xsl:otherwise>
-			<xsl:apply-templates/>
-		</xsl:otherwise>
-    </xsl:choose>
+    <xsl:apply-templates/>
+    
     <!--
         except when followed by a text node or non-printing node.
         This is true whether the href is output or not.

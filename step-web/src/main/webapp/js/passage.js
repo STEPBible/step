@@ -61,6 +61,11 @@ function Passage(passageContainer, versions, columnLayout) {
 	this.reference.change(function(){
 		self.changePassage();
 	});
+	
+	//register to listen for events that click a word/phrase:
+	this.passage.hear("show-all-strong-morphs", function(selfElement, data) {
+		self.higlightStrongs(data);
+	} );
 }
 
 /**
@@ -123,5 +128,34 @@ Passage.prototype.setToolbar = function(toolbar) {
  */
 Passage.prototype.getPassageContainer = function() {
 	return this.container;
+}
+
+/**
+ * highlights all strongs match parameter strongReference
+ * @strongReference the reference look for across this passage pane and highlight
+ */
+Passage.prototype.highlightStrong = function(strongReference) {
+	$(".verse span[onclick*=" + strongReference + "]", this.container).css("text-decoration", "underline");
+	$("span.w[onclick*=" + strongReference + "] span.text", this.container).css("text-decoration", "underline");
+}
+
+/**
+ * if a number of strongs are given, separated by a space, highlights all of them
+ * @param strongMorphReference the references of all strongs and morphs asked for
+ */
+Passage.prototype.higlightStrongs = function(strongMorphReference) {
+	var references = strongMorphReference.split(' ');
+	
+	//reset all spans that are underlined:
+	$(".verse span", this.container).css("text-decoration", "none");
+	$("span.text", this.container).css("text-decoration", "none");
+	
+	
+	for(var ii = 0; ii < references.length; ii++) {
+		if(references[ii].startsWith("strong:")) {
+			this.highlightStrong(references[ii]);
+		} 
+		//we ignore everything else
+	}
 }
 

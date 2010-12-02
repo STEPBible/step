@@ -1,7 +1,10 @@
 
-
 // call the initialisation functions
 init();
+
+//some extensions (perhaps should go in another file)
+String.prototype.startsWith = function(str) { return (this.match("^"+str)==str) }
+
 
 function init() {
 	$(document).ready(function() {

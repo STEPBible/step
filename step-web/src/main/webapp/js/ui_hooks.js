@@ -16,6 +16,8 @@ function showAllStrongMorphs(strongMorphs) {
  * @param strong strong to be displayed
  */
 function showStrong(strong) {
+	$.shout("show-strong", strong);
+	
 	//need to find what event is coming in, to get the clicked element and pass that down
 	
 	//invoke show-all-strong-morphs first, for all 

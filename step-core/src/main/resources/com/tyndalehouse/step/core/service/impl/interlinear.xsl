@@ -351,10 +351,50 @@
         -->
       <xsl:choose>
         <xsl:when test="$TinyVNum = 'true' and $Notes = 'true'">
-          <span class="w"><a name="{@osisID}"><span class="verseNumber"><xsl:value-of select="$versenum"/></span></a></span>
+          <span class="w">
+          	<!--  the verse number -->
+          	<a name="{@osisID}"><span class="verseNumber"><xsl:value-of select="$versenum"/></span></a>
+          	
+			<!-- output a filling gap for strongs -->
+			<xsl:if test="$StrongsNumbers = 'true'">
+				<span class="strongs">Strongs</span>
+			</xsl:if>
+
+			<!-- output a filling gap for morphs -->
+			<xsl:if test="$Morph = 'true'">
+				<span class="morphs">Morph.</span>
+			</xsl:if>
+		
+			<!--  fill up with spaces where we have extra versions shown -->
+			<xsl:if test="normalize-space($interlinearVersion) != ''">
+				<xsl:call-template name="outputVersionNames">
+					<xsl:with-param name="versions" select="$interlinearVersion" />
+				</xsl:call-template>
+			</xsl:if>
+		</span>
         </xsl:when>
         <xsl:when test="$TinyVNum = 'true' and $Notes = 'false'">
-          <span class="w"><span class="verseNumber"><xsl:value-of select="$versenum"/></span></span>
+          <span class="w">
+          	<!--  the verse number -->
+          	<a name="{@osisID}"><span class="text"><span class="verseNumber"><xsl:value-of select="$versenum"/></span></span></a>
+          	
+			<!-- output a filling gap for strongs -->
+			<xsl:if test="$StrongsNumbers = 'true'">
+				<span class="text"><span class="smallHeaders strongs">Strongs</span></span>
+			</xsl:if>
+
+			<!-- output a filling gap for morphs -->
+			<xsl:if test="$Morph = 'true'">
+				<span class="text"><span class="smallHeaders morphs">Morph.</span></span>
+			</xsl:if>
+		
+			<!--  fill up with spaces where we have extra versions shown -->
+			<xsl:if test="normalize-space($interlinearVersion) != ''">
+				<xsl:call-template name="outputVersionNames">
+					<xsl:with-param name="versions" select="$interlinearVersion" />
+				</xsl:call-template>
+			</xsl:if>
+		</span>
         </xsl:when>
         <xsl:when test="$TinyVNum = 'false' and $Notes = 'true'">
           <a name="{@osisID}">(<xsl:value-of select="$versenum"/>)</a>
@@ -1206,12 +1246,143 @@
     </xsl:element>
   </xsl:template>
 
-  <xsl:template match="transChange">
-    <span class="w"><em><xsl:apply-templates/></em></span>
-  </xsl:template>
+	<xsl:template match="transChange">
+		<span class="w">
+			<em>
+				<xsl:apply-templates />
+			</em>
+
+			<!-- output a filling gap for strongs -->
+			<xsl:if test="$StrongsNumbers = 'true'">
+				<span class="strongs">
+					<xsl:call-template name="outputNonBlank">
+						<xsl:with-param name="string" select="''" />
+					</xsl:call-template>
+				</span>
+			</xsl:if>
+
+			<!-- output a filling gap for morphs -->
+			<xsl:if test="$Morph = 'true'">
+				<span class="morphs">
+					<xsl:call-template name="outputNonBlank">
+						<xsl:with-param name="string" select="''" />
+					</xsl:call-template>
+				</span>
+			</xsl:if>
+		
+			<!--  fill up with spaces where we have extra versions shown -->
+			<xsl:if test="normalize-space($interlinearVersion) != ''">
+				<xsl:call-template name="blanksForVersions">
+					<xsl:with-param name="versions" select="$interlinearVersion" />
+				</xsl:call-template>
+			</xsl:if>
+		</span>
+	</xsl:template>
+
+
   <xsl:template match="transChange" mode="jesus">
-    <span class="w"><em><xsl:apply-templates/></em></span>
+    		<span class="w">
+			<em>
+				<xsl:apply-templates />
+			</em>
+
+			<!-- output a filling gap for strongs -->
+			<xsl:if test="$StrongsNumbers = 'true'">
+				<span class="strongs">
+					<xsl:call-template name="outputNonBlank">
+						<xsl:with-param name="string" select="''" />
+					</xsl:call-template>
+				</span>
+			</xsl:if>
+
+			<!-- output a filling gap for morphs -->
+			<xsl:if test="$Morph = 'true'">
+				<span class="morphs">
+					<xsl:call-template name="outputNonBlank">
+						<xsl:with-param name="string" select="''" />
+					</xsl:call-template>
+				</span>
+			</xsl:if>
+		
+			<!--  fill up with spaces where we have extra versions shown -->
+			<xsl:if test="normalize-space($interlinearVersion) != ''">
+				<xsl:call-template name="blanksForVersions">
+					<xsl:with-param name="versions" select="$interlinearVersion" />
+				</xsl:call-template>
+			</xsl:if>
+		</span>
   </xsl:template>
+  
+  
+    <xsl:template name="blanksForVersions">
+	  	<xsl:param name="versions" />  	
+	
+		<xsl:variable name="nextVersion" select="normalize-space(substring-before($versions, ','))" />
+	
+		<!--  if next version is not empty, then there was a comma, so we output this version and call template again -->
+		<xsl:choose>
+			<xsl:when test="normalize-space($nextVersion) != ''">
+				<span class="interlinear">
+					<xsl:call-template name="outputNonBlank">
+						<xsl:with-param name="string">
+							<xsl:value-of select="''" />
+						</xsl:with-param>
+					</xsl:call-template>
+				</span>
+				<xsl:call-template name="interlinear">
+					<xsl:with-param name="versions" select="substring-after($versions, ',')" />
+				</xsl:call-template>
+			</xsl:when>
+			<!-- otherwise, then we can use the remainder as the version, as long as version not empty (for e.g. a trailing comma) -->
+			<xsl:otherwise>
+			    <xsl:if test="normalize-space($versions) != ''" >
+					<span class="interlinear">
+						<xsl:call-template name="outputNonBlank">
+							<xsl:with-param name="string">
+								<xsl:value-of select="''" />
+							</xsl:with-param>
+						</xsl:call-template>
+					</span>
+				</xsl:if>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+  
+
+    <xsl:template name="outputVersionNames">
+	  	<xsl:param name="versions" />  	
+	
+		<xsl:variable name="nextVersion" select="normalize-space(substring-before($versions, ','))" />
+	
+		<!--  if next version is not empty, then there was a comma, so we output this version and call template again -->
+		<xsl:choose>
+			<xsl:when test="normalize-space($nextVersion) != ''">
+				<span class="interlinear"><span class="smallHeaders">
+					<xsl:call-template name="outputNonBlank">
+						<xsl:with-param name="string">
+							<xsl:value-of select="$nextVersion" />
+						</xsl:with-param>
+					</xsl:call-template></span>
+				</span>
+				<xsl:call-template name="outputVersionNames">
+					<xsl:with-param name="versions" select="substring-after($versions, ',')" />
+				</xsl:call-template>
+			</xsl:when>
+			<!-- otherwise, then we can use the remainder as the version, as long as version not empty (for e.g. a trailing comma) -->
+			<xsl:otherwise>
+			    <xsl:if test="normalize-space($versions) != ''" >
+					<span class="interlinear"><span class="smallHeaders">
+						<xsl:call-template name="outputNonBlank">
+							<xsl:with-param name="string">
+								<xsl:value-of select="$versions" />
+							</xsl:with-param>
+						</xsl:call-template></span>
+					</span>
+				</xsl:if>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
   
   <!-- @type is OSIS, @rend is TEI -->
   <xsl:template match="hi">

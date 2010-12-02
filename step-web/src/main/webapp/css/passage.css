@@ -36,6 +36,12 @@ span.interlinear span span span {
 	padding-right: 2px;
 }
 
+.smallHeaders {
+	font-size: 6pt;
+	padding-right: 2px;
+	font-style: italic;
+}
+
 br.paragraph {
 	padding-top: 2px;	
 }

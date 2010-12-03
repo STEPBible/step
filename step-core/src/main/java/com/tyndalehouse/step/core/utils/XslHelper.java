@@ -9,7 +9,7 @@ public final class XslHelper {
     private static final int APPROXIMATE_SPAN_LENGTH = 46;
     private static final String START_ANCHOR = "<a href=\"";
     private static final String START_FUNCTION_WRAPPER = "('";
-    private static final String END_FUNCTION_WRAPPER = "')";
+    private static final String END_FUNCTION_WRAPPER = "', this)";
     private static final String QUOTED_END_TAG = "\">";
     private static final String END_ANCHOR = "</a>";
     private static final String SEPARATORS = " |";

@@ -54,6 +54,10 @@ body {
 	padding-botom: 5px;
 }
 
+#leftPassagePane, #rightPassagePane {
+	white-space: nowrap;
+}
+
 .passageVersion {
 	width: 40%;
 }

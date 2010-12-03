@@ -15,20 +15,25 @@ function showAllStrongMorphs(strongMorphs) {
  * Called when clicking on a strong link
  * @param strong strong to be displayed
  */
-function showStrong(strong) {
-	$.shout("show-strong", strong);
-	
-	//need to find what event is coming in, to get the clicked element and pass that down
-	
-	//invoke show-all-strong-morphs first, for all 
-	
-	//select span containing text <strong>, then get its parent and invoke click() on it. 
+function showStrong(strong, sourceElement) {
+	showMorphOrStrong(strong, sourceElement);
 }
 
 /**
  * called when clicking on a morph
  * @param morph the moprh that is clicked on
  */
-function showMorph(morph) {
+function showMorph(morph, sourceElement) {
+	showMorphOrStrong(morph, sourceElement);
+}
+
+/** TODO: move this out of here to utils.js if we have more utility classes/functions 
+ * helper function for morph and strongs 
+*/
+function showMorphOrStrong(tag, sourceElement) {
+	//trigger the parent event - to show everything
+	$(sourceElement).parent().click()
 	
+	//need to find what event is coming in, to get the clicked element and pass that down
+	$("#lexiconDefinition span:contains(" + tag + ")").parent().click();	
 }

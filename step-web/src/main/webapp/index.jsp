@@ -18,7 +18,7 @@
     <script src="js/util.js" type="text/javascript"></script>
     <script src="js/passage_toolbar.js" type="text/javascript"></script>
     <script src="js/passage.js" type="text/javascript"></script>
-<!--    <script src="js/bookmark.js" type="text/javascript"></script>-->
+    <script src="js/bookmark.js" type="text/javascript"></script>
     <script src="js/lexicon_definition.js" type="text/javascript"></script>
     <script src="js/ui_hooks.js" type="text/javascript"></script>
     <script src="js/init.js" type="text/javascript"></script>
@@ -44,7 +44,7 @@
 	<div class="ui-layout-north northBookmark">
 		<img src="images/step-logo.png" alt="STEP :: Scripture Tools for Every Pastor" />
 	</div>
-	<div class="ui-layout-center bookmarksContent">b</div>
+	<div id="bookmarkPane" class="ui-layout-center bookmarksContent"><span>Bookmarks</span></div>
 	<div class="ui-layout-south logo">
 		<span class="copyright">&copy; Tyndale House</span>
 	</div>

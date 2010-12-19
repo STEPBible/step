@@ -1,5 +1,11 @@
 package com.tyndalehouse.step.core.xsl;
 
+/**
+ * the Interface that a Mutli interlinear provider shall abide to
+ * 
+ * @author Chris
+ * 
+ */
 public interface MultiInterlinearProvider {
     /**
      * This is the more specific method

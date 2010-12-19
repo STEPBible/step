@@ -18,13 +18,14 @@ import com.tyndalehouse.step.core.xsl.MultiInterlinearProvider;
 public class MultiInterlinearProviderImpl implements MultiInterlinearProvider {
     /** we separate by commas and spaces */
     private static final String VERSION_SEPARATOR = ", ";
-    Map<String, InterlinearProvider> interlinearProviders = new HashMap<String, InterlinearProvider>();
+    private final Map<String, InterlinearProvider> interlinearProviders = new HashMap<String, InterlinearProvider>();
 
     /**
      * sets up the interlinear provider with the correct version and text scope.
      * 
-     * @param version the version to use to set up the interlinear
-     * @param textScope the text scope reference, defining the bounds of the lookup
+     * @param versions the versions to use to set up the interlinear
+     * @param textScope the reference, or passage range that should be considered when setting up the
+     *            interlinear provider
      */
     public MultiInterlinearProviderImpl(final String versions, final String textScope) {
         // first check whether the values passed in are correct
@@ -40,7 +41,9 @@ public class MultiInterlinearProviderImpl implements MultiInterlinearProvider {
         }
     }
 
-    public String getWord(final String version, final String verseNumber, final String strong, final String morph) {
+    @Override
+    public String getWord(final String version, final String verseNumber, final String strong,
+            final String morph) {
         return this.interlinearProviders.get(version).getWord(verseNumber, strong, morph);
     }
 }

@@ -21,14 +21,25 @@ public enum XslConversionType {
      */
     private final String file;
 
+    /**
+     * giving a default XSL file to this Conversion type
+     */
     private XslConversionType() {
         this("default.xsl");
     }
 
+    /**
+     * constructing a type associated with a specific file
+     * 
+     * @param file the XSL transformation file
+     */
     private XslConversionType(final String file) {
         this.file = file;
     }
 
+    /**
+     * @return the file associated with this type
+     */
     public String getFile() {
         return this.file;
     }

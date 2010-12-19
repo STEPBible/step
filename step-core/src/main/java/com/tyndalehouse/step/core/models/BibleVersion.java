@@ -15,10 +15,16 @@ public class BibleVersion implements Serializable {
     private String language;
     private boolean hasStrongs;
 
+    /**
+     * @return true if the version contains strong-tagged information
+     */
     public boolean isHasStrongs() {
         return this.hasStrongs;
     }
 
+    /**
+     * @param hasStrongs true if the version contains strong information
+     */
     public void setHasStrongs(final boolean hasStrongs) {
         this.hasStrongs = hasStrongs;
     }

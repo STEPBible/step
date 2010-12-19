@@ -23,11 +23,6 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-context</artifactId>
-		</dependency>
-
-		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 		</dependency>
@@ -41,6 +36,11 @@
 			<groupId>org.crosswire</groupId>
 			<artifactId>jsword</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.jdom</groupId>
+			<artifactId>jdom</artifactId>
+		</dependency>
+		
 		
 		<!-- common utils -->
 		<dependency>
@@ -53,6 +53,14 @@
 			<artifactId>commons-lang</artifactId>
 		</dependency>
 		
+		<dependency>
+			<groupId>commons-collections</groupId>
+			<artifactId>commons-collections</artifactId>
+		</dependency>
 		
+		<dependency>
+			<groupId>com.jolira</groupId>
+			<artifactId>guice</artifactId>
+		</dependency>
 	</dependencies>
 </project>

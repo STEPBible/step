@@ -4,9 +4,15 @@ import static com.tyndalehouse.step.core.utils.StringConversionUtils.getAnyKey;
 import static java.lang.String.format;
 import static org.apache.commons.lang.StringUtils.split;
 
+/**
+ * A helper class for use during XSL transformations
+ * 
+ * @author Chris
+ * 
+ */
 public final class XslHelper {
-    private static final int APPROXIMATE_ANCHOR_LENGTH = 56;
-    private static final int APPROXIMATE_SPAN_LENGTH = 46;
+    private static final int APPROX_ANCHOR_LENGTH = 56;
+    private static final int APPROX_SPAN_LENGTH = 46;
     private static final String START_ANCHOR = "<a href=\"";
     private static final String START_FUNCTION_WRAPPER = "('";
     private static final String END_FUNCTION_WRAPPER = "', this)";
@@ -26,7 +32,9 @@ public final class XslHelper {
      * returns a "span" element for use in an HTML document
      * 
      * @param strongsText the key straight from the OSIS text
+     * @param functionCall the javascript function that will be called upon click of the word
      * @return a span containing all the strongs, seperated by spaces
+     * 
      */
     public static String getSpanFromAttributeName(final String strongsText, final String functionCall) {
         final String[] strongs = split(strongsText, SEPARATORS);
@@ -35,7 +43,7 @@ public final class XslHelper {
         }
 
         // we transform each strong to something like: "<a href=\"%s\">%s</a>";
-        final StringBuilder sb = new StringBuilder(APPROXIMATE_SPAN_LENGTH + strongs.length * APPROXIMATE_ANCHOR_LENGTH);
+        final StringBuilder sb = new StringBuilder(APPROX_SPAN_LENGTH + strongs.length * APPROX_ANCHOR_LENGTH);
 
         String strongKey;
         for (int ii = 0; ii < strongs.length; ii++) {

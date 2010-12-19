@@ -119,7 +119,7 @@ Toolbar.prototype.refreshButtons = function(version) {
 	var self = this;
 	
 	//query the server for features
-	$.getJSON("rest/bible/features/" + version, function (features) {
+	$.getJSON(BIBLE_GET_FEATURES + version, function (features) {
 		//for each button, if in array, then enable, otherwise disable
 
 		//TODO: for some reason there are sometime some initialisation issues which throw an exception

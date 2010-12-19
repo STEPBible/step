@@ -31,7 +31,6 @@ function Passage(passageContainer, versions, columnLayout) {
 		text: false
 	}).change(function() {
 		this.checked ? self.columnLayout.open("north") : self.columnLayout.close("north");
-//		this.checked ? self.toolbar.open() : self.toolbar.close();
 	});
 	
 	
@@ -98,7 +97,7 @@ Passage.prototype.changePassage = function(/* optional */ version, /* optional *
 	
 	var self = this;
 	if(this.version.val() && this.reference.val() && this.version.val() != "" && this.reference.val() != "") {
-		var url = "rest/bible/text/" + this.version.val() + "/" + this.reference.val();
+		var url = BIBLE_GET_BIBLE_TEXT + this.version.val() + "/" + this.reference.val();
 		
 		if(options && options.length != 0) {
 			url += "/" + options ;
@@ -112,6 +111,9 @@ Passage.prototype.changePassage = function(/* optional */ version, /* optional *
 		$.get(url, function (text) {
 			//we get html back, so we insert into passage:
 			self.passage.html(text.value);
+			
+			//passage change was successful, so we let the rest of the UI know
+			$.shout("passage-change", self.reference.val());
 		});
 	}
 }

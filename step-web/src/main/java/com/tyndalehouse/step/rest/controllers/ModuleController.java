@@ -1,33 +1,57 @@
 package com.tyndalehouse.step.rest.controllers;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.google.inject.Inject;
+import com.tyndalehouse.step.core.models.BibleVersion;
 import com.tyndalehouse.step.core.service.ModuleService;
 
-@RequestMapping(value = "/module", method = RequestMethod.GET)
-@Controller
+/**
+ * The Module Controller servicing requests for module information
+ */
 public class ModuleController {
-    @Autowired
-    private ModuleService moduleDefintions;
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private static final Logger LOGGER = LoggerFactory.getLogger(ModuleController.class);
+    private final ModuleService moduleDefintions;
+
+    /**
+     * sets up the controller to access module information
+     * 
+     * @param moduleDefintions the service allowing access to module information
+     */
+    @Inject
+    public ModuleController(final ModuleService moduleDefintions) {
+        this.moduleDefintions = moduleDefintions;
+    }
 
     /**
      * a REST method that returns version of the Bible that are available
      * 
-     * @param reference a reference for a module to lookup
      * @return all versions of modules that are considered to be Bibles.
      */
-    @RequestMapping(value = "/definitions/{reference}")
-    public @ResponseBody
-    String getDefinition(@PathVariable final String reference) {
-        this.logger.debug("Getting definition for {}", reference);
+    public List<BibleVersion> getAllModules() {
+        return this.moduleDefintions.getAvailableModules();
+    }
+
+    /**
+     * a REST method that returns version of the Bible that are not yet installed
+     * 
+     * @return all versions of modules that are considered to be modules and usable by STEP.
+     */
+    public List<BibleVersion> getAllInstallableModules() {
+        return this.moduleDefintions.getAllInstallableModules();
+    }
+
+    /**
+     * a REST method that returns all the definitions for a particular key
+     * 
+     * @param reference a reference for a module to lookup
+     * @return the definition(s) that can be resolved from the reference provided
+     */
+    public String getDefinition(final String reference) {
+        LOGGER.debug("Getting definition for {}", reference);
         return this.moduleDefintions.getDefinition(reference).getExplanation();
     }
 }

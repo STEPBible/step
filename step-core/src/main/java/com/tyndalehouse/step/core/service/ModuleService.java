@@ -2,6 +2,7 @@ package com.tyndalehouse.step.core.service;
 
 import java.util.List;
 
+import com.tyndalehouse.step.core.models.BibleVersion;
 import com.tyndalehouse.step.core.models.Definition;
 
 /**
@@ -27,4 +28,14 @@ public interface ModuleService {
      * @return the definitions associated with the references
      */
     Definition getDefinition(String reference);
+
+    /**
+     * @return all installed modules
+     */
+    List<BibleVersion> getAvailableModules();
+
+    /**
+     * @return a list of all modules that could be installed
+     */
+    List<BibleVersion> getAllInstallableModules();
 }

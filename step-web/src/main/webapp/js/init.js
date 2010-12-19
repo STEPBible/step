@@ -12,6 +12,7 @@ function init() {
 		initGlobalHandlers();
 		initDefaultValues();
 		initLexicon();
+		initBookmarks();
 		initData();
 	});
 }
@@ -100,7 +101,7 @@ function addDefaultValue(inputSelector) {
 function initData() {
 	//get all supported versions
 	var options;
-	$.getJSON("rest/bible/features-all", function(data) {
+	$.getJSON(BIBLE_GET_ALL_FEATURES, function(data) {
 		$.each(data, function() {
 			options = data;
 		});
@@ -113,7 +114,7 @@ function initData() {
 	//we reserve the first spot for "ALL Versions"
 	var ii = 1;
 	
-	$.getJSON("rest/bible/versions", function(data) {
+	$.getJSON(BIBLE_GET_BIBLE_VERSIONS, function(data) {
 		var parsedResponse = $.map(data, function(item) {
 			var showingText = "[" + item.initials + "] " + item.name;
 			
@@ -222,8 +223,13 @@ function initGlobalHandlers() {
 }
 
 function initLexicon() {
-	var lexicon = new LexiconDefinition();
+	new LexiconDefinition();
 }
+
+function initBookmarks() {
+	new Bookmark($("#bookmarkPane"));
+}
+
 
 function raiseError(error) {
 	$("#error").text(error);

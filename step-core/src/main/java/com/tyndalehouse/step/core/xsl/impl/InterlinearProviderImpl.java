@@ -2,6 +2,8 @@ package com.tyndalehouse.step.core.xsl.impl;
 
 import static com.tyndalehouse.step.core.utils.StringConversionUtils.getAnyKey;
 import static com.tyndalehouse.step.core.utils.StringConversionUtils.getStrongKey;
+import static java.lang.String.format;
+import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
 import static org.apache.commons.lang.StringUtils.isBlank;
 import static org.apache.commons.lang.StringUtils.isNotBlank;
 import static org.apache.commons.lang.StringUtils.split;
@@ -31,9 +33,9 @@ import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.xsl.InterlinearProvider;
 
 /**
- * This object is not purposed to be used as a singleton. It builds up textual information on initialisation, and is
- * specific to requests. On initialisation, the OSIS XML is retrieved and iterated through to find all strong/morph
- * candidates
+ * This object is not purposed to be used as a singleton. It builds up textual information on initialisation,
+ * and is specific to requests. On initialisation, the OSIS XML is retrieved and iterated through to find all
+ * strong/morph candidates
  * 
  * @author Chris
  * 
@@ -51,8 +53,8 @@ public class InterlinearProviderImpl implements InterlinearProvider {
     private final Map<DualKey<String, String>, List<String>> limitedAccuracy = new HashMap<DualKey<String, String>, List<String>>();
 
     /**
-     * finally, this is just a list of all the strongs and their mappings. Still would be fairly good as long as the
-     * same word isn't used multiple times.
+     * finally, this is just a list of all the strongs and their mappings. Still would be fairly good as long
+     * as the same word isn't used multiple times.
      */
     private final Map<String, String> worstAccuracy = new HashMap<String, String>();
 
@@ -69,6 +71,10 @@ public class InterlinearProviderImpl implements InterlinearProvider {
         }
 
         final Book currentBook = Books.installed().getBook(version);
+        if (currentBook == null) {
+            throw new StepInternalException(format("Couldn't look up book: [%s]", version));
+        }
+
         BookData bookData;
 
         try {
@@ -88,12 +94,14 @@ public class InterlinearProviderImpl implements InterlinearProvider {
         // exposing package private constructor
     }
 
+    @Override
     public String getWord(final String verseNumber, final String strong, final String morph) {
         // we use a linked hashset, because we want the behaviour of a set while we add to it,
         // but at the end, we will want to return the elements in order
         final Set<String> results = new LinkedHashSet<String>();
         if (isBlank(strong)) {
             // we might as well return, as we have no information to go on
+            return "";
         }
 
         // the keys passed in may have multiple references and morphologies, therefore, we need to lookup
@@ -106,7 +114,8 @@ public class InterlinearProviderImpl implements InterlinearProvider {
             boolean foundMatchForStrong = false;
             final String strongKey = getAnyKey(s);
 
-            // each could be using the morphs we have, so try them all - this gets skipped if we have no morphs
+            // each could be using the morphs we have, so try them all - this gets skipped if we have no
+            // morphs
             for (final String m : morphs) {
                 // lookup (strong,morph) -> word first
                 final DualKey<String, String> key = new DualKey<String, String>(getStrongKey(strongKey), m);
@@ -162,7 +171,7 @@ public class InterlinearProviderImpl implements InterlinearProvider {
             final DualKey<String, String> key = new DualKey<String, String>(strong, verseNumber);
 
             final List<String> list = this.limitedAccuracy.get(key);
-            if (list != null && list.size() != 0) {
+            if (isNotEmpty(list)) {
                 return list.get(0);
             }
         }
@@ -256,14 +265,14 @@ public class InterlinearProviderImpl implements InterlinearProvider {
     /**
      * Finally, we have some information to add to this provider. We try and add it in an efficient fashion.
      * 
-     * So, how do we store this? The most meaningful piece of data is a STRONG number, since it identifies the word that
-     * we want to retrieve. Without the strong number, we don't have any information at all. Therefore, the first level
-     * of lookup should be by Strong number.
+     * So, how do we store this? The most meaningful piece of data is a STRONG number, since it identifies the
+     * word that we want to retrieve. Without the strong number, we don't have any information at all.
+     * Therefore, the first level of lookup should be by Strong number.
      * 
      * Morphology-wise, each word might have a small number of options, so a linked list will do for this
      * 
-     * One would think that strong -> morph -> word will be unique. In the case of having just strong, we should use
-     * verse locality to maximise our chance of getting the right word (strong -> verse -> word)
+     * One would think that strong -> morph -> word will be unique. In the case of having just strong, we
+     * should use verse locality to maximise our chance of getting the right word (strong -> verse -> word)
      * 
      * So in summary, we use: strong -> morph -> word strong -> verse -> list(word) (not unique)
      * 
@@ -272,7 +281,8 @@ public class InterlinearProviderImpl implements InterlinearProvider {
      * @param morph the morphology (identifies how the used is word in the sentence - i.e. grammar)
      * @param word the word to be stored
      */
-    void addTextualInfo(final String verseReference, final String strong, final String morph, final String word) {
+    void addTextualInfo(final String verseReference, final String strong, final String morph,
+            final String word) {
         final String strongKey = getAnyKey(strong);
 
         if (isNotBlank(strongKey) && isNotBlank(morph)) {

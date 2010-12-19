@@ -4,6 +4,12 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
+/**
+ * A simple test class to test to the provider
+ * 
+ * @author Chris
+ * 
+ */
 public class InterlinearProviderImplTest {
     /**
      * this checks that when keyed with strong, morph and verse number, we can retrieve the word. We should be able to

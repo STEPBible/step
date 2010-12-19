@@ -1,0 +1,22 @@
+#installationOptions {
+	min-height: 300px;
+	height: 100%;
+}
+
+#leftColumn {
+	width: 49%;
+	float: left;
+}
+
+#rightColumn { 
+	width: 49%;
+	float: left;
+}
+
+.installed {
+	color: green;
+}
+
+.notInstalled {
+	color: red;
+}

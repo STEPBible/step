@@ -5,7 +5,16 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
+/**
+ * Tests the utility method for converting strings
+ * 
+ * @author Chris
+ * 
+ */
 public class StringConversionUtilsTest {
+    /**
+     * tests that getAnyKey returns the right portion of the string for different keys
+     */
     @Test
     public void testGetAnyKey() {
         assertEquals(getAnyKey("strong:H1"), "1");

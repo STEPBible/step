@@ -6,6 +6,8 @@ import static java.lang.String.format;
  * A Strong Morph Map takes two keys, and gives one word back. The following DualKey relies on hashCode. The hash
  * function relies on toString so T and S need to have fast toString().
  * 
+ * @param <T> the first part of the key
+ * @param <S> the second part of the key
  * @author Chris
  * 
  */
@@ -13,6 +15,12 @@ public class DualKey<T, S> {
     private final T t;
     private final S s;
 
+    /**
+     * creates a composite key
+     * 
+     * @param t the first part of the key
+     * @param s the second part of the key
+     */
     public DualKey(final T t, final S s) {
         this.t = t;
         this.s = s;
@@ -35,7 +43,7 @@ public class DualKey<T, S> {
     @Override
     public int hashCode() {
         // we need to return the same hashcode based on s and t
-        return (this.t.toString().concat(this.s.toString())).hashCode();
+        return this.t.toString().concat(this.s.toString()).hashCode();
     }
 
     @Override

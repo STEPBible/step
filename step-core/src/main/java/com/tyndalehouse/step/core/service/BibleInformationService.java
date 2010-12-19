@@ -7,8 +7,8 @@ import com.tyndalehouse.step.core.models.EnrichedLookupOption;
 import com.tyndalehouse.step.core.models.LookupOption;
 
 /**
- * Interface to the service that gives information about the books of the bible, the different types of bible, etc. This
- * service will mainly use JSword but may also rely on other data sources to display text.
+ * Interface to the service that gives information about the books of the bible, the different types of bible,
+ * etc. This service will mainly use JSword but may also rely on other data sources to display text.
  * 
  * @author Chris
  * 
@@ -16,15 +16,15 @@ import com.tyndalehouse.step.core.models.LookupOption;
 public interface BibleInformationService {
 
     /**
-     * Queries Jsword to return all the available versions of the bible
+     * Queries Jsword to return all the installed versions of the bible
      * 
      * @return all the available versions of the bible
      */
-    List<BibleVersion> getBibleVersions();
+    List<BibleVersion> getAvailableBibleVersions();
 
     /**
-     * This method selects passage text and forms XML for the client. This is done server side so that the client does
-     * not need to render each div individually.
+     * This method selects passage text and forms XML for the client. This is done server side so that the
+     * client does not need to render each div individually.
      * 
      * @param version the initials that identify the bible version
      * @param reference the reference
@@ -32,7 +32,8 @@ public interface BibleInformationService {
      * @param interlinearVersion version to use as the interlinear
      * @return the HTML string passed back for consumption
      */
-    String getPassageText(String version, String reference, List<LookupOption> lookupOptions, String interlinearVersion);
+    String getPassageText(String version, String reference, List<LookupOption> lookupOptions,
+            String interlinearVersion);
 
     /**
      * 
@@ -44,8 +45,26 @@ public interface BibleInformationService {
     /**
      * Gets a list of all supported features so far
      * 
-     * @return
+     * @return the list of lookup options available to the user
      */
     List<EnrichedLookupOption> getAllFeatures();
 
+    /**
+     * Checks a set of core versions to see if they have been installed
+     * 
+     * @return true if the core modules have been installed
+     */
+    boolean hasCoreModules();
+
+    /**
+     * installs the default modules (such as KJV, ESV, Strongs, Robinson)
+     */
+    void installDefaultModules();
+
+    /**
+     * installs separate modules
+     * 
+     * @param reference the reference, initials or book name
+     */
+    void installModules(String reference);
 }

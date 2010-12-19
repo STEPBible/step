@@ -7,17 +7,22 @@ import java.util.Map;
 
 import org.junit.Test;
 
+/**
+ * A simple test for the module service
+ * 
+ * @author Chris
+ * 
+ */
 public class ModuleServiceImplTest {
     /**
      * tests that different definitions references resolve to the right module by default
      */
     @Test
     public void testGetLookupModule() {
-        final ModuleServiceImpl msi = new ModuleServiceImpl();
         final Map<String, String> defaultModules = new HashMap<String, String>();
-        msi.setDefaultModuleLexicons(defaultModules);
-
         defaultModules.put("key:", "module");
+        final ModuleServiceImpl msi = new ModuleServiceImpl(defaultModules, null);
+
         assertEquals("module", msi.getLookupModule("key:H2929"));
     }
 }

@@ -8,35 +8,45 @@ import java.util.List;
 import org.apache.commons.lang.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.tyndalehouse.step.core.models.BibleVersion;
 import com.tyndalehouse.step.core.models.EnrichedLookupOption;
 import com.tyndalehouse.step.core.models.LookupOption;
 import com.tyndalehouse.step.core.service.BibleInformationService;
 import com.tyndalehouse.step.rest.wrappers.HtmlWrapper;
 
-@RequestMapping(value = "/bible", method = RequestMethod.GET)
-@Controller
+/**
+ * The controller for retrieving information on the bible or texts from the bible
+ * 
+ * @author Chris
+ * 
+ */
+@Singleton
 public class BibleController {
-    @Autowired
-    private BibleInformationService bibleInformation;
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private static final long serialVersionUID = -5176839737814243641L;
+    private static final Logger LOGGER = LoggerFactory.getLogger(BibleController.class);
+    private final BibleInformationService bibleInformation;
+
+    /**
+     * creates the controller giving access to bible information
+     * 
+     * @param bibleInformation the service allowing access to biblical material
+     */
+    @Inject
+    public BibleController(final BibleInformationService bibleInformation) {
+        this.bibleInformation = bibleInformation;
+        LOGGER.debug("Created Bible Controller");
+    }
 
     /**
      * a REST method that returns version of the Bible that are available
      * 
      * @return all versions of modules that are considered to be Bibles.
      */
-    @RequestMapping(value = "/versions")
-    public @ResponseBody
-    List<BibleVersion> getBibleVersions() {
-        return this.bibleInformation.getBibleVersions();
+    public List<BibleVersion> getBibleVersions() {
+        return this.bibleInformation.getAvailableBibleVersions();
     }
 
     /**
@@ -46,9 +56,7 @@ public class BibleController {
      * @param reference the reference to lookup
      * @return the text to be displayed, formatted as HTML
      */
-    @RequestMapping(value = "/text/{version}/{reference}")
-    public @ResponseBody
-    HtmlWrapper getBibleText(@PathVariable final String version, @PathVariable final String reference) {
+    public HtmlWrapper getBibleText(final String version, final String reference) {
         return getBibleText(version, reference, null, null);
     }
 
@@ -57,12 +65,10 @@ public class BibleController {
      * 
      * @param version the initials identifying the version
      * @param reference the reference to lookup
+     * @param options the list of options to be passed through and affect the retrieval process
      * @return the text to be displayed, formatted as HTML
      */
-    @RequestMapping(value = "/text/{version}/{reference}/{options}")
-    public @ResponseBody
-    HtmlWrapper getBibleText(@PathVariable final String version, @PathVariable final String reference,
-            @PathVariable final String options) {
+    public HtmlWrapper getBibleText(final String version, final String reference, final String options) {
         return getBibleText(version, reference, options, null);
     }
 
@@ -72,12 +78,11 @@ public class BibleController {
      * @param version the initials identifying the version
      * @param reference the reference to lookup
      * @param options a list of options to be passed in
+     * @param interlinearVersion the interlinear version if provided adds lines under the text
      * @return the text to be displayed, formatted as HTML
      */
-    @RequestMapping(value = "/text/{version}/{reference}/{options}/{interlinearVersion}")
-    public @ResponseBody
-    HtmlWrapper getBibleText(@PathVariable final String version, @PathVariable final String reference,
-            @PathVariable final String options, @PathVariable final String interlinearVersion) {
+    public HtmlWrapper getBibleText(final String version, final String reference, final String options,
+            final String interlinearVersion) {
         Validate.notEmpty(version, "You need to provide a version");
         Validate.notEmpty(reference, "You need to provide a reference");
 
@@ -100,18 +105,19 @@ public class BibleController {
     /**
      * a REST method that returns version of the Bible that are available
      * 
+     * @param version the version initials or full version name to retrieve the versions for
      * @return all versions of modules that are considered to be Bibles.
      */
-    @RequestMapping(value = "/features/{version}")
-    public @ResponseBody
-    List<LookupOption> getBibleVersions(@PathVariable final String version) {
+    public List<LookupOption> getFeatures(final String version) {
         return this.bibleInformation.getFeaturesForVersion(version);
     }
 
-    @RequestMapping(value = "/features-all")
-    public @ResponseBody
-    List<EnrichedLookupOption> getAllFeatures() {
-        // Use EH Cache to cache this
+    /**
+     * retrieves the list of features currently supported by the application
+     * 
+     * @return a list of features currently supported by the application
+     */
+    public List<EnrichedLookupOption> getAllFeatures() {
         return this.bibleInformation.getAllFeatures();
     }
 }

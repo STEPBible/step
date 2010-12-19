@@ -11,10 +11,12 @@ import com.tyndalehouse.step.core.xsl.XslConversionType;
  * 
  */
 public enum LookupOption {
+    // CHECKSTYLE:OFF TODO change the values in the XSL file
     /**
      * Showing headings
      */
     HEADINGS("Headings", "Headings", XslConversionType.DEFAULT, true),
+    // CHECKSTYLE:ON
     /**
      * Showing headings
      */
@@ -24,11 +26,12 @@ public enum LookupOption {
 
     /** Morphology */
     MORPHOLOGY("Morph", "Morphology", XslConversionType.INTERLINEAR),
+    // CHECKSTYLE:OFF
     /**
      * Interlinears are available when Strongs are available.
      */
     INTERLINEAR("Interlinear", "Interlinear", XslConversionType.INTERLINEAR),
-
+    // CHECKSTYLE:ON
     /**
      * Showing headings
      */
@@ -61,7 +64,8 @@ public enum LookupOption {
      * @param stylesheet the stylesheet to use
      * @param displayName the name to display on the user interface
      */
-    private LookupOption(final String xsltParameterName, final String displayName, final XslConversionType stylesheet) {
+    private LookupOption(final String xsltParameterName, final String displayName,
+            final XslConversionType stylesheet) {
         this(xsltParameterName, displayName, stylesheet, false);
     }
 
@@ -71,8 +75,8 @@ public enum LookupOption {
      * @param displayName the name to display on the user interface
      * @param enabledByDefault true to have the UI display the option by default
      */
-    private LookupOption(final String xsltParameterName, final String displayName, final XslConversionType stylesheet,
-            final boolean enabledByDefault) {
+    private LookupOption(final String xsltParameterName, final String displayName,
+            final XslConversionType stylesheet, final boolean enabledByDefault) {
         this.xsltParameterName = xsltParameterName;
         this.displayName = displayName;
         this.stylesheet = stylesheet;
@@ -86,10 +90,16 @@ public enum LookupOption {
         return this.xsltParameterName;
     }
 
+    /**
+     * @return the display name of the lookup option
+     */
     public String getDisplayName() {
         return this.displayName;
     }
 
+    /**
+     * @return the stylesheet that should be used
+     */
     public XslConversionType getStylesheet() {
         return this.stylesheet;
     }

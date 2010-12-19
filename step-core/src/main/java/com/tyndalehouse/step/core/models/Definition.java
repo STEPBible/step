@@ -9,6 +9,12 @@ public class Definition {
     private final String key;
     private final String explanation;
 
+    /**
+     * A definition is made up of a key and an explanation
+     * 
+     * @param key a key identifying where the definition came from
+     * @param explanation an explanation
+     */
     public Definition(final String key, final String explanation) {
         this.key = key;
         this.explanation = explanation;

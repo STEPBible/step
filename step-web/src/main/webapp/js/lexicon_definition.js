@@ -41,7 +41,7 @@ LexiconDefinition.prototype.showAllStrongMorphs = function(s) {
 	
 	var tabs = s.split(" ");
 	$(tabs).each(function() {
-		popup.tabs("add", "rest/module/definitions/" + this, self.getShortKey(this));
+		popup.tabs("add", MODULE_GET_DEFINITION + this, self.getShortKey(this));
 	});
 
 	popup.tabs("option", {

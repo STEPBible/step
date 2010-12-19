@@ -5,18 +5,28 @@
  */
 function Bookmark(bookmarkContainer) {
 	this.bookmarkContainer = bookmarkContainer;
+	var self = this;
 	
-	//for bookmarks, we will only have a few, therefore we store them in an array for now:
-	//we will store the elements in here, with their jquery wrapper
-	this.currentBookmarks = [];
+	//listen to passage changes
+	this.bookmarkContainer.hear("passage-change", function(selfElement, data) {
+		self.addHistory(data);
+	});
 }
 
-//
-///**
-// * Adding a bookmark
-// */
-//Bookmark.prototype.add = function(passageReference) {
-//	var bookmark = this.get(passageReference);
+
+/**
+ * Adding a bookmark
+ */
+Bookmark.prototype.addHistory = function(passageReference) {
+	//construct bookmark
+//	var item = "<span>" + passageReference + "</span>";
+//	$("#bookmarkPane span").prepend(item);
+}	
+	
+	
+	
+	
+	//	var bookmark = this.get(passageReference);
 //	if(bookmark) {
 //		//move bookmark around
 //		

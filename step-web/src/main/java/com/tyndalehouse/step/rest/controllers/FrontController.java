@@ -190,7 +190,8 @@ public class FrontController extends HttpServlet {
         final Class<? extends Object> controllerClass = controllerInstance.getClass();
 
         // try cache first
-        final String cacheKey = getCacheKey(controllerClass.getName(), methodName, args.length);
+        final String cacheKey = getCacheKey(controllerClass.getName(), methodName, args == null ? 0
+                : args.length);
 
         // retrieve method from cache, or put in cache if not there
         Method controllerMethod = this.methodNames.get(cacheKey);

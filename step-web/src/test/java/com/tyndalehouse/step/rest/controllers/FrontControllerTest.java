@@ -66,8 +66,8 @@ public class FrontControllerTest {
      */
     @Test
     public void testCacheKey() {
-        assertEquals("controllergetName",
-                new FrontController(mock(Injector.class)).getCacheKey("controller", "getName", null));
+        assertEquals("controllergetName7",
+                new FrontController(mock(Injector.class)).getCacheKey("controller", "getName", 7));
     }
 
     /**

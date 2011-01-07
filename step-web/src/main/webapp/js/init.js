@@ -8,10 +8,11 @@ String.prototype.startsWith = function(str) { return (this.match("^"+str)==str) 
 
 function init() {
 	$(document).ready(function() {
-		initLayout();
+		var mainAppLayout = initLayout();
 		initGlobalHandlers();
 		initDefaultValues();
 		initLexicon();
+		initTimeline(mainAppLayout);
 		initBookmarks();
 		initData();
 	});
@@ -23,7 +24,7 @@ function init() {
 function initLayout() {
 
 	//do outerlayout first
-	$('body').layout({
+	var mainAppLayout = $('body').layout({
 		name : 'outerLayout', 
 		spacing_open: 2,
 		autoResize : true, // try to maintain pane-percentages
@@ -33,6 +34,7 @@ function initLayout() {
 		west__paneSelector : '#leftColumn',
 		center__paneSelector : '.bookmarks',
 		east__paneSelector : '#rightColumn',
+		south__paneSelector: '#bottomSection',
 		west__size : .45, // percentage size expresses as a decimal
 		east__size : .45,
 		north__minSize : 0,
@@ -40,6 +42,10 @@ function initLayout() {
 		north__spacing_open : 0,
 		north__spacing_closed : 0,
 		north__initClosed: true,
+		south__size : .5,
+		south__spacing_closed: 2,
+		south__resizable : false,
+		south__initClosed : true,
 		minSize : 130,
 		noRoomToOpenAction : "hide"
 	});
@@ -62,6 +68,8 @@ function initLayout() {
 		south__size : 30,
 		noRoomToOpenAction : "hide"
 	});
+	
+	return mainAppLayout;
 }
 
 function initDefaultValues() {
@@ -230,8 +238,12 @@ function initBookmarks() {
 	new Bookmark($("#bookmarkPane"));
 }
 
+function initTimeline(mainAppLayout) {
+	new TimelineWidget($("#bottomSection"), mainAppLayout);
+}
 
 function raiseError(error) {
 	$("#error").text(error);
 	$('body').layout().open("north");
 }
+

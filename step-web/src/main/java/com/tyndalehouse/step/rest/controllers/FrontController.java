@@ -23,7 +23,10 @@ import org.slf4j.LoggerFactory;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
+import com.google.inject.name.Named;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
+import com.tyndalehouse.step.rest.framework.ControllerCacheKey;
+import com.tyndalehouse.step.rest.framework.StepRequest;
 
 /**
  * The FrontController acts like a minimal REST server. The paths are resolved as follows:
@@ -40,30 +43,123 @@ public class FrontController extends HttpServlet {
     private static final char PACKAGE_SEPARATOR = '.';
     private static final long serialVersionUID = 7898656504631346047L;
     private static final String CONTROLLER_SUFFIX = "Controller";
+    // TODO EH cache here too?
     private final Map<String, String> contextPath = new HashMap<String, String>();
+    private final Map<String, byte[]> resultsCache = new HashMap<String, byte[]>();
     private final transient Injector guiceInjector;
     // TODO but also check threadsafety and whether we should share this object
     private final transient ObjectMapper jsonMapper = new ObjectMapper();
+
+    // TODO investigate EH cache here
     private final Map<String, Method> methodNames = new HashMap<String, Method>();
     private final Map<String, Object> controllers = new HashMap<String, Object>();
+    private final boolean isCacheEnabled;
 
     /**
      * creates the front controller which will dispatch all the requests
      * 
      * @param guiceInjector the injector used to call the relevant controllers
+     * @param isCacheEnabled indicates whether responses should be cached for fast retrieval
+     * 
      */
     @Inject
-    public FrontController(final Injector guiceInjector) {
+    public FrontController(final Injector guiceInjector, @Named("cache.enabled") final Boolean isCacheEnabled) {
         this.guiceInjector = guiceInjector;
+        this.isCacheEnabled = Boolean.TRUE.equals(isCacheEnabled);
     }
 
     @Override
-    protected void doGet(final HttpServletRequest req, final HttpServletResponse response) {
-        // fast string manipulation... (?)
-        final String requestURI = req.getRequestURI();
-        LOGGER.debug("Processing {}", requestURI);
+    protected void doGet(final HttpServletRequest request, final HttpServletResponse response) {
+        StepRequest sr = null;
+        try {
+            sr = parseRequest(request);
+            byte[] jsonEncoded = null;
 
-        final int requestStart = getPath(req).length() + 1;
+            // in here we want to retrieve from the cache.
+            final ControllerCacheKey cacheKey = sr.getCacheKey();
+
+            // check results cache here -- TODO - use servlet caching instead?
+            if (this.isCacheEnabled) {
+                LOGGER.debug("Checking cache...");
+                jsonEncoded = this.resultsCache.get(cacheKey.getResultsKey());
+            }
+
+            // cache miss?
+            if (jsonEncoded == null) {
+                LOGGER.debug("The cache was missed so invoking method now...");
+                jsonEncoded = invokeMethod(sr);
+            }
+            setupHeaders(response, jsonEncoded.length);
+            response.getOutputStream().write(jsonEncoded);
+            cache(jsonEncoded, sr.getControllerName(), sr.getMethodName(), sr.getArgs());
+            // CHECKSTYLE:OFF We allow catching errors here, since we are at the top of the structure
+        } catch (final Exception e) {
+            // CHECKSTYLE:ON
+            doError(response, e, sr);
+        }
+    }
+
+    /**
+     * Invokes the method on the controller instance and returns JSON-ed results
+     * 
+     * @param sr the STEP Request containing all pertinent information
+     * @return byte array representation of the return value
+     */
+    byte[] invokeMethod(final StepRequest sr) {
+
+        // controller instance on which to call a method
+        final Object controllerInstance = getController(sr.getControllerName());
+
+        // resolve method
+        final Method controllerMethod = getControllerMethod(sr.getMethodName(), controllerInstance,
+                sr.getArgs(), sr.getCacheKey().getMethodKey());
+
+        // invoke the three together
+        try {
+            final Object returnVal = controllerMethod.invoke(controllerInstance, (Object[]) sr.getArgs());
+            return getEncodedJsonResponse(returnVal);
+        } catch (final IllegalAccessException e) {
+            throw new StepInternalException(sr.toString(), e);
+        } catch (final InvocationTargetException e) {
+            throw new StepInternalException(sr.toString(), e);
+        }
+
+        // TODO remove dead code once I have proven this doesn't get used
+        // catch (final NoSuchMethodError e) {
+        // throw new StepInternalException(sr.toString(), e);
+        // }
+    }
+
+    /**
+     * Returns a json response that is encoded
+     * 
+     * @param responseValue the value that should be encoded
+     * @return the encoded form of the JSON response
+     */
+    byte[] getEncodedJsonResponse(final Object responseValue) {
+        try {
+            return this.jsonMapper.writeValueAsString(responseValue).getBytes(UTF_8_ENCODING);
+        } catch (final JsonGenerationException e) {
+            throw new StepInternalException(e.getMessage(), e);
+        } catch (final JsonMappingException e) {
+            throw new StepInternalException(e.getMessage(), e);
+        } catch (final IOException e) {
+            throw new StepInternalException(e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Returns the step request object containing the relevant information about the STEP Request
+     * 
+     * @param request the HTTP request
+     * @return the StepRequest encapsulating key data
+     */
+    StepRequest parseRequest(final HttpServletRequest request) {
+        final String requestURI = request.getRequestURI();
+
+        LOGGER.debug("Parsing {}", requestURI);
+
+        final int requestStart = getPath(request).length() + 1;
         final int endOfControllerName = requestURI.indexOf('/', requestStart);
         final int startOfMethodName = endOfControllerName + 1;
         final String controllerName = requestURI.substring(requestStart, endOfControllerName);
@@ -72,49 +168,20 @@ public class FrontController extends HttpServlet {
         final int endOfMethodName = startOfMethodName + methodName.length();
 
         LOGGER.debug("Request parsed as controller: [{}], method [{}]", controllerName, methodName);
+        return new StepRequest(controllerName, methodName, getArgs(requestURI, endOfMethodName + 1));
+    }
 
-        // controller instance on which to call a method
-        final Object controllerInstance = getController(controllerName);
-
-        // some arguments to be passsed through
-        final Object[] args = getArgs(requestURI, endOfMethodName + 1);
-
-        // resolve method
-        final Method controllerMethod = getControllerMethod(methodName, controllerInstance, args);
-
-        try {
-            // invoke the three together
-            final Object returnVal = controllerMethod.invoke(controllerInstance, args);
-            final String jsonReturnValue = this.jsonMapper.writeValueAsString(returnVal);
-
-            final byte[] jsonEncoded = jsonReturnValue.getBytes(UTF_8_ENCODING);
-
-            // put results in cache if method is annotated. We don't need to do that
-            // afterwards...
-            setupHeaders(response, jsonEncoded.length);
-            response.getOutputStream().write(jsonEncoded);
-            // response.getOutputStream().flush();
-            // response.getOutputStream().close();
-
-            // perhaps we want to cache things...
-            // TODO
-
-        } catch (final StepInternalException e) {
-            // TODO handle this slightly differently?
-            doError(e);
-        } catch (final NoSuchMethodError e) {
-            doError(e);
-        } catch (final IllegalAccessException e) {
-            doError(e);
-        } catch (final InvocationTargetException e) {
-            doError(e);
-        } catch (final JsonGenerationException e) {
-            doError(e);
-        } catch (final JsonMappingException e) {
-            doError(e);
-        } catch (final IOException e) {
-            doError(e);
-        }
+    /**
+     * TODO caches the results for future use
+     * 
+     * @param jsonEncoded json encoding of the response
+     * @param controllerName the name of the controller that was ino
+     * @param methodName the method name that was called
+     * @param args the arguments that were passed
+     */
+    void cache(final byte[] jsonEncoded, final String controllerName, final String methodName,
+            final Object[] args) {
+        // TODO using EH Cache
     }
 
     /**
@@ -123,7 +190,7 @@ public class FrontController extends HttpServlet {
      * @param response the response
      * @param length the length of the message
      */
-    private void setupHeaders(final HttpServletResponse response, final int length) {
+    void setupHeaders(final HttpServletResponse response, final int length) {
         // we ensure that headers are set up appropriately
         response.addDateHeader("Date", System.currentTimeMillis());
         response.setCharacterEncoding(UTF_8_ENCODING);
@@ -134,13 +201,28 @@ public class FrontController extends HttpServlet {
     /**
      * deals with an error whilst executing the request
      * 
+     * @param response the response
+     * 
      * @param e the exception
+     * @param sr the step request
      */
-    private void doError(final Throwable e) {
-        LOGGER.error(e.getMessage(), e);
+    void doError(final HttpServletResponse response, final Throwable e, final StepRequest sr) {
+        String requestId = null;
+        try {
+            requestId = sr == null ? "Failed to parse request?" : sr.getCacheKey().getResultsKey();
+            if (e != null) {
+                final byte[] errorMessage = this.getEncodedJsonResponse(e.getMessage());
+                response.getOutputStream().write(errorMessage);
+                setupHeaders(response, errorMessage.length);
 
-        // TODO deal with error here:
-
+                LOGGER.error("An internal error has occurred for [{}]", requestId, e);
+            }
+            // CHECKSTYLE:OFF We allow catching errors here, since we are at the top of the structure
+        } catch (final Exception unableToSendError) {
+            // CHECKSTYLE:ON
+            LOGGER.error("Unable to output error for request" + requestId, unableToSendError);
+            LOGGER.error("Due to original Throwable", e);
+        }
     }
 
     /**
@@ -184,14 +266,12 @@ public class FrontController extends HttpServlet {
      * @param methodName the method name
      * @param controllerInstance the instance of the controller
      * @param args the list of arguments, required to resolve the correct method if they have arguments
+     * @param cacheKey the key to retrieve in the cache
      * @return the method to be invoked
      */
-    Method getControllerMethod(final String methodName, final Object controllerInstance, final Object[] args) {
+    Method getControllerMethod(final String methodName, final Object controllerInstance, final Object[] args,
+            final String cacheKey) {
         final Class<? extends Object> controllerClass = controllerInstance.getClass();
-
-        // try cache first
-        final String cacheKey = getCacheKey(controllerClass.getName(), methodName, args == null ? 0
-                : args.length);
 
         // retrieve method from cache, or put in cache if not there
         Method controllerMethod = this.methodNames.get(cacheKey);
@@ -225,22 +305,6 @@ public class FrontController extends HttpServlet {
         }
 
         return classes;
-    }
-
-    /**
-     * returns the cache key to resolve from the cache
-     * 
-     * @param controllerName the controller name
-     * @param methodName the method name
-     * @param numArgs the number of arguments affects which method is returned
-     * @return the key to the method as expected in the cache.
-     */
-    String getCacheKey(final String controllerName, final String methodName, final int numArgs) {
-        final StringBuilder cacheKeyBuffer = new StringBuilder(controllerName.length() + methodName.length());
-        cacheKeyBuffer.append(controllerName);
-        cacheKeyBuffer.append(methodName);
-        cacheKeyBuffer.append(numArgs);
-        return cacheKeyBuffer.toString();
     }
 
     /**
@@ -291,4 +355,5 @@ public class FrontController extends HttpServlet {
         }
         return path;
     }
+
 }

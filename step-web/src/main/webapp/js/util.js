@@ -28,3 +28,7 @@ function addButtonToAutoComplete(textbox, icon) {
 		textbox.focus();
 	});
 }
+
+function extractLast( term ) {
+	return split( term ).pop();
+}

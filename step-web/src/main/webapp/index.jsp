@@ -10,18 +10,23 @@
     <link rel="stylesheet" type="text/css" href="css/initial-layout.css" />
     <link rel="stylesheet" type="text/css" href="css/initial-fonts.css" />
     <link rel="stylesheet" type="text/css" href="css/passage.css" />
-    
+
+	<script src="js/initLib.js"></script>   
+    <script src="libs/timeline_js/timeline-api.js?bundle=true" type="text/javascript"></script>
     <script src="libs/jquery-1.4.2.min.js" type="text/javascript"></script>
     <script src="libs/jquery-ui-1.8.5.custom.min.js" type="text/javascript"></script>
     <script src="libs/jquery.layout-latest.js" type="text/javascript"></script>
     <script src="libs/jquery-shout.js" type="text/javascript"></script>
+    
     <script src="js/util.js" type="text/javascript"></script>
     <script src="js/passage_toolbar.js" type="text/javascript"></script>
     <script src="js/passage.js" type="text/javascript"></script>
     <script src="js/bookmark.js" type="text/javascript"></script>
     <script src="js/lexicon_definition.js" type="text/javascript"></script>
     <script src="js/ui_hooks.js" type="text/javascript"></script>
+    <script src="js/timeline.js" type="text/javascript"></script>
     <script src="js/init.js" type="text/javascript"></script>
+    
 </HEAD>
 <body>
 
@@ -64,6 +69,8 @@
     </div>
 	
 </div>
+
+<div id="bottomSection" class="timeline">No modules have yet been loaded.</div>
 
 <div id="loading"><img alt="Loading..." src="images/wait16.gif" />Loading...</div>
 <div id="error" class="ui-state-highlight">A placeholder for error messages</div>

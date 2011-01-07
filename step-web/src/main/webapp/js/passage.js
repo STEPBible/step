@@ -110,6 +110,8 @@ Passage.prototype.changePassage = function(/* optional */ version, /* optional *
 		//send to server
 		$.get(url, function (text) {
 			//we get html back, so we insert into passage:
+			
+			
 			self.passage.html(text.value);
 			
 			//passage change was successful, so we let the rest of the UI know

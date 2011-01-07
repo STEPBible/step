@@ -35,13 +35,22 @@ function Toolbar(passage, columnContainer, buttonOptions, strongedVersions) {
 		}
 		toolbarId++;
 	});
+	
+	//finally create a timeline button
+	this.createTimelineButton();
 }
 
-//function split( val ) {
-//	return val.split( /,\s*/ );
-//}
-function extractLast( term ) {
-	return split( term ).pop();
+Toolbar.prototype.createTimelineButton = function() {
+	this.toolbarContainer.append("<input id='timeline" + toolbarId
+			+ "' type='checkbox' class='timelineButton'><label for='timeline" + toolbarId + 
+			"'>Timeline</label></input>");
+
+	var timelineSelector = $('#timeline' + toolbarId);
+	timelineSelector.button();
+	
+	timelineSelector.click(function() {
+		$.shout("show-timeline");
+	});
 }
 
 Toolbar.prototype.createInterlinearDropdown = function(toolbarId, strongedVersions, interlinearButton) {

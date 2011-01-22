@@ -1,11 +1,15 @@
 package com.tyndalehouse.step.rest.controllers;
 
 import java.util.Date;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.tyndalehouse.step.core.data.entities.Timeband;
+import com.tyndalehouse.step.core.service.TimelineService;
 
 /**
  * The timeline controller retrieves information about past events
@@ -16,6 +20,18 @@ import com.google.inject.Singleton;
 @Singleton
 public class TimelineController {
     private static final Logger LOGGER = LoggerFactory.getLogger(TimelineController.class);
+    private final TimelineService timelineService;
+
+    /**
+     * The timeline controller relies on the timeline service to retrieve the data
+     * 
+     * @param timelineService the service
+     */
+    @Inject
+    public TimelineController(final TimelineService timelineService) {
+        this.timelineService = timelineService;
+
+    }
 
     /**
      * a REST method to retrieve events between two dates The arrays match in index, and go by three
@@ -43,5 +59,14 @@ public class TimelineController {
     public String getEventsFromReference(final String bibleReference) {
 
         return null;
+    }
+
+    /**
+     * Retrieves the timebands that will be used to configure the timeline component
+     * 
+     * @return the timebands
+     */
+    public List<Timeband> getTimelineConfiguration() {
+        return this.timelineService.getTimelineConfiguration();
     }
 }

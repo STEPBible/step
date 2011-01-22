@@ -43,7 +43,7 @@ public class FrontControllerTest {
     /**
      * Tests normal operation of a GET method
      * 
-     * @throws IOException
+     * @throws IOException uncaught exception
      */
     @Test
     public void testDoGet() throws IOException {

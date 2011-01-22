@@ -16,13 +16,7 @@ function TimelineWidget(rootElement, mainAppLayout) {
 	$(rootElement).hear("hide-timeline", function(selfElement) {
 		//first show the bottom pane...
 		mainAppLayout.close("south");
-	
-		
-		
-//		$(window).resize(self.onResize);
 	});
-	
-	//do the removal of the timeline
 }
 
 var tl;

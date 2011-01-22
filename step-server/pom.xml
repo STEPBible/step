@@ -28,7 +28,6 @@
 			<artifactId>slf4j-log4j12</artifactId>
 			<scope>runtime</scope>
 		</dependency>
-
 	</dependencies>
 
 	<build>

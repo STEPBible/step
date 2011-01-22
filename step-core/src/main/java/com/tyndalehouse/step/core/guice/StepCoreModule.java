@@ -8,19 +8,24 @@ import java.util.Properties;
 
 import org.crosswire.jsword.book.install.Installer;
 
+import com.avaje.ebean.EbeanServer;
 import com.google.inject.AbstractModule;
 import com.google.inject.Module;
 import com.google.inject.TypeLiteral;
 import com.google.inject.name.Names;
+import com.tyndalehouse.step.core.data.create.Loader;
+import com.tyndalehouse.step.core.guice.providers.DatabaseConfigProvider;
 import com.tyndalehouse.step.core.guice.providers.DefaultInstallersProvider;
 import com.tyndalehouse.step.core.guice.providers.DefaultLexiconRefsProvider;
 import com.tyndalehouse.step.core.guice.providers.DefaultVersionsProvider;
 import com.tyndalehouse.step.core.service.BibleInformationService;
 import com.tyndalehouse.step.core.service.JSwordService;
 import com.tyndalehouse.step.core.service.ModuleService;
+import com.tyndalehouse.step.core.service.TimelineService;
 import com.tyndalehouse.step.core.service.impl.BibleInformationServiceImpl;
 import com.tyndalehouse.step.core.service.impl.JSwordServiceImpl;
 import com.tyndalehouse.step.core.service.impl.ModuleServiceImpl;
+import com.tyndalehouse.step.core.service.impl.TimelineServiceImpl;
 
 /**
  * The module configuration that configures the application via guice
@@ -38,6 +43,8 @@ public class StepCoreModule extends AbstractModule implements Module {
         bind(JSwordService.class).to(JSwordServiceImpl.class).asEagerSingleton();
         bind(BibleInformationService.class).to(BibleInformationServiceImpl.class).asEagerSingleton();
         bind(ModuleService.class).to(ModuleServiceImpl.class).asEagerSingleton();
+        bind(TimelineService.class).to(TimelineServiceImpl.class);
+        bind(Loader.class);
 
         bind(new TypeLiteral<List<String>>() {
         }).annotatedWith(Names.named("defaultVersions")).toProvider(DefaultVersionsProvider.class);
@@ -45,6 +52,21 @@ public class StepCoreModule extends AbstractModule implements Module {
         }).annotatedWith(Names.named("defaultLexiconRefs")).toProvider(DefaultLexiconRefsProvider.class);
         bind(new TypeLiteral<List<Installer>>() {
         }).toProvider(DefaultInstallersProvider.class);
+
+        bind(EbeanServer.class).toProvider(DatabaseConfigProvider.class).asEagerSingleton();
+
+        bindDaos();
+        // bind(ConnectionSource.class).toProvider(DataSourceProvider.class);
+    }
+
+    /**
+     * helper method that binds the DAOs
+     */
+    private void bindDaos() {
+        // bind(TimebandDao.class).to(TimebandDaoImpl.class);
+        // bind(HotSpotDao.class).to(HotSpotDaoImpl.class);
+        // bind(TimelineEventDao.class).to(TimelineEventDaoImpl.class);
+        // bind(ScriptureReferenceDao.class).to(ScriptureReferenceDaoImpl.class);
     }
 
     /**

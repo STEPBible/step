@@ -16,6 +16,7 @@
 		<db.driver>org.apache.derby.jdbc.EmbeddedDriver</db.driver>
 		<db.connection.string>jdbc:derby:${db.directory}</db.connection.string>
 
+		<h2.version>1.3.148</h2.version>
 		<derby.version>10.5.3.0_1</derby.version>
 		<junit.version>4.8.2</junit.version>
 
@@ -23,7 +24,7 @@
 		<jsword.version>1.6.1-SNAPSHOT</jsword.version>
 		<jdom.version>1.1</jdom.version>
 		<javatar.version>2.5</javatar.version>
-		
+
 		<jackson-mapper-asl.version>1.6.2</jackson-mapper-asl.version>
 		<org.slf4j.version>1.6.1</org.slf4j.version>
 		<servlet-api.version>2.5</servlet-api.version>
@@ -34,6 +35,9 @@
 		<guice-servlet.version>2.9.1</guice-servlet.version>
 		<opencsv.version>2.1</opencsv.version>
 		<jetty.version>6.1.22</jetty.version>
+		<!-- <ormlite.version>4.6</ormlite.version> -->
+		<ebean.version>2.7.2</ebean.version>
+		<lucene.version>3.0.3</lucene.version>
 
 		<!-- Commons -->
 		<commons-beanutils.version>1.8.3</commons-beanutils.version>
@@ -77,9 +81,30 @@
 				<version>${jsword.version}</version>
 			</dependency>
 			<dependency>
-			    <groupId>javatar</groupId>
-			    <artifactId>javatar</artifactId>
-			    <version>${javatar.version}</version>
+				<groupId>org.apache.lucene</groupId>
+				<artifactId>lucene-core</artifactId>
+				<version>${lucene.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.lucene</groupId>
+				<artifactId>lucene-analyzers</artifactId>
+				<version>${lucene.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.lucene</groupId>
+				<artifactId>lucene-snowball</artifactId>
+				<version>${lucene.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.lucene</groupId>
+				<artifactId>lucene-smartcn</artifactId>
+				<version>${lucene.version}</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>javatar</groupId>
+				<artifactId>javatar</artifactId>
+				<version>${javatar.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.jdom</groupId>
@@ -131,9 +156,9 @@
 				<version>${jstl.version}</version>
 			</dependency>
 			<dependency>
-			    <groupId>net.sourceforge.pjl-comp-filter</groupId>
-			    <artifactId>pjl-comp-filter</artifactId>
-			    <version>${pjl-comp-filter.version}</version>
+				<groupId>net.sourceforge.pjl-comp-filter</groupId>
+				<artifactId>pjl-comp-filter</artifactId>
+				<version>${pjl-comp-filter.version}</version>
 			</dependency>
 
 			<!-- TODO build against google released artifacts -->
@@ -142,11 +167,11 @@
 				<artifactId>guice</artifactId>
 				<version>${guice.version}</version>
 			</dependency>
-			
+
 			<dependency>
-			    <groupId>org.sonatype.sisu.inject</groupId>
-			    <artifactId>guice-servlet</artifactId>
-			    <version>${guice-servlet.version}</version>
+				<groupId>org.sonatype.sisu.inject</groupId>
+				<artifactId>guice-servlet</artifactId>
+				<version>${guice-servlet.version}</version>
 			</dependency>
 
 			<dependency>
@@ -164,11 +189,11 @@
 				<artifactId>org.restlet.ext.json</artifactId>
 				<version>${restlet.version}</version>
 			</dependency>
-			<dependency>
-				<groupId>commons-beanutils</groupId>
-				<artifactId>commons-beanutils</artifactId>
-				<version>${commons-beanutils.version}</version>
-			</dependency>
+<!--			<dependency>-->
+<!--				<groupId>commons-beanutils</groupId>-->
+<!--				<artifactId>commons-beanutils</artifactId>-->
+<!--				<version>${commons-beanutils.version}</version>-->
+<!--			</dependency>-->
 
 			<dependency>
 				<groupId>commons-lang</groupId>
@@ -181,7 +206,7 @@
 				<artifactId>commons-collections</artifactId>
 				<version>${commons-collections.version}</version>
 			</dependency>
-			
+
 			<dependency>
 				<groupId>commons-dbcp</groupId>
 				<artifactId>commons-dbcp</artifactId>
@@ -229,9 +254,40 @@
 			</dependency>
 
 			<dependency>
+				<groupId>com.j256.ormlite</groupId>
+				<artifactId>ormlite-core</artifactId>
+				<version>${ormlite.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.j256.ormlite</groupId>
+				<artifactId>ormlite-jdbc</artifactId>
+				<version>${ormlite.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.h2database</groupId>
+				<artifactId>h2</artifactId>
+				<version>${h2.version}</version>
+				<scope>test</scope>
+			</dependency>
+
+<!--			<dependency>-->
+<!--				<groupId>javax.persistence</groupId>-->
+<!--				<artifactId>persistence-api</artifactId>-->
+<!--				<version>${persistence-api.version}</version>-->
+<!--			</dependency>--> 
+
+			<dependency>
 				<groupId>commons-configuration</groupId>
 				<artifactId>commons-configuration</artifactId>
 				<version>${commons-configuration.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.avaje</groupId>
+				<artifactId>ebean</artifactId>
+				<version>${ebean.version}</version>
 			</dependency>
 
 			<dependency>
@@ -239,7 +295,7 @@
 				<artifactId>jetty</artifactId>
 				<version>${jetty.version}</version>
 			</dependency>
-			
+
 			<dependency>
 				<groupId>junit</groupId>
 				<artifactId>junit</artifactId>
@@ -255,13 +311,13 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-		
+
 	<organization>
 		<name>Tyndale House</name>
 		<url>http://http://www.tyndale.cam.ac.uk/</url>
 	</organization>
-	
-	
+
+
 	<build>
 		<pluginManagement>
 			<plugins>
@@ -322,7 +378,7 @@
 							<projectnature>net.sf.eclipsecs.core.CheckstyleNature</projectnature>
 							<projectnature>edu.umd.cs.findbugs.plugin.eclipse.findbugsNature</projectnature>
 							<projectnature>org.maven.ide.eclipse.maven2Nature</projectnature>
-							
+
 						</additionalProjectnatures>
 						<additionalBuildcommands>
 							<buildcommand>net.sourceforge.pmd.eclipse.plugin.pmdBuilder</buildcommand>
@@ -330,7 +386,7 @@
 							<buildcommand>net.sf.eclipsecs.core.CheckstyleBuilder</buildcommand>
 							<buildcommand>org.maven.ide.eclipse.maven2Builder</buildcommand>
 						</additionalBuildcommands>
-		
+
 						<additionalConfig>
 							<file>
 								<name>.settings/org.eclipse.jdt.core.prefs</name>

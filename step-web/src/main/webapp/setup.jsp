@@ -16,6 +16,7 @@
     <script src="libs/jquery.layout-latest.js" type="text/javascript"></script>
     <script src="libs/jquery-shout.js" type="text/javascript"></script>
     
+    <script src="js/ui_hooks.js" type="text/javascript"></script>
     <script src="js/setup.js" type="text/javascript"></script>
 </HEAD>
 <body>

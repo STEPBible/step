@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.tyndalehouse.step.core.data.create.Loader;
 import com.tyndalehouse.step.core.service.BibleInformationService;
 
 /**
@@ -17,24 +18,26 @@ import com.tyndalehouse.step.core.service.BibleInformationService;
 public class SetupController {
     private static final Logger LOGGER = LoggerFactory.getLogger(SetupController.class);
     private final BibleInformationService bibleInformation;
+    private final Loader loader;
 
     /**
      * creates the controller
      * 
      * @param bibleInformationService the service that allows access to biblical material
+     * @param loader service which is able to load the data into the database
      */
     @Inject
-    public SetupController(final BibleInformationService bibleInformationService) {
+    public SetupController(final BibleInformationService bibleInformationService, final Loader loader) {
         this.bibleInformation = bibleInformationService;
+        this.loader = loader;
     }
 
     /**
-     * a REST method to retrieve events between two dates The arrays match in index, and go by three (timebandId, from,
-     * to), (timebandId, from, to), ...
+     * a REST method to retrieve events between two dates The arrays match in index, and go by three
+     * (timebandId, from, to), (timebandId, from, to), ...
      * 
      * @return true if the software reckons this is the first time
      */
-    // @RequestMapping("/isFirstTime")
     public boolean isFirstTime() {
         LOGGER.debug("Checking whether this is the first time the software is being run");
         return !this.bibleInformation.hasCoreModules();
@@ -44,10 +47,10 @@ public class SetupController {
      * Installing default modules
      * 
      */
-    // @RequestMapping("/install/defaultModules")
     public void installDefaultModules() {
         LOGGER.debug("Installing default modules");
-        this.bibleInformation.installDefaultModules();
+        // this.bibleInformation.installDefaultModules();
+        this.loader.init();
     }
 
     /**
@@ -55,7 +58,6 @@ public class SetupController {
      * 
      * @param reference the initials of the bible to install
      */
-    // @RequestMapping("/install/book/{reference}")
     public void installBible(final String reference) {
         LOGGER.debug("Installing module {}", reference);
         this.bibleInformation.installModules(reference);

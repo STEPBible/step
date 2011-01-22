@@ -1,0 +1,74 @@
+code,scale,description,timeband
+T_Abraham,YEAR,Abraham,TL_PatriarchsToJudges
+T_ACBronzeAge,MILLENIUM,AC Bronze Age,TL_ArchCult
+T_ACModern,CENTURY,AC Modern,TL_ArchCult
+T_AdamToAbraham,MILLENIUM,Adam to Abraham,TL_PatriarchsToJudges
+T_Africa,MILLENIUM,Africa,TL_Africa
+T_All,MILLENIUM,All,TL_Global
+T_Americas,MILLENIUM,Americas,TL_Americas
+T_ArchCult,CENTURY,Architecture and Culture,TL_ArchCult
+T_Asia,CENTURY,Asia,TL_Asia
+T_Assyria,CENTURY,Assyria,TL_OTNeighbours
+T_Babylon,MILLENIUM,Babylon,TL_OTNeighbours
+T_ACBabylonPersia,CENTURY,Babylon Persia,TL_ArchCult
+T_Bible,MILLENIUM,Bible,TL_Global
+T_BirthOfTheNation,CENTURY,Birth of the Nation,TL_Global
+T_China,CENTURY,China,TL_Asia
+T_Conquest,YEAR,Conquest,TL_PatriarchsToJudges
+T_David,DECADE,David,TL_Monarchy
+T_EarlyChurch,YEAR,Early church,TL_EarlyChurch
+T_Egypt,MILLENIUM,Egypt,TL_Egypt
+T_EgyptD12,CENTURY,Egypt D 12,TL_Egypt
+T_EgyptD18,CENTURY,Egypt D 18,TL_Egypt
+T_EgyptD19,CENTURY,Egypt D 19,TL_Egypt
+T_EgyptPtolemaic,MILLENIUM,Egypt Ptolemaic,TL_Egypt
+T_Esther,YEAR,Esther,TL_ExileAndReturn
+T_Europe,CENTURY,Europe,TL_Europe
+T_Exile,YEAR,Exile,TL_ExileAndReturn
+T_ExileAndReturn,YEAR,Exile and return,TL_ExileAndReturn
+T_Exodus,YEAR,Exodus,TL_PatriarchsToJudges
+T_Ezekiel,DECADE,Ezekiel,TL_ExileAndReturn
+T_Greece,CENTURY,Greece,TL_Europe
+T_HagZech,YEAR,Haggai and Zechariah,TL_ExileAndReturn
+T_Hasmonean,CENTURY,Hasmonean,TL_Intertestamental
+T_Herodians,CENTURY,Herodians,TL_Intertestamental
+T_India,CENTURY,India,TL_Asia
+T_Intertestamental,DECADE,Intertestamental,TL_Intertestamental
+T_ACIronAge,MILLENIUM,Iron Age,TL_ArchCult
+T_Isaac,YEAR,Isaac,TL_PatriarchsToJudges
+T_Isaiah,CENTURY,Isaiah,TL_Monarchy
+T_IsraelMonarchy,DECADE,Israel's monarchy,TL_Monarchy
+T_Jacob,YEAR,Jacob,TL_PatriarchsToJudges
+T_Jeremiah,DECADE,Jeremiah,TL_Monarchy
+T_JesusJohn,MONTH,Jesus and John,TL_Jesus
+T_JesusEarly,YEAR,Jesus' early life,TL_Jesus
+T_JesusGalilee,MONTH,Jesus in Galilee,TL_Jesus
+T_JesusGalileeArea,MONTH,Jesus in Galilee Area,TL_Jesus
+T_JesusJudea,MONTH,Jesus in Judea,TL_Jesus
+T_JesusPerea,MONTH,Jesus in Perea,TL_Jesus
+T_JesusResurrected,WEEK,Jesus Resurrected,TL_Jesus
+T_ACJewishPeriod,CENTURY,Jewish Period,TL_ArchCult
+T_JudahMonarchy,DECADE,Judah's monarchy,TL_Monarchy
+T_Judges,DECADE,Judges,TL_PatriarchsToJudges
+T_LifeOfJesus,YEAR,Life of Jesus,TL_Jesus
+T_Mesopotamia,MILLENIUM,Mesopotamia,TL_OTNeighbours
+T_Monarchy,DECADE,Monarchy,TL_Monarchy
+T_NewTestament,DECADE,New Testament,TL_NTChurch
+T_NTChurch,YEAR,NT Church,TL_NTChurch
+T_PassionWeek,DAY,Passion week,TL_Jesus
+T_Patriarchs,YEAR,Patriarchs,TL_Global
+T_PaulToRome,YEAR,Paul to Rome,TL_NTChurch
+T_PaulMJ1,MONTH,Paul's first missionary journey,TL_NTChurch
+T_PaulMJ2,MONTH,Paul's second missionary journey,TL_NTChurch
+T_PaulMJ3,MONTH,Paul's third missionary journey,TL_NTChurch
+T_Persia,CENTURY,Persia,TL_OTNeighbours
+T_Return,YEAR,Return,TL_ExileAndReturn
+T_ACRomeByzantium,MILLENIUM,Rom Byzantium,TL_ArchCult
+T_RomanEmpire,CENTURY,Roman empire,TL_Rome
+T_RomanRepublic,CENTURY,Roman Republic,TL_Rome
+T_Rome,CENTURY,Rome,TL_Rome
+T_Saul,YEAR,Saul,TL_Monarchy
+T_Solomon,DECADE,Solomon,TL_Monarchy
+T_Syria,MILLENIUM,Syria,TL_OTNeighbours
+T_UnitedMonarchy,YEAR,United monarchy,TL_Monarchy
+T_Wilderness,DECADE,Wilderness,TL_PatriarchsToJudges

@@ -1,0 +1,17 @@
+code,scale,description
+TL_Jesus,YEAR,Jesus
+TL_NTChurch,YEAR,New Testament Church
+TL_PatriarchsToJudges,DECADE,Patriarchs to Judges
+TL_Rome,DECADE,Rome
+TL_Egypt,DECADE,Egypt
+TL_Monarchy,DECADE,Monarchy
+TL_EarlyChurch,DECADE,Early Church
+TL_ArchCult,CENTURY,Architecture and Culture
+TL_OTNeighbours,DECADE,Old Testament Neighbours
+TL_Global,CENTURY,Global
+TL_ExileAndReturn,YEAR,Exile and Return
+TL_Intertestamental,CENTURY,Intertestamental
+TL_Africa,MILLENIUM,Africa
+TL_Asia,CENTURY,Asia
+TL_Europe,DECADE,Europe
+TL_Americas,MILLENIUM,Americas

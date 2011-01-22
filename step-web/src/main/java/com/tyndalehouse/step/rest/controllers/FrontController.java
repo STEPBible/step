@@ -20,6 +20,8 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.avaje.ebean.Ebean;
+import com.avaje.ebean.text.json.JsonContext;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
@@ -123,11 +125,6 @@ public class FrontController extends HttpServlet {
         } catch (final InvocationTargetException e) {
             throw new StepInternalException(sr.toString(), e);
         }
-
-        // TODO remove dead code once I have proven this doesn't get used
-        // catch (final NoSuchMethodError e) {
-        // throw new StepInternalException(sr.toString(), e);
-        // }
     }
 
     /**
@@ -138,7 +135,21 @@ public class FrontController extends HttpServlet {
      */
     byte[] getEncodedJsonResponse(final Object responseValue) {
         try {
-            return this.jsonMapper.writeValueAsString(responseValue).getBytes(UTF_8_ENCODING);
+            String response;
+            // we have normal objects and avaje ebean objects which have been intercepted
+            // therefore we can't just use simple jackson mapper
+            if (responseValue == null) {
+                return new byte[0];
+            } else if (responseValue.getClass().getPackage().getName().startsWith("com.avaje")) {
+                final JsonContext json = Ebean.getServer(null).createJsonContext();
+
+                // convert list of beans into JSON
+                response = json.toJsonString(responseValue);
+            } else {
+                response = this.jsonMapper.writeValueAsString(responseValue);
+            }
+
+            return response.getBytes(UTF_8_ENCODING);
         } catch (final JsonGenerationException e) {
             throw new StepInternalException(e.getMessage(), e);
         } catch (final JsonMappingException e) {
@@ -163,8 +174,9 @@ public class FrontController extends HttpServlet {
         final int endOfControllerName = requestURI.indexOf('/', requestStart);
         final int startOfMethodName = endOfControllerName + 1;
         final String controllerName = requestURI.substring(requestStart, endOfControllerName);
+        final int endOfMethodNameSlash = requestURI.indexOf('/', startOfMethodName);
         final String methodName = requestURI.substring(startOfMethodName,
-                requestURI.indexOf('/', startOfMethodName));
+                endOfMethodNameSlash == -1 ? requestURI.length() : endOfMethodNameSlash);
         final int endOfMethodName = startOfMethodName + methodName.length();
 
         LOGGER.debug("Request parsed as controller: [{}], method [{}]", controllerName, methodName);

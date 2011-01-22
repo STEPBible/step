@@ -57,6 +57,7 @@ public class DefaultInstallersProvider implements Provider<List<Installer>> {
                         final Integer p = Integer.parseInt(proxyPort);
                         installer.setProxyPort(p.intValue());
                     } catch (final NumberFormatException e) {
+                        // TODO work out how this should be thrown
                         throw new StepInternalException("Unable to parse port number " + proxyPort, e);
                     }
                 }

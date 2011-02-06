@@ -13,7 +13,7 @@
 	<artifactId>step-web</artifactId>
 	<packaging>war</packaging>
 	<version>1.0-SNAPSHOT</version>
-	<name>STEP :: Step Web project</name>
+	<name>STEP :: Step Web Project</name>
 
 	<dependencies>
 		<dependency>

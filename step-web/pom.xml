@@ -81,7 +81,6 @@
 		<dependency>
 			<groupId>javatar</groupId>
 			<artifactId>javatar</artifactId>
-			<version>${javatar.version}</version>
 		</dependency>
 		
 		<dependency>

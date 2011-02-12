@@ -73,7 +73,7 @@ public final class PassageReferenceUtils {
                 }
             } catch (final NoSuchVerseException nsve) {
                 // Nehemiah 6.20 might not exist for example...
-                LOG.error("Scripture reference does not exist [{}]", nsve);
+                LOG.error("Scripture reference does not exist", nsve);
             } catch (final NoSuchKeyException e) {
                 throw new StepInternalException(e.getMessage(), e);
             }

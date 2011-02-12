@@ -15,6 +15,29 @@
 	<version>1.0-SNAPSHOT</version>
 	<name>STEP :: Step Core functionality</name>
 
+	<build>
+		<plugins>
+			<plugin>
+			    <groupId>org.apache.maven.plugins</groupId>
+		        <artifactId>maven-surefire-plugin</artifactId>
+		        <executions>
+		        	<execution>
+				        <configuration>
+				          <includes>
+				            <include>**/*PreReq.java</include>
+				          </includes>
+				        </configuration>
+				        <phase>process-test-classes</phase>
+				        <goals>
+				        	<goal>test</goal>
+				        </goals>
+		        	</execution>
+		        </executions>
+			</plugin>
+		</plugins>
+	</build>
+
+
 	<dependencies>
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -35,12 +58,6 @@
 			<artifactId>jdom</artifactId>
 		</dependency>
 				
-		<!-- common utils -->
-<!--		<dependency>-->
-<!--			<groupId>commons-beanutils</groupId>-->
-<!--			<artifactId>commons-beanutils</artifactId>-->
-<!--		</dependency>-->
-		
 		<dependency>
 			<groupId>commons-lang</groupId>
 			<artifactId>commons-lang</artifactId>
@@ -72,35 +89,33 @@
 			<artifactId>opencsv</artifactId>
 		</dependency>
 
-<!--		<dependency>-->
-<!--			<groupId>javax.persistence</groupId>-->
-<!--			<artifactId>persistence-api</artifactId>-->
-<!--		</dependency>-->
-
-<!--		<dependency>-->
-<!--			<groupId>com.j256.ormlite</groupId>-->
-<!--			<artifactId>ormlite-core</artifactId>-->
-<!--		</dependency>-->
-
-<dependency>
-    <groupId>org.avaje</groupId>
-    <artifactId>ebean</artifactId>
-</dependency>
+		<dependency>
+		    <groupId>org.avaje</groupId>
+		    <artifactId>ebean</artifactId>
+		</dependency>
 
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
 		</dependency>
 
-<!--		<dependency>-->
-<!--			<groupId>com.j256.ormlite</groupId>-->
-<!--			<artifactId>ormlite-jdbc</artifactId>-->
-<!--		</dependency>-->
-
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
 		</dependency>
 		
+		<!-- transitive dependencies not picked up by jsword -->
+		<dependency>
+			<groupId>javatar</groupId>
+			<artifactId>javatar</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-httpclient</groupId>
+			<artifactId>commons-httpclient </artifactId>
+			<scope>test</scope>
+		</dependency>
+			
 	</dependencies>
 </project>

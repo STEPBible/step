@@ -52,8 +52,8 @@ public class BibleInformationServiceImpl implements BibleInformationService {
     }
 
     @Override
-    public String getPassageText(final String version, final String reference, final List<LookupOption> options,
-            final String interlinearVersion) {
+    public String getPassageText(final String version, final String reference,
+            final List<LookupOption> options, final String interlinearVersion) {
         return this.jsword.getOsisText(version, reference, options, interlinearVersion);
     }
 

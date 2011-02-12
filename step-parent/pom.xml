@@ -47,6 +47,7 @@
 		<commons-dbcp.version>1.3</commons-dbcp.version>
 		<commons-io.version>1.4</commons-io.version>
 		<commons-dbutils.version>1.3</commons-dbutils.version>
+		<commons-httpclient.version>3.1</commons-httpclient.version>
 
 		<!-- testing dependencies -->
 		<mockito.version>1.8.5</mockito.version>
@@ -189,11 +190,6 @@
 				<artifactId>org.restlet.ext.json</artifactId>
 				<version>${restlet.version}</version>
 			</dependency>
-<!--			<dependency>-->
-<!--				<groupId>commons-beanutils</groupId>-->
-<!--				<artifactId>commons-beanutils</artifactId>-->
-<!--				<version>${commons-beanutils.version}</version>-->
-<!--			</dependency>-->
 
 			<dependency>
 				<groupId>commons-lang</groupId>
@@ -225,6 +221,11 @@
 				<version>${commons-dbutils.version}</version>
 			</dependency>
 
+			<dependency>
+			    <groupId>commons-httpclient</groupId>
+			    <artifactId>commons-httpclient</artifactId>
+			    <version>${commons-httpclient.version}</version>
+			</dependency>
 
 			<dependency>
 				<groupId>org.mockito</groupId>
@@ -254,29 +255,11 @@
 			</dependency>
 
 			<dependency>
-				<groupId>com.j256.ormlite</groupId>
-				<artifactId>ormlite-core</artifactId>
-				<version>${ormlite.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>com.j256.ormlite</groupId>
-				<artifactId>ormlite-jdbc</artifactId>
-				<version>${ormlite.version}</version>
-			</dependency>
-
-			<dependency>
 				<groupId>com.h2database</groupId>
 				<artifactId>h2</artifactId>
 				<version>${h2.version}</version>
 				<scope>test</scope>
 			</dependency>
-
-<!--			<dependency>-->
-<!--				<groupId>javax.persistence</groupId>-->
-<!--				<artifactId>persistence-api</artifactId>-->
-<!--				<version>${persistence-api.version}</version>-->
-<!--			</dependency>--> 
 
 			<dependency>
 				<groupId>commons-configuration</groupId>

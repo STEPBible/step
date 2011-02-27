@@ -16,6 +16,8 @@ function ToolbarMenu(passageId, menuRoot) {
 		contentsource: "markup"
 	});
 	
+	this.setDefaultOptions();
+	
 	//also register a listener for ticking or unticking an option in the menu
 	$(menuRoot).hear("pane-menu-internal-state-changed-" + this.passageId, function(selfElement, menuOption) {
 		//menuOption is in the form { name: blah, selected: true/false }
@@ -118,6 +120,13 @@ ToolbarMenu.prototype.refreshMenuOptions = function(version) {
 	});
 }
 
+/**
+ * sets up the default options for the menu
+ */
+ToolbarMenu.prototype.setDefaultOptions = function() {
+	this.toggleMenuItem("HEADINGS");
+	this.toggleMenuItem("VERSE_NUMBERS");
+}
 
 /**
  * returns all menu items matching the name specified

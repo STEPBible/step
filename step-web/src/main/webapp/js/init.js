@@ -177,10 +177,12 @@ function initInitialEvents() {
 	// - version-changed-0 and version-changed-1
 	waitingForCondition(
 		function() {
-			return !($._jq_shout.registry["version-changed-0"] === undefined
-		 		|| $._jq_shout.registry["version-changed-1"] === undefined);
-	}, 	function() {
+			return !($(".passageContainer[passage-id = '0'] .passageVersion") === undefined
+			    || $(".passageContainer[passage-id = '1'] .passageVersion").val() === undefined);
 			
+//			return !($._jq_shout.registry["version-changed-0"] === undefined
+//		 		|| $._jq_shout.registry["version-changed-1"] === undefined);
+	}, 	function() {
 			$.shout("version-changed-" + 0, $(".passageContainer[passage-id = '0'] .passageVersion").val());
 			$.shout("version-changed-" + 1, $(".passageContainer[passage-id = '1'] .passageVersion").val());
 	});

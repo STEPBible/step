@@ -38,7 +38,7 @@ public enum LookupOption {
     TINY_VERSE_NUMBERS("TinyVNum", XslConversionType.DEFAULT);
 
     private final String xsltParameterName;
-    private final String displayName;
+    // private final String displayName;
     private final XslConversionType stylesheet;
     private final boolean enabledByDefault;
 
@@ -78,7 +78,7 @@ public enum LookupOption {
     private LookupOption(final String xsltParameterName, final String displayName,
             final XslConversionType stylesheet, final boolean enabledByDefault) {
         this.xsltParameterName = xsltParameterName;
-        this.displayName = displayName;
+        // this.displayName = displayName;
         this.stylesheet = stylesheet;
         this.enabledByDefault = enabledByDefault;
     }
@@ -90,12 +90,12 @@ public enum LookupOption {
         return this.xsltParameterName;
     }
 
-    /**
-     * @return the display name of the lookup option
-     */
-    public String getDisplayName() {
-        return this.displayName;
-    }
+    // /**
+    // * @return the display name of the lookup option
+    // */
+    // public String getUiKey() {
+    // return this.displayName;
+    // }
 
     /**
      * @return the stylesheet that should be used

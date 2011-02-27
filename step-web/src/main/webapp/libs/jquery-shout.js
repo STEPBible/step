@@ -14,10 +14,12 @@ jQuery.extend(
 {
     _jq_shout: {},
     shout: function (event, data){
-        jQuery.each(this._jq_shout.registry[event],
-                    function (){
-                        this.callback(this.source, data);
-                    });
+    	if(this._jq_shout.registry[event] != null) {
+	        jQuery.each(this._jq_shout.registry[event],
+	                    function (){
+	                        this.callback(this.source, data);
+	                    });
+	    	}
     }
 });
 

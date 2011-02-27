@@ -1,5 +1,21 @@
 
 /**
+ * extending jquery to have array comparison
+ */
+function compare(s, t) {
+    if (s.length != t.length) { return false; }
+    var a = s.sort(),
+        b = t.sort();
+    for (var i = 0; t[i]; i++) {
+        if (a[i] !== b[i]) { 
+                return false;
+        }
+    }
+    return true;
+};
+
+
+/**
  * adds a button next to a specified element
  * @param textbox the box to which to add the dropdown button
  * @param icon the icon to stylise the button
@@ -32,3 +48,19 @@ function addButtonToAutoComplete(textbox, icon) {
 function extractLast( term ) {
 	return split( term ).pop();
 }
+
+/**
+ * looks for the next space in the name provided and returns the shortest name available
+ * @param longName the long name to be shortened
+ * @param minLength the min length from which to start
+ */
+function shortenName(longName, minLength) {
+	var ii = longName.indexOf(' ', minLength);
+	if(ii > 0) {
+		return longName.substring(0, ii) + "...";
+	}
+	
+	//unable to shorten
+	return longName;
+}
+

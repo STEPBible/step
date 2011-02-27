@@ -753,14 +753,14 @@
   <!--=======================================================================-->
   <xsl:template match="title">
     <!-- Always show canonical titles or if headings is turned on -->
-    <xsl:if test="@canonical = 'true' or $Headings = 'true'">
+    <xsl:if test="(@canonical = 'true' or $Headings = 'true') and @type != 'x-gen'">
       <h2 class="heading"><xsl:apply-templates/></h2>
     </xsl:if>
   </xsl:template>
 
   <xsl:template match="title" mode="jesus">
     <!-- Always show canonical titles or if headings is turned on -->
-    <xsl:if test="@canonical = 'true' or $Headings = 'true'">
+    <xsl:if test="(@canonical = 'true' or $Headings = 'true') and @type != 'x-gen'">
       <h2 class="heading"><xsl:apply-templates/></h2>
     </xsl:if>
   </xsl:template>

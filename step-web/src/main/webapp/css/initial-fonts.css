@@ -30,3 +30,9 @@ body {
 	font-size: x-small;
 	padding: 0px 3px 0px 3px;
 }
+
+.selectingTick {
+	float: right;
+	margin-right: 2px;
+	border: 0px;		
+}

@@ -1,6 +1,8 @@
 /**
  * This file defines a number of hooks that the server code can call.
  * The aim is to redirect the calls quickly to other parts of the UI
+ * 
+ * The other calls here are for the menu system which are executing in any particular context
  */
 
 /////////////////////////////////////////////////////////////////////////
@@ -23,8 +25,25 @@ SETUP_INSTALL_BIBLE = "rest/setup/installBible/";
 TIMELINE_GET_EVENTS = "rest/timeline/getEvents/";
 TIMELINE_GET_EVENTS_FROM_REFERENCE = "rest/timeline/getEventsFromReference/";
 
+//////////////////////////
+// SOME DEFAULTS
+//////////////////////////
+var DEFAULT_POPUP_WIDTH = 500;
 
+/** a simpler toggler for the menu items */
+function toggleMenuItem(menuItem) {
+	//the hook needs to find the passage id
+	$.shout("pane-menu-toggle-item-" + $(menuItem).closest(".passageContainer").attr("passage-id"), menuItem.name);
+}
 
+/**
+ * shows the interlinear options as a popup
+ * @param menuItem the menuItem to tick if the popup selects options
+ */
+function showInterlinearChoices(menuItem) {
+	//get passage id from menu parent
+	$.shout("interlinear-menu-option-triggered-" + $(menuItem).closest(".passageContainer").attr("passage-id")); 
+}
 
 /**
  * called when click on a piece of text.
@@ -59,4 +78,13 @@ function showMorphOrStrong(tag, sourceElement) {
 	
 	//need to find what event is coming in, to get the clicked element and pass that down
 	$("#lexiconDefinition span:contains(" + tag + ")").parent().click();	
+}
+
+function showAbout() {
+	//show popup for About box
+	$( "#about" ).dialog({ 
+		buttons: { "Ok": function() { $(this).dialog("close"); } },
+		width: DEFAULT_POPUP_WIDTH,
+		title: "STEP :: Scripture Tools for Every Pastor",
+	});
 }

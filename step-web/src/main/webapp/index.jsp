@@ -11,69 +11,92 @@
     <link rel="stylesheet" type="text/css" href="css/initial-fonts.css" />
     <link rel="stylesheet" type="text/css" href="css/passage.css" />
 
+	<link rel="stylesheet" type="text/css" href="libs/menu/ddsmoothmenu.css" />
+	<link rel="stylesheet" type="text/css" href="libs/menu/ddsmoothmenu-v.css" />
+
 	<script src="js/initLib.js"></script>   
     <script src="libs/timeline_js/timeline-api.js?bundle=true" type="text/javascript"></script>
     <script src="libs/jquery-1.4.2.min.js" type="text/javascript"></script>
     <script src="libs/jquery-ui-1.8.5.custom.min.js" type="text/javascript"></script>
-    <script src="libs/jquery.layout-latest.js" type="text/javascript"></script>
     <script src="libs/jquery-shout.js" type="text/javascript"></script>
+	<script src="libs/menu/ddsmoothmenu.js" type="text/javascript"></script>
     
     <script src="js/util.js" type="text/javascript"></script>
-    <script src="js/passage_toolbar.js" type="text/javascript"></script>
     <script src="js/passage.js" type="text/javascript"></script>
     <script src="js/bookmark.js" type="text/javascript"></script>
     <script src="js/lexicon_definition.js" type="text/javascript"></script>
     <script src="js/ui_hooks.js" type="text/javascript"></script>
     <script src="js/timeline.js" type="text/javascript"></script>
+    <script src="js/toolbar_menu.js" type="text/javascript"></script>
+    <script src="js/interlinear_popup.js" type="text/javascript"></script>
     <script src="js/init.js" type="text/javascript"></script>
     
 </HEAD>
 <body>
 
-<div id="leftColumn" class="column">
-	<!--  the toolbar -->
-	<div class="ui-layout-north toolbar"></div>
-
-	<div class="passageContainer leftPassage ui-layout-center">
-		<div id="leftPassagePane">
-		    <input class="passageVersion defaultValue" type="text" value="Select a Bible version, e.g. ESV" />
-		    <input class="passageReference defaultValue" type="text"  value="Select a reference, e.g. Gen 1:1" /><button class="searchButton">Search</button>
-		    <input id="leftCheck" type="checkbox" class="toolbarButton"><label for="leftCheck">Toolbar</label></input>
-		</div>
-	    <div class="passageText ui-widget"></div>
+<div id="topMenu" class="ddsmoothmenu">
+</div>
+<div class="column">
+	<div class="passageContainer">
+		<div id="leftPaneMenu" class="innerMenus"></div>
+	    <div class="passageText ui-widget">
+	    	<div class="headingContainer">
+		    	<input id="leftPassageReference" class="heading editable passageReference" size="30" value="Rom 1:1-7" />
+		    	<input id="leftPassageBook" class="heading editable passageVersion" size="5" value="KJV" />
+	    	</div>
+	    	<div class="passageContent"></div>
+	    </div>
 	</div>
 </div>
-
-
+	
 <div class="ui-layout-center bookmarks" id="bookmarkPane">
 	<div class="ui-layout-north northBookmark">
-		<img src="images/step-logo.png" alt="STEP :: Scripture Tools for Every Pastor" />
+		<img id="topLogo" src="images/step-logo.png" alt="STEP :: Scripture Tools for Every Pastor" />
 	</div>
 	<div id="bookmarkPane" class="ui-layout-center bookmarksContent"><span>Bookmarks</span></div>
 	<div class="ui-layout-south logo">
 		<span class="copyright">&copy; Tyndale House</span>
 	</div>
 </div>
-
-<div id="rightColumn" class="column">
-	<!--  the toolbar -->
-	<div class="ui-layout-north toolbar"></div>
-	<div class="passageContainer rightPassage ui-layout-center">
-		<div id="rightPassagePane">
-		    <input class="passageVersion defaultValue" type="text" value="Select a Bible version, e.g. ESV" />
-		    <input class="passageReference defaultValue" type="text"  value="Select a reference, e.g. Gen 1:1" /><button class="searchButton">Search</button>
-		    <input id="rightCheck" type="checkbox" class="toolbarButton"><label for="rightCheck">Toolbar</label></input>
+	
+	
+<div class="column">
+	<div class="passageContainer">
+		<div id="rightPaneMenu" class="innerMenus"></div>
+	    <div class="passageText ui-widget">
+	    	<div class="headingContainer">
+		    	<input id="leftPassageReference" class="heading editable passageReference" size="30" value="Revelation 1" />
+		    	<input id="leftPassageBook" class="heading editable passageVersion" size="5" value="ESV" />
+	    	</div>
+	    	<div class="passageContent"></div>
 		</div>
-	
-	    <div class="passageText ui-widget"></div>
-    </div>
-	
+	</div>
 </div>
 
-<div id="bottomSection" class="timeline">No modules have yet been loaded.</div>
+<div class="interlinearPopup">
+	<input type="text" class="interlinearVersions"/>
+	<div class="interlinearChoices"></div>
+</div>
+<div class="interlinearPopup">
+	<input type="text" class="interlinearVersions"/>
+	<div class="interlinearChoices"></div>
+</div>
 
-<div id="loading"><img alt="Loading..." src="images/wait16.gif" />Loading...</div>
-<div id="error" class="ui-state-highlight">A placeholder for error messages</div>
+
+
+<!--<div id="bottomSection" class="timeline">No modules have yet been loaded.</div>-->
+<!---->
+<!--<div id="loading"><img alt="Loading..." src="images/wait16.gif" />Loading...</div>-->
+<!--<div id="error" class="ui-state-highlight">A placeholder for error messages</div>-->
+
+<!--  The about popup -->
+
+<div id="about">
+	<img id="aboutLogo" src="images/step-logo.png" />
+	<h3 id="aboutTitle">STEP :: Scripture Tools for Every Pastor</h3>
+	<p>&copy; Tyndale House 2011</p>
+</div>
+
 
 </body>
 

@@ -77,10 +77,18 @@
 		</dependency>
 
 
+		<dependency>
+			<groupId>org.crosswire</groupId>
+			<artifactId>jsword</artifactId>
+		</dependency>
 		<!-- transitive dependencies not picked up by jsword -->
 		<dependency>
 			<groupId>javatar</groupId>
 			<artifactId>javatar</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.jdom</groupId>
+			<artifactId>jdom</artifactId>
 		</dependency>
 		
 		<dependency>

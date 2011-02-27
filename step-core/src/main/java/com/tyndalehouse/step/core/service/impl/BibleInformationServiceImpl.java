@@ -63,7 +63,7 @@ public class BibleInformationServiceImpl implements BibleInformationService {
         final List<EnrichedLookupOption> elo = new ArrayList<EnrichedLookupOption>(lo.length + 1);
 
         for (int ii = 0; ii < lo.length; ii++) {
-            final String displayName = lo[ii].getDisplayName();
+            final String displayName = lo[ii].name();
             if (isNotBlank(displayName)) {
                 elo.add(new EnrichedLookupOption(displayName, lo[ii].toString(), lo[ii].isEnabledByDefault()));
             }

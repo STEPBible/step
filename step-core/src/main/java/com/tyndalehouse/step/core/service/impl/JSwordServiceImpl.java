@@ -119,6 +119,12 @@ public class JSwordServiceImpl implements JSwordService {
 
         try {
             final Book currentBook = Books.installed().getBook(version);
+
+            if (currentBook == null) {
+                throw new StepInternalException("The specified initials " + version
+                        + " did not reference a valid module");
+            }
+
             final BookData bookData = new BookData(currentBook, currentBook.getKey(reference));
             final Set<XslConversionType> requiredTransformation = identifyStyleSheet(options);
 
@@ -194,7 +200,7 @@ public class JSwordServiceImpl implements JSwordService {
         // cycle through each option
         for (final LookupOption lo : LookupOption.values()) {
             final FeatureType ft = FeatureType.fromString(lo.getXsltParameterName());
-            if (ft != null && isNotEmpty(lo.getDisplayName()) && book.getBookMetaData().hasFeature(ft)) {
+            if (ft != null && isNotEmpty(lo.name()) && book.getBookMetaData().hasFeature(ft)) {
                 options.add(lo);
             }
         }

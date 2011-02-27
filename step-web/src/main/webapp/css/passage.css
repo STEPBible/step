@@ -149,19 +149,46 @@ H6.level {
 	clear: both;
 }
 
+
+
 H3.heading {
 	font-size: 110%;
 	color: #666699;
 	font-weight: bold;
 	clear: both;
-	clear: both;
 }
 
-H2.heading {
-	font-size: 115%;
+
+.editable {
+	border: 0px;
+}
+
+.editable:hover {
+	border: 1px dashed black;
+	font-style: italic;
+}
+
+.editable:focus {
+	border: 1px solid black;
+	font-style: italic;
+}
+
+.headingContainer {
+	height: 30px;	
+}
+
+H2.heading, input.heading {
 	color: #669966;
 	font-weight: bold;
 	clear: both;
+}
+
+input.heading {
+	font-size: 130%;
+}
+
+H2.heading {
+	font-size: 110%;
 }
 
 div.margin {

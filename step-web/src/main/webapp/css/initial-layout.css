@@ -1,11 +1,105 @@
 html {
-	overflow: auto !important;
+/*	overflow: auto !important;*/
 }
 
 body {
 	min-width: 500px;
 	min-height: 300px;
-	background: #F6F6F6;
+	margin: 0px;
+	overflow: hidden;
+}
+
+/**********************************/
+/** ABOUT PANE 					 **/
+/**********************************/
+#about {
+	display: none;
+}
+
+#aboutLogo {
+	float: left;
+	margin: 0px 5px;
+}
+
+#aboutTitle {
+	display: inline;	
+	white-space: nowrap;
+}
+
+/**************************/
+/** INTERLINEAR PANE
+/**************************/
+.interlinearPopup {
+	display: none;
+}
+
+.interlinearVersions {
+	width: 100%;
+}
+
+.interlinearChoices br {
+	clear: both;
+}
+
+.interlinearChoices input {
+	float: left;
+}	
+
+.interlinearChoices label {
+	float: left;
+	margin-right: 10px;	
+}
+
+/**************************/
+/** BOOKMARK PANE
+/**************************/
+.bookmarks {
+	border-top: 0px;
+	min-width: 45px;
+	
+	display: inline;
+	float: left;
+	width: 10%;
+}
+
+.northBookmark {
+	text-align: center;
+}
+
+.northBookmark img {
+	width: 75px;
+	height: 56px;
+} 
+
+.bookmarksContent {
+	margin: 0px 5px;
+	border: 1px solid #cccc99;
+	text-align: center;
+}
+
+
+/**************************/
+/* TOP MENU
+/**************************/
+#topMenu {
+}
+
+
+/**************************/
+/* COLUMNS
+/**************************/
+.column { 
+	border: 0px;
+	display: inline;
+	width: 45%; /* *2 columns */
+	float: left;
+	overflow: auto;
+}
+
+.passageContainer {
+/*	border-left: 0px;*/
+/*	border-top: 0px;*/
+	border: 0px; 	
 }
 
 .ui-button-text {
@@ -28,6 +122,7 @@ body {
 /* disable scrolling in ALL panes */
 .ui-layout-pane {
     overflow: hidden !important;
+    padding: 0px;
 }
 
 .column .ui-layout-pane-north {
@@ -51,16 +146,16 @@ body {
 
 .passageContainer {
 	text-align: center;
-	padding-botom: 5px;
+	padding-bottom: 5px;
 }
-
-#leftPassagePane, #rightPassagePane {
-	white-space: nowrap;
-}
-
-.passageVersion {
-	width: 40%;
-}
+/**/
+/*#leftPassagePane, #rightPassagePane {*/
+/*	white-space: nowrap;*/
+/*}*/
+/**/
+/*.passageVersion {*/
+/*	*/
+/*}*/
 
 .passageReference {
 	width: 40%;

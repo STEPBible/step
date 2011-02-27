@@ -8,7 +8,7 @@ function Bookmark(bookmarkContainer) {
 	var self = this;
 	
 	//listen to passage changes
-	this.bookmarkContainer.hear("passage-change", function(selfElement, data) {
+	this.bookmarkContainer.hear("passage-changed", function(selfElement, data) {
 		self.addHistory(data);
 	});
 }

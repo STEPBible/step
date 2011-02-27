@@ -8,13 +8,15 @@ String.prototype.startsWith = function(str) { return (this.match("^"+str)==str) 
 
 function init() {
 	$(document).ready(function() {
-		var mainAppLayout = initLayout();
+		initMenu();
 		initGlobalHandlers();
+		initLayout();
 		initDefaultValues();
 		initLexicon();
-		initTimeline(mainAppLayout);
+//		initTimeline(mainAppLayout);
 		initBookmarks();
 		initData();
+		initInitialEvents();
 	});
 }
 
@@ -22,54 +24,39 @@ function init() {
  * initialises layout
  */
 function initLayout() {
-
-	//do outerlayout first
-	var mainAppLayout = $('body').layout({
-		name : 'outerLayout', 
-		spacing_open: 2,
-		autoResize : true, // try to maintain pane-percentages
-		autoReopen : true, // auto-open panes that were previously
-		autoBindCustomButtons : true,
-		north__paneSelector: '#error',
-		west__paneSelector : '#leftColumn',
-		center__paneSelector : '.bookmarks',
-		east__paneSelector : '#rightColumn',
-		south__paneSelector: '#bottomSection',
-		west__size : .45, // percentage size expresses as a decimal
-		east__size : .45,
-		north__minSize : 0,
-		north__size: 20,
-		north__spacing_open : 0,
-		north__spacing_closed : 0,
-		north__initClosed: true,
-		south__size : .5,
-		south__spacing_closed: 2,
-		south__resizable : false,
-		south__initClosed : true,
-		minSize : 130,
-		noRoomToOpenAction : "hide"
-	});
-
-	$('#bookmarkPane').layout({
-		name : 'outerLayout', 
-		resizable: false, 
-		closable: false,
-		slidable: false,
-		spacing_open: 0,
-		spacing_closed: 0,
-		
-		autoResize : true, // try to maintain pane-percentages
-		autoReopen : true, // auto-open panes that were previously
-		autoBindCustomButtons : true,
-		north__paneSelector : '.northBookmark',
-		center__paneSelector : '.bookmarksContent',
-		south__paneSelector : '.logo',
-		north__size : 70, 
-		south__size : 30,
-		noRoomToOpenAction : "hide"
+	$("body").hear("refresh-layout", function() {
+		//we resize the heights:
+		var windowHeight = $(window).height();
+		var innerMenuHeight = $("#leftPaneMenu").height();
+		var topMenuHeight = $("#topMenu").height();
+		var imageAndFooterHeight = $(".northBookmark").height() + $(".logo").height();
+		$(".column").height(windowHeight - topMenuHeight);
+		$(".bookmarksContent").height(windowHeight - topMenuHeight - imageAndFooterHeight);
 	});
 	
-	return mainAppLayout;
+	//listen to layout changes and alert
+	$(window).resize(function() {
+		$.shout("refresh-layout");
+	});
+}
+
+function initMenu() {
+	ddsmoothmenu.init({
+		 mainmenuid: "topMenu-ajax", //menu DIV id
+		 zIndexStart: 1000,
+		 orientation: 'h', //Horizontal or vertical menu: Set to "h" or "v"
+		 classname: 'ddsmoothmenu topMenu', //class added to menu's outer DIV
+		 //customtheme: ["#1c5a80", "#18374a"],
+		 contentsource: ["topMenu", "topmenu.html"]
+		});
+	
+	$.get("panemenu.html", function(data) {
+		var menusToBe = $(".innerMenus");
+		menusToBe.html(data);
+		menusToBe.each(function(index, value) {
+			new ToolbarMenu(index, value);
+		});
+	});
 }
 
 function initDefaultValues() {
@@ -118,9 +105,7 @@ function initData() {
 	//get data for passages
 	// make call to server first and once, to cache all passages:
 	var strongedVersions = [];
-
-	//we reserve the first spot for "ALL Versions"
-	var ii = 1;
+	var ii = 0;
 	
 	$.getJSON(BIBLE_GET_BIBLE_VERSIONS, function(data) {
 		var parsedResponse = $.map(data, function(item) {
@@ -140,14 +125,18 @@ function initData() {
 		
 		//add the ALL Version, by iterating through all found versions and adding them as the value
 		var allVersionsKey = "";
-		for(var jj = 1; jj < ii; jj++) {
-			allVersionsKey += strongedVersions[jj].value;
-			if(jj + 1 < ii) {
-				allVersionsKey += ',';
-			}
-		}
-		strongedVersions[0] = {label: "All available versions", value: allVersionsKey };
-		initPassages(parsedResponse, strongedVersions, options);
+		initPassages(parsedResponse, options);
+		initInterlinearPopup(strongedVersions);
+	});
+}
+
+/**
+ * sets up the interlinear popup with the available versions
+ * @param strongedVersions the list of strong versions
+ */
+function initInterlinearPopup(strongedVersions) {
+	$(".interlinearPopup").each(function(index, interlinearPopup) {
+		new InterlinearPopup(strongedVersions, index, interlinearPopup);
 	});
 }
 
@@ -157,47 +146,43 @@ function initData() {
  * @param strongedVersions a list of version containing strong tagging
  * @param options a list of options to be displayed in the toolbar
  */
-function initPassages(allVersions, strongedVersions, options) {
-	//set up the left column
-	var columnLayouts = [
-	                     createColumnLayout('#leftColumn', 'leftColumnLayout', '.toolbar', '.leftPassage'),
-	                     createColumnLayout('#rightColumn', 'rightColumnLayout', '.toolbar', '.rightPassage')
-	                     ];
-	
+function initPassages(allVersions, options) {
 	//set up initial passages with reference data:
-	var versions = ["KJV" ];
-	var passages = ["Romans 1:1-3"];
 	$(".column").each(
 		function(index) {
-			var passage = new Passage($(".passageContainer", this), allVersions, columnLayouts[index]);
-			var toolbar = new Toolbar(passage, $(".toolbar", this), options, strongedVersions);
-			passage.setToolbar(toolbar);
-			
-			if(index < versions.length) {
-				passage.changePassage(versions[index], passages[index]);
-			}
+			var passageContainer = $(".passageContainer", this);
+			passageContainer.attr("passage-id", index);
+			new Passage(passageContainer, allVersions, index);
 		}
 	);
 }
 
-function createColumnLayout(container, name, north, center) {
-	return $(container).layout({
-		name : name, 
-		resizable: false, 
-		closable: true,
-		slidable: true,
-		spacing_open: 0,
-		spacing_closed: 0,
-		
-		autoResize : true, // try to maintain pane-percentages
-		autoReopen : true, // auto-open panes that were previously
-		autoBindCustomButtons : true,
-		north__initClosed: true,
-		north__paneSelector : north,
-		center__paneSelector : center,
-		north__size : 50,
-		
-		noRoomToOpenAction : "hide"
+/**
+ * waits for a particular condition to be ready, then triggers the action
+ * @param isReady a function that can be called to tell us whether something is ready
+ * @param action a function to trigger when we know it will work
+ */
+function waitingForCondition(isReady, action) {
+	if(isReady() == false) {
+		window.setTimeout(function() {
+							waitingForCondition(isReady, action);
+						}, 250);
+	} else {
+		action();
+	}
+}
+
+function initInitialEvents() {
+	//unfortunately, all events might not be loaded yet, in particular
+	// - version-changed-0 and version-changed-1
+	waitingForCondition(
+		function() {
+			return !($._jq_shout.registry["version-changed-0"] === undefined
+		 		|| $._jq_shout.registry["version-changed-1"] === undefined);
+	}, 	function() {
+			
+			$.shout("version-changed-" + 0, $(".passageContainer[passage-id = '0'] .passageVersion").val());
+			$.shout("version-changed-" + 1, $(".passageContainer[passage-id = '1'] .passageVersion").val());
 	});
 }
 

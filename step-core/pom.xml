@@ -108,7 +108,6 @@
 		<dependency>
 			<groupId>javatar</groupId>
 			<artifactId>javatar</artifactId>
-			<scope>test</scope>
 		</dependency>
 
 		<dependency>
@@ -116,6 +115,5 @@
 			<artifactId>commons-httpclient </artifactId>
 			<scope>test</scope>
 		</dependency>
-			
 	</dependencies>
 </project>

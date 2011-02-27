@@ -120,10 +120,11 @@ public class FrontController extends HttpServlet {
         try {
             final Object returnVal = controllerMethod.invoke(controllerInstance, (Object[]) sr.getArgs());
             return getEncodedJsonResponse(returnVal);
+            // TODO send a ERROR 500 back
         } catch (final IllegalAccessException e) {
-            throw new StepInternalException(sr.toString(), e);
+            throw new StepInternalException("An illegal access has occurred", e);
         } catch (final InvocationTargetException e) {
-            throw new StepInternalException(sr.toString(), e);
+            throw new StepInternalException("An internal error has occurred", e);
         }
     }
 

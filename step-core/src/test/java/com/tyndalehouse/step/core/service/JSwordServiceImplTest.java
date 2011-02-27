@@ -45,7 +45,8 @@ public class JSwordServiceImplTest {
      * 
      */
     @Test
-    public void testInterlinearTransformation() throws NoSuchKeyException, BookException, JDOMException, IOException {
+    public void testInterlinearTransformation() throws NoSuchKeyException, BookException, JDOMException,
+            IOException {
         final Book currentBook = Books.installed().getBook("KJV");
         final BookData bookData = new BookData(currentBook, currentBook.getKey("Romans 1:1-3"));
         final Element osisFragment = bookData.getOsisFragment();

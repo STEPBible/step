@@ -65,7 +65,7 @@
 		<div id="rightPaneMenu" class="innerMenus"></div>
 	    <div class="passageText ui-widget">
 	    	<div class="headingContainer">
-		    	<input id="leftPassageReference" class="heading editable passageReference" size="30" value="Revelation 1" />
+		    	<input id="leftPassageReference" class="heading editable passageReference" size="30" value="Jhn 1:1;1 Jhn 1:1" />
 		    	<input id="leftPassageBook" class="heading editable passageVersion" size="5" value="ESV" />
 	    	</div>
 	    	<div class="passageContent"></div>

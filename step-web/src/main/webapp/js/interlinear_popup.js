@@ -37,25 +37,37 @@ InterlinearPopup.prototype.createCheckboxes = function(strongedVersions) {
 	var allCheckBoxes = "";
 	var interlinearChoices = $(".interlinearChoices", this.interlinearPopup);
 	
-	
+	var row = 0;
 	for(ii = 0 ; ii < strongedVersions.length; ii++) {
 		var longName = strongedVersions[ii].label;
 		var shortName = longName.length > 20 ? shortenName(longName, 20) : longName;
 		
 		//created a checkbox for this, that adds the text if checked to the input
+		if(row % 2 == 0) {
+			allCheckBoxes += "<tr>";
+		}
+		
+		allCheckBoxes += "<td>";
 		allCheckBoxes += "<input id='il_" + ii + "' type='checkbox' value='" + strongedVersions[ii].value + "' />" +
 						  "<label for='il_" + ii + "' title='" + longName + "'>" + shortName + "</label>";
+		allCheckBoxes += "</td>";
+	
+		if(row % 2 == 0) {
+			allCheckBoxes += "</tr>";
+		}
+		
+		row++;
+		
 		allOptionsValue += strongedVersions[ii].value;
 		if(ii < strongedVersions.length -1) {
 			allOptionsValue += ',';
 		}
 	}
 	
-	var allOptions = "<input id='il_all' type='checkbox' value='" + allOptionsValue + "' />" +
-	  "<label for='il_" + ii + "'>All</label><br />";
+	var allOptions = "<tr><td><input id='il_all' type='checkbox' value='" + allOptionsValue + "' />" +
+	  "<label for='il_" + ii + "'>All</label></td><td>&nbsp;</td></tr>";
 	
-	interlinearChoices.append(allOptions);
-	interlinearChoices.append(allCheckBoxes);
+	interlinearChoices.append("<table>" + allOptions + allCheckBoxes + "</table>");
 }
 
 /**

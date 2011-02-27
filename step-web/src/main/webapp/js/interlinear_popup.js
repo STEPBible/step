@@ -43,7 +43,7 @@ InterlinearPopup.prototype.createCheckboxes = function(strongedVersions) {
 		var shortName = longName.length > 20 ? shortenName(longName, 20) : longName;
 		
 		//created a checkbox for this, that adds the text if checked to the input
-		if(row % 2 == 0) {
+		if((row % 2) == 0) {
 			allCheckBoxes += "<tr>";
 		}
 		
@@ -52,7 +52,7 @@ InterlinearPopup.prototype.createCheckboxes = function(strongedVersions) {
 						  "<label for='il_" + ii + "' title='" + longName + "'>" + shortName + "</label>";
 		allCheckBoxes += "</td>";
 	
-		if(row % 2 == 0) {
+		if((row % 2) == 1) {
 			allCheckBoxes += "</tr>";
 		}
 		

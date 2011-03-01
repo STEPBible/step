@@ -74,7 +74,7 @@ function showMorph(morph, sourceElement) {
 */
 function showMorphOrStrong(tag, sourceElement) {
 	//trigger the parent event - to show everything
-	$(sourceElement).parent().click()
+	$(sourceElement).parent().click();
 	
 	//need to find what event is coming in, to get the clicked element and pass that down
 	$("#lexiconDefinition span:contains(" + tag + ")").parent().click();	

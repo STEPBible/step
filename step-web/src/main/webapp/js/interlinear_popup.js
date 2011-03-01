@@ -134,7 +134,7 @@ InterlinearPopup.prototype.addShowHandler = function() {
 			},
 			modal: true,
 			width: DEFAULT_POPUP_WIDTH,
-			title: "Please choose one or more versions for the interlinear" + self.passageId
+			title: "Please choose one or more versions for the interlinear"
 		});
 	});
 }

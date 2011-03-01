@@ -1,7 +1,7 @@
 .passageText {
 	margin-top: 1px;
 	overflow: auto;
-	height: 96%;
+	padding: 0px 5px;
 	position: relative;
 	text-align: left;
 }
@@ -160,21 +160,22 @@ H3.heading {
 
 
 .editable {
-	border: 0px;
+	border: 1px dashed black;
 }
 
 .editable:hover {
-	border: 1px dashed black;
+	border: 1px solid black;
 	font-style: italic;
 }
 
 .editable:focus {
 	border: 1px solid black;
-	font-style: italic;
+	font-style: normal;
 }
 
 .headingContainer {
-	height: 30px;	
+	height: 30px;
+	padding-bottom: 5px;
 }
 
 H2.heading, input.heading {

@@ -500,7 +500,24 @@
   </xsl:template>
 
   <!--=======================================================================-->
+  <!-- This section defines the interlinear word 							 -->
+  <!--=======================================================================-->
 	<xsl:template match="w">
+		<xsl:call-template name="outputInterlinearWord">
+			<xsl:with-param name="classes" select="'w'" />
+		</xsl:call-template>
+	</xsl:template>
+
+	<xsl:template match="w" mode="jesus">
+		<xsl:call-template name="outputInterlinearWord">
+			<xsl:with-param name="classes" select="'w jesus'" />
+		</xsl:call-template>
+	</xsl:template>
+
+
+	<xsl:template name="outputInterlinearWord">
+		<xsl:param name="classes" select="'w'" />
+	
 		<!-- Output the content followed by all the lemmas and then all the morphs. 
 			So, we know we have a number of lines to create, therefore, we'll create 
 			that many! -->
@@ -514,7 +531,8 @@
 		</xsl:if>
 
 		<!-- start the block -->
-		<span class="w" onclick="javascript:showAllStrongMorphs(&quot;{@lemma} {@morph}&quot;)">
+		
+		<span class="{$classes}" onclick="javascript:showAllStrongMorphs(&quot;{@lemma} {@morph}&quot;)">
 			<!-- 1st - Output first line or a blank if no text available. -->
 			<span class="text">
 				<xsl:call-template name="outputNonBlank">
@@ -1097,7 +1115,7 @@
   </xsl:template>
   
   <xsl:template match="q[@who = 'Jesus']">
-    <font class="jesus"><xsl:value-of select="@marker"/><xsl:apply-templates mode="jesus"/><xsl:value-of select="@marker"/></font>
+    <xsl:value-of select="@marker"/><xsl:apply-templates mode="jesus" /><xsl:value-of select="@marker"/>
   </xsl:template>
 
   <xsl:template match="q[@type = 'blockquote']">
@@ -1553,7 +1571,13 @@
 
   <!-- If the parent of the text is a verse then, we need to wrap in span. This applies
   to any punctuation really, since all other words should be contained in a W  -->
-  <xsl:template match="text()">
+  <xsl:template match="text()" mode="jesus">
+  	<xsl:call-template name="matchSimpleText"></xsl:call-template>
+  </xsl:template>
+  
+  
+  
+  <xsl:template match="text()" name="matchSimpleText">
   		<xsl:choose>
 			<xsl:when test="jsword:org.apache.commons.lang.StringUtils.containsOnly(normalize-space(.), $punctuation)" />
 	  		<xsl:when test="name(..) = 'verse' and normalize-space(.) != ''"><span class="w"><span class="text"><xsl:value-of select="."/></span></span></xsl:when>

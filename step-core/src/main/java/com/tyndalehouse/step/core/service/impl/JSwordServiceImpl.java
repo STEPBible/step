@@ -128,29 +128,36 @@ public class JSwordServiceImpl implements JSwordService {
             final BookData bookData = new BookData(currentBook, currentBook.getKey(reference));
             final Set<XslConversionType> requiredTransformation = identifyStyleSheet(options);
 
-            final SAXEventProvider osissep = bookData.getSAXEventProvider();
-            TransformingSAXEventProvider htmlsep = null;
-            htmlsep = (TransformingSAXEventProvider) new Converter() {
+            // TODO: This is a workaround while jsword is being fixed. see JS-109, and email from CJB on
+            // 27/02/2011
+            synchronized (this) {
+                final SAXEventProvider osissep = bookData.getSAXEventProvider();
+                TransformingSAXEventProvider htmlsep = null;
+                htmlsep = (TransformingSAXEventProvider) new Converter() {
 
-                public SAXEventProvider convert(final SAXEventProvider provider) throws TransformerException {
-                    try {
-                        // for now, we just assume that we'll only have one option, but this may change later
-                        // TODO, we can probably cache the resource
-                        final TransformingSAXEventProvider tsep = new TransformingSAXEventProvider(getClass()
-                                .getResource(requiredTransformation.iterator().next().getFile()).toURI(),
-                                osissep);
+                    public SAXEventProvider convert(final SAXEventProvider provider)
+                            throws TransformerException {
+                        try {
+                            // for now, we just assume that we'll only have one option, but this may change
+                            // later
+                            // TODO, we can probably cache the resource
+                            final TransformingSAXEventProvider tsep = new TransformingSAXEventProvider(
+                                    getClass()
+                                            .getResource(requiredTransformation.iterator().next().getFile())
+                                            .toURI(), osissep);
 
-                        // set parameters here
-                        setOptions(tsep, options, version, reference);
-                        setupInterlinearOptions(tsep, interlinearVersion, reference);
-                        return tsep;
-                    } catch (final URISyntaxException e) {
-                        throw new StepInternalException("Failed to load resource correctly", e);
+                            // set parameters here
+                            setOptions(tsep, options, version, reference);
+                            setupInterlinearOptions(tsep, interlinearVersion, reference);
+                            return tsep;
+                        } catch (final URISyntaxException e) {
+                            throw new StepInternalException("Failed to load resource correctly", e);
+                        }
                     }
-                }
 
-            }.convert(osissep);
-            return XMLUtil.writeToString(htmlsep);
+                }.convert(osissep);
+                return XMLUtil.writeToString(htmlsep);
+            }
         } catch (final NoSuchKeyException e) {
             throw new StepInternalException("The verse specified was not found: " + reference, e);
         } catch (final BookException e) {

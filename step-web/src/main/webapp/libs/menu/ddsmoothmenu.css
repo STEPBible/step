@@ -76,12 +76,16 @@
 }
 
 .ddsmoothmenu ul li ul li a.disabled {
-	background-color: grey;
+	background-color: lightgrey;
+	color: grey;
+	font-style: italic;
 }
 
 
 .ddsmoothmenu ul li ul li a.disabled:hover {
-	background-color: grey;
+	background-color: lightgrey;
+	color: grey;
+	font-style: italic;
 }
 
 

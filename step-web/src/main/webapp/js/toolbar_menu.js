@@ -88,7 +88,7 @@ ToolbarMenu.prototype.untickMenuItem = function(selectedItem) {
  */
 ToolbarMenu.prototype.checkItemIsSelectable = function(selectedItem) {
 	//we only deal with elements that are enabled
-	if(this.getItemSelector().hasClass("disabled")) {
+	if(this.getItemSelector(selectedItem).hasClass("disabled")) {
 		return false;
 	}
 	return true;

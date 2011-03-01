@@ -48,8 +48,6 @@ function Passage(passageContainer, versions, passageId) {
 	});
 }
 
-
-
 /**
  * changes the passage, with optional parameters
  */
@@ -105,8 +103,11 @@ Passage.prototype.changePassage = function() {
  * @strongReference the reference look for across this passage pane and highlight
  */
 Passage.prototype.highlightStrong = function(strongReference) {
-	$(".verse span[onclick*=" + strongReference + "]", this.container).css("text-decoration", "underline");
-	$("span.w[onclick*=" + strongReference + "] span.text", this.container).css("text-decoration", "underline");
+	//check for black listed strongs
+	if($.inArray(strongReference, Passage.getBlackListedStrongs()) == -1) {
+		$(".verse span[onclick*=" + strongReference + "]", this.container).css("text-decoration", "underline");
+		$("span.w[onclick*=" + strongReference + "] span.text", this.container).css("text-decoration", "underline");
+	}
 }
 
 /**
@@ -154,6 +155,14 @@ Passage.prototype.higlightStrongs = function(strongMorphReference) {
 		//we ignore everything else
 	}
 }
+
+/**
+ * static method that returns strongs that should not be tagged in the UI
+ */
+Passage.getBlackListedStrongs = function() {
+	return ["strong:G3588"];
+}
+
 
 /**
  * sets the toolbar so that the passage can open/close it

@@ -3,6 +3,10 @@
  * extending jquery to have array comparison
  */
 function compare(s, t) {
+	if(s == null || t == null) {
+		return t == s;
+	}
+	
     if (s.length != t.length) { return false; }
     var a = s.sort(),
         b = t.sort();

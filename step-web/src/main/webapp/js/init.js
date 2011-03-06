@@ -31,7 +31,7 @@ function initLayout() {
 		var topMenuHeight = $("#topMenu").height();
 		var imageAndFooterHeight = $(".northBookmark").height() + $(".logo").height();
 		$(".column").height(windowHeight - topMenuHeight);
-		$(".bookmarksContent").height(windowHeight - topMenuHeight - imageAndFooterHeight);
+		$(".bookmarkPane").height(windowHeight - topMenuHeight - imageAndFooterHeight);
 	});
 	
 	//listen to layout changes and alert
@@ -94,6 +94,7 @@ function addDefaultValue(inputSelector) {
 
 
 function initData() {
+	
 	//get all supported versions
 	var options;
 	$.getJSON(BIBLE_GET_ALL_FEATURES, function(data) {
@@ -179,9 +180,6 @@ function initInitialEvents() {
 		function() {
 			return !($(".passageContainer[passage-id = '0'] .passageVersion") === undefined
 			    || $(".passageContainer[passage-id = '1'] .passageVersion").val() === undefined);
-			
-//			return !($._jq_shout.registry["version-changed-0"] === undefined
-//		 		|| $._jq_shout.registry["version-changed-1"] === undefined);
 	}, 	function() {
 			$.shout("version-changed-" + 0, $(".passageContainer[passage-id = '0'] .passageVersion").val());
 			$.shout("version-changed-" + 1, $(".passageContainer[passage-id = '1'] .passageVersion").val());
@@ -222,7 +220,7 @@ function initLexicon() {
 }
 
 function initBookmarks() {
-	new Bookmark($("#bookmarkPane"));
+	new Bookmark($(".bookmarkContents"));
 }
 
 function initTimeline(mainAppLayout) {

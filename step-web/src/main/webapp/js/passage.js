@@ -13,6 +13,9 @@ function Passage(passageContainer, versions, passageId) {
 	this.passage = $(".passageContent", passageContainer);
 	this.passageId = passageId;
 	
+	//read state from the cookie
+	this.setInitialPassage();
+	
 	// set up autocomplete
 	this.version.autocomplete({
 		source : versions,
@@ -22,9 +25,6 @@ function Passage(passageContainer, versions, passageId) {
 			$(this).val(ui.item.value);
 			$(this).change();
 		},
-		change: function() {
-//			$.shout("version-change-" + this.passageId);
-		}
 	}).focus(function() {
 		self.version.autocomplete("search", "");
 	}).change(function() {
@@ -46,6 +46,28 @@ function Passage(passageContainer, versions, passageId) {
 		//we only care about this event if the menu was within the container...
 		self.changePassage();
 	});
+	
+
+	//register when we want to be alerted that a bookmark has changed
+	this.passage.hear("bookmark-triggered-" + this.passageId, function(selfElement, data) {
+		self.reference.val(data);
+		self.changePassage();
+	});
+}
+
+/**
+ * sets up the initial passages based on the cookie state
+ */
+Passage.prototype.setInitialPassage = function() {
+	var cookieReference = $.cookie("currentReference-" + this.passageId);
+	var cookieVersion = $.cookie("currentVersion-" + this.passageId);
+	if(cookieReference != null) {
+		this.reference.val(cookieReference);
+	}
+	
+	if(cookieVersion != null) {
+		this.version.val(cookieVersion);
+	}
 }
 
 /**
@@ -67,9 +89,9 @@ Passage.prototype.changePassage = function() {
 	
 	if(lookupReference && lookupVersion 
 			&& lookupVersion != "" && lookupReference != ""
-			&& (   lookupVersion != this.currentVersion 
-				|| lookupReference != this.currentReference
-			    || interlinearVersion != this.currentInterlinearVersion
+			&& (   lookupVersion != $.cookie("currentVersion-" + this.passageId) 
+				|| lookupReference != $.cookie("currentReference-" + this.passageId)
+			    || interlinearVersion != $.cookie("currentInterlinearVersion-" + this.passageId)
 				|| !compare(options, this.currentOptions)) 
 		) {
 		var url = BIBLE_GET_BIBLE_TEXT + lookupVersion + "/" + lookupReference;
@@ -85,14 +107,17 @@ Passage.prototype.changePassage = function() {
 		//send to server
 		$.get(url, function (text) {
 			//we get html back, so we insert into passage:
-			self.currentReference = lookupReference;
-			self.currentVersion = lookupVersion;
+			$.cookie("currentReference-" + self.passageId, lookupReference);
+			$.cookie("currentVersion-" + self.passageId, lookupVersion);
+			$.cookie("currentOptions-" + self.passageId, options);
+			$.cookie("currentInterlinearVersion-" + self.passageId, interlinearVersion);
+
+			//TODO remove completely in favour of cookie storage only
 			self.currentOptions = options;
-			self.currentInterlinearVersion = interlinearVersion;
 			self.passage.html(text.value);
 			
 			//passage change was successful, so we let the rest of the UI know
-			$.shout("passage-changed", self.reference.val());
+			$.shout("passage-changed", { reference: self.reference.val(), passageId: self.passageId, init: init } );
 		});
 	}
 }

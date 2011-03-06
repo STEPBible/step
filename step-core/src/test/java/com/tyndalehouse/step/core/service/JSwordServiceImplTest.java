@@ -97,4 +97,63 @@ public class JSwordServiceImplTest {
         LOGGER.debug("\n {}", xmlOutputter.outputString(d));
         Assert.assertTrue(osisText.contains("span"));
     }
+
+    /**
+     * tries to replicate the issue with bookdata not being able to be read in a concurrent fashion
+     * 
+     * @throws NoSuchKeyException a no such key exception
+     * @throws BookException a book exception
+     * @throws InterruptedException when the thread is interrupted
+     */
+    @Test
+    public void testConcurrencyIssueOnBookData() throws NoSuchKeyException, BookException,
+            InterruptedException {
+        final String[] names = { "KJV", "ESV" };
+        final String ref = "Rom.1.1";
+
+        final Runnable r1 = new Runnable() {
+            @Override
+            public void run() {
+                final Book b0 = Books.installed().getBook(names[0]);
+                BookData bd1;
+                try {
+                    bd1 = new BookData(b0, b0.getKey(ref));
+                    bd1.getSAXEventProvider();
+                } catch (final NoSuchKeyException e) {
+                    e.printStackTrace();
+                } catch (final BookException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        };
+
+        final Runnable r2 = new Runnable() {
+            @Override
+            public void run() {
+                final Book b0 = Books.installed().getBook(names[1]);
+                BookData bd1;
+                try {
+                    bd1 = new BookData(b0, b0.getKey(ref));
+                    bd1.getSAXEventProvider();
+                } catch (final NoSuchKeyException e) {
+                    e.printStackTrace();
+                } catch (final BookException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        };
+
+        int ii = 0;
+        while (ii++ < 1000) {
+            final Thread t1 = new Thread(r1);
+            final Thread t2 = new Thread(r2);
+            t1.start();
+            t2.start();
+
+            t1.join();
+            t2.join();
+        }
+    }
 }

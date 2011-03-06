@@ -9,66 +9,85 @@ function Bookmark(bookmarkContainer) {
 	
 	//listen to passage changes
 	this.bookmarkContainer.hear("passage-changed", function(selfElement, data) {
-		self.addHistory(data);
+		self.addHistory(data.reference);
 	});
+	
+	this.initialiseHistory();
 }
 
+Bookmark.maxBookmarks = 10;
+Bookmark.historyDelimiter = '#';
+
+//we need to ignore the first two passage changes since we have those in the history
+//the history giving us the order of things
+Bookmark.ignoreChangePassage = 2;
 
 /**
  * Adding a bookmark
  */
 Bookmark.prototype.addHistory = function(passageReference) {
-	//construct bookmark
-//	var item = "<span>" + passageReference + "</span>";
-//	$("#bookmarkPane span").prepend(item);
-}	
+	//we ignore the first two items:
+	if(Bookmark.ignoreChangePassage != 0) {
+		Bookmark.ignoreChangePassage--;
+		return;
+	}
 	
 	
+	//if we have the bookmark already, then we stop here
+	var history = this.getHistory();
 	
+	var indexInHistory = $.inArray(passageReference, history);
 	
-	//	var bookmark = this.get(passageReference);
-//	if(bookmark) {
-//		//move bookmark around
-//		
-//		return;
-//	}
-//	
-//	//otherwise we create the bookmark
-//	bookmark = "<span class='bookmark'>" +
-//			"<a href='#left-" + passageReference + "' >" + "left-arrow" +"</a>" +
-//			passageReference +
-//			"<a href='#right-" + passageReference + "' >" + "right-arrow" +"</a>" +;
-//	
-//	$(this.bookmarkContainer).append(bookmark);
-//	
-//	//insert bookmark here => i.e. it would be good to have a linked list implementation? (or perhaps, 
-//	//we insert whatever...
-//	this.currentBookmarks.insert(bookmark);
-//}
-//
-///**
-// * gets a bookmark
-// */
-//Bookmark.prototype.get = function(passageReference) {
-//	//TODO check this
-//	return $("val() = " + passageReference, this.bookmarkContainer);
-////or
-//	/*
-//	var i = 0;
-//	for(i = 0; i < this.currentBookmarks.length; i++) {
-//		if(this.currentBookmarks[i].val() = passageReference) {
-//			return this.currentBookmarks[i];
-//		}
-//	}*/
-//}
-//
-///** 
-// * removes a bookmark from the list
-// */
-//Bookmark.prototype.remove(reference) {
-//	var b = getBookmark(reference);
-//	if(b) {
-//		b.removeFromParent();
-//	}
-//}
+	if(indexInHistory == -1) {
+		if(history.length > Bookmark.maxBookmarks) {
+			//we remove the first element in the array (i.e. the last child).
+			history.pop();
+			$("div.bookmarkItem:last", this.bookmarkContainer).remove();
+		}
+		
+		//then add
+		this.createBookmarkItem(passageReference);
+		history.unshift(passageReference);
+	} else {
+		//reposition item...
+		var item = $("div.bookmarkItem", this.bookmarkContainer).eq(indexInHistory).detach();
+		history.splice(indexInHistory, 1);
+		this.bookmarkContainer.prepend(item);
+		history.unshift(passageReference);
+	}
+	
+	this.setHistory(history);
+};	
+	
+Bookmark.prototype.initialiseHistory = function() {
+	var history = this.getHistory();
+	if(history != null) {
+		for(var ii = history.length -1; ii >= 0; ii--) {
+			this.createBookmarkItem(history[ii]);
+		}
+	}
+}
 
+Bookmark.prototype.createBookmarkItem = function(passageReference) {
+	if(passageReference && passageReference != "") {
+		var item = "<div class='bookmarkItem'>";
+		item += "<a class='ui-icon ui-icon-arrowthick-1-w bookmarkArrow leftBookmarkArrow' href='#' onclick='$.shout(\"bookmark-triggered-0\", \""+ passageReference + "\");'>&larr;</a>";
+		item += passageReference;
+		item += "<a class='ui-icon ui-icon-arrowthick-1-e bookmarkArrow rightBookmarkArrow' href='#' onclick='$.shout(\"bookmark-triggered-1\", \""+ passageReference + "\");'>&rarr;</a>";
+		item += "</div>";
+		
+		this.bookmarkContainer.prepend(item);
+	}
+};
+
+Bookmark.prototype.getHistory = function() {
+	var history = $.cookie("history");
+	if(history == null) {
+		return [];
+	}
+	return history.split(Bookmark.historyDelimiter);
+};
+
+Bookmark.prototype.setHistory = function(history) {
+	$.cookie("history", history.join(Bookmark.historyDelimiter))
+};

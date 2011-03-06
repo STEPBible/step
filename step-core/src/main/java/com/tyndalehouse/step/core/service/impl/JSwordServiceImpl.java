@@ -1,11 +1,11 @@
 package com.tyndalehouse.step.core.service.impl;
 
-import static com.tyndalehouse.step.core.xsl.XslConversionType.DEFAULT;
 import static org.apache.commons.lang.StringUtils.isBlank;
 import static org.apache.commons.lang.StringUtils.isNotBlank;
 import static org.apache.commons.lang.StringUtils.isNotEmpty;
 import static org.crosswire.jsword.book.BookCategory.BIBLE;
 
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -113,7 +113,7 @@ public class JSwordServiceImpl implements JSwordService {
     }
 
     @Override
-    public String getOsisText(final String version, final String reference, final List<LookupOption> options,
+    public synchronized String getOsisText(final String version, final String reference, final List<LookupOption> options,
             final String interlinearVersion) {
         LOGGER.debug("Retrieving text for ({}, {})", version, reference);
 
@@ -126,38 +126,37 @@ public class JSwordServiceImpl implements JSwordService {
             }
 
             final BookData bookData = new BookData(currentBook, currentBook.getKey(reference));
-            final Set<XslConversionType> requiredTransformation = identifyStyleSheet(options);
+            final XslConversionType requiredTransformation = identifyStyleSheet(options);
 
             // TODO: This is a workaround while jsword is being fixed. see JS-109, and email from CJB on
             // 27/02/2011
-            synchronized (this) {
-                final SAXEventProvider osissep = bookData.getSAXEventProvider();
-                TransformingSAXEventProvider htmlsep = null;
-                htmlsep = (TransformingSAXEventProvider) new Converter() {
+            // synchronized (this) {
 
-                    public SAXEventProvider convert(final SAXEventProvider provider)
-                            throws TransformerException {
-                        try {
-                            // for now, we just assume that we'll only have one option, but this may change
-                            // later
-                            // TODO, we can probably cache the resource
-                            final TransformingSAXEventProvider tsep = new TransformingSAXEventProvider(
-                                    getClass()
-                                            .getResource(requiredTransformation.iterator().next().getFile())
-                                            .toURI(), osissep);
+            final SAXEventProvider osissep = bookData.getSAXEventProvider();
+            TransformingSAXEventProvider htmlsep = null;
+            htmlsep = (TransformingSAXEventProvider) new Converter() {
+                public SAXEventProvider convert(final SAXEventProvider provider) throws TransformerException {
+                    try {
+                        final String file = requiredTransformation.getFile();
+                        final URI resourceURI = getClass().getResource(file).toURI();
 
-                            // set parameters here
-                            setOptions(tsep, options, version, reference);
-                            setupInterlinearOptions(tsep, interlinearVersion, reference);
-                            return tsep;
-                        } catch (final URISyntaxException e) {
-                            throw new StepInternalException("Failed to load resource correctly", e);
-                        }
+                        // for now, we just assume that we'll only have one option, but this may change
+                        // later
+
+                        final TransformingSAXEventProvider tsep = new TransformingSAXEventProvider(
+                                resourceURI, osissep);
+
+                        // set parameters here
+                        setOptions(tsep, options, version, reference);
+                        setupInterlinearOptions(tsep, interlinearVersion, reference);
+                        return tsep;
+                    } catch (final URISyntaxException e) {
+                        throw new StepInternalException("Failed to load resource correctly", e);
                     }
-
-                }.convert(osissep);
-                return XMLUtil.writeToString(htmlsep);
-            }
+                }
+            }.convert(osissep);
+            return XMLUtil.writeToString(htmlsep);
+            // }
         } catch (final NoSuchKeyException e) {
             throw new StepInternalException("The verse specified was not found: " + reference, e);
         } catch (final BookException e) {
@@ -171,26 +170,24 @@ public class JSwordServiceImpl implements JSwordService {
     }
 
     /**
-     * returns the stylesheet that should be used to generate the text
+     * At the moment, we only support one stylesheet at the moment, so we only need to return one This may
+     * change, but at that point we'll have a cleared view on requirements. For now, if one of the options
+     * triggers anything but the default, then we return that. returns the stylesheet that should be used to
+     * generate the text
      * 
      * @param options the list of options that are currently applied to the passage
      * @return the stylesheet (of stylesheets)
      */
-    private Set<XslConversionType> identifyStyleSheet(final List<LookupOption> options) {
+    private XslConversionType identifyStyleSheet(final List<LookupOption> options) {
         final Set<XslConversionType> chosenOptions = new HashSet<XslConversionType>();
 
         for (final LookupOption lo : options) {
-            chosenOptions.add(lo.getStylesheet());
+            if (!XslConversionType.DEFAULT.equals(lo.getStylesheet())) {
+                return lo.getStylesheet();
+            }
         }
 
-        // remove from the list any default:
-        if (chosenOptions.contains(DEFAULT) && chosenOptions.size() > 1) {
-            chosenOptions.remove(DEFAULT);
-        } else if (chosenOptions.isEmpty()) {
-            chosenOptions.add(DEFAULT);
-        }
-
-        return chosenOptions;
+        return XslConversionType.DEFAULT;
     }
 
     @Override

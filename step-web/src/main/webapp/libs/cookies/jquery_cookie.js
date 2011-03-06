@@ -1,4 +1,6 @@
 /**
+ * THIS HAS BEEN MODIFIED BY CJB TO ENSURE DEFAULT OPTION IS TO REMAIN FOR 90 days
+ * 
  * Cookie plugin
  *
  * Copyright (c) 2006 Klaus Hartl (stilbuero.de)
@@ -61,6 +63,10 @@ jQuery.cookie = function(name, value, options) {
             options.expires = -1;
         }
         var expires = '';
+        if(!options.expires) {
+        	options.expires = 90;
+        }
+        
         if (options.expires && (typeof options.expires == 'number' || options.expires.toUTCString)) {
             var date;
             if (typeof options.expires == 'number') {

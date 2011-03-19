@@ -24,6 +24,14 @@
 	<organization>
 		<name>Tyndale House Cambridge &amp; Crosswire</name>
 	</organization>
+
+	<distributionManagement>
+		<repository>
+			<id>crosswire.releases</id>
+			<name>Crosswire repository</name>
+			<url>http://crosswire.org/mvn/content/groups/public/</url>
+		</repository>
+	</distributionManagement>
 	
 	<modules>
 		<module>step-parent</module>

@@ -361,13 +361,14 @@
 							<projectnature>net.sf.eclipsecs.core.CheckstyleNature</projectnature>
 							<projectnature>edu.umd.cs.findbugs.plugin.eclipse.findbugsNature</projectnature>
 							<projectnature>org.maven.ide.eclipse.maven2Nature</projectnature>
-
+							<projectnature>com.avaje.eclipse.buildplugin.enhanceNature</projectnature>
 						</additionalProjectnatures>
 						<additionalBuildcommands>
 							<buildcommand>net.sourceforge.pmd.eclipse.plugin.pmdBuilder</buildcommand>
 							<buildcommand>edu.umd.cs.findbugs.plugin.eclipse.findbugsBuilder</buildcommand>
 							<buildcommand>net.sf.eclipsecs.core.CheckstyleBuilder</buildcommand>
 							<buildcommand>org.maven.ide.eclipse.maven2Builder</buildcommand>
+							<buildcommand>com.avaje.eclipse.buildplugin.enhanceBuilder</buildcommand>
 						</additionalBuildcommands>
 
 						<additionalConfig>

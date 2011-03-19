@@ -90,6 +90,7 @@ public class DatabaseConfigProvider implements Provider<EbeanServer> {
 
         config.setDataSource(ds);
 
+        // config.addPackage("com.tyndalehouse.step.core.data.entities");
         addEntities(config);
 
         // set DDL options...

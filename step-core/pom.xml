@@ -17,6 +17,33 @@
 
 	<build>
 		<plugins>
+			<plugin>  
+				<groupId>org.apache.maven.plugins</groupId>  
+				<artifactId>maven-antrun-plugin</artifactId>  
+				<executions>  
+					<execution>  
+						<id>generating-ebean-classes</id>  
+						<phase>compile</phase>  
+						<configuration>  
+							<tasks>  
+								<property name="compile_classpath" refid="maven.compile.classpath" />  
+								<echo message="Ebean enhancing test classes debug level -----------------------------------" />  
+								<echo message="Classpath: ${compile_classpath}" />  
+								<taskdef name="ebeanEnhance"  
+									classname="com.avaje.ebean.enhance.ant.AntEnhanceTask"  
+									classpath="${compile_classpath}" />  
+								<ebeanEnhance 
+									classSource="${project.build.outputDirectory}"  
+									packages="com.tyndalehouse.step.core.data.entities.**" />  
+							</tasks>  
+							<encoding>UTF-8</encoding>  
+						</configuration>  
+						<goals>  
+							<goal>run</goal>  
+						</goals>
+					</execution>  
+				</executions>  
+			</plugin>  
 			<plugin>
 			    <groupId>org.apache.maven.plugins</groupId>
 		        <artifactId>maven-surefire-plugin</artifactId>

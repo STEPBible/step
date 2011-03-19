@@ -83,7 +83,8 @@ public class UserDataServiceImpl implements UserDataService {
     @Override
     public Session createSession() {
         // TODO we can't use subclassing on Android so remove in preference to enhancements
-        final Session session = this.ebean.createEntityBean(Session.class);
+        // final Session session = this.ebean.createEntityBean(Session.class);
+        final Session session = new Session();
         final ClientSession clientSession = this.clientSessionProvider.get();
 
         // TODO we ensure that we expire the sessions after a while of inactivity

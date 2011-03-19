@@ -247,7 +247,7 @@ public class FrontControllerTest {
         final HttpServletResponse response = mock(HttpServletResponse.class);
         final StepRequest stepRequest = new StepRequest("controller", "method", null);
         final ServletOutputStream outputStream = mock(ServletOutputStream.class);
-        final Throwable exception = mock(Throwable.class);
+        final Throwable exception = new Exception();
         when(response.getOutputStream()).thenReturn(outputStream);
 
         // do test
@@ -255,7 +255,6 @@ public class FrontControllerTest {
 
         // check
         verify(outputStream).write(any(byte[].class));
-        verify(exception).getMessage();
     }
 
     /**

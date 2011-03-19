@@ -18,7 +18,8 @@ import org.slf4j.LoggerFactory;
 
 import au.com.bytecode.opencsv.CSVReader;
 
-import com.avaje.ebean.Ebean;
+import com.avaje.ebean.EbeanServer;
+import com.google.inject.Inject;
 import com.tyndalehouse.step.core.data.common.PartialDate;
 import com.tyndalehouse.step.core.data.common.PrecisionType;
 import com.tyndalehouse.step.core.data.entities.HotSpot;
@@ -54,6 +55,17 @@ public class TimelineModuleLoader {
     // CHECKSTYLE:ON
 
     private static final Logger LOG = LoggerFactory.getLogger(TimelineModuleLoader.class);
+    private final EbeanServer ebean;
+
+    /**
+     * we need to persist object through an orm
+     * 
+     * @param ebean the persistence server
+     */
+    @Inject
+    public TimelineModuleLoader(final EbeanServer ebean) {
+        this.ebean = ebean;
+    }
 
     /**
      * loads up the timeline data
@@ -69,7 +81,7 @@ public class TimelineModuleLoader {
                 scriptureReferences);
 
         // finally persist to database
-        Ebean.save(timelineEvents);
+        this.ebean.save(timelineEvents);
 
     }
 

@@ -10,22 +10,28 @@ import org.crosswire.jsword.book.install.Installer;
 
 import com.avaje.ebean.EbeanServer;
 import com.google.inject.AbstractModule;
-import com.google.inject.Module;
 import com.google.inject.TypeLiteral;
 import com.google.inject.name.Names;
 import com.tyndalehouse.step.core.data.create.Loader;
+import com.tyndalehouse.step.core.data.entities.Session;
 import com.tyndalehouse.step.core.guice.providers.DatabaseConfigProvider;
 import com.tyndalehouse.step.core.guice.providers.DefaultInstallersProvider;
 import com.tyndalehouse.step.core.guice.providers.DefaultLexiconRefsProvider;
 import com.tyndalehouse.step.core.guice.providers.DefaultVersionsProvider;
+import com.tyndalehouse.step.core.guice.providers.ServerSessionProvider;
+import com.tyndalehouse.step.core.guice.providers.TestData;
 import com.tyndalehouse.step.core.service.BibleInformationService;
+import com.tyndalehouse.step.core.service.BookmarkService;
 import com.tyndalehouse.step.core.service.JSwordService;
 import com.tyndalehouse.step.core.service.ModuleService;
 import com.tyndalehouse.step.core.service.TimelineService;
+import com.tyndalehouse.step.core.service.UserDataService;
 import com.tyndalehouse.step.core.service.impl.BibleInformationServiceImpl;
+import com.tyndalehouse.step.core.service.impl.BookmarkServiceImpl;
 import com.tyndalehouse.step.core.service.impl.JSwordServiceImpl;
 import com.tyndalehouse.step.core.service.impl.ModuleServiceImpl;
 import com.tyndalehouse.step.core.service.impl.TimelineServiceImpl;
+import com.tyndalehouse.step.core.service.impl.UserDataServiceImpl;
 
 /**
  * The module configuration that configures the application via guice
@@ -33,18 +39,23 @@ import com.tyndalehouse.step.core.service.impl.TimelineServiceImpl;
  * @author Chris
  * 
  */
-public class StepCoreModule extends AbstractModule implements Module {
+public class StepCoreModule extends AbstractModule {
     private static final String CORE_GUICE_PROPERTIES = "/step.core.properties";
 
     @Override
     protected void configure() {
-        bind(Properties.class).annotatedWith(Names.named("StepCoreProperties")).toInstance(readProperties());
+        final Properties stepProperties = readProperties();
+        bind(Properties.class).annotatedWith(Names.named("StepCoreProperties")).toInstance(stepProperties);
 
         bind(JSwordService.class).to(JSwordServiceImpl.class).asEagerSingleton();
         bind(BibleInformationService.class).to(BibleInformationServiceImpl.class).asEagerSingleton();
         bind(ModuleService.class).to(ModuleServiceImpl.class).asEagerSingleton();
         bind(TimelineService.class).to(TimelineServiceImpl.class);
+        bind(BookmarkService.class).to(BookmarkServiceImpl.class);
+        bind(UserDataService.class).to(UserDataServiceImpl.class);
         bind(Loader.class);
+
+        bind(Session.class).toProvider(ServerSessionProvider.class);
 
         bind(new TypeLiteral<List<String>>() {
         }).annotatedWith(Names.named("defaultVersions")).toProvider(DefaultVersionsProvider.class);
@@ -56,7 +67,11 @@ public class StepCoreModule extends AbstractModule implements Module {
         bind(EbeanServer.class).toProvider(DatabaseConfigProvider.class).asEagerSingleton();
 
         bindDaos();
-        // bind(ConnectionSource.class).toProvider(DataSourceProvider.class);
+
+        // now bind the test data
+        if (Boolean.valueOf(stepProperties.getProperty("test.data.load"))) {
+            bind(TestData.class).asEagerSingleton();
+        }
     }
 
     /**

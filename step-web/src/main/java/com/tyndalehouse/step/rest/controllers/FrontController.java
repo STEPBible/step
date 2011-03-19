@@ -2,7 +2,6 @@ package com.tyndalehouse.step.rest.controllers;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -20,13 +19,15 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.avaje.ebean.Ebean;
+import com.avaje.ebean.EbeanServer;
 import com.avaje.ebean.text.json.JsonContext;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
+import com.tyndalehouse.step.rest.framework.ClientErrorResolver;
+import com.tyndalehouse.step.rest.framework.ClientHandledIssue;
 import com.tyndalehouse.step.rest.framework.ControllerCacheKey;
 import com.tyndalehouse.step.rest.framework.StepRequest;
 
@@ -49,24 +50,31 @@ public class FrontController extends HttpServlet {
     private final Map<String, String> contextPath = new HashMap<String, String>();
     private final Map<String, byte[]> resultsCache = new HashMap<String, byte[]>();
     private final transient Injector guiceInjector;
-    // TODO but also check threadsafety and whether we should share this object
+    // TODO but also check thread safety and whether we should share this object
     private final transient ObjectMapper jsonMapper = new ObjectMapper();
 
     // TODO investigate EH cache here
     private final Map<String, Method> methodNames = new HashMap<String, Method>();
     private final Map<String, Object> controllers = new HashMap<String, Object>();
     private final boolean isCacheEnabled;
+    private final transient EbeanServer ebean;
+    private final transient ClientErrorResolver errorResolver;
 
     /**
      * creates the front controller which will dispatch all the requests
      * 
      * @param guiceInjector the injector used to call the relevant controllers
-     * @param isCacheEnabled indicates whether responses should be cached for fast retrieval
-     * 
+     * @param isCacheEnabled indicates whether responses should be cached for fast retrieval TODO rename all
+     *            ebeans to DB
+     * @param ebean the db access/persisitence object
      */
     @Inject
-    public FrontController(final Injector guiceInjector, @Named("cache.enabled") final Boolean isCacheEnabled) {
+    public FrontController(final Injector guiceInjector,
+            @Named("cache.enabled") final Boolean isCacheEnabled, final EbeanServer ebean,
+            final ClientErrorResolver errorResolver) {
         this.guiceInjector = guiceInjector;
+        this.ebean = ebean;
+        this.errorResolver = errorResolver;
         this.isCacheEnabled = Boolean.TRUE.equals(isCacheEnabled);
     }
 
@@ -91,13 +99,16 @@ public class FrontController extends HttpServlet {
                 LOGGER.debug("The cache was missed so invoking method now...");
                 jsonEncoded = invokeMethod(sr);
             }
+
             setupHeaders(response, jsonEncoded.length);
             response.getOutputStream().write(jsonEncoded);
+
+            // TODO move cache down
             cache(jsonEncoded, sr.getControllerName(), sr.getMethodName(), sr.getArgs());
             // CHECKSTYLE:OFF We allow catching errors here, since we are at the top of the structure
         } catch (final Exception e) {
             // CHECKSTYLE:ON
-            doError(response, e, sr);
+            handleError(response, e, sr);
         }
     }
 
@@ -117,15 +128,39 @@ public class FrontController extends HttpServlet {
                 sr.getArgs(), sr.getCacheKey().getMethodKey());
 
         // invoke the three together
+        Object returnVal;
         try {
-            final Object returnVal = controllerMethod.invoke(controllerInstance, (Object[]) sr.getArgs());
-            return getEncodedJsonResponse(returnVal);
-            // TODO send a ERROR 500 back
-        } catch (final IllegalAccessException e) {
-            throw new StepInternalException("An illegal access has occurred", e);
-        } catch (final InvocationTargetException e) {
-            throw new StepInternalException("An internal error has occurred", e);
+            returnVal = controllerMethod.invoke(controllerInstance, (Object[]) sr.getArgs());
+            // CHECKSTYLE:OFF
+        } catch (final Exception e) {
+            returnVal = convertExceptionToJson(e);
         }
+        return getEncodedJsonResponse(returnVal);
+        // CHECKSTYLE:ON
+    }
+
+    /**
+     * We attempt here to rethrow the exception that caused the invocation target exception, so that we can
+     * handle it nicely for the user
+     * 
+     * @param e the wrapped exception that happened during the reflective call
+     * @return a client handled issue which wraps the exception that was raised
+     */
+    private ClientHandledIssue convertExceptionToJson(final Exception e) {
+        // first we check to see if it's a step exception, or an illegal argument exception
+
+        final Throwable cause = e.getCause();
+        if (cause instanceof StepInternalException) {
+            LOGGER.trace(e.getMessage(), e);
+            return new ClientHandledIssue(cause.getMessage(), this.errorResolver.resolve(cause.getClass()));
+        } else if (cause instanceof IllegalArgumentException) {
+            // a validation exception occurred
+            LOGGER.trace(e.getMessage(), e);
+            return new ClientHandledIssue(cause.getMessage());
+        }
+
+        LOGGER.error(e.getMessage(), e);
+        return new ClientHandledIssue("An internal error has occurred");
     }
 
     /**
@@ -142,7 +177,7 @@ public class FrontController extends HttpServlet {
             if (responseValue == null) {
                 return new byte[0];
             } else if (responseValue.getClass().getPackage().getName().startsWith("com.avaje")) {
-                final JsonContext json = Ebean.getServer(null).createJsonContext();
+                final JsonContext json = this.ebean.createJsonContext();
 
                 // convert list of beans into JSON
                 response = json.toJsonString(responseValue);
@@ -219,12 +254,12 @@ public class FrontController extends HttpServlet {
      * @param e the exception
      * @param sr the step request
      */
-    void doError(final HttpServletResponse response, final Throwable e, final StepRequest sr) {
+    void handleError(final HttpServletResponse response, final Throwable e, final StepRequest sr) {
         String requestId = null;
         try {
             requestId = sr == null ? "Failed to parse request?" : sr.getCacheKey().getResultsKey();
             if (e != null) {
-                final byte[] errorMessage = this.getEncodedJsonResponse(e.getMessage());
+                final byte[] errorMessage = this.getEncodedJsonResponse(e);
                 response.getOutputStream().write(errorMessage);
                 setupHeaders(response, errorMessage.length);
 

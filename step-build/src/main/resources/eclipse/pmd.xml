@@ -360,10 +360,6 @@
             <ruleset>Design Rules</ruleset>
         </rule>
         <rule>
-            <name>AvoidSynchronizedAtMethodLevel</name>
-            <ruleset>Design Rules</ruleset>
-        </rule>
-        <rule>
             <name>MissingBreakInSwitch</name>
             <ruleset>Design Rules</ruleset>
         </rule>
@@ -734,10 +730,6 @@
         <rule>
             <name>AddEmptyString</name>
             <ruleset>Optimization Rules</ruleset>
-        </rule>
-        <rule>
-            <name>MethodReturnsInternalArray</name>
-            <ruleset>Security Code Guidelines</ruleset>
         </rule>
         <rule>
             <name>ArrayIsStoredDirectly</name>

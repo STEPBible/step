@@ -1,8 +1,8 @@
 .passageText {
 	margin-top: 1px;
-	overflow: auto;
+/*	overflow: auto;*/
 	padding: 0px 5px;
-	position: relative;
+/*	position: relative;*/
 	text-align: left;
 }
 

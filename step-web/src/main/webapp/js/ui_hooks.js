@@ -9,6 +9,8 @@
 // The following section defines method names and controller names
 // These are used as part of the rest-like calls
 /////////////////////////////////////////////////////////////////////////
+BOOKMARKS_GET = "rest/bookmark/getBookmarks";
+
 BIBLE_GET_BIBLE_VERSIONS = "rest/bible/getBibleVersions/";
 BIBLE_GET_BIBLE_TEXT = "rest/bible/getBibleText/";
 BIBLE_GET_FEATURES = "rest/bible/getFeatures/";
@@ -25,6 +27,10 @@ SETUP_INSTALL_BIBLE = "rest/setup/installBible/";
 TIMELINE_GET_EVENTS = "rest/timeline/getEvents/";
 TIMELINE_GET_EVENTS_FROM_REFERENCE = "rest/timeline/getEventsFromReference/";
 
+USER_LOGIN = "rest/user/login/";
+USER_LOGOUT = "rest/user/logout/";
+USER_REGISTER = "rest/user/register/"
+
 //////////////////////////
 // SOME DEFAULTS
 //////////////////////////
@@ -34,6 +40,13 @@ var DEFAULT_POPUP_WIDTH = 500;
 function toggleMenuItem(menuItem) {
 	//the hook needs to find the passage id
 	$.shout("pane-menu-toggle-item-" + $(menuItem).closest(".passageContainer").attr("passage-id"), menuItem.name);
+}
+
+/**
+ * shows the login popup
+ */
+function login() {
+	$.shout("show-login-popup");
 }
 
 /**

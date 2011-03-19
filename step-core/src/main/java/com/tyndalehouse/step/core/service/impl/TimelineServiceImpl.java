@@ -2,7 +2,8 @@ package com.tyndalehouse.step.core.service.impl;
 
 import java.util.List;
 
-import com.avaje.ebean.Ebean;
+import com.avaje.ebean.EbeanServer;
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.tyndalehouse.step.core.data.entities.Timeband;
 import com.tyndalehouse.step.core.service.TimelineService;
@@ -14,6 +15,16 @@ import com.tyndalehouse.step.core.service.TimelineService;
  */
 @Singleton
 public class TimelineServiceImpl implements TimelineService {
+    private final EbeanServer ebean;
+
+    /**
+     * @param ebean the ebean server with which to lookup data
+     */
+    @Inject
+    public TimelineServiceImpl(final EbeanServer ebean) {
+        this.ebean = ebean;
+    }
+
     // private final Loader loader;
 
     // /**
@@ -31,6 +42,6 @@ public class TimelineServiceImpl implements TimelineService {
 
     @Override
     public List<Timeband> getTimelineConfiguration() {
-        return Ebean.createQuery(Timeband.class).fetch("hotspots").findList();
+        return this.ebean.createQuery(Timeband.class).fetch("hotspots").findList();
     }
 }

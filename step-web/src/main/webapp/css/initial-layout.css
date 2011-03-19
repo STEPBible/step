@@ -1,7 +1,3 @@
-html {
-/*	overflow: auto !important;*/
-}
-
 body {
 	min-width: 500px;
 	min-height: 300px;
@@ -56,7 +52,6 @@ body {
 .bookmarks {
 	border-top: 0px;
 	min-width: 45px;
-	
 	display: inline;
 	float: left;
 	width: 10%;
@@ -77,10 +72,17 @@ body {
 	text-align: center;
 }
 
+.bookmarkPane h3 {
+	color: #C77405;
+	cursor: pointer;
+	margin-bottom: 1px;
+}
+
 .bookmarkItem {
 	clear: both;
 	display: block;	
 }
+
 
 .leftBookmarkArrow {
 	float: left;
@@ -90,12 +92,28 @@ body {
 	float: right;
 }
 
+/* override the padding inserted by the accordion */
+#bookmarkPane  .ui-accordion-content {
+	padding: 0px;
+}
+
 /**************************/
 /* TOP MENU
 /**************************/
 #topMenu {
 }
 
+#topMenu a.login {
+	padding-top: 7px;
+	padding-right: 8px;
+	float: right;
+	color: white;
+}
+
+#topMenu a.login:hover {
+	color: white;
+	text-decoration: underline;
+}
 
 /**************************/
 /* COLUMNS
@@ -105,17 +123,42 @@ body {
 	display: inline;
 	width: 45%; /* *2 columns */
 	float: left;
-	overflow: auto;
+	position: relative;
+/*	overflow: hidden;*/
+	
 }
 
+
+/********************************/
+/* INNER MENUS (i.e. sub menus)
+/********************************/
+.innerMenu {
+	position: absolute;
+	top: 0px;
+}
+
+
+/**************************/
+/* PASSAGE CONTAINERS
+/**************************/
 .passageContainer {
-/*	border-left: 0px;*/
-/*	border-top: 0px;*/
-	border: 0px; 	
 }
 
-.ui-button-text {
-	padding: 1px 0px 1px 0px !important;
+.passageText {
+	position: relative;
+	top: 30px;
+	overflow: hidden;
+}
+
+.headingContainer {
+	position: absolute;
+	top: 0px;
+}
+
+.passageContent {
+	position: absolute;
+	top: 45px;
+	overflow: auto;
 }
 
 .no-left-border {
@@ -131,13 +174,7 @@ body {
 	border: none;
 }
 
-/* disable scrolling in ALL panes */
-.ui-layout-pane {
-    overflow: hidden !important;
-    padding: 0px;
-}
-
-.column .ui-layout-pane-north {
+.column {
 	border: 0 !important;
 	padding-top: 0px;
 	padding-bottom: 0px;
@@ -160,14 +197,6 @@ body {
 	text-align: center;
 	padding-bottom: 5px;
 }
-/**/
-/*#leftPassagePane, #rightPassagePane {*/
-/*	white-space: nowrap;*/
-/*}*/
-/**/
-/*.passageVersion {*/
-/*	*/
-/*}*/
 
 .passageReference {
 	width: 40%;
@@ -196,9 +225,13 @@ body {
 }
 
 #error {
-	padding-top: 2px;
-	padding-left: 1px;
+	position: absolute;
+	bottom: 0px;
+	padding: 2px;
 	margin: 0px;
+	z-index: 99999;
+	background-color: pink;
+	width: 100%;
 }
 
 #lexiconDefinition {
@@ -210,4 +243,19 @@ body {
 	left: -1000px;
 }
 
+/**************************/
+/* LOGIN POPUP
+/**************************/
+#login {
+	display: none;	
+}
+
+#login label {
+	padding-top: 4px;
+	width: 9em;
+	float: left;
+	text-align: right;
+	margin-right: 0.5em;
+	display: block
+}
 

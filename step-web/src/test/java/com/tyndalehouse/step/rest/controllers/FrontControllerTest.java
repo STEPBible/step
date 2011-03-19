@@ -50,7 +50,7 @@ public class FrontControllerTest {
         final HttpServletRequest request = mock(HttpServletRequest.class);
         final HttpServletResponse response = mock(HttpServletResponse.class);
 
-        final FrontController fc = spy(new FrontController(null, false));
+        final FrontController fc = spy(new FrontController(null, false, null, null));
         final StepRequest parsedRequest = new StepRequest("SomeController", "someMethod", new String[] {
                 "arg1", "arg2" });
         final ServletOutputStream mockOutputStream = mock(ServletOutputStream.class);
@@ -74,12 +74,12 @@ public class FrontControllerTest {
         final HttpServletResponse response = mock(HttpServletResponse.class);
         final StepInternalException testException = new StepInternalException("A test exception");
 
-        final FrontController fc = spy(new FrontController(null, false));
+        final FrontController fc = spy(new FrontController(null, false, null, null));
         final StepRequest parsedRequest = new StepRequest("SomeController", "someMethod", new String[] {
                 "arg1", "arg2" });
 
         doThrow(testException).when(fc).parseRequest(request);
-        doNothing().when(fc).doError(response, testException, parsedRequest);
+        doNothing().when(fc).handleError(response, testException, parsedRequest);
 
         // do the test
         fc.doGet(request, response);
@@ -94,7 +94,7 @@ public class FrontControllerTest {
         // index starts at ...........0123456789-123456789-123456
         final String sampleRequest = "step-web/rest/bible/get/1K2/2K2";
 
-        final FrontController fc = new FrontController(mock(Injector.class), Boolean.FALSE);
+        final FrontController fc = new FrontController(mock(Injector.class), Boolean.FALSE, null, null);
 
         // when
         final Object[] args = fc.getArgs(sampleRequest, 24);
@@ -113,7 +113,7 @@ public class FrontControllerTest {
         // index starts at ...........0123456789-123456789-123456
         final String sampleRequest = "step-web/rest/bible/get/1K2/2K2/";
 
-        final FrontController fc = new FrontController(mock(Injector.class), Boolean.FALSE);
+        final FrontController fc = new FrontController(mock(Injector.class), Boolean.FALSE, null, null);
 
         // when
         final Object[] args = fc.getArgs(sampleRequest, 24);
@@ -131,7 +131,7 @@ public class FrontControllerTest {
      */
     @Test
     public void testGetPath() throws ServletException {
-        final FrontController fc = new FrontController(null, null);
+        final FrontController fc = new FrontController(null, null, null, null);
         final FrontController spy = spy(fc);
 
         final ServletContext mockServletContext = mock(ServletContext.class);
@@ -158,7 +158,7 @@ public class FrontControllerTest {
         final HttpServletResponse response = mock(HttpServletResponse.class);
 
         final int sampleRequestLength = 10;
-        new FrontController(null, null).setupHeaders(response, sampleRequestLength);
+        new FrontController(null, null, null, null).setupHeaders(response, sampleRequestLength);
 
         verify(response).addDateHeader(eq("Date"), anyLong());
         verify(response).setCharacterEncoding("UTF-8");
@@ -175,7 +175,8 @@ public class FrontControllerTest {
      */
     @Test
     public void testGetControllerMethod() throws IllegalAccessException, InvocationTargetException {
-        final FrontController frontController = new FrontController(mock(Injector.class), Boolean.FALSE);
+        final FrontController frontController = new FrontController(mock(Injector.class), Boolean.FALSE,
+                null, null);
         final BibleInformationService bibleInfo = mock(BibleInformationService.class);
         final BibleController controllerInstance = new BibleController(bibleInfo);
 
@@ -195,7 +196,7 @@ public class FrontControllerTest {
     public void testGetController() {
         final String controllerName = "Bible";
         final Injector mockInjector = mock(Injector.class);
-        final FrontController frontController = new FrontController(mockInjector, Boolean.FALSE);
+        final FrontController frontController = new FrontController(mockInjector, Boolean.FALSE, null, null);
 
         final BibleController mockController = mock(BibleController.class);
         when(mockInjector.getInstance(BibleController.class)).thenReturn(mockController);
@@ -212,7 +213,7 @@ public class FrontControllerTest {
      */
     @Test
     public void testGetClasses() {
-        final FrontController fc = new FrontController(null, Boolean.FALSE);
+        final FrontController fc = new FrontController(null, Boolean.FALSE, null, null);
 
         assertEquals(0, fc.getClasses(null).length);
         assertEquals(0, fc.getClasses(new Object[0]).length);
@@ -226,7 +227,8 @@ public class FrontControllerTest {
      */
     @Test
     public void testJsonEncoding() {
-        final byte[] encodedJsonResponse = new FrontController(null, null).getEncodedJsonResponse("abc");
+        final byte[] encodedJsonResponse = new FrontController(null, null, null, null)
+                .getEncodedJsonResponse("abc");
 
         // this reprensents the string "{abc}"
         final byte[] expectedValues = new byte[] { 34, 97, 98, 99, 34 };
@@ -241,7 +243,7 @@ public class FrontControllerTest {
      */
     @Test
     public void testDoErrorHandlesCorrectly() throws IOException {
-        final FrontController fc = new FrontController(null, null);
+        final FrontController fc = new FrontController(null, null, null, null);
         final HttpServletResponse response = mock(HttpServletResponse.class);
         final StepRequest stepRequest = new StepRequest("controller", "method", null);
         final ServletOutputStream outputStream = mock(ServletOutputStream.class);
@@ -249,7 +251,7 @@ public class FrontControllerTest {
         when(response.getOutputStream()).thenReturn(outputStream);
 
         // do test
-        fc.doError(response, exception, stepRequest);
+        fc.handleError(response, exception, stepRequest);
 
         // check
         verify(outputStream).write(any(byte[].class));
@@ -277,7 +279,7 @@ public class FrontControllerTest {
                 contextName + requestSeparator + servletName + requestSeparator + controllerName
                         + requestSeparator + methodName + requestSeparator + arg1 + requestSeparator + arg2);
 
-        final FrontController frontController = new FrontController(null, null);
+        final FrontController frontController = new FrontController(null, null, null, null);
         frontController.init(mock(ServletConfig.class));
 
         final FrontController spy = spy(frontController);
@@ -302,7 +304,7 @@ public class FrontControllerTest {
         final StepRequest sr = new StepRequest("bible", "getAllFeatures", new String[] {});
         final BibleController testController = mock(BibleController.class);
 
-        final FrontController fc = spy(new FrontController(null, null));
+        final FrontController fc = spy(new FrontController(null, null, null, null));
         doReturn(testController).when(fc).getController("bible");
 
         // do test

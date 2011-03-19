@@ -12,9 +12,9 @@ import org.junit.Test;
  * 
  */
 public class StepRequestTest {
-    final String[] args = new String[] { "arg1", "arg2", "arg3" };
-    String testControllerName = "Controller";
-    String testMethodName = "method";
+    private static final String[] TEST_ARGS = new String[] { "arg1", "arg2", "arg3" };
+    private static final String TEST_CONTROLLER_NAME = "Controller";
+    private static final String TEST_METHOD_NAME = "method";
 
     /**
      * a method key should not contain arguments, but contain controller name and method name
@@ -23,9 +23,9 @@ public class StepRequestTest {
     public void testMethodKey() {
         final StepRequest stepRequest = getTestStepRequest();
         final String methodKey = stepRequest.getCacheKey().getMethodKey();
-        assertTrue(methodKey.contains(this.testControllerName));
-        assertTrue(methodKey.contains(this.testMethodName));
-        for (final String s : this.args) {
+        assertTrue(methodKey.contains(TEST_CONTROLLER_NAME));
+        assertTrue(methodKey.contains(TEST_METHOD_NAME));
+        for (final String s : TEST_ARGS) {
             assertFalse(methodKey.contains(s));
         }
     }
@@ -37,9 +37,9 @@ public class StepRequestTest {
     public void testResultKey() {
         final StepRequest stepRequest = getTestStepRequest();
         final String resultsKey = stepRequest.getCacheKey().getResultsKey();
-        assertTrue(resultsKey.contains(this.testControllerName));
-        assertTrue(resultsKey.contains(this.testMethodName));
-        for (final String s : this.args) {
+        assertTrue(resultsKey.contains(TEST_CONTROLLER_NAME));
+        assertTrue(resultsKey.contains(TEST_METHOD_NAME));
+        for (final String s : TEST_ARGS) {
             assertTrue(resultsKey.contains(s));
         }
 
@@ -51,6 +51,6 @@ public class StepRequestTest {
      * @return a step request
      */
     private StepRequest getTestStepRequest() {
-        return new StepRequest(this.testControllerName, this.testMethodName, this.args);
+        return new StepRequest(TEST_CONTROLLER_NAME, TEST_METHOD_NAME, TEST_ARGS);
     }
 }

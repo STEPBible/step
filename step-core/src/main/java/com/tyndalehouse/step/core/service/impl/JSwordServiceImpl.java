@@ -66,7 +66,6 @@ public class JSwordServiceImpl implements JSwordService {
      * @param bibleCategory the categories of books that should be considered
      * @return returns a list of installed modules
      */
-    @SuppressWarnings("unchecked")
     public List<Book> getInstalledModules(final BookCategory... bibleCategory) {
         if (bibleCategory == null || bibleCategory.length == 0) {
             return new ArrayList<Book>();
@@ -91,7 +90,6 @@ public class JSwordServiceImpl implements JSwordService {
      * @param bibleCategory the list of books that should be considered
      * @return a list of all modules
      */
-    @SuppressWarnings("unchecked")
     public List<Book> getAllModules(final BookCategory... bibleCategory) {
         final List<Book> books = new ArrayList<Book>();
         for (final Installer installer : this.bookInstallers) {
@@ -112,9 +110,10 @@ public class JSwordServiceImpl implements JSwordService {
         return getOsisText(version, reference, options, null);
     }
 
+    // TODO remove synchronisation once book is fixed
     @Override
-    public synchronized String getOsisText(final String version, final String reference, final List<LookupOption> options,
-            final String interlinearVersion) {
+    public synchronized String getOsisText(final String version, final String reference,
+            final List<LookupOption> options, final String interlinearVersion) {
         LOGGER.debug("Retrieving text for ({}, {})", version, reference);
 
         try {
@@ -179,8 +178,6 @@ public class JSwordServiceImpl implements JSwordService {
      * @return the stylesheet (of stylesheets)
      */
     private XslConversionType identifyStyleSheet(final List<LookupOption> options) {
-        final Set<XslConversionType> chosenOptions = new HashSet<XslConversionType>();
-
         for (final LookupOption lo : options) {
             if (!XslConversionType.DEFAULT.equals(lo.getStylesheet())) {
                 return lo.getStylesheet();
@@ -293,7 +290,6 @@ public class JSwordServiceImpl implements JSwordService {
         LOGGER.warn("A request to install an already installed book was made for initials " + initials);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public double getProgressOnInstallation(final String bookName) {
         if (isBlank(bookName)) {

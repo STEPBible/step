@@ -1,6 +1,6 @@
 
 /**
- * extending jquery to have array comparison
+ * array comparison
  */
 function compare(s, t) {
 	if(s == null || t == null) {
@@ -21,8 +21,11 @@ function compare(s, t) {
 
 /**
  * adds a button next to a specified element
- * @param textbox the box to which to add the dropdown button
- * @param icon the icon to stylise the button
+ * 
+ * @param textbox
+ *            the box to which to add the dropdown button
+ * @param icon
+ *            the icon to stylise the button
  */
 function addButtonToAutoComplete(textbox, icon) {
 	$( "<button>&nbsp;</button>" ).attr( "tabIndex", -1 )
@@ -54,9 +57,13 @@ function extractLast( term ) {
 }
 
 /**
- * looks for the next space in the name provided and returns the shortest name available
- * @param longName the long name to be shortened
- * @param minLength the min length from which to start
+ * looks for the next space in the name provided and returns the shortest name
+ * available
+ * 
+ * @param longName
+ *            the long name to be shortened
+ * @param minLength
+ *            the min length from which to start
  */
 function shortenName(longName, minLength) {
 	var ii = longName.indexOf(' ', minLength);
@@ -64,7 +71,46 @@ function shortenName(longName, minLength) {
 		return longName.substring(0, ii) + "...";
 	}
 	
-	//unable to shorten
+	// unable to shorten
 	return longName;
 }
+
+// some jquery extensions
+(function ( $ ) {
+	$.extend({
+		/**
+		 * an extension to jquery to do Ajax calls safely, with error handling...
+		 * @param the url
+		 * @param the userFunction to call on success of the query
+		 */
+	    getSafe: function (url, userFunction){
+			$.get(url, function(data) {
+				if(data && data.errorMessage) {
+					// handle an error message here
+					$.shout("caught-error-message", data);
+					if(data.operation) {
+						//so we now have an operation to perform before we continue with the user
+						//function if at all... the userFunction if what should be called if we have
+						//succeeded, but here we have no data, so we need to call ourselve recursively
+						$.shout(data.operation.replace(/_/g, "-").toLowerCase(), 
+								{ 	message: data.errorMessage, 
+									callback : function() { $.getSafe(url, userFunction); } 
+								}
+						);
+					}
+				} else {
+					userFunction(data);
+				}
+			});
+	    }
+	});
+	
+	$.fn.disableSelection = function() {
+	    return $(this).attr('unselectable', 'on')
+	           .css('-moz-user-select', 'none')
+	           .each(function() { 
+	               this.onselectstart = function() { return false; };
+	            });
+	};
+})(jQuery);
 

@@ -17,27 +17,36 @@ function init() {
 		initBookmarks();
 		initData();
 		initInitialEvents();
+		initLogin();
 	});
+}
+
+function refreshLayout() {
+	//we resize the heights:
+	var windowHeight = $(window).height();
+	var innerMenuHeight = $("#leftPaneMenu").height();
+	var topMenuHeight = $("#topMenu").height();
+	var imageAndFooterHeight = $(".northBookmark").height() + $(".logo").height();
+	$(".column").height(windowHeight - topMenuHeight);
+	$(".bookmarkPane").height(windowHeight - topMenuHeight - imageAndFooterHeight);
+	$(".passageText").height(windowHeight - topMenuHeight - innerMenuHeight);
+	$(".passageContent").height($(".passageText").height() - $(".headingContainer").height());	
 }
 
 /**
  * initialises layout
  */
 function initLayout() {
-	$("body").hear("refresh-layout", function() {
-		//we resize the heights:
-		var windowHeight = $(window).height();
-		var innerMenuHeight = $("#leftPaneMenu").height();
-		var topMenuHeight = $("#topMenu").height();
-		var imageAndFooterHeight = $(".northBookmark").height() + $(".logo").height();
-		$(".column").height(windowHeight - topMenuHeight);
-		$(".bookmarkPane").height(windowHeight - topMenuHeight - imageAndFooterHeight);
+	$("body").hear("passage-changed", function() {
+		refreshLayout();
 	});
 	
 	//listen to layout changes and alert
 	$(window).resize(function() {
-		$.shout("refresh-layout");
+		refreshLayout();
 	});
+	
+	
 }
 
 function initMenu() {
@@ -203,15 +212,14 @@ function initGlobalHandlers() {
 		collision: "fit"
 	});
 	
+	//TODO refactor as error object
+	$("#error").slideUp(0);
 	$("#error").click(function() {
-		$('body').layout().close("north");
+		$(this).slideUp(250);
 	});
 	
-	$("#error").ajaxComplete(function(ev, req, ajaxOptions) {
-		var currentResponse = $.parseJSON(req.responseText);
-		if(currentResponse.error) {
-			raiseError(currentResponse.error)
-		}
+	$("#error").hear("caught-error-message", function(selfElement, data) {
+		raiseError(data)
 	});
 }
 
@@ -220,7 +228,11 @@ function initLexicon() {
 }
 
 function initBookmarks() {
-	new Bookmark($(".bookmarkContents"));
+	new Bookmark();
+}
+
+function initLogin() {
+	new Login();
 }
 
 function initTimeline(mainAppLayout) {
@@ -228,7 +240,7 @@ function initTimeline(mainAppLayout) {
 }
 
 function raiseError(error) {
-	$("#error").text(error);
-	$('body').layout().open("north");
+	$("#error").text(error.errorMessage);
+	$("#error").slideDown(250);
 }
 

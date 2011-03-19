@@ -4,15 +4,45 @@
  * for e.g. passage changes, but will also show related information to the passage.
  */
 function Bookmark(bookmarkContainer) {
-	this.bookmarkContainer = bookmarkContainer;
+	this.historyContainer = $("#historyDisplayPane");
+	this.bookmarkContainer = $("#bookmarkDisplayPane");
+	this.loadedBookmarks = false;
 	var self = this;
 	
 	//listen to passage changes
-	this.bookmarkContainer.hear("passage-changed", function(selfElement, data) {
+	this.historyContainer.hear("passage-changed", function(selfElement, data) {
 		self.addHistory(data.reference);
 	});
 	
 	this.initialiseHistory();
+	
+	//add accordion handlers
+	$("#bookmarkPane h3").click(function() {
+		//toggle the arrow
+		var eastArrow = "ui-icon-triangle-1-e";
+		var southArrow = "ui-icon-triangle-1-s";
+		var icon = $(":first", this);
+		
+		if(icon.hasClass(eastArrow)) {
+			icon.removeClass(eastArrow);
+			icon.addClass(southArrow);
+		} else {
+			icon.addClass(eastArrow);
+			icon.removeClass(southArrow);
+		}
+
+		$(this).next().slideToggle(250);
+	}).disableSelection().next().slideUp(0);
+	
+	//finally, we add a handler to force login of the bookmarks
+	$("#bookmarkHeader").click(function() {
+		self.loadBookmarks();
+	}).hear("user-logged-out", function(selfElement, data) {
+		//we clear the bookmarks
+		
+		self.loadedBookmarks = false;
+		self.bookmarkContainer.html("");
+	});
 }
 
 Bookmark.maxBookmarks = 10;
@@ -42,17 +72,17 @@ Bookmark.prototype.addHistory = function(passageReference) {
 		if(history.length > Bookmark.maxBookmarks) {
 			//we remove the first element in the array (i.e. the last child).
 			history.pop();
-			$("div.bookmarkItem:last", this.bookmarkContainer).remove();
+			$("div.bookmarkItem:last", this.historyContainer).remove();
 		}
 		
 		//then add
-		this.createBookmarkItem(passageReference);
+		this.createHistoryItem(passageReference);
 		history.unshift(passageReference);
 	} else {
 		//reposition item...
-		var item = $("div.bookmarkItem", this.bookmarkContainer).eq(indexInHistory).detach();
+		var item = $("div.bookmarkItem", this.historyContainer).eq(indexInHistory).detach();
 		history.splice(indexInHistory, 1);
-		this.bookmarkContainer.prepend(item);
+		this.historyContainer.prepend(item);
 		history.unshift(passageReference);
 	}
 	
@@ -63,12 +93,46 @@ Bookmark.prototype.initialiseHistory = function() {
 	var history = this.getHistory();
 	if(history != null) {
 		for(var ii = history.length -1; ii >= 0; ii--) {
-			this.createBookmarkItem(history[ii]);
+			this.createHistoryItem(history[ii]);
 		}
 	}
 }
 
+/**
+ * loads the bookmarks from the server
+ */
+Bookmark.prototype.loadBookmarks = function() {
+	var self = this;
+	if(!this.loadedBookmarks) {
+		$.getSafe(BOOKMARKS_GET, function(data) {
+			//someone might have clicked twice, so need to check again
+			if(!this.loaded) {
+				this.loaded = true;
+				//we load the bookmarks
+				$.each(data, function(index, item) {
+					self.createBookmarkItem(item.bookmarkReference);
+				});
+			}
+		});
+	}
+}
+
+/**
+ * creates a history item
+ */
+Bookmark.prototype.createHistoryItem = function(passageReference) {
+	this.createItem(passageReference, this.historyContainer, false);
+};
+
+/**
+ * creates a history item
+ */
 Bookmark.prototype.createBookmarkItem = function(passageReference) {
+	this.createItem(passageReference, this.bookmarkContainer, false);
+};
+
+
+Bookmark.prototype.createItem = function(passageReference, container, ascending) {
 	if(passageReference && passageReference != "") {
 		var item = "<div class='bookmarkItem'>";
 		item += "<a class='ui-icon ui-icon-arrowthick-1-w bookmarkArrow leftBookmarkArrow' href='#' onclick='$.shout(\"bookmark-triggered-0\", \""+ passageReference + "\");'>&larr;</a>";
@@ -76,9 +140,15 @@ Bookmark.prototype.createBookmarkItem = function(passageReference) {
 		item += "<a class='ui-icon ui-icon-arrowthick-1-e bookmarkArrow rightBookmarkArrow' href='#' onclick='$.shout(\"bookmark-triggered-1\", \""+ passageReference + "\");'>&rarr;</a>";
 		item += "</div>";
 		
-		this.bookmarkContainer.prepend(item);
+		if(ascending) {
+			container.append(item);
+		} else {
+			container.prepend(item);
+		}
 	}
 };
+
+
 
 Bookmark.prototype.getHistory = function() {
 	var history = $.cookie("history");

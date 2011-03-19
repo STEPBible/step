@@ -9,16 +9,16 @@ body {
 	color: #ccc;
 }
 
-.ui-helper-reset {
-	font-size: 70%;	
-}
-
 .ui-widget {
 	font-family: Verdana;
 }
 	
 .ui-menu-item {
 	font-size: small;	
+}
+
+.ui-widget-header .ui-state-default {
+	color: #669966 ;	
 }
 
 .logo {

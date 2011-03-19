@@ -319,7 +319,7 @@
 					<version>2.7.1</version>
 					<configuration>
 						<junitArtifactName>junit:junit-dep</junitArtifactName>
-						<parallel>classes</parallel>
+						<parallel>method</parallel>
 						<threadCount>4</threadCount>
 					</configuration>
 					<dependencies>

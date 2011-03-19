@@ -8,11 +8,14 @@ import com.avaje.ebean.config.ServerConfig;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.name.Named;
+import com.tyndalehouse.step.core.data.entities.Bookmark;
 import com.tyndalehouse.step.core.data.entities.HotSpot;
 import com.tyndalehouse.step.core.data.entities.ScriptureReference;
 import com.tyndalehouse.step.core.data.entities.ScriptureTarget;
+import com.tyndalehouse.step.core.data.entities.Session;
 import com.tyndalehouse.step.core.data.entities.Timeband;
 import com.tyndalehouse.step.core.data.entities.TimelineEvent;
+import com.tyndalehouse.step.core.data.entities.User;
 
 /**
  * Returns a database connection server instance for use across the application
@@ -112,6 +115,9 @@ public class DatabaseConfigProvider implements Provider<EbeanServer> {
         config.addClass(TimelineEvent.class);
         config.addClass(ScriptureTarget.class);
         config.addClass(ScriptureReference.class);
+        config.addClass(User.class);
+        config.addClass(Session.class);
+        config.addClass(Bookmark.class);
     }
 
 }

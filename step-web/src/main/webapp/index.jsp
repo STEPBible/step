@@ -29,6 +29,7 @@
     <script src="js/timeline.js" type="text/javascript"></script>
     <script src="js/toolbar_menu.js" type="text/javascript"></script>
     <script src="js/interlinear_popup.js" type="text/javascript"></script>
+    <script src="js/login.js" type="text/javascript"></script>
     <script src="js/init.js" type="text/javascript"></script>
     
 </HEAD>
@@ -53,9 +54,15 @@
 	<div class="northBookmark">
 		<img id="topLogo" src="images/step-logo.png" alt="STEP :: Scripture Tools for Every Pastor" />
 	</div>
-	<div class="bookmarkPane">
-		<span>History<br /><br /></span>
-		<span class="bookmarkContents"></span>
+	<div id="bookmarkPane" class="bookmarkPane ui-corner-all">
+		<h3 class="ui-helper-reset ui-state-default ui-corner-all">
+			<span class="leftBookmarkArrow ui-icon ui-icon-triangle-1-e"></span>History
+		</h3>
+		<div id="historyDisplayPane" class="bookmarkContents"><br /></div>
+		<h3 id="bookmarkHeader" class="ui-helper-reset ui-state-default ui-corner-all">
+			<span class="leftBookmarkArrow ui-icon ui-icon-triangle-1-e"></span>Bookmarks
+		</h3>
+		<div id="bookmarkDisplayPane" class="bookmarkContents"><br /></div>
 	</div>
 	<div class="logo">
 		<span class="copyright">&copy; Tyndale House</span>
@@ -90,7 +97,7 @@
 <!--<div id="bottomSection" class="timeline">No modules have yet been loaded.</div>-->
 <!---->
 <!--<div id="loading"><img alt="Loading..." src="images/wait16.gif" />Loading...</div>-->
-<!--<div id="error" class="ui-state-highlight">A placeholder for error messages</div>-->
+<div id="error">A placeholder for error messages</div>
 
 <!--  The about popup -->
 
@@ -100,6 +107,16 @@
 	<p>&copy; Tyndale House 2011</p>
 </div>
 
+<div id="login">
+	<div id="loginPopup">
+		<label for="emailAddress">Email address:</label><input id="emailAddress" type="text" size="20" /><br />
+		<label for="password">Password:</label><input id="password" type="password" size="20" /><br />
+	</div>
+	<div id="registerPopup">
+		<label for="name">Your name</label><input id="emailAddress" type="text" size="20" /><br />
+		<label for="country">Country</label><input id="password" type="password" size="20" /><br />
+	</div>
+</div>
 
 </body>
 

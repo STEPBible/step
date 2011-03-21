@@ -9,6 +9,10 @@ body {
 	color: #ccc;
 }
 
+.notYetImplemented {
+	background-color: black !important ;
+}
+
 .ui-widget {
 	font-family: Verdana;
 }

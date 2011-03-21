@@ -42,6 +42,7 @@
 		<div id="leftPaneMenu" class="innerMenus"></div>
 	    <div class="passageText ui-widget">
 	    	<div class="headingContainer">
+				<a class="bookmarkPassageLink">Add a bookmark</a>
 		    	<input id="leftPassageReference" class="heading editable passageReference" size="30" value="Rom 1:1-7" />
 		    	<input id="leftPassageBook" class="heading editable passageVersion" size="5" value="KJV" />
 	    	</div>
@@ -75,6 +76,7 @@
 		<div id="rightPaneMenu" class="innerMenus"></div>
 	    <div class="passageText ui-widget">
 	    	<div class="headingContainer">
+				<a class="bookmarkPassageLink">Add a bookmark</a>
 		    	<input id="leftPassageReference" class="heading editable passageReference" size="30" value="Jhn 1:1" />
 		    	<input id="leftPassageBook" class="heading editable passageVersion" size="5" value="ESV" />
 	    	</div>

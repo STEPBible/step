@@ -102,7 +102,7 @@ ToolbarMenu.prototype.refreshMenuOptions = function(version) {
 	var self = this;
 	$.getJSON(BIBLE_GET_FEATURES + version, function (features) {
 		//build up map of options
-		$("a", self.menuRoot).each(function(index, value) {
+		$("li:contains('Display') a", self.menuRoot).each(function(index, value) {
 			var changed = false;
 			for(var i = 0 ; features[i]; i++) {
 				if(value.name == features[i]) {

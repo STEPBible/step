@@ -13,6 +13,10 @@ function Bookmark(bookmarkContainer) {
 	this.historyContainer.hear("passage-changed", function(selfElement, data) {
 		self.addHistory(data.reference);
 	});
+
+	this.bookmarkContainer.hear("bookmark-addition-requested", function(selfElement, data) {
+		self.addBookmark(data.reference);
+	});
 	
 	this.initialiseHistory();
 	
@@ -88,7 +92,16 @@ Bookmark.prototype.addHistory = function(passageReference) {
 	
 	this.setHistory(history);
 };	
-	
+
+
+Bookmark.prototype.addBookmark = function(passageReference) {
+	var self = this;
+	$.getSafe(BOOKMARKS_ADD + passageReference, function(data) {
+		self.createBookmarkItem(passageReference, this.bookmarkContainer, false);
+	});
+};	
+
+
 Bookmark.prototype.initialiseHistory = function() {
 	var history = this.getHistory();
 	if(history != null) {

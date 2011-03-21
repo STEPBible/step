@@ -10,6 +10,7 @@
 // These are used as part of the rest-like calls
 /////////////////////////////////////////////////////////////////////////
 BOOKMARKS_GET = "rest/bookmark/getBookmarks";
+BOOKMARKS_ADD = "rest/bookmark/addBookmark/";
 
 BIBLE_GET_BIBLE_VERSIONS = "rest/bible/getBibleVersions/";
 BIBLE_GET_BIBLE_TEXT = "rest/bible/getBibleText/";

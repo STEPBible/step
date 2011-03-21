@@ -11,6 +11,7 @@ function Passage(passageContainer, versions, passageId) {
 	this.version = $(".passageVersion", passageContainer);
 	this.reference = $(".passageReference", passageContainer);
 	this.passage = $(".passageContent", passageContainer);
+	this.bookmarkButton = $(".bookmarkPassageLink", passageContainer);
 	this.passageId = passageId;
 	
 	//read state from the cookie
@@ -53,6 +54,16 @@ function Passage(passageContainer, versions, passageId) {
 		self.reference.val(data);
 		self.changePassage();
 	});
+	
+	this.bookmarkButton.hear("bookmark-passage-" + this.passageId, function(selfElement, data) {
+		self.bookmarkButton.click();
+	});
+	
+	this.bookmarkButton
+		.button({ icons: {primary: "ui-icon-bookmark" }, text: false})
+		.click(function() {
+			$.shout("bookmark-addition-requested", { reference: self.reference.val() });
+		});
 }
 
 /**

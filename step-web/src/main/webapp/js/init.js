@@ -196,14 +196,6 @@ function initInitialEvents() {
 }
 
 function initGlobalHandlers() {
-	$("#loading").ajaxStart(function() {
-		$(this).show();
-	});
-
-	$("#loading").ajaxComplete(function() {
-		$(this).hide();
-	});
-	
 	//set always visible - should probably be its own class
 	$( "#loading" ).position({
 		of: $( "body" ),

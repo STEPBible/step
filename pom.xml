@@ -40,4 +40,34 @@
 		<module>step-web</module>
 		<module>step-server</module>
 	</modules>
+		
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>2.2.1</version>
+				<configuration>
+					<final-name>step-standalone-${project.version}</final-name>
+					<descriptors>
+						<descriptor>standalone.xml</descriptor>
+					</descriptors>
+					<archive>
+						<manifest>
+							<mainClass>com.tyndalehouse.step.server.StepServer</mainClass>
+							<addClasspath>true</addClasspath>
+						</manifest>
+					</archive>
+				</configuration>
+				<executions>
+					<execution>
+						<id>packaging-application</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 </project>

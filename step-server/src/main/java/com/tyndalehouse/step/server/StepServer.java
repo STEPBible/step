@@ -1,6 +1,7 @@
 package com.tyndalehouse.step.server;
 
 import java.awt.Desktop;
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
@@ -37,11 +38,11 @@ public final class StepServer {
         final Server jetty = new Server();
         final ClassLoader currentClassLoader = Thread.currentThread().getContextClassLoader();
         final URL jettyConfig = currentClassLoader.getResource("jetty.xml");
-        final URL warURL = currentClassLoader.getResource("war");
 
         // configure jetty
         XmlConfiguration configuration;
         try {
+            final URL warURL = new File("step-web").toURI().toURL();
             configuration = new XmlConfiguration(jettyConfig);
             configuration.configure(jetty);
 
@@ -70,7 +71,7 @@ public final class StepServer {
         try {
             final StepServer ms = new StepServer();
             ms.start();
-            Desktop.getDesktop().browse(new URI("http://localhost:8080/step-web"));
+            Desktop.getDesktop().browse(new URI("http://localhost:8989/step-web/index.html"));
 
         } catch (final Exception e) {
             LOGGER.debug(e.getMessage(), e);

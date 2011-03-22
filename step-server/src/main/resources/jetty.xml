@@ -36,7 +36,7 @@
     <Call name="addConnector">
       <Arg>
           <New class="org.mortbay.jetty.nio.SelectChannelConnector">
-            <Set name="port"><SystemProperty name="jetty.port" default="8080"/></Set>
+            <Set name="port"><SystemProperty name="jetty.port" default="8989"/></Set>
             <Set name="maxIdleTime">30000</Set>
             <Set name="Acceptors">1</Set>
             <Set name="statsOn">false</Set>

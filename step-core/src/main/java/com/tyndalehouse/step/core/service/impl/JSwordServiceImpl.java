@@ -66,6 +66,7 @@ public class JSwordServiceImpl implements JSwordService {
      * @param bibleCategory the categories of books that should be considered
      * @return returns a list of installed modules
      */
+    @Override
     public List<Book> getInstalledModules(final BookCategory... bibleCategory) {
         if (bibleCategory == null || bibleCategory.length == 0) {
             return new ArrayList<Book>();
@@ -79,6 +80,8 @@ public class JSwordServiceImpl implements JSwordService {
 
         // we set up a filter to retrieve just certain types of books
         final BookFilter bf = new BookFilter() {
+            @Override
+            @SuppressWarnings("PMD.JUnit4TestShouldUseTestAnnotation")
             public boolean test(final Book b) {
                 return categories.contains(b.getBookCategory());
             }
@@ -90,6 +93,7 @@ public class JSwordServiceImpl implements JSwordService {
      * @param bibleCategory the list of books that should be considered
      * @return a list of all modules
      */
+    @Override
     public List<Book> getAllModules(final BookCategory... bibleCategory) {
         final List<Book> books = new ArrayList<Book>();
         for (final Installer installer : this.bookInstallers) {
@@ -134,6 +138,7 @@ public class JSwordServiceImpl implements JSwordService {
             final SAXEventProvider osissep = bookData.getSAXEventProvider();
             TransformingSAXEventProvider htmlsep = null;
             htmlsep = (TransformingSAXEventProvider) new Converter() {
+                @Override
                 public SAXEventProvider convert(final SAXEventProvider provider) throws TransformerException {
                     try {
                         final String file = requiredTransformation.getFile();

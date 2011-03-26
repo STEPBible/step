@@ -1,5 +1,6 @@
 package com.tyndalehouse.step.core.data.entities;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -19,7 +20,9 @@ import com.tyndalehouse.step.core.data.entities.reference.TimeUnitType;
  */
 @CacheStrategy(readOnly = true)
 @Entity
-public class Timeband implements KeyedEntity {
+public class Timeband implements KeyedEntity, Serializable {
+    private static final long serialVersionUID = 8217910739779785032L;
+
     @Id
     @GeneratedValue
     private Integer id;
@@ -50,6 +53,7 @@ public class Timeband implements KeyedEntity {
     /**
      * @return the code
      */
+    @Override
     public String getCode() {
         return this.code;
     }

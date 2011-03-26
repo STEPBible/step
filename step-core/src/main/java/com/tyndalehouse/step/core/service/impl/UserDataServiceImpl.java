@@ -50,7 +50,7 @@ public class UserDataServiceImpl implements UserDataService {
     }
 
     @Override
-    public void register(final String emailAddress, final String name, final String country,
+    public User register(final String emailAddress, final String name, final String country,
             final String password) {
         // first check that are we not logged in!
         Session session = this.sessionProvider.get();
@@ -77,13 +77,11 @@ public class UserDataServiceImpl implements UserDataService {
         this.ebean.save(u);
 
         // next, we just associate the current session with the user by logging in
-        this.login(emailAddress, password);
+        return this.login(emailAddress, password);
     }
 
     @Override
     public Session createSession() {
-        // TODO we can't use subclassing on Android so remove in preference to enhancements
-        // final Session session = this.ebean.createEntityBean(Session.class);
         final Session session = new Session();
         final ClientSession clientSession = this.clientSessionProvider.get();
 
@@ -103,6 +101,16 @@ public class UserDataServiceImpl implements UserDataService {
                 session.getIpAddress());
         this.ebean.save(session);
         return session;
+    }
+
+    @Override
+    public User getLoggedInUser() {
+        final Session session = this.sessionProvider.get();
+        if (session == null) {
+            return null;
+        }
+
+        return session.getUser();
     }
 
     @Override

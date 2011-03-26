@@ -9,6 +9,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.name.Named;
 import com.tyndalehouse.step.core.data.entities.Bookmark;
+import com.tyndalehouse.step.core.data.entities.History;
 import com.tyndalehouse.step.core.data.entities.HotSpot;
 import com.tyndalehouse.step.core.data.entities.ScriptureReference;
 import com.tyndalehouse.step.core.data.entities.ScriptureTarget;
@@ -119,6 +120,7 @@ public class DatabaseConfigProvider implements Provider<EbeanServer> {
         config.addClass(User.class);
         config.addClass(Session.class);
         config.addClass(Bookmark.class);
+        config.addClass(History.class);
     }
 
 }

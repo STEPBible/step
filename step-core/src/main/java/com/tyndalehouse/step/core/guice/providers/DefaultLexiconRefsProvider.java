@@ -21,6 +21,7 @@ public class DefaultLexiconRefsProvider implements Provider<Map<String, String>>
      * 
      */
     @Provides
+    @Override
     public Map<String, String> get() {
         final Map<String, String> moduleRefs = new HashMap<String, String>();
         moduleRefs.put("strong:H", "StrongsHebrew");

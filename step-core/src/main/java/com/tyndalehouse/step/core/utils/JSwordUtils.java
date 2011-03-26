@@ -53,6 +53,7 @@ public final class JSwordUtils {
 
         // finally sort by initials
         sort(versions, new Comparator<BibleVersion>() {
+            @Override
             public int compare(final BibleVersion o1, final BibleVersion o2) {
                 return o1.getInitials().compareTo(o2.getInitials());
             }

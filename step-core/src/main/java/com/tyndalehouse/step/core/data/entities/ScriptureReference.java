@@ -1,5 +1,7 @@
 package com.tyndalehouse.step.core.data.entities;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,7 +16,9 @@ import com.tyndalehouse.step.core.data.entities.reference.TargetType;
  * @author Chris
  */
 @Entity
-public class ScriptureReference {
+public class ScriptureReference implements Serializable {
+    private static final long serialVersionUID = -3854523992102175988L;
+
     @Id
     @GeneratedValue
     private Integer scriptureReferenceId;

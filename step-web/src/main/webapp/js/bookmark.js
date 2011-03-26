@@ -1,7 +1,8 @@
-
 /**
  * The bookmarks components record events that are happening across the application,
  * for e.g. passage changes, but will also show related information to the passage.
+ * 
+ * This could probably now be simplified by doing all the logic server side for the history
  */
 function Bookmark(bookmarkContainer) {
 	this.historyContainer = $("#historyDisplayPane");
@@ -16,6 +17,11 @@ function Bookmark(bookmarkContainer) {
 
 	this.bookmarkContainer.hear("bookmark-addition-requested", function(selfElement, data) {
 		self.addBookmark(data.reference);
+	});
+
+	
+	this.bookmarkContainer.hear("user-logged-in", function(selfElement, data) {
+		self.mergeHistory(data);
 	});
 	
 	this.initialiseHistory();
@@ -43,14 +49,15 @@ function Bookmark(bookmarkContainer) {
 		self.loadBookmarks();
 	}).hear("user-logged-out", function(selfElement, data) {
 		//we clear the bookmarks
-		
 		self.loadedBookmarks = false;
 		self.bookmarkContainer.html("");
 	});
 }
 
+//TODO make server setting
 Bookmark.maxBookmarks = 10;
-Bookmark.historyDelimiter = '#';
+//TODO make server setting
+Bookmark.historyDelimiter = '~';
 
 //we need to ignore the first two passage changes since we have those in the history
 //the history giving us the order of things
@@ -70,9 +77,18 @@ Bookmark.prototype.addHistory = function(passageReference) {
 	//if we have the bookmark already, then we stop here
 	var history = this.getHistory();
 	
-	var indexInHistory = $.inArray(passageReference, history);
+	//check if we have the reference in the array (starts for example: '1 John@' where @ denotes the time at which it happened
+	var indexInHistory = 0;
+	for(var indexInHistory = 0; indexInHistory < history.length; indexInHistory++) {
+		if(history[indexInHistory].match("^" + passageReference + "@")) {
+			break;
+		}
+	}
+
+	//if we didn't find the item
+	var fullHistoryStorageText = passageReference + "@" + new Date().getTime();
 	
-	if(indexInHistory == -1) {
+	if(indexInHistory == history.length) {
 		if(history.length > Bookmark.maxBookmarks) {
 			//we remove the first element in the array (i.e. the last child).
 			history.pop();
@@ -81,13 +97,15 @@ Bookmark.prototype.addHistory = function(passageReference) {
 		
 		//then add
 		this.createHistoryItem(passageReference);
-		history.unshift(passageReference);
+		history.unshift(fullHistoryStorageText);
+		$.get(HISTORY_ADD + fullHistoryStorageText);
 	} else {
 		//reposition item...
 		var item = $("div.bookmarkItem", this.historyContainer).eq(indexInHistory).detach();
 		history.splice(indexInHistory, 1);
 		this.historyContainer.prepend(item);
-		history.unshift(passageReference);
+		history.unshift(fullHistoryStorageText);
+		$.get(HISTORY_ADD + fullHistoryStorageText);
 	}
 	
 	this.setHistory(history);
@@ -103,13 +121,47 @@ Bookmark.prototype.addBookmark = function(passageReference) {
 
 
 Bookmark.prototype.initialiseHistory = function() {
+	//create the history from the cookie, or - logged-in event will override
+	var self = this;
+	self.createHistoryItemsFromCookies();
+}
+
+/** 
+ * we need to work out what our current history is like, and then reset it to be appropriate
+ */
+Bookmark.prototype.mergeHistory = function() {
+	//we call this when we're logged on, so we get can send the history to the server, merge and set it back
+	var self = this;
+	$.getSafe(HISTORY_GET + $.cookie("history"), function(data) {
+		//we now have the merged history
+		self.clearHistory();
+		
+		var historyText = "";
+		if(data) {
+			$.each(data, function(index, item) {
+				//for each item, it has a lastUpdated and a historyReference
+				historyText += item.historyReference + '@' + new Date(item.lastUpdated).getTime() + Bookmark.historyDelimiter;
+			});
+			
+			$.cookie("history", historyText);
+			self.createHistoryItemsFromCookies();
+		}
+	});
+};
+
+/**
+ * creates the history from the items stored in the cookie,
+ * this is called either after setting the persisted history
+ * into the cookie, or when the user is not logged in!
+ */
+Bookmark.prototype.createHistoryItemsFromCookies = function() {
 	var history = this.getHistory();
 	if(history != null) {
 		for(var ii = history.length -1; ii >= 0; ii--) {
 			this.createHistoryItem(history[ii]);
 		}
 	}
-}
+};
 
 /**
  * loads the bookmarks from the server
@@ -128,7 +180,7 @@ Bookmark.prototype.loadBookmarks = function() {
 			}
 		});
 	}
-}
+};
 
 /**
  * creates a history item
@@ -144,8 +196,18 @@ Bookmark.prototype.createBookmarkItem = function(passageReference) {
 	this.createItem(passageReference, this.bookmarkContainer, false);
 };
 
+/**
+ * clears the history
+ */
+Bookmark.prototype.clearHistory = function() {
+	this.historyContainer.empty();
+};
 
-Bookmark.prototype.createItem = function(passageReference, container, ascending) {
+
+Bookmark.prototype.createItem = function(passageCookieReference, container, ascending) {
+	var passageRefParts = passageCookieReference.split('@');
+	var passageReference = passageRefParts[0];
+	
 	if(passageReference && passageReference != "") {
 		var item = "<div class='bookmarkItem'>";
 		item += "<a class='ui-icon ui-icon-arrowthick-1-w bookmarkArrow leftBookmarkArrow' href='#' onclick='$.shout(\"bookmark-triggered-0\", \""+ passageReference + "\");'>&larr;</a>";

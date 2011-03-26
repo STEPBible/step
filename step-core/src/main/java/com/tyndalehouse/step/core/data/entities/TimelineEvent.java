@@ -1,5 +1,7 @@
 package com.tyndalehouse.step.core.data.entities;
 
+import java.io.Serializable;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
@@ -17,7 +19,9 @@ import com.tyndalehouse.step.core.data.common.PrecisionType;
 @CacheStrategy(readOnly = true)
 @Entity
 @DiscriminatorValue("1")
-public class TimelineEvent extends ScriptureTarget {
+public class TimelineEvent extends ScriptureTarget implements Serializable {
+    private static final long serialVersionUID = -4642904574412249515L;
+
     @Column
     private String summary;
 
@@ -120,4 +124,26 @@ public class TimelineEvent extends ScriptureTarget {
         this.hotSpot = hotSpot;
     }
 
+    /**
+     * to get rid of a findbugs bug, we override to make clear we are using the parent's equal method
+     * 
+     * @param obj the object that we are comparing
+     * @return true if objects are equals
+     */
+    @SuppressWarnings("PMD.UselessOverridingMethod")
+    @Override
+    public boolean equals(final Object obj) {
+        return super.equals(obj);
+    }
+
+    /**
+     * overriding the hashcode because we've override the equals
+     * 
+     * @return the parent's hashcode
+     */
+    @SuppressWarnings("PMD.UselessOverridingMethod")
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 }

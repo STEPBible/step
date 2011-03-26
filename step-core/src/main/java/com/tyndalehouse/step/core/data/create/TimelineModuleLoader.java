@@ -95,6 +95,7 @@ public class TimelineModuleLoader {
     private Map<String, HotSpot> loadHotSpots(final Map<String, Timeband> bands) {
         LOG.debug("Loading hot spot data");
         final Map<String, HotSpot> hotSpots = load(HOTSPOTS_CSV_DATA_FILE, new CsvDataMapper<HotSpot>() {
+            @Override
             public HotSpot mapRow(final int rowNum, final CsvData data) {
                 final HotSpot hs = new HotSpot();
                 hs.setCode(data.getData(rowNum, HOTSPOT_CODE_COLUMN));
@@ -116,6 +117,7 @@ public class TimelineModuleLoader {
     private Map<String, Timeband> loadTimebands() {
         LOG.debug("Loading timeband data");
         final Map<String, Timeband> timebands = load(TIMEBAND_CSV_DATA_FILE, new CsvDataMapper<Timeband>() {
+            @Override
             public Timeband mapRow(final int rowNum, final CsvData data) {
                 final Timeband timeband = new Timeband();
                 timeband.setCode(data.getData(rowNum, TIMEBAND_CODE_COLUMN));

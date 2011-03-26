@@ -21,13 +21,13 @@ import com.tyndalehouse.step.core.guice.providers.DefaultVersionsProvider;
 import com.tyndalehouse.step.core.guice.providers.ServerSessionProvider;
 import com.tyndalehouse.step.core.guice.providers.TestData;
 import com.tyndalehouse.step.core.service.BibleInformationService;
-import com.tyndalehouse.step.core.service.BookmarkService;
+import com.tyndalehouse.step.core.service.FavouritesService;
 import com.tyndalehouse.step.core.service.JSwordService;
 import com.tyndalehouse.step.core.service.ModuleService;
 import com.tyndalehouse.step.core.service.TimelineService;
 import com.tyndalehouse.step.core.service.UserDataService;
 import com.tyndalehouse.step.core.service.impl.BibleInformationServiceImpl;
-import com.tyndalehouse.step.core.service.impl.BookmarkServiceImpl;
+import com.tyndalehouse.step.core.service.impl.FavouritesServiceImpl;
 import com.tyndalehouse.step.core.service.impl.JSwordServiceImpl;
 import com.tyndalehouse.step.core.service.impl.ModuleServiceImpl;
 import com.tyndalehouse.step.core.service.impl.TimelineServiceImpl;
@@ -39,6 +39,7 @@ import com.tyndalehouse.step.core.service.impl.UserDataServiceImpl;
  * @author Chris
  * 
  */
+@SuppressWarnings("PMD.CouplingBetweenObjects")
 public class StepCoreModule extends AbstractModule {
     private static final String CORE_GUICE_PROPERTIES = "/step.core.properties";
 
@@ -51,7 +52,7 @@ public class StepCoreModule extends AbstractModule {
         bind(BibleInformationService.class).to(BibleInformationServiceImpl.class).asEagerSingleton();
         bind(ModuleService.class).to(ModuleServiceImpl.class).asEagerSingleton();
         bind(TimelineService.class).to(TimelineServiceImpl.class);
-        bind(BookmarkService.class).to(BookmarkServiceImpl.class);
+        bind(FavouritesService.class).to(FavouritesServiceImpl.class);
         bind(UserDataService.class).to(UserDataServiceImpl.class);
         bind(Loader.class);
 

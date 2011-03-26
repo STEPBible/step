@@ -1,5 +1,6 @@
 package com.tyndalehouse.step.core.data.entities;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.CascadeType;
@@ -19,7 +20,9 @@ import javax.persistence.TemporalType;
  * 
  */
 @Entity
-public class Session {
+public class Session implements Serializable {
+    private static final long serialVersionUID = 6232919302889735151L;
+
     @Id
     @GeneratedValue
     private Integer id;

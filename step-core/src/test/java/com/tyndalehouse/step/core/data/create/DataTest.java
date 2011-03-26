@@ -8,7 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.avaje.ebean.SqlRow;
-import com.tyndalehouse.step.core.data.AbstractDataTest;
+import com.tyndalehouse.step.core.data.DataDrivenTestExtension;
 import com.tyndalehouse.step.core.data.entities.Timeband;
 
 /**
@@ -17,7 +17,7 @@ import com.tyndalehouse.step.core.data.entities.Timeband;
  * @author Chris
  * 
  */
-public class DataTest extends AbstractDataTest {
+public class DataTest extends DataDrivenTestExtension {
     private static final Logger LOG = LoggerFactory.getLogger(DataTest.class);
 
     /**

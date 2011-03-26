@@ -1,5 +1,6 @@
 package com.tyndalehouse.step.core.data.entities;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -21,7 +22,9 @@ import com.tyndalehouse.step.core.data.entities.reference.TimeUnitType;
  */
 @CacheStrategy(readOnly = true)
 @Entity
-public class HotSpot implements KeyedEntity {
+public class HotSpot implements KeyedEntity, Serializable {
+    private static final long serialVersionUID = -7904172771680747618L;
+
     @Id
     @GeneratedValue
     private Integer id;
@@ -72,6 +75,7 @@ public class HotSpot implements KeyedEntity {
     /**
      * @return the code
      */
+    @Override
     public String getCode() {
         return this.code;
     }

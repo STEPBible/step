@@ -29,8 +29,9 @@ public interface UserDataService {
      * @param name the name of the person [optional]
      * @param country his country [optional]
      * @param password the password he has chosen, which we should SHA-1 and salt
+     * @return the user that has been created
      */
-    void register(String emailAddress, String name, String country, String password);
+    User register(String emailAddress, String name, String country, String password);
 
     /**
      * TODO move this to session provider This method is called to create a session for the user. This will
@@ -53,4 +54,9 @@ public interface UserDataService {
      * logs the current user out
      */
     void logout();
+
+    /**
+     * @return the logged in user if the user is logged in
+     */
+    User getLoggedInUser();
 }

@@ -281,7 +281,7 @@ public class InterlinearProviderImpl implements InterlinearProvider {
      * @param morph the morphology (identifies how the used is word in the sentence - i.e. grammar)
      * @param word the word to be stored
      */
-    void addTextualInfo(final String verseReference, final String strong, final String morph,
+    private void addTextualInfo(final String verseReference, final String strong, final String morph,
             final String word) {
         final String strongKey = getAnyKey(strong);
 

@@ -9,7 +9,8 @@ import com.tyndalehouse.step.core.models.ClientSession;
 import com.tyndalehouse.step.core.service.UserDataService;
 
 /**
- * A server session provider
+ * A server session provider TODO should use CACHE here since we query almost everytime there is a request for
+ * bookmarks, etc.
  * 
  * @author Chris
  * 
@@ -40,7 +41,7 @@ public class ServerSessionProvider implements Provider<Session> {
     @Override
     public Session get() {
         final String clientSessionId = this.clientSessionProvider.get().getSessionId();
-        final Session serverSession = this.ebean.find(Session.class).where()
+        final Session serverSession = this.ebean.find(Session.class).fetch("user", "id, name").where()
                 .eq("jSessionId", clientSessionId).findUnique();
 
         if (serverSession == null) {

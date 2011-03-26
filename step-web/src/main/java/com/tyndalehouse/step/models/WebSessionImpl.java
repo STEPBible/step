@@ -24,6 +24,7 @@ public class WebSessionImpl implements ClientSession {
     /**
      * @return the session
      */
+    @Override
     public String getSessionId() {
         return this.sessionId;
     }
@@ -38,6 +39,7 @@ public class WebSessionImpl implements ClientSession {
     /**
      * @return the ipAddress
      */
+    @Override
     public String getIpAddress() {
         return this.ipAddress;
     }

@@ -21,6 +21,7 @@ public class DefaultVersionsProvider implements Provider<List<String>> {
      * 
      */
     @Provides
+    @Override
     public List<String> get() {
         final List<String> versions = new ArrayList<String>();
         versions.add("ESV");

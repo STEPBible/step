@@ -41,6 +41,9 @@ import com.tyndalehouse.step.rest.framework.StepRequest;
  */
 @Singleton
 public class FrontController extends HttpServlet {
+    private static final String ENTITIES_PACKAGE = "com.tyndalehouse.step.core.data.entities";
+    private static final String AVAJE_PACKAGE = "com.avaje";
+
     private static final String UTF_8_ENCODING = "UTF-8";
     private static final Logger LOGGER = LoggerFactory.getLogger(FrontController.class);
     private static final char PACKAGE_SEPARATOR = '.';
@@ -52,12 +55,13 @@ public class FrontController extends HttpServlet {
     private final transient Injector guiceInjector;
     // TODO but also check thread safety and whether we should share this object
     private final transient ObjectMapper jsonMapper = new ObjectMapper();
+    // TODO check if this is thread safe, and if so, then make private field
+    private final transient JsonContext ebeanJson;
 
     // TODO investigate EH cache here
     private final Map<String, Method> methodNames = new HashMap<String, Method>();
     private final Map<String, Object> controllers = new HashMap<String, Object>();
     private final boolean isCacheEnabled;
-    private final transient EbeanServer ebean;
     private final transient ClientErrorResolver errorResolver;
 
     /**
@@ -67,13 +71,15 @@ public class FrontController extends HttpServlet {
      * @param isCacheEnabled indicates whether responses should be cached for fast retrieval TODO rename all
      *            ebeans to DB
      * @param ebean the db access/persisitence object
+     * @param errorResolver the error resolver is the object that helps us translate errors for the client
      */
     @Inject
     public FrontController(final Injector guiceInjector,
             @Named("cache.enabled") final Boolean isCacheEnabled, final EbeanServer ebean,
             final ClientErrorResolver errorResolver) {
         this.guiceInjector = guiceInjector;
-        this.ebean = ebean;
+        this.ebeanJson = ebean.createJsonContext();
+
         this.errorResolver = errorResolver;
         this.isCacheEnabled = Boolean.TRUE.equals(isCacheEnabled);
     }
@@ -155,7 +161,7 @@ public class FrontController extends HttpServlet {
             return new ClientHandledIssue(cause.getMessage(), this.errorResolver.resolve(cause.getClass()));
         } else if (cause instanceof IllegalArgumentException) {
             // a validation exception occurred
-            LOGGER.trace(e.getMessage(), e);
+            LOGGER.warn(e.getMessage(), e);
             return new ClientHandledIssue(cause.getMessage());
         }
 
@@ -176,13 +182,16 @@ public class FrontController extends HttpServlet {
             // therefore we can't just use simple jackson mapper
             if (responseValue == null) {
                 return new byte[0];
-            } else if (responseValue.getClass().getPackage().getName().startsWith("com.avaje")) {
-                final JsonContext json = this.ebean.createJsonContext();
-
-                // convert list of beans into JSON
-                response = json.toJsonString(responseValue);
             } else {
-                response = this.jsonMapper.writeValueAsString(responseValue);
+                final String responsePackage = responseValue.getClass().getPackage().getName();
+                if (responsePackage.startsWith(ENTITIES_PACKAGE)
+                        || responseValue.getClass().getPackage().getName().startsWith(AVAJE_PACKAGE)) {
+
+                    // convert list of beans into JSON
+                    response = this.ebeanJson.toJsonString(responseValue);
+                } else {
+                    response = this.jsonMapper.writeValueAsString(responseValue);
+                }
             }
 
             return response.getBytes(UTF_8_ENCODING);

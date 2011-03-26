@@ -276,3 +276,7 @@ org.eclipse.jdt.core.formatter.tabulation.char=space
 org.eclipse.jdt.core.formatter.tabulation.size=4
 org.eclipse.jdt.core.formatter.use_tabs_only_for_leading_indentations=false
 org.eclipse.jdt.core.formatter.wrap_before_binary_operator=true
+org.eclipse.jdt.core.compiler.problem.suppressOptionalErrors=disabled
+org.eclipse.jdt.core.compiler.problem.suppressWarnings=enabled
+org.eclipse.jdt.core.compiler.problem.unhandledWarningToken=ignore
+org.eclipse.jdt.core.compiler.problem.unusedWarningToken=ignore

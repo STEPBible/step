@@ -14,7 +14,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import com.google.inject.Provider;
-import com.tyndalehouse.step.core.data.AbstractDataTest;
+import com.tyndalehouse.step.core.data.DataDrivenTestExtension;
 import com.tyndalehouse.step.core.data.entities.Session;
 import com.tyndalehouse.step.core.data.entities.User;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
@@ -27,7 +27,7 @@ import com.tyndalehouse.step.core.models.ClientSession;
  * 
  */
 @RunWith(MockitoJUnitRunner.class)
-public class UserDataServiceImplTest extends AbstractDataTest {
+public class UserDataServiceImplTest extends DataDrivenTestExtension {
     @Mock
     private Provider<Session> serverSessionProvider;
     @Mock

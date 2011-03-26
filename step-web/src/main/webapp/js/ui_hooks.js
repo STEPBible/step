@@ -9,8 +9,11 @@
 // The following section defines method names and controller names
 // These are used as part of the rest-like calls
 /////////////////////////////////////////////////////////////////////////
-BOOKMARKS_GET = "rest/bookmark/getBookmarks";
-BOOKMARKS_ADD = "rest/bookmark/addBookmark/";
+BOOKMARKS_GET = "rest/favourites/getBookmarks";
+BOOKMARKS_ADD = "rest/favourites/addBookmark/";
+HISTORY_GET = "rest/favourites/getHistory/";
+HISTORY_ADD = "rest/favourites/addHistory/";
+
 
 BIBLE_GET_BIBLE_VERSIONS = "rest/bible/getBibleVersions/";
 BIBLE_GET_BIBLE_TEXT = "rest/bible/getBibleText/";
@@ -31,7 +34,8 @@ TIMELINE_GET_EVENTS_FROM_REFERENCE = "rest/timeline/getEventsFromReference/";
 USER_LOGIN = "rest/user/login/";
 USER_LOGOUT = "rest/user/logout/";
 USER_REGISTER = "rest/user/register/"
-
+USER_GET_LOGGED_IN_USER = "rest/user/getLoggedInUser";
+	
 //////////////////////////
 // SOME DEFAULTS
 //////////////////////////

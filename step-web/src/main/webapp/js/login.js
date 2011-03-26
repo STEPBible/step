@@ -20,6 +20,15 @@ function Login() {
 	this.root.hear("show-register-popup", function(selfElement, data) {
 		self.showLoginPopup();
 	});
+	
+	//we check whether we are logged on already...
+	$.getSafe(USER_GET_LOGGED_IN_USER, function(data) {
+		//if we have data, we use it to show it
+		if(data && data.name) {
+			//set the name of the user
+			self.setLoggedInUser(data.name);
+		}
+	});
 }
 
 /**
@@ -46,23 +55,12 @@ Login.prototype.showLoginPopup = function(popupTitle, callback) {
 				$.getSafe(USER_LOGIN + email + "/" + password, function(data) {
 					//we have logged in succesfully
 					//change the name of the user
-					var loginLink = $("#loginLink");
-					loginLink.text(data.name);
-					loginLink.unbind('click');
-					loginLink.click(function() {
-						self.showLogout();
-					});
-					
-					$(popup).dialog("close");
-					
-					if(callback) {
-						callback();
-					}
+					self.performSuccessfulLogin(data, popup, callback);
 				});
 			},
 			"Create an account" : function() {
 				//show register popup
-				self.showRegisterPopup();
+				self.showRegisterPopup(callback);
 			},
 			"Cancel" : function() {
 				$(this).dialog("close");
@@ -73,13 +71,43 @@ Login.prototype.showLoginPopup = function(popupTitle, callback) {
 	});
 };
 
-Login.prototype.showRegisterPopup = function() {
+/**
+ * performs a succesful login by changing the name at the top right of the screen
+ */
+Login.prototype.performSuccessfulLogin = function(data, popup, callback) {
+	this.setLoggedInUser(data.name);
+	$(popup).dialog("close");
+	
+	if(callback) {
+		callback();
+	}
+};
+
+/**
+ * shows the register popup
+ */
+Login.prototype.showRegisterPopup = function(callback) {
 	this.registerMode = true;
 	var self = this;
 	this.root.dialog({
 		buttons : { 
 			"Register" : function() {
 				//	send information to server
+				var email = $("#emailAddress", self.root).val();
+				var name = $("#name", self.root).val();
+				var country = $("#country", self.root).val();
+				var password = $("#password", self.root).val();
+				var popup = this;
+				
+				$.getSafe(USER_REGISTER + 
+						email + "/" +
+						name + "/" +
+						country + "/" +
+						password, 
+						function(data) {
+							self.performSuccessfulLogin(data, popup, callback);
+						}
+				);
 			},
 			"Cancel" : function() {
 				self.showLoginPopup();
@@ -121,3 +149,19 @@ Login.prototype.showLogout = function() {
 		}
 	});
 };
+
+/**
+ * sets the user's name up and rebinds the click to 
+ * be a logout operation instead.
+ */
+Login.prototype.setLoggedInUser = function(name) {
+	var loginLink = $("#loginLink");
+	var self = this;
+	
+	loginLink.text(name);
+	loginLink.unbind('click');
+	$.shout("user-logged-in");
+	loginLink.click(function() {
+		self.showLogout();
+	});
+}

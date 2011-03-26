@@ -244,10 +244,6 @@
             <ruleset>Controversial Rules</ruleset>
         </rule>
         <rule>
-            <name>AvoidUsingVolatile</name>
-            <ruleset>Controversial Rules</ruleset>
-        </rule>
-        <rule>
             <name>AvoidAccessibilityAlteration</name>
             <ruleset>Controversial Rules</ruleset>
         </rule>

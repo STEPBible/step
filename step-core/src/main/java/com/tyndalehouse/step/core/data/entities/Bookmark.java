@@ -1,5 +1,7 @@
 package com.tyndalehouse.step.core.data.entities;
 
+import java.io.Serializable;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,16 +16,18 @@ import javax.persistence.ManyToOne;
  * 
  */
 @Entity
-public class Bookmark {
+public class Bookmark implements Serializable {
+    private static final long serialVersionUID = 537098392958960964L;
+
     @Id
     @GeneratedValue
     private Integer id;
 
-    @Column
+    @Column(nullable = false)
     private String bookmarkReference;
 
     @ManyToOne(cascade = CascadeType.PERSIST)
-    @Column
+    @Column(nullable = false)
     private User user;
 
     /**

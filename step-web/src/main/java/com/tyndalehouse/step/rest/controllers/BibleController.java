@@ -4,6 +4,7 @@ import static org.apache.commons.lang.StringUtils.isNotBlank;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.commons.lang.Validate;
 import org.slf4j.Logger;
@@ -94,7 +95,7 @@ public class BibleController {
         final List<LookupOption> lookupOptions = new ArrayList<LookupOption>();
         if (userOptions != null) {
             for (final String o : userOptions) {
-                lookupOptions.add(LookupOption.valueOf(o.toUpperCase()));
+                lookupOptions.add(LookupOption.valueOf(o.toUpperCase(Locale.ENGLISH)));
             }
         }
 

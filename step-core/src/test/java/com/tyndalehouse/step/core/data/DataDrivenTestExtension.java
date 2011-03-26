@@ -10,17 +10,22 @@ import com.google.inject.Injector;
 import com.tyndalehouse.step.core.data.create.DataTestModule;
 
 /**
- * A simple data test that sets up the context and objects to be able to do persistence. TODO think about
- * whethere the ebean server needs to be a new server each time by redoing the guice injector, we redo the
- * server. could make static, but then tests interfere with each other
+ * A simple data test that sets up the context and objects to be able to do persistence.
  * 
  * @author Chris
  * 
  */
-public abstract class AbstractDataTest {
+public class DataDrivenTestExtension {
     private static volatile EbeanServer ebean;
     private static volatile Injector injector;
     private boolean runInTransaction = true;
+
+    /**
+     * prevent initialisation, from anything but extending classes
+     */
+    protected DataDrivenTestExtension() {
+        // do nothing
+    }
 
     /**
      * sets up the tests correctly

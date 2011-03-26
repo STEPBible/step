@@ -1,5 +1,7 @@
 package com.tyndalehouse.step.core.data.entities;
 
+import java.io.Serializable;
+
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
 import javax.persistence.Entity;
@@ -20,7 +22,8 @@ import com.avaje.ebean.annotation.CacheStrategy;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(discriminatorType = DiscriminatorType.INTEGER, name = "targetTypeId")
-public class ScriptureTarget {
+public class ScriptureTarget implements Serializable {
+    private static final long serialVersionUID = -3343458338757180529L;
     @Id
     @GeneratedValue
     private Integer id;

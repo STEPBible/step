@@ -15,6 +15,7 @@ public class StepRequestTest {
     private static final String[] TEST_ARGS = new String[] { "arg1", "arg2", "arg3" };
     private static final String TEST_CONTROLLER_NAME = "Controller";
     private static final String TEST_METHOD_NAME = "method";
+    private static final String TEST_URI = "uri/ControllerController/method/arg1/arg2/arg3";
 
     /**
      * a method key should not contain arguments, but contain controller name and method name
@@ -51,6 +52,6 @@ public class StepRequestTest {
      * @return a step request
      */
     private StepRequest getTestStepRequest() {
-        return new StepRequest(TEST_CONTROLLER_NAME, TEST_METHOD_NAME, TEST_ARGS);
+        return new StepRequest(TEST_URI, TEST_CONTROLLER_NAME, TEST_METHOD_NAME, TEST_ARGS);
     }
 }

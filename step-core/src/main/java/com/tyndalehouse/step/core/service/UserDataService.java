@@ -1,6 +1,5 @@
 package com.tyndalehouse.step.core.service;
 
-import com.tyndalehouse.step.core.data.entities.Session;
 import com.tyndalehouse.step.core.data.entities.User;
 
 /**
@@ -32,14 +31,6 @@ public interface UserDataService {
      * @return the user that has been created
      */
     User register(String emailAddress, String name, String country, String password);
-
-    /**
-     * TODO move this to session provider This method is called to create a session for the user. This will
-     * associate the jsession id with a new row in the Session table.
-     * 
-     * @return the server session that was created
-     */
-    Session createSession();
 
     /**
      * Associates the current session with the username assuming password and username authenticates

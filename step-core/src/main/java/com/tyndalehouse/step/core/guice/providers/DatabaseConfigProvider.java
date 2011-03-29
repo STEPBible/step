@@ -63,7 +63,7 @@ public class DatabaseConfigProvider implements Provider<EbeanServer> {
         this.password = password;
         this.validationQuery = validationQuery;
 
-        // TODO add exception handling when i know how
+        // TODO: add exception handling when i know how
         this.maxActive = Integer.parseInt(maxActive);
         this.maxIdle = Integer.parseInt(maxIdle);
         this.maxOpenStatements = Integer.parseInt(maxOpenStatements);

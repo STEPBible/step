@@ -25,7 +25,7 @@ public class DataTestModule extends AbstractModule {
     }
 
     /**
-     * TODO share this code with main code reads the core properties from the file
+     * TODO: share this code with main code reads the core properties from the file
      * 
      * @return a list of properties read from file
      */

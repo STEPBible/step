@@ -32,7 +32,9 @@ public class UserController {
      * @param name the name of the person [optional]
      * @param country his country [optional]
      * @param password the password he has chosen, which we should SHA-1 and salt
-     * @return the registered user TODO salt
+     * @return the registered user
+     * 
+     *         TODO: salt
      */
     public User register(final String emailAddress, final String name, final String country,
             final String password) {

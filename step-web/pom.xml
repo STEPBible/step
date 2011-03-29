@@ -102,5 +102,30 @@
 
 	<build>
 		<finalName>step-web</finalName>
+
+		<plugins>
+			<plugin>
+				<groupId>com.samaxes.maven</groupId>
+				<artifactId>maven-minify-plugin</artifactId>
+				<version>1.3.3</version>
+				<configuration>
+					<cssSourceDir>css</cssSourceDir>
+					<cssSourceIncludes>
+						<cssSourceInclude>ui-lightness/*.css</cssSourceInclude>
+						<cssSourceInclude>*.css</cssSourceInclude>
+						<cssSourceInclude>libs/menu/*.css</cssSourceInclude>
+					</cssSourceIncludes>
+					<cssFinalFile>step.css</cssFinalFile>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>minify</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
 	</build>
 </project>

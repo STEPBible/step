@@ -10,6 +10,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.tyndalehouse.step.core.data.entities.Timeband;
 import com.tyndalehouse.step.core.service.TimelineService;
+import com.tyndalehouse.step.rest.framework.Cacheable;
 
 /**
  * The timeline controller retrieves information about past events
@@ -40,8 +41,11 @@ public class TimelineController {
      * @param timebandId the timeband ids
      * @param from the from dates
      * @param to the to dates
-     * @return all versions of modules that are considered to be Bibles. TODO work out UK date format mappings
+     * @return all versions of modules that are considered to be Bibles.
+     *         <p />
+     *         TODO: work out UK date format mappings
      */
+    @Cacheable(true)
     public String getEvents(final String[] timebandId, final Date from, final Date to) {
         LOGGER.debug("Retrieving events between [{}] and [{}]", from, to);
         return timebandId[0];
@@ -56,6 +60,7 @@ public class TimelineController {
      * @return a list of events to be shown on a timeline, including the origin of the timeline and the scale
      *         of the timeline
      */
+    @Cacheable(true)
     public String getEventsFromReference(final String bibleReference) {
 
         return null;
@@ -66,6 +71,7 @@ public class TimelineController {
      * 
      * @return the timebands
      */
+    @Cacheable(true)
     public List<Timeband> getTimelineConfiguration() {
         return this.timelineService.getTimelineConfiguration();
     }

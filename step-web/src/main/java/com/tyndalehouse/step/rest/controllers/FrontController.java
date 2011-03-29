@@ -26,9 +26,10 @@ import com.google.inject.Injector;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
+import com.tyndalehouse.step.rest.framework.Cacheable;
 import com.tyndalehouse.step.rest.framework.ClientErrorResolver;
 import com.tyndalehouse.step.rest.framework.ClientHandledIssue;
-import com.tyndalehouse.step.rest.framework.ControllerCacheKey;
+import com.tyndalehouse.step.rest.framework.ResponseCache;
 import com.tyndalehouse.step.rest.framework.StepRequest;
 
 /**
@@ -49,35 +50,38 @@ public class FrontController extends HttpServlet {
     private static final char PACKAGE_SEPARATOR = '.';
     private static final long serialVersionUID = 7898656504631346047L;
     private static final String CONTROLLER_SUFFIX = "Controller";
-    // TODO EH cache here too?
+    // TODO: EH cache here too?
     private final Map<String, String> contextPath = new HashMap<String, String>();
-    private final Map<String, byte[]> resultsCache = new HashMap<String, byte[]>();
     private final transient Injector guiceInjector;
-    // TODO but also check thread safety and whether we should share this object
+    // TODO: but also check thread safety and whether we should share this object
     private final transient ObjectMapper jsonMapper = new ObjectMapper();
-    // TODO check if this is thread safe, and if so, then make private field
+    // TODO: check if this is thread safe, and if so, then make private field
     private final transient JsonContext ebeanJson;
 
-    // TODO investigate EH cache here
+    // TODO: investigate EH cache here
     private final Map<String, Method> methodNames = new HashMap<String, Method>();
     private final Map<String, Object> controllers = new HashMap<String, Object>();
     private final boolean isCacheEnabled;
     private final transient ClientErrorResolver errorResolver;
+    private final transient ResponseCache responseCache;
 
     /**
      * creates the front controller which will dispatch all the requests
+     * <p />
+     * TODO: rename all ebeans to DB
      * 
      * @param guiceInjector the injector used to call the relevant controllers
-     * @param isCacheEnabled indicates whether responses should be cached for fast retrieval TODO rename all
-     *            ebeans to DB
+     * @param isCacheEnabled indicates whether responses should be cached for fast retrieval
      * @param ebean the db access/persisitence object
      * @param errorResolver the error resolver is the object that helps us translate errors for the client
+     * @param responseCache cache in which are put any number of responses to speed up processing
      */
     @Inject
     public FrontController(final Injector guiceInjector,
             @Named("cache.enabled") final Boolean isCacheEnabled, final EbeanServer ebean,
-            final ClientErrorResolver errorResolver) {
+            final ClientErrorResolver errorResolver, final ResponseCache responseCache) {
         this.guiceInjector = guiceInjector;
+        this.responseCache = responseCache;
         this.ebeanJson = ebean.createJsonContext();
 
         this.errorResolver = errorResolver;
@@ -86,31 +90,24 @@ public class FrontController extends HttpServlet {
 
     @Override
     protected void doGet(final HttpServletRequest request, final HttpServletResponse response) {
+        // first of all check cache against URI: (only cached responses go here)
+        byte[] jsonEncoded = this.responseCache.get(request.getRequestURI());
+
         StepRequest sr = null;
         try {
-            sr = parseRequest(request);
-            byte[] jsonEncoded = null;
-
-            // in here we want to retrieve from the cache.
-            final ControllerCacheKey cacheKey = sr.getCacheKey();
-
-            // check results cache here -- TODO - use servlet caching instead?
-            if (this.isCacheEnabled) {
-                LOGGER.debug("Checking cache...");
-                jsonEncoded = this.resultsCache.get(cacheKey.getResultsKey());
-            }
-
             // cache miss?
-            if (jsonEncoded == null) {
-                LOGGER.debug("The cache was missed so invoking method now...");
-                jsonEncoded = invokeMethod(sr);
+            if (jsonEncoded == null || jsonEncoded.length == 0) {
+                sr = parseRequest(request);
+                if (jsonEncoded == null) {
+                    LOGGER.debug("The cache was missed so invoking method now...");
+                    jsonEncoded = invokeMethod(sr);
+                }
+            } else {
+                LOGGER.debug("Returning answer from cache [{}]", request.getRequestURI());
             }
 
             setupHeaders(response, jsonEncoded.length);
             response.getOutputStream().write(jsonEncoded);
-
-            // TODO move cache down
-            cache(jsonEncoded, sr.getControllerName(), sr.getMethodName(), sr.getArgs());
             // CHECKSTYLE:OFF We allow catching errors here, since we are at the top of the structure
         } catch (final Exception e) {
             // CHECKSTYLE:ON
@@ -137,11 +134,14 @@ public class FrontController extends HttpServlet {
         Object returnVal;
         try {
             returnVal = controllerMethod.invoke(controllerInstance, (Object[]) sr.getArgs());
+
             // CHECKSTYLE:OFF
         } catch (final Exception e) {
             returnVal = convertExceptionToJson(e);
         }
-        return getEncodedJsonResponse(returnVal);
+        final byte[] encodedJsonResponse = getEncodedJsonResponse(returnVal);
+        cache(encodedJsonResponse, sr, controllerMethod);
+        return encodedJsonResponse;
         // CHECKSTYLE:ON
     }
 
@@ -225,20 +225,21 @@ public class FrontController extends HttpServlet {
         final int endOfMethodName = startOfMethodName + methodName.length();
 
         LOGGER.debug("Request parsed as controller: [{}], method [{}]", controllerName, methodName);
-        return new StepRequest(controllerName, methodName, getArgs(requestURI, endOfMethodName + 1));
+        return new StepRequest(requestURI, controllerName, methodName, getArgs(requestURI,
+                endOfMethodName + 1));
     }
 
     /**
-     * TODO caches the results for future use
+     * TODO: caches the results for future use
      * 
      * @param jsonEncoded json encoding of the response
-     * @param controllerName the name of the controller that was ino
-     * @param methodName the method name that was called
-     * @param args the arguments that were passed
+     * @param sr the processed request URI containg the the cache key
+     * @param controllerMethod the method so that we can inspect whether an annotation is present
      */
-    void cache(final byte[] jsonEncoded, final String controllerName, final String methodName,
-            final Object[] args) {
-        // TODO using EH Cache
+    void cache(final byte[] jsonEncoded, final StepRequest sr, final Method controllerMethod) {
+        if (this.isCacheEnabled && controllerMethod.isAnnotationPresent(Cacheable.class)) {
+            this.responseCache.put(sr.getCacheKey().getResultsKey(), jsonEncoded);
+        }
     }
 
     /**

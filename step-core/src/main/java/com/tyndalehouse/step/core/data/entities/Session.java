@@ -1,7 +1,7 @@
 package com.tyndalehouse.step.core.data.entities;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.sql.Timestamp;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -13,8 +13,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 /**
- * TODO add job to clean up old sessions that have expired A session is associated with a user and may or may
- * not be active (expiresOn value) A user may be logged in multiple times and hence have several sessions.
+ * A session is associated with a user and may or may not be active (expiresOn value) A user may be logged in
+ * multiple times and hence have several sessions.
  * 
  * @author Chris
  * 
@@ -39,7 +39,7 @@ public class Session implements Serializable {
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column
-    private Date expiresOn;
+    private Timestamp expiresOn;
 
     /**
      * @return the id
@@ -86,14 +86,14 @@ public class Session implements Serializable {
     /**
      * @return the expiresOn
      */
-    public Date getExpiresOn() {
+    public Timestamp getExpiresOn() {
         return this.expiresOn;
     }
 
     /**
      * @param expiresOn the expiresOn to set
      */
-    public void setExpiresOn(final Date expiresOn) {
+    public void setExpiresOn(final Timestamp expiresOn) {
         this.expiresOn = expiresOn;
     }
 

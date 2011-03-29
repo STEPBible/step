@@ -6,10 +6,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import net.sf.ehcache.CacheManager;
+import net.sf.ehcache.config.CacheConfiguration;
+import net.sf.ehcache.config.Configuration;
+
 import org.crosswire.jsword.book.install.Installer;
 
 import com.avaje.ebean.EbeanServer;
 import com.google.inject.AbstractModule;
+import com.google.inject.Provides;
 import com.google.inject.TypeLiteral;
 import com.google.inject.name.Names;
 import com.tyndalehouse.step.core.data.create.Loader;
@@ -48,6 +53,9 @@ public class StepCoreModule extends AbstractModule {
         final Properties stepProperties = readProperties();
         bind(Properties.class).annotatedWith(Names.named("StepCoreProperties")).toInstance(stepProperties);
 
+        // for now just have a method that statically initialises the cache
+        initialiseCacheManager();
+
         bind(JSwordService.class).to(JSwordServiceImpl.class).asEagerSingleton();
         bind(BibleInformationService.class).to(BibleInformationServiceImpl.class).asEagerSingleton();
         bind(ModuleService.class).to(ModuleServiceImpl.class).asEagerSingleton();
@@ -67,12 +75,34 @@ public class StepCoreModule extends AbstractModule {
 
         bind(EbeanServer.class).toProvider(DatabaseConfigProvider.class).asEagerSingleton();
 
+        // bind a cache
+
         bindDaos();
 
         // now bind the test data
         if (Boolean.valueOf(stepProperties.getProperty("test.data.load"))) {
             bind(TestData.class).asEagerSingleton();
         }
+    }
+
+    /**
+     * we return the singleton instance here
+     * 
+     * @return the singleton cache manager
+     */
+    @Provides
+    public CacheManager getCacheManager() {
+        return CacheManager.getInstance();
+    }
+
+    /**
+     * initialises the cache manager. e.g. disables update checker
+     */
+    private void initialiseCacheManager() {
+        final Configuration config = new Configuration();
+        config.setUpdateCheck(false);
+        config.defaultCache(new CacheConfiguration());
+        CacheManager.create(config);
     }
 
     /**

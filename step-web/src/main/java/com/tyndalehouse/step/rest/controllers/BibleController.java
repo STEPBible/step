@@ -16,6 +16,7 @@ import com.tyndalehouse.step.core.models.BibleVersion;
 import com.tyndalehouse.step.core.models.EnrichedLookupOption;
 import com.tyndalehouse.step.core.models.LookupOption;
 import com.tyndalehouse.step.core.service.BibleInformationService;
+import com.tyndalehouse.step.rest.framework.Cacheable;
 import com.tyndalehouse.step.rest.wrappers.HtmlWrapper;
 
 /**
@@ -46,6 +47,7 @@ public class BibleController {
      * 
      * @return all versions of modules that are considered to be Bibles.
      */
+    @Cacheable(true)
     public List<BibleVersion> getBibleVersions() {
         return this.bibleInformation.getAvailableBibleVersions();
     }
@@ -57,6 +59,7 @@ public class BibleController {
      * @param reference the reference to lookup
      * @return the text to be displayed, formatted as HTML
      */
+    @Cacheable(true)
     public HtmlWrapper getBibleText(final String version, final String reference) {
         return getBibleText(version, reference, null, null);
     }
@@ -69,6 +72,7 @@ public class BibleController {
      * @param options the list of options to be passed through and affect the retrieval process
      * @return the text to be displayed, formatted as HTML
      */
+    @Cacheable(true)
     public HtmlWrapper getBibleText(final String version, final String reference, final String options) {
         return getBibleText(version, reference, options, null);
     }
@@ -82,6 +86,7 @@ public class BibleController {
      * @param interlinearVersion the interlinear version if provided adds lines under the text
      * @return the text to be displayed, formatted as HTML
      */
+    @Cacheable(true)
     public HtmlWrapper getBibleText(final String version, final String reference, final String options,
             final String interlinearVersion) {
         Validate.notEmpty(version, "You need to provide a version");
@@ -109,6 +114,7 @@ public class BibleController {
      * @param version the version initials or full version name to retrieve the versions for
      * @return all versions of modules that are considered to be Bibles.
      */
+    @Cacheable(true)
     public List<LookupOption> getFeatures(final String version) {
         return this.bibleInformation.getFeaturesForVersion(version);
     }
@@ -118,6 +124,7 @@ public class BibleController {
      * 
      * @return a list of features currently supported by the application
      */
+    @Cacheable(true)
     public List<EnrichedLookupOption> getAllFeatures() {
         return this.bibleInformation.getAllFeatures();
     }

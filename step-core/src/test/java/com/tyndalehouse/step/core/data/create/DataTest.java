@@ -41,7 +41,9 @@ public class DataTest extends DataDrivenTestExtension {
     }
 
     /**
-     * testing the loading process TODO don't want to test the whole timeline component every build
+     * testing the loading process
+     * <p />
+     * TODO: don't want to test the whole timeline component every build
      */
     @Test
     public void tryLoadingProcess() {

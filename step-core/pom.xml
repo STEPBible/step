@@ -136,6 +136,12 @@
 			<artifactId>h2</artifactId>
 		</dependency>
 		
+		<dependency>
+			<groupId>net.sf.ehcache</groupId>
+			<artifactId>ehcache</artifactId>
+			<type>pom</type>
+		</dependency>
+		
 		<!-- transitive dependencies not picked up by jsword -->
 		<dependency>
 			<groupId>javatar</groupId>

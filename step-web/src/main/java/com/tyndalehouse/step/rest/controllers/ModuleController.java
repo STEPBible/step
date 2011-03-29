@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import com.google.inject.Inject;
 import com.tyndalehouse.step.core.models.BibleVersion;
 import com.tyndalehouse.step.core.service.ModuleService;
+import com.tyndalehouse.step.rest.framework.Cacheable;
 
 /**
  * The Module Controller servicing requests for module information
@@ -50,6 +51,7 @@ public class ModuleController {
      * @param reference a reference for a module to lookup
      * @return the definition(s) that can be resolved from the reference provided
      */
+    @Cacheable(true)
     public String getDefinition(final String reference) {
         LOGGER.debug("Getting definition for {}", reference);
         return this.moduleDefintions.getDefinition(reference).getExplanation();

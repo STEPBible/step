@@ -114,7 +114,7 @@ public class JSwordServiceImpl implements JSwordService {
         return getOsisText(version, reference, options, null);
     }
 
-    // TODO remove synchronisation once book is fixed
+    // TODO: remove synchronisation once book is fixed
     @Override
     public synchronized String getOsisText(final String version, final String reference,
             final List<LookupOption> options, final String interlinearVersion) {
@@ -228,7 +228,7 @@ public class JSwordServiceImpl implements JSwordService {
             if (isNotBlank(interlinearVersion)) {
                 tsep.setParameter("interlinearVersion", interlinearVersion);
             }
-            // TODO else depending on OT or NT, we select a default interlinear version
+            // TODO: else depending on OT or NT, we select a default interlinear version
         }
     }
 

@@ -2,9 +2,6 @@ package com.tyndalehouse.step.core.service.impl;
 
 import static com.avaje.ebean.Expr.eq;
 
-import java.util.Calendar;
-import java.util.Date;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,7 +12,6 @@ import com.google.inject.Singleton;
 import com.tyndalehouse.step.core.data.entities.Session;
 import com.tyndalehouse.step.core.data.entities.User;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
-import com.tyndalehouse.step.core.models.ClientSession;
 import com.tyndalehouse.step.core.service.UserDataService;
 
 /**
@@ -28,40 +24,30 @@ import com.tyndalehouse.step.core.service.UserDataService;
  */
 @Singleton
 public class UserDataServiceImpl implements UserDataService {
-    private static final int EXPIRY_SESSION_INTERVAL = 30;
     private static final Logger LOG = LoggerFactory.getLogger(UserDataServiceImpl.class);
     private final Provider<Session> sessionProvider;
     private final EbeanServer ebean;
-    private final Provider<ClientSession> clientSessionProvider;
 
     /**
      * sessions change at runtime based on which request we are serving
      * 
      * @param ebean the ebean server to persist and load data
      * @param sessionProvider the session provider
-     * @param clientSessionProvider the client session (cookie information + ip address)
      */
     @Inject
-    public UserDataServiceImpl(final EbeanServer ebean, final Provider<Session> sessionProvider,
-            final Provider<ClientSession> clientSessionProvider) {
+    public UserDataServiceImpl(final EbeanServer ebean, final Provider<Session> sessionProvider) {
         this.ebean = ebean;
         this.sessionProvider = sessionProvider;
-        this.clientSessionProvider = clientSessionProvider;
     }
 
     @Override
     public User register(final String emailAddress, final String name, final String country,
             final String password) {
-        // first check that are we not logged in!
-        Session session = this.sessionProvider.get();
 
-        // check we have a session, otherwise create one for ourselves (this should be catered
-        if (session == null || Calendar.getInstance().after(session.getExpiresOn())) {
-            // the session is either non-existent or exists but has expired, so recreate one:
-            createSession();
-            session = this.sessionProvider.get();
-            assert session != null;
-        }
+        LOG.debug("Registering user [{}] with email address [{}]", name, emailAddress);
+
+        // first check that are we not logged in!
+        final Session session = this.sessionProvider.get();
 
         if (session.getUser() != null) {
             throw new IllegalArgumentException("You cannot register, as you are already logged in.");
@@ -77,47 +63,26 @@ public class UserDataServiceImpl implements UserDataService {
         this.ebean.save(u);
 
         // next, we just associate the current session with the user by logging in
-        return this.login(emailAddress, password);
-    }
-
-    @Override
-    public Session createSession() {
-        final Session session = new Session();
-        final ClientSession clientSession = this.clientSessionProvider.get();
-
-        // TODO we ensure that we expire the sessions after a while of inactivity
-        // so we will need to add a filter to ensure this actually happens.
-        // i.e. update the time of the session asynchronously if possible
-        // write a job that deletes expired sessions
-        // this also needs to match up with the value in the client session really
-        final Calendar expiryDate = Calendar.getInstance();
-        expiryDate.add(Calendar.DAY_OF_YEAR, EXPIRY_SESSION_INTERVAL);
-
-        session.setJSessionId(clientSession.getSessionId());
-        session.setIpAddress(clientSession.getIpAddress());
-        session.setExpiresOn(new Date(expiryDate.getTimeInMillis()));
-
-        LOG.debug("Persisting session (jSessionId=[{}],ip=[{}]", session.getJSessionId(),
-                session.getIpAddress());
-        this.ebean.save(session);
-        return session;
+        return this.login(u);
     }
 
     @Override
     public User getLoggedInUser() {
         final Session session = this.sessionProvider.get();
         if (session == null) {
+            LOG.debug("There was no user no logged in");
             return null;
         }
 
+        LOG.debug("Returning a user ");
         return session.getUser();
     }
 
     @Override
     public User login(final String emailAddress, final String password) {
-        // logging in basically means associating the user with the session
-        final Session serverSession = this.sessionProvider.get();
+        LOG.debug("Logging [{}] in to the system", emailAddress);
 
+        // logging in basically means associating the user with the session
         final User user = this.ebean.find(User.class).select("id, name").where()
                 .and(eq("emailAddress", emailAddress), eq("password", password)).findUnique();
 
@@ -126,11 +91,21 @@ public class UserDataServiceImpl implements UserDataService {
             throw new StepInternalException("Unable to login with username/password provided");
         }
 
+        return login(user);
+    }
+
+    /**
+     * A way of logging in without authenticating
+     * 
+     * @param user the user that requires loggin in
+     * @return the user once logged in
+     */
+    private User login(final User user) {
+        final Session serverSession = this.sessionProvider.get();
         serverSession.setUser(user);
 
         // saving the session
         this.ebean.save(serverSession);
-
         return user;
     }
 

@@ -2,25 +2,30 @@ package com.tyndalehouse.step.rest.framework;
 
 /**
  * A simple class that hold request information, provides various cache keys
+ * <p />
+ * TODO: move parse method from FrontController to here.
  * 
  * @author Chris
  * 
  */
 public class StepRequest {
-    private static final Object ARG_SEPARATOR = '-';
-
     private final String controllerName;
     private final String methodName;
     private final String[] args;
 
+    private final String requestURI;
+
     /**
      * Creates a request holder object containing the relevant information about a request
      * 
+     * @param requestURI the request URI that determines the controller, method name, etc.
      * @param controllerName the controller name
      * @param methodName the method name
      * @param args the arguments that should be passed to the method
      */
-    public StepRequest(final String controllerName, final String methodName, final String[] args) {
+    public StepRequest(final String requestURI, final String controllerName, final String methodName,
+            final String[] args) {
+        this.requestURI = requestURI;
         this.controllerName = controllerName;
         this.methodName = methodName;
         this.args = args == null ? new String[] {} : args;
@@ -33,7 +38,6 @@ public class StepRequest {
      */
     public ControllerCacheKey getCacheKey() {
         final String methodKey;
-        final String resultsKey;
 
         // generate the shorter key
         final StringBuilder cacheKeyBuffer = new StringBuilder(this.controllerName.length()
@@ -44,14 +48,7 @@ public class StepRequest {
 
         // get the shorter key now
         methodKey = cacheKeyBuffer.toString();
-
-        // now get a slightly longer key by extending it
-        for (int ii = 0; ii < this.args.length; ii++) {
-            cacheKeyBuffer.append(this.args[ii]);
-            cacheKeyBuffer.append(ARG_SEPARATOR);
-        }
-        resultsKey = cacheKeyBuffer.toString();
-        return new ControllerCacheKey(methodKey, resultsKey);
+        return new ControllerCacheKey(methodKey, this.requestURI);
     }
 
     /**

@@ -105,7 +105,7 @@ public class JSwordServiceImplTest {
      * @throws BookException a book exception
      * @throws InterruptedException when the thread is interrupted
      */
-    // TODO currently disabled
+    // TODO: currently disabled
     @Test
     public void testConcurrencyIssueOnBookData() throws NoSuchKeyException, BookException,
             InterruptedException {

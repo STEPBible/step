@@ -29,6 +29,14 @@
 		<listener-class>com.tyndalehouse.step.guice.StepServletConfig</listener-class>
 	</listener>
 
+	<listener>
+		<listener-class>com.tyndalehouse.step.rest.framework.EbeanServletContextListener</listener-class>
+	</listener>
+
+	<listener>
+          <listener-class>net.sf.ehcache.constructs.web.ShutdownListener</listener-class>
+     </listener>
+
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>
 	</welcome-file-list>

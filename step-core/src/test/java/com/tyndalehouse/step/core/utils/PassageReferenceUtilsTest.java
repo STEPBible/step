@@ -8,8 +8,8 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.tyndalehouse.step.core.data.entities.ScriptureTarget;
 import com.tyndalehouse.step.core.data.entities.ScriptureReference;
+import com.tyndalehouse.step.core.data.entities.ScriptureTarget;
 
 /**
  * testing the passage reference utils class

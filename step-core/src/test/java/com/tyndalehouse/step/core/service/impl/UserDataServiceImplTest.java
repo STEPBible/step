@@ -1,11 +1,8 @@
 package com.tyndalehouse.step.core.service.impl;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
-import java.util.Date;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -40,8 +37,7 @@ public class UserDataServiceImplTest extends DataDrivenTestExtension {
     @Before
     public void setUp() {
         // MockitoAnnotations.initMocks(this);
-        this.userService = new UserDataServiceImpl(super.getEbean(), this.serverSessionProvider,
-                this.clientSessionProvider);
+        this.userService = new UserDataServiceImpl(super.getEbean(), this.serverSessionProvider);
     }
 
     /**
@@ -126,24 +122,5 @@ public class UserDataServiceImplTest extends DataDrivenTestExtension {
 
         // check that the user is logged in
         assertEquals(currentServerSession.getUser().getName(), testName);
-    }
-
-    /**
-     * we check that we can create a session
-     */
-    @Test
-    public void testCreateSession() {
-        final String testClientSessionId = "999";
-        final String testIpAddress = "xx.xxx.xx.xx";
-        final ClientSession clientSession = mock(ClientSession.class);
-        when(this.clientSessionProvider.get()).thenReturn(clientSession);
-        when(clientSession.getSessionId()).thenReturn(testClientSessionId);
-        when(clientSession.getIpAddress()).thenReturn(testIpAddress);
-        this.userService.createSession();
-
-        final Session persistedSession = getEbean().find(Session.class).where()
-                .eq("jSessionId", testClientSessionId).findUnique();
-        assertEquals(persistedSession.getIpAddress(), testIpAddress);
-        assertTrue(persistedSession.getExpiresOn().after(new Date()));
     }
 }

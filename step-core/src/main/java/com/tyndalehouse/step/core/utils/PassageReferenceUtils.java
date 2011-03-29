@@ -63,7 +63,7 @@ public final class PassageReferenceUtils {
                     LOG.trace("Found reference [{}] to [{}]", valueOf(startVerseId), valueOf(endVerseId));
                     final ScriptureReference sr = new ScriptureReference();
 
-                    // TODO fix this:
+                    // TODO: fix this:
                     sr.setTarget(target);
 
                     sr.setStartVerseId(startVerseId);

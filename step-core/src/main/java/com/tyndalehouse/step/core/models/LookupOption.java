@@ -11,7 +11,7 @@ import com.tyndalehouse.step.core.xsl.XslConversionType;
  * 
  */
 public enum LookupOption {
-    // CHECKSTYLE:OFF TODO change the values in the XSL file
+    // CHECKSTYLE:OFF TODO: change the values in the XSL file
     /**
      * Showing headings
      */

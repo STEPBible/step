@@ -166,9 +166,21 @@ body {
 
 .passageContent {
 	position: absolute;
-	top: 45px;
+	/* top: 45px; */ 
 	overflow: auto;
 }
+
+/*********************************************/
+/** BOTTOM COMPONENT
+/*********************************************/
+#bottomSection { 
+	height: 0px;
+	position: absolute;
+	bottom: 0px;
+	left: 0px;
+	width: 100%;
+}
+
 
 .no-left-border {
 	/* border-left: none; */

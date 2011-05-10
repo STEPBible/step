@@ -306,6 +306,12 @@
 				<version>${ehcache.version}</version>
 				<type>pom</type>
 			</dependency>
+			
+			<dependency>
+			    <groupId>joda-time</groupId>
+			    <artifactId>joda-time</artifactId>
+			    <version>1.6.2</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 

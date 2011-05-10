@@ -48,6 +48,8 @@ public class FavouritesServiceImplTest extends DataDrivenTestExtension {
         this.favouritesService = new FavouritesServiceImpl(getEbean(), this.serverSession);
         this.u = new User();
         this.u.setEmailAddress("b@b.com");
+        this.u.setSalt(new byte[0]);
+        this.u.setPassword(new byte[0]);
         final Session s = new Session();
         s.setUser(this.u);
 

@@ -7,7 +7,6 @@ import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
@@ -17,9 +16,6 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -35,6 +31,7 @@ import com.google.inject.Injector;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.service.BibleInformationService;
 import com.tyndalehouse.step.rest.framework.ClientErrorResolver;
+import com.tyndalehouse.step.rest.framework.ControllerCacheKey;
 import com.tyndalehouse.step.rest.framework.ResponseCache;
 import com.tyndalehouse.step.rest.framework.StepRequest;
 
@@ -59,6 +56,8 @@ public class FrontControllerTest {
     private ClientErrorResolver errorResolver;
     @Mock
     private ResponseCache responseCache;
+    @Mock
+    private StepRequest stepRequest;
 
     /**
      * Simply setting up the FrontController under test
@@ -76,21 +75,24 @@ public class FrontControllerTest {
      */
     @Test
     public void testDoGet() throws IOException {
-        final HttpServletRequest request = mock(HttpServletRequest.class);
+        final HttpServletRequest req = mock(HttpServletRequest.class);
         final HttpServletResponse response = mock(HttpServletResponse.class);
+        final String sampleRequest = "step-web/rest/bible/get/1K2/2K2/";
+
+        when(req.getRequestURI()).thenReturn(sampleRequest);
+        when(req.getServletPath()).thenReturn("step-web/");
+        when(req.getContextPath()).thenReturn("rest/");
 
         final FrontController fc = spy(this.fcUnderTest);
-        final StepRequest parsedRequest = new StepRequest("blah", "SomeController", "someMethod",
-                new String[] { "arg1", "arg2" });
+
         final ServletOutputStream mockOutputStream = mock(ServletOutputStream.class);
 
-        doReturn(parsedRequest).when(fc).parseRequest(request);
         doReturn(mockOutputStream).when(response).getOutputStream();
         final byte[] sampleResponse = new byte[] { 1, 2, 3 };
-        doReturn(sampleResponse).when(fc).invokeMethod(parsedRequest);
+        doReturn(sampleResponse).when(fc).invokeMethod(any(StepRequest.class));
 
         // do the test
-        fc.doGet(request, response);
+        fc.doGet(req, response);
         verify(mockOutputStream).write(sampleResponse);
     }
 
@@ -107,71 +109,13 @@ public class FrontControllerTest {
         final StepRequest parsedRequest = new StepRequest("blah", "SomeController", "someMethod",
                 new String[] { "arg1", "arg2" });
 
-        doThrow(testException).when(fc).parseRequest(request);
+        // TODO remove this/
+        // doThrow(testException).when(fc).parseRequest(request);
         doNothing().when(fc).handleError(response, testException, parsedRequest);
 
         // do the test
         fc.doGet(request, response);
 
-    }
-
-    /**
-     * tests that arguments are parsed correctly given the correct start
-     */
-    @Test
-    public void testGetArgs() {
-        // index starts at ...........0123456789-123456789-123456
-        final String sampleRequest = "step-web/rest/bible/get/1K2/2K2";
-
-        // when
-        final Object[] args = this.fcUnderTest.getArgs(sampleRequest, 24);
-
-        // then
-        assertEquals(2, args.length);
-        assertEquals("1K2", args[0]);
-        assertEquals("2K2", args[1]);
-    }
-
-    /**
-     * tests that parsing of request works if request finishes with a slash
-     */
-    @Test
-    public void testGetArgsFinishingWithSlash() {
-        // index starts at ...........0123456789-123456789-123456
-        final String sampleRequest = "step-web/rest/bible/get/1K2/2K2/";
-
-        // when
-        final Object[] args = this.fcUnderTest.getArgs(sampleRequest, 24);
-
-        // then
-        assertEquals(2, args.length);
-        assertEquals("1K2", args[0]);
-        assertEquals("2K2", args[1]);
-    }
-
-    /**
-     * we check that the path is concatenated with the servlet path
-     * 
-     * @throws ServletException an uncaught exception
-     */
-    @Test
-    public void testGetPath() throws ServletException {
-        final FrontController spy = spy(this.fcUnderTest);
-
-        final ServletContext mockServletContext = mock(ServletContext.class);
-        final HttpServletRequest mockRequest = mock(HttpServletRequest.class);
-
-        spy.init(mock(ServletConfig.class));
-
-        when(spy.getServletContext()).thenReturn(mockServletContext);
-        when(mockServletContext.getContextPath()).thenReturn("context/");
-        when(mockRequest.getServletPath()).thenReturn("servletPath");
-
-        // when
-        final String path = spy.getPath(mockRequest);
-
-        // then
-        assertEquals(path, "context/servletPath");
     }
 
     /**
@@ -260,53 +204,17 @@ public class FrontControllerTest {
     @Test
     public void testDoErrorHandlesCorrectly() throws IOException {
         final HttpServletResponse response = mock(HttpServletResponse.class);
-        final StepRequest stepRequest = new StepRequest("blah", "controller", "method", null);
+        // final StepRequest stepRequest = new StepRequest("blah", "controller", "method", null);
         final ServletOutputStream outputStream = mock(ServletOutputStream.class);
         final Throwable exception = new Exception();
         when(response.getOutputStream()).thenReturn(outputStream);
+        when(this.stepRequest.getCacheKey()).thenReturn(new ControllerCacheKey("method", "results"));
 
         // do test
-        this.fcUnderTest.handleError(response, exception, stepRequest);
+        this.fcUnderTest.handleError(response, exception, this.stepRequest);
 
         // check
         verify(outputStream).write(any(byte[].class));
-    }
-
-    /**
-     * checks that parsing is working correctly
-     * 
-     * @throws ServletException uncaught exception
-     */
-    @Test
-    public void testParseRequest() throws ServletException {
-        final HttpServletRequest request = mock(HttpServletRequest.class);
-        final String requestSeparator = "/";
-        final String contextName = "step-web";
-        final String servletName = "servletName";
-        final String controllerName = "controllerName";
-        final String methodName = "methodName";
-        final String arg1 = "argument1";
-        final String arg2 = "argument2";
-
-        when(request.getServletPath()).thenReturn(servletName);
-        when(request.getRequestURI()).thenReturn(
-                contextName + requestSeparator + servletName + requestSeparator + controllerName
-                        + requestSeparator + methodName + requestSeparator + arg1 + requestSeparator + arg2);
-
-        this.fcUnderTest.init(mock(ServletConfig.class));
-
-        final FrontController spy = spy(this.fcUnderTest);
-
-        final ServletContext mockServletContext = mock(ServletContext.class);
-        when(spy.getServletContext()).thenReturn(mockServletContext);
-        when(mockServletContext.getContextPath()).thenReturn(contextName + "/");
-
-        // do test
-        final StepRequest parseRequest = this.fcUnderTest.parseRequest(request);
-
-        // check controller name, method name and arguments
-        assertEquals(controllerName, parseRequest.getControllerName());
-        assertEquals(methodName, parseRequest.getMethodName());
     }
 
     /**

@@ -2,7 +2,10 @@ package com.tyndalehouse.step.core.service;
 
 import java.util.List;
 
+import org.joda.time.LocalDateTime;
+
 import com.tyndalehouse.step.core.data.entities.Timeband;
+import com.tyndalehouse.step.core.data.entities.TimelineEvent;
 
 /**
  * The timeline service gives access to all the data relating to the timeline the events, the configuration,
@@ -23,4 +26,12 @@ public interface TimelineService {
      */
     List<Timeband> getTimelineConfiguration();
 
+    /**
+     * Returns events that fall within a certain time period
+     * 
+     * @param from from date
+     * @param to to date
+     * @return a list of timeline events contained between the two dates
+     */
+    List<TimelineEvent> getTimelineEvents(LocalDateTime from, LocalDateTime to);
 }

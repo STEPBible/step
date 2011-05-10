@@ -1,12 +1,8 @@
 package com.tyndalehouse.step.rest.controllers;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
-import java.net.URLDecoder;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServlet;
@@ -42,16 +38,13 @@ import com.tyndalehouse.step.rest.framework.StepRequest;
  */
 @Singleton
 public class FrontController extends HttpServlet {
+    private static final Logger LOGGER = LoggerFactory.getLogger(FrontController.class);
     private static final String ENTITIES_PACKAGE = "com.tyndalehouse.step.core.data.entities";
     private static final String AVAJE_PACKAGE = "com.avaje";
-
     private static final String UTF_8_ENCODING = "UTF-8";
-    private static final Logger LOGGER = LoggerFactory.getLogger(FrontController.class);
     private static final char PACKAGE_SEPARATOR = '.';
     private static final long serialVersionUID = 7898656504631346047L;
     private static final String CONTROLLER_SUFFIX = "Controller";
-    // TODO: EH cache here too?
-    private final Map<String, String> contextPath = new HashMap<String, String>();
     private final transient Injector guiceInjector;
     // TODO: but also check thread safety and whether we should share this object
     private final transient ObjectMapper jsonMapper = new ObjectMapper();
@@ -68,7 +61,6 @@ public class FrontController extends HttpServlet {
     /**
      * creates the front controller which will dispatch all the requests
      * <p />
-     * TODO: rename all ebeans to DB
      * 
      * @param guiceInjector the injector used to call the relevant controllers
      * @param isCacheEnabled indicates whether responses should be cached for fast retrieval
@@ -78,7 +70,7 @@ public class FrontController extends HttpServlet {
      */
     @Inject
     public FrontController(final Injector guiceInjector,
-            @Named("cache.enabled") final Boolean isCacheEnabled, final EbeanServer ebean,
+            @Named("frontcontroller.cache.enabled") final Boolean isCacheEnabled, final EbeanServer ebean,
             final ClientErrorResolver errorResolver, final ResponseCache responseCache) {
         this.guiceInjector = guiceInjector;
         this.responseCache = responseCache;
@@ -97,7 +89,7 @@ public class FrontController extends HttpServlet {
         try {
             // cache miss?
             if (jsonEncoded == null || jsonEncoded.length == 0) {
-                sr = parseRequest(request);
+                sr = new StepRequest(request, UTF_8_ENCODING);
                 if (jsonEncoded == null) {
                     LOGGER.debug("The cache was missed so invoking method now...");
                     jsonEncoded = invokeMethod(sr);
@@ -176,6 +168,8 @@ public class FrontController extends HttpServlet {
      * @return the encoded form of the JSON response
      */
     byte[] getEncodedJsonResponse(final Object responseValue) {
+        LOGGER.debug("Encoding the following response [{}]", responseValue);
+
         try {
             String response;
             // we have normal objects and avaje ebean objects which have been intercepted
@@ -205,32 +199,7 @@ public class FrontController extends HttpServlet {
     }
 
     /**
-     * Returns the step request object containing the relevant information about the STEP Request
-     * 
-     * @param request the HTTP request
-     * @return the StepRequest encapsulating key data
-     */
-    StepRequest parseRequest(final HttpServletRequest request) {
-        final String requestURI = request.getRequestURI();
-
-        LOGGER.debug("Parsing {}", requestURI);
-
-        final int requestStart = getPath(request).length() + 1;
-        final int endOfControllerName = requestURI.indexOf('/', requestStart);
-        final int startOfMethodName = endOfControllerName + 1;
-        final String controllerName = requestURI.substring(requestStart, endOfControllerName);
-        final int endOfMethodNameSlash = requestURI.indexOf('/', startOfMethodName);
-        final String methodName = requestURI.substring(startOfMethodName,
-                endOfMethodNameSlash == -1 ? requestURI.length() : endOfMethodNameSlash);
-        final int endOfMethodName = startOfMethodName + methodName.length();
-
-        LOGGER.debug("Request parsed as controller: [{}], method [{}]", controllerName, methodName);
-        return new StepRequest(requestURI, controllerName, methodName, getArgs(requestURI,
-                endOfMethodName + 1));
-    }
-
-    /**
-     * TODO: caches the results for future use
+     * caches the results for future use
      * 
      * @param jsonEncoded json encoding of the response
      * @param sr the processed request URI containg the the cache key
@@ -266,6 +235,7 @@ public class FrontController extends HttpServlet {
      */
     void handleError(final HttpServletResponse response, final Throwable e, final StepRequest sr) {
         String requestId = null;
+        LOGGER.debug("Handling error...");
         try {
             requestId = sr == null ? "Failed to parse request?" : sr.getCacheKey().getResultsKey();
             if (e != null) {
@@ -364,54 +334,4 @@ public class FrontController extends HttpServlet {
 
         return classes;
     }
-
-    /**
-     * gets the arguments out of the requestURI String
-     * 
-     * @param requestURI the request URI string
-     * @param parameterStart the location at which the parameters start
-     * @return a list of arguments
-     */
-    String[] getArgs(final String requestURI, final int parameterStart) {
-        final List<String> arguments = new ArrayList<String>();
-        int argStart = parameterStart;
-        int nextArgStop = requestURI.indexOf('/', argStart);
-        try {
-            while (nextArgStop != -1) {
-                arguments.add(URLDecoder.decode(requestURI.substring(argStart, nextArgStop), UTF_8_ENCODING));
-                argStart = nextArgStop + 1;
-                nextArgStop = requestURI.indexOf('/', argStart);
-            }
-        } catch (final UnsupportedEncodingException e) {
-            throw new StepInternalException(e.getMessage(), e);
-        }
-
-        // add the last argument
-        if (argStart < requestURI.length()) {
-            try {
-                arguments.add(URLDecoder.decode(requestURI.substring(argStart), UTF_8_ENCODING));
-            } catch (final UnsupportedEncodingException e) {
-                throw new StepInternalException("Unable to decode last argument", e);
-            }
-        }
-        return arguments.toArray(new String[arguments.size()]);
-    }
-
-    /**
-     * Retrieves the path from the request
-     * 
-     * @param req the request
-     * @return the concatenated request
-     */
-    String getPath(final HttpServletRequest req) {
-        final String servletPath = req.getServletPath();
-        String path = this.contextPath.get(servletPath);
-
-        if (path == null) {
-            path = super.getServletContext().getContextPath() + servletPath;
-            this.contextPath.put(servletPath, path);
-        }
-        return path;
-    }
-
 }

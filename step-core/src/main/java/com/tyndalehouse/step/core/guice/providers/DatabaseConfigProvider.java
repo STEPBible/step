@@ -52,10 +52,10 @@ public class DatabaseConfigProvider implements Provider<EbeanServer> {
     @Inject
     public DatabaseConfigProvider(@Named("app.db.driver") final String driverClassName,
             @Named("app.db.url") final String url, @Named("app.db.username") final String username,
-            @Named("app.db.password") final String password,
-            @Named("app.db.maxActive") final String maxActive, @Named("app.db.maxIdle") final String maxIdle,
-            @Named("app.db.maxOpenStatement") final String maxOpenStatements,
-            @Named("app.db.poolableStatements") final String poolableStatements,
+            @Named("app.db.password") final String password, @Named("app.db.maxActive") final int maxActive,
+            @Named("app.db.maxIdle") final int maxIdle,
+            @Named("app.db.maxOpenStatement") final int maxOpenStatements,
+            @Named("app.db.poolableStatements") final boolean poolableStatements,
             @Named("app.db.validationQuery") final String validationQuery) {
         this.driverClassName = driverClassName;
         this.url = url;
@@ -63,11 +63,10 @@ public class DatabaseConfigProvider implements Provider<EbeanServer> {
         this.password = password;
         this.validationQuery = validationQuery;
 
-        // TODO: add exception handling when i know how
-        this.maxActive = Integer.parseInt(maxActive);
-        this.maxIdle = Integer.parseInt(maxIdle);
-        this.maxOpenStatements = Integer.parseInt(maxOpenStatements);
-        this.poolStatements = Boolean.parseBoolean(poolableStatements);
+        this.maxActive = maxActive;
+        this.maxIdle = maxIdle;
+        this.maxOpenStatements = maxOpenStatements;
+        this.poolStatements = poolableStatements;
     }
 
     // CHECKSTYLE:ON

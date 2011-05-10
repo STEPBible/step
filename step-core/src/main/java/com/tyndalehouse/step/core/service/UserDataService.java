@@ -50,4 +50,14 @@ public interface UserDataService {
      * @return the logged in user if the user is logged in
      */
     User getLoggedInUser();
+
+    /**
+     * From a password, a number of iterations and a salt, returns the corresponding digest
+     * 
+     * @param iterationNb int The number of iterations of the algorithm
+     * @param password String The password to encrypt
+     * @param salt byte[] The salt
+     * @return The digested password
+     */
+    byte[] getHash(int iterationNb, String password, byte[] salt);
 }

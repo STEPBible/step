@@ -1,14 +1,27 @@
 package com.tyndalehouse.step.rest.framework;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.tyndalehouse.step.core.exceptions.StepInternalException;
+
 /**
  * A simple class that hold request information, provides various cache keys
  * <p />
- * TODO: move parse method from FrontController to here.
  * 
  * @author Chris
  * 
  */
 public class StepRequest {
+    private static final Logger LOGGER = LoggerFactory.getLogger(StepRequest.class);
+
     private final String controllerName;
     private final String methodName;
     private final String[] args;
@@ -16,7 +29,8 @@ public class StepRequest {
     private final String requestURI;
 
     /**
-     * Creates a request holder object containing the relevant information about a request
+     * Creates a request holder object containing the relevant information about a request. This constructor
+     * is used more for testing and could possibly be removed later
      * 
      * @param requestURI the request URI that determines the controller, method name, etc.
      * @param controllerName the controller name
@@ -29,6 +43,75 @@ public class StepRequest {
         this.controllerName = controllerName;
         this.methodName = methodName;
         this.args = args == null ? new String[] {} : args;
+    }
+
+    /**
+     * Returns the step request object containing the relevant information about the STEP Request
+     * 
+     * @param request the HTTP request
+     * @param encoding the encoding with which to decode the request
+     */
+    public StepRequest(final HttpServletRequest request, final String encoding) {
+        this.requestURI = request.getRequestURI();
+
+        LOGGER.debug("Parsing {}", this.requestURI);
+
+        final int requestStart = getPathLength(request) + 1;
+        final int endOfControllerName = this.requestURI.indexOf('/', requestStart);
+        final int startOfMethodName = endOfControllerName + 1;
+        final int endOfMethodNameSlash = this.requestURI.indexOf('/', startOfMethodName);
+
+        // now we can set the controllerName and methodNme
+        this.controllerName = this.requestURI.substring(requestStart, endOfControllerName);
+        this.methodName = this.requestURI.substring(startOfMethodName,
+                endOfMethodNameSlash == -1 ? this.requestURI.length() : endOfMethodNameSlash);
+
+        LOGGER.debug("Request parsed as controller: [{}], method [{}]", this.controllerName, this.methodName);
+        final int endOfMethodName = startOfMethodName + this.methodName.length();
+        final String[] calculatedArguments = parseArguments(endOfMethodName + 1, encoding);
+        this.args = calculatedArguments == null ? new String[] {} : calculatedArguments;
+    }
+
+    /**
+     * gets the arguments out of the requestURI String
+     * 
+     * @param parameterStart the location at which the parameters start
+     * @param encoding the encoding with which to decode the arguments
+     * @return a list of arguments
+     */
+    private String[] parseArguments(final int parameterStart, final String encoding) {
+        final List<String> arguments = new ArrayList<String>();
+        int argStart = parameterStart;
+        int nextArgStop = this.requestURI.indexOf('/', argStart);
+        try {
+            while (nextArgStop != -1) {
+                arguments.add(URLDecoder.decode(this.requestURI.substring(argStart, nextArgStop), encoding));
+                argStart = nextArgStop + 1;
+                nextArgStop = this.requestURI.indexOf('/', argStart);
+            }
+        } catch (final UnsupportedEncodingException e) {
+            throw new StepInternalException(e.getMessage(), e);
+        }
+
+        // add the last argument
+        if (argStart < this.requestURI.length()) {
+            try {
+                arguments.add(URLDecoder.decode(this.requestURI.substring(argStart), encoding));
+            } catch (final UnsupportedEncodingException e) {
+                throw new StepInternalException("Unable to decode last argument", e);
+            }
+        }
+        return arguments.toArray(new String[arguments.size()]);
+    }
+
+    /**
+     * Retrieves the path from the request
+     * 
+     * @param req the request
+     * @return the concatenated request
+     */
+    private int getPathLength(final HttpServletRequest req) {
+        return req.getServletPath().length() + req.getContextPath().length();
     }
 
     /**

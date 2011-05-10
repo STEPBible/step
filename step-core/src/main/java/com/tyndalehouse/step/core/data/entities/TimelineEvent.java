@@ -8,6 +8,8 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
+import org.joda.time.LocalDateTime;
+
 import com.avaje.ebean.annotation.CacheStrategy;
 import com.tyndalehouse.step.core.data.common.PrecisionType;
 
@@ -26,10 +28,10 @@ public class TimelineEvent extends ScriptureTarget implements Serializable {
     private String summary;
 
     @Column(nullable = true)
-    private long fromDate;
+    private LocalDateTime fromDate;
 
     @Column(nullable = true)
-    private long toDate;
+    private LocalDateTime toDate;
 
     @Column(nullable = true)
     private PrecisionType fromPrecision;
@@ -57,28 +59,28 @@ public class TimelineEvent extends ScriptureTarget implements Serializable {
     /**
      * @return the fromDate
      */
-    public long getFromDate() {
+    public LocalDateTime getFromDate() {
         return this.fromDate;
     }
 
     /**
      * @param fromDate the fromDate to set
      */
-    public void setFromDate(final long fromDate) {
+    public void setFromDate(final LocalDateTime fromDate) {
         this.fromDate = fromDate;
     }
 
     /**
      * @return the toDate
      */
-    public long getToDate() {
+    public LocalDateTime getToDate() {
         return this.toDate;
     }
 
     /**
      * @param toDate the toDate to set
      */
-    public void setToDate(final long toDate) {
+    public void setToDate(final LocalDateTime toDate) {
         this.toDate = toDate;
     }
 

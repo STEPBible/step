@@ -26,10 +26,13 @@ public class User implements Serializable {
     @Column
     private String name;
 
-    @Column
-    private String password;
+    @Column(nullable = false)
+    private byte[] password;
 
-    @Column
+    @Column(nullable = false)
+    private byte[] salt;
+
+    @Column(nullable = false)
     private String emailAddress;
 
     @Column
@@ -52,15 +55,15 @@ public class User implements Serializable {
     /**
      * @return the password
      */
-    public String getPassword() {
+    public byte[] getPassword() {
         return this.password;
     }
 
     /**
      * @param password the password to set
      */
-    public void setPassword(final String password) {
-        this.password = password;
+    public void setPassword(final byte[] password) {
+        this.password = password.clone();
     }
 
     /**
@@ -103,5 +106,19 @@ public class User implements Serializable {
      */
     public void setCountry(final String country) {
         this.country = country;
+    }
+
+    /**
+     * @return the salt
+     */
+    public byte[] getSalt() {
+        return this.salt;
+    }
+
+    /**
+     * @param salt the salt to set
+     */
+    public void setSalt(final byte[] salt) {
+        this.salt = salt.clone();
     }
 }

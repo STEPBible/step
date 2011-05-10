@@ -13,7 +13,7 @@ function init() {
 		initLayout();
 		initDefaultValues();
 		initLexicon();
-//		initTimeline(mainAppLayout);
+		initTimeline();
 		initBookmarks();
 		initData();
 		initInitialEvents();
@@ -26,11 +26,37 @@ function refreshLayout() {
 	var windowHeight = $(window).height();
 	var innerMenuHeight = $("#leftPaneMenu").height();
 	var topMenuHeight = $("#topMenu").height();
+	var headingContainerHeight = $(".headingContainer").height();
 	var imageAndFooterHeight = $(".northBookmark").height() + $(".logo").height();
-	$(".column").height(windowHeight - topMenuHeight);
-	$(".bookmarkPane").height(windowHeight - topMenuHeight - imageAndFooterHeight);
-	$(".passageText").height(windowHeight - topMenuHeight - innerMenuHeight);
-	$(".passageContent").height($(".passageText").height() - $(".headingContainer").height());	
+	var bottomSectionHeight = $("#bottomSection").height();
+	var windowWithoutMenuNorModule = windowHeight - topMenuHeight - bottomSectionHeight; 
+	var columnHeight = windowWithoutMenuNorModule;
+	var bookmarkHeight = windowWithoutMenuNorModule - imageAndFooterHeight ;
+	var passageTextHeight = windowWithoutMenuNorModule - innerMenuHeight;
+	var passageContentHeight = passageTextHeight - headingContainerHeight;
+	
+	$(".column").height(columnHeight);
+	$(".bookmarkPane").height(bookmarkHeight);
+	$(".passageText").height(passageTextHeight);
+	$(".passageContent").css("top", headingContainerHeight);
+	$(".passageContent").height(passageContentHeight);	
+
+//	alert(headingContainerHeight);
+//	if($("#debug").text() == "") {
+//		$("#bookmarkPane").append("<span id=\"debug\" />");		
+//	}
+//	
+//	var heights = 
+//		"window = " + windowHeight + "\n" + 
+//		"paneMenu = " + innerMenuHeight + "\n" +
+//		"topMenu = " + topMenuHeight + "\n" + 
+//		"imageAndFooter = " + imageAndFooterHeight + "\n" +
+//		"passageText = " + $(".passageText").height() + "\n" +
+//		"heading = " + $(".headingContainer").height() + "\n" +
+//		"passageContent = " + $(".passageContent").height() + "\n" ;
+//		
+//	$("#debug").text(heights);
+//	
 }
 
 /**
@@ -228,7 +254,7 @@ function initLogin() {
 }
 
 function initTimeline(mainAppLayout) {
-	new TimelineWidget($("#bottomSection"), mainAppLayout);
+	new TimelineWidget($("#bottomSection"));
 }
 
 function raiseError(error) {

@@ -22,8 +22,8 @@ public class UserTest extends DataDrivenTestExtension {
         final User u = new User();
         u.setEmailAddress("chrisburrell@test.com");
         u.setName("Chris");
-        u.setPassword("password");
-
+        u.setPassword("password".getBytes());
+        u.setSalt(new byte[0]);
         getEbean().save(u);
         final User r = Ebean.find(User.class, u.getId());
         assertEquals(u.getEmailAddress(), r.getEmailAddress());

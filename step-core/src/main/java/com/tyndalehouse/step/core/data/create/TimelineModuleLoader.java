@@ -153,12 +153,12 @@ public class TimelineModuleLoader {
                 event.setHotSpot(hotspots.get(data.getData(ii, HOTSPOT_COLUMN_NAME)));
                 event.setSummary(data.getData(ii, "Name"));
                 if (from.getPrecision() != PrecisionType.NONE) {
-                    event.setFromDate(from.getDate().getTimeInMillis());
+                    event.setFromDate(from.getDate());
                     event.setFromPrecision(from.getPrecision());
                 }
 
                 if (to.getPrecision() != PrecisionType.NONE) {
-                    event.setToDate(to.getDate().getTimeInMillis());
+                    event.setToDate(to.getDate());
                     event.setToPrecision(to.getPrecision());
 
                 }

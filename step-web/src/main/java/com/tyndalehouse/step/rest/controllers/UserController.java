@@ -1,7 +1,5 @@
 package com.tyndalehouse.step.rest.controllers;
 
-import org.apache.commons.codec.digest.DigestUtils;
-
 import com.google.inject.Inject;
 import com.tyndalehouse.step.core.data.entities.User;
 import com.tyndalehouse.step.core.service.UserDataService;
@@ -34,13 +32,12 @@ public class UserController {
      * @param password the password he has chosen, which we should SHA-1 and salt
      * @return the registered user
      * 
-     *         TODO: salt
      */
     public User register(final String emailAddress, final String name, final String country,
             final String password) {
+
         // do sha1 encoding here to avoid sending unencrypted string singletons all over the place...
-        return this.userDataService.register(emailAddress, name, country,
-                new String(DigestUtils.sha512(password)));
+        return this.userDataService.register(emailAddress, name, country, password);
     }
 
     /**
@@ -51,7 +48,7 @@ public class UserController {
      * @return the user that has logged in
      */
     public User login(final String emailAddress, final String password) {
-        return this.userDataService.login(emailAddress, new String(DigestUtils.sha512(password)));
+        return this.userDataService.login(emailAddress, password);
     }
 
     /**

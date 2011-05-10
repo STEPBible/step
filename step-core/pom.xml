@@ -100,10 +100,10 @@
 			<artifactId>commons-collections</artifactId>
 		</dependency>
 
-		<dependency>
-			<groupId>commons-codec</groupId>
-			<artifactId>commons-codec</artifactId>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>commons-codec</groupId>-->
+<!--			<artifactId>commons-codec</artifactId>-->
+<!--		</dependency>-->
 		
 		<!--  we don't always need this - depends on what version -->
 		<dependency>
@@ -141,6 +141,12 @@
 			<artifactId>ehcache</artifactId>
 			<type>pom</type>
 		</dependency>
+		
+		<dependency>
+		    <groupId>joda-time</groupId>
+		    <artifactId>joda-time</artifactId>
+		</dependency>
+		
 		
 		<!-- transitive dependencies not picked up by jsword -->
 		<dependency>

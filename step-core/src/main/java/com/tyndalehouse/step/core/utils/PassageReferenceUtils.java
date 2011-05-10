@@ -63,7 +63,7 @@ public final class PassageReferenceUtils {
                     LOG.trace("Found reference [{}] to [{}]", valueOf(startVerseId), valueOf(endVerseId));
                     final ScriptureReference sr = new ScriptureReference();
 
-                    // TODO: fix this:
+                    // TODO: fix the broken references in csv files
                     sr.setTarget(target);
 
                     sr.setStartVerseId(startVerseId);

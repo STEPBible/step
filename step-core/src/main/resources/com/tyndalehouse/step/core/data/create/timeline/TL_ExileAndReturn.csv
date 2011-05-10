@@ -22,7 +22,7 @@
 "E_EzNe20","Nehemiah arrives in Jerusalem","-445-04-28",,,,"T_Return",,,"T_Return","Event","Aug 7","Neh.2.11",
 "E_EzNe21","Nehemiah inspects the walls","-445-05-02",,,,"T_Return",,,"T_Return","Event","night of Aug 10","Neh.2.12-16",
 "E_EzNe22","Rebuilding of the walls of Jerusalem","-445-05-03","-445-06-25",,,"T_Return",,,"T_Return","Event","Aug 11-Oct 2","Neh.2.17-6.19","End date given, plus length of 52 days. (Not sure which months were 30 days, which 29, so may be one or two days off.)"
-"E_EzNe23","Appointing of gatekeepers, singers and Levites","-445-06-26","-445-06-29",,,"T_Return",,,"T_Return","Event","Oct 3-Oct 6","Neh.6.20-7.72",
+"E_EzNe23","Appointing of gatekeepers, singers and Levites","-445-06-26","-445-06-29",,,"T_Return",,,"T_Return","Event","Oct 3-Oct 6","Neh.7.1-73",
 "E_EzNe24","Ezra reads the Law","-445-07-01","-445-07-08",,,"T_Return",,,"T_Return","Event","Oct 7-Oct 14","Neh.7.73-8.18",
 "E_EzNe25","The Israelites confess their sins","-445-07-24",,,,"T_Return",,,"T_Return","Event",,"Neh.9-10",
 "E_EzNe26","Resettlement in Jerusalem","-445","-444",,,"T_Return",,,"T_Return","Event",,"Neh.11-12.26","No end time. Months seem reasonable"

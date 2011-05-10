@@ -2,7 +2,6 @@ package com.tyndalehouse.step.core.data.common;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import org.junit.Test;
@@ -36,8 +35,8 @@ public class PartialDateTest {
     @Test
     public void testYearAD() {
         final PartialDate pd = PartialDate.parseDate("1");
-        assertEquals(pd.getDate().get(Calendar.YEAR), 1);
-        assertEquals(pd.getDate().get(Calendar.ERA), GregorianCalendar.AD);
+        assertEquals(pd.getDate().getYear(), 1);
+        assertEquals(pd.getDate().getEra(), GregorianCalendar.AD);
         assertEquals(pd.getPrecision(), PrecisionType.YEAR);
     }
 
@@ -45,8 +44,8 @@ public class PartialDateTest {
     @Test
     public void testYearBC() {
         final PartialDate pd = PartialDate.parseDate("-1");
-        assertEquals(pd.getDate().get(Calendar.YEAR), 1);
-        assertEquals(pd.getDate().get(Calendar.ERA), GregorianCalendar.BC);
+        assertEquals(pd.getDate().getYear(), -1);
+        assertEquals(pd.getDate().getEra(), GregorianCalendar.BC);
         assertEquals(pd.getPrecision(), PrecisionType.YEAR);
     }
 
@@ -54,9 +53,9 @@ public class PartialDateTest {
     @Test
     public void testYearMonthBC() {
         final PartialDate pd = PartialDate.parseDate("-3-7");
-        assertEquals(pd.getDate().get(Calendar.YEAR), 3);
-        assertEquals(pd.getDate().get(Calendar.MONTH), 7);
-        assertEquals(pd.getDate().get(Calendar.ERA), GregorianCalendar.BC);
+        assertEquals(pd.getDate().getYear(), -3);
+        assertEquals(pd.getDate().getMonthOfYear(), 7);
+        assertEquals(pd.getDate().getEra(), GregorianCalendar.BC);
         assertEquals(pd.getPrecision(), PrecisionType.MONTH);
     }
 
@@ -64,11 +63,11 @@ public class PartialDateTest {
     @Test
     public void testYearMonthDay() {
         final PartialDate pd = PartialDate.parseDate("3-07-25");
-        assertEquals(pd.getDate().get(Calendar.YEAR), 3);
-        assertEquals(pd.getDate().get(Calendar.MONTH), 7);
-        assertEquals(pd.getDate().get(Calendar.DAY_OF_MONTH), 25);
+        assertEquals(pd.getDate().getYear(), 3);
+        assertEquals(pd.getDate().getMonthOfYear(), 7);
+        assertEquals(pd.getDate().getDayOfMonth(), 25);
 
-        assertEquals(pd.getDate().get(Calendar.ERA), GregorianCalendar.AD);
+        assertEquals(pd.getDate().getEra(), GregorianCalendar.AD);
         assertEquals(pd.getPrecision(), PrecisionType.DAY);
     }
 

@@ -30,6 +30,7 @@ SETUP_INSTALL_BIBLE = "rest/setup/installBible/";
 
 TIMELINE_GET_EVENTS = "rest/timeline/getEvents/";
 TIMELINE_GET_EVENTS_FROM_REFERENCE = "rest/timeline/getEventsFromReference/";
+TIMELINE_GET_CONFIG = "rest/timeline/getTimelineConfiguration";
 
 USER_LOGIN = "rest/user/login/";
 USER_LOGOUT = "rest/user/logout/";
@@ -45,14 +46,14 @@ var DEFAULT_POPUP_WIDTH = 500;
 function toggleMenuItem(menuItem) {
 	//the hook needs to find the passage id
 	$.shout("pane-menu-toggle-item-" + $(menuItem).closest(".passageContainer").attr("passage-id"), menuItem.name);
-}
+};
 
 /**
  * shows the login popup
  */
 function login() {
 	$.shout("show-login-popup");
-}
+};
 
 /**
  * shows the interlinear options as a popup
@@ -61,7 +62,7 @@ function login() {
 function showInterlinearChoices(menuItem) {
 	//get passage id from menu parent
 	$.shout("interlinear-menu-option-triggered-" + $(menuItem).closest(".passageContainer").attr("passage-id")); 
-}
+};
 
 /**
  * called when click on a piece of text.
@@ -69,7 +70,7 @@ function showInterlinearChoices(menuItem) {
  */
 function showAllStrongMorphs(strongMorphs) {
 	$.shout("show-all-strong-morphs", strongMorphs);
-}
+};
 
 /**
  * Called when clicking on a strong link
@@ -77,7 +78,7 @@ function showAllStrongMorphs(strongMorphs) {
  */
 function showStrong(strong, sourceElement) {
 	showMorphOrStrong(strong, sourceElement);
-}
+};
 
 /**
  * called when clicking on a morph
@@ -85,7 +86,7 @@ function showStrong(strong, sourceElement) {
  */
 function showMorph(morph, sourceElement) {
 	showMorphOrStrong(morph, sourceElement);
-}
+};
 
 /** TODO: move this out of here to utils.js if we have more utility classes/functions 
  * helper function for morph and strongs 
@@ -96,7 +97,7 @@ function showMorphOrStrong(tag, sourceElement) {
 	
 	//need to find what event is coming in, to get the clicked element and pass that down
 	$("#lexiconDefinition span:contains(" + tag + ")").parent().click();	
-}
+};
 
 function showAbout() {
 	//show popup for About box
@@ -105,4 +106,21 @@ function showAbout() {
 		width: DEFAULT_POPUP_WIDTH,
 		title: "STEP :: Scripture Tools for Every Pastor",
 	});
+};
+
+/**
+ * Shows the timeline module
+ */
+function showTimelineModule() {
+	showBottomSection();
+	$.shout("show-timeline");
+};
+
+/**
+ * shows the bottom section
+ */
+function showBottomSection() {
+	var bottomSection = $("#bottomSection");
+	bottomSection.height(bottomSection.parent().parent().height() / 2);
+	refreshLayout();
 }

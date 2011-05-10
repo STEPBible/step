@@ -5,9 +5,9 @@ import static org.apache.commons.lang.StringUtils.isEmpty;
 import static org.apache.commons.lang.StringUtils.split;
 
 import java.util.Calendar;
-import java.util.GregorianCalendar;
 
 import org.apache.commons.lang.StringUtils;
+import org.joda.time.LocalDateTime;
 
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 
@@ -32,7 +32,7 @@ public class PartialDate {
     /**
      * The date to be represented (whether fully accurate or not)
      */
-    private final Calendar c;
+    private final LocalDateTime localDateTime;
 
     /**
      * The precision specifier which tells us just quite how accurate the date is (year, month, day)
@@ -44,12 +44,12 @@ public class PartialDate {
     /**
      * Public constructor to give us a partial date.
      * 
-     * @param c date partial reprentation of a date
+     * @param ldt date partial representation of a date
      * @param precision precision indicating how much of the date can be trusted day/month/year or month/year
      *            or just year
      */
-    public PartialDate(final Calendar c, final PrecisionType precision) {
-        this.c = c;
+    public PartialDate(final LocalDateTime ldt, final PrecisionType precision) {
+        this.localDateTime = ldt;
         this.precision = precision;
     }
 
@@ -86,7 +86,9 @@ public class PartialDate {
      */
     private static PartialDate getPartialDateFromArray(final String[] parts, final boolean negativeDate) {
         final Calendar c = Calendar.getInstance();
+        final LocalDateTime translatedTime;
         PrecisionType p;
+        final int multiplier = negativeDate ? -1 : 1;
 
         try {
             // length of field determines how much of the date has been specified
@@ -95,15 +97,17 @@ public class PartialDate {
                     throw new StepInternalException("There weren't enough parts to this date");
                 case YEAR:
                     // only the year is specified, so use 1st of Jan Year
-                    c.set(parseInt(parts[0]), 1, 1);
+                    translatedTime = new LocalDateTime(multiplier * parseInt(parts[0]), 1, 1, 0, 0);
                     p = PrecisionType.YEAR;
                     break;
                 case YEAR_AND_MONTH:
-                    c.set(parseInt(parts[0]), parseInt(parts[1]), 1);
+                    translatedTime = new LocalDateTime(multiplier * parseInt(parts[0]), parseInt(parts[1]),
+                            1, 0, 0);
                     p = PrecisionType.MONTH;
                     break;
                 case YEAR_MONTH_AND_DAY:
-                    c.set(parseInt(parts[0]), parseInt(parts[1]), parseInt(parts[2]));
+                    translatedTime = new LocalDateTime(multiplier * parseInt(parts[0]), parseInt(parts[1]),
+                            parseInt(parts[2]), 0, 0);
                     p = PrecisionType.DAY;
                     break;
                 default:
@@ -113,19 +117,14 @@ public class PartialDate {
             throw new StepInternalException("Could not parse date into year, month or day.", nfe);
         }
 
-        c.set(Calendar.HOUR_OF_DAY, 0);
-        c.set(Calendar.MINUTE, 0);
-        if (negativeDate) {
-            c.set(Calendar.ERA, GregorianCalendar.BC);
-        }
-        return new PartialDate(c, p);
+        return new PartialDate(translatedTime, p);
     }
 
     /**
      * @return gets the internal date
      */
-    public Calendar getDate() {
-        return this.c;
+    public LocalDateTime getDate() {
+        return this.localDateTime;
     }
 
     /**

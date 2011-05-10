@@ -2,10 +2,14 @@ package com.tyndalehouse.step.core.service.impl;
 
 import java.util.List;
 
+import org.joda.time.LocalDateTime;
+
 import com.avaje.ebean.EbeanServer;
+import com.avaje.ebean.Query;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.tyndalehouse.step.core.data.entities.Timeband;
+import com.tyndalehouse.step.core.data.entities.TimelineEvent;
 import com.tyndalehouse.step.core.service.TimelineService;
 
 /**
@@ -25,23 +29,28 @@ public class TimelineServiceImpl implements TimelineService {
         this.ebean = ebean;
     }
 
-    // private final Loader loader;
-
-    // /**
-    // * Constructing a timeband dao
-    // *
-    // * @param timebandDao the data access object that can be used to access the timeband
-    // */
-    // @Inject
-    // public TimelineServiceImpl(final TimebandDao timebandDao, final HotSpotDao hotSpotDao, final Loader
-    // loader) {
-    // // this.timebandDao = timebandDao;
-    // // this.hotSpotDao = hotSpotDao;
-    // this.loader = loader;
-    // }
-
     @Override
     public List<Timeband> getTimelineConfiguration() {
         return this.ebean.createQuery(Timeband.class).fetch("hotspots").findList();
+    }
+
+    @Override
+    public List<TimelineEvent> getTimelineEvents(final LocalDateTime from, final LocalDateTime to) {
+        // fromDate < to and toDate > from is the standard coverage method where we find the overlapping
+        // events
+        // however "toDate" can be null, therefore we need to cater for that
+
+        // which gives us
+        // fromDate < to and ((toDate != null and toDate > from) or (toDate == null and fromDate > from ))
+
+        // in other words the event starts before the requested period ends, but finishes after the end
+
+        final String eventsQuery = "find timelineEvent where fromDate <= :to and "
+                + "((toDate is not null and toDate >= :from) or (toDate is null and fromDate >= :from))";
+
+        final Query<TimelineEvent> query = this.ebean.createQuery(TimelineEvent.class, eventsQuery);
+        query.setParameter("from", from);
+        query.setParameter("to", to);
+        return query.findList();
     }
 }

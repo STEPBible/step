@@ -25,6 +25,7 @@ import com.tyndalehouse.step.core.models.ClientSession;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class UserDataServiceImplTest extends DataDrivenTestExtension {
+    private static final int TEST_NUM_ENCRYPT_ITERATIONS = 1;
     @Mock
     private Provider<Session> serverSessionProvider;
     @Mock
@@ -37,7 +38,8 @@ public class UserDataServiceImplTest extends DataDrivenTestExtension {
     @Before
     public void setUp() {
         // MockitoAnnotations.initMocks(this);
-        this.userService = new UserDataServiceImpl(super.getEbean(), this.serverSessionProvider);
+        this.userService = new UserDataServiceImpl(super.getEbean(), this.serverSessionProvider,
+                TEST_NUM_ENCRYPT_ITERATIONS, "UTF-8", "SHA-1", "SHA1PRNG", 8);
     }
 
     /**
@@ -64,7 +66,6 @@ public class UserDataServiceImplTest extends DataDrivenTestExtension {
         assertEquals(user.getEmailAddress(), testEmail);
         assertEquals(user.getName(), testName);
         assertEquals(user.getCountry(), testCountry);
-        assertEquals(user.getPassword(), testPassword);
     }
 
     /**
@@ -97,8 +98,8 @@ public class UserDataServiceImplTest extends DataDrivenTestExtension {
     }
 
     /**
-     * we check that login in creates a row in the session table mapped to a user
-     * 
+     * we check that login in creates a row in the session table mapped to a user we also check that the hash
+     * creating the user is used on retrieval of the user
      */
     @Test
     public void testLoginPass() {
@@ -114,7 +115,9 @@ public class UserDataServiceImplTest extends DataDrivenTestExtension {
         // save the user in a database
         final User u = new User();
         u.setEmailAddress(email);
-        u.setPassword(password);
+        final byte[] salt = "abcdefg".getBytes();
+        u.setSalt(salt);
+        u.setPassword(this.userService.getHash(TEST_NUM_ENCRYPT_ITERATIONS, password, salt));
         u.setName(testName);
         getEbean().save(u);
 

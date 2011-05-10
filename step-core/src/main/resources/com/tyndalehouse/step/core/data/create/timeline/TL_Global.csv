@@ -1,5 +1,5 @@
 "ID","Name","From","To","From2","To2","Importance","Certainty","Flags","Timeline","Type","Description","Refs","Notes"
-"T_All","All","-3800","2000","-4112","2000",,,,"T_All","Timeline","Container for everything",,"All refs very approximate"
+"T_All","All","-3800","2000","-4112","2000",,,,"-","Timeline","Container for everything",,"All refs very approximate"
 "T_Bible","Bible ","-3800","400","-4112","400","T_All",,,"T_All","Timeline","All OT dates need sorting out",,
 "T_Patriarchs","Patriarchs","-4000","-1547","-4112","-1859","T_All",,,"T_Bible","Timeline",,"Gen.*",
 "T_AdamToAbraham","Adam to Abraham","-4000","-1854","-4000","-1854","T_Patriarchs",,,"T_Patriarchs","Timeline",,"Gen.1-11",

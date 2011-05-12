@@ -2,6 +2,7 @@ package com.tyndalehouse.step.rest.controllers;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -119,8 +120,8 @@ public class FrontController extends HttpServlet {
         final Object controllerInstance = getController(sr.getControllerName());
 
         // resolve method
-        final Method controllerMethod = getControllerMethod(sr.getMethodName(), controllerInstance,
-                sr.getArgs(), sr.getCacheKey().getMethodKey());
+        final Method controllerMethod = getControllerMethod(sr.getMethodName(), controllerInstance, sr
+                .getArgs(), sr.getCacheKey().getMethodKey());
 
         // invoke the three together
         Object returnVal;
@@ -177,14 +178,10 @@ public class FrontController extends HttpServlet {
             if (responseValue == null) {
                 return new byte[0];
             } else {
-                final String responsePackage = responseValue.getClass().getPackage().getName();
-                if (responsePackage.startsWith(ENTITIES_PACKAGE)
-                        || responseValue.getClass().getPackage().getName().startsWith(AVAJE_PACKAGE)) {
-
-                    // convert list of beans into JSON
-                    response = this.ebeanJson.toJsonString(responseValue);
-                } else {
+                if (isPojo(responseValue)) {
                     response = this.jsonMapper.writeValueAsString(responseValue);
+                } else {
+                    response = this.ebeanJson.toJsonString(responseValue);
                 }
             }
 
@@ -196,6 +193,28 @@ public class FrontController extends HttpServlet {
         } catch (final IOException e) {
             throw new StepInternalException(e.getMessage(), e);
         }
+    }
+
+    /**
+     * inspects the response value to determine the correct serialiser
+     * 
+     * @param responseValue the response value
+     * @return true if normal serialisation should be used
+     */
+    private boolean isPojo(final Object responseValue) {
+        if (responseValue instanceof java.util.Collection<?>) {
+            // inspect what the collection contains...
+            final Collection<?> c = (Collection<?>) responseValue;
+            if (((java.util.Collection<?>) responseValue).size() != 0) {
+                final Object o = c.iterator().next();
+                return isPojo(o);
+            }
+        }
+
+        final String responsePackage = responseValue.getClass().getPackage().getName();
+        return !responsePackage.startsWith(ENTITIES_PACKAGE)
+                && !responseValue.getClass().getPackage().getName().startsWith(AVAJE_PACKAGE);
+
     }
 
     /**

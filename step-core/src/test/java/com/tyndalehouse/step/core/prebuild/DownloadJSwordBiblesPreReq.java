@@ -1,5 +1,7 @@
 package com.tyndalehouse.step.core.prebuild;
 
+import static org.apache.commons.lang.StringUtils.isNotBlank;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,21 +40,31 @@ public class DownloadJSwordBiblesPreReq {
             if (!jsword.isInstalled(moduleInitials)) {
                 LOGGER.debug("Installing [{}] to install: ", moduleInitials);
                 jsword.installBook(moduleInitials);
-            }
-        }
 
-        for (final String moduleInitials : modules) {
-            // now wait for book to install
-            while (!jsword.isInstalled(moduleInitials)) {
-                LOGGER.debug("Waiting for [{}] to install: ", moduleInitials);
-                try {
-                    Thread.sleep(1000);
-                } catch (final InterruptedException e) {
-                    // we ignore this and wait some more
-                    LOGGER.warn("Download was interrupted: [{}]", moduleInitials);
+                while (!jsword.isInstalled(moduleInitials)) {
+                    LOGGER.debug("Waiting for [{}] to install: ", moduleInitials);
+                    try {
+                        Thread.sleep(1000);
+                    } catch (final InterruptedException e) {
+                        // we ignore this and wait some more
+                        LOGGER.warn("Download was interrupted: [{}]", moduleInitials);
+                    }
                 }
             }
         }
+        //
+        // for (final String moduleInitials : modules) {
+        // // now wait for book to install
+        // while (!jsword.isInstalled(moduleInitials)) {
+        // LOGGER.debug("Waiting for [{}] to install: ", moduleInitials);
+        // try {
+        // Thread.sleep(1000);
+        // } catch (final InterruptedException e) {
+        // // we ignore this and wait some more
+        // LOGGER.warn("Download was interrupted: [{}]", moduleInitials);
+        // }
+        // }
+        // }
     }
 
     /**
@@ -67,6 +79,18 @@ public class DownloadJSwordBiblesPreReq {
         installer.setHost("www.crosswire.org");
         installer.setPackageDirectory("/ftpmirror/pub/sword/packages/rawzip");
         installer.setCatalogDirectory("/ftpmirror/pub/sword/raw");
+
+        final String proxyHost = System.getProperty("http.proxyHost");
+        final String proxyPort = System.getProperty("http.proxyPort");
+        LOGGER.info("Using [{}:{}]", proxyHost, proxyPort);
+
+        if (isNotBlank(proxyHost)) {
+            installer.setProxyHost(proxyHost);
+        }
+
+        if (isNotBlank(proxyPort)) {
+            installer.setProxyPort(Integer.parseInt(proxyPort));
+        }
 
         // reload if never used before
         if (installer.getBooks().size() == 0) {

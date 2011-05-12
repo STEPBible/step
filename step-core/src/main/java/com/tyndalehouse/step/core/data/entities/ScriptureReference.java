@@ -21,10 +21,15 @@ public class ScriptureReference implements Serializable {
 
     @Id
     @GeneratedValue
-    private Integer scriptureReferenceId;
+    private Integer id;
 
-    @ManyToOne
-    private ScriptureTarget target;
+    @ManyToOne(optional = true)
+    @Column(nullable = true)
+    private GeoPlace geoPlace;
+
+    @ManyToOne(optional = true)
+    @Column(nullable = true)
+    private TimelineEvent timelineEvent;
 
     @Column
     private TargetType targetType;
@@ -36,32 +41,18 @@ public class ScriptureReference implements Serializable {
     private int endVerseId;
 
     /**
-     * @return the scriptureReferenceId
+     * @return the id
      */
-    public Integer getScriptureReferenceId() {
-        return this.scriptureReferenceId;
+    public Integer getId() {
+        return this.id;
     }
 
     /**
-     * @param scriptureReferenceId the scriptureReferenceId to set
+     * @param id the id to set
      */
-    public void setScriptureReferenceId(final Integer scriptureReferenceId) {
-        this.scriptureReferenceId = scriptureReferenceId;
+    public void setId(final Integer id) {
+        this.id = id;
     }
-
-    // /**
-    // * @return the target
-    // */
-    // public AbstractScriptureTarget getTarget() {
-    // return this.target;
-    // }
-    //
-    // /**
-    // * @param target the target to set
-    // */
-    // public void setTarget(final AbstractScriptureTarget target) {
-    // this.target = target;
-    // }
 
     /**
      * @return the targetType
@@ -106,17 +97,30 @@ public class ScriptureReference implements Serializable {
     }
 
     /**
-     * @return the target
+     * @return the geoPlace
      */
-    public ScriptureTarget getTarget() {
-        return this.target;
+    public GeoPlace getGeoPlace() {
+        return this.geoPlace;
     }
 
     /**
-     * @param target the target to set
+     * @param geoPlace the geoPlace to set
      */
-    public void setTarget(final ScriptureTarget target) {
-        this.target = target;
+    public void setGeoPlace(final GeoPlace geoPlace) {
+        this.geoPlace = geoPlace;
     }
 
+    /**
+     * @return the timelineEvent
+     */
+    public TimelineEvent getTimelineEvent() {
+        return this.timelineEvent;
+    }
+
+    /**
+     * @param timelineEvent the timelineEvent to set
+     */
+    public void setTimelineEvent(final TimelineEvent timelineEvent) {
+        this.timelineEvent = timelineEvent;
+    }
 }

@@ -1,5 +1,6 @@
 package com.tyndalehouse.step.core.service.impl;
 
+import static java.lang.Integer.valueOf;
 import static org.apache.commons.lang.StringUtils.isBlank;
 import static org.apache.commons.lang.StringUtils.isNotBlank;
 import static org.apache.commons.lang.StringUtils.isNotEmpty;
@@ -29,13 +30,22 @@ import org.crosswire.jsword.book.Books;
 import org.crosswire.jsword.book.FeatureType;
 import org.crosswire.jsword.book.install.InstallException;
 import org.crosswire.jsword.book.install.Installer;
+import org.crosswire.jsword.passage.KeyFactory;
 import org.crosswire.jsword.passage.NoSuchKeyException;
+import org.crosswire.jsword.passage.NoSuchVerseException;
+import org.crosswire.jsword.passage.PassageKeyFactory;
+import org.crosswire.jsword.passage.RestrictionType;
+import org.crosswire.jsword.passage.RocketPassage;
+import org.crosswire.jsword.passage.Verse;
+import org.crosswire.jsword.passage.VerseRange;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.tyndalehouse.step.core.data.entities.ScriptureReference;
+import com.tyndalehouse.step.core.data.entities.reference.TargetType;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.models.LookupOption;
 import com.tyndalehouse.step.core.service.JSwordService;
@@ -326,5 +336,41 @@ public class JSwordServiceImpl implements JSwordService {
         throw new StepInternalException(
                 "An unknown error has occurred: the job has disappeared of the job list, "
                         + "but the module is not installed");
+    }
+
+    @Override
+    public List<ScriptureReference> getPassageReferences(final String references) {
+        final List<ScriptureReference> refs = new ArrayList<ScriptureReference>();
+
+        if (isNotBlank(references)) {
+            LOGGER.trace("Resolving references for [{}]", references);
+            try {
+                final KeyFactory keyFactory = PassageKeyFactory.instance();
+                final RocketPassage rp = (RocketPassage) keyFactory.getKey(references);
+                for (int ii = 0; ii < rp.countRanges(RestrictionType.NONE); ii++) {
+                    final VerseRange vr = rp.getRangeAt(ii, RestrictionType.NONE);
+                    final Verse start = vr.getStart();
+                    final Verse end = vr.getEnd();
+
+                    final int startVerseId = start.getOrdinal();
+                    final int endVerseId = end.getOrdinal();
+
+                    LOGGER.trace("Found reference [{}] to [{}]", valueOf(startVerseId), valueOf(endVerseId));
+                    final ScriptureReference sr = new ScriptureReference();
+
+                    // TODO ensure scripture references are linked to targets...
+                    // sr.setTarget(target);
+                    sr.setStartVerseId(startVerseId);
+                    sr.setEndVerseId(endVerseId);
+                    sr.setTargetType(TargetType.TIMELINE_EVENT);
+                    refs.add(sr);
+                }
+            } catch (final NoSuchVerseException nsve) {
+                throw new StepInternalException(nsve.getMessage(), nsve);
+            } catch (final NoSuchKeyException e) {
+                throw new StepInternalException(e.getMessage(), e);
+            }
+        }
+        return refs;
     }
 }

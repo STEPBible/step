@@ -36,16 +36,28 @@ USER_LOGIN = "rest/user/login/";
 USER_LOGOUT = "rest/user/logout/";
 USER_REGISTER = "rest/user/register/"
 USER_GET_LOGGED_IN_USER = "rest/user/getLoggedInUser";
+
+GEOGRAPHY_GET_PLACES = "rest/geography/getPlaces/"
 	
 //////////////////////////
 // SOME DEFAULTS
 //////////////////////////
 var DEFAULT_POPUP_WIDTH = 500;
 
+/**
+ * a helper function that returns the passageId relevant to the menu item provided
+ * @param menuItem the menuItem 
+ * @return id of the passage
+ */
+function getPassageId(menuItem) {
+	return $(menuItem).closest(".passageContainer").attr("passage-id");
+}
+
+
 /** a simpler toggler for the menu items */
 function toggleMenuItem(menuItem) {
 	//the hook needs to find the passage id
-	$.shout("pane-menu-toggle-item-" + $(menuItem).closest(".passageContainer").attr("passage-id"), menuItem.name);
+	$.shout("pane-menu-toggle-item-" + getPassageId(menuItem), menuItem.name);
 };
 
 /**
@@ -61,7 +73,7 @@ function login() {
  */
 function showInterlinearChoices(menuItem) {
 	//get passage id from menu parent
-	$.shout("interlinear-menu-option-triggered-" + $(menuItem).closest(".passageContainer").attr("passage-id")); 
+	$.shout("interlinear-menu-option-triggered-" + getPassageId(menuItem)); 
 };
 
 /**
@@ -114,6 +126,14 @@ function showAbout() {
 function showTimelineModule() {
 	showBottomSection();
 	$.shout("show-timeline");
+};
+
+/**
+ * shows the geography module
+ */
+function showGeographyModule(menuItem) {
+	showBottomSection();
+	$.shout("show-maps", { passageId : + getPassageId(menuItem) } );
 };
 
 /**

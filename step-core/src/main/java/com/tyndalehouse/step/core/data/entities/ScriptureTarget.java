@@ -2,15 +2,9 @@ package com.tyndalehouse.step.core.data.entities;
 
 import java.io.Serializable;
 
-import javax.persistence.DiscriminatorColumn;
-import javax.persistence.DiscriminatorType;
-import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-
-import com.avaje.ebean.annotation.CacheStrategy;
+import javax.persistence.MappedSuperclass;
 
 /**
  * A marker interface meaning this object can be attached to scripture references
@@ -18,12 +12,13 @@ import com.avaje.ebean.annotation.CacheStrategy;
  * @author Chris
  * 
  */
-@CacheStrategy(readOnly = true)
-@Entity
-@Inheritance(strategy = InheritanceType.JOINED)
-@DiscriminatorColumn(discriminatorType = DiscriminatorType.INTEGER, name = "targetTypeId")
-public class ScriptureTarget implements Serializable {
-    private static final long serialVersionUID = -3343458338757180529L;
+// @Entity
+// @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+// @DiscriminatorColumn(discriminatorType = DiscriminatorType.INTEGER)
+@MappedSuperclass
+public abstract class ScriptureTarget implements Serializable {
+    private static final long serialVersionUID = 1598422350749055247L;
+
     @Id
     @GeneratedValue
     private Integer id;
@@ -41,4 +36,5 @@ public class ScriptureTarget implements Serializable {
     public void setId(final Integer id) {
         this.id = id;
     }
+
 }

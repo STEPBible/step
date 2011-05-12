@@ -1,7 +1,6 @@
 package com.tyndalehouse.step.core.data.create;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -9,7 +8,6 @@ import org.slf4j.LoggerFactory;
 
 import com.avaje.ebean.SqlRow;
 import com.tyndalehouse.step.core.data.DataDrivenTestExtension;
-import com.tyndalehouse.step.core.data.entities.Timeband;
 
 /**
  * Basic test for the loader
@@ -40,25 +38,28 @@ public class DataTest extends DataDrivenTestExtension {
         LOG.debug("Got " + i + "  - DataSource good.");
     }
 
-    /**
-     * testing the loading process
-     * <p />
-     * TODO: don't want to test the whole timeline component every build
-     */
-    @Test
-    public void tryLoadingProcess() {
-        final TimelineModuleLoader timelineLoaderModule = new TimelineModuleLoader(getEbean());
-        final Loader l = new Loader(getEbean(), timelineLoaderModule);
-        l.init();
-
-        // we check that we entities in all three tables
-        final Timeband timeband = getEbean().find(Timeband.class).fetch("hotspots.events").where()
-                .eq("id", 1).findUnique();
-
-        assertNotNull(timeband);
-        assertNotNull(timeband.getHotspots());
-        assertNotNull(timeband.getHotspots().get(0));
-        assertNotNull(timeband.getHotspots().get(0).getEvents());
-        assertNotNull(timeband.getHotspots().get(0).getEvents().get(0).getSummary());
-    }
+    // /**
+    // * testing the loading process
+    // * <p />
+    // * TODO: don't want to test the whole timeline/geography component every build
+    // */
+    // @Test
+    // public void tryLoadingProcess() {
+    // final TimelineModuleLoader timelineLoaderModule = new TimelineModuleLoader(getEbean(),
+    // new JSwordServiceImpl(null));
+    // final GeographyModuleLoader geoLoaderModule = new GeographyModuleLoader(getEbean(),
+    // new JSwordServiceImpl(null));
+    // final Loader l = new Loader(getEbean(), timelineLoaderModule, geoLoaderModule);
+    // l.init();
+    //
+    // // we check that we entities in all three tables
+    // final Timeband timeband = getEbean().find(Timeband.class).fetch("hotspots.events").where()
+    // .eq("id", 1).findUnique();
+    //
+    // assertNotNull(timeband);
+    // assertNotNull(timeband.getHotspots());
+    // assertNotNull(timeband.getHotspots().get(0));
+    // assertNotNull(timeband.getHotspots().get(0).getEvents());
+    // assertNotNull(timeband.getHotspots().get(0).getEvents().get(0).getSummary());
+    // }
 }

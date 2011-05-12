@@ -59,8 +59,8 @@ public class UserDataServiceImplTest extends DataDrivenTestExtension {
 
         this.userService.register(testEmail, testName, testCountry, testPassword);
 
-        final Session session = getEbean().find(Session.class).fetch("user").where()
-                .eq("user.emailAddress", testEmail).findUnique();
+        final Session session = getEbean().find(Session.class).fetch("user").where().eq("user.emailAddress",
+                testEmail).findUnique();
         final User user = session.getUser();
 
         assertEquals(user.getEmailAddress(), testEmail);
@@ -126,4 +126,5 @@ public class UserDataServiceImplTest extends DataDrivenTestExtension {
         // check that the user is logged in
         assertEquals(currentServerSession.getUser().getName(), testName);
     }
+
 }

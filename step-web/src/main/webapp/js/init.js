@@ -13,9 +13,11 @@ function init() {
 		initLayout();
 		initDefaultValues();
 		initLexicon();
-		initTimeline();
 		initBookmarks();
+		
 		initData();
+		
+		
 		initInitialEvents();
 		initLogin();
 	});
@@ -127,7 +129,9 @@ function addDefaultValue(inputSelector) {
 	
 }
 
-
+/**
+ * sets up the initial data and passages
+ */
 function initData() {
 	
 	//get all supported versions
@@ -161,8 +165,9 @@ function initData() {
 		
 		//add the ALL Version, by iterating through all found versions and adding them as the value
 		var allVersionsKey = "";
-		initPassages(parsedResponse, options);
+		var passages = initPassages(parsedResponse, options);
 		initInterlinearPopup(strongedVersions);
+		initModules(passages);
 	});
 }
 
@@ -181,16 +186,20 @@ function initInterlinearPopup(strongedVersions) {
  * @param allVersions the list of versions to be given to a dropdown
  * @param strongedVersions a list of version containing strong tagging
  * @param options a list of options to be displayed in the toolbar
+ * @return a list of passage objects so that synchronous calls can be made
  */
 function initPassages(allVersions, options) {
 	//set up initial passages with reference data:
+	var passages = [];
+	
 	$(".column").each(
 		function(index) {
 			var passageContainer = $(".passageContainer", this);
 			passageContainer.attr("passage-id", index);
-			new Passage(passageContainer, allVersions, index);
+			passages.push(new Passage(passageContainer, allVersions, index));
 		}
 	);
+	return passages;
 }
 
 /**
@@ -253,8 +262,15 @@ function initLogin() {
 	new Login();
 }
 
-function initTimeline(mainAppLayout) {
-	new TimelineWidget($("#bottomSection"));
+/**
+ * initialises the modules 
+ * @param passages a list of passages that were provided
+ */
+function initModules(passages) {
+	var bottomSection = $("#bottomSection");
+	
+	new TimelineWidget(bottomSection);
+	new GeographyWidget(bottomSection, passages);
 }
 
 function raiseError(error) {

@@ -9,4 +9,7 @@ package com.tyndalehouse.step.core.data.entities.reference;
 public enum TargetType {
     /** a timeline event */
     TIMELINE_EVENT,
+
+    /** a geo place **/
+    GEO_PLACE,
 }

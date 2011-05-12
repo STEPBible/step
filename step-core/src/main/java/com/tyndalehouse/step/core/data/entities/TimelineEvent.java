@@ -1,12 +1,13 @@
 package com.tyndalehouse.step.core.data.entities;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import org.joda.time.LocalDateTime;
 
@@ -20,7 +21,6 @@ import com.tyndalehouse.step.core.data.common.PrecisionType;
  */
 @CacheStrategy(readOnly = true)
 @Entity
-@DiscriminatorValue("1")
 public class TimelineEvent extends ScriptureTarget implements Serializable {
     private static final long serialVersionUID = -4642904574412249515L;
 
@@ -41,6 +41,9 @@ public class TimelineEvent extends ScriptureTarget implements Serializable {
 
     @ManyToOne(cascade = CascadeType.ALL)
     private HotSpot hotSpot;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "timelineEvent")
+    private List<ScriptureReference> references;
 
     /**
      * @return the summary
@@ -127,25 +130,17 @@ public class TimelineEvent extends ScriptureTarget implements Serializable {
     }
 
     /**
-     * to get rid of a findbugs bug, we override to make clear we are using the parent's equal method
-     * 
-     * @param obj the object that we are comparing
-     * @return true if objects are equals
+     * @return the references
      */
-    @SuppressWarnings("PMD.UselessOverridingMethod")
-    @Override
-    public boolean equals(final Object obj) {
-        return super.equals(obj);
+    public List<ScriptureReference> getReferences() {
+        return this.references;
     }
 
     /**
-     * overriding the hashcode because we've override the equals
-     * 
-     * @return the parent's hashcode
+     * @param references the references to set
      */
-    @SuppressWarnings("PMD.UselessOverridingMethod")
-    @Override
-    public int hashCode() {
-        return super.hashCode();
+    public void setReferences(final List<ScriptureReference> references) {
+        this.references = references;
     }
+
 }

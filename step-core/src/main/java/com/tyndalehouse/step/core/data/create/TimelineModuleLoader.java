@@ -29,7 +29,7 @@ import com.tyndalehouse.step.core.data.entities.Timeband;
 import com.tyndalehouse.step.core.data.entities.TimelineEvent;
 import com.tyndalehouse.step.core.data.entities.reference.TimeUnitType;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
-import com.tyndalehouse.step.core.utils.PassageReferenceUtils;
+import com.tyndalehouse.step.core.service.JSwordService;
 import com.tyndalehouse.step.core.utils.StepIOUtils;
 
 /**
@@ -38,7 +38,7 @@ import com.tyndalehouse.step.core.utils.StepIOUtils;
  * @author Chris
  * 
  */
-public class TimelineModuleLoader {
+public class TimelineModuleLoader implements ModuleLoader {
     private static final String TIMELINE_DIRECTORY = "timeline/";
     private static final String HOTSPOTS_CSV_DATA_FILE = "hotspot/hotspots.csv";
     private static final String TIMEBAND_CSV_DATA_FILE = "timeband/timebands.csv";
@@ -56,6 +56,7 @@ public class TimelineModuleLoader {
 
     private static final Logger LOG = LoggerFactory.getLogger(TimelineModuleLoader.class);
     private final EbeanServer ebean;
+    private final JSwordService jsword;
 
     /**
      * we need to persist object through an orm
@@ -63,25 +64,26 @@ public class TimelineModuleLoader {
      * @param ebean the persistence server
      */
     @Inject
-    public TimelineModuleLoader(final EbeanServer ebean) {
+    public TimelineModuleLoader(final EbeanServer ebean, final JSwordService jsword) {
         this.ebean = ebean;
+        this.jsword = jsword;
     }
 
-    /**
-     * loads up the timeline data
-     * 
-     * @param scriptureReferences the scripture references that might be found as part of the loading
-     */
-    public void init(final List<ScriptureReference> scriptureReferences) {
+    @Override
+    public void init() {
+        LOG.debug("Loading timeline events");
+        final long currentTime = System.currentTimeMillis();
 
         final Map<String, Timeband> bands = loadTimebands();
         final Map<String, HotSpot> hotSpots = loadHotSpots(bands);
         final List<CsvData> timelineDataFiles = getTimelineDataFiles();
-        final List<TimelineEvent> timelineEvents = loadTimelineEvents(hotSpots, timelineDataFiles,
-                scriptureReferences);
+        final List<TimelineEvent> timelineEvents = loadTimelineEvents(hotSpots, timelineDataFiles);
 
         // finally persist to database
         this.ebean.save(timelineEvents);
+
+        final long duration = System.currentTimeMillis() - currentTime;
+        LOG.info("Took {}ms to load {} timeline events", Long.valueOf(duration), timelineEvents.size());
 
     }
 
@@ -140,7 +142,7 @@ public class TimelineModuleLoader {
      * 
      */
     private List<TimelineEvent> loadTimelineEvents(final Map<String, HotSpot> hotspots,
-            final List<CsvData> csvDataFiles, final List<ScriptureReference> scriptureReferences) {
+            final List<CsvData> csvDataFiles) {
         LOG.debug("Loading timeline events data");
         final List<TimelineEvent> events = new ArrayList<TimelineEvent>();
 
@@ -162,13 +164,13 @@ public class TimelineModuleLoader {
                     event.setToPrecision(to.getPrecision());
 
                 }
+                // finally add any scripture reference required
+                final List<ScriptureReference> passageReferences = this.jsword.getPassageReferences(data
+                        .getData(ii, "Refs"));
+
+                event.setReferences(passageReferences);
 
                 events.add(event);
-
-                // finally add any scripture reference required
-
-                scriptureReferences.addAll(PassageReferenceUtils.getPassageReferences(event,
-                        data.getData(ii, "Refs")));
             }
         }
 

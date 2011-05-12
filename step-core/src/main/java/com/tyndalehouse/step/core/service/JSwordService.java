@@ -5,6 +5,7 @@ import java.util.List;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.BookCategory;
 
+import com.tyndalehouse.step.core.data.entities.ScriptureReference;
 import com.tyndalehouse.step.core.models.LookupOption;
 
 /**
@@ -81,4 +82,11 @@ public interface JSwordService {
      */
     List<Book> getAllModules(BookCategory... bookCategory);
 
+    /**
+     * 
+     * @param references a list of references
+     * @param target id of the event
+     * @return the list of references strongly-typed
+     */
+    List<ScriptureReference> getPassageReferences(final String references);
 }

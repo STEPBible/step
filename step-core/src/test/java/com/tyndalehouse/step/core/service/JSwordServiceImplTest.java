@@ -1,6 +1,7 @@
 package com.tyndalehouse.step.core.service;
 
 import static com.tyndalehouse.step.core.models.LookupOption.INTERLINEAR;
+import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -23,6 +24,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.tyndalehouse.step.core.data.entities.ScriptureReference;
 import com.tyndalehouse.step.core.models.LookupOption;
 import com.tyndalehouse.step.core.service.impl.JSwordServiceImpl;
 
@@ -96,6 +98,63 @@ public class JSwordServiceImplTest {
 
         LOGGER.debug("\n {}", xmlOutputter.outputString(d));
         Assert.assertTrue(osisText.contains("span"));
+    }
+
+    /**
+     * Tests the resolving of passage references
+     */
+    @Test
+    public void testSingleReference() {
+        final JSwordServiceImpl jsi = new JSwordServiceImpl(null);
+        final List<ScriptureReference> refs = jsi.getPassageReferences("Gen.1.1");
+
+        assertEquals(refs.size(), 1);
+        assertEquals(1, refs.get(0).getStartVerseId());
+        assertEquals(1, refs.get(0).getEndVerseId());
+    }
+
+    /**
+     * Tests the resolving of passage references
+     */
+    @Test
+    public void testMultipleReference() {
+        final JSwordServiceImpl jsi = new JSwordServiceImpl(null);
+        final List<ScriptureReference> refs = jsi.getPassageReferences("Gen.1.1;Gen.1.3");
+
+        assertEquals(2, refs.size());
+        assertEquals(1, refs.get(0).getStartVerseId());
+        assertEquals(1, refs.get(0).getEndVerseId());
+        assertEquals(3, refs.get(1).getStartVerseId());
+        assertEquals(3, refs.get(1).getEndVerseId());
+    }
+
+    /**
+     * Tests the resolving of passage references
+     */
+    @Test
+    public void testMultiplePassages() {
+        final JSwordServiceImpl jsi = new JSwordServiceImpl(null);
+        final List<ScriptureReference> refs = jsi.getPassageReferences("Gen.1.1-2;Gen.1.4-5");
+
+        assertEquals(refs.size(), 2);
+        assertEquals(1, refs.get(0).getStartVerseId());
+        assertEquals(2, refs.get(0).getEndVerseId());
+        assertEquals(4, refs.get(1).getStartVerseId());
+        assertEquals(5, refs.get(1).getEndVerseId());
+    }
+
+    /**
+     * Tests an example from the geo file
+     */
+    @Test
+    public void testGeoPassageExample() {
+        final JSwordServiceImpl jsi = new JSwordServiceImpl(null);
+
+        // TODO change spaces between 1 and Kgs! This doesn't seem to work...
+
+        // final List<ScriptureReference> refs = getPassageReferences(target, "Josh 12:24; Sng 6:4");
+        final List<ScriptureReference> refs = jsi.getPassageReferences("Song 6:4");
+        assertEquals(refs.size(), 1);
     }
 
     /**

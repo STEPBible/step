@@ -9,6 +9,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.name.Named;
 import com.tyndalehouse.step.core.data.entities.Bookmark;
+import com.tyndalehouse.step.core.data.entities.GeoPlace;
 import com.tyndalehouse.step.core.data.entities.History;
 import com.tyndalehouse.step.core.data.entities.HotSpot;
 import com.tyndalehouse.step.core.data.entities.ScriptureReference;
@@ -111,15 +112,17 @@ public class DatabaseConfigProvider implements Provider<EbeanServer> {
      */
     private void addEntities(final ServerConfig config) {
         // timeline entities
+        config.addClass(ScriptureTarget.class);
+        config.addClass(ScriptureReference.class);
         config.addClass(HotSpot.class);
         config.addClass(Timeband.class);
         config.addClass(TimelineEvent.class);
-        config.addClass(ScriptureTarget.class);
-        config.addClass(ScriptureReference.class);
         config.addClass(User.class);
         config.addClass(Session.class);
         config.addClass(Bookmark.class);
         config.addClass(History.class);
+        config.addClass(GeoPlace.class);
+
     }
 
 }

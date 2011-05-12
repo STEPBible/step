@@ -64,7 +64,7 @@ function Passage(passageContainer, versions, passageId) {
 		.click(function() {
 			$.shout("bookmark-addition-requested", { reference: self.reference.val() });
 		});
-}
+};
 
 /**
  * sets up the initial passages based on the cookie state
@@ -79,7 +79,7 @@ Passage.prototype.setInitialPassage = function() {
 	if(cookieVersion != null) {
 		this.version.val(cookieVersion);
 	}
-}
+};
 
 /**
  * changes the passage, with optional parameters
@@ -131,7 +131,7 @@ Passage.prototype.changePassage = function() {
 			$.shout("passage-changed", { reference: self.reference.val(), passageId: self.passageId, init: init } );
 		});
 	}
-}
+};
 
 
 /**
@@ -144,7 +144,7 @@ Passage.prototype.highlightStrong = function(strongReference) {
 		$(".verse span[onclick*=" + strongReference + "]", this.container).css("text-decoration", "underline");
 		$("span.w[onclick*=" + strongReference + "] span.text", this.container).css("text-decoration", "underline");
 	}
-}
+};
 
 /**
  * This method scans the currently selected options in the menu
@@ -157,7 +157,7 @@ Passage.prototype.getSelectedOptions = function() {
 		selectedOptions.push(value.name);
 	});
 	return selectedOptions;
-}
+};
 
 
 Passage.prototype.getSelectedInterlinearVersion = function() {
@@ -171,7 +171,7 @@ Passage.prototype.getSelectedInterlinearVersion = function() {
 		return $(".interlinearPopup[passage-id = '" + passageId + "'] > .interlinearVersions").val();
 	}
 	return "";
-}
+};
 
 /**
  * if a number of strongs are given, separated by a space, highlights all of them
@@ -190,14 +190,14 @@ Passage.prototype.higlightStrongs = function(strongMorphReference) {
 		} 
 		//we ignore everything else
 	}
-}
+};
 
 /**
  * static method that returns strongs that should not be tagged in the UI
  */
 Passage.getBlackListedStrongs = function() {
 	return ["strong:G3588"];
-}
+};
 
 
 /**
@@ -205,11 +205,18 @@ Passage.getBlackListedStrongs = function() {
  */
 Passage.prototype.setToolbar = function(toolbar) {
 	this.toolbar = toolbar;
-}
+};
 
 /**
  * sets the passage container, so that others can insert themselves into it
  */
 Passage.prototype.getPassageContainer = function() {
 	return this.container;
-}
+};
+
+/**
+ * @return the reference text
+ */
+Passage.prototype.getReference = function() {
+	return this.reference.val();
+};

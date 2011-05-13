@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.avaje.ebean.EbeanServer;
-import com.avaje.ebean.Transaction;
 import com.google.inject.Inject;
 
 /**
@@ -14,25 +13,27 @@ import com.google.inject.Inject;
  * 
  */
 public class Loader {
-    private static final int BATCH_SIZE = 10000;
     private static final Logger LOG = LoggerFactory.getLogger(Loader.class);
     private final TimelineModuleLoader timelineModuleLoader;
     private final EbeanServer ebean;
     private final GeographyModuleLoader geoModuleLoader;
+    private final RelationalPeopleModuleLoader peopleLoader;
 
     /**
      * The loader is given a connection source to load the data
      * 
      * @param timelineModuleLoader loader that loads the timeline module
      * @param geoModuleLoader the loader for geography data
+     * @param peopleLoader loads the genealogies
      * @param ebean the persistence server
      */
     @Inject
     public Loader(final EbeanServer ebean, final TimelineModuleLoader timelineModuleLoader,
-            final GeographyModuleLoader geoModuleLoader) {
+            final GeographyModuleLoader geoModuleLoader, final RelationalPeopleModuleLoader peopleLoader) {
         this.ebean = ebean;
         this.timelineModuleLoader = timelineModuleLoader;
         this.geoModuleLoader = geoModuleLoader;
+        this.peopleLoader = peopleLoader;
     }
 
     /**
@@ -47,20 +48,13 @@ public class Loader {
      */
     private void loadData() {
         LOG.debug("Loading initial data");
-        final Transaction transaction = this.ebean.beginTransaction();
+        this.ebean.beginTransaction();
+
         try {
-            // transaction.setBatchMode(true);
-            // transaction.setBatchSize(BATCH_SIZE);
-            // transaction.setReadOnly(false);
-
-            // set up a list of scripture references that can be populated as we populate the database
-            // final List<ScriptureReference> scriptureReferences = new ArrayList<ScriptureReference>();
-
-            // TODO deduplicate? so that we have many-1 mapping?
+            // TODO
             this.timelineModuleLoader.init();
             this.geoModuleLoader.init();
-
-            // this.ebean.save(scriptureReferences);
+            this.peopleLoader.init();
             this.ebean.commitTransaction();
         } finally {
             this.ebean.endTransaction();

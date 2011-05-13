@@ -1,4 +1,6 @@
-package com.tyndalehouse.step.models.timeline.impl;
+package com.tyndalehouse.step.models.timeline.simile;
+
+import com.tyndalehouse.step.models.timeline.DigestableTimeline;
 
 /**
  * This represents the following fragment:
@@ -15,7 +17,7 @@ package com.tyndalehouse.step.models.timeline.impl;
  * @author Chris
  * 
  */
-public class SimileEvent {
+public class SimileEvent implements DigestableTimeline {
     private String start;
     private String end;
     private boolean duration;

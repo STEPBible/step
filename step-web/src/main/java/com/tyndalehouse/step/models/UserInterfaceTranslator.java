@@ -1,23 +1,22 @@
-package com.tyndalehouse.step.models.timeline;
+package com.tyndalehouse.step.models;
 
 import java.util.List;
-
-import com.tyndalehouse.step.core.data.entities.TimelineEvent;
 
 /**
  * A translator is able to convert timeline data into a form that is acceptable by the client
  * 
  * @author Chris
- * 
+ * @param <S> the source class
+ * @param <T> the target class
  */
-public interface TimelineTranslator {
+public interface UserInterfaceTranslator<S, T> {
 
     /**
      * translates a list of events to a digestable form of a timeline
      * 
-     * @param events a list of events
+     * @param sourceElement the source element
      * @return the wrapped up form of the timeline
      */
-    DigestableTimeline toDigestableTimeline(final List<TimelineEvent> events);
+    T toDigestableForm(final List<S> sourceElement);
 
 }

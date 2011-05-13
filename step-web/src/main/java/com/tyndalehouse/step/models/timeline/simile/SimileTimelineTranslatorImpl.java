@@ -1,4 +1,4 @@
-package com.tyndalehouse.step.models.timeline.impl;
+package com.tyndalehouse.step.models.timeline.simile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,8 +6,8 @@ import java.util.List;
 import org.joda.time.LocalDateTime;
 
 import com.tyndalehouse.step.core.data.entities.TimelineEvent;
+import com.tyndalehouse.step.models.UserInterfaceTranslator;
 import com.tyndalehouse.step.models.timeline.DigestableTimeline;
-import com.tyndalehouse.step.models.timeline.TimelineTranslator;
 
 /**
  * provides a way of
@@ -15,11 +15,12 @@ import com.tyndalehouse.step.models.timeline.TimelineTranslator;
  * @author Chris
  * 
  */
-public class SimileTimelineTranslatorImpl implements TimelineTranslator {
+public class SimileTimelineTranslatorImpl implements
+        UserInterfaceTranslator<TimelineEvent, DigestableTimeline> {
     private static final String SIMILE_DEFAULT_TIME_FORMAT = "iso8601";
 
     @Override
-    public DigestableTimeline toDigestableTimeline(final List<TimelineEvent> events) {
+    public DigestableTimeline toDigestableForm(final List<TimelineEvent> events) {
         final SimileTimelineImpl timeline = new SimileTimelineImpl();
 
         timeline.setDateTimeFormat(SIMILE_DEFAULT_TIME_FORMAT);
@@ -38,7 +39,6 @@ public class SimileTimelineTranslatorImpl implements TimelineTranslator {
             } else {
                 e.setDuration(false);
             }
-
             eventList.add(e);
         }
 

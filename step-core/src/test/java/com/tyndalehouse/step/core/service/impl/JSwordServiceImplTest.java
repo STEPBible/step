@@ -1,4 +1,4 @@
-package com.tyndalehouse.step.core.service;
+package com.tyndalehouse.step.core.service.impl;
 
 import static com.tyndalehouse.step.core.models.LookupOption.INTERLINEAR;
 import static org.junit.Assert.assertEquals;

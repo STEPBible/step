@@ -10,9 +10,10 @@ import org.slf4j.LoggerFactory;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.tyndalehouse.step.core.data.entities.Timeband;
+import com.tyndalehouse.step.core.data.entities.TimelineEvent;
 import com.tyndalehouse.step.core.service.TimelineService;
+import com.tyndalehouse.step.models.UserInterfaceTranslator;
 import com.tyndalehouse.step.models.timeline.DigestableTimeline;
-import com.tyndalehouse.step.models.timeline.TimelineTranslator;
 import com.tyndalehouse.step.rest.framework.Cacheable;
 
 /**
@@ -25,7 +26,7 @@ import com.tyndalehouse.step.rest.framework.Cacheable;
 public class TimelineController {
     private static final Logger LOGGER = LoggerFactory.getLogger(TimelineController.class);
     private final TimelineService timelineService;
-    private final TimelineTranslator translator;
+    private final UserInterfaceTranslator<TimelineEvent, DigestableTimeline> translator;
 
     /**
      * The timeline controller relies on the timeline service to retrieve the data
@@ -34,7 +35,8 @@ public class TimelineController {
      * @param translator a service enabling the translation of the model into a chewable version for the UI
      */
     @Inject
-    public TimelineController(final TimelineService timelineService, final TimelineTranslator translator) {
+    public TimelineController(final TimelineService timelineService,
+            final UserInterfaceTranslator<TimelineEvent, DigestableTimeline> translator) {
         this.timelineService = timelineService;
         this.translator = translator;
     }
@@ -84,8 +86,8 @@ public class TimelineController {
         final long f = Long.parseLong(from);
         final long t = Long.parseLong(to);
 
-        return this.translator.toDigestableTimeline(this.timelineService.getTimelineEvents(new LocalDateTime(
-                f), new LocalDateTime(t)));
+        return this.translator.toDigestableForm(this.timelineService.getTimelineEvents(new LocalDateTime(f),
+                new LocalDateTime(t)));
     }
 
     /**

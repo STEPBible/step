@@ -31,6 +31,10 @@ public class ScriptureReference implements Serializable {
     @Column(nullable = true)
     private TimelineEvent timelineEvent;
 
+    @ManyToOne(optional = true)
+    @Column(nullable = true)
+    private RelationalPerson relationalPerson;
+
     @Column
     private TargetType targetType;
 
@@ -122,5 +126,19 @@ public class ScriptureReference implements Serializable {
      */
     public void setTimelineEvent(final TimelineEvent timelineEvent) {
         this.timelineEvent = timelineEvent;
+    }
+
+    /**
+     * @return the relationalPerson
+     */
+    public RelationalPerson getRelationalPerson() {
+        return this.relationalPerson;
+    }
+
+    /**
+     * @param relationalPerson the relationalPerson to set
+     */
+    public void setRelationalPerson(final RelationalPerson relationalPerson) {
+        this.relationalPerson = relationalPerson;
     }
 }

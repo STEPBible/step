@@ -1,4 +1,4 @@
-package com.tyndalehouse.step.models.timeline.impl;
+package com.tyndalehouse.step.models.timeline.simile;
 
 import java.util.List;
 

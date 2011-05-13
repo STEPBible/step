@@ -1,0 +1,105 @@
+<html>
+<head>
+	<link type="text/css" href="http://thejit.org/static/v20/Jit/Examples/css/base.css" rel="stylesheet" /> 
+	<link type="text/css" href="http://thejit.org/static/v20/Jit/Examples/css/Spacetree.css" rel="stylesheet" /> 
+
+	<script language="javascript" type="text/javascript" src="../libs/jit/jit-yc.js"></script>
+	<script language="javascript" type="text/javascript" src="gene.js"></script>
+</head>
+<body  onload="init();">
+<div id="container"> 
+ 
+<div id="left-container"> 
+ 
+ 
+ 
+<div class="text"> 
+<h4> 
+Tree Animation    
+</h4> 
+ 
+            A static JSON Tree structure is used as input for this animation.<br /><br /> 
+            <b>Click</b> on a node to select it.<br /><br /> 
+            You can <b>select the tree orientation</b> by changing the select box in the right column.<br /><br /> 
+            You can <b>change the selection mode</b> from <em>Normal</em> selection (i.e. center the selected node) to 
+            <em>Set as Root</em>.<br /><br /> 
+            <b>Drag and Drop the canvas</b> to do some panning.<br /><br /> 
+            Leaves color depend on the number of children they actually have.
+            
+</div> 
+ 
+<div id="id-list"></div> 
+ 
+ 
+<div style="text-align:center;"><a href="example1.code.html">See the Example Code</a></div> 
+</div> 
+ 
+<div id="center-container"> 
+    <div id="infovis"></div>    
+</div> 
+ 
+<div id="right-container"> 
+ 
+<h4>Tree Orientation</h4> 
+<table> 
+    <tr> 
+        <td> 
+            <label for="r-left">Left </label> 
+        </td> 
+        <td> 
+            <input type="radio" id="r-left" name="orientation" checked="checked" value="left" /> 
+        </td> 
+    </tr> 
+    <tr> 
+         <td> 
+            <label for="r-top">Top </label> 
+         </td> 
+         <td> 
+            <input type="radio" id="r-top" name="orientation" value="top" /> 
+         </td> 
+    </tr> 
+    <tr> 
+         <td> 
+            <label for="r-bottom">Bottom </label> 
+          </td> 
+          <td> 
+            <input type="radio" id="r-bottom" name="orientation" value="bottom" /> 
+          </td> 
+    </tr> 
+    <tr> 
+          <td> 
+            <label for="r-right">Right </label> 
+          </td> 
+          <td> 
+           <input type="radio" id="r-right" name="orientation" value="right" /> 
+          </td> 
+    </tr> 
+</table> 
+ 
+<h4>Selection Mode</h4> 
+<table> 
+    <tr> 
+        <td> 
+            <label for="s-normal">Normal </label> 
+        </td> 
+        <td> 
+            <input type="radio" id="s-normal" name="selection" checked="checked" value="normal" /> 
+        </td> 
+    </tr> 
+    <tr> 
+         <td> 
+            <label for="s-root">Set as Root </label> 
+         </td> 
+         <td> 
+            <input type="radio" id="s-root" name="selection" value="root" /> 
+         </td> 
+    </tr> 
+</table> 
+ 
+</div> 
+ 
+<div id="log"></div> 
+</div> 
+</body>
+
+</html>

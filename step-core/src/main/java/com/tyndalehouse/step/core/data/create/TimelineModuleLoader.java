@@ -8,7 +8,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,7 +22,6 @@ import com.google.inject.Inject;
 import com.tyndalehouse.step.core.data.common.PartialDate;
 import com.tyndalehouse.step.core.data.common.PrecisionType;
 import com.tyndalehouse.step.core.data.entities.HotSpot;
-import com.tyndalehouse.step.core.data.entities.KeyedEntity;
 import com.tyndalehouse.step.core.data.entities.ScriptureReference;
 import com.tyndalehouse.step.core.data.entities.Timeband;
 import com.tyndalehouse.step.core.data.entities.TimelineEvent;
@@ -38,7 +36,7 @@ import com.tyndalehouse.step.core.utils.StepIOUtils;
  * @author Chris
  * 
  */
-public class TimelineModuleLoader implements ModuleLoader {
+public class TimelineModuleLoader extends AbstractCsvModuleLoader implements ModuleLoader {
     private static final String TIMELINE_DIRECTORY = "timeline/";
     private static final String HOTSPOTS_CSV_DATA_FILE = "hotspot/hotspots.csv";
     private static final String TIMEBAND_CSV_DATA_FILE = "timeband/timebands.csv";
@@ -62,6 +60,7 @@ public class TimelineModuleLoader implements ModuleLoader {
      * we need to persist object through an orm
      * 
      * @param ebean the persistence server
+     * @param jsword the jsword service
      */
     @Inject
     public TimelineModuleLoader(final EbeanServer ebean, final JSwordService jsword) {
@@ -137,7 +136,6 @@ public class TimelineModuleLoader implements ModuleLoader {
      * 
      * @param hotspots the hotspots loaded so far
      * @param csvDataFiles a set of csv data files that can be read
-     * @param scriptureReferences a list of scripture references to be populated as we load data up
      * @return a set of timeline events
      * 
      */
@@ -225,35 +223,5 @@ public class TimelineModuleLoader implements ModuleLoader {
         } finally {
             closeQuietly(reader);
         }
-    }
-
-    /**
-     * loads data from a csv file
-     * 
-     * @param resourceName the resource name to load
-     * @param csvDataMapper the mapper that will be used to construct a entity
-     * @param <K> a type representing the keyed entity
-     * @return a map of entities loaded from the CSV file
-     */
-    private <K extends KeyedEntity> Map<String, K> load(final String resourceName,
-            final CsvDataMapper<K> csvDataMapper) {
-        final Map<String, K> hotSpots = new HashMap<String, K>();
-
-        CSVReader reader = null;
-        try {
-            LOG.debug("Loading {}", resourceName);
-            reader = new CSVReader(new InputStreamReader(getClass().getResourceAsStream(resourceName)));
-            final CsvData data = new CsvData(reader.readAll());
-
-            for (int ii = 0; ii < data.size(); ii++) {
-                final K entity = csvDataMapper.mapRow(ii, data);
-                hotSpots.put(entity.getCode(), entity);
-            }
-        } catch (final IOException e) {
-            throw new StepInternalException(e.getMessage(), e);
-        } finally {
-            StepIOUtils.closeQuietly(reader);
-        }
-        return hotSpots;
     }
 }

@@ -12,6 +12,7 @@ import com.tyndalehouse.step.core.data.entities.Bookmark;
 import com.tyndalehouse.step.core.data.entities.GeoPlace;
 import com.tyndalehouse.step.core.data.entities.History;
 import com.tyndalehouse.step.core.data.entities.HotSpot;
+import com.tyndalehouse.step.core.data.entities.RelationalPerson;
 import com.tyndalehouse.step.core.data.entities.ScriptureReference;
 import com.tyndalehouse.step.core.data.entities.ScriptureTarget;
 import com.tyndalehouse.step.core.data.entities.Session;
@@ -114,6 +115,7 @@ public class DatabaseConfigProvider implements Provider<EbeanServer> {
         // timeline entities
         config.addClass(ScriptureTarget.class);
         config.addClass(ScriptureReference.class);
+        config.addClass(RelationalPerson.class);
         config.addClass(HotSpot.class);
         config.addClass(Timeband.class);
         config.addClass(TimelineEvent.class);
@@ -122,7 +124,6 @@ public class DatabaseConfigProvider implements Provider<EbeanServer> {
         config.addClass(Bookmark.class);
         config.addClass(History.class);
         config.addClass(GeoPlace.class);
-
     }
 
 }

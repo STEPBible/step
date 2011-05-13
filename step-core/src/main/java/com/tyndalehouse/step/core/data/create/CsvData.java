@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * A wrapper for CSV data that can be accessed similar to a Map
  * 
@@ -11,6 +14,7 @@ import java.util.Map;
  * 
  */
 public class CsvData {
+    private static final Logger LOG = LoggerFactory.getLogger(CsvData.class);
     private final List<String[]> data;
     private final Map<String, Integer> headerMapping = new HashMap<String, Integer>();
 
@@ -36,7 +40,7 @@ public class CsvData {
      * @return the value at row [row] and column [columnName]
      */
     public String getData(final int row, final String columnName) {
-
+        CsvData.LOG.trace("Getting data from CSV: R:[{}] C:[{}]", row, columnName);
         return this.data.get(row + 1)[this.headerMapping.get(columnName)];
     }
 

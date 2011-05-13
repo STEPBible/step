@@ -38,18 +38,18 @@ public class DataTest extends DataDrivenTestExtension {
         LOG.debug("Got " + i + "  - DataSource good.");
     }
 
-    // /**
-    // * testing the loading process
-    // * <p />
-    // * TODO: don't want to test the whole timeline/geography component every build
-    // */
+    /**
+     * testing the loading process
+     * <p />
+     * TODO: don't want to test the whole timeline/geography component every build
+     */
     // @Test
     // public void tryLoadingProcess() {
-    // final TimelineModuleLoader timelineLoaderModule = new TimelineModuleLoader(getEbean(),
-    // new JSwordServiceImpl(null));
-    // final GeographyModuleLoader geoLoaderModule = new GeographyModuleLoader(getEbean(),
-    // new JSwordServiceImpl(null));
-    // final Loader l = new Loader(getEbean(), timelineLoaderModule, geoLoaderModule);
+    // final JSwordServiceImpl jsword = new JSwordServiceImpl(null);
+    // final TimelineModuleLoader timelineLoaderModule = new TimelineModuleLoader(getEbean(), jsword);
+    // final GeographyModuleLoader geoLoaderModule = new GeographyModuleLoader(getEbean(), jsword);
+    // final RelationalPeopleModuleLoader peopleLoader = new RelationalPeopleModuleLoader(getEbean(), jsword);
+    // final Loader l = new Loader(getEbean(), timelineLoaderModule, geoLoaderModule, peopleLoader);
     // l.init();
     //
     // // we check that we entities in all three tables

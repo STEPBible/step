@@ -12,9 +12,6 @@ import javax.persistence.MappedSuperclass;
  * @author Chris
  * 
  */
-// @Entity
-// @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-// @DiscriminatorColumn(discriminatorType = DiscriminatorType.INTEGER)
 @MappedSuperclass
 public abstract class ScriptureTarget implements Serializable {
     private static final long serialVersionUID = 1598422350749055247L;

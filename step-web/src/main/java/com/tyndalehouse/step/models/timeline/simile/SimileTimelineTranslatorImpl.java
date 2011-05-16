@@ -32,6 +32,10 @@ public class SimileTimelineTranslatorImpl implements
             e.setDescription(te.getSummary());
             e.setStart(te.getFromDate().toString());
 
+            if (te.getHotSpot() != null) {
+                e.setHotSpotId(te.getHotSpot().getId());
+            }
+
             final LocalDateTime toDate = te.getToDate();
             if (toDate != null) {
                 e.setEnd(te.getToDate().toString());

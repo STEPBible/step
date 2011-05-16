@@ -9,35 +9,37 @@
 // The following section defines method names and controller names
 // These are used as part of the rest-like calls
 /////////////////////////////////////////////////////////////////////////
-BOOKMARKS_GET = "rest/favourites/getBookmarks";
-BOOKMARKS_ADD = "rest/favourites/addBookmark/";
-HISTORY_GET = "rest/favourites/getHistory/";
-HISTORY_ADD = "rest/favourites/addHistory/";
+
+BOOKMARKS_GET = STEP_SERVER_BASE_URL + "favourites/getBookmarks";
+BOOKMARKS_ADD = STEP_SERVER_BASE_URL + "favourites/addBookmark/";
+HISTORY_GET = STEP_SERVER_BASE_URL + "favourites/getHistory/";
+HISTORY_ADD = STEP_SERVER_BASE_URL + "favourites/addHistory/";
 
 
-BIBLE_GET_BIBLE_VERSIONS = "rest/bible/getBibleVersions/";
-BIBLE_GET_BIBLE_TEXT = "rest/bible/getBibleText/";
-BIBLE_GET_FEATURES = "rest/bible/getFeatures/";
-BIBLE_GET_ALL_FEATURES = "rest/bible/getAllFeatures/";
+BIBLE_GET_BIBLE_VERSIONS = STEP_SERVER_BASE_URL + "bible/getBibleVersions/";
+BIBLE_GET_BIBLE_TEXT = STEP_SERVER_BASE_URL + "bible/getBibleText/";
+BIBLE_GET_FEATURES = STEP_SERVER_BASE_URL + "bible/getFeatures/";
+BIBLE_GET_ALL_FEATURES = STEP_SERVER_BASE_URL + "bible/getAllFeatures/";
 
-MODULE_GET_ALL_MODULES = "rest/module/getAllModules/";
-MODULE_GET_ALL_INSTALLABLE_MODULES = "rest/module/getAllModules/";
-MODULE_GET_DEFINITION = "rest/module/getDefinition/";
+MODULE_GET_ALL_MODULES = STEP_SERVER_BASE_URL + "module/getAllModules/";
+MODULE_GET_ALL_INSTALLABLE_MODULES = STEP_SERVER_BASE_URL + "module/getAllModules/";
+MODULE_GET_DEFINITION = STEP_SERVER_BASE_URL + "module/getDefinition/";
 
-SETUP_IS_FIRST_TIME = "rest/setup/isFirstTime/";
-SETUP_INSTALL_DEFAULT_MODULES = "rest/setup/installDefaultModules/";
-SETUP_INSTALL_BIBLE = "rest/setup/installBible/";
+SETUP_IS_FIRST_TIME = STEP_SERVER_BASE_URL + "setup/isFirstTime/";
+SETUP_INSTALL_DEFAULT_MODULES = STEP_SERVER_BASE_URL + "setup/installDefaultModules/";
+SETUP_INSTALL_BIBLE = STEP_SERVER_BASE_URL + "setup/installBible/";
 
-TIMELINE_GET_EVENTS = "rest/timeline/getEvents/";
-TIMELINE_GET_EVENTS_FROM_REFERENCE = "rest/timeline/getEventsFromReference/";
-TIMELINE_GET_CONFIG = "rest/timeline/getTimelineConfiguration";
+TIMELINE_GET_EVENTS = STEP_SERVER_BASE_URL + "timeline/getEvents/";
+TIMELINE_GET_EVENTS_IN_PERIOD = STEP_SERVER_BASE_URL + "timeline/getEventsInPeriod/";
+TIMELINE_GET_EVENTS_FROM_REFERENCE = STEP_SERVER_BASE_URL + "timeline/getEventsFromReference/";
+TIMELINE_GET_CONFIG = STEP_SERVER_BASE_URL + "timeline/getTimelineConfiguration";
 
-USER_LOGIN = "rest/user/login/";
-USER_LOGOUT = "rest/user/logout/";
-USER_REGISTER = "rest/user/register/"
-USER_GET_LOGGED_IN_USER = "rest/user/getLoggedInUser";
+USER_LOGIN = STEP_SERVER_BASE_URL + "user/login/";
+USER_LOGOUT = STEP_SERVER_BASE_URL + "user/logout/";
+USER_REGISTER = STEP_SERVER_BASE_URL + "user/register/"
+USER_GET_LOGGED_IN_USER = STEP_SERVER_BASE_URL + "user/getLoggedInUser";
 
-GEOGRAPHY_GET_PLACES = "rest/geography/getPlaces/"
+GEOGRAPHY_GET_PLACES = STEP_SERVER_BASE_URL + "geography/getPlaces/"
 	
 //////////////////////////
 // SOME DEFAULTS

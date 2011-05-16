@@ -19,6 +19,7 @@ import com.tyndalehouse.step.models.timeline.DigestableTimeline;
  *             'description': 'by Lyonel Feininger, American/German Painter, 1871-1956',
  *             'image': 'http://images.allposters.com/images/AWI/NR096_b.jpg',
  *             'link': 'http://www.allposters.com/-sp/Barfusserkirche-1924-Posters_i1116895_.htm'
+ *             hotspot: '2'
  *             },
  *     ]
  *     }

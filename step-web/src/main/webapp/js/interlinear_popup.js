@@ -76,7 +76,7 @@ InterlinearPopup.prototype.createCheckboxes = function(strongedVersions) {
  */
 InterlinearPopup.prototype.addHandlersToCheckboxes = function() {
 	var self = this;
-	$("input", this.interlinearPopup).not("#il_all").change(function() {
+	$("input:checkbox", this.interlinearPopup).not("#il_all").change(function() {
 		var currentText = $(".interlinearVersions", self.interlinearPopup).val();
 		var itemValue = this.value;
 		
@@ -91,6 +91,13 @@ InterlinearPopup.prototype.addHandlersToCheckboxes = function() {
 			}
 		}
 		$(".interlinearVersions", self.interlinearPopup).val(currentText);
+	});
+	
+	
+	$(".interlinearVersions", self.interlinearPopup).keypress(function(event) {
+		if ( event.which == 13 ) {
+			self.updateInterlinear();
+		}
 	});
 }
 
@@ -120,21 +127,31 @@ InterlinearPopup.prototype.addShowHandler = function() {
 	$(this.interlinearPopup).hear("interlinear-menu-option-triggered-" + this.passageId, function(selfElement, passageId) {
 		selfElement.dialog({
 			buttons : { "OK" : function() {
-							//we check that we have selected some options and alert the menu if so
-							if($("input:checked", self.interlinearPopup).length) {
-								$.shout("pane-menu-internal-state-changed-" + self.passageId, { name: "INTERLINEAR", selected: true });
-							} else {
-								$.shout("pane-menu-internal-state-changed-" + self.passageId, { name: "INTERLINEAR", selected: false });
-							}
-							$(selfElement).dialog("close");
-							
-							//not always true but almost always (since we might still have the same options as before)
-							$.shout("toolbar-menu-options-changed-" + self.passageId);
-						},
-			},
+									self.updateInterlinear();
+								}
+					   },
 			modal: true,
 			width: DEFAULT_POPUP_WIDTH,
 			title: "Please choose one or more versions for the interlinear"
 		});
 	});
-}
+};
+
+
+InterlinearPopup.prototype.updateInterlinear = function() {
+	var self = this;
+	
+	//we check that we have selected some options and alert the menu if so
+	if($("input:checked", self.interlinearPopup).length) {
+		$.shout("pane-menu-internal-state-changed-" + self.passageId, { name: "INTERLINEAR", selected: true });
+	} else {
+		$.shout("pane-menu-internal-state-changed-" + self.passageId, { name: "INTERLINEAR", selected: false });
+	}
+	
+	this.interlinearPopup.dialog("close");
+	
+	//not always true but almost always (since we might still have the same options as before)
+	$.shout("toolbar-menu-options-changed-" + self.passageId);
+
+};
+

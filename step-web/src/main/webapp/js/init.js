@@ -149,18 +149,18 @@ function initData() {
 	
 	$.getJSON(BIBLE_GET_BIBLE_VERSIONS, function(data) {
 		var parsedResponse = $.map(data, function(item) {
-			var showingText = item.initials + "] " + item.name;
+			var showingText = "[" + item.initials + "] " + item.name;
 			var features = "";
 			
 			//add to strongs if applicable
 			if(item.hasStrongs) {
-				features += " " + "<span class='versionFeature strongs' title='Supports Strongs concordance'>S</span>";
-				features += " " + "<span class='versionFeature interlinear' title='Supports interlinear feature'>I</span>";
+				features += " " + "<span class='versionFeature strongsFeature' title='Supports Strongs concordance'>S</span>";
+				features += " " + "<span class='versionFeature interlinearFeature' title='Supports interlinear feature'>I</span>";
 				strongedVersions[ii++] = { label: showingText, value: item.initials};
 			}
 			
 			if(item.hasMorphology) {
-				features += " " + "<span class='versionFeature morphology' title='Supports morphology feature'>M</span>";
+				features += " " + "<span class='versionFeature morphologyFeature' title='Supports morphology feature'>M</span>";
 			}
 			
 			//return response for dropdowns

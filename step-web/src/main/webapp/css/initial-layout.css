@@ -184,15 +184,15 @@ body {
 	font-weight: bold;	
 }
 
-.strongs {
+.strongsFeature {
 	background-color: blue;
 }
 
-.interlinear {
+.interlinearFeature {
 	background-color: orange;
 }
 	
-.morphology {
+.morphologyFeature {
 	background-color: red;
 }
 

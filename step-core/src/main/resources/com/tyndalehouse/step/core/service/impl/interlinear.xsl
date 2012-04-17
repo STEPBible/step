@@ -542,42 +542,46 @@
 		<!-- start the block -->
 		
 		<span class="{$classes}" onclick="javascript:showAllStrongMorphs(&quot;{@lemma} {@morph}&quot;)">
-			<!-- 1st - Output first line or a blank if no text available. -->
-			<span class="text">
-				<xsl:call-template name="outputNonBlank">
-					<xsl:with-param name="string">
-						<xsl:value-of select="concat($innerWordText, $nextText)" />
-					</xsl:with-param>
-				</xsl:call-template>
-			</span>
+				<xsl:variable name="remainingText" select="concat($innerWordText, $nextText)" />				
 
-			<!-- 2nd - Output strongs if turned on. If turned on and no Strong then 
-				we need a blank. So always call template if turned on -->
-			<xsl:if test="$StrongsNumbers = 'true'">
-				<span class="strongs">
-					<xsl:value-of
-						select="jsword:com.tyndalehouse.step.core.utils.XslHelper.getSpanFromAttributeName(@lemma, $strongFunctionCall)" />
+			<xsl:if test="normalize-space($remainingText) != ''">
+				<!-- 1st - Output first line or a blank if no text available. -->
+				<span class="text">
+					<xsl:call-template name="outputNonBlank">
+						<xsl:with-param name="string" select="$remainingText" />
+					</xsl:call-template>
 				</span>
+	
+				<!-- 2nd - Output strongs if turned on. If turned on and no Strong then 
+					we need a blank. So always call template if turned on -->
+				<xsl:if test="$StrongsNumbers = 'true'">
+					<span class="strongs">
+						<xsl:value-of
+							select="jsword:com.tyndalehouse.step.core.utils.XslHelper.getSpanFromAttributeName(@lemma, $strongFunctionCall)" />
+					</span>
+				</xsl:if>
+	
+				<!-- 3rd - Output morphology if turned on. If turned on and no morphology, 
+					we need a blank. -->
+				<xsl:if test="$Morph = 'true'">
+					<span class="morphs">
+						<xsl:value-of
+							select="jsword:com.tyndalehouse.step.core.utils.XslHelper.getSpanFromAttributeName(@morph, $morphFunctionCall)" />
+					</span>
+				</xsl:if>
+	
+	
+				<!-- 4th - We output the interlinears if provided and we do so recursively -->
+				<xsl:if test="normalize-space($interlinearVersion) != ''">
+					<xsl:call-template name="interlinear">
+						<xsl:with-param name="versions" select="$interlinearVersion" />
+					</xsl:call-template>
+				</xsl:if>
+
 			</xsl:if>
 
-			<!-- 3rd - Output morphology if turned on. If turned on and no morphology, 
-				we need a blank. -->
-			<xsl:if test="$Morph = 'true'">
-				<span class="morphs">
-					<xsl:value-of
-						select="jsword:com.tyndalehouse.step.core.utils.XslHelper.getSpanFromAttributeName(@morph, $morphFunctionCall)" />
-				</span>
-			</xsl:if>
-
-
-			<!-- 4th - We output the interlinears if provided and we do so recursively -->
-			<xsl:if test="normalize-space($interlinearVersion) != ''">
-				<xsl:call-template name="interlinear">
-					<xsl:with-param name="versions" select="$interlinearVersion" />
-				</xsl:call-template>
-			</xsl:if>
 			<!-- end the block -->
-		</span>
+			</span>
 	</xsl:template>
   
   <xsl:template name="interlinear">

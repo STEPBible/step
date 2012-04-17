@@ -28,6 +28,8 @@ import org.crosswire.jsword.book.Books;
 import org.crosswire.jsword.passage.NoSuchKeyException;
 import org.jdom.Content;
 import org.jdom.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.xsl.InterlinearProvider;
@@ -41,6 +43,7 @@ import com.tyndalehouse.step.core.xsl.InterlinearProvider;
  * 
  */
 public class InterlinearProviderImpl implements InterlinearProvider {
+    private static final Logger LOGGER = LoggerFactory.getLogger(InterlinearProviderImpl.class);
 
     /**
      * bestAccuracy gives a word by its dual key (strong,morph)
@@ -98,6 +101,9 @@ public class InterlinearProviderImpl implements InterlinearProvider {
     public String getWord(final String verseNumber, final String strong, final String morph) {
         // we use a linked hashset, because we want the behaviour of a set while we add to it,
         // but at the end, we will want to return the elements in order
+        LOGGER.trace("Retrieving word for verse [{}], strong [{}], morph [{}]", new Object[] { verseNumber,
+                strong, morph });
+
         final Set<String> results = new LinkedHashSet<String>();
         if (isBlank(strong)) {
             // we might as well return, as we have no information to go on

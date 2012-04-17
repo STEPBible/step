@@ -14,12 +14,27 @@ public class BibleVersion implements Serializable {
     private String name;
     private String language;
     private boolean hasStrongs;
+    private boolean hasMorphology;
 
     /**
      * @return true if the version contains strong-tagged information
      */
     public boolean isHasStrongs() {
         return this.hasStrongs;
+    }
+
+    /**
+     * @return the hasMorphology
+     */
+    public boolean isHasMorphology() {
+        return this.hasMorphology;
+    }
+
+    /**
+     * @param hasMorphology the hasMorphology to set
+     */
+    public void setHasMorphology(final boolean hasMorphology) {
+        this.hasMorphology = hasMorphology;
     }
 
     /**

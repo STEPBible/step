@@ -170,6 +170,33 @@ body {
 	overflow: auto;
 }
 
+.features {
+	margin-left: 10px;
+	float: right;	
+}
+
+.versionFeature {
+	padding-left: 3px;
+	padding-right: 3px;
+	background-color: #4EB305;
+	font-size: xx-small;
+	color: white;
+	font-weight: bold;	
+}
+
+.strongs {
+	background-color: blue;
+}
+
+.interlinear {
+	background-color: orange;
+}
+	
+.morphology {
+	background-color: red;
+}
+
+
 /*********************************************/
 /** BOTTOM COMPONENT
 /*********************************************/

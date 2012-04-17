@@ -69,6 +69,7 @@
 		<developerConnection>scm:svn:https://crosswire.org/svn/tynstep/trunk</developerConnection>
 		<url>https://crosswire.org/svn/tynstep/trunk/</url>
 	</scm>
+	
 
 	<distributionManagement>
 		<snapshotRepository>
@@ -464,5 +465,8 @@
 				</plugin>
 			</plugins>
 		</pluginManagement>
+		
+
+		
 	</build>
 </project>

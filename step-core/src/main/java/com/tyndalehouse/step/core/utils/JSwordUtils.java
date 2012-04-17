@@ -48,6 +48,8 @@ public final class JSwordUtils {
                 v.setLanguage(language.getName());
             }
             v.setHasStrongs(b.hasFeature(FeatureType.STRONGS_NUMBERS));
+            v.setHasMorphology(b.hasFeature(FeatureType.MORPHOLOGY));
+
             versions.add(v);
         }
 

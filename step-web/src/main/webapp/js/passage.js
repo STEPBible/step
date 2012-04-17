@@ -71,6 +71,14 @@ Passage.prototype.initVersionsTextBox = function(versions) {
 	}).change(function() {
 		$.shout("version-changed-" + self.passageId, this.value);
 	});
+	
+	this.version.data( "autocomplete" )._renderItem = function( ul, item ) {
+		return $( "<li></li>" )
+		.data( "item.autocomplete", item )
+		.append( "<a><span class='features'>" + item.features + "</span>" + item.label + "</a>")
+		.appendTo( ul )
+	}
+	
 };
 
 Passage.prototype.initReferenceTextBox = function() {	

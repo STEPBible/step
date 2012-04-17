@@ -30,7 +30,6 @@ import org.crosswire.jsword.book.Books;
 import org.crosswire.jsword.book.FeatureType;
 import org.crosswire.jsword.book.install.InstallException;
 import org.crosswire.jsword.book.install.Installer;
-import org.crosswire.jsword.passage.KeyFactory;
 import org.crosswire.jsword.passage.NoSuchKeyException;
 import org.crosswire.jsword.passage.NoSuchVerseException;
 import org.crosswire.jsword.passage.PassageKeyFactory;
@@ -38,6 +37,7 @@ import org.crosswire.jsword.passage.RestrictionType;
 import org.crosswire.jsword.passage.RocketPassage;
 import org.crosswire.jsword.passage.Verse;
 import org.crosswire.jsword.passage.VerseRange;
+import org.crosswire.jsword.versification.system.Versifications;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
@@ -345,8 +345,13 @@ public class JSwordServiceImpl implements JSwordService {
         if (isNotBlank(references)) {
             LOGGER.trace("Resolving references for [{}]", references);
             try {
-                final KeyFactory keyFactory = PassageKeyFactory.instance();
-                final RocketPassage rp = (RocketPassage) keyFactory.getKey(references);
+                final PassageKeyFactory keyFactory = PassageKeyFactory.instance();
+
+                // TODO: Should probably base this on the correct versification for the passages, rather than
+                // default to KJV
+
+                final RocketPassage rp = (RocketPassage) keyFactory.getKey(Versifications.instance()
+                        .getVersification(Versifications.DEFAULT_V11N), references);
                 for (int ii = 0; ii < rp.countRanges(RestrictionType.NONE); ii++) {
                     final VerseRange vr = rp.getRangeAt(ii, RestrictionType.NONE);
                     final Verse start = vr.getStart();
@@ -362,6 +367,8 @@ public class JSwordServiceImpl implements JSwordService {
                     // sr.setTarget(target);
                     sr.setStartVerseId(startVerseId);
                     sr.setEndVerseId(endVerseId);
+
+                    // TODO: bug?
                     sr.setTargetType(TargetType.TIMELINE_EVENT);
                     refs.add(sr);
                 }

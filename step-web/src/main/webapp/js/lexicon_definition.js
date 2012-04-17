@@ -13,13 +13,17 @@ function LexiconDefinition() {
 
 LexiconDefinition.prototype.getPopup = function() {
 	if(this.popup) {
+		this.popup.css('display', 'inline-block');
 		return this.popup;
 	}
 	
 	//create the popup container
-	$("body").append("<span id='lexiconDefinition'><ul></ul></span>");
+	$("body").append("<span id='lexiconDefinition'><ul><span id='lexiconPopupClose'>X</span></ul></span>");
 	this.popup = $("#lexiconDefinition");
 	this.popup.tabs().draggable();
+	$('#lexiconPopupClose').click(function() {
+		$('#lexiconDefinition').hide();
+	});
 	return this.popup;
 }
 

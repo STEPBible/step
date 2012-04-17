@@ -26,7 +26,6 @@ import org.slf4j.LoggerFactory;
 
 import com.tyndalehouse.step.core.data.entities.ScriptureReference;
 import com.tyndalehouse.step.core.models.LookupOption;
-import com.tyndalehouse.step.core.service.impl.JSwordServiceImpl;
 
 /**
  * a service providing a wrapper around JSword
@@ -109,8 +108,8 @@ public class JSwordServiceImplTest {
         final List<ScriptureReference> refs = jsi.getPassageReferences("Gen.1.1");
 
         assertEquals(refs.size(), 1);
-        assertEquals(1, refs.get(0).getStartVerseId());
-        assertEquals(1, refs.get(0).getEndVerseId());
+        assertEquals(4, refs.get(0).getStartVerseId());
+        assertEquals(4, refs.get(0).getEndVerseId());
     }
 
     /**
@@ -122,10 +121,10 @@ public class JSwordServiceImplTest {
         final List<ScriptureReference> refs = jsi.getPassageReferences("Gen.1.1;Gen.1.3");
 
         assertEquals(2, refs.size());
-        assertEquals(1, refs.get(0).getStartVerseId());
-        assertEquals(1, refs.get(0).getEndVerseId());
-        assertEquals(3, refs.get(1).getStartVerseId());
-        assertEquals(3, refs.get(1).getEndVerseId());
+        assertEquals(4, refs.get(0).getStartVerseId());
+        assertEquals(4, refs.get(0).getEndVerseId());
+        assertEquals(6, refs.get(1).getStartVerseId());
+        assertEquals(6, refs.get(1).getEndVerseId());
     }
 
     /**
@@ -137,10 +136,10 @@ public class JSwordServiceImplTest {
         final List<ScriptureReference> refs = jsi.getPassageReferences("Gen.1.1-2;Gen.1.4-5");
 
         assertEquals(refs.size(), 2);
-        assertEquals(1, refs.get(0).getStartVerseId());
-        assertEquals(2, refs.get(0).getEndVerseId());
-        assertEquals(4, refs.get(1).getStartVerseId());
-        assertEquals(5, refs.get(1).getEndVerseId());
+        assertEquals(4, refs.get(0).getStartVerseId());
+        assertEquals(5, refs.get(0).getEndVerseId());
+        assertEquals(7, refs.get(1).getStartVerseId());
+        assertEquals(8, refs.get(1).getEndVerseId());
     }
 
     /**

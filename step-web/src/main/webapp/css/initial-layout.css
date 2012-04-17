@@ -176,11 +176,59 @@ body {
 #bottomSection { 
 	height: 0px;
 	position: absolute;
-	bottom: 0px;
+	bottom: 5px;
 	left: 0px;
-	width: 100%;
+	width: 99%;
+	border: 1px solid #000; 
+	margin-left: 5px; 
+	margin-right: 5px;
+	display: none;
 }
 
+#bottomSection > div
+{
+	width: 100%; 
+	background-color: #147000; 
+	color: #fff; 
+	text-align: right;
+}
+
+/* Close button */
+#bottomSection > div span
+{
+	cursor: pointer; 
+	margin: 5px;
+}
+
+#bottomSection #leftArrow
+{
+	height: 105px; 
+	width: 20px; 
+	background-color: #fff;
+	border: 1px solid #ccc; 
+	position: absolute; 
+	top: 28px; 
+	left: 0px; 
+	z-index: 9999;
+	font-size: 30px;
+	color: #ccc;
+	padding-top: 70px;
+}
+
+#bottomSection #rightArrow
+{
+	height: 105px; 
+	width: 20px; 
+	background-color: #fff;
+	border: 1px solid #ccc; 
+	position: absolute; 
+	top: 28px; 
+	right: 0px; 
+	z-index: 9999;
+	font-size: 30px;
+	color: #ccc;
+	padding-top: 70px;
+}
 
 .no-left-border {
 	/* border-left: none; */
@@ -255,8 +303,11 @@ body {
 	width: 100%;
 }
 
+/**************************/
+/* LEXICON DEFINITION
+/**************************/
 #lexiconDefinition {
-	display: inline-block;
+	display: none;
 	z-index: 9999;
 	width: 400px;
 	bottom: 0px;
@@ -264,6 +315,13 @@ body {
 	left: -1000px;
 }
 
+#lexiconPopupClose
+{
+	float: right; 
+	padding-top: 4px; 
+	padding-right: 4px;
+	cursor: pointer;
+}
 /**************************/
 /* LOGIN POPUP
 /**************************/

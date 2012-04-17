@@ -88,8 +88,8 @@
 			    <div class="passageText ui-widget">
 			    	<div class="headingContainer">
 						<a class="bookmarkPassageLink">Add a bookmark</a>
-				    	<input id="leftPassageReference" class="heading editable passageReference" size="30" value="Jhn 1:1" />
-				    	<input id="leftPassageBook" class="heading editable passageVersion" size="5" value="ESV" />
+				    	<input id="rightPassageReference" class="heading editable passageReference" size="30" value="Jhn 1:1" />
+				    	<input id="rightPassageBook" class="heading editable passageVersion" size="5" value="ESV" />
 			    	</div>
 			    	<div class="passageContent"></div>
 				</div>
@@ -97,7 +97,17 @@
 		</div>
 	</div>
 	
-	<div id="bottomSection" class="bottomModule timeline">No modules have yet been loaded.</div>
+	<div id="bottomSection" class="bottomModule timeline">
+		<div style="height: 25px;">
+			<span id="timelineContext" style="float: left;"></span>
+			<span style="float: right;" onclick="hideBottomSection();">Close</span>
+		</div>
+		<div id="leftArrow" onclick="TimelineLeftArrow();" style="cursor: pointer;">&lt;</div>
+		<div id="bottomSectionContent" style="clear: both;">	
+			No modules have yet been loaded.
+		</div>
+		<div id="rightArrow" onclick="TimelineRightArrow();" style="cursor: pointer;">&gt;</div>		
+	</div>
 </div>
 
 <div class="interlinearPopup">

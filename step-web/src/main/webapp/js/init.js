@@ -30,7 +30,7 @@ function refreshLayout() {
 	var topMenuHeight = $("#topMenu").height();
 	var headingContainerHeight = $(".headingContainer").height();
 	var imageAndFooterHeight = $(".northBookmark").height() + $(".logo").height();
-	var bottomSectionHeight = $("#bottomSection").height();
+	var bottomSectionHeight = $("#bottomSection").height() + 100;
 	var windowWithoutMenuNorModule = windowHeight - topMenuHeight - bottomSectionHeight; 
 	var columnHeight = windowWithoutMenuNorModule;
 	var bookmarkHeight = windowWithoutMenuNorModule - imageAndFooterHeight ;
@@ -263,11 +263,11 @@ function initLogin() {
 }
 
 /**
- * initialises the modules 
+ * initialises the modules 	
  * @param passages a list of passages that were provided
  */
 function initModules(passages) {
-	var bottomSection = $("#bottomSection");
+	var bottomSection = $("#bottomSectionContent");
 	
 	new TimelineWidget(bottomSection);
 	new GeographyWidget(bottomSection, passages);

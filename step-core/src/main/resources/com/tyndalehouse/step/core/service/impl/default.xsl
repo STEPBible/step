@@ -90,11 +90,18 @@
   <!-- Whether to output superscript verse numbers or normal size ones -->
   <xsl:param name="TinyVNum" select="'false'"/>
 
+  <!-- The default versification -->
+  <xsl:param name="v11n" select="'KJV'"/>
+
   <!-- The order of display. Hebrew is rtl (right to left) -->
   <xsl:param name="direction" select="'ltr'"/>
 
   <!-- Create a global key factory from which OSIS ids will be generated -->
   <xsl:variable name="keyf" select="jsword:org.crosswire.jsword.passage.PassageKeyFactory.instance()"/>
+  
+  <!--  TODO: support alternate versification -->
+  <xsl:variable name="v11nf" select="jsword:org.crosswire.jsword.versification.system.Versifications.instance()"/>
+
   <!-- Create a global number shaper that can transform 0-9 into other number systems. -->
   <xsl:variable name="shaper" select="jsword:org.crosswire.common.icu.NumberShaper.new()"/>
 
@@ -300,7 +307,8 @@
 
   <xsl:template match="verse" mode="print-notes">
     <xsl:if test=".//note[not(@type) or not(@type = 'x-strongsMarkup')]">
-      <xsl:variable name="passage" select="jsword:getValidKey($keyf, @osisID)"/>
+     <xsl:variable name="versification" select="jsword:getVersification($v11nf, $v11n)"/>
+      <xsl:variable name="passage" select="jsword:getValidKey($keyf, $versification, @osisID)"/>
       <a href="#{substring-before(concat(@osisID, ' '), ' ')}">
         <xsl:value-of select="jsword:getName($passage)"/>
       </a>
@@ -330,8 +338,9 @@
       <xsl:variable name="versenum">
         <xsl:choose>
           <xsl:when test="$BCVNum = 'true'">
-            <xsl:variable name="passage" select="jsword:getValidKey($keyf, @osisID)"/>
-            <xsl:value-of select="jsword:getName($passage)"/>
+		      <xsl:variable name="versification" select="jsword:getVersification($v11nf, $v11n)"/>
+		      <xsl:variable name="passage" select="jsword:getValidKey($keyf, $versification, @osisID)"/>
+              <xsl:value-of select="jsword:getName($passage)"/>
           </xsl:when>
           <xsl:when test="$CVNum = 'true'">
             <xsl:value-of select="concat($chapter, ' : ', $verse)"/>

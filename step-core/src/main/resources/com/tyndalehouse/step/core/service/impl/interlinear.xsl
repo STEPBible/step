@@ -83,6 +83,10 @@
   <!-- Whether to output superscript verse numbers or normal size ones -->
   <xsl:param name="TinyVNum" select="'false'"/>
 
+  <!-- The default versification -->
+  <xsl:param name="v11n" select="'KJV'"/>
+
+
   <!-- The order of display. Hebrew is rtl (right to left) -->
   <xsl:param name="direction" select="'ltr'"/>
 
@@ -93,6 +97,9 @@
   <!--  a comma separated list of versions to display, if provided, then we display the interlinear -->
   <xsl:param name="interlinearVersion" select="''" />
   <xsl:param name="interlinearReference" select="''" />
+
+  <!--  TODO: support alternate versification -->
+  <xsl:variable name="v11nf" select="jsword:org.crosswire.jsword.versification.system.Versifications.instance()"/>
 
   <!-- Create a global key factory from which OSIS ids will be generated -->
   <xsl:variable name="keyf" select="jsword:org.crosswire.jsword.passage.PassageKeyFactory.instance()"/>
@@ -305,7 +312,8 @@
 
   <xsl:template match="verse" mode="print-notes">
     <xsl:if test=".//note[not(@type) or not(@type = 'x-strongsMarkup')]">
-      <xsl:variable name="passage" select="jsword:getValidKey($keyf, @osisID)"/>
+     <xsl:variable name="versification" select="jsword:getVersification($v11nf, $v11n)"/>
+      <xsl:variable name="passage" select="jsword:getValidKey($keyf, $versification, @osisID)"/>
       <a href="#{substring-before(concat(@osisID, ' '), ' ')}">
         <xsl:value-of select="jsword:getName($passage)"/>
       </a>
@@ -335,7 +343,8 @@
       <xsl:variable name="versenum">
         <xsl:choose>
           <xsl:when test="$BCVNum = 'true'">
-            <xsl:variable name="passage" select="jsword:getValidKey($keyf, @osisID)"/>
+            <xsl:variable name="versification" select="jsword:getVersification($v11nf, $v11n)"/>
+      		<xsl:variable name="passage" select="jsword:getValidKey($keyf, $versification, @osisID)"/>
             <xsl:value-of select="jsword:getName($passage)"/>
           </xsl:when>
           <xsl:when test="$CVNum = 'true'">

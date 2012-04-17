@@ -54,6 +54,8 @@ TimelineWidget.prototype.initAndLoad = function() {
 	}
 }
 
+var tl2;
+
 TimelineWidget.prototype.onLoad = function() {
     var zones = [];
     this.theme = Timeline.ClassicTheme.create();
@@ -67,7 +69,8 @@ TimelineWidget.prototype.onLoad = function() {
     	var bands = self.getBands(json.events);
 
     	if(!self.tl) {
-    		self.tl = Timeline.create(self.rootElement[0], bands, Timeline.HORIZONTAL);    	
+    		self.tl = Timeline.create(self.rootElement[0], bands, Timeline.HORIZONTAL); 
+    		tl2 = self.tl;
     	}
     	
 //    	bands[0].eventSource.loadJSON(json, TIMELINE_GET_EVENTS_IN_PERIOD +"-101690000000000/-101580000000000");
@@ -87,6 +90,8 @@ TimelineWidget.prototype.getBands = function(events) {
     var date = "-1250";
     var zones = [];
     
+    var i = 0;
+    
 	$.each(events, function(index, event) {
 		//TODO this can be optmized, since we are re-creating the uiTimebands every time
 		var hotspot = self.hotspots[event.hotSpotId];
@@ -97,7 +102,7 @@ TimelineWidget.prototype.getBands = function(events) {
 			if(obtained[hotspot.timebandId] == null) {
 				obtained[hotspot.timebandId] = true;
 				var bandInfo = Timeline.createBandInfo({
-					width:          "50px", 
+					width:          "180px", 
 					trackGap: 0.2,
 					trackHeight: 0.5,
 					intervalUnit:   unit, 
@@ -110,12 +115,17 @@ TimelineWidget.prototype.getBands = function(events) {
 				});
 				
 				bandInfo.stepTimebandId = hotspot.timebandId;
-				uiTimebands.push( bandInfo );
+				
+				if (i == 2)
+				{
+					uiTimebands.push( bandInfo );
+				}
 			}
 		}
+		
+		i++;
 	});
-
-//    alert(uiTimebands);
+	
 	return uiTimebands;
 }
 
@@ -139,8 +149,9 @@ TimelineWidget.prototype.loadEvents = function(bands, json) {
 			
 		    return band.stepTimebandId == hotspot.timebandId;
 		});
-//		alert(eventsOnBand.length);
-		band.eventSource.loadJSON({ dateTimeFormat: json.dateTimeFormat, events: eventsOnBand }, TIMELINE_GET_EVENTS_IN_PERIOD +"-101690000000000/-101580000000000");
+
+		band.eventSource.loadJSON({ dateTimeFormat: json.dateTimeFormat, events: eventsOnBand }, 
+			TIMELINE_GET_EVENTS_IN_PERIOD +"-101690000000000/-101580000000000");
 	});
 	
 };
@@ -177,4 +188,63 @@ TimelineWidget.prototype.onResize = function() {
             self.tl.layout();
         }, 500);
     }
+}
+
+/* Overriding the fill in bubble from the timeline library. */
+Timeline.DefaultEventSource.Event.prototype.fillInfoBubble = function (elmt, theme, labeller) { 
+	var start = new Date(this.getStart());
+	start = (start.getFullYear() < 0) ? Math.abs(start.getFullYear()) + " BC" : start.getFullYear() + " AD";
+	
+	var end = new Date(this.getEnd());
+	end = (end.getFullYear() < 0) ? Math.abs(end.getFullYear()) + " BC" : end.getFullYear() + " AD";	
+	
+	var doc = elmt.ownerDocument; 
+	var title = this.getText(); 
+	var link = this.getLink(); 
+	var image = this.getImage(); 
+
+	if (image != null) { 
+		var img = doc.createElement("img"); 
+		img.src = image; 
+		theme.event.bubble.imageStyler(img); 
+		elmt.appendChild(img); 
+	} 
+	var divTitle = doc.createElement("div"); 
+	var textTitle = doc.createTextNode(title); 
+	if (link != null) { 
+		var a = doc.createElement("a"); 
+		a.href = link; 
+		a.appendChild(textTitle); 
+		divTitle.appendChild(a); 
+	} else { 
+		divTitle.appendChild(textTitle); 
+	} 
+	theme.event.bubble.titleStyler(divTitle); 
+	elmt.appendChild(divTitle); 
+	var divBody = doc.createElement("div"); 
+	this.fillDescription(divBody); 
+	theme.event.bubble.bodyStyler(divBody); 
+	elmt.appendChild(divBody); 
+	// This is where they define the times in the bubble 
+	var divTime = doc.createElement("div"); 
+	divTime.innerHTML = start + " - " + end; 
+	elmt.appendChild(divTime); 
+	var divWiki = doc.createElement("div"); 
+	this.fillWikiInfo(divWiki); 
+	theme.event.bubble.wikiStyler(divWiki); 
+	elmt.appendChild(divWiki); 
+} 
+
+function TimelineLeftArrow()
+{
+	var band = tl2.getBand(0);
+	var newDate = Timeline.DateTime.parseGregorianDateTime(band.getMinVisibleDate().getFullYear() - 300);
+	band.scrollToCenter(newDate);
+}
+
+function TimelineRightArrow()
+{
+	var band = tl2.getBand(0);
+	var newDate = Timeline.DateTime.parseGregorianDateTime(band.getMaxVisibleDate().getFullYear() + 300);
+	band.scrollToCenter(newDate);
 }

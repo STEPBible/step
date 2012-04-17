@@ -125,8 +125,8 @@ function showAbout() {
 /**
  * Shows the timeline module
  */
-function showTimelineModule() {
-	showBottomSection();
+function showTimelineModule(menuItem) {
+	showBottomSection(menuItem);
 	$.shout("show-timeline");
 };
 
@@ -141,8 +141,35 @@ function showGeographyModule(menuItem) {
 /**
  * shows the bottom section
  */
-function showBottomSection() {
+function showBottomSection(menuItem) {
+	if (getPassageId(menuItem) == 0)
+	{
+		var verse = $('#leftPassageReference').val();
+		$('#timelineContext').html(verse);
+	}
+	else
+	{
+		var verse = $('#rightPassageReference').val();
+		$('#timelineContext').html(verse);	
+	}
+
 	var bottomSection = $("#bottomSection");
-	bottomSection.height(bottomSection.parent().parent().height() / 2);
+	var bottomSectionContent = $("#bottomSectionContent");
+	
+	bottomSection.show();
+	bottomSection.height(250);
+	bottomSectionContent.height(225);
+	
+	refreshLayout();
+}
+
+function hideBottomSection() {
+	var bottomSection = $("#bottomSection");
+	var bottomSectionContent = $("#bottomSectionContent");
+
+	bottomSection.hide();
+	bottomSection.height(0);
+	bottomSectionContent.height(0);
+	
 	refreshLayout();
 }

@@ -2,6 +2,7 @@ package com.tyndalehouse.step.core.service.impl;
 
 import static com.tyndalehouse.step.core.models.LookupOption.INTERLINEAR;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -154,6 +155,21 @@ public class JSwordServiceImplTest {
         // final List<ScriptureReference> refs = getPassageReferences(target, "Josh 12:24; Sng 6:4");
         final List<ScriptureReference> refs = jsi.getPassageReferences("Song 6:4");
         assertEquals(refs.size(), 1);
+    }
+
+    /**
+     * Tests that getting a bible book returns the correct set of names
+     */
+    @Test
+    public void testGetBibleBooks() {
+        final JSwordServiceImpl jsi = new JSwordServiceImpl(null);
+
+        final List<String> bibleBookNames = jsi.getBibleBookNames("Ma", "ESV");
+
+        assertTrue(bibleBookNames.contains("Malachi"));
+        assertTrue(bibleBookNames.contains("Matthew"));
+        assertTrue(bibleBookNames.contains("Mark"));
+
     }
 
     /**

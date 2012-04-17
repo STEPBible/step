@@ -17,25 +17,10 @@ function Passage(passageContainer, versions, passageId) {
 	//read state from the cookie
 	this.setInitialPassage();
 	
-	// set up autocomplete
-	this.version.autocomplete({
-		source : versions,
-		minLength: 0,
-		delay: 0,
-		select : function(event, ui) {
-			$(this).val(ui.item.value);
-			$(this).change();
-		},
-	}).focus(function() {
-		self.version.autocomplete("search", "");
-	}).change(function() {
-		$.shout("version-changed-" + self.passageId, this.value);
-	});
+	this.initVersionsTextBox(versions);
+	this.initReferenceTextBox();
 	
-	//set up change for textbox
-	this.reference.change(function(){
-		self.changePassage();
-	});
+	
 	
 	//register to listen for events that click a word/phrase:
 	this.passage.hear("show-all-strong-morphs", function(selfElement, data) {
@@ -65,6 +50,49 @@ function Passage(passageContainer, versions, passageId) {
 			$.shout("bookmark-addition-requested", { reference: self.reference.val() });
 		});
 };
+
+/**
+ * Sets up the autocomplete for the versions dropdown
+ */
+Passage.prototype.initVersionsTextBox = function(versions) {
+	var self = this;
+	
+	// set up autocomplete
+	this.version.autocomplete({
+		source : versions,
+		minLength: 0,
+		delay: 0,
+		select : function(event, ui) {
+			$(this).val(ui.item.value);
+			$(this).change();
+		},
+	}).focus(function() {
+		self.version.autocomplete("search", "");
+	}).change(function() {
+		$.shout("version-changed-" + self.passageId, this.value);
+	});
+};
+
+Passage.prototype.initReferenceTextBox = function() {	
+	var self = this;
+	
+	//set up change for textbox
+	this.reference.autocomplete({
+		source : function(request, response) {
+			$.get(BIBLE_GET_BIBLE_BOOK_NAMES + request.term + "/" + self.version.val(), function(text) {
+				response(text);
+			});
+		},
+		minLength: 1,
+		delay: 0,
+		select : function(event, ui) {
+			$(this).val(ui.item.value);
+		}
+	}).change(function(){
+		self.changePassage();
+	});
+};
+
 
 /**
  * sets up the initial passages based on the cookie state

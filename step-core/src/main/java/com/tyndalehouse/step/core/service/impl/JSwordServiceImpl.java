@@ -37,6 +37,9 @@ import org.crosswire.jsword.passage.RestrictionType;
 import org.crosswire.jsword.passage.RocketPassage;
 import org.crosswire.jsword.passage.Verse;
 import org.crosswire.jsword.passage.VerseRange;
+import org.crosswire.jsword.versification.BibleBook;
+import org.crosswire.jsword.versification.BibleBookList;
+import org.crosswire.jsword.versification.Versification;
 import org.crosswire.jsword.versification.system.Versifications;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -380,4 +383,44 @@ public class JSwordServiceImpl implements JSwordService {
         }
         return refs;
     }
+
+    /**
+     * Looks through a versification for a particular type of book
+     * 
+     * @param bookStart the string to match
+     * @param versification the versification we are interested in
+     * @return the list of matching names
+     */
+    private List<String> getBooksFromVersification(final String bookStart, final Versification versification) {
+        final List<String> matchingNames = new ArrayList<String>();
+        final BibleBookList books = versification.getBooks();
+        for (final BibleBook book : books) {
+            if (book.getLongName().startsWith(bookStart) || book.getPreferredName().startsWith(bookStart)
+                    || book.getShortName().startsWith(bookStart)) {
+                matchingNames.add(book.getLongName());
+            }
+        }
+        return matchingNames;
+    }
+
+    @Override
+    public List<String> getBibleBookNames(final String bookStart, final String version) {
+        if (isBlank(bookStart)) {
+            return new ArrayList<String>();
+        }
+
+        Versification versification = Versifications.instance().getVersification(version);
+        if (versification == null) {
+            versification = Versifications.instance().getDefaultVersification();
+        }
+
+        final List<String> books = getBooksFromVersification(bookStart, versification);
+
+        if (books.isEmpty()) {
+            return getBooksFromVersification(bookStart, Versifications.instance().getDefaultVersification());
+        }
+
+        return books;
+    }
+
 }

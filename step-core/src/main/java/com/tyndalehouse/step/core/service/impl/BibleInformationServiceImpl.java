@@ -103,4 +103,10 @@ public class BibleInformationServiceImpl implements BibleInformationService {
     public void installModules(final String reference) {
         this.jsword.installBook(reference);
     }
+
+    @Override
+    public List<String> getBibleBookNames(final String bookStart, final String version) {
+        return this.jsword.getBibleBookNames(bookStart, version);
+    }
+
 }

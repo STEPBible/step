@@ -85,8 +85,17 @@ public interface JSwordService {
     /**
      * 
      * @param references a list of references
-     * @param target id of the event
      * @return the list of references strongly-typed
      */
     List<ScriptureReference> getPassageReferences(final String references);
+
+    /**
+     * returns a list of matching names or references in a particular book
+     * 
+     * @param bookStart the name of the matching key to look across book names
+     * @param version the name of the version, defaults to KJV if not found
+     * 
+     * @return a list of matching bible book names
+     */
+    List<String> getBibleBookNames(String bookStart, String version);
 }

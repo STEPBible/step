@@ -128,4 +128,16 @@ public class BibleController {
     public List<EnrichedLookupOption> getAllFeatures() {
         return this.bibleInformation.getAllFeatures();
     }
+
+    /**
+     * 
+     * @param bookStart the phrase input so far in a textbox to use for the lookup
+     * @param version the version to lookup upon
+     * @return a list of items
+     */
+    @Cacheable(true)
+    public List<String> getBibleBookNames(final String bookStart, final String version) {
+        return this.bibleInformation.getBibleBookNames(bookStart, version);
+    }
+
 }

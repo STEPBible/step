@@ -50,6 +50,16 @@ public interface BibleInformationService {
     List<EnrichedLookupOption> getAllFeatures();
 
     /**
+     * returns a list of matching names or references in a particular book
+     * 
+     * @param bookStart the name of the matching key to look across book names
+     * @param version the name of the version, defaults to KJV if not found
+     * 
+     * @return a list of matching bible book names
+     */
+    List<String> getBibleBookNames(String bookStart, String version);
+
+    /**
      * Checks a set of core versions to see if they have been installed
      * 
      * @return true if the core modules have been installed

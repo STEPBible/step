@@ -30,18 +30,20 @@ function refreshLayout() {
 	var topMenuHeight = $("#topMenu").height();
 	var headingContainerHeight = $(".headingContainer").height();
 	var imageAndFooterHeight = $(".northBookmark").height() + $(".logo").height();
-	var bottomSectionHeight = $("#bottomSection").height() + 100;
+	var bottomSectionHeight = $("#bottomSection").height();
 	var windowWithoutMenuNorModule = windowHeight - topMenuHeight - bottomSectionHeight; 
 	var columnHeight = windowWithoutMenuNorModule;
 	var bookmarkHeight = windowWithoutMenuNorModule - imageAndFooterHeight ;
 	var passageTextHeight = windowWithoutMenuNorModule - innerMenuHeight;
+	var gapBetweenMenuAndPassage = 5;
 	var passageContentHeight = passageTextHeight - headingContainerHeight;
+	
 	
 	$(".column").height(columnHeight);
 	$(".bookmarkPane").height(bookmarkHeight);
 	$(".passageText").height(passageTextHeight);
-	$(".passageContent").css("top", headingContainerHeight);
-	$(".passageContent").height(passageContentHeight);	
+	$(".passageContent").css("top", headingContainerHeight + gapBetweenMenuAndPassage);
+	$(".passageContent").height(passageContentHeight - gapBetweenMenuAndPassage * 2);	
 
 //	alert(headingContainerHeight);
 //	if($("#debug").text() == "") {
@@ -58,7 +60,7 @@ function refreshLayout() {
 //		"passageContent = " + $(".passageContent").height() + "\n" ;
 //		
 //	$("#debug").text(heights);
-//	
+	
 }
 
 /**
@@ -277,7 +279,7 @@ function initLogin() {
 function initModules(passages) {
 	var bottomSection = $("#bottomSectionContent");
 	
-	new TimelineWidget(bottomSection);
+	new TimelineWidget(bottomSection, passages);
 	new GeographyWidget(bottomSection, passages);
 }
 

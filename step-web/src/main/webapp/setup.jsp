@@ -5,15 +5,18 @@
     <META http-equiv="Content-Type" content="text/html; charset=utf-8">
     <TITLE>STEP :: Scripture Tools for Every Pastor</TITLE>
 
-    <link rel="stylesheet" type="text/css" href="css/ui-layout/layout-default.css" />
     <link rel="stylesheet" type="text/css" href="css/ui-lightness/jquery-ui-1.8.5.custom.css" />
     <link rel="stylesheet" type="text/css" href="css/initial-layout.css" />
     <link rel="stylesheet" type="text/css" href="css/initial-fonts.css" />
     <link rel="stylesheet" type="text/css" href="css/setup-layout.css" />
     
+    
+    <script src="js/initLib.js" type="text/javascript"></script>
+    	
+    	
     <script src="libs/jquery-1.4.2.min.js" type="text/javascript"></script>
     <script src="libs/jquery-ui-1.8.5.custom.min.js" type="text/javascript"></script>
-    <script src="libs/jquery.layout-latest.js" type="text/javascript"></script>
+    <!--  <script src="libs/jquery.layout-latest.js" type="text/javascript"></script> -->
     <script src="libs/jquery-shout.js" type="text/javascript"></script>
     
     <script src="js/ui_hooks.js" type="text/javascript"></script>

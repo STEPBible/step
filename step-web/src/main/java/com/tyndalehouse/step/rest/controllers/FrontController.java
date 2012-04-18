@@ -120,8 +120,8 @@ public class FrontController extends HttpServlet {
         final Object controllerInstance = getController(sr.getControllerName());
 
         // resolve method
-        final Method controllerMethod = getControllerMethod(sr.getMethodName(), controllerInstance, sr
-                .getArgs(), sr.getCacheKey().getMethodKey());
+        final Method controllerMethod = getControllerMethod(sr.getMethodName(), controllerInstance,
+                sr.getArgs(), sr.getCacheKey().getMethodKey());
 
         // invoke the three together
         Object returnVal;
@@ -212,8 +212,7 @@ public class FrontController extends HttpServlet {
         }
 
         final String responsePackage = responseValue.getClass().getPackage().getName();
-        return !responsePackage.startsWith(ENTITIES_PACKAGE)
-                && !responseValue.getClass().getPackage().getName().startsWith(AVAJE_PACKAGE);
+        return !responsePackage.startsWith(ENTITIES_PACKAGE) && !responsePackage.startsWith(AVAJE_PACKAGE);
 
     }
 

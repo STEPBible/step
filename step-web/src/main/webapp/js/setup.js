@@ -14,7 +14,7 @@ function setup() {
 			$.getJSON(MODULE_GET_ALL_INSTALLABLE_MODULES, function(data) {
 				$(data).each(function() {
 					var toBeInstalled = "<a class='notInstalled' href=\"javascript:installVersion('" + this.initials +  "','" + 
-						this.name.replace(/'/g,"\\'")  + "')\">[" + this.initials + "] " + this.name + " - Installed</a><br />";
+						this.name.replace(/'/g,"\\'")  + "')\">[" + this.initials + "] " + this.name + "</a><br />";
 					$("#availableModules").append(toBeInstalled);
 				})
 			});

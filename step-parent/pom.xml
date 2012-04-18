@@ -40,6 +40,7 @@
 		<opencsv.version>2.1</opencsv.version>
 		<jetty.version>6.1.26</jetty.version>
 
+		<joda-time.version>2.1</joda-time.version>
 		<ebean.version>2.7.2</ebean.version>
 		<ehcache.version>2.4.2</ehcache.version>
 		<lucene.version>3.0.3</lucene.version>
@@ -314,7 +315,7 @@
 			<dependency>
 			    <groupId>joda-time</groupId>
 			    <artifactId>joda-time</artifactId>
-			    <version>1.6.2</version>
+			    <version>${joda-time.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

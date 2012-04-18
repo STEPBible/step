@@ -32,6 +32,7 @@ import com.tyndalehouse.step.models.timeline.DigestableTimeline;
 public class SimileTimelineImpl implements DigestableTimeline {
     private String dateTimeFormat;
     private List<SimileEvent> events;
+    private String suggestedDate;
 
     /**
      * @return the dateTimeFormat
@@ -59,5 +60,19 @@ public class SimileTimelineImpl implements DigestableTimeline {
      */
     public void setEvents(final List<SimileEvent> events) {
         this.events = events;
+    }
+
+    /**
+     * @return the suggestedDate
+     */
+    public String getSuggestedDate() {
+        return this.suggestedDate;
+    }
+
+    /**
+     * @param suggestedDate the suggestedDate to set
+     */
+    public void setSuggestedDate(final String suggestedDate) {
+        this.suggestedDate = suggestedDate;
     }
 }

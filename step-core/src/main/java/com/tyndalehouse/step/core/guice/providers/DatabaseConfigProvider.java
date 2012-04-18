@@ -19,6 +19,7 @@ import com.tyndalehouse.step.core.data.entities.Session;
 import com.tyndalehouse.step.core.data.entities.Timeband;
 import com.tyndalehouse.step.core.data.entities.TimelineEvent;
 import com.tyndalehouse.step.core.data.entities.User;
+import com.tyndalehouse.step.core.data.entities.aggregations.TimelineEventsAndDate;
 
 /**
  * Returns a database connection server instance for use across the application
@@ -124,6 +125,7 @@ public class DatabaseConfigProvider implements Provider<EbeanServer> {
         config.addClass(Bookmark.class);
         config.addClass(History.class);
         config.addClass(GeoPlace.class);
+        config.addClass(TimelineEventsAndDate.class);
     }
 
 }

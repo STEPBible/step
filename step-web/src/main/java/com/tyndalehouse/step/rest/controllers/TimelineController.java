@@ -11,6 +11,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.tyndalehouse.step.core.data.entities.Timeband;
 import com.tyndalehouse.step.core.data.entities.TimelineEvent;
+import com.tyndalehouse.step.core.data.entities.aggregations.TimelineEventsAndDate;
 import com.tyndalehouse.step.core.service.TimelineService;
 import com.tyndalehouse.step.models.UserInterfaceTranslator;
 import com.tyndalehouse.step.models.timeline.DigestableTimeline;
@@ -68,9 +69,12 @@ public class TimelineController {
      *         of the timeline
      */
     @Cacheable(true)
-    public String getEventsFromReference(final String bibleReference) {
+    public DigestableTimeline getEventsFromReference(final String bibleReference) {
+        final TimelineEventsAndDate eventsFromScripture = this.timelineService
+                .getEventsFromScripture(bibleReference);
+        return this.translator.toDigestableForm(eventsFromScripture.getEvents(),
+                eventsFromScripture.getDateTime());
 
-        return null;
     }
 
     /**
@@ -82,12 +86,18 @@ public class TimelineController {
      */
     @Cacheable(true)
     public DigestableTimeline getEventsInPeriod(final String from, final String to) {
-        // TODO enhance FrontController to accept basic types such as long
-        final long f = Long.parseLong(from);
-        final long t = Long.parseLong(to);
+        return this.translator.toDigestableForm(this.timelineService.getTimelineEvents(
+                convertJavascriptDate(from), convertJavascriptDate(to)), null);
+    }
 
-        return this.translator.toDigestableForm(this.timelineService.getTimelineEvents(new LocalDateTime(f),
-                new LocalDateTime(t)));
+    /**
+     * Converts a java script date, which at the moment, just seems to have an extra Z on the end
+     * 
+     * @param javascriptDate the date
+     * @return the local date time
+     */
+    private LocalDateTime convertJavascriptDate(final String javascriptDate) {
+        return LocalDateTime.parse(javascriptDate.substring(0, javascriptDate.length() - 1));
     }
 
     /**

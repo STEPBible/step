@@ -194,7 +194,9 @@ public class TimelineModuleLoader extends AbstractCsvModuleLoader implements Mod
 
         final List<CsvData> csvDataFiles = new ArrayList<CsvData>();
         for (final String ic : indexChapters) {
-            csvDataFiles.add(readTimelineDataFile(ic));
+            if (!ic.startsWith("--")) {
+                csvDataFiles.add(readTimelineDataFile(ic));
+            }
         }
 
         return csvDataFiles;

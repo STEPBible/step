@@ -23,7 +23,7 @@ body {
 }
 
 /**************************/
-/** INTERLINEAR PANE
+/** INTERLINEAR PANE      */
 /**************************/
 .interlinearPopup {
 	display: none;
@@ -47,7 +47,7 @@ body {
 }
 
 /**************************/
-/** BOOKMARK PANE
+/** BOOKMARK PANE         */
 /**************************/
 .bookmarks {
 	border-top: 0px;
@@ -98,7 +98,7 @@ body {
 }
 
 /**************************/
-/* TOP MENU
+/* TOP MENU               */
 /**************************/
 #topMenu {
 }
@@ -116,21 +116,20 @@ body {
 }
 
 /**************************/
-/* COLUMNS
+/* COLUMNS                */
 /**************************/
 .column { 
 	border: 0px;
 	display: inline;
-	width: 45%; /* *2 columns */
+	width: 45%;  /* 2 columns */ 
 	float: left;
 	position: relative;
 /*	overflow: hidden;*/
-	
 }
 
 
 /********************************/
-/* INNER MENUS (i.e. sub menus)
+/* INNER MENUS (i.e. sub menus) */
 /********************************/
 .innerMenu {
 	position: absolute;
@@ -139,7 +138,7 @@ body {
 
 
 /**************************/
-/* PASSAGE CONTAINERS
+/* PASSAGE CONTAINERS     */
 /**************************/
 .passageContainer {
 }
@@ -166,7 +165,7 @@ body {
 
 .passageContent {
 	position: absolute;
-	/* top: 45px; */ 
+/*	 top: 45px;  */
 	overflow: auto;
 }
 
@@ -198,7 +197,7 @@ body {
 
 
 /*********************************************/
-/** BOTTOM COMPONENT
+/** BOTTOM COMPONENT                         */
 /*********************************************/
 #bottomSection { 
 	height: 0px;
@@ -212,53 +211,19 @@ body {
 	display: none;
 }
 
-#bottomSection > div
-{
-	width: 100%; 
-	background-color: #147000; 
-	color: #fff; 
-	text-align: right;
+#bottomModuleHeader {
+	height: 25px;
+	background-color: #4EB305; 
 }
 
-/* Close button */
-#bottomSection > div span
-{
-	cursor: pointer; 
-	margin: 5px;
+.timelineContext {
+	color: #fff; 	
+	font-weight: bold;
 }
 
-#bottomSection #leftArrow
-{
-	height: 105px; 
-	width: 20px; 
-	background-color: #fff;
-	border: 1px solid #ccc; 
-	position: absolute; 
-	top: 28px; 
-	left: 0px; 
-	z-index: 9999;
-	font-size: 30px;
-	color: #ccc;
-	padding-top: 70px;
-}
-
-#bottomSection #rightArrow
-{
-	height: 105px; 
-	width: 20px; 
-	background-color: #fff;
-	border: 1px solid #ccc; 
-	position: absolute; 
-	top: 28px; 
-	right: 0px; 
-	z-index: 9999;
-	font-size: 30px;
-	color: #ccc;
-	padding-top: 70px;
-}
 
 .no-left-border {
-	/* border-left: none; */
+/*	 border-left: none; */
 	margin-left: -1px; 
 }
 
@@ -282,9 +247,9 @@ body {
 	overflow-y: auto;
 }
 
-/* IE 6 doesn't support max-height
-	 * we use height instead, but this forces the menu to always be this tall
-	 */
+/* 	IE 6 doesn't support max-height
+ * we use height instead, but this forces the menu to always be this tall
+ */
 * html .ui-autocomplete {
 	height: 500px;
 }
@@ -331,7 +296,7 @@ body {
 }
 
 /**************************/
-/* LEXICON DEFINITION
+/* LEXICON DEFINITION     */
 /**************************/
 #lexiconDefinition {
 	display: none;
@@ -350,7 +315,7 @@ body {
 	cursor: pointer;
 }
 /**************************/
-/* LOGIN POPUP
+/* LOGIN POPUP            */
 /**************************/
 #login {
 	display: none;	
@@ -364,4 +329,3 @@ body {
 	margin-right: 0.5em;
 	display: block
 }
-

@@ -24,6 +24,7 @@ public class SimileEvent implements DigestableTimeline {
     private String title;
     private String description;
     private int hotSpotId;
+    private int eventId;
 
     private String image; // ? should be url? TODO
     private String link; // ? should be url
@@ -138,5 +139,19 @@ public class SimileEvent implements DigestableTimeline {
      */
     public void setHotSpotId(final int hotSpotId) {
         this.hotSpotId = hotSpotId;
+    }
+
+    /**
+     * @return the eventId
+     */
+    public int getEventId() {
+        return this.eventId;
+    }
+
+    /**
+     * @param eventId the eventId to set
+     */
+    public void setEventId(final int eventId) {
+        this.eventId = eventId;
     }
 }

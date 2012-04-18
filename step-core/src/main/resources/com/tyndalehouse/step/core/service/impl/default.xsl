@@ -949,8 +949,8 @@
     == cQuote   Marks the location of a continuation quote mark, with marker containing the publishers mark.
     -->
   <!--  This is used by the KJV for paragraph markers. -->
-  <xsl:template match="milestone[@type = 'x-p']"><xsl:text> </xsl:text><xsl:value-of select="@marker"/><xsl:text> </xsl:text></xsl:template>
-  <xsl:template match="milestone[@type = 'x-p']" mode="jesus"><xsl:text> </xsl:text><xsl:value-of select="@marker"/><xsl:text> </xsl:text></xsl:template>
+  <xsl:template match="milestone[@type = 'x-p']"> <!-- <xsl:text> </xsl:text><xsl:value-of select="@marker"/><xsl:text> </xsl:text> --></xsl:template>
+  <xsl:template match="milestone[@type = 'x-p']" mode="jesus"><!-- <xsl:text> </xsl:text><xsl:value-of select="@marker"/><xsl:text> </xsl:text> --></xsl:template>
 
   <xsl:template match="milestone[@type = 'cQuote']">
     <xsl:value-of select="@marker"/>

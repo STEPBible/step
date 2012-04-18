@@ -54,7 +54,7 @@ public class Loader {
             // TODO
             this.timelineModuleLoader.init();
             this.geoModuleLoader.init();
-            this.peopleLoader.init();
+            // this.peopleLoader.init();
             this.ebean.commitTransaction();
         } finally {
             this.ebean.endTransaction();

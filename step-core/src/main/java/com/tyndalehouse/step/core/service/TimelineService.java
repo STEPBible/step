@@ -6,6 +6,7 @@ import org.joda.time.LocalDateTime;
 
 import com.tyndalehouse.step.core.data.entities.Timeband;
 import com.tyndalehouse.step.core.data.entities.TimelineEvent;
+import com.tyndalehouse.step.core.data.entities.aggregations.TimelineEventsAndDate;
 
 /**
  * The timeline service gives access to all the data relating to the timeline the events, the configuration,
@@ -34,4 +35,12 @@ public interface TimelineService {
      * @return a list of timeline events contained between the two dates
      */
     List<TimelineEvent> getTimelineEvents(LocalDateTime from, LocalDateTime to);
+
+    /**
+     * Given a reference to a passage, this looks up the relevant set of events
+     * 
+     * @param reference the reference to look up
+     * @return a set of events and the date at which they occur
+     */
+    TimelineEventsAndDate getEventsFromScripture(String reference);
 }

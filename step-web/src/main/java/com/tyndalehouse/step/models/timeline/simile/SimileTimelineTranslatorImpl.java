@@ -20,7 +20,8 @@ public class SimileTimelineTranslatorImpl implements
     private static final String SIMILE_DEFAULT_TIME_FORMAT = "iso8601";
 
     @Override
-    public DigestableTimeline toDigestableForm(final List<TimelineEvent> events) {
+    public DigestableTimeline toDigestableForm(final List<TimelineEvent> events,
+            final LocalDateTime suggestedDate) {
         final SimileTimelineImpl timeline = new SimileTimelineImpl();
 
         timeline.setDateTimeFormat(SIMILE_DEFAULT_TIME_FORMAT);
@@ -31,6 +32,7 @@ public class SimileTimelineTranslatorImpl implements
             e.setTitle(te.getSummary());
             e.setDescription(te.getSummary());
             e.setStart(te.getFromDate().toString());
+            e.setEventId(e.getEventId());
 
             if (te.getHotSpot() != null) {
                 e.setHotSpotId(te.getHotSpot().getId());
@@ -47,6 +49,10 @@ public class SimileTimelineTranslatorImpl implements
         }
 
         timeline.setEvents(eventList);
+
+        if (suggestedDate != null) {
+            timeline.setSuggestedDate(suggestedDate.toString());
+        }
         return timeline;
     }
 }

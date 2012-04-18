@@ -1,179 +1,166 @@
+//TODO DELETE???
+var tl2;
+
+
 /**
  * Code for showing and interacting with the timeline
  */
 
-function TimelineWidget(rootElement) {
+function TimelineWidget(rootElement, passages) {
 	this.rootElement = rootElement;
-	var self = this;
-	
-	this.hotspots = [];
-	this.timebands = [];
+	this.passages = passages;
 	this.initialised = false;
+	this.active = false;
+	this.currentEvents = {};
 	
-	$(rootElement).hear("show-timeline", function(selfElement) {
-		//first show the bottom pane...
+	var self = this;
+
+	// register the "show-timeline" event
+	$(rootElement).hear("show-timeline", function(selfElement, data) {
+		self.passageId = data.passageId;
+		self.active = true;
+		console.log("Showing timeline on passage " + self.passageId);
+
+		// first show the bottom pane...
 		if(!this.initialised) {
 			self.initAndLoad();
 		} else {
 			self.onLoad();
 		}
-		
+				
 		$(window).resize(self.onResize);
-	});
-	
-	$(rootElement).hear("hide-timeline", function(selfElement) {
-		//first show the bottom pane...
-//		mainAppLayout.close("south");
-	});
+	});	
 }
 
-/**
- * @returns true if initialisation was required
- */
 TimelineWidget.prototype.initAndLoad = function() {
-	this.initialised = true;
-	var self = this;
-	
-	if(this.config == null) {
-		//we obtain the configuration from the server - this tells us about timebands -> hotspots, etc.
-		$.getSafe(TIMELINE_GET_CONFIG, function(data) {
-			//want hotspots -> timebands link (we sent the other way round to save space on the copper wire
-    		$.each(data, function(timebandIndex, timeband) {
-    			$.each(timeband.hotspots, function(hotspotIndex, hotspot) {
-    				self.hotspots[hotspot.id] = {
-    						timebandId:	timeband.id,
-    						description: hotspot.description,
-    						scale: hotspot.scale
-    				};
-    			});
-    			
-    			self.timebands[timeband.id] = { description: timeband.description, scale: timeband.scale} ;
-    		});
-    		self.onLoad();
-    	});
-	}
-}
-
-var tl2;
-
-TimelineWidget.prototype.onLoad = function() {
-    var zones = [];
-    this.theme = Timeline.ClassicTheme.create();
-    var self = this;
+	//set up the theme
+	this.theme = Timeline.ClassicTheme.create();
     this.theme.event.bubble.width = 250;
-    
-
+    this.eventSource = new Timeline.DefaultEventSource();
+     
+	// let's start with 1 band for now
 	
-    $.getSafe(TIMELINE_GET_EVENTS_IN_PERIOD +"-101690000000000/-101580000000000", function(json, url) {
-    	//work out how many bands to show first!
-    	var bands = self.getBands(json.events);
+	//setup bands
+    this.bands = [
+	                 Timeline.createBandInfo({
+	                	 trackGap:      100,
+	                     width:          "100%", 
+	                     intervalUnit:   Timeline.DateTime.WEEK, 
+	                     intervalPixels: 150,
+	                     eventSource: this.eventSource,
+	                     theme: this.theme,
+	                 })];
 
-    	if(!self.tl) {
-    		self.tl = Timeline.create(self.rootElement[0], bands, Timeline.HORIZONTAL); 
-    		tl2 = self.tl;
-    	}
-    	
-//    	bands[0].eventSource.loadJSON(json, TIMELINE_GET_EVENTS_IN_PERIOD +"-101690000000000/-101580000000000");
-    	self.loadEvents(bands, json);
-    });    
-}
-
-/**
- * Returns the bands to be created given the data from the ui
- */
-TimelineWidget.prototype.getBands = function(events) {
-	var uiTimebands = [];
-	var obtained = [];
+	//set up timeline
+	this.tl = Timeline.create(this.rootElement[0], this.bands, Timeline.HORIZONTAL);
 	
-	var self = this;
-
-    var date = "-1250";
-    var zones = [];
-    
-    var i = 0;
-    
-	$.each(events, function(index, event) {
-		//TODO this can be optmized, since we are re-creating the uiTimebands every time
-		var hotspot = self.hotspots[event.hotSpotId];
-		if(hotspot != null) {
-			var timeband = self.timebands[hotspot.timebandId];
-			var unit = self.resolveScale(timeband.scale);
-			
-			if(obtained[hotspot.timebandId] == null) {
-				obtained[hotspot.timebandId] = true;
-				var bandInfo = Timeline.createBandInfo({
-					width:          "180px", 
-					trackGap: 0.2,
-					trackHeight: 0.5,
-					intervalUnit:   unit, 
-					intervalPixels: 150,
-//					zones:          {   start: "-2000", end: "2000", /* magnify:  1, */ unit: unit },
-					zones:          {   start: "-1252", end: "-1249", /* magnify:  1, */ unit: unit },
-					eventSource:    new Timeline.DefaultEventSource(),
-					date:           date,
-					theme:          self.theme,
-				});
-				
-				bandInfo.stepTimebandId = hotspot.timebandId;
-				
-				if (i == 2)
-				{
-					uiTimebands.push( bandInfo );
-				}
-			}
-		}
-		
-		i++;
-	});
+	this.initToolbar();
 	
-	return uiTimebands;
-}
-
+	// set status as successfully intialised
+	this.initialised = true;
+	this.onLoad();
+};
 
 
 /**
- * loads up the events on the correct bands
- * the band has a property called stepTimebandId which we can match to hotspots[hotspotId].timebandId
+ * adds an event to the timeline, the caller is required to call the refresh layout on the timeline
  */
-TimelineWidget.prototype.loadEvents = function(bands, json) {
-	var self = this;
-	var events = json.events;
-	
-	$.each(bands, function(bandIndex, band) {
-		var eventsOnBand = $.grep(events, function(element, eventIndex) {
-			//TODO fix events without hotspot ids
-			var hotspot = self.hotspots[element.hotSpotId];
-			if(hotspot == null) {
-				return false;
-			}
-			
-		    return band.stepTimebandId == hotspot.timebandId;
+TimelineWidget.prototype.addEvent = function(item) {
+	//we only add the event if it is not already on our timeline... 
+
+	if(!(item.eventId in this.currentEvents)) {
+
+		var event = new Timeline.DefaultEventSource.Event({
+			'start' : Timeline.DateTime.parseIso8601DateTime(item.start), 
+			'end' : Timeline.DateTime.parseIso8601DateTime(item.end), 
+			'description' : item.description, 
+			'text' : item.title,
+			'instant' : !item.duration
 		});
+	
+		this.eventSource.add(event);
+	}
+}
 
-		band.eventSource.loadJSON({ dateTimeFormat: json.dateTimeFormat, events: eventsOnBand }, 
-			TIMELINE_GET_EVENTS_IN_PERIOD +"-101690000000000/-101580000000000");
+TimelineWidget.prototype.addMultipleEventsAndRefresh = function(data) {
+	var self = this;
+	
+	//add each event to timeline
+	$.each(data.events, function(index, item) {
+		self.addEvent(item);
 	});
 	
+	this.tl.layout();
+}
+
+/**
+ * Let us load stuff relevant to our passage
+ */
+TimelineWidget.prototype.onLoad = function() {
+	var reference = this.passages[this.passageId].getReference();
+	var self = this;
+
+	//load events from server
+	$.getSafe(TIMELINE_GET_EVENTS_FROM_REFERENCE + reference, function(data, url) {
+		console.log("Now have " + data.events.length + " to show.");
+		
+		//move timeline to different date
+		//assuming first band is main band
+		self.tl.getBand(0).scrollToCenter(Timeline.DateTime.parseIso8601DateTime(data.suggestedDate));
+		self.addMultipleEventsAndRefresh(data);
+		
+
+		// now that we have repositioned the timeline, we can try and 
+		// get the other events within the visible time period
+	    $.getSafe(TIMELINE_GET_EVENTS_IN_PERIOD +  
+	    				self.tl.getBand(0).getMinVisibleDate().toISOString() + "/" + 
+	    				self.tl.getBand(0).getMaxVisibleDate().toISOString(), 
+	    				function(data, url) {
+	    	self.addMultipleEventsAndRefresh(data);
+	    });
+	});
+}
+	
+
+TimelineWidget.prototype.addToolbarIcon = function(toolbar, id, text, iconName) {
+	var html = "<a id='" + id + "'>" + text + "</a>";
+	toolbar.append(html);
+	$("#" + id, toolbar).button({ text: false, icons: { primary: iconName }});
 };
 
 /**
- * resolves and returns the timeline scale
+ * Creates a toolbar for the timeline component
  */
-TimelineWidget.prototype.resolveScale = function(scale) {
-	//TODO remove
-//	return Timeline.DateTime.WEEK;
+TimelineWidget.prototype.initToolbar = function() {
+	var self = this;
+	
+	var toolbar = $("#bottomModuleHeader")
+	this.addToolbarIcon(toolbar, "scrollTimelineLeft", "Scroll left", 'ui-icon-seek-prev');
+	this.addToolbarIcon(toolbar, "scrollTimelineRight", "Scroll right", 'ui-icon-seek-next');
+	this.addToolbarIcon(toolbar, "zoomInTimeline", "Zoom in", 'ui-icon-zoomin');
+	this.addToolbarIcon(toolbar, "zoomOutTimeline", "Zoom out", 'ui-icon-zoomout');
+	this.addToolbarIcon(toolbar, "scrollTimelineToDate", "Scroll to date", 'ui-icon-search');
+	
+	$("#bottomModuleHeader #scrollTimelineLeft").click(function() {
+			var mainBand = self.tl.getBand(0);
+			mainBand.scrollToCenter(mainBand.getMinVisibleDate());
+	});
 
-	switch(scale) {
-		case 'CENTURY': return Timeline.DateTime.CENTURY;
-		case 'DAY': return Timeline.DateTime.DAY;
-		case 'DECADE': return Timeline.DateTime.DECADE;
-		case 'MILLENIUM': return Timeline.DateTime.MILLENNIUM;
-		case 'MONTH': return Timeline.DateTime.MONTH;
-		case 'WEEK': return Timeline.DateTime.WEEK;
-		case 'YEAR': return Timeline.DateTime.YEAR;
-		default: return Timeline.DateTime.MONTH;
-	}
+	$("#bottomModuleHeader #scrollTimelineRight").click(function() {
+		var mainBand = self.tl.getBand(0);
+		mainBand.scrollToCenter(mainBand.getMaxVisibleDate());
+	});
 };
+
+
+/**
+ * This method updates the events on the timeline
+ */
+TimelineWidget.prototype.refreshTimeline = function(passageReference) {
+	
+}
+
+
 
 /**
  * resizes the timeline appropriately
@@ -225,7 +212,7 @@ Timeline.DefaultEventSource.Event.prototype.fillInfoBubble = function (elmt, the
 	this.fillDescription(divBody); 
 	theme.event.bubble.bodyStyler(divBody); 
 	elmt.appendChild(divBody); 
-	// This is where they define the times in the bubble 
+	// This is where they define the times in the bubble
 	var divTime = doc.createElement("div"); 
 	divTime.innerHTML = start + " - " + end; 
 	elmt.appendChild(divTime); 
@@ -235,15 +222,13 @@ Timeline.DefaultEventSource.Event.prototype.fillInfoBubble = function (elmt, the
 	elmt.appendChild(divWiki); 
 } 
 
-function TimelineLeftArrow()
-{
+function timelineLeftArrow() {
 	var band = tl2.getBand(0);
 	var newDate = Timeline.DateTime.parseGregorianDateTime(band.getMinVisibleDate().getFullYear() - 300);
 	band.scrollToCenter(newDate);
 }
 
-function TimelineRightArrow()
-{
+function timelineRightArrow() {
 	var band = tl2.getBand(0);
 	var newDate = Timeline.DateTime.parseGregorianDateTime(band.getMaxVisibleDate().getFullYear() + 300);
 	band.scrollToCenter(newDate);

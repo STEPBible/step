@@ -10,38 +10,36 @@
 // These are used as part of the rest-like calls
 /////////////////////////////////////////////////////////////////////////
 
-BOOKMARKS_GET = STEP_SERVER_BASE_URL + "favourites/getBookmarks";
-BOOKMARKS_ADD = STEP_SERVER_BASE_URL + "favourites/addBookmark/";
-HISTORY_GET = STEP_SERVER_BASE_URL + "favourites/getHistory/";
-HISTORY_ADD = STEP_SERVER_BASE_URL + "favourites/addHistory/";
+BOOKMARKS_GET = 						STEP_SERVER_BASE_URL + "favourites/getBookmarks";
+BOOKMARKS_ADD = 						STEP_SERVER_BASE_URL + "favourites/addBookmark/";
+HISTORY_GET = 							STEP_SERVER_BASE_URL + "favourites/getHistory/";
+HISTORY_ADD = 							STEP_SERVER_BASE_URL + "favourites/addHistory/";
 
+BIBLE_GET_BIBLE_VERSIONS = 				STEP_SERVER_BASE_URL + "bible/getBibleVersions/";
+BIBLE_GET_BIBLE_TEXT = 					STEP_SERVER_BASE_URL + "bible/getBibleText/";
+BIBLE_GET_FEATURES = 					STEP_SERVER_BASE_URL + "bible/getFeatures/";
+BIBLE_GET_ALL_FEATURES = 				STEP_SERVER_BASE_URL + "bible/getAllFeatures/";
+BIBLE_GET_BIBLE_BOOK_NAMES = 			STEP_SERVER_BASE_URL + "bible/getBibleBookNames/"
 
-BIBLE_GET_BIBLE_VERSIONS = STEP_SERVER_BASE_URL + "bible/getBibleVersions/";
-BIBLE_GET_BIBLE_TEXT = STEP_SERVER_BASE_URL + "bible/getBibleText/";
-BIBLE_GET_FEATURES = STEP_SERVER_BASE_URL + "bible/getFeatures/";
-BIBLE_GET_ALL_FEATURES = STEP_SERVER_BASE_URL + "bible/getAllFeatures/";
-BIBLE_GET_BIBLE_BOOK_NAMES = STEP_SERVER_BASE_URL + "bible/getBibleBookNames/"
+MODULE_GET_ALL_MODULES = 				STEP_SERVER_BASE_URL + "module/getAllModules/";
+MODULE_GET_ALL_INSTALLABLE_MODULES = 	STEP_SERVER_BASE_URL + "module/getAllInstallableModules/";
+MODULE_GET_DEFINITION = 				STEP_SERVER_BASE_URL + "module/getDefinition/";
 
+SETUP_IS_FIRST_TIME = 					STEP_SERVER_BASE_URL + "setup/isFirstTime/";
+SETUP_INSTALL_DEFAULT_MODULES = 		STEP_SERVER_BASE_URL + "setup/installDefaultModules/";
+SETUP_INSTALL_BIBLE = 					STEP_SERVER_BASE_URL + "setup/installBible/";
 
-MODULE_GET_ALL_MODULES = STEP_SERVER_BASE_URL + "module/getAllModules/";
-MODULE_GET_ALL_INSTALLABLE_MODULES = STEP_SERVER_BASE_URL + "module/getAllModules/";
-MODULE_GET_DEFINITION = STEP_SERVER_BASE_URL + "module/getDefinition/";
+TIMELINE_GET_EVENTS = 					STEP_SERVER_BASE_URL + "timeline/getEvents/";
+TIMELINE_GET_EVENTS_IN_PERIOD = 		STEP_SERVER_BASE_URL + "timeline/getEventsInPeriod/";
+TIMELINE_GET_EVENTS_FROM_REFERENCE = 	STEP_SERVER_BASE_URL + "timeline/getEventsFromReference/";
+TIMELINE_GET_CONFIG = 					STEP_SERVER_BASE_URL + "timeline/getTimelineConfiguration";
 
-SETUP_IS_FIRST_TIME = STEP_SERVER_BASE_URL + "setup/isFirstTime/";
-SETUP_INSTALL_DEFAULT_MODULES = STEP_SERVER_BASE_URL + "setup/installDefaultModules/";
-SETUP_INSTALL_BIBLE = STEP_SERVER_BASE_URL + "setup/installBible/";
+USER_LOGIN = 							STEP_SERVER_BASE_URL + "user/login/";
+USER_LOGOUT = 							STEP_SERVER_BASE_URL + "user/logout/";
+USER_REGISTER = 						STEP_SERVER_BASE_URL + "user/register/"
+USER_GET_LOGGED_IN_USER = 				STEP_SERVER_BASE_URL + "user/getLoggedInUser";
 
-TIMELINE_GET_EVENTS = STEP_SERVER_BASE_URL + "timeline/getEvents/";
-TIMELINE_GET_EVENTS_IN_PERIOD = STEP_SERVER_BASE_URL + "timeline/getEventsInPeriod/";
-TIMELINE_GET_EVENTS_FROM_REFERENCE = STEP_SERVER_BASE_URL + "timeline/getEventsFromReference/";
-TIMELINE_GET_CONFIG = STEP_SERVER_BASE_URL + "timeline/getTimelineConfiguration";
-
-USER_LOGIN = STEP_SERVER_BASE_URL + "user/login/";
-USER_LOGOUT = STEP_SERVER_BASE_URL + "user/logout/";
-USER_REGISTER = STEP_SERVER_BASE_URL + "user/register/"
-USER_GET_LOGGED_IN_USER = STEP_SERVER_BASE_URL + "user/getLoggedInUser";
-
-GEOGRAPHY_GET_PLACES = STEP_SERVER_BASE_URL + "geography/getPlaces/"
+GEOGRAPHY_GET_PLACES = 					STEP_SERVER_BASE_URL + "geography/getPlaces/"
 	
 //////////////////////////
 // SOME DEFAULTS
@@ -129,7 +127,7 @@ function showAbout() {
  */
 function showTimelineModule(menuItem) {
 	showBottomSection(menuItem);
-	$.shout("show-timeline");
+	$.shout("show-timeline", { passageId : + getPassageId(menuItem) });
 };
 
 /**
@@ -147,12 +145,12 @@ function showBottomSection(menuItem) {
 	if (getPassageId(menuItem) == 0)
 	{
 		var verse = $('#leftPassageReference').val();
-		$('#timelineContext').html(verse);
+		$('.timelineContext:first').html(verse);
 	}
 	else
 	{
 		var verse = $('#rightPassageReference').val();
-		$('#timelineContext').html(verse);	
+		$('.timelineContext:first').html(verse);	
 	}
 
 	var bottomSection = $("#bottomSection");

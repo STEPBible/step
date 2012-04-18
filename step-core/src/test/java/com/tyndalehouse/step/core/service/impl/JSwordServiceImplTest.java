@@ -169,7 +169,40 @@ public class JSwordServiceImplTest {
         assertTrue(bibleBookNames.contains("Malachi"));
         assertTrue(bibleBookNames.contains("Matthew"));
         assertTrue(bibleBookNames.contains("Mark"));
+    }
 
+    /**
+     * tests that the XSLT transformation is handled correctly
+     * 
+     * @throws BookException uncaught exception
+     * @throws NoSuchKeyException uncaught exception
+     * @throws IOException uncaught exception
+     * @throws JDOMException uncaught exception
+     */
+    @Test
+    public void testAbsenceOfParagraphMark() throws BookException, NoSuchKeyException, JDOMException,
+            IOException {
+        final String testReference = "Acts 1:15";
+        final String testVersion = "KJV";
+
+        final Book currentBook = Books.installed().getBook(testVersion);
+        final BookData bookData = new BookData(currentBook, currentBook.getKey(testReference));
+        final Element osisFragment = bookData.getOsisFragment();
+
+        final XMLOutputter xmlOutputter = new XMLOutputter(Format.getPrettyFormat());
+        LOGGER.debug(xmlOutputter.outputString(osisFragment));
+
+        // do the test
+        final JSwordServiceImpl jsi = new JSwordServiceImpl(null);
+        final List<LookupOption> options = new ArrayList<LookupOption>();
+        // options.add(LookupOption.STRONG_NUMBERS);
+
+        final String osisText = jsi.getOsisText(testVersion, testReference, options, "");
+        final SAXBuilder sb = new SAXBuilder();
+        final Document d = sb.build(new StringReader(osisText));
+
+        LOGGER.debug("\n {}", xmlOutputter.outputString(d));
+        Assert.assertTrue(osisText.contains("span"));
     }
 
     /**

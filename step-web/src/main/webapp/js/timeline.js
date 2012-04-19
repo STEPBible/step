@@ -19,7 +19,8 @@ function TimelineWidget(rootElement, passages) {
 	$(rootElement).hear("show-timeline", function(selfElement, data) {
 		self.passageId = data.passageId;
 		self.active = true;
-
+		self.linkToPassage = true;
+		
 		// first show the bottom pane...
 		if(!this.initialised) {
 			self.initAndLoad();
@@ -28,6 +29,12 @@ function TimelineWidget(rootElement, passages) {
 		}
 				
 		$(window).resize(self.onResize);
+	});
+	
+	$(rootElement).hear("passage-changed", function(selfElement, data) {
+		if(self.initialised && self.linkToPassage) {
+			self.onLoad();
+		}
 	});	
 }
 
@@ -187,9 +194,7 @@ TimelineWidget.prototype.initToolbar = function() {
 	this.addToolbarButton(toolbar, "zoomInTimeline", "Zoom in", 'ui-icon-zoomin');
 	this.addToolbarButton(toolbar, "zoomOutTimeline", "Zoom out", 'ui-icon-zoomout');
 	this.addToolbarButton(toolbar, "scrollTimelineToDate", "Scroll to date", 'ui-icon-search');
-	this.addToolbarButton(toolbar, "linkToPassage", "Link passage", 'ui-icon-pin-s');
-
-	
+	this.addToolbarButton(toolbar, "linkToPassage", "Unlink from passage", 'ui-icon-pin-s');
 	
 	$("#bottomModuleHeader #scrollTimelineLeft").click(function() {
 			var mainBand = self.tl.getBand(0);
@@ -204,11 +209,14 @@ TimelineWidget.prototype.initToolbar = function() {
 	$("#bottomModuleHeader #linkToPassage").click(function() {
 		if($(this).text() === "Link to passage") {
 			$(this).button("option", {icons: { primary: "ui-icon-pin-s" }, label: "Unlink from passage"});
+			self.linkToPassage = true;
 		} else {	
 			$(this).button("option", {icons: { primary: "ui-icon-pin-w" }, label: "Link to passage"});
-		}
-	
+			self.linkToPassage = false;
+		}		
 	});
+	
+	
 };
 
 

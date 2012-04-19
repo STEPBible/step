@@ -83,6 +83,8 @@ public class TimelineController {
      * @param from the from date, left-bound
      * @param to the to date, right-bound
      * @return a list of timeline events in format digestable by the UI
+     * 
+     *         TODO going to have to cache this more appropriately, as we'll otherwise hammer the database
      */
     @Cacheable(true)
     public DigestableTimeline getEventsInPeriod(final String from, final String to) {

@@ -392,12 +392,15 @@ public class JSwordServiceImpl implements JSwordService {
      * @return the list of matching names
      */
     private List<String> getBooksFromVersification(final String bookStart, final Versification versification) {
+        final String searchPattern = bookStart.toLowerCase();
+
         final List<String> matchingNames = new ArrayList<String>();
         final BibleBookList books = versification.getBooks();
         for (final BibleBook book : books) {
-            if (book.getLongName().startsWith(bookStart) || book.getPreferredName().startsWith(bookStart)
-                    || book.getShortName().startsWith(bookStart)) {
-                matchingNames.add(book.getLongName());
+            if (book.getLongName().toLowerCase().startsWith(searchPattern)
+                    || book.getPreferredName().toLowerCase().startsWith(searchPattern)
+                    || book.getShortName().toLowerCase().startsWith(searchPattern)) {
+                matchingNames.add(book.getShortName());
             }
         }
         return matchingNames;

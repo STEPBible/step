@@ -20,9 +20,9 @@
 		<db.driver>org.apache.derby.jdbc.EmbeddedDriver</db.driver>
 		<db.connection.string>jdbc:derby:${db.directory}</db.connection.string>
 
-		<h2.version>1.3.148</h2.version>
-		<derby.version>10.5.3.0_1</derby.version>
-		<junit.version>4.8.2</junit.version>
+		<h2.version>1.3.166</h2.version>
+		<derby.version>10.8.2.2</derby.version>
+		<junit.version>4.10</junit.version>
 
 		<!-- jsword dependencies -->
 		<jsword.version>1.6.1-SNAPSHOT</jsword.version>
@@ -30,34 +30,34 @@
 		<javatar.version>2.5</javatar.version>
 
 		<jackson-mapper-asl.version>1.6.2</jackson-mapper-asl.version>
-		<org.slf4j.version>1.6.1</org.slf4j.version>
+		<org.slf4j.version>1.6.4</org.slf4j.version>
 		<servlet-api.version>2.5</servlet-api.version>
 		<jsp-api.version>2.1</jsp-api.version>
 		<jstl.version>1.2</jstl.version>
-		<pjl-comp-filter.version>1.6.4</pjl-comp-filter.version>
-		<guice.version>2.1.8</guice.version>
-		<guice-servlet.version>2.9.1</guice-servlet.version>
-		<opencsv.version>2.1</opencsv.version>
+		<pjl-comp-filter.version>1.7</pjl-comp-filter.version>
+		<guice.version>3.0.0</guice.version>
+		<guice-servlet.version>3.0</guice-servlet.version>
+		<opencsv.version>2.3</opencsv.version>
 		<jetty.version>6.1.26</jetty.version>
 
 		<joda-time.version>2.1</joda-time.version>
-		<ebean.version>2.7.2</ebean.version>
-		<ehcache.version>2.4.2</ehcache.version>
+		<ebean.version>2.7.5</ebean.version>
+		<ehcache.version>2.5.2</ehcache.version>
 		<lucene.version>3.0.3</lucene.version>
 
 		<!-- Commons -->
 		<commons-beanutils.version>1.8.3</commons-beanutils.version>
-		<commons-lang.version>2.5</commons-lang.version>
+		<commons-lang.version>2.6</commons-lang.version>
 		<commons-collections.version>3.2.1</commons-collections.version>
 		<commons-configuration.version>1.6</commons-configuration.version>
-		<commons-dbcp.version>1.3</commons-dbcp.version>
+		<commons-dbcp.version>1.4</commons-dbcp.version>
 		<commons-io.version>1.4</commons-io.version>
-		<commons-codec.version>1.4</commons-codec.version>
-		<commons-dbutils.version>1.3</commons-dbutils.version>
+		<commons-codec.version>1.6</commons-codec.version>
+		<commons-dbutils.version>1.4</commons-dbutils.version>
 		<commons-httpclient.version>3.1</commons-httpclient.version>
 
 		<!-- testing dependencies -->
-		<mockito.version>1.8.5</mockito.version>
+		<mockito.version>1.9.0</mockito.version>
 	</properties>
 
 	<url>http://crosswire.org/wiki/Frontends:TyndaleStep</url>
@@ -187,7 +187,7 @@
 			</dependency>
 
 			<dependency>
-				<groupId>org.sonatype.sisu.inject</groupId>
+				<groupId>com.google.inject.extensions</groupId>
 				<artifactId>guice-servlet</artifactId>
 				<version>${guice-servlet.version}</version>
 			</dependency>

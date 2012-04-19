@@ -19,7 +19,6 @@ function TimelineWidget(rootElement, passages) {
 	$(rootElement).hear("show-timeline", function(selfElement, data) {
 		self.passageId = data.passageId;
 		self.active = true;
-		console.log("Showing timeline on passage " + self.passageId);
 
 		// first show the bottom pane...
 		if(!this.initialised) {
@@ -33,32 +32,39 @@ function TimelineWidget(rootElement, passages) {
 }
 
 TimelineWidget.prototype.initAndLoad = function() {
+	var self = this;
+	
 	//set up the theme
 	this.theme = Timeline.ClassicTheme.create();
     this.theme.event.bubble.width = 250;
     this.eventSource = new Timeline.DefaultEventSource();
      
-	// let's start with 1 band for now
+    if(!this.initialised) {
+		// let's start with 1 band for now
+	    this.bands = [ Timeline.createBandInfo({
+	       	 trackGap:      100,
+	            width:          "100%", 
+	            intervalUnit:   Timeline.DateTime.WEEK, 
+	            intervalPixels: 150,
+	            eventSource: this.eventSource,
+	            theme: this.theme,
+	        }) ];
 	
-	//setup bands
-    this.bands = [
-	                 Timeline.createBandInfo({
-	                	 trackGap:      100,
-	                     width:          "100%", 
-	                     intervalUnit:   Timeline.DateTime.WEEK, 
-	                     intervalPixels: 150,
-	                     eventSource: this.eventSource,
-	                     theme: this.theme,
-	                 })];
+		//set up timeline
+		this.tl = Timeline.create(this.rootElement[0], this.bands, Timeline.HORIZONTAL);
 
-	//set up timeline
-	this.tl = Timeline.create(this.rootElement[0], this.bands, Timeline.HORIZONTAL);
+		//set up scrollers
+		this.tl.getBand(0).addOnScrollListener(function(band) {
+			self.intelligentScroll(band);
+        });
+		
+		this.initToolbar();
+		
+		// set status as successfully intialised
+		this.initialised = true;
+    }
 	
-	this.initToolbar();
-	
-	// set status as successfully intialised
-	this.initialised = true;
-	this.onLoad();
+    this.onLoad();
 };
 
 
@@ -69,7 +75,6 @@ TimelineWidget.prototype.addEvent = function(item) {
 	//we only add the event if it is not already on our timeline... 
 
 	if(!(item.eventId in this.currentEvents)) {
-
 		var event = new Timeline.DefaultEventSource.Event({
 			'start' : Timeline.DateTime.parseIso8601DateTime(item.start), 
 			'end' : Timeline.DateTime.parseIso8601DateTime(item.end), 
@@ -79,6 +84,7 @@ TimelineWidget.prototype.addEvent = function(item) {
 		});
 	
 		this.eventSource.add(event);
+		this.currentEvents[item.eventId] = true;
 	}
 }
 
@@ -102,31 +108,72 @@ TimelineWidget.prototype.onLoad = function() {
 
 	//load events from server
 	$.getSafe(TIMELINE_GET_EVENTS_FROM_REFERENCE + reference, function(data, url) {
-		console.log("Now have " + data.events.length + " to show.");
 		
 		//move timeline to different date
 		//assuming first band is main band
-		self.tl.getBand(0).scrollToCenter(Timeline.DateTime.parseIso8601DateTime(data.suggestedDate));
-		self.addMultipleEventsAndRefresh(data);
 		
-
+		if(data.suggestedDate) {
+			self.tl.getBand(0).setCenterVisibleDate(Timeline.DateTime.parseIso8601DateTime(data.suggestedDate));
+			self.addMultipleEventsAndRefresh(data);			
+		}
+		
 		// now that we have repositioned the timeline, we can try and 
 		// get the other events within the visible time period
-	    $.getSafe(TIMELINE_GET_EVENTS_IN_PERIOD +  
-	    				self.tl.getBand(0).getMinVisibleDate().toISOString() + "/" + 
-	    				self.tl.getBand(0).getMaxVisibleDate().toISOString(), 
-	    				function(data, url) {
-	    	self.addMultipleEventsAndRefresh(data);
-	    });
+		self.showVisibleEvents(self.tl.getBand(0));
 	});
-}
-	
+};
 
-TimelineWidget.prototype.addToolbarIcon = function(toolbar, id, text, iconName) {
-	var html = "<a id='" + id + "'>" + text + "</a>";
+/**
+ * Shows currently visible events on the timeline and refreshes the layout
+ */
+TimelineWidget.prototype.showVisibleEvents = function(band) {
+	var self = this;
+	
+	$.getSafe(TIMELINE_GET_EVENTS_IN_PERIOD +  
+					band.getMinVisibleDate().toISOString() + "/" + 
+					band.getMaxVisibleDate().toISOString(), 
+					function(data, url) {
+		self.addMultipleEventsAndRefresh(data);
+		self.lastRecordedOffset = band.getViewOffset();
+	});
+};
+
+/**
+ * this asks for new events only if we do not already have asked for a similar window
+ * 
+ * say 100px if we can work that out...
+ * 
+ */
+TimelineWidget.prototype.intelligentScroll = function(band) {
+	if(!this.lastRecordedOffset) {
+		this.lastRecordedOffset = 0;
+	}
+	
+	//we lookup from the server if we've moved more than 50px!
+	var currentOffset = band.getViewOffset();
+	var diffOffset = Math.abs(this.lastRecordedOffset - currentOffset);
+	
+	if(diffOffset >= 100) {
+		this.showVisibleEvents(band);		
+	}
+};
+
+
+TimelineWidget.prototype.addToolbarIcon = function(html, toolbar, id, text, iconName) {
 	toolbar.append(html);
 	$("#" + id, toolbar).button({ text: false, icons: { primary: iconName }});
 };
+
+TimelineWidget.prototype.addToolbarButton = function(toolbar, id, text, iconName) {
+	var html = "<a id='" + id + "'>" + text + "</a>";
+	this.addToolbarIcon(html, toolbar, id, text, iconName);
+}
+
+TimelineWidget.prototype.addToolbarToggle = function(toolbar, id, text, iconName) {
+	var html = "<input type='checkbox' id='" + id + "' /><label for='" + id + "'>" + text + "</label>";
+	this.addToolbarIcon(html, toolbar, id, text, iconName);
+};
+
 
 /**
  * Creates a toolbar for the timeline component
@@ -135,11 +182,14 @@ TimelineWidget.prototype.initToolbar = function() {
 	var self = this;
 	
 	var toolbar = $("#bottomModuleHeader")
-	this.addToolbarIcon(toolbar, "scrollTimelineLeft", "Scroll left", 'ui-icon-seek-prev');
-	this.addToolbarIcon(toolbar, "scrollTimelineRight", "Scroll right", 'ui-icon-seek-next');
-	this.addToolbarIcon(toolbar, "zoomInTimeline", "Zoom in", 'ui-icon-zoomin');
-	this.addToolbarIcon(toolbar, "zoomOutTimeline", "Zoom out", 'ui-icon-zoomout');
-	this.addToolbarIcon(toolbar, "scrollTimelineToDate", "Scroll to date", 'ui-icon-search');
+	this.addToolbarButton(toolbar, "scrollTimelineLeft", "Scroll left", 'ui-icon-seek-prev');
+	this.addToolbarButton(toolbar, "scrollTimelineRight", "Scroll right", 'ui-icon-seek-next');
+	this.addToolbarButton(toolbar, "zoomInTimeline", "Zoom in", 'ui-icon-zoomin');
+	this.addToolbarButton(toolbar, "zoomOutTimeline", "Zoom out", 'ui-icon-zoomout');
+	this.addToolbarButton(toolbar, "scrollTimelineToDate", "Scroll to date", 'ui-icon-search');
+	this.addToolbarButton(toolbar, "linkToPassage", "Link passage", 'ui-icon-pin-s');
+
+	
 	
 	$("#bottomModuleHeader #scrollTimelineLeft").click(function() {
 			var mainBand = self.tl.getBand(0);
@@ -149,6 +199,15 @@ TimelineWidget.prototype.initToolbar = function() {
 	$("#bottomModuleHeader #scrollTimelineRight").click(function() {
 		var mainBand = self.tl.getBand(0);
 		mainBand.scrollToCenter(mainBand.getMaxVisibleDate());
+	});
+	
+	$("#bottomModuleHeader #linkToPassage").click(function() {
+		if($(this).text() === "Link to passage") {
+			$(this).button("option", {icons: { primary: "ui-icon-pin-s" }, label: "Unlink from passage"});
+		} else {	
+			$(this).button("option", {icons: { primary: "ui-icon-pin-w" }, label: "Link to passage"});
+		}
+	
 	});
 };
 
@@ -172,7 +231,11 @@ TimelineWidget.prototype.onResize = function() {
 	if (resizeTimerID == null) {
         resizeTimerID = window.setTimeout(function() {
             resizeTimerID = null;
-            self.tl.layout();
+
+            if(self.tl) {
+            	self.tl.layout();
+            }
+            
         }, 500);
     }
 }

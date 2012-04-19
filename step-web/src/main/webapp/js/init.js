@@ -17,9 +17,9 @@ function init() {
 		
 		initData();
 		
-		
 		initInitialEvents();
 		initLogin();
+		
 	});
 }
 

@@ -1,11 +1,6 @@
-//TODO DELETE???
-var tl2;
-
-
 /**
  * Code for showing and interacting with the timeline
  */
-
 function TimelineWidget(rootElement, passages) {
 	this.rootElement = rootElement;
 	this.passages = passages;
@@ -47,16 +42,51 @@ TimelineWidget.prototype.initAndLoad = function() {
     this.eventSource = new Timeline.DefaultEventSource();
      
     if(!this.initialised) {
-		// let's start with 1 band for now
-	    this.bands = [ Timeline.createBandInfo({
-	       	 trackGap:      100,
-	            width:          "100%", 
-	            intervalUnit:   Timeline.DateTime.WEEK, 
-	            intervalPixels: 150,
+    	var zones = [
+    	                {   
+                            start:  Timeline.DateTime.parseIso8601DateTime("-1251-12-18T00:00:00.000"),
+                            end:    Timeline.DateTime.parseIso8601DateTime("-1250-01-21T00:00:00.000"),
+    	                    magnify:  5,
+    	                    unit:     Timeline.DateTime.WEEK,
+    	                }];
+    	
+	    this.bands = [ 
+			Timeline.createHotZoneBandInfo({
+			    width:          "80%", 
+			    intervalUnit:   Timeline.DateTime.MONTH, 
+			    intervalPixels: 150,
+			    zones:          zones,
+			    eventSource:    this.eventSource,
+			}),
+	        
+	        Timeline.createBandInfo({
+	        	overview:       true,
+	            trackHeight:    0.5,
+	            trackGap:       0.2,
 	            eventSource: this.eventSource,
-	            theme: this.theme,
-	        }) ];
-	
+	        	width:          "30%", 
+	            intervalUnit:   Timeline.DateTime.YEAR, 
+	            intervalPixels: 300
+	        })
+	        ];
+
+	    this.bands[0].decorators = [
+	                               new Timeline.SpanHighlightDecorator({
+	                                   startDate:  Timeline.DateTime.parseIso8601DateTime("-1251-12-18T00:00:00.000"),
+	                                   endDate:    Timeline.DateTime.parseIso8601DateTime("-1250-01-21T00:00:00.000"),
+	                                   color:      "#FFC080", /*this is the color of the "span" that is highlighted*/
+	                                   opacity:    50,
+	                                   startLabel: "START", /* labels can use HTML tags, should be styled in stylesheet below, this lebel is right aligned*/
+	                                   endLabel:   "END", /* this one is left aligned*/
+	                                  // theme:      theme,
+	                                  cssClass: 't-highlight1'
+	                               })];
+	    
+	    
+	    
+	    this.bands[1].syncWith = 0;
+	    this.bands[1].highlight = true;
+	    
 		//set up timeline
 		this.tl = Timeline.create(this.rootElement[0], this.bands, Timeline.HORIZONTAL);
 
@@ -293,14 +323,3 @@ Timeline.DefaultEventSource.Event.prototype.fillInfoBubble = function (elmt, the
 	elmt.appendChild(divWiki); 
 } 
 
-function timelineLeftArrow() {
-	var band = tl2.getBand(0);
-	var newDate = Timeline.DateTime.parseGregorianDateTime(band.getMinVisibleDate().getFullYear() - 300);
-	band.scrollToCenter(newDate);
-}
-
-function timelineRightArrow() {
-	var band = tl2.getBand(0);
-	var newDate = Timeline.DateTime.parseGregorianDateTime(band.getMaxVisibleDate().getFullYear() + 300);
-	band.scrollToCenter(newDate);
-}

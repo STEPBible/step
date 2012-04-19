@@ -5,6 +5,7 @@ import static org.apache.commons.lang.StringUtils.isNotEmpty;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -76,7 +77,7 @@ public class GeographyModuleLoader implements ModuleLoader {
         try {
 
             placeFileStream = getClass().getResourceAsStream(OPENBIBLE_DATA);
-            lineIterator = IOUtils.lineIterator(placeFileStream, null);
+            lineIterator = IOUtils.lineIterator(placeFileStream, Charset.defaultCharset());
 
             for (int ii = 0; ii < IGNORE_LINES && lineIterator.hasNext(); ii++) {
                 lineIterator.next();

@@ -166,9 +166,9 @@ public class JSwordServiceImplTest {
 
         final List<String> bibleBookNames = jsi.getBibleBookNames("Ma", "ESV");
 
-        assertTrue(bibleBookNames.contains("Malachi"));
-        assertTrue(bibleBookNames.contains("Matthew"));
-        assertTrue(bibleBookNames.contains("Mark"));
+        assertTrue(bibleBookNames.contains("Mal"));
+        assertTrue(bibleBookNames.contains("Mat"));
+        assertTrue(bibleBookNames.contains("Mar"));
     }
 
     /**

@@ -163,7 +163,6 @@
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
 			<version>4.1-beta1</version>
-			<scope>test</scope>
 		</dependency>
 	</dependencies>
 </project>

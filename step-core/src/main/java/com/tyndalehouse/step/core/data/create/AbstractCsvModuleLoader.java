@@ -20,7 +20,7 @@ import com.tyndalehouse.step.core.utils.StepIOUtils;
  * @author cjburrell
  * 
  */
-public class AbstractCsvModuleLoader {
+public abstract class AbstractCsvModuleLoader {
     private static final Logger LOG = LoggerFactory.getLogger(AbstractCsvModuleLoader.class);
 
     /**

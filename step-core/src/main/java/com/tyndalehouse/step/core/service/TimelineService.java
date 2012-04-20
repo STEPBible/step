@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.joda.time.LocalDateTime;
 
-import com.tyndalehouse.step.core.data.entities.Timeband;
+import com.tyndalehouse.step.core.data.entities.HotSpot;
 import com.tyndalehouse.step.core.data.entities.TimelineEvent;
 import com.tyndalehouse.step.core.data.entities.aggregations.TimelineEventsAndDate;
 
@@ -25,7 +25,7 @@ public interface TimelineService {
      * 
      * @return a list of timebands with all the required details
      */
-    List<Timeband> getTimelineConfiguration();
+    List<HotSpot> getTimelineConfiguration();
 
     /**
      * Returns events that fall within a certain time period

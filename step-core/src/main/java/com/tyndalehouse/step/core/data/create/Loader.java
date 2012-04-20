@@ -17,23 +17,23 @@ public class Loader {
     private final TimelineModuleLoader timelineModuleLoader;
     private final EbeanServer ebean;
     private final GeographyModuleLoader geoModuleLoader;
-    private final RelationalPeopleModuleLoader peopleLoader;
+    private final HotSpotModuleLoader hotSpotModuleLoader;
 
     /**
      * The loader is given a connection source to load the data
      * 
      * @param timelineModuleLoader loader that loads the timeline module
      * @param geoModuleLoader the loader for geography data
-     * @param peopleLoader loads the genealogies
+     * @param hotSpotModuleLoader loads the hotspots for the timeline
      * @param ebean the persistence server
      */
     @Inject
     public Loader(final EbeanServer ebean, final TimelineModuleLoader timelineModuleLoader,
-            final GeographyModuleLoader geoModuleLoader, final RelationalPeopleModuleLoader peopleLoader) {
+            final GeographyModuleLoader geoModuleLoader, final HotSpotModuleLoader hotSpotModuleLoader) {
         this.ebean = ebean;
         this.timelineModuleLoader = timelineModuleLoader;
         this.geoModuleLoader = geoModuleLoader;
-        this.peopleLoader = peopleLoader;
+        this.hotSpotModuleLoader = hotSpotModuleLoader;
     }
 
     /**
@@ -51,7 +51,7 @@ public class Loader {
         this.ebean.beginTransaction();
 
         try {
-            // TODO
+            this.hotSpotModuleLoader.init();
             this.timelineModuleLoader.init();
             this.geoModuleLoader.init();
             // this.peopleLoader.init();

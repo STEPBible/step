@@ -42,66 +42,74 @@ TimelineWidget.prototype.initAndLoad = function() {
     this.eventSource = new Timeline.DefaultEventSource();
      
     if(!this.initialised) {
-    	var zones = [
-    	                {   
-                            start:  Timeline.DateTime.parseIso8601DateTime("-1251-12-18T00:00:00.000"),
-                            end:    Timeline.DateTime.parseIso8601DateTime("-1250-01-21T00:00:00.000"),
-    	                    magnify:  5,
-    	                    unit:     Timeline.DateTime.WEEK,
-    	                }];
-    	
-	    this.bands = [ 
-			Timeline.createHotZoneBandInfo({
-			    width:          "80%", 
-			    intervalUnit:   Timeline.DateTime.MONTH, 
-			    intervalPixels: 150,
-			    zones:          zones,
-			    eventSource:    this.eventSource,
-			}),
-	        
-	        Timeline.createBandInfo({
-	        	overview:       true,
-	            trackHeight:    0.5,
-	            trackGap:       0.2,
-	            eventSource: this.eventSource,
-	        	width:          "30%", 
-	            intervalUnit:   Timeline.DateTime.YEAR, 
-	            intervalPixels: 300
-	        })
-	        ];
-
-	    this.bands[0].decorators = [
-	                               new Timeline.SpanHighlightDecorator({
-	                                   startDate:  Timeline.DateTime.parseIso8601DateTime("-1251-12-18T00:00:00.000"),
-	                                   endDate:    Timeline.DateTime.parseIso8601DateTime("-1250-01-21T00:00:00.000"),
-	                                   color:      "#FFC080", /*this is the color of the "span" that is highlighted*/
-	                                   opacity:    50,
-	                                   startLabel: "START", /* labels can use HTML tags, should be styled in stylesheet below, this lebel is right aligned*/
-	                                   endLabel:   "END", /* this one is left aligned*/
-	                                  // theme:      theme,
-	                                  cssClass: 't-highlight1'
-	                               })];
-	    
-	    
-	    
-	    this.bands[1].syncWith = 0;
-	    this.bands[1].highlight = true;
-	    
-		//set up timeline
-		this.tl = Timeline.create(this.rootElement[0], this.bands, Timeline.HORIZONTAL);
-
-		//set up scrollers
-		this.tl.getBand(0).addOnScrollListener(function(band) {
-			self.intelligentScroll(band);
-        });
-		
-		this.initToolbar();
-		
-		// set status as successfully intialised
-		this.initialised = true;
-    }
+		$.getSafe(TIMELINE_GET_CONFIGURATION, function(data, url) {
+			var zones = [];
+			
+			$.each(data, function(index, item) {
+				//create one zone per config item
+    			zones.push({   
+                            start:  	Timeline.DateTime.parseIso8601DateTime(item.start),
+                            end:    	Timeline.DateTime.parseIso8601DateTime(item.end),
+    	                    magnify:  	item.magnify,
+    	                    unit:     	Timeline.DateTime[item.scale],
+    						color:     item.color,
+    						description: item.description
+    			});
+    		});
 	
-    this.onLoad();
+			self.bands = [ 
+				Timeline.createHotZoneBandInfo({
+				    width:          "80%", 
+				    intervalUnit:   Timeline.DateTime.MONTH, 
+				    intervalPixels: 100,
+				    zones:          zones,
+				    eventSource:    self.eventSource,
+				}),
+		        
+		        Timeline.createBandInfo({
+		        	overview:       true,
+		            trackHeight:    0.5,
+		            trackGap:       0.2,
+		            eventSource: 	self.eventSource,
+		        	width:          "30%", 
+		            intervalUnit:   Timeline.DateTime.YEAR, 
+		            intervalPixels: 300
+		        })
+	        ];
+	
+			var decorators = [];
+			$.each(zones, function(index, item) {
+				decorators.push(new Timeline.SpanHighlightDecorator({
+	                   startDate:  item.start,
+	                   endDate:    item.end,
+	                   color:      item.color,
+	                   opacity:    50,
+	                   startLabel: item.description,
+//	                   endLabel:   "END",
+ 	                  cssClass: 't-highlight1'
+	               }));
+			});
+			
+			self.bands[0].decorators = decorators;
+			
+			self.bands[1].syncWith = 0;
+			self.bands[1].highlight = true;
+		    
+			//set up timeline
+			self.tl = Timeline.create(self.rootElement[0], self.bands, Timeline.HORIZONTAL);
+
+			//set up scrollers
+			self.tl.getBand(0).addOnScrollListener(function(band) {
+				self.intelligentScroll(band);
+	        });
+		
+			self.initToolbar();
+		
+			// set status as successfully initialised
+			self.initialised = true;
+			self.onLoad();
+		});
+    }
 };
 
 
@@ -240,6 +248,9 @@ TimelineWidget.prototype.initToolbar = function() {
 		if($(this).text() === "Link to passage") {
 			$(this).button("option", {icons: { primary: "ui-icon-pin-s" }, label: "Unlink from passage"});
 			self.linkToPassage = true;
+			
+			//trigger reload in case passage has already changed
+			self.onLoad();
 		} else {	
 			$(this).button("option", {icons: { primary: "ui-icon-pin-w" }, label: "Link to passage"});
 			self.linkToPassage = false;
@@ -247,16 +258,22 @@ TimelineWidget.prototype.initToolbar = function() {
 	});
 	
 	
+	$("#bottomModuleHeader #scrollTimelineToDate").click(function() {
+		var datePopup = $("#goToDate");
+		$("#scrollToYear", datePopup).val(self.tl.getBand(0).getCenterVisibleDate().getFullYear());
+		datePopup.dialog({ modal: true, 
+						   buttons : [{ 
+						            	  text: "OK", 
+						            	  click: function() { 
+						            		  $(this).dialog("close"); 
+						            		  var yearValue = $("#scrollToYear", datePopup).val();
+						            		  self.tl.getBand(0).setCenterVisibleDate(Timeline.DateTime.parseIso8601DateTime(yearValue)); 
+						            		  self.showVisibleEvents(self.tl.getBand(0)); 
+						              }
+						   }] 
+						}).show();
+	});
 };
-
-
-/**
- * This method updates the events on the timeline
- */
-TimelineWidget.prototype.refreshTimeline = function(passageReference) {
-	
-}
-
 
 
 /**

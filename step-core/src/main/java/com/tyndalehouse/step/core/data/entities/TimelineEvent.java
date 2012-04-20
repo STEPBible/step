@@ -6,7 +6,6 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import org.joda.time.LocalDateTime;
@@ -38,9 +37,6 @@ public class TimelineEvent extends ScriptureTarget implements Serializable {
 
     @Column(nullable = true)
     private PrecisionType toPrecision;
-
-    @ManyToOne(cascade = CascadeType.ALL)
-    private HotSpot hotSpot;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "timelineEvent")
     private List<ScriptureReference> references;
@@ -113,20 +109,6 @@ public class TimelineEvent extends ScriptureTarget implements Serializable {
      */
     public void setToPrecision(final PrecisionType toPrecision) {
         this.toPrecision = toPrecision;
-    }
-
-    /**
-     * @return the hotSpot
-     */
-    public HotSpot getHotSpot() {
-        return this.hotSpot;
-    }
-
-    /**
-     * @param hotSpot the hotSpot to set
-     */
-    public void setHotSpot(final HotSpot hotSpot) {
-        this.hotSpot = hotSpot;
     }
 
     /**

@@ -1,15 +1,13 @@
 package com.tyndalehouse.step.core.data.entities;
 
 import java.io.Serializable;
-import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+
+import org.joda.time.LocalDateTime;
 
 import com.avaje.ebean.annotation.CacheStrategy;
 import com.tyndalehouse.step.core.data.entities.reference.TimeUnitType;
@@ -22,7 +20,7 @@ import com.tyndalehouse.step.core.data.entities.reference.TimeUnitType;
  */
 @CacheStrategy(readOnly = true)
 @Entity
-public class HotSpot implements KeyedEntity, Serializable {
+public class HotSpot implements Serializable {
     private static final long serialVersionUID = -7904172771680747618L;
 
     @Id
@@ -30,19 +28,22 @@ public class HotSpot implements KeyedEntity, Serializable {
     private Integer id;
 
     @Column
-    private String description;
+    private LocalDateTime start;
 
     @Column
-    private String code;
+    private LocalDateTime end;
+
+    @Column
+    private String description;
 
     @Column
     private TimeUnitType scale;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    private Timeband timeband;
+    @Column
+    private String color;
 
-    @OneToMany
-    private List<TimelineEvent> events;
+    @Column
+    private double magnify;
 
     /**
      * @return the id
@@ -73,21 +74,6 @@ public class HotSpot implements KeyedEntity, Serializable {
     }
 
     /**
-     * @return the code
-     */
-    @Override
-    public String getCode() {
-        return this.code;
-    }
-
-    /**
-     * @param code the code to set
-     */
-    public void setCode(final String code) {
-        this.code = code;
-    }
-
-    /**
      * @return the scale
      */
     public TimeUnitType getScale() {
@@ -102,31 +88,58 @@ public class HotSpot implements KeyedEntity, Serializable {
     }
 
     /**
-     * @return the timeband
+     * @return the start
      */
-    public Timeband getTimeband() {
-        return this.timeband;
+    public LocalDateTime getStart() {
+        return this.start;
     }
 
     /**
-     * @param timeband the timeband to set
+     * @param start the start to set
      */
-    public void setTimeband(final Timeband timeband) {
-        this.timeband = timeband;
+    public void setStart(final LocalDateTime start) {
+        this.start = start;
     }
 
     /**
-     * @return the events
+     * @return the end
      */
-    public List<TimelineEvent> getEvents() {
-        return this.events;
+    public LocalDateTime getEnd() {
+        return this.end;
     }
 
     /**
-     * @param events the events to set
+     * @param end the end to set
      */
-    public void setEvents(final List<TimelineEvent> events) {
-        this.events = events;
+    public void setEnd(final LocalDateTime end) {
+        this.end = end;
     }
 
+    /**
+     * @return the color
+     */
+    public String getColor() {
+        return this.color;
+    }
+
+    /**
+     * @param color the color to set
+     */
+    public void setColor(final String color) {
+        this.color = color;
+    }
+
+    /**
+     * @return the magnify
+     */
+    public double getMagnify() {
+        return this.magnify;
+    }
+
+    /**
+     * @param magnify the magnify to set
+     */
+    public void setMagnify(final double magnify) {
+        this.magnify = magnify;
+    }
 }

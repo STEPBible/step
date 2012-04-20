@@ -13,8 +13,8 @@ import com.avaje.ebean.EbeanServer;
 import com.avaje.ebean.Query;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.tyndalehouse.step.core.data.entities.HotSpot;
 import com.tyndalehouse.step.core.data.entities.ScriptureReference;
-import com.tyndalehouse.step.core.data.entities.Timeband;
 import com.tyndalehouse.step.core.data.entities.TimelineEvent;
 import com.tyndalehouse.step.core.data.entities.aggregations.TimelineEventsAndDate;
 import com.tyndalehouse.step.core.data.entities.reference.TargetType;
@@ -44,8 +44,8 @@ public class TimelineServiceImpl implements TimelineService {
     }
 
     @Override
-    public List<Timeband> getTimelineConfiguration() {
-        return this.ebean.createQuery(Timeband.class).fetch("hotspots").findList();
+    public List<HotSpot> getTimelineConfiguration() {
+        return this.ebean.createQuery(HotSpot.class).findList();
     }
 
     @Override
@@ -73,7 +73,7 @@ public class TimelineServiceImpl implements TimelineService {
         }
 
         // copy list to new list that can be sorted
-        final ArrayList<TimelineEvent> events = new ArrayList<TimelineEvent>(matchingTimelineEvents);
+        final List<TimelineEvent> events = new ArrayList<TimelineEvent>(matchingTimelineEvents);
 
         // first we order events based on the start date
         Collections.sort(events, new Comparator<TimelineEvent>() {

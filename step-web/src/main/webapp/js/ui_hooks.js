@@ -32,7 +32,8 @@ SETUP_INSTALL_BIBLE = 					STEP_SERVER_BASE_URL + "setup/installBible/";
 TIMELINE_GET_EVENTS = 					STEP_SERVER_BASE_URL + "timeline/getEvents/";
 TIMELINE_GET_EVENTS_IN_PERIOD = 		STEP_SERVER_BASE_URL + "timeline/getEventsInPeriod/";
 TIMELINE_GET_EVENTS_FROM_REFERENCE = 	STEP_SERVER_BASE_URL + "timeline/getEventsFromReference/";
-TIMELINE_GET_CONFIG = 					STEP_SERVER_BASE_URL + "timeline/getTimelineConfiguration";
+TIMELINE_GET_CONFIGURATION = 			STEP_SERVER_BASE_URL + "timeline/getTimelineConfiguration";
+
 
 USER_LOGIN = 							STEP_SERVER_BASE_URL + "user/login/";
 USER_LOGOUT = 							STEP_SERVER_BASE_URL + "user/logout/";

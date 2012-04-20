@@ -1,8 +1,9 @@
 package com.tyndalehouse.step.rest.framework;
 
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.Locale;
+
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import com.avaje.ebeaninternal.server.text.json.DefaultJsonValueAdapter;
 
@@ -13,10 +14,10 @@ import com.avaje.ebeaninternal.server.text.json.DefaultJsonValueAdapter;
  * 
  */
 public class StepJsonValueAdapter extends DefaultJsonValueAdapter {
+    private final DateTimeFormatter iso8601 = DateTimeFormat.forPattern("\"yyyy-MM-dd'T'HH:mm:ss.SSS\"");
+
     @Override
     public String jsonFromTimestamp(final Timestamp date) {
-        final SimpleDateFormat sdf = new SimpleDateFormat("\"EEE, d MMM yyyy HH:mm:ss Z\"",
-                Locale.getDefault());
-        return sdf.format(date);
+        return this.iso8601.print(date.getTime());
     }
 }

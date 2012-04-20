@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.tyndalehouse.step.core.data.entities.Timeband;
+import com.tyndalehouse.step.core.data.entities.HotSpot;
 import com.tyndalehouse.step.core.data.entities.TimelineEvent;
 import com.tyndalehouse.step.core.data.entities.aggregations.TimelineEventsAndDate;
 import com.tyndalehouse.step.core.service.TimelineService;
@@ -108,7 +108,7 @@ public class TimelineController {
      * @return the timebands
      */
     @Cacheable(true)
-    public List<Timeband> getTimelineConfiguration() {
+    public List<HotSpot> getTimelineConfiguration() {
         return this.timelineService.getTimelineConfiguration();
     }
 }

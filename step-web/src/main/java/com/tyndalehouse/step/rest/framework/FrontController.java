@@ -1,4 +1,4 @@
-package com.tyndalehouse.step.rest.controllers;
+package com.tyndalehouse.step.rest.framework;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -23,11 +23,6 @@ import com.google.inject.Injector;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
-import com.tyndalehouse.step.rest.framework.Cacheable;
-import com.tyndalehouse.step.rest.framework.ClientErrorResolver;
-import com.tyndalehouse.step.rest.framework.ClientHandledIssue;
-import com.tyndalehouse.step.rest.framework.ResponseCache;
-import com.tyndalehouse.step.rest.framework.StepRequest;
 
 /**
  * The FrontController acts like a minimal REST server. The paths are resolved as follows:
@@ -40,6 +35,7 @@ import com.tyndalehouse.step.rest.framework.StepRequest;
 @Singleton
 public class FrontController extends HttpServlet {
     private static final Logger LOGGER = LoggerFactory.getLogger(FrontController.class);
+    private static final String CONTROLLER_PACKAGE = "com.tyndalehouse.step.rest.controllers";
     private static final String ENTITIES_PACKAGE = "com.tyndalehouse.step.core.data.entities";
     private static final String AVAJE_PACKAGE = "com.avaje";
     private static final String UTF_8_ENCODING = "UTF-8";
@@ -283,7 +279,7 @@ public class FrontController extends HttpServlet {
         // if retrieving yields null, get controller from Guice, and put in cache
         if (controllerInstance == null) {
             // make up the full class name
-            final String packageName = getClass().getPackage().getName();
+            final String packageName = CONTROLLER_PACKAGE;
             final StringBuilder className = new StringBuilder(packageName.length() + controllerName.length()
                     + CONTROLLER_SUFFIX.length() + 1);
 
@@ -323,15 +319,18 @@ public class FrontController extends HttpServlet {
         Method controllerMethod = this.methodNames.get(cacheKey);
         if (controllerMethod == null) {
             // resolve method
+
             try {
-                controllerMethod = controllerClass.getMethod(methodName, getClasses(args));
+                final Class<?>[] classes = getClasses(args);
+                controllerMethod = controllerClass.getMethod(methodName, classes);
+                this.methodNames.put(cacheKey, controllerMethod);
 
                 // put method in cache
-                this.methodNames.put(cacheKey, controllerMethod);
             } catch (final NoSuchMethodException e) {
                 throw new StepInternalException(e.getMessage(), e);
             }
         }
+
         return controllerMethod;
     }
 

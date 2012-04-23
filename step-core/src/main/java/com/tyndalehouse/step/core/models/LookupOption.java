@@ -15,22 +15,26 @@ public enum LookupOption {
     /**
      * Showing headings
      */
-    HEADINGS("Headings", "Headings", XslConversionType.DEFAULT, true),
+    HEADINGS("Headings", XslConversionType.DEFAULT, true),
     // CHECKSTYLE:ON
     /**
-     * Showing headings
+     * Showing verse numbers
      */
-    VERSE_NUMBERS("VNum", "Verse Nums.", XslConversionType.DEFAULT, true),
+    VERSE_NUMBERS("VNum", XslConversionType.DEFAULT, true),
+    /**
+     * Showing cross references
+     */
+    NOTES("Notes", XslConversionType.DEFAULT, true),
     /** Strong numbers */
-    STRONG_NUMBERS("StrongsNumbers", "Strongs", XslConversionType.INTERLINEAR),
+    STRONG_NUMBERS("StrongsNumbers", XslConversionType.INTERLINEAR),
 
     /** Morphology */
-    MORPHOLOGY("Morph", "Morphology", XslConversionType.INTERLINEAR),
+    MORPHOLOGY("Morph", XslConversionType.INTERLINEAR),
     // CHECKSTYLE:OFF
     /**
      * Interlinears are available when Strongs are available.
      */
-    INTERLINEAR("Interlinear", "Interlinear", XslConversionType.INTERLINEAR),
+    INTERLINEAR("Interlinear", XslConversionType.INTERLINEAR),
     // CHECKSTYLE:ON
     /**
      * Showing headings
@@ -38,7 +42,6 @@ public enum LookupOption {
     TINY_VERSE_NUMBERS("TinyVNum", XslConversionType.DEFAULT);
 
     private final String xsltParameterName;
-    // private final String displayName;
     private final XslConversionType stylesheet;
     private final boolean enabledByDefault;
 
@@ -48,7 +51,7 @@ public enum LookupOption {
      * @param xsltParameterName the corresponding parameter name in the XSLT stylesheet
      */
     private LookupOption(final String xsltParameterName) {
-        this(xsltParameterName, xsltParameterName, DEFAULT);
+        this(xsltParameterName, DEFAULT, false);
     }
 
     /**
@@ -56,29 +59,17 @@ public enum LookupOption {
      * @param stylesheet the stylesheet to use
      */
     private LookupOption(final String xsltParameterName, final XslConversionType stylesheet) {
-        this(xsltParameterName, null, stylesheet);
+        this(xsltParameterName, stylesheet, false);
     }
 
     /**
      * @param xsltParameterName the name of the parameter in the stylesheet
      * @param stylesheet the stylesheet to use
-     * @param displayName the name to display on the user interface
-     */
-    private LookupOption(final String xsltParameterName, final String displayName,
-            final XslConversionType stylesheet) {
-        this(xsltParameterName, displayName, stylesheet, false);
-    }
-
-    /**
-     * @param xsltParameterName the name of the parameter in the stylesheet
-     * @param stylesheet the stylesheet to use
-     * @param displayName the name to display on the user interface
      * @param enabledByDefault true to have the UI display the option by default
      */
-    private LookupOption(final String xsltParameterName, final String displayName,
-            final XslConversionType stylesheet, final boolean enabledByDefault) {
+    private LookupOption(final String xsltParameterName, final XslConversionType stylesheet,
+            final boolean enabledByDefault) {
         this.xsltParameterName = xsltParameterName;
-        // this.displayName = displayName;
         this.stylesheet = stylesheet;
         this.enabledByDefault = enabledByDefault;
     }
@@ -89,13 +80,6 @@ public enum LookupOption {
     public String getXsltParameterName() {
         return this.xsltParameterName;
     }
-
-    // /**
-    // * @return the display name of the lookup option
-    // */
-    // public String getUiKey() {
-    // return this.displayName;
-    // }
 
     /**
      * @return the stylesheet that should be used

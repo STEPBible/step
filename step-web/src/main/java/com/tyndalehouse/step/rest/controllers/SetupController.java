@@ -1,5 +1,7 @@
 package com.tyndalehouse.step.rest.controllers;
 
+import static org.apache.commons.lang.Validate.notNull;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,6 +30,9 @@ public class SetupController {
      */
     @Inject
     public SetupController(final BibleInformationService bibleInformationService, final Loader loader) {
+        notNull(bibleInformationService, "No bible information service was provided");
+        notNull(loader, "No loader module was provided");
+
         this.bibleInformation = bibleInformationService;
         this.loader = loader;
     }
@@ -59,6 +64,7 @@ public class SetupController {
      * @param reference the initials of the bible to install
      */
     public void installBible(final String reference) {
+        notNull(reference, "A reference must be provided to install a bible");
         LOGGER.debug("Installing module {}", reference);
         this.bibleInformation.installModules(reference);
     }

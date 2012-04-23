@@ -38,6 +38,7 @@ TimelineWidget.prototype.initAndLoad = function() {
 	
 	//set up the theme
 	this.theme = Timeline.ClassicTheme.create();
+	
     this.theme.event.bubble.width = 250;
     this.eventSource = new Timeline.DefaultEventSource();
      
@@ -64,6 +65,20 @@ TimelineWidget.prototype.initAndLoad = function() {
 				    intervalPixels: 100,
 				    zones:          zones,
 				    eventSource:    self.eventSource,
+				    zoomIndex: 10,
+				    zoomSteps: new Array(
+		              {pixelsPerInterval: 280,  unit: Timeline.DateTime.HOUR},
+		              {pixelsPerInterval: 140,  unit: Timeline.DateTime.HOUR},
+		              {pixelsPerInterval:  70,  unit: Timeline.DateTime.HOUR},
+		              {pixelsPerInterval:  35,  unit: Timeline.DateTime.HOUR},
+		              {pixelsPerInterval: 400,  unit: Timeline.DateTime.DAY},
+		              {pixelsPerInterval: 200,  unit: Timeline.DateTime.DAY},
+		              {pixelsPerInterval: 100,  unit: Timeline.DateTime.DAY},
+		              {pixelsPerInterval:  50,  unit: Timeline.DateTime.DAY},
+		              {pixelsPerInterval: 400,  unit: Timeline.DateTime.MONTH},
+		              {pixelsPerInterval: 200,  unit: Timeline.DateTime.MONTH},
+		              {pixelsPerInterval: 100,  unit: Timeline.DateTime.MONTH} 
+				    )
 				}),
 		        
 		        Timeline.createBandInfo({
@@ -244,6 +259,21 @@ TimelineWidget.prototype.initToolbar = function() {
 		mainBand.scrollToCenter(mainBand.getMaxVisibleDate());
 	});
 	
+	$("#bottomModuleHeader #zoomInTimeline").click(function() {
+		var mainBand = self.tl.getBand(0);
+		mainBand.zoom(true);
+		self.tl.paint();
+		self.tl.layout();
+	});
+
+	$("#bottomModuleHeader #zoomOutTimeline").click(function() {
+		var mainBand = self.tl.getBand(0);
+		mainBand.zoom(false);
+		self.tl.paint();
+		self.tl.layout();
+	});
+	
+	
 	$("#bottomModuleHeader #linkToPassage").click(function() {
 		if($(this).text() === "Link to passage") {
 			$(this).button("option", {icons: { primary: "ui-icon-pin-s" }, label: "Unlink from passage"});
@@ -261,7 +291,8 @@ TimelineWidget.prototype.initToolbar = function() {
 	$("#bottomModuleHeader #scrollTimelineToDate").click(function() {
 		var datePopup = $("#goToDate");
 		$("#scrollToYear", datePopup).val(self.tl.getBand(0).getCenterVisibleDate().getFullYear());
-		datePopup.dialog({ modal: true, 
+		datePopup.dialog({ title: "Please enter a year:",
+						   modal: true, 
 						   buttons : [{ 
 						            	  text: "OK", 
 						            	  click: function() { 
@@ -330,6 +361,7 @@ Timeline.DefaultEventSource.Event.prototype.fillInfoBubble = function (elmt, the
 	this.fillDescription(divBody); 
 	theme.event.bubble.bodyStyler(divBody); 
 	elmt.appendChild(divBody); 
+	
 	// This is where they define the times in the bubble
 	var divTime = doc.createElement("div"); 
 	divTime.innerHTML = start + " - " + end; 

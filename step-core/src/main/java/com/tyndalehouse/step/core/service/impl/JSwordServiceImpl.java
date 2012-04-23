@@ -216,6 +216,11 @@ public class JSwordServiceImpl implements JSwordService {
             options.add(LookupOption.VERSE_NUMBERS);
         }
 
+        if (book.getBookMetaData().hasFeature(FeatureType.FOOTNOTES)
+                || book.getBookMetaData().hasFeature(FeatureType.SCRIPTURE_REFERENCES)) {
+            options.add(LookupOption.NOTES);
+        }
+
         // cycle through each option
         for (final LookupOption lo : LookupOption.values()) {
             final FeatureType ft = FeatureType.fromString(lo.getXsltParameterName());

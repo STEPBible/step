@@ -126,6 +126,7 @@ ToolbarMenu.prototype.refreshMenuOptions = function(version) {
 ToolbarMenu.prototype.setDefaultOptions = function() {
 	this.toggleMenuItem("HEADINGS");
 	this.toggleMenuItem("VERSE_NUMBERS");
+	this.toggleMenuItem("NOTES");
 }
 
 /**

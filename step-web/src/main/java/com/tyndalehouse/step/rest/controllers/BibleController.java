@@ -1,12 +1,12 @@
 package com.tyndalehouse.step.rest.controllers;
 
 import static org.apache.commons.lang.StringUtils.isNotBlank;
+import static org.apache.commons.lang.Validate.notEmpty;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import org.apache.commons.lang.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,6 +38,7 @@ public class BibleController {
      */
     @Inject
     public BibleController(final BibleInformationService bibleInformation) {
+
         this.bibleInformation = bibleInformation;
         LOGGER.debug("Created Bible Controller");
     }
@@ -89,8 +90,8 @@ public class BibleController {
     @Cacheable(true)
     public HtmlWrapper getBibleText(final String version, final String reference, final String options,
             final String interlinearVersion) {
-        Validate.notEmpty(version, "You need to provide a version");
-        Validate.notEmpty(reference, "You need to provide a reference");
+        notEmpty(version, "You need to provide a version");
+        notEmpty(reference, "You need to provide a reference");
 
         String[] userOptions = null;
         if (isNotBlank(options)) {

@@ -5,7 +5,7 @@ import com.google.inject.Injector;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.google.inject.servlet.ServletModule;
 import com.tyndalehouse.step.core.guice.StepCoreModule;
-import com.tyndalehouse.step.rest.controllers.FrontController;
+import com.tyndalehouse.step.rest.framework.FrontController;
 
 /**
  * Configures the listener for the web app to return the injector used to configure the whole of the

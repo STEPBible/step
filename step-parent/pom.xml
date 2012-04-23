@@ -333,7 +333,6 @@
 		<url>http://http://www.tyndale.cam.ac.uk/</url>
 	</organization>
 
-
 	<build>
 		<pluginManagement>
 			<plugins>
@@ -454,19 +453,31 @@
 					<version>2.4</version>
 					<configuration>
 						<check>
-							<branchRate>70</branchRate>
-							<lineRate>70</lineRate>
-							<haltOnFailure>false</haltOnFailure>
-							<totalBranchRate>60</totalBranchRate>
-							<totalLineRate>60</totalLineRate>
-							<packageLineRate>60</packageLineRate>
-							<packageBranchRate>60</packageBranchRate>
+							<branchRate>20</branchRate>
+							<lineRate>20</lineRate>
+							<haltOnFailure>true</haltOnFailure>
+							<totalBranchRate>20</totalBranchRate>
+							<totalLineRate>20</totalLineRate>
 						</check>
 					</configuration>
 				</plugin>
 			</plugins>
 		</pluginManagement>
 		
+		<plugins>
+<!-- 		 <plugin> -->
+<!-- 	        <groupId>org.codehaus.mojo</groupId> -->
+<!-- 	        <artifactId>cobertura-maven-plugin</artifactId> -->
+<!-- 	        <executions> -->
+<!-- 	          <execution> -->
+<!-- 	            <goals> -->
+<!-- 	              <goal>clean</goal> -->
+<!-- 	              <goal>check</goal> -->
+<!-- 	            </goals> -->
+<!-- 	          </execution> -->
+<!-- 	        </executions> -->
+<!-- 	      </plugin> -->
+		</plugins>
 
 		
 	</build>

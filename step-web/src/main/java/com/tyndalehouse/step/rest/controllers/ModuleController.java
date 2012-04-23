@@ -1,5 +1,8 @@
 package com.tyndalehouse.step.rest.controllers;
 
+import static org.apache.commons.lang.Validate.notEmpty;
+import static org.apache.commons.lang.Validate.notNull;
+
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -24,6 +27,7 @@ public class ModuleController {
      */
     @Inject
     public ModuleController(final ModuleService moduleDefintions) {
+        notNull(moduleDefintions, "Intialising the module administration controller failed");
         this.moduleDefintions = moduleDefintions;
     }
 
@@ -53,6 +57,7 @@ public class ModuleController {
      */
     @Cacheable(true)
     public String getDefinition(final String reference) {
+        notEmpty(reference, "A reference must be provided to obtain a definition");
         LOGGER.debug("Getting definition for {}", reference);
         return this.moduleDefintions.getDefinition(reference).getExplanation();
     }

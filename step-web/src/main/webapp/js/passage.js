@@ -35,7 +35,7 @@ function Passage(passageContainer, versions, passageId) {
 	
 
 	//register when we want to be alerted that a bookmark has changed
-	this.passage.hear("bookmark-triggered-" + this.passageId, function(selfElement, data) {
+	this.passage.hear("new-passage-" + this.passageId, function(selfElement, data) {
 		self.reference.val(data);
 		self.changePassage();
 	});

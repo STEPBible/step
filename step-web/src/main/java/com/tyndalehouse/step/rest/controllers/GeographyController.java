@@ -1,5 +1,8 @@
 package com.tyndalehouse.step.rest.controllers;
 
+import static org.apache.commons.lang.Validate.notEmpty;
+import static org.apache.commons.lang.Validate.notNull;
+
 import java.util.List;
 
 import com.google.inject.Inject;
@@ -25,6 +28,7 @@ public class GeographyController {
      */
     @Inject
     public GeographyController(final GeographyService geoService) {
+        notNull(geoService, "Failed to initialise Geography Controller");
         this.geoService = geoService;
 
     }
@@ -36,6 +40,7 @@ public class GeographyController {
      * @return the list of places (lat/long/precisions)
      */
     public List<GeoPlace> getPlaces(final String reference) {
+        notEmpty("A reference is required for looking up geography modules");
         return this.geoService.getPlaces(reference);
     }
 

@@ -63,6 +63,10 @@ function toggleMenuItem(menuItem) {
 	$.shout("pane-menu-toggle-item-" + getPassageId(menuItem), menuItem.name);
 };
 
+function changePassage(element, passageReference) {
+	$.shout("new-passage-" + getPassageId(element), passageReference);
+}
+
 /**
  * shows the login popup
  */

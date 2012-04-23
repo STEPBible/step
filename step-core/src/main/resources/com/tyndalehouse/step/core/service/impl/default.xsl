@@ -668,25 +668,17 @@
 
   <!--=======================================================================-->
   <xsl:template match="reference">
-    <xsl:choose>
-      <xsl:when test="$XRef = 'true'">
-        <a href="bible://{@osisRef}"><xsl:apply-templates/></a>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:apply-templates/>
-      </xsl:otherwise>
-    </xsl:choose>
+        <xsl:variable name="versification" select="jsword:getVersification($v11nf, $v11n)"/>
+        <xsl:variable name="passage" select="jsword:getValidKey($keyf, $versification, @osisRef)"/>
+        <xsl:variable name="passageKey" select="jsword:getName($passage)"/>
+        <a href="#" class="linkRef" onclick="javascript:changePassage(this, &quot;{$passageKey}&quot;);"><xsl:apply-templates/></a>
   </xsl:template>
   
   <xsl:template match="reference" mode="jesus">
-    <xsl:choose>
-      <xsl:when test="$XRef = 'true'">
-        <a href="bible://{@osisRef}"><xsl:apply-templates mode="jesus"/></a>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:apply-templates mode="jesus"/>
-      </xsl:otherwise>
-    </xsl:choose>
+        <xsl:variable name="versification" select="jsword:getVersification($v11nf, $v11n)"/>
+        <xsl:variable name="passage" select="jsword:getValidKey($keyf, $versification, @osisRef)"/>
+        <xsl:variable name="passageKey" select="jsword:getName($passage)"/>
+        <a href="#" onclick="javascript:changePassage(this, &quot;{$passageKey}&quot;);"><xsl:apply-templates/></a>
   </xsl:template>
   
   <!--=======================================================================-->

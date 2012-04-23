@@ -74,9 +74,16 @@ SUP.verseNumber {
 	color: gray;
 }
 
-SUP.note {
-	font-size: 75%;
-	color: green;
+SUP.note a {
+	font-size: 100%;
+	font-weight: bold;
+	color: #696;
+}
+
+SUP.note a:visited {
+	font-size: 100%;
+	font-weight: bold;
+	color: #696;
 }
 
 FONT.lex {
@@ -151,13 +158,12 @@ H6.level {
 
 
 
-H3.heading {
+H3.heading  {
 	font-size: 110%;
 	color: #666699;
 	font-weight: bold;
 	clear: both;
 }
-
 
 .editable {
 	border: 1px dashed black;
@@ -206,9 +212,31 @@ TD.text {
 }
 
 
+.notes a {
+	color: #666699;
+	font-weight: bold;
+	front-size: xx-small;
+}
+
+
+
+a.linkRef {
+	color: #696;
+	font-weight: normal;
+	front-size: smaller;
+}
+
+a:hover.linkRef {
+	color: #696;	
+	font-weight: normal;
+	front-size: smaller;
+}
+
+
 /* the following are for dictionary entries */
 FONT.orth {
 	font-weight: bold;
+	
 }
 
 FONT.pron {

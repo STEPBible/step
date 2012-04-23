@@ -1,4 +1,4 @@
-package com.tyndalehouse.step.rest.controllers;
+package com.tyndalehouse.step.rest.framework;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
@@ -30,8 +30,10 @@ import com.avaje.ebean.EbeanServer;
 import com.google.inject.Injector;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.service.BibleInformationService;
+import com.tyndalehouse.step.rest.controllers.BibleController;
 import com.tyndalehouse.step.rest.framework.ClientErrorResolver;
 import com.tyndalehouse.step.rest.framework.ControllerCacheKey;
+import com.tyndalehouse.step.rest.framework.FrontController;
 import com.tyndalehouse.step.rest.framework.ResponseCache;
 import com.tyndalehouse.step.rest.framework.StepRequest;
 

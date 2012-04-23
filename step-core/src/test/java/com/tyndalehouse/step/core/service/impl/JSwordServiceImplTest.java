@@ -266,4 +266,14 @@ public class JSwordServiceImplTest {
         // t2.join();
         // }
     }
+
+    @Test
+    public void testPrettyXml() throws BookException, NoSuchKeyException, JDOMException, IOException {
+        final Book currentBook = Books.installed().getBook("ESV");
+        final BookData bookData = new BookData(currentBook, currentBook.getKey("Exodus 3:14"));
+        final Element osisFragment = bookData.getOsisFragment();
+
+        final XMLOutputter xmlOutputter = new XMLOutputter(Format.getPrettyFormat());
+        LOGGER.debug(xmlOutputter.outputString(osisFragment));
+    }
 }

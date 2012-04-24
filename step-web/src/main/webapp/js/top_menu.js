@@ -3,37 +3,35 @@
  * Represents the menu that will be at the top of the passage container
  */
 function TopMenu(menuRoot) {
-	this.menuRoot = $(menuRoot);
 	var self = this;
+	this.menuRoot = menuRoot;
 
+	
 	ddsmoothmenu.init({
-		 mainmenuid: menuRoot.id, //menu DIV id
+		 mainmenuid: menuRoot.attr("id"), //menu DIV id
 		 zIndexStart: 1000,
 		 orientation: 'h', //Horizontal or vertical menu: Set to "h" or "v"
 		 classname: 'ddsmoothmenu topMenu', //class added to menu's outer DIV
-		 //customtheme: ["#1c5a80", "#18374a"],
-		 contentsource: ["topMenu", "topmenu.html"]
+         contentsource: "markup"
 		});
 	
 	this.setDefaultOptions();
 	
-//	$(menuRoot).hear("pane-menu-toggle-item-" + this.passageId, function(selfElement, menuOptionName) {
-//		self.toggleMenuItem(menuOptionName);
-//	});
+	$(menuRoot).hear("pane-menu-toggle-item", function(selfElement, menuOption) {
+		self.toggleMenuItem(menuOption);
+	});
+	
+	this.setupHearers();
 }
 
-/**
- * @param selected true to select
- * @param menuItem the item name
- */
-TopMenu.prototype.selectMenuItem = function(menuItem, selected) {
-	if(selected) {
-		this.tickMenuItem(menuItem);
-	} else {
-		this.untickMenuItem(menuItem);
-	}
-}
-
+TopMenu.prototype.setupHearers = function() {
+	this.menuRoot.hear("topmenu-LIMIT_AVAILABLE_MODULES", function(selfElement, enabled) {
+		var versions = $.getSafe(BIBLE_GET_BIBLE_VERSIONS + enabled, function(versions) {
+			// send events to passages and reload - then change init function
+			$.shout("version-list-refresh", versions);
+		});
+	});
+};
 
 /**
  * toggles the tick next to the element
@@ -44,13 +42,11 @@ TopMenu.prototype.toggleMenuItem = function(selectedItem) {
 		var matchedSelectedIcon = $(this.getItemSelector(selectedItem)).children(".selectingTick");
 		if(matchedSelectedIcon.length) {
 			this.untickMenuItem(selectedItem);		
+			$.shout("topmenu-" + selectedItem, false);
 		} else {
 			this.tickMenuItem(selectedItem);
+			$.shout("topmenu-" + selectedItem, true);
 		}
-
-		//fire off options?
-		//fire-off an event indicating that menu options have changed!
-//		$.shout("toolbar-menu-options-changed-" + this.passageId);
 	}
 }
 
@@ -88,7 +84,14 @@ TopMenu.prototype.checkItemIsSelectable = function(selectedItem) {
  * sets up the default options for the menu
  */
 TopMenu.prototype.setDefaultOptions = function() {
-	this.toggleMenuItem("LIMIT_AVAILABLE_MODULES");
+//	this.toggleMenuItem("LIMIT_AVAILABLE_MODULES");
+}
+
+/**
+ * returns true if item is selected
+ */
+TopMenu.prototype.isItemSelected = function(name) {
+	return getItemSelector(name).children("img.selectingTick").length != 0;
 }
 
 /**

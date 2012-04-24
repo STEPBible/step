@@ -8,11 +8,15 @@ import static org.mockito.Mockito.verify;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Mock;
 
+import com.tyndalehouse.step.core.guice.providers.ServerSessionProvider;
 import com.tyndalehouse.step.core.models.LookupOption;
 import com.tyndalehouse.step.core.service.BibleInformationService;
+import com.tyndalehouse.step.guice.providers.ClientSessionProvider;
 
 /**
  * tests the bible controller
@@ -22,7 +26,22 @@ import com.tyndalehouse.step.core.service.BibleInformationService;
  */
 public class BibleControllerTest {
     private final BibleInformationService bibleInformation = mock(BibleInformationService.class);
-    private final BibleController testController = new BibleController(this.bibleInformation);
+
+    @Mock
+    private ServerSessionProvider serverSessionProvider;
+    @Mock
+    private ClientSessionProvider clientSessionProvider;
+
+    private BibleController testController;
+
+    /**
+     * sets the test up
+     */
+    @Before
+    public void setup() {
+        this.testController = new BibleController(this.bibleInformation, this.serverSessionProvider,
+                this.clientSessionProvider);
+    }
 
     /**
      * tests that we call correct method
@@ -31,7 +50,7 @@ public class BibleControllerTest {
     public void testGetBibleVersions() {
         // do test
         this.testController.getBibleVersions();
-        verify(this.bibleInformation).getAvailableBibleVersions();
+        verify(this.bibleInformation).getAvailableBibleVersions(true, null);
     }
 
     /**

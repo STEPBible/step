@@ -18,9 +18,12 @@ public interface BibleInformationService {
     /**
      * Queries Jsword to return all the installed versions of the bible
      * 
+     * @param locale the locale of the requester
+     * @param allVersions a boolean indicating whether all versions should be returned
+     * 
      * @return all the available versions of the bible
      */
-    List<BibleVersion> getAvailableBibleVersions();
+    List<BibleVersion> getAvailableBibleVersions(boolean allVersions, String locale);
 
     /**
      * This method selects passage text and forms XML for the client. This is done server side so that the

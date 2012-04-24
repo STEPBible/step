@@ -20,4 +20,9 @@ public interface ClientSession {
      * @return the IP address
      */
     String getIpAddress();
+
+    /**
+     * @return the preferred language of the user
+     */
+    String getLanguage();
 }

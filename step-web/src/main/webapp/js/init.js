@@ -80,22 +80,18 @@ function initLayout() {
 }
 
 function initMenu() {
-	ddsmoothmenu.init({
-		 mainmenuid: "topMenu-ajax", //menu DIV id
-		 zIndexStart: 1000,
-		 orientation: 'h', //Horizontal or vertical menu: Set to "h" or "v"
-		 classname: 'ddsmoothmenu topMenu', //class added to menu's outer DIV
-		 //customtheme: ["#1c5a80", "#18374a"],
-		 contentsource: ["topMenu", "topmenu.html"]
-		});
-//	new TopMenu($("#topMenu-ajax");
+	$.get("topmenu.html", function(data) {
+		var topMenu = $("#topMenu");
+		topMenu.html(data);
+		new TopMenu($("#topMenu-ajax"));		
+	});
 	
 	
 	$.get("panemenu.html", function(data) {
 		var menusToBe = $(".innerMenus");
 		menusToBe.html(data);
 		menusToBe.each(function(index, value) {
-			new ToolbarMenu(index, value);
+		new ToolbarMenu(index, value);
 		});
 	});
 }
@@ -151,33 +147,18 @@ function initData() {
 	var strongedVersions = [];
 	var ii = 0;
 	
-	$.getJSON(BIBLE_GET_BIBLE_VERSIONS, function(data) {
-		var parsedResponse = $.map(data, function(item) {
+	$.getJSON(BIBLE_GET_BIBLE_VERSIONS + "false", function(versionsFromServer) {
+		
+		$.each(versionsFromServer, function(index, item) {
 			var showingText = "[" + item.initials + "] " + item.name;
-			var features = "";
-			
-			//add to strongs if applicable
 			if(item.hasStrongs) {
-				features += " " + "<span class='versionFeature strongsFeature' title='Supports Strongs concordance'>S</span>";
-				features += " " + "<span class='versionFeature interlinearFeature' title='Supports interlinear feature'>I</span>";
 				strongedVersions[ii++] = { label: showingText, value: item.initials};
-			}
-			
-			if(item.hasMorphology) {
-				features += " " + "<span class='versionFeature morphologyFeature' title='Supports morphology feature'>M</span>";
-			}
-			
-			//return response for dropdowns
-			return {
-				label : showingText,
-				value : item.initials,
-				features: features
 			}
 		});
 		
 		//add the ALL Version, by iterating through all found versions and adding them as the value
 		var allVersionsKey = "";
-		var passages = initPassages(parsedResponse, options);
+		var passages = initPassages(versionsFromServer, options);
 		initInterlinearPopup(strongedVersions);
 		initModules(passages);
 	});

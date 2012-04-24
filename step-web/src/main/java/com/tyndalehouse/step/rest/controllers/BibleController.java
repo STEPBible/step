@@ -11,8 +11,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
+import com.tyndalehouse.step.core.data.entities.Session;
+import com.tyndalehouse.step.core.data.entities.User;
 import com.tyndalehouse.step.core.models.BibleVersion;
+import com.tyndalehouse.step.core.models.ClientSession;
 import com.tyndalehouse.step.core.models.EnrichedLookupOption;
 import com.tyndalehouse.step.core.models.LookupOption;
 import com.tyndalehouse.step.core.service.BibleInformationService;
@@ -30,16 +34,21 @@ public class BibleController {
     private static final long serialVersionUID = -5176839737814243641L;
     private static final Logger LOGGER = LoggerFactory.getLogger(BibleController.class);
     private final BibleInformationService bibleInformation;
+    private final Provider<Session> serverSession;
+    private final Provider<ClientSession> clientSession;
 
     /**
      * creates the controller giving access to bible information
      * 
      * @param bibleInformation the service allowing access to biblical material
+     * @param serverSession session
      */
     @Inject
-    public BibleController(final BibleInformationService bibleInformation) {
-
+    public BibleController(final BibleInformationService bibleInformation,
+            final Provider<Session> serverSession, final Provider<ClientSession> clientSession) {
         this.bibleInformation = bibleInformation;
+        this.serverSession = serverSession;
+        this.clientSession = clientSession;
         LOGGER.debug("Created Bible Controller");
     }
 
@@ -50,7 +59,20 @@ public class BibleController {
      */
     @Cacheable(true)
     public List<BibleVersion> getBibleVersions() {
-        return this.bibleInformation.getAvailableBibleVersions();
+        return this.bibleInformation.getAvailableBibleVersions(true, null);
+    }
+
+    /**
+     * a REST method that returns version of the Bible that are available
+     * 
+     * @param allVersions boolean to indicate whether all versions should be returned
+     * @return all versions of modules that are considered to be Bibles.
+     */
+    @Cacheable(true)
+    public List<BibleVersion> getBibleVersions(final String allVersions) {
+        final User user = this.serverSession.get().getUser();
+        final String language = user == null ? this.clientSession.get().getLanguage() : user.getLanguage();
+        return this.bibleInformation.getAvailableBibleVersions(Boolean.valueOf(allVersions), language);
     }
 
     /**

@@ -1,12 +1,12 @@
 /* top menu */
 .topMenu {
-	background-color: #147000; /*background of menu bar (default state)*/
+	background-color: #629914; /*background of menu bar (default state)*/
 	border-bottom: 1px solid white;
 }
 
 /*Top level menu link items style*/
 .topMenu ul li a,.ddsmoothmenu ul li label {
-	background-color: #147000; /*background of menu items (default state)*/
+	background-color: #629914; /*background of menu items (default state)*/
 	border-right: 1px solid white;
 	color: white;
 }
@@ -156,6 +156,10 @@
 	padding: 5px;
 	margin: 0;
 	border-top-width: 0;
+}
+
+#topMenu .ddsmoothmenu ul li ul li a {
+	width: 250px !important;
 }
 
 /* Holly Hack for IE \*/

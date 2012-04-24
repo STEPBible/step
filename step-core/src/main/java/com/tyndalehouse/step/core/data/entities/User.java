@@ -38,6 +38,9 @@ public class User implements Serializable {
     @Column
     private String country;
 
+    @Column
+    private String language;
+
     /**
      * @return the id
      */
@@ -120,5 +123,19 @@ public class User implements Serializable {
      */
     public void setSalt(final byte[] salt) {
         this.salt = salt.clone();
+    }
+
+    /**
+     * @return the language
+     */
+    public String getLanguage() {
+        return this.language;
+    }
+
+    /**
+     * @param language the language to set
+     */
+    public void setLanguage(final String language) {
+        this.language = language;
     }
 }

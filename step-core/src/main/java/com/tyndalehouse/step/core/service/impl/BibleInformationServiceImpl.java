@@ -46,9 +46,10 @@ public class BibleInformationServiceImpl implements BibleInformationService {
     }
 
     @Override
-    public List<BibleVersion> getAvailableBibleVersions() {
+    public List<BibleVersion> getAvailableBibleVersions(final boolean allVersions, final String locale) {
         LOGGER.info("Getting bible versions");
-        return getSortedSerialisableList(this.jsword.getInstalledModules(BookCategory.BIBLE));
+        return getSortedSerialisableList(this.jsword.getInstalledModules(allVersions, locale,
+                BookCategory.BIBLE));
     }
 
     @Override

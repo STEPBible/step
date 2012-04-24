@@ -44,6 +44,16 @@ public interface JSwordService {
     List<Book> getInstalledModules(BookCategory... bibleCategory);
 
     /**
+     * looks up any installed module
+     * 
+     * @param bibleCategory the categories of the modules to be returned
+     * @param allVersions indicates all versions of the bible
+     * @param locale specifies a particular language of interest + defaults
+     * @return a list of bible books
+     */
+    List<Book> getInstalledModules(boolean allVersions, String locale, BookCategory... bibleCategory);
+
+    /**
      * Gets the features for a module
      * 
      * @param version the initials of the book to look up
@@ -98,4 +108,5 @@ public interface JSwordService {
      * @return a list of matching bible book names
      */
     List<String> getBibleBookNames(String bookStart, String version);
+
 }

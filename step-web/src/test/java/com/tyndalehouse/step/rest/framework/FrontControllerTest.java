@@ -3,7 +3,9 @@ package com.tyndalehouse.step.rest.framework;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyLong;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
@@ -29,13 +31,10 @@ import org.mockito.runners.MockitoJUnitRunner;
 import com.avaje.ebean.EbeanServer;
 import com.google.inject.Injector;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
+import com.tyndalehouse.step.core.guice.providers.ServerSessionProvider;
 import com.tyndalehouse.step.core.service.BibleInformationService;
+import com.tyndalehouse.step.guice.providers.ClientSessionProvider;
 import com.tyndalehouse.step.rest.controllers.BibleController;
-import com.tyndalehouse.step.rest.framework.ClientErrorResolver;
-import com.tyndalehouse.step.rest.framework.ControllerCacheKey;
-import com.tyndalehouse.step.rest.framework.FrontController;
-import com.tyndalehouse.step.rest.framework.ResponseCache;
-import com.tyndalehouse.step.rest.framework.StepRequest;
 
 /**
  * tests the front controller parsing process
@@ -47,6 +46,7 @@ import com.tyndalehouse.step.rest.framework.StepRequest;
 @RunWith(MockitoJUnitRunner.class)
 public class FrontControllerTest {
     private FrontController fcUnderTest;
+
     @Mock
     private Injector guiceInjector;
 
@@ -60,6 +60,11 @@ public class FrontControllerTest {
     private ResponseCache responseCache;
     @Mock
     private StepRequest stepRequest;
+
+    @Mock
+    private ServerSessionProvider serverSessionProvider;
+    @Mock
+    private ClientSessionProvider clientSessionProvider;
 
     /**
      * Simply setting up the FrontController under test
@@ -146,7 +151,8 @@ public class FrontControllerTest {
     @Test
     public void testGetControllerMethod() throws IllegalAccessException, InvocationTargetException {
         final BibleInformationService bibleInfo = mock(BibleInformationService.class);
-        final BibleController controllerInstance = new BibleController(bibleInfo);
+        final BibleController controllerInstance = new BibleController(bibleInfo, this.serverSessionProvider,
+                this.clientSessionProvider);
 
         // when
         final Method controllerMethod = this.fcUnderTest.getControllerMethod("getBibleVersions",
@@ -154,7 +160,7 @@ public class FrontControllerTest {
 
         // then
         controllerMethod.invoke(controllerInstance);
-        verify(bibleInfo).getAvailableBibleVersions();
+        verify(bibleInfo).getAvailableBibleVersions(anyBoolean(), anyString());
     }
 
     /**

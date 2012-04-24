@@ -134,6 +134,33 @@ public class FrontController extends HttpServlet {
         // CHECKSTYLE:ON
     }
 
+    // /**
+    // * casts objects to the appropriate types
+    // *
+    // * @param parameterTypes the parameter types expected
+    // * @param args the arguments passed in
+    // * @return the set of cast arguments
+    // */
+    // private Object[] parseArgs(final Class<?>[] parameterTypes, final String[] args) {
+    // final Object[] newArgs = new String[parameterTypes.length];
+    //
+    // for (int ii = 0; ii < parameterTypes.length; ii++) {
+    // // deal with nulls
+    // if (ii > args.length) {
+    // newArgs[ii] = null;
+    // } else {
+    // if (boolean.class.equals(parameterTypes[ii])) {
+    // newArgs[ii] = Boolean.valueOf(args[ii]);
+    // } else {
+    // newArgs[ii] = args[ii];
+    // }
+    // }
+    // }
+    //
+    // // TODO Auto-generated method stub
+    // return null;
+    // }
+
     /**
      * We attempt here to rethrow the exception that caused the invocation target exception, so that we can
      * handle it nicely for the user

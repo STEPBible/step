@@ -11,14 +11,16 @@ import com.tyndalehouse.step.core.models.ClientSession;
 public class WebSessionImpl implements ClientSession {
     private String sessionId;
     private String ipAddress;
+    private String language;
 
     /**
      * creates a web session
      * 
      * @param id the id of the session
      */
-    public WebSessionImpl(final String id) {
+    public WebSessionImpl(final String id, final String language) {
         this.sessionId = id;
+        this.language = language;
     }
 
     /**
@@ -49,5 +51,17 @@ public class WebSessionImpl implements ClientSession {
      */
     public void setIpAddress(final String ipAddress) {
         this.ipAddress = ipAddress;
+    }
+
+    @Override
+    public String getLanguage() {
+        return this.language;
+    }
+
+    /**
+     * @param language the language to set
+     */
+    public void setLanguage(final String language) {
+        this.language = language;
     }
 }

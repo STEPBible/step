@@ -5,7 +5,7 @@
  * @param passageContainer the passage Container containing the whole control
  * @param versions the list of versions to use to populate the dropdown
  */
-function Passage(passageContainer, versions, passageId) {
+function Passage(passageContainer, rawServerVersions, passageId) {
 	var self = this;
 	this.container = passageContainer;
 	this.version = $(".passageVersion", passageContainer);
@@ -17,7 +17,7 @@ function Passage(passageContainer, versions, passageId) {
 	//read state from the cookie
 	this.setInitialPassage();
 	
-	this.initVersionsTextBox(versions);
+	this.initVersionsTextBox(rawServerVersions);
 	this.initReferenceTextBox();
 	
 	
@@ -40,6 +40,10 @@ function Passage(passageContainer, versions, passageId) {
 		self.changePassage();
 	});
 	
+	this.passage.hear("version-list-refresh", function(selfElement, versions) {
+		self.refreshVersionsTextBox(versions);
+	});
+	
 	this.bookmarkButton.hear("bookmark-passage-" + this.passageId, function(selfElement, data) {
 		self.bookmarkButton.click();
 	});
@@ -51,15 +55,45 @@ function Passage(passageContainer, versions, passageId) {
 		});
 };
 
+
+/**
+ * refreshes the list attached to the version dropdown
+ */
+Passage.prototype.refreshVersionsTextBox = function(rawServerVersions) {
+	//need to make server response adequate for autocomplete:
+	var parsedVersions = $.map(rawServerVersions, function(item) {
+		var showingText = "[" + item.initials + "] " + item.name;
+		var features = "";
+		//add to Strongs if applicable, and therefore interlinear
+		if(item.hasStrongs) {
+			features += " " + "<span class='versionFeature strongsFeature' title='Supports Strongs concordance'>S</span>";
+			features += " " + "<span class='versionFeature interlinearFeature' title='Supports interlinear feature'>I</span>";
+		}
+
+		//add morphology
+		if(item.hasMorphology) {
+			features += " " + "<span class='versionFeature morphologyFeature' title='Supports morphology feature'>M</span>";
+		}
+		
+		//return response for dropdowns
+		return {
+			label : showingText,
+			value : item.initials,
+			features: features
+		}
+	});
+	
+	this.version.autocomplete({source: parsedVersions});
+};
+
 /**
  * Sets up the autocomplete for the versions dropdown
  */
-Passage.prototype.initVersionsTextBox = function(versions) {
+Passage.prototype.initVersionsTextBox = function(rawServerVersions) {
 	var self = this;
 	
 	// set up autocomplete
 	this.version.autocomplete({
-		source : versions,
 		minLength: 0,
 		delay: 0,
 		select : function(event, ui) {
@@ -79,6 +113,7 @@ Passage.prototype.initVersionsTextBox = function(versions) {
 		.appendTo( ul )
 	}
 	
+	this.refreshVersionsTextBox(rawServerVersions)
 };
 
 Passage.prototype.initReferenceTextBox = function() {	

@@ -4,6 +4,7 @@ import static java.lang.Integer.valueOf;
 import static org.apache.commons.lang.StringUtils.isBlank;
 import static org.apache.commons.lang.StringUtils.isNotBlank;
 import static org.apache.commons.lang.StringUtils.isNotEmpty;
+import static org.apache.commons.lang.Validate.notNull;
 import static org.crosswire.jsword.book.BookCategory.BIBLE;
 
 import java.net.URI;
@@ -62,7 +63,10 @@ import com.tyndalehouse.step.core.xsl.XslConversionType;
  */
 @Singleton
 public class JSwordServiceImpl implements JSwordService {
+    private static final String ANCIENT_GREEK = "grc";
+    private static final String ANCIENT_HEBREW = "hbo";
     private static final Logger LOGGER = LoggerFactory.getLogger(JSwordServiceImpl.class);
+
     private final List<Installer> bookInstallers;
 
     /**
@@ -75,12 +79,13 @@ public class JSwordServiceImpl implements JSwordService {
         this.bookInstallers = installers;
     }
 
-    /**
-     * @param bibleCategory the categories of books that should be considered
-     * @return returns a list of installed modules
-     */
     @Override
-    public List<Book> getInstalledModules(final BookCategory... bibleCategory) {
+    public List<Book> getInstalledModules(final boolean allVersions, final String locale,
+            final BookCategory... bibleCategory) {
+        if (!allVersions) {
+            notNull(locale, "Locale was not passed by requester");
+        }
+
         if (bibleCategory == null || bibleCategory.length == 0) {
             return new ArrayList<Book>();
         }
@@ -96,10 +101,22 @@ public class JSwordServiceImpl implements JSwordService {
             @Override
             @SuppressWarnings("PMD.JUnit4TestShouldUseTestAnnotation")
             public boolean test(final Book b) {
-                return categories.contains(b.getBookCategory());
+                return categories.contains(b.getBookCategory())
+                        && (allVersions || ANCIENT_GREEK.equals(b.getLanguage().getCode())
+                                || ANCIENT_HEBREW.equals(b.getLanguage().getCode()) || locale.equals(b
+                                .getLanguage().getCode()));
             }
         };
         return Books.installed().getBooks(bf);
+    }
+
+    /**
+     * @param bibleCategory the categories of books that should be considered
+     * @return returns a list of installed modules
+     */
+    @Override
+    public List<Book> getInstalledModules(final BookCategory... bibleCategory) {
+        return getInstalledModules(true, null, bibleCategory);
     }
 
     /**

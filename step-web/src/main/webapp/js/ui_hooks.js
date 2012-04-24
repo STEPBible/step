@@ -59,8 +59,16 @@ function getPassageId(menuItem) {
 
 /** a simpler toggler for the menu items */
 function toggleMenuItem(menuItem) {
-	//the hook needs to find the passage id
-	$.shout("pane-menu-toggle-item-" + getPassageId(menuItem), menuItem.name);
+	//the hook needs to find the passage id if we're a sub menu
+	var eventName = "pane-menu-toggle-item";
+	var passageId = getPassageId(menuItem);
+	if(passageId) {
+		eventName += "-" + passageId;
+	} else {
+		//append passage
+	}
+	
+	$.shout(eventName, menuItem.name);
 };
 
 function changePassage(element, passageReference) {

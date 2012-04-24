@@ -36,6 +36,10 @@ span.interlinear span span span {
 	padding-right: 2px;
 }
 
+.interlinear .verseNumber {
+	clear: left;
+}
+
 .smallHeaders {
 	font-size: 6pt;
 	padding-right: 2px;
@@ -51,8 +55,18 @@ A {
 }
 
 span.w {
-	margin-top: 20px;	
+	margin-top: 20px;
+	margin-top: 20px;
+	border-left: dotted darkgrey 1px;
+	text-align: center;
+	padding-left: 2px !important;
 }
+
+span.verseStart {
+	clear: left;
+}
+	
+
 
 span.strongs a {
 	color: orange;

@@ -95,6 +95,7 @@
   <xsl:param name="morphFunctionCall" select="'javascript:showMorph'" />
   
   <!--  a comma separated list of versions to display, if provided, then we display the interlinear -->
+  <xsl:param name="baseVersion" select="''" />
   <xsl:param name="interlinearVersion" select="''" />
   <xsl:param name="interlinearReference" select="''" />
 
@@ -272,7 +273,7 @@
     <!-- Always output the verse -->
     <xsl:choose>
       <xsl:when test="$VLine = 'true'">
-        <div class="l"><a name="{@osisID}"><xsl:call-template name="versenum"/></a><xsl:apply-templates/></div>
+        <span class="l interlinear"><a name="{@osisID}"><xsl:call-template name="versenum"/></a><xsl:apply-templates/></span>
       </xsl:when>
       <xsl:otherwise>
         <span class="interlinear"><xsl:call-template name="versenum"/><xsl:apply-templates/></span>
@@ -360,9 +361,9 @@
         -->
       <xsl:choose>
         <xsl:when test="$TinyVNum = 'true' and $Notes = 'true'">
-          <span class="w">
+          <span class="w verseStart">
           	<!--  the verse number -->
-          	<a name="{@osisID}"><span class="verseNumber"><xsl:value-of select="$versenum"/></span></a>
+          	<a name="{@osisID}"><span class="verseNumber"><xsl:value-of select="concat($versenum, ' ', $baseVersion)"/></span></a>
           	
 			<!-- output a filling gap for strongs -->
 			<xsl:if test="$StrongsNumbers = 'true'">
@@ -383,9 +384,9 @@
 		</span>
         </xsl:when>
         <xsl:when test="$TinyVNum = 'true' and $Notes = 'false'">
-          <span class="w">
+          <span class="w verseStart">
           	<!--  the verse number -->
-          	<a name="{@osisID}"><span class="text"><span class="verseNumber"><xsl:value-of select="$versenum"/></span></span></a>
+          	<a name="{@osisID}"><span class="text"><span class="verseNumber"><xsl:value-of select="concat($versenum, ' ', $baseVersion)"/></span></span></a>
           	
 			<!-- output a filling gap for strongs -->
 			<xsl:if test="$StrongsNumbers = 'true'">

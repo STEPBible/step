@@ -242,6 +242,7 @@ public class JSwordServiceImpl implements JSwordService {
             final String interlinearVersion, final String reference) {
         if (tsep.getParameter(LookupOption.INTERLINEAR.getXsltParameterName()) != null) {
             tsep.setParameter("interlinearReference", reference);
+            tsep.setParameter("VLine", false);
 
             if (isNotBlank(interlinearVersion)) {
                 tsep.setParameter("interlinearVersion", interlinearVersion);
@@ -267,6 +268,8 @@ public class JSwordServiceImpl implements JSwordService {
                 tsep.setParameter(LookupOption.TINY_VERSE_NUMBERS.getXsltParameterName(), true);
             }
         }
+
+        tsep.setParameter("baseVersion", version);
     }
 
     @Override
@@ -413,19 +416,17 @@ public class JSwordServiceImpl implements JSwordService {
 
     @Override
     public List<String> getBibleBookNames(final String bookStart, final String version) {
-        if (isBlank(bookStart)) {
-            return new ArrayList<String>();
-        }
+        final String lookup = isBlank(bookStart) ? "" : bookStart;
 
         Versification versification = Versifications.instance().getVersification(version);
         if (versification == null) {
             versification = Versifications.instance().getDefaultVersification();
         }
 
-        final List<String> books = getBooksFromVersification(bookStart, versification);
+        final List<String> books = getBooksFromVersification(lookup, versification);
 
         if (books.isEmpty()) {
-            return getBooksFromVersification(bookStart, Versifications.instance().getDefaultVersification());
+            return getBooksFromVersification(lookup, Versifications.instance().getDefaultVersification());
         }
 
         return books;

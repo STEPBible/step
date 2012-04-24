@@ -36,6 +36,7 @@ public class DatabaseConfigProvider implements Provider<EbeanServer> {
     private final String url;
     private final String username;
     private final String password;
+    private BasicDataSource ds;
 
     /**
      * We inject some properties in to the datasource provider
@@ -78,20 +79,19 @@ public class DatabaseConfigProvider implements Provider<EbeanServer> {
         final ServerConfig config = new ServerConfig();
         config.setName("db");
 
-        final BasicDataSource ds = new BasicDataSource();
-        ds.setDefaultAutoCommit(false);
-        ds.setDriverClassName(this.driverClassName);
-        ds.setPoolPreparedStatements(this.poolStatements);
-        ds.setMaxActive(this.maxActive);
-        ds.setMaxIdle(this.maxIdle);
-        ds.setMaxOpenPreparedStatements(this.maxOpenStatements);
-        ds.setValidationQuery(this.validationQuery);
-        ds.setUrl(this.url);
-        ds.setUsername(this.username);
-        ds.setPassword(this.password);
+        this.ds = new BasicDataSource();
+        this.ds.setDefaultAutoCommit(false);
+        this.ds.setDriverClassName(this.driverClassName);
+        this.ds.setPoolPreparedStatements(this.poolStatements);
+        this.ds.setMaxActive(this.maxActive);
+        this.ds.setMaxIdle(this.maxIdle);
+        this.ds.setMaxOpenPreparedStatements(this.maxOpenStatements);
+        this.ds.setValidationQuery(this.validationQuery);
+        this.ds.setUrl(this.url);
+        this.ds.setUsername(this.username);
+        this.ds.setPassword(this.password);
 
-        config.setDataSource(ds);
-
+        config.setDataSource(this.ds);
         // config.addPackage("com.tyndalehouse.step.core.data.entities");
         addEntities(config);
 
@@ -126,4 +126,10 @@ public class DatabaseConfigProvider implements Provider<EbeanServer> {
         config.addClass(TimelineEventsAndDate.class);
     }
 
+    /**
+     * @return the ds
+     */
+    public BasicDataSource getDs() {
+        return this.ds;
+    }
 }

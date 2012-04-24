@@ -91,7 +91,7 @@ Passage.prototype.initReferenceTextBox = function() {
 				response(text);
 			});
 		},
-		minLength: 1,
+		minLength: 0,
 		delay: 0,
 		select : function(event, ui) {
 			$(this).val(ui.item.value);

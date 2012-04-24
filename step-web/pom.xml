@@ -21,6 +21,11 @@
 			<artifactId>step-core</artifactId>
 		</dependency>
 		<dependency>
+		    <groupId>org.avaje</groupId>
+		    <artifactId>ebean</artifactId>
+		</dependency>
+		
+		<dependency>
 			<groupId>org.codehaus.jackson</groupId>
 			<artifactId>jackson-mapper-asl</artifactId>
 		</dependency>

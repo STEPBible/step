@@ -88,6 +88,8 @@ function initMenu() {
 		 //customtheme: ["#1c5a80", "#18374a"],
 		 contentsource: ["topMenu", "topmenu.html"]
 		});
+//	new TopMenu($("#topMenu-ajax");
+	
 	
 	$.get("panemenu.html", function(data) {
 		var menusToBe = $(".innerMenus");

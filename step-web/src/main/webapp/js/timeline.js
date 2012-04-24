@@ -53,7 +53,7 @@ TimelineWidget.prototype.initAndLoad = function() {
                             end:    	Timeline.DateTime.parseIso8601DateTime(item.end),
     	                    magnify:  	item.magnify,
     	                    unit:     	Timeline.DateTime[item.scale],
-    						color:     item.color,
+//    						color:     item.color,
     						description: item.description
     			});
     		});
@@ -93,17 +93,17 @@ TimelineWidget.prototype.initAndLoad = function() {
 	        ];
 	
 			var decorators = [];
-			$.each(zones, function(index, item) {
-				decorators.push(new Timeline.SpanHighlightDecorator({
-	                   startDate:  item.start,
-	                   endDate:    item.end,
-	                   color:      item.color,
-	                   opacity:    50,
-	                   startLabel: item.description,
-//	                   endLabel:   "END",
- 	                  cssClass: 't-highlight1'
-	               }));
-			});
+//			$.each(zones, function(index, item) {
+//				decorators.push(new Timeline.SpanHighlightDecorator({
+//	                   startDate:  item.start,
+//	                   endDate:    item.end,
+//	                   color:      item.color,
+//	                   opacity:    50,
+//	                   startLabel: item.description,
+////	                   endLabel:   "END",
+// 	                  cssClass: 't-highlight1'
+//	               }));
+//			});
 			
 			self.bands[0].decorators = decorators;
 			

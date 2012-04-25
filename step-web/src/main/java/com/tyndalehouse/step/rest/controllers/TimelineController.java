@@ -1,5 +1,7 @@
 package com.tyndalehouse.step.rest.controllers;
 
+import static org.apache.commons.lang.Validate.notNull;
+
 import java.util.List;
 
 import org.joda.time.LocalDateTime;
@@ -37,6 +39,8 @@ public class TimelineController {
     @Inject
     public TimelineController(final TimelineService timelineService,
             final UserInterfaceTranslator<TimelineEvent, DigestableTimeline> translator) {
+        notNull(timelineService, "Timeline service was null");
+        notNull(translator, "Translator was null");
         this.timelineService = timelineService;
         this.translator = translator;
     }
@@ -52,6 +56,8 @@ public class TimelineController {
      */
     @Cacheable(true)
     public DigestableTimeline getEventsFromReference(final String bibleReference) {
+        LOGGER.debug("Getting events for scripture [{}]", bibleReference);
+
         final TimelineEventsAndDate eventsFromScripture = this.timelineService
                 .getEventsFromScripture(bibleReference);
         return this.translator.toDigestableForm(eventsFromScripture.getEvents(),
@@ -70,6 +76,8 @@ public class TimelineController {
      */
     @Cacheable(true)
     public DigestableTimeline getEventsInPeriod(final String from, final String to) {
+        LOGGER.debug("Getting events between [{}] and [{}]", from, to);
+
         return this.translator.toDigestableForm(this.timelineService.getTimelineEvents(
                 convertJavascriptDate(from), convertJavascriptDate(to)), null);
     }
@@ -91,6 +99,8 @@ public class TimelineController {
      */
     @Cacheable(true)
     public List<HotSpot> getTimelineConfiguration() {
+        LOGGER.debug("Returning timeline configuration");
+
         return this.timelineService.getTimelineConfiguration();
     }
 }

@@ -12,6 +12,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import javax.xml.transform.TransformerException;
@@ -80,10 +81,19 @@ public class JSwordServiceImpl implements JSwordService {
     }
 
     @Override
-    public List<Book> getInstalledModules(final boolean allVersions, final String locale,
+    public List<Book> getInstalledModules(final boolean allVersions, final String language,
             final BookCategory... bibleCategory) {
+
         if (!allVersions) {
-            notNull(locale, "Locale was not passed by requester");
+            notNull(language, "Locale was not passed by requester");
+        }
+
+        // TODO : TOTOTOTOTOTOTOTO
+        final String tempLang;
+        if ("eng".equals(language)) {
+            tempLang = "en";
+        } else {
+            tempLang = language;
         }
 
         if (bibleCategory == null || bibleCategory.length == 0) {
@@ -102,12 +112,22 @@ public class JSwordServiceImpl implements JSwordService {
             @SuppressWarnings("PMD.JUnit4TestShouldUseTestAnnotation")
             public boolean test(final Book b) {
                 return categories.contains(b.getBookCategory())
-                        && (allVersions || ANCIENT_GREEK.equals(b.getLanguage().getCode())
-                                || ANCIENT_HEBREW.equals(b.getLanguage().getCode()) || locale.equals(b
-                                .getLanguage().getCode()));
+                        && (allVersions || isAcceptableVersions(b, tempLang));
             }
+
         };
         return Books.installed().getBooks(bf);
+    }
+
+    /**
+     * @param locale the language we are interested in
+     * @param book the book we are testing
+     * @return true if we are to accept the book
+     */
+    private boolean isAcceptableVersions(final Book book, final String locale) {
+        return ANCIENT_GREEK.equals(book.getLanguage().getCode())
+                || ANCIENT_HEBREW.equals(book.getLanguage().getCode())
+                || locale.equals(book.getLanguage().getCode());
     }
 
     /**
@@ -417,7 +437,7 @@ public class JSwordServiceImpl implements JSwordService {
      * @return the list of matching names
      */
     private List<String> getBooksFromVersification(final String bookStart, final Versification versification) {
-        final String searchPattern = bookStart.toLowerCase();
+        final String searchPattern = bookStart.toLowerCase(Locale.getDefault());
 
         final List<String> matchingNames = new ArrayList<String>();
         final BibleBookList books = versification.getBooks();

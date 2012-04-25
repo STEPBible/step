@@ -31,6 +31,15 @@ TopMenu.prototype.setupHearers = function() {
 			$.shout("version-list-refresh", versions);
 		});
 	});
+	
+	this.menuRoot.hear("topmenu-SYNC_BOTH_PASSAGES", function(selfElement, enabled) {
+		//alert all passages that we are passage 0 is master
+		if(enabled) {
+			$.shout("sync-passage-activated");
+		} else {
+			$.shout("sync-passage-deactivated");
+		}
+	});
 };
 
 /**

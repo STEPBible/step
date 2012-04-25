@@ -46,5 +46,14 @@ jQuery.extend(jQuery.fn,
                              }
                              jQuery._jq_shout.registry[eventName].push(item);
                          });
+    },
+    
+    unhear: function(eventName) {
+    	var self = this;
+    	jQuery.each(jQuery._jq_shout.registry[eventName], function(index, item) {
+    		if(item.source == self) {
+    			jQuery._jq_shout.registry[eventName].splice(index, 1);
+    		}
+    	});
     }
 });

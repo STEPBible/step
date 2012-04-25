@@ -40,6 +40,7 @@ public class TestData {
      * @param numCryptoIterations the number of iterations to perform - we need since we hook in to the user
      *            data service from a different viewpoint
      * @param loader the loader that should be called upon installation mainly
+     * @param coreModules a comma-separated list of core modules
      * @param jsword jsword services
      */
     @Inject

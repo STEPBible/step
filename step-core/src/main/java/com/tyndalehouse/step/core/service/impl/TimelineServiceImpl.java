@@ -99,7 +99,7 @@ public class TimelineServiceImpl implements TimelineService {
         // first get the kjv reference
         final List<ScriptureReference> passageReferences = this.jsword.getPassageReferences(reference);
 
-        if (passageReferences.size() == 0) {
+        if (passageReferences.isEmpty()) {
             return new ArrayList<TimelineEvent>();
         }
 

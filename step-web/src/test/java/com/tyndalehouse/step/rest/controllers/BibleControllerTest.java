@@ -38,7 +38,7 @@ public class BibleControllerTest {
      * sets the test up
      */
     @Before
-    public void setup() {
+    public void setUp() {
         this.testController = new BibleController(this.bibleInformation, this.serverSessionProvider,
                 this.clientSessionProvider);
     }

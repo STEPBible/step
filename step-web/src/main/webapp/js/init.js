@@ -11,7 +11,6 @@ function init() {
 		initMenu();
 		initGlobalHandlers();
 		initLayout();
-		initDefaultValues();
 		initLexicon();
 		initBookmarks();
 		
@@ -94,39 +93,6 @@ function initMenu() {
 		new ToolbarMenu(index, value);
 		});
 	});
-}
-
-function initDefaultValues() {
-	addDefaultValue($("input.defaultValue"));
-}
-
-var nonIDedInputs = 0;
-function addDefaultValue(inputSelector) {
-	var default_values = new Array();
-	inputSelector.each(function(index) {
-		$(this).addClass("inactive");
-		if(this.id == "") {
-			this.id = nonIDedInputs++;
-		}
-		if (!default_values[this.id]) {
-			default_values[this.id] = this.value;
-		}
-	});
-
-	inputSelector.focus(function() {
-		if (this.value == default_values[this.id]) {
-			$(this).removeClass("inactive");
-			this.value = '';
-		}
-		
-		$(this).blur(function() {
-			if (this.value == '') {
-				$(this).addClass("inactive");
-				this.value = default_values[this.id];
-			}
-		});
-	});
-	
 }
 
 /**

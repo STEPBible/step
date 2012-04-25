@@ -30,7 +30,6 @@ import com.tyndalehouse.step.core.service.FavouritesService;
 import com.tyndalehouse.step.core.service.GeographyService;
 import com.tyndalehouse.step.core.service.JSwordService;
 import com.tyndalehouse.step.core.service.ModuleService;
-import com.tyndalehouse.step.core.service.RelationalPeopleService;
 import com.tyndalehouse.step.core.service.TimelineService;
 import com.tyndalehouse.step.core.service.UserDataService;
 import com.tyndalehouse.step.core.service.impl.BibleInformationServiceImpl;
@@ -38,7 +37,6 @@ import com.tyndalehouse.step.core.service.impl.FavouritesServiceImpl;
 import com.tyndalehouse.step.core.service.impl.GeographyServiceImpl;
 import com.tyndalehouse.step.core.service.impl.JSwordServiceImpl;
 import com.tyndalehouse.step.core.service.impl.ModuleServiceImpl;
-import com.tyndalehouse.step.core.service.impl.RelationalPeopleServiceImpl;
 import com.tyndalehouse.step.core.service.impl.TimelineServiceImpl;
 import com.tyndalehouse.step.core.service.impl.UserDataServiceImpl;
 
@@ -67,7 +65,6 @@ public class StepCoreModule extends AbstractModule {
         bind(GeographyService.class).to(GeographyServiceImpl.class);
         bind(FavouritesService.class).to(FavouritesServiceImpl.class);
         bind(UserDataService.class).to(UserDataServiceImpl.class);
-        bind(RelationalPeopleService.class).to(RelationalPeopleServiceImpl.class);
         bind(Loader.class);
 
         bind(Session.class).toProvider(ServerSessionProvider.class);

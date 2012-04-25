@@ -12,8 +12,10 @@ import javax.persistence.MappedSuperclass;
  * @author Chris
  * 
  */
+// CHECKSTYLE:OFF
 @MappedSuperclass
 public abstract class ScriptureTarget implements Serializable {
+    // CHECKSTYLE:ON
     private static final long serialVersionUID = 1598422350749055247L;
 
     @Id

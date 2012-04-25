@@ -4,8 +4,6 @@ import static java.lang.Integer.parseInt;
 import static org.apache.commons.lang.StringUtils.isEmpty;
 import static org.apache.commons.lang.StringUtils.split;
 
-import java.util.Calendar;
-
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.LocalDateTime;
 
@@ -85,7 +83,6 @@ public class PartialDate {
      * @return the newly created PartialDate
      */
     private static PartialDate getPartialDateFromArray(final String[] parts, final boolean negativeDate) {
-        final Calendar c = Calendar.getInstance();
         final LocalDateTime translatedTime;
         PrecisionType p;
         final int multiplier = negativeDate ? -1 : 1;

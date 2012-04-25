@@ -13,6 +13,7 @@ function Passage(passageContainer, rawServerVersions, passageId) {
 	this.passage = $(".passageContent", passageContainer);
 	this.bookmarkButton = $(".bookmarkPassageLink", passageContainer);
 	this.passageId = passageId;
+	this.passageSync = false;
 	
 	//read state from the cookie
 	this.setInitialPassage();
@@ -32,7 +33,6 @@ function Passage(passageContainer, rawServerVersions, passageId) {
 		//we only care about this event if the menu was within the container...
 		self.changePassage();
 	});
-	
 
 	//register when we want to be alerted that a bookmark has changed
 	this.passage.hear("new-passage-" + this.passageId, function(selfElement, data) {
@@ -47,6 +47,15 @@ function Passage(passageContainer, rawServerVersions, passageId) {
 	this.bookmarkButton.hear("bookmark-passage-" + this.passageId, function(selfElement, data) {
 		self.bookmarkButton.click();
 	});
+	
+	this.passage.hear("sync-passage-activated", function(selfElement, data) {
+		self.doSync();
+	});
+	
+	this.passage.hear("sync-passage-deactivated", function(selfElement, data) {
+		self.deSync();
+	});
+
 	
 	this.bookmarkButton
 		.button({ icons: {primary: "ui-icon-bookmark" }, text: false})
@@ -153,21 +162,53 @@ Passage.prototype.setInitialPassage = function() {
 };
 
 /**
+ * We are forcing a passage sync, which means that we want to change the passage reference text
+ * to match passage-0
+ */
+Passage.prototype.doSync = function() {
+	var self = this;
+	if(this.passageId != 0) {
+		this.passageSync = true;
+		this.reference.attr("disabled", "disabled");
+		this.reference.attr("title", "To view a separate passage on this side of the screen, " +
+				"please use the Options menu and disable the 'Sync both passages' option.");
+		this.changePassage();
+		
+		//set up hearer for all new changes
+		this.passage.hear("passage-changed", function(selfElement, data) {
+			if(data.passageId == 0) {
+				self.changePassage();
+			}
+		});
+	}
+};
+
+/**
+ * removes the syncing setting
+ */
+Passage.prototype.deSync = function() {
+	if(this.passageId != 0) {
+		this.passageSync = false;
+		this.reference.removeAttr("disabled");
+		this.reference.removeAttr("title");
+		this.changePassage();
+		
+		//unregister hearer
+		this.passage.unhear("passage-changed");
+	}
+};
+
+/**
  * changes the passage, with optional parameters
  */
 Passage.prototype.changePassage = function() {
-	if(this.reference.hasClass("inactive") || this.version.hasClass("inactive")) {
-		raiseError("You need to provide both a version and a reference to lookup a passage");
-		return;
-	}
-	
 	//now get the options from toolbar
 	var options = this.getSelectedOptions();
 	var interlinearVersion = this.getSelectedInterlinearVersion();
 	
 	var self = this;
 	var lookupVersion = this.version.val();
-	var lookupReference = this.reference.val();
+	var lookupReference = this.passageSync ?  $(".passageReference").first().val() : this.reference.val();
 	
 	if(lookupReference && lookupVersion 
 			&& lookupVersion != "" && lookupReference != ""

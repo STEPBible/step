@@ -25,19 +25,16 @@ import com.tyndalehouse.step.rest.framework.FrontController;
  * 
  */
 public class StepServletConfig extends GuiceServletContextListener {
-    private final Logger LOGGER = LoggerFactory.getLogger(StepServletConfig.class);
-    private Injector injector;
+    private static final Logger LOGGER = LoggerFactory.getLogger(StepServletConfig.class);
 
     @Override
     protected Injector getInjector() {
-        this.injector = Guice.createInjector(new StepCoreModule(), new WebContextModule(),
-                new ServletModule() {
-                    @Override
-                    protected void configureServlets() {
-                        serve("/rest/*").with(FrontController.class);
-                    }
-                });
-        return this.injector;
+        return Guice.createInjector(new StepCoreModule(), new WebContextModule(), new ServletModule() {
+            @Override
+            protected void configureServlets() {
+                serve("/rest/*").with(FrontController.class);
+            }
+        });
     }
 
     @Override
@@ -57,9 +54,9 @@ public class StepServletConfig extends GuiceServletContextListener {
 
             try {
                 DriverManager.deregisterDriver(driver);
-                this.LOGGER.info("Deregistering Jdbc driver: {}", driver);
+                LOGGER.info("Deregistering Jdbc driver: {}", driver);
             } catch (final SQLException e) {
-                this.LOGGER.error("Error deregistering driver " + driver.toString(), e);
+                LOGGER.error("Error deregistering driver " + driver.toString(), e);
             }
         }
     }

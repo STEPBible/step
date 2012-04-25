@@ -17,6 +17,7 @@ public class WebSessionImpl implements ClientSession {
      * creates a web session
      * 
      * @param id the id of the session
+     * @param language the ISO 3-character long language name
      */
     public WebSessionImpl(final String id, final String language) {
         this.sessionId = id;

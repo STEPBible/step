@@ -29,6 +29,12 @@ import com.tyndalehouse.step.core.service.JSwordService;
  * 
  */
 public class GeographyModuleLoader implements ModuleLoader {
+    private static final int PLACE_NAME_FIELD = 0;
+    private static final int ROOT_FIELD = 1;
+    private static final int LATITUDE_FIELD = 2;
+    private static final int LONGITUDE_FIELD = 3;
+    private static final int SCRIPTURE_FIELD = 4;
+    private static final int COMMENT_FIELD = 5;
     private static final String OPENBIBLE_DATA = "geography/openbible.tab";
     private static final Logger LOG = LoggerFactory.getLogger(GeographyModuleLoader.class);
     private static final int IGNORE_LINES = 1;
@@ -88,16 +94,17 @@ public class GeographyModuleLoader implements ModuleLoader {
                 final String[] geoFields = StringUtils.splitPreserveAllTokens(geoLine, '\t');
 
                 final GeoPlace gp = new GeoPlace();
-                gp.setEsvName(geoFields[0]);
-                gp.setRoot(geoFields[1]);
-                setCoordinates(gp, geoFields[2], geoFields[3]);
+                gp.setEsvName(geoFields[PLACE_NAME_FIELD]);
+                gp.setRoot(geoFields[ROOT_FIELD]);
+                setCoordinates(gp, geoFields[LATITUDE_FIELD], geoFields[LONGITUDE_FIELD]);
                 final List<ScriptureReference> passageReferences = this.jsword
-                        .getPassageReferences(geoFields[4].replace(',', ';').replace("Sng", "Song"));
+                        .getPassageReferences(geoFields[SCRIPTURE_FIELD].replace(',', ';').replace("Sng",
+                                "Song"));
 
                 gp.setReferences(passageReferences);
-                gp.setComment(geoFields[5]);
+                gp.setComment(geoFields[COMMENT_FIELD]);
 
-                LOG.trace("Adding [{}] [{}]", gp.getEsvName(), geoFields[4]);
+                LOG.trace("Adding [{}] [{}]", gp.getEsvName(), geoFields[PLACE_NAME_FIELD]);
                 places.add(gp);
                 LOG.trace("Added [{}] [{}]", gp.getId(), gp.getEsvName());
 
@@ -144,7 +151,6 @@ public class GeographyModuleLoader implements ModuleLoader {
         LOG.trace("Parsing value coordinate [{}]", coordinate);
         while (ii < coordLength && !Character.isDigit(coordinate.charAt(ii))) {
             // do something with the characters we find
-
             ii++;
         }
 

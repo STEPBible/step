@@ -41,7 +41,9 @@ public class BibleController {
      * creates the controller giving access to bible information
      * 
      * @param bibleInformation the service allowing access to biblical material
-     * @param serverSession session
+     * @param serverSession server-side stored session
+     * @param clientSession clientSession given on the request
+     * 
      */
     @Inject
     public BibleController(final BibleInformationService bibleInformation,

@@ -26,8 +26,8 @@ public class SimileEvent implements DigestableTimeline {
     private int hotSpotId;
     private int eventId;
 
-    private String image; // ? should be url? TODO
-    private String link; // ? should be url
+    private String image;
+    private String link;
 
     /**
      * @return the start

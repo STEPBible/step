@@ -21,14 +21,15 @@ import com.tyndalehouse.step.core.data.common.GeoPrecision;
 @Entity
 public class GeoPlace extends ScriptureTarget implements Serializable {
     private static final long serialVersionUID = -3798208225083529282L;
+    private static final int COORDINATE_PRECISION = 17;
 
     @Column
     private String esvName;
     @Column
     private String root;
-    @Column(precision = 17)
+    @Column(precision = COORDINATE_PRECISION)
     private Double latitude;
-    @Column(precision = 17)
+    @Column(precision = COORDINATE_PRECISION)
     private Double longitude;
     @Column
     private String comment;

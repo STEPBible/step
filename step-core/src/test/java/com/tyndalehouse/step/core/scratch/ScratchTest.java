@@ -31,9 +31,13 @@ public class ScratchTest {
     // }
     //
     // }
-
+    /**
+     * a placeholder test to allow developers to write and comment out tests in this class
+     * 
+     */
     @Test
     public void simpleTest() {
+        // NO-OP
 
     }
 }

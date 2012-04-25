@@ -3,12 +3,6 @@ body {
 	font-family: Verdana;
 }
 
-
-
-.inactive {
-	color: #ccc;
-}
-
 .notYetImplemented {
 	background-color: black !important ;
 }

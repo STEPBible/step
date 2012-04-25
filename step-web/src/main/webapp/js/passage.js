@@ -39,6 +39,12 @@ function Passage(passageContainer, rawServerVersions, passageId) {
 		self.reference.val(data);
 		self.changePassage();
 	});
+
+	//register when we want to be alerted that a bookmark has changed
+	this.passage.hear("show-preview-" + this.passageId, function(selfElement, previewData) {
+		self.showPreview(previewData);
+	});
+	
 	
 	this.passage.hear("version-list-refresh", function(selfElement, versions) {
 		self.refreshVersionsTextBox(versions);
@@ -56,7 +62,6 @@ function Passage(passageContainer, rawServerVersions, passageId) {
 		self.deSync();
 	});
 
-	
 	this.bookmarkButton
 		.button({ icons: {primary: "ui-icon-bookmark" }, text: false})
 		.click(function() {
@@ -303,6 +308,38 @@ Passage.prototype.higlightStrongs = function(strongMorphReference) {
 		//we ignore everything else
 	}
 };
+
+/**
+ * shows a preview of the current text desired
+ */
+Passage.prototype.showPreview = function(previewData) {
+	var reference = previewData.reference;
+	var source = previewData.source;
+
+	var position = this.passageId == 0 ? "right" : "left";
+	
+	$.getSafe(BIBLE_GET_BIBLE_TEXT + this.version.val() + "/" + reference, function(text) {
+		
+		//create a bubble popup for each DOM element with class attribute as "text", "button" or "link" and LI, P, IMG elements.
+
+		$(source).CreateBubblePopup({
+									position : position,
+									align	 : 'top',
+									innerHtml: text.value,
+									width: 350,
+//									height: 100,
+									selectable: true,
+									openingSpeed: -1,
+									closingSpeed: -1,
+									innerHtmlStyle: {
+														color: '#fff !important !important', 
+														'text-align' :'left'
+													},
+									themeName: 	'all-orange',
+									themePath: 	'libs/bubble/jquerybubblepopup-themes'
+								});
+	});
+}
 
 /**
  * static method that returns strongs that should not be tagged in the UI

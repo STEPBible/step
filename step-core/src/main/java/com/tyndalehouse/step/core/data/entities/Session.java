@@ -27,7 +27,7 @@ public class Session implements Serializable {
     @GeneratedValue
     private Integer id;
 
-    @Column
+    @Column(unique = true)
     private String jSessionId;
 
     @ManyToOne(cascade = CascadeType.PERSIST)

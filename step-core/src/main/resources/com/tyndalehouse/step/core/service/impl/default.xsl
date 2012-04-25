@@ -66,6 +66,9 @@
   <!-- Whether to show morphologic forms or not -->
   <xsl:param name="Morph" select="'false'"/>
 
+  <!-- Whether to display Jesus' words in red or not -->
+  <xsl:param name="RedLetterText" select="'false'" />
+
   <!-- Whether to start each verse on an new line or not -->
   <xsl:param name="VLine" select="'false'"/>
 
@@ -114,41 +117,23 @@
           <xsl:when test="$Notes = 'true' and //note[not(@type = 'x-strongsMarkup')]">
             <xsl:choose>
               <xsl:when test="$direction != 'rtl'">
-                <table cols="2" cellpadding="5" cellspacing="5">
-                  <tr>
-                    <!-- The two rows are swapped until the bug is fixed. -->
-                    <td valign="top" class="notes">
-                      <p>&#160;</p>
+                <div class="notesPane">
                       <xsl:apply-templates select="//verse" mode="print-notes"/>
-                    </td>
-                    <td valign="top" class="text">
-                      <xsl:apply-templates/>
-                    </td>
-                  </tr>
-                </table>
+                </div>
               </xsl:when>
               <xsl:otherwise>
-                <!-- reverse the table for Right to Left languages -->
-                <table cols="2" cellpadding="5" cellspacing="5">
+                <div class="notesPane">
                   <!-- In a right to left, the alignment should be reversed too -->
-                  <tr align="right">
-                    <td valign="top" class="notes">
                       <p>&#160;</p>
                       <xsl:apply-templates select="//note" mode="print-notes"/>
-                    </td>
-                    <td valign="top" class="text">
-                      <xsl:apply-templates/>
-                    </td>
-                  </tr>
-                </table>
+				</div>
               </xsl:otherwise>
             </xsl:choose>
           </xsl:when>
-          <xsl:otherwise>
-            <xsl:apply-templates/>
-          </xsl:otherwise>
         </xsl:choose>
+	      <xsl:apply-templates/>
       </div>
+      
   </xsl:template>
 
   <!--=======================================================================-->
@@ -574,7 +559,14 @@
 
   <!--=======================================================================-->
   <xsl:template match="speaker[@who = 'Jesus']">
-    <span class="jesus"><xsl:apply-templates mode="jesus"/></span>
+  	<xsl:choose>
+	  	<xsl:when test="$RedLetterText = 'true'">
+	    	<span class="jesus"><xsl:apply-templates mode="jesus"/></span>
+	    </xsl:when>
+	    <xsl:otherwise>
+	    	<span class="speech"><xsl:apply-templates /></span>
+	    </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
   <xsl:template match="speaker">
@@ -671,14 +663,14 @@
         <xsl:variable name="versification" select="jsword:getVersification($v11nf, $v11n)"/>
         <xsl:variable name="passage" select="jsword:getValidKey($keyf, $versification, @osisRef)"/>
         <xsl:variable name="passageKey" select="jsword:getName($passage)"/>
-        <a href="#" class="linkRef" onclick="javascript:changePassage(this, &quot;{$passageKey}&quot;);"><xsl:apply-templates/></a>
+        <a href="#" class="linkRef" onmouseover="javascript:viewPassage(this, &quot;{$passageKey}&quot;);" onclick="javascript:changePassage(this, &quot;{$passageKey}&quot;);"><xsl:apply-templates/></a>
   </xsl:template>
   
   <xsl:template match="reference" mode="jesus">
         <xsl:variable name="versification" select="jsword:getVersification($v11nf, $v11n)"/>
         <xsl:variable name="passage" select="jsword:getValidKey($keyf, $versification, @osisRef)"/>
         <xsl:variable name="passageKey" select="jsword:getName($passage)"/>
-        <a href="#" onclick="javascript:changePassage(this, &quot;{$passageKey}&quot;);"><xsl:apply-templates/></a>
+        <a href="#" onmouseover="javascript:viewPassage(this, &quot;{$passageKey}&quot;);" onclick="javascript:changePassage(this, &quot;{$passageKey}&quot;);"><xsl:apply-templates/></a>
   </xsl:template>
   
   <!--=======================================================================-->
@@ -990,7 +982,14 @@
   </xsl:template>
   
   <xsl:template match="q[@who = 'Jesus']">
-    <span class="jesus"><xsl:value-of select="@marker"/><xsl:apply-templates mode="jesus"/><xsl:value-of select="@marker"/></span>
+  	<xsl:choose>
+	  	<xsl:when test="$RedLetterText = 'true'">
+	    	<span class="jesus"><xsl:value-of select="@marker"/><xsl:apply-templates mode="jesus"/><xsl:value-of select="@marker"/></span>
+	    </xsl:when>
+	    <xsl:otherwise>
+	    	<span class="q"><xsl:value-of select="@marker"/><xsl:apply-templates /><xsl:value-of select="@marker"/></span>
+	    </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
   <xsl:template match="q[@type = 'blockquote']">

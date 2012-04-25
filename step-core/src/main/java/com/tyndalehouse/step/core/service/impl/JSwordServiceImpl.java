@@ -251,6 +251,9 @@ public class JSwordServiceImpl implements JSwordService {
         // some options are always there for Bibles:
         if (BIBLE.equals(book.getBookCategory())) {
             options.add(LookupOption.VERSE_NUMBERS);
+
+            // TODO bug in modules? in jsword?
+            options.add(LookupOption.RED_LETTER);
         }
 
         if (book.getBookMetaData().hasFeature(FeatureType.FOOTNOTES)
@@ -265,6 +268,7 @@ public class JSwordServiceImpl implements JSwordService {
                 options.add(lo);
             }
         }
+
         return options;
     }
 

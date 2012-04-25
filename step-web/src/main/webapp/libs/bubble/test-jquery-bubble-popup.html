@@ -1,0 +1,77 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+<title>jQuery Bubble Popup - Test</title>
+<meta name="description" content="jQuery Bubble Popup Test">
+<meta name="keywords" content="jquery, bubble, popup, test">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style>
+/* Doc Styles */
+html, body, div, table, td, a, p, img{margin:0px;padding:0px;width:auto;height:auto;font-family:'Trebuchet MS', Arial;font-size:11px;text-align:center; vertical-align:middle;color:#333333;}
+h1{font-size:24px;}
+h2{font-size:16px;}
+a{color:#006699;}a:hover{color:#0099FF;}
+img{display:block;border:0px;}
+div.page{margin:0px auto;}
+div.header{margin:25px auto;}
+div.content{margin:auto auto;text-align:center;}
+div.footer{margin-top:50px;}
+div.footer a{font-size:10px;}
+.button{margin:auto auto;text-align:center;width:200px;height:60px;color:#FFFFFF;background-color:#006699;border:#003366 1px solid;cursor:pointer;}
+</style>
+
+<link href="css/jquery-bubble-popup-v3.css" rel="stylesheet" type="text/css" />
+<script src="scripts/jquery-1.7.2.min.js" type="text/javascript"></script>
+<script src="scripts/jquery-bubble-popup-v3.min.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+<!--
+$(document).ready(function(){
+
+		$('.button').CreateBubblePopup({
+
+									position : 'top',
+									align	 : 'center',
+									
+									innerHtml: 'Take a look to the HTML source of this page <br /> \
+												to learn how the plugin works!',
+
+									innerHtmlStyle: {
+														color:'#FFFFFF', 
+														'text-align':'center'
+													},
+
+									themeName: 'all-black',
+									themePath: 'jquerybubblepopup-themes'
+								 
+								});
+});
+//-->
+</script>
+</head>
+<body>
+<div class="page">
+	<div class="header">
+
+	  <h1>jQuery Bubble Popup</h1>
+	  <h2>test plugin</h2>
+
+	</div>
+	<div class="content">
+		<br />
+		<br />
+		<br />
+
+              <div class="button">mouse over here!</div>
+
+		<br />
+		<br />
+        <strong>Take a look to the HTML source of this page to learn how the plugin works!</strong>
+	</div>
+
+	<div class="footer">
+	  <p><a href="http://www.maxvergelli.com/jquery-bubble-popup/">JQUERY BUBBLE POPUP</a> &copy; 2012 MAX VERGELLI</p>
+	</div>
+</div>
+</body>
+</html>

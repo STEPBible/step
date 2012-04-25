@@ -46,6 +46,33 @@ span.interlinear span span span {
 	font-style: italic;
 }
 
+.notesPane {
+	display: block;
+	background-color: #F4F4E8;
+	padding: 1px;
+	max-width: 100px;
+	height: 100%;
+	color: green !important  ;
+}
+
+.leftColumn .notesPane {
+	margin-left: 5px;
+	float: right;
+}
+
+.rightColumn .notesPane {
+	margin-right: 5px;
+	float: left;
+}
+
+
+.notesPane a {
+	color: #669;
+	font-weight: bold;
+	font-size: x-small;
+}
+
+
 br.paragraph {
 	padding-top: 2px;	
 }
@@ -176,7 +203,6 @@ H3.heading  {
 	font-size: 110%;
 	color: #666699;
 	font-weight: bold;
-	clear: both;
 }
 
 .editable {

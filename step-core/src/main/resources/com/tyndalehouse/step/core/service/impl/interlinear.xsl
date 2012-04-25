@@ -59,7 +59,10 @@
   <!-- Whether to show morphologic forms or not -->
   <xsl:param name="Morph" select="'false'"/>
 
-  <!-- Whether to start each verse on an new line or not -->
+   <!-- Whether to display Jesus' words in red or not -->
+  <xsl:param name="RedLetterText" select="'false'" />
+ 
+   <!-- Whether to start each verse on an new line or not -->
   <xsl:param name="VLine" select="'false'"/>
 
   <!-- Whether to show non-canonical "headings" or not -->
@@ -120,33 +123,37 @@
           <xsl:when test="$Notes = 'true' and //note[not(@type = 'x-strongsMarkup')]">
             <xsl:choose>
               <xsl:when test="$direction != 'rtl'">
-                <table cols="2" cellpadding="5" cellspacing="5">
-                  <tr>
+                <div style="float: left">
+<!--                 <table cols="2" cellpadding="5" cellspacing="5"> -->
+<!--                   <tr> -->
                     <!-- The two rows are swapped until the bug is fixed. -->
-                    <td valign="top" class="notes">
-                      <p>&#160;</p>
+<!--                     <td valign="top" class="notes"> -->
+<!--                       <p>&#160;</p> -->
                       <xsl:apply-templates select="//verse" mode="print-notes"/>
-                    </td>
-                    <td valign="top" class="text">
+<!--                     </td> -->
+<!--                     <td valign="top" class="text"> -->
                       <xsl:apply-templates/>
-                    </td>
-                  </tr>
-                </table>
+<!--                     </td> -->
+<!--                   </tr> -->
+<!--                 </table> -->
+                </div>
               </xsl:when>
               <xsl:otherwise>
                 <!-- reverse the table for Right to Left languages -->
-                <table cols="2" cellpadding="5" cellspacing="5">
+                <div style="float: left">
+<!--                 <table cols="2" cellpadding="5" cellspacing="5"> -->
                   <!-- In a right to left, the alignment should be reversed too -->
-                  <tr align="right">
-                    <td valign="top" class="notes">
+<!--                   <tr align="right"> -->
+<!--                     <td valign="top" class="notes"> -->
                       <p>&#160;</p>
                       <xsl:apply-templates select="//note" mode="print-notes"/>
-                    </td>
-                    <td valign="top" class="text">
+<!--                     </td> -->
+<!--                     <td valign="top" class="text"> -->
                       <xsl:apply-templates/>
-                    </td>
-                  </tr>
-                </table>
+<!--                     </td> -->
+<!--                   </tr> -->
+<!--                 </table> -->
+				</div>
               </xsl:otherwise>
             </xsl:choose>
           </xsl:when>
@@ -707,7 +714,14 @@
 
   <!--=======================================================================-->
   <xsl:template match="speaker[@who = 'Jesus']">
-    <font class="jesus"><xsl:apply-templates mode="jesus"/></font>
+  	<xsl:choose>
+	  	<xsl:when test="$RedLetterText = 'true'">
+	    	<span class="jesus"><xsl:apply-templates mode="jesus"/></span>
+	    </xsl:when>
+	    <xsl:otherwise>
+	    	<span class="speech"><xsl:apply-templates /></span>
+	    </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
   <xsl:template match="speaker">
@@ -1131,7 +1145,14 @@
   </xsl:template>
   
   <xsl:template match="q[@who = 'Jesus']">
-    <xsl:value-of select="@marker"/><xsl:apply-templates mode="jesus" /><xsl:value-of select="@marker"/>
+    	<xsl:choose>
+	  	<xsl:when test="$RedLetterText = 'true'">
+	    	<span class="jesus"><xsl:value-of select="@marker"/><xsl:apply-templates mode="jesus"/><xsl:value-of select="@marker"/></span>
+	    </xsl:when>
+	    <xsl:otherwise>
+	    	<span class="q"><xsl:value-of select="@marker"/><xsl:apply-templates /><xsl:value-of select="@marker"/></span>
+	    </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
   <xsl:template match="q[@type = 'blockquote']">

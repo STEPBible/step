@@ -76,6 +76,15 @@ function changePassage(element, passageReference) {
 }
 
 /**
+ * show bubble from relevant passage object
+ * @param element
+ * @param passageReference
+ */
+function viewPassage(element, passageReference) {
+	$.shout("show-preview-" + getPassageId(element), { source: element, reference: passageReference});
+}
+
+/**
  * shows the login popup
  */
 function login() {

@@ -22,6 +22,10 @@ public enum LookupOption {
      */
     VERSE_NUMBERS("VNum", XslConversionType.DEFAULT, true),
     /**
+     * enabling red letter for the Words of Jesus
+     */
+    RED_LETTER("RedLetterText", XslConversionType.DEFAULT),
+    /**
      * Showing cross references
      */
     NOTES("Notes", XslConversionType.DEFAULT, true),

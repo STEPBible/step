@@ -1,5 +1,8 @@
 package com.tyndalehouse.step.core.utils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * A collection of utility methods enabling us to convert Strings, references one way or another.
  * 
@@ -9,6 +12,7 @@ public final class StringConversionUtils {
     private static final char KEY_SEPARATOR = ':';
     private static final String STRONG_PREFIX = "strong:";
     private static final int LANGUAGE_INDICATOR = STRONG_PREFIX.length();
+    private static final Logger LOGGER = LoggerFactory.getLogger(StringConversionUtils.class);
 
     /**
      * hiding implementation
@@ -18,11 +22,11 @@ public final class StringConversionUtils {
     }
 
     /**
-     * Not all bibles encode strong numbers as strong:[HG]\d+ unfortunately, so instead we cope for strong: and
-     * strong:H.
+     * Not all bibles encode strong numbers as strong:[HG]\d+ unfortunately, so instead we cope for strong:
+     * and strong:H.
      * 
-     * In essence we chop off any of the following prefixes: strong:G, strong:H, strong:, H, G. We don't use a regularl
-     * expression, since this will be much quicker
+     * In essence we chop off any of the following prefixes: strong:G, strong:H, strong:, H, G. We don't use a
+     * regularl expression, since this will be much quicker
      * 
      * @param strong strong key
      * @return the key containing just the digits
@@ -63,6 +67,8 @@ public final class StringConversionUtils {
      * @return the shortened key
      */
     public static String getAnyKey(final String potentialKey, final boolean trimInitial) {
+        LOGGER.debug("Looking for key [{}] with trimInitial [{}]", potentialKey, trimInitial);
+
         // find first colon and start afterwards, -1 yields 0, which is the beginning of the string
         // so we can work with that.
         int start = potentialKey.lastIndexOf(KEY_SEPARATOR) + 1;
@@ -76,10 +82,11 @@ public final class StringConversionUtils {
             }
 
             // finally, we may have 0s:
-            while (potentialKey.charAt(start) == '0') {
+            while (start < potentialKey.length() && potentialKey.charAt(start) == '0') {
                 start++;
             }
         }
+
         return potentialKey.substring(start);
     }
 }

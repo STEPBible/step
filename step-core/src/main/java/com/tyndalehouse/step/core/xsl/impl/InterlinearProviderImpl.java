@@ -118,6 +118,9 @@ public class InterlinearProviderImpl implements InterlinearProvider {
         // There are at most strongs.length words, and we might have morphological data to help
         for (final String s : strongs) {
             boolean foundMatchForStrong = false;
+
+            // find corresponding strong:
+            LOGGER.debug("Finding strong key [{}]", s);
             final String strongKey = getAnyKey(s);
 
             // each could be using the morphs we have, so try them all - this gets skipped if we have no

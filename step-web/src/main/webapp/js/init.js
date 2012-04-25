@@ -148,18 +148,8 @@ function initData() {
 	var ii = 0;
 	
 	$.getJSON(BIBLE_GET_BIBLE_VERSIONS + "false", function(versionsFromServer) {
-		
-		$.each(versionsFromServer, function(index, item) {
-			var showingText = "[" + item.initials + "] " + item.name;
-			if(item.hasStrongs) {
-				strongedVersions[ii++] = { label: showingText, value: item.initials};
-			}
-		});
-		
-		//add the ALL Version, by iterating through all found versions and adding them as the value
-		var allVersionsKey = "";
 		var passages = initPassages(versionsFromServer, options);
-		initInterlinearPopup(strongedVersions);
+		initInterlinearPopup(versionsFromServer);
 		initModules(passages);
 	});
 }
@@ -168,11 +158,11 @@ function initData() {
  * sets up the interlinear popup with the available versions
  * @param strongedVersions the list of strong versions
  */
-function initInterlinearPopup(strongedVersions) {
+function initInterlinearPopup(versionsFromServer) {
 	$(".interlinearPopup").each(function(index, interlinearPopup) {
-		new InterlinearPopup(strongedVersions, index, interlinearPopup);
+		new InterlinearPopup(versionsFromServer, index, interlinearPopup);
 	});
-}
+};
 
 /**
  * creates the passages components

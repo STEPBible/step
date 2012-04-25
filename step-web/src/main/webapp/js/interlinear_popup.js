@@ -10,7 +10,7 @@
  * 
  * @param an array of Bible versions that contain strong numbers
  */
-function InterlinearPopup(strongedVersions, passageId, interlinearPopup) {
+function InterlinearPopup(versionsFromServer, passageId, interlinearPopup) {
 	this.passageId = passageId;
 	this.interlinearPopup = $(interlinearPopup);
 	
@@ -20,11 +20,38 @@ function InterlinearPopup(strongedVersions, passageId, interlinearPopup) {
 	//first set up the passage id
 	this.interlinearPopup.attr("passage-id", this.passageId);
 	
+	//the interelinear popup is now dependant on the set of versions shown:
+	this.interlinearPopup.hear("version-list-refresh", function(selfElement, versions) {
+		self.refreshCheckBoxes(versions);
+	});
+	
+	
 	//now do the handlers
+	this.refreshCheckBoxes(versionsFromServer);
+	this.addShowHandler();
+}
+
+/**
+ * sets up all the checkboxes
+ */
+InterlinearPopup.prototype.refreshCheckBoxes = function(versionsFromServer) {
+	var strongedVersions = [];
+	var ii = 0;
+	
+	//delete current popup
+	$("table", this.interlinearPopup).remove();
+	
+	//iterate through all versions for those that have strong numbers
+	$.each(versionsFromServer, function(index, item) {
+		var showingText = "[" + item.initials + "] " + item.name;
+		if(item.hasStrongs) {
+			strongedVersions[ii++] = { label: showingText, value: item.initials};
+		}
+	});
+	
 	this.createCheckboxes(strongedVersions);
 	this.addHandlersToCheckboxes();
 	this.addAllOptionsHandler();
-	this.addShowHandler();
 }
 
 /**

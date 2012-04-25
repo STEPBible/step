@@ -379,6 +379,7 @@
 			<xsl:if test="normalize-space($interlinearVersion) != ''">
 				<xsl:call-template name="outputVersionNames">
 					<xsl:with-param name="versions" select="$interlinearVersion" />
+					<xsl:with-param name="printVersions" select="'print'" />
 				</xsl:call-template>
 			</xsl:if>
 		</span>
@@ -402,6 +403,7 @@
 			<xsl:if test="normalize-space($interlinearVersion) != ''">
 				<xsl:call-template name="outputVersionNames">
 					<xsl:with-param name="versions" select="$interlinearVersion" />
+					<xsl:with-param name="printVersions" select="'print'" />
 				</xsl:call-template>
 			</xsl:if>
 		</span>
@@ -541,16 +543,13 @@
 		</xsl:if>
 
 		<!-- start the block only if we have english to show? -->
-		
-		<xsl:variable name="remainingText" select="concat($innerWordText, $nextText)" />				
+		<xsl:variable name="remainingText" select="$innerWordText" />				
 		<xsl:if test="$remainingText != ''">
-
 			<span class="{$classes}" onclick="javascript:showAllStrongMorphs(&quot;{@lemma} {@morph}&quot;)">
-	
 				<xsl:if test="normalize-space($remainingText) != ''">
 					<!-- 1st - Output first line or a blank if no text available. -->
 					<span class="text">
-						<xsl:call-template name="outputNonBlank">
+					  		<xsl:call-template name="outputNonBlank">
 							<xsl:with-param name="string" select="$remainingText" />
 						</xsl:call-template>
 					</span>
@@ -1386,32 +1385,48 @@
 
     <xsl:template name="outputVersionNames">
 	  	<xsl:param name="versions" />  	
+		<xsl:param name="printVersions" />
 	
 		<xsl:variable name="nextVersion" select="normalize-space(substring-before($versions, ','))" />
 	
 		<!--  if next version is not empty, then there was a comma, so we output this version and call template again -->
 		<xsl:choose>
 			<xsl:when test="normalize-space($nextVersion) != ''">
-				<span class="interlinear"><span class="smallHeaders">
-					<xsl:call-template name="outputNonBlank">
-						<xsl:with-param name="string">
-							<xsl:value-of select="$nextVersion" />
-						</xsl:with-param>
-					</xsl:call-template></span>
+				<span class="interlinear">
+					<xsl:choose>
+						<xsl:when test="$printVersions != 'no-print'">
+							<span class="smallHeaders">
+							<xsl:call-template name="outputNonBlank">
+								<xsl:with-param name="string">
+									<xsl:value-of select="$nextVersion" />
+								</xsl:with-param>
+							</xsl:call-template>
+							</span>
+						</xsl:when>
+						<xsl:otherwise>&#160;</xsl:otherwise>
+					</xsl:choose>					
 				</span>
 				<xsl:call-template name="outputVersionNames">
 					<xsl:with-param name="versions" select="substring-after($versions, ',')" />
+					<xsl:with-param name="printVersions" select="$printVersions" />
 				</xsl:call-template>
 			</xsl:when>
 			<!-- otherwise, then we can use the remainder as the version, as long as version not empty (for e.g. a trailing comma) -->
 			<xsl:otherwise>
 			    <xsl:if test="normalize-space($versions) != ''" >
-					<span class="interlinear"><span class="smallHeaders">
-						<xsl:call-template name="outputNonBlank">
-							<xsl:with-param name="string">
-								<xsl:value-of select="$versions" />
-							</xsl:with-param>
-						</xsl:call-template></span>
+					<span class="interlinear">
+						<xsl:choose>
+							<xsl:when test="$printVersions != 'no-print'">
+								<span class="smallHeaders">
+								<xsl:call-template name="outputNonBlank">
+									<xsl:with-param name="string">
+										<xsl:value-of select="$versions" />
+									</xsl:with-param>
+								</xsl:call-template>
+								</span>
+							</xsl:when>
+							<xsl:otherwise>&#160;</xsl:otherwise>
+						</xsl:choose>
 					</span>
 				</xsl:if>
 			</xsl:otherwise>
@@ -1589,15 +1604,41 @@
   <!-- If the parent of the text is a verse then, we need to wrap in span. This applies
   to any punctuation really, since all other words should be contained in a W  -->
   <xsl:template match="text()" mode="jesus">
-  	<xsl:call-template name="matchSimpleText"></xsl:call-template>
+  	  <xsl:call-template name="matchSimpleText"></xsl:call-template>
   </xsl:template>
   
   
-  
+  <!-- Matching simple text when not matched elsewhere? -->
   <xsl:template match="text()" name="matchSimpleText">
   		<xsl:choose>
 			<xsl:when test="jsword:org.apache.commons.lang.StringUtils.containsOnly(normalize-space(.), $punctuation)" />
-	  		<xsl:when test="name(..) = 'verse' and normalize-space(.) != ''"><span class="w"><span class="text"><xsl:value-of select="."/></span></span></xsl:when>
+	  		<xsl:when test="name(..) = 'verse' and normalize-space(.) != ''">
+	  			<span class="w">
+	  				<span class="text"><xsl:value-of select="."/></span>
+	  				<!-- now we need to put the set of spans for strongs/morphs/interlinear versions -->
+
+					<!-- output a filling gap for strongs -->
+					<xsl:if test="$StrongsNumbers = 'true'">
+						<span class="text">&#160;</span>
+					</xsl:if>
+		
+					<!-- output a filling gap for morphs -->
+					<xsl:if test="$Morph = 'true'">
+						<span class="text">&#160;</span>
+					</xsl:if>
+				
+					<!--  fill up with spaces where we have extra versions shown -->
+					<xsl:if test="normalize-space($interlinearVersion) != ''">
+						<xsl:call-template name="outputVersionNames">
+							<xsl:with-param name="versions" select="$interlinearVersion" />
+							<xsl:with-param name="printVersions" select="'no-print'" />
+						</xsl:call-template>
+					</xsl:if>
+	  				
+	  				
+	  				
+	  		 	</span>
+	  		</xsl:when>
 	  		<xsl:when test="normalize-space(.) != ''"><xsl:value-of select="."/></xsl:when>
   		</xsl:choose>
   </xsl:template>

@@ -71,38 +71,6 @@ public class JSwordServiceImplTest {
     }
 
     /**
-     * tests what happens when we select interlinear
-     * 
-     * @throws NoSuchKeyException uncaught exceptions
-     * @throws BookException uncaught exception
-     * @throws IOException uncaught exception
-     * @throws JDOMException uncaught exception
-     * 
-     */
-    @Test
-    public void testInterlinearRomans1v4() throws NoSuchKeyException, BookException, JDOMException,
-            IOException {
-        final Book currentBook = Books.installed().getBook("KJV");
-        final BookData bookData = new BookData(currentBook, currentBook.getKey("Romans 1:4"));
-        final Element osisFragment = bookData.getOsisFragment();
-
-        final XMLOutputter xmlOutputter = new XMLOutputter(Format.getPrettyFormat());
-        LOGGER.debug(xmlOutputter.outputString(osisFragment));
-
-        // do the test
-        final JSwordServiceImpl jsi = new JSwordServiceImpl(null);
-        final List<LookupOption> options = new ArrayList<LookupOption>();
-        options.add(INTERLINEAR);
-
-        final String osisText = jsi.getOsisText("KJV", "Romans 1:4", options, "Byz");
-        final SAXBuilder sb = new SAXBuilder();
-        final Document d = sb.build(new StringReader(osisText));
-
-        LOGGER.debug("\n {}", xmlOutputter.outputString(d));
-        Assert.assertTrue(osisText.contains("span"));
-    }
-
-    /**
      * tests that the XSLT transformation is handled correctly
      * 
      * @throws BookException uncaught exception

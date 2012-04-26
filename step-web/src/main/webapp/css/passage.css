@@ -47,6 +47,7 @@ span.interlinear span span span {
 }
 
 .notesPane {
+	padding: 2px !important;
 	display: block;
 	background-color: #F4F4E8;
 	padding: 1px;
@@ -299,7 +300,7 @@ FONT.usg {
 	max-height: 200px;
 	background-color: #F6A828 ;
 	border: 2px solid #E78F08;
-	overflow: crop;
+	overflow: hidden;
 	padding: 5px;
 }
 

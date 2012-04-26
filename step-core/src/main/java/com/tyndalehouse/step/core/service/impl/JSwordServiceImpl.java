@@ -37,6 +37,7 @@ import static org.apache.commons.lang.StringUtils.isBlank;
 import static org.apache.commons.lang.StringUtils.isNotBlank;
 import static org.apache.commons.lang.StringUtils.isNotEmpty;
 import static org.apache.commons.lang.Validate.notNull;
+import static org.crosswire.common.xml.XMLUtil.writeToString;
 import static org.crosswire.jsword.book.BookCategory.BIBLE;
 
 import java.net.URI;
@@ -54,7 +55,6 @@ import org.crosswire.common.progress.Progress;
 import org.crosswire.common.xml.Converter;
 import org.crosswire.common.xml.SAXEventProvider;
 import org.crosswire.common.xml.TransformingSAXEventProvider;
-import org.crosswire.common.xml.XMLUtil;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.BookCategory;
 import org.crosswire.jsword.book.BookData;
@@ -85,6 +85,7 @@ import com.tyndalehouse.step.core.data.entities.ScriptureReference;
 import com.tyndalehouse.step.core.data.entities.reference.TargetType;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.models.LookupOption;
+import com.tyndalehouse.step.core.models.OsisWrapper;
 import com.tyndalehouse.step.core.service.JSwordService;
 import com.tyndalehouse.step.core.xsl.XslConversionType;
 
@@ -191,14 +192,14 @@ public class JSwordServiceImpl implements JSwordService {
     }
 
     @Override
-    public String getOsisText(final String version, final String reference) {
+    public OsisWrapper getOsisText(final String version, final String reference) {
         final List<LookupOption> options = new ArrayList<LookupOption>();
         return getOsisText(version, reference, options, null);
     }
 
-    // TODO: remove synchronisation once book is fixed
+    // FIXME TODO: JS-109, email from CJB on 27/02/2011 remove synchronisation once book is fixed
     @Override
-    public synchronized String getOsisText(final String version, final String reference,
+    public synchronized OsisWrapper getOsisText(final String version, final String reference,
             final List<LookupOption> options, final String interlinearVersion) {
         LOGGER.debug("Retrieving text for ({}, {})", version, reference);
 
@@ -213,10 +214,6 @@ public class JSwordServiceImpl implements JSwordService {
             final BookData bookData = new BookData(currentBook, currentBook.getKey(reference));
             final XslConversionType requiredTransformation = identifyStyleSheet(options);
 
-            // TODO: This is a workaround while jsword is being fixed. see JS-109, and email from CJB on
-            // 27/02/2011
-            // synchronized (this) {
-
             final SAXEventProvider osissep = bookData.getSAXEventProvider();
             TransformingSAXEventProvider htmlsep = null;
             htmlsep = (TransformingSAXEventProvider) new Converter() {
@@ -225,9 +222,6 @@ public class JSwordServiceImpl implements JSwordService {
                     try {
                         final String file = requiredTransformation.getFile();
                         final URI resourceURI = getClass().getResource(file).toURI();
-
-                        // for now, we just assume that we'll only have one option, but this may change
-                        // later
 
                         final TransformingSAXEventProvider tsep = new TransformingSAXEventProvider(
                                 resourceURI, osissep);
@@ -241,8 +235,7 @@ public class JSwordServiceImpl implements JSwordService {
                     }
                 }
             }.convert(osissep);
-            return XMLUtil.writeToString(htmlsep);
-            // }
+            return new OsisWrapper(writeToString(htmlsep), bookData.getKey().getName());
         } catch (final NoSuchKeyException e) {
             throw new StepInternalException("The verse specified was not found: " + reference, e);
         } catch (final BookException e) {
@@ -423,7 +416,7 @@ public class JSwordServiceImpl implements JSwordService {
     }
 
     @Override
-    public List<ScriptureReference> getPassageReferences(final String references) {
+    public List<ScriptureReference> getPassageReferences(final String references, final TargetType targetType) {
         final List<ScriptureReference> refs = new ArrayList<ScriptureReference>();
 
         if (isNotBlank(references)) {
@@ -452,8 +445,8 @@ public class JSwordServiceImpl implements JSwordService {
                     sr.setStartVerseId(startVerseId);
                     sr.setEndVerseId(endVerseId);
 
-                    // TODO: bug?
-                    sr.setTargetType(TargetType.TIMELINE_EVENT);
+                    // FIXME: bug?
+                    sr.setTargetType(targetType);
                     refs.add(sr);
                 }
             } catch (final NoSuchVerseException nsve) {

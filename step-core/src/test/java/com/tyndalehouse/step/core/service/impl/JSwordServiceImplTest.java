@@ -32,6 +32,8 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.service.impl;
 
+import static com.tyndalehouse.step.core.data.entities.reference.TargetType.GEO_PLACE;
+import static com.tyndalehouse.step.core.data.entities.reference.TargetType.TIMELINE_EVENT;
 import static com.tyndalehouse.step.core.models.LookupOption.INTERLINEAR;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -93,7 +95,7 @@ public class JSwordServiceImplTest {
         final List<LookupOption> options = new ArrayList<LookupOption>();
         options.add(INTERLINEAR);
 
-        final String osisText = jsi.getOsisText("KJV", "Romans 1:1-3", options, "KJV");
+        final String osisText = jsi.getOsisText("KJV", "Romans 1:1-3", options, "KJV").getValue();
         final SAXBuilder sb = new SAXBuilder();
         final Document d = sb.build(new StringReader(osisText));
 
@@ -124,7 +126,7 @@ public class JSwordServiceImplTest {
         final List<LookupOption> options = new ArrayList<LookupOption>();
         options.add(LookupOption.STRONG_NUMBERS);
 
-        final String osisText = jsi.getOsisText("KJV", "Romans 1:4", options, "");
+        final String osisText = jsi.getOsisText("KJV", "Romans 1:4", options, "").getValue();
         final SAXBuilder sb = new SAXBuilder();
         final Document d = sb.build(new StringReader(osisText));
 
@@ -138,7 +140,7 @@ public class JSwordServiceImplTest {
     @Test
     public void testSingleReference() {
         final JSwordServiceImpl jsi = new JSwordServiceImpl(null);
-        final List<ScriptureReference> refs = jsi.getPassageReferences("Gen.1.1");
+        final List<ScriptureReference> refs = jsi.getPassageReferences("Gen.1.1", TIMELINE_EVENT);
 
         assertEquals(refs.size(), 1);
         assertEquals(4, refs.get(0).getStartVerseId());
@@ -151,7 +153,7 @@ public class JSwordServiceImplTest {
     @Test
     public void testMultipleReference() {
         final JSwordServiceImpl jsi = new JSwordServiceImpl(null);
-        final List<ScriptureReference> refs = jsi.getPassageReferences("Gen.1.1;Gen.1.3");
+        final List<ScriptureReference> refs = jsi.getPassageReferences("Gen.1.1;Gen.1.3", TIMELINE_EVENT);
 
         assertEquals(2, refs.size());
         assertEquals(4, refs.get(0).getStartVerseId());
@@ -166,7 +168,7 @@ public class JSwordServiceImplTest {
     @Test
     public void testMultiplePassages() {
         final JSwordServiceImpl jsi = new JSwordServiceImpl(null);
-        final List<ScriptureReference> refs = jsi.getPassageReferences("Gen.1.1-2;Gen.1.4-5");
+        final List<ScriptureReference> refs = jsi.getPassageReferences("Gen.1.1-2;Gen.1.4-5", TIMELINE_EVENT);
 
         assertEquals(refs.size(), 2);
         assertEquals(4, refs.get(0).getStartVerseId());
@@ -185,7 +187,7 @@ public class JSwordServiceImplTest {
         // TODO change spaces between 1 and Kgs! This doesn't seem to work...
 
         // final List<ScriptureReference> refs = getPassageReferences(target, "Josh 12:24; Sng 6:4");
-        final List<ScriptureReference> refs = jsi.getPassageReferences("Song 6:4");
+        final List<ScriptureReference> refs = jsi.getPassageReferences("Song 6:4", GEO_PLACE);
         assertEquals(refs.size(), 1);
     }
 
@@ -229,7 +231,7 @@ public class JSwordServiceImplTest {
         final List<LookupOption> options = new ArrayList<LookupOption>();
         // options.add(LookupOption.STRONG_NUMBERS);
 
-        final String osisText = jsi.getOsisText(testVersion, testReference, options, "");
+        final String osisText = jsi.getOsisText(testVersion, testReference, options, "").getValue();
         final SAXBuilder sb = new SAXBuilder();
         final Document d = sb.build(new StringReader(osisText));
 
@@ -237,82 +239,65 @@ public class JSwordServiceImplTest {
         Assert.assertTrue(osisText.contains("span"));
     }
 
-    /**
-     * tries to replicate the issue with bookdata not being able to be read in a concurrent fashion
-     * 
-     * @throws NoSuchKeyException a no such key exception
-     * @throws BookException a book exception
-     * @throws InterruptedException when the thread is interrupted
-     */
-    // TODO: currently disabled
-    @Test
-    public void testConcurrencyIssueOnBookData() throws NoSuchKeyException, BookException,
-            InterruptedException {
-        // final String[] names = { "KJV", "ESV" };
-        // final String ref = "Rom.1.1";
-        //
-        // final Runnable r1 = new Runnable() {
-        // @Override
-        // public void run() {
-        // final Book b0 = Books.installed().getBook(names[0]);
-        // BookData bd1;
-        // try {
-        // bd1 = new BookData(b0, b0.getKey(ref));
-        // bd1.getSAXEventProvider();
-        // } catch (final NoSuchKeyException e) {
-        // LOGGER.error("A jsword error during test", e);
-        // Assert.fail("JSword bug has occured");
-        // } catch (final BookException e) {
-        // LOGGER.error("A jsword error during test", e);
-        // Assert.fail("JSword bug has occured");
-        // }
-        // }
-        // };
-        //
-        // final Runnable r2 = new Runnable() {
-        // @Override
-        // public void run() {
-        // final Book b0 = Books.installed().getBook(names[1]);
-        // BookData bd1;
-        // try {
-        // bd1 = new BookData(b0, b0.getKey(ref));
-        // bd1.getSAXEventProvider();
-        // } catch (final NoSuchKeyException e) {
-        // LOGGER.error("A jsword error during test", e);
-        // Assert.fail("JSword bug has occured");
-        // } catch (final BookException e) {
-        // LOGGER.error("A jsword error during test", e);
-        // Assert.fail("JSword bug has occured");
-        // }
-        // }
-        // };
-        //
-        // int ii = 0;
-        // while (ii++ < 15) {
-        // final Thread t1 = new Thread(r1);
-        // final Thread t2 = new Thread(r2);
-        // t1.start();
-        // t2.start();
-        //
-        // t1.join();
-        // t2.join();
-        // }
-    }
-
     // /**
-    // * Outputs pretty xml
-    // * @throws BookException
-    // * @throws NoSuchKeyException
-    // * @throws JDOMException
-    // * @throws IOException
+    // * tries to replicate the issue with bookdata not being able to be read in a concurrent fashion
+    // *
+    // * @throws NoSuchKeyException a no such key exception
+    // * @throws BookException a book exception
+    // * @throws InterruptedException when the thread is interrupted
     // */
+    // // FIXME: currently disabled
     // @Test
-    // public void testPrettyXml() throws BookException, NoSuchKeyException, JDOMException, IOException {
-    // final Book currentBook = Books.installed().getBook("ESV");
-    // final BookData bookData = new BookData(currentBook, currentBook.getKey("Exodus 3:14"));
-    // final Element osisFragment = bookData.getOsisFragment();
+    // public void testConcurrencyIssueOnBookData() throws NoSuchKeyException, BookException,
+    // InterruptedException {
+    // final String[] names = { "KJV", "ESV" };
+    // final String ref = "Rom.1.1";
     //
-    // final XMLOutputter xmlOutputter = new XMLOutputter(Format.getPrettyFormat());
-    // LOGGER.debug(xmlOutputter.outputString(osisFragment));
+    // final Runnable r1 = new Runnable() {
+    // @Override
+    // public void run() {
+    // final Book b0 = Books.installed().getBook(names[0]);
+    // BookData bd1;
+    // try {
+    // bd1 = new BookData(b0, b0.getKey(ref));
+    // bd1.getSAXEventProvider();
+    // } catch (final NoSuchKeyException e) {
+    // LOGGER.error("A jsword error during test", e);
+    // Assert.fail("JSword bug has occured");
+    // } catch (final BookException e) {
+    // LOGGER.error("A jsword error during test", e);
+    // Assert.fail("JSword bug has occured");
+    // }
+    // }
+    // };
+    //
+    // final Runnable r2 = new Runnable() {
+    // @Override
+    // public void run() {
+    // final Book b0 = Books.installed().getBook(names[1]);
+    // BookData bd1;
+    // try {
+    // bd1 = new BookData(b0, b0.getKey(ref));
+    // bd1.getSAXEventProvider();
+    // } catch (final NoSuchKeyException e) {
+    // LOGGER.error("A jsword error during test", e);
+    // Assert.fail("JSword bug has occured");
+    // } catch (final BookException e) {
+    // LOGGER.error("A jsword error during test", e);
+    // Assert.fail("JSword bug has occured");
+    // }
+    // }
+    // };
+    //
+    // int ii = 0;
+    // while (ii++ < 15) {
+    // final Thread t1 = new Thread(r1);
+    // final Thread t2 = new Thread(r2);
+    // t1.start();
+    // t2.start();
+    //
+    // t1.join();
+    // t2.join();
+    // }
     // }
 }

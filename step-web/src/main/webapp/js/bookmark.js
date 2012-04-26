@@ -79,7 +79,7 @@ Bookmark.prototype.addHistory = function(passageReference) {
 	
 	//check if we have the reference in the array (starts for example: '1 John@' where @ denotes the time at which it happened
 	var indexInHistory = 0;
-	for(var indexInHistory = 0; indexInHistory < history.length; indexInHistory++) {
+	for(indexInHistory = 0; indexInHistory < history.length; indexInHistory++) {
 		if(history[indexInHistory].match("^" + passageReference + "@")) {
 			break;
 		}
@@ -124,7 +124,7 @@ Bookmark.prototype.initialiseHistory = function() {
 	//create the history from the cookie, or - logged-in event will override
 	var self = this;
 	self.createHistoryItemsFromCookies();
-}
+};
 
 /** 
  * we need to work out what our current history is like, and then reset it to be appropriate
@@ -234,5 +234,5 @@ Bookmark.prototype.getHistory = function() {
 };
 
 Bookmark.prototype.setHistory = function(history) {
-	$.cookie("history", history.join(Bookmark.historyDelimiter))
+	$.cookie("history", history.join(Bookmark.historyDelimiter));
 };

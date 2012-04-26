@@ -51,9 +51,9 @@ import com.tyndalehouse.step.core.models.BibleVersion;
 import com.tyndalehouse.step.core.models.ClientSession;
 import com.tyndalehouse.step.core.models.EnrichedLookupOption;
 import com.tyndalehouse.step.core.models.LookupOption;
+import com.tyndalehouse.step.core.models.OsisWrapper;
 import com.tyndalehouse.step.core.service.BibleInformationService;
 import com.tyndalehouse.step.rest.framework.Cacheable;
-import com.tyndalehouse.step.rest.wrappers.HtmlWrapper;
 
 /**
  * The controller for retrieving information on the bible or texts from the bible
@@ -117,7 +117,7 @@ public class BibleController {
      * @return the text to be displayed, formatted as HTML
      */
     @Cacheable(true)
-    public HtmlWrapper getBibleText(final String version, final String reference) {
+    public OsisWrapper getBibleText(final String version, final String reference) {
         return getBibleText(version, reference, null, null);
     }
 
@@ -130,7 +130,7 @@ public class BibleController {
      * @return the text to be displayed, formatted as HTML
      */
     @Cacheable(true)
-    public HtmlWrapper getBibleText(final String version, final String reference, final String options) {
+    public OsisWrapper getBibleText(final String version, final String reference, final String options) {
         return getBibleText(version, reference, options, null);
     }
 
@@ -144,7 +144,7 @@ public class BibleController {
      * @return the text to be displayed, formatted as HTML
      */
     @Cacheable(true)
-    public HtmlWrapper getBibleText(final String version, final String reference, final String options,
+    public OsisWrapper getBibleText(final String version, final String reference, final String options,
             final String interlinearVersion) {
         notEmpty(version, "You need to provide a version");
         notEmpty(reference, "You need to provide a reference");
@@ -161,8 +161,7 @@ public class BibleController {
             }
         }
 
-        return new HtmlWrapper(this.bibleInformation.getPassageText(version, reference, lookupOptions,
-                interlinearVersion));
+        return this.bibleInformation.getPassageText(version, reference, lookupOptions, interlinearVersion);
     }
 
     /**

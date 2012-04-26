@@ -43,12 +43,10 @@ import com.tyndalehouse.step.core.xsl.XslConversionType;
  * 
  */
 public enum LookupOption {
-    // CHECKSTYLE:OFF TODO: change the values in the XSL file
     /**
      * Showing headings
      */
     HEADINGS("Headings", XslConversionType.DEFAULT, true),
-    // CHECKSTYLE:ON
     /**
      * Showing verse numbers
      */
@@ -66,12 +64,10 @@ public enum LookupOption {
 
     /** Morphology */
     MORPHOLOGY("Morph", XslConversionType.INTERLINEAR),
-    // CHECKSTYLE:OFF
     /**
      * Interlinears are available when Strongs are available.
      */
     INTERLINEAR("Interlinear", XslConversionType.INTERLINEAR),
-    // CHECKSTYLE:ON
     /**
      * Showing headings
      */

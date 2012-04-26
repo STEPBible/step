@@ -26,7 +26,7 @@ function TopMenu(menuRoot) {
 
 TopMenu.prototype.setupHearers = function() {
 	this.menuRoot.hear("topmenu-LIMIT_AVAILABLE_MODULES", function(selfElement, enabled) {
-		var versions = $.getSafe(BIBLE_GET_BIBLE_VERSIONS + enabled, function(versions) {
+		$.getSafe(BIBLE_GET_BIBLE_VERSIONS + enabled, function(versions) {
 			// send events to passages and reload - then change init function
 			$.shout("version-list-refresh", versions);
 		});
@@ -57,7 +57,7 @@ TopMenu.prototype.toggleMenuItem = function(selectedItem) {
 			$.shout("topmenu-" + selectedItem, true);
 		}
 	}
-}
+};
 
 
 /**
@@ -66,7 +66,7 @@ TopMenu.prototype.toggleMenuItem = function(selectedItem) {
  */
 TopMenu.prototype.tickMenuItem = function(selectedItem) {
 	this.getItemSelector(selectedItem).not(":has(img)").append("<img class='selectingTick' src='images/selected.png' />");		
-}
+};
 
 /**
  * removes the tick next to the menu item
@@ -74,7 +74,7 @@ TopMenu.prototype.tickMenuItem = function(selectedItem) {
  */
 TopMenu.prototype.untickMenuItem = function(selectedItem) {
 	$("img.selectingTick", this.getItemSelector(selectedItem)).remove();
-}
+};
 
 /**
  * The menu item can be selected
@@ -87,21 +87,21 @@ TopMenu.prototype.checkItemIsSelectable = function(selectedItem) {
 		return false;
 	}
 	return true;
-}
+};
 
 /**
  * sets up the default options for the menu
  */
 TopMenu.prototype.setDefaultOptions = function() {
 //	this.toggleMenuItem("LIMIT_AVAILABLE_MODULES");
-}
+};
 
 /**
  * returns true if item is selected
  */
 TopMenu.prototype.isItemSelected = function(name) {
 	return getItemSelector(name).children("img.selectingTick").length != 0;
-}
+};
 
 /**
  * returns all menu items matching the name specified
@@ -109,4 +109,4 @@ TopMenu.prototype.isItemSelected = function(name) {
  */
 TopMenu.prototype.getItemSelector = function(name) {
 	return $("*[name = '" + name + "']", this.menuRoot);
-}
+};

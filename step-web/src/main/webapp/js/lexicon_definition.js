@@ -25,15 +25,15 @@ LexiconDefinition.prototype.getPopup = function() {
 		$('#lexiconDefinition').hide();
 	});
 	return this.popup;
-}
+};
 
 LexiconDefinition.prototype.showStrong = function(s) {
 	
-}
+};
 
 LexiconDefinition.prototype.showMorphs = function(s) {
 	
-}
+};
 
 LexiconDefinition.prototype.showAllStrongMorphs = function(s) {
 	var self = this;
@@ -67,7 +67,7 @@ LexiconDefinition.prototype.showAllStrongMorphs = function(s) {
 			collision: "fit flip",
 		});
 	}
-}
+};
 
 LexiconDefinition.prototype.getShortKey = function(k) {
 	var subKey = k.substring(k.indexOf(':') + 1);
@@ -75,4 +75,4 @@ LexiconDefinition.prototype.getShortKey = function(k) {
 		return subKey.substring(1);
 	}
 	return subKey;
-}
+};

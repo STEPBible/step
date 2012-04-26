@@ -37,6 +37,7 @@ import java.util.List;
 import com.tyndalehouse.step.core.models.BibleVersion;
 import com.tyndalehouse.step.core.models.EnrichedLookupOption;
 import com.tyndalehouse.step.core.models.LookupOption;
+import com.tyndalehouse.step.core.models.OsisWrapper;
 
 /**
  * Interface to the service that gives information about the books of the bible, the different types of bible,
@@ -67,7 +68,7 @@ public interface BibleInformationService {
      * @param interlinearVersion version to use as the interlinear
      * @return the HTML string passed back for consumption
      */
-    String getPassageText(String version, String reference, List<LookupOption> lookupOptions,
+    OsisWrapper getPassageText(String version, String reference, List<LookupOption> lookupOptions,
             String interlinearVersion);
 
     /**

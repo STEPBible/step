@@ -32,6 +32,8 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.service.impl;
 
+import static com.tyndalehouse.step.core.data.entities.reference.TargetType.GEO_PLACE;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -71,7 +73,8 @@ public class GeographyServiceImpl implements GeographyService {
     @Override
     public List<GeoPlace> getPlaces(final String reference) {
         LOG.debug("Returning places for reference [{}]", reference);
-        final List<ScriptureReference> passageReferences = this.jsword.getPassageReferences(reference);
+        final List<ScriptureReference> passageReferences = this.jsword.getPassageReferences(reference,
+                GEO_PLACE);
         final List<GeoPlace> placesInScope = new ArrayList<GeoPlace>();
 
         final String rawQuery = "t0.id in (select geo_place_id from scripture_reference "

@@ -29,8 +29,6 @@ function init() {
  */
 function updatePassageView() {
 	var params = getUrlVars();
-
-	var options = "";
 	var version = "KJV";
 	var passage = "Romans 1";
 

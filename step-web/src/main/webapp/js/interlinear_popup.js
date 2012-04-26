@@ -52,7 +52,7 @@ InterlinearPopup.prototype.refreshCheckBoxes = function(versionsFromServer) {
 	this.createCheckboxes(strongedVersions);
 	this.addHandlersToCheckboxes();
 	this.addAllOptionsHandler();
-}
+};
 
 /**
  * creates all the checkboxes, one per strong version
@@ -95,7 +95,7 @@ InterlinearPopup.prototype.createCheckboxes = function(strongedVersions) {
 	  "<label for='il_" + ii + "'>All</label></td><td>&nbsp;</td></tr>";
 	
 	interlinearChoices.append("<table>" + allOptions + allCheckBoxes + "</table>");
-}
+};
 
 /**
  * adds the handlers to all the normal checkboxes to add text into
@@ -126,7 +126,7 @@ InterlinearPopup.prototype.addHandlersToCheckboxes = function() {
 			self.updateInterlinear();
 		}
 	});
-}
+};
 
 /**
  * adds a handler that adds all the options to the textbox
@@ -142,7 +142,7 @@ InterlinearPopup.prototype.addAllOptionsHandler = function() {
 			$("label[for = 'il_all']", this.interlinearPopup).val("All");
 		}
 	});
-}
+};
 
 /**
  * sets up the handler to show the popup. This alerts the menu if the state has changed

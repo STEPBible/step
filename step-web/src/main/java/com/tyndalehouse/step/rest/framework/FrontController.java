@@ -75,12 +75,9 @@ public class FrontController extends HttpServlet {
     private static final long serialVersionUID = 7898656504631346047L;
     private static final String CONTROLLER_SUFFIX = "Controller";
     private final transient Injector guiceInjector;
-    // TODO: but also check thread safety and whether we should share this object
     private final transient ObjectMapper jsonMapper = new ObjectMapper();
-    // TODO: check if this is thread safe, and if so, then make private field
     private final transient JsonContext ebeanJson;
 
-    // TODO: investigate EH cache here
     private final Map<String, Method> methodNames = new HashMap<String, Method>();
     private final Map<String, Object> controllers = new HashMap<String, Object>();
     private final boolean isCacheEnabled;

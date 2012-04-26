@@ -3,7 +3,7 @@
 init();
 
 //some extensions (perhaps should go in another file)
-String.prototype.startsWith = function(str) { return (this.match("^"+str)==str) }
+String.prototype.startsWith = function(str) { return (this.match("^"+str)==str); };
 
 
 function init() {
@@ -101,7 +101,7 @@ function initMenu() {
 function initData() {
 	
 	//get all supported versions
-	var options;
+	var options = {};
 	$.getJSON(BIBLE_GET_ALL_FEATURES, function(data) {
 		$.each(data, function() {
 			options = data;
@@ -110,9 +110,6 @@ function initData() {
 	
 	//get data for passages
 	// make call to server first and once, to cache all passages:
-	var strongedVersions = [];
-	var ii = 0;
-	
 	$.getJSON(BIBLE_GET_BIBLE_VERSIONS + "false", function(versionsFromServer) {
 		var passages = initPassages(versionsFromServer, options);
 		initInterlinearPopup(versionsFromServer);
@@ -195,7 +192,7 @@ function initGlobalHandlers() {
 	});
 	
 	$("#error").hear("caught-error-message", function(selfElement, data) {
-		raiseError(data)
+		raiseError(data);
 	});
 }
 

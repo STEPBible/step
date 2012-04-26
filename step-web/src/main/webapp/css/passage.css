@@ -290,3 +290,19 @@ FONT.def {
 FONT.usg {
 	font-style: plain;
 }
+
+#previewReference {
+	color: white;
+	font-weight: solid;
+	z-index: 9999999;
+	max-width: 280px;
+	max-height: 200px;
+	background-color: #F6A828 ;
+	border: 2px solid #E78F08;
+	overflow: crop;
+	padding: 5px;
+}
+
+.previewReferenceKey {
+	font-style: italic;
+}

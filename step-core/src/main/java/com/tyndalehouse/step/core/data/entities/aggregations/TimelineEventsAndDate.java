@@ -32,6 +32,7 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.data.entities.aggregations;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -47,7 +48,8 @@ import com.tyndalehouse.step.core.data.entities.TimelineEvent;
  * 
  */
 @Entity
-public class TimelineEventsAndDate {
+public class TimelineEventsAndDate implements Serializable {
+    private static final long serialVersionUID = -7079914843690188557L;
     private List<TimelineEvent> events;
     private LocalDateTime dateTime;
 

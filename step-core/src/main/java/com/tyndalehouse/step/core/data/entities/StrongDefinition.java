@@ -32,6 +32,8 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.data.entities;
 
+import java.io.Serializable;
+
 import javax.persistence.Entity;
 
 import com.avaje.ebean.annotation.CacheStrategy;
@@ -44,12 +46,13 @@ import com.avaje.ebean.annotation.CacheStrategy;
  */
 @CacheStrategy(readOnly = true)
 @Entity
-public class StrongDefinition {
+public class StrongDefinition implements Serializable {
+    private static final long serialVersionUID = 1L;
     private String originalLanguage;
     private String transliteration;
     private String pronunciation;
     private String kjvDefinition;
-    private String strongs_derivation;
-    private String lexicon_summary;
+    private String strongsDerivation;
+    private String lexiconSummary;
 
 }

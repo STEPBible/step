@@ -32,6 +32,8 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.service.impl;
 
+import static com.tyndalehouse.step.core.data.entities.reference.TargetType.TIMELINE_EVENT;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -49,7 +51,6 @@ import com.tyndalehouse.step.core.data.entities.HotSpot;
 import com.tyndalehouse.step.core.data.entities.ScriptureReference;
 import com.tyndalehouse.step.core.data.entities.TimelineEvent;
 import com.tyndalehouse.step.core.data.entities.aggregations.TimelineEventsAndDate;
-import com.tyndalehouse.step.core.data.entities.reference.TargetType;
 import com.tyndalehouse.step.core.service.JSwordService;
 import com.tyndalehouse.step.core.service.TimelineService;
 
@@ -129,7 +130,8 @@ public class TimelineServiceImpl implements TimelineService {
      */
     private List<TimelineEvent> lookupEventsMatchingReference(final String reference) {
         // first get the kjv reference
-        final List<ScriptureReference> passageReferences = this.jsword.getPassageReferences(reference);
+        final List<ScriptureReference> passageReferences = this.jsword.getPassageReferences(reference,
+                TIMELINE_EVENT);
 
         if (passageReferences.isEmpty()) {
             return new ArrayList<TimelineEvent>();
@@ -152,7 +154,7 @@ public class TimelineServiceImpl implements TimelineService {
         final Query<TimelineEvent> query = this.ebean.createQuery(TimelineEvent.class, queryText).fetch(
                 "references");
 
-        query.setParameter("targetType", TargetType.TIMELINE_EVENT);
+        query.setParameter("targetType", TIMELINE_EVENT);
         query.setParameter("searchStart", searchingReference.getStartVerseId());
         query.setParameter("searchEnd", searchingReference.getEndVerseId());
 

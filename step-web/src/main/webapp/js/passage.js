@@ -94,7 +94,7 @@ Passage.prototype.refreshVersionsTextBox = function(rawServerVersions) {
 			label : showingText,
 			value : item.initials,
 			features: features
-		}
+		};
 	});
 	
 	this.version.autocomplete({source: parsedVersions});
@@ -124,10 +124,10 @@ Passage.prototype.initVersionsTextBox = function(rawServerVersions) {
 		return $( "<li></li>" )
 		.data( "item.autocomplete", item )
 		.append( "<a><span class='features'>" + item.features + "</span>" + item.label + "</a>")
-		.appendTo( ul )
-	}
+		.appendTo( ul );
+	};
 	
-	this.refreshVersionsTextBox(rawServerVersions)
+	this.refreshVersionsTextBox(rawServerVersions);
 };
 
 Passage.prototype.initReferenceTextBox = function() {	
@@ -316,30 +316,24 @@ Passage.prototype.showPreview = function(previewData) {
 	var reference = previewData.reference;
 	var source = previewData.source;
 
-	var position = this.passageId == 0 ? "right" : "left";
+	var myAnchor = this.passageId == 0 ? "left" : "right";
+	var offset = (80 * (this.passageId == 0 ? 1 : -1)) + " 0";
 	
-	$.getSafe(BIBLE_GET_BIBLE_TEXT + this.version.val() + "/" + reference, function(text) {
+	$.getSafe(BIBLE_GET_BIBLE_TEXT + this.version.val() + "/" + reference, function(data) {
+		$("#previewReference").html(data.value + "<span class='previewReferenceKey'>[" + data.reference + "]</span>");
+		$("#previewReference").show().position({
+			of: $(source),
+			my: myAnchor + " center",
+			at: "center " + "center",
+			offset: offset,
+			collision: "fit"
+		});
 		
-		//create a bubble popup for each DOM element with class attribute as "text", "button" or "link" and LI, P, IMG elements.
-
-		$(source).CreateBubblePopup({
-									position : position,
-									align	 : 'top',
-									innerHtml: text.value,
-									width: 350,
-//									height: 100,
-									selectable: true,
-									openingSpeed: -1,
-									closingSpeed: -1,
-									innerHtmlStyle: {
-														color: '#fff !important !important', 
-														'text-align' :'left'
-													},
-									themeName: 	'all-orange',
-									themePath: 	'libs/bubble/jquerybubblepopup-themes'
-								});
+		$(".notesPane").mouseleave(function(s) {
+			$("#previewReference").hide();
+		});
 	});
-}
+};
 
 /**
  * static method that returns strongs that should not be tagged in the UI

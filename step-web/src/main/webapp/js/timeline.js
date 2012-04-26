@@ -146,7 +146,7 @@ TimelineWidget.prototype.addEvent = function(item) {
 		this.eventSource.add(event);
 		this.currentEvents[item.eventId] = true;
 	}
-}
+};
 
 TimelineWidget.prototype.addMultipleEventsAndRefresh = function(data) {
 	var self = this;
@@ -157,7 +157,7 @@ TimelineWidget.prototype.addMultipleEventsAndRefresh = function(data) {
 	});
 	
 	this.tl.layout();
-}
+};
 
 /**
  * Let us load stuff relevant to our passage
@@ -227,7 +227,7 @@ TimelineWidget.prototype.addToolbarIcon = function(html, toolbar, id, text, icon
 TimelineWidget.prototype.addToolbarButton = function(toolbar, id, text, iconName) {
 	var html = "<a id='" + id + "'>" + text + "</a>";
 	this.addToolbarIcon(html, toolbar, id, text, iconName);
-}
+};
 
 TimelineWidget.prototype.addToolbarToggle = function(toolbar, id, text, iconName) {
 	var html = "<input type='checkbox' id='" + id + "' /><label for='" + id + "'>" + text + "</label>";
@@ -241,7 +241,7 @@ TimelineWidget.prototype.addToolbarToggle = function(toolbar, id, text, iconName
 TimelineWidget.prototype.initToolbar = function() {
 	var self = this;
 	
-	var toolbar = $("#bottomModuleHeader")
+	var toolbar = $("#bottomModuleHeader");
 	this.addToolbarButton(toolbar, "scrollTimelineLeft", "Scroll left", 'ui-icon-seek-prev');
 	this.addToolbarButton(toolbar, "scrollTimelineRight", "Scroll right", 'ui-icon-seek-next');
 	this.addToolbarButton(toolbar, "zoomInTimeline", "Zoom in", 'ui-icon-zoomin');
@@ -324,7 +324,7 @@ TimelineWidget.prototype.onResize = function() {
             
         }, 500);
     }
-}
+};
 
 /* Overriding the fill in bubble from the timeline library. */
 Timeline.DefaultEventSource.Event.prototype.fillInfoBubble = function (elmt, theme, labeller) { 
@@ -370,5 +370,5 @@ Timeline.DefaultEventSource.Event.prototype.fillInfoBubble = function (elmt, the
 	this.fillWikiInfo(divWiki); 
 	theme.event.bubble.wikiStyler(divWiki); 
 	elmt.appendChild(divWiki); 
-} 
+};
 

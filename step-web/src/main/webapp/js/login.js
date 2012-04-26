@@ -164,4 +164,4 @@ Login.prototype.setLoggedInUser = function(name) {
 	loginLink.click(function() {
 		self.showLogout();
 	});
-}
+};

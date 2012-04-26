@@ -19,7 +19,7 @@ BIBLE_GET_BIBLE_VERSIONS = 				STEP_SERVER_BASE_URL + "bible/getBibleVersions/";
 BIBLE_GET_BIBLE_TEXT = 					STEP_SERVER_BASE_URL + "bible/getBibleText/";
 BIBLE_GET_FEATURES = 					STEP_SERVER_BASE_URL + "bible/getFeatures/";
 BIBLE_GET_ALL_FEATURES = 				STEP_SERVER_BASE_URL + "bible/getAllFeatures/";
-BIBLE_GET_BIBLE_BOOK_NAMES = 			STEP_SERVER_BASE_URL + "bible/getBibleBookNames/"
+BIBLE_GET_BIBLE_BOOK_NAMES = 			STEP_SERVER_BASE_URL + "bible/getBibleBookNames/";
 
 MODULE_GET_ALL_MODULES = 				STEP_SERVER_BASE_URL + "module/getAllModules/";
 MODULE_GET_ALL_INSTALLABLE_MODULES = 	STEP_SERVER_BASE_URL + "module/getAllInstallableModules/";
@@ -37,10 +37,10 @@ TIMELINE_GET_CONFIGURATION = 			STEP_SERVER_BASE_URL + "timeline/getTimelineConf
 
 USER_LOGIN = 							STEP_SERVER_BASE_URL + "user/login/";
 USER_LOGOUT = 							STEP_SERVER_BASE_URL + "user/logout/";
-USER_REGISTER = 						STEP_SERVER_BASE_URL + "user/register/"
+USER_REGISTER = 						STEP_SERVER_BASE_URL + "user/register/";
 USER_GET_LOGGED_IN_USER = 				STEP_SERVER_BASE_URL + "user/getLoggedInUser";
 
-GEOGRAPHY_GET_PLACES = 					STEP_SERVER_BASE_URL + "geography/getPlaces/"
+GEOGRAPHY_GET_PLACES = 					STEP_SERVER_BASE_URL + "geography/getPlaces/";
 	
 //////////////////////////
 // SOME DEFAULTS
@@ -72,6 +72,7 @@ function toggleMenuItem(menuItem) {
 };
 
 function changePassage(element, passageReference) {
+	$("#previewReference").hide();
 	$.shout("new-passage-" + getPassageId(element), passageReference);
 }
 

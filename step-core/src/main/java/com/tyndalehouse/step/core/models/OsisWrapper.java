@@ -30,7 +30,7 @@
  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
-package com.tyndalehouse.step.rest.wrappers;
+package com.tyndalehouse.step.core.models;
 
 /**
  * A simple wrapper around a string for returning as a JSON-mapped object
@@ -38,16 +38,19 @@ package com.tyndalehouse.step.rest.wrappers;
  * @author Chris
  * 
  */
-public class HtmlWrapper {
+public class OsisWrapper {
     private final String value;
+    private final String reference;
 
     /**
      * the value to be wrapped
      * 
+     * @param reference reference
      * @param value the value to be wrapped around
      */
-    public HtmlWrapper(final String value) {
+    public OsisWrapper(final String value, final String reference) {
         this.value = value;
+        this.reference = reference;
     }
 
     /**
@@ -55,5 +58,12 @@ public class HtmlWrapper {
      */
     public String getValue() {
         return this.value;
+    }
+
+    /**
+     * @return the reference
+     */
+    public String getReference() {
+        return this.reference;
     }
 }

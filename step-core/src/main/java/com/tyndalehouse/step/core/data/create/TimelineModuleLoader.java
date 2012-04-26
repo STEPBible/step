@@ -33,6 +33,7 @@
 package com.tyndalehouse.step.core.data.create;
 
 import static com.tyndalehouse.step.core.data.common.PartialDate.parseDate;
+import static com.tyndalehouse.step.core.data.entities.reference.TargetType.TIMELINE_EVENT;
 import static com.tyndalehouse.step.core.utils.StepIOUtils.closeQuietly;
 
 import java.io.IOException;
@@ -127,8 +128,8 @@ public class TimelineModuleLoader extends AbstractCsvModuleLoader implements Mod
 
                 }
                 // finally add any scripture reference required
-                final List<ScriptureReference> passageReferences = this.jsword.getPassageReferences(data
-                        .getData(ii, "Refs"));
+                final List<ScriptureReference> passageReferences = this.jsword.getPassageReferences(
+                        data.getData(ii, "Refs"), TIMELINE_EVENT);
 
                 event.setReferences(passageReferences);
 

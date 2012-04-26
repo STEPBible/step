@@ -16,7 +16,7 @@ function setup() {
 					var toBeInstalled = "<a class='notInstalled' href=\"javascript:installVersion('" + this.initials +  "','" + 
 						this.name.replace(/'/g,"\\'")  + "')\">[" + this.initials + "] " + this.name + "</a><br />";
 					$("#availableModules").append(toBeInstalled);
-				})
+				});
 			});
 		});
 	});
@@ -26,7 +26,7 @@ function setup() {
 		$(data).each(function() {
 			var installed = "<div class=\"installed\">[" + this.initials + "] " + this.name + " - Installed</div>";
 			$("#inProgressModules").append(installed);
-		})
+		});
 	});
 }
 

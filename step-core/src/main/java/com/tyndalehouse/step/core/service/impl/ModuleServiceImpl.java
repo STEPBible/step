@@ -86,7 +86,7 @@ public class ModuleServiceImpl implements ModuleService {
         final String lookupModule = getLookupModule(reference);
         if (lookupModule != null) {
             return new Definition(reference, this.jsword.getOsisText(lookupModule,
-                    StringConversionUtils.getAnyKey(reference, false)));
+                    StringConversionUtils.getAnyKey(reference, false)).getReference());
         }
 
         LOGGER.warn("No module could be found for [{}]", reference);

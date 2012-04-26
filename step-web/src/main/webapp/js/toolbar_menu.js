@@ -43,7 +43,7 @@ ToolbarMenu.prototype.selectMenuItem = function(menuItem, selected) {
 	} else {
 		this.untickMenuItem(menuItem);
 	}
-}
+};
 
 
 /**
@@ -62,7 +62,7 @@ ToolbarMenu.prototype.toggleMenuItem = function(selectedItem) {
 		//fire-off an event indicating that menu options have changed!
 		$.shout("toolbar-menu-options-changed-" + this.passageId);
 	}
-}
+};
 
 
 /**
@@ -71,7 +71,7 @@ ToolbarMenu.prototype.toggleMenuItem = function(selectedItem) {
  */
 ToolbarMenu.prototype.tickMenuItem = function(selectedItem) {
 	this.getItemSelector(selectedItem).not(":has(img)").append("<img class='selectingTick' src='images/selected.png' />");		
-}
+};
 
 /**
  * removes the tick next to the menu item
@@ -79,7 +79,7 @@ ToolbarMenu.prototype.tickMenuItem = function(selectedItem) {
  */
 ToolbarMenu.prototype.untickMenuItem = function(selectedItem) {
 	$("img.selectingTick", this.getItemSelector(selectedItem)).remove();
-}
+};
 
 /**
  * The menu item can be selected
@@ -92,7 +92,7 @@ ToolbarMenu.prototype.checkItemIsSelectable = function(selectedItem) {
 		return false;
 	}
 	return true;
-}
+};
 
 /**
  * Refreshes the menu options according to what can currently be displayed
@@ -118,7 +118,7 @@ ToolbarMenu.prototype.refreshMenuOptions = function(version) {
 		});
 		$.shout("toolbar-menu-options-changed-" + self.passageId);
 	});
-}
+};
 
 /**
  * sets up the default options for the menu
@@ -127,7 +127,7 @@ ToolbarMenu.prototype.setDefaultOptions = function() {
 	this.toggleMenuItem("HEADINGS");
 	this.toggleMenuItem("VERSE_NUMBERS");
 	this.toggleMenuItem("NOTES");
-}
+};
 
 /**
  * returns all menu items matching the name specified
@@ -135,4 +135,4 @@ ToolbarMenu.prototype.setDefaultOptions = function() {
  */
 ToolbarMenu.prototype.getItemSelector = function(name) {
 	return $("*[name = '" + name + "']", this.menuRoot);
-}
+};

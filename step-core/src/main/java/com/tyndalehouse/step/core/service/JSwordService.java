@@ -38,7 +38,9 @@ import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.BookCategory;
 
 import com.tyndalehouse.step.core.data.entities.ScriptureReference;
+import com.tyndalehouse.step.core.data.entities.reference.TargetType;
 import com.tyndalehouse.step.core.models.LookupOption;
+import com.tyndalehouse.step.core.models.OsisWrapper;
 
 /**
  * The service providing access to JSword. All JSword calls should preferably be placed in this service
@@ -56,7 +58,8 @@ public interface JSwordService {
      * @param interlinearVersion the version to add if there is an interlinear request, or blank if not
      * @return the OSIS text in an HTML form
      */
-    String getOsisText(String version, String reference, List<LookupOption> options, String interlinearVersion);
+    OsisWrapper getOsisText(String version, String reference, List<LookupOption> options,
+            String interlinearVersion);
 
     /**
      * returns the biblical text as xml dom
@@ -65,7 +68,7 @@ public interface JSwordService {
      * @param reference the reference to lookup
      * @return the OSIS text in an HTML form
      */
-    String getOsisText(String version, String reference);
+    OsisWrapper getOsisText(String version, String reference);
 
     /**
      * looks up any installed module
@@ -127,9 +130,10 @@ public interface JSwordService {
     /**
      * 
      * @param references a list of references
+     * @param targetType TODO
      * @return the list of references strongly-typed
      */
-    List<ScriptureReference> getPassageReferences(final String references);
+    List<ScriptureReference> getPassageReferences(final String references, TargetType targetType);
 
     /**
      * returns a list of matching names or references in a particular book

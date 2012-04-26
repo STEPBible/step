@@ -32,6 +32,7 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.data.create;
 
+import static com.tyndalehouse.step.core.data.entities.reference.TargetType.GEO_PLACE;
 import static org.apache.commons.lang.StringUtils.isEmpty;
 import static org.apache.commons.lang.StringUtils.isNotEmpty;
 
@@ -129,9 +130,8 @@ public class GeographyModuleLoader implements ModuleLoader {
                 gp.setEsvName(geoFields[PLACE_NAME_FIELD]);
                 gp.setRoot(geoFields[ROOT_FIELD]);
                 setCoordinates(gp, geoFields[LATITUDE_FIELD], geoFields[LONGITUDE_FIELD]);
-                final List<ScriptureReference> passageReferences = this.jsword
-                        .getPassageReferences(geoFields[SCRIPTURE_FIELD].replace(',', ';').replace("Sng",
-                                "Song"));
+                final List<ScriptureReference> passageReferences = this.jsword.getPassageReferences(
+                        geoFields[SCRIPTURE_FIELD].replace(',', ';').replace("Sng", "Song"), GEO_PLACE);
 
                 gp.setReferences(passageReferences);
                 gp.setComment(geoFields[COMMENT_FIELD]);
@@ -177,6 +177,33 @@ public class GeographyModuleLoader implements ModuleLoader {
             return;
         }
 
+        final String coordinateSuffix = getCoordinateFromString(coordinate, gp);
+        try {
+
+            if (isNotEmpty(coordinateSuffix)) {
+                final Double coordValue = Double.parseDouble(coordinateSuffix);
+                if (isLatitude) {
+                    gp.setLatitude(coordValue);
+                } else {
+                    gp.setLongitude(coordValue);
+                }
+            } else {
+                // set to unknown
+                gp.setPrecision(GeoPrecision.UNKNOWN);
+            }
+        } catch (final NumberFormatException e) {
+            LOG.error("Unable to parse number: " + coordinate, e);
+        }
+    }
+
+    /**
+     * Gets the right part of the string for further conversion into a decimal value
+     * 
+     * @param coordinate the coordinate string
+     * @param gp the geo place, in case we need to set the approximation
+     * @return the coordinate
+     */
+    private String getCoordinateFromString(final String coordinate, final GeoPlace gp) {
         // advance to first digit
         int ii = 0;
         final int coordLength = coordinate.length();
@@ -198,27 +225,10 @@ public class GeographyModuleLoader implements ModuleLoader {
 
         if (jj <= ii) {
             // then we have only dodgy characters indicating unknown
-            gp.setPrecision(GeoPrecision.UNKNOWN);
-            return;
+            return null;
         }
 
-        try {
-            LOG.trace("Substring of [{}] and [{}]", ii, jj);
-            final String coordinateSuffix = coordinate.substring(ii, jj + 1);
-
-            if (isNotEmpty(coordinateSuffix)) {
-                final Double coordValue = Double.parseDouble(coordinateSuffix);
-                if (isLatitude) {
-                    gp.setLatitude(coordValue);
-                } else {
-                    gp.setLongitude(coordValue);
-                }
-            } else {
-                // set to unknown
-                gp.setPrecision(GeoPrecision.UNKNOWN);
-            }
-        } catch (final NumberFormatException e) {
-            LOG.error("Unable to parse number: " + coordinate, e);
-        }
+        LOG.trace("Substring of [{}] and [{}]", ii, jj);
+        return coordinate.substring(ii, jj + 1);
     }
 }

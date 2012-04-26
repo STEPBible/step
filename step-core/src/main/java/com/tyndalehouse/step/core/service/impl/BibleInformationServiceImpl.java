@@ -50,6 +50,7 @@ import com.google.inject.name.Named;
 import com.tyndalehouse.step.core.models.BibleVersion;
 import com.tyndalehouse.step.core.models.EnrichedLookupOption;
 import com.tyndalehouse.step.core.models.LookupOption;
+import com.tyndalehouse.step.core.models.OsisWrapper;
 import com.tyndalehouse.step.core.service.BibleInformationService;
 import com.tyndalehouse.step.core.service.JSwordService;
 
@@ -85,7 +86,7 @@ public class BibleInformationServiceImpl implements BibleInformationService {
     }
 
     @Override
-    public String getPassageText(final String version, final String reference,
+    public OsisWrapper getPassageText(final String version, final String reference,
             final List<LookupOption> options, final String interlinearVersion) {
         return this.jsword.getOsisText(version, reference, options, interlinearVersion);
     }

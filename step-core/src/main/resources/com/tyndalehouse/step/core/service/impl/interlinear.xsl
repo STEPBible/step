@@ -270,7 +270,7 @@
       </xsl:choose>
     </xsl:for-each>
     <!-- Handle the KJV paragraph marker. -->
-    <xsl:if test="milestone[@type = 'x-p']"><br/><br/></xsl:if>
+    <xsl:if test="milestone[@type = 'x-p']"><p /></xsl:if>
     <!-- If the verse doesn't start on its own line and -->
     <!-- the verse is not the first verse of a set of siblings, -->
     <!-- output an extra space. -->
@@ -303,7 +303,7 @@
       <h3 class="heading"><xsl:value-of select="$title"/></h3>
     </xsl:if>
     <!-- Handle the KJV paragraph marker. -->
-    <xsl:if test="milestone[@type = 'x-p']"><br/><br/></xsl:if>
+    <xsl:if test="milestone[@type = 'x-p']"><p /></xsl:if>
     <!-- Always output the verse -->
     <xsl:choose>
       <xsl:when test="$VLine = 'true'">
@@ -966,8 +966,8 @@
   <xsl:template match="l[@sID]"/>
   <xsl:template match="l[@sID]" mode="jesus"/>
 
-  <xsl:template match="l[@eID]"><br/></xsl:template>
-  <xsl:template match="l[@eID]" mode="jesus"><br/></xsl:template>
+  <xsl:template match="l[@eID]"><p /></xsl:template>
+  <xsl:template match="l[@eID]" mode="jesus"><p /></xsl:template>
 
   <xsl:template match="l">
     <xsl:apply-templates/><br/>
@@ -980,8 +980,8 @@
   <!-- While a BR is a break, if it is immediately followed by punctuation,
        indenting this rule can introduce whitespace.
     -->
-  <xsl:template match="lb"><br/></xsl:template>
-  <xsl:template match="lb" mode="jesus"><br/></xsl:template>
+  <xsl:template match="lb"><br /></xsl:template>
+  <xsl:template match="lb" mode="jesus">a<br/></xsl:template>
 
   <xsl:template match="list">
     <xsl:choose>

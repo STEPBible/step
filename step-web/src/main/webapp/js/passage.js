@@ -320,17 +320,21 @@ Passage.prototype.showPreview = function(previewData) {
 	var offset = (80 * (this.passageId == 0 ? 1 : -1)) + " 0";
 	
 	$.getSafe(BIBLE_GET_BIBLE_TEXT + this.version.val() + "/" + reference, function(data) {
-		$("#previewReference").html(data.value + "<span class='previewReferenceKey'>[" + data.reference + "]</span>");
-		$("#previewReference").show().position({
+		var popup = $("#previewReference");
+		
+		popup.html(data.value + "<span class='previewReferenceKey'>[" + data.reference + "]</span>");
+		popup.show().position({
 			of: $(source),
 			my: myAnchor + " center",
 			at: "center " + "center",
 			offset: offset,
 			collision: "fit"
+		}).mouseleave(function(s) {
+			popup.hide();
 		});
 		
 		$(".notesPane").mouseleave(function(s) {
-			$("#previewReference").hide();
+			popup.hide();
 		});
 	});
 };

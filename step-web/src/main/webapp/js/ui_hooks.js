@@ -57,6 +57,7 @@ function getPassageId(menuItem) {
 }
 
 
+
 /** a simpler toggler for the menu items */
 function toggleMenuItem(menuItem) {
 	//the hook needs to find the passage id if we're a sub menu

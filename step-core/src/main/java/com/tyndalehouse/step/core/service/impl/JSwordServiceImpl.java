@@ -276,8 +276,9 @@ public class JSwordServiceImpl implements JSwordService {
         // some options are always there for Bibles:
         if (BIBLE.equals(book.getBookCategory())) {
             options.add(LookupOption.VERSE_NUMBERS);
+            options.add(LookupOption.VERSE_NEW_LINE);
 
-            // TODO bug in modules? in jsword?
+            // TODO FIXME bug in modules? in jsword?
             options.add(LookupOption.RED_LETTER);
         }
 

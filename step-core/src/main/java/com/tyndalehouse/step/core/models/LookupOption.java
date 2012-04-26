@@ -52,6 +52,10 @@ public enum LookupOption {
      */
     VERSE_NUMBERS("VNum", XslConversionType.DEFAULT, true),
     /**
+     * verses to be displayed on new line
+     */
+    VERSE_NEW_LINE("VLine", XslConversionType.DEFAULT),
+    /**
      * enabling red letter for the Words of Jesus
      */
     RED_LETTER("RedLetterText", XslConversionType.DEFAULT),
@@ -69,7 +73,7 @@ public enum LookupOption {
      */
     INTERLINEAR("Interlinear", XslConversionType.INTERLINEAR),
     /**
-     * Showing headings
+     * Showing tiny verse numbers
      */
     TINY_VERSE_NUMBERS("TinyVNum", XslConversionType.DEFAULT);
 

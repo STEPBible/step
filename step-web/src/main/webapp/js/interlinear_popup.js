@@ -26,6 +26,10 @@ function InterlinearPopup(versionsFromServer, passageId, interlinearPopup) {
 	});
 	
 	
+	this.interlinearPopup.hear("version-changed-" + this.passageId, function() {
+		self.refreshCheckBoxes();
+	});
+	
 	//now do the handlers
 	this.refreshCheckBoxes(versionsFromServer);
 	this.addShowHandler();
@@ -37,19 +41,24 @@ function InterlinearPopup(versionsFromServer, passageId, interlinearPopup) {
 InterlinearPopup.prototype.refreshCheckBoxes = function(versionsFromServer) {
 	var strongedVersions = [];
 	var ii = 0;
-	
+
 	//delete current popup
 	$("table", this.interlinearPopup).remove();
 	
-	//iterate through all versions for those that have strong numbers
-	$.each(versionsFromServer, function(index, item) {
-		var showingText = "[" + item.initials + "] " + item.name;
-		if(item.hasStrongs) {
-			strongedVersions[ii++] = { label: showingText, value: item.initials};
-		}
-	});
-	
-	this.createCheckboxes(strongedVersions);
+	//if we've been passed in versions, then store
+	if(versionsFromServer) {
+		//iterate through all versions for those that have strong numbers
+		$.each(versionsFromServer, function(index, item) {
+			var showingText = "[" + item.initials + "] " + item.name;
+			if(item.hasStrongs) {
+				strongedVersions[ii++] = { label: showingText, value: item.initials};
+			}
+		});
+		
+		this.versions = strongedVersions;
+	}
+
+	this.createCheckboxes(this.versions);
 	this.addHandlersToCheckboxes();
 	this.addAllOptionsHandler();
 };
@@ -63,31 +72,38 @@ InterlinearPopup.prototype.createCheckboxes = function(strongedVersions) {
 	var allOptionsValue = "";
 	var allCheckBoxes = "";
 	var interlinearChoices = $(".interlinearChoices", this.interlinearPopup);
+	var displayedVersion = $(".passageContainer[passage-id = " + this.passageId +"] .passageVersion").val();
 	
 	var row = 0;
 	for(ii = 0 ; ii < strongedVersions.length; ii++) {
 		var longName = strongedVersions[ii].label;
 		var shortName = longName.length > 20 ? shortenName(longName, 20) : longName;
+		var disabledOption = displayedVersion == strongedVersions[ii].value;
+		var disabledCheckBox = disabledOption ? "disabled='disabled' " : "";
+		var disabledLabel = disabledOption ? "inactive" : "";
 		
 		//created a checkbox for this, that adds the text if checked to the input
-		if((row % 2) == 0) {
+		if((ii % 2) == 0) {
 			allCheckBoxes += "<tr>";
 		}
 		
 		allCheckBoxes += "<td>";
-		allCheckBoxes += "<input id='il_" + ii + "' type='checkbox' value='" + strongedVersions[ii].value + "' />" +
-						  "<label for='il_" + ii + "' title='" + longName + "'>" + shortName + "</label>";
+		allCheckBoxes += "<input id='il_" + ii + "' type='checkbox' value='" + strongedVersions[ii].value + "' "; 
+		allCheckBoxes += disabledCheckBox + " />"+
+						  "<label for='il_" + ii + "' title='" + longName + "' class='" + disabledLabel +"'>" + shortName + "</label>";
 		allCheckBoxes += "</td>";
 	
+		
+		
 		if((row % 2) == 1) {
 			allCheckBoxes += "</tr>";
 		}
 		
-		row++;
-		
-		allOptionsValue += strongedVersions[ii].value;
-		if(ii < strongedVersions.length -1) {
-			allOptionsValue += ',';
+		if(displayedVersion != strongedVersions[ii].value) {
+			allOptionsValue += strongedVersions[ii].value;
+			if(ii < strongedVersions.length -1) {
+				allOptionsValue += ',';
+			}
 		}
 	}
 	

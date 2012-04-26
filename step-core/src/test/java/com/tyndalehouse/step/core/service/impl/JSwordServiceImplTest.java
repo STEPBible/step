@@ -206,21 +206,19 @@ public class JSwordServiceImplTest {
     }
 
     /**
-     * tests that the XSLT transformation is handled correctly
+     * Justs shows XML on the stdout
      * 
-     * @throws BookException uncaught exception
-     * @throws NoSuchKeyException uncaught exception
-     * @throws IOException uncaught exception
-     * @throws JDOMException uncaught exception
+     * @throws BookException an exceptioon
+     * @throws NoSuchKeyException an exception
+     * @throws IOException an exception
+     * @throws JDOMException an exception
      */
     @Test
-    public void testAbsenceOfParagraphMark() throws BookException, NoSuchKeyException, JDOMException,
-            IOException {
-        final String testReference = "Acts 1:15";
-        final String testVersion = "KJV";
-
-        final Book currentBook = Books.installed().getBook(testVersion);
-        final BookData bookData = new BookData(currentBook, currentBook.getKey(testReference));
+    public void testPrettyXml() throws BookException, NoSuchKeyException, JDOMException, IOException {
+        final String version = "KJV";
+        final String ref = "Genesis 46:9-10";
+        final Book currentBook = Books.installed().getBook(version);
+        final BookData bookData = new BookData(currentBook, currentBook.getKey(ref));
         final Element osisFragment = bookData.getOsisFragment();
 
         final XMLOutputter xmlOutputter = new XMLOutputter(Format.getPrettyFormat());
@@ -231,12 +229,13 @@ public class JSwordServiceImplTest {
         final List<LookupOption> options = new ArrayList<LookupOption>();
         // options.add(LookupOption.STRONG_NUMBERS);
 
-        final String osisText = jsi.getOsisText(testVersion, testReference, options, "").getValue();
+        final String osisText = jsi.getOsisText(version, ref, options, "").getValue();
         final SAXBuilder sb = new SAXBuilder();
         final Document d = sb.build(new StringReader(osisText));
 
         LOGGER.debug("\n {}", xmlOutputter.outputString(d));
         Assert.assertTrue(osisText.contains("span"));
+
     }
 
     // /**

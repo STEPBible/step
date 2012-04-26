@@ -94,13 +94,14 @@ span.verseStart {
 	clear: left;
 }
 	
-
-
-span.strongs a {
-	color: orange;
+span.strongs {
 	text-decoration: none;
 	font-size: xx-small;
 	text-align: center;
+}
+
+span.strongs a {
+	color: orange;
 }
 
 span.morphs a {
@@ -228,7 +229,6 @@ H3.heading  {
 H2.heading, input.heading {
 	color: #669966;
 	font-weight: bold;
-	clear: both;
 }
 
 input.heading {

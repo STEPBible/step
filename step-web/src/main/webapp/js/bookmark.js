@@ -24,8 +24,6 @@ function Bookmark(bookmarkContainer) {
 		self.mergeHistory(data);
 	});
 	
-	this.initialiseHistory();
-	
 	//add accordion handlers
 	$("#bookmarkPane h3").click(function() {
 		//toggle the arrow
@@ -43,6 +41,8 @@ function Bookmark(bookmarkContainer) {
 
 		$(this).next().slideToggle(250);
 	}).disableSelection().next().slideUp(0);
+
+	this.initialiseHistory();
 	
 	//finally, we add a handler to force login of the bookmarks
 	$("#bookmarkHeader").click(function() {
@@ -52,11 +52,12 @@ function Bookmark(bookmarkContainer) {
 		self.loadedBookmarks = false;
 		self.bookmarkContainer.html("");
 	});
+	
+	
 }
 
 //TODO make server setting
 Bookmark.maxBookmarks = 10;
-//TODO make server setting
 Bookmark.historyDelimiter = '~';
 
 //we need to ignore the first two passage changes since we have those in the history
@@ -124,6 +125,9 @@ Bookmark.prototype.initialiseHistory = function() {
 	//create the history from the cookie, or - logged-in event will override
 	var self = this;
 	self.createHistoryItemsFromCookies();
+	
+	//finally, we open the history tab
+	$("#bookmarkPane h3").trigger('click');
 };
 
 /** 

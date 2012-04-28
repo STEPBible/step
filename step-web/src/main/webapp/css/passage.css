@@ -94,7 +94,7 @@ span.verseStart {
 	clear: left;
 }
 	
-span.strongs {
+span.strongs, span.morphs {
 	text-decoration: none;
 	font-size: xx-small;
 	text-align: center;
@@ -106,9 +106,6 @@ span.strongs a {
 
 span.morphs a {
 	color: green;
-	text-decoration: none;
-	font-size: xx-small;
-	text-align: center;
 }
 
 
@@ -307,3 +304,16 @@ FONT.usg {
 .previewReferenceKey {
 	font-style: italic;
 }
+
+/**********************************************/
+/** Grammar colour coding                     */
+/**********************************************/
+.ggSVN { color: #680000; } 
+.ggSVO { color: #FF0000; }
+.ggSGD { color: #FF3333; }
+.ggPVN { color: #696; }
+.ggPVO { color: #4EB305; }
+.ggPGD { color: PaleGreen; }
+
+.ggS { color : red; font-weight: bold; }
+.ggP { color: green; font-weight: bold; }

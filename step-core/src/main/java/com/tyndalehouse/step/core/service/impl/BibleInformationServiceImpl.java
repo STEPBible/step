@@ -112,6 +112,11 @@ public class BibleInformationServiceImpl implements BibleInformationService {
         if (features.contains(STRONG_NUMBERS)) {
             features.add(INTERLINEAR);
         }
+
+        if (features.contains(LookupOption.MORPHOLOGY)) {
+            features.add(LookupOption.COLOUR_CODE);
+        }
+
         return features;
     }
 

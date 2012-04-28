@@ -1,9 +1,45 @@
+/*******************************************************************************
+ * Copyright (c) 2012, Directors of the Tyndale STEP Project
+ * All rights reserved.
+ * 
+ * Redistribution and use in source and binary forms, with or without 
+ * modification, are permitted provided that the following conditions 
+ * are met:
+ * 
+ * Redistributions of source code must retain the above copyright 
+ * notice, this list of conditions and the following disclaimer.
+ * Redistributions in binary form must reproduce the above copyright 
+ * notice, this list of conditions and the following disclaimer in 
+ * the documentation and/or other materials provided with the 
+ * distribution.
+ * Neither the name of the Tyndale House, Cambridge (www.TyndaleHouse.com)  
+ * nor the names of its contributors may be used to endorse or promote 
+ * products derived from this software without specific prior written 
+ * permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
+ * COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING 
+ * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
+ * THE POSSIBILITY OF SUCH DAMAGE.
+ ******************************************************************************/
+
 /**
- * Definition of the Passage component responsible for displaying
- * OSIS passages appropriately. Ties the search box for the reference
- * and the version together to the passage displayed
- * @param passageContainer the passage Container containing the whole control
- * @param versions the list of versions to use to populate the dropdown
+ * Definition of the Passage component responsible for displaying OSIS passages
+ * appropriately. Ties the search box for the reference and the version together
+ * to the passage displayed
+ * 
+ * @param passageContainer
+ *            the passage Container containing the whole control
+ * @param versions
+ *            the list of versions to use to populate the dropdown
  */
 function Passage(passageContainer, rawServerVersions, passageId) {
 	var self = this;
@@ -15,7 +51,7 @@ function Passage(passageContainer, rawServerVersions, passageId) {
 	this.passageId = passageId;
 	this.passageSync = false;
 	
-	//read state from the cookie
+	// read state from the cookie
 	this.setInitialPassage();
 	
 	this.initVersionsTextBox(rawServerVersions);
@@ -23,24 +59,23 @@ function Passage(passageContainer, rawServerVersions, passageId) {
 	
 	
 	
-	//register to listen for events that click a word/phrase:
+	// register to listen for events that click a word/phrase:
 	this.passage.hear("show-all-strong-morphs", function(selfElement, data) {
 		self.higlightStrongs(data);
 	});
 	
-	//register we want to be notified of menu option changes...
+	// register we want to be notified of menu option changes...
 	this.passage.hear("toolbar-menu-options-changed-" + this.passageId, function(selfElement, data) {
-		//we only care about this event if the menu was within the container...
-		self.changePassage();
+			self.changePassage();
 	});
 
-	//register when we want to be alerted that a bookmark has changed
+	// register when we want to be alerted that a bookmark has changed
 	this.passage.hear("new-passage-" + this.passageId, function(selfElement, data) {
 		self.reference.val(data);
 		self.changePassage();
 	});
 
-	//register when we want to be alerted that a bookmark has changed
+	// register when we want to be alerted that a bookmark has changed
 	this.passage.hear("show-preview-" + this.passageId, function(selfElement, previewData) {
 		self.showPreview(previewData);
 	});
@@ -74,22 +109,22 @@ function Passage(passageContainer, rawServerVersions, passageId) {
  * refreshes the list attached to the version dropdown
  */
 Passage.prototype.refreshVersionsTextBox = function(rawServerVersions) {
-	//need to make server response adequate for autocomplete:
+	// need to make server response adequate for autocomplete:
 	var parsedVersions = $.map(rawServerVersions, function(item) {
 		var showingText = "[" + item.initials + "] " + item.name;
 		var features = "";
-		//add to Strongs if applicable, and therefore interlinear
+		// add to Strongs if applicable, and therefore interlinear
 		if(item.hasStrongs) {
 			features += " " + "<span class='versionFeature strongsFeature' title='Supports Strongs concordance'>S</span>";
 			features += " " + "<span class='versionFeature interlinearFeature' title='Supports interlinear feature'>I</span>";
 		}
 
-		//add morphology
+		// add morphology
 		if(item.hasMorphology) {
-			features += " " + "<span class='versionFeature morphologyFeature' title='Supports morphology feature'>M</span>";
+			features += " " + "<span class='versionFeature morphologyFeature' title='Supports the grammar feature'>G</span>";
 		}
 		
-		//return response for dropdowns
+		// return response for dropdowns
 		return {
 			label : showingText,
 			value : item.initials,
@@ -133,7 +168,7 @@ Passage.prototype.initVersionsTextBox = function(rawServerVersions) {
 Passage.prototype.initReferenceTextBox = function() {	
 	var self = this;
 	
-	//set up change for textbox
+	// set up change for textbox
 	this.reference.autocomplete({
 		source : function(request, response) {
 			$.get(BIBLE_GET_BIBLE_BOOK_NAMES + request.term + "/" + self.version.val(), function(text) {
@@ -167,8 +202,8 @@ Passage.prototype.setInitialPassage = function() {
 };
 
 /**
- * We are forcing a passage sync, which means that we want to change the passage reference text
- * to match passage-0
+ * We are forcing a passage sync, which means that we want to change the passage
+ * reference text to match passage-0
  */
 Passage.prototype.doSync = function() {
 	var self = this;
@@ -179,7 +214,7 @@ Passage.prototype.doSync = function() {
 				"please use the Options menu and disable the 'Sync both passages' option.");
 		this.changePassage();
 		
-		//set up hearer for all new changes
+		// set up hearer for all new changes
 		this.passage.hear("passage-changed", function(selfElement, data) {
 			if(data.passageId == 0) {
 				self.changePassage();
@@ -198,7 +233,7 @@ Passage.prototype.deSync = function() {
 		this.reference.removeAttr("title");
 		this.changePassage();
 		
-		//unregister hearer
+		// unregister hearer
 		this.passage.unhear("passage-changed");
 	}
 };
@@ -207,7 +242,7 @@ Passage.prototype.deSync = function() {
  * changes the passage, with optional parameters
  */
 Passage.prototype.changePassage = function() {
-	//now get the options from toolbar
+	// now get the options from toolbar
 	var options = this.getSelectedOptions();
 	var interlinearVersion = this.getSelectedInterlinearVersion();
 	
@@ -232,19 +267,19 @@ Passage.prototype.changePassage = function() {
 			}
 		}
 		
-		//send to server
+		// send to server
 		$.get(url, function (text) {
-			//we get html back, so we insert into passage:
+			// we get html back, so we insert into passage:
 			$.cookie("currentReference-" + self.passageId, lookupReference);
 			$.cookie("currentVersion-" + self.passageId, lookupVersion);
 			$.cookie("currentOptions-" + self.passageId, options);
 			$.cookie("currentInterlinearVersion-" + self.passageId, interlinearVersion);
 
-			//TODO remove completely in favour of cookie storage only
+			// TODO remove completely in favour of cookie storage only
 			self.currentOptions = options;
 			self.passage.html(text.value);
 			
-			//passage change was successful, so we let the rest of the UI know
+			// passage change was successful, so we let the rest of the UI know
 			$.shout("passage-changed", { reference: self.reference.val(), passageId: self.passageId, init: init } );
 		});
 	}
@@ -253,10 +288,12 @@ Passage.prototype.changePassage = function() {
 
 /**
  * highlights all strongs match parameter strongReference
- * @strongReference the reference look for across this passage pane and highlight
+ * 
+ * @strongReference the reference look for across this passage pane and
+ *                  highlight
  */
 Passage.prototype.highlightStrong = function(strongReference) {
-	//check for black listed strongs
+	// check for black listed strongs
 	if($.inArray(strongReference, Passage.getBlackListedStrongs()) == -1) {
 		$(".verse span[onclick*=" + strongReference + "]", this.container).css("text-decoration", "underline");
 		$("span.w[onclick*=" + strongReference + "] span.text", this.container).css("text-decoration", "underline");
@@ -264,8 +301,8 @@ Passage.prototype.highlightStrong = function(strongReference) {
 };
 
 /**
- * This method scans the currently selected options in the menu
- * to find out what is selected and what is not...
+ * This method scans the currently selected options in the menu to find out what
+ * is selected and what is not...
  */
 Passage.prototype.getSelectedOptions = function() {
 	var selectedOptions = [];
@@ -278,12 +315,13 @@ Passage.prototype.getSelectedOptions = function() {
 
 
 Passage.prototype.getSelectedInterlinearVersion = function() {
-	//look for menu item for interlinears...
-	//we check that it has a tick and is enabled for the INTERLINEAR name
+	// look for menu item for interlinears...
+	// we check that it has a tick and is enabled for the INTERLINEAR name
 	var menuItem = $("a:has(img.selectingTick)[name = 'INTERLINEAR']", this.container).not(".disabled");
 	
 	if(menuItem.length) {
-		//lookup the only link we have which is the passage-id attribute on the container
+		// lookup the only link we have which is the passage-id attribute on the
+		// container
 		var passageId = $(this.container).attr("passage-id");
 		return $(".interlinearPopup[passage-id = '" + passageId + "'] > .interlinearVersions").val();
 	}
@@ -291,13 +329,16 @@ Passage.prototype.getSelectedInterlinearVersion = function() {
 };
 
 /**
- * if a number of strongs are given, separated by a space, highlights all of them
- * @param strongMorphReference the references of all strongs and morphs asked for
+ * if a number of strongs are given, separated by a space, highlights all of
+ * them
+ * 
+ * @param strongMorphReference
+ *            the references of all strongs and morphs asked for
  */
 Passage.prototype.higlightStrongs = function(strongMorphReference) {
 	var references = strongMorphReference.split(' ');
 	
-	//reset all spans that are underlined:
+	// reset all spans that are underlined:
 	$(".verse span", this.container).css("text-decoration", "none");
 	$("span.text", this.container).css("text-decoration", "none");
 	
@@ -305,7 +346,7 @@ Passage.prototype.higlightStrongs = function(strongMorphReference) {
 		if(references[ii].startsWith("strong:")) {
 			this.highlightStrong(references[ii]);
 		} 
-		//we ignore everything else
+		// we ignore everything else
 	}
 };
 
@@ -338,7 +379,6 @@ Passage.prototype.showPreview = function(previewData) {
 		});
 	});
 };
-
 /**
  * static method that returns strongs that should not be tagged in the UI
  */

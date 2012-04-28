@@ -75,7 +75,14 @@ public enum LookupOption {
     /**
      * Showing tiny verse numbers
      */
-    TINY_VERSE_NUMBERS("TinyVNum", XslConversionType.DEFAULT);
+    TINY_VERSE_NUMBERS("TinyVNum", XslConversionType.DEFAULT),
+    /**
+     * 
+     */
+    COLOUR_CODE("ColorCoding", XslConversionType.DEFAULT),
+
+    /** not available to the UI */
+    CHAPTER_VERSE("CVNum", null);
 
     private final String xsltParameterName;
     private final XslConversionType stylesheet;

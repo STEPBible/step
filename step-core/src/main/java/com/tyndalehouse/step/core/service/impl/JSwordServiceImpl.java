@@ -228,7 +228,7 @@ public class JSwordServiceImpl implements JSwordService {
 
                         // set parameters here
                         setOptions(tsep, options, version, reference);
-                        setupInterlinearOptions(tsep, interlinearVersion, reference);
+                        setInterlinearOptions(tsep, interlinearVersion, reference);
                         return tsep;
                     } catch (final URISyntaxException e) {
                         throw new StepInternalException("Failed to load resource correctly", e);
@@ -260,6 +260,13 @@ public class JSwordServiceImpl implements JSwordService {
     private XslConversionType identifyStyleSheet(final List<LookupOption> options) {
         for (final LookupOption lo : options) {
             if (!XslConversionType.DEFAULT.equals(lo.getStylesheet())) {
+                if (XslConversionType.INTERLINEAR.equals(lo.getStylesheet())) {
+                    options.add(LookupOption.CHAPTER_VERSE);
+
+                    // FIXME: also remove headers, as not yet supported
+                    options.remove(LookupOption.HEADINGS);
+                }
+
                 return lo.getStylesheet();
             }
         }
@@ -305,7 +312,7 @@ public class JSwordServiceImpl implements JSwordService {
      * @param interlinearVersion the interlinear version(s) that the users have requested
      * @param reference the reference the user is interested in
      */
-    private void setupInterlinearOptions(final TransformingSAXEventProvider tsep,
+    private void setInterlinearOptions(final TransformingSAXEventProvider tsep,
             final String interlinearVersion, final String reference) {
         if (tsep.getParameter(LookupOption.INTERLINEAR.getXsltParameterName()) != null) {
             tsep.setParameter("interlinearReference", reference);
@@ -314,7 +321,6 @@ public class JSwordServiceImpl implements JSwordService {
             if (isNotBlank(interlinearVersion)) {
                 tsep.setParameter("interlinearVersion", interlinearVersion);
             }
-            // TODO: else depending on OT or NT, we select a default interlinear version
         }
     }
 
@@ -329,10 +335,12 @@ public class JSwordServiceImpl implements JSwordService {
     protected void setOptions(final TransformingSAXEventProvider tsep, final List<LookupOption> options,
             final String version, final String textScope) {
         for (final LookupOption lookupOption : options) {
-            tsep.setParameter(lookupOption.getXsltParameterName(), true);
+            if (lookupOption.getXsltParameterName() != null) {
+                tsep.setParameter(lookupOption.getXsltParameterName(), true);
 
-            if (LookupOption.VERSE_NUMBERS.equals(lookupOption)) {
-                tsep.setParameter(LookupOption.TINY_VERSE_NUMBERS.getXsltParameterName(), true);
+                if (LookupOption.VERSE_NUMBERS.equals(lookupOption)) {
+                    tsep.setParameter(LookupOption.TINY_VERSE_NUMBERS.getXsltParameterName(), true);
+                }
             }
         }
 

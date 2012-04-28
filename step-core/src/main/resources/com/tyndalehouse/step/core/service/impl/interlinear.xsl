@@ -92,6 +92,9 @@
 
   <!-- The order of display. Hebrew is rtl (right to left) -->
   <xsl:param name="direction" select="'ltr'"/>
+  
+  <!--  true to display color coding information -->
+  <xsl:param name="ColorCoding" select="'false'" />
 
   <!-- Whether to show an interlinear and the provider helping with the lookup -->
   <xsl:param name="strongFunctionCall" select="'javascript:showStrong'" />
@@ -114,6 +117,9 @@
   <xsl:variable name="interlinearProvider" select="jsword:com.tyndalehouse.step.core.xsl.impl.MultiInterlinearProviderImpl.new(string($interlinearVersion), string($interlinearReference))" />
   <xsl:variable name="punctuation" select="'|\,./&lt;&gt;?;\#:@~[]{}-=_+`¬!£$%^&amp;*()&quot;'" />
 
+  <!-- set up options for color coding -->
+  <xsl:variable name="colorCodingProvider" select="jsword:com.tyndalehouse.step.core.xsl.impl.ColorCoderProviderImpl.new()" />
+
   <!--=======================================================================-->
   <xsl:template match="/">
       <div>
@@ -123,45 +129,23 @@
           <xsl:when test="$Notes = 'true' and //note[not(@type = 'x-strongsMarkup')]">
             <xsl:choose>
               <xsl:when test="$direction != 'rtl'">
-                <div style="float: left">
-<!--                 <table cols="2" cellpadding="5" cellspacing="5"> -->
-<!--                   <tr> -->
-                    <!-- The two rows are swapped until the bug is fixed. -->
-<!--                     <td valign="top" class="notes"> -->
-<!--                       <p>&#160;</p> -->
+                <div class="notesPane">
                       <xsl:apply-templates select="//verse" mode="print-notes"/>
-<!--                     </td> -->
-<!--                     <td valign="top" class="text"> -->
-                      <xsl:apply-templates/>
-<!--                     </td> -->
-<!--                   </tr> -->
-<!--                 </table> -->
                 </div>
               </xsl:when>
               <xsl:otherwise>
-                <!-- reverse the table for Right to Left languages -->
-                <div style="float: left">
-<!--                 <table cols="2" cellpadding="5" cellspacing="5"> -->
+                <div class="notesPane">
                   <!-- In a right to left, the alignment should be reversed too -->
-<!--                   <tr align="right"> -->
-<!--                     <td valign="top" class="notes"> -->
                       <p>&#160;</p>
                       <xsl:apply-templates select="//note" mode="print-notes"/>
-<!--                     </td> -->
-<!--                     <td valign="top" class="text"> -->
-                      <xsl:apply-templates/>
-<!--                     </td> -->
-<!--                   </tr> -->
-<!--                 </table> -->
 				</div>
               </xsl:otherwise>
             </xsl:choose>
           </xsl:when>
-          <xsl:otherwise>
-            <xsl:apply-templates/>
-          </xsl:otherwise>
         </xsl:choose>
+	      <xsl:apply-templates/>
       </div>
+      
   </xsl:template>
 
   <!--=======================================================================-->
@@ -356,7 +340,7 @@
             <xsl:value-of select="jsword:getName($passage)"/>
           </xsl:when>
           <xsl:when test="$CVNum = 'true'">
-            <xsl:value-of select="concat($chapter, ' : ', $verse)"/>
+            <xsl:value-of select="concat($chapter, ':', $verse)"/>
           </xsl:when>
           <xsl:otherwise>
             <xsl:value-of select="$verse"/>
@@ -370,7 +354,7 @@
         <xsl:when test="$TinyVNum = 'true' and $Notes = 'true'">
           <span class="w verseStart">
           	<!--  the verse number -->
-          	<a name="{@osisID}"><span class="verseNumber"><xsl:value-of select="concat($versenum, ' ', $baseVersion)"/></span></a>
+          	<a name="{@osisID}"><span class="verseNumber"><xsl:value-of select="concat($baseVersion, ' ', $versenum)"/></span></a>
           	
 			<!-- output a filling gap for strongs -->
 			<xsl:if test="$StrongsNumbers = 'true'">
@@ -379,7 +363,7 @@
 
 			<!-- output a filling gap for morphs -->
 			<xsl:if test="$Morph = 'true'">
-				<span class="morphs">Morph.</span>
+				<span class="morphs">Grammar</span>
 			</xsl:if>
 		
 			<!--  fill up with spaces where we have extra versions shown -->
@@ -394,7 +378,7 @@
         <xsl:when test="$TinyVNum = 'true' and $Notes = 'false'">
           <span class="w verseStart">
           	<!--  the verse number -->
-          	<a name="{@osisID}"><span class="text"><span class="verseNumber"><xsl:value-of select="concat($versenum, ' ', $baseVersion)"/></span></span></a>
+          	<a name="{@osisID}"><span class="text"><span class="verseNumber"><xsl:value-of select="concat($baseVersion, ' ', $versenum)"/></span></span></a>
           	
 			<!-- output a filling gap for strongs -->
 			<xsl:if test="$StrongsNumbers = 'true'">
@@ -403,7 +387,7 @@
 
 			<!-- output a filling gap for morphs -->
 			<xsl:if test="$Morph = 'true'">
-				<span class="text"><span class="smallHeaders morphs">Morph.</span></span>
+				<span class="text"><span class="smallHeaders morphs">Grammar</span></span>
 			</xsl:if>
 		
 			<!--  fill up with spaces where we have extra versions shown -->
@@ -552,7 +536,17 @@
 		<!-- start the block only if we have english to show? -->
 		<xsl:variable name="remainingText" select="$innerWordText" />				
 		<xsl:if test="$remainingText != ''">
-			<span class="{$classes}" onclick="javascript:showAllStrongMorphs(&quot;{@lemma} {@morph}&quot;)">
+			<xsl:variable name="colorClass">
+				<xsl:choose>
+				<xsl:when test="$ColorCoding = 'true'">
+					<xsl:variable name="className" select="jsword:getColorClass($colorCodingProvider, @morph)" />
+					<xsl:value-of select="concat('gg', $className)" />
+				</xsl:when>
+				<xsl:otherwise><xsl:value-of select="''" /></xsl:otherwise>
+				</xsl:choose>
+			</xsl:variable>
+    
+			<span class="{$classes} {$colorClass}" onclick="javascript:showDef(this)" strong="{@lemma}" morph="{@morph}">
 				<xsl:if test="normalize-space($remainingText) != ''">
 					<!-- 1st - Output first line or a blank if no text available. -->
 					<span class="text">

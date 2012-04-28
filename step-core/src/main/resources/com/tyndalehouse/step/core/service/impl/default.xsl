@@ -99,6 +99,9 @@
   <!-- The order of display. Hebrew is rtl (right to left) -->
   <xsl:param name="direction" select="'ltr'"/>
 
+  <!--  true to display color coding information -->
+  <xsl:param name="ColorCoding" select="'false'" />
+
   <!-- Create a global key factory from which OSIS ids will be generated -->
   <xsl:variable name="keyf" select="jsword:org.crosswire.jsword.passage.PassageKeyFactory.instance()"/>
   
@@ -107,6 +110,10 @@
 
   <!-- Create a global number shaper that can transform 0-9 into other number systems. -->
   <xsl:variable name="shaper" select="jsword:org.crosswire.common.icu.NumberShaper.new()"/>
+
+  <!-- set up options for color coding -->
+  <xsl:variable name="colorCodingProvider" select="jsword:com.tyndalehouse.step.core.xsl.impl.ColorCoderProviderImpl.new()" />
+
 
   <!--=======================================================================-->
   <xsl:template match="/">
@@ -453,7 +460,16 @@
     <!-- Output the content followed by all the lemmas and then all the morphs. -->
     <xsl:choose>
 	    <xsl:when test="normalize-space(@lemma) != '' or normalize-space(@morph) != ''">
-	    	<span onclick="javascript:showAllStrongMorphs(&quot;{@lemma} {@morph}&quot;)"><xsl:apply-templates/></span>
+    		<xsl:choose>
+	    		<xsl:when test="$ColorCoding = 'true'" >
+			    	<xsl:variable name="colorClass" select="jsword:getColorClass($colorCodingProvider, @morph)"/>
+			    	<span class="gg{$colorClass}" onclick="javascript:showDef(this)" strong="{@lemma}" morph="{@morph}"><xsl:apply-templates/></span>
+			    </xsl:when>
+			    <xsl:otherwise>
+	    	    	<span onclick="javascript:showDef(this)" strong="{@lemma}" morph="{@morph}"><xsl:apply-templates/></span>
+			    </xsl:otherwise>
+		    </xsl:choose>
+	    
 	    </xsl:when>
 		<xsl:otherwise>
 			<xsl:apply-templates/>

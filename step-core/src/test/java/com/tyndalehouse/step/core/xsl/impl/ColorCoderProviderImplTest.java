@@ -30,42 +30,53 @@
  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
-$(document).ready(function() {
-	setup();
-});
+package com.tyndalehouse.step.core.xsl.impl;
+
+import static org.junit.Assert.assertEquals;
+
+import java.util.Arrays;
+import java.util.Collection;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 
 /**
- * This method sets up the main page allowing the user to install modules as he/she wishes
+ * color coding tests
+ * 
+ * @author chrisburrell
+ * 
  */
-function setup() {
-	$("#installCoreModules").click(function() {
-		// we add a click handler that installs the default modules
-		$.getJSON(SETUP_INSTALL_DEFAULT_MODULES, function(data) {
-			// installation has started - so now we can afford to make calls to the internet:
-			// set up available modules - to do extend to everything...
-			$.getJSON(MODULE_GET_ALL_INSTALLABLE_MODULES, function(data) {
-				$(data).each(function() {
-					var toBeInstalled = "<a class='notInstalled' href=\"javascript:installVersion('" + this.initials +  "','" + 
-						this.name.replace(/'/g,"\\'")  + "')\">[" + this.initials + "] " + this.name + "</a><br />";
-					$("#availableModules").append(toBeInstalled);
-				});
-			});
-		});
-	});
-	
-	// set up available modules - to do extend to everything...
-	$.getJSON(MODULE_GET_ALL_MODULES, function(data) {
-		$(data).each(function() {
-			var installed = "<div class=\"installed\">[" + this.initials + "] " + this.name + " - Installed</div>";
-			$("#inProgressModules").append(installed);
-		});
-	});
+@RunWith(Parameterized.class)
+public class ColorCoderProviderImplTest {
+    private final String outcome;
+    private final String sample;
+
+    public ColorCoderProviderImplTest(final String sample, final String outcome) {
+        this.sample = sample;
+        this.outcome = outcome;
+    }
+
+    /**
+     * @return a collection of pairs. The first element is tested and should resolve to the 2nd element
+     * 
+     */
+    @Parameterized.Parameters
+    public static Collection<?> testCases() {
+        return Arrays.asList(new String[][] { { "ROBINSON:ABC-NSN", ColorCoderProviderImpl.SINGULAR_VN },
+                { "ROBINSON:ABC-NPN", ColorCoderProviderImpl.PLURAL_VN },
+                { "ROBINSON:ABC-OSN", ColorCoderProviderImpl.SINGULAR_VO },
+                { "ROBINSON:ABC-OPM", ColorCoderProviderImpl.PLURAL_VO },
+                { "ROBINSON:ABC-GSF", ColorCoderProviderImpl.SINGULAR_GD },
+                { "ROBINSON:ABC-GPF", ColorCoderProviderImpl.PLURAL_GD } });
+    }
+
+    /**
+     * calls the isSingular method
+     */
+    @Test
+    public void testColorCodingSingular() {
+        final ColorCoderProviderImpl c = new ColorCoderProviderImpl();
+        assertEquals(this.outcome, c.getColorClass(this.sample));
+    }
 }
-
-function installVersion(initials, name) {
-	$.getJSON(SETUP_INSTALL_BIBLE + initials, function(data) {
-		//set up a progress bar on the other side...
-	});
-}
-
-

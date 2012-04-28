@@ -116,7 +116,40 @@ function changePassage(element, passageReference) {
  * @param passageReference
  */
 function viewPassage(element, passageReference) {
-	$.shout("show-preview-" + getPassageId(element), { source: element, reference: passageReference});
+	//only shout preview if the preview bar is not displaying options on it.
+	if(!$("#previewBar").is(":visible") || !$("#previewReference").is(":visible")) {
+		$.shout("show-preview-" + getPassageId(element), { source: element, reference: passageReference});
+	}
+}
+
+/**
+ * we show the preview options in the box that shows the reference.
+ */
+function showPreviewOptions() {
+	var previewBar = $("#previewBar");
+	$("#previewLeft", previewBar).button({text: false, icons: { primary:"ui-icon-arrowthick-1-w" }}).click(
+			function(){
+				$.shout("new-passage-0", $("#previewReference .previewReferenceKey").text().replace(/[\[\]]/g, ""));
+				$("#previewClose").trigger("click");
+			});
+	$("#previewClose", previewBar).button({text: false, icons: { primary:"ui-icon-close" }}).click(
+			function() { 
+				$("#previewBar").hide();
+				$("#previewReference").hide();
+			});
+	$("#previewRight", previewBar).button({text: false, icons: { primary:"ui-icon-arrowthick-1-e" }}).click(
+			function(){
+				$.shout("new-passage-1", $("#previewReference .previewReferenceKey").text());
+				$("#previewClose").trigger("click");
+			});
+	previewBar.show();
+	
+	//we remove handlers that close the popup and make it resizable and draggable + remove margin from container top
+	$("#previewReference").resizable({maxWidth: 500}).off("mouseleave.previewscripture").draggable({handle: "#previewBar"});
+	$(".notesPane").off("mouseleave.previewscripture");
+	$(".notesPane").off("mouseleave");
+	//remove any margin from the container top
+	
 }
 
 /**

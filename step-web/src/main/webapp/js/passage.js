@@ -361,20 +361,20 @@ Passage.prototype.showPreview = function(previewData) {
 	var offset = (80 * (this.passageId == 0 ? 1 : -1)) + " 0";
 	
 	$.getSafe(BIBLE_GET_BIBLE_TEXT + this.version.val() + "/" + reference, function(data) {
+		$("#popupText").html(data.value + "<span class='previewReferenceKey'>[" + data.reference + "]</span>");
+
 		var popup = $("#previewReference");
-		
-		popup.html(data.value + "<span class='previewReferenceKey'>[" + data.reference + "]</span>");
 		popup.show().position({
 			of: $(source),
 			my: myAnchor + " center",
 			at: "center " + "center",
 			offset: offset,
 			collision: "fit"
-		}).mouseleave(function(s) {
+		}).on("mouseleave.previewscripture", function(s) {
 			popup.hide();
 		});
 		
-		$(".notesPane").mouseleave(function(s) {
+		$(".notesPane").on("mouseleave.previewscripture", function(s) {
 			popup.hide();
 		});
 	});

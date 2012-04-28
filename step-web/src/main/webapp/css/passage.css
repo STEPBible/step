@@ -293,15 +293,33 @@ FONT.usg {
 	color: white;
 	font-weight: solid;
 	z-index: 9999999;
-	max-width: 280px;
-	max-height: 200px;
+	max-width: 350px;
+	max-height: 350px;
 	background-color: #F6A828 ;
 	border: 2px solid #E78F08;
 	overflow: hidden;
-	padding: 5px;
+	margin: 5px;
 }
 
-.previewReferenceKey {
+#previewReference a {
+	float: right;
+}
+
+
+#previewBar {
+	border: 2px	 solid #E78F08;
+	background-color: #E78F08;
+	border-bottom: none;
+	margin: 0px;
+	height: 28px;
+}
+
+#previewReference p {
+	margin: 0px;
+}
+
+
+#previewReference .previewReferenceKey {
 	font-style: italic;
 }
 

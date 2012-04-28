@@ -74,6 +74,9 @@
 
   <!-- Whether to show non-canonical "headings" or not -->
   <xsl:param name="Headings" select="'false'"/>
+  
+	<!--  This is set if we are interested in a preview only and the x-gen information is of no interest. -->
+  <xsl:param name="Preview" select="'false'"/>
 
   <!-- Whether to show notes or not -->
   <xsl:param name="Notes" select="'false'"/>
@@ -660,18 +663,26 @@
   </xsl:template>
 
   <!--=======================================================================-->
-  <xsl:template match="title">
+  
+  <!-- We will always show a x-gen title -->
+  
+  
+  <xsl:template match="title" name="normalTile">
     <!-- Always show canonical titles or if headings is turned on -->
-    <xsl:if test="(@canonical = 'true' or $Headings = 'true') and @type != 'x-gen'">
-      <h2 class="heading"><xsl:apply-templates/></h2>
+    <xsl:if test="(@canonical = 'true' or $Headings = 'true' or @type = 'x-gen')">
+      <xsl:choose>
+      	<xsl:when test="@type = 'x-gen'">
+      		<h2 class="xgen"><xsl:apply-templates/></h2>
+      	</xsl:when>
+      	<xsl:otherwise>
+      		<h2 class="heading"><xsl:apply-templates/></h2>
+      	</xsl:otherwise>
+      </xsl:choose>
     </xsl:if>
   </xsl:template>
 
   <xsl:template match="title" mode="jesus">
-    <!-- Always show canonical titles or if headings is turned on -->
-    <xsl:if test="(@canonical = 'true' or $Headings = 'true') and @type != 'x-gen'">
-      <h2 class="heading"><xsl:apply-templates/></h2>
-    </xsl:if>
+	<xsl:call-template name="normalTile" />
   </xsl:template>
 
   <!--=======================================================================-->

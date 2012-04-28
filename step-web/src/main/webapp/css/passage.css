@@ -223,6 +223,14 @@ H3.heading  {
 	padding-bottom: 5px;
 }
 
+H2.xgen {
+	font-family: times;
+	color: #669966;
+	font-variant:small-caps;
+	font-style: italic;
+}
+
+
 H2.heading, input.heading {
 	color: #669966;
 	font-weight: bold;
@@ -300,6 +308,11 @@ FONT.usg {
 	overflow: hidden;
 	margin: 5px;
 }
+
+#previewReference H2.xgen {
+	display: none;	
+}
+
 
 #previewReference a {
 	float: right;

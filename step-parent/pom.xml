@@ -98,8 +98,8 @@
 		<url>http://crosswire.org/bugs</url>
 	</issueManagement>
 	<scm>
-		<connection>scm:svn:http://crosswire.org/svn/tynstep/trunk</connection>
-		<developerConnection>scm:svn:https://crosswire.org/svn/tynstep/trunk</developerConnection>
+		<connection>scm:git:git://github.com/tyndale/step.gittrunk</connection>
+		<developerConnection>scm:git:git@github.com:tyndale/step.git</developerConnection>
 		<url>https://crosswire.org/svn/tynstep/trunk/</url>
 	</scm>
 	

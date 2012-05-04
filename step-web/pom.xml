@@ -136,9 +136,7 @@
 				<configuration>
 					<cssSourceDir>css</cssSourceDir>
 					<cssSourceIncludes>
-						<cssSourceInclude>**/*.css</cssSourceInclude>
-<!-- 						<cssSourceInclude>*.css</cssSourceInclude> -->
-<!-- 						<cssSourceInclude>libs/menu/*.css</cssSourceInclude> -->
+						<cssSourceInclude>*.css</cssSourceInclude>
 					</cssSourceIncludes>
 					<cssFinalFile>step.css</cssFinalFile>
 					<jsSourceDir>js</jsSourceDir>

@@ -16,21 +16,21 @@
 	<meta name="description" content="Scripture Tools for Every Pastor is a Bible study tool, currently showing: <%= stepRequest.getReference(0) %> in the <%= stepRequest.getVersion(0) %> and <%= stepRequest.getReference(1) %> in the <%= stepRequest.getVersion(1) %>">
 	<meta name="keywords" content="bible study kjv esv asv scripture tools for every pastor interlinear strong robinson timeline" />
 	<link rel="shortcut icon"  href="images/step-favicon.ico" />
+	<link rel="stylesheet" type="text/css" href="libs/menu/ddsmoothmenu.css" />
+	<link rel="stylesheet" type="text/css" href="libs/menu/ddsmoothmenu-v.css" />
+	<link rel="stylesheet" type="text/css" href="css/ui-lightness/jquery-ui-1.8.19.custom.css" />
 	<script src="js_init/initLib.js" type="text/javascript"></script>   
     <script src="libs/timeline_js/timeline-api.js" type="text/javascript"></script>
     <script src="libs/jquery-1.7.2.min.js" type="text/javascript"></script>
     <script src="libs/jquery-ui-1.8.19.custom.min.js" type="text/javascript"></script>
 	
 	<%
-		// if debug is present we put individual files in.
-		if(request.getParameter("debug") != null) {
+		// if debug is present we put individual files in. TOTOTOTOTOTOTO CHANGE THIS FIXME
+		if(request.getParameter("debug") == null) {
 	%>
-	    <link rel="stylesheet" type="text/css" href="css/ui-lightness/jquery-ui-1.8.19.custom.css" />
 	    <link rel="stylesheet" type="text/css" href="css/initial-layout.css" />
 	    <link rel="stylesheet" type="text/css" href="css/initial-fonts.css" />
 	    <link rel="stylesheet" type="text/css" href="css/passage.css" />
-		<link rel="stylesheet" type="text/css" href="libs/menu/ddsmoothmenu.css" />
-		<link rel="stylesheet" type="text/css" href="libs/menu/ddsmoothmenu-v.css" />
 	
 	    <script src="js/jquery_cookie.js" type="text/javascript"></script>
 		<script src="js/jquery-shout.js" type="text/javascript"></script>

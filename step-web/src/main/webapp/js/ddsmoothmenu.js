@@ -152,4 +152,4 @@ init:function(setting){
 	})
 }
 
-} //end ddsmoothmenu variable
+}; //end ddsmoothmenu variable

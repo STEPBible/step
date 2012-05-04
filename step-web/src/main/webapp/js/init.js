@@ -42,13 +42,14 @@ function init() {
 		initMenu();
 		initGlobalHandlers();
 		initLayout();
-		initLexicon();
-		initBookmarks();
+
+		//init modules
+//		initModules()
 		
 		initData();
 		
 		initInitialEvents();
-		initLogin();
+//		initLogin();
 		
 	});
 }
@@ -110,19 +111,10 @@ function initLayout() {
 }
 
 function initMenu() {
-	$.get("topmenu.html", function(data) {
-		var topMenu = $("#topMenu");
-		topMenu.html(data);
-		new TopMenu($("#topMenu-ajax"));		
-	});
-	
-	
-	$.get("panemenu.html", function(data) {
-		var menusToBe = $(".innerMenus");
-		menusToBe.html(data);
-		menusToBe.each(function(index, value) {
+	new TopMenu($("#topMenu-ajax"));		
+	var menusToBe = $(".innerMenus");
+	menusToBe.each(function(index, value) {
 		new ToolbarMenu(index, value);
-		});
 	});
 }
 
@@ -227,25 +219,17 @@ function initGlobalHandlers() {
 	});
 }
 
-function initLexicon() {
-	new LexiconDefinition();
-}
-
-function initBookmarks() {
-	new Bookmark();
-}
-
-function initLogin() {
-	new Login();
-}
-
 /**
  * initialises the modules 	
  * @param passages a list of passages that were provided
  */
 function initModules(passages) {
+	new LexiconDefinition();
+	new Bookmark();
+	new Login();
+	new Title();
+		
 	var bottomSection = $("#bottomSectionContent");
-	
 	new TimelineWidget(bottomSection, passages);
 	new GeographyWidget(bottomSection, passages);
 }

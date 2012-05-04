@@ -32,8 +32,6 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.guice;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -45,7 +43,6 @@ import net.sf.ehcache.config.Configuration;
 import org.crosswire.jsword.book.install.Installer;
 
 import com.avaje.ebean.EbeanServer;
-import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.TypeLiteral;
 import com.google.inject.name.Names;
@@ -71,6 +68,7 @@ import com.tyndalehouse.step.core.service.impl.JSwordServiceImpl;
 import com.tyndalehouse.step.core.service.impl.ModuleServiceImpl;
 import com.tyndalehouse.step.core.service.impl.TimelineServiceImpl;
 import com.tyndalehouse.step.core.service.impl.UserDataServiceImpl;
+import com.tyndalehouse.step.core.utils.AbstractStepGuiceModule;
 
 /**
  * The module configuration that configures the application via guice
@@ -79,12 +77,19 @@ import com.tyndalehouse.step.core.service.impl.UserDataServiceImpl;
  * 
  */
 @SuppressWarnings("PMD.CouplingBetweenObjects")
-public class StepCoreModule extends AbstractModule {
-    private static final String CORE_GUICE_PROPERTIES = "/step.core.properties";
+public class StepCoreModule extends AbstractStepGuiceModule {
+    private static final String GUICE_PROPERTIES = "/step.core.properties";
+
+    /**
+     * sets up the module with the relevant properties file
+     */
+    public StepCoreModule() {
+        super(GUICE_PROPERTIES);
+    }
 
     @Override
-    protected void configure() {
-        final Properties stepProperties = readProperties();
+    protected void doConfigure() {
+        final Properties stepProperties = getModuleProperties();
         bind(Properties.class).annotatedWith(Names.named("StepCoreProperties")).toInstance(stepProperties);
 
         // for now just have a method that statically initialises the cache
@@ -149,23 +154,4 @@ public class StepCoreModule extends AbstractModule {
         // bind(TimelineEventDao.class).to(TimelineEventDaoImpl.class);
         // bind(ScriptureReferenceDao.class).to(ScriptureReferenceDaoImpl.class);
     }
-
-    /**
-     * reads the core properties from the file
-     * 
-     * @return a list of properties read from file
-     */
-    private Properties readProperties() {
-        final InputStream stream = getClass().getResourceAsStream(CORE_GUICE_PROPERTIES);
-        final Properties appProperties = new Properties();
-        try {
-            appProperties.load(stream);
-            Names.bindProperties(super.binder(), appProperties);
-        } catch (final IOException e) {
-            // This is the preferred way to tell Guice something went wrong
-            super.addError(e);
-        }
-        return appProperties;
-    }
-
 }

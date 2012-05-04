@@ -48,6 +48,9 @@ function Passage(passageContainer, rawServerVersions, passageId) {
 	this.reference = $(".passageReference", passageContainer);
 	this.passage = $(".passageContent", passageContainer);
 	this.bookmarkButton = $(".bookmarkPassageLink", passageContainer);
+	this.previousChapter = $(".previousChapter", passageContainer);
+	this.nextChapter = $(".nextChapter", passageContainer);
+	
 	this.passageId = passageId;
 	this.passageSync = false;
 	
@@ -101,7 +104,21 @@ function Passage(passageContainer, rawServerVersions, passageId) {
 		.button({ icons: {primary: "ui-icon-bookmark" }, text: false})
 		.click(function() {
 			$.shout("bookmark-addition-requested", { reference: self.reference.val() });
-		});
+	});
+	
+
+	this.previousChapter
+		.button({ icons: {primary: "ui-icon-arrowreturnthick-1-w" }, text: false})
+		.click(function() {
+			//TODO
+	});
+
+	this.nextChapter
+		.button({ icons: {primary: "ui-icon-arrowreturnthick-1-w" }, text: false})
+		.click(function() {
+			//TODO
+	});
+	
 };
 
 
@@ -280,7 +297,7 @@ Passage.prototype.changePassage = function() {
 			self.passage.html(text.value);
 			
 			// passage change was successful, so we let the rest of the UI know
-			$.shout("passage-changed", { reference: self.reference.val(), passageId: self.passageId, init: init } );
+			$.shout("passage-changed", { reference: self.reference.val(), passageId: self.passageId, init: init, version:  lookupVersion} );
 		});
 	}
 };

@@ -32,11 +32,12 @@
  ******************************************************************************/
 package com.tyndalehouse.step.guice;
 
-import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
 import com.tyndalehouse.step.core.data.entities.TimelineEvent;
 import com.tyndalehouse.step.core.models.ClientSession;
+import com.tyndalehouse.step.core.utils.AbstractStepGuiceModule;
 import com.tyndalehouse.step.guice.providers.ClientSessionProvider;
+import com.tyndalehouse.step.models.UiDefaults;
 import com.tyndalehouse.step.models.UserInterfaceTranslator;
 import com.tyndalehouse.step.models.timeline.DigestableTimeline;
 import com.tyndalehouse.step.models.timeline.simile.SimileTimelineTranslatorImpl;
@@ -48,12 +49,22 @@ import com.tyndalehouse.step.models.timeline.simile.SimileTimelineTranslatorImpl
  * @author Chris
  * 
  */
-public class WebContextModule extends AbstractModule {
+public class StepWebModule extends AbstractStepGuiceModule {
+    private static final String GUICE_PROPERTIES = "/step.web.properties";
+
+    /**
+     * sets up the module with the relevant properties file
+     */
+    public StepWebModule() {
+        super(GUICE_PROPERTIES);
+        // TODO Auto-generated constructor stub
+    }
 
     @Override
-    protected void configure() {
+    protected void doConfigure() {
         // this provider is helpful for getting the request at runtime
         bind(ClientSession.class).toProvider(ClientSessionProvider.class);
+        bind(UiDefaults.class).asEagerSingleton();
 
         bind(new TypeLiteral<UserInterfaceTranslator<TimelineEvent, DigestableTimeline>>() {
         }).to(SimileTimelineTranslatorImpl.class);

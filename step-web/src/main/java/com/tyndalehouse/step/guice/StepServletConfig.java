@@ -37,6 +37,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Enumeration;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 
 import org.slf4j.Logger;
@@ -61,17 +62,27 @@ public class StepServletConfig extends GuiceServletContextListener {
 
     @Override
     protected Injector getInjector() {
-        return Guice.createInjector(new StepCoreModule(), new WebContextModule(), new ServletModule() {
+        return Guice.createInjector(new StepCoreModule(), new StepWebModule(), new ServletModule() {
             @Override
             protected void configureServlets() {
                 serve("/rest/*").with(FrontController.class);
+                serve("/index.jsp");
             }
         });
     }
 
     @Override
+    public void contextInitialized(final ServletContextEvent servletContextEvent) {
+        // No call to super as it also calls getInjector()
+        final ServletContext sc = servletContextEvent.getServletContext();
+        sc.setAttribute(Injector.class.getName(), getInjector());
+    }
+
+    @Override
     public void contextDestroyed(final ServletContextEvent servletContextEvent) {
         deregisterDbDrivers();
+        final ServletContext sc = servletContextEvent.getServletContext();
+        sc.removeAttribute(Injector.class.getName());
         super.contextDestroyed(servletContextEvent);
 
     }

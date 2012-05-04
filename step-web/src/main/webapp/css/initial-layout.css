@@ -143,12 +143,21 @@ body {
 .passageContainer {
 }
 
-.bookmarkPassageLink {
+.passageButtons {
 	float: right;
 	height: 16px	
 	width: 16px;
 	margin-top: 5px;
 	margin-right: 5px;
+}
+
+.nextChapter {
+	-moz-transform: scaleX(-1);
+    -o-transform: scaleX(-1);
+    -webkit-transform: scaleX(-1);
+    transform: scaleX(-1);
+    filter: FlipH;
+    -ms-filter: "FlipH";
 }
 
 .passageText {

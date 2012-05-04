@@ -52,6 +52,12 @@ public class ColorCoderProviderImplTest {
     private final String outcome;
     private final String sample;
 
+    /**
+     * Color coding the passage tests
+     * 
+     * @param sample the sample string to test against
+     * @param outcome the outcome of the tests
+     */
     public ColorCoderProviderImplTest(final String sample, final String outcome) {
         this.sample = sample;
         this.outcome = outcome;
@@ -62,7 +68,7 @@ public class ColorCoderProviderImplTest {
      * 
      */
     @Parameterized.Parameters
-    public static Collection<?> testCases() {
+    public static Collection<?> parameterizedTestCases() {
         return Arrays.asList(new String[][] { { "ROBINSON:ABC-NSN", ColorCoderProviderImpl.SINGULAR_VN },
                 { "ROBINSON:ABC-NPN", ColorCoderProviderImpl.PLURAL_VN },
                 { "ROBINSON:ABC-OSN", ColorCoderProviderImpl.SINGULAR_VO },

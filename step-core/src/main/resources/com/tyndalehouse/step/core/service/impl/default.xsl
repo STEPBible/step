@@ -466,7 +466,7 @@
     		<xsl:choose>
 	    		<xsl:when test="$ColorCoding = 'true'" >
 			    	<xsl:variable name="colorClass" select="jsword:getColorClass($colorCodingProvider, @morph)"/>
-			    	<span class="gg{$colorClass}" onclick="javascript:showDef(this)" strong="{@lemma}" morph="{@morph}"><xsl:apply-templates/></span>
+			    	<span class="{$colorClass}" onclick="javascript:showDef(this)" strong="{@lemma}" morph="{@morph}"><xsl:apply-templates/></span>
 			    </xsl:when>
 			    <xsl:otherwise>
 	    	    	<span onclick="javascript:showDef(this)" strong="{@lemma}" morph="{@morph}"><xsl:apply-templates/></span>

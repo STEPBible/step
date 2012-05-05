@@ -32,8 +32,12 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.xsl.impl;
 
-import java.util.HashSet;
-import java.util.Set;
+import static java.util.regex.Pattern.compile;
+
+import java.util.regex.Pattern;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A utility to provide colors to an xsl spreadsheet. This is a non-static utility since later on we may wish
@@ -67,48 +71,24 @@ import java.util.Set;
  * @author chrisburrell
  */
 public class ColorCoderProviderImpl {
+    static final Pattern FEMININE_FORM = compile("SF|PF");
+    static final Pattern MASCULINE_FORM = compile("SM|PM");
+    static final Pattern SINGULAR_FORM = compile("S[MFN]$|S[MFN]-[A-Z]|[123]S|[CDFIKPQRSTX]-[123][A-Z]S");
+    static final Pattern PLURAL_FORM = compile("P[MFN]$|P[MFN]-[A-Z]|[123]P|[CDFIKPQRSTX]-[123][A-Z]P");
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ColorCoderProviderImpl.class);
+    private static final String ROBINSON_PREFIX_LC = "robinson:";
+    private static final String ROBINSON_PREFIX_UC = "ROBINSON:";
+    private static final int MINIMUM_MORPH_LENGTH = ROBINSON_PREFIX_UC.length() + 2;
+
     // css classes
-    static final String SINGULAR = "S";
-    static final String PLURAL = "P";
-    static final String SINGULAR_VN = "SVN";
-    static final String PLURAL_VN = "PVN";
-    static final String SINGULAR_VO = "SVO";
-    static final String PLURAL_VO = "PVO";
-    static final String SINGULAR_GD = "SGD";
-    static final String PLURAL_GD = "PGD";
-
-    private static final int MINIMUM_MORPH_LENGTH = 3;
-    private static final Set<String> SINGULAR_FORMS;
-    private static final Set<String> PLURAL_FORMS;
-    private static final Set<String> VN_FORMS;
-    private static final Set<String> VO_FORMS;
-    private static final Set<String> GD_FORMS;
-
-    static {
-        // CHECKSTYLE:OFF We define various rules for grammar colour coding
-        SINGULAR_FORMS = initialise(new String[] { "-1S", "-2S", "-3S", "SM", "SN", "SF" });
-        PLURAL_FORMS = initialise(new String[] { "-1P", "-2P", "-3P", "PM", "PN", "PF" });
-        VN_FORMS = initialise(new String[] { "-1S", "-2S", "-3S", "NSM", "NSN", "NSF", "NPM", "NPN", "NPF" });
-        VO_FORMS = initialise(new String[] { "VSM", "VSN", "VSF", "VPM", "VPN", "VPF", "OSM", "OSN", "OSF",
-                "OPM", "OPN", "OPF" });
-        GD_FORMS = initialise(new String[] { "GSM", "GSN", "GSF", "GPM", "GPN", "GPF", "DSM", "DSN", "DSF",
-                "DPM", "DPN", "DPF" });
-        // CHECKSTYLE:ON
-    }
-
-    /**
-     * initialises an array of items into a set
-     * 
-     * @param items the set of items
-     * @return set containing stuff
-     */
-    private static Set<String> initialise(final String... items) {
-        final Set<String> s = new HashSet<String>();
-        for (final String item : items) {
-            s.add(item);
-        }
-        return s;
-    }
+    private static final String NEITHER_PLURAL_NOR_SINGULAR = "";
+    private static final String PLURAL_NEUTER = "plur neut";
+    private static final String PLURAL_MASCULINE = "plur mas";
+    private static final String PLURAL_FEMININE = "plur fem";
+    private static final String SINGULAR_NEUTER = "sing neut";
+    private static final String SINGULAR_MASCULINE = "sing mas";
+    private static final String SINGULAR_FEMININE = "sing fem";
 
     /**
      * @param morph the robinson morphology
@@ -119,71 +99,81 @@ public class ColorCoderProviderImpl {
             return "";
         }
 
-        if (morph.startsWith("robinson:") || morph.startsWith("ROBINSON:")) {
+        if (morph.startsWith(ROBINSON_PREFIX_LC) || morph.startsWith(ROBINSON_PREFIX_UC)) {
             // we're in business and we know we have at least 3 characters
-            final int length = morph.length();
-            final String suffix2 = morph.substring(length - 2);
-            final String suffix3 = morph.substring(length - MINIMUM_MORPH_LENGTH);
+            LOGGER.debug("Identifying grammar for [{}]", morph);
 
-            if (SINGULAR_FORMS.contains(suffix2) || SINGULAR_FORMS.contains(suffix3)) {
-                return getCase(true, suffix3);
+            // null - none, false = singular, true = plural
+            Boolean plural = null;
+            if (isSingular(morph)) {
+                plural = Boolean.FALSE;
+            } else if (isPlural(morph)) {
+                plural = Boolean.TRUE;
             }
 
-            if (PLURAL_FORMS.contains(suffix2) || PLURAL_FORMS.contains(suffix3)) {
-                return getCase(false, suffix3);
+            // null - none, false = feminine, true = masculine
+            Boolean masculine = null;
+            if (isFeminine(morph)) {
+                masculine = Boolean.FALSE;
+            } else if (isMasculine(morph)) {
+                masculine = Boolean.TRUE;
             }
-            return "";
+            return getCssColor(plural, masculine);
         }
         return "";
     }
 
     /**
+     * calculates the relevant css color
      * 
-     * @param isSingular true if the word is singular, false if plural
-     * @param suffix3 suffix of three letters
-     * @return class name
+     * @param plural true if plural, false if singular, null otherwise
+     * @param masculine true if masculine, false if feminine, null otherwise
+     * @return the calculated css color
      */
-    private String getCase(final boolean isSingular, final String suffix3) {
-        // secondly determine the case of the word - these are all 3 letter suffixes
-        if (VN_FORMS.contains(suffix3)) {
-            return isSingular ? SINGULAR_VN : PLURAL_VN;
+    private String getCssColor(final Boolean plural, final Boolean masculine) {
+        if (plural == null) {
+            // neither singular, nor plural, so return normal black, not bold
+            return NEITHER_PLURAL_NOR_SINGULAR;
+        } else if (plural.booleanValue()) {
+            // plural
+            return masculine == null ? PLURAL_NEUTER : masculine.booleanValue() ? PLURAL_MASCULINE
+                    : PLURAL_FEMININE;
         }
 
-        if (VO_FORMS.contains(suffix3)) {
-            return isSingular ? SINGULAR_VO : PLURAL_VO;
-        }
-
-        if (GD_FORMS.contains(suffix3)) {
-            return isSingular ? SINGULAR_GD : PLURAL_GD;
-        }
-
-        return isSingular ? SINGULAR : PLURAL;
+        // else singular
+        return masculine == null ? SINGULAR_NEUTER : masculine.booleanValue() ? SINGULAR_MASCULINE
+                : SINGULAR_FEMININE;
     }
 
     /**
-     * returns true if it represents a singular
-     * 
-     * @param suffix3 last 3 letters of robinson morph
-     * @return true if singular form
+     * @param morph the string to test
+     * @return true if masculine
      */
-    boolean isVocativeOrObjective(final String suffix3) {
-        if (VO_FORMS.contains(suffix3)) {
-            return true;
-        }
-        return true;
+    boolean isMasculine(final String morph) {
+        return MASCULINE_FORM.matcher(morph).find(ROBINSON_PREFIX_UC.length());
     }
 
     /**
-     * returns true if it represents a singular
-     * 
-     * @param suffix2 last 2 letters of robinson morph
-     * @param suffix3 last 3 letters of robinson morph
-     * @return true if singular form
+     * @param morph the string to test
+     * @return true if feminine
      */
-    boolean isSingular(final String suffix2, final String suffix3) {
-        if (SINGULAR_FORMS.contains(suffix2) || SINGULAR_FORMS.contains(suffix3)) {
-            return true;
-        }
-        return true;
+    boolean isFeminine(final String morph) {
+        return FEMININE_FORM.matcher(morph).find(ROBINSON_PREFIX_UC.length());
+    }
+
+    /**
+     * @param morph the string to test
+     * @return true if plural
+     */
+    boolean isPlural(final String morph) {
+        return PLURAL_FORM.matcher(morph).find(ROBINSON_PREFIX_UC.length());
+    }
+
+    /**
+     * @param morph the string to test
+     * @return true if singular
+     */
+    boolean isSingular(final String morph) {
+        return SINGULAR_FORM.matcher(morph).find(ROBINSON_PREFIX_UC.length());
     }
 }

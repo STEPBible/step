@@ -339,12 +339,8 @@ FONT.usg {
 /**********************************************/
 /** Grammar colour coding                     */
 /**********************************************/
-.ggSVN { color: #680000; } 
-.ggSVO { color: #FF0000; }
-.ggSGD { color: #FF3333; }
-.ggPVN { color: #696; }
-.ggPVO { color: #4EB305; }
-.ggPGD { color: PaleGreen; }
-
-.ggS { color : red; font-weight: bold; }
-.ggP { color: green; font-weight: bold; }
+.plur { font-weight: bold; }
+.sing { }
+.mas { color: #000099; }
+.fem { color: #FF0000; }
+.neut { color: black; }   

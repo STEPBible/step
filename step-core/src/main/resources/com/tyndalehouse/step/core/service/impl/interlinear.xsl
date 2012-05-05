@@ -540,7 +540,7 @@
 				<xsl:choose>
 				<xsl:when test="$ColorCoding = 'true'">
 					<xsl:variable name="className" select="jsword:getColorClass($colorCodingProvider, @morph)" />
-					<xsl:value-of select="concat('gg', $className)" />
+					<xsl:value-of select="$className" />
 				</xsl:when>
 				<xsl:otherwise><xsl:value-of select="''" /></xsl:otherwise>
 				</xsl:choose>

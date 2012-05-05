@@ -33,29 +33,42 @@
 /**
  * Code for showing and interacting with the timeline
  */
-
+var singletonWidget; 
 function GeographyWidget(rootElement, passages) {
 	this.rootElement = rootElement;
 	this.initialised = false;
 	this.passages = passages; 
 	this.markers = [];
 	this.removeMarkers = true;
+	singletonWidget = this;
 	
 	var self = this;
 	$(rootElement).hear("show-maps", function(selfElement, data) {
 		$(window).resize(self.onResize);
-		self.initialiseMaps();
-		self.goToReference(self.passages[data.passageId].getReference());
-	});
-	
-	$(rootElement).hear("hide-maps", function(selfElement) {
-		//TODO remove listener to passage change
+		self.initialiseLibrary();
+		self.passageId = data.passageId;
 	});
 	
 	$(rootElement).hear("passage-changed", function(selfElement, data) {
 		self.goToReference(data.reference);
 	});
 };
+
+GeographyWidget.prototype.initialiseLibrary = function() {
+	var script = document.createElement("script");
+	script.src = "https://www.google.com/jsapi?callback=loadMaps";
+	script.type = "text/javascript";
+	document.getElementsByTagName("head")[0].appendChild(script);
+}
+
+function loadMaps() {
+  google.load("maps", "3", {"callback" : initialiseFirstTimeMaps, other_params: "sensor=false" });
+}
+
+function initialiseFirstTimeMaps() {
+	singletonWidget.initialiseMaps();
+	singletonWidget.goToReference(singletonWidget.passages[singletonWidget.passageId].getReference());
+}
 
 /**
  * initialises the maps
@@ -64,7 +77,7 @@ GeographyWidget.prototype.initialiseMaps = function() {
 	//default could be Jerusalem
 	var latlng = new google.maps.LatLng(31.777444, 35.234935);
 
-	if(!this.initialised) {
+	if(!this.initialised) {	
 	    var myOptions = {
 	      zoom: 6,
 	      center: latlng,

@@ -196,4 +196,28 @@ public class BibleController {
         return this.bibleInformation.getBibleBookNames(bookStart, version);
     }
 
+    /**
+     * ascertains the next reference to lookup
+     * 
+     * @param reference the current ref
+     * @param version the current version
+     * @return the next reference
+     */
+    @Cacheable(true)
+    public String getNextChapter(final String reference, final String version) {
+        return this.bibleInformation.getSiblingChapter(reference, version, false);
+    }
+
+    /**
+     * ascertains the previous reference to lookup
+     * 
+     * @param reference the current ref
+     * @param version the current version
+     * @return the previous reference
+     */
+    @Cacheable(true)
+    public String getPreviousChapter(final String reference, final String version) {
+        return this.bibleInformation.getSiblingChapter(reference, version, true);
+    }
+
 }

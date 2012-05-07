@@ -32,10 +32,13 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.service.impl;
 
+import static java.lang.Integer.parseInt;
 import static java.lang.Integer.valueOf;
+import static java.lang.String.format;
 import static org.apache.commons.lang.StringUtils.isBlank;
 import static org.apache.commons.lang.StringUtils.isNotBlank;
 import static org.apache.commons.lang.StringUtils.isNotEmpty;
+import static org.apache.commons.lang.StringUtils.split;
 import static org.apache.commons.lang.Validate.notNull;
 import static org.crosswire.common.xml.XMLUtil.writeToString;
 import static org.crosswire.jsword.book.BookCategory.BIBLE;
@@ -50,6 +53,7 @@ import java.util.Set;
 
 import javax.xml.transform.TransformerException;
 
+import org.apache.commons.lang.StringUtils;
 import org.crosswire.common.progress.JobManager;
 import org.crosswire.common.progress.Progress;
 import org.crosswire.common.xml.Converter;
@@ -64,6 +68,7 @@ import org.crosswire.jsword.book.Books;
 import org.crosswire.jsword.book.FeatureType;
 import org.crosswire.jsword.book.install.InstallException;
 import org.crosswire.jsword.book.install.Installer;
+import org.crosswire.jsword.passage.Key;
 import org.crosswire.jsword.passage.NoSuchKeyException;
 import org.crosswire.jsword.passage.NoSuchVerseException;
 import org.crosswire.jsword.passage.PassageKeyFactory;
@@ -97,6 +102,8 @@ import com.tyndalehouse.step.core.xsl.XslConversionType;
  */
 @Singleton
 public class JSwordServiceImpl implements JSwordService {
+    private static final String OSIS_CHAPTER_FORMAT = "%s.%d";
+    private static final String OSIS_CHAPTER_VERSE_FORMAT = "%s.%s.%d";
     private static final String ANCIENT_GREEK = "grc";
     private static final String ANCIENT_HEBREW = "hbo";
     private static final Logger LOGGER = LoggerFactory.getLogger(JSwordServiceImpl.class);
@@ -189,6 +196,138 @@ public class JSwordServiceImpl implements JSwordService {
             }
         }
         return books;
+    }
+
+    @Override
+    public String getSiblingChapter(final String reference, final String version,
+            final boolean previousChapter) {
+        // getting the next chapter
+        final Book currentBook = Books.installed().getBook(version);
+
+        try {
+            final Key key = currentBook.getKey(reference);
+            final String osisID = key.getOsisID();
+            LOGGER.debug(osisID);
+
+            // split down according to different references
+            final String[] refs = StringUtils.split(osisID, ",;- ");
+            final String interestedRef = previousChapter ? refs[0] : refs[refs.length - 1];
+            final String[] refParts = split(interestedRef, '.');
+            final Key newKey = previousChapter ? getPreviousRef(refParts, key, currentBook) : getNextRef(
+                    refParts, key, currentBook);
+            return newKey.getName();
+
+        } catch (final NoSuchKeyException e) {
+            throw new StepInternalException("Cannot find next chapter", e);
+        }
+    }
+
+    /**
+     * Roudns up the reference to the next chapter + 1 (1 if it is the last verse)
+     * 
+     * @param ref the current reference, split into up-to three parts (book/chapter/verse)
+     * @param currentKey the current key
+     * @param currentBook the book containing all valid keys
+     * @return the next key in the list
+     */
+    Key getNextRef(final String[] ref, final Key currentKey, final Book currentBook) {
+        switch (ref.length) {
+            case 3:
+                return expandToFullChapter(ref[0], ref[1], ref[2], currentBook, currentKey, 1);
+            case 2:
+                // if we only have 2 parts, then we take the chapter number +1 and see if that makes sense
+                return getAdjacentChapter(ref[0], ref[1], currentBook, currentKey, 1);
+            default:
+                break;
+        }
+
+        return currentKey;
+    }
+
+    /**
+     * attempts to resolve to the next previous chapter
+     * 
+     * @param ref the refParts, each element representing a portion of the OSIS ID
+     * @param currentKey the key that is currently being examined
+     * @param currentBook the book that is currently being referenced
+     * @return the new OSIS ID, whether it exists or not.
+     */
+    Key getPreviousRef(final String[] ref, final Key currentKey, final Book currentBook) {
+
+        // are we dealing with something like Book.chapter.verse?
+        switch (ref.length) {
+            case 3:
+                return expandToFullChapter(ref[0], ref[1], ref[2], currentBook, currentKey, -1);
+            case 2:
+                return getAdjacentChapter(ref[0], ref[1], currentBook, currentKey, -1);
+            default:
+                // we are dealing with a book or something else.
+                break;
+        }
+
+        return currentKey;
+    }
+
+    /**
+     * attemps to expand to the next chapter if exists, other returns the same key as currently if no new
+     * chapter is found
+     * 
+     * @param bookName the name of book, e.g. Gen
+     * @param chapterNumber the chapter number
+     * @param currentBook the book to look for valid keys
+     * @param currentKey the current position in the book
+     * @param gap -1 for a previous chapter, +1 for a next chapter
+     * @return the new key, referring to the next chapter of previous as requested
+     */
+    Key getAdjacentChapter(final String bookName, final String chapterNumber, final Book currentBook,
+            final Key currentKey, final int gap) {
+        final int newChapter = parseInt(chapterNumber) + gap;
+
+        return getValidOrSameKey(currentBook, currentKey, format(OSIS_CHAPTER_FORMAT, bookName, newChapter));
+    }
+
+    /**
+     * Expands the key to full chapter, or if it is the last verse in the chapter, then it expands to the next
+     * chapter
+     * 
+     * @param bookName the name of book, e.g. Gen
+     * @param chapterNumber the chapter number
+     * @param verseNumber the verse number
+     * @param currentBook the book to look for valid keys
+     * @param currentKey the current position in the book
+     * @param gap the increment to expand to, e.g. 1 to the next chapter, -1 to the previous chapter (value in
+     *            approximate verse numbers)
+     * @return the new key, whether it refers to this current chapter or the next
+     */
+    Key expandToFullChapter(final String bookName, final String chapterNumber, final String verseNumber,
+            final Book currentBook, final Key currentKey, final int gap) {
+        final int nextVerse = parseInt(verseNumber) + gap;
+
+        final Key newKey = getValidOrSameKey(currentBook, currentKey,
+                format(OSIS_CHAPTER_VERSE_FORMAT, bookName, chapterNumber, nextVerse));
+
+        // if we're on a beginning of a chapter
+        if (newKey.getOsisID().endsWith(".0") || newKey.equals(currentKey)) {
+            return getAdjacentChapter(bookName, chapterNumber, currentBook, currentKey, gap);
+        }
+
+        return currentBook.getValidKey(format("%s.%s", bookName, chapterNumber));
+    }
+
+    /**
+     * returns a valid key to the book, either the one specified in the newKeyName or the currentKey
+     * 
+     * @param currentBook the book to look for valid keys
+     * @param currentKey the current key
+     * @param newKeyName the new potential key name
+     * @return the newKey if newKeyName was a good guess, or currentKey if not
+     */
+    private Key getValidOrSameKey(final Book currentBook, final Key currentKey, final String newKeyName) {
+        final Key validKey = currentBook.getValidKey(newKeyName);
+        if (validKey.isEmpty()) {
+            return currentKey;
+        }
+        return validKey;
     }
 
     @Override

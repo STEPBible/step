@@ -47,6 +47,7 @@ import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.BookData;
 import org.crosswire.jsword.book.BookException;
 import org.crosswire.jsword.book.Books;
+import org.crosswire.jsword.passage.Key;
 import org.crosswire.jsword.passage.NoSuchKeyException;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -203,6 +204,59 @@ public class JSwordServiceImplTest {
         assertTrue(bibleBookNames.contains("Mal"));
         assertTrue(bibleBookNames.contains("Mat"));
         assertTrue(bibleBookNames.contains("Mar"));
+    }
+
+    /**
+     * Testing that reference gets bumped up and down
+     */
+    @Test
+    public void testGetSiblingChapter() {
+        final JSwordServiceImpl jsword = new JSwordServiceImpl(null);
+
+        // previous chapter tests
+        assertEquals("Genesis 1", jsword.getSiblingChapter("Genesis 2", "KJV", true));
+        assertEquals("Genesis 2", jsword.getSiblingChapter("Genesis 2:5", "KJV", true));
+        assertEquals("Genesis 1", jsword.getSiblingChapter("Genesis 2-3:17", "KJV", true));
+        assertEquals("Genesis 2", jsword.getSiblingChapter("Genesis 2:3-3:17", "KJV", true));
+
+        // next chapter tests
+        assertEquals("Genesis 3", jsword.getSiblingChapter("Genesis 2-3:17", "KJV", false));
+        assertEquals("Genesis 4", jsword.getSiblingChapter("Genesis 2-3:24", "KJV", false));
+        assertEquals("Genesis 3", jsword.getSiblingChapter("Genesis 3:17", "KJV", false));
+        assertEquals("Genesis 4", jsword.getSiblingChapter("Genesis 3:24", "KJV", false));
+        assertEquals("Genesis 3", jsword.getSiblingChapter("Genesis 2", "KJV", false));
+    }
+
+    /**
+     * testing variations of getting the previous reference
+     * 
+     * @throws NoSuchKeyException uncaught exception
+     */
+    @Test
+    public void testGetPreviousRef() throws NoSuchKeyException {
+        final JSwordServiceImpl jsword = new JSwordServiceImpl(null);
+        final Book book = Books.installed().getBook("KJV");
+        final Key key = book.getKey("Genesis 3:17");
+
+        assertEquals("Gen.3", jsword.getPreviousRef(new String[] { "Gen", "3", "17" }, key, book)
+                .getOsisRef());
+        assertEquals("Gen.2", jsword.getPreviousRef(new String[] { "Gen", "3", "1" }, key, book).getOsisRef());
+        assertEquals("Gen.2", jsword.getPreviousRef(new String[] { "Gen", "3" }, key, book).getOsisRef());
+    }
+
+    /**
+     * testing variations of getting the previous reference
+     * 
+     * @throws NoSuchKeyException uncaught exception
+     */
+    @Test
+    public void testGetNextRef() throws NoSuchKeyException {
+        final JSwordServiceImpl jsword = new JSwordServiceImpl(null);
+        final Book book = Books.installed().getBook("KJV");
+        final Key key = book.getKey("Genesis 3:24");
+
+        assertEquals("Gen.4", jsword.getNextRef(new String[] { "Gen", "3", "24" }, key, book).getOsisRef());
+        assertEquals("Gen.4", jsword.getNextRef(new String[] { "Gen", "3" }, key, book).getOsisRef());
     }
 
     /**

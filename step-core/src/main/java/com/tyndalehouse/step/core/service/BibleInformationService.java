@@ -113,4 +113,14 @@ public interface BibleInformationService {
      * @param reference the reference, initials or book name
      */
     void installModules(String reference);
+
+    /**
+     * Returns the previous or next chapter
+     * 
+     * @param reference the reference
+     * @param version the version of the book we are interested in
+     * @param previousChapter true for previous chapter, false for next chapter
+     * @return the new reference to display on the user screen
+     */
+    String getSiblingChapter(String reference, String version, boolean previousChapter);
 }

@@ -110,13 +110,17 @@ function Passage(passageContainer, rawServerVersions, passageId) {
 	this.previousChapter
 		.button({ icons: {primary: "ui-icon-arrowreturnthick-1-w" }, text: false})
 		.click(function() {
-			//TODO
+			$.getSafe(BIBLE_GET_PREVIOUS_CHAPTER + self.reference.val() + "/" + self.version.val(), function(newReference) {
+				self.changePassage(newReference);
+			});
 	});
 
 	this.nextChapter
 		.button({ icons: {primary: "ui-icon-arrowreturnthick-1-w" }, text: false})
 		.click(function() {
-			//TODO
+			$.getSafe(BIBLE_GET_NEXT_CHAPTER + self.reference.val() + "/" + self.version.val(), function(newReference) {
+				self.changePassage(newReference);
+			});
 	});
 	
 };
@@ -258,7 +262,12 @@ Passage.prototype.deSync = function() {
 /**
  * changes the passage, with optional parameters
  */
-Passage.prototype.changePassage = function() {
+Passage.prototype.changePassage = function(newReference) {
+    if(newReference) {
+    	this.reference.val(newReference);
+    }
+	
+	
 	// now get the options from toolbar
 	var options = this.getSelectedOptions();
 	var interlinearVersion = this.getSelectedInterlinearVersion();

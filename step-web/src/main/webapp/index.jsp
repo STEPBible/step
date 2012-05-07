@@ -67,8 +67,8 @@
 			    <div class="passageText ui-widget">
 			    	<div class="headingContainer">
 						<a class="bookmarkPassageLink passageButtons">Add a bookmark</a>
-						<a class="nextChapter passageButtons">Next chapter</a>
-						<a class="previousChapter passageButtons">Previous chapter</a>
+						<a class="nextChapter passageButtons">Displays the next chapter (or expands to the end of the chapter)</a>
+						<a class="previousChapter passageButtons">Displays the previous chapter (or expands to the start of the chapter)</a>
 				    	<input id="leftPassageReference" class="heading editable passageReference" size="30" 
 				    		value="<%= stepRequest.getReference(0) %>" />
 				    	<input id="leftPassageBook" class="heading editable passageVersion" size="5" 
@@ -105,8 +105,8 @@
 			    <div class="passageText ui-widget">
 			    	<div class="headingContainer">
 						<a class="bookmarkPassageLink passageButtons">Add a bookmark</a>
-						<a class="nextChapter passageButtons">Next chapter</a>
-						<a class="previousChapter passageButtons">Previous chapter</a>
+						<a class="nextChapter passageButtons">Displays the next chapter (or expands to the end of the chapter)</a>
+						<a class="previousChapter passageButtons">Displays the previous chapter (or expands to the start of the chapter)</a>
 				    	<input id="rightPassageReference" class="heading editable passageReference" size="30" 
 				    		value="<%= stepRequest.getReference(1) %>" />
 				    	<input id="rightPassageBook" class="heading editable passageVersion" size="5" 

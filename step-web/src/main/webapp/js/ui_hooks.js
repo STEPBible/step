@@ -53,6 +53,8 @@ BIBLE_GET_BIBLE_TEXT = 					STEP_SERVER_BASE_URL + "bible/getBibleText/";
 BIBLE_GET_FEATURES = 					STEP_SERVER_BASE_URL + "bible/getFeatures/";
 BIBLE_GET_ALL_FEATURES = 				STEP_SERVER_BASE_URL + "bible/getAllFeatures/";
 BIBLE_GET_BIBLE_BOOK_NAMES = 			STEP_SERVER_BASE_URL + "bible/getBibleBookNames/";
+BIBLE_GET_NEXT_CHAPTER =				STEP_SERVER_BASE_URL + "bible/getNextChapter/";
+BIBLE_GET_PREVIOUS_CHAPTER = 			STEP_SERVER_BASE_URL + "bible/getPreviousChapter/";
 
 MODULE_GET_ALL_MODULES = 				STEP_SERVER_BASE_URL + "module/getAllModules/";
 MODULE_GET_ALL_INSTALLABLE_MODULES = 	STEP_SERVER_BASE_URL + "module/getAllInstallableModules/";

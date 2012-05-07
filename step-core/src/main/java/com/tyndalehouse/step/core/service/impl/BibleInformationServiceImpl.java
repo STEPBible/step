@@ -148,4 +148,9 @@ public class BibleInformationServiceImpl implements BibleInformationService {
         return this.jsword.getBibleBookNames(bookStart, version);
     }
 
+    @Override
+    public String getSiblingChapter(final String reference, final String version,
+            final boolean previousChapter) {
+        return this.jsword.getSiblingChapter(reference, version, previousChapter);
+    }
 }

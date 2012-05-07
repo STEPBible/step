@@ -449,12 +449,8 @@ public class JSwordServiceImpl implements JSwordService {
                     LOGGER.trace("Found reference [{}] to [{}]", valueOf(startVerseId), valueOf(endVerseId));
                     final ScriptureReference sr = new ScriptureReference();
 
-                    // TODO ensure scripture references are linked to targets...
-                    // sr.setTarget(target);
                     sr.setStartVerseId(startVerseId);
                     sr.setEndVerseId(endVerseId);
-
-                    // FIXME: bug?
                     sr.setTargetType(targetType);
                     refs.add(sr);
                 }

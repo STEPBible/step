@@ -41,6 +41,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.name.Named;
 import com.tyndalehouse.step.core.data.entities.Bookmark;
+import com.tyndalehouse.step.core.data.entities.DictionaryArticle;
 import com.tyndalehouse.step.core.data.entities.GeoPlace;
 import com.tyndalehouse.step.core.data.entities.History;
 import com.tyndalehouse.step.core.data.entities.HotSpot;
@@ -156,6 +157,7 @@ public class DatabaseConfigProvider implements Provider<EbeanServer> {
         config.addClass(GeoPlace.class);
         config.addClass(TimelineEventsAndDate.class);
         config.addClass(StrongDefinition.class);
+        config.addClass(DictionaryArticle.class);
     }
 
     /**

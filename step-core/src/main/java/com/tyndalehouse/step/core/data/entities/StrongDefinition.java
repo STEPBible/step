@@ -35,6 +35,8 @@ package com.tyndalehouse.step.core.data.entities;
 import java.io.Serializable;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
 import com.avaje.ebean.annotation.CacheStrategy;
 
@@ -44,15 +46,121 @@ import com.avaje.ebean.annotation.CacheStrategy;
  * @author Chris
  * 
  */
+/**
+ * @author chrisburrell
+ * 
+ */
 @CacheStrategy(readOnly = true)
 @Entity
 public class StrongDefinition implements Serializable {
     private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue
+    private Integer id;
+
     private String originalLanguage;
     private String transliteration;
     private String pronunciation;
     private String kjvDefinition;
     private String strongsDerivation;
     private String lexiconSummary;
+
+    /**
+     * @return the id
+     */
+    public Integer getId() {
+        return this.id;
+    }
+
+    /**
+     * @param id the id to set
+     */
+    public void setId(final Integer id) {
+        this.id = id;
+    }
+
+    /**
+     * @return the originalLanguage
+     */
+    public String getOriginalLanguage() {
+        return this.originalLanguage;
+    }
+
+    /**
+     * @param originalLanguage the originalLanguage to set
+     */
+    public void setOriginalLanguage(final String originalLanguage) {
+        this.originalLanguage = originalLanguage;
+    }
+
+    /**
+     * @return the transliteration
+     */
+    public String getTransliteration() {
+        return this.transliteration;
+    }
+
+    /**
+     * @param transliteration the transliteration to set
+     */
+    public void setTransliteration(final String transliteration) {
+        this.transliteration = transliteration;
+    }
+
+    /**
+     * @return the pronunciation
+     */
+    public String getPronunciation() {
+        return this.pronunciation;
+    }
+
+    /**
+     * @param pronunciation the pronunciation to set
+     */
+    public void setPronunciation(final String pronunciation) {
+        this.pronunciation = pronunciation;
+    }
+
+    /**
+     * @return the kjvDefinition
+     */
+    public String getKjvDefinition() {
+        return this.kjvDefinition;
+    }
+
+    /**
+     * @param kjvDefinition the kjvDefinition to set
+     */
+    public void setKjvDefinition(final String kjvDefinition) {
+        this.kjvDefinition = kjvDefinition;
+    }
+
+    /**
+     * @return the strongsDerivation
+     */
+    public String getStrongsDerivation() {
+        return this.strongsDerivation;
+    }
+
+    /**
+     * @param strongsDerivation the strongsDerivation to set
+     */
+    public void setStrongsDerivation(final String strongsDerivation) {
+        this.strongsDerivation = strongsDerivation;
+    }
+
+    /**
+     * @return the lexiconSummary
+     */
+    public String getLexiconSummary() {
+        return this.lexiconSummary;
+    }
+
+    /**
+     * @param lexiconSummary the lexiconSummary to set
+     */
+    public void setLexiconSummary(final String lexiconSummary) {
+        this.lexiconSummary = lexiconSummary;
+    }
 
 }

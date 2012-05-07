@@ -51,6 +51,7 @@ import au.com.bytecode.opencsv.CSVReader;
 
 import com.avaje.ebean.EbeanServer;
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import com.tyndalehouse.step.core.data.common.PartialDate;
 import com.tyndalehouse.step.core.data.common.PrecisionType;
 import com.tyndalehouse.step.core.data.entities.ScriptureReference;
@@ -66,25 +67,28 @@ import com.tyndalehouse.step.core.utils.StepIOUtils;
  * 
  */
 public class TimelineModuleLoader extends AbstractCsvModuleLoader implements ModuleLoader {
-    private static final String TIMELINE_DIRECTORY = "timeline/";
     private static final Logger LOG = LoggerFactory.getLogger(TimelineModuleLoader.class);
     private final EbeanServer ebean;
     private final JSwordService jsword;
+    private final String timelineDirectoryClasspath;
 
     /**
      * we need to persist object through an orm
      * 
      * @param ebean the persistence server
      * @param jsword the jsword service
+     * @param timelineDirectoryClasspath TODO
      */
     @Inject
-    public TimelineModuleLoader(final EbeanServer ebean, final JSwordService jsword) {
+    public TimelineModuleLoader(final EbeanServer ebean, final JSwordService jsword,
+            @Named("test.data.path.timeline.events.directory") final String timelineDirectoryClasspath) {
         this.ebean = ebean;
         this.jsword = jsword;
+        this.timelineDirectoryClasspath = timelineDirectoryClasspath;
     }
 
     @Override
-    public void init() {
+    public int init() {
         LOG.debug("Loading timeline events");
         final long currentTime = System.currentTimeMillis();
 
@@ -92,10 +96,17 @@ public class TimelineModuleLoader extends AbstractCsvModuleLoader implements Mod
         final List<TimelineEvent> timelineEvents = loadTimelineEvents(timelineDataFiles);
 
         // finally persist to database
-        this.ebean.save(timelineEvents);
+        final int count = this.ebean.save(timelineEvents);
 
         final long duration = System.currentTimeMillis() - currentTime;
-        LOG.info("Took {}ms to load {} timeline events", Long.valueOf(duration), timelineEvents.size());
+        LOG.info("Took {}ms to load {} timeline events", Long.valueOf(duration), count);
+
+        if (timelineEvents.size() != count) {
+            LOG.warn("Loaded [{}] timeline events but was trying to load [{}]", new Object[] { count,
+                    timelineEvents.size() });
+        }
+
+        return count;
 
     }
 
@@ -149,7 +160,13 @@ public class TimelineModuleLoader extends AbstractCsvModuleLoader implements Mod
         InputStream indexFile = null;
         List<String> indexChapters = null;
         try {
-            indexFile = getClass().getResourceAsStream(TIMELINE_DIRECTORY + "index.txt");
+            indexFile = getClass().getResourceAsStream(this.timelineDirectoryClasspath + "index.txt");
+            if (indexFile == null) {
+                // return empty and warn
+                LOG.warn("No events loaded - index file is missing");
+                return new ArrayList<CsvData>();
+            }
+
             indexChapters = IOUtils.readLines(indexFile);
         } catch (final IOException e) {
             throw new StepInternalException(e.getMessage(), e);
@@ -180,7 +197,8 @@ public class TimelineModuleLoader extends AbstractCsvModuleLoader implements Mod
         CSVReader reader = null;
         Reader fileReader = null;
         try {
-            final InputStream csvFile = getClass().getResourceAsStream(TIMELINE_DIRECTORY + timelineDataFile);
+            final InputStream csvFile = getClass().getResourceAsStream(
+                    this.timelineDirectoryClasspath + timelineDataFile);
             fileReader = new InputStreamReader(csvFile);
 
             reader = new CSVReader(fileReader);

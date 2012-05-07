@@ -236,10 +236,6 @@
             <ruleset>Code Size Rules</ruleset>
         </rule>
         <rule>
-            <name>TooManyMethods</name>
-            <ruleset>Code Size Rules</ruleset>
-        </rule>
-        <rule>
             <name>UnnecessaryConstructor</name>
             <ruleset>Controversial Rules</ruleset>
         </rule>

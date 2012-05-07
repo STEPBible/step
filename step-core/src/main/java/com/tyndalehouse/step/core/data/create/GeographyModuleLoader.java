@@ -50,6 +50,7 @@ import org.slf4j.LoggerFactory;
 
 import com.avaje.ebean.EbeanServer;
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import com.tyndalehouse.step.core.data.common.GeoPrecision;
 import com.tyndalehouse.step.core.data.entities.GeoPlace;
 import com.tyndalehouse.step.core.data.entities.ScriptureReference;
@@ -68,37 +69,48 @@ public class GeographyModuleLoader implements ModuleLoader {
     private static final int LONGITUDE_FIELD = 3;
     private static final int SCRIPTURE_FIELD = 4;
     private static final int COMMENT_FIELD = 5;
-    private static final String OPENBIBLE_DATA = "geography/openbible.tab";
     private static final Logger LOG = LoggerFactory.getLogger(GeographyModuleLoader.class);
     private static final int IGNORE_LINES = 1;
     private final EbeanServer ebean;
     private final JSwordService jsword;
+    private final String dataClasspath;
 
     /**
      * we need to persist object through an orm
      * 
      * @param ebean the persistence server
      * @param jsword the jsword service
+     * @param dataClasspath classpath to data
      */
     @Inject
-    public GeographyModuleLoader(final EbeanServer ebean, final JSwordService jsword) {
+    public GeographyModuleLoader(final EbeanServer ebean, final JSwordService jsword,
+            @Named("test.data.path.geography.openbible") final String dataClasspath) {
         this.ebean = ebean;
         this.jsword = jsword;
+        this.dataClasspath = dataClasspath;
     }
 
     /**
      * loads up the timeline data
+     * 
+     * @return the number of items successfully added
      */
-    public void init() {
+    public int init() {
         final long currentTime = System.currentTimeMillis();
 
         final List<GeoPlace> geoPlaces = loadOpenBibleData();
 
         // finally persist to database
-        this.ebean.save(geoPlaces);
+        final int count = this.ebean.save(geoPlaces);
 
         final long duration = System.currentTimeMillis() - currentTime;
-        LOG.info("Took {}ms to load {} places", Long.valueOf(duration), geoPlaces.size());
+        LOG.info("Took {}ms to load {} places", Long.valueOf(duration), count);
+
+        if (geoPlaces.size() != count) {
+            LOG.warn("Loaded {} places but was trying to load [{}]", new Object[] { count, geoPlaces.size() });
+        }
+
+        return count;
     }
 
     /**
@@ -115,7 +127,7 @@ public class GeographyModuleLoader implements ModuleLoader {
 
         try {
 
-            placeFileStream = getClass().getResourceAsStream(OPENBIBLE_DATA);
+            placeFileStream = getClass().getResourceAsStream(this.dataClasspath);
             lineIterator = IOUtils.lineIterator(placeFileStream, Charset.defaultCharset());
 
             for (int ii = 0; ii < IGNORE_LINES && lineIterator.hasNext(); ii++) {

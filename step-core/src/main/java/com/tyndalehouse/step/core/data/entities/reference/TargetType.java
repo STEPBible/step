@@ -44,4 +44,7 @@ public enum TargetType {
 
     /** a geo place **/
     GEO_PLACE,
+
+    /** a dictionary article */
+    DICTIONARY_ARTICLE
 }

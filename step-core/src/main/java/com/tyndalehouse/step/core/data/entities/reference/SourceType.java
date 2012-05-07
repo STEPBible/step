@@ -30,62 +30,17 @@
  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
-package com.tyndalehouse.step.core.xsl.impl;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import org.junit.Test;
+package com.tyndalehouse.step.core.data.entities.reference;
 
 /**
- * color coding tests - patterns are checked in {@link ColorCoderProviderImplPatternsTest}
+ * Types of dictionary article sources
  * 
  * @author chrisburrell
+ * 
  */
-public class ColorCoderProviderImplTest {
+public enum SourceType {
     /**
-     * tests that all sets of patterns find the relevant part
+     * From the Easton dictionary
      */
-    @Test
-    public void testPatternMethods() {
-        final ColorCoderProviderImpl cc = new ColorCoderProviderImpl();
-        assertTrue(cc.isFeminine("robinson:SF"));
-        assertTrue(cc.isMasculine("robinson:SM"));
-        assertTrue(cc.isPlural("robinson:-1P"));
-        assertTrue(cc.isSingular("robinson:-1S"));
-    }
-
-    /**
-     * tests badly coded modules
-     */
-    @Test
-    public void testShortMorph() {
-        final ColorCoderProviderImpl cc = new ColorCoderProviderImpl();
-        assertEquals("", cc.getColorClass("robin"));
-        assertEquals("", cc.getColorClass(null));
-    }
-
-    /**
-     * testing different unsupported encodings
-     */
-    @Test
-    public void testDifferentEncoding() {
-        final ColorCoderProviderImpl cc = new ColorCoderProviderImpl();
-        assertEquals("", cc.getColorClass("ROBinsoN:-1P"));
-    }
-
-    /**
-     * Testing the happy path
-     */
-    @Test
-    public void testHappyPath() {
-        final ColorCoderProviderImpl cc = new ColorCoderProviderImpl();
-
-        assertEquals("sing fem", cc.getColorClass("robinson:N-GSF"));
-        assertEquals("sing mas", cc.getColorClass("robinson:N-GSM"));
-        assertEquals("plur fem", cc.getColorClass("robinson:N-GPF"));
-        assertEquals("plur mas", cc.getColorClass("robinson:N-GPM"));
-        assertEquals("sing neut", cc.getColorClass("robinson:N-GSN"));
-        assertEquals("plur neut", cc.getColorClass("robinson:N-GPN"));
-    }
+    EASTON,
 }

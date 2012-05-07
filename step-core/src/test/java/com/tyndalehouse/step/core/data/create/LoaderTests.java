@@ -30,62 +30,66 @@
  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
-package com.tyndalehouse.step.core.xsl.impl;
+package com.tyndalehouse.step.core.data.create;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+
+import com.tyndalehouse.step.core.data.DataDrivenTestExtension;
+import com.tyndalehouse.step.core.data.entities.ScriptureReference;
+import com.tyndalehouse.step.core.service.JSwordService;
+import com.tyndalehouse.step.core.service.impl.JSwordServiceImpl;
 
 /**
- * color coding tests - patterns are checked in {@link ColorCoderProviderImplPatternsTest}
+ * Tests the loading of the geography loader
  * 
  * @author chrisburrell
+ * 
  */
-public class ColorCoderProviderImplTest {
+@RunWith(MockitoJUnitRunner.class)
+public class LoaderTests extends DataDrivenTestExtension {
+    @Mock
+    private JSwordService jsword;
+
     /**
-     * tests that all sets of patterns find the relevant part
+     * tests the openbible data
      */
     @Test
-    public void testPatternMethods() {
-        final ColorCoderProviderImpl cc = new ColorCoderProviderImpl();
-        assertTrue(cc.isFeminine("robinson:SF"));
-        assertTrue(cc.isMasculine("robinson:SM"));
-        assertTrue(cc.isPlural("robinson:-1P"));
-        assertTrue(cc.isSingular("robinson:-1S"));
+    public void testGeographyLoader() {
+        assertEquals(4, new GeographyModuleLoader(getEbean(), this.jsword, "geography.tab").init());
     }
 
     /**
-     * tests badly coded modules
+     * tests the timeline
      */
     @Test
-    public void testShortMorph() {
-        final ColorCoderProviderImpl cc = new ColorCoderProviderImpl();
-        assertEquals("", cc.getColorClass("robin"));
-        assertEquals("", cc.getColorClass(null));
+    public void testTimeline() {
+        assertEquals(4, new TimelineModuleLoader(getEbean(), this.jsword, "").init());
     }
 
     /**
-     * testing different unsupported encodings
+     * tests the timeline
      */
     @Test
-    public void testDifferentEncoding() {
-        final ColorCoderProviderImpl cc = new ColorCoderProviderImpl();
-        assertEquals("", cc.getColorClass("ROBinsoN:-1P"));
+    public void testHotSpots() {
+        assertEquals(3, new HotSpotModuleLoader(getEbean(), "hotspots.csv").init());
     }
 
     /**
-     * Testing the happy path
+     * for this one we need a real jsword service because we will test that scripture refs are resolved
+     * correctly.
      */
     @Test
-    public void testHappyPath() {
-        final ColorCoderProviderImpl cc = new ColorCoderProviderImpl();
-
-        assertEquals("sing fem", cc.getColorClass("robinson:N-GSF"));
-        assertEquals("sing mas", cc.getColorClass("robinson:N-GSM"));
-        assertEquals("plur fem", cc.getColorClass("robinson:N-GPF"));
-        assertEquals("plur mas", cc.getColorClass("robinson:N-GPM"));
-        assertEquals("sing neut", cc.getColorClass("robinson:N-GSN"));
-        assertEquals("plur neut", cc.getColorClass("robinson:N-GPN"));
+    public void testDictionaryArticles() {
+        final JSwordService realJSword = new JSwordServiceImpl(null);
+        final int count = new DictionaryLoader(getEbean(), realJSword, "easton.txt").init();
+        final int srCount = getEbean().find(ScriptureReference.class).findRowCount();
+        assertEquals(4, count);
+        assertTrue(srCount > 10);
     }
 }

@@ -49,6 +49,7 @@ import au.com.bytecode.opencsv.CSVReader;
 
 import com.avaje.ebean.EbeanServer;
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import com.tyndalehouse.step.core.data.entities.HotSpot;
 import com.tyndalehouse.step.core.data.entities.reference.TimeUnitType;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
@@ -60,22 +61,25 @@ import com.tyndalehouse.step.core.exceptions.StepInternalException;
  * 
  */
 public class HotSpotModuleLoader extends AbstractCsvModuleLoader implements ModuleLoader {
-    private static final String HOTSPOT_DATA = "hotspot/hotspots.csv";
     private static final Logger LOG = LoggerFactory.getLogger(HotSpotModuleLoader.class);
     private final EbeanServer ebean;
+    private final String hotspotDataClasspath;
 
     /**
      * we need to persist object through an orm
      * 
      * @param ebean the persistence server
+     * @param hotspotDataClasspath the data to be loaded
      */
     @Inject
-    public HotSpotModuleLoader(final EbeanServer ebean) {
+    public HotSpotModuleLoader(final EbeanServer ebean,
+            @Named("test.data.path.timeline.hotspots") final String hotspotDataClasspath) {
         this.ebean = ebean;
+        this.hotspotDataClasspath = hotspotDataClasspath;
     }
 
     @Override
-    public void init() {
+    public int init() {
         LOG.debug("Loading hotspots");
         final long currentTime = System.currentTimeMillis();
 
@@ -83,10 +87,16 @@ public class HotSpotModuleLoader extends AbstractCsvModuleLoader implements Modu
         final List<HotSpot> hotSpots = loadHotSpots(timelineDataFiles);
 
         // finally persist to database
-        this.ebean.save(hotSpots);
+        final int count = this.ebean.save(hotSpots);
 
         final long duration = System.currentTimeMillis() - currentTime;
         LOG.info("Took {}ms to load {} hotspots", Long.valueOf(duration), hotSpots.size());
+
+        if (hotSpots.size() != count) {
+            LOG.warn("Loaded [{}] hotspots but was trying to load [{}]",
+                    new Object[] { count, hotSpots.size() });
+        }
+        return count;
 
     }
 
@@ -123,13 +133,13 @@ public class HotSpotModuleLoader extends AbstractCsvModuleLoader implements Modu
      * @return a CSV wrapped data file
      */
     private CsvData readHotSpotDataFile() {
-        LOG.debug("Reading hootspot file: ");
+        LOG.debug("Reading hotspot file: ");
 
         // this uses a buffered reader internally
         CSVReader reader = null;
         Reader fileReader = null;
         try {
-            final InputStream csvFile = getClass().getResourceAsStream(HOTSPOT_DATA);
+            final InputStream csvFile = getClass().getResourceAsStream(this.hotspotDataClasspath);
             fileReader = new InputStreamReader(csvFile);
 
             reader = new CSVReader(fileReader);

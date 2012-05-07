@@ -312,8 +312,8 @@ Passage.prototype.changePassage = function() {
 Passage.prototype.highlightStrong = function(strongReference) {
 	// check for black listed strongs
 	if($.inArray(strongReference, Passage.getBlackListedStrongs()) == -1) {
-		$(".verse span[onclick*=" + strongReference + "]", this.container).css("text-decoration", "underline");
-		$("span.w[onclick*=" + strongReference + "] span.text", this.container).css("text-decoration", "underline");
+		$(".verse span[onclick*='" + strongReference + "']", this.container).css("text-decoration", "underline");
+		$("span.w[onclick*='" + strongReference + "'] span.text", this.container).css("text-decoration", "underline");
 	}
 };
 

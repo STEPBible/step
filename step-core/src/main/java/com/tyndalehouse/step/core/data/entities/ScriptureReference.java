@@ -63,6 +63,10 @@ public class ScriptureReference implements Serializable {
     @Column(nullable = true)
     private TimelineEvent timelineEvent;
 
+    @ManyToOne(optional = true)
+    @Column(nullable = true)
+    private DictionaryArticle dictionaryArticle;
+
     @Column
     private TargetType targetType;
 
@@ -154,5 +158,19 @@ public class ScriptureReference implements Serializable {
      */
     public void setTimelineEvent(final TimelineEvent timelineEvent) {
         this.timelineEvent = timelineEvent;
+    }
+
+    /**
+     * @return the dictionaryArticle
+     */
+    public DictionaryArticle getDictionaryArticle() {
+        return this.dictionaryArticle;
+    }
+
+    /**
+     * @param dictionaryArticle the dictionaryArticle to set
+     */
+    public void setDictionaryArticle(final DictionaryArticle dictionaryArticle) {
+        this.dictionaryArticle = dictionaryArticle;
     }
 }

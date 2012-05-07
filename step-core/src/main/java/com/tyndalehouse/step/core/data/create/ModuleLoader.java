@@ -42,7 +42,9 @@ public interface ModuleLoader {
     /**
      * loads up the timeline data
      * 
+     * @return the number of items loaded
+     * 
      */
-    void init();
+    int init();
 
 }

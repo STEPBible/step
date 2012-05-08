@@ -71,7 +71,7 @@ import com.tyndalehouse.step.rest.controllers.BibleController;
 /**
  * tests the front controller parsing process
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 @SuppressWarnings("PMD.TooManyMethods")

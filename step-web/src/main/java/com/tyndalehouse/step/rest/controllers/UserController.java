@@ -39,7 +39,7 @@ import com.tyndalehouse.step.core.service.UserDataService;
 /**
  * Gives access to the user data of the application
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 public class UserController {

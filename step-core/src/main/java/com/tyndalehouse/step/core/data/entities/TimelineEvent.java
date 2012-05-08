@@ -48,7 +48,7 @@ import com.tyndalehouse.step.core.data.common.PrecisionType;
 /**
  * Represents an event or duration in time.
  * 
- * @author Chris
+ * @author chrisburrell
  */
 @CacheStrategy(readOnly = true)
 @Entity

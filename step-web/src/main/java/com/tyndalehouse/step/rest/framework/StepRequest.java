@@ -48,7 +48,7 @@ import com.tyndalehouse.step.core.exceptions.StepInternalException;
  * A simple class that hold request information, provides various cache keys
  * <p />
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 public class StepRequest {

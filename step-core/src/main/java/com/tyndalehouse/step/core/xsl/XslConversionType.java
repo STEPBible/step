@@ -35,7 +35,7 @@ package com.tyndalehouse.step.core.xsl;
 /**
  * Defines which types of XSL stylesheets are available
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 public enum XslConversionType {

@@ -43,7 +43,7 @@ import com.tyndalehouse.step.core.exceptions.StepInternalException;
 /**
  * Checks different types of parsing functionality for parsing dates
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 public class PartialDateTest {

@@ -55,7 +55,7 @@ import com.tyndalehouse.step.core.service.UserDataService;
 /**
  * Provides test data if necessary
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 @Singleton

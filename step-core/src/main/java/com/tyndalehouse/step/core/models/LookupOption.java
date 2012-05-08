@@ -39,7 +39,7 @@ import com.tyndalehouse.step.core.xsl.XslConversionType;
 /**
  * Outlines a list of options available in lookup
  * 
- * @author Chris Burrell
+ * @author chrisburrell 
  * 
  */
 public enum LookupOption {

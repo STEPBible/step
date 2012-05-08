@@ -35,7 +35,7 @@ package com.tyndalehouse.step.core.models;
 /**
  * At the moment, the "Client Session" object just wraps around an id.
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 public interface ClientSession {

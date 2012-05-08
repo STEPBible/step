@@ -37,7 +37,7 @@ import org.junit.Test;
 /**
  * A default test to do whatever we want
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 public class ScratchTest {

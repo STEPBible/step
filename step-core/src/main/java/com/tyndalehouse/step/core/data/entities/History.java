@@ -47,7 +47,7 @@ import javax.persistence.TemporalType;
 /**
  * A user may have multiple history items, these are always ordered by the last inserted data however
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 @Entity

@@ -60,7 +60,7 @@ import com.tyndalehouse.step.core.service.TimelineService;
 /**
  * tests the timeline service
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 @RunWith(MockitoJUnitRunner.class)

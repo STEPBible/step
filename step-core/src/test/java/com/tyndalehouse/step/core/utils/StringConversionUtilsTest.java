@@ -40,7 +40,7 @@ import org.junit.Test;
 /**
  * Tests the utility method for converting strings
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 public class StringConversionUtilsTest {

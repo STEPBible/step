@@ -35,7 +35,7 @@ package com.tyndalehouse.step.core.data.create;
 /**
  * Defines a mapping function
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  * @param <T> the type that will be returned
  */

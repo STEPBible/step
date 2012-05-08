@@ -36,7 +36,7 @@ package com.tyndalehouse.step.core.exceptions;
  * The default exception to be thrown throughout the application. It is of type {@link RuntimeException} so
  * that it does not require explicit catching
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 public class StepInternalException extends RuntimeException {

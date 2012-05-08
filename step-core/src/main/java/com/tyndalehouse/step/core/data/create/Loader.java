@@ -41,7 +41,7 @@ import com.google.inject.Inject;
 /**
  * The object that will be responsible for loading all the data into a database
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 public class Loader {

@@ -59,7 +59,7 @@ import com.tyndalehouse.step.core.data.entities.User;
 /**
  * tests that we can create and retrieve bookmarks
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 @RunWith(MockitoJUnitRunner.class)

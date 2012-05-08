@@ -42,7 +42,7 @@ import com.avaje.ebeaninternal.server.text.json.DefaultJsonValueAdapter;
 /**
  * we override the default JSON value adapter to provide custom serialisation for dates
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 public class StepJsonValueAdapter extends DefaultJsonValueAdapter {

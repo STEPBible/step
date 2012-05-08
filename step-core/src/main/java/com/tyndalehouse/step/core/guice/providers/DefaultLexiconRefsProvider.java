@@ -42,7 +42,7 @@ import com.google.inject.Singleton;
 /**
  * Provides the mappings between lexicon key references and the module initials that should be used.
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 @Singleton

@@ -49,7 +49,7 @@ import org.junit.Test;
 /**
  * Tests that cache keys are constructed correctly
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 public class StepRequestTest {

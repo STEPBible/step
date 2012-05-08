@@ -39,7 +39,7 @@ import org.joda.time.LocalDateTime;
 /**
  * A translator is able to convert timeline data into a form that is acceptable by the client
  * 
- * @author Chris
+ * @author chrisburrell
  * @param <S> the source class
  * @param <T> the target class
  */

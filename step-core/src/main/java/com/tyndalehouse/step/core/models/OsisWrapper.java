@@ -35,7 +35,7 @@ package com.tyndalehouse.step.core.models;
 /**
  * A simple wrapper around a string for returning as a JSON-mapped object
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 public class OsisWrapper {

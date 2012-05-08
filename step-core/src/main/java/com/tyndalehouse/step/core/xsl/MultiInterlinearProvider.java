@@ -35,7 +35,7 @@ package com.tyndalehouse.step.core.xsl;
 /**
  * the Interface that a Mutli interlinear provider shall abide to
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 public interface MultiInterlinearProvider {

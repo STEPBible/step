@@ -53,7 +53,7 @@ import com.tyndalehouse.step.guice.providers.ClientSessionProvider;
 /**
  * tests the bible controller
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 public class BibleControllerTest {

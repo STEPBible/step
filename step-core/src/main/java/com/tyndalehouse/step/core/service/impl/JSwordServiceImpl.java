@@ -64,7 +64,6 @@ import org.crosswire.jsword.book.BookCategory;
 import org.crosswire.jsword.book.BookData;
 import org.crosswire.jsword.book.BookException;
 import org.crosswire.jsword.book.BookFilter;
-import org.crosswire.jsword.book.BookMetaData;
 import org.crosswire.jsword.book.Books;
 import org.crosswire.jsword.book.FeatureType;
 import org.crosswire.jsword.book.install.InstallException;
@@ -574,9 +573,12 @@ public class JSwordServiceImpl implements JSwordService {
             try {
                 final PassageKeyFactory keyFactory = PassageKeyFactory.instance();
 
-                final String versification = (String) Books.installed().getBook(version).getBookMetaData()
-                        .getProperty(BookMetaData.KEY_VERSIFICATION);
-                final Versification v11n = Versifications.instance().getVersification(versification);
+                // TODO FIXME this should be uncommented - but currently need it out to make loading process
+                // work
+                // final String versification = (String) Books.installed().getBook(version).getBookMetaData()
+                // .getProperty(BookMetaData.KEY_VERSIFICATION);
+                // final Versification v11n = Versifications.instance().getVersification(versification);
+                final Versification v11n = Versifications.instance().getDefaultVersification();
 
                 final RocketPassage rp = (RocketPassage) keyFactory.getKey(v11n, references);
                 for (int ii = 0; ii < rp.countRanges(RestrictionType.NONE); ii++) {

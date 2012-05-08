@@ -45,7 +45,7 @@ import com.tyndalehouse.step.core.data.entities.reference.TargetType;
 /**
  * The object that represents a scripture reference
  * 
- * @author Chris
+ * @author chrisburrell
  */
 @Entity
 public class ScriptureReference implements Serializable {

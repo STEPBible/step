@@ -45,7 +45,7 @@ import com.tyndalehouse.step.core.service.GeographyService;
 /**
  * Getting some geographical data to display
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 @Singleton

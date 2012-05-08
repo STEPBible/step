@@ -46,7 +46,7 @@ import com.tyndalehouse.step.core.data.entities.aggregations.TimelineEventsAndDa
  * 
  * The timeline data is currently loaded from a CSV file and stored in the database
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 public interface TimelineService {

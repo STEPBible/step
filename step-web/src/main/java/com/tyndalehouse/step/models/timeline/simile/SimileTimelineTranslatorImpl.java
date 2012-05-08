@@ -44,7 +44,7 @@ import com.tyndalehouse.step.models.timeline.DigestableTimeline;
 /**
  * provides a way of
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 public class SimileTimelineTranslatorImpl implements

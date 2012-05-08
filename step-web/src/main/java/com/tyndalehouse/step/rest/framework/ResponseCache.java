@@ -43,7 +43,7 @@ import com.tyndalehouse.step.core.data.caches.AbstractDefaultCache;
 /**
  * This caches responses - should be varied for Android and mobiles since there would be less memory
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 public class ResponseCache extends AbstractDefaultCache<byte[]> {

@@ -50,7 +50,7 @@ import com.tyndalehouse.step.core.models.ClientSession;
 /**
  * A server session provider
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 @Singleton

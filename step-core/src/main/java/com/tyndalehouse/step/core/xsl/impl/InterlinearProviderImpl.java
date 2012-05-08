@@ -71,7 +71,7 @@ import com.tyndalehouse.step.core.xsl.InterlinearProvider;
  * and is specific to requests. On initialisation, the OSIS XML is retrieved and iterated through to find all
  * strong/morph candidates
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 public class InterlinearProviderImpl implements InterlinearProvider {

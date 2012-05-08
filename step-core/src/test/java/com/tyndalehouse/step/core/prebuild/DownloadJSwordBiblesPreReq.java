@@ -50,7 +50,7 @@ import com.tyndalehouse.step.core.service.impl.JSwordServiceImpl;
 /**
  * Downloads the jsword bible versions
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 public class DownloadJSwordBiblesPreReq {

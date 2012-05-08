@@ -38,7 +38,7 @@ import org.slf4j.LoggerFactory;
 /**
  * A collection of utility methods enabling us to convert Strings, references one way or another.
  * 
- * @author Chris
+ * @author chrisburrell
  */
 public final class StringConversionUtils {
     private static final char KEY_SEPARATOR = ':';

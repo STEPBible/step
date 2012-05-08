@@ -47,7 +47,7 @@ import com.tyndalehouse.step.core.data.entities.reference.TimeUnitType;
 /**
  * The entity representing a timeline
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 @CacheStrategy(readOnly = true)

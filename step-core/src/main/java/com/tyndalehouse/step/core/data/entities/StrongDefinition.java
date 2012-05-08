@@ -43,7 +43,7 @@ import com.avaje.ebean.annotation.CacheStrategy;
 /**
  * A entitiy representing what we expect to see in a strong definition
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 /**

@@ -45,7 +45,7 @@ import com.tyndalehouse.step.core.data.entities.Session;
  * 
  * The session cache automatically expires elements after a while and will clean up dead sessions on exit
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 public class SessionCache extends AbstractDefaultCache<Session> {

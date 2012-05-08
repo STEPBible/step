@@ -40,7 +40,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Some IO Utils for use in the STEP application
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 public final class StepIOUtils {

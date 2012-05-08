@@ -42,7 +42,7 @@ import org.junit.Test;
 /**
  * A simple test class to test to the provider
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 public class InterlinearProviderImplTest {

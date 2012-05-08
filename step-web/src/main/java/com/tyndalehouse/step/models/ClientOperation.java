@@ -35,7 +35,7 @@ package com.tyndalehouse.step.models;
 /**
  * a set of operations that should be performed by the client
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 public enum ClientOperation {

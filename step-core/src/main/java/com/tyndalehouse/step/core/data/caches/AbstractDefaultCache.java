@@ -42,7 +42,7 @@ import com.tyndalehouse.step.core.utils.cache.SimpleCache;
 /**
  * An abstract implementation of the cache
  * 
- * @author Chris
+ * @author chrisburrell
  * @param <T> the type of element that will be stored in the cache
  */
 public abstract class AbstractDefaultCache<T> implements SimpleCache<String, T> {

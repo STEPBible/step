@@ -44,7 +44,7 @@ import com.tyndalehouse.step.core.xsl.MultiInterlinearProvider;
 /**
  * This implementation will support multiple versions, so each of the methods is keyed by version requested.
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 public class MultiInterlinearProviderImpl implements MultiInterlinearProvider {

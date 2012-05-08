@@ -57,7 +57,7 @@ import com.tyndalehouse.step.core.exceptions.StepInternalException;
 /**
  * Loads anything related to the timeline
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 public class HotSpotModuleLoader extends AbstractCsvModuleLoader implements ModuleLoader {

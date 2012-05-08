@@ -35,7 +35,7 @@ package com.tyndalehouse.step.core.data.entities.reference;
 /**
  * Represents different entities that can be linked to a scripture reference
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 public enum TargetType {

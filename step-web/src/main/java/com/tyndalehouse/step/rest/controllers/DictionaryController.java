@@ -46,7 +46,7 @@ import com.tyndalehouse.step.rest.framework.Cacheable;
 /**
  * The controller for retrieving information on the bible or texts from the bible
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 @Singleton

@@ -44,7 +44,7 @@ import com.tyndalehouse.step.core.data.DataDrivenTestExtension;
 /**
  * Basic test for the loader
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 public class DataTest extends DataDrivenTestExtension {

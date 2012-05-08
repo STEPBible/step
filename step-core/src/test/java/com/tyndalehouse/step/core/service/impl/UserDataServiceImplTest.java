@@ -52,7 +52,7 @@ import com.tyndalehouse.step.core.models.ClientSession;
 /**
  * tests the paths through the user data service
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 @RunWith(MockitoJUnitRunner.class)

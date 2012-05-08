@@ -56,7 +56,7 @@ import com.tyndalehouse.step.core.data.entities.aggregations.TimelineEventsAndDa
 /**
  * Returns a database connection server instance for use across the application
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 public class DatabaseConfigProvider implements Provider<EbeanServer> {

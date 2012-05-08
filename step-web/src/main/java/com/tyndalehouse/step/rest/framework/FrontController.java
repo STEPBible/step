@@ -61,7 +61,7 @@ import com.tyndalehouse.step.core.exceptions.StepInternalException;
  * 
  * /step-web/rest/controllerName/methodName/arg1/arg2/arg3
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 @Singleton

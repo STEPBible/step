@@ -42,7 +42,7 @@ import com.tyndalehouse.step.core.utils.AbstractStepGuiceModule;
 /**
  * A simple guice module to initialise the database
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 public class DataTestModule extends AbstractStepGuiceModule {

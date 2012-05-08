@@ -42,7 +42,7 @@ import org.slf4j.LoggerFactory;
 /**
  * A wrapper for CSV data that can be accessed similar to a Map
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 public class CsvData {

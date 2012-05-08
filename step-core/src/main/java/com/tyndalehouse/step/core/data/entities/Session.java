@@ -48,7 +48,7 @@ import javax.persistence.TemporalType;
  * A session is associated with a user and may or may not be active (expiresOn value) A user may be logged in
  * multiple times and hence have several sessions.
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 @Entity

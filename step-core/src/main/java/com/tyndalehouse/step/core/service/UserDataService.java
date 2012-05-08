@@ -48,7 +48,7 @@ import com.tyndalehouse.step.core.data.entities.User;
  * 
  * Fourthly, we can access everything through the session, without need for username, etc.
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 public interface UserDataService {

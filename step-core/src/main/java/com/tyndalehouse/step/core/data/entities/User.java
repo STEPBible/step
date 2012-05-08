@@ -43,7 +43,7 @@ import javax.persistence.Table;
 /**
  * represents a user entity. A user contains a username and password.
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 @Entity

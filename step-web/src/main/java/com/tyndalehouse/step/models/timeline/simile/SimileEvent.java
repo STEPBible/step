@@ -46,7 +46,7 @@ import com.tyndalehouse.step.models.timeline.DigestableTimeline;
  *         },
  * </pre>
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 public class SimileEvent implements DigestableTimeline {

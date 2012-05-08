@@ -41,7 +41,7 @@ import com.tyndalehouse.step.core.data.entities.History;
 /**
  * A service to add, remove bookmarks, history, etc.
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 public interface FavouritesService {

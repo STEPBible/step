@@ -49,7 +49,7 @@ import com.tyndalehouse.step.core.data.entities.ScriptureReference;
 /**
  * tests the geography data retrieval queries
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 @RunWith(MockitoJUnitRunner.class)

@@ -41,7 +41,7 @@ import javax.persistence.MappedSuperclass;
 /**
  * A marker interface meaning this object can be attached to scripture references
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 // CHECKSTYLE:OFF

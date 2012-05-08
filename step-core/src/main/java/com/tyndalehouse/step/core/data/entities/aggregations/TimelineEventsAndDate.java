@@ -44,7 +44,7 @@ import com.tyndalehouse.step.core.data.entities.TimelineEvent;
 /**
  * A simple wrapper around a timeline set of events and a central date
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 @Entity

@@ -45,7 +45,7 @@ import com.tyndalehouse.step.core.service.BibleInformationService;
 /**
  * The controller that will deal with any requests changing the behaviour of the application
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 @Singleton

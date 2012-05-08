@@ -42,7 +42,7 @@ import com.google.inject.Singleton;
 /**
  * Provides a list of default versions that should be installed for the application
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 @Singleton

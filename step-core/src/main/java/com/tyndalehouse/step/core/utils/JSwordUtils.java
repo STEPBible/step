@@ -48,7 +48,7 @@ import com.tyndalehouse.step.core.models.BibleVersion;
 /**
  * a set of utility methods to manipulate the JSword objects coming out
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 public final class JSwordUtils {

@@ -37,7 +37,7 @@ package com.tyndalehouse.step.core.utils.cache;
  * 
  * @param <T> the key class
  * @param <S> the item class
- * @author Chris
+ * @author chrisburrell
  * 
  */
 public interface SimpleCache<T, S> {

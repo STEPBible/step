@@ -59,7 +59,7 @@ import com.tyndalehouse.step.core.service.JSwordService;
 /**
  * Loads anything related to the timeline
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 public class GeographyModuleLoader implements ModuleLoader {

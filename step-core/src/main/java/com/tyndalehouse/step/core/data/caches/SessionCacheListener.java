@@ -46,7 +46,7 @@ import com.tyndalehouse.step.core.data.entities.Session;
 /**
  * provides simple implementation for expiring and updating session
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 public class SessionCacheListener extends AbstractCacheListener {

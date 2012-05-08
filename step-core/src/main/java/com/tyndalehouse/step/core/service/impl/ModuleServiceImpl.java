@@ -59,7 +59,7 @@ import com.tyndalehouse.step.core.utils.StringConversionUtils;
 /**
  * Looks up module information, for example lexicon definitions for particular references
  * 
- * @author Chris Burrell
+ * @author chrisburrell 
  * 
  */
 @Singleton

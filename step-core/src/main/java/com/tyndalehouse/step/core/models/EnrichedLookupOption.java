@@ -35,7 +35,7 @@ package com.tyndalehouse.step.core.models;
 /**
  * Outlines a list of options available in lookup
  * 
- * @author Chris Burrell
+ * @author chrisburrell 
  * 
  */
 public class EnrichedLookupOption {

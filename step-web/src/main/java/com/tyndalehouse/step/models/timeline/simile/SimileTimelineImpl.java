@@ -57,7 +57,7 @@ import com.tyndalehouse.step.models.timeline.DigestableTimeline;
  *     }
  * </pre>
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 @Singleton

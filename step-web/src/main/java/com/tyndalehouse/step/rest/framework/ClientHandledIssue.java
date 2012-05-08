@@ -37,7 +37,7 @@ import com.tyndalehouse.step.models.ClientOperation;
 /**
  * A client error, contains a message and an optional redirection operation
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 public class ClientHandledIssue {

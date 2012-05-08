@@ -44,7 +44,7 @@ import com.tyndalehouse.step.core.data.create.DataTestModule;
 /**
  * A simple data test that sets up the context and objects to be able to do persistence.
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 public class DataDrivenTestExtension {

@@ -42,7 +42,7 @@ import com.tyndalehouse.step.core.data.DataDrivenTestExtension;
 /**
  * tests that i can create a user - probably not going to do this for all entities
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 public class UserTest extends DataDrivenTestExtension {

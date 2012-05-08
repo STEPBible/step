@@ -37,7 +37,7 @@ import com.tyndalehouse.step.core.models.ClientSession;
 /**
  * A web session which wraps around the jsession id...
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 public class WebSessionImpl implements ClientSession {

@@ -53,7 +53,7 @@ import com.tyndalehouse.step.core.exceptions.StepInternalException;
 /**
  * Provides a set of installers for installing Bibles, modules, etc e.g. from Crosswire
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 @Singleton

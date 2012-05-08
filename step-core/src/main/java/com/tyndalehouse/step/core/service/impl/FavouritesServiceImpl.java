@@ -61,7 +61,7 @@ import com.tyndalehouse.step.core.service.FavouritesService;
 /**
  * An implementation of the bookmark
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 @Singleton

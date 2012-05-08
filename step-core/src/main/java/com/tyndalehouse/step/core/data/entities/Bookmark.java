@@ -44,7 +44,7 @@ import javax.persistence.ManyToOne;
 /**
  * A user may have multiple bookmarks
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 @Entity

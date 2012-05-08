@@ -75,7 +75,7 @@ import com.tyndalehouse.step.core.utils.AbstractStepGuiceModule;
 /**
  * The module configuration that configures the application via guice
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 @SuppressWarnings("PMD.CouplingBetweenObjects")

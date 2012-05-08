@@ -39,7 +39,7 @@ import static org.apache.commons.lang.StringUtils.split;
 /**
  * A helper class for use during XSL transformations
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 public final class XslHelper {

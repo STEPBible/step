@@ -36,7 +36,7 @@ package com.tyndalehouse.step.core.exceptions;
  * The default exception to be thrown throughout the application when a validation exception has occurred. It
  * is of type {@link StepInternal} so that it does not require explicit catching
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 public class ValidationException extends StepInternalException {

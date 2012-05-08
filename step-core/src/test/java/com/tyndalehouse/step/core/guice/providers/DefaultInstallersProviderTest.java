@@ -41,7 +41,7 @@ import org.junit.Test;
 /**
  * Test properties are loaded properly and construct a installer capable of downloading books off the internet
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 public class DefaultInstallersProviderTest {

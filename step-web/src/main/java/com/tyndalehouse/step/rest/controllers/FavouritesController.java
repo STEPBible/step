@@ -52,7 +52,7 @@ import com.tyndalehouse.step.core.service.FavouritesService;
  * 
  * In this case, we just simply proxy through
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 @Singleton

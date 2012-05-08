@@ -46,7 +46,7 @@ import com.tyndalehouse.step.models.timeline.simile.SimileTimelineTranslatorImpl
  * This module serves to inject data that is specific to the servlet layer. The purpose of it is therefore to
  * abstract away the identity of it being a java web servlet serving the page.
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 public class StepWebModule extends AbstractStepGuiceModule {

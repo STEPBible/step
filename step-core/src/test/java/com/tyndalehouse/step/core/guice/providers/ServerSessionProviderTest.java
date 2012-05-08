@@ -54,7 +54,7 @@ import com.tyndalehouse.step.core.models.ClientSession;
 /**
  * Testing various methods in the server-side session provider
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 @RunWith(MockitoJUnitRunner.class)

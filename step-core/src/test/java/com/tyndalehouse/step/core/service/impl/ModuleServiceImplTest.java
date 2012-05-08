@@ -42,7 +42,7 @@ import org.junit.Test;
 /**
  * A simple test for the module service
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 public class ModuleServiceImplTest {

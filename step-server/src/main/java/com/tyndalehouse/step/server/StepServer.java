@@ -48,7 +48,7 @@ import org.xml.sax.SAXException;
 /**
  * the main class that kicks off the application
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 public final class StepServer {

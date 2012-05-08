@@ -35,7 +35,7 @@ package com.tyndalehouse.step.core.data.entities;
 /**
  * An interface allowing the entity to be keyed by something other than just id
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 public interface KeyedEntity {

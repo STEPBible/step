@@ -45,7 +45,7 @@ import com.tyndalehouse.step.core.models.OsisWrapper;
 /**
  * The service providing access to JSword. All JSword calls should preferably be placed in this service
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 public interface JSwordService {

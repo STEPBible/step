@@ -35,7 +35,7 @@ package com.tyndalehouse.step.core.exceptions;
 /**
  * The default exception to be thrown when a feature is unavailable because authentication is required.
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 public class RequiresLoginException extends ValidationException {

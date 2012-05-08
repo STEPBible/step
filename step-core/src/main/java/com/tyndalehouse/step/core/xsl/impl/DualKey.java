@@ -40,7 +40,7 @@ import static java.lang.String.format;
  * 
  * @param <T> the first part of the key
  * @param <S> the second part of the key
- * @author Chris
+ * @author chrisburrell
  * 
  */
 public class DualKey<T, S> {

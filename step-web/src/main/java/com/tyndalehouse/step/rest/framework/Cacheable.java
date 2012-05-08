@@ -40,7 +40,7 @@ import java.lang.annotation.Target;
 /**
  * An annotation that indicates the results of a particular method can be cached
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 @Retention(RetentionPolicy.RUNTIME)

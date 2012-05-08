@@ -53,7 +53,7 @@ import com.tyndalehouse.step.rest.framework.Cacheable;
 /**
  * The timeline controller retrieves information about past events
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 @Singleton

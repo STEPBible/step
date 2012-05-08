@@ -63,7 +63,7 @@ import com.tyndalehouse.step.core.utils.StepIOUtils;
 /**
  * Loads anything related to the timeline
  * 
- * @author Chris
+ * @author chrisburrell
  * 
  */
 public class TimelineModuleLoader extends AbstractCsvModuleLoader implements ModuleLoader {

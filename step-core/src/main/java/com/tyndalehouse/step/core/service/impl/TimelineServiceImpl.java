@@ -131,7 +131,7 @@ public class TimelineServiceImpl implements TimelineService {
     private List<TimelineEvent> lookupEventsMatchingReference(final String reference) {
         // first get the kjv reference
         final List<ScriptureReference> passageReferences = this.jsword.getPassageReferences(reference,
-                TIMELINE_EVENT);
+                TIMELINE_EVENT, "KJV");
 
         if (passageReferences.isEmpty()) {
             return new ArrayList<TimelineEvent>();

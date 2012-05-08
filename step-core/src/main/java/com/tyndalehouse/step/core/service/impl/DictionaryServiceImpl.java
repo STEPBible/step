@@ -30,66 +30,52 @@
  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
-package com.tyndalehouse.step.core.data.create;
+package com.tyndalehouse.step.core.service.impl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static com.avaje.ebean.Expr.eq;
+import static com.avaje.ebean.Expr.ieq;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import java.util.List;
 
-import com.tyndalehouse.step.core.data.DataDrivenTestExtension;
-import com.tyndalehouse.step.core.data.entities.ScriptureReference;
-import com.tyndalehouse.step.core.service.JSwordService;
-import com.tyndalehouse.step.core.service.impl.JSwordServiceImpl;
+import com.avaje.ebean.EbeanServer;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+import com.tyndalehouse.step.core.data.entities.DictionaryArticle;
+import com.tyndalehouse.step.core.service.DictionaryService;
 
 /**
- * Tests the loading of the geography loader
+ * Service to lookup dictionary articles and content
  * 
  * @author chrisburrell
  * 
  */
-@RunWith(MockitoJUnitRunner.class)
-public class LoaderTests extends DataDrivenTestExtension {
-    @Mock
-    private JSwordService jsword;
+@Singleton
+public class DictionaryServiceImpl implements DictionaryService {
+    private static final String HEADWORD_INSTANCE_FIELD = "headwordInstance";
+    private static final String HEADWORD_FIELD = "headword";
+    private final EbeanServer ebean;
 
     /**
-     * tests the openbible data
+     * sets up the service
+     * 
+     * @param ebean the persistence layer
      */
-    @Test
-    public void testGeographyLoader() {
-        assertEquals(4, new GeographyModuleLoader(getEbean(), this.jsword, "geography.tab").init());
+    @Inject
+    public DictionaryServiceImpl(final EbeanServer ebean) {
+        this.ebean = ebean;
     }
 
-    /**
-     * tests the timeline
-     */
-    @Test
-    public void testTimeline() {
-        assertEquals(4, new TimelineModuleLoader(getEbean(), this.jsword, "").init());
+    @Override
+    public List<DictionaryArticle> searchArticlesByHeadword(final String headword) {
+        return this.ebean.find(DictionaryArticle.class).select("headword, headwordInstance").where()
+                .ieq(HEADWORD_FIELD, headword).findList();
     }
 
-    /**
-     * tests the timeline
-     */
-    @Test
-    public void testHotSpots() {
-        assertEquals(3, new HotSpotModuleLoader(getEbean(), "hotspots.csv").init());
+    @Override
+    public DictionaryArticle lookupArticleByHeadword(final String headword, final int headwordInstance) {
+        return this.ebean.find(DictionaryArticle.class).select("text").where()
+                .and(ieq(HEADWORD_FIELD, headword), eq(HEADWORD_INSTANCE_FIELD, headwordInstance))
+                .findUnique();
     }
 
-    /**
-     * for this one we need a real jsword service because we will test that scripture refs are resolved
-     * correctly.
-     */
-    @Test
-    public void testDictionaryArticles() {
-        final JSwordService realJSword = new JSwordServiceImpl(null);
-        final int count = new DictionaryLoader(getEbean(), realJSword, "dictionary_sample.txt").init();
-        final int srCount = getEbean().find(ScriptureReference.class).findRowCount();
-        assertEquals(4, count);
-        assertTrue(srCount > 10);
-    }
 }

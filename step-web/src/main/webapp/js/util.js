@@ -35,21 +35,21 @@
  * array comparison
  */
 function compare(s, t) {
-	if(s == null || t == null) {
+	if (s == null || t == null) {
 		return t == s;
 	}
-	
-    if (s.length != t.length) { return false; }
-    var a = s.sort(),
-        b = t.sort();
-    for (var i = 0; t[i]; i++) {
-        if (a[i] !== b[i]) { 
-                return false;
-        }
-    }
-    return true;
-};
 
+	if (s.length != t.length) {
+		return false;
+	}
+	var a = s.sort(), b = t.sort();
+	for ( var i = 0; t[i]; i++) {
+		if (a[i] !== b[i]) {
+			return false;
+		}
+	}
+	return true;
+};
 
 /**
  * adds a button next to a specified element
@@ -60,32 +60,28 @@ function compare(s, t) {
  *            the icon to stylise the button
  */
 function addButtonToAutoComplete(textbox, icon) {
-	$( "<button>&nbsp;</button>" ).attr( "tabIndex", -1 )
-	.attr( "title", "Show all Bible versions" )
-	.insertAfter( textbox )
-	.button({
-		icons: {
-			primary: icon
+	$("<button>&nbsp;</button>").attr("tabIndex", -1).attr("title",
+			"Show all Bible versions").insertAfter(textbox).button({
+		icons : {
+			primary : icon
 		},
-		text: false
-	})
-	.removeClass( "ui-corner-all" )
-	.addClass( "ui-corner-right ui-button-icon no-left-border" )
-	.click(function() {
+		text : false
+	}).removeClass("ui-corner-all").addClass(
+			"ui-corner-right ui-button-icon no-left-border").click(function() {
 		// close if already visible
-		if ( textbox.autocomplete( "widget" ).is( ":visible" ) ) {
-			textbox.autocomplete( "close" );
+		if (textbox.autocomplete("widget").is(":visible")) {
+			textbox.autocomplete("close");
 			return;
 		}
 
 		// pass empty string as value to search for, displaying all results
-		textbox.autocomplete( "search", "" );
+		textbox.autocomplete("search", "");
 		textbox.focus();
 	});
 }
 
-function extractLast( term ) {
-	return split( term ).pop();
+function extractLast(term) {
+	return split(term).pop();
 }
 
 /**
@@ -99,50 +95,61 @@ function extractLast( term ) {
  */
 function shortenName(longName, minLength) {
 	var ii = longName.indexOf(' ', minLength);
-	if(ii > 0) {
+	if (ii > 0) {
 		return longName.substring(0, ii) + "...";
 	}
-	
+
 	// unable to shorten
 	return longName;
 }
 
 // some jquery extensions
-(function ( $ ) {
+(function($) {
 	$.extend({
 		/**
-		 * an extension to jquery to do Ajax calls safely, with error handling...
-		 * @param the url
-		 * @param the userFunction to call on success of the query
+		 * an extension to jquery to do Ajax calls safely, with error
+		 * handling...
+		 * 
+		 * @param the
+		 *            url
+		 * @param the
+		 *            userFunction to call on success of the query
 		 */
-	    getSafe: function (url, userFunction){
+		getSafe : function(url, userFunction) {
 			$.get(url, function(data) {
-				if(data && data.errorMessage) {
+				if (data && data.errorMessage) {
 					// handle an error message here
 					$.shout("caught-error-message", data);
-					if(data.operation) {
-						//so we now have an operation to perform before we continue with the user
-						//function if at all... the userFunction if what should be called if we have
-						//succeeded, but here we have no data, so we need to call ourselve recursively
-						$.shout(data.operation.replace(/_/g, "-").toLowerCase(), 
-								{ 	message: data.errorMessage, 
-									callback : function() { $.getSafe(url, userFunction); } 
-								}
-						);
+					if (data.operation) {
+						// so we now have an operation to perform before we
+						// continue with the user
+						// function if at all... the userFunction if what should
+						// be called if we have
+						// succeeded, but here we have no data, so we need to
+						// call ourselve recursively
+						$
+								.shout(data.operation.replace(/_/g, "-")
+										.toLowerCase(), {
+									message : data.errorMessage,
+									callback : function() {
+										$.getSafe(url, userFunction);
+									}
+								});
 					}
 				} else {
 					userFunction(data);
 				}
 			});
-	    }
+		}
 	});
-	
+
 	$.fn.disableSelection = function() {
-	    return $(this).attr('unselectable', 'on')
-	           .css('-moz-user-select', 'none')
-	           .each(function() { 
-	               this.onselectstart = function() { return false; };
-	            });
+		return $(this).attr('unselectable', 'on').css('-moz-user-select',
+				'none').each(function() {
+			this.onselectstart = function() {
+				return false;
+			};
+		});
 	};
 })(jQuery);
 
@@ -150,7 +157,83 @@ function shortenName(longName, minLength) {
  * a short version of endsWith
  */
 String.prototype.endsWith = function(pattern) {
-    var d = this.length - pattern.length;
-    return d >= 0 && this.lastIndexOf(pattern) === d;
+	var d = this.length - pattern.length;
+	return d >= 0 && this.lastIndexOf(pattern) === d;
 };
 
+function getWordAtPoint(elem, x, y) {
+	if (elem.nodeType == elem.TEXT_NODE) {
+		var range = elem.ownerDocument.createRange();
+		range.selectNodeContents(elem);
+		var currentPos = 0;
+		var endPos = range.endOffset;
+		while (currentPos + 1 < endPos) {
+			range.setStart(elem, currentPos);
+			range.setEnd(elem, currentPos + 1);
+			if (range.getBoundingClientRect().left <= x
+					&& range.getBoundingClientRect().right >= x
+					&& range.getBoundingClientRect().top <= y
+					&& range.getBoundingClientRect().bottom >= y) {
+
+					return expandSelection(range);
+			}
+			currentPos += 1;
+		}
+	} else {
+		for ( var i = 0; i < elem.childNodes.length; i++) {
+			var range = elem.childNodes[i].ownerDocument.createRange();
+			range.selectNodeContents(elem.childNodes[i]);
+			if (range.getBoundingClientRect().left <= x
+					&& range.getBoundingClientRect().right >= x
+					&& range.getBoundingClientRect().top <= y
+					&& range.getBoundingClientRect().bottom >= y) {
+				range.detach();
+				
+				var selected = getWordAtPoint(elem.childNodes[i], x, y);
+				if(selected) {
+					return selected;
+				}
+			} else {
+				range.detach();
+			}
+		}
+	}
+	return (null);
+};
+
+
+function expandSelection(range) {
+	if(range.expand) {
+		//chrome comes in here
+		range.expand("word");
+		var ret = range.toString();
+		range.detach();
+		return (ret);
+	} else if (window.getSelection && window.getSelection().modify) {
+		//firefox comes here
+		var sel = window.getSelection();
+		sel.modify("move", "backward", "word");
+		sel.modify("extend", "forward", "word");
+
+		//get text and unselect
+		var text = sel.toString();
+		sel.removeAllRanges();
+		
+		return text;
+	} else if (document.selection && document.selection.type == "Text") {
+		//IE ends up here
+		
+		var range = document.selection.createRange();
+
+		//move to the end of the selection
+		range.moveEnd("word", 1);
+		range.moveStart("word", -1);
+		
+		var text = range.text;
+		
+		if(range.detach) {
+			range.detach();
+		}
+		return text;
+	} 
+}

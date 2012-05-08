@@ -165,6 +165,32 @@
 	Please enter a year: <input type="text" id="scrollToYear" />
 </div>
 
+<!--  The popup that can have lots of helpful information -->
+<span id='lexiconDefinition'>
+	<ul>
+		<span id="lexiconPopupClose">X</span>
+			<select id="selectedPane"
+				title="Select the pane you wish to display links from">
+				<option value="0">Left Pane</option>
+				<option value="1">Right pane</option>
+			</select>
+
+			<li><a href="#origin">Word origin</a></li>
+		<li><a href="#grammar">Grammar</a></li>
+		<li><a href="#dictionaries">Context</a></li>
+	</ul>
+
+	<div id="origin">
+		<p></p>
+	</div>
+	<div id="grammar">
+		<p></p>
+	</div>
+	<div id="dictionaries">
+		<p></p>
+	</div>
+</span>
+
 <div id="previewReference" style="display: none"><div id="previewBar" style="display: none;">
 	<a href="#" id="previewClose">Close this popup</a>
 	<a href="#" id="previewRight">See passage on the right pane</a>

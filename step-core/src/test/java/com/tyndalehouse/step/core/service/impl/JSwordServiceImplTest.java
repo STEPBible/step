@@ -141,7 +141,7 @@ public class JSwordServiceImplTest {
     @Test
     public void testSingleReference() {
         final JSwordServiceImpl jsi = new JSwordServiceImpl(null);
-        final List<ScriptureReference> refs = jsi.getPassageReferences("Gen.1.1", TIMELINE_EVENT);
+        final List<ScriptureReference> refs = jsi.getPassageReferences("Gen.1.1", TIMELINE_EVENT, "KJV");
 
         assertEquals(refs.size(), 1);
         assertEquals(4, refs.get(0).getStartVerseId());
@@ -154,7 +154,8 @@ public class JSwordServiceImplTest {
     @Test
     public void testMultipleReference() {
         final JSwordServiceImpl jsi = new JSwordServiceImpl(null);
-        final List<ScriptureReference> refs = jsi.getPassageReferences("Gen.1.1;Gen.1.3", TIMELINE_EVENT);
+        final List<ScriptureReference> refs = jsi.getPassageReferences("Gen.1.1;Gen.1.3", TIMELINE_EVENT,
+                "KJV");
 
         assertEquals(2, refs.size());
         assertEquals(4, refs.get(0).getStartVerseId());
@@ -169,7 +170,8 @@ public class JSwordServiceImplTest {
     @Test
     public void testMultiplePassages() {
         final JSwordServiceImpl jsi = new JSwordServiceImpl(null);
-        final List<ScriptureReference> refs = jsi.getPassageReferences("Gen.1.1-2;Gen.1.4-5", TIMELINE_EVENT);
+        final List<ScriptureReference> refs = jsi.getPassageReferences("Gen.1.1-2;Gen.1.4-5", TIMELINE_EVENT,
+                "KJV");
 
         assertEquals(refs.size(), 2);
         assertEquals(4, refs.get(0).getStartVerseId());
@@ -188,7 +190,7 @@ public class JSwordServiceImplTest {
         // TODO change spaces between 1 and Kgs! This doesn't seem to work...
 
         // final List<ScriptureReference> refs = getPassageReferences(target, "Josh 12:24; Sng 6:4");
-        final List<ScriptureReference> refs = jsi.getPassageReferences("Song 6:4", GEO_PLACE);
+        final List<ScriptureReference> refs = jsi.getPassageReferences("Song 6:4", GEO_PLACE, "KJV");
         assertEquals(refs.size(), 1);
     }
 

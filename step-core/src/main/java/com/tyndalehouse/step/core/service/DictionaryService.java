@@ -30,66 +30,34 @@
  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
-package com.tyndalehouse.step.core.data.create;
+package com.tyndalehouse.step.core.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import java.util.List;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
-
-import com.tyndalehouse.step.core.data.DataDrivenTestExtension;
-import com.tyndalehouse.step.core.data.entities.ScriptureReference;
-import com.tyndalehouse.step.core.service.JSwordService;
-import com.tyndalehouse.step.core.service.impl.JSwordServiceImpl;
+import com.tyndalehouse.step.core.data.entities.DictionaryArticle;
 
 /**
- * Tests the loading of the geography loader
+ * Service to lookup dictionary articles and content
  * 
  * @author chrisburrell
  * 
  */
-@RunWith(MockitoJUnitRunner.class)
-public class LoaderTests extends DataDrivenTestExtension {
-    @Mock
-    private JSwordService jsword;
+public interface DictionaryService {
 
     /**
-     * tests the openbible data
+     * Searches for all articles with the headword
+     * 
+     * @param headword the headword
+     * @return the list of matching articles
      */
-    @Test
-    public void testGeographyLoader() {
-        assertEquals(4, new GeographyModuleLoader(getEbean(), this.jsword, "geography.tab").init());
-    }
+    List<DictionaryArticle> searchArticlesByHeadword(String headword);
 
     /**
-     * tests the timeline
+     * looks up a specific headword
+     * 
+     * @param headword
+     * @param headwordInstance
+     * @return the dictionary if found
      */
-    @Test
-    public void testTimeline() {
-        assertEquals(4, new TimelineModuleLoader(getEbean(), this.jsword, "").init());
-    }
-
-    /**
-     * tests the timeline
-     */
-    @Test
-    public void testHotSpots() {
-        assertEquals(3, new HotSpotModuleLoader(getEbean(), "hotspots.csv").init());
-    }
-
-    /**
-     * for this one we need a real jsword service because we will test that scripture refs are resolved
-     * correctly.
-     */
-    @Test
-    public void testDictionaryArticles() {
-        final JSwordService realJSword = new JSwordServiceImpl(null);
-        final int count = new DictionaryLoader(getEbean(), realJSword, "dictionary_sample.txt").init();
-        final int srCount = getEbean().find(ScriptureReference.class).findRowCount();
-        assertEquals(4, count);
-        assertTrue(srCount > 10);
-    }
+    DictionaryArticle lookupArticleByHeadword(String headword, int headwordInstance);
 }

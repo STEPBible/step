@@ -60,6 +60,15 @@ function Passage(passageContainer, rawServerVersions, passageId) {
 	this.initVersionsTextBox(rawServerVersions);
 	this.initReferenceTextBox();
 	
+	//this is so that when we click a word, it highlights it
+	this.passage.click(function(e) {
+		var clickedWord = getWordAtPoint(this, e.pageX, e.pageY);
+		var lookup = clickedWord.replace(/[ ,.;:"]/g, "");
+		
+		$.shout("show-all-strong-morphs", { displayedWord: lookup } );
+		
+	});
+	
 	
 	
 	// register to listen for events that click a word/phrase:
@@ -124,6 +133,7 @@ function Passage(passageContainer, rawServerVersions, passageId) {
 	});
 	
 };
+
 
 
 /**
@@ -362,17 +372,18 @@ Passage.prototype.getSelectedInterlinearVersion = function() {
  *            the references of all strongs and morphs asked for
  */
 Passage.prototype.higlightStrongs = function(strongMorphReference) {
-	var references = strongMorphReference.split(' ');
+	if(strongMorphReference.strong == null) {
+		return;
+	}
+	
+	var references = strongMorphReference.strong.split();
 	
 	// reset all spans that are underlined:
 	$(".verse span", this.container).css("text-decoration", "none");
 	$("span.text", this.container).css("text-decoration", "none");
 	
 	for(var ii = 0; ii < references.length; ii++) {
-		if(references[ii].startsWith("strong:")) {
 			this.highlightStrong(references[ii]);
-		} 
-		// we ignore everything else
 	}
 };
 

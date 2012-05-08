@@ -30,66 +30,60 @@
  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
-package com.tyndalehouse.step.core.data.create;
+package com.tyndalehouse.step.rest.controllers;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import java.util.List;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.tyndalehouse.step.core.data.DataDrivenTestExtension;
-import com.tyndalehouse.step.core.data.entities.ScriptureReference;
-import com.tyndalehouse.step.core.service.JSwordService;
-import com.tyndalehouse.step.core.service.impl.JSwordServiceImpl;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+import com.tyndalehouse.step.core.data.entities.DictionaryArticle;
+import com.tyndalehouse.step.core.service.DictionaryService;
+import com.tyndalehouse.step.rest.framework.Cacheable;
 
 /**
- * Tests the loading of the geography loader
+ * The controller for retrieving information on the bible or texts from the bible
  * 
- * @author chrisburrell
+ * @author Chris
  * 
  */
-@RunWith(MockitoJUnitRunner.class)
-public class LoaderTests extends DataDrivenTestExtension {
-    @Mock
-    private JSwordService jsword;
+@Singleton
+public class DictionaryController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(DictionaryController.class);
+    private final DictionaryService dictionary;
 
     /**
-     * tests the openbible data
+     * creates the controller giving access to bible information
+     * 
+     * @param dictionary the dictionary serivce that looks up and searches articles
      */
-    @Test
-    public void testGeographyLoader() {
-        assertEquals(4, new GeographyModuleLoader(getEbean(), this.jsword, "geography.tab").init());
+    @Inject
+    public DictionaryController(final DictionaryService dictionary) {
+        this.dictionary = dictionary;
+        LOGGER.debug("Created Dictionary Controller");
     }
 
     /**
-     * tests the timeline
+     * 
+     * @param headword the headword to lookup
+     * @param headwordInstance the number of the article to retrieve
+     * @return the list of matching articles
      */
-    @Test
-    public void testTimeline() {
-        assertEquals(4, new TimelineModuleLoader(getEbean(), this.jsword, "").init());
+    @Cacheable(true)
+    public DictionaryArticle lookupDictionaryByHeadword(final String headword, final String headwordInstance) {
+        final int headwordI = Integer.parseInt(headwordInstance);
+        return this.dictionary.lookupArticleByHeadword(headword, headwordI);
     }
 
     /**
-     * tests the timeline
+     * Searches all article matching the headword.
+     * 
+     * @param headword the article name
+     * @return the list of articles
      */
-    @Test
-    public void testHotSpots() {
-        assertEquals(3, new HotSpotModuleLoader(getEbean(), "hotspots.csv").init());
-    }
-
-    /**
-     * for this one we need a real jsword service because we will test that scripture refs are resolved
-     * correctly.
-     */
-    @Test
-    public void testDictionaryArticles() {
-        final JSwordService realJSword = new JSwordServiceImpl(null);
-        final int count = new DictionaryLoader(getEbean(), realJSword, "dictionary_sample.txt").init();
-        final int srCount = getEbean().find(ScriptureReference.class).findRowCount();
-        assertEquals(4, count);
-        assertTrue(srCount > 10);
+    public List<DictionaryArticle> searchDictionaryByHeadword(final String headword) {
+        return this.dictionary.searchArticlesByHeadword(headword);
     }
 }

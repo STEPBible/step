@@ -88,7 +88,8 @@ public class TimelineServiceImplTest extends DataDrivenTestExtension {
         final List<ScriptureReference> testReferences = saveEventWithVerses(TIMELINE_EVENT, 5, 10);
 
         // ensure we return the references that we've set up
-        when(this.jsword.getPassageReferences(anyString(), any(TargetType.class))).thenReturn(testReferences);
+        when(this.jsword.getPassageReferences(anyString(), any(TargetType.class), anyString())).thenReturn(
+                testReferences);
 
         final TimelineEventsAndDate eventsForPassage = this.ts.getEventsFromScripture("");
 
@@ -106,7 +107,8 @@ public class TimelineServiceImplTest extends DataDrivenTestExtension {
         saveEventWithVerses(TargetType.TIMELINE_EVENT, 11, 13);
 
         // ensure we return the references that we've set up
-        when(this.jsword.getPassageReferences(anyString(), any(TargetType.class))).thenReturn(testReferences);
+        when(this.jsword.getPassageReferences(anyString(), any(TargetType.class), anyString())).thenReturn(
+                testReferences);
 
         final TimelineEventsAndDate eventsForPassage = this.ts.getEventsFromScripture("");
 
@@ -122,7 +124,8 @@ public class TimelineServiceImplTest extends DataDrivenTestExtension {
         final List<ScriptureReference> testReferences = saveEventWithVerses(TargetType.GEO_PLACE, 5, 10);
 
         // ensure we return the references that we've set up
-        when(this.jsword.getPassageReferences(anyString(), any(TargetType.class))).thenReturn(testReferences);
+        when(this.jsword.getPassageReferences(anyString(), any(TargetType.class), anyString())).thenReturn(
+                testReferences);
 
         final TimelineEventsAndDate eventsForPassage = this.ts.getEventsFromScripture("");
 

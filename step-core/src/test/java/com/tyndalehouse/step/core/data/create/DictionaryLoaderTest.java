@@ -33,8 +33,12 @@
 package com.tyndalehouse.step.core.data.create;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 import org.junit.Test;
+
+import com.tyndalehouse.step.core.data.entities.DictionaryArticle;
+import com.tyndalehouse.step.core.data.entities.reference.SourceType;
 
 /**
  * testing the loader mechanism
@@ -48,7 +52,95 @@ public class DictionaryLoaderTest {
      */
     @Test
     public void testGetFieldContent() {
-        assertEquals("hi you", new DictionaryLoader(null, null, null).getFieldContent("@SOME_FIELD_NAME",
+        assertEquals("hi you", new DictionaryLoader(null, null, null).parseFieldContent("@SOME_FIELD_NAME",
                 "SOME_FIELD_NAME: hi you"));
+    }
+
+    /**
+     * Tests various different types of resolving the headword instance
+     */
+    @Test
+    public void testGetFieldHeadwordInstance() {
+        final DictionaryLoader dl = new DictionaryLoader(null, null, null);
+        assertEquals(1, dl.parseHeadwordInstance("SomeWord"));
+        assertEquals(1, dl.parseHeadwordInstance("SomeWord ()"));
+        assertEquals(1, dl.parseHeadwordInstance("SomeWord )"));
+        assertEquals(1, dl.parseHeadwordInstance("SomeWord )("));
+        assertEquals(1, dl.parseHeadwordInstance("SomeWord (d)"));
+        assertEquals(2, dl.parseHeadwordInstance("SomeWord (2)"));
+    }
+
+    /**
+     * tests that parsing an raw article makes it into html
+     */
+    @Test
+    public void testParseArticle() {
+        final DictionaryLoader dl = new DictionaryLoader(null, null, null);
+        final DictionaryArticle article = new DictionaryArticle();
+        article.setSource(SourceType.EASTON);
+
+        assertEqualsArticleText("", "", article, dl);
+        assertEqualsArticleText("", " ", article, dl);
+        assertEqualsArticleText("text", "text", article, dl);
+
+        assertEqualsArticleText("and <a onclick='goToArticle(\"EASTON\", \"Moses\", \"\")'>Moses</a>",
+                "and [[Moses]]", article, dl);
+
+        assertEqualsArticleText(
+                "and <a onclick='goToArticle(\"EASTON\", \"Moses\", \"MOSES (1)\")'>Moses</a>",
+                "and [[Moses|MOSES (1)]]", article, dl);
+
+        assertEqualsArticleText("and <a onclick='viewPassage(this, \"Deut.32.32\")'>Deut 32:32</a>",
+                "and [[Deut 32:32|Deut.32.32]]", article, dl);
+
+        assertEqualsArticleText("", "", article, dl);
+        assertEqualsArticleText("and <a onclick='goToArticle(\"EASTON\", \"Moses\", \"\")'>Moses</a> "
+                + "see <a onclick='viewPassage(this, \"Deut.32.32\")'>Deut 32:32</a>",
+                "and [[Moses]] see [[Deut 32:32|Deut.32.32]]", article, dl);
+
+        assertEqualsArticleText("<a onclick='goToArticle(\"EASTON\", \"Amram\", \"AMRAM (1)\")'>Amram</a>",
+                "[[Amram|AMRAM (1)]]", article, dl);
+    }
+
+    /**
+     * Tests multiple expressions
+     */
+    @Test
+    public void testMultipleExpressions() {
+        final DictionaryLoader dl = new DictionaryLoader(null, null, null);
+        final DictionaryArticle article = new DictionaryArticle();
+        article.setSource(SourceType.EASTON);
+
+        final String s = "The eldest son of [[Amram|AMRAM (1)]]"
+                + " and [[Jochebed]], a [[daughter]] of [[Levi|LEVI (1)]] ([[Exod.6.20|Exod 6:20]])";
+        dl.parseArticleText(article, new StringBuilder(s));
+
+        System.out.println(article.getText());
+        assertFalse(article.getText().contains("[["));
+    }
+
+    /**
+     * helper method
+     * 
+     * @param expected the expected value
+     * @param input the input to the est
+     * @param article the article that contains the source of the article
+     * @param dl the loader under test
+     */
+    private void assertEqualsArticleText(final String expected, final String input,
+            final DictionaryArticle article, final DictionaryLoader dl) {
+        dl.parseArticleText(article, toS(input));
+        assertEquals(expected, article.getText());
+
+    }
+
+    /**
+     * simple helper that shortens the tests
+     * 
+     * @param s a string
+     * @return the string builder with the string contents
+     */
+    private StringBuilder toS(final String s) {
+        return new StringBuilder(s);
     }
 }

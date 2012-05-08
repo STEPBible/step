@@ -40,7 +40,7 @@ function LexiconDefinition() {
 	//listen for particular types of events and call the prototype functions
 	this.getPopup().hear("show-all-strong-morphs", function(selfElement, data) {
 		self.showDef(data);
-	} );
+	});
 }
 
 LexiconDefinition.prototype.getPopup = function() {
@@ -50,16 +50,18 @@ LexiconDefinition.prototype.getPopup = function() {
 	}
 	
 	//create the popup container
-	$("body").append("<span id='lexiconDefinition'><ul><span id='lexiconPopupClose'>X</span></ul></span>");
 	this.popup = $("#lexiconDefinition");
 	this.popup.tabs().draggable();
 	$('#lexiconPopupClose').click(function() {
 		$('#lexiconDefinition').hide();
 	});
+	
+	
+	
 	return this.popup;
 };
 
-LexiconDefinition.prototype.showDef = function(s) {
+LexiconDefinition.prototype.showDef = function(data) {
 	var self = this;
 	var popup = self.getPopup();
 	
@@ -67,30 +69,62 @@ LexiconDefinition.prototype.showDef = function(s) {
 	popup.tabs("destroy");
 	popup.tabs();
 	
-	var tabs = s.split(" ");
-	$(tabs).each(function() {
-		popup.tabs("add", MODULE_GET_DEFINITION + this, self.getShortKey(this));
-	});
-
+	var displayedWord = data.displayedWord;
+	var strong = data.strong;
+	var morph = data.morph;
+	
+	//show dictionary elements
+	this.showStrong(data.strong);
+	this.showMorph(data.morph);
+	this.showDictionaryTabs(data.displayedWord);
+	
 	popup.tabs("option", {
-		collapsible: true,
+		collapsible: false,
 		selected: 0
 	});
 	
 	//TODO this is a workaround because of bug http://bugs.jqueryui.com/ticket/5069
-	popup.tabs("select", 1);
-	popup.tabs("select", 0);
+//	popup.tabs("select", 1);
+//	popup.tabs("select", 0);
 	
-	//if left position is negative, then we assume it's off screen and need position
-	if(popup.css("left")[0] == '-') {
-		//position in the middle
-		popup.position({
-			of: $("body"),
-			my: "right top",
-			at: "right top",
-			collision: "fit flip",
-		});
+	this.reposition();
+};
+
+LexiconDefinition.prototype.showStrong = function(strong) {
+	if(strong) {
+//		String strongs = strong.split(" ");
+//		$.getSafe(MODULE_GET_DEFINITION + strong, function() {
+			
+//		});		
 	}
+};
+
+LexiconDefinition.prototype.showMorph = function(morph) {
+	if(morph) {
+//		String strongs = strong.split(" ");
+//		$.getSafe(MODULE_GET_DEFINITION + strong, function() {
+			
+//		});		
+	}
+};
+
+LexiconDefinition.prototype.showDictionaryTabs = function(displayedWord) {
+	var self = this;
+	$.getSafe(DICTIONARY_SEARCH_BY_HEADWORD + displayedWord, function(data) {
+//		$("#tab-1").html(data.text);
+//		var tabTitle = data.source;
+//		self.getPopup().tabs( "add", "#tab-1", tabTitle);
+		
+		//make a ul list
+		var html = "<h3>Word context</h3><ul>";
+		
+		$.each(data, function(index, item) {
+			html += "<li><a href=\"#\" onclick='showArticle(\""+ item.headword + "\", \"" + item.headwordInstance+ "\")'>" + item.headword + "</a></li>";
+		});
+		
+		html += "</ul><h3>Verse context</h3>";
+		$("#dictionaries").html(html);
+	});
 };
 
 LexiconDefinition.prototype.getShortKey = function(k) {
@@ -100,3 +134,16 @@ LexiconDefinition.prototype.getShortKey = function(k) {
 	}
 	return subKey;
 };
+
+LexiconDefinition.prototype.reposition = function() {
+	//if left position is negative, then we assume it's off screen and need position
+	if(this.getPopup().css("left")[0] == '-') {
+		//position in the middle
+		this.getPopup().position({
+			of: $("body"),
+			my: "right top",
+			at: "right top",
+			collision: "fit flip",
+		});
+	}
+}

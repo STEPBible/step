@@ -130,10 +130,12 @@ public interface JSwordService {
     /**
      * 
      * @param references a list of references
-     * @param targetType TODO
+     * @param targetType the type of reference this is attributed to
+     * @param version the version name is used to select the correct versification
      * @return the list of references strongly-typed
      */
-    List<ScriptureReference> getPassageReferences(final String references, TargetType targetType);
+    List<ScriptureReference> getPassageReferences(final String references, TargetType targetType,
+            String version);
 
     /**
      * returns a list of matching names or references in a particular book

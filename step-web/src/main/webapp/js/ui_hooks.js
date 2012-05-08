@@ -56,6 +56,9 @@ BIBLE_GET_BIBLE_BOOK_NAMES = 			STEP_SERVER_BASE_URL + "bible/getBibleBookNames/
 BIBLE_GET_NEXT_CHAPTER =				STEP_SERVER_BASE_URL + "bible/getNextChapter/";
 BIBLE_GET_PREVIOUS_CHAPTER = 			STEP_SERVER_BASE_URL + "bible/getPreviousChapter/";
 
+DICTIONARY_GET_BY_HEADWORD = 			STEP_SERVER_BASE_URL + "dictionary/lookupDictionaryByHeadword/";
+DICTIONARY_SEARCH_BY_HEADWORD = 		STEP_SERVER_BASE_URL + "dictionary/searchDictionaryByHeadword/"
+
 MODULE_GET_ALL_MODULES = 				STEP_SERVER_BASE_URL + "module/getAllModules/";
 MODULE_GET_ALL_INSTALLABLE_MODULES = 	STEP_SERVER_BASE_URL + "module/getAllInstallableModules/";
 MODULE_GET_DEFINITION = 				STEP_SERVER_BASE_URL + "module/getDefinition/";
@@ -68,7 +71,6 @@ TIMELINE_GET_EVENTS = 					STEP_SERVER_BASE_URL + "timeline/getEvents/";
 TIMELINE_GET_EVENTS_IN_PERIOD = 		STEP_SERVER_BASE_URL + "timeline/getEventsInPeriod/";
 TIMELINE_GET_EVENTS_FROM_REFERENCE = 	STEP_SERVER_BASE_URL + "timeline/getEventsFromReference/";
 TIMELINE_GET_CONFIGURATION = 			STEP_SERVER_BASE_URL + "timeline/getTimelineConfiguration";
-
 
 USER_LOGIN = 							STEP_SERVER_BASE_URL + "user/login/";
 USER_LOGOUT = 							STEP_SERVER_BASE_URL + "user/logout/";
@@ -175,11 +177,14 @@ function showInterlinearChoices(menuItem) {
  * @param strongMorphs all the strongs and morphs associated with this "word"
  */
 function showDef(source) {
-	var strong = $(source).attr("strong");
-	var morph = $(source).attr("morph");
+	var s = $(source);
+	
+	var strong = s.attr("strong");
+	var morph = s.attr("morph");
+	
 	
 	var strongMorph = strong + " " + morph;
-	$.shout("show-all-strong-morphs", strongMorph);
+	$.shout("show-all-strong-morphs", { strong: strong, morph: morph});
 };
 
 /**
@@ -208,6 +213,15 @@ function showMorphOrStrong(tag, sourceElement) {
 	//need to find what event is coming in, to get the clicked element and pass that down
 	$("#lexiconDefinition span:contains(" + tag + ")").parent().click();	
 };
+
+function showArticle(headword, instance) {
+	var passageId = $("#selectedPane").val();
+	
+	$.getSafe(DICTIONARY_GET_BY_HEADWORD + headword + "/" + instance, function(data) {
+		//TODO finish this off...
+		$(".passageContainer[passage-id = " + passageId + "]").html(data.text);
+	});
+}
 
 function showAbout() {
 	//show popup for About box

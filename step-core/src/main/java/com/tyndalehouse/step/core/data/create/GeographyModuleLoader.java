@@ -142,8 +142,10 @@ public class GeographyModuleLoader implements ModuleLoader {
                 gp.setEsvName(geoFields[PLACE_NAME_FIELD]);
                 gp.setRoot(geoFields[ROOT_FIELD]);
                 setCoordinates(gp, geoFields[LATITUDE_FIELD], geoFields[LONGITUDE_FIELD]);
-                final List<ScriptureReference> passageReferences = this.jsword.getPassageReferences(
-                        geoFields[SCRIPTURE_FIELD].replace(',', ';').replace("Sng", "Song"), GEO_PLACE);
+                final List<ScriptureReference> passageReferences = this.jsword
+                        .getPassageReferences(
+                                geoFields[SCRIPTURE_FIELD].replace(',', ';').replace("Sng", "Song"),
+                                GEO_PLACE, "KJV");
 
                 gp.setReferences(passageReferences);
                 gp.setComment(geoFields[COMMENT_FIELD]);

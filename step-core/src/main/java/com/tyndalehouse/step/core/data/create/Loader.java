@@ -50,6 +50,7 @@ public class Loader {
     private final EbeanServer ebean;
     private final GeographyModuleLoader geoModuleLoader;
     private final HotSpotModuleLoader hotSpotModuleLoader;
+    private final DictionaryLoader dictionaryLoader;
 
     /**
      * The loader is given a connection source to load the data
@@ -61,11 +62,13 @@ public class Loader {
      */
     @Inject
     public Loader(final EbeanServer ebean, final TimelineModuleLoader timelineModuleLoader,
-            final GeographyModuleLoader geoModuleLoader, final HotSpotModuleLoader hotSpotModuleLoader) {
+            final GeographyModuleLoader geoModuleLoader, final HotSpotModuleLoader hotSpotModuleLoader,
+            final DictionaryLoader dictionaryLoader) {
         this.ebean = ebean;
         this.timelineModuleLoader = timelineModuleLoader;
         this.geoModuleLoader = geoModuleLoader;
         this.hotSpotModuleLoader = hotSpotModuleLoader;
+        this.dictionaryLoader = dictionaryLoader;
     }
 
     /**
@@ -86,7 +89,7 @@ public class Loader {
             this.hotSpotModuleLoader.init();
             this.timelineModuleLoader.init();
             this.geoModuleLoader.init();
-            // this.peopleLoader.init();
+            this.dictionaryLoader.init();
             this.ebean.commitTransaction();
         } finally {
             this.ebean.endTransaction();

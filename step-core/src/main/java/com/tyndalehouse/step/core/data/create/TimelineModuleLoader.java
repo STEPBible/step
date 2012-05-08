@@ -140,7 +140,7 @@ public class TimelineModuleLoader extends AbstractCsvModuleLoader implements Mod
                 }
                 // finally add any scripture reference required
                 final List<ScriptureReference> passageReferences = this.jsword.getPassageReferences(
-                        data.getData(ii, "Refs"), TIMELINE_EVENT);
+                        data.getData(ii, "Refs"), TIMELINE_EVENT, "KJV");
 
                 event.setReferences(passageReferences);
 

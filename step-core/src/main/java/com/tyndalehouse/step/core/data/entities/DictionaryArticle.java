@@ -57,8 +57,8 @@ public class DictionaryArticle implements Serializable {
     @Id
     @GeneratedValue
     private Integer id;
-
     private String headword;
+    private int headwordInstance;
     private char clazz;
     private String status;
     private SourceType source;
@@ -164,5 +164,19 @@ public class DictionaryArticle implements Serializable {
      */
     public void setId(final Integer id) {
         this.id = id;
+    }
+
+    /**
+     * @return the headwordInstance
+     */
+    public int getHeadwordInstance() {
+        return this.headwordInstance;
+    }
+
+    /**
+     * @param headwordInstance the headwordInstance to set
+     */
+    public void setHeadwordInstance(final int headwordInstance) {
+        this.headwordInstance = headwordInstance;
     }
 }

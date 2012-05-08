@@ -64,6 +64,7 @@ import org.crosswire.jsword.book.BookCategory;
 import org.crosswire.jsword.book.BookData;
 import org.crosswire.jsword.book.BookException;
 import org.crosswire.jsword.book.BookFilter;
+import org.crosswire.jsword.book.BookMetaData;
 import org.crosswire.jsword.book.Books;
 import org.crosswire.jsword.book.FeatureType;
 import org.crosswire.jsword.book.install.InstallException;
@@ -564,7 +565,8 @@ public class JSwordServiceImpl implements JSwordService {
     }
 
     @Override
-    public List<ScriptureReference> getPassageReferences(final String references, final TargetType targetType) {
+    public List<ScriptureReference> getPassageReferences(final String references,
+            final TargetType targetType, final String version) {
         final List<ScriptureReference> refs = new ArrayList<ScriptureReference>();
 
         if (isNotBlank(references)) {
@@ -572,11 +574,11 @@ public class JSwordServiceImpl implements JSwordService {
             try {
                 final PassageKeyFactory keyFactory = PassageKeyFactory.instance();
 
-                // TODO: Should probably base this on the correct versification for the passages, rather than
-                // default to KJV
+                final String versification = (String) Books.installed().getBook(version).getBookMetaData()
+                        .getProperty(BookMetaData.KEY_VERSIFICATION);
+                final Versification v11n = Versifications.instance().getVersification(versification);
 
-                final RocketPassage rp = (RocketPassage) keyFactory.getKey(Versifications.instance()
-                        .getVersification(Versifications.DEFAULT_V11N), references);
+                final RocketPassage rp = (RocketPassage) keyFactory.getKey(v11n, references);
                 for (int ii = 0; ii < rp.countRanges(RestrictionType.NONE); ii++) {
                     final VerseRange vr = rp.getRangeAt(ii, RestrictionType.NONE);
                     final Verse start = vr.getStart();
@@ -594,7 +596,7 @@ public class JSwordServiceImpl implements JSwordService {
                     refs.add(sr);
                 }
             } catch (final NoSuchVerseException nsve) {
-                throw new StepInternalException(nsve.getMessage(), nsve);
+                throw new StepInternalException("Verse " + references + " does not exist", nsve);
             } catch (final NoSuchKeyException e) {
                 throw new StepInternalException(e.getMessage(), e);
             }

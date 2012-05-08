@@ -42,6 +42,7 @@ import org.slf4j.LoggerFactory;
 
 import com.avaje.ebean.EbeanServer;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.tyndalehouse.step.core.data.entities.GeoPlace;
 import com.tyndalehouse.step.core.data.entities.ScriptureReference;
 import com.tyndalehouse.step.core.service.GeographyService;
@@ -53,6 +54,7 @@ import com.tyndalehouse.step.core.service.JSwordService;
  * @author cjburrell
  * 
  */
+@Singleton
 public class GeographyServiceImpl implements GeographyService {
     private static final Logger LOG = LoggerFactory.getLogger(GeographyServiceImpl.class);
     private final EbeanServer ebean;
@@ -74,7 +76,7 @@ public class GeographyServiceImpl implements GeographyService {
     public List<GeoPlace> getPlaces(final String reference) {
         LOG.debug("Returning places for reference [{}]", reference);
         final List<ScriptureReference> passageReferences = this.jsword.getPassageReferences(reference,
-                GEO_PLACE);
+                GEO_PLACE, "KJV");
         final List<GeoPlace> placesInScope = new ArrayList<GeoPlace>();
 
         final String rawQuery = "t0.id in (select geo_place_id from scripture_reference "

@@ -42,6 +42,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
 import com.tyndalehouse.step.core.models.BibleVersion;
+import com.tyndalehouse.step.core.models.Definition;
 import com.tyndalehouse.step.core.service.ModuleService;
 import com.tyndalehouse.step.rest.framework.Cacheable;
 
@@ -91,6 +92,11 @@ public class ModuleController {
     public String getDefinition(final String reference) {
         notEmpty(reference, "A reference must be provided to obtain a definition");
         LOGGER.debug("Getting definition for {}", reference);
-        return this.moduleDefintions.getDefinition(reference).getExplanation();
+        final Definition definition = this.moduleDefintions.getDefinition(reference);
+
+        if (definition == null) {
+            return "";
+        }
+        return definition.getExplanation();
     }
 }

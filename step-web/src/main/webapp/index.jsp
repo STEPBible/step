@@ -177,11 +177,9 @@
 
 			<li>
 				<a href="#origin">Original Word</a>
-				<a href="#" 
-				title="This tab is only available when the chosen version supports the Vocabulary or Grammar features. Look for the 'V' and 'G' markers in the Bible versions dropdown." 
-				class="ui-icon-info">
+				
 			</li>
-		<li><a href="#dictionaries">Context</a></li>
+			<li><a href="#dictionaries">Context</a></li>
 	</ul>
 
 	<div id="origin">

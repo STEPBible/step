@@ -317,11 +317,15 @@ body {
 	left: -1000px;
 }
 
-#lexiconPopupClose, lexiconPopupClose {
+#lexiconPopupClose {
 	float: right; 
 	padding-top: 4px; 
 	padding-right: 4px;
 	cursor: pointer;
+}
+
+#selectedPane {
+	float: right;
 }
 /**************************/
 /* LOGIN POPUP            */

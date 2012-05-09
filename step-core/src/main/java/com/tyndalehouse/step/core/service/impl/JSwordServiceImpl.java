@@ -102,6 +102,7 @@ import com.tyndalehouse.step.core.xsl.XslConversionType;
  */
 @Singleton
 public class JSwordServiceImpl implements JSwordService {
+    private static final String CURRENT_BIBLE_INSTALL_JOB = "Installing book: %s";
     private static final String OSIS_CHAPTER_FORMAT = "%s.%d";
     private static final String OSIS_CHAPTER_VERSE_FORMAT = "%s.%s.%d";
     private static final String ANCIENT_GREEK = "grc";
@@ -518,7 +519,6 @@ public class JSwordServiceImpl implements JSwordService {
                         // but go round the loop to see if more options are available
                         continue;
                     }
-                    return;
                 }
             }
             // if we get here, then we were unable to install the book
@@ -543,7 +543,7 @@ public class JSwordServiceImpl implements JSwordService {
         final Set<Progress> jswordJobs = JobManager.getJobs();
         // not yet installed (or at least wasn't on the lines above, so check job list
         for (final Progress p : jswordJobs) {
-            final String expectedJobName = "Installing book: " + bookName;
+            final String expectedJobName = format(CURRENT_BIBLE_INSTALL_JOB, bookName);
             if (expectedJobName.equals(p.getJobName())) {
                 if (p.isFinished()) {
                     return 1;

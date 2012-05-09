@@ -83,12 +83,14 @@ public class TestData {
         this.userService = userService;
         this.numCryptoIterations = numCryptoIterations;
         this.jsword = jsword;
+
         final User u = getUser();
         createBookmarks(u);
         createHistory(u);
-        loader.init();
 
         loadDefaultJSwordModules(coreModules);
+
+        loader.init();
     }
 
     /**
@@ -98,6 +100,7 @@ public class TestData {
      */
     private void loadDefaultJSwordModules(final String coreModules) {
         final String[] modules = StringUtils.split(coreModules, ",");
+
         for (final String m : modules) {
             if (!this.jsword.isInstalled(m)) {
                 this.jsword.installBook(m);

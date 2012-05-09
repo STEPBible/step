@@ -146,7 +146,7 @@ Passage.prototype.refreshVersionsTextBox = function(rawServerVersions) {
 		var features = "";
 		// add to Strongs if applicable, and therefore interlinear
 		if(item.hasStrongs) {
-			features += " " + "<span class='versionFeature strongsFeature' title='Supports Strongs concordance'>S</span>";
+			features += " " + "<span class='versionFeature strongsFeature' title='Supports Strongs concordance'>V</span>";
 			features += " " + "<span class='versionFeature interlinearFeature' title='Supports interlinear feature'>I</span>";
 		}
 

@@ -37,6 +37,8 @@ import org.slf4j.LoggerFactory;
 
 import com.avaje.ebean.EbeanServer;
 import com.google.inject.Inject;
+import com.tyndalehouse.step.core.exceptions.StepInternalException;
+import com.tyndalehouse.step.core.service.JSwordService;
 
 /**
  * The object that will be responsible for loading all the data into a database
@@ -45,25 +47,31 @@ import com.google.inject.Inject;
  * 
  */
 public class Loader {
+    private static final int INSTALL_WAITING = 1000;
+    private static final int INSTALL_MAX_WAITING = INSTALL_WAITING * 60;
+    private static final String KJV = "KJV";
     private static final Logger LOG = LoggerFactory.getLogger(Loader.class);
     private final TimelineModuleLoader timelineModuleLoader;
     private final EbeanServer ebean;
     private final GeographyModuleLoader geoModuleLoader;
     private final HotSpotModuleLoader hotSpotModuleLoader;
     private final DictionaryLoader dictionaryLoader;
+    private final JSwordService jsword;
 
     /**
      * The loader is given a connection source to load the data
      * 
+     * @param jsword the jsword service
      * @param timelineModuleLoader loader that loads the timeline module
      * @param geoModuleLoader the loader for geography data
      * @param hotSpotModuleLoader loads the hotspots for the timeline
      * @param ebean the persistence server
      */
     @Inject
-    public Loader(final EbeanServer ebean, final TimelineModuleLoader timelineModuleLoader,
-            final GeographyModuleLoader geoModuleLoader, final HotSpotModuleLoader hotSpotModuleLoader,
-            final DictionaryLoader dictionaryLoader) {
+    public Loader(final JSwordService jsword, final EbeanServer ebean,
+            final TimelineModuleLoader timelineModuleLoader, final GeographyModuleLoader geoModuleLoader,
+            final HotSpotModuleLoader hotSpotModuleLoader, final DictionaryLoader dictionaryLoader) {
+        this.jsword = jsword;
         this.ebean = ebean;
         this.timelineModuleLoader = timelineModuleLoader;
         this.geoModuleLoader = geoModuleLoader;
@@ -75,7 +83,35 @@ public class Loader {
      * Creates the table and loads the initial data set
      */
     public void init() {
+        // in order to do this, we need some jsword modules available. - we assume someone has kicked off the
+        // process
+        // kick of installation of jsword modules
+        checkAndWaitForKJV();
+
+        // now we can load the data
         loadData();
+    }
+
+    /**
+     * All modules are based on this version
+     */
+    private void checkAndWaitForKJV() {
+        int waitTime = INSTALL_MAX_WAITING;
+
+        // very ugly, but as good as it's going to get for now
+        while (waitTime > 0 && !this.jsword.isInstalled(KJV)) {
+            try {
+                LOG.debug("Waiting for KJV installation to finish...");
+                waitTime -= INSTALL_WAITING;
+                Thread.sleep(INSTALL_WAITING);
+            } catch (final InterruptedException e) {
+                LOG.warn("Interrupted exception", e);
+            }
+        }
+
+        if (waitTime <= 0) {
+            throw new StepInternalException("KJV module was not installed in time");
+        }
     }
 
     /**

@@ -175,8 +175,12 @@
 				<option value="1">Right pane</option>
 			</select>
 
-			<li><a href="#origin">Word origin</a></li>
-		<li><a href="#grammar">Grammar</a></li>
+			<li>
+				<a href="#origin">Original Word</a>
+				<a href="#" 
+				title="This tab is only available when the chosen version supports the Vocabulary or Grammar features. Look for the 'V' and 'G' markers in the Bible versions dropdown." 
+				class="ui-icon-info">
+			</li>
 		<li><a href="#dictionaries">Context</a></li>
 	</ul>
 

@@ -87,10 +87,8 @@ public class TestData {
         final User u = getUser();
         createBookmarks(u);
         createHistory(u);
-
         loadDefaultJSwordModules(coreModules);
 
-        loader.init();
     }
 
     /**
@@ -100,11 +98,20 @@ public class TestData {
      */
     private void loadDefaultJSwordModules(final String coreModules) {
         final String[] modules = StringUtils.split(coreModules, ",");
+        boolean installerInfoRefreshed = false;
 
         for (final String m : modules) {
+            LOGGER.trace("Loading [{}]", m);
+
             if (!this.jsword.isInstalled(m)) {
+                if (!installerInfoRefreshed) {
+                    LOGGER.trace("Reloading installers");
+                    this.jsword.reloadInstallers();
+                    installerInfoRefreshed = true;
+                }
+
+                LOGGER.trace("Installing {} module", m);
                 this.jsword.installBook(m);
-                LOGGER.info("Installing {} module", m);
             } else {
                 LOGGER.info("Book {} already installed", m);
             }

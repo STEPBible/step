@@ -157,4 +157,10 @@ public interface JSwordService {
      */
     String getSiblingChapter(String reference, String version, boolean previousChapter);
 
+    /**
+     * reloads all installers TODO - user should be warned <b>USERS SHOULD BE WARNED ABOUT THIS AS IT LOOKS UP
+     * INFORMATION ON THE INTERNET</b>
+     */
+    void reloadInstallers();
+
 }

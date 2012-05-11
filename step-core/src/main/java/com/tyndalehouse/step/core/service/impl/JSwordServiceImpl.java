@@ -122,6 +122,26 @@ public class JSwordServiceImpl implements JSwordService {
     }
 
     @Override
+    public void reloadInstallers() {
+        boolean errors = false;
+        LOGGER.trace("About to reload installers");
+        for (final Installer i : this.bookInstallers) {
+            try {
+                LOGGER.trace("Reloading installer [{}]", i.getInstallerDefinition());
+                i.reloadBookList();
+            } catch (final InstallException e) {
+                errors = true;
+                LOGGER.error(e.getMessage(), e);
+            }
+        }
+
+        if (errors) {
+            throw new StepInternalException(
+                    "Errors occurred while trying to retrieve the latest installer information");
+        }
+    }
+
+    @Override
     public List<Book> getInstalledModules(final boolean allVersions, final String language,
             final BookCategory... bibleCategory) {
 
@@ -502,14 +522,17 @@ public class JSwordServiceImpl implements JSwordService {
 
         // check if already installed?
         if (!isInstalled(initials)) {
-            LOGGER.debug("Book was not already installed, so kicking off installation process [{}]");
+            LOGGER.debug("Book was not already installed, so kicking off installation process for [{}]",
+                    initials);
             for (final Installer i : this.bookInstallers) {
                 final Book bookToBeInstalled = i.getBook(initials);
 
+                // TODO TODO TODO FIME
                 if (bookToBeInstalled != null) {
                     // then we can kick off installation and return
                     try {
                         i.install(bookToBeInstalled);
+                        return;
                     } catch (final InstallException e) {
                         // we log error here,
                         LOGGER.error(

@@ -10,6 +10,5 @@ target
 .LICENSE.txt
 db-create.sql
 db-drop.sql
-db-create.sql
-db-drop.sql
+bin
 

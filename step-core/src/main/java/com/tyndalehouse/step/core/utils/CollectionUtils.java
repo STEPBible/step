@@ -30,51 +30,39 @@
  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
-package com.tyndalehouse.step.core.data.create.loaders.editors;
+package com.tyndalehouse.step.core.utils;
 
-import java.beans.PropertyEditorSupport;
-
-import com.tyndalehouse.step.core.exceptions.StepInternalException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
- * Generic enum editor
+ * A set of utilities to manipulate collections
  * 
- * @param <E> the class of the enum
- * @author Marcin D&#261;browski, dabek at users.sourceforge.net
+ * @author chrisburrell
  * 
  */
-public class EnumPropertyEditor<E extends Enum<E>> extends PropertyEditorSupport {
-    private final Class<E> clazz;
+public final class CollectionUtils {
+    /**
+     * prevent instantiation
+     */
+    private CollectionUtils() {
+        // no-op
+    }
 
     /**
-     * @param clazz the class of the enum
+     * TODO move to utils Subtracts 2 lists
+     * 
+     * @param a list a the master list
+     * @param b list b the list of items to take out
+     * @param <T> the type of element
+     * @return the trimmed list
      */
-    public EnumPropertyEditor(final Class<E> clazz) {
-        this.clazz = clazz;
-    }
+    public static <T> List<T> subtract(final List<T> a, final List<T> b) {
+        final Set<T> superSet = new HashSet<T>(a);
+        superSet.removeAll(b);
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public E getValue() {
-        return (E) super.getValue();
-    }
-
-    @Override
-    public void setAsText(final String text) {
-        try {
-            setValue(Enum.valueOf(this.clazz, text));
-            // CHECKSTYLE:OFF
-        } catch (final Exception ex) {
-            // CHECKSTYLE:ON
-            throw new StepInternalException("Unable to convert " + text, ex);
-        }
-    }
-
-    @Override
-    public String getAsText() {
-        if (getValue() == null) {
-            return null;
-        }
-        return getValue().name();
+        return new ArrayList<T>(superSet);
     }
 }

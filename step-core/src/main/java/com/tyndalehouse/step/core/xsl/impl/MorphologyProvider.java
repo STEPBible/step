@@ -52,6 +52,7 @@ public class MorphologyProvider {
     private static final Logger LOGGER = LoggerFactory.getLogger(MorphologyProvider.class);
     private static final String ROBINSON_PREFIX = "robinson:";
     private static final int ROBINSON_PREFIX_LENGTH = ROBINSON_PREFIX.length();
+    private static final String NON_BREAKING_SPACE = "&nbsp;";
     private final EbeanServer ebean;
     private final MorphologyCache cache;
 
@@ -87,19 +88,19 @@ public class MorphologyProvider {
                 // exit straight away if null
                 if (morphology == null) {
                     // then place element in cache for empty string
-                    this.cache.put(key, "");
-                    return "";
+                    this.cache.put(key, NON_BREAKING_SPACE);
+                    return NON_BREAKING_SPACE;
                 }
 
                 return getHtmlForMorph(key, functionCall, morphology);
             }
-            return "";
+            return NON_BREAKING_SPACE;
             // CHECKSTYLE:OFF
         } catch (final Exception x) {
             // CHECKSTYLE:ON
             // we catch all exceptions as want to at least render something
             LOGGER.error(x.getMessage(), x);
-            return "";
+            return NON_BREAKING_SPACE;
         }
     }
 

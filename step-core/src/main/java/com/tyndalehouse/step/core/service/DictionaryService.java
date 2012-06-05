@@ -55,9 +55,9 @@ public interface DictionaryService {
     /**
      * looks up a specific headword
      * 
-     * @param headword
-     * @param headwordInstance
-     * @return the dictionary if found
+     * @param headword the word indicating the topic of the dictionary article
+     * @param headwordInstance differentiates between articles if we have several entries
+     * @return the dictionary entry if found
      */
     DictionaryArticle lookupArticleByHeadword(String headword, int headwordInstance);
 }

@@ -248,10 +248,6 @@
             <ruleset>Controversial Rules</ruleset>
         </rule>
         <rule>
-            <name>AssignmentInOperand</name>
-            <ruleset>Controversial Rules</ruleset>
-        </rule>
-        <rule>
             <name>DontImportSun</name>
             <ruleset>Controversial Rules</ruleset>
         </rule>
@@ -278,10 +274,6 @@
         <rule>
             <name>DoNotCallGarbageCollectionExplicitly</name>
             <ruleset>Controversial Rules</ruleset>
-        </rule>
-        <rule>
-            <name>CouplingBetweenObjects</name>
-            <ruleset>Coupling Rules</ruleset>
         </rule>
         <rule>
             <name>UseSingleton</name>

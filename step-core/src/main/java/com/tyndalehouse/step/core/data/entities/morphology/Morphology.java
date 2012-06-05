@@ -32,6 +32,8 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.data.entities.morphology;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -43,7 +45,9 @@ import javax.persistence.Id;
  * 
  */
 @Entity
-public class Morphology {
+public class Morphology implements Serializable {
+    private static final long serialVersionUID = -9117616832904022032L;
+
     @Id
     @Column(nullable = false)
     private String code;

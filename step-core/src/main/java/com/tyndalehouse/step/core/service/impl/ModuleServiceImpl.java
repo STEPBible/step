@@ -36,11 +36,9 @@ import static com.tyndalehouse.step.core.utils.JSwordUtils.getSortedSerialisable
 import static com.tyndalehouse.step.core.utils.StringUtils.split;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.BookCategory;
@@ -55,6 +53,7 @@ import com.tyndalehouse.step.core.models.BibleVersion;
 import com.tyndalehouse.step.core.models.Definition;
 import com.tyndalehouse.step.core.service.JSwordService;
 import com.tyndalehouse.step.core.service.ModuleService;
+import com.tyndalehouse.step.core.utils.CollectionUtils;
 import com.tyndalehouse.step.core.utils.StringConversionUtils;
 
 /**
@@ -141,27 +140,11 @@ public class ModuleServiceImpl implements ModuleService {
     @Override
     public List<BibleVersion> getAllInstallableModules() {
         LOGGER.info("Returning all modules currently not installed");
-        final List<BibleVersion> installedVersions = getAvailableModules();
+        final List<Book> installedVersions = this.jsword.getInstalledModules(BookCategory.BIBLE,
+                BookCategory.DICTIONARY, BookCategory.COMMENTARY);
         final List<Book> allModules = this.jsword.getAllModules(BookCategory.BIBLE, BookCategory.DICTIONARY,
                 BookCategory.COMMENTARY);
 
-        // TODO the line below is buggy anyway!
-        // return getSortedSerialisableList(subtract(allModules, installedVersions));
-        return null;
-    }
-
-    /**
-     * TODO move to utils Subtracts 2 lists
-     * 
-     * @param a list a the master list
-     * @param b list b the list of items to take out
-     * @param <T> the type of element
-     * @return the trimmed list
-     */
-    private <T extends Object> List<T> subtract(final List<T> a, final List<T> b) {
-        final Set<T> superSet = new HashSet<T>(a);
-        superSet.removeAll(b);
-
-        return new ArrayList<T>(superSet);
+        return getSortedSerialisableList(CollectionUtils.subtract(allModules, installedVersions));
     }
 }

@@ -150,7 +150,7 @@
     <module name="IllegalType"/>
     <module name="InnerAssignment"/>
     <module name="JUnitTestCase"/>
-    <module name="MagicNumber"/>
+<!--     <module name="MagicNumber"/> -->
     <module name="MissingCtor">
       <property name="severity" value="ignore"/>
       <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>

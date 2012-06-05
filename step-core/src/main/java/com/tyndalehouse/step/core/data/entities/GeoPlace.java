@@ -72,8 +72,6 @@ public class GeoPlace extends ScriptureTarget implements Serializable {
     @Column
     private GeoPrecision precision;
 
-    // private static final long serialVersionUID = -3343458338757180529L;
-
     /**
      * @return the esvName
      */

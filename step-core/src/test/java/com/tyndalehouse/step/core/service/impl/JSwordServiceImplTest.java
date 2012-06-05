@@ -92,7 +92,7 @@ public class JSwordServiceImplTest {
         LOGGER.debug(xmlOutputter.outputString(osisFragment));
 
         // do the test
-        final JSwordServiceImpl jsi = new JSwordServiceImpl(null);
+        final JSwordServiceImpl jsi = new JSwordServiceImpl(null, null);
         final List<LookupOption> options = new ArrayList<LookupOption>();
         options.add(INTERLINEAR);
 
@@ -123,7 +123,7 @@ public class JSwordServiceImplTest {
         LOGGER.debug(xmlOutputter.outputString(osisFragment));
 
         // do the test
-        final JSwordServiceImpl jsi = new JSwordServiceImpl(null);
+        final JSwordServiceImpl jsi = new JSwordServiceImpl(null, null);
         final List<LookupOption> options = new ArrayList<LookupOption>();
         options.add(LookupOption.STRONG_NUMBERS);
 
@@ -140,7 +140,7 @@ public class JSwordServiceImplTest {
      */
     @Test
     public void testSingleReference() {
-        final JSwordServiceImpl jsi = new JSwordServiceImpl(null);
+        final JSwordServiceImpl jsi = new JSwordServiceImpl(null, null);
         final List<ScriptureReference> refs = jsi.getPassageReferences("Gen.1.1", TIMELINE_EVENT, "KJV");
 
         assertEquals(refs.size(), 1);
@@ -153,7 +153,7 @@ public class JSwordServiceImplTest {
      */
     @Test
     public void testMultipleReference() {
-        final JSwordServiceImpl jsi = new JSwordServiceImpl(null);
+        final JSwordServiceImpl jsi = new JSwordServiceImpl(null, null);
         final List<ScriptureReference> refs = jsi.getPassageReferences("Gen.1.1;Gen.1.3", TIMELINE_EVENT,
                 "KJV");
 
@@ -169,7 +169,7 @@ public class JSwordServiceImplTest {
      */
     @Test
     public void testMultiplePassages() {
-        final JSwordServiceImpl jsi = new JSwordServiceImpl(null);
+        final JSwordServiceImpl jsi = new JSwordServiceImpl(null, null);
         final List<ScriptureReference> refs = jsi.getPassageReferences("Gen.1.1-2;Gen.1.4-5", TIMELINE_EVENT,
                 "KJV");
 
@@ -185,7 +185,7 @@ public class JSwordServiceImplTest {
      */
     @Test
     public void testGeoPassageExample() {
-        final JSwordServiceImpl jsi = new JSwordServiceImpl(null);
+        final JSwordServiceImpl jsi = new JSwordServiceImpl(null, null);
 
         // TODO change spaces between 1 and Kgs! This doesn't seem to work...
 
@@ -199,7 +199,7 @@ public class JSwordServiceImplTest {
      */
     @Test
     public void testGetBibleBooks() {
-        final JSwordServiceImpl jsi = new JSwordServiceImpl(null);
+        final JSwordServiceImpl jsi = new JSwordServiceImpl(null, null);
 
         final List<String> bibleBookNames = jsi.getBibleBookNames("Ma", "ESV");
 
@@ -213,7 +213,7 @@ public class JSwordServiceImplTest {
      */
     @Test
     public void testGetSiblingChapter() {
-        final JSwordServiceImpl jsword = new JSwordServiceImpl(null);
+        final JSwordServiceImpl jsword = new JSwordServiceImpl(null, null);
 
         // previous chapter tests
         assertEquals("Genesis 1", jsword.getSiblingChapter("Genesis 2", "KJV", true));
@@ -236,7 +236,7 @@ public class JSwordServiceImplTest {
      */
     @Test
     public void testGetPreviousRef() throws NoSuchKeyException {
-        final JSwordServiceImpl jsword = new JSwordServiceImpl(null);
+        final JSwordServiceImpl jsword = new JSwordServiceImpl(null, null);
         final Book book = Books.installed().getBook("KJV");
         final Key key = book.getKey("Genesis 3:17");
 
@@ -253,7 +253,7 @@ public class JSwordServiceImplTest {
      */
     @Test
     public void testGetNextRef() throws NoSuchKeyException {
-        final JSwordServiceImpl jsword = new JSwordServiceImpl(null);
+        final JSwordServiceImpl jsword = new JSwordServiceImpl(null, null);
         final Book book = Books.installed().getBook("KJV");
         final Key key = book.getKey("Genesis 3:24");
 
@@ -281,7 +281,7 @@ public class JSwordServiceImplTest {
         LOGGER.debug(xmlOutputter.outputString(osisFragment));
 
         // do the test
-        final JSwordServiceImpl jsi = new JSwordServiceImpl(null);
+        final JSwordServiceImpl jsi = new JSwordServiceImpl(null, null);
         final List<LookupOption> options = new ArrayList<LookupOption>();
         // options.add(LookupOption.STRONG_NUMBERS);
 

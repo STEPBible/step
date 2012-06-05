@@ -32,8 +32,8 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.xsl.impl;
 
-import static org.apache.commons.lang.StringUtils.isBlank;
-import static org.apache.commons.lang.StringUtils.split;
+import static com.tyndalehouse.step.core.utils.StringUtils.areAnyBlank;
+import static com.tyndalehouse.step.core.utils.StringUtils.split;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -61,7 +61,7 @@ public class MultiInterlinearProviderImpl implements MultiInterlinearProvider {
      */
     public MultiInterlinearProviderImpl(final String versions, final String textScope) {
         // first check whether the values passed in are correct
-        if (isBlank(versions) || isBlank(textScope)) {
+        if (areAnyBlank(versions, textScope)) {
             return;
         }
 

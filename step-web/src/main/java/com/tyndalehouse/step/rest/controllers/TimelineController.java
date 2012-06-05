@@ -32,7 +32,8 @@
  ******************************************************************************/
 package com.tyndalehouse.step.rest.controllers;
 
-import static org.apache.commons.lang.Validate.notNull;
+import static com.tyndalehouse.step.core.exceptions.UserExceptionType.CONTROLLER_INITIALISATION_ERROR;
+import static com.tyndalehouse.step.core.utils.ValidateUtils.notNull;
 
 import java.util.List;
 
@@ -71,8 +72,8 @@ public class TimelineController {
     @Inject
     public TimelineController(final TimelineService timelineService,
             final UserInterfaceTranslator<TimelineEvent, DigestableTimeline> translator) {
-        notNull(timelineService, "Timeline service was null");
-        notNull(translator, "Translator was null");
+        notNull(timelineService, "Timeline service was null", CONTROLLER_INITIALISATION_ERROR);
+        notNull(translator, "Translator was null", CONTROLLER_INITIALISATION_ERROR);
         this.timelineService = timelineService;
         this.translator = translator;
     }

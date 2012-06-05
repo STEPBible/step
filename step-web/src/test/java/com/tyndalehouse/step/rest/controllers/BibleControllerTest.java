@@ -45,6 +45,7 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 
+import com.tyndalehouse.step.core.exceptions.ValidationException;
 import com.tyndalehouse.step.core.guice.providers.ServerSessionProvider;
 import com.tyndalehouse.step.core.models.LookupOption;
 import com.tyndalehouse.step.core.service.BibleInformationService;
@@ -88,7 +89,7 @@ public class BibleControllerTest {
     /**
      * check that exception is thrown if no version provided
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = ValidationException.class)
     public void testGetBibleTextNoVersion() {
         this.testController.getBibleText(null, "Ref");
     }
@@ -96,7 +97,7 @@ public class BibleControllerTest {
     /**
      * check that exception is thrown if no version provided
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = ValidationException.class)
     public void testGetBibleTextNoVersionWithOptions() {
         this.testController.getBibleText(null, "Ref", "options");
     }
@@ -104,7 +105,7 @@ public class BibleControllerTest {
     /**
      * check that exception is thrown if no version provided
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = ValidationException.class)
     public void testGetBibleTextNoVersionWithOptionsAndInterlinear() {
         this.testController.getBibleText(null, "Ref", "options", "interlinear");
     }
@@ -112,7 +113,7 @@ public class BibleControllerTest {
     /**
      * check that exception is thrown if no reference is provided
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = ValidationException.class)
     public void testGetBibleTextNoReference() {
         this.testController.getBibleText("KJV", null);
     }
@@ -120,7 +121,7 @@ public class BibleControllerTest {
     /**
      * check that exception is thrown if no reference is provided
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = ValidationException.class)
     public void testGetBibleTextNoReferenceWithOptions() {
         this.testController.getBibleText("KJV", null, "options");
     }
@@ -128,7 +129,7 @@ public class BibleControllerTest {
     /**
      * check that exception is thrown if no reference is provided
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = ValidationException.class)
     public void testGetBibleTextNoReferenceWithOptionsAndInterlinear() {
         this.testController.getBibleText("KJV", null, "options", "interlinear");
     }

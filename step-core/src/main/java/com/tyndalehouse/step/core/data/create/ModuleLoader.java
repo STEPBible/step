@@ -40,7 +40,7 @@ package com.tyndalehouse.step.core.data.create;
  */
 public interface ModuleLoader {
     /**
-     * loads up the timeline data
+     * loads up the data
      * 
      * @return the number of items loaded
      * 

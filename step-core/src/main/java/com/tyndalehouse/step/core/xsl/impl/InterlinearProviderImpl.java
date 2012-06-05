@@ -34,11 +34,11 @@ package com.tyndalehouse.step.core.xsl.impl;
 
 import static com.tyndalehouse.step.core.utils.StringConversionUtils.getAnyKey;
 import static com.tyndalehouse.step.core.utils.StringConversionUtils.getStrongKey;
+import static com.tyndalehouse.step.core.utils.StringUtils.areAnyBlank;
+import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
+import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
+import static com.tyndalehouse.step.core.utils.StringUtils.split;
 import static java.lang.String.format;
-import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
-import static org.apache.commons.lang.StringUtils.isBlank;
-import static org.apache.commons.lang.StringUtils.isNotBlank;
-import static org.apache.commons.lang.StringUtils.split;
 import static org.crosswire.jsword.book.OSISUtil.ATTRIBUTE_W_LEMMA;
 import static org.crosswire.jsword.book.OSISUtil.ATTRIBUTE_W_MORPH;
 import static org.crosswire.jsword.book.OSISUtil.OSIS_ATTR_OSISID;
@@ -101,7 +101,7 @@ public class InterlinearProviderImpl implements InterlinearProvider {
      */
     public InterlinearProviderImpl(final String version, final String textScope) {
         // first check whether the values passed in are correct
-        if (isBlank(version) || isBlank(textScope)) {
+        if (areAnyBlank(version, textScope)) {
             return;
         }
 
@@ -212,7 +212,7 @@ public class InterlinearProviderImpl implements InterlinearProvider {
             final DualKey<String, String> key = new DualKey<String, String>(strong, verseNumber);
 
             final List<String> list = this.limitedAccuracy.get(key);
-            if (isNotEmpty(list)) {
+            if (list != null && list.size() > 0) {
                 return list.get(0);
             }
         }

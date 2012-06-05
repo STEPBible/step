@@ -32,11 +32,23 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.data.create;
 
+import java.util.Properties;
+
+import javax.inject.Named;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.avaje.ebean.EbeanServer;
 import com.google.inject.Inject;
+import com.tyndalehouse.step.core.data.create.loaders.CsvModuleLoader;
+import com.tyndalehouse.step.core.data.create.loaders.CustomTranslationCsvModuleLoader;
+import com.tyndalehouse.step.core.data.create.loaders.translations.OpenBibleDataTranslation;
+import com.tyndalehouse.step.core.data.create.loaders.translations.TimelineEventTranslation;
+import com.tyndalehouse.step.core.data.entities.GeoPlace;
+import com.tyndalehouse.step.core.data.entities.HotSpot;
+import com.tyndalehouse.step.core.data.entities.TimelineEvent;
+import com.tyndalehouse.step.core.data.entities.morphology.Morphology;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.service.JSwordService;
 
@@ -51,32 +63,23 @@ public class Loader {
     private static final int INSTALL_MAX_WAITING = INSTALL_WAITING * 60;
     private static final String KJV = "KJV";
     private static final Logger LOG = LoggerFactory.getLogger(Loader.class);
-    private final TimelineModuleLoader timelineModuleLoader;
     private final EbeanServer ebean;
-    private final GeographyModuleLoader geoModuleLoader;
-    private final HotSpotModuleLoader hotSpotModuleLoader;
-    private final DictionaryLoader dictionaryLoader;
     private final JSwordService jsword;
+    private final Properties coreProperties;
 
     /**
      * The loader is given a connection source to load the data
      * 
      * @param jsword the jsword service
-     * @param timelineModuleLoader loader that loads the timeline module
-     * @param geoModuleLoader the loader for geography data
-     * @param hotSpotModuleLoader loads the hotspots for the timeline
      * @param ebean the persistence server
+     * @param coreProperties the step core properties
      */
     @Inject
     public Loader(final JSwordService jsword, final EbeanServer ebean,
-            final TimelineModuleLoader timelineModuleLoader, final GeographyModuleLoader geoModuleLoader,
-            final HotSpotModuleLoader hotSpotModuleLoader, final DictionaryLoader dictionaryLoader) {
+            @Named("StepCoreProperties") final Properties coreProperties) {
         this.jsword = jsword;
         this.ebean = ebean;
-        this.timelineModuleLoader = timelineModuleLoader;
-        this.geoModuleLoader = geoModuleLoader;
-        this.hotSpotModuleLoader = hotSpotModuleLoader;
-        this.dictionaryLoader = dictionaryLoader;
+        this.coreProperties = coreProperties;
     }
 
     /**
@@ -122,13 +125,68 @@ public class Loader {
         this.ebean.beginTransaction();
 
         try {
-            this.hotSpotModuleLoader.init();
-            this.timelineModuleLoader.init();
-            this.geoModuleLoader.init();
-            this.dictionaryLoader.init();
+            loadHotSpots();
+            loadTimeline();
+            loadOpenBibleGeography();
+            loadDictionaryArticles();
+            loadRobinsonMorphology();
             this.ebean.commitTransaction();
         } finally {
             this.ebean.endTransaction();
         }
     }
+
+    /**
+     * loads all hotspots
+     * 
+     * @return number of records loaded
+     */
+    int loadHotSpots() {
+        return new CsvModuleLoader<HotSpot>(this.ebean,
+                this.coreProperties.getProperty("test.data.path.timeline.hotspots"), HotSpot.class).init();
+    }
+
+    /**
+     * Loads all of robinson's morphological data
+     * 
+     * @return the number of entries
+     */
+    int loadRobinsonMorphology() {
+        return new CsvModuleLoader<Morphology>(this.ebean,
+                this.coreProperties.getProperty("test.data.path.morphology.robinson"), Morphology.class)
+                .init();
+    }
+
+    /**
+     * loads the timeline events
+     * 
+     * @return number of records loaded
+     */
+    int loadTimeline() {
+        return new CustomTranslationCsvModuleLoader<TimelineEvent>(this.ebean,
+                this.coreProperties.getProperty("test.data.path.timeline.events.directory"),
+                TimelineEvent.class, new TimelineEventTranslation(this.jsword)).init();
+    }
+
+    /**
+     * loads the open bible geography data
+     * 
+     * @return the number of records loaded
+     */
+    int loadOpenBibleGeography() {
+        return new CustomTranslationCsvModuleLoader<GeoPlace>(this.ebean,
+                this.coreProperties.getProperty("test.data.path.geography.openbible"), GeoPlace.class,
+                new OpenBibleDataTranslation(this.jsword), '\t').init();
+    }
+
+    /**
+     * loads a set of articles
+     * 
+     * @return the number of articles loaded
+     */
+    int loadDictionaryArticles() {
+        return new DictionaryLoader(this.ebean, this.jsword,
+                this.coreProperties.getProperty("test.data.path.dictionary.easton")).init();
+    }
+
 }

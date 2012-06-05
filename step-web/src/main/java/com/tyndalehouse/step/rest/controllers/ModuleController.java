@@ -32,8 +32,10 @@
  ******************************************************************************/
 package com.tyndalehouse.step.rest.controllers;
 
-import static org.apache.commons.lang.Validate.notEmpty;
-import static org.apache.commons.lang.Validate.notNull;
+import static com.tyndalehouse.step.core.exceptions.UserExceptionType.CONTROLLER_INITIALISATION_ERROR;
+import static com.tyndalehouse.step.core.exceptions.UserExceptionType.USER_MISSING_FIELD;
+import static com.tyndalehouse.step.core.utils.ValidateUtils.notEmpty;
+import static com.tyndalehouse.step.core.utils.ValidateUtils.notNull;
 
 import java.util.List;
 
@@ -60,7 +62,7 @@ public class ModuleController {
      */
     @Inject
     public ModuleController(final ModuleService moduleDefintions) {
-        notNull(moduleDefintions, "Intialising the module administration controller failed");
+        notNull(moduleDefintions, "Intialising the module administration controller failed", CONTROLLER_INITIALISATION_ERROR);
         this.moduleDefintions = moduleDefintions;
     }
 
@@ -90,7 +92,7 @@ public class ModuleController {
      */
     @Cacheable(true)
     public String getDefinition(final String reference) {
-        notEmpty(reference, "A reference must be provided to obtain a definition");
+        notEmpty(reference, "A reference must be provided to obtain a definition", USER_MISSING_FIELD);
         LOGGER.debug("Getting definition for {}", reference);
         final Definition definition = this.moduleDefintions.getDefinition(reference);
 

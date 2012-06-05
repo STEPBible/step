@@ -52,6 +52,7 @@ import com.tyndalehouse.step.core.data.entities.StrongDefinition;
 import com.tyndalehouse.step.core.data.entities.TimelineEvent;
 import com.tyndalehouse.step.core.data.entities.User;
 import com.tyndalehouse.step.core.data.entities.aggregations.TimelineEventsAndDate;
+import com.tyndalehouse.step.core.data.entities.morphology.Morphology;
 
 /**
  * Returns a database connection server instance for use across the application
@@ -145,7 +146,6 @@ public class DatabaseConfigProvider implements Provider<EbeanServer> {
      * @param config the configuration to be enhanced
      */
     private void addEntities(final ServerConfig config) {
-        // timeline entities
         config.addClass(ScriptureTarget.class);
         config.addClass(ScriptureReference.class);
         config.addClass(HotSpot.class);
@@ -158,6 +158,7 @@ public class DatabaseConfigProvider implements Provider<EbeanServer> {
         config.addClass(TimelineEventsAndDate.class);
         config.addClass(StrongDefinition.class);
         config.addClass(DictionaryArticle.class);
+        config.addClass(Morphology.class);
     }
 
     /**

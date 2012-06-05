@@ -35,7 +35,7 @@ package com.tyndalehouse.step.core.service.impl;
 import static com.tyndalehouse.step.core.models.LookupOption.INTERLINEAR;
 import static com.tyndalehouse.step.core.models.LookupOption.STRONG_NUMBERS;
 import static com.tyndalehouse.step.core.utils.JSwordUtils.getSortedSerialisableList;
-import static org.apache.commons.lang.StringUtils.isNotBlank;
+import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
 
 import java.util.ArrayList;
 import java.util.List;

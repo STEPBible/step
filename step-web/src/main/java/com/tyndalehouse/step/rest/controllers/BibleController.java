@@ -32,8 +32,9 @@
  ******************************************************************************/
 package com.tyndalehouse.step.rest.controllers;
 
-import static org.apache.commons.lang.StringUtils.isNotBlank;
-import static org.apache.commons.lang.Validate.notEmpty;
+import static com.tyndalehouse.step.core.exceptions.UserExceptionType.USER_MISSING_FIELD;
+import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
+import static com.tyndalehouse.step.core.utils.ValidateUtils.notEmpty;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -146,8 +147,8 @@ public class BibleController {
     @Cacheable(true)
     public OsisWrapper getBibleText(final String version, final String reference, final String options,
             final String interlinearVersion) {
-        notEmpty(version, "You need to provide a version");
-        notEmpty(reference, "You need to provide a reference");
+        notEmpty(version, "You need to provide a version", USER_MISSING_FIELD);
+        notEmpty(reference, "You need to provide a reference", USER_MISSING_FIELD);
 
         String[] userOptions = null;
         if (isNotBlank(options)) {

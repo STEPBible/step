@@ -36,6 +36,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.tyndalehouse.step.core.data.entities.DictionaryArticle;
 import com.tyndalehouse.step.core.data.entities.reference.SourceType;
@@ -47,6 +49,8 @@ import com.tyndalehouse.step.core.data.entities.reference.SourceType;
  * 
  */
 public class DictionaryLoaderTest {
+    private static final Logger LOGGER = LoggerFactory.getLogger(DictionaryLoaderTest.class);
+
     /**
      * Testing field is obtained accurately
      */
@@ -113,9 +117,14 @@ public class DictionaryLoaderTest {
 
         final String s = "The eldest son of [[Amram|AMRAM (1)]]"
                 + " and [[Jochebed]], a [[daughter]] of [[Levi|LEVI (1)]] ([[Exod.6.20|Exod 6:20]])";
-        dl.parseArticleText(article, new StringBuilder(s));
 
-        System.out.println(article.getText());
+        dl.setArticleText(toS(s));
+        dl.setCurrentArticle(article);
+
+        // do test
+        dl.parseArticleText();
+
+        LOGGER.trace("Article text is [{}]", article.getText());
         assertFalse(article.getText().contains("[["));
     }
 
@@ -129,9 +138,11 @@ public class DictionaryLoaderTest {
      */
     private void assertEqualsArticleText(final String expected, final String input,
             final DictionaryArticle article, final DictionaryLoader dl) {
-        dl.parseArticleText(article, toS(input));
-        assertEquals(expected, article.getText());
+        dl.setCurrentArticle(article);
+        dl.setArticleText(toS(input));
 
+        dl.parseArticleText();
+        assertEquals(expected, article.getText());
     }
 
     /**

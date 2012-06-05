@@ -32,7 +32,7 @@
  ******************************************************************************/
 package com.tyndalehouse.step.jsp;
 
-import static org.apache.commons.lang.StringUtils.isEmpty;
+import static com.tyndalehouse.step.core.utils.StringUtils.isEmpty;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;

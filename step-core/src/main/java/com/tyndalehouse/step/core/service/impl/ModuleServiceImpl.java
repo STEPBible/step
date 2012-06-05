@@ -33,13 +33,14 @@
 package com.tyndalehouse.step.core.service.impl;
 
 import static com.tyndalehouse.step.core.utils.JSwordUtils.getSortedSerialisableList;
-import static org.apache.commons.collections.CollectionUtils.subtract;
-import static org.apache.commons.lang.StringUtils.split;
+import static com.tyndalehouse.step.core.utils.StringUtils.split;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.BookCategory;
@@ -59,7 +60,7 @@ import com.tyndalehouse.step.core.utils.StringConversionUtils;
 /**
  * Looks up module information, for example lexicon definitions for particular references
  * 
- * @author chrisburrell 
+ * @author chrisburrell
  * 
  */
 @Singleton
@@ -144,6 +145,23 @@ public class ModuleServiceImpl implements ModuleService {
         final List<Book> allModules = this.jsword.getAllModules(BookCategory.BIBLE, BookCategory.DICTIONARY,
                 BookCategory.COMMENTARY);
 
-        return getSortedSerialisableList(subtract(allModules, installedVersions));
+        // TODO the line below is buggy anyway!
+        // return getSortedSerialisableList(subtract(allModules, installedVersions));
+        return null;
+    }
+
+    /**
+     * TODO move to utils Subtracts 2 lists
+     * 
+     * @param a list a the master list
+     * @param b list b the list of items to take out
+     * @param <T> the type of element
+     * @return the trimmed list
+     */
+    private <T extends Object> List<T> subtract(final List<T> a, final List<T> b) {
+        final Set<T> superSet = new HashSet<T>(a);
+        superSet.removeAll(b);
+
+        return new ArrayList<T>(superSet);
     }
 }

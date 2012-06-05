@@ -41,24 +41,24 @@ package com.tyndalehouse.step.core.exceptions;
  */
 public class ValidationException extends StepInternalException {
     private static final long serialVersionUID = -5636677138385910988L;
-
-    /**
-     * creates the generic validation exception to be used on the server. These can be handled separately to @see
-     * {StepInternalException}
-     * 
-     * @param message the message for the exception
-     * @param t the cause of the exception
-     */
-    public ValidationException(final String message, final Throwable t) {
-        super(message, t);
-    }
+    private final UserExceptionType exceptionType;
 
     /**
      * creates the generic runtime exception to be used on the server
      * 
-     * @param message the message
+     * @param exceptionMessage the exception message
+     * @param exceptionType the type of exception
      */
-    public ValidationException(final String message) {
-        super(message);
+    public ValidationException(final String exceptionMessage, final UserExceptionType exceptionType) {
+        super(exceptionMessage);
+        this.exceptionType = exceptionType;
     }
+
+    /**
+     * @return the exceptionType
+     */
+    public UserExceptionType getExceptionType() {
+        return this.exceptionType;
+    }
+
 }

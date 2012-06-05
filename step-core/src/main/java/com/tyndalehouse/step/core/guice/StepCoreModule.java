@@ -118,10 +118,6 @@ public class StepCoreModule extends AbstractStepGuiceModule {
 
         bind(EbeanServer.class).toProvider(DatabaseConfigProvider.class).asEagerSingleton();
 
-        // bind a cache
-
-        bindDaos();
-
         // now bind the test data
         if (Boolean.valueOf(stepProperties.getProperty("test.data.load"))) {
             bind(TestData.class).asEagerSingleton();
@@ -148,13 +144,4 @@ public class StepCoreModule extends AbstractStepGuiceModule {
         CacheManager.create(config);
     }
 
-    /**
-     * helper method that binds the DAOs
-     */
-    private void bindDaos() {
-        // bind(TimebandDao.class).to(TimebandDaoImpl.class);
-        // bind(HotSpotDao.class).to(HotSpotDaoImpl.class);
-        // bind(TimelineEventDao.class).to(TimelineEventDaoImpl.class);
-        // bind(ScriptureReferenceDao.class).to(ScriptureReferenceDaoImpl.class);
-    }
 }

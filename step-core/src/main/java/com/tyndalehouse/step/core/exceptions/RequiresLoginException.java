@@ -32,6 +32,8 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.exceptions;
 
+import static com.tyndalehouse.step.core.exceptions.UserExceptionType.LOGIN_REQUIRED;
+
 /**
  * The default exception to be thrown when a feature is unavailable because authentication is required.
  * 
@@ -44,19 +46,9 @@ public class RequiresLoginException extends ValidationException {
     /**
      * creates the exception
      * 
-     * @param message the message for the exception
-     * @param t the cause of the exception
-     */
-    public RequiresLoginException(final String message, final Throwable t) {
-        super(message, t);
-    }
-
-    /**
-     * creates the exception
-     * 
      * @param message the message
      */
     public RequiresLoginException(final String message) {
-        super(message);
+        super(message, LOGIN_REQUIRED);
     }
 }

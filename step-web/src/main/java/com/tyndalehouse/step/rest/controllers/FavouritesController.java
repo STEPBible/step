@@ -32,11 +32,11 @@
  ******************************************************************************/
 package com.tyndalehouse.step.rest.controllers;
 
+import static com.tyndalehouse.step.core.utils.StringUtils.split;
+
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.apache.commons.lang.StringUtils;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -44,6 +44,7 @@ import com.tyndalehouse.step.core.data.entities.Bookmark;
 import com.tyndalehouse.step.core.data.entities.History;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.service.FavouritesService;
+import com.tyndalehouse.step.core.utils.StringUtils;
 
 /**
  * This helps manage bookmarks and history items. This implementation simply wraps around the Favourites
@@ -110,11 +111,11 @@ public class FavouritesController {
         // check for no history - currently a bit of a hack
         if (StringUtils.isNotEmpty(clientHistoryString) && !"null".equals(clientHistoryString)) {
 
-            // first we split by '#' to get individual portions of the history list
+            // first we split by '~' to get individual portions of the history list
             // then by @ sign to get the date at which they were last updated
             // we will do a fairly gross approximation here and refactor if this causes issues
             try {
-                final String[] tokens = StringUtils.split(clientHistoryString, "~@");
+                final String[] tokens = split(clientHistoryString, "[~@]");
                 for (int ii = 0; ii < tokens.length; ii = ii + 2) {
                     final History item = new History();
                     item.setHistoryReference(tokens[ii]);
@@ -135,7 +136,7 @@ public class FavouritesController {
      * @return the id of the reference
      */
     public int addHistory(final String reference) {
-        final String[] split = StringUtils.split(reference, '@');
+        final String[] split = split(reference, "@");
         if (split.length != 2) {
             throw new StepInternalException("Unable to add history item to user profile.");
         }

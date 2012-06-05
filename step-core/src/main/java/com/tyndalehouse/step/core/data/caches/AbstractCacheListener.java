@@ -38,7 +38,7 @@ import net.sf.ehcache.event.CacheEventListener;
 
 /**
  * This is a simple implementation where the listener does nothing. It is meant to be inherited to provide
- * overiddes for just what is required.
+ * overiddes for just what is required - rewrite to use standard normal cache instead
  * 
  * @author chrisburrell
  * 

@@ -8,8 +8,8 @@ target
 .project
 .settings
 .LICENSE.txt
-step-core/db-create.sql
-step-core/db-drop.sql
-step-web/db-create.sql
-step-web/db-drop.sql
+db-create.sql
+db-drop.sql
+db-create.sql
+db-drop.sql
 

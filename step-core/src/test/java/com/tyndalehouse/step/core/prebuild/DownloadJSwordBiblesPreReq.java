@@ -32,7 +32,7 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.prebuild;
 
-import static org.apache.commons.lang.StringUtils.isNotBlank;
+import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,7 +66,7 @@ public class DownloadJSwordBiblesPreReq {
         final String[] modules = new String[] { "KJV", "ESV", "Byz", "StrongsGreek", "StrongsHebrew",
                 "Robinson" };
 
-        final JSwordService jsword = new JSwordServiceImpl(getInstallers());
+        final JSwordService jsword = new JSwordServiceImpl(getInstallers(), null);
 
         for (final String moduleInitials : modules) {
             if (!jsword.isInstalled(moduleInitials)) {

@@ -34,7 +34,8 @@
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   version="1.0"
   xmlns:jsword="http://xml.apache.org/xalan/java"
-  extension-element-prefixes="jsword">
+  xmlns:morph="xalan://com.tyndalehouse.step.core.xsl.impl.MorphologyProvider"
+  extension-element-prefixes="jsword morph">
 
   <!--  Version 3.0 is necessary to get br to work correctly. -->
   <xsl:output method="html" version="3.0" omit-xml-declaration="yes" indent="no"/>
@@ -104,7 +105,9 @@
   <xsl:param name="baseVersion" select="''" />
   <xsl:param name="interlinearVersion" select="''" />
   <xsl:param name="interlinearReference" select="''" />
-
+  <xsl:param name="morphologyProvider" />
+ 
+ 
   <!--  TODO: support alternate versification -->
   <xsl:variable name="v11nf" select="jsword:org.crosswire.jsword.versification.system.Versifications.instance()"/>
 
@@ -115,6 +118,7 @@
   
   <!--  set up interlinear provider, if we have requested it -->
   <xsl:variable name="interlinearProvider" select="jsword:com.tyndalehouse.step.core.xsl.impl.MultiInterlinearProviderImpl.new(string($interlinearVersion), string($interlinearReference))" />
+
   <xsl:variable name="punctuation" select="'|\,./&lt;&gt;?;\#:@~[]{}-=_+`¬!£$%^&amp;*()&quot;'" />
 
   <!-- set up options for color coding -->
@@ -529,7 +533,7 @@
 		</xsl:variable>
 	
 		<xsl:variable name="nextText" select="normalize-space(following-sibling::node()[1][self::text()])" />
-		<xsl:if test="not(jsword:org.apache.commons.lang.StringUtils.containsOnly($nextText, $punctuation))">
+		<xsl:if test="jsword:com.tyndalehouse.step.core.utils.StringUtils.containsAlphaNumeric($nextText)">
 			<xsl:variable name="nextText" select="''"/>
 		</xsl:if>
 
@@ -569,10 +573,9 @@
 					<xsl:if test="$Morph = 'true'">
 						<span class="morphs">
 							<xsl:value-of
-								select="jsword:com.tyndalehouse.step.core.utils.XslHelper.getSpanFromAttributeName(@morph, $morphFunctionCall)" />
+								select="morph:getDisplayMorphology($morphologyProvider, @morph, $morphFunctionCall)" />
 						</span>
 					</xsl:if>
-		
 		
 					<!-- 4th - We output the interlinears if provided and we do so recursively -->
 					<xsl:if test="normalize-space($interlinearVersion) != ''">
@@ -1618,7 +1621,7 @@
   <!-- Matching simple text when not matched elsewhere? -->
   <xsl:template match="text()" name="matchSimpleText">
   		<xsl:choose>
-			<xsl:when test="jsword:org.apache.commons.lang.StringUtils.containsOnly(normalize-space(.), $punctuation)" />
+			<xsl:when test="not(jsword:com.tyndalehouse.step.core.utils.StringUtils.containsAlphaNumeric(normalize-space(.)))" />
 	  		<xsl:when test="name(..) = 'verse' and normalize-space(.) != ''">
 	  			<span class="w">
 	  				<span class="text"><xsl:value-of select="."/></span>

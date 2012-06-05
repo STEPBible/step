@@ -32,11 +32,12 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.guice.providers;
 
+import static com.tyndalehouse.step.core.utils.StringUtils.commaSeparate;
+
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -88,7 +89,7 @@ public class TestData {
         createBookmarks(u);
         createHistory(u);
         loadDefaultJSwordModules(coreModules);
-
+        loader.init();
     }
 
     /**
@@ -97,7 +98,7 @@ public class TestData {
      * @param coreModules a comma separated list of modules
      */
     private void loadDefaultJSwordModules(final String coreModules) {
-        final String[] modules = StringUtils.split(coreModules, ",");
+        final String[] modules = commaSeparate(coreModules);
         boolean installerInfoRefreshed = false;
 
         for (final String m : modules) {

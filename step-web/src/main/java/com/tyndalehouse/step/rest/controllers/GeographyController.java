@@ -32,8 +32,10 @@
  ******************************************************************************/
 package com.tyndalehouse.step.rest.controllers;
 
-import static org.apache.commons.lang.Validate.notEmpty;
-import static org.apache.commons.lang.Validate.notNull;
+import static com.tyndalehouse.step.core.exceptions.UserExceptionType.CONTROLLER_INITIALISATION_ERROR;
+import static com.tyndalehouse.step.core.exceptions.UserExceptionType.USER_MISSING_FIELD;
+import static com.tyndalehouse.step.core.utils.ValidateUtils.notEmpty;
+import static com.tyndalehouse.step.core.utils.ValidateUtils.notNull;
 
 import java.util.List;
 
@@ -60,7 +62,7 @@ public class GeographyController {
      */
     @Inject
     public GeographyController(final GeographyService geoService) {
-        notNull(geoService, "Failed to initialise Geography Controller");
+        notNull(geoService, "Failed to initialise Geography Controller", CONTROLLER_INITIALISATION_ERROR);
         this.geoService = geoService;
 
     }
@@ -72,7 +74,7 @@ public class GeographyController {
      * @return the list of places (lat/long/precisions)
      */
     public List<GeoPlace> getPlaces(final String reference) {
-        notEmpty("A reference is required for looking up geography modules");
+        notEmpty(reference, "A reference is required for looking up geography modules", USER_MISSING_FIELD);
         return this.geoService.getPlaces(reference);
     }
 

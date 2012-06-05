@@ -32,11 +32,10 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.data.common;
 
+import static com.tyndalehouse.step.core.utils.StringUtils.isEmpty;
+import static com.tyndalehouse.step.core.utils.StringUtils.split;
 import static java.lang.Integer.parseInt;
-import static org.apache.commons.lang.StringUtils.isEmpty;
-import static org.apache.commons.lang.StringUtils.split;
 
-import org.apache.commons.lang.StringUtils;
 import org.joda.time.LocalDateTime;
 
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
@@ -53,7 +52,7 @@ import com.tyndalehouse.step.core.exceptions.StepInternalException;
  * @author CJBurrell
  */
 public class PartialDate {
-    private static final String DATE_DELIMITER = " -";
+    private static final String DATE_DELIMITER = "[ ]?-[ ]?";
     private static final int NO_PARTS = 0;
     private static final int YEAR = 1;
     private static final int YEAR_AND_MONTH = 2;
@@ -91,8 +90,13 @@ public class PartialDate {
      * @return a PartialDate
      */
     public static PartialDate parseDate(final String date) {
+        // check for null value
+        if (date == null) {
+            return new PartialDate(null, PrecisionType.NONE);
+        }
+
         // if passed in empty, return null and be done with empty strings!
-        final String trimmedDate = StringUtils.trim(date);
+        final String trimmedDate = date.trim();
         if (isEmpty(trimmedDate)) {
             return new PartialDate(null, PrecisionType.NONE);
         }
@@ -100,11 +104,7 @@ public class PartialDate {
         final boolean negativeDate = date.charAt(0) == '-';
         final String parseableDate = negativeDate ? trimmedDate.substring(1) : trimmedDate;
 
-        try {
-            return getPartialDateFromArray(split(parseableDate.trim(), DATE_DELIMITER), negativeDate);
-        } catch (final StepInternalException e) {
-            throw new StepInternalException("Unable to parse " + date, e);
-        }
+        return getPartialDateFromArray(split(parseableDate.trim(), DATE_DELIMITER), negativeDate);
     }
 
     /**

@@ -39,6 +39,8 @@ import java.util.List;
 
 import org.junit.Test;
 
+import com.tyndalehouse.step.core.data.create.loaders.CsvData;
+
 /**
  * Tests the Csv Data
  * 

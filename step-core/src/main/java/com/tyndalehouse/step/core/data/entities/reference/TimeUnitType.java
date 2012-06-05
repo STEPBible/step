@@ -38,19 +38,13 @@ package com.tyndalehouse.step.core.data.entities.reference;
  * @author chrisburrell
  * 
  */
+// CHECKSTYLE:OFF
 public enum TimeUnitType {
-    /** CENTURY */
     CENTURY,
-    /** DAY */
     DAY,
-    /** DECADE */
     DECADE,
-    /** MILLIENIUM */
     MILLENIUM,
-    /** MONTH */
     MONTH,
-    /** WEEK */
     WEEK,
-    /** YEAR */
     YEAR,
 }

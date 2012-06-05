@@ -32,14 +32,15 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.service.impl;
 
+import static com.tyndalehouse.step.core.exceptions.UserExceptionType.SERVICE_VALIDATION_ERROR;
+import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
+import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
+import static com.tyndalehouse.step.core.utils.StringUtils.isNotEmpty;
+import static com.tyndalehouse.step.core.utils.StringUtils.split;
+import static com.tyndalehouse.step.core.utils.ValidateUtils.notBlank;
 import static java.lang.Integer.parseInt;
 import static java.lang.Integer.valueOf;
 import static java.lang.String.format;
-import static org.apache.commons.lang.StringUtils.isBlank;
-import static org.apache.commons.lang.StringUtils.isNotBlank;
-import static org.apache.commons.lang.StringUtils.isNotEmpty;
-import static org.apache.commons.lang.StringUtils.split;
-import static org.apache.commons.lang.Validate.notNull;
 import static org.crosswire.common.xml.XMLUtil.writeToString;
 import static org.crosswire.jsword.book.BookCategory.BIBLE;
 
@@ -53,7 +54,6 @@ import java.util.Set;
 
 import javax.xml.transform.TransformerException;
 
-import org.apache.commons.lang.StringUtils;
 import org.crosswire.common.progress.JobManager;
 import org.crosswire.common.progress.Progress;
 import org.crosswire.common.xml.Converter;
@@ -92,7 +92,9 @@ import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.models.LookupOption;
 import com.tyndalehouse.step.core.models.OsisWrapper;
 import com.tyndalehouse.step.core.service.JSwordService;
+import com.tyndalehouse.step.core.utils.ValidateUtils;
 import com.tyndalehouse.step.core.xsl.XslConversionType;
+import com.tyndalehouse.step.core.xsl.impl.MorphologyProvider;
 
 /**
  * a service providing a wrapper around JSword
@@ -110,15 +112,18 @@ public class JSwordServiceImpl implements JSwordService {
     private static final Logger LOGGER = LoggerFactory.getLogger(JSwordServiceImpl.class);
 
     private final List<Installer> bookInstallers;
+    private final MorphologyProvider morphologyProvider;
 
     /**
      * constructs the jsword service.
      * 
      * @param installers the installers are the objects that query the crosswire servers
+     * @param morphologyProvider TODO
      */
     @Inject
-    public JSwordServiceImpl(final List<Installer> installers) {
+    public JSwordServiceImpl(final List<Installer> installers, final MorphologyProvider morphologyProvider) {
         this.bookInstallers = installers;
+        this.morphologyProvider = morphologyProvider;
     }
 
     @Override
@@ -146,7 +151,7 @@ public class JSwordServiceImpl implements JSwordService {
             final BookCategory... bibleCategory) {
 
         if (!allVersions) {
-            notNull(language, "Locale was not passed by requester");
+            ValidateUtils.notNull(language, "Locale was not passed by requester", SERVICE_VALIDATION_ERROR);
         }
 
         // TODO : TOTOTOTOTOTOTOTO
@@ -231,9 +236,9 @@ public class JSwordServiceImpl implements JSwordService {
             LOGGER.debug(osisID);
 
             // split down according to different references
-            final String[] refs = StringUtils.split(osisID, ",;- ");
+            final String[] refs = split(osisID, "[,; \\-]+");
             final String interestedRef = previousChapter ? refs[0] : refs[refs.length - 1];
-            final String[] refParts = split(interestedRef, '.');
+            final String[] refParts = split(interestedRef, "\\.");
             final Key newKey = previousChapter ? getPreviousRef(refParts, key, currentBook) : getNextRef(
                     refParts, key, currentBook);
             return newKey.getName();
@@ -357,6 +362,7 @@ public class JSwordServiceImpl implements JSwordService {
         return getOsisText(version, reference, options, null);
     }
 
+    // TODO: can we make this more performant by not re-compiling stylesheet - or is already cached
     // FIXME TODO: JS-109, email from CJB on 27/02/2011 remove synchronisation once book is fixed
     @Override
     public synchronized OsisWrapper getOsisText(final String version, final String reference,
@@ -440,6 +446,10 @@ public class JSwordServiceImpl implements JSwordService {
         final Book book = Books.installed().getBook(version);
         final List<LookupOption> options = new ArrayList<LookupOption>(LookupOption.values().length + 1);
 
+        if (book == null) {
+            return options;
+        }
+
         // some options are always there for Bibles:
         if (BIBLE.equals(book.getBookCategory())) {
             options.add(LookupOption.VERSE_NUMBERS);
@@ -501,6 +511,11 @@ public class JSwordServiceImpl implements JSwordService {
                 if (LookupOption.VERSE_NUMBERS.equals(lookupOption)) {
                     tsep.setParameter(LookupOption.TINY_VERSE_NUMBERS.getXsltParameterName(), true);
                 }
+
+                if (LookupOption.MORPHOLOGY.equals(lookupOption)) {
+                    // tsep.setDevelopmentMode(true);
+                    tsep.setParameter("morphologyProvider", this.morphologyProvider);
+                }
             }
         }
 
@@ -515,10 +530,7 @@ public class JSwordServiceImpl implements JSwordService {
     @Override
     public void installBook(final String initials) {
         LOGGER.debug("Installing module [{}]", initials);
-
-        if (isBlank(initials)) {
-            throw new StepInternalException("No version was found");
-        }
+        notBlank(initials, "No version was found", SERVICE_VALIDATION_ERROR);
 
         // check if already installed?
         if (!isInstalled(initials)) {
@@ -555,9 +567,7 @@ public class JSwordServiceImpl implements JSwordService {
 
     @Override
     public double getProgressOnInstallation(final String bookName) {
-        if (isBlank(bookName)) {
-            throw new StepInternalException("The book name provided was blank");
-        }
+        notBlank(bookName, "The book name provided was blank", SERVICE_VALIDATION_ERROR);
 
         if (isInstalled(bookName)) {
             return 1;

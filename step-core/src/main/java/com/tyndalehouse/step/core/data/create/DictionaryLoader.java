@@ -34,27 +34,23 @@ package com.tyndalehouse.step.core.data.create;
 
 import static com.tyndalehouse.step.core.data.entities.reference.SourceType.valueOf;
 import static com.tyndalehouse.step.core.data.entities.reference.TargetType.DICTIONARY_ARTICLE;
-import static org.apache.commons.io.IOUtils.lineIterator;
-import static org.apache.commons.lang.StringUtils.isEmpty;
-import static org.apache.commons.lang.StringUtils.split;
+import static com.tyndalehouse.step.core.utils.IOUtils.closeQuietly;
+import static com.tyndalehouse.step.core.utils.StringUtils.isEmpty;
+import static com.tyndalehouse.step.core.utils.StringUtils.split;
 
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.Charset;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.inject.Inject;
-
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.io.LineIterator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.avaje.ebean.EbeanServer;
-import com.google.inject.name.Named;
+import com.tyndalehouse.step.core.data.create.loaders.AbstractClasspathBasedModuleLoader;
 import com.tyndalehouse.step.core.data.entities.DictionaryArticle;
 import com.tyndalehouse.step.core.data.entities.ScriptureReference;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
@@ -66,7 +62,7 @@ import com.tyndalehouse.step.core.service.JSwordService;
  * @author chrisburrell
  * 
  */
-public class DictionaryLoader implements ModuleLoader {
+public class DictionaryLoader extends AbstractClasspathBasedModuleLoader<DictionaryArticle> {
     private static final Logger LOGGER = LoggerFactory.getLogger(DictionaryLoader.class);
     private static final Pattern BIBLE_LINK = Pattern
             .compile("\\[\\[([A-Za-z0-9:. ]+)\\|([A-Za-z0-9:. ]+)\\]\\]");
@@ -81,167 +77,185 @@ public class DictionaryLoader implements ModuleLoader {
     private static final String TEXT = "@Text:";
     private static final String ALL_REFS = "@AllRefs:";
 
-    private final EbeanServer ebean;
-    private final String dataPath;
     private final JSwordService jsword;
+
+    // state used during processing
+    private int errors;
+    private int count;
+    private DictionaryArticle currentArticle;
+    private List<DictionaryArticle> articles = new ArrayList<DictionaryArticle>();
+    private StringBuilder articleText;
 
     /**
      * Loads up dictionary items
      * 
      * @param ebean the backend server
      * @param jsword the service to invoke sword modules
-     * @param dataPath the classpath to the data
+     * @param resourcePath the classpath to the data
      */
-    @Inject
-    public DictionaryLoader(final EbeanServer ebean, final JSwordService jsword,
-            @Named("test.data.path.dictionary.easton") final String dataPath) {
-        this.ebean = ebean;
+    public DictionaryLoader(final EbeanServer ebean, final JSwordService jsword, final String resourcePath) {
+        super(ebean, resourcePath);
         this.jsword = jsword;
-        this.dataPath = dataPath;
     }
 
     @Override
-    public int init() {
-        int count = 0;
-        int errors = 0;
-        LineIterator lineIterator = null;
-        InputStream placeFileStream = null;
-        List<DictionaryArticle> articles = new ArrayList<DictionaryArticle>();
+    protected List<DictionaryArticle> parseFile(final Reader reader) {
+        final BufferedReader bufferedReader = new BufferedReader(reader);
+        String line = null;
 
         try {
-            placeFileStream = getClass().getResourceAsStream(this.dataPath);
-            lineIterator = lineIterator(placeFileStream, Charset.defaultCharset());
-
-            String line = null;
-            StringBuilder bigField = new StringBuilder(DEFAULT_ARTICLE_SIZE);
-            DictionaryArticle article = null;
-            while (lineIterator.hasNext()) {
-                line = lineIterator.next();
-
-                // deal with case where we are hitting a new word
-                if (line.startsWith(HEADWORD)) {
-                    if (article != null) {
-                        parseArticleText(article, bigField);
-                        articles.add(article);
-                    }
-
-                    // save in batches
-                    if (articles.size() > BATCH_ARTICLES) {
-                        count += this.ebean.save(articles);
-                        articles = new ArrayList<DictionaryArticle>();
-                    }
-
-                    article = new DictionaryArticle();
-                    bigField = new StringBuilder();
-                }
-
-                // are we dealing with a normal field
-                if (line.length() > 0 && line.charAt(0) == '@') {
-                    // work out which fields first
-                    errors += parseField(article, line);
-                } else {
-                    appendToArticleText(bigField, line);
-                }
+            while ((line = bufferedReader.readLine()) != null) {
+                parseLine(line);
             }
+
+            // save last article
+            saveCurrentArticle();
         } catch (final IOException io) {
             LOGGER.warn(io.getMessage(), io);
         } finally {
-            LineIterator.closeQuietly(lineIterator);
-            IOUtils.closeQuietly(placeFileStream);
+            closeQuietly(bufferedReader);
         }
 
-        count += this.ebean.save(articles);
-        LOGGER.info("Loaded [{}] dictionary articles with [{}] errors", count, errors);
-        return count;
+        LOGGER.info("Loaded [{}] dictionary articles with [{}] errors", this.count, this.errors);
+        return this.articles;
+    }
+
+    /**
+     * Parses a line by setting the current state of this loader appropriately
+     * 
+     * @param line the line that has been read from file
+     */
+    private void parseLine(final String line) {
+        // deal with case where we are hitting a new word
+        if (line.startsWith(HEADWORD)) {
+            prepareNewArticle();
+        }
+
+        // are we dealing with a normal field
+        if (line.length() > 0 && line.charAt(0) == '@') {
+            // work out which fields and how to parse them
+            parseField(line);
+        } else {
+            appendToArticleText(line);
+        }
+    }
+
+    /**
+     * Saves the current article, and if threshold is met, then saves to database
+     */
+    private void saveCurrentArticle() {
+        if (this.currentArticle != null) {
+            parseArticleText();
+            this.articles.add(this.currentArticle);
+        }
+
+        // save in batches, so we won't be returning this set of articles
+        if (this.articles.size() > BATCH_ARTICLES) {
+            this.count += getEbean().save(this.articles);
+            LOGGER.info("Saved [{}] items to database", this.count);
+            this.articles = new ArrayList<DictionaryArticle>();
+        }
+
+    }
+
+    /**
+     * sets the appropriate state and saves articles in batches to prevent too much going into memory
+     */
+    private void prepareNewArticle() {
+        saveCurrentArticle();
+        this.currentArticle = new DictionaryArticle();
+        this.articleText = new StringBuilder(DEFAULT_ARTICLE_SIZE);
     }
 
     /**
      * appends a paragraph mark if the line is empty, or appends the content of the line if not.
      * 
-     * @param bigField the stringbuilder containing the article text
      * @param line the line with its content.
      */
-    private void appendToArticleText(final StringBuilder bigField, final String line) {
+    private void appendToArticleText(final String line) {
         if (isEmpty(line)) {
             // empty line, so let's put a paragraph mark in
-            bigField.append("<p />");
+            this.articleText.append("<p />");
         } else {
             // text field content + 1 space
-            bigField.append(line);
-            bigField.append(' ');
+            this.articleText.append(line);
+            this.articleText.append(' ');
         }
     }
 
     /**
      * transforms the article into HTML
-     * 
-     * @param article the article currently populated with loaded values
-     * @param text the content of the article in raw form
      */
-    void parseArticleText(final DictionaryArticle article, final StringBuilder text) {
-        final String articleContentRaw = text.toString().trim();
+    void parseArticleText() {
+        final String articleContentRaw = this.articleText.toString().trim();
         final Matcher bibleLinkMatcher = BIBLE_LINK.matcher(articleContentRaw);
         final String articleWithBibleRefs = bibleLinkMatcher
                 .replaceAll("<a onclick='viewPassage(this, \"$2\")'>$1</a>");
 
         final Matcher internalLinkMatcher = INTERNAL_LINK.matcher(articleWithBibleRefs);
 
-        article.setText(internalLinkMatcher.replaceAll("<a onclick='goToArticle(\""
-                + article.getSource().name() + "\", \"$1\", \"$2\")'>$1</a>"));
+        this.currentArticle.setText(internalLinkMatcher.replaceAll("<a onclick='goToArticle(\""
+                + this.currentArticle.getSource().name() + "\", \"$1\", \"$2\")'>$1</a>"));
     }
 
     /**
      * parses a simple field by examining the type and setting the content (or appending the content to a
      * 
-     * @param article the article entity
      * @param line the line content including field name and value
-     * @return the number of errors encountered
      */
-    private int parseField(final DictionaryArticle article, final String line) {
-        int errors = 0;
+    private void parseField(final String line) {
         if (line.startsWith(HEADWORD)) {
             // headwords may contain several articles
-            article.setHeadword(parseFieldContent(HEADWORD, line));
-
-            article.setHeadwordInstance(parseHeadwordInstance(article.getHeadword()));
+            this.currentArticle.setHeadword(parseFieldContent(HEADWORD, line));
+            this.currentArticle.setHeadwordInstance(parseHeadwordInstance(this.currentArticle.getHeadword()));
+            LOGGER.debug("Loading article [{}] - [{}]", this.currentArticle.getHeadword(),
+                    this.currentArticle.getHeadwordInstance());
         } else if (line.startsWith(CLASS)) {
             // assuming 1 character-length
-            article.setClazz(parseFieldContent(CLASS, line).charAt(0));
+            this.currentArticle.setClazz(parseFieldContent(CLASS, line).charAt(0));
         } else if (line.startsWith(STATUS)) {
-            article.setStatus(parseFieldContent(STATUS, line));
+            this.currentArticle.setStatus(parseFieldContent(STATUS, line));
         } else if (line.startsWith(SOURCE)) {
-            article.setSource(valueOf(parseFieldContent(SOURCE, line).toUpperCase()));
+            this.currentArticle.setSource(valueOf(parseFieldContent(SOURCE, line).toUpperCase()));
         } else if (line.startsWith(TEXT)) {
-            article.setText(parseFieldContent(TEXT, line));
+            this.currentArticle.setText(parseFieldContent(TEXT, line));
         } else if (line.startsWith(ALL_REFS)) {
             final String fieldContent = parseFieldContent(ALL_REFS, line);
 
-            // we'll assume for now that we are always split by ; but we will warn otherwise
-            final String[] refs = split(fieldContent, "; ");
-            final List<ScriptureReference> allRefs = new ArrayList<ScriptureReference>();
-            for (final String s : refs) {
-                List<ScriptureReference> references = new ArrayList<ScriptureReference>();
-                try {
-                    references = this.jsword.getPassageReferences(s, DICTIONARY_ARTICLE, "KJV");
-                } catch (final StepInternalException e) {
-                    errors++;
-                    LOGGER.error("Cannot resolve reference " + s + " for article " + article.getHeadword());
-                    LOGGER.trace("Unable to resolve references", e);
-                }
-                allRefs.addAll(references);
-            }
-
-            if (allRefs.isEmpty()) {
-                // we warn because we found nothing
-                LOGGER.warn("No references found for Article [{}]", article.getHeadword());
-
-            }
-            article.setScriptureReferences(allRefs);
+            parseAllRefs(fieldContent);
         } else {
             LOGGER.error("Field [{}] not recognised", line);
         }
+    }
 
-        return errors;
+    /**
+     * @param fieldContent the references to be parsed and set onto the article
+     */
+    private void parseAllRefs(final String fieldContent) {
+        // we'll assume for now that we are always split by ; but we will warn otherwise
+        final String[] refs = split(fieldContent, "[ ]?;[ ]?");
+        final List<ScriptureReference> allRefs = new ArrayList<ScriptureReference>();
+
+        // iterate through all references found
+        for (final String s : refs) {
+            List<ScriptureReference> references = new ArrayList<ScriptureReference>();
+            try {
+                references = this.jsword.getPassageReferences(s, DICTIONARY_ARTICLE, "KJV");
+            } catch (final StepInternalException e) {
+                this.errors++;
+                LOGGER.error("Cannot resolve reference " + s + " for article "
+                        + this.currentArticle.getHeadword());
+                LOGGER.trace("Unable to resolve references", e);
+            }
+            allRefs.addAll(references);
+        }
+
+        if (allRefs.isEmpty()) {
+            // we warn because we found nothing
+            LOGGER.warn("No references found for Article [{}]", this.currentArticle.getHeadword());
+
+        }
+        this.currentArticle.setScriptureReferences(allRefs);
     }
 
     /**
@@ -279,5 +293,19 @@ public class DictionaryLoader implements ModuleLoader {
      */
     String parseFieldContent(final String fieldName, final String line) {
         return line.substring(fieldName.length() + 1).trim();
+    }
+
+    /**
+     * @param currentArticle the currentArticle to set
+     */
+    void setCurrentArticle(final DictionaryArticle currentArticle) {
+        this.currentArticle = currentArticle;
+    }
+
+    /**
+     * @param articleText the articleText to set
+     */
+    void setArticleText(final StringBuilder articleText) {
+        this.articleText = articleText;
     }
 }

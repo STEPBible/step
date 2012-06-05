@@ -1,0 +1,202 @@
+<!--
+  Copyright (c) 2012, Directors of the Tyndale STEP Project
+  All rights reserved.
+  
+  Redistribution and use in source and binary forms, with or without 
+  modification, are permitted provided that the following conditions 
+  are met:
+  
+  Redistributions of source code must retain the above copyright 
+  notice, this list of conditions and the following disclaimer.
+  Redistributions in binary form must reproduce the above copyright 
+  notice, this list of conditions and the following disclaimer in 
+  the documentation and/or other materials provided with the 
+  distribution.
+  Neither the name of the Tyndale House, Cambridge (www.TyndaleHouse.com)  
+  nor the names of its contributors may be used to endorse or promote 
+  products derived from this software without specific prior written 
+  permission.
+  
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
+  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
+  FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
+  COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
+  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
+  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
+  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING 
+  IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
+  THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.tyndalehouse.step</groupId>
+		<artifactId>step-parent</artifactId>
+		<version>1.0-SNAPSHOT</version>
+		<relativePath>../step-parent/pom.xml</relativePath>
+	</parent>
+
+	<groupId>com.tyndalehouse.step</groupId>
+	<artifactId>step-core</artifactId>
+	<packaging>jar</packaging>
+	<version>1.0-SNAPSHOT</version>
+	<name>STEP :: Step Core functionality</name>
+
+	<build>
+		<plugins>
+			<plugin>  
+				<groupId>org.apache.maven.plugins</groupId>  
+				<artifactId>maven-antrun-plugin</artifactId>  
+				<executions>  
+					<execution>  
+						<id>generating-ebean-classes</id>  
+						<phase>compile</phase>  
+						<configuration>  
+							<tasks>  
+								<property name="compile_classpath" refid="maven.compile.classpath" />  
+								<echo message="Ebean enhancing test classes debug level -----------------------------------" />  
+								<echo message="Classpath: ${compile_classpath}" />  
+								<taskdef name="ebeanEnhance"  
+									classname="com.avaje.ebean.enhance.ant.AntEnhanceTask"  
+									classpath="${compile_classpath}" />  
+								<ebeanEnhance 
+									classSource="${project.build.outputDirectory}"  
+									packages="com.tyndalehouse.step.core.data.entities.**" />  
+							</tasks>  
+							<encoding>UTF-8</encoding>  
+						</configuration>  
+						<goals>  
+							<goal>run</goal>  
+						</goals>
+					</execution>  
+				</executions>  
+			</plugin>  
+			<plugin>
+			    <groupId>org.apache.maven.plugins</groupId>
+		        <artifactId>maven-surefire-plugin</artifactId>
+		        <executions>
+		        	<execution>
+				        <configuration>
+				          <includes>
+				            <include>**/*PreReq.java</include>
+				          </includes>
+				        </configuration>
+				        <phase>process-test-classes</phase>
+				        <goals>
+				        	<goal>test</goal>
+				        </goals>
+		        	</execution>
+		        </executions>
+			</plugin>
+			
+<!-- 			 <plugin> -->
+<!-- 		        <groupId>org.codehaus.mojo</groupId> -->
+<!-- 		        <artifactId>cobertura-maven-plugin</artifactId> -->
+<!-- 		        <configuration> -->
+<!-- 		          <instrumentation> -->
+<!-- 		            <excludes> -->
+<!-- 		             Controllers are generally empty and provide validation only -->
+<!-- 		              <exclude>com/tyndalehouse/step/rest/controllers/*.class</exclude> -->
+<!-- 		              <exclude>com/tyndalehouse/step/core/data/entities/*.class</exclude> -->
+<!-- 		              <exclude>com/tyndalehouse/step/core/models/*.class</exclude> -->
+<!-- 		            </excludes> -->
+<!-- 		          </instrumentation> -->
+<!-- 		        </configuration> -->
+<!-- 		      </plugin> -->
+		      
+		</plugins>
+	</build>
+
+
+	<dependencies>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.crosswire</groupId>
+			<artifactId>jsword</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.jdom</groupId>
+			<artifactId>jdom</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>xalan</groupId>
+			<artifactId>xalan</artifactId>
+			<version>2.7.1</version>
+		</dependency>
+            
+				
+		<!--  we don't always need this - depends on what version -->
+		<dependency>
+			<groupId>commons-dbcp</groupId>
+			<artifactId>commons-dbcp</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.jolira</groupId>
+			<artifactId>guice</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>net.sf.opencsv</groupId>
+			<artifactId>opencsv</artifactId>
+		</dependency>
+
+		<dependency>
+		    <groupId>org.avaje</groupId>
+		    <artifactId>ebean</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>net.sf.ehcache</groupId>
+			<artifactId>ehcache-core</artifactId>
+		</dependency>
+		
+		<dependency>
+		    <groupId>joda-time</groupId>
+		    <artifactId>joda-time</artifactId>
+		</dependency>
+		
+		
+		<!-- transitive dependencies not picked up by jsword -->
+		<dependency>
+			<groupId>javatar</groupId>
+			<artifactId>javatar</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-httpclient</groupId>
+			<artifactId>commons-httpclient </artifactId>
+			<scope>test</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.1-beta1</version>
+		</dependency>
+	</dependencies>
+</project>

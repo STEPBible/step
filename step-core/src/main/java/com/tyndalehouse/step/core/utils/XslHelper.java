@@ -33,8 +33,8 @@
 package com.tyndalehouse.step.core.utils;
 
 import static com.tyndalehouse.step.core.utils.StringConversionUtils.getAnyKey;
+import static com.tyndalehouse.step.core.utils.StringUtils.split;
 import static java.lang.String.format;
-import static org.apache.commons.lang.StringUtils.split;
 
 /**
  * A helper class for use during XSL transformations
@@ -50,7 +50,7 @@ public final class XslHelper {
     private static final String END_FUNCTION_WRAPPER = "', this)";
     private static final String QUOTED_END_TAG = "\">";
     private static final String END_ANCHOR = "</a>";
-    private static final String SEPARATORS = " |";
+    private static final String SEPARATORS = "[ ]?\\|[ ]?";
     private static final String BLANK_SPACE = "&nbsp;";
 
     /**

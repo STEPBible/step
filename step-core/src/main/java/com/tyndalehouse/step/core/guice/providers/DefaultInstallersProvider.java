@@ -32,7 +32,8 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.guice.providers;
 
-import static org.apache.commons.lang.StringUtils.isNotBlank;
+import static com.tyndalehouse.step.core.utils.StringUtils.commaSeparate;
+import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +41,6 @@ import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
 
-import org.apache.commons.lang.StringUtils;
 import org.crosswire.jsword.book.install.Installer;
 import org.crosswire.jsword.book.install.sword.HttpSwordInstaller;
 
@@ -73,7 +73,7 @@ public class DefaultInstallersProvider implements Provider<List<Installer>> {
         for (final Entry<Object, Object> entry : entrySet) {
             if (entry.getKey() instanceof String && ((String) entry.getKey()).startsWith("installer")) {
                 // add to list
-                final String[] split = StringUtils.split(entry.getValue().toString(), ",");
+                final String[] split = commaSeparate(entry.getValue().toString());
 
                 final HttpSwordInstaller installer = new HttpSwordInstaller();
                 installer.setHost(split[0]);

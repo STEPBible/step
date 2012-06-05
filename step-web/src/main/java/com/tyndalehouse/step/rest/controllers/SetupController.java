@@ -32,7 +32,10 @@
  ******************************************************************************/
 package com.tyndalehouse.step.rest.controllers;
 
-import static org.apache.commons.lang.Validate.notNull;
+import static com.tyndalehouse.step.core.exceptions.UserExceptionType.CONTROLLER_INITIALISATION_ERROR;
+import static com.tyndalehouse.step.core.exceptions.UserExceptionType.USER_MISSING_FIELD;
+import static com.tyndalehouse.step.core.utils.ValidateUtils.notBlank;
+import static com.tyndalehouse.step.core.utils.ValidateUtils.notNull;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,8 +65,9 @@ public class SetupController {
      */
     @Inject
     public SetupController(final BibleInformationService bibleInformationService, final Loader loader) {
-        notNull(bibleInformationService, "No bible information service was provided");
-        notNull(loader, "No loader module was provided");
+        notNull(bibleInformationService, "No bible information service was provided",
+                CONTROLLER_INITIALISATION_ERROR);
+        notNull(loader, "No loader module was provided", CONTROLLER_INITIALISATION_ERROR);
 
         this.bibleInformation = bibleInformationService;
         this.loader = loader;
@@ -96,7 +100,7 @@ public class SetupController {
      * @param reference the initials of the bible to install
      */
     public void installBible(final String reference) {
-        notNull(reference, "A reference must be provided to install a bible");
+        notBlank(reference, "A reference must be provided to install a bible", USER_MISSING_FIELD);
         LOGGER.debug("Installing module {}", reference);
         this.bibleInformation.installModules(reference);
     }

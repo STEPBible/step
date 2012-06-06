@@ -60,7 +60,7 @@ import com.tyndalehouse.step.core.service.JSwordService;
  */
 public class Loader {
     private static final int INSTALL_WAITING = 1000;
-    private static final int INSTALL_MAX_WAITING = INSTALL_WAITING * 60;
+    private static final int INSTALL_MAX_WAITING = INSTALL_WAITING * 180;
     private static final String KJV = "KJV";
     private static final Logger LOG = LoggerFactory.getLogger(Loader.class);
     private final EbeanServer ebean;

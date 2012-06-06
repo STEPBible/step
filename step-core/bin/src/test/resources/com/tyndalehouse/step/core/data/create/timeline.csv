@@ -1,5 +1,0 @@
-"ID","Name","From","To","From2","To2","Importance","Certainty","Flags","Timeline","Type","Description","Refs","Source"
-"T_JesusEarly","Early Years of Jesus Christ and John the Baptist","-04-10","11",,,"T_LifeOfJesus",,,"T_LifeOfJesus","Timeline",,,
-"T_JesusJohn","John's ministry and the start of Jesus's","29-01","31-02",,,"T_LifeOfJesus",,,"T_LifeOfJesus","Timeline","Jesus mainly in Judea",,
-"E_JES1","Birth of John the Baptist promised","-04-10",,,,"T_JesusEarly",,,"T_JesusEarly","Event",,"Luke.1.5-25",
-"E_PAT17","Seven years of plenty","-1574","-1567","-1886","-1879","T_Jacob","20",,"T_Jacob","Event",,"Gen.41.46-53",

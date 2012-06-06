@@ -1,5 +1,7 @@
 init();
 
+var currentShowingURL;
+
 function getUrlVars() {
 	var vars = {};
 	var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi,
@@ -34,11 +36,11 @@ function updatePassageView() {
 
 	var url = BIBLE_GET_BIBLE_TEXT + version + "/" + passage + "/";
 
-	if (!params["headings"] || params["headings"] === "on") {
+	if (params["headings"] && params["headings"] === "on") {
 		url += "HEADINGS,";
 	}
 
-	if (!params["verse_numbers"] || params["verse_numbers"] === "on") {
+	if (params["verse_numbers"] && params["verse_numbers"] === "on") {
 		url += "VERSE_NUMBERS,";
 	}
 
@@ -50,9 +52,13 @@ function updatePassageView() {
 		url += "MORPHOLOGY,";
 	}
 	
-	$.get(url, function(text) {
-		// we get html back, so we insert into passage:
-		$("#mobileMainPane").html(text.value);
-	});
+	if(currentShowingURL != url ){
+		currentShowingURL = url;
+		console.log(url);
+		$.get(url, function(text) {
+			// we get html back, so we insert into passage:
+			$("#mobileMainPane").html(text.value);
+		});
+	}
 
 }

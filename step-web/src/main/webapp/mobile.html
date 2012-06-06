@@ -8,7 +8,7 @@
 	<link rel="stylesheet" type="text/css" href="css_mobile/init-layout.css" />
 	<link rel="stylesheet" type="text/css" href="css/passage.css" />
 
-	<script src="js/initLib.js" type="text/javascript"></script>   
+	<script src="js_init/initLib.js" type="text/javascript"></script>   
 
 	<script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
 	<script src="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.js"></script>
@@ -40,8 +40,8 @@
 	</div>
 
 	<div data-role="content">
-	
-		<form>
+	<!--  method="get" action="rest/bible/getBibleText/KJV/Romans 1/HEADINGS,VERSE_NUMBERS,MORPHOLOGY" -->
+		<form >
 			<div data-role="control-group">
 				<legend>Display Options</legend>
 				   <input type="checkbox" checked="checked" name="verse_numbers" id="verse_numbers" />
@@ -60,10 +60,5 @@
 			<input type="submit" value="Submit" data-direction="reverse" />
 		</form>
 	</div>
-
-
-
-
-
 </body>
 </html>

@@ -48,7 +48,7 @@ public class MoodEditor extends EnumPropertyEditor<Mood> {
 
     @Override
     public void setAsText(final String text) {
-        super.setValue(Mood.resolveByDisplayName(text));
+        super.setValue(Mood.resolveByCsvValueName(text));
     }
 
 }

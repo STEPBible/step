@@ -48,6 +48,6 @@ public class VoiceEditor extends EnumPropertyEditor<Voice> {
 
     @Override
     public void setAsText(final String text) {
-        super.setValue(Voice.resolveByDisplayName(text));
+        super.setValue(Voice.resolveByCsvValueName(text));
     }
 }

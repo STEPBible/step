@@ -36,7 +36,7 @@ import static com.tyndalehouse.step.core.utils.EnumUtils.getReverseMap;
 
 import java.util.Map;
 
-import com.tyndalehouse.step.core.models.HasDisplayName;
+import com.tyndalehouse.step.core.models.HasCsvValueName;
 
 /**
  * Tense of a verb, etc.
@@ -44,42 +44,74 @@ import com.tyndalehouse.step.core.models.HasDisplayName;
  * @author chrisburrell
  */
 // CHECKSTYLE:OFF
-public enum Tense implements HasDisplayName {
+public enum Tense implements HasCsvValueName {
     AORIST("Aorist"),
     COMPARATIVE("Comparative"),
     CONTRACTED_FORM("Contracted form"),
     FUTURE("Future"),
-    IMPERFECT("ImpeRfect"),
-    INDECLINABLE_LETTER("Indeclinable Letter"),
-    INDECLINABLE_NUMERAL("Indeclinable NUmeral"),
+    IMPERFECT("ImpeRfect", "Imperfect"),
+    INDECLINABLE_LETTER("Indeclinable letter"),
+    INDECLINABLE_NUMERAL("Indeclinable NUmeral", "Numeral", "Indeclinable"),
     INDEFINITE_TENSE("Indefinite tense"),
     INTERROGATIVE("Interrogative"),
     NEGATIVE("Negative"),
     PRESENT("Present"),
     SECOND_AORIST("Second Aorist"),
     SECOND_FUTURE("Second Future"),
-    SECOND_PERFECT("Second peRfect"),
-    SECOND_PLUPERFECT("Second pLupeRfect");
+    SECOND_PERFECT("Second peRfect", "Second Perfect"),
+    SECOND_PLUPERFECT("Second pLupeRfect", "Second Pluperfect");
 
     private static Map<String, Tense> values = getReverseMap(values());
+    private final String csvValueName;
     private final String displayName;
+    private final String notes;
 
     /**
      * @param displayText the text to display on the screen
      */
-    Tense(final String displayName) {
+    Tense(final String csvValueName) {
+        this(csvValueName, null);
+    }
+
+    Tense(final String csvValueName, final String displayName) {
+        this(csvValueName, displayName, null);
+    }
+
+    /**
+     * @param displayText the text to display on the screen
+     */
+    Tense(final String csvValueName, final String displayName, final String notes) {
+        this.csvValueName = csvValueName;
         this.displayName = displayName;
+        this.notes = notes;
     }
 
     /**
      * @return the displayText
      */
-    public String getDisplayName() {
-        return this.displayName;
+    public String getCsvValueName() {
+        return this.csvValueName;
     }
 
-    public static Tense resolveByDisplayName(final String displayName) {
-        return values.get(displayName);
+    public static Tense resolveByCsvValueName(final String csvValueName) {
+        return values.get(csvValueName);
+    }
+
+    /**
+     * @return the displayName
+     */
+    String getDisplayName() {
+        if (this.displayName != null) {
+            return this.displayName;
+        }
+        return this.csvValueName;
+    }
+
+    /**
+     * @return the notes
+     */
+    public String getNotes() {
+        return this.notes;
     }
 
     @Override

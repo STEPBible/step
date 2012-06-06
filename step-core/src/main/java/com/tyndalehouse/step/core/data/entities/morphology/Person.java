@@ -36,7 +36,7 @@ import static com.tyndalehouse.step.core.utils.EnumUtils.getReverseMap;
 
 import java.util.Map;
 
-import com.tyndalehouse.step.core.models.HasDisplayName;
+import com.tyndalehouse.step.core.models.HasCsvValueName;
 
 /**
  * The person used for the word
@@ -45,33 +45,51 @@ import com.tyndalehouse.step.core.models.HasDisplayName;
  * 
  */
 // CHECKSTYLE:OFF
-public enum Person implements HasDisplayName {
+public enum Person implements HasCsvValueName {
     FIRST("First"),
     SECOND("Second"),
     THIRD("Third"),
     MIDDLE_SIGNIFICANCE("Middle significance"),
-    ATTIC_FORM("ATTIc form");
+    ATTIC_FORM("ATTIc form", "Attic form");
 
     private static Map<String, Person> values = getReverseMap(values());
+    private final String csvValueName;
     private final String displayName;
 
     /**
-     * @param displayName The display name for the screen
+     * @param csvValueName The display name for the screen
      */
-    Person(final String displayName) {
-        this.displayName = displayName;
+    Person(final String csvValueName) {
+        this(csvValueName, null);
+    }
 
+    /**
+     * @param csvValueName The display name for the screen
+     */
+    Person(final String csvValueName, final String displayName) {
+        this.csvValueName = csvValueName;
+        this.displayName = displayName;
+    }
+
+    /**
+     * @return the csvValueName
+     */
+    public String getCsvValueName() {
+        return this.csvValueName;
+    }
+
+    public static Person resolveByCsvValueName(final String csvValueName) {
+        return values.get(csvValueName);
     }
 
     /**
      * @return the displayName
      */
-    public String getDisplayName() {
-        return this.displayName;
-    }
-
-    public static Person resolveByDisplayName(final String displayName) {
-        return values.get(displayName);
+    String getDisplayName() {
+        if (this.displayName != null) {
+            return this.displayName;
+        }
+        return this.csvValueName;
     }
 
     @Override

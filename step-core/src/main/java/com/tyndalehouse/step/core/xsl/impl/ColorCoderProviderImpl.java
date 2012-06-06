@@ -68,6 +68,9 @@ import org.slf4j.LoggerFactory;
  * <p>
  * ie anything ending GSM GSN GSF GPM GPN or GPF or DSM DSN DSF DPM DPN or DPF
  * 
+ * TODO: could this be optimized by a cache to avoid running the regex everytime. If so, worth looking at
+ * {@link MorphologyProvider} for an example. it might also be worth combining the implementations
+ * 
  * @author chrisburrell
  */
 public class ColorCoderProviderImpl {
@@ -94,6 +97,7 @@ public class ColorCoderProviderImpl {
      * @param morph the robinson morphology
      * @return the classname
      */
+    // TODO this doesn't work for multiple morphs - rework for colours? share a cache system...
     public String getColorClass(final String morph) {
         if (morph == null || morph.length() < MINIMUM_MORPH_LENGTH) {
             return "";

@@ -36,7 +36,7 @@ import static com.tyndalehouse.step.core.utils.EnumUtils.getReverseMap;
 
 import java.util.Map;
 
-import com.tyndalehouse.step.core.models.HasDisplayName;
+import com.tyndalehouse.step.core.models.HasCsvValueName;
 
 /**
  * Various forms of mood
@@ -45,31 +45,46 @@ import com.tyndalehouse.step.core.models.HasDisplayName;
  * 
  */
 // CHECKSTYLE:OFF
-public enum Mood implements HasDisplayName {
+public enum Mood implements HasCsvValueName {
     INDICATIVE("Indicative"),
-    IMPERATIVE("iMperative"),
-    INFINITIVE("iNfinitive"),
+    IMPERATIVE("iMperative", "Imperative"),
+    INFINITIVE("iNfinitive", "Infinitive"),
     OPTATIVE("Optative"),
     PARTICIPLE("Participle"),
     SUBJUNCTIVE("Subjunctive");
 
     private static Map<String, Mood> values = getReverseMap(values());
+    private final String csvValueName;
     private final String displayName;
 
-    Mood(final String displayName) {
-        this.displayName = displayName;
+    Mood(final String csvValueName) {
+        this(csvValueName, null);
+    }
 
+    Mood(final String csvValueName, final String displayName) {
+        this.csvValueName = csvValueName;
+        this.displayName = displayName;
     }
 
     /**
      * @return the displayName
      */
-    public String getDisplayName() {
-        return this.displayName;
+    public String getCsvValueName() {
+        return this.csvValueName;
     }
 
-    public static Mood resolveByDisplayName(final String displayName) {
-        return values.get(displayName);
+    public static Mood resolveByCsvValueName(final String csvValueName) {
+        return values.get(csvValueName);
+    }
+
+    /**
+     * @return the displayName
+     */
+    String getDisplayName() {
+        if (this.displayName != null) {
+            return this.displayName;
+        }
+        return this.csvValueName;
     }
 
     @Override

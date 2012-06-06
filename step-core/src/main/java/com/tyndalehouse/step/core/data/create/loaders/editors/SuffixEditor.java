@@ -48,6 +48,6 @@ public class SuffixEditor extends EnumPropertyEditor<Suffix> {
 
     @Override
     public void setAsText(final String text) {
-        super.setValue(Suffix.resolveByDisplayName(text));
+        super.setValue(Suffix.resolveByCsvValueName(text));
     }
 }

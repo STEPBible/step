@@ -30,12 +30,14 @@
  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
-package com.tyndalehouse.step.core.data.caches;
+package com.tyndalehouse.step.core.data.caches.morphology;
 
 import javax.inject.Inject;
 
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.config.CacheConfiguration;
+
+import com.tyndalehouse.step.core.data.caches.AbstractDefaultCache;
 
 /**
  * A cache for looking up morphology details
@@ -43,8 +45,8 @@ import net.sf.ehcache.config.CacheConfiguration;
  * @author chrisburrell
  * 
  */
-public class MorphologyCache extends AbstractDefaultCache<String> {
-    private static final int MAX_MORPHS = 512;
+public class MorphologyCache extends AbstractDefaultCache<MorphCacheEntry> {
+    private static final int MAX_MORPHS = 1024;
 
     /**
      * creates the session cache

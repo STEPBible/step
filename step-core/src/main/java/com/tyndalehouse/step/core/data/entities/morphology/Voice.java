@@ -36,7 +36,7 @@ import static com.tyndalehouse.step.core.utils.EnumUtils.getReverseMap;
 
 import java.util.Map;
 
-import com.tyndalehouse.step.core.models.HasDisplayName;
+import com.tyndalehouse.step.core.models.HasCsvValueName;
 
 /**
  * Voice of the word
@@ -45,37 +45,53 @@ import com.tyndalehouse.step.core.models.HasDisplayName;
  * 
  */
 // CHECKSTYLE:OFF
-public enum Voice implements HasDisplayName {
+public enum Voice implements HasCsvValueName {
     ACTIVE("Active"),
-    IMPERSONAL_ACTIVE("Impersonal active"),
-    MIDDLE_OR_PASSIVE("Either middle or passive"),
-    PASSIVE_DEPONENT("Passive depOnent"),
+    IMPERSONAL_ACTIVE("Impersonal active", "Impersonal Active"),
+    MIDDLE_OR_PASSIVE("Either middle or passive", "Middle or Passive"),
+    PASSIVE_DEPONENT("Passive depOnent", "Passive Deponent"),
     PASSIVE("Passive"),
-    MIDDLE_OR_PASSIVE_DEPONENT("middle or Passive depoNent"),
+    MIDDLE_OR_PASSIVE_DEPONENT("middle or Passive depoNent", "Middle or Passive Deponent"),
     MIDDLE("Middle"),
-    MIDDLE_DEPONENT("middle Deponent"),
+    MIDDLE_DEPONENT("middle Deponent", "Middle Deponent"),
     INDEFINITE_VOICE("Indefinite voice");
 
     private static Map<String, Voice> values = getReverseMap(values());
+    private String csvValueName;
     private String displayName;
 
-    Voice(final String displayName) {
+    Voice(final String csvValueName) {
+        this(csvValueName, null);
+    }
+
+    Voice(final String csvValueName, final String displayName) {
+        this.csvValueName = csvValueName;
         this.displayName = displayName;
     }
 
     /**
      * @return the displayName
      */
-    public String getDisplayName() {
-        return this.displayName;
+    public String getCsvValueName() {
+        return this.csvValueName;
     }
 
-    public static Voice resolveByDisplayName(final String displayName) {
-        return values.get(displayName);
+    public static Voice resolveByCsvValueName(final String csvValueName) {
+        return values.get(csvValueName);
+    }
+
+    /**
+     * @return the displayName
+     */
+    String getDisplayName() {
+        if (this.displayName != null) {
+            return this.displayName;
+        }
+        return this.csvValueName;
     }
 
     @Override
     public String toString() {
-        return getDisplayName();
+        return getCsvValueName();
     }
 }

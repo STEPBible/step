@@ -36,7 +36,7 @@ import static com.tyndalehouse.step.core.utils.EnumUtils.getReverseMap;
 
 import java.util.Map;
 
-import com.tyndalehouse.step.core.models.HasDisplayName;
+import com.tyndalehouse.step.core.models.HasCsvValueName;
 
 /**
  * the number of the word
@@ -46,24 +46,26 @@ import com.tyndalehouse.step.core.models.HasDisplayName;
  */
 // CHECKSTYLE:OFF
 
-public enum Number implements HasDisplayName {
-    SINGULAR("Singular"),
-    PLURAL("Plural");
+public enum Number implements HasCsvValueName {
+    SINGULAR("Singular", "sing"),
+    PLURAL("Plural", "plur");
 
     private static Map<String, Number> values = getReverseMap(values());
     private final String displayName;
+    private final String cssClass;
 
     /**
      * @param displayText name to be displayed on the screen
      */
-    Number(final String displayName) {
+    Number(final String displayName, final String cssClass) {
         this.displayName = displayName;
+        this.cssClass = cssClass;
     }
 
     /**
      * @return the displayName
      */
-    public String getDisplayName() {
+    public String getCsvValueName() {
         return this.displayName;
     }
 
@@ -73,6 +75,13 @@ public enum Number implements HasDisplayName {
 
     @Override
     public String toString() {
-        return getDisplayName();
+        return getCsvValueName();
+    }
+
+    /**
+     * @return the cssClass
+     */
+    public String getCssClass() {
+        return this.cssClass;
     }
 }

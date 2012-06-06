@@ -36,7 +36,7 @@ import static com.tyndalehouse.step.core.utils.EnumUtils.getReverseMap;
 
 import java.util.Map;
 
-import com.tyndalehouse.step.core.models.HasDisplayName;
+import com.tyndalehouse.step.core.models.HasCsvValueName;
 
 /**
  * The case of the word
@@ -45,7 +45,7 @@ import com.tyndalehouse.step.core.models.HasDisplayName;
  * 
  */
 // CHECKSTYLE:OFF
-public enum Case implements HasDisplayName {
+public enum Case implements HasCsvValueName {
     ACCUSATIVE("Accusative"),
     DATIVE("Dative"),
     GENITIVE("Genitive"),
@@ -66,7 +66,7 @@ public enum Case implements HasDisplayName {
      * @return the displayName
      */
     @Override
-    public String getDisplayName() {
+    public String getCsvValueName() {
         return this.displayName;
     }
 
@@ -76,6 +76,6 @@ public enum Case implements HasDisplayName {
 
     @Override
     public String toString() {
-        return getDisplayName();
+        return getCsvValueName();
     }
 }

@@ -48,6 +48,6 @@ public class FunctionEditor extends EnumPropertyEditor<Function> {
 
     @Override
     public void setAsText(final String text) {
-        super.setValue(Function.resolveByDisplayName(text));
+        super.setValue(Function.resolveByCsvValueName(text));
     }
 }

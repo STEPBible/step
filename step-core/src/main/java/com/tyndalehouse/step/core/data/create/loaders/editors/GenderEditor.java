@@ -48,7 +48,7 @@ public class GenderEditor extends EnumPropertyEditor<Gender> {
 
     @Override
     public void setAsText(final String text) {
-        super.setValue(Gender.resolveByDisplayName(text));
+        super.setValue(Gender.resolveByCsvValueName(text));
     }
 
 }

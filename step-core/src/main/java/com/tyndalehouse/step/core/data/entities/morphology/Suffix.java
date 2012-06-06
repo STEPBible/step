@@ -36,7 +36,7 @@ import static com.tyndalehouse.step.core.utils.EnumUtils.getReverseMap;
 
 import java.util.Map;
 
-import com.tyndalehouse.step.core.models.HasDisplayName;
+import com.tyndalehouse.step.core.models.HasCsvValueName;
 
 /**
  * Suffix
@@ -45,35 +45,54 @@ import com.tyndalehouse.step.core.models.HasDisplayName;
  * 
  */
 // CHECKSTYLE:OFF
-public enum Suffix implements HasDisplayName {
+public enum Suffix implements HasCsvValueName {
     COMPARATIVE("Comparative"),
     SUPERLATIVE("Superlative"),
     TRANSITIVE("Transitive"),
-    ATTIC_FORM("ATTic form"),
-    ATTIC_GREEK_FORM("ATTic Greek form"),
+    ATTIC_FORM("ATTic form", "Attic form"),
+    ATTIC_GREEK_FORM("ATTic Greek form", "Attic form"),
     CONTRACTED_FORM("Contracted form"),
     MIDDLE_SIGNIFICANCE("Middle significance"),
     PARTICLE_ATTACHED("Particle attached");
 
     private static Map<String, Suffix> values = getReverseMap(values());
+    private final String csvValueName;
     private final String displayName;
 
     /**
      * @param displayText name to be displayed on the screen
      */
-    Suffix(final String displayName) {
+    Suffix(final String csvValueName) {
+        this(csvValueName, null);
+    }
+
+    /**
+     * @param displayText name to be displayed on the screen
+     */
+    Suffix(final String csvValueName, final String displayName) {
+        this.csvValueName = csvValueName;
         this.displayName = displayName;
     }
 
     /**
      * @return the displayName
      */
-    public String getDisplayName() {
-        return this.displayName;
+    public String getCsvValueName() {
+        return this.csvValueName;
     }
 
-    public static Suffix resolveByDisplayName(final String displayName) {
-        return values.get(displayName);
+    public static Suffix resolveByCsvValueName(final String csvValueName) {
+        return values.get(csvValueName);
+    }
+
+    /**
+     * @return the displayName
+     */
+    String getDisplayName() {
+        if (this.displayName != null) {
+            return this.displayName;
+        }
+        return this.csvValueName;
     }
 
     @Override

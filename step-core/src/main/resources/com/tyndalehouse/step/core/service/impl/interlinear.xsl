@@ -98,8 +98,7 @@
   <xsl:param name="ColorCoding" select="'false'" />
 
   <!-- Whether to show an interlinear and the provider helping with the lookup -->
-  <xsl:param name="strongFunctionCall" select="'javascript:showStrong'" />
-  <xsl:param name="morphFunctionCall" select="'javascript:showMorph'" />
+  <xsl:param name="infoFunctionCall" select="'javascript:showInfo'" />
   
   <!--  a comma separated list of versions to display, if provided, then we display the interlinear -->
   <xsl:param name="baseVersion" select="''" />
@@ -564,7 +563,7 @@
 					<xsl:if test="$StrongsNumbers = 'true'">
 						<span class="strongs">
 							<xsl:value-of
-								select="jsword:com.tyndalehouse.step.core.utils.XslHelper.getSpanFromAttributeName(@lemma, $strongFunctionCall)" />
+								select="jsword:com.tyndalehouse.step.core.utils.XslHelper.getSpanFromAttributeName(@lemma, $infoFunctionCall)" />
 						</span>
 					</xsl:if>
 		
@@ -573,7 +572,7 @@
 					<xsl:if test="$Morph = 'true'">
 						<span class="morphs">
 							<xsl:value-of
-								select="morph:getDisplayMorphology($morphologyProvider, @morph, $morphFunctionCall)" />
+								select="morph:getDisplayMorphology($morphologyProvider, @morph, $infoFunctionCall)" />
 						</span>
 					</xsl:if>
 		

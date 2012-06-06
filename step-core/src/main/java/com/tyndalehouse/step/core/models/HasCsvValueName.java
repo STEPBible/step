@@ -38,11 +38,11 @@ package com.tyndalehouse.step.core.models;
  * @author chrisburrell
  * 
  */
-public interface HasDisplayName {
+public interface HasCsvValueName {
 
     /**
      * @return the display name of the representing entity
      */
-    String getDisplayName();
+    String getCsvValueName();
 
 }

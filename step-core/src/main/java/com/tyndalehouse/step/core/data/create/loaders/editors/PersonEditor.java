@@ -48,7 +48,7 @@ public class PersonEditor extends EnumPropertyEditor<Person> {
 
     @Override
     public void setAsText(final String text) {
-        super.setValue(Person.resolveByDisplayName(text));
+        super.setValue(Person.resolveByCsvValueName(text));
     }
 
 }

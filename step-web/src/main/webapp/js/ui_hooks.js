@@ -187,26 +187,11 @@ function showDef(source) {
 	$.shout("show-all-strong-morphs", { strong: strong, morph: morph});
 };
 
-/**
- * Called when clicking on a strong link
- * @param strong strong to be displayed
- */
-function showStrong(strong, sourceElement) {
-	showMorphOrStrong(strong, sourceElement);
-};
-
-/**
- * called when clicking on a morph
- * @param morph the moprh that is clicked on
- */
-function showMorph(morph, sourceElement) {
-	showMorphOrStrong(morph, sourceElement);
-};
 
 /** TODO: move this out of here to utils.js if we have more utility classes/functions 
  * helper function for morph and strongs 
 */
-function showMorphOrStrong(tag, sourceElement) {
+function showInfo(tag, sourceElement) {
 	//trigger the parent event - to show everything
 	$(sourceElement).parent().click();
 	

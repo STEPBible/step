@@ -36,7 +36,7 @@ import static com.tyndalehouse.step.core.utils.EnumUtils.getReverseMap;
 
 import java.util.Map;
 
-import com.tyndalehouse.step.core.models.HasDisplayName;
+import com.tyndalehouse.step.core.models.HasCsvValueName;
 
 /**
  * Gender of the word
@@ -45,40 +45,73 @@ import com.tyndalehouse.step.core.models.HasDisplayName;
  * 
  */
 // CHECKSTYLE:OFF
-public enum Gender implements HasDisplayName {
-    FEMININE("Feminine"),
-    MASCULINE("Masculine"),
-    NEUTRER("Neuter"),
+public enum Gender implements HasCsvValueName {
+    FEMININE("Feminine", null, "fem"),
+    MASCULINE("Masculine", null, "mas"),
+    NEUTRER("Neuter", null, "neut"),
     AEOLIC("Aeolic"),
     APOCOPATED_FORM("Apocopated form"),
-    ATTIC_FORM("ATTic form"),
+    ATTIC_FORM("ATTic form", "Attic form"),
     CONTRACTED_FORM("Contracted form"),
-    IRREGULAR_OR_IMPURE_FORM("iRRegular or impure form"),
+    IRREGULAR_OR_IMPURE_FORM("iRRegular or impure form", "Irregular form"),
     MIDDLE_SIGNIFICANCE("Middle significance");
 
     private static Map<String, Gender> values = getReverseMap(values());
+    private final String csvValueName;
     private final String displayName;
+    private final String cssClass;
 
     /**
      * @param displayText name to be displayed on the screen
      */
-    Gender(final String displayName) {
+    Gender(final String csvValueName) {
+        this(csvValueName, null);
+    }
+
+    Gender(final String csvValueName, final String displayName) {
+        this(csvValueName, null, null);
+    }
+
+    /**
+     * @param displayText name to be displayed on the screen
+     */
+    Gender(final String csvValueName, final String displayName, final String cssClass) {
+        this.csvValueName = csvValueName;
         this.displayName = displayName;
+        this.cssClass = cssClass;
+
     }
 
     /**
      * @return the displayName
      */
-    public String getDisplayName() {
-        return this.displayName;
+    public String getCsvValueName() {
+        return this.csvValueName;
     }
 
-    public static Gender resolveByDisplayName(final String displayName) {
-        return values.get(displayName);
+    public static Gender resolveByCsvValueName(final String csvValueName) {
+        return values.get(csvValueName);
+    }
+
+    /**
+     * @return the displayName
+     */
+    String getDisplayName() {
+        if (this.displayName != null) {
+            return this.displayName;
+        }
+        return this.csvValueName;
     }
 
     @Override
     public String toString() {
         return getDisplayName();
+    }
+
+    /**
+     * @return the cssClass
+     */
+    public String getCssClass() {
+        return this.cssClass;
     }
 }

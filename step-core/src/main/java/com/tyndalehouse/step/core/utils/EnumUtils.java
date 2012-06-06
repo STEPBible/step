@@ -35,7 +35,7 @@ package com.tyndalehouse.step.core.utils;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.tyndalehouse.step.core.models.HasDisplayName;
+import com.tyndalehouse.step.core.models.HasCsvValueName;
 
 /**
  * utils for enums
@@ -51,14 +51,14 @@ public final class EnumUtils {
     /**
      * @param values the list of enum values
      * @param <T> type of the enum we wish to pass in
-     * @return a map keyed by display name (see {@link HasDisplayName}
+     * @return a map keyed by display name (see {@link HasCsvValueName}
      */
     // CHECKSTYLE:OFF
-    public static <T extends Enum<T> & HasDisplayName> Map<String, T> getReverseMap(final T[] values) {
+    public static <T extends Enum<T> & HasCsvValueName> Map<String, T> getReverseMap(final T[] values) {
         final Map<String, T> map = new HashMap<String, T>(values.length);
 
         for (final T t : values) {
-            map.put(t.getDisplayName(), t);
+            map.put(t.getCsvValueName(), t);
         }
         return map;
     }

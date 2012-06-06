@@ -36,7 +36,7 @@ import static com.tyndalehouse.step.core.utils.EnumUtils.getReverseMap;
 
 import java.util.Map;
 
-import com.tyndalehouse.step.core.models.HasDisplayName;
+import com.tyndalehouse.step.core.models.HasCsvValueName;
 
 /**
  * Different functions a word can perform
@@ -45,55 +45,90 @@ import com.tyndalehouse.step.core.models.HasDisplayName;
  */
 // CHECKSTYLE:OFF
 
-public enum Function implements HasDisplayName {
+public enum Function implements HasCsvValueName {
     ADJECTIVE("Adjective"),
     ADVERB("Adverb"),
-    CONDITIONAL_PARTICLE("CONDitional particle or conjunction"),
-    CONJUCTION("conjunction or conjunctive particle"),
-    CORRELATIVE_INTERROGATIVE_PRONOUN("correlative or Interrogative pronoun"),
-    CORRELATIVE_PRONOUN("corRelative pronoun"),
-    DEFINITE_ARTICLE("Definite article"),
-    DEMONSTRATIVE_PRONOUN("Demonstrative pronoun"),
-    HEBREW("HEBrew transliterated word"),
-    INDECLINABLE_NOUN("Indeclinable Noun of Other type"),
-    INDECLINABLE_PROPER_NOUN("Indeclinable PRoper Noun"),
-    INDEFINITE_PRONOUN("Indefinite pronoun"),
-    INTERJECTION("INterJection"),
-    INTERROGATIVE_PRONOUN("Interrogative pronoun"),
+    CONDITIONAL_PARTICLE("CONDitional particle or conjunction", "Conditional"),
+    CONJUCTION("conjunction or conjunctive particle", "Conjunctive"),
+    CORRELATIVE_INTERROGATIVE_PRONOUN("correlative or Interrogative pronoun", "Interrogative"),
+    CORRELATIVE_PRONOUN("corRelative pronoun", "Pronoun", "Correlative pronoun"),
+    DEFINITE_ARTICLE("Definite article", "Article"),
+    DEMONSTRATIVE_PRONOUN("Demonstrative pronoun", "Pronoun", "Demonstrative pronoun"),
+    HEBREW("HEBrew transliterated word", "Hebrew word"),
+    INDECLINABLE_NOUN("Indeclinable Noun of Other type", "Noun", "Indeclinable noun"),
+    INDECLINABLE_PROPER_NOUN("Indeclinable PRoper Noun", "Proper noun", "Indeclinable proper noun"),
+    INDEFINITE_PRONOUN("Indefinite pronoun", "Pronoun", "Indefinite pronoun"),
+    INTERJECTION("INterJection", "Interjection"),
+    INTERROGATIVE_PRONOUN("Interrogative pronoun", "Interrogative"),
     NOUN("Noun"),
-    PARTICLE("paRticle"),
-    PARTICLE_DISJUNCTIVE("PaRTicle, disjunctive particle"),
-    PERSONAL_PRONOUN("Personal pronoun"),
-    POSSESSIVE_PRONOUN("poSessive pronoun"),
-    PREPOSITION("PREPosition"),
-    RECIPROCAL_PRONOUN("reCiprocal pronoun"),
-    REFLEXIVE_PRONOUN("reFlexive pronoun"),
-    RELATIVE_PRONOUN("Relative pronoun"),
+    PARTICLE("paRticle", "Particle"),
+    PARTICLE_DISJUNCTIVE("PaRTicle, disjunctive particle", "Disjunctive"),
+    PERSONAL_PRONOUN("Personal pronoun", "Pronoun", "Personal pronoun"),
+    POSSESSIVE_PRONOUN("poSessive pronoun", "Pronoun", "Possessive pronoun"),
+    PREPOSITION("PREPosition", "Preposition"),
+    RECIPROCAL_PRONOUN("reCiprocal pronoun", "Pronoun", "Reciprocal pronoun"),
+    REFLEXIVE_PRONOUN("reFlexive pronoun", "Pronoun", "Reflexive pronoun"),
+    RELATIVE_PRONOUN("Relative pronoun", "Pronoun", "Relative pronoun"),
     VERB("Verb");
 
     private static Map<String, Function> values = getReverseMap(values());
+    private final String csvValueName;
     private final String displayName;
+    private final String notes;
 
     /**
      * @param displayText name to be displayed on the screen
      */
-    Function(final String displayName) {
+    Function(final String csvValueName) {
+        this(csvValueName, null, null);
+    }
+
+    /**
+     * @param displayText name to be displayed on the screen
+     */
+    Function(final String csvValueName, final String displayName) {
+        this(csvValueName, displayName, null);
+    }
+
+    /**
+     * @param displayText name to be displayed on the screen
+     */
+    Function(final String csvValueName, final String displayName, final String notes) {
+        this.csvValueName = csvValueName;
         this.displayName = displayName;
+        this.notes = notes;
     }
 
     /**
      * @return the displayName
      */
-    public String getDisplayName() {
-        return this.displayName;
+    public String getCsvValueName() {
+        return this.csvValueName;
     }
 
-    public static Function resolveByDisplayName(final String displayName) {
-        return values.get(displayName);
+    public static Function resolveByCsvValueName(final String csvValueName) {
+        return values.get(csvValueName);
+    }
+
+    /**
+     * @return the displayName
+     */
+    String getDisplayName() {
+        if (this.displayName != null) {
+            return this.displayName;
+        }
+        return this.csvValueName;
     }
 
     @Override
     public String toString() {
         return getDisplayName();
+    }
+
+    /**
+     * @return the notes
+     */
+    public String getNotes() {
+        return this.notes;
     }
 }

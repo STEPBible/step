@@ -331,8 +331,10 @@ Passage.prototype.changePassage = function(newReference) {
 Passage.prototype.highlightStrong = function(strongReference) {
 	// check for black listed strongs
 	if($.inArray(strongReference, Passage.getBlackListedStrongs()) == -1) {
-		$(".verse span[onclick*='" + strongReference + "']", this.container).css("text-decoration", "underline");
-		$("span.w[onclick*='" + strongReference + "'] span.text", this.container).css("text-decoration", "underline");
+		$(".verse span[strong='" + strongReference + "']", this.container).css("text-decoration", "underline");
+		$("span.w[strong='" + strongReference + "'] span.text", this.container).css("text-decoration", "underline");
+		
+		//TODO deal with multiple strong numbers too
 	}
 };
 

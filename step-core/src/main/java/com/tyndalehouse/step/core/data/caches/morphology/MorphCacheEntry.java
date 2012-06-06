@@ -30,24 +30,37 @@
  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
-package com.tyndalehouse.step.core.data.create.loaders.editors;
-
-import com.tyndalehouse.step.core.data.entities.morphology.Tense;
+package com.tyndalehouse.step.core.data.caches.morphology;
 
 /**
- * Timeunit editor
- * 
  * @author chrisburrell
  * 
  */
-public class TenseEditor extends EnumPropertyEditor<Tense> {
-    /** the default constructor **/
-    public TenseEditor() {
-        super(Tense.class);
+public class MorphCacheEntry {
+    private final String inlineHtml;
+    private final String cssClasses;
+
+    /**
+     * @param inlineHtml the link to be displayed inline with the text
+     * @param cssClasses the css classes that apply
+     */
+    public MorphCacheEntry(final String inlineHtml, final String cssClasses) {
+        super();
+        this.inlineHtml = inlineHtml;
+        this.cssClasses = cssClasses;
     }
 
-    @Override
-    public void setAsText(final String text) {
-        super.setValue(Tense.resolveByCsvValueName(text));
+    /**
+     * @return the inlineHtml
+     */
+    public String getInlineHtml() {
+        return this.inlineHtml;
+    }
+
+    /**
+     * @return the cssClasses
+     */
+    public String getCssClasses() {
+        return this.cssClasses;
     }
 }

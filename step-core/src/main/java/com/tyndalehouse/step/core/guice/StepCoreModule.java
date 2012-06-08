@@ -60,6 +60,7 @@ import com.tyndalehouse.step.core.service.FavouritesService;
 import com.tyndalehouse.step.core.service.GeographyService;
 import com.tyndalehouse.step.core.service.JSwordService;
 import com.tyndalehouse.step.core.service.ModuleService;
+import com.tyndalehouse.step.core.service.MorphologyService;
 import com.tyndalehouse.step.core.service.TimelineService;
 import com.tyndalehouse.step.core.service.UserDataService;
 import com.tyndalehouse.step.core.service.impl.BibleInformationServiceImpl;
@@ -68,6 +69,7 @@ import com.tyndalehouse.step.core.service.impl.FavouritesServiceImpl;
 import com.tyndalehouse.step.core.service.impl.GeographyServiceImpl;
 import com.tyndalehouse.step.core.service.impl.JSwordServiceImpl;
 import com.tyndalehouse.step.core.service.impl.ModuleServiceImpl;
+import com.tyndalehouse.step.core.service.impl.MorphologyServiceImpl;
 import com.tyndalehouse.step.core.service.impl.TimelineServiceImpl;
 import com.tyndalehouse.step.core.service.impl.UserDataServiceImpl;
 import com.tyndalehouse.step.core.utils.AbstractStepGuiceModule;
@@ -100,12 +102,13 @@ public class StepCoreModule extends AbstractStepGuiceModule {
         bind(JSwordService.class).to(JSwordServiceImpl.class).asEagerSingleton();
         bind(BibleInformationService.class).to(BibleInformationServiceImpl.class).asEagerSingleton();
         bind(ModuleService.class).to(ModuleServiceImpl.class).asEagerSingleton();
+        bind(MorphologyService.class).to(MorphologyServiceImpl.class).asEagerSingleton();
         bind(TimelineService.class).to(TimelineServiceImpl.class);
         bind(GeographyService.class).to(GeographyServiceImpl.class);
-        bind(FavouritesService.class).to(FavouritesServiceImpl.class);
-        bind(UserDataService.class).to(UserDataServiceImpl.class);
+        bind(FavouritesService.class).to(FavouritesServiceImpl.class).asEagerSingleton();
+        bind(UserDataService.class).to(UserDataServiceImpl.class).asEagerSingleton();
         bind(DictionaryService.class).to(DictionaryServiceImpl.class);
-        bind(Loader.class);
+        bind(Loader.class).asEagerSingleton();
 
         bind(Session.class).toProvider(ServerSessionProvider.class);
 

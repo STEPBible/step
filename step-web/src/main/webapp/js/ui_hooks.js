@@ -61,7 +61,7 @@ DICTIONARY_SEARCH_BY_HEADWORD = 		STEP_SERVER_BASE_URL + "dictionary/searchDicti
 
 MODULE_GET_ALL_MODULES = 				STEP_SERVER_BASE_URL + "module/getAllModules/";
 MODULE_GET_ALL_INSTALLABLE_MODULES = 	STEP_SERVER_BASE_URL + "module/getAllInstallableModules/";
-MODULE_GET_DEFINITION = 				STEP_SERVER_BASE_URL + "module/getDefinition/";
+MODULE_GET_INFO =		 				STEP_SERVER_BASE_URL + "module/getInfo/";
 
 SETUP_IS_FIRST_TIME = 					STEP_SERVER_BASE_URL + "setup/isFirstTime/";
 SETUP_INSTALL_DEFAULT_MODULES = 		STEP_SERVER_BASE_URL + "setup/installDefaultModules/";
@@ -83,6 +83,7 @@ GEOGRAPHY_GET_PLACES = 					STEP_SERVER_BASE_URL + "geography/getPlaces/";
 // SOME DEFAULTS
 //////////////////////////
 var DEFAULT_POPUP_WIDTH = 500;
+var DETAIL_LEVELS = ["Quick", "Deeper", "Detailed"]
 
 /**
  * a helper function that returns the passageId relevant to the menu item provided
@@ -95,7 +96,7 @@ function getPassageId(menuItem) {
 
 
 
-/** a simpler toggler for the menu items */
+/** a simple toggler for the menu items */
 function toggleMenuItem(menuItem) {
 	//the hook needs to find the passage id if we're a sub menu
 	var eventName = "pane-menu-toggle-item";
@@ -174,7 +175,6 @@ function showInterlinearChoices(menuItem) {
 
 /**
  * called when click on a piece of text.
- * @param strongMorphs all the strongs and morphs associated with this "word"
  */
 function showDef(source) {
 	var s = $(source);
@@ -182,9 +182,7 @@ function showDef(source) {
 	var strong = s.attr("strong");
 	var morph = s.attr("morph");
 	
-	
-	var strongMorph = strong + " " + morph;
-	$.shout("show-all-strong-morphs", { strong: strong, morph: morph});
+	$.shout("show-all-strong-morphs", { strong: strong, morph: morph, source: source});
 };
 
 

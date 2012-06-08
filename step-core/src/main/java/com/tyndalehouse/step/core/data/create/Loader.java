@@ -43,6 +43,7 @@ import com.avaje.ebean.EbeanServer;
 import com.google.inject.Inject;
 import com.tyndalehouse.step.core.data.create.loaders.CsvModuleLoader;
 import com.tyndalehouse.step.core.data.create.loaders.CustomTranslationCsvModuleLoader;
+import com.tyndalehouse.step.core.data.create.loaders.PostProcessingAction;
 import com.tyndalehouse.step.core.data.create.loaders.translations.OpenBibleDataTranslation;
 import com.tyndalehouse.step.core.data.create.loaders.translations.TimelineEventTranslation;
 import com.tyndalehouse.step.core.data.entities.GeoPlace;
@@ -153,8 +154,14 @@ public class Loader {
      */
     int loadRobinsonMorphology() {
         return new CsvModuleLoader<Morphology>(this.ebean,
-                this.coreProperties.getProperty("test.data.path.morphology.robinson"), Morphology.class)
-                .init();
+                this.coreProperties.getProperty("test.data.path.morphology.robinson"), Morphology.class,
+                new PostProcessingAction<Morphology>() {
+
+                    @Override
+                    public void postProcess(final Morphology entity) {
+                        entity.initialise();
+                    }
+                }).init();
     }
 
     /**

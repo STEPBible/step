@@ -73,6 +73,13 @@ public enum Number implements HasCsvValueName {
         return values.get(displayName);
     }
 
+    /**
+     * @return the displayName
+     */
+    public String getDisplayName() {
+        return this.displayName;
+    }
+
     @Override
     public String toString() {
         return getCsvValueName();

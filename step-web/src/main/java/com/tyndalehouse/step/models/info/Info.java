@@ -30,33 +30,47 @@
  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
-package com.tyndalehouse.step.core.data.caches.morphology;
+package com.tyndalehouse.step.models.info;
 
-import javax.inject.Inject;
+import java.util.List;
 
-import net.sf.ehcache.CacheManager;
-import net.sf.ehcache.config.CacheConfiguration;
-
-import com.tyndalehouse.step.core.data.caches.AbstractDefaultCache;
-import com.tyndalehouse.step.core.data.entities.morphology.Morphology;
+import com.tyndalehouse.step.core.data.entities.StrongDefinition;
 
 /**
- * A cache for looking up morphology details
+ * A set of information from various sources
  * 
  * @author chrisburrell
  * 
  */
-public class MorphologyCache extends AbstractDefaultCache<Morphology> {
-    private static final int MAX_MORPHS = 1024;
+public class Info {
+    private List<MorphInfo> morphInfos;
+    private List<StrongDefinition> vocabInfos;
 
     /**
-     * creates the session cache
-     * 
-     * @param cacheManager the cache manager
+     * @return the morphInfos
      */
-    @Inject
-    public MorphologyCache(final CacheManager cacheManager) {
-        super(cacheManager, new CacheConfiguration("morphologyCache", 0).eternal(true).maxEntriesLocalHeap(
-                MAX_MORPHS));
+    public List<MorphInfo> getMorphInfos() {
+        return this.morphInfos;
+    }
+
+    /**
+     * @param morphInfos the morphInfos to set
+     */
+    public void setMorphInfos(final List<MorphInfo> morphInfos) {
+        this.morphInfos = morphInfos;
+    }
+
+    /**
+     * @return the vocabInfos
+     */
+    public List<StrongDefinition> getVocabInfos() {
+        return this.vocabInfos;
+    }
+
+    /**
+     * @param vocabInfos the vocabInfos to set
+     */
+    public void setVocabInfos(final List<StrongDefinition> vocabInfos) {
+        this.vocabInfos = vocabInfos;
     }
 }

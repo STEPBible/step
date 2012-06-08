@@ -33,19 +33,21 @@
 package com.tyndalehouse.step.rest.controllers;
 
 import static com.tyndalehouse.step.core.exceptions.UserExceptionType.CONTROLLER_INITIALISATION_ERROR;
-import static com.tyndalehouse.step.core.exceptions.UserExceptionType.USER_MISSING_FIELD;
-import static com.tyndalehouse.step.core.utils.ValidateUtils.notEmpty;
 import static com.tyndalehouse.step.core.utils.ValidateUtils.notNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
+import com.tyndalehouse.step.core.data.entities.morphology.Morphology;
 import com.tyndalehouse.step.core.models.BibleVersion;
-import com.tyndalehouse.step.core.models.Definition;
 import com.tyndalehouse.step.core.service.ModuleService;
+import com.tyndalehouse.step.core.service.MorphologyService;
+import com.tyndalehouse.step.models.info.Info;
+import com.tyndalehouse.step.models.info.MorphInfo;
 import com.tyndalehouse.step.rest.framework.Cacheable;
 
 /**
@@ -53,7 +55,8 @@ import com.tyndalehouse.step.rest.framework.Cacheable;
  */
 public class ModuleController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ModuleController.class);
-    private final ModuleService moduleDefintions;
+    private final ModuleService moduleService;
+    private final MorphologyService morphology;
 
     /**
      * sets up the controller to access module information
@@ -61,9 +64,15 @@ public class ModuleController {
      * @param moduleDefintions the service allowing access to module information
      */
     @Inject
-    public ModuleController(final ModuleService moduleDefintions) {
-        notNull(moduleDefintions, "Intialising the module administration controller failed", CONTROLLER_INITIALISATION_ERROR);
-        this.moduleDefintions = moduleDefintions;
+    public ModuleController(final ModuleService moduleService, final MorphologyService morphology) {
+        notNull(moduleService,
+                "Intialising the module service in the module administration controller failed",
+                CONTROLLER_INITIALISATION_ERROR);
+        notNull(morphology,
+                "Intialising the morphology service failed in the module administration controller",
+                CONTROLLER_INITIALISATION_ERROR);
+        this.moduleService = moduleService;
+        this.morphology = morphology;
     }
 
     /**
@@ -72,7 +81,7 @@ public class ModuleController {
      * @return all versions of modules that are considered to be Bibles.
      */
     public List<BibleVersion> getAllModules() {
-        return this.moduleDefintions.getAvailableModules();
+        return this.moduleService.getAvailableModules();
     }
 
     /**
@@ -81,24 +90,46 @@ public class ModuleController {
      * @return all versions of modules that are considered to be modules and usable by STEP.
      */
     public List<BibleVersion> getAllInstallableModules() {
-        return this.moduleDefintions.getAllInstallableModules();
+        return this.moduleService.getAllInstallableModules();
     }
 
     /**
-     * a REST method that returns all the definitions for a particular key
+     * a method that returns all the definitions for a particular key
      * 
-     * @param reference a reference for a module to lookup
+     * @param strong the strong number
+     * @param morph the morphology code to lookup
+     * @param osisId the id of the verse that we are looking up
      * @return the definition(s) that can be resolved from the reference provided
      */
     @Cacheable(true)
-    public String getDefinition(final String reference) {
-        notEmpty(reference, "A reference must be provided to obtain a definition", USER_MISSING_FIELD);
-        LOGGER.debug("Getting definition for {}", reference);
-        final Definition definition = this.moduleDefintions.getDefinition(reference);
+    public Info getInfo(final String strong, final String morph, final String osisId) {
+        // notEmpty(strong, "A reference must be provided to obtain a definition", USER_MISSING_FIELD);
+        LOGGER.debug("Getting information for [{}], [{}], [{}]", new Object[] { strong, morph, osisId });
 
-        if (definition == null) {
-            return "";
+        // this.moduleService.getMorphology(morph);
+
+        // final Definition definition = this.moduleDefintions.getDefinition(reference);
+
+        // if (definition == null) {
+        // return "";
+        // }
+
+        final Info i = new Info();
+        i.setMorphInfos(translateToInfo(this.morphology.getMorphology(morph)));
+        return i;
+    }
+
+    /**
+     * Morphology to information for the UI
+     * 
+     * @param morphologies the list of all morphologies
+     * @return the morphology information pojo
+     */
+    private List<MorphInfo> translateToInfo(final List<Morphology> morphologies) {
+        final List<MorphInfo> morphologyInfos = new ArrayList<MorphInfo>(morphologies.size());
+        for (final Morphology m : morphologies) {
+            morphologyInfos.add(new MorphInfo(m));
         }
-        return definition.getExplanation();
+        return morphologyInfos;
     }
 }

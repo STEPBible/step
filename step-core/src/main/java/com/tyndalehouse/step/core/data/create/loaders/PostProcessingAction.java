@@ -30,33 +30,18 @@
  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
-package com.tyndalehouse.step.core.data.caches.morphology;
-
-import javax.inject.Inject;
-
-import net.sf.ehcache.CacheManager;
-import net.sf.ehcache.config.CacheConfiguration;
-
-import com.tyndalehouse.step.core.data.caches.AbstractDefaultCache;
-import com.tyndalehouse.step.core.data.entities.morphology.Morphology;
+package com.tyndalehouse.step.core.data.create.loaders;
 
 /**
- * A cache for looking up morphology details
+ * Post action to apply after parsing
  * 
  * @author chrisburrell
  * 
+ * @param <T> the class of the entity
  */
-public class MorphologyCache extends AbstractDefaultCache<Morphology> {
-    private static final int MAX_MORPHS = 1024;
-
+public interface PostProcessingAction<T> {
     /**
-     * creates the session cache
-     * 
-     * @param cacheManager the cache manager
+     * @param entity the entity that is currently in scope
      */
-    @Inject
-    public MorphologyCache(final CacheManager cacheManager) {
-        super(cacheManager, new CacheConfiguration("morphologyCache", 0).eternal(true).maxEntriesLocalHeap(
-                MAX_MORPHS));
-    }
+    void postProcess(T entity);
 }

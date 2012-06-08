@@ -47,6 +47,7 @@ import javax.persistence.Id;
 @Entity
 public class Morphology implements Serializable {
     private static final long serialVersionUID = -9117616832904022032L;
+    private static final char SPACE_SEPARATOR = ' ';
 
     @Id
     @Column(nullable = false)
@@ -61,6 +62,8 @@ public class Morphology implements Serializable {
     private Gender gender;
     private Suffix suffix;
     private String rootCode;
+    private String cssClasses;
+    private String inlineHtml;
 
     /**
      * @return the code
@@ -214,5 +217,88 @@ public class Morphology implements Serializable {
      */
     public void setRootCode(final String rootCode) {
         this.rootCode = rootCode;
+    }
+
+    /**
+     * @return the cssClasses
+     */
+    @Column(updatable = false)
+    public String getCssClasses() {
+        return this.cssClasses;
+    }
+
+    /**
+     * @return the inlineHtml
+     */
+    public String getInlineHtml() {
+        return this.inlineHtml;
+    }
+
+    /**
+     * Initialises the inline html
+     */
+    public void initialise() {
+        // initialise css
+        initialiseCssClasses();
+
+        // now we can initialise the inline html
+        final StringBuilder html = new StringBuilder(128);
+        html.append("<span onclick='javascript:showDef(this)' ");
+        html.append("title='");
+
+        if (getFunction() != null && getFunction().getNotes() != null) {
+            html.append(getFunction().getNotes());
+            html.append(SPACE_SEPARATOR);
+        }
+
+        if (getTense() != null) {
+            html.append(getTense());
+            html.append(SPACE_SEPARATOR);
+
+            if (getTense().getNotes() != null) {
+                html.append(getTense().getNotes());
+                html.append(SPACE_SEPARATOR);
+            }
+        }
+
+        appendNonNullSpacedItem(html, getGender());
+        appendNonNullSpacedItem(html, getNumber());
+
+        html.append("' class='");
+        html.append(this.cssClasses);
+        html.append("'>");
+        html.append(getFunction());
+        html.append("</span>");
+        this.inlineHtml = html.toString();
+    }
+
+    /**
+     * initialises the css classes for the morphology item
+     */
+    private void initialiseCssClasses() {
+        final StringBuilder sb = new StringBuilder(10);
+        if (this.getNumber() != null) {
+            sb.append(getNumber().getCssClass());
+            sb.append(' ');
+        }
+
+        if (this.getGender() != null) {
+            sb.append(getGender().getCssClass());
+        }
+
+        this.cssClasses = sb.toString();
+    }
+
+    /**
+     * adds an item with a space afterwards if the item is not null
+     * 
+     * @param html the current content
+     * @param item the item to add
+     */
+    private void appendNonNullSpacedItem(final StringBuilder html, final Object item) {
+        if (item != null) {
+            html.append(item);
+            html.append(SPACE_SEPARATOR);
+        }
     }
 }

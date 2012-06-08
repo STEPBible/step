@@ -61,13 +61,13 @@ function Passage(passageContainer, rawServerVersions, passageId) {
 	this.initReferenceTextBox();
 	
 	//this is so that when we click a word, it highlights it
-	this.passage.click(function(e) {
-		var clickedWord = getWordAtPoint(this, e.pageX, e.pageY);
-		var lookup = clickedWord.replace(/[ ,.;:"]/g, "");
-		
-		$.shout("show-all-strong-morphs", { displayedWord: lookup } );
-		
-	});
+//	this.passage.click(function(e) {
+//		var clickedWord = getWordAtPoint(this, e.pageX, e.pageY);
+//		var lookup = clickedWord.replace(/[ ,.;:"]/g, "");
+//		
+//		$.shout("show-all-strong-morphs", { displayedWord: lookup } );
+//		
+//	});
 	
 	
 	

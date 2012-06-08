@@ -94,7 +94,6 @@ import com.tyndalehouse.step.core.models.OsisWrapper;
 import com.tyndalehouse.step.core.service.JSwordService;
 import com.tyndalehouse.step.core.utils.ValidateUtils;
 import com.tyndalehouse.step.core.xsl.XslConversionType;
-import com.tyndalehouse.step.core.xsl.impl.MorphologyProvider;
 
 /**
  * a service providing a wrapper around JSword
@@ -112,7 +111,7 @@ public class JSwordServiceImpl implements JSwordService {
     private static final Logger LOGGER = LoggerFactory.getLogger(JSwordServiceImpl.class);
 
     private final List<Installer> bookInstallers;
-    private final MorphologyProvider morphologyProvider;
+    private final MorphologyServiceImpl morphologyProvider;
 
     /**
      * constructs the jsword service.
@@ -121,7 +120,7 @@ public class JSwordServiceImpl implements JSwordService {
      * @param morphologyProvider TODO
      */
     @Inject
-    public JSwordServiceImpl(final List<Installer> installers, final MorphologyProvider morphologyProvider) {
+    public JSwordServiceImpl(final List<Installer> installers, final MorphologyServiceImpl morphologyProvider) {
         this.bookInstallers = installers;
         this.morphologyProvider = morphologyProvider;
     }

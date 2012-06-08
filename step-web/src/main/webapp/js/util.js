@@ -237,3 +237,11 @@ function expandSelection(range) {
 		return text;
 	} 
 }
+
+
+function addNotApplicableString(val) {
+	if(val == null || val == "") {
+		return "<span class='notApplicable'>N/A</span>";
+	}
+	return val;
+}

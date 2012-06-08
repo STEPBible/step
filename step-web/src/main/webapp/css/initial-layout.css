@@ -311,7 +311,7 @@ body {
 #lexiconDefinition {
 	display: none;
 	z-index: 9999;
-	width: 400px;
+	width: 600px;
 	bottom: 0px;
 	right: 0px;
 	left: -1000px;

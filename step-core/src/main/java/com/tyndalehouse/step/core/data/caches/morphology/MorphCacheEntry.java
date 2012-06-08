@@ -32,6 +32,8 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.data.caches.morphology;
 
+import com.tyndalehouse.step.core.data.entities.morphology.Morphology;
+
 /**
  * @author chrisburrell
  * 
@@ -39,15 +41,17 @@ package com.tyndalehouse.step.core.data.caches.morphology;
 public class MorphCacheEntry {
     private final String inlineHtml;
     private final String cssClasses;
+    private final Morphology morphology;
 
     /**
      * @param inlineHtml the link to be displayed inline with the text
      * @param cssClasses the css classes that apply
+     * @param morphology the full morphology item
      */
-    public MorphCacheEntry(final String inlineHtml, final String cssClasses) {
-        super();
+    public MorphCacheEntry(final String inlineHtml, final String cssClasses, final Morphology morphology) {
         this.inlineHtml = inlineHtml;
         this.cssClasses = cssClasses;
+        this.morphology = morphology;
     }
 
     /**
@@ -62,5 +66,12 @@ public class MorphCacheEntry {
      */
     public String getCssClasses() {
         return this.cssClasses;
+    }
+
+    /**
+     * @return the morphology
+     */
+    public Morphology getMorphology() {
+        return this.morphology;
     }
 }

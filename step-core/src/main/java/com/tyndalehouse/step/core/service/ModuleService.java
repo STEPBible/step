@@ -70,4 +70,5 @@ public interface ModuleService {
      * @return a list of all modules that could be installed
      */
     List<BibleVersion> getAllInstallableModules();
+
 }

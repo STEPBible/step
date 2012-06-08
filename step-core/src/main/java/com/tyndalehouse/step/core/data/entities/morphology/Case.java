@@ -70,6 +70,13 @@ public enum Case implements HasCsvValueName {
         return this.displayName;
     }
 
+    /**
+     * @return the displayName
+     */
+    public String getDisplayName() {
+        return this.displayName;
+    }
+
     public static Case resolveByDisplayName(final String displayName) {
         return values.get(displayName);
     }

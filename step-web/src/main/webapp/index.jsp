@@ -169,12 +169,6 @@
 <span id='lexiconDefinition'>
 	<ul>
 		<span id="lexiconPopupClose">X</span>
-			<select id="selectedPane"
-				title="Select the pane you wish to display links from">
-				<option value="0">Left Pane</option>
-				<option value="1">Right pane</option>
-			</select>
-
 			<li>
 				<a href="#origin">Original Word</a>
 				
@@ -183,10 +177,67 @@
 	</ul>
 
 	<div id="origin">
-		<p></p>
-	</div>
-	<div id="grammar">
-		<p></p>
+			<!--  Vocab -->
+			<table class="lexiconTable">
+				<thead>
+					<tr>
+						<td colspan="4"><h3>Vocab</h3></td>
+					</tr>
+				</thead>
+				<tr>
+					<th level="0">Pronunciation</th>
+					<td level="0" id="pronunciation"></td>
+					<th level="0">KJV definition</th>
+					<td level="0" id="kjvDefinition"></td>
+				</tr>
+				<tr>
+					<th level="1">Strongs derivation</th>
+					<td level="1" id="strongsDerivation"></td>
+					<th level="1">Lexicon summary</th>
+					<td level="1" id="lexiconSummary"></td>
+				</tr>
+				<tr>
+					<th level="1">Original Language</th>
+					<td level="1" id="originalLanguage"></td>
+					<th level="2">Transliteration</th>
+					<td level="2" id="transliteration"></td>
+				</tr>
+			</table>
+		
+			<!--  Gramar -->
+			<table class="lexiconTable">
+				<thead>
+					<tr>
+						<td colspan="4"><h3>Grammar</h3></td>
+					</tr>
+				</thead>
+				<tr>
+					<th level="0">Function</th>
+					<td level="0" id="function"></td>
+					<th level="0">Gender</th>
+					<td level="0" id="gender"></td>
+				</tr>
+				<tr>
+					<th level="0">Person</th>
+					<td level="0" id="person"></td>
+					<th level="0">Number</th>
+					<td level="0" id="number"></td>
+				</tr>
+				<tr>
+					<th level="1">Case</th>
+					<td  level="1"id="wordCase"></td>
+					<th level="2">Suffix</th>
+					<td level="2" id="suffix"></td>
+				</tr>
+				<tr>
+					<th level="1">Tense</th>
+					<td level="1" id="tense"></td>
+					<th level="2">Mood</th>
+					<td  level="2"id="mood"></td>
+				</tr>
+			</table>
+			<span id="detailLevel">&nbsp;</span>
+			<span id="sliderDetailLevelLabel">Quick view</span>
 	</div>
 	<div id="dictionaries">
 		<p></p>

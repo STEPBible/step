@@ -34,3 +34,44 @@ body {
 	margin-right: 2px;
 	border: 0px;		
 }
+
+/********************************/
+/** Lexicon popup               */
+/********************************/
+.lexiconTable {
+	width: 100%;
+	border: 1px dotted lightgray;
+	margin-bottom: 10px;
+	text-align: left;
+}
+
+#sliderDetailLevelLabel {
+	float: right;
+	font-style: italic;
+	color: darkslategrey;
+	margin-right: 12px;
+	margin-bottom: 4px;
+}
+
+#detailLevel {
+	float: right;
+	width: 50px;
+}
+
+.lexiconTable h3 {
+	margin: 0px;
+	color: #696;
+}
+
+.lexiconTable th {
+	color: #669;
+}
+
+/********************************/
+/** Other labels                */
+/********************************/
+.notApplicable {
+	color: lightgrey;
+	font-style: italic;
+}
+

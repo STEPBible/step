@@ -80,7 +80,7 @@ public enum Mood implements HasCsvValueName {
     /**
      * @return the displayName
      */
-    String getDisplayName() {
+    public String getDisplayName() {
         if (this.displayName != null) {
             return this.displayName;
         }

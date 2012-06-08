@@ -99,10 +99,11 @@ public class CsvModuleLoader<T> extends AbstractClasspathBasedModuleLoader<T> {
      * @param ebean the ebean server
      * @param resourcePath the resource path to load
      * @param columnMappingStrategy the strategy to use to map the entities
+     * @param action the action to use to post process.
      */
     public CsvModuleLoader(final EbeanServer ebean, final String resourcePath,
-            final MappingStrategy<T> columnMappingStrategy) {
-        super(ebean, resourcePath);
+            final MappingStrategy<T> columnMappingStrategy, final PostProcessingAction<T> action) {
+        super(ebean, resourcePath, action);
         this.columnMappingStrategy = columnMappingStrategy;
     }
 
@@ -114,7 +115,7 @@ public class CsvModuleLoader<T> extends AbstractClasspathBasedModuleLoader<T> {
      */
     public CsvModuleLoader(final EbeanServer ebean, final String resourcePath,
             final MappingStrategy<T> columnMappingStrategy, final char separator) {
-        this(ebean, resourcePath, columnMappingStrategy);
+        this(ebean, resourcePath, columnMappingStrategy, null);
         this.separator = separator;
     }
 
@@ -124,7 +125,18 @@ public class CsvModuleLoader<T> extends AbstractClasspathBasedModuleLoader<T> {
      * @param clazz the type of resource to load
      */
     public CsvModuleLoader(final EbeanServer ebean, final String resourcePath, final Class<T> clazz) {
-        this(ebean, resourcePath, new HeaderNameMappingStrategy<T>(clazz));
+        this(ebean, resourcePath, new HeaderNameMappingStrategy<T>(clazz), null);
+    }
+
+    /**
+     * @param ebean the data persistence to write to
+     * @param resourcePath the path of the resource to load
+     * @param clazz the type of resource to load
+     * @param action the post processing action
+     */
+    public CsvModuleLoader(final EbeanServer ebean, final String resourcePath, final Class<T> clazz,
+            final PostProcessingAction<T> action) {
+        this(ebean, resourcePath, new HeaderNameMappingStrategy<T>(clazz), action);
     }
 
     /**

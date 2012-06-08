@@ -31,17 +31,39 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
 
+var morphSpans = [["function", "functionNotes"], "voice", "mood", "wordCase", "person", "number", "gender", "suffix", ["tense", "tenseNotes"]];
+var vocabSpans = ["originalLanguage", "transliteration", "pronunciation", "kjvDefinition", "strongsDerivation", "lexiconSummary"];
+
 /**
  * The bookmarks components record events that are happening across the application,
  * for e.g. passage changes, but will also show related information to the passage.
  */
-function LexiconDefinition() {
+function LexiconDefinition(currentLevel) {
 	var self = this;
 	//listen for particular types of events and call the prototype functions
 	this.getPopup().hear("show-all-strong-morphs", function(selfElement, data) {
 		self.showDef(data);
 	});
-}
+	
+	$("#detailLevel").slider({
+		min: 1,
+		max: 3,
+		slide: function(event, ui) {
+			self.updateSliderImpact(ui.value-1);
+		},
+		value: currentLevel + 1
+	});
+	
+	this.updateSliderImpact(currentLevel);
+};
+
+LexiconDefinition.prototype.updateSliderImpact = function(newLevel) {
+	$("#sliderDetailLevelLabel").html(DETAIL_LEVELS[newLevel] + " view");
+	
+	//show all relevant levels
+	$("#lexiconDefinition *").filter(function() { return $(this).attr("level") <= newLevel; }).show();
+	$("#lexiconDefinition *").filter(function() { return $(this).attr("level") > newLevel; }).hide();
+};
 
 LexiconDefinition.prototype.getPopup = function() {
 	if(this.popup) {
@@ -55,9 +77,6 @@ LexiconDefinition.prototype.getPopup = function() {
 	$('#lexiconPopupClose').click(function() {
 		$('#lexiconDefinition').hide();
 	});
-	
-	
-	
 	return this.popup;
 };
 
@@ -66,65 +85,71 @@ LexiconDefinition.prototype.showDef = function(data) {
 	var popup = self.getPopup();
 	
 	//create all tabs - first remove everything, then readd.
-	popup.tabs("destroy");
-	popup.tabs();
-	
 	var displayedWord = data.displayedWord;
 	var strong = data.strong;
 	var morph = data.morph;
+	var verse = $(data.source).closest("span.verse").filter("a:first").attr("name");
 	
-	//show dictionary elements
-	this.showStrong(data.strong);
-	this.showMorph(data.morph);
-	this.showDictionaryTabs(data.displayedWord);
-	
-	popup.tabs("option", {
-		collapsible: false,
-		selected: 0
+	//Get info on word
+	$.getSafe(MODULE_GET_INFO + strong + "/" + morph + "/" + verse, function(data) {
+		self.showOriginalWordData(data);
 	});
 	
-	//TODO this is a workaround because of bug http://bugs.jqueryui.com/ticket/5069
-//	popup.tabs("select", 1);
-//	popup.tabs("select", 0);
+	//show dictionary elements
+	this.showDictionaryTabs(data.displayedWord);
 	
 	this.reposition();
 };
 
-LexiconDefinition.prototype.showStrong = function(strong) {
-	if(strong) {
-//		String strongs = strong.split(" ");
-//		$.getSafe(MODULE_GET_DEFINITION + strong, function() {
-			
-//		});		
+LexiconDefinition.prototype.showOriginalWordData = function(data) {
+	var detailLevel = $("#selectedDetail", this.popup).val();
+	
+	this.renderPopupTable(data.morphInfos, detailLevel, morphSpans);
+	this.renderPopupTable(data.vocabInfos, detailLevel, vocabSpans);
+};
+
+
+LexiconDefinition.prototype.renderPopupTable = function(morphInfos, level, infoSpans) {
+	var item;
+	if(morphInfos == null || morphInfos[0] == null) {
+		item = new Object();
+	} else {
+		item = morphInfos[0];
+	}
+	
+	for(x in infoSpans) {
+		var i = infoSpans[x];
+		if($.isArray(i)) {
+			if(item[i[1]] != null && item[i[1]] != "") {
+				$("#" + i[0]).html(item[i[0]] + "(" + item[i[1]] + ")");
+			} else {
+				$("#" + i[0]).html(item[i[0]]);
+			}
+		} else {
+			$("#" + i).html(addNotApplicableString(item[i]));
+		}
 	}
 };
 
-LexiconDefinition.prototype.showMorph = function(morph) {
-	if(morph) {
-//		String strongs = strong.split(" ");
-//		$.getSafe(MODULE_GET_DEFINITION + strong, function() {
-			
-//		});		
-	}
-};
+
 
 LexiconDefinition.prototype.showDictionaryTabs = function(displayedWord) {
 	var self = this;
-	$.getSafe(DICTIONARY_SEARCH_BY_HEADWORD + displayedWord, function(data) {
-//		$("#tab-1").html(data.text);
-//		var tabTitle = data.source;
-//		self.getPopup().tabs( "add", "#tab-1", tabTitle);
-		
-		//make a ul list
-		var html = "<h3>Word context</h3><ul>";
-		
-		$.each(data, function(index, item) {
-			html += "<li><a href=\"#\" onclick='showArticle(\""+ item.headword + "\", \"" + item.headwordInstance+ "\")'>" + item.headword + "</a></li>";
-		});
-		
-		html += "</ul><h3>Verse context</h3>";
-		$("#dictionaries").html(html);
-	});
+//	$.getSafe(DICTIONARY_SEARCH_BY_HEADWORD + displayedWord, function(data) {
+////		$("#tab-1").html(data.text);
+////		var tabTitle = data.source;
+////		self.getPopup().tabs( "add", "#tab-1", tabTitle);
+//		
+//		//make a ul list
+//		var html = "<h3>Word context</h3><ul>";
+//		
+//		$.each(data, function(index, item) {
+//			html += "<li><a href=\"#\" onclick='showArticle(\""+ item.headword + "\", \"" + item.headwordInstance+ "\")'>" + item.headword + "</a></li>";
+//		});
+//		
+//		html += "</ul><h3>Verse context</h3>";
+//		$("#dictionaries").html(html);
+//	});
 };
 
 LexiconDefinition.prototype.getShortKey = function(k) {

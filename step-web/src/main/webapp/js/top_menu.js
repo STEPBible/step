@@ -30,6 +30,9 @@
  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
+
+var menuViewLevelItems = ["QUICK_VIEW", "DEEPER_VIEW", "DETAILED_VIEW"];
+
 /**
  * Represents the menu that will be at the top of the passage container
  */
@@ -56,7 +59,8 @@ function TopMenu(menuRoot) {
 }
 
 TopMenu.prototype.setupHearers = function() {
-	this.menuRoot.hear("topmenu-LIMIT_AVAILABLE_MODULES", function(selfElement, enabled) {
+	var self = this;
+	this.menuRoot.hear("topmenu-SHOW_ALL_VERSIONS", function(selfElement, enabled) {
 		$.getSafe(BIBLE_GET_BIBLE_VERSIONS + enabled, function(versions) {
 			// send events to passages and reload - then change init function
 			$.shout("version-list-refresh", versions);
@@ -71,7 +75,50 @@ TopMenu.prototype.setupHearers = function() {
 			$.shout("sync-passage-deactivated");
 		}
 	});
+	
+	this.menuRoot.hear("topmenu-QUICK_VIEW", function(selfElement, enabled) {
+		if(enabled) {
+			self.changeView(0);
+		}
+	});
+
+	this.menuRoot.hear("topmenu-DEEPER_VIEW", function(selfElement, enabled) {
+		if(enabled) {
+			self.changeView(1);
+		}
+	});
+
+	this.menuRoot.hear("topmenu-DETAILED_VIEW", function(selfElement, enabled) {
+		if(enabled) {
+			self.changeView(2);
+		}
+	});
+
 };
+
+/**
+ * changes the view level, unticks the relevant checkboxes
+ */
+TopMenu.prototype.changeView = function(level) {
+	switch(level) {
+		case 0:  
+			this.untickMenuItem(menuViewLevelItems[1]);
+			this.untickMenuItem(menuViewLevelItems[2]);
+			break;
+		case 1:
+			this.untickMenuItem(menuViewLevelItems[0]);
+			this.untickMenuItem(menuViewLevelItems[2]);
+			break;
+		case 2: 
+			this.untickMenuItem(menuViewLevelItems[0]);
+			this.untickMenuItem(menuViewLevelItems[1]);
+			break;
+	}
+	
+	//now we can set the value in the cookie... probably don't need to fire off event for now
+	this.currentLevel = level;
+	$.cookie("detailLevel", level);
+}
 
 /**
  * toggles the tick next to the element
@@ -81,8 +128,11 @@ TopMenu.prototype.toggleMenuItem = function(selectedItem) {
 	if(this.checkItemIsSelectable(selectedItem)) {
 		var matchedSelectedIcon = $(this.getItemSelector(selectedItem)).children(".selectingTick");
 		if(matchedSelectedIcon.length) {
-			this.untickMenuItem(selectedItem);		
-			$.shout("topmenu-" + selectedItem, false);
+			//we untick only if we're not the view level icons
+			if(!$.inArray(selectedItem, menuViewLevelItems)) {
+				this.untickMenuItem(selectedItem);		
+				$.shout("topmenu-" + selectedItem, false);
+			}
 		} else {
 			this.tickMenuItem(selectedItem);
 			$.shout("topmenu-" + selectedItem, true);
@@ -124,7 +174,19 @@ TopMenu.prototype.checkItemIsSelectable = function(selectedItem) {
  * sets up the default options for the menu
  */
 TopMenu.prototype.setDefaultOptions = function() {
-//	this.toggleMenuItem("LIMIT_AVAILABLE_MODULES");
+	this.toggleMenuItem("SHOW_ALL_VERSIONS");
+	
+	
+	var level = $.cookie("detailLevel");
+	if(level != null || level == "") {
+		this.currentLevel = parseInt(level);
+	} else {
+		this.currentLevel = 0;
+		this.changeView(this.currentLevel);
+	}
+	
+	this.tickMenuItem(menuViewLevelItems[this.currentLevel]);
+	this.changeView(this.currentLevel);
 };
 
 /**
@@ -141,3 +203,7 @@ TopMenu.prototype.isItemSelected = function(name) {
 TopMenu.prototype.getItemSelector = function(name) {
 	return $("*[name = '" + name + "']", this.menuRoot);
 };
+
+TopMenu.prototype.getLevel = function() {
+	return this.currentLevel;
+}

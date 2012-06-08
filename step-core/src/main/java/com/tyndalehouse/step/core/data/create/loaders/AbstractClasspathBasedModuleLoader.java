@@ -60,6 +60,7 @@ public abstract class AbstractClasspathBasedModuleLoader<T> implements ModuleLoa
     private static final Logger LOG = LoggerFactory.getLogger(AbstractClasspathBasedModuleLoader.class);
     private final String resourcePath;
     private final EbeanServer ebean;
+    private PostProcessingAction<T> postProcessingAction;
 
     /**
      * @param ebean the ebean server
@@ -70,12 +71,27 @@ public abstract class AbstractClasspathBasedModuleLoader<T> implements ModuleLoa
         this.resourcePath = resourcePath;
     }
 
+    /**
+     * Same as all other constructors but allows a post processing action to be run
+     * 
+     * @param ebean the ebean server
+     * @param resourcePath resourcePath of the file containing all entities
+     * @param action the action that will be run after loading
+     */
+    public AbstractClasspathBasedModuleLoader(final EbeanServer ebean, final String resourcePath,
+            final PostProcessingAction<T> action) {
+        this(ebean, resourcePath);
+        this.postProcessingAction = action;
+    }
+
     @Override
     public int init() {
         LOG.debug("Loading entities for [{}]", this.resourcePath);
         final long currentTime = System.currentTimeMillis();
 
         final List<T> entities = readDataFile();
+
+        postProcess(entities);
 
         // finally persist to database
         final int count = this.ebean.save(entities);
@@ -88,6 +104,19 @@ public abstract class AbstractClasspathBasedModuleLoader<T> implements ModuleLoa
             LOG.warn("Loaded [{}] hotspots but was trying to load [{}]", count, entities.size());
         }
         return count;
+    }
+
+    /**
+     * Runs post-processor on entity
+     * 
+     * @param entities the list of entities
+     */
+    private void postProcess(final List<T> entities) {
+        if (this.postProcessingAction != null) {
+            for (final T t : entities) {
+                this.postProcessingAction.postProcess(t);
+            }
+        }
     }
 
     /**

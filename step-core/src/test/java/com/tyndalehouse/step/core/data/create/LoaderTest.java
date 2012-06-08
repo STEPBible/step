@@ -44,6 +44,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import com.tyndalehouse.step.core.data.DataDrivenTestExtension;
 import com.tyndalehouse.step.core.data.entities.ScriptureReference;
+import com.tyndalehouse.step.core.data.entities.morphology.Morphology;
 import com.tyndalehouse.step.core.service.JSwordService;
 import com.tyndalehouse.step.core.service.impl.JSwordServiceImpl;
 
@@ -120,6 +121,7 @@ public class LoaderTest extends DataDrivenTestExtension {
         final Loader l = new Loader(this.jsword, getEbean(), coreProperties);
         final int count = l.loadRobinsonMorphology();
 
-        assertEquals(1004, count);
+        assertEquals(25, count);
+        getEbean().find(Morphology.class, "V-2AAP-DSM");
     }
 }

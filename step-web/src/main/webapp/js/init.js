@@ -36,6 +36,7 @@ init();
 //some extensions (perhaps should go in another file)
 String.prototype.startsWith = function(str) { return (this.match("^"+str)==str); };
 
+var topMenu;
 
 function init() {
 	$(document).ready(function() {
@@ -111,7 +112,7 @@ function initLayout() {
 }
 
 function initMenu() {
-	new TopMenu($("#topMenu-ajax"));		
+	topMenu = new TopMenu($("#topMenu-ajax"));		
 	var menusToBe = $(".innerMenus");
 	menusToBe.each(function(index, value) {
 		new ToolbarMenu(index, value);
@@ -224,7 +225,7 @@ function initGlobalHandlers() {
  * @param passages a list of passages that were provided
  */
 function initModules(passages) {
-	new LexiconDefinition();
+	new LexiconDefinition(topMenu.getLevel());
 	new Bookmark();
 	new Login();
 	new Title();

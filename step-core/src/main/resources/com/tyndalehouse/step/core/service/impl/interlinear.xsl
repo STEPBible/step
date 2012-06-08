@@ -34,7 +34,7 @@
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   version="1.0"
   xmlns:jsword="http://xml.apache.org/xalan/java"
-  xmlns:morph="xalan://com.tyndalehouse.step.core.xsl.impl.MorphologyProvider"
+  xmlns:morph="xalan://com.tyndalehouse.step.core.service.impl.MorphologyServiceImpl"
   extension-element-prefixes="jsword morph">
 
   <!--  Version 3.0 is necessary to get br to work correctly. -->
@@ -572,7 +572,7 @@
 					<xsl:if test="$Morph = 'true'">
 						<span class="morphs">
 							<xsl:value-of
-								select="morph:getDisplayMorphology($morphologyProvider, @morph, $infoFunctionCall)" />
+								select="morph:getDisplayMorphology($morphologyProvider, @morph)" />
 						</span>
 					</xsl:if>
 		

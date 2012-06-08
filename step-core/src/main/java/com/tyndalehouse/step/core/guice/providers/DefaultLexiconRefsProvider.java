@@ -35,9 +35,10 @@ package com.tyndalehouse.step.core.guice.providers;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.google.inject.Provider;
+import javax.inject.Provider;
+import javax.inject.Singleton;
+
 import com.google.inject.Provides;
-import com.google.inject.Singleton;
 
 /**
  * Provides the mappings between lexicon key references and the module initials that should be used.

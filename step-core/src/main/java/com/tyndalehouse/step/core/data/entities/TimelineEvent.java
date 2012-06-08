@@ -55,9 +55,6 @@ import com.tyndalehouse.step.core.data.common.PrecisionType;
 public class TimelineEvent extends ScriptureTarget implements Serializable {
     private static final long serialVersionUID = -4642904574412249515L;
 
-    @Column
-    private String summary;
-
     @Column(nullable = true)
     private LocalDateTime fromDate;
 
@@ -72,20 +69,6 @@ public class TimelineEvent extends ScriptureTarget implements Serializable {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "timelineEvent")
     private List<ScriptureReference> references;
-
-    /**
-     * @return the summary
-     */
-    public String getSummary() {
-        return this.summary;
-    }
-
-    /**
-     * @param summary the summary to set
-     */
-    public void setSummary(final String summary) {
-        this.summary = summary;
-    }
 
     /**
      * @return the fromDate

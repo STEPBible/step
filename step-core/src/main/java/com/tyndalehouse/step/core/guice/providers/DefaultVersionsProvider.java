@@ -35,9 +35,10 @@ package com.tyndalehouse.step.core.guice.providers;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.inject.Provider;
+import javax.inject.Provider;
+import javax.inject.Singleton;
+
 import com.google.inject.Provides;
-import com.google.inject.Singleton;
 
 /**
  * Provides a list of default versions that should be installed for the application

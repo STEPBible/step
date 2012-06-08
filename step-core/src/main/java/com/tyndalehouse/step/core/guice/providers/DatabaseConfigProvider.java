@@ -32,14 +32,15 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.guice.providers;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Provider;
+
 import org.apache.commons.dbcp.BasicDataSource;
 
 import com.avaje.ebean.EbeanServer;
 import com.avaje.ebean.EbeanServerFactory;
 import com.avaje.ebean.config.ServerConfig;
-import com.google.inject.Inject;
-import com.google.inject.Provider;
-import com.google.inject.name.Named;
 import com.tyndalehouse.step.core.data.entities.Bookmark;
 import com.tyndalehouse.step.core.data.entities.DictionaryArticle;
 import com.tyndalehouse.step.core.data.entities.GeoPlace;

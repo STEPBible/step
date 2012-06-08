@@ -142,10 +142,10 @@ public class TimelineServiceImplTest extends DataDrivenTestExtension {
         final List<TimelineEvent> timelineEvents = this.ts.getTimelineEvents(new LocalDateTime(0),
                 new LocalDateTime(2000));
 
-        LOG.debug("Event 1: [{}]", timelineEvents.get(0).getSummary());
+        LOG.debug("Event 1: [{}]", timelineEvents.get(0).getName());
 
         assertEquals(timelineEvents.size(), 1);
-        assertEquals(timelineEvents.get(0).getSummary(), inRange.getSummary());
+        assertEquals(timelineEvents.get(0).getName(), inRange.getName());
     }
 
     /**
@@ -171,7 +171,7 @@ public class TimelineServiceImplTest extends DataDrivenTestExtension {
                 new LocalDateTime(2000));
 
         assertEquals(timelineEvents.size(), 1);
-        assertEquals(timelineEvents.get(0).getSummary(), inRange.getSummary());
+        assertEquals(timelineEvents.get(0).getName(), inRange.getName());
     }
 
     /**
@@ -184,7 +184,7 @@ public class TimelineServiceImplTest extends DataDrivenTestExtension {
                 new LocalDateTime(2000));
 
         assertEquals(timelineEvents.size(), 1);
-        assertEquals(timelineEvents.get(0).getSummary(), inRange.getSummary());
+        assertEquals(timelineEvents.get(0).getName(), inRange.getName());
     }
 
     /**
@@ -197,7 +197,7 @@ public class TimelineServiceImplTest extends DataDrivenTestExtension {
                 new LocalDateTime(2000));
 
         assertEquals(timelineEvents.size(), 1);
-        assertEquals(timelineEvents.get(0).getSummary(), inRange.getSummary());
+        assertEquals(timelineEvents.get(0).getName(), inRange.getName());
     }
 
     /**
@@ -210,7 +210,7 @@ public class TimelineServiceImplTest extends DataDrivenTestExtension {
                 new LocalDateTime(2000));
 
         assertEquals(timelineEvents.size(), 1);
-        assertEquals(timelineEvents.get(0).getSummary(), inRange.getSummary());
+        assertEquals(timelineEvents.get(0).getName(), inRange.getName());
     }
 
     /**
@@ -265,7 +265,7 @@ public class TimelineServiceImplTest extends DataDrivenTestExtension {
     private TimelineEvent createEvent(final int startTime, final String summary) {
         final TimelineEvent te = new TimelineEvent();
         te.setFromDate(new LocalDateTime(startTime));
-        te.setSummary(summary);
+        te.setName(summary);
         return te;
     }
 

@@ -34,13 +34,13 @@ package com.tyndalehouse.step.core.data.create;
 
 import java.util.Properties;
 
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.avaje.ebean.EbeanServer;
-import com.google.inject.Inject;
 import com.tyndalehouse.step.core.data.create.loaders.CsvModuleLoader;
 import com.tyndalehouse.step.core.data.create.loaders.CustomTranslationCsvModuleLoader;
 import com.tyndalehouse.step.core.data.create.loaders.PostProcessingAction;

@@ -70,7 +70,7 @@ public class OpenBibleDataTranslation implements CsvTranslation<GeoPlace> {
         for (int ii = 0; ii < data.size(); ii++) {
 
             final GeoPlace gp = new GeoPlace();
-            gp.setEsvName(data.getData(ii, "ESV"));
+            gp.setName(data.getData(ii, "ESV"));
             gp.setRoot(data.getData(ii, "Root"));
             setCoordinates(gp, data.getData(ii, "Lat"), data.getData(ii, "Lon"));
 
@@ -80,9 +80,9 @@ public class OpenBibleDataTranslation implements CsvTranslation<GeoPlace> {
             gp.setReferences(passageReferences);
             gp.setComment(data.getData(ii, "Comment"));
 
-            LOG.trace("Adding [{}] [{}]", gp.getId(), gp.getEsvName());
+            LOG.trace("Adding [{}] [{}]", gp.getId(), gp.getName());
             places.add(gp);
-            LOG.trace("Added [{}] [{}]", gp.getId(), gp.getEsvName());
+            LOG.trace("Added [{}] [{}]", gp.getId(), gp.getName());
         }
         return places;
     }

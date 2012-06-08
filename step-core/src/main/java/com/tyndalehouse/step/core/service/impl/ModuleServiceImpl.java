@@ -40,14 +40,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
+
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.BookCategory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-import com.google.inject.name.Named;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.models.BibleVersion;
 import com.tyndalehouse.step.core.models.Definition;
@@ -81,6 +82,7 @@ public class ModuleServiceImpl implements ModuleService {
         this.jsword = jsword;
     }
 
+    // TODO: deprecated?
     @Override
     public Definition getDefinition(final String reference) {
         final String lookupModule = getLookupModule(reference);

@@ -61,8 +61,8 @@ public class SimileTimelineTranslatorImpl implements
         final List<SimileEvent> eventList = new ArrayList<SimileEvent>();
         for (final TimelineEvent te : events) {
             final SimileEvent e = new SimileEvent();
-            e.setTitle(te.getSummary());
-            e.setDescription(te.getSummary());
+            e.setTitle(te.getName());
+            e.setDescription(te.getName());
             e.setStart(te.getFromDate().toString());
             e.setEventId(te.getId());
 

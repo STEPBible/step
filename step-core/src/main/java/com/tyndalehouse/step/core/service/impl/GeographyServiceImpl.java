@@ -37,12 +37,13 @@ import static com.tyndalehouse.step.core.data.entities.reference.TargetType.GEO_
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.avaje.ebean.EbeanServer;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 import com.tyndalehouse.step.core.data.entities.GeoPlace;
 import com.tyndalehouse.step.core.data.entities.ScriptureReference;
 import com.tyndalehouse.step.core.service.GeographyService;

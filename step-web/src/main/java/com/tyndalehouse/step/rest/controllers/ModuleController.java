@@ -106,16 +106,9 @@ public class ModuleController {
         // notEmpty(strong, "A reference must be provided to obtain a definition", USER_MISSING_FIELD);
         LOGGER.debug("Getting information for [{}], [{}], [{}]", new Object[] { strong, morph, osisId });
 
-        // this.moduleService.getMorphology(morph);
-
-        // final Definition definition = this.moduleDefintions.getDefinition(reference);
-
-        // if (definition == null) {
-        // return "";
-        // }
-
         final Info i = new Info();
         i.setMorphInfos(translateToInfo(this.morphology.getMorphology(morph)));
+
         return i;
     }
 

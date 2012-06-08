@@ -41,13 +41,14 @@ import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Provider;
+import javax.inject.Singleton;
+
 import org.crosswire.jsword.book.install.Installer;
 import org.crosswire.jsword.book.install.sword.HttpSwordInstaller;
 
-import com.google.inject.Inject;
-import com.google.inject.Provider;
-import com.google.inject.Singleton;
-import com.google.inject.name.Named;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 
 /**

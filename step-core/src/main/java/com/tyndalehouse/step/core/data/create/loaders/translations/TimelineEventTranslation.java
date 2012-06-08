@@ -68,7 +68,7 @@ public class TimelineEventTranslation implements CsvTranslation<TimelineEvent> {
             final PartialDate from = parseDate(data.getData(ii, "From"));
             final PartialDate to = parseDate(data.getData(ii, "To"));
 
-            event.setSummary(data.getData(ii, "Name"));
+            event.setName(data.getData(ii, "Name"));
             if (from.getPrecision() != PrecisionType.NONE) {
                 event.setFromDate(from.getDate());
                 event.setFromPrecision(from.getPrecision());

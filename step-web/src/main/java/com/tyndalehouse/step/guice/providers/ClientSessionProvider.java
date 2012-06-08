@@ -32,11 +32,11 @@
  ******************************************************************************/
 package com.tyndalehouse.step.guice.providers;
 
+import javax.inject.Provider;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.servlet.RequestScoped;
 import com.tyndalehouse.step.core.models.ClientSession;
 import com.tyndalehouse.step.models.WebSessionImpl;

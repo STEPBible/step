@@ -32,12 +32,14 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.data.caches;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
+
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.config.CacheConfiguration;
 import net.sf.ehcache.store.MemoryStoreEvictionPolicy;
 
-import com.google.inject.Inject;
-import com.google.inject.name.Named;
 import com.tyndalehouse.step.core.data.entities.Session;
 
 /**
@@ -48,6 +50,7 @@ import com.tyndalehouse.step.core.data.entities.Session;
  * @author chrisburrell
  * 
  */
+@Singleton
 public class SessionCache extends AbstractDefaultCache<Session> {
 
     /**

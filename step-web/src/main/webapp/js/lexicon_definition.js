@@ -93,10 +93,8 @@ LexiconDefinition.prototype.showDef = function(data) {
 	//Get info on word
 	$.getSafe(MODULE_GET_INFO + strong + "/" + morph + "/" + verse, function(data) {
 		self.showOriginalWordData(data);
+		self.showContext(data);
 	});
-	
-	//show dictionary elements
-	this.showDictionaryTabs(data.displayedWord);
 	
 	this.reposition();
 };
@@ -108,6 +106,11 @@ LexiconDefinition.prototype.showOriginalWordData = function(data) {
 	this.renderPopupTable(data.vocabInfos, detailLevel, vocabSpans);
 };
 
+
+LexiconDefinition.prototype.showContext = function(data) {
+	var detailLevel = $("#selectedDetail", this.popup).val();
+	
+};
 
 LexiconDefinition.prototype.renderPopupTable = function(morphInfos, level, infoSpans) {
 	var item;
@@ -132,25 +135,6 @@ LexiconDefinition.prototype.renderPopupTable = function(morphInfos, level, infoS
 };
 
 
-
-LexiconDefinition.prototype.showDictionaryTabs = function(displayedWord) {
-	var self = this;
-//	$.getSafe(DICTIONARY_SEARCH_BY_HEADWORD + displayedWord, function(data) {
-////		$("#tab-1").html(data.text);
-////		var tabTitle = data.source;
-////		self.getPopup().tabs( "add", "#tab-1", tabTitle);
-//		
-//		//make a ul list
-//		var html = "<h3>Word context</h3><ul>";
-//		
-//		$.each(data, function(index, item) {
-//			html += "<li><a href=\"#\" onclick='showArticle(\""+ item.headword + "\", \"" + item.headwordInstance+ "\")'>" + item.headword + "</a></li>";
-//		});
-//		
-//		html += "</ul><h3>Verse context</h3>";
-//		$("#dictionaries").html(html);
-//	});
-};
 
 LexiconDefinition.prototype.getShortKey = function(k) {
 	var subKey = k.substring(k.indexOf(':') + 1);

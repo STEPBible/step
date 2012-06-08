@@ -34,6 +34,7 @@ package com.tyndalehouse.step.core.data.entities;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
@@ -53,6 +54,8 @@ public abstract class ScriptureTarget implements Serializable {
     @Id
     @GeneratedValue
     private Integer id;
+    @Column
+    private String name;
 
     /**
      * @return the id
@@ -68,4 +71,17 @@ public abstract class ScriptureTarget implements Serializable {
         this.id = id;
     }
 
+    /**
+     * @return the name
+     */
+    public String getName() {
+        return this.name;
+    }
+
+    /**
+     * @param name the name to set
+     */
+    public void setName(final String name) {
+        this.name = name;
+    }
 }

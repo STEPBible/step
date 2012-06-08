@@ -35,12 +35,13 @@ package com.tyndalehouse.step.core.data.caches;
 import java.sql.Timestamp;
 import java.util.Calendar;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import net.sf.ehcache.Ehcache;
 import net.sf.ehcache.Element;
 
 import com.avaje.ebean.EbeanServer;
-import com.google.inject.Inject;
-import com.google.inject.name.Named;
 import com.tyndalehouse.step.core.data.entities.Session;
 
 /**

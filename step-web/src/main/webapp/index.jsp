@@ -239,7 +239,7 @@
 			<span id="detailLevel">&nbsp;</span>
 			<span id="sliderDetailLevelLabel">Quick view</span>
 	</div>
-	<div id="dictionaries">
+	<div id="context">
 		<p></p>
 	</div>
 </span>

@@ -37,9 +37,10 @@ import static com.avaje.ebean.Expr.ieq;
 
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import com.avaje.ebean.EbeanServer;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 import com.tyndalehouse.step.core.data.entities.DictionaryArticle;
 import com.tyndalehouse.step.core.service.DictionaryService;
 

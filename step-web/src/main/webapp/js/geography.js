@@ -98,7 +98,7 @@ GeographyWidget.prototype.goToReference = function(reference) {
 		var self = this;
 		$.getSafe(GEOGRAPHY_GET_PLACES + reference, function(places) {
 			$.each(places, function(index, place) {
-				var content = "<div>" + place.esvName + "<br /><div>@ " + place.latitude + ", " + place.longitude + "</div>" + place.comment + "</div>";
+				var content = "<div>" + place.name + "<br /><div>@ " + place.latitude + ", " + place.longitude + "</div>" + place.comment + "</div>";
 				var infoWindow = new google.maps.InfoWindow({
 				    content: content
 				});
@@ -106,7 +106,7 @@ GeographyWidget.prototype.goToReference = function(reference) {
 				var marker = new google.maps.Marker({
 						position: new google.maps.LatLng(place.latitude, place.longitude),
 						map: self.map,
-						title: place.esvName
+						title: place.name
 				});
 				
 				self.markers.push(marker);

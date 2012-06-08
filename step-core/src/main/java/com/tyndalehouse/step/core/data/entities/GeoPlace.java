@@ -56,8 +56,6 @@ public class GeoPlace extends ScriptureTarget implements Serializable {
     private static final int COORDINATE_PRECISION = 17;
 
     @Column
-    private String esvName;
-    @Column
     private String root;
     @Column(precision = COORDINATE_PRECISION)
     private Double latitude;
@@ -71,20 +69,6 @@ public class GeoPlace extends ScriptureTarget implements Serializable {
 
     @Column
     private GeoPrecision precision;
-
-    /**
-     * @return the esvName
-     */
-    public String getEsvName() {
-        return this.esvName;
-    }
-
-    /**
-     * @param esvName the esvName to set
-     */
-    public void setEsvName(final String esvName) {
-        this.esvName = esvName;
-    }
 
     /**
      * @return the root

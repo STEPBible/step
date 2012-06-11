@@ -32,8 +32,6 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.service.impl;
 
-import static com.tyndalehouse.step.core.data.entities.reference.TargetType.GEO_PLACE;
-import static com.tyndalehouse.step.core.data.entities.reference.TargetType.TIMELINE_EVENT;
 import static com.tyndalehouse.step.core.models.LookupOption.INTERLINEAR;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -141,7 +139,7 @@ public class JSwordServiceImplTest {
     @Test
     public void testSingleReference() {
         final JSwordServiceImpl jsi = new JSwordServiceImpl(null, null);
-        final List<ScriptureReference> refs = jsi.getPassageReferences("Gen.1.1", TIMELINE_EVENT, "KJV");
+        final List<ScriptureReference> refs = jsi.resolveReferences("Gen.1.1", "KJV");
 
         assertEquals(refs.size(), 1);
         assertEquals(4, refs.get(0).getStartVerseId());
@@ -154,8 +152,7 @@ public class JSwordServiceImplTest {
     @Test
     public void testMultipleReference() {
         final JSwordServiceImpl jsi = new JSwordServiceImpl(null, null);
-        final List<ScriptureReference> refs = jsi.getPassageReferences("Gen.1.1;Gen.1.3", TIMELINE_EVENT,
-                "KJV");
+        final List<ScriptureReference> refs = jsi.resolveReferences("Gen.1.1;Gen.1.3", "KJV");
 
         assertEquals(2, refs.size());
         assertEquals(4, refs.get(0).getStartVerseId());
@@ -170,8 +167,7 @@ public class JSwordServiceImplTest {
     @Test
     public void testMultiplePassages() {
         final JSwordServiceImpl jsi = new JSwordServiceImpl(null, null);
-        final List<ScriptureReference> refs = jsi.getPassageReferences("Gen.1.1-2;Gen.1.4-5", TIMELINE_EVENT,
-                "KJV");
+        final List<ScriptureReference> refs = jsi.resolveReferences("Gen.1.1-2;Gen.1.4-5", "KJV");
 
         assertEquals(refs.size(), 2);
         assertEquals(4, refs.get(0).getStartVerseId());
@@ -190,7 +186,7 @@ public class JSwordServiceImplTest {
         // TODO change spaces between 1 and Kgs! This doesn't seem to work...
 
         // final List<ScriptureReference> refs = getPassageReferences(target, "Josh 12:24; Sng 6:4");
-        final List<ScriptureReference> refs = jsi.getPassageReferences("Song 6:4", GEO_PLACE, "KJV");
+        final List<ScriptureReference> refs = jsi.resolveReferences("Song 6:4", "KJV");
         assertEquals(refs.size(), 1);
     }
 

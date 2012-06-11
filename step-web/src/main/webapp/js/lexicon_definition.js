@@ -73,7 +73,7 @@ LexiconDefinition.prototype.getPopup = function() {
 	
 	//create the popup container
 	this.popup = $("#lexiconDefinition");
-	this.popup.tabs().draggable();
+	this.popup.tabs().draggable({ handle: "#lexiconDefinitionHeader"});
 	$('#lexiconPopupClose').click(function() {
 		$('#lexiconDefinition').hide();
 	});

@@ -33,7 +33,7 @@
 package com.tyndalehouse.step.core.data.create;
 
 import static com.tyndalehouse.step.core.data.entities.reference.SourceType.valueOf;
-import static com.tyndalehouse.step.core.data.entities.reference.TargetType.DICTIONARY_ARTICLE;
+import static com.tyndalehouse.step.core.utils.EntityUtils.fillInTargetType;
 import static com.tyndalehouse.step.core.utils.IOUtils.closeQuietly;
 import static com.tyndalehouse.step.core.utils.StringUtils.isEmpty;
 import static com.tyndalehouse.step.core.utils.StringUtils.split;
@@ -53,6 +53,7 @@ import com.avaje.ebean.EbeanServer;
 import com.tyndalehouse.step.core.data.create.loaders.AbstractClasspathBasedModuleLoader;
 import com.tyndalehouse.step.core.data.entities.DictionaryArticle;
 import com.tyndalehouse.step.core.data.entities.ScriptureReference;
+import com.tyndalehouse.step.core.data.entities.reference.TargetType;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.service.JSwordService;
 
@@ -240,7 +241,8 @@ public class DictionaryLoader extends AbstractClasspathBasedModuleLoader<Diction
         for (final String s : refs) {
             List<ScriptureReference> references = new ArrayList<ScriptureReference>();
             try {
-                references = this.jsword.getPassageReferences(s, DICTIONARY_ARTICLE, "KJV");
+                references = this.jsword.resolveReferences(s, "KJV");
+                fillInTargetType(references, TargetType.DICTIONARY_ARTICLE);
             } catch (final StepInternalException e) {
                 this.errors++;
                 LOGGER.error("Cannot resolve reference " + s + " for article "

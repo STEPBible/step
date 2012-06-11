@@ -131,8 +131,7 @@ public class TimelineServiceImpl implements TimelineService {
      */
     private List<TimelineEvent> lookupEventsMatchingReference(final String reference) {
         // first get the kjv reference
-        final List<ScriptureReference> passageReferences = this.jsword.getPassageReferences(reference,
-                TIMELINE_EVENT, "KJV");
+        final List<ScriptureReference> passageReferences = this.jsword.resolveReferences(reference, "KJV");
 
         if (passageReferences.isEmpty()) {
             return new ArrayList<TimelineEvent>();
@@ -148,6 +147,7 @@ public class TimelineServiceImpl implements TimelineService {
         // overlap: if a and b are start and stop of event, then overlap formula is:
         // search_start < b & search_end > a
 
+        // TODO rewrite using ebean notations rather than query
         final String queryText = "find timelineEvent where references.targetType = :targetType "
                 + "and :searchStart <= references.endVerseId and :searchEnd >= references.startVerseId";
         // final String queryText = "find timelineEvent";

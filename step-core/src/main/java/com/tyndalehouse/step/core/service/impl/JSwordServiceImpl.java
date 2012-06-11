@@ -87,7 +87,6 @@ import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
 import com.tyndalehouse.step.core.data.entities.ScriptureReference;
-import com.tyndalehouse.step.core.data.entities.reference.TargetType;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.models.LookupOption;
 import com.tyndalehouse.step.core.models.OsisWrapper;
@@ -595,49 +594,6 @@ public class JSwordServiceImpl implements JSwordService {
                         + "but the module is not installed");
     }
 
-    @Override
-    public List<ScriptureReference> getPassageReferences(final String references,
-            final TargetType targetType, final String version) {
-        final List<ScriptureReference> refs = new ArrayList<ScriptureReference>();
-
-        if (isNotBlank(references)) {
-            LOGGER.trace("Resolving references for [{}]", references);
-            try {
-                final PassageKeyFactory keyFactory = PassageKeyFactory.instance();
-
-                // TODO FIXME this should be uncommented - but currently need it out to make loading process
-                // work
-                // final String versification = (String) Books.installed().getBook(version).getBookMetaData()
-                // .getProperty(BookMetaData.KEY_VERSIFICATION);
-                // final Versification v11n = Versifications.instance().getVersification(versification);
-                final Versification v11n = Versifications.instance().getDefaultVersification();
-
-                final RocketPassage rp = (RocketPassage) keyFactory.getKey(v11n, references);
-                for (int ii = 0; ii < rp.countRanges(RestrictionType.NONE); ii++) {
-                    final VerseRange vr = rp.getRangeAt(ii, RestrictionType.NONE);
-                    final Verse start = vr.getStart();
-                    final Verse end = vr.getEnd();
-
-                    final int startVerseId = start.getOrdinal();
-                    final int endVerseId = end.getOrdinal();
-
-                    LOGGER.trace("Found reference [{}] to [{}]", valueOf(startVerseId), valueOf(endVerseId));
-                    final ScriptureReference sr = new ScriptureReference();
-
-                    sr.setStartVerseId(startVerseId);
-                    sr.setEndVerseId(endVerseId);
-                    sr.setTargetType(targetType);
-                    refs.add(sr);
-                }
-            } catch (final NoSuchVerseException nsve) {
-                throw new StepInternalException("Verse " + references + " does not exist", nsve);
-            } catch (final NoSuchKeyException e) {
-                throw new StepInternalException(e.getMessage(), e);
-            }
-        }
-        return refs;
-    }
-
     /**
      * Looks through a versification for a particular type of book
      * 
@@ -678,4 +634,41 @@ public class JSwordServiceImpl implements JSwordService {
         return books;
     }
 
+    @Override
+    public List<ScriptureReference> resolveReferences(final String references, final String version) {
+
+        LOGGER.trace("Resolving references for [{}]", references);
+        try {
+            final List<ScriptureReference> refs = new ArrayList<ScriptureReference>();
+
+            if (isBlank(references)) {
+                return refs;
+            }
+
+            final PassageKeyFactory keyFactory = PassageKeyFactory.instance();
+            final Versification v11n = Versifications.instance().getDefaultVersification();
+            final RocketPassage rp = (RocketPassage) keyFactory.getKey(v11n, references);
+
+            for (int ii = 0; ii < rp.countRanges(RestrictionType.NONE); ii++) {
+                final VerseRange vr = rp.getRangeAt(ii, RestrictionType.NONE);
+                final Verse start = vr.getStart();
+                final Verse end = vr.getEnd();
+
+                final int startVerseId = start.getOrdinal();
+                final int endVerseId = end.getOrdinal();
+
+                LOGGER.trace("Found reference [{}] to [{}]", valueOf(startVerseId), valueOf(endVerseId));
+                final ScriptureReference sr = new ScriptureReference();
+
+                sr.setStartVerseId(startVerseId);
+                sr.setEndVerseId(endVerseId);
+                refs.add(sr);
+            }
+            return refs;
+        } catch (final NoSuchVerseException nsve) {
+            throw new StepInternalException("Verse " + references + " does not exist", nsve);
+        } catch (final NoSuchKeyException e) {
+            throw new StepInternalException(e.getMessage(), e);
+        }
+    }
 }

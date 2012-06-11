@@ -32,7 +32,7 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.service.impl;
 
-import static com.tyndalehouse.step.core.data.entities.reference.TargetType.GEO_PLACE;
+import static java.lang.String.format;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,16 +76,16 @@ public class GeographyServiceImpl implements GeographyService {
     @Override
     public List<GeoPlace> getPlaces(final String reference) {
         LOG.debug("Returning places for reference [{}]", reference);
-        final List<ScriptureReference> passageReferences = this.jsword.getPassageReferences(reference,
-                GEO_PLACE, "KJV");
+        final List<ScriptureReference> passageReferences = this.jsword.resolveReferences(reference, "KJV");
         final List<GeoPlace> placesInScope = new ArrayList<GeoPlace>();
 
+        // TODO rewrite in ebean form
         final String rawQuery = "t0.id in (select geo_place_id from scripture_reference "
                 + "where start_verse_id <= %s and end_verse_id >= %s and geo_place_id is not null)";
 
         for (final ScriptureReference sr : passageReferences) {
             placesInScope.addAll(this.ebean.find(GeoPlace.class).where()
-                    .raw(String.format(rawQuery, sr.getEndVerseId(), sr.getStartVerseId())).findList());
+                    .raw(format(rawQuery, sr.getEndVerseId(), sr.getStartVerseId())).findList());
         }
 
         return placesInScope;

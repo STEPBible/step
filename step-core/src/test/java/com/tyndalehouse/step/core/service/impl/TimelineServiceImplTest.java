@@ -34,7 +34,6 @@ package com.tyndalehouse.step.core.service.impl;
 
 import static com.tyndalehouse.step.core.data.entities.reference.TargetType.TIMELINE_EVENT;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
@@ -88,8 +87,7 @@ public class TimelineServiceImplTest extends DataDrivenTestExtension {
         final List<ScriptureReference> testReferences = saveEventWithVerses(TIMELINE_EVENT, 5, 10);
 
         // ensure we return the references that we've set up
-        when(this.jsword.getPassageReferences(anyString(), any(TargetType.class), anyString())).thenReturn(
-                testReferences);
+        when(this.jsword.resolveReferences(anyString(), anyString())).thenReturn(testReferences);
 
         final TimelineEventsAndDate eventsForPassage = this.ts.getEventsFromScripture("");
 
@@ -107,8 +105,7 @@ public class TimelineServiceImplTest extends DataDrivenTestExtension {
         saveEventWithVerses(TargetType.TIMELINE_EVENT, 11, 13);
 
         // ensure we return the references that we've set up
-        when(this.jsword.getPassageReferences(anyString(), any(TargetType.class), anyString())).thenReturn(
-                testReferences);
+        when(this.jsword.resolveReferences(anyString(), anyString())).thenReturn(testReferences);
 
         final TimelineEventsAndDate eventsForPassage = this.ts.getEventsFromScripture("");
 
@@ -124,8 +121,7 @@ public class TimelineServiceImplTest extends DataDrivenTestExtension {
         final List<ScriptureReference> testReferences = saveEventWithVerses(TargetType.GEO_PLACE, 5, 10);
 
         // ensure we return the references that we've set up
-        when(this.jsword.getPassageReferences(anyString(), any(TargetType.class), anyString())).thenReturn(
-                testReferences);
+        when(this.jsword.resolveReferences(anyString(), anyString())).thenReturn(testReferences);
 
         final TimelineEventsAndDate eventsForPassage = this.ts.getEventsFromScripture("");
 

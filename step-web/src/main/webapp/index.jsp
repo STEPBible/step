@@ -167,16 +167,16 @@
 
 <!--  The popup that can have lots of helpful information -->
 <span id='lexiconDefinition'>
-	<ul>
+	<ul id="lexiconDefinitionHeader">
 		<span id="lexiconPopupClose">X</span>
-			<li>
-				<a href="#origin">Original Word</a>
-				
-			</li>
-			<li><a href="#dictionaries">Context</a></li>
+			<li><a href="#origin">Original Word</a></li>
+			<li><a href="#context">Context</a></li>
 	</ul>
 
 	<div id="origin">
+			<span id="detailLevel">&nbsp;</span>
+			<span id="sliderDetailLevelLabel">Quick view</span>
+			
 			<!--  Vocab -->
 			<table class="lexiconTable">
 				<thead>
@@ -236,8 +236,6 @@
 					<td  level="2"id="mood"></td>
 				</tr>
 			</table>
-			<span id="detailLevel">&nbsp;</span>
-			<span id="sliderDetailLevelLabel">Quick view</span>
 	</div>
 	<div id="context">
 		<p></p>

@@ -32,7 +32,7 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.data.create.loaders.translations;
 
-import static com.tyndalehouse.step.core.data.entities.reference.TargetType.GEO_PLACE;
+import static com.tyndalehouse.step.core.utils.EntityUtils.fillInTargetType;
 import static com.tyndalehouse.step.core.utils.StringUtils.isEmpty;
 import static com.tyndalehouse.step.core.utils.StringUtils.isNotEmpty;
 
@@ -46,6 +46,7 @@ import com.tyndalehouse.step.core.data.common.GeoPrecision;
 import com.tyndalehouse.step.core.data.create.loaders.CsvData;
 import com.tyndalehouse.step.core.data.entities.GeoPlace;
 import com.tyndalehouse.step.core.data.entities.ScriptureReference;
+import com.tyndalehouse.step.core.data.entities.reference.TargetType;
 import com.tyndalehouse.step.core.service.JSwordService;
 
 /**
@@ -74,8 +75,10 @@ public class OpenBibleDataTranslation implements CsvTranslation<GeoPlace> {
             gp.setRoot(data.getData(ii, "Root"));
             setCoordinates(gp, data.getData(ii, "Lat"), data.getData(ii, "Lon"));
 
-            final List<ScriptureReference> passageReferences = this.jsword.getPassageReferences(
-                    data.getData(ii, "Verses").replace(',', ';').replace("Sng", "Song"), GEO_PLACE, "KJV");
+            final List<ScriptureReference> passageReferences = this.jsword.resolveReferences(
+                    data.getData(ii, "Verses").replace(',', ';').replace("Sng", "Song"), "KJV");
+
+            fillInTargetType(passageReferences, TargetType.GEO_PLACE);
 
             gp.setReferences(passageReferences);
             gp.setComment(data.getData(ii, "Comment"));

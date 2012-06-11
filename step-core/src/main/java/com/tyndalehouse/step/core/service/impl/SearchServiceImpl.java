@@ -30,65 +30,62 @@
  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
-package com.tyndalehouse.step.core.data.create.loaders.translations;
+package com.tyndalehouse.step.core.service.impl;
 
-import static com.tyndalehouse.step.core.data.common.PartialDate.parseDate;
-import static com.tyndalehouse.step.core.utils.EntityUtils.fillInTargetType;
+import static com.avaje.ebean.Expr.ge;
+import static com.avaje.ebean.Expr.le;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.tyndalehouse.step.core.data.common.PartialDate;
-import com.tyndalehouse.step.core.data.common.PrecisionType;
-import com.tyndalehouse.step.core.data.create.loaders.CsvData;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.avaje.ebean.EbeanServer;
 import com.tyndalehouse.step.core.data.entities.ScriptureReference;
-import com.tyndalehouse.step.core.data.entities.TimelineEvent;
-import com.tyndalehouse.step.core.data.entities.reference.TargetType;
 import com.tyndalehouse.step.core.service.JSwordService;
+import com.tyndalehouse.step.core.service.SearchService;
 
 /**
- * Translates from {@link CsvData} to {@link TimelineEvent}
+ * A federated search service implementation. see {@link SearchService}
  * 
  * @author chrisburrell
+ * 
  */
-public class TimelineEventTranslation implements CsvTranslation<TimelineEvent> {
+@Singleton
+public class SearchServiceImpl implements SearchService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(SearchServiceImpl.class);
+    private final EbeanServer ebean;
     private final JSwordService jsword;
 
     /**
-     * @param jsword the jsword service to be able to lookup the relevant references
+     * @param ebean the ebean server to carry out the search from
+     * @param jsword used to convert references to numerals, etc.
      */
-    public TimelineEventTranslation(final JSwordService jsword) {
+    @Inject
+    public SearchServiceImpl(final EbeanServer ebean, final JSwordService jsword) {
+        this.ebean = ebean;
         this.jsword = jsword;
     }
 
     @Override
-    public List<TimelineEvent> parseAll(final CsvData data) {
-        final List<TimelineEvent> events = new ArrayList<TimelineEvent>(data.size());
-        for (int ii = 0; ii < data.size(); ii++) {
-            final TimelineEvent event = new TimelineEvent();
-            final PartialDate from = parseDate(data.getData(ii, "From"));
-            final PartialDate to = parseDate(data.getData(ii, "To"));
+    public List<ScriptureReference> searchAllByReference(final String references) {
+        LOGGER.debug("Searching for all entries with references of [{}]", references);
 
-            event.setName(data.getData(ii, "Name"));
-            if (from.getPrecision() != PrecisionType.NONE) {
-                event.setFromDate(from.getDate());
-                event.setFromPrecision(from.getPrecision());
-            }
+        final List<ScriptureReference> inputRefs = this.jsword.resolveReferences(references, "KJV");
 
-            if (to.getPrecision() != PrecisionType.NONE) {
-                event.setToDate(to.getDate());
-                event.setToPrecision(to.getPrecision());
+        final List<ScriptureReference> searchResults = new ArrayList<ScriptureReference>();
 
-            }
-            // finally add any scripture reference required
-            final List<ScriptureReference> passageReferences = this.jsword.resolveReferences(
-                    data.getData(ii, "Refs"), "KJV");
-
-            fillInTargetType(passageReferences, TargetType.TIMELINE_EVENT);
-
-            event.setReferences(passageReferences);
-            events.add(event);
+        // do search
+        for (final ScriptureReference r : inputRefs) {
+            searchResults.addAll(this.ebean.find(ScriptureReference.class).fetch("geoPlace")
+                    .fetch("timelineEvent").setDistinct(true).fetch("dictionaryArticle").where()
+                    .and(ge("endVerseId", r.getStartVerseId()), le("startVerseId", r.getEndVerseId()))
+                    .findList());
         }
-        return events;
+        return searchResults;
     }
 }

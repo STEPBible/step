@@ -38,7 +38,6 @@ import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.BookCategory;
 
 import com.tyndalehouse.step.core.data.entities.ScriptureReference;
-import com.tyndalehouse.step.core.data.entities.reference.TargetType;
 import com.tyndalehouse.step.core.models.LookupOption;
 import com.tyndalehouse.step.core.models.OsisWrapper;
 
@@ -130,12 +129,10 @@ public interface JSwordService {
     /**
      * 
      * @param references a list of references
-     * @param targetType the type of reference this is attributed to
      * @param version the version name is used to select the correct versification
      * @return the list of references strongly-typed
      */
-    List<ScriptureReference> getPassageReferences(final String references, TargetType targetType,
-            String version);
+    List<ScriptureReference> resolveReferences(final String references, String version);
 
     /**
      * returns a list of matching names or references in a particular book

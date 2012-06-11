@@ -61,6 +61,7 @@ import com.tyndalehouse.step.core.service.GeographyService;
 import com.tyndalehouse.step.core.service.JSwordService;
 import com.tyndalehouse.step.core.service.ModuleService;
 import com.tyndalehouse.step.core.service.MorphologyService;
+import com.tyndalehouse.step.core.service.SearchService;
 import com.tyndalehouse.step.core.service.TimelineService;
 import com.tyndalehouse.step.core.service.UserDataService;
 import com.tyndalehouse.step.core.service.impl.BibleInformationServiceImpl;
@@ -70,6 +71,7 @@ import com.tyndalehouse.step.core.service.impl.GeographyServiceImpl;
 import com.tyndalehouse.step.core.service.impl.JSwordServiceImpl;
 import com.tyndalehouse.step.core.service.impl.ModuleServiceImpl;
 import com.tyndalehouse.step.core.service.impl.MorphologyServiceImpl;
+import com.tyndalehouse.step.core.service.impl.SearchServiceImpl;
 import com.tyndalehouse.step.core.service.impl.TimelineServiceImpl;
 import com.tyndalehouse.step.core.service.impl.UserDataServiceImpl;
 import com.tyndalehouse.step.core.utils.AbstractStepGuiceModule;
@@ -99,6 +101,7 @@ public class StepCoreModule extends AbstractStepGuiceModule {
         // for now just have a method that statically initialises the cache
         initialiseCacheManager();
 
+        bind(SearchService.class).to(SearchServiceImpl.class).asEagerSingleton();
         bind(JSwordService.class).to(JSwordServiceImpl.class).asEagerSingleton();
         bind(BibleInformationService.class).to(BibleInformationServiceImpl.class).asEagerSingleton();
         bind(ModuleService.class).to(ModuleServiceImpl.class).asEagerSingleton();

@@ -130,7 +130,7 @@ public abstract class AbstractClasspathBasedModuleLoader<T> implements ModuleLoa
             return parseMultipleCsvFiles();
         }
 
-        return parseSingleCsvFile(this.resourcePath);
+        return parseSingleFile(this.resourcePath);
     }
 
     /**
@@ -149,7 +149,7 @@ public abstract class AbstractClasspathBasedModuleLoader<T> implements ModuleLoa
             String line = null;
             while ((line = reader.readLine()) != null) {
                 if (!line.startsWith("--")) {
-                    allEntities.addAll(parseSingleCsvFile(directory + line));
+                    allEntities.addAll(parseSingleFile(directory + line));
                 }
             }
         } catch (final IOException e) {
@@ -167,7 +167,7 @@ public abstract class AbstractClasspathBasedModuleLoader<T> implements ModuleLoa
      * @param csvResource the classpath resource path
      * @return the list of loaded entities
      */
-    private List<T> parseSingleCsvFile(final String csvResource) {
+    private List<T> parseSingleFile(final String csvResource) {
         // this uses a buffered reader internally
         Reader fileReader = null;
         InputStream stream = null;

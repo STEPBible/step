@@ -5,6 +5,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1"> 
 	<link rel="stylesheet" type="text/css" href="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.css" />
 
+	<link rel="stylesheet" type="text/css" href="css_mobile/jquery.mobile.simpledialog.min.css" />
 	<link rel="stylesheet" type="text/css" href="css_mobile/init-layout.css" />
 	<link rel="stylesheet" type="text/css" href="css/passage.css" />
 
@@ -13,52 +14,50 @@
 	<script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
 	<script src="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.js"></script>
 	
+	<script src="libs/jquery.mobile.simpledialog2.min.js"></script>
 	<script src="js/ui_hooks.js" type="text/javascript"></script>
-	
 	<script src="js_mobile/init.js" type="text/javascript"></script>
 </head> 
-<body> 
+<body>
 
-<div data-role="page" id="main">
+<div data-role="page" id="main" >
 
-	<div data-role="header" data-position="fixed">
+	<div data-role="header" data-position="fixed" >
 		<h1>STEP</h1>
-		<a href="#options" data-rel="dialog" data-transition="slide" data-icon="gears">Options</a>
-	</div><!-- /header -->
-
-	<div data-role="content">	
-		<div id="mobileMainPane"></div>
+		<a href="#" id="optionsButton" data-role="button" data-icon="gears">Options</a>
 	</div>
 	
-
+	<div data-role="content">
+		<div id="contentPane"></div>
+	</div>
+	
 </div>
 
+<div id="optionsContent" style="display: none">
 
-<div data-role="page" id="options">
-	<div data-role="header">
-		<h1>Options</h1>
+	<div data-role="fieldcontain">
+		<label for="versions" class="select" data-theme="c">Version</label>
+		<select name="versions" id="versions">
+		</select>
 	</div>
 
-	<div data-role="content">
-	<!--  method="get" action="rest/bible/getBibleText/KJV/Romans 1/HEADINGS,VERSE_NUMBERS,MORPHOLOGY" -->
-		<form >
-			<div data-role="control-group">
-				<legend>Display Options</legend>
-				   <input type="checkbox" checked="checked" name="verse_numbers" id="verse_numbers" />
-				   <label for="verse_numbers">Verse numbers</label>
-				   
-				   <input type="checkbox" checked="checked" name="headings" id="headings" />
-				   <label for="headings">Headers</label>
-		
-				   <input type="checkbox" name="strongs" id="strongs" />
-				   <label for="strongs">Strong numbers</label>
-				
-				   <input type="checkbox" name="morphs" id="morphs" />
-				   <label for="morphs">Morphology</label>
-			</div>
-			
-			<input type="submit" value="Submit" data-direction="reverse" />
-		</form>
+	<input type="checkbox" checked="checked" name="verseNumbers" id="verseNumbers" data-theme="c" />
+	<label for="verseNumbers">Verse numbers</label>
+	
+	<input type="checkbox" checked="checked" name="headings" id="headings"  data-theme="c" />
+	<label for="headings">Headings</label>
+	
+	<input type="checkbox" name="strongs" id="strongs"  data-theme="c" />
+	<label for="strongs">Strong numbers</label>
+	
+	<input type="checkbox" name="morphs" id="morphs"  data-theme="c" />
+	<label for="morphs">Morphology</label>
+
+	<div class="ui-grid-a">
+		<div class="ui-block-a"><a rel="close" data-role="button" id="updateView" href="#">Update</a></div>
+		<div class="ui-block-b"><a rel="close" data-role="button" data-icon="delete" data-theme="c" href="#">Cancel</a></div>
 	</div>
+</div>
+
 </body>
 </html>

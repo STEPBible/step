@@ -127,9 +127,9 @@ function initData() {
 	//get all supported versions
 	var options = {};
 	$.getJSON(BIBLE_GET_ALL_FEATURES, function(data) {
-		$.each(data, function() {
+//		$.each(data, function() {
 			options = data;
-		});
+//		});
 	});
 	
 	//get data for passages

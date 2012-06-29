@@ -170,7 +170,7 @@ public class TestData {
         u.setPassword(this.userService.getHash(this.numCryptoIterations, "password", salt));
         u.setSalt(salt);
 
-        // this.ebean.save(u);
+        this.ebean.save(u);
         return u;
     }
 }

@@ -33,6 +33,7 @@
 package com.tyndalehouse.step.core.xsl.impl;
 
 import static com.tyndalehouse.step.core.utils.StringUtils.areAnyBlank;
+import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
 import static com.tyndalehouse.step.core.utils.StringUtils.split;
 
 import java.util.HashMap;
@@ -49,7 +50,7 @@ import com.tyndalehouse.step.core.xsl.MultiInterlinearProvider;
  */
 public class MultiInterlinearProviderImpl implements MultiInterlinearProvider {
     /** we separate by commas and spaces */
-    private static final String VERSION_SEPARATOR = ", ";
+    static final String VERSION_SEPARATOR = ", ?";
     private final Map<String, InterlinearProvider> interlinearProviders = new HashMap<String, InterlinearProvider>();
 
     /**
@@ -68,7 +69,9 @@ public class MultiInterlinearProviderImpl implements MultiInterlinearProvider {
         final String[] differentVersions = split(versions, VERSION_SEPARATOR);
         if (differentVersions != null) {
             for (final String version : differentVersions) {
-                this.interlinearProviders.put(version, new InterlinearProviderImpl(version, textScope));
+                if (isNotBlank(version)) {
+                    this.interlinearProviders.put(version, new InterlinearProviderImpl(version, textScope));
+                }
             }
         }
     }

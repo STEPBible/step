@@ -61,7 +61,8 @@ public class ModuleController {
     /**
      * sets up the controller to access module information
      * 
-     * @param moduleDefintions the service allowing access to module information
+     * @param moduleService the service allowing access to module information
+     * @param morphology the morphology service
      */
     @Inject
     public ModuleController(final ModuleService moduleService, final MorphologyService morphology) {

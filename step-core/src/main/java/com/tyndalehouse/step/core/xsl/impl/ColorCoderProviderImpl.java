@@ -39,8 +39,6 @@ import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.tyndalehouse.step.core.service.impl.MorphologyServiceImpl;
-
 /**
  * A utility to provide colors to an xsl spreadsheet. This is a non-static utility since later on we may wish
  * to provide configuration to vary the colours, etc.
@@ -70,8 +68,6 @@ import com.tyndalehouse.step.core.service.impl.MorphologyServiceImpl;
  * <p>
  * ie anything ending GSM GSN GSF GPM GPN or GPF or DSM DSN DSF DPM DPN or DPF
  * 
- * TODO: could this be optimized by a cache to avoid running the regex everytime. If so, worth looking at
- * {@link MorphologyServiceImpl} for an example. it might also be worth combining the implementations
  * 
  * @author chrisburrell
  */

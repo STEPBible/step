@@ -61,7 +61,6 @@ public class Morphology implements Serializable {
     private Number number;
     private Gender gender;
     private Suffix suffix;
-    private String rootCode;
     private String cssClasses;
     private String inlineHtml;
 
@@ -203,20 +202,6 @@ public class Morphology implements Serializable {
      */
     public void setSuffix(final Suffix suffix) {
         this.suffix = suffix;
-    }
-
-    /**
-     * @return the rootCode
-     */
-    public String getRootCode() {
-        return this.rootCode;
-    }
-
-    /**
-     * @param rootCode the rootCode to set
-     */
-    public void setRootCode(final String rootCode) {
-        this.rootCode = rootCode;
     }
 
     /**

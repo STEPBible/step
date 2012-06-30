@@ -56,7 +56,7 @@
 		<xalan.version>2.7.1</xalan.version>
 
 		<joda-time.version>2.1</joda-time.version>
-		<ebean.version>2.7.5</ebean.version>
+		<ebean.version>2.7.7</ebean.version>
 		<ehcache.version>2.5.2</ehcache.version>
 		<ehcache-web.version>2.0.4</ehcache-web.version>
 		<lucene.version>3.0.3</lucene.version>

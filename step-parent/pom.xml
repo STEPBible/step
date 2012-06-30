@@ -306,7 +306,7 @@
 					</artifactId>
 					<configuration>
 						<encoding>
-							iso-8859-1
+							UTF-8
 						</encoding>
 						<source>
 							${java.version}
@@ -431,9 +431,6 @@
 							</buildcommand>
 							<buildcommand>
 								net.sf.eclipsecs.core.CheckstyleBuilder
-							</buildcommand>
-							<buildcommand>
-								org.maven.ide.eclipse.maven2Builder
 							</buildcommand>
 							<buildcommand>
 								com.avaje.eclipse.buildplugin.enhanceBuilder

@@ -46,11 +46,11 @@ import com.tyndalehouse.step.core.models.HasCsvValueName;
  */
 // CHECKSTYLE:OFF
 public enum Person implements HasCsvValueName {
-    FIRST("First"),
-    SECOND("Second"),
-    THIRD("Third"),
+    FIRST("1st"),
+    SECOND("2nd"),
+    THIRD("3rd"),
     MIDDLE_SIGNIFICANCE("Middle significance"),
-    ATTIC_FORM("ATTIc form", "Attic form");
+    ATTIC_FORM("ATTic form", "Attic form");
 
     private static Map<String, Person> values = getReverseMap(values());
     private final String csvValueName;

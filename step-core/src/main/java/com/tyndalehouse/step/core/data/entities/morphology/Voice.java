@@ -47,14 +47,14 @@ import com.tyndalehouse.step.core.models.HasCsvValueName;
 // CHECKSTYLE:OFF
 public enum Voice implements HasCsvValueName {
     ACTIVE("Active"),
-    IMPERSONAL_ACTIVE("Impersonal active", "Impersonal Active"),
-    MIDDLE_OR_PASSIVE("Either middle or passive", "Middle or Passive"),
-    PASSIVE_DEPONENT("Passive depOnent", "Passive Deponent"),
+    IMPERSONAL_ACTIVE("impersonal active", "Impersonal Active"),
+    MIDDLE_OR_PASSIVE("Either Middle or Passive", "Middle or Passive"),
+    PASSIVE_DEPONENT("Passive Deponent"),
     PASSIVE("Passive"),
-    MIDDLE_OR_PASSIVE_DEPONENT("middle or Passive depoNent", "Middle or Passive Deponent"),
+    MIDDLE_OR_PASSIVE_DEPONENT("Middle or Passive Deponent"),
     MIDDLE("Middle"),
-    MIDDLE_DEPONENT("middle Deponent", "Middle Deponent"),
-    INDEFINITE_VOICE("Indefinite voice");
+    MIDDLE_DEPONENT("Middle Deponent"),
+    INDEFINITE_VOICE("indefinite voice", "Indefinite Voice");
 
     private static Map<String, Voice> values = getReverseMap(values());
     private String csvValueName;

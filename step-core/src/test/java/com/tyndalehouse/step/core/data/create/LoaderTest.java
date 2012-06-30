@@ -35,16 +35,32 @@ package com.tyndalehouse.step.core.data.create;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Properties;
+import java.util.Set;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.tyndalehouse.step.core.data.DataDrivenTestExtension;
 import com.tyndalehouse.step.core.data.entities.ScriptureReference;
+import com.tyndalehouse.step.core.data.entities.morphology.Case;
+import com.tyndalehouse.step.core.data.entities.morphology.Function;
+import com.tyndalehouse.step.core.data.entities.morphology.Gender;
+import com.tyndalehouse.step.core.data.entities.morphology.Mood;
 import com.tyndalehouse.step.core.data.entities.morphology.Morphology;
+import com.tyndalehouse.step.core.data.entities.morphology.Number;
+import com.tyndalehouse.step.core.data.entities.morphology.Person;
+import com.tyndalehouse.step.core.data.entities.morphology.Suffix;
+import com.tyndalehouse.step.core.data.entities.morphology.Tense;
+import com.tyndalehouse.step.core.data.entities.morphology.Voice;
+import com.tyndalehouse.step.core.models.HasCsvValueName;
 import com.tyndalehouse.step.core.service.JSwordService;
 import com.tyndalehouse.step.core.service.impl.JSwordServiceImpl;
 
@@ -56,6 +72,8 @@ import com.tyndalehouse.step.core.service.impl.JSwordServiceImpl;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class LoaderTest extends DataDrivenTestExtension {
+    private static final Logger LOG = LoggerFactory.getLogger(LoaderTest.class);
+
     @Mock
     private JSwordService jsword;
 
@@ -121,7 +139,89 @@ public class LoaderTest extends DataDrivenTestExtension {
         final Loader l = new Loader(this.jsword, getEbean(), coreProperties);
         final int count = l.loadRobinsonMorphology();
 
-        assertEquals(25, count);
-        getEbean().find(Morphology.class, "V-2AAP-DSM");
+        final Morphology m1 = getEbean().find(Morphology.class, "V-2AAP-DSM");
+
+        // check verb columns
+        assertEquals(Function.VERB, m1.getFunction());
+        assertEquals(Tense.SECOND_AORIST, m1.getTense());
+        assertEquals(Voice.ACTIVE, m1.getVoice());
+        assertEquals(Mood.PARTICIPLE, m1.getMood());
+        assertEquals(Case.DATIVE, m1.getWordCase());
+        assertEquals(Number.SINGULAR, m1.getNumber());
+        assertEquals(Gender.MASCULINE, m1.getGender());
+
+        final Morphology m2 = getEbean().find(Morphology.class, "F-1ASM");
+        assertEquals(Person.FIRST, m2.getPerson());
+        assertEquals(Function.REFLEXIVE_PRONOUN, m2.getFunction());
+
+        final Morphology m3 = getEbean().find(Morphology.class, "D-NPM-C");
+        assertEquals(Suffix.CONTRACTED_FORM, m3.getSuffix());
+        assertEquals(1092, count);
+
+        checkAllEnumerationValuesUsed(getEbean().find(Morphology.class).findList());
+    }
+
+    /**
+     * checks that we have loaded up all types of enumerations
+     * 
+     * @param morphs the list of all morphologies loaded up
+     */
+    private void checkAllEnumerationValuesUsed(final List<Morphology> morphs) {
+        final Set<Function> functions = new HashSet<Function>();
+        final Set<Case> cases = new HashSet<Case>();
+        final Set<Gender> genders = new HashSet<Gender>();
+        final Set<Mood> moods = new HashSet<Mood>();
+        final Set<Number> numbers = new HashSet<Number>();
+        final Set<Person> persons = new HashSet<Person>();
+        final Set<Suffix> suffixes = new HashSet<Suffix>();
+        final Set<Tense> tenses = new HashSet<Tense>();
+        final Set<Voice> voices = new HashSet<Voice>();
+
+        for (final Morphology m : morphs) {
+            functions.add(m.getFunction());
+            cases.add(m.getWordCase());
+            genders.add(m.getGender());
+            moods.add(m.getMood());
+            numbers.add(m.getNumber());
+            persons.add(m.getPerson());
+            suffixes.add(m.getSuffix());
+            tenses.add(m.getTense());
+            voices.add(m.getVoice());
+        }
+
+        // now iterate through all enumerations
+        final List<HasCsvValueName> missing = new ArrayList<HasCsvValueName>();
+        missing.addAll(checkAllUsed(Function.values(), functions));
+        missing.addAll(checkAllUsed(Case.values(), cases));
+        missing.addAll(checkAllUsed(Gender.values(), genders));
+        missing.addAll(checkAllUsed(Mood.values(), moods));
+        missing.addAll(checkAllUsed(Number.values(), numbers));
+        missing.addAll(checkAllUsed(Person.values(), persons));
+        missing.addAll(checkAllUsed(Suffix.values(), suffixes));
+        missing.addAll(checkAllUsed(Tense.values(), tenses));
+        missing.addAll(checkAllUsed(Voice.values(), voices));
+
+        for (final HasCsvValueName o : missing) {
+            LOG.error("Missing [{}] for [{}]", o.getCsvValueName(), o.getClass().getSimpleName());
+        }
+
+        assertTrue(missing.isEmpty());
+    }
+
+    /**
+     * @param values a list of values to be contained in a set of enum values
+     * @param enumValues the set of enum values
+     * @param <T> the type of the list elements
+     * @return missing values from enumValues
+     */
+    private <T> List<T> checkAllUsed(final T[] values, final Set<T> enumValues) {
+        final List<T> missing = new ArrayList<T>();
+
+        for (final T t : values) {
+            if (!enumValues.contains(t)) {
+                missing.add(t);
+            }
+        }
+        return missing;
     }
 }

@@ -47,8 +47,8 @@ import com.tyndalehouse.step.core.models.HasCsvValueName;
 // CHECKSTYLE:OFF
 public enum Mood implements HasCsvValueName {
     INDICATIVE("Indicative"),
-    IMPERATIVE("iMperative", "Imperative"),
-    INFINITIVE("iNfinitive", "Infinitive"),
+    IMPERATIVE("Imperative"),
+    INFINITIVE("Infinitive"),
     OPTATIVE("Optative"),
     PARTICIPLE("Participle"),
     SUBJUNCTIVE("Subjunctive");

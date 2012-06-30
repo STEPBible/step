@@ -32,6 +32,8 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.data.create;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.inject.Inject;
@@ -39,6 +41,8 @@ import javax.inject.Named;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import au.com.bytecode.opencsv.bean.HeaderColumnNameTranslateMappingStrategy;
 
 import com.avaje.ebean.EbeanServer;
 import com.tyndalehouse.step.core.data.create.loaders.CsvModuleLoader;
@@ -153,15 +157,64 @@ public class Loader {
      * @return the number of entries
      */
     int loadRobinsonMorphology() {
+        final HeaderColumnNameTranslateMappingStrategy<Morphology> columnMapping = new HeaderColumnNameTranslateMappingStrategy<Morphology>();
+        final Map<String, String> columnTranslations = getMorphologyTranslations();
+
+        columnMapping.setColumnMapping(columnTranslations);
+        columnMapping.setType(Morphology.class);
+
         return new CsvModuleLoader<Morphology>(this.ebean,
-                this.coreProperties.getProperty("test.data.path.morphology.robinson"), Morphology.class,
+                this.coreProperties.getProperty("test.data.path.morphology.robinson"), columnMapping,
                 new PostProcessingAction<Morphology>() {
 
                     @Override
                     public void postProcess(final Morphology entity) {
+                        LOG.trace("Processing [{}]", entity.getCode());
                         entity.initialise();
                     }
                 }).init();
+    }
+
+    /**
+     * @return the translations from csv columns to field names
+     */
+    private Map<String, String> getMorphologyTranslations() {
+        final Map<String, String> columnTranslations = new HashMap<String, String>();
+
+        // set up basic fields
+        columnTranslations.put("CODE", "code");
+        columnTranslations.put("specific Function", "function");
+        columnTranslations.put("specific Tense", "tense");
+        columnTranslations.put("specific Voice", "voice");
+        columnTranslations.put("specific Mood", "mood");
+        columnTranslations.put("specific Case", "wordCase");
+        columnTranslations.put("specific Person", "person");
+        columnTranslations.put("specific Number", "number");
+        columnTranslations.put("specific Gender", "gender");
+        columnTranslations.put("specific Extra", "suffix");
+
+        // explanations
+        columnTranslations.put("Function explained", "functionExplained");
+        columnTranslations.put("Tense explained", "tenseExplained");
+        columnTranslations.put("Voice explained", "voiceExplained");
+        columnTranslations.put("Mood explained", "moodExplained");
+        columnTranslations.put("Case explained", "caseExplained");
+        columnTranslations.put("Person explained", "personExplained");
+        columnTranslations.put("Number explained", "numberExplained");
+        columnTranslations.put("Gender explained", "genderExplained");
+        columnTranslations.put("Extra explained", "suffixExplained");
+
+        // descriptions
+        columnTranslations.put("Function in description", "functionDescription");
+        columnTranslations.put("Tense in description", "tenseDescription");
+        columnTranslations.put("Voice in description", "voiceDescription");
+        columnTranslations.put("Mood in description", "moodDescription");
+        columnTranslations.put("Case in description", "caseDescription");
+        columnTranslations.put("Person in description", "personDescription");
+        columnTranslations.put("Number in description", "numberDescription");
+        columnTranslations.put("Gender in description", "genderDescription");
+        columnTranslations.put("Extra in description", "suffixDescription");
+        return columnTranslations;
     }
 
     /**

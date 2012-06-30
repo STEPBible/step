@@ -53,7 +53,7 @@ public enum Gender implements HasCsvValueName {
     APOCOPATED_FORM("Apocopated form"),
     ATTIC_FORM("ATTic form", "Attic form"),
     CONTRACTED_FORM("Contracted form"),
-    IRREGULAR_OR_IMPURE_FORM("iRRegular or impure form", "Irregular form"),
+    IRREGULAR_OR_IMPURE_FORM("IRRegular or impure form", "Irregular form"),
     MIDDLE_SIGNIFICANCE("Middle significance");
 
     private static Map<String, Gender> values = getReverseMap(values());

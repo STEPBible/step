@@ -49,17 +49,17 @@ public enum Tense implements HasCsvValueName {
     COMPARATIVE("Comparative"),
     CONTRACTED_FORM("Contracted form"),
     FUTURE("Future"),
-    IMPERFECT("ImpeRfect", "Imperfect"),
-    INDECLINABLE_LETTER("Indeclinable letter"),
+    IMPERFECT("Imperfect"),
+    INDECLINABLE_LETTER("Indeclinable Letter"),
     INDECLINABLE_NUMERAL("Indeclinable NUmeral", "Numeral", "Indeclinable"),
-    INDEFINITE_TENSE("Indefinite tense"),
+    INDEFINITE_TENSE("indefinite tense", "Indefinite tense"),
     INTERROGATIVE("Interrogative"),
     NEGATIVE("Negative"),
     PRESENT("Present"),
-    SECOND_AORIST("Second Aorist"),
-    SECOND_FUTURE("Second Future"),
-    SECOND_PERFECT("Second peRfect", "Second Perfect"),
-    SECOND_PLUPERFECT("Second pLupeRfect", "Second Pluperfect");
+    SECOND_AORIST("2nd Aorist"),
+    SECOND_FUTURE("2nd Future"),
+    SECOND_PERFECT("2nd Perfect"),
+    SECOND_PLUPERFECT("2nd Pluperfect");
 
     private static Map<String, Tense> values = getReverseMap(values());
     private final String csvValueName;

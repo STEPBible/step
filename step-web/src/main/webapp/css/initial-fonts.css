@@ -58,9 +58,23 @@ body {
 	width: 50px;
 }
 
-.lexiconTable h3 {
+.metadataContainer h3 {
 	margin: 0px;
 	color: #696;
+}
+
+.metadataContainer span {
+	font-size: 8pt;
+}
+
+.metadataContainer h5 {
+	font-size: 8pt;
+	display: inline;
+}
+
+.emphasisePopupText {
+	text-decoration: underline;
+	text-style: italic;
 }
 
 .lexiconTable th {

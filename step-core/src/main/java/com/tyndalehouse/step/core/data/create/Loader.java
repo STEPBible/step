@@ -214,6 +214,10 @@ public class Loader {
         columnTranslations.put("Number in description", "numberDescription");
         columnTranslations.put("Gender in description", "genderDescription");
         columnTranslations.put("Extra in description", "suffixDescription");
+
+        columnTranslations.put("Shorter Example", "description");
+        columnTranslations.put("Explanation", "explanation");
+
         return columnTranslations;
     }
 

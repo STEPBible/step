@@ -31,7 +31,6 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
 
-var morphSpans = [["function", "functionNotes"], "voice", "mood", "wordCase", "person", "number", "gender", "suffix", ["tense", "tenseNotes"]];
 var vocabSpans = ["originalLanguage", "transliteration", "pronunciation", "kjvDefinition", "strongsDerivation", "lexiconSummary"];
 
 /**
@@ -102,10 +101,29 @@ LexiconDefinition.prototype.showDef = function(data) {
 LexiconDefinition.prototype.showOriginalWordData = function(data) {
 	var detailLevel = $("#selectedDetail", this.popup).val();
 	
-	this.renderPopupTable(data.morphInfos, detailLevel, morphSpans);
+	this.populateIds(data.morphInfos, "#grammarContainer");
+	
+//	this.renderPopupTable(data.morphInfos, detailLevel, morphSpans);
+	//TODO remove renderPopupTable once vocabInfos is done...
 	this.renderPopupTable(data.vocabInfos, detailLevel, vocabSpans);
 };
 
+
+LexiconDefinition.prototype.populateIds = function(data, container) {
+	$("*", container).each(function(index, item) {
+		if(item.id) {
+			var content = data[0][item.id];
+			if(content) {
+				$(item).html(content.replace(/_(.*)_/g, "<span class=\"emphasisePopupText\">$1</span>"));
+			}
+		}
+		
+		if($(item).attr("depends-on")) {
+			//make visible or not
+			$(item).toggle(data[0][$(item).attr("depends-on")] != "");
+		}
+	});
+}
 
 LexiconDefinition.prototype.showContext = function(data) {
 	var detailLevel = $("#selectedDetail", this.popup).val();

@@ -177,6 +177,8 @@
 			<span id="detailLevel">&nbsp;</span>
 			<span id="sliderDetailLevelLabel">Quick view</span>
 			
+
+			
 			<!--  Vocab -->
 			<table class="lexiconTable">
 				<thead>
@@ -205,37 +207,37 @@
 			</table>
 		
 			<!--  Gramar -->
-			<table class="lexiconTable">
-				<thead>
-					<tr>
-						<td colspan="4"><h3>Grammar</h3></td>
-					</tr>
-				</thead>
-				<tr>
-					<th level="0">Function</th>
-					<td level="0" id="function"></td>
-					<th level="0">Gender</th>
-					<td level="0" id="gender"></td>
-				</tr>
-				<tr>
-					<th level="0">Person</th>
-					<td level="0" id="person"></td>
-					<th level="0">Number</th>
-					<td level="0" id="number"></td>
-				</tr>
-				<tr>
-					<th level="1">Case</th>
-					<td  level="1"id="wordCase"></td>
-					<th level="2">Suffix</th>
-					<td level="2" id="suffix"></td>
-				</tr>
-				<tr>
-					<th level="1">Tense</th>
-					<td level="1" id="tense"></td>
-					<th level="2">Mood</th>
-					<td  level="2"id="mood"></td>
-				</tr>
-			</table>
+			<div id="grammarContainer" class="metadataContainer">
+				<h3>Grammar</h3>
+				<!-- Quick view -->
+				<span level="0">
+					<h5 id="function"></h5>:<span id="person"></span> Person 
+					<span id="number"></span> <span id="gender"></span> 
+					( 
+					<span id="wordCase"></span> <span id="tense"></span>
+					<span id="mood"></span> <span id="voice"></span>
+					<span id="gender"></span>
+					) <br/>
+					<span id="description"></span>
+					<br />
+				</span>
+				<span level="1">
+					<span id="explanation"></span><br />
+				</span>
+				<span level="2">
+					<br />
+					<div depends-on="functionDescription"><h5>Function:</h5> <span id="functionDescription"></span> <h5>i.e.</h5> <span id="functionExplained"></span></div>
+					<div depends-on="personDescription"><h5>Person:</h5> <span id="personDescription"></span> <h5>i.e.</h5> <span id="personExplained"></span></div>
+					<div depends-on="genderDescription"><h5>Gender:</h5> <span id="genderDescription"></span> <h5>i.e.</h5> <span id="genderExplained"></span></div>
+					<div depends-on="numberDescription"><h5>Number:</h5> <span id="numberDescription"></span> <h5>i.e.</h5> <span id="numberExplained"></span></div>
+					<div depends-on="caseDescription"><h5>Case:</h5> <span id="caseDescription"></span> <h5>i.e.</h5> <span id="wordCaseExplained"></span></div>
+					<div depends-on="tenseDescription"><h5>Tense:</h5> <span id="tenseDescription"></span> <h5>i.e.</h5> <span id="tenseExplained"></span></div>
+					<div depends-on="moodDescription"><h5>Mood:</h5> <span id="moodDescription"></span> <h5>i.e.</h5> <span id="moodExplained"></span></div>
+					<div depends-on="voiceDescription"><h5>Voice:</h5> <span id="voiceDescription"></span> <h5>i.e.</h5> <span id="voiceExplained"></span></div>
+					<div depends-on="suffixDescription"><h5>Extra:</h5> <span id="suffixDescription"></span> <h5>i.e.</h5> <span id="suffixExplained"></span></div>
+				</span>
+			</div>
+			
 	</div>
 	<div id="context">
 		<p></p>

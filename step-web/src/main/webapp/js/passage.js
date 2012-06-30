@@ -331,10 +331,9 @@ Passage.prototype.changePassage = function(newReference) {
 Passage.prototype.highlightStrong = function(strongReference) {
 	// check for black listed strongs
 	if($.inArray(strongReference, Passage.getBlackListedStrongs()) == -1) {
-		$(".verse span[strong='" + strongReference + "']", this.container).css("text-decoration", "underline");
-		$("span.w[strong='" + strongReference + "'] span.text", this.container).css("text-decoration", "underline");
+		$(".verse span[strong='" + strongReference + "']", this.container).addClass("emphasisePassagePhrase");
+		$("span.w[strong='" + strongReference + "'] span.text", this.container).addClass("emphasisePassagePhrase");
 		
-		//TODO deal with multiple strong numbers too
 	}
 };
 
@@ -381,8 +380,8 @@ Passage.prototype.higlightStrongs = function(strongMorphReference) {
 	var references = strongMorphReference.strong.split();
 	
 	// reset all spans that are underlined:
-	$(".verse span", this.container).css("text-decoration", "none");
-	$("span.text", this.container).css("text-decoration", "none");
+	$(".verse span", this.container).removeClass("emphasisePassagePhrase");
+	$("span.text", this.container).removeClass("emphasisePassagePhrase");
 	
 	for(var ii = 0; ii < references.length; ii++) {
 			this.highlightStrong(references[ii]);

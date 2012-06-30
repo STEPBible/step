@@ -332,6 +332,11 @@ FONT.usg {
 	font-style: italic;
 }
 
+.emphasisePassagePhrase {
+	text-decoration: underline;
+	/* border: 2px dotted #E78F08; */
+}
+
 /**********************************************/
 /** Grammar colour coding                     */
 /**********************************************/

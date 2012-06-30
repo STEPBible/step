@@ -84,6 +84,8 @@ public class Morphology implements Serializable {
     private String numberDescription;
     private String genderDescription;
     private String suffixDescription;
+    private String description;
+    private String explanation;
 
     // used for displaying purposes
     private String cssClasses;
@@ -479,6 +481,34 @@ public class Morphology implements Serializable {
      */
     public void setSuffixDescription(final String suffixDescription) {
         this.suffixDescription = suffixDescription;
+    }
+
+    /**
+     * @return the description
+     */
+    public String getDescription() {
+        return this.description;
+    }
+
+    /**
+     * @param description the description to set
+     */
+    public void setDescription(final String description) {
+        this.description = description;
+    }
+
+    /**
+     * @return the explanation
+     */
+    public String getExplanation() {
+        return this.explanation;
+    }
+
+    /**
+     * @param explanation the explanation to set
+     */
+    public void setExplanation(final String explanation) {
+        this.explanation = explanation;
     }
 
     /**

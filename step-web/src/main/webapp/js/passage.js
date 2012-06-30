@@ -121,6 +121,7 @@ function Passage(passageContainer, rawServerVersions, passageId) {
 		.click(function() {
 			$.getSafe(BIBLE_GET_PREVIOUS_CHAPTER + self.reference.val() + "/" + self.version.val(), function(newReference) {
 				self.changePassage(newReference);
+				self.passage.scrollTop(0);
 			});
 	});
 
@@ -129,6 +130,7 @@ function Passage(passageContainer, rawServerVersions, passageId) {
 		.click(function() {
 			$.getSafe(BIBLE_GET_NEXT_CHAPTER + self.reference.val() + "/" + self.version.val(), function(newReference) {
 				self.changePassage(newReference);
+				self.passage.scrollTop(0);
 			});
 	});
 	

@@ -120,8 +120,9 @@ function Passage(passageContainer, rawServerVersions, passageId) {
 		.button({ icons: {primary: "ui-icon-arrowreturnthick-1-w" }, text: false})
 		.click(function() {
 			$.getSafe(BIBLE_GET_PREVIOUS_CHAPTER + self.reference.val() + "/" + self.version.val(), function(newReference) {
-				self.changePassage(newReference);
-				self.passage.scrollTop(0);
+				self.changePassage(newReference, function() {
+					self.passage.scrollTop(self.passage.prop("scrollHeight") - self.passage.height());	
+				});
 			});
 	});
 
@@ -129,8 +130,9 @@ function Passage(passageContainer, rawServerVersions, passageId) {
 		.button({ icons: {primary: "ui-icon-arrowreturnthick-1-w" }, text: false})
 		.click(function() {
 			$.getSafe(BIBLE_GET_NEXT_CHAPTER + self.reference.val() + "/" + self.version.val(), function(newReference) {
-				self.changePassage(newReference);
-				self.passage.scrollTop(0);
+				self.changePassage(newReference, function() {
+					self.passage.scrollTop(0);
+				});
 			});
 	});
 	
@@ -274,7 +276,7 @@ Passage.prototype.deSync = function() {
 /**
  * changes the passage, with optional parameters
  */
-Passage.prototype.changePassage = function(newReference) {
+Passage.prototype.changePassage = function(newReference, callback) {
     if(newReference) {
     	this.reference.val(newReference);
     }
@@ -319,6 +321,11 @@ Passage.prototype.changePassage = function(newReference) {
 			
 			// passage change was successful, so we let the rest of the UI know
 			$.shout("passage-changed", { reference: self.reference.val(), passageId: self.passageId, init: init, version:  lookupVersion} );
+			
+			//do callback
+			if(callback) {
+				callback();
+			}
 		});
 	}
 };

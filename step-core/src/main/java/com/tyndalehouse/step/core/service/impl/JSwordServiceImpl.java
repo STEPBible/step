@@ -66,6 +66,7 @@ import org.crosswire.jsword.book.BookCategory;
 import org.crosswire.jsword.book.BookData;
 import org.crosswire.jsword.book.BookException;
 import org.crosswire.jsword.book.BookFilter;
+import org.crosswire.jsword.book.BookMetaData;
 import org.crosswire.jsword.book.Books;
 import org.crosswire.jsword.book.FeatureType;
 import org.crosswire.jsword.book.install.InstallException;
@@ -362,8 +363,7 @@ public class JSwordServiceImpl implements JSwordService {
 
     @Override
     public synchronized String getVerseRange(final int startVerseId, final int endVerseId) {
-        final Versification kjvVersification = Versifications.instance().getVersification(
-                DEFAULT_NUMBERED_VERSION);
+        final Versification kjvVersification = getVersificationForVersion(DEFAULT_NUMBERED_VERSION);
 
         Verse start = kjvVersification.decodeOrdinal(startVerseId);
         final Verse end = kjvVersification.decodeOrdinal(endVerseId);
@@ -381,14 +381,15 @@ public class JSwordServiceImpl implements JSwordService {
             final String numberedVersion, final int verseId) {
 
         // coded from numbered version.
-        final Verse s = Versifications.instance().getVersification(numberedVersion).decodeOrdinal(verseId);
+        final Verse s = getVersificationForVersion(numberedVersion).decodeOrdinal(verseId);
         final int verseNumber = s.getVerse() == 0 ? 1 : s.getVerse();
 
         // convert it over to target versification
-        final Verse targetVersionVerse = Versifications.instance().getVersification(version)
-                .patch(s.getBook(), s.getChapter(), verseNumber);
-
         final Book lookupVersion = getBookFromVersion(version);
+
+        final Verse targetVersionVerse = getVersificationForVersion(lookupVersion).patch(s.getBook(),
+                s.getChapter(), verseNumber);
+
         final BookData lookupBookData = new BookData(lookupVersion, targetVersionVerse);
 
         return getTextForBookData(version, lookupBookData.getKey().getOsisID(),
@@ -425,22 +426,6 @@ public class JSwordServiceImpl implements JSwordService {
         } catch (final NoSuchKeyException e) {
             throw new StepInternalException("The verse specified was not found: " + reference, e);
         }
-    }
-
-    /**
-     * Gets a book from version initials
-     * 
-     * @param version the version initials
-     * @return the JSword book
-     */
-    private Book getBookFromVersion(final String version) {
-        final Book currentBook = Books.installed().getBook(version);
-
-        if (currentBook == null) {
-            throw new StepInternalException("The specified initials " + version
-                    + " did not reference a valid module");
-        }
-        return currentBook;
     }
 
     /**
@@ -699,7 +684,7 @@ public class JSwordServiceImpl implements JSwordService {
     public List<String> getBibleBookNames(final String bookStart, final String version) {
         final String lookup = isBlank(bookStart) ? "" : bookStart;
 
-        Versification versification = Versifications.instance().getVersification(version);
+        Versification versification = getVersificationForVersion(version);
         if (versification == null) {
             versification = Versifications.instance().getDefaultVersification();
         }
@@ -725,7 +710,7 @@ public class JSwordServiceImpl implements JSwordService {
             }
 
             final PassageKeyFactory keyFactory = PassageKeyFactory.instance();
-            final Versification av11n = Versifications.instance().getVersification(version);
+            final Versification av11n = getVersificationForVersion(version);
             final RocketPassage rp = (RocketPassage) keyFactory.getKey(av11n, references);
 
             for (int ii = 0; ii < rp.countRanges(RestrictionType.NONE); ii++) {
@@ -749,5 +734,43 @@ public class JSwordServiceImpl implements JSwordService {
         } catch (final NoSuchKeyException e) {
             throw new StepInternalException(e.getMessage(), e);
         }
+    }
+
+    // TODO move to utility class?
+    /**
+     * Gets a book from version initials
+     * 
+     * @param version the version initials
+     * @return the JSword book
+     */
+    private static Book getBookFromVersion(final String version) {
+        final Book currentBook = Books.installed().getBook(version);
+
+        if (currentBook == null) {
+            throw new StepInternalException("The specified initials " + version
+                    + " did not reference a valid module");
+        }
+        return currentBook;
+    }
+
+    /**
+     * A helper method to get the versification from a book
+     * 
+     * @param version the version we are interested in.
+     * @return the versification the versification of the book
+     */
+    private static Versification getVersificationForVersion(final String version) {
+        return getVersificationForVersion(getBookFromVersion(version));
+    }
+
+    /**
+     * A helper method to get the versification from a book
+     * 
+     * @param version the version we are interested in.
+     * @return the versification the versification of the book
+     */
+    private static Versification getVersificationForVersion(final Book version) {
+        return Versifications.instance().getVersification(
+                (String) version.getBookMetaData().getProperty(BookMetaData.KEY_VERSIFICATION));
     }
 }

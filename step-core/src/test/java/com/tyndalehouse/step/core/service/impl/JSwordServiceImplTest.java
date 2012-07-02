@@ -268,7 +268,7 @@ public class JSwordServiceImplTest {
     @Test
     public void testPrettyXml() throws BookException, NoSuchKeyException, JDOMException, IOException {
         final String version = "ESV";
-        final String ref = "John 1:2;John 1:4;John 3:2";
+        final String ref = "Exodus 3:1-4:17";
         final Book currentBook = Books.installed().getBook(version);
         final BookData bookData = new BookData(currentBook, currentBook.getKey(ref));
         final Element osisFragment = bookData.getOsisFragment();
@@ -299,7 +299,7 @@ public class JSwordServiceImplTest {
         assertTrue(j.getOsisTextByVerseNumber("ESV", "KJV", 60000).getValue()
                 .contains("The grace of the Lord Jesus"));
         assertTrue(j.getOsisTextByVerseNumber("FreSegond", "KJV", 60000).getValue()
-                .contains("Que la grâce du Seigneur Jésus soit avec tous!"));
+                .contains("Que la gr\u00e2ce du Seigneur J\u00e9sus soit avec tous!"));
 
     }
 

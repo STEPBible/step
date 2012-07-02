@@ -36,14 +36,16 @@ import java.util.List;
 
 import org.joda.time.LocalDateTime;
 
+import com.tyndalehouse.step.core.data.entities.TimelineEvent;
+import com.tyndalehouse.step.models.timeline.DigestableTimeline;
+import com.tyndalehouse.step.models.timeline.simile.SimileEvent;
+
 /**
  * A translator is able to convert timeline data into a form that is acceptable by the client
  * 
  * @author chrisburrell
- * @param <S> the source class
- * @param <T> the target class
  */
-public interface UserInterfaceTranslator<S, T> {
+public interface TimelineTranslator {
 
     /**
      * translates a list of events to a digestable form of a timeline
@@ -52,6 +54,14 @@ public interface UserInterfaceTranslator<S, T> {
      * @param suggestedDate a date for the timeline
      * @return the wrapped up form of the timeline
      */
-    T toDigestableForm(final List<S> sourceElement, LocalDateTime suggestedDate);
+    DigestableTimeline toDigestableForm(final List<TimelineEvent> sourceElement, LocalDateTime suggestedDate);
+
+    /**
+     * Translates a single event into a simile event
+     * 
+     * @param te the timeline
+     * @return the simile event to be sent through
+     */
+    SimileEvent translateEvent(TimelineEvent te);
 
 }

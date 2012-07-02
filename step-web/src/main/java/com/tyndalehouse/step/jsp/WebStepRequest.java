@@ -44,6 +44,9 @@ import java.util.Map;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.inject.Injector;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.models.UiDefaults;
@@ -56,6 +59,7 @@ import com.tyndalehouse.step.rest.controllers.BibleController;
  * 
  */
 public class WebStepRequest {
+    private static final Logger LOG = LoggerFactory.getLogger(WebStepRequest.class);
     private static final String CURRENT_REFERENCE_0 = "currentReference-0";
     private static final String CURRENT_REFERENCE_1 = "currentReference-1";
     private static final String CURRENT_VERSION_0 = "currentVersion-0";
@@ -117,9 +121,18 @@ public class WebStepRequest {
      * @return the html to put into the page
      */
     public String getPassage(final int passageId) {
+
         final String reference = getReference(passageId);
         final String version = getVersion(passageId);
-        return this.injector.getInstance(BibleController.class).getBibleText(version, reference).getValue();
+
+        try {
+            return this.injector.getInstance(BibleController.class).getBibleText(version, reference)
+                    .getValue();
+        } catch (final StepInternalException e) {
+            // silently ignore and log as debug
+            LOG.trace("Unable to restore state", e);
+            return "";
+        }
     }
 
     /**

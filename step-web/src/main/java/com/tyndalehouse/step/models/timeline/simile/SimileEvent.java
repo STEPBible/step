@@ -32,6 +32,9 @@
  ******************************************************************************/
 package com.tyndalehouse.step.models.timeline.simile;
 
+import java.io.Serializable;
+
+import com.tyndalehouse.step.core.data.common.PrecisionType;
 import com.tyndalehouse.step.models.timeline.DigestableTimeline;
 
 /**
@@ -49,7 +52,8 @@ import com.tyndalehouse.step.models.timeline.DigestableTimeline;
  * @author chrisburrell
  * 
  */
-public class SimileEvent implements DigestableTimeline {
+public class SimileEvent implements DigestableTimeline, Serializable {
+    private static final long serialVersionUID = -7725905171349065886L;
     private String start;
     private String end;
     private boolean duration;
@@ -60,6 +64,10 @@ public class SimileEvent implements DigestableTimeline {
 
     private String image;
     private String link;
+    private PrecisionType startPrecision;
+    private PrecisionType endPrecision;
+    private String certainty;
+    private String flags;
 
     /**
      * @return the start
@@ -185,5 +193,61 @@ public class SimileEvent implements DigestableTimeline {
      */
     public void setEventId(final int eventId) {
         this.eventId = eventId;
+    }
+
+    /**
+     * @return the startPrecision
+     */
+    public PrecisionType getStartPrecision() {
+        return this.startPrecision;
+    }
+
+    /**
+     * @param startPrecision the startPrecision to set
+     */
+    public void setStartPrecision(final PrecisionType startPrecision) {
+        this.startPrecision = startPrecision;
+    }
+
+    /**
+     * @return the endPrecision
+     */
+    public PrecisionType getEndPrecision() {
+        return this.endPrecision;
+    }
+
+    /**
+     * @param endPrecision the endPrecision to set
+     */
+    public void setEndPrecision(final PrecisionType endPrecision) {
+        this.endPrecision = endPrecision;
+    }
+
+    /**
+     * @return the certainty
+     */
+    public String getCertainty() {
+        return this.certainty;
+    }
+
+    /**
+     * @param certainty the certainty to set
+     */
+    public void setCertainty(final String certainty) {
+        this.certainty = certainty;
+    }
+
+    /**
+     * @return the flags
+     */
+    public String getFlags() {
+        return this.flags;
+    }
+
+    /**
+     * @param flags the flags to set
+     */
+    public void setFlags(final String flags) {
+        this.flags = flags;
     }
 }

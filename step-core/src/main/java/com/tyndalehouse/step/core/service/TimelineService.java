@@ -39,6 +39,7 @@ import org.joda.time.LocalDateTime;
 import com.tyndalehouse.step.core.data.entities.HotSpot;
 import com.tyndalehouse.step.core.data.entities.TimelineEvent;
 import com.tyndalehouse.step.core.data.entities.aggregations.TimelineEventsAndDate;
+import com.tyndalehouse.step.core.models.EnhancedTimelineEvent;
 
 /**
  * The timeline service gives access to all the data relating to the timeline the events, the configuration,
@@ -75,4 +76,13 @@ public interface TimelineService {
      * @return a set of events and the date at which they occur
      */
     TimelineEventsAndDate getEventsFromScripture(String reference);
+
+    /**
+     * Returns all the required information about a timeline event
+     * 
+     * @param id the id of the event
+     * @param version the version to use to lookup any associated verse numbers
+     * @return the timeline event with all its data
+     */
+    EnhancedTimelineEvent getTimelineEvent(int id, String version);
 }

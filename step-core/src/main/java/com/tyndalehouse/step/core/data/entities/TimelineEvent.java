@@ -69,6 +69,10 @@ public class TimelineEvent extends ScriptureTarget implements Serializable {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "timelineEvent")
     private List<ScriptureReference> references;
+    @Column(nullable = true)
+    private String certainty;
+    @Column(nullable = true)
+    private String flags;
 
     /**
      * @return the fromDate
@@ -140,4 +144,31 @@ public class TimelineEvent extends ScriptureTarget implements Serializable {
         this.references = references;
     }
 
+    /**
+     * @return the certainty
+     */
+    public String getCertainty() {
+        return this.certainty;
+    }
+
+    /**
+     * @param certainty the certainty to set
+     */
+    public void setCertainty(final String certainty) {
+        this.certainty = certainty;
+    }
+
+    /**
+     * @return the flags
+     */
+    public String getFlags() {
+        return this.flags;
+    }
+
+    /**
+     * @param flags the flags to set
+     */
+    public void setFlags(final String flags) {
+        this.flags = flags;
+    }
 }

@@ -52,6 +52,8 @@ import com.tyndalehouse.step.core.data.entities.HotSpot;
 import com.tyndalehouse.step.core.data.entities.ScriptureReference;
 import com.tyndalehouse.step.core.data.entities.TimelineEvent;
 import com.tyndalehouse.step.core.data.entities.aggregations.TimelineEventsAndDate;
+import com.tyndalehouse.step.core.models.EnhancedTimelineEvent;
+import com.tyndalehouse.step.core.models.OsisWrapper;
 import com.tyndalehouse.step.core.service.JSwordService;
 import com.tyndalehouse.step.core.service.TimelineService;
 
@@ -181,5 +183,26 @@ public class TimelineServiceImpl implements TimelineService {
         query.setParameter("from", from);
         query.setParameter("to", to);
         return query.findList();
+    }
+
+    @Override
+    public EnhancedTimelineEvent getTimelineEvent(final int id, final String version) {
+        final EnhancedTimelineEvent ete = new EnhancedTimelineEvent(this.ebean.find(TimelineEvent.class, id));
+
+        final List<ScriptureReference> references = ete.getEvent().getReferences();
+        for (final ScriptureReference r : references) {
+            // obtain first verse of each reference for display and add "..." on them...
+            final int startVerseId = r.getStartVerseId();
+
+            final OsisWrapper osisText = this.jsword.getOsisTextByVerseNumber(version, startVerseId);
+
+            if (startVerseId != r.getEndVerseId()) {
+                osisText.setFragment(true);
+                osisText.setReference(this.jsword.getVerseRange(startVerseId, r.getEndVerseId()));
+            }
+
+            ete.add(osisText);
+        }
+        return ete;
     }
 }

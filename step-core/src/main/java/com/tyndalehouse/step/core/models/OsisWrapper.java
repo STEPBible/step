@@ -32,15 +32,19 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.models;
 
+import java.io.Serializable;
+
 /**
  * A simple wrapper around a string for returning as a JSON-mapped object
  * 
  * @author chrisburrell
  * 
  */
-public class OsisWrapper {
-    private final String value;
-    private final String reference;
+public class OsisWrapper implements Serializable {
+    private static final long serialVersionUID = -5651330317995494895L;
+    private String value;
+    private String reference;
+    private boolean fragment;
 
     /**
      * the value to be wrapped
@@ -65,5 +69,33 @@ public class OsisWrapper {
      */
     public String getReference() {
         return this.reference;
+    }
+
+    /**
+     * @param fragment the fragment to set
+     */
+    public void setFragment(final boolean fragment) {
+        this.fragment = fragment;
+    }
+
+    /**
+     * @return the fragment
+     */
+    public boolean isFragment() {
+        return this.fragment;
+    }
+
+    /**
+     * @param value the value to set
+     */
+    public void setValue(final String value) {
+        this.value = value;
+    }
+
+    /**
+     * @param reference the reference to set
+     */
+    public void setReference(final String reference) {
+        this.reference = reference;
     }
 }

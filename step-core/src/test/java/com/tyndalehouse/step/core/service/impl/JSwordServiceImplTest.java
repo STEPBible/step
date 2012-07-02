@@ -287,6 +287,19 @@ public class JSwordServiceImplTest {
 
         LOGGER.debug("\n {}", xmlOutputter.outputString(d));
         Assert.assertTrue(osisText.contains("span"));
+    }
+
+    /**
+     * Tests a lookup by number
+     */
+    @Test
+    public void testNumberLookup() {
+        final JSwordServiceImpl j = new JSwordServiceImpl(null, null);
+        assertTrue(j.getOsisTextByVerseNumber("ESV", "KJV", 4).getValue().contains("In the beginning"));
+        assertTrue(j.getOsisTextByVerseNumber("ESV", "KJV", 60000).getValue()
+                .contains("The grace of the Lord Jesus"));
+        assertTrue(j.getOsisTextByVerseNumber("FreSegond", "KJV", 60000).getValue()
+                .contains("Que la grâce du Seigneur Jésus soit avec tous!"));
 
     }
 

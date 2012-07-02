@@ -44,11 +44,13 @@ import org.slf4j.LoggerFactory;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.tyndalehouse.step.core.data.entities.HotSpot;
-import com.tyndalehouse.step.core.data.entities.TimelineEvent;
 import com.tyndalehouse.step.core.data.entities.aggregations.TimelineEventsAndDate;
+import com.tyndalehouse.step.core.models.EnhancedTimelineEvent;
 import com.tyndalehouse.step.core.service.TimelineService;
-import com.tyndalehouse.step.models.UserInterfaceTranslator;
+import com.tyndalehouse.step.models.TimelineTranslator;
 import com.tyndalehouse.step.models.timeline.DigestableTimeline;
+import com.tyndalehouse.step.models.timeline.simile.EnhancedSimileEvent;
+import com.tyndalehouse.step.models.timeline.simile.SimileEvent;
 import com.tyndalehouse.step.rest.framework.Cacheable;
 
 /**
@@ -61,7 +63,7 @@ import com.tyndalehouse.step.rest.framework.Cacheable;
 public class TimelineController {
     private static final Logger LOGGER = LoggerFactory.getLogger(TimelineController.class);
     private final TimelineService timelineService;
-    private final UserInterfaceTranslator<TimelineEvent, DigestableTimeline> translator;
+    private final TimelineTranslator translator;
 
     /**
      * The timeline controller relies on the timeline service to retrieve the data
@@ -70,8 +72,7 @@ public class TimelineController {
      * @param translator a service enabling the translation of the model into a chewable version for the UI
      */
     @Inject
-    public TimelineController(final TimelineService timelineService,
-            final UserInterfaceTranslator<TimelineEvent, DigestableTimeline> translator) {
+    public TimelineController(final TimelineService timelineService, final TimelineTranslator translator) {
         notNull(timelineService, "Timeline service was null", CONTROLLER_INITIALISATION_ERROR);
         notNull(translator, "Translator was null", CONTROLLER_INITIALISATION_ERROR);
         this.timelineService = timelineService;
@@ -96,6 +97,27 @@ public class TimelineController {
         return this.translator.toDigestableForm(eventsFromScripture.getEvents(),
                 eventsFromScripture.getDateTime());
 
+    }
+
+    /**
+     * Retrieves all the information available for a particular timeline event
+     * 
+     * @param eventId the event id identifying a particular timeline event in the database
+     * @param version the version that is currently being looked at by the user so that we can lookup verses
+     *            in the correct version
+     * @return all the information available for a particular timeline
+     */
+    @Cacheable(true)
+    public EnhancedSimileEvent getEventInformation(final String eventId, final String version) {
+        final EnhancedTimelineEvent timelineEvent = this.timelineService.getTimelineEvent(
+                Integer.parseInt(eventId), version);
+
+        final SimileEvent se = this.translator.translateEvent(timelineEvent.getEvent());
+        final EnhancedSimileEvent ese = new EnhancedSimileEvent();
+        ese.setEvent(se);
+        ese.setVerses(timelineEvent.getVerses());
+
+        return ese;
     }
 
     /**

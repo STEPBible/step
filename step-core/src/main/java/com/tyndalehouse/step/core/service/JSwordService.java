@@ -160,4 +160,33 @@ public interface JSwordService {
      */
     void reloadInstallers();
 
+    /**
+     * Given a verse number, we lookup the verse in question and return it
+     * 
+     * @param version the version to be looked up
+     * @param numberedVersion the version used for numbering verses
+     * @param verseId the verse number to look up
+     * @return the OsisWrapper containing the text
+     */
+    OsisWrapper getOsisTextByVerseNumber(String version, String numberedVersion, int verseId);
+
+    /**
+     * Given a verse number, we lookup the verse in question and return it. The numberedVersion is assumed to
+     * be KJV (i.e. KJV is used for the number lookup)
+     * 
+     * @param version the version to be looked up
+     * @param verseId the verse number to look up
+     * @return the OsisWrapper containing the text
+     */
+    OsisWrapper getOsisTextByVerseNumber(String version, int verseId);
+
+    /**
+     * Looks up the reference name for a particular verse
+     * 
+     * @param startVerseId start of the verse range
+     * @param endVerseId end of the verse range
+     * @return the reference to be displayed on a screen
+     */
+    String getVerseRange(int startVerseId, int endVerseId);
+
 }

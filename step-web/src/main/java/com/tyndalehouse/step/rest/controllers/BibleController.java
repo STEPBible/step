@@ -65,7 +65,6 @@ import com.tyndalehouse.step.rest.framework.Cacheable;
  */
 @Singleton
 public class BibleController {
-    private static final long serialVersionUID = -5176839737814243641L;
     private static final Logger LOGGER = LoggerFactory.getLogger(BibleController.class);
     private final BibleInformationService bibleInformation;
     private final Provider<Session> serverSession;

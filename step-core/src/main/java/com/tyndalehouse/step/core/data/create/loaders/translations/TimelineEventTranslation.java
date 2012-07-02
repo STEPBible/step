@@ -78,8 +78,11 @@ public class TimelineEventTranslation implements CsvTranslation<TimelineEvent> {
             if (to.getPrecision() != PrecisionType.NONE) {
                 event.setToDate(to.getDate());
                 event.setToPrecision(to.getPrecision());
-
             }
+
+            event.setCertainty(data.getData(ii, "Certainty"));
+            event.setFlags(data.getData(ii, "Flags"));
+
             // finally add any scripture reference required
             final List<ScriptureReference> passageReferences = this.jsword.resolveReferences(
                     data.getData(ii, "Refs"), "KJV");

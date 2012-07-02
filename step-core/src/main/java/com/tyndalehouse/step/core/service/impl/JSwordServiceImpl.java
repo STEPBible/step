@@ -102,6 +102,7 @@ import com.tyndalehouse.step.core.xsl.XslConversionType;
  */
 @Singleton
 public class JSwordServiceImpl implements JSwordService {
+    private static final String DEFAULT_NUMBERED_VERSION = "KJV";
     private static final String CURRENT_BIBLE_INSTALL_JOB = "Installing book: %s";
     private static final String OSIS_CHAPTER_FORMAT = "%s.%d";
     private static final String OSIS_CHAPTER_VERSE_FORMAT = "%s.%s.%d";
@@ -116,7 +117,7 @@ public class JSwordServiceImpl implements JSwordService {
      * constructs the jsword service.
      * 
      * @param installers the installers are the objects that query the crosswire servers
-     * @param morphologyProvider TODO
+     * @param morphologyProvider provides morphological information
      */
     @Inject
     public JSwordServiceImpl(final List<Installer> installers, final MorphologyServiceImpl morphologyProvider) {
@@ -356,8 +357,47 @@ public class JSwordServiceImpl implements JSwordService {
 
     @Override
     public OsisWrapper getOsisText(final String version, final String reference) {
-        final List<LookupOption> options = new ArrayList<LookupOption>();
-        return getOsisText(version, reference, options, null);
+        return getOsisText(version, reference, new ArrayList<LookupOption>(), null);
+    }
+
+    @Override
+    public synchronized String getVerseRange(final int startVerseId, final int endVerseId) {
+        final Versification kjvVersification = Versifications.instance().getVersification(
+                DEFAULT_NUMBERED_VERSION);
+
+        Verse start = kjvVersification.decodeOrdinal(startVerseId);
+        final Verse end = kjvVersification.decodeOrdinal(endVerseId);
+
+        if (start.getVerse() == 0) {
+            start = kjvVersification.decodeOrdinal(startVerseId + 1);
+        }
+
+        final VerseRange vr = new VerseRange(kjvVersification, start, end);
+        return vr.getName();
+    }
+
+    @Override
+    public synchronized OsisWrapper getOsisTextByVerseNumber(final String version,
+            final String numberedVersion, final int verseId) {
+
+        // coded from numbered version.
+        final Verse s = Versifications.instance().getVersification(numberedVersion).decodeOrdinal(verseId);
+        final int verseNumber = s.getVerse() == 0 ? 1 : s.getVerse();
+
+        // convert it over to target versification
+        final Verse targetVersionVerse = Versifications.instance().getVersification(version)
+                .patch(s.getBook(), s.getChapter(), verseNumber);
+
+        final Book lookupVersion = getBookFromVersion(version);
+        final BookData lookupBookData = new BookData(lookupVersion, targetVersionVerse);
+
+        return getTextForBookData(version, lookupBookData.getKey().getOsisID(),
+                new ArrayList<LookupOption>(), null, lookupBookData);
+    }
+
+    @Override
+    public synchronized OsisWrapper getOsisTextByVerseNumber(final String version, final int verseId) {
+        return getOsisTextByVerseNumber(version, DEFAULT_NUMBERED_VERSION, verseId);
     }
 
     // TODO: can we make this more performant by not re-compiling stylesheet - or is already cached
@@ -367,15 +407,56 @@ public class JSwordServiceImpl implements JSwordService {
             final List<LookupOption> options, final String interlinearVersion) {
         LOGGER.debug("Retrieving text for ({}, {})", version, reference);
 
+        final BookData bookData = getBookData(version, reference);
+        return getTextForBookData(version, reference, options, interlinearVersion, bookData);
+    }
+
+    /**
+     * Gets the BookData set up for verse retrieval
+     * 
+     * @param version the version to be used
+     * @param reference the reference
+     * @return the BookData object
+     */
+    private BookData getBookData(final String version, final String reference) {
+        final Book currentBook = getBookFromVersion(version);
         try {
-            final Book currentBook = Books.installed().getBook(version);
+            return new BookData(currentBook, currentBook.getKey(reference));
+        } catch (final NoSuchKeyException e) {
+            throw new StepInternalException("The verse specified was not found: " + reference, e);
+        }
+    }
 
-            if (currentBook == null) {
-                throw new StepInternalException("The specified initials " + version
-                        + " did not reference a valid module");
-            }
+    /**
+     * Gets a book from version initials
+     * 
+     * @param version the version initials
+     * @return the JSword book
+     */
+    private Book getBookFromVersion(final String version) {
+        final Book currentBook = Books.installed().getBook(version);
 
-            final BookData bookData = new BookData(currentBook, currentBook.getKey(reference));
+        if (currentBook == null) {
+            throw new StepInternalException("The specified initials " + version
+                    + " did not reference a valid module");
+        }
+        return currentBook;
+    }
+
+    /**
+     * Gets the osis text
+     * 
+     * @param version the version to look up
+     * @param reference the reference
+     * @param options the list of lookup options
+     * @param interlinearVersion the interlinear version if applicable
+     * @param bookData the bookdata to use to look up the required version/reference combo
+     * @return the html text
+     */
+    private OsisWrapper getTextForBookData(final String version, final String reference,
+            final List<LookupOption> options, final String interlinearVersion, final BookData bookData) {
+
+        try {
             final XslConversionType requiredTransformation = identifyStyleSheet(options);
 
             final SAXEventProvider osissep = bookData.getSAXEventProvider();
@@ -400,8 +481,6 @@ public class JSwordServiceImpl implements JSwordService {
                 }
             }.convert(osissep);
             return new OsisWrapper(writeToString(htmlsep), bookData.getKey().getName());
-        } catch (final NoSuchKeyException e) {
-            throw new StepInternalException("The verse specified was not found: " + reference, e);
         } catch (final BookException e) {
             throw new StepInternalException("Unable to query the book data to retrieve specified passage: "
                     + version + ", " + reference, e);
@@ -646,16 +725,16 @@ public class JSwordServiceImpl implements JSwordService {
             }
 
             final PassageKeyFactory keyFactory = PassageKeyFactory.instance();
-            final Versification v11n = Versifications.instance().getDefaultVersification();
-            final RocketPassage rp = (RocketPassage) keyFactory.getKey(v11n, references);
+            final Versification av11n = Versifications.instance().getVersification(version);
+            final RocketPassage rp = (RocketPassage) keyFactory.getKey(av11n, references);
 
             for (int ii = 0; ii < rp.countRanges(RestrictionType.NONE); ii++) {
                 final VerseRange vr = rp.getRangeAt(ii, RestrictionType.NONE);
                 final Verse start = vr.getStart();
                 final Verse end = vr.getEnd();
 
-                final int startVerseId = start.getOrdinal();
-                final int endVerseId = end.getOrdinal();
+                final int startVerseId = av11n.getOrdinal(start);
+                final int endVerseId = av11n.getOrdinal(end);
 
                 LOGGER.trace("Found reference [{}] to [{}]", valueOf(startVerseId), valueOf(endVerseId));
                 final ScriptureReference sr = new ScriptureReference();

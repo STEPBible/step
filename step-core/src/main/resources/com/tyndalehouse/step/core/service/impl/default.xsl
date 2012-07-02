@@ -672,7 +672,7 @@
     <xsl:if test="(@canonical = 'true' or $Headings = 'true' or @type = 'x-gen')">
       <xsl:choose>
       	<xsl:when test="@type = 'x-gen'">
-      		<h2 class="xgen"><xsl:apply-templates/></h2>
+      		<!--  <h2 class="xgen"><xsl:apply-templates/></h2> -->
       	</xsl:when>
       	<xsl:otherwise>
       		<h2 class="heading"><xsl:apply-templates/></h2>

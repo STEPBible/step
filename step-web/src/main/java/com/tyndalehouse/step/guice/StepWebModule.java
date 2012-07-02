@@ -32,14 +32,11 @@
  ******************************************************************************/
 package com.tyndalehouse.step.guice;
 
-import com.google.inject.TypeLiteral;
-import com.tyndalehouse.step.core.data.entities.TimelineEvent;
 import com.tyndalehouse.step.core.models.ClientSession;
 import com.tyndalehouse.step.core.utils.AbstractStepGuiceModule;
 import com.tyndalehouse.step.guice.providers.ClientSessionProvider;
+import com.tyndalehouse.step.models.TimelineTranslator;
 import com.tyndalehouse.step.models.UiDefaults;
-import com.tyndalehouse.step.models.UserInterfaceTranslator;
-import com.tyndalehouse.step.models.timeline.DigestableTimeline;
 import com.tyndalehouse.step.models.timeline.simile.SimileTimelineTranslatorImpl;
 
 /**
@@ -66,7 +63,6 @@ public class StepWebModule extends AbstractStepGuiceModule {
         bind(ClientSession.class).toProvider(ClientSessionProvider.class);
         bind(UiDefaults.class).asEagerSingleton();
 
-        bind(new TypeLiteral<UserInterfaceTranslator<TimelineEvent, DigestableTimeline>>() {
-        }).to(SimileTimelineTranslatorImpl.class);
+        bind(TimelineTranslator.class).to(SimileTimelineTranslatorImpl.class);
     }
 }

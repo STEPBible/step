@@ -454,3 +454,10 @@ Passage.prototype.getPassageContainer = function() {
 Passage.prototype.getReference = function() {
 	return this.reference.val();
 };
+
+/**
+ * @return the reference text
+ */
+Passage.prototype.getVersion = function() {
+	return this.version.val();
+};

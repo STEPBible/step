@@ -1,0 +1,29 @@
+.timelineEmphasise {
+	font-weight: bold;
+}
+
+.timelineCertainty {
+	background-color: #99FF99;
+	border: thin solid grey;
+}
+
+.timelineFlags {
+	background-color: #FF9999;
+	border: thin solid grey;
+}
+
+.timelineDeEmphasise {
+	color: lightgrey;
+	font-style: italic;
+}
+
+.timelineDatePopup {
+	font-style: italic;
+	text-align: right;
+	clear: both;
+}
+
+.timelineVerse a {
+	display: inline-block;
+}
+

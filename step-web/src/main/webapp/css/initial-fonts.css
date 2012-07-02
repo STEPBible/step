@@ -89,3 +89,6 @@ body {
 	font-style: italic;
 }
 
+.passage-arrow {
+	background-image: url('ui-lightness/images/ui-icons_669966_256x240.png');
+}

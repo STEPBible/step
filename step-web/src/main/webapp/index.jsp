@@ -31,6 +31,7 @@
 	    <link rel="stylesheet" type="text/css" href="css/initial-layout.css" />
 	    <link rel="stylesheet" type="text/css" href="css/initial-fonts.css" />
 	    <link rel="stylesheet" type="text/css" href="css/passage.css" />
+	    <link rel="stylesheet" type="text/css" href="css/timeline.css" />
 	
 	    <script src="js/jquery_cookie.js" type="text/javascript"></script>
 		<script src="js/jquery-shout.js" type="text/javascript"></script>

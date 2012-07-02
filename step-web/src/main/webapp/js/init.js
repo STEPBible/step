@@ -37,6 +37,7 @@ init();
 String.prototype.startsWith = function(str) { return (this.match("^"+str)==str); };
 
 var topMenu;
+var timeline;
 
 function init() {
 	$(document).ready(function() {
@@ -231,7 +232,7 @@ function initModules(passages) {
 	new Title();
 		
 	var bottomSection = $("#bottomSectionContent");
-	new TimelineWidget(bottomSection, passages);
+	timeline = new TimelineWidget(bottomSection, passages);
 	new GeographyWidget(bottomSection, passages);
 }
 

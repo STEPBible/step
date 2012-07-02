@@ -246,9 +246,9 @@ Bookmark.prototype.createItem = function(passageCookieReference, container, asce
 	
 	if(passageReference && passageReference != "") {
 		var item = "<div class='bookmarkItem'>";
-		item += "<a class='ui-icon ui-icon-arrowthick-1-w bookmarkArrow leftBookmarkArrow' href='#' onclick='$.shout(\"new-passage-0\", \""+ passageReference + "\");'>&larr;</a>";
+		item += goToPassageArrow(true, passageReference, "bookmarkArrow leftBookmarkArrow");
 		item += passageReference;
-		item += "<a class='ui-icon ui-icon-arrowthick-1-e bookmarkArrow rightBookmarkArrow' href='#' onclick='$.shout(\"new-passage-1\", \""+ passageReference + "\");'>&rarr;</a>";
+		item += goToPassageArrow(false, passageReference, "bookmarkArrow rightBookmarkArrow");
 		item += "</div>";
 		
 		if(ascending) {

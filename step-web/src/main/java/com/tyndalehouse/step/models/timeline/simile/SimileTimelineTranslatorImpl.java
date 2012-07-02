@@ -38,7 +38,7 @@ import java.util.List;
 import org.joda.time.LocalDateTime;
 
 import com.tyndalehouse.step.core.data.entities.TimelineEvent;
-import com.tyndalehouse.step.models.UserInterfaceTranslator;
+import com.tyndalehouse.step.models.TimelineTranslator;
 import com.tyndalehouse.step.models.timeline.DigestableTimeline;
 
 /**
@@ -47,8 +47,7 @@ import com.tyndalehouse.step.models.timeline.DigestableTimeline;
  * @author chrisburrell
  * 
  */
-public class SimileTimelineTranslatorImpl implements
-        UserInterfaceTranslator<TimelineEvent, DigestableTimeline> {
+public class SimileTimelineTranslatorImpl implements TimelineTranslator {
     private static final String SIMILE_DEFAULT_TIME_FORMAT = "iso8601";
 
     @Override
@@ -60,19 +59,7 @@ public class SimileTimelineTranslatorImpl implements
 
         final List<SimileEvent> eventList = new ArrayList<SimileEvent>();
         for (final TimelineEvent te : events) {
-            final SimileEvent e = new SimileEvent();
-            e.setTitle(te.getName());
-            e.setDescription(te.getName());
-            e.setStart(te.getFromDate().toString());
-            e.setEventId(te.getId());
-
-            final LocalDateTime toDate = te.getToDate();
-            if (toDate != null) {
-                e.setEnd(te.getToDate().toString());
-                e.setDuration(true);
-            } else {
-                e.setDuration(false);
-            }
+            final SimileEvent e = translateEvent(te);
             eventList.add(e);
         }
 
@@ -82,5 +69,28 @@ public class SimileTimelineTranslatorImpl implements
             timeline.setSuggestedDate(suggestedDate.toString());
         }
         return timeline;
+    }
+
+    @Override
+    public SimileEvent translateEvent(final TimelineEvent te) {
+        final SimileEvent e = new SimileEvent();
+        e.setTitle(te.getName());
+        e.setDescription(te.getName());
+        e.setStart(te.getFromDate().toString());
+        e.setEventId(te.getId());
+        e.setCertainty(te.getCertainty());
+        e.setFlags(te.getFlags());
+
+        e.setStartPrecision(te.getFromPrecision());
+
+        final LocalDateTime toDate = te.getToDate();
+        if (toDate != null) {
+            e.setEnd(te.getToDate().toString());
+            e.setEndPrecision(te.getToPrecision());
+            e.setDuration(true);
+        } else {
+            e.setDuration(false);
+        }
+        return e;
     }
 }

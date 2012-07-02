@@ -78,11 +78,17 @@ function addButtonToAutoComplete(textbox, icon) {
 		textbox.autocomplete("search", "");
 		textbox.focus();
 	});
-}
+};
 
 function extractLast(term) {
 	return split(term).pop();
-}
+};
+
+
+function isAlpha(val) {
+	var regEx = /^[a-zA-Z]+$/; 
+	return val.match(regEx);  
+};
 
 /**
  * looks for the next space in the name provided and returns the shortest name
@@ -236,7 +242,26 @@ function expandSelection(range) {
 		}
 		return text;
 	} 
-}
+};
+
+function goToPassageArrow(isLeft, ref, classes) {
+	if(isLeft) {
+		var text = "<a class='ui-icon ui-icon-arrowthick-1-w passage-arrow ";
+		
+		if(classes) {
+			text += classes;
+		}
+		return text + "' href='#' onclick='$.shout(\"new-passage-0\", \""+ ref + "\");'>&nbsp;</a>";
+	} else {
+		var text = "<a class='ui-icon ui-icon-arrowthick-1-e passage-arrow ";
+		if(classes) {
+			text += classes;
+		}
+		return text + "' href='#' onclick='$.shout(\"new-passage-1\", \""+ ref + "\");'>&nbsp;</a>";
+	}
+};
+
+
 
 
 function addNotApplicableString(val) {

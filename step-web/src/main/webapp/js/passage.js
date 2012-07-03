@@ -188,7 +188,7 @@ Passage.prototype.scrollOccurred = function() {
 	var relativePosition = currentLocation / heightBefore;
 	
 	
-	if(this.getBefore == false && (heightBefore < 1500 || relativePosition < 0.25)) {
+	if(this.getBefore == false && (heightBefore < 2000 || relativePosition < 0.33)) {
 		this.getBefore = true;
 		//expand passage both ways, so look for x verses each way
 		$.getSafe(BIBLE_GET_BY_NUMBER + this.version.val() + "/" + 
@@ -198,11 +198,11 @@ Passage.prototype.scrollOccurred = function() {
 			var heightAfter = self.passage.prop("scrollHeight");
 			self.passage.scrollTop(heightAfter - heightBefore + currentLocation);
 			self.startVerseId = text.startRange;
-			self.getBefore = true;
+			self.getBefore = false;
 		});
 	}
 
-	if(this.getAfter == false && (heightBefore < 1500 || relativePosition > 0.75)) {
+	if(this.getAfter == false && (heightBefore < 2000 || relativePosition > 0.66)) {
 		this.getAfter = true;
 		$.getSafe(BIBLE_GET_BY_NUMBER + this.version.val() + "/" + 
 				(this.endVerseId + 1) + "/" + (this.endVerseId + CONTINUOUS_SCROLLING_VERSE_GAP) + "/" + "true/" +

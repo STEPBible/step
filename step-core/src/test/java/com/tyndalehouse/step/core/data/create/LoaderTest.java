@@ -156,7 +156,7 @@ public class LoaderTest extends DataDrivenTestExtension {
 
         final Morphology m3 = getEbean().find(Morphology.class, "D-NPM-C");
         assertEquals(Suffix.CONTRACTED_FORM, m3.getSuffix());
-        assertEquals(1092, count);
+        assertEquals(1093, count);
 
         checkAllEnumerationValuesUsed(getEbean().find(Morphology.class).findList());
     }

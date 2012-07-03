@@ -58,6 +58,9 @@ function Passage(passageContainer, rawServerVersions, passageId) {
 	this.passageId = passageId;
 	this.passageSync = false;
 	
+	this.getBefore = false;
+	this.getAfter = false;
+	
 	// read state from the cookie
 	this.setInitialPassage();
 	
@@ -185,7 +188,8 @@ Passage.prototype.scrollOccurred = function() {
 	var relativePosition = currentLocation / heightBefore;
 	
 	
-	if(heightBefore < 1500 || relativePosition < 0.25) {
+	if(this.getBefore == false && (heightBefore < 1500 || relativePosition < 0.25)) {
+		this.getBefore = true;
 		//expand passage both ways, so look for x verses each way
 		$.getSafe(BIBLE_GET_BY_NUMBER + this.version.val() + "/" + 
 				(this.startVerseId - CONTINUOUS_SCROLLING_VERSE_GAP) + "/" + (this.startVerseId - 1) + "/" + "false/" +
@@ -194,15 +198,18 @@ Passage.prototype.scrollOccurred = function() {
 			var heightAfter = self.passage.prop("scrollHeight");
 			self.passage.scrollTop(heightAfter - heightBefore + currentLocation);
 			self.startVerseId = text.startRange;
+			self.getBefore = true;
 		});
 	}
 
-	if(heightBefore < 1500 || relativePosition > 0.75) {
+	if(this.getAfter == false && (heightBefore < 1500 || relativePosition > 0.75)) {
+		this.getAfter = true;
 		$.getSafe(BIBLE_GET_BY_NUMBER + this.version.val() + "/" + 
 				(this.endVerseId + 1) + "/" + (this.endVerseId + CONTINUOUS_SCROLLING_VERSE_GAP) + "/" + "true/" +
 				this.currentOptions + "/" + this.getSelectedInterlinearVersion(), function(text) {
 			self.passage.append(text.value);
 			self.endVerseId = text.endRange;
+			self.getAfter = false;
 //			console.log("Continous range is now " + self.startVerseId + " => " + self.endVerseId);
 		});
 	}

@@ -182,7 +182,7 @@ public class Loader {
         final Map<String, String> columnTranslations = new HashMap<String, String>();
 
         // set up basic fields
-        columnTranslations.put("CODE", "code");
+        columnTranslations.put("1  CODE\"", "code");
         columnTranslations.put("specific Function", "function");
         columnTranslations.put("specific Tense", "tense");
         columnTranslations.put("specific Voice", "voice");

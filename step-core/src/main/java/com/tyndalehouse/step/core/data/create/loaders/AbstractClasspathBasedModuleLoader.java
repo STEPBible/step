@@ -40,6 +40,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -175,7 +176,7 @@ public abstract class AbstractClasspathBasedModuleLoader<T> implements ModuleLoa
         try {
             stream = ModuleLoader.class.getResourceAsStream(csvResource);
             bufferedStream = new BufferedInputStream(stream);
-            fileReader = new InputStreamReader(bufferedStream);
+            fileReader = new InputStreamReader(bufferedStream, Charset.forName("UTF-8"));
             return parseFile(fileReader);
         } finally {
             closeQuietly(fileReader);

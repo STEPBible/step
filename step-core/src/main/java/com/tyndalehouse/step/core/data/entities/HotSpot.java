@@ -60,10 +60,10 @@ public class HotSpot implements Serializable {
     private Integer id;
 
     @Column
-    private LocalDateTime start;
+    private LocalDateTime startTime;
 
     @Column
-    private LocalDateTime end;
+    private LocalDateTime endTime;
 
     @Column
     private String description;
@@ -122,29 +122,29 @@ public class HotSpot implements Serializable {
     /**
      * @return the start
      */
-    public LocalDateTime getStart() {
-        return this.start;
+    public LocalDateTime getStartTime() {
+        return this.startTime;
     }
 
     /**
-     * @param start the start to set
+     * @param startTime the start to set
      */
-    public void setStart(final LocalDateTime start) {
-        this.start = start;
+    public void setStartTime(final LocalDateTime startTime) {
+        this.startTime = startTime;
     }
 
     /**
      * @return the end
      */
-    public LocalDateTime getEnd() {
-        return this.end;
+    public LocalDateTime getEndTime() {
+        return this.endTime;
     }
 
     /**
-     * @param end the end to set
+     * @param endTime the end to set
      */
-    public void setEnd(final LocalDateTime end) {
-        this.end = end;
+    public void setEndTime(final LocalDateTime endTime) {
+        this.endTime = endTime;
     }
 
     /**

@@ -32,7 +32,10 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.data.create;
 
+import static com.tyndalehouse.step.core.utils.StringUtils.split;
+
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -52,6 +55,7 @@ import com.tyndalehouse.step.core.data.create.loaders.translations.OpenBibleData
 import com.tyndalehouse.step.core.data.create.loaders.translations.TimelineEventTranslation;
 import com.tyndalehouse.step.core.data.entities.GeoPlace;
 import com.tyndalehouse.step.core.data.entities.HotSpot;
+import com.tyndalehouse.step.core.data.entities.LexiconDefinition;
 import com.tyndalehouse.step.core.data.entities.TimelineEvent;
 import com.tyndalehouse.step.core.data.entities.morphology.Morphology;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
@@ -152,6 +156,58 @@ public class Loader {
     }
 
     /**
+     * Loads the lexicon and cross references all strongs after initial loading is complete
+     * 
+     * @return the number of entries loaded
+     */
+    int loadLexicon() {
+        new CsvModuleLoader<LexiconDefinition>(this.ebean,
+                this.coreProperties.getProperty("test.data.path.lexicon"), LexiconDefinition.class).init();
+
+        // now we need to post-process all of the fields
+        final List<LexiconDefinition> allDefs = this.ebean.find(LexiconDefinition.class).select("*")
+                .select("id,strong,relatedStrongs").fetch("similarStrongs").findList();
+
+        // now reverse code them all
+        final Map<String, LexiconDefinition> codedByStrongNumber = new HashMap<String, LexiconDefinition>();
+        for (final LexiconDefinition def : allDefs) {
+            codedByStrongNumber.put(def.getStrong(), def);
+        }
+
+        // now we can iterate through them again and save all of the references...
+        for (final LexiconDefinition def : allDefs) {
+            final String[] strongNumbers = split(def.getRelatedStrongs(), ",");
+            final StringBuilder newRelatedStrongs = new StringBuilder(strongNumbers.length * 16);
+            for (int ii = 0; ii < strongNumbers.length; ii++) {
+                // look up the strong correspondance
+                final LexiconDefinition relatedStrong = codedByStrongNumber.get(strongNumbers[ii]);
+
+                if (relatedStrong == null) {
+                    LOG.error("Unable to reference strong [{}]. [{}] is incomplete.", strongNumbers[ii],
+                            def.getStrong());
+                    continue;
+                }
+
+                def.getSimilarStrongs().add(relatedStrong);
+
+                // also replace the string value
+                newRelatedStrongs.append(relatedStrong.getOriginal());
+                if (ii + 1 < strongNumbers.length) {
+                    newRelatedStrongs.append(' ');
+                }
+            }
+
+            // replace the related strong field:
+            def.setRelatedStrongs(newRelatedStrongs.toString());
+        }
+
+        // persist strongs to db
+        this.ebean.save(allDefs);
+
+        return allDefs.size();
+    }
+
+    /**
      * Loads all of robinson's morphological data
      * 
      * @return the number of entries
@@ -193,7 +249,7 @@ public class Loader {
         columnTranslations.put("specific Gender", "gender");
         columnTranslations.put("specific Extra", "suffix");
 
-        // explanations
+        // explanations & descriptions
         columnTranslations.put("Function explained", "functionExplained");
         columnTranslations.put("Tense explained", "tenseExplained");
         columnTranslations.put("Voice explained", "voiceExplained");

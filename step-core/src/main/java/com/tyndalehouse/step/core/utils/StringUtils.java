@@ -143,7 +143,7 @@ public final class StringUtils {
      * @return the array of split values
      */
     public static String[] split(final String value, final String patternRegex) {
-        if (value == null) {
+        if (isBlank(value)) {
             return new String[0];
         }
 

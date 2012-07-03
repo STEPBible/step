@@ -34,7 +34,7 @@ package com.tyndalehouse.step.models.info;
 
 import java.util.List;
 
-import com.tyndalehouse.step.core.data.entities.StrongDefinition;
+import com.tyndalehouse.step.core.data.entities.LexiconDefinition;
 
 /**
  * A set of information from various sources
@@ -44,7 +44,7 @@ import com.tyndalehouse.step.core.data.entities.StrongDefinition;
  */
 public class Info {
     private List<MorphInfo> morphInfos;
-    private List<StrongDefinition> vocabInfos;
+    private List<LexiconDefinition> vocabInfos;
 
     /**
      * @return the morphInfos
@@ -63,14 +63,14 @@ public class Info {
     /**
      * @return the vocabInfos
      */
-    public List<StrongDefinition> getVocabInfos() {
+    public List<LexiconDefinition> getVocabInfos() {
         return this.vocabInfos;
     }
 
     /**
      * @param vocabInfos the vocabInfos to set
      */
-    public void setVocabInfos(final List<StrongDefinition> vocabInfos) {
+    public void setVocabInfos(final List<LexiconDefinition> vocabInfos) {
         this.vocabInfos = vocabInfos;
     }
 }

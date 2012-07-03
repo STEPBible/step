@@ -99,8 +99,8 @@ TimelineWidget.prototype.initAndLoad = function() {
 			$.each(data, function(index, item) {
 				//create one zone per config item
     			zones.push({   
-                            start:  	Timeline.DateTime.parseIso8601DateTime(item.start),
-                            end:    	Timeline.DateTime.parseIso8601DateTime(item.end),
+                            start:  	Timeline.DateTime.parseIso8601DateTime(item.startTime),
+                            end:    	Timeline.DateTime.parseIso8601DateTime(item.endTime),
     	                    magnify:  	item.magnify,
     	                    unit:     	Timeline.DateTime[item.scale],
 //    						color:     item.color,

@@ -33,6 +33,7 @@
 package com.tyndalehouse.step.core.data.create;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
@@ -49,6 +50,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.tyndalehouse.step.core.data.DataDrivenTestExtension;
+import com.tyndalehouse.step.core.data.entities.LexiconDefinition;
 import com.tyndalehouse.step.core.data.entities.ScriptureReference;
 import com.tyndalehouse.step.core.data.entities.morphology.Case;
 import com.tyndalehouse.step.core.data.entities.morphology.Function;
@@ -127,6 +129,29 @@ public class LoaderTest extends DataDrivenTestExtension {
         final int srCount = getEbean().find(ScriptureReference.class).findRowCount();
         assertEquals(4, count);
         assertTrue(srCount > 10);
+    }
+
+    /**
+     * checks that the lexicon is loaded correctly with all its references
+     */
+    @Test
+    public void testLexicon() {
+        final Properties coreProperties = new Properties();
+        coreProperties.put("test.data.path.lexicon", "lexicon.csv");
+        final Loader l = new Loader(new JSwordServiceImpl(null, null), getEbean(), coreProperties);
+
+        final int count = l.loadLexicon();
+        assertEquals(5, count);
+
+        final LexiconDefinition firstStrong = getEbean().find(LexiconDefinition.class).where()
+                .eq("strong", "G0016").findUnique();
+
+        assertEquals("G0016", firstStrong.getStrong());
+        assertFalse(firstStrong.getRelatedStrongs().contains("G0015"));
+        final List<LexiconDefinition> similarStrongs = firstStrong.getSimilarStrongs();
+
+        assertEquals(4, similarStrongs.size());
+
     }
 
     /**

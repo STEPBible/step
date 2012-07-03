@@ -49,7 +49,7 @@ import com.tyndalehouse.step.core.data.entities.HotSpot;
 import com.tyndalehouse.step.core.data.entities.ScriptureReference;
 import com.tyndalehouse.step.core.data.entities.ScriptureTarget;
 import com.tyndalehouse.step.core.data.entities.Session;
-import com.tyndalehouse.step.core.data.entities.StrongDefinition;
+import com.tyndalehouse.step.core.data.entities.LexiconDefinition;
 import com.tyndalehouse.step.core.data.entities.TimelineEvent;
 import com.tyndalehouse.step.core.data.entities.User;
 import com.tyndalehouse.step.core.data.entities.aggregations.TimelineEventsAndDate;
@@ -157,7 +157,7 @@ public class DatabaseConfigProvider implements Provider<EbeanServer> {
         config.addClass(History.class);
         config.addClass(GeoPlace.class);
         config.addClass(TimelineEventsAndDate.class);
-        config.addClass(StrongDefinition.class);
+        config.addClass(LexiconDefinition.class);
         config.addClass(DictionaryArticle.class);
         config.addClass(Morphology.class);
     }

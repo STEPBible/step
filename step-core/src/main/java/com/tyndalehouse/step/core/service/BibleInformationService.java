@@ -72,6 +72,21 @@ public interface BibleInformationService {
             String interlinearVersion);
 
     /**
+     * This method selects passage text and forms XML for the client. This is done server side so that the
+     * client does not need to render each div individually.
+     * 
+     * @param version the initials that identify the bible version
+     * @param startVerseId the start of the passage, as a numeral
+     * @param endVerseId the end of the passage, as a numeral
+     * @param lookupOptions options to set for retrieval
+     * @param interlinearVersion version to use as the interlinear
+     * @param round TODO
+     * @return the HTML string passed back for consumption
+     */
+    OsisWrapper getPassageText(String version, int startVerseId, int endVerseId,
+            List<LookupOption> lookupOptions, String interlinearVersion, Boolean round);
+
+    /**
      * 
      * @param version the version to lookup
      * @return the features available for a Bible (for e.g. Strong numbers)
@@ -123,4 +138,5 @@ public interface BibleInformationService {
      * @return the new reference to display on the user screen
      */
     String getSiblingChapter(String reference, String version, boolean previousChapter);
+
 }

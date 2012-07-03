@@ -87,6 +87,13 @@ public class BibleInformationServiceImpl implements BibleInformationService {
     }
 
     @Override
+    public OsisWrapper getPassageText(final String version, final int startVerseId, final int endVerseId,
+            final List<LookupOption> options, final String interlinearVersion, final Boolean roundUp) {
+        return this.jsword.getOsisTextByVerseNumbers(version, version, startVerseId, endVerseId, options,
+                interlinearVersion, roundUp);
+    }
+
+    @Override
     public OsisWrapper getPassageText(final String version, final String reference,
             final List<LookupOption> options, final String interlinearVersion) {
         return this.jsword.getOsisText(version, reference, options, interlinearVersion);

@@ -49,6 +49,8 @@ public enum UserExceptionType {
     USER_VALIDATION_ERROR,
     /** the user did not provide a field */
     USER_MISSING_FIELD,
+    /** App is not providing a field that is expected */
+    APP_MISSING_FIELD,
     /** Some general error at the controller layer */
     CONTROLLER_INITIALISATION_ERROR,
 }

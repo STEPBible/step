@@ -77,7 +77,10 @@ function refreshLayout() {
 	$(".passageText").height(passageTextHeight);
 	$(".passageContent").css("top", headingContainerHeight + gapBetweenMenuAndPassage);
 	$(".passageContent").height(passageContentHeight - gapBetweenMenuAndPassage * 2);	
-
+	
+	
+	
+	
 //	alert(headingContainerHeight);
 //	if($("#debug").text() == "") {
 //		$("#bookmarkPane").append("<span id=\"debug\" />");		

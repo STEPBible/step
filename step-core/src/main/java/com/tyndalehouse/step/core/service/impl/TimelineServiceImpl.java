@@ -53,6 +53,7 @@ import com.tyndalehouse.step.core.data.entities.ScriptureReference;
 import com.tyndalehouse.step.core.data.entities.TimelineEvent;
 import com.tyndalehouse.step.core.data.entities.aggregations.TimelineEventsAndDate;
 import com.tyndalehouse.step.core.models.EnhancedTimelineEvent;
+import com.tyndalehouse.step.core.models.LookupOption;
 import com.tyndalehouse.step.core.models.OsisWrapper;
 import com.tyndalehouse.step.core.service.JSwordService;
 import com.tyndalehouse.step.core.service.TimelineService;
@@ -194,7 +195,8 @@ public class TimelineServiceImpl implements TimelineService {
             // obtain first verse of each reference for display and add "..." on them...
             final int startVerseId = r.getStartVerseId();
 
-            final OsisWrapper osisText = this.jsword.getOsisTextByVerseNumber(version, startVerseId);
+            final OsisWrapper osisText = this.jsword.getOsisTextByVerseNumber(version, startVerseId,
+                    new ArrayList<LookupOption>(), null);
 
             if (startVerseId != r.getEndVerseId()) {
                 osisText.setFragment(true);

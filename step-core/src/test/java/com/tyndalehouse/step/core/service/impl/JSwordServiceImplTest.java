@@ -295,11 +295,13 @@ public class JSwordServiceImplTest {
     @Test
     public void testNumberLookup() {
         final JSwordServiceImpl j = new JSwordServiceImpl(null, null);
-        assertTrue(j.getOsisTextByVerseNumber("ESV", "KJV", 4).getValue().contains("In the beginning"));
-        assertTrue(j.getOsisTextByVerseNumber("ESV", "KJV", 60000).getValue()
-                .contains("The grace of the Lord Jesus"));
-        assertTrue(j.getOsisTextByVerseNumber("FreSegond", "KJV", 60000).getValue()
-                .contains("Que la gr\u00e2ce du Seigneur J\u00e9sus soit avec tous!"));
+        assertTrue(j.getOsisTextByVerseNumbers("ESV", "KJV", 4, new ArrayList<LookupOption>(), null)
+                .getValue().contains("In the beginning"));
+        assertTrue(j.getOsisTextByVerseNumbers("ESV", "KJV", 60000, new ArrayList<LookupOption>(), null)
+                .getValue().contains("The grace of the Lord Jesus"));
+        assertTrue(j
+                .getOsisTextByVerseNumbers("FreSegond", "KJV", 60000, new ArrayList<LookupOption>(), null)
+                .getValue().contains("Que la gr\u00e2ce du Seigneur J\u00e9sus soit avec tous!"));
 
     }
 

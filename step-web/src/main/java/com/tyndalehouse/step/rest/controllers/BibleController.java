@@ -32,6 +32,7 @@
  ******************************************************************************/
 package com.tyndalehouse.step.rest.controllers;
 
+import static com.tyndalehouse.step.core.exceptions.UserExceptionType.APP_MISSING_FIELD;
 import static com.tyndalehouse.step.core.exceptions.UserExceptionType.USER_MISSING_FIELD;
 import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
 import static com.tyndalehouse.step.core.utils.ValidateUtils.notEmpty;
@@ -147,9 +148,68 @@ public class BibleController {
     @Cacheable(true)
     public OsisWrapper getBibleText(final String version, final String reference, final String options,
             final String interlinearVersion) {
+        // TODO de-duplicate for internationalisation
         notEmpty(version, "You need to provide a version", USER_MISSING_FIELD);
         notEmpty(reference, "You need to provide a reference", USER_MISSING_FIELD);
 
+        return this.bibleInformation.getPassageText(version, reference, getLookupOptions(options),
+                interlinearVersion);
+    }
+
+    /**
+     * Looks up the bible text by verse numbers, mostly used for continuous scrolling
+     * 
+     * @param version the version initials
+     * @param startVerseId the start verse ordinal
+     * @param endVerseId the end verse ordinal
+     * @param options the comma-separated list of options (optional)
+     * @return the osis wrapper
+     */
+    public OsisWrapper getBibleByVerseNumber(final String version, final String startVerseId,
+            final String endVerseId, final String roundUp, final String options) {
+        return getBibleByVerseNumber(version, startVerseId, endVerseId, roundUp, options, null);
+
+    }
+
+    /**
+     * Looks up the bible text by verse numbers, mostly used for continuous scrolling
+     * 
+     * @param version the version initials
+     * @param startVerseId the start verse ordinal
+     * @param endVerseId the end verse ordinal
+     * @param options the comma-separated list of options (optional)
+     * @param interlinearVersion an interlinear versions if available (optional)
+     * @param roundUp true to indicate rounding up, false to indicate rounding down, anything else for no
+     *            rounding
+     * @return the osis wrapper
+     */
+    public OsisWrapper getBibleByVerseNumber(final String version, final String startVerseId,
+            final String endVerseId, final String roundUp, final String options,
+            final String interlinearVersion) {
+        notEmpty(version, "You need to provide a version", USER_MISSING_FIELD);
+        notEmpty(startVerseId, "You need to provide a start verse id", APP_MISSING_FIELD);
+        notEmpty(endVerseId, "You need to a provide a end verse id", APP_MISSING_FIELD);
+
+        Boolean roundingUp = null;
+        if (isNotBlank(roundUp)) {
+            if ("true".equalsIgnoreCase(roundUp)) {
+                roundingUp = Boolean.TRUE;
+            } else if ("false".equalsIgnoreCase(roundUp)) {
+                roundingUp = Boolean.FALSE;
+            }
+        }
+        return this.bibleInformation.getPassageText(version, Integer.parseInt(startVerseId),
+                Integer.parseInt(endVerseId), getLookupOptions(options), interlinearVersion, roundingUp);
+
+    }
+
+    /**
+     * Translates the options provided over the http interface to something palatable by the service layer
+     * 
+     * @param options the list of options, comma-separated.
+     * @return a list of {@link LookupOption}
+     */
+    private List<LookupOption> getLookupOptions(final String options) {
         String[] userOptions = null;
         if (isNotBlank(options)) {
             userOptions = options.split(",");
@@ -161,8 +221,7 @@ public class BibleController {
                 lookupOptions.add(LookupOption.valueOf(o.toUpperCase(Locale.ENGLISH)));
             }
         }
-
-        return this.bibleInformation.getPassageText(version, reference, lookupOptions, interlinearVersion);
+        return lookupOptions;
     }
 
     /**

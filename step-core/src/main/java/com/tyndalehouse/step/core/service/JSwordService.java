@@ -166,9 +166,12 @@ public interface JSwordService {
      * @param version the version to be looked up
      * @param numberedVersion the version used for numbering verses
      * @param verseId the verse number to look up
+     * @param lookupOptions the list of options for the lookup operation
+     * @param interlinearVersion the version to add if there is an interlinear request, or blank if not
      * @return the OsisWrapper containing the text
      */
-    OsisWrapper getOsisTextByVerseNumber(String version, String numberedVersion, int verseId);
+    OsisWrapper getOsisTextByVerseNumbers(String version, String numberedVersion, int verseId,
+            final List<LookupOption> lookupOptions, final String interlinearVersion);
 
     /**
      * Given a verse number, we lookup the verse in question and return it. The numberedVersion is assumed to
@@ -176,9 +179,12 @@ public interface JSwordService {
      * 
      * @param version the version to be looked up
      * @param verseId the verse number to look up
+     * @param options the list of options for the lookup operation
+     * @param interlinearVersion the version to add if there is an interlinear request, or blank if not
      * @return the OsisWrapper containing the text
      */
-    OsisWrapper getOsisTextByVerseNumber(String version, int verseId);
+    OsisWrapper getOsisTextByVerseNumber(String version, int verseId, final List<LookupOption> options,
+            final String interlinearVersion);
 
     /**
      * Looks up the reference name for a particular verse
@@ -188,5 +194,21 @@ public interface JSwordService {
      * @return the reference to be displayed on a screen
      */
     String getVerseRange(int startVerseId, int endVerseId);
+
+    /**
+     * Given a verse number, we lookup the verse in question and return it. The numberedVersion is assumed to
+     * be KJV (i.e. KJV is used for the number lookup)
+     * 
+     * @param version the version to use for the passage lookup
+     * @param numberedVersion the version to be used to lookup the ordinal verse numbers
+     * @param startVerseId the start of the verse number to look up
+     * @param endVerseId the end of the verse
+     * @param options the list of options for the lookup operation
+     * @param interlinearVersion the version to add if there is an interlinear request, or blank if not
+     * @param roundReference TODO
+     * @return the OsisWrapper containing the text
+     */
+    OsisWrapper getOsisTextByVerseNumbers(String version, String numberedVersion, int startVerseId,
+            int endVerseId, List<LookupOption> options, final String interlinearVersion, Boolean roundReference);
 
 }

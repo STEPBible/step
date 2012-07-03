@@ -70,6 +70,7 @@
 						<a class="bookmarkPassageLink passageButtons">Add a bookmark</a>
 						<a class="nextChapter passageButtons">Displays the next chapter (or expands to the end of the chapter)</a>
 						<a class="previousChapter passageButtons">Displays the previous chapter (or expands to the start of the chapter)</a>
+						<input type="checkbox" id="continuousPassage0" class="continuousPassage passageButtons" /><label class="passageButtons" for="continuousPassage0">View as one long scroll</label>
 				    	<input id="leftPassageReference" class="heading editable passageReference" size="30" 
 				    		value="<%= stepRequest.getReference(0) %>" />
 				    	<input id="leftPassageBook" class="heading editable passageVersion" size="5" 
@@ -99,7 +100,6 @@
 			</div>
 		</div>
 			
-			
 		<div class="column rightColumn">
 			<div class="passageContainer">
 				<div id="rightPaneMenu" class="innerMenus"><jsp:include page="panemenu.html" /></div>
@@ -108,6 +108,7 @@
 						<a class="bookmarkPassageLink passageButtons">Add a bookmark</a>
 						<a class="nextChapter passageButtons">Displays the next chapter (or expands to the end of the chapter)</a>
 						<a class="previousChapter passageButtons">Displays the previous chapter (or expands to the start of the chapter)</a>
+						<input type="checkbox" id="continuousPassage1" class="continuousPassage passageButtons" /><label class="passageButtons" for="continuousPassage1">View as one long scroll</label>
 				    	<input id="rightPassageReference" class="heading editable passageReference" size="30" 
 				    		value="<%= stepRequest.getReference(1) %>" />
 				    	<input id="rightPassageBook" class="heading editable passageVersion" size="5" 

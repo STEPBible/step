@@ -74,6 +74,7 @@ import org.crosswire.jsword.book.install.Installer;
 import org.crosswire.jsword.passage.Key;
 import org.crosswire.jsword.passage.NoSuchKeyException;
 import org.crosswire.jsword.passage.NoSuchVerseException;
+import org.crosswire.jsword.passage.Passage;
 import org.crosswire.jsword.passage.PassageKeyFactory;
 import org.crosswire.jsword.passage.RestrictionType;
 import org.crosswire.jsword.passage.RocketPassage;
@@ -368,6 +369,7 @@ public class JSwordServiceImpl implements JSwordService {
         Verse start = kjvVersification.decodeOrdinal(startVerseId);
         final Verse end = kjvVersification.decodeOrdinal(endVerseId);
 
+        // TODO continue to discuss on JSWORD devel list
         if (start.getVerse() == 0) {
             start = kjvVersification.decodeOrdinal(startVerseId + 1);
         }
@@ -377,28 +379,107 @@ public class JSwordServiceImpl implements JSwordService {
     }
 
     @Override
-    public synchronized OsisWrapper getOsisTextByVerseNumber(final String version,
-            final String numberedVersion, final int verseId) {
+    public synchronized OsisWrapper getOsisTextByVerseNumbers(final String version,
+            final String numberedVersion, final int verseId, final List<LookupOption> lookupOptions,
+            final String interlinearVersion) {
+        return getOsisTextByVerseNumbers(version, numberedVersion, verseId, verseId, lookupOptions,
+                interlinearVersion, null);
+    }
+
+    @Override
+    public synchronized OsisWrapper getOsisTextByVerseNumbers(final String version,
+            final String numberedVersion, final int startVerseId, final int endVerseId,
+            final List<LookupOption> lookupOptions, final String interlinearVersion,
+            final Boolean roundReference) {
 
         // coded from numbered version.
-        final Verse s = getVersificationForVersion(numberedVersion).decodeOrdinal(verseId);
-        final int verseNumber = s.getVerse() == 0 ? 1 : s.getVerse();
+        final Versification versificationForNumberedVersion = getVersificationForVersion(numberedVersion);
+        final Verse s = versificationForNumberedVersion.decodeOrdinal(startVerseId);
+        final Verse e = versificationForNumberedVersion.decodeOrdinal(endVerseId);
 
         // convert it over to target versification
         final Book lookupVersion = getBookFromVersion(version);
 
-        final Verse targetVersionVerse = getVersificationForVersion(lookupVersion).patch(s.getBook(),
-                s.getChapter(), verseNumber);
+        final VerseRange range = getVerseRangeForSelectedVerses(version, numberedVersion,
+                versificationForNumberedVersion, s, e, lookupVersion, roundReference);
 
-        final BookData lookupBookData = new BookData(lookupVersion, targetVersionVerse);
+        final BookData lookupBookData = new BookData(lookupVersion, range);
+        return getTextForBookData(version, lookupBookData.getKey().getOsisID(), lookupOptions,
+                interlinearVersion, lookupBookData);
+    }
 
-        return getTextForBookData(version, lookupBookData.getKey().getOsisID(),
-                new ArrayList<LookupOption>(), null, lookupBookData);
+    private VerseRange getVerseRangeForSelectedVerses(final String version, final String numberedVersion,
+            final Versification versificationForNumberedVersion, final Verse s, final Verse e,
+            final Book lookupVersion, final Boolean roundReference) {
+        VerseRange range;
+
+        // TODO - should this be amended? yes - probably
+        final int verseNumber = s.getVerse() == 0 ? 1 : s.getVerse();
+
+        if (!numberedVersion.equals(version)) {
+            // need to patch things over
+            final Versification versificationLookupVersion = getVersificationForVersion(lookupVersion);
+            final Verse targetStartVersionVerse = versificationLookupVersion.patch(s.getBook(),
+                    s.getChapter(), verseNumber);
+            final Verse targetEndVersionsVerse = versificationLookupVersion.patch(e.getBook(),
+                    e.getChapter(), e.getVerse());
+
+            range = new VerseRange(versificationLookupVersion, targetStartVersionVerse,
+                    targetEndVersionsVerse);
+        } else {
+            range = new VerseRange(versificationForNumberedVersion, s, e);
+        }
+
+        // now we may need to round the range up/down
+        return roundRange(roundReference, range);
+    }
+
+    /**
+     * rounds the range up or down
+     * 
+     * @param roundReference null to indicate no rounding, true to round up and false to round down.
+     * @param range the range
+     * @return the new verse range, rounded as appropriate
+     */
+    private VerseRange roundRange(final Boolean roundReference, final VerseRange range) {
+        if (Boolean.TRUE.equals(roundReference)) {
+            return roundRangeUp(range);
+        } else if (Boolean.FALSE.equals(roundReference)) {
+            return roundRangeDown(range);
+        }
+
+        return range;
+    }
+
+    /**
+     * Round the range upwards, i.e. changes the end verse
+     * 
+     * @param range the range to be rounded up
+     * @return the new range
+     */
+    private VerseRange roundRangeDown(final VerseRange range) {
+        final Versification versification = range.getVersification();
+        final Verse end = range.getEnd();
+        return new VerseRange(versification, versification.getFirstVerseInChapter(end), end);
+    }
+
+    /**
+     * Round the range upwards, i.e. changes the end verse
+     * 
+     * @param range the range to be rounded up
+     * @return the new range
+     */
+    private VerseRange roundRangeUp(final VerseRange range) {
+        final Versification versification = range.getVersification();
+        final Verse end = range.getEnd();
+        return new VerseRange(versification, range.getStart(), versification.getLastVerseInChapter(end));
     }
 
     @Override
-    public synchronized OsisWrapper getOsisTextByVerseNumber(final String version, final int verseId) {
-        return getOsisTextByVerseNumber(version, DEFAULT_NUMBERED_VERSION, verseId);
+    public synchronized OsisWrapper getOsisTextByVerseNumber(final String version, final int verseId,
+            final List<LookupOption> options, final String interlinearVersion) {
+        return getOsisTextByVerseNumbers(version, DEFAULT_NUMBERED_VERSION, verseId, options,
+                interlinearVersion);
     }
 
     // TODO: can we make this more performant by not re-compiling stylesheet - or is already cached
@@ -445,8 +526,7 @@ public class JSwordServiceImpl implements JSwordService {
             final XslConversionType requiredTransformation = identifyStyleSheet(options);
 
             final SAXEventProvider osissep = bookData.getSAXEventProvider();
-            TransformingSAXEventProvider htmlsep = null;
-            htmlsep = (TransformingSAXEventProvider) new Converter() {
+            final TransformingSAXEventProvider htmlsep = (TransformingSAXEventProvider) new Converter() {
                 @Override
                 public SAXEventProvider convert(final SAXEventProvider provider) throws TransformerException {
                     try {
@@ -465,7 +545,31 @@ public class JSwordServiceImpl implements JSwordService {
                     }
                 }
             }.convert(osissep);
-            return new OsisWrapper(writeToString(htmlsep), bookData.getKey().getName());
+
+            // the original book
+            final Book book = bookData.getFirstBook();
+            final Versification versification = getVersificationForVersion(book);
+
+            final OsisWrapper osisWrapper = new OsisWrapper(writeToString(htmlsep), bookData.getKey()
+                    .getName());
+
+            final Key key = bookData.getKey();
+            if (key instanceof Passage) {
+                final Passage p = (Passage) bookData.getKey();
+                osisWrapper.setMultipleRanges(p.hasRanges(RestrictionType.NONE));
+
+                // get the first "range" and set up the start and ends
+                final VerseRange r = (VerseRange) p.rangeIterator(RestrictionType.NONE).next();
+                osisWrapper.setStartRange(versification.getOrdinal(r.getStart()));
+                osisWrapper.setEndRange(versification.getOrdinal(r.getEnd()));
+            } else if (key instanceof VerseRange) {
+                final VerseRange vr = (VerseRange) key;
+                osisWrapper.setStartRange(versification.getOrdinal(vr.getStart()));
+                osisWrapper.setEndRange(versification.getOrdinal(vr.getEnd()));
+                osisWrapper.setMultipleRanges(false);
+            }
+
+            return osisWrapper;
         } catch (final BookException e) {
             throw new StepInternalException("Unable to query the book data to retrieve specified passage: "
                     + version + ", " + reference, e);

@@ -45,6 +45,9 @@ public class OsisWrapper implements Serializable {
     private String value;
     private String reference;
     private boolean fragment;
+    private boolean isMultipleRanges;
+    private int startRange;
+    private int endRange;
 
     /**
      * the value to be wrapped
@@ -98,4 +101,47 @@ public class OsisWrapper implements Serializable {
     public void setReference(final String reference) {
         this.reference = reference;
     }
+
+    /**
+     * @return the startRange
+     */
+    public int getStartRange() {
+        return this.startRange;
+    }
+
+    /**
+     * @param startRange the startRange to set
+     */
+    public void setStartRange(final int startRange) {
+        this.startRange = startRange;
+    }
+
+    /**
+     * @return the endRange
+     */
+    public int getEndRange() {
+        return this.endRange;
+    }
+
+    /**
+     * @param endRange the endRange to set
+     */
+    public void setEndRange(final int endRange) {
+        this.endRange = endRange;
+    }
+
+    /**
+     * @return the isMultipleRanges
+     */
+    public boolean isMultipleRanges() {
+        return this.isMultipleRanges;
+    }
+
+    /**
+     * @param isMultipleRanges the isMultipleRanges to set
+     */
+    public void setMultipleRanges(final boolean isMultipleRanges) {
+        this.isMultipleRanges = isMultipleRanges;
+    }
+
 }

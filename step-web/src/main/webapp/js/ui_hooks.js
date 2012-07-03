@@ -55,6 +55,7 @@ BIBLE_GET_ALL_FEATURES = 				STEP_SERVER_BASE_URL + "bible/getAllFeatures/";
 BIBLE_GET_BIBLE_BOOK_NAMES = 			STEP_SERVER_BASE_URL + "bible/getBibleBookNames/";
 BIBLE_GET_NEXT_CHAPTER =				STEP_SERVER_BASE_URL + "bible/getNextChapter/";
 BIBLE_GET_PREVIOUS_CHAPTER = 			STEP_SERVER_BASE_URL + "bible/getPreviousChapter/";
+BIBLE_GET_BY_NUMBER = 					STEP_SERVER_BASE_URL + "bible/getBibleByVerseNumber/";
 
 DICTIONARY_GET_BY_HEADWORD = 			STEP_SERVER_BASE_URL + "dictionary/lookupDictionaryByHeadword/";
 DICTIONARY_SEARCH_BY_HEADWORD = 		STEP_SERVER_BASE_URL + "dictionary/searchDictionaryByHeadword/"

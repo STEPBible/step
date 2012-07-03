@@ -31,6 +31,8 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
 
+var CONTINUOUS_SCROLLING_VERSE_GAP = 50
+
 /**
  * Definition of the Passage component responsible for displaying OSIS passages
  * appropriately. Ties the search box for the reference and the version together
@@ -50,7 +52,9 @@ function Passage(passageContainer, rawServerVersions, passageId) {
 	this.bookmarkButton = $(".bookmarkPassageLink", passageContainer);
 	this.previousChapter = $(".previousChapter", passageContainer);
 	this.nextChapter = $(".nextChapter", passageContainer);
-	
+	this.continuousPassage = $(".continuousPassage", passageContainer);
+	this.scrolling = false;
+	this.forceRefresh = false;
 	this.passageId = passageId;
 	this.passageSync = false;
 	
@@ -136,7 +140,73 @@ function Passage(passageContainer, rawServerVersions, passageId) {
 			});
 	});
 	
+	this.continuousPassage
+		.button({ icons: { primary: "ui-icon-script" }, text: false })
+		.click(function() {
+			self.handleContinuousPassage();
+		});
 };
+
+
+Passage.prototype.handleContinuousPassage = function() {
+	if(this.scrolling == false) {
+		if(this.isMultiRange) {
+			raiseError("Continuous scrolling cannot be enabled for mutliple ranges");
+		}
+		
+		this.scrolling = true;
+
+		this.scrollOccurred();
+		
+		//attach to scroll event
+		var self = this;
+		this.passage.scroll(function() {
+			//scrolling occurred, so call handler
+			self.scrollOccurred();
+		});
+	} else {
+		//TODO tidy up continuous scrolling?
+		this.scrolling = false;
+		this.forceRefresh = true;
+		
+		//remove scrolling handlers
+		this.passage.unbind("scroll");
+		this.passage.scrollTop(0);
+		this.changePassage();
+	}
+}
+
+Passage.prototype.scrollOccurred = function() {
+	var self = this;
+
+	//capture total height before
+	var heightBefore = self.passage.prop("scrollHeight");
+	var currentLocation = self.passage.scrollTop();
+	var relativePosition = currentLocation / heightBefore;
+	
+	
+	if(heightBefore < 1500 || relativePosition < 0.25) {
+		//expand passage both ways, so look for x verses each way
+		$.getSafe(BIBLE_GET_BY_NUMBER + this.version.val() + "/" + 
+				(this.startVerseId - CONTINUOUS_SCROLLING_VERSE_GAP) + "/" + (this.startVerseId - 1) + "/" + "false/" +
+				this.currentOptions + "/" + this.getSelectedInterlinearVersion(), function(text) {
+			self.passage.prepend(text.value);
+			var heightAfter = self.passage.prop("scrollHeight");
+			self.passage.scrollTop(heightAfter - heightBefore + currentLocation);
+			self.startVerseId = text.startRange;
+		});
+	}
+
+	if(heightBefore < 1500 || relativePosition > 0.75) {
+		$.getSafe(BIBLE_GET_BY_NUMBER + this.version.val() + "/" + 
+				(this.endVerseId + 1) + "/" + (this.endVerseId + CONTINUOUS_SCROLLING_VERSE_GAP) + "/" + "true/" +
+				this.currentOptions + "/" + this.getSelectedInterlinearVersion(), function(text) {
+			self.passage.append(text.value);
+			self.endVerseId = text.endRange;
+//			console.log("Continous range is now " + self.startVerseId + " => " + self.endVerseId);
+		});
+	}
+}
 
 
 
@@ -290,13 +360,16 @@ Passage.prototype.changePassage = function(newReference, callback) {
 	var lookupVersion = this.version.val();
 	var lookupReference = this.passageSync ?  $(".passageReference").first().val() : this.reference.val();
 	
-	if(lookupReference && lookupVersion 
+	if(this.forceRefresh || (lookupReference && lookupVersion 
 			&& lookupVersion != "" && lookupReference != ""
 			&& (   lookupVersion != $.cookie("currentVersion-" + this.passageId) 
 				|| lookupReference != $.cookie("currentReference-" + this.passageId)
 			    || interlinearVersion != $.cookie("currentInterlinearVersion-" + this.passageId)
-				|| !compare(options, this.currentOptions)) 
+				|| !compare(options, this.currentOptions))) 
 		) {
+		this.forceRefresh = false;
+		
+		
 		var url = BIBLE_GET_BIBLE_TEXT + lookupVersion + "/" + lookupReference;
 		
 		if(options && options.length != 0) {
@@ -318,6 +391,19 @@ Passage.prototype.changePassage = function(newReference, callback) {
 			// TODO remove completely in favour of cookie storage only
 			self.currentOptions = options;
 			self.passage.html(text.value);
+			
+			self.startVerseId = text.startRange;
+			self.endVerseId = text.endRange;
+			self.isMultiRange = text.multipleRanges;
+			
+			if(self.isMultiRange) {
+				//disable button
+				self.continuousPassage.attr("disabled", "disabled");
+				self.continuousPassage.attr("title", "Continous passage scrolling is only available when one scripture reference is entered.");
+			} else {
+				self.continuousPassage.removeAttr("disabled");
+				self.continuousPassage.attr("title", "Click here to enable continuous scrolling");
+			}
 			
 			// passage change was successful, so we let the rest of the UI know
 			$.shout("passage-changed", { reference: self.reference.val(), passageId: self.passageId, init: init, version:  lookupVersion} );

@@ -227,13 +227,13 @@ Passage.prototype.refreshVersionsTextBox = function(rawServerVersions) {
 		var features = "";
 		// add to Strongs if applicable, and therefore interlinear
 		if(item.hasStrongs) {
-			features += " " + "<span class='versionFeature strongsFeature' title='Supports Strongs concordance'>V</span>";
-			features += " " + "<span class='versionFeature interlinearFeature' title='Supports interlinear feature'>I</span>";
+			features += " " + "<span class='versionFeature strongsFeature' title='Vocabulary available'>V</span>";
+			features += " " + "<span class='versionFeature interlinearFeature' title='Interlinear available'>I</span>";
 		}
 
 		// add morphology
 		if(item.hasMorphology) {
-			features += " " + "<span class='versionFeature morphologyFeature' title='Supports the grammar feature'>G</span>";
+			features += " " + "<span class='versionFeature morphologyFeature' title='Grammar available'>G</span>";
 		}
 		
 		// return response for dropdowns

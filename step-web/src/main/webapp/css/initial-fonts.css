@@ -83,8 +83,7 @@ body {
 }
 
 .emphasisePopupText {
-	text-decoration: underline;
-	text-style: italic;
+	font-style: italic;
 }
 
 

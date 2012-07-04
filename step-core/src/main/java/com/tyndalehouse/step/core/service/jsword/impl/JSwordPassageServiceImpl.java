@@ -30,47 +30,32 @@
  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
-package com.tyndalehouse.step.core.service.impl;
+package com.tyndalehouse.step.core.service.jsword.impl;
 
-import static com.tyndalehouse.step.core.exceptions.UserExceptionType.SERVICE_VALIDATION_ERROR;
 import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
 import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
-import static com.tyndalehouse.step.core.utils.StringUtils.isNotEmpty;
 import static com.tyndalehouse.step.core.utils.StringUtils.split;
-import static com.tyndalehouse.step.core.utils.ValidateUtils.notBlank;
 import static java.lang.Integer.parseInt;
 import static java.lang.Integer.valueOf;
 import static java.lang.String.format;
 import static org.crosswire.common.xml.XMLUtil.writeToString;
-import static org.crosswire.jsword.book.BookCategory.BIBLE;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
-import java.util.Set;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.xml.transform.TransformerException;
 
-import org.crosswire.common.progress.JobManager;
-import org.crosswire.common.progress.Progress;
 import org.crosswire.common.xml.Converter;
 import org.crosswire.common.xml.SAXEventProvider;
 import org.crosswire.common.xml.TransformingSAXEventProvider;
 import org.crosswire.jsword.book.Book;
-import org.crosswire.jsword.book.BookCategory;
 import org.crosswire.jsword.book.BookData;
 import org.crosswire.jsword.book.BookException;
-import org.crosswire.jsword.book.BookFilter;
-import org.crosswire.jsword.book.BookMetaData;
 import org.crosswire.jsword.book.Books;
-import org.crosswire.jsword.book.FeatureType;
-import org.crosswire.jsword.book.install.InstallException;
-import org.crosswire.jsword.book.install.Installer;
 import org.crosswire.jsword.passage.Key;
 import org.crosswire.jsword.passage.NoSuchKeyException;
 import org.crosswire.jsword.passage.NoSuchVerseException;
@@ -80,10 +65,7 @@ import org.crosswire.jsword.passage.RestrictionType;
 import org.crosswire.jsword.passage.RocketPassage;
 import org.crosswire.jsword.passage.Verse;
 import org.crosswire.jsword.passage.VerseRange;
-import org.crosswire.jsword.versification.BibleBook;
-import org.crosswire.jsword.versification.BibleBookList;
 import org.crosswire.jsword.versification.Versification;
-import org.crosswire.jsword.versification.system.Versifications;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
@@ -92,8 +74,10 @@ import com.tyndalehouse.step.core.data.entities.ScriptureReference;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.models.LookupOption;
 import com.tyndalehouse.step.core.models.OsisWrapper;
-import com.tyndalehouse.step.core.service.JSwordService;
-import com.tyndalehouse.step.core.utils.ValidateUtils;
+import com.tyndalehouse.step.core.service.VocabularyService;
+import com.tyndalehouse.step.core.service.impl.MorphologyServiceImpl;
+import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
+import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
 import com.tyndalehouse.step.core.xsl.XslConversionType;
 
 /**
@@ -103,126 +87,27 @@ import com.tyndalehouse.step.core.xsl.XslConversionType;
  * 
  */
 @Singleton
-public class JSwordServiceImpl implements JSwordService {
-    private static final String DEFAULT_NUMBERED_VERSION = "KJV";
-    private static final String CURRENT_BIBLE_INSTALL_JOB = "Installing book: %s";
+public class JSwordPassageServiceImpl implements JSwordPassageService {
     private static final String OSIS_CHAPTER_FORMAT = "%s.%d";
     private static final String OSIS_CHAPTER_VERSE_FORMAT = "%s.%s.%d";
-    private static final String ANCIENT_GREEK = "grc";
-    private static final String ANCIENT_HEBREW = "hbo";
-    private static final Logger LOGGER = LoggerFactory.getLogger(JSwordServiceImpl.class);
-
-    private final List<Installer> bookInstallers;
+    private static final Logger LOGGER = LoggerFactory.getLogger(JSwordPassageServiceImpl.class);
     private final MorphologyServiceImpl morphologyProvider;
+    private final JSwordVersificationService versificationService;
+    private final VocabularyService vocabProvider;
 
     /**
      * constructs the jsword service.
      * 
-     * @param installers the installers are the objects that query the crosswire servers
+     * @param versificationService jsword versification service
      * @param morphologyProvider provides morphological information
+     * @param vocabProvider the service providing lexicon and vocabulary information
      */
     @Inject
-    public JSwordServiceImpl(final List<Installer> installers, final MorphologyServiceImpl morphologyProvider) {
-        this.bookInstallers = installers;
+    public JSwordPassageServiceImpl(final JSwordVersificationService versificationService,
+            final MorphologyServiceImpl morphologyProvider, final VocabularyService vocabProvider) {
+        this.versificationService = versificationService;
         this.morphologyProvider = morphologyProvider;
-    }
-
-    @Override
-    public void reloadInstallers() {
-        boolean errors = false;
-        LOGGER.trace("About to reload installers");
-        for (final Installer i : this.bookInstallers) {
-            try {
-                LOGGER.trace("Reloading installer [{}]", i.getInstallerDefinition());
-                i.reloadBookList();
-            } catch (final InstallException e) {
-                errors = true;
-                LOGGER.error(e.getMessage(), e);
-            }
-        }
-
-        if (errors) {
-            throw new StepInternalException(
-                    "Errors occurred while trying to retrieve the latest installer information");
-        }
-    }
-
-    @Override
-    public List<Book> getInstalledModules(final boolean allVersions, final String language,
-            final BookCategory... bibleCategory) {
-
-        if (!allVersions) {
-            ValidateUtils.notNull(language, "Locale was not passed by requester", SERVICE_VALIDATION_ERROR);
-        }
-
-        // TODO : TOTOTOTOTOTOTOTO
-        final String tempLang;
-        if ("eng".equals(language)) {
-            tempLang = "en";
-        } else {
-            tempLang = language;
-        }
-
-        if (bibleCategory == null || bibleCategory.length == 0) {
-            return new ArrayList<Book>();
-        }
-
-        // quickly transform the categories to a set for fast comparison
-        final Set<BookCategory> categories = new HashSet<BookCategory>();
-        for (int ii = 0; ii < bibleCategory.length; ii++) {
-            categories.add(bibleCategory[ii]);
-        }
-
-        // we set up a filter to retrieve just certain types of books
-        final BookFilter bf = new BookFilter() {
-            @Override
-            @SuppressWarnings("PMD.JUnit4TestShouldUseTestAnnotation")
-            public boolean test(final Book b) {
-                return categories.contains(b.getBookCategory())
-                        && (allVersions || isAcceptableVersions(b, tempLang));
-            }
-
-        };
-        return Books.installed().getBooks(bf);
-    }
-
-    /**
-     * @param locale the language we are interested in
-     * @param book the book we are testing
-     * @return true if we are to accept the book
-     */
-    private boolean isAcceptableVersions(final Book book, final String locale) {
-        return ANCIENT_GREEK.equals(book.getLanguage().getCode())
-                || ANCIENT_HEBREW.equals(book.getLanguage().getCode())
-                || locale.equals(book.getLanguage().getCode());
-    }
-
-    /**
-     * @param bibleCategory the categories of books that should be considered
-     * @return returns a list of installed modules
-     */
-    @Override
-    public List<Book> getInstalledModules(final BookCategory... bibleCategory) {
-        return getInstalledModules(true, null, bibleCategory);
-    }
-
-    /**
-     * @param bibleCategory the list of books that should be considered
-     * @return a list of all modules
-     */
-    @Override
-    public List<Book> getAllModules(final BookCategory... bibleCategory) {
-        final List<Book> books = new ArrayList<Book>();
-        for (final Installer installer : this.bookInstallers) {
-            try {
-                installer.reloadBookList();
-                books.addAll(installer.getBooks());
-            } catch (final InstallException e) {
-                // log an error
-                LOGGER.error("Unable to update installer", e);
-            }
-        }
-        return books;
+        this.vocabProvider = vocabProvider;
     }
 
     @Override
@@ -363,129 +248,32 @@ public class JSwordServiceImpl implements JSwordService {
     }
 
     @Override
-    public synchronized String getVerseRange(final int startVerseId, final int endVerseId) {
-        final Versification kjvVersification = getVersificationForVersion(DEFAULT_NUMBERED_VERSION);
-
-        Verse start = kjvVersification.decodeOrdinal(startVerseId);
-        final Verse end = kjvVersification.decodeOrdinal(endVerseId);
-
-        // TODO continue to discuss on JSWORD devel list
-        if (start.getVerse() == 0) {
-            start = kjvVersification.decodeOrdinal(startVerseId + 1);
-        }
-
-        final VerseRange vr = new VerseRange(kjvVersification, start, end);
-        return vr.getName();
-    }
-
-    @Override
-    public synchronized OsisWrapper getOsisTextByVerseNumbers(final String version,
-            final String numberedVersion, final int verseId, final List<LookupOption> lookupOptions,
-            final String interlinearVersion) {
-        return getOsisTextByVerseNumbers(version, numberedVersion, verseId, verseId, lookupOptions,
-                interlinearVersion, null);
-    }
-
-    @Override
     public synchronized OsisWrapper getOsisTextByVerseNumbers(final String version,
             final String numberedVersion, final int startVerseId, final int endVerseId,
             final List<LookupOption> lookupOptions, final String interlinearVersion,
             final Boolean roundReference) {
 
         // coded from numbered version.
-        final Versification versificationForNumberedVersion = getVersificationForVersion(numberedVersion);
+        final Versification versificationForNumberedVersion = this.versificationService
+                .getVersificationForVersion(numberedVersion);
         final Verse s = versificationForNumberedVersion.decodeOrdinal(startVerseId);
         final Verse e = versificationForNumberedVersion.decodeOrdinal(endVerseId);
 
         // convert it over to target versification
-        final Book lookupVersion = getBookFromVersion(version);
+        final Book lookupVersion = this.versificationService.getBookFromVersion(version);
 
-        final VerseRange range = getVerseRangeForSelectedVerses(version, numberedVersion,
-                versificationForNumberedVersion, s, e, lookupVersion, roundReference);
+        final VerseRange range = this.versificationService.getVerseRangeForSelectedVerses(version,
+                numberedVersion, versificationForNumberedVersion, s, e, lookupVersion, roundReference);
 
         final BookData lookupBookData = new BookData(lookupVersion, range);
         return getTextForBookData(version, lookupBookData.getKey().getOsisID(), lookupOptions,
                 interlinearVersion, lookupBookData);
     }
 
-    private VerseRange getVerseRangeForSelectedVerses(final String version, final String numberedVersion,
-            final Versification versificationForNumberedVersion, final Verse s, final Verse e,
-            final Book lookupVersion, final Boolean roundReference) {
-        VerseRange range;
-
-        // TODO - should this be amended? yes - probably
-        final int verseNumber = s.getVerse() == 0 ? 1 : s.getVerse();
-
-        if (!numberedVersion.equals(version)) {
-            // need to patch things over
-            final Versification versificationLookupVersion = getVersificationForVersion(lookupVersion);
-            final Verse targetStartVersionVerse = versificationLookupVersion.patch(s.getBook(),
-                    s.getChapter(), verseNumber);
-            final Verse targetEndVersionsVerse = versificationLookupVersion.patch(e.getBook(),
-                    e.getChapter(), e.getVerse());
-
-            range = new VerseRange(versificationLookupVersion, targetStartVersionVerse,
-                    targetEndVersionsVerse);
-        } else {
-            range = new VerseRange(versificationForNumberedVersion, s, e);
-        }
-
-        // now we may need to round the range up/down
-        return roundRange(roundReference, range);
-    }
-
-    /**
-     * rounds the range up or down
-     * 
-     * @param roundReference null to indicate no rounding, true to round up and false to round down.
-     * @param range the range
-     * @return the new verse range, rounded as appropriate
-     */
-    private VerseRange roundRange(final Boolean roundReference, final VerseRange range) {
-        if (Boolean.TRUE.equals(roundReference)) {
-            return roundRangeUp(range);
-        } else if (Boolean.FALSE.equals(roundReference)) {
-            return roundRangeDown(range);
-        }
-
-        return range;
-    }
-
-    /**
-     * Round the range upwards, i.e. changes the end verse
-     * 
-     * @param range the range to be rounded up
-     * @return the new range
-     */
-    private VerseRange roundRangeDown(final VerseRange range) {
-        final Versification versification = range.getVersification();
-        final Verse end = range.getEnd();
-        return new VerseRange(versification, versification.getFirstVerseInChapter(end), end);
-    }
-
-    /**
-     * Round the range upwards, i.e. changes the end verse
-     * 
-     * @param range the range to be rounded up
-     * @return the new range
-     */
-    private VerseRange roundRangeUp(final VerseRange range) {
-        final Versification versification = range.getVersification();
-        final Verse end = range.getEnd();
-        return new VerseRange(versification, range.getStart(), versification.getLastVerseInChapter(end));
-    }
-
-    @Override
-    public synchronized OsisWrapper getOsisTextByVerseNumber(final String version, final int verseId,
-            final List<LookupOption> options, final String interlinearVersion) {
-        return getOsisTextByVerseNumbers(version, DEFAULT_NUMBERED_VERSION, verseId, options,
-                interlinearVersion);
-    }
-
     // TODO: can we make this more performant by not re-compiling stylesheet - or is already cached
     // FIXME TODO: JS-109, email from CJB on 27/02/2011 remove synchronisation once book is fixed
     @Override
-    public synchronized OsisWrapper getOsisText(final String version, final String reference,
+    public OsisWrapper getOsisText(final String version, final String reference,
             final List<LookupOption> options, final String interlinearVersion) {
         LOGGER.debug("Retrieving text for ({}, {})", version, reference);
 
@@ -501,7 +289,7 @@ public class JSwordServiceImpl implements JSwordService {
      * @return the BookData object
      */
     private BookData getBookData(final String version, final String reference) {
-        final Book currentBook = getBookFromVersion(version);
+        final Book currentBook = this.versificationService.getBookFromVersion(version);
         try {
             return new BookData(currentBook, currentBook.getKey(reference));
         } catch (final NoSuchKeyException e) {
@@ -519,7 +307,7 @@ public class JSwordServiceImpl implements JSwordService {
      * @param bookData the bookdata to use to look up the required version/reference combo
      * @return the html text
      */
-    private OsisWrapper getTextForBookData(final String version, final String reference,
+    private synchronized OsisWrapper getTextForBookData(final String version, final String reference,
             final List<LookupOption> options, final String interlinearVersion, final BookData bookData) {
 
         try {
@@ -548,7 +336,7 @@ public class JSwordServiceImpl implements JSwordService {
 
             // the original book
             final Book book = bookData.getFirstBook();
-            final Versification versification = getVersificationForVersion(book);
+            final Versification versification = this.versificationService.getVersificationForVersion(book);
 
             final OsisWrapper osisWrapper = new OsisWrapper(writeToString(htmlsep), bookData.getKey()
                     .getName());
@@ -606,41 +394,6 @@ public class JSwordServiceImpl implements JSwordService {
         return XslConversionType.DEFAULT;
     }
 
-    @Override
-    public List<LookupOption> getFeatures(final String version) {
-        // obtain the book
-        final Book book = Books.installed().getBook(version);
-        final List<LookupOption> options = new ArrayList<LookupOption>(LookupOption.values().length + 1);
-
-        if (book == null) {
-            return options;
-        }
-
-        // some options are always there for Bibles:
-        if (BIBLE.equals(book.getBookCategory())) {
-            options.add(LookupOption.VERSE_NUMBERS);
-            options.add(LookupOption.VERSE_NEW_LINE);
-
-            // TODO FIXME bug in modules? in jsword?
-            options.add(LookupOption.RED_LETTER);
-        }
-
-        if (book.getBookMetaData().hasFeature(FeatureType.FOOTNOTES)
-                || book.getBookMetaData().hasFeature(FeatureType.SCRIPTURE_REFERENCES)) {
-            options.add(LookupOption.NOTES);
-        }
-
-        // cycle through each option
-        for (final LookupOption lo : LookupOption.values()) {
-            final FeatureType ft = FeatureType.fromString(lo.getXsltParameterName());
-            if (ft != null && isNotEmpty(lo.name()) && book.getBookMetaData().hasFeature(ft)) {
-                options.add(lo);
-            }
-        }
-
-        return options;
-    }
-
     /**
      * sets up the default interlinear options
      * 
@@ -682,124 +435,14 @@ public class JSwordServiceImpl implements JSwordService {
                     // tsep.setDevelopmentMode(true);
                     tsep.setParameter("morphologyProvider", this.morphologyProvider);
                 }
+
+                if (LookupOption.STRONG_NUMBERS.equals(lookupOption)) {
+                    tsep.setParameter("vocabProvider", this.vocabProvider);
+                }
             }
         }
 
         tsep.setParameter("baseVersion", version);
-    }
-
-    @Override
-    public boolean isInstalled(final String moduleInitials) {
-        return Books.installed().getBook(moduleInitials) != null;
-    }
-
-    @Override
-    public void installBook(final String initials) {
-        LOGGER.debug("Installing module [{}]", initials);
-        notBlank(initials, "No version was found", SERVICE_VALIDATION_ERROR);
-
-        // check if already installed?
-        if (!isInstalled(initials)) {
-            LOGGER.debug("Book was not already installed, so kicking off installation process for [{}]",
-                    initials);
-            for (final Installer i : this.bookInstallers) {
-                final Book bookToBeInstalled = i.getBook(initials);
-
-                // TODO TODO TODO FIME
-                if (bookToBeInstalled != null) {
-                    // then we can kick off installation and return
-                    try {
-                        i.install(bookToBeInstalled);
-                        return;
-                    } catch (final InstallException e) {
-                        // we log error here,
-                        LOGGER.error(
-                                "An error occurred error, and we unable to use this installer for module"
-                                        + initials, e);
-
-                        // but go round the loop to see if more options are available
-                        continue;
-                    }
-                }
-            }
-            // if we get here, then we were unable to install the book
-            // since we couldn't find it.
-            throw new StepInternalException("Unable to find book with initials " + initials);
-        }
-
-        // if we get here then we had already installed the book - how come we're asking for this again?
-        LOGGER.warn("A request to install an already installed book was made for initials " + initials);
-    }
-
-    @Override
-    public double getProgressOnInstallation(final String bookName) {
-        notBlank(bookName, "The book name provided was blank", SERVICE_VALIDATION_ERROR);
-
-        if (isInstalled(bookName)) {
-            return 1;
-        }
-
-        final Set<Progress> jswordJobs = JobManager.getJobs();
-        // not yet installed (or at least wasn't on the lines above, so check job list
-        for (final Progress p : jswordJobs) {
-            final String expectedJobName = format(CURRENT_BIBLE_INSTALL_JOB, bookName);
-            if (expectedJobName.equals(p.getJobName())) {
-                if (p.isFinished()) {
-                    return 1;
-                }
-
-                return (double) p.getWork() / p.getTotalWork();
-            }
-        }
-
-        // the job may have completed by now, while we did the search, so do a final check
-        if (isInstalled(bookName)) {
-            return 1;
-        }
-
-        throw new StepInternalException(
-                "An unknown error has occurred: the job has disappeared of the job list, "
-                        + "but the module is not installed");
-    }
-
-    /**
-     * Looks through a versification for a particular type of book
-     * 
-     * @param bookStart the string to match
-     * @param versification the versification we are interested in
-     * @return the list of matching names
-     */
-    private List<String> getBooksFromVersification(final String bookStart, final Versification versification) {
-        final String searchPattern = bookStart.toLowerCase(Locale.getDefault());
-
-        final List<String> matchingNames = new ArrayList<String>();
-        final BibleBookList books = versification.getBooks();
-        for (final BibleBook book : books) {
-            if (book.getLongName().toLowerCase().startsWith(searchPattern)
-                    || book.getPreferredName().toLowerCase().startsWith(searchPattern)
-                    || book.getShortName().toLowerCase().startsWith(searchPattern)) {
-                matchingNames.add(book.getShortName());
-            }
-        }
-        return matchingNames;
-    }
-
-    @Override
-    public List<String> getBibleBookNames(final String bookStart, final String version) {
-        final String lookup = isBlank(bookStart) ? "" : bookStart;
-
-        Versification versification = getVersificationForVersion(version);
-        if (versification == null) {
-            versification = Versifications.instance().getDefaultVersification();
-        }
-
-        final List<String> books = getBooksFromVersification(lookup, versification);
-
-        if (books.isEmpty()) {
-            return getBooksFromVersification(lookup, Versifications.instance().getDefaultVersification());
-        }
-
-        return books;
     }
 
     @Override
@@ -814,7 +457,7 @@ public class JSwordServiceImpl implements JSwordService {
             }
 
             final PassageKeyFactory keyFactory = PassageKeyFactory.instance();
-            final Versification av11n = getVersificationForVersion(version);
+            final Versification av11n = this.versificationService.getVersificationForVersion(version);
             final RocketPassage rp = (RocketPassage) keyFactory.getKey(av11n, references);
 
             for (int ii = 0; ii < rp.countRanges(RestrictionType.NONE); ii++) {
@@ -840,41 +483,4 @@ public class JSwordServiceImpl implements JSwordService {
         }
     }
 
-    // TODO move to utility class?
-    /**
-     * Gets a book from version initials
-     * 
-     * @param version the version initials
-     * @return the JSword book
-     */
-    private static Book getBookFromVersion(final String version) {
-        final Book currentBook = Books.installed().getBook(version);
-
-        if (currentBook == null) {
-            throw new StepInternalException("The specified initials " + version
-                    + " did not reference a valid module");
-        }
-        return currentBook;
-    }
-
-    /**
-     * A helper method to get the versification from a book
-     * 
-     * @param version the version we are interested in.
-     * @return the versification the versification of the book
-     */
-    private static Versification getVersificationForVersion(final String version) {
-        return getVersificationForVersion(getBookFromVersion(version));
-    }
-
-    /**
-     * A helper method to get the versification from a book
-     * 
-     * @param version the version we are interested in.
-     * @return the versification the versification of the book
-     */
-    private static Versification getVersificationForVersion(final Book version) {
-        return Versifications.instance().getVersification(
-                (String) version.getBookMetaData().getProperty(BookMetaData.KEY_VERSIFICATION));
-    }
 }

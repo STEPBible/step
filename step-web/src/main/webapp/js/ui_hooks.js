@@ -213,7 +213,7 @@ function showAbout() {
 	$( "#about" ).dialog({ 
 		buttons: { "Ok": function() { $(this).dialog("close"); } },
 		width: DEFAULT_POPUP_WIDTH,
-		title: "STEP :: Scripture Tools for Every Pastor",
+		title: "STEP :: Scripture Tools for Every Person",
 	});
 };
 

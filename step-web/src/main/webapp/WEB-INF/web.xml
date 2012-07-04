@@ -3,7 +3,7 @@
  "http://java.sun.com/dtd/web-app_2_3.dtd" >
 
 <web-app>
-	<display-name>STEP :: Scripture Tools for Every Pastor</display-name>
+	<display-name>STEP :: Scripture Tools for Every Person</display-name>
 
 	<filter>
 		<filter-name>guiceFilter</filter-name>

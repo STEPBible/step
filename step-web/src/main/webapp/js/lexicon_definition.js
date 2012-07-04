@@ -99,28 +99,59 @@ LexiconDefinition.prototype.showDef = function(data) {
 LexiconDefinition.prototype.showOriginalWordData = function(data) {
 	var detailLevel = $("#selectedDetail", this.popup).val();
 	
-	this.populateIds(data.morphInfos, "#grammarContainer");
-	this.populateIds(data.vocabInfos, "#vocabContainer");
+	//remove previous information
+	this.populateNames(data.morphInfos, "#grammarContainer");
+	this.populateNames(data.vocabInfos, "#vocabContainer");
 	
 };
 
 
-LexiconDefinition.prototype.populateIds = function(data, container) {
+LexiconDefinition.prototype.resetContainer = function(container) {
+	$("*", container).each(function(index, element) {
+		if($(element).attr("info-name")) {
+			$(element).html("");
+		}
+	});
+};
+
+
+LexiconDefinition.prototype.populateNames = function(data, container) {
+	this.resetContainer(container);
+	
+	//now check if we have information, if not, then hide
+	if(data.length == 0) {
+		$(container).hide();
+		return;
+	} else {
+		$(container).show();
+	}
+	
 	$("*", container).each(function(index, item) {
-		if(item.id) {
-			var content = data[0][item.id];
+		var infoName = $(item).attr("info-name");
+		if(infoName) {
+			var content = data[0][infoName];
 			if(content) {
 				if(content.replace) {
-					content = content.replace(/_(.*)_/g, "<span class=\"emphasisePopupText\">$1</span>");
+					content = content.replace(/_([^_]*)_/g, "<span class=\"emphasisePopupText\">$1</span>");
 				}
 				
 				$(item).html(content);
 			}
 		}
 		
-		if($(item).attr("depends-on")) {
-			//make visible or not
-			$(item).toggle(data[0][$(item).attr("depends-on")] != "");
+		var dependencyList = $(item).attr("depends-on");
+		if(dependencyList) {
+			var dependencies = dependencyList.split(",");
+			
+			//if any one of the dependencies is to be shown, then we show
+			var show = false;
+			for(var ii = 0; ii < dependencies.length; ii++) {
+				if(data[0][dependencies[ii]] != "") {
+					$(item).toggle(true); 
+					return;
+				}
+			}
+			$(item).toggle(false); 
 		}
 	});
 }

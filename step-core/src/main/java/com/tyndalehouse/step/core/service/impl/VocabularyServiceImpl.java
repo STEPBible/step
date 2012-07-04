@@ -21,6 +21,7 @@ import com.tyndalehouse.step.core.service.VocabularyService;
  */
 @Singleton
 public class VocabularyServiceImpl implements VocabularyService {
+    private static final String STRONG_SEPARATORS = "[ ,]+";
     private static final String HIGHER_STRONG = "STRONG:";
     private static final String LOWER_STRONG = "strong:";
     private static final int START_STRONG_KEY = HIGHER_STRONG.length();
@@ -39,8 +40,37 @@ public class VocabularyServiceImpl implements VocabularyService {
         notBlank(vocabIdentifiers, "Vocab identifiers was null", UserExceptionType.SERVICE_VALIDATION_ERROR);
 
         final List<String> idList = getKeys(vocabIdentifiers);
-        return this.ebean.find(LexiconDefinition.class).where().idIn(idList).findList();
 
+        if (!idList.isEmpty()) {
+            return this.ebean.find(LexiconDefinition.class).where().idIn(idList).findList();
+        }
+        return new ArrayList<LexiconDefinition>();
+
+    }
+
+    @Override
+    public String getDefaultTransliteration(final String vocabIdentifiers) {
+        final List<String> keys = getKeys(vocabIdentifiers);
+
+        if (keys.isEmpty()) {
+            return "";
+        }
+
+        // else we lookup and concatenate
+        final List<LexiconDefinition> lds = this.ebean.find(LexiconDefinition.class)
+                .select("simpleTransliteration").where().idIn(keys).findList();
+
+        // TODO - if nothing there, for now we just return the ids we got
+        if (lds.isEmpty()) {
+            return vocabIdentifiers;
+        }
+
+        final StringBuilder sb = new StringBuilder(lds.size() * 32);
+        for (final LexiconDefinition l : lds) {
+            sb.append(l.getSimpleTransliteration());
+        }
+
+        return sb.toString();
     }
 
     /**
@@ -51,7 +81,7 @@ public class VocabularyServiceImpl implements VocabularyService {
      */
     List<String> getKeys(final String vocabIdentifiers) {
         final List<String> idList = new ArrayList<String>();
-        final String[] ids = vocabIdentifiers.split(",");
+        final String[] ids = vocabIdentifiers.split(STRONG_SEPARATORS);
 
         for (final String i : ids) {
 

@@ -46,8 +46,8 @@ import org.slf4j.LoggerFactory;
 
 import com.avaje.ebean.EbeanServer;
 import com.tyndalehouse.step.core.data.entities.ScriptureReference;
-import com.tyndalehouse.step.core.service.JSwordService;
 import com.tyndalehouse.step.core.service.SearchService;
+import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 
 /**
  * A federated search service implementation. see {@link SearchService}
@@ -59,14 +59,14 @@ import com.tyndalehouse.step.core.service.SearchService;
 public class SearchServiceImpl implements SearchService {
     private static final Logger LOGGER = LoggerFactory.getLogger(SearchServiceImpl.class);
     private final EbeanServer ebean;
-    private final JSwordService jsword;
+    private final JSwordPassageService jsword;
 
     /**
      * @param ebean the ebean server to carry out the search from
      * @param jsword used to convert references to numerals, etc.
      */
     @Inject
-    public SearchServiceImpl(final EbeanServer ebean, final JSwordService jsword) {
+    public SearchServiceImpl(final EbeanServer ebean, final JSwordPassageService jsword) {
         this.ebean = ebean;
         this.jsword = jsword;
     }

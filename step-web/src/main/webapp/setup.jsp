@@ -3,7 +3,7 @@
 <HEAD>
 
     <META http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <TITLE>STEP :: Scripture Tools for Every Pastor</TITLE>
+    <TITLE>STEP :: Scripture Tools for Every Person</TITLE>
 
     <link rel="stylesheet" type="text/css" href="css/ui-lightness/jquery-ui-1.8.5.custom.css" />
     <link rel="stylesheet" type="text/css" href="css/initial-layout.css" />
@@ -24,7 +24,7 @@
 </HEAD>
 <body>
 
-	<h1>STEP - Scripture Tools for Every Pastor</h1>
+	<h1>STEP - Scripture Tools for Every Person</h1>
 	
 	This is setup page for the STEP software. 
 	This page enables you to install different modules used by STEP, including Bibles, Dictionaries, ...

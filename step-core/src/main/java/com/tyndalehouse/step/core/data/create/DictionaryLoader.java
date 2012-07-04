@@ -55,7 +55,7 @@ import com.tyndalehouse.step.core.data.entities.DictionaryArticle;
 import com.tyndalehouse.step.core.data.entities.ScriptureReference;
 import com.tyndalehouse.step.core.data.entities.reference.TargetType;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
-import com.tyndalehouse.step.core.service.JSwordService;
+import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 
 /**
  * Loads an Easton Dictionary
@@ -78,7 +78,7 @@ public class DictionaryLoader extends AbstractClasspathBasedModuleLoader<Diction
     private static final String TEXT = "@Text:";
     private static final String ALL_REFS = "@AllRefs:";
 
-    private final JSwordService jsword;
+    private final JSwordPassageService jsword;
 
     // state used during processing
     private int errors;
@@ -94,7 +94,7 @@ public class DictionaryLoader extends AbstractClasspathBasedModuleLoader<Diction
      * @param jsword the service to invoke sword modules
      * @param resourcePath the classpath to the data
      */
-    public DictionaryLoader(final EbeanServer ebean, final JSwordService jsword, final String resourcePath) {
+    public DictionaryLoader(final EbeanServer ebean, final JSwordPassageService jsword, final String resourcePath) {
         super(ebean, resourcePath);
         this.jsword = jsword;
     }

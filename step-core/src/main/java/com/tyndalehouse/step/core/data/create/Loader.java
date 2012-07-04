@@ -59,7 +59,8 @@ import com.tyndalehouse.step.core.data.entities.LexiconDefinition;
 import com.tyndalehouse.step.core.data.entities.TimelineEvent;
 import com.tyndalehouse.step.core.data.entities.morphology.Morphology;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
-import com.tyndalehouse.step.core.service.JSwordService;
+import com.tyndalehouse.step.core.service.jsword.JSwordModuleService;
+import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 
 /**
  * The object that will be responsible for loading all the data into a database
@@ -73,20 +74,23 @@ public class Loader {
     private static final String KJV = "KJV";
     private static final Logger LOG = LoggerFactory.getLogger(Loader.class);
     private final EbeanServer ebean;
-    private final JSwordService jsword;
+    private final JSwordPassageService jsword;
     private final Properties coreProperties;
+    private final JSwordModuleService jswordModule;
 
     /**
      * The loader is given a connection source to load the data
      * 
      * @param jsword the jsword service
+     * @param jswordModule the service helping with installation of jsword modules
      * @param ebean the persistence server
      * @param coreProperties the step core properties
      */
     @Inject
-    public Loader(final JSwordService jsword, final EbeanServer ebean,
-            @Named("StepCoreProperties") final Properties coreProperties) {
+    public Loader(final JSwordPassageService jsword, final JSwordModuleService jswordModule,
+            final EbeanServer ebean, @Named("StepCoreProperties") final Properties coreProperties) {
         this.jsword = jsword;
+        this.jswordModule = jswordModule;
         this.ebean = ebean;
         this.coreProperties = coreProperties;
     }
@@ -111,7 +115,7 @@ public class Loader {
         int waitTime = INSTALL_MAX_WAITING;
 
         // very ugly, but as good as it's going to get for now
-        while (waitTime > 0 && !this.jsword.isInstalled(KJV)) {
+        while (waitTime > 0 && !this.jswordModule.isInstalled(KJV)) {
             try {
                 LOG.debug("Waiting for KJV installation to finish...");
                 waitTime -= INSTALL_WAITING;
@@ -227,9 +231,44 @@ public class Loader {
                     @Override
                     public void postProcess(final Morphology entity) {
                         LOG.trace("Processing [{}]", entity.getCode());
+                        sanitizeDefinitions(entity);
+
                         entity.initialise();
                     }
                 }).init();
+    }
+
+    /**
+     * removes extra characters from entity before persisiting
+     * 
+     * @param entity the entity to be cleansed
+     */
+    protected void sanitizeDefinitions(final Morphology entity) {
+        final String quote = "\"";
+        final String empty = "";
+
+        entity.setFunctionExplained(entity.getFunctionExplained().replaceAll(quote, empty));
+        entity.setTenseExplained(entity.getTenseExplained().replaceAll(quote, empty));
+        entity.setVoiceExplained(entity.getVoiceExplained().replaceAll(quote, empty));
+        entity.setMoodExplained(entity.getMoodExplained().replaceAll(quote, empty));
+        entity.setCaseExplained(entity.getCaseExplained().replaceAll(quote, empty));
+        entity.setPersonExplained(entity.getPersonExplained().replaceAll(quote, empty));
+        entity.setNumberExplained(entity.getNumberExplained().replaceAll(quote, empty));
+        entity.setGenderExplained(entity.getGenderExplained().replaceAll(quote, empty));
+        entity.setSuffixExplained(entity.getSuffixExplained().replaceAll(quote, empty));
+
+        entity.setFunctionDescription(entity.getFunctionDescription().replaceAll(quote, empty));
+        entity.setTenseDescription(entity.getTenseDescription().replaceAll(quote, empty));
+        entity.setVoiceDescription(entity.getVoiceDescription().replaceAll(quote, empty));
+        entity.setMoodDescription(entity.getMoodDescription().replaceAll(quote, empty));
+        entity.setCaseDescription(entity.getCaseDescription().replaceAll(quote, empty));
+        entity.setPersonDescription(entity.getPersonDescription().replaceAll(quote, empty));
+        entity.setNumberDescription(entity.getNumberDescription().replaceAll(quote, empty));
+        entity.setGenderDescription(entity.getGenderDescription().replaceAll(quote, empty));
+        entity.setSuffixDescription(entity.getSuffixDescription().replaceAll(quote, empty));
+
+        entity.setDescription(entity.getDescription().replaceAll(quote, empty));
+        entity.setExplanation(entity.getExplanation().replaceAll(quote, empty));
     }
 
     /**

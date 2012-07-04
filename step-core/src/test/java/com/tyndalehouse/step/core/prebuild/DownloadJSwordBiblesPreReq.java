@@ -44,8 +44,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.tyndalehouse.step.core.service.JSwordService;
-import com.tyndalehouse.step.core.service.impl.JSwordServiceImpl;
+import com.tyndalehouse.step.core.service.jsword.impl.JSwordModuleServiceImpl;
 
 /**
  * Downloads the jsword bible versions
@@ -66,7 +65,7 @@ public class DownloadJSwordBiblesPreReq {
         final String[] modules = new String[] { "KJV", "ESV", "Byz", "StrongsGreek", "StrongsHebrew",
                 "Robinson" };
 
-        final JSwordService jsword = new JSwordServiceImpl(getInstallers(), null);
+        final JSwordModuleServiceImpl jsword = new JSwordModuleServiceImpl(getInstallers());
 
         for (final String moduleInitials : modules) {
             if (!jsword.isInstalled(moduleInitials)) {

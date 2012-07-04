@@ -63,8 +63,10 @@ import com.tyndalehouse.step.core.data.entities.morphology.Suffix;
 import com.tyndalehouse.step.core.data.entities.morphology.Tense;
 import com.tyndalehouse.step.core.data.entities.morphology.Voice;
 import com.tyndalehouse.step.core.models.HasCsvValueName;
-import com.tyndalehouse.step.core.service.JSwordService;
-import com.tyndalehouse.step.core.service.impl.JSwordServiceImpl;
+import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
+import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
+import com.tyndalehouse.step.core.service.jsword.impl.JSwordPassageServiceImpl;
+import com.tyndalehouse.step.core.service.jsword.impl.JSwordVersificationServiceImpl;
 
 /**
  * Tests the loading of the geography loader
@@ -77,7 +79,7 @@ public class LoaderTest extends DataDrivenTestExtension {
     private static final Logger LOG = LoggerFactory.getLogger(LoaderTest.class);
 
     @Mock
-    private JSwordService jsword;
+    private JSwordPassageService jsword;
 
     /**
      * tests the openbible data
@@ -87,7 +89,7 @@ public class LoaderTest extends DataDrivenTestExtension {
         final Properties coreProperties = new Properties();
         coreProperties.put("test.data.path.geography.openbible", "geography.tab");
 
-        final Loader l = new Loader(this.jsword, getEbean(), coreProperties);
+        final Loader l = new Loader(this.jsword, null, getEbean(), coreProperties);
         assertEquals(4, l.loadOpenBibleGeography());
     }
 
@@ -99,7 +101,7 @@ public class LoaderTest extends DataDrivenTestExtension {
         final Properties coreProperties = new Properties();
         coreProperties.put("test.data.path.timeline.events.directory", "timeline.csv");
 
-        final Loader l = new Loader(this.jsword, getEbean(), coreProperties);
+        final Loader l = new Loader(this.jsword, null, getEbean(), coreProperties);
         assertEquals(4, l.loadTimeline());
     }
 
@@ -110,7 +112,7 @@ public class LoaderTest extends DataDrivenTestExtension {
     public void testHotSpots() {
         final Properties coreProperties = new Properties();
         coreProperties.put("test.data.path.timeline.hotspots", "hotspots.csv");
-        final Loader l = new Loader(this.jsword, getEbean(), coreProperties);
+        final Loader l = new Loader(this.jsword, null, getEbean(), coreProperties);
 
         assertEquals(3, l.loadHotSpots());
     }
@@ -123,7 +125,11 @@ public class LoaderTest extends DataDrivenTestExtension {
     public void testDictionaryArticles() {
         final Properties coreProperties = new Properties();
         coreProperties.put("test.data.path.dictionary.easton", "dictionary_sample.txt");
-        final Loader l = new Loader(new JSwordServiceImpl(null, null), getEbean(), coreProperties);
+
+        final JSwordVersificationService versificationService = new JSwordVersificationServiceImpl();
+
+        final Loader l = new Loader(new JSwordPassageServiceImpl(versificationService, null, null), null,
+                getEbean(), coreProperties);
         final int count = l.loadDictionaryArticles();
 
         final int srCount = getEbean().find(ScriptureReference.class).findRowCount();
@@ -138,7 +144,8 @@ public class LoaderTest extends DataDrivenTestExtension {
     public void testLexicon() {
         final Properties coreProperties = new Properties();
         coreProperties.put("test.data.path.lexicon", "lexicon.csv");
-        final Loader l = new Loader(new JSwordServiceImpl(null, null), getEbean(), coreProperties);
+        final Loader l = new Loader(new JSwordPassageServiceImpl(null, null, null), null, getEbean(),
+                coreProperties);
 
         final int count = l.loadLexicon();
         assertEquals(5, count);
@@ -161,7 +168,7 @@ public class LoaderTest extends DataDrivenTestExtension {
     public void testRobinsonMorphology() {
         final Properties coreProperties = new Properties();
         coreProperties.put("test.data.path.morphology.robinson", "robinson_morphology.csv");
-        final Loader l = new Loader(this.jsword, getEbean(), coreProperties);
+        final Loader l = new Loader(this.jsword, null, getEbean(), coreProperties);
         final int count = l.loadRobinsonMorphology();
 
         final Morphology m1 = getEbean().find(Morphology.class, "V-2AAP-DSM");

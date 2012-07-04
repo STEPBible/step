@@ -13,8 +13,8 @@
     <TITLE>STEP Bible: <%= stepRequest.getReference(0) %> and <%= stepRequest.getReference(1) %></TITLE>
     <META http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-	<meta name="description" content="Scripture Tools for Every Pastor is a Bible study tool, currently showing: <%= stepRequest.getReference(0) %> in the <%= stepRequest.getVersion(0) %> and <%= stepRequest.getReference(1) %> in the <%= stepRequest.getVersion(1) %>">
-	<meta name="keywords" content="bible study kjv esv asv scripture tools for every pastor interlinear strong robinson timeline" />
+	<meta name="description" content="Scripture Tools for Every Person is a Bible study tool, currently showing: <%= stepRequest.getReference(0) %> in the <%= stepRequest.getVersion(0) %> and <%= stepRequest.getReference(1) %> in the <%= stepRequest.getVersion(1) %>">
+	<meta name="keywords" content="bible study kjv esv asv scripture tools for every person interlinear strong robinson timeline" />
 	
 	<link rel="shortcut icon"  href="images/step-favicon.ico" />
 	<link rel="stylesheet" type="text/css" href="css/ui-lightness/jquery-ui-1.8.19.custom.css" />
@@ -83,7 +83,7 @@
 		
 		<div class="bookmarks" id="centerPane">
 			<div class="northBookmark">
-				<img id="topLogo" src="images/step-logo.png" alt="STEP :: Scripture Tools for Every Pastor" />
+				<img id="topLogo" src="images/step-logo.png" alt="STEP :: Scripture Tools for Every Person" />
 			</div>
 			<div id="bookmarkPane" class="bookmarkPane ui-corner-all">
 				<h3 class="ui-helper-reset ui-state-default ui-corner-all">
@@ -148,92 +148,18 @@
 
 <div id="about">
 	<img id="aboutLogo" src="images/step-logo.png" />
-	<h3 id="aboutTitle">STEP :: Scripture Tools for Every Pastor</h3>
+	<h3 id="aboutTitle">STEP :: Scripture Tools for Every Person</h3>
 	<p>&copy; Tyndale House 2011</p>
 </div>
 
-<div id="login">
-	<div id="loginPopup">
-		<label for="emailAddress">Email address:</label><input id="emailAddress" type="text" size="20" /><br />
-		<label for="password">Password:</label><input id="password" type="password" size="20" /><br />
-	</div>
-	<div id="registerPopup">
-		<label for="name">Your name</label><input id="name" type="text" size="20" /><br />
-		<label for="country">Country</label><input id="country" type="text" size="20" /><br />
-	</div>
-</div>
+<jsp:include page="jsps/login.jsp"></jsp:include>
 
 <div id="goToDate" style="display: none">
 	Please enter a year: <input type="text" id="scrollToYear" />
 </div>
 
 <!--  The popup that can have lots of helpful information -->
-<span id='lexiconDefinition'>
-	<ul id="lexiconDefinitionHeader">
-		<span id="lexiconPopupClose">X</span>
-			<li><a href="#origin">Original Word</a></li>
-			<li><a href="#context">Context</a></li>
-	</ul>
-
-	<div id="origin">
-			<span id="detailLevel">&nbsp;</span>
-			<span id="sliderDetailLevelLabel">Quick view</span>
-			
-			<div><i>Search for the <a href="#">same word</a>, all <a href="#">related words</a>, or <a href="#">this word with this grammar</a></i></div>
-			<p />
-			<!--  Vocab -->
-			<div id="vocabContainer" class="metadataContainer">
-				<h3>Vocab</h3>
-				<div level="0">
-					<div><h5 id="transliteration"></h5> (<span id="original"></span>): <span id="shortDefinition"></span></div>
-					<div id="mounce"></div>
-				</div>
-				<div level="1">
-					<div><h5>Translated in the Bible as: </h5><span id="avTranslation"></span> (Strong's <span id="strong"></span>)</div>
-				</div>	
-				<div level="2">
-					<div>Related Words: <span id="similarStrongs"></span>TODO</div>
-					<div id="lsj"></div>
-				</div>
-			</div>
-			<p />
-			<!--  Gramar -->
-			<div id="grammarContainer" class="metadataContainer">
-				<h3>Grammar</h3>
-				<!-- Quick view -->
-				<span level="0">
-					<h5 id="function"></h5>:<span id="person"></span> Person 
-					<span id="number"></span> <span id="gender"></span> 
-					( 
-					<span id="wordCase"></span> <span id="tense"></span>
-					<span id="mood"></span> <span id="voice"></span>
-					<span id="gender"></span>
-					) <br/>
-					<span id="description"></span>
-					<br />
-				</span>
-				<span level="1">
-					<span id="explanation"></span><br />
-				</span>
-				<span level="2">
-					<br />
-					<div depends-on="functionDescription"><h5>Function:</h5> <span id="functionDescription"></span> <h5>i.e.</h5> <span id="functionExplained"></span></div>
-					<div depends-on="personDescription"><h5>Person:</h5> <span id="personDescription"></span> <h5>i.e.</h5> <span id="personExplained"></span></div>
-					<div depends-on="genderDescription"><h5>Gender:</h5> <span id="genderDescription"></span> <h5>i.e.</h5> <span id="genderExplained"></span></div>
-					<div depends-on="numberDescription"><h5>Number:</h5> <span id="numberDescription"></span> <h5>i.e.</h5> <span id="numberExplained"></span></div>
-					<div depends-on="caseDescription"><h5>Case:</h5> <span id="caseDescription"></span> <h5>i.e.</h5> <span id="wordCaseExplained"></span></div>
-					<div depends-on="tenseDescription"><h5>Tense:</h5> <span id="tenseDescription"></span> <h5>i.e.</h5> <span id="tenseExplained"></span></div>
-					<div depends-on="moodDescription"><h5>Mood:</h5> <span id="moodDescription"></span> <h5>i.e.</h5> <span id="moodExplained"></span></div>
-					<div depends-on="voiceDescription"><h5>Voice:</h5> <span id="voiceDescription"></span> <h5>i.e.</h5> <span id="voiceExplained"></span></div>
-					<div depends-on="suffixDescription"><h5>Extra:</h5> <span id="suffixDescription"></span> <h5>i.e.</h5> <span id="suffixExplained"></span></div>
-				</span>
-			</div>
-			
-	</div>
-	<div id="context">
-		<p></p>
-	</div>
-</span>
+<jsp:include page="jsps/lexicon_definition.jsp"  />
 
 <div id="previewReference" style="display: none"><div id="previewBar" style="display: none;">
 	<a href="#" id="previewClose">Close this popup</a>

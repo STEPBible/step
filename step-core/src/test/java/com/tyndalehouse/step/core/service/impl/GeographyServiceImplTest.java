@@ -45,6 +45,8 @@ import com.tyndalehouse.step.core.data.DataDrivenTestExtension;
 import com.tyndalehouse.step.core.data.common.GeoPrecision;
 import com.tyndalehouse.step.core.data.entities.GeoPlace;
 import com.tyndalehouse.step.core.data.entities.ScriptureReference;
+import com.tyndalehouse.step.core.service.jsword.impl.JSwordPassageServiceImpl;
+import com.tyndalehouse.step.core.service.jsword.impl.JSwordVersificationServiceImpl;
 
 /**
  * tests the geography data retrieval queries
@@ -81,8 +83,8 @@ public class GeographyServiceImplTest extends DataDrivenTestExtension {
         assertEquals(1, geoPlaces.size());
         assertEquals(1, geoPlaces.get(0).getReferences().size());
 
-        final GeographyServiceImpl geo = new GeographyServiceImpl(getEbean(), new JSwordServiceImpl(null,
-                null));
+        final GeographyServiceImpl geo = new GeographyServiceImpl(getEbean(), new JSwordPassageServiceImpl(
+                new JSwordVersificationServiceImpl(), null, null));
         final List<GeoPlace> places = geo.getPlaces("Genesis 1:1-15");
 
         assertEquals("ESV Name", places.get(0).getName());

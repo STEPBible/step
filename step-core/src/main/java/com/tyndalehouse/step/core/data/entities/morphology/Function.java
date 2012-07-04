@@ -48,6 +48,7 @@ import com.tyndalehouse.step.core.models.HasCsvValueName;
 public enum Function implements HasCsvValueName {
     ADJECTIVE("Adjective"),
     ADVERB("Adverb"),
+    ADVERB_WITH_PARTICLE_COMBINED("ADVerb or adverb and particle combined", "Adverb"),
     CONDITIONAL_PARTICLE("CONDitional particle or conjunction", "Conditional"),
     CONJUCTION("conjunction or conjunctive particle", "Conjunctive"),
     CORRELATIVE_INTERROGATIVE_PRONOUN("Correlative or Interrogative pronoun", "Interrogative"),

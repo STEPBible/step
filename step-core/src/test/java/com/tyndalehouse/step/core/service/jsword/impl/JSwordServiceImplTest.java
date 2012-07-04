@@ -30,7 +30,7 @@
  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
-package com.tyndalehouse.step.core.service.impl;
+package com.tyndalehouse.step.core.service.jsword.impl;
 
 import static com.tyndalehouse.step.core.models.LookupOption.INTERLINEAR;
 import static org.junit.Assert.assertEquals;
@@ -90,7 +90,8 @@ public class JSwordServiceImplTest {
         LOGGER.debug(xmlOutputter.outputString(osisFragment));
 
         // do the test
-        final JSwordServiceImpl jsi = new JSwordServiceImpl(null, null);
+        final JSwordPassageServiceImpl jsi = new JSwordPassageServiceImpl(
+                new JSwordVersificationServiceImpl(), null, null);
         final List<LookupOption> options = new ArrayList<LookupOption>();
         options.add(INTERLINEAR);
 
@@ -121,9 +122,9 @@ public class JSwordServiceImplTest {
         LOGGER.debug(xmlOutputter.outputString(osisFragment));
 
         // do the test
-        final JSwordServiceImpl jsi = new JSwordServiceImpl(null, null);
+        final JSwordPassageServiceImpl jsi = new JSwordPassageServiceImpl(
+                new JSwordVersificationServiceImpl(), null, null);
         final List<LookupOption> options = new ArrayList<LookupOption>();
-        options.add(LookupOption.STRONG_NUMBERS);
 
         final String osisText = jsi.getOsisText("KJV", "Romans 1:4", options, "").getValue();
         final SAXBuilder sb = new SAXBuilder();
@@ -138,7 +139,8 @@ public class JSwordServiceImplTest {
      */
     @Test
     public void testSingleReference() {
-        final JSwordServiceImpl jsi = new JSwordServiceImpl(null, null);
+        final JSwordPassageServiceImpl jsi = new JSwordPassageServiceImpl(
+                new JSwordVersificationServiceImpl(), null, null);
         final List<ScriptureReference> refs = jsi.resolveReferences("Gen.1.1", "KJV");
 
         assertEquals(refs.size(), 1);
@@ -151,7 +153,8 @@ public class JSwordServiceImplTest {
      */
     @Test
     public void testMultipleReference() {
-        final JSwordServiceImpl jsi = new JSwordServiceImpl(null, null);
+        final JSwordPassageServiceImpl jsi = new JSwordPassageServiceImpl(
+                new JSwordVersificationServiceImpl(), null, null);
         final List<ScriptureReference> refs = jsi.resolveReferences("Gen.1.1;Gen.1.3", "KJV");
 
         assertEquals(2, refs.size());
@@ -166,7 +169,8 @@ public class JSwordServiceImplTest {
      */
     @Test
     public void testMultiplePassages() {
-        final JSwordServiceImpl jsi = new JSwordServiceImpl(null, null);
+        final JSwordPassageServiceImpl jsi = new JSwordPassageServiceImpl(
+                new JSwordVersificationServiceImpl(), null, null);
         final List<ScriptureReference> refs = jsi.resolveReferences("Gen.1.1-2;Gen.1.4-5", "KJV");
 
         assertEquals(refs.size(), 2);
@@ -181,7 +185,8 @@ public class JSwordServiceImplTest {
      */
     @Test
     public void testGeoPassageExample() {
-        final JSwordServiceImpl jsi = new JSwordServiceImpl(null, null);
+        final JSwordPassageServiceImpl jsi = new JSwordPassageServiceImpl(
+                new JSwordVersificationServiceImpl(), null, null);
 
         // TODO change spaces between 1 and Kgs! This doesn't seem to work...
 
@@ -195,7 +200,8 @@ public class JSwordServiceImplTest {
      */
     @Test
     public void testGetBibleBooks() {
-        final JSwordServiceImpl jsi = new JSwordServiceImpl(null, null);
+        final JSwordMetadataServiceImpl jsi = new JSwordMetadataServiceImpl(
+                new JSwordVersificationServiceImpl());
 
         final List<String> bibleBookNames = jsi.getBibleBookNames("Ma", "ESV");
 
@@ -209,7 +215,8 @@ public class JSwordServiceImplTest {
      */
     @Test
     public void testGetSiblingChapter() {
-        final JSwordServiceImpl jsword = new JSwordServiceImpl(null, null);
+        final JSwordPassageServiceImpl jsword = new JSwordPassageServiceImpl(
+                new JSwordVersificationServiceImpl(), null, null);
 
         // previous chapter tests
         assertEquals("Genesis 1", jsword.getSiblingChapter("Genesis 2", "KJV", true));
@@ -232,7 +239,8 @@ public class JSwordServiceImplTest {
      */
     @Test
     public void testGetPreviousRef() throws NoSuchKeyException {
-        final JSwordServiceImpl jsword = new JSwordServiceImpl(null, null);
+        final JSwordPassageServiceImpl jsword = new JSwordPassageServiceImpl(
+                new JSwordVersificationServiceImpl(), null, null);
         final Book book = Books.installed().getBook("KJV");
         final Key key = book.getKey("Genesis 3:17");
 
@@ -249,7 +257,8 @@ public class JSwordServiceImplTest {
      */
     @Test
     public void testGetNextRef() throws NoSuchKeyException {
-        final JSwordServiceImpl jsword = new JSwordServiceImpl(null, null);
+        final JSwordPassageServiceImpl jsword = new JSwordPassageServiceImpl(
+                new JSwordVersificationServiceImpl(), null, null);
         final Book book = Books.installed().getBook("KJV");
         final Key key = book.getKey("Genesis 3:24");
 
@@ -277,7 +286,8 @@ public class JSwordServiceImplTest {
         LOGGER.debug(xmlOutputter.outputString(osisFragment));
 
         // do the test
-        final JSwordServiceImpl jsi = new JSwordServiceImpl(null, null);
+        final JSwordPassageServiceImpl jsi = new JSwordPassageServiceImpl(
+                new JSwordVersificationServiceImpl(), null, null);
         final List<LookupOption> options = new ArrayList<LookupOption>();
         // options.add(LookupOption.STRONG_NUMBERS);
 
@@ -294,14 +304,17 @@ public class JSwordServiceImplTest {
      */
     @Test
     public void testNumberLookup() {
-        final JSwordServiceImpl j = new JSwordServiceImpl(null, null);
-        assertTrue(j.getOsisTextByVerseNumbers("ESV", "KJV", 4, new ArrayList<LookupOption>(), null)
+        final JSwordPassageServiceImpl j = new JSwordPassageServiceImpl(new JSwordVersificationServiceImpl(),
+                null, null);
+        assertTrue(j.getOsisTextByVerseNumbers("ESV", "KJV", 4, 4, new ArrayList<LookupOption>(), null, null)
                 .getValue().contains("In the beginning"));
-        assertTrue(j.getOsisTextByVerseNumbers("ESV", "KJV", 60000, new ArrayList<LookupOption>(), null)
-                .getValue().contains("The grace of the Lord Jesus"));
         assertTrue(j
-                .getOsisTextByVerseNumbers("FreSegond", "KJV", 60000, new ArrayList<LookupOption>(), null)
-                .getValue().contains("Que la gr\u00e2ce du Seigneur J\u00e9sus soit avec tous!"));
+                .getOsisTextByVerseNumbers("ESV", "KJV", 60000, 60000, new ArrayList<LookupOption>(), null,
+                        null).getValue().contains("The grace of the Lord Jesus"));
+        assertTrue(j
+                .getOsisTextByVerseNumbers("FreSegond", "KJV", 60000, 60000, new ArrayList<LookupOption>(),
+                        null, null).getValue()
+                .contains("Que la gr\u00e2ce du Seigneur J\u00e9sus soit avec tous!"));
 
     }
 

@@ -47,7 +47,7 @@ import com.avaje.ebean.EbeanServer;
 import com.tyndalehouse.step.core.data.entities.GeoPlace;
 import com.tyndalehouse.step.core.data.entities.ScriptureReference;
 import com.tyndalehouse.step.core.service.GeographyService;
-import com.tyndalehouse.step.core.service.JSwordService;
+import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 
 /**
  * Returns geography data
@@ -59,7 +59,7 @@ import com.tyndalehouse.step.core.service.JSwordService;
 public class GeographyServiceImpl implements GeographyService {
     private static final Logger LOG = LoggerFactory.getLogger(GeographyServiceImpl.class);
     private final EbeanServer ebean;
-    private final JSwordService jsword;
+    private final JSwordPassageService jsword;
 
     /**
      * creates a new Geography service implementation
@@ -68,7 +68,7 @@ public class GeographyServiceImpl implements GeographyService {
      * @param jsword the jsword service for access to Crosswire functionality
      */
     @Inject
-    public GeographyServiceImpl(final EbeanServer ebean, final JSwordService jsword) {
+    public GeographyServiceImpl(final EbeanServer ebean, final JSwordPassageService jsword) {
         this.ebean = ebean;
         this.jsword = jsword;
     }

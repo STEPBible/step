@@ -47,7 +47,7 @@ import com.tyndalehouse.step.core.data.create.loaders.CsvData;
 import com.tyndalehouse.step.core.data.entities.GeoPlace;
 import com.tyndalehouse.step.core.data.entities.ScriptureReference;
 import com.tyndalehouse.step.core.data.entities.reference.TargetType;
-import com.tyndalehouse.step.core.service.JSwordService;
+import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 
 /**
  * Translates from {@link CsvData} to {@link GeoPlace}
@@ -56,12 +56,12 @@ import com.tyndalehouse.step.core.service.JSwordService;
  */
 public class OpenBibleDataTranslation implements CsvTranslation<GeoPlace> {
     private static final Logger LOG = LoggerFactory.getLogger(OpenBibleDataTranslation.class);
-    private final JSwordService jsword;
+    private final JSwordPassageService jsword;
 
     /**
      * @param jsword the jsword service to be able to lookup the relevant references
      */
-    public OpenBibleDataTranslation(final JSwordService jsword) {
+    public OpenBibleDataTranslation(final JSwordPassageService jsword) {
         this.jsword = jsword;
     }
 

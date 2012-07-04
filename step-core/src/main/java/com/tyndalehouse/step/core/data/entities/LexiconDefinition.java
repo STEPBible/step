@@ -60,7 +60,6 @@ import com.avaje.ebean.annotation.CacheStrategy;
 public class LexiconDefinition implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
-    @JoinColumn
     private String strong;
     private String original;
     private String originalWithoutAccents;

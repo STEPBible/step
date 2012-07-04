@@ -52,8 +52,9 @@ import org.slf4j.LoggerFactory;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.models.BibleVersion;
 import com.tyndalehouse.step.core.models.Definition;
-import com.tyndalehouse.step.core.service.JSwordService;
 import com.tyndalehouse.step.core.service.ModuleService;
+import com.tyndalehouse.step.core.service.jsword.JSwordModuleService;
+import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import com.tyndalehouse.step.core.utils.CollectionUtils;
 import com.tyndalehouse.step.core.utils.StringConversionUtils;
 
@@ -67,7 +68,8 @@ import com.tyndalehouse.step.core.utils.StringConversionUtils;
 public class ModuleServiceImpl implements ModuleService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ModuleServiceImpl.class);
     private final Map<String, String> defaultLexiconsRefs;
-    private final JSwordService jsword;
+    private final JSwordPassageService jsword;
+    private final JSwordModuleService jswordModuleService;
 
     /**
      * constructs a service to give module information and content
@@ -77,9 +79,10 @@ public class ModuleServiceImpl implements ModuleService {
      */
     @Inject
     public ModuleServiceImpl(@Named("defaultLexiconRefs") final Map<String, String> lexiconRefs,
-            final JSwordService jsword) {
+            final JSwordPassageService jsword, final JSwordModuleService jswordModuleService) {
         this.defaultLexiconsRefs = lexiconRefs;
         this.jsword = jsword;
+        this.jswordModuleService = jswordModuleService;
     }
 
     // TODO: deprecated?
@@ -134,7 +137,7 @@ public class ModuleServiceImpl implements ModuleService {
     @Override
     public List<BibleVersion> getAvailableModules() {
         LOGGER.info("Getting bible versions");
-        return getSortedSerialisableList(this.jsword.getInstalledModules(BookCategory.BIBLE,
+        return getSortedSerialisableList(this.jswordModuleService.getInstalledModules(BookCategory.BIBLE,
                 BookCategory.DICTIONARY, BookCategory.COMMENTARY));
     }
 
@@ -142,10 +145,10 @@ public class ModuleServiceImpl implements ModuleService {
     @Override
     public List<BibleVersion> getAllInstallableModules() {
         LOGGER.info("Returning all modules currently not installed");
-        final List<Book> installedVersions = this.jsword.getInstalledModules(BookCategory.BIBLE,
+        final List<Book> installedVersions = this.jswordModuleService.getInstalledModules(BookCategory.BIBLE,
                 BookCategory.DICTIONARY, BookCategory.COMMENTARY);
-        final List<Book> allModules = this.jsword.getAllModules(BookCategory.BIBLE, BookCategory.DICTIONARY,
-                BookCategory.COMMENTARY);
+        final List<Book> allModules = this.jswordModuleService.getAllModules(BookCategory.BIBLE,
+                BookCategory.DICTIONARY, BookCategory.COMMENTARY);
 
         return getSortedSerialisableList(CollectionUtils.subtract(allModules, installedVersions));
     }

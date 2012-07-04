@@ -44,7 +44,7 @@ import com.tyndalehouse.step.core.data.create.loaders.CsvData;
 import com.tyndalehouse.step.core.data.entities.ScriptureReference;
 import com.tyndalehouse.step.core.data.entities.TimelineEvent;
 import com.tyndalehouse.step.core.data.entities.reference.TargetType;
-import com.tyndalehouse.step.core.service.JSwordService;
+import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 
 /**
  * Translates from {@link CsvData} to {@link TimelineEvent}
@@ -52,12 +52,12 @@ import com.tyndalehouse.step.core.service.JSwordService;
  * @author chrisburrell
  */
 public class TimelineEventTranslation implements CsvTranslation<TimelineEvent> {
-    private final JSwordService jsword;
+    private final JSwordPassageService jsword;
 
     /**
      * @param jsword the jsword service to be able to lookup the relevant references
      */
-    public TimelineEventTranslation(final JSwordService jsword) {
+    public TimelineEventTranslation(final JSwordPassageService jsword) {
         this.jsword = jsword;
     }
 

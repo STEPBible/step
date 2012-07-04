@@ -53,7 +53,7 @@ public class ModuleServiceImplTest {
     public void testGetLookupModule() {
         final Map<String, String> defaultModules = new HashMap<String, String>();
         defaultModules.put("key:", "module");
-        final ModuleServiceImpl msi = new ModuleServiceImpl(defaultModules, null);
+        final ModuleServiceImpl msi = new ModuleServiceImpl(defaultModules, null, null);
 
         assertEquals("module", msi.getLookupModule("key:H2929"));
     }

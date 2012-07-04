@@ -51,8 +51,9 @@ import com.tyndalehouse.step.core.data.create.Loader;
 import com.tyndalehouse.step.core.data.entities.Bookmark;
 import com.tyndalehouse.step.core.data.entities.History;
 import com.tyndalehouse.step.core.data.entities.User;
-import com.tyndalehouse.step.core.service.JSwordService;
 import com.tyndalehouse.step.core.service.UserDataService;
+import com.tyndalehouse.step.core.service.jsword.JSwordModuleService;
+import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 
 /**
  * Provides test data if necessary
@@ -66,7 +67,8 @@ public class TestData {
     private final EbeanServer ebean;
     private final UserDataService userService;
     private final int numCryptoIterations;
-    private final JSwordService jsword;
+    private final JSwordPassageService jsword;
+    private final JSwordModuleService jswordModule;
 
     /**
      * @param ebean the ebean server to persist objects with
@@ -80,11 +82,13 @@ public class TestData {
     @Inject
     public TestData(final EbeanServer ebean, final UserDataService userService,
             @Named("app.security.numIterations") final int numCryptoIterations, final Loader loader,
-            @Named("test.data.modules") final String coreModules, final JSwordService jsword) {
+            @Named("test.data.modules") final String coreModules, final JSwordPassageService jsword,
+            final JSwordModuleService jswordModule) {
         this.ebean = ebean;
         this.userService = userService;
         this.numCryptoIterations = numCryptoIterations;
         this.jsword = jsword;
+        this.jswordModule = jswordModule;
 
         final User u = getUser();
         createBookmarks(u);
@@ -105,15 +109,15 @@ public class TestData {
         for (final String m : modules) {
             LOGGER.trace("Loading [{}]", m);
 
-            if (!this.jsword.isInstalled(m)) {
+            if (!this.jswordModule.isInstalled(m)) {
                 if (!installerInfoRefreshed) {
                     LOGGER.trace("Reloading installers");
-                    this.jsword.reloadInstallers();
+                    this.jswordModule.reloadInstallers();
                     installerInfoRefreshed = true;
                 }
 
                 LOGGER.trace("Installing {} module", m);
-                this.jsword.installBook(m);
+                this.jswordModule.installBook(m);
             } else {
                 LOGGER.info("Book {} already installed", m);
             }

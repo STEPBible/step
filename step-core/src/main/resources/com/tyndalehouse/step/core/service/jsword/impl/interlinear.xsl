@@ -35,7 +35,8 @@
   version="1.0"
   xmlns:jsword="http://xml.apache.org/xalan/java"
   xmlns:morph="xalan://com.tyndalehouse.step.core.service.impl.MorphologyServiceImpl"
-  extension-element-prefixes="jsword morph">
+  xmlns:vocab="xaland://com.tyndalehouse.step.core.service.impl.VocabularyServiceImpl"
+  extension-element-prefixes="jsword morph vocab">
 
   <!--  Version 3.0 is necessary to get br to work correctly. -->
   <xsl:output method="html" version="3.0" omit-xml-declaration="yes" indent="no"/>
@@ -105,6 +106,7 @@
   <xsl:param name="interlinearVersion" select="''" />
   <xsl:param name="interlinearReference" select="''" />
   <xsl:param name="morphologyProvider" />
+  <xsl:param name="vocabProvider" />
  
  
   <!--  TODO: support alternate versification -->
@@ -562,8 +564,10 @@
 						we need a blank. So always call template if turned on -->
 					<xsl:if test="$StrongsNumbers = 'true'">
 						<span class="strongs">
-							<xsl:value-of
-								select="jsword:com.tyndalehouse.step.core.utils.XslHelper.getSpanFromAttributeName(@lemma, $infoFunctionCall)" />
+							<a href="javascript:showInfo('@lemma', this);">
+								<xsl:value-of
+									select="vocab:getDefaultTransliteration($vocabProvider, @lemma)" />
+							</a>						
 						</span>
 					</xsl:if>
 		

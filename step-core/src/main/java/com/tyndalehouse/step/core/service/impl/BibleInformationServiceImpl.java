@@ -53,7 +53,9 @@ import com.tyndalehouse.step.core.models.EnrichedLookupOption;
 import com.tyndalehouse.step.core.models.LookupOption;
 import com.tyndalehouse.step.core.models.OsisWrapper;
 import com.tyndalehouse.step.core.service.BibleInformationService;
-import com.tyndalehouse.step.core.service.JSwordService;
+import com.tyndalehouse.step.core.service.jsword.JSwordMetadataService;
+import com.tyndalehouse.step.core.service.jsword.JSwordModuleService;
+import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 
 /**
  * Command handler returning all available bible versions
@@ -64,39 +66,47 @@ import com.tyndalehouse.step.core.service.JSwordService;
 public class BibleInformationServiceImpl implements BibleInformationService {
     private static final Logger LOGGER = LoggerFactory.getLogger(BibleInformationServiceImpl.class);
     private final List<String> defaultVersions;
-    private final JSwordService jsword;
+    private final JSwordPassageService jswordPassage;
+    private final JSwordModuleService jswordModule;
+    private final JSwordMetadataService jswordMetadata;
 
     /**
      * The bible information service, retrieving content and meta data
      * 
      * @param defaultVersions a list of the default versions that should be installed
-     * @param jsword the jsword service
+     * @param jswordPassage the jsword service
+     * @param jswordModule provides information and handles information relating to module installation, etc.
+     * @param jswordMetadata provides metadata on jsword modules
+     * 
      */
     @Inject
     public BibleInformationServiceImpl(@Named("defaultVersions") final List<String> defaultVersions,
-            final JSwordService jsword) {
-        this.jsword = jsword;
+            final JSwordPassageService jswordPassage, final JSwordModuleService jswordModule,
+            final JSwordMetadataService jswordMetadata) {
+        this.jswordPassage = jswordPassage;
         this.defaultVersions = defaultVersions;
+        this.jswordModule = jswordModule;
+        this.jswordMetadata = jswordMetadata;
     }
 
     @Override
     public List<BibleVersion> getAvailableBibleVersions(final boolean allVersions, final String locale) {
         LOGGER.info("Getting bible versions with locale [{}] and allVersions=[{}]", locale, allVersions);
-        return getSortedSerialisableList(this.jsword.getInstalledModules(allVersions, locale,
+        return getSortedSerialisableList(this.jswordModule.getInstalledModules(allVersions, locale,
                 BookCategory.BIBLE));
     }
 
     @Override
     public OsisWrapper getPassageText(final String version, final int startVerseId, final int endVerseId,
             final List<LookupOption> options, final String interlinearVersion, final Boolean roundUp) {
-        return this.jsword.getOsisTextByVerseNumbers(version, version, startVerseId, endVerseId, options,
-                interlinearVersion, roundUp);
+        return this.jswordPassage.getOsisTextByVerseNumbers(version, version, startVerseId, endVerseId,
+                options, interlinearVersion, roundUp);
     }
 
     @Override
     public OsisWrapper getPassageText(final String version, final String reference,
             final List<LookupOption> options, final String interlinearVersion) {
-        return this.jsword.getOsisText(version, reference, options, interlinearVersion);
+        return this.jswordPassage.getOsisText(version, reference, options, interlinearVersion);
     }
 
     @Override
@@ -116,7 +126,7 @@ public class BibleInformationServiceImpl implements BibleInformationService {
 
     @Override
     public List<LookupOption> getFeaturesForVersion(final String version) {
-        final List<LookupOption> features = this.jsword.getFeatures(version);
+        final List<LookupOption> features = this.jswordMetadata.getFeatures(version);
         if (features.contains(STRONG_NUMBERS)) {
             features.add(INTERLINEAR);
         }
@@ -131,7 +141,7 @@ public class BibleInformationServiceImpl implements BibleInformationService {
     @Override
     public boolean hasCoreModules() {
         for (final String version : this.defaultVersions) {
-            if (!this.jsword.isInstalled(version)) {
+            if (!this.jswordModule.isInstalled(version)) {
                 return false;
             }
         }
@@ -142,23 +152,23 @@ public class BibleInformationServiceImpl implements BibleInformationService {
     public void installDefaultModules() {
         // we install the module for every core module in the list
         for (final String book : this.defaultVersions) {
-            this.jsword.installBook(book);
+            this.jswordModule.installBook(book);
         }
     }
 
     @Override
     public void installModules(final String reference) {
-        this.jsword.installBook(reference);
+        this.jswordModule.installBook(reference);
     }
 
     @Override
     public List<String> getBibleBookNames(final String bookStart, final String version) {
-        return this.jsword.getBibleBookNames(bookStart, version);
+        return this.jswordMetadata.getBibleBookNames(bookStart, version);
     }
 
     @Override
     public String getSiblingChapter(final String reference, final String version,
             final boolean previousChapter) {
-        return this.jsword.getSiblingChapter(reference, version, previousChapter);
+        return this.jswordPassage.getSiblingChapter(reference, version, previousChapter);
     }
 }

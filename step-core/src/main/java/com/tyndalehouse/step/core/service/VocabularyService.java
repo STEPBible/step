@@ -48,4 +48,12 @@ public interface VocabularyService {
      * @return the lexicon definitions
      */
     List<LexiconDefinition> getDefinitions(String vocabIdentifiers);
+
+    /**
+     * Gets the default transliteration as a string
+     * 
+     * @param vocabIdentifiers the vocab identifiers
+     * @return the string to be displayed
+     */
+    String getDefaultTransliteration(String vocabIdentifiers);
 }

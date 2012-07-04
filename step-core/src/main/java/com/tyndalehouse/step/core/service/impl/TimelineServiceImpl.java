@@ -55,8 +55,9 @@ import com.tyndalehouse.step.core.data.entities.aggregations.TimelineEventsAndDa
 import com.tyndalehouse.step.core.models.EnhancedTimelineEvent;
 import com.tyndalehouse.step.core.models.LookupOption;
 import com.tyndalehouse.step.core.models.OsisWrapper;
-import com.tyndalehouse.step.core.service.JSwordService;
 import com.tyndalehouse.step.core.service.TimelineService;
+import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
+import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
 
 /**
  * The implementation of the timeline service, based on JDBC and ORM Lite to access the database.
@@ -68,16 +69,21 @@ public class TimelineServiceImpl implements TimelineService {
     private static final Logger LOGGER = LoggerFactory.getLogger(TimelineServiceImpl.class);
 
     private final EbeanServer ebean;
-    private final JSwordService jsword;
+    private final JSwordPassageService jsword;
+
+    private final JSwordVersificationService jswordVersification;
 
     /**
      * @param ebean the ebean server with which to lookup data
      * @param jsword the jsword service
+     * @param jswordVersification the versification service
      */
     @Inject
-    public TimelineServiceImpl(final EbeanServer ebean, final JSwordService jsword) {
+    public TimelineServiceImpl(final EbeanServer ebean, final JSwordPassageService jsword,
+            final JSwordVersificationService jswordVersification) {
         this.ebean = ebean;
         this.jsword = jsword;
+        this.jswordVersification = jswordVersification;
     }
 
     @Override
@@ -195,12 +201,12 @@ public class TimelineServiceImpl implements TimelineService {
             // obtain first verse of each reference for display and add "..." on them...
             final int startVerseId = r.getStartVerseId();
 
-            final OsisWrapper osisText = this.jsword.getOsisTextByVerseNumber(version, startVerseId,
-                    new ArrayList<LookupOption>(), null);
+            final OsisWrapper osisText = this.jsword.getOsisTextByVerseNumbers(version, "KJV", startVerseId,
+                    startVerseId, new ArrayList<LookupOption>(), null, null);
 
             if (startVerseId != r.getEndVerseId()) {
                 osisText.setFragment(true);
-                osisText.setReference(this.jsword.getVerseRange(startVerseId, r.getEndVerseId()));
+                osisText.setReference(this.jswordVersification.getVerseRange(startVerseId, r.getEndVerseId()));
             }
 
             ete.add(osisText);

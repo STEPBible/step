@@ -309,7 +309,7 @@ public class FrontController extends HttpServlet {
         try {
             requestId = sr == null ? "Failed to parse request?" : sr.getCacheKey().getResultsKey();
             if (e != null) {
-                final byte[] errorMessage = this.getEncodedJsonResponse(e);
+                final byte[] errorMessage = this.getEncodedJsonResponse(e.getMessage());
                 response.getOutputStream().write(errorMessage);
                 setupHeaders(response, errorMessage.length);
 
@@ -383,7 +383,7 @@ public class FrontController extends HttpServlet {
 
                 // put method in cache
             } catch (final NoSuchMethodException e) {
-                throw new StepInternalException(e.getMessage(), e);
+                throw new StepInternalException("Unable to find matching method for " + methodName, e);
             }
         }
 

@@ -46,6 +46,10 @@ span.interlinear span span span {
 	font-style: italic;
 }
 
+a.smallHeaders {
+	color: #696;
+}
+
 .notesPane {
 	padding: 2px !important;
 	display: block;

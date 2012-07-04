@@ -217,6 +217,10 @@ function showAbout() {
 	});
 };
 
+function makeMasterInterlinear(newVersion) {
+	$.shout("make-master-interlinear", newVersion);
+}
+
 /**
  * Shows the timeline module
  */

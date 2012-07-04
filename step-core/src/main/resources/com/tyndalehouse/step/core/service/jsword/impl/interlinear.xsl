@@ -363,7 +363,7 @@
           	
 			<!-- output a filling gap for strongs -->
 			<xsl:if test="$StrongsNumbers = 'true'">
-				<span class="strongs">Strongs</span>
+				<span class="strongs">Vocab.</span>
 			</xsl:if>
 
 			<!-- output a filling gap for morphs -->
@@ -387,7 +387,7 @@
           	
 			<!-- output a filling gap for strongs -->
 			<xsl:if test="$StrongsNumbers = 'true'">
-				<span class="text"><span class="smallHeaders strongs">Strongs</span></span>
+				<span class="text"><span class="smallHeaders strongs">Vocab.</span></span>
 			</xsl:if>
 
 			<!-- output a filling gap for morphs -->
@@ -1408,13 +1408,13 @@
 				<span class="interlinear">
 					<xsl:choose>
 						<xsl:when test="$printVersions != 'no-print'">
-							<span class="smallHeaders">
+							<a class='smallHeaders' href='javascript:makeMasterInterlinear(&quot;{$nextVersion}&quot;)'>
 							<xsl:call-template name="outputNonBlank">
 								<xsl:with-param name="string">
 									<xsl:value-of select="$nextVersion" />
 								</xsl:with-param>
 							</xsl:call-template>
-							</span>
+							</a>
 						</xsl:when>
 						<xsl:otherwise>&#160;</xsl:otherwise>
 					</xsl:choose>					
@@ -1430,13 +1430,13 @@
 					<span class="interlinear">
 						<xsl:choose>
 							<xsl:when test="$printVersions != 'no-print'">
-								<span class="smallHeaders">
+							<a class='smallHeaders' href='javascript:makeMasterInterlinear(&quot;{$nextVersion}&quot;)'>
 								<xsl:call-template name="outputNonBlank">
 									<xsl:with-param name="string">
 										<xsl:value-of select="$versions" />
 									</xsl:with-param>
 								</xsl:call-template>
-								</span>
+								</a>
 							</xsl:when>
 							<xsl:otherwise>&#160;</xsl:otherwise>
 						</xsl:choose>

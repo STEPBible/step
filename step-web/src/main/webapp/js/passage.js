@@ -148,6 +148,16 @@ function Passage(passageContainer, rawServerVersions, passageId) {
 		.click(function() {
 			self.handleContinuousPassage();
 		});
+	
+	
+	$(this.passage).hear("make-master-interlinear", function(selfElement, newMasterVersion) {
+		var interlinearVersion = self.getSelectedInterlinearVersion();
+		var currentVersion = self.getVersion();
+	
+		self.setSelectedInterlinearVersion(interlinearVersion.replace(newMasterVersion, currentVersion));
+		self.version.val(newMasterVersion);
+		self.changePassage();
+	});
 };
 
 
@@ -459,13 +469,14 @@ Passage.prototype.getSelectedInterlinearVersion = function() {
 	var menuItem = $("a:has(img.selectingTick)[name = 'INTERLINEAR']", this.container).not(".disabled");
 	
 	if(menuItem.length) {
-		// lookup the only link we have which is the passage-id attribute on the
-		// container
-		var passageId = $(this.container).attr("passage-id");
-		return $(".interlinearPopup[passage-id = '" + passageId + "'] > .interlinearVersions").val();
+		return $(".interlinearPopup[passage-id = '" + this.passageId + "'] > .interlinearVersions").val();
 	}
 	return "";
 };
+
+Passage.prototype.setSelectedInterlinearVersion = function(newVersions) {
+	$(".interlinearPopup[passage-id = '" + this.passageId + "'] > .interlinearVersions").val(newVersions);
+}
 
 /**
  * if a number of strongs are given, separated by a space, highlights all of

@@ -179,35 +179,24 @@
 			<span id="detailLevel">&nbsp;</span>
 			<span id="sliderDetailLevelLabel">Quick view</span>
 			
-
-			
+			<div><i>Search for the <a href="#">same word</a>, all <a href="#">related words</a>, or <a href="#">this word with this grammar</a></i></div>
+			<p />
 			<!--  Vocab -->
-			<table class="lexiconTable">
-				<thead>
-					<tr>
-						<td colspan="4"><h3>Vocab</h3></td>
-					</tr>
-				</thead>
-				<tr>
-					<th level="0">Pronunciation</th>
-					<td level="0" id="pronunciation"></td>
-					<th level="0">KJV definition</th>
-					<td level="0" id="kjvDefinition"></td>
-				</tr>
-				<tr>
-					<th level="1">Strongs derivation</th>
-					<td level="1" id="strongsDerivation"></td>
-					<th level="1">Lexicon summary</th>
-					<td level="1" id="lexiconSummary"></td>
-				</tr>
-				<tr>
-					<th level="1">Original Language</th>
-					<td level="1" id="originalLanguage"></td>
-					<th level="2">Transliteration</th>
-					<td level="2" id="transliteration"></td>
-				</tr>
-			</table>
-		
+			<div id="vocabContainer" class="metadataContainer">
+				<h3>Vocab</h3>
+				<div level="0">
+					<div><h5 id="transliteration"></h5> (<span id="original"></span>): <span id="shortDefinition"></span></div>
+					<div id="mounce"></div>
+				</div>
+				<div level="1">
+					<div><h5>Translated in the Bible as: </h5><span id="avTranslation"></span> (Strong's <span id="strong"></span>)</div>
+				</div>	
+				<div level="2">
+					<div>Related Words: <span id="similarStrongs"></span>TODO</div>
+					<div id="lsj"></div>
+				</div>
+			</div>
+			<p />
 			<!--  Gramar -->
 			<div id="grammarContainer" class="metadataContainer">
 				<h3>Grammar</h3>

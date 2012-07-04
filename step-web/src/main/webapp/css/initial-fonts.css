@@ -67,6 +67,16 @@ body {
 	font-size: 8pt;
 }
 
+.metadataContainer div {
+	font-size: 8pt;
+}
+
+#origin a {
+	color: #696;
+	font-size: 8pt;
+}
+
+
 .metadataContainer h5 {
 	font-size: 8pt;
 	display: inline;
@@ -77,9 +87,6 @@ body {
 	text-style: italic;
 }
 
-.lexiconTable th {
-	color: #669;
-}
 
 /********************************/
 /** Other labels                */

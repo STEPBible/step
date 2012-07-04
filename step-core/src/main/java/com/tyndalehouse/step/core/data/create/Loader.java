@@ -139,6 +139,7 @@ public class Loader {
             loadOpenBibleGeography();
             loadDictionaryArticles();
             loadRobinsonMorphology();
+            loadLexicon();
             this.ebean.commitTransaction();
         } finally {
             this.ebean.endTransaction();

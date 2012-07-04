@@ -31,8 +31,6 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
 
-var vocabSpans = ["originalLanguage", "transliteration", "pronunciation", "kjvDefinition", "strongsDerivation", "lexiconSummary"];
-
 /**
  * The bookmarks components record events that are happening across the application,
  * for e.g. passage changes, but will also show related information to the passage.
@@ -102,10 +100,8 @@ LexiconDefinition.prototype.showOriginalWordData = function(data) {
 	var detailLevel = $("#selectedDetail", this.popup).val();
 	
 	this.populateIds(data.morphInfos, "#grammarContainer");
+	this.populateIds(data.vocabInfos, "#vocabContainer");
 	
-//	this.renderPopupTable(data.morphInfos, detailLevel, morphSpans);
-	//TODO remove renderPopupTable once vocabInfos is done...
-	this.renderPopupTable(data.vocabInfos, detailLevel, vocabSpans);
 };
 
 
@@ -114,7 +110,11 @@ LexiconDefinition.prototype.populateIds = function(data, container) {
 		if(item.id) {
 			var content = data[0][item.id];
 			if(content) {
-				$(item).html(content.replace(/_(.*)_/g, "<span class=\"emphasisePopupText\">$1</span>"));
+				if(content.replace) {
+					content = content.replace(/_(.*)_/g, "<span class=\"emphasisePopupText\">$1</span>");
+				}
+				
+				$(item).html(content);
 			}
 		}
 		
@@ -129,29 +129,6 @@ LexiconDefinition.prototype.showContext = function(data) {
 	var detailLevel = $("#selectedDetail", this.popup).val();
 	
 };
-
-LexiconDefinition.prototype.renderPopupTable = function(morphInfos, level, infoSpans) {
-	var item;
-	if(morphInfos == null || morphInfos[0] == null) {
-		item = new Object();
-	} else {
-		item = morphInfos[0];
-	}
-	
-	for(x in infoSpans) {
-		var i = infoSpans[x];
-		if($.isArray(i)) {
-			if(item[i[1]] != null && item[i[1]] != "") {
-				$("#" + i[0]).html(item[i[0]] + "(" + item[i[1]] + ")");
-			} else {
-				$("#" + i[0]).html(item[i[0]]);
-			}
-		} else {
-			$("#" + i).html(addNotApplicableString(item[i]));
-		}
-	}
-};
-
 
 
 LexiconDefinition.prototype.getShortKey = function(k) {

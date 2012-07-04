@@ -33,6 +33,7 @@
 package com.tyndalehouse.step.rest.controllers;
 
 import static com.tyndalehouse.step.core.exceptions.UserExceptionType.CONTROLLER_INITIALISATION_ERROR;
+import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
 import static com.tyndalehouse.step.core.utils.ValidateUtils.notNull;
 
 import java.util.ArrayList;
@@ -46,6 +47,7 @@ import com.tyndalehouse.step.core.data.entities.morphology.Morphology;
 import com.tyndalehouse.step.core.models.BibleVersion;
 import com.tyndalehouse.step.core.service.ModuleService;
 import com.tyndalehouse.step.core.service.MorphologyService;
+import com.tyndalehouse.step.core.service.VocabularyService;
 import com.tyndalehouse.step.models.info.Info;
 import com.tyndalehouse.step.models.info.MorphInfo;
 import com.tyndalehouse.step.rest.framework.Cacheable;
@@ -57,15 +59,18 @@ public class ModuleController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ModuleController.class);
     private final ModuleService moduleService;
     private final MorphologyService morphology;
+    private final VocabularyService vocab;
 
     /**
      * sets up the controller to access module information
      * 
      * @param moduleService the service allowing access to module information
      * @param morphology the morphology service
+     * @param vocabulary the vocabulary service
      */
     @Inject
-    public ModuleController(final ModuleService moduleService, final MorphologyService morphology) {
+    public ModuleController(final ModuleService moduleService, final MorphologyService morphology,
+            final VocabularyService vocabulary) {
         notNull(moduleService,
                 "Intialising the module service in the module administration controller failed",
                 CONTROLLER_INITIALISATION_ERROR);
@@ -74,6 +79,7 @@ public class ModuleController {
                 CONTROLLER_INITIALISATION_ERROR);
         this.moduleService = moduleService;
         this.morphology = morphology;
+        this.vocab = vocabulary;
     }
 
     /**
@@ -97,19 +103,23 @@ public class ModuleController {
     /**
      * a method that returns all the definitions for a particular key
      * 
-     * @param strong the strong number
-     * @param morph the morphology code to lookup
+     * @param vocabIdentifiers the strong number
+     * @param morphIdentifiers the morphology code to lookup
      * @param osisId the id of the verse that we are looking up
      * @return the definition(s) that can be resolved from the reference provided
      */
     @Cacheable(true)
-    public Info getInfo(final String strong, final String morph, final String osisId) {
+    public Info getInfo(final String vocabIdentifiers, final String morphIdentifiers, final String osisId) {
         // notEmpty(strong, "A reference must be provided to obtain a definition", USER_MISSING_FIELD);
-        LOGGER.debug("Getting information for [{}], [{}], [{}]", new Object[] { strong, morph, osisId });
+        LOGGER.debug("Getting information for [{}], [{}], [{}]", new Object[] { this.vocab, morphIdentifiers,
+                osisId });
 
         final Info i = new Info();
-        i.setMorphInfos(translateToInfo(this.morphology.getMorphology(morph)));
+        i.setMorphInfos(translateToInfo(this.morphology.getMorphology(morphIdentifiers)));
 
+        if (isNotBlank(vocabIdentifiers)) {
+            i.setVocabInfos(this.vocab.getDefinitions(vocabIdentifiers));
+        }
         return i;
     }
 

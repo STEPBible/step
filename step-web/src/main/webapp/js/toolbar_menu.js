@@ -63,6 +63,10 @@ function ToolbarMenu(passageId, menuRoot) {
 	$(menuRoot).hear("version-changed-" + this.passageId, function(selfElement, version) {
 		self.refreshMenuOptions(version);
 	});
+	
+	$(menuRoot).hear("version-changed-dynamically" + this.passageId, function(selfElement, version) {
+		self.refreshMenuOptions(version);
+	});
 }
 
 /**

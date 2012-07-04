@@ -1408,7 +1408,7 @@
 				<span class="interlinear">
 					<xsl:choose>
 						<xsl:when test="$printVersions != 'no-print'">
-							<a class='smallHeaders' href='javascript:makeMasterInterlinear(&quot;{$nextVersion}&quot;)'>
+							<a class='smallHeaders' href='#' onclick='javascript:makeMasterInterlinear(this, &quot;{$nextVersion}&quot;)'>
 							<xsl:call-template name="outputNonBlank">
 								<xsl:with-param name="string">
 									<xsl:value-of select="$nextVersion" />

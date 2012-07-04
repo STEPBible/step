@@ -150,13 +150,14 @@ function Passage(passageContainer, rawServerVersions, passageId) {
 		});
 	
 	
-	$(this.passage).hear("make-master-interlinear", function(selfElement, newMasterVersion) {
+	$(this.passage).hear("make-master-interlinear-" + this.passageId, function(selfElement, newMasterVersion) {
 		var interlinearVersion = self.getSelectedInterlinearVersion();
 		var currentVersion = self.getVersion();
 	
-		self.setSelectedInterlinearVersion(interlinearVersion.replace(newMasterVersion, currentVersion));
+		self.setSelectedInterlinearVersion(interlinearVersion.replace(newMasterVersion, currentVersion), currentVersion, newMasterVersion);
 		self.version.val(newMasterVersion);
-		self.changePassage();
+		
+		$.shout("version-changed-dynamically" + self.passageId, newMasterVersion);
 	});
 };
 
@@ -474,8 +475,20 @@ Passage.prototype.getSelectedInterlinearVersion = function() {
 	return "";
 };
 
-Passage.prototype.setSelectedInterlinearVersion = function(newVersions) {
-	$(".interlinearPopup[passage-id = '" + this.passageId + "'] > .interlinearVersions").val(newVersions);
+Passage.prototype.setSelectedInterlinearVersion = function(newVersions, newlyAvailable, noLongerAvailable) {
+	var popup = $(".interlinearPopup[passage-id = '" + this.passageId + "']")
+	
+	//set the popup underlying text
+	$(".interlinearVersions", popup).val(newVersions);
+	
+	var input = $("input[value = '" + newlyAvailable + "']", popup);
+	input.removeAttr('disabled');
+	input.next().removeClass('inactive');
+	
+	//now disable the current one
+	var currentVersion = $("input[value = '" + noLongerAvailable + "']", popup);
+	currentVersion.attr('disabled', 'disabled');
+	currentVersion.next().addClass('inactive');
 }
 
 /**

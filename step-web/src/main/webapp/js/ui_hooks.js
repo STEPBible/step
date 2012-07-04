@@ -217,8 +217,8 @@ function showAbout() {
 	});
 };
 
-function makeMasterInterlinear(newVersion) {
-	$.shout("make-master-interlinear", newVersion);
+function makeMasterInterlinear(element, newVersion) {
+	$.shout("make-master-interlinear-" + getPassageId(element), newVersion);
 }
 
 /**

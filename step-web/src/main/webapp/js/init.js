@@ -233,6 +233,10 @@ function initModules(passages) {
 	new Bookmark();
 	new Login();
 	new Title();
+	
+	$(".passageContainer").each(function(i, item) {
+		new Search(item);
+	});
 		
 	var bottomSection = $("#bottomSectionContent");
 	timeline = new TimelineWidget(bottomSection, passages);

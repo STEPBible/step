@@ -68,6 +68,8 @@ SETUP_IS_FIRST_TIME = 					STEP_SERVER_BASE_URL + "setup/isFirstTime/";
 SETUP_INSTALL_DEFAULT_MODULES = 		STEP_SERVER_BASE_URL + "setup/installDefaultModules/";
 SETUP_INSTALL_BIBLE = 					STEP_SERVER_BASE_URL + "setup/installBible/";
 
+SEARCH_DEFAULT = 						STEP_SERVER_BASE_URL + "search/search/";
+
 TIMELINE_GET_EVENTS = 					STEP_SERVER_BASE_URL + "timeline/getEvents/";
 TIMELINE_GET_EVENTS_IN_PERIOD = 		STEP_SERVER_BASE_URL + "timeline/getEventsInPeriod/";
 TIMELINE_GET_EVENTS_FROM_REFERENCE = 	STEP_SERVER_BASE_URL + "timeline/getEventsFromReference/";

@@ -32,12 +32,6 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.service.impl;
 
-import static com.avaje.ebean.Expr.ge;
-import static com.avaje.ebean.Expr.le;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -45,9 +39,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.avaje.ebean.EbeanServer;
-import com.tyndalehouse.step.core.data.entities.ScriptureReference;
+import com.tyndalehouse.step.core.models.SearchResult;
 import com.tyndalehouse.step.core.service.SearchService;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
+import com.tyndalehouse.step.core.service.jsword.JSwordSearchService;
 
 /**
  * A federated search service implementation. see {@link SearchService}
@@ -60,32 +55,42 @@ public class SearchServiceImpl implements SearchService {
     private static final Logger LOGGER = LoggerFactory.getLogger(SearchServiceImpl.class);
     private final EbeanServer ebean;
     private final JSwordPassageService jsword;
+    private final JSwordSearchService jswordSearch;
 
     /**
      * @param ebean the ebean server to carry out the search from
      * @param jsword used to convert references to numerals, etc.
+     * @param jswordSearch the search service for jsword modules
      */
     @Inject
-    public SearchServiceImpl(final EbeanServer ebean, final JSwordPassageService jsword) {
+    public SearchServiceImpl(final EbeanServer ebean, final JSwordPassageService jsword,
+            final JSwordSearchService jswordSearch) {
         this.ebean = ebean;
         this.jsword = jsword;
+        this.jswordSearch = jswordSearch;
     }
 
     @Override
-    public List<ScriptureReference> searchAllByReference(final String references) {
-        LOGGER.debug("Searching for all entries with references of [{}]", references);
-
-        final List<ScriptureReference> inputRefs = this.jsword.resolveReferences(references, "KJV");
-
-        final List<ScriptureReference> searchResults = new ArrayList<ScriptureReference>();
-
-        // do search
-        for (final ScriptureReference r : inputRefs) {
-            searchResults.addAll(this.ebean.find(ScriptureReference.class).fetch("geoPlace")
-                    .fetch("timelineEvent").setDistinct(true).fetch("dictionaryArticle").where()
-                    .and(ge("endVerseId", r.getStartVerseId()), le("startVerseId", r.getEndVerseId()))
-                    .findList());
-        }
-        return searchResults;
+    public SearchResult search(final String version, final String query) {
+        return this.jswordSearch.search(version, query);
     }
+
+    // TODO
+    // @Override
+    // public List<ScriptureReference> searchAllByReference(final String references) {
+    // LOGGER.debug("Searching for all entries with references of [{}]", references);
+    //
+    // final List<ScriptureReference> inputRefs = this.jsword.resolveReferences(references, "KJV");
+    //
+    // final List<ScriptureReference> searchResults = new ArrayList<ScriptureReference>();
+    //
+    // // do search
+    // for (final ScriptureReference r : inputRefs) {
+    // searchResults.addAll(this.ebean.find(ScriptureReference.class).fetch("geoPlace")
+    // .fetch("timelineEvent").setDistinct(true).fetch("dictionaryArticle").where()
+    // .and(ge("endVerseId", r.getStartVerseId()), le("startVerseId", r.getEndVerseId()))
+    // .findList());
+    // }
+    // return searchResults;
+    // }
 }

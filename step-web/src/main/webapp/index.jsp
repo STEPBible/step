@@ -32,7 +32,10 @@
 	    <link rel="stylesheet" type="text/css" href="css/initial-fonts.css" />
 	    <link rel="stylesheet" type="text/css" href="css/passage.css" />
 	    <link rel="stylesheet" type="text/css" href="css/timeline.css" />
+	    <link rel="stylesheet" type="text/css" href="css/search.css" />
+	    <link rel="stylesheet" type="text/css" href="css/fgmenu.css" />
 	
+<!-- 		<script src="libs/fgmenu.js" type="text/javascript"></script> -->
 	    <script src="js/jquery_cookie.js" type="text/javascript"></script>
 		<script src="js/jquery-shout.js" type="text/javascript"></script>
 		<script src="js/ddsmoothmenu.js" type="text/javascript"></script>
@@ -48,6 +51,7 @@
 	    <script src="js/interlinear_popup.js" type="text/javascript"></script>
 	    <script src="js/login.js" type="text/javascript"></script>
 		<script src="js/title.js" type="text/javascript"></script>
+		<script src="js/search.js" type="text/javascript"></script>
 	    <script src="js/init.js" type="text/javascript"></script>
 	<%
 		} else {

@@ -14,12 +14,16 @@ import javax.inject.Singleton;
 
 import org.crosswire.common.progress.JobManager;
 import org.crosswire.common.progress.Progress;
+import org.crosswire.common.progress.WorkEvent;
+import org.crosswire.common.progress.WorkListener;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.BookCategory;
 import org.crosswire.jsword.book.BookFilter;
 import org.crosswire.jsword.book.Books;
 import org.crosswire.jsword.book.install.InstallException;
 import org.crosswire.jsword.book.install.Installer;
+import org.crosswire.jsword.index.IndexManagerFactory;
+import org.crosswire.jsword.index.IndexStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,15 +39,55 @@ import com.tyndalehouse.step.core.utils.ValidateUtils;
  */
 @Singleton
 public class JSwordModuleServiceImpl implements JSwordModuleService {
+    private static final String INSTALLING_BOOK = "Installing book";
     private static final Logger LOGGER = LoggerFactory.getLogger(JSwordModuleServiceImpl.class);
     private static final String ANCIENT_GREEK = "grc";
     private static final String ANCIENT_HEBREW = "hbo";
     private static final String CURRENT_BIBLE_INSTALL_JOB = "Installing book: %s";
     private final List<Installer> bookInstallers;
 
+    /**
+     * @param installers a list of installers to use to download books
+     */
     @Inject
     public JSwordModuleServiceImpl(final List<Installer> installers) {
         this.bookInstallers = installers;
+
+        // add a handler to be notified of all job progresses
+        JobManager.addWorkListener(new WorkListener() {
+
+            @Override
+            public void workStateChanged(final WorkEvent ev) {
+                // Never fired - mailed jsword-devel list. so unfortunately need to use below
+            }
+
+            @Override
+            public void workProgressed(final WorkEvent ev) {
+                // ignore for now...
+                final Progress job = ev.getJob();
+                LOGGER.trace("Work [{}] at [{}] / [{}]", new Object[] { job.getJobName(), job.getTotalWork(),
+                        job.getTotalWork() });
+
+                if (job.isFinished() && job.getJobName().startsWith(INSTALLING_BOOK)) {
+                    handleFinshedBookInstall();
+                }
+            }
+        });
+
+    }
+
+    /**
+     * When a book finishes installation, we'll index it
+     */
+    void handleFinshedBookInstall() {
+        // usually at most one book needs indexing, so let's kick the process off...
+        final List<Book> books = Books.installed().getBooks();
+        for (final Book b : books) {
+            if (IndexStatus.UNDONE.equals(b.getIndexStatus())) {
+                LOGGER.info("Indexing [{}]", b.getInitials());
+                IndexManagerFactory.getIndexManager().scheduleIndexCreation(b);
+            }
+        }
     }
 
     @Override

@@ -30,29 +30,64 @@
  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
-package com.tyndalehouse.step.core.service;
 
-import com.tyndalehouse.step.core.models.SearchResult;
+function Search(passageContainer) {
+	this.context = $(passageContainer);
+	this.passageId = this.context.attr("passage-id");
+	
+	var self = this;
+	var searchButton = $(".searchButton", passageContainer).button(
+			{
+				icons: { primary: 'ui-icon-search' },
+				text: false
+			}
+	).click(function() {
+		self.handleSearch();
+	});
+
+
+	$(".versionSearchBox", this.context).keypress(function(e) {
+	    if(e.which == 13) {
+	    	self.handleSearch();
+	    }
+	});
+	
+	$(".searchScope", this.context).menu({ 
+		content: $("#searchMenu").html()
+//		showSpeed: 400 
+	});
+}
 
 /**
- * Runs various searches across the underlying database
- * 
- * @author chrisburrell
- * 
+ * handles a search click
  */
-public interface SearchService {
-    // /**
-    // * Searches for all entities matching a reference
-    // *
-    // * @param reference the reference to search for
-    // * @return a list of all entities
-    // */
-    // List<ScriptureReference> searchAllByReference(String reference);
+Search.prototype.handleSearch = function() {
+	var self = this;
+	
+	$.getSafe(SEARCH_DEFAULT + $(".passageVersion", this.context).val() + "/" + $(".versionSearchBox", this.context).val(), function(searchQueryResults) {
+		var results = "";
+		var searchResults = searchQueryResults.results;
+		
+		if(searchResults.length == 0) {
+			results += "<span class='notApplicable'>No search results were found</span>";
+		}
+		
+		$.each(searchResults, function(i, item) {
+			results += "<div class='searchResultRow'><span class='searchResultKey'> ";
+			results += goToPassageArrow(true, item.key, "searchKeyPassageArrow");
+			results += item.key;
+			results += goToPassageArrow(false, item.key, "searchKeyPassageArrow");
+			results += "</span>";
+			results += item.preview;
+			results += "</div>";
+		});
 
-    /**
-     * @param version the initials of the book to search through
-     * @param searchQuery the raw search query
-     * @return the list of search results
-     */
-    SearchResult search(String version, String searchQuery);
+		if(searchQueryResults.maxReached == true) {
+			results += "<span class='notApplicable'>The maximum number of search results was reached. Please refine your search to see continue.</span>";
+		}
+		
+		$(".passageContent", self.context).html(results);
+		
+	});
 }
+

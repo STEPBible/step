@@ -91,7 +91,7 @@ body {
 /** Other labels                */
 /********************************/
 .notApplicable {
-	color: lightgrey;
+	color: grey;
 	font-style: italic;
 }
 

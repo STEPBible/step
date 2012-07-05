@@ -1,0 +1,27 @@
+/*******************************************/
+/* TOOLBAR search box                      */
+/*******************************************/
+.versionSearchBox {
+	float: right;
+	margin-top: 4px;
+	margin-right: 4px;
+}
+
+.searchButton {
+	float: right;
+	height: 16px;
+	margin-top: 5px;
+	margin-right: 4px;
+}
+
+.searchResultKey {
+	color: #696;
+}
+
+.searchKeyPassageArrow {
+	display: inline-block;
+}
+
+.searchResultRow {
+	margin-bottom: 10px;
+}

@@ -77,10 +77,12 @@ import com.tyndalehouse.step.core.service.impl.VocabularyServiceImpl;
 import com.tyndalehouse.step.core.service.jsword.JSwordMetadataService;
 import com.tyndalehouse.step.core.service.jsword.JSwordModuleService;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
+import com.tyndalehouse.step.core.service.jsword.JSwordSearchService;
 import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
 import com.tyndalehouse.step.core.service.jsword.impl.JSwordMetadataServiceImpl;
 import com.tyndalehouse.step.core.service.jsword.impl.JSwordModuleServiceImpl;
 import com.tyndalehouse.step.core.service.jsword.impl.JSwordPassageServiceImpl;
+import com.tyndalehouse.step.core.service.jsword.impl.JSwordSearchServiceImpl;
 import com.tyndalehouse.step.core.service.jsword.impl.JSwordVersificationServiceImpl;
 import com.tyndalehouse.step.core.utils.AbstractStepGuiceModule;
 
@@ -115,6 +117,7 @@ public class StepCoreModule extends AbstractStepGuiceModule {
         bind(JSwordModuleService.class).to(JSwordModuleServiceImpl.class).asEagerSingleton();
         bind(JSwordMetadataService.class).to(JSwordMetadataServiceImpl.class).asEagerSingleton();
         bind(JSwordVersificationService.class).to(JSwordVersificationServiceImpl.class).asEagerSingleton();
+        bind(JSwordSearchService.class).to(JSwordSearchServiceImpl.class);
 
         bind(BibleInformationService.class).to(BibleInformationServiceImpl.class).asEagerSingleton();
         bind(ModuleService.class).to(ModuleServiceImpl.class).asEagerSingleton();

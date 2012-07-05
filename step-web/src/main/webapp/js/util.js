@@ -262,8 +262,6 @@ function goToPassageArrow(isLeft, ref, classes) {
 };
 
 
-
-
 function addNotApplicableString(val) {
 	if(val == null || val == "") {
 		return "<span class='notApplicable'>N/A</span>";

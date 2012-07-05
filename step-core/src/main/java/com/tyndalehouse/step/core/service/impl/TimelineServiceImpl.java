@@ -202,7 +202,7 @@ public class TimelineServiceImpl implements TimelineService {
             final int startVerseId = r.getStartVerseId();
 
             final OsisWrapper osisText = this.jsword.getOsisTextByVerseNumbers(version, "KJV", startVerseId,
-                    startVerseId, new ArrayList<LookupOption>(), null, null);
+                    startVerseId, new ArrayList<LookupOption>(), null, null, true);
 
             if (startVerseId != r.getEndVerseId()) {
                 osisText.setFragment(true);

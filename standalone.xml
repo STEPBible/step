@@ -42,5 +42,15 @@
 			<source>README.txt</source>
 			<outputDirectory>/webapps</outputDirectory>
 		</file>
+		<file>
+			<source>step-server/src/main/run/runStep.bat</source>
+			<outputDirectory>/</outputDirectory>
+			<filtered>true</filtered>
+		</file>
+		<file>
+			<source>step-server/src/main/run/runStep.sh</source>
+			<outputDirectory>/</outputDirectory>
+			<filtered>true</filtered>
+		</file>
 	</files>
 </assembly>

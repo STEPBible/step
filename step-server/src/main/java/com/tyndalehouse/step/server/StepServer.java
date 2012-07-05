@@ -38,9 +38,9 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
 
-import org.mortbay.jetty.Server;
-import org.mortbay.jetty.webapp.WebAppContext;
-import org.mortbay.xml.XmlConfiguration;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.webapp.WebAppContext;
+import org.eclipse.jetty.xml.XmlConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
@@ -83,6 +83,8 @@ public final class StepServer {
 
             // start the server
             jetty.start();
+            Desktop.getDesktop().browse(new URI("http://localhost:8989/step-web/"));
+            jetty.join();
         } catch (final SAXException e) {
             LOGGER.error(e.getMessage(), e);
         } catch (final IOException e) {
@@ -103,7 +105,6 @@ public final class StepServer {
         try {
             final StepServer ms = new StepServer();
             ms.start();
-            Desktop.getDesktop().browse(new URI("http://localhost:8989/step-web/index.html"));
 
         } catch (final Exception e) {
             LOGGER.debug(e.getMessage(), e);

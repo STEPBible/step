@@ -100,7 +100,7 @@ public class BibleInformationServiceImpl implements BibleInformationService {
     public OsisWrapper getPassageText(final String version, final int startVerseId, final int endVerseId,
             final List<LookupOption> options, final String interlinearVersion, final Boolean roundUp) {
         return this.jswordPassage.getOsisTextByVerseNumbers(version, version, startVerseId, endVerseId,
-                options, interlinearVersion, roundUp);
+                options, interlinearVersion, roundUp, false);
     }
 
     @Override

@@ -95,10 +95,11 @@ public interface JSwordPassageService {
      * @param options the list of options for the lookup operation
      * @param interlinearVersion the version to add if there is an interlinear request, or blank if not
      * @param roundReference TODO
+     * @param ignoreVerse0 TODO
      * @return the OsisWrapper containing the text
      */
     OsisWrapper getOsisTextByVerseNumbers(String version, String numberedVersion, int startVerseId,
             int endVerseId, List<LookupOption> options, final String interlinearVersion,
-            Boolean roundReference);
+            Boolean roundReference, boolean ignoreVerse0);
 
 }

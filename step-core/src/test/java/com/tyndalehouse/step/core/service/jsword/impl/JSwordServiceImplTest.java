@@ -306,14 +306,14 @@ public class JSwordServiceImplTest {
     public void testNumberLookup() {
         final JSwordPassageServiceImpl j = new JSwordPassageServiceImpl(new JSwordVersificationServiceImpl(),
                 null, null);
-        assertTrue(j.getOsisTextByVerseNumbers("ESV", "KJV", 4, 4, new ArrayList<LookupOption>(), null, null)
+        assertTrue(j.getOsisTextByVerseNumbers("ESV", "KJV", 4, 4, new ArrayList<LookupOption>(), null, null, false)
                 .getValue().contains("In the beginning"));
         assertTrue(j
                 .getOsisTextByVerseNumbers("ESV", "KJV", 60000, 60000, new ArrayList<LookupOption>(), null,
-                        null).getValue().contains("The grace of the Lord Jesus"));
+                        null, false).getValue().contains("The grace of the Lord Jesus"));
         assertTrue(j
                 .getOsisTextByVerseNumbers("FreSegond", "KJV", 60000, 60000, new ArrayList<LookupOption>(),
-                        null, null).getValue()
+                        null, null, false).getValue()
                 .contains("Que la gr\u00e2ce du Seigneur J\u00e9sus soit avec tous!"));
 
     }

@@ -47,17 +47,19 @@ public class JSwordVersificationServiceImpl implements JSwordVersificationServic
     @Override
     public VerseRange getVerseRangeForSelectedVerses(final String version, final String numberedVersion,
             final Versification versificationForNumberedVersion, final Verse s, final Verse e,
-            final Book lookupVersion, final Boolean roundReference) {
+            final Book lookupVersion, final Boolean roundReference, final boolean ignoreVerse0) {
         VerseRange range;
 
         // TODO - should this be amended? yes - probably
-        final int verseNumber = s.getVerse() == 0 ? 1 : s.getVerse();
+        final int verseNumber = ignoreVerse0 && s.getVerse() == 0 ? 1 : s.getVerse();
+        final int chapterNumber = ignoreVerse0 && s.getChapter() == 0 ? 1 : s.getChapter();
 
         if (!numberedVersion.equals(version)) {
             // need to patch things over
             final Versification versificationLookupVersion = getVersificationForVersion(lookupVersion);
             final Verse targetStartVersionVerse = versificationLookupVersion.patch(s.getBook(),
-                    s.getChapter(), verseNumber);
+                    chapterNumber, verseNumber);
+
             final Verse targetEndVersionsVerse = versificationLookupVersion.patch(e.getBook(),
                     e.getChapter(), e.getVerse());
 

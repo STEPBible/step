@@ -251,7 +251,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
     public synchronized OsisWrapper getOsisTextByVerseNumbers(final String version,
             final String numberedVersion, final int startVerseId, final int endVerseId,
             final List<LookupOption> lookupOptions, final String interlinearVersion,
-            final Boolean roundReference) {
+            final Boolean roundReference, final boolean ignoreVerse0) {
 
         // coded from numbered version.
         final Versification versificationForNumberedVersion = this.versificationService
@@ -263,7 +263,8 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
         final Book lookupVersion = this.versificationService.getBookFromVersion(version);
 
         final VerseRange range = this.versificationService.getVerseRangeForSelectedVerses(version,
-                numberedVersion, versificationForNumberedVersion, s, e, lookupVersion, roundReference);
+                numberedVersion, versificationForNumberedVersion, s, e, lookupVersion, roundReference,
+                ignoreVerse0);
 
         final BookData lookupBookData = new BookData(lookupVersion, range);
         return getTextForBookData(version, lookupBookData.getKey().getOsisID(), lookupOptions,

@@ -1,4 +1,4 @@
-<%@ page language="java"  %> 
+<%@ page pageEncoding="UTF-8" language="java"  %> 
 <%@ page import="com.tyndalehouse.step.jsp.WebStepRequest" %>
 <%@ page import="com.google.inject.Injector"%>
 <%@ page import="com.google.inject.Guice"%>

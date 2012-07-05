@@ -34,7 +34,7 @@ public interface JSwordVersificationService {
 
     VerseRange getVerseRangeForSelectedVerses(String version, String numberedVersion,
             Versification versificationForNumberedVersion, Verse s, Verse e, Book lookupVersion,
-            Boolean roundReference);
+            Boolean roundReference, boolean ignoreVerse0);
 
     /**
      * A helper method to get the versification from a book

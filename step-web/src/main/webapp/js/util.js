@@ -164,6 +164,7 @@ function shortenName(longName, minLength) {
 		 */
 		getSafe : function(url, userFunction) {
 			$.get(url, function(data) {
+			    console.log("Received url ", url, " ", data);
 				if (data && data.errorMessage) {
 					// handle an error message here
 					$.shout("caught-error-message", data);
@@ -174,14 +175,15 @@ function shortenName(longName, minLength) {
 						// be called if we have
 						// succeeded, but here we have no data, so we need to
 						// call ourselve recursively
-						$
-								.shout(data.operation.replace(/_/g, "-")
+						$.shout(data.operation.replace(/_/g, "-")
 										.toLowerCase(), {
 									message : data.errorMessage,
 									callback : function() {
 										$.getSafe(url, userFunction);
 									}
-								});
+						});
+					} else {
+					    step.util.raiseError(data.errorMessage);
 					}
 				} else {
 					userFunction(data);

@@ -72,6 +72,8 @@ import org.xml.sax.SAXException;
 
 import com.tyndalehouse.step.core.data.entities.ScriptureReference;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
+import com.tyndalehouse.step.core.exceptions.UserExceptionType;
+import com.tyndalehouse.step.core.exceptions.ValidationException;
 import com.tyndalehouse.step.core.models.LookupOption;
 import com.tyndalehouse.step.core.models.OsisWrapper;
 import com.tyndalehouse.step.core.service.VocabularyService;
@@ -292,7 +294,16 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
     private BookData getBookData(final String version, final String reference) {
         final Book currentBook = this.versificationService.getBookFromVersion(version);
         try {
-            return new BookData(currentBook, currentBook.getKey(reference));
+            final Key key = currentBook.getKey(reference);
+
+            // TODO, work this one out
+            final int cardinality = key.getCardinality();
+            if (cardinality > 500) {
+                throw new ValidationException("The reference " + reference + " contains too many verses.",
+                        UserExceptionType.USER_VALIDATION_ERROR);
+            }
+
+            return new BookData(currentBook, key);
         } catch (final NoSuchKeyException e) {
             throw new StepInternalException("The verse specified was not found: " + reference, e);
         }

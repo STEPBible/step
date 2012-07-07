@@ -217,7 +217,7 @@ Passage.prototype.changePassage = function() {
     }
 
     // send to server
-    $.get(url, function(text) {
+    $.getSafe(url, function(text) {
         step.state.passage.range(self.passageId, text.startRange, text.endRange, text.multipleRanges);
 
         // we get html back, so we insert into passage:
@@ -312,6 +312,7 @@ Passage.prototype.showPreview = function(previewData) {
     var offset = (80 * (this.passageId == 0 ? 1 : -1)) + " 0";
 
     $.getSafe(BIBLE_GET_BIBLE_TEXT + step.state.passage.version(this.passageId) + "/" + reference, function(data) {
+        console.log(data);
         $("#popupText").html(data.value + "<span class='previewReferenceKey'>[" + data.reference + "]</span>");
 
         var popup = $("#previewReference");

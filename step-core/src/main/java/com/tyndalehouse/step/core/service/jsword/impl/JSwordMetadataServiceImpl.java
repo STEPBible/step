@@ -84,7 +84,6 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
         final Versification versification = this.versificationService.getVersificationForVersion(version);
 
         final List<String> books = getBooks(lookup, versification);
-
         if (books.isEmpty()) {
             return getBooks(lookup, Versifications.instance().getDefaultVersification());
         }
@@ -100,18 +99,46 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
      * @return the list of matching names
      */
     private List<String> getBooks(final String bookStart, final Versification versification) {
-        final String searchPattern = bookStart.toLowerCase(Locale.getDefault());
+        final String searchPattern = bookStart.toLowerCase(Locale.getDefault()).trim();
 
         final List<String> matchingNames = new ArrayList<String>();
         final BibleBookList books = versification.getBooks();
+
+        BibleBook b = null;
         for (final BibleBook book : books) {
             if (book.getLongName().toLowerCase().startsWith(searchPattern)
                     || book.getPreferredName().toLowerCase().startsWith(searchPattern)
                     || book.getShortName().toLowerCase().startsWith(searchPattern)) {
+                b = book;
                 matchingNames.add(book.getShortName());
             }
         }
+
+        if (matchingNames.size() == 1) {
+            return getChapters(versification, b, searchPattern);
+        }
+
         return matchingNames;
     }
 
+    /**
+     * Returns the list of chapters
+     * 
+     * @param versification the versification
+     * @param book the book
+     * @param searchSoFar the search so far
+     * @return a list of books
+     */
+    private List<String> getChapters(final Versification versification, final BibleBook book,
+            final String searchSoFar) {
+        final int lastChapter = versification.getLastChapter(book);
+        final List<String> chapters = new ArrayList<String>();
+        for (int ii = 0; ii < lastChapter; ii++) {
+            final char f = Character.toUpperCase(searchSoFar.charAt(0));
+            final String chapNumber = String.format("%c%s %d", f, searchSoFar.substring(1), ii);
+
+            chapters.add(chapNumber);
+        }
+        return chapters;
+    }
 }

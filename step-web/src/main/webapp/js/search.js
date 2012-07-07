@@ -36,26 +36,25 @@ function Search(passageContainer) {
 	this.passageId = this.context.attr("passage-id");
 	
 	var self = this;
-	var searchButton = $(".searchButton", passageContainer).button(
+
+	this.versionSearchBox = $(".versionSearchBox", this.context).keypress(function(e) {
+	    if(e.which == 13) {
+	    	self.handleSearch();
+	    }
+	});
+
+	
+	$(".searchButton", passageContainer).button(
 			{
 				icons: { primary: 'ui-icon-search' },
 				text: false
 			}
 	).click(function() {
 		self.handleSearch();
-	});
+	}).position({my: "left", at: "right", of: this.versionSearchBox});
 
-
-	$(".versionSearchBox", this.context).keypress(function(e) {
-	    if(e.which == 13) {
-	    	self.handleSearch();
-	    }
-	});
 	
-	$(".searchScope", this.context).menu({ 
-		content: $("#searchMenu").html()
-//		showSpeed: 400 
-	});
+//	$(".searchScope", this.context).hide();
 }
 
 /**
@@ -89,5 +88,6 @@ Search.prototype.handleSearch = function() {
 		$(".passageContent", self.context).html(results);
 		
 	});
-}
+};
+
 

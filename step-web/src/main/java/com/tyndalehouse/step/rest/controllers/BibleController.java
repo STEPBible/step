@@ -107,7 +107,8 @@ public class BibleController {
     @Cacheable(true)
     public List<BibleVersion> getBibleVersions(final String allVersions) {
         final User user = this.serverSession.get().getUser();
-        final String language = user == null ? this.clientSession.get().getLanguage() : user.getLanguage();
+        final String language = user == null || user.getLanguage() == null ? this.clientSession.get()
+                .getLanguage() : user.getLanguage();
         return this.bibleInformation.getAvailableBibleVersions(Boolean.valueOf(allVersions), language);
     }
 

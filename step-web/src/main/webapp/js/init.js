@@ -36,12 +36,16 @@ init();
 //some extensions (perhaps should go in another file)
 String.prototype.startsWith = function(str) { return (this.match("^"+str)==str); };
 
+
+
 var topMenu;
 var timeline;
 
 function init() {
 	$(document).ready(function() {
 		initMenu();
+		$("li[menu-name] a[name]").bind("click", function() { step.menu.handleClickEvent(this); });
+
 		initGlobalHandlers();
 		initLayout();
 
@@ -116,7 +120,7 @@ function initLayout() {
 }
 
 function initMenu() {
-	topMenu = new TopMenu($("#topMenu-ajax"));		
+//	topMenu = new TopMenu($("#topMenu-ajax"));		
 	var menusToBe = $(".innerMenus");
 	menusToBe.each(function(index, value) {
 		new ToolbarMenu(index, value);
@@ -138,9 +142,10 @@ function initData() {
 	
 	//get data for passages
 	// make call to server first and once, to cache all passages:
-	$.getJSON(BIBLE_GET_BIBLE_VERSIONS + "false", function(versionsFromServer) {
-		var passages = initPassages(versionsFromServer, options);
+	// todo work out why step.menu.isOptionSelected("SHOW_ALL_VERSIONS") doesn't return true
+	$.getJSON(BIBLE_GET_BIBLE_VERSIONS + true, function(versionsFromServer) {
 		initInterlinearPopup(versionsFromServer);
+		var passages = initPassages(versionsFromServer, options);
 		initModules(passages);
 	});
 }
@@ -220,7 +225,7 @@ function initGlobalHandlers() {
 	});
 	
 	$("#error").hear("caught-error-message", function(selfElement, data) {
-		raiseError(data);
+		step.util.raiseError(data);
 	});
 }
 
@@ -229,7 +234,7 @@ function initGlobalHandlers() {
  * @param passages a list of passages that were provided
  */
 function initModules(passages) {
-	new LexiconDefinition(topMenu.getLevel());
+	new LexiconDefinition();
 	new Bookmark();
 	new Login();
 	new Title();
@@ -243,8 +248,4 @@ function initModules(passages) {
 	new GeographyWidget(bottomSection, passages);
 }
 
-function raiseError(error) {
-	$("#error").text(error.errorMessage);
-	$("#error").slideDown(250);
-}
 

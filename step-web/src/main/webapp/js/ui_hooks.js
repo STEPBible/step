@@ -58,7 +58,7 @@ BIBLE_GET_PREVIOUS_CHAPTER = 			STEP_SERVER_BASE_URL + "bible/getPreviousChapter
 BIBLE_GET_BY_NUMBER = 					STEP_SERVER_BASE_URL + "bible/getBibleByVerseNumber/";
 
 DICTIONARY_GET_BY_HEADWORD = 			STEP_SERVER_BASE_URL + "dictionary/lookupDictionaryByHeadword/";
-DICTIONARY_SEARCH_BY_HEADWORD = 		STEP_SERVER_BASE_URL + "dictionary/searchDictionaryByHeadword/"
+DICTIONARY_SEARCH_BY_HEADWORD = 		STEP_SERVER_BASE_URL + "dictionary/searchDictionaryByHeadword/";
 
 MODULE_GET_ALL_MODULES = 				STEP_SERVER_BASE_URL + "module/getAllModules/";
 MODULE_GET_ALL_INSTALLABLE_MODULES = 	STEP_SERVER_BASE_URL + "module/getAllInstallableModules/";
@@ -87,37 +87,38 @@ GEOGRAPHY_GET_PLACES = 					STEP_SERVER_BASE_URL + "geography/getPlaces/";
 // SOME DEFAULTS
 //////////////////////////
 var DEFAULT_POPUP_WIDTH = 500;
-var DETAIL_LEVELS = ["Quick", "Deeper", "Detailed"]
-
-/**
- * a helper function that returns the passageId relevant to the menu item provided
- * @param menuItem the menuItem 
- * @return id of the passage
- */
-function getPassageId(menuItem) {
-	return $(menuItem).closest(".passageContainer").attr("passage-id");
-}
-
+var DETAIL_LEVELS = ["Quick", "Deeper", "Detailed"];
 
 
 /** a simple toggler for the menu items */
 function toggleMenuItem(menuItem) {
-	//the hook needs to find the passage id if we're a sub menu
-	var eventName = "pane-menu-toggle-item";
-	var passageId = getPassageId(menuItem);
-	if(passageId) {
-		eventName += "-" + passageId;
-	} else {
-		//append passage
+	//try and find a menu name
+	var menuName = getParentMenuName(menuItem);
+	
+	var passageId = step.passage.getPassageId(menuItem);
+	if(!passageId) {
+		passageId = "";
 	}
 	
-	$.shout(eventName, menuItem.name);
+	$.shout("MENU-" + menuName.name, {
+		menu: getParentMenuName(menuItem), 
+		menuItem: { element: menuItem, name: menuItem.name }, 
+		passageId: passageId 
+	});
+
+	
+	//	$.shout(eventName, menuItem.name);
 };
 
-function changePassage(element, passageReference) {
-	$("#previewReference").hide();
-	$.shout("new-passage-" + getPassageId(element), passageReference);
-}
+function getParentMenuName(menuItem) {
+	var menu = $(menuItem).closest("li[menu-name]");
+	return {element: menu, name: menu.attr("menu-name") };
+} 
+
+//function changePassage(element, passageReference) {
+//	$("#previewReference").hide();
+//	step.state.passage.reference(step.passage.getPassageId(element), passageReference);
+//}
 
 /**
  * show bubble from relevant passage object
@@ -127,7 +128,7 @@ function changePassage(element, passageReference) {
 function viewPassage(element, passageReference) {
 	//only shout preview if the preview bar is not displaying options on it.
 	if(!$("#previewBar").is(":visible") || !$("#previewReference").is(":visible")) {
-		$.shout("show-preview-" + getPassageId(element), { source: element, reference: passageReference});
+		$.shout("show-preview-" + step.passage.getPassageId(element), { source: element, reference: passageReference});
 	}
 }
 
@@ -137,8 +138,8 @@ function viewPassage(element, passageReference) {
 function showPreviewOptions() {
 	var previewBar = $("#previewBar");
 	$("#previewLeft", previewBar).button({text: false, icons: { primary:"ui-icon-arrowthick-1-w" }}).click(
-			function(){
-				$.shout("new-passage-0", $("#previewReference .previewReferenceKey").text().replace(/[\[\]]/g, ""));
+			function() {
+				step.state.passage.reference(0, $("#previewReference .previewReferenceKey").text().replace(/[\[\]]/g, ""));
 				$("#previewClose").trigger("click");
 			});
 	$("#previewClose", previewBar).button({text: false, icons: { primary:"ui-icon-close" }}).click(
@@ -148,7 +149,7 @@ function showPreviewOptions() {
 			});
 	$("#previewRight", previewBar).button({text: false, icons: { primary:"ui-icon-arrowthick-1-e" }}).click(
 			function(){
-				$.shout("new-passage-1", $("#previewReference .previewReferenceKey").text());
+				step.state.passage.reference(1, $("#previewReference .previewReferenceKey").text().replace(/[\[\]]/g, ""));
 				$("#previewClose").trigger("click");
 			});
 	previewBar.show();
@@ -166,15 +167,6 @@ function showPreviewOptions() {
  */
 function login() {
 	$.shout("show-login-popup");
-};
-
-/**
- * shows the interlinear options as a popup
- * @param menuItem the menuItem to tick if the popup selects options
- */
-function showInterlinearChoices(menuItem) {
-	//get passage id from menu parent
-	$.shout("interlinear-menu-option-triggered-" + getPassageId(menuItem)); 
 };
 
 /**
@@ -210,67 +202,8 @@ function showArticle(headword, instance) {
 	});
 }
 
-function showAbout() {
-	//show popup for About box
-	$( "#about" ).dialog({ 
-		buttons: { "Ok": function() { $(this).dialog("close"); } },
-		width: DEFAULT_POPUP_WIDTH,
-		title: "STEP :: Scripture Tools for Every Person",
-	});
-};
 
 function makeMasterInterlinear(element, newVersion) {
-	$.shout("make-master-interlinear-" + getPassageId(element), newVersion);
+	$.shout("make-master-interlinear-" + step.passage.getPassageId(element), newVersion);
 }
 
-/**
- * Shows the timeline module
- */
-function showTimelineModule(menuItem) {
-	showBottomSection(menuItem);
-	$.shout("show-timeline", { passageId : + getPassageId(menuItem) });
-};
-
-/**
- * shows the geography module
- */
-function showGeographyModule(menuItem) {
-	showBottomSection();
-	$.shout("show-maps", { passageId : + getPassageId(menuItem) } );
-};
-
-/**
- * shows the bottom section
- */
-function showBottomSection(menuItem) {
-	if (getPassageId(menuItem) == 0)
-	{
-		var verse = $('#leftPassageReference').val();
-		$('.timelineContext:first').html(verse);
-	}
-	else
-	{
-		var verse = $('#rightPassageReference').val();
-		$('.timelineContext:first').html(verse);	
-	}
-
-	var bottomSection = $("#bottomSection");
-	var bottomSectionContent = $("#bottomSectionContent");
-	
-	bottomSection.show();
-	bottomSection.height(250);
-	bottomSectionContent.height(225);
-	
-	refreshLayout();
-}
-
-function hideBottomSection() {
-	var bottomSection = $("#bottomSection");
-	var bottomSectionContent = $("#bottomSectionContent");
-
-	bottomSection.hide();
-	bottomSection.height(0);
-	bottomSectionContent.height(0);
-	
-	refreshLayout();
-}

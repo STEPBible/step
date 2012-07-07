@@ -44,7 +44,7 @@ function Bookmark(bookmarkContainer) {
 	
 	//listen to passage changes
 	this.historyContainer.hear("passage-changed", function(selfElement, data) {
-		self.addHistory(data.reference);
+		self.addHistory(step.state.passage.reference(data.passageId));
 	});
 
 	this.bookmarkContainer.hear("bookmark-addition-requested", function(selfElement, data) {

@@ -34,6 +34,7 @@
 /**
  * This file is used for setting up variables used by external libraries 
  */
+var step = {};
 
 //Set up the variables for accessing the server
 STEP_SERVER_BASE_URL = "rest/";

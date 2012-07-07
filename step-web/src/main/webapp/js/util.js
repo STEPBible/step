@@ -31,6 +31,43 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
 
+step.util = {
+	getPassageContainer: function(passageId) {
+		return $(".passageContainer[passage-id = " + passageId + "]");
+	},
+
+	getAllPassageIds: function() {
+		return $(".passageContainer").map(function() { return $(this).attr("passage-id"); }).get();
+	},
+	
+	getPassageContent: function(passageId) {
+	    return $(".passageContent", step.util.getPassageContainer(passageId));
+	},
+	
+	raiseError: function (error) {
+	    var message = error.message ? error.message : error;
+	    
+	    $("#error").text(message);
+	    $("#error").slideDown(250);
+	},
+	
+	isBlank: function(s) {
+	    if(s == null) {
+	        return true;
+	    }
+	    return s.match(/^\s*$/g) != null;
+	},
+	
+	raiseErrorIfBlank: function(s, message) {
+	    if(this.isBlank(s)) {
+	        this.raiseError(message);
+	        return false;
+	    }
+	    return true;
+	}
+};
+
+
 /**
  * array comparison
  */
@@ -50,6 +87,10 @@ function compare(s, t) {
 	}
 	return true;
 };
+
+function isEmpty(s) {
+	return !s || s.length == 0;
+}
 
 /**
  * adds a button next to a specified element
@@ -251,13 +292,13 @@ function goToPassageArrow(isLeft, ref, classes) {
 		if(classes) {
 			text += classes;
 		}
-		return text + "' href='#' onclick='$.shout(\"new-passage-0\", \""+ ref + "\");'>&nbsp;</a>";
+		return text + "' href='#' onclick='step.state.passage.reference(0, \""+ ref + "\");'>&nbsp;</a>";
 	} else {
 		var text = "<a class='ui-icon ui-icon-arrowthick-1-e passage-arrow ";
 		if(classes) {
 			text += classes;
 		}
-		return text + "' href='#' onclick='$.shout(\"new-passage-1\", \""+ ref + "\");'>&nbsp;</a>";
+		return text + "' href='#' onclick='step.state.passage.reference(1, \""+ ref + "\");'>&nbsp;</a>";
 	}
 };
 

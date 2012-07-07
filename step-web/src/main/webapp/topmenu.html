@@ -1,25 +1,25 @@
 <div id="topMenu-ajax" class="ddsmoothmenu">
 <a id="loginLink" class="login" href="#" onclick="login()">Login</a>
 <ul>
-	<li><a href="#">View</a>
+	<li menu-name="VIEW"><a href="#">View</a>
 	<ul>
-		<li><a href="#" name="QUICK_VIEW" onclick="toggleMenuItem(this);">Quick</a></li>
-		<li><a href="#" name="DEEPER_VIEW" onclick="toggleMenuItem(this);">Deeper</a></li>
-		<li><a href="#" name="DETAILED_VIEW" onclick="toggleMenuItem(this);">Detailed</a></li>
+		<li><a href="#" name="QUICK_VIEW" level="0">Quick</a></li>
+		<li><a href="#" name="DEEPER_VIEW" level="1">Deeper</a></li>
+		<li><a href="#" name="DETAILED_VIEW" level="2">Detailed</a></li>
 	</ul>
 	</li>
 
-	<li><a href="#">Options</a>
+	<li menu-name="OPTIONS"><a href="#">Options</a>
 	<ul>
-		<li><a href="#" name="SHOW_ALL_VERSIONS" onclick="toggleMenuItem(this);">Show Bibles from every language</a></li>
-		<li><a href="#" name="SYNC_BOTH_PASSAGES" onclick="toggleMenuItem(this);">Sync both passages</a></li>
+		<li><a href="#" name="SHOW_ALL_VERSIONS" >Show Bibles from every language</a></li>
+		<li><a href="#" name="SYNC_BOTH_PASSAGES">Sync both passages</a></li>
 	</ul>
 	</li>
 
-	<li><a href="#">Tools</a>
+	<li menu-name="TOOLS"><a href="#">Tools</a>
 	<ul>
 		<li>
-			<a href="https://repository-step.forge.cloudbees.com/snapshot/com/tyndalehouse/step/step-mvn/1.0-SNAPSHOT/">Download the Desktop application</a></li>
+			<a href="https://repository-step.forge.cloudbees.com/snapshot/com/tyndalehouse/step/step-mvn/1.0-SNAPSHOT/" target="_blank">Download the Desktop application</a></li>
 		<li><a href="#" class="notYetImplemented">Install Core Bibles [Coming soon]</a></li>
 		<li><a href="#" class="notYetImplemented">Update [Coming soon]</a></li>
 		<li><a href="#" class="notYetImplemented">User preferences [Coming soon]</a></li>
@@ -27,11 +27,11 @@
 	</li>
 
 	
-	<li><a href="#">Help</a>
+	<li menu-name="HELP"><a href="#">Help</a>
 	<ul>
-		<li><a href="#" class="notYetImplemented">Help manual [Coming soon]</a></li>
-		<li><a href="#" class="notYetImplemented">Tips &amp; Tricks [Coming soon]</a></li>
-		<li><a href="#" onclick="showAbout();">About...</a></li>
+		<li><a href="http://stepweb.atlassian.net/wiki/display/TYNSTEP/STEP+Help+Manual" target="_blank">Online Help manual</a></li>
+		<li><a href="res/manual.pdf" target="_blank">Offline Help manual</a></li>
+		<li><a href="#" name="ABOUT">About...</a></li>
 	</ul>
 	</li>
 </ul>

@@ -2,14 +2,16 @@
 /* TOOLBAR search box                      */
 /*******************************************/
 .versionSearchBox {
-	float: right;
-	margin-top: 4px;
-	margin-right: 4px;
+/* 	float: right; */
 }
 
-.searchButton {
+.searchToolbar {
 	float: right;
-	height: 16px;
+	display: inline;
+}
+
+.searchToolbarButton {
+	height: 18px;
 	margin-top: 5px;
 	margin-right: 4px;
 }
@@ -24,4 +26,8 @@
 
 .searchResultRow {
 	margin-bottom: 10px;
+}
+
+.searchScope {
+	width: 200px;
 }

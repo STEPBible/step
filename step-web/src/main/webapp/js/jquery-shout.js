@@ -2,7 +2,7 @@
  * jQuery Shout plugin
  * http://gnu.gabrielfalcao.com/shout
  *
- * Copyright (c) 2009 Gabriel Falcão
+ * Copyright (c) 2009 Gabriel Falcï¿½o
  * Dual licensed under the MIT and GPL 3+ licenses.
  *
  * http://www.opensource.org/licenses/mit-license.php
@@ -43,7 +43,7 @@ jQuery.extend(jQuery.fn,
                              var item = {
                                  source: $self,
                                  callback: messageCallback
-                             }
+                             };
                              jQuery._jq_shout.registry[eventName].push(item);
                          });
     },

@@ -31,7 +31,7 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
 
-var CONTINUOUS_SCROLLING_VERSE_GAP = 50
+var CONTINUOUS_SCROLLING_VERSE_GAP = 50;
 
 /**
  * Definition of the Passage component responsible for displaying OSIS passages
@@ -43,31 +43,50 @@ var CONTINUOUS_SCROLLING_VERSE_GAP = 50
  * @param versions
  *            the list of versions to use to populate the dropdown
  */
+
+step.passage = {
+		getPassageId: function(menuItem) {
+			return $(menuItem).closest(".passageContainer").attr("passage-id");
+		},
+		
+		getReference: function(passageId) {
+			return $(".passageContainer[passage-id = " + passageId + "] .passageReference").val();
+		},
+		
+		/* 2 queues of calls backs for passages */
+		callbacks: [ [], []]
+};
+
+
 function Passage(passageContainer, rawServerVersions, passageId) {
 	var self = this;
 	this.container = passageContainer;
 	this.version = $(".passageVersion", passageContainer);
 	this.reference = $(".passageReference", passageContainer);
 	this.passage = $(".passageContent", passageContainer);
-	this.bookmarkButton = $(".bookmarkPassageLink", passageContainer);
-	this.previousChapter = $(".previousChapter", passageContainer);
-	this.nextChapter = $(".nextChapter", passageContainer);
-	this.continuousPassage = $(".continuousPassage", passageContainer);
+	this.passageId = passageId;
+
+	
+	$(this).hear("passage-state-has-changed-" + passageId, function() {
+		self.changePassage();
+	});
+	
+	
+	
+	
 	this.scrolling = false;
 	this.forceRefresh = false;
-	this.passageId = passageId;
-	this.passageSync = false;
 	
 	this.getBefore = false;
 	this.getAfter = false;
 	
 	// read state from the cookie
-	this.setInitialPassage();
+	step.state.passage.restore(this.passageId);
 	
 	this.initVersionsTextBox(rawServerVersions);
 	this.initReferenceTextBox();
 	
-	//this is so that when we click a word, it highlights it
+// this is so that when we click a word, it highlights it
 //	this.passage.click(function(e) {
 //		var clickedWord = getWordAtPoint(this, e.pageX, e.pageY);
 //		var lookup = clickedWord.replace(/[ ,.;:"]/g, "");
@@ -82,17 +101,7 @@ function Passage(passageContainer, rawServerVersions, passageId) {
 	this.passage.hear("show-all-strong-morphs", function(selfElement, data) {
 		self.higlightStrongs(data);
 	});
-	
-	// register we want to be notified of menu option changes...
-	this.passage.hear("toolbar-menu-options-changed-" + this.passageId, function(selfElement, data) {
-			self.changePassage();
-	});
 
-	// register when we want to be alerted that a bookmark has changed
-	this.passage.hear("new-passage-" + this.passageId, function(selfElement, data) {
-		self.reference.val(data);
-		self.changePassage();
-	});
 
 	// register when we want to be alerted that a bookmark has changed
 	this.passage.hear("show-preview-" + this.passageId, function(selfElement, previewData) {
@@ -104,127 +113,22 @@ function Passage(passageContainer, rawServerVersions, passageId) {
 		self.refreshVersionsTextBox(versions);
 	});
 	
-	this.bookmarkButton.hear("bookmark-passage-" + this.passageId, function(selfElement, data) {
-		self.bookmarkButton.click();
-	});
-	
-	this.passage.hear("sync-passage-activated", function(selfElement, data) {
-		self.doSync();
-	});
-	
-	this.passage.hear("sync-passage-deactivated", function(selfElement, data) {
-		self.deSync();
-	});
 
-	this.bookmarkButton
-		.button({ icons: {primary: "ui-icon-bookmark" }, text: false})
-		.click(function() {
-			$.shout("bookmark-addition-requested", { reference: self.reference.val() });
-	});
 	
-
-	this.previousChapter
-		.button({ icons: {primary: "ui-icon-arrowreturnthick-1-w" }, text: false})
-		.click(function() {
-			$.getSafe(BIBLE_GET_PREVIOUS_CHAPTER + self.reference.val() + "/" + self.version.val(), function(newReference) {
-				self.changePassage(newReference, function() {
-					self.passage.scrollTop(self.passage.prop("scrollHeight") - self.passage.height());	
-				});
-			});
-	});
-
-	this.nextChapter
-		.button({ icons: {primary: "ui-icon-arrowreturnthick-1-w" }, text: false})
-		.click(function() {
-			$.getSafe(BIBLE_GET_NEXT_CHAPTER + self.reference.val() + "/" + self.version.val(), function(newReference) {
-				self.changePassage(newReference, function() {
-					self.passage.scrollTop(0);
-				});
-			});
-	});
 	
-	this.continuousPassage
-		.button({ icons: { primary: "ui-icon-script" }, text: false })
-		.click(function() {
-			self.handleContinuousPassage();
-		});
+	
 	
 	
 	$(this.passage).hear("make-master-interlinear-" + this.passageId, function(selfElement, newMasterVersion) {
 		var interlinearVersion = self.getSelectedInterlinearVersion();
-		var currentVersion = self.getVersion();
+		var currentVersion = step.state.passage.version(this.passageId);
 	
 		self.setSelectedInterlinearVersion(interlinearVersion.replace(newMasterVersion, currentVersion), currentVersion, newMasterVersion);
-		self.version.val(newMasterVersion);
+		step.state.passage.version(this.passageId, newMasterVersion);
 		
 		$.shout("version-changed-dynamically" + self.passageId, newMasterVersion);
 	});
 };
-
-
-Passage.prototype.handleContinuousPassage = function() {
-	if(this.scrolling == false) {
-		if(this.isMultiRange) {
-			raiseError("Continuous scrolling cannot be enabled for mutliple ranges");
-		}
-		
-		this.scrolling = true;
-
-		this.scrollOccurred();
-		
-		//attach to scroll event
-		var self = this;
-		this.passage.scroll(function() {
-			//scrolling occurred, so call handler
-			self.scrollOccurred();
-		});
-	} else {
-		//TODO tidy up continuous scrolling?
-		this.scrolling = false;
-		this.forceRefresh = true;
-		
-		//remove scrolling handlers
-		this.passage.unbind("scroll");
-		this.passage.scrollTop(0);
-		this.changePassage();
-	}
-}
-
-Passage.prototype.scrollOccurred = function() {
-	var self = this;
-
-	//capture total height before
-	var heightBefore = self.passage.prop("scrollHeight");
-	var currentLocation = self.passage.scrollTop();
-	var relativePosition = currentLocation / heightBefore;
-	
-	
-	if(this.getBefore == false && (heightBefore < 2000 || relativePosition < 0.33)) {
-		this.getBefore = true;
-		//expand passage both ways, so look for x verses each way
-		$.getSafe(BIBLE_GET_BY_NUMBER + this.version.val() + "/" + 
-				(this.startVerseId - CONTINUOUS_SCROLLING_VERSE_GAP) + "/" + (this.startVerseId - 1) + "/" + "false/" +
-				this.currentOptions + "/" + this.getSelectedInterlinearVersion(), function(text) {
-			self.passage.prepend(text.value);
-			var heightAfter = self.passage.prop("scrollHeight");
-			self.passage.scrollTop(heightAfter - heightBefore + currentLocation);
-			self.startVerseId = text.startRange;
-			self.getBefore = false;
-		});
-	}
-
-	if(this.getAfter == false && (heightBefore < 2000 || relativePosition > 0.66)) {
-		this.getAfter = true;
-		$.getSafe(BIBLE_GET_BY_NUMBER + this.version.val() + "/" + 
-				(this.endVerseId + 1) + "/" + (this.endVerseId + CONTINUOUS_SCROLLING_VERSE_GAP) + "/" + "true/" +
-				this.currentOptions + "/" + this.getSelectedInterlinearVersion(), function(text) {
-			self.passage.append(text.value);
-			self.endVerseId = text.endRange;
-			self.getAfter = false;
-//			console.log("Continous range is now " + self.startVerseId + " => " + self.endVerseId);
-		});
-	}
-}
 
 
 
@@ -269,13 +173,16 @@ Passage.prototype.initVersionsTextBox = function(rawServerVersions) {
 		minLength: 0,
 		delay: 0,
 		select : function(event, ui) {
-			$(this).val(ui.item.value);
+			step.state.passage.version(self.passageId, ui.item.value);
 			$(this).change();
 		},
 	}).focus(function() {
 		self.version.autocomplete("search", "");
 	}).change(function() {
-		$.shout("version-changed-" + self.passageId, this.value);
+	    if(step.util.raiseErrorIfBlank(this.value, "A version must be selected.")) {
+	        $.shout("version-changed-" + self.passageId, this.value);
+	        $(this).blur();
+	    };
 	});
 	
 	this.version.data( "autocomplete" )._renderItem = function( ul, item ) {
@@ -294,99 +201,65 @@ Passage.prototype.initReferenceTextBox = function() {
 	// set up change for textbox
 	this.reference.autocomplete({
 		source : function(request, response) {
-			$.get(BIBLE_GET_BIBLE_BOOK_NAMES + request.term + "/" + self.version.val(), function(text) {
+			$.get(BIBLE_GET_BIBLE_BOOK_NAMES + request.term + "/" + step.state.passage.version(self.passageId), function(text) {
 				response(text);
 			});
 		},
 		minLength: 0,
 		delay: 0,
 		select : function(event, ui) {
-			$(this).val(ui.item.value);
+			step.state.passage.reference(self.passageId, ui.item.value);
+//			$(this).val(ui.item.value);
 		}
-	}).change(function(){
-		self.changePassage();
+	}).change(function() {
+		step.state.passage.reference(self.passageId, $(this).val());
+		//self.changePassage();
 	});
 };
 
 
-/**
- * sets up the initial passages based on the cookie state
- */
-Passage.prototype.setInitialPassage = function() {
-	var cookieReference = $.cookie("currentReference-" + this.passageId);
-	var cookieVersion = $.cookie("currentVersion-" + this.passageId);
-	if(cookieReference != null) {
-		this.reference.val(cookieReference);
-	}
-	
-	if(cookieVersion != null) {
-		this.version.val(cookieVersion);
-	}
-};
+///**
+// * sets up the initial passages based on the cookie state
+// */
+//Passage.prototype.setInitialPassage = function() {
+//	var cookieReference = $.cookie("currentReference-" + this.passageId);
+//	var cookieVersion = $.cookie("currentVersion-" + this.passageId);
+//	if(cookieReference != null) {
+//		this.reference.val(cookieReference);
+//	}
+//	
+//	if(cookieVersion != null) {
+//		this.version.val(cookieVersion);
+//	}
+//};
 
-/**
- * We are forcing a passage sync, which means that we want to change the passage
- * reference text to match passage-0
- */
-Passage.prototype.doSync = function() {
-	var self = this;
-	if(this.passageId != 0) {
-		this.passageSync = true;
-		this.reference.attr("disabled", "disabled");
-		this.reference.attr("title", "To view a separate passage on this side of the screen, " +
-				"please use the Options menu and disable the 'Sync both passages' option.");
-		this.changePassage();
-		
-		// set up hearer for all new changes
-		this.passage.hear("passage-changed", function(selfElement, data) {
-			if(data.passageId == 0) {
-				self.changePassage();
-			}
-		});
-	}
-};
-
-/**
- * removes the syncing setting
- */
-Passage.prototype.deSync = function() {
-	if(this.passageId != 0) {
-		this.passageSync = false;
-		this.reference.removeAttr("disabled");
-		this.reference.removeAttr("title");
-		this.changePassage();
-		
-		// unregister hearer
-		this.passage.unhear("passage-changed");
-	}
-};
 
 /**
  * changes the passage, with optional parameters
  */
-Passage.prototype.changePassage = function(newReference, callback) {
-    if(newReference) {
-    	this.reference.val(newReference);
-    }
-	
-	
-	// now get the options from toolbar
-	var options = this.getSelectedOptions();
-	var interlinearVersion = this.getSelectedInterlinearVersion();
-	
+Passage.prototype.changePassage = function() {
 	var self = this;
-	var lookupVersion = this.version.val();
-	var lookupReference = this.passageSync ?  $(".passageReference").first().val() : this.reference.val();
+	var lookupVersion = step.state.passage.version(this.passageId);
+	var lookupReference = step.state.passage.reference(this.passageId);   
+	var options = step.state.passage.options(this.passageId);
+	var interlinearVersion = step.state.passage.interlinearVersions(this.passageId);
 	
-	if(this.forceRefresh || (lookupReference && lookupVersion 
-			&& lookupVersion != "" && lookupReference != ""
-			&& (   lookupVersion != $.cookie("currentVersion-" + this.passageId) 
-				|| lookupReference != $.cookie("currentReference-" + this.passageId)
-			    || interlinearVersion != $.cookie("currentInterlinearVersion-" + this.passageId)
-				|| !compare(options, this.currentOptions))) 
-		) {
-		this.forceRefresh = false;
-		
+	
+    if( !step.util.raiseErrorIfBlank(lookupVersion, "A version must be provided") || 
+        !step.util.raiseErrorIfBlank(lookupReference, "A reference must be provided")) {
+        return;
+    }
+
+	
+
+// TODO
+//	if(isEmpty(lookupReference) || isEmpty(lookupVersion)) {
+//		return;
+//	}
+//
+//	
+//	if(this.forceRefresh || step.state.passage.hasChanged(this.passageId, lookupVersion, lookupReference, options, interlinearVersion)) { 
+//		this.forceRefresh = false;
 		
 		var url = BIBLE_GET_BIBLE_TEXT + lookupVersion + "/" + lookupReference;
 		
@@ -400,38 +273,23 @@ Passage.prototype.changePassage = function(newReference, callback) {
 		
 		// send to server
 		$.get(url, function (text) {
+			step.state.passage.range(self.passageId, text.startRange, text.endRange, text.multipleRanges);
+			
 			// we get html back, so we insert into passage:
-			$.cookie("currentReference-" + self.passageId, lookupReference);
-			$.cookie("currentVersion-" + self.passageId, lookupVersion);
-			$.cookie("currentOptions-" + self.passageId, options);
-			$.cookie("currentInterlinearVersion-" + self.passageId, interlinearVersion);
-
-			// TODO remove completely in favour of cookie storage only
-			self.currentOptions = options;
 			self.passage.html(text.value);
+
 			
-			self.startVerseId = text.startRange;
-			self.endVerseId = text.endRange;
-			self.isMultiRange = text.multipleRanges;
 			
-			if(self.isMultiRange) {
-				//disable button
-				self.continuousPassage.attr("disabled", "disabled");
-				self.continuousPassage.attr("title", "Continous passage scrolling is only available when one scripture reference is entered.");
-			} else {
-				self.continuousPassage.removeAttr("disabled");
-				self.continuousPassage.attr("title", "Click here to enable continuous scrolling");
-			}
 			
 			// passage change was successful, so we let the rest of the UI know
-			$.shout("passage-changed", { reference: self.reference.val(), passageId: self.passageId, init: init, version:  lookupVersion} );
+			$.shout("passage-changed", { passageId: self.passageId} );
 			
-			//do callback
-			if(callback) {
-				callback();
+			//execute all callbacks
+			var items = step.passage.callbacks[self.passageId];
+			while(items.length != 0) {
+			    items.pop()();
 			}
 		});
-	}
 };
 
 
@@ -450,18 +308,6 @@ Passage.prototype.highlightStrong = function(strongReference) {
 	}
 };
 
-/**
- * This method scans the currently selected options in the menu to find out what
- * is selected and what is not...
- */
-Passage.prototype.getSelectedOptions = function() {
-	var selectedOptions = [];
-	// we select all ticks, but only enabled
-	$(".innerMenu a:has(img.selectingTick)", this.container).not(".disabled").each(function(index, value) {
-		selectedOptions.push(value.name);
-	});
-	return selectedOptions;
-};
 
 
 Passage.prototype.getSelectedInterlinearVersion = function() {
@@ -476,7 +322,7 @@ Passage.prototype.getSelectedInterlinearVersion = function() {
 };
 
 Passage.prototype.setSelectedInterlinearVersion = function(newVersions, newlyAvailable, noLongerAvailable) {
-	var popup = $(".interlinearPopup[passage-id = '" + this.passageId + "']")
+	var popup = $(".interlinearPopup[passage-id = '" + this.passageId + "']");
 	
 	//set the popup underlying text
 	$(".interlinearVersions", popup).val(newVersions);
@@ -489,7 +335,7 @@ Passage.prototype.setSelectedInterlinearVersion = function(newVersions, newlyAva
 	var currentVersion = $("input[value = '" + noLongerAvailable + "']", popup);
 	currentVersion.attr('disabled', 'disabled');
 	currentVersion.next().addClass('inactive');
-}
+};
 
 /**
  * if a number of strongs are given, separated by a space, highlights all of
@@ -524,7 +370,7 @@ Passage.prototype.showPreview = function(previewData) {
 	var myAnchor = this.passageId == 0 ? "left" : "right";
 	var offset = (80 * (this.passageId == 0 ? 1 : -1)) + " 0";
 	
-	$.getSafe(BIBLE_GET_BIBLE_TEXT + this.version.val() + "/" + reference, function(data) {
+	$.getSafe(BIBLE_GET_BIBLE_TEXT + step.state.passage.version(this.passageId) + "/" + reference, function(data) {
 		$("#popupText").html(data.value + "<span class='previewReferenceKey'>[" + data.reference + "]</span>");
 
 		var popup = $("#previewReference");
@@ -572,9 +418,3 @@ Passage.prototype.getReference = function() {
 	return this.reference.val();
 };
 
-/**
- * @return the reference text
- */
-Passage.prototype.getVersion = function() {
-	return this.version.val();
-};

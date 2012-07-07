@@ -21,7 +21,8 @@
 	<script src="js_init/initLib.js" type="text/javascript"></script>   
     <script src="libs/timeline_js/timeline-api.js" type="text/javascript"></script>
     <script src="libs/jquery-1.7.2.min.js" type="text/javascript"></script>
-    <script src="libs/jquery-ui-1.8.19.custom.min.js" type="text/javascript"></script>
+<!--     <script src="libs/jquery-ui-1.8.19.custom.min.js" type="text/javascript"></script> -->
+	<script src="libs/jquery-ui-1.9-beta.min.js" type="text/javascript"></script>
 	
 	<%
 		if(request.getParameter("debug") != null) {
@@ -33,7 +34,6 @@
 	    <link rel="stylesheet" type="text/css" href="css/passage.css" />
 	    <link rel="stylesheet" type="text/css" href="css/timeline.css" />
 	    <link rel="stylesheet" type="text/css" href="css/search.css" />
-	    <link rel="stylesheet" type="text/css" href="css/fgmenu.css" />
 	
 <!-- 		<script src="libs/fgmenu.js" type="text/javascript"></script> -->
 	    <script src="js/jquery_cookie.js" type="text/javascript"></script>
@@ -46,12 +46,30 @@
 	    <script src="js/ui_hooks.js" type="text/javascript"></script>
 	    <script src="js/timeline.js" type="text/javascript"></script>
 	    <script src="js/geography.js" type="text/javascript"></script>
-	    <script src="js/top_menu.js" type="text/javascript"></script>
 	    <script src="js/toolbar_menu.js" type="text/javascript"></script>
 	    <script src="js/interlinear_popup.js" type="text/javascript"></script>
 	    <script src="js/login.js" type="text/javascript"></script>
 		<script src="js/title.js" type="text/javascript"></script>
 		<script src="js/search.js" type="text/javascript"></script>
+
+		<script src="js/navigation/step.navigation.js" type="text/javascript"></script>	    
+		<script src="js/state/step.state.js" type="text/javascript"></script>
+	    <script src="js/menu/step.menu.js" type="text/javascript"></script>
+
+	    <script src="js/menu/top/help.js" type="text/javascript"></script>
+	    <script src="js/menu/top/options.js" type="text/javascript"></script>
+	    <script src="js/menu/top/tools.js" type="text/javascript"></script>
+	    <script src="js/menu/top/view.js" type="text/javascript"></script>
+	    <script src="js/menu/top/top.menu.ui.js" type="text/javascript"></script>
+	    <script src="js/menu/passage/context.js" type="text/javascript"></script>
+	    <script src="js/menu/passage/display.js" type="text/javascript"></script>
+	    <script src="js/menu/passage/passageTools.js" type="text/javascript"></script>
+	    <script src="js/menu/passage/search.js" type="text/javascript"></script>
+	    <script src="js/menu/defaults.js" type="text/javascript"></script>
+
+	    <script src="js/passage/step.passage.navigation.js" type="text/javascript"></script>
+	    <script src="js/passage/step.passage.navigation.ui.js" type="text/javascript"></script>
+	    <script src="js/bookmark/step.bookmark.ui.js" type="text/javascript"></script>
 	    <script src="js/init.js" type="text/javascript"></script>
 	<%
 		} else {
@@ -127,7 +145,7 @@
 	<div id="bottomSection" class="bottomModule timeline">
 		<div id="bottomModuleHeader" >
 			<span class="timelineContext" style="padding-right: 10px"></span>
-			<span class="timelineContext" style="float: right;" onclick="hideBottomSection();">Close</span>
+			<span class="timelineContext" style="float: right;" onclick="step.navigation.hideBottomSection();">Close</span>
 		</div>
 		<div id="bottomSectionContent" style="clear: both;">	
 			No modules have yet been loaded.

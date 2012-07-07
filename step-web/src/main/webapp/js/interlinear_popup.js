@@ -63,10 +63,30 @@ function InterlinearPopup(versionsFromServer, passageId, interlinearPopup) {
 		self.refreshCheckBoxes();
 	});
 	
+	this.interlinearPopup.hear("initialise-interlinear-versions", function(selfElement, data) {
+		if(data.passageId == self.passageId) {
+			self.init();
+		}
+	});
+	
 	//now do the handlers
 	this.refreshCheckBoxes(versionsFromServer);
 	this.addShowHandler();
 }
+
+InterlinearPopup.prototype.init = function() {
+	var self = this;
+	var interlinearVersions = step.state.passage.interlinearVersions(this.passageId).split(",");
+	
+	$.each(interlinearVersions, function(i, item) {
+		if(!isEmpty(item)) {
+			$("input[value = '" + item + "']", self.interlinearPopup).prop("checked", true);
+		}
+	});
+	
+	//then selected all checked and reset text in box accordingly
+	$(".interlinearVersions",  this.interlinearPopup).val(interlinearVersions);
+};
 
 /**
  * sets up all the checkboxes
@@ -94,6 +114,10 @@ InterlinearPopup.prototype.refreshCheckBoxes = function(versionsFromServer) {
 	this.createCheckboxes(this.versions);
 	this.addHandlersToCheckboxes();
 	this.addAllOptionsHandler();
+	
+	//reset selected options
+	this.init();
+	
 };
 
 /**
@@ -126,8 +150,6 @@ InterlinearPopup.prototype.createCheckboxes = function(strongedVersions) {
 						  "<label for='il_" + ii + "' title='" + longName + "' class='" + disabledLabel +"'>" + shortName + "</label>";
 		allCheckBoxes += "</td>";
 	
-		
-		
 		if((row % 2) == 1) {
 			allCheckBoxes += "</tr>";
 		}
@@ -140,7 +162,7 @@ InterlinearPopup.prototype.createCheckboxes = function(strongedVersions) {
 		}
 	}
 	
-	var allOptions = "<tr><td><input id='il_all' type='checkbox' value='" + allOptionsValue + "' />" +
+	var allOptions = "<tr><td><input id='il_all" + this.passageId + "' type='checkbox' value='" + allOptionsValue + "' />" +
 	  "<label for='il_" + ii + "'>All</label></td><td>&nbsp;</td></tr>";
 	
 	interlinearChoices.append("<table>" + allOptions + allCheckBoxes + "</table>");
@@ -152,7 +174,7 @@ InterlinearPopup.prototype.createCheckboxes = function(strongedVersions) {
  */
 InterlinearPopup.prototype.addHandlersToCheckboxes = function() {
 	var self = this;
-	$("input:checkbox", this.interlinearPopup).not("#il_all").change(function() {
+	$("input:checkbox", this.interlinearPopup).not("#il_all" + this.passageId).change(function() {
 		var currentText = $(".interlinearVersions", self.interlinearPopup).val();
 		var itemValue = this.value;
 		
@@ -181,14 +203,18 @@ InterlinearPopup.prototype.addHandlersToCheckboxes = function() {
  * adds a handler that adds all the options to the textbox
  */
 InterlinearPopup.prototype.addAllOptionsHandler = function() {
-	$("#il_all", this.interlinearPopup).change(function() {
+	var self = this;
+	
+	$("#il_all" + this.passageId, this.interlinearPopup).change(function() {
 		//so on change, we basically put replace the whole text, not just part of it...
-		if(this.checked) {
+		if($(this).is(":checked")) {
+			$("input[type='checkbox']:not([disabled])", self.interlinearPopup).prop('checked', true);
 			$(".interlinearVersions", self.interlinearPopup).val(this.value);
-			$("label[for = 'il_all']", this.interlinearPopup).val("None");
+			$("label", self.interlinearPopup).filter(function() { return $(this).text() == 'All'; } ).html("None");
 		} else {
+			$("input[type='checkbox']", self.interlinearPopup).not(".disabled").prop('checked', false);
 			$(".interlinearVersions", self.interlinearPopup).val("");
-			$("label[for = 'il_all']", this.interlinearPopup).val("All");
+			$("label", self.interlinearPopup).filter(function() { return $(this).text() == 'None'; } ).html("All");
 		}
 	});
 };
@@ -216,18 +242,19 @@ InterlinearPopup.prototype.addShowHandler = function() {
 
 InterlinearPopup.prototype.updateInterlinear = function() {
 	var self = this;
+
+	//update the state - but do not fire change - as menu item will be ticked and this will fire change for us.
+	step.state.passage.interlinearVersions(this.passageId, $(".interlinearVersions", this.interlinearPopup).val(), false);
 	
 	//we check that we have selected some options and alert the menu if so
 	if($("input:checked", self.interlinearPopup).length) {
-		$.shout("pane-menu-internal-state-changed-" + self.passageId, { name: "INTERLINEAR", selected: true });
+		$.shout("interlinear-menu-option", { passageId: self.passageId, name: "INTERLINEAR", selected: true });
 	} else {
-		$.shout("pane-menu-internal-state-changed-" + self.passageId, { name: "INTERLINEAR", selected: false });
+		$.shout("interlinear-menu-option", { passageId: self.passageId, name: "INTERLINEAR", selected: false });
 	}
 	
+	//close the dialog
 	this.interlinearPopup.dialog("close");
-	
-	//not always true but almost always (since we might still have the same options as before)
-	$.shout("toolbar-menu-options-changed-" + self.passageId);
 
 };
 

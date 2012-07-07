@@ -59,7 +59,7 @@ GeographyWidget.prototype.initialiseLibrary = function() {
 	script.src = "https://www.google.com/jsapi?callback=loadMaps";
 	script.type = "text/javascript";
 	document.getElementsByTagName("head")[0].appendChild(script);
-}
+};
 
 function loadMaps() {
   google.load("maps", "3", {"callback" : initialiseFirstTimeMaps, other_params: "sensor=false" });

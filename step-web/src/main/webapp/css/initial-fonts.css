@@ -15,6 +15,10 @@ body {
 	font-size: small;	
 }
 
+.ui-menu-item a {
+		line-height: normal !important;
+}
+
 .ui-widget-header .ui-state-default {
 	color: #669966 ;	
 }

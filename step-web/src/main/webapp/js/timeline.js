@@ -383,7 +383,7 @@ TimelineWidget.prototype.onResize = function() {
  * gets the right bit of the date out.
  */
 TimelineWidget.prototype.getDateInfo = function(dateObj, datePrecision) {
-	var rawDate;
+	var rawDate = "";
 	if(dateObj) {
 		rawDate = Timeline.DateTime.parseIso8601DateTime(dateObj);
 	}
@@ -411,20 +411,19 @@ TimelineWidget.prototype.getDateInfo = function(dateObj, datePrecision) {
 	}
 
 	return text;
-}
+};
 
 
 TimelineWidget.prototype.getDateAdBc = function(rawDate) {
 	return rawDate.getFullYear() < 0 ? "BC" : "AD";
-}
+};
 
 
 /* Overriding the fill in bubble from the timeline library. */
 Timeline.DefaultEventSource.Event.prototype.fillInfoBubble = function (elmt, theme, labeller) { 
-	var self = this;
-	
 	//get event details from server
-	var version = timeline.passages[timeline.passageId].getVersion();
+	var version = step.state.passage.version(timeline.passageId); 
+		
 	$.getSafe(TIMELINE_GET_EVENT_INFO + this.getEventID() + "/" + version, function(eventInfo) {
 		//do title
 		var title = "<div>" + eventInfo.event.title + "</div>";
@@ -446,7 +445,7 @@ Timeline.DefaultEventSource.Event.prototype.fillInfoBubble = function (elmt, the
 			//last character is?
 			var c = certainty[certainty.length -1];
 			
-			var accuracy;
+			var accuracy = [];
 			if(isAlpha(c)) {
 				if(c == 'Y') {
 					accuracy = ["year(s)", 'Y'];
@@ -479,9 +478,9 @@ Timeline.DefaultEventSource.Event.prototype.fillInfoBubble = function (elmt, the
 			if(flags == "EY") {
 				dating += "Estimated year - The year has been estimated in order to preserve the order of events.";
 			} else if(flags == "EM") {
-				dating += "Estimated month - The month has been estimated in order to preserve the order of events."
+				dating += "Estimated month - The month has been estimated in order to preserve the order of events.";
 			}
-			dating += "'>" + flags + "</span>"
+			dating += "'>" + flags + "</span>";
 		}
 		dating += "</div>";
 		

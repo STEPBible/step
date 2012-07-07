@@ -1,30 +1,37 @@
-<span>
-<a href="#" class="searchButton" >Search</a>
+<div class="searchToolbar">
 <input type="text" class="versionSearchBox" />
-</span>
-<ul>
-	<li><a href="#">Display</a>
+<a href="#" class="searchButton searchToolbarButton" >Search</a>
+</div>
+<ul class="paneMenuBar">
+	<li menu-name="DISPLAY"><a href="#" menu-name="DISPLAY">Display</a>
 	<ul>
-		<li><a href="#"  name="HEADINGS" onclick="toggleMenuItem(this);">Headings</a></li>
-		<li><a href="#" name="VERSE_NUMBERS" onclick="toggleMenuItem(this);">Verse Numbers</a></li>
-		<li><a href="#" name="VERSE_NEW_LINE" onclick="toggleMenuItem(this);">Verses on separate lines</a>
-		<li><a href="#" name="RED_LETTER" onclick="toggleMenuItem(this);">Red Letters</a></li>
-		<li><a href="#" name="NOTES" onclick="toggleMenuItem(this);">Notes and References</a></li>
-		<li><a href="#" name="STRONG_NUMBERS" onclick="toggleMenuItem(this);">Vocabulary</a></li>
-		<li><a href="#" name="MORPHOLOGY" onclick="toggleMenuItem(this);">Grammar</a></li>
-		<li><a href="#" name="COLOUR_CODE" onclick="toggleMenuItem(this);" >Colour code text</a></li>
-		<li><a href="#" name="INTERLINEAR" onclick="showInterlinearChoices(this);" >Interlinear...</a></li>
+		<li><a href="#" name="HEADINGS" >Headings</a></li>
+		<li><a href="#" name="VERSE_NUMBERS">Verse Numbers</a></li>
+		<li><a href="#" name="VERSE_NEW_LINE">Verses on separate lines</a>
+		<li><a href="#" name="RED_LETTER">Red Letters</a></li>
+		<li><a href="#" name="NOTES">Notes and References</a></li>
+		<li><a href="#" name="STRONG_NUMBERS">Vocabulary</a></li>
+		<li><a href="#" name="MORPHOLOGY">Grammar</a></li>
+		<li><a href="#" name="COLOUR_CODE" >Colour code text</a></li>
+		<li><a href="#" name="INTERLINEAR" >Interlinear...</a></li>
 	</ul>
 	</li>
-	<li><a href="#">Context</a>
+	<li  menu-name="CONTEXT"><a href="#">Context</a>
 	<ul>
-		<li><a href="#" onclick="showTimelineModule(this);">Timeline</a></li>
-		<li><a href="#" onclick="showGeographyModule(this);">Maps</a></li>
+		<li><a href="#" name="TIMELINE">Timeline</a></li>
+		<li><a href="#" name="GEOGRAPHY">Maps</a></li>
 	</ul>
 	</li>
-	<li><a href="#">Tools</a>
+	<li  menu-name="SEARCH"><a href="#">Search</a>
 	<ul>
-		<li><a href="#" class="bookmarkPassageMenuItem">Bookmark passage</a></li>
+		<li><a href="#" name="SEARCH_SCOPE_BIBLE" >Selected Bible</a></li>
+		<li><a href="#" name="SEARCH_SCOPE_PASSAGE">Selected Passage</a></li>
+		<li><a href="#" name="SEARCH_SCOPE_TIMELINE">Timeline</a></li>
+	</ul>
+	</li>
+	<li menu-name="PASSAGE-TOOLS"><a href="#">Tools</a>
+	<ul>
+		<li><a href="#" name="BOOKMARK" class="bookmarkPassageMenuItem">Bookmark passage</a></li>
 	</ul>
 	</li>
 </ul>

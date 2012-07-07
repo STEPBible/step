@@ -35,13 +35,14 @@
  * The bookmarks components record events that are happening across the application,
  * for e.g. passage changes, but will also show related information to the passage.
  */
-function LexiconDefinition(currentLevel) {
+function LexiconDefinition() {
 	var self = this;
 	//listen for particular types of events and call the prototype functions
 	this.getPopup().hear("show-all-strong-morphs", function(selfElement, data) {
 		self.showDef(data);
 	});
 	
+	var currentLevel = step.state.detail.get();
 	$("#detailLevel").slider({
 		min: 1,
 		max: 3,
@@ -79,10 +80,8 @@ LexiconDefinition.prototype.getPopup = function() {
 
 LexiconDefinition.prototype.showDef = function(data) {
 	var self = this;
-	var popup = self.getPopup();
 	
 	//create all tabs - first remove everything, then readd.
-	var displayedWord = data.displayedWord;
 	var strong = data.strong;
 	var morph = data.morph;
 	var verse = $(data.source).closest("span.verse").filter("a:first").attr("name");
@@ -90,19 +89,15 @@ LexiconDefinition.prototype.showDef = function(data) {
 	//Get info on word
 	$.getSafe(MODULE_GET_INFO + strong + "/" + morph + "/" + verse, function(data) {
 		self.showOriginalWordData(data);
-		self.showContext(data);
 	});
 	
 	this.reposition();
 };
 
 LexiconDefinition.prototype.showOriginalWordData = function(data) {
-	var detailLevel = $("#selectedDetail", this.popup).val();
-	
 	//remove previous information
 	this.populateNames(data.morphInfos, "#grammarContainer");
 	this.populateNames(data.vocabInfos, "#vocabContainer");
-	
 };
 
 
@@ -144,7 +139,6 @@ LexiconDefinition.prototype.populateNames = function(data, container) {
 			var dependencies = dependencyList.split(",");
 			
 			//if any one of the dependencies is to be shown, then we show
-			var show = false;
 			for(var ii = 0; ii < dependencies.length; ii++) {
 				if(data[0][dependencies[ii]] != "") {
 					$(item).toggle(true); 
@@ -154,12 +148,8 @@ LexiconDefinition.prototype.populateNames = function(data, container) {
 			$(item).toggle(false); 
 		}
 	});
-}
-
-LexiconDefinition.prototype.showContext = function(data) {
-	var detailLevel = $("#selectedDetail", this.popup).val();
-	
 };
+
 
 
 LexiconDefinition.prototype.getShortKey = function(k) {
@@ -181,4 +171,4 @@ LexiconDefinition.prototype.reposition = function() {
 			collision: "fit flip",
 		});
 	}
-}
+};

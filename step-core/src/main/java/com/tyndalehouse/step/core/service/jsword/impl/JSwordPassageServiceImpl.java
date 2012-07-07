@@ -326,7 +326,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
                                 resourceURI, osissep);
 
                         // set parameters here
-                        setOptions(tsep, options, version, reference);
+                        setOptions(tsep, options, version);
                         setInterlinearOptions(tsep, interlinearVersion, reference);
                         return tsep;
                     } catch (final URISyntaxException e) {
@@ -415,15 +415,16 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
     }
 
     /**
-     * This method sets up the options for the XSLT transformation
+     * This method sets up the options for the XSLT transformation. Note: the set of options is trimmed to
+     * those actually available
      * 
      * @param tsep the xslt transformer
      * @param options the options available
      * @param version the version to initialise a potential interlinear with
-     * @param textScope the scope of the text to lookup
      */
     protected void setOptions(final TransformingSAXEventProvider tsep, final List<LookupOption> options,
-            final String version, final String textScope) {
+            final String version) {
+
         for (final LookupOption lookupOption : options) {
             if (lookupOption.getXsltParameterName() != null) {
                 tsep.setParameter(lookupOption.getXsltParameterName(), true);

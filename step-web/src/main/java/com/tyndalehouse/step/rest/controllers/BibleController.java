@@ -219,6 +219,7 @@ public class BibleController {
         final List<LookupOption> lookupOptions = new ArrayList<LookupOption>();
         if (userOptions != null) {
             for (final String o : userOptions) {
+
                 lookupOptions.add(LookupOption.valueOf(o.toUpperCase(Locale.ENGLISH)));
             }
         }

@@ -100,13 +100,39 @@ public class BibleInformationServiceImpl implements BibleInformationService {
     public OsisWrapper getPassageText(final String version, final int startVerseId, final int endVerseId,
             final List<LookupOption> options, final String interlinearVersion, final Boolean roundUp) {
         return this.jswordPassage.getOsisTextByVerseNumbers(version, version, startVerseId, endVerseId,
-                options, interlinearVersion, roundUp, false);
+                trim(options, version), interlinearVersion, roundUp, false);
     }
 
     @Override
     public OsisWrapper getPassageText(final String version, final String reference,
             final List<LookupOption> options, final String interlinearVersion) {
-        return this.jswordPassage.getOsisText(version, reference, options, interlinearVersion);
+        return this.jswordPassage.getOsisText(version, reference, trim(options, version), interlinearVersion);
+    }
+
+    /**
+     * Trims the options down to what is supported by the version
+     * 
+     * @param options the options
+     * @param version the version that is being selected
+     * @return a new list of options where both list have been intersected.
+     */
+    private List<LookupOption> trim(final List<LookupOption> options, final String version) {
+        if (options.isEmpty()) {
+            return options;
+        }
+
+        final List<LookupOption> available = getFeaturesForVersion(version);
+        final List<LookupOption> result = new ArrayList<LookupOption>(options.size());
+        // do a crazy bubble intersect
+        for (final LookupOption loOption : options) {
+            for (final LookupOption avOption : available) {
+                if (loOption.equals(avOption)) {
+                    result.add(loOption);
+                    break;
+                }
+            }
+        }
+        return result;
     }
 
     @Override

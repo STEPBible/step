@@ -76,7 +76,13 @@ function InterlinearPopup(versionsFromServer, passageId, interlinearPopup) {
 
 InterlinearPopup.prototype.init = function() {
 	var self = this;
-	var interlinearVersions = step.state.passage.interlinearVersions(this.passageId).split(",");
+	var interlinearVersions = step.state.passage.interlinearVersions(this.passageId);
+	
+	if(!interlinearVersions) {
+	    return;
+	} 
+	interlinearVersions = interlinearVersions.split(",");
+	
 	
 	$.each(interlinearVersions, function(i, item) {
 		if(!isEmpty(item)) {

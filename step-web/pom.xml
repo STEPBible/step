@@ -141,8 +141,8 @@
 		<plugins>
 			<plugin>
 				<groupId>com.samaxes.maven</groupId>
-				<artifactId>maven-minify-plugin</artifactId>
-				<version>1.3.5</version>
+				<artifactId>minify-maven-plugin</artifactId>
+				<version>1.5.1-SNAPSHOT</version>
 				<configuration>
 					<cssSourceDir>css</cssSourceDir>
 					<cssSourceIncludes>
@@ -151,7 +151,7 @@
 					<cssFinalFile>step.css</cssFinalFile>
 					<jsSourceDir>js</jsSourceDir>
 					<jsSourceIncludes>
-						<jsSourceInclude>*.js</jsSourceInclude>
+						<jsSourceInclude>**/*.js</jsSourceInclude>
 					</jsSourceIncludes>
 					<jsFinalFile>step.js</jsFinalFile>
 				</configuration>

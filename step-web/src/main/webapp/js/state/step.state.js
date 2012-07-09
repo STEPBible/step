@@ -37,8 +37,8 @@ step.state = {
 		},
 		
 		restore: function(passageId) {
-			this.version(passageId, this.version(passageId), false);
-			this._storedReference(passageId, this._storedReference(passageId), false);
+		    this._restoreVersion(passageId);
+		    this._restoreReference(passageId);
 			
 			//we restore the menu options manually:
 			this._restoreMenuOptions(passageId, this.options(passageId));
@@ -46,7 +46,7 @@ step.state = {
 			this._restorePassageSync();
 			this._fireStateChanged(passageId);
 		},
-
+		
 		version: function(passageId, version, fireChange) {
 			if(version) {
 				$(".passageVersion", step.util.getPassageContainer(passageId)).val(version);
@@ -166,7 +166,17 @@ step.state = {
 		},
 
 		_restoreMenuOptions: function(passageId, options) {
-            var menuOptions = $.isArray(options) ? options : options.split(",");
+		    if(step.util.isBlank(options)) {
+                //make sure that the state matches the state of the menu items selected
+                var opts = step.menu.getSelectedOptionsForMenu(passageId, 'DISPLAY');
+                if(opts) {
+                    //we read this from the defaults that are already ticked, so just store
+                    this.options(passageId, opts, false);
+                }
+                return;
+            }
+		    
+		    var menuOptions = $.isArray(listOptions) ? listOptions : listOptions.split(",");
             $.shout("initialise-passage-display-options", { passageId: passageId, menuOptions: menuOptions});
         },
 
@@ -176,6 +186,25 @@ step.state = {
         
         _restorePassageSync: function() {
             $.shout("initialise-passage-sync", this.syncMode());
+        },
+
+        _restoreVersion: function(passageId) {            
+            var v = this.version(passageId);
+            if(!step.util.isBlank(v)) {
+                this.version(passageId, v, false);    
+            } else {
+                //use the pre-populated value
+                this.version(passageId, $(".passageVersion", step.util.getPassageContainer(passageId)).val(), false);
+            }
+        },
+        
+        _restoreReference: function(passageId) {
+            var r = this._storedReference(passageId);
+            if(!step.util.isBlank(r)) {
+                this._storedReference(passageId, r, false);
+            } else {
+                this.reference(passageId, $(".passageReference", step.util.getPassageContainer(passageId)).val(), false);
+            }
         },
 
         _fireStateChanged: function(passageId) {

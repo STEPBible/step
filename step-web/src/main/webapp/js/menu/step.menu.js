@@ -55,6 +55,10 @@ step.menu = {
 		return selectedOptions;
 	},
 	
+	getSelectedOptionsForMenu: function(passageId, menuName) {
+	    return this.getSelectedOptions($("li[menu-name=" + menuName + "]", step.util.getPassageContainer(passageId)));
+	},
+	
     isOptionSelected: function(optionName) {
         return this.getMenuItem(optionName).has("img.selectingTick");
     },

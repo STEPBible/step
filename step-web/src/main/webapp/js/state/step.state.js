@@ -1,12 +1,21 @@
 step.state = {
         activeSearch: function(passageId, activeSearch) {
+            //refresh menu options
+            if(activeSearch) {
+                //tick the right menu item
+                step.menu.tickOneItemInMenuGroup('SEARCH', activeSearch, passageId);
+                
+                
+                //show the correct field set
+                this._showRelevantFieldSet(passageId);
+            }
+
             var newValue = this._storeAndRetrieveCookieState(passageId, "activeSearch", activeSearch, true);
             return newValue;
         },
         
         restore: function() {
             //restore active search
-            
             step.state.detail.restore();
             
             var passageIds = step.util.getAllPassageIds();
@@ -14,13 +23,21 @@ step.state = {
                 step.menu.tickMenuItem(step.menu.getMenuItem(this.activeSearch(i), i));
                 step.state.passage.restore(i);
                 step.state.original.restore(i);
+                this._showRelevantFieldSet(i);
             }
+        },
+        
+        _showRelevantFieldSet: function(passageId) {
+            var passageContainer = step.util.getPassageContainer(passageId);
+
+            $(".advancedSearch fieldset", passageContainer).hide();
+            var option = $("a[name ^= 'SEARCH_']:has(img.selectingTick)", passageContainer);
+            var optionName = option.text();
+            $(".advancedSearch legend:contains('" + optionName + "')", passageContainer).parent().show();
         },
         
         _fireStateChanged : function(passageId) {
             var active = this.activeSearch(passageId);
-            
-            $.shout("refresh-passage-display", passageId);
             
             if(!active || active == 'SEARCH_PASSAGE') {
                 $.shout("passage-state-has-changed", {

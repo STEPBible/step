@@ -24,7 +24,7 @@
 					<div><h5>Translated in the Bible as: </h5><span info-name="avTranslation"></span> (Strong's <span info-name="strong"></span>)</div>
 				</div>	
 				<div level="2">
-					<div>Related Words: <span info-name="similarStrongs"></span>TODO</div>
+					<div>Related Words: <span info-name="similarStrongLinks"></span>TODO</div>
 					<div info-name="lsj"></div>
 				</div>
 			</div>

@@ -33,6 +33,7 @@
 package com.tyndalehouse.step.core.data.entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -42,6 +43,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
+
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonProperty;
+
+import com.tyndalehouse.step.core.models.ShortLexiconDefinition;
 
 /**
  * A entitiy representing what we expect to see in a strong definition
@@ -71,10 +77,7 @@ public class LexiconDefinition implements Serializable {
     @Lob
     private String lsj;
 
-    // @ManyToOne
-    // @JoinColumn(name = "parent_definition")
-    // private LexiconDefinition parent;
-
+    @JsonIgnore
     @ManyToMany(cascade = CascadeType.ALL, targetEntity = LexiconDefinition.class)
     @JoinTable(name = "lexicon_relationships", joinColumns = { @JoinColumn(name = "strong") }, inverseJoinColumns = { @JoinColumn(name = "other_strong") })
     private List<LexiconDefinition> similarStrongs;
@@ -247,17 +250,17 @@ public class LexiconDefinition implements Serializable {
         this.originalWithoutAccents = originalWithoutAccents;
     }
 
-    // /**
-    // * @return the parent
-    // */
-    // public LexiconDefinition getParent() {
-    // return this.parent;
-    // }
-    //
-    // /**
-    // * @param parent the parent to set
-    // */
-    // public void setParent(final LexiconDefinition parent) {
-    // this.parent = parent;
-    // }
+    /**
+     * A special getter that returns a list of strongs without their lexicon definiton object
+     * 
+     * @return the list of strong codes
+     */
+    @JsonProperty("similarStrongs")
+    public List<ShortLexiconDefinition> getSimilarStrongCodes() {
+        final List<ShortLexiconDefinition> codes = new ArrayList<ShortLexiconDefinition>();
+        for (final LexiconDefinition l : this.similarStrongs) {
+            codes.add(new ShortLexiconDefinition(l.getStrong(), l.getOriginal()));
+        }
+        return codes;
+    }
 }

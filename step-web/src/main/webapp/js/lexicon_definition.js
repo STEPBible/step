@@ -31,6 +31,24 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
 
+step.lexicon = {
+        passageId: 0,
+        sameWordSearch: function() {
+            var query = $("span[info-name ='strong']").val();
+            if(step.util.raiseErrorIfBlank(query, "No strong data is available")) {
+                step.search.strong.exact(query);
+            }
+        },
+        
+        relatedWordSearch: function() {
+            
+        },
+
+        wordGrammarSearch: function() {
+            
+        }
+};
+
 /**
  * The bookmarks components record events that are happening across the application,
  * for e.g. passage changes, but will also show related information to the passage.
@@ -80,6 +98,10 @@ LexiconDefinition.prototype.getPopup = function() {
 
 LexiconDefinition.prototype.showDef = function(data) {
 	var self = this;
+	
+	step.lexicon.passageId = step.passage.getPassageId(data);
+	
+	
 	
 	//create all tabs - first remove everything, then readd.
 	var strong = data.strong;

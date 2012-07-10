@@ -32,24 +32,24 @@
  ******************************************************************************/
 
 step.util = {
-	getPassageContainer: function(passageId) {
-		return $(".passageContainer[passage-id = " + passageId + "]");
+	getPassageContainer: function(passageIdOrElement) {
+	    //check if we have a number
+	    if(isNaN(parseInt(passageIdOrElement))) {
+	        //assume jquery selector or element
+	        return $(passageIdOrElement).closest(".passageContainer");
+	    }
+	    	    
+		return $(".passageContainer[passage-id = " + passageIdOrElement + "]");
 	},
 
 	getAllPassageIds: function() {
 		return $(".passageContainer").map(function() { return $(this).attr("passage-id"); }).get();
 	},
 	
-	getPassageContent: function(passageId) {
-	    return $(".passageContent", step.util.getPassageContainer(passageId));
+	getPassageContent: function(passageIdOrElement) {
+	    return $(".passageContent", step.util.getPassageContainer(passageIdOrElement));
 	},
-	
-	raiseError: function (error) {
-	    var message = error.message ? error.message : error;
-	    
-	    $("#error").text(message);
-	    $("#error").slideDown(250);
-	},
+
 	
 	isBlank: function(s) {
 	    if(s == null) {
@@ -57,7 +57,14 @@ step.util = {
 	    }
 	    return s.match(/^\s*$/g) != null;
 	},
-	
+	   
+    raiseError: function (error) {
+        var message = error.message ? error.message : error;
+        
+        $("#error").text(message);
+        $("#error").slideDown(250);
+    },
+    
 	raiseErrorIfBlank: function(s, message) {
 	    if(this.isBlank(s)) {
 	        this.raiseError(message);

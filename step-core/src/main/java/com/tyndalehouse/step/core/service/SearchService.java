@@ -55,4 +55,18 @@ public interface SearchService {
      * @return the list of search results
      */
     SearchResult search(String version, String searchQuery);
+
+    /**
+     * @param version the initials of the book to search through
+     * @param searchStrong 1 or more strong numbers
+     * @return the search results
+     */
+    SearchResult searchStrong(String version, String searchStrong);
+
+    /**
+     * @param version the initials of the book to search through
+     * @param searchStrong 1 or more strong numbers
+     * @return the search results
+     */
+    SearchResult searchRelatedStrong(String version, String searchStrong);
 }

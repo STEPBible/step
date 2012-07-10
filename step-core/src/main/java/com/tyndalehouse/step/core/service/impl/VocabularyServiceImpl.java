@@ -87,10 +87,22 @@ public class VocabularyServiceImpl implements VocabularyService {
 
             if (i.length() > START_STRONG_KEY + 1
                     && (i.startsWith(LOWER_STRONG) || i.startsWith(HIGHER_STRONG))) {
-                idList.add(String.format("%c%04d", i.charAt(START_STRONG_KEY),
-                        Integer.parseInt(i.substring(START_STRONG_KEY + 1))));
+                idList.add(padStrongNumber(i, true));
             }
         }
         return idList;
+    }
+
+    /**
+     * Pads a strong number with the correct number of 0s
+     * 
+     * @param strongNumber the strong number
+     * @param prefix true to indicate the strongNumber is preceded with strong:
+     * @return the padded strong number
+     */
+    public static String padStrongNumber(final String strongNumber, final boolean prefix) {
+        final int baseIndex = prefix ? START_STRONG_KEY : 0;
+        return String.format("%c%04d", strongNumber.charAt(baseIndex),
+                Integer.parseInt(strongNumber.substring(baseIndex + 1)));
     }
 }

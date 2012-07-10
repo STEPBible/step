@@ -208,7 +208,6 @@ public class Loader {
 
         // persist strongs to db
         this.ebean.save(allDefs);
-
         return allDefs.size();
     }
 

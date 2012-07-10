@@ -50,7 +50,8 @@
 	    <script src="js/interlinear_popup.js" type="text/javascript"></script>
 	    <script src="js/login.js" type="text/javascript"></script>
 		<script src="js/title.js" type="text/javascript"></script>
-		<script src="js/search.js" type="text/javascript"></script>
+		<script src="js/search/step.search.js" type="text/javascript"></script>
+		<script src="js/search/step.search.ui.js" type="text/javascript"></script>
 
 		<script src="js/navigation/step.navigation.js" type="text/javascript"></script>	    
 		<script src="js/state/step.state.js" type="text/javascript"></script>
@@ -67,6 +68,7 @@
 	    <script src="js/menu/passage/search.js" type="text/javascript"></script>
 	    <script src="js/menu/defaults.js" type="text/javascript"></script>
 
+	    <script src="js/passage/step.passage.ui.js" type="text/javascript"></script>
 	    <script src="js/passage/step.passage.navigation.js" type="text/javascript"></script>
 	    <script src="js/passage/step.passage.navigation.ui.js" type="text/javascript"></script>
 	    <script src="js/bookmark/step.bookmark.ui.js" type="text/javascript"></script>
@@ -81,60 +83,29 @@
 	%>
 </HEAD>
 <body>
-<div id="topMenu" class="ddsmoothmenu"><jsp:include page="topmenu.html" /></div>
-<div style="height: 100%">
+<div id="topMenu" class="ddsmoothmenu"><jsp:include page="js/menu/top/menu.html" /></div>
+<div>
 	<div id="middleSection">
 		<div class="column leftColumn">
 			<div class="passageContainer">
-				<div id="leftPaneMenu" class="innerMenus"><jsp:include page="panemenu.html" /></div>
+				<div id="leftPaneMenu" class="innerMenus"><jsp:include page="js/menu/passage/menu.html" /></div>
 			    <div class="passageText ui-widget">
 			    	<div class="headingContainer">
-						<a class="bookmarkPassageLink passageButtons">Add a bookmark</a>
-						<a class="nextChapter passageButtons">Displays the next chapter (or expands to the end of the chapter)</a>
-						<a class="previousChapter passageButtons">Displays the previous chapter (or expands to the start of the chapter)</a>
-						<input type="checkbox" id="continuousPassage0" class="continuousPassage passageButtons" /><label class="passageButtons" for="continuousPassage0">View as one long scroll</label>
-				    	<input id="leftPassageReference" class="heading editable passageReference" size="30" 
-				    		value="<%= stepRequest.getReference(0) %>" />
-				    	<input id="leftPassageBook" class="heading editable passageVersion" size="5" 
-				    		value="<%= stepRequest.getVersion(0) %>" />
+			    		<jsp:include page="js/search/advanced_search.jsp" />
 			    	</div>
 			    	<div class="passageContent"><%= stepRequest.getPassage(0) %></div>
 			    </div>
 			</div>
 		</div>
 		
-		<div class="bookmarks" id="centerPane">
-			<div class="northBookmark">
-				<img id="topLogo" src="images/step-logo.png" alt="STEP :: Scripture Tools for Every Person" />
-			</div>
-			<div id="bookmarkPane" class="bookmarkPane ui-corner-all">
-				<h3 class="ui-helper-reset ui-state-default ui-corner-all">
-					<span class="leftBookmarkArrow ui-icon ui-icon-triangle-1-e"></span>Recent Texts
-				</h3>
-				<div id="historyDisplayPane" class="bookmarkContents"><br /></div>
-				<h3 id="bookmarkHeader" class="ui-helper-reset ui-state-default ui-corner-all">
-					<span class="leftBookmarkArrow ui-icon ui-icon-triangle-1-e"></span>Bookmarks
-				</h3>
-				<div id="bookmarkDisplayPane" class="bookmarkContents"><br /></div>
-			</div>
-			<div class="logo">
-				<span class="copyright">&copy; Tyndale House</span>
-			</div>
-		</div>
+		<jsp:include page="js/bookmark/bookmark.jsp"></jsp:include>
 			
 		<div class="column rightColumn">
 			<div class="passageContainer">
-				<div id="rightPaneMenu" class="innerMenus"><jsp:include page="panemenu.html" /></div>
+				<div id="rightPaneMenu" class="innerMenus"><jsp:include page="js/menu/passage/menu.html" /></div>
 			    <div class="passageText ui-widget">
 			    	<div class="headingContainer">
-						<a class="bookmarkPassageLink passageButtons">Add a bookmark</a>
-						<a class="nextChapter passageButtons">Displays the next chapter (or expands to the end of the chapter)</a>
-						<a class="previousChapter passageButtons">Displays the previous chapter (or expands to the start of the chapter)</a>
-						<input type="checkbox" id="continuousPassage1" class="continuousPassage passageButtons" /><label class="passageButtons" for="continuousPassage1">View as one long scroll</label>
-				    	<input id="rightPassageReference" class="heading editable passageReference" size="30" 
-				    		value="<%= stepRequest.getReference(1) %>" />
-				    	<input id="rightPassageBook" class="heading editable passageVersion" size="5" 
-				    		value="<%= stepRequest.getVersion(1) %>" />
+			    		<jsp:include page="js/search/advanced_search.jsp" />
 			    	</div>
 			    	<div class="passageContent"><%= stepRequest.getPassage(1) %></div>
 				</div>

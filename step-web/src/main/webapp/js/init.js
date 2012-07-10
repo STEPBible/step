@@ -76,30 +76,12 @@ function refreshLayout() {
 	var passageContentHeight = passageTextHeight - headingContainerHeight;
 	
 	
-	$(".column").height(columnHeight);
+//	$(".column").height(columnHeight);
 	$(".bookmarkPane").height(bookmarkHeight);
-	$(".passageText").height(passageTextHeight);
-	$(".passageContent").css("top", headingContainerHeight + gapBetweenMenuAndPassage);
-	$(".passageContent").height(passageContentHeight - gapBetweenMenuAndPassage * 2);	
+//	$(".passageText").height(passageTextHeight);
 	
 	
-	
-	
-//	alert(headingContainerHeight);
-//	if($("#debug").text() == "") {
-//		$("#bookmarkPane").append("<span id=\"debug\" />");		
-//	}
-//	
-//	var heights = 
-//		"window = " + windowHeight + "\n" + 
-//		"paneMenu = " + innerMenuHeight + "\n" +
-//		"topMenu = " + topMenuHeight + "\n" + 
-//		"imageAndFooter = " + imageAndFooterHeight + "\n" +
-//		"passageText = " + $(".passageText").height() + "\n" +
-//		"heading = " + $(".headingContainer").height() + "\n" +
-//		"passageContent = " + $(".passageContent").height() + "\n" ;
-//		
-//	$("#debug").text(heights);
+	step.passage.ui.resize();
 	
 }
 
@@ -238,11 +220,7 @@ function initModules(passages) {
 	new Bookmark();
 	new Login();
 	new Title();
-	
-	$(".passageContainer").each(function(i, item) {
-		new Search(item);
-	});
-		
+
 	var bottomSection = $("#bottomSectionContent");
 	timeline = new TimelineWidget(bottomSection, passages);
 	new GeographyWidget(bottomSection, passages);

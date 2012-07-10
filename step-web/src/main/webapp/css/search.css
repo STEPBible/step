@@ -31,3 +31,23 @@
 .searchScope {
 	width: 200px;
 }
+
+/*******************************************/
+/* Advanced search box                     */
+/*******************************************/
+.advancedSearch {
+	font-size: smaller;
+}
+
+.advancedSearch legend {
+	color: #696;
+	font-weight: bold;
+}
+
+.advancedSearch table {
+	width: 50%;
+}
+
+.advancedSearch table {
+	width: 12.5%;
+}

@@ -32,6 +32,12 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.service.impl;
 
+import static com.tyndalehouse.step.core.service.impl.VocabularyServiceImpl.padStrongNumber;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -39,6 +45,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.avaje.ebean.EbeanServer;
+import com.tyndalehouse.step.core.data.entities.LexiconDefinition;
 import com.tyndalehouse.step.core.models.SearchResult;
 import com.tyndalehouse.step.core.service.SearchService;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
@@ -53,6 +60,7 @@ import com.tyndalehouse.step.core.service.jsword.JSwordSearchService;
 @Singleton
 public class SearchServiceImpl implements SearchService {
     private static final Logger LOGGER = LoggerFactory.getLogger(SearchServiceImpl.class);
+    private static final String STRONG_QUERY = "strong:";
     private final EbeanServer ebean;
     private final JSwordPassageService jsword;
     private final JSwordSearchService jswordSearch;
@@ -73,6 +81,67 @@ public class SearchServiceImpl implements SearchService {
     @Override
     public SearchResult search(final String version, final String query) {
         return this.jswordSearch.search(version, query);
+    }
+
+    @Override
+    public SearchResult searchStrong(final String version, final String searchStrong) {
+        final List<String> strongs = getStrongsFromQuery(searchStrong);
+        return runStrongSearch(version, strongs);
+    }
+
+    @Override
+    public SearchResult searchRelatedStrong(final String version, final String searchStrong) {
+        final List<String> strongsFromQuery = getStrongsFromQuery(searchStrong);
+
+        final List<LexiconDefinition> strongs = this.ebean.find(LexiconDefinition.class)
+                .fetch("similarStrongs").select("similarStrongs.strong").where()
+                .in("strong", strongsFromQuery).findList();
+
+        // final List<LexiconDefinition> strongs = this.ebean.find(LexiconDefinition.class)
+        // .fetch("similarStrongs").where().in("strong", strongsFromQuery).findList();
+
+        for (final LexiconDefinition s : strongs) {
+            final List<LexiconDefinition> similarStrongs = s.getSimilarStrongs();
+            for (final LexiconDefinition similar : similarStrongs) {
+                strongsFromQuery.add(similar.getStrong());
+            }
+        }
+
+        return runStrongSearch(version, strongsFromQuery);
+    }
+
+    /**
+     * runs the search and returns results
+     * 
+     * @param version the version to run against
+     * @param strongs the strong numbers to search for
+     * @return the result
+     */
+    private SearchResult runStrongSearch(final String version, final List<String> strongs) {
+        final StringBuilder query = new StringBuilder();
+        for (final String s : strongs) {
+            query.append(STRONG_QUERY);
+            query.append(s);
+            query.append(' ');
+        }
+
+        // TODO jsword bug - email 09-Jul-2012 - 19:11 GMT
+        return search(version, query.toString().trim().toLowerCase());
+    }
+
+    /**
+     * Parses the search query, returned in upper case in case a database lookup is required
+     * 
+     * @param searchStrong the search query
+     * @return the list of strongs
+     */
+    private List<String> getStrongsFromQuery(final String searchStrong) {
+        final List<String> strongs = Arrays.asList(searchStrong.split("[, ;]+"));
+        final List<String> strongList = new ArrayList<String>();
+        for (final String s : strongs) {
+            strongList.add(padStrongNumber(s.toUpperCase(), false));
+        }
+        return strongList;
     }
 
     // TODO

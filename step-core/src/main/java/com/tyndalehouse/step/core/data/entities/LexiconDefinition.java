@@ -39,11 +39,9 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-
-import com.avaje.ebean.annotation.CacheStrategy;
+import javax.persistence.ManyToMany;
 
 /**
  * A entitiy representing what we expect to see in a strong definition
@@ -55,7 +53,6 @@ import com.avaje.ebean.annotation.CacheStrategy;
  * @author chrisburrell
  * 
  */
-@CacheStrategy(readOnly = true)
 @Entity
 public class LexiconDefinition implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -74,11 +71,12 @@ public class LexiconDefinition implements Serializable {
     @Lob
     private String lsj;
 
-    @ManyToOne
-    @JoinColumn(name = "parent_definition")
-    private LexiconDefinition parent;
+    // @ManyToOne
+    // @JoinColumn(name = "parent_definition")
+    // private LexiconDefinition parent;
 
-    @OneToMany(targetEntity = LexiconDefinition.class, cascade = CascadeType.PERSIST, mappedBy = "parent")
+    @ManyToMany(cascade = CascadeType.ALL, targetEntity = LexiconDefinition.class)
+    @JoinTable(name = "lexicon_relationships", joinColumns = { @JoinColumn(name = "strong") }, inverseJoinColumns = { @JoinColumn(name = "other_strong") })
     private List<LexiconDefinition> similarStrongs;
 
     /**
@@ -249,17 +247,17 @@ public class LexiconDefinition implements Serializable {
         this.originalWithoutAccents = originalWithoutAccents;
     }
 
-    /**
-     * @return the parent
-     */
-    public LexiconDefinition getParent() {
-        return this.parent;
-    }
-
-    /**
-     * @param parent the parent to set
-     */
-    public void setParent(final LexiconDefinition parent) {
-        this.parent = parent;
-    }
+    // /**
+    // * @return the parent
+    // */
+    // public LexiconDefinition getParent() {
+    // return this.parent;
+    // }
+    //
+    // /**
+    // * @param parent the parent to set
+    // */
+    // public void setParent(final LexiconDefinition parent) {
+    // this.parent = parent;
+    // }
 }

@@ -41,8 +41,8 @@ var CONTINUOUS_SCROLLING_VERSE_GAP = 50;
  */
 
 step.passage = {
-    getPassageId : function(menuItem) {
-        return $(menuItem).closest(".passageContainer").attr("passage-id");
+    getPassageId : function(element) {
+        return $(element).closest(".passageContainer").attr("passage-id");
     },
 
     getReference : function(passageId) {

@@ -1,5 +1,7 @@
 package com.tyndalehouse.step.core.service.jsword.impl;
 
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
 /**
@@ -13,6 +15,6 @@ public class JSwordSearchServiceImplTest {
         final JSwordSearchServiceImpl search = new JSwordSearchServiceImpl(
                 new JSwordVersificationServiceImpl());
 
-        search.search("KJV", "strong:g0016");
+        assertTrue(search.search("KJV", "strong:g0016").getResults().size() > 0);
     }
 }

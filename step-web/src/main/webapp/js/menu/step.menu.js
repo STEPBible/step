@@ -19,8 +19,17 @@ step.menu = {
 		$("img.selectingTick", selectedItem).remove();
 	},
 
-	untickAll: function(selector) {
-		$(selector).find("img.selectingTick").remove();
+	untickAll: function(selectorOrMenuName, passageId) {
+	    var menu = selectorOrMenuName;
+	    if(typeof(selectorOrMenuName) == 'string') {
+	        if(passageId) {
+	            menu = $("a[menu-name = '" + selectorOrMenuName + "']", step.util.getPassageContainer(passageId));
+	        } else {
+	            menu = $("a[menu-name = '" + selectorOrMenuName + "']");
+	        }
+	    }
+	    
+		$(menu).find("img.selectingTick").remove();
 	},
 	
 	toggleMenuItem: function(selectedItem) {
@@ -58,9 +67,9 @@ step.menu = {
 	getSelectedOptionsForMenu: function(passageId, menuName) {
 	    return this.getSelectedOptions($("li[menu-name=" + menuName + "]", step.util.getPassageContainer(passageId)));
 	},
-	
-    isOptionSelected: function(optionName) {
-        return this.getMenuItem(optionName).has("img.selectingTick");
+		
+    isOptionSelected: function(optionName, passageId) {
+        return this.getMenuItem(optionName, passageId).has("img.selectingTick").size() != 0;
     },
 	
 	defaults: function(menuName, itemList) {

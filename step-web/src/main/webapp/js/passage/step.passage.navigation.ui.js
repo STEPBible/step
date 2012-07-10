@@ -23,7 +23,19 @@ $(document).ready(function() {
         },
         text : false
     }).click(function() {
-        step.passage.navigation.handleContinuousScrolling(step.passage.getPassageId(this), $(this).is(":checked"));
+        var enabled = "";
+        
+        var icon = $(this).button("option", "icons").primary;
+        
+        if(icon == "ui-icon-script") {
+            enabled = true;
+            $(this).button("option", "icons", {primary: "ui-icon-document-b"});
+        } else {
+            enabled = false;
+            $(this).button("option", "icons", {primary: "ui-icon-script"});
+        }
+        
+        step.passage.navigation.handleContinuousScrolling(step.passage.getPassageId(this), enabled);
     }).hear("passage-changed", function(button, data) {
         if (step.state.passage.multiRange(step.passage.getPassageId(this))) {
             // disable button
@@ -34,5 +46,4 @@ $(document).ready(function() {
             $(button).attr("title", "Click here to enable continuous scrolling");
         }
     });
-
 });

@@ -31,7 +31,7 @@ $(step.menu).hear("interlinear-menu-option", function(self, interlinearResult) {
 $(step.menu).hear("initialise-passage-display-options", function(self, data) {
 	//refresh ui
 	var passageContainer = step.util.getPassageContainer(data.passageId);
-	step.menu.untickAll(passageContainer);
+	step.menu.untickAll("DISPLAY", data.passageId);
 	for(var i in data.menuOptions) {
 		step.menu.tickMenuItem($("a[name='" + data.menuOptions[i] +"']", passageContainer));
 	}

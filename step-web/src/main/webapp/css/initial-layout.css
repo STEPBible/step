@@ -120,20 +120,8 @@ body {
 /**************************/
 .column { 
 	border: 0px;
-	display: inline;
 	width: 45%;  /* 2 columns */ 
 	float: left;
-	position: relative;
-/*	overflow: hidden;*/
-}
-
-
-/********************************/
-/* INNER MENUS (i.e. sub menus) */
-/********************************/
-.innerMenu {
-	position: absolute;
-	top: 0px;
 }
 
 
@@ -145,10 +133,6 @@ body {
 
 .passageButtons {
 	float: right;
-	height: 16px	
-	width: 16px;
-	margin-top: 5px;
-	margin-right: 5px;
 }
 
 .nextChapter {
@@ -161,21 +145,16 @@ body {
 }
 
 .passageText {
-	position: relative;
-	top: 30px;
 	overflow: hidden;
 }
 
 .headingContainer {
-	position: absolute;
-	top: 0px;
 	width: 99%;
 }
 
 .passageContent {
-	position: absolute;
-/*	 top: 45px;  */
-	overflow: auto;
+	overflow-x: hidden;
+	overflow-y: auto;
 }
 
 .features {
@@ -266,10 +245,6 @@ body {
 .passageContainer {
 	text-align: center;
 	padding-bottom: 5px;
-}
-
-.passageReference {
-	width: 40%;
 }
 
 .toolbarContainer {

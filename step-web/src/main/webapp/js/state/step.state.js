@@ -45,6 +45,8 @@ step.state = {
 			this._restoreInterlinearVersions(passageId, this.interlinearVersions(passageId));
 			this._restorePassageSync();
 			this._fireStateChanged(passageId);
+			
+			$.shout("application-ready");
 		},
 		
 		version: function(passageId, version, fireChange) {
@@ -176,7 +178,7 @@ step.state = {
                 return;
             }
 		    
-		    var menuOptions = $.isArray(listOptions) ? listOptions : listOptions.split(",");
+		    var menuOptions = $.isArray(options) ? options : options.split(",");
             $.shout("initialise-passage-display-options", { passageId: passageId, menuOptions: menuOptions});
         },
 

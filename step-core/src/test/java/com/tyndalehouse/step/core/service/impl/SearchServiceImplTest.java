@@ -3,9 +3,6 @@ package com.tyndalehouse.step.core.service.impl;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.junit.Test;
 
 import com.tyndalehouse.step.core.data.DataDrivenTestExtension;
@@ -31,7 +28,7 @@ public class SearchServiceImplTest extends DataDrivenTestExtension {
                 versificationService, null, null), new JSwordSearchServiceImpl(versificationService));
 
         final SearchResult searchStrong = si.searchStrong("KJV", "G16");
-        assertTrue(searchStrong.getResults().get(0).getKey().equals("1 Peter 4:19"));
+        assertTrue("1 Peter 4:19".equals(searchStrong.getResults().get(0).getKey()));
     }
 
     /** test exact strong match */
@@ -42,17 +39,17 @@ public class SearchServiceImplTest extends DataDrivenTestExtension {
                 versificationService, null, null), new JSwordSearchServiceImpl(versificationService));
 
         final LexiconDefinition ld = new LexiconDefinition();
-        ld.setStrong("G16");
+        ld.setStrong("G0016");
+        getEbean().save(ld);
+
         final LexiconDefinition related = new LexiconDefinition();
         related.setStrong("G0015");
-        final List<LexiconDefinition> similarStrongs = new ArrayList<LexiconDefinition>();
-        similarStrongs.add(related);
-        ld.setSimilarStrongs(similarStrongs);
-
-        getEbean().save(ld);
         getEbean().save(related);
 
+        ld.getSimilarStrongs().add(related);
+        getEbean().save(ld);
+
         final SearchResult searchStrong = si.searchRelatedStrong("KJV", "G16");
-        assertEquals("strong:G16 strong:G0015", searchStrong.getQuery().trim());
+        assertEquals("strong:g0016 strong:g0015", searchStrong.getQuery().trim());
     }
 }

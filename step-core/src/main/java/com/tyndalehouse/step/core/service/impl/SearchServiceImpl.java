@@ -48,7 +48,6 @@ import com.avaje.ebean.EbeanServer;
 import com.tyndalehouse.step.core.data.entities.LexiconDefinition;
 import com.tyndalehouse.step.core.models.SearchResult;
 import com.tyndalehouse.step.core.service.SearchService;
-import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import com.tyndalehouse.step.core.service.jsword.JSwordSearchService;
 
 /**
@@ -62,19 +61,15 @@ public class SearchServiceImpl implements SearchService {
     private static final Logger LOGGER = LoggerFactory.getLogger(SearchServiceImpl.class);
     private static final String STRONG_QUERY = "strong:";
     private final EbeanServer ebean;
-    private final JSwordPassageService jsword;
     private final JSwordSearchService jswordSearch;
 
     /**
      * @param ebean the ebean server to carry out the search from
      * @param jsword used to convert references to numerals, etc.
-     * @param jswordSearch the search service for jsword modules
      */
     @Inject
-    public SearchServiceImpl(final EbeanServer ebean, final JSwordPassageService jsword,
-            final JSwordSearchService jswordSearch) {
+    public SearchServiceImpl(final EbeanServer ebean, final JSwordSearchService jswordSearch) {
         this.ebean = ebean;
-        this.jsword = jsword;
         this.jswordSearch = jswordSearch;
     }
 

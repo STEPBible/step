@@ -9,7 +9,6 @@ import com.tyndalehouse.step.core.data.DataDrivenTestExtension;
 import com.tyndalehouse.step.core.data.entities.LexiconDefinition;
 import com.tyndalehouse.step.core.models.SearchResult;
 import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
-import com.tyndalehouse.step.core.service.jsword.impl.JSwordPassageServiceImpl;
 import com.tyndalehouse.step.core.service.jsword.impl.JSwordSearchServiceImpl;
 import com.tyndalehouse.step.core.service.jsword.impl.JSwordVersificationServiceImpl;
 
@@ -24,8 +23,8 @@ public class SearchServiceImplTest extends DataDrivenTestExtension {
     @Test
     public void testSearchStrong() {
         final JSwordVersificationService versificationService = new JSwordVersificationServiceImpl();
-        final SearchServiceImpl si = new SearchServiceImpl(getEbean(), new JSwordPassageServiceImpl(
-                versificationService, null, null), new JSwordSearchServiceImpl(versificationService));
+        final SearchServiceImpl si = new SearchServiceImpl(getEbean(), new JSwordSearchServiceImpl(
+                versificationService));
 
         final SearchResult searchStrong = si.searchStrong("KJV", "G16");
         assertTrue("1 Peter 4:19".equals(searchStrong.getResults().get(0).getKey()));
@@ -35,8 +34,8 @@ public class SearchServiceImplTest extends DataDrivenTestExtension {
     @Test
     public void testSearchRelatedStrongs() {
         final JSwordVersificationService versificationService = new JSwordVersificationServiceImpl();
-        final SearchServiceImpl si = new SearchServiceImpl(getEbean(), new JSwordPassageServiceImpl(
-                versificationService, null, null), new JSwordSearchServiceImpl(versificationService));
+        final SearchServiceImpl si = new SearchServiceImpl(getEbean(), new JSwordSearchServiceImpl(
+                versificationService));
 
         final LexiconDefinition ld = new LexiconDefinition();
         ld.setStrong("G0016");

@@ -132,7 +132,7 @@
 			<scope>runtime</scope>
 		</dependency>
 
-		            
+
 	</dependencies>
 
 	<build>
@@ -143,24 +143,62 @@
 				<groupId>com.samaxes.maven</groupId>
 				<artifactId>minify-maven-plugin</artifactId>
 				<version>1.5.1-SNAPSHOT</version>
-				<configuration>
-					<cssSourceDir>css</cssSourceDir>
-					<cssSourceIncludes>
-						<cssSourceInclude>*.css</cssSourceInclude>
-					</cssSourceIncludes>
-					<cssFinalFile>step.css</cssFinalFile>
-					<jsSourceDir>js</jsSourceDir>
-					<jsSourceIncludes>
-						<jsSourceInclude>**/*.js</jsSourceInclude>
-					</jsSourceIncludes>
-					<jsFinalFile>step.js</jsFinalFile>
-				</configuration>
 				<executions>
 					<execution>
+						<id>minify-all-step-resources</id>
 						<phase>process-resources</phase>
 						<goals>
 							<goal>minify</goal>
 						</goals>
+						<configuration>
+							<cssSourceDir>css</cssSourceDir>
+							<cssSourceIncludes>
+								<cssSourceInclude>*.css</cssSourceInclude>
+							</cssSourceIncludes>
+							<cssFinalFile>step.css</cssFinalFile>
+							<jsSourceDir>js</jsSourceDir>
+							<jsSourceFiles>
+								<jsSourceInclude>jquery-extensions/jquery-cookie.js</jsSourceInclude>
+								<jsSourceInclude>jquery-extensions/jquery-shout.js</jsSourceInclude>
+								<jsSourceInclude>ddsmoothmenu.js</jsSourceInclude>
+								<jsSourceInclude>util.js</jsSourceInclude>
+								<jsSourceInclude>bookmark.js</jsSourceInclude>
+								<jsSourceInclude>lexicon_definition.js</jsSourceInclude>
+								<jsSourceInclude>ui_hooks.js</jsSourceInclude>
+								<jsSourceInclude>timeline.js</jsSourceInclude>
+								<jsSourceInclude>geography.js</jsSourceInclude>
+								<jsSourceInclude>toolbar_menu.js</jsSourceInclude>
+								<jsSourceInclude>interlinear_popup.js</jsSourceInclude>
+								<jsSourceInclude>login.js</jsSourceInclude>
+								<jsSourceInclude>title.js</jsSourceInclude>
+								<jsSourceInclude>search/step.search.js</jsSourceInclude>
+								<jsSourceInclude>search/step.search.ui.js</jsSourceInclude>
+								<jsSourceInclude>navigation/step.navigation.js</jsSourceInclude>
+								<jsSourceInclude>state/step.state.js</jsSourceInclude>
+								<jsSourceInclude>state/step.state.detail.js</jsSourceInclude>
+								<jsSourceInclude>state/step.state.passage.js</jsSourceInclude>
+								<jsSourceInclude>state/step.state.original.js</jsSourceInclude>
+								<jsSourceInclude>menu/step.menu.js</jsSourceInclude>
+								<jsSourceInclude>menu/top/help.js</jsSourceInclude>
+								<jsSourceInclude>menu/top/options.js</jsSourceInclude>
+								<jsSourceInclude>menu/top/tools.js</jsSourceInclude>
+								<jsSourceInclude>menu/top/view.js</jsSourceInclude>
+								<jsSourceInclude>menu/top/top.menu.ui.js</jsSourceInclude>
+								<jsSourceInclude>menu/passage/context.js</jsSourceInclude>
+								<jsSourceInclude>menu/passage/display.js</jsSourceInclude>
+								<jsSourceInclude>menu/passage/passageTools.js</jsSourceInclude>
+								<jsSourceInclude>menu/passage/search.js</jsSourceInclude>
+								<jsSourceInclude>menu/step.menu.defaults.js</jsSourceInclude>
+								<jsSourceInclude>passage/step.passage.js</jsSourceInclude>
+								<jsSourceInclude>passage/step.passage.ui.js</jsSourceInclude>
+								<jsSourceInclude>passage/step.passage.navigation.js</jsSourceInclude>
+								<jsSourceInclude>passage/step.passage.navigation.ui.js</jsSourceInclude>
+								<jsSourceInclude>bookmark/step.bookmark.ui.js</jsSourceInclude>
+								<jsSourceInclude>init.js</jsSourceInclude>
+
+							</jsSourceFiles>
+							<jsFinalFile>step.js</jsFinalFile>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>

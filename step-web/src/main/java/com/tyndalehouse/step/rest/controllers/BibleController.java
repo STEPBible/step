@@ -37,9 +37,7 @@ import static com.tyndalehouse.step.core.exceptions.UserExceptionType.USER_MISSI
 import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
 import static com.tyndalehouse.step.core.utils.ValidateUtils.notEmpty;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -153,8 +151,7 @@ public class BibleController {
         notEmpty(version, "You need to provide a version", USER_MISSING_FIELD);
         notEmpty(reference, "You need to provide a reference", USER_MISSING_FIELD);
 
-        return this.bibleInformation.getPassageText(version, reference, getLookupOptions(options),
-                interlinearVersion);
+        return this.bibleInformation.getPassageText(version, reference, options, interlinearVersion);
     }
 
     /**
@@ -200,30 +197,8 @@ public class BibleController {
             }
         }
         return this.bibleInformation.getPassageText(version, Integer.parseInt(startVerseId),
-                Integer.parseInt(endVerseId), getLookupOptions(options), interlinearVersion, roundingUp);
+                Integer.parseInt(endVerseId), options, interlinearVersion, roundingUp);
 
-    }
-
-    /**
-     * Translates the options provided over the http interface to something palatable by the service layer
-     * 
-     * @param options the list of options, comma-separated.
-     * @return a list of {@link LookupOption}
-     */
-    private List<LookupOption> getLookupOptions(final String options) {
-        String[] userOptions = null;
-        if (isNotBlank(options)) {
-            userOptions = options.split(",");
-        }
-
-        final List<LookupOption> lookupOptions = new ArrayList<LookupOption>();
-        if (userOptions != null) {
-            for (final String o : userOptions) {
-
-                lookupOptions.add(LookupOption.valueOf(o.toUpperCase(Locale.ENGLISH)));
-            }
-        }
-        return lookupOptions;
     }
 
     /**

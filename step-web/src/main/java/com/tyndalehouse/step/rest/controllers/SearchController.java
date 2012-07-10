@@ -41,6 +41,8 @@ public class SearchController {
     /**
      * @param version the version to search across
      * @param searchStrong the query to search for
+     * @param options a list of options to be passed in
+     * @param interlinearVersion the interlinear version if provided adds lines under the text
      * @return the search result(s)
      */
     public SearchResult searchStrong(final String version, final String searchStrong) {

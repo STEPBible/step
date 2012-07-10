@@ -35,12 +35,10 @@
 	    <link rel="stylesheet" type="text/css" href="css/timeline.css" />
 	    <link rel="stylesheet" type="text/css" href="css/search.css" />
 	
-<!-- 		<script src="libs/fgmenu.js" type="text/javascript"></script> -->
-	    <script src="js/jquery_cookie.js" type="text/javascript"></script>
-		<script src="js/jquery-shout.js" type="text/javascript"></script>
+	    <script src="js/jquery-extensions/jquery-cookie.js" type="text/javascript"></script>
+		<script src="js/jquery-extensions/jquery-shout.js" type="text/javascript"></script>
 		<script src="js/ddsmoothmenu.js" type="text/javascript"></script>
 	    <script src="js/util.js" type="text/javascript"></script>
-	    <script src="js/passage.js" type="text/javascript"></script>
 	    <script src="js/bookmark.js" type="text/javascript"></script>
 	    <script src="js/lexicon_definition.js" type="text/javascript"></script>
 	    <script src="js/ui_hooks.js" type="text/javascript"></script>
@@ -54,9 +52,14 @@
 		<script src="js/search/step.search.ui.js" type="text/javascript"></script>
 
 		<script src="js/navigation/step.navigation.js" type="text/javascript"></script>	    
-		<script src="js/state/step.state.js" type="text/javascript"></script>
-	    <script src="js/menu/step.menu.js" type="text/javascript"></script>
 
+
+		<script src="js/state/step.state.js" type="text/javascript"></script>
+		<script src="js/state/step.state.detail.js" type="text/javascript"></script>
+		<script src="js/state/step.state.passage.js" type="text/javascript"></script>
+		<script src="js/state/step.state.original.js" type="text/javascript"></script>
+
+	    <script src="js/menu/step.menu.js" type="text/javascript"></script>
 	    <script src="js/menu/top/help.js" type="text/javascript"></script>
 	    <script src="js/menu/top/options.js" type="text/javascript"></script>
 	    <script src="js/menu/top/tools.js" type="text/javascript"></script>
@@ -66,8 +69,9 @@
 	    <script src="js/menu/passage/display.js" type="text/javascript"></script>
 	    <script src="js/menu/passage/passageTools.js" type="text/javascript"></script>
 	    <script src="js/menu/passage/search.js" type="text/javascript"></script>
-	    <script src="js/menu/defaults.js" type="text/javascript"></script>
+	    <script src="js/menu/step.menu.defaults.js" type="text/javascript"></script>
 
+	    <script src="js/passage/step.passage.js" type="text/javascript"></script>
 	    <script src="js/passage/step.passage.ui.js" type="text/javascript"></script>
 	    <script src="js/passage/step.passage.navigation.js" type="text/javascript"></script>
 	    <script src="js/passage/step.passage.navigation.ui.js" type="text/javascript"></script>
@@ -87,7 +91,7 @@
 <div>
 	<div id="middleSection">
 		<div class="column leftColumn">
-			<div class="passageContainer">
+			<div class="passageContainer" passage-id=0>
 				<div id="leftPaneMenu" class="innerMenus"><jsp:include page="js/menu/passage/menu.html" /></div>
 			    <div class="passageText ui-widget">
 			    	<div class="headingContainer">
@@ -101,7 +105,7 @@
 		<jsp:include page="js/bookmark/bookmark.jsp"></jsp:include>
 			
 		<div class="column rightColumn">
-			<div class="passageContainer">
+			<div class="passageContainer" passage-id=1>
 				<div id="rightPaneMenu" class="innerMenus"><jsp:include page="js/menu/passage/menu.html" /></div>
 			    <div class="passageText ui-widget">
 			    	<div class="headingContainer">

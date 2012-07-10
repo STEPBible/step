@@ -32,7 +32,6 @@
  ******************************************************************************/
 package com.tyndalehouse.step.rest.controllers;
 
-import static org.apache.commons.collections.CollectionUtils.isEqualCollection;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -42,7 +41,6 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 
 import com.tyndalehouse.step.core.exceptions.ValidationException;
@@ -148,14 +146,9 @@ public class BibleControllerTest {
         this.testController.getBibleText("version", "reference", "HEADINGS,VERSE_NUMBERS", "kjv,esv");
 
         // verify
-        final ArgumentCaptor<List> captor = ArgumentCaptor.forClass(List.class);
+        verify(this.bibleInformation).getPassageText(eq("version"), eq("reference"),
+                eq("HEADINGS,VERSE_NUMBERS"), eq("kjv,esv"));
 
-        verify(this.bibleInformation).getPassageText(eq("version"), eq("reference"), captor.capture(),
-                eq("kjv,esv"));
-
-        // check the list that was captured
-        final List value = captor.getValue();
-        isEqualCollection(value, options);
     }
 
     /**

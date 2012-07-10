@@ -39,6 +39,7 @@ import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -98,15 +99,38 @@ public class BibleInformationServiceImpl implements BibleInformationService {
 
     @Override
     public OsisWrapper getPassageText(final String version, final int startVerseId, final int endVerseId,
-            final List<LookupOption> options, final String interlinearVersion, final Boolean roundUp) {
+            final String options, final String interlinearVersion, final Boolean roundUp) {
         return this.jswordPassage.getOsisTextByVerseNumbers(version, version, startVerseId, endVerseId,
-                trim(options, version), interlinearVersion, roundUp, false);
+                trim(getLookupOptions(options), version), interlinearVersion, roundUp, false);
     }
 
     @Override
-    public OsisWrapper getPassageText(final String version, final String reference,
-            final List<LookupOption> options, final String interlinearVersion) {
-        return this.jswordPassage.getOsisText(version, reference, trim(options, version), interlinearVersion);
+    public OsisWrapper getPassageText(final String version, final String reference, final String options,
+            final String interlinearVersion) {
+        return this.jswordPassage.getOsisText(version, reference, trim(getLookupOptions(options), version),
+                interlinearVersion);
+    }
+
+    /**
+     * Translates the options provided over the http interface to something palatable by the service layer
+     * 
+     * @param options the list of options, comma-separated.
+     * @return a list of {@link LookupOption}
+     */
+    private List<LookupOption> getLookupOptions(final String options) {
+        String[] userOptions = null;
+        if (isNotBlank(options)) {
+            userOptions = options.split(",");
+        }
+
+        final List<LookupOption> lookupOptions = new ArrayList<LookupOption>();
+        if (userOptions != null) {
+            for (final String o : userOptions) {
+
+                lookupOptions.add(LookupOption.valueOf(o.toUpperCase(Locale.ENGLISH)));
+            }
+        }
+        return lookupOptions;
     }
 
     /**

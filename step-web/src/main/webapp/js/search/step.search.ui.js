@@ -26,41 +26,42 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
+
+step.search.ui = {
+    strongNumber : function(value, passageId) {
+        $(".strongSearch", step.util.getPassageContainer(passageId)).val(value);
+    }
+
+};
+
 $(document).ready(function() {
-    $(".versionSearchBox").keypress(function(e) {
-        if (e.which == 13) {
-            step.search.handleSearch(this);
-        }
-    }).each(function(i, item) {
-        $($(".searchButton").get(i)).button({
-            icons : {
-                primary : 'ui-icon-search'
-            },
-            text : false
-        }).click(function() {
-            step.search.handleSearch(this);
-        }).position({
-            my : "left",
-            at : "right",
-            of : $(this)
-        });
+    $(".advancedSearch input[type = 'button']").button({});
+
+    $(".strongSearch").change(function() {
+        step.state.original.strong(step.passage.getPassageId(this), $(this).val());
     });
 
-    $(".advancedSearch input[type = 'button']").button({});
-    
     $(".exactStrongNumber").click(function() {
-        step.search.tagging.exact(this);
+        var passageId = step.passage.getPassageId(this);
+        step.state.original.searchType(passageId, "exact");
+        step.state.activeSearch(passageId, 'SEARCH_ORIGINAL');
     });
-    
+
     $(".relatedStrongNumbers").click(function() {
-        step.search.tagging.related(this);
+        var passageId = step.passage.getPassageId(this);
+        step.state.original.searchType(passageId, "related");
+        step.state.activeSearch(passageId, 'SEARCH_ORIGINAL');
     });
-    
-    
+
     $(".advancedSearch fieldset").hide();
 });
 
-
-
-
+$(step.search.ui).hear("original-search-state-has-changed", function(s, data) {
+    var searchType = step.state.original.searchType(data.passageId);
+    if(searchType == "exact") {
+        step.search.tagging.exact(data.passageId);
+    } else if (searchType == "related"){
+        step.search.tagging.related(data.passageId);
+    }
+});
 

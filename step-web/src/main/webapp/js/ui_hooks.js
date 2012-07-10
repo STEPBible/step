@@ -107,9 +107,6 @@ function toggleMenuItem(menuItem) {
 		menuItem: { element: menuItem, name: menuItem.name }, 
 		passageId: passageId 
 	});
-
-	
-	//	$.shout(eventName, menuItem.name);
 };
 
 function getParentMenuName(menuItem) {
@@ -117,10 +114,6 @@ function getParentMenuName(menuItem) {
 	return {element: menu, name: menu.attr("menu-name") };
 } 
 
-//function changePassage(element, passageReference) {
-//	$("#previewReference").hide();
-//	step.state.passage.reference(step.passage.getPassageId(element), passageReference);
-//}
 
 /**
  * show bubble from relevant passage object

@@ -121,7 +121,6 @@ public class WebStepRequest {
      * @return the html to put into the page
      */
     public String getPassage(final int passageId) {
-
         final String reference = getReference(passageId);
         final String version = getVersion(passageId);
 

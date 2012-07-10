@@ -68,7 +68,7 @@ public interface BibleInformationService {
      * @param interlinearVersion version to use as the interlinear
      * @return the HTML string passed back for consumption
      */
-    OsisWrapper getPassageText(String version, String reference, List<LookupOption> lookupOptions,
+    OsisWrapper getPassageText(String version, String reference, String lookupOptions,
             String interlinearVersion);
 
     /**
@@ -84,7 +84,7 @@ public interface BibleInformationService {
      * @return the HTML string passed back for consumption
      */
     OsisWrapper getPassageText(String version, int startVerseId, int endVerseId,
-            List<LookupOption> lookupOptions, String interlinearVersion, Boolean round);
+            String lookupOptions, String interlinearVersion, Boolean round);
 
     /**
      * 

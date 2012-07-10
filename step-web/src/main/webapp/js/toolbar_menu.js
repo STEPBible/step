@@ -48,12 +48,12 @@ function ToolbarMenu(passageId, menuRoot) {
 		contentsource: "markup"
 	});
 	
-	$(menuRoot).hear("version-changed-" + this.passageId, function(selfElement, version) {
-		self.refreshMenuOptions(version);
+	$(menuRoot).hear("version-changed-" + this.passageId, function(selfElement) {
+		self.refreshMenuOptions();
 	});
 	
-	$(menuRoot).hear("version-changed-dynamically" + this.passageId, function(selfElement, version) {
-		self.refreshMenuOptions(version);
+	$(menuRoot).hear("version-changed-dynamically" + this.passageId, function(selfElement) {
+		self.refreshMenuOptions();
 	});
 }
 
@@ -61,9 +61,9 @@ function ToolbarMenu(passageId, menuRoot) {
  * Refreshes the menu options according to what can currently be displayed
  * @param version the new version of the passage
  */
-ToolbarMenu.prototype.refreshMenuOptions = function(version) {
+ToolbarMenu.prototype.refreshMenuOptions = function() {
 	var self = this;
-	$.getJSON(BIBLE_GET_FEATURES + version, function (features) {
+	$.getJSON(BIBLE_GET_FEATURES + step.state.passage.version(this.passageId), function (features) {
 		//build up map of options
 		$("li:contains('Display') a", self.menuRoot).each(function(index, value) {
 			var changed = false;

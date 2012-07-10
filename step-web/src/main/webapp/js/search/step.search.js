@@ -1,21 +1,18 @@
 step.search = {
     tagging : {
-        exact : function(element) {
-            this._doStrongSearch(element, SEARCH_STRONG_EXACT);
+        exact : function(passageId) {
+            this._doStrongSearch(passageId, SEARCH_STRONG_EXACT);
         },
 
-        related : function(element) {
-            this._doStrongSearch(element, SEARCH_STRONG_RELATED);
+        related : function(passageId) {
+            this._doStrongSearch(passageId, SEARCH_STRONG_RELATED);
         },
 
-        _doStrongSearch : function(element, searchType) {
-            var passageId = step.passage.getPassageId(element);
-            var passageContainer = step.util.getPassageContainer(element);
-            var passageContent = step.util.getPassageContent(element);
-            var query = $(".strongSearch", passageContainer).val();
+        _doStrongSearch : function(passageId, searchType) {
+            var query = step.state.original.strong(passageId);
 
             if (step.util.raiseErrorIfBlank(query, "Please enter a strong number")) {
-                step.search._doSearch(searchType, passageId, query, passageContent);
+                step.search._doSearch(searchType, passageId, query);
             }
         }
     },
@@ -30,14 +27,14 @@ step.search = {
         }
     },
 
-    _doSearch : function(searchType, passageId, query, passageContent) {
+    _doSearch : function(searchType, passageId, query) {
         var self = this;
         $.getSafe(searchType + step.state.passage.version(passageId) + "/" + query, function(searchQueryResults) {
-            self._displayResults(searchQueryResults, passageContent);
+            self._displayResults(searchQueryResults, passageId);
         });
     },
 
-    _displayResults : function(searchQueryResults, passageContent) {
+    _displayResults : function(searchQueryResults, passageId) {
         var results = "";
         var searchResults = searchQueryResults.results;
 
@@ -58,7 +55,7 @@ step.search = {
         if (searchQueryResults.maxReached == true) {
             results += "<span class='notApplicable'>The maximum number of search results was reached. Please refine your search to see continue.</span>";
         }
-
-        $(passageContent).html(results);
+        
+        $(step.util.getPassageContent(passageId)).html(results);
     }
 };

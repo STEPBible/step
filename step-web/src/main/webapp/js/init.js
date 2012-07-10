@@ -56,29 +56,24 @@ function init() {
 		
 		initInitialEvents();
 //		initLogin();
-		
+
+	      // read state from the cookie
+        step.state.restore();
+
 	});
 }
 
 function refreshLayout() {
 	//we resize the heights:
 	var windowHeight = $(window).height();
-	var innerMenuHeight = $("#leftPaneMenu").height();
 	var topMenuHeight = $("#topMenu").height();
-	var headingContainerHeight = $(".headingContainer").height();
 	var imageAndFooterHeight = $(".northBookmark").height() + $(".logo").height();
 	var bottomSectionHeight = $("#bottomSection").height();
 	var windowWithoutMenuNorModule = windowHeight - topMenuHeight - bottomSectionHeight; 
-	var columnHeight = windowWithoutMenuNorModule;
 	var bookmarkHeight = windowWithoutMenuNorModule - imageAndFooterHeight ;
-	var passageTextHeight = windowWithoutMenuNorModule - innerMenuHeight;
-	var gapBetweenMenuAndPassage = 5;
-	var passageContentHeight = passageTextHeight - headingContainerHeight;
 	
 	
-//	$(".column").height(columnHeight);
 	$(".bookmarkPane").height(bookmarkHeight);
-//	$(".passageText").height(passageTextHeight);
 	
 	
 	step.passage.ui.resize();
@@ -156,7 +151,6 @@ function initPassages(allVersions, options) {
 	$(".column").each(
 		function(index) {
 			var passageContainer = $(".passageContainer", this);
-			passageContainer.attr("passage-id", index);
 			passages.push(new Passage(passageContainer, allVersions, index));
 		}
 	);

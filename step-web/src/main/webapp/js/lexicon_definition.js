@@ -36,12 +36,13 @@ step.lexicon = {
         sameWordSearch: function() {
             var query = $("span[info-name ='strong']").val();
             if(step.util.raiseErrorIfBlank(query, "No strong data is available")) {
-                step.search.strong.exact(query);
+                step.state.original.strong(query);
+                step.search.strong.exact(query, this.passageId + 1 % step.util.getAllPassageIds().length);
             }
         },
         
         relatedWordSearch: function() {
-            
+            step.search.strong.related(query, this.passageId);            
         },
 
         wordGrammarSearch: function() {

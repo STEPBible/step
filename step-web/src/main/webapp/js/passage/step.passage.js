@@ -29,17 +29,6 @@
 
 var CONTINUOUS_SCROLLING_VERSE_GAP = 50;
 
-/**
- * Definition of the Passage component responsible for displaying OSIS passages
- * appropriately. Ties the search box for the reference and the version together
- * to the passage displayed
- * 
- * @param passageContainer
- *            the passage Container containing the whole control
- * @param versions
- *            the list of versions to use to populate the dropdown
- */
-
 step.passage = {
     getPassageId : function(element) {
         return $(element).closest(".passageContainer").attr("passage-id");
@@ -48,10 +37,57 @@ step.passage = {
     getReference : function(passageId) {
         return $(".passageContainer[passage-id = " + passageId + "] .passageReference").val();
     },
+    
+    changePassage: function(passageId) {
+        var lookupVersion = step.state.passage.version(passageId);
+        var lookupReference = step.state.passage.reference(passageId);
+        var options = step.state.passage.options(passageId);
+        var interlinearVersion = step.state.passage.interlinearVersions(passageId);
+
+        if (!step.util.raiseErrorIfBlank(lookupVersion, "A version must be provided")
+                || !step.util.raiseErrorIfBlank(lookupReference, "A reference must be provided")) {
+            return;
+        }
+
+        var url = BIBLE_GET_BIBLE_TEXT + lookupVersion + "/" + lookupReference;
+        if (options && options.length != 0) {
+            url += "/" + options;
+
+            if (interlinearVersion && interlinearVersion.length != 0) {
+                url += "/" + interlinearVersion;
+            }
+        }
+
+        // send to server
+        $.getSafe(url, function(text) {
+            step.state.passage.range(passageId, text.startRange, text.endRange, text.multipleRanges);
+
+            // we get html back, so we insert into passage:
+            step.util.getPassageContent(passageId).html(text.value);
+
+            // passage change was successful, so we let the rest of the UI know
+            $.shout("passage-changed", {
+                passageId : passageId
+            });
+
+            // execute all callbacks
+            var items = step.passage.callbacks[passageId];
+            while (items.length != 0) {
+                items.pop()();
+            }
+        });
+    },
 
     /* 2 queues of calls backs for passages */
     callbacks : [ [], [] ]
 };
+
+
+$(step.passage).hear("passage-state-has-changed", function(s, data) {
+    step.passage.changePassage(data.passageId);
+});
+
+
 
 function Passage(passageContainer, rawServerVersions, passageId) {
     var self = this;
@@ -61,12 +97,6 @@ function Passage(passageContainer, rawServerVersions, passageId) {
     this.passage = $(".passageContent", passageContainer);
     this.passageId = passageId;
 
-    $(this).hear("passage-state-has-changed-" + passageId, function() {
-        self.changePassage();
-    });
-
-    // read state from the cookie
-    step.state.passage.restore(this.passageId);
 
     this.initVersionsTextBox(rawServerVersions);
     this.initReferenceTextBox();
@@ -183,58 +213,15 @@ Passage.prototype.initReferenceTextBox = function() {
         delay : 0,
         select : function(event, ui) {
             step.state.passage.reference(self.passageId, ui.item.value);
-            // $(this).val(ui.item.value);
         }
     }).change(function() {
         step.state.passage.reference(self.passageId, $(this).val());
-        // self.changePassage();
     });
 };
 
 /**
  * changes the passage, with optional parameters
  */
-Passage.prototype.changePassage = function() {
-    var self = this;
-    var lookupVersion = step.state.passage.version(this.passageId);
-    var lookupReference = step.state.passage.reference(this.passageId);
-    var options = step.state.passage.options(this.passageId);
-    var interlinearVersion = step.state.passage.interlinearVersions(this.passageId);
-
-    if (!step.util.raiseErrorIfBlank(lookupVersion, "A version must be provided")
-            || !step.util.raiseErrorIfBlank(lookupReference, "A reference must be provided")) {
-        return;
-    }
-
-    var url = BIBLE_GET_BIBLE_TEXT + lookupVersion + "/" + lookupReference;
-
-    if (options && options.length != 0) {
-        url += "/" + options;
-
-        if (interlinearVersion && interlinearVersion.length != 0) {
-            url += "/" + interlinearVersion;
-        }
-    }
-
-    // send to server
-    $.getSafe(url, function(text) {
-        step.state.passage.range(self.passageId, text.startRange, text.endRange, text.multipleRanges);
-
-        // we get html back, so we insert into passage:
-        self.passage.html(text.value);
-
-        // passage change was successful, so we let the rest of the UI know
-        $.shout("passage-changed", {
-            passageId : self.passageId
-        });
-
-        // execute all callbacks
-        var items = step.passage.callbacks[self.passageId];
-        while (items.length != 0) {
-            items.pop()();
-        }
-    });
-};
 
 /**
  * highlights all strongs match parameter strongReference

@@ -42,6 +42,10 @@ body {
 /********************************/
 /** Lexicon popup               */
 /********************************/
+#lexiconDefinitionHeader a {
+	font-size: smaller;
+}
+
 .lexiconTable {
 	width: 100%;
 	border: 1px dotted lightgray;

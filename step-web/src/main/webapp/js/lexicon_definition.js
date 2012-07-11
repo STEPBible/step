@@ -103,8 +103,10 @@ LexiconDefinition.prototype.getPopup = function() {
     // create the popup container
     this.popup = $("#lexiconDefinition");
     this.popup.tabs().draggable({
-        handle : "#lexiconDefinitionHeader"
+        handle : "#lexiconDefinitionHeader",
     });
+    $("#lexiconDefinition").tabs("select", 0)
+    
     $('#lexiconPopupClose').click(function() {
         $('#lexiconDefinition').hide();
     });
@@ -116,7 +118,7 @@ LexiconDefinition.prototype.showDef = function(data) {
 
     step.lexicon.passageId = data.passageId;
 
-    // create all tabs - first remove everything, then readd.
+    // create all tabs - first remove everything, then re-add.
     var strong = data.strong;
     var morph = data.morph;
     var verse = $(data.source).closest("span.verse").filter("a:first").attr("name");

@@ -2,7 +2,7 @@
 
 <span id='lexiconDefinition'>
 	<ul id="lexiconDefinitionHeader">
-		<span id="lexiconPopupClose">X</span>
+		<span id="lexiconPopupClose">x</span>
 			<li><a href="#origin">Original Word</a></li>
 			<li><a href="#context">Context</a></li>
 	</ul>

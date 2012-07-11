@@ -64,9 +64,6 @@
    <!-- Whether to display Jesus' words in red or not -->
   <xsl:param name="RedLetterText" select="'false'" />
  
-   <!-- Whether to start each verse on an new line or not -->
-  <xsl:param name="VLine" select="'false'"/>
-
   <!-- Whether to show non-canonical "headings" or not -->
   <xsl:param name="Headings" select="'false'"/>
 
@@ -263,28 +260,21 @@
     <!-- If the verse doesn't start on its own line and -->
     <!-- the verse is not the first verse of a set of siblings, -->
     <!-- output an extra space. -->
-    <xsl:if test="$VLine = 'false' and preceding-sibling::*[local-name() = 'verse']">
+    <xsl:if test="preceding-sibling::*[local-name() = 'verse']">
       <xsl:text>&#160;</xsl:text>
     </xsl:if>
     <!-- Always output the verse -->
-    <xsl:choose>
-      <xsl:when test="$VLine = 'true'">
-        <span class="l interlinear"><a name="{@osisID}"><xsl:call-template name="versenum"/></a><xsl:apply-templates/></span>
-      </xsl:when>
-      <xsl:otherwise>
         <span class="interlinear"><xsl:call-template name="versenum"/><xsl:apply-templates/></span>
         <!-- Follow the verse with an extra space -->
         <!-- when they don't start on lines to themselves -->
         <xsl:text> </xsl:text>
-      </xsl:otherwise>
-    </xsl:choose>
   </xsl:template>
 
   <xsl:template match="verse[not(@eID)]" mode="jesus">
     <!-- If the verse doesn't start on its own line and -->
     <!-- the verse is not the first verse of a set of siblings, -->
     <!-- output an extra space. -->
-    <xsl:if test="$VLine = 'false' and preceding-sibling::*[local-name() = 'verse']">
+    <xsl:if test="preceding-sibling::*[local-name() = 'verse']">
       <xsl:text>&#160;</xsl:text>
     </xsl:if>
     <xsl:variable name="title" select=".//title"/>
@@ -294,17 +284,10 @@
     <!-- Handle the KJV paragraph marker. -->
     <xsl:if test="milestone[@type = 'x-p']"><p /></xsl:if>
     <!-- Always output the verse -->
-    <xsl:choose>
-      <xsl:when test="$VLine = 'true'">
-        <div class="l"><a name="{@osisID}"><xsl:call-template name="versenum"/></a><xsl:apply-templates mode="jesus"/></div>
-      </xsl:when>
-      <xsl:otherwise>
         <xsl:call-template name="versenum"/><xsl:apply-templates mode="jesus"/>
         <!-- Follow the verse with an extra space -->
         <!-- when they don't start on lines to themselves -->
         <xsl:text> </xsl:text>
-      </xsl:otherwise>
-    </xsl:choose>
   </xsl:template>
 
   <xsl:template match="verse" mode="print-notes">

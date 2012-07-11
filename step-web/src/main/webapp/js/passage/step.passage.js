@@ -125,11 +125,12 @@ function Passage(passageContainer, rawServerVersions, passageId) {
     });
 
     $(this.passage).hear("make-master-interlinear-" + this.passageId, function(selfElement, newMasterVersion) {
-        var interlinearVersion = self.getSelectedInterlinearVersion();
-        var currentVersion = step.state.passage.version(this.passageId);
+        var interlinearVersion = step.state.passage.interlinearVersions(self.passageId); 
+        var currentVersion = step.state.passage.version(self.passageId);
 
-        self.setSelectedInterlinearVersion(interlinearVersion.replace(newMasterVersion, currentVersion), currentVersion, newMasterVersion);
-        step.state.passage.version(this.passageId, newMasterVersion);
+        
+        step.state.passage.interlinearVersions(self.passageId, interlinearVersion.replace(newMasterVersion, currentVersion), currentVersion, newMasterVersion);
+        step.state.passage.version(self.passageId, newMasterVersion);
 
         $.shout("version-changed-dynamically" + self.passageId, newMasterVersion);
     });
@@ -324,23 +325,5 @@ Passage.getBlackListedStrongs = function() {
     return [ "strong:G3588" ];
 };
 
-/**
- * sets the toolbar so that the passage can open/close it
- */
-Passage.prototype.setToolbar = function(toolbar) {
-    this.toolbar = toolbar;
-};
 
-/**
- * sets the passage container, so that others can insert themselves into it
- */
-Passage.prototype.getPassageContainer = function() {
-    return this.container;
-};
 
-/**
- * @return the reference text
- */
-Passage.prototype.getReference = function() {
-    return this.reference.val();
-};

@@ -98,7 +98,7 @@
 			    	<div class="headingContainer">
 			    		<jsp:include page="js/search/advanced_search.jsp" />
 			    	</div>
-			    	<div class="passageContent"><%= stepRequest.getPassage(0) %></div>
+			    	<div class="passageContent">&nbsp;</div>
 			    </div>
 			</div>
 		</div>
@@ -112,7 +112,7 @@
 			    	<div class="headingContainer">
 			    		<jsp:include page="js/search/advanced_search.jsp" />
 			    	</div>
-			    	<div class="passageContent"><%= stepRequest.getPassage(1) %></div>
+			    	<div class="passageContent">&nbsp;</div>
 				</div>
 			</div>
 		</div>

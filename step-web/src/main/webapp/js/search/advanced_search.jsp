@@ -58,21 +58,21 @@
 		<table style="width: 100%">
 			<tr>
 				<td>Search by scripture reference</td>
-				<td><input type="text" class="passageReference" /></td>
-				<td colspan="3"><input type="button" class="exactStrongNumber passageButtons" value="Search"
+				<td><input type="text" class="timelineReference" /></td>
+				<td colspan="3"><input type="button" class="timelineReferenceSearch passageButtons" value="Search"
 						title="Finds timeline events related to the selected reference" /></td>
 			</tr>
 			<tr>
 				<td>Search by description</td>
 				<td><input type="text" class="timelineEventDescription" /></td>
-				<td colspan="3"><input class="passageButtons" type="button" value="Search"</td>
+				<td colspan="3"><input class="timelineDescriptionSearch passageButtons" type="button" value="Search"</td>
 			</tr>
 			<tr>
 				<td>Search by date</td>
 				<td><input type="text" class="timelineDate" /></td>
 				<td> +/- </td> 
-				<td><input type="text" class="timelineDate" size="4" /> years</td>
-				<td><input class="passageButtons" type="button" value="Search" /></td>
+				<td><input type="text" class="timelineYears" size="4" /> years</td>
+				<td><input class="timelineDateSearch passageButtons" type="button" value="Search" /></td>
 			</tr>
 		</table>
 	</fieldset>

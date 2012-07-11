@@ -26,15 +26,44 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
-$(document).ready(function() {
-    $(".bookmarkPassageLink").button({
-        icons : {
-            primary : "ui-icon-bookmark"
-        },
-        text : false
-    }).click(function() {
-        $.shout("bookmark-addition-requested", {
-            reference : step.state.passage.reference(step.passage.getPassageId(this))
-        });
-    });
-});
+step.state.timeline = {
+    restore : function(passageId) {
+        this.reference(passageId, this.reference(passageId));
+        this.description(passageId, this.description(passageId));
+        this.timelineDate(passageId, this.timelineDate(passageId));
+        this.timelineYears(passageId, this.timelineYears(passageId));
+    },
+
+    reference : function(passageId, value) {
+        if (value) {
+            $(".timelineReference", step.util.getPassageContainer(passageId)).val(value);
+        }
+
+        return step.state._storeAndRetrieveCookieState(passageId, "timelineReference", value, false);
+    },
+    description : function(passageId, value) {
+        if (value) {
+            $(".timelineEventDescription", step.util.getPassageContainer(passageId)).val(value);
+        }
+
+        return step.state._storeAndRetrieveCookieState(passageId, "timelineEventDescription", value, false);
+    },
+    timelineDate : function(passageId, value) {
+        if (value) {
+            $(".timelineDate", step.util.getPassageContainer(passageId)).val(value);
+        }
+
+        return step.state._storeAndRetrieveCookieState(passageId, "timelineDate", value, false);
+    },
+    timelineYears : function(passageId, value) {
+        if (value) {
+            $(".timelineYears", step.util.getPassageContainer(passageId)).val(value);
+        }
+
+        return step.state._storeAndRetrieveCookieState(passageId, "timelineYears", value, false);
+    },
+
+    searchType : function(passageId, searchType) {
+        return step.state._storeAndRetrieveCookieState(passageId, "timelineSearchType", searchType);
+    }
+};

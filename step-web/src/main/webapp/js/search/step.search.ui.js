@@ -26,15 +26,13 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
+
 $(document).ready(function() {
-    $(".bookmarkPassageLink").button({
-        icons : {
-            primary : "ui-icon-bookmark"
-        },
-        text : false
-    }).click(function() {
-        $.shout("bookmark-addition-requested", {
-            reference : step.state.passage.reference(step.passage.getPassageId(this))
-        });
-    });
+    $(".advancedSearch input[type = 'button']").button({});
+    $(".advancedSearch fieldset").hide();
 });
+
+step.search.ui = {
+        
+};
+

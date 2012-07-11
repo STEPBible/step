@@ -26,8 +26,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
-
-step.search.ui = {
+step.search.ui.original = {
     strongNumber : function(value, passageId) {
         $(".strongSearch", step.util.getPassageContainer(passageId)).val(value);
     }
@@ -35,8 +34,6 @@ step.search.ui = {
 };
 
 $(document).ready(function() {
-    $(".advancedSearch input[type = 'button']").button({});
-
     $(".strongSearch").change(function() {
         step.state.original.strong(step.passage.getPassageId(this), $(this).val());
     });
@@ -52,11 +49,9 @@ $(document).ready(function() {
         step.state.original.searchType(passageId, "related");
         step.state.activeSearch(passageId, 'SEARCH_ORIGINAL');
     });
-
-    $(".advancedSearch fieldset").hide();
 });
 
-$(step.search.ui).hear("original-search-state-has-changed", function(s, data) {
+$(step.search.ui.original).hear("original-search-state-has-changed", function(s, data) {
     var searchType = step.state.original.searchType(data.passageId);
     if(searchType == "exact") {
         step.search.tagging.exact(data.passageId);

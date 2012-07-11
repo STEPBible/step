@@ -245,6 +245,23 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
     }
 
     @Override
+    public OsisWrapper peakOsisText(final String version, final String keyedVersion,
+            final ScriptureReference r) {
+        // obtain first verse of each reference for display and add "..." on them...
+        final int startVerseId = r.getStartVerseId();
+
+        final OsisWrapper osisText = this.getOsisTextByVerseNumbers(version, keyedVersion, startVerseId,
+                startVerseId, new ArrayList<LookupOption>(), null, null, true);
+
+        if (startVerseId != r.getEndVerseId()) {
+            osisText.setFragment(true);
+            osisText.setReference(this.versificationService.getVerseRange(startVerseId, r.getEndVerseId()));
+        }
+
+        return osisText;
+    }
+
+    @Override
     public OsisWrapper getOsisText(final String version, final String reference) {
         return getOsisText(version, reference, new ArrayList<LookupOption>(), null);
     }

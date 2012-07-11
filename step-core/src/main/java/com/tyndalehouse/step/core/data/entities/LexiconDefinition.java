@@ -61,7 +61,7 @@ import com.tyndalehouse.step.core.models.ShortLexiconDefinition;
  */
 @Entity
 public class LexiconDefinition implements Serializable {
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = -776292628844878350L;
     @Id
     private String strong;
     private String original;

@@ -1,6 +1,6 @@
 package com.tyndalehouse.step.core.service.jsword;
 
-import com.tyndalehouse.step.core.models.SearchResult;
+import com.tyndalehouse.step.core.models.search.SearchResult;
 
 /**
  * Searches across jsword modules

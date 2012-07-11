@@ -53,7 +53,6 @@ import com.tyndalehouse.step.core.data.entities.ScriptureReference;
 import com.tyndalehouse.step.core.data.entities.TimelineEvent;
 import com.tyndalehouse.step.core.data.entities.aggregations.TimelineEventsAndDate;
 import com.tyndalehouse.step.core.models.EnhancedTimelineEvent;
-import com.tyndalehouse.step.core.models.LookupOption;
 import com.tyndalehouse.step.core.models.OsisWrapper;
 import com.tyndalehouse.step.core.service.TimelineService;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
@@ -67,7 +66,6 @@ import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
 @Singleton
 public class TimelineServiceImpl implements TimelineService {
     private static final Logger LOGGER = LoggerFactory.getLogger(TimelineServiceImpl.class);
-
     private final EbeanServer ebean;
     private final JSwordPassageService jsword;
 
@@ -198,17 +196,7 @@ public class TimelineServiceImpl implements TimelineService {
 
         final List<ScriptureReference> references = ete.getEvent().getReferences();
         for (final ScriptureReference r : references) {
-            // obtain first verse of each reference for display and add "..." on them...
-            final int startVerseId = r.getStartVerseId();
-
-            final OsisWrapper osisText = this.jsword.getOsisTextByVerseNumbers(version, "KJV", startVerseId,
-                    startVerseId, new ArrayList<LookupOption>(), null, null, true);
-
-            if (startVerseId != r.getEndVerseId()) {
-                osisText.setFragment(true);
-                osisText.setReference(this.jswordVersification.getVerseRange(startVerseId, r.getEndVerseId()));
-            }
-
+            final OsisWrapper osisText = this.jsword.peakOsisText(version, KEYED_REFERENCE_VERSION, r);
             ete.add(osisText);
         }
         return ete;

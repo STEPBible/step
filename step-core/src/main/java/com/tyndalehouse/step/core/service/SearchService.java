@@ -32,7 +32,7 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.service;
 
-import com.tyndalehouse.step.core.models.SearchResult;
+import com.tyndalehouse.step.core.models.search.SearchResult;
 
 /**
  * Runs various searches across the underlying database
@@ -69,4 +69,13 @@ public interface SearchService {
      * @return the search results
      */
     SearchResult searchRelatedStrong(String version, String searchStrong);
+
+    /**
+     * Searches the timeline by description
+     * 
+     * @param version the version to use for any passage references found
+     * @param description the description of the event that is sought after
+     * @return the result
+     */
+    SearchResult searchTimelineDescription(String version, String description);
 }

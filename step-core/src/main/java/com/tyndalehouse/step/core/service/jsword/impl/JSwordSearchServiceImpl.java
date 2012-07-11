@@ -18,8 +18,9 @@ import org.crosswire.jsword.passage.Passage;
 import org.crosswire.jsword.passage.RestrictionType;
 
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
-import com.tyndalehouse.step.core.models.SearchEntry;
-import com.tyndalehouse.step.core.models.SearchResult;
+import com.tyndalehouse.step.core.models.search.SearchEntry;
+import com.tyndalehouse.step.core.models.search.SearchResult;
+import com.tyndalehouse.step.core.models.search.VerseSearchEntry;
 import com.tyndalehouse.step.core.service.jsword.JSwordSearchService;
 import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
 
@@ -62,7 +63,7 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
                 final Key range = rangeIter.next();
                 final BookData data = new BookData(bible, range);
                 final String canonicalText = OSISUtil.getCanonicalText(data.getOsisFragment());
-                resultPassages.add(new SearchEntry(range.getName(), canonicalText));
+                resultPassages.add(new VerseSearchEntry(range.getName(), canonicalText));
             }
 
             final SearchResult r = new SearchResult();

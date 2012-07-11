@@ -1,4 +1,5 @@
-package com.tyndalehouse.step.core.models;
+package com.tyndalehouse.step.core.models.search;
+
 
 /**
  * Represents a result that was a match to the original query
@@ -6,14 +7,14 @@ package com.tyndalehouse.step.core.models;
  * @author chrisburrell
  * 
  */
-public class SearchEntry {
+public class VerseSearchEntry implements SearchEntry {
     private String key;
     private String preview;
 
     /**
      * for serialisation
      */
-    public SearchEntry() {
+    public VerseSearchEntry() {
         // for serialisation
     }
 
@@ -21,7 +22,7 @@ public class SearchEntry {
      * @param key meaninful key to the user
      * @param preview the preview text
      */
-    public SearchEntry(final String key, final String preview) {
+    public VerseSearchEntry(final String key, final String preview) {
         this.key = key;
         this.preview = preview;
     }

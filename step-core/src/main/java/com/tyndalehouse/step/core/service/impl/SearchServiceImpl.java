@@ -33,6 +33,7 @@
 package com.tyndalehouse.step.core.service.impl;
 
 import static com.tyndalehouse.step.core.service.impl.VocabularyServiceImpl.padStrongNumber;
+import static java.lang.String.format;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -46,8 +47,16 @@ import org.slf4j.LoggerFactory;
 
 import com.avaje.ebean.EbeanServer;
 import com.tyndalehouse.step.core.data.entities.LexiconDefinition;
-import com.tyndalehouse.step.core.models.SearchResult;
+import com.tyndalehouse.step.core.data.entities.ScriptureReference;
+import com.tyndalehouse.step.core.data.entities.TimelineEvent;
+import com.tyndalehouse.step.core.models.OsisWrapper;
+import com.tyndalehouse.step.core.models.search.SearchEntry;
+import com.tyndalehouse.step.core.models.search.SearchResult;
+import com.tyndalehouse.step.core.models.search.TimelineEventSearchEntry;
+import com.tyndalehouse.step.core.models.search.VerseSearchEntry;
 import com.tyndalehouse.step.core.service.SearchService;
+import com.tyndalehouse.step.core.service.TimelineService;
+import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import com.tyndalehouse.step.core.service.jsword.JSwordSearchService;
 
 /**
@@ -60,17 +69,22 @@ import com.tyndalehouse.step.core.service.jsword.JSwordSearchService;
 public class SearchServiceImpl implements SearchService {
     private static final Logger LOGGER = LoggerFactory.getLogger(SearchServiceImpl.class);
     private static final String STRONG_QUERY = "strong:";
+    private static final String LIKE = "%%%s%%";
     private final EbeanServer ebean;
     private final JSwordSearchService jswordSearch;
+    private final JSwordPassageService jsword;
 
     /**
      * @param ebean the ebean server to carry out the search from
      * @param jsword used to convert references to numerals, etc.
+     * @param jswordSearch the search service
      */
     @Inject
-    public SearchServiceImpl(final EbeanServer ebean, final JSwordSearchService jswordSearch) {
+    public SearchServiceImpl(final EbeanServer ebean, final JSwordSearchService jswordSearch,
+            final JSwordPassageService jsword) {
         this.ebean = ebean;
         this.jswordSearch = jswordSearch;
+        this.jsword = jsword;
     }
 
     @Override
@@ -80,20 +94,19 @@ public class SearchServiceImpl implements SearchService {
 
     @Override
     public SearchResult searchStrong(final String version, final String searchStrong) {
+        LOGGER.debug("Searching for strongs [{}]", searchStrong);
         final List<String> strongs = getStrongsFromQuery(searchStrong);
         return runStrongSearch(version, strongs);
     }
 
     @Override
     public SearchResult searchRelatedStrong(final String version, final String searchStrong) {
+        LOGGER.debug("Searching for related strongs [{}]", searchStrong);
         final List<String> strongsFromQuery = getStrongsFromQuery(searchStrong);
 
         final List<LexiconDefinition> strongs = this.ebean.find(LexiconDefinition.class)
                 .fetch("similarStrongs").select("similarStrongs.strong").where()
                 .in("strong", strongsFromQuery).findList();
-
-        // final List<LexiconDefinition> strongs = this.ebean.find(LexiconDefinition.class)
-        // .fetch("similarStrongs").where().in("strong", strongsFromQuery).findList();
 
         for (final LexiconDefinition s : strongs) {
             final List<LexiconDefinition> similarStrongs = s.getSimilarStrongs();
@@ -103,6 +116,40 @@ public class SearchServiceImpl implements SearchService {
         }
 
         return runStrongSearch(version, strongsFromQuery);
+    }
+
+    @Override
+    public SearchResult searchTimelineDescription(final String version, final String description) {
+        final List<TimelineEvent> events = this.ebean.find(TimelineEvent.class).where()
+                .ilike("name", format(LIKE, description)).findList();
+
+        final List<SearchEntry> results = new ArrayList<SearchEntry>();
+        final SearchResult r = new SearchResult();
+        r.setQuery("timeline:description:" + description);
+        r.setResults(results);
+
+        for (final TimelineEvent e : events) {
+            final List<ScriptureReference> references = e.getReferences();
+            final List<VerseSearchEntry> verses = new ArrayList<VerseSearchEntry>();
+
+            for (final ScriptureReference ref : references) {
+                final OsisWrapper peakOsisText = this.jsword.peakOsisText(version,
+                        TimelineService.KEYED_REFERENCE_VERSION, ref);
+
+                final VerseSearchEntry verseEntry = new VerseSearchEntry();
+                verseEntry.setKey(peakOsisText.getReference());
+                verseEntry.setPreview(peakOsisText.getValue());
+                verses.add(verseEntry);
+            }
+
+            final TimelineEventSearchEntry entry = new TimelineEventSearchEntry();
+            entry.setId(e.getId());
+            entry.setDescription(e.getName());
+            entry.setVerses(verses);
+            results.add(entry);
+        }
+
+        return r;
     }
 
     /**

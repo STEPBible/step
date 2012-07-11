@@ -6,7 +6,7 @@ import static com.tyndalehouse.step.core.utils.ValidateUtils.notNull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import com.tyndalehouse.step.core.models.SearchResult;
+import com.tyndalehouse.step.core.models.search.SearchResult;
 import com.tyndalehouse.step.core.service.SearchService;
 
 /**
@@ -60,5 +60,49 @@ public class SearchController {
         notNull(version, "A version must be selected", USER_MISSING_FIELD);
         notNull(searchStrong, "Please enter a search query", USER_MISSING_FIELD);
         return this.searchService.searchRelatedStrong(version, searchStrong);
+    }
+
+    /**
+     * Searches the timeline
+     * 
+     * @param version the version to use to lookup references
+     * @param description the description of the event
+     * @return the search results
+     */
+    public SearchResult searchTimelineDescription(final String version, final String description) {
+        notNull(version, "A version must be selected as results contain scripture references",
+                USER_MISSING_FIELD);
+        notNull(version, "A partial description must be provided", USER_MISSING_FIELD);
+
+        return this.searchService.searchTimelineDescription(version, description);
+    }
+
+    /**
+     * Searches the timeline
+     * 
+     * @param version the version to use to lookup references
+     * @param year the year around which the event occurred
+     * @param plusMinus a error margin within which events are accepted
+     * @return the search results
+     */
+    public SearchResult searchTimelineDating(final String version, final String year, final String plusMinus) {
+        notNull(version, "A version must be selected as results contain scripture references",
+                USER_MISSING_FIELD);
+        notNull(year, "A year must be provided to carry out searching by date", USER_MISSING_FIELD);
+        return null;
+    }
+
+    /**
+     * Searches the timeline
+     * 
+     * @param version the version to use to lookup references
+     * @param reference the reference to look up against timeline events
+     * @return the search results
+     */
+    public SearchResult searchTimelineReference(final String version, final String reference) {
+        notNull(version, "A version must be selected as results contain scripture references.",
+                USER_MISSING_FIELD);
+        notNull(reference, "A reference must be provided for this search.", USER_MISSING_FIELD);
+        return null;
     }
 }

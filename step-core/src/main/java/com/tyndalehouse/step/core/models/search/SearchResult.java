@@ -1,4 +1,4 @@
-package com.tyndalehouse.step.core.models;
+package com.tyndalehouse.step.core.models.search;
 
 import java.io.Serializable;
 import java.util.List;

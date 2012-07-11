@@ -102,4 +102,14 @@ public interface JSwordPassageService {
             int endVerseId, List<LookupOption> options, final String interlinearVersion,
             Boolean roundReference, boolean ignoreVerse0);
 
+    /**
+     * Looks up a very short starter for ten
+     * 
+     * @param version the version to lookup the text from
+     * @param keyedVersion the version with which the passage is keyed
+     * @param r the reference
+     * @return an osis wrapper
+     */
+    OsisWrapper peakOsisText(String version, String keyedVersion, ScriptureReference r);
+
 }

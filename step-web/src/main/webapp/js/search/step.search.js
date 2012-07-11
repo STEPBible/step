@@ -53,6 +53,9 @@ step.search = {
         
         description: function(passageId) {
             console.log("Searching by timeline description");
+            $.getSafe(SEARCH_TIMELINE_DESCRIPTION, [step.state.passage.version(passageId), step.state.timeline.description(passageId)], function(results) {
+                step.search._displayResults(results, passageId);
+            });
         },
         
         dating : function(passageId) {
@@ -76,6 +79,36 @@ step.search = {
             self._displayResults(searchQueryResults, passageId);
         });
     },
+    
+    _displayTimelineEventResults : function(results, passageId) {
+        var resultHtml = "<ul class='searchResults'>";
+        var self = this;
+        $.each(results, function(i, item) {
+            resultHtml += "<li class='searchResultRow'><a class='searchResultKey' href='#' onclick='goToTimeline(\"" + item.key + "\")'>" + item.description +  "</a></li>";
+            if(item.verses && item.verses.length > 0) {
+                resultHtml += "<ul>";
+                resultHtml += self._displayPassageResults(item.verses, passageId);
+                resultHtml += "</ul>";
+            }
+        });
+        
+        resultHtml += "</ul>";
+        return resultHtml;
+    },
+    
+    _displayPassageResults : function(searchResults, passageId) {
+        var results = "";
+        $.each(searchResults, function(i, item) {
+            results += "<li class='searchResultRow'><span class='searchResultKey'> ";
+            results += goToPassageArrow(true, item.key, "searchKeyPassageArrow");
+            results += item.key;
+            results += goToPassageArrow(false, item.key, "searchKeyPassageArrow");
+            results += "</span>";
+            results += item.preview;
+            results += "</li>";
+        });
+        return results;
+    },
 
     _displayResults : function(searchQueryResults, passageId) {
         var results = "";
@@ -83,17 +116,17 @@ step.search = {
 
         if (searchResults.length == 0) {
             results += "<span class='notApplicable'>No search results were found</span>";
+            return;
         }
 
-        $.each(searchResults, function(i, item) {
-            results += "<div class='searchResultRow'><span class='searchResultKey'> ";
-            results += goToPassageArrow(true, item.key, "searchKeyPassageArrow");
-            results += item.key;
-            results += goToPassageArrow(false, item.key, "searchKeyPassageArrow");
-            results += "</span>";
-            results += item.preview;
-            results += "</div>";
-        });
+        if(searchQueryResults.query.indexOf("timeline") == 0) {
+            results += this._displayTimelineEventResults(searchResults, passageId);
+        } else {
+            results += "<ul class='searchResults'>";
+            results += this._displayPassageResults(searchResults, passageId);
+            results += "</ul>";
+        }
+        
 
         if (searchQueryResults.maxReached == true) {
             results += "<span class='notApplicable'>The maximum number of search results was reached. Please refine your search to see continue.</span>";

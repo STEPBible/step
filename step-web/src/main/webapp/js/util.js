@@ -169,7 +169,21 @@ function shortenName(longName, minLength) {
 		 * @param the
 		 *            userFunction to call on success of the query
 		 */
-		getSafe : function(url, userFunction) {
+		getSafe : function(url, args, userFunction) {
+		    
+		    //args is optional, so we test whether it is a function
+		    if($.isFunction(args)) {
+		        userFunction = args;
+		    } else {
+                for(var i = 0; i < args.length; i++) {
+                    url += args[i];
+                    
+                    if(i < args.length -1) {
+                        url += "/";
+                    }
+                }
+		    }
+		    
 			$.get(url, function(data) {
 			    console.log("Received url ", url, " ", data);
 				if (data && data.errorMessage) {

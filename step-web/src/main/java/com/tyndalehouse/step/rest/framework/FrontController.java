@@ -309,7 +309,8 @@ public class FrontController extends HttpServlet {
         try {
             requestId = sr == null ? "Failed to parse request?" : sr.getCacheKey().getResultsKey();
             if (e != null) {
-                final byte[] errorMessage = this.getEncodedJsonResponse(e.getMessage());
+                final ClientHandledIssue issue = new ClientHandledIssue(e.getMessage());
+                final byte[] errorMessage = this.getEncodedJsonResponse(issue);
                 response.getOutputStream().write(errorMessage);
                 setupHeaders(response, errorMessage.length);
 

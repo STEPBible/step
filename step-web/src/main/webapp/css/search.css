@@ -24,8 +24,14 @@
 	display: inline-block;
 }
 
+.searchResults {
+	padding-left: 0px;
+}
+
 .searchResultRow {
+	margin-left: 0px;
 	margin-bottom: 10px;
+	list-style: none;
 }
 
 .searchScope {

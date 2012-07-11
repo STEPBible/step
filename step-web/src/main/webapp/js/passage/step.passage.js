@@ -179,6 +179,9 @@ Passage.prototype.initVersionsTextBox = function(rawServerVersions) {
         minLength : 0,
         delay : 0,
         select : function(event, ui) {
+            //manually change the text, so that the change() method can fire against the right version
+            self.version.val(ui.item.value);
+            
             $(this).change();
         },
     }).focus(function() {

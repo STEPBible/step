@@ -1,5 +1,5 @@
 step.state = {
-        activeSearch: function(passageId, activeSearch) {
+        activeSearch: function(passageId, activeSearch, fireChange) {
             //refresh menu options
             if(activeSearch) {
                 //tick the right menu item
@@ -10,7 +10,7 @@ step.state = {
                 this._showRelevantFieldSet(passageId);
             }
 
-            var newValue = this._storeAndRetrieveCookieState(passageId, "activeSearch", activeSearch, true);
+            var newValue = this._storeAndRetrieveCookieState(passageId, "activeSearch", activeSearch, fireChange);
             return newValue;
         },
         

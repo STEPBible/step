@@ -36,7 +36,7 @@ step.state.passage = {
         }
         var returnVersion = step.state._storeAndRetrieveCookieState(passageId, "version", version, fireChange);
         
-        //now that we've updated, alert if we intended a change
+        //now that we've updated, alert if we intended change
         if(version) {
             $.shout("version-changed-" + passageId, version);
         }
@@ -46,7 +46,7 @@ step.state.passage = {
 
     reference : function(passageId, reference, fireChange) {
         //if we've called this, then change the active state
-        step.state.activeSearch(passageId, 'SEARCH_PASSAGE');
+        step.state.activeSearch(passageId, 'SEARCH_PASSAGE', fireChange);
         
         // if we're in sync mode and passageId != 0, then we don't
         // accept any changes, we return reference of passage 0
@@ -101,7 +101,7 @@ step.state.passage = {
             mode = step.state._storeAndRetrieveCookieState(0, "syncMode");
             if (isEmpty(mode)) {
                 mode = false;
-                step.state._storeAndRetrieveCookieState(0, "syncMode", mode, fireChange);
+                step.state._storeAndRetrieveCookieState(0, "syncMode", step.defaults.syncMode, false);
             }
             return mode == true || mode == "true";
         }

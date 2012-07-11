@@ -54,7 +54,7 @@ function init() {
 		
 		initData();
 		
-		initInitialEvents();
+//		initInitialEvents();
 //		initLogin();
 
 	      // read state from the cookie
@@ -157,33 +157,33 @@ function initPassages(allVersions, options) {
 	return passages;
 }
 
-/**
- * waits for a particular condition to be ready, then triggers the action
- * @param isReady a function that can be called to tell us whether something is ready
- * @param action a function to trigger when we know it will work
- */
-function waitingForCondition(isReady, action) {
-	if(isReady() == false) {
-		window.setTimeout(function() {
-							waitingForCondition(isReady, action);
-						}, 250);
-	} else {
-		action();
-	}
-}
-
-function initInitialEvents() {
-	//unfortunately, all events might not be loaded yet, in particular
-	// - version-changed-0 and version-changed-1
-	waitingForCondition(
-		function() {
-			return !($(".passageContainer[passage-id = '0'] .passageVersion") === undefined
-			    || $(".passageContainer[passage-id = '1'] .passageVersion").val() === undefined);
-	}, 	function() {
-			$.shout("version-changed-" + 0, $(".passageContainer[passage-id = '0'] .passageVersion").val());
-			$.shout("version-changed-" + 1, $(".passageContainer[passage-id = '1'] .passageVersion").val());
-	});
-}
+///**
+// * waits for a particular condition to be ready, then triggers the action
+// * @param isReady a function that can be called to tell us whether something is ready
+// * @param action a function to trigger when we know it will work
+// */
+//function waitingForCondition(isReady, action) {
+//	if(isReady() == false) {
+//		window.setTimeout(function() {
+//							waitingForCondition(isReady, action);
+//						}, 250);
+//	} else {
+//		action();
+//	}
+//}
+//
+//function initInitialEvents() {
+//	//unfortunately, all events might not be loaded yet, in particular
+//	// - version-changed-0 and version-changed-1
+//	waitingForCondition(
+//		function() {
+//			return !($(".passageContainer[passage-id = '0'] .passageVersion") === undefined
+//			    || $(".passageContainer[passage-id = '1'] .passageVersion").val() === undefined);
+//	}, 	function() {
+//			$.shout("version-changed-" + 0, $(".passageContainer[passage-id = '0'] .passageVersion").val());
+//			$.shout("version-changed-" + 1, $(".passageContainer[passage-id = '1'] .passageVersion").val());
+//	});
+//}
 
 function initGlobalHandlers() {
 	//set always visible - should probably be its own class

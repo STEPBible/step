@@ -32,9 +32,16 @@ step.state.passage = {
     version : function(passageId, version, fireChange) {
         if (version) {
             $(".passageVersion", step.util.getPassageContainer(passageId)).val(version);
+            
+        }
+        var returnVersion = step.state._storeAndRetrieveCookieState(passageId, "version", version, fireChange);
+        
+        //now that we've updated, alert if we intended a change
+        if(version) {
             $.shout("version-changed-" + passageId, version);
         }
-        return step.state._storeAndRetrieveCookieState(passageId, "version", version, fireChange);
+        
+        return returnVersion;
     },
 
     reference : function(passageId, reference, fireChange) {
@@ -130,19 +137,22 @@ step.state.passage = {
     },
 
     _restoreMenuOptions : function(passageId, options) {
+        var opts = options;
         if (step.util.isBlank(options)) {
-            // make sure that the state matches the state of the menu items
-            // selected
-            var opts = step.menu.getSelectedOptionsForMenu(passageId, 'DISPLAY');
+
+            if(options == null) {
+                //then first time run, so get defaults
+                opts = step.defaults.passages[passageId].options;
+            } else {
+                opts = step.menu.getSelectedOptionsForMenu(passageId, 'DISPLAY');
+            }
+
             if (opts) {
-                // we read this from the defaults that are already ticked, so
-                // just store
                 this.options(passageId, opts, false);
             }
-            return;
         }
 
-        var menuOptions = $.isArray(options) ? options : options.split(",");
+        var menuOptions = $.isArray(opts) ? opts : opts.split(",");
         $.shout("initialise-passage-display-options", {
             passageId : passageId,
             menuOptions : menuOptions

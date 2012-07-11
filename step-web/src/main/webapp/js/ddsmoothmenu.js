@@ -16,7 +16,7 @@
 //** Dec 17th, 10" (v1.5): Updated menu shadow to use CSS3 box shadows when the browser is FF3.5+, IE9+, Opera9.5+, or Safari3+/Chrome. Only .js file changed.
 
 var ddsmoothmenu = {
-
+//    ignoreHoverDDSmoothMenu: 0,
     // Specify full URL to down and right arrow images (23 is padding-right
     // added to top level LIs with drop downs):
     arrowimages : {
@@ -90,6 +90,10 @@ var ddsmoothmenu = {
         $mainmenu.parent().get(0).className = setting.classname || "ddsmoothmenu";
         var $headers = $mainmenu.find("ul").parent();
         $headers.hover(function(e) {
+//            if(ddsmoothmenu.ignoreHoverDDSmoothMenu < 2) {
+//                ddsmoothmenu.ignoreHoverDDSmoothMenu++;
+//                return;
+//            }
             $(this).children('a:eq(0)').addClass('selected');
         }, function(e) {
             $(this).children('a:eq(0)').removeClass('selected');
@@ -149,6 +153,12 @@ var ddsmoothmenu = {
                     // shadow div
             }
             $curobj.hover(function(e) {
+//                if(ddsmoothmenu.ignoreHoverDDSmoothMenu < 2) {
+//                    ddsmoothmenu.ignoreHoverDDSmoothMenu++;
+//                    return;
+//                }
+
+                
                 var $targetul = $subul; // reference UL to reveal
                 var header = $curobj.get(0); // reference header LI as DOM
                                                 // object

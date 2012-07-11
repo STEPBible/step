@@ -1,0 +1,132 @@
+[0.000][INFO]:      ChromeDriver 21.0.1180.4 D:\dev\chromedriver\chromedriver.exe
+[1.114][FINE]:      Initializing session with capabilities {
+   "browserName": "chrome",
+   "platform": "ANY",
+   "version": ""
+}
+
+[1.115][INFO]:      Launching chrome: "C:\Users\Chris\AppData\Local\Google\Chrome\Application\chrome.exe" --disable-hang-monitor --disable-prompt-on-repost --dom-automation --full-memory-crash-report --no-default-browser-check --no-first-run --ignore-certificate-errors --disable-popup-blocking --homepage=about:blank
+[2.320][INFO]:      Connected to Chrome successfully. Version: 22.0.1201.0
+[2.346][FINE]:      Command received (/session/2e6f6bab7f9861e23cdb97e5d8558961)
+[2.346][FINE]:      Command finished (/session/2e6f6bab7f9861e23cdb97e5d8558961) with response {
+   "sessionId": "2e6f6bab7f9861e23cdb97e5d8558961",
+   "status": 0,
+   "value": {
+      "acceptSslCerts": false,
+      "applicationCacheEnabled": false,
+      "browserConnectionEnabled": false,
+      "browserName": "chrome",
+      "chrome.chromedriverVersion": "21.0.1180.4",
+      "chrome.nativeEvents": false,
+      "cssSelectorsEnabled": true,
+      "databaseEnabled": false,
+      "handlesAlerts": true,
+      "javascriptEnabled": true,
+      "locationContextEnabled": false,
+      "nativeEvents": true,
+      "platform": "windows",
+      "rotatable": false,
+      "takesScreenshot": true,
+      "version": "22.0.1201.0",
+      "webStorageEnabled": true
+   }
+}
+
+[2.374][FINE]:      Command received (/session/2e6f6bab7f9861e23cdb97e5d8558961/timeouts/implicit_wait) with params {
+   "ms": 5000
+}
+
+[2.374][FINER]:     Waiting for all views to stop loading...
+[2.375][FINER]:     Done waiting for all views to stop loading
+[2.375][FINER]:     Waiting for all views to stop loading...
+[2.375][FINER]:     Done waiting for all views to stop loading
+[2.375][FINE]:      Command finished (/session/2e6f6bab7f9861e23cdb97e5d8558961/timeouts/implicit_wait) with response {
+   "sessionId": "2e6f6bab7f9861e23cdb97e5d8558961",
+   "status": 0,
+   "value": {
+
+   }
+}
+
+[2.379][FINE]:      Initializing session with capabilities {
+   "browserName": "chrome",
+   "platform": "ANY",
+   "version": ""
+}
+
+[2.379][INFO]:      Launching chrome: "C:\Users\Chris\AppData\Local\Google\Chrome\Application\chrome.exe" --disable-hang-monitor --disable-prompt-on-repost --dom-automation --full-memory-crash-report --no-default-browser-check --no-first-run --ignore-certificate-errors --disable-popup-blocking --homepage=about:blank
+[3.620][INFO]:      Connected to Chrome successfully. Version: 22.0.1201.0
+[3.625][FINE]:      Command received (/session/a0da946d024234351520a910c38d67de)
+[3.626][FINE]:      Command finished (/session/a0da946d024234351520a910c38d67de) with response {
+   "sessionId": "a0da946d024234351520a910c38d67de",
+   "status": 0,
+   "value": {
+      "acceptSslCerts": false,
+      "applicationCacheEnabled": false,
+      "browserConnectionEnabled": false,
+      "browserName": "chrome",
+      "chrome.chromedriverVersion": "21.0.1180.4",
+      "chrome.nativeEvents": false,
+      "cssSelectorsEnabled": true,
+      "databaseEnabled": false,
+      "handlesAlerts": true,
+      "javascriptEnabled": true,
+      "locationContextEnabled": false,
+      "nativeEvents": true,
+      "platform": "windows",
+      "rotatable": false,
+      "takesScreenshot": true,
+      "version": "22.0.1201.0",
+      "webStorageEnabled": true
+   }
+}
+
+[3.629][FINE]:      Command received (/session/a0da946d024234351520a910c38d67de/timeouts/implicit_wait) with params {
+   "ms": 5000
+}
+
+[3.629][FINER]:     Waiting for all views to stop loading...
+[3.629][FINER]:     Done waiting for all views to stop loading
+[3.629][FINER]:     Waiting for all views to stop loading...
+[3.629][FINER]:     Done waiting for all views to stop loading
+[3.630][FINE]:      Command finished (/session/a0da946d024234351520a910c38d67de/timeouts/implicit_wait) with response {
+   "sessionId": "a0da946d024234351520a910c38d67de",
+   "status": 0,
+   "value": {
+
+   }
+}
+
+[3.633][FINE]:      Command received (/session/a0da946d024234351520a910c38d67de/url) with params {
+   "url": "http://localhost:8080/step-web?debug"
+}
+
+[3.633][FINER]:     Waiting for all views to stop loading...
+[3.633][FINER]:     Done waiting for all views to stop loading
+[4.951][FINER]:     Waiting for all views to stop loading...
+[4.954][FINER]:     Done waiting for all views to stop loading
+[4.954][FINE]:      Command finished (/session/a0da946d024234351520a910c38d67de/url) with response {
+   "sessionId": "a0da946d024234351520a910c38d67de",
+   "status": 0,
+   "value": {
+
+   }
+}
+
+[4.965][FINE]:      Command received (/session/2e6f6bab7f9861e23cdb97e5d8558961/element) with params {
+   "using": "link text",
+   "value": "View"
+}
+
+[4.965][FINER]:     Waiting for all views to stop loading...
+[4.966][FINER]:     Done waiting for all views to stop loading
+[10.025][FINER]:    Waiting for all views to stop loading...
+[10.026][FINER]:    Done waiting for all views to stop loading
+[10.026][WARNING]:  Command finished (/session/2e6f6bab7f9861e23cdb97e5d8558961/element) with response {
+   "sessionId": "2e6f6bab7f9861e23cdb97e5d8558961",
+   "status": 7,
+   "value": {
+      "message": "The element could not be found"
+   }
+}
+

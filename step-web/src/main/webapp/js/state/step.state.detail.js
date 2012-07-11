@@ -13,6 +13,11 @@ step.state.detail = {
             },
             
             restore: function() {
-                step.menu.tickMenuItem($("li[menu-name = 'VIEW'] ul li a").get(this.get()));
+                var current = this.get();
+                if(current == null) {
+                    current = step.defaults.detailLevel;
+                }
+                
+                step.menu.tickMenuItem($("li[menu-name = 'VIEW'] ul li a").get(current));
             }
 };

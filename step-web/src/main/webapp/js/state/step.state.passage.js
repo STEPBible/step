@@ -32,6 +32,7 @@ step.state.passage = {
     version : function(passageId, version, fireChange) {
         if (version) {
             $(".passageVersion", step.util.getPassageContainer(passageId)).val(version);
+            $.shout("version-changed-" + passageId, version);
         }
         return step.state._storeAndRetrieveCookieState(passageId, "version", version, fireChange);
     },
@@ -164,7 +165,7 @@ step.state.passage = {
             this.version(passageId, v, false);
         } else {
             // use the pre-populated value
-            this.version(passageId, $(".passageVersion", step.util.getPassageContainer(passageId)).val(), false);
+            this.version(passageId, step.defaults.passages[passageId].version, false);
         }
     },
 
@@ -173,7 +174,7 @@ step.state.passage = {
         if (!step.util.isBlank(r)) {
             this._storedReference(passageId, r, false);
         } else {
-            this.reference(passageId, $(".passageReference", step.util.getPassageContainer(passageId)).val(), false);
+            this.reference(passageId, step.defaults.passages[passageId].reference, false);
         }
     }
 };

@@ -53,6 +53,7 @@
 
 		<script src="js/navigation/step.navigation.js" type="text/javascript"></script>	    
 
+		<script src="js/defaults/step.defaults.js" type="text/javascript"></script>
 
 		<script src="js/state/step.state.js" type="text/javascript"></script>
 		<script src="js/state/step.state.detail.js" type="text/javascript"></script>

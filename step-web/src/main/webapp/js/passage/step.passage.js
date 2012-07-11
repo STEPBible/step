@@ -178,14 +178,13 @@ Passage.prototype.initVersionsTextBox = function(rawServerVersions) {
         minLength : 0,
         delay : 0,
         select : function(event, ui) {
-            step.state.passage.version(self.passageId, ui.item.value);
             $(this).change();
         },
     }).focus(function() {
         self.version.autocomplete("search", "");
     }).change(function() {
         if (step.util.raiseErrorIfBlank(this.value, "A version must be selected.")) {
-            $.shout("version-changed-" + self.passageId, this.value);
+            step.state.passage.version(self.passageId, this.value);
             $(this).blur();
         }
         ;

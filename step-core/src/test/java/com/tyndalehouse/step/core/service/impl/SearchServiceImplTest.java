@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import com.tyndalehouse.step.core.data.DataDrivenTestExtension;
@@ -27,24 +28,27 @@ import com.tyndalehouse.step.core.service.jsword.impl.JSwordVersificationService
  * 
  */
 public class SearchServiceImplTest extends DataDrivenTestExtension {
+    private SearchServiceImpl si;
+
+    @Before
+    public void setUp() {
+        final JSwordVersificationService versificationService = new JSwordVersificationServiceImpl();
+        final JSwordPassageServiceImpl jsword = new JSwordPassageServiceImpl(versificationService, null, null);
+        this.si = new SearchServiceImpl(getEbean(),
+                new JSwordSearchServiceImpl(versificationService, jsword), jsword, null);
+
+    }
+
     /** test exact strong match */
     @Test
     public void testSearchStrong() {
-        final JSwordVersificationService versificationService = new JSwordVersificationServiceImpl();
-        final SearchServiceImpl si = new SearchServiceImpl(getEbean(), new JSwordSearchServiceImpl(
-                versificationService), new JSwordPassageServiceImpl(versificationService, null, null));
-
-        final SearchResult searchStrong = si.searchStrong("KJV", "G16");
+        final SearchResult searchStrong = this.si.searchStrong("KJV", "G16");
         assertTrue("1 Peter 4:19".equals(((VerseSearchEntry) searchStrong.getResults().get(0)).getKey()));
     }
 
     /** test exact strong match */
     @Test
     public void testSearchRelatedStrongs() {
-        final JSwordVersificationService versificationService = new JSwordVersificationServiceImpl();
-        final SearchServiceImpl si = new SearchServiceImpl(getEbean(), new JSwordSearchServiceImpl(
-                versificationService), new JSwordPassageServiceImpl(versificationService, null, null));
-
         final LexiconDefinition ld = new LexiconDefinition();
         ld.setStrong("G0016");
         getEbean().save(ld);
@@ -56,17 +60,13 @@ public class SearchServiceImplTest extends DataDrivenTestExtension {
         ld.getSimilarStrongs().add(related);
         getEbean().save(ld);
 
-        final SearchResult searchStrong = si.searchRelatedStrong("KJV", "G16");
+        final SearchResult searchStrong = this.si.searchRelatedStrong("KJV", "G16");
         assertEquals("strong:g0016 strong:g0015", searchStrong.getQuery().trim());
     }
 
     /** test exact strong match */
     @Test
     public void testSearchTimelineDescription() {
-        final JSwordVersificationService versificationService = new JSwordVersificationServiceImpl();
-        final SearchServiceImpl si = new SearchServiceImpl(getEbean(), new JSwordSearchServiceImpl(
-                versificationService), new JSwordPassageServiceImpl(versificationService, null, null));
-
         // write test event to db
         final TimelineEvent e = new TimelineEvent();
         e.setName("Golden Calf episode");
@@ -78,7 +78,7 @@ public class SearchServiceImplTest extends DataDrivenTestExtension {
         e.setReferences(references);
         getEbean().save(e);
 
-        final SearchResult result = si.searchTimelineDescription("ESV", "calf");
+        final SearchResult result = this.si.searchTimelineDescription("ESV", "calf");
         final TimelineEventSearchEntry timelineEventSearchEntry = (TimelineEventSearchEntry) result
                 .getResults().get(0);
         assertEquals("Golden Calf episode", timelineEventSearchEntry.getDescription());

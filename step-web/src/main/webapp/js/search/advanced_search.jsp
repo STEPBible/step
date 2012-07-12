@@ -31,11 +31,15 @@
 						query [TODO - Add slider]</h4></td>
 			</tr>
 			<tr>
-				<td>Include exact phrase</td>
-				<td><input type="text" class="textPrimaryExactPhrase" size="15" /></td>
+				<td>Include all of these words</td>
+				<td><input type="text" class="textPrimaryIncludeAllWords" size="15" /></td>
 				<td>Include any of these words</td>
 				<td><input type="text" class="textPrimaryIncludeWords"
 					size="15" /></td>
+			</tr>
+			<tr>
+				<td>Include exact phrase</td>
+				<td colspan="3"><input type="text" class="textPrimaryExactPhrase" size="45" /></td>
 			</tr>
 			<tr>
 				<td>Exclude this exact phrase</td>
@@ -72,19 +76,15 @@
 				</td>
 			</tr>
 			<tr>
-				<td>Include exact phrase</td>
-				<td><input type="text" class="textCloseByExactPhrase" size="15" /></td>
+				<td>Include all of these words</td>
+				<td><input type="text" class="textCloseByIncludeAllWords" size="15" /></td>
 				<td>Include any of these words</td>
 				<td><input type="text" class="textCloseByIncludeWords"
 					size="15" /></td>
 			</tr>
 			<tr>
-				<td>Exclude these words</td>
-				<td><input type="text" class="textCloseByExcludeWords"
-					size="15" /></td>
-				<td>Exclude this exact phrase</td>
-				<td><input type="text" class="textCloseByExcludePhrase"
-					size="15" /></td>
+				<td>Include exact phrase</td>
+				<td colspan="3"><input type="text" class="textCloseByExactPhrase" size="45" /></td>
 			</tr>
 			<tr>
 				<td>Include spellings similar to</td>
@@ -119,6 +119,8 @@
 			<tr>
 				<td>Restrict search to</td>
 				<td><input type="text" class="textRestriction" size="15" /></td>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i>or</i><span style="float: right">Excluding range</span></td>
+				<td><input type="text" class="textRestrictionExclude" size="15" /></td>
 			</tr>
 			<tr>
 				<td>Sort results by relevance</td>
@@ -127,7 +129,7 @@
 			</tr>
 			<tr>
 				<td>Query syntax</td>
-				<td colspan="3"><textarea class="textQuerySyntax" cols="70"></textarea></td>
+				<td colspan="3"><textarea class="textQuerySyntax" cols="45"></textarea></td>
 			</tr>
 			<tr>
 				<td colspan="3">&nbsp;</td>

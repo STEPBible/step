@@ -70,6 +70,11 @@ step.search = {
     textual : {
         search : function(passageId){
             console.log("Searching text...");
+            var query = step.state.textual.textQuerySyntax(passageId);
+
+            if (step.util.raiseErrorIfBlank(query, "Please fill in the form first")) {
+                step.search._doSearch(SEARCH_DEFAULT, passageId, query);
+            }
         }
     },
     

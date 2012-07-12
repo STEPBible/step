@@ -52,7 +52,7 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
     public SearchResult search(final String version, final String query) {
         final DefaultSearchModifier modifier = new DefaultSearchModifier();
 
-        modifier.setRanked(true);
+        modifier.setRanked(false);
         modifier.setMaxResults(MAX_RESULTS);
 
         final Book bible = this.av11nService.getBookFromVersion(version);

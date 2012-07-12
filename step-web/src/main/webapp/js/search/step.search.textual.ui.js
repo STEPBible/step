@@ -29,6 +29,7 @@
 step.search.ui.textual = {
     textPrimaryExactPhrase : function(value, passageId) { $(".textPrimaryExactPhrase", step.util.getPassageContainer(passageId)).val(value); },
     textPrimaryIncludeWords : function(value, passageId) { $(".textPrimaryIncludeWords", step.util.getPassageContainer(passageId)).val(value); },
+    textPrimaryIncludeAllWords : function(value, passageId) { $(".textPrimaryIncludeAllWords", step.util.getPassageContainer(passageId)).val(value); },
     textPrimarySimilarSpellings : function(value, passageId) { $(".textPrimarySimilarSpellings", step.util.getPassageContainer(passageId)).val(value); },
     textPrimaryWordsStarting : function(value, passageId) { $(".textPrimaryWordsStarting", step.util.getPassageContainer(passageId)).val(value); },
     textPrimaryExcludeWords : function(value, passageId) { $(".textPrimaryExcludeWords", step.util.getPassageContainer(passageId)).val(value); },
@@ -37,6 +38,7 @@ step.search.ui.textual = {
     textPrimaryWithinXWords : function(value, passageId) { $(".textPrimaryWithinXWords", step.util.getPassageContainer(passageId)).val(value); },
     textCloseByExactPhrase : function(value, passageId) { $(".textCloseByExactPhrase", step.util.getPassageContainer(passageId)).val(value); },
     textCloseByIncludeWords : function(value, passageId) { $(".textCloseByIncludeWords", step.util.getPassageContainer(passageId)).val(value); },
+    textCloseByIncludeAllWords : function(value, passageId) { $(".textCloseByIncludeAllWords", step.util.getPassageContainer(passageId)).val(value); },
     textCloseBySimilarSpellings : function(value, passageId) { $(".textCloseBySimilarSpellings", step.util.getPassageContainer(passageId)).val(value); },
     textCloseByWordsStarting : function(value, passageId) { $(".textCloseByWordsStarting", step.util.getPassageContainer(passageId)).val(value); },
     textCloseByExcludeWords : function(value, passageId) { $(".textCloseByExcludeWords", step.util.getPassageContainer(passageId)).val(value); },
@@ -45,6 +47,7 @@ step.search.ui.textual = {
     textCloseByWithinXWords : function(value, passageId) { $(".textCloseByWithinXWords", step.util.getPassageContainer(passageId)).val(value); },
     textVerseProximity : function(value, passageId) { $(".textVerseProximity", step.util.getPassageContainer(passageId)).val(value); },
     textRestriction : function(value, passageId) { $(".textRestriction", step.util.getPassageContainer(passageId)).val(value); },
+    textRestrictionExclude : function(value, passageId) { $(".textRestrictionExclude", step.util.getPassageContainer(passageId)).val(value); },
     textSortByRelevance : function(value, passageId) { $(".textSortByRelevance", step.util.getPassageContainer(passageId)).prop('checked', value); },
     textQuerySyntax : function(value, passageId) { $(".textQuerySyntax", step.util.getPassageContainer(passageId)).val(value); },
     
@@ -54,6 +57,7 @@ step.search.ui.textual = {
         
         var query = "";
         query += this._evalExactPhrase($(".textPrimaryExactPhrase", passageContainer).val());
+        query += this._evalAllWords($(".textPrimaryIncludeAllWords", passageContainer).val());
         query += this._evalAnyWord($(".textPrimaryIncludeWords", passageContainer).val());
         query += this._evalSpellings($(".textPrimarySimilarSpellings", passageContainer).val());
         query += this._evalStarting($(".textPrimaryWordsStarting", passageContainer).val());
@@ -64,6 +68,7 @@ step.search.ui.textual = {
                     $(".textPrimaryWithinXWords", passageContainer).val());
         
         var secondaryQuery = "";
+        secondaryQuery += this._evalAllWords($(".textCloseByIncludeAllWords", passageContainer).val());
         secondaryQuery += this._evalExactPhrase($(".textCloseByExactPhrase", passageContainer).val());
         secondaryQuery += this._evalAnyWord($(".textCloseByIncludeWords", passageContainer).val());
         secondaryQuery += this._evalSpellings($(".textCloseBySimilarSpellings", passageContainer).val());
@@ -76,7 +81,17 @@ step.search.ui.textual = {
         
         
         query = this._evalProximity($(".textVerseProximity").val(), query, secondaryQuery);
-        query = this._evalTextRestriction($(".textRestriction").val(), query);
+        
+        var restriction = $(".textRestriction").val();
+        query = this._evalTextRestriction(restriction, query);
+        
+        var restrictionExclude = $(".textRestrictionExclude").val();
+        if(!step.util.isBlank(restrictionExclude) && !step.util.isBlank(restriction)) {
+            step.util.raiseError("Both a restriction and an inclusion of range have been specified. The range restriction will be used.");
+        } else {
+            query = this._evalTextRestrictionExclude(restrictionExclude, query);
+        }
+        
         
         step.state.textual.textQuerySyntax(passageId, query);
     },
@@ -87,7 +102,19 @@ step.search.ui.textual = {
         }
         return "";
     },
-    
+
+    _evalAllWords : function(text) {
+        if(!step.util.isBlank(text)) {
+            var words = text.split(" ");
+            var syntax = "";
+            for (var i = 0; i < words.length; i++) {
+                syntax += " +" + words[i];
+            }
+            return syntax; 
+        }
+        return "";
+    },
+
     _evalAnyWord : function(text) {
         return " " + text;
     },
@@ -146,12 +173,22 @@ step.search.ui.textual = {
             query = "+[" + restriction + "] " + query; 
         }
         return query;
+    },
+
+    _evalTextRestrictionExclude : function(restriction, query) {
+        if(!step.util.isBlank(restriction)) {
+            //join the two queries up
+            query = "-[" + restriction + "] " + query; 
+        }
+        return query;
     }
+
 };
 
 $(document).ready(function() {
     $(".textPrimaryExactPhrase").change(function() {  step.state.textual.textPrimaryExactPhrase(step.passage.getPassageId(this), $(this).val()); });
     $(".textPrimaryIncludeWords").change(function() {  step.state.textual.textPrimaryIncludeWords(step.passage.getPassageId(this), $(this).val()); });
+    $(".textPrimaryIncludeAllWords").change(function() {  step.state.textual.textPrimaryIncludeAllWords(step.passage.getPassageId(this), $(this).val()); });
     $(".textPrimarySimilarSpellings").change(function() {  step.state.textual.textPrimarySimilarSpellings(step.passage.getPassageId(this), $(this).val()); });
     $(".textPrimaryWordsStarting").change(function() {  step.state.textual.textPrimaryWordsStarting(step.passage.getPassageId(this), $(this).val()); });
     $(".textPrimaryExcludeWords").change(function() {  step.state.textual.textPrimaryExcludeWords(step.passage.getPassageId(this), $(this).val()); });
@@ -160,6 +197,7 @@ $(document).ready(function() {
     $(".textPrimaryWithinXWords").change(function() {  step.state.textual.textPrimaryWithinXWords(step.passage.getPassageId(this), $(this).val()); });
     $(".textCloseByExactPhrase").change(function() {  step.state.textual.textCloseByExactPhrase(step.passage.getPassageId(this), $(this).val()); });
     $(".textCloseByIncludeWords").change(function() {  step.state.textual.textCloseByIncludeWords(step.passage.getPassageId(this), $(this).val()); });
+    $(".textCloseByIncludeAllWords").change(function() {  step.state.textual.textCloseByIncludeAllWords(step.passage.getPassageId(this), $(this).val()); });
     $(".textCloseBySimilarSpellings").change(function() {  step.state.textual.textCloseBySimilarSpellings(step.passage.getPassageId(this), $(this).val()); });
     $(".textCloseByWordsStarting").change(function() {  step.state.textual.textCloseByWordsStarting(step.passage.getPassageId(this), $(this).val()); });
     $(".textCloseByExcludeWords").change(function() {  step.state.textual.textCloseByExcludeWords(step.passage.getPassageId(this), $(this).val()); });
@@ -168,6 +206,7 @@ $(document).ready(function() {
     $(".textCloseByWithinXWords").change(function() {  step.state.textual.textCloseByWithinXWords(step.passage.getPassageId(this), $(this).val()); });
     $(".textVerseProximity").change(function() {  step.state.textual.textVerseProximity(step.passage.getPassageId(this), $(this).val()); });
     $(".textRestriction").change(function() {  step.state.textual.textRestriction(step.passage.getPassageId(this), $(this).val()); });
+    $(".textRestrictionExclude").change(function() {  step.state.textual.textRestrictionExclude(step.passage.getPassageId(this), $(this).val()); });
     $(".textSortByRelevance").change(function() {  step.state.textual.textSortByRelevance(step.passage.getPassageId(this), $(this).prop('checked')); });
     $(".textQuerySyntax").change(function() { step.state.textual.textQuerySyntax(step.passage.getPassageId(this), $(this).val()); });
 
@@ -176,6 +215,7 @@ $(document).ready(function() {
         //need to register state, so don't go straight to the field on the screen
         step.state.textual.textPrimaryExactPhrase(passageId, "");
         step.state.textual.textPrimaryIncludeWords(passageId, "");
+        step.state.textual.textPrimaryIncludeAllWords(passageId, "");
         step.state.textual.textPrimarySimilarSpellings(passageId, "");
         step.state.textual.textPrimaryWordsStarting(passageId, "");
         step.state.textual.textPrimaryExcludeWords(passageId, "");
@@ -184,6 +224,7 @@ $(document).ready(function() {
         step.state.textual.textPrimaryWithinXWords(passageId, "");
         step.state.textual.textCloseByExactPhrase(passageId, "");
         step.state.textual.textCloseByIncludeWords(passageId, "");
+        step.state.textual.textCloseByIncludeAllWords(passageId, "");
         step.state.textual.textCloseBySimilarSpellings(passageId, "");
         step.state.textual.textCloseByWordsStarting(passageId, "");
         step.state.textual.textCloseByExcludeWords(passageId, "");
@@ -192,6 +233,7 @@ $(document).ready(function() {
         step.state.textual.textCloseByWithinXWords(passageId, "");
         step.state.textual.textVerseProximity(passageId, "");
         step.state.textual.textRestriction(passageId, "");
+        step.state.textual.textRestrictionExclude(passageId, "");
         step.state.textual.textSortByRelevance(passageId, false);
         step.state.textual.textQuerySyntax(passageId, "");
     });
@@ -202,7 +244,7 @@ $(document).ready(function() {
     });
     
     $(".textSearchButton").click(function() {
-        step.state.activeSearch(step.passage.getPassageId(passageId), 'SEARCH_TEXT', true);
+        step.state.activeSearch(step.passage.getPassageId(this), 'SEARCH_TEXT', true);
     });
 });
 

@@ -1,6 +1,7 @@
 package com.tyndalehouse.step.rest.controllers;
 
 import static com.tyndalehouse.step.core.exceptions.UserExceptionType.USER_MISSING_FIELD;
+import static com.tyndalehouse.step.core.utils.ValidateUtils.atLeast;
 import static com.tyndalehouse.step.core.utils.ValidateUtils.notNull;
 
 import javax.inject.Inject;
@@ -72,7 +73,8 @@ public class SearchController {
     public SearchResult searchTimelineDescription(final String version, final String description) {
         notNull(version, "A version must be selected as results contain scripture references",
                 USER_MISSING_FIELD);
-        notNull(version, "A partial description must be provided", USER_MISSING_FIELD);
+        notNull(description, "A description must be provided", USER_MISSING_FIELD);
+        atLeast(description, 4, "The description must be at least 4 characters long", USER_MISSING_FIELD);
 
         return this.searchService.searchTimelineDescription(version, description);
     }
@@ -89,6 +91,8 @@ public class SearchController {
         notNull(version, "A version must be selected as results contain scripture references",
                 USER_MISSING_FIELD);
         notNull(year, "A year must be provided to carry out searching by date", USER_MISSING_FIELD);
+
+        // not yet implemented
         return null;
     }
 
@@ -103,6 +107,6 @@ public class SearchController {
         notNull(version, "A version must be selected as results contain scripture references.",
                 USER_MISSING_FIELD);
         notNull(reference, "A reference must be provided for this search.", USER_MISSING_FIELD);
-        return null;
+        return this.searchService.searchTimelineReference(version, reference);
     }
 }

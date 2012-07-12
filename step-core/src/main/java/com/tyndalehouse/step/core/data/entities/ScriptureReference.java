@@ -41,6 +41,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
 import com.tyndalehouse.step.core.data.entities.reference.TargetType;
+import com.tyndalehouse.step.core.data.entities.timeline.TimelineEvent;
 
 /**
  * The object that represents a scripture reference

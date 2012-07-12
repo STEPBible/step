@@ -82,4 +82,17 @@ public final class ValidateUtils {
             throw new ValidationException(exceptionMessage, type);
         }
     }
+
+    /**
+     * @param s the string to be tested
+     * @param minCharacters the number of characters below which we reject the request
+     * @param exceptionMessage the message
+     * @param type the type of user exception
+     */
+    public static void atLeast(final String s, final int minCharacters, final String exceptionMessage,
+            final UserExceptionType type) {
+        if (s.length() < minCharacters) {
+            throw new ValidationException(exceptionMessage, type);
+        }
+    }
 }

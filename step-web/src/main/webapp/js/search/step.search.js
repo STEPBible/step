@@ -49,6 +49,10 @@ step.search = {
     timeline : {
         reference : function(passageId) {
             console.log("Searching timeline by reference");
+            $.getSafe(SEARCH_TIMELINE_REFERENCE, [step.state.passage.version(passageId), step.state.timeline.reference(passageId)], function(results) {
+                step.search._displayResults(results, passageId);
+            });
+            
         },
         
         description: function(passageId) {
@@ -60,6 +64,12 @@ step.search = {
         
         dating : function(passageId) {
             console.log("Searching by dating");            
+        }
+    },
+    
+    textual : {
+        search : function(passageId){
+            console.log("Searching text...");
         }
     },
     

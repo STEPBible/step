@@ -11,7 +11,7 @@ import org.junit.Test;
 import com.tyndalehouse.step.core.data.DataDrivenTestExtension;
 import com.tyndalehouse.step.core.data.entities.LexiconDefinition;
 import com.tyndalehouse.step.core.data.entities.ScriptureReference;
-import com.tyndalehouse.step.core.data.entities.TimelineEvent;
+import com.tyndalehouse.step.core.data.entities.timeline.TimelineEvent;
 import com.tyndalehouse.step.core.models.search.SearchResult;
 import com.tyndalehouse.step.core.models.search.TimelineEventSearchEntry;
 import com.tyndalehouse.step.core.models.search.VerseSearchEntry;

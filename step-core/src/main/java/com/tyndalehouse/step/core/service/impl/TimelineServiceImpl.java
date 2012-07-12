@@ -48,10 +48,10 @@ import org.slf4j.LoggerFactory;
 
 import com.avaje.ebean.EbeanServer;
 import com.avaje.ebean.Query;
-import com.tyndalehouse.step.core.data.entities.HotSpot;
 import com.tyndalehouse.step.core.data.entities.ScriptureReference;
-import com.tyndalehouse.step.core.data.entities.TimelineEvent;
 import com.tyndalehouse.step.core.data.entities.aggregations.TimelineEventsAndDate;
+import com.tyndalehouse.step.core.data.entities.timeline.HotSpot;
+import com.tyndalehouse.step.core.data.entities.timeline.TimelineEvent;
 import com.tyndalehouse.step.core.models.EnhancedTimelineEvent;
 import com.tyndalehouse.step.core.models.OsisWrapper;
 import com.tyndalehouse.step.core.service.TimelineService;
@@ -136,7 +136,8 @@ public class TimelineServiceImpl implements TimelineService {
      * @param reference the reference we are looking for
      * @return the list of events matching the reference
      */
-    private List<TimelineEvent> lookupEventsMatchingReference(final String reference) {
+    @Override
+    public List<TimelineEvent> lookupEventsMatchingReference(final String reference) {
         // first get the kjv reference
         final List<ScriptureReference> passageReferences = this.jsword.resolveReferences(reference, "KJV");
 

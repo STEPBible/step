@@ -36,9 +36,9 @@ import java.util.List;
 
 import org.joda.time.LocalDateTime;
 
-import com.tyndalehouse.step.core.data.entities.HotSpot;
-import com.tyndalehouse.step.core.data.entities.TimelineEvent;
 import com.tyndalehouse.step.core.data.entities.aggregations.TimelineEventsAndDate;
+import com.tyndalehouse.step.core.data.entities.timeline.HotSpot;
+import com.tyndalehouse.step.core.data.entities.timeline.TimelineEvent;
 import com.tyndalehouse.step.core.models.EnhancedTimelineEvent;
 
 /**
@@ -90,4 +90,10 @@ public interface TimelineService {
      * @return the timeline event with all its data
      */
     EnhancedTimelineEvent getTimelineEvent(int id, String version);
+
+    /**
+     * @param reference reference of the scripture passage under consideration
+     * @return the list of events matching that reference
+     */
+    List<TimelineEvent> lookupEventsMatchingReference(String reference);
 }

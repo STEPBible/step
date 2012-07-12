@@ -39,7 +39,7 @@ import com.tyndalehouse.step.core.xsl.XslConversionType;
 /**
  * Outlines a list of options available in lookup
  * 
- * @author chrisburrell 
+ * @author chrisburrell
  * 
  */
 public enum LookupOption {
@@ -82,7 +82,9 @@ public enum LookupOption {
     COLOUR_CODE("ColorCoding", XslConversionType.DEFAULT),
 
     /** not available to the UI */
-    CHAPTER_VERSE("CVNum", null);
+    CHAPTER_VERSE("CVNum", null),
+
+    HIDE_XGEN("HideXGen", XslConversionType.DEFAULT);
 
     private final String xsltParameterName;
     private final XslConversionType stylesheet;

@@ -35,6 +35,7 @@ package com.tyndalehouse.step.core.service.jsword.impl;
 import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
 import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
 import static com.tyndalehouse.step.core.utils.StringUtils.split;
+import static com.tyndalehouse.step.core.utils.ValidateUtils.notNull;
 import static java.lang.Integer.parseInt;
 import static java.lang.Integer.valueOf;
 import static java.lang.String.format;
@@ -245,13 +246,25 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
     }
 
     @Override
+    public OsisWrapper peakOsisText(final Book bible, final Key key) {
+        final List<LookupOption> lookupOptions = new ArrayList<LookupOption>();
+        lookupOptions.add(LookupOption.HIDE_XGEN);
+
+        final BookData bookData = new BookData(bible, key);
+        return getTextForBookData(lookupOptions, null, bookData);
+    }
+
+    @Override
     public OsisWrapper peakOsisText(final String version, final String keyedVersion,
             final ScriptureReference r) {
         // obtain first verse of each reference for display and add "..." on them...
         final int startVerseId = r.getStartVerseId();
 
+        final List<LookupOption> lookupOptions = new ArrayList<LookupOption>();
+        lookupOptions.add(LookupOption.HIDE_XGEN);
+
         final OsisWrapper osisText = this.getOsisTextByVerseNumbers(version, keyedVersion, startVerseId,
-                startVerseId, new ArrayList<LookupOption>(), null, null, true);
+                startVerseId, lookupOptions, null, null, true);
 
         if (startVerseId != r.getEndVerseId()) {
             osisText.setFragment(true);
@@ -286,8 +299,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
                 ignoreVerse0);
 
         final BookData lookupBookData = new BookData(lookupVersion, range);
-        return getTextForBookData(version, lookupBookData.getKey().getOsisID(), lookupOptions,
-                interlinearVersion, lookupBookData);
+        return getTextForBookData(lookupOptions, interlinearVersion, lookupBookData);
     }
 
     // TODO: can we make this more performant by not re-compiling stylesheet - or is already cached
@@ -298,7 +310,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
         LOGGER.debug("Retrieving text for ({}, {})", version, reference);
 
         final BookData bookData = getBookData(version, reference);
-        return getTextForBookData(version, reference, options, interlinearVersion, bookData);
+        return getTextForBookData(options, interlinearVersion, bookData);
     }
 
     /**
@@ -329,15 +341,20 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
     /**
      * Gets the osis text
      * 
-     * @param version the version to look up
-     * @param reference the reference
      * @param options the list of lookup options
      * @param interlinearVersion the interlinear version if applicable
      * @param bookData the bookdata to use to look up the required version/reference combo
+     * 
      * @return the html text
      */
-    private synchronized OsisWrapper getTextForBookData(final String version, final String reference,
-            final List<LookupOption> options, final String interlinearVersion, final BookData bookData) {
+    private synchronized OsisWrapper getTextForBookData(final List<LookupOption> options,
+            final String interlinearVersion, final BookData bookData) {
+
+        // check we have a book in mind and a reference
+        notNull(bookData, "An internal error occurred", UserExceptionType.SERVICE_VALIDATION_ERROR);
+        notNull(bookData.getFirstBook(), "An internal error occurred",
+                UserExceptionType.SERVICE_VALIDATION_ERROR);
+        notNull(bookData.getKey(), "An internal error occurred", UserExceptionType.SERVICE_VALIDATION_ERROR);
 
         try {
             final XslConversionType requiredTransformation = identifyStyleSheet(options);
@@ -354,8 +371,8 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
                                 resourceURI, osissep);
 
                         // set parameters here
-                        setOptions(tsep, options, version);
-                        setInterlinearOptions(tsep, interlinearVersion, reference);
+                        setOptions(tsep, options, bookData.getFirstBook().getInitials());
+                        setInterlinearOptions(tsep, interlinearVersion, bookData.getKey().getOsisID());
                         return tsep;
                     } catch (final URISyntaxException e) {
                         throw new StepInternalException("Failed to load resource correctly", e);
@@ -388,6 +405,9 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
 
             return osisWrapper;
         } catch (final BookException e) {
+            final String reference = bookData.getKey().getOsisID();
+            final String version = bookData.getFirstBook().getInitials();
+
             throw new StepInternalException("Unable to query the book data to retrieve specified passage: "
                     + version + ", " + reference, e);
         } catch (final SAXException e) {

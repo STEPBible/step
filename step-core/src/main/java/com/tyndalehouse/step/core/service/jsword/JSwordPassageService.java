@@ -34,6 +34,9 @@ package com.tyndalehouse.step.core.service.jsword;
 
 import java.util.List;
 
+import org.crosswire.jsword.book.Book;
+import org.crosswire.jsword.passage.Key;
+
 import com.tyndalehouse.step.core.data.entities.ScriptureReference;
 import com.tyndalehouse.step.core.models.LookupOption;
 import com.tyndalehouse.step.core.models.OsisWrapper;
@@ -94,8 +97,8 @@ public interface JSwordPassageService {
      * @param endVerseId the end of the verse
      * @param options the list of options for the lookup operation
      * @param interlinearVersion the version to add if there is an interlinear request, or blank if not
-     * @param roundReference TODO
-     * @param ignoreVerse0 TODO
+     * @param roundReference true to indicate to include everything to the next chapter.
+     * @param ignoreVerse0 whether to ignore verse 0
      * @return the OsisWrapper containing the text
      */
     OsisWrapper getOsisTextByVerseNumbers(String version, String numberedVersion, int startVerseId,
@@ -111,5 +114,14 @@ public interface JSwordPassageService {
      * @return an osis wrapper
      */
     OsisWrapper peakOsisText(String version, String keyedVersion, ScriptureReference r);
+
+    /**
+     * Looks up a very short starter for ten
+     * 
+     * @param bible the version to lookup the text from
+     * @param range the key to the passage
+     * @return an osis wrapper
+     */
+    OsisWrapper peakOsisText(Book bible, Key range);
 
 }

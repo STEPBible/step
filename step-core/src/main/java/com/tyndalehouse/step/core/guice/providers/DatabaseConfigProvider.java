@@ -45,15 +45,15 @@ import com.tyndalehouse.step.core.data.entities.Bookmark;
 import com.tyndalehouse.step.core.data.entities.DictionaryArticle;
 import com.tyndalehouse.step.core.data.entities.GeoPlace;
 import com.tyndalehouse.step.core.data.entities.History;
-import com.tyndalehouse.step.core.data.entities.HotSpot;
 import com.tyndalehouse.step.core.data.entities.ScriptureReference;
 import com.tyndalehouse.step.core.data.entities.ScriptureTarget;
 import com.tyndalehouse.step.core.data.entities.Session;
 import com.tyndalehouse.step.core.data.entities.LexiconDefinition;
-import com.tyndalehouse.step.core.data.entities.TimelineEvent;
 import com.tyndalehouse.step.core.data.entities.User;
 import com.tyndalehouse.step.core.data.entities.aggregations.TimelineEventsAndDate;
 import com.tyndalehouse.step.core.data.entities.morphology.Morphology;
+import com.tyndalehouse.step.core.data.entities.timeline.HotSpot;
+import com.tyndalehouse.step.core.data.entities.timeline.TimelineEvent;
 
 /**
  * Returns a database connection server instance for use across the application

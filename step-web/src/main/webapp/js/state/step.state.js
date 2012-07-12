@@ -51,6 +51,7 @@ step.state = {
             step.state.passage.restore(i);
             step.state.original.restore(i);
             step.state.timeline.restore(i);
+            step.state.textual.restore(i);
             this._showRelevantFieldSet(i);
         }
     },
@@ -68,17 +69,13 @@ step.state = {
         var active = this.activeSearch(passageId);
 
         if (!active || active == 'SEARCH_PASSAGE') {
-            $.shout("passage-state-has-changed", {
-                passageId : passageId
-            });
+            $.shout("passage-state-has-changed", { passageId : passageId });
         } else if (active == 'SEARCH_ORIGINAL') {
-            $.shout("original-search-state-has-changed", {
-                passageId : passageId
-            });
+            $.shout("original-search-state-has-changed", { passageId : passageId });
         } else if (active == 'SEARCH_TIMELINE') {
-            $.shout("timeline-search-state-has-changed", {
-                passageId : passageId
-            });
+            $.shout("timeline-search-state-has-changed", { passageId : passageId });
+        } else if (active == 'SEARCH_TEXT') {
+            $.shout("textual-search-state-has-changed", { passageId : passageId });
         }
     },
 
@@ -102,7 +99,7 @@ step.state = {
                 newObj = obj.join();
             }
 
-            if (newObj != originalValue) {
+            if (newObj != originalValue || fireChange == true) {
                 // store first
                 $.cookie("step.passage." + passageId + "." + key, obj);
                 if (fireChange == null || fireChange == true) {

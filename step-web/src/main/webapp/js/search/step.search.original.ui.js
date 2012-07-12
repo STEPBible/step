@@ -41,13 +41,13 @@ $(document).ready(function() {
     $(".exactStrongNumber").click(function() {
         var passageId = step.passage.getPassageId(this);
         step.state.original.searchType(passageId, "exact");
-        step.state.activeSearch(passageId, 'SEARCH_ORIGINAL');
+        step.state.activeSearch(passageId, 'SEARCH_ORIGINAL', true);
     });
 
     $(".relatedStrongNumbers").click(function() {
         var passageId = step.passage.getPassageId(this);
         step.state.original.searchType(passageId, "related");
-        step.state.activeSearch(passageId, 'SEARCH_ORIGINAL');
+        step.state.activeSearch(passageId, 'SEARCH_ORIGINAL', true);
     });
 });
 

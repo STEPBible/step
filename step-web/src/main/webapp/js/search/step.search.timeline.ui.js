@@ -66,19 +66,19 @@ $(document).ready(function() {
     $(".timelineReferenceSearch").click(function() {
         var passageId = step.passage.getPassageId(this);
         step.state.timeline.searchType(passageId, "reference");
-        step.state.activeSearch(passageId, 'SEARCH_TIMELINE');
+        step.state.activeSearch(passageId, 'SEARCH_TIMELINE', true);
     });
 
     $(".timelineDescriptionSearch").click(function() {
         var passageId = step.passage.getPassageId(this);
         step.state.timeline.searchType(passageId, "description");
-        step.state.activeSearch(passageId, 'SEARCH_TIMELINE');
+        step.state.activeSearch(passageId, 'SEARCH_TIMELINE', true);
     });
     
     $(".timelineDateSearch").click(function() {
         var passageId = step.passage.getPassageId(this);
         step.state.timeline.searchType(passageId, "dating");
-        step.state.activeSearch(passageId, 'SEARCH_TIMELINE');
+        step.state.activeSearch(passageId, 'SEARCH_TIMELINE', true);
     });
 });
 

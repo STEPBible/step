@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.tyndalehouse.step.core.data.entities.TimelineEvent;
+import com.tyndalehouse.step.core.data.entities.timeline.TimelineEvent;
 
 /**
  * Adds some key non-persisted fields to the event

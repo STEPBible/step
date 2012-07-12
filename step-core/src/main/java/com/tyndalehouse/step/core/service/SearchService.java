@@ -78,4 +78,13 @@ public interface SearchService {
      * @return the result
      */
     SearchResult searchTimelineDescription(String version, String description);
+
+    /**
+     * Searches the timeline by description
+     * 
+     * @param version the version to use for any passage references found
+     * @param reference the scripture reference of the event that is sought after
+     * @return the result
+     */
+    SearchResult searchTimelineReference(String version, String reference);
 }

@@ -73,7 +73,7 @@ SEARCH_STRONG_EXACT = STEP_SERVER_BASE_URL + "search/searchStrong/";
 SEARCH_STRONG_RELATED = STEP_SERVER_BASE_URL + "search/searchRelatedStrong/";
 SEARCH_TIMELINE_DESCRIPTION = STEP_SERVER_BASE_URL + "search/searchTimelineDescription/";
 SEARCH_TIMELINE_DATING = STEP_SERVER_BASE_URL + "search/searchTimelineDating/";
-SEARCH_TIMELINE_REFERENCE = STEP_SERVER_BASE_URL + "search/searchReference/";
+SEARCH_TIMELINE_REFERENCE = STEP_SERVER_BASE_URL + "search/searchTimelineReference/";
 
 
 TIMELINE_GET_EVENTS = STEP_SERVER_BASE_URL + "timeline/getEvents/";

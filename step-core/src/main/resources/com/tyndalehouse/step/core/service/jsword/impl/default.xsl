@@ -105,6 +105,8 @@
   <!--  true to display color coding information -->
   <xsl:param name="ColorCoding" select="'false'" />
 
+  <xsl:param name="HideXGen" select="'false'" />
+
   <!-- Create a global key factory from which OSIS ids will be generated -->
   <xsl:variable name="keyf" select="jsword:org.crosswire.jsword.passage.PassageKeyFactory.instance()"/>
   
@@ -672,7 +674,9 @@
     <xsl:if test="(@canonical = 'true' or $Headings = 'true' or @type = 'x-gen')">
       <xsl:choose>
       	<xsl:when test="@type = 'x-gen'">
-      		 <h2 class="xgen"><xsl:apply-templates/></h2>
+      		<xsl:if test="$HideXGen != 'true'">
+      		 	<h2 class="xgen"><xsl:apply-templates/></h2>
+      		</xsl:if>
       	</xsl:when>
       	<xsl:otherwise>
       		<h2 class="heading"><xsl:apply-templates/></h2>

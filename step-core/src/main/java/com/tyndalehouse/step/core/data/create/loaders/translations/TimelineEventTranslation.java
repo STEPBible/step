@@ -42,8 +42,8 @@ import com.tyndalehouse.step.core.data.common.PartialDate;
 import com.tyndalehouse.step.core.data.common.PrecisionType;
 import com.tyndalehouse.step.core.data.create.loaders.CsvData;
 import com.tyndalehouse.step.core.data.entities.ScriptureReference;
-import com.tyndalehouse.step.core.data.entities.TimelineEvent;
 import com.tyndalehouse.step.core.data.entities.reference.TargetType;
+import com.tyndalehouse.step.core.data.entities.timeline.TimelineEvent;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 
 /**

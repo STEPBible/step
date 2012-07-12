@@ -43,8 +43,8 @@ import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.tyndalehouse.step.core.data.entities.HotSpot;
 import com.tyndalehouse.step.core.data.entities.aggregations.TimelineEventsAndDate;
+import com.tyndalehouse.step.core.data.entities.timeline.HotSpot;
 import com.tyndalehouse.step.core.models.EnhancedTimelineEvent;
 import com.tyndalehouse.step.core.service.TimelineService;
 import com.tyndalehouse.step.models.TimelineTranslator;

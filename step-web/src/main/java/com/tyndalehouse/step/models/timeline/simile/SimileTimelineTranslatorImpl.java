@@ -37,7 +37,7 @@ import java.util.List;
 
 import org.joda.time.LocalDateTime;
 
-import com.tyndalehouse.step.core.data.entities.TimelineEvent;
+import com.tyndalehouse.step.core.data.entities.timeline.TimelineEvent;
 import com.tyndalehouse.step.models.TimelineTranslator;
 import com.tyndalehouse.step.models.timeline.DigestableTimeline;
 

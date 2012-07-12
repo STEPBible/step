@@ -34,6 +34,10 @@
 	list-style: none;
 }
 
+.searchResultRow div, .searchResultRow div p{
+	display: inline;
+}
+
 .searchScope {
 	width: 200px;
 }
@@ -45,6 +49,14 @@
 	font-size: smaller;
 }
 
+.advancedSearch h4 {
+	color: #696;
+	margin: 0px;
+	padding: 0px;
+	font-style: italic;
+}
+
+
 .advancedSearch legend {
 	color: #696;
 	font-weight: bold;
@@ -52,6 +64,11 @@
 
 .advancedSearch table {
 	width: 50%;
+}
+
+
+.textSearchTable {
+	width: 100% !important;
 }
 
 .advancedSearch table {

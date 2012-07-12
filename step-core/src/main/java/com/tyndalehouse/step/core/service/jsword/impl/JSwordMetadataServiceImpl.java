@@ -133,8 +133,10 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
             final String searchSoFar) {
         final int lastChapter = versification.getLastChapter(book);
         final List<String> chapters = new ArrayList<String>();
-        for (int ii = 0; ii < lastChapter; ii++) {
+        for (int ii = 1; ii < lastChapter; ii++) {
             final char f = Character.toUpperCase(searchSoFar.charAt(0));
+
+            // never return chapter 0, instead
             final String chapNumber = String.format("%c%s %d", f, searchSoFar.substring(1), ii);
 
             chapters.add(chapNumber);

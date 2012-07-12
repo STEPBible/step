@@ -51,6 +51,7 @@
 		<script src="js/search/step.search.js" type="text/javascript"></script>
 		<script src="js/search/step.search.ui.js" type="text/javascript"></script>
 		<script src="js/search/step.search.original.ui.js" type="text/javascript"></script>
+		<script src="js/search/step.search.textual.ui.js" type="text/javascript"></script>
 		<script src="js/search/step.search.timeline.ui.js" type="text/javascript"></script>
 
 		<script src="js/navigation/step.navigation.js" type="text/javascript"></script>	    
@@ -61,6 +62,7 @@
 		<script src="js/state/step.state.detail.js" type="text/javascript"></script>
 		<script src="js/state/step.state.passage.js" type="text/javascript"></script>
 		<script src="js/state/step.state.original.js" type="text/javascript"></script>
+		<script src="js/state/step.state.textual.js" type="text/javascript"></script>
 		<script src="js/state/step.state.timeline.js" type="text/javascript"></script>
 
 	    <script src="js/menu/step.menu.js" type="text/javascript"></script>

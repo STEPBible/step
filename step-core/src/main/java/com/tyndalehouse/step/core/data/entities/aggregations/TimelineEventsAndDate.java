@@ -39,7 +39,7 @@ import javax.persistence.Entity;
 
 import org.joda.time.LocalDateTime;
 
-import com.tyndalehouse.step.core.data.entities.TimelineEvent;
+import com.tyndalehouse.step.core.data.entities.timeline.TimelineEvent;
 
 /**
  * A simple wrapper around a timeline set of events and a central date

@@ -48,7 +48,7 @@ import org.slf4j.LoggerFactory;
 import com.avaje.ebean.EbeanServer;
 import com.tyndalehouse.step.core.data.entities.LexiconDefinition;
 import com.tyndalehouse.step.core.data.entities.ScriptureReference;
-import com.tyndalehouse.step.core.data.entities.TimelineEvent;
+import com.tyndalehouse.step.core.data.entities.timeline.TimelineEvent;
 import com.tyndalehouse.step.core.models.OsisWrapper;
 import com.tyndalehouse.step.core.models.search.SearchEntry;
 import com.tyndalehouse.step.core.models.search.SearchResult;
@@ -73,6 +73,7 @@ public class SearchServiceImpl implements SearchService {
     private final EbeanServer ebean;
     private final JSwordSearchService jswordSearch;
     private final JSwordPassageService jsword;
+    private final TimelineService timeline;
 
     /**
      * @param ebean the ebean server to carry out the search from
@@ -81,10 +82,11 @@ public class SearchServiceImpl implements SearchService {
      */
     @Inject
     public SearchServiceImpl(final EbeanServer ebean, final JSwordSearchService jswordSearch,
-            final JSwordPassageService jsword) {
+            final JSwordPassageService jsword, final TimelineService timeline) {
         this.ebean = ebean;
         this.jswordSearch = jswordSearch;
         this.jsword = jsword;
+        this.timeline = timeline;
     }
 
     @Override
@@ -123,9 +125,28 @@ public class SearchServiceImpl implements SearchService {
         final List<TimelineEvent> events = this.ebean.find(TimelineEvent.class).where()
                 .ilike("name", format(LIKE, description)).findList();
 
+        return buildTimelineSearchResults(version, "timeline:description:" + description, events);
+    }
+
+    @Override
+    public SearchResult searchTimelineReference(final String version, final String reference) {
+        final List<TimelineEvent> events = this.timeline.lookupEventsMatchingReference(reference);
+        return buildTimelineSearchResults(version, "timeline:reference:" + reference, events);
+    }
+
+    /**
+     * Construct the relevant entity structure to represent timeline search results
+     * 
+     * @param version the version we want to look up references from
+     * @param query the query that was run (in case we extend our language further at a later stage)
+     * @param events the events that were found
+     * @return the search results
+     */
+    private SearchResult buildTimelineSearchResults(final String version, final String query,
+            final List<TimelineEvent> events) {
         final List<SearchEntry> results = new ArrayList<SearchEntry>();
         final SearchResult r = new SearchResult();
-        r.setQuery("timeline:description:" + description);
+        r.setQuery(query);
         r.setResults(results);
 
         for (final TimelineEvent e : events) {
@@ -148,7 +169,6 @@ public class SearchServiceImpl implements SearchService {
             entry.setVerses(verses);
             results.add(entry);
         }
-
         return r;
     }
 

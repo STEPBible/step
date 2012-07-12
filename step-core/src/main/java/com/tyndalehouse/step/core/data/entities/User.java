@@ -64,7 +64,7 @@ public class User implements Serializable {
     @Column(nullable = false)
     private byte[] salt;
 
-    @Column(nullable = false)
+    @Column(unique = true, nullable = false)
     private String emailAddress;
 
     @Column

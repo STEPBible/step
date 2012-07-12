@@ -8,9 +8,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.crosswire.jsword.book.Book;
-import org.crosswire.jsword.book.BookData;
 import org.crosswire.jsword.book.BookException;
-import org.crosswire.jsword.book.OSISUtil;
 import org.crosswire.jsword.index.search.DefaultSearchModifier;
 import org.crosswire.jsword.index.search.DefaultSearchRequest;
 import org.crosswire.jsword.passage.Key;
@@ -18,9 +16,11 @@ import org.crosswire.jsword.passage.Passage;
 import org.crosswire.jsword.passage.RestrictionType;
 
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
+import com.tyndalehouse.step.core.models.OsisWrapper;
 import com.tyndalehouse.step.core.models.search.SearchEntry;
 import com.tyndalehouse.step.core.models.search.SearchResult;
 import com.tyndalehouse.step.core.models.search.VerseSearchEntry;
+import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import com.tyndalehouse.step.core.service.jsword.JSwordSearchService;
 import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
 
@@ -32,15 +32,19 @@ import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
  */
 @Singleton
 public class JSwordSearchServiceImpl implements JSwordSearchService {
-    private static final int MAX_RESULTS = 50;
+    private static final int MAX_RESULTS = 500;
     private final JSwordVersificationService av11nService;
+    private final JSwordPassageService jsword;
 
     /**
      * @param av11nService the versification service
+     * @param jsword the jsword lookup service to retrieve the references
      */
     @Inject
-    public JSwordSearchServiceImpl(final JSwordVersificationService av11nService) {
+    public JSwordSearchServiceImpl(final JSwordVersificationService av11nService,
+            final JSwordPassageService jsword) {
         this.av11nService = av11nService;
+        this.jsword = jsword;
 
     }
 
@@ -61,9 +65,10 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
             // boundaries.
             while (rangeIter.hasNext()) {
                 final Key range = rangeIter.next();
-                final BookData data = new BookData(bible, range);
-                final String canonicalText = OSISUtil.getCanonicalText(data.getOsisFragment());
-                resultPassages.add(new VerseSearchEntry(range.getName(), canonicalText));
+
+                final OsisWrapper peakOsisText = this.jsword.peakOsisText(bible, range);
+                resultPassages
+                        .add(new VerseSearchEntry(peakOsisText.getReference(), peakOsisText.getValue()));
             }
 
             final SearchResult r = new SearchResult();

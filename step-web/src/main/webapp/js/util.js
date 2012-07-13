@@ -32,14 +32,22 @@
  ******************************************************************************/
 
 step.util = {
+    passageContainers: [null, null],
+    passageContents: [null, null],
+        
 	getPassageContainer: function(passageIdOrElement) {
 	    //check if we have a number
 	    if(isNaN(parseInt(passageIdOrElement))) {
 	        //assume jquery selector or element
 	        return $(passageIdOrElement).closest(".passageContainer");
 	    }
-	    	    
-		return $(".passageContainer[passage-id = " + passageIdOrElement + "]");
+	    
+	    //check if we're storing it
+	    if(this.passageContainers[passageIdOrElement] == null) {
+	        var container = $(".passageContainer[passage-id = " + passageIdOrElement + "]");
+	        this.passageContainers[passageIdOrElement] = container;
+	    } 
+        return this.passageContainers[passageIdOrElement];
 	},
 
 	getAllPassageIds: function() {
@@ -47,7 +55,15 @@ step.util = {
 	},
 	
 	getPassageContent: function(passageIdOrElement) {
-	    return $(".passageContent", step.util.getPassageContainer(passageIdOrElement));
+	    if(isNaN(parseInt(passageIdOrElement))) {
+	        return $(".passageContent", this.getPassageContainer(passageIdOrElement));
+	    }
+	    
+	    if(this.passageContents[passageIdOrElement] == null) {
+	        var content = $(".passageContent", step.util.getPassageContainer(passageIdOrElement));
+	        this.passageContents[passageIdOrElement] = content;
+	    } 
+	    return this.passageContents[passageIdOrElement];
 	},
 
 	

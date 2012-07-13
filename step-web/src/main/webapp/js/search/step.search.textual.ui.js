@@ -105,12 +105,8 @@ step.search.ui.textual = {
 
     _evalAllWords : function(text) {
         if(!step.util.isBlank(text)) {
-            var words = text.split(" ");
-            var syntax = "";
-            for (var i = 0; i < words.length; i++) {
-                syntax += " +" + words[i];
-            }
-            return syntax; 
+            var words = $.trim(text).split(" ").join(" AND ");
+            return "(" + words + ")";
         }
         return "";
     },
@@ -234,18 +230,58 @@ $(document).ready(function() {
         step.state.textual.textVerseProximity(passageId, "");
         step.state.textual.textRestriction(passageId, "");
         step.state.textual.textRestrictionExclude(passageId, "");
-        step.state.textual.textSortByRelevance(passageId, false);
+        step.state.textual.textSortByRelevance(passageId, true);
         step.state.textual.textQuerySyntax(passageId, "");
     });
     
     $(".textSearchTable input").keyup(function() {
         //re-evaluate query syntax and store
-        step.search.ui.textual.evaluateQuerySyntax(step.passage.getPassageId(this));
+        var passageId = step.passage.getPassageId(this);
+        step.search.ui.textual.evaluateQuerySyntax(passageId);
+        step.util.getPassageContent(passageId).empty();
     });
     
     $(".textSearchButton").click(function() {
         step.state.activeSearch(step.passage.getPassageId(this), 'SEARCH_TEXT', true);
     });
+    
+    
+    $(".showRanges").bind( "keydown", function( event ) {
+        if ( event.keyCode === $.ui.keyCode.TAB &&
+                $(this).data( "autocomplete" ).menu.active ) {
+            event.preventDefault();
+        }
+        }).click(function() {
+            $(this).autocomplete("search", "");
+        }).autocomplete({
+            minLength: 0,
+            delay : 0,
+            source: function( request, response ) {
+                // delegate back to autocomplete, but extract the last term
+                response( $.ui.autocomplete.filter(
+                    step.defaults.search.textual.availableRanges, extractLast( request.term ) ) );
+            },
+            focus: function() {
+                return false;
+            },
+            select: function( event, ui ) {
+                var target = $(event.target);
+                target.val(ui.item.value);
+                target.trigger('change');
+                step.search.ui.textual.evaluateQuerySyntax(step.passage.getPassageId(target));
+                return false;
+            },
+            open: function(event, ui) {
+                //check we've got the right size
+                $(".ui-autocomplete").map(function() {
+                    //check if 'this' has a child containing the text of the first option
+                    if($(this).find(":contains('" + step.defaults.search.textual.availableRanges[0].label + "')")) {
+                        $(this).css('width', '300px');
+                    };
+                    return false;
+                });
+            }            
+        });
 });
 
 $(step.search.ui).hear("textual-search-state-has-changed", function(s, data) {

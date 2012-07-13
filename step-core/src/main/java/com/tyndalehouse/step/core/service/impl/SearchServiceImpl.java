@@ -90,8 +90,8 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
-    public SearchResult search(final String version, final String query) {
-        return this.jswordSearch.search(version, query);
+    public SearchResult search(final String version, final String query, final boolean ranked) {
+        return this.jswordSearch.search(version, query, ranked);
     }
 
     @Override
@@ -188,7 +188,7 @@ public class SearchServiceImpl implements SearchService {
         }
 
         // TODO jsword bug - email 09-Jul-2012 - 19:11 GMT
-        return search(version, query.toString().trim().toLowerCase());
+        return search(version, query.toString().trim().toLowerCase(), false);
     }
 
     /**

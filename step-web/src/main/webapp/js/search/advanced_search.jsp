@@ -118,9 +118,9 @@
 			</tr>
 			<tr>
 				<td>Restrict search to</td>
-				<td><input type="text" class="textRestriction" size="15" /></td>
+				<td><input type="text" class="textRestriction showRanges" size="15" /></td>
 				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i>or</i><span style="float: right">Excluding range</span></td>
-				<td><input type="text" class="textRestrictionExclude" size="15" /></td>
+				<td><input type="text" class="textRestrictionExclude showRanges" size="15" /></td>
 			</tr>
 			<tr>
 				<td>Sort results by relevance</td>

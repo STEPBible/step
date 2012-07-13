@@ -31,19 +31,18 @@ public class SearchController {
     /**
      * @param version the version to search across
      * @param searchQuery the query to search for
+     * @param ranked true to indicate results should ranked in order of priority
      * @return the search result(s)
      */
-    public SearchResult search(final String version, final String searchQuery) {
+    public SearchResult search(final String version, final String searchQuery, final String ranked) {
         notNull(version, "A version must be selected", USER_MISSING_FIELD);
         notNull(searchQuery, "Please enter a search query", USER_MISSING_FIELD);
-        return this.searchService.search(version, searchQuery);
+        return this.searchService.search(version, searchQuery, Boolean.parseBoolean(ranked));
     }
 
     /**
      * @param version the version to search across
      * @param searchStrong the query to search for
-     * @param options a list of options to be passed in
-     * @param interlinearVersion the interlinear version if provided adds lines under the text
      * @return the search result(s)
      */
     public SearchResult searchStrong(final String version, final String searchStrong) {

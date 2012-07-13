@@ -49,9 +49,21 @@ step.state.textual = {
         this.textVerseProximity(passageId, this.textVerseProximity(passageId));
         this.textRestriction(passageId, this.textRestriction(passageId));
         this.textRestrictionExclude(passageId, this.textRestrictionExclude(passageId));
-        this.textSortByRelevance(passageId, this.textSortByRelevance(passageId));
-        this.textQuerySyntax(passageId, this.textQuerySyntax(passageId));
+        this._restoreSortByRelevance(passageId);
+        step.search.ui.textual.evaluateQuerySyntax(passageId);
+
     },
+    
+    _restoreSortByRelevance : function(passageId) {
+        var s = this.textSortByRelevance(passageId);
+        if(!step.util.isBlank(s)) {
+            //then we have a value, so just store it
+            this.textSortByRelevance(passageId, s);
+        } else {
+            //use the default value
+            this.textSortByRelevance(passageId, step.defaults.search.textual.sortByRelevance, false);
+        }
+    }, 
 
     textPrimaryExactPhrase : function(passageId, value) { if (value != null) { $(".textPrimaryExactPhrase", step.util.getPassageContainer(passageId)).val(value); } return step.state._storeAndRetrieveCookieState(passageId, "textPrimaryExactPhrase", value, false); },
     textPrimaryIncludeWords : function(passageId, value) { if (value != null) { $(".textPrimaryIncludeWords", step.util.getPassageContainer(passageId)).val(value); } return step.state._storeAndRetrieveCookieState(passageId, "textPrimaryIncludeWords", value, false); },

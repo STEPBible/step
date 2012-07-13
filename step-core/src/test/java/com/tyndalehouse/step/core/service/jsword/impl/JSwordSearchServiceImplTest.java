@@ -22,7 +22,7 @@ public class JSwordSearchServiceImplTest {
 
     @Test
     public void testMusings() {
-        assertTrue(this.search.search("KJV", "strong:g0016").getResults().size() > 0);
+        assertTrue(this.search.search("KJV", "strong:g0016", false).getResults().size() > 0);
     }
 
     // @Test

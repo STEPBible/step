@@ -56,6 +56,9 @@
 	font-style: italic;
 }
 
+.advancedSearch .ui-menu {
+	width: 150px;
+}
 
 .advancedSearch legend {
 	color: #696;

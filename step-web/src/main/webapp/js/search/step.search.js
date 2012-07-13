@@ -52,7 +52,6 @@ step.search = {
             $.getSafe(SEARCH_TIMELINE_REFERENCE, [step.state.passage.version(passageId), step.state.timeline.reference(passageId)], function(results) {
                 step.search._displayResults(results, passageId);
             });
-            
         },
         
         description: function(passageId) {
@@ -70,10 +69,15 @@ step.search = {
     textual : {
         search : function(passageId){
             console.log("Searching text...");
-            var query = step.state.textual.textQuerySyntax(passageId);
-
+            var query = $.trim(step.state.textual.textQuerySyntax(passageId));
+            if(step.util.isBlank(query)) {
+                return;
+            }
+                        
+            var ranked = step.state.textual.textSortByRelevance(passageId);
+            
             if (step.util.raiseErrorIfBlank(query, "Please fill in the form first")) {
-                step.search._doSearch(SEARCH_DEFAULT, passageId, query);
+                step.search._doSearch(SEARCH_DEFAULT, passageId, query, ranked);
             }
         }
     },
@@ -88,9 +92,12 @@ step.search = {
         }
     },
 
-    _doSearch : function(searchType, passageId, query) {
+    _doSearch : function(searchType, passageId, query, ranked) {
         var self = this;
-        $.getSafe(searchType + step.state.passage.version(passageId) + "/" + query, function(searchQueryResults) {
+        var version = step.state.passage.version(passageId);
+        var args = ranked == null ? [version, query] : [version, query, ranked];
+        
+        $.getSafe(searchType, args, function(searchQueryResults) {
             self._displayResults(searchQueryResults, passageId);
         });
     },

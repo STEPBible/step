@@ -148,6 +148,9 @@ function extractLast(term) {
 	return split(term).pop();
 };
 
+function split( val ) {
+    return val.split( /,\s*/ );
+}
 
 function isAlpha(val) {
 	var regEx = /^[a-zA-Z]+$/; 

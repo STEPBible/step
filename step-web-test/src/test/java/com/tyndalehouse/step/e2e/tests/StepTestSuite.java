@@ -12,11 +12,12 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriverService;
 
 import com.tyndalehouse.step.e2e.framework.WebDriverTest;
+import com.tyndalehouse.step.e2e.tests.regression.TimelineComponentOpensTest;
 import com.tyndalehouse.step.e2e.tests.regression.TopMenuWithoutCookiesTest;
 
 @RunWith(Suite.class)
 @SuiteClasses({ StepPassageTest.class, StepBookmarkTest.class, NavigationButtonsTest.class,
-        StepDisplayOptionsTest.class, TopMenuWithoutCookiesTest.class })
+        StepDisplayOptionsTest.class, TopMenuWithoutCookiesTest.class, TimelineComponentOpensTest.class })
 public class StepTestSuite {
     private static boolean createdByTest = false;
     private static ChromeDriverService service;

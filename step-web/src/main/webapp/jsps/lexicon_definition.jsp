@@ -82,7 +82,7 @@
 							<td><h5>Case:</h5></td>
 							<td><span info-name="wordCase"></span></td>
 							<td><h5>i.e.</h5></td>
-							<td><span info-name="wordCaseExplained"></span></td>
+							<td><span info-name="caseExplained"></span></td>
 						</tr>
 						<tr depends-on="tenseDescription">
 							<td><h5>Tense:</h5></td>

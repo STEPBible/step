@@ -50,7 +50,7 @@ public enum Function implements HasCsvValueName {
     ADVERB("Adverb"),
     ADVERB_WITH_PARTICLE_COMBINED("ADVerb or adverb and particle combined", "Adverb"),
     CONDITIONAL_PARTICLE("CONDitional particle or conjunction", "Conditional"),
-    CONJUCTION("conjunction or conjunctive particle", "Conjunctive"),
+    CONJUCTION("conjunction or conjunctive particle", "Conjunction"),
     CORRELATIVE_INTERROGATIVE_PRONOUN("Correlative or Interrogative pronoun", "Interrogative"),
     CORRELATIVE_PRONOUN("Correlative pronoun", "Pronoun", "Correlative pronoun"),
     DEFINITE_ARTICLE("Definite article", "Article"),

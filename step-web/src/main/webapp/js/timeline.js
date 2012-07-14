@@ -1,20 +1,3 @@
-var HEBREW_MONTH_NAMES = [ 
-	["January", "Tevet" ], 
-	["February", "Shevat" ], 
-	["March", "Adar" ], 
-	["April", "Abib", "Nisan" ], 
-	["May", "Iyar" ], 
-	["June", "Sivan" ], 
-	["July", "Tamuz" ], 
-	["August", "Ab" ], 
-	["September", "Elul" ], 
-	["October", "Tishri" ], 
-	["November", "Marcheshvan" ], 
-	["December", "Kislev" ]
-];
-	
-var OT_CUT_OFF_DATE = -10;
-
 /*******************************************************************************
  * Copyright (c) 2012, Directors of the Tyndale STEP Project
  * All rights reserved.
@@ -48,12 +31,30 @@ var OT_CUT_OFF_DATE = -10;
  * THE POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
 
+var HEBREW_MONTH_NAMES = [ 
+    ["January", "Tevet" ], 
+    ["February", "Shevat" ], 
+    ["March", "Adar" ], 
+    ["April", "Abib", "Nisan" ], 
+    ["May", "Iyar" ], 
+    ["June", "Sivan" ], 
+    ["July", "Tamuz" ], 
+    ["August", "Ab" ], 
+    ["September", "Elul" ], 
+    ["October", "Tishri" ], 
+    ["November", "Marcheshvan" ], 
+    ["December", "Kislev" ]
+];
+    
+var OT_CUT_OFF_DATE = -10;
+
+
+
 /**
  * Code for showing and interacting with the timeline
  */
-function TimelineWidget(rootElement, passages) {
+function TimelineWidget(rootElement) {
 	this.rootElement = rootElement;
-	this.passages = passages;
 	this.initialised = false;
 	this.active = false;
 	this.currentEvents = {};

@@ -37,6 +37,16 @@ $(step.menu).hear("MENU-OPTIONS", function(self, menuTrigger) {
 	} else if(menuTrigger.menuItem.name == "SYNC_BOTH_PASSAGES") {
 		step.state.passage.syncMode(isOptionEnabled);
 		$(".passageContainer:not([passage-id=0]) .passageReference").prop("disabled", isOptionEnabled);
+	} else if(menuTrigger.menuItem.name == "SWAP_BOTH_PASSAGES") {
+	    var version0 = step.state.passage.version(0);
+	    var version1 = step.state.passage.version(1);
+	    var reference0 = step.state.passage.reference(0);
+	    var reference1 = step.state.passage.reference(1);
+
+	    step.state.passage.version(0, version1, false);
+	    step.state.passage.reference(0, reference1);
+	    step.state.passage.version(1, version0, false);
+        step.state.passage.reference(1, reference0);
 	}
 });
 

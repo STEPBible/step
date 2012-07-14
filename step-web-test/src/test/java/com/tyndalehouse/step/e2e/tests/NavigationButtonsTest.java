@@ -12,10 +12,13 @@ import com.tyndalehouse.step.e2e.framework.WebDriverTest;
 public class NavigationButtonsTest extends WebDriverTest {
     @Test
     public void testNavigationButtons() {
-        doNavigationButtonTest(0, "Acts 4", "Now Peter and John were going up to the temple",
-                "And as they were speaking to the people, the priests and the captain");
-        doNavigationButtonTest(1, "John 7", "they saw the signs that he was doing on the sick",
-                "After this Jesus went about in Galilee.");
+        doNavigationButtonTest(0, "Acts 4",
+                "1Now Peter and John were ogoing up to the temple at pthe hour of prayer, qthe ninth hour",
+                "1And as they were speaking to the people, the priests and lthe captain of the temple",
+                "Acts 3", "Acts 4");
+        doNavigationButtonTest(1, "John 7",
+                "1After this jJesus went away to the other side of kthe Sea of Galilee",
+                "1After this Jesus went about in Galilee. He would not go about in Judea", "John 6", "John 7");
     }
 
     /**
@@ -24,18 +27,17 @@ public class NavigationButtonsTest extends WebDriverTest {
      */
     @Test
     public void testContinuousScroll() {
-        final String start = "Jude, a servant of Jesus Christ and brother of James";
+        final String start = "1Jude, a servant1 of Jesus Christ and brother of James";
         final String end = "and authority, before all time and now and forever. Amen.";
 
         // 3 john and revelation
-        final String before = "I had much to write to you, but I would rather not write with pen and ink.";
-        final String after = "And to the angel of the church in Smyrna write";
+        final String before = "13oI had much to write to you, but I would rather not write with pen and ink";
 
-        doTestContinuousScroll(0, "Jude", start, end, before, after);
+        doTestContinuousScroll(0, "Jude", start, end, before);
     }
 
     private void doTestContinuousScroll(final int passageId, final String reference, final String start,
-            final String end, final String before, final String after) {
+            final String end, final String before) {
         final Passage passage = PageOperations.loadPassage(this.getDriver(), 0, "ESV", reference, true);
 
         passage.checkPassageText(start);
@@ -44,8 +46,9 @@ public class NavigationButtonsTest extends WebDriverTest {
         final WebElement continuous = passage.findWithinPassage(".continuousPassage");
         continuous.click();
 
+        // check that it contains some more text before
         passage.checkPassageText(before);
-        passage.checkPassageText(after);
+        // don't check after, since that depends on screen size
 
         // now click item again, and we're back where we were
         continuous.click();
@@ -53,12 +56,11 @@ public class NavigationButtonsTest extends WebDriverTest {
         final String newText = passage.checkPassageText(end);
 
         assertFalse(newText.contains(before));
-        assertFalse(newText.contains(after));
-
     }
 
     private void doNavigationButtonTest(final int passageId, final String reference,
-            final String previousText, final String nextText) {
+            final String previousText, final String nextText, final String previousReference,
+            final String nextReference) {
         final Passage passage = PageOperations.loadPassage(this.getDriver(), passageId, "ESV", reference,
                 true);
 
@@ -66,9 +68,11 @@ public class NavigationButtonsTest extends WebDriverTest {
         final WebElement next = passage.findWithinPassage(".nextChapter");
 
         previous.click();
+        passage.checkReference(previousReference);
         passage.checkPassageText(previousText);
 
         next.click();
+        passage.checkReference(nextReference);
         passage.checkPassageText(nextText);
     }
 }

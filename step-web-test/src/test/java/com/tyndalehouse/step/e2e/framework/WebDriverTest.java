@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.After;
+import org.junit.AfterClass;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -18,6 +19,7 @@ public class WebDriverTest {
 
     public static WebDriver createDriver() {
         try {
+            // created driver
             final RemoteWebDriver remoteWebDriver = new RemoteWebDriver(StepTestSuite.getService().getUrl(),
                     DesiredCapabilities.chrome());
             remoteWebDriver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
@@ -31,11 +33,22 @@ public class WebDriverTest {
 
     @After
     public void quitDriver() {
-        if (inOneWindow != null) {
+        if (StepTestSuite.RUN_IN_ONE_WINDOW) {
             return;
         }
 
         this.getDriver().quit();
+    }
+
+    @AfterClass
+    public static void tearDown() {
+        try {
+            if (StepTestSuite.isServiceCreateByTest()) {
+                StepTestSuite.getService().stop();
+            }
+        } catch (final IOException e) {
+            e.printStackTrace();
+        }
     }
 
     protected WebDriver getDriver() {

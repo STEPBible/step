@@ -80,13 +80,27 @@ public class Passage {
         return passageText.getText();
     }
 
+    public void checkReference() {
+        checkReference(this.reference);
+    }
+
+    public void checkReference(final String reference) {
+        final WebDriverWait w = new WebDriverWait(this.driver, 5);
+        w.until(new Predicate<WebDriver>() {
+            @Override
+            public boolean apply(@Nullable final WebDriver input) {
+                return Passage.this.refElement.getAttribute("value").equals(reference);
+            }
+        });
+    }
+
     public WebElement findWithinPassage(final String css) {
         return this.driver.findElements(By.cssSelector(".passageContainer")).get(this.passageId)
                 .findElement(By.cssSelector(css));
     }
 
     public void verify() {
-        assertEquals(this.reference, this.refElement.getAttribute("value"));
+        checkReference();
         assertEquals(this.version, this.versionElement.getAttribute("value"));
     }
 
@@ -103,4 +117,5 @@ public class Passage {
     public WebDriver getDriver() {
         return this.driver;
     }
+
 }

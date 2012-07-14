@@ -1,5 +1,7 @@
 package com.tyndalehouse.step.e2e.tests;
 
+import static com.tyndalehouse.step.e2e.fragments.PageOperations.loadPassage;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -9,7 +11,6 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 import com.tyndalehouse.step.e2e.fragments.MenuOperations;
-import com.tyndalehouse.step.e2e.fragments.PageOperations;
 import com.tyndalehouse.step.e2e.fragments.Passage;
 import com.tyndalehouse.step.e2e.framework.WebDriverTest;
 
@@ -54,12 +55,20 @@ public class StepDisplayOptionsTest extends WebDriverTest {
 
     @Test
     public void testMenuOption() {
-        final Passage passage = PageOperations.loadPassage(this.getDriver(),
-                Integer.parseInt(this.passageId), "ESV", this.reference, true);
-        MenuOperations.clickMenuItem(passage, this.menuName, this.menuItem);
+        // first set the state so that we have no options selected, and use a passage we are not interested in
+        // for the test
+        Passage passage = loadPassage(this.getDriver(), Integer.parseInt(this.passageId), "ESV",
+                "Genesis 1:1", true);
+
+        MenuOperations.disableAllOptions(passage, "Display");
+
+        passage = loadPassage(this.getDriver(), Integer.parseInt(this.passageId), "ESV", this.reference,
+                false);
+
+        MenuOperations.clickMenuItem(passage, this.menuName, this.menuItem, 3);
         passage.checkPassageText(this.newText);
 
-        MenuOperations.clickMenuItem(passage, this.menuName, this.menuItem);
+        MenuOperations.clickMenuItem(passage, this.menuName, this.menuItem, 3);
         passage.checkPassageTextDisappeared(this.newText);
 
     }

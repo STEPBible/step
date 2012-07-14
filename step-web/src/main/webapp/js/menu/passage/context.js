@@ -34,9 +34,9 @@ $(step.menu).hear("MENU-CONTEXT", function(self, menuTrigger) {
 	step.navigation.showBottomSection(menuItem);
 	
 	if(menuItem.name == "TIMELINE") {
-		$.shout("show-timeline", { passageId : step.passage.getPassageId(menuItem) });
+		$.shout("show-timeline", { passageId : menuTrigger.passageId });
 	} else if(menuTrigger.menuItem.name == "GEOGRAPHY") {
-		$.shout("show-maps", { passageId : step.passage.getPassageId(menuItem) } );
+		$.shout("show-maps", { passageId : menuTrigger.passageId } );
 	}
 });
 

@@ -12,12 +12,15 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriverService;
 
 import com.tyndalehouse.step.e2e.framework.WebDriverTest;
+import com.tyndalehouse.step.e2e.tests.regression.TopMenuWithoutCookiesTest;
 
 @RunWith(Suite.class)
-@SuiteClasses({ StepPassageTest.class, StepBookmarkTest.class, NavigationButtonsTest.class })
+@SuiteClasses({ StepPassageTest.class, StepBookmarkTest.class, NavigationButtonsTest.class,
+        StepDisplayOptionsTest.class, TopMenuWithoutCookiesTest.class })
 public class StepTestSuite {
+    private static boolean createdByTest = false;
     private static ChromeDriverService service;
-    private static final boolean RUN_IN_ONE_WINDOW = true;
+    public static final boolean RUN_IN_ONE_WINDOW = false;
 
     @BeforeClass
     public static void createAndStartService() throws IOException {
@@ -25,10 +28,6 @@ public class StepTestSuite {
                 .usingDriverExecutable(new File("d:/dev/chromedriver/chromedriver.exe")).usingAnyFreePort()
                 .build();
         service.start();
-
-        if (RUN_IN_ONE_WINDOW) {
-            WebDriverTest.setInOneWindow(WebDriverTest.createDriver());
-        }
     }
 
     @AfterClass
@@ -48,9 +47,14 @@ public class StepTestSuite {
      */
     public static ChromeDriverService getService() throws IOException {
         if (service == null) {
+            createdByTest = true;
             createAndStartService();
         }
 
         return service;
+    }
+
+    public static boolean isServiceCreateByTest() {
+        return createdByTest;
     }
 }

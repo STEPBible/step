@@ -216,7 +216,7 @@ function initModules(passages) {
 	new Title();
 
 	var bottomSection = $("#bottomSectionContent");
-	timeline = new TimelineWidget(bottomSection, passages);
+	timeline = new TimelineWidget(bottomSection);
 	new GeographyWidget(bottomSection, passages);
 }
 

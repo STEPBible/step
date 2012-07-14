@@ -216,7 +216,7 @@ TimelineWidget.prototype.addMultipleEventsAndRefresh = function(data) {
  * Let us load stuff relevant to our passage
  */
 TimelineWidget.prototype.onLoad = function() {
-	var reference = this.passages[this.passageId].getReference();
+	var reference = step.state.passage.reference(this.passageId);
 	var self = this;
 
 	//load events from server

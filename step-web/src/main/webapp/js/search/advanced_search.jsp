@@ -3,9 +3,9 @@
 	<!-- Passage search -->
 	<fieldset>
 		<legend>Passage search</legend>
-		<span class="passageButtons"> <!-- 			<input type="button" class="exactStrongNumber" value="Lookup" title="Look up a reference in the selected Bible"/>	 -->
-			<a class="continuousPassage">Displays the passage as one large
-				scroll</a> <a class="previousChapter">Displays the previous chapter
+		<span class="passageButtons"> 
+			<a class="syncOtherPassage">Syncs with the other passage</a>
+			<a class="continuousPassage">Displays the passage as one large scroll</a> <a class="previousChapter">Displays the previous chapter
 				(or expands to the start of the chapter)</a> <a class="nextChapter">Displays
 				the next chapter (or expands to the end of the chapter)</a> <a
 			class="bookmarkPassageLink">Add a bookmark</a>

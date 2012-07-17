@@ -47,37 +47,56 @@ $(step.menu).hear("MENU-OPTIONS", function(self, menuTrigger) {
 });
 
 
+step.menu.options = {
+        enablePassage : function(enabledPassageId) {
+            var passageContainer = $(".passageContainer[passage-id=" + enabledPassageId + "]");
+            
+            $(".passageReference", passageContainer).prop("disabled", false);
+            $(".syncOtherPassage", passageContainer)
+                .button("enable")
+                .button("option", "icons", {primary: "ui-icon-pin-s"})
+                .attr("title", "Use this passage for both columns");
+        },
+        
+        disablePassage : function(disablePassageId) {
+            var passageContainer = $(".passageContainer[passage-id=" + disablePassageId + "]");
+            
+            $(".passageReference", passageContainer).prop("disabled", true);
+            $(".syncOtherPassage", passageContainer)
+                .button("disable")
+                .button("option", "icons", {primary: "ui-icon-pin-s"});
+            
+            
+            var otherPassageContainer = $(".passageContainer[passage-id=" + ((disablePassageId +1) %2) + "]");
+            $(".syncOtherPassage", otherPassageContainer)
+                .button("option", "icons", {primary: "ui-icon-pin-w"})
+                .attr("title", "Make passages independent");
+        }
+};
+
 $(step.menu).hear("MENU-SYNC", function(self, menuTrigger) {
     step.menu.tickOneItemInMenuGroup(menuTrigger);
     if(menuTrigger.menuItem.name == "NO_SYNC") {
         step.state.passage.syncMode(-1);
-        $(".passageContainer:not([passage-id=0]) .passageReference").prop("disabled", false);
-        $(".passageContainer:not([passage-id=1]) .passageReference").prop("disabled", false);
+        step.menu.options.enablePassage(0);
+        step.menu.options.enablePassage(1);
     } else if(menuTrigger.menuItem.name == "SYNC_LEFT") {
         step.state.passage.syncMode(0);
-        $(".passageContainer:not([passage-id=0]) .passageReference").prop("disabled", true);
-        $(".passageContainer:not([passage-id=1]) .passageReference").prop("disabled", false);
+        step.menu.options.enablePassage(0);
+        step.menu.options.disablePassage(1);
     } else if(menuTrigger.menuItem.name == "SYNC_RIGHT") {
         step.state.passage.syncMode(1);
-        $(".passageContainer:not([passage-id=0]) .passageReference").prop("disabled", false);
-        $(".passageContainer:not([passage-id=1]) .passageReference").prop("disabled", true);
+        step.menu.options.enablePassage(1);
+        step.menu.options.disablePassage(0);
     }    
 });
 
 $(step.menu).hear("initialise-passage-sync", function(s, sync) {
-    var menuItem;
     if(sync == 0) {
-        //        $.shout("MENU-SYNC", );
         toggleMenuItem($("a[name = 'SYNC_LEFT']").get(0));
-        
     } else if(sync == 1) {
         toggleMenuItem($("a[name = 'SYNC_RIGHT']").get(0));
-//        menuItem = step.menu.getMenuItem("SYNC_LEFT");        
     } else {
-//        menuItem = step.menu.getMenuItem("NO_SYNC");        
         toggleMenuItem($("a[name = 'NO_SYNC']").get(0));
-//        menuItem = step.menu.getMenuItem("SYNC_RIGHT");        
     }
-    
-//    step.menu.tickMenuItem(menuItem);
 });

@@ -131,6 +131,9 @@ step.state.passage = {
             } else {
                 step.state._fireStateChangedAllBut(mode);
             }
+            
+            $.shout("refresh-sync-menu", mode);
+            
         } else {
             // check we have something stored, we always store syncing against passage 0...
             mode = step.state._storeAndRetrieveCookieState(0, "syncMode");

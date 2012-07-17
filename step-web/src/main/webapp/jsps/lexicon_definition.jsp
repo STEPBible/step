@@ -34,7 +34,7 @@
 				<h3>Grammar</h3>
 				<!-- Quick view -->
 				<span level="0">
-					<h5 info-name="function"></h5>: <span info-name="person"></span> <span depends-on="person">Person</span> 
+					<h5 info-name="functionNotes|function"></h5>: <span info-name="person"></span> <span depends-on="person">Person</span> 
 					<span info-name="number"></span> <span info-name="gender"></span> 
 					
 					<span depends-on="wordCase,mood,gender,suffix">

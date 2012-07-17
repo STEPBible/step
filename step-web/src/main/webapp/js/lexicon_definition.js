@@ -169,7 +169,12 @@ LexiconDefinition.prototype.populateNames = function(data, container) {
     $("*", container).each(function(index, item) {
         var infoName = $(item).attr("info-name");
         if (infoName) {
-            var content = data[0][infoName];
+            var infos = infoName.split("|");
+            var content = data[0][infos[0]];
+            if(content == "") {
+                content = data[0][infos[1]];
+            }
+            
             if (content) {
                 if (content.replace) {
                     content = content.replace(/_([^_]*)_/g, "<span class=\"emphasisePopupText\">$1</span>");

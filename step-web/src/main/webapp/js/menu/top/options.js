@@ -27,16 +27,12 @@
  * POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
 $(step.menu).hear("MENU-OPTIONS", function(self, menuTrigger) {
-	var isOptionEnabled = step.menu.toggleMenuItem(menuTrigger.menuItem.element);
-	
+    var isOptionEnabled = step.menu.toggleMenuItem(menuTrigger.menuItem.element);
 	if(menuTrigger.menuItem.name == "SHOW_ALL_VERSIONS") {
 		$.getSafe(BIBLE_GET_BIBLE_VERSIONS + isOptionEnabled, function(versions) {
 			// send events to passages and reload - then change init function
 			$.shout("version-list-refresh", versions);
 		});		
-	} else if(menuTrigger.menuItem.name == "SYNC_BOTH_PASSAGES") {
-		step.state.passage.syncMode(isOptionEnabled);
-		$(".passageContainer:not([passage-id=0]) .passageReference").prop("disabled", isOptionEnabled);
 	} else if(menuTrigger.menuItem.name == "SWAP_BOTH_PASSAGES") {
 	    var version0 = step.state.passage.version(0);
 	    var version1 = step.state.passage.version(1);
@@ -51,9 +47,37 @@ $(step.menu).hear("MENU-OPTIONS", function(self, menuTrigger) {
 });
 
 
+$(step.menu).hear("MENU-SYNC", function(self, menuTrigger) {
+    step.menu.tickOneItemInMenuGroup(menuTrigger);
+    if(menuTrigger.menuItem.name == "NO_SYNC") {
+        step.state.passage.syncMode(-1);
+        $(".passageContainer:not([passage-id=0]) .passageReference").prop("disabled", false);
+        $(".passageContainer:not([passage-id=1]) .passageReference").prop("disabled", false);
+    } else if(menuTrigger.menuItem.name == "SYNC_LEFT") {
+        step.state.passage.syncMode(0);
+        $(".passageContainer:not([passage-id=0]) .passageReference").prop("disabled", true);
+        $(".passageContainer:not([passage-id=1]) .passageReference").prop("disabled", false);
+    } else if(menuTrigger.menuItem.name == "SYNC_RIGHT") {
+        step.state.passage.syncMode(1);
+        $(".passageContainer:not([passage-id=0]) .passageReference").prop("disabled", false);
+        $(".passageContainer:not([passage-id=1]) .passageReference").prop("disabled", true);
+    }    
+});
+
 $(step.menu).hear("initialise-passage-sync", function(s, sync) {
-	if(sync) {
-		step.menu.tickMenuItem(step.menu.getMenuItem("SYNC_BOTH_PASSAGES"));
-		$(".passageContainer:not([passage-id=0]) .passageReference").prop("disabled", true);
-	}
+    var menuItem;
+    if(sync == 0) {
+        //        $.shout("MENU-SYNC", );
+        toggleMenuItem($("a[name = 'SYNC_LEFT']").get(0));
+        
+    } else if(sync == 1) {
+        toggleMenuItem($("a[name = 'SYNC_RIGHT']").get(0));
+//        menuItem = step.menu.getMenuItem("SYNC_LEFT");        
+    } else {
+//        menuItem = step.menu.getMenuItem("NO_SYNC");        
+        toggleMenuItem($("a[name = 'NO_SYNC']").get(0));
+//        menuItem = step.menu.getMenuItem("SYNC_RIGHT");        
+    }
+    
+//    step.menu.tickMenuItem(menuItem);
 });

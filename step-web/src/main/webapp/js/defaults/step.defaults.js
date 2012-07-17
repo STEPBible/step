@@ -28,7 +28,7 @@
  ******************************************************************************/
 step.defaults = {
     detailLevel : 0,
-    syncMode : false,
+    syncMode : -1,
     passages : [ {
         version : 'KJV',
         reference : 'John 3:16-17',

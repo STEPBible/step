@@ -79,16 +79,26 @@ step.state = {
         }
     },
 
-    _fireStateChangedAllButFirst : function() {
+    _fireStateChangedAll : function(excludingFilter) {
         var self = this;
         var passageIds = step.util.getAllPassageIds();
         if (passageIds) {
             $.each(passageIds, function(i, item) {
-                if (item != 0) {
+                if(excludingFilter == null || !excludingFilter(item)) {
                     self._fireStateChanged(item);
                 }
             });
         }
+    },
+    
+    _fireStateChangedAllBut : function(skipPassageId) {
+        this._fireStateChangedAll(function(item) {
+            return item == skipPassageId;
+        });
+    },
+
+    _fireStateChangedAllButFirst : function() {
+        this._fireStateChangedAllButFirst(0);
     },
 
     _storeAndRetrieveCookieState : function(passageId, key, obj, fireChange) {

@@ -76,24 +76,25 @@ step.state.passage = {
         //if we've called this, then change the active state
         step.state.activeSearch(passageId, 'SEARCH_PASSAGE', fireChange);
         
-        // if we're in sync mode and passageId != 0, then we don't
+        // if we're in sync mode and passageId != -1, then we don't
         // accept any changes, we return reference of passage 0
-        if (passageId != 0 && this.syncMode()) {
+        var synchingPassage = this.syncMode()
+        if(synchingPassage != -1 && synchingPassage != passageId) {
             if (reference) {
                 // ignore if reference passed in + do not fire state changes
                 return;
             }
 
-            // if we're asked for a value, return that of passageId=0
-            return step.state._storeAndRetrieveCookieState(0, "reference", reference, fireChange);
+            // if we're asked for a value, return that of the synced passage
+            return step.state._storeAndRetrieveCookieState(synchingPassage, "reference", reference, fireChange);
         }
 
         // store reference
         var ref = this._storedReference(passageId, reference, fireChange);
 
-        if (this.syncMode() && reference) {
+        if (synchingPassage != -1 && reference) {
             // we need to alert all passages if reference has changed
-            step.state._fireStateChangedAllButFirst();
+            step.state._fireStateChangedAllBut(synchingPassage);
         }
 
         return ref;
@@ -120,18 +121,23 @@ step.state.passage = {
         // always store syncMode against passage 0
         var mode;
         if (syncMode != null) {
+            var originalSyncMode = this.syncMode();
             mode = step.state._storeAndRetrieveCookieState(0, "syncMode", syncMode, false);
 
             // state changed
-            step.state._fireStateChangedAllButFirst();
+            //if we're going from left to right or vice-versa, then we need to fire change everywhere.
+            if(originalSyncMode != -1) {
+                step.state._fireStateChangedAll();
+            } else {
+                step.state._fireStateChangedAllBut(mode);
+            }
         } else {
-            // check we have something stored...
+            // check we have something stored, we always store syncing against passage 0...
             mode = step.state._storeAndRetrieveCookieState(0, "syncMode");
             if (isEmpty(mode)) {
-                mode = false;
-                step.state._storeAndRetrieveCookieState(0, "syncMode", step.defaults.syncMode, false);
+                mode = step.state._storeAndRetrieveCookieState(0, "syncMode", step.defaults.syncMode, false);
             }
-            return mode == true || mode == "true";
+            return mode;
         }
     },
 

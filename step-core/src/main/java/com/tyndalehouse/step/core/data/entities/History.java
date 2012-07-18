@@ -44,12 +44,15 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.avaje.ebean.annotation.CacheStrategy;
+
 /**
  * A user may have multiple history items, these are always ordered by the last inserted data however
  * 
  * @author chrisburrell
  * 
  */
+@CacheStrategy(readOnly = true)
 @Entity
 public class History implements Serializable {
     private static final long serialVersionUID = 2983314321961626288L;

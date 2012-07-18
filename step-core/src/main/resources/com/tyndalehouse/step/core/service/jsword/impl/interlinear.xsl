@@ -56,7 +56,9 @@
   <xsl:param name="baseURL" select="''"/>
 
   <!-- Whether to show Strongs or not -->
-  <xsl:param name="StrongsNumbers" select="'false'"/>
+  <xsl:param name="EnglishVocab" select="'false'"/>
+  <xsl:param name="Transliteration" select="'false'"/>
+  <xsl:param name="GreekVocab" select="'false'"/>
 
   <!-- Whether to show morphologic forms or not -->
   <xsl:param name="Morph" select="'false'"/>
@@ -345,8 +347,14 @@
           	<a name="{@osisID}"><span class="verseNumber"><xsl:value-of select="concat($baseVersion, ' ', $versenum)"/></span></a>
           	
 			<!-- output a filling gap for strongs -->
-			<xsl:if test="$StrongsNumbers = 'true'">
-				<span class="strongs">Vocab.</span>
+			<xsl:if test="$EnglishVocab = 'true'">
+				<span class="strongs">Eng. V</span>
+			</xsl:if>
+			<xsl:if test="$Transliteration = 'true'">
+				<span class="strongs">Trans.</span>
+			</xsl:if>
+			<xsl:if test="$GreekVocab = 'true'">
+				<span class="strongs">Grk. V.</span>
 			</xsl:if>
 
 			<!-- output a filling gap for morphs -->
@@ -369,8 +377,14 @@
           	<a name="{@osisID}"><span class="text"><span class="verseNumber"><xsl:value-of select="concat($baseVersion, ' ', $versenum)"/></span></span></a>
           	
 			<!-- output a filling gap for strongs -->
-			<xsl:if test="$StrongsNumbers = 'true'">
-				<span class="text"><span class="smallHeaders strongs">Vocab.</span></span>
+			<xsl:if test="$EnglishVocab = 'true'">
+				<span class="text"><span class="smallHeaders strongs">Eng V.</span></span>
+			</xsl:if>
+			<xsl:if test="$Transliteration = 'true'">
+				<span class="text"><span class="smallHeaders strongs">Trans.</span></span>
+			</xsl:if>
+			<xsl:if test="$GreekVocab = 'true'">
+				<span class="text"><span class="smallHeaders strongs">Grk. V.</span></span>
 			</xsl:if>
 
 			<!-- output a filling gap for morphs -->
@@ -544,12 +558,30 @@
 					</span>
 		
 					<!-- 2nd - Output strongs if turned on. If turned on and no Strong then 
-						we need a blank. So always call template if turned on -->
-					<xsl:if test="$StrongsNumbers = 'true'">
+						we need a blank. So always call template if turned on 
+						There are three sets of strong possibilities
+						-->
+					<xsl:if test="$EnglishVocab = 'true'">
+						<span class="strongs">
+							<a href="javascript:showInfo('@lemma', this);">
+								<xsl:value-of
+									select="vocab:getEnglishVocab($vocabProvider, @lemma)" />
+							</a>						
+						</span>
+					</xsl:if>
+					<xsl:if test="$Transliteration = 'true'">
 						<span class="strongs">
 							<a href="javascript:showInfo('@lemma', this);">
 								<xsl:value-of
 									select="vocab:getDefaultTransliteration($vocabProvider, @lemma)" />
+							</a>						
+						</span>
+					</xsl:if>
+					<xsl:if test="$GreekVocab = 'true'">
+						<span class="strongs">
+							<a href="javascript:showInfo('@lemma', this);">
+								<xsl:value-of
+									select="vocab:getGreekVocab($vocabProvider, @lemma)" />
 							</a>						
 						</span>
 					</xsl:if>
@@ -1282,14 +1314,29 @@
 				<xsl:apply-templates />
 			</em>
 
-			<!-- output a filling gap for strongs -->
-			<xsl:if test="$StrongsNumbers = 'true'">
+			<!-- output a filling gap for strongs x3 -->
+			<xsl:if test="$EnglishVocab = 'true'">
 				<span class="strongs">
 					<xsl:call-template name="outputNonBlank">
 						<xsl:with-param name="string" select="''" />
 					</xsl:call-template>
 				</span>
 			</xsl:if>
+			<xsl:if test="$Transliteration = 'true'">
+				<span class="strongs">
+					<xsl:call-template name="outputNonBlank">
+						<xsl:with-param name="string" select="''" />
+					</xsl:call-template>
+				</span>
+			</xsl:if>
+			<xsl:if test="$GreekVocab = 'true'">
+				<span class="strongs">
+					<xsl:call-template name="outputNonBlank">
+						<xsl:with-param name="string" select="''" />
+					</xsl:call-template>
+				</span>
+			</xsl:if>
+			
 
 			<!-- output a filling gap for morphs -->
 			<xsl:if test="$Morph = 'true'">
@@ -1317,7 +1364,21 @@
 			</em>
 
 			<!-- output a filling gap for strongs -->
-			<xsl:if test="$StrongsNumbers = 'true'">
+			<xsl:if test="$EnglishVocab = 'true'">
+				<span class="strongs">
+					<xsl:call-template name="outputNonBlank">
+						<xsl:with-param name="string" select="''" />
+					</xsl:call-template>
+				</span>
+			</xsl:if>
+			<xsl:if test="$Transliteration = 'true'">
+				<span class="strongs">
+					<xsl:call-template name="outputNonBlank">
+						<xsl:with-param name="string" select="''" />
+					</xsl:call-template>
+				</span>
+			</xsl:if>
+			<xsl:if test="$GreekVocab = 'true'">
 				<span class="strongs">
 					<xsl:call-template name="outputNonBlank">
 						<xsl:with-param name="string" select="''" />
@@ -1614,7 +1675,13 @@
 	  				<!-- now we need to put the set of spans for strongs/morphs/interlinear versions -->
 
 					<!-- output a filling gap for strongs -->
-					<xsl:if test="$StrongsNumbers = 'true'">
+					<xsl:if test="$EnglishVocab = 'true'">
+						<span class="text">&#160;</span>
+					</xsl:if>
+					<xsl:if test="$Transliteration = 'true'">
+						<span class="text">&#160;</span>
+					</xsl:if>
+					<xsl:if test="$GreekVocab = 'true'">
 						<span class="text">&#160;</span>
 					</xsl:if>
 		

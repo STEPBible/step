@@ -63,8 +63,12 @@ public enum LookupOption {
      * Showing cross references
      */
     NOTES("Notes", XslConversionType.DEFAULT, true),
-    /** Strong numbers */
-    STRONG_NUMBERS("StrongsNumbers", XslConversionType.INTERLINEAR),
+    /** English vocabulary interlinear */
+    ENGLISH_VOCAB("EnglishVocab", XslConversionType.INTERLINEAR),
+    /** Transliteration interlinear */
+    TRANSLITERATION("Transliteration", XslConversionType.INTERLINEAR),
+    /** Greek vocabulary */
+    GREEK_VOCAB("GreekVocab", XslConversionType.INTERLINEAR),
 
     /** Morphology */
     MORPHOLOGY("Morph", XslConversionType.INTERLINEAR),

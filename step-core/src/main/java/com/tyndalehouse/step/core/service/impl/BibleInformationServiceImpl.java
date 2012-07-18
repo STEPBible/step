@@ -32,8 +32,6 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.service.impl;
 
-import static com.tyndalehouse.step.core.models.LookupOption.INTERLINEAR;
-import static com.tyndalehouse.step.core.models.LookupOption.STRONG_NUMBERS;
 import static com.tyndalehouse.step.core.utils.JSwordUtils.getSortedSerialisableList;
 import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
 
@@ -176,16 +174,7 @@ public class BibleInformationServiceImpl implements BibleInformationService {
 
     @Override
     public List<LookupOption> getFeaturesForVersion(final String version) {
-        final List<LookupOption> features = this.jswordMetadata.getFeatures(version);
-        if (features.contains(STRONG_NUMBERS)) {
-            features.add(INTERLINEAR);
-        }
-
-        if (features.contains(LookupOption.MORPHOLOGY)) {
-            features.add(LookupOption.COLOUR_CODE);
-        }
-
-        return features;
+        return this.jswordMetadata.getFeatures(version);
     }
 
     @Override

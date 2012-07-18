@@ -61,6 +61,17 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
             options.add(LookupOption.RED_LETTER);
         }
 
+        if (book.getBookMetaData().hasFeature(FeatureType.STRONGS_NUMBERS)) {
+            options.add(LookupOption.ENGLISH_VOCAB);
+            options.add(LookupOption.GREEK_VOCAB);
+            options.add(LookupOption.TRANSLITERATION);
+            options.add(LookupOption.INTERLINEAR);
+        }
+
+        if (book.hasFeature(FeatureType.MORPHOLOGY)) {
+            options.add(LookupOption.COLOUR_CODE);
+        }
+
         if (book.getBookMetaData().hasFeature(FeatureType.FOOTNOTES)
                 || book.getBookMetaData().hasFeature(FeatureType.SCRIPTURE_REFERENCES)) {
             options.add(LookupOption.NOTES);

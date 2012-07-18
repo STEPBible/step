@@ -102,10 +102,11 @@ span.strongs, span.morphs {
 	text-decoration: none;
 	font-size: xx-small;
 	text-align: center;
+	font-style: italic;
 }
 
 span.strongs a {
-	color: orange;
+	color: black;
 }
 
 

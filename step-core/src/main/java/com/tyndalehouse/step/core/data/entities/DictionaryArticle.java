@@ -42,6 +42,7 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.OneToMany;
 
+import com.avaje.ebean.annotation.CacheStrategy;
 import com.tyndalehouse.step.core.data.entities.reference.SourceType;
 
 /**
@@ -50,6 +51,7 @@ import com.tyndalehouse.step.core.data.entities.reference.SourceType;
  * @author chrisburrell
  * 
  */
+@CacheStrategy(readOnly = true)
 @Entity
 public class DictionaryArticle implements Serializable {
     private static final long serialVersionUID = 4729195176353512170L;

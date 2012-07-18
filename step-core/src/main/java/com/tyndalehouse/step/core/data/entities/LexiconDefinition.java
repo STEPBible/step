@@ -47,6 +47,7 @@ import javax.persistence.ManyToMany;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 
+import com.avaje.ebean.annotation.CacheStrategy;
 import com.tyndalehouse.step.core.models.ShortLexiconDefinition;
 
 /**
@@ -59,6 +60,7 @@ import com.tyndalehouse.step.core.models.ShortLexiconDefinition;
  * @author chrisburrell
  * 
  */
+@CacheStrategy(readOnly = true)
 @Entity
 public class LexiconDefinition implements Serializable {
     private static final long serialVersionUID = -776292628844878350L;

@@ -60,12 +60,6 @@
   <!-- The absolute base for relative references. -->
   <xsl:param name="baseURL" select="''"/>
 
-  <!-- Whether to show Strongs or not -->
-  <xsl:param name="StrongsNumbers" select="'false'"/>
-
-  <!-- Whether to show morphologic forms or not -->
-  <xsl:param name="Morph" select="'false'"/>
-
   <!-- Whether to display Jesus' words in red or not -->
   <xsl:param name="RedLetterText" select="'false'" />
 

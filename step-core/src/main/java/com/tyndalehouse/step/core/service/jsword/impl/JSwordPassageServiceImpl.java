@@ -486,7 +486,9 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
                     tsep.setParameter("morphologyProvider", this.morphologyProvider);
                 }
 
-                if (LookupOption.STRONG_NUMBERS.equals(lookupOption)) {
+                if (LookupOption.ENGLISH_VOCAB.equals(lookupOption)
+                        || LookupOption.TRANSLITERATION.equals(lookupOption)
+                        || LookupOption.GREEK_VOCAB.equals(lookupOption)) {
                     tsep.setParameter("vocabProvider", this.vocabProvider);
                 }
             }

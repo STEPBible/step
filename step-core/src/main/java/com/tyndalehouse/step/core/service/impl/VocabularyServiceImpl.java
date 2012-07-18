@@ -27,6 +27,26 @@ public class VocabularyServiceImpl implements VocabularyService {
     private static final int START_STRONG_KEY = HIGHER_STRONG.length();
     private final EbeanServer ebean;
 
+    // define a few extraction methods
+    private final LexiconDataProvider transliterationProvider = new LexiconDataProvider() {
+        @Override
+        public String getData(final LexiconDefinition l) {
+            return l.getSimpleTransliteration();
+        }
+    };
+    private final LexiconDataProvider englishVocabProvider = new LexiconDataProvider() {
+        @Override
+        public String getData(final LexiconDefinition l) {
+            return l.getShortDefinition();
+        }
+    };
+    private final LexiconDataProvider greekVocabProvider = new LexiconDataProvider() {
+        @Override
+        public String getData(final LexiconDefinition l) {
+            return l.getOriginal();
+        }
+    };
+
     /**
      * @param ebean the database server
      */
@@ -49,16 +69,36 @@ public class VocabularyServiceImpl implements VocabularyService {
     }
 
     @Override
-    public String getDefaultTransliteration(final String vocabIdentifiers) {
-        final List<String> keys = getKeys(vocabIdentifiers);
+    public String getEnglishVocab(final String vocabIdentifiers) {
+        return getDataFromLexiconDefinition(vocabIdentifiers, this.englishVocabProvider);
+    }
 
+    @Override
+    public String getGreekVocab(final String vocabIdentifiers) {
+        return getDataFromLexiconDefinition(vocabIdentifiers, this.greekVocabProvider);
+    }
+
+    @Override
+    public String getDefaultTransliteration(final String vocabIdentifiers) {
+        return getDataFromLexiconDefinition(vocabIdentifiers, this.transliterationProvider);
+    }
+
+    /**
+     * gets data from the matched lexicon definitions
+     * 
+     * @param vocabIdentifiers the identifiers
+     * @param provider the provider used to get data from it
+     * @return the data in String form
+     */
+    private String getDataFromLexiconDefinition(final String vocabIdentifiers,
+            final LexiconDataProvider provider) {
+        final List<String> keys = getKeys(vocabIdentifiers);
         if (keys.isEmpty()) {
             return "";
         }
 
         // else we lookup and concatenate
-        final List<LexiconDefinition> lds = this.ebean.find(LexiconDefinition.class)
-                .select("simpleTransliteration").where().idIn(keys).findList();
+        final List<LexiconDefinition> lds = getLexiconDefinitions(keys);
 
         // TODO - if nothing there, for now we just return the ids we got
         if (lds.isEmpty()) {
@@ -67,10 +107,22 @@ public class VocabularyServiceImpl implements VocabularyService {
 
         final StringBuilder sb = new StringBuilder(lds.size() * 32);
         for (final LexiconDefinition l : lds) {
-            sb.append(l.getSimpleTransliteration());
+            sb.append(provider.getData(l));
         }
 
         return sb.toString();
+    }
+
+    /**
+     * returns the lexicon definitions
+     * 
+     * @param keys the keys to match
+     * @return the lexicon definitions that were found
+     */
+    private List<LexiconDefinition> getLexiconDefinitions(final List<String> keys) {
+        final List<LexiconDefinition> lds = this.ebean.find(LexiconDefinition.class)
+                .select("original,simpleTransliteration,shortDefinition").where().idIn(keys).findList();
+        return lds;
     }
 
     /**

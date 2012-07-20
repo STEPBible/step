@@ -276,8 +276,8 @@ public class JSwordServiceImplTest {
      */
     @Test
     public void testPrettyXml() throws BookException, NoSuchKeyException, JDOMException, IOException {
-        final String version = "ESV";
-        final String ref = "Exodus 3:1-4:17";
+        final String version = "KJV";
+        final String ref = "Matt 5:15";
         final Book currentBook = Books.installed().getBook(version);
         final BookData bookData = new BookData(currentBook, currentBook.getKey(ref));
         final Element osisFragment = bookData.getOsisFragment();
@@ -306,8 +306,9 @@ public class JSwordServiceImplTest {
     public void testNumberLookup() {
         final JSwordPassageServiceImpl j = new JSwordPassageServiceImpl(new JSwordVersificationServiceImpl(),
                 null, null);
-        assertTrue(j.getOsisTextByVerseNumbers("ESV", "KJV", 4, 4, new ArrayList<LookupOption>(), null, null, false)
-                .getValue().contains("In the beginning"));
+        assertTrue(j
+                .getOsisTextByVerseNumbers("ESV", "KJV", 4, 4, new ArrayList<LookupOption>(), null, null,
+                        false).getValue().contains("In the beginning"));
         assertTrue(j
                 .getOsisTextByVerseNumbers("ESV", "KJV", 60000, 60000, new ArrayList<LookupOption>(), null,
                         null, false).getValue().contains("The grace of the Lord Jesus"));

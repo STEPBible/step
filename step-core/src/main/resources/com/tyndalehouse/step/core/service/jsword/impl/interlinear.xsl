@@ -1157,34 +1157,48 @@
 	    	<span class="jesus"><xsl:value-of select="@marker"/><xsl:apply-templates mode="jesus"/><xsl:value-of select="@marker"/></span>
 	    </xsl:when>
 	    <xsl:otherwise>
-	    	<span class="q"><xsl:value-of select="@marker"/><xsl:apply-templates /><xsl:value-of select="@marker"/></span>
+	    		<xsl:value-of select="@marker"/>
+	    		<xsl:apply-templates />
+	    		<xsl:value-of select="@marker"/>
 	    </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
 
   <xsl:template match="q[@type = 'blockquote']">
-    <blockquote class="q"><xsl:value-of select="@marker"/><xsl:apply-templates/><xsl:value-of select="@marker"/></blockquote>
+	    		<xsl:value-of select="@marker"/>
+	    		<xsl:apply-templates />
+	    		<xsl:value-of select="@marker"/>
   </xsl:template>
 
   <xsl:template match="q[@type = 'blockquote']" mode="jesus">
-    <blockquote class="q"><xsl:value-of select="@marker"/><xsl:apply-templates mode="jesus"/><xsl:value-of select="@marker"/></blockquote>
+	    		<xsl:value-of select="@marker"/>
+	    		<xsl:apply-templates />
+	    		<xsl:value-of select="@marker"/>
   </xsl:template>
 
   <xsl:template match="q[@type = 'citation']">
-    <blockquote class="q"><xsl:value-of select="@marker"/><xsl:apply-templates/><xsl:value-of select="@marker"/></blockquote>
+	    		<xsl:value-of select="@marker"/>
+	    		<xsl:apply-templates />
+	    		<xsl:value-of select="@marker"/>
   </xsl:template>
 
   <xsl:template match="q[@type = 'citation']" mode="jesus">
-    <blockquote class="q"><xsl:value-of select="@marker"/><xsl:apply-templates mode="jesus"/><xsl:value-of select="@marker"/></blockquote>
+	    		<xsl:value-of select="@marker"/>
+	    		<xsl:apply-templates />
+	    		<xsl:value-of select="@marker"/>
   </xsl:template>
 
   <xsl:template match="q[@type = 'embedded']">
     <xsl:choose>
       <xsl:when test="@marker">
-        <xsl:value-of select="@marker"/><xsl:apply-templates/><xsl:value-of select="@marker"/>
+	    		<xsl:value-of select="@marker"/>
+	    		<xsl:apply-templates />
+	    		<xsl:value-of select="@marker"/>
       </xsl:when>
       <xsl:otherwise>
-        <quote class="q"><xsl:apply-templates/></quote>
+	    		<xsl:value-of select="@marker"/>
+	    		<xsl:apply-templates />
+	    		<xsl:value-of select="@marker"/>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -1192,7 +1206,9 @@
   <xsl:template match="q[@type = 'embedded']" mode="jesus">
     <xsl:choose>
       <xsl:when test="@marker">
-      <xsl:value-of select="@marker"/><xsl:apply-templates mode="jesus"/><xsl:value-of select="@marker"/>
+	    		<xsl:value-of select="@marker"/>
+	    		<xsl:apply-templates />
+	    		<xsl:value-of select="@marker"/>
       </xsl:when>
       <xsl:otherwise>
         <quote class="q"><xsl:apply-templates/></quote>
@@ -1309,51 +1325,10 @@
   </xsl:template>
 
 	<xsl:template match="transChange">
-		<span class="w">
 			<em>
 				<xsl:apply-templates />
 			</em>
 
-			<!-- output a filling gap for strongs x3 -->
-			<xsl:if test="$EnglishVocab = 'true'">
-				<span class="strongs">
-					<xsl:call-template name="outputNonBlank">
-						<xsl:with-param name="string" select="''" />
-					</xsl:call-template>
-				</span>
-			</xsl:if>
-			<xsl:if test="$Transliteration = 'true'">
-				<span class="strongs">
-					<xsl:call-template name="outputNonBlank">
-						<xsl:with-param name="string" select="''" />
-					</xsl:call-template>
-				</span>
-			</xsl:if>
-			<xsl:if test="$GreekVocab = 'true'">
-				<span class="strongs">
-					<xsl:call-template name="outputNonBlank">
-						<xsl:with-param name="string" select="''" />
-					</xsl:call-template>
-				</span>
-			</xsl:if>
-			
-
-			<!-- output a filling gap for morphs -->
-			<xsl:if test="$Morph = 'true'">
-				<span class="morphs">
-					<xsl:call-template name="outputNonBlank">
-						<xsl:with-param name="string" select="''" />
-					</xsl:call-template>
-				</span>
-			</xsl:if>
-		
-			<!--  fill up with spaces where we have extra versions shown -->
-			<xsl:if test="normalize-space($interlinearVersion) != ''">
-				<xsl:call-template name="blanksForVersions">
-					<xsl:with-param name="versions" select="$interlinearVersion" />
-				</xsl:call-template>
-			</xsl:if>
-		</span>
 	</xsl:template>
 
 
@@ -1661,7 +1636,7 @@
   <!-- If the parent of the text is a verse then, we need to wrap in span. This applies
   to any punctuation really, since all other words should be contained in a W  -->
   <xsl:template match="text()" mode="jesus">
-  	  <xsl:call-template name="matchSimpleText"></xsl:call-template>
+  	  <xsl:call-template name="matchSimpleText" />
   </xsl:template>
   
   
@@ -1697,12 +1672,38 @@
 							<xsl:with-param name="printVersions" select="'no-print'" />
 						</xsl:call-template>
 					</xsl:if>
-	  				
-	  				
-	  				
 	  		 	</span>
 	  		</xsl:when>
-	  		<xsl:when test="normalize-space(.) != ''"><xsl:value-of select="."/></xsl:when>
+	  		<xsl:when test="normalize-space(.) != ''">
+	  			<span class="w">
+	  				<span class="text"><xsl:value-of select="."/></span>
+	  				<!-- now we need to put the set of spans for strongs/morphs/interlinear versions -->
+
+					<!-- output a filling gap for strongs -->
+					<xsl:if test="$EnglishVocab = 'true'">
+						<span class="text">&#160;</span>
+					</xsl:if>
+					<xsl:if test="$Transliteration = 'true'">
+						<span class="text">&#160;</span>
+					</xsl:if>
+					<xsl:if test="$GreekVocab = 'true'">
+						<span class="text">&#160;</span>
+					</xsl:if>
+		
+					<!-- output a filling gap for morphs -->
+					<xsl:if test="$Morph = 'true'">
+						<span class="text">&#160;</span>
+					</xsl:if>
+				
+					<!--  fill up with spaces where we have extra versions shown -->
+					<xsl:if test="normalize-space($interlinearVersion) != ''">
+						<xsl:call-template name="outputVersionNames">
+							<xsl:with-param name="versions" select="$interlinearVersion" />
+							<xsl:with-param name="printVersions" select="'no-print'" />
+						</xsl:call-template>
+					</xsl:if>
+	  		 	</span>
+	  		</xsl:when>
   		</xsl:choose>
   </xsl:template>
 

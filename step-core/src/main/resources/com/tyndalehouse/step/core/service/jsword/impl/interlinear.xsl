@@ -526,11 +526,10 @@
 		<!-- Output the content followed by all the lemmas and then all the morphs. 
 			So, we know we have a number of lines to create, therefore, we'll create 
 			that many! -->
-		<xsl:variable name="innerWordText">
-			<xsl:apply-templates />
-		</xsl:variable>
-	
+		<xsl:variable name="innerWordText"><xsl:apply-templates /></xsl:variable>
+	              
 		<xsl:variable name="nextText" select="normalize-space(following-sibling::node()[1][self::text()])" />
+	
 		<xsl:if test="jsword:com.tyndalehouse.step.core.utils.StringUtils.containsAlphaNumeric($nextText)">
 			<xsl:variable name="nextText" select="''"/>
 		</xsl:if>
@@ -552,8 +551,9 @@
 				<xsl:if test="normalize-space($remainingText) != ''">
 					<!-- 1st - Output first line or a blank if no text available. -->
 					<span class="text">
-					  		<xsl:call-template name="outputNonBlank">
+					  	<xsl:call-template name="outputNonBlank">
 							<xsl:with-param name="string" select="$remainingText" />
+							<xsl:with-param name="nextText" select="$nextText" />
 						</xsl:call-template>
 					</span>
 		
@@ -645,11 +645,12 @@
   
   <xsl:template name="outputNonBlank">
   	<xsl:param name="string" />
+  	<xsl:param name="nextText" select="''" />
   	<xsl:choose>
   		<xsl:when test="normalize-space($string) != ''">
-  			<xsl:value-of select="$string" />
+  			<xsl:value-of select="normalize-space($string)" />
   		</xsl:when>
-  		<xsl:otherwise><xsl:value-of select="'&#160;'" /></xsl:otherwise>
+  		<xsl:otherwise><xsl:value-of select="$nextText"/><xsl:value-of select="'&#160;'" /></xsl:otherwise>
   	</xsl:choose>
   	
   </xsl:template>
@@ -1644,39 +1645,9 @@
   <xsl:template match="text()" name="matchSimpleText">
   		<xsl:choose>
 			<xsl:when test="not(jsword:com.tyndalehouse.step.core.utils.StringUtils.containsAlphaNumeric(normalize-space(.)))" />
-	  		<xsl:when test="name(..) = 'verse' and normalize-space(.) != ''">
-	  			<span class="w">
-	  				<span class="text"><xsl:value-of select="."/></span>
-	  				<!-- now we need to put the set of spans for strongs/morphs/interlinear versions -->
-
-					<!-- output a filling gap for strongs -->
-					<xsl:if test="$EnglishVocab = 'true'">
-						<span class="text">&#160;</span>
-					</xsl:if>
-					<xsl:if test="$Transliteration = 'true'">
-						<span class="text">&#160;</span>
-					</xsl:if>
-					<xsl:if test="$GreekVocab = 'true'">
-						<span class="text">&#160;</span>
-					</xsl:if>
-		
-					<!-- output a filling gap for morphs -->
-					<xsl:if test="$Morph = 'true'">
-						<span class="text">&#160;</span>
-					</xsl:if>
-				
-					<!--  fill up with spaces where we have extra versions shown -->
-					<xsl:if test="normalize-space($interlinearVersion) != ''">
-						<xsl:call-template name="outputVersionNames">
-							<xsl:with-param name="versions" select="$interlinearVersion" />
-							<xsl:with-param name="printVersions" select="'no-print'" />
-						</xsl:call-template>
-					</xsl:if>
-	  		 	</span>
-	  		</xsl:when>
 	  		<xsl:when test="normalize-space(.) != ''">
 	  			<span class="w">
-	  				<span class="text"><xsl:value-of select="."/></span>
+	  				<span class="text"><xsl:value-of select="."/><xsl:value-of select="normalize-space(../following-sibling::node()[1][self::text()])"/></span>
 	  				<!-- now we need to put the set of spans for strongs/morphs/interlinear versions -->
 
 					<!-- output a filling gap for strongs -->

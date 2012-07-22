@@ -499,7 +499,7 @@ Timeline.DefaultEventSource.Event.prototype.fillInfoBubble = function (elmt, the
 			
 			verses += "<span class='timelineEmphasise'>"; 
 			verses += goToPassageArrow(true, item.reference);
-			verses +=  " " + item.reference + " "; 
+			verses +=  " <a href='#' title='Click for more options' onclick='javascript:showPreviewOptions();' onmouseover=\"javascript:viewPassage("+ timeline.passageId + ", '" + item.reference + "', this);\" >" + item.reference + " "; 
 			verses += goToPassageArrow(false, item.reference);
 			verses += " </span>";
 			verses += $(".verse", item.value).text();

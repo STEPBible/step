@@ -129,10 +129,16 @@ function getParentMenuName(menuItem) {
  * @param element
  * @param passageReference
  */
-function viewPassage(element, passageReference) {
+function viewPassage(passageIdOrElement, passageReference, element) {
     // only shout preview if the preview bar is not displaying options on it.
     if (!$("#previewBar").is(":visible") || !$("#previewReference").is(":visible")) {
-        $.shout("show-preview-" + step.passage.getPassageId(element), {
+        var passageId = passageIdOrElement;
+        if(isNaN(parseInt(passageIdOrElement))) {
+            passageId = step.passage.getPassageId(passageIdOrElement);
+            element = passageIdOrElement;
+        }
+        
+        $.shout("show-preview-" + passageId, {
             source : element,
             reference : passageReference
         });

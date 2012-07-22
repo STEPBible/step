@@ -27,12 +27,16 @@
  * POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
 step.navigation = {
-	showBottomSection: function(menuItem) {
-		if (step.passage.getPassageId(menuItem) == 0) {
+	showBottomSection: function(menuItemOrPassageId) {
+	    var passageId = menuItemOrPassageId;
+	    if(isNaN(parseInt(menuItemOrPassageId))) {
+	        passageId = step.passage.getPassageId(menuItemOrPassageId);
+	    }
+	    
+	    if (passageId == 0) {
 			var verse = $('#leftPassageReference').val();
 			$('.timelineContext:first').html(verse);
-		}
-		else {
+		} else {
 			var verse = $('#rightPassageReference').val();
 			$('.timelineContext:first').html(verse);	
 		}

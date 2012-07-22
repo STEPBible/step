@@ -49,6 +49,14 @@ var HEBREW_MONTH_NAMES = [
 var OT_CUT_OFF_DATE = -10;
 
 
+step.timeline = {
+        show: function(passageId, verseRef) {
+            step.state.passage.reference(passageId, verseRef);
+            step.navigation.showBottomSection(passageId);
+            $.shout("show-timeline", { passageId: passageId });
+        }
+};
+
 
 /**
  * Code for showing and interacting with the timeline

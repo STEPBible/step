@@ -106,12 +106,19 @@ step.search = {
         var resultHtml = "<ul class='searchResults'>";
         var self = this;
         $.each(results, function(i, item) {
-            resultHtml += "<li class='searchResultRow'><a class='searchResultKey' href='#' onclick='goToTimeline(\"" + item.key + "\")'>" + item.description +  "</a></li>";
+            var resultItem = "";
+            var aTarget = "";
             if(item.verses && item.verses.length > 0) {
-                resultHtml += "<ul>";
-                resultHtml += self._displayPassageResults(item.verses, passageId);
-                resultHtml += "</ul>";
+                aTarget = $.map(item.verses, function(item, i) { return item.key; }).join();
+                
+                resultItem += "<ul>";
+                resultItem += self._displayPassageResults(item.verses, passageId);
+                resultItem += "</ul>";
             }
+            
+            resultItem = "<li class='searchResultRow'><a class='searchResultKey' href='#' onclick='step.timeline.show("+ passageId + ", \"" + aTarget + "\")'>" + item.description +  "</a></li>" + resultItem;
+                        
+            resultHtml += resultItem;
         });
         
         resultHtml += "</ul>";

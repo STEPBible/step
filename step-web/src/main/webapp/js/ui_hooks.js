@@ -199,6 +199,7 @@ function login() {
     $.shout("show-login-popup");
 };
 
+
 /**
  * called when click on a piece of text.
  */

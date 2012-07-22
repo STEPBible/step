@@ -33,7 +33,10 @@ $(window).resize(function() {
 
 step.passage.ui = {
     resize : function() {
-        $(".passageContent").height($(window).height() - $(".passageContent").position().top);
+        var windowHeight = $(window).height();
+        $(".passageContent").each(function(i, item) {
+            $(item).height(windowHeight - $(item).position().top);
+        });
     },
 };
 

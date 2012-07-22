@@ -5,9 +5,9 @@
 		<legend>Passage search</legend>
 		<span class="passageButtons"> 
 			<a class="syncOtherPassage">Syncs with the other passage</a>
-			<a class="continuousPassage">Displays the passage as one large scroll</a> <a class="previousChapter">Displays the previous chapter
-				(or expands to the start of the chapter)</a> <a class="nextChapter">Displays
-				the next chapter (or expands to the end of the chapter)</a> <a
+			<a class="continuousPassage">Displays the passage as one large scroll</a>
+			<a class="previousChapter">Displays the previous chapter (or expands to the start of the chapter)</a>
+			<a class="nextChapter">Displays the next chapter (or expands to the end of the chapter)</a> <a
 			class="bookmarkPassageLink">Add a bookmark</a>
 		</span>
 

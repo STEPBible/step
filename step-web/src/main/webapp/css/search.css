@@ -39,6 +39,11 @@
 	display: inline;
 }
 
+.highlight {
+	background-color: yellow;
+	font-style: normal;
+}
+
 .searchScope {
 	width: 200px;
 }

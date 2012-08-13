@@ -2,7 +2,7 @@
 
 	<!-- Passage search -->
 	<fieldset>
-		<legend>Passage search</legend>
+		<legend>Passage lookup</legend>
 		<span class="passageButtons"> 
 			<a class="syncOtherPassage">Syncs with the other passage</a>
 			<a class="continuousPassage">Displays the passage as one large scroll</a>

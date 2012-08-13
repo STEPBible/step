@@ -19,6 +19,7 @@
 	<link rel="shortcut icon"  href="images/step-favicon.ico" />
 	<link rel="stylesheet" type="text/css" href="css/ui-lightness/jquery-ui-1.8.19.custom.css" />
 	<script src="js_init/initLib.js" type="text/javascript"></script>   
+    <script src="libs/dohighlight-min.js" type="text/javascript"></script>
     <script src="libs/timeline_js/timeline-api.js" type="text/javascript"></script>
     <script src="libs/jquery-1.7.2.min.js" type="text/javascript"></script>
 <!--     <script src="libs/jquery-ui-1.8.19.custom.min.js" type="text/javascript"></script> -->

@@ -77,12 +77,48 @@ step.search = {
             var ranked = step.state.textual.textSortByRelevance(passageId);
             
             if (step.util.raiseErrorIfBlank(query, "Please fill in the form first")) {
-                step.search._doSearch(SEARCH_DEFAULT, passageId, query, ranked);
+                step.search._doSearch(SEARCH_DEFAULT, passageId, query, ranked, this._highlightingTerms(query));
             }
+        },
+        
+        _highlightingTerms : function(query) {
+            var terms = [];
+            var termBase;
+            
+            //remove range restrictions, -word and -"a phrase"
+            termBase = query.replace(/[+-]\[[^\]]*]/g, "");
+            termBase = termBase.replace(/-[a-zA-Z]+/g, "");
+            termBase = termBase.replace(/-"[^"]+"/g, "");
+            
+            //remove distances and brackets
+            termBase = termBase.replace(/~[0-9]+/g, "");
+            termBase = termBase.replace(/[\(\)]*/g, "");
+            
+            
+            var matches = termBase.match(/"[^"]*"/);
+            if(matches) {
+                for(var i = 0; i < matches.length; i++) {
+                    terms.push(matches[i].substring(1, matches[i].length -1));
+                }
+            }
+            
+            //then remove it from the query
+            termBase = termBase.replace(/"[^"]*"/, "");
+            var smallTerms = termBase.split(" ");
+            if(smallTerms) {
+                for(var i = 0; i < smallTerms.length; i++) {
+                    var consideredTerm = smallTerms[i].trim(); 
+                    if(consideredTerm.length != "") {
+                        terms.push(consideredTerm);   
+                    }
+                }
+            }
+            console.log(terms);
+            return terms;
         }
     },
     
-    handleSearch : function(element) {
+    handleSearch : function(element, highlightTerms) {
         var passageId = step.passage.getPassageId(element);
         var passageContainer = step.util.getPassageContainer(passageId);
         var passageContent = step.util.getPassageContent(passageId);
@@ -92,14 +128,37 @@ step.search = {
         }
     },
 
-    _doSearch : function(searchType, passageId, query, ranked) {
+    _doSearch : function(searchType, passageId, query, ranked, highlightTerms) {
         var self = this;
         var version = step.state.passage.version(passageId);
         var args = ranked == null ? [version, query] : [version, query, ranked];
         
         $.getSafe(searchType, args, function(searchQueryResults) {
             self._displayResults(searchQueryResults, passageId);
+            self._highlightResults(passageId, highlightTerms);
         });
+    },
+    
+    _highlightResults : function(passageId, highlightTerms) {
+        if(highlightTerms == undefined) {
+            return;
+        }
+        
+        var self = this;
+        var verses = $(".searchResultRow .verse", step.util.getPassageContent(passageId));
+        //check if we have hit anything, likelyhood is yes of course.
+        $.each(verses, function(i, item) {
+            //test against each potential match
+            for(var j = 0; j < highlightTerms.length; j++) {
+                if($(this).text().indexOf(highlightTerms[j]) != -1) {
+                    self._highlightTerm(highlightTerms[j], this);
+                }
+            }
+        });
+    },
+    
+    _highlightTerm : function(term, item) {
+       doHighlight(item, "highlight", term);
     },
     
     _displayTimelineEventResults : function(results, passageId) {

@@ -66,7 +66,7 @@ step.search.ui.textual = {
         query += this._evalWordsWithinRangeOfEachOther(
                     $(".textPrimaryIncludeRangedWords", passageContainer).val(), 
                     $(".textPrimaryWithinXWords", passageContainer).val());
-        
+                
         var secondaryQuery = "";
         secondaryQuery += this._evalAllWords($(".textCloseByIncludeAllWords", passageContainer).val());
         secondaryQuery += this._evalExactPhrase($(".textCloseByExactPhrase", passageContainer).val());

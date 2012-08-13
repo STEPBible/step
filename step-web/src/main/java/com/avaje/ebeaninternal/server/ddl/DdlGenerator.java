@@ -27,6 +27,7 @@ import com.avaje.ebeaninternal.api.SpiEbeanServer;
 /**
  * Controls the generation of DDL and potentially runs the resulting scripts.
  */
+// CHECKSTYLE:OFF
 public class DdlGenerator {
 
     private static final Logger logger = Logger.getLogger(DdlGenerator.class.getName());
@@ -342,3 +343,4 @@ public class DdlGenerator {
         return s;
     }
 }
+// CHECKSTYLE:ON

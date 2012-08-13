@@ -18,10 +18,15 @@ import com.tyndalehouse.step.e2e.tests.regression.TopMenuWithoutCookiesTest;
 @RunWith(Suite.class)
 @SuiteClasses({ StepPassageTest.class, StepBookmarkTest.class, NavigationButtonsTest.class,
         StepDisplayOptionsTest.class, TopMenuWithoutCookiesTest.class, TimelineComponentOpensTest.class })
-public class StepTestSuite {
+public final class StepTestSuite {
     private static boolean createdByTest = false;
     private static ChromeDriverService service;
     public static final boolean RUN_IN_ONE_WINDOW = false;
+
+    /** prevent instantiation */
+    private StepTestSuite() {
+        // no op
+    }
 
     @BeforeClass
     public static void createAndStartService() throws IOException {

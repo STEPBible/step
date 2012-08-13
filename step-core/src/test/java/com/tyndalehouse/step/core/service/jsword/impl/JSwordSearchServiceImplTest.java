@@ -13,6 +13,9 @@ import org.junit.Test;
 public class JSwordSearchServiceImplTest {
     private JSwordSearchServiceImpl search;
 
+    /**
+     * sets up search service
+     */
     @Before
     public void setUp() {
         final JSwordVersificationServiceImpl av11nService = new JSwordVersificationServiceImpl();
@@ -20,6 +23,9 @@ public class JSwordSearchServiceImplTest {
                 null, null));
     }
 
+    /**
+     * Random tests
+     */
     @Test
     public void testMusings() {
         assertTrue(this.search.search("KJV", "strong:g0016", false).getResults().size() > 0);

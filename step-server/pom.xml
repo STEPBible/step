@@ -40,7 +40,6 @@
 	</parent>
 
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.tyndalehouse.step</groupId>
 	<artifactId>step-server</artifactId>
 	<packaging>jar</packaging>
 	<name>STEP :: Server wrapper for local execution</name>

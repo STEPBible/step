@@ -78,8 +78,8 @@ public class FrontController extends HttpServlet {
     private final transient ObjectMapper jsonMapper = new ObjectMapper();
     private final transient JsonContext ebeanJson;
 
-    private final Map<String, Method> methodNames = new HashMap<String, Method>();
-    private final Map<String, Object> controllers = new HashMap<String, Object>();
+    private final transient Map<String, Method> methodNames = new HashMap<String, Method>();
+    private final transient Map<String, Object> controllers = new HashMap<String, Object>();
     private final boolean isCacheEnabled;
     private final transient ClientErrorResolver errorResolver;
     private final transient ResponseCache responseCache;

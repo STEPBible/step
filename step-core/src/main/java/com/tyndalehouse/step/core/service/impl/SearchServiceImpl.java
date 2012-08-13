@@ -38,6 +38,7 @@ import static java.lang.String.format;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -78,6 +79,7 @@ public class SearchServiceImpl implements SearchService {
     /**
      * @param ebean the ebean server to carry out the search from
      * @param jsword used to convert references to numerals, etc.
+     * @param timeline the timeline service
      * @param jswordSearch the search service
      */
     @Inject
@@ -201,7 +203,7 @@ public class SearchServiceImpl implements SearchService {
         final List<String> strongs = Arrays.asList(searchStrong.split("[, ;]+"));
         final List<String> strongList = new ArrayList<String>();
         for (final String s : strongs) {
-            strongList.add(padStrongNumber(s.toUpperCase(), false));
+            strongList.add(padStrongNumber(s.toUpperCase(Locale.ENGLISH), false));
         }
         return strongList;
     }

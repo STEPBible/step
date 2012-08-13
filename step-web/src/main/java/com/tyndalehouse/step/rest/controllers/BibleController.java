@@ -160,6 +160,7 @@ public class BibleController {
      * @param version the version initials
      * @param startVerseId the start verse ordinal
      * @param endVerseId the end verse ordinal
+     * @param roundUp indicates that verse numbers will be rounded up
      * @param options the comma-separated list of options (optional)
      * @return the osis wrapper
      */

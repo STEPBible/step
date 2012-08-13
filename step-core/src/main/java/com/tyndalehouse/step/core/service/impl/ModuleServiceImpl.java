@@ -76,6 +76,7 @@ public class ModuleServiceImpl implements ModuleService {
      * 
      * @param lexiconRefs the default references that should be used
      * @param jsword the jsword service to retrieve data
+     * @param jswordModuleService the service to register and manipulate modules
      */
     @Inject
     public ModuleServiceImpl(@Named("defaultLexiconRefs") final Map<String, String> lexiconRefs,

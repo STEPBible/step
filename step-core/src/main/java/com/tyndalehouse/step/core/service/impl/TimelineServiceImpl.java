@@ -56,7 +56,6 @@ import com.tyndalehouse.step.core.models.EnhancedTimelineEvent;
 import com.tyndalehouse.step.core.models.OsisWrapper;
 import com.tyndalehouse.step.core.service.TimelineService;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
-import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
 
 /**
  * The implementation of the timeline service, based on JDBC and ORM Lite to access the database.
@@ -69,19 +68,14 @@ public class TimelineServiceImpl implements TimelineService {
     private final EbeanServer ebean;
     private final JSwordPassageService jsword;
 
-    private final JSwordVersificationService jswordVersification;
-
     /**
      * @param ebean the ebean server with which to lookup data
      * @param jsword the jsword service
-     * @param jswordVersification the versification service
      */
     @Inject
-    public TimelineServiceImpl(final EbeanServer ebean, final JSwordPassageService jsword,
-            final JSwordVersificationService jswordVersification) {
+    public TimelineServiceImpl(final EbeanServer ebean, final JSwordPassageService jsword) {
         this.ebean = ebean;
         this.jsword = jsword;
-        this.jswordVersification = jswordVersification;
     }
 
     @Override

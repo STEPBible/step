@@ -1,6 +1,6 @@
 package com.tyndalehouse.step.e2e.tests.regression;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
@@ -16,7 +16,7 @@ public class TopMenuWithoutCookiesTest extends WebDriverTest {
     public void testOnlyOneTickInLevelMenu() {
         PageOperations.goToMainPage(getDriver());
 
-        assertTrue("0 or more than 1 option is ticked",
-                MenuOperations.getOptionsForTopMenu(getDriver(), "VIEW").size() == 1);
+        assertEquals("0 or more than 1 option is ticked", 1,
+                MenuOperations.getOptionsForTopMenu(getDriver(), "VIEW").size());
     }
 }

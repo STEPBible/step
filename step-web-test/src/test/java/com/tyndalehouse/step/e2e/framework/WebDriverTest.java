@@ -10,12 +10,15 @@ import org.junit.AfterClass;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.tyndalehouse.step.e2e.tests.StepTestSuite;
 
 public class WebDriverTest {
-    private WebDriver driver;
+    private static final Logger LOGGER = LoggerFactory.getLogger(WebDriverTest.class);
     private static WebDriver inOneWindow = null;
+    private WebDriver driver;
 
     public static WebDriver createDriver() {
         try {
@@ -47,14 +50,16 @@ public class WebDriverTest {
                 StepTestSuite.getService().stop();
             }
         } catch (final IOException e) {
-            e.printStackTrace();
+            LOGGER.error("Failed to tear down test", e);
         }
     }
 
     protected WebDriver getDriver() {
         if (inOneWindow != null) {
             return inOneWindow;
-        } else if (this.driver == null) {
+        }
+
+        if (this.driver == null) {
             this.driver = createDriver();
         }
 

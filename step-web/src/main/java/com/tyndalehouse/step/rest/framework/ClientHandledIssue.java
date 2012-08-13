@@ -32,6 +32,8 @@
  ******************************************************************************/
 package com.tyndalehouse.step.rest.framework;
 
+import java.io.Serializable;
+
 import com.tyndalehouse.step.models.ClientOperation;
 
 /**
@@ -40,7 +42,7 @@ import com.tyndalehouse.step.models.ClientOperation;
  * @author chrisburrell
  * 
  */
-public class ClientHandledIssue {
+public class ClientHandledIssue implements Serializable {
     private static final long serialVersionUID = -4354861806290828883L;
     private final String errorMessage;
     private final ClientOperation operation;

@@ -53,7 +53,6 @@ import com.tyndalehouse.step.core.data.entities.History;
 import com.tyndalehouse.step.core.data.entities.User;
 import com.tyndalehouse.step.core.service.UserDataService;
 import com.tyndalehouse.step.core.service.jsword.JSwordModuleService;
-import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 
 /**
  * Provides test data if necessary
@@ -67,7 +66,6 @@ public class TestData {
     private final EbeanServer ebean;
     private final UserDataService userService;
     private final int numCryptoIterations;
-    private final JSwordPassageService jsword;
     private final JSwordModuleService jswordModule;
 
     /**
@@ -77,17 +75,15 @@ public class TestData {
      *            data service from a different viewpoint
      * @param loader the loader that should be called upon installation mainly
      * @param coreModules a comma-separated list of core modules
-     * @param jsword jsword services
+     * @param jswordModule the service to register modules
      */
     @Inject
     public TestData(final EbeanServer ebean, final UserDataService userService,
             @Named("app.security.numIterations") final int numCryptoIterations, final Loader loader,
-            @Named("test.data.modules") final String coreModules, final JSwordPassageService jsword,
-            final JSwordModuleService jswordModule) {
+            @Named("test.data.modules") final String coreModules, final JSwordModuleService jswordModule) {
         this.ebean = ebean;
         this.userService = userService;
         this.numCryptoIterations = numCryptoIterations;
-        this.jsword = jsword;
         this.jswordModule = jswordModule;
 
         final User u = getUser();

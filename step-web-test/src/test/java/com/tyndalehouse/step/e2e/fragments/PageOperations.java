@@ -9,8 +9,13 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.google.common.base.Predicate;
 
-public class PageOperations {
+public final class PageOperations {
     private static final String STEP_URL = "http://localhost:8080/step-web?debug";
+
+    /** prevent instantiation */
+    private PageOperations() {
+        // no op
+    }
 
     /**
      * Goes to the main page

@@ -32,6 +32,19 @@ public interface JSwordVersificationService {
      */
     String getVerseRange(int startVerseId, int endVerseId, String version);
 
+    /**
+     * Obtains a verse range for the provided verses
+     * 
+     * @param version the version to use for lookup purposes
+     * @param numberedVersion the version of the Bible to use for the versification (i.e. verse ordinals)
+     * @param versificationForNumberedVersion the actual versification object
+     * @param s the start verse
+     * @param e the end verse
+     * @param lookupVersion the lookup version
+     * @param roundReference whether to round up/down the reference
+     * @param ignoreVerse0 whether to ignore verse 0 (i.e. the beginning of the chapter
+     * @return the verse range in question
+     */
     VerseRange getVerseRangeForSelectedVerses(String version, String numberedVersion,
             Versification versificationForNumberedVersion, Verse s, Verse e, Book lookupVersion,
             Boolean roundReference, boolean ignoreVerse0);

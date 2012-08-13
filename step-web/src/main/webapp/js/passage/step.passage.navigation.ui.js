@@ -58,11 +58,11 @@ $(document).ready(function() {
         if(icon == "ui-icon-script") {
             enabled = true;
             $(this).button("option", "icons", {primary: "ui-icon-document-b"});
-            $(button).attr("title", "Click here to display the selected passage only");
+            $(this).attr("title", "Click here to display the selected passage only");
         } else {
             enabled = false;
             $(this).button("option", "icons", {primary: "ui-icon-script"});
-            $(button).attr("title", "Click here to display the passage as one large scroll");
+            $(this).attr("title", "Click here to display the passage as one large scroll");
         }
         
         step.passage.navigation.handleContinuousScrolling(step.passage.getPassageId(this), enabled);

@@ -17,7 +17,17 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.google.common.base.Predicate;
 
-public class MenuOperations {
+/**
+ * Helper for menu operations
+ * 
+ * @author chrisburrell
+ * 
+ */
+public final class MenuOperations {
+    /** prevent instantiation */
+    private MenuOperations() {
+        // no op
+    }
 
     public static void clickMenuItem(final Passage p, final String menuName, final String menuItem,
             final int retry) {

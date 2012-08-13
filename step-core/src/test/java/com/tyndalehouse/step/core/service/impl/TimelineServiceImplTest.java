@@ -56,7 +56,6 @@ import com.tyndalehouse.step.core.data.entities.reference.TargetType;
 import com.tyndalehouse.step.core.data.entities.timeline.TimelineEvent;
 import com.tyndalehouse.step.core.service.TimelineService;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
-import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
 
 /**
  * tests the timeline service
@@ -72,16 +71,13 @@ public class TimelineServiceImplTest extends DataDrivenTestExtension {
     @Mock
     private JSwordPassageService jsword;
 
-    @Mock
-    private JSwordVersificationService jswordVersification;
-
     /**
      * sets up a few things to be able to test properly
      */
     @Before
     public void setUp() {
 
-        this.ts = new TimelineServiceImpl(getEbean(), this.jsword, this.jswordVersification);
+        this.ts = new TimelineServiceImpl(getEbean(), this.jsword);
     }
 
     /**

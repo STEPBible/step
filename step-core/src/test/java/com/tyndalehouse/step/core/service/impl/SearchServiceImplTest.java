@@ -30,6 +30,9 @@ import com.tyndalehouse.step.core.service.jsword.impl.JSwordVersificationService
 public class SearchServiceImplTest extends DataDrivenTestExtension {
     private SearchServiceImpl si;
 
+    /**
+     * sets up each test
+     */
     @Before
     public void setUp() {
         final JSwordVersificationService versificationService = new JSwordVersificationServiceImpl();

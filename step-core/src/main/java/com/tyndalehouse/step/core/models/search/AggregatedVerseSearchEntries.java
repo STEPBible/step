@@ -2,7 +2,14 @@ package com.tyndalehouse.step.core.models.search;
 
 import java.util.List;
 
+/**
+ * Simple POJO to encapsulate search results
+ * 
+ * @author chrisburrell
+ * 
+ */
 public class AggregatedVerseSearchEntries implements SearchEntry {
+    private static final long serialVersionUID = 4962112707759665454L;
     private List<String> searchKeys;
     private String results;
 

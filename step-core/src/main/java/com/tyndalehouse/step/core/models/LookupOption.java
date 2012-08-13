@@ -88,6 +88,9 @@ public enum LookupOption {
     /** not available to the UI */
     CHAPTER_VERSE("CVNum", null),
 
+    /**
+     * Whether to hide the XGen OSIS elements
+     */
     HIDE_XGEN("HideXGen", XslConversionType.DEFAULT);
 
     private final String xsltParameterName;

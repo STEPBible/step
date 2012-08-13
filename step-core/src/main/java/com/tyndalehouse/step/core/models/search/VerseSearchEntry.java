@@ -1,6 +1,5 @@
 package com.tyndalehouse.step.core.models.search;
 
-
 /**
  * Represents a result that was a match to the original query
  * 
@@ -8,6 +7,7 @@ package com.tyndalehouse.step.core.models.search;
  * 
  */
 public class VerseSearchEntry implements SearchEntry {
+    private static final long serialVersionUID = 5620645768146160462L;
     private String key;
     private String preview;
 

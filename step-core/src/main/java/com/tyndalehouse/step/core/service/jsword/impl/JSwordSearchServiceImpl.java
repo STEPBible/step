@@ -146,7 +146,7 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
      * Looks up the results in rank order
      * 
      * @param results the results
-     * @return the time it took
+     * @param maxResults the number of results desired
      */
     private void rankAndTrimResults(final Key results, final int maxResults) {
         if (!(results instanceof PassageTally)) {

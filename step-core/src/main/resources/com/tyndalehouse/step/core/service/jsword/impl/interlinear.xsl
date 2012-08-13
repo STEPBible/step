@@ -344,7 +344,7 @@
         <xsl:when test="$TinyVNum = 'true' and $Notes = 'true'">
           <span class="w verseStart">
           	<!--  the verse number -->
-          	<a name="{@osisID}"><span class="verseNumber"><xsl:value-of select="concat($baseVersion, ' ', $versenum)"/></span></a>
+          	<a name="{@osisID}"><span class="interVerseNumbers"><xsl:value-of select="concat($baseVersion, ' ', $versenum)"/></span></a>
           	
 			<!-- output a filling gap for strongs -->
 			<xsl:if test="$EnglishVocab = 'true'">
@@ -374,7 +374,7 @@
         <xsl:when test="$TinyVNum = 'true' and $Notes = 'false'">
           <span class="w verseStart">
           	<!--  the verse number -->
-          	<a name="{@osisID}"><span class="text"><span class="verseNumber"><xsl:value-of select="concat($baseVersion, ' ', $versenum)"/></span></span></a>
+          	<a name="{@osisID}"><span class="text"><span class="smallHeaders interVerseNumbers"><xsl:value-of select="concat($baseVersion, ' ', $versenum)"/></span></span></a>
           	
 			<!-- output a filling gap for strongs -->
 			<xsl:if test="$EnglishVocab = 'true'">
@@ -527,12 +527,20 @@
 			So, we know we have a number of lines to create, therefore, we'll create 
 			that many! -->
 		<xsl:variable name="innerWordText"><xsl:apply-templates /></xsl:variable>
-	              
-		<xsl:variable name="nextText" select="normalize-space(following-sibling::node()[1][self::text()])" />
+
+		<xsl:variable name="lookAhead" select="normalize-space(following-sibling::node()[1][self::text()])" />
+<!-- 		<xsl:message>lookahead=<xsl:value-of select="$lookAhead"></xsl:value-of></xsl:message>         -->
+		<xsl:variable name="nextText">
+			<xsl:choose>
+				<xsl:when test="jsword:com.tyndalehouse.step.core.utils.StringUtils.containsAlphaNumeric($lookAhead)"></xsl:when>
+				<xsl:otherwise><xsl:value-of select="$lookAhead" /></xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+<!-- 		<xsl:message>nextText=<xsl:value-of select="$nextText"></xsl:value-of></xsl:message>         -->
 	
-		<xsl:if test="jsword:com.tyndalehouse.step.core.utils.StringUtils.containsAlphaNumeric($nextText)">
-			<xsl:variable name="nextText" select="''"/>
-		</xsl:if>
+<!-- 		<xsl:if test="jsword:com.tyndalehouse.step.core.utils.StringUtils.containsAlphaNumeric($nextText)"> -->
+<!-- 			<xsl:variable name="nextText" select="''"/> -->
+<!-- 		</xsl:if> -->
 
 		<!-- start the block only if we have english to show? -->
 		<xsl:variable name="remainingText" select="$innerWordText" />				
@@ -1647,7 +1655,21 @@
 			<xsl:when test="not(jsword:com.tyndalehouse.step.core.utils.StringUtils.containsAlphaNumeric(normalize-space(.)))" />
 	  		<xsl:when test="normalize-space(.) != ''">
 	  			<span class="w">
-	  				<span class="text"><xsl:value-of select="."/><xsl:value-of select="normalize-space(../following-sibling::node()[1][self::text()])"/></span>
+	  			
+	  			<xsl:variable name="lookAhead" select="normalize-space(../following-sibling::node()[1][self::text()])" />	  			
+				<!-- we only output the next portion if it is punctuation -->
+				<xsl:variable name="nextPartOfText">
+					<xsl:choose>
+						<xsl:when
+							test="jsword:com.tyndalehouse.step.core.utils.StringUtils.containsAlphaNumeric($lookAhead)"></xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="$lookAhead" />
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:variable>
+	  			
+	  			
+	  				<span class="text"><xsl:value-of select="."/><xsl:value-of select="$nextPartOfText"/></span>
 	  				<!-- now we need to put the set of spans for strongs/morphs/interlinear versions -->
 
 					<!-- output a filling gap for strongs -->

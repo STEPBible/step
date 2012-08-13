@@ -277,7 +277,7 @@ public class JSwordServiceImplTest {
     @Test
     public void testPrettyXml() throws BookException, NoSuchKeyException, JDOMException, IOException {
         final String version = "KJV";
-        final String ref = "Matt 5:15";
+        final String ref = "Rom 1:3";
         final Book currentBook = Books.installed().getBook(version);
         final BookData bookData = new BookData(currentBook, currentBook.getKey(ref));
         final Element osisFragment = bookData.getOsisFragment();
@@ -289,9 +289,9 @@ public class JSwordServiceImplTest {
         final JSwordPassageServiceImpl jsi = new JSwordPassageServiceImpl(
                 new JSwordVersificationServiceImpl(), null, null);
         final List<LookupOption> options = new ArrayList<LookupOption>();
-        // options.add(LookupOption.STRONG_NUMBERS);
+        options.add(LookupOption.INTERLINEAR);
 
-        final String osisText = jsi.getOsisText(version, ref, options, "").getValue();
+        final String osisText = jsi.getOsisText(version, ref, options, "TR").getValue();
         final SAXBuilder sb = new SAXBuilder();
         final Document d = sb.build(new StringReader(osisText));
 

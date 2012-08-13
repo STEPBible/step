@@ -41,7 +41,7 @@ span.interlinear span span span {
 }
 
 .smallHeaders {
-	font-size: 6pt;
+	font-size: 6pt !important;
 	padding-right: 2px;
 	font-style: italic;
 }
@@ -98,7 +98,7 @@ span.verseStart {
 	clear: left;
 }
 	
-span.strongs, span.morphs {
+span.strongs, span.morphs, span.interVerseNumbers {
 	text-decoration: none;
 	font-size: xx-small;
 	text-align: center;

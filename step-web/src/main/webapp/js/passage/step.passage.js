@@ -219,6 +219,10 @@ Passage.prototype.initReferenceTextBox = function() {
         }
     }).change(function() {
         step.state.passage.reference(self.passageId, $(this).val());
+    }).click(function() {
+        if($(this).val() == "") {
+            $(this).autocomplete("search", "");
+        }
     });
 };
 

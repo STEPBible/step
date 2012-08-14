@@ -11,8 +11,16 @@ body {
 	font-family: Verdana;
 }
 	
+	
+.ui-menu-item * {
+	font-size: x-small;
+	min-width: 100px;
+	white-space: nowrap;
+}
+
+	
 .ui-menu-item {
-	font-size: small;	
+	font-size: x-small;	
 }
 
 .ui-menu-item a {

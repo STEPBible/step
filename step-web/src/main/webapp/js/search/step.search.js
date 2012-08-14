@@ -66,15 +66,28 @@ step.search = {
         }
     },
     
+    simpleText : {
+        search : function(passageId) {
+            console.log("Simple text search...");
+            var query = $.trim(step.state.simpleText.simpleTextQuerySyntax(passageId));
+            var ranked = step.state.simpleText.simpleTextSortByRelevance(passageId);
+            step.search.textual._validateAndRunSearch(passageId, query, ranked);
+        }
+    },
+    
     textual : {
         search : function(passageId){
             console.log("Searching text...");
             var query = $.trim(step.state.textual.textQuerySyntax(passageId));
+            var ranked = step.state.textual.textSortByRelevance(passageId);
+            
+            this._validateAndRunSearch(passageId, query, ranked);
+        },
+        
+        _validateAndRunSearch : function(passageId, query, ranked) {
             if(step.util.isBlank(query)) {
                 return;
             }
-                        
-            var ranked = step.state.textual.textSortByRelevance(passageId);
             
             if (step.util.raiseErrorIfBlank(query, "Please fill in the form first")) {
                 step.search._doSearch(SEARCH_DEFAULT, passageId, query, ranked, this._highlightingTerms(query));

@@ -51,6 +51,7 @@ step.state = {
             step.state.passage.restore(i);
             step.state.original.restore(i);
             step.state.timeline.restore(i);
+            step.state.simpleText.restore(i);
             step.state.textual.restore(i);
             this._showRelevantFieldSet(i);
         }
@@ -76,6 +77,8 @@ step.state = {
             $.shout("timeline-search-state-has-changed", { passageId : passageId });
         } else if (active == 'SEARCH_TEXT') {
             $.shout("textual-search-state-has-changed", { passageId : passageId });
+        } else if(active == 'SEARCH_SIMPLE_TEXT') {
+            $.shout("simpleText-search-state-has-changed", { passageId : passageId });
         }
     },
 

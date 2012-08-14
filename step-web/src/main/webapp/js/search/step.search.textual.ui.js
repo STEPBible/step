@@ -98,7 +98,7 @@ step.search.ui.textual = {
     //TODO think about escaping
     _evalExactPhrase : function(text) {
         if(!step.util.isBlank(text)) {
-            return ' "' + text + '"'; 
+            return ' "' + text + '" '; 
         }
         return "";
     },
@@ -117,14 +117,14 @@ step.search.ui.textual = {
     
     _evalSpellings : function(text) {
         if(!step.util.isBlank(text)) {
-            return " " + text + '~'; 
+            return " " + $.trim(text).split(" ").join("~ ") + "~ ";
         }
         return "";
     },
     
     _evalStarting : function(text) {
         if(!step.util.isBlank(text)) {
-            return " " + text + '*'; 
+            return " " + $.trim(text).split(' ').join('* ') + '* '; 
         }
         return "";
     },
@@ -206,8 +206,10 @@ $(document).ready(function() {
     $(".textSortByRelevance").change(function() {  step.state.textual.textSortByRelevance(step.passage.getPassageId(this), $(this).prop('checked')); });
     $(".textQuerySyntax").change(function() { step.state.textual.textQuerySyntax(step.passage.getPassageId(this), $(this).val()); });
 
+    
     $(".textClearButton").click(function() {
         var passageId = step.passage.getPassageId(this);
+        
         //need to register state, so don't go straight to the field on the screen
         step.state.textual.textPrimaryExactPhrase(passageId, "");
         step.state.textual.textPrimaryIncludeWords(passageId, "");
@@ -235,8 +237,8 @@ $(document).ready(function() {
     });
     
     $(".textSearchTable input").keyup(function() {
-        //re-evaluate query syntax and store
         var passageId = step.passage.getPassageId(this);
+        //re-evaluate query syntax and store
         step.search.ui.textual.evaluateQuerySyntax(passageId);
         step.util.getPassageContent(passageId).empty();
     });

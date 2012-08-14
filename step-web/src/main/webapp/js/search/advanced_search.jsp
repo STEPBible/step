@@ -3,7 +3,7 @@
 	<!-- Passage search -->
 	<fieldset>
 		<legend>Passage lookup</legend>
-		<span class="passageButtons"> 
+		<span class="passageButtons">  
 			<a class="syncOtherPassage">Syncs with the other passage</a>
 			<a class="continuousPassage">Displays the passage as one large scroll</a>
 			<a class="previousChapter">Displays the previous chapter (or expands to the start of the chapter)</a>
@@ -21,8 +21,31 @@
 		</table>
 	</fieldset>
 
+	<fieldset class="simpleTextFields">
+		<legend>Text search</legend>
+
+		Search for
+		<input type="text" class="simpleTextType simpleTextTypePrimary" />
+		<input type="text" class="simpleTextCriteria" />
+		within: <input type="text" class="simpleTextScope" /><br />
+		and
+		<input type="text" class="simpleTextInclude" /> 
+		<input type="text" class="simpleTextType simpleTextTypeSecondary" />
+		<input type="text" class="simpleTextSecondaryCriteria" />
+		within <input type="text" class="simpleTextProximity" />
+		<br />
+		and order the results by <input type="text" class="simpleTextSortByRelevance" />
+		
+		<br />
+		<textarea class="simpleTextQuerySyntax" cols="45"></textarea>
+		<input type="button" class="simpleTextClear" value="Clear" />
+		<input type="button" class="simpleTextSearchButton" value="Search" />
+		
+	</fieldset>
+
+
 	<fieldset>
-		<legend>Textual search</legend>
+		<legend>Advanced text search</legend>
 
 		<table class="textSearchTable">
 			<tr>

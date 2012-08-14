@@ -52,7 +52,7 @@ $(step.menu).hear("interlinear-menu-option", function(self, interlinearResult) {
 	}
 
 	var selectedOptions = step.menu.getSelectedOptions(step.menu.getParentMenu(mi));
-	step.state.passage.options(interlinearResult.passageId, selectedOptions);
+	step.state.passage.options(interlinearResult.passageId, selectedOptions, true);
 });
 
 

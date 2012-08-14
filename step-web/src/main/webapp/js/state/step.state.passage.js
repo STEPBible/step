@@ -126,9 +126,9 @@ step.state.passage = {
 
             // state changed
             //if we're going from left to right or vice-versa, then we need to fire change everywhere.
-            if(originalSyncMode != -1) {
+            if(fireChange != false && originalSyncMode != -1) {
                 step.state._fireStateChangedAll();
-            } else {
+            } else if(fireChange != false){
                 step.state._fireStateChangedAllBut(mode);
             }
             

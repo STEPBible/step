@@ -71,32 +71,41 @@ step.menu.options = {
             $(".syncOtherPassage", otherPassageContainer)
                 .button("option", "icons", {primary: "ui-icon-pin-w"})
                 .attr("title", "Make passages independent");
+        },
+        
+        _tickSyncMode : function(mode, fire) {
+            if(mode == "NO_SYNC") {
+                step.state.passage.syncMode(-1, fire);
+                step.menu.options.enablePassage(0);
+                step.menu.options.enablePassage(1);
+            } else if(mode == "SYNC_LEFT") {
+                step.state.passage.syncMode(0, fire);
+                step.menu.options.enablePassage(0);
+                step.menu.options.disablePassage(1);
+            } else if(mode == "SYNC_RIGHT") {
+                step.state.passage.syncMode(1, fire);
+                step.menu.options.enablePassage(1);
+                step.menu.options.disablePassage(0);
+            }    
         }
 };
 
 $(step.menu).hear("MENU-SYNC", function(self, menuTrigger) {
     step.menu.tickOneItemInMenuGroup(menuTrigger);
-    if(menuTrigger.menuItem.name == "NO_SYNC") {
-        step.state.passage.syncMode(-1);
-        step.menu.options.enablePassage(0);
-        step.menu.options.enablePassage(1);
-    } else if(menuTrigger.menuItem.name == "SYNC_LEFT") {
-        step.state.passage.syncMode(0);
-        step.menu.options.enablePassage(0);
-        step.menu.options.disablePassage(1);
-    } else if(menuTrigger.menuItem.name == "SYNC_RIGHT") {
-        step.state.passage.syncMode(1);
-        step.menu.options.enablePassage(1);
-        step.menu.options.disablePassage(0);
-    }    
+    step.menu.options._tickSyncMode(menuTrigger.menuItem.name);
 });
 
 $(step.menu).hear("initialise-passage-sync", function(s, sync) {
+    var syncName;  
+    
     if(sync == 0) {
-        toggleMenuItem($("a[name = 'SYNC_LEFT']").get(0));
+        syncName = "SYNC_LEFT";
     } else if(sync == 1) {
-        toggleMenuItem($("a[name = 'SYNC_RIGHT']").get(0));
+        syncName = "SYNC_RIGHT";
     } else {
-        toggleMenuItem($("a[name = 'NO_SYNC']").get(0));
+        syncName = "NO_SYNC";
     }
+
+    step.menu.tickMenuItem($("a[name='" + syncName+ "']"));
+    step.menu.options._tickSyncMode(syncName, false);
 });

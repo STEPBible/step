@@ -40,6 +40,9 @@ import java.util.Enumeration;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 
+import org.crosswire.common.util.Reporter;
+import org.crosswire.common.util.ReporterEvent;
+import org.crosswire.common.util.ReporterListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -76,6 +79,20 @@ public class StepServletConfig extends GuiceServletContextListener {
         // No call to super as it also calls getInjector()
         final ServletContext sc = servletContextEvent.getServletContext();
         sc.setAttribute(Injector.class.getName(), getInjector());
+
+        Reporter.addReporterListener(new ReporterListener() {
+            @Override
+            public void reportMessage(final ReporterEvent ev) {
+                LOGGER.warn("{} {}", ev.getSourceName(), ev.getMessage());
+            }
+
+            @Override
+            public void reportException(final ReporterEvent ev) {
+                LOGGER.error("{} {}", ev.getSourceName(), ev.getMessage());
+                LOGGER.error("Error occurred in JSword application", ev.getException());
+
+            }
+        });
     }
 
     @Override

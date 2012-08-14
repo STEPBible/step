@@ -64,7 +64,14 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
         final Book bible = this.av11nService.getBookFromVersion(version);
 
         try {
-            final Key results = bible.find(new DefaultSearchRequest(query, modifier));
+
+            final Key results;
+
+            // TODO JS-228 raised for thread-safety
+            synchronized (this) {
+                results = bible.find(new DefaultSearchRequest(query, modifier));
+            }
+
             LOGGER.debug("[{}] verses found.", results.getCardinality());
 
             if (ranked) {

@@ -35,6 +35,10 @@
 	<version>1.0-SNAPSHOT</version>
 	<name>STEP :: Step Web project</name>
 
+	<properties>
+		<skipTomcat>false</skipTomcat>
+	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>com.tyndalehouse.step</groupId>
@@ -202,6 +206,44 @@
 					</execution>
 				</executions>
 			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.cargo</groupId>
+				<artifactId>cargo-maven2-plugin</artifactId>
+				<configuration>
+					<container>
+						<containerId>tomcat6x</containerId>
+						<home>/opt/tomcat_dev</home>
+				        </container>
+				        <configuration>
+						<type>existing</type>
+						<home>/opt/tomcat_dev</home>
+					</configuration>
+					<deployer>
+						<type>installed</type>
+					</deployer>
+					<deployables>
+						<deployable>
+							<groupId>com.tyndalehouse.step</groupId>
+							<artifactId>step-web</artifactId>
+							<type>war</type>
+							<properties>
+								<context>step-web</context>
+							</properties>
+						</deployable>
+					</deployables>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
+
+	<profiles>
+		<profile>
+			<id>deploy-local</id>
+			<properties>
+				<deployTomcat>true</deployTomcat>
+			</properties>
+		</profile>
+	</profiles>
+
 </project>

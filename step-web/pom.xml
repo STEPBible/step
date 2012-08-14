@@ -67,6 +67,12 @@
 			<artifactId>slf4j-log4j12</artifactId>
 			<scope>runtime</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>jul-to-slf4j</artifactId>
+			<version>1.6.6</version>
+		</dependency>
+		            
 
 		<!-- Servlet -->
 		<dependency>
@@ -252,7 +258,7 @@
 		<profile>
 			<id>deploy-local</id>
 			<properties>
-				<skipTomcat>true</skipTomcat>
+				<skipTomcat>false</skipTomcat>
 			</properties>
 		</profile>
 	</profiles>

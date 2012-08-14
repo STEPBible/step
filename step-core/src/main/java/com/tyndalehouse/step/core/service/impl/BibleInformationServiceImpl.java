@@ -210,4 +210,9 @@ public class BibleInformationServiceImpl implements BibleInformationService {
             final boolean previousChapter) {
         return this.jswordPassage.getSiblingChapter(reference, version, previousChapter);
     }
+
+    @Override
+    public void index(final String initials) {
+        this.jswordModule.index(initials);
+    }
 }

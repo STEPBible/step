@@ -100,7 +100,10 @@ public interface JSwordModuleService {
     void reloadInstallers();
 
     /**
-     * Ensures indexes are created by default
+     * indexes a book
+     * 
+     * @param initials the initials of the book to index
      */
-    void handleFinshedBookInstall();
+    void index(String initials);
+
 }

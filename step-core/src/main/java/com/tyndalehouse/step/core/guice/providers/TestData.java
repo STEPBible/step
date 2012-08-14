@@ -116,9 +116,6 @@ public class TestData {
                 this.jswordModule.installBook(m);
             } else {
                 LOGGER.info("Book {} already installed", m);
-
-                // check book is indexed
-                this.jswordModule.handleFinshedBookInstall();
             }
         }
     }

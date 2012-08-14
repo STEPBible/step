@@ -83,8 +83,8 @@ public interface BibleInformationService {
      * @param round TODO
      * @return the HTML string passed back for consumption
      */
-    OsisWrapper getPassageText(String version, int startVerseId, int endVerseId,
-            String lookupOptions, String interlinearVersion, Boolean round);
+    OsisWrapper getPassageText(String version, int startVerseId, int endVerseId, String lookupOptions,
+            String interlinearVersion, Boolean round);
 
     /**
      * 
@@ -138,5 +138,12 @@ public interface BibleInformationService {
      * @return the new reference to display on the user screen
      */
     String getSiblingChapter(String reference, String version, boolean previousChapter);
+
+    /**
+     * Indexes a book
+     * 
+     * @param initials initials of the book (e.g. KJV)
+     */
+    void index(String initials);
 
 }

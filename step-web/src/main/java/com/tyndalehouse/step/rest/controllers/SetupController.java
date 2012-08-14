@@ -104,4 +104,14 @@ public class SetupController {
         LOGGER.debug("Installing module {}", reference);
         this.bibleInformation.installModules(reference);
     }
+
+    /**
+     * indexes a book
+     * 
+     * @param initials the initials of the book to index
+     */
+    public void index(final String initials) {
+        notBlank(initials, "A version must be provided", USER_MISSING_FIELD);
+        this.bibleInformation.index(initials);
+    }
 }

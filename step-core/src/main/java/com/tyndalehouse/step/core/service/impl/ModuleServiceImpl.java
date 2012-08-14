@@ -153,4 +153,5 @@ public class ModuleServiceImpl implements ModuleService {
 
         return getSortedSerialisableList(CollectionUtils.subtract(allModules, installedVersions));
     }
+
 }

@@ -79,8 +79,7 @@ public class JSwordModuleServiceImpl implements JSwordModuleService {
     /**
      * When a book finishes installation, we'll index it
      */
-    @Override
-    public void handleFinshedBookInstall() {
+    void handleFinshedBookInstall() {
         // usually at most one book needs indexing, so let's kick the process off...
         final List<Book> books = Books.installed().getBooks();
         for (final Book b : books) {
@@ -94,6 +93,11 @@ public class JSwordModuleServiceImpl implements JSwordModuleService {
     @Override
     public boolean isInstalled(final String moduleInitials) {
         return Books.installed().getBook(moduleInitials) != null;
+    }
+
+    @Override
+    public void index(final String initials) {
+        IndexManagerFactory.getIndexManager().scheduleIndexCreation(Books.installed().getBook(initials));
     }
 
     @Override

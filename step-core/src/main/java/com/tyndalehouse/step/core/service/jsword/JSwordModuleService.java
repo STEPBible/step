@@ -98,4 +98,9 @@ public interface JSwordModuleService {
      * INFORMATION ON THE INTERNET</b>
      */
     void reloadInstallers();
+
+    /**
+     * Ensures indexes are created by default
+     */
+    void handleFinshedBookInstall();
 }

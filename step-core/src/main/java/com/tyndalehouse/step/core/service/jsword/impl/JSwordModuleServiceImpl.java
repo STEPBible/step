@@ -79,7 +79,8 @@ public class JSwordModuleServiceImpl implements JSwordModuleService {
     /**
      * When a book finishes installation, we'll index it
      */
-    void handleFinshedBookInstall() {
+    @Override
+    public void handleFinshedBookInstall() {
         // usually at most one book needs indexing, so let's kick the process off...
         final List<Book> books = Books.installed().getBooks();
         for (final Book b : books) {

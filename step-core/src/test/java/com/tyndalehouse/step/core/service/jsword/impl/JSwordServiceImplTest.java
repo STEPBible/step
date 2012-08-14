@@ -135,6 +135,39 @@ public class JSwordServiceImplTest {
     }
 
     /**
+     * tests that the XSLT transformation is handled correctly
+     * 
+     * @throws BookException uncaught exception
+     * @throws NoSuchKeyException uncaught exception
+     * @throws IOException uncaught exception
+     * @throws JDOMException uncaught exception
+     */
+    @Test
+    public void testComparing() throws BookException, NoSuchKeyException, JDOMException, IOException {
+        final Book currentBook = Books.installed().getBook("KJV");
+        final Book secondaryBook = Books.installed().getBook("ESV");
+
+        final BookData bookData = new BookData(new Book[] { currentBook, secondaryBook },
+                currentBook.getKey("Romans 1:4"), true);
+        final Element osisFragment = bookData.getOsisFragment();
+
+        final XMLOutputter xmlOutputter = new XMLOutputter(Format.getPrettyFormat());
+        LOGGER.debug(xmlOutputter.outputString(osisFragment));
+
+        // do the test
+        // // final JSwordPassageServiceImpl jsi = new JSwordPassageServiceImpl(
+        // // new JSwordVersificationServiceImpl(), null, null);
+        // // final List<LookupOption> options = new ArrayList<LookupOption>();
+        // //
+        // // final String osisText = jsi.getOsisText("KJV", "Romans 1:4", options, "").getValue();
+        // // final SAXBuilder sb = new SAXBuilder();
+        // // final Document d = sb.build(new StringReader(osisText));
+        //
+        // LOGGER.debug("\n {}", xmlOutputter.outputString(d));
+        // Assert.assertTrue(osisText.contains("span"));
+    }
+
+    /**
      * Tests the resolving of passage references
      */
     @Test

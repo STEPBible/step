@@ -210,6 +210,7 @@
 			<plugin>
 				<groupId>org.codehaus.cargo</groupId>
 				<artifactId>cargo-maven2-plugin</artifactId>
+				<version></version>
 				<configuration>
 					<container>
 						<containerId>tomcat6x</containerId>
@@ -232,7 +233,17 @@
 							</properties>
 						</deployable>
 					</deployables>
+					<skip>${skipTomcat}</skip>
 				</configuration>
+				<executions>
+					<execution>
+			            <id>deploy-tomcat</id>
+			            <phase>integration-test</phase>
+			            <goals>
+			               <goal>redeploy</goal>
+			            </goals>
+			          </execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>

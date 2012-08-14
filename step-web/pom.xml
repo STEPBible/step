@@ -36,7 +36,7 @@
 	<name>STEP :: Step Web project</name>
 
 	<properties>
-		<skipTomcat>false</skipTomcat>
+		<skipTomcat>true</skipTomcat>
 	</properties>
 
 	<dependencies>
@@ -252,7 +252,7 @@
 		<profile>
 			<id>deploy-local</id>
 			<properties>
-				<deployTomcat>true</deployTomcat>
+				<skipTomcat>true</skipTomcat>
 			</properties>
 		</profile>
 	</profiles>

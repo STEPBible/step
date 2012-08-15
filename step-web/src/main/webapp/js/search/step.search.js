@@ -166,7 +166,7 @@ step.search = {
     },
     
     _displayTimelineEventResults : function(results, passageId) {
-        var resultHtml = "<table class='searchResults'>";
+        var resultHtml = "<table>";
         var self = this;
         $.each(results, function(i, item) {
             var resultItem = "";
@@ -174,12 +174,12 @@ step.search = {
             if(item.verses && item.verses.length > 0) {
                 aTarget = $.map(item.verses, function(item, i) { return item.key; }).join();
                 
-                resultItem += "<table>";
+                resultItem += "<table class='masterSearchTable'>";
                 resultItem += self._displayPassageResults(item.verses, passageId);
                 resultItem += "</table>";
             }
             
-            resultItem = "<tr class='searchResultRow'><td class='searchResultKey'><a class='searchResultKey' href='#' onclick='step.timeline.show("+ passageId + ", \"" + aTarget + "\")'></td><td>" + item.description +  "</a></td></tr>" + resultItem;
+            resultItem = "<tr><td class='masterSearchResultRow'><a class='' href='#' onclick='step.timeline.show("+ passageId + ", \"" + aTarget + "\")'>" + item.description +  "</a></td><td>" + resultItem +"</td>";
                         
             resultHtml += resultItem;
         });

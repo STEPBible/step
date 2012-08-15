@@ -24,11 +24,11 @@
 	<fieldset class="simpleTextFields">
 		<legend>Text search</legend>
 
-		Search for
+		Search for verses with
 		<input type="text" size="19" class="simpleTextType simpleTextTypePrimary drop" />
 		<input type="text" class="simpleTextCriteria" />
 		within <input type="text" class="simpleTextScope drop" /><br />
-		which
+		and
 		<input type="text" class="simpleTextInclude drop" size="7" /> 
 		<input type="text" size="16" class="simpleTextSecondaryTypes simpleTextTypeSecondary drop" />
 		<input type="text" class="simpleTextSecondaryCriteria" />
@@ -38,7 +38,7 @@
 		
 		<br />
 		<textarea class="simpleTextQuerySyntax" cols="45"></textarea>
-		<input type="button" class="simpleTextClear" value="Clear" />
+		<input type="button" class="simpleTextClear" value="Reset" />
 		<input type="button" class="simpleTextSearchButton" value="Search" />
 		
 	</fieldset>

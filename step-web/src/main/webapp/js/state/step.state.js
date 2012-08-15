@@ -27,6 +27,60 @@
  * POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
 step.state = {
+     trackState : function(selector, namespace) {
+         if($.isArray(selector)) {
+             for(var i = 0; i < selector.length; i++) {
+                 this.trackState(selector[i], namespace);
+             }
+             return;
+         }
+         
+         var selected = $(selector);
+         var key = selector.substring(1);
+         selected.change(function(){
+             var controlValue = this.type == 'checkbox' ? $(this).prop('checked') : $(this).val()
+             step.state[namespace][key](step.passage.getPassageId(this), controlValue);
+         });
+         
+         
+         step.state[namespace][key] = function(passageId, value) {
+             var specificSelector = $(selector, step.util.getPassageContainer(passageId));
+             if(specificSelector.get(0).type == 'checkbox') {
+                     if (value != null) { 
+                         specificSelector.prop('checked', value == "true" || value == true); 
+                     }
+                     return step.state._storeAndRetrieveCookieState(passageId, "textSortByRelevance", value, false);                     
+             } else {
+                 if (value != null) { 
+                     specificSelector.val(value); 
+                 }
+                 return step.state._storeAndRetrieveCookieState(passageId, key, value, false);
+             }
+         };
+         
+         //add to list of tracked elements
+         this.trackedKeys.push([namespace, key, selected.length]);
+     }, 
+
+     trackedKeys : [],
+     
+     restoreTrackedKeys : function() {
+         for(var i = 0; i < this.trackedKeys.length; i++) {
+             var keyId = this.trackedKeys[i];
+             
+             if(keyId[2].length == 1) {
+                 var func = step.state[keyId[0]][keyId[1]];
+                 func(func());
+             } else {
+                 //assume within a passage container
+                 for(var j = 0; j < keyId[2]; j++) {
+                     var func = step.state[keyId[0]][keyId[1]];
+                     func(j, func(j));
+                 }
+             }
+         }
+     },
+        
     activeSearch : function(passageId, activeSearch, fireChange) {
         // refresh menu options
         if (activeSearch) {
@@ -42,9 +96,12 @@ step.state = {
     },
 
     restore : function() {
+        this.restoreTrackedKeys();
+        
         // restore active search
         step.state.detail.restore();
 
+        
         var passageIds = step.util.getAllPassageIds();
         for ( var i in passageIds) {
             step.menu.tickMenuItem(step.menu.getMenuItem(this.activeSearch(i), i));

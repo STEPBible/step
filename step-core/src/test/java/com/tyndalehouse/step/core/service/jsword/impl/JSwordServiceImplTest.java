@@ -309,8 +309,8 @@ public class JSwordServiceImplTest {
      */
     @Test
     public void testPrettyXml() throws BookException, NoSuchKeyException, JDOMException, IOException {
-        final String version = "OSMHB";
-        final String ref = "Gen 1:12";
+        final String version = "Nave";
+        final String ref = "Money";
         final Book currentBook = Books.installed().getBook(version);
         final BookData bookData = new BookData(currentBook, currentBook.getKey(ref));
         final Element osisFragment = bookData.getOsisFragment();

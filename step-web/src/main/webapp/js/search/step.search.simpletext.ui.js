@@ -27,19 +27,6 @@
  * POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
 step.search.ui.simpleText = {
-        simpleTextTypePrimary : function(value, passageId) { $(".simpleTextTypePrimary", step.util.getPassageContainer(passageId)).val(value); },
-        simpleTextCriteria : function(value, passageId) { $(".simpleTextCriteria", step.util.getPassageContainer(passageId)).val(value); },
-        simpleTextScope : function(value, passageId) { $(".simpleTextScope", step.util.getPassageContainer(passageId)).val(value); },
-        simpleTextInclude : function(value, passageId) { $(".simpleTextInclude", step.util.getPassageContainer(passageId)).val(value); },
-        simpleTextTypeSecondary : function(value, passageId) { $(".simpleTextTypeSecondary", step.util.getPassageContainer(passageId)).val(value); },
-        simpleTextSecondaryCriteria : function(value, passageId) { $(".simpleTextSecondaryCriteria", step.util.getPassageContainer(passageId)).val(value); },
-        simpleTextProximity : function(value, passageId) { $(".simpleTextProximity", step.util.getPassageContainer(passageId)).val(value); },
-        simpleTextSortByRelevance : function(value, passageId) { $(".simpleTextSortByRelevance", step.util.getPassageContainer(passageId)).val(value); },
-        
-        
-//    textQuerySyntax : function(value, passageId) { $(".textQuerySyntax", step.util.getPassageContainer(passageId)).val(value); },
-    
-    
     evaluateQuerySyntax: function(passageId) {
         var passageContainer = step.util.getPassageContainer(passageId);
         
@@ -101,23 +88,19 @@ step.search.ui.simpleText = {
 };
 
 $(document).ready(function() {
-    $(".simpleTextTypePrimary").change(function() {  step.state.simpleText.simpleTextTypePrimary(step.passage.getPassageId(this), $(this).val()); });
-    $(".simpleTextCriteria").change(function() {  step.state.simpleText.simpleTextCriteria(step.passage.getPassageId(this), $(this).val()); });
-    $(".simpleTextScope").change(function() {  step.state.simpleText.simpleTextScope(step.passage.getPassageId(this), $(this).val()); });
-    $(".simpleTextInclude").change(function() {  step.state.simpleText.simpleTextInclude(step.passage.getPassageId(this), $(this).val()); });
-    $(".simpleTextTypeSecondary").change(function() {  step.state.simpleText.simpleTextTypeSecondary(step.passage.getPassageId(this), $(this).val()); });
-    $(".simpleTextSecondaryCriteria").change(function() {  step.state.simpleText.simpleTextSecondaryCriteria(step.passage.getPassageId(this), $(this).val()); });
-    $(".simpleTextProximity").change(function() {  step.state.simpleText.simpleTextProximity(step.passage.getPassageId(this), $(this).val()); });
-    $(".simpleTextSortByRelevance").change(function() {  step.state.simpleText.simpleTextSortByRelevance(step.passage.getPassageId(this), $(this).val()); });
-    
-    $(".simpleTextFields input").keyup(function() {
-        var passageContent = step.util.getPassageContent(passageId);
-        var passageId = step.passage.getPassageId(this);
-        //re-evaluate query syntax and store
-        step.search.ui.simpleText.evaluateQuerySyntax(passageId);
-        passageContent.empty();
-    });
-    
+    var namespace = "simpleText";
+    step.state.trackState([
+                           ".simpleTextTypePrimary",
+                           ".simpleTextCriteria",
+                           ".simpleTextScope",
+                           ".simpleTextInclude",
+                           ".simpleTextTypeSecondary",
+                           ".simpleTextSecondaryCriteria",
+                           ".simpleTextProximity",
+                           ".simpleTextSortByRelevance"
+                           ], namespace);
+
+    step.util.ui.trackQuerySyntax(".simpleTextFields", namespace);
     $(".simpleTextClear").click(function() {
         //  reset texts
         var passageId = step.passage.getPassageId(this);
@@ -129,105 +112,25 @@ $(document).ready(function() {
         step.state.simpleText.simpleTextQuerySyntax(passageId, "");
     });
 
-    //TODO refactor
-      $(".simpleTextType").autocomplete({
-          minLength: 0,
-          delay : 0,
-          source: step.defaults.search.textual.simpleTextTypes,
-          select: function(event, ui) {
-              $(this).val(ui.item.value);
-              $(this).change();
-              $(this).trigger('keyup');
-      }})
-      .click(function() {
-          $(this).autocomplete("search", "");
-      }).attr("readonly", true);
-      
-      $(".simpleTextSecondaryTypes").autocomplete({
-          minLength: 0,
-          delay : 0,
-          source: step.defaults.search.textual.simpleTextSecondaryTypes,
-          select: function(event, ui) {
-              $(this).val(ui.item.value);
-              $(this).change();
-              $(this).trigger('keyup');
-      }})
-      .click(function() {
-          $(this).autocomplete("search", "");
-      }).attr("readonly", true);
-      
-      
-      $(".simpleTextScope").autocomplete({
-          minLength: 0,
-          delay : 0,
-          source: step.defaults.search.textual.availableRanges,
-          select: function(event, ui) {
-              $(this).val(ui.item.value);
-              $(this).change();
-              $(this).trigger('keyup');
-      }})
-      .click(function() {
-          $(this).autocomplete("search", "");
-      });
-      
-      $(".simpleTextInclude").autocomplete({
-          minLength: 0,
-          delay : 0,
-          source: step.defaults.search.textual.simpleTextIncludes,
-          select: function(event, ui) {
-              $(this).val(ui.item.value);
-              
-              var proximity = $(this).nextAll(".simpleTextProximity");
-              if(ui.item.value == 'include') {
-                  if(proximity.val() == 'the same verse') {
-                      //reset
-                      proximity.val(step.defaults.search.textual.simpleTextProximities[0]);
-                      proximity.attr('disabled', false);
-                  }
-              } else if(ui.item.value == 'exclude') {
-                  proximity.val('the same verse');
-                  proximity.attr('disabled', true);
+      step.util.ui.searchButton(".simpleTextSearchButton",  'SEARCH_SIMPLE_TEXT');
+      step.util.ui.autocompleteSearch(".simpleTextType", step.defaults.search.textual.simpleTextTypes, true);
+      step.util.ui.autocompleteSearch(".simpleTextSecondaryTypes", step.defaults.search.textual.simpleTextSecondaryTypes, true);
+      step.util.ui.autocompleteSearch(".simpleTextScope", step.defaults.search.textual.availableRanges);
+      step.util.ui.autocompleteSearch(".simpleTextProximity", step.defaults.search.textual.simpleTextProximities, true);
+      step.util.ui.autocompleteSearch(".simpleTextSortByRelevance", step.defaults.search.textual.simpleTextSortBy, true);
+      step.util.ui.autocompleteSearch(".simpleTextInclude", step.defaults.search.textual.simpleTextIncludes, true, function(currentElement, value) {
+          var proximity = $(currentElement).nextAll(".simpleTextProximity");
+          if(value == 'include') {
+              if(proximity.val() == 'the same verse') {
+                  //reset
+                  proximity.val(step.defaults.search.textual.simpleTextProximities[0]);
+                  proximity.attr('disabled', false);
               }
-              
-              $(this).change();
-              $(this).trigger('keyup');
-      }})
-      .click(function() {
-          $(this).autocomplete("search", "");
-      }).attr("readonly", true);
-
-      $(".simpleTextProximity").autocomplete({
-          minLength: 0,
-          delay : 0,
-          source: step.defaults.search.textual.simpleTextProximities,
-          select: function(event, ui) {
-              $(this).val(ui.item.value);
-              $(this).change();
-              $(this).trigger('keyup');
-      }})
-      .click(function() {
-          $(this).autocomplete("search", "");
-      }).attr("readonly", true);
-
-      $(".simpleTextSortByRelevance").autocomplete({
-          minLength: 0,
-          delay : 0,
-          source: step.defaults.search.textual.simpleTextSortBy,
-          select: function(event, ui) {
-              $(this).val(ui.item.value);
-              $(this).change();
-              $(this).trigger('keyup');
-          }})
-          .click(function() {
-              $(this).autocomplete("search", "");
-          }).attr("readonly", true);
-      
-      
-    $(".simpleTextSearchButton").click(function() {
-        step.state.activeSearch(step.passage.getPassageId(this), 'SEARCH_SIMPLE_TEXT', true);
-    });
-    
-    
+          } else if(value == 'exclude') {
+              proximity.val('the same verse');
+              proximity.attr('disabled', true);
+          }
+      });
 });
 
 $(step.search.ui).hear("simpleText-search-state-has-changed", function(s, data) {

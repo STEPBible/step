@@ -26,8 +26,20 @@
 	display: inline-block;
 }
 
-.searchResults {
+.searchResults, .masterSearchResultRow {
 	padding-left: 0px;
+}
+
+.masterSearchResultRow {
+	color: #696;
+}
+
+.masterSearchResultRow a {
+	color: #696;
+}
+
+.masterSearchTable * td.searchResultKey {
+	width: 150px !important;
 }
 
 .searchResultRow {
@@ -54,8 +66,6 @@
 }
 
 .simpleTextFields input.drop {
-	text-decoration: underline;
-	border: none;
 	text-align: left;
 	color: #696;
 }

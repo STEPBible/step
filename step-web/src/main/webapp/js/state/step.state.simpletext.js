@@ -28,18 +28,6 @@
  ******************************************************************************/
 step.state.simpleText = {
     restore : function(passageId) {
-        this.simpleTextTypePrimary(passageId, this.simpleTextTypePrimary(passageId));
-        this.simpleTextCriteria(passageId, this.simpleTextCriteria(passageId));
-        this.simpleTextScope(passageId, this.simpleTextScope(passageId));
-        this.simpleTextInclude(passageId, this.simpleTextInclude(passageId));
-        this.simpleTextTypeSecondary(passageId, this.simpleTextTypeSecondary(passageId));
-        this.simpleTextSecondaryCriteria(passageId, this.simpleTextSecondaryCriteria(passageId));
-        this.simpleTextProximity(passageId, this.simpleTextProximity(passageId));
-        this.simpleTextSortByRelevance(passageId, this.simpleTextSortByRelevance(passageId));
-        
-        
-        this.restoreDefaults(passageId, false);
-//        this._restoreSortByRelevance(passageId);
         step.search.ui.simpleText.evaluateQuerySyntax(passageId);
 
     },
@@ -59,24 +47,5 @@ step.state.simpleText = {
       }
     },
     
-//    _restoreSortByRelevance : function(passageId) {
-//        var s = this.textSortByRelevance(passageId);
-//        if(!step.util.isBlank(s)) {
-//            //then we have a value, so just store it
-//            this.textSortByRelevance(passageId, s);
-//        } else {
-//            //use the default value
-//            this.textSortByRelevance(passageId, step.defaults.search.textual.sortByRelevance, false);
-//        }
-//    }, 
-
-    simpleTextTypePrimary : function(passageId, value) { if (value != null) { $(".simpleTextTypePrimary", step.util.getPassageContainer(passageId)).val(value); } return step.state._storeAndRetrieveCookieState(passageId, "simpleTextTypePrimary", value, false); },
-    simpleTextCriteria : function(passageId, value) { if (value != null) { $(".simpleTextCriteria", step.util.getPassageContainer(passageId)).val(value); } return step.state._storeAndRetrieveCookieState(passageId, "simpleTextCriteria", value, false); },
-    simpleTextScope : function(passageId, value) { if (value != null) { $(".simpleTextScope", step.util.getPassageContainer(passageId)).val(value); } return step.state._storeAndRetrieveCookieState(passageId, "simpleTextScope", value, false); },
-    simpleTextInclude : function(passageId, value) { if (value != null) { $(".simpleTextInclude", step.util.getPassageContainer(passageId)).val(value); } return step.state._storeAndRetrieveCookieState(passageId, "simpleTextInclude", value, false); },
-    simpleTextTypeSecondary : function(passageId, value) { if (value != null) { $(".simpleTextTypeSecondary", step.util.getPassageContainer(passageId)).val(value); } return step.state._storeAndRetrieveCookieState(passageId, "simpleTextTypeSecondary", value, false); },
-    simpleTextSecondaryCriteria : function(passageId, value) { if (value != null) { $(".simpleTextSecondaryCriteria", step.util.getPassageContainer(passageId)).val(value); } return step.state._storeAndRetrieveCookieState(passageId, "simpleTextSecondaryCriteria", value, false); },
-    simpleTextProximity : function(passageId, value) { if (value != null) { $(".simpleTextProximity", step.util.getPassageContainer(passageId)).val(value); } return step.state._storeAndRetrieveCookieState(passageId, "simpleTextProximity", value, false); },
     simpleTextQuerySyntax : function(passageId, value) { if (value != null) { $(".simpleTextQuerySyntax", step.util.getPassageContainer(passageId)).val(value); } return step.state._storeAndRetrieveCookieState(passageId, "simpleTextQuerySyntax", value, false); },
-    simpleTextSortByRelevance : function(passageId, value) { if (value != null) { $(".simpleTextSortByRelevance", step.util.getPassageContainer(passageId)).val(value); } return step.state._storeAndRetrieveCookieState(passageId, "simpleTextSortByRelevance", value, false); } 
 };

@@ -87,7 +87,45 @@ step.util = {
 	        return false;
 	    }
 	    return true;
-	}
+	},
+
+    ui : {
+        autocompleteSearch : function(selector, data, readonly, preChangeHandler) {
+            $(selector).autocomplete({
+                minLength: 0,
+                delay : 0,
+                source: data,
+                select: function(event, ui) {
+                    $(this).val(ui.item.value);
+                    
+                    if(preChangeHandler) {
+                        preChangeHandler(this, ui.item.value);
+                    }
+                    
+                    $(this).change();
+                    $(this).trigger('keyup');
+            }})
+            .click(function() {
+                $(this).autocomplete("search", "");
+            }).attr("readonly", readonly == true);
+        },
+        
+        searchButton : function(selector, searchType) {
+            $(selector).click(function() {
+                step.state.activeSearch(step.passage.getPassageId(this), searchType, true);
+            });
+        },
+        
+        trackQuerySyntax : function(selector, namespace) {
+            $(selector + " input").keyup(function() {
+                $(this).change();
+                
+                //re-evaluate query
+                var passageId = step.passage.getPassageId(this);
+                step.search.ui[namespace].evaluateQuerySyntax(passageId);
+            });  
+        }
+    }
 };
 
 

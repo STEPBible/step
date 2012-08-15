@@ -130,6 +130,8 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
         while (rangeIter.hasNext()) {
             final Key range = rangeIter.next();
 
+            range.blur(5, RestrictionType.NONE);
+
             final OsisWrapper peakOsisText = this.jsword.peakOsisText(bible, range);
             resultPassages.add(new VerseSearchEntry(peakOsisText.getReference(), peakOsisText.getValue()));
         }

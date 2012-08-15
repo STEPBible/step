@@ -157,21 +157,12 @@ step.search = {
             return;
         }
         
-        var self = this;
-        var verses = $(".searchResultRow .verse", step.util.getPassageContent(passageId));
-        //check if we have hit anything, likelyhood is yes of course.
-        $.each(verses, function(i, item) {
-            //test against each potential match
-            for(var j = 0; j < highlightTerms.length; j++) {
-                if($(this).text().indexOf(highlightTerms[j]) != -1) {
-                    self._highlightTerm(highlightTerms[j], this);
-                }
-            }
-        });
-    },
-    
-    _highlightTerm : function(term, item) {
-       doHighlight(item, "highlight", term);
+        var verses = $(".searchResults", step.util.getPassageContent(passageId)).get(0);
+        
+        for(var i = 0; i < highlightTerms.length; i++) {
+            var regex = new RegExp("\\b" + highlightTerms[i] + "\\b", "ig");
+            doHighlight(verses, "highlight", regex);
+        }
     },
     
     _displayTimelineEventResults : function(results, passageId) {

@@ -221,7 +221,9 @@ $(document).ready(function() {
     });
     
     
-    step.util.ui.searchButton(".textSearchButton",  'SEARCH_TEXT');
+    step.util.ui.searchButton(".textSearchButton",  'SEARCH_TEXT', function() {
+        legend.trigger('click');
+    });
     
     $(".showRanges").bind( "keydown", function( event ) {
         if ( event.keyCode === $.ui.keyCode.TAB &&

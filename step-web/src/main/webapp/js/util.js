@@ -110,9 +110,13 @@ step.util = {
             }).attr("readonly", readonly == true);
         },
         
-        searchButton : function(selector, searchType) {
+        searchButton : function(selector, searchType, callback) {
             $(selector).click(function() {
                 step.state.activeSearch(step.passage.getPassageId(this), searchType, true);
+                
+                if(callback) {
+                    callback();
+                }
             });
         },
         

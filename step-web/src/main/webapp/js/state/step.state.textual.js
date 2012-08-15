@@ -28,21 +28,10 @@
  ******************************************************************************/
 step.state.textual = {
     restore : function(passageId) {
-        step.search.ui.textual.evaluateQuerySyntax(passageId);
+//        step.search.ui.textual.evaluateQuerySyntax(passageId);
 
     },
     
-//    _restoreSortByRelevance : function(passageId) {
-//        var s = this.textSortByRelevance(passageId);
-//        if(!step.util.isBlank(s)) {
-//            //then we have a value, so just store it
-//            this.textSortByRelevance(passageId, s);
-//        } else {
-//            //use the default value
-//            this.textSortByRelevance(passageId, step.defaults.search.textual.sortByRelevance, false);
-//        }
-//    }, 
-
     textQuerySyntax : function(passageId, value) { if (value != null) { $(".textQuerySyntax", step.util.getPassageContainer(passageId)).val(value); } return step.state._storeAndRetrieveCookieState(passageId, "textQuerySyntax", value, false); }
 
 };

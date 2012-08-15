@@ -49,14 +49,14 @@ step.search = {
     timeline : {
         reference : function(passageId) {
             console.log("Searching timeline by reference");
-            $.getSafe(SEARCH_TIMELINE_REFERENCE, [step.state.passage.version(passageId), step.state.timeline.reference(passageId)], function(results) {
+            $.getSafe(SEARCH_TIMELINE_REFERENCE, [step.state.passage.version(passageId), step.state.timeline.timelineReference(passageId)], function(results) {
                 step.search._displayResults(results, passageId);
             });
         },
         
         description: function(passageId) {
             console.log("Searching by timeline description");
-            $.getSafe(SEARCH_TIMELINE_DESCRIPTION, [step.state.passage.version(passageId), step.state.timeline.description(passageId)], function(results) {
+            $.getSafe(SEARCH_TIMELINE_DESCRIPTION, [step.state.passage.version(passageId), step.state.timeline.timelineEventDescription(passageId)], function(results) {
                 step.search._displayResults(results, passageId);
             });
         },

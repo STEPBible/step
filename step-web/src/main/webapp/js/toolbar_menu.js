@@ -63,7 +63,7 @@ function ToolbarMenu(passageId, menuRoot) {
  */
 ToolbarMenu.prototype.refreshMenuOptions = function() {
 	var self = this;
-	$.getJSON(BIBLE_GET_FEATURES + step.state.passage.version(this.passageId), function (features) {
+	$.getSafe(BIBLE_GET_FEATURES + step.state.passage.version(this.passageId), function (features) {
 		//build up map of options
 		$("li:contains('Display') a", self.menuRoot).each(function(index, value) {
 			var changed = false;

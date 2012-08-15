@@ -131,14 +131,14 @@ Bookmark.prototype.addHistory = function(passageReference) {
 		//then add
 		this.createHistoryItem(passageReference);
 		history.unshift(fullHistoryStorageText);
-		$.get(HISTORY_ADD + fullHistoryStorageText);
+		$.getSafe(HISTORY_ADD + fullHistoryStorageText);
 	} else {
 		//reposition item...
 		var item = $("div.bookmarkItem", this.historyContainer).eq(indexInHistory).detach();
 		history.splice(indexInHistory, 1);
 		this.historyContainer.prepend(item);
 		history.unshift(fullHistoryStorageText);
-		$.get(HISTORY_ADD + fullHistoryStorageText);
+		$.getSafe(HISTORY_ADD + fullHistoryStorageText);
 	}
 	
 	this.setHistory(history);

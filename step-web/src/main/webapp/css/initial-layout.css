@@ -317,3 +317,8 @@ body {
 	margin-right: 0.5em;
 	display: block
 }
+
+
+#waiting {
+	position: absolute;
+}

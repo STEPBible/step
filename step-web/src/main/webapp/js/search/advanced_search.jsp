@@ -216,6 +216,8 @@
 				<td><input class="timelineDateSearch passageButtons"
 					type="button" value="Search" /></td>
 			</tr>
+			
+			<input type="hidden" class="timelineSearchDescription" />
 		</table>
 	</fieldset>
 </div>

@@ -27,10 +27,15 @@
  * POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
 step.state = {
-     trackState : function(selector, namespace) {
+     trackState : function(selector, namespace, defaultHandler) {
          if($.isArray(selector)) {
              for(var i = 0; i < selector.length; i++) {
-                 this.trackState(selector[i], namespace);
+                 this.trackState(selector[i], namespace, defaultHandler);
+             }
+             
+             //add handlers for all defaults too
+             if(defaultHandler) {
+                 this.trackedDefaults.push(defaultHandler);             
              }
              return;
          }
@@ -38,10 +43,14 @@ step.state = {
          var selected = $(selector);
          var key = selector.substring(1);
          selected.change(function(){
-             var controlValue = this.type == 'checkbox' ? $(this).prop('checked') : $(this).val()
+             var controlValue = this.type == 'checkbox' ? $(this).prop('checked') : $(this).val();
              step.state[namespace][key](step.passage.getPassageId(this), controlValue);
          });
          
+         
+         if(step.state[namespace] == undefined) {
+             step.state[namespace] = {};
+         }
          
          step.state[namespace][key] = function(passageId, value) {
              var specificSelector = $(selector, step.util.getPassageContainer(passageId));
@@ -49,7 +58,12 @@ step.state = {
                      if (value != null) { 
                          specificSelector.prop('checked', value == "true" || value == true); 
                      }
-                     return step.state._storeAndRetrieveCookieState(passageId, "textSortByRelevance", value, false);                     
+                     
+                     var checkboxValue = step.state._storeAndRetrieveCookieState(passageId, key, value, false);
+                     if(checkboxValue == undefined || checkboxValue == "") {
+                         checkboxValue = step.state._storeAndRetrieveCookieState(passageId, key, "false", false);
+                     }
+                     return checkboxValue;
              } else {
                  if (value != null) { 
                      specificSelector.val(value); 
@@ -60,9 +74,11 @@ step.state = {
          
          //add to list of tracked elements
          this.trackedKeys.push([namespace, key, selected.length]);
+         
      }, 
 
      trackedKeys : [],
+     trackedDefaults : [],
      
      restoreTrackedKeys : function() {
          for(var i = 0; i < this.trackedKeys.length; i++) {
@@ -77,6 +93,20 @@ step.state = {
                      var func = step.state[keyId[0]][keyId[1]];
                      func(j, func(j));
                  }
+             }
+         }
+     },
+     
+     restoreTrackedDefaults : function() {
+         for(var i = 0; i < this.trackedDefaults.length; i++) {
+             if($.isArray(this.trackedDefaults[i])) {
+                 for(var j = 0; j < this.trackedDefaults[i].length; j++) {
+                     this.trackedDefaults[i][j](0, true);
+                     this.trackedDefaults[i][j](1, true);
+                 }
+             } else {
+                 this.trackedDefaults[i](0, true);
+                 this.trackedDefaults[i](1, true);
              }
          }
      },
@@ -97,9 +127,11 @@ step.state = {
 
     restore : function() {
         this.restoreTrackedKeys();
+        this.restoreTrackedDefaults();
         
         // restore active search
         step.state.detail.restore();
+        
 
         
         var passageIds = step.util.getAllPassageIds();
@@ -107,8 +139,6 @@ step.state = {
             step.menu.tickMenuItem(step.menu.getMenuItem(this.activeSearch(i), i));
             step.state.passage.restore(i);
             step.state.original.restore(i);
-            step.state.timeline.restore(i);
-            step.state.simpleText.restore(i);
             step.state.textual.restore(i);
             this._showRelevantFieldSet(i);
         }
@@ -120,7 +150,10 @@ step.state = {
         $(".advancedSearch fieldset", passageContainer).hide();
         var option = $("a[name ^= 'SEARCH_']:has(img.selectingTick)", passageContainer);
         var optionName = option.text();
-        $(".advancedSearch legend:contains('" + optionName + "')", passageContainer).parent().show();
+        var targetFieldset = $(".advancedSearch legend:contains('" + optionName + "')", passageContainer).parent();
+        targetFieldset.show();
+//        $(targetFieldset.find("input").get(0)).trigger('change');
+
     },
 
     _fireStateChanged : function(passageId) {

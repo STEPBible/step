@@ -124,6 +124,12 @@ step.util = {
                 var passageId = step.passage.getPassageId(this);
                 step.search.ui[namespace].evaluateQuerySyntax(passageId);
             });  
+        },
+        
+        resetIfEmpty : function(passageId, force, evalFunction, defaultValue) {
+            if(force == true || force == undefined || evalFunction(passageId) == null || evalFunction(passageId) == "") {
+                evalFunction(passageId, defaultValue);
+            }
         }
     }
 };
@@ -212,7 +218,15 @@ function shortenName(longName, minLength) {
 
 	// unable to shorten
 	return longName;
-}
+};
+
+var outstandingRequests = 0;
+function refreshWaitStatus() {
+    var coords = $("#topLogo").position();
+    $("#waiting").css('top', coords.top + 300);
+    $("#waiting").css('left', coords.left + $("#topLogo").width() / 2 - $("#waiting").width() / 2);
+    $("#waiting").css("display", outstandingRequests > 0 ? "block" : "none");
+};
 
 // some jquery extensions
 (function($) {
@@ -241,7 +255,12 @@ function shortenName(longName, minLength) {
                 }
 		    }
 		    
-			$.get(url, function(data) {
+		    outstandingRequests++;
+            refreshWaitStatus();
+            $.get(url, function(data) {
+			    outstandingRequests--;
+			    refreshWaitStatus();
+			    
 			    console.log("Received url ", url, " ", data);
 				if (data && data.errorMessage) {
 					// handle an error message here

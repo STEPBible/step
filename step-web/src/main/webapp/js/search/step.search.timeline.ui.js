@@ -26,52 +26,28 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
-step.search.ui.timeline = {
-    reference : function(value, passageId) {
-        //handled by passage reference since in same container...
-        $(".timelineReference", step.util.getPassageContainer(passageId)).val(value);
-    },
-    
-    eventDescription : function(value, passageId) {
-        $(".timelineEventDescription", step.util.getPassageContainer(passageId)).val(value);
-    },
-    
-    timelineDate : function(value, passageId) {
-        $(".timelineDate", step.util.getPassageContainer(passageId)).val(value);
-    },
-    
-    timelineYears : function(value, passageId) {
-        $(".timelineYears", step.util.getPassageContainer(passageId)).val(value);
-    }
-};
-
 $(document).ready(function() {
-    $(".timelineReference").change(function() {
-        step.state.timeline.reference(step.passage.getPassageId(this), $(this).val());
-    });
-
-    $(".timelineEventDescription").change(function() {
-        step.state.timeline.description(step.passage.getPassageId(this), $(this).val());
-    });
-
-    $(".timelineDate").change(function() {
-        step.state.timeline.timelineDate(step.passage.getPassageId(this), $(this).val());
-    });
-
-    $(".timelineYears").change(function() {
-        step.state.timeline.timelineYears(step.passage.getPassageId(this), $(this).val());
-    });
-
+    var namespace = "timeline";
+    step.state.trackState([
+                           ".timelineReference",
+                           ".timelineEventDescription",
+                           ".timelineDate",
+                           ".timelineYears",
+                           ".timelineSearchDescription",
+                           ], namespace);
+    
+    
+    
     
     $(".timelineReferenceSearch").click(function() {
         var passageId = step.passage.getPassageId(this);
-        step.state.timeline.searchType(passageId, "reference");
+        step.state.timeline.timelineSearchDescription(passageId, "reference");
         step.state.activeSearch(passageId, 'SEARCH_TIMELINE', true);
     });
 
     $(".timelineDescriptionSearch").click(function() {
         var passageId = step.passage.getPassageId(this);
-        step.state.timeline.searchType(passageId, "description");
+        step.state.timeline.timelineSearchDescription(passageId, "description");
         step.state.activeSearch(passageId, 'SEARCH_TIMELINE', true);
     });
     
@@ -83,7 +59,7 @@ $(document).ready(function() {
 });
 
 $(step.search.ui).hear("timeline-search-state-has-changed", function(s, data) {
-    var searchType = step.state.timeline.searchType(data.passageId);
+    var searchType = step.state.timeline.timelineSearchDescription(data.passageId);
     if(searchType == "reference") {
         step.search.timeline.reference(data.passageId);
     } else if (searchType == "description"){

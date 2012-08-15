@@ -45,7 +45,7 @@ function init() {
 	$(document).ready(function() {
 		initMenu();
 		$("li[menu-name] a[name]").bind("click", function() { step.menu.handleClickEvent(this); });
-
+		
 		initGlobalHandlers();
 		initLayout();
 
@@ -111,7 +111,7 @@ function initData() {
 	
 	//get all supported versions
 	var options = {};
-	$.getJSON(BIBLE_GET_ALL_FEATURES, function(data) {
+	$.getSafe(BIBLE_GET_ALL_FEATURES, function(data) {
 //		$.each(data, function() {
 			options = data;
 //		});
@@ -120,7 +120,7 @@ function initData() {
 	//get data for passages
 	// make call to server first and once, to cache all passages:
 	// todo work out why step.menu.isOptionSelected("SHOW_ALL_VERSIONS") doesn't return true
-	$.getJSON(BIBLE_GET_BIBLE_VERSIONS + true, function(versionsFromServer) {
+	$.getSafe(BIBLE_GET_BIBLE_VERSIONS + true, function(versionsFromServer) {
 		initInterlinearPopup(versionsFromServer);
 		var passages = initPassages(versionsFromServer, options);
 		initModules(passages);

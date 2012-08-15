@@ -84,7 +84,16 @@ step.search.ui.simpleText = {
             case step.defaults.search.textual.simpleTextTypes[4] : query += step.search.ui.textual._evalStarting(criteria); break; 
         }
         return query;
-    }
+    },
+
+    restoreDefaults : function(passageId, force) {
+        step.util.ui.resetIfEmpty(passageId, force, step.state.simpleText.simpleTextTypePrimary, step.defaults.search.textual.simpleTextTypes[0]);
+        step.util.ui.resetIfEmpty(passageId, force, step.state.simpleText.simpleTextScope, step.defaults.search.textual.availableRanges[0].value);
+        step.util.ui.resetIfEmpty(passageId, force, step.state.simpleText.simpleTextInclude, step.defaults.search.textual.simpleTextIncludes[0]);
+        step.util.ui.resetIfEmpty(passageId, force, step.state.simpleText.simpleTextTypeSecondary, step.defaults.search.textual.simpleTextTypes[0]);
+        step.util.ui.resetIfEmpty(passageId, force, step.state.simpleText.simpleTextProximity, step.defaults.search.textual.simpleTextProximities[0]);
+        step.util.ui.resetIfEmpty(passageId, force, step.state.simpleText.simpleTextSortByRelevance, step.defaults.search.textual.simpleTextSortBy[0]);
+    },
 };
 
 $(document).ready(function() {
@@ -98,7 +107,7 @@ $(document).ready(function() {
                            ".simpleTextSecondaryCriteria",
                            ".simpleTextProximity",
                            ".simpleTextSortByRelevance"
-                           ], namespace);
+                           ], namespace, [step.search.ui.simpleText.restoreDefaults]);
 
     step.util.ui.trackQuerySyntax(".simpleTextFields", namespace);
     $(".simpleTextClear").click(function() {
@@ -108,7 +117,7 @@ $(document).ready(function() {
         step.state.simpleText.simpleTextSecondaryCriteria(passageId, "");
         
         //then reset dropdowns
-        step.state.simpleText.restoreDefaults(passageId, true);
+        step.search.ui.simpleText.restoreDefaults(passageId, true);
         step.state.simpleText.simpleTextQuerySyntax(passageId, "");
     });
 

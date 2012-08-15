@@ -66,7 +66,6 @@
 		<script src="js/state/step.state.original.js" type="text/javascript"></script>
 		<script src="js/state/step.state.textual.js" type="text/javascript"></script>
 		<script src="js/state/step.state.simpletext.js" type="text/javascript"></script>
-		<script src="js/state/step.state.timeline.js" type="text/javascript"></script>
 
 	    <script src="js/menu/step.menu.js" type="text/javascript"></script>
 	    <script src="js/menu/top/help.js" type="text/javascript"></script>
@@ -166,7 +165,7 @@
 
 <!--  The popup that can have lots of helpful information -->
 <jsp:include page="jsps/lexicon_definition.jsp"  />
-
+<img src="images/wait_big.gif" id="waiting" />
 <div id="previewReference" style="display: none"><div id="previewBar" style="display: none;">
 	<a href="#" id="previewClose">Close this popup</a>
 	<a href="#" id="previewRight">See passage on the right pane</a>

@@ -208,7 +208,7 @@ Passage.prototype.initReferenceTextBox = function() {
     // set up change for textbox
     this.reference.autocomplete({
         source : function(request, response) {
-            $.get(BIBLE_GET_BIBLE_BOOK_NAMES + request.term + "/" + step.state.passage.version(self.passageId), function(text) {
+            $.getSafe(BIBLE_GET_BIBLE_BOOK_NAMES + request.term + "/" + step.state.passage.version(self.passageId), function(text) {
                 response(text);
             });
         },

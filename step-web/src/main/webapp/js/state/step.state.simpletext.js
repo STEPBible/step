@@ -27,25 +27,5 @@
  * POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
 step.state.simpleText = {
-    restore : function(passageId) {
-        step.search.ui.simpleText.evaluateQuerySyntax(passageId);
-
-    },
-    
-    restoreDefaults : function(passageId, force) {
-        this._resetIfEmpty(passageId, force, step.state.simpleText.simpleTextTypePrimary, step.defaults.search.textual.simpleTextTypes[0]);
-        this._resetIfEmpty(passageId, force, step.state.simpleText.simpleTextScope, step.defaults.search.textual.availableRanges[0].value);
-        this._resetIfEmpty(passageId, force, step.state.simpleText.simpleTextInclude, step.defaults.search.textual.simpleTextIncludes[0]);
-        this._resetIfEmpty(passageId, force, step.state.simpleText.simpleTextTypeSecondary, step.defaults.search.textual.simpleTextTypes[0]);
-        this._resetIfEmpty(passageId, force, step.state.simpleText.simpleTextProximity, step.defaults.search.textual.simpleTextProximities[0]);
-        this._resetIfEmpty(passageId, force, step.state.simpleText.simpleTextSortByRelevance, step.defaults.search.textual.simpleTextSortBy[0]);
-    },
-    
-    _resetIfEmpty : function(passageId, force, evalFunction, defaultValue) {
-      if(force == true || force == undefined || evalFunction(passageId) == null || evalFunction(passageId) == "") {
-          evalFunction(passageId, defaultValue);
-      }
-    },
-    
     simpleTextQuerySyntax : function(passageId, value) { if (value != null) { $(".simpleTextQuerySyntax", step.util.getPassageContainer(passageId)).val(value); } return step.state._storeAndRetrieveCookieState(passageId, "simpleTextQuerySyntax", value, false); },
 };

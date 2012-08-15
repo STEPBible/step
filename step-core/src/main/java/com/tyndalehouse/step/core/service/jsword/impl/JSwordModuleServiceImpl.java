@@ -18,6 +18,7 @@ import org.crosswire.common.progress.WorkEvent;
 import org.crosswire.common.progress.WorkListener;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.BookCategory;
+import org.crosswire.jsword.book.BookException;
 import org.crosswire.jsword.book.BookFilter;
 import org.crosswire.jsword.book.Books;
 import org.crosswire.jsword.book.install.InstallException;
@@ -98,6 +99,17 @@ public class JSwordModuleServiceImpl implements JSwordModuleService {
     @Override
     public void index(final String initials) {
         IndexManagerFactory.getIndexManager().scheduleIndexCreation(Books.installed().getBook(initials));
+    }
+
+    @Override
+    public void reIndex(final String initials) {
+        final Book book = Books.installed().getBook(initials);
+        try {
+            IndexManagerFactory.getIndexManager().deleteIndex(book);
+        } catch (final BookException e) {
+            LOGGER.warn("Error deleting index. Attempting to rebuild index all the same", e);
+        }
+        IndexManagerFactory.getIndexManager().scheduleIndexCreation(book);
     }
 
     @Override

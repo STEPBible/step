@@ -2,8 +2,15 @@ package com.tyndalehouse.step.core.service.jsword.impl;
 
 import static org.junit.Assert.assertTrue;
 
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.tyndalehouse.step.core.models.search.SearchEntry;
+import com.tyndalehouse.step.core.models.search.VerseSearchEntry;
 
 /**
  * Tests the various searches
@@ -11,6 +18,7 @@ import org.junit.Test;
  * @author chrisburrell
  */
 public class JSwordSearchServiceImplTest {
+    private static final Logger LOGGER = LoggerFactory.getLogger(JSwordSearchServiceImplTest.class);
     private JSwordSearchServiceImpl search;
 
     /**
@@ -28,7 +36,11 @@ public class JSwordSearchServiceImplTest {
      */
     @Test
     public void testMusings() {
-        assertTrue(this.search.search("KJV", "heading:water", false).getResults().size() > 0);
+        final List<SearchEntry> results = this.search.search("ESV", "heading:*water*", false).getResults();
+        for (int i = 0; i < 10 || i < results.size(); i++) {
+            LOGGER.debug(((VerseSearchEntry) results.get(i)).getKey());
+        }
+        assertTrue(results.size() > 0);
     }
 
     // @Test

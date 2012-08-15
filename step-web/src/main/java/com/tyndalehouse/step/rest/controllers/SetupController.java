@@ -114,4 +114,14 @@ public class SetupController {
         notBlank(initials, "A version must be provided", USER_MISSING_FIELD);
         this.bibleInformation.index(initials);
     }
+
+    /**
+     * Re-indexes a book
+     * 
+     * @param initials the initials of the book to index
+     */
+    public void reIndex(final String initials) {
+        notBlank(initials, "A version must be provided", USER_MISSING_FIELD);
+        this.bibleInformation.reIndex(initials);
+    }
 }

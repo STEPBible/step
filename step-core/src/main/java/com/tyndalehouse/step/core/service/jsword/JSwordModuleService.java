@@ -106,4 +106,11 @@ public interface JSwordModuleService {
      */
     void index(String initials);
 
+    /**
+     * re-indexes a book
+     * 
+     * @param initials the initials of the book to index
+     */
+    void reIndex(String initials);
+
 }

@@ -146,4 +146,11 @@ public interface BibleInformationService {
      */
     void index(String initials);
 
+    /**
+     * Re-Indexes a book
+     * 
+     * @param initials initials of the book (e.g. KJV)
+     */
+    void reIndex(String initials);
+
 }

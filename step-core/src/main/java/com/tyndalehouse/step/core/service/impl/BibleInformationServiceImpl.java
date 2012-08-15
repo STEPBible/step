@@ -215,4 +215,9 @@ public class BibleInformationServiceImpl implements BibleInformationService {
     public void index(final String initials) {
         this.jswordModule.index(initials);
     }
+
+    @Override
+    public void reIndex(final String initials) {
+        this.jswordModule.reIndex(initials);
+    }
 }

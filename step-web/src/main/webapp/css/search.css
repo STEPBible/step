@@ -19,6 +19,7 @@
 .searchResultKey {
 	color: #696;
 	background-color: #eef;
+	white-space: nowrap;
 }
 
 .searchKeyPassageArrow {
@@ -51,6 +52,18 @@
 .simpleTextFields input {
 	margin: 3px;
 }
+
+.simpleTextFields input.drop {
+	text-decoration: underline;
+	border: none;
+	text-align: left;
+	color: #696;
+}
+
+.simpleTextFields input.drop:hover {
+	cursor: pointer;
+}
+
 
 /*******************************************/
 /* Advanced search box                     */

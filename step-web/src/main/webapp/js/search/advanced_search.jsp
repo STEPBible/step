@@ -25,16 +25,16 @@
 		<legend>Text search</legend>
 
 		Search for
-		<input type="text" class="simpleTextType simpleTextTypePrimary" />
+		<input type="text" size="19" class="simpleTextType simpleTextTypePrimary drop" />
 		<input type="text" class="simpleTextCriteria" />
-		within: <input type="text" class="simpleTextScope" /><br />
-		and
-		<input type="text" class="simpleTextInclude" /> 
-		<input type="text" class="simpleTextType simpleTextTypeSecondary" />
+		within <input type="text" class="simpleTextScope drop" /><br />
+		which
+		<input type="text" class="simpleTextInclude drop" size="7" /> 
+		<input type="text" size="16" class="simpleTextSecondaryTypes simpleTextTypeSecondary drop" />
 		<input type="text" class="simpleTextSecondaryCriteria" />
-		within <input type="text" class="simpleTextProximity" />
+		within <input type="text" class="simpleTextProximity drop" />
 		<br />
-		and order the results by <input type="text" class="simpleTextSortByRelevance" />
+		and order the results by <input type="text" class="simpleTextSortByRelevance drop" />
 		
 		<br />
 		<textarea class="simpleTextQuerySyntax" cols="45"></textarea>

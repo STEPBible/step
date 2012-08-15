@@ -15,7 +15,6 @@ import org.crosswire.jsword.passage.Key;
 import org.crosswire.jsword.passage.Passage;
 import org.crosswire.jsword.passage.PassageTally;
 import org.crosswire.jsword.passage.PassageTally.Order;
-import org.crosswire.jsword.passage.RestrictionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -125,14 +124,14 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
      */
     private List<SearchEntry> getPassagesForResults(final Book bible, final Key results) {
         final List<SearchEntry> resultPassages = new ArrayList<SearchEntry>();
-        final Iterator<Key> rangeIter = ((Passage) results).rangeIterator(RestrictionType.NONE);
+        final Iterator<Key> iterator = ((Passage) results).iterator();
 
-        while (rangeIter.hasNext()) {
-            final Key range = rangeIter.next();
+        while (iterator.hasNext()) {
+            final Key passage = iterator.next();
 
-            range.blur(5, RestrictionType.NONE);
+            // range.blur(5, RestrictionType.NONE);
 
-            final OsisWrapper peakOsisText = this.jsword.peakOsisText(bible, range);
+            final OsisWrapper peakOsisText = this.jsword.peakOsisText(bible, passage);
             resultPassages.add(new VerseSearchEntry(peakOsisText.getReference(), peakOsisText.getValue()));
         }
         return resultPassages;
@@ -147,7 +146,7 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
     private void trimResults(final Key results, final int maxResults) {
         if (results instanceof Passage) {
             final Passage p = (Passage) results;
-            p.trimRanges(maxResults, RestrictionType.CHAPTER);
+            p.trimVerses(maxResults);
         }
     }
 
@@ -164,6 +163,6 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
 
         final PassageTally tally = (PassageTally) results;
         tally.setOrdering(Order.TALLY);
-        tally.trimRanges(maxResults, RestrictionType.NONE);
+        tally.trimVerses(maxResults);
     }
 }

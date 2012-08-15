@@ -106,7 +106,7 @@ step.search = {
             //remove distances and brackets
             termBase = termBase.replace(/~[0-9]+/g, "");
             termBase = termBase.replace(/[\(\)]*/g, "");
-            
+            termBase = termBase.replace(/ AND /g, " ");
             
             var matches = termBase.match(/"[^"]*"/);
             if(matches) {
@@ -166,7 +166,7 @@ step.search = {
     },
     
     _displayTimelineEventResults : function(results, passageId) {
-        var resultHtml = "<ul class='searchResults'>";
+        var resultHtml = "<table class='searchResults'>";
         var self = this;
         $.each(results, function(i, item) {
             var resultItem = "";
@@ -174,30 +174,30 @@ step.search = {
             if(item.verses && item.verses.length > 0) {
                 aTarget = $.map(item.verses, function(item, i) { return item.key; }).join();
                 
-                resultItem += "<ul>";
+                resultItem += "<table>";
                 resultItem += self._displayPassageResults(item.verses, passageId);
-                resultItem += "</ul>";
+                resultItem += "</table>";
             }
             
-            resultItem = "<li class='searchResultRow'><a class='searchResultKey' href='#' onclick='step.timeline.show("+ passageId + ", \"" + aTarget + "\")'>" + item.description +  "</a></li>" + resultItem;
+            resultItem = "<tr class='searchResultRow'><td class='searchResultKey'><a class='searchResultKey' href='#' onclick='step.timeline.show("+ passageId + ", \"" + aTarget + "\")'></td><td>" + item.description +  "</a></td></tr>" + resultItem;
                         
             resultHtml += resultItem;
         });
         
-        resultHtml += "</ul>";
+        resultHtml += "</table>";
         return resultHtml;
     },
     
     _displayPassageResults : function(searchResults, passageId) {
         var results = "";
         $.each(searchResults, function(i, item) {
-            results += "<li class='searchResultRow'><span class='searchResultKey'> ";
+            results += "<tr class='searchResultRow'><td class='searchResultKey'> ";
             results += goToPassageArrow(true, item.key, "searchKeyPassageArrow");
             results += item.key;
             results += goToPassageArrow(false, item.key, "searchKeyPassageArrow");
-            results += "</span>";
+            results += "</td><td>";
             results += item.preview;
-            results += "</li>";
+            results += "</td></tr>";
         });
         return results;
     },
@@ -208,15 +208,12 @@ step.search = {
 
         if (searchResults.length == 0) {
             results += "<span class='notApplicable'>No search results were found</span>";
-            return;
-        }
-
-        if(searchQueryResults.query.indexOf("timeline") == 0) {
+        } else if(searchQueryResults.query.indexOf("timeline") == 0) {
             results += this._displayTimelineEventResults(searchResults, passageId);
         } else {
-            results += "<ul class='searchResults'>";
+            results += "<table class='searchResults'>";
             results += this._displayPassageResults(searchResults, passageId);
-            results += "</ul>";
+            results += "</table>";
         }
         
 

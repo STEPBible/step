@@ -50,7 +50,7 @@ step.search.ui.simpleText = {
         var secondaryType = $(".simpleTextTypeSecondary", passageContainer).val();
         var secondaryCriteria = $(".simpleTextSecondaryCriteria", passageContainer).val();
         var proximity = $(".simpleTextProximity", passageContainer).val();
-
+        var includeExclude = $(".simpleTextInclude", passageContainer).val();
         
         //if no primary criteria, exit here
         if(step.util.isBlank(primaryCriteria)) {
@@ -72,9 +72,18 @@ step.search.ui.simpleText = {
         
         var firstSpace = proximity.indexOf(' ');
         var proximityRange = proximity.substring(0, firstSpace);
+
         
-        query += "~" + proximityRange + " ";
-        query = this._evalCriteria(secondaryType, secondaryCriteria, query);
+        if(includeExclude == step.defaults.search.textual.simpleTextIncludes[0]) {
+            query += " ~" + proximityRange + " ";
+            query = this._evalCriteria(secondaryType, secondaryCriteria, query);
+        } else if (includeExclude == step.defaults.search.textual.simpleTextIncludes[1]) {
+            if(secondaryType == step.defaults.search.textual.simpleTextSecondaryTypes[0]) {
+                query += step.search.ui.textual._evalExcludeWord(secondaryCriteria);
+            } else {
+                query += step.search.ui.textual._evalExcludePhrase(secondaryCriteria);
+            }
+        }
         
         step.state.simpleText.simpleTextQuerySyntax(passageId, query);
     },
@@ -120,8 +129,7 @@ $(document).ready(function() {
         step.state.simpleText.simpleTextQuerySyntax(passageId, "");
     });
 
-//    var passageContent = step.util.getPassageContent(passageId);
-    
+    //TODO refactor
       $(".simpleTextType").autocomplete({
           minLength: 0,
           delay : 0,
@@ -133,7 +141,21 @@ $(document).ready(function() {
       }})
       .click(function() {
           $(this).autocomplete("search", "");
-      });
+      }).attr("readonly", true);
+      
+      $(".simpleTextSecondaryTypes").autocomplete({
+          minLength: 0,
+          delay : 0,
+          source: step.defaults.search.textual.simpleTextSecondaryTypes,
+          select: function(event, ui) {
+              $(this).val(ui.item.value);
+              $(this).change();
+              $(this).trigger('keyup');
+      }})
+      .click(function() {
+          $(this).autocomplete("search", "");
+      }).attr("readonly", true);
+      
       
       $(".simpleTextScope").autocomplete({
           minLength: 0,
@@ -154,12 +176,25 @@ $(document).ready(function() {
           source: step.defaults.search.textual.simpleTextIncludes,
           select: function(event, ui) {
               $(this).val(ui.item.value);
+              
+              var proximity = $(this).nextAll(".simpleTextProximity");
+              if(ui.item.value == 'include') {
+                  if(proximity.val() == 'the same verse') {
+                      //reset
+                      proximity.val(step.defaults.search.textual.simpleTextProximities[0]);
+                      proximity.attr('disabled', false);
+                  }
+              } else if(ui.item.value == 'exclude') {
+                  proximity.val('the same verse');
+                  proximity.attr('disabled', true);
+              }
+              
               $(this).change();
               $(this).trigger('keyup');
       }})
       .click(function() {
           $(this).autocomplete("search", "");
-      });
+      }).attr("readonly", true);
 
       $(".simpleTextProximity").autocomplete({
           minLength: 0,
@@ -172,7 +207,7 @@ $(document).ready(function() {
       }})
       .click(function() {
           $(this).autocomplete("search", "");
-      });
+      }).attr("readonly", true);
 
       $(".simpleTextSortByRelevance").autocomplete({
           minLength: 0,
@@ -185,7 +220,7 @@ $(document).ready(function() {
           }})
           .click(function() {
               $(this).autocomplete("search", "");
-          });
+          }).attr("readonly", true);
       
       
     $(".simpleTextSearchButton").click(function() {

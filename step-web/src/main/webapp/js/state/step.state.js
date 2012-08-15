@@ -169,6 +169,8 @@ step.state = {
             $.shout("textual-search-state-has-changed", { passageId : passageId });
         } else if(active == 'SEARCH_SIMPLE_TEXT') {
             $.shout("simpleText-search-state-has-changed", { passageId : passageId });
+        } else if(active == 'SEARCH_SUBJECT') {
+            $.shout("subject-search-state-has-changed", { passageId : passageId });
         }
     },
 

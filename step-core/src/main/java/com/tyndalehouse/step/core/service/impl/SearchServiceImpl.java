@@ -43,6 +43,7 @@ import java.util.Locale;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import org.crosswire.jsword.index.lucene.LuceneIndex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -101,6 +102,14 @@ public class SearchServiceImpl implements SearchService {
         LOGGER.debug("Searching for strongs [{}]", searchStrong);
         final List<String> strongs = getStrongsFromQuery(searchStrong);
         return runStrongSearch(version, strongs);
+    }
+
+    @Override
+    public SearchResult searchSubject(final String subject) {
+        // assume subject is partial
+        final String query = String.format("%s:*%s*", LuceneIndex.FIELD_HEADING, subject);
+
+        return this.jswordSearch.search("ESV", query, false);
     }
 
     @Override

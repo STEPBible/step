@@ -192,6 +192,21 @@
 	</fieldset>
 
 	<fieldset>
+		<legend>Subject search</legend>
+		<span class="passageButtons"> 
+			<input type="button" class="subjectClear" value="Clear" title="Clears the search criteria" />
+		<input type="button" class="subjectSearch" value="Search" title="This will search for subjects matching the selected criteria" />
+		</span>
+		<table>
+			<tr>
+				<td>Subject</td>
+				<td><input type="text" class="subjectText" /></td>
+			</tr>
+		</table>
+	</fieldset>
+
+
+	<fieldset>
 		<legend>Timeline search</legend>
 		<table style="width: 100%">
 			<tr>

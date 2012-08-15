@@ -55,7 +55,7 @@
 		<script src="js/search/step.search.simpletext.ui.js" type="text/javascript"></script>
 		<script src="js/search/step.search.textual.ui.js" type="text/javascript"></script>
 		<script src="js/search/step.search.timeline.ui.js" type="text/javascript"></script>
-
+		<script src="js/search/step.search.subject.ui.js" type="text/javascript"></script>
 		<script src="js/navigation/step.navigation.js" type="text/javascript"></script>	    
 
 		<script src="js/defaults/step.defaults.js" type="text/javascript"></script>

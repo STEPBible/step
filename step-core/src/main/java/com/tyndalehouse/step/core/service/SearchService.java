@@ -88,4 +88,12 @@ public interface SearchService {
      * @return the result
      */
     SearchResult searchTimelineReference(String version, String reference);
+
+    /**
+     * Searches for the subject
+     * 
+     * @param subject the subject that we are looking for
+     * @return a search result
+     */
+    SearchResult searchSubject(String subject);
 }

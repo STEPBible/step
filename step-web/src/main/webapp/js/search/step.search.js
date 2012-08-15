@@ -66,6 +66,15 @@ step.search = {
         }
     },
     
+    subject : {
+        search : function(passageId) {
+            console.log("Subject search");
+            $.getSafe(SEARCH_SUBJECT, [step.state.subject.subjectText(passageId)], function(results) {
+                step.search._displayResults(results, passageId);
+            });
+        }
+    },
+    
     simpleText : {
         search : function(passageId) {
             console.log("Simple text search...");

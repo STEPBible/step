@@ -183,6 +183,13 @@ $(document).ready(function() {
                             ".textSortByRelevance"
                            ], namespace);
     
+    
+    
+    var legend = $($(".textPrimaryExactPhrase:first")).parents("fieldset").find("legend");
+    legend.click(function() {
+        $(this).next().toggle('blind', {direction: 'vertical'}, 500, function() { refreshLayout(); });
+    }).css("cursor", "pointer");
+    
     step.util.ui.trackQuerySyntax(".textSearchTable", namespace);
     $(".textClearButton").click(function() {
         var passageId = step.passage.getPassageId(this);

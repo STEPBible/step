@@ -41,6 +41,15 @@ public class SearchController {
     }
 
     /**
+     * @param subject subject that is being searched for
+     * @return the search result(s)
+     */
+    public SearchResult searchSubject(final String subject) {
+        notNull(subject, "A subject must be provided", USER_MISSING_FIELD);
+        return this.searchService.searchSubject(subject);
+    }
+
+    /**
      * @param version the version to search across
      * @param searchStrong the query to search for
      * @return the search result(s)

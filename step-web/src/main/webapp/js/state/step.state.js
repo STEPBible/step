@@ -101,12 +101,12 @@ step.state = {
          for(var i = 0; i < this.trackedDefaults.length; i++) {
              if($.isArray(this.trackedDefaults[i])) {
                  for(var j = 0; j < this.trackedDefaults[i].length; j++) {
-                     this.trackedDefaults[i][j](0, true);
-                     this.trackedDefaults[i][j](1, true);
+                     this.trackedDefaults[i][j](0, false);
+                     this.trackedDefaults[i][j](1, false);
                  }
              } else {
-                 this.trackedDefaults[i](0, true);
-                 this.trackedDefaults[i](1, true);
+                 this.trackedDefaults[i](0, false);
+                 this.trackedDefaults[i](1, false);
              }
          }
      },
@@ -139,7 +139,6 @@ step.state = {
             step.menu.tickMenuItem(step.menu.getMenuItem(this.activeSearch(i), i));
             step.state.passage.restore(i);
             step.state.original.restore(i);
-            step.state.textual.restore(i);
             this._showRelevantFieldSet(i);
         }
     },
@@ -152,7 +151,6 @@ step.state = {
         var optionName = option.text();
         var targetFieldset = $(".advancedSearch legend:contains('" + optionName + "')", passageContainer).parent();
         targetFieldset.show();
-//        $(targetFieldset.find("input").get(0)).trigger('change');
 
     },
 

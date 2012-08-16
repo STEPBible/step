@@ -30,7 +30,7 @@ step.search.ui.textual = {
     evaluateQuerySyntax: function(passageId) {
         var passageContainer = step.util.getPassageContainer(passageId);
         
-        var query = "";
+        var query = "t=";
         query += this._evalExactPhrase($(".textPrimaryExactPhrase", passageContainer).val());
         query += this._evalAllWords($(".textPrimaryIncludeAllWords", passageContainer).val());
         query += this._evalAnyWord($(".textPrimaryIncludeWords", passageContainer).val());
@@ -69,6 +69,7 @@ step.search.ui.textual = {
         
         
         step.state.textual.textQuerySyntax(passageId, query);
+        return query;
     },
     //TODO think about escaping
     _evalExactPhrase : function(text) {
@@ -81,7 +82,8 @@ step.search.ui.textual = {
     _evalAllWords : function(text) {
         if(!step.util.isBlank(text)) {
             var words = $.trim(text).split(" ").join(" AND ");
-            return "(" + words + ")";
+            return words ;
+            //            return "(" + words + ")";
         }
         return "";
     },
@@ -141,7 +143,7 @@ step.search.ui.textual = {
     _evalTextRestriction : function(restriction, query) {
         if(!step.util.isBlank(restriction)) {
             //join the two queries up
-            query = "+[" + restriction + "] " + query; 
+            query = query + "+[" + restriction + "] "; 
         }
         return query;
     },
@@ -173,14 +175,13 @@ $(document).ready(function() {
                             ".textCloseByIncludeAllWords",   
                             ".textCloseBySimilarSpellings",
                             ".textCloseByWordsStarting",
-                            ".textCloseByExcludeWords",
-                            ".textCloseByExcludePhrase",
                             ".textCloseByIncludeRangedWords",
                             ".textCloseByWithinXWords",
                             ".textVerseProximity",
                             ".textRestriction",
                             ".textRestrictionExclude",
-                            ".textSortByRelevance"
+                            ".textSortByRelevance",
+                            ".textQuerySyntax"
                            ], namespace);
     
     
@@ -209,8 +210,8 @@ $(document).ready(function() {
         step.state.textual.textCloseByIncludeAllWords(passageId, "");
         step.state.textual.textCloseBySimilarSpellings(passageId, "");
         step.state.textual.textCloseByWordsStarting(passageId, "");
-        step.state.textual.textCloseByExcludeWords(passageId, "");
-        step.state.textual.textCloseByExcludePhrase(passageId, "");
+//        step.state.textual.textCloseByExcludeWords(passageId, "");
+//        step.state.textual.textCloseByExcludePhrase(passageId, "");
         step.state.textual.textCloseByIncludeRangedWords(passageId, "");
         step.state.textual.textCloseByWithinXWords(passageId, "");
         step.state.textual.textVerseProximity(passageId, "");

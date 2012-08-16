@@ -24,22 +24,40 @@
 	<fieldset class="simpleTextFields">
 		<legend>Text search</legend>
 
-		Search for verses with
-		<input type="text" size="19" class="simpleTextType simpleTextTypePrimary drop" />
-		<input type="text" class="simpleTextCriteria" />
-		within <input type="text" class="simpleTextScope drop" /><br />
-		and
-		<input type="text" class="simpleTextInclude drop" size="7" /> 
-		<input type="text" size="16" class="simpleTextSecondaryTypes simpleTextTypeSecondary drop" />
-		<input type="text" class="simpleTextSecondaryCriteria" />
-		within <input type="text" class="simpleTextProximity drop" />
-		<br />
-		and order the results by <input type="text" class="simpleTextSortByRelevance drop" />
-		
-		<br />
-		<textarea class="simpleTextQuerySyntax" cols="45"></textarea>
-		<input type="button" class="simpleTextClear" value="Reset" />
-		<input type="button" class="simpleTextSearchButton" value="Search" />
+		<table style="width: 100%">
+			<tr>
+				<td>Search for verses with</td>
+				<td><input type="text" class="simpleTextType simpleTextTypePrimary drop" /></td>
+				<td><input type="text" class="simpleTextCriteria" /></td>
+				<td>within</td>
+				<td><input type="text" class="simpleTextScope drop" /></td>
+			</tr>
+			<tr>
+				<td>and <input type="text" class="simpleTextInclude drop" size="13" /></td>
+				<td><input type="text" class="simpleTextSecondaryTypes simpleTextTypeSecondary drop" /></td>
+				<td><input type="text" class="simpleTextSecondaryCriteria" /></td>
+				<td>within</td>
+				<td><input type="text" class="simpleTextProximity drop" /></td>
+			</tr>
+			<tr>
+				<td>ordering the results by</td>
+				<td><input type="text" class="simpleTextSortByRelevance drop" /></td>
+				<td colspan="3">
+					<span  style="float: right">
+						<input type="button" class="simpleTextClear" value="Reset" />
+						<input type="button" class="simpleTextSearchButton" value="Search" />
+					</span>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="5"><hr /></td>
+			</tr>
+			<tr>
+				<td style="vertical-align: top">Query syntax</td>
+				<td colspan="4"><textarea class="simpleTextQuerySyntax" cols="45"></textarea></td>
+			</tr>
+		</table>
+			
 		
 	</fieldset>
 
@@ -89,7 +107,7 @@
 				</td>
 			</tr>
 			<tr>
-				<td colspan="4"><hr />
+				<td colspan="4"><hr /></td>
 			</tr>
 			<tr>
 				<td colspan="4">
@@ -126,7 +144,7 @@
 				</td>
 			</tr>
 			<tr>
-				<td colspan="4"><hr />
+				<td colspan="4"><hr /></td>
 			</tr>
 			<tr>
 				<td colspan="4">
@@ -149,17 +167,18 @@
 				<td>Sort results by relevance</td>
 				<td><input type="checkbox" class="textSortByRelevance"
 					size="15" /></td>
+				<td colspan="2"><span style="float:right"><input type="button"
+					class="textClearButton" value="Clear" />
+					<input type="button"
+					class="textSearchButton" value="Search" /></span>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="4"><hr /></td>
 			</tr>
 			<tr>
 				<td>Query syntax</td>
 				<td colspan="3"><textarea class="textQuerySyntax" cols="45"></textarea></td>
-			</tr>
-			<tr>
-				<td colspan="3">&nbsp;</td>
-				<td colspan="1" style="float: right"><input type="button"
-					class="textClearButton" value="Clear" />
-				<input type="button"
-					class="textSearchButton" value="Search" /></td>
 			</tr>
 		</table>
 	</fieldset>
@@ -193,16 +212,26 @@
 
 	<fieldset>
 		<legend>Subject search</legend>
-		<span class="passageButtons"> 
-			<input type="button" class="subjectClear" value="Clear" title="Clears the search criteria" />
-		<input type="button" class="subjectSearch" value="Search" title="This will search for subjects matching the selected criteria" />
-		</span>
-		<table>
+		<table class="subjectSearchTable" style="width: 100%">
 			<tr>
 				<td>Subject</td>
 				<td><input type="text" class="subjectText" /></td>
+				<td>		
+					<span class="passageButtons"> 
+						<input type="button" class="subjectClear" value="Clear" title="Clears the search criteria" />
+						<input type="button" class="subjectSearch" value="Search" title="This will search for subjects matching the selected criteria" />
+					</span>
+				</td>
 			</tr>
+			<tr>
+				<td colspan="3"><hr /></td>
+			</tr>
+			<tr>
+				<td>Query syntax</td>
+				<td colspan="3"><input type="text" class="subjectQuerySyntax" /></td>
 		</table>
+		
+		
 	</fieldset>
 
 

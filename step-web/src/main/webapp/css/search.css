@@ -70,6 +70,13 @@
 	color: #696;
 }
 
+.drop {
+	background-image: url('../images/downarrow.png');
+	background-repeat: no-repeat;
+	background-position: right center;
+	border: solid thin;
+}
+
 .simpleTextFields input.drop:hover {
 	cursor: pointer;
 }
@@ -126,3 +133,22 @@ li.subjectHeading {
 .advancedSearch table {
 	width: 12.5%;
 }
+
+
+/*******************************************/
+/* Subject search box                 */
+/*******************************************/
+.subjectText, .subjectQuerySyntax {
+	width: 100%;
+}
+
+/*******************************************/
+/* Query Syntax search box                 */
+/*******************************************/
+.searchQuerySyntax {
+	position: relative;
+	right: 0px;
+	top: 2px;
+	float: right;
+}
+

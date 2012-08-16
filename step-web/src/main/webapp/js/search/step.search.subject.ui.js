@@ -27,14 +27,23 @@
  * POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
 step.search.ui.subject = {
+        evaluateQuerySyntax : function(passageId) {
+           var query = "s=" + $(".subjectText", step.util.getPassageContainer(passageId)).val();
+           
+           step.state.subject.subjectQuerySyntax(passageId, query);
+           
+           return query;
+        }
 };
 
 $(document).ready(function() {
     var namespace = "subject";
     step.state.trackState([
                            ".subjectText",
+                           ".subjectQuerySyntax",
                            ], namespace);
 
+    step.util.ui.trackQuerySyntax(".subjectSearchTable", namespace);
    
     $(".subjectClear").click(function() {
         //  reset texts

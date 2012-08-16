@@ -126,7 +126,12 @@ step.util = {
                 
                 //re-evaluate query
                 var passageId = step.passage.getPassageId(this);
-                step.search.ui[namespace].evaluateQuerySyntax(passageId);
+                var syntax = step.search.ui[namespace].evaluateQuerySyntax(passageId);
+                
+                //also write it up the top
+                if(syntax) {
+                    $(".searchQuerySyntax", step.util.getPassageContainer(passageId)).val(syntax); 
+                }
             });  
         },
         

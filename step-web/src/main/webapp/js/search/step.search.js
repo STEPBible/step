@@ -45,6 +45,11 @@ step.search = {
             }
         }
     },
+    quick : {
+        search : function() {
+            console.log("Executing quick search");
+        },
+    },
     
     timeline : {
         reference : function(passageId) {
@@ -69,10 +74,19 @@ step.search = {
     subject : {
         search : function(passageId) {
             console.log("Subject search");
-            $.getSafe(SEARCH_SUBJECT, ['ESV', step.state.subject.subjectText(passageId)], function(results) {
+            
+            var query = step.state.subject.subjectText(passageId);
+            var highlightTerms = this._highlightingTerms(query);
+            
+            $.getSafe(SEARCH_SUBJECT, ['ESV', query], function(results) {
                 step.search._displayResults(results, passageId);
+                self._highlightResults(passageId, highlightTerms);
             });
         },
+        
+        _highlightingTerms : function(query) {
+            return query.substring(2).split(" ");
+        }
     },
     
     simpleText : {
@@ -86,7 +100,7 @@ step.search = {
     
     textual : {
         search : function(passageId){
-            console.log("Searching text...");
+            console.log("Advanced text search...");
             var query = $.trim(step.state.textual.textQuerySyntax(passageId));
             var ranked = step.state.textual.textSortByRelevance(passageId);
             
@@ -105,10 +119,10 @@ step.search = {
         
         _highlightingTerms : function(query) {
             var terms = [];
-            var termBase;
+            var termBase = query.substring(2);
             
             //remove range restrictions, -word and -"a phrase"
-            termBase = query.replace(/[+-]\[[^\]]*]/g, "");
+            termBase = termBase.replace(/[+-]\[[^\]]*]/g, "");
             termBase = termBase.replace(/-[a-zA-Z]+/g, "");
             termBase = termBase.replace(/-"[^"]+"/g, "");
             
@@ -162,11 +176,11 @@ step.search = {
     },
     
     _highlightResults : function(passageId, highlightTerms) {
-        if(highlightTerms == undefined) {
+        var verses = $(".searchResults", step.util.getPassageContent(passageId)).get(0);
+        if(highlightTerms == undefined || verses == undefined) {
             return;
         }
         
-        var verses = $(".searchResults", step.util.getPassageContent(passageId)).get(0);
         
         for(var i = 0; i < highlightTerms.length; i++) {
             var regex = new RegExp("\\b" + highlightTerms[i] + "\\b", "ig");

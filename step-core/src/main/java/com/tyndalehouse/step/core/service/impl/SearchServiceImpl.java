@@ -79,6 +79,7 @@ public class SearchServiceImpl implements SearchService {
     private final JSwordSearchService jswordSearch;
     private final JSwordPassageService jsword;
     private final TimelineService timeline;
+    private final String TEXT_SEARCH = "t=";
 
     /**
      * @param ebean the ebean server to carry out the search from
@@ -97,6 +98,10 @@ public class SearchServiceImpl implements SearchService {
 
     @Override
     public SearchResult search(final String version, final String query, final boolean ranked) {
+        // for text searches, we may have a prefix of t=
+        if (query.startsWith(this.TEXT_SEARCH)) {
+            return this.jswordSearch.search(version, query.substring(2), ranked);
+        }
         return this.jswordSearch.search(version, query, ranked);
     }
 

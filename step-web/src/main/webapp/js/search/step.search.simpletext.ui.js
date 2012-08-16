@@ -30,7 +30,7 @@ step.search.ui.simpleText = {
     evaluateQuerySyntax: function(passageId) {
         var passageContainer = step.util.getPassageContainer(passageId);
         
-        var query = "";
+        var query = "t=";
         
         var primaryType = $(".simpleTextTypePrimary", passageContainer).val();
         var primaryCriteria = $(".simpleTextCriteria", passageContainer).val();
@@ -47,14 +47,14 @@ step.search.ui.simpleText = {
         
         //add the restriction
         var restriction = step.state.simpleText.simpleTextScope(passageId);
-        query += step.search.ui.textual._evalTextRestriction(restriction, query);
+        query = step.search.ui.textual._evalTextRestriction(restriction, query);
 
         //eval first part of the criteria
         query = this._evalCriteria(primaryType, primaryCriteria, query);
 
         if(secondaryCriteria == null || $.trim(secondaryCriteria) == "") {
             step.state.simpleText.simpleTextQuerySyntax(passageId, query);
-            return;
+            return query;
         }
         
         var firstSpace = proximity.indexOf(' ');
@@ -73,6 +73,7 @@ step.search.ui.simpleText = {
         }
         
         step.state.simpleText.simpleTextQuerySyntax(passageId, query);
+        return query;
     },
     
     _evalCriteria : function(searchType, criteria, query) {
@@ -106,7 +107,8 @@ $(document).ready(function() {
                            ".simpleTextTypeSecondary",
                            ".simpleTextSecondaryCriteria",
                            ".simpleTextProximity",
-                           ".simpleTextSortByRelevance"
+                           ".simpleTextSortByRelevance",
+                           ".simpleTextQuerySyntax"
                            ], namespace, [step.search.ui.simpleText.restoreDefaults]);
 
     step.util.ui.trackQuerySyntax(".simpleTextFields", namespace);
@@ -128,7 +130,7 @@ $(document).ready(function() {
       step.util.ui.autocompleteSearch(".simpleTextProximity", step.defaults.search.textual.simpleTextProximities, true);
       step.util.ui.autocompleteSearch(".simpleTextSortByRelevance", step.defaults.search.textual.simpleTextSortBy, true);
       step.util.ui.autocompleteSearch(".simpleTextInclude", step.defaults.search.textual.simpleTextIncludes, true, function(currentElement, value) {
-          var proximity = $(currentElement).nextAll(".simpleTextProximity");
+          var proximity = $(currentElement).closest("table").find(".simpleTextProximity");
           if(value == 'include') {
               if(proximity.val() == 'the same verse') {
                   //reset

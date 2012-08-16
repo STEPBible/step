@@ -46,7 +46,12 @@ public enum XslConversionType {
     /**
      * identifies a text that requires outputs on multiple lines
      */
-    INTERLINEAR("interlinear.xsl");
+    INTERLINEAR("interlinear.xsl"),
+
+    /**
+     * Only outputs the headings that happen to be in the XML
+     */
+    HEADINGS_ONLY("headers-only.xsl");
 
     /**
      * indicates the xsl conversion file to use for this work

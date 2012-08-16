@@ -120,8 +120,9 @@ public interface JSwordPassageService {
      * 
      * @param bible the version to lookup the text from
      * @param range the key to the passage
+     * @param options a set of lookup options
      * @return an osis wrapper
      */
-    OsisWrapper peakOsisText(Book bible, Key range);
+    OsisWrapper peakOsisText(Book bible, Key range, LookupOption... options);
 
 }

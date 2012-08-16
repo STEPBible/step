@@ -69,10 +69,10 @@ step.search = {
     subject : {
         search : function(passageId) {
             console.log("Subject search");
-            $.getSafe(SEARCH_SUBJECT, [step.state.subject.subjectText(passageId)], function(results) {
+            $.getSafe(SEARCH_SUBJECT, ['ESV', step.state.subject.subjectText(passageId)], function(results) {
                 step.search._displayResults(results, passageId);
             });
-        }
+        },
     },
     
     simpleText : {
@@ -210,6 +210,26 @@ step.search = {
         });
         return results;
     },
+    
+    _displaySubjectResults : function(searchResults, passageId) {
+        var results = "<ul class='subjectSection'>";
+        
+        var headingsSearch = searchResults[0].headingsSearch;
+        var headingsResults = headingsSearch.results;
+        
+        for(var i = 0; i < headingsResults.length; i++) {
+            results += "<li class='subjectHeading'>";
+            results += "<span class='subjectSearchLink'>";
+            results += goToPassageArrow(true, headingsResults[i].key, "searchKeyPassageArrow");
+            results += headingsResults[i].key;
+            results += goToPassageArrow(false, headingsResults[i].key, "searchKeyPassageArrow");
+            results += "</span>";
+            results += headingsResults[i].preview;
+            results += "</li>";
+        }
+        
+        return results += "</ul>";
+    },
 
     _displayResults : function(searchQueryResults, passageId) {
         var results = "";
@@ -219,7 +239,10 @@ step.search = {
             results += "<span class='notApplicable'>No search results were found</span>";
         } else if(searchQueryResults.query.indexOf("timeline") == 0) {
             results += this._displayTimelineEventResults(searchResults, passageId);
-        } else {
+        } else if(searchQueryResults.query.indexOf("subject") == 0) {
+            results += this._displaySubjectResults(searchResults, passageId);
+        }
+        else {
             results += "<table class='searchResults'>";
             results += this._displayPassageResults(searchResults, passageId);
             results += "</table>";

@@ -88,6 +88,8 @@ public enum LookupOption {
     /** not available to the UI */
     CHAPTER_VERSE("CVNum", null),
 
+    HEADINGS_ONLY("HeadingsOnly", XslConversionType.HEADINGS_ONLY),
+
     /**
      * Whether to hide the XGen OSIS elements
      */

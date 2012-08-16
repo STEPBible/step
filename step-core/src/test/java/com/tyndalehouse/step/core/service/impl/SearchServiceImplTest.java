@@ -8,12 +8,16 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.tyndalehouse.step.core.data.DataDrivenTestExtension;
 import com.tyndalehouse.step.core.data.entities.LexiconDefinition;
 import com.tyndalehouse.step.core.data.entities.ScriptureReference;
 import com.tyndalehouse.step.core.data.entities.timeline.TimelineEvent;
+import com.tyndalehouse.step.core.models.search.SearchEntry;
 import com.tyndalehouse.step.core.models.search.SearchResult;
+import com.tyndalehouse.step.core.models.search.SubjectHeadingSearchEntry;
 import com.tyndalehouse.step.core.models.search.TimelineEventSearchEntry;
 import com.tyndalehouse.step.core.models.search.VerseSearchEntry;
 import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
@@ -28,6 +32,7 @@ import com.tyndalehouse.step.core.service.jsword.impl.JSwordVersificationService
  * 
  */
 public class SearchServiceImplTest extends DataDrivenTestExtension {
+    private static final Logger LOG = LoggerFactory.getLogger(SearchServiceImplTest.class);
     private SearchServiceImpl si;
 
     /**
@@ -40,6 +45,20 @@ public class SearchServiceImplTest extends DataDrivenTestExtension {
         this.si = new SearchServiceImpl(getEbean(),
                 new JSwordSearchServiceImpl(versificationService, jsword), jsword, null);
 
+    }
+
+    /** test exact strong match */
+    @Test
+    public void testSubjectSearch() {
+        final SearchResult searchSubject = this.si.searchSubject("ESV", "elijah");
+
+        final List<SearchEntry> entries = ((SubjectHeadingSearchEntry) searchSubject.getResults().get(0))
+                .getHeadingsSearch().getResults();
+        for (final SearchEntry e : entries) {
+            LOG.debug(((VerseSearchEntry) e).getPreview());
+
+        }
+        assertTrue(searchSubject.getResults().size() > 0);
     }
 
     /** test exact strong match */

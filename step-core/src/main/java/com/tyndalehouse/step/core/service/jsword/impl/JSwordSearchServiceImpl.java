@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
+import com.tyndalehouse.step.core.models.LookupOption;
 import com.tyndalehouse.step.core.models.OsisWrapper;
 import com.tyndalehouse.step.core.models.search.SearchEntry;
 import com.tyndalehouse.step.core.models.search.SearchResult;
@@ -53,7 +54,8 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
     }
 
     @Override
-    public SearchResult search(final String version, final String query, final boolean ranked) {
+    public SearchResult search(final String version, final String query, final boolean ranked,
+            final LookupOption... options) {
         final long start = System.currentTimeMillis();
 
         final DefaultSearchModifier modifier = new DefaultSearchModifier();
@@ -81,7 +83,7 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
             LOGGER.debug("Trimmed down to [{}].", results.getCardinality());
 
             final long startRefs = System.currentTimeMillis();
-            final List<SearchEntry> resultPassages = getPassagesForResults(bible, results);
+            final List<SearchEntry> resultPassages = getPassagesForResults(bible, results, options);
             final long endRefs = System.currentTimeMillis();
 
             return getSearchResult(query, start, startRefs, endRefs, resultPassages);
@@ -120,9 +122,11 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
      * 
      * @param bible the bible under examination
      * @param results the list of results
+     * @param options to use to lookup the right parameterization of the text
      * @return the list of entries found
      */
-    private List<SearchEntry> getPassagesForResults(final Book bible, final Key results) {
+    private List<SearchEntry> getPassagesForResults(final Book bible, final Key results,
+            final LookupOption... options) {
         final List<SearchEntry> resultPassages = new ArrayList<SearchEntry>();
         final Iterator<Key> iterator = ((Passage) results).iterator();
 
@@ -131,7 +135,7 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
 
             // range.blur(5, RestrictionType.NONE);
 
-            final OsisWrapper peakOsisText = this.jsword.peakOsisText(bible, passage);
+            final OsisWrapper peakOsisText = this.jsword.peakOsisText(bible, passage, options);
             resultPassages.add(new VerseSearchEntry(peakOsisText.getReference(), peakOsisText.getValue()));
         }
         return resultPassages;

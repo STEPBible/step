@@ -1,6 +1,7 @@
 package com.tyndalehouse.step.core.models.search;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -85,4 +86,16 @@ public class SearchResult implements Serializable {
         this.timeTookTotal = timeTookTotal;
     }
 
+    /**
+     * Adds a search entry to the list of results
+     * 
+     * @param result result to be added
+     */
+    public void addEntry(final SubjectHeadingSearchEntry result) {
+        if (this.results == null) {
+            this.results = new ArrayList<SearchEntry>();
+        }
+
+        this.results.add(result);
+    }
 }

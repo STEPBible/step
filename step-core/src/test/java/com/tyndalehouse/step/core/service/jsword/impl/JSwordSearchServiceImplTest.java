@@ -36,7 +36,7 @@ public class JSwordSearchServiceImplTest {
      */
     @Test
     public void testMusings() {
-        final List<SearchEntry> results = this.search.search("ESV", "heading:*water*", false).getResults();
+        final List<SearchEntry> results = this.search.search("ESV", "Melchizedc~", false).getResults();
         for (int i = 0; i < 10 || i < results.size(); i++) {
             LOGGER.debug(((VerseSearchEntry) results.get(i)).getKey());
         }

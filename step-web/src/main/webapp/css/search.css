@@ -75,6 +75,22 @@
 }
 
 
+ul.subjectSection {
+	padding-left: 0px;
+}
+
+li.subjectHeading {
+	margin-top: 3px;
+	list-style: none;
+	margin-left: 0px;
+	
+}
+
+.subjectSearchLink {
+	float: right;
+}
+
+
 /*******************************************/
 /* Advanced search box                     */
 /*******************************************/

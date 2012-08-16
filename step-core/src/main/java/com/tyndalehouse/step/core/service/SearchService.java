@@ -93,7 +93,8 @@ public interface SearchService {
      * Searches for the subject
      * 
      * @param subject the subject that we are looking for
+     * @param version the version to use to lookup the headings
      * @return a search result
      */
-    SearchResult searchSubject(String subject);
+    SearchResult searchSubject(final String version, String subject);
 }

@@ -32,6 +32,7 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.service.impl;
 
+import static com.tyndalehouse.step.core.models.LookupOption.HEADINGS_ONLY;
 import static com.tyndalehouse.step.core.service.impl.VocabularyServiceImpl.padStrongNumber;
 import static java.lang.String.format;
 
@@ -54,12 +55,14 @@ import com.tyndalehouse.step.core.data.entities.timeline.TimelineEvent;
 import com.tyndalehouse.step.core.models.OsisWrapper;
 import com.tyndalehouse.step.core.models.search.SearchEntry;
 import com.tyndalehouse.step.core.models.search.SearchResult;
+import com.tyndalehouse.step.core.models.search.SubjectHeadingSearchEntry;
 import com.tyndalehouse.step.core.models.search.TimelineEventSearchEntry;
 import com.tyndalehouse.step.core.models.search.VerseSearchEntry;
 import com.tyndalehouse.step.core.service.SearchService;
 import com.tyndalehouse.step.core.service.TimelineService;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import com.tyndalehouse.step.core.service.jsword.JSwordSearchService;
+import com.tyndalehouse.step.core.utils.StringUtils;
 
 /**
  * A federated search service implementation. see {@link SearchService}
@@ -105,11 +108,32 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
-    public SearchResult searchSubject(final String subject) {
+    public SearchResult searchSubject(final String version, final String subject) {
         // assume subject is partial
-        final String query = String.format("%s:*%s*", LuceneIndex.FIELD_HEADING, subject);
+        final String[] keys = StringUtils.split(subject);
+        final StringBuilder query = new StringBuilder();
 
-        return this.jswordSearch.search("ESV", query, false);
+        for (int i = 0; i < keys.length; i++) {
+            query.append(LuceneIndex.FIELD_HEADING);
+            query.append(':');
+            query.append(keys[i]);
+
+            if (i + 1 < keys.length) {
+                query.append(" AND ");
+            }
+        }
+
+        final SearchResult headingsSearch = this.jswordSearch.search(version, query.toString(), false,
+                HEADINGS_ONLY);
+
+        final SubjectHeadingSearchEntry headings = new SubjectHeadingSearchEntry();
+        headings.setHeadingsSearch(headingsSearch);
+
+        final SearchResult sr = new SearchResult();
+        sr.setQuery("subject:" + query);
+        sr.addEntry(headings);
+
+        return sr;
     }
 
     @Override

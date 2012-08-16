@@ -44,6 +44,7 @@ import static org.crosswire.common.xml.XMLUtil.writeToString;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -246,8 +247,9 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
     }
 
     @Override
-    public OsisWrapper peakOsisText(final Book bible, final Key key) {
+    public OsisWrapper peakOsisText(final Book bible, final Key key, final LookupOption... options) {
         final List<LookupOption> lookupOptions = new ArrayList<LookupOption>();
+        Collections.addAll(lookupOptions, options);
         lookupOptions.add(LookupOption.HIDE_XGEN);
 
         final BookData bookData = new BookData(bible, key);

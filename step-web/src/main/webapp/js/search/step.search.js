@@ -28,6 +28,9 @@
  ******************************************************************************/
 
 step.search = {
+        
+        
+        
     tagging : {
         exact : function(passageId) {
             this._doStrongSearch(passageId, SEARCH_STRONG_EXACT);
@@ -75,12 +78,12 @@ step.search = {
         search : function(passageId) {
             console.log("Subject search");
             
-            var query = step.state.subject.subjectText(passageId);
+            var query = step.state.subject.subjectQuerySyntax(passageId);
             var highlightTerms = this._highlightingTerms(query);
             
             $.getSafe(SEARCH_SUBJECT, ['ESV', query], function(results) {
                 step.search._displayResults(results, passageId);
-                self._highlightResults(passageId, highlightTerms);
+                step.search._highlightResults(passageId, highlightTerms);
             });
         },
         
@@ -153,16 +156,6 @@ step.search = {
             return terms;
         }
     },
-    
-    handleSearch : function(element, highlightTerms) {
-        var passageId = step.passage.getPassageId(element);
-        var passageContainer = step.util.getPassageContainer(passageId);
-        var passageContent = step.util.getPassageContent(passageId);
-        var query = $(".versionSearchBox", passageContainer).val();
-        if (step.util.raiseErrorIfBlank(query, "Please provide a query")) {
-            this._doSearch(SEARCH_DEFAULT, passageId, query, passageContent);
-        }
-    },
 
     _doSearch : function(searchType, passageId, query, ranked, highlightTerms) {
         var self = this;
@@ -198,7 +191,7 @@ step.search = {
                 aTarget = $.map(item.verses, function(item, i) { return item.key; }).join();
                 
                 resultItem += "<table class='masterSearchTable'>";
-                resultItem += self._displayPassageResults(item.verses, passageId);
+                resultItem += self._displayPassageResults(item.verses, passageId, false);
                 resultItem += "</table>";
             }
             
@@ -211,13 +204,18 @@ step.search = {
         return resultHtml;
     },
     
-    _displayPassageResults : function(searchResults, passageId) {
+    _displayPassageResults : function(searchResults, passageId, goToChapter) {
+        if(goToChapter == undefined) {
+            goToChapter = true;
+        }
+        
+        
         var results = "";
         $.each(searchResults, function(i, item) {
             results += "<tr class='searchResultRow'><td class='searchResultKey'> ";
-            results += goToPassageArrow(true, item.key, "searchKeyPassageArrow");
+            results += goToPassageArrow(true, item.key, "searchKeyPassageArrow", goToChapter);
             results += item.key;
-            results += goToPassageArrow(false, item.key, "searchKeyPassageArrow");
+            results += goToPassageArrow(false, item.key, "searchKeyPassageArrow", goToChapter);
             results += "</td><td>";
             results += item.preview;
             results += "</td></tr>";
@@ -226,7 +224,7 @@ step.search = {
     },
     
     _displaySubjectResults : function(searchResults, passageId) {
-        var results = "<ul class='subjectSection'>";
+        var results = "<ul class='subjectSection searchResults'>";
         
         var headingsSearch = searchResults[0].headingsSearch;
         var headingsResults = headingsSearch.results;
@@ -234,9 +232,9 @@ step.search = {
         for(var i = 0; i < headingsResults.length; i++) {
             results += "<li class='subjectHeading'>";
             results += "<span class='subjectSearchLink'>";
-            results += goToPassageArrow(true, headingsResults[i].key, "searchKeyPassageArrow");
+            results += goToPassageArrow(true, headingsResults[i].key, "searchKeyPassageArrow", true);
             results += headingsResults[i].key;
-            results += goToPassageArrow(false, headingsResults[i].key, "searchKeyPassageArrow");
+            results += goToPassageArrow(false, headingsResults[i].key, "searchKeyPassageArrow", true);
             results += "</span>";
             results += headingsResults[i].preview;
             results += "</li>";

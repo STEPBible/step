@@ -114,8 +114,10 @@ public class SearchServiceImpl implements SearchService {
 
     @Override
     public SearchResult searchSubject(final String version, final String subject) {
+        final String parsedSubject = subject.startsWith("s=") ? subject.substring(2) : subject;
+
         // assume subject is partial
-        final String[] keys = StringUtils.split(subject);
+        final String[] keys = StringUtils.split(parsedSubject);
         final StringBuilder query = new StringBuilder();
 
         for (int i = 0; i < keys.length; i++) {

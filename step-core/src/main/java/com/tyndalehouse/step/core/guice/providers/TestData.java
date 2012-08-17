@@ -89,7 +89,7 @@ public class TestData {
         final User u = getUser();
         createBookmarks(u);
         createHistory(u);
-        loadDefaultJSwordModules(coreModules);
+        // loadDefaultJSwordModules(coreModules);
         loader.init();
     }
 

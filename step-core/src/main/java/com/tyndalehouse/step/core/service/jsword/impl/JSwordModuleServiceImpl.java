@@ -86,7 +86,8 @@ public class JSwordModuleServiceImpl implements JSwordModuleService {
         for (final Book b : books) {
             if (IndexStatus.UNDONE.equals(b.getIndexStatus())) {
                 LOGGER.info("Indexing [{}]", b.getInitials());
-                IndexManagerFactory.getIndexManager().scheduleIndexCreation(b);
+                // TODO
+                // IndexManagerFactory.getIndexManager().scheduleIndexCreation(b);
             }
         }
     }

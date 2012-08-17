@@ -393,21 +393,39 @@ function expandSelection(range) {
 	} 
 };
 
-function goToPassageArrow(isLeft, ref, classes) {
-	if(isLeft) {
+function goToPassageArrow(isLeft, ref, classes, goToChapter) {
+    if(goToChapter != true) {
+        goToChapter = false;
+    }
+    
+    if(isLeft) {
 		var text = "<a class='ui-icon ui-icon-arrowthick-1-w passage-arrow ";
 		
 		if(classes) {
 			text += classes;
 		}
-		return text + "' href='#' onclick='step.state.passage.reference(0, \""+ ref + "\");'>&nbsp;</a>";
+		return text + "' href='#' onclick='passageArrowTrigger(0, \""+ ref + "\", " + goToChapter +");'>&nbsp;</a>";
 	} else {
 		var text = "<a class='ui-icon ui-icon-arrowthick-1-e passage-arrow ";
 		if(classes) {
 			text += classes;
 		}
-		return text + "' href='#' onclick='step.state.passage.reference(1, \""+ ref + "\");'>&nbsp;</a>";
+		return text + "' href='#' onclick='passageArrowTrigger(1, \""+ ref + "\", " + goToChapter +");'>&nbsp;</a>";
 	}
+};
+
+
+function passageArrowTrigger(passageId, ref, goToChapter) {
+    if(goToChapter) {
+        //true value, so get the next reference
+        $.getSafe(BIBLE_GET_NEXT_CHAPTER, [ref, step.state.passage.version(passageId)], function(newChapterRef) {
+            step.state.passage.reference(passageId, newChapterRef);
+            
+            //TODO - GO TO VERSE
+        });
+    } else {
+        step.state.passage.reference(passageId, ref);
+    }
 };
 
 

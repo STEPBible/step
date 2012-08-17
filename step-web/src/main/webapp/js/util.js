@@ -139,6 +139,86 @@ step.util = {
             if(force == true || force == undefined || evalFunction(passageId) == null || evalFunction(passageId) == "") {
                 evalFunction(passageId, defaultValue);
             }
+        },
+        
+        initSearchToolbar : function() {
+//            var toolbar = $(".searchToolbar");
+            
+            $(".moreSearchContext").button({
+                text: false,
+                icons: {
+                    primary: "ui-icon-plusthick"
+                }
+            }).click(function() {
+                var currentContext = $(this).siblings(".searchContext", this);
+                var currentContextValue = parseInt(currentContext.val());
+                var newContext = currentContextValue + 1;
+                currentContext.val(newContext);
+                
+                currentContext.trigger('change');
+                
+                if(newContext != currentContextValue) {
+                    step.state._fireStateChanged(step.passage.getPassageId(this));
+                }
+            });
+            
+            $(".lessSearchContext").button({
+                text: false,
+                icons: {
+                    primary: "ui-icon-minusthick"
+                }
+            }).click(function() {
+                var currentContext = $(this).siblings(".searchContext", this);
+                var currentContextValue = parseInt(currentContext.val());
+                var newContext = currentContextValue - 1;
+                currentContext.val(newContext > 0 ? newContext : 0);
+                
+                currentContext.trigger('change');
+                if(newContext != currentContextValue) {
+                    step.state._fireStateChanged(step.passage.getPassageId(this));
+                }
+            });
+            
+            $(".concordanceFormat").button({
+                text: false,
+                icons: {
+                    primary: "ui-icon-grip-dotted-vertical"
+                }
+            });
+            
+            $(".refineSearch").button({
+                text: false,
+                icons: {
+                    primary: "ui-icon-pencil"
+                }
+            });
+            
+            
+            $(".showSearchCriteria").button({
+                text: false,
+                icons: {
+                    primary: "ui-icon-circle-triangle-s"
+                }
+            }).click(function() {
+                $(this).parent().find(".hideSearchCriteria").show();
+                $(this).hide();
+                $(this).closest(".searchToolbar").prev().show('blind', {direction: 'vertical'}, 500, function() { refreshLayout(); });
+            }).hide();
+            
+            
+
+            $(".hideSearchCriteria").button({
+                text : false,
+                icons : {
+                    primary : "ui-icon-circle-triangle-n"
+                }
+            }).click(function() {
+                $(this).parent().find(".showSearchCriteria").show();
+                $(this).hide();
+                $(this).closest(".searchToolbar").prev().hide('blind', {direction: 'vertical'}, 500, function() { refreshLayout(); });
+            });
+            
+            $(".searchToolbarButtonSets").buttonset();
         }
     }
 };
@@ -255,13 +335,17 @@ function refreshWaitStatus() {
 		    if($.isFunction(args)) {
 		        userFunction = args;
 		    } else {
-                for(var i = 0; i < args.length; i++) {
-                    url += args[i];
-                    
-                    if(i < args.length -1) {
-                        url += "/";
+		        if(args == undefined) {
+		            args = [];
+		        } else {
+                    for(var i = 0; i < args.length; i++) {
+                        url += args[i];
+                        
+                        if(i < args.length -1) {
+                            url += "/";
+                        }
                     }
-                }
+		        }
 		    }
 		    
 		    outstandingRequests++;

@@ -141,17 +141,22 @@ step.state = {
             step.state.original.restore(i);
             this._showRelevantFieldSet(i);
         }
+        
+        step.util.ui.initSearchToolbar();
     },
 
     _showRelevantFieldSet : function(passageId) {
         var passageContainer = step.util.getPassageContainer(passageId);
-
         $(".advancedSearch fieldset", passageContainer).hide();
+
         var option = $("a[name ^= 'SEARCH_']:has(img.selectingTick)", passageContainer);
         var optionName = option.text();
+        this._showFieldSet(passageContainer, optionName);
+    },
+    
+    _showFieldSet : function(passageContainer, optionName) {
         var targetFieldset = $(".advancedSearch legend:contains('" + optionName + "')", passageContainer).parent();
         targetFieldset.show();
-
     },
 
     _fireStateChanged : function(passageId) {

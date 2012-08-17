@@ -52,10 +52,11 @@ public interface SearchService {
     /**
      * @param version the initials of the book to search through
      * @param searchQuery the raw search query
-     * @param ranked TODO
+     * @param ranked whether to order by ranking or bible
+     * @param context the amount of context given to each search result
      * @return the list of search results
      */
-    SearchResult search(String version, String searchQuery, boolean ranked);
+    SearchResult search(String version, String searchQuery, boolean ranked, int context);
 
     /**
      * @param version the initials of the book to search through

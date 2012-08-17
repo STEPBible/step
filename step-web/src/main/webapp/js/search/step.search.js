@@ -79,8 +79,8 @@ step.search = {
             console.log("Subject search");
             
             var query = step.state.subject.subjectQuerySyntax(passageId);
-            var highlightTerms = this._highlightingTerms(query);
             
+            var highlightTerms = this._highlightingTerms(query);
             $.getSafe(SEARCH_SUBJECT, ['ESV', query], function(results) {
                 step.search._displayResults(results, passageId);
                 step.search._highlightResults(passageId, highlightTerms);
@@ -96,8 +96,9 @@ step.search = {
         search : function(passageId) {
             console.log("Simple text search...");
             var query = $.trim(step.state.simpleText.simpleTextQuerySyntax(passageId));
+            var context = step.state.simpleText.simpleTextSearchContext(passageId);
             var ranked = step.state.simpleText.simpleTextSortByRelevance(passageId);
-            step.search.textual._validateAndRunSearch(passageId, query, ranked);
+            step.search.textual._validateAndRunSearch(passageId, query, ranked, context);
         }
     },
     
@@ -110,13 +111,13 @@ step.search = {
             this._validateAndRunSearch(passageId, query, ranked);
         },
         
-        _validateAndRunSearch : function(passageId, query, ranked) {
+        _validateAndRunSearch : function(passageId, query, ranked, context) {
             if(step.util.isBlank(query)) {
                 return;
             }
             
             if (step.util.raiseErrorIfBlank(query, "Please fill in the form first")) {
-                step.search._doSearch(SEARCH_DEFAULT, passageId, query, ranked, this._highlightingTerms(query));
+                step.search._doSearch(SEARCH_DEFAULT, passageId, query, ranked, context, this._highlightingTerms(query));
             }
         },
         
@@ -157,10 +158,11 @@ step.search = {
         }
     },
 
-    _doSearch : function(searchType, passageId, query, ranked, highlightTerms) {
+    _doSearch : function(searchType, passageId, query, ranked, context, highlightTerms) {
         var self = this;
         var version = step.state.passage.version(passageId);
-        var args = ranked == null ? [version, query] : [version, query, ranked];
+        var contextArg = context == undefined || isNaN(context) ? 0 : context;
+        var args = ranked == null ? [version, query] : [version, query, ranked, contextArg];
         
         $.getSafe(searchType, args, function(searchQueryResults) {
             self._displayResults(searchQueryResults, passageId);
@@ -249,12 +251,14 @@ step.search = {
 
         if (searchResults.length == 0) {
             results += "<span class='notApplicable'>No search results were found</span>";
-        } else if(searchQueryResults.query.indexOf("timeline") == 0) {
+            return;
+        } 
+        
+        if(searchQueryResults.query.indexOf("timeline") == 0) {
             results += this._displayTimelineEventResults(searchResults, passageId);
         } else if(searchQueryResults.query.indexOf("subject") == 0) {
             results += this._displaySubjectResults(searchResults, passageId);
-        }
-        else {
+        } else {
             results += "<table class='searchResults'>";
             results += this._displayPassageResults(searchResults, passageId);
             results += "</table>";
@@ -265,6 +269,19 @@ step.search = {
             results += "<span class='notApplicable'>The maximum number of search results was reached. Please refine your search to see continue.</span>";
         }
         
-        $(step.util.getPassageContent(passageId)).html(results);
+        var passageContent = $(step.util.getPassageContent(passageId));
+        passageContent.html(results);
+
+//        this.showToolbar(passageId);
+    },
+    
+    showToolbar : function(passageId) {
+        var passageContainer = step.util.getPassageContainer(passageId);
+        step.state._showFieldSet(passageContainer, "Search toolbar");
     }
 };
+
+
+
+
+

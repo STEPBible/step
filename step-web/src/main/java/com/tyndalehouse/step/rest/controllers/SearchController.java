@@ -34,10 +34,12 @@ public class SearchController {
      * @param ranked true to indicate results should ranked in order of priority
      * @return the search result(s)
      */
-    public SearchResult search(final String version, final String searchQuery, final String ranked) {
+    public SearchResult search(final String version, final String searchQuery, final String ranked,
+            final String context) {
         notNull(version, "A version must be selected", USER_MISSING_FIELD);
         notNull(searchQuery, "Please enter a search query", USER_MISSING_FIELD);
-        return this.searchService.search(version, searchQuery, Boolean.parseBoolean(ranked));
+        return this.searchService.search(version, searchQuery, Boolean.parseBoolean(ranked),
+                Integer.parseInt(context));
     }
 
     /**

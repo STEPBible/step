@@ -97,12 +97,13 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
-    public SearchResult search(final String version, final String query, final boolean ranked) {
+    public SearchResult search(final String version, final String query, final boolean ranked,
+            final int context) {
         // for text searches, we may have a prefix of t=
         if (query.startsWith(this.TEXT_SEARCH)) {
-            return this.jswordSearch.search(version, query.substring(2), ranked);
+            return this.jswordSearch.search(version, query.substring(2), ranked, context);
         }
-        return this.jswordSearch.search(version, query, ranked);
+        return this.jswordSearch.search(version, query, ranked, context);
     }
 
     @Override
@@ -130,7 +131,7 @@ public class SearchServiceImpl implements SearchService {
             }
         }
 
-        final SearchResult headingsSearch = this.jswordSearch.search(version, query.toString(), false,
+        final SearchResult headingsSearch = this.jswordSearch.search(version, query.toString(), false, 1,
                 HEADINGS_ONLY);
 
         final SubjectHeadingSearchEntry headings = new SubjectHeadingSearchEntry();
@@ -230,7 +231,7 @@ public class SearchServiceImpl implements SearchService {
         }
 
         // TODO jsword bug - email 09-Jul-2012 - 19:11 GMT
-        return search(version, query.toString().trim().toLowerCase(), false);
+        return search(version, query.toString().trim().toLowerCase(), false, 1);
     }
 
     /**

@@ -108,7 +108,8 @@ $(document).ready(function() {
                            ".simpleTextSecondaryCriteria",
                            ".simpleTextProximity",
                            ".simpleTextSortByRelevance",
-                           ".simpleTextQuerySyntax"
+                           ".simpleTextQuerySyntax",
+                           ".simpleTextSearchContext"
                            ], namespace, [step.search.ui.simpleText.restoreDefaults]);
 
     step.util.ui.trackQuerySyntax(".simpleTextFields", namespace);

@@ -15,6 +15,10 @@ import org.crosswire.jsword.passage.Key;
 import org.crosswire.jsword.passage.Passage;
 import org.crosswire.jsword.passage.PassageTally;
 import org.crosswire.jsword.passage.PassageTally.Order;
+import org.crosswire.jsword.passage.RestrictionType;
+import org.crosswire.jsword.passage.Verse;
+import org.crosswire.jsword.passage.VerseRange;
+import org.crosswire.jsword.versification.Versification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,7 +40,7 @@ import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
  */
 @Singleton
 public class JSwordSearchServiceImpl implements JSwordSearchService {
-    private static final int MAX_RESULTS = 500;
+    private static final int MAX_RESULTS = 50;
     private static final Logger LOGGER = LoggerFactory.getLogger(JSwordSearchServiceImpl.class);
     private final JSwordVersificationService av11nService;
     private final JSwordPassageService jsword;
@@ -55,7 +59,7 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
 
     @Override
     public SearchResult search(final String version, final String query, final boolean ranked,
-            final LookupOption... options) {
+            final int context, final LookupOption... options) {
         final long start = System.currentTimeMillis();
 
         final DefaultSearchModifier modifier = new DefaultSearchModifier();
@@ -80,10 +84,11 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
             } else {
                 trimResults(results, MAX_RESULTS);
             }
+
             LOGGER.debug("Trimmed down to [{}].", results.getCardinality());
 
             final long startRefs = System.currentTimeMillis();
-            final List<SearchEntry> resultPassages = getPassagesForResults(bible, results, options);
+            final List<SearchEntry> resultPassages = getPassagesForResults(bible, results, context, options);
             final long endRefs = System.currentTimeMillis();
 
             return getSearchResult(query, start, startRefs, endRefs, resultPassages);
@@ -122,21 +127,33 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
      * 
      * @param bible the bible under examination
      * @param results the list of results
+     * @param context amount of context to add
      * @param options to use to lookup the right parameterization of the text
      * @return the list of entries found
      */
-    private List<SearchEntry> getPassagesForResults(final Book bible, final Key results,
+    private List<SearchEntry> getPassagesForResults(final Book bible, final Key results, final int context,
             final LookupOption... options) {
         final List<SearchEntry> resultPassages = new ArrayList<SearchEntry>();
         final Iterator<Key> iterator = ((Passage) results).iterator();
 
         while (iterator.hasNext()) {
-            final Key passage = iterator.next();
+            final Key verse = iterator.next();
+            final Key lookupKey;
 
-            // range.blur(5, RestrictionType.NONE);
+            if (verse instanceof Verse) {
+                // then we need to make it into a verse range
+                final Versification v11n = this.av11nService.getVersificationForVersion(bible);
+                final VerseRange vr = new VerseRange(v11n, (Verse) verse);
+                vr.blur(context, RestrictionType.NONE);
+                lookupKey = vr;
+            } else {
+                // assume blur is supported
+                verse.blur(context, RestrictionType.NONE);
+                lookupKey = verse;
+            }
 
-            final OsisWrapper peakOsisText = this.jsword.peakOsisText(bible, passage, options);
-            resultPassages.add(new VerseSearchEntry(peakOsisText.getReference(), peakOsisText.getValue()));
+            final OsisWrapper peakOsisText = this.jsword.peakOsisText(bible, lookupKey, options);
+            resultPassages.add(new VerseSearchEntry(verse.getName(), peakOsisText.getValue()));
         }
         return resultPassages;
     }

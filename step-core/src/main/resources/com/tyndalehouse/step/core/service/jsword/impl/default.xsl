@@ -349,7 +349,7 @@
           <a name="{@osisID}"><span class="verseNumber"><xsl:value-of select="$versenum"/></span></a>
         </xsl:when>
         <xsl:when test="$TinyVNum = 'true' and $Notes = 'false'">
-          <span class="verseNumber"><xsl:value-of select="$versenum"/></span>
+          <a name="{@osisID}"><span class="verseNumber"><xsl:value-of select="$versenum"/></span></a>
         </xsl:when>
         <xsl:when test="$TinyVNum = 'false' and $Notes = 'true'">
           <a name="{@osisID}">(<xsl:value-of select="$versenum"/>)</a>

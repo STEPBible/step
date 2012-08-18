@@ -51,6 +51,7 @@ import com.tyndalehouse.step.core.data.entities.User;
 import com.tyndalehouse.step.core.models.BibleVersion;
 import com.tyndalehouse.step.core.models.ClientSession;
 import com.tyndalehouse.step.core.models.EnrichedLookupOption;
+import com.tyndalehouse.step.core.models.KeyWrapper;
 import com.tyndalehouse.step.core.models.LookupOption;
 import com.tyndalehouse.step.core.models.OsisWrapper;
 import com.tyndalehouse.step.core.service.BibleInformationService;
@@ -242,7 +243,7 @@ public class BibleController {
      * @return the next reference
      */
     @Cacheable(true)
-    public String getNextChapter(final String reference, final String version) {
+    public KeyWrapper getNextChapter(final String reference, final String version) {
         return this.bibleInformation.getSiblingChapter(reference, version, false);
     }
 
@@ -254,8 +255,19 @@ public class BibleController {
      * @return the previous reference
      */
     @Cacheable(true)
-    public String getPreviousChapter(final String reference, final String version) {
+    public KeyWrapper getPreviousChapter(final String reference, final String version) {
         return this.bibleInformation.getSiblingChapter(reference, version, true);
     }
 
+    /**
+     * Retrieves key information
+     * 
+     * @param reference the reference that we are interested in
+     * @param version the version to lookup the key in
+     * @return the information about that particular key, e.g. OSIS-ID
+     */
+    @Cacheable(true)
+    public KeyWrapper getKeyInfo(final String reference, final String version) {
+        return this.bibleInformation.getKeyInfo(reference, version);
+    }
 }

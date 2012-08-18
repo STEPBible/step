@@ -76,6 +76,7 @@ import com.tyndalehouse.step.core.data.entities.ScriptureReference;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.exceptions.UserExceptionType;
 import com.tyndalehouse.step.core.exceptions.ValidationException;
+import com.tyndalehouse.step.core.models.KeyWrapper;
 import com.tyndalehouse.step.core.models.LookupOption;
 import com.tyndalehouse.step.core.models.OsisWrapper;
 import com.tyndalehouse.step.core.service.VocabularyService;
@@ -115,7 +116,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
     }
 
     @Override
-    public String getSiblingChapter(final String reference, final String version,
+    public KeyWrapper getSiblingChapter(final String reference, final String version,
             final boolean previousChapter) {
         // getting the next chapter
         final Book currentBook = Books.installed().getBook(version);
@@ -131,10 +132,23 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
             final String[] refParts = split(interestedRef, "\\.");
             final Key newKey = previousChapter ? getPreviousRef(refParts, key, currentBook) : getNextRef(
                     refParts, key, currentBook);
-            return newKey.getName();
+            return new KeyWrapper(newKey);
 
         } catch (final NoSuchKeyException e) {
             throw new StepInternalException("Cannot find next chapter", e);
+        }
+    }
+
+    @Override
+    public KeyWrapper getKeyInfo(final String reference, final String version) {
+        final Book currentBook = Books.installed().getBook(version);
+
+        try {
+            Key key;
+            key = currentBook.getKey(reference);
+            return new KeyWrapper(key);
+        } catch (final NoSuchKeyException e) {
+            throw new StepInternalException("Unable to resolve key: " + reference);
         }
     }
 

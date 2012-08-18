@@ -36,6 +36,7 @@ import java.util.List;
 
 import com.tyndalehouse.step.core.models.BibleVersion;
 import com.tyndalehouse.step.core.models.EnrichedLookupOption;
+import com.tyndalehouse.step.core.models.KeyWrapper;
 import com.tyndalehouse.step.core.models.LookupOption;
 import com.tyndalehouse.step.core.models.OsisWrapper;
 
@@ -137,7 +138,7 @@ public interface BibleInformationService {
      * @param previousChapter true for previous chapter, false for next chapter
      * @return the new reference to display on the user screen
      */
-    String getSiblingChapter(String reference, String version, boolean previousChapter);
+    KeyWrapper getSiblingChapter(String reference, String version, boolean previousChapter);
 
     /**
      * Indexes a book
@@ -152,5 +153,14 @@ public interface BibleInformationService {
      * @param initials initials of the book (e.g. KJV)
      */
     void reIndex(String initials);
+
+    /**
+     * Obtains information about a particular key, including its OSIS ID
+     * 
+     * @param reference the reference we are looking up
+     * @param version the initials of the version we are wanting to look up 'reference' in.
+     * @return a wrapper around the info retrieved
+     */
+    KeyWrapper getKeyInfo(String reference, String version);
 
 }

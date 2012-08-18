@@ -38,6 +38,7 @@ import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.passage.Key;
 
 import com.tyndalehouse.step.core.data.entities.ScriptureReference;
+import com.tyndalehouse.step.core.models.KeyWrapper;
 import com.tyndalehouse.step.core.models.LookupOption;
 import com.tyndalehouse.step.core.models.OsisWrapper;
 
@@ -85,7 +86,7 @@ public interface JSwordPassageService {
      * @param previousChapter true for previous chapter, false for next chapter
      * @return the new reference to display on the user screen
      */
-    String getSiblingChapter(String reference, String version, boolean previousChapter);
+    KeyWrapper getSiblingChapter(String reference, String version, boolean previousChapter);
 
     /**
      * Given a verse number, we lookup the verse in question and return it. The numberedVersion is assumed to
@@ -124,5 +125,14 @@ public interface JSwordPassageService {
      * @return an osis wrapper
      */
     OsisWrapper peakOsisText(Book bible, Key range, LookupOption... options);
+
+    /**
+     * Returns info about the key
+     * 
+     * @param reference the reference we are looking up
+     * @param version version to look up the key in
+     * @return the key with its osis ID
+     */
+    KeyWrapper getKeyInfo(String reference, String version);
 
 }

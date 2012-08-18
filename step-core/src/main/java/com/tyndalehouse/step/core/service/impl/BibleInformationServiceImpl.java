@@ -49,6 +49,7 @@ import org.slf4j.LoggerFactory;
 
 import com.tyndalehouse.step.core.models.BibleVersion;
 import com.tyndalehouse.step.core.models.EnrichedLookupOption;
+import com.tyndalehouse.step.core.models.KeyWrapper;
 import com.tyndalehouse.step.core.models.LookupOption;
 import com.tyndalehouse.step.core.models.OsisWrapper;
 import com.tyndalehouse.step.core.service.BibleInformationService;
@@ -206,9 +207,14 @@ public class BibleInformationServiceImpl implements BibleInformationService {
     }
 
     @Override
-    public String getSiblingChapter(final String reference, final String version,
+    public KeyWrapper getSiblingChapter(final String reference, final String version,
             final boolean previousChapter) {
         return this.jswordPassage.getSiblingChapter(reference, version, previousChapter);
+    }
+
+    @Override
+    public KeyWrapper getKeyInfo(final String reference, final String version) {
+        return this.jswordPassage.getKeyInfo(reference, version);
     }
 
     @Override

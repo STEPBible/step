@@ -504,11 +504,23 @@ function goToPassageArrow(isLeft, ref, classes, goToChapter) {
 function passageArrowTrigger(passageId, ref, goToChapter) {
     if(goToChapter) {
         //true value, so get the next reference
-        $.getSafe(BIBLE_GET_NEXT_CHAPTER, [ref, step.state.passage.version(passageId)], function(newChapterRef) {
-            step.state.passage.reference(passageId, newChapterRef);
-            
-            //TODO - GO TO VERSE
+        var version = step.state.passage.version(passageId);
+        
+        step.passage.callbacks[passageId].push(function() {
+            $.getSafe(BIBLE_GET_KEY_INFO, [ref, version], function(newRef) {
+                var passageContent = step.util.getPassageContent(passageId);
+                var link = $("a[name = '" + newRef.osisKeyId + "']", passageContent);
+                $(passageContent).scrollTop(link.position().top);
+                
+                $(link).closest(".verse").addClass("highlight");
+            });            
         });
+
+        
+        $.getSafe(BIBLE_GET_NEXT_CHAPTER, [ref, version], function(newChapterRef) {
+            step.state.passage.reference(passageId, newChapterRef.name);
+        });
+        
     } else {
         step.state.passage.reference(passageId, ref);
     }

@@ -45,7 +45,7 @@ step.passage.navigation = {
                     passage.scrollTop(scroll);
                 });
                 
-                step.state.passage.reference(passageId, newReference);
+                step.state.passage.reference(passageId, newReference.name);
             });
         }
     },

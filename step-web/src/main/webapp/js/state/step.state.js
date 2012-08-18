@@ -199,8 +199,10 @@ step.state = {
         this._fireStateChangedAllButFirst(0);
     },
 
-    _storeAndRetrieveCookieState : function(passageId, key, obj, fireChange) {
+    _storeAndRetrieveCookieState : function(passageId, key, obj, fireChange, changeHandler) {
         var originalValue = $.cookie("step.passage." + passageId + "." + key);
+        var fired = false;
+        
         if (obj != null) {
             var newObj = obj;
             if ($.isArray(obj)) {
@@ -212,10 +214,15 @@ step.state = {
                 $.cookie("step.passage." + passageId + "." + key, obj);
                 if (fireChange == null || fireChange == true) {
                     step.state._fireStateChanged(passageId);
+                    fired = true;
                 }
 
                 // then return
-                return $.cookie("step.passage." + passageId + "." + key);
+                var storedValue = $.cookie("step.passage." + passageId + "." + key);
+                if(changeHandler) { 
+                    changeHandler(fired);
+                }
+                return storedValue;
             }
         }
 

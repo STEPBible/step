@@ -73,11 +73,15 @@ step.passage = {
             });
 
             // execute all callbacks
-            var items = step.passage.callbacks[passageId];
-            while (items.length != 0) {
-                items.pop()();
-            }
+            step.passage.executeCallbacks(passageId);
         });
+    },
+    
+    executeCallbacks : function(passageId) {
+        var items = step.passage.callbacks[passageId];
+        while (items.length != 0) {
+            items.pop()();
+        }
     },
 
     /* 2 queues of calls backs for passages */

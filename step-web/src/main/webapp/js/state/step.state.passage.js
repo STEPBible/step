@@ -78,7 +78,7 @@ step.state.passage = {
         
         // if we're in sync mode and passageId != -1, then we don't
         // accept any changes, we return reference of passage 0
-        var synchingPassage = this.syncMode()
+        var synchingPassage = this.syncMode();
         if(synchingPassage != -1 && synchingPassage != passageId) {
             if (reference) {
                 // ignore if reference passed in + do not fire state changes
@@ -104,7 +104,12 @@ step.state.passage = {
         if (reference) {
             $(".passageReference", step.util.getPassageContainer(passageId)).val(reference);
         }
-        return step.state._storeAndRetrieveCookieState(passageId, "reference", reference, fireChange);
+        return step.state._storeAndRetrieveCookieState(passageId, "reference", reference, fireChange, function(hasFired) {
+            if(!hasFired) {
+                //then exhaust all passage handlers
+                step.passage.executeCallbacks(passageId);
+            }
+        });
     },
 
     options : function(passageId, options, fireChange) {

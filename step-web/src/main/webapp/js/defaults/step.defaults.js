@@ -56,7 +56,7 @@ step.defaults = {
             simpleTextTypes : [ "one or more words", "all of the words", "the exact phrase", "words similar to", "words starting with"],
             simpleTextSecondaryTypes : [ "all of the words", "the exact phrase"],
             simpleTextIncludes : ["include", "exclude"],
-            simpleTextProximities : ["1 verse either side", "2 verses either side", "6 verses either side", "30 verses either size"],
+            simpleTextProximities : ["the same verse", "1 verse either side", "2 verses either side", "6 verses either side", "30 verses either size"],
             simpleTextSortBy : [ "relevance", " occurrence in the Bible text"]
             
         }

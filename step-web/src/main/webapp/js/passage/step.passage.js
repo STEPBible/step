@@ -63,8 +63,10 @@ step.passage = {
             step.state.passage.range(passageId, text.startRange, text.endRange, text.multipleRanges);
 
             // we get html back, so we insert into passage:
-            step.util.getPassageContent(passageId).html(text.value);
-
+            var passageContent = step.util.getPassageContent(passageId);
+            passageContent.html(text.value);
+            
+            
             // passage change was successful, so we let the rest of the UI know
             $.shout("passage-changed", {
                 passageId : passageId

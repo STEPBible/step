@@ -181,11 +181,9 @@ $(document).ready(function() {
                             ".textRestriction",
                             ".textRestrictionExclude",
                             ".textSortByRelevance",
-                            ".textQuerySyntax"
+                            ".textQuerySyntax",
+                            ".textSearchContext"
                            ], namespace);
-    
-    
-    
     
     step.util.ui.trackQuerySyntax(".textSearchTable", namespace);
     $(".textClearButton").click(function() {
@@ -206,8 +204,6 @@ $(document).ready(function() {
         step.state.textual.textCloseByIncludeAllWords(passageId, "");
         step.state.textual.textCloseBySimilarSpellings(passageId, "");
         step.state.textual.textCloseByWordsStarting(passageId, "");
-//        step.state.textual.textCloseByExcludeWords(passageId, "");
-//        step.state.textual.textCloseByExcludePhrase(passageId, "");
         step.state.textual.textCloseByIncludeRangedWords(passageId, "");
         step.state.textual.textCloseByWithinXWords(passageId, "");
         step.state.textual.textVerseProximity(passageId, "");

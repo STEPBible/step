@@ -376,7 +376,9 @@ function refreshWaitStatus() {
 					    step.util.raiseError(data.errorMessage);
 					}
 				} else {
-					userFunction(data);
+				    if(userFunction) {
+				        userFunction(data);
+				    }
 				}
 			});
 		}

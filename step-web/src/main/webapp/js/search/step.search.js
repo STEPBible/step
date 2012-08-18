@@ -106,9 +106,10 @@ step.search = {
         search : function(passageId){
             console.log("Advanced text search...");
             var query = $.trim(step.state.textual.textQuerySyntax(passageId));
+            var context = step.state.textual.textSearchContext(passageId);
             var ranked = step.state.textual.textSortByRelevance(passageId);
             
-            this._validateAndRunSearch(passageId, query, ranked);
+            this._validateAndRunSearch(passageId, query, ranked, context);
         },
         
         _validateAndRunSearch : function(passageId, query, ranked, context) {

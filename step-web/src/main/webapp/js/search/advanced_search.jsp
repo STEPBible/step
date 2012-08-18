@@ -61,20 +61,7 @@
 			</tr>
 		</table>
 
-		<div class="searchToolbar">
-				Bible version(s): <input type='text' class='searchVersions' />
-			
-			<span class="searchToolbarButtonSets">
-				<a href='#' class='moreSearchContext'>More context</a>
-				<a href='#' class='lessSearchContext'>Less context</a>
-				<input type='hidden' size='2' class='searchContext simpleTextSearchContext' value='0' readonly='true' />
-			
-				<a href='#' class='concordanceFormat'>Concordance view</a>
-				<a href='#' class='refineSearch'>Refine search</a>
-				<a href='#' class='showSearchCriteria'>Show search criteria</a>
-				<a href='#' class='hideSearchCriteria'>Hide search criteria</a>
-			</span>
-		</div>
+		<jsp:include page="search_toolbar.jsp?specificSearchContext=simpleTextSearchContext"  />
 		
 	</fieldset>
 
@@ -197,7 +184,12 @@
 				<td>Query syntax</td>
 				<td colspan="3"><textarea class="textQuerySyntax" cols="45"></textarea></td>
 			</tr>
+			<tr>
+				<td colspan="4"><hr /></td>
+			</tr>
 		</table>
+		
+		<jsp:include page="search_toolbar.jsp?specificSearchContext=textSearchContext" />
 	</fieldset>
 
 	<fieldset>

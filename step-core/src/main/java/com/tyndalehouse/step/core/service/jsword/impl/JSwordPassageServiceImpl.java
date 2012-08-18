@@ -358,6 +358,11 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
                 UserExceptionType.SERVICE_VALIDATION_ERROR);
         notNull(bookData.getKey(), "An internal error occurred", UserExceptionType.SERVICE_VALIDATION_ERROR);
 
+        // first check whether the key is contained in the book
+        if (!keyExistsInBook(bookData)) {
+            throw new StepInternalException("The specified reference does not exist in this Bible");
+        }
+
         try {
             final XslConversionType requiredTransformation = identifyStyleSheet(options);
 
@@ -417,6 +422,25 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
         } catch (final TransformerException e) {
             throw new StepInternalException(e.getMessage(), e);
         }
+    }
+
+    /**
+     * If the key exists in one of the book, returns true, otherwise false
+     * 
+     * @param bookData the book data containing all books and the key
+     * @return true if the key exists in one of the books
+     */
+    private boolean keyExistsInBook(final BookData bookData) {
+        final Book[] books = bookData.getBooks();
+
+        final Key key = bookData.getKey();
+        for (final Book b : books) {
+            if (b.contains(key)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

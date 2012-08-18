@@ -30,7 +30,8 @@ step.search.ui.simpleText = {
     evaluateQuerySyntax: function(passageId) {
         var passageContainer = step.util.getPassageContainer(passageId);
         
-        var query = "t=";
+        var query = "";
+        var prefix = "t=";
         
         var primaryType = $(".simpleTextTypePrimary", passageContainer).val();
         var primaryCriteria = $(".simpleTextCriteria", passageContainer).val();
@@ -47,33 +48,43 @@ step.search.ui.simpleText = {
         
         //add the restriction
         var restriction = step.state.simpleText.simpleTextScope(passageId);
-        query = step.search.ui.textual._evalTextRestriction(restriction, query);
+        var restrictionQuery = step.search.ui.textual._evalTextRestriction(restriction, query);
 
         //eval first part of the criteria
         query = this._evalCriteria(primaryType, primaryCriteria, query);
 
         if(secondaryCriteria == null || $.trim(secondaryCriteria) == "") {
-            step.state.simpleText.simpleTextQuerySyntax(passageId, query);
-            return query;
+            var finalQuery = prefix + restrictionQuery + query;
+            step.state.simpleText.simpleTextQuerySyntax(passageId, finalQuery);
+            return finalQuery;
         }
         
         var firstSpace = proximity.indexOf(' ');
-        var proximityRange = proximity.substring(0, firstSpace);
+        var proximityRange = proximity == step.defaults.search.textual.simpleTextProximities[0] ? "same" : proximity.substring(0, firstSpace);
 
         
         if(includeExclude == step.defaults.search.textual.simpleTextIncludes[0]) {
-            query += " ~" + proximityRange + " ";
+            if(!isNaN(proximityRange)) {
+                query += " ~" + proximityRange + " ";
+            } else {
+                //add brackets and AND
+                query = "(" + $.trim(query) + ") AND ";
+            }
+            
             query = this._evalCriteria(secondaryType, secondaryCriteria, query);
         } else if (includeExclude == step.defaults.search.textual.simpleTextIncludes[1]) {
             if(secondaryType == step.defaults.search.textual.simpleTextSecondaryTypes[0]) {
+                //excluding separate words
                 query += step.search.ui.textual._evalExcludeWord(secondaryCriteria);
             } else {
+                //excluding a phrase
                 query += step.search.ui.textual._evalExcludePhrase(secondaryCriteria);
             }
         }
         
-        step.state.simpleText.simpleTextQuerySyntax(passageId, query);
-        return query;
+        var finalQuery = prefix + restrictionQuery + query; 
+        step.state.simpleText.simpleTextQuerySyntax(passageId, finalQuery);
+        return finalQuery;
     },
     
     _evalCriteria : function(searchType, criteria, query) {
@@ -91,10 +102,30 @@ step.search.ui.simpleText = {
         step.util.ui.resetIfEmpty(passageId, force, step.state.simpleText.simpleTextTypePrimary, step.defaults.search.textual.simpleTextTypes[0]);
         step.util.ui.resetIfEmpty(passageId, force, step.state.simpleText.simpleTextScope, step.defaults.search.textual.availableRanges[0].value);
         step.util.ui.resetIfEmpty(passageId, force, step.state.simpleText.simpleTextInclude, step.defaults.search.textual.simpleTextIncludes[0]);
-        step.util.ui.resetIfEmpty(passageId, force, step.state.simpleText.simpleTextTypeSecondary, step.defaults.search.textual.simpleTextTypes[0]);
+        step.util.ui.resetIfEmpty(passageId, force, step.state.simpleText.simpleTextTypeSecondary, step.defaults.search.textual.simpleTextTypes[1]);
         step.util.ui.resetIfEmpty(passageId, force, step.state.simpleText.simpleTextProximity, step.defaults.search.textual.simpleTextProximities[0]);
         step.util.ui.resetIfEmpty(passageId, force, step.state.simpleText.simpleTextSortByRelevance, step.defaults.search.textual.simpleTextSortBy[0]);
     },
+    
+    restoreIncludeExclude : function(passageId) {
+        var passageContainer = step.util.getPassageContainer(passageId);
+        var include = $(".simpleTextInclude", passageContainer);
+        step.search.ui.simpleText.includeProximityChange(include, include.val());
+    },
+    
+    includeProximityChange : function(currentElement, value) {
+        var proximity = $(currentElement).closest("table").find(".simpleTextProximity");
+        if(value == 'include') {
+            if(proximity.val() == 'the same verse') {
+                //reset
+                proximity.val(step.defaults.search.textual.simpleTextProximities[0]);
+                proximity.attr('disabled', false);
+            }
+        } else if(value == 'exclude') {
+            proximity.val(step.defaults.search.textual.simpleTextProximities[0]);
+            proximity.attr('disabled', true);
+        }
+    }
 };
 
 $(document).ready(function() {
@@ -110,7 +141,7 @@ $(document).ready(function() {
                            ".simpleTextSortByRelevance",
                            ".simpleTextQuerySyntax",
                            ".simpleTextSearchContext"
-                           ], namespace, [step.search.ui.simpleText.restoreDefaults]);
+                           ], namespace, [step.search.ui.simpleText.restoreDefaults, step.search.ui.simpleText.restoreIncludeExclude]);
 
     step.util.ui.trackQuerySyntax(".simpleTextFields", namespace);
     $(".simpleTextClear").click(function() {
@@ -131,17 +162,7 @@ $(document).ready(function() {
       step.util.ui.autocompleteSearch(".simpleTextProximity", step.defaults.search.textual.simpleTextProximities, true);
       step.util.ui.autocompleteSearch(".simpleTextSortByRelevance", step.defaults.search.textual.simpleTextSortBy, true);
       step.util.ui.autocompleteSearch(".simpleTextInclude", step.defaults.search.textual.simpleTextIncludes, true, function(currentElement, value) {
-          var proximity = $(currentElement).closest("table").find(".simpleTextProximity");
-          if(value == 'include') {
-              if(proximity.val() == 'the same verse') {
-                  //reset
-                  proximity.val(step.defaults.search.textual.simpleTextProximities[0]);
-                  proximity.attr('disabled', false);
-              }
-          } else if(value == 'exclude') {
-              proximity.val('the same verse');
-              proximity.attr('disabled', true);
-          }
+          step.search.ui.simpleText.includeProximityChange(currentElement, value);
       });
 });
 

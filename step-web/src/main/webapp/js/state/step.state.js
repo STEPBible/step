@@ -224,8 +224,13 @@ step.state = {
                 }
                 return storedValue;
             }
+            
+            
         }
 
+        if(changeHandler) { 
+            changeHandler(fired);
+        }
         return originalValue;
     }
 };

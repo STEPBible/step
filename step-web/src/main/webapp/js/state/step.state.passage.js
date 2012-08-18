@@ -104,12 +104,18 @@ step.state.passage = {
         if (reference) {
             $(".passageReference", step.util.getPassageContainer(passageId)).val(reference);
         }
-        return step.state._storeAndRetrieveCookieState(passageId, "reference", reference, fireChange, function(hasFired) {
+
+        var callback = function(hasFired) {
             if(!hasFired) {
                 //then exhaust all passage handlers
                 step.passage.executeCallbacks(passageId);
             }
-        });
+        };
+        if(reference) {
+            return step.state._storeAndRetrieveCookieState(passageId, "reference", reference, fireChange, callback);
+        } else {
+            return step.state._storeAndRetrieveCookieState(passageId, "reference", reference, fireChange);
+        }
     },
 
     options : function(passageId, options, fireChange) {

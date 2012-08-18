@@ -510,8 +510,10 @@ function passageArrowTrigger(passageId, ref, goToChapter) {
             $.getSafe(BIBLE_GET_KEY_INFO, [ref, version], function(newRef) {
                 var passageContent = step.util.getPassageContent(passageId);
                 var link = $("a[name = '" + newRef.osisKeyId + "']", passageContent);
-                $(passageContent).scrollTop(link.position().top);
                 
+                
+                window.location.hash = newRef.osisKeyId;
+                $("*", passageContent).removeClass("highlight");
                 $(link).closest(".verse").addClass("highlight");
             });            
         });

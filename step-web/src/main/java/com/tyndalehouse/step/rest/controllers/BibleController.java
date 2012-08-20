@@ -260,6 +260,18 @@ public class BibleController {
     }
 
     /**
+     * Takes a reference and returns the chapter it is part of
+     * 
+     * @param reference the reference that we are interested in
+     * @param version the version to lookup the key in
+     * @return the new reference with full chapter
+     */
+    @Cacheable(true)
+    public KeyWrapper expandKeyToChapter(final String version, final String reference) {
+        return this.bibleInformation.expandKeyToChapter(version, reference);
+    }
+
+    /**
      * Retrieves key information
      * 
      * @param reference the reference that we are interested in

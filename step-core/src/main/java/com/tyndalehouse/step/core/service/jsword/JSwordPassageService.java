@@ -124,7 +124,7 @@ public interface JSwordPassageService {
      * @param options a set of lookup options
      * @return an osis wrapper
      */
-    OsisWrapper peakOsisText(Book bible, Key range, LookupOption... options);
+    OsisWrapper peakOsisText(Book bible, Key range, List<LookupOption> options);
 
     /**
      * Returns info about the key
@@ -135,4 +135,12 @@ public interface JSwordPassageService {
      */
     KeyWrapper getKeyInfo(String reference, String version);
 
+    /**
+     * Expands the current reference to the whole chapter it is contained by
+     * 
+     * @param version the book such as KJV, ESV
+     * @param reference the reference
+     * @return the new reference representing the whole chapter
+     */
+    KeyWrapper expandToChapter(String version, String reference);
 }

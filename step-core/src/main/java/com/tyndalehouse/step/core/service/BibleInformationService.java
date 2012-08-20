@@ -163,4 +163,13 @@ public interface BibleInformationService {
      */
     KeyWrapper getKeyInfo(String reference, String version);
 
+    /**
+     * Takes a reference and returns the chapter it is part of
+     * 
+     * @param reference the reference that we are interested in
+     * @param version the version to lookup the key in
+     * @return the new reference with full chapter
+     */
+    KeyWrapper expandKeyToChapter(String version, String reference);
+
 }

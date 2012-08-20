@@ -512,14 +512,32 @@ function passageArrowTrigger(passageId, ref, goToChapter) {
                 var link = $("a[name = '" + newRef.osisKeyId + "']", passageContent);
                 
                 
-                window.location.hash = newRef.osisKeyId;
+                console.log("link-offset-top", link.offset().top);
+                console.log("link-height", link.height());
+                console.log("offset-parent", link.offsetParent());
+                
+                var scroll = link.offset().top - passageContent.height();
+//                if(scroll < 0) {
+//                    scroll = 0;
+//                }
+                
+                var originalScrollTop = passageContent.scrollTop();
+                passageContent.animate({
+                    scrollTop : originalScrollTop + scroll
+                }, 500);
+                
+                
+                //window.location.hash = newRef.osisKeyId;
                 $("*", passageContent).removeClass("highlight");
                 $(link).closest(".verse").addClass("highlight");
+                
+                //also do so if we are looking at an interlinear-ed version
+                $(link).closest(".interlinear").find("*").addClass("highlight");
             });            
         });
 
         
-        $.getSafe(BIBLE_GET_NEXT_CHAPTER, [ref, version], function(newChapterRef) {
+        $.getSafe(BIBLE_EXPAND_TO_CHAPTER, [version, ref], function(newChapterRef) {
             step.state.passage.reference(passageId, newChapterRef.name);
         });
         

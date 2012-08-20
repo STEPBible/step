@@ -226,4 +226,9 @@ public class BibleInformationServiceImpl implements BibleInformationService {
     public void reIndex(final String initials) {
         this.jswordModule.reIndex(initials);
     }
+
+    @Override
+    public KeyWrapper expandKeyToChapter(final String version, final String reference) {
+        return this.jswordPassage.expandToChapter(version, reference);
+    }
 }

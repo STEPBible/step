@@ -44,7 +44,6 @@ import static org.crosswire.common.xml.XMLUtil.writeToString;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -244,6 +243,13 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
         return currentBook.getValidKey(format("%s.%s", bookName, chapterNumber));
     }
 
+    @Override
+    public KeyWrapper expandToChapter(final String version, final String reference) {
+        final Key k = Books.installed().getBook(version).getValidKey(reference);
+        k.blur(100, RestrictionType.CHAPTER);
+        return new KeyWrapper(k);
+    }
+
     /**
      * returns a valid key to the book, either the one specified in the newKeyName or the currentKey
      * 
@@ -261,13 +267,11 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
     }
 
     @Override
-    public OsisWrapper peakOsisText(final Book bible, final Key key, final LookupOption... options) {
-        final List<LookupOption> lookupOptions = new ArrayList<LookupOption>();
-        Collections.addAll(lookupOptions, options);
-        lookupOptions.add(LookupOption.HIDE_XGEN);
+    public OsisWrapper peakOsisText(final Book bible, final Key key, final List<LookupOption> options) {
+        options.add(LookupOption.HIDE_XGEN);
 
         final BookData bookData = new BookData(bible, key);
-        return getTextForBookData(lookupOptions, null, bookData);
+        return getTextForBookData(options, null, bookData);
     }
 
     @Override

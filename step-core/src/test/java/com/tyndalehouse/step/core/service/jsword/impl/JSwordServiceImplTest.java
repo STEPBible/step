@@ -47,6 +47,8 @@ import org.crosswire.jsword.book.BookException;
 import org.crosswire.jsword.book.Books;
 import org.crosswire.jsword.passage.Key;
 import org.crosswire.jsword.passage.NoSuchKeyException;
+import org.crosswire.jsword.passage.Verse;
+import org.crosswire.jsword.versification.BibleBook;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -69,6 +71,16 @@ import com.tyndalehouse.step.core.models.LookupOption;
  */
 public class JSwordServiceImplTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(JSwordServiceImplTest.class);
+
+    @Test
+    public void testExpandNoGap() {
+        final JSwordPassageServiceImpl jsi = new JSwordPassageServiceImpl(
+                new JSwordVersificationServiceImpl(), null, null);
+
+        final Key expandToFullChapter = jsi.expandToFullChapter("Ruth", "1", "22",
+                Books.installed().getBook("KJV"), new Verse(BibleBook.RUTH, 1, 22), 0);
+        LOGGER.debug(expandToFullChapter.getName());
+    }
 
     /**
      * tests what happens when we select interlinear

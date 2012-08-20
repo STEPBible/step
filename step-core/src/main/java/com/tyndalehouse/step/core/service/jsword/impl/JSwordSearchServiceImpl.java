@@ -1,6 +1,7 @@
 package com.tyndalehouse.step.core.service.jsword.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -88,7 +89,16 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
             LOGGER.debug("Trimmed down to [{}].", results.getCardinality());
 
             final long startRefs = System.currentTimeMillis();
-            final List<SearchEntry> resultPassages = getPassagesForResults(bible, results, context, options);
+
+            // if context > 0, then we need to add verse numbers:
+            final List<LookupOption> lookupOptions = new ArrayList<LookupOption>();
+            Collections.addAll(lookupOptions, options);
+            if (context > 0) {
+                lookupOptions.add(LookupOption.VERSE_NUMBERS);
+            }
+
+            final List<SearchEntry> resultPassages = getPassagesForResults(bible, results, context,
+                    lookupOptions);
             final long endRefs = System.currentTimeMillis();
 
             return getSearchResult(query, start, startRefs, endRefs, resultPassages);
@@ -132,7 +142,7 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
      * @return the list of entries found
      */
     private List<SearchEntry> getPassagesForResults(final Book bible, final Key results, final int context,
-            final LookupOption... options) {
+            final List<LookupOption> options) {
         final List<SearchEntry> resultPassages = new ArrayList<SearchEntry>();
         final Iterator<Key> iterator = ((Passage) results).iterator();
 
@@ -153,7 +163,7 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
             }
 
             final OsisWrapper peakOsisText = this.jsword.peakOsisText(bible, lookupKey, options);
-            resultPassages.add(new VerseSearchEntry(verse.getName(), peakOsisText.getValue()));
+            resultPassages.add(new VerseSearchEntry(peakOsisText.getReference(), peakOsisText.getValue()));
         }
         return resultPassages;
     }

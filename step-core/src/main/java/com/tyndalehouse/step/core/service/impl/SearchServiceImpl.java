@@ -231,7 +231,7 @@ public class SearchServiceImpl implements SearchService {
         }
 
         // TODO jsword bug - email 09-Jul-2012 - 19:11 GMT
-        return search(version, query.toString().trim().toLowerCase(), false, 1);
+        return search(version, query.toString().trim().toLowerCase(), false, 0);
     }
 
     /**

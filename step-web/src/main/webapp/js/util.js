@@ -184,6 +184,23 @@ step.util = {
                 icons: {
                     primary: "ui-icon-grip-dotted-vertical"
                 }
+            }).click(function() {
+                var terms = step.search.highlightTerms;
+                if(terms.length != 1) {
+                    step.util.raiseError("Concordance style is only available for single-term searches");
+                }
+                
+                var term = step.search.highlightTerms[0];
+                var searchResults = $(".searchResults", step.util.getPassageContainer(this));
+                $(".searchResultRow", searchResults).each(function(i, item) {
+                    var textValue = $(item).text();
+                    
+                    
+                    //find the highlights
+                    var concordanceMiddle = $("<span class='concordanceMiddleColumn'></span>").add($(".highlight", item));
+                    
+                    var row = $(item).html(concordanceMiddle);
+                });
             });
             
             $(".refineSearch").button({

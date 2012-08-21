@@ -174,14 +174,16 @@ step.search = {
     _highlightResults : function(passageId, highlightTerms) {
         var verses = $(".searchResults", step.util.getPassageContent(passageId)).get(0);
         if(highlightTerms == undefined || verses == undefined) {
+            step.search.highlightTerms = [];
             return;
         }
         
-        
+        step.search.highlightTerms = highlightTerms;
         for(var i = 0; i < highlightTerms.length; i++) {
             var regex = new RegExp("\\b" + highlightTerms[i] + "\\b", "ig");
             doHighlight(verses, "highlight", regex);
         }
+        
     },
     
     _displayTimelineEventResults : function(results, passageId) {
@@ -219,7 +221,7 @@ step.search = {
             results += goToPassageArrow(true, item.key, "searchKeyPassageArrow", goToChapter);
             results += item.key;
             results += goToPassageArrow(false, item.key, "searchKeyPassageArrow", goToChapter);
-            results += "</td><td>";
+            results += "</td><td class='searchResultRow'>";
             results += item.preview;
             results += "</td></tr>";
         });

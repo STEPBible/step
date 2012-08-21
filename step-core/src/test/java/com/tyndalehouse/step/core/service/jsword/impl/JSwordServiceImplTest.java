@@ -264,17 +264,17 @@ public class JSwordServiceImplTest {
                 new JSwordVersificationServiceImpl(), null, null);
 
         // previous chapter tests
-        assertEquals("Genesis 1", jsword.getSiblingChapter("Genesis 2", "KJV", true));
-        assertEquals("Genesis 2", jsword.getSiblingChapter("Genesis 2:5", "KJV", true));
-        assertEquals("Genesis 1", jsword.getSiblingChapter("Genesis 2-3:17", "KJV", true));
-        assertEquals("Genesis 2", jsword.getSiblingChapter("Genesis 2:3-3:17", "KJV", true));
+        assertEquals("Genesis 1", jsword.getSiblingChapter("Genesis 2", "KJV", true).getName());
+        assertEquals("Genesis 2", jsword.getSiblingChapter("Genesis 2:5", "KJV", true).getName());
+        assertEquals("Genesis 1", jsword.getSiblingChapter("Genesis 2-3:17", "KJV", true).getName());
+        assertEquals("Genesis 2", jsword.getSiblingChapter("Genesis 2:3-3:17", "KJV", true).getName());
 
         // next chapter tests
-        assertEquals("Genesis 3", jsword.getSiblingChapter("Genesis 2-3:17", "KJV", false));
-        assertEquals("Genesis 4", jsword.getSiblingChapter("Genesis 2-3:24", "KJV", false));
-        assertEquals("Genesis 3", jsword.getSiblingChapter("Genesis 3:17", "KJV", false));
-        assertEquals("Genesis 4", jsword.getSiblingChapter("Genesis 3:24", "KJV", false));
-        assertEquals("Genesis 3", jsword.getSiblingChapter("Genesis 2", "KJV", false));
+        assertEquals("Genesis 3", jsword.getSiblingChapter("Genesis 2-3:17", "KJV", false).getName());
+        assertEquals("Genesis 4", jsword.getSiblingChapter("Genesis 2-3:24", "KJV", false).getName());
+        assertEquals("Genesis 3", jsword.getSiblingChapter("Genesis 3:17", "KJV", false).getName());
+        assertEquals("Genesis 4", jsword.getSiblingChapter("Genesis 3:24", "KJV", false).getName());
+        assertEquals("Genesis 3", jsword.getSiblingChapter("Genesis 2", "KJV", false).getName());
     }
 
     /**

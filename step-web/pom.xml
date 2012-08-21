@@ -220,11 +220,11 @@
 				<configuration>
 					<container>
 						<containerId>tomcat6x</containerId>
-						<home>/opt/tomcat_dev</home>
+						<home>/opt/bitnami/dev-step-tomcat</home>
 				        </container>
 				        <configuration>
 						<type>existing</type>
-						<home>/opt/tomcat_dev</home>
+						<home>/opt/bitnami/dev-step-tomcat</home>
 					</configuration>
 					<deployer>
 						<type>installed</type>

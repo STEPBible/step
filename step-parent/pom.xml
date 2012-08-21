@@ -92,6 +92,19 @@
 		</snapshotRepository>
 	</distributionManagement>
 
+	<repositories>
+		<repository>
+			<releases>
+				<enabled>true</enabled>
+				<updatePolicy>always</updatePolicy>
+				<checksumPolicy>warn</checksumPolicy>
+			</releases>
+			<id>crosswire.public</id>
+			<name>Codehaus Public Repo</name>
+			<url>http://crosswire.org/mvn/content/groups/public/</url>
+			<layout>default</layout>
+		</repository>
+	</repositories>
 
 	<dependencyManagement>
 		<dependencies>

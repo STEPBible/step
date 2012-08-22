@@ -78,7 +78,7 @@ public final class JSwordUtils {
             final Language language = b.getLanguage();
             if (language != null) {
 
-                v.setLanguage(language.getName());
+                v.setLanguageCode(language.getCode());
             }
             v.setHasStrongs(b.hasFeature(FeatureType.STRONGS_NUMBERS));
             v.setHasMorphology(b.hasFeature(FeatureType.MORPHOLOGY));

@@ -90,7 +90,83 @@ step.passage = {
     },
 
     /* 2 queues of calls backs for passages */
-    callbacks : [ [], [] ]
+    callbacks : [ [], [] ],
+   
+    filteredVersions : function(passageVersion, passageId) {
+        var widget = passageVersion.filteredcomplete("widget");
+        
+        var resource = widget.find("input:radio[name=textType]:checked").val();
+        var language = widget.find("input:checkbox[name=language]:checked").val();
+        var vocab = widget.find("input.vocabFeature").prop('checked');
+        var interlinear = widget.find("input.interlinearFeature").prop('checked');
+        var grammar = widget.find("input.grammarFeature").prop('checked');
+
+        console.log("language is ", language);
+        
+       return $.grep(step.versions, function(item, index) {
+            if(resource == 'commentaries') {
+                //we ignore commentaries outright for now
+                return false;
+            }
+            
+            //exclude if vocab and no strongs
+            if((vocab == true || interlinear == true) && !item.hasStrongs) {
+                return false;
+            }
+            
+            if(grammar == true && !item.hasMorphology) {
+                return false;
+            }
+            
+            var lang = item.languageCode;
+            if(language == "langAncient" && lang != 'grc' && lang != 'la' && lang != 'he') {
+                return false;
+            }
+            
+            var currentLang = step.state.language(1);
+            if(language == "langMyAndEnglish" && lang != currentLang && lang != 'en') {
+                return false;
+            }
+            
+            if(language == "langMy" && lang != currentLang) {
+                return false;
+            }
+            
+            
+            return true;
+        });
+    },
+    
+    refreshVersions : function(passageId, rawServerVersions) {
+        // need to make server response adequate for autocomplete:
+        var parsedVersions = $.map(rawServerVersions, function(item) {
+            var showingText = "[" + item.initials + "] " + item.name;
+            var features = "";
+            // add to Strongs if applicable, and therefore interlinear
+            if (item.hasStrongs) {
+                features += " " + "<span class='versionFeature strongsFeature' title='Vocabulary available'>V</span>";
+                features += " " + "<span class='versionFeature interlinearFeature' title='Interlinear available'>I</span>";
+            }
+
+            // add morphology
+            if (item.hasMorphology) {
+                features += " " + "<span class='versionFeature morphologyFeature' title='Grammar available'>G</span>";
+            }
+
+            if (item.isQuestionable) {
+                feawtures += " " + "<span class='versioNFeature questionableFeature' title='Questionable material'>?</span>";
+            }
+
+            // return response for dropdowns
+            return {
+                label : showingText,
+                value : item.initials,
+                features : features
+            };
+        });
+
+        $(".passageVersion", step.util.getPassageContainer(passageId)).filteredcomplete("option", "source", parsedVersions);
+    }
 };
 
 
@@ -132,7 +208,7 @@ function Passage(passageContainer, rawServerVersions, passageId) {
     });
 
     this.passage.hear("version-list-refresh", function(selfElement, versions) {
-        self.refreshVersionsTextBox(versions);
+        step.passage.refreshVersions(self.passageId, versions);
     });
 
     $(this.passage).hear("make-master-interlinear-" + this.passageId, function(selfElement, newMasterVersion) {
@@ -147,41 +223,20 @@ function Passage(passageContainer, rawServerVersions, passageId) {
     });
 };
 
-/**
- * refreshes the list attached to the version dropdown
- */
-Passage.prototype.refreshVersionsTextBox = function(rawServerVersions) {
-    // need to make server response adequate for autocomplete:
-    var parsedVersions = $.map(rawServerVersions, function(item) {
-        var showingText = "[" + item.initials + "] " + item.name;
-        var features = "";
-        // add to Strongs if applicable, and therefore interlinear
-        if (item.hasStrongs) {
-            features += " " + "<span class='versionFeature strongsFeature' title='Vocabulary available'>V</span>";
-            features += " " + "<span class='versionFeature interlinearFeature' title='Interlinear available'>I</span>";
-        }
 
-        // add morphology
-        if (item.hasMorphology) {
-            features += " " + "<span class='versionFeature morphologyFeature' title='Grammar available'>G</span>";
-        }
-        
-        if(item.isQuestionable) {
-            feawtures += " " + "<span class='versioNFeature questionableFeature' title='Questionable material'>?</span>";
-        }
+$(step.passage).hear("filter-versions", function() {
+    var element = document.activeElement;
+    var passageId = step.passage.getPassageId(element);
+    var passageContainer = step.util.getPassageContainer(passageId);
+    var passageVersion = $(".passageVersion", passageContainer);
+    
+    step.passage.refreshVersions(passageId, step.passage.filteredVersions(passageVersion, passageId));
+//    passageVersion.filteredcomplete("option", "source", );
+    passageVersion.filteredcomplete("search", "");
 
-        // return response for dropdowns
-        return {
-            label : showingText,
-            value : item.initials,
-            features : features
-        };
-    });
+});
 
-    this.version.autocomplete({
-        source : parsedVersions
-    });
-};
+
 
 /**
  * Sets up the autocomplete for the versions dropdown
@@ -190,7 +245,7 @@ Passage.prototype.initVersionsTextBox = function(rawServerVersions) {
     var self = this;
 
     // set up autocomplete
-    this.version.autocomplete({
+    this.version.filteredcomplete({
         minLength : 0,
         delay : 0,
         select : function(event, ui) {
@@ -199,22 +254,28 @@ Passage.prototype.initVersionsTextBox = function(rawServerVersions) {
             
             $(this).change();
         },
+        open: function(event, ui) {
+            //check we've got the right size
+            $(".ui-autocomplete").map(function() {
+                //check if 'this' has a child containing the text of the first option
+                    $(this).css('width', '500px');
+            });
+        }
     }).focus(function() {
-        self.version.autocomplete("search", "");
+        self.version.filteredcomplete("search", "");
     }).change(function() {
         if (step.util.raiseErrorIfBlank(this.value, "A version must be selected.")) {
             step.state.passage.version(self.passageId, this.value);
             $(this).blur();
         }
-        ;
     });
 
-    this.version.data("autocomplete")._renderItem = function(ul, item) {
+    this.version.data("filteredcomplete")._renderItem = function(ul, item) {
         return $("<li></li>").data("item.autocomplete", item).append("<a><span class='features'>" + item.features + "</span>" + item.label + "</a>").appendTo(
                 ul);
     };
 
-    this.refreshVersionsTextBox(rawServerVersions);
+    step.passage.refreshVersions(this.passageId, rawServerVersions);
 };
 
 Passage.prototype.initReferenceTextBox = function() {
@@ -256,7 +317,6 @@ Passage.prototype.highlightStrong = function(strongReference) {
     if ($.inArray(strongReference, Passage.getBlackListedStrongs()) == -1) {
         $(".verse span[strong='" + strongReference + "']", this.container).addClass("emphasisePassagePhrase");
         $("span.w[strong='" + strongReference + "'] span.text", this.container).addClass("emphasisePassagePhrase");
-
     }
 };
 

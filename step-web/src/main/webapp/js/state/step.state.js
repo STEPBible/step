@@ -126,6 +126,15 @@ step.state = {
         return newValue;
     },
 
+
+    language : function(numParts) {
+        var lang = window.navigator.userLanguage || window.navigator.language;
+        if(numParts == 1) {
+            return lang.split("-")[0];
+        } 
+        return lang;
+    },
+    
     restore : function() {
         this.restoreTrackedKeys();
         this.restoreTrackedDefaults();

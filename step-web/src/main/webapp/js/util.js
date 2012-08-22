@@ -272,7 +272,6 @@ step.util = {
     }
 };
 
-
 /**
  * array comparison
  */

@@ -44,10 +44,10 @@ public class BibleVersion implements Serializable {
     private static final long serialVersionUID = 6598606392490334637L;
     private String initials;
     private String name;
-    private String language;
     private boolean hasStrongs;
     private boolean hasMorphology;
     private boolean questionable;
+    private String languageCode;
 
     /**
      * @return true if the version contains strong-tagged information
@@ -106,17 +106,17 @@ public class BibleVersion implements Serializable {
     }
 
     /**
-     * @return the language
+     * @return the languageCode
      */
-    public String getLanguage() {
-        return this.language;
+    public String getLanguageCode() {
+        return this.languageCode;
     }
 
     /**
-     * @param language the language to set
+     * @param languageCode the languageCode to set
      */
-    public void setLanguage(final String language) {
-        this.language = language;
+    public void setLanguageCode(final String languageCode) {
+        this.languageCode = languageCode;
     }
 
     /**

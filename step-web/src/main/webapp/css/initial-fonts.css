@@ -114,3 +114,12 @@ body {
 .passage-arrow {
 	background-image: url('ui-lightness/images/ui-icons_669966_256x240.png');
 }
+
+
+.filterOptions, .filterOptions * {
+	font-size: 10px !important;
+}
+.filterButtonSet {
+	margin-top: 3px;
+}
+

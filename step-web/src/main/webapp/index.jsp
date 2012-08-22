@@ -39,6 +39,7 @@
 	
 	    <script src="js/jquery-extensions/jquery-cookie.js" type="text/javascript"></script>
 		<script src="js/jquery-extensions/jquery-shout.js" type="text/javascript"></script>
+	    <script src="js/jquery-extensions/jquery-filtered-complete.js" type="text/javascript"></script>
 		<script src="js/ddsmoothmenu.js" type="text/javascript"></script>
 	    <script src="js/util.js" type="text/javascript"></script>
 	    <script src="js/bookmark.js" type="text/javascript"></script>

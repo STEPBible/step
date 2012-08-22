@@ -29,8 +29,6 @@
 
 step.search = {
         
-        
-        
     tagging : {
         exact : function(passageId) {
             this._doStrongSearch(passageId, SEARCH_STRONG_EXACT);
@@ -161,6 +159,7 @@ step.search = {
         }
     },
 
+   
     _doSearch : function(searchType, passageId, query, version, ranked, context, highlightTerms) {
         var self = this;
         var contextArg = context == undefined || isNaN(context) ? 0 : context;

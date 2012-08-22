@@ -35,6 +35,7 @@
 	    <link rel="stylesheet" type="text/css" href="css/passage.css" />
 	    <link rel="stylesheet" type="text/css" href="css/timeline.css" />
 	    <link rel="stylesheet" type="text/css" href="css/search.css" />
+	    <link rel="stylesheet" type="text/css" href="css/cardo.css" />
 	
 	    <script src="js/jquery-extensions/jquery-cookie.js" type="text/javascript"></script>
 		<script src="js/jquery-extensions/jquery-shout.js" type="text/javascript"></script>

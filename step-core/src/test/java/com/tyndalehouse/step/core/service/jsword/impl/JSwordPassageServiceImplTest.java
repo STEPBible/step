@@ -69,9 +69,12 @@ import com.tyndalehouse.step.core.models.LookupOption;
  * @author CJBurrell
  * 
  */
-public class JSwordServiceImplTest {
-    private static final Logger LOGGER = LoggerFactory.getLogger(JSwordServiceImplTest.class);
+public class JSwordPassageServiceImplTest {
+    private static final Logger LOGGER = LoggerFactory.getLogger(JSwordPassageServiceImplTest.class);
 
+    /**
+     * should expand Ruth.1.22 to Ruth.1
+     */
     @Test
     public void testExpandNoGap() {
         final JSwordPassageServiceImpl jsi = new JSwordPassageServiceImpl(
@@ -321,8 +324,8 @@ public class JSwordServiceImplTest {
      */
     @Test
     public void testPrettyXml() throws BookException, NoSuchKeyException, JDOMException, IOException {
-        final String version = "ESV";
-        final String ref = "Exodus 7:14";
+        final String version = "Diaglott";
+        final String ref = "John 1";
         final Book currentBook = Books.installed().getBook(version);
         final BookData bookData = new BookData(currentBook, currentBook.getKey(ref));
         final Element osisFragment = bookData.getOsisFragment();
@@ -363,65 +366,65 @@ public class JSwordServiceImplTest {
 
     }
 
-    // /**
-    // * tries to replicate the issue with bookdata not being able to be read in a concurrent fashion
-    // *
-    // * @throws NoSuchKeyException a no such key exception
-    // * @throws BookException a book exception
-    // * @throws InterruptedException when the thread is interrupted
-    // */
-    // // FIXME: currently disabled
-    // @Test
-    // public void testConcurrencyIssueOnBookData() throws NoSuchKeyException, BookException,
-    // InterruptedException {
-    // final String[] names = { "KJV", "ESV" };
-    // final String ref = "Rom.1.1";
-    //
-    // final Runnable r1 = new Runnable() {
-    // @Override
-    // public void run() {
-    // final Book b0 = Books.installed().getBook(names[0]);
-    // BookData bd1;
-    // try {
-    // bd1 = new BookData(b0, b0.getKey(ref));
-    // bd1.getSAXEventProvider();
-    // } catch (final NoSuchKeyException e) {
-    // LOGGER.error("A jsword error during test", e);
-    // Assert.fail("JSword bug has occured");
-    // } catch (final BookException e) {
-    // LOGGER.error("A jsword error during test", e);
-    // Assert.fail("JSword bug has occured");
-    // }
-    // }
-    // };
-    //
-    // final Runnable r2 = new Runnable() {
-    // @Override
-    // public void run() {
-    // final Book b0 = Books.installed().getBook(names[1]);
-    // BookData bd1;
-    // try {
-    // bd1 = new BookData(b0, b0.getKey(ref));
-    // bd1.getSAXEventProvider();
-    // } catch (final NoSuchKeyException e) {
-    // LOGGER.error("A jsword error during test", e);
-    // Assert.fail("JSword bug has occured");
-    // } catch (final BookException e) {
-    // LOGGER.error("A jsword error during test", e);
-    // Assert.fail("JSword bug has occured");
-    // }
-    // }
-    // };
-    //
-    // int ii = 0;
-    // while (ii++ < 15) {
-    // final Thread t1 = new Thread(r1);
-    // final Thread t2 = new Thread(r2);
-    // t1.start();
-    // t2.start();
-    //
-    // t1.join();
-    // t2.join();
-    // }
-    // }
+    /**
+     * tries to replicate the issue with bookdata not being able to be read in a concurrent fashion
+     * 
+     * @throws NoSuchKeyException a no such key exception
+     * @throws BookException a book exception
+     * @throws InterruptedException when the thread is interrupted
+     */
+    // FIXME: currently disabled
+    @Test
+    public void testConcurrencyIssueOnBookData() throws NoSuchKeyException, BookException,
+            InterruptedException {
+        final String[] names = { "KJV", "ESV" };
+        final String ref = "Rom.1.1";
+
+        final Runnable r1 = new Runnable() {
+            @Override
+            public void run() {
+                final Book b0 = Books.installed().getBook(names[0]);
+                BookData bd1;
+                try {
+                    bd1 = new BookData(b0, b0.getKey(ref));
+                    bd1.getSAXEventProvider();
+                } catch (final NoSuchKeyException e) {
+                    LOGGER.error("A jsword error during test", e);
+                    Assert.fail("JSword bug has occured");
+                } catch (final BookException e) {
+                    LOGGER.error("A jsword error during test", e);
+                    Assert.fail("JSword bug has occured");
+                }
+            }
+        };
+
+        final Runnable r2 = new Runnable() {
+            @Override
+            public void run() {
+                final Book b0 = Books.installed().getBook(names[1]);
+                BookData bd1;
+                try {
+                    bd1 = new BookData(b0, b0.getKey(ref));
+                    bd1.getSAXEventProvider();
+                } catch (final NoSuchKeyException e) {
+                    LOGGER.error("A jsword error during test", e);
+                    Assert.fail("JSword bug has occured");
+                } catch (final BookException e) {
+                    LOGGER.error("A jsword error during test", e);
+                    Assert.fail("JSword bug has occured");
+                }
+            }
+        };
+
+        int ii = 0;
+        while (ii++ < 15) {
+            final Thread t1 = new Thread(r1);
+            final Thread t2 = new Thread(r2);
+            t1.start();
+            t2.start();
+
+            t1.join();
+            t2.join();
+        }
+    }
 }

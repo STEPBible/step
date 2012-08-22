@@ -48,16 +48,19 @@ public class OsisWrapper implements Serializable {
     private boolean isMultipleRanges;
     private int startRange;
     private int endRange;
+    private final String languageCode;
 
     /**
      * the value to be wrapped
      * 
-     * @param reference reference
      * @param value the value to be wrapped around
+     * @param reference reference
+     * @param languageCode languageCode of the retrieved Bible
      */
-    public OsisWrapper(final String value, final String reference) {
+    public OsisWrapper(final String value, final String reference, final String languageCode) {
         this.value = value;
         this.reference = reference;
+        this.languageCode = languageCode;
     }
 
     /**
@@ -138,10 +141,16 @@ public class OsisWrapper implements Serializable {
     }
 
     /**
-     * @param isMultipleRanges the isMultipleRanges to set
+     * @param hasMultipleRanges the isMultipleRanges to set
      */
-    public void setMultipleRanges(final boolean isMultipleRanges) {
-        this.isMultipleRanges = isMultipleRanges;
+    public void setMultipleRanges(final boolean hasMultipleRanges) {
+        this.isMultipleRanges = hasMultipleRanges;
     }
 
+    /**
+     * @return the languageCode
+     */
+    public String getLanguageCode() {
+        return this.languageCode;
+    }
 }

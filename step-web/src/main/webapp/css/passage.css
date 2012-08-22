@@ -265,6 +265,10 @@ TD.text {
 	front-size: xx-small;
 }
 
+.hebrewLanguage {
+	font-family: Cardo;
+	font-size: 130%;
+}
 
 
 a.linkRef {

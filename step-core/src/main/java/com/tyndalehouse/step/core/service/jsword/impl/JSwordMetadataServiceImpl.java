@@ -121,7 +121,9 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
                     || book.getPreferredName().toLowerCase().startsWith(searchPattern)
                     || book.getShortName().toLowerCase().startsWith(searchPattern)) {
                 b = book;
-                matchingNames.add(book.getShortName());
+
+                addBookName(matchingNames, book);
+
             }
         }
 
@@ -130,6 +132,21 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
         }
 
         return matchingNames;
+    }
+
+    /**
+     * Adds all Bible books except for INTROs to NT, OT and Bible.
+     * 
+     * @param matchingNames the list of current names
+     * @param bookName the book that we are examining
+     */
+    private void addBookName(final List<String> matchingNames, final BibleBook bookName) {
+        if (BibleBook.INTRO_BIBLE.equals(bookName) || BibleBook.INTRO_NT.equals(bookName)
+                || BibleBook.INTRO_OT.equals(bookName)) {
+            return;
+        }
+
+        matchingNames.add(bookName.getShortName());
     }
 
     /**
@@ -147,7 +164,7 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
         for (int ii = 1; ii < lastChapter; ii++) {
             final char f = Character.toUpperCase(searchSoFar.charAt(0));
 
-            // never return chapter 0, instead
+            // make sure first letter is CAPS, followed by the rest of the word and the chapter number
             final String chapNumber = String.format("%c%s %d", f, searchSoFar.substring(1), ii);
 
             chapters.add(chapNumber);

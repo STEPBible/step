@@ -66,6 +66,11 @@ step.passage = {
             var passageContent = step.util.getPassageContent(passageId);
             passageContent.html(text.value);
             
+            if(text.languageCode == 'he') {
+                passageContent.addClass("hebrewLanguage");
+            } else {
+                passageContent.removeClass("hebrewLanguage");
+            }
             
             // passage change was successful, so we let the rest of the UI know
             $.shout("passage-changed", {

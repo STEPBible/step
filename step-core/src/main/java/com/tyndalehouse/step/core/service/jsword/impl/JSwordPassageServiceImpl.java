@@ -410,7 +410,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
             final Versification versification = this.versificationService.getVersificationForVersion(book);
 
             final OsisWrapper osisWrapper = new OsisWrapper(writeToString(htmlsep), bookData.getKey()
-                    .getName());
+                    .getName(), book.getLanguage().getCode());
 
             final Key key = bookData.getKey();
             if (key instanceof Passage) {

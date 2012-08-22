@@ -91,7 +91,7 @@ public class SearchResult implements Serializable {
      * 
      * @param result result to be added
      */
-    public void addEntry(final SubjectHeadingSearchEntry result) {
+    public void addEntry(final SearchEntry result) {
         if (this.results == null) {
             this.results = new ArrayList<SearchEntry>();
         }

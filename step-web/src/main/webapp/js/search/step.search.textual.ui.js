@@ -182,7 +182,8 @@ $(document).ready(function() {
                             ".textRestrictionExclude",
                             ".textSortByRelevance",
                             ".textQuerySyntax",
-                            ".textSearchContext"
+                            ".textSearchContext",
+                            ".textSearchVersion",
                            ], namespace);
     
     step.util.ui.trackQuerySyntax(".textSearchTable", namespace);
@@ -213,10 +214,6 @@ $(document).ready(function() {
         step.state.textual.textQuerySyntax(passageId, "");
     });
     
-    
-    step.util.ui.searchButton(".textSearchButton",  'SEARCH_TEXT', function() {
-        legend.trigger('click');
-    });
     
     $(".showRanges").bind( "keydown", function( event ) {
         if ( event.keyCode === $.ui.keyCode.TAB &&
@@ -256,7 +253,17 @@ $(document).ready(function() {
         });
 });
 
+$(step.search.ui).hear("SEARCH_TEXT-activated", function(s, data) {
+    //check version on toolbar
+    var version = step.state.textual.textSearchVersion(data.passageId);
+    if(step.util.isBlank(version)) {
+        step.state.textual.textSearchVersion(data.passageId, step.state.passage.version(data.passageId));
+    }
+});
+
 $(step.search.ui).hear("textual-search-state-has-changed", function(s, data) {
     step.search.textual.search(data.passageId);
 });
+
+
 

@@ -172,14 +172,18 @@ body {
 }
 
 .strongsFeature {
-	background-color: blue;
+	background-color: #4F5ECA;
 }
 
 .interlinearFeature {
-	background-color: orange;
+	background-color: #FFA22D;
 }
 	
 .morphologyFeature {
+	background-color: lightpink;
+}
+
+.questionableFeature {
 	background-color: red;
 }
 

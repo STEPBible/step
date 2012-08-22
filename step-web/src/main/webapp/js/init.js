@@ -121,6 +121,7 @@ function initData() {
 	// make call to server first and once, to cache all passages:
 	// todo work out why step.menu.isOptionSelected("SHOW_ALL_VERSIONS") doesn't return true
 	$.getSafe(BIBLE_GET_BIBLE_VERSIONS + true, function(versionsFromServer) {
+	    step.versions = versionsFromServer;
 		initInterlinearPopup(versionsFromServer);
 		var passages = initPassages(versionsFromServer, options);
 		initModules(passages);
@@ -156,34 +157,6 @@ function initPassages(allVersions, options) {
 	);
 	return passages;
 }
-
-///**
-// * waits for a particular condition to be ready, then triggers the action
-// * @param isReady a function that can be called to tell us whether something is ready
-// * @param action a function to trigger when we know it will work
-// */
-//function waitingForCondition(isReady, action) {
-//	if(isReady() == false) {
-//		window.setTimeout(function() {
-//							waitingForCondition(isReady, action);
-//						}, 250);
-//	} else {
-//		action();
-//	}
-//}
-//
-//function initInitialEvents() {
-//	//unfortunately, all events might not be loaded yet, in particular
-//	// - version-changed-0 and version-changed-1
-//	waitingForCondition(
-//		function() {
-//			return !($(".passageContainer[passage-id = '0'] .passageVersion") === undefined
-//			    || $(".passageContainer[passage-id = '1'] .passageVersion").val() === undefined);
-//	}, 	function() {
-//			$.shout("version-changed-" + 0, $(".passageContainer[passage-id = '0'] .passageVersion").val());
-//			$.shout("version-changed-" + 1, $(".passageContainer[passage-id = '1'] .passageVersion").val());
-//	});
-//}
 
 function initGlobalHandlers() {
 	//set always visible - should probably be its own class

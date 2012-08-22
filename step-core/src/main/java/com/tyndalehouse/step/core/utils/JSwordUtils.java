@@ -73,6 +73,7 @@ public final class JSwordUtils {
             final BibleVersion v = new BibleVersion();
             v.setName(b.getName());
             v.setInitials(b.getInitials());
+            v.setQuestionable(b.isQuestionable());
 
             final Language language = b.getLanguage();
             if (language != null) {

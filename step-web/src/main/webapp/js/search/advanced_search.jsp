@@ -61,7 +61,7 @@
 			</tr>
 		</table>
 
-		<jsp:include page="search_toolbar.jsp?specificSearchContext=simpleTextSearchContext"  />
+		<jsp:include page="search_toolbar.jsp?specificSearchContext=simpleTextSearchContext&specificSearchVersion=simpleTextSearchVersion"  />
 		
 	</fieldset>
 
@@ -189,7 +189,7 @@
 			</tr>
 		</table>
 		
-		<jsp:include page="search_toolbar.jsp?specificSearchContext=textSearchContext" />
+		<jsp:include page="search_toolbar.jsp?specificSearchContext=textSearchContext&specificSearchVersion=textSearchVersion" />
 	</fieldset>
 
 	<fieldset>
@@ -207,6 +207,10 @@
 				<td><input type="text" class="strongSearch" /></td>
 			</tr>
 		</table>
+
+		<hr />
+				
+		<jsp:include page="search_toolbar.jsp?specificSearchContext=originalSearchContext&specificSearchVersion=strongSearchVersion" />
 	</fieldset>
 
 	<fieldset>

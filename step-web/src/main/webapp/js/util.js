@@ -190,17 +190,17 @@ step.util = {
                     step.util.raiseError("Concordance style is only available for single-term searches");
                 }
                 
-                var term = step.search.highlightTerms[0];
-                var searchResults = $(".searchResults", step.util.getPassageContainer(this));
-                $(".searchResultRow", searchResults).each(function(i, item) {
-                    var textValue = $(item).text();
-                    
-                    
-                    //find the highlights
-                    var concordanceMiddle = $("<span class='concordanceMiddleColumn'></span>").add($(".highlight", item));
-                    
-                    var row = $(item).html(concordanceMiddle);
-                });
+//                var term = step.search.highlightTerms[0];
+//                var searchResults = $(".searchResults", step.util.getPassageContainer(this));
+//                $(".searchResultRow", searchResults).each(function(i, item) {
+//                    var textValue = $(item).text();
+//                    
+//                    
+//                    //find the highlights
+//                    var concordanceMiddle = $("<span class='concordanceMiddleColumn'></span>").add($(".highlight", item));
+//                    
+//                    var row = $(item).html(concordanceMiddle);
+//                });
             });
             
             $(".refineSearch").button({
@@ -236,6 +236,38 @@ step.util = {
             });
             
             $(".searchToolbarButtonSets").buttonset();
+            
+            $(".searchVersions").autocomplete({
+                minLength: 0,
+                source: function( request, response ) {
+                    // delegate back to autocomplete, but extract the last term
+                    response( $.ui.autocomplete.filter(
+                            $.map(step.versions, function(value, index) {
+                                return value.initials;  
+                              }), extractLast( request.term ) ) );
+                },
+                focus: function() {
+                    // prevent value inserted on focus
+                    return false;
+                },
+                select: function( event, ui ) {
+                    var terms = split( this.value );
+                    // remove the current input
+                    terms.pop();
+                    // add the selected item
+                    terms.push( ui.item.value );
+                    // add placeholder to get the comma-and-space at the end
+                    terms.push( "" );
+                    this.value = terms.join( ", " );
+                    
+                    $(this).autocomplete("search", "");
+                    $(this).trigger('change');
+                    
+                    return false;
+                }
+            }).click(function() {
+                    $(this).autocomplete("search", "");
+            });
         }
     }
 };

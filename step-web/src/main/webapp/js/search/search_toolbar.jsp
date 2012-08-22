@@ -1,5 +1,5 @@
 <div class="searchToolbar">
-	Bible version(s): <input type='text' class='searchVersions' /> 
+	Bible version(s): <input type='text' class='searchVersions <%=request.getParameter("specificSearchVersion")%>' /> 
 	<span class="searchToolbarButtonSets"> 
 	<a href='#' class='moreSearchContext'>More context</a> 
 	<a href='#' class='lessSearchContext'>Less context</a> 

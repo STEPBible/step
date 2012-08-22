@@ -53,6 +53,7 @@ import com.tyndalehouse.step.core.data.entities.LexiconDefinition;
 import com.tyndalehouse.step.core.data.entities.ScriptureReference;
 import com.tyndalehouse.step.core.data.entities.timeline.TimelineEvent;
 import com.tyndalehouse.step.core.models.OsisWrapper;
+import com.tyndalehouse.step.core.models.search.KeyedSearchResultSearchEntry;
 import com.tyndalehouse.step.core.models.search.SearchEntry;
 import com.tyndalehouse.step.core.models.search.SearchResult;
 import com.tyndalehouse.step.core.models.search.SubjectHeadingSearchEntry;
@@ -73,13 +74,13 @@ import com.tyndalehouse.step.core.utils.StringUtils;
 @Singleton
 public class SearchServiceImpl implements SearchService {
     private static final Logger LOGGER = LoggerFactory.getLogger(SearchServiceImpl.class);
+    private static final String TEXT_SEARCH = "t=";
     private static final String STRONG_QUERY = "strong:";
     private static final String LIKE = "%%%s%%";
     private final EbeanServer ebean;
     private final JSwordSearchService jswordSearch;
     private final JSwordPassageService jsword;
     private final TimelineService timeline;
-    private final String TEXT_SEARCH = "t=";
 
     /**
      * @param ebean the ebean server to carry out the search from
@@ -100,10 +101,26 @@ public class SearchServiceImpl implements SearchService {
     public SearchResult search(final String version, final String query, final boolean ranked,
             final int context) {
         // for text searches, we may have a prefix of t=
-        if (query.startsWith(this.TEXT_SEARCH)) {
-            return this.jswordSearch.search(version, query.substring(2), ranked, context);
+        final String parsedQuery = query.startsWith(TEXT_SEARCH) ? query.substring(2) : query;
+        final String[] versions = version.split("[, ]+");
+
+        final SearchResult sr = new SearchResult();
+        sr.setQuery(query);
+
+        for (final String v : versions) {
+            final SearchResult result = this.jswordSearch.search(v, parsedQuery, ranked, context);
+            final KeyedSearchResultSearchEntry entry = new KeyedSearchResultSearchEntry();
+            entry.setKey(v);
+            entry.setSearchResult(result);
+            sr.addEntry(entry);
+
+            sr.setTimeTookTotal(sr.getTimeTookTotal() + result.getTimeTookTotal());
+            sr.setTimeTookToRetrieveScripture(sr.getTimeTookToRetrieveScripture()
+                    + result.getTimeTookToRetrieveScripture());
+            sr.setMaxReached(sr.isMaxReached() || result.isMaxReached());
         }
-        return this.jswordSearch.search(version, query, ranked, context);
+
+        return sr;
     }
 
     @Override

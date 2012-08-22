@@ -140,7 +140,8 @@ $(document).ready(function() {
                            ".simpleTextProximity",
                            ".simpleTextSortByRelevance",
                            ".simpleTextQuerySyntax",
-                           ".simpleTextSearchContext"
+                           ".simpleTextSearchContext",
+                           ".simpleTextSearchVersion"
                            ], namespace, [step.search.ui.simpleText.restoreDefaults, step.search.ui.simpleText.restoreIncludeExclude]);
 
     step.util.ui.trackQuerySyntax(".simpleTextFields", namespace);
@@ -164,6 +165,14 @@ $(document).ready(function() {
       step.util.ui.autocompleteSearch(".simpleTextInclude", step.defaults.search.textual.simpleTextIncludes, true, function(currentElement, value) {
           step.search.ui.simpleText.includeProximityChange(currentElement, value);
       });
+});
+
+$(step.search.ui).hear("SEARCH_SIMPLE_TEXT-activated", function(s, data) {
+    //check version on toolbar
+    var version = step.state.simpleText.simpleTextSearchVersion(data.passageId);
+    if(step.util.isBlank(version)) {
+        step.state.simpleText.simpleTextSearchVersion(data.passageId, step.state.passage.version(data.passageId));
+    }
 });
 
 $(step.search.ui).hear("simpleText-search-state-has-changed", function(s, data) {

@@ -92,6 +92,11 @@ li.subjectHeading {
 	float: right;
 }
 
+.smallResultKey {
+	font-size: x-small;
+	color: #696;
+}
+
 
 /*******************************************/
 /* Advanced search box                     */
@@ -157,3 +162,5 @@ li.subjectHeading {
 .searchToolbarButtonSets {
 	float: right;
 }
+
+

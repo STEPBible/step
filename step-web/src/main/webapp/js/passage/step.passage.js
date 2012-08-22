@@ -165,6 +165,10 @@ Passage.prototype.refreshVersionsTextBox = function(rawServerVersions) {
         if (item.hasMorphology) {
             features += " " + "<span class='versionFeature morphologyFeature' title='Grammar available'>G</span>";
         }
+        
+        if(item.isQuestionable) {
+            feawtures += " " + "<span class='versioNFeature questionableFeature' title='Questionable material'>?</span>";
+        }
 
         // return response for dropdowns
         return {

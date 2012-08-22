@@ -119,6 +119,7 @@ step.state = {
 
             // show the correct field set
             this._showRelevantFieldSet(passageId);
+            $.shout(activeSearch + "-activated", {passageId: passageId});
         }
 
         var newValue = this._storeAndRetrieveCookieState(passageId, "activeSearch", activeSearch, fireChange);

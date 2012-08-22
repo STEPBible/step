@@ -44,7 +44,8 @@ step.search = {
             var query = step.state.original.strong(passageId);
 
             if (step.util.raiseErrorIfBlank(query, "Please enter a strong number")) {
-                step.search._doSearch(searchType, passageId, query);
+                //TODO - version for original word search
+                step.search._doSearch(searchType, passageId, query, 'KJV');
             }
         }
     },
@@ -96,9 +97,10 @@ step.search = {
         search : function(passageId) {
             console.log("Simple text search...");
             var query = $.trim(step.state.simpleText.simpleTextQuerySyntax(passageId));
+            var version = step.state.simpleText.simpleTextSearchVersion(passageId);
             var context = step.state.simpleText.simpleTextSearchContext(passageId);
             var ranked = step.state.simpleText.simpleTextSortByRelevance(passageId);
-            step.search.textual._validateAndRunSearch(passageId, query, ranked, context);
+            step.search.textual._validateAndRunSearch(passageId, query, version, ranked, context);
         }
     },
     
@@ -106,19 +108,19 @@ step.search = {
         search : function(passageId){
             console.log("Advanced text search...");
             var query = $.trim(step.state.textual.textQuerySyntax(passageId));
+            var version = step.state.textual.textSearchVersion(passageId);
             var context = step.state.textual.textSearchContext(passageId);
             var ranked = step.state.textual.textSortByRelevance(passageId);
-            
-            this._validateAndRunSearch(passageId, query, ranked, context);
+            this._validateAndRunSearch(passageId, query, version, ranked, context);
         },
         
-        _validateAndRunSearch : function(passageId, query, ranked, context) {
+        _validateAndRunSearch : function(passageId, query, version, ranked, context) {
             if(step.util.isBlank(query)) {
                 return;
             }
             
             if (step.util.raiseErrorIfBlank(query, "Please fill in the form first")) {
-                step.search._doSearch(SEARCH_DEFAULT, passageId, query, ranked, context, this._highlightingTerms(query));
+                step.search._doSearch(SEARCH_DEFAULT, passageId, query, version, ranked, context, this._highlightingTerms(query));
             }
         },
         
@@ -159,9 +161,8 @@ step.search = {
         }
     },
 
-    _doSearch : function(searchType, passageId, query, ranked, context, highlightTerms) {
+    _doSearch : function(searchType, passageId, query, version, ranked, context, highlightTerms) {
         var self = this;
-        var version = step.state.passage.version(passageId);
         var contextArg = context == undefined || isNaN(context) ? 0 : context;
         var args = ranked == null ? [version, query] : [version, query, ranked, contextArg];
         
@@ -209,11 +210,17 @@ step.search = {
         return resultHtml;
     },
     
-    _displayPassageResults : function(searchResults, passageId, goToChapter) {
+    _displayPassageResults : function(qualifiedSearchResults, passageId, goToChapter) {
         if(goToChapter == undefined) {
             goToChapter = true;
         }
         
+        var key = "";
+        var searchResults = qualifiedSearchResults; 
+        if(qualifiedSearchResults.key) {
+            key = qualifiedSearchResults.key;
+            searchResults = qualifiedSearchResults.result;
+        }
         
         var results = "";
         $.each(searchResults, function(i, item) {
@@ -222,12 +229,12 @@ step.search = {
             results += item.key;
             results += goToPassageArrow(false, item.key, "searchKeyPassageArrow", goToChapter);
             results += "</td><td class='searchResultRow'>";
-            results += item.preview;
+            results += "<span class='smallResultKey'>(" + key + ")</span> " + item.preview;
             results += "</td></tr>";
         });
         return results;
     },
-    
+
     _displaySubjectResults : function(searchResults, passageId) {
         var results = "<ul class='subjectSection searchResults'>";
         
@@ -263,7 +270,15 @@ step.search = {
             results += this._displaySubjectResults(searchResults, passageId);
         } else {
             results += "<table class='searchResults'>";
-            results += this._displayPassageResults(searchResults, passageId);
+            
+            if($.isArray(searchResults)) {
+                for(var i = 0; i < searchResults.length; i++) {
+                    results += this._displayPassageResults({ result: searchResults[i].searchResult.results, key: searchResults[i].key}, passageId);
+                }
+            } else {
+                results += this._displayPassageResults(searchResults, passageId);
+            }
+            
             results += "</table>";
         }
         

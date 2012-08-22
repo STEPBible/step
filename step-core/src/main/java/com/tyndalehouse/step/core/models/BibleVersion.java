@@ -47,6 +47,7 @@ public class BibleVersion implements Serializable {
     private String language;
     private boolean hasStrongs;
     private boolean hasMorphology;
+    private boolean questionable;
 
     /**
      * @return true if the version contains strong-tagged information
@@ -118,4 +119,17 @@ public class BibleVersion implements Serializable {
         this.language = language;
     }
 
+    /**
+     * @return the questionable
+     */
+    public boolean isQuestionable() {
+        return this.questionable;
+    }
+
+    /**
+     * @param questionable the questionable to set
+     */
+    public void setQuestionable(final boolean questionable) {
+        this.questionable = questionable;
+    }
 }

@@ -54,6 +54,7 @@ import org.crosswire.common.xml.Converter;
 import org.crosswire.common.xml.SAXEventProvider;
 import org.crosswire.common.xml.TransformingSAXEventProvider;
 import org.crosswire.jsword.book.Book;
+import org.crosswire.jsword.book.BookCategory;
 import org.crosswire.jsword.book.BookData;
 import org.crosswire.jsword.book.BookException;
 import org.crosswire.jsword.book.Books;
@@ -377,12 +378,13 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
         notNull(bookData.getKey(), "An internal error occurred", UserExceptionType.SERVICE_VALIDATION_ERROR);
 
         // first check whether the key is contained in the book
-        if (!keyExistsInBook(bookData)) {
-            throw new StepInternalException("The specified reference does not exist in this Bible");
-        }
+        // if (!keyExistsInBook(bookData)) {
+        // throw new StepInternalException("The specified reference does not exist in this Bible");
+        // }
 
         try {
-            final XslConversionType requiredTransformation = identifyStyleSheet(options);
+            final XslConversionType requiredTransformation = identifyStyleSheet(bookData.getFirstBook()
+                    .getBookCategory(), options);
 
             final SAXEventProvider osissep = bookData.getSAXEventProvider();
             final TransformingSAXEventProvider htmlsep = (TransformingSAXEventProvider) new Converter() {
@@ -396,7 +398,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
                                 resourceURI, osissep);
 
                         // set parameters here
-                        setOptions(tsep, options, bookData.getFirstBook().getInitials());
+                        setOptions(tsep, options, bookData.getFirstBook());
                         setInterlinearOptions(tsep, interlinearVersion, bookData.getKey().getOsisID());
                         return tsep;
                     } catch (final URISyntaxException e) {
@@ -410,7 +412,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
             final Versification versification = this.versificationService.getVersificationForVersion(book);
 
             final OsisWrapper osisWrapper = new OsisWrapper(writeToString(htmlsep), bookData.getKey()
-                    .getName(), book.getLanguage().getCode());
+                    .getName(), book.getLanguage().getCode(), bookData.getKey().getOsisID());
 
             final Key key = bookData.getKey();
             if (key instanceof Passage) {
@@ -467,10 +469,17 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
      * triggers anything but the default, then we return that. returns the stylesheet that should be used to
      * generate the text
      * 
+     * @param bookCategory the category of the book
+     * 
      * @param options the list of options that are currently applied to the passage
      * @return the stylesheet (of stylesheets)
      */
-    private XslConversionType identifyStyleSheet(final List<LookupOption> options) {
+    private XslConversionType identifyStyleSheet(final BookCategory bookCategory,
+            final List<LookupOption> options) {
+        if (BookCategory.COMMENTARY.equals(bookCategory)) {
+            return XslConversionType.COMMENTARY;
+        }
+
         for (final LookupOption lo : options) {
             if (!XslConversionType.DEFAULT.equals(lo.getStylesheet())) {
                 if (XslConversionType.INTERLINEAR.equals(lo.getStylesheet())) {
@@ -512,10 +521,10 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
      * 
      * @param tsep the xslt transformer
      * @param options the options available
-     * @param version the version to initialise a potential interlinear with
+     * @param book the version to initialise a potential interlinear with
      */
     protected void setOptions(final TransformingSAXEventProvider tsep, final List<LookupOption> options,
-            final String version) {
+            final Book book) {
 
         for (final LookupOption lookupOption : options) {
             if (lookupOption.getXsltParameterName() != null) {
@@ -538,7 +547,8 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
             }
         }
 
-        tsep.setParameter("baseVersion", version);
+        tsep.setParameter("direction", book.getBookMetaData().isLeftToRight() ? "ltr" : "rtl");
+        tsep.setParameter("baseVersion", book.getInitials());
     }
 
     @Override

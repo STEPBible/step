@@ -144,13 +144,13 @@ step.passage = {
             var features = "";
             // add to Strongs if applicable, and therefore interlinear
             if (item.hasStrongs) {
-                features += " " + "<span class='versionFeature strongsFeature' title='Vocabulary available'>V</span>";
-                features += " " + "<span class='versionFeature interlinearFeature' title='Interlinear available'>I</span>";
+                features += " " + "<span class='versionFeature' title='Vocabulary available'>V</span>";
+                features += " " + "<span class='versionFeature' title='Interlinear available'>I</span>";
             }
 
             // add morphology
             if (item.hasMorphology) {
-                features += " " + "<span class='versionFeature morphologyFeature' title='Grammar available'>G</span>";
+                features += " " + "<span class='versionFeature' title='Grammar available'>G</span>";
             }
 
             if (item.isQuestionable) {
@@ -224,8 +224,8 @@ function Passage(passageContainer, rawServerVersions, passageId) {
 };
 
 
-$(step.passage).hear("filter-versions", function() {
-    var element = document.activeElement;
+$(step.passage).hear("filter-versions", function(source, data) {
+    var element = data;
     var passageId = step.passage.getPassageId(element);
     var passageContainer = step.util.getPassageContainer(passageId);
     var passageVersion = $(".passageVersion", passageContainer);
@@ -233,7 +233,9 @@ $(step.passage).hear("filter-versions", function() {
     step.passage.refreshVersions(passageId, step.passage.filteredVersions(passageVersion, passageId));
 //    passageVersion.filteredcomplete("option", "source", );
     passageVersion.filteredcomplete("search", "");
-
+    
+    //hack for IE.
+    passageVersion.focus();
 });
 
 
@@ -260,6 +262,10 @@ Passage.prototype.initVersionsTextBox = function(rawServerVersions) {
                 //check if 'this' has a child containing the text of the first option
                     $(this).css('width', '500px');
             });
+        },
+        
+        close : function(event, ui) {
+            console.log("closing");
         }
     }).focus(function() {
         self.version.filteredcomplete("search", "");

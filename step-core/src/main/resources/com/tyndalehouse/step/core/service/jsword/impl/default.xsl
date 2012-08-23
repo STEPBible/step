@@ -261,7 +261,7 @@
         <div class="l"><a name="{@osisID}"><xsl:call-template name="versenum"/></a><xsl:apply-templates/></div>
       </xsl:when>
       <xsl:otherwise>
-        <span class="verse"><xsl:call-template name="versenum"/><xsl:apply-templates/></span>
+        <span class="verse" dir="{$direction}"><xsl:call-template name="versenum"/><xsl:apply-templates/></span>
         <!-- Follow the verse with an extra space -->
         <!-- when they don't start on lines to themselves -->
         <xsl:text> </xsl:text>

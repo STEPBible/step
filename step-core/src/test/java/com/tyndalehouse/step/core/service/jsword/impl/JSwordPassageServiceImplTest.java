@@ -324,13 +324,13 @@ public class JSwordPassageServiceImplTest {
      */
     @Test
     public void testPrettyXml() throws BookException, NoSuchKeyException, JDOMException, IOException {
-        final String version = "Diaglott";
-        final String ref = "John 1";
+        final String version = "Geneva";
+        final String ref = "John.1.1";
         final Book currentBook = Books.installed().getBook(version);
         final BookData bookData = new BookData(currentBook, currentBook.getKey(ref));
         final Element osisFragment = bookData.getOsisFragment();
 
-        final XMLOutputter xmlOutputter = new XMLOutputter(Format.getPrettyFormat());
+        final XMLOutputter xmlOutputter = new XMLOutputter(Format.getRawFormat());
         LOGGER.debug(xmlOutputter.outputString(osisFragment));
 
         // do the test

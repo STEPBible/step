@@ -59,10 +59,7 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
     }
 
     @Override
-    public SearchResult search(final String version, final String query, final boolean ranked,
-            final int context, final LookupOption... options) {
-        final long start = System.currentTimeMillis();
-
+    public Key searchKeys(final String version, final String query, final boolean ranked, final int context) {
         final DefaultSearchModifier modifier = new DefaultSearchModifier();
         modifier.setRanked(ranked);
         modifier.setMaxResults(MAX_RESULTS);
@@ -70,41 +67,50 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
         final Book bible = this.av11nService.getBookFromVersion(version);
 
         try {
-
-            final Key results;
-
             // TODO JS-228 raised for thread-safety
             synchronized (this) {
-                results = bible.find(new DefaultSearchRequest(query, modifier));
+                return bible.find(new DefaultSearchRequest(query, modifier));
             }
-
-            LOGGER.debug("[{}] verses found.", results.getCardinality());
-
-            if (ranked) {
-                rankAndTrimResults(results, MAX_RESULTS);
-            } else {
-                trimResults(results, MAX_RESULTS);
-            }
-
-            LOGGER.debug("Trimmed down to [{}].", results.getCardinality());
-
-            final long startRefs = System.currentTimeMillis();
-
-            // if context > 0, then we need to add verse numbers:
-            final List<LookupOption> lookupOptions = new ArrayList<LookupOption>();
-            Collections.addAll(lookupOptions, options);
-            if (context > 0) {
-                lookupOptions.add(LookupOption.VERSE_NUMBERS);
-            }
-
-            final List<SearchEntry> resultPassages = getPassagesForResults(bible, results, context,
-                    lookupOptions);
-            final long endRefs = System.currentTimeMillis();
-
-            return getSearchResult(query, start, startRefs, endRefs, resultPassages);
         } catch (final BookException e) {
             throw new StepInternalException("Unable to search for " + query + " with Bible " + version, e);
         }
+    }
+
+    @Override
+    public SearchResult search(final String version, final String query, final boolean ranked,
+            final int context, final LookupOption... options) {
+        final long start = System.currentTimeMillis();
+        final Key results = searchKeys(version, query, ranked, context);
+        return retrieveResultsFromKeys(version, query, ranked, context, start, results, options);
+    }
+
+    @Override
+    public SearchResult retrieveResultsFromKeys(final String version, final String query,
+            final boolean ranked, final int context, final long start, final Key results,
+            final LookupOption... options) {
+        LOGGER.debug("[{}] verses found.", results.getCardinality());
+        if (ranked) {
+            rankAndTrimResults(results, MAX_RESULTS);
+        } else {
+            trimResults(results, MAX_RESULTS);
+        }
+
+        LOGGER.debug("Trimmed down to [{}].", results.getCardinality());
+
+        final long startRefs = System.currentTimeMillis();
+
+        // if context > 0, then we need to add verse numbers:
+        final List<LookupOption> lookupOptions = new ArrayList<LookupOption>();
+        Collections.addAll(lookupOptions, options);
+        if (context > 0) {
+            lookupOptions.add(LookupOption.VERSE_NUMBERS);
+        }
+
+        final Book bible = this.av11nService.getBookFromVersion(version);
+        final List<SearchEntry> resultPassages = getPassagesForResults(bible, results, context, lookupOptions);
+        final long endRefs = System.currentTimeMillis();
+
+        return getSearchResult(query, start, startRefs, endRefs, resultPassages);
     }
 
     /**
@@ -163,7 +169,8 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
             }
 
             final OsisWrapper peakOsisText = this.jsword.peakOsisText(bible, lookupKey, options);
-            resultPassages.add(new VerseSearchEntry(peakOsisText.getReference(), peakOsisText.getValue()));
+            resultPassages.add(new VerseSearchEntry(peakOsisText.getReference(), peakOsisText.getValue(),
+                    peakOsisText.getOsisId()));
         }
         return resultPassages;
     }

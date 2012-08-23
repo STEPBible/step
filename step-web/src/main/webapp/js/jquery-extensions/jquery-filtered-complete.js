@@ -18,15 +18,15 @@ $.widget("custom.filteredcomplete", $.ui.autocomplete, {
 
                 toolbar += '<tr class="filterButtonSet"><td class="filterHeader">Languages</td><td>';
                 toolbar += '<input type="checkbox" id="languageAll" value="langAll" name="language" key="langAll" /><label for="languageAll">All</label>';
-                toolbar += '<input type="checkbox" id="languageMy" value="langMy" name="language"  key="langMy" /><label for="languageMy">Mine</label>';
-                toolbar += '<input type="checkbox" id="languageMyAndEnglish" value="langMyAndEnglish"  key="langMyEnglish" name="language" /><label for="languageMyAndEnglish">Mine + English</label>';
+                toolbar += '<input type="checkbox" id="languageMy" value="langMy" name="language"  key="langMy" /><label for="languageMy">Local</label>';
+                toolbar += '<input type="checkbox" id="languageMyAndEnglish" value="langMyAndEnglish"  key="langMyEnglish" name="language" /><label for="languageMyAndEnglish">Local + English</label>';
                 toolbar += '<input type="checkbox" id="languageAncient" value="langAncient"  key="langAncient" name="language" /><label for="languageAncient">Ancient</label>';
                 toolbar += '</td></tr>';
 
-                toolbar += '<tr class="filterButtonSet"><td class="filterHeader">Features</td><td>';
-                toolbar += '<input type="checkbox" id="vocabFeature" class="vocabFeature" key="vocab" /><label for="vocabFeature">V</label>';
-                toolbar += '<input type="checkbox" id="interlinearFeature" class="interlinearFeature" key="interlinear" /><label for="interlinearFeature">I</label>';
-                toolbar += '<input type="checkbox" id="grammarFeature" class="grammarFeature" key="grammar" /><label for="grammarFeature">G</label>';
+                toolbar += '<tr class="filterButtonSet"><td class="filterHeader">Features available</td><td>';
+                toolbar += '<input type="checkbox" id="vocabFeature" class="vocabFeature" key="vocab" /><label for="vocabFeature"><span class="versionFeature">V</span>ocabulary</label>';
+                toolbar += '<input type="checkbox" id="interlinearFeature" class="interlinearFeature" key="interlinear" /><label for="interlinearFeature"><span class="versionFeature">I</span>nterlinear</label>';
+                toolbar += '<input type="checkbox" id="grammarFeature" class="grammarFeature" key="grammar" /><label for="grammarFeature"><span class="versionFeature">G</span>rammar</label>';
                 toolbar += '</td></tr>';
                 
                 toolbar += '</table>';
@@ -58,7 +58,7 @@ $.widget("custom.filteredcomplete", $.ui.autocomplete, {
                 });
             }
             
-            $.shout("filter-versions");
+            $.shout("filter-versions", self.element[0]);
         });
     },
 

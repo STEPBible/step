@@ -174,7 +174,6 @@ public class DdlGenerator {
     }
 
     protected void writeFile(final String fileName, final String fileContent) throws IOException {
-        System.out.println(System.getProperty("java.io.tmpdir"));
         final File f = new File(new File(System.getProperty("java.io.tmpdir")), fileName);
 
         final FileWriter fw = new FileWriter(f);

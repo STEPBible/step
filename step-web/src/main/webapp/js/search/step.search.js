@@ -209,18 +209,8 @@ step.search = {
         return resultHtml;
     },
     
-    _displayPassageResults : function(qualifiedSearchResults, passageId, goToChapter) {
-        if(goToChapter == undefined) {
-            goToChapter = true;
-        }
-        
-        var key = "";
-        var searchResults = qualifiedSearchResults; 
-        if(qualifiedSearchResults.key) {
-            key = qualifiedSearchResults.key;
-            searchResults = qualifiedSearchResults.result;
-        }
-        
+    // qualifiedSearchResults = {result: , key: }
+    _displayPassageResults : function(searchResults, passageId, goToChapter, contentGenerator) {
         var results = "";
         $.each(searchResults, function(i, item) {
             results += "<tr class='searchResultRow'><td class='searchResultKey'> ";
@@ -228,12 +218,18 @@ step.search = {
             results += item.key;
             results += goToPassageArrow(false, item.key, "searchKeyPassageArrow", goToChapter);
             results += "</td><td class='searchResultRow'>";
-            results += "<span class='smallResultKey'>(" + key + ")</span> " + item.preview;
+            
+            if(contentGenerator != undefined) {
+                results += contentGenerator(item);
+            } else {
+                results += item.preview;
+            }
+            
             results += "</td></tr>";
         });
         return results;
     },
-
+    
     _displaySubjectResults : function(searchResults, passageId) {
         var results = "<ul class='subjectSection searchResults'>";
         
@@ -258,8 +254,13 @@ step.search = {
         var results = "";
         var searchResults = searchQueryResults.results;
 
-        if (searchResults.length == 0) {
+        //remove any hebrew language css
+        step.util.getPassageContainer(passageId).removeClass("hebrewLanguage");
+        
+        
+        if (searchResults == undefined || searchResults.length == 0) {
             results += "<span class='notApplicable'>No search results were found</span>";
+            this._changePassageContent(passageId, results);
             return;
         } 
         
@@ -270,12 +271,17 @@ step.search = {
         } else {
             results += "<table class='searchResults'>";
             
-            if($.isArray(searchResults)) {
-                for(var i = 0; i < searchResults.length; i++) {
-                    results += this._displayPassageResults({ result: searchResults[i].searchResult.results, key: searchResults[i].key}, passageId);
-                }
+            if(searchResults[0].preview) {
+                    results += this._displayPassageResults(searchResults, passageId, true);
             } else {
-                results += this._displayPassageResults(searchResults, passageId);
+                //we customize the generation of the actual verse content to add the version
+                results += this._displayPassageResults(searchResults, passageId, true, function (item) {
+                    var content= "";
+                    $.each(item.verseContent, function(i, verseContent) {
+                        content += "<div class='multiVersionSubResult'><span class='smallResultKey'>(" + verseContent.contentKey + ")</span> " + verseContent.preview +"</div>";
+                    });
+                    return content;
+                });
             }
             
             results += "</table>";
@@ -286,10 +292,13 @@ step.search = {
             results += "<span class='notApplicable'>The maximum number of search results was reached. Please refine your search to see continue.</span>";
         }
         
+        this._changePassageContent(passageId, results);
+    },
+    
+    _changePassageContent : function(passageId, content) {
         var passageContent = $(step.util.getPassageContent(passageId));
-        passageContent.html(results);
-
-//        this.showToolbar(passageId);
+        passageContent.html(content);
+        refreshLayout();
     },
     
     showToolbar : function(passageId) {

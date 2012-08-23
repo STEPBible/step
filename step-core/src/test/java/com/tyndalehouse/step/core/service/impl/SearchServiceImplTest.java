@@ -32,7 +32,7 @@ import com.tyndalehouse.step.core.service.jsword.impl.JSwordVersificationService
  * 
  */
 public class SearchServiceImplTest extends DataDrivenTestExtension {
-    private static final Logger LOG = LoggerFactory.getLogger(SearchServiceImplTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SearchServiceImplTest.class);
     private SearchServiceImpl si;
 
     /**
@@ -47,6 +47,15 @@ public class SearchServiceImplTest extends DataDrivenTestExtension {
 
     }
 
+    /**
+     * Random tests
+     */
+    @Test
+    public void testMultiVersionSearch() {
+        final List<SearchEntry> results = this.si.search("ESV,KJV,ASV", "elijah", false, 1).getResults();
+        assertTrue(results.size() > 0);
+    }
+
     /** test exact strong match */
     @Test
     public void testSubjectSearch() {
@@ -55,7 +64,7 @@ public class SearchServiceImplTest extends DataDrivenTestExtension {
         final List<SearchEntry> entries = ((SubjectHeadingSearchEntry) searchSubject.getResults().get(0))
                 .getHeadingsSearch().getResults();
         for (final SearchEntry e : entries) {
-            LOG.debug(((VerseSearchEntry) e).getPreview());
+            LOGGER.debug(((VerseSearchEntry) e).getPreview());
 
         }
         assertTrue(searchSubject.getResults().size() > 0);

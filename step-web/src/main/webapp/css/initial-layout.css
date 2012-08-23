@@ -163,16 +163,13 @@ body {
 }
 
 .versionFeature {
-	padding-left: 3px;
-	padding-right: 3px;
-	background-color: #4EB305;
 	font-size: xx-small;
-	color: white;
+	color: #696; 
 	font-weight: bold;	
 }
 
 .strongsFeature {
-	background-color: #4F5ECA;
+	/* background-color: #; */
 }
 
 .interlinearFeature {

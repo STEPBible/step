@@ -38,13 +38,18 @@ import static java.lang.String.format;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.crosswire.jsword.index.lucene.LuceneIndex;
+import org.crosswire.jsword.passage.Key;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,6 +59,7 @@ import com.tyndalehouse.step.core.data.entities.ScriptureReference;
 import com.tyndalehouse.step.core.data.entities.timeline.TimelineEvent;
 import com.tyndalehouse.step.core.models.OsisWrapper;
 import com.tyndalehouse.step.core.models.search.KeyedSearchResultSearchEntry;
+import com.tyndalehouse.step.core.models.search.KeyedVerseContent;
 import com.tyndalehouse.step.core.models.search.SearchEntry;
 import com.tyndalehouse.step.core.models.search.SearchResult;
 import com.tyndalehouse.step.core.models.search.SubjectHeadingSearchEntry;
@@ -100,27 +106,124 @@ public class SearchServiceImpl implements SearchService {
     @Override
     public SearchResult search(final String version, final String query, final boolean ranked,
             final int context) {
+
         // for text searches, we may have a prefix of t=
         final String parsedQuery = query.startsWith(TEXT_SEARCH) ? query.substring(2) : query;
         final String[] versions = version.split("[, ]+");
 
-        final SearchResult sr = new SearchResult();
-        sr.setQuery(query);
-
-        for (final String v : versions) {
-            final SearchResult result = this.jswordSearch.search(v, parsedQuery, ranked, context);
-            final KeyedSearchResultSearchEntry entry = new KeyedSearchResultSearchEntry();
-            entry.setKey(v);
-            entry.setSearchResult(result);
-            sr.addEntry(entry);
-
-            sr.setTimeTookTotal(sr.getTimeTookTotal() + result.getTimeTookTotal());
-            sr.setTimeTookToRetrieveScripture(sr.getTimeTookToRetrieveScripture()
-                    + result.getTimeTookToRetrieveScripture());
-            sr.setMaxReached(sr.isMaxReached() || result.isMaxReached());
+        if (versions.length == 1) {
+            return this.jswordSearch.search(versions[0], parsedQuery, ranked, context);
         }
 
+        // otherwise, we are into the realm of searching across multiple versions
+        final long start = System.currentTimeMillis();
+
+        final Map<String, Key> resultsPerVersion = new HashMap<String, Key>();
+        // no need to rank, since it won't be possible to rank accurately across versions
+        for (final String v : versions) {
+            resultsPerVersion.put(v, this.jswordSearch.searchKeys(v, parsedQuery, false, context));
+        }
+
+        final Key results = mergeSearches(resultsPerVersion);
+
+        // build combined results
+        return buildCombinedResults(versions, results, parsedQuery, context, start);
+    }
+
+    /**
+     * Builds the combined results
+     * 
+     * @param versions the array of versions that are to be looked up from the keys
+     * @param results the set of results
+     * @param parsedQuery the parsed query, used for populate of the POJO
+     * @param context how much context to add
+     * @param start the start time of the search
+     * @return the set of results
+     */
+    private SearchResult buildCombinedResults(final String[] versions, final Key results,
+            final String parsedQuery, final int context, final long start) {
+        final SearchResult sr = new SearchResult();
+
+        // double-indirection map, verse -> version -> content
+        final Map<String, Map<String, VerseSearchEntry>> verseToVersionToContent = new LinkedHashMap<String, Map<String, VerseSearchEntry>>();
+
+        // combine the results into 1 giant keyed map
+        for (final String v : versions) {
+            final long totalScriptureRetrievalStart = System.currentTimeMillis();
+
+            // retrieve scripture content and set up basics
+            final SearchResult s = this.jswordSearch.retrieveResultsFromKeys(v, parsedQuery, false, context,
+                    start, results);
+            sr.setTimeTookToRetrieveScripture(sr.getTimeTookToRetrieveScripture()
+                    + System.currentTimeMillis() - totalScriptureRetrievalStart);
+            sr.setMaxReached(sr.isMaxReached() || s.isMaxReached());
+
+            // key in to aggregating map
+            for (final SearchEntry e : s.getResults()) {
+                final VerseSearchEntry verseEntry = (VerseSearchEntry) e;
+
+                // retrieve Verse to Version map
+                Map<String, VerseSearchEntry> versionToContent = verseToVersionToContent.get(verseEntry
+                        .getOsisId());
+                if (versionToContent == null) {
+                    // using a tree map to maintain the natural ordering
+                    versionToContent = new LinkedHashMap<String, VerseSearchEntry>();
+                    verseToVersionToContent.put(verseEntry.getOsisId(), versionToContent);
+                }
+                versionToContent.put(v, verseEntry);
+            }
+        }
+
+        for (final Entry<String, Map<String, VerseSearchEntry>> verseToVersionToContentEntry : verseToVersionToContent
+                .entrySet()) {
+            // key= osisId, value=version+content
+            final KeyedSearchResultSearchEntry aggregateVerse = new KeyedSearchResultSearchEntry();
+
+            for (final Entry<String, VerseSearchEntry> versionToContentEntry : verseToVersionToContentEntry
+                    .getValue().entrySet()) {
+                final KeyedVerseContent keyedVerseContent = new KeyedVerseContent();
+                keyedVerseContent.setContentKey(versionToContentEntry.getKey());
+                final VerseSearchEntry verseSearchEntry = versionToContentEntry.getValue();
+                keyedVerseContent.setPreview(verseSearchEntry.getPreview());
+
+                // add to aggregation verse
+                aggregateVerse.addEntry(keyedVerseContent);
+                if (aggregateVerse.getKey() == null) {
+                    aggregateVerse.setKey(verseSearchEntry.getKey());
+                }
+            }
+
+            sr.addEntry(aggregateVerse);
+        }
+
+        sr.setQuery(parsedQuery);
+        sr.setTimeTookTotal(System.currentTimeMillis() - start);
         return sr;
+
+    }
+
+    /**
+     * merges all search results together
+     * 
+     * @param resultsPerVersion the results per version
+     * @return the list of results
+     */
+    private Key mergeSearches(final Map<String, Key> resultsPerVersion) {
+        Key all = null;
+
+        for (final Entry<String, Key> entry : resultsPerVersion.entrySet()) {
+            final Key value = entry.getValue();
+            LOGGER.debug("Sub-result-set [{}] has [{}] entries", entry.getKey(), value.getCardinality());
+
+            if (all == null) {
+                all = value;
+            } else {
+                all.addAll(value);
+            }
+        }
+
+        LOGGER.debug("Combined result-set has [{}] entries", all.getCardinality());
+        return all;
     }
 
     @Override

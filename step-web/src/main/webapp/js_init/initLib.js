@@ -36,6 +36,11 @@
  */
 var step = {};
 
+if(typeof console === "undefined"){
+    console = { log: function() { } };
+  }
+  console.log("doc ready");
+
 //Set up the variables for accessing the server
 STEP_SERVER_BASE_URL = "rest/";
 

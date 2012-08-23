@@ -35,7 +35,7 @@ public class JSwordSearchServiceImplTest {
      * Random tests
      */
     @Test
-    public void testMusings() {
+    public void testApproximateSingleSearch() {
         final List<SearchEntry> results = this.search.search("ESV", "Melchizedc~", false, 1).getResults();
         for (int i = 0; i < 10 || i < results.size(); i++) {
             LOGGER.debug(((VerseSearchEntry) results.get(i)).getKey());

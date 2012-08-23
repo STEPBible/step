@@ -47,6 +47,10 @@
 	display: inline;
 }
 
+.searchResultRow div, .searchResultRow div p {
+	padding-left: 10px;
+}
+
 .highlight {
 	background-color: yellow;
 	font-style: normal;
@@ -97,6 +101,11 @@ li.subjectHeading {
 	color: #696;
 }
 
+.multiVersionSubResult {
+	display: block !important;
+	clear: both;
+	border-bottom: dotted thin lightgray;
+}
 
 /*******************************************/
 /* Advanced search box                     */

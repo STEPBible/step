@@ -51,7 +51,10 @@ public enum XslConversionType {
     /**
      * Only outputs the headings that happen to be in the XML
      */
-    HEADINGS_ONLY("headers-only.xsl");
+    HEADINGS_ONLY("headers-only.xsl"),
+
+    /** commentaries contain verses, free text and references */
+    COMMENTARY("commentary.xsl");
 
     /**
      * indicates the xsl conversion file to use for this work

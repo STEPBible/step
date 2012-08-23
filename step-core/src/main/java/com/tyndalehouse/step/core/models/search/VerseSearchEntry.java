@@ -9,6 +9,7 @@ package com.tyndalehouse.step.core.models.search;
 public class VerseSearchEntry implements SearchEntry {
     private static final long serialVersionUID = 5620645768146160462L;
     private String key;
+    private String osisId;
     private String preview;
 
     /**
@@ -21,10 +22,12 @@ public class VerseSearchEntry implements SearchEntry {
     /**
      * @param key meaninful key to the user
      * @param preview the preview text
+     * @param osisId TODO
      */
-    public VerseSearchEntry(final String key, final String preview) {
+    public VerseSearchEntry(final String key, final String preview, final String osisId) {
         this.key = key;
         this.preview = preview;
+        this.osisId = osisId;
     }
 
     /**
@@ -53,5 +56,19 @@ public class VerseSearchEntry implements SearchEntry {
      */
     public void setPreview(final String preview) {
         this.preview = preview;
+    }
+
+    /**
+     * @return the osisId
+     */
+    public String getOsisId() {
+        return this.osisId;
+    }
+
+    /**
+     * @param osisId the osisId to set
+     */
+    public void setOsisId(final String osisId) {
+        this.osisId = osisId;
     }
 }

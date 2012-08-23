@@ -44,6 +44,7 @@ public class OsisWrapper implements Serializable {
     private static final long serialVersionUID = -5651330317995494895L;
     private String value;
     private String reference;
+    private String osisId;
     private boolean fragment;
     private boolean isMultipleRanges;
     private int startRange;
@@ -56,11 +57,14 @@ public class OsisWrapper implements Serializable {
      * @param value the value to be wrapped around
      * @param reference reference
      * @param languageCode languageCode of the retrieved Bible
+     * @param osisId TODO
      */
-    public OsisWrapper(final String value, final String reference, final String languageCode) {
+    public OsisWrapper(final String value, final String reference, final String languageCode,
+            final String osisId) {
         this.value = value;
         this.reference = reference;
         this.languageCode = languageCode;
+        this.osisId = osisId;
     }
 
     /**
@@ -152,5 +156,19 @@ public class OsisWrapper implements Serializable {
      */
     public String getLanguageCode() {
         return this.languageCode;
+    }
+
+    /**
+     * @return the osisId
+     */
+    public String getOsisId() {
+        return this.osisId;
+    }
+
+    /**
+     * @param osisId the osisId to set
+     */
+    public void setOsisId(final String osisId) {
+        this.osisId = osisId;
     }
 }

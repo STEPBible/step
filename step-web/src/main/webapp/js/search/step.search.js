@@ -118,7 +118,7 @@ step.search = {
             }
             
             if (step.util.raiseErrorIfBlank(query, "Please fill in the form first")) {
-                step.search._doSearch(SEARCH_DEFAULT, passageId, query, version, ranked, context, this._highlightingTerms(query));
+                step.search._doSearch(SEARCH_DEFAULT, passageId, query, version.toUpperCase(), ranked, context, this._highlightingTerms(query));
             }
         },
         

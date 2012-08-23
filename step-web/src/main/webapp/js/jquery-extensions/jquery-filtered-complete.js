@@ -1,6 +1,10 @@
 $.widget("custom.filteredcomplete", $.ui.autocomplete, {
     _renderMenu : function(ul, items) {
         var self = this;
+        
+        //remove any already existing menu from the dom
+        $(document).find(".filterOptions").parent().empty();
+        
         $.each(items, function(index, item) {
             if (index == 0) {
                 var toolbar = "";

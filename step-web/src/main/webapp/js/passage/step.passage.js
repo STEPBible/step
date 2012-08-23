@@ -298,11 +298,21 @@ Passage.prototype.initReferenceTextBox = function() {
         delay : 0,
         select : function(event, ui) {
             step.state.passage.reference(self.passageId, ui.item.value);
+            $(this).focus();
+            var that = this;
+            
+            delay(function() {
+                $(that).autocomplete("search", $(that).val());
+                }, 50);
         }
     }).change(function() {
         step.state.passage.reference(self.passageId, $(this).val());
     }).click(function() {
-        if($(this).val() == "") {
+        $(this).autocomplete("search", $(this).val());
+        
+        //if no results, then re-run search with nothing
+        if($(".passageReference:first").prop("autocomplete") == "off") {
+            //search for nothing
             $(this).autocomplete("search", "");
         }
     });

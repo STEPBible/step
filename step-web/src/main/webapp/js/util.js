@@ -269,8 +269,16 @@ step.util = {
                     $(this).autocomplete("search", "");
             });
         }
-    }
+    },
 };
+
+var delay = (function(){
+    var timer = 0;
+    return function(callback, ms){
+      clearTimeout (timer);
+      timer = setTimeout(callback, ms);
+    };
+  })();
 
 /**
  * array comparison

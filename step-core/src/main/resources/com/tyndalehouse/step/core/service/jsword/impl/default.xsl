@@ -258,7 +258,7 @@
     <!-- Always output the verse -->
     <xsl:choose>
       <xsl:when test="$VLine = 'true'">
-        <div class="l"><a name="{@osisID}"><xsl:call-template name="versenum"/></a><xsl:apply-templates/></div>
+        <div class="l" dir="{$direction}"><a name="{@osisID}"><xsl:call-template name="versenum"/></a><xsl:apply-templates/></div>
       </xsl:when>
       <xsl:otherwise>
         <span class="verse" dir="{$direction}"><xsl:call-template name="versenum"/><xsl:apply-templates/></span>

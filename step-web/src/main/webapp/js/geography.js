@@ -42,6 +42,21 @@ function GeographyWidget(rootElement, passages) {
 	this.removeMarkers = true;
 	singletonWidget = this;
 	
+//	$("#bottomModuleHeader").append("Lat: <input id='lat' />");
+//    $("#bottomModuleHeader").append("Long: <input id='long' />");
+	var self = this;
+
+
+    $("#bottomModuleHeader").append("Long: <button id='go2' text='GO2' />");
+    $("#go2").click(function() {
+        var latlng = new google.maps.LatLng(32.817363, 35.156913);
+        self.map.setCenter(latlng);
+        self.map.setZoom(20);
+        
+    });
+
+    
+	
 	var self = this;
 	$(rootElement).hear("show-maps", function(selfElement, data) {
 		$(window).resize(self.onResize);
@@ -67,7 +82,7 @@ function loadMaps() {
 
 function initialiseFirstTimeMaps() {
 	singletonWidget.initialiseMaps();
-	singletonWidget.goToReference(singletonWidget.passages[singletonWidget.passageId].getReference());
+	singletonWidget.goToReference( step.state.passage.reference(singletonWidget.passageId));
 }
 
 /**
@@ -84,6 +99,20 @@ GeographyWidget.prototype.initialiseMaps = function() {
 	      mapTypeId: google.maps.MapTypeId.TERRAIN
 	    };
 	    this.map = new google.maps.Map(this.rootElement.get(0), myOptions);
+	    
+	        
+	        //newark
+	        var altImageBounds = new google.maps.LatLngBounds(
+	                new google.maps.LatLng(32.781323, 35.103733),
+	                new google.maps.LatLng(32.817363, 35.156913));
+	        
+	        var oldmap2 = new google.maps.GroundOverlay(
+	                "http://www.tyndalearchive.com/STEP/GEOG/maps/rectangles_JPG/160-243=5x4.jpg",
+	                altImageBounds);
+	        oldmap2.setMap(this.map);
+	        
+	        $("img[src='http://www.tyndalearchive.com/STEP/GEOG/maps/rectangles_JPG/160-243=5x4.jpg']").css('opacity',0.5);
+	        
 	    initialised = true;
 	}
 };

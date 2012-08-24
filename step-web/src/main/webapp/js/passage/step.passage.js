@@ -258,10 +258,10 @@ Passage.prototype.initVersionsTextBox = function(rawServerVersions) {
         },
         open: function(event, ui) {
             //check we've got the right size
-//            $(".ui-autocomplete").map(function() {
-//                //check if 'this' has a child containing the text of the first option
-////                    $(this).css('width', '500px');
-//            });
+            $(".ui-autocomplete").map(function() {
+                //check if 'this' has a child containing the text of the first option
+                    $(this).css('width', '400px');
+            });
         },
         
         close : function(event, ui) {

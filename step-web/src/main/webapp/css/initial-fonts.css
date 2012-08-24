@@ -118,6 +118,7 @@ body {
 
 .filterOptions, .filterOptions * {
 	font-size: 10px !important;
+	white-space: nowrap;
 }
 .filterButtonSet {
 	margin-top: 3px;

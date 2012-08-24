@@ -35,6 +35,7 @@ package com.tyndalehouse.step.core.service.jsword.impl;
 import static com.tyndalehouse.step.core.models.LookupOption.INTERLINEAR;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -61,6 +62,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.tyndalehouse.step.core.data.entities.ScriptureReference;
+import com.tyndalehouse.step.core.models.BookName;
 import com.tyndalehouse.step.core.models.LookupOption;
 
 /**
@@ -251,11 +253,22 @@ public class JSwordPassageServiceImplTest {
         final JSwordMetadataServiceImpl jsi = new JSwordMetadataServiceImpl(
                 new JSwordVersificationServiceImpl());
 
-        final List<String> bibleBookNames = jsi.getBibleBookNames("Ma", "ESV");
+        final List<BookName> bibleBookNames = jsi.getBibleBookNames("Ma", "ESV");
+        final String[] containedAbbrevations = new String[] { "Mal", "Mat", "Mar" };
 
-        assertTrue(bibleBookNames.contains("Mal"));
-        assertTrue(bibleBookNames.contains("Mat"));
-        assertTrue(bibleBookNames.contains("Mar"));
+        for (final String s : containedAbbrevations) {
+            boolean found = false;
+            for (final BookName b : bibleBookNames) {
+                if (s.equalsIgnoreCase(b.getShortName())) {
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found) {
+                fail(s + " was not found");
+            }
+        }
     }
 
     /**
@@ -324,8 +337,8 @@ public class JSwordPassageServiceImplTest {
      */
     @Test
     public void testPrettyXml() throws BookException, NoSuchKeyException, JDOMException, IOException {
-        final String version = "Geneva";
-        final String ref = "John.1.1";
+        final String version = "ESV";
+        final String ref = "John.1-5;Acts.1-5";
         final Book currentBook = Books.installed().getBook(version);
         final BookData bookData = new BookData(currentBook, currentBook.getKey(ref));
         final Element osisFragment = bookData.getOsisFragment();

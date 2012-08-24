@@ -35,6 +35,7 @@ package com.tyndalehouse.step.core.service;
 import java.util.List;
 
 import com.tyndalehouse.step.core.models.BibleVersion;
+import com.tyndalehouse.step.core.models.BookName;
 import com.tyndalehouse.step.core.models.EnrichedLookupOption;
 import com.tyndalehouse.step.core.models.KeyWrapper;
 import com.tyndalehouse.step.core.models.LookupOption;
@@ -109,7 +110,7 @@ public interface BibleInformationService {
      * 
      * @return a list of matching bible book names
      */
-    List<String> getBibleBookNames(String bookStart, String version);
+    List<BookName> getBibleBookNames(String bookStart, String version);
 
     /**
      * Checks a set of core versions to see if they have been installed

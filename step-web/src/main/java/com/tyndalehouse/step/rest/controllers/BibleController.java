@@ -49,6 +49,7 @@ import org.slf4j.LoggerFactory;
 import com.tyndalehouse.step.core.data.entities.Session;
 import com.tyndalehouse.step.core.data.entities.User;
 import com.tyndalehouse.step.core.models.BibleVersion;
+import com.tyndalehouse.step.core.models.BookName;
 import com.tyndalehouse.step.core.models.ClientSession;
 import com.tyndalehouse.step.core.models.EnrichedLookupOption;
 import com.tyndalehouse.step.core.models.KeyWrapper;
@@ -231,7 +232,7 @@ public class BibleController {
      * @return a list of items
      */
     @Cacheable(true)
-    public List<String> getBibleBookNames(final String bookStart, final String version) {
+    public List<BookName> getBibleBookNames(final String bookStart, final String version) {
         return this.bibleInformation.getBibleBookNames(bookStart, version);
     }
 

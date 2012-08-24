@@ -291,7 +291,9 @@ Passage.prototype.initReferenceTextBox = function() {
     this.reference.autocomplete({
         source : function(request, response) {
             $.getSafe(BIBLE_GET_BIBLE_BOOK_NAMES + request.term + "/" + step.state.passage.version(self.passageId), function(text) {
-                response(text);
+                response($.map(text, function(item) {
+                    return { label: "<span>" + item.shortName + " <span style='font-size: larger'>&rArr;</span> " + item.fullName + "</span>", value: item.shortName };
+                }));
             });
         },
         minLength : 0,
@@ -315,7 +317,12 @@ Passage.prototype.initReferenceTextBox = function() {
             //search for nothing
             $(this).autocomplete("search", "");
         }
-    });
+    }).data( "autocomplete" )._renderItem = function( ul, item ) {
+        return $( "<li></li>" )
+        .data( "item.autocomplete", item )
+        .append( "<a>" + item.label + "</a>" )
+        .appendTo( ul );
+    };;
 };
 
 /**

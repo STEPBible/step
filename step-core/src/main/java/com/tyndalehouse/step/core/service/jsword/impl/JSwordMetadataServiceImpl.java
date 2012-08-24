@@ -18,6 +18,7 @@ import org.crosswire.jsword.versification.BibleBookList;
 import org.crosswire.jsword.versification.Versification;
 import org.crosswire.jsword.versification.system.Versifications;
 
+import com.tyndalehouse.step.core.models.BookName;
 import com.tyndalehouse.step.core.models.LookupOption;
 import com.tyndalehouse.step.core.service.jsword.JSwordMetadataService;
 import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
@@ -89,12 +90,12 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
     }
 
     @Override
-    public List<String> getBibleBookNames(final String bookStart, final String version) {
+    public List<BookName> getBibleBookNames(final String bookStart, final String version) {
         final String lookup = isBlank(bookStart) ? "" : bookStart;
 
         final Versification versification = this.versificationService.getVersificationForVersion(version);
 
-        final List<String> books = getBooks(lookup, versification);
+        final List<BookName> books = getBooks(lookup, versification);
         if (books.isEmpty()) {
             return getBooks(lookup, Versifications.instance().getDefaultVersification());
         }
@@ -109,10 +110,10 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
      * @param versification the versification we are interested in
      * @return the list of matching names
      */
-    private List<String> getBooks(final String bookStart, final Versification versification) {
+    private List<BookName> getBooks(final String bookStart, final Versification versification) {
         final String searchPattern = bookStart.toLowerCase(Locale.getDefault()).trim();
 
-        final List<String> matchingNames = new ArrayList<String>();
+        final List<BookName> matchingNames = new ArrayList<BookName>();
         final BibleBookList books = versification.getBooks();
 
         BibleBook b = null;
@@ -140,13 +141,13 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
      * @param matchingNames the list of current names
      * @param bookName the book that we are examining
      */
-    private void addBookName(final List<String> matchingNames, final BibleBook bookName) {
+    private void addBookName(final List<BookName> matchingNames, final BibleBook bookName) {
         if (BibleBook.INTRO_BIBLE.equals(bookName) || BibleBook.INTRO_NT.equals(bookName)
                 || BibleBook.INTRO_OT.equals(bookName)) {
             return;
         }
 
-        matchingNames.add(bookName.getShortName());
+        matchingNames.add(new BookName(bookName.getShortName(), bookName.getLongName()));
     }
 
     /**
@@ -157,17 +158,18 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
      * @param searchSoFar the search so far
      * @return a list of books
      */
-    private List<String> getChapters(final Versification versification, final BibleBook book,
+    private List<BookName> getChapters(final Versification versification, final BibleBook book,
             final String searchSoFar) {
         final int lastChapter = versification.getLastChapter(book);
-        final List<String> chapters = new ArrayList<String>();
+        final List<BookName> chapters = new ArrayList<BookName>();
         for (int ii = 1; ii < lastChapter; ii++) {
-            final char f = Character.toUpperCase(searchSoFar.charAt(0));
+            // final char f = Character.toUpperCase(searchSoFar.charAt(0));
 
             // make sure first letter is CAPS, followed by the rest of the word and the chapter number
-            final String chapNumber = String.format("%c%s %d", f, searchSoFar.substring(1), ii);
+            final String chapNumber = String.format("%s %d", book.getShortName(), ii);
+            final String longChapNumber = String.format("%s %d", book.getLongName(), ii);
 
-            chapters.add(chapNumber);
+            chapters.add(new BookName(chapNumber, longChapNumber));
         }
         return chapters;
     }

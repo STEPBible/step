@@ -51,7 +51,7 @@ step.defaults = {
                                 { label: "Prophets",            value: "Isa-Mal" },
                                 { label: "Gospels and Acts",    value: "Mat-Acts" },
                                 { label: "Epistles",            value: "Rom-Rev" },
-                                { label: "Pick books...", value: "" }
+                                { label: "List books...", value: ""}
                               ],
             simpleTextTypes : [ "one or more words", "all of the words", "the exact phrase", "words similar to", "words starting with"],
             simpleTextSecondaryTypes : [ "all of the words", "the exact phrase"],

@@ -34,6 +34,7 @@ package com.tyndalehouse.step.core.service.jsword;
 
 import java.util.List;
 
+import com.tyndalehouse.step.core.models.BookName;
 import com.tyndalehouse.step.core.models.LookupOption;
 
 /**
@@ -59,5 +60,5 @@ public interface JSwordMetadataService {
      * 
      * @return a list of matching bible book names
      */
-    List<String> getBibleBookNames(String bookStart, String version);
+    List<BookName> getBibleBookNames(String bookStart, String version);
 }

@@ -48,6 +48,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.tyndalehouse.step.core.models.BibleVersion;
+import com.tyndalehouse.step.core.models.BookName;
 import com.tyndalehouse.step.core.models.EnrichedLookupOption;
 import com.tyndalehouse.step.core.models.KeyWrapper;
 import com.tyndalehouse.step.core.models.LookupOption;
@@ -202,7 +203,7 @@ public class BibleInformationServiceImpl implements BibleInformationService {
     }
 
     @Override
-    public List<String> getBibleBookNames(final String bookStart, final String version) {
+    public List<BookName> getBibleBookNames(final String bookStart, final String version) {
         return this.jswordMetadata.getBibleBookNames(bookStart, version);
     }
 

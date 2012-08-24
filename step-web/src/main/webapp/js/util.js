@@ -91,7 +91,7 @@ step.util = {
 
     ui : {
         autocompleteSearch : function(selector, data, readonly, preChangeHandler) {
-            $(selector).autocomplete({
+            return $(selector).autocomplete({
                 minLength: 0,
                 delay : 0,
                 source: data,
@@ -132,7 +132,7 @@ step.util = {
                 if(syntax) {
                     $(".searchQuerySyntax", step.util.getPassageContainer(passageId)).val(syntax); 
                 }
-            });  
+            });
         },
         
         resetIfEmpty : function(passageId, force, evalFunction, defaultValue) {

@@ -158,8 +158,8 @@ body {
 }
 
 .features {
-	margin-left: 10px;
 	float: right;	
+	text-align: right;
 }
 
 .versionFeature {
@@ -168,22 +168,23 @@ body {
 	font-weight: bold;	
 }
 
-.strongsFeature {
-	/* background-color: #; */
-}
-
-.interlinearFeature {
-	background-color: #FFA22D;
-}
-	
-.morphologyFeature {
-	background-color: lightpink;
-}
 
 .questionableFeature {
 	background-color: red;
 }
 
+.versionName {
+	width: 40ex;
+	overflow: hidden;
+	display: inline-block;
+	min-width: none;
+}
+
+.versionKey {
+	width: 15ex;
+	display: inline-block;
+	min-width: none;
+}
 
 /*********************************************/
 /** BOTTOM COMPONENT                         */

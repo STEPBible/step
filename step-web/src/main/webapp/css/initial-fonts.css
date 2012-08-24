@@ -14,7 +14,7 @@ body {
 	
 .ui-menu-item * {
 	font-size: x-small;
-	min-width: 100px;
+	/* min-width: 100px; */
 	white-space: nowrap;
 }
 

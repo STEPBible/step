@@ -140,7 +140,7 @@ step.passage = {
     refreshVersions : function(passageId, rawServerVersions) {
         // need to make server response adequate for autocomplete:
         var parsedVersions = $.map(rawServerVersions, function(item) {
-            var showingText = "[" + item.initials + "] " + item.name;
+            var showingText = "<span class='versionKey'>" +item.initials + "</span><span style='font-size: larger'>&rArr;</span>&nbsp;<span class='versionName'>" + item.name + "</span>";
             var features = "";
             // add to Strongs if applicable, and therefore interlinear
             if (item.hasStrongs) {
@@ -258,10 +258,10 @@ Passage.prototype.initVersionsTextBox = function(rawServerVersions) {
         },
         open: function(event, ui) {
             //check we've got the right size
-            $(".ui-autocomplete").map(function() {
-                //check if 'this' has a child containing the text of the first option
-                    $(this).css('width', '500px');
-            });
+//            $(".ui-autocomplete").map(function() {
+//                //check if 'this' has a child containing the text of the first option
+////                    $(this).css('width', '500px');
+//            });
         },
         
         close : function(event, ui) {

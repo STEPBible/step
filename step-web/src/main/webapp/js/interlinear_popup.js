@@ -119,7 +119,6 @@ InterlinearPopup.prototype.refreshCheckBoxes = function(versionsFromServer) {
 
 	this.createCheckboxes(this.versions);
 	this.addHandlersToCheckboxes();
-	this.addAllOptionsHandler();
 	
 	//reset selected options
 	this.init();
@@ -168,10 +167,7 @@ InterlinearPopup.prototype.createCheckboxes = function(strongedVersions) {
 		}
 	}
 	
-	var allOptions = "<tr><td><input id='il_all" + this.passageId + "' type='checkbox' value='" + allOptionsValue + "' />" +
-	  "<label for='il_" + ii + "'>All</label></td><td>&nbsp;</td></tr>";
-	
-	interlinearChoices.append("<table>" + allOptions + allCheckBoxes + "</table>");
+	interlinearChoices.append("<table>" + allCheckBoxes + "</table>");
 };
 
 /**
@@ -206,26 +202,6 @@ InterlinearPopup.prototype.addHandlersToCheckboxes = function() {
 };
 
 /**
- * adds a handler that adds all the options to the textbox
- */
-InterlinearPopup.prototype.addAllOptionsHandler = function() {
-	var self = this;
-	
-	$("#il_all" + this.passageId, this.interlinearPopup).change(function() {
-		//so on change, we basically put replace the whole text, not just part of it...
-		if($(this).is(":checked")) {
-			$("input[type='checkbox']:not([disabled])", self.interlinearPopup).prop('checked', true);
-			$(".interlinearVersions", self.interlinearPopup).val(this.value);
-			$("label", self.interlinearPopup).filter(function() { return $(this).text() == 'All'; } ).html("None");
-		} else {
-			$("input[type='checkbox']", self.interlinearPopup).not(".disabled").prop('checked', false);
-			$(".interlinearVersions", self.interlinearPopup).val("");
-			$("label", self.interlinearPopup).filter(function() { return $(this).text() == 'None'; } ).html("All");
-		}
-	});
-};
-
-/**
  * sets up the handler to show the popup. This alerts the menu if the state has changed
  * so that the icon can be adjusted correctly, it also alerts that the options have changed
  * so that a passage may or may not need changing...
@@ -234,7 +210,23 @@ InterlinearPopup.prototype.addShowHandler = function() {
 	var self = this;
 	$(this.interlinearPopup).hear("interlinear-menu-option-triggered-" + this.passageId, function(selfElement, passageId) {
 		selfElement.dialog({
-			buttons : { "OK" : function() {
+			buttons : { 
+			    "Reset" : function() {
+                    $(this).find("input[type='checkbox']").prop('checked', false);
+                    $(this).find(".interlinearVersions").val("");
+			    },
+			    
+			    "Select all" : function() {
+			        var allCheckboxes = $(this).find("input[type='checkbox']:not([disabled])"); 
+			        allCheckboxes.prop('checked', true);
+			        var values = $.map(allCheckboxes, function(item) {
+			            return $(item).val();
+			        });
+			        			        
+                    $(this).find(".interlinearVersions").val(values.join(", "));
+			    },
+			    
+			    "OK" : function() {
 									self.updateInterlinear();
 								}
 					   },

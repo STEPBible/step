@@ -187,6 +187,7 @@ $(document).ready(function() {
                            ], namespace);
     
     step.util.ui.trackQuerySyntax(".textSearchTable", namespace);
+    step.util.ui.searchButton(".textSearchButton",  'SEARCH_TEXT');
     $(".textClearButton").click(function() {
         var passageId = step.passage.getPassageId(this);
         

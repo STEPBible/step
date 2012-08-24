@@ -87,6 +87,9 @@ step.search = {
         },
         
         _highlightingTerms : function(query) {
+            if(query == undefined || query.length < 2) {
+                return [];
+            }
             return query.substring(2).split(" ");
         }
     },

@@ -156,9 +156,10 @@ li.subjectHeading {
 /*******************************************/
 .searchQuerySyntax {
 	position: relative;
-	right: 0px;
 	top: 2px;
 	float: right;
+	right: 5px;
+	width: 100px;
 }
 
 /*******************************************/

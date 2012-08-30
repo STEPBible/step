@@ -68,10 +68,12 @@ public interface BibleInformationService {
      * @param reference the reference
      * @param lookupOptions options to set for retrieval
      * @param interlinearVersion version to use as the interlinear
+     * @param interlinearMode indicates if we are interested in interleaving, proper interlinear, comparing,
+     *            etc.
      * @return the HTML string passed back for consumption
      */
     OsisWrapper getPassageText(String version, String reference, String lookupOptions,
-            String interlinearVersion);
+            String interlinearVersion, String interlinearMode);
 
     /**
      * This method selects passage text and forms XML for the client. This is done server side so that the

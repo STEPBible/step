@@ -30,6 +30,47 @@ span.interlinear span span span {
 	display: inline;
 }
 
+.verseGrouping {
+	border-bottom: thin dotted gray;
+	margin-bottom: 5px;
+	padding-bottom: 5px;
+}
+
+.verseGrouping * .smallResultKey {
+	margin-right: 10px;	
+}
+
+.verseGrouping * p {
+	display: none;
+}
+
+.verseGrouping .primary > .cmpUnderline {
+	display: none;
+}
+
+.verseGrouping .secondary > .cmpStrike {
+	display: none;
+}
+
+
+.singleVerse {
+	display: block;	
+}
+
+.singleVerse div.l {
+	display: inline;
+}
+
+.cmpStrike {
+	color: #696;
+	font-weight: bold;
+}
+
+.cmpUnderline {
+	color: #669; 
+	font-weight: bold;
+}
+
 .verseNumber {
 	vertical-align: top;
 	font-size: 6pt;
@@ -204,6 +245,16 @@ H3.heading  {
 	color: #666699;
 	font-weight: bold;
 }
+
+H4.heading  {
+	font-size: 100%;
+	color: #666699;
+	font-weight: bold;
+	padding: 0px;
+	margin: 0px;
+}
+
+
 
 .editable {
 	border: 1px dashed black;

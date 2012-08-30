@@ -29,8 +29,7 @@
 step.passage.navigation = {
     chapter : {
         previous : function(passageId) {
-            this._getSiblingReference(passageId, BIBLE_GET_PREVIOUS_CHAPTER, 
-                    step.util.getPassageContent(passageId).prop("scrollHeight"));
+            this._getSiblingReference(passageId, BIBLE_GET_PREVIOUS_CHAPTER, 0);
         },
 
         next : function(passageId) {

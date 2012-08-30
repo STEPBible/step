@@ -35,7 +35,7 @@
   version="1.0"
   xmlns:jsword="http://xml.apache.org/xalan/java"
   xmlns:morph="xalan://com.tyndalehouse.step.core.service.impl.MorphologyServiceImpl"
-  xmlns:vocab="xaland://com.tyndalehouse.step.core.service.impl.VocabularyServiceImpl"
+  xmlns:vocab="xalan://com.tyndalehouse.step.core.service.impl.VocabularyServiceImpl"
   extension-element-prefixes="jsword morph vocab">
 
   <!--  Version 3.0 is necessary to get br to work correctly. -->

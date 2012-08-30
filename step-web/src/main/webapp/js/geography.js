@@ -54,7 +54,6 @@ function GeographyWidget(rootElement, passages) {
         self.map.setZoom(20);
         
     });
-
     
 	
 	var self = this;

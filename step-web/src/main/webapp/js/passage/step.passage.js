@@ -42,7 +42,8 @@ step.passage = {
         var lookupVersion = step.state.passage.version(passageId);
         var lookupReference = step.state.passage.reference(passageId);
         var options = step.state.passage.options(passageId);
-        var interlinearVersion = step.state.passage.interlinearVersions(passageId);
+        var interlinearVersion = step.state.passage.extraVersions(passageId);
+        var interlinearMode = this._getInterlinearMode(passageId);
 
         if (!step.util.raiseErrorIfBlank(lookupVersion, "A version must be provided")
                 || !step.util.raiseErrorIfBlank(lookupReference, "A reference must be provided")) {
@@ -55,6 +56,7 @@ step.passage = {
 
             if (interlinearVersion && interlinearVersion.length != 0) {
                 url += "/" + interlinearVersion;
+                url += "/" + interlinearMode;
             }
         }
 
@@ -82,6 +84,12 @@ step.passage = {
         });
     },
     
+    _getInterlinearMode : function(passageId) {
+        var name = step.state.passage.extraVersionsDisplayOptions(passageId);
+        var index = step.defaults.passage.interOptions.indexOf(name);
+        return step.defaults.passage.interNamedOptions[index];
+    },
+    
     executeCallbacks : function(passageId) {
         var items = step.passage.callbacks[passageId];
         while (items.length != 0) {
@@ -90,83 +98,8 @@ step.passage = {
     },
 
     /* 2 queues of calls backs for passages */
-    callbacks : [ [], [] ],
-   
-    filteredVersions : function(passageVersion, passageId) {
-        var widget = passageVersion.filteredcomplete("widget");
-        
-        var resource = widget.find("input:radio[name=textType]:checked").val();
-        var language = widget.find("input:checkbox[name=language]:checked").val();
-        var vocab = widget.find("input.vocabFeature").prop('checked');
-        var interlinear = widget.find("input.interlinearFeature").prop('checked');
-        var grammar = widget.find("input.grammarFeature").prop('checked');
+    callbacks : [ [], [] ]
 
-        console.log("language is ", language);
-        
-       return $.grep(step.versions, function(item, index) {
-            if(resource == 'commentaries') {
-                //we ignore commentaries outright for now
-                return false;
-            }
-            
-            //exclude if vocab and no strongs
-            if((vocab == true || interlinear == true) && !item.hasStrongs) {
-                return false;
-            }
-            
-            if(grammar == true && !item.hasMorphology) {
-                return false;
-            }
-            
-            var lang = item.languageCode;
-            if(language == "langAncient" && lang != 'grc' && lang != 'la' && lang != 'he') {
-                return false;
-            }
-            
-            var currentLang = step.state.language(1);
-            if(language == "langMyAndEnglish" && lang != currentLang && lang != 'en') {
-                return false;
-            }
-            
-            if(language == "langMy" && lang != currentLang) {
-                return false;
-            }
-            
-            
-            return true;
-        });
-    },
-    
-    refreshVersions : function(passageId, rawServerVersions) {
-        // need to make server response adequate for autocomplete:
-        var parsedVersions = $.map(rawServerVersions, function(item) {
-            var showingText = "<span class='versionKey'>" +item.initials + "</span><span style='font-size: larger'>&rArr;</span>&nbsp;<span class='versionName'>" + item.name + "</span>";
-            var features = "";
-            // add to Strongs if applicable, and therefore interlinear
-            if (item.hasStrongs) {
-                features += " " + "<span class='versionFeature' title='Vocabulary available'>V</span>";
-                features += " " + "<span class='versionFeature' title='Interlinear available'>I</span>";
-            }
-
-            // add morphology
-            if (item.hasMorphology) {
-                features += " " + "<span class='versionFeature' title='Grammar available'>G</span>";
-            }
-
-            if (item.isQuestionable) {
-                feawtures += " " + "<span class='versioNFeature questionableFeature' title='Questionable material'>?</span>";
-            }
-
-            // return response for dropdowns
-            return {
-                label : showingText,
-                value : item.initials,
-                features : features
-            };
-        });
-
-        $(".passageVersion", step.util.getPassageContainer(passageId)).filteredcomplete("option", "source", parsedVersions);
-    }
 };
 
 
@@ -176,7 +109,7 @@ $(step.passage).hear("passage-state-has-changed", function(s, data) {
 
 
 
-function Passage(passageContainer, rawServerVersions, passageId) {
+function Passage(passageContainer, passageId) {
     var self = this;
     this.container = passageContainer;
     this.version = $(".passageVersion", passageContainer);
@@ -185,7 +118,7 @@ function Passage(passageContainer, rawServerVersions, passageId) {
     this.passageId = passageId;
 
 
-    this.initVersionsTextBox(rawServerVersions);
+    this.initVersionsTextBox();
     this.initReferenceTextBox();
 
     // this is so that when we click a word, it highlights it
@@ -208,7 +141,7 @@ function Passage(passageContainer, rawServerVersions, passageId) {
     });
 
     this.passage.hear("version-list-refresh", function(selfElement, versions) {
-        step.passage.refreshVersions(self.passageId, versions);
+        step.version.refreshVersions(self.passageId, versions);
     });
 
     $(this.passage).hear("make-master-interlinear-" + this.passageId, function(selfElement, newMasterVersion) {
@@ -224,64 +157,19 @@ function Passage(passageContainer, rawServerVersions, passageId) {
 };
 
 
-$(step.passage).hear("filter-versions", function(source, data) {
-    var element = data;
-    var passageId = step.passage.getPassageId(element);
-    var passageContainer = step.util.getPassageContainer(passageId);
-    var passageVersion = $(".passageVersion", passageContainer);
-    
-    step.passage.refreshVersions(passageId, step.passage.filteredVersions(passageVersion, passageId));
-//    passageVersion.filteredcomplete("option", "source", );
-    passageVersion.filteredcomplete("search", "");
-    
-    //hack for IE.
-    passageVersion.focus();
-});
-
-
 
 /**
  * Sets up the autocomplete for the versions dropdown
  */
-Passage.prototype.initVersionsTextBox = function(rawServerVersions) {
+Passage.prototype.initVersionsTextBox = function() {
     var self = this;
-
-    // set up autocomplete
-    this.version.filteredcomplete({
-        minLength : 0,
-        delay : 0,
-        select : function(event, ui) {
-            //manually change the text, so that the change() method can fire against the right version
-            self.version.val(ui.item.value);
-            
-            $(this).change();
-        },
-        open: function(event, ui) {
-            //check we've got the right size
-            $(".ui-autocomplete").map(function() {
-                //check if 'this' has a child containing the text of the first option
-                    $(this).css('width', '400px');
-            });
-        },
-        
-        close : function(event, ui) {
-            console.log("closing");
-        }
-    }).focus(function() {
-        self.version.filteredcomplete("search", "");
-    }).change(function() {
-        if (step.util.raiseErrorIfBlank(this.value, "A version must be selected.")) {
-            step.state.passage.version(self.passageId, this.value);
-            $(this).blur();
+    step.version.autocomplete(this.version, function(value) {
+        self.version.val(value);
+    }, function(value) {
+        if (step.util.raiseErrorIfBlank(value, "A version must be selected.")) {
+            step.state.passage.version(self.passageId, value);
         }
     });
-
-    this.version.data("filteredcomplete")._renderItem = function(ul, item) {
-        return $("<li></li>").data("item.autocomplete", item).append("<a><span class='features'>" + item.features + "</span>" + item.label + "</a>").appendTo(
-                ul);
-    };
-
-    step.passage.refreshVersions(this.passageId, rawServerVersions);
 };
 
 Passage.prototype.initReferenceTextBox = function() {
@@ -322,7 +210,7 @@ Passage.prototype.initReferenceTextBox = function() {
         .data( "item.autocomplete", item )
         .append( "<a>" + item.label + "</a>" )
         .appendTo( ul );
-    };;
+    };
 };
 
 /**

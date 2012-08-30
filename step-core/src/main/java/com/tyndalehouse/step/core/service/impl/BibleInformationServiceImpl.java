@@ -32,6 +32,8 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.service.impl;
 
+import static com.tyndalehouse.step.core.models.InterlinearMode.INTERLINEAR;
+import static com.tyndalehouse.step.core.models.InterlinearMode.NONE;
 import static com.tyndalehouse.step.core.utils.JSwordUtils.getSortedSerialisableList;
 import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
 
@@ -50,6 +52,7 @@ import org.slf4j.LoggerFactory;
 import com.tyndalehouse.step.core.models.BibleVersion;
 import com.tyndalehouse.step.core.models.BookName;
 import com.tyndalehouse.step.core.models.EnrichedLookupOption;
+import com.tyndalehouse.step.core.models.InterlinearMode;
 import com.tyndalehouse.step.core.models.KeyWrapper;
 import com.tyndalehouse.step.core.models.LookupOption;
 import com.tyndalehouse.step.core.models.OsisWrapper;
@@ -57,6 +60,7 @@ import com.tyndalehouse.step.core.service.BibleInformationService;
 import com.tyndalehouse.step.core.service.jsword.JSwordMetadataService;
 import com.tyndalehouse.step.core.service.jsword.JSwordModuleService;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
+import com.tyndalehouse.step.core.utils.StringUtils;
 
 /**
  * Command handler returning all available bible versions
@@ -65,6 +69,7 @@ import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
  */
 @Singleton
 public class BibleInformationServiceImpl implements BibleInformationService {
+    private static final String VERSION_SEPARATOR = ",";
     private static final Logger LOGGER = LoggerFactory.getLogger(BibleInformationServiceImpl.class);
     private final List<String> defaultVersions;
     private final JSwordPassageService jswordPassage;
@@ -100,19 +105,50 @@ public class BibleInformationServiceImpl implements BibleInformationService {
     @Override
     public OsisWrapper getPassageText(final String version, final int startVerseId, final int endVerseId,
             final String options, final String interlinearVersion, final Boolean roundUp) {
+        // TODO FIXME: are we assuming that interlinears are not available under unlimited scrolling?
         return this.jswordPassage.getOsisTextByVerseNumbers(version, version, startVerseId, endVerseId,
-                trim(getLookupOptions(options), version), interlinearVersion, roundUp, false);
+                trim(getLookupOptions(options), version, InterlinearMode.NONE), interlinearVersion, roundUp,
+                false);
     }
 
     @Override
     public OsisWrapper getPassageText(final String version, final String reference, final String options,
-            final String interlinearVersion) {
-        return this.jswordPassage.getOsisText(version, reference, trim(getLookupOptions(options), version),
-                interlinearVersion);
+            final String interlinearVersion, final String interlinearMode) {
+
+        final InterlinearMode desiredModeOfDisplay = interlinearMode == null ? NONE : InterlinearMode
+                .valueOf(interlinearMode);
+
+        if (INTERLINEAR != desiredModeOfDisplay && NONE != desiredModeOfDisplay) {
+            // split the versions
+            final String[] versions = getInterleavedVersions(version, interlinearVersion);
+            return this.jswordPassage.getInterleavedVersions(versions, reference,
+                    trim(getLookupOptions(options), version, desiredModeOfDisplay), desiredModeOfDisplay);
+        }
+
+        return this.jswordPassage.getOsisText(version, reference,
+                trim(getLookupOptions(options), version, desiredModeOfDisplay), interlinearVersion,
+                desiredModeOfDisplay);
     }
 
     /**
-     * Translates the options provided over the http interface to something palatable by the service layer
+     * Joins version with interlinear version and returns an upper case array
+     * 
+     * @param version the base version
+     * @param interlinearVersion the interlinear version
+     * @return the array of well-formatted versions for use in the stylesheet
+     */
+    private String[] getInterleavedVersions(final String version, final String interlinearVersion) {
+        final String[] versions = StringUtils
+                .split(version + VERSION_SEPARATOR + interlinearVersion, "[, ]+");
+        for (int i = 0; i < versions.length; i++) {
+            versions[i] = versions[i].toUpperCase();
+        }
+
+        return versions;
+    }
+
+    /**
+     * Translates the options provided over the HTTP interface to something palatable by the service layer
      * 
      * @param options the list of options, comma-separated.
      * @return a list of {@link LookupOption}
@@ -120,7 +156,7 @@ public class BibleInformationServiceImpl implements BibleInformationService {
     private List<LookupOption> getLookupOptions(final String options) {
         String[] userOptions = null;
         if (isNotBlank(options)) {
-            userOptions = options.split(",");
+            userOptions = options.split(VERSION_SEPARATOR);
         }
 
         final List<LookupOption> lookupOptions = new ArrayList<LookupOption>();
@@ -138,16 +174,18 @@ public class BibleInformationServiceImpl implements BibleInformationService {
      * 
      * @param options the options
      * @param version the version that is being selected
+     * @param mode the display mode, because we remove some options depending on what is selected
      * @return a new list of options where both list have been intersected.
      */
-    private List<LookupOption> trim(final List<LookupOption> options, final String version) {
+    private List<LookupOption> trim(final List<LookupOption> options, final String version,
+            final InterlinearMode mode) {
         if (options.isEmpty()) {
             return options;
         }
 
         final List<LookupOption> available = getFeaturesForVersion(version);
         final List<LookupOption> result = new ArrayList<LookupOption>(options.size());
-        // do a crazy bubble intersect
+        // do a crazy bubble intersect, but it's tiny
         for (final LookupOption loOption : options) {
             for (final LookupOption avOption : available) {
                 if (loOption.equals(avOption)) {
@@ -156,6 +194,13 @@ public class BibleInformationServiceImpl implements BibleInformationService {
                 }
             }
         }
+
+        // now trim further depending on modes required:
+        if (mode.equals(InterlinearMode.INTERLEAVED)) {
+            result.remove(LookupOption.VERSE_NUMBERS);
+            result.remove(LookupOption.HEADINGS);
+        }
+
         return result;
     }
 

@@ -121,7 +121,7 @@ public class BibleController {
      */
     @Cacheable(true)
     public OsisWrapper getBibleText(final String version, final String reference) {
-        return getBibleText(version, reference, null, null);
+        return getBibleText(version, reference, null, null, null);
     }
 
     /**
@@ -134,7 +134,7 @@ public class BibleController {
      */
     @Cacheable(true)
     public OsisWrapper getBibleText(final String version, final String reference, final String options) {
-        return getBibleText(version, reference, options, null);
+        return getBibleText(version, reference, options, null, null);
     }
 
     /**
@@ -148,12 +148,13 @@ public class BibleController {
      */
     @Cacheable(true)
     public OsisWrapper getBibleText(final String version, final String reference, final String options,
-            final String interlinearVersion) {
+            final String interlinearVersion, final String interlinearMode) {
         // TODO de-duplicate for internationalisation
         notEmpty(version, "You need to provide a version", USER_MISSING_FIELD);
         notEmpty(reference, "You need to provide a reference", USER_MISSING_FIELD);
 
-        return this.bibleInformation.getPassageText(version, reference, options, interlinearVersion);
+        return this.bibleInformation.getPassageText(version, reference, options, interlinearVersion,
+                interlinearMode);
     }
 
     /**

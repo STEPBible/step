@@ -32,6 +32,7 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.service.jsword.impl;
 
+import static com.tyndalehouse.step.core.models.InterlinearMode.NONE;
 import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
 import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
 import static com.tyndalehouse.step.core.utils.StringUtils.split;
@@ -40,17 +41,22 @@ import static java.lang.Integer.parseInt;
 import static java.lang.Integer.valueOf;
 import static java.lang.String.format;
 import static org.crosswire.common.xml.XMLUtil.writeToString;
+import static org.crosswire.jsword.book.OSISUtil.OSIS_ATTR_OSISID;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.xml.transform.TransformerException;
 
 import org.crosswire.common.xml.Converter;
+import org.crosswire.common.xml.JDOMSAXEventProvider;
 import org.crosswire.common.xml.SAXEventProvider;
 import org.crosswire.common.xml.TransformingSAXEventProvider;
 import org.crosswire.jsword.book.Book;
@@ -68,6 +74,11 @@ import org.crosswire.jsword.passage.RocketPassage;
 import org.crosswire.jsword.passage.Verse;
 import org.crosswire.jsword.passage.VerseRange;
 import org.crosswire.jsword.versification.Versification;
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.filter.Filter;
+import org.jdom.output.Format;
+import org.jdom.output.XMLOutputter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
@@ -76,6 +87,7 @@ import com.tyndalehouse.step.core.data.entities.ScriptureReference;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.exceptions.UserExceptionType;
 import com.tyndalehouse.step.core.exceptions.ValidationException;
+import com.tyndalehouse.step.core.models.InterlinearMode;
 import com.tyndalehouse.step.core.models.KeyWrapper;
 import com.tyndalehouse.step.core.models.LookupOption;
 import com.tyndalehouse.step.core.models.OsisWrapper;
@@ -84,6 +96,7 @@ import com.tyndalehouse.step.core.service.impl.MorphologyServiceImpl;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
 import com.tyndalehouse.step.core.xsl.XslConversionType;
+import com.tyndalehouse.step.core.xsl.impl.InterleavingProviderImpl;
 
 /**
  * a service providing a wrapper around JSword
@@ -272,7 +285,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
         options.add(LookupOption.HIDE_XGEN);
 
         final BookData bookData = new BookData(bible, key);
-        return getTextForBookData(options, null, bookData);
+        return getTextForBookData(options, null, bookData, NONE);
     }
 
     @Override
@@ -297,14 +310,13 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
 
     @Override
     public OsisWrapper getOsisText(final String version, final String reference) {
-        return getOsisText(version, reference, new ArrayList<LookupOption>(), null);
+        return getOsisText(version, reference, new ArrayList<LookupOption>(), null, NONE);
     }
 
     @Override
-    public synchronized OsisWrapper getOsisTextByVerseNumbers(final String version,
-            final String numberedVersion, final int startVerseId, final int endVerseId,
-            final List<LookupOption> lookupOptions, final String interlinearVersion,
-            final Boolean roundReference, final boolean ignoreVerse0) {
+    public OsisWrapper getOsisTextByVerseNumbers(final String version, final String numberedVersion,
+            final int startVerseId, final int endVerseId, final List<LookupOption> lookupOptions,
+            final String interlinearVersion, final Boolean roundReference, final boolean ignoreVerse0) {
 
         // coded from numbered version.
         final Versification versificationForNumberedVersion = this.versificationService
@@ -320,18 +332,19 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
                 ignoreVerse0);
 
         final BookData lookupBookData = new BookData(lookupVersion, range);
-        return getTextForBookData(lookupOptions, interlinearVersion, lookupBookData);
+        return getTextForBookData(lookupOptions, interlinearVersion, lookupBookData, NONE);
     }
 
     // TODO: can we make this more performant by not re-compiling stylesheet - or is already cached
     // FIXME TODO: JS-109, email from CJB on 27/02/2011 remove synchronisation once book is fixed
     @Override
     public OsisWrapper getOsisText(final String version, final String reference,
-            final List<LookupOption> options, final String interlinearVersion) {
+            final List<LookupOption> options, final String interlinearVersion,
+            final InterlinearMode displayMode) {
         LOGGER.debug("Retrieving text for ({}, {})", version, reference);
 
         final BookData bookData = getBookData(version, reference);
-        return getTextForBookData(options, interlinearVersion, bookData);
+        return getTextForBookData(options, interlinearVersion, bookData, displayMode);
     }
 
     /**
@@ -365,11 +378,12 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
      * @param options the list of lookup options
      * @param interlinearVersion the interlinear version if applicable
      * @param bookData the bookdata to use to look up the required version/reference combo
+     * @param displayMode the mode to display the text with
      * 
      * @return the html text
      */
     private synchronized OsisWrapper getTextForBookData(final List<LookupOption> options,
-            final String interlinearVersion, final BookData bookData) {
+            final String interlinearVersion, final BookData bookData, final InterlinearMode displayMode) {
 
         // check we have a book in mind and a reference
         notNull(bookData, "An internal error occurred", UserExceptionType.SERVICE_VALIDATION_ERROR);
@@ -383,29 +397,10 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
         // }
 
         try {
-            final XslConversionType requiredTransformation = identifyStyleSheet(bookData.getFirstBook()
-                    .getBookCategory(), options);
-
             final SAXEventProvider osissep = bookData.getSAXEventProvider();
-            final TransformingSAXEventProvider htmlsep = (TransformingSAXEventProvider) new Converter() {
-                @Override
-                public SAXEventProvider convert(final SAXEventProvider provider) throws TransformerException {
-                    try {
-                        final String file = requiredTransformation.getFile();
-                        final URI resourceURI = getClass().getResource(file).toURI();
 
-                        final TransformingSAXEventProvider tsep = new TransformingSAXEventProvider(
-                                resourceURI, osissep);
-
-                        // set parameters here
-                        setOptions(tsep, options, bookData.getFirstBook());
-                        setInterlinearOptions(tsep, interlinearVersion, bookData.getKey().getOsisID());
-                        return tsep;
-                    } catch (final URISyntaxException e) {
-                        throw new StepInternalException("Failed to load resource correctly", e);
-                    }
-                }
-            }.convert(osissep);
+            final TransformingSAXEventProvider htmlsep = executeStyleSheet(options, interlinearVersion,
+                    bookData, osissep, displayMode);
 
             // the original book
             final Book book = bookData.getFirstBook();
@@ -444,6 +439,186 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
         }
     }
 
+    @Override
+    public synchronized OsisWrapper getInterleavedVersions(final String[] versions, final String reference,
+            final List<LookupOption> options, final InterlinearMode displayMode) {
+        notNull(versions, "No versions were passed in", UserExceptionType.SERVICE_VALIDATION_ERROR);
+        notNull(reference, "No reference was passed in", UserExceptionType.SERVICE_VALIDATION_ERROR);
+
+        options.add(LookupOption.VERSE_NEW_LINE);
+
+        final Book[] books = new Book[versions.length];
+        for (int ii = 0; ii < versions.length; ii++) {
+            books[ii] = this.versificationService.getBookFromVersion(versions[ii]);
+        }
+
+        try {
+            final Key key = books[0].getKey(reference);
+            final BookData data = new BookData(books, key, displayMode == InterlinearMode.COLUMN_COMPARE
+                    || displayMode == InterlinearMode.INTERLEAVED_COMPARE);
+
+            final TransformingSAXEventProvider transformer = executeStyleSheet(options, null, data,
+                    data.getSAXEventProvider(), displayMode, versions);
+            final OsisWrapper osisWrapper = new OsisWrapper(writeToString(transformer), data.getKey()
+                    .getName(), data.getFirstBook().getLanguage().getCode(), data.getKey().getOsisID());
+            return osisWrapper;
+        } catch (final TransformerException e) {
+            throw new StepInternalException(e.getMessage(), e);
+        } catch (final SAXException e) {
+            throw new StepInternalException(e.getMessage(), e);
+        } catch (final BookException e) {
+            throw new StepInternalException(e.getMessage(), e);
+        } catch (final NoSuchKeyException e) {
+            throw new StepInternalException(e.getMessage(), e);
+        }
+    }
+
+    // FIXME: TODO can be unsynchronized when JS-109 is rewritten
+    /***
+     * 
+     * @param versions the list of all interleaved versions we want to display
+     * @param reference the reference that we wish to look up
+     * @param options the list of options available
+     * @return the OSIS wrapper containing everything we need
+     */
+    // @Override
+    // public synchronized OsisWrapper getInterleavedVersions(final String[] versions, final String reference,
+    // final List<LookupOption> options) {
+    // notNull(versions, "No versions were passed in", UserExceptionType.SERVICE_VALIDATION_ERROR);
+    // notNull(reference, "No reference was passed in", UserExceptionType.SERVICE_VALIDATION_ERROR);
+    //
+    // options.add(LookupOption.VERSE_NEW_LINE);
+    //
+    // final BookData[] data = new BookData[versions.length];
+    // for (int ii = 0; ii < versions.length; ii++) {
+    // data[ii] = getBookData(versions[ii], reference);
+    // }
+    //
+    // final SAXEventProvider provider = buildInterleavedVersions(data);
+    // try {
+    // final TransformingSAXEventProvider transformer = executeStyleSheet(options, null, data[0],
+    // provider);
+    // final OsisWrapper osisWrapper = new OsisWrapper(writeToString(transformer), data[0].getKey()
+    // .getName(), data[0].getFirstBook().getLanguage().getCode(), data[0].getKey().getOsisID());
+    // return osisWrapper;
+    // } catch (final TransformerException e) {
+    // throw new StepInternalException(e.getMessage(), e);
+    // } catch (final SAXException e) {
+    // throw new StepInternalException(e.getMessage(), e);
+    // }
+    // }
+
+    /**
+     * Changes the input OSIS document to have extra verses, the ones from the other versions
+     * 
+     * @param bookDatas the list of all book datas that we will be querying
+     * @return the provider of events for the stylesheet to execute upon
+     */
+    SAXEventProvider buildInterleavedVersions(final BookData... bookDatas) {
+
+        final Map<String, Element> versions = new HashMap<String, Element>();
+        try {
+            // obtain OSIS from every version
+            for (final BookData bookData : bookDatas) {
+                final Element osis = bookData.getOsis();
+                versions.put(bookData.getFirstBook().getInitials(), osis);
+            }
+
+            final Filter verseFilter = new Filter() {
+                @Override
+                public boolean matches(final Object element) {
+                    if (element instanceof Element) {
+                        final Element e = (Element) element;
+                        return "verse".equalsIgnoreCase(e.getName());
+                    }
+                    return false;
+                }
+            };
+
+            // select one version and iterate through the others and change the OSIS
+            boolean firstVersion = true;
+            final Map<String, Element> versesFromMaster = new HashMap<String, Element>();
+
+            // iterate through documents of every version
+            for (final BookData data : bookDatas) {
+                final String version = data.getFirstBook().getInitials();
+
+                final Element element = versions.get(version);
+                final Iterator<Element> docIterator = element.getDescendants(verseFilter);
+                Element previousAppendedElement = null;
+
+                // save the first version
+                while (docIterator.hasNext()) {
+                    final Element e = docIterator.next();
+                    LOGGER.debug("Obtaining verse [{}]", e.getAttributeValue(OSIS_ATTR_OSISID));
+                    final String osisID = e.getAttributeValue(OSIS_ATTR_OSISID).toLowerCase();
+                    if (firstVersion) {
+                        versesFromMaster.put(osisID, e);
+                    } else {
+                        Element childVerse = versesFromMaster.get(osisID);
+
+                        if (childVerse == null) {
+                            LOGGER.debug("Orphaned row: [{}]", osisID);
+                            childVerse = previousAppendedElement;
+                        }
+
+                        final Element parentElement = childVerse.getParentElement();
+                        parentElement.addContent(parentElement.indexOf(childVerse), (Element) e.clone());
+                        previousAppendedElement = childVerse;
+                    }
+                }
+
+                firstVersion = false;
+            }
+
+            final Element amendedOsis = versions.get(bookDatas[0].getFirstBook().getInitials());
+            Document doc = amendedOsis.getDocument();
+
+            if (doc == null) {
+                doc = new Document(amendedOsis);
+            }
+
+            final XMLOutputter xmlOutputter = new XMLOutputter(Format.getRawFormat());
+            LOGGER.debug("\n {}", xmlOutputter.outputString(doc));
+
+            return new JDOMSAXEventProvider(doc);
+
+        } catch (final BookException e) {
+            throw new StepInternalException(e.getMessage(), e);
+        }
+    }
+
+    private TransformingSAXEventProvider executeStyleSheet(final List<LookupOption> options,
+            final String interlinearVersion, final BookData bookData, final SAXEventProvider osissep,
+            final InterlinearMode displayMode, final String... interleavingVersions)
+            throws TransformerException {
+        final XslConversionType requiredTransformation = identifyStyleSheet(bookData.getFirstBook()
+                .getBookCategory(), options, displayMode);
+
+        final TransformingSAXEventProvider htmlsep = (TransformingSAXEventProvider) new Converter() {
+            @Override
+            public SAXEventProvider convert(final SAXEventProvider provider) throws TransformerException {
+                try {
+                    final String file = requiredTransformation.getFile();
+                    final URI resourceURI = getClass().getResource(file).toURI();
+
+                    final TransformingSAXEventProvider tsep = new TransformingSAXEventProvider(resourceURI,
+                            osissep);
+
+                    // set parameters here
+                    setOptions(tsep, options, bookData.getFirstBook());
+                    setInterlinearOptions(tsep, interlinearVersion, bookData.getKey().getOsisID(),
+                            displayMode);
+                    setInterleavingOptions(tsep, displayMode, interleavingVersions);
+                    return tsep;
+                } catch (final URISyntaxException e) {
+                    throw new StepInternalException("Failed to load resource correctly", e);
+                }
+            }
+        }.convert(osissep);
+        return htmlsep;
+    }
+
     /**
      * If the key exists in one of the book, returns true, otherwise false
      * 
@@ -472,15 +647,23 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
      * @param bookCategory the category of the book
      * 
      * @param options the list of options that are currently applied to the passage
+     * @param displayMode the display mode with wich to display the style sheet
      * @return the stylesheet (of stylesheets)
      */
     private XslConversionType identifyStyleSheet(final BookCategory bookCategory,
-            final List<LookupOption> options) {
+            final List<LookupOption> options, final InterlinearMode displayMode) {
         if (BookCategory.COMMENTARY.equals(bookCategory)) {
             return XslConversionType.COMMENTARY;
         }
 
+        // for interlinears, we automatically add that option
+        if (displayMode == InterlinearMode.INTERLINEAR) {
+            options.add(LookupOption.INTERLINEAR);
+        }
+
         for (final LookupOption lo : options) {
+            // TODO refactor to remove completely the options adding / removing in preference for putting in
+            // trim() in BibleInformationServiceImpl
             if (!XslConversionType.DEFAULT.equals(lo.getStylesheet())) {
                 if (XslConversionType.INTERLINEAR.equals(lo.getStylesheet())) {
                     options.add(LookupOption.CHAPTER_VERSE);
@@ -502,10 +685,11 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
      * @param tsep the transformer that we want to set up
      * @param interlinearVersion the interlinear version(s) that the users have requested
      * @param reference the reference the user is interested in
+     * @param displayMode the mode to display the passage, i.e. interlinear, interleaved, etc.
      */
     private void setInterlinearOptions(final TransformingSAXEventProvider tsep,
-            final String interlinearVersion, final String reference) {
-        if (tsep.getParameter(LookupOption.INTERLINEAR.getXsltParameterName()) != null) {
+            final String interlinearVersion, final String reference, final InterlinearMode displayMode) {
+        if (displayMode == InterlinearMode.INTERLINEAR) {
             tsep.setParameter("interlinearReference", reference);
             tsep.setParameter("VLine", false);
 
@@ -513,6 +697,28 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
                 tsep.setParameter("interlinearVersion", interlinearVersion);
             }
         }
+    }
+
+    /**
+     * Sets up interleaving vs column view
+     * 
+     * @param tsep the transformer
+     * @param versions interleavingProvider the provider of interleaved version names
+     * @param displayMode the display mode that we are interested in
+     */
+    private void setInterleavingOptions(final TransformingSAXEventProvider tsep,
+            final InterlinearMode displayMode, final String[] versions) {
+        if (displayMode == InterlinearMode.INTERLEAVED || displayMode == InterlinearMode.INTERLEAVED_COMPARE) {
+            tsep.setParameter("Interleave", true);
+            tsep.setParameter("interleavingProvider", new InterleavingProviderImpl(versions,
+                    displayMode == InterlinearMode.INTERLEAVED_COMPARE));
+        }
+
+        if (displayMode == InterlinearMode.INTERLEAVED_COMPARE
+                || displayMode == InterlinearMode.COLUMN_COMPARE) {
+            tsep.setParameter("comparing", true);
+        }
+
     }
 
     /**

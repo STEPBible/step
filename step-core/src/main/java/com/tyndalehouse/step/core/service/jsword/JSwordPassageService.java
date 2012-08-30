@@ -38,6 +38,7 @@ import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.passage.Key;
 
 import com.tyndalehouse.step.core.data.entities.ScriptureReference;
+import com.tyndalehouse.step.core.models.InterlinearMode;
 import com.tyndalehouse.step.core.models.KeyWrapper;
 import com.tyndalehouse.step.core.models.LookupOption;
 import com.tyndalehouse.step.core.models.OsisWrapper;
@@ -56,10 +57,11 @@ public interface JSwordPassageService {
      * @param reference the reference to lookup
      * @param options the list of options for the lookup operation
      * @param interlinearVersion the version to add if there is an interlinear request, or blank if not
+     * @param displayMode the mode with which display the passage text
      * @return the OSIS text in an HTML form
      */
     OsisWrapper getOsisText(String version, String reference, List<LookupOption> options,
-            String interlinearVersion);
+            String interlinearVersion, InterlinearMode displayMode);
 
     /**
      * returns the biblical text as xml dom
@@ -143,4 +145,16 @@ public interface JSwordPassageService {
      * @return the new reference representing the whole chapter
      */
     KeyWrapper expandToChapter(String version, String reference);
+
+    /**
+     * a text with interleaved verses from each version
+     * 
+     * @param versions the list of versions
+     * @param reference the reference to be looked up in each version
+     * @param options the list of options to use in the proper OSIS conversion
+     * @param displayMode the mode with which display the passage text
+     * @return the osis wrapper
+     */
+    OsisWrapper getInterleavedVersions(String[] versions, String reference, List<LookupOption> options,
+            InterlinearMode displayMode);
 }

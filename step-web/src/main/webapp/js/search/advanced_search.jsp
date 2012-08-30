@@ -11,12 +11,18 @@
 			class="bookmarkPassageLink">Add a bookmark</a>
 		</span>
 
-		<table width="50%">
+		<table>
 			<tr>
 				<td>Bible version</td>
 				<td><input type="text" class="passageVersion" size="15" /></td>
 				<td style="padding-left: 10px">Scripture Reference</td>
 				<td><input type="text" class="passageReference" size="15" /></td>
+			</tr>
+			<tr>
+				<td>Comparison versions</td>
+				<td><input type="text" class="extraVersions" size="15" /></td>
+				<td style="padding-left: 10px">will be shown as</td>
+				<td><input type="text" class="extraVersionsDisplayOptions drop" size="15" readonly=true"/></td>
 			</tr>
 		</table>
 	</fieldset>

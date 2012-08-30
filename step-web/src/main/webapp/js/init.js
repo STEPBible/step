@@ -125,8 +125,11 @@ function initData() {
 	// todo work out why step.menu.isOptionSelected("SHOW_ALL_VERSIONS") doesn't return true
 	$.getSafe(BIBLE_GET_BIBLE_VERSIONS + true, function(versionsFromServer) {
 	    step.versions = versionsFromServer;
+	    
+	    $.shout("versions-initialisation-completed");
+	    
 		initInterlinearPopup(versionsFromServer);
-		var passages = initPassages(versionsFromServer, options);
+		var passages = initPassages(options);
 		initModules(passages);
 	});
 }
@@ -148,14 +151,14 @@ function initInterlinearPopup(versionsFromServer) {
  * @param options a list of options to be displayed in the toolbar
  * @return a list of passage objects so that synchronous calls can be made
  */
-function initPassages(allVersions, options) {
+function initPassages(options) {
 	//set up initial passages with reference data:
 	var passages = [];
 	
 	$(".column").each(
 		function(index) {
 			var passageContainer = $(".passageContainer", this);
-			passages.push(new Passage(passageContainer, allVersions, index));
+			passages.push(new Passage(passageContainer, index));
 		}
 	);
 	return passages;

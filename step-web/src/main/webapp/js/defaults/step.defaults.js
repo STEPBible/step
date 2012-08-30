@@ -39,6 +39,11 @@ step.defaults = {
         options : ["HEADINGS", "VERSE_NUMBERS", "NOTES"]
     }
     ],
+    passage : {
+        interOptions : [ "Interlinear", "Interleaved", "Interleaved with comparison", "Column view", "Column view with comparison" ],
+        interNamedOptions : ["INTERLINEAR", "INTERLEAVED", "INTERLEAVED_COMPARE", "COLUMN", "COLUMN_COMPARE"]
+    },
+    
     search: {
         textual : {
             sortByRelevance : true,
@@ -53,6 +58,7 @@ step.defaults = {
                                 { label: "Epistles",            value: "Rom-Rev" },
                                 { label: "List books...", value: ""}
                               ],
+            //order and indices are important below
             simpleTextTypes : [ "one or more words", "all of the words", "the exact phrase", "words similar to", "words starting with"],
             simpleTextSecondaryTypes : [ "all of the words", "the exact phrase"],
             simpleTextIncludes : ["include", "exclude"],

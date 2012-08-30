@@ -38,5 +38,29 @@ step.passage.ui = {
             $(item).height(windowHeight - $(item).position().top);
         });
     },
+    
+    restoreDefaults : function(passageId, force) {
+        step.util.ui.resetIfEmpty(passageId, force, step.state.passage.extraVersionsDisplayOptions, step.defaults.passage.interOptions[0]);
+    }
 };
 
+$(document).ready(function() {
+    step.state.trackState([
+                           ".extraVersions", ".extraVersionsDisplayOptions"
+                           ], "passage", step.passage.ui.restoreDefaults);
+    
+    $(".extraVersionsDisplayOptions").change(function(event) {
+        step.passage.changePassage(step.passage.getPassageId(event.target));
+    });
+    
+    step.util.ui.autocompleteSearch(".extraVersionsDisplayOptions", step.defaults.passage.interOptions);
+    
+});
+
+$(step.passage.ui).hear("versions-initialisation-completed", function() {
+    $.each($(".extraVersions"), function(i, item) {
+        step.version.autocomplete($(item), undefined, undefined, function(target) {
+            step.passage.changePassage(step.passage.getPassageId(target));
+        }, true);        
+    })
+});

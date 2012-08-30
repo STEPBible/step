@@ -34,7 +34,8 @@
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   version="1.0"
   xmlns:jsword="http://xml.apache.org/xalan/java"
-  extension-element-prefixes="jsword">
+  xmlns:interleaving="xalan://com.tyndalehouse.step.core.xsl.impl.InterleavingProviderImpl"
+  extension-element-prefixes="jsword interleaving">
 
   <!--  Version 3.0 is necessary to get br to work correctly. -->
   <xsl:output method="html" version="3.0" omit-xml-declaration="yes" indent="no"/>
@@ -100,6 +101,10 @@
   <xsl:param name="ColorCoding" select="'false'" />
 
   <xsl:param name="HideXGen" select="'false'" />
+
+  <xsl:param name="Interleave" select="'false'" />
+  <xsl:param name="interleavingProvider" />
+  <xsl:param name="comparing" select="false()" />
 
   <!-- Create a global key factory from which OSIS ids will be generated -->
   <xsl:variable name="keyf" select="jsword:org.crosswire.jsword.passage.PassageKeyFactory.instance()"/>
@@ -308,62 +313,92 @@
     </xsl:if>
   </xsl:template>
 
+  <xsl:template name="interleavedVerseNum">
+  		<xsl:param name="verse" />
+  		
+		<xsl:variable name="firstOsisID" select="substring-before(concat($verse/@osisID, ' '), ' ')"/>
+        
+        <xsl:if test="normalize-space($firstOsisID) != ''" >
+	        <xsl:variable name="book" select="substring-before($firstOsisID, '.')"/>
+			<xsl:variable name="chapter" select="jsword:shape($shaper, substring-before(substring-after($firstOsisID, '.'), '.'))"/>
+			<xsl:variable name="verse">
+			  <xsl:choose>
+			    <xsl:when test="@n">
+			      <xsl:value-of select="jsword:shape($shaper, string(@n))"/>
+			    </xsl:when>
+			    <xsl:otherwise>
+			      <xsl:value-of select="jsword:shape($shaper, substring-after(substring-after($firstOsisID, '.'), '.'))"/>
+			    </xsl:otherwise>
+			  </xsl:choose>
+			</xsl:variable>
+			
+	  		<h4 class='heading'><xsl:value-of select="concat($book, ' ', $chapter, ':', $verse)"/></h4>
+        </xsl:if>
+  </xsl:template>
+  
+  <xsl:template name="interleavedVersion">
+ 		<xsl:if test="$Interleave = 'true'">
+ 			<span class="smallResultKey">(<xsl:value-of select="interleaving:getNextVersion($interleavingProvider)" />)</span>
+ 		</xsl:if>
+  </xsl:template>
+  
   <xsl:template name="versenum">
-    <!-- Are verse numbers wanted? -->
-    <xsl:if test="$VNum = 'true'">
-      <!-- An osisID can be a space separated list of them -->
-      <xsl:variable name="firstOsisID" select="substring-before(concat(@osisID, ' '), ' ')"/>
-      <xsl:variable name="book" select="substring-before($firstOsisID, '.')"/>
-      <xsl:variable name="chapter" select="jsword:shape($shaper, substring-before(substring-after($firstOsisID, '.'), '.'))"/>
-      <!-- If n is present use it for the number -->
-      <xsl:variable name="verse">
-        <xsl:choose>
-          <xsl:when test="@n">
-            <xsl:value-of select="jsword:shape($shaper, string(@n))"/>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:value-of select="jsword:shape($shaper, substring-after(substring-after($firstOsisID, '.'), '.'))"/>
-          </xsl:otherwise>
-        </xsl:choose>
-      </xsl:variable>
-      <xsl:variable name="versenum">
-        <xsl:choose>
-          <xsl:when test="$BCVNum = 'true'">
-		      <xsl:variable name="versification" select="jsword:getVersification($v11nf, $v11n)"/>
-		      <xsl:variable name="passage" select="jsword:getValidKey($keyf, $versification, @osisID)"/>
-              <xsl:value-of select="jsword:getName($passage)"/>
-          </xsl:when>
-          <xsl:when test="$CVNum = 'true'">
-            <xsl:value-of select="concat($chapter, ' : ', $verse)"/>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:value-of select="$verse"/>
-          </xsl:otherwise>
-        </xsl:choose>
-      </xsl:variable>
-      <!--
-        == Surround versenum with dup
-        -->
-      <xsl:choose>
-        <xsl:when test="$TinyVNum = 'true' and $Notes = 'true'">
-          <a name="{@osisID}"><span class="verseNumber"><xsl:value-of select="$versenum"/></span></a>
-        </xsl:when>
-        <xsl:when test="$TinyVNum = 'true' and $Notes = 'false'">
-          <a name="{@osisID}"><span class="verseNumber"><xsl:value-of select="$versenum"/></span></a>
-        </xsl:when>
-        <xsl:when test="$TinyVNum = 'false' and $Notes = 'true'">
-          <a name="{@osisID}">(<xsl:value-of select="$versenum"/>)</a>
-          <xsl:text> </xsl:text>
-        </xsl:when>
-        <xsl:otherwise>
-          (<xsl:value-of select="$versenum"/>)
-          <xsl:text> </xsl:text>
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:if>
-    <xsl:if test="$VNum = 'false' and $Notes = 'true'">
-      <a name="{@osisID}"></a>
-    </xsl:if>
+  	<!-- we output version names not verse numbers for interleaved translations -->
+  		    <!-- Are verse numbers wanted? -->
+		    <xsl:if test="$VNum = 'true'">
+		      <!-- An osisID can be a space separated list of them -->
+		      <xsl:variable name="firstOsisID" select="substring-before(concat(@osisID, ' '), ' ')"/>
+		      <xsl:variable name="book" select="substring-before($firstOsisID, '.')"/>
+		      <xsl:variable name="chapter" select="jsword:shape($shaper, substring-before(substring-after($firstOsisID, '.'), '.'))"/>
+		      <!-- If n is present use it for the number -->
+		      <xsl:variable name="verse">
+		        <xsl:choose>
+		          <xsl:when test="@n">
+		            <xsl:value-of select="jsword:shape($shaper, string(@n))"/>
+		          </xsl:when>
+		          <xsl:otherwise>
+		            <xsl:value-of select="jsword:shape($shaper, substring-after(substring-after($firstOsisID, '.'), '.'))"/>
+		          </xsl:otherwise>
+		        </xsl:choose>
+		      </xsl:variable>
+		      <xsl:variable name="versenum">
+		        <xsl:choose>
+		          <xsl:when test="$BCVNum = 'true'">
+				      <xsl:variable name="versification" select="jsword:getVersification($v11nf, $v11n)"/>
+				      <xsl:variable name="passage" select="jsword:getValidKey($keyf, $versification, @osisID)"/>
+		              <xsl:value-of select="jsword:getName($passage)"/>
+		          </xsl:when>
+		          <xsl:when test="$CVNum = 'true'">
+		            <xsl:value-of select="concat($chapter, ' : ', $verse)"/>
+		          </xsl:when>
+		          <xsl:otherwise>
+		            <xsl:value-of select="$verse"/>
+		          </xsl:otherwise>
+		        </xsl:choose>
+		      </xsl:variable>
+		      <!--
+		        == Surround versenum with dup
+		        -->
+		      <xsl:choose>
+		        <xsl:when test="$TinyVNum = 'true' and $Notes = 'true'">
+		          <a name="{@osisID}"><span class="verseNumber"><xsl:value-of select="$versenum"/></span></a>
+		        </xsl:when>
+		        <xsl:when test="$TinyVNum = 'true' and $Notes = 'false'">
+		          <a name="{@osisID}"><span class="verseNumber"><xsl:value-of select="$versenum"/></span></a>
+		        </xsl:when>
+		        <xsl:when test="$TinyVNum = 'false' and $Notes = 'true'">
+		          <a name="{@osisID}">(<xsl:value-of select="$versenum"/>)</a>
+		          <xsl:text> </xsl:text>
+		        </xsl:when>
+		        <xsl:otherwise>
+		          (<xsl:value-of select="$versenum"/>)
+		          <xsl:text> </xsl:text>
+		        </xsl:otherwise>
+		      </xsl:choose>
+		    </xsl:if>
+		    <xsl:if test="$VNum = 'false' and $Notes = 'true'">
+		      <a name="{@osisID}"></a>
+		    </xsl:if>
   </xsl:template>
 
   <!--=======================================================================-->
@@ -1094,73 +1129,156 @@
   </xsl:template>
 
   <xsl:template match="table">
-    <table class="table">
-      <xsl:copy-of select="@rows|@cols"/>
-      <xsl:if test="head">
-        <thead class="head"><xsl:apply-templates select="head"/></thead>
-      </xsl:if>
-      <tbody><xsl:apply-templates select="row"/></tbody>
-    </table>
+    <xsl:choose>
+    	<xsl:when test="$Interleave = 'true'">
+    		<xsl:apply-templates select="row"/>
+    	</xsl:when>
+    	<xsl:otherwise>
+		    <table class="table">
+		      <xsl:copy-of select="@rows|@cols"/>
+		      <xsl:if test="head">
+		        <thead class="head"><xsl:apply-templates select="head"/></thead>
+		      </xsl:if>
+		      <tbody><xsl:apply-templates select="row"/></tbody>
+		    </table>
+    	</xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
   <xsl:template match="row">
-    <tr class="row"><xsl:apply-templates/></tr>
+    <xsl:choose>
+    	<xsl:when test="$Interleave = 'true'">
+    		<xsl:choose>
+    			<xsl:when test="cell[@role = 'label']">
+    			</xsl:when>
+    			<xsl:otherwise>
+    				<div class="verseGrouping">
+    					<xsl:variable name="verse" select="cell/verse" />
+    				    <xsl:call-template name="interleavedVerseNum">
+    				    	<xsl:with-param name="verse" select="$verse" />
+    				    </xsl:call-template>	
+    					<xsl:apply-templates/>
+    				</div>
+    			</xsl:otherwise>
+    		</xsl:choose>
+    	</xsl:when>
+    	<xsl:otherwise>
+			<tr class="row"><xsl:apply-templates/></tr>
+    	</xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+  
+  <xsl:template name="interleaveVerse">
+	<xsl:param name="cell-direction" />
+	<xsl:param name="classes" select="''" />
+	
+		<xsl:element name="span">
+			<xsl:attribute name="class">singleVerse <xsl:value-of select="$classes" /></xsl:attribute>
+			<xsl:if test="@xml:lang">
+				<xsl:attribute name="dir">
+				          <xsl:value-of select="$cell-direction" />
+				</xsl:attribute>
+			</xsl:if>
+			<xsl:if test="$cell-direction = 'rtl'">
+				<xsl:attribute name="align">
+			          <xsl:value-of select="'right'" />
+				</xsl:attribute>
+			</xsl:if>
+			<xsl:call-template name="interleavedVersion" />
+			<xsl:apply-templates />
+		</xsl:element>
   </xsl:template>
   
   <xsl:template match="cell">
-    <xsl:variable name="element-name">
-      <xsl:choose>
-        <xsl:when test="@role = 'label'">
-          <xsl:text>th</xsl:text>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:text>td</xsl:text>
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
-    <xsl:variable name="cell-direction">
-      <xsl:if test="@xml:lang">
-        <xsl:call-template name="getDirection">
-         <xsl:with-param name="lang"><xsl:value-of select="@xml:lang"/></xsl:with-param>
-        </xsl:call-template>
-      </xsl:if>
-    </xsl:variable>
-    <xsl:element name="{$element-name}">
-      <xsl:attribute name="class">cell</xsl:attribute>
-      <xsl:attribute name="valign">top</xsl:attribute>
-      <xsl:if test="@xml:lang">
-        <xsl:attribute name="dir">
-          <xsl:value-of select="$cell-direction"/>
-        </xsl:attribute>
-      </xsl:if>
-      <xsl:if test="$cell-direction = 'rtl'">
-        <xsl:attribute name="align">
-          <xsl:value-of select="'right'"/>
-        </xsl:attribute>
-      </xsl:if>
-      <xsl:if test="@rows">
-        <xsl:attribute name="rowspan">
-          <xsl:value-of select="@rows"/>
-        </xsl:attribute>
-      </xsl:if>
-      <xsl:if test="@cols">
-        <xsl:attribute name="colspan">
-          <xsl:value-of select="@cols"/>
-        </xsl:attribute>
-      </xsl:if>
-      <!-- hack alert -->
-      <xsl:choose>
-        <xsl:when test="$cell-direction = 'rtl'">
-          <xsl:text>&#8235;</xsl:text><xsl:apply-templates/><xsl:text>&#8236;</xsl:text>
-        </xsl:when>
-        <xsl:when test="$cell-direction = 'ltr'">
-          <xsl:text>&#8234;</xsl:text><xsl:apply-templates/><xsl:text>&#8236;</xsl:text>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:apply-templates/>
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:element>
+		<xsl:variable name="cell-direction">
+		
+			<xsl:if test="@xml:lang">
+				<xsl:call-template name="getDirection">
+					<xsl:with-param name="lang">
+						<xsl:value-of select="@xml:lang" />
+					</xsl:with-param>
+				</xsl:call-template>
+			</xsl:if>
+		</xsl:variable>
+		
+	    <xsl:choose>
+    	<!-- interleaving or tabular column form -->
+    	<xsl:when test="$Interleave = 'true'">
+    		<xsl:if test="./verse">
+    			<xsl:if test="$comparing = false()">
+					<xsl:call-template name="interleaveVerse">
+						<xsl:with-param name="cell-direction" select="$cell-direction" />
+					</xsl:call-template>
+				</xsl:if>
+			</xsl:if>
+			<!-- output twice the cell of those diffs we have found if we are comparing -->
+    		<xsl:if test="$comparing = true() and not(./verse)">
+				<!-- output twice, but with slightly different styles -->
+				<xsl:call-template name="interleaveVerse">
+					<xsl:with-param name="cell-direction" select="$cell-direction" />
+					<xsl:with-param name="classes" select="'primary'" />
+				</xsl:call-template>
+				<xsl:call-template name="interleaveVerse">
+					<xsl:with-param name="cell-direction" select="$cell-direction" />
+					<xsl:with-param name="classes" select="'secondary'" />
+				</xsl:call-template>				
+			</xsl:if>
+    	</xsl:when>
+    	<xsl:otherwise>
+			<xsl:variable name="element-name">
+				<xsl:choose>
+					<xsl:when test="@role = 'label'">
+						<xsl:text>th</xsl:text>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:text>td</xsl:text>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:variable>
+			<xsl:element name="{$element-name}">
+				<xsl:attribute name="class">cell</xsl:attribute>
+				<xsl:attribute name="valign">top</xsl:attribute>
+				<xsl:if test="@xml:lang">
+					<xsl:attribute name="dir">
+					          <xsl:value-of select="$cell-direction" />
+					</xsl:attribute>
+				</xsl:if>
+				<xsl:if test="$cell-direction = 'rtl'">
+					<xsl:attribute name="align">
+					          <xsl:value-of select="'right'" />
+					</xsl:attribute>
+				</xsl:if>
+				<xsl:if test="@rows">
+					<xsl:attribute name="rowspan">
+					          <xsl:value-of select="@rows" />
+					</xsl:attribute>
+				</xsl:if>
+				<xsl:if test="@cols">
+					<xsl:attribute name="colspan">
+					          <xsl:value-of select="@cols" />
+					</xsl:attribute>
+				</xsl:if>
+				<!-- hack alert -->
+				<xsl:choose>
+					<xsl:when test="$cell-direction = 'rtl'">
+						<xsl:text>&#8235;</xsl:text>
+						<xsl:apply-templates />
+						<xsl:text>&#8236;</xsl:text>
+					</xsl:when>
+					<xsl:when test="$cell-direction = 'ltr'">
+						<xsl:text>&#8234;</xsl:text>
+						<xsl:apply-templates />
+						<xsl:text>&#8236;</xsl:text>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:apply-templates />
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:element>	
+		</xsl:otherwise>
+    </xsl:choose>
+  
+    
   </xsl:template>
 
   <xsl:template match="transChange">
@@ -1199,7 +1317,7 @@
         <em><xsl:apply-templates/></em>
       </xsl:when>
       <xsl:when test="$style = 'line-through'">
-        <span class="strike"><xsl:apply-templates/></span>
+        <span class="cmpStrike"><xsl:apply-templates/></span>
       </xsl:when>
       <xsl:when test="$style = 'normal'">
         <span class="normal"><xsl:apply-templates/></span>
@@ -1214,7 +1332,7 @@
         <sup><xsl:apply-templates/></sup>
       </xsl:when>
       <xsl:when test="$style = 'underline'">
-        <span class="underline"><xsl:apply-templates/></span>
+        <span class="cmpUnderline"><xsl:apply-templates/></span>
       </xsl:when>
       <xsl:when test="$style = 'x-caps'">
         <span class="caps"><xsl:apply-templates/></span>

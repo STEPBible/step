@@ -105,7 +105,7 @@ public class BibleControllerTest {
      */
     @Test(expected = ValidationException.class)
     public void testGetBibleTextNoVersionWithOptionsAndInterlinear() {
-        this.testController.getBibleText(null, "Ref", "options", "interlinear");
+        this.testController.getBibleText(null, "Ref", "options", "interlinear", null);
     }
 
     /**
@@ -129,7 +129,7 @@ public class BibleControllerTest {
      */
     @Test(expected = ValidationException.class)
     public void testGetBibleTextNoReferenceWithOptionsAndInterlinear() {
-        this.testController.getBibleText("KJV", null, "options", "interlinear");
+        this.testController.getBibleText("KJV", null, "options", "interlinear", null);
     }
 
     /**
@@ -143,11 +143,12 @@ public class BibleControllerTest {
         options.add(LookupOption.VERSE_NUMBERS);
 
         // do test
-        this.testController.getBibleText("version", "reference", "HEADINGS,VERSE_NUMBERS", "kjv,esv");
+        this.testController.getBibleText("version", "reference", "HEADINGS,VERSE_NUMBERS", "kjv,esv",
+                "INTERLINEAR");
 
         // verify
         verify(this.bibleInformation).getPassageText(eq("version"), eq("reference"),
-                eq("HEADINGS,VERSE_NUMBERS"), eq("kjv,esv"));
+                eq("HEADINGS,VERSE_NUMBERS"), eq("kjv,esv"), eq("INTERLINEAR"));
 
     }
 

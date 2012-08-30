@@ -109,6 +109,8 @@ step.util = {
                 $(this).autocomplete("search", "");
             }).attr("readonly", readonly == true);
         },
+
+   
         
         searchButton : function(selector, searchType, callback) {
             $(selector).click(function() {
@@ -237,36 +239,11 @@ step.util = {
             
             $(".searchToolbarButtonSets").buttonset();
             
-            $(".searchVersions").autocomplete({
-                minLength: 0,
-                source: function( request, response ) {
-                    // delegate back to autocomplete, but extract the last term
-                    response( $.ui.autocomplete.filter(
-                            $.map(step.versions, function(value, index) {
-                                return value.initials;  
-                              }), extractLast( request.term ) ) );
-                },
-                focus: function() {
-                    // prevent value inserted on focus
-                    return false;
-                },
-                select: function( event, ui ) {
-                    var terms = split( this.value );
-                    // remove the current input
-                    terms.pop();
-                    // add the selected item
-                    terms.push( ui.item.value );
-                    // add placeholder to get the comma-and-space at the end
-                    terms.push( "" );
-                    this.value = terms.join( ", " );
-                    
-                    $(this).autocomplete("search", "");
-                    $(this).trigger('change');
-                    
-                    return false;
-                }
-            }).click(function() {
-                    $(this).autocomplete("search", "");
+            
+            $(step.util).hear("versions-initialisation-completed", function() {
+                $.each($(".searchVersions"), function(i, item) {
+                    step.version.autocomplete($(item), undefined, undefined, undefined, true);        
+                });
             });
         }
     },

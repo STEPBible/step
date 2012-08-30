@@ -44,11 +44,29 @@ span.interlinear span span span {
 	display: none;
 }
 
-.verseGrouping .primary > .cmpUnderline {
+td.primary {
+	border-left: thin dotted;
+}
+
+.comparingTable tr {
+	padding-bottom: 5px;
+}
+
+.headingVerseNumber {
+	color: #669;
+	vertical-align: top;
+}
+
+.comparingVersionName {
+	color: #696;
+	text-align: center;
+}
+
+.primary > .cmpUnderline {
 	display: none;
 }
 
-.verseGrouping .secondary > .cmpStrike {
+.secondary > .cmpStrike {
 	display: none;
 }
 

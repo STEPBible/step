@@ -32,6 +32,10 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.service.jsword.impl;
 
+import static com.tyndalehouse.step.core.models.InterlinearMode.COLUMN_COMPARE;
+import static com.tyndalehouse.step.core.models.InterlinearMode.INTERLEAVED;
+import static com.tyndalehouse.step.core.models.InterlinearMode.INTERLEAVED_COMPARE;
+import static com.tyndalehouse.step.core.models.InterlinearMode.INTERLINEAR;
 import static com.tyndalehouse.step.core.models.InterlinearMode.NONE;
 import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
 import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
@@ -708,14 +712,18 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
      */
     private void setInterleavingOptions(final TransformingSAXEventProvider tsep,
             final InterlinearMode displayMode, final String[] versions) {
-        if (displayMode == InterlinearMode.INTERLEAVED || displayMode == InterlinearMode.INTERLEAVED_COMPARE) {
-            tsep.setParameter("Interleave", true);
+        // so long as we're not NONE or INTERLINEAR, we almost always need an InterlinearProvider
+        if (displayMode != NONE && displayMode != INTERLINEAR) {
             tsep.setParameter("interleavingProvider", new InterleavingProviderImpl(versions,
-                    displayMode == InterlinearMode.INTERLEAVED_COMPARE));
+                    displayMode == INTERLEAVED_COMPARE || displayMode == COLUMN_COMPARE));
         }
 
-        if (displayMode == InterlinearMode.INTERLEAVED_COMPARE
-                || displayMode == InterlinearMode.COLUMN_COMPARE) {
+        if (displayMode == INTERLEAVED || displayMode == INTERLEAVED_COMPARE) {
+            tsep.setParameter("Interleave", true);
+
+        }
+
+        if (displayMode == INTERLEAVED_COMPARE || displayMode == COLUMN_COMPARE) {
             tsep.setParameter("comparing", true);
         }
 

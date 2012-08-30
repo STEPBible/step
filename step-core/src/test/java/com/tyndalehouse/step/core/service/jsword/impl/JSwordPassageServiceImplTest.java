@@ -353,8 +353,9 @@ public class JSwordPassageServiceImplTest {
 
         LOGGER.debug("Original is:\n {}", xmlOutputter.outputString(data.getOsisFragment()));
 
-        final OsisWrapper interleavedVersions = jsi.getInterleavedVersions(new String[] { "ESV", "KJV" },
-                ref, new ArrayList<LookupOption>(), InterlinearMode.INTERLEAVED_COMPARE);
+        final OsisWrapper interleavedVersions = jsi.getInterleavedVersions(
+                new String[] { "ESV", "KJV", "ASV" }, ref, new ArrayList<LookupOption>(),
+                InterlinearMode.COLUMN_COMPARE);
 
         final SAXBuilder sb = new SAXBuilder();
         final Document d = sb.build(new StringReader(interleavedVersions.getValue()));

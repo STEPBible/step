@@ -313,8 +313,32 @@
     </xsl:if>
   </xsl:template>
 
+
   <xsl:template name="interleavedVerseNum">
+	<xsl:param name="verse" />
+  	
+  	<h4 class='heading'>
+	  	<xsl:call-template name="intertwinedVerseNum">
+	  		<xsl:with-param name="verse" select="$verse" />
+	  		<xsl:with-param name="includeBook" select="true()" />
+	  	</xsl:call-template>
+  	</h4>
+  </xsl:template>
+  
+	<xsl:template name="columnVerseNumber">
+		<xsl:param name="verse" />
+		<th class='headingVerseNumber'>
+			<xsl:call-template name="intertwinedVerseNum">
+				<xsl:with-param name="verse" select="$verse" />
+				<xsl:with-param name="includeBook" select="false()" />
+			</xsl:call-template>
+		</th>
+	</xsl:template>
+  
+  
+  <xsl:template name="intertwinedVerseNum">
   		<xsl:param name="verse" />
+  		<xsl:param name="includeBook" />
   		
 		<xsl:variable name="firstOsisID" select="substring-before(concat($verse/@osisID, ' '), ' ')"/>
         
@@ -332,7 +356,14 @@
 			  </xsl:choose>
 			</xsl:variable>
 			
-	  		<h4 class='heading'><xsl:value-of select="concat($book, ' ', $chapter, ':', $verse)"/></h4>
+			<xsl:choose>
+				<xsl:when test="$includeBook = true()">
+	  				<xsl:value-of select="concat($book, ' ', $chapter, ':', $verse)"/>
+				</xsl:when>
+				<xsl:otherwise>
+	  				<xsl:value-of select="concat($chapter, ':', $verse)"/>
+				</xsl:otherwise>
+			</xsl:choose>
         </xsl:if>
   </xsl:template>
   
@@ -1134,7 +1165,7 @@
     		<xsl:apply-templates select="row"/>
     	</xsl:when>
     	<xsl:otherwise>
-		    <table class="table">
+		    <table class="table comparingTable">
 		      <xsl:copy-of select="@rows|@cols"/>
 		      <xsl:if test="head">
 		        <thead class="head"><xsl:apply-templates select="head"/></thead>
@@ -1149,8 +1180,7 @@
     <xsl:choose>
     	<xsl:when test="$Interleave = 'true'">
     		<xsl:choose>
-    			<xsl:when test="cell[@role = 'label']">
-    			</xsl:when>
+    			<xsl:when test="cell[@role = 'label']"></xsl:when>
     			<xsl:otherwise>
     				<div class="verseGrouping">
     					<xsl:variable name="verse" select="cell/verse" />
@@ -1163,9 +1193,32 @@
     		</xsl:choose>
     	</xsl:when>
     	<xsl:otherwise>
-			<tr class="row"><xsl:apply-templates/></tr>
+    		<xsl:choose>
+    			<xsl:when test="cell[@role = 'label']">
+    				<xsl:if test="$comparing = true()">
+    					<tr><td></td><xsl:call-template name="outputComparingTableHeader"></xsl:call-template></tr>
+    				</xsl:if>
+    			</xsl:when>
+    			<xsl:otherwise>
+    				<tr class="row">
+    					<xsl:variable name="verse" select="cell/verse" />
+    				    <xsl:call-template name="columnVerseNumber">
+    				    	<xsl:with-param name="verse" select="$verse" />
+    				    </xsl:call-template>	
+    					<xsl:apply-templates/>
+    				</tr>
+    			</xsl:otherwise>
+    		</xsl:choose>
     	</xsl:otherwise>
     </xsl:choose>
+  </xsl:template>
+  
+  <xsl:template name="outputComparingTableHeader">
+  		<th class="comparingVersionName"><xsl:value-of select="interleaving:getNextVersion($interleavingProvider)" /></th>
+  		
+  		<xsl:if test="not(interleaving:isFirstVersion($interleavingProvider))">
+  			<xsl:call-template name="outputComparingTableHeader" />
+  		</xsl:if>
   </xsl:template>
   
   <xsl:template name="interleaveVerse">
@@ -1187,6 +1240,62 @@
 			<xsl:call-template name="interleavedVersion" />
 			<xsl:apply-templates />
 		</xsl:element>
+  </xsl:template>
+  
+  <xsl:template name="columnVerse">
+	<xsl:param name="cell-direction" />
+	<xsl:param name="classes" select="''" />
+  
+	<xsl:variable name="element-name">
+		<xsl:choose>
+			<xsl:when test="@role = 'label'">
+				<xsl:text>th</xsl:text>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:text>td</xsl:text>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>
+	<xsl:element name="{$element-name}">
+		<xsl:attribute name="class">cell <xsl:value-of select="$classes" /></xsl:attribute>
+		<xsl:attribute name="valign">top</xsl:attribute>
+		<xsl:if test="@xml:lang">
+			<xsl:attribute name="dir">
+				<xsl:value-of select="$cell-direction" />
+			</xsl:attribute>
+		</xsl:if>
+		<xsl:if test="$cell-direction = 'rtl'">
+			<xsl:attribute name="align">
+			          <xsl:value-of select="'right'" />
+			</xsl:attribute>
+		</xsl:if>
+		<xsl:if test="@rows">
+			<xsl:attribute name="rowspan">
+			          <xsl:value-of select="@rows" />
+			</xsl:attribute>
+		</xsl:if>
+		<xsl:if test="@cols">
+			<xsl:attribute name="colspan">
+			          <xsl:value-of select="@cols" />
+			</xsl:attribute>
+		</xsl:if>
+		<!-- hack alert -->
+		<xsl:choose>
+			<xsl:when test="$cell-direction = 'rtl'">
+				<xsl:text>&#8235;</xsl:text>
+				<xsl:apply-templates />
+				<xsl:text>&#8236;</xsl:text>
+			</xsl:when>
+			<xsl:when test="$cell-direction = 'ltr'">
+				<xsl:text>&#8234;</xsl:text>
+				<xsl:apply-templates />
+				<xsl:text>&#8236;</xsl:text>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:apply-templates />
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:element>	
   </xsl:template>
   
   <xsl:template match="cell">
@@ -1225,56 +1334,24 @@
 			</xsl:if>
     	</xsl:when>
     	<xsl:otherwise>
-			<xsl:variable name="element-name">
-				<xsl:choose>
-					<xsl:when test="@role = 'label'">
-						<xsl:text>th</xsl:text>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:text>td</xsl:text>
-					</xsl:otherwise>
-				</xsl:choose>
-			</xsl:variable>
-			<xsl:element name="{$element-name}">
-				<xsl:attribute name="class">cell</xsl:attribute>
-				<xsl:attribute name="valign">top</xsl:attribute>
-				<xsl:if test="@xml:lang">
-					<xsl:attribute name="dir">
-					          <xsl:value-of select="$cell-direction" />
-					</xsl:attribute>
+    		<xsl:if test="./verse">
+	   			<xsl:if test="$comparing = false()">
+					<xsl:call-template name="columnVerse">
+						<xsl:with-param name="cell-direction" select="$cell-direction" />
+					</xsl:call-template>
 				</xsl:if>
-				<xsl:if test="$cell-direction = 'rtl'">
-					<xsl:attribute name="align">
-					          <xsl:value-of select="'right'" />
-					</xsl:attribute>
-				</xsl:if>
-				<xsl:if test="@rows">
-					<xsl:attribute name="rowspan">
-					          <xsl:value-of select="@rows" />
-					</xsl:attribute>
-				</xsl:if>
-				<xsl:if test="@cols">
-					<xsl:attribute name="colspan">
-					          <xsl:value-of select="@cols" />
-					</xsl:attribute>
-				</xsl:if>
-				<!-- hack alert -->
-				<xsl:choose>
-					<xsl:when test="$cell-direction = 'rtl'">
-						<xsl:text>&#8235;</xsl:text>
-						<xsl:apply-templates />
-						<xsl:text>&#8236;</xsl:text>
-					</xsl:when>
-					<xsl:when test="$cell-direction = 'ltr'">
-						<xsl:text>&#8234;</xsl:text>
-						<xsl:apply-templates />
-						<xsl:text>&#8236;</xsl:text>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:apply-templates />
-					</xsl:otherwise>
-				</xsl:choose>
-			</xsl:element>	
+			</xsl:if>
+			
+			<xsl:if test="$comparing = true()  and not(./verse)">
+					<xsl:call-template name="columnVerse">
+						<xsl:with-param name="cell-direction" select="$cell-direction" />
+						<xsl:with-param name="classes" select="'primary'" />
+					</xsl:call-template>
+					<xsl:call-template name="columnVerse">
+						<xsl:with-param name="cell-direction" select="$cell-direction" />
+						<xsl:with-param name="classes" select="'secondary'" />
+					</xsl:call-template>
+			</xsl:if>
 		</xsl:otherwise>
     </xsl:choose>
   

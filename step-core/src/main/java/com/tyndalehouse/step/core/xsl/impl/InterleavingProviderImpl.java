@@ -28,7 +28,8 @@ public class InterleavingProviderImpl implements InterleavingProvider {
         if (!this.comparing) {
             return returnAndIncrement();
         } else {
-            if (this.lastAccessed == 0) {
+            // if the first or the last, we only output once
+            if (this.lastAccessed == 0 || this.lastAccessed == this.versions.length - 1) {
                 return returnAndIncrement();
             } else {
                 // we're 1 or more, so if we've already returned once, then return a second time, but
@@ -44,6 +45,18 @@ public class InterleavingProviderImpl implements InterleavingProvider {
         }
     }
 
+    /**
+     * @return true to indicate we are on version name number 1
+     */
+    public boolean isFirstVersion() {
+        return this.lastAccessed == 0;
+    }
+
+    /**
+     * increments our count and returns the version name
+     * 
+     * @return the version name
+     */
     private String returnAndIncrement() {
         final String nextVersion = this.versions[this.lastAccessed];
         this.lastAccessed = (this.lastAccessed + 1) % this.versions.length;

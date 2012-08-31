@@ -50,12 +50,12 @@ step.passage = {
             return;
         }
 
-        var url = BIBLE_GET_BIBLE_TEXT + lookupVersion + "/" + lookupReference;
+        var url = BIBLE_GET_BIBLE_TEXT + lookupVersion.toUpperCase() + "/" + lookupReference;
         if (options && options.length != 0) {
             url += "/" + options;
 
             if (interlinearVersion && interlinearVersion.length != 0) {
-                url += "/" + interlinearVersion;
+                url += "/" + interlinearVersion.toUpperCase();
                 url += "/" + interlinearMode;
             }
         }
@@ -81,6 +81,49 @@ step.passage = {
 
             // execute all callbacks
             step.passage.executeCallbacks(passageId);
+            
+            //finally add handlers to elements containing xref
+            $.each($("[xref]", passageContent), function(i, item) {
+                var xref = $(this).attr("xref");
+                
+                $(this).qtip({
+                    content : {
+                        title : {
+                            text: xref,
+                            button : true
+                        },
+                        ajax : {
+                            url : BIBLE_GET_BIBLE_TEXT + step.state.passage.version(passageId) + "/" + encodeURIComponent(xref),
+                            type : 'GET',
+                            data : {},
+                            dataType : 'json',
+                            success : function(data, status) {
+                                this.set('content.title.text', xref);
+                                this.set('content.text', data.value);
+                            },
+                        }
+                    },
+                    style: {
+                        tip: false,
+                        classes: 'draggable-tooltip'
+                    },
+                    show :  { event: 'click' },
+                    hide : { event: 'click' },
+                    events : {
+                        render : function(event, api) {
+                            $(this).draggable({
+                                containment: 'window',
+                                handle: api.elements.titlebar
+                            });
+                            
+                            $(api.elements.titlebar).append(goToPassageArrow(true, xref, "leftPassagePreview"));
+                            $(api.elements.titlebar).append(goToPassageArrow(false, xref, "rightPassagePreview"));
+                            $(".leftPassagePreview, .rightPassagePreview", api.elements.titlebar).button().click(function () { api.hide(); });
+//                            $(".leftPassagePreview .ui-button-text, .rightPassagePreview .ui-button-text", api.elements.titlebar).removeClass("ui-button-text");
+                        }
+                    }
+                });                 
+            });
         });
     },
     
@@ -145,11 +188,11 @@ function Passage(passageContainer, passageId) {
     });
 
     $(this.passage).hear("make-master-interlinear-" + this.passageId, function(selfElement, newMasterVersion) {
-        var interlinearVersion = step.state.passage.interlinearVersions(self.passageId); 
+        var interlinearVersion = step.state.passage.extraVersions(self.passageId); 
         var currentVersion = step.state.passage.version(self.passageId);
 
         
-        step.state.passage.interlinearVersions(self.passageId, interlinearVersion.replace(newMasterVersion, currentVersion), currentVersion, newMasterVersion);
+        step.state.passage.extraVersions(self.passageId, interlinearVersion.replace(newMasterVersion, currentVersion), currentVersion, newMasterVersion);
         step.state.passage.version(self.passageId, newMasterVersion);
 
         $.shout("version-changed-dynamically" + self.passageId, newMasterVersion);
@@ -231,32 +274,6 @@ Passage.prototype.highlightStrong = function(strongReference) {
     }
 };
 
-Passage.prototype.getSelectedInterlinearVersion = function() {
-    // look for menu item for interlinears...
-    // we check that it has a tick and is enabled for the INTERLINEAR name
-    var menuItem = $("a:has(img.selectingTick)[name = 'INTERLINEAR']", this.container).not(".disabled");
-
-    if (menuItem.length) {
-        return $(".interlinearPopup[passage-id = '" + this.passageId + "'] > .interlinearVersions").val();
-    }
-    return "";
-};
-
-Passage.prototype.setSelectedInterlinearVersion = function(newVersions, newlyAvailable, noLongerAvailable) {
-    var popup = $(".interlinearPopup[passage-id = '" + this.passageId + "']");
-
-    // set the popup underlying text
-    $(".interlinearVersions", popup).val(newVersions);
-
-    var input = $("input[value = '" + newlyAvailable + "']", popup);
-    input.removeAttr('disabled');
-    input.next().removeClass('inactive');
-
-    // now disable the current one
-    var currentVersion = $("input[value = '" + noLongerAvailable + "']", popup);
-    currentVersion.attr('disabled', 'disabled');
-    currentVersion.next().addClass('inactive');
-};
 
 /**
  * if a number of strongs are given, separated by a space, highlights all of

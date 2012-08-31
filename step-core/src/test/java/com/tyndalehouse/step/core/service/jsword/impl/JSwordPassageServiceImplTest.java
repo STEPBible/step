@@ -374,13 +374,13 @@ public class JSwordPassageServiceImplTest {
     @Test
     public void testPrettyXml() throws BookException, NoSuchKeyException, JDOMException, IOException {
         final String version = "ESV";
-        final String ref = "Acts 8:36-38";
+        final String ref = "John 3:20";
         final Book currentBook = Books.installed().getBook(version);
         final BookData bookData = new BookData(currentBook, currentBook.getKey(ref));
         final Element osisFragment = bookData.getOsisFragment();
 
-        final XMLOutputter xmlOutputter = new XMLOutputter(Format.getRawFormat());
-        LOGGER.trace(xmlOutputter.outputString(osisFragment));
+        final XMLOutputter xmlOutputter = new XMLOutputter(Format.getPrettyFormat());
+        LOGGER.debug(xmlOutputter.outputString(osisFragment));
 
         // do the test
         final JSwordPassageServiceImpl jsi = new JSwordPassageServiceImpl(

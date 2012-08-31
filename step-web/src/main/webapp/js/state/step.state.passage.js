@@ -27,18 +27,6 @@
  * POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
 step.state.passage = {
-    store : function(passageId, version, reference, options, interlinearVersions, start, end, multiRange) {
-        this.startVerseId(passageId, start);
-        this.endVerseId(passageId, end);
-        this.multiRange(passageId, multiRange);
-        this.version(passageId, version, false);
-        this.reference(passageId, reference, false);
-        this.options(passageId, options, false);
-        this.interlinearVersions(passageId, interlinearVersions, false);
-
-        // fire change of state
-        step.state._fireStateChanged(passageId);
-    },
 
     hasChanged : function(p, v, r, o, i) {
         return this.version(p) != v || this.reference(p) != r || !compare(this.options(p), o) || this.interlinearVersions(p) != i;
@@ -50,7 +38,6 @@ step.state.passage = {
         
         // we restore the menu options manually:
         this._restoreMenuOptions(passageId, this.options(passageId));
-        this._restoreInterlinearVersions(passageId, this.interlinearVersions(passageId));
         this._restorePassageSync();
         step.state._fireStateChanged(passageId);
 
@@ -66,6 +53,8 @@ step.state.passage = {
         
         //now that we've updated, alert if we intended change
         if(version) {
+            step.passage.ui.updateDisplayOptions(passageId);
+            
             $.shout("version-changed-" + passageId, version);
         }
         
@@ -122,10 +111,6 @@ step.state.passage = {
         // menus take care of themselves, so no need to do anything here, but
         // call the underlying storage
         return step.state._storeAndRetrieveCookieState(passageId, "options", options, fireChange);
-    },
-
-    interlinearVersions : function(passageId, interlinearVersions, fireChange) {
-        return step.state._storeAndRetrieveCookieState(passageId, "interlinearVersions", interlinearVersions, fireChange);
     },
 
     syncMode : function(syncMode, fireChange) {
@@ -204,12 +189,6 @@ step.state.passage = {
         $.shout("initialise-passage-display-options", {
             passageId : passageId,
             menuOptions : menuOptions
-        });
-    },
-
-    _restoreInterlinearVersions : function(passageId, interlinearVersions) {
-        $.shout("initialise-interlinear-versions", {
-            passageId : passageId
         });
     },
 

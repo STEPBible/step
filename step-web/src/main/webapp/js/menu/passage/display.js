@@ -32,27 +32,11 @@ $(step.menu).hear("MENU-DISPLAY", function(self, menuTrigger) {
 		return;
 	}
 	
-	if(menuTrigger.menuItem.name != "INTERLINEAR") {
 		step.menu.toggleMenuItem(menuTrigger.menuItem.element);
 
 		//save the new state of options
 		var selectedOptions = step.menu.getSelectedOptions(menuTrigger.menu.element);
 		step.state.passage.options(menuTrigger.passageId, selectedOptions);
-	} else {
-		$.shout("interlinear-menu-option-triggered-" +  menuTrigger.passageId);
-	}
-});
-
-$(step.menu).hear("interlinear-menu-option", function(self, interlinearResult) {
-	var mi = step.menu.getMenuItem(interlinearResult.name, interlinearResult.passageId);
-	if(interlinearResult.selected) {
-		step.menu.tickMenuItem(mi);
-	} else {
-		step.menu.untickMenuItem(mi);
-	}
-
-	var selectedOptions = step.menu.getSelectedOptions(step.menu.getParentMenu(mi));
-	step.state.passage.options(interlinearResult.passageId, selectedOptions, true);
 });
 
 

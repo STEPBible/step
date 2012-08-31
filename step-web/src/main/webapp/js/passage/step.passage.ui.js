@@ -44,9 +44,16 @@ step.passage.ui = {
     },
     
     updateDisplayOptions : function(passageId) {
-        var displayOptions = $(".extraVersionsDisplayOptions", step.util.getPassageContainer(passageId));
+        if(step.versions == undefined) {
+            //don't have it from server yet, so return immediately
+            return;
+        }
         
-        var comparisonVersions = $(".extraVersions").val().replace(/ +/g, "");
+        
+        var passageContainer = step.util.getPassageContainer(passageId);
+        var displayOptions = $(".extraVersionsDisplayOptions", passageContainer);
+        
+        var comparisonVersions = $(".extraVersions", passageContainer).val().replace(/ +/g, "");
 
         //check for no versions
         if(comparisonVersions == undefined || comparisonVersions.length == 0) {

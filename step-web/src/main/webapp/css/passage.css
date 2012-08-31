@@ -388,6 +388,23 @@ FONT.usg {
 	margin: 5px;
 }
 
+.leftPassagePreview {
+	right: 44px !important;
+	font-size: 130%;
+	height: 14px;
+	font-weight: bold;
+	background-position-y: -50px;
+}
+
+.rightPassagePreview {
+	right: 25px !important;
+	font-size: 130%;
+	height: 14px;
+	font-weight: bold;
+	background-position-y: -50px;
+}
+
+
 #previewReference H2.xgen {
 	display: none;	
 }
@@ -428,3 +445,14 @@ FONT.usg {
 .mas { color: #000099; }
 .fem { color: #C90000; }
 .neut { color: black; }   
+
+
+.draggable-tooltip .ui-tooltip-titlebar {
+    cursor: move;
+    color: #696;
+}
+
+.draggable-tooltip * .xgen {
+	display: none;
+}
+​

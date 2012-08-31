@@ -128,21 +128,10 @@ function initData() {
 	    
 	    $.shout("versions-initialisation-completed");
 	    
-		initInterlinearPopup(versionsFromServer);
 		var passages = initPassages(options);
 		initModules(passages);
 	});
 }
-
-/**
- * sets up the interlinear popup with the available versions
- * @param strongedVersions the list of strong versions
- */
-function initInterlinearPopup(versionsFromServer) {
-	$(".interlinearPopup").each(function(index, interlinearPopup) {
-		new InterlinearPopup(versionsFromServer, index, interlinearPopup);
-	});
-};
 
 /**
  * creates the passages components

@@ -31,6 +31,7 @@
 	<%
 		if(request.getParameter("debug") != null) {
 	%>
+		<link rel="stylesheet" type="text/css" href="css/qtip.css" />
 		<link rel="stylesheet" type="text/css" href="css/ddsmoothmenu.css" />
 		<link rel="stylesheet" type="text/css" href="css/ddsmoothmenu-v.css" />
 	    <link rel="stylesheet" type="text/css" href="css/initial-layout.css" />
@@ -40,6 +41,8 @@
 	    <link rel="stylesheet" type="text/css" href="css/search.css" />
 	    <link rel="stylesheet" type="text/css" href="css/cardo.css" />
 	
+	    <script src="js/jquery-extensions/jquery-qtip.js" type="text/javascript"></script>
+	    <script src="js/jquery-extensions/jquery-hover-intent.js" type="text/javascript"></script>
 	    <script src="js/jquery-extensions/jquery-cookie.js" type="text/javascript"></script>
 		<script src="js/jquery-extensions/jquery-shout.js" type="text/javascript"></script>
 	    <script src="js/jquery-extensions/jquery-filtered-complete.js" type="text/javascript"></script>
@@ -51,7 +54,6 @@
 	    <script src="js/timeline.js" type="text/javascript"></script>
 	    <script src="js/geography.js" type="text/javascript"></script>
 	    <script src="js/toolbar_menu.js" type="text/javascript"></script>
-	    <script src="js/interlinear_popup.js" type="text/javascript"></script>
 	    <script src="js/login.js" type="text/javascript"></script>
 		<script src="js/title.js" type="text/javascript"></script>
 		<script src="js/search/step.search.js" type="text/javascript"></script>

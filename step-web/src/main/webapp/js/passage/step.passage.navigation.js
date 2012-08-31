@@ -127,7 +127,7 @@ step.passage.navigation = {
     _getPortion: function(passageId, start, end, roundup, callback) {
         var version = step.state.passage.version(passageId);
         var options = step.state.passage.options(passageId);
-        var interlinearOptions = step.state.passage.interlinearVersions(passageId);
+        var interlinearOptions = step.state.passage.extraVersions(passageId);
         
         $.getSafe(BIBLE_GET_BY_NUMBER + 
                 version + "/" + 

@@ -40,8 +40,9 @@ step.defaults = {
     }
     ],
     passage : {
-        interOptions : [ "Interlinear", "Interleaved", "Interleaved with comparison", "Column view", "Column view with comparison" ],
-        interNamedOptions : ["INTERLINEAR", "INTERLEAVED", "INTERLEAVED_COMPARE", "COLUMN", "COLUMN_COMPARE"]
+        interOptions : [ "Interleaved", "Interleaved with comparison", "Interlinear", "Column view", "Column view with comparison" ],
+        interNamedOptions : ["INTERLEAVED", "INTERLEAVED_COMPARE", "INTERLINEAR", "COLUMN", "COLUMN_COMPARE"],
+        interOptionsNoInterlinear : [ "Interleaved", "Interleaved with comparison", "Column view", "Column view with comparison" ]
     },
     
     search: {

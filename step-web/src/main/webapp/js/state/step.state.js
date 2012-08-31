@@ -185,6 +185,12 @@ step.state = {
         } else if(active == 'SEARCH_SUBJECT') {
             $.shout("subject-search-state-has-changed", { passageId : passageId });
         }
+        
+//        this._recomputeHash();
+    },
+    
+    _recomputeHash : function() {
+//        location.hash = document.cookie.toString();
     },
 
     _fireStateChangedAll : function(excludingFilter) {

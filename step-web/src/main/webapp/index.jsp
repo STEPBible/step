@@ -16,6 +16,9 @@
 	<meta name="description" content="Scripture Tools for Every Person is a Bible study tool, currently showing: <%= stepRequest.getReference(0) %> in the <%= stepRequest.getVersion(0) %> and <%= stepRequest.getReference(1) %> in the <%= stepRequest.getVersion(1) %>">
 	<meta name="keywords" content="bible study kjv esv asv scripture tools for every person interlinear strong robinson timeline" />
 	
+	<!-- used for webmaster tools -->
+	<meta name="google-site-verification" content="OZfGjgjfTQq0Gn-m6pecYXYNGoDTllWS6v9aBOi64AU" />
+	
 	<link rel="shortcut icon"  href="images/step-favicon.ico" />
 	<link rel="stylesheet" type="text/css" href="css/ui-lightness/jquery-ui-1.8.19.custom.css" />
 	<script src="js_init/initLib.js" type="text/javascript"></script>   

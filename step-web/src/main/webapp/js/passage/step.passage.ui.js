@@ -41,6 +41,60 @@ step.passage.ui = {
     
     restoreDefaults : function(passageId, force) {
         step.util.ui.resetIfEmpty(passageId, force, step.state.passage.extraVersionsDisplayOptions, step.defaults.passage.interOptions[0]);
+    },
+    
+    updateDisplayOptions : function(passageId) {
+        var displayOptions = $(".extraVersionsDisplayOptions", step.util.getPassageContainer(passageId));
+        
+        var comparisonVersions = $(".extraVersions").val().replace(/ +/g, "");
+
+        //check for no versions
+        if(comparisonVersions == undefined || comparisonVersions.length == 0) {
+            //then we disable the box and return immediately
+            displayOptions.prop("disabled", true);
+            return;
+        } else {
+            //otherwise we enable it
+            displayOptions.prop("disabled", false);
+        }
+        
+        //if we're looking at an interlinear option, then we need to check all versions support that
+        if(comparisonVersions) {
+            var versions = comparisonVersions.split(",");
+            versions.push(step.state.passage.version(passageId));
+            
+            for(var i = 0; i < versions.length; i++) {
+                //check that each version contains
+                var features = this.getSelectedVersion(versions[i]);
+                if(features && !features.hasStrongs) {
+                    if(step.defaults.passage.interNamedOptions[step.defaults.passage.interOptions.indexOf(displayOptions.val())] == "INTERLINEAR") {
+                        displayOptions.val(step.defaults.passage.interOptions[0]);
+                        displayOptions.trigger('change');
+                    } 
+                    
+                    //change available options
+                    displayOptions.autocomplete("option", "source", step.defaults.passage.interOptionsNoInterlinear);
+                    return;
+                }
+            }
+        }
+        
+        //if we get here, then we need to allow interlinears:
+        displayOptions.autocomplete("option", "source", step.defaults.passage.interOptions);
+    },
+    
+    /**
+     * Simple forward search
+     */
+    getSelectedVersion : function(versionName) {
+        for(var i = 0; i < step.versions.length; i++) {
+            if(versionName == step.versions[i].initials) {
+                return step.versions[i];
+            }
+        }
+        
+        console.log("Did not manage to find version ", versionName);
+        return undefined;
     }
 };
 
@@ -58,9 +112,18 @@ $(document).ready(function() {
 });
 
 $(step.passage.ui).hear("versions-initialisation-completed", function() {
+    for(var i = 0; i < step.util.passageContents.length; i++) {
+        step.passage.ui.updateDisplayOptions(i);
+    }
+    
     $.each($(".extraVersions"), function(i, item) {
         step.version.autocomplete($(item), undefined, undefined, function(target) {
-            step.passage.changePassage(step.passage.getPassageId(target));
-        }, true);        
-    })
+            var passageId = step.passage.getPassageId(target);
+            
+            //reset displayOptions because interlinear might not be available
+            step.passage.ui.updateDisplayOptions(passageId);
+            
+            step.passage.changePassage(passageId);
+        }, true);
+    });
 });

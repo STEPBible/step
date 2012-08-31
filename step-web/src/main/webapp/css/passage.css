@@ -52,6 +52,11 @@ td.primary {
 	padding-bottom: 5px;
 }
 
+.comparingTable * {
+	vertical-align: top;
+}
+
+
 .headingVerseNumber {
 	color: #669;
 	vertical-align: top;

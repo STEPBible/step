@@ -59,11 +59,15 @@ import com.tyndalehouse.step.rest.controllers.BibleController;
  * 
  */
 public class WebStepRequest {
+    private static final String REF_0_PARAM = "reference";
+    private static final String REF_1_PARAM = "reference-1";
+    private static final String VERSION_0_PARAM = "version";
+    private static final String VERSION_1_PARAM = "version-1";
     private static final Logger LOG = LoggerFactory.getLogger(WebStepRequest.class);
-    private static final String CURRENT_REFERENCE_0 = "currentReference-0";
-    private static final String CURRENT_REFERENCE_1 = "currentReference-1";
-    private static final String CURRENT_VERSION_0 = "currentVersion-0";
-    private static final String CURRENT_VERSION_1 = "currentVersion-1";
+    private static final String CURRENT_REFERENCE_0 = "step.passage.0.reference";
+    private static final String CURRENT_REFERENCE_1 = "step.passage.1.reference";
+    private static final String CURRENT_VERSION_0 = "step.passage.0.version";
+    private static final String CURRENT_VERSION_1 = "step.passage.1.version";
     private final HttpServletRequest request;
     private Map<String, String> cookieMap;
     private final Injector injector;
@@ -84,6 +88,37 @@ public class WebStepRequest {
 
         this.references = new ArrayList<String>();
         this.versions = new ArrayList<String>();
+
+        init(request, this.references, REF_0_PARAM, CURRENT_REFERENCE_0, this.defaults.getDefaultReference1());
+        init(request, this.references, REF_1_PARAM, CURRENT_REFERENCE_1, this.defaults.getDefaultReference2());
+
+        init(request, this.versions, VERSION_0_PARAM, CURRENT_VERSION_0, this.defaults.getDefaultVersion1());
+        init(request, this.versions, VERSION_1_PARAM, CURRENT_VERSION_1, this.defaults.getDefaultVersion2());
+    }
+
+    /**
+     * Initialises the state of the web request, with either the request parameter, the cookie, or the
+     * failsafe-default value
+     * 
+     * @param servletRequest the request object
+     * @param store the store in which to store the value we are calcualting
+     * @param requestParamName the name of the request parameter in the url
+     * @param cookieName the name of the cookie key
+     * @param failsafeValue the default value
+     */
+    private void init(final HttpServletRequest servletRequest, final List<String> store,
+            final String requestParamName, final String cookieName, final String failsafeValue) {
+        final String passageReference = servletRequest.getParameter(requestParamName);
+        if (!isEmpty(passageReference)) {
+            store.add(passageReference);
+        } else {
+            final String cookieValue = getCookieValue(cookieName);
+            if (!isEmpty(cookieValue)) {
+                store.add(cookieValue);
+            } else {
+                store.add(failsafeValue);
+            }
+        }
     }
 
     /**
@@ -93,11 +128,25 @@ public class WebStepRequest {
      * @return the reference
      */
     public String getReference(final int passageId) {
-        if (this.references.isEmpty()) {
-            this.references.add(getCookieValue(CURRENT_REFERENCE_0, this.defaults.getDefaultReference1()));
-            this.references.add(getCookieValue(CURRENT_REFERENCE_1, this.defaults.getDefaultReference2()));
-        }
         return this.references.get(passageId);
+    }
+
+    /**
+     * @param passageId the passageId of interest
+     * @return the next reference
+     */
+    public String getNextReference(final int passageId) {
+        return this.injector.getInstance(BibleController.class)
+                .getNextChapter(getReference(passageId), getVersion(0)).getOsisKeyId();
+    }
+
+    /**
+     * @param passageId the passageId of interest
+     * @return the previous reference
+     */
+    public String getPreviousReference(final int passageId) {
+        return this.injector.getInstance(BibleController.class)
+                .getPreviousChapter(getReference(passageId), getVersion(0)).getOsisKeyId();
     }
 
     /**
@@ -107,10 +156,6 @@ public class WebStepRequest {
      * @return the reference
      */
     public String getVersion(final int passageId) {
-        if (this.versions.isEmpty()) {
-            this.versions.add(getCookieValue(CURRENT_VERSION_0, this.defaults.getDefaultVersion1()));
-            this.versions.add(getCookieValue(CURRENT_VERSION_1, this.defaults.getDefaultVersion2()));
-        }
         return this.versions.get(passageId);
     }
 
@@ -125,8 +170,8 @@ public class WebStepRequest {
         final String version = getVersion(passageId);
 
         try {
-            return this.injector.getInstance(BibleController.class).getBibleText(version, reference)
-                    .getValue();
+            return this.injector.getInstance(BibleController.class)
+                    .getBibleText(version, reference, "VERSE_NUMBERS,NOTES").getValue();
         } catch (final StepInternalException e) {
             // silently ignore and log as debug
             LOG.trace("Unable to restore state", e);
@@ -138,10 +183,9 @@ public class WebStepRequest {
      * returns the value of the cookie
      * 
      * @param cookieName the key to the cookies from the page
-     * @param defaultValue the value to return if not found
      * @return the value requested
      */
-    private String getCookieValue(final String cookieName, final String defaultValue) {
+    private String getCookieValue(final String cookieName) {
         if (this.cookieMap == null) {
             this.cookieMap = new HashMap<String, String>();
 
@@ -156,7 +200,7 @@ public class WebStepRequest {
         try {
             String v = this.cookieMap.get(cookieName);
             if (isEmpty(v)) {
-                v = defaultValue;
+                return null;
             } else {
                 v = URLDecoder.decode(v, "UTF-8");
             }

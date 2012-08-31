@@ -102,6 +102,7 @@
 
   <xsl:param name="HideXGen" select="'false'" />
 
+  <xsl:param name="baseVersion" select="''" />
   <xsl:param name="Interleave" select="'false'" />
   <xsl:param name="interleavingProvider" />
   <xsl:param name="comparing" select="false()" />
@@ -754,14 +755,14 @@
         <xsl:variable name="versification" select="jsword:getVersification($v11nf, $v11n)"/>
         <xsl:variable name="passage" select="jsword:getValidKey($keyf, $versification, @osisRef)"/>
         <xsl:variable name="passageKey" select="jsword:getName($passage)"/>
-        <a href="#" title="Click for more options" class="linkRef" xref="{$passageKey}" onclick="javascript:showPreviewOptions();"><xsl:apply-templates/></a>
+        <a href="?reference={$passageKey}&amp;version={$baseVersion}" title="Click for more options" class="linkRef" xref="{$passageKey}"><xsl:apply-templates/></a>
   </xsl:template>
   
   <xsl:template match="reference" mode="jesus">
         <xsl:variable name="versification" select="jsword:getVersification($v11nf, $v11n)"/>
         <xsl:variable name="passage" select="jsword:getValidKey($keyf, $versification, @osisRef)"/>
         <xsl:variable name="passageKey" select="jsword:getName($passage)"/>
-        <a href="#" title="Click for more options" xref="{$passageKey}" onclick="javascript:showPreviewOptions();"><xsl:apply-templates/></a>
+        <a href="?reference={$passageKey}&amp;version={$baseVersion}" title="Click for more options" xref="{$passageKey}" onclick="javascript:showPreviewOptions();"><xsl:apply-templates/></a>
   </xsl:template>
   
   <!--=======================================================================-->

@@ -100,8 +100,8 @@
   <!-- Whether to show an interlinear and the provider helping with the lookup -->
   <xsl:param name="infoFunctionCall" select="'javascript:showInfo'" />
   
-  <!--  a comma separated list of versions to display, if provided, then we display the interlinear -->
   <xsl:param name="baseVersion" select="''" />
+  <!--  a comma separated list of versions to display, if provided, then we display the interlinear -->
   <xsl:param name="interlinearVersion" select="''" />
   <xsl:param name="interlinearReference" select="''" />
   <xsl:param name="morphologyProvider" />

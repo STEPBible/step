@@ -82,9 +82,14 @@ step.passage = {
             // execute all callbacks
             step.passage.executeCallbacks(passageId);
             
+            
             //finally add handlers to elements containing xref
             $.each($("[xref]", passageContent), function(i, item) {
                 var xref = $(this).attr("xref");
+                
+                $(this).click(function(e) {
+                    e.preventDefault();
+                })
                 
                 $(this).qtip({
                     content : {

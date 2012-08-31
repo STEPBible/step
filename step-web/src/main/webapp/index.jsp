@@ -110,9 +110,9 @@
 				<div id="leftPaneMenu" class="innerMenus"><jsp:include page="js/menu/passage/menu.html" /></div>
 			    <div class="passageText ui-widget">
 			    	<div class="headingContainer">
-			    		<jsp:include page="js/search/advanced_search.jsp" />
+			    		<jsp:include page="js/search/advanced_search.jsp?passageId=0" />
 			    	</div>
-			    	<div class="passageContent">&nbsp;</div>
+			    	<div class="passageContent">&nbsp;<%= stepRequest.getPassage(0) %></div>
 			    </div>
 			</div>
 		</div>
@@ -124,9 +124,9 @@
 				<div id="rightPaneMenu" class="innerMenus"><jsp:include page="js/menu/passage/menu.html" /></div>
 			    <div class="passageText ui-widget">
 			    	<div class="headingContainer">
-			    		<jsp:include page="js/search/advanced_search.jsp" />
+			    		<jsp:include page="js/search/advanced_search.jsp?passageId=1" />
 			    	</div>
-			    	<div class="passageContent">&nbsp;</div>
+			    	<div class="passageContent">&nbsp;<%= stepRequest.getPassage(1) %></div>
 				</div>
 			</div>
 		</div>

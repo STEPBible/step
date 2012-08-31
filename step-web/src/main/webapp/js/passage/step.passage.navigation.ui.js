@@ -32,7 +32,8 @@ $(document).ready(function() {
             primary : "ui-icon-arrowreturnthick-1-w"
         },
         text : false
-    }).click(function() {
+    }).click(function(e) {
+        e.preventDefault();
         step.passage.navigation.chapter.previous(step.passage.getPassageId(this));
     });
 
@@ -41,7 +42,8 @@ $(document).ready(function() {
             primary : "ui-icon-arrowreturnthick-1-w"
         },
         text : false
-    }).click(function() {
+    }).click(function(e) {
+        e.preventDefault();
         step.passage.navigation.chapter.next(step.passage.getPassageId(this));
     });
 

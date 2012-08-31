@@ -47,7 +47,6 @@ step.state.passage = {
     version : function(passageId, version, fireChange) {
         if (version) {
             $(".passageVersion", step.util.getPassageContainer(passageId)).val(version);
-            
         }
         var returnVersion = step.state._storeAndRetrieveCookieState(passageId, "version", version, fireChange);
         
@@ -197,6 +196,14 @@ step.state.passage = {
     },
 
     _restoreVersion : function(passageId) {
+        //overwrite value if provided in request
+        var urlVersion = $.getUrlVar("version" + passageId == 0 ? "" : "-1");
+        if(!step.util.isBlank(urlVersion)) {
+            this.version(passageId, urlVersion, false);
+            return;
+        }
+        
+        
         var v = this.version(passageId);
         if (!step.util.isBlank(v)) {
             this.version(passageId, v, false);
@@ -207,6 +214,15 @@ step.state.passage = {
     },
 
     _restoreReference : function(passageId) {
+        //overwrite value if provided in request
+        var urlReference = $.getUrlVar("reference" + passageId == 0 ? "" : "-1");
+        if(!step.util.isBlank(urlReference)) {
+            this.reference(passageId, urlReference, false);
+            return;
+        }
+
+        
+        
         var r = this._storedReference(passageId);
         if (!step.util.isBlank(r)) {
             this._storedReference(passageId, r, false);

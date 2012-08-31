@@ -102,7 +102,7 @@ public class Loader {
         // in order to do this, we need some jsword modules available. - we assume someone has kicked off the
         // process
         // kick of installation of jsword modules
-        checkAndWaitForKJV();
+        // checkAndWaitForKJV();
 
         // now we can load the data
         loadData();

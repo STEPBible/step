@@ -123,7 +123,7 @@ function initData() {
 	//get data for passages
 	// make call to server first and once, to cache all passages:
 	// todo work out why step.menu.isOptionSelected("SHOW_ALL_VERSIONS") doesn't return true
-	$.getSafe(BIBLE_GET_BIBLE_VERSIONS + true, function(versionsFromServer) {
+	$.getSafe(BIBLE_GET_MODULES + true, function(versionsFromServer) {
 	    step.versions = versionsFromServer;
 	    
 	    $.shout("versions-initialisation-completed");

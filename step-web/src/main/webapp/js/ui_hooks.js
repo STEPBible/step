@@ -48,7 +48,7 @@ BOOKMARKS_ADD = STEP_SERVER_BASE_URL + "favourites/addBookmark/";
 HISTORY_GET = STEP_SERVER_BASE_URL + "favourites/getHistory/";
 HISTORY_ADD = STEP_SERVER_BASE_URL + "favourites/addHistory/";
 
-BIBLE_GET_BIBLE_VERSIONS = STEP_SERVER_BASE_URL + "bible/getBibleVersions/";
+BIBLE_GET_MODULES = STEP_SERVER_BASE_URL + "bible/getModules/";
 BIBLE_GET_BIBLE_TEXT = STEP_SERVER_BASE_URL + "bible/getBibleText/";
 BIBLE_GET_FEATURES = STEP_SERVER_BASE_URL + "bible/getFeatures/";
 BIBLE_GET_ALL_FEATURES = STEP_SERVER_BASE_URL + "bible/getAllFeatures/";

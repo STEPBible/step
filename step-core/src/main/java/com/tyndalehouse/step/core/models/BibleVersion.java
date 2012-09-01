@@ -48,6 +48,7 @@ public class BibleVersion implements Serializable {
     private boolean hasMorphology;
     private boolean questionable;
     private String languageCode;
+    private String category;
 
     /**
      * @return true if the version contains strong-tagged information
@@ -131,5 +132,19 @@ public class BibleVersion implements Serializable {
      */
     public void setQuestionable(final boolean questionable) {
         this.questionable = questionable;
+    }
+
+    /**
+     * @return the category
+     */
+    public String getCategory() {
+        return this.category;
+    }
+
+    /**
+     * @param category the category to set
+     */
+    public void setCategory(final String category) {
+        this.category = category;
     }
 }

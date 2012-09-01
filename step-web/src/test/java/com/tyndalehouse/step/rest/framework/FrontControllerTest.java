@@ -187,12 +187,12 @@ public class FrontControllerTest {
                 this.clientSessionProvider);
 
         // when
-        final Method controllerMethod = this.fcUnderTest.getControllerMethod("getBibleVersions",
+        final Method controllerMethod = this.fcUnderTest.getControllerMethod("getModules",
                 controllerInstance, null, null);
 
         // then
         controllerMethod.invoke(controllerInstance);
-        verify(bibleInfo).getAvailableBibleVersions(anyBoolean(), anyString());
+        verify(bibleInfo).getAvailableModules(anyBoolean(), anyString());
     }
 
     /**

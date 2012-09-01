@@ -93,9 +93,10 @@ public class BibleController {
      * 
      * @return all versions of modules that are considered to be Bibles.
      */
+    // TODO: move this elsewhere
     @Cacheable(true)
-    public List<BibleVersion> getBibleVersions() {
-        return this.bibleInformation.getAvailableBibleVersions(true, null);
+    public List<BibleVersion> getModules() {
+        return this.bibleInformation.getAvailableModules(true, null);
     }
 
     /**
@@ -105,11 +106,11 @@ public class BibleController {
      * @return all versions of modules that are considered to be Bibles.
      */
     @Cacheable(true)
-    public List<BibleVersion> getBibleVersions(final String allVersions) {
+    public List<BibleVersion> getModules(final String allVersions) {
         final User user = this.serverSession.get().getUser();
         final String language = user == null || user.getLanguage() == null ? this.clientSession.get()
                 .getLanguage() : user.getLanguage();
-        return this.bibleInformation.getAvailableBibleVersions(Boolean.valueOf(allVersions), language);
+        return this.bibleInformation.getAvailableModules(Boolean.valueOf(allVersions), language);
     }
 
     /**

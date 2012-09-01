@@ -465,4 +465,19 @@ FONT.usg {
 .draggable-tooltip * .xgen {
 	display: none;
 }
-​
+
+
+.commentaryItalic {
+	font-style: italic;			
+}
+
+.commentaryVerseNumber {
+	color: #669;
+	font-weight: bold;
+	padding-right: 5px;
+}
+
+.commentaryVerse {
+	display: block;
+	padding-bottom: 5px;	
+}

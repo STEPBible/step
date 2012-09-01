@@ -96,10 +96,10 @@ public class BibleInformationServiceImpl implements BibleInformationService {
     }
 
     @Override
-    public List<BibleVersion> getAvailableBibleVersions(final boolean allVersions, final String locale) {
+    public List<BibleVersion> getAvailableModules(final boolean allVersions, final String locale) {
         LOGGER.info("Getting bible versions with locale [{}] and allVersions=[{}]", locale, allVersions);
         return getSortedSerialisableList(this.jswordModule.getInstalledModules(allVersions, locale,
-                BookCategory.BIBLE));
+                BookCategory.BIBLE, BookCategory.COMMENTARY));
     }
 
     @Override

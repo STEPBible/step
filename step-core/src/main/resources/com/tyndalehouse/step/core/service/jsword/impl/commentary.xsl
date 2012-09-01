@@ -28,7 +28,7 @@
 	<!-- == A proper OSIS document has osis as its root. == We dig deeper for 
 		its content. -->
 	<xsl:template match="verse">
-		<span class="verse"><xsl:call-template name="versenum"/><xsl:apply-templates/></span>
+		<span class="commentaryVerse"><xsl:call-template name="versenum"/><xsl:apply-templates/></span>
 	</xsl:template>
 	
 	
@@ -47,7 +47,7 @@
               <xsl:value-of select="jsword:getName($passage)"/>
       </xsl:variable>
 
-       <a name="{@osisID}"><span class="verseNumber"><xsl:value-of select="$versenum"/></span></a>
+       <a name="{@osisID}"><span class="commentaryVerseNumber"><xsl:value-of select="$versenum"/></span></a>
   </xsl:template>
 
   <xsl:template match="reference">
@@ -59,6 +59,22 @@
 
   <xsl:template match="lb">
 	<p />
+  </xsl:template>
+
+  <xsl:template match="div[@type='paragraph']">
+	<p />
+  </xsl:template>
+
+  <xsl:template match="hi[@type = 'italic']">
+	<span class="commentaryItalic">
+		<xsl:apply-templates/>
+	</span>
+  </xsl:template>
+
+  <xsl:template match="hi[@type = 'small-caps']">
+	<span class="caps">
+		<xsl:apply-templates/>
+	</span>
   </xsl:template>
 
 

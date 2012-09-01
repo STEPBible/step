@@ -99,14 +99,14 @@ step.version = {
 
 //            $(target).filteredcomplete("option", "source", []);
             
-            this.refreshVersions(target, step.versions);
+            this.refreshVersions(target, step.version.filteredVersions(target));
         },
         
         
         filteredVersions : function(target) {
             var widget = target.filteredcomplete("widget");
             
-            var resource = widget.find("input:radio[name=textType]:checked").val();
+            var resource = widget.find("input:checkbox[name=textType]:checked").val();
             var language = widget.find("input:checkbox[name=language]:checked").val();
             var vocab = widget.find("input.vocabFeature").prop('checked');
             var interlinear = widget.find("input.interlinearFeature").prop('checked');
@@ -115,8 +115,11 @@ step.version = {
             console.log("language is ", language);
             
            return $.grep(step.versions, function(item, index) {
-                if(resource == 'commentaries') {
+                if(resource == 'commentaries' && item.category != 'COMMENTARY' ||
+                   resource == undefined && item.category == 'COMMENTARY') {
                     //we ignore commentaries outright for now
+                    return false;
+                } else if(resource == 'bibles' && item.category != 'BIBLE') {
                     return false;
                 }
                 

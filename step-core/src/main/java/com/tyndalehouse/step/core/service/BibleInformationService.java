@@ -58,7 +58,7 @@ public interface BibleInformationService {
      * 
      * @return all the available versions of the bible
      */
-    List<BibleVersion> getAvailableBibleVersions(boolean allVersions, String locale);
+    List<BibleVersion> getAvailableModules(boolean allVersions, String locale);
 
     /**
      * This method selects passage text and forms XML for the client. This is done server side so that the

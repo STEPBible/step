@@ -28,7 +28,8 @@
  ******************************************************************************/
 $(step.menu).hear("MENU-OPTIONS", function(self, menuTrigger) {
     var isOptionEnabled = step.menu.toggleMenuItem(menuTrigger.menuItem.element);
-	if(menuTrigger.menuItem.name == "SHOW_ALL_VERSIONS") {
+    //TODO remove option from menu
+    if(menuTrigger.menuItem.name == "SHOW_ALL_VERSIONS") {
 		$.getSafe(BIBLE_GET_BIBLE_VERSIONS + isOptionEnabled, function(versions) {
 			// send events to passages and reload - then change init function
 			$.shout("version-list-refresh", versions);

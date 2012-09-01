@@ -80,8 +80,8 @@ public class BibleControllerTest {
     @Test
     public void testGetBibleVersions() {
         // do test
-        this.testController.getBibleVersions();
-        verify(this.bibleInformation).getAvailableBibleVersions(true, null);
+        this.testController.getModules();
+        verify(this.bibleInformation).getAvailableModules(true, null);
     }
 
     /**

@@ -12,8 +12,8 @@ $.widget("custom.filteredcomplete", $.ui.autocomplete, {
                 toolbar += '<table width="100%">';
                 
                 toolbar += '<tr class="filterButtonSet"><td class="filterHeader">Resource type</td><td>';
-                toolbar += '<input type="radio" id="bibles" value="bibles" name="textType"/><label for="bibles">Bibles</label>';
-                toolbar += '<input type="radio" id="commentaries" value="commentaries" name="textType" /><label for="commentaries">Commentaries</label>';
+                toolbar += '<input type="checkbox" id="bibles" value="bibles" name="textType" key="bibles" /><label for="bibles">Bibles</label>';
+                toolbar += '<input type="checkbox" id="commentaries" value="commentaries" name="textType"  key="commentaries" /><label for="commentaries">Commentaries</label>';
                 toolbar += '</td></tr>';
 
                 toolbar += '<tr class="filterButtonSet"><td class="filterHeader">Languages</td><td>';
@@ -43,7 +43,7 @@ $.widget("custom.filteredcomplete", $.ui.autocomplete, {
 
         
         $(ul).find("input").button();
-        $(ul).find("input[value = 'bibles']").prop("checked", true);
+//        $(ul).find("input[value = 'bibles']").prop("checked", true);
         $(".filterButtonSet", ul).buttonset();
 
         $(ul).find("input").click(function(event) {
@@ -52,6 +52,12 @@ $.widget("custom.filteredcomplete", $.ui.autocomplete, {
             if($(this).attr('name') == 'language') {
                 //uncheck all but this.
                 var otherBoxes = $(ul).find("input[name='language']").not(this);
+                otherBoxes.prop('checked', false).button("refresh");
+                otherBoxes.each(function(i, item) {
+                    $.data(self, $(item).attr('key'), $(item).prop('checked'));
+                });
+            } else if($(this).attr('name') == 'textType') {
+                var otherBoxes = $(ul).find("input[name='textType']").not(this);
                 otherBoxes.prop('checked', false).button("refresh");
                 otherBoxes.each(function(i, item) {
                     $.data(self, $(item).attr('key'), $(item).prop('checked'));
@@ -73,13 +79,23 @@ $.widget("custom.filteredcomplete", $.ui.autocomplete, {
         this._restoreCheckedState(ul, "langAncient", "input[value='langAncient']");
         this._restoreCheckedState(ul, "langMyEnglish", "input[value='langMyAndEnglish']");
 
+        this._restoreCheckedState(ul, "bibles", "input[value='bibles']");
+        this._restoreCheckedState(ul, "commentaries", "input[value='commentaries']");
+
+        //default option for all
         if($(ul).find("input[name='language']:checked").length == 0) {
             $(ul).find("input[value = 'langAll']").prop("checked", true);
+        }
+        
+        
+        if($(ul).find("input[name='textType']:checked").length == 0) {
+            var biblesOption = $(ul).find("input[value = 'bibles']");
+            biblesOption.prop("checked", true);
+            $.data(this, 'bibles', true);
         }
      },
         
       _restoreCheckedState : function(ul, key, selector) {
-            if($.data(this, key) == true) { $(ul).find(selector).prop("checked", true);
-        }
-    }
+            if($.data(this, key) == true) { $(ul).find(selector).prop("checked", true); }
+      }
 });

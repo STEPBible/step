@@ -74,7 +74,7 @@ public final class JSwordUtils {
             v.setName(b.getName());
             v.setInitials(b.getInitials());
             v.setQuestionable(b.isQuestionable());
-
+            v.setCategory(b.getBookCategory().name());
             final Language language = b.getLanguage();
             if (language != null) {
 

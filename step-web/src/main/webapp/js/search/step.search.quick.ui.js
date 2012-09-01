@@ -2,15 +2,10 @@
 $(document).ready(function() {
     var namespace = "quick";
     step.state.trackState([
-                           ".searchQuerySyntax",
+                           ".searchQuerySyntax"
                            ], namespace);
 
    
-    $(".subjectClear").click(function() {
-        //  reset texts
-        var passageId = step.passage.getPassageId(this);
-        step.state.simpleText.subjectSearch(passageId, "");
-    });
 
     $(".searchQuerySyntax").keypress(function(event) {
         if (event.which == 13 ) {

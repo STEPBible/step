@@ -135,7 +135,7 @@ body {
 	float: right;
 }
 
-.nextChapter {
+.nextChapter, .nextPage {
 	-moz-transform: scaleX(-1);
     -o-transform: scaleX(-1);
     -webkit-transform: scaleX(-1);

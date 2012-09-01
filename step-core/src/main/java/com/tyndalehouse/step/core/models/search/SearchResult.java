@@ -12,6 +12,7 @@ public class SearchResult implements Serializable {
     private static final long serialVersionUID = 5408141957094432935L;
     private String query;
     private boolean maxReached;
+    private int total;
     private long timeTookToRetrieveScripture;
     private long timeTookTotal;
     private List<SearchEntry> results;
@@ -97,5 +98,19 @@ public class SearchResult implements Serializable {
         }
 
         this.results.add(result);
+    }
+
+    /**
+     * @return the total
+     */
+    public int getTotal() {
+        return this.total;
+    }
+
+    /**
+     * @param total the total to set
+     */
+    public void setTotal(final int total) {
+        this.total = total;
     }
 }

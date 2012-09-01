@@ -28,6 +28,8 @@
  ******************************************************************************/
 
 step.search = {
+    pageSize : 50,
+    totalResults : 0,
         
     tagging : {
         exact : function(passageId) {
@@ -40,10 +42,11 @@ step.search = {
 
         _doStrongSearch : function(passageId, searchType) {
             var query = step.state.original.strong(passageId);
-
+            var pageNumber = step.state.original.originalPageNumber(passageId);
+            
             if (step.util.raiseErrorIfBlank(query, "Please enter a strong number")) {
                 //TODO - version for original word search
-                step.search._doSearch(searchType, passageId, query, 'KJV');
+                step.search._doSearch(searchType, passageId, query, 'KJV', pageNumber);
             }
         }
     },
@@ -78,9 +81,11 @@ step.search = {
             console.log("Subject search");
             
             var query = step.state.subject.subjectQuerySyntax(passageId);
+            var pageNumber = step.state.subject.subjectPageNumber(passageId); 
             
             var highlightTerms = this._highlightingTerms(query);
-            $.getSafe(SEARCH_SUBJECT, ['ESV', query], function(results) {
+            $.getSafe(SEARCH_SUBJECT, ['ESV', query, pageNumber], function(results) {
+                step.search._updateTotal(passageId, results.total, pageNumber);
                 step.search._displayResults(results, passageId);
                 step.search._highlightResults(passageId, highlightTerms);
             });
@@ -100,8 +105,10 @@ step.search = {
             var query = $.trim(step.state.simpleText.simpleTextQuerySyntax(passageId));
             var version = step.state.simpleText.simpleTextSearchVersion(passageId);
             var context = step.state.simpleText.simpleTextSearchContext(passageId);
-            var ranked = step.state.simpleText.simpleTextSortByRelevance(passageId);
-            step.search.textual._validateAndRunSearch(passageId, query, version, ranked, context);
+            var ranked = step.state.simpleText.simpleTextSortByRelevance(passageId) == step.defaults.search.textual.simpleTextSortBy[0];
+            var pageNumber = step.state.simpleText.simpleTextPageNumber(passageId);
+            
+            step.search.textual._validateAndRunSearch(passageId, query, version, ranked, context, pageNumber);
         }
     },
     
@@ -112,16 +119,18 @@ step.search = {
             var version = step.state.textual.textSearchVersion(passageId);
             var context = step.state.textual.textSearchContext(passageId);
             var ranked = step.state.textual.textSortByRelevance(passageId);
-            this._validateAndRunSearch(passageId, query, version, ranked, context);
+            var pageNumber = step.state.textual.textPageNumber(passageId);
+
+            this._validateAndRunSearch(passageId, query, version, ranked, context, pageNumber);
         },
         
-        _validateAndRunSearch : function(passageId, query, version, ranked, context) {
+        _validateAndRunSearch : function(passageId, query, version, ranked, context, pageNumber) {
             if(step.util.isBlank(query)) {
                 step.search._displayResults({}, passageId);
                 return;
             }
             
-            step.search._doSearch(SEARCH_DEFAULT, passageId, query, version.toUpperCase(), ranked, context, this._highlightingTerms(query));
+            step.search._doSearch(SEARCH_DEFAULT, passageId, query, version, pageNumber, ranked, context, this._highlightingTerms(query));
         },
         
         _highlightingTerms : function(query) {
@@ -162,15 +171,30 @@ step.search = {
     },
 
    
-    _doSearch : function(searchType, passageId, query, version, ranked, context, highlightTerms) {
+    _doSearch : function(searchType, passageId, query, version, pageNumber, ranked, context, highlightTerms) {
         var self = this;
         var contextArg = context == undefined || isNaN(context) ? 0 : context;
-        var args = ranked == null ? [version, query] : [version, query, ranked, contextArg];
+        var pageNumberArg = pageNumber == undefined ? 1 : pageNumber;
+        var versionArg = version.toUpperCase();
+        var args = ranked == null ? [versionArg, query, pageNumberArg] : [versionArg, query, ranked, contextArg, pageNumberArg];
         
         $.getSafe(searchType, args, function(searchQueryResults) {
+            self._updateTotal(passageId, searchQueryResults.total, pageNumber);
             self._displayResults(searchQueryResults, passageId);
             self._highlightResults(passageId, highlightTerms);
         });
+    },
+    
+    _updateTotal : function(passageId, total, pageNumber) {
+        var resultsLabel = $("fieldset:visible .resultsLabel", step.util.getPassageContainer(passageId));
+        
+        //1 = 1 + (pg1 - 1) * 50, 51 = 1 + (pg2 -1) * 50 
+        var start = 1 + ((pageNumber -1) * step.search.pageSize);
+        var end = pageNumber * step.search.pageSize;
+        end = end < total ? end : total;
+        resultsLabel.html("Showing results <em>" + start + " - " + end + "</em> of <em>" + total + "</em>");
+        
+        this.totalResults = total;  
     },
     
     _highlightResults : function(passageId, highlightTerms) {
@@ -257,8 +281,7 @@ step.search = {
         var searchResults = searchQueryResults.results;
 
         //remove any hebrew language css
-        step.util.getPassageContainer(passageId).removeClass("hebrewLanguage");
-        
+        step.util.getPassageContainer(passageId).removeClass("hebrewLanguage greekLanguage");
         
         if (searchResults == undefined || searchResults.length == 0) {
             results += "<span class='notApplicable'>No search results were found</span>";

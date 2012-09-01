@@ -1,6 +1,7 @@
 package com.tyndalehouse.step.core.service.impl;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
@@ -52,14 +53,14 @@ public class SearchServiceImplTest extends DataDrivenTestExtension {
      */
     @Test
     public void testMultiVersionSearch() {
-        final List<SearchEntry> results = this.si.search("ESV,KJV,ASV", "elijah", false, 1).getResults();
-        assertTrue(results.size() > 0);
+        final List<SearchEntry> results = this.si.search("ESV,KJV,ASV", "elijah", false, 1, 1).getResults();
+        assertFalse(results.isEmpty());
     }
 
     /** test exact strong match */
     @Test
     public void testSubjectSearch() {
-        final SearchResult searchSubject = this.si.searchSubject("ESV", "elijah");
+        final SearchResult searchSubject = this.si.searchSubject("ESV", "elijah", 1);
 
         final List<SearchEntry> entries = ((SubjectHeadingSearchEntry) searchSubject.getResults().get(0))
                 .getHeadingsSearch().getResults();
@@ -73,7 +74,7 @@ public class SearchServiceImplTest extends DataDrivenTestExtension {
     /** test exact strong match */
     @Test
     public void testSearchStrong() {
-        final SearchResult searchStrong = this.si.searchStrong("KJV", "G16");
+        final SearchResult searchStrong = this.si.searchStrong("KJV", "G16", 1);
         assertTrue("1 Peter 4:19".equals(((VerseSearchEntry) searchStrong.getResults().get(0)).getKey()));
     }
 
@@ -91,7 +92,7 @@ public class SearchServiceImplTest extends DataDrivenTestExtension {
         ld.getSimilarStrongs().add(related);
         getEbean().save(ld);
 
-        final SearchResult searchStrong = this.si.searchRelatedStrong("KJV", "G16");
+        final SearchResult searchStrong = this.si.searchRelatedStrong("KJV", "G16", 1);
         assertEquals("strong:g0016 strong:g0015", searchStrong.getQuery().trim());
     }
 

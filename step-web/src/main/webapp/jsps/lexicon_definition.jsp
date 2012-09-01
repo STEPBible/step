@@ -17,15 +17,15 @@
 			<div id="vocabContainer" class="metadataContainer">
 				<h3>Vocab</h3>
 				<div level="0">
-					<div><h5 info-name="transliteration"></h5> (<span info-name="original"></span>): <span info-name="shortDefinition"></span></div>
+					<div><h5 info-name="transliteration"></h5> (<span info-name="original" class="ancientLanguage"></span>): <span info-name="shortDefinition"></span></div>
 					<div info-name="mounce"></div>
 				</div>
 				<div level="1">
 					<div><h5>Translated in the Bible as: </h5><span info-name="avTranslation"></span> (Strong's <span info-name="strong"></span>)</div>
 				</div>	
 				<div level="2">
-					<div>Related Words: <span info-name="similarStrongLinks"></span>TODO</div>
-					<div info-name="lsj"></div>
+					<div>Related Words: <span info-name="similarStrongLinks" class="ancientLanguage"></span>TODO</div>
+					<div info-name="lsj" class="ancientLanguage"></div>
 				</div>
 			</div>
 			<p />

@@ -41,6 +41,7 @@ $(document).ready(function() {
     step.state.trackState([
                            ".subjectText",
                            ".subjectQuerySyntax",
+                           ".subjectPageNumber"
                            ], namespace);
 
     step.util.ui.trackQuerySyntax(".subjectSearchTable", namespace);
@@ -48,7 +49,8 @@ $(document).ready(function() {
     $(".subjectClear").click(function() {
         //  reset texts
         var passageId = step.passage.getPassageId(this);
-        step.state.simpleText.subjectSearch(passageId, "");
+        step.state.subject.subjectText(passageId, "");
+        step.state.subject.subjectQuerySyntax(passageId, "");
     });
 
       step.util.ui.searchButton(".subjectSearch",  'SEARCH_SUBJECT');

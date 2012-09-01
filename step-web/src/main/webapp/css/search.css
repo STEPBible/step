@@ -11,6 +11,16 @@
 	margin-right: 4px;
 }
 
+.resultsLabel {
+	float: right;
+	clear: both;
+	padding: 5px;	
+}
+
+.resultsLabel em {
+	font-weight: bold;
+}
+
 .searchResultKey {
 	color: #696;
 	background-color: #eef;
@@ -43,12 +53,17 @@
 	list-style: none;
 }
 
-.searchResultRow div, .searchResultRow div p{
+.searchResultRow div, .searchResultRow div p, .searchResultRow h3, .searchResultRow h2, .searchResultRow h1, .searchResultRow h4   {
 	display: inline;
 }
 
+.searchResultRow h3, .searchResultRow h2, .searchResultRow h1, .searchResultRow h4   {
+	padding-right: 5px;
+	font-size: 100%;
+}
+
 .searchResultRow div, .searchResultRow div p {
-	padding-left: 10px;
+/* 	padding-left: 10px; */
 }
 
 .highlight {
@@ -66,6 +81,10 @@
 
 .simpleTextFields input.drop {
 	text-align: left;
+}
+
+.querySyntax {
+	border: solid thin #ABADB3;
 }
 
 .drop {

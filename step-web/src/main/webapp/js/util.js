@@ -114,6 +114,9 @@ step.util = {
         
         searchButton : function(selector, searchType, callback) {
             $(selector).click(function() {
+                //clicking on search button resets page number to 1:
+                $("fieldset:visible .pageNumber").val(1).trigger('change');
+                
                 step.state.activeSearch(step.passage.getPassageId(this), searchType, true);
                 
                 if(callback) {
@@ -134,7 +137,70 @@ step.util = {
                 if(syntax) {
                     $(".searchQuerySyntax", step.util.getPassageContainer(passageId)).val(syntax); 
                 }
+                
+                //finally attempt a search estimation
+                delay(function() {
+                    $.getSafe(SEARCH_ESTIMATES, [$("fieldset:visible .searchVersions", step.util.getPassageContainer(passageId)).val(), syntax], function(estimate) {
+                        $("fieldset:visible .resultEstimates", step.util.getPassageContainer(passageId)).html("~ <em>" + estimate + "</em> results").prev().css("background-color", "#" + step.util.ui._calculateEstimateBackgroundColour(estimate));
+                        
+                    });
+                }, 500);
             });
+        },
+        
+        testColor : function() {
+            var i = 0;
+            for(i = 0; i < 100; i++) {
+                $("fieldset:visible .resultEstimates").prev().css("background-color", "#" + this._calculateEstimateBackgroundColour(i));
+                
+            }
+        },
+        
+        _calculateEstimateBackgroundColour : function(numResults) {
+            var red = 0xCC;
+            var green = 0xEB;
+            var blue = 0xCC;
+            
+            var maxRed = 0xFF;
+            var minGreen = 0xb4;
+
+            var redStep = Math.round((maxRed - red) / 50);
+            var greenStep = Math.round((green - minGreen) / 50);    
+
+            
+            if(numResults <= 50) {
+                return "CCEBCC";
+            }
+            
+            var stepsRemaining = numResults;
+            while(red < maxRed && stepsRemaining > 0) {
+                red += redStep;
+                stepsRemaining--;
+            }
+            
+            while(green > minGreen && stepsRemaining > 0) {
+                green -= greenStep;
+                stepsRemaining--;
+            }
+            
+            if(red > maxRed) {
+                red = maxRed;
+            }
+            
+            if(green < minGreen) {
+                green = minGreen;
+            }
+            
+            var color = this.pad2(red.toString(16)) + this.pad2(green.toString(16)) + this.pad2(blue.toString(16));
+            console.log("estimate color: ", color, " for ", numResults, " results");
+            return color;
+        },
+        
+        pad2 : function(s) {
+            if(s.length < 2) {
+                return "0" + s;
+            }
+            return s;
         },
         
         resetIfEmpty : function(passageId, force, evalFunction, defaultValue) {
@@ -180,38 +246,80 @@ step.util = {
                     step.state._fireStateChanged(step.passage.getPassageId(this));
                 }
             });
+
             
-            $(".concordanceFormat").button({
-                text: false,
-                icons: {
-                    primary: "ui-icon-grip-dotted-vertical"
-                }
-            }).click(function() {
-                var terms = step.search.highlightTerms;
-                if(terms.length != 1) {
-                    step.util.raiseError("Concordance style is only available for single-term searches");
-                }
+            $(".previousPage").button({
+                icons : {
+                    primary : "ui-icon-arrowreturnthick-1-w"
+                },
+                text : false
+            }).click(function(e) {
+                e.preventDefault();
                 
-//                var term = step.search.highlightTerms[0];
-//                var searchResults = $(".searchResults", step.util.getPassageContainer(this));
-//                $(".searchResultRow", searchResults).each(function(i, item) {
-//                    var textValue = $(item).text();
-//                    
-//                    
-//                    //find the highlights
-//                    var concordanceMiddle = $("<span class='concordanceMiddleColumn'></span>").add($(".highlight", item));
-//                    
-//                    var row = $(item).html(concordanceMiddle);
-//                });
-            });
-            
-            $(".refineSearch").button({
-                text: false,
-                icons: {
-                    primary: "ui-icon-pencil"
+                //decrement the page number if visible fieldset:
+                var pageNumber = $("fieldset:visible .pageNumber", step.util.getPassageContainer(this));
+                var oldPageNumber = parseInt(pageNumber.val());
+                
+                if(oldPageNumber > 1) {
+                    pageNumber.val(oldPageNumber - 1);
+                    pageNumber.trigger("change");
+                    step.state._fireStateChanged(step.passage.getPassageId(this));
                 }
             });
             
+            $(".nextPage").button({
+                icons : {
+                    primary : "ui-icon-arrowreturnthick-1-w"
+                },
+                text : false
+            }).click(function(e) {
+                e.preventDefault();
+                
+                var totalPages = Math.round((step.search.totalResults / step.search.pageSize) + 0.5);
+                var pageNumber = $("fieldset:visible .pageNumber", step.util.getPassageContainer(this));
+                var oldPageNumber = parseInt(pageNumber.val());
+                
+                if(oldPageNumber < totalPages) {
+                    pageNumber.val(oldPageNumber + 1);
+                    pageNumber.trigger("change");
+                    step.state._fireStateChanged(step.passage.getPassageId(this));
+                }
+            });
+            
+//            $(".concordanceFormat").button({
+//                text: false,
+//                icons: {
+//                    primary: "ui-icon-grip-dotted-vertical"
+//                }
+//            }).click(function() {
+//                var terms = step.search.highlightTerms;
+//                if(terms.length != 1) {
+//                    step.util.raiseError("Concordance style is only available for single-term searches");
+//                }
+//                
+////                var term = step.search.highlightTerms[0];
+////                var searchResults = $(".searchResults", step.util.getPassageContainer(this));
+////                $(".searchResultRow", searchResults).each(function(i, item) {
+////                    var textValue = $(item).text();
+////                    
+////                    
+////                    //find the highlights
+////                    var concordanceMiddle = $("<span class='concordanceMiddleColumn'></span>").add($(".highlight", item));
+////                    
+////                    var row = $(item).html(concordanceMiddle);
+////                });
+//            });
+//            
+//            $(".refineSearch").button({
+//                text: false,
+//                icons: {
+//                    primary: "ui-icon-pencil"
+//                }
+//            });
+            
+
+
+
             
             $(".showSearchCriteria").button({
                 text: false,
@@ -559,30 +667,31 @@ function passageArrowTrigger(passageId, ref, goToChapter) {
         step.passage.callbacks[passageId].push(function() {
             $.getSafe(BIBLE_GET_KEY_INFO, [ref, version], function(newRef) {
                 var passageContent = step.util.getPassageContent(passageId);
-                var link = $("a[name = '" + newRef.osisKeyId + "']", passageContent);
-                
-                
-                console.log("link-offset-top", link.offset().top);
-                console.log("link-height", link.height());
-                console.log("offset-parent", link.offsetParent());
-                
-                var scroll = link.offset().top - passageContent.height();
-//                if(scroll < 0) {
-//                    scroll = 0;
-//                }
-                
-                var originalScrollTop = passageContent.scrollTop();
-                passageContent.animate({
-                    scrollTop : originalScrollTop + scroll
-                }, 500);
-                
-                
-                //window.location.hash = newRef.osisKeyId;
+
+                var scrolled = false;
+                var osisRefs = newRef.osisKeyId.split(" ");
                 $("*", passageContent).removeClass("highlight");
-                $(link).closest(".verse").addClass("highlight");
-                
-                //also do so if we are looking at an interlinear-ed version
-                $(link).closest(".interlinear").find("*").addClass("highlight");
+                for(var i = 0; i < osisRefs.length; i++) {
+                    var link = $("a[name = '" + osisRefs[i] + "']", passageContent);
+                    
+                    if(link) {
+                        if(!scrolled) {
+                            var linkOffset =  link.offset();
+                            var scroll = linkOffset == undefined ? 0 : linkOffset.top - passageContent.height();
+                            
+                            var originalScrollTop = passageContent.scrollTop();
+                            passageContent.animate({
+                                scrollTop : originalScrollTop + scroll
+                            }, 500);
+                            scrolled = true;
+                        }                        
+                        //window.location.hash = newRef.osisKeyId;
+                        $(link).closest(".verse").addClass("highlight");
+                        
+                        //also do so if we are looking at an interlinear-ed version
+                        $(link).closest(".interlinear").find("*").addClass("highlight");
+                    }
+                }
             });            
         });
 

@@ -83,6 +83,7 @@ public class SearchServiceImpl implements SearchService {
     private static final String TEXT_SEARCH = "t=";
     private static final String STRONG_QUERY = "strong:";
     private static final String LIKE = "%%%s%%";
+    private static final int MAX_PAGE_RETURNED = 50;
     private final EbeanServer ebean;
     private final JSwordSearchService jswordSearch;
     private final JSwordPassageService jsword;
@@ -104,15 +105,28 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
+    public long estimateSearch(final String version, final String searchQuery) {
+        final String parsedQuery = getParsedQuery(searchQuery);
+        final String[] versions = getVersions(version);
+
+        long estimates = 0;
+        for (final String v : versions) {
+            estimates += this.jswordSearch.estimateSearchResults(v, parsedQuery);
+        }
+
+        return estimates;
+    }
+
+    @Override
     public SearchResult search(final String version, final String query, final boolean ranked,
-            final int context) {
+            final int context, final int pageNumber) {
 
         // for text searches, we may have a prefix of t=
-        final String parsedQuery = query.startsWith(TEXT_SEARCH) ? query.substring(2) : query;
-        final String[] versions = version.split("[, ]+");
+        final String parsedQuery = getParsedQuery(query);
+        final String[] versions = getVersions(version);
 
         if (versions.length == 1) {
-            return this.jswordSearch.search(versions[0], parsedQuery, ranked, context);
+            return this.jswordSearch.search(versions[0], parsedQuery, ranked, context, pageNumber);
         }
 
         // otherwise, we are into the realm of searching across multiple versions
@@ -121,13 +135,35 @@ public class SearchServiceImpl implements SearchService {
         final Map<String, Key> resultsPerVersion = new HashMap<String, Key>();
         // no need to rank, since it won't be possible to rank accurately across versions
         for (final String v : versions) {
-            resultsPerVersion.put(v, this.jswordSearch.searchKeys(v, parsedQuery, false, context));
+            resultsPerVersion.put(v,
+                    this.jswordSearch.searchKeys(v, parsedQuery, false, context, MAX_PAGE_RETURNED));
         }
 
         final Key results = mergeSearches(resultsPerVersion);
 
         // build combined results
-        return buildCombinedResults(versions, results, parsedQuery, context, start);
+        return buildCombinedResults(versions, results, parsedQuery, context, start, pageNumber);
+    }
+
+    /**
+     * Splits a potentially concatenated set of versions into an array of independant versions: "ESV, KJV"
+     * becomes ["ESV", "KJV"]
+     * 
+     * @param version version or versions passed in
+     * @return an array of individual versions
+     */
+    private String[] getVersions(final String version) {
+        return version.split("[, ]+");
+    }
+
+    /**
+     * removes the prefix from the query
+     * 
+     * @param query the pre-parsed query
+     * @return the query after parsing
+     */
+    private String getParsedQuery(final String query) {
+        return query.startsWith(TEXT_SEARCH) ? query.substring(2) : query;
     }
 
     /**
@@ -138,10 +174,11 @@ public class SearchServiceImpl implements SearchService {
      * @param parsedQuery the parsed query, used for populate of the POJO
      * @param context how much context to add
      * @param start the start time of the search
+     * @param pageNumber the page to be retrieved
      * @return the set of results
      */
     private SearchResult buildCombinedResults(final String[] versions, final Key results,
-            final String parsedQuery, final int context, final long start) {
+            final String parsedQuery, final int context, final long start, final int pageNumber) {
         final SearchResult sr = new SearchResult();
 
         // double-indirection map, verse -> version -> content
@@ -153,7 +190,7 @@ public class SearchServiceImpl implements SearchService {
 
             // retrieve scripture content and set up basics
             final SearchResult s = this.jswordSearch.retrieveResultsFromKeys(v, parsedQuery, false, context,
-                    start, results);
+                    start, results, pageNumber);
             sr.setTimeTookToRetrieveScripture(sr.getTimeTookToRetrieveScripture()
                     + System.currentTimeMillis() - totalScriptureRetrievalStart);
             sr.setMaxReached(sr.isMaxReached() || s.isMaxReached());
@@ -227,14 +264,15 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
-    public SearchResult searchStrong(final String version, final String searchStrong) {
+    public SearchResult searchStrong(final String version, final String searchStrong, final int pageNumber) {
         LOGGER.debug("Searching for strongs [{}]", searchStrong);
         final List<String> strongs = getStrongsFromQuery(searchStrong);
-        return runStrongSearch(version, strongs);
+        return runStrongSearch(version, strongs, pageNumber);
     }
 
     @Override
-    public SearchResult searchSubject(final String version, final String subject) {
+    public SearchResult searchSubject(final String version, final String subject, final int pageNumber) {
+        final long start = System.currentTimeMillis();
         final String parsedSubject = subject.startsWith("s=") ? subject.substring(2) : subject;
 
         // assume subject is partial
@@ -251,8 +289,8 @@ public class SearchServiceImpl implements SearchService {
             }
         }
 
-        final SearchResult headingsSearch = this.jswordSearch.search(version, query.toString(), false, 1,
-                HEADINGS_ONLY);
+        final SearchResult headingsSearch = this.jswordSearch.search(version, query.toString(), false, 0,
+                pageNumber, HEADINGS_ONLY);
 
         final SubjectHeadingSearchEntry headings = new SubjectHeadingSearchEntry();
         headings.setHeadingsSearch(headingsSearch);
@@ -260,12 +298,15 @@ public class SearchServiceImpl implements SearchService {
         final SearchResult sr = new SearchResult();
         sr.setQuery("subject:" + query);
         sr.addEntry(headings);
-
+        sr.setTotal(headingsSearch.getTotal());
+        sr.setTimeTookToRetrieveScripture(headingsSearch.getTimeTookToRetrieveScripture());
+        sr.setTimeTookTotal(System.currentTimeMillis() - start);
         return sr;
     }
 
     @Override
-    public SearchResult searchRelatedStrong(final String version, final String searchStrong) {
+    public SearchResult searchRelatedStrong(final String version, final String searchStrong,
+            final int pageNumber) {
         LOGGER.debug("Searching for related strongs [{}]", searchStrong);
         final List<String> strongsFromQuery = getStrongsFromQuery(searchStrong);
 
@@ -280,7 +321,7 @@ public class SearchServiceImpl implements SearchService {
             }
         }
 
-        return runStrongSearch(version, strongsFromQuery);
+        return runStrongSearch(version, strongsFromQuery, pageNumber);
     }
 
     @Override
@@ -340,9 +381,11 @@ public class SearchServiceImpl implements SearchService {
      * 
      * @param version the version to run against
      * @param strongs the strong numbers to search for
+     * @param pageNumber the page to be retrieved, starting at 1
      * @return the result
      */
-    private SearchResult runStrongSearch(final String version, final List<String> strongs) {
+    private SearchResult runStrongSearch(final String version, final List<String> strongs,
+            final int pageNumber) {
         final StringBuilder query = new StringBuilder();
         for (final String s : strongs) {
             query.append(STRONG_QUERY);
@@ -351,7 +394,7 @@ public class SearchServiceImpl implements SearchService {
         }
 
         // TODO jsword bug - email 09-Jul-2012 - 19:11 GMT
-        return search(version, query.toString().trim().toLowerCase(), false, 0);
+        return search(version, query.toString().trim().toLowerCase(), false, 0, pageNumber);
     }
 
     /**

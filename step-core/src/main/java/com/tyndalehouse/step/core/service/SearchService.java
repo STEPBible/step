@@ -41,36 +41,31 @@ import com.tyndalehouse.step.core.models.search.SearchResult;
  * 
  */
 public interface SearchService {
-    // /**
-    // * Searches for all entities matching a reference
-    // *
-    // * @param reference the reference to search for
-    // * @return a list of all entities
-    // */
-    // List<ScriptureReference> searchAllByReference(String reference);
-
     /**
      * @param version the initials of the book to search through
      * @param searchQuery the raw search query
      * @param ranked whether to order by ranking or bible
      * @param context the amount of context given to each search result
+     * @param pageNumber the page to be retrieved, starting at 1
      * @return the list of search results
      */
-    SearchResult search(String version, String searchQuery, boolean ranked, int context);
+    SearchResult search(String version, String searchQuery, boolean ranked, int context, int pageNumber);
 
     /**
      * @param version the initials of the book to search through
      * @param searchStrong 1 or more strong numbers
+     * @param pageNumber the page to be retrieved, starting at 1
      * @return the search results
      */
-    SearchResult searchStrong(String version, String searchStrong);
+    SearchResult searchStrong(String version, String searchStrong, int pageNumber);
 
     /**
      * @param version the initials of the book to search through
      * @param searchStrong 1 or more strong numbers
+     * @param pageNumber the page to be retrieved, starting at 1
      * @return the search results
      */
-    SearchResult searchRelatedStrong(String version, String searchStrong);
+    SearchResult searchRelatedStrong(String version, String searchStrong, int pageNumber);
 
     /**
      * Searches the timeline by description
@@ -95,7 +90,17 @@ public interface SearchService {
      * 
      * @param subject the subject that we are looking for
      * @param version the version to use to lookup the headings
+     * @param pageNumber the page to be retrieved, starting at 1
      * @return a search result
      */
-    SearchResult searchSubject(final String version, String subject);
+    SearchResult searchSubject(final String version, String subject, int pageNumber);
+
+    /**
+     * Estimates the number of search results given
+     * 
+     * @param version the version we are searching across
+     * @param searchQuery the search query
+     * @return the number of results
+     */
+    long estimateSearch(String version, String searchQuery);
 }

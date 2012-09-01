@@ -141,7 +141,8 @@ $(document).ready(function() {
                            ".simpleTextSortByRelevance",
                            ".simpleTextQuerySyntax",
                            ".simpleTextSearchContext",
-                           ".simpleTextSearchVersion"
+                           ".simpleTextSearchVersion",
+                           ".simpleTextPageNumber"
                            ], namespace, [step.search.ui.simpleText.restoreDefaults, step.search.ui.simpleText.restoreIncludeExclude]);
 
     step.util.ui.trackQuerySyntax(".simpleTextFields", namespace);

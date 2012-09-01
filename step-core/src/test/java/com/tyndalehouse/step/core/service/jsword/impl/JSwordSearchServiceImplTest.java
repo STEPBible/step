@@ -32,11 +32,19 @@ public class JSwordSearchServiceImplTest {
     }
 
     /**
+     * tests that estimations of search results can be returned
+     */
+    @Test
+    public void testEstimation() {
+        assertTrue(this.search.estimateSearchResults("ESV", "John") > 100);
+    }
+
+    /**
      * Random tests
      */
     @Test
     public void testApproximateSingleSearch() {
-        final List<SearchEntry> results = this.search.search("ESV", "Melchizedc~", false, 1).getResults();
+        final List<SearchEntry> results = this.search.search("ESV", "Melchizedc~", false, 1, 1).getResults();
         for (int i = 0; i < 10 || i < results.size(); i++) {
             LOGGER.debug(((VerseSearchEntry) results.get(i)).getKey());
         }

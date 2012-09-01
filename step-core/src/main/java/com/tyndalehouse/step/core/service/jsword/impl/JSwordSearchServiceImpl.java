@@ -41,7 +41,8 @@ import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
  */
 @Singleton
 public class JSwordSearchServiceImpl implements JSwordSearchService {
-    private static final int MAX_RESULTS = 50;
+    private static final int MAX_RESULTS = 500;
+    private static final int PAGE_SIZE = 50;
     private static final Logger LOGGER = LoggerFactory.getLogger(JSwordSearchServiceImpl.class);
     private final JSwordVersificationService av11nService;
     private final JSwordPassageService jsword;
@@ -59,10 +60,39 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
     }
 
     @Override
-    public Key searchKeys(final String version, final String query, final boolean ranked, final int context) {
+    public int estimateSearchResults(final String version, final String query) {
+        final long start = System.currentTimeMillis();
+        final Key k = searchKeys(version, query, true, 0, true, 0);
+        if (k instanceof PassageTally) {
+            LOGGER.trace("Took [{}]ms", System.currentTimeMillis() - start);
+            return ((PassageTally) k).getTotal();
+        }
+
+        return -1;
+    }
+
+    @Override
+    public Key searchKeys(final String version, final String query, final boolean ranked, final int context,
+            final int pageNumber) {
+        return searchKeys(version, query, ranked, context, false, pageNumber);
+    }
+
+    /**
+     * Searches uniquely for the keys, in order to do the passage lookup at a later stage
+     * 
+     * @param version the version to be looked up
+     * @param query the query
+     * @param ranked whether to rank or not
+     * @param context the context of the search.
+     * @param estimation true to indicate we are not interested in the results per say.
+     * @param pageNumber the pageNumber we are interested in, starting with page number 1
+     * @return the search result keys
+     */
+    private Key searchKeys(final String version, final String query, final boolean ranked, final int context,
+            final boolean estimation, final int pageNumber) {
         final DefaultSearchModifier modifier = new DefaultSearchModifier();
-        modifier.setRanked(ranked);
-        modifier.setMaxResults(MAX_RESULTS);
+        modifier.setRanked(estimation ? true : ranked);
+        modifier.setMaxResults(estimation ? 0 : pageNumber * PAGE_SIZE);
 
         final Book bible = this.av11nService.getBookFromVersion(version);
 
@@ -78,24 +108,21 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
 
     @Override
     public SearchResult search(final String version, final String query, final boolean ranked,
-            final int context, final LookupOption... options) {
+            final int context, final int pageNumber, final LookupOption... options) {
         final long start = System.currentTimeMillis();
-        final Key results = searchKeys(version, query, ranked, context);
-        return retrieveResultsFromKeys(version, query, ranked, context, start, results, options);
+        final Key results = searchKeys(version, query, ranked, context, pageNumber);
+        return retrieveResultsFromKeys(version, query, ranked, context, start, results, pageNumber, options);
     }
 
     @Override
     public SearchResult retrieveResultsFromKeys(final String version, final String query,
             final boolean ranked, final int context, final long start, final Key results,
-            final LookupOption... options) {
-        LOGGER.debug("[{}] verses found.", results.getCardinality());
-        if (ranked) {
-            rankAndTrimResults(results, MAX_RESULTS);
-        } else {
-            trimResults(results, MAX_RESULTS);
-        }
+            final int pageNumber, final LookupOption... options) {
+        final int total = getTotal(results);
 
-        LOGGER.debug("Trimmed down to [{}].", results.getCardinality());
+        LOGGER.debug("Total of [{}] results.", total);
+        final Key newResults = rankAndTrimResults(ranked, results, pageNumber);
+        LOGGER.debug("Trimmed down to [{}].", newResults.getCardinality());
 
         final long startRefs = System.currentTimeMillis();
 
@@ -107,10 +134,26 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
         }
 
         final Book bible = this.av11nService.getBookFromVersion(version);
-        final List<SearchEntry> resultPassages = getPassagesForResults(bible, results, context, lookupOptions);
+        final List<SearchEntry> resultPassages = getPassagesForResults(bible, newResults, context,
+                lookupOptions);
         final long endRefs = System.currentTimeMillis();
 
-        return getSearchResult(query, start, startRefs, endRefs, resultPassages);
+        return getSearchResult(query, start, startRefs, endRefs, resultPassages, total);
+    }
+
+    /**
+     * returns the total or -1 if not available
+     * 
+     * @param results the key to set of results
+     * @return the results
+     */
+    private int getTotal(final Key results) {
+        if (results instanceof PassageTally) {
+            return ((PassageTally) results).getTotal();
+        } else if (results instanceof Passage) {
+            return ((Passage) results).getCardinality();
+        }
+        return -1;
     }
 
     /**
@@ -124,7 +167,7 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
      * @return the search result to be returned to the service caller
      */
     private SearchResult getSearchResult(final String query, final long start, final long startRefs,
-            final long endRefs, final List<SearchEntry> resultPassages) {
+            final long endRefs, final List<SearchEntry> resultPassages, final int total) {
         final SearchResult r = new SearchResult();
         r.setResults(resultPassages);
 
@@ -135,6 +178,7 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
         r.setQuery(query);
         r.setTimeTookTotal(end - start);
         r.setTimeTookToRetrieveScripture(endRefs - startRefs);
+        r.setTotal(total);
         return r;
     }
 
@@ -176,31 +220,41 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
     }
 
     /**
-     * Trims results to the correct size
-     * 
-     * @param results the key to the search results
-     * @param maxResults the number of results we want to keep
+     * @param ranked true to indicate the search is desired in ranking order
+     * @param results the result to be trimmed
+     * @param pageNumber the page number we are interested in
+     * @return the results
      */
-    private void trimResults(final Key results, final int maxResults) {
-        if (results instanceof Passage) {
-            final Passage p = (Passage) results;
-            p.trimVerses(maxResults);
+    private Key rankAndTrimResults(final boolean ranked, final Key results, final int pageNumber) {
+        rankResults(ranked, results);
+
+        final Passage passage = (Passage) results;
+
+        // we need the first pageNumber*PAGE_SIZE results, so remove anything beyond that.
+        passage.trimVerses(pageNumber * PAGE_SIZE);
+        Passage newResults = passage;
+
+        while (newResults.getCardinality() > PAGE_SIZE) {
+            newResults = newResults.trimVerses(PAGE_SIZE);
         }
+
+        return newResults;
     }
 
     /**
-     * Looks up the results in rank order
+     * Sets up the passage tally to rank the results
      * 
-     * @param results the results
-     * @param maxResults the number of results desired
+     * @param ranked true to indicate ranking occurs
+     * @param results the results, amended to reflect what is desired
      */
-    private void rankAndTrimResults(final Key results, final int maxResults) {
-        if (!(results instanceof PassageTally)) {
-            throw new StepInternalException("Unable to retrieve in ranked order...");
-        }
+    private void rankResults(final boolean ranked, final Key results) {
+        if (ranked) {
+            if (!(results instanceof PassageTally)) {
+                throw new StepInternalException("Unable to retrieve in ranked order...");
+            }
 
-        final PassageTally tally = (PassageTally) results;
-        tally.setOrdering(Order.TALLY);
-        tally.trimVerses(maxResults);
+            ((PassageTally) results).setOrdering(Order.TALLY);
+
+        }
     }
 }

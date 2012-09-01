@@ -280,21 +280,32 @@ public class JSwordPassageServiceImplTest {
      */
     @Test
     public void testGetSiblingChapter() {
+        org.crosswire.jsword.versification.BookName.setFullBookName(false);
         final JSwordPassageServiceImpl jsword = new JSwordPassageServiceImpl(
                 new JSwordVersificationServiceImpl(), null, null);
 
         // previous chapter tests
-        assertEquals("Genesis 1", jsword.getSiblingChapter("Genesis 2", "KJV", true).getName());
-        assertEquals("Genesis 2", jsword.getSiblingChapter("Genesis 2:5", "KJV", true).getName());
-        assertEquals("Genesis 1", jsword.getSiblingChapter("Genesis 2-3:17", "KJV", true).getName());
-        assertEquals("Genesis 2", jsword.getSiblingChapter("Genesis 2:3-3:17", "KJV", true).getName());
+        assertEquals("Gen 1", jsword.getSiblingChapter("Genesis 2", "ESV", true).getName());
+        assertEquals("Gen 1", jsword.getSiblingChapter("Genesis 2:5", "ESV", true).getName());
+        assertEquals("Gen 1", jsword.getSiblingChapter("Genesis 2-3:17", "ESV", true).getName());
+        assertEquals("Gen 1", jsword.getSiblingChapter("Genesis 2:3-3:17", "ESV", true).getName());
 
         // next chapter tests
-        assertEquals("Genesis 3", jsword.getSiblingChapter("Genesis 2-3:17", "KJV", false).getName());
-        assertEquals("Genesis 4", jsword.getSiblingChapter("Genesis 2-3:24", "KJV", false).getName());
-        assertEquals("Genesis 3", jsword.getSiblingChapter("Genesis 3:17", "KJV", false).getName());
-        assertEquals("Genesis 4", jsword.getSiblingChapter("Genesis 3:24", "KJV", false).getName());
-        assertEquals("Genesis 3", jsword.getSiblingChapter("Genesis 2", "KJV", false).getName());
+        assertEquals("Gen 4", jsword.getSiblingChapter("Genesis 2-3:17", "ESV", false).getName());
+        assertEquals("Gen 4", jsword.getSiblingChapter("Genesis 2-3:24", "ESV", false).getName());
+        assertEquals("Gen 4", jsword.getSiblingChapter("Genesis 3:17", "ESV", false).getName());
+        assertEquals("Gen 4", jsword.getSiblingChapter("Genesis 3:24", "ESV", false).getName());
+        assertEquals("Gen 3", jsword.getSiblingChapter("Genesis 2", "ESV", false).getName());
+
+        assertEquals("Mal 4", jsword.getSiblingChapter("Mat 1", "ESV", true).getName());
+        assertEquals("Mat 1", jsword.getSiblingChapter("Mal 4", "ESV", false).getName());
+
+        assertEquals("Mar 16", jsword.getSiblingChapter("Luke 1", "ESV", true).getName());
+        assertEquals("Luk 1", jsword.getSiblingChapter("Mark 16", "ESV", false).getName());
+
+        assertEquals("Gen 1", jsword.getSiblingChapter("Genesis 1:2", "ESV", true).getName());
+        assertEquals("Rev 22", jsword.getSiblingChapter("Revelation 22:5", "ESV", false).getName());
+
     }
 
     /**
@@ -374,7 +385,7 @@ public class JSwordPassageServiceImplTest {
     @Test
     public void testPrettyXml() throws BookException, NoSuchKeyException, JDOMException, IOException {
         final String version = "ESV";
-        final String ref = "John 3:20";
+        final String ref = "Mar 2";
         final Book currentBook = Books.installed().getBook(version);
         final BookData bookData = new BookData(currentBook, currentBook.getKey(ref));
         final Element osisFragment = bookData.getOsisFragment();

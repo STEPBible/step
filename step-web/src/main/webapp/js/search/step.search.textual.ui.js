@@ -184,6 +184,7 @@ $(document).ready(function() {
                             ".textQuerySyntax",
                             ".textSearchContext",
                             ".textSearchVersion",
+                            ".textPageNumber"
                            ], namespace);
     
     step.util.ui.trackQuerySyntax(".textSearchTable", namespace);

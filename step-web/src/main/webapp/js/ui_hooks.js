@@ -71,6 +71,7 @@ SETUP_INSTALL_DEFAULT_MODULES = STEP_SERVER_BASE_URL + "setup/installDefaultModu
 SETUP_INSTALL_BIBLE = STEP_SERVER_BASE_URL + "setup/installBible/";
 
 SEARCH_DEFAULT = STEP_SERVER_BASE_URL + "search/search/";
+SEARCH_ESTIMATES = STEP_SERVER_BASE_URL + "search/estimateSearch/"
 SEARCH_STRONG_EXACT = STEP_SERVER_BASE_URL + "search/searchStrong/";
 SEARCH_STRONG_RELATED = STEP_SERVER_BASE_URL + "search/searchRelatedStrong/";
 SEARCH_TIMELINE_DESCRIPTION = STEP_SERVER_BASE_URL + "search/searchTimelineDescription/";

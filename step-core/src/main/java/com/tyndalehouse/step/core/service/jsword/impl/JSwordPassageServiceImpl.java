@@ -39,7 +39,6 @@ import static com.tyndalehouse.step.core.models.InterlinearMode.INTERLINEAR;
 import static com.tyndalehouse.step.core.models.InterlinearMode.NONE;
 import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
 import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
-import static com.tyndalehouse.step.core.utils.StringUtils.split;
 import static com.tyndalehouse.step.core.utils.ValidateUtils.notNull;
 import static java.lang.Integer.parseInt;
 import static java.lang.Integer.valueOf;
@@ -69,6 +68,7 @@ import org.crosswire.jsword.book.BookData;
 import org.crosswire.jsword.book.BookException;
 import org.crosswire.jsword.book.Books;
 import org.crosswire.jsword.passage.Key;
+import org.crosswire.jsword.passage.KeyUtil;
 import org.crosswire.jsword.passage.NoSuchKeyException;
 import org.crosswire.jsword.passage.NoSuchVerseException;
 import org.crosswire.jsword.passage.Passage;
@@ -77,6 +77,8 @@ import org.crosswire.jsword.passage.RestrictionType;
 import org.crosswire.jsword.passage.RocketPassage;
 import org.crosswire.jsword.passage.Verse;
 import org.crosswire.jsword.passage.VerseRange;
+import org.crosswire.jsword.versification.BibleBook;
+import org.crosswire.jsword.versification.BibleBookList;
 import org.crosswire.jsword.versification.Versification;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -136,24 +138,105 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
     public KeyWrapper getSiblingChapter(final String reference, final String version,
             final boolean previousChapter) {
         // getting the next chapter
+        // FIXME find a way of getting the next chapter from the current key, in the current book, rather than
+        // relying on verisification systems which may contain verses that the Book does not support
         final Book currentBook = Books.installed().getBook(version);
+        final Versification v11n = this.versificationService.getVersificationForVersion(currentBook);
 
         try {
             final Key key = currentBook.getKey(reference);
-            final String osisID = key.getOsisID();
-            LOGGER.debug(osisID);
 
-            // split down according to different references
-            final String[] refs = split(osisID, "[,; \\-]+");
-            final String interestedRef = previousChapter ? refs[0] : refs[refs.length - 1];
-            final String[] refParts = split(interestedRef, "\\.");
-            final Key newKey = previousChapter ? getPreviousRef(refParts, key, currentBook) : getNextRef(
-                    refParts, key, currentBook);
-            return new KeyWrapper(newKey);
+            final Verse verse = KeyUtil.getVerse(previousChapter ? key : key.get(key.getCardinality() - 1));
+            final int chapter = verse.getChapter();
+            final BibleBook bibleBook = verse.getBook();
 
+            Verse targetVerse;
+
+            if (previousChapter) {
+                if (chapter > 1) {
+                    targetVerse = new Verse(verse.getBook(), chapter - 1, 1);
+                } else {
+                    // we go down a book
+                    final BibleBookList books = v11n.getBooks();
+
+                    final BibleBook previousBook = getNonIntroPreviousBook(bibleBook, books);
+
+                    targetVerse = previousBook == null ? new Verse(BibleBook.GEN, 1, 1) : new Verse(
+                            previousBook, v11n.getLastChapter(previousBook), 1);
+                }
+            } else {
+                final int lastChapterInBook = v11n.getLastChapter(verse.getBook());
+                if (chapter < lastChapterInBook) {
+                    targetVerse = new Verse(verse.getBook(), chapter + 1, 1);
+                } else {
+                    // we go up a book
+                    final BibleBookList books = v11n.getBooks();
+                    final BibleBook nextBook = getNonIntroNextBook(bibleBook, books);
+
+                    final int lastChapter = v11n.getLastChapter(BibleBook.REV);
+                    final int lastVerse = v11n.getLastVerse(BibleBook.REV, lastChapter);
+                    targetVerse = nextBook == null ? new Verse(BibleBook.REV, lastChapter, lastVerse)
+                            : new Verse(nextBook, 1, 1);
+                }
+            }
+
+            // now we've got our target verse, use it, trim off the verse number
+            return new KeyWrapper(currentBook.getKey(getChapter(targetVerse)));
         } catch (final NoSuchKeyException e) {
             throw new StepInternalException("Cannot find next chapter", e);
         }
+    }
+
+    /**
+     * @param targetVerse the verse for which we want to trim off the verse number
+     * @return the reference without the verse number
+     */
+    private String getChapter(final Verse targetVerse) {
+        final String osisID = targetVerse.getOsisID();
+        final String[] parts = osisID.split("[.]");
+        if (parts.length == 2) {
+            return osisID;
+        }
+
+        if (parts.length == 3) {
+            return String.format("%s.%s", parts[0], parts[1]);
+        }
+
+        return null;
+    }
+
+    /**
+     * @param bibleBook the current book
+     * @param books the list of books
+     * @return the next bible book that is not an introduction
+     */
+    private BibleBook getNonIntroNextBook(final BibleBook bibleBook, final BibleBookList books) {
+        BibleBook nextBook = bibleBook;
+        do {
+            nextBook = books.getNextBook(nextBook);
+        } while (nextBook != null && isIntro(nextBook));
+        return nextBook;
+    }
+
+    /**
+     * @param bibleBook the current book
+     * @param books the list of books
+     * @return the previous bible book that is not an introduction
+     **/
+    private BibleBook getNonIntroPreviousBook(final BibleBook bibleBook, final BibleBookList books) {
+        BibleBook previousBook = bibleBook;
+        do {
+            previousBook = books.getPreviousBook(previousBook);
+        } while (previousBook != null && isIntro(previousBook));
+        return previousBook;
+    }
+
+    /**
+     * @param book the book to test
+     * @return true to indicate the book is an introduction to the NT/OT/Bible
+     */
+    private boolean isIntro(final BibleBook book) {
+        return book.getOSIS().startsWith("Intro");
     }
 
     @Override

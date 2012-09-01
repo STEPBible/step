@@ -71,14 +71,17 @@
 			</tr>
 			<tr>
 				<td style="vertical-align: top">Query syntax</td>
-				<td colspan="4"><textarea class="simpleTextQuerySyntax" cols="45"></textarea></td>
+				<td colspan="4">
+					<input class="simpleTextQuerySyntax querySyntax" size="45" />
+					<span class="resultEstimates"></span>
+				</td>
 			</tr>
 			<tr>
 				<td colspan="5"><hr /></td>
 			</tr>
 		</table>
 
-		<jsp:include page="search_toolbar.jsp?specificSearchContext=simpleTextSearchContext&specificSearchVersion=simpleTextSearchVersion"  />
+		<jsp:include page="search_toolbar.jsp?namespace=simpleText&context=true"  />
 		
 	</fieldset>
 
@@ -199,14 +202,17 @@
 			</tr>
 			<tr>
 				<td>Query syntax</td>
-				<td colspan="3"><textarea class="textQuerySyntax" cols="45"></textarea></td>
+				<td colspan="3">
+					<input class="textQuerySyntax querySyntax" size="45"></input>
+					<span class="resultEstimates"></span>
+				</td>
 			</tr>
 			<tr>
 				<td colspan="4"><hr /></td>
 			</tr>
 		</table>
 		
-		<jsp:include page="search_toolbar.jsp?specificSearchContext=textSearchContext&specificSearchVersion=textSearchVersion" />
+		<jsp:include page="search_toolbar.jsp?namespace=text&context=true" />
 	</fieldset>
 
 	<fieldset>
@@ -227,7 +233,7 @@
 
 		<hr />
 				
-		<jsp:include page="search_toolbar.jsp?specificSearchContext=originalSearchContext&specificSearchVersion=strongSearchVersion" />
+		<jsp:include page="search_toolbar.jsp?namespace=original&context=true" />
 	</fieldset>
 
 	<fieldset>
@@ -258,9 +264,14 @@
 			</tr>
 			<tr>
 				<td>Query syntax</td>
-				<td colspan="3"><input type="text" class="subjectQuerySyntax" /></td>
+				<td colspan="3"><input type="text" class="subjectQuerySyntax querySyntax" /></td>
+			</tr>
+			<tr>
+				<td colspan="4"><hr /></td>
+			</tr>
 		</table>
-		
+				
+		<jsp:include page="search_toolbar.jsp?namespace=subject&context=false" />
 		
 	</fieldset>
 

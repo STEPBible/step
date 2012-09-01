@@ -68,7 +68,8 @@ step.version = {
                     //check we've got the right size
                     $(".ui-autocomplete").map(function() {
                         //check if 'this' has a child containing the text of the first option
-                            $(this).css('width', '400px');
+                            $(this).css('width', '400px').css("overflow-x", "hidden");
+                            
                     });
                 },
                 

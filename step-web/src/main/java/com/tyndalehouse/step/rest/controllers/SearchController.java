@@ -7,6 +7,7 @@ import static com.tyndalehouse.step.core.utils.ValidateUtils.notNull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import com.tyndalehouse.step.core.exceptions.UserExceptionType;
 import com.tyndalehouse.step.core.models.search.SearchResult;
 import com.tyndalehouse.step.core.service.SearchService;
 
@@ -35,43 +36,63 @@ public class SearchController {
      * @return the search result(s)
      */
     public SearchResult search(final String version, final String searchQuery, final String ranked,
-            final String context) {
+            final String context, final String pageNumber) {
         notNull(version, "A version must be selected", USER_MISSING_FIELD);
         notNull(searchQuery, "Please enter a search query", USER_MISSING_FIELD);
+        notNull(pageNumber, "Page number is required", UserExceptionType.APP_MISSING_FIELD);
+
         return this.searchService.search(version, searchQuery, Boolean.parseBoolean(ranked),
-                Integer.parseInt(context));
+                Integer.parseInt(context), Integer.parseInt(pageNumber));
+    }
+
+    /**
+     * Estimates the number of hits for a particular search query
+     * 
+     * @param version the versions to search across
+     * @param searchQuery the search query.
+     * @return the number of results
+     */
+    public long estimateSearch(final String version, final String searchQuery) {
+        return this.searchService.estimateSearch(version, searchQuery);
     }
 
     /**
      * @param version the version used to do the headings search
      * @param subject subject that is being searched for
+     * @param pageNumber the page to be retrieved, starting at 1
      * @return the search result(s)
      */
-    public SearchResult searchSubject(final String version, final String subject) {
+    public SearchResult searchSubject(final String version, final String subject, final String pageNumber) {
         notNull(subject, "A subject must be provided", USER_MISSING_FIELD);
-        return this.searchService.searchSubject(version, subject);
+        notNull(pageNumber, "Page number is required", UserExceptionType.APP_MISSING_FIELD);
+
+        return this.searchService.searchSubject(version, subject, Integer.parseInt(pageNumber));
     }
 
     /**
      * @param version the version to search across
      * @param searchStrong the query to search for
+     * @param pageNumber the page to be retrieved, starting at 1
      * @return the search result(s)
      */
-    public SearchResult searchStrong(final String version, final String searchStrong) {
+    public SearchResult searchStrong(final String version, final String searchStrong, final String pageNumber) {
         notNull(version, "A version must be selected", USER_MISSING_FIELD);
         notNull(searchStrong, "Please enter a search query", USER_MISSING_FIELD);
-        return this.searchService.searchStrong(version, searchStrong);
+        notNull(pageNumber, "Page number is required", UserExceptionType.APP_MISSING_FIELD);
+        return this.searchService.searchStrong(version, searchStrong, Integer.parseInt(pageNumber));
     }
 
     /**
      * @param version the version to search across
      * @param searchStrong the query to search for
+     * @param pageNumber the page to be retrieved, starting at 1
      * @return the search result(s)
      */
-    public SearchResult searchRelatedStrong(final String version, final String searchStrong) {
+    public SearchResult searchRelatedStrong(final String version, final String searchStrong,
+            final String pageNumber) {
         notNull(version, "A version must be selected", USER_MISSING_FIELD);
         notNull(searchStrong, "Please enter a search query", USER_MISSING_FIELD);
-        return this.searchService.searchRelatedStrong(version, searchStrong);
+        return this.searchService.searchRelatedStrong(version, searchStrong, Integer.parseInt(pageNumber));
     }
 
     /**

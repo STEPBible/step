@@ -49,6 +49,12 @@ $(document).ready(function() {
         step.state.original.searchType(passageId, "related");
         step.state.activeSearch(passageId, 'SEARCH_ORIGINAL', true);
     });
+
+    var namespace = "original";
+    step.state.trackState([
+                           ".originalPageNumber"
+                           ], namespace);
+
 });
 
 $(step.search.ui.original).hear("original-search-state-has-changed", function(s, data) {

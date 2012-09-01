@@ -30,6 +30,13 @@
 $(document).ready(function() {
     $(".advancedSearch input[type = 'button']").button({});
     $(".advancedSearch fieldset").hide();
+
+    $("input[type = 'text']", ".advancedSearch").on("keydown", function(event) {
+        if(event.keyCode == 13) {
+            var passageId = step.passage.getPassageId(event.target);
+            step.state._fireStateChanged(passageId);
+        }
+    });
 });
 
 step.search.ui = {

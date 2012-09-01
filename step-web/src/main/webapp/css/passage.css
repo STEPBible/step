@@ -344,6 +344,16 @@ TD.text {
 	font-size: 150%;
 }
 
+.greekLanguage {
+	font-family: Cardo;
+	font-size: 120%;
+}
+
+.ancientLanguage {
+	font-family: Cardo;
+	font-size: 120% !important;	
+}
+
 
 a.linkRef {
 	color: #696;

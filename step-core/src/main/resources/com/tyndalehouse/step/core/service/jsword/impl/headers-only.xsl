@@ -7,13 +7,13 @@
 <!-- 		omit-xml-declaration="yes" indent="no" /> -->
 
 	<xsl:template match="/">
-		<xsl:apply-templates select="//verse//title" />
+		<xsl:apply-templates select="//verse//title[@type='section']" />
 	</xsl:template>
 
 	<!--======================================================================= -->
 	<!-- == A proper OSIS document has osis as its root. == We dig deeper for 
 		its content. -->
-	<xsl:template match="//verse/title">
+	<xsl:template match="//verse/title[@type='section']">
 			<xsl:value-of select="." />
 	</xsl:template>
 	

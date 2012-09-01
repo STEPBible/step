@@ -43,6 +43,7 @@ import javax.servlet.ServletContextEvent;
 import org.crosswire.common.util.Reporter;
 import org.crosswire.common.util.ReporterEvent;
 import org.crosswire.common.util.ReporterListener;
+import org.crosswire.jsword.versification.BookName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -93,6 +94,8 @@ public class StepServletConfig extends GuiceServletContextListener {
 
             }
         });
+
+        BookName.setFullBookName(false);
     }
 
     @Override

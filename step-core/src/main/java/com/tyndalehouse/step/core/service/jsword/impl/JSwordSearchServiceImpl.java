@@ -147,7 +147,8 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
      * @param results the key to set of results
      * @return the results
      */
-    private int getTotal(final Key results) {
+    @Override
+    public int getTotal(final Key results) {
         if (results instanceof PassageTally) {
             return ((PassageTally) results).getTotal();
         } else if (results instanceof Passage) {

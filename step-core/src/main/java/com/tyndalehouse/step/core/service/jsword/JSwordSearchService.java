@@ -59,4 +59,12 @@ public interface JSwordSearchService {
      * @return the number of results returned by the query
      */
     int estimateSearchResults(String version, String query);
+
+    /**
+     * Returns the total number of results in the search
+     * 
+     * @param results the key containing all the results
+     * @return the total number of results
+     */
+    int getTotal(Key results);
 }

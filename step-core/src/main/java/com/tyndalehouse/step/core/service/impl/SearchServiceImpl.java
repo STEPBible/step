@@ -181,6 +181,8 @@ public class SearchServiceImpl implements SearchService {
             final String parsedQuery, final int context, final long start, final int pageNumber) {
         final SearchResult sr = new SearchResult();
 
+        sr.setTotal(this.jswordSearch.getTotal(results));
+
         // double-indirection map, verse -> version -> content
         final Map<String, Map<String, VerseSearchEntry>> verseToVersionToContent = new LinkedHashMap<String, Map<String, VerseSearchEntry>>();
 

@@ -47,7 +47,7 @@
 				<td><input type="text" class="simpleTextType simpleTextTypePrimary drop" /></td>
 				<td><input type="text" class="simpleTextCriteria" /></td>
 				<td>within</td>
-				<td><input type="text" class="simpleTextScope drop" /></td>
+				<td><input type="text" class="simpleTextScope drop" title="For example, <b>Mark</b>, <b>Rom 1</b>, <b>Phili</b> <br />Or select an option from the list" /></td>
 			</tr>
 			<tr>
 				<td>and <input type="text" class="simpleTextInclude drop" size="13" /></td>

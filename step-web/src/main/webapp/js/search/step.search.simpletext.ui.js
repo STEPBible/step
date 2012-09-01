@@ -166,6 +166,20 @@ $(document).ready(function() {
       step.util.ui.autocompleteSearch(".simpleTextInclude", step.defaults.search.textual.simpleTextIncludes, true, function(currentElement, value) {
           step.search.ui.simpleText.includeProximityChange(currentElement, value);
       });
+      
+      //also add a qtip
+      $(".simpleTextScope").qtip({
+          show :  { event: 'focus' },
+          hide : { event: 'blur' },
+          position: {
+              at: "right center",
+              my: "left center",
+              viewport: $(window)
+          },
+           style: { 
+               tip: 'leftMiddle' // Notice the corner value is identical to the previously mentioned positioning corners
+            }
+      });
 });
 
 $(step.search.ui).hear("SEARCH_SIMPLE_TEXT-activated", function(s, data) {

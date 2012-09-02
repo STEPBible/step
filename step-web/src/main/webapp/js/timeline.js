@@ -77,6 +77,7 @@ function TimelineWidget(rootElement) {
 		
 		// first show the bottom pane...
 		if(!this.initialised) {
+		    initTimelineMethods();
 			self.initAndLoad();
 		} else {
 			self.onLoad();
@@ -388,154 +389,155 @@ TimelineWidget.prototype.onResize = function() {
     }
 };
 
-/**
- * gets the right bit of the date out.
- */
-TimelineWidget.prototype.getDateInfo = function(dateObj, datePrecision) {
-	var rawDate = "";
-	if(dateObj) {
-		rawDate = Timeline.DateTime.parseIso8601DateTime(dateObj);
-	}
+    /**
+     * gets the right bit of the date out.
+     */
+    TimelineWidget.prototype.getDateInfo = function(dateObj, datePrecision) {
+    	var rawDate = "";
+    	if(dateObj) {
+    		rawDate = Timeline.DateTime.parseIso8601DateTime(dateObj);
+    	}
+    
+    	var text = "";
+    	
+    	if(datePrecision == "DAY") {
+    		text += rawDate.getDate() + " ";
+    	}
+    	
+    	if(datePrecision == "DAY" || datePrecision == "MONTH") {
+    		var hebrewMonth = HEBREW_MONTH_NAMES[rawDate.getMonth()];
+    		
+    		if(hebrewMonth.length > 2 && rawDate.getFullYear() >= 0) {
+    			text += "<span title='" + hebrewMonth[2] + " is approximately equivalent to " + hebrewMonth[0] + "'>" + hebrewMonth[2] + "</span>";
+    		} else {
+    			text += "<span title='" + hebrewMonth[1] + " is approximately equivalent to " + hebrewMonth[0] + "'>" + hebrewMonth[1] + "</span>";
+    		}
+    		text += " ";
+    	}
+    	
+    	if(datePrecision != "NONE") {
+    		//then this is day/month/year
+    		text += Math.abs(rawDate.getFullYear()) + this.getDateAdBc(rawDate);
+    	}
+    
+    	return text;
+    };
+    
+    
+    TimelineWidget.prototype.getDateAdBc = function(rawDate) {
+    	return rawDate.getFullYear() < 0 ? "BC" : "AD";
+    };
+    
+function initTimelineMethods() {    
+    /* Overriding the fill in bubble from the timeline library. */
+    Timeline.DefaultEventSource.Event.prototype.fillInfoBubble = function (elmt, theme, labeller) { 
+    	//get event details from server
+    	var version = step.state.passage.version(timeline.passageId); 
+    		
+    	$.getSafe(TIMELINE_GET_EVENT_INFO + this.getEventID() + "/" + version, function(eventInfo) {
+    		//do title
+    		var title = "<div>" + eventInfo.event.title + "</div>";
+    		
+    		
+    		var dating = "<div class='timelineDatePopup'>";
+    		dating += timeline.getDateInfo(eventInfo.event.start, eventInfo.event.startPrecision);
+    
+    		if(eventInfo.event.end) {
+    			dating += " - ";
+    			dating += timeline.getDateInfo(eventInfo.event.start, eventInfo.event.startPrecision);
+    		}
+    		
+    		
+    		
+    		//add uncertainty and flags
+    		var certainty = eventInfo.event.certainty;
+    		if(certainty) {
+    			//last character is?
+    			var c = certainty[certainty.length -1];
+    			
+    			var accuracy = [];
+    			if(isAlpha(c)) {
+    				if(c == 'Y') {
+    					accuracy = ["year(s)", 'Y'];
+    				} else if (c == 'M') {
+    					accuracy = ["month(s)", "M"];
+    				}
+    				certainty = certainty.substring(0, certainty.length -1);
+    			} else {
+    				switch(eventInfo.event.startPrecision) {
+    					case "DAY":
+    						accuracy = ["day(s)", "D"];
+    					case "MONTH":
+    						accuracy = ["month(s)", "M"];
+    					case "YEAR":
+    						accuracy = ["year(s)", "Y"];
+    						break;
+    					default: accuracy = ["year(s)", 'Y'];
+    				}
+    			}
+    			
+    			
+    			dating += "&nbsp;<span class='timelineCertainty' title='Dating of this event is known within approximately " 
+    					+ certainty + " " + accuracy[0] + "'>" + certainty + accuracy[1] + "</span>";
+    		}
+    		
+    		var flags = eventInfo.event.flags;
+    		if(flags) {
+    			dating += "&nbsp;<span class='timelineFlags'  title='";
+    
+    			if(flags == "EY") {
+    				dating += "Estimated year - The year has been estimated in order to preserve the order of events.";
+    			} else if(flags == "EM") {
+    				dating += "Estimated month - The month has been estimated in order to preserve the order of events.";
+    			}
+    			dating += "'>" + flags + "</span>";
+    		}
+    		dating += "</div>";
+    		
+    		
+    		var body = "<div>";
+    		
+    		//do we do more for description: TODO
+    //		var description = "<div>" + eventInfo.event.description + "</div><br />";
+    //		body += description;
+    		
+    		//do verses
+    		var verses = "";
+    		$.each(eventInfo.verses, function(index, item) {
+    			verses += "<div class='timelineVerse'>";
+    			
+    			verses += "<span class='timelineEmphasise'>"; 
+    			verses += goToPassageArrow(true, item.reference);
+    			verses +=  " <a href='#' title='Click for more options' onclick='javascript:showPreviewOptions();' onmouseover=\"javascript:viewPassage("+ timeline.passageId + ", '" + item.reference + "', this);\" >" + item.reference + " "; 
+    			verses += goToPassageArrow(false, item.reference);
+    			verses += " </span>";
+    			verses += $(".verse", item.value).text();
+    			
+    			if(item.fragment) {
+    				verses += "...";
+    			}
+    			
+    			verses += "</div>";
+    		});
+    		
+    		body += verses;
+    		body += "</div>";
+    		
+    		//attach title
+    		var divTitle = $(title).get(0);
+    		theme.event.bubble.titleStyler(divTitle);
+    		$(elmt).append(divTitle);
+    		
+            //attach dating information
+            $(elmt).append(dating);
+    		
+    		//attach body
+            var divBody = $(body).get(0);
+    //        self.fillDescription(divBody);
+            theme.event.bubble.bodyStyler(divBody);
+            $(elmt).append(divBody);
+            
+    	});
+    };
 
-	var text = "";
-	
-	if(datePrecision == "DAY") {
-		text += rawDate.getDate() + " ";
-	}
-	
-	if(datePrecision == "DAY" || datePrecision == "MONTH") {
-		var hebrewMonth = HEBREW_MONTH_NAMES[rawDate.getMonth()];
-		
-		if(hebrewMonth.length > 2 && rawDate.getFullYear() >= 0) {
-			text += "<span title='" + hebrewMonth[2] + " is approximately equivalent to " + hebrewMonth[0] + "'>" + hebrewMonth[2] + "</span>";
-		} else {
-			text += "<span title='" + hebrewMonth[1] + " is approximately equivalent to " + hebrewMonth[0] + "'>" + hebrewMonth[1] + "</span>";
-		}
-		text += " ";
-	}
-	
-	if(datePrecision != "NONE") {
-		//then this is day/month/year
-		text += Math.abs(rawDate.getFullYear()) + this.getDateAdBc(rawDate);
-	}
-
-	return text;
-};
-
-
-TimelineWidget.prototype.getDateAdBc = function(rawDate) {
-	return rawDate.getFullYear() < 0 ? "BC" : "AD";
-};
-
-
-/* Overriding the fill in bubble from the timeline library. */
-Timeline.DefaultEventSource.Event.prototype.fillInfoBubble = function (elmt, theme, labeller) { 
-	//get event details from server
-	var version = step.state.passage.version(timeline.passageId); 
-		
-	$.getSafe(TIMELINE_GET_EVENT_INFO + this.getEventID() + "/" + version, function(eventInfo) {
-		//do title
-		var title = "<div>" + eventInfo.event.title + "</div>";
-		
-		
-		var dating = "<div class='timelineDatePopup'>";
-		dating += timeline.getDateInfo(eventInfo.event.start, eventInfo.event.startPrecision);
-
-		if(eventInfo.event.end) {
-			dating += " - ";
-			dating += timeline.getDateInfo(eventInfo.event.start, eventInfo.event.startPrecision);
-		}
-		
-		
-		
-		//add uncertainty and flags
-		var certainty = eventInfo.event.certainty;
-		if(certainty) {
-			//last character is?
-			var c = certainty[certainty.length -1];
-			
-			var accuracy = [];
-			if(isAlpha(c)) {
-				if(c == 'Y') {
-					accuracy = ["year(s)", 'Y'];
-				} else if (c == 'M') {
-					accuracy = ["month(s)", "M"];
-				}
-				certainty = certainty.substring(0, certainty.length -1);
-			} else {
-				switch(eventInfo.event.startPrecision) {
-					case "DAY":
-						accuracy = ["day(s)", "D"];
-					case "MONTH":
-						accuracy = ["month(s)", "M"];
-					case "YEAR":
-						accuracy = ["year(s)", "Y"];
-						break;
-					default: accuracy = ["year(s)", 'Y'];
-				}
-			}
-			
-			
-			dating += "&nbsp;<span class='timelineCertainty' title='Dating of this event is known within approximately " 
-					+ certainty + " " + accuracy[0] + "'>" + certainty + accuracy[1] + "</span>";
-		}
-		
-		var flags = eventInfo.event.flags;
-		if(flags) {
-			dating += "&nbsp;<span class='timelineFlags'  title='";
-
-			if(flags == "EY") {
-				dating += "Estimated year - The year has been estimated in order to preserve the order of events.";
-			} else if(flags == "EM") {
-				dating += "Estimated month - The month has been estimated in order to preserve the order of events.";
-			}
-			dating += "'>" + flags + "</span>";
-		}
-		dating += "</div>";
-		
-		
-		var body = "<div>";
-		
-		//do we do more for description: TODO
-//		var description = "<div>" + eventInfo.event.description + "</div><br />";
-//		body += description;
-		
-		//do verses
-		var verses = "";
-		$.each(eventInfo.verses, function(index, item) {
-			verses += "<div class='timelineVerse'>";
-			
-			verses += "<span class='timelineEmphasise'>"; 
-			verses += goToPassageArrow(true, item.reference);
-			verses +=  " <a href='#' title='Click for more options' onclick='javascript:showPreviewOptions();' onmouseover=\"javascript:viewPassage("+ timeline.passageId + ", '" + item.reference + "', this);\" >" + item.reference + " "; 
-			verses += goToPassageArrow(false, item.reference);
-			verses += " </span>";
-			verses += $(".verse", item.value).text();
-			
-			if(item.fragment) {
-				verses += "...";
-			}
-			
-			verses += "</div>";
-		});
-		
-		body += verses;
-		body += "</div>";
-		
-		//attach title
-		var divTitle = $(title).get(0);
-		theme.event.bubble.titleStyler(divTitle);
-		$(elmt).append(divTitle);
-		
-        //attach dating information
-        $(elmt).append(dating);
-		
-		//attach body
-        var divBody = $(body).get(0);
-//        self.fillDescription(divBody);
-        theme.event.bubble.bodyStyler(divBody);
-        $(elmt).append(divBody);
-        
-	});
-};
-
+}

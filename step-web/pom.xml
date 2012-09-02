@@ -161,51 +161,74 @@
 							<goal>minify</goal>
 						</goals>
 						<configuration>
-							<cssSourceDir>css</cssSourceDir>
+							<cssSourceDir>.</cssSourceDir>
 							<cssSourceIncludes>
-								<cssSourceInclude>*.css</cssSourceInclude>
+								<cssSourceInclude>css/jquery-ui-1.8.19.custom.css</cssSourceInclude>
+								<cssSourceInclude>css/qtip.css</cssSourceInclude>
+								<cssSourceInclude>css/ddsmoothmenu.css</cssSourceInclude>
+								<cssSourceInclude>css/ddsmoothmenu-v.css</cssSourceInclude>
+								<cssSourceInclude>css/initial-layout.css</cssSourceInclude>
+								<cssSourceInclude>css/initial-fonts.css</cssSourceInclude>
+								<cssSourceInclude>css/passage.css</cssSourceInclude>
+								<cssSourceInclude>css/timeline.css</cssSourceInclude>
+								<cssSourceInclude>css/search.css</cssSourceInclude>
+								<cssSourceInclude>css/cardo.css</cssSourceInclude>
 							</cssSourceIncludes>
 							<cssFinalFile>step.css</cssFinalFile>
-							<jsSourceDir>js</jsSourceDir>
+							<jsSourceDir>.</jsSourceDir>
 							<jsSourceFiles>
-								<jsSourceInclude>jquery-extensions/jquery-cookie.js</jsSourceInclude>
-								<jsSourceInclude>jquery-extensions/jquery-shout.js</jsSourceInclude>
-								<jsSourceInclude>ddsmoothmenu.js</jsSourceInclude>
-								<jsSourceInclude>util.js</jsSourceInclude>
-								<jsSourceInclude>bookmark.js</jsSourceInclude>
-								<jsSourceInclude>lexicon_definition.js</jsSourceInclude>
-								<jsSourceInclude>ui_hooks.js</jsSourceInclude>
-								<jsSourceInclude>timeline.js</jsSourceInclude>
-								<jsSourceInclude>geography.js</jsSourceInclude>
-								<jsSourceInclude>toolbar_menu.js</jsSourceInclude>
-								<jsSourceInclude>interlinear_popup.js</jsSourceInclude>
-								<jsSourceInclude>login.js</jsSourceInclude>
-								<jsSourceInclude>title.js</jsSourceInclude>
-								<jsSourceInclude>search/step.search.js</jsSourceInclude>
-								<jsSourceInclude>search/step.search.ui.js</jsSourceInclude>
-								<jsSourceInclude>navigation/step.navigation.js</jsSourceInclude>
-								<jsSourceInclude>state/step.state.js</jsSourceInclude>
-								<jsSourceInclude>state/step.state.detail.js</jsSourceInclude>
-								<jsSourceInclude>state/step.state.passage.js</jsSourceInclude>
-								<jsSourceInclude>state/step.state.original.js</jsSourceInclude>
-								<jsSourceInclude>menu/step.menu.js</jsSourceInclude>
-								<jsSourceInclude>menu/top/help.js</jsSourceInclude>
-								<jsSourceInclude>menu/top/options.js</jsSourceInclude>
-								<jsSourceInclude>menu/top/tools.js</jsSourceInclude>
-								<jsSourceInclude>menu/top/view.js</jsSourceInclude>
-								<jsSourceInclude>menu/top/top.menu.ui.js</jsSourceInclude>
-								<jsSourceInclude>menu/passage/context.js</jsSourceInclude>
-								<jsSourceInclude>menu/passage/display.js</jsSourceInclude>
-								<jsSourceInclude>menu/passage/passageTools.js</jsSourceInclude>
-								<jsSourceInclude>menu/passage/search.js</jsSourceInclude>
-								<jsSourceInclude>menu/step.menu.defaults.js</jsSourceInclude>
-								<jsSourceInclude>passage/step.passage.js</jsSourceInclude>
-								<jsSourceInclude>passage/step.passage.ui.js</jsSourceInclude>
-								<jsSourceInclude>passage/step.passage.navigation.js</jsSourceInclude>
-								<jsSourceInclude>passage/step.passage.navigation.ui.js</jsSourceInclude>
-								<jsSourceInclude>bookmark/step.bookmark.ui.js</jsSourceInclude>
-								<jsSourceInclude>init.js</jsSourceInclude>
-
+								<jsSourceInclude>js_init/initLib.js</jsSourceInclude>   
+							    <jsSourceInclude>libs/dohighlight-min.js</jsSourceInclude>
+							    <jsSourceInclude>libs/timeline_js/timeline-api.js</jsSourceInclude>
+							    <jsSourceInclude>libs/jquery-1.7.2.min.js</jsSourceInclude>
+								<jsSourceInclude>libs/jquery-ui-1.9-beta.min.js</jsSourceInclude>
+							    <jsSourceInclude>js/jquery-extensions/jquery-qtip.js</jsSourceInclude>
+							    <jsSourceInclude>js/jquery-extensions/jquery-hover-intent.js</jsSourceInclude>
+							    <jsSourceInclude>js/jquery-extensions/jquery-cookie.js</jsSourceInclude>
+								<jsSourceInclude>js/jquery-extensions/jquery-shout.js</jsSourceInclude>
+							    <jsSourceInclude>js/jquery-extensions/jquery-filtered-complete.js</jsSourceInclude>
+								<jsSourceInclude>js/ddsmoothmenu.js</jsSourceInclude>
+							    <jsSourceInclude>js/util.js</jsSourceInclude>
+							    <jsSourceInclude>js/bookmark.js</jsSourceInclude>
+							    <jsSourceInclude>js/lexicon_definition.js</jsSourceInclude>
+							    <jsSourceInclude>js/ui_hooks.js</jsSourceInclude>
+							    <jsSourceInclude>js/timeline.js</jsSourceInclude>
+							    <jsSourceInclude>js/geography.js</jsSourceInclude>
+							    <jsSourceInclude>js/toolbar_menu.js</jsSourceInclude>
+							    <jsSourceInclude>js/login.js</jsSourceInclude>
+								<jsSourceInclude>js/title.js</jsSourceInclude>
+								<jsSourceInclude>js/search/step.search.js</jsSourceInclude>
+								<jsSourceInclude>js/search/step.search.ui.js</jsSourceInclude>
+								<jsSourceInclude>js/search/step.search.quick.ui.js</jsSourceInclude>
+								<jsSourceInclude>js/search/step.search.original.ui.js</jsSourceInclude>
+								<jsSourceInclude>js/search/step.search.simpletext.ui.js</jsSourceInclude>
+								<jsSourceInclude>js/search/step.search.textual.ui.js</jsSourceInclude>
+								<jsSourceInclude>js/search/step.search.timeline.ui.js</jsSourceInclude>
+								<jsSourceInclude>js/search/step.search.subject.ui.js</jsSourceInclude>
+								<jsSourceInclude>js/navigation/step.navigation.js</jsSourceInclude>	    
+								<jsSourceInclude>js/defaults/step.defaults.js</jsSourceInclude>
+								<jsSourceInclude>js/state/step.state.js</jsSourceInclude>
+								<jsSourceInclude>js/state/step.state.detail.js</jsSourceInclude>
+								<jsSourceInclude>js/state/step.state.passage.js</jsSourceInclude>
+								<jsSourceInclude>js/state/step.state.original.js</jsSourceInclude>
+							    <jsSourceInclude>js/menu/step.menu.js</jsSourceInclude>
+							    <jsSourceInclude>js/menu/top/help.js</jsSourceInclude>
+							    <jsSourceInclude>js/menu/top/options.js</jsSourceInclude>
+							    <jsSourceInclude>js/menu/top/tools.js</jsSourceInclude>
+							    <jsSourceInclude>js/menu/top/view.js</jsSourceInclude>
+							    <jsSourceInclude>js/menu/top/top.menu.ui.js</jsSourceInclude>
+							    <jsSourceInclude>js/menu/passage/context.js</jsSourceInclude>
+							    <jsSourceInclude>js/menu/passage/display.js</jsSourceInclude>
+							    <jsSourceInclude>js/menu/passage/passageTools.js</jsSourceInclude>
+							    <jsSourceInclude>js/menu/passage/search.js</jsSourceInclude>
+							    <jsSourceInclude>js/menu/step.menu.defaults.js</jsSourceInclude>
+							    <jsSourceInclude>js/passage/step.version.js</jsSourceInclude>
+							    <jsSourceInclude>js/passage/step.passage.js</jsSourceInclude>
+							    <jsSourceInclude>js/passage/step.passage.ui.js</jsSourceInclude>
+							    <jsSourceInclude>js/passage/step.passage.navigation.js</jsSourceInclude>
+							    <jsSourceInclude>js/passage/step.passage.navigation.ui.js</jsSourceInclude>
+							    <jsSourceInclude>js/bookmark/step.bookmark.ui.js</jsSourceInclude>
+							    <jsSourceInclude>js/init.js</jsSourceInclude>
 							</jsSourceFiles>
 							<jsFinalFile>step.js</jsFinalFile>
 						</configuration>
@@ -250,6 +273,30 @@
 			            </goals>
 			          </execution>
 				</executions>
+			</plugin>
+			
+			<plugin>
+			   <groupId>org.mortbay.jetty</groupId>
+			   <artifactId>jetty-jspc-maven-plugin</artifactId>
+			   <version>8.1.5.v20120716</version>
+			   <executions>
+			     <execution>
+			       <id>jspc</id>
+			       <goals>
+			         <goal>jspc</goal>
+			       </goals>
+			       <configuration>
+			       		<packageRoot>com.tyndalehouse.step</packageRoot>
+			       </configuration>
+			     </execution>
+			   </executions>
+			 </plugin>
+			 <plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<configuration>
+					<webXml>${basedir}/target/web.xml</webXml>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

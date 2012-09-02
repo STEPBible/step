@@ -1,4 +1,5 @@
-<%@ page pageEncoding="UTF-8" language="java"  %> 
+<%@ page contentType="text/html; charset=UTF-8" language="java" %> 
+
 <%@ page import="com.tyndalehouse.step.jsp.WebStepRequest" %>
 <%@ page import="com.google.inject.Injector"%>
 <%@ page import="com.google.inject.Guice"%>
@@ -17,8 +18,8 @@
 		<span class="passageButtons">  
 			<a class="syncOtherPassage">Syncs with the other passage</a>
 			<a class="continuousPassage">Displays the passage as one large scroll</a>
-			<a class="previousChapter" href="?reference=<%= stepRequest.getPreviousReference(0) %>&version=<%= stepRequest.getVersion(Integer.parseInt(request.getParameter("passageId"))) %>">Displays the previous chapter (or expands to the start of the chapter)</a>
-			<a class="nextChapter" href="?reference=<%= stepRequest.getNextReference(0) %>&version=<%= stepRequest.getVersion(Integer.parseInt(request.getParameter("passageId"))) %>">Displays the next chapter (or expands to the end of the chapter)</a> <a
+			<a class="previousChapter" href="?reference=<%= stepRequest.getPreviousReference(Integer.parseInt(request.getParameter("passageId"))) %>&version=<%= stepRequest.getVersion(Integer.parseInt(request.getParameter("passageId"))) %>">Displays the previous chapter (or expands to the start of the chapter)</a>
+			<a class="nextChapter" href="?reference=<%= stepRequest.getNextReference(Integer.parseInt(request.getParameter("passageId"))) %>&version=<%= stepRequest.getVersion(Integer.parseInt(request.getParameter("passageId"))) %>">Displays the next chapter (or expands to the end of the chapter)</a> <a
 			class="bookmarkPassageLink">Add a bookmark</a>
 		</span>
 

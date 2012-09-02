@@ -52,7 +52,7 @@
 		<guice.version>3.0.0</guice.version>
 		<guice-servlet.version>3.0</guice-servlet.version>
 		<opencsv.version>2.3</opencsv.version>
-		<jetty.version>8.1.4.v20120524</jetty.version>
+		<jetty.version>8.1.5.v20120716</jetty.version>
 		<xalan.version>2.7.1</xalan.version>
 
 		<joda-time.version>2.1</joda-time.version>

@@ -1,3 +1,5 @@
+<%@ page contentType="text/html; charset=UTF-8" language="java" %> 
+
 <div class="bookmarks" id="centerPane">
 	<div class="northBookmark">
 		<img id="topLogo" src="images/step-logo.png"

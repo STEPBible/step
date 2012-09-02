@@ -1,4 +1,6 @@
-<%@ page pageEncoding="UTF-8" language="java"  %> 
+<%@ page contentType="text/html; charset=UTF-8" language="java" %> 
+
+
 <%@ page import="com.tyndalehouse.step.jsp.WebStepRequest" %>
 <%@ page import="com.google.inject.Injector"%>
 <%@ page import="com.google.inject.Guice"%>
@@ -20,17 +22,12 @@
 	<meta name="google-site-verification" content="OZfGjgjfTQq0Gn-m6pecYXYNGoDTllWS6v9aBOi64AU" />
 	
 	<link rel="shortcut icon"  href="images/step-favicon.ico" />
-	<link rel="stylesheet" type="text/css" href="css/ui-lightness/jquery-ui-1.8.19.custom.css" />
-	<script src="js_init/initLib.js" type="text/javascript"></script>   
-    <script src="libs/dohighlight-min.js" type="text/javascript"></script>
-    <script src="libs/timeline_js/timeline-api.js" type="text/javascript"></script>
-    <script src="libs/jquery-1.7.2.min.js" type="text/javascript"></script>
-<!--     <script src="libs/jquery-ui-1.8.19.custom.min.js" type="text/javascript"></script> -->
-	<script src="libs/jquery-ui-1.9-beta.min.js" type="text/javascript"></script>
-	
+
 	<%
 		if(request.getParameter("debug") != null) {
 	%>
+
+		<link rel="stylesheet" type="text/css" href="css/jquery-ui-1.8.19.custom.css" />
 		<link rel="stylesheet" type="text/css" href="css/qtip.css" />
 		<link rel="stylesheet" type="text/css" href="css/ddsmoothmenu.css" />
 		<link rel="stylesheet" type="text/css" href="css/ddsmoothmenu-v.css" />
@@ -41,6 +38,11 @@
 	    <link rel="stylesheet" type="text/css" href="css/search.css" />
 	    <link rel="stylesheet" type="text/css" href="css/cardo.css" />
 	
+		<script src="js_init/initLib.js" type="text/javascript"></script>   
+	    <script src="libs/dohighlight-min.js" type="text/javascript"></script>
+	    <script src="libs/timeline_js/timeline-api.js" type="text/javascript"></script>
+	    <script src="libs/jquery-1.7.2.min.js" type="text/javascript"></script>
+		<script src="libs/jquery-ui-1.9-beta.min.js" type="text/javascript"></script>
 	    <script src="js/jquery-extensions/jquery-qtip.js" type="text/javascript"></script>
 	    <script src="js/jquery-extensions/jquery-hover-intent.js" type="text/javascript"></script>
 	    <script src="js/jquery-extensions/jquery-cookie.js" type="text/javascript"></script>

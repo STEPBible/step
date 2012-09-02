@@ -1,3 +1,6 @@
+<%@ page contentType="text/html; charset=UTF-8" language="java" %> 
+
+
 <div class="searchToolbar">
 	Bible version(s): <input type='text' class='searchVersions <%=request.getParameter("namespace")%>SearchVersion' /> 
 	

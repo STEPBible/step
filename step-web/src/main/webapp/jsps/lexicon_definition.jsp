@@ -1,4 +1,5 @@
-<%@ page language="java"  %> 
+<%@ page contentType="text/html; charset=UTF-8" language="java" %> 
+
 
 <span id='lexiconDefinition'>
 	<ul id="lexiconDefinitionHeader">

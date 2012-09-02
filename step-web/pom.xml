@@ -279,11 +279,15 @@
 
 	<profiles>
 		<profile>
-			<!--  deployment locally, or for local use, like the stand-alone version -->
+			<!--  deployment locally, or for local use-->
 			<id>deploy-local</id>
 			<properties>
 				<skipTomcat>false</skipTomcat>
 			</properties>
+		</profile>
+		<profile>
+			<!--  deployment locally, or for local use-->
+			<id>standalone-install</id>
 			<build>
 				<plugins>
 					<plugin>

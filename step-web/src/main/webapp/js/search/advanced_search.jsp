@@ -23,11 +23,11 @@
 			class="bookmarkPassageLink">Add a bookmark</a>
 		</span>
 
-		<table>
+		<table class="passageTable">
 			<tr>
-				<td>Bible version</td>
+				<td>Translation / Commentary</td>
 				<td><input type="text" class="passageVersion" size="15" /></td>
-				<td style="padding-left: 10px">Scripture Reference</td>
+				<td style="padding-left: 10px">Bible Text</td>
 				<td><input type="text" class="passageReference" size="15" /></td>
 			</tr>
 			<tr>

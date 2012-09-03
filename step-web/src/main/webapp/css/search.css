@@ -149,18 +149,21 @@ li.subjectHeading {
 	font-weight: bold;
 }
 
-.advancedSearch table {
-	width: 50%;
-}
+/* .advancedSearch table { */
+/* 	width: 50%; */
+/* } */
 
+.passageTable {
+	padding-right: 20px;
+}
 
 .textSearchTable {
 	width: 100% !important;
 }
 
-.advancedSearch table {
-	width: 12.5%;
-}
+/* .advancedSearch table { */
+/* 	width: 12.5%; */
+/* } */
 
 
 /*******************************************/

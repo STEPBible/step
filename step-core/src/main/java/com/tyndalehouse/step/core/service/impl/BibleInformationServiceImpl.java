@@ -201,6 +201,11 @@ public class BibleInformationServiceImpl implements BibleInformationService {
             result.remove(LookupOption.HEADINGS);
         }
 
+        if (mode.equals(InterlinearMode.INTERLINEAR)) {
+            result.remove(LookupOption.NOTES);
+            result.add(LookupOption.VERSE_NEW_LINE);
+        }
+
         return result;
     }
 

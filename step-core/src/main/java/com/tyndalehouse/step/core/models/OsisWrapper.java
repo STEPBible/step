@@ -50,6 +50,8 @@ public class OsisWrapper implements Serializable {
     private int startRange;
     private int endRange;
     private final String languageCode;
+    private boolean containsGreek = false;
+    private boolean containsHebrew = false;
 
     /**
      * the value to be wrapped
@@ -170,5 +172,33 @@ public class OsisWrapper implements Serializable {
      */
     public void setOsisId(final String osisId) {
         this.osisId = osisId;
+    }
+
+    /**
+     * @return the containsGreek
+     */
+    public boolean isContainsGreek() {
+        return this.containsGreek;
+    }
+
+    /**
+     * @param containsGreek the containsGreek to set
+     */
+    public void setContainsGreek(final boolean containsGreek) {
+        this.containsGreek = containsGreek;
+    }
+
+    /**
+     * @return the containsHebrew
+     */
+    public boolean isContainsHebrew() {
+        return this.containsHebrew;
+    }
+
+    /**
+     * @param containsHebrew the containsHebrew to set
+     */
+    public void setContainsHebrew(final boolean containsHebrew) {
+        this.containsHebrew = containsHebrew;
     }
 }

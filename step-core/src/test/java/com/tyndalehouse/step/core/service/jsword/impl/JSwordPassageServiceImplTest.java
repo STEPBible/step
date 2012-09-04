@@ -384,8 +384,8 @@ public class JSwordPassageServiceImplTest {
      */
     @Test
     public void testPrettyXml() throws BookException, NoSuchKeyException, JDOMException, IOException {
-        final String version = "KJV";
-        final String ref = "Exodus 1-2;Mar 1:1";
+        final String version = "OSMHB";
+        final String ref = "Genesis 1:1";
         final Book currentBook = Books.installed().getBook(version);
         final BookData bookData = new BookData(currentBook, currentBook.getKey(ref));
         final Element osisFragment = bookData.getOsisFragment();
@@ -398,11 +398,12 @@ public class JSwordPassageServiceImplTest {
                 new JSwordVersificationServiceImpl(), null, null);
         final List<LookupOption> options = new ArrayList<LookupOption>();
 
-        final String osisText = jsi.getOsisText(version, ref, options, null, InterlinearMode.NONE).getValue();
+        final String osisText = jsi.getOsisText(version, ref, options, "KJV", InterlinearMode.INTERLINEAR)
+                .getValue();
         final SAXBuilder sb = new SAXBuilder();
         final Document d = sb.build(new StringReader(osisText));
 
-        LOGGER.trace("\n {}", xmlOutputter.outputString(d));
+        LOGGER.debug("\n {}", xmlOutputter.outputString(d));
         Assert.assertTrue(osisText.contains("span"));
     }
 

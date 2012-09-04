@@ -72,7 +72,7 @@ public class Loader {
     private static final int INSTALL_WAITING = 1000;
     private static final int INSTALL_MAX_WAITING = INSTALL_WAITING * 180;
     private static final String KJV = "KJV";
-    private static final Logger LOG = LoggerFactory.getLogger(Loader.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(Loader.class);
     private final EbeanServer ebean;
     private final JSwordPassageService jsword;
     private final Properties coreProperties;
@@ -117,11 +117,11 @@ public class Loader {
         // very ugly, but as good as it's going to get for now
         while (waitTime > 0 && !this.jswordModule.isInstalled(KJV)) {
             try {
-                LOG.debug("Waiting for KJV installation to finish...");
+                LOGGER.debug("Waiting for KJV installation to finish...");
                 waitTime -= INSTALL_WAITING;
                 Thread.sleep(INSTALL_WAITING);
             } catch (final InterruptedException e) {
-                LOG.warn("Interrupted exception", e);
+                LOGGER.warn("Interrupted exception", e);
             }
         }
 
@@ -134,7 +134,7 @@ public class Loader {
      * Loads the data into the database
      */
     private void loadData() {
-        LOG.debug("Loading initial data");
+        LOGGER.debug("Loading initial data");
         this.ebean.beginTransaction();
 
         try {
@@ -156,6 +156,8 @@ public class Loader {
      * @return number of records loaded
      */
     int loadHotSpots() {
+        LOGGER.debug("Loading hotspots");
+
         return new CsvModuleLoader<HotSpot>(this.ebean,
                 this.coreProperties.getProperty("test.data.path.timeline.hotspots"), HotSpot.class).init();
     }
@@ -166,6 +168,7 @@ public class Loader {
      * @return the number of entries loaded
      */
     int loadLexicon() {
+        LOGGER.debug("Loading lexicon");
         new CsvModuleLoader<LexiconDefinition>(this.ebean,
                 this.coreProperties.getProperty("test.data.path.lexicon"), LexiconDefinition.class).init();
 
@@ -188,7 +191,7 @@ public class Loader {
                 final LexiconDefinition relatedStrong = codedByStrongNumber.get(strongNumbers[ii]);
 
                 if (relatedStrong == null) {
-                    LOG.error("Unable to reference strong [{}]. [{}] is incomplete.", strongNumbers[ii],
+                    LOGGER.error("Unable to reference strong [{}]. [{}] is incomplete.", strongNumbers[ii],
                             def.getStrong());
                     continue;
                 }
@@ -217,6 +220,7 @@ public class Loader {
      * @return the number of entries
      */
     int loadRobinsonMorphology() {
+        LOGGER.debug("Loading robinson morphology");
         final HeaderColumnNameTranslateMappingStrategy<Morphology> columnMapping = new HeaderColumnNameTranslateMappingStrategy<Morphology>();
         final Map<String, String> columnTranslations = getMorphologyTranslations();
 
@@ -229,7 +233,7 @@ public class Loader {
 
                     @Override
                     public void postProcess(final Morphology entity) {
-                        LOG.trace("Processing [{}]", entity.getCode());
+                        LOGGER.trace("Processing [{}]", entity.getCode());
                         sanitizeDefinitions(entity);
 
                         entity.initialise();
@@ -322,6 +326,7 @@ public class Loader {
      * @return number of records loaded
      */
     int loadTimeline() {
+        LOGGER.debug("Loading timeline");
         return new CustomTranslationCsvModuleLoader<TimelineEvent>(this.ebean,
                 this.coreProperties.getProperty("test.data.path.timeline.events.directory"),
                 TimelineEvent.class, new TimelineEventTranslation(this.jsword)).init();
@@ -333,6 +338,7 @@ public class Loader {
      * @return the number of records loaded
      */
     int loadOpenBibleGeography() {
+        LOGGER.debug("Loading Open Bible geography");
         return new CustomTranslationCsvModuleLoader<GeoPlace>(this.ebean,
                 this.coreProperties.getProperty("test.data.path.geography.openbible"), GeoPlace.class,
                 new OpenBibleDataTranslation(this.jsword), '\t').init();
@@ -344,6 +350,7 @@ public class Loader {
      * @return the number of articles loaded
      */
     int loadDictionaryArticles() {
+        LOGGER.debug("Loading dictionary articles");
         return new DictionaryLoader(this.ebean, this.jsword,
                 this.coreProperties.getProperty("test.data.path.dictionary.easton")).init();
     }

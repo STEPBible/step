@@ -70,7 +70,9 @@ public class MultiInterlinearProviderImpl implements MultiInterlinearProvider {
         if (differentVersions != null) {
             for (final String version : differentVersions) {
                 if (isNotBlank(version)) {
-                    this.interlinearProviders.put(version, new InterlinearProviderImpl(version, textScope));
+                    final String normalisedVersion = version.trim();
+                    this.interlinearProviders.put(normalisedVersion, new InterlinearProviderImpl(
+                            normalisedVersion, textScope));
                 }
             }
         }

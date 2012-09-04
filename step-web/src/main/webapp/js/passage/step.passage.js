@@ -68,10 +68,10 @@ step.passage = {
             var passageContent = step.util.getPassageContent(passageId);
             passageContent.html(text.value);
             
-            var verses = $("span.verse", passageContent);
-            if(text.languageCode == 'he') {
+            var verses = $("span.verse, .interlinear span", passageContent);
+            if(text.languageCode == 'he' || text.containsHebrew) {
                 verses.addClass("hebrewLanguage").removeClass("greekLanguage");
-            } else if(text.languageCode == 'grc') {
+            } else if(text.languageCode == 'grc' || text.containsGreek) {
                 verses.addClass("greekLanguage").removeClass("hebrewLanguage");
             } else {
                 verses.removeClass("hebrewLanguage greekLanguage");

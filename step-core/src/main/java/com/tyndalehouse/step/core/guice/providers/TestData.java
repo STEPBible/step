@@ -126,6 +126,8 @@ public class TestData {
      * @param u the user
      */
     private void createHistory(final User u) {
+        LOGGER.debug("Loading test history");
+
         final History h = new History();
         h.setHistoryReference("Rev 1");
         h.setUser(u);
@@ -139,7 +141,7 @@ public class TestData {
      * @param u the user
      */
     private void createBookmarks(final User u) {
-
+        LOGGER.debug("Loading test bookmarks");
         final List<Bookmark> bookmarks = new ArrayList<Bookmark>();
         final Bookmark b1 = new Bookmark();
         b1.setBookmarkReference("Acts 2:7-20");

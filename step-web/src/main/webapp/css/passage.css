@@ -16,13 +16,26 @@ span.interlinear span { /* Make each word follow the other */
 	white-space: nowrap;
 }
 
+
+span.rtl span { /* Make each word follow the other */
+	float: right;
+}
+
+
 /* Make the different views of a word stack. */
 span.interlinear span span { /* Make this stack on top of each other. */
 	display: block;
 	/* Turn off floating and padding that was added by the previous rule. */
 	float: none;
 	padding: 0;
+	font-size: 12px;
 }
+
+span.rtl span span {
+	font-size: 16px;
+	font-family: Cardo ;
+}
+
 
 /* Allow for spans to be nested more deeply */
 span.interlinear span span span {
@@ -160,6 +173,10 @@ span.w {
 
 span.verseStart {
 	clear: left;
+}
+
+.rtl span.verseStart {
+	clear: right;
 }
 	
 span.strongs, span.morphs, span.interVerseNumbers {
@@ -340,18 +357,18 @@ TD.text {
 }
 
 .hebrewLanguage {
-	font-family: Cardo;
-	font-size: 150%;
+	font-family: Cardo !important;
+	font-size: 18px !important;
 }
 
 .greekLanguage {
-	font-family: Cardo;
-	font-size: 120%;
+	font-family: Cardo !important;
+	font-size: 16px !important;
 }
 
 .ancientLanguage {
-	font-family: Cardo;
-	font-size: 120% !important;	
+	font-family: Cardo !important;
+	font-size: 16px  !important;	
 }
 
 

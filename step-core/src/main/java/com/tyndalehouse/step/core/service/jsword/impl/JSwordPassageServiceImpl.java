@@ -496,6 +496,8 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
             final OsisWrapper osisWrapper = new OsisWrapper(writeToString(htmlsep), bookData.getKey()
                     .getName(), book.getLanguage().getCode(), bookData.getKey().getOsisID());
 
+            containsAncient(osisWrapper, interlinearVersion);
+
             final Key key = bookData.getKey();
             if (key instanceof Passage) {
                 final Passage p = (Passage) bookData.getKey();
@@ -526,6 +528,28 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
         }
     }
 
+    /**
+     * @param osisWrapper the osis wrapper to eventually be returned
+     * @param interlinearVersion the interlinear versions in a comma separated format
+     */
+    private void containsAncient(final OsisWrapper osisWrapper, final String interlinearVersion) {
+        if (isBlank(interlinearVersion)) {
+            return;
+        }
+
+        final String[] versions = interlinearVersion.split(", ?");
+
+        for (final String v : versions) {
+            if (isNotBlank(v)) {
+                final String code = Books.installed().getBook(v.trim()).getLanguage().getCode();
+                setIfContainsHebrew(osisWrapper, code);
+                setIfContainsGreek(osisWrapper, code);
+            }
+        }
+
+        return;
+    }
+
     @Override
     public synchronized OsisWrapper getInterleavedVersions(final String[] versions, final String reference,
             final List<LookupOption> options, final InterlinearMode displayMode) {
@@ -548,6 +572,13 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
                     data.getSAXEventProvider(), displayMode, versions);
             final OsisWrapper osisWrapper = new OsisWrapper(writeToString(transformer), data.getKey()
                     .getName(), data.getFirstBook().getLanguage().getCode(), data.getKey().getOsisID());
+
+            for (final Book b : books) {
+                final String languageCode = b.getLanguage().getCode();
+                setIfContainsHebrew(osisWrapper, languageCode);
+                setIfContainsGreek(osisWrapper, languageCode);
+            }
+
             return osisWrapper;
         } catch (final TransformerException e) {
             throw new StepInternalException(e.getMessage(), e);
@@ -557,6 +588,30 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
             throw new StepInternalException(e.getMessage(), e);
         } catch (final NoSuchKeyException e) {
             throw new StepInternalException(e.getMessage(), e);
+        }
+    }
+
+    /**
+     * sets the flag on the osis wrapper if it the code represents the greek
+     * 
+     * @param osisWrapper osis Wrapper
+     * @param code the code to be examined
+     */
+    private void setIfContainsGreek(final OsisWrapper osisWrapper, final String code) {
+        if ("grc".equals(code)) {
+            osisWrapper.setContainsGreek(true);
+        }
+    }
+
+    /**
+     * sets the flag on the osis wrapper if it the code represents the hebrew
+     * 
+     * @param osisWrapper osis Wrapper
+     * @param code the code to be examined
+     */
+    private void setIfContainsHebrew(final OsisWrapper osisWrapper, final String code) {
+        if ("he".equals(code)) {
+            osisWrapper.setContainsHebrew(true);
         }
     }
 

@@ -147,6 +147,7 @@
             </xsl:choose>
           </xsl:when>
         </xsl:choose>
+        
 	      <xsl:apply-templates/>
       </div>
       
@@ -266,7 +267,7 @@
       <xsl:text>&#160;</xsl:text>
     </xsl:if>
     <!-- Always output the verse -->
-        <span class="interlinear"><xsl:call-template name="versenum"/><xsl:apply-templates/></span>
+        <span class="interlinear {$direction}"><xsl:call-template name="versenum"/><xsl:apply-templates/></span>
         <!-- Follow the verse with an extra space -->
         <!-- when they don't start on lines to themselves -->
         <xsl:text> </xsl:text>

@@ -28,7 +28,7 @@
  ******************************************************************************/
 
 step.search = {
-    pageSize : 50,
+    pageSize : step.defaults.pageSize,
     totalResults : 0,
     refinedSearch : [],
     lastSearch: "",    
@@ -153,23 +153,23 @@ step.search = {
     },
     
     
-    _validateAndRunSearch : function(passageId, query, version, ranked, context, pageNumber, pageSize) {
+    _validateAndRunSearch : function(passageId, query, version, ranked, context, pageNumber) {
         if(step.util.isBlank(query)) {
             step.search._displayResults({}, passageId);
             return;
         }
 
-        step.search._doSearch(passageId, query, version, pageNumber, ranked, context, pageSize, this._highlightingTerms(query));
+        step.search._doSearch(passageId, query, version, pageNumber, ranked, context, this._highlightingTerms(query));
     },
 
-    _doSearch : function(passageId, query, version, pageNumber, ranked, context, pageSize, highlightTerms) {
+    _doSearch : function(passageId, query, version, pageNumber, ranked, context, highlightTerms) {
         var self = this;
         
         var versionArg = " in (" + version.toUpperCase() + ")";
         var pageNumberArg = pageNumber == null ? 1 : pageNumber;
         var rankedArg = ranked == undefined ? false : ranked;
         var contextArg = context == undefined || isNaN(context) ? 0 : context;
-        var pageSizeArg = pageSize == undefined ? 50 : pageSize;
+        var pageSizeArg = this.pageSize;
         var finalInnerQuery = query + versionArg;
         
         var refinedQuery = this._joinInRefiningSearches(finalInnerQuery);

@@ -249,6 +249,35 @@ step.util = {
             });
 
             
+            $(".adjustPageSize").button({
+                icons : {
+                    primary : "ui-icon-arrowstop-1-s"
+                },
+                text : false
+            }).click(function(e) {
+                e.preventDefault();
+                var passageContainer = step.util.getPassageContainer(this);
+                var windowHeight = $(window).height();
+                var targetPageSize = 1;
+                
+                if(step.search.pageSize != step.defaults.pageSize) {
+                    step.search.pageSize = step.defaults.pageSize;
+                } else {
+                    //find the one that extends beyond the window height
+                    var rows = $("tr.searchResultRow");
+                    for(var i = 0; i < rows.size(); i++) {
+                        if(rows.eq(i).offset().top + rows.eq(i).height() > windowHeight) {
+                            targetPageSize = i - 1;
+                            break;
+                        }
+                    }
+                    
+                    console.log("Target window size is " + targetPageSize);
+                    step.search.pageSize = targetPageSize;
+                }
+                step.state._fireStateChanged(step.passage.getPassageId(this));
+            });
+            
             $(".previousPage").button({
                 icons : {
                     primary : "ui-icon-arrowreturnthick-1-w"

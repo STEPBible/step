@@ -28,6 +28,7 @@
  ******************************************************************************/
 step.defaults = {
     detailLevel : 0,
+    pageSize : 50,
     syncMode : -1,
     passages : [ {
         version : 'KJV',

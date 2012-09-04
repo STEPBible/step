@@ -51,7 +51,7 @@ $(document).ready(function() {
     });
 
     var namespace = "original";
-    step.state.trackState([
+    step.state.trackState([".originalSearchVersion",
                            ".originalPageNumber"
                            ], namespace);
 

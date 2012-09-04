@@ -46,11 +46,52 @@ step.search = {
             var query = searchTypePrefix + step.state.original.strong(passageId);
             var pageNumber = step.state.original.originalPageNumber(passageId);
             
+            var versions = step.state.original.originalSearchVersion(passageId);
+            if(versions == undefined) {
+                versions = "";
+            }
+            
+            if(!this._versionsContainsStrongs(versions)) {
+                versions = "KJV," + versions;
+                step.state.original.originalSearchVersion(passageId, versions);
+            }
+            
+            
             if (step.util.raiseErrorIfBlank(query, "Please enter a strong number")) {
                 //TODO - version for original word search
-                step.search._validateAndRunSearch(passageId, query, "KJV", false, 0, pageNumber);
+                step.search._validateAndRunSearch(passageId, query, versions, false, 0, pageNumber);
             }
+        },
+        
+        _versionsContainsStrongs : function(versions) {
+            if(step.util.isBlank(versions)) {
+                return false;
+            }
+            
+            if(step.versions == undefined) {
+                return false;
+            }
+            
+            var vs = versions.split(",");
+
+           //iterate through all versions of interes
+           for(var j = 0; j < vs.length; j++) {
+               //looking for them in step.versions
+               for(var i = 0; i < step.versions.length; i++) {
+                   if(vs[j] == step.versions[i]) {
+                       if(step.versions[i].hasStrongs) {
+                           return true;
+                       } else {
+                           //break and continue round for the next
+                           break;
+                       }
+                   }
+               }
+           }
+           
+           return false;
         }
+        
     },
     quick : {
         search : function() {

@@ -48,7 +48,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.crosswire.jsword.passage.Key;
-import org.crosswire.jsword.passage.PassageTally;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -139,28 +138,62 @@ public class SearchServiceImpl implements SearchService {
     private SearchResult executeJoiningSearches(final SearchQuery sq) {
         // we run each individual search, and get all the keys out of each
 
-        Key results = null;
-
-        do {
-            if (sq.getCurrentSearch().getType() == SearchType.TEXT) {
-                results = intersect(results, this.jswordSearch.searchKeys(sq));
-            } else {
-                throw new StepInternalException(String.format(
-                        "Search %s is not support, unable to refine search type [%s]", sq.getOriginalQuery(),
-                        sq.getCurrentSearch().getType()));
-            }
-        } while (sq.hasMoreSearches());
+        final Key results = runJoiningSearches(sq);
 
         // now retrieve the results, we need to retrieve results as per the last type of search run
         // so first of all, we set the allKeys flag to false
         sq.setAllKeys(false);
 
+        return extractSearchResults(sq, results);
+    }
+
+    /**
+     * Runs each individual search and gives us a key that can be used to retrieve every passage
+     * 
+     * @param sq the search query
+     * @return the key to all the results
+     */
+    private Key runJoiningSearches(final SearchQuery sq) {
+        Key results = null;
+        do {
+            switch (sq.getCurrentSearch().getType()) {
+                case TEXT:
+                    results = intersect(results, this.jswordSearch.searchKeys(sq));
+                    break;
+                case EXACT_STRONG:
+                    adaptQueryForStrongSearch(sq);
+                    intersect(results, this.jswordSearch.searchKeys(sq));
+                    break;
+                case RELATED_STRONG:
+                    adaptQueryForRelatedStrongSearch(sq);
+                    intersect(results, this.jswordSearch.searchKeys(sq));
+                    break;
+                case SUBJECT:
+                case TIMELINE_DESCRIPTION:
+                case TIMELINE_REFERENCE:
+                default:
+                    throw new StepInternalException(String.format(
+                            "Search %s is not support, unable to refine search type [%s]",
+                            sq.getOriginalQuery(), sq.getCurrentSearch().getType()));
+            }
+        } while (sq.hasMoreSearches());
+        return results;
+    }
+
+    /**
+     * Extracts the search results from a multi-joined search query
+     * 
+     * @param sq the search query
+     * @param results the results
+     * @return the search results ready to send back
+     */
+    private SearchResult extractSearchResults(final SearchQuery sq, final Key results) {
         final IndividualSearch lastSearch = sq.getLastSearch();
         switch (lastSearch.getType()) {
             case TEXT:
-                return buildCombinedVerseBasedResults(sq, results);
             case EXACT_STRONG:
             case RELATED_STRONG:
+                return buildCombinedVerseBasedResults(sq, results);
             case SUBJECT:
             case TIMELINE_DESCRIPTION:
             case TIMELINE_REFERENCE:
@@ -248,14 +281,11 @@ public class SearchServiceImpl implements SearchService {
      * @return the results
      */
     private SearchResult runExactStrongSearch(final SearchQuery sq) {
-        final IndividualSearch currentSearch = sq.getCurrentSearch();
-        final String searchStrong = currentSearch.getQuery();
+        adaptQueryForStrongSearch(sq);
 
-        LOGGER.debug("Searching for strongs [{}]", searchStrong);
-        final List<String> strongs = getStrongsFromQuery(searchStrong);
-
-        // there may only be one, but it works with one or more
-        return runMultipleStrongSearch(sq, strongs);
+        // TODO jsword bug - email 09-Jul-2012 - 19:11 GMT
+        // and then run the search
+        return runTextSearch(sq);
     }
 
     /**
@@ -265,12 +295,35 @@ public class SearchServiceImpl implements SearchService {
      * @return the results
      */
     private SearchResult runRelatedStrongSearch(final SearchQuery sq) {
-        final IndividualSearch currentSearch = sq.getCurrentSearch();
-        final String query = currentSearch.getQuery();
+        adaptQueryForRelatedStrongSearch(sq);
 
-        LOGGER.debug("Searching for related strongs [{}]", query);
-        final List<String> strongsFromQuery = getStrongsFromQuery(query);
+        // and then run the search
+        return runTextSearch(sq);
+    }
 
+    /**
+     * Takes in a normal search query, and adapts the current search by rewriting the query syntax so that it
+     * can be parsed by JSword
+     * 
+     * @param sq the search query
+     */
+    private void adaptQueryForStrongSearch(final SearchQuery sq) {
+        final List<String> strongs = getStrongsFromCurrentSearch(sq);
+        final String query = getQuerySyntaxForStrongs(strongs);
+
+        // we can now change the individual search query, to the real text search
+        sq.getCurrentSearch().setQuery(query);
+    }
+
+    /**
+     * Adapts the search query to be used in a strong search
+     * 
+     * @param sq the search query object
+     */
+    private void adaptQueryForRelatedStrongSearch(final SearchQuery sq) {
+        final List<String> strongsFromQuery = getStrongsFromCurrentSearch(sq);
+
+        // get all similar ones
         final List<LexiconDefinition> strongs = this.ebean.find(LexiconDefinition.class)
                 .fetch("similarStrongs").select("similarStrongs.strong").where()
                 .in("strong", strongsFromQuery).findList();
@@ -282,7 +335,25 @@ public class SearchServiceImpl implements SearchService {
             }
         }
 
-        return runMultipleStrongSearch(sq, strongsFromQuery);
+        final String query = getQuerySyntaxForStrongs(strongsFromQuery);
+
+        // we can now change the individual search query, to the real text search
+        sq.getCurrentSearch().setQuery(query);
+    }
+
+    /**
+     * splits up the query syntax and returns a list of all strong numbers required
+     * 
+     * @param sq the search query
+     * @return the list of strongs
+     */
+    private List<String> getStrongsFromCurrentSearch(final SearchQuery sq) {
+        final IndividualSearch currentSearch = sq.getCurrentSearch();
+        final String searchStrong = currentSearch.getQuery();
+
+        LOGGER.debug("Searching for strongs [{}]", searchStrong);
+        final List<String> strongs = splitToStrongs(searchStrong);
+        return strongs;
     }
 
     /**
@@ -348,27 +419,17 @@ public class SearchServiceImpl implements SearchService {
     }
 
     /**
-     * runs the search and returns results
-     * 
-     * @param sq the holder for the search query
-     * @param strongs the strong numbers to search for
-     * @return the result
+     * @param strongs a list of strongs
+     * @return the query syntax
      */
-    private SearchResult runMultipleStrongSearch(final SearchQuery sq, final List<String> strongs) {
+    private String getQuerySyntaxForStrongs(final List<String> strongs) {
         final StringBuilder query = new StringBuilder();
         for (final String s : strongs) {
             query.append(STRONG_QUERY);
             query.append(s);
             query.append(' ');
         }
-
-        // TODO jsword bug - email 09-Jul-2012 - 19:11 GMT
-
-        // we can now change the individual search query, to the real text search
-        sq.getCurrentSearch().setQuery(query.toString().trim().toLowerCase());
-
-        // and then run the search
-        return runTextSearch(sq);
+        return query.toString().trim().toLowerCase();
     }
 
     /**
@@ -377,7 +438,7 @@ public class SearchServiceImpl implements SearchService {
      * @param searchStrong the search query
      * @return the list of strongs
      */
-    private List<String> getStrongsFromQuery(final String searchStrong) {
+    private List<String> splitToStrongs(final String searchStrong) {
         final List<String> strongs = Arrays.asList(searchStrong.split("[, ;]+"));
         final List<String> strongList = new ArrayList<String>();
         for (final String s : strongs) {
@@ -466,11 +527,6 @@ public class SearchServiceImpl implements SearchService {
 
         // otherwise we interesect and adjust the "total"
         results.retainAll(searchKeys);
-
-        if (results instanceof PassageTally) {
-            ((PassageTally) results).setTotal(results.getCardinality());
-        }
-
         return results;
     }
     // TODO

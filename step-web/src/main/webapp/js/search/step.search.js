@@ -117,7 +117,7 @@ step.search = {
             step.search._displayResults({}, passageId);
             return;
         }
-        
+
         step.search._doSearch(passageId, query, version, pageNumber, ranked, context, pageSize, this._highlightingTerms(query));
     },
 

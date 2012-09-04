@@ -52,13 +52,12 @@ public class SearchController {
     /**
      * Estimates the number of hits for a particular search query
      * 
-     * @param version the versions to search across
      * @param searchQuery the search query.
      * @return the number of results
      */
     public long estimateSearch(final String searchQuery) {
         // JSword currently only allows estimates as ranked searches
-        return this.searchService.estimateSearch(new SearchQuery(searchQuery, true, 0, 0, 0));
+        return this.searchService.estimateSearch(new SearchQuery(searchQuery, false, 0, 0, 0));
     }
 
 }

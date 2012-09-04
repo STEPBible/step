@@ -44,7 +44,8 @@ public class SearchServiceImplTest extends DataDrivenTestExtension {
         final JSwordVersificationService versificationService = new JSwordVersificationServiceImpl();
         final JSwordPassageServiceImpl jsword = new JSwordPassageServiceImpl(versificationService, null, null);
         this.si = new SearchServiceImpl(getEbean(),
-                new JSwordSearchServiceImpl(versificationService, jsword), jsword, null);
+                new JSwordSearchServiceImpl(versificationService, jsword), jsword, new TimelineServiceImpl(
+                        getEbean(), jsword));
 
     }
 
@@ -61,7 +62,8 @@ public class SearchServiceImplTest extends DataDrivenTestExtension {
     /** test exact strong match */
     @Test
     public void testSubjectSearch() {
-        final SearchResult searchSubject = this.si.search(new SearchQuery("s=elijah", false, 0, 1, 1));
+        final SearchResult searchSubject = this.si
+                .search(new SearchQuery("s=elijah in (ESV)", false, 0, 1, 1));
 
         final List<SearchEntry> entries = ((SubjectHeadingSearchEntry) searchSubject.getResults().get(0))
                 .getHeadingsSearch().getResults();
@@ -111,7 +113,7 @@ public class SearchServiceImplTest extends DataDrivenTestExtension {
         e.setReferences(references);
         getEbean().save(e);
 
-        final SearchResult result = this.si.search(new SearchQuery("dr=calf in (ESV)", false, 0, 1, 10));
+        final SearchResult result = this.si.search(new SearchQuery("d=calf in (ESV)", false, 0, 1, 10));
         final TimelineEventSearchEntry timelineEventSearchEntry = (TimelineEventSearchEntry) result
                 .getResults().get(0);
         assertEquals("Golden Calf episode", timelineEventSearchEntry.getDescription());

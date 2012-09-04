@@ -68,15 +68,9 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
         final long start = System.currentTimeMillis();
 
         final Key k = searchKeys(sq);
+        LOGGER.trace("Took [{}]ms", System.currentTimeMillis() - start);
 
-        if (k instanceof PassageTally) {
-            LOGGER.trace("Took [{}]ms", System.currentTimeMillis() - start);
-            return ((PassageTally) k).getTotal();
-        } else if (k instanceof Passage) {
-            return ((Passage) k).getCardinality();
-        }
-
-        return -1;
+        return k.getCardinality();
     }
 
     @Override
@@ -87,7 +81,7 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
 
         // need to set to something sensible, other we may experience a
         // "Requested array size exceeds VM limit"
-        modifier.setMaxResults(sq.isAllKeys() ? MAX_RESULTS : sq.getPageNumber() * sq.getPageSize());
+        modifier.setMaxResults(MAX_RESULTS);
 
         final IndividualSearch currentSearch = sq.getCurrentSearch();
         for (final String version : currentSearch.getVersions()) {
@@ -174,12 +168,7 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
      */
     @Override
     public int getTotal(final Key results) {
-        if (results instanceof PassageTally) {
-            return ((PassageTally) results).getTotal();
-        } else if (results instanceof Passage) {
-            return ((Passage) results).getCardinality();
-        }
-        return -1;
+        return results.getCardinality();
     }
 
     /**

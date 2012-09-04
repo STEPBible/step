@@ -112,16 +112,29 @@ step.state = {
      },
         
     activeSearch : function(passageId, activeSearch, fireChange) {
+        var refiningSearches = step.search.refinedSearch.length != 0; 
+        
         // refresh menu options
         if (activeSearch) {
-            // tick the right menu item
-            step.menu.tickOneItemInMenuGroup('SEARCH', activeSearch, passageId);
+            //then show warning sign if attempting to refine a search
+            if( (activeSearch == "SEARCH_TIMELINE" || activeSearch == "SEARCH_SUBJECT") && refiningSearches) {
+                step.util.raiseError("This type of search does not support the 'Refine search' feature. Please close the 'Refine Search' feature to proceed.");
+                return;
+            } else {
+                // tick the right menu item
+                step.menu.tickOneItemInMenuGroup('SEARCH', activeSearch, passageId);
 
-            // show the correct field set
-            this._showRelevantFieldSet(passageId);
-            $.shout(activeSearch + "-activated", {passageId: passageId});
+                // show the correct field set
+                this._showRelevantFieldSet(passageId);
+
+                $.shout(activeSearch + "-activated", {passageId: passageId});
+                
+            }
         }
 
+        //if we are refining a search && not explicitly wanting a change, then do not fire a change
+        var fireChange = refiningSearches && fireChange == undefined ? false : fireChange;
+        
         var newValue = this._storeAndRetrieveCookieState(passageId, "activeSearch", activeSearch, fireChange);
         return newValue;
     },

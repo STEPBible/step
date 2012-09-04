@@ -16,5 +16,5 @@ $(document).ready(function() {
 });
 
 $(step.search.ui).hear("subject-search-state-has-changed", function(s, data) {
-    step.search.subject.search(data.passageId);
+//    step.search.subject.search(data.passageId);
 });

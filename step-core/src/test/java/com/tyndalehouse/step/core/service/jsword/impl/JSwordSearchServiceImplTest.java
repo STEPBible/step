@@ -53,6 +53,19 @@ public class JSwordSearchServiceImplTest {
         assertTrue(results.size() > 0);
     }
 
+    /**
+     * Random tests
+     */
+    @Test
+    public void testGood() {
+        final List<SearchEntry> results = this.search.search(
+                new SearchQuery("+[Mat-Rev] good~ in (KJV)", true, 0, 1, 1000000), "ESV").getResults();
+        for (int i = 0; i < results.size(); i++) {
+            LOGGER.debug(((VerseSearchEntry) results.get(i)).getKey());
+        }
+        assertTrue(results.size() > 0);
+    }
+
     // @Test
     // public void testRebuildIndex() throws InterruptedException {
     // final List<Book> books = Books.installed().getBooks();

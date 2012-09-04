@@ -85,6 +85,20 @@ step.passage = {
             // execute all callbacks
             step.passage.executeCallbacks(passageId);
             
+            $(".note", passageContent).each(function(i, item) {
+                $(this).attr("title", "hi you. This is a note at the right place on the screen");
+                var yPosition = $(this).offset().top;
+                var xPosition = $("#centerPane").offset().left;
+                
+                $(this).qtip({
+                    position : {
+                        target : [xPosition, yPosition],
+                        my: "middle left,",
+                        at: "middle right"
+                    }
+                })
+            });
+            
             
             //finally add handlers to elements containing xref
             $.each($("[xref]", passageContent), function(i, item) {

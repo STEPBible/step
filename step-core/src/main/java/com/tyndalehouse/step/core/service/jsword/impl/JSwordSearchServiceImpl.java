@@ -2,8 +2,11 @@ package com.tyndalehouse.step.core.service.jsword.impl;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -29,6 +32,8 @@ import com.tyndalehouse.step.core.models.OsisWrapper;
 import com.tyndalehouse.step.core.models.search.SearchEntry;
 import com.tyndalehouse.step.core.models.search.SearchResult;
 import com.tyndalehouse.step.core.models.search.VerseSearchEntry;
+import com.tyndalehouse.step.core.service.impl.IndividualSearch;
+import com.tyndalehouse.step.core.service.impl.SearchQuery;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import com.tyndalehouse.step.core.service.jsword.JSwordSearchService;
 import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
@@ -41,9 +46,8 @@ import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
  */
 @Singleton
 public class JSwordSearchServiceImpl implements JSwordSearchService {
-    private static final int MAX_RESULTS = 500;
-    private static final int PAGE_SIZE = 50;
     private static final Logger LOGGER = LoggerFactory.getLogger(JSwordSearchServiceImpl.class);
+    private static final int MAX_RESULTS = 50000;
     private final JSwordVersificationService av11nService;
     private final JSwordPassageService jsword;
 
@@ -60,85 +64,106 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
     }
 
     @Override
-    public int estimateSearchResults(final String version, final String query) {
+    public int estimateSearchResults(final SearchQuery sq) {
         final long start = System.currentTimeMillis();
-        final Key k = searchKeys(version, query, true, 0, true, 0);
+
+        final Key k = searchKeys(sq);
+
         if (k instanceof PassageTally) {
             LOGGER.trace("Took [{}]ms", System.currentTimeMillis() - start);
             return ((PassageTally) k).getTotal();
+        } else if (k instanceof Passage) {
+            return ((Passage) k).getCardinality();
         }
 
         return -1;
     }
 
     @Override
-    public Key searchKeys(final String version, final String query, final boolean ranked, final int context,
-            final int pageNumber) {
-        return searchKeys(version, query, ranked, context, false, pageNumber);
+    public Key searchKeys(final SearchQuery sq) {
+        final DefaultSearchModifier modifier = new DefaultSearchModifier();
+        final Map<String, Key> resultsPerVersion = new HashMap<String, Key>();
+        modifier.setRanked(sq.isRanked());
+
+        // need to set to something sensible, other we may experience a
+        // "Requested array size exceeds VM limit"
+        modifier.setMaxResults(sq.isAllKeys() ? MAX_RESULTS : sq.getPageNumber() * sq.getPageSize());
+
+        final IndividualSearch currentSearch = sq.getCurrentSearch();
+        for (final String version : currentSearch.getVersions()) {
+
+            // now for each version, we do the search and store it in a map
+            final Book bible = this.av11nService.getBookFromVersion(version);
+
+            try {
+                // TODO JS-228 raised for thread-safety
+                synchronized (this) {
+                    resultsPerVersion.put(version,
+                            bible.find(new DefaultSearchRequest(currentSearch.getQuery(), modifier)));
+                }
+            } catch (final BookException e) {
+                throw new StepInternalException("Unable to search for " + currentSearch.getQuery()
+                        + " with Bible " + version, e);
+            }
+        }
+
+        // we then need to merge the keys together
+        // otherwise, we are into the realm of searching across multiple versions
+        // no need to rank, since it won't be possible to rank accurately across versions
+        return mergeSearches(resultsPerVersion);
     }
 
     /**
-     * Searches uniquely for the keys, in order to do the passage lookup at a later stage
+     * merges all search results together
      * 
-     * @param version the version to be looked up
-     * @param query the query
-     * @param ranked whether to rank or not
-     * @param context the context of the search.
-     * @param estimation true to indicate we are not interested in the results per say.
-     * @param pageNumber the pageNumber we are interested in, starting with page number 1
-     * @return the search result keys
+     * @param resultsPerVersion the results per version
+     * @return the list of results
      */
-    private Key searchKeys(final String version, final String query, final boolean ranked, final int context,
-            final boolean estimation, final int pageNumber) {
-        final DefaultSearchModifier modifier = new DefaultSearchModifier();
-        modifier.setRanked(estimation ? true : ranked);
-        modifier.setMaxResults(estimation ? 0 : pageNumber * PAGE_SIZE);
+    private Key mergeSearches(final Map<String, Key> resultsPerVersion) {
+        Key all = null;
 
-        final Book bible = this.av11nService.getBookFromVersion(version);
+        for (final Entry<String, Key> entry : resultsPerVersion.entrySet()) {
+            final Key value = entry.getValue();
+            LOGGER.debug("Sub-result-set [{}] has [{}] entries", entry.getKey(), value.getCardinality());
 
-        try {
-            // TODO JS-228 raised for thread-safety
-            synchronized (this) {
-                return bible.find(new DefaultSearchRequest(query, modifier));
+            if (all == null) {
+                all = value;
+            } else {
+                all.addAll(value);
             }
-        } catch (final BookException e) {
-            throw new StepInternalException("Unable to search for " + query + " with Bible " + version, e);
         }
+
+        LOGGER.debug("Combined result-set has [{}] entries", all.getCardinality());
+        return all;
     }
 
     @Override
-    public SearchResult search(final String version, final String query, final boolean ranked,
-            final int context, final int pageNumber, final LookupOption... options) {
-        final long start = System.currentTimeMillis();
-        final Key results = searchKeys(version, query, ranked, context, pageNumber);
-        return retrieveResultsFromKeys(version, query, ranked, context, start, results, pageNumber, options);
+    public SearchResult search(final SearchQuery sq, final String version, final LookupOption... options) {
+        return retrieveResultsFromKeys(sq, searchKeys(sq), version, options);
     }
 
     @Override
-    public SearchResult retrieveResultsFromKeys(final String version, final String query,
-            final boolean ranked, final int context, final long start, final Key results,
-            final int pageNumber, final LookupOption... options) {
+    public SearchResult retrieveResultsFromKeys(final SearchQuery sq, final Key results,
+            final String version, final LookupOption... options) {
         final int total = getTotal(results);
+        final long startRefRetrieval = System.currentTimeMillis();
 
         LOGGER.debug("Total of [{}] results.", total);
-        final Key newResults = rankAndTrimResults(ranked, results, pageNumber);
+        final Key newResults = rankAndTrimResults(sq, results);
         LOGGER.debug("Trimmed down to [{}].", newResults.getCardinality());
-
-        final long startRefs = System.currentTimeMillis();
 
         // if context > 0, then we need to add verse numbers:
         final List<LookupOption> lookupOptions = new ArrayList<LookupOption>();
         Collections.addAll(lookupOptions, options);
-        if (context > 0) {
+        if (sq.getContext() > 0) {
             lookupOptions.add(LookupOption.VERSE_NUMBERS);
         }
 
         final Book bible = this.av11nService.getBookFromVersion(version);
-        final List<SearchEntry> resultPassages = getPassagesForResults(bible, newResults, context,
+        final List<SearchEntry> resultPassages = getPassagesForResults(bible, newResults, sq.getContext(),
                 lookupOptions);
-        final long endRefs = System.currentTimeMillis();
 
-        return getSearchResult(query, start, startRefs, endRefs, resultPassages, total);
+        return getSearchResult(resultPassages, total, System.currentTimeMillis() - startRefRetrieval);
     }
 
     /**
@@ -160,25 +185,18 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
     /**
      * Constructs the search result object
      * 
-     * @param query the query that was run
-     * @param start the start time
-     * @param startRefs the start time of retrieving the references
      * @param resultPassages the resulting passages
-     * @param endRefs the end time of looking up the references
+     * @param total the total number of hits
+     * @param retrievalTime the time taken to retrieve the references attached to the search results
      * @return the search result to be returned to the service caller
      */
-    private SearchResult getSearchResult(final String query, final long start, final long startRefs,
-            final long endRefs, final List<SearchEntry> resultPassages, final int total) {
+    private SearchResult getSearchResult(final List<SearchEntry> resultPassages, final int total,
+            final long retrievalTime) {
         final SearchResult r = new SearchResult();
         r.setResults(resultPassages);
 
-        final long end = System.currentTimeMillis();
-
         // set stats:
-        r.setMaxReached(MAX_RESULTS == resultPassages.size());
-        r.setQuery(query);
-        r.setTimeTookTotal(end - start);
-        r.setTimeTookToRetrieveScripture(endRefs - startRefs);
+        r.setTimeTookToRetrieveScripture(retrievalTime);
         r.setTotal(total);
         return r;
     }
@@ -213,6 +231,7 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
                 lookupKey = verse;
             }
 
+            // TODO this is not very efficient so requires refactoring
             final OsisWrapper peakOsisText = this.jsword.peakOsisText(bible, lookupKey, options);
             resultPassages.add(new VerseSearchEntry(peakOsisText.getReference(), peakOsisText.getValue(),
                     peakOsisText.getOsisId()));
@@ -221,22 +240,21 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
     }
 
     /**
-     * @param ranked true to indicate the search is desired in ranking order
+     * @param sq search query
      * @param results the result to be trimmed
-     * @param pageNumber the page number we are interested in
      * @return the results
      */
-    private Key rankAndTrimResults(final boolean ranked, final Key results, final int pageNumber) {
-        rankResults(ranked, results);
+    private Key rankAndTrimResults(final SearchQuery sq, final Key results) {
+        rankResults(sq.isRanked(), results);
 
         final Passage passage = (Passage) results;
 
         // we need the first pageNumber*PAGE_SIZE results, so remove anything beyond that.
-        passage.trimVerses(pageNumber * PAGE_SIZE);
+        passage.trimVerses(sq.getPageNumber() * sq.getPageSize());
         Passage newResults = passage;
 
-        while (newResults.getCardinality() > PAGE_SIZE) {
-            newResults = newResults.trimVerses(PAGE_SIZE);
+        while (newResults.getCardinality() > sq.getPageSize()) {
+            newResults = newResults.trimVerses(sq.getPageSize());
         }
 
         return newResults;

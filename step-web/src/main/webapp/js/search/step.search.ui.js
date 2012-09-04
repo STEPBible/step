@@ -37,6 +37,11 @@ $(document).ready(function() {
             step.state._fireStateChanged(passageId);
         }
     });
+    
+    $(".closeRefinedSearch").click(function() {
+       $(".refinedSearch", step.util.getPassageContainer(this)).hide();
+       step.search.refinedSearch = [];
+    });
 });
 
 step.search.ui = {

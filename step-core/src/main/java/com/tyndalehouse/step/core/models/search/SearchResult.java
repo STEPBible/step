@@ -11,25 +11,10 @@ import java.util.List;
 public class SearchResult implements Serializable {
     private static final long serialVersionUID = 5408141957094432935L;
     private String query;
-    private boolean maxReached;
     private int total;
     private long timeTookToRetrieveScripture;
     private long timeTookTotal;
     private List<SearchEntry> results;
-
-    /**
-     * @return the maxReached
-     */
-    public boolean isMaxReached() {
-        return this.maxReached;
-    }
-
-    /**
-     * @param maxReached the maxReached to set
-     */
-    public void setMaxReached(final boolean maxReached) {
-        this.maxReached = maxReached;
-    }
 
     /**
      * @return the query

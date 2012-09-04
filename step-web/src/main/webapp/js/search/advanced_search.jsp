@@ -11,6 +11,15 @@
 
 
 <div class="advancedSearch" style="clear: both">
+	<div class="refinedSearch ui-state-highlight">
+		<span class="ui-icon ui-icon-close closeRefinedSearch"></span>
+		<div class="innerRefinedSearch">
+			<span class="ui-icon ui-icon-info"></span>
+			<span class="refinedSearchLabel"></span>
+		</div>
+		
+	</div>
+
 
 	<!-- Passage search -->
 	<fieldset>

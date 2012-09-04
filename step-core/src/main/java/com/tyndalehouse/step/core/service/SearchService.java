@@ -33,6 +33,7 @@
 package com.tyndalehouse.step.core.service;
 
 import com.tyndalehouse.step.core.models.search.SearchResult;
+import com.tyndalehouse.step.core.service.impl.SearchQuery;
 
 /**
  * Runs various searches across the underlying database
@@ -42,65 +43,18 @@ import com.tyndalehouse.step.core.models.search.SearchResult;
  */
 public interface SearchService {
     /**
-     * @param version the initials of the book to search through
-     * @param searchQuery the raw search query
-     * @param ranked whether to order by ranking or bible
-     * @param context the amount of context given to each search result
-     * @param pageNumber the page to be retrieved, starting at 1
-     * @return the list of search results
-     */
-    SearchResult search(String version, String searchQuery, boolean ranked, int context, int pageNumber);
-
-    /**
-     * @param version the initials of the book to search through
-     * @param searchStrong 1 or more strong numbers
-     * @param pageNumber the page to be retrieved, starting at 1
+     * Runs a search against STEP
+     * 
+     * @param sq the query to be run, possibly containing multiple versions or even refined searches
      * @return the search results
      */
-    SearchResult searchStrong(String version, String searchStrong, int pageNumber);
+    SearchResult search(SearchQuery sq);
 
     /**
-     * @param version the initials of the book to search through
-     * @param searchStrong 1 or more strong numbers
-     * @param pageNumber the page to be retrieved, starting at 1
+     * Estimates the number of results returned by the search
+     * 
+     * @param sq the query
      * @return the search results
      */
-    SearchResult searchRelatedStrong(String version, String searchStrong, int pageNumber);
-
-    /**
-     * Searches the timeline by description
-     * 
-     * @param version the version to use for any passage references found
-     * @param description the description of the event that is sought after
-     * @return the result
-     */
-    SearchResult searchTimelineDescription(String version, String description);
-
-    /**
-     * Searches the timeline by description
-     * 
-     * @param version the version to use for any passage references found
-     * @param reference the scripture reference of the event that is sought after
-     * @return the result
-     */
-    SearchResult searchTimelineReference(String version, String reference);
-
-    /**
-     * Searches for the subject
-     * 
-     * @param subject the subject that we are looking for
-     * @param version the version to use to lookup the headings
-     * @param pageNumber the page to be retrieved, starting at 1
-     * @return a search result
-     */
-    SearchResult searchSubject(final String version, String subject, int pageNumber);
-
-    /**
-     * Estimates the number of search results given
-     * 
-     * @param version the version we are searching across
-     * @param searchQuery the search query
-     * @return the number of results
-     */
-    long estimateSearch(String version, String searchQuery);
+    long estimateSearch(SearchQuery sq);
 }

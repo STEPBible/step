@@ -77,7 +77,7 @@ step.util = {
     raiseError: function (error) {
         var message = error.message ? error.message : error;
         
-        $("#error").text(message);
+        $("#errorText").text(message);
         $("#error").slideDown(250);
     },
     
@@ -140,7 +140,8 @@ step.util = {
                 
                 //finally attempt a search estimation
                 delay(function() {
-                    $.getSafe(SEARCH_ESTIMATES, [$("fieldset:visible .searchVersions", step.util.getPassageContainer(passageId)).val(), syntax], function(estimate) {
+                    var versions = $("fieldset:visible .searchVersions", step.util.getPassageContainer(passageId)).val()
+                    $.getSafe(SEARCH_ESTIMATES, [syntax + " in (" + versions + ")"], function(estimate) {
                         $("fieldset:visible .resultEstimates", step.util.getPassageContainer(passageId)).html("~ <em>" + estimate + "</em> results").prev().css("background-color", "#" + step.util.ui._calculateEstimateBackgroundColour(estimate));
                         
                     });
@@ -310,15 +311,19 @@ step.util = {
 ////                });
 //            });
 //            
-//            $(".refineSearch").button({
-//                text: false,
-//                icons: {
-//                    primary: "ui-icon-pencil"
-//                }
-//            });
+            $(".refineSearch").button({
+                text: false,
+                icons: {
+                    primary: "ui-icon-pencil"
+                }
+            }).click(function() {
+                var passageContainer = step.util.getPassageContainer(this);
+                step.search.refinedSearch.push(step.search.lastSearch);
+
+                $(".refinedSearch .refinedSearchLabel", passageContainer).html("Refining results from last search: " + step.search.refinedSearch.join("=>"));
+                $(".refinedSearch", passageContainer).show();
+            });
             
-
-
 
             
             $(".showSearchCriteria").button({

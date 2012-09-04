@@ -17,7 +17,7 @@
 	
 	<input type='hidden' class='searchContext <%=request.getParameter("namespace")%>SearchContext' value='0' readonly='true' /> 
 <!-- 	<a href='#' class='concordanceFormat'>Concordance view</a>  -->
-<!-- 	<a href='#' class='refineSearch'>Refine search</a>  -->
+	<a href='#' class='refineSearch'>Refine search</a> 
 	<a href='#' class='previousPage'>Previous page of results</a> 
 	<a href='#' class='nextPage'>Next page of results</a> 
 	<a href='#' class='showSearchCriteria'>Show search criteria</a> 

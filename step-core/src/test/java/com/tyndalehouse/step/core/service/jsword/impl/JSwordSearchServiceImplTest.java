@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import com.tyndalehouse.step.core.models.search.SearchEntry;
 import com.tyndalehouse.step.core.models.search.VerseSearchEntry;
+import com.tyndalehouse.step.core.service.impl.SearchQuery;
 
 /**
  * Tests the various searches
@@ -36,7 +37,7 @@ public class JSwordSearchServiceImplTest {
      */
     @Test
     public void testEstimation() {
-        assertTrue(this.search.estimateSearchResults("ESV", "John") > 100);
+        assertTrue(this.search.estimateSearchResults(new SearchQuery("John in (ESV)", false, 0, 0, 0)) > 100);
     }
 
     /**
@@ -44,7 +45,8 @@ public class JSwordSearchServiceImplTest {
      */
     @Test
     public void testApproximateSingleSearch() {
-        final List<SearchEntry> results = this.search.search("ESV", "Melchizedc~", false, 1, 1).getResults();
+        final List<SearchEntry> results = this.search.search(
+                new SearchQuery("Melchizedc~ in (ESV)", false, 0, 1, 10), "ESV").getResults();
         for (int i = 0; i < 10 || i < results.size(); i++) {
             LOGGER.debug(((VerseSearchEntry) results.get(i)).getKey());
         }

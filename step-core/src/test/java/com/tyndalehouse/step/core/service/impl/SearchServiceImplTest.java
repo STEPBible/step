@@ -53,14 +53,15 @@ public class SearchServiceImplTest extends DataDrivenTestExtension {
      */
     @Test
     public void testMultiVersionSearch() {
-        final List<SearchEntry> results = this.si.search("ESV,KJV,ASV", "elijah", false, 1, 1).getResults();
+        final List<SearchEntry> results = this.si.search(
+                new SearchQuery("t=elijah in(ESV,KJV,ASV)", false, 0, 1, 1)).getResults();
         assertFalse(results.isEmpty());
     }
 
     /** test exact strong match */
     @Test
     public void testSubjectSearch() {
-        final SearchResult searchSubject = this.si.searchSubject("ESV", "elijah", 1);
+        final SearchResult searchSubject = this.si.search(new SearchQuery("s=elijah", false, 0, 1, 1));
 
         final List<SearchEntry> entries = ((SubjectHeadingSearchEntry) searchSubject.getResults().get(0))
                 .getHeadingsSearch().getResults();
@@ -74,7 +75,7 @@ public class SearchServiceImplTest extends DataDrivenTestExtension {
     /** test exact strong match */
     @Test
     public void testSearchStrong() {
-        final SearchResult searchStrong = this.si.searchStrong("KJV", "G16", 1);
+        final SearchResult searchStrong = this.si.search(new SearchQuery("o=G16 in (KJV)", false, 0, 1, 1));
         assertTrue("1 Peter 4:19".equals(((VerseSearchEntry) searchStrong.getResults().get(0)).getKey()));
     }
 
@@ -92,8 +93,8 @@ public class SearchServiceImplTest extends DataDrivenTestExtension {
         ld.getSimilarStrongs().add(related);
         getEbean().save(ld);
 
-        final SearchResult searchStrong = this.si.searchRelatedStrong("KJV", "G16", 1);
-        assertEquals("strong:g0016 strong:g0015", searchStrong.getQuery().trim());
+        final SearchResult searchStrong = this.si.search(new SearchQuery("o~=G16 in (KJV)", false, 0, 1, 10));
+        assertTrue(searchStrong.getResults().size() > 5);
     }
 
     /** test exact strong match */
@@ -110,7 +111,7 @@ public class SearchServiceImplTest extends DataDrivenTestExtension {
         e.setReferences(references);
         getEbean().save(e);
 
-        final SearchResult result = this.si.searchTimelineDescription("ESV", "calf");
+        final SearchResult result = this.si.search(new SearchQuery("dr=calf in (ESV)", false, 0, 1, 10));
         final TimelineEventSearchEntry timelineEventSearchEntry = (TimelineEventSearchEntry) result
                 .getResults().get(0);
         assertEquals("Golden Calf episode", timelineEventSearchEntry.getDescription());

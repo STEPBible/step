@@ -156,7 +156,10 @@
 
 
 <!--<div id="loading"><img alt="Loading..." src="images/wait16.gif" />Loading...</div>-->
-<div id="error" class="ui-state-error" style="display: none">A placeholder for error messages</div>
+<div id="error" class="ui-state-error" style="display: none">
+	<span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
+	<span id="errorText">A placeholder for error messages</span>
+</div>
 
 <!--  The about popup -->
 

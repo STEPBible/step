@@ -30,23 +30,25 @@
 step.search = {
     pageSize : 50,
     totalResults : 0,
-        
+    refinedSearch : [],
+    lastSearch: "",    
+    
     tagging : {
         exact : function(passageId) {
-            this._doStrongSearch(passageId, SEARCH_STRONG_EXACT);
+            this._doStrongSearch(passageId, "o=");
         },
 
         related : function(passageId) {
-            this._doStrongSearch(passageId, SEARCH_STRONG_RELATED);
+            this._doStrongSearch(passageId, "o~=");
         },
 
-        _doStrongSearch : function(passageId, searchType) {
-            var query = step.state.original.strong(passageId);
+        _doStrongSearch : function(passageId, searchTypePrefix) {
+            var query = searchTypePrefix + step.state.original.strong(passageId);
             var pageNumber = step.state.original.originalPageNumber(passageId);
             
             if (step.util.raiseErrorIfBlank(query, "Please enter a strong number")) {
                 //TODO - version for original word search
-                step.search._doSearch(searchType, passageId, query, 'KJV', pageNumber);
+                step.search._validateAndRunSearch(passageId, query, "KJV", false, 0, pageNumber);
             }
         }
     },
@@ -59,16 +61,12 @@ step.search = {
     timeline : {
         reference : function(passageId) {
             console.log("Searching timeline by reference");
-            $.getSafe(SEARCH_TIMELINE_REFERENCE, [step.state.passage.version(passageId), step.state.timeline.timelineReference(passageId)], function(results) {
-                step.search._displayResults(results, passageId);
-            });
+            step.search._validateAndRunSearch(passageId, "dr=" + step.state.timeline.timelineReference(passageId), step.state.passage.version(passageId), false, 0, 1);
         },
         
         description: function(passageId) {
             console.log("Searching by timeline description");
-            $.getSafe(SEARCH_TIMELINE_DESCRIPTION, [step.state.passage.version(passageId), step.state.timeline.timelineEventDescription(passageId)], function(results) {
-                step.search._displayResults(results, passageId);
-            });
+            step.search._validateAndRunSearch(passageId, "d=" + step.state.timeline.timelineEventDescription(passageId), step.state.passage.version(passageId), false, 0, 1);
         },
         
         dating : function(passageId) {
@@ -83,20 +81,8 @@ step.search = {
             var query = step.state.subject.subjectQuerySyntax(passageId);
             var pageNumber = step.state.subject.subjectPageNumber(passageId); 
             
-            var highlightTerms = this._highlightingTerms(query);
-            $.getSafe(SEARCH_SUBJECT, ['ESV', query, pageNumber], function(results) {
-                step.search._updateTotal(passageId, results.total, pageNumber);
-                step.search._displayResults(results, passageId);
-                step.search._highlightResults(passageId, highlightTerms);
-            });
+            step.search._validateAndRunSearch(passageId, query, "ESV", false, 0, pageNumber);
         },
-        
-        _highlightingTerms : function(query) {
-            if(query == undefined || query.length < 2) {
-                return [];
-            }
-            return query.substring(2).split(" ");
-        }
     },
     
     simpleText : {
@@ -108,7 +94,7 @@ step.search = {
             var ranked = step.state.simpleText.simpleTextSortByRelevance(passageId) == step.defaults.search.textual.simpleTextSortBy[0];
             var pageNumber = step.state.simpleText.simpleTextPageNumber(passageId);
             
-            step.search.textual._validateAndRunSearch(passageId, query, version, ranked, context, pageNumber);
+            step.search._validateAndRunSearch(passageId, query, version, ranked, context, pageNumber);
         }
     },
     
@@ -121,68 +107,85 @@ step.search = {
             var ranked = step.state.textual.textSortByRelevance(passageId);
             var pageNumber = step.state.textual.textPageNumber(passageId);
 
-            this._validateAndRunSearch(passageId, query, version, ranked, context, pageNumber);
+            step.search._validateAndRunSearch(passageId, query, version, ranked, context, pageNumber);
         },
-        
-        _validateAndRunSearch : function(passageId, query, version, ranked, context, pageNumber) {
-            if(step.util.isBlank(query)) {
-                step.search._displayResults({}, passageId);
-                return;
-            }
-            
-            step.search._doSearch(SEARCH_DEFAULT, passageId, query, version, pageNumber, ranked, context, this._highlightingTerms(query));
-        },
-        
-        _highlightingTerms : function(query) {
-            var terms = [];
-            var termBase = query.substring(2);
-            
-            //remove range restrictions, -word and -"a phrase"
-            termBase = termBase.replace(/[+-]\[[^\]]*]/g, "");
-            termBase = termBase.replace(/-[a-zA-Z]+/g, "");
-            termBase = termBase.replace(/-"[^"]+"/g, "");
-            
-            //remove distances and brackets
-            termBase = termBase.replace(/~[0-9]+/g, "");
-            termBase = termBase.replace(/[\(\)]*/g, "");
-            termBase = termBase.replace(/ AND /g, " ");
-            
-            var matches = termBase.match(/"[^"]*"/);
-            if(matches) {
-                for(var i = 0; i < matches.length; i++) {
-                    terms.push(matches[i].substring(1, matches[i].length -1));
-                }
-            }
-            
-            //then remove it from the query
-            termBase = termBase.replace(/"[^"]*"/, "");
-            var smallTerms = termBase.split(" ");
-            if(smallTerms) {
-                for(var i = 0; i < smallTerms.length; i++) {
-                    var consideredTerm = smallTerms[i].trim(); 
-                    if(consideredTerm.length != "") {
-                        terms.push(consideredTerm);   
-                    }
-                }
-            }
-            console.log(terms);
-            return terms;
+    },
+    
+    
+    _validateAndRunSearch : function(passageId, query, version, ranked, context, pageNumber, pageSize) {
+        if(step.util.isBlank(query)) {
+            step.search._displayResults({}, passageId);
+            return;
         }
+        
+        step.search._doSearch(passageId, query, version, pageNumber, ranked, context, pageSize, this._highlightingTerms(query));
     },
 
-   
-    _doSearch : function(searchType, passageId, query, version, pageNumber, ranked, context, highlightTerms) {
+    _doSearch : function(passageId, query, version, pageNumber, ranked, context, pageSize, highlightTerms) {
         var self = this;
-        var contextArg = context == undefined || isNaN(context) ? 0 : context;
-        var pageNumberArg = pageNumber == undefined ? 1 : pageNumber;
-        var versionArg = version.toUpperCase();
-        var args = ranked == null ? [versionArg, query, pageNumberArg] : [versionArg, query, ranked, contextArg, pageNumberArg];
         
-        $.getSafe(searchType, args, function(searchQueryResults) {
+        var versionArg = " in (" + version.toUpperCase() + ")";
+        var pageNumberArg = pageNumber == null ? 1 : pageNumber;
+        var rankedArg = ranked == undefined ? false : ranked;
+        var contextArg = context == undefined || isNaN(context) ? 0 : context;
+        var pageSizeArg = pageSize == undefined ? 50 : pageSize;
+        var finalInnerQuery = query + versionArg;
+        
+        var refinedQuery = this._joinInRefiningSearches(finalInnerQuery);
+        var args = [refinedQuery, rankedArg, contextArg, pageNumberArg, pageSizeArg];
+        
+        $.getSafe(SEARCH_DEFAULT, args, function(searchQueryResults) {
             self._updateTotal(passageId, searchQueryResults.total, pageNumber);
+            self.lastSearch = searchQueryResults.query;
             self._displayResults(searchQueryResults, passageId);
             self._highlightResults(passageId, highlightTerms);
         });
+    },
+    
+    _highlightingTerms : function(query) {
+        var terms = [];
+        var termBase = query.substring(2);
+        
+        //remove range restrictions, -word and -"a phrase"
+        termBase = termBase.replace(/[+-]\[[^\]]*]/g, "");
+        termBase = termBase.replace(/-[a-zA-Z]+/g, "");
+        termBase = termBase.replace(/-"[^"]+"/g, "");
+        
+        //remove distances and brackets
+        termBase = termBase.replace(/~[0-9]+/g, "");
+        termBase = termBase.replace(/[\(\)]*/g, "");
+        termBase = termBase.replace(/ AND /g, " ");
+        
+        var matches = termBase.match(/"[^"]*"/);
+        if(matches) {
+            for(var i = 0; i < matches.length; i++) {
+                terms.push(matches[i].substring(1, matches[i].length -1));
+            }
+        }
+        
+        //then remove it from the query
+        termBase = termBase.replace(/"[^"]*"/, "");
+        var smallTerms = termBase.split(" ");
+        if(smallTerms) {
+            for(var i = 0; i < smallTerms.length; i++) {
+                var consideredTerm = smallTerms[i].trim(); 
+                if(consideredTerm.length != "") {
+                    terms.push(consideredTerm);   
+                }
+            }
+        }
+        console.log(terms);
+        return terms;
+    },
+    
+
+   
+    _joinInRefiningSearches : function(query) {
+        if(this.refinedSearch.length != 0) {
+            return this.refinedSearch.join("=>") + "=>" + query;
+        }
+        
+        return query;
     },
     
     _updateTotal : function(passageId, total, pageNumber) {
@@ -289,9 +292,9 @@ step.search = {
             return;
         } 
         
-        if(searchQueryResults.query.indexOf("timeline") == 0) {
+        if(searchQueryResults.query.startsWith("d=") || searchQueryResults.query.startsWith("dr=")) {
             results += this._displayTimelineEventResults(searchResults, passageId);
-        } else if(searchQueryResults.query.indexOf("subject") == 0) {
+        } else if(searchQueryResults.query.startsWith("s=")) {
             results += this._displaySubjectResults(searchResults, passageId);
         } else {
             results += "<table class='searchResults'>";

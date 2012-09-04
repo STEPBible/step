@@ -126,6 +126,32 @@ li.subjectHeading {
 	border-bottom: dotted thin lightgray;
 }
 
+
+.refinedSearch {
+	display: none;
+/* 	height: 20px; */
+}
+
+.innerRefinedSearch {
+	padding: 5px;	
+}
+
+.closeRefinedSearch {
+	float: right;
+	background-image: url(images/ui-icons_ef8c08_256x240.png) !important;
+	margin-top: 3px;
+}
+
+.closeRefinedSearch:HOVER {
+	cursor: pointer;
+}
+
+
+.refinedSearch .ui-icon-info {
+	float: left;
+	margin-top: -2px;
+}
+
 /*******************************************/
 /* Advanced search box                     */
 /*******************************************/

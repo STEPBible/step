@@ -115,14 +115,14 @@ step.passage = {
     },
     
     _doInlineNotes : function(passageId, passageContent) {
+        var myPosition = passageId == 0 ? "left" : "right";
+        var atPosition = passageId == 0 ? "right" : "left"; 
+
         $(".verse .note", passageContent).has(".inlineNote").each(function(i, item) {
             var link = $("a", this);
             var note = $(".inlineNote", this);
             
             link.attr("title", note.html());
-            var myPosition = passageId == 0 ? "left" : "right";
-            var atPosition = passageId == 0 ? "right" : "left"; 
-            
             
             $(link).qtip({
                     position: {
@@ -153,6 +153,10 @@ step.passage = {
     },
     
     _doSideNotes : function(passageId, passageContent) {
+        var myPosition = passageId == 0 ? "left" : "right";
+        var atPosition = passageId == 0 ? "right" : "left"; 
+
+        
         $.each($(".notesPane [xref]", passageContent), function(i, item) {
             var xref = $(this).attr("xref");
             
@@ -160,7 +164,12 @@ step.passage = {
                 e.preventDefault();
             })
             
+            
             $(this).qtip({
+                position: {
+                    my: "top " + myPosition,
+                    at: "top " + atPosition
+                },
                 content : {
                     title : {
                         text: xref,
@@ -179,7 +188,8 @@ step.passage = {
                 },
                 style: {
                     tip: false,
-                    classes: 'draggable-tooltip'
+                    classes: 'draggable-tooltip',
+                    width: { min: 800,  max: 800}
                 },
                 show :  { event: 'click' },
                 hide : { event: 'click' },

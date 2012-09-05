@@ -485,7 +485,15 @@ FONT.usg {
 .draggable-tooltip .ui-tooltip-titlebar {
     cursor: move;
     color: #696;
+/*     width: 100%; */
+    padding: 5px 0px;
 }
+
+.ui-tooltip-content {
+ 	max-height: 400px;
+	overflow: auto;
+}
+
 
 .draggable-tooltip * .xgen {
 	display: none;

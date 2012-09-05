@@ -130,14 +130,14 @@
             <xsl:choose>
               <xsl:when test="$direction != 'rtl'">
                 <div class="notesPane">
-                      <xsl:apply-templates select="//verse" mode="print-notes"/>
+                      <xsl:apply-templates select="//verse" mode="print-cross-references"/>
                 </div>
               </xsl:when>
               <xsl:otherwise>
                 <div class="notesPane">
                   <!-- In a right to left, the alignment should be reversed too -->
                       <p>&#160;</p>
-                      <xsl:apply-templates select="//note" mode="print-notes"/>
+                      <xsl:apply-templates select="//note" mode="print-cross-references"/>
 				</div>
               </xsl:otherwise>
             </xsl:choose>
@@ -302,6 +302,19 @@
     </xsl:choose>
   </xsl:template>
 
+
+  <xsl:template match="verse" mode="print-cross-references">
+    <xsl:if test=".//note[@type = 'crossReference']">
+     <xsl:variable name="versification" select="jsword:getVersification($v11nf, $v11n)"/>
+      <xsl:variable name="passage" select="jsword:getValidKey($keyf, $versification, @osisID)"/>
+      <a href="#{substring-before(concat(@osisID, ' '), ' ')}">
+        <xsl:value-of select="jsword:getName($passage)"/>
+      </a>
+      <xsl:apply-templates select=".//note[@type = 'crossReference']" mode="print-cross-references" />
+      <div><xsl:text>&#160;</xsl:text></div>
+    </xsl:if>
+  </xsl:template>
+
   <xsl:template match="verse" mode="print-notes">
     <xsl:if test=".//note[not(@type) or not(@type = 'x-strongsMarkup')]">
      <xsl:variable name="versification" select="jsword:getVersification($v11nf, $v11n)"/>
@@ -449,16 +462,40 @@
   <xsl:template match="note[@type = 'x-strongsMarkup']" mode="print-notes"/>
 
   <xsl:template match="note">
-    <xsl:if test="$Notes = 'true'">
+<xsl:if test="$Notes = 'true'">
       <!-- If there is a following sibling that is a note, emit a separator -->
       <xsl:variable name="siblings" select="../child::node()"/>
       <xsl:variable name="next-position" select="position() + 1"/>
       <xsl:choose>
         <xsl:when test="name($siblings[$next-position]) = 'note'">
-          <sup class="note"><a href="#note-{generate-id(.)}"><xsl:call-template name="generateNoteXref"/></a>, </sup>
+        	<xsl:choose>
+        		<xsl:when test="@type = 'crossReference'">
+		           <sup class="note"><a href="#" noteType='{@type}' xref="{@osisID}" ref="{@osisRef}"><xsl:call-template name="generateNoteXref"/></a>, </sup>
+        		</xsl:when>
+	    		<xsl:otherwise>
+					 <sup class="note">
+					 	<a href="#" noteType='{@type}' xref="{@osisID}" ref="{@osisRef}">
+					 		<xsl:call-template name="generateNoteXref"/>
+					 	</a>
+				 		<span class="inlineNote"><xsl:apply-templates select="." mode="print-notes" /></span>
+				 	, </sup>
+        		</xsl:otherwise>
+        	</xsl:choose>
         </xsl:when>
         <xsl:otherwise>
-          <sup class="note"><a href="#note-{generate-id(.)}"><xsl:call-template name="generateNoteXref"/></a></sup>
+        	<xsl:choose>
+        		<xsl:when test="@type = 'crossReference'">
+		           <sup class="note"><a href="#" noteType='{@type}' xref="{@osisID}" ref="{@osisRef}"><xsl:call-template name="generateNoteXref"/></a></sup>
+        		</xsl:when>
+        		<xsl:otherwise>
+					 <sup class="note">
+					 	<a href="#" noteType='{@type}' xref="{@osisID}" ref="{@osisRef}">
+					 		<xsl:call-template name="generateNoteXref"/>
+					 	</a>
+				 		<span class="inlineNote"><xsl:apply-templates select="." mode="print-notes" /></span>
+					 </sup>
+        		</xsl:otherwise>
+        	</xsl:choose>
         </xsl:otherwise>
       </xsl:choose>
     </xsl:if>
@@ -466,15 +503,39 @@
 
   <xsl:template match="note" mode="jesus">
     <xsl:if test="$Notes = 'true'">
-     <!-- If there is a following sibling that is a note, emit a separator -->
+      <!-- If there is a following sibling that is a note, emit a separator -->
       <xsl:variable name="siblings" select="../child::node()"/>
       <xsl:variable name="next-position" select="position() + 1"/>
       <xsl:choose>
-        <xsl:when test="$siblings[$next-position] and name($siblings[$next-position]) = 'note'">
-          <sup class="note"><a href="#note-{generate-id(.)}"><xsl:call-template name="generateNoteXref"/></a>, </sup>
+        <xsl:when test="name($siblings[$next-position]) = 'note'">
+        	<xsl:choose>
+        		<xsl:when test="@type = 'crossReference'">
+		           <sup class="note"><a href="#" noteType='{@type}' xref="{@osisID}" ref="{@osisRef}"><xsl:call-template name="generateNoteXref"/></a>, </sup>
+        		</xsl:when>
+	    		<xsl:otherwise>
+					 <sup class="note">
+					 	<a href="#" noteType='{@type}' xref="{@osisID}" ref="{@osisRef}">
+					 		<xsl:call-template name="generateNoteXref"/>
+					 	</a>
+				 		<span class="inlineNote"><xsl:apply-templates select="." mode="print-notes" /></span>
+				 	, </sup>
+        		</xsl:otherwise>
+        	</xsl:choose>
         </xsl:when>
         <xsl:otherwise>
-          <sup class="note"><a href="#note-{generate-id(.)}"><xsl:call-template name="generateNoteXref"/></a></sup>
+        	<xsl:choose>
+        		<xsl:when test="@type = 'crossReference'">
+		           <sup class="note"><a href="#" noteType='{@type}' xref="{@osisID}" ref="{@osisRef}"><xsl:call-template name="generateNoteXref"/></a></sup>
+        		</xsl:when>
+        		<xsl:otherwise>
+					 <sup class="note">
+					 	<a href="#" noteType='{@type}' xref="{@osisID}" ref="{@osisRef}">
+					 		<xsl:call-template name="generateNoteXref"/>
+					 	</a>
+				 		<span class="inlineNote"><xsl:apply-templates select="." mode="print-notes" /></span>
+					 </sup>
+        		</xsl:otherwise>
+        	</xsl:choose>
         </xsl:otherwise>
       </xsl:choose>
     </xsl:if>
@@ -490,6 +551,19 @@
       <xsl:apply-templates/>
     </div>
   </xsl:template>
+
+  <xsl:template match="note" mode="print-cross-references">
+	<xsl:if test="@type = 'crossReference'">
+	    <div class="margin">
+	      <strong><xsl:call-template name="generateNoteXref"/></strong>
+	      <a name="note-{generate-id(.)}">
+	        <xsl:text> </xsl:text>
+	      </a>
+	      <xsl:apply-templates/>
+	    </div>
+	  </xsl:if>
+  </xsl:template>
+
 
   <!--
     == If the n attribute is present then use that for the cross ref otherwise create a letter.

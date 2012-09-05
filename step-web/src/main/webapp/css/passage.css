@@ -43,6 +43,14 @@ span.interlinear span span span {
 	display: inline;
 }
 
+.inlineNote {
+	display: none;
+}
+
+.visibleInlineNote {
+	font-size: 12px;
+}
+
 .verseGrouping {
 	border-bottom: thin dotted gray;
 	margin-bottom: 5px;

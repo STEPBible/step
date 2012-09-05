@@ -44,7 +44,8 @@ step.passage = {
         var options = step.state.passage.options(passageId);
         var interlinearVersion = step.state.passage.extraVersions(passageId);
         var interlinearMode = this._getInterlinearMode(passageId);
-
+        var self = this;
+        
         if (!step.util.raiseErrorIfBlank(lookupVersion, "A version must be provided")
                 || !step.util.raiseErrorIfBlank(lookupReference, "A reference must be provided")) {
             return;
@@ -85,67 +86,116 @@ step.passage = {
             // execute all callbacks
             step.passage.executeCallbacks(passageId);
             
-            $(".note", passageContent).each(function(i, item) {
-                $(this).attr("title", "hi you. This is a note at the right place on the screen");
-                var yPosition = $(this).offset().top;
-                var xPosition = $("#centerPane").offset().left;
-                
-                $(this).qtip({
-                    position : {
-                        target : [xPosition, yPosition],
-                        my: "middle left,",
-                        at: "middle right"
-                    }
-                })
-            });
-            
-            
+
             //finally add handlers to elements containing xref
-            $.each($("[xref]", passageContent), function(i, item) {
-                var xref = $(this).attr("xref");
-                
-                $(this).click(function(e) {
-                    e.preventDefault();
-                })
-                
-                $(this).qtip({
-                    content : {
-                        title : {
-                            text: xref,
-                            button : true
-                        },
-                        ajax : {
-                            url : BIBLE_GET_BIBLE_TEXT + step.state.passage.version(passageId) + "/" + encodeURIComponent(xref),
-                            type : 'GET',
-                            data : {},
-                            dataType : 'json',
-                            success : function(data, status) {
-                                this.set('content.title.text', xref);
-                                this.set('content.text', data.value);
-                            },
-                        }
+            self._doInlineNotes(passageId, passageContent);
+            self._doNonInlineNotes(passageContent);
+            self._doSideNotes(passageId, passageContent);
+        });
+    },
+    
+    _doNonInlineNotes : function(passageContent) {
+        var verseNotes = $(".verse .note", passageContent);
+        var nonInlineNotes = verseNotes.not(verseNotes.has(".inlineNote"));
+        
+        nonInlineNotes.each(function(i, item) {
+            var link = $("a", this);
+            
+            
+            $(link).hover(function() {
+                $(".notesPane strong").filter(function() {
+                    return $(this).text() == link.text();
+                }).closest(".margin").addClass("highlight");
+            }, function() {
+                $(".notesPane strong").filter(function() {
+                    return $(this).text() == link.text();
+                }).closest(".margin").removeClass("highlight");
+            });
+        });  
+    },
+    
+    _doInlineNotes : function(passageId, passageContent) {
+        $(".verse .note", passageContent).has(".inlineNote").each(function(i, item) {
+            var link = $("a", this);
+            var note = $(".inlineNote", this);
+            
+            link.attr("title", note.html());
+            var myPosition = passageId == 0 ? "left" : "right";
+            var atPosition = passageId == 0 ? "right" : "left"; 
+            
+            
+            $(link).qtip({
+                    position: {
+                        my: "center " + myPosition,
+                        at: "center " + atPosition
                     },
                     style: {
-                        tip: false,
-                        classes: 'draggable-tooltip'
+                        classes : "visibleInlineNote"
                     },
-                    show :  { event: 'click' },
-                    hide : { event: 'click' },
+                
                     events : {
-                        render : function(event, api) {
-                            $(this).draggable({
-                                containment: 'window',
-                                handle: api.elements.titlebar
-                            });
+                        show : function() {
+                            var qtipApi = $(this).qtip("api");
+                            var yPosition = qtipApi.elements.target.offset().top;
+                            var centerPane = $("#centerPane");
+                            var xPosition = centerPane.offset().left;
                             
-                            $(api.elements.titlebar).append(goToPassageArrow(true, xref, "leftPassagePreview"));
-                            $(api.elements.titlebar).append(goToPassageArrow(false, xref, "rightPassagePreview"));
-                            $(".leftPassagePreview, .rightPassagePreview", api.elements.titlebar).button().click(function () { api.hide(); });
-//                            $(".leftPassagePreview .ui-button-text, .rightPassagePreview .ui-button-text", api.elements.titlebar).removeClass("ui-button-text");
+                            if(passageId == 1) {
+                                xPosition += centerPane.width();
+                            }
+                            
+                            var currentPosition = $(this).qtip("option", "position");
+                            currentPosition.target = [xPosition, yPosition];
                         }
                     }
-                });                 
             });
+        });
+    },
+    
+    _doSideNotes : function(passageId, passageContent) {
+        $.each($(".notesPane [xref]", passageContent), function(i, item) {
+            var xref = $(this).attr("xref");
+            
+            $(this).click(function(e) {
+                e.preventDefault();
+            })
+            
+            $(this).qtip({
+                content : {
+                    title : {
+                        text: xref,
+                        button : true
+                    },
+                    ajax : {
+                        url : BIBLE_GET_BIBLE_TEXT + step.state.passage.version(passageId) + "/" + encodeURIComponent(xref),
+                        type : 'GET',
+                        data : {},
+                        dataType : 'json',
+                        success : function(data, status) {
+                            this.set('content.title.text', xref);
+                            this.set('content.text', data.value);
+                        },
+                    }
+                },
+                style: {
+                    tip: false,
+                    classes: 'draggable-tooltip'
+                },
+                show :  { event: 'click' },
+                hide : { event: 'click' },
+                events : {
+                    render : function(event, api) {
+                        $(this).draggable({
+                            containment: 'window',
+                            handle: api.elements.titlebar
+                        });
+                        
+                        $(api.elements.titlebar).append(goToPassageArrow(true, xref, "leftPassagePreview"));
+                        $(api.elements.titlebar).append(goToPassageArrow(false, xref, "rightPassagePreview"));
+                        $(".leftPassagePreview, .rightPassagePreview", api.elements.titlebar).button().click(function () { api.hide(); });
+                    }
+                }
+            });                 
         });
     },
     
@@ -210,14 +260,14 @@ function Passage(passageContainer, passageId) {
     });
 
     $(this.passage).hear("make-master-interlinear-" + this.passageId, function(selfElement, newMasterVersion) {
-        var interlinearVersion = step.state.passage.extraVersions(self.passageId); 
-        var currentVersion = step.state.passage.version(self.passageId);
-
+        var interlinearVersion = step.state.passage.extraVersions(self.passageId).toUpperCase(); 
+        var currentVersion = step.state.passage.version(self.passageId).toUpperCase();
+        var newUpperMasterVersion = newMasterVersion.toUpperCase(); 
         
-        step.state.passage.extraVersions(self.passageId, interlinearVersion.replace(newMasterVersion, currentVersion), currentVersion, newMasterVersion);
-        step.state.passage.version(self.passageId, newMasterVersion);
+        step.state.passage.extraVersions(self.passageId, interlinearVersion.replace(newUpperMasterVersion, currentVersion));
+        step.state.passage.version(self.passageId, newUpperMasterVersion);
 
-        $.shout("version-changed-dynamically" + self.passageId, newMasterVersion);
+        $.shout("version-changed-dynamically" + self.passageId, newUpperMasterVersion);
     });
 };
 
@@ -231,7 +281,13 @@ Passage.prototype.initVersionsTextBox = function() {
     step.version.autocomplete(this.version, function(value) {
         self.version.val(value);
     }, function(value) {
+        
+        
         if (step.util.raiseErrorIfBlank(value, "A version must be selected.")) {
+            //need to refresh the options of interleaving/interlinear, etc.
+            step.passage.ui.updateDisplayOptions(self.passageId);
+
+            
             step.state.passage.version(self.passageId, value);
         }
     });

@@ -1459,7 +1459,7 @@
 					<span class="interlinear">
 						<xsl:choose>
 							<xsl:when test="$printVersions != 'no-print'">
-							<a class='smallHeaders' href='javascript:makeMasterInterlinear(&quot;{$nextVersion}&quot;)'>
+							<a class='smallHeaders' href="#" onclick='javascript:makeMasterInterlinear(this, &quot;{$versions}&quot;)' title='Let this text define the word ordering'>
 								<xsl:call-template name="outputNonBlank">
 									<xsl:with-param name="string">
 										<xsl:value-of select="$versions" />

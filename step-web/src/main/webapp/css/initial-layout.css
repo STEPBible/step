@@ -135,6 +135,20 @@ body {
 	float: right;
 }
 
+.passageSizeButtons  {
+	clear: right;
+	margin-top: 5px;
+}
+
+.smallerFont {
+	font-size: 75%;
+	color: #EC8E0C !important;
+}
+
+.largerFonts {
+	color: #EC8E0C !important;
+}
+
 .nextChapter, .nextPage {
 	-moz-transform: scaleX(-1);
     -o-transform: scaleX(-1);

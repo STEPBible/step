@@ -88,7 +88,11 @@ step.util = {
 	    }
 	    return true;
 	},
-		
+
+	raiseInfo : function (passageId, message) {
+	    $(".infoBar", step.util.getPassageContainer(passageId)).toggle(true).find(".infoLabel").html(message);
+	},
+	
     ui : {
         autocompleteSearch : function(selector, data, readonly, preChangeHandler) {
             return $(selector).autocomplete({
@@ -110,8 +114,6 @@ step.util = {
             }).attr("readonly", readonly == true);
         },
 
-   
-        
         searchButton : function(selector, searchType, callback) {
             $(selector).click(function() {
                 //clicking on search button resets page number to 1:

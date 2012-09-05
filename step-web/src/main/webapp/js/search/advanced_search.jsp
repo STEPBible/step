@@ -11,6 +11,14 @@
 
 
 <div class="advancedSearch" style="clear: both">
+	<div class="infoBar ui-state-highlight">
+		<span class="ui-icon ui-icon-close closeInfoBar"></span>
+		<div class="innerInfoBar">
+			<span class="ui-icon ui-icon-info"></span>
+			<span class="infoLabel"></span>
+		</div>
+	</div>
+	
 	<div class="refinedSearch ui-state-highlight">
 		<span class="ui-icon ui-icon-close closeRefinedSearch"></span>
 		<div class="innerRefinedSearch">
@@ -24,13 +32,19 @@
 	<!-- Passage search -->
 	<fieldset>
 		<legend>Passage lookup</legend>
-		<span class="passageButtons">  
+		<span class="passageButtons passageLookupButtons">  
 			<a class="syncOtherPassage">Syncs with the other passage</a>
 			<a class="continuousPassage">Displays the passage as one large scroll</a>
 			<a class="previousChapter" href="?reference=<%= stepRequest.getPreviousReference(Integer.parseInt(request.getParameter("passageId"))) %>&version=<%= stepRequest.getVersion(Integer.parseInt(request.getParameter("passageId"))) %>">Displays the previous chapter (or expands to the start of the chapter)</a>
 			<a class="nextChapter" href="?reference=<%= stepRequest.getNextReference(Integer.parseInt(request.getParameter("passageId"))) %>&version=<%= stepRequest.getVersion(Integer.parseInt(request.getParameter("passageId"))) %>">Displays the next chapter (or expands to the end of the chapter)</a> <a
 			class="bookmarkPassageLink">Add a bookmark</a>
 		</span>
+
+		<span class="passageButtons passageSizeButtons">  
+			<a class="smallerFonts" href="#" title="Smaller fonts">A</a>
+			<a class="largerFonts" href="#" title="Larger fonts">A</a>
+		</span>
+
 
 		<table class="passageTable">
 			<tr>

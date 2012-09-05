@@ -99,4 +99,5 @@ $(document).ready(function() {
             toggleMenuItem($("a[name = 'NO_SYNC']").get(0));
         }
     });
+    
 });

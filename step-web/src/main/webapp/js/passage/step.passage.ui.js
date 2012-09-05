@@ -114,6 +114,27 @@ $(document).ready(function() {
         step.passage.changePassage(step.passage.getPassageId(event.target));
     });
     
+    
+    $(".smallerFonts").button({
+            text : true
+    }).click(function() {
+        var elements = $(".passageContentHolder *", step.util.getPassageContainer(this)).not(".notesPane, sup, a, .verseNumber");
+        var fontSize = parseInt(elements.css("font-size"));
+        elements.css("font-size", fontSize -1);
+    }).find(".ui-button-text").html("<span class='smallerFont'>A</span>");
+    
+    $(".largerFonts").button({
+                text : true        
+        }
+    ).click(function() {
+        var elements = $(".passageContentHolder *", step.util.getPassageContainer(this)).not(".notesPane, sup, a, .verseNumber");
+        var fontSize = parseInt(elements.css("font-size"));
+        elements.css("font-size", fontSize + 1);
+    });
+    
+    $(".passageSizeButtons").buttonset();
+    $(".passageLookupButtons").buttonset();
+
     step.util.ui.autocompleteSearch(".extraVersionsDisplayOptions", step.defaults.passage.interOptions);
     
 });

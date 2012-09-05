@@ -171,6 +171,12 @@ function initGlobalHandlers() {
 	$("#error").hear("caught-error-message", function(selfElement, data) {
 		step.util.raiseError(data);
 	});
+	
+	
+	var infoBar = $(".infoBar").toggle(false);
+	infoBar.find(".closeInfoBar").click(function() {
+	    $(this).closest(".infoBar").toggle(false);
+	}); 
 }
 
 /**

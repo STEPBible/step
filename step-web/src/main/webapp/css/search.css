@@ -129,25 +129,24 @@ li.subjectHeading {
 
 .refinedSearch {
 	display: none;
-/* 	height: 20px; */
 }
 
-.innerRefinedSearch {
+.innerRefinedSearch, .innerInfoBar {
 	padding: 5px;	
 }
 
-.closeRefinedSearch {
+.closeRefinedSearch, .closeInfoBar {
 	float: right;
 	background-image: url(images/ui-icons_ef8c08_256x240.png) !important;
 	margin-top: 3px;
 }
 
-.closeRefinedSearch:HOVER {
+.closeRefinedSearch:HOVER, .closeInfoBar:HOVER {
 	cursor: pointer;
 }
 
 
-.refinedSearch .ui-icon-info {
+.refinedSearch .ui-icon-info, .infoBar .ui-icon-info  {
 	float: left;
 	margin-top: -2px;
 }

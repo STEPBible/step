@@ -92,7 +92,6 @@ import org.xml.sax.SAXException;
 import com.tyndalehouse.step.core.data.entities.ScriptureReference;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.exceptions.UserExceptionType;
-import com.tyndalehouse.step.core.exceptions.ValidationException;
 import com.tyndalehouse.step.core.models.InterlinearMode;
 import com.tyndalehouse.step.core.models.KeyWrapper;
 import com.tyndalehouse.step.core.models.LookupOption;
@@ -112,6 +111,7 @@ import com.tyndalehouse.step.core.xsl.impl.InterleavingProviderImpl;
  */
 @Singleton
 public class JSwordPassageServiceImpl implements JSwordPassageService {
+    private static final int MAX_VERSES_RETRIEVED = 300;
     private static final String OSIS_CHAPTER_FORMAT = "%s.%d";
     private static final String OSIS_CHAPTER_VERSE_FORMAT = "%s.%s.%d";
     private static final Logger LOGGER = LoggerFactory.getLogger(JSwordPassageServiceImpl.class);
@@ -443,19 +443,33 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
      */
     private BookData getBookData(final String version, final String reference) {
         final Book currentBook = this.versificationService.getBookFromVersion(version);
+
         try {
-            final Key key = currentBook.getKey(reference);
+            Key key = currentBook.getKey(reference);
 
             // TODO, work this one out
             final int cardinality = key.getCardinality();
-            if (cardinality > 500) {
-                throw new ValidationException("The reference " + reference + " contains too many verses.",
-                        UserExceptionType.USER_VALIDATION_ERROR);
+            if (cardinality > MAX_VERSES_RETRIEVED) {
+                // then we go for the first chapter instead...
+                // if the reference was for a whole book, we go for chapter 1, otherwise, we trim the range
+                // down to the limit
+
+                final Passage requestedPassage = KeyUtil.getPassage(key);
+                if (requestedPassage.countRanges(RestrictionType.NONE) == 1
+                        && requestedPassage.getRangeAt(0, RestrictionType.NONE).isWholeBook()) {
+                    // ignoring chapter 0
+                    key = requestedPassage.getRangeAt(1, RestrictionType.CHAPTER);
+                } else {
+                    requestedPassage.trimVerses(MAX_VERSES_RETRIEVED);
+                }
+            } else if (key.getCardinality() == 0) {
+                throw new NoSuchKeyException("Cardinality of key is 0");
             }
 
             return new BookData(currentBook, key);
         } catch (final NoSuchKeyException e) {
-            throw new StepInternalException("The verse specified was not found: " + reference, e);
+            throw new StepInternalException("The specified reference was not found: " + reference
+                    + " in the selected text", e);
         }
     }
 

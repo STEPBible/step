@@ -67,16 +67,7 @@ step.passage = {
 
             // we get html back, so we insert into passage:
             var passageContent = step.util.getPassageContent(passageId);
-            passageContent.html(text.value);
-            
-            var verses = $("span.verse, .interlinear span", passageContent);
-            if(text.languageCode == 'he' || text.containsHebrew) {
-                verses.addClass("hebrewLanguage").removeClass("greekLanguage");
-            } else if(text.languageCode == 'grc' || text.containsGreek) {
-                verses.addClass("greekLanguage").removeClass("hebrewLanguage");
-            } else {
-                verses.removeClass("hebrewLanguage greekLanguage");
-            }
+            self._setPassageContent(passageId, passageContent, text);
             
             // passage change was successful, so we let the rest of the UI know
             $.shout("passage-changed", {
@@ -92,6 +83,26 @@ step.passage = {
             self._doNonInlineNotes(passageContent);
             self._doSideNotes(passageId, passageContent);
         });
+    },
+    
+    _setPassageContent : function(passageId, passageContent, serverResponse) {
+        //first check that we have non-xgen elements
+        if($(serverResponse.value).children().not(".xgen").size() == 0) {
+            step.util.raiseInfo(passageId, "The reference was not found in the specified text.");
+            passageContent.html("");
+        } else {
+            passageContent.html(serverResponse.value);
+        }
+        
+        var verses = $("span.verse, .interlinear span", passageContent);
+        if(serverResponse.languageCode == 'he' || serverResponse.containsHebrew) {
+            verses.addClass("hebrewLanguage").removeClass("greekLanguage");
+        } else if(serverResponse.languageCode == 'grc' || serverResponse.containsGreek) {
+            verses.addClass("greekLanguage").removeClass("hebrewLanguage");
+        } else {
+            verses.removeClass("hebrewLanguage greekLanguage");
+        }
+
     },
     
     _doNonInlineNotes : function(passageContent) {

@@ -128,8 +128,10 @@ $(document).ready(function() {
         }
     ).click(function() {
         var elements = $(".passageContentHolder *", step.util.getPassageContainer(this)).not(".notesPane, sup, a, .verseNumber");
-        var fontSize = parseInt(elements.css("font-size"));
-        elements.css("font-size", fontSize + 1);
+        $.each(elements, function(i, item) {
+            var fontSize = parseInt($(this).css("font-size"));
+            $(this).css("font-size", fontSize + 1);
+        })
     });
     
     $(".passageSizeButtons").buttonset();

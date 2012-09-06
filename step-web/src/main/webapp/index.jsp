@@ -85,7 +85,6 @@
 	    <script src="js/menu/passage/display.js" type="text/javascript"></script>
 	    <script src="js/menu/passage/passageTools.js" type="text/javascript"></script>
 	    <script src="js/menu/passage/search.js" type="text/javascript"></script>
-	    <script src="js/menu/step.menu.defaults.js" type="text/javascript"></script>
 
 	    <script src="js/passage/step.version.js" type="text/javascript"></script>
 	    <script src="js/passage/step.passage.js" type="text/javascript"></script>

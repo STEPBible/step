@@ -29,12 +29,7 @@
 $(step.menu).hear("MENU-OPTIONS", function(self, menuTrigger) {
     var isOptionEnabled = step.menu.toggleMenuItem(menuTrigger.menuItem.element);
     //TODO remove option from menu
-    if(menuTrigger.menuItem.name == "SHOW_ALL_VERSIONS") {
-		$.getSafe(BIBLE_GET_BIBLE_VERSIONS + isOptionEnabled, function(versions) {
-			// send events to passages and reload - then change init function
-			$.shout("version-list-refresh", versions);
-		});		
-	} else if(menuTrigger.menuItem.name == "SWAP_BOTH_PASSAGES") {
+    if(menuTrigger.menuItem.name == "SWAP_BOTH_PASSAGES") {
 	    var version0 = step.state.passage.version(0);
 	    var version1 = step.state.passage.version(1);
 	    var reference0 = step.state.passage.reference(0);

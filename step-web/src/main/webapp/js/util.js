@@ -89,8 +89,18 @@ step.util = {
 	    return true;
 	},
 
-	raiseInfo : function (passageId, message) {
-	    $(".infoBar", step.util.getPassageContainer(passageId)).toggle(true).find(".infoLabel").html(message);
+	raiseInfo : function (passageId, message, level) {
+	    var infoBar = $(".infoBar", step.util.getPassageContainer(passageId));
+	    var icon = $(".innerInfoBar .ui-icon", infoBar).addClass("ui-icon");
+	    icon.removeClass();
+
+	    if(level == 'error') {
+            icon.addClass("ui-icon-alert");
+	    } else {
+	        icon.addClass("ui-icon-info");
+	    }
+	    
+	    infoBar.toggle(true).find(".infoLabel").html(message);
 	},
 	
     ui : {
@@ -505,8 +515,9 @@ function refreshWaitStatus() {
 		 *            url
 		 * @param the
 		 *            userFunction to call on success of the query
+		 * @deprecated
 		 */
-		getSafe : function(url, args, userFunction) {
+		getSafe : function(url, args, userFunction, passageId, level) {
 		    
 		    //args is optional, so we test whether it is a function
 		    if($.isFunction(args)) {
@@ -534,7 +545,7 @@ function refreshWaitStatus() {
 			    console.log("Received url ", url, " ", data);
 				if (data && data.errorMessage) {
 					// handle an error message here
-					$.shout("caught-error-message", data);
+//					$.shout("caught-error-message", data);
 					if (data.operation) {
 						// so we now have an operation to perform before we
 						// continue with the user
@@ -550,7 +561,11 @@ function refreshWaitStatus() {
 									}
 						});
 					} else {
-					    step.util.raiseError(data.errorMessage);
+					    if(passageId != undefined) {
+					        step.util.raiseInfo(passageId, data.errorMessage, level);					        
+					    } else {
+		                    step.util.raiseError(data.errorMessage);
+					    }
 					}
 				} else {
 				    if(userFunction) {
@@ -558,6 +573,15 @@ function refreshWaitStatus() {
 				    }
 				}
 			});
+		},
+		
+		/**
+		 * @param getCall.url, getCall.args, getCall.userFunction, getCall.passageId, getCall.level
+		 *  
+		 * 
+		 */
+		getPassageSafe : function(call) {
+		    return this.getSafe(call.url, call.args, call.callback, call.passageId, call.level);
 		},
 		
         getUrlVars: function(){

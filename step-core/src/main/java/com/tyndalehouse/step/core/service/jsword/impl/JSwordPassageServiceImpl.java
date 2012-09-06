@@ -470,8 +470,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
 
             return new BookData(currentBook, key);
         } catch (final NoSuchKeyException e) {
-            throw new StepInternalException("The specified reference was not found: " + reference
-                    + " in the selected text", e);
+            throw new StepInternalException("The Bible text (" + reference + ")  is invalid.", e);
         }
     }
 

@@ -78,8 +78,8 @@ public class JSwordVersificationServiceImpl implements JSwordVersificationServic
         final Book currentBook = Books.installed().getBook(version);
 
         if (currentBook == null) {
-            throw new StepInternalException("The specified initials " + version
-                    + " did not reference a valid module");
+            throw new StepInternalException("The Translation / Commentary (" + version
+                    + ") could not be found.");
         }
         return currentBook;
     }

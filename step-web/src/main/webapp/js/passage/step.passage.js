@@ -62,33 +62,39 @@ step.passage = {
         }
 
         // send to server
-        $.getSafe(url, function(text) {
-            step.state.passage.range(passageId, text.startRange, text.endRange, text.multipleRanges);
-
-            // we get html back, so we insert into passage:
-            var passageContent = step.util.getPassageContent(passageId);
-            self._setPassageContent(passageId, passageContent, text);
-            
-            // passage change was successful, so we let the rest of the UI know
-            $.shout("passage-changed", {
-                passageId : passageId
-            });
-
-            // execute all callbacks
-            step.passage.executeCallbacks(passageId);
-            
-
-            //finally add handlers to elements containing xref
-            self._doInlineNotes(passageId, passageContent);
-            self._doNonInlineNotes(passageContent);
-            self._doSideNotes(passageId, passageContent);
-        });
+        $.getPassageSafe({
+            url : url, 
+            callback:  function(text) {
+                step.state.passage.range(passageId, text.startRange, text.endRange, text.multipleRanges);
+    
+                // we get html back, so we insert into passage:
+                var passageContent = step.util.getPassageContent(passageId);
+                self._setPassageContent(passageId, passageContent, text);
+                
+                // passage change was successful, so we let the rest of the UI know
+                $.shout("passage-changed", {
+                    passageId : passageId
+                });
+    
+                // execute all callbacks
+                step.passage.executeCallbacks(passageId);
+                
+    
+                //finally add handlers to elements containing xref
+                self._doInlineNotes(passageId, passageContent);
+                self._doNonInlineNotes(passageContent);
+                self._doSideNotes(passageId, passageContent);
+            }, 
+            passageId: passageId, 
+            level: 'error'});
     },
     
     _setPassageContent : function(passageId, passageContent, serverResponse) {
         //first check that we have non-xgen elements
         if($(serverResponse.value).children().not(".xgen").size() == 0) {
-            step.util.raiseInfo(passageId, "The reference was not found in the specified text.");
+            var reference = step.state.passage.reference(passageId)
+            
+            step.util.raiseInfo(passageId, "The Translation / Commentary does not cover the Bible Text (" + reference + ").");
             passageContent.html("");
         } else {
             passageContent.html(serverResponse.value);
@@ -320,11 +326,17 @@ Passage.prototype.initReferenceTextBox = function() {
     // set up change for textbox
     this.reference.autocomplete({
         source : function(request, response) {
-            $.getSafe(BIBLE_GET_BIBLE_BOOK_NAMES + request.term + "/" + step.state.passage.version(self.passageId), function(text) {
-                response($.map(text, function(item) {
-                    return { label: "<span>" + item.shortName + " <span style='font-size: larger'>&rArr;</span> " + item.fullName + "</span>", value: item.shortName };
-                }));
-            });
+            $.getPassageSafe({
+                url : BIBLE_GET_BIBLE_BOOK_NAMES,
+                args : [request.term, step.state.passage.version(self.passageId)], 
+                callback: function(text) {
+                    response($.map(text, function(item) {
+                        return { label: "<span>" + item.shortName + " <span style='font-size: larger'>&rArr;</span> " + item.fullName + "</span>", value: item.shortName };
+                    }));
+                },
+                passageId : self.passageId,
+                level : 'error'
+           });
         },
         minLength : 0,
         delay : 0,

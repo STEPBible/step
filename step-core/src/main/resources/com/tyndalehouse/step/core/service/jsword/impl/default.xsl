@@ -112,6 +112,7 @@
   
   <!--  TODO: support alternate versification -->
   <xsl:variable name="v11nf" select="jsword:org.crosswire.jsword.versification.system.Versifications.instance()"/>
+  <xsl:variable name="versification" select="jsword:getVersification($v11nf, $v11n)"/>
 
   <!-- Create a global number shaper that can transform 0-9 into other number systems. -->
   <xsl:variable name="shaper" select="jsword:org.crosswire.common.icu.NumberShaper.new()"/>
@@ -305,7 +306,6 @@
 
   <xsl:template match="verse" mode="print-cross-references">
     <xsl:if test=".//note[@type = 'crossReference']">
-     <xsl:variable name="versification" select="jsword:getVersification($v11nf, $v11n)"/>
       <xsl:variable name="passage" select="jsword:getValidKey($keyf, $versification, @osisID)"/>
       <a href="#{substring-before(concat(@osisID, ' '), ' ')}">
         <xsl:value-of select="jsword:getName($passage)"/>
@@ -317,7 +317,6 @@
 
   <xsl:template match="verse" mode="print-notes">
     <xsl:if test=".//note[not(@type) or not(@type = 'x-strongsMarkup')]">
-     <xsl:variable name="versification" select="jsword:getVersification($v11nf, $v11n)"/>
       <xsl:variable name="passage" select="jsword:getValidKey($keyf, $versification, @osisID)"/>
       <a href="#{substring-before(concat(@osisID, ' '), ' ')}">
         <xsl:value-of select="jsword:getName($passage)"/>
@@ -409,7 +408,6 @@
 		      <xsl:variable name="versenum">
 		        <xsl:choose>
 		          <xsl:when test="$BCVNum = 'true'">
-				      <xsl:variable name="versification" select="jsword:getVersification($v11nf, $v11n)"/>
 				      <xsl:variable name="passage" select="jsword:getValidKey($keyf, $versification, @osisID)"/>
 		              <xsl:value-of select="jsword:getName($passage)"/>
 		          </xsl:when>
@@ -810,7 +808,13 @@
       <xsl:choose>
       	<xsl:when test="@type = 'x-gen'">
       		<xsl:if test="$HideXGen != 'true'">
-      		 	<h2 class="xgen"><xsl:apply-templates/></h2>
+      		 	<h2 class="xgen">
+      		 		<xsl:variable name="headerText">
+      		 			<xsl:apply-templates/>
+      		 		</xsl:variable>
+      		 		<xsl:variable name="longHeaderText" select="jsword:com.tyndalehouse.step.core.utils.HeadingsUtil.getLongHeader($versification, $headerText)" />
+      		 		<xsl:value-of select="$longHeaderText" />
+      		 	</h2>
       		</xsl:if>
       	</xsl:when>
       	<xsl:otherwise>
@@ -826,14 +830,12 @@
 
   <!--=======================================================================-->
   <xsl:template match="reference">
-        <xsl:variable name="versification" select="jsword:getVersification($v11nf, $v11n)"/>
         <xsl:variable name="passage" select="jsword:getValidKey($keyf, $versification, @osisRef)"/>
         <xsl:variable name="passageKey" select="jsword:getName($passage)"/>
         <a href="?reference={$passageKey}&amp;version={$baseVersion}" title="Click for more options" class="linkRef" xref="{$passageKey}"><xsl:apply-templates/></a>
   </xsl:template>
   
   <xsl:template match="reference" mode="jesus">
-        <xsl:variable name="versification" select="jsword:getVersification($v11nf, $v11n)"/>
         <xsl:variable name="passage" select="jsword:getValidKey($keyf, $versification, @osisRef)"/>
         <xsl:variable name="passageKey" select="jsword:getName($passage)"/>
         <a href="?reference={$passageKey}&amp;version={$baseVersion}" title="Click for more options" xref="{$passageKey}" onclick="javascript:showPreviewOptions();"><xsl:apply-templates/></a>

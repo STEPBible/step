@@ -117,16 +117,16 @@ step.passage = {
         
         nonInlineNotes.each(function(i, item) {
             var link = $("a", this);
-            
+            var passageContainer = step.util.getPassageContainer(link);
             
             $(link).hover(function() {
-                $(".notesPane strong").filter(function() {
+                $(".notesPane strong", passageContainer).filter(function() {
                     return $(this).text() == link.text();
-                }).closest(".margin").addClass("highlight");
+                }).closest(".margin").addClass("ui-state-highlight");
             }, function() {
-                $(".notesPane strong").filter(function() {
+                $(".notesPane strong", passageContainer).filter(function() {
                     return $(this).text() == link.text();
-                }).closest(".margin").removeClass("highlight");
+                }).closest(".margin").removeClass("ui-state-highlight");
             });
         });  
     },
@@ -198,7 +198,7 @@ step.passage = {
                         data : {},
                         dataType : 'json',
                         success : function(data, status) {
-                            this.set('content.title.text', xref);
+                            this.set('content.title.text', data.longName);
                             this.set('content.text', data.value);
                         },
                     }

@@ -50,7 +50,7 @@ public class JSwordSearchServiceImplTest {
         for (int i = 0; i < 10 || i < results.size(); i++) {
             LOGGER.debug(((VerseSearchEntry) results.get(i)).getKey());
         }
-        assertTrue(results.size() > 0);
+        assertTrue(!results.isEmpty());
     }
 
     /**
@@ -63,7 +63,7 @@ public class JSwordSearchServiceImplTest {
         for (int i = 0; i < results.size(); i++) {
             LOGGER.debug(((VerseSearchEntry) results.get(i)).getKey());
         }
-        assertTrue(results.size() > 0);
+        assertTrue(!results.isEmpty());
     }
 
     // @Test

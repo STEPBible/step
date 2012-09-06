@@ -249,7 +249,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
             key = currentBook.getKey(reference);
             return new KeyWrapper(key);
         } catch (final NoSuchKeyException e) {
-            throw new StepInternalException("Unable to resolve key: " + reference);
+            throw new StepInternalException("Unable to resolve key: " + reference, e);
         }
     }
 
@@ -491,7 +491,9 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
         notNull(bookData, "An internal error occurred", UserExceptionType.SERVICE_VALIDATION_ERROR);
         notNull(bookData.getFirstBook(), "An internal error occurred",
                 UserExceptionType.SERVICE_VALIDATION_ERROR);
-        notNull(bookData.getKey(), "An internal error occurred", UserExceptionType.SERVICE_VALIDATION_ERROR);
+
+        final Key key = bookData.getKey();
+        notNull(key, "An internal error occurred", UserExceptionType.SERVICE_VALIDATION_ERROR);
 
         // first check whether the key is contained in the book
         // if (!keyExistsInBook(bookData)) {
@@ -508,14 +510,13 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
             final Book book = bookData.getFirstBook();
             final Versification versification = this.versificationService.getVersificationForVersion(book);
 
-            final OsisWrapper osisWrapper = new OsisWrapper(writeToString(htmlsep), bookData.getKey()
-                    .getName(), book.getLanguage().getCode(), bookData.getKey().getOsisID());
+            final OsisWrapper osisWrapper = new OsisWrapper(writeToString(htmlsep), key, book.getLanguage()
+                    .getCode(), versification);
 
             containsAncient(osisWrapper, interlinearVersion);
 
-            final Key key = bookData.getKey();
             if (key instanceof Passage) {
-                final Passage p = (Passage) bookData.getKey();
+                final Passage p = (Passage) key;
                 osisWrapper.setMultipleRanges(p.hasRanges(RestrictionType.NONE));
 
                 // get the first "range" and set up the start and ends
@@ -531,7 +532,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
 
             return osisWrapper;
         } catch (final BookException e) {
-            final String reference = bookData.getKey().getOsisID();
+            final String reference = key.getOsisID();
             final String version = bookData.getFirstBook().getInitials();
 
             throw new StepInternalException("Unable to query the book data to retrieve specified passage: "
@@ -561,8 +562,6 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
                 setIfContainsGreek(osisWrapper, code);
             }
         }
-
-        return;
     }
 
     @Override
@@ -585,8 +584,11 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
 
             final TransformingSAXEventProvider transformer = executeStyleSheet(options, null, data,
                     data.getSAXEventProvider(), displayMode, versions);
-            final OsisWrapper osisWrapper = new OsisWrapper(writeToString(transformer), data.getKey()
-                    .getName(), data.getFirstBook().getLanguage().getCode(), data.getKey().getOsisID());
+
+            final Versification v11n = this.versificationService.getVersificationForVersion(data
+                    .getFirstBook());
+            final OsisWrapper osisWrapper = new OsisWrapper(writeToString(transformer), data.getKey(), data
+                    .getFirstBook().getLanguage().getCode(), v11n);
 
             for (final Book b : books) {
                 final String languageCode = b.getLanguage().getCode();

@@ -34,6 +34,11 @@ package com.tyndalehouse.step.core.models;
 
 import java.io.Serializable;
 
+import org.crosswire.jsword.passage.Key;
+import org.crosswire.jsword.versification.Versification;
+
+import com.tyndalehouse.step.core.utils.HeadingsUtil;
+
 /**
  * A simple wrapper around a string for returning as a JSON-mapped object
  * 
@@ -46,27 +51,28 @@ public class OsisWrapper implements Serializable {
     private String reference;
     private String osisId;
     private boolean fragment;
-    private boolean isMultipleRanges;
+    private boolean multipleRanges;
     private int startRange;
     private int endRange;
     private final String languageCode;
     private boolean containsGreek = false;
     private boolean containsHebrew = false;
+    private final String longName;
 
     /**
      * the value to be wrapped
      * 
      * @param value the value to be wrapped around
-     * @param reference reference
-     * @param languageCode languageCode of the retrieved Bible
-     * @param osisId TODO
+     * @param key the key that was used to lookup the text
+     * @param languageCode the ISO language code
+     * @param v11n the versification system used
      */
-    public OsisWrapper(final String value, final String reference, final String languageCode,
-            final String osisId) {
+    public OsisWrapper(final String value, final Key key, final String languageCode, final Versification v11n) {
         this.value = value;
-        this.reference = reference;
+        this.reference = key.getName();
+        this.longName = HeadingsUtil.getLongHeader(v11n, key);
+        this.osisId = key.getOsisID();
         this.languageCode = languageCode;
-        this.osisId = osisId;
     }
 
     /**
@@ -143,14 +149,14 @@ public class OsisWrapper implements Serializable {
      * @return the isMultipleRanges
      */
     public boolean isMultipleRanges() {
-        return this.isMultipleRanges;
+        return this.multipleRanges;
     }
 
     /**
      * @param hasMultipleRanges the isMultipleRanges to set
      */
     public void setMultipleRanges(final boolean hasMultipleRanges) {
-        this.isMultipleRanges = hasMultipleRanges;
+        this.multipleRanges = hasMultipleRanges;
     }
 
     /**
@@ -200,5 +206,12 @@ public class OsisWrapper implements Serializable {
      */
     public void setContainsHebrew(final boolean containsHebrew) {
         this.containsHebrew = containsHebrew;
+    }
+
+    /**
+     * @return the longName
+     */
+    public String getLongName() {
+        return this.longName;
     }
 }

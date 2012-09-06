@@ -74,7 +74,6 @@ public class WebStepRequest {
     private final Injector injector;
     private final List<String> references;
     private final List<String> versions;
-    private final UiDefaults defaults;
 
     /**
      * wraps around the servlet request for easy access
@@ -85,16 +84,16 @@ public class WebStepRequest {
     public WebStepRequest(final Injector injector, final HttpServletRequest request) {
         this.injector = injector;
         this.request = request;
-        this.defaults = injector.getInstance(UiDefaults.class);
+        final UiDefaults defaults = injector.getInstance(UiDefaults.class);
 
         this.references = new ArrayList<String>();
         this.versions = new ArrayList<String>();
 
-        init(request, this.references, REF_0_PARAM, CURRENT_REFERENCE_0, this.defaults.getDefaultReference1());
-        init(request, this.references, REF_1_PARAM, CURRENT_REFERENCE_1, this.defaults.getDefaultReference2());
+        init(request, this.references, REF_0_PARAM, CURRENT_REFERENCE_0, defaults.getDefaultReference1());
+        init(request, this.references, REF_1_PARAM, CURRENT_REFERENCE_1, defaults.getDefaultReference2());
 
-        init(request, this.versions, VERSION_0_PARAM, CURRENT_VERSION_0, this.defaults.getDefaultVersion1());
-        init(request, this.versions, VERSION_1_PARAM, CURRENT_VERSION_1, this.defaults.getDefaultVersion2());
+        init(request, this.versions, VERSION_0_PARAM, CURRENT_VERSION_0, defaults.getDefaultVersion1());
+        init(request, this.versions, VERSION_1_PARAM, CURRENT_VERSION_1, defaults.getDefaultVersion2());
     }
 
     /**

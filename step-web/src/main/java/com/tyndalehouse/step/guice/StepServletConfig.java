@@ -84,12 +84,12 @@ public class StepServletConfig extends GuiceServletContextListener {
         Reporter.addReporterListener(new ReporterListener() {
             @Override
             public void reportMessage(final ReporterEvent ev) {
-                LOGGER.warn("{} {}", ev.getSourceName(), ev.getMessage());
+                LOGGER.warn("Reporting message from JSword: {} {}", ev.getSourceName(), ev.getMessage());
             }
 
             @Override
             public void reportException(final ReporterEvent ev) {
-                LOGGER.error("{} {}", ev.getSourceName(), ev.getMessage());
+                LOGGER.error("Reporting exception from JSword: {} {}", ev.getSourceName(), ev.getMessage());
                 LOGGER.error("Error occurred in JSword application", ev.getException());
 
             }

@@ -730,7 +730,7 @@ function passageArrowTrigger(passageId, ref, goToChapter) {
 
                 var scrolled = false;
                 var osisRefs = newRef.osisKeyId.split(" ");
-                $("*", passageContent).removeClass("highlight");
+                $("*", passageContent).removeClass("ui-state-highlight");
                 for(var i = 0; i < osisRefs.length; i++) {
                     var link = $("a[name = '" + osisRefs[i] + "']", passageContent);
                     
@@ -746,10 +746,10 @@ function passageArrowTrigger(passageId, ref, goToChapter) {
                             scrolled = true;
                         }                        
                         //window.location.hash = newRef.osisKeyId;
-                        $(link).closest(".verse").addClass("highlight");
+                        $(link).closest(".verse").addClass("ui-state-highlight");
                         
                         //also do so if we are looking at an interlinear-ed version
-                        $(link).closest(".interlinear").find("*").addClass("highlight");
+                        $(link).closest(".interlinear").find("*").addClass("ui-state-highlight");
                     }
                 }
             });            

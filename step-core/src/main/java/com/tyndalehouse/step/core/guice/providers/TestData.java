@@ -32,8 +32,6 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.guice.providers;
 
-import static com.tyndalehouse.step.core.utils.StringUtils.commaSeparate;
-
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -74,13 +72,12 @@ public class TestData {
      * @param numCryptoIterations the number of iterations to perform - we need since we hook in to the user
      *            data service from a different viewpoint
      * @param loader the loader that should be called upon installation mainly
-     * @param coreModules a comma-separated list of core modules
      * @param jswordModule the service to register modules
      */
     @Inject
     public TestData(final EbeanServer ebean, final UserDataService userService,
             @Named("app.security.numIterations") final int numCryptoIterations, final Loader loader,
-            @Named("test.data.modules") final String coreModules, final JSwordModuleService jswordModule) {
+            final JSwordModuleService jswordModule) {
         this.ebean = ebean;
         this.userService = userService;
         this.numCryptoIterations = numCryptoIterations;
@@ -93,32 +90,32 @@ public class TestData {
         loader.init();
     }
 
-    /**
-     * installs core jsword modules
-     * 
-     * @param coreModules a comma separated list of modules
-     */
-    private void loadDefaultJSwordModules(final String coreModules) {
-        final String[] modules = commaSeparate(coreModules);
-        boolean installerInfoRefreshed = false;
-
-        for (final String m : modules) {
-            LOGGER.trace("Loading [{}]", m);
-
-            if (!this.jswordModule.isInstalled(m)) {
-                if (!installerInfoRefreshed) {
-                    LOGGER.trace("Reloading installers");
-                    this.jswordModule.reloadInstallers();
-                    installerInfoRefreshed = true;
-                }
-
-                LOGGER.trace("Installing {} module", m);
-                this.jswordModule.installBook(m);
-            } else {
-                LOGGER.info("Book {} already installed", m);
-            }
-        }
-    }
+    // /**
+    // * installs core jsword modules
+    // *
+    // * @param coreModules a comma separated list of modules
+    // */
+    // private void loadDefaultJSwordModules(final String coreModules) {
+    // final String[] modules = commaSeparate(coreModules);
+    // boolean installerInfoRefreshed = false;
+    //
+    // for (final String m : modules) {
+    // LOGGER.trace("Loading [{}]", m);
+    //
+    // if (!this.jswordModule.isInstalled(m)) {
+    // if (!installerInfoRefreshed) {
+    // LOGGER.trace("Reloading installers");
+    // this.jswordModule.reloadInstallers();
+    // installerInfoRefreshed = true;
+    // }
+    //
+    // LOGGER.trace("Installing {} module", m);
+    // this.jswordModule.installBook(m);
+    // } else {
+    // LOGGER.info("Book {} already installed", m);
+    // }
+    // }
+    // }
 
     /**
      * creates a history item for the test user

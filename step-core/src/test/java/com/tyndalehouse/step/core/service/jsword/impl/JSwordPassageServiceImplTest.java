@@ -371,7 +371,38 @@ public class JSwordPassageServiceImplTest {
         final SAXBuilder sb = new SAXBuilder();
         final Document d = sb.build(new StringReader(interleavedVersions.getValue()));
         LOGGER.debug("\n {}", xmlOutputter.outputString(d));
+    }
 
+    /**
+     * Justs shows XML on the stdout
+     * 
+     * @throws BookException an exceptioon
+     * @throws NoSuchKeyException an exception
+     * @throws IOException an exception
+     * @throws JDOMException an exception
+     */
+    @Test
+    public void testLongHeaders() throws BookException, NoSuchKeyException, JDOMException, IOException {
+        final String version = "ESV";
+        final String ref = "Luk 4:27";
+
+        // set up the static JSword field
+        org.crosswire.jsword.versification.BookName.setFullBookName(false);
+
+        // do the test
+        final JSwordPassageServiceImpl jsi = new JSwordPassageServiceImpl(
+                new JSwordVersificationServiceImpl(), null, null);
+        final String osisText = jsi.getOsisText(version, ref, new ArrayList<LookupOption>(), null,
+                InterlinearMode.NONE).getValue();
+
+        if (LOGGER.isDebugEnabled()) {
+            final XMLOutputter xmlOutputter = new XMLOutputter(Format.getPrettyFormat());
+            final SAXBuilder sb = new SAXBuilder();
+            final Document d = sb.build(new StringReader(osisText));
+            LOGGER.debug("\n {}", xmlOutputter.outputString(d));
+        }
+
+        Assert.assertTrue(osisText.contains("Luke 4:27"));
     }
 
     /**

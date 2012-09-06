@@ -257,7 +257,7 @@ step.search = {
         step.search.highlightTerms = highlightTerms;
         for(var i = 0; i < highlightTerms.length; i++) {
             var regex = new RegExp("\\b" + highlightTerms[i] + "\\b", "ig");
-            doHighlight(verses, "highlight", regex);
+            doHighlight(verses, "ui-state-highlight", regex);
         }
         
     },

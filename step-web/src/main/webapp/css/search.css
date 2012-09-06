@@ -63,7 +63,7 @@
 	display: inline;
 }
 
-.searchResultRow h3, .searchResultRow h2, .searchResultRow h1, .searchResultRow h4   {
+.searchResultRow h3, .searchResultRow h2, .searchResultRow h1, .searchResultRow h4, .searchResultRow p  {
 	padding-right: 5px;
 	font-size: 100%;
 }

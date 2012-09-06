@@ -353,18 +353,18 @@ public class JSwordPassageServiceImplTest {
     @Test
     public void testInterleave() throws BookException, NoSuchKeyException, JDOMException, IOException {
         final XMLOutputter xmlOutputter = new XMLOutputter(Format.getPrettyFormat());
-        final String ref = "Gen 8:1";
+        final String ref = "Acts 2:1";
 
         // do the test
         final JSwordPassageServiceImpl jsi = new JSwordPassageServiceImpl(
                 new JSwordVersificationServiceImpl(), null, null);
 
         final BookData data = new BookData(new Book[] { Books.installed().getBook("ESV"),
-                Books.installed().getBook("OSMHB") }, Books.installed().getBook("OSMHB").getKey(ref), true);
+                Books.installed().getBook("Byz") }, Books.installed().getBook("Byz").getKey(ref), true);
 
         LOGGER.debug("Original is:\n {}", xmlOutputter.outputString(data.getOsisFragment()));
 
-        final OsisWrapper interleavedVersions = jsi.getInterleavedVersions(new String[] { "ESV", "OSMHB" },
+        final OsisWrapper interleavedVersions = jsi.getInterleavedVersions(new String[] { "ESV", "Byz" },
                 ref, new ArrayList<LookupOption>(), InterlinearMode.INTERLEAVED);
 
         final SAXBuilder sb = new SAXBuilder();

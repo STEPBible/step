@@ -2,6 +2,7 @@
   font-family: 'Cardo';
   font-style: normal;
   font-weight: 400;
+  font-size: 18px;
   src: local('Cardo'), local('Cardo-Regular'), url(../fonts/cardo-regular.woff) format('woff');
 }
 @font-face {

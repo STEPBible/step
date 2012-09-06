@@ -84,6 +84,8 @@ step.passage = {
                 self._doInlineNotes(passageId, passageContent);
                 self._doNonInlineNotes(passageContent);
                 self._doSideNotes(passageId, passageContent);
+                self._doHideEmptyNotesPane(passageContent);
+                self._adjustTextAlignment(passageContent);
             }, 
             passageId: passageId, 
             level: 'error'});
@@ -169,6 +171,18 @@ step.passage = {
         });
     },
     
+    _adjustTextAlignment : function(passageContent) {
+        //we right align
+        
+        if($(".verse", passageContent).not(".rtlDirection").size() == 0) {
+            $(".passageContentHolder", passageContent).addClass("rtlDirection");
+        } else {
+            //we're clearly either a mix of directions, or a simple ltr, so leave as is, 
+            //but remove rtlDirection from passageContent... classes get regenerated on next time...
+        }
+        
+    },
+    
     _doSideNotes : function(passageId, passageContent) {
         var myPosition = passageId == 0 ? "left" : "right";
         var atPosition = passageId == 0 ? "right" : "left"; 
@@ -224,6 +238,14 @@ step.passage = {
                 }
             });                 
         });
+    },
+    
+    _doHideEmptyNotesPane : function(passageContent) {
+        var notes = $(".notesPane", passageContent);
+        
+        if(notes.text().trim().length == 0) {
+            notes.toggle(false);
+        }
     },
     
     _getInterlinearMode : function(passageId) {
@@ -420,7 +442,7 @@ Passage.prototype.showPreview = function(previewData) {
     var offset = (80 * (this.passageId == 0 ? 1 : -1)) + " 0";
 
     $.getSafe(BIBLE_GET_BIBLE_TEXT + step.state.passage.version(this.passageId) + "/" + reference, function(data) {
-        console.log(data);
+//        console.log(data);
         $("#popupText").html(data.value + "<span class='previewReferenceKey'>[" + data.reference + "]</span>");
 
         var popup = $("#previewReference");

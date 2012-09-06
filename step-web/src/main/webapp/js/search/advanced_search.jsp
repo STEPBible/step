@@ -85,10 +85,13 @@
 				<td><input type="text" class="simpleTextSortByRelevance drop" /></td>
 				<td colspan="3">
 					<span  style="float: right">
-						<input type="button" class="simpleTextClear" value="Reset" />
+						<input type="button" class="simpleTextClear resetSearch" value="Reset" />
 						<input type="button" class="simpleTextSearchButton" value="Search" />
 					</span>
 				</td>
+			</tr>
+			<tr>
+				<td colspan="5"><span class="resultEstimates">&nbsp;</span></td>
 			</tr>
 			<tr>
 				<td colspan="5"><hr /></td>
@@ -97,7 +100,6 @@
 				<td style="vertical-align: top">Query syntax</td>
 				<td colspan="4">
 					<input class="simpleTextQuerySyntax querySyntax" size="45" />
-					<span class="resultEstimates"></span>
 				</td>
 			</tr>
 			<tr>
@@ -216,10 +218,14 @@
 				<td><input type="checkbox" class="textSortByRelevance"
 					size="15" /></td>
 				<td colspan="2"><span style="float:right"><input type="button"
-					class="textClearButton" value="Clear" />
+					class="textClearButton resetSearch" value="Clear" />
 					<input type="button"
 					class="textSearchButton" value="Search" /></span>
+					
 				</td>
+			</tr>
+			<tr>
+				<td colspan="4"><span class="resultEstimates">&nbsp;</span></td>
 			</tr>
 			<tr>
 				<td colspan="4"><hr /></td>
@@ -228,7 +234,6 @@
 				<td>Query syntax</td>
 				<td colspan="3">
 					<input class="textQuerySyntax querySyntax" size="45"></input>
-					<span class="resultEstimates"></span>
 				</td>
 			</tr>
 			<tr>
@@ -241,7 +246,7 @@
 
 	<fieldset>
 		<legend>Original word search</legend>
-		<span class="passageButtons"> <input type="button"
+		<span class="passageButtons"> <input type="button resetSearch"
 			class="exactStrongNumber" value="Exact word"
 			title="This will search for all passages containing this Strong number" />
 			<input type="button" class="relatedStrongNumbers"
@@ -278,7 +283,7 @@
 				<td><input type="text" class="subjectText" /></td>
 				<td>		
 					<span class="passageButtons"> 
-						<input type="button" class="subjectClear" value="Clear" title="Clears the search criteria" />
+						<input type="button" class="subjectClear resetSearch" value="Clear" title="Clears the search criteria" />
 						<input type="button" class="subjectSearch" value="Search" title="This will search for subjects matching the selected criteria" />
 					</span>
 				</td>

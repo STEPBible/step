@@ -95,29 +95,29 @@ step.search = {
     },
     quick : {
         search : function() {
-            console.log("Executing quick search");
+//            console.log("Executing quick search");
         },
     },
     
     timeline : {
         reference : function(passageId) {
-            console.log("Searching timeline by reference");
+//            console.log("Searching timeline by reference");
             step.search._validateAndRunSearch(passageId, "dr=" + step.state.timeline.timelineReference(passageId), step.state.passage.version(passageId), false, 0, 1);
         },
         
         description: function(passageId) {
-            console.log("Searching by timeline description");
+//            console.log("Searching by timeline description");
             step.search._validateAndRunSearch(passageId, "d=" + step.state.timeline.timelineEventDescription(passageId), step.state.passage.version(passageId), false, 0, 1);
         },
         
         dating : function(passageId) {
-            console.log("Searching by dating");            
+//            console.log("Searching by dating");            
         }
     },
     
     subject : {
         search : function(passageId) {
-            console.log("Subject search");
+//            console.log("Subject search");
             
             var query = step.state.subject.subjectQuerySyntax(passageId);
             var pageNumber = step.state.subject.subjectPageNumber(passageId); 
@@ -128,7 +128,7 @@ step.search = {
     
     simpleText : {
         search : function(passageId) {
-            console.log("Simple text search...");
+//            console.log("Simple text search...");
             var query = $.trim(step.state.simpleText.simpleTextQuerySyntax(passageId));
             var version = step.state.simpleText.simpleTextSearchVersion(passageId);
             var context = step.state.simpleText.simpleTextSearchContext(passageId);
@@ -141,7 +141,7 @@ step.search = {
     
     textual : {
         search : function(passageId){
-            console.log("Advanced text search...");
+//            console.log("Advanced text search...");
             var query = $.trim(step.state.textual.textQuerySyntax(passageId));
             var version = step.state.textual.textSearchVersion(passageId);
             var context = step.state.textual.textSearchContext(passageId);
@@ -159,7 +159,7 @@ step.search = {
             return;
         }
 
-        step.search._doSearch(passageId, query, version, pageNumber, ranked, context, this._highlightingTerms(query));
+        step.search._doSearch(passageId, query, version, pageNumber, ranked, context);
     },
 
     _doSearch : function(passageId, query, version, pageNumber, ranked, context, highlightTerms) {
@@ -173,6 +173,8 @@ step.search = {
         var finalInnerQuery = query + versionArg;
         
         var refinedQuery = this._joinInRefiningSearches(finalInnerQuery);
+        var highlightTerms = this._highlightingTerms(refinedQuery);
+        
         var args = [refinedQuery, rankedArg, contextArg, pageNumberArg, pageSizeArg];
         
         $.getSafe(SEARCH_DEFAULT, args, function(searchQueryResults) {
@@ -197,6 +199,10 @@ step.search = {
         termBase = termBase.replace(/[\(\)]*/g, "");
         termBase = termBase.replace(/ AND /g, " ");
         
+        termBase = termBase.replace(/in \([^)]+\)/gi, "");
+        termBase = termBase.replace("=>", " ")
+        
+        
         var matches = termBase.match(/"[^"]*"/);
         if(matches) {
             for(var i = 0; i < matches.length; i++) {
@@ -215,7 +221,7 @@ step.search = {
                 }
             }
         }
-        console.log(terms);
+//        console.log(terms);
         return terms;
     },
     

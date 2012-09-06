@@ -284,13 +284,29 @@
    		</xsl:choose>
    	</xsl:variable>
    	    	
+    <xsl:variable name="languageFont">
+   		<xsl:choose>
+   			<xsl:when test="./ancestor::cell/@xml:lang">
+				<xsl:choose>
+   					<xsl:when test="./ancestor::cell/@xml:lang = 'he'">unicodeFont</xsl:when>
+   					<xsl:when test="./ancestor::cell/@xml:lang = 'grc'">unicodeFont</xsl:when>
+					<xsl:otherwise><xsl:value-of select="''" /></xsl:otherwise>
+				</xsl:choose>   			
+   			</xsl:when>
+   			<xsl:otherwise>
+   				<xsl:value-of select="''" />
+   			</xsl:otherwise>
+   		</xsl:choose>
+   	</xsl:variable>
+   	
+    
     <!-- Always output the verse -->
     <xsl:choose>
       <xsl:when test="$VLine = 'true'">
-        <div class="l {$languageDirection}Direction" dir="{$languageDirection}"><a name="{@osisID}"><xsl:call-template name="versenum"/></a><xsl:apply-templates/></div>
+        <div class="l {$languageDirection}Direction {$languageFont}" dir="{$languageDirection}"><a name="{@osisID}"><xsl:call-template name="versenum"/></a><xsl:apply-templates/></div>
       </xsl:when>
       <xsl:otherwise>
-        <span class="verse {$languageDirection}Direction" dir="{$languageDirection}"><xsl:call-template name="versenum"/><xsl:apply-templates/></span>
+        <span class="verse {$languageDirection}Direction {$languageFont}" dir="{$languageDirection}"><xsl:call-template name="versenum"/><xsl:apply-templates/></span>
         <!-- Follow the verse with an extra space -->
         <!-- when they don't start on lines to themselves -->
         <xsl:text> </xsl:text>

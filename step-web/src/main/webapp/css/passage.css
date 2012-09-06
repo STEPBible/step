@@ -36,6 +36,10 @@ span.rtl span span {
 	font-family: Cardo ;
 }
 
+.unicodeFont {
+	font-family: Cardo;
+	font-size: 14px;
+}
 
 .rtlDirection {
 	text-align : right;

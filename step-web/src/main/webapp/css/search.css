@@ -35,6 +35,12 @@
 	padding-left: 0px;
 }
 
+.resultEstimates {
+	float: right;
+	text-align: right;
+	font-weight: bold;
+}
+
 .masterSearchResultRow {
 	color: #696;
 }

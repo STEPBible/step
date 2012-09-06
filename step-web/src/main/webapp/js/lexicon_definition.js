@@ -61,7 +61,7 @@ function LexiconDefinition() {
     var self = this;
     // listen for particular types of events and call the prototype functions
     this.getPopup().hear("show-all-strong-morphs", function(selfElement, data) {
-        console.log(data);
+//        console.log(data);
         self.showDef(data);
 
         // temporary measure, but we can keep it in as a safe-guard against no

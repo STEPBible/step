@@ -69,7 +69,7 @@ $.widget("custom.filteredcomplete", $.ui.autocomplete, {
     },
 
     _restoreState : function(ul) {
-        console.log("Restoring state");
+//        console.log("Restoring state");
         this._restoreCheckedState(ul, "vocab", ".vocabFeature");
         this._restoreCheckedState(ul, "interlinear", ".interlinearFeature"); 
         this._restoreCheckedState(ul, "grammar", ".grammarFeature");

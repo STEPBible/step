@@ -74,7 +74,7 @@ step.version = {
                 },
                 
                 close : function(event, ui) {
-                    console.log("closing");
+//                    console.log("closing");
                 }
             }).focus(function() {
                 $(target).filteredcomplete("search", "");
@@ -112,7 +112,7 @@ step.version = {
             var interlinear = widget.find("input.interlinearFeature").prop('checked');
             var grammar = widget.find("input.grammarFeature").prop('checked');
 
-            console.log("language is ", language);
+//            console.log("language is ", language);
             
            return $.grep(step.versions, function(item, index) {
                 if(resource == 'commentaries' && item.category != 'COMMENTARY' ||

@@ -100,7 +100,7 @@ step.passage.ui = {
             }
         }
         
-        console.log("Did not manage to find version ", versionName);
+//        console.log("Did not manage to find version ", versionName);
         return undefined;
     }
 };

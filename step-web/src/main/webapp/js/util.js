@@ -152,11 +152,16 @@ step.util = {
                 
                 //finally attempt a search estimation
                 delay(function() {
-                    var versions = $("fieldset:visible .searchVersions", step.util.getPassageContainer(passageId)).val()
-                    $.getSafe(SEARCH_ESTIMATES, [syntax + " in (" + versions + ")"], function(estimate) {
-                        $("fieldset:visible .resultEstimates", step.util.getPassageContainer(passageId)).html("~ <em>" + estimate + "</em> results").prev().css("background-color", "#" + step.util.ui._calculateEstimateBackgroundColour(estimate));
-                        
-                    });
+                    var versions = $("fieldset:visible .searchVersions", step.util.getPassageContainer(passageId)).val();
+                    
+                    if(step.search.refinedSearch.length == 0) {
+                        $.getSafe(SEARCH_ESTIMATES, [syntax + " in (" + versions + ")"], function(estimate) {
+                            $("fieldset:visible .resultEstimates", step.util.getPassageContainer(passageId))
+                                .html("~ <em>" + estimate + "</em> results")
+                                .css("color", "#" + step.util.ui._calculateEstimateBackgroundColour(estimate));
+                            
+                        });
+                    }
                 }, 500);
             });
         },
@@ -170,19 +175,19 @@ step.util = {
         },
         
         _calculateEstimateBackgroundColour : function(numResults) {
-            var red = 0xCC;
-            var green = 0xEB;
-            var blue = 0xCC;
+            var red = 0x66;
+            var green = 0x99;
+            var blue = 0x66;
             
             var maxRed = 0xFF;
-            var minGreen = 0xb4;
+            var minGreen = 0x77;
 
             var redStep = Math.round((maxRed - red) / 50);
             var greenStep = Math.round((green - minGreen) / 50);    
 
             
             if(numResults <= 50) {
-                return "CCEBCC";
+                return "009966";
             }
             
             var stepsRemaining = numResults;
@@ -205,7 +210,7 @@ step.util = {
             }
             
             var color = this.pad2(red.toString(16)) + this.pad2(green.toString(16)) + this.pad2(blue.toString(16));
-            console.log("estimate color: ", color, " for ", numResults, " results");
+//            console.log("estimate color: ", color, " for ", numResults, " results");
             return color;
         },
         
@@ -284,7 +289,7 @@ step.util = {
                         }
                     }
                     
-                    console.log("Target window size is " + targetPageSize);
+//                    console.log("Target window size is " + targetPageSize);
                     step.search.pageSize = targetPageSize;
                 }
                 step.state._fireStateChanged(step.passage.getPassageId(this));
@@ -362,6 +367,13 @@ step.util = {
                 step.search.refinedSearch.push(step.search.lastSearch);
 
                 $(".refinedSearch .refinedSearchLabel", passageContainer).html("Refining results from last search: " + step.search.refinedSearch.join("=>"));
+                
+                //blank the results
+                $("fieldset:visible .resultEstimates", passageContainer).html("");
+                
+                //trigger the reset button
+                $("fieldset:visible .resetSearch").trigger("click");
+                
                 $(".refinedSearch", passageContainer).show();
             });
             
@@ -542,7 +554,7 @@ function refreshWaitStatus() {
 			    outstandingRequests--;
 			    refreshWaitStatus();
 			    
-			    console.log("Received url ", url, " ", data);
+//			    console.log("Received url ", url, " ", data);
 				if (data && data.errorMessage) {
 					// handle an error message here
 //					$.shout("caught-error-message", data);

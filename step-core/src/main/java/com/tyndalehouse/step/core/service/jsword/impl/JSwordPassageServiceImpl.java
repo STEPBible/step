@@ -111,6 +111,7 @@ import com.tyndalehouse.step.core.xsl.impl.InterleavingProviderImpl;
  */
 @Singleton
 public class JSwordPassageServiceImpl implements JSwordPassageService {
+    private static final String OSIS_ID_BOOK_CHAPTER = "%s.%s";
     private static final int MAX_VERSES_RETRIEVED = 300;
     private static final String OSIS_CHAPTER_FORMAT = "%s.%d";
     private static final String OSIS_CHAPTER_VERSE_FORMAT = "%s.%s.%d";
@@ -182,7 +183,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
             }
 
             // now we've got our target verse, use it, trim off the verse number
-            return new KeyWrapper(currentBook.getKey(getChapter(targetVerse)));
+            return new KeyWrapper(currentBook.getKey(getChapter(targetVerse, v11n)));
         } catch (final NoSuchKeyException e) {
             throw new StepInternalException("Cannot find next chapter", e);
         }
@@ -190,17 +191,21 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
 
     /**
      * @param targetVerse the verse for which we want to trim off the verse number
+     * @param v11n the versification of the book considered, required to deal with 1-chapter books
      * @return the reference without the verse number
      */
-    private String getChapter(final Verse targetVerse) {
+    private String getChapter(final Verse targetVerse, final Versification v11n) {
         final String osisID = targetVerse.getOsisID();
         final String[] parts = osisID.split("[.]");
-        if (parts.length == 2) {
-            return osisID;
+
+        if (v11n.getLastChapter(targetVerse.getBook()) == 1) {
+            // we're dealing with a 1-chapter book, so we only send back the name of the book
+            return parts[0];
         }
 
+        // otherwise, we always send back book+chapter
         if (parts.length == 3) {
-            return String.format("%s.%s", parts[0], parts[1]);
+            return String.format(OSIS_ID_BOOK_CHAPTER, parts[0], parts[1]);
         }
 
         return null;
@@ -342,7 +347,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
             return getAdjacentChapter(bookName, chapterNumber, currentBook, currentKey, gap);
         }
 
-        return currentBook.getValidKey(format("%s.%s", bookName, chapterNumber));
+        return currentBook.getValidKey(format(OSIS_ID_BOOK_CHAPTER, bookName, chapterNumber));
     }
 
     @Override

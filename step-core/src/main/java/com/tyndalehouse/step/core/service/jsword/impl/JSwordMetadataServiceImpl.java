@@ -129,7 +129,10 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
         }
 
         if (matchingNames.size() == 1) {
-            return getChapters(versification, b, searchPattern);
+            final List<BookName> optionsInBook = getChapters(versification, b, searchPattern);
+            if (!optionsInBook.isEmpty()) {
+                return optionsInBook;
+            }
         }
 
         return matchingNames;
@@ -171,6 +174,7 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
 
             chapters.add(new BookName(chapNumber, longChapNumber));
         }
+
         return chapters;
     }
 }

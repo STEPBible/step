@@ -37,6 +37,11 @@ span.rtl span span {
 }
 
 
+.rtlDirection {
+	text-align : right;
+}
+
+
 /* Allow for spans to be nested more deeply */
 span.interlinear span span span {
 	/* Turn off block display that was added by the previous rule. */

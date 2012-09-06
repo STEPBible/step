@@ -262,13 +262,35 @@
     <xsl:if test="$VLine = 'false' and preceding-sibling::*[local-name() = 'verse']">
       <xsl:text>&#160;</xsl:text>
     </xsl:if>
+    
+    <!--  set up the direction variable -->
+    <xsl:variable name="cell-direction">
+			<xsl:if test="./ancestor::cell/@xml:lang">
+				<xsl:call-template name="getDirection">
+					<xsl:with-param name="lang">
+						<xsl:value-of select="./ancestor::cell/@xml:lang" />
+					</xsl:with-param>
+				</xsl:call-template>
+			</xsl:if>
+	</xsl:variable>
+   	<xsl:variable name="languageDirection">
+   		<xsl:choose>
+   			<xsl:when test="./ancestor::cell/@xml:lang">
+   				<xsl:value-of select="$cell-direction" />
+   			</xsl:when>
+   			<xsl:otherwise>
+   				<xsl:value-of select="$direction" />
+   			</xsl:otherwise>
+   		</xsl:choose>
+   	</xsl:variable>
+   	    	
     <!-- Always output the verse -->
     <xsl:choose>
       <xsl:when test="$VLine = 'true'">
-        <div class="l" dir="{$direction}"><a name="{@osisID}"><xsl:call-template name="versenum"/></a><xsl:apply-templates/></div>
+        <div class="l {$languageDirection}Direction" dir="{$languageDirection}"><a name="{@osisID}"><xsl:call-template name="versenum"/></a><xsl:apply-templates/></div>
       </xsl:when>
       <xsl:otherwise>
-        <span class="verse" dir="{$direction}"><xsl:call-template name="versenum"/><xsl:apply-templates/></span>
+        <span class="verse {$languageDirection}Direction" dir="{$languageDirection}"><xsl:call-template name="versenum"/><xsl:apply-templates/></span>
         <!-- Follow the verse with an extra space -->
         <!-- when they don't start on lines to themselves -->
         <xsl:text> </xsl:text>
@@ -1304,16 +1326,17 @@
 	
 		<xsl:element name="span">
 			<xsl:attribute name="class">singleVerse <xsl:value-of select="$classes" /></xsl:attribute>
-			<xsl:if test="@xml:lang">
-				<xsl:attribute name="dir">
-				          <xsl:value-of select="$cell-direction" />
-				</xsl:attribute>
-			</xsl:if>
-			<xsl:if test="$cell-direction = 'rtl'">
-				<xsl:attribute name="align">
-			          <xsl:value-of select="'right'" />
-				</xsl:attribute>
-			</xsl:if>
+			<!--  Should attempt to support user languages that operate right to left at some point -->
+			<!-- 			<xsl:if test="@xml:lang"> -->
+			<!-- 				<xsl:attribute name="dir"> -->
+			<!-- 				          <xsl:value-of select="$cell-direction" /> -->
+			<!-- 				</xsl:attribute> -->
+			<!-- 			</xsl:if> -->
+			<!-- 			<xsl:if test="$cell-direction = 'rtl'"> -->
+			<!-- 				<xsl:attribute name="align"> -->
+			<!-- 			          <xsl:value-of select="'right'" /> -->
+			<!-- 				</xsl:attribute> -->
+			<!-- 			</xsl:if> -->
 			<xsl:call-template name="interleavedVersion" />
 			<xsl:apply-templates />
 		</xsl:element>

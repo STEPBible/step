@@ -58,6 +58,7 @@ import com.tyndalehouse.step.rest.controllers.BibleController;
  * @author chrisburrell
  * 
  */
+// CHECKSTYLE:OFF
 public class WebStepRequest {
     private static final String REF_0_PARAM = "reference";
     private static final String REF_1_PARAM = "reference-1";
@@ -128,7 +129,11 @@ public class WebStepRequest {
      * @return the reference
      */
     public String getReference(final int passageId) {
-        return this.references.get(passageId);
+        try {
+            return this.references.get(passageId);
+        } catch (final Exception e) {
+            return "";
+        }
     }
 
     /**
@@ -136,8 +141,12 @@ public class WebStepRequest {
      * @return the next reference
      */
     public String getNextReference(final int passageId) {
-        return this.injector.getInstance(BibleController.class)
-                .getNextChapter(getReference(passageId), getVersion(0)).getOsisKeyId();
+        try {
+            return this.injector.getInstance(BibleController.class)
+                    .getNextChapter(getReference(passageId), getVersion(0)).getOsisKeyId();
+        } catch (final Exception e) {
+            return "";
+        }
     }
 
     /**
@@ -145,8 +154,12 @@ public class WebStepRequest {
      * @return the previous reference
      */
     public String getPreviousReference(final int passageId) {
-        return this.injector.getInstance(BibleController.class)
-                .getPreviousChapter(getReference(passageId), getVersion(0)).getOsisKeyId();
+        try {
+            return this.injector.getInstance(BibleController.class)
+                    .getPreviousChapter(getReference(passageId), getVersion(0)).getOsisKeyId();
+        } catch (final Exception e) {
+            return "";
+        }
     }
 
     /**
@@ -156,7 +169,11 @@ public class WebStepRequest {
      * @return the reference
      */
     public String getVersion(final int passageId) {
-        return this.versions.get(passageId);
+        try {
+            return this.versions.get(passageId);
+        } catch (final Exception e) {
+            return "";
+        }
     }
 
     /**
@@ -175,6 +192,8 @@ public class WebStepRequest {
         } catch (final StepInternalException e) {
             // silently ignore and log as debug
             LOG.trace("Unable to restore state", e);
+            return "";
+        } catch (final Exception e) {
             return "";
         }
     }

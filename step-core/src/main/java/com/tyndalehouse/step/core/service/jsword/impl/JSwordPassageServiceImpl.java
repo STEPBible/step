@@ -146,7 +146,8 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
         try {
             final Key key = currentBook.getKey(reference);
 
-            final Verse verse = KeyUtil.getVerse(previousChapter ? key : key.get(key.getCardinality() - 1));
+            final Verse verse = KeyUtil.getVerse(previousChapter ? key : key.get(key.getCardinality() - 1),
+                    v11n);
             final int chapter = verse.getChapter();
             final BibleBook bibleBook = verse.getBook();
 
@@ -443,6 +444,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
      */
     private BookData getBookData(final String version, final String reference) {
         final Book currentBook = this.versificationService.getBookFromVersion(version);
+        final Versification v11n = this.versificationService.getVersificationForVersion(currentBook);
 
         try {
             Key key = currentBook.getKey(reference);
@@ -454,7 +456,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
                 // if the reference was for a whole book, we go for chapter 1, otherwise, we trim the range
                 // down to the limit
 
-                final Passage requestedPassage = KeyUtil.getPassage(key);
+                final Passage requestedPassage = KeyUtil.getPassage(key, v11n);
                 if (requestedPassage.countRanges(RestrictionType.NONE) == 1
                         && requestedPassage.getRangeAt(0, RestrictionType.NONE).isWholeBook()) {
                     // ignoring chapter 0

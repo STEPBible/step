@@ -102,6 +102,8 @@ step.passage = {
             passageContent.html(serverResponse.value);
         }
         
+        
+        
         var verses = $("span.verse, .interlinear span", passageContent);
         if(serverResponse.languageCode == 'he' || serverResponse.containsHebrew) {
             verses.addClass("hebrewLanguage").removeClass("greekLanguage");
@@ -174,13 +176,14 @@ step.passage = {
     _adjustTextAlignment : function(passageContent) {
         //we right align
         
-        if($(".verse", passageContent).not(".rtlDirection").size() == 0) {
-            $(".passageContentHolder", passageContent).addClass("rtlDirection");
-        } else {
-            //we're clearly either a mix of directions, or a simple ltr, so leave as is, 
-            //but remove rtlDirection from passageContent... classes get regenerated on next time...
-        }
+        //if we have only rtl, we right-align, so
+        //A- if any ltr, then return immediately
+        if($(".ltr", passageContent).size() > 0 || $("[dir='ltr']", passageContent).size() > 0 || $(".ltrDirection", passageContent).size() > 0) {
+            return;
+        } 
         
+        //if no ltr, then assume, rtl
+        $(".passageContentHolder", passageContent).addClass("rtlDirection");
     },
     
     _doSideNotes : function(passageId, passageContent) {

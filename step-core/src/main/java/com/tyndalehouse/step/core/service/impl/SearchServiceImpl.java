@@ -162,11 +162,11 @@ public class SearchServiceImpl implements SearchService {
                     break;
                 case EXACT_STRONG:
                     adaptQueryForStrongSearch(sq);
-                    intersect(results, this.jswordSearch.searchKeys(sq));
+                    results = intersect(results, this.jswordSearch.searchKeys(sq));
                     break;
                 case RELATED_STRONG:
                     adaptQueryForRelatedStrongSearch(sq);
-                    intersect(results, this.jswordSearch.searchKeys(sq));
+                    results = intersect(results, this.jswordSearch.searchKeys(sq));
                     break;
                 case SUBJECT:
                 case TIMELINE_DESCRIPTION:

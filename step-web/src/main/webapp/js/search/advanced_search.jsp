@@ -246,7 +246,7 @@
 
 	<fieldset>
 		<legend>Original word search</legend>
-		<span class="passageButtons"> <input type="button resetSearch"
+		<span class="passageButtons resetSearch"> <input type="button"
 			class="exactStrongNumber" value="Exact word"
 			title="This will search for all passages containing this Strong number" />
 			<input type="button" class="relatedStrongNumbers"

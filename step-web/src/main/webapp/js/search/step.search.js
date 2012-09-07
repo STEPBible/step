@@ -78,7 +78,7 @@ step.search = {
            for(var j = 0; j < vs.length; j++) {
                //looking for them in step.versions
                for(var i = 0; i < step.versions.length; i++) {
-                   if(vs[j] == step.versions[i]) {
+                   if(vs[j] == step.versions[i].initials) {
                        if(step.versions[i].hasStrongs) {
                            return true;
                        } else {
@@ -188,6 +188,10 @@ step.search = {
     _highlightingTerms : function(query) {
         var terms = [];
         var termBase = query.substring(2);
+
+        //remove the search in (v1, v2, v3)
+        termBase = termBase.replace(/in \([^)]+\)/gi, "");
+        termBase = termBase.replace("=>", " ")
         
         //remove range restrictions, -word and -"a phrase"
         termBase = termBase.replace(/[+-]\[[^\]]*]/g, "");
@@ -199,8 +203,6 @@ step.search = {
         termBase = termBase.replace(/[\(\)]*/g, "");
         termBase = termBase.replace(/ AND /g, " ");
         
-        termBase = termBase.replace(/in \([^)]+\)/gi, "");
-        termBase = termBase.replace("=>", " ")
         
         
         var matches = termBase.match(/"[^"]*"/);

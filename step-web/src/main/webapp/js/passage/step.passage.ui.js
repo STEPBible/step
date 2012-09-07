@@ -118,7 +118,7 @@ $(document).ready(function() {
     $(".smallerFonts").button({
             text : true
     }).click(function() {
-        var elements = $(".passageContentHolder *", step.util.getPassageContainer(this)).not(".notesPane, sup, a, .verseNumber");
+        var elements = $(".passageContentHolder", step.util.getPassageContainer(this));
         var fontSize = parseInt(elements.css("font-size"));
         elements.css("font-size", fontSize -1);
     }).find(".ui-button-text").html("<span class='smallerFont'>A</span>");
@@ -127,7 +127,7 @@ $(document).ready(function() {
                 text : true        
         }
     ).click(function() {
-        var elements = $(".passageContentHolder *", step.util.getPassageContainer(this)).not(".notesPane, sup, a, .verseNumber");
+        var elements = $(".passageContentHolder", step.util.getPassageContainer(this));
         $.each(elements, function(i, item) {
             var fontSize = parseInt($(this).css("font-size"));
             $(this).css("font-size", fontSize + 1);

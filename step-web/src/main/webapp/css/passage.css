@@ -28,17 +28,17 @@ span.interlinear span span { /* Make this stack on top of each other. */
 	/* Turn off floating and padding that was added by the previous rule. */
 	float: none;
 	padding: 0;
-	font-size: 12px;
+/* 	font-size: 12px; */
 }
 
 span.rtl span span {
-	font-size: 16px;
+/* 	font-size: 16px; */
 	font-family: Cardo ;
 }
 
 .unicodeFont {
 	font-family: Cardo;
-	font-size: 14px;
+/* 	font-size: 14px; */
 }
 
 .rtlDirection {

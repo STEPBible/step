@@ -86,9 +86,12 @@ step.passage = {
                 self._doSideNotes(passageId, passageContent);
                 self._doHideEmptyNotesPane(passageContent);
                 self._adjustTextAlignment(passageContent);
+                
+                step.state.passage.reference(passageId, text.reference, false);
             }, 
             passageId: passageId, 
-            level: 'error'});
+            level: 'error'
+         });
     },
     
     _setPassageContent : function(passageId, passageContent, serverResponse) {

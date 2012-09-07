@@ -562,9 +562,12 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
 
         for (final String v : versions) {
             if (isNotBlank(v)) {
-                final String code = Books.installed().getBook(v.trim()).getLanguage().getCode();
-                setIfContainsHebrew(osisWrapper, code);
-                setIfContainsGreek(osisWrapper, code);
+                final Book book = Books.installed().getBook(v.trim());
+                if (book != null) {
+                    final String code = book.getLanguage().getCode();
+                    setIfContainsHebrew(osisWrapper, code);
+                    setIfContainsGreek(osisWrapper, code);
+                }
             }
         }
     }

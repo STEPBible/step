@@ -69,7 +69,8 @@ step.search = {
             }
             
             if(step.versions == undefined) {
-                return false;
+                //assume true, since we are most likely in a situation where things are being reloaded
+                return true;
             }
             
             var vs = versions.split(",");
@@ -178,7 +179,7 @@ step.search = {
         var args = [refinedQuery, rankedArg, contextArg, pageNumberArg, pageSizeArg];
         
         $.getSafe(SEARCH_DEFAULT, args, function(searchQueryResults) {
-            self._updateTotal(passageId, searchQueryResults.total, pageNumber);
+            self._updateTotal(passageId, searchQueryResults.total, pageNumberArg);
             self.lastSearch = searchQueryResults.query;
             self._displayResults(searchQueryResults, passageId);
             self._highlightResults(passageId, highlightTerms);

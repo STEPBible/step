@@ -39,12 +39,18 @@ $(document).ready(function() {
     });
 
     $(".exactStrongNumber").click(function() {
+        //reset the page number as we are doing this ourselves
+        step.util.ui.resetPageNumber();
+
         var passageId = step.passage.getPassageId(this);
         step.state.original.searchType(passageId, "exact");
         step.state.activeSearch(passageId, 'SEARCH_ORIGINAL', true);
     });
 
     $(".relatedStrongNumbers").click(function() {
+        //reset the page number as we are doing this ourselves
+        step.util.ui.resetPageNumber();
+
         var passageId = step.passage.getPassageId(this);
         step.state.original.searchType(passageId, "related");
         step.state.activeSearch(passageId, 'SEARCH_ORIGINAL', true);

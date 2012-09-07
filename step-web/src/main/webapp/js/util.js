@@ -125,9 +125,10 @@ step.util = {
         },
 
         searchButton : function(selector, searchType, callback) {
+            var self = this;
             $(selector).click(function() {
                 //clicking on search button resets page number to 1:
-                $("fieldset:visible .pageNumber").val(1).trigger('change');
+                self.resetPageNumber();
                 
                 step.state.activeSearch(step.passage.getPassageId(this), searchType, true);
                 
@@ -135,6 +136,10 @@ step.util = {
                     callback();
                 }
             });
+        },
+        
+        resetPageNumber : function() {
+            $("fieldset:visible .pageNumber").val(1).trigger('change');
         },
         
         trackQuerySyntax : function(selector, namespace) {
@@ -324,7 +329,12 @@ step.util = {
                 
                 var totalPages = Math.round((step.search.totalResults / step.search.pageSize) + 0.5);
                 var pageNumber = $("fieldset:visible .pageNumber", step.util.getPassageContainer(this));
+                
+                
                 var oldPageNumber = parseInt(pageNumber.val());
+                if(oldPageNumber == undefined || oldPageNumber == 0 || oldPageNumber == Number.NaN) {
+                    oldPageNumber = 1;
+                }
                 
                 if(oldPageNumber < totalPages) {
                     pageNumber.val(oldPageNumber + 1);

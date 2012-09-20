@@ -157,6 +157,18 @@ li.subjectHeading {
 	margin-top: -2px;
 }
 
+
+/*******************************************/
+/* Original word search box                */
+/*******************************************/
+
+td.rightHandBorder {
+	border-right: solid thin lightgray;
+}
+
+
+
+
 /*******************************************/
 /* Advanced search box                     */
 /*******************************************/

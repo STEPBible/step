@@ -6,7 +6,6 @@ $(document).ready(function() {
                            ], namespace);
 
    
-
     $(".searchQuerySyntax").keypress(function(event) {
         if (event.which == 13 ) {
             step.search.quick.search(step.passage.getPassageId(this));

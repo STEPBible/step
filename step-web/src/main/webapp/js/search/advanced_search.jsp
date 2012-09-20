@@ -245,22 +245,42 @@
 	</fieldset>
 
 	<fieldset>
-		<legend>Original word search</legend>
-		<span class="passageButtons resetSearch"> <input type="button"
-			class="exactStrongNumber" value="Exact word"
-			title="This will search for all passages containing this Strong number" />
-			<input type="button" class="relatedStrongNumbers"
-			value="Similar words"
-			title="This will search the specified strong number and any similar Greek forms" />
-		</span>
-		<table>
+		<legend>Word search</legend>
+
+		<table class="wordSearch" style="width: 100%"> 
 			<tr>
-				<td>Strong</td>
-				<td><input type="text" class="strongSearch" /></td>
+				<td style="width: 100px">Search</td>
+				<td><input type="text" class="originalScope drop" size="20" readonly=true" title="Once the original word has been identified, constrains the displayed search results." /></td>
+				<td>for</td>
+				<td><input type='text' class='originalType drop' size="15" readonly=true" /></td>
+				<td><input type='text' class='originalWord' title="Select an option from the previous dropdown first." /></td>
+			</tr>
+			<tr>
+				<td><span class="originalMeaning">as occurring in</span><span class="originalAncient">showing</span></td>
+				<td>
+					<input type='text' class='originalWordScope drop originalMeaning' size="20" readonly=true" />
+					<input type='text' class='originalForms drop originalAncient' size="20" readonly=true" />
+				</td>
+
+				<td>sorted by</td>
+				<td><input type="text" class="originalSorting drop" size="15" readonly=true" /></td>
+				<td>
+					<input type="button" class="originalSearchButton passageButtons" value="Search" title="Search for the keyed-in word" />
+					<input type="button" class="originalClear passageButtons" value="Clear" title="Reset the form" />
+				</td> 
+			<tr>
+				<td colspan="5"><hr /></td>
+			</tr>
+			<tr>
+				<td>Query syntax</td>
+				<td colspan="4">
+					<input class="originalQuerySyntax querySyntax" size="45" />
+				</td>
+			</tr>
+			<tr>
+				<td colspan="5"><hr /></td>
 			</tr>
 		</table>
-
-		<hr />
 				
 		<jsp:include page="search_toolbar.jsp?namespace=original&context=true" />
 	</fieldset>

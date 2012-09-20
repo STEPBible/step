@@ -175,10 +175,7 @@ $(document).ready(function() {
               at: "right center",
               my: "left center",
               viewport: $(window)
-          },
-           style: { 
-               tip: 'leftMiddle' // Notice the corner value is identical to the previously mentioned positioning corners
-            }
+          }
       });
 });
 

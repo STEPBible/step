@@ -29,46 +29,154 @@
 step.search.ui.original = {
     strongNumber : function(value, passageId) {
         $(".strongSearch", step.util.getPassageContainer(passageId)).val(value);
-    }
+    },
 
+    _setTitleFromTargetChange : function(target, value) {
+        switch(value) {
+            case WORDS_MEANING[0]   : step.search.ui.original._setTitleForWord(target, WORDS_MEANING[1]);   break;
+            case GREEK_WORDS[0]     : step.search.ui.original._setTitleForWord(target, GREEK_WORDS[1]);     break;
+            case HEBREW_WORDS[0]    : step.search.ui.original._setTitleForWord(target, HEBREW_WORDS[1]);    break;
+        }
+    },
+    
+    _setTitleForWord : function(target, option) {
+            $(target).closest("fieldset").find(".originalWord").attr("title", option);
+    },
+    
+    _displayCorrectOptions : function(passageId) {
+        var passageContainer = step.util.getPassageContainer(passageId);
+        var currentType = $(".originalType", passageContainer).val();
+        
+        if(currentType == WORDS_MEANING[0]) {
+             $(".originalMeaning", passageContainer).toggle(true);       
+             $(".originalAncient", passageContainer).toggle(false);       
+        } else {
+             $(".originalAncient", passageContainer).toggle(true);       
+             $(".originalMeaning", passageContainer).toggle(false);       
+        }
+    },
+    
+    restoreDefaults : function(passageId, force) {
+        step.util.ui.resetIfEmpty(passageId, force, step.state.original.originalType,  step.defaults.search.original.originalTypes[0]);
+        step.util.ui.resetIfEmpty(passageId, force, step.state.original.originalForms,  step.defaults.search.original.originalForms[1]);
+        step.util.ui.resetIfEmpty(passageId, force, step.state.original.originalScope,  step.defaults.search.textual.availableRanges[0].value);
+        step.util.ui.resetIfEmpty(passageId, force, step.state.original.originalWordScope,  step.defaults.search.textual.availableRanges[0].value);
+        step.util.ui.resetIfEmpty(passageId, force, step.state.original.originalSorting,  step.defaults.search.original.originalSorting[0]);
+    },
+    
+    restoreTitle : function(passageId, force) {
+        var target = $(".originalType", step.util.getPassageContainer(passageId));
+        var value = target.val();
+        step.search.ui.original._setTitleFromTargetChange(target, value);
+    },
+    
+    restoreOptions : function(passageId, force) {
+        step.search.ui.original._displayCorrectOptions(passageId);
+    },
+    
+    evaluateQuerySyntax : function(passageId) {
+        var passageContainer = step.util.getPassageContainer(passageId);
+        
+        var originalType = $(".originalType", passageContainer).val();
+        var originalWord = $(".originalWord", passageContainer).val();
+        
+        var originalScope = $(".originalScope", passageContainer).val();
+        var originalSorting = $(".originalSorting", passageContainer).val();
+
+        
+        var query = "o";
+        
+        if(originalType == WORDS_MEANING[0]) {
+            query += "m";
+            
+            //do something with it TODO
+            var originalWordScope = $(".originalWordScope", passageContainer).val();
+           
+        } else {
+            if (originalType == GREEK_WORDS[0]) {
+                query += "g";
+            } else if(originalType == HEBREW_WORDS[0]) {
+                query += "h";
+            }
+            
+            var originalForms = $(".originalForms", passageContainer).val();
+            if(originalForms == SPECIFIC_GRAMMAR) {
+                query += "~";
+                
+                query += "noun~verb~"
+                //TODO add forms for grammar
+            } else if(originalForms == ALL_RELATED) {
+                query += "~"
+            } else if(originalForms == ALL_FORMS) {
+                //add a = to make a double equal
+                query += "*";
+            }
+        }
+        query += "=";
+        
+        query += "+[" + originalScope + "] ";
+        query += originalWord;
+        
+        step.state.original.originalQuerySyntax(passageId, query);
+        return query;
+    }
 };
 
 $(document).ready(function() {
-    $(".strongSearch").change(function() {
-        step.state.original.strong(step.passage.getPassageId(this), $(this).val());
-    });
-
-    $(".exactStrongNumber").click(function() {
-        //reset the page number as we are doing this ourselves
-        step.util.ui.resetPageNumber();
-
-        var passageId = step.passage.getPassageId(this);
-        step.state.original.searchType(passageId, "exact");
-        step.state.activeSearch(passageId, 'SEARCH_ORIGINAL', true);
-    });
-
-    $(".relatedStrongNumbers").click(function() {
-        //reset the page number as we are doing this ourselves
-        step.util.ui.resetPageNumber();
-
-        var passageId = step.passage.getPassageId(this);
-        step.state.original.searchType(passageId, "related");
-        step.state.activeSearch(passageId, 'SEARCH_ORIGINAL', true);
-    });
-
     var namespace = "original";
-    step.state.trackState([".originalSearchVersion",
-                           ".originalPageNumber"
-                           ], namespace);
+    step.state.trackState([".originalType", 
+                           ".originalWord", 
+                           ".originalForms", 
+                           ".originalScope",
+                           ".originalSorting",
+                           ".originalWordScope", 
+                           ".originalSearchVersion",
+                           ".originalPageNumber",
+                           ".originalQuerySyntax"
+                           ], namespace, [step.search.ui.original.restoreDefaults, step.search.ui.original.restoreTitle, step.search.ui.original.restoreOptions]);
+    
+    step.util.ui.autocompleteSearch(".originalType", step.defaults.search.original.originalTypes, true, function(target, value) {
+       step.search.ui.original._setTitleFromTargetChange(target, value);
+       step.search.ui.original._displayCorrectOptions(step.passage.getPassageId(target));
+    });
+    
+    step.util.ui.autocompleteSearch(".originalForms", step.defaults.search.original.originalForms, true);
+    step.util.ui.autocompleteSearch(".originalScope", step.defaults.search.textual.availableRanges);
+    step.util.ui.autocompleteSearch(".originalSorting", step.defaults.search.original.originalSorting, true);
+    step.util.ui.autocompleteSearch(".originalWordScope", step.defaults.search.textual.availableRanges);
 
+    
+    step.util.ui.trackQuerySyntax(".wordSearch", namespace);
+    step.util.ui.searchButton(".originalSearchButton", 'SEARCH_ORIGINAL');
+    $(".originalClear").click(function() {
+        var passageId = step.passage.getPassageId(this);
+        step.search.ui.original.restoreDefaults(passageId, true);
+        step.search.ui.original.restoreTitle(passageId, true);
+        step.search.ui.original.restoreOptions(passageId, true);
+        step.state.original.originalWord(passageId, "");
+    });
+
+    //do qtip for textbox
+    $(".originalWord").qtip({
+        show :  { event: 'focus' },
+        hide : { event: 'blur' }
+    });
+
+    
+    //do qtip for textbox
+    $(".originalScope").qtip({
+        show : { delay: 500 },
+//        show :  { event: 'focus' },
+//        hide : { event: 'blur' },
+        position: {
+            my: "bottom center",
+            at: "top center",
+            viewport: $(window)
+        }
+    });
 });
 
 $(step.search.ui.original).hear("original-search-state-has-changed", function(s, data) {
-    var searchType = step.state.original.searchType(data.passageId);
-    if(searchType == "exact") {
-        step.search.tagging.exact(data.passageId);
-    } else if (searchType == "related"){
-        step.search.tagging.related(data.passageId);
-    }
+    step.search.original.search(data.passageId);
 });
 

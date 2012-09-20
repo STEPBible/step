@@ -32,10 +32,7 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.data.create;
 
-import static com.tyndalehouse.step.core.utils.StringUtils.split;
-
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -48,19 +45,22 @@ import org.slf4j.LoggerFactory;
 import au.com.bytecode.opencsv.bean.HeaderColumnNameTranslateMappingStrategy;
 
 import com.avaje.ebean.EbeanServer;
+import com.avaje.ebean.Transaction;
+import com.avaje.ebean.TxIsolation;
 import com.tyndalehouse.step.core.data.create.loaders.CsvModuleLoader;
 import com.tyndalehouse.step.core.data.create.loaders.CustomTranslationCsvModuleLoader;
 import com.tyndalehouse.step.core.data.create.loaders.PostProcessingAction;
 import com.tyndalehouse.step.core.data.create.loaders.translations.OpenBibleDataTranslation;
 import com.tyndalehouse.step.core.data.create.loaders.translations.TimelineEventTranslation;
 import com.tyndalehouse.step.core.data.entities.GeoPlace;
-import com.tyndalehouse.step.core.data.entities.LexiconDefinition;
+import com.tyndalehouse.step.core.data.entities.lexicon.LexicalForm;
 import com.tyndalehouse.step.core.data.entities.morphology.Morphology;
 import com.tyndalehouse.step.core.data.entities.timeline.HotSpot;
 import com.tyndalehouse.step.core.data.entities.timeline.TimelineEvent;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.service.jsword.JSwordModuleService;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
+import com.tyndalehouse.step.core.utils.StringConversionUtils;
 
 /**
  * The object that will be responsible for loading all the data into a database
@@ -71,6 +71,7 @@ import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 public class Loader {
     private static final int INSTALL_WAITING = 1000;
     private static final int INSTALL_MAX_WAITING = INSTALL_WAITING * 180;
+    private static final String INDEX_CREATE = "CREATE INDEX %s on %s (%s)";
     private static final String KJV = "KJV";
     private static final Logger LOGGER = LoggerFactory.getLogger(Loader.class);
     private final EbeanServer ebean;
@@ -99,7 +100,9 @@ public class Loader {
      * Creates the table and loads the initial data set
      */
     public void init() {
-        // in order to do this, we need some jsword modules available. - we assume someone has kicked off the
+
+        // in order to do this, we need some jsword modules available. - we assume someone has kicked off
+        // the
         // process
         // kick of installation of jsword modules
         // checkAndWaitForKJV();
@@ -135,7 +138,9 @@ public class Loader {
      */
     private void loadData() {
         LOGGER.debug("Loading initial data");
-        this.ebean.beginTransaction();
+        final Transaction transaction = this.ebean.beginTransaction(TxIsolation.READ_UNCOMMITTED);
+        transaction.setBatchMode(true);
+        transaction.setBatchSize(500);
 
         try {
             loadHotSpots();
@@ -143,11 +148,61 @@ public class Loader {
             loadOpenBibleGeography();
             loadDictionaryArticles();
             loadRobinsonMorphology();
-            loadLexicon();
-            this.ebean.commitTransaction();
+            loadLexiconDefinitions();
+            loadLexicalForms();
+            // loadLexicon();
+            // this.ebean.commitTransaction();
         } finally {
-            this.ebean.endTransaction();
+            // this.ebean.commitTransaction();
+            this.ebean.currentTransaction().flushBatch();
         }
+
+        LOGGER.debug("Creating indexes");
+        createIndexes();
+        LOGGER.debug("Finished loading data");
+    }
+
+    /**
+     * Creates indexes on various tables
+     */
+    private void createIndexes() {
+        // create some indexes manually:
+        // indexName/table/column
+        int i = 0;
+        this.ebean.createSqlUpdate(
+                String.format(INDEX_CREATE, "def_idx" + (i++), "definition", "lsj_word_beta")).execute();
+        this.ebean.createSqlUpdate(
+                String.format(INDEX_CREATE, "def_idx" + (i++), "definition", "lsj_word_beta_unaccented"))
+                .execute();
+        this.ebean.createSqlUpdate(
+                String.format(INDEX_CREATE, "def_idx" + (i++), "definition", "strong_translit")).execute();
+        this.ebean.createSqlUpdate(
+                String.format(INDEX_CREATE, "def_idx" + (i++), "definition", "strong_pronunc")).execute();
+
+        this.ebean.createSqlUpdate(
+                String.format(INDEX_CREATE, "def_idx" + (i++), "definition", "accented_unicode")).execute();
+        this.ebean.createSqlUpdate(
+                String.format(INDEX_CREATE, "def_idx" + (i++), "definition", "unaccented_unicode")).execute();
+        this.ebean.createSqlUpdate(
+                String.format(INDEX_CREATE, "def_idx" + (i++), "definition", "step_transliteration"))
+                .execute();
+        this.ebean.createSqlUpdate(
+                String.format(INDEX_CREATE, "def_idx" + (i++), "definition",
+                        "unaccented_step_transliteration")).execute();
+        this.ebean
+                .createSqlUpdate(String.format(INDEX_CREATE, "def_idx" + (i++), "definition", "step_gloss"))
+                .execute();
+
+        i = 0;
+        this.ebean.createSqlUpdate(
+                String.format(INDEX_CREATE, "lex_form_idx" + (i++), "lexical_form", "raw_strong_number"))
+                .execute();
+        this.ebean.createSqlUpdate(
+                String.format(INDEX_CREATE, "lex_form_idx" + (i++), "lexical_form", "raw_form")).execute();
+        this.ebean.createSqlUpdate(
+                String.format(INDEX_CREATE, "lex_form_idx" + (i++), "lexical_form", "unaccented_form"))
+                .execute();
+
     }
 
     /**
@@ -156,62 +211,16 @@ public class Loader {
      * @return number of records loaded
      */
     int loadHotSpots() {
-        LOGGER.debug("Loading hotspots");
+        try {
+            LOGGER.debug("Loading hotspots");
 
-        return new CsvModuleLoader<HotSpot>(this.ebean,
-                this.coreProperties.getProperty("test.data.path.timeline.hotspots"), HotSpot.class).init();
-    }
-
-    /**
-     * Loads the lexicon and cross references all strongs after initial loading is complete
-     * 
-     * @return the number of entries loaded
-     */
-    int loadLexicon() {
-        LOGGER.debug("Loading lexicon");
-        new CsvModuleLoader<LexiconDefinition>(this.ebean,
-                this.coreProperties.getProperty("test.data.path.lexicon"), LexiconDefinition.class).init();
-
-        // now we need to post-process all of the fields
-        final List<LexiconDefinition> allDefs = this.ebean.find(LexiconDefinition.class).select("*")
-                .select("id,strong,relatedStrongs").fetch("similarStrongs").findList();
-
-        // now reverse code them all
-        final Map<String, LexiconDefinition> codedByStrongNumber = new HashMap<String, LexiconDefinition>();
-        for (final LexiconDefinition def : allDefs) {
-            codedByStrongNumber.put(def.getStrong(), def);
+            return new CsvModuleLoader<HotSpot>(this.ebean,
+                    this.coreProperties.getProperty("test.data.path.timeline.hotspots"), HotSpot.class)
+                    .init();
+        } finally {
+            // this.ebean.commitTransaction();
+            this.ebean.currentTransaction().flushBatch();
         }
-
-        // now we can iterate through them again and save all of the references...
-        for (final LexiconDefinition def : allDefs) {
-            final String[] strongNumbers = split(def.getRelatedStrongs(), ",");
-            final StringBuilder newRelatedStrongs = new StringBuilder(strongNumbers.length * 16);
-            for (int ii = 0; ii < strongNumbers.length; ii++) {
-                // look up the strong correspondance
-                final LexiconDefinition relatedStrong = codedByStrongNumber.get(strongNumbers[ii]);
-
-                if (relatedStrong == null) {
-                    LOGGER.error("Unable to reference strong [{}]. [{}] is incomplete.", strongNumbers[ii],
-                            def.getStrong());
-                    continue;
-                }
-
-                def.getSimilarStrongs().add(relatedStrong);
-
-                // also replace the string value
-                newRelatedStrongs.append(relatedStrong.getOriginal());
-                if (ii + 1 < strongNumbers.length) {
-                    newRelatedStrongs.append(' ');
-                }
-            }
-
-            // replace the related strong field:
-            def.setRelatedStrongs(newRelatedStrongs.toString());
-        }
-
-        // persist strongs to db
-        this.ebean.save(allDefs);
-        return allDefs.size();
     }
 
     /**
@@ -227,18 +236,24 @@ public class Loader {
         columnMapping.setColumnMapping(columnTranslations);
         columnMapping.setType(Morphology.class);
 
-        return new CsvModuleLoader<Morphology>(this.ebean,
-                this.coreProperties.getProperty("test.data.path.morphology.robinson"), columnMapping,
-                new PostProcessingAction<Morphology>() {
+        try {
+            return new CsvModuleLoader<Morphology>(this.ebean,
+                    this.coreProperties.getProperty("test.data.path.morphology.robinson"), columnMapping,
+                    new PostProcessingAction<Morphology>() {
 
-                    @Override
-                    public void postProcess(final Morphology entity) {
-                        LOGGER.trace("Processing [{}]", entity.getCode());
-                        sanitizeDefinitions(entity);
+                        @Override
+                        public void postProcess(final Morphology entity) {
+                            LOGGER.trace("Processing [{}]", entity.getCode());
+                            sanitizeDefinitions(entity);
 
-                        entity.initialise();
-                    }
-                }).init();
+                            entity.initialise();
+                        }
+                    }).init();
+        } finally {
+            // this.ebean.commitTransaction();
+            this.ebean.currentTransaction().flushBatch();
+        }
+
     }
 
     /**
@@ -327,9 +342,15 @@ public class Loader {
      */
     int loadTimeline() {
         LOGGER.debug("Loading timeline");
-        return new CustomTranslationCsvModuleLoader<TimelineEvent>(this.ebean,
-                this.coreProperties.getProperty("test.data.path.timeline.events.directory"),
-                TimelineEvent.class, new TimelineEventTranslation(this.jsword)).init();
+        try {
+            return new CustomTranslationCsvModuleLoader<TimelineEvent>(this.ebean,
+                    this.coreProperties.getProperty("test.data.path.timeline.events.directory"),
+                    TimelineEvent.class, new TimelineEventTranslation(this.jsword)).init();
+        } finally {
+            // this.ebean.commitTransaction();
+            this.ebean.currentTransaction().flushBatch();
+        }
+
     }
 
     /**
@@ -339,9 +360,16 @@ public class Loader {
      */
     int loadOpenBibleGeography() {
         LOGGER.debug("Loading Open Bible geography");
-        return new CustomTranslationCsvModuleLoader<GeoPlace>(this.ebean,
-                this.coreProperties.getProperty("test.data.path.geography.openbible"), GeoPlace.class,
-                new OpenBibleDataTranslation(this.jsword), '\t').init();
+        try {
+            return new CustomTranslationCsvModuleLoader<GeoPlace>(this.ebean,
+                    this.coreProperties.getProperty("test.data.path.geography.openbible"), GeoPlace.class,
+                    new OpenBibleDataTranslation(this.jsword), '\t').init();
+        } finally {
+            // this.ebean.commitTransaction();
+            this.ebean.currentTransaction().flushBatch();
+
+        }
+
     }
 
     /**
@@ -351,8 +379,55 @@ public class Loader {
      */
     int loadDictionaryArticles() {
         LOGGER.debug("Loading dictionary articles");
-        return new DictionaryLoader(this.ebean, this.jsword,
-                this.coreProperties.getProperty("test.data.path.dictionary.easton")).init();
+        try {
+            return new DictionaryLoader(this.ebean, this.jsword,
+                    this.coreProperties.getProperty("test.data.path.dictionary.easton")).init();
+        } finally {
+            // this.ebean.commitTransaction();
+            this.ebean.currentTransaction().flushBatch();
+
+        }
+
     }
 
+    /**
+     * Loads lexicon definitions
+     * 
+     * @return the number of entries loaded
+     */
+    int loadLexiconDefinitions() {
+        try {
+            return new LexiconLoader(this.ebean,
+                    this.coreProperties.getProperty("test.data.path.lexicon.definitions")).init();
+        } finally {
+            // this.ebean.commitTransaction();
+            this.ebean.currentTransaction().flushBatch();
+
+        }
+
+    }
+
+    /**
+     * loads all lexical forms for all words found in the Bible
+     * 
+     * @return the number of forms loaded, ~200,000
+     */
+    int loadLexicalForms() {
+        LOGGER.debug("Loading lexical forms");
+        try {
+            return new CsvModuleLoader<LexicalForm>(this.ebean,
+                    this.coreProperties.getProperty("test.data.path.lexicon.forms"), LexicalForm.class,
+                    new PostProcessingAction<LexicalForm>() {
+
+                        @Override
+                        public void postProcess(final LexicalForm entity) {
+                            entity.setUnaccentedForm(StringConversionUtils.unAccent(entity.getRawForm()));
+
+                        }
+                    }).init();
+        } finally {
+            // this.ebean.commitTransaction();
+            this.ebean.currentTransaction().flushBatch();
+        }
+    }
 }

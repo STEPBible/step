@@ -15,7 +15,8 @@ jQuery.extend(
     _jq_shout: {},
 
     shout: function (event, data){
-//    	console.log(event, data);
+        console.log(event);
+        //    	console.log(event, data);
     	if(this._jq_shout.registry[event] != null) {
 	        jQuery.each(this._jq_shout.registry[event],
 	                    function (){

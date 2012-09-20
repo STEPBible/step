@@ -83,11 +83,14 @@ public class TestData {
         this.numCryptoIterations = numCryptoIterations;
         this.jswordModule = jswordModule;
 
-        final User u = getUser();
-        createBookmarks(u);
-        createHistory(u);
-        // loadDefaultJSwordModules(coreModules);
-        loader.init();
+        if (Boolean.getBoolean("step.loader")) {
+
+            final User u = getUser();
+            createBookmarks(u);
+            createHistory(u);
+            // loadDefaultJSwordModules(coreModules);
+            loader.init();
+        }
     }
 
     // /**

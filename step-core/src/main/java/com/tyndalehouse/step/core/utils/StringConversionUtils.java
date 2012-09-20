@@ -32,6 +32,10 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.utils;
 
+import java.text.Normalizer;
+import java.text.Normalizer.Form;
+import java.util.regex.Pattern;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,10 +45,19 @@ import org.slf4j.LoggerFactory;
  * @author chrisburrell
  */
 public final class StringConversionUtils {
+    private static final Pattern BETA_UPPER_CASE_SYMBOLS = Pattern.compile("[*]");
+    private static final Pattern BETA_ACCENTS = Pattern.compile("[()/=+|&'*\\\\]");
+    private static final String GREEK_BREATHING = "h";
+    private static final int ETNAHTA = 0x0591;
+    private static final int DAGESH_GAP = 0xFB44 - 0x05e3;
+    private static final int ALEPH = 0x05D0;
+    private static final int TAV = 0x05EA;
     private static final char KEY_SEPARATOR = ':';
     private static final String STRONG_PREFIX = "strong:";
-    private static final int LANGUAGE_INDICATOR = STRONG_PREFIX.length();
+    private static final int STRONG_PREFIX_LENGTH = STRONG_PREFIX.length();
+    private static final int LANGUAGE_INDICATOR = STRONG_PREFIX_LENGTH;
     private static final Logger LOGGER = LoggerFactory.getLogger(StringConversionUtils.class);
+    private static final char ALEPH_LAMED = 0xFB4F;
 
     /**
      * hiding implementation
@@ -58,7 +71,7 @@ public final class StringConversionUtils {
      * and strong:H.
      * 
      * In essence we chop off any of the following prefixes: strong:G, strong:H, strong:, H, G. We don't use a
-     * regularl expression, since this will be much quicker
+     * regular expression, since this will be much quicker
      * 
      * @param strong strong key
      * @return the key containing just the digits
@@ -92,6 +105,66 @@ public final class StringConversionUtils {
     }
 
     /**
+     * Strips off strong: if present, to yield Gxxxx
+     * 
+     * @param key key to change
+     * @return the key without the prefix
+     */
+    public static String getStrongLanguageSpecificKey(final String key) {
+        if (key.length() > STRONG_PREFIX_LENGTH) {
+            return key.substring(STRONG_PREFIX_LENGTH);
+        }
+        return key;
+    }
+
+    /**
+     * pads the strong number according to its size, to an optional letter followed by 4 digits
+     * 
+     * @param key the key to the strong number
+     * @return the strong number, padded
+     */
+    public static String getStrongPaddedKey(final String key) {
+        final String strongNumber = getStrongLanguageSpecificKey(key);
+
+        final int length = strongNumber.length();
+        if (length >= 5 || length <= 0) {
+            return strongNumber;
+        }
+
+        // check we have G or H
+        final char firstChar = strongNumber.charAt(0);
+        if (firstChar == 'G' || firstChar == 'H') {
+            switch (length) {
+                case 1:
+                    return strongNumber;
+                case 2:
+                    return new String(new char[] { firstChar, '0', '0', '0', strongNumber.charAt(1) });
+                case 3:
+                    return new String(new char[] { firstChar, '0', '0', strongNumber.charAt(1),
+                            strongNumber.charAt(2) });
+                case 4:
+                    return new String(new char[] { firstChar, '0', strongNumber.charAt(1),
+                            strongNumber.charAt(2), strongNumber.charAt(3) });
+                default:
+                    return strongNumber;
+            }
+        }
+
+        // we only have the numbers so do our best
+        switch (length) {
+            case 1:
+                return new String(new char[] { '0', '0', '0', strongNumber.charAt(0) });
+            case 2:
+                return new String(new char[] { '0', '0', strongNumber.charAt(0), strongNumber.charAt(1) });
+            case 3:
+                return new String(new char[] { '0', strongNumber.charAt(0), strongNumber.charAt(1),
+                        strongNumber.charAt(2) });
+            default:
+                return strongNumber;
+        }
+    }
+
+    /**
      * in this case, we assume that a key starts shortly after the last ':' with a number
      * 
      * @param potentialKey a key that can potentially be shortened
@@ -120,5 +193,250 @@ public final class StringConversionUtils {
         }
 
         return potentialKey.substring(start);
+    }
+
+    /**
+     * Takes accents and other punctuation off the word - less performant
+     * 
+     * @param word the word to be processed
+     * @return the unaccented form
+     */
+    public static String unAccent(final String word) {
+        return unAccent(unAccent(word, true), false);
+    }
+
+    /**
+     * Removes the starting H, if present (for greek transliterations only at present time)
+     * 
+     * @param stepTransliteration the transliteration
+     * @return the transliteration adapted for unaccented texts)
+     */
+    public static String adaptForUnaccentedTransliteration(final String stepTransliteration) {
+        if (stepTransliteration.startsWith(GREEK_BREATHING)) {
+            return stepTransliteration.substring(1);
+        }
+        return stepTransliteration;
+    }
+
+    static long t1 = 0;
+    static long t2 = 0;
+
+    /**
+     * @param rawForm raw form of the word
+     * @return the transliteration of the word given
+     */
+    public static final String transliterate(final String rawForm) {
+        // decompose characters from breathing and accents and store in StringBuilder
+
+        final long t = System.currentTimeMillis();
+        final String normalized = Normalizer.normalize(rawForm.toLowerCase(), Form.NFD);
+        // t1 += System.currentTimeMillis() - t;
+
+        // t = System.currentTimeMillis();
+        final StringBuilder sb = new StringBuilder(normalized);
+
+        int position = 0;
+
+        while (position < sb.length()) {
+            switch (sb.charAt(position)) {
+                case 'α':
+                    sb.setCharAt(position++, 'a');
+                    break;
+
+                case 'β':
+                    sb.setCharAt(position++, 'b');
+                    break;
+
+                case 'γ':
+                    if (position + 1 < sb.length()) {
+                        switch (sb.charAt(position + 1)) {
+                            case 'γ':
+                                sb.setCharAt(position++, 'n');
+                                sb.setCharAt(position++, 'g');
+                                break;
+                            case 'κ':
+                                sb.setCharAt(position++, 'n');
+                                sb.setCharAt(position++, 'k');
+                                break;
+                            case 'χ':
+                                sb.setCharAt(position++, 'n');
+                                sb.setCharAt(position++, 'c');
+                                sb.insert(position++, 'h');
+                                break;
+                            default:
+                                sb.setCharAt(position++, 'g');
+                                break;
+                        }
+                    } else {
+                        sb.setCharAt(position++, 'g');
+                    }
+                    break;
+
+                case 'δ':
+                    sb.setCharAt(position++, 'd');
+                    break;
+
+                case 'ε':
+                    sb.setCharAt(position++, 'e');
+                    break;
+
+                case 'ζ':
+                    sb.setCharAt(position++, 'z');
+                    break;
+
+                case 'η':
+                    sb.setCharAt(position++, 'é');
+                    break;
+
+                case 'θ':
+                    sb.setCharAt(position++, 't');
+                    sb.insert(position++, 'h');
+                    break;
+
+                case 'ι':
+                    sb.setCharAt(position++, 'i');
+                    break;
+
+                case 'κ':
+                    sb.setCharAt(position++, 'k');
+                    break;
+
+                case 'λ':
+                    sb.setCharAt(position++, 'l');
+                    break;
+
+                case 'μ':
+                    sb.setCharAt(position++, 'm');
+                    break;
+
+                case 'ν':
+                    sb.setCharAt(position++, 'n');
+                    break;
+
+                case 'ξ':
+                    sb.setCharAt(position++, 'x');
+                    break;
+
+                case 'ο':
+                    sb.setCharAt(position++, 'o');
+                    break;
+
+                case 'π':
+                    sb.setCharAt(position++, 'p');
+                    break;
+
+                case 'ρ':
+                    sb.setCharAt(position++, 'r');
+                    break;
+
+                case 'ς':
+                    sb.setCharAt(position++, 's');
+                    break;
+
+                case 'σ':
+                    sb.setCharAt(position++, 's');
+                    break;
+
+                case 'τ':
+                    sb.setCharAt(position++, 't');
+                    break;
+
+                case 'υ':
+                    sb.setCharAt(position++, 'u');
+                    break;
+
+                case 'φ':
+                    sb.setCharAt(position++, 'f');
+                    break;
+
+                case 'χ':
+                    sb.setCharAt(position++, 'c');
+                    sb.insert(position++, 'h');
+                    break;
+
+                case 'ψ':
+                    sb.setCharAt(position++, 'p');
+                    sb.insert(position++, 's');
+                    break;
+                case 'ω':
+                    sb.setCharAt(position++, 'o');
+                    sb.insert(position++, 'w');
+                    break;
+                //
+
+                // leave spaces in, but should never be hit
+                case ' ':
+                    position++;
+                    break;
+
+                // breathing character
+                case 0x314:
+                    // if the previous character was not a 'r', then we add an 'h'
+                    if (!((position == 0 && sb.charAt(1) == 'ρ') || (position > 0 && sb.charAt(0) == 'r'))) {
+                        sb.deleteCharAt(position);
+                        sb.insert(0, 'h');
+                    }
+
+                    position++;
+                    break;
+                default:
+                    // remove character since not recognised
+                    sb.deleteCharAt(position);
+                    break;
+            }
+        }
+
+        final String s = sb.toString();
+        t2 += (System.currentTimeMillis() - t);
+        return s;
+    }
+
+    /**
+     * takes accents and other punctuation off the word
+     * 
+     * @param word the word to be processed
+     * @param isGreek true for greek, false for hebrew
+     * @return the unaccented form
+     */
+    public static String unAccent(final String word, final boolean isGreek) {
+        if (isGreek) {
+            return Normalizer.normalize(word, Normalizer.Form.NFD).replaceAll(
+                    "\\p{InCombiningDiacriticalMarks}+", "");
+        } else {
+            final StringBuilder sb = new StringBuilder(word);
+            int i = 0;
+            while (i < sb.length()) {
+                final char currentChar = sb.charAt(i);
+                if (currentChar < ALEPH && currentChar >= ETNAHTA) {
+                    sb.deleteCharAt(i);
+                } else if (currentChar > TAV && currentChar < ALEPH_LAMED) {
+                    sb.setCharAt(i, (char) (currentChar - DAGESH_GAP));
+                    i++;
+                } else {
+                    i++;
+                }
+            }
+            return sb.toString();
+        }
+    }
+
+    /**
+     * assumes lower case version of beta, since this is what we search on
+     * 
+     * @param beta the input string, with '*'
+     * @return a version without breathing or *
+     */
+    public static String toBetaLowercase(final String beta) {
+        return BETA_UPPER_CASE_SYMBOLS.matcher(beta).replaceAll("");
+    }
+
+    /**
+     * Gets rid of breathing and upper case symbols. Does not change the case of the characters
+     * 
+     * @param beta the input string with breathing and * for capitals
+     * @return a version without breathing or *
+     */
+    public static String toBetaUnaccented(final String beta) {
+        return BETA_ACCENTS.matcher(beta).replaceAll("");
     }
 }

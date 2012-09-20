@@ -35,7 +35,8 @@
   version="1.0"
   xmlns:jsword="http://xml.apache.org/xalan/java"
   xmlns:interleaving="xalan://com.tyndalehouse.step.core.xsl.impl.InterleavingProviderImpl"
-  extension-element-prefixes="jsword interleaving">
+  xmlns:conversion="xalan://com.tyndalehouse.step.core.utils.StringConversionUtils"
+  extension-element-prefixes="jsword interleaving conversion">
 
   <!--  Version 3.0 is necessary to get br to work correctly. -->
   <xsl:output method="html" version="3.0" omit-xml-declaration="yes" indent="no"/>
@@ -639,10 +640,12 @@
     		<xsl:choose>
 	    		<xsl:when test="$ColorCoding = 'true'" >
 			    	<xsl:variable name="colorClass" select="jsword:getColorClass($colorCodingProvider, @morph)"/>
-			    	<span class="{$colorClass}" onclick="javascript:showDef(this)" strong="{@lemma}" morph="{@morph}"><xsl:apply-templates/></span>
+			    	<xsl:variable name="lemma" select="conversion:getStrongPaddedKey(@lemma)" />
+			    	<span class="{$colorClass}" onclick="javascript:showDef(this)" strong="{$lemma}" morph="{@morph}"><xsl:apply-templates/></span>
 			    </xsl:when>
 			    <xsl:otherwise>
-	    	    	<span onclick="javascript:showDef(this)" strong="{@lemma}" morph="{@morph}"><xsl:apply-templates/></span>
+			    	<xsl:variable name="lemma" select="conversion:getStrongPaddedKey(@lemma)" />
+	    	    	<span onclick="javascript:showDef(this)" strong="{$lemma}" morph="{@morph}"><xsl:apply-templates/></span>
 			    </xsl:otherwise>
 		    </xsl:choose>
 	    

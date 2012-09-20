@@ -34,6 +34,10 @@ package com.tyndalehouse.step.core.service.impl;
 
 import static com.tyndalehouse.step.core.models.LookupOption.HEADINGS_ONLY;
 import static com.tyndalehouse.step.core.service.impl.VocabularyServiceImpl.padStrongNumber;
+import static com.tyndalehouse.step.core.utils.StringConversionUtils.toBetaLowercase;
+import static com.tyndalehouse.step.core.utils.StringConversionUtils.toBetaUnaccented;
+import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
+import static java.lang.Character.isDigit;
 import static java.lang.String.format;
 
 import java.util.ArrayList;
@@ -52,8 +56,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.avaje.ebean.EbeanServer;
-import com.tyndalehouse.step.core.data.entities.LexiconDefinition;
 import com.tyndalehouse.step.core.data.entities.ScriptureReference;
+import com.tyndalehouse.step.core.data.entities.lexicon.Definition;
+import com.tyndalehouse.step.core.data.entities.lexicon.LexicalForm;
 import com.tyndalehouse.step.core.data.entities.timeline.TimelineEvent;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.models.OsisWrapper;
@@ -68,6 +73,7 @@ import com.tyndalehouse.step.core.service.SearchService;
 import com.tyndalehouse.step.core.service.TimelineService;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import com.tyndalehouse.step.core.service.jsword.JSwordSearchService;
+import com.tyndalehouse.step.core.utils.StringConversionUtils;
 
 /**
  * A federated search service implementation. see {@link SearchService}
@@ -77,6 +83,9 @@ import com.tyndalehouse.step.core.service.jsword.JSwordSearchService;
  */
 @Singleton
 public class SearchServiceImpl implements SearchService {
+    // TODO should this be parameterized?
+    private static final String BASE_GREEK_VERSION = "WHNU";
+    private static final String BASE_HEBREW_VERSION = "OSMHB";
     private static final Logger LOGGER = LoggerFactory.getLogger(SearchServiceImpl.class);
     private static final String STRONG_QUERY = "strong:";
     private static final String LIKE = "%%%s%%";
@@ -111,10 +120,15 @@ public class SearchServiceImpl implements SearchService {
 
         SearchResult result;
         // if we've only got one search, we want to retrieve the keys, the page, etc. all in one go
-        if (sq.isIndividualSearch()) {
-            result = executeOneSearch(sq);
-        } else {
-            result = executeJoiningSearches(sq);
+        try {
+
+            if (sq.isIndividualSearch()) {
+                result = executeOneSearch(sq);
+            } else {
+                result = executeJoiningSearches(sq);
+            }
+        } catch (final AbortQueryException ex) {
+            result = new SearchResult();
         }
 
         // we split the query into separate searches
@@ -130,7 +144,7 @@ public class SearchServiceImpl implements SearchService {
     }
 
     /**
-     * Runs a number of searches, joining them together (known as "refine searches"
+     * Runs a number of searches, joining them together (known as "refine searches")
      * 
      * @param sq the search query object
      * @return the list of search results
@@ -160,13 +174,23 @@ public class SearchServiceImpl implements SearchService {
                 case TEXT:
                     results = intersect(results, this.jswordSearch.searchKeys(sq));
                     break;
-                case EXACT_STRONG:
+                case ORIGINAL_GREEK_FORMS:
+                case ORIGINAL_HEBREW_FORMS:
                     adaptQueryForStrongSearch(sq);
                     results = intersect(results, this.jswordSearch.searchKeys(sq));
                     break;
-                case RELATED_STRONG:
+                case ORIGINAL_GREEK_RELATED:
+                case ORIGINAL_HEBREW_RELATED:
                     adaptQueryForRelatedStrongSearch(sq);
                     results = intersect(results, this.jswordSearch.searchKeys(sq));
+                    break;
+                case ORIGINAL_MEANING:
+                    adaptQueryForMeaningSearch(sq);
+                    results = intersect(results, this.jswordSearch.searchKeys(sq));
+                    break;
+                case ORIGINAL_GREEK_EXACT:
+                case ORIGINAL_HEBREW_EXACT:
+                    results = intersect(results, getKeysFromOriginalText(sq));
                     break;
                 case SUBJECT:
                 case TIMELINE_DESCRIPTION:
@@ -191,8 +215,14 @@ public class SearchServiceImpl implements SearchService {
         final IndividualSearch lastSearch = sq.getLastSearch();
         switch (lastSearch.getType()) {
             case TEXT:
-            case EXACT_STRONG:
-            case RELATED_STRONG:
+                // case ORIGINAL_FORM:
+            case ORIGINAL_MEANING:
+            case ORIGINAL_GREEK_EXACT:
+            case ORIGINAL_GREEK_FORMS:
+            case ORIGINAL_GREEK_RELATED:
+            case ORIGINAL_HEBREW_EXACT:
+            case ORIGINAL_HEBREW_RELATED:
+            case ORIGINAL_HEBREW_FORMS:
                 return buildCombinedVerseBasedResults(sq, results);
             case SUBJECT:
             case TIMELINE_DESCRIPTION:
@@ -218,14 +248,25 @@ public class SearchServiceImpl implements SearchService {
                 return runTextSearch(sq);
             case SUBJECT:
                 return runSubjectSearch(sq);
-            case EXACT_STRONG:
-                return runExactStrongSearch(sq);
-            case RELATED_STRONG:
-                return runRelatedStrongSearch(sq);
+                // case EXACT_STRONG:
+                // return runExactStrongSearch(sq);
+                // case RELATED_STRONG:
+                // return runRelatedStrongSearch(sq);
             case TIMELINE_DESCRIPTION:
                 return runTimelineDescriptionSearch(sq);
             case TIMELINE_REFERENCE:
                 return runTimelineReferenceSearch(sq);
+            case ORIGINAL_GREEK_FORMS:
+            case ORIGINAL_HEBREW_FORMS:
+                return runAllFormsStrongSearch(sq);
+            case ORIGINAL_GREEK_RELATED:
+            case ORIGINAL_HEBREW_RELATED:
+                return runRelatedStrongSearch(sq);
+            case ORIGINAL_GREEK_EXACT:
+            case ORIGINAL_HEBREW_EXACT:
+                return runExactOriginalTextSearch(sq);
+            case ORIGINAL_MEANING:
+                return runMeaningSearch(sq);
             default:
                 throw new StepInternalException("Attempted to execute unknown search");
         }
@@ -275,17 +316,28 @@ public class SearchServiceImpl implements SearchService {
     }
 
     /**
+     * Obtains all glosses with a particular meaning
+     * 
+     * @param sq the search criteria
+     * @return the result from the corresponding text search
+     */
+    private SearchResult runMeaningSearch(final SearchQuery sq) {
+        final List<String> strongs = adaptQueryForMeaningSearch(sq);
+        return runStrongTextSearch(sq, strongs);
+    }
+
+    /**
      * Runs the search looking for particular strongs
      * 
      * @param sq the search query
      * @return the results
      */
-    private SearchResult runExactStrongSearch(final SearchQuery sq) {
-        adaptQueryForStrongSearch(sq);
+    private SearchResult runAllFormsStrongSearch(final SearchQuery sq) {
+        final List<String> strongs = adaptQueryForStrongSearch(sq);
 
         // TODO jsword bug - email 09-Jul-2012 - 19:11 GMT
         // and then run the search
-        return runTextSearch(sq);
+        return runStrongTextSearch(sq, strongs);
     }
 
     /**
@@ -295,10 +347,116 @@ public class SearchServiceImpl implements SearchService {
      * @return the results
      */
     private SearchResult runRelatedStrongSearch(final SearchQuery sq) {
-        adaptQueryForRelatedStrongSearch(sq);
+        final List<String> strongs = adaptQueryForRelatedStrongSearch(sq);
 
         // and then run the search
-        return runTextSearch(sq);
+        return runStrongTextSearch(sq, strongs);
+    }
+
+    /**
+     * Runs a search using the exact form, i.e. without any lookups, a straight text search on the original
+     * text
+     * 
+     * @param sq the search criteria
+     * @return the results to be shown
+     */
+    private SearchResult runExactOriginalTextSearch(final SearchQuery sq) {
+        final Key resultKeys = getKeysFromOriginalText(sq);
+
+        // return results from appropriate versions
+        return extractSearchResults(sq, resultKeys);
+    }
+
+    /**
+     * Runs the search, and adds teh strongs to the search results
+     * 
+     * @param sq the search criteria
+     * @param strongs the list of strongs that were searched for
+     * @return the search results
+     */
+    private SearchResult runStrongTextSearch(final SearchQuery sq, final List<String> strongs) {
+        final SearchResult textResults = runTextSearch(sq);
+        textResults.setStrongHighlights(strongs);
+        return textResults;
+    }
+
+    /**
+     * Searches for all passage references matching an original text (greek or hebrew)
+     * 
+     * @param sq the search criteria
+     * @return the list of verses
+     */
+    private Key getKeysFromOriginalText(final SearchQuery sq) {
+        final IndividualSearch currentSearch = sq.getCurrentSearch();
+        final String[] soughtAfterVersions = currentSearch.getVersions();
+
+        // overwrite version with Tisch to do the search
+        if (currentSearch.getType() == SearchType.ORIGINAL_GREEK_EXACT) {
+            currentSearch.setVersions(new String[] { BASE_GREEK_VERSION });
+            currentSearch.setQuery(unaccent(currentSearch.getQuery(), sq));
+        } else {
+            currentSearch.setVersions(new String[] { BASE_HEBREW_VERSION });
+        }
+
+        final Key resultKeys = this.jswordSearch.searchKeys(sq);
+
+        // now overwrite again and do the intersection with the normal text
+        currentSearch.setVersions(soughtAfterVersions);
+        return resultKeys;
+    }
+
+    /**
+     * Attempts to recognise the input, whether it is a strong number, a transliteration or a hebrew/greek
+     * word
+     * 
+     * @param sq the search criteria
+     * @return a list of match strong numbers
+     */
+    private List<String> getStrongsFromTextCriteria(final SearchQuery sq) {
+        // we can be dealing with a strong number, if so, no work required...
+        final String query = sq.getCurrentSearch().getQuery();
+
+        List<String> strongs;
+        if (isDigit(query.charAt(0)) || (query.length() > 1 && isDigit(query.charAt(1)))) {
+            // then we're dealing with a strong number, without its G/H prefix
+            strongs = getStrongsFromCurrentSearch(sq);
+        } else {
+            // we're dealing with some sort of greek/hebrew form so we search the tables for this
+            strongs = searchTextFieldsForDefinition(query, sq);
+        }
+
+        // run rules for transliteration
+        if (strongs.isEmpty()) {
+            // run transliteration rules
+            strongs = findByTransliteration(query);
+        }
+        return strongs;
+    }
+
+    /**
+     * Looks up all the glosses for a particular word, and then adapts to strong search and continues as
+     * before
+     * 
+     * @param sq
+     * @return
+     */
+    private List<String> adaptQueryForMeaningSearch(final SearchQuery sq) {
+        final String query = sq.getCurrentSearch().getQuery();
+
+        // TODO having wildcards both before and after and after is not good for performance - revise and use
+        // full text search?
+        final List<Definition> matchingMeanings = this.ebean.find(Definition.class).select("strongNumber")
+                .where().ilike("stepGloss", "%" + query + "%").findList();
+        final List<String> strongs = new ArrayList<String>(matchingMeanings.size());
+        for (final Definition d : matchingMeanings) {
+            strongs.add(d.getStrongNumber());
+        }
+
+        final String textQuery = getQuerySyntaxForStrongs(strongs, sq);
+        sq.getCurrentSearch().setQuery(textQuery);
+
+        // return the strongs that the search will match
+        return strongs;
     }
 
     /**
@@ -307,12 +465,16 @@ public class SearchServiceImpl implements SearchService {
      * 
      * @param sq the search query
      */
-    private void adaptQueryForStrongSearch(final SearchQuery sq) {
-        final List<String> strongs = getStrongsFromCurrentSearch(sq);
-        final String query = getQuerySyntaxForStrongs(strongs);
+    private List<String> adaptQueryForStrongSearch(final SearchQuery sq) {
+        final List<String> strongs = getStrongsFromTextCriteria(sq);
+
+        final String textQuery = getQuerySyntaxForStrongs(strongs, sq);
 
         // we can now change the individual search query, to the real text search
-        sq.getCurrentSearch().setQuery(query);
+        sq.getCurrentSearch().setQuery(textQuery);
+
+        // return the strongs that the search will match
+        return strongs;
     }
 
     /**
@@ -320,25 +482,116 @@ public class SearchServiceImpl implements SearchService {
      * 
      * @param sq the search query object
      */
-    private void adaptQueryForRelatedStrongSearch(final SearchQuery sq) {
-        final List<String> strongsFromQuery = getStrongsFromCurrentSearch(sq);
+    private List<String> adaptQueryForRelatedStrongSearch(final SearchQuery sq) {
+        final List<String> strongsFromQuery = getStrongsFromTextCriteria(sq);
 
         // get all similar ones
-        final List<LexiconDefinition> strongs = this.ebean.find(LexiconDefinition.class)
-                .fetch("similarStrongs").select("similarStrongs.strong").where()
-                .in("strong", strongsFromQuery).findList();
+        final List<Definition> strongs = this.ebean.find(Definition.class).fetch("similarStrongs")
+                .select("similarStrongs.strongNumber").where().in("strongNumber", strongsFromQuery)
+                .findList();
 
-        for (final LexiconDefinition s : strongs) {
-            final List<LexiconDefinition> similarStrongs = s.getSimilarStrongs();
-            for (final LexiconDefinition similar : similarStrongs) {
-                strongsFromQuery.add(similar.getStrong());
+        for (final Definition s : strongs) {
+            final List<Definition> similarStrongs = s.getSimilarStrongs();
+            for (final Definition similar : similarStrongs) {
+                strongsFromQuery.add(similar.getStrongNumber());
             }
         }
 
-        final String query = getQuerySyntaxForStrongs(strongsFromQuery);
+        final String query = getQuerySyntaxForStrongs(strongsFromQuery, sq);
 
         // we can now change the individual search query, to the real text search
         sq.getCurrentSearch().setQuery(query);
+
+        // return the strongs that the search will match
+        return strongsFromQuery;
+    }
+
+    /**
+     * Searches the underlying DB for the relevant entry
+     * 
+     * @param query the query that is being passed in
+     * @param sq the search criteria
+     * @return the list of strongs matched
+     */
+    private List<String> searchTextFieldsForDefinition(final String query, final SearchQuery sq) {
+        List<LexicalForm> forms = this.ebean.find(LexicalForm.class).select("rawStrongNumber").where()
+                .eq("rawForm", query).findList();
+        if (forms == null) {
+            forms = this.ebean.find(LexicalForm.class).where().eq("unaccentedForm", unaccent(query, sq))
+                    .findList();
+        }
+
+        if (forms == null) {
+            return new ArrayList<String>(0);
+        }
+
+        // if we matched more than one, then we don't have our assumed uniqueness... log warning and
+        // continue with first matched strong
+
+        final List<String> listOfStrongs = new ArrayList<String>();
+        for (final LexicalForm f : forms) {
+            listOfStrongs.add(f.getRawStrongNumber());
+        }
+        return listOfStrongs;
+    }
+
+    /**
+     * removes accents, hebrew vowels, etc.
+     * 
+     * @param query query
+     * @param sq the current query criteria
+     * @return the unaccented string
+     */
+    private String unaccent(final String query, final SearchQuery sq) {
+        final SearchType currentSearchType = sq.getCurrentSearch().getType();
+        switch (currentSearchType) {
+            case ORIGINAL_GREEK_EXACT:
+            case ORIGINAL_GREEK_FORMS:
+            case ORIGINAL_GREEK_RELATED:
+                return StringConversionUtils.unAccent(query, true);
+            case ORIGINAL_HEBREW_EXACT:
+            case ORIGINAL_HEBREW_FORMS:
+            case ORIGINAL_HEBREW_RELATED:
+                return StringConversionUtils.unAccent(query, false);
+
+            default:
+                return query;
+        }
+    }
+
+    /**
+     * Runs the transliteration rules on the input in an attempt to match an entry in the lexicon
+     * 
+     * @param query the query to be found
+     * @return the strongs that have been found/matched.
+     */
+    private List<String> findByTransliteration(final String query) {
+        final List<Definition> definitions = new ArrayList<Definition>();
+
+        // first find by transliterations that we have
+        final String lowerQuery = query.toLowerCase();
+        final String betaQuery = toBetaLowercase(lowerQuery);
+        final String betaUnaccentedQuery = toBetaUnaccented(lowerQuery);
+
+        final List<Definition> defs = this.ebean.find(Definition.class).select("strongNumber").where()
+                .disjunction().eq("stepTransliteration", lowerQuery)
+                .eq("unaccentedTransliteration", lowerQuery).eq("strongPronunc", lowerQuery)
+                .eq("strongTranslit", lowerQuery).eq("lsjWordBeta", betaQuery)
+                .eq("lsjWordBetaUnaccented", betaUnaccentedQuery).findList();
+
+        // finally, if we haven't found anything, then abort
+        if (definitions.isEmpty()) {
+            // TODO obtain and implement transliteration rules
+            // nothing to search for..., so abort query
+            throw new AbortQueryException("No definitions found for input");
+        }
+
+        final List<String> strongs = new ArrayList<String>(defs.size());
+        for (final Definition d : defs) {
+            strongs.add(d.getStrongNumber());
+        }
+
+        return strongs;
     }
 
     /**
@@ -352,7 +605,7 @@ public class SearchServiceImpl implements SearchService {
         final String searchStrong = currentSearch.getQuery();
 
         LOGGER.debug("Searching for strongs [{}]", searchStrong);
-        final List<String> strongs = splitToStrongs(searchStrong);
+        final List<String> strongs = splitToStrongs(searchStrong, sq.getCurrentSearch().getType());
         return strongs;
     }
 
@@ -420,14 +673,24 @@ public class SearchServiceImpl implements SearchService {
 
     /**
      * @param strongs a list of strongs
+     * @param sq the current search criteria containing the range of interest
      * @return the query syntax
      */
-    private String getQuerySyntaxForStrongs(final List<String> strongs) {
-        final StringBuilder query = new StringBuilder();
+    private String getQuerySyntaxForStrongs(final List<String> strongs, final SearchQuery sq) {
+        final StringBuilder query = new StringBuilder(64);
+
+        // adding a space in front in case we prepend a range
+        query.append(' ');
         for (final String s : strongs) {
             query.append(STRONG_QUERY);
             query.append(s);
             query.append(' ');
+        }
+
+        final String mainRange = sq.getCurrentSearch().getMainRange();
+        if (isNotBlank(mainRange)) {
+            query.insert(0, mainRange);
+
         }
         return query.toString().trim().toLowerCase();
     }
@@ -436,15 +699,38 @@ public class SearchServiceImpl implements SearchService {
      * Parses the search query, returned in upper case in case a database lookup is required
      * 
      * @param searchStrong the search query
+     * @param searchType type of search, this includes greek vs hebrew...
      * @return the list of strongs
      */
-    private List<String> splitToStrongs(final String searchStrong) {
+    private List<String> splitToStrongs(final String searchStrong, final SearchType searchType) {
         final List<String> strongs = Arrays.asList(searchStrong.split("[, ;]+"));
         final List<String> strongList = new ArrayList<String>();
         for (final String s : strongs) {
-            strongList.add(padStrongNumber(s.toUpperCase(Locale.ENGLISH), false));
+            final String prefixedStrong = isDigit(s.charAt(0)) ? getPrefixed(s, searchType) : s;
+            strongList.add(padStrongNumber(prefixedStrong.toUpperCase(Locale.ENGLISH), false));
         }
         return strongList;
+    }
+
+    /**
+     * @param s the string to add a prefix to
+     * @param searchType the type of search
+     * @return the prefixed string with H/G
+     */
+    private String getPrefixed(final String s, final SearchType searchType) {
+        switch (searchType) {
+            case ORIGINAL_GREEK_EXACT:
+            case ORIGINAL_GREEK_FORMS:
+            case ORIGINAL_GREEK_RELATED:
+                return 'G' + s;
+            case ORIGINAL_HEBREW_EXACT:
+            case ORIGINAL_HEBREW_FORMS:
+            case ORIGINAL_HEBREW_RELATED:
+                return 'H' + s;
+            default:
+                return null;
+
+        }
     }
 
     /**

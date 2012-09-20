@@ -15,6 +15,7 @@ public class SearchResult implements Serializable {
     private long timeTookToRetrieveScripture;
     private long timeTookTotal;
     private List<SearchEntry> results;
+    private List<String> strongHighlights;
 
     /**
      * @return the query
@@ -97,5 +98,19 @@ public class SearchResult implements Serializable {
      */
     public void setTotal(final int total) {
         this.total = total;
+    }
+
+    /**
+     * @return the strongHighlights
+     */
+    public List<String> getStrongHighlights() {
+        return this.strongHighlights;
+    }
+
+    /**
+     * @param strongHighlights the strongHighlights to set
+     */
+    public void setStrongHighlights(final List<String> strongHighlights) {
+        this.strongHighlights = strongHighlights;
     }
 }

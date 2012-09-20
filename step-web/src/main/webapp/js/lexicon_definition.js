@@ -42,7 +42,7 @@ step.lexicon = {
     },
 
     _doSearch : function(searchType) {
-        var query = $("span[info-name ='strong']").val();
+        var query = $("span[info-name ='strongNumber']").val();
         if(step.util.raiseErrorIfBlank(query, "No strong data is available")) {
             var targetPassageId = this.passageId;
             step.state.original.strong(targetPassageId, query);
@@ -66,7 +66,7 @@ function LexiconDefinition() {
 
         // temporary measure, but we can keep it in as a safe-guard against no
         // strong mapping being found:
-        $("span[info-name ='strong']").val(data.strong.substring("strong:".length));
+        $("span[info-name ='strong']").val(data.strong);
     });
 
     var currentLevel = step.state.detail.get();

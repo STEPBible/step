@@ -1,0 +1,51 @@
+===============================
+@LSJ-No=	21813
+@LSJ-WordAccented=	μυωπός
+@LSJ-WordUnaccented=	μυωπος
+@LSJ-WordBeta=	mυωpoς
+@LSJ-Gramm=	<Gk>μυωπός, όν</Gk> <br>=	<Gk>μύωψ</Gk> I, [<a href="#" class=cdate title="Xenophon Historicus">5th/4th BCE</a>] <br>
+@LSJ-Defs=	
+===============================
+@LSJ-No=	21814
+@LSJ-WordAccented=	μύωψ
+@LSJ-WordUnaccented=	μυωψ
+@LSJ-WordBeta=	mυωψ
+@LSJ-Gramm=	<Gk>μύ-ωφαιλινγ ον λεμβυφ</Gk> [] <br> <Gk>ψ, ωπος</Gk>, <br> <Gk>μύω, ὤψ</Gk>
+@LSJ-Defs=	1. <b>contracting the eyes </b>, as shortsighted people do, <b>shortsighted </b>, [<a href="#" class=cdate title="Aristotle Philosopher">4th BCE</a>] <br>2. as Subst., <b>the horsefly </b> or <b>gadfly </b>, Lat. <Lat>tabanus</Lat>, [<a href="#" class=cdate title="Aeschulus Tragicus">6th/5th BCE</a>, <a href="#" class=cdate title="Plato Philosophus">5th/4th BCE</a>] <br>3. <b>a good, spur </b>, [<a href="#" class=cdate title="Xenophon Historicus">5th/4th BCE</a>, <a href="#" class=cdate title="Theophrastus Philosophus">4th/3rd BCE</a>]:—;metaph. <b>a stimulant </b>, [<a href="#" class=cdate title="Lucian">2nd CE</a>, <date>var. dates<author>Anthology Palantina</author></date> 
+===============================
+@LSJ-No=	21815
+@LSJ-WordAccented=	μῶλος
+@LSJ-WordUnaccented=	μωλος
+@LSJ-WordBeta=	mωloς
+@LSJ-Gramm=	! <Gk>μῶλος, ὁ</Gk>,
+@LSJ-Defs=	<b>the toil </b> and <b>moil </b> of war, [<a href="#" class=cdate title="Iliad by Homer">8th/7th BCE</a>]; <Gk>ξείνου καὶ Ἴρου μ</Gk>. <b>the struggle between </b> Irus and the stranger, [<a href="#" class=cdate title="Odyssey by Homer">8th/7th BCE</a>] 
+===============================
+@LSJ-No=	21816
+@LSJ-WordAccented=	μῶλυ
+@LSJ-WordUnaccented=	μωλυ
+@LSJ-WordBeta=	mωlυ
+@LSJ-Gramm=	
+@LSJ-Defs=	<b>moly, mandrake </b>, a fabulous herb of magic power, having a black root and white blossom, given by Hermes to Ulysses, as a counter-charm to the charms of Circe, [<a href="#" class=cdate title="Odyssey by Homer">8th/7th BCE</a>] 
+===============================
+@LSJ-No=	21817
+@LSJ-WordAccented=	μωμάομαι
+@LSJ-WordUnaccented=	μωμαομαι
+@LSJ-WordBeta=	mωmaomai
+@LSJ-Gramm=	<Gk>μωμάομαι</Gk>, <br> <Gk>μῶμος</Gk>
+@LSJ-Defs=	Dep.: <b>to find, fault with, blame </b>, c. acc., [<a href="#" class=cdate title="Iliad by Homer">8th/7th BCE</a>, <a href="#" class=cdate title="Aeschulus Tragicus">6th/5th BCE</a>]:—;an aor1 inf. <Gk>μωμηθῆναι</Gk> in pass. sense, [<a href="#" class=cdate title="New Testament">1st CE</a>] 
+@StrongNo=	G3469
+
+@AccentedBETA=	MWMA/OMAI
+@AccentedUnicode=	μωμάομαι
+@PlainUnicode=	>μωμαομαι<
+@StrongTranslit=	mōmáomai
+@StrongPronunc=	mo-mah'-om-ahee
+@StrongAltern=	
+@StrongDef=	to carp at, i.e. censure (discredit)
+@StrongDeriv=	from G3470;
+@RelatedNos=	G3470
+@Co-relatedNos=	
+@MShortDef=	(mid.) to criticize, find fault, blame; (pass.) to be discredited, have fault found with
+@MMedDef=	<b>to find fault with, censure, blame,, criticize</b> <ref>2Cor. 8:20; </ref>passively, <ref>2Cor. 6:3* </ref>
+@STEP-gloss=	to blame
+===============================

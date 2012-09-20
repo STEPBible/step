@@ -95,16 +95,30 @@ public abstract class AbstractClasspathBasedModuleLoader<T> implements ModuleLoa
         postProcess(entities);
 
         // finally persist to database
-        final int count = this.ebean.save(entities);
+        // for (int i = 0; i < entities.size(); i++) {
+        // final T bean = entities.get(i);
+        // try {
+        // this.ebean.save(bean);
+        // } catch (final Exception e) {
+        // if (bean instanceof LexicalForm) {
+        // final LexicalForm lexicalForm = (LexicalForm) bean;
+        // LOG.warn("Failed for [{}] [{}]", lexicalForm.getRawForm(),
+        // lexicalForm.getRawStrongNumber());
+        // }
+        //
+        // }
+        // }
+        // final int count = this.ebean.save(entities);
 
         final long duration = System.currentTimeMillis() - currentTime;
         LOG.info("Took {}ms to load {} entities from [{}]",
                 new Object[] { Long.valueOf(duration), entities.size(), this.resourcePath });
 
-        if (entities.size() != count) {
-            LOG.warn("Loaded [{}] hotspots but was trying to load [{}]", count, entities.size());
-        }
-        return count;
+        // if (entities.size() != count) {
+        // LOG.warn("Loaded [{}] entities but was trying to load [{}]", count, entities.size());
+        // }
+        return 0;
+        // return count;
     }
 
     /**
@@ -116,6 +130,7 @@ public abstract class AbstractClasspathBasedModuleLoader<T> implements ModuleLoa
         if (this.postProcessingAction != null) {
             for (final T t : entities) {
                 this.postProcessingAction.postProcess(t);
+                this.ebean.save(t);
             }
         }
     }

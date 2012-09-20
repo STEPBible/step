@@ -447,7 +447,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
      * @param reference the reference
      * @return the BookData object
      */
-    private BookData getBookData(final String version, final String reference) {
+    BookData getBookData(final String version, final String reference) {
         final Book currentBook = this.versificationService.getBookFromVersion(version);
         final Versification v11n = this.versificationService.getVersificationForVersion(currentBook);
 

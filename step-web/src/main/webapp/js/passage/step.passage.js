@@ -471,7 +471,7 @@ Passage.prototype.showPreview = function(previewData) {
  * static method that returns strongs that should not be tagged in the UI
  */
 Passage.getBlackListedStrongs = function() {
-    return [ "strong:G3588" ];
+    return [ "G3588" ];
 };
 
 

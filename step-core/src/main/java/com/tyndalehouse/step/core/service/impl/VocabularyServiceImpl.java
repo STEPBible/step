@@ -9,7 +9,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import com.avaje.ebean.EbeanServer;
-import com.tyndalehouse.step.core.data.entities.LexiconDefinition;
+import com.tyndalehouse.step.core.data.entities.lexicon.Definition;
 import com.tyndalehouse.step.core.exceptions.UserExceptionType;
 import com.tyndalehouse.step.core.service.VocabularyService;
 
@@ -30,20 +30,20 @@ public class VocabularyServiceImpl implements VocabularyService {
     // define a few extraction methods
     private final LexiconDataProvider transliterationProvider = new LexiconDataProvider() {
         @Override
-        public String getData(final LexiconDefinition l) {
-            return l.getSimpleTransliteration();
+        public String getData(final Definition l) {
+            return l.getStepTransliteration();
         }
     };
     private final LexiconDataProvider englishVocabProvider = new LexiconDataProvider() {
         @Override
-        public String getData(final LexiconDefinition l) {
-            return l.getShortDefinition();
+        public String getData(final Definition l) {
+            return l.getStepGloss();
         }
     };
     private final LexiconDataProvider greekVocabProvider = new LexiconDataProvider() {
         @Override
-        public String getData(final LexiconDefinition l) {
-            return l.getOriginal();
+        public String getData(final Definition l) {
+            return l.getAccentedUnicode();
         }
     };
 
@@ -56,15 +56,15 @@ public class VocabularyServiceImpl implements VocabularyService {
     }
 
     @Override
-    public List<LexiconDefinition> getDefinitions(final String vocabIdentifiers) {
+    public List<Definition> getDefinitions(final String vocabIdentifiers) {
         notBlank(vocabIdentifiers, "Vocab identifiers was null", UserExceptionType.SERVICE_VALIDATION_ERROR);
 
-        final List<String> idList = getKeys(vocabIdentifiers);
+        final List<String> strongList = getKeys(vocabIdentifiers);
 
-        if (!idList.isEmpty()) {
-            return this.ebean.find(LexiconDefinition.class).where().idIn(idList).findList();
+        if (!strongList.isEmpty()) {
+            return this.ebean.find(Definition.class).where().in("strongNumber", strongList).findList();
         }
-        return new ArrayList<LexiconDefinition>();
+        return new ArrayList<Definition>();
 
     }
 
@@ -98,7 +98,7 @@ public class VocabularyServiceImpl implements VocabularyService {
         }
 
         // else we lookup and concatenate
-        final List<LexiconDefinition> lds = getLexiconDefinitions(keys);
+        final List<Definition> lds = getLexiconDefinitions(keys);
 
         // TODO - if nothing there, for now we just return the ids we got
         if (lds.isEmpty()) {
@@ -106,7 +106,7 @@ public class VocabularyServiceImpl implements VocabularyService {
         }
 
         final StringBuilder sb = new StringBuilder(lds.size() * 32);
-        for (final LexiconDefinition l : lds) {
+        for (final Definition l : lds) {
             sb.append(provider.getData(l));
         }
 
@@ -119,9 +119,9 @@ public class VocabularyServiceImpl implements VocabularyService {
      * @param keys the keys to match
      * @return the lexicon definitions that were found
      */
-    private List<LexiconDefinition> getLexiconDefinitions(final List<String> keys) {
-        final List<LexiconDefinition> lds = this.ebean.find(LexiconDefinition.class)
-                .select("original,simpleTransliteration,shortDefinition").where().idIn(keys).findList();
+    private List<Definition> getLexiconDefinitions(final List<String> keys) {
+        final List<Definition> lds = this.ebean.find(Definition.class)
+                .select("accentedUnicode,TranslitStep,stepGloss").where().in("strongNumber", keys).findList();
         return lds;
     }
 

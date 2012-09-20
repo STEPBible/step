@@ -48,9 +48,10 @@ import com.tyndalehouse.step.core.data.entities.History;
 import com.tyndalehouse.step.core.data.entities.ScriptureReference;
 import com.tyndalehouse.step.core.data.entities.ScriptureTarget;
 import com.tyndalehouse.step.core.data.entities.Session;
-import com.tyndalehouse.step.core.data.entities.LexiconDefinition;
 import com.tyndalehouse.step.core.data.entities.User;
 import com.tyndalehouse.step.core.data.entities.aggregations.TimelineEventsAndDate;
+import com.tyndalehouse.step.core.data.entities.lexicon.Definition;
+import com.tyndalehouse.step.core.data.entities.lexicon.LexicalForm;
 import com.tyndalehouse.step.core.data.entities.morphology.Morphology;
 import com.tyndalehouse.step.core.data.entities.timeline.HotSpot;
 import com.tyndalehouse.step.core.data.entities.timeline.TimelineEvent;
@@ -157,9 +158,10 @@ public class DatabaseConfigProvider implements Provider<EbeanServer> {
         config.addClass(History.class);
         config.addClass(GeoPlace.class);
         config.addClass(TimelineEventsAndDate.class);
-        config.addClass(LexiconDefinition.class);
         config.addClass(DictionaryArticle.class);
         config.addClass(Morphology.class);
+        config.addClass(Definition.class);
+        config.addClass(LexicalForm.class);
     }
 
     /**

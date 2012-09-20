@@ -33,19 +33,12 @@ step.search = {
     refinedSearch : [],
     lastSearch: "",    
     
-    tagging : {
-        exact : function(passageId) {
-            this._doStrongSearch(passageId, "o=");
-        },
-
-        related : function(passageId) {
-            this._doStrongSearch(passageId, "o~=");
-        },
-
-        _doStrongSearch : function(passageId, searchTypePrefix) {
-            var query = searchTypePrefix + step.state.original.strong(passageId);
+    original : {
+        search : function(passageId) {
+            var query = step.state.original.originalQuerySyntax(passageId);
             var pageNumber = step.state.original.originalPageNumber(passageId);
-            
+            var versions = step.state.original.originalSearchVersion(passageId);
+
             var versions = step.state.original.originalSearchVersion(passageId);
             if(versions == undefined) {
                 versions = "";
@@ -56,13 +49,9 @@ step.search = {
                 step.state.original.originalSearchVersion(passageId, versions);
             }
             
-            
-            if (step.util.raiseErrorIfBlank(query, "Please enter a strong number")) {
-                //TODO - version for original word search
-                step.search._validateAndRunSearch(passageId, query, versions, false, 0, pageNumber);
-            }
+            step.search._validateAndRunSearch(passageId, query, versions, false, 0, pageNumber);
         },
-        
+
         _versionsContainsStrongs : function(versions) {
             if(step.util.isBlank(versions)) {
                 return false;
@@ -74,7 +63,7 @@ step.search = {
             }
             
             var vs = versions.split(",");
-
+        
            //iterate through all versions of interes
            for(var j = 0; j < vs.length; j++) {
                //looking for them in step.versions
@@ -92,8 +81,8 @@ step.search = {
            
            return false;
         }
-        
     },
+    
     quick : {
         search : function() {
 //            console.log("Executing quick search");
@@ -176,13 +165,18 @@ step.search = {
         var refinedQuery = this._joinInRefiningSearches(finalInnerQuery);
         var highlightTerms = this._highlightingTerms(refinedQuery);
         
-        var args = [refinedQuery, rankedArg, contextArg, pageNumberArg, pageSizeArg];
+        var args = [encodeURIComponent(refinedQuery), rankedArg, contextArg, pageNumberArg, pageSizeArg];
         
         $.getSafe(SEARCH_DEFAULT, args, function(searchQueryResults) {
             self._updateTotal(passageId, searchQueryResults.total, pageNumberArg);
             self.lastSearch = searchQueryResults.query;
             self._displayResults(searchQueryResults, passageId);
-            self._highlightResults(passageId, highlightTerms);
+            
+            if(searchQueryResults.strongHighlights) {
+                self._highlightStrongs(passageId, searchQueryResults.strongHighlights);
+            } else {
+                self._highlightResults(passageId, highlightTerms);
+            }
         });
     },
     
@@ -228,7 +222,18 @@ step.search = {
         return terms;
     },
     
+    _highlightStrongs : function(passageId, strongsList) {
+        if(strongsList == undefined) {
+            return;
+        }
+        
+        //now let's iterate through the list of strongs, find all the elements that match, and add the highlight class
+        var passageContainer = step.util.getPassageContainer(passageId);
 
+        for(var i = 0; i < strongsList.length; i++) {
+            $("span[strong~='" + strongsList[i] + "']", passageContainer).addClass("ui-state-highlight");
+        }
+    },
    
     _joinInRefiningSearches : function(query) {
         if(this.refinedSearch.length != 0) {
@@ -259,10 +264,11 @@ step.search = {
         
         step.search.highlightTerms = highlightTerms;
         for(var i = 0; i < highlightTerms.length; i++) {
-            var regex = new RegExp("\\b" + highlightTerms[i] + "\\b", "ig");
-            doHighlight(verses, "ui-state-highlight", regex);
+            if(!step.util.isBlank(highlightTerms[i])) {
+                var regex = new RegExp("\\b" + highlightTerms[i] + "\\b", "ig");
+                doHighlight(verses, "ui-state-highlight", regex);
+            }
         }
-        
     },
     
     _displayTimelineEventResults : function(results, passageId) {

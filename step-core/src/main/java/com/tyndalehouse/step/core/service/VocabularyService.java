@@ -34,7 +34,7 @@ package com.tyndalehouse.step.core.service;
 
 import java.util.List;
 
-import com.tyndalehouse.step.core.data.entities.LexiconDefinition;
+import com.tyndalehouse.step.core.data.entities.lexicon.Definition;
 
 /**
  * The service providing morphology information
@@ -47,7 +47,7 @@ public interface VocabularyService {
      * @param vocabIdentifiers the identifier of the vocab entry (e.g. strong:G0001)
      * @return the lexicon definitions
      */
-    List<LexiconDefinition> getDefinitions(String vocabIdentifiers);
+    List<Definition> getDefinitions(String vocabIdentifiers);
 
     /**
      * Gets the default transliteration as a string

@@ -160,7 +160,7 @@ step.util = {
                     var versions = $("fieldset:visible .searchVersions", step.util.getPassageContainer(passageId)).val();
                     
                     if(step.search.refinedSearch.length == 0) {
-                        $.getSafe(SEARCH_ESTIMATES, [syntax + " in (" + versions + ")"], function(estimate) {
+                        $.getSafe(SEARCH_ESTIMATES, [encodeURIComponent(syntax) + " in (" + versions + ")"], function(estimate) {
                             $("fieldset:visible .resultEstimates", step.util.getPassageContainer(passageId))
                                 .html("~ <em>" + estimate + "</em> results")
                                 .css("color", "#" + step.util.ui._calculateEstimateBackgroundColour(estimate));

@@ -26,19 +26,33 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
+
+////////////////////////////////////////
+// LANGUAGE
+////////////////////////////////////////
+WORDS_MEANING = ["words meaning", "Type the English meaning of the original words."];
+GREEK_WORDS = ["a Greek word", "Type the start of the word in English letters or Unicode Greek."];
+HEBREW_WORDS = ["a Hebrew word", "Type the start of the word in English letters or Unicode Hebrew."];
+
+
+SPECIFIC_FORM = "this specific form of this word";
+ALL_FORMS = "all forms of this word";
+ALL_RELATED = "all related words";
+SPECIFIC_GRAMMAR = "specific grammar...";
+
 step.defaults = {
     detailLevel : 0,
     pageSize : 50,
     syncMode : -1,
-    passages : [ {
-        version : 'KJV',
-        reference : 'John 3:16-17',
-        options : ["HEADINGS", "VERSE_NUMBERS", "NOTES"]
-    }, {
-        version : 'ESV',
-        reference : 'Ephesians 6:10-18',
-        options : ["HEADINGS", "VERSE_NUMBERS", "NOTES"]
-    }
+    passages : [{
+            version : 'KJV',
+            reference : 'John 3:16-17',
+            options : ["HEADINGS", "VERSE_NUMBERS", "NOTES"]
+        }, {
+            version : 'ESV',
+            reference : 'Ephesians 6:10-18',
+            options : ["HEADINGS", "VERSE_NUMBERS", "NOTES"]
+        }
     ],
     passage : {
         interOptions : [ "Interleaved", "Interleaved with comparison", "Interlinear", "Column view", "Column view with comparison" ],
@@ -67,6 +81,14 @@ step.defaults = {
             simpleTextProximities : ["the same verse", "1 verse either side", "2 verses either side", "6 verses either side", "30 verses either size"],
             simpleTextSortBy : [ "relevance", " occurrence in the Bible text"]
             
+        },
+        
+        original : {
+            originalTypes : [WORDS_MEANING[0], 
+                             GREEK_WORDS[0], 
+                             HEBREW_WORDS[0]],
+            originalForms: [ALL_RELATED, ALL_FORMS, SPECIFIC_FORM, SPECIFIC_GRAMMAR],
+            originalSorting: ["Scripture", "Vocabulary", "Translation", "Grammar", "Original spelling"]
         }
     }
 };

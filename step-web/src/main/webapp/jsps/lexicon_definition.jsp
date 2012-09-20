@@ -18,15 +18,17 @@
 			<div id="vocabContainer" class="metadataContainer">
 				<h3>Vocab</h3>
 				<div level="0">
-					<div><h5 info-name="transliteration"></h5> (<span info-name="original" class="ancientLanguage"></span>): <span info-name="shortDefinition"></span></div>
-					<div info-name="mounce"></div>
+					<div><h5 info-name="stepTransliteration"></h5> (<span info-name="accentedUnicode" class="ancientLanguage"></span>): <span info-name="mshortDef"></span></div>
 				</div>
 				<div level="1">
-					<div><h5>Translated in the Bible as: </h5><span info-name="avTranslation"></span> (Strong's <span info-name="strong"></span>)</div>
+					<hr />
+					<div><h5>Translated in the Bible as: </h5></div>
+					<div><h5>Meaning: </h5> <span info-name="mmedDef"></span> </div>
 				</div>	
 				<div level="2">
-					<div>Related Words: <span info-name="similarStrongLinks" class="ancientLanguage"></span>TODO</div>
-					<div info-name="lsj" class="ancientLanguage"></div>
+					<hr />
+					<div>Related Words: <span info-name="relatedNos" class="ancientLanguage"></span></div>
+					<h5>LSJ Definition (for Strong's <span info-name="strongNumber"></span>):</h5><div info-name="lsjDefs" ></div>
 				</div>
 			</div>
 			<p />

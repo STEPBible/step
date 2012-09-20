@@ -13,7 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.tyndalehouse.step.core.data.DataDrivenTestExtension;
-import com.tyndalehouse.step.core.data.entities.LexiconDefinition;
 import com.tyndalehouse.step.core.data.entities.ScriptureReference;
 import com.tyndalehouse.step.core.data.entities.timeline.TimelineEvent;
 import com.tyndalehouse.step.core.models.search.SearchEntry;
@@ -81,23 +80,23 @@ public class SearchServiceImplTest extends DataDrivenTestExtension {
         assertTrue("1 Peter 4:19".equals(((VerseSearchEntry) searchStrong.getResults().get(0)).getKey()));
     }
 
-    /** test exact strong match */
-    @Test
-    public void testSearchRelatedStrongs() {
-        final LexiconDefinition ld = new LexiconDefinition();
-        ld.setStrong("G0016");
-        getEbean().save(ld);
-
-        final LexiconDefinition related = new LexiconDefinition();
-        related.setStrong("G0015");
-        getEbean().save(related);
-
-        ld.getSimilarStrongs().add(related);
-        getEbean().save(ld);
-
-        final SearchResult searchStrong = this.si.search(new SearchQuery("o~=G16 in (KJV)", false, 0, 1, 10));
-        assertTrue(searchStrong.getResults().size() > 5);
-    }
+    // /** test exact strong match */
+    // @Test
+    // public void testSearchRelatedStrongs() {
+    // final LexiconDefinition ld = new LexiconDefinition();
+    // ld.setStrong("G0016");
+    // getEbean().save(ld);
+    //
+    // final LexiconDefinition related = new LexiconDefinition();
+    // related.setStrong("G0015");
+    // getEbean().save(related);
+    //
+    // ld.getSimilarStrongs().add(related);
+    // getEbean().save(ld);
+    //
+    // final SearchResult searchStrong = this.si.search(new SearchQuery("o~=G16 in (KJV)", false, 0, 1, 10));
+    // assertTrue(searchStrong.getResults().size() > 5);
+    // }
 
     /** test exact strong match */
     @Test

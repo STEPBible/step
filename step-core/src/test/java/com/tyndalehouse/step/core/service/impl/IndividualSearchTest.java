@@ -40,4 +40,17 @@ public class IndividualSearchTest {
         assertEquals(SearchType.TEXT, s.getType());
         assertEquals("blah", s.getQuery());
     }
+
+    /**
+     * Tests the extraction of a original word search with a sub-range
+     */
+    @Test
+    public void testSubRangeText() {
+        final IndividualSearch s = new IndividualSearch("om=+[Gen-Rev] {John} good in (ESV)");
+
+        assertEquals(SearchType.ORIGINAL_MEANING, s.getType());
+        assertEquals("good", s.getQuery());
+        assertEquals("+[Gen-Rev]", s.getMainRange());
+        assertEquals("John", s.getSubRange());
+    }
 }

@@ -75,6 +75,72 @@ import com.tyndalehouse.step.core.models.OsisWrapper;
 public class JSwordPassageServiceImplTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(JSwordPassageServiceImplTest.class);
 
+    // Outputs all lexical forms TODO - move to a step-utils project
+    // @Test
+    // public void testOutput() throws BookException, NoSuchKeyException {
+    // final Pattern m = Pattern.compile("([GH]+[0-9]+)[.,;·]?");
+    // final SortedMap<String, Set<String>> strongs = new TreeMap<String, Set<String>>();
+    //
+    // final Filter filter = new Filter() {
+    // private static final long serialVersionUID = 1L;
+    //
+    // @Override
+    // public boolean matches(final Object arg) {
+    // if (arg instanceof Element) {
+    // final Element element = (Element) arg;
+    // final Attribute attribute = element.getAttribute(OSISUtil.ATTRIBUTE_W_LEMMA);
+    // return attribute != null;
+    // }
+    // return false;
+    // }
+    // };
+    //
+    // for (final Book b : Books.installed().getBooks()) {
+    // if (!"grc".equalsIgnoreCase(b.getLanguage().getCode())
+    // && !"he".equalsIgnoreCase(b.getLanguage().getCode())) {
+    // continue;
+    // }
+    // System.err.println("Processing " + b.getInitials());
+    //
+    // final Key key = b.getKey("Gen-Rev");
+    // final BookData bookData = new BookData(b, key);
+    // final Element osis = bookData.getOsis();
+    // final Iterator<Element> descendants = osis.getDescendants(filter);
+    //
+    // while (descendants.hasNext()) {
+    // final Element el = descendants.next();
+    // final Matcher matcher = m.matcher(el.getAttributeValue(OSISUtil.ATTRIBUTE_W_LEMMA));
+    //
+    // final StringBuilder sb = new StringBuilder();
+    // while (matcher.find()) {
+    // sb.append(matcher.group(1));
+    // sb.append("|");
+    // }
+    // if (sb.length() == 0) {
+    // // System.err.println(el.getAttributeValue(OSISUtil.ATTRIBUTE_W_LEMMA));
+    // continue;
+    // }
+    //
+    // sb.deleteCharAt(sb.length() - 1);
+    //
+    // Set<String> set = strongs.get(sb.toString());
+    // if (set == null) {
+    // set = new HashSet<String>(10);
+    // strongs.put(sb.toString(), set);
+    // }
+    // set.add(el.getTextTrim());
+    // }
+    // }
+    //
+    // for (final Entry<String, Set<String>> entry : strongs.entrySet()) {
+    // final Set<String> s = entry.getValue();
+    // final String key = entry.getKey();
+    // for (final String v : s) {
+    // System.out.println(String.format("%s,%s", key, v));
+    // }
+    // }
+    // }
+
     /**
      * should expand Ruth.1.22 to Ruth.1
      */
@@ -416,8 +482,8 @@ public class JSwordPassageServiceImplTest {
      */
     @Test
     public void testPrettyXml() throws BookException, NoSuchKeyException, JDOMException, IOException {
-        final String version = "ESV";
-        final String ref = "Luk 4:27";
+        final String version = "KJV";
+        final String ref = "Rev 1:2";
         final Book currentBook = Books.installed().getBook(version);
         final BookData bookData = new BookData(currentBook, currentBook.getKey(ref));
         final Element osisFragment = bookData.getOsisFragment();

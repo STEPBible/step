@@ -106,4 +106,12 @@ public class DataDrivenTestExtension {
     public void setRunInTransaction(final boolean runInTransaction) {
         this.runInTransaction = runInTransaction;
     }
+
+    /**
+     * Called to interrupt transaction and continue without transactional support
+     */
+    public void runOutsideTransaction() {
+        this.runInTransaction = false;
+        ebean.endTransaction();
+    }
 }

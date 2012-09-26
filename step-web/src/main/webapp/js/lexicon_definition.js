@@ -69,31 +69,13 @@ function LexiconDefinition() {
         $("span[info-name ='strong']").val(data.strong);
     });
 
-    var currentLevel = step.state.detail.get();
-    $("#detailLevel").slider({
-        min : 1,
-        max : 3,
-        slide : function(event, ui) {
-            self.updateSliderImpact(ui.value - 1);
-        },
-        value : currentLevel + 1
+    var currentLevel = step.state.view.getDetail();
+    $("#origin").detailSlider({
+        key: "lexicon",
+        scopeSelector : "#lexiconDefinition"
     });
-
-    this.updateSliderImpact(currentLevel);
-};
-
-LexiconDefinition.prototype.updateSliderImpact = function(newLevel) {
-    $("#sliderDetailLevelLabel").html(DETAIL_LEVELS[newLevel] + " view");
-
-    // show all relevant levels
-    $("#lexiconDefinition *").filter(function() {
-        return $(this).attr("level") <= newLevel;
-    }).show();
-    $("#lexiconDefinition *").filter(function() {
-        return $(this).attr("level") > newLevel;
-    }).hide();
-};
-
+}
+    
 LexiconDefinition.prototype.getPopup = function() {
     if (this.popup) {
         this.popup.css('display', 'inline-block');

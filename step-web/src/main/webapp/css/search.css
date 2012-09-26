@@ -1,4 +1,13 @@
 /*******************************************/
+/* GENERAL CLASSES FOR SEARCH              */
+/*******************************************/
+.searchButtonsAlign {
+	text-align : right;
+/* 	margin-right:  80px; */
+	clear: both;
+}
+
+/*******************************************/
 /* TOOLBAR search box                      */
 /*******************************************/
 .versionSearchBox {
@@ -36,7 +45,7 @@
 }
 
 .resultEstimates {
-	float: right;
+/* 	float: right; */
 	text-align: right;
 	font-weight: bold;
 }
@@ -57,6 +66,30 @@
 	margin-left: 0px;
 	margin-bottom: 10px;
 	list-style: none;
+}
+
+.originalWordSearchToolbar .ui-button-text {
+	font-size: 10px;
+}
+
+.ancientSearchSuggestion {
+	font-family: Cardo;
+	font-size: 12px !important;
+}
+
+.ancientSearchSuggestion:hover {
+	font-family: Cardo-bold;
+	font-size: 12px !important;
+}
+
+.ancientSearch {
+	font-family: Cardo-bold;
+	font-size: 16px;
+}
+
+.ancientSearchButton {
+	font-family: Cardo-bold;
+	font-size: 12px;
 }
 
 .searchResultRow div, .searchResultRow div p, .searchResultRow h3, .searchResultRow h2, .searchResultRow h1, .searchResultRow h4   {
@@ -166,8 +199,15 @@ td.rightHandBorder {
 	border-right: solid thin lightgray;
 }
 
+th.searchResultStrongHeader {
+	color: #666699;
+}
 
-
+h4.lexicalGrouping {
+	color: #669966;
+	padding-top: 0px;
+	margin-top: 0px;
+ }
 
 /*******************************************/
 /* Advanced search box                     */
@@ -200,20 +240,13 @@ td.rightHandBorder {
 	padding-right: 20px;
 }
 
-.textSearchTable {
-	width: 100% !important;
-}
-
-/* .advancedSearch table { */
-/* 	width: 12.5%; */
-/* } */
-
 
 /*******************************************/
 /* Subject search box                 */
 /*******************************************/
-.subjectText, .subjectQuerySyntax {
+.subjectText {
 	width: 100%;
+	border: solid thin #ABADB3;
 }
 
 /*******************************************/
@@ -239,3 +272,28 @@ td.rightHandBorder {
 }
 
 
+/*******************************************/
+/* Suggestions for original words		   */
+/*******************************************/
+.suggestionHeader {
+	white-space: nowrap;
+}
+
+.suggestionColumn, .suggestionColumnTitle {
+	width: 150px;
+	display: inline-block;
+	font-size: 10px;
+}
+
+.suggestionColumnTitle {
+	font-weight: bold;
+/* 	width: 130px !important; */
+}
+
+
+/*******************************************/
+/* Suggestions for original words		   */
+/*******************************************/
+.quickSearch {
+	font-size: 1em;
+}

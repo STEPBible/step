@@ -27,7 +27,7 @@
 		if(request.getParameter("debug") != null) {
 	%>
 
-		<link rel="stylesheet" type="text/css" href="css/jquery-ui-1.8.19.custom.css" />
+		<link rel="stylesheet" type="text/css" href="css/jquery-ui-1.8.23.custom.css" />
 		<link rel="stylesheet" type="text/css" href="css/qtip.css" />
 		<link rel="stylesheet" type="text/css" href="css/ddsmoothmenu.css" />
 		<link rel="stylesheet" type="text/css" href="css/ddsmoothmenu-v.css" />
@@ -41,13 +41,16 @@
 		<script src="js_init/initLib.js" type="text/javascript"></script>   
 	    <script src="libs/dohighlight-min.js" type="text/javascript"></script>
 	    <script src="libs/timeline_js/timeline-api.js" type="text/javascript"></script>
-	    <script src="libs/jquery-1.7.2.min.js" type="text/javascript"></script>
-		<script src="libs/jquery-ui-1.9-beta.min.js" type="text/javascript"></script>
+	    <script src="libs/jquery-1.8.2.min.js" type="text/javascript"></script>
+		<script src="libs/jquery-ui-1.8.23.custom.min.js" type="text/javascript"></script>
+<!-- 		<script src="libs/jquery-ui-1.9-beta.min.js" type="text/javascript"></script> -->
 	    <script src="js/jquery-extensions/jquery-qtip.js" type="text/javascript"></script>
 	    <script src="js/jquery-extensions/jquery-hover-intent.js" type="text/javascript"></script>
 	    <script src="js/jquery-extensions/jquery-cookie.js" type="text/javascript"></script>
 		<script src="js/jquery-extensions/jquery-shout.js" type="text/javascript"></script>
 	    <script src="js/jquery-extensions/jquery-filtered-complete.js" type="text/javascript"></script>
+	    <script src="js/jquery-extensions/jquery-lexical-complete.js" type="text/javascript"></script>
+	    <script src="js/jquery-extensions/jquery-detail-slider.js" type="text/javascript"></script>
 		<script src="js/ddsmoothmenu.js" type="text/javascript"></script>
 	    <script src="js/util.js" type="text/javascript"></script>
 	    <script src="js/bookmark.js" type="text/javascript"></script>
@@ -71,7 +74,7 @@
 
 
 		<script src="js/state/step.state.js" type="text/javascript"></script>
-		<script src="js/state/step.state.detail.js" type="text/javascript"></script>
+		<script src="js/state/step.state.view.js" type="text/javascript"></script>
 		<script src="js/state/step.state.passage.js" type="text/javascript"></script>
 		<script src="js/state/step.state.original.js" type="text/javascript"></script>
 
@@ -112,6 +115,7 @@
 			    <div class="passageText ui-widget">
 			    	<div class="headingContainer">
 			    		<jsp:include page="js/search/advanced_search.jsp?passageId=0" />
+						<jsp:include page="js/search/passage_toolbar.jsp?passageId=0" />
 			    	</div>
 			    	<div class="passageContent">&nbsp;<%= stepRequest.getPassage(0) %></div>
 			    </div>
@@ -126,6 +130,7 @@
 			    <div class="passageText ui-widget">
 			    	<div class="headingContainer">
 			    		<jsp:include page="js/search/advanced_search.jsp?passageId=1" />
+			    		<jsp:include page="js/search/passage_toolbar.jsp?passageId=1" />
 			    	</div>
 			    	<div class="passageContent">&nbsp;<%= stepRequest.getPassage(1) %></div>
 				</div>

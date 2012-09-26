@@ -30,6 +30,8 @@
 var CONTINUOUS_SCROLLING_VERSE_GAP = 50;
 
 step.passage = {
+    lastUrls : [undefined, undefined],
+    
     getPassageId : function(element) {
         return $(element).closest(".passageContainer").attr("passage-id");
     },
@@ -39,13 +41,26 @@ step.passage = {
     },
     
     changePassage: function(passageId) {
+        var container = step.util.getPassageContainer(passageId);
         var lookupVersion = step.state.passage.version(passageId);
         var lookupReference = step.state.passage.reference(passageId);
         var options = step.state.passage.options(passageId);
-        var interlinearVersion = step.state.passage.extraVersions(passageId);
-        var interlinearMode = this._getInterlinearMode(passageId);
-        var self = this;
         
+        var level = $("fieldset", container).detailSlider("value");
+        
+        var interlinearVersion = "";
+        var interlinearMode = "";
+        if(level > 0) {
+            interlinearVersion = step.state.passage.extraVersions(passageId);
+            interlinearMode = "INTERLEAVED";
+        }
+
+        if(level > 1) {
+            interlinearMode = this._getInterlinearMode(passageId);    
+        }
+        
+        
+        var self = this;
         if (!step.util.raiseErrorIfBlank(lookupVersion, "A version must be provided")
                 || !step.util.raiseErrorIfBlank(lookupReference, "A reference must be provided")) {
             return;
@@ -60,6 +75,14 @@ step.passage = {
                 url += "/" + interlinearMode;
             }
         }
+        
+        if(this.lastUrls[passageId] == url) {
+            //execute all callbacks only
+            step.passage.executeCallbacks(passageId);
+            return;
+        }
+        this.lastUrls[passageId] = url;
+        
 
         // send to server
         $.getPassageSafe({
@@ -277,6 +300,9 @@ $(step.passage).hear("passage-state-has-changed", function(s, data) {
     step.passage.changePassage(data.passageId);
 });
 
+$(step.passage).hear("slideView-SEARCH_PASSAGE", function (s, data) {
+    step.passage.changePassage(data.passageId);
+});
 
 
 function Passage(passageContainer, passageId) {

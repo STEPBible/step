@@ -43,54 +43,49 @@
 // The following section defines method names and controller names
 // These are used as part of the rest-like calls
 // ///////////////////////////////////////////////////////////////////////
-BOOKMARKS_GET = STEP_SERVER_BASE_URL + "favourites/getBookmarks";
-BOOKMARKS_ADD = STEP_SERVER_BASE_URL + "favourites/addBookmark/";
-HISTORY_GET = STEP_SERVER_BASE_URL + "favourites/getHistory/";
-HISTORY_ADD = STEP_SERVER_BASE_URL + "favourites/addHistory/";
+BOOKMARKS_GET =                     STEP_SERVER_BASE_URL + "favourites/getBookmarks";
+BOOKMARKS_ADD =                     STEP_SERVER_BASE_URL + "favourites/addBookmark/";
+HISTORY_GET =                       STEP_SERVER_BASE_URL + "favourites/getHistory/";
+HISTORY_ADD =                       STEP_SERVER_BASE_URL + "favourites/addHistory/";
 
-BIBLE_GET_MODULES = STEP_SERVER_BASE_URL + "bible/getModules/";
-BIBLE_GET_BIBLE_TEXT = STEP_SERVER_BASE_URL + "bible/getBibleText/";
-BIBLE_GET_FEATURES = STEP_SERVER_BASE_URL + "bible/getFeatures/";
-BIBLE_GET_ALL_FEATURES = STEP_SERVER_BASE_URL + "bible/getAllFeatures/";
-BIBLE_GET_BIBLE_BOOK_NAMES = STEP_SERVER_BASE_URL + "bible/getBibleBookNames/";
-BIBLE_GET_NEXT_CHAPTER = STEP_SERVER_BASE_URL + "bible/getNextChapter/";
-BIBLE_GET_PREVIOUS_CHAPTER = STEP_SERVER_BASE_URL + "bible/getPreviousChapter/";
-BIBLE_GET_BY_NUMBER = STEP_SERVER_BASE_URL + "bible/getBibleByVerseNumber/";
-BIBLE_GET_KEY_INFO = STEP_SERVER_BASE_URL + "bible/getKeyInfo/";
-BIBLE_EXPAND_TO_CHAPTER = STEP_SERVER_BASE_URL + "bible/expandKeyToChapter/";
+BIBLE_GET_MODULES =                 STEP_SERVER_BASE_URL + "bible/getModules/";
+BIBLE_GET_BIBLE_TEXT =              STEP_SERVER_BASE_URL + "bible/getBibleText/";
+BIBLE_GET_FEATURES =                STEP_SERVER_BASE_URL + "bible/getFeatures/";
+BIBLE_GET_ALL_FEATURES =            STEP_SERVER_BASE_URL + "bible/getAllFeatures/";
+BIBLE_GET_BIBLE_BOOK_NAMES =        STEP_SERVER_BASE_URL + "bible/getBibleBookNames/";
+BIBLE_GET_NEXT_CHAPTER =            STEP_SERVER_BASE_URL + "bible/getNextChapter/";
+BIBLE_GET_PREVIOUS_CHAPTER =        STEP_SERVER_BASE_URL + "bible/getPreviousChapter/";
+BIBLE_GET_BY_NUMBER =               STEP_SERVER_BASE_URL + "bible/getBibleByVerseNumber/";
+BIBLE_GET_KEY_INFO =                STEP_SERVER_BASE_URL + "bible/getKeyInfo/";
+BIBLE_EXPAND_TO_CHAPTER =           STEP_SERVER_BASE_URL + "bible/expandKeyToChapter/";
 
-DICTIONARY_GET_BY_HEADWORD = STEP_SERVER_BASE_URL + "dictionary/lookupDictionaryByHeadword/";
-DICTIONARY_SEARCH_BY_HEADWORD = STEP_SERVER_BASE_URL + "dictionary/searchDictionaryByHeadword/";
+DICTIONARY_GET_BY_HEADWORD =        STEP_SERVER_BASE_URL + "dictionary/lookupDictionaryByHeadword/";
+DICTIONARY_SEARCH_BY_HEADWORD =     STEP_SERVER_BASE_URL + "dictionary/searchDictionaryByHeadword/";
 
-MODULE_GET_ALL_MODULES = STEP_SERVER_BASE_URL + "module/getAllModules/";
-MODULE_GET_ALL_INSTALLABLE_MODULES = STEP_SERVER_BASE_URL + "module/getAllInstallableModules/";
-MODULE_GET_INFO = STEP_SERVER_BASE_URL + "module/getInfo/";
+MODULE_GET_ALL_MODULES =            STEP_SERVER_BASE_URL + "module/getAllModules/";
+MODULE_GET_ALL_INSTALLABLE_MODULES= STEP_SERVER_BASE_URL + "module/getAllInstallableModules/";
+MODULE_GET_INFO =                   STEP_SERVER_BASE_URL + "module/getInfo/";
 
-SETUP_IS_FIRST_TIME = STEP_SERVER_BASE_URL + "setup/isFirstTime/";
-SETUP_INSTALL_DEFAULT_MODULES = STEP_SERVER_BASE_URL + "setup/installDefaultModules/";
-SETUP_INSTALL_BIBLE = STEP_SERVER_BASE_URL + "setup/installBible/";
+SETUP_IS_FIRST_TIME =               STEP_SERVER_BASE_URL + "setup/isFirstTime/";
+SETUP_INSTALL_DEFAULT_MODULES =     STEP_SERVER_BASE_URL + "setup/installDefaultModules/";
+SETUP_INSTALL_BIBLE =               STEP_SERVER_BASE_URL + "setup/installBible/";
 
-SEARCH_DEFAULT = STEP_SERVER_BASE_URL + "search/search/";
-SEARCH_ESTIMATES = STEP_SERVER_BASE_URL + "search/estimateSearch/"
-//SEARCH_STRONG_EXACT = STEP_SERVER_BASE_URL + "search/searchStrong/";
-//SEARCH_STRONG_RELATED = STEP_SERVER_BASE_URL + "search/searchRelatedStrong/";
-//SEARCH_TIMELINE_DESCRIPTION = STEP_SERVER_BASE_URL + "search/searchTimelineDescription/";
-//SEARCH_TIMELINE_DATING = STEP_SERVER_BASE_URL + "search/searchTimelineDating/";
-//SEARCH_TIMELINE_REFERENCE = STEP_SERVER_BASE_URL + "search/searchTimelineReference/";
-//SEARCH_SUBJECT = STEP_SERVER_BASE_URL + "search/searchSubject/";
+SEARCH_DEFAULT =                    STEP_SERVER_BASE_URL + "search/search/";
+SEARCH_ESTIMATES =                  STEP_SERVER_BASE_URL + "search/estimateSearch/"
+SEARCH_SUGGESTIONS =                STEP_SERVER_BASE_URL + "search/getLexicalSuggestions/";
 
-TIMELINE_GET_EVENTS = STEP_SERVER_BASE_URL + "timeline/getEvents/";
-TIMELINE_GET_EVENTS_IN_PERIOD = STEP_SERVER_BASE_URL + "timeline/getEventsInPeriod/";
-TIMELINE_GET_EVENTS_FROM_REFERENCE = STEP_SERVER_BASE_URL + "timeline/getEventsFromReference/";
-TIMELINE_GET_CONFIGURATION = STEP_SERVER_BASE_URL + "timeline/getTimelineConfiguration";
-TIMELINE_GET_EVENT_INFO = STEP_SERVER_BASE_URL + "timeline/getEventInformation/";
+TIMELINE_GET_EVENTS =               STEP_SERVER_BASE_URL + "timeline/getEvents/";
+TIMELINE_GET_EVENTS_IN_PERIOD =     STEP_SERVER_BASE_URL + "timeline/getEventsInPeriod/";
+TIMELINE_GET_EVENTS_FROM_REFERENCE= STEP_SERVER_BASE_URL + "timeline/getEventsFromReference/";
+TIMELINE_GET_CONFIGURATION =        STEP_SERVER_BASE_URL + "timeline/getTimelineConfiguration";
+TIMELINE_GET_EVENT_INFO =           STEP_SERVER_BASE_URL + "timeline/getEventInformation/";
 
-USER_LOGIN = STEP_SERVER_BASE_URL + "user/login/";
-USER_LOGOUT = STEP_SERVER_BASE_URL + "user/logout/";
-USER_REGISTER = STEP_SERVER_BASE_URL + "user/register/";
-USER_GET_LOGGED_IN_USER = STEP_SERVER_BASE_URL + "user/getLoggedInUser";
+USER_LOGIN =                        STEP_SERVER_BASE_URL + "user/login/";
+USER_LOGOUT =                       STEP_SERVER_BASE_URL + "user/logout/";
+USER_REGISTER =                     STEP_SERVER_BASE_URL + "user/register/";
+USER_GET_LOGGED_IN_USER =           STEP_SERVER_BASE_URL + "user/getLoggedInUser";
 
-GEOGRAPHY_GET_PLACES = STEP_SERVER_BASE_URL + "geography/getPlaces/";
+GEOGRAPHY_GET_PLACES =              STEP_SERVER_BASE_URL + "geography/getPlaces/";
 
 
 

@@ -2,8 +2,13 @@
 
 
 <div class="searchToolbar">
+	<%
+		if(request.getParameter("bibleVersions").equals("true")) {
+	%>
 	Bible version(s): <input type='text' class='searchVersions <%=request.getParameter("namespace")%>SearchVersion' /> 
-	
+	<%
+		}
+	%>
 	<span class="searchToolbarButtonSets"> 
 	
 	<%

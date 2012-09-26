@@ -11,7 +11,9 @@ $(document).ready(function() {
             step.search.quick.search(step.passage.getPassageId(this));
             event.preventDefault();
         }
-    });
+    }).focus(function() {
+        $(this).select();
+    }).mouseup(function(e) { return false; });
 });
 
 $(step.search.ui).hear("subject-search-state-has-changed", function(s, data) {

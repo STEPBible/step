@@ -27,6 +27,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
 step.search.ui.original = {
+    allForms : [false,false],
+        
     strongNumber : function(value, passageId) {
         $(".strongSearch", step.util.getPassageContainer(passageId)).val(value);
     },
@@ -34,6 +36,7 @@ step.search.ui.original = {
     _setTitleFromTargetChange : function(target, value) {
         switch(value) {
             case WORDS_MEANING[0]   : step.search.ui.original._setTitleForWord(target, WORDS_MEANING[1]);   break;
+            case TRANSLATED_AS[0]   : step.search.ui.original._setTitleForWord(target, TRANSLATED_AS[1]);   break;
             case GREEK_WORDS[0]     : step.search.ui.original._setTitleForWord(target, GREEK_WORDS[1]);     break;
             case HEBREW_WORDS[0]    : step.search.ui.original._setTitleForWord(target, HEBREW_WORDS[1]);    break;
         }
@@ -47,9 +50,12 @@ step.search.ui.original = {
         var passageContainer = step.util.getPassageContainer(passageId);
         var currentType = $(".originalType", passageContainer).val();
         
-        if(currentType == WORDS_MEANING[0]) {
+        if(currentType == TRANSLATED_AS[0]) {
              $(".originalMeaning", passageContainer).toggle(true);       
              $(".originalAncient", passageContainer).toggle(false);       
+        } else if(currentType == WORDS_MEANING[0]) {
+            $(".originalMeaning", passageContainer).toggle(false);       
+            $(".originalAncient", passageContainer).toggle(false);
         } else {
              $(".originalAncient", passageContainer).toggle(true);       
              $(".originalMeaning", passageContainer).toggle(false);       
@@ -60,7 +66,7 @@ step.search.ui.original = {
         step.util.ui.resetIfEmpty(passageId, force, step.state.original.originalType,  step.defaults.search.original.originalTypes[0]);
         step.util.ui.resetIfEmpty(passageId, force, step.state.original.originalForms,  step.defaults.search.original.originalForms[1]);
         step.util.ui.resetIfEmpty(passageId, force, step.state.original.originalScope,  step.defaults.search.textual.availableRanges[0].value);
-        step.util.ui.resetIfEmpty(passageId, force, step.state.original.originalWordScope,  step.defaults.search.textual.availableRanges[0].value);
+        step.util.ui.resetIfEmpty(passageId, force, step.state.original.originalWordScope,  "Mat 1:1");
         step.util.ui.resetIfEmpty(passageId, force, step.state.original.originalSorting,  step.defaults.search.original.originalSorting[0]);
     },
     
@@ -83,15 +89,16 @@ step.search.ui.original = {
         var originalScope = $(".originalScope", passageContainer).val();
         var originalSorting = $(".originalSorting", passageContainer).val();
 
+        var originalWordScope = "";
         
         var query = "o";
-        
         if(originalType == WORDS_MEANING[0]) {
             query += "m";
-            
+        } else if (originalType == TRANSLATED_AS[0]) {
             //do something with it TODO
-            var originalWordScope = $(".originalWordScope", passageContainer).val();
-           
+            query += "t";
+            originalWordScope = $(".originalWordScope", passageContainer).val();
+            
         } else {
             if (originalType == GREEK_WORDS[0]) {
                 query += "g";
@@ -115,10 +122,65 @@ step.search.ui.original = {
         query += "=";
         
         query += "+[" + originalScope + "] ";
+        if(originalWordScope != "") {
+            query += "{" + originalWordScope + "}";
+        }
         query += originalWord;
         
         step.state.original.originalQuerySyntax(passageId, query);
         return query;
+    },
+    
+    autocomplete : function() {
+        $(document).ready(function() {
+            var target = $(".originalWord");
+            
+            target.lexicalcomplete({
+                minLength : 2,
+                select : function(event, ui) {
+                    //manually change the text, so that the change() method can fire against the right version
+                    $(this).val(ui.item.value);
+                    $(this).change();
+                    $(this).trigger('keyup');
+                },
+                open: function(event, ui) {
+                    //check we've got the right size
+                    $(".ui-autocomplete").map(function() {
+                        //check if 'this' has a child containing the text of the first option
+                            $(this).css('width', '400px').css("overflow-x", "hidden");
+                    });
+                },
+                source : function(request, response) {
+                        $.getPassageSafe({
+                            url : SEARCH_SUGGESTIONS,
+                            args : [encodeURIComponent(request.term.replace('/', '#')), step.search.ui.original.allForms[step.passage.getPassageId(this.element)[0]]], 
+                            callback: function(text) {
+                                response($.map(text, function(item) {
+                                    return { label: "<span>" + 
+                                            "<span class='suggestionColumn ancientSearchSuggestion'>" + item.matchingForm + "</span>" +
+                                            "<span class='suggestionColumn'>" + item.stepTransliteration + "</span>" + 
+                                            "<span class='suggestionColumn'>" + item.gloss + "</span>" +
+                                        "</span>", value: item.matchingForm };
+                                }));
+                            },
+                            passageId : step.passage.getPassageId(this),
+                            level : 'error'
+                       });
+                }
+            }).data("lexicalcomplete")._renderItem = function(ul, item) {
+                return $("<li></li>").data("item.autocomplete", item).append("<a>" + item.label + "</a>").appendTo(ul);
+            }
+            
+            target.click(function() {
+               $(this).lexicalcomplete("search");
+            });
+            
+            
+            $(step.search.ui.original).hear("lexical-filter-change", function(self, data) {
+                var wordBox = $(".originalWord", step.util.getPassageContainer(data.passageId));
+                wordBox.lexicalcomplete("search" );
+            });
+        });
     }
 };
 
@@ -129,6 +191,7 @@ $(document).ready(function() {
                            ".originalForms", 
                            ".originalScope",
                            ".originalSorting",
+                           ".originalSearchContext",
                            ".originalWordScope", 
                            ".originalSearchVersion",
                            ".originalPageNumber",
@@ -143,11 +206,13 @@ $(document).ready(function() {
     step.util.ui.autocompleteSearch(".originalForms", step.defaults.search.original.originalForms, true);
     step.util.ui.autocompleteSearch(".originalScope", step.defaults.search.textual.availableRanges);
     step.util.ui.autocompleteSearch(".originalSorting", step.defaults.search.original.originalSorting, true);
-    step.util.ui.autocompleteSearch(".originalWordScope", step.defaults.search.textual.availableRanges);
+//    step.util.ui.autocompleteSearch(".originalWordScope", step.defaults.search.textual.availableRanges);
 
+    step.search.ui.original.autocomplete();
     
     step.util.ui.trackQuerySyntax(".wordSearch", namespace);
-    step.util.ui.searchButton(".originalSearchButton", 'SEARCH_ORIGINAL');
+    step.util.ui.searchButton(".originalSearchButton", 'SEARCH_ORIGINAL', undefined, function(passageId) { step.search.original.filters[passageId] = undefined });
+     
     $(".originalClear").click(function() {
         var passageId = step.passage.getPassageId(this);
         step.search.ui.original.restoreDefaults(passageId, true);
@@ -159,15 +224,18 @@ $(document).ready(function() {
     //do qtip for textbox
     $(".originalWord").qtip({
         show :  { event: 'focus' },
-        hide : { event: 'blur' }
+        hide : { event: 'blur' },
+        position: {
+            my: "bottom center",
+            at: "top center",
+            viewport: $(window)
+        }
     });
 
     
     //do qtip for textbox
     $(".originalScope").qtip({
         show : { delay: 500 },
-//        show :  { event: 'focus' },
-//        hide : { event: 'blur' },
         position: {
             my: "bottom center",
             at: "top center",

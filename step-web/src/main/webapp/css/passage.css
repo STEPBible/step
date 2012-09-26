@@ -523,3 +523,20 @@ FONT.usg {
 	display: block;
 	padding-bottom: 5px;	
 }
+
+/**********************************************/
+/** Grammar colour coding                     */
+/**********************************************/
+.passageToolbarContainer {
+	margin-top: 5px;
+}
+
+.passageToolbarFloatingContainer  {
+	text-align: right;
+		display: block;
+	
+}
+
+.passageContainer .passageLookupButtons, .passageContainer .passageSizeButtons {
+	font-size: 0.8em;
+}

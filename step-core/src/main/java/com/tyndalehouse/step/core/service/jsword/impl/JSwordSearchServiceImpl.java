@@ -238,15 +238,19 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
 
         final Passage passage = (Passage) results;
 
-        // we need the first pageNumber*PAGE_SIZE results, so remove anything beyond that.
-        passage.trimVerses(sq.getPageNumber() * sq.getPageSize());
-        Passage newResults = passage;
+        if (!sq.isAllKeys()) {
 
-        while (newResults.getCardinality() > sq.getPageSize()) {
-            newResults = newResults.trimVerses(sq.getPageSize());
+            // we need the first pageNumber*PAGE_SIZE results, so remove anything beyond that.
+            passage.trimVerses(sq.getPageNumber() * sq.getPageSize());
+            Passage newResults = passage;
+
+            while (newResults.getCardinality() > sq.getPageSize()) {
+                newResults = newResults.trimVerses(sq.getPageSize());
+            }
+
+            return newResults;
         }
-
-        return newResults;
+        return results;
     }
 
     /**

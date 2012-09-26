@@ -49,8 +49,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.tyndalehouse.step.core.data.DataDrivenTestExtension;
-import com.tyndalehouse.step.core.data.entities.ScriptureReference;
 import com.tyndalehouse.step.core.data.entities.lexicon.Definition;
+import com.tyndalehouse.step.core.data.entities.lexicon.SpecificForm;
 import com.tyndalehouse.step.core.data.entities.morphology.Case;
 import com.tyndalehouse.step.core.data.entities.morphology.Function;
 import com.tyndalehouse.step.core.data.entities.morphology.Gender;
@@ -124,15 +124,18 @@ public class LoaderTest extends DataDrivenTestExtension {
     public void testLexiconDefinitions() {
 
         final Properties coreProperties = new Properties();
-        coreProperties.put("test.data.path.lexicon.definitions", "step_gklexwithlsj-abridged3.txt");
+        coreProperties.put("test.data.path.lexicon.definitions.greek", "lexicon_sample.txt");
+        coreProperties.put("test.data.path.lexicon.definitions.hebrew", "lexicon_empty.txt");
 
         final JSwordVersificationService versificationService = new JSwordVersificationServiceImpl();
 
         final Loader l = new Loader(new JSwordPassageServiceImpl(versificationService, null, null), null,
                 getEbean(), coreProperties);
-        final int count = l.loadLexiconDefinitions();
+        l.loadLexiconDefinitions();
 
-        assertEquals(19, count);
+        final int count = getEbean().find(Definition.class).findRowCount();
+
+        assertEquals(18, count);
     }
 
     /**
@@ -140,71 +143,27 @@ public class LoaderTest extends DataDrivenTestExtension {
      * correctly.
      */
     @Test
-    public void testLexicalForms() {
+    public void testSpecificForms() {
         final Properties coreProperties = new Properties();
-        coreProperties.put("test.data.path.lexicon.forms", "lexical_forms.txt");
+        coreProperties.put("test.data.path.lexicon.forms", "specific_forms.txt");
         final JSwordVersificationService versificationService = new JSwordVersificationServiceImpl();
         final Loader l = new Loader(new JSwordPassageServiceImpl(versificationService, null, null), null,
                 getEbean(), coreProperties);
 
         // add G1 and G10 so that foreign key relationships are possible
         final Definition d1 = new Definition();
-        d1.setStrongNumber("G1");
+        d1.setStrongNumber("G0001");
 
         final Definition d2 = new Definition();
-        d2.setStrongNumber("G10");
+        d2.setStrongNumber("G0010");
 
         getEbean().save(d1);
         getEbean().save(d2);
 
-        final int count = l.loadLexicalForms();
+        l.loadSpecificForms();
 
-        assertTrue(count > 10);
+        assertTrue(getEbean().find(SpecificForm.class).findRowCount() > 10);
     }
-
-    /**
-     * for this one we need a real jsword service because we will test that scripture refs are resolved
-     * correctly.
-     */
-    @Test
-    public void testDictionaryArticles() {
-        final Properties coreProperties = new Properties();
-        coreProperties.put("test.data.path.dictionary.easton", "dictionary_sample.txt");
-
-        final JSwordVersificationService versificationService = new JSwordVersificationServiceImpl();
-
-        final Loader l = new Loader(new JSwordPassageServiceImpl(versificationService, null, null), null,
-                getEbean(), coreProperties);
-        final int count = l.loadDictionaryArticles();
-
-        final int srCount = getEbean().find(ScriptureReference.class).findRowCount();
-        assertEquals(4, count);
-        assertTrue(srCount > 10);
-    }
-
-    // /**
-    // * checks that the lexicon is loaded correctly with all its references
-    // */
-    // @Test
-    // public void testLexicon() {
-    // final Properties coreProperties = new Properties();
-    // coreProperties.put("test.data.path.lexicon", "lexicon.csv");
-    // final Loader l = new Loader(new JSwordPassageServiceImpl(null, null, null), null, getEbean(),
-    // coreProperties);
-    //
-    // final int count = l.loadLexicon();
-    // assertEquals(5, count);
-    //
-    // final LexiconDefinition firstStrong = getEbean().find(LexiconDefinition.class).where()
-    // .eq("strong", "G0016").findUnique();
-    //
-    // assertEquals("G0016", firstStrong.getStrong());
-    // assertFalse(firstStrong.getRelatedStrongs().contains("G0015"));
-    // final List<LexiconDefinition> similarStrongs = firstStrong.getSimilarStrongs();
-    //
-    // assertEquals(4, similarStrongs.size());
-    //
-    // }
 
     /**
      * tests loading of robinson's morphology codes

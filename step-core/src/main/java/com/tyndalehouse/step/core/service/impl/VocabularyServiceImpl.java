@@ -121,7 +121,8 @@ public class VocabularyServiceImpl implements VocabularyService {
      */
     private List<Definition> getLexiconDefinitions(final List<String> keys) {
         final List<Definition> lds = this.ebean.find(Definition.class)
-                .select("accentedUnicode,TranslitStep,stepGloss").where().in("strongNumber", keys).findList();
+                .select("accentedUnicode,stepTransliteration,stepGloss").where().in("strongNumber", keys)
+                .findList();
         return lds;
     }
 
@@ -136,10 +137,12 @@ public class VocabularyServiceImpl implements VocabularyService {
         final String[] ids = vocabIdentifiers.split(STRONG_SEPARATORS);
 
         for (final String i : ids) {
-
-            if (i.length() > START_STRONG_KEY + 1
-                    && (i.startsWith(LOWER_STRONG) || i.startsWith(HIGHER_STRONG))) {
-                idList.add(padStrongNumber(i, true));
+            final char firstChar = i.charAt(0);
+            if (firstChar == 'G' || firstChar == 'H') {
+                idList.add(padStrongNumber(i, false));
+            } else if ((i.startsWith(HIGHER_STRONG) || i.startsWith(LOWER_STRONG))
+                    && i.length() > START_STRONG_KEY) {
+                idList.add(padStrongNumber(i.substring(START_STRONG_KEY), false));
             }
         }
         return idList;

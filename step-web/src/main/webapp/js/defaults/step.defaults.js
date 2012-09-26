@@ -31,6 +31,7 @@
 // LANGUAGE
 ////////////////////////////////////////
 WORDS_MEANING = ["words meaning", "Type the English meaning of the original words."];
+TRANSLATED_AS = ["words translated as", "Type a phrase that occurs in a passage."];
 GREEK_WORDS = ["a Greek word", "Type the start of the word in English letters or Unicode Greek."];
 HEBREW_WORDS = ["a Hebrew word", "Type the start of the word in English letters or Unicode Hebrew."];
 
@@ -39,6 +40,8 @@ SPECIFIC_FORM = "this specific form of this word";
 ALL_FORMS = "all forms of this word";
 ALL_RELATED = "all related words";
 SPECIFIC_GRAMMAR = "specific grammar...";
+ORIGINAL_SPELLING =  "Original spelling";
+VOCABULARY = "Vocabulary";
 
 step.defaults = {
     detailLevel : 0,
@@ -84,11 +87,12 @@ step.defaults = {
         },
         
         original : {
-            originalTypes : [WORDS_MEANING[0], 
+            originalTypes : [WORDS_MEANING[0],
+                             TRANSLATED_AS[0],
                              GREEK_WORDS[0], 
                              HEBREW_WORDS[0]],
-            originalForms: [ALL_RELATED, ALL_FORMS, SPECIFIC_FORM, SPECIFIC_GRAMMAR],
-            originalSorting: ["Scripture", "Vocabulary", "Translation", "Grammar", "Original spelling"]
+            originalForms: [ALL_RELATED, ALL_FORMS, SPECIFIC_FORM, ],
+            originalSorting: ["Scripture", VOCABULARY, ORIGINAL_SPELLING]
         }
     }
 };

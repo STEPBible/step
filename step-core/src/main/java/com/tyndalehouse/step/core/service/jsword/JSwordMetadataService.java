@@ -61,4 +61,10 @@ public interface JSwordMetadataService {
      * @return a list of matching bible book names
      */
     List<BookName> getBibleBookNames(String bookStart, String version);
+
+    /**
+     * @param version version of interest
+     * @return true if the version in question contains Strongs
+     */
+    boolean hasVocab(String version);
 }

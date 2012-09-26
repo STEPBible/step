@@ -54,6 +54,7 @@ public final class StringConversionUtils {
     private static final int TAV = 0x05EA;
     private static final char KEY_SEPARATOR = ':';
     private static final String STRONG_PREFIX = "strong:";
+    private static final String UPPER_STRONG_PREFIX = "STRONG:";
     private static final int STRONG_PREFIX_LENGTH = STRONG_PREFIX.length();
     private static final int LANGUAGE_INDICATOR = STRONG_PREFIX_LENGTH;
     private static final Logger LOGGER = LoggerFactory.getLogger(StringConversionUtils.class);
@@ -105,16 +106,16 @@ public final class StringConversionUtils {
     }
 
     /**
-     * Strips off strong: if present, to yield Gxxxx
+     * Strips off strong: if present, to yield Gxxxx - Assumes strong prefix is upperCase, i.e. STRONG:
      * 
      * @param key key to change
      * @return the key without the prefix
      */
     public static String getStrongLanguageSpecificKey(final String key) {
-        if (key.length() > STRONG_PREFIX_LENGTH) {
+        if (key.startsWith(UPPER_STRONG_PREFIX)) {
             return key.substring(STRONG_PREFIX_LENGTH);
         }
-        return key;
+        return null;
     }
 
     /**
@@ -124,44 +125,97 @@ public final class StringConversionUtils {
      * @return the strong number, padded
      */
     public static String getStrongPaddedKey(final String key) {
-        final String strongNumber = getStrongLanguageSpecificKey(key);
-
-        final int length = strongNumber.length();
-        if (length >= 5 || length <= 0) {
-            return strongNumber;
+        if (key == null) {
+            return "";
         }
 
-        // check we have G or H
-        final char firstChar = strongNumber.charAt(0);
-        if (firstChar == 'G' || firstChar == 'H') {
-            switch (length) {
-                case 1:
-                    return strongNumber;
-                case 2:
-                    return new String(new char[] { firstChar, '0', '0', '0', strongNumber.charAt(1) });
-                case 3:
-                    return new String(new char[] { firstChar, '0', '0', strongNumber.charAt(1),
-                            strongNumber.charAt(2) });
-                case 4:
-                    return new String(new char[] { firstChar, '0', strongNumber.charAt(1),
-                            strongNumber.charAt(2), strongNumber.charAt(3) });
-                default:
-                    return strongNumber;
+        final StringBuilder sb = new StringBuilder(key.length());
+        final String[] split = key.toUpperCase().split(" ");
+        for (final String s : split) {
+            final String strongNumber = getStrongLanguageSpecificKey(s);
+
+            if (strongNumber == null) {
+                continue;
+            }
+
+            final int length = strongNumber.length();
+            if (sb.length() > 0) {
+                // add a space separator
+                sb.append(' ');
+            }
+
+            // check we have G or H
+            final char firstChar = strongNumber.charAt(0);
+            if (firstChar == 'G' || firstChar == 'H') {
+                switch (length) {
+                    case 1:
+                        sb.append(strongNumber);
+                        break;
+                    case 2:
+                        sb.append(firstChar);
+                        sb.append('0');
+                        sb.append('0');
+                        sb.append('0');
+                        sb.append(strongNumber.charAt(1));
+                        break;
+                    case 3:
+                        sb.append(firstChar);
+                        sb.append('0');
+                        sb.append('0');
+                        sb.append(strongNumber.charAt(1));
+                        sb.append(strongNumber.charAt(2));
+                        break;
+                    case 4:
+                        sb.append(firstChar);
+                        sb.append('0');
+                        sb.append(strongNumber.charAt(1));
+                        sb.append(strongNumber.charAt(2));
+                        sb.append(strongNumber.charAt(3));
+                        break;
+                    case 6:
+                        if (strongNumber.charAt(1) == '0') {
+                            sb.append(firstChar);
+                            sb.append(strongNumber.charAt(2));
+                            sb.append(strongNumber.charAt(3));
+                            sb.append(strongNumber.charAt(4));
+                            sb.append(strongNumber.charAt(5));
+                            break;
+                        }
+
+                        sb.append(strongNumber);
+                        break;
+                    default:
+                        sb.append(strongNumber);
+                        break;
+                }
+            } else {
+                // we only have the numbers so do our best
+                switch (length) {
+                    case 1:
+                        sb.append('0');
+                        sb.append('0');
+                        sb.append('0');
+                        sb.append(strongNumber.charAt(0));
+                        break;
+                    case 2:
+                        sb.append('0');
+                        sb.append('0');
+                        sb.append(strongNumber.charAt(0));
+                        sb.append(strongNumber.charAt(1));
+                        break;
+                    case 3:
+                        sb.append('0');
+                        sb.append(strongNumber.charAt(0));
+                        sb.append(strongNumber.charAt(1));
+                        sb.append(strongNumber.charAt(2));
+                        break;
+                    default:
+                        sb.append(strongNumber);
+                        break;
+                }
             }
         }
-
-        // we only have the numbers so do our best
-        switch (length) {
-            case 1:
-                return new String(new char[] { '0', '0', '0', strongNumber.charAt(0) });
-            case 2:
-                return new String(new char[] { '0', '0', strongNumber.charAt(0), strongNumber.charAt(1) });
-            case 3:
-                return new String(new char[] { '0', strongNumber.charAt(0), strongNumber.charAt(1),
-                        strongNumber.charAt(2) });
-            default:
-                return strongNumber;
-        }
+        return sb.toString().trim();
     }
 
     /**
@@ -218,21 +272,18 @@ public final class StringConversionUtils {
         return stepTransliteration;
     }
 
-    static long t1 = 0;
-    static long t2 = 0;
-
     /**
      * @param rawForm raw form of the word
      * @return the transliteration of the word given
      */
-    public static final String transliterate(final String rawForm) {
+    public static String transliterate(final String rawForm) {
         // decompose characters from breathing and accents and store in StringBuilder
 
-        final long t = System.currentTimeMillis();
-        final String normalized = Normalizer.normalize(rawForm.toLowerCase(), Form.NFD);
-        // t1 += System.currentTimeMillis() - t;
+        if (rawForm == null) {
+            return "";
+        }
 
-        // t = System.currentTimeMillis();
+        final String normalized = Normalizer.normalize(rawForm.toLowerCase(), Form.NFD);
         final StringBuilder sb = new StringBuilder(normalized);
 
         int position = 0;
@@ -359,7 +410,7 @@ public final class StringConversionUtils {
                     sb.insert(position++, 's');
                     break;
                 case 'ω':
-                    sb.setCharAt(position++, 'o');
+                    sb.setCharAt(position++, 'u');
                     sb.insert(position++, 'w');
                     break;
                 //
@@ -387,7 +438,6 @@ public final class StringConversionUtils {
         }
 
         final String s = sb.toString();
-        t2 += (System.currentTimeMillis() - t);
         return s;
     }
 
@@ -437,6 +487,9 @@ public final class StringConversionUtils {
      * @return a version without breathing or *
      */
     public static String toBetaUnaccented(final String beta) {
+        if (beta == null) {
+            return null;
+        }
         return BETA_ACCENTS.matcher(beta).replaceAll("");
     }
 }

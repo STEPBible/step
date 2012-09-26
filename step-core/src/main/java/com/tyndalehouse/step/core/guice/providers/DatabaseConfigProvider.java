@@ -51,7 +51,8 @@ import com.tyndalehouse.step.core.data.entities.Session;
 import com.tyndalehouse.step.core.data.entities.User;
 import com.tyndalehouse.step.core.data.entities.aggregations.TimelineEventsAndDate;
 import com.tyndalehouse.step.core.data.entities.lexicon.Definition;
-import com.tyndalehouse.step.core.data.entities.lexicon.LexicalForm;
+import com.tyndalehouse.step.core.data.entities.lexicon.SpecificForm;
+import com.tyndalehouse.step.core.data.entities.lexicon.Translation;
 import com.tyndalehouse.step.core.data.entities.morphology.Morphology;
 import com.tyndalehouse.step.core.data.entities.timeline.HotSpot;
 import com.tyndalehouse.step.core.data.entities.timeline.TimelineEvent;
@@ -73,6 +74,7 @@ public class DatabaseConfigProvider implements Provider<EbeanServer> {
     private final String username;
     private final String password;
     private BasicDataSource ds;
+    private final boolean generateDDL;
 
     /**
      * We inject some properties in to the datasource provider
@@ -95,7 +97,8 @@ public class DatabaseConfigProvider implements Provider<EbeanServer> {
             @Named("app.db.maxIdle") final int maxIdle,
             @Named("app.db.maxOpenStatement") final int maxOpenStatements,
             @Named("app.db.poolableStatements") final boolean poolableStatements,
-            @Named("app.db.validationQuery") final String validationQuery) {
+            @Named("app.db.validationQuery") final String validationQuery,
+            @Named("app.db.generate.ddl") final boolean generateDDL) {
         this.driverClassName = driverClassName;
         this.url = url;
         this.username = username;
@@ -106,6 +109,7 @@ public class DatabaseConfigProvider implements Provider<EbeanServer> {
         this.maxIdle = maxIdle;
         this.maxOpenStatements = maxOpenStatements;
         this.poolStatements = poolableStatements;
+        this.generateDDL = generateDDL;
     }
 
     // CHECKSTYLE:ON
@@ -132,8 +136,9 @@ public class DatabaseConfigProvider implements Provider<EbeanServer> {
         addEntities(config);
 
         // set DDL options...
-        config.setDdlGenerate(true);
-        config.setDdlRun(true);
+        config.setDdlGenerate(this.generateDDL);
+        config.setDdlRun(this.generateDDL);
+        //
 
         config.setDefaultServer(true);
         config.setRegister(true);
@@ -161,7 +166,8 @@ public class DatabaseConfigProvider implements Provider<EbeanServer> {
         config.addClass(DictionaryArticle.class);
         config.addClass(Morphology.class);
         config.addClass(Definition.class);
-        config.addClass(LexicalForm.class);
+        config.addClass(SpecificForm.class);
+        config.addClass(Translation.class);
     }
 
     /**

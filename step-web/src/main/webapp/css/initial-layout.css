@@ -124,6 +124,10 @@ body {
 	float: left;
 }
 
+.singleColumn {
+	width: 100%;	
+}
+
 
 /**************************/
 /* PASSAGE CONTAINERS     */
@@ -239,6 +243,7 @@ body {
 	border: none;
 }
 
+
 .column {
 	border: 0 !important;
 	padding-top: 0px;
@@ -337,4 +342,11 @@ body {
 
 #waiting {
 	position: absolute;
+}
+
+/**************************/
+/* Helper classes         */
+/**************************/
+.clearBoth {
+	clear: both;
 }

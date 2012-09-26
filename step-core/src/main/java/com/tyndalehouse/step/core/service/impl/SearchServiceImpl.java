@@ -36,17 +36,24 @@ import static com.tyndalehouse.step.core.models.LookupOption.HEADINGS_ONLY;
 import static com.tyndalehouse.step.core.service.impl.VocabularyServiceImpl.padStrongNumber;
 import static com.tyndalehouse.step.core.utils.StringConversionUtils.toBetaLowercase;
 import static com.tyndalehouse.step.core.utils.StringConversionUtils.toBetaUnaccented;
+import static com.tyndalehouse.step.core.utils.StringConversionUtils.unAccent;
+import static com.tyndalehouse.step.core.utils.StringUtils.isEmpty;
 import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
 import static java.lang.Character.isDigit;
 import static java.lang.String.format;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -58,9 +65,10 @@ import org.slf4j.LoggerFactory;
 import com.avaje.ebean.EbeanServer;
 import com.tyndalehouse.step.core.data.entities.ScriptureReference;
 import com.tyndalehouse.step.core.data.entities.lexicon.Definition;
-import com.tyndalehouse.step.core.data.entities.lexicon.LexicalForm;
+import com.tyndalehouse.step.core.data.entities.lexicon.SpecificForm;
 import com.tyndalehouse.step.core.data.entities.timeline.TimelineEvent;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
+import com.tyndalehouse.step.core.models.LexiconSuggestion;
 import com.tyndalehouse.step.core.models.OsisWrapper;
 import com.tyndalehouse.step.core.models.search.KeyedSearchResultSearchEntry;
 import com.tyndalehouse.step.core.models.search.KeyedVerseContent;
@@ -71,6 +79,9 @@ import com.tyndalehouse.step.core.models.search.TimelineEventSearchEntry;
 import com.tyndalehouse.step.core.models.search.VerseSearchEntry;
 import com.tyndalehouse.step.core.service.SearchService;
 import com.tyndalehouse.step.core.service.TimelineService;
+import com.tyndalehouse.step.core.service.helpers.GlossComparator;
+import com.tyndalehouse.step.core.service.helpers.OriginalSpellingComparator;
+import com.tyndalehouse.step.core.service.jsword.JSwordMetadataService;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import com.tyndalehouse.step.core.service.jsword.JSwordSearchService;
 import com.tyndalehouse.step.core.utils.StringConversionUtils;
@@ -83,35 +94,139 @@ import com.tyndalehouse.step.core.utils.StringConversionUtils;
  */
 @Singleton
 public class SearchServiceImpl implements SearchService {
+    /** value representing a vocabulary sort */
+    public static final String VOCABULARY_SORT = "Vocabulary";
+    /** value representing a original spelling sort */
+    public static final Object ORIGINAL_SPELLING_SORT = "Original spelling";
+    private static final String STRONG_THE = "G3588";
+    private static final String START_OF_STRONG_FIELD = "strong='";
+    private static final int START_OF_STRONG_FIELD_LENGTH = START_OF_STRONG_FIELD.length();
+    private static final int MAX_SUGGESTIONS = 20;
     // TODO should this be parameterized?
     private static final String BASE_GREEK_VERSION = "WHNU";
     private static final String BASE_HEBREW_VERSION = "OSMHB";
     private static final Logger LOGGER = LoggerFactory.getLogger(SearchServiceImpl.class);
     private static final String STRONG_QUERY = "strong:";
     private static final String LIKE = "%%%s%%";
+    private static final int MAX_TRANSLATED_AS_SIZE = 20;
     private final EbeanServer ebean;
     private final JSwordSearchService jswordSearch;
     private final JSwordPassageService jsword;
     private final TimelineService timeline;
+    private final JSwordMetadataService jswordMeta;
 
     /**
      * @param ebean the ebean server to carry out the search from
      * @param jsword used to convert references to numerals, etc.
      * @param timeline the timeline service
+     * @param jswordMeta the metadata service to obtain information about specific books
      * @param jswordSearch the search service
      */
     @Inject
     public SearchServiceImpl(final EbeanServer ebean, final JSwordSearchService jswordSearch,
-            final JSwordPassageService jsword, final TimelineService timeline) {
+            final JSwordPassageService jsword, final TimelineService timeline,
+            final JSwordMetadataService jswordMeta) {
         this.ebean = ebean;
         this.jswordSearch = jswordSearch;
         this.jsword = jsword;
         this.timeline = timeline;
+        this.jswordMeta = jswordMeta;
     }
 
     @Override
     public long estimateSearch(final SearchQuery sq) {
         return this.jswordSearch.estimateSearchResults(sq);
+    }
+
+    @Override
+    public List<LexiconSuggestion> getLexicalSuggestions(final String form, final boolean includeAllForms) {
+        if (isEmpty(form)) {
+            return new ArrayList<LexiconSuggestion>();
+        }
+
+        final String lowerForm = form.toLowerCase() + '%';
+
+        if (includeAllForms) {
+            return getMatchingAllForms(lowerForm);
+        } else {
+            return getMatchingFormsFromLexicon(form, lowerForm);
+        }
+    }
+
+    /**
+     * retrieves forms from the lexicon
+     * 
+     * @param form the form
+     * @param lowerForm form in lower case, containing a % if appropriate
+     * @return the list of suggestions
+     */
+    private List<LexiconSuggestion> getMatchingFormsFromLexicon(final String form, final String lowerForm) {
+        final List<LexiconSuggestion> suggestions = new ArrayList<LexiconSuggestion>();
+        final List<Definition> definitions = this.ebean.find(Definition.class)
+                .select("accentedUnicode,stepTransliteration,stepGloss,blacklisted").where()
+                .eq("blacklisted", false).isNotNull("strongNumber").disjunction()
+                .like("accentedUnicode", lowerForm).like("unaccentedUnicode", lowerForm)
+                .like("strongTranslit", lowerForm).like("strongPronunc", lowerForm)
+                .like("stepTransliteration", lowerForm).like("unaccentedStepTransliteration", lowerForm)
+                .like("alternativeTranslit1", lowerForm).like("alternativeTranslit1Unaccented", lowerForm)
+                .eq("strongNumber", form).endJunction().setMaxRows(MAX_SUGGESTIONS).findList();
+        for (final Definition def : definitions) {
+            suggestions.add(convertToSuggestion(def));
+        }
+        return suggestions;
+    }
+
+    /**
+     * retrieves forms from the lexicon
+     * 
+     * @param lowerForm form in lower case, containing a % if appropriate
+     * @return the list of suggestions
+     */
+    private List<LexiconSuggestion> getMatchingAllForms(final String lowerForm) {
+        final List<LexiconSuggestion> suggestions = new ArrayList<LexiconSuggestion>();
+
+        final List<SpecificForm> forms = this.ebean.find(SpecificForm.class)
+                .fetch("strongNumber", "accentedUnicode,stepTransliteration,stepGloss,blacklisted").where()
+                .disjunction().like("rawForm", lowerForm).like("unaccentedForm", unAccent(lowerForm))
+                .like("transliteration", lowerForm).endJunction().setMaxRows(MAX_SUGGESTIONS).findList();
+
+        for (final SpecificForm f : forms) {
+            suggestions.add(convertToSuggestion(f));
+        }
+        return suggestions;
+    }
+
+    /**
+     * @param f form retrieved from the database
+     * @return the suggestion put back to the user
+     */
+    private LexiconSuggestion convertToSuggestion(final SpecificForm f) {
+        final Definition strongNumber = f.getStrongNumber();
+        final LexiconSuggestion suggestion = convertToSuggestion(strongNumber);
+
+        suggestion.setMatchingForm(f.getRawForm());
+        suggestion.setStepTransliteration(f.getTransliteration());
+        return suggestion;
+    }
+
+    /**
+     * convers a definition to a suggested form
+     * 
+     * @param def the definition
+     * @return the suggestion
+     */
+    private LexiconSuggestion convertToSuggestion(final Definition def) {
+        final LexiconSuggestion suggestion = new LexiconSuggestion();
+        suggestion.setGloss(def.getStepGloss());
+
+        if (Boolean.TRUE.equals(def.getBlacklisted())) {
+            suggestion.setMatchingForm(def.getAccentedUnicode() + " [too frequent]");
+        } else {
+            suggestion.setMatchingForm(def.getAccentedUnicode());
+        }
+
+        suggestion.setStepTransliteration(def.getStepTransliteration());
+        return suggestion;
     }
 
     @Override
@@ -140,7 +255,166 @@ public class SearchServiceImpl implements SearchService {
 
         result.setTimeTookTotal(System.currentTimeMillis() - start);
         result.setQuery(sq.getOriginalQuery());
+        specialSort(sq, result);
         return result;
+    }
+
+    /**
+     * We may have a special type of sort to operate
+     * 
+     * @param sq the search query
+     * @param result the result to be sorted
+     */
+    private void specialSort(final SearchQuery sq, final SearchResult result) {
+        // we only do this kind of sort if we have some strong numbers, and at least 2!
+        if (result.getStrongHighlights() != null && result.getStrongHighlights().size() > 1) {
+
+            result.setOrder(sq.getSortOrder());
+            if (VOCABULARY_SORT.equals(sq.getSortOrder())) {
+                sortByStrongNumber(sq, result, new GlossComparator());
+            } else if (ORIGINAL_SPELLING_SORT.equals(sq.getSortOrder())) {
+                sortByStrongNumber(sq, result, new OriginalSpellingComparator());
+            }
+        }
+    }
+
+    /**
+     * For this kind of sort, we find out which strong number is present in a verse, then run a comparator on
+     * the strong numbers sorts results by strong number
+     * 
+     * @param sq the search criteria
+     * @param result results
+     * @param comparator the comparator to use to sort the strong numbers
+     */
+    private void sortByStrongNumber(final SearchQuery sq, final SearchResult result,
+            final Comparator<? super Definition> comparator) {
+        // sq should have the strong numbers, if we're doing this kind of sort
+        List<Definition> definitions = sq.getDefinitions();
+        if (definitions == null) {
+            // stop searching
+            LOGGER.warn("Attempting to sort by strong number, but no strong numbers available. ");
+            return;
+        }
+
+        final Set<String> strongs = new HashSet<String>(result.getStrongHighlights());
+
+        final List<SearchEntry> entries = result.getResults();
+        final List<SearchEntry> noOrder = new ArrayList<SearchEntry>(0);
+
+        final Map<String, List<VerseSearchEntry>> keyedOrder = new HashMap<String, List<VerseSearchEntry>>(
+                strongs.size());
+
+        for (final SearchEntry entry : entries) {
+            boolean added = false;
+            if (entry instanceof VerseSearchEntry) {
+
+                for (final String strong : strongs) {
+                    final VerseSearchEntry verse = (VerseSearchEntry) entry;
+
+                    if (strong == null) {
+                        continue;
+                    }
+
+                    if (verse.getPreview().contains(strong)) {
+                        List<VerseSearchEntry> list = keyedOrder.get(strong);
+                        if (list == null) {
+                            list = new ArrayList<VerseSearchEntry>(16);
+                            keyedOrder.put(strong, list);
+                        }
+                        list.add(verse);
+                        added = true;
+                        // break and continue with next entry
+                        break;
+                    }
+                }
+
+                // should never happen
+                if (!added) {
+                    noOrder.add(entry);
+                }
+            }
+        }
+
+        // now work out the order of the strong numbers, probably best in terms of the gloss...
+        // order the definitions, then simply re-do the list of verse search entries
+        Collections.sort(definitions, comparator);
+        final List<LexiconSuggestion> suggestions = new ArrayList<LexiconSuggestion>();
+        for (final Definition def : definitions) {
+            suggestions.add(convertToSuggestion(def));
+        }
+        result.setDefinitions(suggestions);
+
+        // if we have filters, then we need to reduce further...
+        definitions = filterDefinitions(sq, definitions);
+
+        // now we have sorted definitions, we need to rebuild the search result
+        final List<SearchEntry> newOrder = new ArrayList<SearchEntry>();
+        for (final Definition def : definitions) {
+            final List<VerseSearchEntry> list = keyedOrder.get(def.getStrongNumber());
+            if (list != null) {
+                newOrder.addAll(list);
+                for (final VerseSearchEntry e : list) {
+                    e.setStepGloss(def.getStepGloss());
+                    e.setStepTransliteration(def.getStepTransliteration());
+                    e.setAccentedUnicode(def.getAccentedUnicode());
+                }
+            }
+        }
+
+        newOrder.addAll(noOrder);
+        result.setResults(specialPaging(sq, newOrder));
+    }
+
+    /**
+     * Keep definitions that are of current interest to the user... Remove all others
+     * 
+     * @param sq the search criteria
+     * @param definitions the definitions
+     * @return a list of definitions to be included in the filter
+     */
+    private List<Definition> filterDefinitions(final SearchQuery sq, final List<Definition> definitions) {
+        final String[] originalFilter = sq.getCurrentSearch().getOriginalFilter();
+        if (originalFilter == null || originalFilter.length == 0) {
+            return definitions;
+        }
+
+        // bubble intersection, acceptable, because we're only dealing with a handful of definitions
+        final List<Definition> keep = new ArrayList<Definition>(definitions.size());
+
+        for (final Definition def : definitions) {
+            for (final String filteredValue : originalFilter) {
+                if (def.getAccentedUnicode().equals(filteredValue)) {
+                    keep.add(def);
+
+                    // break out of filterValues loop, and proceed with next definition
+                    break;
+                }
+            }
+        }
+        return keep;
+    }
+
+    /**
+     * Reduces the results to the correct page size
+     * 
+     * @param sq the search criteria
+     * @param newOrder the elements in the new order
+     * @return the new set of results, with only pageSize results
+     */
+    private List<SearchEntry> specialPaging(final SearchQuery sq, final List<SearchEntry> newOrder) {
+        // runs paging after a special sort
+        sq.getPageNumber();
+        sq.getPageSize();
+
+        // we want
+        final int firstElement = (sq.getPageNumber() - 1) * sq.getPageSize();
+        final int lastElement = firstElement + sq.getPageSize();
+
+        final List<SearchEntry> newResults = new ArrayList<SearchEntry>(sq.getPageSize());
+        for (int ii = firstElement; ii < lastElement && ii < newOrder.size(); ii++) {
+            newResults.add(newOrder.get(ii));
+        }
+        return newResults;
     }
 
     /**
@@ -267,9 +541,127 @@ public class SearchServiceImpl implements SearchService {
                 return runExactOriginalTextSearch(sq);
             case ORIGINAL_MEANING:
                 return runMeaningSearch(sq);
+            case ORIGINAL_TRANSLATED_AS:
+                return runTranslatedAsSearch(sq);
             default:
                 throw new StepInternalException("Attempted to execute unknown search");
         }
+    }
+
+    /**
+     * Searches a first text for occurences of the text, then repeats the search for the strong number that
+     * was matched
+     * 
+     * @param sq the search criteria
+     * @return the results from the search
+     */
+    private SearchResult runTranslatedAsSearch(final SearchQuery sq) {
+        // we search across all tagged versions selected
+        final String[] versions = sq.getCurrentSearch().getVersions();
+        final IndividualSearch currentSearch = sq.getCurrentSearch();
+
+        // prepare sub range query
+        final String currentQuery = currentSearch.getQuery();
+        final StringBuilder sb = new StringBuilder(currentQuery.length());
+
+        sb.append('+');
+        sb.append('[');
+        sb.append(currentSearch.getSubRange());
+        sb.append(']');
+        sb.append(' ');
+        sb.append('"');
+        sb.append(currentQuery.replace("\"", ""));
+        sb.append('"');
+
+        currentSearch.setQuery(sb.toString());
+
+        final Set<String> strongs = new HashSet<String>();
+        for (final String v : versions) {
+            if (this.jswordMeta.hasVocab(v)) {
+                final SearchResult search = this.jswordSearch.search(sq, v);
+                if (search.getResults().size() > MAX_TRANSLATED_AS_SIZE) {
+                    throw new StepInternalException("The field 'as occuring in' is not specific enough");
+                }
+
+                strongs.addAll(getStrongsForPhrase(currentQuery, search));
+            }
+        }
+
+        // now we have a list of strongs to search for, we do the same as a normal strong all forms search
+        final StringBuilder newQuery = new StringBuilder(strongs.size() * 5);
+        for (final String s : strongs) {
+            newQuery.append(s);
+            newQuery.append(' ');
+        }
+
+        sq.getCurrentSearch().setQuery(newQuery.toString().trim());
+        return runAllFormsStrongSearch(sq);
+    }
+
+    /**
+     * Parses the XML crudely, by looking for the strongs tags just prior to any hit
+     * 
+     * @param queryText the query text that we have hit
+     * @param results the results to be parsed
+     * @return a list of strongs
+     */
+    private Set<String> getStrongsForPhrase(final String queryText, final SearchResult results) {
+        final List<SearchEntry> resultEntries = results.getResults();
+        final Set<String> strongs = new HashSet<String>(5);
+
+        for (final SearchEntry se : resultEntries) {
+            if (se instanceof VerseSearchEntry) {
+                final VerseSearchEntry verseSearchEntry = (VerseSearchEntry) se;
+                strongs.addAll(parseVerseSearchEntry(queryText, verseSearchEntry));
+
+            }
+        }
+
+        removeBlacklistedStrongs(strongs);
+
+        return strongs;
+    }
+
+    /**
+     * Removes strongs that can appear all over the place such as for the words "the"
+     * 
+     * @param strongs strong numbers
+     */
+    private void removeBlacklistedStrongs(final Set<String> strongs) {
+        strongs.remove(STRONG_THE);
+    }
+
+    /**
+     * Looks for a hit
+     * 
+     * @param queryString the text that is being searched for
+     * @param verseSearchEntry a verse search entry
+     * @return a list of strongs that have been found in the verse
+     */
+    private Set<String> parseVerseSearchEntry(final String queryString,
+            final VerseSearchEntry verseSearchEntry) {
+        final String preview = verseSearchEntry.getPreview();
+        final Set<String> strongs = new HashSet<String>(4);
+
+        // start at the end and work backwards
+        int firstHit = preview.lastIndexOf(queryString);
+        while (firstHit != -1) {
+            // look for strong field
+            final int startOfStrongField = preview.lastIndexOf(START_OF_STRONG_FIELD, firstHit);
+            if (startOfStrongField != -1) {
+                final int endOfStrongField = preview.indexOf('\'', startOfStrongField
+                        + START_OF_STRONG_FIELD_LENGTH);
+                final String substring = preview.substring(START_OF_STRONG_FIELD_LENGTH + startOfStrongField,
+                        endOfStrongField);
+                final String[] split = substring.split(" ");
+                for (final String potentialStrong : split) {
+                    strongs.add(potentialStrong);
+                }
+            }
+            firstHit = preview.lastIndexOf(queryString, startOfStrongField);
+        }
+
+        return strongs;
     }
 
     /**
@@ -415,6 +807,12 @@ public class SearchServiceImpl implements SearchService {
     private List<String> getStrongsFromTextCriteria(final SearchQuery sq) {
         // we can be dealing with a strong number, if so, no work required...
         final String query = sq.getCurrentSearch().getQuery();
+        if (query.isEmpty()) {
+            return new ArrayList<String>(0);
+        }
+
+        final boolean wildcard = query.charAt(query.length() - 1) == '*';
+        final String searchQuery = wildcard ? query.replace("*", "%") : query;
 
         List<String> strongs;
         if (isDigit(query.charAt(0)) || (query.length() > 1 && isDigit(query.charAt(1)))) {
@@ -422,13 +820,13 @@ public class SearchServiceImpl implements SearchService {
             strongs = getStrongsFromCurrentSearch(sq);
         } else {
             // we're dealing with some sort of greek/hebrew form so we search the tables for this
-            strongs = searchTextFieldsForDefinition(query, sq);
+            strongs = searchTextFieldsForDefinition(searchQuery, sq);
         }
 
         // run rules for transliteration
         if (strongs.isEmpty()) {
             // run transliteration rules
-            strongs = findByTransliteration(query);
+            strongs = findByTransliteration(searchQuery);
         }
         return strongs;
     }
@@ -437,16 +835,18 @@ public class SearchServiceImpl implements SearchService {
      * Looks up all the glosses for a particular word, and then adapts to strong search and continues as
      * before
      * 
-     * @param sq
-     * @return
+     * @param sq search criteria
+     * @return a list of matching strongs
      */
     private List<String> adaptQueryForMeaningSearch(final SearchQuery sq) {
         final String query = sq.getCurrentSearch().getQuery();
 
         // TODO having wildcards both before and after and after is not good for performance - revise and use
         // full text search?
-        final List<Definition> matchingMeanings = this.ebean.find(Definition.class).select("strongNumber")
-                .where().ilike("stepGloss", "%" + query + "%").findList();
+        final List<Definition> matchingMeanings = this.ebean.find(Definition.class)
+                .select("strongNumber,stepGloss,accentedUnicode,stepTransliteration").where()
+                .eq("blacklisted", false).ilike("translations.alternativeTranslation", "%" + query + "%")
+                .findList();
         final List<String> strongs = new ArrayList<String>(matchingMeanings.size());
         for (final Definition d : matchingMeanings) {
             strongs.add(d.getStrongNumber());
@@ -454,6 +854,7 @@ public class SearchServiceImpl implements SearchService {
 
         final String textQuery = getQuerySyntaxForStrongs(strongs, sq);
         sq.getCurrentSearch().setQuery(textQuery);
+        sq.setDefinitions(matchingMeanings);
 
         // return the strongs that the search will match
         return strongs;
@@ -464,6 +865,7 @@ public class SearchServiceImpl implements SearchService {
      * can be parsed by JSword
      * 
      * @param sq the search query
+     * @return a list of all matching strongs
      */
     private List<String> adaptQueryForStrongSearch(final SearchQuery sq) {
         final List<String> strongs = getStrongsFromTextCriteria(sq);
@@ -481,17 +883,24 @@ public class SearchServiceImpl implements SearchService {
      * Adapts the search query to be used in a strong search
      * 
      * @param sq the search query object
+     * @return a list of strong numbers
      */
     private List<String> adaptQueryForRelatedStrongSearch(final SearchQuery sq) {
         final List<String> strongsFromQuery = getStrongsFromTextCriteria(sq);
 
+        final List<Definition> matchedStrongs = new ArrayList<Definition>();
+
         // get all similar ones
-        final List<Definition> strongs = this.ebean.find(Definition.class).fetch("similarStrongs")
-                .select("similarStrongs.strongNumber").where().in("strongNumber", strongsFromQuery)
+        final List<Definition> strongs = this.ebean.find(Definition.class)
+                .fetch("similarStrongs", "strongNumber,stepGloss,accentedUnicode,stepTransliteration")
+                .select("strongNumber,stepGloss,accentedUnicode,stepTransliteration").where()
+                .eq("blacklisted", false).eq("blacklisted", false).in("strongNumber", strongsFromQuery)
                 .findList();
 
+        matchedStrongs.addAll(strongs);
         for (final Definition s : strongs) {
             final List<Definition> similarStrongs = s.getSimilarStrongs();
+            matchedStrongs.addAll(similarStrongs);
             for (final Definition similar : similarStrongs) {
                 strongsFromQuery.add(similar.getStrongNumber());
             }
@@ -501,6 +910,7 @@ public class SearchServiceImpl implements SearchService {
 
         // we can now change the individual search query, to the real text search
         sq.getCurrentSearch().setQuery(query);
+        sq.setDefinitions(matchedStrongs);
 
         // return the strongs that the search will match
         return strongsFromQuery;
@@ -509,30 +919,72 @@ public class SearchServiceImpl implements SearchService {
     /**
      * Searches the underlying DB for the relevant entry
      * 
-     * @param query the query that is being passed in
+     * @param searchQuery the query that is being passed in
      * @param sq the search criteria
      * @return the list of strongs matched
      */
-    private List<String> searchTextFieldsForDefinition(final String query, final SearchQuery sq) {
-        List<LexicalForm> forms = this.ebean.find(LexicalForm.class).select("rawStrongNumber").where()
-                .eq("rawForm", query).findList();
-        if (forms == null) {
-            forms = this.ebean.find(LexicalForm.class).where().eq("unaccentedForm", unaccent(query, sq))
-                    .findList();
+    private List<String> searchTextFieldsForDefinition(final String searchQuery, final SearchQuery sq) {
+        // first look through the text forms
+
+        List<SpecificForm> forms = this.ebean.find(SpecificForm.class).select("rawStrongNumber").where()
+                .eq("strongNumber.blacklisted", false).like("rawForm", searchQuery).findList();
+
+        if (forms.isEmpty()) {
+            final String unaccentedForm = unaccent(searchQuery, sq);
+
+            if (unaccentedForm.charAt(unaccentedForm.length() - 1) == '*') {
+                forms = this.ebean.find(SpecificForm.class).select("rawStrongNumber").where()
+                        .eq("strongNumber.blacklisted", false).like("unaccentedForm", searchQuery).findList();
+            } else {
+                forms = this.ebean.find(SpecificForm.class).select("rawStrongNumber").where()
+                        .eq("strongNumber.blacklisted", false).eq("unaccentedForm", searchQuery).findList();
+            }
         }
 
-        if (forms == null) {
-            return new ArrayList<String>(0);
+        if (forms.isEmpty()) {
+            return lookupFromLexicon(searchQuery, sq);
         }
 
         // if we matched more than one, then we don't have our assumed uniqueness... log warning and
         // continue with first matched strong
 
         final List<String> listOfStrongs = new ArrayList<String>();
-        for (final LexicalForm f : forms) {
+        for (final SpecificForm f : forms) {
             listOfStrongs.add(f.getRawStrongNumber());
         }
         return listOfStrongs;
+    }
+
+    /**
+     * Looks up the search criteria from the lexicon
+     * 
+     * @param query the query
+     * @param sq the search criteria
+     * @return a list of strong numbers
+     */
+    private List<String> lookupFromLexicon(final String query, final SearchQuery sq) {
+        // forms in lexicons are stored in lowercase
+        final String queryLower = query.toLowerCase();
+
+        // if we still have nothing, then look through the definitions
+        List<Definition> definitions = this.ebean.find(Definition.class).select("strongNumber").where()
+                .like("accentedUnicode", queryLower).eq("blacklisted", false).findList();
+
+        if (definitions.isEmpty()) {
+            definitions = this.ebean.find(Definition.class).select("strongNumber").where()
+                    .like("unaccentedUnicode", unaccent(queryLower, sq)).eq("blacklisted", false).findList();
+        }
+
+        final List<String> matchedStrongs = new ArrayList<String>();
+        if (definitions == null) {
+            return matchedStrongs;
+        }
+
+        for (final Definition d : definitions) {
+            matchedStrongs.add(d.getStrongNumber());
+        }
+
+        return matchedStrongs;
     }
 
     /**
@@ -566,21 +1018,19 @@ public class SearchServiceImpl implements SearchService {
      * @return the strongs that have been found/matched.
      */
     private List<String> findByTransliteration(final String query) {
-        final List<Definition> definitions = new ArrayList<Definition>();
-
         // first find by transliterations that we have
         final String lowerQuery = query.toLowerCase();
         final String betaQuery = toBetaLowercase(lowerQuery);
         final String betaUnaccentedQuery = toBetaUnaccented(lowerQuery);
 
         final List<Definition> defs = this.ebean.find(Definition.class).select("strongNumber").where()
-                .disjunction().eq("stepTransliteration", lowerQuery)
-                .eq("unaccentedTransliteration", lowerQuery).eq("strongPronunc", lowerQuery)
-                .eq("strongTranslit", lowerQuery).eq("lsjWordBeta", betaQuery)
-                .eq("lsjWordBetaUnaccented", betaUnaccentedQuery).findList();
+                .eq("blacklisted", false).disjunction().eq("stepTransliteration", lowerQuery)
+                .like("unaccentedStepTransliteration", lowerQuery).like("strongPronunc", lowerQuery)
+                .like("strongTranslit", lowerQuery).like("alternativeTranslit1", betaQuery)
+                .like("alternativeTranslit1Unaccented", betaUnaccentedQuery).findList();
 
         // finally, if we haven't found anything, then abort
-        if (definitions.isEmpty()) {
+        if (defs.isEmpty()) {
             // TODO obtain and implement transliteration rules
             // nothing to search for..., so abort query
             throw new AbortQueryException("No definitions found for input");
@@ -815,22 +1265,4 @@ public class SearchServiceImpl implements SearchService {
         results.retainAll(searchKeys);
         return results;
     }
-    // TODO
-    // @Override
-    // public List<ScriptureReference> searchAllByReference(final String references) {
-    // LOGGER.debug("Searching for all entries with references of [{}]", references);
-    //
-    // final List<ScriptureReference> inputRefs = this.jsword.resolveReferences(references, "KJV");
-    //
-    // final List<ScriptureReference> searchResults = new ArrayList<ScriptureReference>();
-    //
-    // // do search
-    // for (final ScriptureReference r : inputRefs) {
-    // searchResults.addAll(this.ebean.find(ScriptureReference.class).fetch("geoPlace")
-    // .fetch("timelineEvent").setDistinct(true).fetch("dictionaryArticle").where()
-    // .and(ge("endVerseId", r.getStartVerseId()), le("startVerseId", r.getEndVerseId()))
-    // .findList());
-    // }
-    // return searchResults;
-    // }
 }

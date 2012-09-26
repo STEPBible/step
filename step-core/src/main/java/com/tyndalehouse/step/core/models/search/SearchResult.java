@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.tyndalehouse.step.core.models.LexiconSuggestion;
+
 /**
  * 
  * @author chrisburrell
@@ -16,6 +18,8 @@ public class SearchResult implements Serializable {
     private long timeTookTotal;
     private List<SearchEntry> results;
     private List<String> strongHighlights;
+    private String order;
+    private List<LexiconSuggestion> definitions;
 
     /**
      * @return the query
@@ -112,5 +116,33 @@ public class SearchResult implements Serializable {
      */
     public void setStrongHighlights(final List<String> strongHighlights) {
         this.strongHighlights = strongHighlights;
+    }
+
+    /**
+     * @return the order
+     */
+    public String getOrder() {
+        return this.order;
+    }
+
+    /**
+     * @param order the order to set
+     */
+    public void setOrder(final String order) {
+        this.order = order;
+    }
+
+    /**
+     * @return the definitions
+     */
+    public List<LexiconSuggestion> getDefinitions() {
+        return this.definitions;
+    }
+
+    /**
+     * @param definitions the definitions to set
+     */
+    public void setDefinitions(final List<LexiconSuggestion> definitions) {
+        this.definitions = definitions;
     }
 }

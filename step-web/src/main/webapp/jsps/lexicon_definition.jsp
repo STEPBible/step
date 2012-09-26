@@ -8,9 +8,7 @@
 			<li><a href="#context">Context</a></li>
 	</ul>
 
-	<div id="origin">
-			<span id="detailLevel">&nbsp;</span>
-			<span id="sliderDetailLevelLabel">Quick view</span>
+	<div id="origin" name="LEXICON_DEFINITION">
 			
 			<div><i>Search for the <a href="#" onclick="step.lexicon.sameWordSearch();">same word</a>, all <a href="#" onclick="step.lexicon.relatedWordSearch();">related words</a>, or <a href="#" onclick="step.lexicon.wordGrammarSearch();">this word with this grammar</a></i></div>
 			<p />
@@ -18,12 +16,12 @@
 			<div id="vocabContainer" class="metadataContainer">
 				<h3>Vocab</h3>
 				<div level="0">
-					<div><h5 info-name="stepTransliteration"></h5> (<span info-name="accentedUnicode" class="ancientLanguage"></span>): <span info-name="mshortDef"></span></div>
+					<div><h5 info-name="stepTransliteration"></h5> (<span info-name="accentedUnicode" class="ancientLanguage"></span>): <span info-name="shortDef"></span></div>
 				</div>
 				<div level="1">
 					<hr />
 					<div><h5>Translated in the Bible as: </h5></div>
-					<div><h5>Meaning: </h5> <span info-name="mmedDef"></span> </div>
+					<div><h5>Meaning: </h5> <span info-name="mediumDef"></span> </div>
 				</div>	
 				<div level="2">
 					<hr />

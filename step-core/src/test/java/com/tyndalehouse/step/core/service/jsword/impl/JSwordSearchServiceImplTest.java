@@ -37,7 +37,7 @@ public class JSwordSearchServiceImplTest {
      */
     @Test
     public void testEstimation() {
-        assertTrue(this.search.estimateSearchResults(new SearchQuery("John in (ESV)", false, 0, 0, 0)) > 100);
+        assertTrue(this.search.estimateSearchResults(new SearchQuery("John in (ESV)", "false", 0, 0, 0)) > 100);
     }
 
     /**
@@ -46,7 +46,7 @@ public class JSwordSearchServiceImplTest {
     @Test
     public void testApproximateSingleSearch() {
         final List<SearchEntry> results = this.search.search(
-                new SearchQuery("Melchizedc~ in (ESV)", false, 0, 1, 10), "ESV").getResults();
+                new SearchQuery("Melchizedc~ in (ESV)", "false", 0, 1, 10), "ESV").getResults();
         for (int i = 0; i < 10 || i < results.size(); i++) {
             LOGGER.debug(((VerseSearchEntry) results.get(i)).getKey());
         }
@@ -59,7 +59,7 @@ public class JSwordSearchServiceImplTest {
     @Test
     public void testGood() {
         final List<SearchEntry> results = this.search.search(
-                new SearchQuery("+[Mat-Rev] good~ in (KJV)", true, 0, 1, 1000000), "ESV").getResults();
+                new SearchQuery("+[Mat-Rev] good~ in (KJV)", "true", 0, 1, 1000000), "ESV").getResults();
         for (int i = 0; i < results.size(); i++) {
             LOGGER.debug(((VerseSearchEntry) results.get(i)).getKey());
         }

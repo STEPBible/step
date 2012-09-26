@@ -61,15 +61,21 @@ body {
 	text-align: left;
 }
 
-#sliderDetailLevelLabel {
+legend .detailSliderContainer {
+	float: right;
+}
+
+.sliderDetailLevelLabel {
+	clear: both;
 	float: right;
 	font-style: italic;
 	color: darkslategrey;
-	margin-right: 12px;
 	margin-bottom: 4px;
+	padding-left: 15px;
 }
 
-#detailLevel {
+.detailLevel {
+	clear: both;
 	float: right;
 	width: 50px;
 }

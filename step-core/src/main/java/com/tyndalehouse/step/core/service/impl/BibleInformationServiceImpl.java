@@ -196,14 +196,32 @@ public class BibleInformationServiceImpl implements BibleInformationService {
         }
 
         // now trim further depending on modes required:
-        if (mode.equals(InterlinearMode.INTERLEAVED)) {
-            result.remove(LookupOption.VERSE_NUMBERS);
-            result.remove(LookupOption.HEADINGS);
-        }
-
-        if (mode.equals(InterlinearMode.INTERLINEAR)) {
-            result.remove(LookupOption.NOTES);
-            result.add(LookupOption.VERSE_NEW_LINE);
+        switch (mode) {
+            case COLUMN:
+                break;
+            case COLUMN_COMPARE:
+                result.remove(LookupOption.VERSE_NUMBERS);
+                result.remove(LookupOption.HEADINGS);
+                result.remove(LookupOption.NOTES);
+                break;
+            case INTERLEAVED:
+                result.remove(LookupOption.VERSE_NUMBERS);
+                result.remove(LookupOption.HEADINGS);
+                result.remove(LookupOption.NOTES);
+                break;
+            case INTERLEAVED_COMPARE:
+                result.remove(LookupOption.VERSE_NUMBERS);
+                result.remove(LookupOption.HEADINGS);
+                result.remove(LookupOption.NOTES);
+                break;
+            case INTERLINEAR:
+                result.remove(LookupOption.NOTES);
+                result.add(LookupOption.VERSE_NEW_LINE);
+                break;
+            case NONE:
+                break;
+            default:
+                break;
         }
 
         return result;

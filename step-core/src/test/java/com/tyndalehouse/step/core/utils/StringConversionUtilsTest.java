@@ -72,7 +72,7 @@ public class StringConversionUtilsTest {
      */
     @Test
     public void testGetStrongSpecificKey() {
-        assertEquals("G1020", getStrongLanguageSpecificKey("strong:G1020"));
+        assertEquals("G1020", getStrongLanguageSpecificKey("STRONG:G1020"));
     }
 
     /**
@@ -100,7 +100,7 @@ public class StringConversionUtilsTest {
         final String transliterate = StringConversionUtils.transliterate("");
         LOG.debug(transliterate);
         assertEquals("hén", transliterate("ἣν"));
-        assertEquals("howde", transliterate("ὧδε"));
+        assertEquals("huwde", transliterate("ὧδε"));
         assertEquals("salpingos", transliterate("σάλπιγγος"));
         assertEquals("lalousés", transliterate("λαλούσης"));
         assertEquals("adikésés", transliterate("ἀδικήσῃς"));
@@ -113,10 +113,10 @@ public class StringConversionUtilsTest {
 
         assertEquals("psuchén", transliterate("ψυχὴν"));
         assertEquals("farisaioi", transliterate("Φαρισαῖοι"));
-        assertEquals("hérowdianown", transliterate("Ἡρῳδιανῶν"));
+        assertEquals("héruwdianuwn", transliterate("Ἡρῳδιανῶν"));
 
         assertEquals("ioudaias", transliterate("Ἰουδαίας"));
-        assertEquals("hierosolumown", transliterate("Ἱεροσολύμων"));
+        assertEquals("hierosolumuwn", transliterate("Ἱεροσολύμων"));
         assertEquals("mastigas", transliterate("μάστιγας"));
 
         assertEquals("exérammenén", transliterate("ἐξηραμμένην"));

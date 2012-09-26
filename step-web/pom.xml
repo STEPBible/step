@@ -282,7 +282,7 @@
 			<!--  deployment locally, or for local use-->
 			<id>deploy-local</id>
 			<properties>
-				<skipTomcat>false</skipTomcat>
+				<skipTomcat>true</skipTomcat>
 			</properties>
 		</profile>
 		<profile>

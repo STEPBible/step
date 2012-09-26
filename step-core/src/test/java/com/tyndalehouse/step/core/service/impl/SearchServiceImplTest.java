@@ -21,6 +21,7 @@ import com.tyndalehouse.step.core.models.search.SubjectHeadingSearchEntry;
 import com.tyndalehouse.step.core.models.search.TimelineEventSearchEntry;
 import com.tyndalehouse.step.core.models.search.VerseSearchEntry;
 import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
+import com.tyndalehouse.step.core.service.jsword.impl.JSwordMetadataServiceImpl;
 import com.tyndalehouse.step.core.service.jsword.impl.JSwordPassageServiceImpl;
 import com.tyndalehouse.step.core.service.jsword.impl.JSwordSearchServiceImpl;
 import com.tyndalehouse.step.core.service.jsword.impl.JSwordVersificationServiceImpl;
@@ -44,7 +45,7 @@ public class SearchServiceImplTest extends DataDrivenTestExtension {
         final JSwordPassageServiceImpl jsword = new JSwordPassageServiceImpl(versificationService, null, null);
         this.si = new SearchServiceImpl(getEbean(),
                 new JSwordSearchServiceImpl(versificationService, jsword), jsword, new TimelineServiceImpl(
-                        getEbean(), jsword));
+                        getEbean(), jsword), new JSwordMetadataServiceImpl(versificationService));
 
     }
 
@@ -54,15 +55,15 @@ public class SearchServiceImplTest extends DataDrivenTestExtension {
     @Test
     public void testMultiVersionSearch() {
         final List<SearchEntry> results = this.si.search(
-                new SearchQuery("t=elijah in(ESV,KJV,ASV)", false, 0, 1, 1)).getResults();
+                new SearchQuery("t=elijah in(ESV,KJV,ASV)", "false", 0, 1, 1)).getResults();
         assertFalse(results.isEmpty());
     }
 
     /** test exact strong match */
     @Test
     public void testSubjectSearch() {
-        final SearchResult searchSubject = this.si
-                .search(new SearchQuery("s=elijah in (ESV)", false, 0, 1, 1));
+        final SearchResult searchSubject = this.si.search(new SearchQuery("s=elijah in (ESV)", "false", 0, 1,
+                1));
 
         final List<SearchEntry> entries = ((SubjectHeadingSearchEntry) searchSubject.getResults().get(0))
                 .getHeadingsSearch().getResults();
@@ -73,12 +74,12 @@ public class SearchServiceImplTest extends DataDrivenTestExtension {
         assertTrue(searchSubject.getResults().size() > 0);
     }
 
-    /** test exact strong match */
-    @Test
-    public void testSearchStrong() {
-        final SearchResult searchStrong = this.si.search(new SearchQuery("o=G16 in (KJV)", false, 0, 1, 1));
-        assertTrue("1 Peter 4:19".equals(((VerseSearchEntry) searchStrong.getResults().get(0)).getKey()));
-    }
+    // /** test exact strong match */
+    // @Test
+    // public void testSearchStrong() {
+    // final SearchResult searchStrong = this.si.search(new SearchQuery("o=G16 in (KJV)", "false", 0, 1, 1));
+    // assertTrue("1 Peter 4:19".equals(((VerseSearchEntry) searchStrong.getResults().get(0)).getKey()));
+    // }
 
     // /** test exact strong match */
     // @Test
@@ -112,7 +113,7 @@ public class SearchServiceImplTest extends DataDrivenTestExtension {
         e.setReferences(references);
         getEbean().save(e);
 
-        final SearchResult result = this.si.search(new SearchQuery("d=calf in (ESV)", false, 0, 1, 10));
+        final SearchResult result = this.si.search(new SearchQuery("d=calf in (ESV)", "false", 0, 1, 10));
         final TimelineEventSearchEntry timelineEventSearchEntry = (TimelineEventSearchEntry) result
                 .getResults().get(0);
         assertEquals("Golden Calf episode", timelineEventSearchEntry.getDescription());

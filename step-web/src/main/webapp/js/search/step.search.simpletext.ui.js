@@ -32,7 +32,7 @@ step.search.ui.simpleText = {
         
         var query = "";
         var prefix = "t=";
-        
+        var level = $("fieldset:visible", step.util.getPassageContainer(0)).detailSlider("value");
         var primaryType = $(".simpleTextTypePrimary", passageContainer).val();
         var primaryCriteria = $(".simpleTextCriteria", passageContainer).val();
         var secondaryType = $(".simpleTextTypeSecondary", passageContainer).val();
@@ -53,7 +53,7 @@ step.search.ui.simpleText = {
         //eval first part of the criteria
         query = this._evalCriteria(primaryType, primaryCriteria, query);
 
-        if(secondaryCriteria == null || $.trim(secondaryCriteria) == "") {
+        if(level == 0 || secondaryCriteria == null || $.trim(secondaryCriteria) == "") {
             var finalQuery = prefix + restrictionQuery + query;
             step.state.simpleText.simpleTextQuerySyntax(passageId, finalQuery);
             return finalQuery;
@@ -104,7 +104,7 @@ step.search.ui.simpleText = {
         step.util.ui.resetIfEmpty(passageId, force, step.state.simpleText.simpleTextInclude, step.defaults.search.textual.simpleTextIncludes[0]);
         step.util.ui.resetIfEmpty(passageId, force, step.state.simpleText.simpleTextTypeSecondary, step.defaults.search.textual.simpleTextTypes[1]);
         step.util.ui.resetIfEmpty(passageId, force, step.state.simpleText.simpleTextProximity, step.defaults.search.textual.simpleTextProximities[0]);
-        step.util.ui.resetIfEmpty(passageId, force, step.state.simpleText.simpleTextSortByRelevance, step.defaults.search.textual.simpleTextSortBy[0]);
+//        step.util.ui.resetIfEmpty(passageId, force, step.state.simpleText.simpleTextSortByRelevance, step.defaults.search.textual.simpleTextSortBy[0]);
     },
     
     restoreIncludeExclude : function(passageId) {
@@ -138,7 +138,7 @@ $(document).ready(function() {
                            ".simpleTextTypeSecondary",
                            ".simpleTextSecondaryCriteria",
                            ".simpleTextProximity",
-                           ".simpleTextSortByRelevance",
+//                           ".simpleTextSortByRelevance",
                            ".simpleTextQuerySyntax",
                            ".simpleTextSearchContext",
                            ".simpleTextSearchVersion",
@@ -162,7 +162,7 @@ $(document).ready(function() {
       step.util.ui.autocompleteSearch(".simpleTextSecondaryTypes", step.defaults.search.textual.simpleTextSecondaryTypes, true);
       step.util.ui.autocompleteSearch(".simpleTextScope", step.defaults.search.textual.availableRanges);
       step.util.ui.autocompleteSearch(".simpleTextProximity", step.defaults.search.textual.simpleTextProximities, true);
-      step.util.ui.autocompleteSearch(".simpleTextSortByRelevance", step.defaults.search.textual.simpleTextSortBy, true);
+//      step.util.ui.autocompleteSearch(".simpleTextSortByRelevance", step.defaults.search.textual.simpleTextSortBy, true);
       step.util.ui.autocompleteSearch(".simpleTextInclude", step.defaults.search.textual.simpleTextIncludes, true, function(currentElement, value) {
           step.search.ui.simpleText.includeProximityChange(currentElement, value);
       });
@@ -189,4 +189,8 @@ $(step.search.ui).hear("SEARCH_SIMPLE_TEXT-activated", function(s, data) {
 
 $(step.search.ui).hear("simpleText-search-state-has-changed", function(s, data) {
     step.search.simpleText.search(data.passageId);
+});
+
+$(step.search.ui).hear("slideView-SEARCH_SIMPLE_TEXT", function(s, data) {
+    step.search.ui.simpleText.evaluateQuerySyntax(data.passageId);  
 });

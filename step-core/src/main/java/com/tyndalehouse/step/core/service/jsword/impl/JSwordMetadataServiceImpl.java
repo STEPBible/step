@@ -177,4 +177,9 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
 
         return chapters;
     }
+
+    @Override
+    public boolean hasVocab(final String version) {
+        return Books.installed().getBook(version).hasFeature(FeatureType.STRONGS_NUMBERS);
+    }
 }

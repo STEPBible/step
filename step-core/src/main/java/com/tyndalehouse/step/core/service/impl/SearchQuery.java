@@ -1,5 +1,9 @@
 package com.tyndalehouse.step.core.service.impl;
 
+import java.util.List;
+
+import com.tyndalehouse.step.core.data.entities.lexicon.Definition;
+
 /**
  * Search query object. Defines all parameters required to execute a search
  * 
@@ -17,15 +21,18 @@ public class SearchQuery {
 
     private int currentSearch = 0;
     private boolean allKeys = false;
+    private final String sortOrder;
+    private List<Definition> definitions;
 
     /**
      * @param searchQuery the query to be run
-     * @param ranked true to indicate the search results should be ranked
+     * @param sortOrder "true" to indicate the search results should be ranked, also can used text to be used
+     *            in special sorts
      * @param context how many verses either side to include
      * @param pageNumber the page number required
      * @param pageSize the size of the page to be returned
      */
-    public SearchQuery(final String searchQuery, final boolean ranked, final int context,
+    public SearchQuery(final String searchQuery, final String sortOrder, final int context,
             final int pageNumber, final int pageSize) {
 
         this.originalQuery = searchQuery;
@@ -39,12 +46,15 @@ public class SearchQuery {
         }
 
         // by default we set all Keys to true if we have several searches to run
-        if (this.searches.length > 1) {
+        if (this.searches.length > 1 || SearchServiceImpl.VOCABULARY_SORT.equals(sortOrder)
+                || SearchServiceImpl.ORIGINAL_SPELLING_SORT.equals(sortOrder)) {
             this.allKeys = true;
         }
 
         // set the other variables
-        this.ranked = ranked;
+        this.ranked = Boolean.parseBoolean(sortOrder);
+        this.sortOrder = sortOrder;
+
         this.context = context;
         this.pageNumber = pageNumber;
         this.pageSize = pageSize;
@@ -148,5 +158,26 @@ public class SearchQuery {
      */
     public void setAllKeys(final boolean allKeys) {
         this.allKeys = allKeys;
+    }
+
+    /**
+     * @return the sortOrder
+     */
+    public String getSortOrder() {
+        return this.sortOrder;
+    }
+
+    /**
+     * @param strongNumbers the strongNumbers to set
+     */
+    public void setDefinitions(final List<Definition> strongNumbers) {
+        this.definitions = strongNumbers;
+    }
+
+    /**
+     * @return the strongNumbers
+     */
+    public List<Definition> getDefinitions() {
+        return this.definitions;
     }
 }

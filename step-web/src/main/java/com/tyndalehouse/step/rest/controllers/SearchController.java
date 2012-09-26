@@ -2,11 +2,15 @@ package com.tyndalehouse.step.rest.controllers;
 
 import static com.tyndalehouse.step.core.exceptions.UserExceptionType.APP_MISSING_FIELD;
 import static com.tyndalehouse.step.core.exceptions.UserExceptionType.USER_MISSING_FIELD;
+import static com.tyndalehouse.step.core.utils.ValidateUtils.notBlank;
 import static com.tyndalehouse.step.core.utils.ValidateUtils.notNull;
+
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import com.tyndalehouse.step.core.models.LexiconSuggestion;
 import com.tyndalehouse.step.core.models.search.SearchResult;
 import com.tyndalehouse.step.core.service.SearchService;
 import com.tyndalehouse.step.core.service.impl.SearchQuery;
@@ -45,7 +49,7 @@ public class SearchController {
         notNull(context, "The context field is required", APP_MISSING_FIELD);
         notNull(pageSize, "Page size is required", APP_MISSING_FIELD);
 
-        return this.searchService.search(new SearchQuery(searchQuery, Boolean.parseBoolean(ranked), Integer
+        return this.searchService.search(new SearchQuery(searchQuery.replace('#', '/'), ranked, Integer
                 .parseInt(context), Integer.parseInt(pageNumber), Integer.parseInt(pageSize)));
     }
 
@@ -57,7 +61,20 @@ public class SearchController {
      */
     public long estimateSearch(final String searchQuery) {
         // JSword currently only allows estimates as ranked searches
-        return this.searchService.estimateSearch(new SearchQuery(searchQuery, false, 0, 0, 0));
+        return this.searchService.estimateSearch(new SearchQuery(searchQuery, "false", 0, 0, 0));
+    }
+
+    /**
+     * Obtains a list of suggestions to display to the user
+     * 
+     * @param form the form input so far
+     * @param includeAllForms whether to include all known forms
+     * @return a list of suggestions
+     */
+    public List<LexiconSuggestion> getLexicalSuggestions(final String form, final String includeAllForms) {
+        notBlank(form, "Blank lexical prefix passed.", APP_MISSING_FIELD);
+        return this.searchService.getLexicalSuggestions(form.replace('#', '/'),
+                Boolean.parseBoolean(includeAllForms));
     }
 
 }

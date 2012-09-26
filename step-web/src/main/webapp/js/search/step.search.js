@@ -34,11 +34,20 @@ step.search = {
     lastSearch: "",    
     
     original : {
+        //place for two filters
+        filters : [undefined, undefined],
+        
         search : function(passageId) {
             var query = step.state.original.originalQuerySyntax(passageId);
+            if(query != undefined) {
+                query = query.replace('/', '#');
+            } 
             var pageNumber = step.state.original.originalPageNumber(passageId);
             var versions = step.state.original.originalSearchVersion(passageId);
-
+            var context = step.state.original.originalSearchContext(passageId);
+            var sortOrder = $("fieldset:visible", step.util.getPassageContainer(passageId)).detailSlider("value") > 0 ? step.state.original.originalSorting(passageId) : false;
+            var filter = step.search.original.filters[passageId];
+            
             var versions = step.state.original.originalSearchVersion(passageId);
             if(versions == undefined) {
                 versions = "";
@@ -49,7 +58,11 @@ step.search = {
                 step.state.original.originalSearchVersion(passageId, versions);
             }
             
-            step.search._validateAndRunSearch(passageId, query, versions, false, 0, pageNumber);
+            if(filter && filter.length != 0) {
+                query += " where original is (" + filter.join() + ") ";
+            }
+            
+            step.search._validateAndRunSearch(passageId, query, versions, sortOrder, context, pageNumber);
         },
 
         _versionsContainsStrongs : function(versions) {
@@ -84,9 +97,35 @@ step.search = {
     },
     
     quick : {
-        search : function() {
-//            console.log("Executing quick search");
+        search : function(passageId) {
+            var query = $.trim(step.state.quick.searchQuerySyntax(passageId));
+            if(query == undefined) {
+                returned;
+            }
+            
+            if(query[0] == 'o') {
+                query = query.replace('/', '#');
+            }
+            
+            var version = this._getQuickVersions(passageId);
+            
+            var context = 0;
+            var ranked = false;
+            var pageNumber = step.search.pageSize;
+            
+            step.search._validateAndRunSearch(passageId, query, version, ranked, context, pageNumber);
         },
+        
+        _getQuickVersions : function(passageId) {
+            var passageContainer = step.util.getPassageContainer(passageId);
+            var versions = $("fieldset:visible", passageContainer).find(".searchVersions, .passageVersion, .extraVersions");
+            var versionInitials = "";
+            $.each(versions, function(i, item) {
+                versionInitials += $(this).val();
+                versionInitials += ',';
+            });
+            return versionInitials;
+        }
     },
     
     timeline : {
@@ -122,7 +161,7 @@ step.search = {
             var query = $.trim(step.state.simpleText.simpleTextQuerySyntax(passageId));
             var version = step.state.simpleText.simpleTextSearchVersion(passageId);
             var context = step.state.simpleText.simpleTextSearchContext(passageId);
-            var ranked = step.state.simpleText.simpleTextSortByRelevance(passageId) == step.defaults.search.textual.simpleTextSortBy[0];
+            var ranked = false; // step.state.simpleText.simpleTextSortByRelevance(passageId) == step.defaults.search.textual.simpleTextSortBy[0];
             var pageNumber = step.state.simpleText.simpleTextPageNumber(passageId);
             
             step.search._validateAndRunSearch(passageId, query, version, ranked, context, pageNumber);
@@ -247,9 +286,10 @@ step.search = {
         var resultsLabel = $("fieldset:visible .resultsLabel", step.util.getPassageContainer(passageId));
         
         //1 = 1 + (pg1 - 1) * 50, 51 = 1 + (pg2 -1) * 50 
-        var start = 1 + ((pageNumber -1) * step.search.pageSize);
+        var start = total == 0 ? 0 : 1 + ((pageNumber -1) * step.search.pageSize);
         var end = pageNumber * step.search.pageSize;
         end = end < total ? end : total;
+        
         resultsLabel.html("Showing results <em>" + start + " - " + end + "</em> of <em>" + total + "</em>");
         
         this.totalResults = total;  
@@ -281,7 +321,7 @@ step.search = {
                 aTarget = $.map(item.verses, function(item, i) { return item.key; }).join();
                 
                 resultItem += "<table class='masterSearchTable'>";
-                resultItem += self._displayPassageResults(item.verses, passageId, false);
+                resultItem += self._displayPassageResults(item.verses, passageId, false, undefined);
                 resultItem += "</table>";
             }
             
@@ -295,9 +335,25 @@ step.search = {
     },
     
     // qualifiedSearchResults = {result: , key: }
-    _displayPassageResults : function(searchResults, passageId, goToChapter, contentGenerator) {
+    _displayPassageResults : function(searchResults, passageId, goToChapter, sortOrder, contentGenerator) {
         var results = "";
+        
+        var lastUnicode = "";
+                
         $.each(searchResults, function(i, item) {
+            if(item.accentedUnicode && item.accentedUnicode != lastUnicode) {
+                results += "<th class='searchResultStrongHeader' colspan='2'>";
+                
+                if(sortOrder == VOCABULARY) {
+                    results += (item.stepGloss == undefined ? "-" : item.stepGloss) + " (<em>" + item.stepTransliteration + "</em> ; " +  "<span class='ancientSearch'>" + item.accentedUnicode + "</span>)";
+                } else {
+                    results += "<span class='ancientSearch'>" + item.accentedUnicode + "</span> (<em>" + item.stepTransliteration + "</em>): " + (item.stepGloss == undefined ? "-" : item.stepGloss);
+                }
+                
+                results += "</th>";
+                lastUnicode = item.accentedUnicode;
+            }
+            
             results += "<tr class='searchResultRow'><td class='searchResultKey'> ";
             results += goToPassageArrow(true, item.key, "searchKeyPassageArrow", goToChapter);
             results += item.key;
@@ -338,6 +394,7 @@ step.search = {
     _displayResults : function(searchQueryResults, passageId) {
         var results = "";
         var searchResults = searchQueryResults.results;
+        var sortOrder = searchQueryResults.order;
 
         //remove any hebrew language css
         step.util.getPassageContainer(passageId).removeClass("hebrewLanguage greekLanguage");
@@ -356,10 +413,10 @@ step.search = {
             results += "<table class='searchResults'>";
             
             if(searchResults[0].preview) {
-                    results += this._displayPassageResults(searchResults, passageId, true);
+                    results += this._displayPassageResults(searchResults, passageId, true, sortOrder);
             } else {
                 //we customize the generation of the actual verse content to add the version
-                results += this._displayPassageResults(searchResults, passageId, true, function (item) {
+                results += this._displayPassageResults(searchResults, passageId, true, sortOrder, function (item) {
                     var content= "";
                     $.each(item.verseContent, function(i, verseContent) {
                         content += "<div class='multiVersionSubResult'><span class='smallResultKey'>(" + verseContent.contentKey + ")</span> " + verseContent.preview +"</div>";
@@ -377,6 +434,49 @@ step.search = {
         }
         
         this._changePassageContent(passageId, results);
+
+        this._doOriginalWordToolbar(searchQueryResults.definitions, passageId);
+    },
+    
+    _doOriginalWordToolbar : function(definitions, passageId) {
+        var passageContent = step.util.getPassageContent(passageId);
+        if(definitions) {
+            //add a toolbar in there for each word
+            var originalWordToolbar = $("<div class='originalWordSearchToolbar'></div>");
+            var values = step.search.original.filters[passageId] || [];
+            
+            $.each(definitions, function(i, item) {
+                var link = "<input type='checkbox' " +
+                		"value='" + (item.matchingForm == undefined ? "" : item.matchingForm) +"' " +
+                	    "id='ows_" + passageId + "_" + i + "' " +
+                        ($.inArray(item.matchingForm, values) != -1 ? "checked='checked'" : "") +   
+                    " /><label for='ows_" + passageId + "_" + i  + "' ><span class='ancientSearchButton'>" + item.matchingForm + "</span>" +
+//                		"<br />" + item.stepTransliteration + 
+                		"<br />";
+                if(item.gloss) {
+                    link += item.gloss;
+                }
+                link += "</label>";
+                originalWordToolbar.append(link);
+            });
+            
+            originalWordToolbar.find("input").button().click(function() {
+                //get all selected checkboxes
+                var options = $(this).closest(".originalWordSearchToolbar").find("input[type='checkbox']:checked");
+                var filter = [];
+                $.each(options, function(i, item) {
+                  filter.push($(this).val());  
+                });
+                
+                step.search.original.filters[passageId] = filter;
+                step.search.original.search(passageId);
+            });
+            
+            originalWordToolbar.buttonset();
+
+            var bar = $("<div></div>").append("<h4 class='lexicalGrouping'>The following lexical forms have been found:</h4>").append(originalWordToolbar).append("<hr />");
+            passageContent.prepend(bar);
+        }
     },
     
     _changePassageContent : function(passageId, content) {

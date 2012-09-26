@@ -1,5 +1,8 @@
 package com.tyndalehouse.step.core.service.impl;
 
+import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
+import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,6 +27,7 @@ public class IndividualSearch {
 
     private static final Pattern MAIN_RANGE = Pattern.compile("(\\+\\[[^\\]]+\\])");
     private static final Pattern SUB_RANGE = Pattern.compile("\\{([^}]+)\\}");
+    private static final Pattern ORIGINAL_FILTER = Pattern.compile(" where original is \\(([^)]+)\\)");
 
     private static final Logger LOGGER = LoggerFactory.getLogger(IndividualSearch.class);
     private static final String TEXT = "t=";
@@ -39,6 +43,7 @@ public class IndividualSearch {
     private boolean amendedQuery;
     private String subRange;
     private String mainRange;
+    private String[] originalFilter;
 
     /**
      * Initialises the search from the query string
@@ -60,11 +65,15 @@ public class IndividualSearch {
             this.type = SearchType.TIMELINE_REFERENCE;
             matchVersions(query.substring(TIMELINE_REFERENCE.length()));
         } else {
-            LOGGER.warn("Unknown search type for query [{}]", query);
+            // LOGGER.warn("Unknown search type for query [{}]", query);
 
             // default to JSword and hope for the best, but warn
             matchVersions(query);
             this.type = SearchType.TEXT;
+        }
+        if (isBlank(this.query)) {
+            // return straight away
+            throw new StepInternalException("Unable to search, as query provided was blank.");
         }
     }
 
@@ -80,6 +89,9 @@ public class IndividualSearch {
         switch (parseableQuery.charAt(0)) {
             case 'm':
                 this.type = SearchType.ORIGINAL_MEANING;
+                break;
+            case 't':
+                this.type = SearchType.ORIGINAL_TRANSLATED_AS;
                 break;
             case 'g':
                 if (specifier == RELATED_WORDS) {
@@ -109,7 +121,8 @@ public class IndividualSearch {
                 throw new StepInternalException("Unsupported search for query o" + parseableQuery);
         }
 
-        matchVersions(parseableQuery.substring(length + 1));
+        matchOriginalFilter(parseableQuery.substring(length + 1));
+        matchVersions(this.query);
 
         // finally we can try and match our sub-range for the original word
         matchSubRange();
@@ -117,6 +130,22 @@ public class IndividualSearch {
         matchMainRange();
     }
 
+    /**
+     * Matches the original filter, 'where original is' pattern
+     * 
+     * @param parseableQuery query
+     */
+    private void matchOriginalFilter(final String parseableQuery) {
+        this.query = parseableQuery;
+        final String originalFilter = matchFirstGroupAndRemove(ORIGINAL_FILTER);
+        if (isNotBlank(originalFilter)) {
+            this.originalFilter = originalFilter.split(",");
+        }
+    }
+
+    /**
+     * Matches a main range such as +[Gen-Rev]
+     */
     private void matchMainRange() {
         this.mainRange = matchFirstGroupAndRemove(MAIN_RANGE);
     }
@@ -243,8 +272,18 @@ public class IndividualSearch {
         return this.mainRange;
     }
 
+    /**
+     * @param versions overwrites the versions
+     */
     public void setVersions(final String[] versions) {
         this.versions = versions;
 
+    }
+
+    /**
+     * @return the originalFilter
+     */
+    public String[] getOriginalFilter() {
+        return this.originalFilter;
     }
 }

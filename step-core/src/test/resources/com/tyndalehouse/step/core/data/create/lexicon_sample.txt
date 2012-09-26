@@ -1,51 +1,258 @@
-===============================
-@LSJ-No=	21813
-@LSJ-WordAccented=	μυωπός
-@LSJ-WordUnaccented=	μυωπος
-@LSJ-WordBeta=	mυωpoς
-@LSJ-Gramm=	<Gk>μυωπός, όν</Gk> <br>=	<Gk>μύωψ</Gk> I, [<a href="#" class=cdate title="Xenophon Historicus">5th/4th BCE</a>] <br>
-@LSJ-Defs=	
-===============================
-@LSJ-No=	21814
-@LSJ-WordAccented=	μύωψ
-@LSJ-WordUnaccented=	μυωψ
-@LSJ-WordBeta=	mυωψ
-@LSJ-Gramm=	<Gk>μύ-ωφαιλινγ ον λεμβυφ</Gk> [] <br> <Gk>ψ, ωπος</Gk>, <br> <Gk>μύω, ὤψ</Gk>
-@LSJ-Defs=	1. <b>contracting the eyes </b>, as shortsighted people do, <b>shortsighted </b>, [<a href="#" class=cdate title="Aristotle Philosopher">4th BCE</a>] <br>2. as Subst., <b>the horsefly </b> or <b>gadfly </b>, Lat. <Lat>tabanus</Lat>, [<a href="#" class=cdate title="Aeschulus Tragicus">6th/5th BCE</a>, <a href="#" class=cdate title="Plato Philosophus">5th/4th BCE</a>] <br>3. <b>a good, spur </b>, [<a href="#" class=cdate title="Xenophon Historicus">5th/4th BCE</a>, <a href="#" class=cdate title="Theophrastus Philosophus">4th/3rd BCE</a>]:—;metaph. <b>a stimulant </b>, [<a href="#" class=cdate title="Lucian">2nd CE</a>, <date>var. dates<author>Anthology Palantina</author></date> 
-===============================
-@LSJ-No=	21815
-@LSJ-WordAccented=	μῶλος
-@LSJ-WordUnaccented=	μωλος
-@LSJ-WordBeta=	mωloς
-@LSJ-Gramm=	! <Gk>μῶλος, ὁ</Gk>,
-@LSJ-Defs=	<b>the toil </b> and <b>moil </b> of war, [<a href="#" class=cdate title="Iliad by Homer">8th/7th BCE</a>]; <Gk>ξείνου καὶ Ἴρου μ</Gk>. <b>the struggle between </b> Irus and the stranger, [<a href="#" class=cdate title="Odyssey by Homer">8th/7th BCE</a>] 
-===============================
-@LSJ-No=	21816
-@LSJ-WordAccented=	μῶλυ
-@LSJ-WordUnaccented=	μωλυ
-@LSJ-WordBeta=	mωlυ
-@LSJ-Gramm=	
-@LSJ-Defs=	<b>moly, mandrake </b>, a fabulous herb of magic power, having a black root and white blossom, given by Hermes to Ulysses, as a counter-charm to the charms of Circe, [<a href="#" class=cdate title="Odyssey by Homer">8th/7th BCE</a>] 
-===============================
-@LSJ-No=	21817
-@LSJ-WordAccented=	μωμάομαι
-@LSJ-WordUnaccented=	μωμαομαι
-@LSJ-WordBeta=	mωmaomai
-@LSJ-Gramm=	<Gk>μωμάομαι</Gk>, <br> <Gk>μῶμος</Gk>
-@LSJ-Defs=	Dep.: <b>to find, fault with, blame </b>, c. acc., [<a href="#" class=cdate title="Iliad by Homer">8th/7th BCE</a>, <a href="#" class=cdate title="Aeschulus Tragicus">6th/5th BCE</a>]:—;an aor1 inf. <Gk>μωμηθῆναι</Gk> in pass. sense, [<a href="#" class=cdate title="New Testament">1st CE</a>] 
-@StrongNo=	G3469
-
-@AccentedBETA=	MWMA/OMAI
-@AccentedUnicode=	μωμάομαι
-@PlainUnicode=	>μωμαομαι<
-@StrongTranslit=	mōmáomai
-@StrongPronunc=	mo-mah'-om-ahee
-@StrongAltern=	
-@StrongDef=	to carp at, i.e. censure (discredit)
-@StrongDeriv=	from G3470;
-@RelatedNos=	G3470
-@Co-relatedNos=	
-@MShortDef=	(mid.) to criticize, find fault, blame; (pass.) to be discredited, have fault found with
-@MMedDef=	<b>to find fault with, censure, blame,, criticize</b> <ref>2Cor. 8:20; </ref>passively, <ref>2Cor. 6:3* </ref>
-@STEP-gloss=	to blame
-===============================
+αινεας$===============================
+@UnicodeAccented=	Αἰνέας
+@StrNo=	G0132
+@StrBetaAccented=	*ai)ne/as
+@StrUnicodeAccented=	Αἰνέας
+@StrUnicodeUnaccented=	αινεας
+@StrTranslit=	Ainéas
+@StrPronunc=	ahee-neh'-as
+@StrAltern=	
+@StrDef=	Ænĕas, an Israelite
+@StrDeriv=	of uncertain derivation;
+@StrRelatedNos=	
+@StrCoRelatedNos=	
+@MounceShortDef=	Aeneas, [poss.] "praise"
+@MounceMedDef=	<b>Aeneas,</b> pr. name, <ref>Acts 9:33f.* </ref>
+@StepGloss=	Aeneas
+@Translations=	Aeneas
+αινων$===============================
+@UnicodeAccented=	Αἰνών
+@StrNo=	G0137
+@StrBetaAccented=	*ai)nw/n
+@StrUnicodeAccented=	Αἰνών
+@StrUnicodeUnaccented=	αινων
+@StrTranslit=	Ainṓn
+@StrPronunc=	ahee-nohn'
+@StrAltern=	
+@StrDef=	Ænon, a place in Palestine
+@StrDeriv=	of Hebrew origin (a derivative of Η5869, place of springs);
+@StrRelatedNos=	Η5869
+@StrCoRelatedNos=	
+@MounceShortDef=	Aenon, "spring"
+@MounceMedDef=	<b>Enon,</b> pr. name, indecl, where Jn. was baptizing, <ref>Jn. 3:23* </ref>
+@StepGloss=	Aenon
+@Translations=	Aenon
+ααρων$===============================
+@UnicodeAccented=	Ἀαρών
+@StrNo=	G0002
+@StrBetaAccented=	*)aarw/n
+@StrUnicodeAccented=	Ἀαρών
+@StrUnicodeUnaccented=	Ααρων
+@StrTranslit=	Aarṓn
+@StrPronunc=	ah-ar-ohn'
+@StrAltern=	
+@StrDef=	Aaron, the brother of Moses
+@StrDeriv=	of Hebrew origin (H0175);
+@StrRelatedNos=	H0175
+@StrCoRelatedNos=	
+@MounceShortDef=	Aaron (referring to both the person and his priesthood)
+@MounceMedDef=	<b>Aaron,</b> pr. name, indecl, the brother of Moses (<ref>Exod. 4:14</ref>), <ref>Lk. 1:15; Acts 7:40; Heb. 5:4; 7:11; 9:4* </ref>
+@StepGloss=	Aaron
+@Translations=	Aaron
+αβαδδων$===============================
+@UnicodeAccented=	Ἀβαδδών
+@StrNo=	G0003
+@StrBetaAccented=	*)abaddw/n
+@StrUnicodeAccented=	Ἀβαδδών
+@StrUnicodeUnaccented=	Αβαδδων
+@StrTranslit=	Abaddṓn
+@StrPronunc=	ab-ad-dohn'
+@StrAltern=	
+@StrDef=	a destroying angel
+@StrDeriv=	of Hebrew origin (H0011);
+@StrRelatedNos=	H0011
+@StrCoRelatedNos=	
+@MounceShortDef=	Abaddon, "destruction"
+@MounceMedDef=	<b>Abaddon,</b> pr. name, indecl, alternate spelling: <greek>Ἀββαδών</greek>, the angel who rules in hell, <ref>Rev. 9:11* </ref>
+@StepGloss=	Abaddon
+@Translations=	Abaddon
+αββα$===============================
+@UnicodeAccented=	Ἀββᾶ
+@LsjNo=	16
+@LsjUnicodeAccented=	Ἀββᾶ
+@LsjUnicodeUnaccented=	Αββα
+@LsjBetaUnaccented=	Abba
+@LsjGramm=	
+@LsjDefs=	Hebr. word, <b>father </b>, [<a href="#" class=cdate title="New Testament">1st CE</a>] 
+@StrNo=	G0005
+@StrBetaAccented=	*)abba=
+@StrUnicodeAccented=	Ἀββᾶ
+@StrUnicodeUnaccented=	Αββα
+@StrTranslit=	Abbâ
+@StrPronunc=	ab-bah'
+@StrAltern=	
+@StrDef=	father as a vocative
+@StrDeriv=	of Chaldee origin (H0002);
+@StrRelatedNos=	H0002
+@StrCoRelatedNos=	
+@MounceShortDef=	Aramaic for "father"
+@MounceMedDef=	<b>father,</b> <ref>Mk. 14:36; Rom. 8:15; Gal. 4:6* </ref>
+@StepGloss=	Father
+@Translations=	Father
+αβδηριτης$===============================
+@UnicodeAccented=	Ἀβδηρίτης
+@LsjNo=	17
+@LsjUnicodeAccented=	Ἀβδηρίτης
+@LsjUnicodeUnaccented=	Αβδηριτης
+@LsjBetaUnaccented=	Abdhriths
+@LsjGramm=	
+@LsjDefs=	<b>a man of Abdera </b> in Thrace, proverb. of simpletons. [<a href="#" class=cdate title="Demosthenes Orator">4th BCE</a>] 
+αβδηριτικος$===============================
+@UnicodeAccented=	Ἀβδηριτικός
+@LsjNo=	18
+@LsjUnicodeAccented=	Ἀβδηριτικός
+@LsjUnicodeUnaccented=	Αβδηριτικος
+@LsjBetaUnaccented=	Abdhritikos
+@LsjGramm=	
+@LsjDefs=	<b>like an Abderite </b>, i.e. <b>stupid </b>, [<a href="#" class=cdate title="Lucian">2nd CE</a>] 
+αβελ$===============================
+@UnicodeAccented=	Ἄβελ
+@StrNo=	G0006
+@StrBetaAccented=	*)/abel
+@StrUnicodeAccented=	Ἄβελ
+@StrUnicodeUnaccented=	Αβελ
+@StrTranslit=	Ábel
+@StrPronunc=	ab'-el
+@StrAltern=	
+@StrDef=	Abel, the son of Adam
+@StrDeriv=	of Hebrew origin (H1893);
+@StrRelatedNos=	H1893
+@StrCoRelatedNos=	
+@MounceShortDef=	Abel, "morning mist"
+@MounceMedDef=	<b>Abel,</b> pr. name, indecl, <ref>Mt. 23:35; Lk. 11:51; Heb. 11:4; 12:24 </ref>
+@StepGloss=	Abel
+@Translations=	Abel
+αβιαθαρ$===============================
+@UnicodeAccented=	Ἀβιαθάρ
+@StrNo=	G0008
+@StrBetaAccented=	*)abiaqa/r
+@StrUnicodeAccented=	Ἀβιαθάρ
+@StrUnicodeUnaccented=	Αβιαθαρ
+@StrTranslit=	Abiathár
+@StrPronunc=	ab-ee-ath'-ar
+@StrAltern=	
+@StrDef=	Abiathar, an Israelite
+@StrDeriv=	of Hebrew origin (H0054);
+@StrRelatedNos=	H0054
+@StrCoRelatedNos=	
+@MounceShortDef=	Abiathar, "[my] father gives abundance" or "the father is preeminent"
+@MounceMedDef=	<b>Abiathar,</b> pr. name, indecl, <ref>Mk. 2:26* </ref>
+@StepGloss=	Abiathar
+@Translations=	Abiathar
+αβια$===============================
+@UnicodeAccented=	Ἀβιά
+@StrNo=	G0007
+@StrBetaAccented=	*)abia/
+@StrUnicodeAccented=	Ἀβιά
+@StrUnicodeUnaccented=	Αβια
+@StrTranslit=	Abiá
+@StrPronunc=	ab-ee-ah'
+@StrAltern=	
+@StrDef=	Abijah, the name of two Israelites
+@StrDeriv=	of Hebrew origin (H0029);
+@StrRelatedNos=	H0029
+@StrCoRelatedNos=	
+@MounceShortDef=	Abijah, "[my] father is Yahweh"
+@MounceMedDef=	<b>Abiajah,</b> pr. name, indecl. Hebrew is <b>Abijah</b>. (1) the son of Rehoboam (<ref>1Chr. 3:10</ref>) <ref>Mt. 1:7; </ref>(2) the division of priests to which Zechariah belonged (<ref>1Chr. 24:10</ref>) <ref>Lk. 1:5* </ref>
+@StepGloss=	Abijah
+@Translations=	Abijah
+αβιληνη$===============================
+@UnicodeAccented=	Ἀβιληνή
+@StrNo=	G0009
+@StrBetaAccented=	*)abilhnh/
+@StrUnicodeAccented=	Ἀβιληνή
+@StrUnicodeUnaccented=	Αβιληνη
+@StrTranslit=	Abilēnḗ
+@StrPronunc=	ab-ee-lay-nay'
+@StrAltern=	
+@StrDef=	Abilene, a region of Syria
+@StrDeriv=	of foreign origin (compare H0058);
+@StrRelatedNos=	H0058
+@StrCoRelatedNos=	
+@MounceShortDef=	Abilene, a territory on the south end of the Ante-Lebanon mountain range, "[prob.] "meadow"
+@MounceMedDef=	<b>Abilene,</b> a district of the Syrian Decapolis; from <b>Abila,</b> the chief town, <ref>Lk. 3:1* </ref>
+@StepGloss=	Abilene
+@Translations=	Abilene
+αβιουδ$===============================
+@UnicodeAccented=	Ἀβιούδ
+@StrNo=	G0010
+@StrBetaAccented=	*)abiou/d
+@StrUnicodeAccented=	Ἀβιούδ
+@StrUnicodeUnaccented=	Αβιουδ
+@StrTranslit=	Abioúd
+@StrPronunc=	ab-ee-ood'
+@StrAltern=	
+@StrDef=	Abihud, an Israelite
+@StrDeriv=	of Hebrew origin (H0031);
+@StrRelatedNos=	H0031
+@StrCoRelatedNos=	
+@MounceShortDef=	Abiud, "[my] father has majesty"
+@MounceMedDef=	<b>Abihud,</b> pr. name, indecl 
+@StepGloss=	Abiud
+@Translations=	Abiud
+αβρααμ$===============================
+@UnicodeAccented=	Ἀβραάμ
+@StrNo=	G0011
+@StrBetaAccented=	*)abraa/m
+@StrUnicodeAccented=	Ἀβραάμ
+@StrUnicodeUnaccented=	Αβρααμ
+@StrTranslit=	Abraám
+@StrPronunc=	ab-rah-am'
+@StrAltern=	
+@StrDef=	Abraham, the Hebrew patriarch
+@StrDeriv=	of Hebrew origin (H0085);
+@StrRelatedNos=	H0085
+@StrCoRelatedNos=	
+@MounceShortDef=	Abraham, "father of many"
+@MounceMedDef=	<b>Abraham,</b> pr. name indecl 
+@StepGloss=	Abraham
+@Translations=	Abraham
+αβυδοθεν$===============================
+@UnicodeAccented=	Ἀβυδόθεν
+@LsjNo=	62
+@LsjUnicodeAccented=	Ἀβυδόθεν
+@LsjUnicodeUnaccented=	Αβυδοθεν
+@LsjBetaUnaccented=	Abudoqen
+@LsjGramm=	
+@LsjDefs=	<b>from Abydos </b>, [<a href="#" class=cdate title="Iliad by Homer">8th/7th BCE</a>] 
+αβυδοθι$===============================
+@UnicodeAccented=	Ἀβυδόθι
+@LsjNo=	63
+@LsjUnicodeAccented=	Ἀβυδόθι
+@LsjUnicodeUnaccented=	Αβυδοθι
+@LsjBetaUnaccented=	Abudoqi
+@LsjGramm=	
+@LsjDefs=	<b>at Abydos </b>, [<a href="#" class=cdate title="Iliad by Homer">8th/7th BCE</a>] 
+αβυδος$===============================
+@UnicodeAccented=	Ἄβυδος
+@LsjNo=	64
+@LsjUnicodeAccented=	Ἄβυδος
+@LsjUnicodeUnaccented=	Αβυδος
+@LsjBetaUnaccented=	Abudos
+@LsjGramm=	
+@LsjDefs=	<b>Abydos </b>, the town on the Asiatic side of the Hellespont. 
+αγαβος$===============================
+@UnicodeAccented=	Ἄγαβος
+@StrNo=	G0013
+@StrBetaAccented=	*)/agabos
+@StrUnicodeAccented=	Ἄγαβος
+@StrUnicodeUnaccented=	Αγαβος
+@StrTranslit=	Ágabos
+@StrPronunc=	ag'-ab-os
+@StrAltern=	
+@StrDef=	Agabus, an Israelite
+@StrDeriv=	of Hebrew origin (compare H2285);
+@StrRelatedNos=	H2285
+@StrCoRelatedNos=	
+@MounceShortDef=	Agabus
+@MounceMedDef=	<b>Agabus, pr. name,</b> <ref>Acts 11:28; 21:10* </ref>
+@StepGloss=	Agabus
+@Translations=	Agabus
+αγαμεμνονεος$===============================
+@UnicodeAccented=	Ἀγαμεμνόνεος
+@LsjNo=	88
+@LsjUnicodeAccented=	Ἀγαμεμνόνεος
+@LsjUnicodeUnaccented=	Αγαμεμνονεος
+@LsjBetaUnaccented=	Agamemnoneos
+@LsjGramm=	
+@LsjDefs=	<b>of </b> or <b>having to do with Agamemnon </b>, [<a href="#" class=cdate title="Homer">8th/7th BCE</a>, <a href="#" class=cdate title="Pindar">5th BCE</a>, <a href="#" class=cdate title="Aeschulus Tragicus">6th/5th BCE</a>] 

@@ -54,6 +54,17 @@ step.state = {
          
          step.state[namespace][key] = function(passageId, value) {
              var specificSelector = $(selector, step.util.getPassageContainer(passageId));
+             
+             if(specificSelector == undefined) {
+                 console.log("WARNING: specificSelector does not match any elements. Selector given was " + selector);
+             }
+             
+             var selectedElement = specificSelector.get(0);
+             if(selectedElement == undefined) {
+                 console.log("WARNING: specificSelector does not match any elements. Selector given was " + selector);
+                 return;
+             }
+             
              if(specificSelector.get(0).type == 'checkbox') {
                      if (value != null) { 
                          specificSelector.prop('checked', value == "true" || value == true); 
@@ -153,7 +164,7 @@ step.state = {
         this.restoreTrackedDefaults();
         
         // restore active search
-        step.state.detail.restore();
+        step.state.view.restore();
         
 
         
@@ -164,6 +175,10 @@ step.state = {
             step.state.original.restore(i);
             this._showRelevantFieldSet(i);
         }
+        
+        //add the sliders to every fieldset
+        $("fieldset").detailSlider();
+        console.log("DONEONEONEONEONEON");
         
         step.util.ui.initSearchToolbar();
     },
@@ -178,6 +193,7 @@ step.state = {
     },
     
     _showFieldSet : function(passageContainer, optionName) {
+        $(".passageToolbarContainer", passageContainer).toggle(optionName == "Passage lookup");
         var targetFieldset = $(".advancedSearch legend:contains('" + optionName + "')", passageContainer).parent();
         targetFieldset.show();
     },

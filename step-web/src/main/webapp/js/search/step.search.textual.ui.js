@@ -29,33 +29,49 @@
 step.search.ui.textual = {
     evaluateQuerySyntax: function(passageId) {
         var passageContainer = step.util.getPassageContainer(passageId);
+        var level = $("fieldset:visible").detailSlider("value");
         
-        var query = "t=";
+        var prefix = "t=";
+        var query = "";
+        //level 0
         query += this._evalExactPhrase($(".textPrimaryExactPhrase", passageContainer).val());
         query += this._evalAllWords($(".textPrimaryIncludeAllWords", passageContainer).val());
         query += this._evalAnyWord($(".textPrimaryIncludeWords", passageContainer).val());
-        query += this._evalSpellings($(".textPrimarySimilarSpellings", passageContainer).val());
-        query += this._evalStarting($(".textPrimaryWordsStarting", passageContainer).val());
-        query += this._evalExcludeWord($(".textPrimaryExcludeWords", passageContainer).val());
-        query += this._evalExcludePhrase($(".textPrimaryExcludePhrase", passageContainer).val());
-        query += this._evalWordsWithinRangeOfEachOther(
-                    $(".textPrimaryIncludeRangedWords", passageContainer).val(), 
-                    $(".textPrimaryWithinXWords", passageContainer).val());
-                
+        
+        //level 2
+        if(level == 2) {
+            query += this._evalSpellings($(".textPrimarySimilarSpellings", passageContainer).val());
+            query += this._evalStarting($(".textPrimaryWordsStarting", passageContainer).val());
+            query += this._evalExcludeWord($(".textPrimaryExcludeWords", passageContainer).val());
+            query += this._evalExcludePhrase($(".textPrimaryExcludePhrase", passageContainer).val());
+            query += this._evalWordsWithinRangeOfEachOther(
+                        $(".textPrimaryIncludeRangedWords", passageContainer).val(), 
+                        $(".textPrimaryWithinXWords", passageContainer).val());
+        }
+
+        
+        //level 1
         var secondaryQuery = "";
-        secondaryQuery += this._evalAllWords($(".textCloseByIncludeAllWords", passageContainer).val());
-        secondaryQuery += this._evalExactPhrase($(".textCloseByExactPhrase", passageContainer).val());
-        secondaryQuery += this._evalAnyWord($(".textCloseByIncludeWords", passageContainer).val());
-        secondaryQuery += this._evalSpellings($(".textCloseBySimilarSpellings", passageContainer).val());
-        secondaryQuery += this._evalStarting($(".textCloseByWordsStarting", passageContainer).val());
-        secondaryQuery += this._evalExcludeWord($(".textCloseByExcludeWords", passageContainer).val());
-        secondaryQuery += this._evalExcludePhrase($(".textCloseByExcludePhrase", passageContainer).val());
-        secondaryQuery += this._evalWordsWithinRangeOfEachOther(
-                    $(".textCloseByIncludeRangedWords", passageContainer).val(), 
-                    $(".textCloseByWithinXWords", passageContainer).val());
+        if(level > 0) {
+            secondaryQuery += this._evalAllWords($(".textCloseByIncludeAllWords", passageContainer).val());
+            secondaryQuery += this._evalExactPhrase($(".textCloseByExactPhrase", passageContainer).val());
+            secondaryQuery += this._evalAnyWord($(".textCloseByIncludeWords", passageContainer).val());
+        }
         
+        //level 2
+        if(level == 2) {
+            secondaryQuery += this._evalSpellings($(".textCloseBySimilarSpellings", passageContainer).val());
+            secondaryQuery += this._evalStarting($(".textCloseByWordsStarting", passageContainer).val());
+            secondaryQuery += this._evalExcludeWord($(".textCloseByExcludeWords", passageContainer).val());
+            secondaryQuery += this._evalExcludePhrase($(".textCloseByExcludePhrase", passageContainer).val());
+            secondaryQuery += this._evalWordsWithinRangeOfEachOther(
+                        $(".textCloseByIncludeRangedWords", passageContainer).val(), 
+                        $(".textCloseByWithinXWords", passageContainer).val());
+        }
         
-        query = this._evalProximity($(".textVerseProximity", passageContainer).val(), query, secondaryQuery);
+        if(level > 0) {
+            query = this._evalProximity($(".textVerseProximity", passageContainer).val(), query, secondaryQuery);
+        }
         
         var restriction = $(".textRestriction", passageContainer).val();
         query = this._evalTextRestriction(restriction, query);
@@ -67,7 +83,7 @@ step.search.ui.textual = {
             query = this._evalTextRestrictionExclude(restrictionExclude, query);
         }
         
-        
+        query = prefix + query;
         step.state.textual.textQuerySyntax(passageId, query);
         return query;
     },
@@ -268,4 +284,7 @@ $(step.search.ui).hear("textual-search-state-has-changed", function(s, data) {
 });
 
 
+$(step.search.ui).hear("slideView-SEARCH_TEXT", function(s, data) {
+    step.search.ui.textual.evaluateQuerySyntax(data.passageId);    
+});
 

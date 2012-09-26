@@ -67,6 +67,7 @@ import org.crosswire.jsword.book.BookCategory;
 import org.crosswire.jsword.book.BookData;
 import org.crosswire.jsword.book.BookException;
 import org.crosswire.jsword.book.Books;
+import org.crosswire.jsword.book.UnAccenter;
 import org.crosswire.jsword.passage.Key;
 import org.crosswire.jsword.passage.KeyUtil;
 import org.crosswire.jsword.passage.NoSuchKeyException;
@@ -100,6 +101,7 @@ import com.tyndalehouse.step.core.service.VocabularyService;
 import com.tyndalehouse.step.core.service.impl.MorphologyServiceImpl;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
+import com.tyndalehouse.step.core.utils.StringConversionUtils;
 import com.tyndalehouse.step.core.xsl.XslConversionType;
 import com.tyndalehouse.step.core.xsl.impl.InterleavingProviderImpl;
 
@@ -453,6 +455,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
 
         try {
             Key key = currentBook.getKey(reference);
+            normalize(key, v11n);
 
             // TODO, work this one out
             final int cardinality = key.getCardinality();
@@ -480,6 +483,22 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
     }
 
     /**
+     * Removes verse 0 if present
+     * 
+     * @param reference the reference we wish to normalize
+     */
+    void normalize(final Key reference, final Versification v) {
+        final Passage passage = KeyUtil.getPassage(reference, v);
+        final int cardinality = passage.getCardinality();
+        if (cardinality > 1) {
+            final Key firstVerse = passage.get(0);
+            if (firstVerse instanceof Verse && v.isStartOfChapter((Verse) firstVerse)) {
+                passage.remove(firstVerse);
+            }
+        }
+    }
+
+    /**
      * Gets the osis text
      * 
      * @param options the list of lookup options
@@ -500,6 +519,11 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
         final Key key = bookData.getKey();
         notNull(key, "An internal error occurred", UserExceptionType.SERVICE_VALIDATION_ERROR);
 
+        // the original book
+        final Book book = bookData.getFirstBook();
+        final Versification versification = this.versificationService.getVersificationForVersion(book);
+        normalize(key, versification);
+
         // first check whether the key is contained in the book
         // if (!keyExistsInBook(bookData)) {
         // throw new StepInternalException("The specified reference does not exist in this Bible");
@@ -510,10 +534,6 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
 
             final TransformingSAXEventProvider htmlsep = executeStyleSheet(options, interlinearVersion,
                     bookData, osissep, displayMode);
-
-            // the original book
-            final Book book = bookData.getFirstBook();
-            final Versification versification = this.versificationService.getVersificationForVersion(book);
 
             final OsisWrapper osisWrapper = new OsisWrapper(writeToString(htmlsep), key, book.getLanguage()
                     .getCode(), versification);
@@ -587,14 +607,17 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
 
         try {
             final Key key = books[0].getKey(reference);
+            final Versification v11n = this.versificationService.getVersificationForVersion(books[0]);
+            normalize(key, v11n);
+
             final BookData data = new BookData(books, key, displayMode == InterlinearMode.COLUMN_COMPARE
                     || displayMode == InterlinearMode.INTERLEAVED_COMPARE);
+
+            setUnaccenter(data, displayMode);
 
             final TransformingSAXEventProvider transformer = executeStyleSheet(options, null, data,
                     data.getSAXEventProvider(), displayMode, versions);
 
-            final Versification v11n = this.versificationService.getVersificationForVersion(data
-                    .getFirstBook());
             final OsisWrapper osisWrapper = new OsisWrapper(writeToString(transformer), data.getKey(), data
                     .getFirstBook().getLanguage().getCode(), v11n);
 
@@ -613,6 +636,24 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
             throw new StepInternalException(e.getMessage(), e);
         } catch (final NoSuchKeyException e) {
             throw new StepInternalException(e.getMessage(), e);
+        }
+    }
+
+    /**
+     * if we're comparing, we want to compare unaccented forms
+     * 
+     * @param data the data
+     * @param displayMode the chosen display mode
+     */
+    private void setUnaccenter(final BookData data, final InterlinearMode displayMode) {
+        if (displayMode == COLUMN_COMPARE || displayMode == INTERLEAVED_COMPARE) {
+            data.setUnaccenter(new UnAccenter() {
+
+                @Override
+                public String unaccent(final String accentedForm) {
+                    return StringConversionUtils.unAccent(accentedForm);
+                }
+            });
         }
     }
 

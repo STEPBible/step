@@ -38,7 +38,6 @@ import static com.tyndalehouse.step.core.utils.StringConversionUtils.toBetaLower
 import static com.tyndalehouse.step.core.utils.StringConversionUtils.toBetaUnaccented;
 import static com.tyndalehouse.step.core.utils.StringConversionUtils.transliterate;
 import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
-import static com.tyndalehouse.step.core.utils.StringUtils.split;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -55,7 +54,9 @@ import org.slf4j.LoggerFactory;
 import com.avaje.ebean.EbeanServer;
 import com.tyndalehouse.step.core.data.create.loaders.AbstractClasspathBasedModuleLoader;
 import com.tyndalehouse.step.core.data.entities.lexicon.Definition;
+import com.tyndalehouse.step.core.data.entities.lexicon.Translation;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
+import com.tyndalehouse.step.core.utils.StringConversionUtils;
 
 /**
  * Loads an Easton Dictionary
@@ -65,7 +66,6 @@ import com.tyndalehouse.step.core.exceptions.StepInternalException;
  */
 public class LexiconLoader extends AbstractClasspathBasedModuleLoader<Definition> {
     private static final Logger LOGGER = LoggerFactory.getLogger(LexiconLoader.class);
-    // private static final int BATCH_DEFINITIONS = 500;
     private static final String START_TOKEN = "==============";
 
     // state used during processing
@@ -73,7 +73,7 @@ public class LexiconLoader extends AbstractClasspathBasedModuleLoader<Definition
     private int count;
     private Definition currentDefinition;
     private Map<String, Method> methodMappings;
-    private int uncommittedDefinitions = 0;
+    private final boolean isGreek;
 
     /**
      * Loads up dictionary items
@@ -83,6 +83,7 @@ public class LexiconLoader extends AbstractClasspathBasedModuleLoader<Definition
      */
     public LexiconLoader(final EbeanServer ebean, final String resourcePath) {
         super(ebean, resourcePath);
+        this.isGreek = resourcePath.endsWith("greek.txt");
         initMappings();
     }
 
@@ -104,156 +105,29 @@ public class LexiconLoader extends AbstractClasspathBasedModuleLoader<Definition
             closeQuietly(bufferedReader);
         }
 
-        processStrongLinks();
-        processTransliterations();
-
         LOGGER.info("Loaded [{}] dictionary articles with [{}] errors", this.count, this.errors);
         return new ArrayList<Definition>();
     }
 
     /**
-     * creates transliterations for all definitions
+     * TODO slow performance on first call to setter of ebean... chase group post on Google. creates
+     * transliterations for all definitions
      */
     private void processTransliterations() {
-        long timeSaving = 0;
-        long timeTransliterating = 0;
-        long timeLast = 0;
+        // step transliterations, with
+        this.currentDefinition.setStepTransliteration(transliterate(this.currentDefinition
+                .getAccentedUnicode()));
 
-        long timeStart = 0;
-        long timeA = 0;
-        long timeB = 0;
-        long timeC = 0;
-        long timeD = 0;
-        long timeE = 0;
-        long timeF = 0;
-        final long timeG = 0;
+        // and without the breathing - results may still contain accents - however they are generated from
+        // unicode without accents
+        this.currentDefinition
+                .setUnaccentedStepTransliteration(adaptForUnaccentedTransliteration(this.currentDefinition
+                        .getStepTransliteration()));
 
-        // run on a clean set of beans
-        getEbean().currentTransaction().flushBatch();
-
-        // now we need to add transliterations
-        // Given we are doing this with H2, we could use a java function, but best not to tie ourselves down
-        final List<Definition> definitions = getEbean().find(Definition.class).select("*").where()
-                .isNotNull("accentedUnicode").findList();
-        int countTransliterations = 0;
-        for (final Definition def : definitions) {
-
-            timeStart = timeLast = System.currentTimeMillis();
-            final String transliteration = transliterate(def.getAccentedUnicode());
-            timeF += System.currentTimeMillis() - timeLast;
-            timeLast = System.currentTimeMillis();
-
-            def.setStepTransliteration(transliteration);
-            timeA += System.currentTimeMillis() - timeLast;
-            timeLast = System.currentTimeMillis();
-
-            def.setUnaccentedStepTransliteration(adaptForUnaccentedTransliteration(def
-                    .getStepTransliteration()));
-            timeB += System.currentTimeMillis() - timeLast;
-            timeLast = System.currentTimeMillis();
-
-            final String strongPronunc = def.getStrongPronunc();
-            if (strongPronunc != null) {
-                def.setStrongPronunc(strongPronunc.toLowerCase());
-            }
-            timeC += System.currentTimeMillis() - timeLast;
-            timeLast = System.currentTimeMillis();
-
-            final String strongTranslit = def.getStrongTranslit();
-            if (strongTranslit != null) {
-                def.setStrongTranslit(strongTranslit.toLowerCase());
-            }
-            timeD += System.currentTimeMillis() - timeLast;
-            timeLast = System.currentTimeMillis();
-
-            final String betaForm = def.getLsjWordBeta();
-            if (betaForm != null) {
-                final String lowerBeta = betaForm.toLowerCase();
-                def.setLsjWordBeta(toBetaLowercase(lowerBeta));
-                def.setLsjWordBetaUnaccented(toBetaUnaccented(lowerBeta));
-            }
-            timeE += System.currentTimeMillis() - timeLast;
-            timeLast = System.currentTimeMillis();
-
-            timeTransliterating += System.currentTimeMillis() - timeStart;
-
-            timeLast = System.currentTimeMillis();
-            getEbean().save(def);
-            timeSaving += System.currentTimeMillis() - timeLast;
-
-            countTransliterations++;
-            if (countTransliterations % 500 == 0) {
-                // getEbean().commitTransaction();
-                // this.ebean.currentTransaction().flushBatch();
-                LOGGER.warn("Times A [{}], B [{}], C [{}], D [{}], E [{}]", new Object[] { timeA, timeB,
-                        timeC, timeD, timeE });
-
-                LOGGER.warn("Saved [{}] transliterations. Time taken: parsing: [{}], loading: [{}]",
-                        new Object[] { countTransliterations, timeTransliterating, timeSaving });
-            }
-
-            // batch.add(def);
-            // if (batch.size() >= BATCH_DEFINITIONS) {
-            // LOGGER.debug("Saving transliterations [{}] / [{}]", countTransliterations, definitions.size());
-            // getEbean().save(batch);
-            // LOGGER.debug("Saved transliterations ");
-            // batch = new ArrayList<Definition>(BATCH_DEFINITIONS);
-            // }
-        }
-    }
-
-    /**
-     * Creates the links between all strong numbers
-     */
-    private void processStrongLinks() {
-        // flush everything so far
-        getEbean().currentTransaction().flushBatch();
-
-        // now we need to post-process all of the fields
-        final List<Definition> allDefs = getEbean().find(Definition.class)
-                .select("id,strongNumber,relatedNos").fetch("similarStrongs").where().isNotNull("relatedNos")
-                .findList();
-
-        // now reverse code them all
-        final Map<String, Definition> codedByStrongNumber = new HashMap<String, Definition>();
-        for (final Definition def : allDefs) {
-            codedByStrongNumber.put(def.getStrongNumber(), def);
-        }
-
-        int countLinks = 0;
-        for (final Definition def : allDefs) {
-
-            final String[] strongNumbers = split(def.getRelatedNos());
-            final StringBuilder newRelatedStrongs = new StringBuilder(strongNumbers.length * 16);
-            for (int ii = 0; ii < strongNumbers.length; ii++) {
-                // look up the strong correspondance
-                final Definition relatedStrong = codedByStrongNumber.get(strongNumbers[ii]);
-
-                if (relatedStrong == null) {
-                    LOGGER.error("Unable to reference strong [{}]. [{}] is incomplete.", strongNumbers[ii],
-                            def.getStrongNumber());
-                    continue;
-                }
-
-                def.getSimilarStrongs().add(relatedStrong);
-
-                // also replace the string value
-                newRelatedStrongs.append(relatedStrong.getAccentedUnicode());
-                if (ii + 1 < strongNumbers.length) {
-                    newRelatedStrongs.append(' ');
-                }
-            }
-
-            // replace the related strong field:
-            def.setRelatedNos(newRelatedStrongs.toString());
-
-            getEbean().save(def);
-            countLinks++;
-
-            if (countLinks % 500 == 0) {
-                // getEbean().commitTransaction();
-                LOGGER.debug("Created links for [{}] definitions", countLinks);
-            }
+        if (this.count % 2000 == 0) {
+            // getEbean().commitTransaction();
+            // this.ebean.currentTransaction().flushBatch();
+            LOGGER.info("Saved [{}] transliterations.", this.count);
         }
     }
 
@@ -277,14 +151,68 @@ public class LexiconLoader extends AbstractClasspathBasedModuleLoader<Definition
     private void saveCurrentDefinition() {
 
         if (this.currentDefinition != null) {
-            this.uncommittedDefinitions++;
+            processTransliterations();
+            processDefaultsIfNull();
+            processLowerCasings();
             getEbean().save(this.currentDefinition);
+            this.count++;
+        }
+    }
+
+    private void processDefaultsIfNull() {
+        if (this.currentDefinition.getBlacklisted() == null) {
+            this.currentDefinition.setBlacklisted(Boolean.FALSE);
+        }
+    }
+
+    /**
+     * Sets various fields to their lower case equivalence
+     */
+    private void processLowerCasings() {
+        final String strongPronunc = this.currentDefinition.getStrongPronunc();
+        if (strongPronunc != null) {
+            this.currentDefinition.setStrongPronunc(strongPronunc.toLowerCase());
         }
 
-        // if (this.uncommittedDefinitions % 500 == 0) {
-        // getEbean().commitTransaction();
-        // this.ebean.currentTransaction().flushBatch();
-        // }
+        final String strongTranslit = this.currentDefinition.getStrongTranslit();
+        if (strongTranslit != null) {
+            this.currentDefinition.setStrongTranslit(strongTranslit.toLowerCase());
+        }
+
+        final String alternative = this.currentDefinition.getAlternativeTranslit1();
+        if (alternative != null) {
+            final String lowerAlternative = alternative.toLowerCase();
+            if (this.isGreek) {
+                this.currentDefinition.setAlternativeTranslit1(toBetaLowercase(lowerAlternative));
+            } else {
+                this.currentDefinition.setAlternativeTranslit1(lowerAlternative.replace("#", ""));
+            }
+        }
+
+        final String unaccentedAlternative = this.currentDefinition.getAlternativeTranslit1Unaccented();
+        if (unaccentedAlternative != null) {
+            if (this.isGreek) {
+                this.currentDefinition.setAlternativeTranslit1Unaccented(unaccentedAlternative.toLowerCase());
+            } else {
+                this.currentDefinition.setAlternativeTranslit1Unaccented(unaccentedAlternative.replace("#",
+                        ""));
+            }
+        } else if (alternative != null) {
+            if (this.isGreek) {
+                this.currentDefinition.setAlternativeTranslit1Unaccented(toBetaUnaccented(alternative
+                        .toLowerCase()));
+            } else {
+                this.currentDefinition.setAlternativeTranslit1Unaccented(alternative.toLowerCase());
+            }
+        }
+
+        final String accentedUnicode = this.currentDefinition.getAccentedUnicode();
+        if (accentedUnicode != null) {
+            final String lowerCaseAccentedUnicode = accentedUnicode.toLowerCase();
+            this.currentDefinition.setAccentedUnicode(lowerCaseAccentedUnicode);
+            this.currentDefinition.setUnaccentedUnicode(StringConversionUtils.unAccent(
+                    lowerCaseAccentedUnicode, true));
+        }
     }
 
     /**
@@ -295,21 +223,6 @@ public class LexiconLoader extends AbstractClasspathBasedModuleLoader<Definition
         this.currentDefinition = new Definition();
     }
 
-    // /**
-    // * transforms the article into HTML
-    // */
-    // void parseArticleText() {
-    // final String articleContentRaw = this.articleText.toString().trim();
-    // final Matcher bibleLinkMatcher = BIBLE_LINK.matcher(articleContentRaw);
-    // final String articleWithBibleRefs = bibleLinkMatcher
-    // .replaceAll("<a onclick='viewPassage(this, \"$2\")'>$1</a>");
-    //
-    // final Matcher internalLinkMatcher = INTERNAL_LINK.matcher(articleWithBibleRefs);
-    //
-    // this.currentArticle.setText(internalLinkMatcher.replaceAll("<a onclick='goToArticle(\""
-    // + this.currentArticle.getSource().name() + "\", \"$1\", \"$2\")'>$1</a>"));
-    // }
-
     /**
      * Sets up the mappings between field names and methods
      */
@@ -318,24 +231,42 @@ public class LexiconLoader extends AbstractClasspathBasedModuleLoader<Definition
         final Class<Definition> defClass = Definition.class;
 
         try {
-            this.methodMappings.put("@LsjBetaUnaccented",
-                    defClass.getDeclaredMethod("setLsjWordBeta", String.class));
-            this.methodMappings.put("@LSJ-Defs", defClass.getDeclaredMethod("setLsjDefs", String.class));
-            this.methodMappings.put("@StrNo", defClass.getDeclaredMethod("setStrongNumber", String.class));
+            final Method mediumDef = defClass.getDeclaredMethod("setMediumDef", String.class);
+            final Method alternativeTranslit1Unaccented = defClass.getDeclaredMethod(
+                    "setAlternativeTranslit1Unaccented", String.class);
+            final Method alternativeTrans1 = defClass.getDeclaredMethod("setAlternativeTranslit1",
+                    String.class);
+            final Method unicodeAccented = defClass.getDeclaredMethod("setAccentedUnicode", String.class);
+
             this.methodMappings.put("@UnicodeAccented",
                     defClass.getDeclaredMethod("setAccentedUnicode", String.class));
-            this.methodMappings.put("@UnaccentedUnicode",
-                    defClass.getDeclaredMethod("setUnaccentedUnicode", String.class));
+
+            this.methodMappings.put("@LSJ-Defs", defClass.getDeclaredMethod("setLsjDefs", String.class));
+            this.methodMappings.put("@StrNo", defClass.getDeclaredMethod("setStrongNumber", String.class));
+            this.methodMappings.put("@StrBetaAccented", alternativeTrans1);
+
             this.methodMappings.put("@StrTranslit",
                     defClass.getDeclaredMethod("setStrongTranslit", String.class));
             this.methodMappings.put("@StrPronunc",
                     defClass.getDeclaredMethod("setStrongPronunc", String.class));
             this.methodMappings.put("@StrRelatedNos",
                     defClass.getDeclaredMethod("setRelatedNos", String.class));
-            this.methodMappings.put("@MounceShortDef",
-                    defClass.getDeclaredMethod("setMShortDef", String.class));
-            this.methodMappings.put("@MounceMedDef", defClass.getDeclaredMethod("setMMedDef", String.class));
             this.methodMappings.put("@StepGloss", defClass.getDeclaredMethod("setStepGloss", String.class));
+            this.methodMappings.put("@StopWord", defClass.getDeclaredMethod("setBlacklisted", Boolean.class));
+
+            // greek specific mappings
+            this.methodMappings.put("@MounceShortDef",
+                    defClass.getDeclaredMethod("setShortDef", String.class));
+            this.methodMappings.put("@MounceMedDef", mediumDef);
+            this.methodMappings.put("@LsjBetaUnaccented", alternativeTranslit1Unaccented);
+
+            // hebrew specific mappings
+            this.methodMappings.put("@BdbMedDef", mediumDef);
+            this.methodMappings.put("@AcadTransAccented", alternativeTrans1);
+            this.methodMappings.put("@AcadTransUnaccented", alternativeTranslit1Unaccented);
+
+            // temp - TODO - remove when fields have been renamed
+            this.methodMappings.put("@StrUnicodeAccented", unicodeAccented);
 
         } catch (final NoSuchMethodException e) {
             throw new StepInternalException("Unable to find matching method", e);
@@ -360,16 +291,10 @@ public class LexiconLoader extends AbstractClasspathBasedModuleLoader<Definition
             return;
         }
 
+        // get field name and value
         final String fieldName = line.substring(0, tabIndex - 1);
-
-        final Method method = this.methodMappings.get(fieldName);
-        if (method == null) {
-            LOGGER.trace("Unable to map [{}]", fieldName);
-            return;
-        }
-
-        // get value
         final int startValue = tabIndex + 1;
+        // get value
         if (startValue > line.length()) {
             // no value, so skip
             LOGGER.trace("Skipping empty field [{}]", fieldName);
@@ -383,69 +308,49 @@ public class LexiconLoader extends AbstractClasspathBasedModuleLoader<Definition
             return;
         }
 
+        final Method method = this.methodMappings.get(fieldName);
+        if (method == null) {
+            tryOtherMappings(fieldName, fieldValue);
+            LOGGER.trace("Unable to map [{}]", fieldName);
+            return;
+        }
+
         try {
-            method.invoke(this.currentDefinition, fieldValue);
+            final Class<?>[] parameterTypes = method.getParameterTypes();
+            if (Boolean.class.equals(parameterTypes[0])) {
+                method.invoke(this.currentDefinition, Boolean.parseBoolean(fieldValue));
+            } else {
+                method.invoke(this.currentDefinition, fieldValue);
+            }
+
         } catch (final ReflectiveOperationException e) {
             throw new StepInternalException("Unable to call method for field " + fieldName, e);
         }
     }
 
-    // /**
-    // * @param fieldContent the references to be parsed and set onto the article
-    // */
-    // private void parseAllRefs(final String fieldContent) {
-    // // we'll assume for now that we are always split by ; but we will warn otherwise
-    // final String[] refs = split(fieldContent, "[ ]?;[ ]?");
-    // final List<ScriptureReference> allRefs = new ArrayList<ScriptureReference>();
-    //
-    // // iterate through all references found
-    // for (final String s : refs) {
-    // List<ScriptureReference> references = new ArrayList<ScriptureReference>();
-    // try {
-    // references = this.jsword.resolveReferences(s, "KJV");
-    // fillInTargetType(references, TargetType.DICTIONARY_ARTICLE);
-    // } catch (final StepInternalException e) {
-    // this.errors++;
-    // LOGGER.error("Cannot resolve reference " + s + " for article "
-    // + this.currentArticle.getHeadword());
-    // LOGGER.trace("Unable to resolve references", e);
-    // }
-    // allRefs.addAll(references);
-    // }
-    //
-    // if (allRefs.isEmpty()) {
-    // // we warn because we found nothing
-    // LOGGER.warn("No references found for Article [{}]", this.currentArticle.getHeadword());
-    //
-    // }
-    // this.currentArticle.setScriptureReferences(allRefs);
-    // }
+    /**
+     * Tries other mappings to process the field with
+     * 
+     * @param fieldName the name of the field
+     * @param fieldValue the value of the field
+     */
+    private void tryOtherMappings(final String fieldName, final String fieldValue) {
+        if ("@Translations".equals(fieldName)) {
+            final String[] translations = fieldValue.split("[|]");
 
-    // /**
-    // * return the number of the headword
-    // *
-    // * @param headword the headword to examine
-    // * @return the instance number of the article
-    // */
-    // int parseHeadwordInstance(final String headword) {
-    // // examine last character
-    // if (headword.charAt(headword.length() - 1) == ')') {
-    // final int parenthesis = headword.lastIndexOf('(');
-    // if (parenthesis == -1) {
-    // return 1;
-    // }
-    //
-    // final String headwordMarker = headword.substring(parenthesis + 1, headword.length() - 1);
-    // try {
-    // return Integer.parseInt(headwordMarker);
-    // } catch (final NumberFormatException e) {
-    // LOGGER.warn(e.getMessage(), e);
-    // return 1;
-    // }
-    // }
-    //
-    // return 1;
-    // }
+            for (final String alternative : translations) {
+                final Translation t = new Translation();
+                t.setAlternativeTranslation(alternative);
+
+                List<Translation> currentTranslations = this.currentDefinition.getTranslations();
+                if (currentTranslations == null) {
+                    currentTranslations = new ArrayList<Translation>();
+                    this.currentDefinition.setTranslations(currentTranslations);
+                }
+                currentTranslations.add(t);
+            }
+        }
+    }
 
     /**
      * Helper method that gets a trimmed string out
@@ -457,18 +362,4 @@ public class LexiconLoader extends AbstractClasspathBasedModuleLoader<Definition
     String parseFieldContent(final String fieldName, final String line) {
         return line.substring(fieldName.length() + 1).trim();
     }
-
-    // /**
-    // * @param currentArticle the currentArticle to set
-    // */
-    // void setCurrentArticle(final DictionaryArticle currentArticle) {
-    // this.currentArticle = currentArticle;
-    // }
-
-    // /**
-    // * @param articleText the articleText to set
-    // */
-    // void setArticleText(final StringBuilder articleText) {
-    // this.articleText = articleText;
-    // }
 }

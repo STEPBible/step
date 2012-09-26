@@ -33,6 +33,7 @@
 package com.tyndalehouse.step.core.service.jsword.impl;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -49,6 +50,7 @@ import org.crosswire.jsword.passage.Key;
 import org.crosswire.jsword.passage.NoSuchKeyException;
 import org.crosswire.jsword.passage.Verse;
 import org.crosswire.jsword.versification.BibleBook;
+import org.crosswire.jsword.versification.system.Versifications;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -140,6 +142,25 @@ public class JSwordPassageServiceImplTest {
     // }
     // }
     // }
+    /**
+     * tests that verse 0 gets excluded
+     * 
+     * @throws NoSuchKeyException
+     */
+    @Test
+    public void testNormalize() throws NoSuchKeyException {
+        final JSwordPassageServiceImpl jsi = new JSwordPassageServiceImpl(
+                new JSwordVersificationServiceImpl(), null, null);
+
+        final Book book = Books.installed().getBook("KJV");
+
+        final Key key = book.getKey("John 4");
+
+        assertTrue(key.get(0).getOsisID().equals("John.4.0"));
+        jsi.normalize(key, Versifications.instance().getDefaultVersification());
+        assertFalse(key.get(0).getOsisID().equals("John.4.0"));
+
+    }
 
     /**
      * should expand Ruth.1.22 to Ruth.1
@@ -419,16 +440,16 @@ public class JSwordPassageServiceImplTest {
     @Test
     public void testInterleave() throws BookException, NoSuchKeyException, JDOMException, IOException {
         final XMLOutputter xmlOutputter = new XMLOutputter(Format.getPrettyFormat());
-        final String ref = "Genesis 1";
+        final String ref = "John 4";
 
         // do the test
         final JSwordPassageServiceImpl jsi = new JSwordPassageServiceImpl(
                 new JSwordVersificationServiceImpl(), null, null);
 
-        final String[] versions = new String[] { "KJV", "OSMHB" };
+        final String[] versions = new String[] { "Byz", "Tisch" };
         final BookData data = new BookData(new Book[] { Books.installed().getBook(versions[0]),
                 Books.installed().getBook(versions[1]) }, Books.installed().getBook(versions[0]).getKey(ref),
-                true);
+                false);
 
         LOGGER.debug("Original is:\n {}", xmlOutputter.outputString(data.getOsisFragment()));
 
@@ -483,7 +504,7 @@ public class JSwordPassageServiceImplTest {
     @Test
     public void testPrettyXml() throws BookException, NoSuchKeyException, JDOMException, IOException {
         final String version = "KJV";
-        final String ref = "Rev 1:2";
+        final String ref = "Gen 1:1";
         final Book currentBook = Books.installed().getBook(version);
         final BookData bookData = new BookData(currentBook, currentBook.getKey(ref));
         final Element osisFragment = bookData.getOsisFragment();
@@ -497,8 +518,7 @@ public class JSwordPassageServiceImplTest {
         final List<LookupOption> options = new ArrayList<LookupOption>();
         options.add(LookupOption.NOTES);
 
-        final String osisText = jsi.getOsisText(version, ref, options, "KJV", InterlinearMode.NONE)
-                .getValue();
+        final String osisText = jsi.getOsisText(version, ref, options, null, InterlinearMode.NONE).getValue();
         final SAXBuilder sb = new SAXBuilder();
         final Document d = sb.build(new StringReader(osisText));
 

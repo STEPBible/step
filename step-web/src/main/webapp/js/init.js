@@ -63,10 +63,14 @@ function init() {
 	      // read state from the cookie
         step.state.restore();
 
+        hearViewChanges();
+        $.shout("view-change");
 	});
 }
 
 function refreshLayout() {
+    
+    
 	//we resize the heights:
 	var windowHeight = $(window).height();
 	var topMenuHeight = $("#topMenu").height();
@@ -80,13 +84,31 @@ function refreshLayout() {
 	
 	
 	step.passage.ui.resize();
-	
+}
+
+function hearViewChanges() {
+    $(window).hear("view-change", function(self, data) {
+        var view = data == undefined ||  data.viewName == undefined ? step.state.view.getView() : data.viewName;  
+        step.state.view.storeView(view);
+        
+//        if(view == 'SINGLE_COLUMN_VIEW') {
+//           $(".leftColumn").removeClass("column").addClass("singleColumn");
+//           $(".column").toggle(false);
+//           $("#centerPane").toggle(false);
+//       } else if (view == 'SINGLE_HELP_VIEW') {
+//       } else {
+//           $(".column").toggle(true);
+//           $(".leftColumn").removeClass("singleColumn").addClass("column");
+//           $("#centerPane").toggle(true);
+//       }
+    });
 }
 
 /**
  * initialises layout
  */
 function initLayout() {
+    
 	$("body").hear("passage-changed", function() {
 		refreshLayout();
 	});

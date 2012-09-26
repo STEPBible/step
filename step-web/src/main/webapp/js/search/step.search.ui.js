@@ -42,6 +42,7 @@ $(document).ready(function() {
        $(".refinedSearch", step.util.getPassageContainer(this)).hide();
        step.search.refinedSearch = [];
     });
+
 });
 
 step.search.ui = {

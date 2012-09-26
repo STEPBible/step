@@ -124,13 +124,18 @@ step.util = {
             }).attr("readonly", readonly == true);
         },
 
-        searchButton : function(selector, searchType, callback) {
+        searchButton : function(selector, searchType, callback, preClickHandler) {
             var self = this;
             $(selector).click(function() {
+                var passageId = step.passage.getPassageId(this);
+                if(preClickHandler) {
+                    preClickHandler(passageId);
+                }
+                
                 //clicking on search button resets page number to 1:
                 self.resetPageNumber();
                 
-                step.state.activeSearch(step.passage.getPassageId(this), searchType, true);
+                step.state.activeSearch(passageId, searchType, true);
                 
                 if(callback) {
                     callback();
@@ -155,12 +160,17 @@ step.util = {
                     $(".searchQuerySyntax", step.util.getPassageContainer(passageId)).val(syntax); 
                 }
                 
+                if(syntax.startsWith("o")) {
+                    //no estimate for original word search
+                    return;
+                }
+                
                 //finally attempt a search estimation
                 delay(function() {
                     var versions = $("fieldset:visible .searchVersions", step.util.getPassageContainer(passageId)).val();
                     
                     if(step.search.refinedSearch.length == 0) {
-                        $.getSafe(SEARCH_ESTIMATES, [encodeURIComponent(syntax) + " in (" + versions + ")"], function(estimate) {
+                        $.getSafe(SEARCH_ESTIMATES, [encodeURIComponent(syntax.replace('/', '#')) + " in (" + versions + ")"], function(estimate) {
                             $("fieldset:visible .resultEstimates", step.util.getPassageContainer(passageId))
                                 .html("~ <em>" + estimate + "</em> results")
                                 .css("color", "#" + step.util.ui._calculateEstimateBackgroundColour(estimate));
@@ -397,7 +407,8 @@ step.util = {
             }).click(function() {
                 $(this).parent().find(".hideSearchCriteria").show();
                 $(this).hide();
-                $(this).closest(".searchToolbar").prev().show('blind', {direction: 'vertical'}, 500, function() { refreshLayout(); });
+                $(this).closest(".searchToolbar").closest("fieldset").children().not(".searchToolbar").show();
+                refreshLayout();
             }).hide();
             
             
@@ -410,7 +421,8 @@ step.util = {
             }).click(function() {
                 $(this).parent().find(".showSearchCriteria").show();
                 $(this).hide();
-                $(this).closest(".searchToolbar").prev().hide('blind', {direction: 'vertical'}, 500, function() { refreshLayout(); });
+                $(this).closest(".searchToolbar").closest("fieldset").children().not(".searchToolbar").hide();
+                refreshLayout();
             });
             
             $(".searchToolbarButtonSets").buttonset();

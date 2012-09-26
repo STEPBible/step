@@ -25,47 +25,33 @@
 			<span class="ui-icon ui-icon-info"></span>
 			<span class="refinedSearchLabel"></span>
 		</div>
-		
 	</div>
 
 
 	<!-- Passage search -->
-	<fieldset>
+	<fieldset name="SEARCH_PASSAGE">
 		<legend>Passage lookup</legend>
-		<span class="passageButtons passageLookupButtons">  
-			<a class="syncOtherPassage">Syncs with the other passage</a>
-			<a class="continuousPassage">Displays the passage as one large scroll</a>
-			<a class="previousChapter" href="?reference=<%= stepRequest.getPreviousReference(Integer.parseInt(request.getParameter("passageId"))) %>&version=<%= stepRequest.getVersion(Integer.parseInt(request.getParameter("passageId"))) %>">Displays the previous chapter (or expands to the start of the chapter)</a>
-			<a class="nextChapter" href="?reference=<%= stepRequest.getNextReference(Integer.parseInt(request.getParameter("passageId"))) %>&version=<%= stepRequest.getVersion(Integer.parseInt(request.getParameter("passageId"))) %>">Displays the next chapter (or expands to the end of the chapter)</a> <a
-			class="bookmarkPassageLink">Add a bookmark</a>
-		</span>
-
-		<span class="passageButtons passageSizeButtons">  
-			<a class="smallerFonts" href="#" title="Smaller fonts">A</a>
-			<a class="largerFonts" href="#" title="Larger fonts">A</a>
-		</span>
-
 
 		<table class="passageTable">
 			<tr>
 				<td>Translation / Commentary</td>
 				<td><input type="text" class="passageVersion" size="15" /></td>
-				<td style="padding-left: 10px">Bible Text</td>
+				<td style="padding-left: 10px">Bible Text&nbsp;</td>
 				<td><input type="text" class="passageReference" size="15" /></td>
 			</tr>
-			<tr>
+			<tr level="1">
 				<td>Comparison versions</td>
 				<td><input type="text" class="extraVersions" size="15" /></td>
-				<td style="padding-left: 10px">will be shown as</td>
-				<td><input type="text" class="extraVersionsDisplayOptions drop" size="15" readonly=true"/></td>
+				<td level="2" style="padding-left: 10px">will be shown as</td>
+				<td level="2"><input type="text" class="extraVersionsDisplayOptions drop" size="15" readonly=true"/></td>
 			</tr>
 		</table>
 	</fieldset>
 
-	<fieldset class="simpleTextFields">
+	<fieldset class="simpleTextFields" name="SEARCH_SIMPLE_TEXT">
 		<legend>Text search</legend>
 
-		<table style="width: 100%">
+		<table>
 			<tr>
 				<td>Search for verses with</td>
 				<td><input type="text" class="simpleTextType simpleTextTypePrimary drop" /></td>
@@ -73,53 +59,38 @@
 				<td>within</td>
 				<td><input type="text" class="simpleTextScope drop" title="For example, <b>Mark</b>, <b>Rom 1</b>, <b>Phili</b> <br />Or select an option from the list" /></td>
 			</tr>
-			<tr>
+			<tr level="1">
 				<td>and <input type="text" class="simpleTextInclude drop" size="13" /></td>
 				<td><input type="text" class="simpleTextSecondaryTypes simpleTextTypeSecondary drop" /></td>
 				<td><input type="text" class="simpleTextSecondaryCriteria" /></td>
 				<td>within</td>
 				<td><input type="text" class="simpleTextProximity drop" /></td>
 			</tr>
-			<tr>
-				<td>ordering the results by</td>
-				<td><input type="text" class="simpleTextSortByRelevance drop" /></td>
-				<td colspan="3">
-					<span  style="float: right">
-						<input type="button" class="simpleTextClear resetSearch" value="Reset" />
-						<input type="button" class="simpleTextSearchButton" value="Search" />
-					</span>
-				</td>
-			</tr>
-			<tr>
-				<td colspan="5"><span class="resultEstimates">&nbsp;</span></td>
-			</tr>
-			<tr>
-				<td colspan="5"><hr /></td>
-			</tr>
-			<tr>
-				<td style="vertical-align: top">Query syntax</td>
-				<td colspan="4">
-					<input class="simpleTextQuerySyntax querySyntax" size="45" />
-				</td>
-			</tr>
-			<tr>
-				<td colspan="5"><hr /></td>
-			</tr>
 		</table>
 
-		<jsp:include page="search_toolbar.jsp?namespace=simpleText&context=true"  />
+		<div class="searchButtonsAlign">
+			<input type="button" class="simpleTextClear resetSearch" value="Reset" />
+			<input type="button" class="simpleTextSearchButton" value="Search" /><br />
+			<span class="resultEstimates">&nbsp;</span>
+		</div>
+
+		<hr level="2" />
+		<div level="2">Query syntax <input class="simpleTextQuerySyntax querySyntax" style="width: 70%" /> </div>
+	
+		<hr />
+		<jsp:include page="search_toolbar.jsp?namespace=simpleText&context=true&bibleVersions=true"  />
 		
 	</fieldset>
 
 
-	<fieldset>
+	<fieldset name="SEARCH_TEXT">
 		<legend>Advanced text search</legend>
 
 		<table class="textSearchTable">
 			<tr>
 				<td colspan="4"><h4
 						title="This is used for the main search query. Results returned are centered on this query.">First
-						query [TODO - Add slider]</h4></td>
+						query</h4></td>
 			</tr>
 			<tr>
 				<td>Include all of these words</td>
@@ -132,7 +103,7 @@
 				<td>Include exact phrase</td>
 				<td colspan="3"><input type="text" class="textPrimaryExactPhrase" size="45" /></td>
 			</tr>
-			<tr>
+			<tr level="2">
 				<td>Exclude this exact phrase</td>
 				<td><input type="text" class="textPrimaryExcludePhrase"
 					size="15" /></td>
@@ -140,15 +111,15 @@
 				<td><input type="text" class="textPrimaryExcludeWords"
 					size="15" /></td>
 			</tr>
-			<tr>
+			<tr level="2">
 				<td>Include spellings similar to</td>
 				<td><input type="text" class="textPrimarySimilarSpellings"
 					size="15" /></td>
-				<td>Words starting with</td>
+				<td>Include words starting with</td>
 				<td><input type="text" class="textPrimaryWordsStarting"
 					size="15" /></td>
 			</tr>
-			<tr>
+			<tr level="2">
 				<td>Include these words</td>
 				<td colspan="1"><input type="text"
 					class="textPrimaryIncludeRangedWords" size="15" /></td>
@@ -156,36 +127,42 @@
 					class="textPrimaryWithinXWords" size="2" /> words of each other
 				</td>
 			</tr>
-			<tr>
+			<tr  level="1">
 				<td colspan="4"><hr /></td>
 			</tr>
-			<tr>
+			<tr level="1">
 				<td colspan="4">
 					<h4
 						title="Use a secondary query if you want to look for terms that are close to the first query">Second
 						query</h4>
 				</td>
 			</tr>
-			<tr>
+			<tr  level="1">
+				<td colspan="4">First and second queries are within 
+				<input type="text" class="textVerseProximity" size="2" /> verses of each other</td>
+			</tr>
+			<tr level="1">
 				<td>Include all of these words</td>
 				<td><input type="text" class="textCloseByIncludeAllWords" size="15" /></td>
+<!-- 			</tr> -->
+<!-- 			<tr> -->
 				<td>Include any of these words</td>
 				<td><input type="text" class="textCloseByIncludeWords"
 					size="15" /></td>
 			</tr>
-			<tr>
+			<tr level="1">
 				<td>Include exact phrase</td>
 				<td colspan="3"><input type="text" class="textCloseByExactPhrase" size="45" /></td>
 			</tr>
-			<tr>
+			<tr level="2">
 				<td>Include spellings similar to</td>
 				<td><input type="text" class="textCloseBySimilarSpellings"
 					size="15" /></td>
-				<td>Words starting with</td>
+				<td>Include words starting with</td>
 				<td><input type="text" class="textCloseByWordsStarting"
 					size="15" /></td>
 			</tr>
-			<tr>
+			<tr level="2">
 				<td>Include these words</td>
 				<td colspan="1"><input type="text"
 					class="textCloseByIncludeRangedWords" size="15" /></td>
@@ -199,133 +176,112 @@
 			<tr>
 				<td colspan="4">
 					<h4
-						title="Use a secondary query if you want to look for terms that are close to the first query">Search
+						title="Search options to specialise the search further">Search
 						options</h4>
 				</td>
 			</tr>
-			<tr>
-				<td colspan="4">First and second queries are within 
-				<input type="text" class="textVerseProximity" size="2" /> verses of each other</td>
-			</tr>
+			
 			<tr>
 				<td>Restrict search to</td>
 				<td><input type="text" class="textRestriction showRanges" size="15" /></td>
-				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i>or</i><span style="float: right">Excluding range</span></td>
+				<td><i>or</i> exclude range</td>
 				<td><input type="text" class="textRestrictionExclude showRanges" size="15" /></td>
-			</tr>
-			<tr>
-				<td>Sort results by relevance</td>
-				<td><input type="checkbox" class="textSortByRelevance"
-					size="15" /></td>
-				<td colspan="2"><span style="float:right"><input type="button"
-					class="textClearButton resetSearch" value="Clear" />
-					<input type="button"
-					class="textSearchButton" value="Search" /></span>
-					
-				</td>
-			</tr>
-			<tr>
-				<td colspan="4"><span class="resultEstimates">&nbsp;</span></td>
-			</tr>
-			<tr>
-				<td colspan="4"><hr /></td>
-			</tr>
-			<tr>
-				<td>Query syntax</td>
-				<td colspan="3">
-					<input class="textQuerySyntax querySyntax" size="45"></input>
-				</td>
-			</tr>
-			<tr>
-				<td colspan="4"><hr /></td>
 			</tr>
 		</table>
 		
-		<jsp:include page="search_toolbar.jsp?namespace=text&context=true" />
+		<div class="searchButtonsAlign">
+			<input type="button" class="textClearButton resetSearch" value="Clear" />
+			<input type="button" class="textSearchButton" value="Search" /><br />
+			<span class="resultEstimates">&nbsp;</span>
+		</div>
+		
+		<hr level="2" />
+		
+		<div level="2">
+			Query syntax
+			<input class="textQuerySyntax querySyntax" size="45"></input>
+		</div>
+		<hr />
+		
+		
+		<jsp:include page="search_toolbar.jsp?namespace=text&context=true&bibleVersions=true" />
 	</fieldset>
 
-	<fieldset>
+	<fieldset name="SEARCH_ORIGINAL">
 		<legend>Word search</legend>
 
-		<table class="wordSearch" style="width: 100%"> 
+		<table class="wordSearch" >
 			<tr>
-				<td style="width: 100px">Search</td>
-				<td><input type="text" class="originalScope drop" size="20" readonly=true" title="Once the original word has been identified, constrains the displayed search results." /></td>
-				<td>for</td>
-				<td><input type='text' class='originalType drop' size="15" readonly=true" /></td>
+				<td >Search for</td>
+				<td><input type='text' class='originalType drop' size="20" readonly=true" /></td>
 				<td><input type='text' class='originalWord' title="Select an option from the previous dropdown first." /></td>
 			</tr>
 			<tr>
-				<td><span class="originalMeaning">as occurring in</span><span class="originalAncient">showing</span></td>
+				<td><span class="originalMeaning">as they occur in</span><span class="originalAncient">showing</span></td>
+				<td></td>
 				<td>
-					<input type='text' class='originalWordScope drop originalMeaning' size="20" readonly=true" />
+					<input type='text' class='originalWordScope originalMeaning' />
 					<input type='text' class='originalForms drop originalAncient' size="20" readonly=true" />
 				</td>
-
-				<td>sorted by</td>
-				<td><input type="text" class="originalSorting drop" size="15" readonly=true" /></td>
-				<td>
-					<input type="button" class="originalSearchButton passageButtons" value="Search" title="Search for the keyed-in word" />
-					<input type="button" class="originalClear passageButtons" value="Clear" title="Reset the form" />
-				</td> 
-			<tr>
-				<td colspan="5"><hr /></td>
 			</tr>
 			<tr>
-				<td>Query syntax</td>
-				<td colspan="4">
-					<input class="originalQuerySyntax querySyntax" size="45" />
-				</td>
+				<td>Restrict results to</td>
+				<td><input type="text" class="originalScope drop" size="20" readonly=true" title="Once the original word has been identified, constrains the displayed search results." /></td>
 			</tr>
 			<tr>
-				<td colspan="5"><hr /></td>
+				<td level="1">and group by</td>
+				<td level="1"><input type="text" class="originalSorting drop" size="15" readonly=true" /></td>
 			</tr>
 		</table>
-				
-		<jsp:include page="search_toolbar.jsp?namespace=original&context=true" />
-	</fieldset>
-
-	<fieldset>
-		<legend>Lexicon definition search</legend>
-		<table>
-			<tr>
-				<td>Strong</td>
-				<td><input type="text" class="strongSearch" /></td>
-			</tr>
-		</table>
-	</fieldset>
-
-	<fieldset>
-		<legend>Subject search</legend>
-		<table class="subjectSearchTable" style="width: 100%">
-			<tr>
-				<td>Subject</td>
-				<td><input type="text" class="subjectText" /></td>
-				<td>		
-					<span class="passageButtons"> 
-						<input type="button" class="subjectClear resetSearch" value="Clear" title="Clears the search criteria" />
-						<input type="button" class="subjectSearch" value="Search" title="This will search for subjects matching the selected criteria" />
-					</span>
-				</td>
-			</tr>
-			<tr>
-				<td colspan="3"><hr /></td>
-			</tr>
-			<tr>
-				<td>Query syntax</td>
-				<td colspan="3"><input type="text" class="subjectQuerySyntax querySyntax" /></td>
-			</tr>
-			<tr>
-				<td colspan="4"><hr /></td>
-			</tr>
-		</table>
-				
-		<jsp:include page="search_toolbar.jsp?namespace=subject&context=false" />
 		
+		
+		<div class="searchButtonsAlign">
+			<input type="button" class="originalClear " value="Clear" title="Reset the form" />
+			<input type="button" class="originalSearchButton " value="Search" title="Search for the keyed-in word" />
+		</div>
+		
+		<hr level="2" />
+		
+		<div level="2">
+			Query syntax&nbsp;
+			<input type="text" class="originalQuerySyntax querySyntax" size="45" />
+		</div>
+		<hr />
+		
+		
+		<jsp:include page="search_toolbar.jsp?namespace=original&context=true&bibleVersions=true" />
+	</fieldset>
+
+	<fieldset name="SEARCH_SUBJECT">
+		<legend>Subject search</legend>
+		<table class="subjectSearchTable">
+			<tr>
+				<td>Subject&nbsp;</td>
+				<td><input type="text" class="subjectText" /></td>
+			</tr>
+			<tr level="2">
+				<td>Query Syntax&nbsp;</td>
+				<td><input type="text" class="subjectQuerySyntax querySyntax subjectText" /></td>
+			</tr>
+			
+		</table>
+
+		<div> 
+			<input type="button" class="subjectClear resetSearch" value="Clear" title="Clears the search criteria" />
+			<input type="button" class="subjectSearch" value="Search" title="This will search for subjects matching the selected criteria" />
+		</div>
+					
+		<hr level="2" />
+		
+
+		<hr />
+				
+		<jsp:include page="search_toolbar.jsp?namespace=subject&context=false&bibleVersions=false" />
 	</fieldset>
 
 
-	<fieldset>
+<%-- 	
+	<fieldset name="SEARCH_TIMELINE">
 		<legend>Timeline search</legend>
 		<table style="width: 100%">
 			<tr>
@@ -354,4 +310,5 @@
 			<input type="hidden" class="timelineSearchDescription" />
 		</table>
 	</fieldset>
+--%>
 	</div>

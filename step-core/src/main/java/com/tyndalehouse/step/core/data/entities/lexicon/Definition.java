@@ -44,6 +44,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
@@ -70,8 +71,17 @@ public class Definition implements Serializable, Cloneable {
     @JoinTable(name = "definition_relationships", joinColumns = { @JoinColumn(name = "strongNumber") }, inverseJoinColumns = { @JoinColumn(name = "other_strong") })
     private List<Definition> similarStrongs;
 
-    private String lsjWordBeta;
-    private String lsjWordBetaUnaccented;
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, targetEntity = Translation.class, mappedBy = "lexiconDefinition")
+    private List<Translation> translations;
+
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, targetEntity = SpecificForm.class, mappedBy = "strongNumber")
+    @JoinColumn(name = "raw_strong_number")
+    private List<SpecificForm> specificForms;
+
+    private String alternativeTranslit1;
+    private String alternativeTranslit1Unaccented;
 
     @Lob
     private String lsjDefs;
@@ -87,12 +97,17 @@ public class Definition implements Serializable, Cloneable {
     private String relatedNos;
 
     @Lob
-    private String mShortDef;
+    private String shortDef;
     @Lob
-    private String mMedDef;
+    private String mediumDef;
     private String stepGloss;
     private String stepTransliteration;
     private String unaccentedStepTransliteration;
+    /**
+     * Indicates that this word should not be returned when carrying out searches
+     */
+    @Column(nullable = false)
+    private Boolean blacklisted;
 
     /**
      * @param id the id to set
@@ -109,10 +124,10 @@ public class Definition implements Serializable, Cloneable {
     }
 
     /**
-     * @param lsjWordBeta the lsjWordBeta to set
+     * @param alternativeTranslit1 the alternativeTranslit1 to set
      */
-    public void setLsjWordBeta(final String lsjWordBeta) {
-        this.lsjWordBeta = lsjWordBeta;
+    public void setAlternativeTranslit1(final String alternativeTranslit1) {
+        this.alternativeTranslit1 = alternativeTranslit1;
     }
 
     /**
@@ -158,17 +173,17 @@ public class Definition implements Serializable, Cloneable {
     }
 
     /**
-     * @param mShortDefinition the mShortDef to set
+     * @param shortDef the mShortDef to set
      */
-    public void setMShortDef(final String mShortDefinition) {
-        this.mShortDef = mShortDefinition;
+    public void setShortDef(final String shortDef) {
+        this.shortDef = shortDef;
     }
 
     /**
-     * @param mMedDefinition the mMedDef to set
+     * @param mediumDef the mMedDef to set
      */
-    public void setMMedDef(final String mMedDefinition) {
-        this.mMedDef = mMedDefinition;
+    public void setMediumDef(final String mediumDef) {
+        this.mediumDef = mediumDef;
     }
 
     /**
@@ -200,10 +215,10 @@ public class Definition implements Serializable, Cloneable {
     }
 
     /**
-     * @return the lsjWordBeta
+     * @return the alternativeTranslit1
      */
-    public String getLsjWordBeta() {
-        return this.lsjWordBeta;
+    public String getAlternativeTranslit1() {
+        return this.alternativeTranslit1;
     }
 
     /**
@@ -251,15 +266,15 @@ public class Definition implements Serializable, Cloneable {
     /**
      * @return the mShortDef
      */
-    public String getMShortDef() {
-        return this.mShortDef;
+    public String getShortDef() {
+        return this.shortDef;
     }
 
     /**
      * @return the mMedDef
      */
-    public String getMMedDef() {
-        return this.mMedDef;
+    public String getMediumDef() {
+        return this.mediumDef;
     }
 
     /**
@@ -305,17 +320,17 @@ public class Definition implements Serializable, Cloneable {
     }
 
     /**
-     * @return the lsjWordBetaUnaccented
+     * @return the alternativeTranslit1Unaccented
      */
-    public String getLsjWordBetaUnaccented() {
-        return this.lsjWordBetaUnaccented;
+    public String getAlternativeTranslit1Unaccented() {
+        return this.alternativeTranslit1Unaccented;
     }
 
     /**
-     * @param lsjWordBetaUnaccented the lsjWordBetaUnaccented to set
+     * @param alternativeTranslit1Unaccented the alternativeTranslit1Unaccented to set
      */
-    public void setLsjWordBetaUnaccented(final String lsjWordBetaUnaccented) {
-        this.lsjWordBetaUnaccented = lsjWordBetaUnaccented;
+    public void setAlternativeTranslit1Unaccented(final String alternativeTranslit1Unaccented) {
+        this.alternativeTranslit1Unaccented = alternativeTranslit1Unaccented;
     }
 
     /**
@@ -330,5 +345,54 @@ public class Definition implements Serializable, Cloneable {
             codes.add(new ShortLexiconDefinition(l.getStrongNumber(), l.getAccentedUnicode()));
         }
         return codes;
+    }
+
+    /**
+     * @return the translations
+     */
+    public List<Translation> getTranslations() {
+        return this.translations;
+    }
+
+    /**
+     * @param translations the translations to set
+     */
+    public void setTranslations(final List<Translation> translations) {
+        this.translations = translations;
+    }
+
+    /**
+     * @return the blacklisted
+     */
+    public Boolean getBlacklisted() {
+        return this.blacklisted;
+    }
+
+    /**
+     * @param blacklisted the blacklisted to set
+     */
+    public void setBlacklisted(final Boolean blacklisted) {
+        this.blacklisted = blacklisted;
+    }
+
+    /**
+     * @return the specificForms
+     */
+    public List<SpecificForm> getSpecificForms() {
+        return this.specificForms;
+    }
+
+    /**
+     * @param specificForms the specificForms to set
+     */
+    public void setSpecificForms(final List<SpecificForm> specificForms) {
+        this.specificForms = specificForms;
+    }
+
+    /**
+     * @return the unaccentedStepTransliteration
+     */
+    public String getUnaccentedStepTransliteration() {
+        return this.unaccentedStepTransliteration;
     }
 }

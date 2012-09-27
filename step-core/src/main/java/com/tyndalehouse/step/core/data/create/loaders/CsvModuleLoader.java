@@ -47,6 +47,7 @@ import au.com.bytecode.opencsv.bean.CsvToBean;
 import au.com.bytecode.opencsv.bean.MappingStrategy;
 
 import com.avaje.ebean.EbeanServer;
+import com.tyndalehouse.step.core.data.create.LoaderTransaction;
 import com.tyndalehouse.step.core.data.create.loaders.editors.CaseEditor;
 import com.tyndalehouse.step.core.data.create.loaders.editors.FunctionEditor;
 import com.tyndalehouse.step.core.data.create.loaders.editors.GenderEditor;
@@ -100,10 +101,12 @@ public class CsvModuleLoader<T> extends AbstractClasspathBasedModuleLoader<T> {
      * @param resourcePath the resource path to load
      * @param columnMappingStrategy the strategy to use to map the entities
      * @param action the action to use to post process.
+     * @param transaction loader transaction
      */
     public CsvModuleLoader(final EbeanServer ebean, final String resourcePath,
-            final MappingStrategy<T> columnMappingStrategy, final PostProcessingAction<T> action) {
-        super(ebean, resourcePath, action);
+            final MappingStrategy<T> columnMappingStrategy, final PostProcessingAction<T> action,
+            final LoaderTransaction transaction) {
+        super(ebean, resourcePath, action, transaction);
         this.columnMappingStrategy = columnMappingStrategy;
     }
 
@@ -111,21 +114,26 @@ public class CsvModuleLoader<T> extends AbstractClasspathBasedModuleLoader<T> {
      * @param ebean the ebean server
      * @param resourcePath the resource path to load
      * @param columnMappingStrategy the strategy to use to map the entities
-     * @param separator specifies the delimited found in the "c"sv file (e.g. \t)
+     * @param separator specifies the delimited found in the "c"sv file (e.g. \t) * @param transaction loader
+     *            transaction
+     * @param transaction loader transaction
      */
     public CsvModuleLoader(final EbeanServer ebean, final String resourcePath,
-            final MappingStrategy<T> columnMappingStrategy, final char separator) {
-        this(ebean, resourcePath, columnMappingStrategy, null);
+            final MappingStrategy<T> columnMappingStrategy, final char separator,
+            final LoaderTransaction transaction) {
+        this(ebean, resourcePath, columnMappingStrategy, null, transaction);
         this.separator = separator;
     }
 
     /**
      * @param ebean the data persistence to write to
      * @param resourcePath the path of the resource to load
-     * @param clazz the type of resource to load
+     * @param clazz the type of resource to load * @param transaction loader transaction
+     * @param transaction loader transaction
      */
-    public CsvModuleLoader(final EbeanServer ebean, final String resourcePath, final Class<T> clazz) {
-        this(ebean, resourcePath, new HeaderNameMappingStrategy<T>(clazz), null);
+    public CsvModuleLoader(final EbeanServer ebean, final String resourcePath, final Class<T> clazz,
+            final LoaderTransaction transaction) {
+        this(ebean, resourcePath, new HeaderNameMappingStrategy<T>(clazz), null, transaction);
     }
 
     /**
@@ -133,10 +141,11 @@ public class CsvModuleLoader<T> extends AbstractClasspathBasedModuleLoader<T> {
      * @param resourcePath the path of the resource to load
      * @param clazz the type of resource to load
      * @param action the post processing action
+     * @param transaction loader transaction
      */
     public CsvModuleLoader(final EbeanServer ebean, final String resourcePath, final Class<T> clazz,
-            final PostProcessingAction<T> action) {
-        this(ebean, resourcePath, new HeaderNameMappingStrategy<T>(clazz), action);
+            final PostProcessingAction<T> action, final LoaderTransaction transaction) {
+        this(ebean, resourcePath, new HeaderNameMappingStrategy<T>(clazz), action, transaction);
     }
 
     /**
@@ -144,10 +153,11 @@ public class CsvModuleLoader<T> extends AbstractClasspathBasedModuleLoader<T> {
      * @param resourcePath the path of the resource to load
      * @param clazz the type of resource to load
      * @param separator the csv separator, e.g. \t
+     * @param transaction loader transaction
      */
     public CsvModuleLoader(final EbeanServer ebean, final String resourcePath, final Class<T> clazz,
-            final char separator) {
-        this(ebean, resourcePath, clazz);
+            final char separator, final LoaderTransaction transaction) {
+        this(ebean, resourcePath, clazz, transaction);
         this.separator = separator;
     }
 

@@ -31,13 +31,17 @@ public class SpecificFormsLoader extends AbstractClasspathBasedModuleLoader<Spec
     private static final String INSERT_LEXICON = "insert into specific_form (raw_form , unaccented_form , transliteration , raw_strong_number )"
             + "select accented_unicode, unaccented_unicode, step_transliteration, strong_number from definition where accented_unicode not in (select raw_form from specific_form)";
     private static final Pattern QUOTE_ESCAPE = Pattern.compile("'");
+    private final LoaderTransaction transaction;
 
     /**
      * @param ebean the persistence server
      * @param resourcePath the file
+     * @param transaction the transaction
      */
-    public SpecificFormsLoader(final EbeanServer ebean, final String resourcePath) {
-        super(ebean, resourcePath);
+    public SpecificFormsLoader(final EbeanServer ebean, final String resourcePath,
+            final LoaderTransaction transaction) {
+        super(ebean, resourcePath, transaction);
+        this.transaction = transaction;
     }
 
     @Override
@@ -77,11 +81,13 @@ public class SpecificFormsLoader extends AbstractClasspathBasedModuleLoader<Spec
         final String query = sql.toString();
         if (query.length() > INSERT_INTO_SPECIFIC_FORMS.length()) {
             getEbean().execute(new DefaultSqlUpdate(sql.toString()));
-            getEbean().currentTransaction().flushBatch();
+            this.transaction.flushCommitAndContinue();
         }
 
         // tie in the lexicon
         getEbean().execute(new DefaultSqlUpdate(INSERT_LEXICON));
+        this.transaction.flushCommitAndContinue();
+
         LOGGER.info("Finished loading specific forms");
         return new ArrayList<SpecificForm>();
     }

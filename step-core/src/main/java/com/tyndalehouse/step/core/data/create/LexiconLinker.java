@@ -29,13 +29,15 @@ public class LexiconLinker {
             + "select strongnumber , other_strong from definition_relationships dr where "
             + "concat(strongnumber, other_strong) not in (select concat(other_strong, strongnumber) from definition_relationships);";
     private final EbeanServer ebean;
+    private final LoaderTransaction transaction;
 
     /**
      * @param ebean the ebean server
+     * @param transaction
      */
-    public LexiconLinker(final EbeanServer ebean) {
+    public LexiconLinker(final EbeanServer ebean, final LoaderTransaction transaction) {
         this.ebean = ebean;
-
+        this.transaction = transaction;
     }
 
     /**
@@ -43,7 +45,7 @@ public class LexiconLinker {
      */
     public void processStrongLinks() {
         // flush everything so far
-        this.ebean.currentTransaction().flushBatch();
+        this.transaction.flushCommitAndContinue();
 
         // now we need to post-process all of the fields
         final List<Definition> allDefs = this.ebean.find(Definition.class)
@@ -120,7 +122,7 @@ public class LexiconLinker {
                     total += links;
                     links = 0;
                 }
-                this.ebean.currentTransaction().flushBatch();
+                this.transaction.flushCommitAndContinue();
             }
         }
     }

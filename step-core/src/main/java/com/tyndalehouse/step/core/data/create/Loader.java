@@ -47,8 +47,6 @@ import org.slf4j.LoggerFactory;
 import au.com.bytecode.opencsv.bean.HeaderColumnNameTranslateMappingStrategy;
 
 import com.avaje.ebean.EbeanServer;
-import com.avaje.ebean.Transaction;
-import com.avaje.ebean.TxIsolation;
 import com.tyndalehouse.step.core.data.create.loaders.CsvModuleLoader;
 import com.tyndalehouse.step.core.data.create.loaders.CustomTranslationCsvModuleLoader;
 import com.tyndalehouse.step.core.data.create.loaders.PostProcessingAction;
@@ -100,6 +98,7 @@ public class Loader {
     private final JSwordPassageService jsword;
     private final Properties coreProperties;
     private final JSwordModuleService jswordModule;
+    private final LoaderTransaction transaction;
 
     /**
      * The loader is given a connection source to load the data
@@ -116,6 +115,7 @@ public class Loader {
         this.jswordModule = jswordModule;
         this.ebean = ebean;
         this.coreProperties = coreProperties;
+        this.transaction = new LoaderTransaction(ebean, 1000);
     }
 
     /**
@@ -133,10 +133,10 @@ public class Loader {
 
         // set undo log
         try {
-            this.ebean.createSqlUpdate("SET UNDO_LOG 0");
+            this.ebean.createSqlUpdate("SET UNDO_LOG 0").execute();
             loadData();
         } finally {
-            this.ebean.createSqlUpdate("SET UNDO_LOG 1");
+            this.ebean.createSqlUpdate("SET UNDO_LOG 1").execute();
         }
     }
 
@@ -167,24 +167,21 @@ public class Loader {
      */
     private void loadData() {
         LOGGER.debug("Loading initial data");
-        final Transaction transaction = this.ebean.beginTransaction(TxIsolation.READ_UNCOMMITTED);
-        transaction.setBatchMode(true);
-        transaction.setBatchSize(2000);
+
+        this.transaction.openNewBatchTransaction();
 
         try {
             loadHotSpots();
             loadTimeline();
             loadOpenBibleGeography();
-            loadDictionaryArticles();
+            // loadDictionaryArticles();
             loadRobinsonMorphology();
             loadLexiconDefinitions();
             loadSpecificForms();
             // loadLexicon();
         } finally {
             LOGGER.info("Committing batch...");
-            this.ebean.currentTransaction().flushBatch();
-            LOGGER.info("Committing transaction...");
-            this.ebean.commitTransaction();
+            this.transaction.commitAndEnd();
         }
 
         LOGGER.debug("Creating indexes");
@@ -203,7 +200,6 @@ public class Loader {
             this.ebean.createSqlUpdate(
                     format(INDEX_CREATE, INDEXES[ii][0] + (i++), INDEXES[ii][1], INDEXES[ii][2])).execute();
         }
-
     }
 
     /**
@@ -216,10 +212,11 @@ public class Loader {
             LOGGER.debug("Loading hotspots");
 
             return new CsvModuleLoader<HotSpot>(this.ebean,
-                    this.coreProperties.getProperty("test.data.path.timeline.hotspots"), HotSpot.class)
-                    .init();
+                    this.coreProperties.getProperty("test.data.path.timeline.hotspots"), HotSpot.class,
+                    this.transaction).init();
         } finally {
-            this.ebean.currentTransaction().flushBatch();
+            this.transaction.flushCommitAndContinue();
+
         }
     }
 
@@ -248,11 +245,10 @@ public class Loader {
 
                             entity.initialise();
                         }
-                    }).init();
+                    }, this.transaction).init();
         } finally {
-            this.ebean.currentTransaction().flushBatch();
+            this.transaction.flushCommitAndContinue();
         }
-
     }
 
     /**
@@ -344,11 +340,10 @@ public class Loader {
         try {
             return new CustomTranslationCsvModuleLoader<TimelineEvent>(this.ebean,
                     this.coreProperties.getProperty("test.data.path.timeline.events.directory"),
-                    TimelineEvent.class, new TimelineEventTranslation(this.jsword)).init();
+                    TimelineEvent.class, new TimelineEventTranslation(this.jsword), this.transaction).init();
         } finally {
-            this.ebean.currentTransaction().flushBatch();
+            this.transaction.flushCommitAndContinue();
         }
-
     }
 
     /**
@@ -361,12 +356,10 @@ public class Loader {
         try {
             return new CustomTranslationCsvModuleLoader<GeoPlace>(this.ebean,
                     this.coreProperties.getProperty("test.data.path.geography.openbible"), GeoPlace.class,
-                    new OpenBibleDataTranslation(this.jsword), '\t').init();
+                    new OpenBibleDataTranslation(this.jsword), '\t', this.transaction).init();
         } finally {
-            this.ebean.currentTransaction().flushBatch();
-
+            this.transaction.flushCommitAndContinue();
         }
-
     }
 
     /**
@@ -378,10 +371,10 @@ public class Loader {
         LOGGER.debug("Loading dictionary articles");
         try {
             return new DictionaryLoader(this.ebean, this.jsword,
-                    this.coreProperties.getProperty("test.data.path.dictionary.easton")).init();
+                    this.coreProperties.getProperty("test.data.path.dictionary.easton"), this.transaction)
+                    .init();
         } finally {
-            this.ebean.currentTransaction().flushBatch();
-
+            this.transaction.flushCommitAndContinue();
         }
 
     }
@@ -394,16 +387,17 @@ public class Loader {
     int loadLexiconDefinitions() {
         try {
             int count = new LexiconLoader(this.ebean,
-                    this.coreProperties.getProperty("test.data.path.lexicon.definitions.greek")).init();
+                    this.coreProperties.getProperty("test.data.path.lexicon.definitions.greek"),
+                    this.transaction).init();
             count += new LexiconLoader(this.ebean,
-                    this.coreProperties.getProperty("test.data.path.lexicon.definitions.hebrew")).init();
+                    this.coreProperties.getProperty("test.data.path.lexicon.definitions.hebrew"),
+                    this.transaction).init();
 
-            new LexiconLinker(this.ebean).processStrongLinks();
+            new LexiconLinker(this.ebean, this.transaction).processStrongLinks();
 
             return count;
         } finally {
-            this.ebean.currentTransaction().flushBatch();
-
+            this.transaction.flushCommitAndContinue();
         }
     }
 
@@ -416,10 +410,10 @@ public class Loader {
         LOGGER.debug("Loading lexical forms");
         try {
             return new SpecificFormsLoader(this.ebean,
-                    this.coreProperties.getProperty("test.data.path.lexicon.forms")).init();
+                    this.coreProperties.getProperty("test.data.path.lexicon.forms"), this.transaction).init();
         } finally {
             LOGGER.debug("Flushing batch from specific forms");
-            this.ebean.currentTransaction().flushBatch();
+            this.transaction.flushCommitAndContinue();
             LOGGER.debug("Batch flushed");
         }
     }

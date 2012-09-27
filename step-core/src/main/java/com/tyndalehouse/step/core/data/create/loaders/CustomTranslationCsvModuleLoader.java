@@ -38,6 +38,7 @@ import java.util.List;
 import au.com.bytecode.opencsv.CSVReader;
 
 import com.avaje.ebean.EbeanServer;
+import com.tyndalehouse.step.core.data.create.LoaderTransaction;
 import com.tyndalehouse.step.core.data.create.loaders.translations.CsvTranslation;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 
@@ -56,10 +57,11 @@ public class CustomTranslationCsvModuleLoader<T> extends CsvModuleLoader<T> {
      * @param resourcePath the path to the resource to be loaded
      * @param clazz the class of the object we wish to load
      * @param translation to translation to apply in order to obtain our entities
+     * @param transaction the transaction for the loader
      */
     public CustomTranslationCsvModuleLoader(final EbeanServer server, final String resourcePath,
-            final Class<T> clazz, final CsvTranslation<T> translation) {
-        super(server, resourcePath, clazz);
+            final Class<T> clazz, final CsvTranslation<T> translation, final LoaderTransaction transaction) {
+        super(server, resourcePath, clazz, transaction);
         this.translation = translation;
     }
 
@@ -69,10 +71,12 @@ public class CustomTranslationCsvModuleLoader<T> extends CsvModuleLoader<T> {
      * @param clazz the class of the object we wish to load
      * @param translation to translation to apply in order to obtain our entities
      * @param csvSeparator the separator if the default of ',' is not desired
+     * @param transaction the transaction for the loader
      */
     public CustomTranslationCsvModuleLoader(final EbeanServer server, final String resourcePath,
-            final Class<T> clazz, final CsvTranslation<T> translation, final char csvSeparator) {
-        super(server, resourcePath, clazz, csvSeparator);
+            final Class<T> clazz, final CsvTranslation<T> translation, final char csvSeparator,
+            final LoaderTransaction transaction) {
+        super(server, resourcePath, clazz, csvSeparator, transaction);
         this.translation = translation;
     }
 

@@ -74,15 +74,19 @@ public class LexiconLoader extends AbstractClasspathBasedModuleLoader<Definition
     private Definition currentDefinition;
     private Map<String, Method> methodMappings;
     private final boolean isGreek;
+    private final LoaderTransaction transaction;
 
     /**
      * Loads up dictionary items
      * 
      * @param ebean the backend server
      * @param resourcePath the classpath to the data
+     * @param transaction transaction manager
      */
-    public LexiconLoader(final EbeanServer ebean, final String resourcePath) {
-        super(ebean, resourcePath);
+    public LexiconLoader(final EbeanServer ebean, final String resourcePath,
+            final LoaderTransaction transaction) {
+        super(ebean, resourcePath, transaction);
+        this.transaction = transaction;
         this.isGreek = resourcePath.endsWith("greek.txt");
         initMappings();
     }
@@ -152,8 +156,8 @@ public class LexiconLoader extends AbstractClasspathBasedModuleLoader<Definition
             this.count++;
 
             if (this.count % 2000 == 0) {
-                // getEbean().commitTransaction();
-                // getEbean().currentTransaction().flushBatch();
+                this.transaction.flushCommitAndContinue();
+
                 LOGGER.info("Saved [{}] lexical entries.", this.count);
             }
         }

@@ -48,6 +48,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.avaje.ebean.EbeanServer;
+import com.tyndalehouse.step.core.data.create.LoaderTransaction;
 import com.tyndalehouse.step.core.data.create.ModuleLoader;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 
@@ -62,14 +63,18 @@ public abstract class AbstractClasspathBasedModuleLoader<T> implements ModuleLoa
     private final String resourcePath;
     private final EbeanServer ebean;
     private PostProcessingAction<T> postProcessingAction;
+    private final LoaderTransaction transaction;
 
     /**
      * @param ebean the ebean server
      * @param resourcePath the resource path to load
+     * @param transaction the transaction for the loader
      */
-    public AbstractClasspathBasedModuleLoader(final EbeanServer ebean, final String resourcePath) {
+    public AbstractClasspathBasedModuleLoader(final EbeanServer ebean, final String resourcePath,
+            final LoaderTransaction transaction) {
         this.ebean = ebean;
         this.resourcePath = resourcePath;
+        this.transaction = transaction;
     }
 
     /**
@@ -78,10 +83,11 @@ public abstract class AbstractClasspathBasedModuleLoader<T> implements ModuleLoa
      * @param ebean the ebean server
      * @param resourcePath resourcePath of the file containing all entities
      * @param action the action that will be run after loading
+     * @param transaction the transaction for the loader
      */
     public AbstractClasspathBasedModuleLoader(final EbeanServer ebean, final String resourcePath,
-            final PostProcessingAction<T> action) {
-        this(ebean, resourcePath);
+            final PostProcessingAction<T> action, final LoaderTransaction transaction) {
+        this(ebean, resourcePath, transaction);
         this.postProcessingAction = action;
     }
 
@@ -92,8 +98,9 @@ public abstract class AbstractClasspathBasedModuleLoader<T> implements ModuleLoa
 
         final List<T> entities = readDataFile();
 
-        this.ebean.currentTransaction().flushBatch();
+        this.transaction.flushCommitAndContinue();
         postProcess(entities);
+        this.transaction.flushCommitAndContinue();
 
         final long duration = System.currentTimeMillis() - currentTime;
         LOG.info("Took {}ms to load {} entities from [{}]",

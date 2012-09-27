@@ -93,9 +93,11 @@ public class DictionaryLoader extends AbstractClasspathBasedModuleLoader<Diction
      * @param ebean the backend server
      * @param jsword the service to invoke sword modules
      * @param resourcePath the classpath to the data
+     * @param transaction transaction manager for loader
      */
-    public DictionaryLoader(final EbeanServer ebean, final JSwordPassageService jsword, final String resourcePath) {
-        super(ebean, resourcePath);
+    public DictionaryLoader(final EbeanServer ebean, final JSwordPassageService jsword,
+            final String resourcePath, final LoaderTransaction transaction) {
+        super(ebean, resourcePath, transaction);
         this.jsword = jsword;
     }
 

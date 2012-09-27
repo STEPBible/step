@@ -56,8 +56,8 @@ public class DictionaryLoaderTest {
      */
     @Test
     public void testGetFieldContent() {
-        assertEquals("hi you", new DictionaryLoader(null, null, null).parseFieldContent("@SOME_FIELD_NAME",
-                "SOME_FIELD_NAME: hi you"));
+        assertEquals("hi you", new DictionaryLoader(null, null, null, null).parseFieldContent(
+                "@SOME_FIELD_NAME", "SOME_FIELD_NAME: hi you"));
     }
 
     /**
@@ -65,7 +65,7 @@ public class DictionaryLoaderTest {
      */
     @Test
     public void testGetFieldHeadwordInstance() {
-        final DictionaryLoader dl = new DictionaryLoader(null, null, null);
+        final DictionaryLoader dl = new DictionaryLoader(null, null, null, null);
         assertEquals(1, dl.parseHeadwordInstance("SomeWord"));
         assertEquals(1, dl.parseHeadwordInstance("SomeWord ()"));
         assertEquals(1, dl.parseHeadwordInstance("SomeWord )"));
@@ -79,7 +79,7 @@ public class DictionaryLoaderTest {
      */
     @Test
     public void testParseArticle() {
-        final DictionaryLoader dl = new DictionaryLoader(null, null, null);
+        final DictionaryLoader dl = new DictionaryLoader(null, null, null, null);
         final DictionaryArticle article = new DictionaryArticle();
         article.setSource(SourceType.EASTON);
 
@@ -111,7 +111,7 @@ public class DictionaryLoaderTest {
      */
     @Test
     public void testMultipleExpressions() {
-        final DictionaryLoader dl = new DictionaryLoader(null, null, null);
+        final DictionaryLoader dl = new DictionaryLoader(null, null, null, null);
         final DictionaryArticle article = new DictionaryArticle();
         article.setSource(SourceType.EASTON);
 

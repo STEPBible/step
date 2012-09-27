@@ -133,10 +133,10 @@ public class Loader {
 
         // set undo log
         try {
-            this.ebean.createSqlUpdate("SET UNDO_LOG 0").execute();
+            // this.ebean.createSqlUpdate("SET UNDO_LOG 0").execute();
             loadData();
         } finally {
-            this.ebean.createSqlUpdate("SET UNDO_LOG 1").execute();
+            // this.ebean.createSqlUpdate("SET UNDO_LOG 1").execute();
         }
     }
 

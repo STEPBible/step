@@ -1,5 +1,6 @@
 package com.tyndalehouse.step.core.service.impl;
 
+import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
 import static com.tyndalehouse.step.core.utils.ValidateUtils.notBlank;
 
 import java.util.ArrayList;
@@ -133,6 +134,10 @@ public class VocabularyServiceImpl implements VocabularyService {
      * @return the list of all keys to lookup
      */
     List<String> getKeys(final String vocabIdentifiers) {
+        if (isBlank(vocabIdentifiers)) {
+            return new ArrayList<String>(0);
+        }
+
         final List<String> idList = new ArrayList<String>();
         final String[] ids = vocabIdentifiers.split(STRONG_SEPARATORS);
 

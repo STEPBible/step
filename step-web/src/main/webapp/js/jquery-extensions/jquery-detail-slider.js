@@ -43,7 +43,7 @@ $(function() {
     	    var value = step.state._storeAndRetrieveCookieState(passageId, "slideView-" + this.options.key);
     	    
     	    if(value == undefined) {
-    	        value = step.state._storeAndRetrieveCookieState(passageId, "slideView-" +this.options.key, 0);
+    	        value = step.state._storeAndRetrieveCookieState(passageId, "slideView-" +this.options.key, 0, false);
     	    }
     	    return parseInt(value);
     	},

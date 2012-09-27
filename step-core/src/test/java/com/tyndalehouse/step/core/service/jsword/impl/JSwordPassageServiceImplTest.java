@@ -440,7 +440,7 @@ public class JSwordPassageServiceImplTest {
     @Test
     public void testInterleave() throws BookException, NoSuchKeyException, JDOMException, IOException {
         final XMLOutputter xmlOutputter = new XMLOutputter(Format.getPrettyFormat());
-        final String ref = "John 4";
+        final String ref = "John 4:1";
 
         // do the test
         final JSwordPassageServiceImpl jsi = new JSwordPassageServiceImpl(
@@ -449,12 +449,12 @@ public class JSwordPassageServiceImplTest {
         final String[] versions = new String[] { "Byz", "Tisch" };
         final BookData data = new BookData(new Book[] { Books.installed().getBook(versions[0]),
                 Books.installed().getBook(versions[1]) }, Books.installed().getBook(versions[0]).getKey(ref),
-                false);
+                true);
 
         LOGGER.debug("Original is:\n {}", xmlOutputter.outputString(data.getOsisFragment()));
 
         final OsisWrapper interleavedVersions = jsi.getInterleavedVersions(versions, ref,
-                new ArrayList<LookupOption>(), InterlinearMode.INTERLEAVED);
+                new ArrayList<LookupOption>(), InterlinearMode.COLUMN_COMPARE);
 
         final SAXBuilder sb = new SAXBuilder();
         final Document d = sb.build(new StringReader(interleavedVersions.getValue()));
@@ -503,7 +503,7 @@ public class JSwordPassageServiceImplTest {
      */
     @Test
     public void testPrettyXml() throws BookException, NoSuchKeyException, JDOMException, IOException {
-        final String version = "KJV";
+        final String version = "WLC";
         final String ref = "Gen 1:1";
         final Book currentBook = Books.installed().getBook(version);
         final BookData bookData = new BookData(currentBook, currentBook.getKey(ref));

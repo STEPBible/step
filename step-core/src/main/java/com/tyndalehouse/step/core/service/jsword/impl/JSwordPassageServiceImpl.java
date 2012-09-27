@@ -50,9 +50,11 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -605,13 +607,14 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
             books[ii] = this.versificationService.getBookFromVersion(versions[ii]);
         }
 
+        validateInterleavedVersions(displayMode, books);
+
         try {
             final Key key = books[0].getKey(reference);
             final Versification v11n = this.versificationService.getVersificationForVersion(books[0]);
             normalize(key, v11n);
 
-            final BookData data = new BookData(books, key, displayMode == InterlinearMode.COLUMN_COMPARE
-                    || displayMode == InterlinearMode.INTERLEAVED_COMPARE);
+            final BookData data = new BookData(books, key, isComparingMode(displayMode));
 
             setUnaccenter(data, displayMode);
 
@@ -637,6 +640,39 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
         } catch (final NoSuchKeyException e) {
             throw new StepInternalException(e.getMessage(), e);
         }
+    }
+
+    /**
+     * Checks that if comparing, we are looking at versions of the same language, or at least two of them
+     * 
+     * @param displayMode the display mode
+     * @param books the books that have been found
+     */
+    private void validateInterleavedVersions(final InterlinearMode displayMode, final Book[] books) {
+        final Set<String> languageCodes = new HashSet<String>(books.length);
+        if (isComparingMode(displayMode)) {
+            // check that we have at least two books of the same language
+            for (final Book b : books) {
+                final String code = b.getLanguage().getCode();
+                if (languageCodes.contains(code)) {
+                    return;
+                }
+                // otherwise we add and hope another version turns up
+                languageCodes.add(code);
+            }
+            throw new StepInternalException(
+                    "Cannot compare the selected versions as they are written in different languages");
+        }
+
+    }
+
+    /**
+     * @param displayMode the display mode of the passage
+     * @return true if we are comparing
+     */
+    private boolean isComparingMode(final InterlinearMode displayMode) {
+        return displayMode == InterlinearMode.COLUMN_COMPARE
+                || displayMode == InterlinearMode.INTERLEAVED_COMPARE;
     }
 
     /**

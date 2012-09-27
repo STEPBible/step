@@ -212,7 +212,7 @@ public class InterlinearProviderImpl implements InterlinearProvider {
             final DualKey<String, String> key = new DualKey<String, String>(strong, verseNumber);
 
             final List<String> list = this.limitedAccuracy.get(key);
-            if (list != null && list.isEmpty()) {
+            if (list != null && !list.isEmpty()) {
                 return list.get(0);
             }
         }

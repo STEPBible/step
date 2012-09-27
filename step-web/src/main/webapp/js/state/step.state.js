@@ -169,16 +169,16 @@ step.state = {
 
         
         var passageIds = step.util.getAllPassageIds();
+
+        //add the sliders to every fieldset - this needs to happen before the passages are restored
+        $("fieldset").detailSlider();
+
         for ( var i in passageIds) {
             step.menu.tickMenuItem(step.menu.getMenuItem(this.activeSearch(i), i));
             step.state.passage.restore(i);
             step.state.original.restore(i);
             this._showRelevantFieldSet(i);
         }
-        
-        //add the sliders to every fieldset
-        $("fieldset").detailSlider();
-        console.log("DONEONEONEONEONEON");
         
         step.util.ui.initSearchToolbar();
     },
@@ -245,7 +245,7 @@ step.state = {
     },
 
     _storeAndRetrieveCookieState : function(passageId, key, obj, fireChange, changeHandler) {
-        var originalValue = $.cookie("step.passage." + passageId + "." + key);
+        var originalValue = $.localStore("step.passage." + passageId + "." + key);
         var fired = false;
         
         if (obj != null) {
@@ -256,21 +256,19 @@ step.state = {
 
             if (newObj != originalValue || fireChange == true) {
                 // store first
-                $.cookie("step.passage." + passageId + "." + key, obj);
+                $.localStore("step.passage." + passageId + "." + key, obj);
                 if (fireChange == null || fireChange == true) {
                     step.state._fireStateChanged(passageId);
                     fired = true;
                 }
 
                 // then return
-                var storedValue = $.cookie("step.passage." + passageId + "." + key);
+                var storedValue = $.localStore("step.passage." + passageId + "." + key);
                 if(changeHandler) { 
                     changeHandler(fired);
                 }
                 return storedValue;
             }
-            
-            
         }
 
         if(changeHandler) { 

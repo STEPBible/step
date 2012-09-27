@@ -123,12 +123,6 @@ public class LexiconLoader extends AbstractClasspathBasedModuleLoader<Definition
         this.currentDefinition
                 .setUnaccentedStepTransliteration(adaptForUnaccentedTransliteration(this.currentDefinition
                         .getStepTransliteration()));
-
-        if (this.count % 2000 == 0) {
-            // getEbean().commitTransaction();
-            // this.ebean.currentTransaction().flushBatch();
-            LOGGER.info("Saved [{}] transliterations.", this.count);
-        }
     }
 
     /**
@@ -156,6 +150,12 @@ public class LexiconLoader extends AbstractClasspathBasedModuleLoader<Definition
             processLowerCasings();
             getEbean().save(this.currentDefinition);
             this.count++;
+
+            if (this.count % 2000 == 0) {
+                // getEbean().commitTransaction();
+                // getEbean().currentTransaction().flushBatch();
+                LOGGER.info("Saved [{}] lexical entries.", this.count);
+            }
         }
     }
 
@@ -241,7 +241,7 @@ public class LexiconLoader extends AbstractClasspathBasedModuleLoader<Definition
             this.methodMappings.put("@UnicodeAccented",
                     defClass.getDeclaredMethod("setAccentedUnicode", String.class));
 
-            this.methodMappings.put("@LSJ-Defs", defClass.getDeclaredMethod("setLsjDefs", String.class));
+            this.methodMappings.put("@LsjDefs", defClass.getDeclaredMethod("setLsjDefs", String.class));
             this.methodMappings.put("@StrNo", defClass.getDeclaredMethod("setStrongNumber", String.class));
             this.methodMappings.put("@StrBetaAccented", alternativeTrans1);
 
@@ -249,7 +249,7 @@ public class LexiconLoader extends AbstractClasspathBasedModuleLoader<Definition
                     defClass.getDeclaredMethod("setStrongTranslit", String.class));
             this.methodMappings.put("@StrPronunc",
                     defClass.getDeclaredMethod("setStrongPronunc", String.class));
-            this.methodMappings.put("@StrRelatedNos",
+            this.methodMappings.put("@AllRelatedNos",
                     defClass.getDeclaredMethod("setRelatedNos", String.class));
             this.methodMappings.put("@StepGloss", defClass.getDeclaredMethod("setStepGloss", String.class));
             this.methodMappings.put("@StopWord", defClass.getDeclaredMethod("setBlacklisted", Boolean.class));
@@ -264,6 +264,8 @@ public class LexiconLoader extends AbstractClasspathBasedModuleLoader<Definition
             this.methodMappings.put("@BdbMedDef", mediumDef);
             this.methodMappings.put("@AcadTransAccented", alternativeTrans1);
             this.methodMappings.put("@AcadTransUnaccented", alternativeTranslit1Unaccented);
+            this.methodMappings.put("@2llUnaccented",
+                    defClass.getDeclaredMethod("setTwoLetterLookup", String.class));
 
             // temp - TODO - remove when fields have been renamed
             this.methodMappings.put("@StrUnicodeAccented", unicodeAccented);

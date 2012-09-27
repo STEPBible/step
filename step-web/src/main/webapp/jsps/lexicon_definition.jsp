@@ -16,7 +16,7 @@
 			<div id="vocabContainer" class="metadataContainer">
 				<h3>Vocab</h3>
 				<div level="0">
-					<div><h5 info-name="stepTransliteration"></h5> (<span info-name="accentedUnicode" class="ancientLanguage"></span>): <span info-name="shortDef"></span></div>
+					<div><h5 info-name="stepTransliteration"></h5> (<span info-name="accentedUnicode" class="unicodeFont"></span>): <span info-name="shortDef"></span></div>
 				</div>
 				<div level="1">
 					<hr />

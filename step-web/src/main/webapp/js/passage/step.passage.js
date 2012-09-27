@@ -51,12 +51,15 @@ step.passage = {
         var interlinearVersion = "";
         var interlinearMode = "";
         if(level > 0) {
-            interlinearVersion = step.state.passage.extraVersions(passageId);
+            interlinearVersion = step.state.passage.extraVersions(passageId)
+            if(interlinearVersion != undefined) {
+                interlinearVersion = interlinearVersion.trim();
+            }
             interlinearMode = "INTERLEAVED";
         }
 
         if(level > 1) {
-            interlinearMode = this._getInterlinearMode(passageId);    
+            interlinearMode = this._getInterlinearMode(passageId);
         }
         
         
@@ -104,17 +107,42 @@ step.passage = {
                 
     
                 //finally add handlers to elements containing xref
+                self._doFonts(passageId, passageContent, interlinearMode, interlinearVersion);
                 self._doInlineNotes(passageId, passageContent);
                 self._doNonInlineNotes(passageContent);
                 self._doSideNotes(passageId, passageContent);
                 self._doHideEmptyNotesPane(passageContent);
                 self._adjustTextAlignment(passageContent);
-                
+                self._redoTextSize(passageId, passageContent);
                 step.state.passage.reference(passageId, text.reference, false);
             }, 
             passageId: passageId, 
             level: 'error'
          });
+    },
+    
+    _redoTextSize : function(passageId, passageContent) {
+        var fontSize = step.passage.ui.fontSizes[passageId];
+        if(fontSize != undefined) {
+            $(".passageContentHolder", passageContent).css("font-size", fontSize);
+        }
+    },
+    
+    _doFonts : function(passageId, passageContent, interlinearMode, interlinearVersions) {
+        if(interlinearVersions != null && interlinearVersions.length > 0 && interlinearMode == "INTERLINEAR") {
+            $(".interlinear").find("span.interlinear, .ancientVocab, .text", passageContent).filter(function() {
+                return step.util.isUnicode(this);
+            }).addClass("unicodeFont");
+        }
+        
+        if(interlinearMode == "" || interlinearMode == undefined || interlinearVersions  == undefined || interlinearVersions == "") {
+            //examine the first verse's contents, remove spaces and numbers
+            var contents = $(".verse:first", passageContent).text().replace(/[0-9\s]/g, "");
+                
+            if(step.util.isUnicode(contents)) {
+                    $(".passageContentHolder", passageContent).addClass("unicodeFont");
+            }
+        }
     },
     
     _setPassageContent : function(passageId, passageContent, serverResponse) {
@@ -127,18 +155,6 @@ step.passage = {
         } else {
             passageContent.html(serverResponse.value);
         }
-        
-        
-        
-        var verses = $("span.verse, .interlinear span", passageContent);
-        if(serverResponse.languageCode == 'he' || serverResponse.containsHebrew) {
-            verses.addClass("hebrewLanguage").removeClass("greekLanguage");
-        } else if(serverResponse.languageCode == 'grc' || serverResponse.containsGreek) {
-            verses.addClass("greekLanguage").removeClass("hebrewLanguage");
-        } else {
-            verses.removeClass("hebrewLanguage greekLanguage");
-        }
-
     },
     
     _doNonInlineNotes : function(passageContent) {
@@ -222,7 +238,7 @@ step.passage = {
             
             $(this).click(function(e) {
                 e.preventDefault();
-            })
+            });
             
             
             $(this).qtip({

@@ -169,7 +169,7 @@ public class Loader {
         LOGGER.debug("Loading initial data");
         final Transaction transaction = this.ebean.beginTransaction(TxIsolation.READ_UNCOMMITTED);
         transaction.setBatchMode(true);
-        transaction.setBatchSize(500);
+        transaction.setBatchSize(2000);
 
         try {
             loadHotSpots();

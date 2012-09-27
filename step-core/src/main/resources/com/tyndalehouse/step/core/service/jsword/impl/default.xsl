@@ -1,25 +1,4 @@
 <?xml version="1.0"?>
-<!--
- * Distribution License:
- * JSword is free software; you can redistribute it and/or modify it under
- * the terms of the GNU Lesser General Public License, version 2.1 as published by
- * the Free Software Foundation. This program is distributed in the hope
- * that it will be useful, but WITHOUT ANY WARRANTY; without even the
- * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU Lesser General Public License for more details.
- *
- * The License is available on the internet at:
- *       http://www.gnu.org/copyleft/lgpl.html
- * or by writing to:
- *      Free Software Foundation, Inc.
- *      59 Temple Place - Suite 330
- *      Boston, MA 02111-1307, USA
- *
- * Copyright: 2005
- *     The copyright to this program is held by it's authors.
- *
- * ID: $Id: default.xsl 1943 2009-03-25 11:43:28Z dmsmith $
- -->
  <!--
  * Transforms OSIS to HTML for viewing within JSword browsers.
  * Note: There are custom protocols which the browser must handle.
@@ -1429,6 +1408,21 @@
 			</xsl:if>
 		</xsl:variable>
 		
+		<xsl:variable name="languageFont">
+		   		<xsl:choose>
+		   			<xsl:when test="@xml:lang">
+						<xsl:choose>
+		   					<xsl:when test="@xml:lang = 'he'">unicodeFont</xsl:when>
+		   					<xsl:when test="@xml:lang = 'grc'">unicodeFont</xsl:when>
+							<xsl:otherwise><xsl:value-of select="''" /></xsl:otherwise>
+						</xsl:choose>   			
+		   			</xsl:when>
+		   			<xsl:otherwise>
+		   				<xsl:value-of select="''" />
+		   			</xsl:otherwise>
+		   		</xsl:choose>
+		   	</xsl:variable>
+		
 	    <xsl:choose>
     	<!-- interleaving or tabular column form -->
     	<xsl:when test="$Interleave = 'true'">
@@ -1444,11 +1438,11 @@
 				<!-- output twice, but with slightly different styles -->
 				<xsl:call-template name="interleaveVerse">
 					<xsl:with-param name="cell-direction" select="$cell-direction" />
-					<xsl:with-param name="classes" select="'primary'" />
+					<xsl:with-param name="classes" select="concat('primary', ' ', $languageFont)" />
 				</xsl:call-template>
 				<xsl:call-template name="interleaveVerse">
 					<xsl:with-param name="cell-direction" select="$cell-direction" />
-					<xsl:with-param name="classes" select="'secondary'" />
+					<xsl:with-param name="classes" select="concat('secondary', ' ', $languageFont)" />
 				</xsl:call-template>				
 			</xsl:if>
     	</xsl:when>
@@ -1460,15 +1454,29 @@
 					</xsl:call-template>
 				</xsl:if>
 			</xsl:if>
-			
+			<xsl:variable name="languageFont">
+		   		<xsl:choose>
+		   			<xsl:when test="@xml:lang">
+						<xsl:choose>
+		   					<xsl:when test="@xml:lang = 'he'">unicodeFont</xsl:when>
+		   					<xsl:when test="@xml:lang = 'grc'">unicodeFont</xsl:when>
+							<xsl:otherwise><xsl:value-of select="''" /></xsl:otherwise>
+						</xsl:choose>   			
+		   			</xsl:when>
+		   			<xsl:otherwise>
+		   				<xsl:value-of select="''" />
+		   			</xsl:otherwise>
+		   		</xsl:choose>
+		   	</xsl:variable>
+   	
 			<xsl:if test="$comparing = true()  and not(./verse)">
 					<xsl:call-template name="columnVerse">
 						<xsl:with-param name="cell-direction" select="$cell-direction" />
-						<xsl:with-param name="classes" select="'primary'" />
+						<xsl:with-param name="classes" select="concat('primary', ' ', $languageFont)" />
 					</xsl:call-template>
 					<xsl:call-template name="columnVerse">
 						<xsl:with-param name="cell-direction" select="$cell-direction" />
-						<xsl:with-param name="classes" select="'secondary'" />
+						<xsl:with-param name="classes" select="concat('secondary', ' ', $languageFont)" />
 					</xsl:call-template>
 			</xsl:if>
 		</xsl:otherwise>

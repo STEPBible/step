@@ -94,6 +94,7 @@ public class Definition implements Serializable, Cloneable {
 
     private String strongTranslit;
     private String strongPronunc;
+    @Lob
     private String relatedNos;
 
     @Lob
@@ -103,6 +104,9 @@ public class Definition implements Serializable, Cloneable {
     private String stepGloss;
     private String stepTransliteration;
     private String unaccentedStepTransliteration;
+
+    private String twoLetterLookup;
+
     /**
      * Indicates that this word should not be returned when carrying out searches
      */
@@ -394,5 +398,19 @@ public class Definition implements Serializable, Cloneable {
      */
     public String getUnaccentedStepTransliteration() {
         return this.unaccentedStepTransliteration;
+    }
+
+    /**
+     * @return the twoLetterLookup
+     */
+    public String getTwoLetterLookup() {
+        return this.twoLetterLookup;
+    }
+
+    /**
+     * @param twoLetterLookup the twoLetterLookup to set
+     */
+    public void setTwoLetterLookup(final String twoLetterLookup) {
+        this.twoLetterLookup = twoLetterLookup;
     }
 }

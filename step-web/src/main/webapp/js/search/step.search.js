@@ -402,6 +402,7 @@ step.search = {
         if (searchResults == undefined || searchResults.length == 0) {
             results += "<span class='notApplicable'>No search results were found</span>";
             this._changePassageContent(passageId, results);
+            this._doOriginalWordToolbar(searchQueryResults.definitions, passageId);
             return;
         } 
         
@@ -474,7 +475,7 @@ step.search = {
             
             originalWordToolbar.buttonset();
 
-            var bar = $("<div></div>").append("<h4 class='lexicalGrouping'>The following lexical forms have been found:</h4>").append(originalWordToolbar).append("<hr />");
+            var bar = $("<div></div>").append("<h4 class='lexicalGrouping'>The following lexical forms have been included in the search:</h4>").append(originalWordToolbar).append("<hr />");
             passageContent.prepend(bar);
         }
     },

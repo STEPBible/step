@@ -338,11 +338,6 @@ public class SearchServiceImpl implements SearchService {
         // now work out the order of the strong numbers, probably best in terms of the gloss...
         // order the definitions, then simply re-do the list of verse search entries
         Collections.sort(definitions, comparator);
-        final List<LexiconSuggestion> suggestions = new ArrayList<LexiconSuggestion>();
-        for (final Definition def : definitions) {
-            suggestions.add(convertToSuggestion(def));
-        }
-        result.setDefinitions(suggestions);
 
         // if we have filters, then we need to reduce further...
         definitions = filterDefinitions(sq, definitions);
@@ -361,8 +356,25 @@ public class SearchServiceImpl implements SearchService {
             }
         }
 
-        newOrder.addAll(noOrder);
+        final String[] filter = sq.getCurrentSearch().getOriginalFilter();
+        if (filter == null || filter.length == 0) {
+            newOrder.addAll(noOrder);
+        }
         result.setResults(specialPaging(sq, newOrder));
+    }
+
+    /**
+     * Sets the definitions onto the result object
+     * 
+     * @param result the result object
+     * @param definitions the definitions that have been included in the search
+     */
+    private void setDefinitionForResults(final SearchResult result, final List<Definition> definitions) {
+        final List<LexiconSuggestion> suggestions = new ArrayList<LexiconSuggestion>();
+        for (final Definition def : definitions) {
+            suggestions.add(convertToSuggestion(def));
+        }
+        result.setDefinitions(suggestions);
     }
 
     /**
@@ -715,7 +727,13 @@ public class SearchServiceImpl implements SearchService {
      */
     private SearchResult runMeaningSearch(final SearchQuery sq) {
         final List<String> strongs = adaptQueryForMeaningSearch(sq);
-        return runStrongTextSearch(sq, strongs);
+
+        final SearchResult result = runStrongTextSearch(sq, strongs);
+        setDefinitionForResults(result, sq.getDefinitions());
+
+        // we can now use the filter and save ourselves some effort
+
+        return result;
     }
 
     /**
@@ -742,7 +760,9 @@ public class SearchServiceImpl implements SearchService {
         final List<String> strongs = adaptQueryForRelatedStrongSearch(sq);
 
         // and then run the search
-        return runStrongTextSearch(sq, strongs);
+        final SearchResult result = runStrongTextSearch(sq, strongs);
+        setDefinitionForResults(result, sq.getDefinitions());
+        return result;
     }
 
     /**
@@ -844,12 +864,15 @@ public class SearchServiceImpl implements SearchService {
         // TODO having wildcards both before and after and after is not good for performance - revise and use
         // full text search?
         final List<Definition> matchingMeanings = this.ebean.find(Definition.class)
-                .select("strongNumber,stepGloss,accentedUnicode,stepTransliteration").where()
+                .select("accentedUnicode,strongNumber,stepGloss,accentedUnicode,stepTransliteration").where()
                 .eq("blacklisted", false).ilike("translations.alternativeTranslation", "%" + query + "%")
                 .findList();
+
         final List<String> strongs = new ArrayList<String>(matchingMeanings.size());
         for (final Definition d : matchingMeanings) {
-            strongs.add(d.getStrongNumber());
+            if (isInFilter(d, sq)) {
+                strongs.add(d.getStrongNumber());
+            }
         }
 
         final String textQuery = getQuerySyntaxForStrongs(strongs, sq);
@@ -858,6 +881,27 @@ public class SearchServiceImpl implements SearchService {
 
         // return the strongs that the search will match
         return strongs;
+    }
+
+    /**
+     * Returns true to indicate that the specified definition object should be included in the text search
+     * 
+     * @param d the definition
+     * @param sq the search criteria
+     * @return true if the object is to be included
+     */
+    private boolean isInFilter(final Definition d, final SearchQuery sq) {
+        final String[] originalFilter = sq.getCurrentSearch().getOriginalFilter();
+        if (originalFilter == null || originalFilter.length == 0) {
+            return true;
+        }
+
+        for (final String filterValue : originalFilter) {
+            if (filterValue.equals(d.getAccentedUnicode())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -888,21 +932,32 @@ public class SearchServiceImpl implements SearchService {
     private List<String> adaptQueryForRelatedStrongSearch(final SearchQuery sq) {
         final List<String> strongsFromQuery = getStrongsFromTextCriteria(sq);
 
+        // remove strongs if not in filter
         final List<Definition> matchedStrongs = new ArrayList<Definition>();
 
         // get all similar ones
-        final List<Definition> strongs = this.ebean.find(Definition.class)
-                .fetch("similarStrongs", "strongNumber,stepGloss,accentedUnicode,stepTransliteration")
+        final List<Definition> strongs = this.ebean
+                .find(Definition.class)
+                .fetch("similarStrongs",
+                        "accentedUnicode,strongNumber,stepGloss,accentedUnicode,stepTransliteration")
                 .select("strongNumber,stepGloss,accentedUnicode,stepTransliteration").where()
                 .eq("blacklisted", false).eq("blacklisted", false).in("strongNumber", strongsFromQuery)
                 .findList();
 
         matchedStrongs.addAll(strongs);
         for (final Definition s : strongs) {
+            // remove from matched strong if not in filter
+            if (!isInFilter(s, sq)) {
+                strongsFromQuery.remove(s.getStrongNumber());
+            }
+
             final List<Definition> similarStrongs = s.getSimilarStrongs();
+
             matchedStrongs.addAll(similarStrongs);
             for (final Definition similar : similarStrongs) {
-                strongsFromQuery.add(similar.getStrongNumber());
+                if (this.isInFilter(similar, sq)) {
+                    strongsFromQuery.add(similar.getStrongNumber());
+                }
             }
         }
 

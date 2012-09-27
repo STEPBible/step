@@ -33,11 +33,12 @@ span.interlinear span span { /* Make this stack on top of each other. */
 
 span.rtl span span {
 /* 	font-size: 16px; */
-	font-family: Cardo ;
+/* 	font-family: Cardo ; */
 }
 
 .unicodeFont {
 	font-family: Cardo;
+	font-size: 140%;
 /* 	font-size: 14px; */
 }
 
@@ -198,9 +199,18 @@ span.verseStart {
 	
 span.strongs, span.morphs, span.interVerseNumbers {
 	text-decoration: none;
-	font-size: xx-small;
+	font-size: 90%;
 	text-align: center;
 	font-style: italic;
+}
+
+.ancientVocab a {
+	color: black !important;
+}
+
+.ancientVocab {
+	font-style: italic;
+	font-family: Cardo-italic;
 }
 
 span.strongs a {

@@ -32,6 +32,7 @@ $(window).resize(function() {
 });
 
 step.passage.ui = {
+    fontSizes : [undefined, undefined],
     resize : function() {
         var windowHeight = $(window).height();
         $(".passageContent").each(function(i, item) {
@@ -120,7 +121,11 @@ $(document).ready(function() {
     }).click(function() {
         var elements = $(".passageContentHolder", step.util.getPassageContainer(this));
         var fontSize = parseInt(elements.css("font-size"));
-        elements.css("font-size", fontSize -1);
+        var newFontSize = fontSize -1;
+        
+        step.passage.ui.fontSizes[step.passage.getPassageId(this)] = newFontSize;
+        
+        elements.css("font-size", newFontSize);
     }).find(".ui-button-text").html("<span class='smallerFont'>A</span>");
     
     $(".largerFonts").button({
@@ -130,7 +135,9 @@ $(document).ready(function() {
         var elements = $(".passageContentHolder", step.util.getPassageContainer(this));
         $.each(elements, function(i, item) {
             var fontSize = parseInt($(this).css("font-size"));
-            $(this).css("font-size", fontSize + 1);
+            var newFontSize = fontSize + 1;
+            step.passage.ui.fontSizes[step.passage.getPassageId(this)] = newFontSize;
+            $(this).css("font-size", newFontSize);
         })
     });
     

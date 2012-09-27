@@ -52,7 +52,8 @@ step.search.ui.original = {
         
         if(currentType == TRANSLATED_AS[0]) {
              $(".originalMeaning", passageContainer).toggle(true);       
-             $(".originalAncient", passageContainer).toggle(false);       
+             $(".originalAncient", passageContainer).toggle(false);
+             
         } else if(currentType == WORDS_MEANING[0]) {
             $(".originalMeaning", passageContainer).toggle(false);       
             $(".originalAncient", passageContainer).toggle(false);
@@ -60,6 +61,24 @@ step.search.ui.original = {
              $(".originalAncient", passageContainer).toggle(true);       
              $(".originalMeaning", passageContainer).toggle(false);       
         }
+        
+        this._displayCorrectGroupBy(passageId, passageContainer, currentType);
+    },
+    
+    _displayCorrectGroupBy : function(passageId, passageContainer, currentType) {
+        if(currentType == WORDS_MEANING[0]) {
+            $(".originalSorting", passageContainer).prop("disabled", false);
+            return;
+        } 
+        
+        if(currentType == GREEK_WORDS[0] || currentType == HEBREW_WORDS[0]) {
+            var kindOfForms = $(".originalForms", passageContainer).val();
+            if(kindOfForms == ALL_RELATED) {
+                $(".originalSorting", passageContainer).prop("disabled", false);
+                return;
+            } 
+        } 
+        $(".originalSorting", passageContainer).prop("disabled", true);
     },
     
     restoreDefaults : function(passageId, force) {
@@ -82,11 +101,11 @@ step.search.ui.original = {
     
     evaluateQuerySyntax : function(passageId) {
         var passageContainer = step.util.getPassageContainer(passageId);
-        
+        var level = $("fieldset:visible", passageContainer).detailSlider("value");
         var originalType = $(".originalType", passageContainer).val();
         var originalWord = $(".originalWord", passageContainer).val();
         
-        var originalScope = $(".originalScope", passageContainer).val();
+        var originalScope = level == 0 ? "Gen-Rev" : $(".originalScope", passageContainer).val();
         var originalSorting = $(".originalSorting", passageContainer).val();
 
         var originalWordScope = "";
@@ -203,7 +222,9 @@ $(document).ready(function() {
        step.search.ui.original._displayCorrectOptions(step.passage.getPassageId(target));
     });
     
-    step.util.ui.autocompleteSearch(".originalForms", step.defaults.search.original.originalForms, true);
+    step.util.ui.autocompleteSearch(".originalForms", step.defaults.search.original.originalForms, true, function(target, value) {
+        step.search.ui.original._displayCorrectOptions(step.passage.getPassageId(target));
+    });
     step.util.ui.autocompleteSearch(".originalScope", step.defaults.search.textual.availableRanges);
     step.util.ui.autocompleteSearch(".originalSorting", step.defaults.search.original.originalSorting, true);
 //    step.util.ui.autocompleteSearch(".originalWordScope", step.defaults.search.textual.availableRanges);

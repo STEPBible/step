@@ -54,6 +54,11 @@ body {
 	font-size: smaller;
 }
 
+.superTranslit {
+	vertical-align: super;
+	font-size: 60%;
+}
+
 .lexiconTable {
 	width: 100%;
 	border: 1px dotted lightgray;
@@ -86,7 +91,7 @@ legend .detailSliderContainer {
 }
 
 .metadataContainer span {
-	font-size: 8pt;
+/* 	font-size: 8pt; */
 }
 
 .metadataContainer div {

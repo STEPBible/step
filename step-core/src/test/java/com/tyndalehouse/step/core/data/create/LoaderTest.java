@@ -153,9 +153,11 @@ public class LoaderTest extends DataDrivenTestExtension {
         // add G1 and G10 so that foreign key relationships are possible
         final Definition d1 = new Definition();
         d1.setStrongNumber("G0001");
+        d1.setBlacklisted(false);
 
         final Definition d2 = new Definition();
         d2.setStrongNumber("G0010");
+        d2.setBlacklisted(false);
 
         getEbean().save(d1);
         getEbean().save(d2);

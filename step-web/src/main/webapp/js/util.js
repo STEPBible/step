@@ -73,6 +73,22 @@ step.util = {
 	    }
 	    return s.match(/^\s*$/g) != null;
 	},
+	
+	isUnicode : function(element) {
+        try {
+            if(element.innerText) {
+                return element.innerText.trim().charCodeAt(0) > 255;
+            } else if(element.text) {
+                return element.text().trim().charCodeAt(0) > 255;
+            } else if(element.charCodeAt) {
+                return element.charCodeAt(0) > 255;
+            } else {
+                return false;
+            }
+        } catch(err) {
+            return false;
+        }
+	},
 	   
     raiseError: function (error) {
         var message = error.message ? error.message : error;
@@ -148,7 +164,11 @@ step.util = {
         },
         
         trackQuerySyntax : function(selector, namespace) {
-            $(selector + " input").keyup(function() {
+            $(selector + " input").keyup(function(ev) {
+                if(ev.which < 48) {
+                    return true;
+                }
+                
                 $(this).change();
                 
                 //re-evaluate query
@@ -178,6 +198,7 @@ step.util = {
                         });
                     }
                 }, 500);
+                return true;
             });
         },
         

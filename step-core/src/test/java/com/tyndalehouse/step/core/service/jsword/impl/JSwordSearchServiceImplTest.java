@@ -61,10 +61,22 @@ public class JSwordSearchServiceImplTest {
         final List<SearchEntry> results = this.search.search(
                 new SearchQuery("+[Mat-Rev] good~ in (KJV)", "true", 0, 1, 1000000), "ESV").getResults();
         for (int i = 0; i < results.size(); i++) {
-            LOGGER.debug(((VerseSearchEntry) results.get(i)).getKey());
+            LOGGER.trace(((VerseSearchEntry) results.get(i)).getKey());
         }
         assertTrue(!results.isEmpty());
     }
+
+    // @Test
+    // public void testRebuildIndex() {
+    // final IndexManager indexManager = IndexManagerFactory.getIndexManager();
+    // try {
+    // indexManager.scheduleIndexCreation(Books.installed().getBook("WLC"));
+    //
+    // Thread.sleep(60 * 20);
+    // } catch (final InterruptedException e) {
+    // e.printStackTrace();
+    // }
+    // }
 
     // @Test
     // public void testRebuildIndex() throws InterruptedException {

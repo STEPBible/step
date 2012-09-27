@@ -179,7 +179,7 @@ Bookmark.prototype.mergeHistory = function() {
 				historyText += item.historyReference + '@' + new Date(item.lastUpdated).getTime() + Bookmark.historyDelimiter;
 			});
 			
-			$.cookie("history", historyText);
+			$.localStore("history", historyText);
 			self.createHistoryItemsFromCookies();
 		}
 	});
@@ -262,7 +262,7 @@ Bookmark.prototype.createItem = function(passageCookieReference, container, asce
 
 
 Bookmark.prototype.getHistory = function() {
-	var history = $.cookie("history");
+	var history = $.localStore("history");
 	if(history == null) {
 		return [];
 	}
@@ -270,5 +270,5 @@ Bookmark.prototype.getHistory = function() {
 };
 
 Bookmark.prototype.setHistory = function(history) {
-	$.cookie("history", history.join(Bookmark.historyDelimiter));
+	$.localStore("history", history.join(Bookmark.historyDelimiter));
 };

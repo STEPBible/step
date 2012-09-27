@@ -61,6 +61,34 @@ public final class StringConversionUtils {
     private static final char ALEPH_LAMED = 0xFB4F;
 
     /**
+     * A helper class indicating how the transliteration ends
+     * 
+     * @author chrisburrell
+     * 
+     */
+    private static enum HebrewTransliterationEnding {
+        ACH("ach"),
+        A_BRACK("a("),
+        AH("ah"),
+        NONE("");
+        private String ending;
+
+        /**
+         * @param ending the ending for the transliteration
+         */
+        HebrewTransliterationEnding(final String ending) {
+            this.ending = ending;
+        }
+
+        /**
+         * @return the ending
+         */
+        public String getEnding() {
+            return this.ending;
+        }
+    }
+
+    /**
      * hiding implementation
      */
     private StringConversionUtils() {
@@ -226,7 +254,7 @@ public final class StringConversionUtils {
      * @return the shortened key
      */
     public static String getAnyKey(final String potentialKey, final boolean trimInitial) {
-        LOGGER.debug("Looking for key [{}] with trimInitial [{}]", potentialKey, trimInitial);
+        LOGGER.trace("Looking for key [{}] with trimInitial [{}]", potentialKey, trimInitial);
 
         // find first colon and start afterwards, -1 yields 0, which is the beginning of the string
         // so we can work with that.
@@ -279,13 +307,457 @@ public final class StringConversionUtils {
     public static String transliterate(final String rawForm) {
         // decompose characters from breathing and accents and store in StringBuilder
 
-        if (rawForm == null) {
+        if (rawForm == null || rawForm.length() == 0) {
             return "";
+        }
+        final int firstChar = rawForm.charAt(0);
+
+        if ((firstChar > 0x590 && firstChar < 0x600) || (firstChar > 0xFB10 && firstChar < 0xFB50)) {
+            return transliterateHebrew(rawForm);
         }
 
         final String normalized = Normalizer.normalize(rawForm.toLowerCase(), Form.NFD);
-        final StringBuilder sb = new StringBuilder(normalized);
+        // then assume Greek
+        return transliterateGreek(normalized);
+    }
 
+    /**
+     * Transliteration of the Hebrew text
+     * 
+     * @param normalized the normalized form
+     * @return the transliterated hebrew
+     */
+    private static String transliterateHebrew(final String normalized) {
+        final StringBuilder input = new StringBuilder(normalized);
+
+        // first strip out cantiallation marks
+        for (int ii = 0; ii < input.length();) {
+            final int c = input.charAt(ii);
+            if (c >= 0x0590 && c <= 0x05AF || c >= 0x05C3 && c <= 0x5CF && c != 0x5C7 || c == 0x5BD
+                    || c == 0x5BF || c == 0x5C0) {
+                input.deleteCharAt(ii);
+            } else {
+                ii++;
+            }
+        }
+
+        // then process combined forms at the end of the word
+        HebrewTransliterationEnding transliterationEnding;
+        int currentInputLength = input.length();
+        if (currentInputLength > 1) {
+            final char[] end = new char[2];
+            input.getChars(currentInputLength - 2, currentInputLength, end, 0);
+            transliterationEnding = processHebrewEndings(currentInputLength, input, end);
+        } else {
+            transliterationEnding = HebrewTransliterationEnding.NONE;
+        }
+
+        // now process from left to right for combined forms
+        currentInputLength = input.length();
+        int position = 0;
+
+        while (position < input.length() - 1) {
+            final char current = input.charAt(position);
+            final int nextPosition = position + 1;
+            final char next = input.charAt(nextPosition);
+            final int originalPosition = position;
+
+            position = processCompositeForms(input, currentInputLength, position, current, nextPosition, next);
+
+            // end switch of three-character forms
+            if (originalPosition != position) {
+                // then match has occurred, so continue round one more time
+                continue;
+            }
+
+            // out of composite form switch statement
+            // carry on with dagesh forms
+            position = processDageshForms(input, position, current, nextPosition, next);
+
+            if (originalPosition == position) {
+                position++;
+            }
+            currentInputLength = input.length();
+        }
+
+        // remove all remaining dageshes
+        removeHebrewDageshAndSinShinMarks(input);
+
+        // finally do a simple character substitution
+        singleHebrewLetterReplacement(input);
+
+        input.append(transliterationEnding.getEnding());
+        return input.toString();
+    }
+
+    /**
+     * Process hebrew composite forms
+     * 
+     * @param input the string builder for in-place replacement
+     * @param currentInputLength the length of the input
+     * @param position the current position
+     * @param nextPosition the next position
+     * @param next the next character
+     * @return the new position
+     */
+    private static int processCompositeForms(final StringBuilder input, final int currentInputLength,
+            int position, final char current, final int nextPosition, final char next) {
+        int thirdPosition;
+        int fourthPosition;
+        char third;
+        switch (current) {
+            case 0x5E9:
+                if (next == 0x5C2) {
+                    input.setCharAt(position, 's');
+                    input.setCharAt(nextPosition, 's');
+                    position += 2;
+                } else if (next == 0x5C1) {
+                    input.setCharAt(position, 's');
+                    input.setCharAt(nextPosition, 'h');
+                    position += 2;
+                }
+                break;
+            case 0x5D5:
+                if (next == 0x5BC) {
+                    thirdPosition = nextPosition + 1;
+                    if (thirdPosition < currentInputLength) {
+                        third = input.charAt(thirdPosition);
+                        switch (third) {
+                            case 0x5B7:
+                                input.setCharAt(position, 'v');
+                                input.setCharAt(nextPosition, 'a');
+                                input.deleteCharAt(thirdPosition);
+                                position += 2;
+                                break;
+                            case 0x5B4:
+                                fourthPosition = thirdPosition + 1;
+                                if (fourthPosition < currentInputLength
+                                        && input.charAt(fourthPosition) == 0x5D9) {
+                                    input.setCharAt(position, 'v');
+                                    input.setCharAt(nextPosition, 'i');
+                                    input.setCharAt(thirdPosition, 'y');
+                                    input.deleteCharAt(fourthPosition);
+                                    position += 3;
+                                    break;
+                                }
+
+                                input.setCharAt(position, 'v');
+                                input.setCharAt(nextPosition, 'i');
+                                input.deleteCharAt(thirdPosition);
+                                position += 2;
+                                break;
+                            case 0x5B8:
+                                input.setCharAt(position, 'v');
+                                input.setCharAt(nextPosition, 'a');
+                                input.setCharAt(thirdPosition, 'a');
+                                position += 3;
+                                break;
+                            case 0x5B0:
+                                input.setCharAt(position, 'v');
+                                input.setCharAt(nextPosition, '\'');
+                                input.deleteCharAt(thirdPosition);
+                                position += 2;
+                                break;
+                            case 0x5B6:
+                                input.setCharAt(position, 'v');
+                                input.setCharAt(nextPosition, 'e');
+                                input.deleteCharAt(thirdPosition);
+                                position += 2;
+                                break;
+                            case 0x5B5:
+                                input.setCharAt(position, 'v');
+                                input.setCharAt(nextPosition, 'é');
+                                input.deleteCharAt(thirdPosition);
+                                position += 2;
+                                break;
+                            case 0x5BB:
+                                input.setCharAt(position, 'v');
+                                input.setCharAt(nextPosition, 'u');
+                                input.deleteCharAt(thirdPosition);
+                                position += 2;
+                                break;
+                            case 0x5D5:
+                                fourthPosition = thirdPosition + 1;
+                                if (fourthPosition < currentInputLength
+                                        && input.charAt(fourthPosition) == 0x5B9) {
+                                    input.setCharAt(position, 'v');
+                                    input.setCharAt(nextPosition, 'o');
+                                    input.setCharAt(thirdPosition, 'w');
+                                    input.deleteCharAt(fourthPosition);
+                                    position += 3;
+                                    break;
+                                }
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                } else if (next == 0x5B9) {
+                    thirdPosition = nextPosition + 1;
+                    if (thirdPosition < currentInputLength && input.charAt(thirdPosition) == 0x5B8) {
+                        input.setCharAt(position, 'o');
+                        input.setCharAt(nextPosition, 'v');
+                        input.setCharAt(thirdPosition, 'a');
+                        input.insert(thirdPosition + 1, 'a');
+                        position += 4;
+                        break;
+                    } else {
+                        input.setCharAt(position, 'o');
+                        input.setCharAt(nextPosition, 'w');
+                        position += 2;
+                        break;
+                    }
+                }
+                break;
+            default:
+                break;
+        }
+        return position;
+    }
+
+    private static int processDageshForms(final StringBuilder input, int position, final char current,
+            final int nextPosition, final char next) {
+        if (next == 0x5BC) {
+            switch (current) {
+                case 0x5D5:
+                    input.setCharAt(position, 'u');
+                    input.setCharAt(nextPosition, 'w');
+                    position += 2;
+                    break;
+                case 0x5D1:
+                    input.setCharAt(position, 'b');
+                    input.deleteCharAt(nextPosition);
+                    position += 1;
+                    break;
+                case 0x5D2:
+                    input.setCharAt(position, 'g');
+                    input.deleteCharAt(nextPosition);
+                    position += 1;
+                    break;
+                case 0x5D3:
+                    input.setCharAt(position, 'd');
+                    input.deleteCharAt(nextPosition);
+                    position += 1;
+                    break;
+                case 0x5DB:
+                    input.setCharAt(position, 'k');
+                    input.deleteCharAt(nextPosition);
+                    position += 1;
+                    break;
+                case 0x5E4:
+                    input.setCharAt(position, 'p');
+                    input.deleteCharAt(nextPosition);
+                    position += 1;
+                    break;
+                case 0x5EA:
+                    input.setCharAt(position, 't');
+                    input.deleteCharAt(nextPosition);
+                    position += 1;
+                    break;
+
+            }
+        }
+        return position;
+    }
+
+    /**
+     * Removes the dagesh character from input
+     * 
+     * @param input the string builder for in-place replacement
+     * @param currentInputLength the current length of the input
+     */
+    private static void removeHebrewDageshAndSinShinMarks(final StringBuilder input) {
+        for (int ii = 0; ii < input.length();) {
+            if (input.charAt(ii) == 0x5BC || input.charAt(ii) == 0x5C1 || input.charAt(ii) == 0x5C2) {
+                input.deleteCharAt(ii);
+            } else {
+                ii++;
+            }
+        }
+    }
+
+    /**
+     * Perform single hebrew letter mappings
+     * 
+     * @param input the string builder for in-place replacement
+     */
+    private static void singleHebrewLetterReplacement(final StringBuilder input) {
+        for (int ii = 0; ii < input.length(); ii++) {
+            switch (input.charAt(ii)) {
+                case 0x5B0:
+                    input.setCharAt(ii, '\'');
+                    break;
+                case 0x5B1:
+                    input.setCharAt(ii, 'e');
+                    break;
+                case 0x5B2:
+                    input.setCharAt(ii, 'a');
+                    break;
+                case 0x5B3:
+                    input.setCharAt(ii, 'o');
+                    break;
+                case 0x5B4:
+                    input.setCharAt(ii, 'i');
+                    break;
+                case 0x5B5:
+                    input.setCharAt(ii, 'é');
+                    break;
+                case 0x5B6:
+                    input.setCharAt(ii, 'e');
+                    break;
+                case 0x5B7:
+                    input.setCharAt(ii, 'a');
+                    break;
+                case 0x5B8:
+                    input.setCharAt(ii++, 'a');
+                    input.insert(ii, 'a');
+                    break;
+                case 0x5B9:
+                    input.setCharAt(ii, 'o');
+                    break;
+                case 0x5BA:
+                    input.setCharAt(ii, 'a');
+                    break;
+                case 0x5BB:
+                    input.setCharAt(ii, 'u');
+                    break;
+                case 0x5C7:
+                    input.setCharAt(ii, 'o');
+                    break;
+                case 0x5D0:
+                    input.setCharAt(ii, ')');
+                    break;
+                case 0x5D1:
+                    input.setCharAt(ii++, 'b');
+                    input.insert(ii, 'h');
+                    break;
+                case 0x5D2:
+                    input.setCharAt(ii, 'g');
+                    break;
+                case 0x5D3:
+                    input.setCharAt(ii, 'd');
+                    break;
+                case 0x5D4:
+                    input.setCharAt(ii, 'h');
+                    break;
+                case 0x5D5:
+                    input.setCharAt(ii, 'v');
+                    break;
+                case 0x5D6:
+                    input.setCharAt(ii, 'z');
+                    break;
+                case 0x5D7:
+                    input.setCharAt(ii++, 'c');
+                    input.insert(ii, 'h');
+                    break;
+                case 0x5D8:
+                    input.setCharAt(ii++, 't');
+                    input.insert(ii, 't');
+                    break;
+                case 0x5D9:
+                    input.setCharAt(ii, 'y');
+                    break;
+                case 0x5DA:
+                    input.setCharAt(ii, 'k');
+                    break;
+                case 0x5DB:
+                    input.setCharAt(ii, 'k');
+                    break;
+                case 0x5DC:
+                    input.setCharAt(ii, 'l');
+                    break;
+                case 0x5DD:
+                    input.setCharAt(ii, 'm');
+                    break;
+                case 0x5DE:
+                    input.setCharAt(ii, 'm');
+                    break;
+                case 0x5DF:
+                    input.setCharAt(ii, 'n');
+                    break;
+                case 0x5E0:
+                    input.setCharAt(ii, 'n');
+                    break;
+                case 0x5E1:
+                    input.setCharAt(ii, 's');
+                    break;
+                case 0x5E2:
+                    input.setCharAt(ii, '(');
+                    break;
+                case 0x5E3:
+                    input.setCharAt(ii++, 'p');
+                    input.insert(ii, 'h');
+                    break;
+                case 0x5E4:
+                    input.setCharAt(ii++, 'p');
+                    input.insert(ii, 'h');
+                    break;
+                case 0x5E5:
+                    input.setCharAt(ii++, 't');
+                    input.insert(ii, 's');
+                    break;
+                case 0x5E6:
+                    input.setCharAt(ii++, 't');
+                    input.insert(ii, 's');
+                    break;
+                case 0x5E7:
+                    input.setCharAt(ii, 'q');
+                    break;
+                case 0x5E8:
+                    input.setCharAt(ii, 'r');
+                    break;
+                case 0x5E9:
+                    input.setCharAt(ii++, 's');
+                    input.insert(ii, 'h');
+                    break;
+                case 0x5EA:
+                    input.setCharAt(ii++, 't');
+                    input.insert(ii, 'h');
+                    break;
+                default:
+                    break;
+
+            }
+        }
+    }
+
+    /**
+     * processes hebrew endings that are specifc and need to be removed immediate before the rest of the
+     * transliration is performed
+     * 
+     * @param input the input
+     * @param end the characters at the end of the word
+     * @return the correct hebrew ending
+     */
+    private static HebrewTransliterationEnding processHebrewEndings(final int inputLength,
+            final StringBuilder input, final char[] end) {
+        if (end[1] != 0x5B7) {
+            return HebrewTransliterationEnding.NONE;
+        }
+
+        switch (end[0]) {
+            case 0x5D7:
+                input.delete(inputLength - 2, inputLength);
+                return HebrewTransliterationEnding.ACH;
+            case 0x5E2:
+                input.delete(inputLength - 2, inputLength);
+                return HebrewTransliterationEnding.A_BRACK;
+            case 0x5D4:
+                input.delete(inputLength - 2, inputLength);
+                return HebrewTransliterationEnding.AH;
+            default:
+                return HebrewTransliterationEnding.NONE;
+        }
+    }
+
+    /**
+     * Performs a greek transliteration on a normalised string
+     * 
+     * @param normalized the normalised string
+     * @return the equivalent transliteration
+     */
+    private static String transliterateGreek(final String normalized) {
+        final StringBuilder sb = new StringBuilder(normalized);
         int position = 0;
 
         while (position < sb.length()) {

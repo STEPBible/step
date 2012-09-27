@@ -93,36 +93,86 @@ public class StringConversionUtilsTest {
     }
 
     /**
-     * Testing transliteration
+     * Testing transliteration of the greek
      */
     @Test
-    public void testTransliterate() {
+    public void testTransliterateGreek() {
         final String transliterate = StringConversionUtils.transliterate("");
         LOG.debug(transliterate);
-        assertEquals("hén", transliterate("ἣν"));
-        assertEquals("huwde", transliterate("ὧδε"));
-        assertEquals("salpingos", transliterate("σάλπιγγος"));
-        assertEquals("lalousés", transliterate("λαλούσης"));
-        assertEquals("adikésés", transliterate("ἀδικήσῃς"));
-        assertEquals("hote", transliterate("ὅτε"));
-        assertEquals("heote", transliterate("εὅτε"));
+        assertEquals("hén", testTransliterate("ἣν"));
+        assertEquals("huwde", testTransliterate("ὧδε"));
+        assertEquals("salpingos", testTransliterate("σάλπιγγος"));
+        assertEquals("lalousés", testTransliterate("λαλούσης"));
+        assertEquals("adikésés", testTransliterate("ἀδικήσῃς"));
+        assertEquals("hote", testTransliterate("ὅτε"));
+        assertEquals("heote", testTransliterate("εὅτε"));
 
-        assertEquals("angelon", transliterate("ἄγγελον"));
-        assertEquals("prosenenke", transliterate("προσένεγκε"));
-        assertEquals("splanchnistheis", transliterate("σπλαγχνισθεὶς"));
+        assertEquals("angelon", testTransliterate("ἄγγελον"));
+        assertEquals("prosenenke", testTransliterate("προσένεγκε"));
+        assertEquals("splanchnistheis", testTransliterate("σπλαγχνισθεὶς"));
 
-        assertEquals("psuchén", transliterate("ψυχὴν"));
-        assertEquals("farisaioi", transliterate("Φαρισαῖοι"));
-        assertEquals("héruwdianuwn", transliterate("Ἡρῳδιανῶν"));
+        assertEquals("psuchén", testTransliterate("ψυχὴν"));
+        assertEquals("farisaioi", testTransliterate("Φαρισαῖοι"));
+        assertEquals("héruwdianuwn", testTransliterate("Ἡρῳδιανῶν"));
 
-        assertEquals("ioudaias", transliterate("Ἰουδαίας"));
-        assertEquals("hierosolumuwn", transliterate("Ἱεροσολύμων"));
-        assertEquals("mastigas", transliterate("μάστιγας"));
+        assertEquals("ioudaias", testTransliterate("Ἰουδαίας"));
+        assertEquals("hierosolumuwn", testTransliterate("Ἱεροσολύμων"));
+        assertEquals("mastigas", testTransliterate("μάστιγας"));
 
-        assertEquals("exérammenén", transliterate("ἐξηραμμένην"));
-        // assertEquals("", transliterate("μάστιγας"));
-        // assertEquals("", transliterate("μάστιγας"));
+        assertEquals("exérammenén", testTransliterate("ἐξηραμμένην"));
+    }
 
+    /**
+     * Transliterates some hebrew
+     */
+    @Test
+    public void testTransliterateHebrew() {
+        assertEquals("b'ré)shiyth", testTransliterate("בְּרֵאשִׁ֖ית"));
+
+        assertEquals("baaraa)", testTransliterate("בָּרָ֣א"));
+        assertEquals(")elohiym", testTransliterate("אֱלֹהִ֑ים"));
+        assertEquals(")éth", testTransliterate("אֵ֥ת"));
+        assertEquals("hashaamayim", testTransliterate("הַשָּׁמַ֖יִם"));
+        assertEquals("v')éth", testTransliterate("וְאֵ֥ת"));
+        assertEquals("haa)aarets", testTransliterate("הָאָֽרֶץ"));
+        assertEquals("bir'qiya(", testTransliterate("בִּרְקִ֣יעַ"));
+        assertEquals("hashaamayim", testTransliterate("הַשָּׁמַ֔יִם"));
+        assertEquals("l'habh'diyl", testTransliterate("לְהַבְדִּ֕יל"));
+        assertEquals("béyn", testTransliterate("בֵּ֥ין"));
+        assertEquals("hayowm", testTransliterate("הַיּ֖וֹם"));
+        assertEquals("uwbhéyn", testTransliterate("וּבֵ֣ין"));
+        assertEquals("halaay'laah", testTransliterate("הַלָּ֑יְלָה"));
+
+        assertEquals("chabhaah", testTransliterate("חַבַהַ"));
+        assertEquals("(abhaa(", testTransliterate("עַבַעַ"));
+        assertEquals("habhaah", testTransliterate("הַבַהַ"));
+        assertEquals("hahaah", testTransliterate("הַהַהַ"));
+        assertEquals("shvaah", testTransliterate("שׁוַּהַ"));
+        assertEquals("ssvaaah", testTransliterate("שׂוָּהַ"));
+        assertEquals("shav'tteh", testTransliterate("שַּׁוְּטֶה"));
+        assertEquals("bhévey", testTransliterate("בֵוֶּי"));
+        assertEquals("dovéth", testTransliterate("דֹוֵּת"));
+        assertEquals("dovi(", testTransliterate("דֹוִּע"));
+        assertEquals("pvik'", testTransliterate("פּוִּךְ"));
+        assertEquals("geviy", testTransliterate("גֶּוִּי"));
+        assertEquals("kuvow", testTransliterate("כֻּוּוֹ"));
+        assertEquals("dvun", testTransliterate("דּוֻּן"));
+        assertEquals("tovaaph", testTransliterate("תּוָֹף"));
+
+        assertEquals(")oz'niy", testTransliterate("אׇזְנִי"));
+
+    }
+
+    /**
+     * A helper method that logs the transliterations
+     * 
+     * @param s the string to transliterate
+     * @return the transliteration
+     */
+    private String testTransliterate(final String s) {
+        final String transliterate = transliterate(s);
+        LOG.debug("[{}] \t transliterates to\t [{}]", s, transliterate);
+        return transliterate;
     }
 
     /**

@@ -34,6 +34,7 @@ package com.tyndalehouse.step.core.utils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Map.Entry;
 import java.util.Properties;
 
 import com.google.inject.AbstractModule;
@@ -69,16 +70,33 @@ public abstract class AbstractStepGuiceModule extends AbstractModule {
      * @return a list of properties read from file
      */
     private Properties readProperties() {
-        final InputStream stream = getClass().getResourceAsStream(this.propertyFileUrl);
-        this.moduleProperties = new Properties();
+        InputStream stream = null;
         try {
+            stream = getClass().getResourceAsStream(this.propertyFileUrl);
+            this.moduleProperties = new Properties();
             this.moduleProperties.load(stream);
+            applySystemPropertiesOverride();
+
             Names.bindProperties(super.binder(), this.moduleProperties);
         } catch (final IOException e) {
             // This is the preferred way to tell Guice something went wrong
             super.addError(e);
+        } finally {
+            IOUtils.closeQuietly(stream);
         }
         return this.moduleProperties;
+    }
+
+    /**
+     * Overrides with anything that has been specified in system properties
+     */
+    private void applySystemPropertiesOverride() {
+        final Properties sys = System.getProperties();
+        for (final Entry<Object, Object> p : sys.entrySet()) {
+            if (this.moduleProperties.containsKey(p.getKey())) {
+                this.moduleProperties.setProperty((String) p.getKey(), (String) p.getValue());
+            }
+        }
     }
 
     /**

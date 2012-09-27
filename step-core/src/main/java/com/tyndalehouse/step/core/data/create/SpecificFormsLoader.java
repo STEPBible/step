@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +30,7 @@ public class SpecificFormsLoader extends AbstractClasspathBasedModuleLoader<Spec
     private static final String INSERT_INTO_SPECIFIC_FORMS = "INSERT INTO specific_form(RAW_STRONG_NUMBER, RAW_FORM, UNACCENTED_FORM, TRANSLITERATION) VALUES";
     private static final String INSERT_LEXICON = "insert into specific_form (raw_form , unaccented_form , transliteration , raw_strong_number )"
             + "select accented_unicode, unaccented_unicode, step_transliteration, strong_number from definition where accented_unicode not in (select raw_form from specific_form)";
+    private static final Pattern QUOTE_ESCAPE = Pattern.compile("'");
 
     /**
      * @param ebean the persistence server
@@ -51,11 +53,13 @@ public class SpecificFormsLoader extends AbstractClasspathBasedModuleLoader<Spec
                 parseLine(sql, line);
                 lines++;
 
-                if (lines > 1000) {
+                if (lines > 10000) {
                     sql.deleteCharAt(sql.length() - 1);
                     final String query = sql.toString();
                     if (query.length() > INSERT_INTO_SPECIFIC_FORMS.length()) {
                         getEbean().execute(new DefaultSqlUpdate(query));
+                        getEbean().currentTransaction().flushBatch();
+
                         LOGGER.debug("Created [{}] specific forms", total);
                         sql = getAdjustedStringBuilder();
                         total += lines;
@@ -118,7 +122,7 @@ public class SpecificFormsLoader extends AbstractClasspathBasedModuleLoader<Spec
         sql.append('\'');
         sql.append(',');
         sql.append('\'');
-        sql.append(transliterate(split[1]));
+        sql.append(QUOTE_ESCAPE.matcher(transliterate(split[1])).replaceAll("''"));
         sql.append('\'');
         sql.append(')');
         sql.append(',');

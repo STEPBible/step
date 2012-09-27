@@ -80,7 +80,7 @@ public class ColorCoderProviderImplPatternsTest {
      */
     @Test
     public void testPatterns() {
-        LOGGER.debug("Testing {} with {}", this.p.toString(), this.s);
+        LOGGER.trace("Testing {} with {}", this.p.toString(), this.s);
         assertTrue(this.s, this.p.matcher(this.s).find());
     }
 

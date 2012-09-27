@@ -224,7 +224,7 @@
 					<input type='text' class='originalForms drop originalAncient' size="20" readonly=true" />
 				</td>
 			</tr>
-			<tr>
+			<tr level="1">
 				<td>Restrict results to</td>
 				<td><input type="text" class="originalScope drop" size="20" readonly=true" title="Once the original word has been identified, constrains the displayed search results." /></td>
 			</tr>
@@ -261,7 +261,7 @@
 			</tr>
 			<tr level="2">
 				<td>Query Syntax&nbsp;</td>
-				<td><input type="text" class="subjectQuerySyntax querySyntax subjectText" /></td>
+				<td><input type="text" class="subjectQuerySyntax querySyntax" /></td>
 			</tr>
 			
 		</table>

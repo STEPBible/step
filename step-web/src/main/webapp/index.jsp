@@ -47,6 +47,7 @@
 	    <script src="js/jquery-extensions/jquery-qtip.js" type="text/javascript"></script>
 	    <script src="js/jquery-extensions/jquery-hover-intent.js" type="text/javascript"></script>
 	    <script src="js/jquery-extensions/jquery-cookie.js" type="text/javascript"></script>
+	    <script src="js/jquery-extensions/jquery-local-store.js" type="text/javascript"></script>
 		<script src="js/jquery-extensions/jquery-shout.js" type="text/javascript"></script>
 	    <script src="js/jquery-extensions/jquery-filtered-complete.js" type="text/javascript"></script>
 	    <script src="js/jquery-extensions/jquery-lexical-complete.js" type="text/javascript"></script>

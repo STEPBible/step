@@ -87,7 +87,7 @@ LexiconDefinition.prototype.getPopup = function() {
     this.popup.tabs().draggable({
         handle : "#lexiconDefinitionHeader",
     });
-    $("#lexiconDefinition").tabs("select", 0)
+    $("#lexiconDefinition").tabs("select", 0);
     
     $('#lexiconPopupClose').click(function() {
         $('#lexiconDefinition').hide();
@@ -126,6 +126,15 @@ LexiconDefinition.prototype.showOriginalWordData = function(data) {
         }
         
         $("*[info-name = 'similarStrongLinks']", "#vocabContainer").html(similarStrongs);
+    }
+    
+    //process step translit
+    var translit = $("[info-name='stepTransliteration']");
+    var translitHtml = translit.html();
+    if(!step.util.isBlank(translitHtml)) {
+        translitHtml = translitHtml.replace("(", "<span class='superTranslit'>(</span>");
+        translitHtml = translitHtml.replace(")", "<span class='superTranslit'>)</span>");
+        translit.html(translitHtml);
     }
 };
 

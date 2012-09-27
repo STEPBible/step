@@ -28,20 +28,20 @@
  ******************************************************************************/
 step.state.view = {
             storeDetail : function(level) {
-                $.cookie("detailLevel", level);
+                $.localStore("detailLevel", level);
             },
 
             getDetail : function() {
-                var level = $.cookie("detailLevel");
+                var level = $.localStore("detailLevel");
                 if (level != null || level == "") {
                     return parseInt(level);
                 } else {
-                    $.cookie("detailLevel", 0);
+                    $.localStore("detailLevel", 0);
                 }
             },
 
             getView : function() {
-              var view = $.cookie("viewType");
+              var view = $.localStore("viewType");
               if(view == undefined || view == "") {
                   view = "SINGLE_COLUMN_VIEW";
                   this.storeView(view);
@@ -51,7 +51,7 @@ step.state.view = {
             },
             
             storeView : function(viewName) { 
-                $.cookie("viewType", viewName);
+                $.localStore("viewType", viewName);
             },
             
             restore: function() {

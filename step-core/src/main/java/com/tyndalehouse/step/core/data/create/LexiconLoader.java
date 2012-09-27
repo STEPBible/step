@@ -325,7 +325,7 @@ public class LexiconLoader extends AbstractClasspathBasedModuleLoader<Definition
                 method.invoke(this.currentDefinition, fieldValue);
             }
 
-        } catch (final ReflectiveOperationException e) {
+        } catch (final Exception e) {
             throw new StepInternalException("Unable to call method for field " + fieldName, e);
         }
     }

@@ -152,7 +152,7 @@
 			<plugin>
 				<groupId>com.samaxes.maven</groupId>
 				<artifactId>minify-maven-plugin</artifactId>
-				<version>1.5.2-SNAPSHOT</version>
+				<version>1.5.3-SNAPSHOT</version>
 				<executions>
 					<execution>
 						<id>minify-all-step-resources</id>
@@ -162,76 +162,75 @@
 						</goals>
 						<configuration>
 							<cssSourceDir>.</cssSourceDir>
-							<cssSourceIncludes>
-								<cssSourceInclude>css/jquery-ui-1.8.23.custom.css</cssSourceInclude>
-								<cssSourceInclude>css/qtip.css</cssSourceInclude>
-								<cssSourceInclude>css/ddsmoothmenu.css</cssSourceInclude>
-								<cssSourceInclude>css/ddsmoothmenu-v.css</cssSourceInclude>
-							    <cssSourceInclude>css/initial-layout.css</cssSourceInclude>
-							    <cssSourceInclude>css/initial-fonts.css</cssSourceInclude>
-							    <cssSourceInclude>css/passage.css</cssSourceInclude>
-							    <cssSourceInclude>css/timeline.css</cssSourceInclude>
-							    <cssSourceInclude>css/search.css</cssSourceInclude>
-							    <cssSourceInclude>css/cardo.css</cssSourceInclude>
-							</cssSourceIncludes>
+							<cssSourceFiles>
+								<cssSourceFile>css/jquery-ui-1.8.23.custom.css</cssSourceFile>
+								<cssSourceFile>css/qtip.css</cssSourceFile>
+								<cssSourceFile>css/ddsmoothmenu.css</cssSourceFile>
+								<cssSourceFile>css/ddsmoothmenu-v.css</cssSourceFile>
+							    <cssSourceFile>css/initial-layout.css</cssSourceFile>
+							    <cssSourceFile>css/initial-fonts.css</cssSourceFile>
+							    <cssSourceFile>css/passage.css</cssSourceFile>
+							    <cssSourceFile>css/timeline.css</cssSourceFile>
+							    <cssSourceFile>css/search.css</cssSourceFile>
+							    <cssSourceFile>css/cardo.css</cssSourceFile>
+							</cssSourceFiles>
 							<cssFinalFile>step.css</cssFinalFile>
 							<jsSourceDir>.</jsSourceDir>
 							<jsSourceFiles>
-								<jsSourceInclude>js_init/initLib.js</jsSourceInclude>   
-							    <jsSourceInclude>libs/dohighlight-min.js</jsSourceInclude>
-							    <jsSourceInclude>libs/timeline_js/timeline-api.js</jsSourceInclude>
-							    <jsSourceInclude>libs/jquery-1.8.2.min.js</jsSourceInclude>
-								<jsSourceInclude>libs/jquery-ui-1.8.23.custom.min.js</jsSourceInclude>
-							    <jsSourceInclude>js/jquery-extensions/jquery-qtip.js</jsSourceInclude>
-							    <jsSourceInclude>js/jquery-extensions/jquery-hover-intent.js</jsSourceInclude>
-							    <jsSourceInclude>js/jquery-extensions/jquery-cookie.js</jsSourceInclude>
-							    <jsSourceInclude>js/jquery-extensions/jquery-local-store.js</jsSourceInclude>
-								<jsSourceInclude>js/jquery-extensions/jquery-shout.js</jsSourceInclude>
-							    <jsSourceInclude>js/jquery-extensions/jquery-filtered-complete.js</jsSourceInclude>
-							    <jsSourceInclude>js/jquery-extensions/jquery-lexical-complete.js</jsSourceInclude>
-							    <jsSourceInclude>js/jquery-extensions/jquery-detail-slider.js</jsSourceInclude>
-								<jsSourceInclude>js/ddsmoothmenu.js</jsSourceInclude>
-							    <jsSourceInclude>js/util.js</jsSourceInclude>
-							    <jsSourceInclude>js/bookmark.js</jsSourceInclude>
-							    <jsSourceInclude>js/lexicon_definition.js</jsSourceInclude>
-							    <jsSourceInclude>js/ui_hooks.js</jsSourceInclude>
-							    <jsSourceInclude>js/timeline.js</jsSourceInclude>
-							    <jsSourceInclude>js/geography.js</jsSourceInclude>
-							    <jsSourceInclude>js/toolbar_menu.js</jsSourceInclude>
-							    <jsSourceInclude>js/login.js</jsSourceInclude>
-								<jsSourceInclude>js/title.js</jsSourceInclude>
-								<jsSourceInclude>js/defaults/step.defaults.js</jsSourceInclude>
-								<jsSourceInclude>js/search/step.search.js</jsSourceInclude>
-								<jsSourceInclude>js/search/step.search.ui.js</jsSourceInclude>
-								<jsSourceInclude>js/search/step.search.quick.ui.js</jsSourceInclude>
-								<jsSourceInclude>js/search/step.search.original.ui.js</jsSourceInclude>
-								<jsSourceInclude>js/search/step.search.simpletext.ui.js</jsSourceInclude>
-								<jsSourceInclude>js/search/step.search.textual.ui.js</jsSourceInclude>
-								<jsSourceInclude>js/search/step.search.timeline.ui.js</jsSourceInclude>
-								<jsSourceInclude>js/search/step.search.subject.ui.js</jsSourceInclude>
-								<jsSourceInclude>js/navigation/step.navigation.js</jsSourceInclude>	    
-								<jsSourceInclude>js/state/step.state.js</jsSourceInclude>
-								<jsSourceInclude>js/state/step.state.view.js</jsSourceInclude>
-								<jsSourceInclude>js/state/step.state.passage.js</jsSourceInclude>
-								<jsSourceInclude>js/state/step.state.original.js</jsSourceInclude>
-							    <jsSourceInclude>js/menu/step.menu.js</jsSourceInclude>
-							    <jsSourceInclude>js/menu/top/help.js</jsSourceInclude>
-							    <jsSourceInclude>js/menu/top/options.js</jsSourceInclude>
-							    <jsSourceInclude>js/menu/top/tools.js</jsSourceInclude>
-							    <jsSourceInclude>js/menu/top/view.js</jsSourceInclude>
-							    <jsSourceInclude>js/menu/top/top.menu.ui.js</jsSourceInclude>
-							    <jsSourceInclude>js/menu/passage/context.js</jsSourceInclude>
-							    <jsSourceInclude>js/menu/passage/display.js</jsSourceInclude>
-							    <jsSourceInclude>js/menu/passage/passageTools.js</jsSourceInclude>
-							    <jsSourceInclude>js/menu/passage/search.js</jsSourceInclude>
-							    <jsSourceInclude>js/passage/step.version.js</jsSourceInclude>
-							    <jsSourceInclude>js/passage/step.passage.js</jsSourceInclude>
-							    <jsSourceInclude>js/passage/step.passage.ui.js</jsSourceInclude>
-							    <jsSourceInclude>js/passage/step.passage.navigation.js</jsSourceInclude>
-							    <jsSourceInclude>js/passage/step.passage.navigation.ui.js</jsSourceInclude>
-							    <jsSourceInclude>js/bookmark/step.bookmark.ui.js</jsSourceInclude>
-							    <jsSourceInclude>js/init.js</jsSourceInclude>
-		
+								<jsSourceFile>js_init/initLib.js</jsSourceFile>   
+							    <jsSourceFile>libs/dohighlight-min.js</jsSourceFile>
+							    <jsSourceFile>libs/timeline_js/timeline-api.js</jsSourceFile>
+							    <jsSourceFile>libs/jquery-1.8.2.min.js</jsSourceFile>
+								<jsSourceFile>libs/jquery-ui-1.8.23.custom.min.js</jsSourceFile>
+							    <jsSourceFile>js/jquery-extensions/jquery-qtip.js</jsSourceFile>
+							    <jsSourceFile>js/jquery-extensions/jquery-hover-intent.js</jsSourceFile>
+							    <jsSourceFile>js/jquery-extensions/jquery-cookie.js</jsSourceFile>
+							    <jsSourceFile>js/jquery-extensions/jquery-local-store.js</jsSourceFile>
+								<jsSourceFile>js/jquery-extensions/jquery-shout.js</jsSourceFile>
+							    <jsSourceFile>js/jquery-extensions/jquery-filtered-complete.js</jsSourceFile>
+							    <jsSourceFile>js/jquery-extensions/jquery-lexical-complete.js</jsSourceFile>
+							    <jsSourceFile>js/jquery-extensions/jquery-detail-slider.js</jsSourceFile>
+								<jsSourceFile>js/ddsmoothmenu.js</jsSourceFile>
+							    <jsSourceFile>js/util.js</jsSourceFile>
+							    <jsSourceFile>js/bookmark.js</jsSourceFile>
+							    <jsSourceFile>js/lexicon_definition.js</jsSourceFile>
+							    <jsSourceFile>js/ui_hooks.js</jsSourceFile>
+							    <jsSourceFile>js/timeline.js</jsSourceFile>
+							    <jsSourceFile>js/geography.js</jsSourceFile>
+							    <jsSourceFile>js/toolbar_menu.js</jsSourceFile>
+							    <jsSourceFile>js/login.js</jsSourceFile>
+								<jsSourceFile>js/title.js</jsSourceFile>
+								<jsSourceFile>js/defaults/step.defaults.js</jsSourceFile>
+								<jsSourceFile>js/search/step.search.js</jsSourceFile>
+								<jsSourceFile>js/search/step.search.ui.js</jsSourceFile>
+								<jsSourceFile>js/search/step.search.quick.ui.js</jsSourceFile>
+								<jsSourceFile>js/search/step.search.original.ui.js</jsSourceFile>
+								<jsSourceFile>js/search/step.search.simpletext.ui.js</jsSourceFile>
+								<jsSourceFile>js/search/step.search.textual.ui.js</jsSourceFile>
+								<jsSourceFile>js/search/step.search.timeline.ui.js</jsSourceFile>
+								<jsSourceFile>js/search/step.search.subject.ui.js</jsSourceFile>
+								<jsSourceFile>js/navigation/step.navigation.js</jsSourceFile>	    
+								<jsSourceFile>js/state/step.state.js</jsSourceFile>
+								<jsSourceFile>js/state/step.state.view.js</jsSourceFile>
+								<jsSourceFile>js/state/step.state.passage.js</jsSourceFile>
+								<jsSourceFile>js/state/step.state.original.js</jsSourceFile>
+							    <jsSourceFile>js/menu/step.menu.js</jsSourceFile>
+							    <jsSourceFile>js/menu/top/help.js</jsSourceFile>
+							    <jsSourceFile>js/menu/top/options.js</jsSourceFile>
+							    <jsSourceFile>js/menu/top/tools.js</jsSourceFile>
+							    <jsSourceFile>js/menu/top/view.js</jsSourceFile>
+							    <jsSourceFile>js/menu/top/top.menu.ui.js</jsSourceFile>
+							    <jsSourceFile>js/menu/passage/context.js</jsSourceFile>
+							    <jsSourceFile>js/menu/passage/display.js</jsSourceFile>
+							    <jsSourceFile>js/menu/passage/passageTools.js</jsSourceFile>
+							    <jsSourceFile>js/menu/passage/search.js</jsSourceFile>
+							    <jsSourceFile>js/passage/step.version.js</jsSourceFile>
+							    <jsSourceFile>js/passage/step.passage.js</jsSourceFile>
+							    <jsSourceFile>js/passage/step.passage.ui.js</jsSourceFile>
+							    <jsSourceFile>js/passage/step.passage.navigation.js</jsSourceFile>
+							    <jsSourceFile>js/passage/step.passage.navigation.ui.js</jsSourceFile>
+							    <jsSourceFile>js/bookmark/step.bookmark.ui.js</jsSourceFile>
+							    <jsSourceFile>js/init.js</jsSourceFile>
 							</jsSourceFiles>
 							<jsFinalFile>step.js</jsFinalFile>
 						</configuration>

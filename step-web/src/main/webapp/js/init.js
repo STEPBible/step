@@ -91,16 +91,23 @@ function hearViewChanges() {
         var view = data == undefined ||  data.viewName == undefined ? step.state.view.getView() : data.viewName;  
         step.state.view.storeView(view);
         
-//        if(view == 'SINGLE_COLUMN_VIEW') {
-//           $(".leftColumn").removeClass("column").addClass("singleColumn");
-//           $(".column").toggle(false);
-//           $("#centerPane").toggle(false);
-//       } else if (view == 'SINGLE_HELP_VIEW') {
-//       } else {
-//           $(".column").toggle(true);
-//           $(".leftColumn").removeClass("singleColumn").addClass("column");
-//           $("#centerPane").toggle(true);
-//       }
+        if(view == 'SINGLE_COLUMN_VIEW') {
+           $(".leftColumn").removeClass("column").addClass("singleColumn");
+           $(".column").toggle(false);
+           $("#centerPane").toggle(false);
+           
+           //add the holding page
+           $("#holdingPage").toggle(true);
+           $(".leftColumn").resizable();
+           
+       } else if (view == 'SINGLE_HELP_VIEW') {
+       } else {
+           $(".column").toggle(true);
+           $(".leftColumn").removeClass("singleColumn").addClass("column");
+           $("#centerPane").toggle(true);
+           $("#holdingPage").toggle(false);
+           $(".leftColumn").resizable("destroy");
+       }
     });
 }
 
@@ -163,7 +170,7 @@ function initPassages(options) {
 	//set up initial passages with reference data:
 	var passages = [];
 	
-	$(".column").each(
+	$(".column, .singleColumn").each(
 		function(index) {
 			var passageContainer = $(".passageContainer", this);
 			passages.push(new Passage(passageContainer, index));

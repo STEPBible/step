@@ -122,6 +122,22 @@
 			    </div>
 			</div>
 		</div>
+		<div id="holdingPage">
+			<h1>STEP<br /> <em>S</em>cripture <em>T</em>ools for <em>E</em>very <em>P</em>erson</h1>
+			<img src="images/step-logo-big.png" title="STEP" /><br />
+			<em>Stepping into the Bible.</em><br /><br />
+			
+			<table>
+				<tr>
+					<td><a href="#" title="A quick tutorial demonstrating how to get started"/>Quick start</a></td>
+					<td><a href="#" title="Detailed information on how to use the software"/>Help manual</a></td>
+				</tr>
+				<tr>
+					<td><a href="#" title="Find out more about the STEP project developed by Tyndale House"/>About the STEP project</a></td>
+					<td><a href="#" title="Give your time, money, skills towards helping make the STEP project a better tool for everyone" />Support the STEP project</a></td>
+				</tr>
+			</table>
+		</div>
 		
 		<jsp:include page="js/bookmark/bookmark.jsp"></jsp:include>
 			

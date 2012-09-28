@@ -98,7 +98,7 @@ function hearViewChanges() {
            
            //add the holding page
            $("#holdingPage").toggle(true);
-           $(".leftColumn").resizable();
+           $(".leftColumn").resizable({ handles: 'e'});
            
        } else if (view == 'SINGLE_HELP_VIEW') {
        } else {
@@ -115,6 +115,13 @@ function hearViewChanges() {
  * initialises layout
  */
 function initLayout() {
+    //add the defaults slider bar
+    $("#topMenu").detailSlider({title: "Controls the level of detail across the whole application.", key : "top"});
+    $(document).hear("slideView-top", function(self, data) {
+        var value = $("#topMenu").detailSlider("value");
+        $(".detailSliderContainer").parent().not("#topMenu").detailSlider("update", { value : value});
+    });
+    
     
 	$("body").hear("passage-changed", function() {
 		refreshLayout();

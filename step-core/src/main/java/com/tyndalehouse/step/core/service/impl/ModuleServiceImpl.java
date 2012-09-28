@@ -42,6 +42,7 @@ import java.util.Map.Entry;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 
 import org.crosswire.jsword.book.Book;
@@ -51,6 +52,7 @@ import org.slf4j.LoggerFactory;
 
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.models.BibleVersion;
+import com.tyndalehouse.step.core.models.ClientSession;
 import com.tyndalehouse.step.core.models.Definition;
 import com.tyndalehouse.step.core.service.ModuleService;
 import com.tyndalehouse.step.core.service.jsword.JSwordModuleService;
@@ -70,6 +72,7 @@ public class ModuleServiceImpl implements ModuleService {
     private final Map<String, String> defaultLexiconsRefs;
     private final JSwordPassageService jsword;
     private final JSwordModuleService jswordModuleService;
+    private final Provider<ClientSession> clientSession;
 
     /**
      * constructs a service to give module information and content
@@ -80,10 +83,12 @@ public class ModuleServiceImpl implements ModuleService {
      */
     @Inject
     public ModuleServiceImpl(@Named("defaultLexiconRefs") final Map<String, String> lexiconRefs,
-            final JSwordPassageService jsword, final JSwordModuleService jswordModuleService) {
+            final JSwordPassageService jsword, final JSwordModuleService jswordModuleService,
+            final Provider<ClientSession> clientSession) {
         this.defaultLexiconsRefs = lexiconRefs;
         this.jsword = jsword;
         this.jswordModuleService = jswordModuleService;
+        this.clientSession = clientSession;
     }
 
     // TODO: deprecated?
@@ -139,7 +144,7 @@ public class ModuleServiceImpl implements ModuleService {
     public List<BibleVersion> getAvailableModules() {
         LOGGER.info("Getting bible versions");
         return getSortedSerialisableList(this.jswordModuleService.getInstalledModules(BookCategory.BIBLE,
-                BookCategory.DICTIONARY, BookCategory.COMMENTARY));
+                BookCategory.DICTIONARY, BookCategory.COMMENTARY), this.clientSession.get().getLocale());
     }
 
     @SuppressWarnings("unchecked")
@@ -151,7 +156,8 @@ public class ModuleServiceImpl implements ModuleService {
         final List<Book> allModules = this.jswordModuleService.getAllModules(BookCategory.BIBLE,
                 BookCategory.DICTIONARY, BookCategory.COMMENTARY);
 
-        return getSortedSerialisableList(CollectionUtils.subtract(allModules, installedVersions));
+        return getSortedSerialisableList(CollectionUtils.subtract(allModules, installedVersions),
+                this.clientSession.get().getLocale());
     }
 
 }

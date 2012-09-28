@@ -49,6 +49,7 @@ import static org.mockito.Mockito.when;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Locale;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -192,7 +193,7 @@ public class FrontControllerTest {
 
         // then
         controllerMethod.invoke(controllerInstance);
-        verify(bibleInfo).getAvailableModules(anyBoolean(), anyString());
+        verify(bibleInfo).getAvailableModules(anyBoolean(), anyString(), any(Locale.class));
     }
 
     /**

@@ -38,6 +38,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
 import org.crosswire.common.util.Language;
 import org.crosswire.jsword.book.Book;
@@ -52,6 +53,7 @@ import com.tyndalehouse.step.core.models.BibleVersion;
  * 
  */
 public final class JSwordUtils {
+
     /**
      * hiding implementaiton
      */
@@ -63,9 +65,11 @@ public final class JSwordUtils {
      * returns a sorted list from another list, with only the required information
      * 
      * @param bibles a list of jsword bibles
+     * @param userLocale the local for the user
      * @return the list of bibles
      */
-    public static List<BibleVersion> getSortedSerialisableList(final Collection<Book> bibles) {
+    public static List<BibleVersion> getSortedSerialisableList(final Collection<Book> bibles,
+            final Locale userLocale) {
         final List<BibleVersion> versions = new ArrayList<BibleVersion>();
 
         // we only send back what we need
@@ -77,8 +81,13 @@ public final class JSwordUtils {
             v.setCategory(b.getBookCategory().name());
             final Language language = b.getLanguage();
             if (language != null) {
-
                 v.setLanguageCode(language.getCode());
+
+                final Locale versionLanguage = new Locale(language.getCode());
+
+                if (versionLanguage != null) {
+                    v.setLanguageName(versionLanguage.getDisplayLanguage(userLocale));
+                }
             }
             v.setHasStrongs(b.hasFeature(FeatureType.STRONGS_NUMBERS));
             v.setHasMorphology(b.hasFeature(FeatureType.MORPHOLOGY));

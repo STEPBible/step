@@ -3,7 +3,8 @@ $(function() {
     	options : {
     	    scopeSelector : undefined,
     	    key : undefined,
-    	    keySelector : undefined
+    	    keySelector : undefined,
+    	    title : undefined
     	},
     	
     	/**
@@ -26,12 +27,21 @@ $(function() {
     	    var label = $("<span class='sliderDetailLevelLabel'>Quick view</span>");
             var widgetContent = $("<span class='detailSliderContainer'></span>").append(label).append(slider);
             
+            if(this.options.title) {
+                slider.attr("title", this.options.title);
+            }
+            this.slider = slider;
     	    this.element.prepend(widgetContent);
     	    this.element.addClass("detailSlider")
     	    
     	    this._updateLabel();
     	    this._updateSliderImpact(this._getValue(), false);
 //    	    console.log("Done for " + this.options.key);
+    	},
+    	
+    	update : function(event) {
+    	    this.slider.slider("value", event.value +1);
+    	    this._updateSliderImpact(event.value);
     	},
     	
     	value : function(event) {

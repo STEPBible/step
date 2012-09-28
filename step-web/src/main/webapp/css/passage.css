@@ -550,3 +550,10 @@ FONT.usg {
 .passageContainer .passageLookupButtons, .passageContainer .passageSizeButtons {
 	font-size: 0.8em;
 }
+
+
+.filterTagLine {
+	font-size: 10px;
+	font-style: italic;
+	text-align: right;
+}

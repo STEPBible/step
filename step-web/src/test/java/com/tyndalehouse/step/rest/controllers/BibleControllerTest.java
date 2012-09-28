@@ -81,7 +81,7 @@ public class BibleControllerTest {
     public void testGetBibleVersions() {
         // do test
         this.testController.getModules();
-        verify(this.bibleInformation).getAvailableModules(true, null);
+        verify(this.bibleInformation).getAvailableModules(true, null, null);
     }
 
     /**

@@ -32,6 +32,8 @@
  ******************************************************************************/
 package com.tyndalehouse.step.guice.providers;
 
+import java.util.Locale;
+
 import javax.inject.Provider;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -68,6 +70,7 @@ public class ClientSessionProvider implements Provider<ClientSession> {
     @Override
     public ClientSession get() {
         // check if this has the IP address in it
-        return new WebSessionImpl(this.session.getId(), this.request.getLocale().getISO3Language());
+        final Locale locale = this.request.getLocale();
+        return new WebSessionImpl(this.session.getId(), locale.getISO3Language(), locale);
     }
 }

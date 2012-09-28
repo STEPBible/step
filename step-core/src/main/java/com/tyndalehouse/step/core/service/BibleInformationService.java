@@ -33,6 +33,7 @@
 package com.tyndalehouse.step.core.service;
 
 import java.util.List;
+import java.util.Locale;
 
 import com.tyndalehouse.step.core.models.BibleVersion;
 import com.tyndalehouse.step.core.models.BookName;
@@ -52,13 +53,13 @@ public interface BibleInformationService {
 
     /**
      * Queries Jsword to return all the installed versions of the bible
-     * 
-     * @param locale the locale of the requester
      * @param allVersions a boolean indicating whether all versions should be returned
+     * @param locale the locale of the requester
+     * @param usersLocale TODO
      * 
      * @return all the available versions of the bible
      */
-    List<BibleVersion> getAvailableModules(boolean allVersions, String locale);
+    List<BibleVersion> getAvailableModules(boolean allVersions, String locale, Locale usersLocale);
 
     /**
      * This method selects passage text and forms XML for the client. This is done server side so that the

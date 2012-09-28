@@ -49,6 +49,7 @@ public class BibleVersion implements Serializable {
     private boolean questionable;
     private String languageCode;
     private String category;
+    private String languageName;
 
     /**
      * @return true if the version contains strong-tagged information
@@ -146,5 +147,19 @@ public class BibleVersion implements Serializable {
      */
     public void setCategory(final String category) {
         this.category = category;
+    }
+
+    /**
+     * @return the languageName
+     */
+    public String getLanguageName() {
+        return this.languageName;
+    }
+
+    /**
+     * @param languageName the languageName to set
+     */
+    public void setLanguageName(final String languageName) {
+        this.languageName = languageName;
     }
 }

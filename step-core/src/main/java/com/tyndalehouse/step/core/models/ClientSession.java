@@ -32,6 +32,8 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.models;
 
+import java.util.Locale;
+
 /**
  * At the moment, the "Client Session" object just wraps around an id.
  * 
@@ -57,4 +59,10 @@ public interface ClientSession {
      * @return the preferred language of the user
      */
     String getLanguage();
+
+    /**
+     * @return the full Locale object
+     */
+    Locale getLocale();
+
 }

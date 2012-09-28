@@ -137,7 +137,7 @@ step.passage = {
         
         if(interlinearMode == "" || interlinearMode == undefined || interlinearVersions  == undefined || interlinearVersions == "") {
             //examine the first verse's contents, remove spaces and numbers
-            var contents = $(".verse:first", passageContent).text().replace(/[0-9\s]/g, "");
+            var contents = $(".verse:first", passageContent).text().replace(/[0-9\s,.;:'“”]/g, "");
                 
             if(step.util.isUnicode(contents)) {
                     $(".passageContentHolder", passageContent).addClass("unicodeFont");

@@ -245,7 +245,8 @@ step.state = {
     },
 
     _storeAndRetrieveCookieState : function(passageId, key, obj, fireChange, changeHandler) {
-        var originalValue = $.localStore("step.passage." + passageId + "." + key);
+        var localKey = passageId != undefined ? "step.passage." + passageId + "." + key : "step." + key;
+        var originalValue = $.localStore(localKey);
         var fired = false;
         
         if (obj != null) {
@@ -256,14 +257,14 @@ step.state = {
 
             if (newObj != originalValue || fireChange == true) {
                 // store first
-                $.localStore("step.passage." + passageId + "." + key, obj);
+                $.localStore(localKey, obj);
                 if (fireChange == null || fireChange == true) {
                     step.state._fireStateChanged(passageId);
                     fired = true;
                 }
 
                 // then return
-                var storedValue = $.localStore("step.passage." + passageId + "." + key);
+                var storedValue = $.localStore(localKey);
                 if(changeHandler) { 
                     changeHandler(fired);
                 }

@@ -133,10 +133,16 @@ public class Loader {
 
         // set undo log
         try {
-            // this.ebean.createSqlUpdate("SET UNDO_LOG 0").execute();
+            this.ebean.createSqlUpdate("SET LOG 0").execute();
+            this.ebean.createSqlUpdate("SET CACHE_SIZE 65536").execute();
+            this.ebean.createSqlUpdate("SET LOCK_MODE 0").execute();
+            this.ebean.createSqlUpdate("SET UNDO_LOG 0").execute();
             loadData();
         } finally {
-            // this.ebean.createSqlUpdate("SET UNDO_LOG 1").execute();
+            this.ebean.createSqlUpdate("SET LOG 1").execute();
+            this.ebean.createSqlUpdate("SET CACHE_SIZE 65536").execute();
+            this.ebean.createSqlUpdate("SET LOCK_MODE 1").execute();
+            this.ebean.createSqlUpdate("SET UNDO_LOG 1").execute();
         }
     }
 

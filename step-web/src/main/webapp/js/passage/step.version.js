@@ -31,6 +31,41 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
 step.version = {
+        quickEnglish : ["ASV", "BBE", "DRC", "ESV", "KJV", "NETtext", "RWebster", "WEB"],
+        deeperEnglish : ["JPS", "LEB", "Rotherham", "AB", "YLT"],
+        names : {
+            asv         : {name : "American Standard Version ", level : 0},
+            bbe         : {name : "Bible in Basic English ", level : 0},
+            drc         : {name : "Douay-Rheims Catholic Bible ", level : 0},
+            esv         : {name : "English Standard Version", level : 0},
+            kjv         : {name : "King James Version (\"Authorised\") ", level : 0},
+            nasb        : {name : "New American Standard Bible ", level : 0},
+            nettext     : {name : "New English Translation ", level : 0},
+            rwebster    : {level : 0},
+            web         : {name : "World English Bible ", level : 0},
+            jps         : {name : "Jewish Publication Society (OT)", level : 1},
+            leb         : {name : "Lexham English Bible ", level : 1},
+            rotherham   : {name : "Emphasized Bible ", level : 1},
+            ab          : {name : "Translation of Greek Septuagint (OT)", level : 1},
+            ylt         : {name : "Young's over-literal translation of Hebrew & Greek", level : 1},
+            
+            abp         : {name : "Interlinear for Greek Septuagint (OT)", level : 2 }, 
+            etheridge   : {name : "Translation of Syriac Peshitta (NT)", level : 2}, 
+
+            abpgrk      : {name : "Orthodox Greek Septuagint (Grk, OT)", level : 2},
+            lxx         : {name : "Septuagint from Rahlf+Goettingen (Grk, OT)", level : 2},
+            peshitta    : {name : "Syriac version (Syriac, NT)", level : 2},
+            tnt         : {name : "Greek edition of Tregelles (Grk. NT)", level : 2},
+            vulgate     : {name : "Latin Bible by Jerome (Lat. +Ap)", level : 2},
+            whnu        : {name : "Westcott & Hort + NA27/UBS3 (Grk. NT)", level : 2},
+            wlc         : {name : "BHS corrected to Leningrad codex (Heb. OT)", level : 2},
+            
+            //            DRC = Translation of Latin Vulgate (Eng. OT+Ap+NT)
+            chiuns      : {name: "和合本圣经 （简体版）" },
+            chincvs     : {name: "新译本 （简体版）" },
+            chincvt     : {name: "新譯本 (繁體版)"}
+        },
+        
         autocomplete : function(target, selectHandler, changeHandler, blurHandler, additive) {
             // set up autocomplete
             target.filteredcomplete({
@@ -112,7 +147,11 @@ step.version = {
             var interlinear = widget.find("input.interlinearFeature").prop('checked');
             var grammar = widget.find("input.grammarFeature").prop('checked');
 
-//            console.log("language is ", language);
+            
+            var level = $.localStore("step.slideView-versionsDetail");
+            if(level == undefined) {
+                level = 0;
+            }
             
            return $.grep(step.versions, function(item, index) {
                 if(resource == 'commentaries' && item.category != 'COMMENTARY' ||
@@ -123,29 +162,48 @@ step.version = {
                     return false;
                 }
                 
-                //exclude if vocab and no strongs
-                if((vocab == true || interlinear == true) && !item.hasStrongs) {
-                    return false;
+                //skip over feature filtering, if level is Quick or Deeper
+                if(level == 2) {
+                    //exclude if vocab and no strongs
+                    if((vocab == true || interlinear == true) && !item.hasStrongs) {
+                        return false;
+                    }
+                    
+                    if(grammar == true && !item.hasMorphology) {
+                        return false;
+                    }
                 }
-                
-                if(grammar == true && !item.hasMorphology) {
-                    return false;
-                }
-                
+
                 var lang = item.languageCode;
-                if(language == "langAncient" && lang != 'grc' && lang != 'la' && lang != 'he') {
+                if(level == 2 && language == "langAncient" && lang != 'grc' && lang != 'la' && lang != 'he') {
                     return false;
                 }
-                
+
                 var currentLang = step.state.language(1);
-                if(language == "langMyAndEnglish" && lang != currentLang && lang != 'en') {
+                //if English and quick, buttons are not available, and we show only english language
+                if(currentLang == 'en' && level == 0 && lang != 'en') {
+                    //then exclude
+                    return false;
+                } 
+                
+                //if we've got those buttons, i.e. currentLang != English
+                if( currentLang != 'en' &&       
+                        language == "langMyAndEnglish" && lang != currentLang && lang != 'en') {
                     return false;
                 }
                 
-                if(language == "langMy" && lang != currentLang) {
+                
+                if((language == "langMy" || language == undefined) && lang != currentLang) {
                     return false;
                 }
                 
+                //finally, if level is 0 or 1 we restrict what we see...
+                var versionName = step.version.names[item.initials.toLowerCase()];
+                if(level == 0) {
+                    return versionName != undefined && versionName.level == 0;
+                } else if (level == 1) {
+                    versionName != undefined && versionName.level < 2;
+                }
                 
                 return true;
             });
@@ -154,7 +212,18 @@ step.version = {
         refreshVersions : function(target, versions) {
             // need to make server response adequate for autocomplete:
             var parsedVersions = $.map(versions, function(item) {
-                var showingText = "<span class='versionKey'>" +item.initials + "</span><span style='font-size: larger'>&rArr;</span>&nbsp;<span class='versionName'>" + item.name + "</span>";
+                
+                var name = item.name;
+                var overName = step.version.names[item.initials.toLowerCase()];
+                if(overName != undefined && overName.name != undefined) {
+                    name = overName.name;
+                }
+                
+                var languageName = step.languages[item.lang2];
+                var showingText = 
+                    "<span class='versionInfo' title='" + item.name + " (" + item.languageName.replace("'", "&quot;")  + ")'>&#x24be;</span>&nbsp;&nbsp;" +
+                    "<span class='versionKey'>" +item.initials + "</span><span style='font-size: larger'>&rArr;</span>&nbsp;" +
+                    "<span class='versionName'>" + name + "</span>";
                 var features = "";
                 // add to Strongs if applicable, and therefore interlinear
                 if (item.hasStrongs) {
@@ -168,7 +237,7 @@ step.version = {
                 }
 
                 if (item.isQuestionable) {
-                    features += " " + "<span class='versioNFeature questionableFeature' title='Questionable material'>?</span>";
+                    features += " " + "<span class='versionFeature questionableFeature' title='Questionable material'>?</span>";
                 }
                 
                 // return response for dropdowns
@@ -180,6 +249,12 @@ step.version = {
             });
 
             $(target).filteredcomplete("option", "source", parsedVersions);
+            
+            delay(function() {
+                $(".versionInfo").click(function(event) {
+                    event.preventDefault();
+                }, 300);
+            });
         }
 };
 
@@ -188,17 +263,22 @@ step.version = {
 $(step.version).hear("filter-versions", function(source, data) {
     var element = data;
     var target = $(element);
-//    var passageId = step.passage.getPassageId(element);
-//    var passageContainer = step.util.getPassageContainer(passageId);
-//    var passageVersion = $(".passageVersion", passageContainer);
     
+//    var versionsToKeep = step.version.filteredVersions(target);
+//    $.map(versionsToKeep, function(n, i) {
+//       return i.initials;
+//    });
+//    
+//    $(".filteredCompleteVersions .versionKey").filter(function() {
+//        return $.inArray($(this).html()) == -1;
+//    }).hide();
     
     
     step.version.refreshVersions(target, step.version.filteredVersions(target));
-    
-    target.filteredcomplete("search", "");
+//    target.filteredcomplete("search", "");
     
     //hack for IE.
     element.focus();
 });
+
 

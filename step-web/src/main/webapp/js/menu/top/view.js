@@ -34,7 +34,7 @@ $(step.menu).hear("MENU-VIEW", function(self, menuTrigger) {
 	    step.menu.tickMenuItem(menuTrigger.menuItem.element);
 	    step.state.view.storeDetail(level);
 	} else {
-	    step.menu.untickMenuItem($(menuTrigger.menuItem.element).parent().parent().not("[level]"));
+	    step.menu.untickMenuItem($(menuTrigger.menuItem.element).parent().parent().find("*").not("[level]"));
         step.menu.tickMenuItem(menuTrigger.menuItem.element);
 	    $.shout("view-change", {viewName : menuTrigger.menuItem.name});
 	}

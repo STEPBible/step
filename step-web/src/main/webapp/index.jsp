@@ -37,8 +37,9 @@
 	    <link rel="stylesheet" type="text/css" href="css/timeline.css" />
 	    <link rel="stylesheet" type="text/css" href="css/search.css" />
 	    <link rel="stylesheet" type="text/css" href="css/cardo.css" />
-	
+		
 		<script src="js_init/initLib.js" type="text/javascript"></script>   
+		<script src="js/internationalization/languages.js" type="text/javascript"></script>
 	    <script src="libs/dohighlight-min.js" type="text/javascript"></script>
 	    <script src="libs/timeline_js/timeline-api.js" type="text/javascript"></script>
 	    <script src="libs/jquery-1.8.2.min.js" type="text/javascript"></script>
@@ -134,7 +135,7 @@
 				</tr>
 				<tr>
 					<td><a href="#" title="Find out more about the STEP project developed by Tyndale House"/>About the STEP project</a></td>
-					<td><a href="#" title="Give your time, money, skills towards helping make the STEP project a better tool for everyone" />Support the STEP project</a></td>
+					<td><a href="#" title="Give your time, skills, etc. towards helping make the STEP project a better tool for everyone" />Support the STEP project</a></td>
 				</tr>
 			</table>
 		</div>

@@ -131,6 +131,12 @@ legend .detailSliderContainer {
 	font-size: 10px !important;
 	white-space: nowrap;
 }
+
+.filterOptions .detailSlider {
+	float: right;
+	margin-right: 10px;
+}
+
 .filterButtonSet {
 	margin-top: 3px;
 }

@@ -78,6 +78,7 @@ body {
 	margin-bottom: 1px;
 }
 
+
 .bookmarkItem {
 	clear: both;
 	display: block;	
@@ -100,7 +101,20 @@ body {
 /**************************/
 /* TOP MENU               */
 /**************************/
-#topMenu {
+
+
+#topMenu .detailSliderContainer {
+	float: right;
+	font-size: 10px;
+	margin-right: 10px;
+}
+
+#topMenu .detailSliderContainer .detailLevel {
+	font-size: 1em;
+}
+
+#topMenu .detailSliderContainer .sliderDetailLevelLabel {
+	color: white !important;
 }
 
 #topMenu a.login {
@@ -383,3 +397,5 @@ body {
 .clearBoth {
 	clear: both;
 }
+
+

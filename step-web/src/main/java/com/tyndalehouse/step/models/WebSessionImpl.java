@@ -32,6 +32,8 @@
  ******************************************************************************/
 package com.tyndalehouse.step.models;
 
+import java.util.Locale;
+
 import com.tyndalehouse.step.core.models.ClientSession;
 
 /**
@@ -44,6 +46,7 @@ public class WebSessionImpl implements ClientSession {
     private String sessionId;
     private String ipAddress;
     private String language;
+    private Locale locale;
 
     /**
      * creates a web session
@@ -51,9 +54,10 @@ public class WebSessionImpl implements ClientSession {
      * @param id the id of the session
      * @param language the ISO 3-character long language name
      */
-    public WebSessionImpl(final String id, final String language) {
+    public WebSessionImpl(final String id, final String language, final Locale locale) {
         this.sessionId = id;
         this.language = language;
+        this.locale = locale;
     }
 
     /**
@@ -96,5 +100,17 @@ public class WebSessionImpl implements ClientSession {
      */
     public void setLanguage(final String language) {
         this.language = language;
+    }
+
+    @Override
+    public Locale getLocale() {
+        return this.locale;
+    }
+
+    /**
+     * @param locale the locale to set
+     */
+    public void setLocale(final Locale locale) {
+        this.locale = locale;
     }
 }

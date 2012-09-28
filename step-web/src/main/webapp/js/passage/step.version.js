@@ -66,6 +66,11 @@ step.version = {
             chincvt     : {name: "新譯本 (繁體版)"}
         },
         
+        updateInfoLink : function(passageId) {
+            var version = step.state.passage.version(passageId);
+            $(".infoAboutVersion", step.util.getPassageContainer(passageId)).attr("href", "version.jsp?version=" + version).attr("title", "Information about the " + version + " Bible / Commentary");
+        },
+        
         autocomplete : function(target, selectHandler, changeHandler, blurHandler, additive) {
             // set up autocomplete
             target.filteredcomplete({
@@ -221,7 +226,7 @@ step.version = {
                 
                 var languageName = step.languages[item.lang2];
                 var showingText = 
-                    "<span class='versionInfo' title='" + item.name + " (" + item.languageName.replace("'", "&quot;")  + ")'>&#x24be;</span>&nbsp;&nbsp;" +
+                    "<span class='versionInfo' title='" + item.name + " (" + item.languageName.replace("'", "&quot;")  + ")'>&#x24d8;</span>&nbsp;&nbsp;" +
                     "<span class='versionKey'>" +item.initials + "</span><span style='font-size: larger'>&rArr;</span>&nbsp;" +
                     "<span class='versionName'>" + name + "</span>";
                 var features = "";
@@ -258,6 +263,14 @@ step.version = {
         }
 };
 
+
+$(step.version).hear("version-changed-0", function(source, data) {
+   step.version.updateInfoLink(0);
+});
+
+$(step.version).hear("version-changed-1", function(source, data) {
+    step.version.updateInfoLink(1); 
+ });
 
 
 $(step.version).hear("filter-versions", function(source, data) {

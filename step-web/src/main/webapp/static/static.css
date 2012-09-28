@@ -1,0 +1,90 @@
+body, h1 {
+	padding: 0px;
+	margin: 0px;
+	font-family: Verdana;
+}
+
+h1 {
+	font-size: 16px;
+	padding: 10px;
+	color: white;
+	
+}
+
+h2 {
+	font-size: 16px;
+	color: #696;
+}
+
+h3 {
+	font-size: 14px;
+	color: #669;
+	padding: 0px;
+	margin: 0px;
+}
+
+.copyright {
+	margin-left: 5px;
+	font-size: 11px;
+	min-width: 200px;
+/* 	float: left; */
+}
+
+
+.header {
+	background-color: #629914;
+	color: white; 
+	height: 39px;
+}
+
+#bookListTable tr.even {
+	background-color: #F0F0F0 ; 
+}
+
+#bookListContainer {
+	width: 700px;
+	padding-right: 10px;
+	float: left;
+}
+
+#bookListTable {
+	border: solid 1px lightgrey;
+}
+
+
+#bookListTable th {
+	background-color: #4EB305;
+	color: white;
+	font-size: 12px;
+}
+
+#bookListTable {
+	border-collapse: collapse;
+}
+
+#bookListTable tr, #bookListTable td {
+	border-bottom: solid 1px lightgrey;
+	border-right: solid 1px lightgrey;
+
+	margin: 0px;
+	font-size: 12px;
+}
+
+#bookListTable tr {
+	padding: 0px;
+}
+
+#bookListTable td {
+	padding: 2px;
+}
+
+
+.bookName {
+	color: #669;
+	font-weight: bold;
+	padding-left: 5px;
+}
+
+#bookListTable a  {
+	color: #669;
+}

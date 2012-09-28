@@ -130,12 +130,12 @@
 			
 			<table>
 				<tr>
-					<td><a href="#" title="A quick tutorial demonstrating how to get started"/>Quick start</a></td>
-					<td><a href="#" title="Detailed information on how to use the software"/>Help manual</a></td>
+					<td><a href="http://help.step.tyndalehouse.com/quickStart.html" title="A quick tutorial demonstrating how to get started"/>Quick start</a></td>
+					<td><a href="http://help.step.tyndalehouse.com/helpManual.html" title="Detailed information on how to use the software"/>Help manual</a></td>
 				</tr>
 				<tr>
-					<td><a href="#" title="Find out more about the STEP project developed by Tyndale House"/>About the STEP project</a></td>
-					<td><a href="#" title="Give your time, skills, etc. towards helping make the STEP project a better tool for everyone" />Support the STEP project</a></td>
+					<td><a href="http://help.step.tyndalehouse.com/about.html" title="Find out more about the STEP project developed by Tyndale House"/>About the STEP project</a></td>
+					<td><a href="http://help.step.tyndalehouse.com/supportTheProject.html" title="Give your time, skills, etc. towards helping make the STEP project a better tool for everyone" />Support the STEP project</a></td>
 				</tr>
 			</table>
 		</div>

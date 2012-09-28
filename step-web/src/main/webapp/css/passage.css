@@ -557,3 +557,9 @@ FONT.usg {
 	font-style: italic;
 	text-align: right;
 }
+
+.infoAboutVersion, .versionInfo {
+	font-size: 120%;
+	color: #696;
+	font-weight: bold;	
+}

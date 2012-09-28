@@ -197,6 +197,16 @@ public class WebStepRequest {
         }
     }
 
+    public String getThisVersion() {
+        final int passageId = Integer.parseInt(this.request.getParameter("passageId"));
+        return this.versions.get(passageId);
+    }
+
+    public String getThisReference() {
+        final int passageId = Integer.parseInt(this.request.getParameter("passageId"));
+        return this.references.get(passageId);
+    }
+
     /**
      * returns the value of the cookie
      * 

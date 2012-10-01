@@ -65,6 +65,7 @@ DICTIONARY_SEARCH_BY_HEADWORD =     STEP_SERVER_BASE_URL + "dictionary/searchDic
 MODULE_GET_ALL_MODULES =            STEP_SERVER_BASE_URL + "module/getAllModules/";
 MODULE_GET_ALL_INSTALLABLE_MODULES= STEP_SERVER_BASE_URL + "module/getAllInstallableModules/";
 MODULE_GET_INFO =                   STEP_SERVER_BASE_URL + "module/getInfo/";
+MODULE_GET_QUICK_INFO =             STEP_SERVER_BASE_URL + "module/getQuickInfo/";
 
 SETUP_IS_FIRST_TIME =               STEP_SERVER_BASE_URL + "setup/isFirstTime/";
 SETUP_INSTALL_DEFAULT_MODULES =     STEP_SERVER_BASE_URL + "setup/installDefaultModules/";

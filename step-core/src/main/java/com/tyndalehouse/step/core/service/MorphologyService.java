@@ -49,4 +49,12 @@ public interface MorphologyService {
      * @return the list of matched morphology entities
      */
     List<Morphology> getMorphology(String code);
+
+    /**
+     * Returns the same as {@link getMorphology} but only partial information
+     * 
+     * @param code the long-code including prefix
+     * @return the list of matched morphology entities
+     */
+    List<Morphology> getQuickMorphology(String code);
 }

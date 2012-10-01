@@ -72,4 +72,12 @@ public interface VocabularyService {
      * @return the string to be displayed
      */
     String getGreekVocab(String vocabIdentifiers);
+
+    /**
+     * Gets quick information about the particular identifiers
+     * 
+     * @param vocabIdentifiers the identifier
+     * @return the quick information
+     */
+    List<Definition> getQuickDefinitions(String vocabIdentifiers);
 }

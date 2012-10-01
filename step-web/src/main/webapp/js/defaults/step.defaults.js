@@ -31,7 +31,6 @@
 // LANGUAGE
 ////////////////////////////////////////
 WORDS_MEANING = ["words meaning", "Type the English meaning of the original words."];
-TRANSLATED_AS = ["words translated as", "Type a phrase that occurs in a passage."];
 GREEK_WORDS = ["a Greek word", "Type the start of the word in English letters or Unicode Greek."];
 HEBREW_WORDS = ["a Hebrew word", "Type the start of the word in English letters or Unicode Hebrew."];
 
@@ -88,7 +87,6 @@ step.defaults = {
         
         original : {
             originalTypes : [WORDS_MEANING[0],
-                             TRANSLATED_AS[0],
                              GREEK_WORDS[0], 
                              HEBREW_WORDS[0]],
             originalForms: [ALL_RELATED, ALL_FORMS, SPECIFIC_FORM, ],

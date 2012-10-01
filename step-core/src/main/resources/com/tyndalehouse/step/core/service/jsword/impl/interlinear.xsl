@@ -535,7 +535,7 @@
 				</xsl:choose>
 			</xsl:variable>
     
-			<span class="{$classes} {$colorClass}" onclick="javascript:showDef(this)" strong="{@lemma}" morph="{@morph}">
+			<span class="{$classes} {$colorClass}" strong="{@lemma}" morph="{@morph}">
 				<xsl:if test="normalize-space($remainingText) != ''">
 					<!-- 1st - Output first line or a blank if no text available. -->
 					<span class="text">

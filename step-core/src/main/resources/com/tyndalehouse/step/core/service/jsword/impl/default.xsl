@@ -620,11 +620,11 @@
 	    		<xsl:when test="$ColorCoding = 'true'" >
 			    	<xsl:variable name="colorClass" select="jsword:getColorClass($colorCodingProvider, @morph)"/>
 			    	<xsl:variable name="lemma" select="conversion:getStrongPaddedKey(@lemma)" />
-			    	<span class="{$colorClass}" onclick="javascript:showDef(this)" strong="{$lemma}" morph="{@morph}"><xsl:apply-templates/></span>
+			    	<span class="{$colorClass}" strong="{$lemma}" morph="{@morph}"><xsl:apply-templates/></span>
 			    </xsl:when>
 			    <xsl:otherwise>
 			    	<xsl:variable name="lemma" select="conversion:getStrongPaddedKey(@lemma)" />
-	    	    	<span onclick="javascript:showDef(this)" strong="{$lemma}" morph="{@morph}"><xsl:apply-templates/></span>
+	    	    	<span strong="{$lemma}" morph="{@morph}"><xsl:apply-templates/></span>
 			    </xsl:otherwise>
 		    </xsl:choose>
 	    

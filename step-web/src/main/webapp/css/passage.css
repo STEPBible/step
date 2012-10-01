@@ -563,3 +563,18 @@ FONT.usg {
 	color: #696;
 	font-weight: bold;	
 }
+
+
+.quickLexiconDefinition {
+	width: 300px;
+/* 	height: 300px; */
+	overflow: auto;
+	position: absolute;
+	top: 0px;
+	z-index: 10000;
+}
+
+.quickLexiconDefinition h1 {
+	font-size: 1em;
+	font-weight: bold;
+}

@@ -99,7 +99,7 @@ public class MorphInfo implements Serializable {
      * 
      * @param m see {@link Morphology}
      */
-    public MorphInfo(final Morphology m) {
+    public MorphInfo(final Morphology m, final boolean includeAllInfo) {
         setFunction(m.getFunction());
         setGender(m.getGender());
         setMood(m.getMood());
@@ -110,28 +110,30 @@ public class MorphInfo implements Serializable {
         setVoice(m.getVoice());
         setWordCase(m.getWordCase());
 
-        setExplanation(m.getExplanation());
-        setDescription(m.getDescription());
+        if (includeAllInfo) {
+            setExplanation(m.getExplanation());
+            setDescription(m.getDescription());
 
-        setFunctionExplained(m.getFunctionExplained());
-        setGenderExplained(m.getGenderExplained());
-        setMoodExplained(m.getMoodExplained());
-        setNumberExplained(m.getNumberExplained());
-        setPersonExplained(m.getPersonExplained());
-        setSuffixExplained(m.getSuffixExplained());
-        setTenseExplained(m.getTenseExplained());
-        setVoiceExplained(m.getVoiceExplained());
-        setCaseExplained(m.getCaseExplained());
+            setFunctionExplained(m.getFunctionExplained());
+            setGenderExplained(m.getGenderExplained());
+            setMoodExplained(m.getMoodExplained());
+            setNumberExplained(m.getNumberExplained());
+            setPersonExplained(m.getPersonExplained());
+            setSuffixExplained(m.getSuffixExplained());
+            setTenseExplained(m.getTenseExplained());
+            setVoiceExplained(m.getVoiceExplained());
+            setCaseExplained(m.getCaseExplained());
 
-        setFunctionDescription(m.getFunctionDescription());
-        setGenderDescription(m.getGenderDescription());
-        setMoodDescription(m.getMoodDescription());
-        setNumberDescription(m.getNumberDescription());
-        setPersonDescription(m.getPersonDescription());
-        setSuffixDescription(m.getSuffixDescription());
-        setTenseDescription(m.getTenseDescription());
-        setVoiceDescription(m.getVoiceDescription());
-        setCaseDescription(m.getCaseDescription());
+            setFunctionDescription(m.getFunctionDescription());
+            setGenderDescription(m.getGenderDescription());
+            setMoodDescription(m.getMoodDescription());
+            setNumberDescription(m.getNumberDescription());
+            setPersonDescription(m.getPersonDescription());
+            setSuffixDescription(m.getSuffixDescription());
+            setTenseDescription(m.getTenseDescription());
+            setVoiceDescription(m.getVoiceDescription());
+            setCaseDescription(m.getCaseDescription());
+        }
     }
 
     /**

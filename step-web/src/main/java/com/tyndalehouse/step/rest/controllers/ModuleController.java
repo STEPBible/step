@@ -43,6 +43,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
+import com.tyndalehouse.step.core.data.entities.lexicon.Definition;
 import com.tyndalehouse.step.core.data.entities.morphology.Morphology;
 import com.tyndalehouse.step.core.models.BibleVersion;
 import com.tyndalehouse.step.core.service.ModuleService;
@@ -50,6 +51,7 @@ import com.tyndalehouse.step.core.service.MorphologyService;
 import com.tyndalehouse.step.core.service.VocabularyService;
 import com.tyndalehouse.step.models.info.Info;
 import com.tyndalehouse.step.models.info.MorphInfo;
+import com.tyndalehouse.step.models.info.VocabInfo;
 import com.tyndalehouse.step.rest.framework.Cacheable;
 
 /**
@@ -115,24 +117,63 @@ public class ModuleController {
                 osisId });
 
         final Info i = new Info();
-        i.setMorphInfos(translateToInfo(this.morphology.getMorphology(morphIdentifiers)));
+        i.setMorphInfos(translateToInfo(this.morphology.getMorphology(morphIdentifiers), true));
 
         if (isNotBlank(vocabIdentifiers)) {
-            i.setVocabInfos(this.vocab.getDefinitions(vocabIdentifiers));
+            i.setVocabInfos(translateToVocabInfo(this.vocab.getDefinitions(vocabIdentifiers), true));
         }
         return i;
+    }
+
+    /**
+     * a method that returns all the definitions for a particular key
+     * 
+     * @param vocabIdentifiers the strong number
+     * @param morphIdentifiers the morphology code to lookup
+     * @return the definition(s) that can be resolved from the reference provided
+     */
+    @Cacheable(true)
+    public Info getQuickInfo(final String vocabIdentifiers, final String morphIdentifiers) {
+        // notEmpty(strong, "A reference must be provided to obtain a definition", USER_MISSING_FIELD);
+        LOGGER.debug("Getting quick information for [{}], [{}]",
+                new Object[] { this.vocab, morphIdentifiers });
+
+        final Info i = new Info();
+        i.setMorphInfos(translateToInfo(this.morphology.getQuickMorphology(morphIdentifiers), false));
+
+        if (isNotBlank(vocabIdentifiers)) {
+            i.setVocabInfos(translateToVocabInfo(this.vocab.getQuickDefinitions(vocabIdentifiers), false));
+        }
+        return i;
+    }
+
+    /**
+     * Copies over information
+     * 
+     * @param definitions info from definitions is copied over
+     * @param includeAllInfo true to include all information
+     * @return a list of infos
+     */
+    private List<VocabInfo> translateToVocabInfo(final List<Definition> definitions,
+            final boolean includeAllInfo) {
+        final List<VocabInfo> morphologyInfos = new ArrayList<VocabInfo>(definitions.size());
+        for (final Definition d : definitions) {
+            morphologyInfos.add(new VocabInfo(d, includeAllInfo));
+        }
+        return morphologyInfos;
     }
 
     /**
      * Morphology to information for the UI
      * 
      * @param morphologies the list of all morphologies
+     * @param includeAllInfo true to include all information
      * @return the morphology information pojo
      */
-    private List<MorphInfo> translateToInfo(final List<Morphology> morphologies) {
+    private List<MorphInfo> translateToInfo(final List<Morphology> morphologies, final boolean includeAllInfo) {
         final List<MorphInfo> morphologyInfos = new ArrayList<MorphInfo>(morphologies.size());
         for (final Morphology m : morphologies) {
-            morphologyInfos.add(new MorphInfo(m));
+            morphologyInfos.add(new MorphInfo(m, includeAllInfo));
         }
         return morphologyInfos;
     }

@@ -75,6 +75,10 @@ public class IndividualSearch {
             // return straight away
             throw new StepInternalException("Unable to search, as query provided was blank.");
         }
+
+        LOGGER.debug(
+                "The following search has been constructed: type [{}]\nquery [{}]\n subRange [{}], mainRange [{}]",
+                new Object[] { this.type, query, this.subRange, this.mainRange });
     }
 
     /**
@@ -89,9 +93,6 @@ public class IndividualSearch {
         switch (parseableQuery.charAt(0)) {
             case 'm':
                 this.type = SearchType.ORIGINAL_MEANING;
-                break;
-            case 't':
-                this.type = SearchType.ORIGINAL_TRANSLATED_AS;
                 break;
             case 'g':
                 if (specifier == RELATED_WORDS) {

@@ -90,6 +90,12 @@ public class MorphologyServiceImpl implements MorphologyService {
         return morphs;
     }
 
+    @Override
+    public List<Morphology> getQuickMorphology(final String code) {
+        // very little information available, so let's return it all
+        return getMorphology(code);
+    }
+
     /**
      * Cache-based method, retrieves morphology information
      * 

@@ -82,10 +82,6 @@ public class DownloadJSwordBiblesPreReq {
                 }
             }
         }
-
-        for (final String m : modules) {
-            jsword.index(m);
-        }
     }
 
     /**

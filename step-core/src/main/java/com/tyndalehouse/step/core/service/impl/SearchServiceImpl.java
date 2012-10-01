@@ -81,7 +81,6 @@ import com.tyndalehouse.step.core.service.SearchService;
 import com.tyndalehouse.step.core.service.TimelineService;
 import com.tyndalehouse.step.core.service.helpers.GlossComparator;
 import com.tyndalehouse.step.core.service.helpers.OriginalSpellingComparator;
-import com.tyndalehouse.step.core.service.jsword.JSwordMetadataService;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import com.tyndalehouse.step.core.service.jsword.JSwordSearchService;
 import com.tyndalehouse.step.core.utils.StringConversionUtils;
@@ -108,29 +107,24 @@ public class SearchServiceImpl implements SearchService {
     private static final Logger LOGGER = LoggerFactory.getLogger(SearchServiceImpl.class);
     private static final String STRONG_QUERY = "strong:";
     private static final String LIKE = "%%%s%%";
-    private static final int MAX_TRANSLATED_AS_SIZE = 20;
     private final EbeanServer ebean;
     private final JSwordSearchService jswordSearch;
     private final JSwordPassageService jsword;
     private final TimelineService timeline;
-    private final JSwordMetadataService jswordMeta;
 
     /**
      * @param ebean the ebean server to carry out the search from
      * @param jsword used to convert references to numerals, etc.
      * @param timeline the timeline service
-     * @param jswordMeta the metadata service to obtain information about specific books
      * @param jswordSearch the search service
      */
     @Inject
     public SearchServiceImpl(final EbeanServer ebean, final JSwordSearchService jswordSearch,
-            final JSwordPassageService jsword, final TimelineService timeline,
-            final JSwordMetadataService jswordMeta) {
+            final JSwordPassageService jsword, final TimelineService timeline) {
         this.ebean = ebean;
         this.jswordSearch = jswordSearch;
         this.jsword = jsword;
         this.timeline = timeline;
-        this.jswordMeta = jswordMeta;
     }
 
     @Override
@@ -553,61 +547,9 @@ public class SearchServiceImpl implements SearchService {
                 return runExactOriginalTextSearch(sq);
             case ORIGINAL_MEANING:
                 return runMeaningSearch(sq);
-            case ORIGINAL_TRANSLATED_AS:
-                return runTranslatedAsSearch(sq);
             default:
                 throw new StepInternalException("Attempted to execute unknown search");
         }
-    }
-
-    /**
-     * Searches a first text for occurences of the text, then repeats the search for the strong number that
-     * was matched
-     * 
-     * @param sq the search criteria
-     * @return the results from the search
-     */
-    private SearchResult runTranslatedAsSearch(final SearchQuery sq) {
-        // we search across all tagged versions selected
-        final String[] versions = sq.getCurrentSearch().getVersions();
-        final IndividualSearch currentSearch = sq.getCurrentSearch();
-
-        // prepare sub range query
-        final String currentQuery = currentSearch.getQuery();
-        final StringBuilder sb = new StringBuilder(currentQuery.length());
-
-        sb.append('+');
-        sb.append('[');
-        sb.append(currentSearch.getSubRange());
-        sb.append(']');
-        sb.append(' ');
-        sb.append('"');
-        sb.append(currentQuery.replace("\"", ""));
-        sb.append('"');
-
-        currentSearch.setQuery(sb.toString());
-
-        final Set<String> strongs = new HashSet<String>();
-        for (final String v : versions) {
-            if (this.jswordMeta.hasVocab(v)) {
-                final SearchResult search = this.jswordSearch.search(sq, v);
-                if (search.getResults().size() > MAX_TRANSLATED_AS_SIZE) {
-                    throw new StepInternalException("The field 'as occuring in' is not specific enough");
-                }
-
-                strongs.addAll(getStrongsForPhrase(currentQuery, search));
-            }
-        }
-
-        // now we have a list of strongs to search for, we do the same as a normal strong all forms search
-        final StringBuilder newQuery = new StringBuilder(strongs.size() * 5);
-        for (final String s : strongs) {
-            newQuery.append(s);
-            newQuery.append(' ');
-        }
-
-        sq.getCurrentSearch().setQuery(newQuery.toString().trim());
-        return runAllFormsStrongSearch(sq);
     }
 
     /**

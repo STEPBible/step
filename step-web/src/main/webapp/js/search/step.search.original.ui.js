@@ -36,7 +36,6 @@ step.search.ui.original = {
     _setTitleFromTargetChange : function(target, value) {
         switch(value) {
             case WORDS_MEANING[0]   : step.search.ui.original._setTitleForWord(target, WORDS_MEANING[1]);   break;
-            case TRANSLATED_AS[0]   : step.search.ui.original._setTitleForWord(target, TRANSLATED_AS[1]);   break;
             case GREEK_WORDS[0]     : step.search.ui.original._setTitleForWord(target, GREEK_WORDS[1]);     break;
             case HEBREW_WORDS[0]    : step.search.ui.original._setTitleForWord(target, HEBREW_WORDS[1]);    break;
         }
@@ -50,11 +49,7 @@ step.search.ui.original = {
         var passageContainer = step.util.getPassageContainer(passageId);
         var currentType = $(".originalType", passageContainer).val();
         
-        if(currentType == TRANSLATED_AS[0]) {
-             $(".originalMeaning", passageContainer).toggle(true);       
-             $(".originalAncient", passageContainer).toggle(false);
-             
-        } else if(currentType == WORDS_MEANING[0]) {
+        if(currentType == WORDS_MEANING[0]) {
             $(".originalMeaning", passageContainer).toggle(false);       
             $(".originalAncient", passageContainer).toggle(false);
         } else {

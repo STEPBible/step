@@ -50,9 +50,4 @@ public enum SearchType {
      * Search for an original Hebrew word and its related Hebrew words
      */
     ORIGINAL_HEBREW_RELATED,
-    /**
-     * Indicates we are interested in words that have been translated as in a particular passage
-     */
-    ORIGINAL_TRANSLATED_AS,
-
 }

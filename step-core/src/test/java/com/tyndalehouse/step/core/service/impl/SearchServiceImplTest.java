@@ -21,7 +21,6 @@ import com.tyndalehouse.step.core.models.search.SubjectHeadingSearchEntry;
 import com.tyndalehouse.step.core.models.search.TimelineEventSearchEntry;
 import com.tyndalehouse.step.core.models.search.VerseSearchEntry;
 import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
-import com.tyndalehouse.step.core.service.jsword.impl.JSwordMetadataServiceImpl;
 import com.tyndalehouse.step.core.service.jsword.impl.JSwordPassageServiceImpl;
 import com.tyndalehouse.step.core.service.jsword.impl.JSwordSearchServiceImpl;
 import com.tyndalehouse.step.core.service.jsword.impl.JSwordVersificationServiceImpl;
@@ -45,7 +44,7 @@ public class SearchServiceImplTest extends DataDrivenTestExtension {
         final JSwordPassageServiceImpl jsword = new JSwordPassageServiceImpl(versificationService, null, null);
         this.si = new SearchServiceImpl(getEbean(),
                 new JSwordSearchServiceImpl(versificationService, jsword), jsword, new TimelineServiceImpl(
-                        getEbean(), jsword), new JSwordMetadataServiceImpl(versificationService));
+                        getEbean(), jsword));
 
     }
 

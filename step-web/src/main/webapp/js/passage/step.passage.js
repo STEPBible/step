@@ -114,11 +114,61 @@ step.passage = {
                 self._doHideEmptyNotesPane(passageContent);
                 self._adjustTextAlignment(passageContent);
                 self._redoTextSize(passageId, passageContent);
+                self._addStrongHandlers(passageId, passageContent);
                 step.state.passage.reference(passageId, text.reference, false);
             }, 
             passageId: passageId, 
             level: 'error'
          });
+    },
+    
+    _addStrongHandlers : function(passageId, passageContent) {
+        $("[strong]", passageContent).click(function() { 
+            showDef(this);
+        }).hover(function() {
+            var self = this;
+            delay(function() {
+                var strong = $(self).attr('strong');
+                var morph = $(self).attr('morph');
+                
+                $.getSafe(MODULE_GET_QUICK_INFO + strong + "/" + morph + "/", function(data) {
+                    var vocabInfo = "";
+                    if(data.vocabInfos) {
+                        $.each(data.vocabInfos, function(i, item) {
+                            vocabInfo +=    "<h1>" +
+                            		        "<span class='unicodeFont'>" +
+                            		        item.accentedUnicode + 
+                            		        "</span> (" +
+                            		        item.stepTransliteration +
+                            		        "): " +
+                            		        item.stepGloss +
+                            		        "</h1>" +
+                            		        "<span>" + 
+                            		        (item.shortDef == undefined ? "" : item.shortDef) +
+                            		        "</span></p>";
+                        });
+                    }
+                    
+                    //"<span class='ancientSearch'>" + item.accentedUnicode + "</span> (<em>" + item.stepTransliteration + "</em>): " + (item.stepGloss == undefined ? "-" : item.stepGloss);
+                    
+                    $(".quickLexiconDefinition").remove();
+                    var infoContent = "<div class='quickLexiconDefinition ui-state-highlight'>" +
+                                vocabInfo +
+                                "</div>";
+                    var infoBox = $(infoContent);
+                    
+                    $("body").append(infoBox);
+                    infoBox.css('right', "0px");
+
+                });
+            }
+         , 600);
+        }, function() {
+            var self = this;
+            delay(function() {
+                $(".quickLexiconDefinition").remove();
+            }, 2000);
+        });
     },
     
     _redoTextSize : function(passageId, passageContent) {

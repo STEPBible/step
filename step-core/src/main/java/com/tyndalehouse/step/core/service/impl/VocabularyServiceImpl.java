@@ -63,10 +63,23 @@ public class VocabularyServiceImpl implements VocabularyService {
         final List<String> strongList = getKeys(vocabIdentifiers);
 
         if (!strongList.isEmpty()) {
-            return this.ebean.find(Definition.class).where().in("strongNumber", strongList).findList();
+            return this.ebean.find(Definition.class).select("*").where().in("strongNumber", strongList)
+                    .findList();
         }
         return new ArrayList<Definition>();
+    }
 
+    @Override
+    public List<Definition> getQuickDefinitions(final String vocabIdentifiers) {
+        notBlank(vocabIdentifiers, "Vocab identifiers was null", UserExceptionType.SERVICE_VALIDATION_ERROR);
+        final List<String> strongList = getKeys(vocabIdentifiers);
+
+        if (!strongList.isEmpty()) {
+            return this.ebean.find(Definition.class)
+                    .select("accentedUnicode,stepTransliteration,shortDef,stepGloss").where()
+                    .in("strongNumber", strongList).findList();
+        }
+        return new ArrayList<Definition>();
     }
 
     @Override

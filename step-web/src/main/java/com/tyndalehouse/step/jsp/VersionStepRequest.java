@@ -35,6 +35,7 @@ package com.tyndalehouse.step.jsp;
 import javax.servlet.http.HttpServletRequest;
 
 import org.crosswire.jsword.book.Book;
+import org.crosswire.jsword.passage.Key;
 import org.crosswire.jsword.versification.BibleBook;
 import org.crosswire.jsword.versification.BibleBookList;
 import org.crosswire.jsword.versification.Versification;
@@ -59,6 +60,7 @@ public class VersionStepRequest {
     private static final Logger LOG = LoggerFactory.getLogger(VersionStepRequest.class);
     private Versification versificationForVersion;
     private JSwordVersificationService versification;
+    private Key globalKeyList;
 
     /**
      * wraps around the servlet request for easy access
@@ -75,6 +77,7 @@ public class VersionStepRequest {
             if (version != null) {
                 this.versification = this.injector.getInstance(JSwordVersificationService.class);
                 this.book = this.versification.getBookFromVersion(version);
+                this.globalKeyList = this.book.getGlobalKeyList();
                 this.versificationForVersion = this.versification.getVersificationForVersion(this.book);
                 this.success = true;
             }
@@ -90,7 +93,7 @@ public class VersionStepRequest {
      */
     public String getBookList() {
         final StringBuilder bookList = new StringBuilder(1024 * 8);
-        bookList.append("<table id='bookListTable'>");
+        bookList.append("<table id='bookListTable' class='listingTable'>");
         bookList.append("<tr><th>Bible book name</th><th>Chapters in the book</th></tr>");
 
         final BibleBookList books = this.versificationForVersion.getBooks();
@@ -131,6 +134,12 @@ public class VersionStepRequest {
 
         if (BibleBook.INTRO_BIBLE.equals(bb) || BibleBook.INTRO_NT.equals(bb)
                 || BibleBook.INTRO_OT.equals(bb)) {
+            return;
+        }
+
+        final Key keyToBook = this.book.getValidKey(bb.getBookName().getShortName());
+        keyToBook.retainAll(this.globalKeyList);
+        if (keyToBook.getCardinality() == 0) {
             return;
         }
 

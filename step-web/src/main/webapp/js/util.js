@@ -451,7 +451,9 @@ step.util = {
             
             $(step.util).hear("versions-initialisation-completed", function() {
                 $.each($(".searchVersions"), function(i, item) {
-                    step.version.autocomplete($(item), undefined, undefined, undefined, true);        
+                    $(item).versions({
+                        multi : true
+                    });
                 });
             });
         }

@@ -50,6 +50,7 @@
 	    <script src="js/jquery-extensions/jquery-cookie.js" type="text/javascript"></script>
 	    <script src="js/jquery-extensions/jquery-local-store.js" type="text/javascript"></script>
 		<script src="js/jquery-extensions/jquery-shout.js" type="text/javascript"></script>
+	    <script src="js/jquery-extensions/jquery-versions-complete.js" type="text/javascript"></script>
 	    <script src="js/jquery-extensions/jquery-filtered-complete.js" type="text/javascript"></script>
 	    <script src="js/jquery-extensions/jquery-lexical-complete.js" type="text/javascript"></script>
 	    <script src="js/jquery-extensions/jquery-detail-slider.js" type="text/javascript"></script>
@@ -130,8 +131,8 @@
 			
 			<table>
 				<tr>
-					<td><a href="http://help.step.tyndalehouse.com/quickStart.html" title="A quick tutorial demonstrating how to get started"/>Quick start</a></td>
-					<td><a href="http://help.step.tyndalehouse.com/helpManual.html" title="Detailed information on how to use the software"/>Help manual</a></td>
+					<td><a href="http://help.step.tyndalehouse.com/quickStart.html" title="A quick tutorial demonstrating how to get started"/>Help manual</a></td>
+					<td><a href="versions.jsp" title="Detailed information on how to use the software"/>Available versions</a></td>
 				</tr>
 				<tr>
 					<td><a href="http://help.step.tyndalehouse.com/about.html" title="Find out more about the STEP project developed by Tyndale House"/>About the STEP project</a></td>

@@ -36,6 +36,18 @@ step.state.passage = {
         this._restoreVersion(passageId);
         this._restoreReference(passageId);
         
+        if(step.state.passage.rewriteUrl == true) {
+            //make sure we keep the debug if we need to
+            var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+            var url = "?";
+            for(var i = 0 ; i < hashes.length; i++) {
+                if(hashes[i].toLowerCase() == 'debug') {
+                    url += "&debug"; 
+                }
+            }
+            window.location.href = url;
+        }
+        
         // we restore the menu options manually:
         this._restoreMenuOptions(passageId, this.options(passageId));
         this._restorePassageSync();
@@ -197,9 +209,10 @@ step.state.passage = {
 
     _restoreVersion : function(passageId) {
         //overwrite value if provided in request
-        var urlVersion = $.getUrlVar("version" + passageId == 0 ? "" : "-1");
+        var urlVersion = $.getUrlVar("version" + (parseInt(passageId) == 0 ? "" : "-1"));
         if(!step.util.isBlank(urlVersion)) {
             this.version(passageId, urlVersion, false);
+            step.state.passage.rewriteUrl = true;
             return;
         }
         
@@ -215,9 +228,10 @@ step.state.passage = {
 
     _restoreReference : function(passageId) {
         //overwrite value if provided in request
-        var urlReference = $.getUrlVar("reference" + passageId == 0 ? "" : "-1");
+        var urlReference = $.getUrlVar("reference" + (parseInt(passageId) == 0 ? "" : "-1"));
         if(!step.util.isBlank(urlReference)) {
             this.reference(passageId, urlReference, false);
+            step.state.passage.rewriteUrl = true;
             return;
         }
 

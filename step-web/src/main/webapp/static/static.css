@@ -37,7 +37,7 @@ h3 {
 	height: 39px;
 }
 
-#bookListTable tr.even {
+.listingTable tr.even {
 	background-color: #F0F0F0 ; 
 }
 
@@ -47,22 +47,23 @@ h3 {
 	float: left;
 }
 
-#bookListTable {
+.listingTable {
+	width: 100%;
 	border: solid 1px lightgrey;
 }
 
 
-#bookListTable th {
+.listingTable th {
 	background-color: #4EB305;
 	color: white;
 	font-size: 12px;
 }
 
-#bookListTable {
+.listingTable {
 	border-collapse: collapse;
 }
 
-#bookListTable tr, #bookListTable td {
+.listingTable tr, #bookListTable td {
 	border-bottom: solid 1px lightgrey;
 	border-right: solid 1px lightgrey;
 
@@ -70,11 +71,11 @@ h3 {
 	font-size: 12px;
 }
 
-#bookListTable tr {
+.listingTable tr {
 	padding: 0px;
 }
 
-#bookListTable td {
+.listingTable td {
 	padding: 2px;
 }
 
@@ -85,6 +86,29 @@ h3 {
 	padding-left: 5px;
 }
 
-#bookListTable a  {
+.listingTable a  {
 	color: #669;
+}
+
+/******************/
+/** versions page */
+/******************/
+
+
+a.info {
+	color: #696;
+	text-decoration: none;
+	font-weight: bold;
+}
+
+.versionInitialsColumn {
+	width: 150px;
+}
+
+.versionNameColumn {
+	
+}
+
+.versionCategoryColumn {
+	width: 100px;
 }

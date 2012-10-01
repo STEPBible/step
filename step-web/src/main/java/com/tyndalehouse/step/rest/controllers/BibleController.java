@@ -38,6 +38,7 @@ import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
 import static com.tyndalehouse.step.core.utils.ValidateUtils.notEmpty;
 
 import java.util.List;
+import java.util.Locale;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -48,7 +49,6 @@ import org.slf4j.LoggerFactory;
 
 import com.tyndalehouse.step.core.data.entities.Session;
 import com.tyndalehouse.step.core.data.entities.User;
-import com.tyndalehouse.step.core.models.BibleVersion;
 import com.tyndalehouse.step.core.models.BookName;
 import com.tyndalehouse.step.core.models.ClientSession;
 import com.tyndalehouse.step.core.models.EnrichedLookupOption;
@@ -56,6 +56,7 @@ import com.tyndalehouse.step.core.models.KeyWrapper;
 import com.tyndalehouse.step.core.models.LookupOption;
 import com.tyndalehouse.step.core.models.OsisWrapper;
 import com.tyndalehouse.step.core.service.BibleInformationService;
+import com.tyndalehouse.step.models.ModulesForLanguageUser;
 import com.tyndalehouse.step.rest.framework.Cacheable;
 
 /**
@@ -91,27 +92,22 @@ public class BibleController {
     /**
      * a REST method that returns version of the Bible that are available
      * 
-     * @return all versions of modules that are considered to be Bibles.
-     */
-    // TODO: move this elsewhere
-    @Cacheable(true)
-    public List<BibleVersion> getModules() {
-        return this.bibleInformation.getAvailableModules(true, null, null);
-    }
-
-    /**
-     * a REST method that returns version of the Bible that are available
-     * 
      * @param allVersions boolean to indicate whether all versions should be returned
      * @return all versions of modules that are considered to be Bibles.
      */
     @Cacheable(true)
-    public List<BibleVersion> getModules(final String allVersions) {
+    public ModulesForLanguageUser getModules(final String allVersions) {
         final User user = this.serverSession.get().getUser();
         final String language = user == null || user.getLanguage() == null ? this.clientSession.get()
                 .getLanguage() : user.getLanguage();
-        return this.bibleInformation.getAvailableModules(Boolean.valueOf(allVersions), language,
-                this.clientSession.get().getLocale());
+
+        final Locale userLocale = this.clientSession.get().getLocale();
+        final ModulesForLanguageUser versions = new ModulesForLanguageUser();
+        versions.setLanguageCode(userLocale.getLanguage());
+        versions.setLanguageName(userLocale.getDisplayLanguage(userLocale));
+        versions.setVersions(this.bibleInformation.getAvailableModules(Boolean.valueOf(allVersions),
+                language, userLocale));
+        return versions;
     }
 
     /**

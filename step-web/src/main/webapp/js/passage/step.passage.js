@@ -375,18 +375,15 @@ function Passage(passageContainer, passageId) {
  */
 Passage.prototype.initVersionsTextBox = function() {
     var self = this;
-    step.version.autocomplete(this.version, function(value) {
-        self.version.val(value);
-    }, function(value) {
-        
-        
-        if (step.util.raiseErrorIfBlank(value, "A version must be selected.")) {
-            //need to refresh the options of interleaving/interlinear, etc.
-            step.passage.ui.updateDisplayOptions(self.passageId);
-
-            
-            step.state.passage.version(self.passageId, value);
-        }
+    
+    $(this.version).versions();
+    $(this.version).bind('change', function(event) {
+            var value = $(event.target).val();
+            if (step.util.raiseErrorIfBlank(value, "A version must be selected.")) {
+                  //need to refresh the options of interleaving/interlinear, etc.
+                  step.passage.ui.updateDisplayOptions(self.passageId);
+                  step.state.passage.version(self.passageId, value);
+            }
     });
 };
 

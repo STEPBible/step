@@ -154,13 +154,16 @@ $(step.passage.ui).hear("versions-initialisation-completed", function() {
     }
     
     $.each($(".extraVersions"), function(i, item) {
-        step.version.autocomplete($(item), undefined, undefined, function(target) {
-            var passageId = step.passage.getPassageId(target);
-            
-            //reset displayOptions because interlinear might not be available
-            step.passage.ui.updateDisplayOptions(passageId);
-            
-            step.passage.changePassage(passageId);
-        }, true);
+        $(item).versions({
+            multi : true
+        }).bind('change', function(event) {
+              var target = event.target;
+              var passageId = step.passage.getPassageId(target);
+              
+              //reset displayOptions because interlinear might not be available
+              step.passage.ui.updateDisplayOptions(passageId);
+              
+              step.passage.changePassage(passageId);
+        });
     });
 });

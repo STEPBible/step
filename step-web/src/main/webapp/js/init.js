@@ -185,7 +185,13 @@ function initData() {
 	//get data for passages
 	// make call to server first and once, to cache all passages:
 	$.getSafe(BIBLE_GET_MODULES + true, function(versionsFromServer) {
-	    step.versions = versionsFromServer;
+	    step.versions = versionsFromServer.versions;
+	    step.user = {
+	            language : {
+	                code : versionsFromServer.languageCode,
+	                name : versionsFromServer.languageName
+	            }
+	    }
 	    
 	    $.shout("versions-initialisation-completed");
 	    

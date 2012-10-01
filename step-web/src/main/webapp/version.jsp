@@ -10,23 +10,11 @@
 	VersionStepRequest stepRequest = new VersionStepRequest(injector, request);
 %>
 
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<HTML>
-<HEAD>
-    <TITLE>STEP :: <%= stepRequest.getBook().getName() %></TITLE>
-    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-	<meta name="description" content="Scripture Tools for Every Person is a Bible study tool, currently showing information about <%= stepRequest.getBook().getName() %>">
-	<meta name="keywords" content="<%= stepRequest.getBook().getName() %> <%= stepRequest.getBook().getInitials() %>" />
-	
-	<!-- used for webmaster tools -->
-	<meta name="google-site-verification" content="OZfGjgjfTQq0Gn-m6pecYXYNGoDTllWS6v9aBOi64AU" />
-	<link rel="stylesheet" type="text/css" href="static/static.css" />
-	<link rel="shortcut icon"  href="images/step-favicon.ico" />
-</HEAD>
-<body>
-	<jsp:include page="jsps/header.jsp" />
-
+<jsp:include page="jsps/header.jsp">
+	<jsp:param value="<%= stepRequest.getBook().getName() %>" name="title"/>
+	<jsp:param value="The <%= stepRequest.getBook().getName() %>" name="description"/>
+	<jsp:param value="<%= stepRequest.getBook().getName() %>" name="keywords"/>
+</jsp:include>
 
 <% if(!stepRequest.isSuccess()) { %>
 	Unable to obtain information about this version: <%= request.getParameter("version") %>

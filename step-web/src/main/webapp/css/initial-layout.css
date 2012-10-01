@@ -399,3 +399,20 @@ body {
 }
 
 
+/**************************/
+/* Version menu           */
+/**************************/
+.versionsListMenu {
+ 	overflow-y: auto; 
+	max-height: 400px;
+	width: 100%;
+}
+
+.versionsListMenu li {
+	cursor: pointer;
+}
+
+.versionsAutoComplete {
+	width: 400px;
+}
+

@@ -89,6 +89,12 @@ public final class JSwordUtils {
                     v.setLanguageName(versionLanguage.getDisplayLanguage(userLocale));
                 }
             }
+
+            if (v.getLanguageCode() == null || v.getLanguageName() == null) {
+                v.setLanguageCode(userLocale.getLanguage());
+                v.setLanguageName(userLocale.getDisplayLanguage(userLocale));
+            }
+
             v.setHasStrongs(b.hasFeature(FeatureType.STRONGS_NUMBERS));
             v.setHasMorphology(b.hasFeature(FeatureType.MORPHOLOGY));
 

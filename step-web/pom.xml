@@ -188,6 +188,7 @@
 							    <jsSourceFile>js/jquery-extensions/jquery-cookie.js</jsSourceFile>
 							    <jsSourceFile>js/jquery-extensions/jquery-local-store.js</jsSourceFile>
 								<jsSourceFile>js/jquery-extensions/jquery-shout.js</jsSourceFile>
+							    <jsSourceFile>jquery-versions-complete.js</jsSourceFile>
 							    <jsSourceFile>js/jquery-extensions/jquery-filtered-complete.js</jsSourceFile>
 							    <jsSourceFile>js/jquery-extensions/jquery-lexical-complete.js</jsSourceFile>
 							    <jsSourceFile>js/jquery-extensions/jquery-detail-slider.js</jsSourceFile>

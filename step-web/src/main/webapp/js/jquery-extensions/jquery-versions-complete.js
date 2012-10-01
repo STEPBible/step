@@ -27,6 +27,12 @@ $.widget("custom.versions",  {
             });
         });
         
+        
+        this.element.bind("keyup", function() {
+           self._filter($(this).val()); 
+        });
+        
+        
         if(!$.data(document, 'versions-rendered')) {
             //render menu
             this.dropdownVersionMenu = $("<div class='versionsAutoComplete ui-widget-content ui-corner-all'></div>");
@@ -93,8 +99,8 @@ $.widget("custom.versions",  {
 
     },
     
-    _filter : function() {
-        var versions = this._filteredVersions();
+    _filter : function(val) {
+        var versions = this._filteredVersions(val);
         
         var listItems = $("[initials]", this.dropdownVersionMenu);
         $.each(listItems, function(i, item) {
@@ -109,7 +115,7 @@ $.widget("custom.versions",  {
         });
     },
     
-    _filteredVersions : function() {
+    _filteredVersions : function(val) {
         var widget = this.dropdownVersionMenu;
         
         var resource = widget.find("input:checkbox[name=textType]:checked").val();
@@ -126,6 +132,18 @@ $.widget("custom.versions",  {
        
        var filteredVersionResult = {};
        $.each(step.versions, function(index, item) {
+           if(val) {
+               var lv = val.toLowerCase();
+               if(item.initials.toLowerCase().indexOf(lv) == -1 && item.name.toLowerCase().indexOf(lv) == -1) {
+                   //reject
+                   return;
+               } else {
+                   filteredVersionResult[item.initials] = 'keep';
+                   return;
+               }
+           }
+           
+           
             if(resource == 'commentaries' && item.category != 'COMMENTARY' ||
                resource == undefined && item.category == 'COMMENTARY') {
                 //we ignore commentaries outright for now
@@ -312,8 +330,7 @@ $.widget("custom.versions",  {
         
         var languageName = step.languages[item.lang2];
         var showingText = 
-            "<span class='versionInfo' title='" + item.name + " (" + item.languageName.replace("'", "&quot;")  + ")'>&#x24d8;</span>&nbsp;&nbsp;" +
-            "<span class='versionKey'>" + item.initials + "</span><span style='font-size: larger'>&rArr;</span>&nbsp;" +
+            "<span class='versionKey' >" + item.initials + "</span><span style='font-size: larger'>&rArr;</span>&nbsp;" +
             "<span class='versionName'>" + name + "</span>";
         var features = "";
         // add to Strongs if applicable, and therefore interlinear
@@ -328,7 +345,7 @@ $.widget("custom.versions",  {
         }
         
         // return response for dropdowns
-        var itemHtml = "<li initials='" + item.initials +  "'><a><span class='features'>" + features + "</span>" + showingText + "</a></li>";
+        var itemHtml = "<li title='" + item.name + " (" + item.languageName.replace("'", "&quot;")  + ")' initials='" + item.initials +  "'><a><span class='features'>" + features + "</span>" + showingText + "</a></li>";
         return $(itemHtml);
     }
 });

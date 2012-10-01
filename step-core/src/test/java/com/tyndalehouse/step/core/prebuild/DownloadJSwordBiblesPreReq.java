@@ -62,8 +62,7 @@ public class DownloadJSwordBiblesPreReq {
      */
     @Test
     public void installDefaultJSwordDefaultBibleVersions() throws InstallException {
-        final String[] modules = new String[] { "KJV", "ESV", "Byz", "StrongsGreek", "StrongsHebrew",
-                "Robinson", "FreSegond" };
+        final String[] modules = new String[] { "KJV", "ESV", "Byz", "FreSegond" };
 
         final JSwordModuleServiceImpl jsword = new JSwordModuleServiceImpl(getInstallers());
 
@@ -83,19 +82,10 @@ public class DownloadJSwordBiblesPreReq {
                 }
             }
         }
-        //
-        // for (final String moduleInitials : modules) {
-        // // now wait for book to install
-        // while (!jsword.isInstalled(moduleInitials)) {
-        // LOGGER.debug("Waiting for [{}] to install: ", moduleInitials);
-        // try {
-        // Thread.sleep(1000);
-        // } catch (final InterruptedException e) {
-        // // we ignore this and wait some more
-        // LOGGER.warn("Download was interrupted: [{}]", moduleInitials);
-        // }
-        // }
-        // }
+
+        for (final String m : modules) {
+            jsword.index(m);
+        }
     }
 
     /**

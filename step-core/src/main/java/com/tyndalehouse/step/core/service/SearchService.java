@@ -35,6 +35,7 @@ package com.tyndalehouse.step.core.service;
 import java.util.List;
 
 import com.tyndalehouse.step.core.models.LexiconSuggestion;
+import com.tyndalehouse.step.core.models.search.LexicalSuggestionType;
 import com.tyndalehouse.step.core.models.search.SearchResult;
 import com.tyndalehouse.step.core.service.impl.SearchQuery;
 
@@ -64,9 +65,12 @@ public interface SearchService {
     /**
      * Retrieves all matching lexical entries for the word typed in
      * 
+     * @param suggestionType indicates greek or hebrew
      * @param form the word that has been typed in so far
      * @param includeAllForms true to indicate results should come lexical_form table.
+     * 
      * @return a list of lexicon suggestions
      */
-    List<LexiconSuggestion> getLexicalSuggestions(String form, boolean includeAllForms);
+    List<LexiconSuggestion> getLexicalSuggestions(LexicalSuggestionType suggestionType, String form,
+            boolean includeAllForms);
 }

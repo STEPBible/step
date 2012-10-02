@@ -75,21 +75,24 @@ step.util = {
 	},
 	
 	isUnicode : function(element) {
+	    var text = "";
+	    if(element.text) {
+	        text = element.text();
+	    } else if(element.innerText) {
+	        text = element.innerText;
+	    } else if(element.charCodeAt) {
+	        text = element;
+	    }
+	    
+	    text = text.replace(/[0-9\s,.;:'“”]/g, "").trim();
+	    
         try {
-            if(element.innerText) {
-                return element.innerText.trim().charCodeAt(0) > 255;
-            } else if(element.text) {
-                return element.text().trim().charCodeAt(0) > 255;
-            } else if(element.charCodeAt) {
-                return element.charCodeAt(0) > 255;
-            } else {
-                return false;
-            }
+                return text.charCodeAt(0) > 255;
         } catch(err) {
             return false;
         }
 	},
-	   
+	
     raiseError: function (error) {
         var message = error.message ? error.message : error;
         
@@ -120,6 +123,56 @@ step.util = {
 	},
 	
     ui : {
+        addStrongHandlers : function(passageId, passageContent) {
+            $("[strong]", passageContent).click(function() { 
+                showDef(this);
+            }).hover(function() {
+                var self = this;
+                delay(function() {
+                    var strong = $(self).attr('strong');
+                    var morph = $(self).attr('morph');
+                    
+                    $.getSafe(MODULE_GET_QUICK_INFO + strong + "/" + morph + "/", function(data) {
+                        var vocabInfo = "";
+                        if(data.vocabInfos) {
+                            $.each(data.vocabInfos, function(i, item) {
+                                vocabInfo +=    "<h1>" +
+                                                "<span class='unicodeFont'>" +
+                                                item.accentedUnicode + 
+                                                "</span> (" +
+                                                item.stepTransliteration +
+                                                "): " +
+                                                item.stepGloss +
+                                                "</h1>" +
+                                                "<span>" + 
+                                                (item.shortDef == undefined ? "" : item.shortDef) +
+                                                "</span></p><span class='infoTagLine'>" +
+                                                "More information can be found by clicking on the word in the verse." +
+                                                "</span>";
+                            });
+                        }
+                        
+                        //"<span class='ancientSearch'>" + item.accentedUnicode + "</span> (<em>" + item.stepTransliteration + "</em>): " + (item.stepGloss == undefined ? "-" : item.stepGloss);
+                        
+                        $(".quickLexiconDefinition").remove();
+                        var infoContent = "<div class='quickLexiconDefinition ui-state-highlight'>" +
+                                    vocabInfo +
+                                    "</div>";
+                        var infoBox = $(infoContent);
+                        
+                        $("body").append(infoBox);
+                        infoBox.css('right', "0px");
+    
+                    });
+                }
+             , 600);
+            }, function() {
+                var self = this;
+                delay(function() {
+                    $(".quickLexiconDefinition").remove();
+                }, 150);
+            });
+        },
         autocompleteSearch : function(selector, data, readonly, preChangeHandler) {
             return $(selector).autocomplete({
                 minLength: 0,

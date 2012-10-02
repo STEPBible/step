@@ -106,6 +106,9 @@ td.primary {
 	display: none;
 }
 
+span[strong]:hover {
+	border-bottom: 2px #696 dashed;
+}
 
 .singleVerse {
 	display: block;	
@@ -570,11 +573,18 @@ FONT.usg {
 /* 	height: 300px; */
 	overflow: auto;
 	position: absolute;
-	top: 0px;
+	bottom: 0px;
 	z-index: 10000;
 }
 
 .quickLexiconDefinition h1 {
 	font-size: 1em;
 	font-weight: bold;
+}
+
+.infoTagLine {
+	font-size: xx-small;
+	text-align: right;
+	width: 50%;
+	float: right;
 }

@@ -157,4 +157,14 @@ public interface JSwordPassageService {
      */
     OsisWrapper getInterleavedVersions(String[] versions, String reference, List<LookupOption> options,
             InterlinearMode displayMode);
+
+    /**
+     * Returns some plain text for a passage
+     * 
+     * @param version the version
+     * @param reference the reference
+     * @param firstVerse include the first verse only
+     * @return the plain text
+     */
+    String getPlainText(String version, String reference, boolean firstVerse);
 }

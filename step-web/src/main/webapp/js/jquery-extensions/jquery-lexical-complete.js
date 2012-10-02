@@ -10,7 +10,7 @@ $.widget("custom.lexicalcomplete", $.ui.autocomplete, {
                 var toolbar = "";
                 toolbar += '<div class="lexicalOptions">';
                 toolbar += 'Include all forms <input type="checkbox" id="includeAllForms" class="includeAllForms" key="includeAllForms" />';
-                toolbar += '</div><div class="suggestionHeader"><span class="suggestionColumnTitle">Greek</span><span class="suggestionColumnTitle">Transliteration</span><span class="suggestionColumnTitle">Meaning</span>';
+                toolbar += '</div><div class="suggestionHeader"><span class="suggestionColumnTitle">Greek / Hebrew</span><span class="suggestionColumnTitle">Transliteration</span><span class="suggestionColumnTitle">Meaning</span>';
                 toolbar += '</div><hr />';
                 
                 ul.append(toolbar);

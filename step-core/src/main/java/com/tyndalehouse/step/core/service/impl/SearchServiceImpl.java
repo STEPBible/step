@@ -72,6 +72,7 @@ import com.tyndalehouse.step.core.models.LexiconSuggestion;
 import com.tyndalehouse.step.core.models.OsisWrapper;
 import com.tyndalehouse.step.core.models.search.KeyedSearchResultSearchEntry;
 import com.tyndalehouse.step.core.models.search.KeyedVerseContent;
+import com.tyndalehouse.step.core.models.search.LexicalSuggestionType;
 import com.tyndalehouse.step.core.models.search.SearchEntry;
 import com.tyndalehouse.step.core.models.search.SearchResult;
 import com.tyndalehouse.step.core.models.search.SubjectHeadingSearchEntry;
@@ -133,7 +134,8 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
-    public List<LexiconSuggestion> getLexicalSuggestions(final String form, final boolean includeAllForms) {
+    public List<LexiconSuggestion> getLexicalSuggestions(final LexicalSuggestionType suggestionType,
+            final String form, final boolean includeAllForms) {
         if (isEmpty(form)) {
             return new ArrayList<LexiconSuggestion>();
         }
@@ -141,25 +143,27 @@ public class SearchServiceImpl implements SearchService {
         final String lowerForm = form.toLowerCase() + '%';
 
         if (includeAllForms) {
-            return getMatchingAllForms(lowerForm);
+            return getMatchingAllForms(suggestionType, lowerForm);
         } else {
-            return getMatchingFormsFromLexicon(form, lowerForm);
+            return getMatchingFormsFromLexicon(suggestionType, form, lowerForm);
         }
     }
 
     /**
      * retrieves forms from the lexicon
      * 
+     * @param suggestionType indicates greek/hebrew look ups
      * @param form the form
      * @param lowerForm form in lower case, containing a % if appropriate
      * @return the list of suggestions
      */
-    private List<LexiconSuggestion> getMatchingFormsFromLexicon(final String form, final String lowerForm) {
+    private List<LexiconSuggestion> getMatchingFormsFromLexicon(final LexicalSuggestionType suggestionType,
+            final String form, final String lowerForm) {
         final List<LexiconSuggestion> suggestions = new ArrayList<LexiconSuggestion>();
         final List<Definition> definitions = this.ebean.find(Definition.class)
                 .select("accentedUnicode,stepTransliteration,stepGloss,blacklisted").where()
-                .eq("blacklisted", false).isNotNull("strongNumber").disjunction()
-                .like("accentedUnicode", lowerForm).like("unaccentedUnicode", lowerForm)
+                .eq("blacklisted", false).like("strongNumber", suggestionType.getStrongPattern())
+                .disjunction().like("accentedUnicode", lowerForm).like("unaccentedUnicode", lowerForm)
                 .like("strongTranslit", lowerForm).like("strongPronunc", lowerForm)
                 .like("stepTransliteration", lowerForm).like("unaccentedStepTransliteration", lowerForm)
                 .like("alternativeTranslit1", lowerForm).like("alternativeTranslit1Unaccented", lowerForm)
@@ -173,16 +177,20 @@ public class SearchServiceImpl implements SearchService {
     /**
      * retrieves forms from the lexicon
      * 
+     * @param suggestionType indicates greek/hebrew look ups
      * @param lowerForm form in lower case, containing a % if appropriate
      * @return the list of suggestions
      */
-    private List<LexiconSuggestion> getMatchingAllForms(final String lowerForm) {
+    private List<LexiconSuggestion> getMatchingAllForms(final LexicalSuggestionType suggestionType,
+            final String lowerForm) {
         final List<LexiconSuggestion> suggestions = new ArrayList<LexiconSuggestion>();
 
         final List<SpecificForm> forms = this.ebean.find(SpecificForm.class)
                 .fetch("strongNumber", "accentedUnicode,stepTransliteration,stepGloss,blacklisted").where()
                 .disjunction().like("rawForm", lowerForm).like("unaccentedForm", unAccent(lowerForm))
-                .like("transliteration", lowerForm).endJunction().setMaxRows(MAX_SUGGESTIONS).findList();
+                .like("transliteration", lowerForm).endJunction()
+                .like("rawStrongNumber", suggestionType.getStrongPattern()).setMaxRows(MAX_SUGGESTIONS)
+                .findList();
 
         for (final SpecificForm f : forms) {
             suggestions.add(convertToSuggestion(f));

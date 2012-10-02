@@ -5,12 +5,14 @@ import static com.tyndalehouse.step.core.exceptions.UserExceptionType.USER_MISSI
 import static com.tyndalehouse.step.core.utils.ValidateUtils.notBlank;
 import static com.tyndalehouse.step.core.utils.ValidateUtils.notNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import com.tyndalehouse.step.core.models.LexiconSuggestion;
+import com.tyndalehouse.step.core.models.search.LexicalSuggestionType;
 import com.tyndalehouse.step.core.models.search.SearchResult;
 import com.tyndalehouse.step.core.service.SearchService;
 import com.tyndalehouse.step.core.service.impl.SearchQuery;
@@ -67,13 +69,28 @@ public class SearchController {
     /**
      * Obtains a list of suggestions to display to the user
      * 
+     * @param greekOrHebrew "greek" if greek is desired, otherwise "hebrew", if null, then returns immediately
      * @param form the form input so far
      * @param includeAllForms whether to include all known forms
      * @return a list of suggestions
      */
-    public List<LexiconSuggestion> getLexicalSuggestions(final String form, final String includeAllForms) {
+    public List<LexiconSuggestion> getLexicalSuggestions(final String greekOrHebrew, final String form,
+            final String includeAllForms) {
         notBlank(form, "Blank lexical prefix passed.", APP_MISSING_FIELD);
-        return this.searchService.getLexicalSuggestions(form.replace('#', '/'),
+
+        LexicalSuggestionType suggestionType = null;
+        if ("greek".equals(greekOrHebrew)) {
+            suggestionType = LexicalSuggestionType.GREEK;
+        } else if ("hebrew".equals(greekOrHebrew)) {
+            suggestionType = LexicalSuggestionType.HEBREW;
+        }
+
+        // still null then return
+        if (suggestionType == null) {
+            return new ArrayList<LexiconSuggestion>(0);
+        }
+
+        return this.searchService.getLexicalSuggestions(suggestionType, form.replace('#', '/'),
                 Boolean.parseBoolean(includeAllForms));
     }
 

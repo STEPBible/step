@@ -40,6 +40,7 @@ import java.util.Enumeration;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 
+import org.apache.commons.dbcp.BasicDataSource;
 import org.crosswire.common.util.Reporter;
 import org.crosswire.common.util.ReporterEvent;
 import org.crosswire.common.util.ReporterListener;
@@ -47,11 +48,13 @@ import org.crosswire.jsword.versification.BookName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.avaje.ebeaninternal.server.core.DefaultSqlUpdate;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.google.inject.servlet.ServletModule;
 import com.tyndalehouse.step.core.guice.StepCoreModule;
+import com.tyndalehouse.step.core.guice.providers.DatabaseConfigProvider;
 import com.tyndalehouse.step.rest.framework.FrontController;
 
 /**
@@ -62,6 +65,7 @@ import com.tyndalehouse.step.rest.framework.FrontController;
  * 
  */
 public class StepServletConfig extends GuiceServletContextListener {
+    private static final String ORG_H2_DRIVER = "org.h2.Driver";
     private static final Logger LOGGER = LoggerFactory.getLogger(StepServletConfig.class);
 
     @Override
@@ -100,7 +104,7 @@ public class StepServletConfig extends GuiceServletContextListener {
 
     @Override
     public void contextDestroyed(final ServletContextEvent servletContextEvent) {
-        deregisterDbDrivers();
+        deregisterDb();
         final ServletContext sc = servletContextEvent.getServletContext();
         sc.removeAttribute(Injector.class.getName());
         super.contextDestroyed(servletContextEvent);
@@ -110,7 +114,15 @@ public class StepServletConfig extends GuiceServletContextListener {
     /**
      * Deregisters database drivers to prevent leaks
      */
-    private void deregisterDbDrivers() {
+    private void deregisterDb() {
+        final DatabaseConfigProvider dbConfig = getInjector().getInstance(DatabaseConfigProvider.class);
+        final BasicDataSource ds = dbConfig.getDs();
+
+        // tear down database
+        if (ORG_H2_DRIVER.equals(ds.getDriverClassName()) && !Boolean.getBoolean("leaveDbUp")) {
+            dbConfig.get().execute(new DefaultSqlUpdate("SHUTDOWN"));
+        }
+
         final Enumeration<Driver> drivers = DriverManager.getDrivers();
         while (drivers.hasMoreElements()) {
             final Driver driver = drivers.nextElement();

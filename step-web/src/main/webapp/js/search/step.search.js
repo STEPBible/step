@@ -216,6 +216,17 @@ step.search = {
             } else {
                 self._highlightResults(passageId, highlightTerms);
             }
+            
+            self._doFonts(passageId);
+            step.util.ui.addStrongHandlers(passageId, step.util.getPassageContainer(passageId));
+        });
+    },
+    
+    _doFonts : function(passageId) {
+        $.each($(".passageContentHolder", step.util.getPassageContainer(passageId)), function(n, item) {
+            if(step.util.isUnicode(item)) {
+                $(item).addClass("unicodeFont");
+            }
         });
     },
     

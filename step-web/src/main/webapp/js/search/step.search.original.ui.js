@@ -108,11 +108,6 @@ step.search.ui.original = {
         var query = "o";
         if(originalType == WORDS_MEANING[0]) {
             query += "m";
-        } else if (originalType == TRANSLATED_AS[0]) {
-            //do something with it TODO
-            query += "t";
-            originalWordScope = $(".originalWordScope", passageContainer).val();
-            
         } else {
             if (originalType == GREEK_WORDS[0]) {
                 query += "g";
@@ -165,21 +160,34 @@ step.search.ui.original = {
                     });
                 },
                 source : function(request, response) {
-                        $.getPassageSafe({
-                            url : SEARCH_SUGGESTIONS,
-                            args : [encodeURIComponent(request.term.replace('/', '#')), step.search.ui.original.allForms[step.passage.getPassageId(this.element)[0]]], 
-                            callback: function(text) {
-                                response($.map(text, function(item) {
-                                    return { label: "<span>" + 
-                                            "<span class='suggestionColumn ancientSearchSuggestion'>" + item.matchingForm + "</span>" +
-                                            "<span class='suggestionColumn'>" + item.stepTransliteration + "</span>" + 
-                                            "<span class='suggestionColumn'>" + item.gloss + "</span>" +
-                                        "</span>", value: item.matchingForm };
-                                }));
-                            },
-                            passageId : step.passage.getPassageId(this),
-                            level : 'error'
-                       });
+                    var passageId =  step.passage.getPassageId(this.element);
+                    var searchType = step.state.original.originalType(passageId);
+                    var suggestionType = undefined;
+                    if(searchType == HEBREW_WORDS[0]) {
+                        suggestionType = "hebrew";
+                    } else if(searchType == GREEK_WORDS[0]) {
+                        suggestionType = "greek";
+                    }
+                    
+                    if(suggestionType == null) {
+                        return response({});
+                    }
+                    
+                    $.getPassageSafe({
+                        url : SEARCH_SUGGESTIONS,
+                        args : [suggestionType, encodeURIComponent(request.term.replace('/', '#')), step.search.ui.original.allForms[passageId]], 
+                        callback: function(text) {
+                            response($.map(text, function(item) {
+                                return { label: "<span>" + 
+                                        "<span class='suggestionColumn ancientSearchSuggestion'>" + item.matchingForm + "</span>" +
+                                        "<span class='suggestionColumn'>" + item.stepTransliteration + "</span>" + 
+                                        "<span class='suggestionColumn'>" + item.gloss + "</span>" +
+                                    "</span>", value: item.matchingForm };
+                            }));
+                        },
+                        passageId : step.passage.getPassageId(this),
+                        level : 'error'
+                   });
                 }
             }).data("lexicalcomplete")._renderItem = function(ul, item) {
                 return $("<li></li>").data("item.autocomplete", item).append("<a>" + item.label + "</a>").appendTo(ul);

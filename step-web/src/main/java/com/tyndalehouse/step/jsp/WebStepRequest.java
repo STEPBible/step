@@ -49,6 +49,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.inject.Injector;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
+import com.tyndalehouse.step.core.service.jsword.impl.JSwordPassageServiceImpl;
 import com.tyndalehouse.step.models.UiDefaults;
 import com.tyndalehouse.step.rest.controllers.BibleController;
 
@@ -60,11 +61,11 @@ import com.tyndalehouse.step.rest.controllers.BibleController;
  */
 // CHECKSTYLE:OFF
 public class WebStepRequest {
+    private static final Logger LOG = LoggerFactory.getLogger(WebStepRequest.class);
     private static final String REF_0_PARAM = "reference";
     private static final String REF_1_PARAM = "reference-1";
     private static final String VERSION_0_PARAM = "version";
     private static final String VERSION_1_PARAM = "version-1";
-    private static final Logger LOG = LoggerFactory.getLogger(WebStepRequest.class);
     private static final String CURRENT_REFERENCE_0 = "step.passage.0.reference";
     private static final String CURRENT_REFERENCE_1 = "step.passage.1.reference";
     private static final String CURRENT_VERSION_0 = "step.passage.0.version";
@@ -170,6 +171,15 @@ public class WebStepRequest {
     public String getVersion(final int passageId) {
         try {
             return this.versions.get(passageId);
+        } catch (final Exception e) {
+            return "";
+        }
+    }
+
+    public String getTitle() {
+        try {
+            final JSwordPassageServiceImpl jsword = this.injector.getInstance(JSwordPassageServiceImpl.class);
+            return jsword.getPlainText(this.getVersion(0), this.getReference(0), true).replaceAll("[<>]", "");
         } catch (final Exception e) {
             return "";
         }

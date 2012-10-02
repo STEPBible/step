@@ -69,6 +69,7 @@ import org.crosswire.jsword.book.BookCategory;
 import org.crosswire.jsword.book.BookData;
 import org.crosswire.jsword.book.BookException;
 import org.crosswire.jsword.book.Books;
+import org.crosswire.jsword.book.OSISUtil;
 import org.crosswire.jsword.book.UnAccenter;
 import org.crosswire.jsword.passage.Key;
 import org.crosswire.jsword.passage.KeyUtil;
@@ -375,6 +376,51 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
             return currentKey;
         }
         return validKey;
+    }
+
+    @Override
+    public String getPlainText(final String version, final String reference, final boolean firstVerse) {
+        final Book book = this.versificationService.getBookFromVersion(version);
+        try {
+            Key key = book.getKey(reference);
+            if (firstVerse) {
+                key = getFirstverseExcludingZero(key, book);
+            }
+
+            final BookData data = new BookData(book, key);
+            return OSISUtil.getCanonicalText(data.getOsisFragment());
+        } catch (final BookException e) {
+            throw new StepInternalException(e.getMessage(), e);
+        } catch (final NoSuchKeyException e) {
+            throw new StepInternalException(e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Gets the key for verse 1
+     * 
+     * @param key the current aggregate key
+     * @param b the book
+     * @return the new key representing 1 verse only
+     */
+    private Key getFirstverseExcludingZero(final Key key, final Book b) {
+        if (key.getCardinality() < 1) {
+            return key;
+        }
+
+        final Key subKey = key.get(0);
+        if (subKey instanceof Verse) {
+            final Verse verse = (Verse) subKey;
+            if (verse.getVerse() == 0) {
+                // then return verse 1 if available
+                if (key.getCardinality() > 1) {
+                    return key.get(1);
+                }
+                return this.versificationService.getVersificationForVersion(b).add(verse, 1);
+            }
+            return verse;
+        }
+        return key;
     }
 
     @Override

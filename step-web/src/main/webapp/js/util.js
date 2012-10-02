@@ -150,11 +150,13 @@ step.util = {
                                                 "</h1>" +
                                                 "<span>" + 
                                                 (item.shortDef == undefined ? "" : item.shortDef) +
-                                                "</span></p><span class='infoTagLine'>" +
-                                                "More information can be found by clicking on the word in the verse." +
-                                                "</span>";
+                                                "</span></p>";
                             });
                         }
+                        
+                        vocabInfo += "<span class='infoTagLine'>" +
+                        "More information can be found by clicking on the word in the verse." +
+                        "</span>";
                         
                         //"<span class='ancientSearch'>" + item.accentedUnicode + "</span> (<em>" + item.stepTransliteration + "</em>): " + (item.stepGloss == undefined ? "-" : item.stepGloss);
                         

@@ -1,7 +1,7 @@
 var hearingFilteredComplete = false;
 
 step.autoVersions = {
-    currentElement : undefined,
+    currentElement : undefined
 };
 
 $.widget("custom.versions",  {
@@ -41,9 +41,6 @@ $.widget("custom.versions",  {
             this._filter();
           
             $("body").append(this.dropdownVersionMenu);
-            
-            //need to render slider after attaching to document for impact to affect everything properly
-            this._renderSlider();
             
             this.dropdownVersionMenu.hide();
             $.data(document, 'dropdownVersionMenu', this.dropdownVersionMenu);
@@ -103,14 +100,20 @@ $.widget("custom.versions",  {
         var versions = this._filteredVersions(val);
         
         var listItems = $("[initials]", this.dropdownVersionMenu);
+        
+        //on ancient, we only keep the versions once.
+        var language = this.dropdownVersionMenu.find("input:checkbox[name=language]:checked").val();
+        var kept = {};
         $.each(listItems, function(i, item) {
             var jqItem = $(item);
-            if(versions[jqItem.attr('initials')] == undefined) {
+            var initials = jqItem.attr('initials');
+            if(versions[initials] == undefined || (language == 'langAncient' && kept[initials])) {
                 //hide element
                 jqItem.hide();
             } else {
                 //show element
                 jqItem.show();
+                kept[initials] = true;
             }
         });
     },
@@ -120,17 +123,10 @@ $.widget("custom.versions",  {
         
         var resource = widget.find("input:checkbox[name=textType]:checked").val();
         var language = widget.find("input:checkbox[name=language]:checked").val();
-        var vocab = widget.find("input.vocabFeature").prop('checked');
-        var interlinear = widget.find("input.interlinearFeature").prop('checked');
-        var grammar = widget.find("input.grammarFeature").prop('checked');
-        
-        
-        var level = $.localStore("step.slideView-versionsDetail");
-        if(level == undefined) {
-            level = 0;
-        }
        
        var filteredVersionResult = {};
+       var ancientAlreadyIn = {};
+       
        $.each(step.versions, function(index, item) {
            if(val) {
                var lv = val.toLowerCase();
@@ -152,29 +148,13 @@ $.widget("custom.versions",  {
                 return;
             }
             
-            //skip over feature filtering, if level is Quick or Deeper
-            if(level == 2) {
-                //exclude if vocab and no strongs
-                if((vocab == true || interlinear == true) && !item.hasStrongs) {
-                    return;
-                }
-                
-                if(grammar == true && !item.hasMorphology) {
-                    return;
-                }
-            }
-
+  
             var lang = item.languageCode;
-            if(level == 2 && language == "langAncient" && lang != 'grc' && lang != 'la' && lang != 'he') {
+            if(language == "langAncient" && lang != 'grc' && lang != 'la' && lang != 'he') {
                 return;
             }
 
             var currentLang = step.state.language(1);
-            //if English and quick, buttons are not available, and we show only english language
-            if(currentLang == 'en' && level == 0 && lang != 'en') {
-                //then exclude
-                return;
-            } 
             
             //if we've got those buttons, i.e. currentLang != English
             if( currentLang != 'en' &&       
@@ -187,59 +167,10 @@ $.widget("custom.versions",  {
                 return;
             }
             
-            //finally, if level is 0 or 1 we restrict what we see...
-            var versionName = step.version.names[item.initials.toLowerCase()];
-            if(level == 0) {
-                if(versionName != undefined && versionName.level == 0) {
-                    //continue
-                } else {
-                    return;
-                };
-            } else if (level == 1) {
-                if(versionName != undefined && versionName.level < 2) {
-                    //accept and continue
-                } else {
-                    return;
-                };
-            }
-            
             filteredVersionResult[item.initials] = 'keep';
             return;
         });
        return filteredVersionResult;
-    },
-    
-    _renderSlider : function() {
-        var self = this;
-        var languageCode =  step.user.language.code;
-        
-      //do detail slider
-        var toolbarContainer = $(".filterOptions", this.dropdownVersionMenu);
-        $("[name='versionsDetail']", toolbarContainer).detailSlider({ scopeSelector : ".filterOptions" });
-        var currentLevel = $.localStore("step.slideView-versionsDetail");
-        if(currentLevel == undefined) {
-            currentLevel = 0;
-        }
-        
-        if(currentLevel < 1 && languageCode == "en") {
-            $(".languageFilters", toolbarContainer).hide();
-        } else {
-            $(".languageFilters", toolbarContainer).show();
-        }
-        
-        $(this).hear("slideView-versionsDetail", function(data) {
-            var level = $("[name='versionsDetail']", toolbarContainer).detailSlider("value");
-
-            var levelElement = $("[name='versionsDetail']:visible", toolbarContainer);
-            if(levelElement.length != 0) {
-                if(level == 0) {
-                    $(".languageFilters", toolbarContainer).hide();
-                } else {
-                    $(".languageFilters", toolbarContainer).show();    
-                }
-                self._filter();
-            }
-        });
     },
     
     _renderFilterOptions : function() {
@@ -255,11 +186,11 @@ $.widget("custom.versions",  {
         toolbar += '<tr class=""><td class="filterHeader">Resource type</td><td>';
         toolbar += '<span class="filterButtonSet"><input type="checkbox" id="bibles" value="bibles" name="textType" key="bibles" checked="checked" /><label for="bibles">Bibles</label>';
         toolbar += '<input type="checkbox" id="commentaries" value="commentaries" name="textType"  key="commentaries" /><label for="commentaries">Commentaries</label></span>';
-        toolbar += '<span name="versionsDetail"></span></td>';    
+        toolbar += '</td>';    
         toolbar += '</tr>';
 
         toolbar += '<tr class="filterButtonSet languageFilters"><td class="filterHeader">Languages</td><td>';
-        toolbar += '<span level=1><input type="checkbox" level=2 id="languageAll" value="langAll" name="language" key="langAll" /><label for="languageAll">All</label></span>';
+        toolbar += '<span ><input type="checkbox" id="languageAll" value="langAll" name="language" key="langAll" /><label for="languageAll">All</label></span>';
 
         toolbar += '<input type="checkbox" id="languageMy" value="langMy" name="language"  key="langMy" ';
         if(languageCode == 'en') {
@@ -272,14 +203,10 @@ $.widget("custom.versions",  {
             toolbar += '<input type="checkbox" id="languageMyAndEnglish" value="langMyAndEnglish"  key="langMyEnglish" name="language" checked="checked" /><label for="languageMyAndEnglish">' + languageName + ' + English</label>';
         }
         
-        toolbar += '<span level=2><input type="checkbox" id="languageAncient" value="langAncient"  key="langAncient" name="language" /><label for="languageAncient">Ancient</label></span>';
+        toolbar += '<span ><input type="checkbox" id="languageAncient" value="langAncient"  key="langAncient" name="language" /><label for="languageAncient">Ancient</label></span>';
         
         toolbar += '</td></tr>';
-            toolbar += '<tr class="filterButtonSet" level=2><td class="filterHeader">Features available</td><td>';
-            toolbar += '<input type="checkbox" id="vocabFeature" class="vocabFeature" key="vocab" /><label for="vocabFeature"><span class="versionFeature">V</span>ocabulary</label>';
-            toolbar += '<input type="checkbox" id="interlinearFeature" class="interlinearFeature" key="interlinear" /><label for="interlinearFeature"><span class="versionFeature">I</span>nterlinear</label>';
-            toolbar += '<input type="checkbox" id="grammarFeature" class="grammarFeature" key="grammar" /><label for="grammarFeature"><span class="versionFeature">G</span>rammar</label>';
-            toolbar += '</td></tr>';
+            
         
         toolbar += '</table>';
         toolbar += '<div class="filterTagLine">Filtering ' + step.versions.length + ' Bibles &amp; Commentaries</div><hr />';
@@ -310,6 +237,20 @@ $.widget("custom.versions",  {
     _renderVersions : function() {
         var self = this;
         var menu = $("<ul class='versionsListMenu'></ul>");
+        
+        if(step.strongVersions) {
+            $.each(step.strongVersions, function(i, version) {
+                menu.append(self._renderItem(version));
+            });
+
+            menu.append(self._renderItem(step.keyedVersions["ESV"]));
+            
+            //get last item, and mark it out
+            var items = menu.find("li");
+            var lastItem = items[items.length - 1];
+            $(lastItem).addClass("versionBreakMenuItem");
+        }
+        
         
         if(step.versions) {
             $.each(step.versions, function(i, version) {

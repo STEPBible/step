@@ -9,6 +9,9 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.avaje.ebean.EbeanServer;
 import com.tyndalehouse.step.core.data.entities.lexicon.Definition;
 import com.tyndalehouse.step.core.exceptions.UserExceptionType;
@@ -22,6 +25,7 @@ import com.tyndalehouse.step.core.service.VocabularyService;
  */
 @Singleton
 public class VocabularyServiceImpl implements VocabularyService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(VocabularyServiceImpl.class);
     private static final String STRONG_SEPARATORS = "[ ,]+";
     private static final String HIGHER_STRONG = "STRONG:";
     private static final String LOWER_STRONG = "strong:";
@@ -175,7 +179,20 @@ public class VocabularyServiceImpl implements VocabularyService {
      */
     public static String padStrongNumber(final String strongNumber, final boolean prefix) {
         final int baseIndex = prefix ? START_STRONG_KEY : 0;
-        return String.format("%c%04d", strongNumber.charAt(baseIndex),
-                Integer.parseInt(strongNumber.substring(baseIndex + 1)));
+        String subStrong = null;
+        try {
+            subStrong = strongNumber.substring(baseIndex + 1);
+            return String.format("%c%04d", strongNumber.charAt(baseIndex), Integer.parseInt(subStrong));
+        } catch (final NumberFormatException e) {
+            LOGGER.trace("Unable to parse strong number.", e);
+            // deals with dodgy modules
+            // perhaps someone added some random information at the end
+            if (subStrong != null && subStrong.length() > 3) {
+                final String first4Chars = subStrong.substring(0, 4);
+                return String.format("%c%04d", strongNumber.charAt(baseIndex), Integer.parseInt(first4Chars));
+            }
+
+            return "err";
+        }
     }
 }

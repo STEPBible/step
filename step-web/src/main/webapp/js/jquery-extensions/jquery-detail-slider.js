@@ -24,7 +24,7 @@ $(function() {
                 value : self._getValue() + 1
             });
             
-    	    var label = $("<span class='sliderDetailLevelLabel'>Quick view</span>");
+    	    var label = $("<span class='sliderDetailLevelLabel'>Basic view</span>");
             var widgetContent = $("<span class='detailSliderContainer'></span>").append(label).append(slider);
             
             if(this.options.title) {

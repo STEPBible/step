@@ -95,14 +95,7 @@ step.passage.ui = {
      * Simple forward search
      */
     getSelectedVersion : function(versionName) {
-        for(var i = 0; i < step.versions.length; i++) {
-            if(versionName == step.versions[i].initials) {
-                return step.versions[i];
-            }
-        }
-        
-//        console.log("Did not manage to find version ", versionName);
-        return undefined;
+        return step.keyedVersions[versionName];
     }
 };
 

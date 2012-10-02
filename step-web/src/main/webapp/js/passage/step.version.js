@@ -30,35 +30,38 @@
  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
+NO_STRONGS = "The selected Bible will not be clickable as it does not support the Vocabulary feature.";
+
 step.version = {
+        warned : {},
         quickEnglish : ["ASV", "BBE", "DRC", "ESV", "KJV", "NETtext", "RWebster", "WEB"],
         deeperEnglish : ["JPS", "LEB", "Rotherham", "AB", "YLT"],
         names : {
-            asv         : {name : "American Standard Version ", level : 0},
-            bbe         : {name : "Bible in Basic English ", level : 0},
-            drc         : {name : "Douay-Rheims Catholic Bible ", level : 0},
-            esv         : {name : "English Standard Version", level : 0},
-            kjv         : {name : "King James Version (\"Authorised\") ", level : 0},
-            nasb        : {name : "New American Standard Bible ", level : 0},
-            nettext     : {name : "New English Translation ", level : 0},
+            asv         : {name : "American Standard Version "},
+            bbe         : {name : "Bible in Basic English "},
+            drc         : {name : "Douay-Rheims Catholic Bible "},
+            esv         : {name : "English Standard Version"},
+            kjv         : {name : "King James Version (\"Authorised\") "},
+            nasb        : {name : "New American Standard Bible "},
+            nettext     : {name : "New English Translation "},
             rwebster    : {level : 0},
-            web         : {name : "World English Bible ", level : 0},
-            jps         : {name : "Jewish Publication Society (OT)", level : 1},
-            leb         : {name : "Lexham English Bible ", level : 1},
-            rotherham   : {name : "Emphasized Bible ", level : 1},
-            ab          : {name : "Translation of Greek Septuagint (OT)", level : 1},
-            ylt         : {name : "Young's over-literal translation of Hebrew & Greek", level : 1},
+            web         : {name : "World English Bible "},
+            jps         : {name : "Jewish Publication Society (OT)"},
+            leb         : {name : "Lexham English Bible "},
+            rotherham   : {name : "Emphasized Bible "},
+            ab          : {name : "Translation of Greek Septuagint (OT)"},
+            ylt         : {name : "Young's over-literal translation of Hebrew & Greek"},
             
-            abp         : {name : "Interlinear for Greek Septuagint (OT)", level : 2 }, 
-            etheridge   : {name : "Translation of Syriac Peshitta (NT)", level : 2}, 
+            abp         : {name : "Interlinear for Greek Septuagint (OT)" }, 
+            etheridge   : {name : "Translation of Syriac Peshitta (NT)"}, 
 
-            abpgrk      : {name : "Orthodox Greek Septuagint (Grk, OT)", level : 2},
-            lxx         : {name : "Septuagint from Rahlf+Goettingen (Grk, OT)", level : 2},
-            peshitta    : {name : "Syriac version (Syriac, NT)", level : 2},
-            tnt         : {name : "Greek edition of Tregelles (Grk. NT)", level : 2},
-            vulgate     : {name : "Latin Bible by Jerome (Lat. +Ap)", level : 2},
-            whnu        : {name : "Westcott & Hort + NA27/UBS3 (Grk. NT)", level : 2},
-            wlc         : {name : "BHS corrected to Leningrad codex (Heb. OT)", level : 2},
+            abpgrk      : {name : "Orthodox Greek Septuagint (Grk, OT)"},
+            lxx         : {name : "Septuagint from Rahlf+Goettingen (Grk, OT)"},
+            peshitta    : {name : "Syriac version (Syriac, NT)"},
+            tnt         : {name : "Greek edition of Tregelles (Grk. NT)"},
+            vulgate     : {name : "Latin Bible by Jerome (Lat. +Ap)"},
+            whnu        : {name : "Westcott & Hort + NA27/UBS3 (Grk. NT)"},
+            wlc         : {name : "BHS corrected to Leningrad codex (Heb. OT)"},
             
             //            DRC = Translation of Latin Vulgate (Eng. OT+Ap+NT)
             chiuns      : {name: "和合本圣经 （简体版）" },
@@ -70,15 +73,38 @@ step.version = {
             var version = step.state.passage.version(passageId);
             $(".infoAboutVersion", step.util.getPassageContainer(passageId)).attr("href", "version.jsp?version=" + version).attr("title", "Information about the " + version + " Bible / Commentary");
         },
+        
+        warnIfNoStrongs : function(passageId, version) {
+            if(!step.keyedVersions) {
+                return;
+            }
+            
+            var self = this;
+            var keyedVersion = step.keyedVersions[version];
+            if(keyedVersion.category == 'BIBLE' && !keyedVersion.hasStrongs && !step.version.warned[keyedVersion.initials]) {
+                   step.util.raiseInfo(passageId, NO_STRONGS);
+                   step.version.warned[keyedVersion.initials] = true;           
+               } 
+        }
 };
 
-
-$(step.version).hear("version-changed-0", function(source, data) {
-   step.version.updateInfoLink(0);
+$(step.version).hear("versions-initialisation-completed", function(source, data) {
+    step.version.warnIfNoStrongs(0, step.state.passage.version(0));
+    step.version.warnIfNoStrongs(1, step.state.passage.version(1));
 });
 
-$(step.version).hear("version-changed-1", function(source, data) {
+$(step.version).hear("version-changed-0", function(source, version) {
+    step.version.updateInfoLink(0);
+   
+    //raise info box to warn, if not strong version...
+    step.version.warnIfNoStrongs(0, version);
+});
+
+$(step.version).hear("version-changed-1", function(source, version) {
     step.version.updateInfoLink(1); 
+    
+    //raise info box to warn, if not strong version...
+    step.version.warnIfNoStrongs(1, version);
  });
 
 

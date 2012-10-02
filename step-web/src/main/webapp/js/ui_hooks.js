@@ -94,7 +94,7 @@ GEOGRAPHY_GET_PLACES =              STEP_SERVER_BASE_URL + "geography/getPlaces/
 // SOME DEFAULTS
 // ////////////////////////
 var DEFAULT_POPUP_WIDTH = 500;
-var DETAIL_LEVELS = [ "Quick", "Deeper", "Detailed" ];
+var DETAIL_LEVELS = [ "Basic", "Intermediate", "Advanced" ];
 
 /** a simple toggler for the menu items */
 function toggleMenuItem(menuItem) {

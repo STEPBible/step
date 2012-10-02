@@ -720,10 +720,10 @@
   <xsl:template match="speaker[@who = 'Jesus']">
   	<xsl:choose>
 	  	<xsl:when test="$RedLetterText = 'true'">
-	    	<span class="jesus"><xsl:apply-templates mode="jesus"/></span>
+	    	<font class="jesus"><xsl:apply-templates mode="jesus"/></font>
 	    </xsl:when>
 	    <xsl:otherwise>
-	    	<span class="speech"><xsl:apply-templates /></span>
+	    	<font class="speech"><xsl:apply-templates /></font>
 	    </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -1143,7 +1143,7 @@
   <xsl:template match="q[@who = 'Jesus']">
     	<xsl:choose>
 	  	<xsl:when test="$RedLetterText = 'true'">
-	    	<span class="jesus"><xsl:value-of select="@marker"/><xsl:apply-templates mode="jesus"/><xsl:value-of select="@marker"/></span>
+	    	<font class="jesus"><xsl:value-of select="@marker"/><xsl:apply-templates mode="jesus"/><xsl:value-of select="@marker"/></font>
 	    </xsl:when>
 	    <xsl:otherwise>
 	    		<xsl:value-of select="@marker"/>

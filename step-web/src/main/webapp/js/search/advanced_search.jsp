@@ -35,10 +35,10 @@
 		<table class="passageTable">
 			<tr>
 				<td>Translation / Commentary</td>
-				<td><input type="text" class="passageVersion" size="15" /> &nbsp; 
+				<td><input type="text" class="passageVersion drop" size="15" /> &nbsp; 
 					<a class="infoAboutVersion" target="_blank" href="version.jsp?version=<%= stepRequest.getThisVersion() %>" title="Information about the <%= stepRequest.getThisVersion() %> Bible / Commentary">&#x24d8;</a>&nbsp;</td>
 				<td style="padding-left: 10px">Bible Text&nbsp;</td>
-				<td><input type="text" class="passageReference" size="15" /></td>
+				<td><input type="text" class="passageReference drop" size="15" /></td>
 			</tr>
 			<tr level="1">
 				<td>Comparison versions</td>

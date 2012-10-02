@@ -186,6 +186,16 @@ function initData() {
 	// make call to server first and once, to cache all passages:
 	$.getSafe(BIBLE_GET_MODULES + true, function(versionsFromServer) {
 	    step.versions = versionsFromServer.versions;
+	    step.keyedVersions = {};
+	    step.strongVersions = {};
+	    for(var i = 0; i < step.versions.length; i++) {
+	        step.keyedVersions[step.versions[i].initials] = step.versions[i];
+	        
+	        if(step.versions[i].hasStrongs) {
+	            step.strongVersions[step.versions[i].initials] = step.versions[i];
+	        }
+	    }
+	    
 	    step.user = {
 	            language : {
 	                code : versionsFromServer.languageCode,

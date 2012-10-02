@@ -251,28 +251,31 @@ public class JSwordPassageServiceImplTest {
      */
     @Test
     public void testComparing() throws BookException, NoSuchKeyException, JDOMException, IOException {
-        final Book currentBook = Books.installed().getBook("KJV");
-        final Book secondaryBook = Books.installed().getBook("ESV");
+        final Book currentBook = Books.installed().getBook("ESV");
+        final Book secondaryBook = Books.installed().getBook("KJV");
         final Book tertiaryBook = Books.installed().getBook("ASV");
 
+        final String reference = "Mark 3:1-2";
         final BookData bookData = new BookData(new Book[] { currentBook, secondaryBook, tertiaryBook },
-                currentBook.getKey("Romans 1:4-5"), true);
+                currentBook.getKey(reference), true);
         final Element osisFragment = bookData.getOsisFragment();
 
         final XMLOutputter xmlOutputter = new XMLOutputter(Format.getPrettyFormat());
-        LOGGER.trace(xmlOutputter.outputString(osisFragment));
+        LOGGER.info(xmlOutputter.outputString(osisFragment));
 
         // do the test
-        // // final JSwordPassageServiceImpl jsi = new JSwordPassageServiceImpl(
-        // // new JSwordVersificationServiceImpl(), null, null);
-        // // final List<LookupOption> options = new ArrayList<LookupOption>();
-        // //
-        // // final String osisText = jsi.getOsisText("KJV", "Romans 1:4", options, "").getValue();
-        // // final SAXBuilder sb = new SAXBuilder();
-        // // final Document d = sb.build(new StringReader(osisText));
-        //
-        // LOGGER.debug("\n {}", xmlOutputter.outputString(d));
-        // Assert.assertTrue(osisText.contains("span"));
+        final JSwordPassageServiceImpl jsi = new JSwordPassageServiceImpl(
+                new JSwordVersificationServiceImpl(), null, null);
+        final List<LookupOption> options = new ArrayList<LookupOption>();
+
+        final String osisText = jsi.getInterleavedVersions(
+                new String[] { currentBook.getInitials(), secondaryBook.getInitials() }, reference, options,
+                InterlinearMode.INTERLEAVED_COMPARE).getValue();
+        final SAXBuilder sb = new SAXBuilder();
+        final Document d = sb.build(new StringReader(osisText));
+
+        LOGGER.debug("\n {}", xmlOutputter.outputString(d));
+        Assert.assertTrue(osisText.contains("span"));
     }
 
     /**
@@ -503,8 +506,8 @@ public class JSwordPassageServiceImplTest {
      */
     @Test
     public void testPrettyXml() throws BookException, NoSuchKeyException, JDOMException, IOException {
-        final String version = "WLC";
-        final String ref = "Gen 1:1";
+        final String version = "ABP";
+        final String ref = "Mark 3:1";
         final Book currentBook = Books.installed().getBook(version);
         final BookData bookData = new BookData(currentBook, currentBook.getKey(ref));
         final Element osisFragment = bookData.getOsisFragment();

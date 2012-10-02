@@ -84,18 +84,11 @@ step.search = {
             
             var vs = versions.split(",");
         
-           //iterate through all versions of interes
+           //iterate through all versions of interest
            for(var j = 0; j < vs.length; j++) {
                //looking for them in step.versions
-               for(var i = 0; i < step.versions.length; i++) {
-                   if(vs[j] == step.versions[i].initials) {
-                       if(step.versions[i].hasStrongs) {
-                           return true;
-                       } else {
-                           //break and continue round for the next
-                           break;
-                       }
-                   }
+               if(step.strongVersions[vs[j]]) {
+                   return true;
                }
            }
            

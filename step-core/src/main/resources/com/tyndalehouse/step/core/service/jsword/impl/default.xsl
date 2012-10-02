@@ -1323,7 +1323,7 @@
 	<xsl:param name="classes" select="''" />
 	
 		<xsl:element name="span">
-			<xsl:attribute name="class">singleVerse <xsl:value-of select="$classes" /></xsl:attribute>
+			<xsl:attribute name="class">singleVerse <xsl:value-of select="$classes" /><xsl:value-of select="$cell-direction" /></xsl:attribute>
 			<!--  Should attempt to support user languages that operate right to left at some point -->
 			<!-- 			<xsl:if test="@xml:lang"> -->
 			<!-- 				<xsl:attribute name="dir"> -->

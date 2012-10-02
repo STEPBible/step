@@ -516,5 +516,8 @@ Passage.getBlackListedStrongs = function() {
     return [ "G3588" ];
 };
 
+$(step.passage).hear("SEARCH_PASSAGE-activated", function(self, data) {
+    step.passage.lastUrls[data.passageId] = undefined;
+});
 
 

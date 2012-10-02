@@ -76,6 +76,8 @@ public class GeographyServiceImplTest extends DataDrivenTestExtension {
         gp.setReferences(references);
 
         // save place
+        super.getEbean().delete(super.getEbean().find(GeoPlace.class).findList());
+
         super.getEbean().save(gp);
 
         // get place from reference, we check persistence-cascading worked correctly

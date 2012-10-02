@@ -45,9 +45,16 @@ step.search = {
             var pageNumber = step.state.original.originalPageNumber(passageId);
             var versions = step.state.original.originalSearchVersion(passageId);
             var context = step.state.original.originalSearchContext(passageId);
-            var sortOrder = $("fieldset:visible", step.util.getPassageContainer(passageId)).detailSlider("value") > 0 ? step.state.original.originalSorting(passageId) : false;
-            var filter = step.search.original.filters[passageId];
+
+            var passageContainer = step.util.getPassageContainer(passageId);
+            var sortOrder
+            if($(".originalSorting:enabled", passageContainer).size() > 0) {
+                sortOrder = $("fieldset:visible", passageContainer).detailSlider("value") > 0 ? step.state.original.originalSorting(passageId) : false;
+            }
+            sortOrder = false;
             
+            var filter = step.search.original.filters[passageId];
+
             var versions = step.state.original.originalSearchVersion(passageId);
             if(versions == undefined) {
                 versions = "";
@@ -117,8 +124,7 @@ step.search = {
         },
         
         _getQuickVersions : function(passageId) {
-            var passageContainer = step.util.getPassageContainer(passageId);
-            var versions = $("fieldset:visible", passageContainer).find(".searchVersions, .passageVersion, .extraVersions");
+            var versions = step.util.ui.getVisibleVersions(passageId);
             var versionInitials = "";
             $.each(versions, function(i, item) {
                 versionInitials += $(this).val();
@@ -194,7 +200,16 @@ step.search = {
     _doSearch : function(passageId, query, version, pageNumber, ranked, context, highlightTerms) {
         var self = this;
         
-        var versionArg = " in (" + version.toUpperCase() + ")";
+        var checkedVersion = version;
+        if(version == null || version.trim().length == 0) {
+            checkedVersion = step.state.passage.version(passageId);
+            
+            if(checkedVersion == undefined || checkedVersion.trim().length == 0) {
+                checkedVersion = 'KJV';
+            }
+        }
+        
+        var versionArg = " in (" + checkedVersion.toUpperCase() + ")";
         var pageNumberArg = pageNumber == null ? 1 : pageNumber;
         var rankedArg = ranked == undefined ? false : ranked;
         var contextArg = context == undefined || isNaN(context) ? 0 : context;
@@ -367,7 +382,8 @@ step.search = {
             
             results += "<tr class='searchResultRow'><td class='searchResultKey'> ";
             results += goToPassageArrow(true, item.key, "searchKeyPassageArrow", goToChapter);
-            results += item.key;
+            results += "<a class='searchRefLink' href='#' onclick='passageArrowTrigger(" + passageId + ", \"" + item.key + "\", " + goToChapter + ")' >" 
+                + item.key + "</a>";
             results += goToPassageArrow(false, item.key, "searchKeyPassageArrow", goToChapter);
             results += "</td><td class='searchResultRow'>";
             
@@ -392,7 +408,8 @@ step.search = {
             results += "<li class='subjectHeading'>";
             results += "<span class='subjectSearchLink'>";
             results += goToPassageArrow(true, headingsResults[i].key, "searchKeyPassageArrow", true);
-            results += headingsResults[i].key;
+            results += "<a class='searchRefLink' href='#' onclick='passageArrowTrigger(" + passageId + ", \"" + headingsResults[i].key + "\", true)' >" 
+            + headingsResults[i].key + "</a>";
             results += goToPassageArrow(false, headingsResults[i].key, "searchKeyPassageArrow", true);
             results += "</span>";
             results += headingsResults[i].preview;

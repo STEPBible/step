@@ -53,6 +53,7 @@ import com.tyndalehouse.step.core.data.create.loaders.PostProcessingAction;
 import com.tyndalehouse.step.core.data.create.loaders.translations.OpenBibleDataTranslation;
 import com.tyndalehouse.step.core.data.create.loaders.translations.TimelineEventTranslation;
 import com.tyndalehouse.step.core.data.entities.GeoPlace;
+import com.tyndalehouse.step.core.data.entities.VersionInfo;
 import com.tyndalehouse.step.core.data.entities.morphology.Morphology;
 import com.tyndalehouse.step.core.data.entities.timeline.HotSpot;
 import com.tyndalehouse.step.core.data.entities.timeline.TimelineEvent;
@@ -177,6 +178,7 @@ public class Loader {
         this.transaction.openNewBatchTransaction();
 
         try {
+            loadVersionInformation();
             loadHotSpots();
             loadTimeline();
             loadOpenBibleGeography();
@@ -205,6 +207,24 @@ public class Loader {
         for (int ii = 0; ii < INDEXES.length; ii++) {
             this.ebean.createSqlUpdate(
                     format(INDEX_CREATE, INDEXES[ii][0] + (i++), INDEXES[ii][1], INDEXES[ii][2])).execute();
+        }
+    }
+
+    /**
+     * Loads Tyndale's version information
+     * 
+     * @return the number of records loaded
+     */
+    int loadVersionInformation() {
+        try {
+            LOGGER.debug("Loading version information");
+
+            return new CsvModuleLoader<VersionInfo>(this.ebean,
+                    this.coreProperties.getProperty("test.data.path.versions.info"), VersionInfo.class,
+                    this.transaction).init();
+        } finally {
+            this.transaction.flushCommitAndContinue();
+
         }
     }
 

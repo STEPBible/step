@@ -10,7 +10,10 @@
 
 	<div id="origin" name="LEXICON_DEFINITION">
 			
-			<div><i>Search for the <a href="#" onclick="step.lexicon.sameWordSearch();">same word</a>, all <a href="#" onclick="step.lexicon.relatedWordSearch();">related words</a>, or <a href="#" onclick="step.lexicon.wordGrammarSearch();">this word with this grammar</a></i></div>
+			<div><i>Search for the <a href="#" onclick="step.lexicon.sameWordSearch();">same word</a> or all <a href="#" onclick="step.lexicon.relatedWordSearch();">related words</a>
+<!-- 			, or <a href="#" onclick="step.lexicon.wordGrammarSearch();">this word with this grammar</a> -->
+			
+			</i></div>
 			<p />
 			<!--  Vocab -->
 			<div id="vocabContainer" class="metadataContainer">

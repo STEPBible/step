@@ -35,16 +35,22 @@ package com.tyndalehouse.step.rest.controllers;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
+import com.tyndalehouse.step.core.data.entities.Session;
 import com.tyndalehouse.step.core.exceptions.ValidationException;
 import com.tyndalehouse.step.core.guice.providers.ServerSessionProvider;
+import com.tyndalehouse.step.core.models.ClientSession;
 import com.tyndalehouse.step.core.models.LookupOption;
 import com.tyndalehouse.step.core.service.BibleInformationService;
 import com.tyndalehouse.step.guice.providers.ClientSessionProvider;
@@ -55,6 +61,7 @@ import com.tyndalehouse.step.guice.providers.ClientSessionProvider;
  * @author chrisburrell
  * 
  */
+@RunWith(MockitoJUnitRunner.class)
 public class BibleControllerTest {
     private final BibleInformationService bibleInformation = mock(BibleInformationService.class);
 
@@ -79,9 +86,14 @@ public class BibleControllerTest {
      */
     @Test
     public void testGetBibleVersions() {
+        final ClientSession clientSessionMock = mock(ClientSession.class);
+        when(clientSessionMock.getLocale()).thenReturn(Locale.getDefault());
+        when(this.serverSessionProvider.get()).thenReturn(mock(Session.class));
+        when(this.clientSessionProvider.get()).thenReturn(clientSessionMock);
+
         // do test
         this.testController.getModules("true");
-        verify(this.bibleInformation).getAvailableModules(true, null, null);
+        verify(this.bibleInformation).getAvailableModules(true, null, Locale.getDefault());
     }
 
     /**

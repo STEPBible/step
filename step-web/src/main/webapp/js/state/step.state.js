@@ -138,7 +138,9 @@ step.state = {
                 // show the correct field set
                 this._showRelevantFieldSet(passageId);
 
-                $.shout(activeSearch + "-activated", {passageId: passageId});
+                if(fireChange == true) {
+                    $.shout(activeSearch + "-activated", {passageId: passageId});
+                }
                 
             }
         }

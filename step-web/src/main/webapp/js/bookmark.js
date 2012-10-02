@@ -247,7 +247,10 @@ Bookmark.prototype.createItem = function(passageCookieReference, container, asce
 	if(passageReference && passageReference != "") {
 		var item = "<div class='bookmarkItem'>";
 		item += goToPassageArrow(true, passageReference, "bookmarkArrow leftBookmarkArrow");
+
+		item += "<a class='searchRefLink' href='#' onclick='passageArrowTrigger(0, \"" + passageReference + "\", false)' >"
 		item += passageReference;
+		item += "</a>";
 		item += goToPassageArrow(false, passageReference, "bookmarkArrow rightBookmarkArrow");
 		item += "</div>";
 		

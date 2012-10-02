@@ -97,6 +97,7 @@ public abstract class AbstractClasspathBasedModuleLoader<T> implements ModuleLoa
         final long currentTime = System.currentTimeMillis();
 
         final List<T> entities = readDataFile();
+        this.ebean.save(entities);
 
         this.transaction.flushCommitAndContinue();
         postProcess(entities);
@@ -178,6 +179,9 @@ public abstract class AbstractClasspathBasedModuleLoader<T> implements ModuleLoa
         BufferedInputStream bufferedStream = null;
         try {
             stream = ModuleLoader.class.getResourceAsStream(csvResource);
+            if (stream == null) {
+                throw new StepInternalException("Unable to read resource: " + csvResource);
+            }
             bufferedStream = new BufferedInputStream(stream);
             fileReader = new InputStreamReader(bufferedStream, Charset.forName("UTF-8"));
             return parseFile(fileReader);

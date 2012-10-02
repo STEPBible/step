@@ -40,6 +40,10 @@
 	display: inline-block;
 }
 
+.searchRefLink {
+	color: #696;
+}
+
 .searchResults, .masterSearchResultRow {
 	padding-left: 0px;
 }

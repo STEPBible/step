@@ -145,7 +145,6 @@ $(document).ready(function() {
     $(".passageLookupButtons").buttonset();
 
     step.util.ui.autocompleteSearch(".extraVersionsDisplayOptions", step.defaults.passage.interOptions);
-    
 });
 
 $(step.passage.ui).hear("versions-initialisation-completed", function() {

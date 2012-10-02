@@ -328,7 +328,6 @@ $.widget("custom.versions",  {
             name = overName.name;
         }
         
-        var languageName = step.languages[item.lang2];
         var showingText = 
             "<span class='versionKey' >" + item.initials + "</span><span style='font-size: larger'>&rArr;</span>&nbsp;" +
             "<span class='versionName'>" + name + "</span>";

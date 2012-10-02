@@ -39,7 +39,6 @@
 	    <link rel="stylesheet" type="text/css" href="css/cardo.css" />
 		
 		<script src="js_init/initLib.js" type="text/javascript"></script>   
-		<script src="js/internationalization/languages.js" type="text/javascript"></script>
 	    <script src="libs/dohighlight-min.js" type="text/javascript"></script>
 	    <script src="libs/timeline_js/timeline-api.js" type="text/javascript"></script>
 	    <script src="libs/jquery-1.8.2.min.js" type="text/javascript"></script>
@@ -51,7 +50,6 @@
 	    <script src="js/jquery-extensions/jquery-local-store.js" type="text/javascript"></script>
 		<script src="js/jquery-extensions/jquery-shout.js" type="text/javascript"></script>
 	    <script src="js/jquery-extensions/jquery-versions-complete.js" type="text/javascript"></script>
-	    <script src="js/jquery-extensions/jquery-filtered-complete.js" type="text/javascript"></script>
 	    <script src="js/jquery-extensions/jquery-lexical-complete.js" type="text/javascript"></script>
 	    <script src="js/jquery-extensions/jquery-detail-slider.js" type="text/javascript"></script>
 		<script src="js/ddsmoothmenu.js" type="text/javascript"></script>

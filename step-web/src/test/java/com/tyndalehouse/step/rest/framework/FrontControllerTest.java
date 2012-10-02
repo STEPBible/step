@@ -35,9 +35,7 @@ package com.tyndalehouse.step.rest.framework;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyLong;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
@@ -49,7 +47,6 @@ import static org.mockito.Mockito.when;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Locale;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -188,12 +185,12 @@ public class FrontControllerTest {
                 this.clientSessionProvider);
 
         // when
-        final Method controllerMethod = this.fcUnderTest.getControllerMethod("getModules",
+        final Method controllerMethod = this.fcUnderTest.getControllerMethod("getAllFeatures",
                 controllerInstance, null, null);
 
         // then
         controllerMethod.invoke(controllerInstance);
-        verify(bibleInfo).getAvailableModules(anyBoolean(), anyString(), any(Locale.class));
+        verify(bibleInfo).getAllFeatures();
     }
 
     /**

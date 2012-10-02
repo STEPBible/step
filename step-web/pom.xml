@@ -178,7 +178,6 @@
 							<jsSourceDir>.</jsSourceDir>
 							<jsSourceFiles>
 								<jsSourceFile>js_init/initLib.js</jsSourceFile>   
-								<jsSourceFile>js/internationalization/languages.js</jsSourceFile>
 							    <jsSourceFile>libs/dohighlight-min.js</jsSourceFile>
 							    <jsSourceFile>libs/timeline_js/timeline-api.js</jsSourceFile>
 							    <jsSourceFile>libs/jquery-1.8.2.min.js</jsSourceFile>
@@ -188,8 +187,7 @@
 							    <jsSourceFile>js/jquery-extensions/jquery-cookie.js</jsSourceFile>
 							    <jsSourceFile>js/jquery-extensions/jquery-local-store.js</jsSourceFile>
 								<jsSourceFile>js/jquery-extensions/jquery-shout.js</jsSourceFile>
-							    <jsSourceFile>jquery-versions-complete.js</jsSourceFile>
-							    <jsSourceFile>js/jquery-extensions/jquery-filtered-complete.js</jsSourceFile>
+							    <jsSourceFile>js/jquery-extensions/jquery-versions-complete.js</jsSourceFile>
 							    <jsSourceFile>js/jquery-extensions/jquery-lexical-complete.js</jsSourceFile>
 							    <jsSourceFile>js/jquery-extensions/jquery-detail-slider.js</jsSourceFile>
 								<jsSourceFile>js/ddsmoothmenu.js</jsSourceFile>

@@ -20,6 +20,19 @@
 	Unable to obtain information about this version: <%= request.getParameter("version") %>
 <% } else { %>
 	<h2><%= stepRequest.getBook().getName() %> (<%= stepRequest.getBook().getInitials() %>)</h1>
+		<% 
+			String info = stepRequest.getTyndaleInfo();
+			if(info != null) {
+		%>
+		<div class="tyndaleInfo">
+	    	<span class='tyndaleInfo'><%=  info %></span>
+	    	<p />
+	    </div>			
+		<% 
+			}
+		%>
+	</div>
+
 	<span id="bookListContainer">
 		<h3>Book list</h3>
 		<%= stepRequest.getBookList() %>

@@ -42,7 +42,9 @@ import org.crosswire.jsword.versification.Versification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.avaje.ebean.EbeanServer;
 import com.google.inject.Injector;
+import com.tyndalehouse.step.core.data.entities.VersionInfo;
 import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
 
 /**
@@ -53,7 +55,6 @@ import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
  */
 // CHECKSTYLE:OFF
 public class VersionStepRequest {
-    private final HttpServletRequest request;
     private final Injector injector;
     private Book book;
     private boolean success;
@@ -70,7 +71,6 @@ public class VersionStepRequest {
      */
     public VersionStepRequest(final Injector injector, final HttpServletRequest request) {
         this.injector = injector;
-        this.request = request;
 
         try {
             final String version = request.getParameter("version");
@@ -108,6 +108,16 @@ public class VersionStepRequest {
 
     public String getShortPromo() {
         return extractMetadata("ShortPromo");
+    }
+
+    public String getTyndaleInfo() {
+        final EbeanServer ebean = this.injector.getInstance(EbeanServer.class);
+        final VersionInfo info = ebean.find(VersionInfo.class, this.book.getInitials());
+        if (info == null) {
+            return null;
+        } else {
+            return info.getInfo();
+        }
     }
 
     /**

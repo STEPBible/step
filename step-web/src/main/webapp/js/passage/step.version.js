@@ -86,19 +86,7 @@ $(step.version).hear("filter-versions", function(source, data) {
     var element = data;
     var target = $(element);
     
-//    var versionsToKeep = step.version.filteredVersions(target);
-//    $.map(versionsToKeep, function(n, i) {
-//       return i.initials;
-//    });
-//    
-//    $(".filteredCompleteVersions .versionKey").filter(function() {
-//        return $.inArray($(this).html()) == -1;
-//    }).hide();
-    
-    
     step.version.refreshVersions(target, step.version.filteredVersions(target));
-//    target.filteredcomplete("search", "");
-    
     //hack for IE.
     element.focus();
 });

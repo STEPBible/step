@@ -117,6 +117,18 @@ public class LoaderTest extends DataDrivenTestExtension {
     }
 
     /**
+     * tests the version information is loaded
+     */
+    @Test
+    public void testVersionInfo() {
+        final Properties coreProperties = new Properties();
+        coreProperties.put("test.data.path.versions.info", "versions.csv");
+        final Loader l = new Loader(this.jsword, null, getEbean(), coreProperties);
+
+        assertEquals(2, l.loadVersionInformation());
+    }
+
+    /**
      * for this one we need a real jsword service because we will test that scripture refs are resolved
      * correctly.
      */

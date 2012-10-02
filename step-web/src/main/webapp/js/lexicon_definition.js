@@ -30,24 +30,36 @@
 step.lexicon = {
     passageId : 0,
     sameWordSearch : function() {
-        this._doSearch("exact");
+        this._doSearch(ALL_FORMS);
     },
 
     relatedWordSearch : function() {
-        this._doSearch("related");
+        this._doSearch(ALL_RELATED);
     },
 
     wordGrammarSearch : function() {
-
+        //not yet implemented 
     },
 
     _doSearch : function(searchType) {
-        var query = $("span[info-name ='strongNumber']").val();
+        var query = $("span[info-name ='strongNumber']").text();
         if(step.util.raiseErrorIfBlank(query, "No strong data is available")) {
-            var targetPassageId = this.passageId;
-            step.state.original.strong(targetPassageId, query);
-            step.state.original.searchType(targetPassageId, searchType);
-            step.state.activeSearch(targetPassageId, 'SEARCH_ORIGINAL');
+            var targetPassageId = (parseInt(this.passageId) + 1) % 2;
+            
+            step.state.original.originalScope(targetPassageId, "Gen-Rev");
+            step.state.original.originalType(targetPassageId, query[0] == 'H' ? HEBREW_WORDS[0] : GREEK_WORDS[0]);
+            step.state.original.originalWord(targetPassageId, query);
+            step.state.original.originalForms(targetPassageId, searchType);
+            step.state.original.originalSearchContext(targetPassageId, 0);
+            step.state.original.originalSearchVersion(targetPassageId, step.util.ui.getVisibleVersions(this.passageId).val());
+            
+            //parse the query syntax
+            step.search.ui.original.evaluateQuerySyntax(targetPassageId);
+            
+            //if we're in single view, then we would want to bring up the second column
+            step.state.view.ensureTwoColumnView();
+            
+            step.state.activeSearch(targetPassageId, 'SEARCH_ORIGINAL', true);
         }
     }
 };

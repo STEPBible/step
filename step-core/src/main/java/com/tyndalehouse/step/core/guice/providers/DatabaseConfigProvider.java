@@ -49,6 +49,7 @@ import com.tyndalehouse.step.core.data.entities.ScriptureReference;
 import com.tyndalehouse.step.core.data.entities.ScriptureTarget;
 import com.tyndalehouse.step.core.data.entities.Session;
 import com.tyndalehouse.step.core.data.entities.User;
+import com.tyndalehouse.step.core.data.entities.VersionInfo;
 import com.tyndalehouse.step.core.data.entities.aggregations.TimelineEventsAndDate;
 import com.tyndalehouse.step.core.data.entities.lexicon.Definition;
 import com.tyndalehouse.step.core.data.entities.lexicon.SpecificForm;
@@ -153,6 +154,7 @@ public class DatabaseConfigProvider implements Provider<EbeanServer> {
      * @param config the configuration to be enhanced
      */
     private void addEntities(final ServerConfig config) {
+        config.addClass(VersionInfo.class);
         config.addClass(ScriptureTarget.class);
         config.addClass(ScriptureReference.class);
         config.addClass(HotSpot.class);

@@ -39,6 +39,13 @@ import static com.tyndalehouse.step.core.utils.StringConversionUtils.translitera
 import static com.tyndalehouse.step.core.utils.StringConversionUtils.unAccent;
 import static org.junit.Assert.assertEquals;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -120,6 +127,96 @@ public class StringConversionUtilsTest {
         assertEquals("mastigas", testTransliterate("μάστιγας"));
 
         assertEquals("exérammenén", testTransliterate("ἐξηραμμένην"));
+    }
+
+    @Test
+    public void testTransliterateHebrewFromFile() throws IOException {
+        final FileReader reader = new FileReader(new File("d:\\temp\\sample.txt"));
+        final BufferedReader br = new BufferedReader(reader);
+        final FileWriter writer = new FileWriter(new File("d:\\temp\\hebrew-out.txt"));
+        final BufferedWriter bw = new BufferedWriter(writer, 4 * 1024 * 1024);
+
+        final long start = System.currentTimeMillis();
+        int lineNumber = 0;
+        String line;
+
+        while ((line = br.readLine()) != null) {
+            final String[] split = line.split(",");
+            bw.write(Integer.toString(lineNumber));
+            bw.write(',');
+            bw.write(split[0]);
+            bw.write(',');
+            bw.write(split[1]);
+            bw.write(',');
+
+            try {
+                transliterate(split[1]);
+                bw.write(transliterate(split[1]));
+            } catch (final Exception e) {
+                // error
+                bw.write("ERROR: ");
+                bw.write(e.toString());
+            }
+
+            bw.newLine();
+            lineNumber++;
+
+            if ((lineNumber % 2000) == 0) {
+                reportProgress(start, lineNumber);
+            }
+        }
+
+        br.close();
+        bw.close();
+
+        reportProgress(start, lineNumber);
+    }
+
+    /**
+     * outputs the time taken so far and the number of items processed
+     * 
+     * @param start the time at which we started
+     * @param lineNumber the number of items processed
+     */
+    private void reportProgress(final long start, final int lineNumber) {
+        System.out.println(String.format("Took %dms to do %d transliterations", System.currentTimeMillis()
+                - start, lineNumber));
+    }
+
+    @Test
+    public void testTransliterateHebrew1() {
+        // testTransliterate("בְּרֵאשִׁ֖ית");
+        // testTransliterate("בָּרָ֣א");
+        // testTransliterate("אֱלֹהִ֑ים");
+        // testTransliterate("אֵ֥ת");
+        // testTransliterate("הַשָּׁמַ֖יִם");
+        // testTransliterate("וְאֵ֥ת");
+        // testTransliterate("הָאָֽרֶץ");
+        // testTransliterate("בִּרְקִ֣יעַ");
+        // testTransliterate("הַשָּׁמַ֔יִם");
+        // testTransliterate("לְהַבְדִּ֕יל");
+        // testTransliterate("בֵּ֥ין");
+        testTransliterate("הַיּ֖וֹם");
+        // testTransliterate("וּבֵ֣ין");
+        // testTransliterate("הַלָּ֑יְלָה");
+        //
+        // testTransliterate("חַבַהַ");
+        // testTransliterate("עַבַעַ");
+        // testTransliterate("הַבַהַ");
+        // testTransliterate("הַהַהַ");
+        // testTransliterate("שׁוַּהַ");
+        // testTransliterate("שׂוָּהַ");
+        // testTransliterate("שַּׁוְּטֶה");
+        // testTransliterate("בֵוֶּי");
+        // testTransliterate("דֹוֵּת");
+        // testTransliterate("דֹוִּע");
+        // testTransliterate("פּוִּךְ");
+        // testTransliterate("גֶּוִּי");
+        // testTransliterate("כֻּוּוֹ");
+        // testTransliterate("דּוֻּן");
+        // testTransliterate("תּוָֹף");
+        //
+        // testTransliterate("אׇזְנִי");
     }
 
     /**

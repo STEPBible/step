@@ -130,6 +130,8 @@ function hearViewChanges() {
            $("#holdingPage").toggle(false);
            $(".leftColumn").resizable("destroy");
        }
+        
+        $.shout("view-change-done");
     });
 }
 
@@ -264,7 +266,6 @@ function initModules(passages) {
 	new LexiconDefinition();
 	new Bookmark();
 	new Login();
-	new Title();
 
 	var bottomSection = $("#bottomSectionContent");
 	timeline = new TimelineWidget(bottomSection);

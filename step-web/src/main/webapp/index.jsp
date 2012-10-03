@@ -61,7 +61,6 @@
 	    <script src="js/geography.js" type="text/javascript"></script>
 	    <script src="js/toolbar_menu.js" type="text/javascript"></script>
 	    <script src="js/login.js" type="text/javascript"></script>
-		<script src="js/title.js" type="text/javascript"></script>
 		<script src="js/defaults/step.defaults.js" type="text/javascript"></script>
 		<script src="js/search/step.search.js" type="text/javascript"></script>
 		<script src="js/search/step.search.ui.js" type="text/javascript"></script>
@@ -81,7 +80,6 @@
 
 	    <script src="js/menu/step.menu.js" type="text/javascript"></script>
 	    <script src="js/menu/top/help.js" type="text/javascript"></script>
-	    <script src="js/menu/top/options.js" type="text/javascript"></script>
 	    <script src="js/menu/top/tools.js" type="text/javascript"></script>
 	    <script src="js/menu/top/view.js" type="text/javascript"></script>
 	    <script src="js/menu/top/top.menu.ui.js" type="text/javascript"></script>

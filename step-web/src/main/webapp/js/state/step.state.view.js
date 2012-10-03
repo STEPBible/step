@@ -52,7 +52,7 @@ step.state.view = {
             
             ensureTwoColumnView : function() {
                 if(this.getView() == 'SINGLE_COLUMN_VIEW') {
-                    $.shout("view-change", { viewName : "TWO_COLUMN_VIEW"})
+                    $.shout("view-change", { viewName : "TWO_COLUMN_VIEW"});
                 }
             },
             

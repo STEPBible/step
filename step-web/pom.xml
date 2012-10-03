@@ -199,7 +199,6 @@
 							    <jsSourceFile>js/geography.js</jsSourceFile>
 							    <jsSourceFile>js/toolbar_menu.js</jsSourceFile>
 							    <jsSourceFile>js/login.js</jsSourceFile>
-								<jsSourceFile>js/title.js</jsSourceFile>
 								<jsSourceFile>js/defaults/step.defaults.js</jsSourceFile>
 								<jsSourceFile>js/search/step.search.js</jsSourceFile>
 								<jsSourceFile>js/search/step.search.ui.js</jsSourceFile>
@@ -216,7 +215,6 @@
 								<jsSourceFile>js/state/step.state.original.js</jsSourceFile>
 							    <jsSourceFile>js/menu/step.menu.js</jsSourceFile>
 							    <jsSourceFile>js/menu/top/help.js</jsSourceFile>
-							    <jsSourceFile>js/menu/top/options.js</jsSourceFile>
 							    <jsSourceFile>js/menu/top/tools.js</jsSourceFile>
 							    <jsSourceFile>js/menu/top/view.js</jsSourceFile>
 							    <jsSourceFile>js/menu/top/top.menu.ui.js</jsSourceFile>

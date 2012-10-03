@@ -115,11 +115,18 @@ step.passage = {
                 self._adjustTextAlignment(passageContent);
                 self._redoTextSize(passageId, passageContent);
                 self._addStrongHandlers(passageId, passageContent);
+                self._updatePageTitle(passageId, passageContent, lookupVersion, lookupReference);
                 step.state.passage.reference(passageId, text.reference, false);
             }, 
             passageId: passageId, 
             level: 'error'
          });
+    },
+    
+    _updatePageTitle : function(passageId, passageContent, version, reference) {
+        if(passageId == 0) {
+            $("title").html(version + " " + reference + " " + $(".verse", passageContent).text().replace("1", ""));
+        }
     },
     
     _addStrongHandlers : function(passageId, passageContent) {

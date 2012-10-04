@@ -92,6 +92,7 @@ public class Loader {
             { SPECIFIC_FORM_IDX, SPECIFIC_FORM_TABLE, "raw_form" },
             { SPECIFIC_FORM_IDX, SPECIFIC_FORM_TABLE, "unaccented_form" },
             { SPECIFIC_FORM_IDX, SPECIFIC_FORM_TABLE, "transliteration" },
+            { SPECIFIC_FORM_IDX, SPECIFIC_FORM_TABLE, "simplified_transliteration" },
             { TRANS_IDX, TRANSLATION_TABLE, "alternative_translation" } };
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Loader.class);
@@ -414,10 +415,10 @@ public class Loader {
         try {
             int count = new LexiconLoader(this.ebean,
                     this.coreProperties.getProperty("test.data.path.lexicon.definitions.greek"),
-                    this.transaction).init();
+                    this.transaction, true).init();
             count += new LexiconLoader(this.ebean,
                     this.coreProperties.getProperty("test.data.path.lexicon.definitions.hebrew"),
-                    this.transaction).init();
+                    this.transaction, false).init();
 
             new LexiconLinker(this.ebean, this.transaction).processStrongLinks();
 

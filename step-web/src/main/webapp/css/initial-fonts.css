@@ -56,7 +56,10 @@ body {
 
 .superTranslit {
 	vertical-align: super;
-	font-size: 60%;
+}
+
+.stressTranslit {
+	font-variant: small-caps;	
 }
 
 .lexiconTable {
@@ -141,3 +144,9 @@ legend .detailSliderContainer {
 	margin-top: 3px;
 }
 
+
+.stepTransliteration {
+	font-family: Arial;
+	font-style: italic;
+	font-size: 1.2em !important;
+}

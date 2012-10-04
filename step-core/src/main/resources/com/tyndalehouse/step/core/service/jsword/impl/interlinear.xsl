@@ -558,7 +558,7 @@
 						</span>
 					</xsl:if>
 					<xsl:if test="$Transliteration = 'true'">
-						<span class="strongs">
+						<span class="strongs stepTransliteration">
 							<a href="javascript:showInfo('@lemma', this);">
 								<xsl:value-of
 									select="vocab:getDefaultTransliteration($vocabProvider, @lemma)" />
@@ -1336,7 +1336,7 @@
 				</span>
 			</xsl:if>
 			<xsl:if test="$Transliteration = 'true'">
-				<span class="strongs">
+				<span class="strongs  stepTransliteration">
 					<xsl:call-template name="outputNonBlank">
 						<xsl:with-param name="string" select="''" />
 					</xsl:call-template>

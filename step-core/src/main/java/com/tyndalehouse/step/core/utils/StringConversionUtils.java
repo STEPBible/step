@@ -34,6 +34,8 @@ package com.tyndalehouse.step.core.utils;
 
 import java.text.Normalizer;
 import java.text.Normalizer.Form;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
@@ -52,6 +54,12 @@ import com.tyndalehouse.step.core.utils.hebrew.VowelStressType;
  * @author chrisburrell
  */
 public final class StringConversionUtils {
+    private static final char K_WITH_LINE = '\u1e35';
+    private static final char T_WITH_DOT = '\u1e6d';
+    private static final char H_WITH_DOT = '\u1e25';
+    private static final char B_WITH_LINE = '\u1E07';
+    private static final char CLOSED_QUOTE = '\u2019';
+    private static final char OPEN_QUOTE = '\u2018';
     private static final Logger LOGGER = LoggerFactory.getLogger(StringConversionUtils.class);
     private static final char QAMATS_QATAN = 0x5C7;
 
@@ -70,8 +78,10 @@ public final class StringConversionUtils {
     private static final char DAGESH = 0x5BC;
     private static final char METEG = 0x05BD;
 
+    private static final char GERESH = 0x059C;
+    private static final char GERESH_MUQDAM = 0x059D;
+
     private static final char SHIN_DOT = 0x05C1;
-    private static final char HOLAM_QAMATS = 0x5C7;
 
     private static final char BET = 0x5D1;
     private static final char GIMEL = 0x5D2;
@@ -113,34 +123,6 @@ public final class StringConversionUtils {
     private static final int LANGUAGE_INDICATOR = STRONG_PREFIX_LENGTH;
 
     private static final char ALEPH_LAMED = 0xFB4F;
-
-    /**
-     * A helper class indicating how the transliteration ends
-     * 
-     * @author chrisburrell
-     * 
-     */
-    private static enum HebrewTransliterationEnding {
-        ACH("ach"),
-        A_BRACK("a("),
-        AH("ah"),
-        NONE("");
-        private String ending;
-
-        /**
-         * @param ending the ending for the transliteration
-         */
-        HebrewTransliterationEnding(final String ending) {
-            this.ending = ending;
-        }
-
-        /**
-         * @return the ending
-         */
-        public String getEnding() {
-            return this.ending;
-        }
-    }
 
     /**
      * hiding implementation
@@ -345,13 +327,144 @@ public final class StringConversionUtils {
      * Removes the starting H, if present (for greek transliterations only at present time)
      * 
      * @param stepTransliteration the transliteration
+     * @param isGreek true if greek
      * @return the transliteration adapted for unaccented texts)
      */
-    public static String adaptForUnaccentedTransliteration(final String stepTransliteration) {
-        if (stepTransliteration.startsWith(GREEK_BREATHING)) {
-            return stepTransliteration.substring(1);
+    public static Set<String> adaptForQueryingSimplifiedTransliteration(final String stepTransliteration,
+            final boolean isGreek) {
+        final Set<String> options = new HashSet<String>(2);
+        if (isGreek) {
+
+            if (stepTransliteration.startsWith(GREEK_BREATHING)) {
+                options.add(stepTransliteration.substring(1));
+                return options;
+            }
+
+            options.add(stepTransliteration);
+            return options;
         }
-        return stepTransliteration;
+
+        // otherwise hebrew, so run the pattern to remove everything...
+        options.add(removeHebrewTranslitMarkUp(stepTransliteration));
+        options.add(removeHebrewTranslitMarkUp2(stepTransliteration));
+        return options;
+
+    }
+
+    private static String removeHebrewTranslitMarkUp2(final String stepTransliteration) {
+        final StringBuilder sb = new StringBuilder(stepTransliteration);
+
+        // also remove double letters...
+        char lastLetter = 0x0;
+        for (int ii = 0; ii < sb.length();) {
+            final char currentLetter = sb.charAt(ii);
+            switch (currentLetter) {
+                case '.':
+                case '-':
+                case '\'':
+                case '*':
+                case CLOSED_QUOTE:
+                case OPEN_QUOTE:
+                    sb.deleteCharAt(ii);
+                    continue;
+                case K_WITH_LINE:
+                    sb.setCharAt(ii, 'k');
+                    break;
+                case T_WITH_DOT:
+                    sb.setCharAt(ii, 't');
+                    break;
+                case H_WITH_DOT:
+                    sb.setCharAt(ii, 'h');
+                    break;
+                case B_WITH_LINE:
+                    sb.setCharAt(ii, 'b');
+                    break;
+                case 'é':
+                    sb.setCharAt(ii, 'e');
+                    break;
+                case 'v':
+                    sb.setCharAt(ii, 'b');
+                default:
+                    break;
+            }
+
+            if (currentLetter == lastLetter) {
+                sb.deleteCharAt(ii);
+                continue;
+            }
+
+            lastLetter = currentLetter;
+            ii++;
+        }
+
+        return sb.toString();
+    }
+
+    /**
+     * Removes the starting H, if present (for greek transliterations only at present time)
+     * 
+     * @param stepTransliteration the transliteration
+     * @param isGreek true if greek
+     * @return the transliteration adapted for unaccented texts)
+     */
+    public static String adaptForUnaccentedTransliteration(final String stepTransliteration,
+            final boolean isGreek) {
+        if (isGreek) {
+            if (stepTransliteration.startsWith(GREEK_BREATHING)) {
+                return stepTransliteration.substring(1);
+            }
+            return stepTransliteration;
+        }
+
+        // otherwise hebrew, so run the pattern to remove everything...
+        return removeHebrewTranslitMarkUp(stepTransliteration);
+    }
+
+    private static String removeHebrewTranslitMarkUp(final String stepTransliteration) {
+        final StringBuilder sb = new StringBuilder(stepTransliteration);
+
+        // also remove double letters...
+        char lastLetter = 0x0;
+        for (int ii = 0; ii < sb.length();) {
+            final char currentLetter = sb.charAt(ii);
+            switch (currentLetter) {
+                case '.':
+                case '-':
+                case '\'':
+                case '*':
+                case CLOSED_QUOTE:
+                case OPEN_QUOTE:
+                    sb.deleteCharAt(ii);
+                    continue;
+                case K_WITH_LINE:
+                    sb.setCharAt(ii, 'k');
+                    break;
+                case T_WITH_DOT:
+                    sb.setCharAt(ii, 't');
+                    break;
+                case H_WITH_DOT:
+                    sb.setCharAt(ii, 'h');
+                    break;
+                case B_WITH_LINE:
+                    sb.setCharAt(ii, 'b');
+                    break;
+                case 'é':
+                    sb.setCharAt(ii, 'e');
+                    break;
+                default:
+                    break;
+            }
+
+            if (currentLetter == lastLetter) {
+                sb.deleteCharAt(ii);
+                continue;
+            }
+
+            lastLetter = currentLetter;
+            ii++;
+        }
+
+        return sb.toString();
     }
 
     /**
@@ -391,7 +504,7 @@ public final class StringConversionUtils {
                 if (isHebrewConsonant(input[ii])) {
                     if (ii >= 2 && processYod(input, letters, ii)) {
                         // do nothing
-                    } else if (ii >= 2 && processVav(input, letters, ii)) {
+                    } else if (processVav(input, letters, ii)) {
                         // do nothing
                     } else {
                         final HebrewLetter letter = new HebrewLetter(input[ii]);
@@ -409,7 +522,7 @@ public final class StringConversionUtils {
 
                     if (isAny(input[ii], SHEVA, HATAF_SEGOL, HATAF_PATAH, HATAF_QAMATS)) {
                         letter.setVowelLengthType(VowelLengthType.VERY_SHORT);
-                    } else if (isAny(input[ii], TSERE, QAMATS, QAMATS_2, HOLAM_QAMATS)) {
+                    } else if (isAny(input[ii], TSERE, QAMATS, QAMATS_2, HOLAM)) {
                         letter.setVowelLengthType(VowelLengthType.LONG);
                     } else if (input[ii] == HIRIQ && hasAnyPointing(input, ii, true, METEG)
                             || hasAnyPointing(input, ii, false, METEG)) {
@@ -470,8 +583,6 @@ public final class StringConversionUtils {
                     new Object[] { Integer.toString(hl.getC(), 16), hl.getHebrewLetterType(),
                             hl.getConsonantType(), hl.getVowelLengthType(), hl.getVowelStressType(),
                             hl.getSoundingType() });
-
-            LOGGER.trace(hl.toString());
         }
     }
 
@@ -484,12 +595,36 @@ public final class StringConversionUtils {
     private static void firstPass(final HebrewLetter[] letters, final char[] input) {
         for (int ii = 0; ii < letters.length; ii++) {
             if (HebrewLetterType.ACCENT.equals(letters[ii].getHebrewLetterType())) {
-                final HebrewLetter letter = getCloseVowel(letters, ii);
-                letter.setVowelStressType(VowelStressType.STRESSED);
+                // StringConversionUtils.
+                //
+                if (isNotGeresh(input, ii) || previousConsonant(letters, ii) != 0) {
+                    final HebrewLetter letter = getCloseVowel(letters, ii);
+                    letter.setVowelStressType(VowelStressType.STRESSED);
+                }
             } else if (letters[ii].getC() == VAV && hasCloseDagesh(input, ii)) {
                 letters[ii].setVowelLengthType(VowelLengthType.SHORT);
             }
         }
+    }
+
+    private static boolean isNotGeresh(final char[] input, final int ii) {
+        return input[ii] != GERESH_MUQDAM && input[ii] != GERESH;
+    }
+
+    /**
+     * Looking for the first previous consonant
+     * 
+     * @param letters the set of strongly typed letters
+     * @param currentPosition the actual position in the cahracter
+     * @return position of previous consonant
+     */
+    private static int previousConsonant(final HebrewLetter[] letters, final int currentPosition) {
+        for (int ii = currentPosition - 1; ii >= 0; ii--) {
+            if (letters[ii].isConsonant()) {
+                return ii;
+            }
+        }
+        return -1;
     }
 
     /**
@@ -501,12 +636,12 @@ public final class StringConversionUtils {
     private static void secondPass(final HebrewLetter[] letters, final char[] input) {
         int previousConsonantPosition = -1;
         for (int ii = 0; ii < letters.length; ii++) {
-            if (HebrewLetterType.CONSONANT.equals(letters[ii].getHebrewLetterType())) {
+            if (letters[ii].isConsonant()) {
                 previousConsonantPosition = ii;
             } else if (letters[ii].getC() == SHEVA) {
-                if (previousConsonantPosition == 0
-                        || ConsonantType.DOUBLE.equals(letters[previousConsonantPosition].getConsonantType())
-                        || isAfterLongUnstressedVowel(letters, previousConsonantPosition)) {
+                if (!isLastLetter(input, ii)
+                        && (previousConsonantPosition == 0 || letters[previousConsonantPosition].isDoubled() || isAfterLongUnstressedVowel(
+                                letters, previousConsonantPosition))) {
                     letters[ii].setSoundingType(SoundingType.SOUNDING);
                 } else {
                     letters[ii].setSoundingType(SoundingType.SILENT);
@@ -539,20 +674,24 @@ public final class StringConversionUtils {
             final StringBuilder output) {
         final HebrewLetter currentLetter = letter[current];
         final char c = currentLetter.getC();
-        final int currentSize = output.length();
 
-        if (VowelStressType.STRESSED.equals(currentLetter.getVowelStressType())) {
+        if (currentLetter.isStressed()) {
             output.append('*');
         }
+
+        // hyphenating vowels
+        hyphenateSyllables(letter, current, output);
+
+        final int sizeBeforeAppending = output.length();
 
         switch (c) {
         // consonants
             case ALEPH:
-                output.append(')');
+                output.append(CLOSED_QUOTE);
                 break;
             case BET:
-                if (ConsonantType.NO_DAGESH.equals(currentLetter.getConsonantType())) {
-                    output.append('v');
+                if (currentLetter.hasNoDagesh() && current != 0) {
+                    output.append(B_WITH_LINE);
                 } else {
                     output.append('b');
                 }
@@ -567,27 +706,31 @@ public final class StringConversionUtils {
                 output.append('h');
                 break;
             case VAV:
-                output.append('v');
+                if (currentLetter.isVowel()) {
+                    if (currentLetter.isShureq()) {
+                        output.append('u');
+                    }
+                    output.append('w');
+                } else {
+                    output.append('v');
+                }
                 break;
             case ZAYIN:
                 output.append('z');
                 break;
             case HET:
-                output.append('c');
-                output.append('h');
+                output.append(H_WITH_DOT);
                 break;
             case TET:
-                output.append('t');
-                output.append('t');
+                output.append(T_WITH_DOT);
                 break;
             case YOD:
                 output.append('y');
                 break;
             case FINAL_KAF:
             case KAF:
-                if (ConsonantType.NO_DAGESH.equals(currentLetter.getConsonantType())) {
-                    output.append('k');
-                    output.append('h');
+                if (currentLetter.hasNoDagesh() && current != 0) {
+                    output.append(K_WITH_LINE);
                 } else {
                     output.append('k');
                 }
@@ -598,22 +741,20 @@ public final class StringConversionUtils {
             case FINAL_MEM:
             case MEM:
                 output.append('m');
-                output.append('m');
                 break;
             case FINAL_NUN:
             case NUN:
-                output.append('n');
                 output.append('n');
                 break;
             case SAMEKH:
                 output.append('s');
                 break;
             case AYIN:
-                output.append('(');
+                output.append(OPEN_QUOTE);
                 break;
             case FINAL_PE:
             case PE:
-                if (ConsonantType.NO_DAGESH.equals(currentLetter.getConsonantType())) {
+                if (currentLetter.hasNoDagesh() && current != 0) {
                     output.append('p');
                     output.append('h');
                 } else {
@@ -640,34 +781,22 @@ public final class StringConversionUtils {
 
             // vowels
             case SHEVA:
-                output.append('\'');
-                output.append('e');
-
-                // silent shewa marks a syllable, or vocal we append
-                output.append('-');
-
+                if (!currentLetter.isSilent()) {
+                    output.append('\'');
+                    output.append('e');
+                }
                 break;
             case HATAF_SEGOL:
                 output.append('.');
                 output.append('e');
-
-                // hataf vowels mark a new syllable
-                output.append('-');
-
                 break;
             case HATAF_PATAH:
                 output.append('.');
                 output.append('a');
-
-                // hataf vowels mark a new syllable
-                output.append('-');
                 break;
             case HATAF_QAMATS:
                 output.append('.');
                 output.append('o');
-
-                // hataf vowels mark a new syllable
-                output.append('-');
                 break;
             case HIRIQ:
                 output.append('i');
@@ -686,7 +815,12 @@ public final class StringConversionUtils {
                 output.append('a');
                 break;
             case HOLAM:
-                output.append('o');
+                final int length = output.length();
+                if (length > 0 && output.charAt(length - 1) == 'w') {
+                    output.insert(length - 1, 'o');
+                } else {
+                    output.append('o');
+                }
                 break;
             case QAMATS_2:
                 output.append('a');
@@ -694,7 +828,7 @@ public final class StringConversionUtils {
             case QUBUTS:
                 output.append('u');
                 break;
-            case HOLAM_QAMATS:
+            case QAMATS_QATAN:
                 output.append('o');
                 break;
             case SHIN_DOT:
@@ -705,29 +839,109 @@ public final class StringConversionUtils {
         }
 
         // doubling and hyphenating
-        if (ConsonantType.DOUBLE.equals(currentLetter.getConsonantType())) {
+        if (currentLetter.isDoubled()) {
             output.append('-');
             // copy to the end, and discount the already added -
-            final int endOfDoubleLetter = output.length() - 2;
-            for (int ii = currentSize - 1; ii < endOfDoubleLetter; ii++) {
+            final int endOfDoubleLetter = output.length() - 1;
+            for (int ii = sizeBeforeAppending; ii < endOfDoubleLetter; ii++) {
                 output.append(output.charAt(ii));
             }
         }
+    }
 
-        // hyphenating
-        if (VowelLengthType.LONG.equals(currentLetter.getVowelLengthType())
-                && VowelStressType.NOT_STRESSED.equals(currentLetter.getVowelStressType())) {
-            output.append('-');
+    /**
+     * Marks the syllables
+     * 
+     * @param letters set of letters
+     * @param current the current position
+     * @param output the current output
+     */
+    private static void hyphenateSyllables(final HebrewLetter[] letters, final int current,
+            final StringBuilder output) {
+        if (current == 0 || !letters[current].isConsonant()
+                || isLastHebrewConsonantWithoutVowel(letters, current)) {
+            return;
         }
+
+        // look for vowels
+        boolean foundLongVowel = false;
+        boolean foundStressedVowel = false;
+        for (int ii = current - 1; ii > 0 && !letters[ii].isConsonant(); ii--) {
+            if (letters[ii].isVowel()) {
+                if (letters[ii].getC() == HATAF_PATAH || letters[ii].getC() == HATAF_QAMATS
+                        || letters[ii].getC() == HATAF_SEGOL || letters[ii].getC() == SHEVA) {
+                    output.append('-');
+                    return;
+                }
+
+                if (letters[ii].isLong()) {
+                    foundLongVowel = true;
+                }
+
+                if (letters[ii].isStressed()) {
+                    foundStressedVowel = true;
+                }
+
+                if (foundLongVowel && !foundStressedVowel) {
+                    output.append('-');
+                    return;
+                }
+            }
+        }
+
+        if (letters[current].isDoubled()) {
+            return;
+        }
+        for (int ii = current + 1; ii < letters.length && !letters[ii].isConsonant(); ii++) {
+            if (letters[ii].getC() == SHEVA && letters[ii].isSilent()) {
+                return;
+            }
+        }
+
+        output.append('-');
+    }
+
+    /**
+     * 
+     * @param letters the set of letters
+     * @param position our current position
+     * @return true if it last without vowel, false if it's last with vowel OR not last consonant
+     */
+    private static boolean isLastHebrewConsonantWithoutVowel(final HebrewLetter[] letters, final int position) {
+        final boolean isLastHebrewConsonant = isLastHebrewConsonant(letters, position);
+
+        if (isLastHebrewConsonant) {
+            for (int ii = position + 1; ii < letters.length; ii++) {
+                if (letters[ii].isVowel()) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * @param letters the set of letters
+     * @param position our current position
+     * @return true if no other consonants are found after the position
+     */
+    private static boolean isLastHebrewConsonant(final HebrewLetter[] letters, final int position) {
+        for (int ii = position + 1; ii < letters.length; ii++) {
+            if (letters[ii].isConsonant()) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
      * Swaps letters round if they finish in a particular order:
      * 
      * <pre>
-     *  ha => ah, 
-     *  (a => a(, 
-     * cha = ach
+     *  ha => ah, (including with dot)
+     *  (a => a(,
      * </pre>
      * 
      * @param output
@@ -737,7 +951,6 @@ public final class StringConversionUtils {
         // check last character if a
         final int last = output.length() - 1;
         final int secondLast = last - 2;
-        final int thirdLast = last - 3;
 
         if (secondLast == -1) {
             return;
@@ -746,21 +959,15 @@ public final class StringConversionUtils {
         // ends with a
         if (output.charAt(last) == 'a') {
             // ends with ha
-            if (output.charAt(secondLast) == 'h') {
-                // ends with cha
-                if (thirdLast != -1 && output.charAt(thirdLast) == 'c') {
-                    output.setCharAt(thirdLast, 'a');
-                    output.setCharAt(secondLast, 'c');
-                    output.setCharAt(last, 'h');
-                } else {
-                    // ends only with ha
-                    output.setCharAt(secondLast, 'a');
-                    output.setCharAt(last, 'h');
-                }
-            } else if (output.charAt(secondLast) == '(') {
+            final char secondChar = output.charAt(secondLast);
+            if (output.charAt(secondLast) == 'h' || secondChar == H_WITH_DOT) {
+                // ends only with ha
+                output.setCharAt(secondLast, 'a');
+                output.setCharAt(last, secondChar);
+            } else if (secondChar == OPEN_QUOTE) {
                 // ends with (a
                 output.setCharAt(last, 'a');
-                output.setCharAt(secondLast, '(');
+                output.setCharAt(secondLast, OPEN_QUOTE);
             }
         }
 
@@ -778,10 +985,9 @@ public final class StringConversionUtils {
         // look for first letter we have
         int ii = consonantPosition - 1;
 
-        while (letters[ii].getHebrewLetterType() != HebrewLetterType.CONSONANT) {
-            if ((HebrewLetterType.VOWEL.equals(letters[ii].getHebrewLetterType())
-                    && VowelLengthType.LONG.equals(letters[ii].getVowelLengthType()) && VowelStressType.NOT_STRESSED
-                        .equals(letters[ii].getVowelStressType())) || letters[ii].getC() == SHEVA) {
+        while (ii >= 0 && !letters[ii].isConsonant()) {
+            if ((letters[ii].isVowel() && letters[ii].isLong() && !letters[ii].isStressed())
+                    || letters[ii].getC() == SHEVA) {
                 return true;
             }
 
@@ -799,10 +1005,31 @@ public final class StringConversionUtils {
         return hasAnyPointing(input, currentPosition, true, DAGESH);
     }
 
+    /**
+     * Looks backwards to the consonant, then forwards to the beginning of the next consonant, then works
+     * backwards until it hits a vowel
+     * 
+     * @param letters the set of letters
+     * @param currentPosition out current position
+     * @return the closest vowel found in the sequence of hebrew letters
+     */
     private static HebrewLetter getCloseVowel(final HebrewLetter[] letters, final int currentPosition) {
-        final HebrewLetter vowel = getCloseVowel(letters, currentPosition, false);
-        if (vowel == null) {
-            return getCloseVowel(letters, currentPosition, true);
+        HebrewLetter vowel = getCloseVowel(letters, currentPosition, false);
+        if (vowel != null) {
+            return vowel;
+
+        }
+
+        vowel = getCloseVowel(letters, currentPosition, true);
+        if (vowel != null) {
+            return vowel;
+
+        }
+
+        for (int ii = currentPosition; ii >= 0; ii--) {
+            if (letters[ii].isVowel()) {
+                return letters[ii];
+            }
         }
 
         return vowel;
@@ -813,9 +1040,9 @@ public final class StringConversionUtils {
         final int increment = forwards ? 1 : -1;
 
         for (int ii = currentPosition + increment; ii > 0 && ii < letters.length; ii = ii + increment) {
-            if (HebrewLetterType.VOWEL.equals(letters[ii].getHebrewLetterType())) {
+            if (letters[ii].isVowel()) {
                 return letters[ii];
-            } else if (HebrewLetterType.CONSONANT.equals(letters[ii].getHebrewLetterType())) {
+            } else if (letters[ii].isConsonant()) {
                 break;
             }
         }
@@ -829,7 +1056,7 @@ public final class StringConversionUtils {
      * @return true to indicate a vowel
      */
     private static boolean isHebrewVowel(final char c) {
-        return c >= SHEVA && c <= HOLAM_QAMATS && c != DAGESH;
+        return c >= SHEVA && c <= QAMATS_QATAN && c != DAGESH;
     }
 
     /**
@@ -923,12 +1150,33 @@ public final class StringConversionUtils {
             } else {
                 final HebrewLetter letter = new HebrewLetter(VAV);
                 letter.setHebrewLetterType(HebrewLetterType.VOWEL);
-                letter.setVowelLengthType(VowelLengthType.LONG);
+
+                // TODO could be optimized by rolling into to isVavConsonant
+                if (hasAnyPointing(inputString, currentPosition, true, DAGESH)) {
+                    letter.setShureq(true);
+                }
+
+                // next consonant has a dagesh?
+                final int position = nextHebrewConsonant(inputString, currentPosition);
+                if (position != -1 && hasAnyPointing(inputString, position, true, DAGESH)) {
+                    letter.setVowelLengthType(VowelLengthType.SHORT);
+                } else {
+                    letter.setVowelLengthType(VowelLengthType.LONG);
+                }
                 letters[currentPosition] = letter;
             }
             return true;
         }
         return false;
+    }
+
+    private static int nextHebrewConsonant(final char[] inputString, final int currentPosition) {
+        int ii = currentPosition + 1;
+        while (ii < inputString.length && !isHebrewConsonant(inputString[ii])) {
+            ii++;
+        }
+
+        return ii == inputString.length ? -1 : ii;
     }
 
     /**
@@ -942,7 +1190,7 @@ public final class StringConversionUtils {
      */
     public static boolean hasAnyPointing(final char[] inputString, final int position, final boolean after,
             final char... otherMarks) {
-        return hasPointing(inputString, position, after, true, false, otherMarks);
+        return hasPointing(inputString, position, after, false, false, otherMarks);
     }
 
     /**
@@ -956,7 +1204,7 @@ public final class StringConversionUtils {
      */
     public static boolean hasAllPointing(final char[] inputString, final int position, final boolean after,
             final char... otherMarks) {
-        return hasPointing(inputString, position, after, false, false, otherMarks);
+        return hasPointing(inputString, position, after, true, false, otherMarks);
     }
 
     /**
@@ -970,7 +1218,7 @@ public final class StringConversionUtils {
      */
     public static boolean hasAllPointingIncludingVav(final char[] inputString, final int position,
             final boolean after, final char... otherMarks) {
-        return hasPointing(inputString, position, after, false, true, otherMarks);
+        return hasPointing(inputString, position, after, true, true, otherMarks);
 
     }
 
@@ -1017,7 +1265,16 @@ public final class StringConversionUtils {
      * @return true if vav is a consonant
      */
     private static boolean isVavConsonant(final char[] inputString, final int currentPosition) {
-        if (hasAnyPointing(inputString, currentPosition, true, DAGESH)) {
+        final boolean hasDagesh = hasAnyPointing(inputString, currentPosition, true, DAGESH);
+        if (currentPosition == 0) {
+            return !hasDagesh;
+        }
+
+        if (isLastLetter(inputString, currentPosition)) {
+            return !hasDagesh && !hasAnyPointing(inputString, currentPosition, true, HOLAM);
+        }
+
+        if (hasDagesh) {
             if (hasAnyPointing(inputString, currentPosition, true, HIRIQ, TSERE, SEGOL, SHEVA, PATAH, QAMATS,
                     QUBUTS, QAMATS_QATAN)) {
                 return true;
@@ -1030,7 +1287,7 @@ public final class StringConversionUtils {
             return false;
         }
 
-        if (hasAllPointing(inputString, currentPosition, true, QUBUTS, HOLAM)) {
+        if (hasAllPointing(inputString, currentPosition, true, QAMATS, HOLAM)) {
             return true;
         }
 
@@ -1072,7 +1329,10 @@ public final class StringConversionUtils {
      * @return true if yod is a vowel
      */
     private static boolean isYodVowel(final char[] inputString, final int currentPosition) {
-        return hasAnyPointing(inputString, currentPosition, false, HIRIQ, TSERE, SEGOL);
+        return hasAnyPointing(inputString, currentPosition, false, HIRIQ, TSERE, SEGOL, QAMATS, QAMATS_2)
+                && !hasAnyPointing(inputString, currentPosition, true, QAMATS_QATAN, SHEVA, HATAF_SEGOL,
+                        HATAF_PATAH, HATAF_QAMATS, HIRIQ, TSERE, SEGOL, PATAH, QAMATS, HOLAM, QAMATS_2,
+                        QUBUTS, DAGESH);
     }
 
     /**
@@ -1089,435 +1349,6 @@ public final class StringConversionUtils {
         }
         return true;
     }
-
-    // /**
-    // * Transliteration of the Hebrew text
-    // *
-    // * @param normalized the normalized form
-    // * @return the transliterated hebrew
-    // */
-    // private static String transliterateHebrew2(final String normalized) {
-    // final StringBuilder input = new StringBuilder(normalized);
-    //
-    // // first strip out cantiallation marks
-    // for (int ii = 0; ii < input.length();) {
-    // final int c = input.charAt(ii);
-    // if (c >= 0x0590 && c <= 0x05AF || c >= 0x05C3 && c <= 0x5CF && c != 0x5C7 || c == 0x5BD
-    // || c == 0x5BF || c == 0x5C0) {
-    // input.deleteCharAt(ii);
-    // } else {
-    // ii++;
-    // }
-    // }
-    //
-    // // then process combined forms at the end of the word
-    // HebrewTransliterationEnding transliterationEnding;
-    // int currentInputLength = input.length();
-    // if (currentInputLength > 1) {
-    // final char[] end = new char[2];
-    // input.getChars(currentInputLength - 2, currentInputLength, end, 0);
-    // transliterationEnding = processHebrewEndings(currentInputLength, input, end);
-    // } else {
-    // transliterationEnding = HebrewTransliterationEnding.NONE;
-    // }
-    //
-    // // now process from left to right for combined forms
-    // currentInputLength = input.length();
-    // int position = 0;
-    //
-    // while (position < input.length() - 1) {
-    // final char current = input.charAt(position);
-    // final int nextPosition = position + 1;
-    // final char next = input.charAt(nextPosition);
-    // final int originalPosition = position;
-    //
-    // position = processCompositeForms(input, currentInputLength, position, current, nextPosition, next);
-    //
-    // // end switch of three-character forms
-    // if (originalPosition != position) {
-    // // then match has occurred, so continue round one more time
-    // continue;
-    // }
-    //
-    // // out of composite form switch statement
-    // // carry on with dagesh forms
-    // position = processDageshForms(input, position, current, nextPosition, next);
-    //
-    // if (originalPosition == position) {
-    // position++;
-    // }
-    // currentInputLength = input.length();
-    // }
-    //
-    // // remove all remaining dageshes
-    // removeHebrewDageshAndSinShinMarks(input);
-    //
-    // // finally do a simple character substitution
-    // singleHebrewLetterReplacement(input);
-    //
-    // input.append(transliterationEnding.getEnding());
-    // return input.toString();
-    // }
-
-    // /**
-    // * Process hebrew composite forms
-    // *
-    // * @param input the string builder for in-place replacement
-    // * @param currentInputLength the length of the input
-    // * @param position the current position
-    // * @param nextPosition the next position
-    // * @param next the next character
-    // * @return the new position
-    // */
-    // private static int processCompositeForms(final StringBuilder input, final int currentInputLength,
-    // int position, final char current, final int nextPosition, final char next) {
-    // int thirdPosition;
-    // int fourthPosition;
-    // char third;
-    // switch (current) {
-    // case 0x5E9:
-    // if (next == 0x5C2) {
-    // input.setCharAt(position, 's');
-    // input.setCharAt(nextPosition, 's');
-    // position += 2;
-    // } else if (next == 0x5C1) {
-    // input.setCharAt(position, 's');
-    // input.setCharAt(nextPosition, 'h');
-    // position += 2;
-    // }
-    // break;
-    // case 0x5D5:
-    // if (next == 0x5BC) {
-    // thirdPosition = nextPosition + 1;
-    // if (thirdPosition < currentInputLength) {
-    // third = input.charAt(thirdPosition);
-    // switch (third) {
-    // case 0x5B7:
-    // input.setCharAt(position, 'v');
-    // input.setCharAt(nextPosition, 'a');
-    // input.deleteCharAt(thirdPosition);
-    // position += 2;
-    // break;
-    // case 0x5B4:
-    // fourthPosition = thirdPosition + 1;
-    // if (fourthPosition < currentInputLength
-    // && input.charAt(fourthPosition) == 0x5D9) {
-    // input.setCharAt(position, 'v');
-    // input.setCharAt(nextPosition, 'i');
-    // input.setCharAt(thirdPosition, 'y');
-    // input.deleteCharAt(fourthPosition);
-    // position += 3;
-    // break;
-    // }
-    //
-    // input.setCharAt(position, 'v');
-    // input.setCharAt(nextPosition, 'i');
-    // input.deleteCharAt(thirdPosition);
-    // position += 2;
-    // break;
-    // case 0x5B8:
-    // input.setCharAt(position, 'v');
-    // input.setCharAt(nextPosition, 'a');
-    // input.setCharAt(thirdPosition, 'a');
-    // position += 3;
-    // break;
-    // case 0x5B0:
-    // input.setCharAt(position, 'v');
-    // input.setCharAt(nextPosition, '\'');
-    // input.deleteCharAt(thirdPosition);
-    // position += 2;
-    // break;
-    // case 0x5B6:
-    // input.setCharAt(position, 'v');
-    // input.setCharAt(nextPosition, 'e');
-    // input.deleteCharAt(thirdPosition);
-    // position += 2;
-    // break;
-    // case 0x5B5:
-    // input.setCharAt(position, 'v');
-    // input.setCharAt(nextPosition, 'é');
-    // input.deleteCharAt(thirdPosition);
-    // position += 2;
-    // break;
-    // case 0x5BB:
-    // input.setCharAt(position, 'v');
-    // input.setCharAt(nextPosition, 'u');
-    // input.deleteCharAt(thirdPosition);
-    // position += 2;
-    // break;
-    // case 0x5D5:
-    // fourthPosition = thirdPosition + 1;
-    // if (fourthPosition < currentInputLength
-    // && input.charAt(fourthPosition) == 0x5B9) {
-    // input.setCharAt(position, 'v');
-    // input.setCharAt(nextPosition, 'o');
-    // input.setCharAt(thirdPosition, 'w');
-    // input.deleteCharAt(fourthPosition);
-    // position += 3;
-    // break;
-    // }
-    // break;
-    // default:
-    // break;
-    // }
-    // }
-    // } else if (next == 0x5B9) {
-    // thirdPosition = nextPosition + 1;
-    // if (thirdPosition < currentInputLength && input.charAt(thirdPosition) == 0x5B8) {
-    // input.setCharAt(position, 'o');
-    // input.setCharAt(nextPosition, 'v');
-    // input.setCharAt(thirdPosition, 'a');
-    // input.insert(thirdPosition + 1, 'a');
-    // position += 4;
-    // break;
-    // } else {
-    // input.setCharAt(position, 'o');
-    // input.setCharAt(nextPosition, 'w');
-    // position += 2;
-    // break;
-    // }
-    // }
-    // break;
-    // default:
-    // break;
-    // }
-    // return position;
-    // }
-    //
-    // private static int processDageshForms(final StringBuilder input, int position, final char current,
-    // final int nextPosition, final char next) {
-    // if (next == 0x5BC) {
-    // switch (current) {
-    // case 0x5D5:
-    // input.setCharAt(position, 'u');
-    // input.setCharAt(nextPosition, 'w');
-    // position += 2;
-    // break;
-    // case 0x5D1:
-    // input.setCharAt(position, 'b');
-    // input.deleteCharAt(nextPosition);
-    // position += 1;
-    // break;
-    // case 0x5D2:
-    // input.setCharAt(position, 'g');
-    // input.deleteCharAt(nextPosition);
-    // position += 1;
-    // break;
-    // case 0x5D3:
-    // input.setCharAt(position, 'd');
-    // input.deleteCharAt(nextPosition);
-    // position += 1;
-    // break;
-    // case 0x5DB:
-    // input.setCharAt(position, 'k');
-    // input.deleteCharAt(nextPosition);
-    // position += 1;
-    // break;
-    // case 0x5E4:
-    // input.setCharAt(position, 'p');
-    // input.deleteCharAt(nextPosition);
-    // position += 1;
-    // break;
-    // case 0x5EA:
-    // input.setCharAt(position, 't');
-    // input.deleteCharAt(nextPosition);
-    // position += 1;
-    // break;
-    //
-    // }
-    // }
-    // return position;
-    // }
-    //
-    // /**
-    // * Removes the dagesh character from input
-    // *
-    // * @param input the string builder for in-place replacement
-    // * @param currentInputLength the current length of the input
-    // */
-    // private static void removeHebrewDageshAndSinShinMarks(final StringBuilder input) {
-    // for (int ii = 0; ii < input.length();) {
-    // if (input.charAt(ii) == 0x5BC || input.charAt(ii) == 0x5C1 || input.charAt(ii) == 0x5C2) {
-    // input.deleteCharAt(ii);
-    // } else {
-    // ii++;
-    // }
-    // }
-    // }
-    //
-    // /**
-    // * Perform single hebrew letter mappings
-    // *
-    // * @param input the string builder for in-place replacement
-    // */
-    // private static void singleHebrewLetterReplacement(final StringBuilder input) {
-    // for (int ii = 0; ii < input.length(); ii++) {
-    // switch (input.charAt(ii)) {
-    // case 0x5B0:
-    // input.setCharAt(ii, '\'');
-    // break;
-    // case 0x5B1:
-    // input.setCharAt(ii, 'e');
-    // break;
-    // case 0x5B2:
-    // input.setCharAt(ii, 'a');
-    // break;
-    // case 0x5B3:
-    // input.setCharAt(ii, 'o');
-    // break;
-    // case 0x5B4:
-    // input.setCharAt(ii, 'i');
-    // break;
-    // case 0x5B5:
-    // input.setCharAt(ii, 'é');
-    // break;
-    // case 0x5B6:
-    // input.setCharAt(ii, 'e');
-    // break;
-    // case 0x5B7:
-    // input.setCharAt(ii, 'a');
-    // break;
-    // case 0x5B8:
-    // input.setCharAt(ii++, 'a');
-    // input.insert(ii, 'a');
-    // break;
-    // case 0x5B9:
-    // input.setCharAt(ii, 'o');
-    // break;
-    // case 0x5BA:
-    // input.setCharAt(ii, 'a');
-    // break;
-    // case 0x5BB:
-    // input.setCharAt(ii, 'u');
-    // break;
-    // case 0x5C7:
-    // input.setCharAt(ii, 'o');
-    // break;
-    // case 0x5D0:
-    // input.setCharAt(ii, ')');
-    // break;
-    // case 0x5D1:
-    // input.setCharAt(ii++, 'b');
-    // input.insert(ii, 'h');
-    // break;
-    // case 0x5D2:
-    // input.setCharAt(ii, 'g');
-    // break;
-    // case 0x5D3:
-    // input.setCharAt(ii, 'd');
-    // break;
-    // case 0x5D4:
-    // input.setCharAt(ii, 'h');
-    // break;
-    // case 0x5D5:
-    // input.setCharAt(ii, 'v');
-    // break;
-    // case 0x5D6:
-    // input.setCharAt(ii, 'z');
-    // break;
-    // case 0x5D7:
-    // input.setCharAt(ii++, 'c');
-    // input.insert(ii, 'h');
-    // break;
-    // case 0x5D8:
-    // input.setCharAt(ii++, 't');
-    // input.insert(ii, 't');
-    // break;
-    // case 0x5D9:
-    // input.setCharAt(ii, 'y');
-    // break;
-    // case 0x5DA:
-    // input.setCharAt(ii, 'k');
-    // break;
-    // case 0x5DB:
-    // input.setCharAt(ii, 'k');
-    // break;
-    // case 0x5DC:
-    // input.setCharAt(ii, 'l');
-    // break;
-    // case 0x5DD:
-    // input.setCharAt(ii, 'm');
-    // break;
-    // case 0x5DE:
-    // input.setCharAt(ii, 'm');
-    // break;
-    // case 0x5DF:
-    // input.setCharAt(ii, 'n');
-    // break;
-    // case 0x5E0:
-    // input.setCharAt(ii, 'n');
-    // break;
-    // case 0x5E1:
-    // input.setCharAt(ii, 's');
-    // break;
-    // case 0x5E2:
-    // input.setCharAt(ii, '(');
-    // break;
-    // case 0x5E3:
-    // input.setCharAt(ii++, 'p');
-    // input.insert(ii, 'h');
-    // break;
-    // case 0x5E4:
-    // input.setCharAt(ii++, 'p');
-    // input.insert(ii, 'h');
-    // break;
-    // case 0x5E5:
-    // input.setCharAt(ii++, 't');
-    // input.insert(ii, 's');
-    // break;
-    // case 0x5E6:
-    // input.setCharAt(ii++, 't');
-    // input.insert(ii, 's');
-    // break;
-    // case 0x5E7:
-    // input.setCharAt(ii, 'q');
-    // break;
-    // case 0x5E8:
-    // input.setCharAt(ii, 'r');
-    // break;
-    // case 0x5E9:
-    // input.setCharAt(ii++, 's');
-    // input.insert(ii, 'h');
-    // break;
-    // case 0x5EA:
-    // input.setCharAt(ii++, 't');
-    // input.insert(ii, 'h');
-    // break;
-    // default:
-    // break;
-    //
-    // }
-    // }
-    // }
-
-    // /**
-    // * processes hebrew endings that are specifc and need to be removed immediate before the rest of the
-    // * transliration is performed
-    // *
-    // * @param input the input
-    // * @param end the characters at the end of the word
-    // * @return the correct hebrew ending
-    // */
-    // private static HebrewTransliterationEnding processHebrewEndings(final int inputLength,
-    // final StringBuilder input, final char[] end) {
-    // if (end[1] != 0x5B7) {
-    // return HebrewTransliterationEnding.NONE;
-    // }
-    //
-    // switch (end[0]) {
-    // case 0x5D7:
-    // input.delete(inputLength - 2, inputLength);
-    // return HebrewTransliterationEnding.ACH;
-    // case 0x5E2:
-    // input.delete(inputLength - 2, inputLength);
-    // return HebrewTransliterationEnding.A_BRACK;
-    // case 0x5D4:
-    // input.delete(inputLength - 2, inputLength);
-    // return HebrewTransliterationEnding.AH;
-    // default:
-    // return HebrewTransliterationEnding.NONE;
-    // }
-    // }
 
     /**
      * Performs a greek transliteration on a normalised string

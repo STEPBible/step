@@ -12,6 +12,7 @@ public class HebrewLetter {
     private ConsonantType consonantType = null;
     private VowelStressType vowelStressType = null;
     private VowelLengthType vowelLengthType = null;
+    private boolean shureq = false;
     private final char c;
 
     /**
@@ -21,6 +22,55 @@ public class HebrewLetter {
      */
     public HebrewLetter(final char c) {
         this.c = c;
+    }
+
+    /**
+     * @return true if is a vowel
+     */
+    public boolean isVowel() {
+        return HebrewLetterType.VOWEL == this.hebrewLetterType;
+    }
+
+    /**
+     * @return true if is a consonant
+     */
+    public boolean isConsonant() {
+        return HebrewLetterType.CONSONANT == this.hebrewLetterType;
+    }
+
+    /**
+     * @return true if no dagesh on the letter
+     */
+    public boolean hasNoDagesh() {
+        return this.consonantType == ConsonantType.NO_DAGESH;
+    }
+
+    /**
+     * @return true if consontant type is DOUBLE
+     */
+    public boolean isDoubled() {
+        return this.consonantType == ConsonantType.DOUBLE;
+    }
+
+    /**
+     * @return true if long
+     */
+    public boolean isLong() {
+        return this.vowelLengthType == VowelLengthType.LONG;
+    }
+
+    /**
+     * @return true if stressed
+     */
+    public boolean isStressed() {
+        return this.vowelStressType == VowelStressType.STRESSED;
+    }
+
+    /**
+     * @return true if silent
+     */
+    public boolean isSilent() {
+        return this.soundingType == SoundingType.SILENT;
     }
 
     /**
@@ -100,4 +150,17 @@ public class HebrewLetter {
         return this.c;
     }
 
+    /**
+     * @return the shureq
+     */
+    public boolean isShureq() {
+        return this.shureq;
+    }
+
+    /**
+     * @param shureq the shureq to set
+     */
+    public void setShureq(final boolean shureq) {
+        this.shureq = shureq;
+    }
 }

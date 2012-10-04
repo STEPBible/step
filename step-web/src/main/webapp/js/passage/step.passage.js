@@ -116,6 +116,7 @@ step.passage = {
                 self._redoTextSize(passageId, passageContent);
                 self._addStrongHandlers(passageId, passageContent);
                 self._updatePageTitle(passageId, passageContent, lookupVersion, lookupReference);
+                self._doTransliterations(passageId, passageContent);
                 step.state.passage.reference(passageId, text.reference, false);
             }, 
             passageId: passageId, 
@@ -140,8 +141,18 @@ step.passage = {
         }
     },
     
+    _doTransliterations : function(passageId, passageContent) {
+        $.each($(".stepTransliteration", passageContent), function(i, item) {
+           step.util.ui.markUpTransliteration($(this)); 
+        });
+    },
+    
     _doFonts : function(passageId, passageContent, interlinearMode, interlinearVersions) {
-        if(interlinearVersions != null && interlinearVersions.length > 0 && interlinearMode == "INTERLINEAR") {
+        //interlinear or a display option
+        var displayOptions = step.state.passage.options(1);
+        var isInterlinearOption = displayOptions.indexOf("TRANSLITERATION") || displayOptions.indexOf("GREEK_VOCAB") || displayOptions.indexOf("ENGLISH_VOCAB"); 
+        
+        if((interlinearVersions != null && interlinearVersions.length > 0 && interlinearMode == "INTERLINEAR") || isInterlinearOption) {
             $(".interlinear").find("span.interlinear, .ancientVocab, .text", passageContent).filter(function() {
                 return step.util.isUnicode(this);
             }).addClass("unicodeFont");

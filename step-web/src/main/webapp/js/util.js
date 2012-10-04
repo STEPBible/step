@@ -128,6 +128,7 @@ step.util = {
         },
         
         addStrongHandlers : function(passageId, passageContent) {
+            var that = this;
             $("[strong]", passageContent).click(function() { 
                 showDef(this);
             }).hover(function() {
@@ -143,8 +144,8 @@ step.util = {
                                 vocabInfo +=    "<h1>" +
                                                 "<span class='unicodeFont'>" +
                                                 item.accentedUnicode + 
-                                                "</span> (" +
-                                                item.stepTransliteration +
+                                                "</span> (<span class='stepTransliteration'>" +
+                                                that.markUpTransliteration(item.stepTransliteration) +
                                                 "): " +
                                                 item.stepGloss +
                                                 "</h1>" +
@@ -515,6 +516,27 @@ step.util = {
                     });
                 });
             });
+        },
+        
+        /** Marks up a element containing a STEP transliteration by doing the following things:
+         * '*' makes a syllable uppercase - small caps
+         * '.' followed by aeiou makes the vowel superscript
+         * ' followed by e is superscript 
+         */
+        markUpTransliteration : function(translit) {
+            var translitHtml = translit.html ? translit.html() : translit;
+            if(!step.util.isBlank(translitHtml)) {
+                translitHtml = translitHtml.replace(/'e/g, "<span class='superTranslit'>e</span>");
+                translitHtml = translitHtml.replace(/\.([aeiou])/g, "<span class='superTranslit'>$1</span>");
+                translitHtml = translitHtml.replace(/([^*-]*)\*([^*-]*)/g, "<span class='stressTranslit'>$1$2</span>")
+
+                //look for any stars in the word and highlight before and after
+                
+                if(translit.html) {
+                    translit.html(translitHtml);
+                }
+            }
+            return translitHtml;
         }
     },
 };

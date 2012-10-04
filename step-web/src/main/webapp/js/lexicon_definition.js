@@ -140,14 +140,11 @@ LexiconDefinition.prototype.showOriginalWordData = function(data) {
         $("*[info-name = 'similarStrongLinks']", "#vocabContainer").html(similarStrongs);
     }
     
-    //process step translit
+
+    
     var translit = $("[info-name='stepTransliteration']");
-    var translitHtml = translit.html();
-    if(!step.util.isBlank(translitHtml)) {
-        translitHtml = translitHtml.replace("(", "<span class='superTranslit'>(</span>");
-        translitHtml = translitHtml.replace(")", "<span class='superTranslit'>)</span>");
-        translit.html(translitHtml);
-    }
+    step.util.ui.markUpTransliteration(translit);
+   
 };
 
 LexiconDefinition.prototype.resetContainer = function(container) {

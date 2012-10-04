@@ -30,6 +30,8 @@ public class SpecificForm {
 
     private String transliteration;
 
+    private String simplifiedTransliteration;
+
     @ManyToOne
     @JoinColumn(name = "raw_strong_number", referencedColumnName = "strong_number")
     private Definition strongNumber;
@@ -104,5 +106,19 @@ public class SpecificForm {
      */
     public void setTransliteration(final String transliteration) {
         this.transliteration = transliteration;
+    }
+
+    /**
+     * @return the simplifiedTransliteration
+     */
+    public String getSimplifiedTransliteration() {
+        return this.simplifiedTransliteration;
+    }
+
+    /**
+     * @param simplifiedTransliteration the simplifiedTransliteration to set
+     */
+    public void setSimplifiedTransliteration(final String simplifiedTransliteration) {
+        this.simplifiedTransliteration = simplifiedTransliteration;
     }
 }

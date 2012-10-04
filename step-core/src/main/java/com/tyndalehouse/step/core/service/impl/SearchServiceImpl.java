@@ -34,6 +34,7 @@ package com.tyndalehouse.step.core.service.impl;
 
 import static com.tyndalehouse.step.core.models.LookupOption.HEADINGS_ONLY;
 import static com.tyndalehouse.step.core.service.impl.VocabularyServiceImpl.padStrongNumber;
+import static com.tyndalehouse.step.core.utils.StringConversionUtils.adaptForUnaccentedTransliteration;
 import static com.tyndalehouse.step.core.utils.StringConversionUtils.toBetaLowercase;
 import static com.tyndalehouse.step.core.utils.StringConversionUtils.toBetaUnaccented;
 import static com.tyndalehouse.step.core.utils.StringConversionUtils.unAccent;
@@ -63,6 +64,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.avaje.ebean.EbeanServer;
+import com.avaje.ebean.ExpressionList;
 import com.tyndalehouse.step.core.data.entities.ScriptureReference;
 import com.tyndalehouse.step.core.data.entities.lexicon.Definition;
 import com.tyndalehouse.step.core.data.entities.lexicon.SpecificForm;
@@ -101,7 +103,7 @@ public class SearchServiceImpl implements SearchService {
     private static final String STRONG_THE = "G3588";
     private static final String START_OF_STRONG_FIELD = "strong='";
     private static final int START_OF_STRONG_FIELD_LENGTH = START_OF_STRONG_FIELD.length();
-    private static final int MAX_SUGGESTIONS = 20;
+    private static final int MAX_SUGGESTIONS = 50;
     // TODO should this be parameterized?
     private static final String BASE_GREEK_VERSION = "WHNU";
     private static final String BASE_HEBREW_VERSION = "OSMHB";
@@ -160,14 +162,23 @@ public class SearchServiceImpl implements SearchService {
     private List<LexiconSuggestion> getMatchingFormsFromLexicon(final LexicalSuggestionType suggestionType,
             final String form, final String lowerForm) {
         final List<LexiconSuggestion> suggestions = new ArrayList<LexiconSuggestion>();
-        final List<Definition> definitions = this.ebean.find(Definition.class)
+
+        ExpressionList<Definition> partialQuery = this.ebean.find(Definition.class)
                 .select("accentedUnicode,stepTransliteration,stepGloss,blacklisted").where()
                 .eq("blacklisted", false).like("strongNumber", suggestionType.getStrongPattern())
                 .disjunction().like("accentedUnicode", lowerForm).like("unaccentedUnicode", lowerForm)
                 .like("strongTranslit", lowerForm).like("strongPronunc", lowerForm)
-                .like("stepTransliteration", lowerForm).like("unaccentedStepTransliteration", lowerForm)
-                .like("alternativeTranslit1", lowerForm).like("alternativeTranslit1Unaccented", lowerForm)
-                .eq("strongNumber", form).endJunction().setMaxRows(MAX_SUGGESTIONS).findList();
+                .like("stepTransliteration", lowerForm).like("alternativeTranslit1", lowerForm)
+                .like("alternativeTranslit1Unaccented", lowerForm).eq("strongNumber", form);
+
+        final Set<String> options = StringConversionUtils.adaptForQueryingSimplifiedTransliteration(
+                lowerForm, LexicalSuggestionType.GREEK == suggestionType);
+        for (final String o : options) {
+            partialQuery = partialQuery.like("unaccentedStepTransliteration", o);
+        }
+
+        final List<Definition> definitions = partialQuery.endJunction().setMaxRows(MAX_SUGGESTIONS).orderBy()
+                .asc("unaccentedStepTransliteration").findList();
         for (final Definition def : definitions) {
             suggestions.add(convertToSuggestion(def));
         }
@@ -185,12 +196,19 @@ public class SearchServiceImpl implements SearchService {
             final String lowerForm) {
         final List<LexiconSuggestion> suggestions = new ArrayList<LexiconSuggestion>();
 
-        final List<SpecificForm> forms = this.ebean.find(SpecificForm.class)
-                .fetch("strongNumber", "accentedUnicode,stepTransliteration,stepGloss,blacklisted").where()
-                .disjunction().like("rawForm", lowerForm).like("unaccentedForm", unAccent(lowerForm))
-                .like("transliteration", lowerForm).endJunction()
+        final List<SpecificForm> forms = this.ebean
+                .find(SpecificForm.class)
+                .fetch("strongNumber", "accentedUnicode,stepTransliteration,stepGloss,blacklisted")
+                .where()
+                .disjunction()
+                .like("rawForm", lowerForm)
+                .like("unaccentedForm", unAccent(lowerForm))
+                .like("transliteration", lowerForm)
+                .like("simplifiedTransliteration",
+                        adaptForUnaccentedTransliteration(lowerForm,
+                                LexicalSuggestionType.GREEK == suggestionType)).endJunction()
                 .like("rawStrongNumber", suggestionType.getStrongPattern()).setMaxRows(MAX_SUGGESTIONS)
-                .findList();
+                .orderBy().asc("simplifiedTransliteration").findList();
 
         for (final SpecificForm f : forms) {
             suggestions.add(convertToSuggestion(f));
@@ -796,7 +814,10 @@ public class SearchServiceImpl implements SearchService {
         // run rules for transliteration
         if (strongs.isEmpty()) {
             // run transliteration rules
-            strongs = findByTransliteration(searchQuery);
+            final SearchType type = sq.getCurrentSearch().getType();
+            if (type.isGreek() || type.isHebrew()) {
+                strongs = findByTransliteration(searchQuery, type.isGreek());
+            }
         }
         return strongs;
     }
@@ -1019,33 +1040,48 @@ public class SearchServiceImpl implements SearchService {
     /**
      * Runs the transliteration rules on the input in an attempt to match an entry in the lexicon
      * 
+     * @param sq
+     * 
      * @param query the query to be found
      * @return the strongs that have been found/matched.
      */
-    private List<String> findByTransliteration(final String query) {
+    private List<String> findByTransliteration(final String query, final boolean isGreek) {
         // first find by transliterations that we have
         final String lowerQuery = query.toLowerCase();
         final String betaQuery = toBetaLowercase(lowerQuery);
         final String betaUnaccentedQuery = toBetaUnaccented(lowerQuery);
 
-        final List<Definition> defs = this.ebean.find(Definition.class).select("strongNumber").where()
-                .eq("blacklisted", false).disjunction().eq("stepTransliteration", lowerQuery)
-                .like("unaccentedStepTransliteration", lowerQuery).like("strongPronunc", lowerQuery)
-                .like("strongTranslit", lowerQuery).like("alternativeTranslit1", betaQuery)
-                .like("alternativeTranslit1Unaccented", betaUnaccentedQuery).findList();
+        final String simplifiedTransliteration = adaptForUnaccentedTransliteration(lowerQuery, isGreek);
+
+        final List<SpecificForm> specificForms = this.ebean.find(SpecificForm.class)
+                .select("rawStrongNumber").where().disjunction().like("transliteration", lowerQuery)
+                .like("simplifiedTransliteration", simplifiedTransliteration).findList();
 
         // finally, if we haven't found anything, then abort
-        if (defs.isEmpty()) {
+        if (!specificForms.isEmpty()) {
+            final List<String> strongs = new ArrayList<String>(specificForms.size());
             // TODO obtain and implement transliteration rules
             // nothing to search for..., so abort query
-            throw new AbortQueryException("No definitions found for input");
+            for (final SpecificForm f : specificForms) {
+                strongs.add(f.getRawStrongNumber());
+            }
+            return strongs;
         }
 
+        final List<Definition> defs = this.ebean.find(Definition.class).select("strongNumber").where()
+                .eq("blacklisted", false).disjunction().eq("stepTransliteration", lowerQuery)
+                .like("unaccentedStepTransliteration", simplifiedTransliteration)
+                .like("strongPronunc", lowerQuery).like("strongTranslit", lowerQuery)
+                .like("alternativeTranslit1", betaQuery)
+                .like("alternativeTranslit1Unaccented", betaUnaccentedQuery).findList();
+
+        if (defs.isEmpty()) {
+            throw new AbortQueryException("No definitions found for input");
+        }
         final List<String> strongs = new ArrayList<String>(defs.size());
         for (final Definition d : defs) {
             strongs.add(d.getStrongNumber());
         }
-
         return strongs;
     }
 

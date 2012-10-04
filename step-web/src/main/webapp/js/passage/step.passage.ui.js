@@ -95,7 +95,7 @@ step.passage.ui = {
      * Simple forward search
      */
     getSelectedVersion : function(versionName) {
-        return step.keyedVersions[versionName];
+        return step.keyedVersions[versionName.toUpperCase()];
     }
 };
 

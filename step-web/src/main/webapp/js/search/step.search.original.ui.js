@@ -180,7 +180,7 @@ step.search.ui.original = {
                             response($.map(text, function(item) {
                                 return { label: "<span>" + 
                                         "<span class='suggestionColumn ancientSearchSuggestion'>" + item.matchingForm + "</span>" +
-                                        "<span class='suggestionColumn'>" + item.stepTransliteration + "</span>" + 
+                                        "<span class='suggestionColumn stepTransliteration'>" + step.util.ui.markUpTransliteration(item.stepTransliteration) + "</span>" + 
                                         "<span class='suggestionColumn'>" + item.gloss + "</span>" +
                                     "</span>", value: item.matchingForm };
                             }));
@@ -200,7 +200,7 @@ step.search.ui.original = {
             
             $(step.search.ui.original).hear("lexical-filter-change", function(self, data) {
                 var wordBox = $(".originalWord", step.util.getPassageContainer(data.passageId));
-                wordBox.lexicalcomplete("search" );
+                wordBox.lexicalcomplete("search");
             });
         });
     }

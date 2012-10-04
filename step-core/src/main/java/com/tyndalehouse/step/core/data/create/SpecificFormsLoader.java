@@ -1,6 +1,7 @@
 package com.tyndalehouse.step.core.data.create;
 
 import static com.tyndalehouse.step.core.utils.IOUtils.closeQuietly;
+import static com.tyndalehouse.step.core.utils.StringConversionUtils.adaptForUnaccentedTransliteration;
 import static com.tyndalehouse.step.core.utils.StringConversionUtils.transliterate;
 import static com.tyndalehouse.step.core.utils.StringConversionUtils.unAccent;
 
@@ -27,9 +28,9 @@ import com.tyndalehouse.step.core.data.entities.lexicon.SpecificForm;
  */
 public class SpecificFormsLoader extends AbstractClasspathBasedModuleLoader<SpecificForm> {
     private static final Logger LOGGER = LoggerFactory.getLogger(LexiconLoader.class);
-    private static final String INSERT_INTO_SPECIFIC_FORMS = "INSERT INTO specific_form(RAW_STRONG_NUMBER, RAW_FORM, UNACCENTED_FORM, TRANSLITERATION) VALUES";
-    private static final String INSERT_LEXICON = "insert into specific_form (raw_form , unaccented_form , transliteration , raw_strong_number )"
-            + "select accented_unicode, unaccented_unicode, step_transliteration, strong_number from definition where accented_unicode not in (select raw_form from specific_form)";
+    private static final String INSERT_INTO_SPECIFIC_FORMS = "INSERT INTO specific_form(RAW_STRONG_NUMBER, RAW_FORM, UNACCENTED_FORM, TRANSLITERATION, SIMPLIFIED_TRANSLITERATION) VALUES";
+    private static final String INSERT_LEXICON = "insert into specific_form (raw_form , unaccented_form , transliteration , simplified_transliteration, raw_strong_number )"
+            + "select accented_unicode, unaccented_unicode, step_transliteration, unaccented_step_transliteration, strong_number from definition where accented_unicode not in (select raw_form from specific_form)";
     private static final Pattern QUOTE_ESCAPE = Pattern.compile("'");
     private final LoaderTransaction transaction;
 
@@ -128,7 +129,12 @@ public class SpecificFormsLoader extends AbstractClasspathBasedModuleLoader<Spec
         sql.append('\'');
         sql.append(',');
         sql.append('\'');
-        sql.append(QUOTE_ESCAPE.matcher(transliterate(split[1])).replaceAll("''"));
+        final String stepTransliteration = transliterate(split[1]);
+        sql.append(QUOTE_ESCAPE.matcher(stepTransliteration).replaceAll("''"));
+        sql.append('\'');
+        sql.append(',');
+        sql.append('\'');
+        sql.append(adaptForUnaccentedTransliteration(stepTransliteration, split[0].charAt(0) == 'G'));
         sql.append('\'');
         sql.append(')');
         sql.append(',');

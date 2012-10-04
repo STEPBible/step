@@ -139,6 +139,9 @@ public class DatabaseConfigProvider implements Provider<EbeanServer> {
         // set DDL options...
         config.setDdlGenerate(this.generateDDL);
         config.setDdlRun(this.generateDDL);
+
+        // config.setLoggingToJavaLogger(true);
+        // config.setLoggingLevel(LogLevel.SQL);
         //
 
         config.setDefaultServer(true);

@@ -14,10 +14,13 @@ public enum LexicalSuggestionType {
     /**
      * only greek should be returned
      */
-    GREEK("H%");
+    GREEK("G%");
 
     private final String strongPattern;
 
+    /**
+     * @param strongPattern the pattern to use in the query
+     */
     LexicalSuggestionType(final String strongPattern) {
         this.strongPattern = strongPattern;
     }

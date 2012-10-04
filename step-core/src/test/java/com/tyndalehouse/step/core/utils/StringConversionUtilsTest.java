@@ -39,13 +39,6 @@ import static com.tyndalehouse.step.core.utils.StringConversionUtils.translitera
 import static com.tyndalehouse.step.core.utils.StringConversionUtils.unAccent;
 import static org.junit.Assert.assertEquals;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -129,92 +122,98 @@ public class StringConversionUtilsTest {
         assertEquals("exérammenén", testTransliterate("ἐξηραμμένην"));
     }
 
-    @Test
-    public void testTransliterateHebrewFromFile() throws IOException {
-        final FileReader reader = new FileReader(new File("d:\\temp\\sample.txt"));
-        final BufferedReader br = new BufferedReader(reader);
-        final FileWriter writer = new FileWriter(new File("d:\\temp\\hebrew-out.txt"));
-        final BufferedWriter bw = new BufferedWriter(writer, 4 * 1024 * 1024);
-
-        final long start = System.currentTimeMillis();
-        int lineNumber = 0;
-        String line;
-
-        while ((line = br.readLine()) != null) {
-            final String[] split = line.split(",");
-            bw.write(Integer.toString(lineNumber));
-            bw.write(',');
-            bw.write(split[0]);
-            bw.write(',');
-            bw.write(split[1]);
-            bw.write(',');
-
-            try {
-                transliterate(split[1]);
-                bw.write(transliterate(split[1]));
-            } catch (final Exception e) {
-                // error
-                bw.write("ERROR: ");
-                bw.write(e.toString());
-            }
-
-            bw.newLine();
-            lineNumber++;
-
-            if ((lineNumber % 2000) == 0) {
-                reportProgress(start, lineNumber);
-            }
-        }
-
-        br.close();
-        bw.close();
-
-        reportProgress(start, lineNumber);
-    }
-
-    /**
-     * outputs the time taken so far and the number of items processed
-     * 
-     * @param start the time at which we started
-     * @param lineNumber the number of items processed
-     */
-    private void reportProgress(final long start, final int lineNumber) {
-        System.out.println(String.format("Took %dms to do %d transliterations", System.currentTimeMillis()
-                - start, lineNumber));
-    }
+    // @Test
+    // public void testTransliterateHebrewFromFile() throws IOException {
+    // final Pattern p = Pattern.compile("[*.]*");
+    //
+    // final FileReader reader = new FileReader(new File("d:\\temp\\sample.txt"));
+    // final BufferedReader br = new BufferedReader(reader);
+    // final FileWriter writer = new FileWriter(new File("d:\\temp\\hebrew-out.txt"));
+    // final BufferedWriter bw = new BufferedWriter(writer, 4 * 1024 * 1024);
+    //
+    // final long start = System.currentTimeMillis();
+    // int lineNumber = 0;
+    // String line;
+    //
+    // while ((line = br.readLine()) != null) {
+    // final String[] split = line.split(",");
+    // bw.write(Integer.toString(lineNumber));
+    // bw.write('\t');
+    // // bw.write(split[0]);
+    // // bw.write('\t');
+    // bw.write(split[1]);
+    // bw.write('\t');
+    //
+    // try {
+    // final String translit = transliterate(split[1]);
+    // bw.write(p.matcher(translit).replaceAll(""));
+    // bw.write('\t');
+    // bw.write(translit);
+    //
+    // } catch (final Exception e) {
+    // // error
+    // bw.write("ERROR: ");
+    // bw.write(e.toString());
+    // }
+    //
+    // bw.newLine();
+    // lineNumber++;
+    //
+    // if ((lineNumber % 2000) == 0) {
+    // reportProgress(start, lineNumber);
+    // }
+    // }
+    //
+    // br.close();
+    // bw.close();
+    //
+    // reportProgress(start, lineNumber);
+    // }
+    //
+    // /**
+    // * outputs the time taken so far and the number of items processed
+    // *
+    // * @param start the time at which we started
+    // * @param lineNumber the number of items processed
+    // */
+    // private void reportProgress(final long start, final int lineNumber) {
+    // System.out.println(String.format("Took %dms to do %d transliterations", System.currentTimeMillis()
+    // - start, lineNumber));
+    // }
 
     @Test
     public void testTransliterateHebrew1() {
-        // testTransliterate("בְּרֵאשִׁ֖ית");
-        // testTransliterate("בָּרָ֣א");
-        // testTransliterate("אֱלֹהִ֑ים");
-        // testTransliterate("אֵ֥ת");
-        // testTransliterate("הַשָּׁמַ֖יִם");
-        // testTransliterate("וְאֵ֥ת");
-        // testTransliterate("הָאָֽרֶץ");
-        // testTransliterate("בִּרְקִ֣יעַ");
-        // testTransliterate("הַשָּׁמַ֔יִם");
-        // testTransliterate("לְהַבְדִּ֕יל");
-        // testTransliterate("בֵּ֥ין");
+
+        testTransliterate("וְ֝יָב֗וֹא");
+        testTransliterate("בָּרָ֣א");
+        testTransliterate("אֱלֹהִ֑ים");
+        testTransliterate("אֵ֥ת");
+        testTransliterate("הַשָּׁמַ֖יִם");
+        testTransliterate("וְאֵ֥ת");
+        testTransliterate("הָאָֽרֶץ");
+        testTransliterate("בִּרְקִ֣יעַ");
+        testTransliterate("הַשָּׁמַ֔יִם");
+        testTransliterate("לְהַבְדִּ֕יל");
+        testTransliterate("בֵּ֥ין");
         testTransliterate("הַיּ֖וֹם");
-        // testTransliterate("וּבֵ֣ין");
-        // testTransliterate("הַלָּ֑יְלָה");
-        //
-        // testTransliterate("חַבַהַ");
-        // testTransliterate("עַבַעַ");
-        // testTransliterate("הַבַהַ");
-        // testTransliterate("הַהַהַ");
-        // testTransliterate("שׁוַּהַ");
-        // testTransliterate("שׂוָּהַ");
-        // testTransliterate("שַּׁוְּטֶה");
-        // testTransliterate("בֵוֶּי");
-        // testTransliterate("דֹוֵּת");
-        // testTransliterate("דֹוִּע");
-        // testTransliterate("פּוִּךְ");
-        // testTransliterate("גֶּוִּי");
-        // testTransliterate("כֻּוּוֹ");
-        // testTransliterate("דּוֻּן");
-        // testTransliterate("תּוָֹף");
+        testTransliterate("וּבֵ֣ין");
+        testTransliterate("הַלָּ֑יְלָה");
+
+        testTransliterate("חַבַהַ");
+        testTransliterate("עַבַעַ");
+        testTransliterate("הַבַהַ");
+        testTransliterate("הַהַהַ");
+        testTransliterate("שׁוַּהַ");
+        testTransliterate("שׂוָּהַ");
+        testTransliterate("שַּׁוְּטֶה");
+        testTransliterate("בֵוֶּי");
+        testTransliterate("דֹוֵּת");
+        testTransliterate("דֹוִּע");
+        testTransliterate("פּוִּךְ");
+        testTransliterate("גֶּוִּי");
+        testTransliterate("כֻּוּוֹ");
+        testTransliterate("דּוֻּן");
+        testTransliterate("תּוָֹף");
         //
         // testTransliterate("אׇזְנִי");
     }
@@ -224,39 +223,27 @@ public class StringConversionUtilsTest {
      */
     @Test
     public void testTransliterateHebrew() {
-        assertEquals("b'ré)shiyth", testTransliterate("בְּרֵאשִׁ֖ית"));
-
-        assertEquals("baaraa)", testTransliterate("בָּרָ֣א"));
-        assertEquals(")elohiym", testTransliterate("אֱלֹהִ֑ים"));
-        assertEquals(")éth", testTransliterate("אֵ֥ת"));
-        assertEquals("hashaamayim", testTransliterate("הַשָּׁמַ֖יִם"));
-        assertEquals("v')éth", testTransliterate("וְאֵ֥ת"));
-        assertEquals("haa)aarets", testTransliterate("הָאָֽרֶץ"));
-        assertEquals("bir'qiya(", testTransliterate("בִּרְקִ֣יעַ"));
-        assertEquals("hashaamayim", testTransliterate("הַשָּׁמַ֔יִם"));
-        assertEquals("l'habh'diyl", testTransliterate("לְהַבְדִּ֕יל"));
-        assertEquals("béyn", testTransliterate("בֵּ֥ין"));
-        assertEquals("hayowm", testTransliterate("הַיּ֖וֹם"));
-        assertEquals("uwbhéyn", testTransliterate("וּבֵ֣ין"));
-        assertEquals("halaay'laah", testTransliterate("הַלָּ֑יְלָה"));
-
-        assertEquals("chabhaah", testTransliterate("חַבַהַ"));
-        assertEquals("(abhaa(", testTransliterate("עַבַעַ"));
-        assertEquals("habhaah", testTransliterate("הַבַהַ"));
-        assertEquals("hahaah", testTransliterate("הַהַהַ"));
-        assertEquals("shvaah", testTransliterate("שׁוַּהַ"));
-        assertEquals("ssvaaah", testTransliterate("שׂוָּהַ"));
-        assertEquals("shav'tteh", testTransliterate("שַּׁוְּטֶה"));
-        assertEquals("bhévey", testTransliterate("בֵוֶּי"));
-        assertEquals("dovéth", testTransliterate("דֹוֵּת"));
-        assertEquals("dovi(", testTransliterate("דֹוִּע"));
-        assertEquals("pvik'", testTransliterate("פּוִּךְ"));
-        assertEquals("geviy", testTransliterate("גֶּוִּי"));
-        assertEquals("kuvow", testTransliterate("כֻּוּוֹ"));
-        assertEquals("dvun", testTransliterate("דּוֻּן"));
-        assertEquals("tovaaph", testTransliterate("תּוָֹף"));
-
-        assertEquals(")oz'niy", testTransliterate("אׇזְנִי"));
+        assertEquals(testTransliterate("הַשָּׁמַ֔יִם"), "has-shaa-m*a-yim");
+        assertEquals(testTransliterate("לְהַבְדִּ֕יל"), "l'e-haḇ-d*iyl");
+        assertEquals(testTransliterate("בֵּ֥ין"), "b*éyn");
+        assertEquals(testTransliterate("הַיּ֖וֹם"), "hay-y*owm");
+        assertEquals(testTransliterate("וּבֵ֣ין"), "uw-ḇ*éyn");
+        assertEquals(testTransliterate("הַלָּ֑יְלָה"), "hal-l*aay-laah");
+        assertEquals(testTransliterate("חַבַהַ"), "ḥa-ḇa-ha");
+        assertEquals(testTransliterate("עַבַעַ"), "‘a-ḇa-‘a");
+        assertEquals(testTransliterate("הַבַהַ"), "ha-ḇa-ha");
+        assertEquals(testTransliterate("הַהַהַ"), "ha-ha-ha");
+        assertEquals(testTransliterate("שׁוַּהַ"), "shv-va-ha");
+        assertEquals(testTransliterate("שׂוָּהַ"), "sv-vaa-ha");
+        assertEquals(testTransliterate("שַּׁוְּטֶה"), "shav-v'e-ṭeh");
+        assertEquals(testTransliterate("בֵוֶּי"), "bé-v-vey");
+        assertEquals(testTransliterate("דֹוֵּת"), "do-v-vét");
+        assertEquals(testTransliterate("דֹוִּע"), "do-v-vi‘");
+        assertEquals(testTransliterate("פּוִּךְ"), "pv-viḵ");
+        assertEquals(testTransliterate("גֶּוִּי"), "gev-viy");
+        assertEquals(testTransliterate("כֻּוּוֹ"), "kuuwow");
+        assertEquals(testTransliterate("דּוֻּן"), "dv-vun");
+        assertEquals(testTransliterate("תּוָֹף"), "t-voaaph");
 
     }
 

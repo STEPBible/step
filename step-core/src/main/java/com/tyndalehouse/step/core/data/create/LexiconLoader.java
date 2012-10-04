@@ -82,12 +82,13 @@ public class LexiconLoader extends AbstractClasspathBasedModuleLoader<Definition
      * @param ebean the backend server
      * @param resourcePath the classpath to the data
      * @param transaction transaction manager
+     * @param isGreek TODO
      */
     public LexiconLoader(final EbeanServer ebean, final String resourcePath,
-            final LoaderTransaction transaction) {
+            final LoaderTransaction transaction, final boolean isGreek) {
         super(ebean, resourcePath, transaction);
         this.transaction = transaction;
-        this.isGreek = resourcePath.endsWith("greek.txt");
+        this.isGreek = isGreek;
         initMappings();
     }
 
@@ -124,9 +125,8 @@ public class LexiconLoader extends AbstractClasspathBasedModuleLoader<Definition
 
         // and without the breathing - results may still contain accents - however they are generated from
         // unicode without accents
-        this.currentDefinition
-                .setUnaccentedStepTransliteration(adaptForUnaccentedTransliteration(this.currentDefinition
-                        .getStepTransliteration()));
+        this.currentDefinition.setUnaccentedStepTransliteration(adaptForUnaccentedTransliteration(
+                this.currentDefinition.getStepTransliteration(), this.isGreek));
     }
 
     /**

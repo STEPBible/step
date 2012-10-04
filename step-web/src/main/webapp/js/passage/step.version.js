@@ -80,8 +80,8 @@ step.version = {
             }
             
             var self = this;
-            var keyedVersion = step.keyedVersions[version];
-            if(keyedVersion.category == 'BIBLE' && !keyedVersion.hasStrongs && !step.version.warned[keyedVersion.initials]) {
+            var keyedVersion = step.keyedVersions[version.toUpperCase()];
+            if(keyedVersion && keyedVersion.category == 'BIBLE' && !keyedVersion.hasStrongs && !step.version.warned[keyedVersion.initials]) {
                    step.util.raiseInfo(passageId, NO_STRONGS);
                    step.version.warned[keyedVersion.initials] = true;           
                } 

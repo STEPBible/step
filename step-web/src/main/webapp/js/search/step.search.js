@@ -47,11 +47,12 @@ step.search = {
             var context = step.state.original.originalSearchContext(passageId);
 
             var passageContainer = step.util.getPassageContainer(passageId);
-            var sortOrder
+            var sortOrder;
             if($(".originalSorting:enabled", passageContainer).size() > 0) {
                 sortOrder = $("fieldset:visible", passageContainer).detailSlider("value") > 0 ? step.state.original.originalSorting(passageId) : false;
+            } else {
+                sortOrder = false;
             }
-            sortOrder = false;
             
             var filter = step.search.original.filters[passageId];
 
@@ -87,7 +88,7 @@ step.search = {
            //iterate through all versions of interest
            for(var j = 0; j < vs.length; j++) {
                //looking for them in step.versions
-               if(step.strongVersions[vs[j]]) {
+               if(step.strongVersions[vs[j].toUpperCase()]) {
                    return true;
                }
            }
@@ -364,9 +365,9 @@ step.search = {
                 results += "<th class='searchResultStrongHeader' colspan='2'>";
                 
                 if(sortOrder == VOCABULARY) {
-                    results += (item.stepGloss == undefined ? "-" : item.stepGloss) + " (<em>" + item.stepTransliteration + "</em> ; " +  "<span class='ancientSearch'>" + item.accentedUnicode + "</span>)";
+                    results += (item.stepGloss == undefined ? "-" : item.stepGloss) + " (<em class='stepTransliteration'>" + step.util.ui.markUpTransliteration(item.stepTransliteration) + "</em> ; " +  "<span class='ancientSearch'>" + item.accentedUnicode + "</span>)";
                 } else {
-                    results += "<span class='ancientSearch'>" + item.accentedUnicode + "</span> (<em>" + item.stepTransliteration + "</em>): " + (item.stepGloss == undefined ? "-" : item.stepGloss);
+                    results += "<span class='ancientSearch'>" + item.accentedUnicode + "</span> (<em class='stepTransliteration'>" + step.util.ui.markUpTransliteration(item.stepTransliteration) + "</em>): " + (item.stepGloss == undefined ? "-" : item.stepGloss);
                 }
                 
                 results += "</th>";

@@ -21,6 +21,10 @@ span.rtl span { /* Make each word follow the other */
 	float: right;
 }
 
+.singleVerse div span {
+	float: none;
+}
+
 
 /* Make the different views of a word stack. This rule can also be surrounded with a .jesus span*/
 span.interlinear span span { /* Make this stack on top of each other. */
@@ -31,13 +35,6 @@ span.interlinear span span { /* Make this stack on top of each other. */
 /* 	font-size: 12px; */
 }
 
-
-
-
-span.rtl span span {
-/* 	font-size: 16px; */
-/* 	font-family: Cardo ; */
-}
 
 .unicodeFont {
 	font-family: Cardo;

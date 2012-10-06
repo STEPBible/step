@@ -3,17 +3,31 @@ package com.tyndalehouse.step.core.service.impl;
 import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
 import static com.tyndalehouse.step.core.utils.ValidateUtils.notBlank;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.document.Document;
+import org.apache.lucene.index.Term;
+import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.TermQuery;
+import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.store.RAMDirectory;
+import org.apache.lucene.store.SimpleFSDirectory;
+import org.apache.lucene.util.Version;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.avaje.ebean.EbeanServer;
 import com.tyndalehouse.step.core.data.entities.lexicon.Definition;
+import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.exceptions.UserExceptionType;
 import com.tyndalehouse.step.core.service.VocabularyService;
 
@@ -31,6 +45,7 @@ public class VocabularyServiceImpl implements VocabularyService {
     private static final String LOWER_STRONG = "strong:";
     private static final int START_STRONG_KEY = HIGHER_STRONG.length();
     private final EbeanServer ebean;
+    private final Analyzer a;
 
     // define a few extraction methods
     private final LexiconDataProvider transliterationProvider = new LexiconDataProvider() {
@@ -51,6 +66,7 @@ public class VocabularyServiceImpl implements VocabularyService {
             return l.getAccentedUnicode();
         }
     };
+    private IndexSearcher searcher;
 
     /**
      * @param ebean the database server
@@ -58,6 +74,21 @@ public class VocabularyServiceImpl implements VocabularyService {
     @Inject
     public VocabularyServiceImpl(final EbeanServer ebean) {
         this.ebean = ebean;
+        this.a = new StandardAnalyzer(Version.LUCENE_30);
+
+    }
+
+    public IndexSearcher getSearcher() {
+        if (this.searcher == null) {
+            try {
+                final SimpleFSDirectory path = new SimpleFSDirectory(new File("d:\\temp\\step"));
+                final RAMDirectory ramFile = new RAMDirectory(path);
+                this.searcher = new IndexSearcher(ramFile);
+            } catch (final IOException e) {
+                throw new StepInternalException("Some exception has occurred");
+            }
+        }
+        return this.searcher;
     }
 
     @Override
@@ -65,10 +96,39 @@ public class VocabularyServiceImpl implements VocabularyService {
         notBlank(vocabIdentifiers, "Vocab identifiers was null", UserExceptionType.SERVICE_VALIDATION_ERROR);
 
         final List<String> strongList = getKeys(vocabIdentifiers);
+        final List<Definition> definitions = new ArrayList<Definition>(strongList.size());
 
         if (!strongList.isEmpty()) {
-            return this.ebean.find(Definition.class).select("*").where().in("strongNumber", strongList)
-                    .findList();
+
+            // final QueryParser parser = new QueryParser(Version.LUCENE_30, Definition.STRONG_NUMBER,
+            // this.a);
+
+            final StringBuilder sb = new StringBuilder();
+            for (final String s : strongList) {
+                sb.append(s);
+                sb.append(' ');
+            }
+
+            final long s = System.nanoTime();
+            final TermQuery query = new TermQuery(new Term(Definition.STRONG_NUMBER, sb.toString().trim()));
+            try {
+                // final Query query = parser.parse(sb.toString().trim());
+                final IndexSearcher mySearcher = getSearcher();
+                final TopDocs results = mySearcher.search(query, strongList.size());
+
+                for (final ScoreDoc score : results.scoreDocs) {
+                    final Document doc = mySearcher.doc(score.doc);
+                    definitions.add(new Definition(doc));
+
+                }
+                LOGGER.error("message: [{}] ", System.nanoTime() - s);
+                return definitions;
+            } catch (final IOException e) {
+                throw new StepInternalException("IO exception during search", e);
+            }
+
+            // return this.ebean.find(Definition.class).select("*").where().in("strongNumber", strongList)
+            // .findList();
         }
         return new ArrayList<Definition>();
     }

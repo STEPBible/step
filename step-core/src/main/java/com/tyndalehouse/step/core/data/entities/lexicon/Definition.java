@@ -46,6 +46,7 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
+import org.apache.lucene.document.Document;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 
@@ -61,6 +62,26 @@ import com.tyndalehouse.step.core.models.ShortLexiconDefinition;
 @CacheStrategy(readOnly = true)
 @Entity
 public class Definition implements Serializable, Cloneable {
+    public static final String STOP_WORD = "stopWord";
+    public static final String SIMILAR_STRONGS = "similarStrongs";
+    public static final String TRANSLATIONS = "translations";
+    public static final String SPECIFIC_FORMS = "specificForms";
+    public static final String ALTERNATIVE_TRANSLIT1 = "alternativeTranslit1";
+    public static final String ALTERNATIVE_TRANSLIT1_UNACCENTED = "alternativeTranslit1Unaccented";
+    public static final String LSJ_DEFS = "lsjDefs";
+    public static final String STRONG_NUMBER = "strongNumber";
+    public static final String ACCENTED_UNICODE = "accentedUnicode";
+    public static final String UNACCENTED_UNICODE = "unaccentedUnicode";
+    public static final String STRONG_TRANSLITERATION = "strongTranslit";
+    public static final String STRONG_PRONUNC = "strongPronunc";
+    public static final String RELATED_NOS = "relatedNos";
+    public static final String SHORT_DEF = "shortDef";
+    public static final String MEDIUM_DEF = "mediumDef";
+    public static final String STEP_GLOSS = "stepGloss";
+    public static final String STEP_TRANSLITERATION = "stepTransliteration";
+    public static final String UNACCENTED_STEP_TRANSLITERATION = "unaccentedStepTransliteration";
+    public static final String TWO_LETTER_LOOKUP = "twoLetterLookup";
+
     private static final long serialVersionUID = 172250669085074461L;
 
     @Id
@@ -112,6 +133,25 @@ public class Definition implements Serializable, Cloneable {
      */
     @Column(nullable = false)
     private Boolean blacklisted;
+
+    public Definition() {
+        // serialization
+    }
+
+    public Definition(final Document doc) {
+        this.strongNumber = doc.get(STRONG_NUMBER);
+        this.accentedUnicode = doc.get(ACCENTED_UNICODE);
+        this.relatedNos = doc.get(RELATED_NOS);
+        this.stepGloss = doc.get(STEP_GLOSS);
+        this.alternativeTranslit1 = doc.get(ALTERNATIVE_TRANSLIT1);
+        this.shortDef = doc.get(SHORT_DEF);
+        this.mediumDef = doc.get(MEDIUM_DEF);
+        this.blacklisted = Boolean.parseBoolean(doc.get(STOP_WORD));
+        this.lsjDefs = doc.get(LSJ_DEFS);
+        this.mediumDef = doc.get(MEDIUM_DEF);
+        this.alternativeTranslit1Unaccented = doc.get(ALTERNATIVE_TRANSLIT1_UNACCENTED);
+
+    }
 
     /**
      * @param id the id to set

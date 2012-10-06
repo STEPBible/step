@@ -179,14 +179,14 @@ public class Loader {
         this.transaction.openNewBatchTransaction();
 
         try {
-            loadVersionInformation();
-            loadHotSpots();
-            loadTimeline();
-            loadOpenBibleGeography();
+            // loadVersionInformation();
+            // loadHotSpots();
+            // loadTimeline();
+            // loadOpenBibleGeography();
             // loadDictionaryArticles();
-            loadRobinsonMorphology();
+            // loadRobinsonMorphology();
             loadLexiconDefinitions();
-            loadSpecificForms();
+            // loadSpecificForms();
             // loadLexicon();
         } finally {
             LOGGER.info("Committing batch...");
@@ -413,16 +413,14 @@ public class Loader {
      */
     int loadLexiconDefinitions() {
         try {
-            int count = new LexiconLoader(this.ebean,
-                    this.coreProperties.getProperty("test.data.path.lexicon.definitions.greek"),
-                    this.transaction, true).init();
-            count += new LexiconLoader(this.ebean,
+            // int count = new LexiconLoader(this.ebean,
+            // this.coreProperties.getProperty("test.data.path.lexicon.definitions.greek"),
+            // this.transaction, true).init();
+            return new LexiconLoader(this.ebean,
                     this.coreProperties.getProperty("test.data.path.lexicon.definitions.hebrew"),
                     this.transaction, false).init();
 
-            new LexiconLinker(this.ebean, this.transaction).processStrongLinks();
-
-            return count;
+            // new LexiconLinker(this.ebean, this.transaction).processStrongLinks();
         } finally {
             this.transaction.flushCommitAndContinue();
         }

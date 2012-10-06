@@ -139,7 +139,7 @@ public class StepCoreModule extends AbstractStepGuiceModule {
         bind(new TypeLiteral<List<Installer>>() {
         }).toProvider(DefaultInstallersProvider.class);
 
-        bind(EbeanServer.class).toProvider(DatabaseConfigProvider.class).asEagerSingleton();
+        bind(EbeanServer.class).toProvider(DatabaseConfigProvider.class);
 
         // now bind the test data
         if (Boolean.valueOf(stepProperties.getProperty("test.data.load"))) {

@@ -32,14 +32,24 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.data.create;
 
+import static com.tyndalehouse.step.core.data.entities.lexicon.Definition.ACCENTED_UNICODE;
+import static com.tyndalehouse.step.core.data.entities.lexicon.Definition.ALTERNATIVE_TRANSLIT1;
+import static com.tyndalehouse.step.core.data.entities.lexicon.Definition.ALTERNATIVE_TRANSLIT1_UNACCENTED;
+import static com.tyndalehouse.step.core.data.entities.lexicon.Definition.LSJ_DEFS;
+import static com.tyndalehouse.step.core.data.entities.lexicon.Definition.MEDIUM_DEF;
+import static com.tyndalehouse.step.core.data.entities.lexicon.Definition.RELATED_NOS;
+import static com.tyndalehouse.step.core.data.entities.lexicon.Definition.SHORT_DEF;
+import static com.tyndalehouse.step.core.data.entities.lexicon.Definition.STEP_GLOSS;
+import static com.tyndalehouse.step.core.data.entities.lexicon.Definition.STOP_WORD;
+import static com.tyndalehouse.step.core.data.entities.lexicon.Definition.STRONG_NUMBER;
+import static com.tyndalehouse.step.core.data.entities.lexicon.Definition.STRONG_PRONUNC;
+import static com.tyndalehouse.step.core.data.entities.lexicon.Definition.STRONG_TRANSLITERATION;
+import static com.tyndalehouse.step.core.data.entities.lexicon.Definition.TWO_LETTER_LOOKUP;
 import static com.tyndalehouse.step.core.utils.IOUtils.closeQuietly;
-import static com.tyndalehouse.step.core.utils.StringConversionUtils.adaptForUnaccentedTransliteration;
-import static com.tyndalehouse.step.core.utils.StringConversionUtils.toBetaLowercase;
-import static com.tyndalehouse.step.core.utils.StringConversionUtils.toBetaUnaccented;
-import static com.tyndalehouse.step.core.utils.StringConversionUtils.transliterate;
 import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
 import java.lang.reflect.Method;
@@ -48,15 +58,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.lucene.analysis.SimpleAnalyzer;
+import org.apache.lucene.document.Document;
+import org.apache.lucene.document.Field;
+import org.apache.lucene.document.Field.Index;
+import org.apache.lucene.document.Field.Store;
+import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.IndexWriter.MaxFieldLength;
+import org.apache.lucene.store.Directory;
+import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.store.RAMDirectory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.avaje.ebean.EbeanServer;
 import com.tyndalehouse.step.core.data.create.loaders.AbstractClasspathBasedModuleLoader;
 import com.tyndalehouse.step.core.data.entities.lexicon.Definition;
-import com.tyndalehouse.step.core.data.entities.lexicon.Translation;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
-import com.tyndalehouse.step.core.utils.StringConversionUtils;
 
 /**
  * Loads an Easton Dictionary
@@ -71,10 +89,15 @@ public class LexiconLoader extends AbstractClasspathBasedModuleLoader<Definition
     // state used during processing
     private int errors;
     private int count;
-    private Definition currentDefinition;
+    // private Definition currentDefinition;
+    private Document document;
     private Map<String, Method> methodMappings;
     private final boolean isGreek;
     private final LoaderTransaction transaction;
+    private final RAMDirectory ramDirectory;
+    private IndexWriter writer;
+    private Map<String, FieldConfig> config;
+    private SimpleAnalyzer analyzer;
 
     /**
      * Loads up dictionary items
@@ -89,7 +112,19 @@ public class LexiconLoader extends AbstractClasspathBasedModuleLoader<Definition
         super(ebean, resourcePath, transaction);
         this.transaction = transaction;
         this.isGreek = isGreek;
-        initMappings();
+
+        this.ramDirectory = new RAMDirectory();
+        // DefinitionAnalyzer analyzer = new DefinitionAnalyzer();
+        try {
+            this.analyzer = new SimpleAnalyzer();
+            this.writer = new IndexWriter(this.ramDirectory, this.analyzer, MaxFieldLength.UNLIMITED);
+        } catch (final IOException e) {
+            throw new StepInternalException("Unable to create index", e);
+        }
+
+        initLuceneMappings();
+        // initMappings();
+
     }
 
     @Override
@@ -104,6 +139,22 @@ public class LexiconLoader extends AbstractClasspathBasedModuleLoader<Definition
 
             // save last article
             saveCurrentDefinition();
+
+            this.writer.close();
+            final File file = new File("d:\\temp\\step");
+            final Directory destination = FSDirectory.open(file);
+
+            final IndexWriter fsWriter = new IndexWriter(destination, this.analyzer, true,
+                    IndexWriter.MaxFieldLength.UNLIMITED);
+            fsWriter.addIndexesNoOptimize(new Directory[] { this.ramDirectory });
+            fsWriter.optimize();
+
+            final int docs = fsWriter.maxDoc();
+            fsWriter.close();
+
+            // Free up the space used by the ram directory
+            this.ramDirectory.close();
+
         } catch (final IOException io) {
             LOGGER.warn(io.getMessage(), io);
         } finally {
@@ -114,20 +165,20 @@ public class LexiconLoader extends AbstractClasspathBasedModuleLoader<Definition
         return new ArrayList<Definition>();
     }
 
-    /**
-     * TODO slow performance on first call to setter of ebean... chase group post on Google. creates
-     * transliterations for all definitions
-     */
-    private void processTransliterations() {
-        // step transliterations, with
-        this.currentDefinition.setStepTransliteration(transliterate(this.currentDefinition
-                .getAccentedUnicode()));
-
-        // and without the breathing - results may still contain accents - however they are generated from
-        // unicode without accents
-        this.currentDefinition.setUnaccentedStepTransliteration(adaptForUnaccentedTransliteration(
-                this.currentDefinition.getStepTransliteration(), this.isGreek));
-    }
+    // /**
+    // * TODO slow performance on first call to setter of ebean... chase group post on Google. creates
+    // * transliterations for all definitions
+    // */
+    // private void processTransliterations() {
+    // // step transliterations, with
+    // this.currentDefinition.setStepTransliteration(transliterate(this.currentDefinition
+    // .getAccentedUnicode()));
+    //
+    // // and without the breathing - results may still contain accents - however they are generated from
+    // // unicode without accents
+    // this.currentDefinition.setUnaccentedStepTransliteration(adaptForUnaccentedTransliteration(
+    // this.currentDefinition.getStepTransliteration(), this.isGreek));
+    // }
 
     /**
      * Parses a line by setting the current state of this loader appropriately
@@ -147,84 +198,134 @@ public class LexiconLoader extends AbstractClasspathBasedModuleLoader<Definition
      * Saves the current article, and if threshold is met, then saves to database
      */
     private void saveCurrentDefinition() {
-
-        if (this.currentDefinition != null) {
-            processTransliterations();
-            processDefaultsIfNull();
-            processLowerCasings();
-            getEbean().save(this.currentDefinition);
-            this.count++;
-
-            if (this.count % 2000 == 0) {
-                this.transaction.flushCommitAndContinue();
-
-                LOGGER.info("Saved [{}] lexical entries.", this.count);
+        try {
+            if (this.document != null) {
+                this.writer.addDocument(this.document);
             }
+        } catch (final IOException e) {
+            throw new StepInternalException("Unable to add document to index", e);
         }
+
+        // if (this.document == null) {
+        // this.document = new Document();
+        // }
+
+        // if (this.currentDefinition != null) {
+        // processTransliterations();
+        // processDefaultsIfNull();
+        // processLowerCasings();
+        // getEbean().save(this.currentDefinition);
+        // this.count++;
+        //
+        // if (this.count % 2000 == 0) {
+        // this.transaction.flushCommitAndContinue();
+        //
+        // LOGGER.info("Saved [{}] lexical entries.", this.count);
+        // }
+        // }
     }
 
-    private void processDefaultsIfNull() {
-        if (this.currentDefinition.getBlacklisted() == null) {
-            this.currentDefinition.setBlacklisted(Boolean.FALSE);
-        }
-    }
+    // private void processDefaultsIfNull() {
+    // if (this.currentDefinition.getBlacklisted() == null) {
+    // this.currentDefinition.setBlacklisted(Boolean.FALSE);
+    // }
+    // }
 
-    /**
-     * Sets various fields to their lower case equivalence
-     */
-    private void processLowerCasings() {
-        final String strongPronunc = this.currentDefinition.getStrongPronunc();
-        if (strongPronunc != null) {
-            this.currentDefinition.setStrongPronunc(strongPronunc.toLowerCase());
-        }
-
-        final String strongTranslit = this.currentDefinition.getStrongTranslit();
-        if (strongTranslit != null) {
-            this.currentDefinition.setStrongTranslit(strongTranslit.toLowerCase());
-        }
-
-        final String alternative = this.currentDefinition.getAlternativeTranslit1();
-        if (alternative != null) {
-            final String lowerAlternative = alternative.toLowerCase();
-            if (this.isGreek) {
-                this.currentDefinition.setAlternativeTranslit1(toBetaLowercase(lowerAlternative));
-            } else {
-                this.currentDefinition.setAlternativeTranslit1(lowerAlternative.replace("#", ""));
-            }
-        }
-
-        final String unaccentedAlternative = this.currentDefinition.getAlternativeTranslit1Unaccented();
-        if (unaccentedAlternative != null) {
-            if (this.isGreek) {
-                this.currentDefinition.setAlternativeTranslit1Unaccented(unaccentedAlternative.toLowerCase());
-            } else {
-                this.currentDefinition.setAlternativeTranslit1Unaccented(unaccentedAlternative.replace("#",
-                        ""));
-            }
-        } else if (alternative != null) {
-            if (this.isGreek) {
-                this.currentDefinition.setAlternativeTranslit1Unaccented(toBetaUnaccented(alternative
-                        .toLowerCase()));
-            } else {
-                this.currentDefinition.setAlternativeTranslit1Unaccented(alternative.toLowerCase());
-            }
-        }
-
-        final String accentedUnicode = this.currentDefinition.getAccentedUnicode();
-        if (accentedUnicode != null) {
-            final String lowerCaseAccentedUnicode = accentedUnicode.toLowerCase();
-            this.currentDefinition.setAccentedUnicode(lowerCaseAccentedUnicode);
-            this.currentDefinition.setUnaccentedUnicode(StringConversionUtils.unAccent(
-                    lowerCaseAccentedUnicode, true));
-        }
-    }
+    // /**
+    // * Sets various fields to their lower case equivalence
+    // */
+    // private void processLowerCasings() {
+    // final String strongPronunc = this.currentDefinition.getStrongPronunc();
+    // if (strongPronunc != null) {
+    // this.currentDefinition.setStrongPronunc(strongPronunc.toLowerCase());
+    // }
+    //
+    // final String strongTranslit = this.currentDefinition.getStrongTranslit();
+    // if (strongTranslit != null) {
+    // this.currentDefinition.setStrongTranslit(strongTranslit.toLowerCase());
+    // }
+    //
+    // final String alternative = this.currentDefinition.getAlternativeTranslit1();
+    // if (alternative != null) {
+    // final String lowerAlternative = alternative.toLowerCase();
+    // if (this.isGreek) {
+    // this.currentDefinition.setAlternativeTranslit1(toBetaLowercase(lowerAlternative));
+    // } else {
+    // this.currentDefinition.setAlternativeTranslit1(lowerAlternative.replace("#", ""));
+    // }
+    // }
+    //
+    // final String unaccentedAlternative = this.currentDefinition.getAlternativeTranslit1Unaccented();
+    // if (unaccentedAlternative != null) {
+    // if (this.isGreek) {
+    // this.currentDefinition.setAlternativeTranslit1Unaccented(unaccentedAlternative.toLowerCase());
+    // } else {
+    // this.currentDefinition.setAlternativeTranslit1Unaccented(unaccentedAlternative.replace("#",
+    // ""));
+    // }
+    // } else if (alternative != null) {
+    // if (this.isGreek) {
+    // this.currentDefinition.setAlternativeTranslit1Unaccented(toBetaUnaccented(alternative
+    // .toLowerCase()));
+    // } else {
+    // this.currentDefinition.setAlternativeTranslit1Unaccented(alternative.toLowerCase());
+    // }
+    // }
+    //
+    // final String accentedUnicode = this.currentDefinition.getAccentedUnicode();
+    // if (accentedUnicode != null) {
+    // final String lowerCaseAccentedUnicode = accentedUnicode.toLowerCase();
+    // this.currentDefinition.setAccentedUnicode(lowerCaseAccentedUnicode);
+    // this.currentDefinition.setUnaccentedUnicode(StringConversionUtils.unAccent(
+    // lowerCaseAccentedUnicode, true));
+    // }
+    // }
 
     /**
      * sets the appropriate state and saves articles in batches to prevent too much going into memory
      */
     private void prepareNewDefinition() {
         saveCurrentDefinition();
-        this.currentDefinition = new Definition();
+        this.document = new Document();
+
+        // this.currentDefinition = new Definition();
+    }
+
+    private void initLuceneMappings() {
+        this.config = new HashMap<String, FieldConfig>();
+
+        // stored and indexed
+        this.config.put("@StrNo", new FieldConfig(STRONG_NUMBER, Store.YES, Index.NOT_ANALYZED));
+        this.config.put("@UnicodeAccented", new FieldConfig(ACCENTED_UNICODE, Store.YES, Index.NOT_ANALYZED));
+        this.config.put("@StrUnicodeAccented", new FieldConfig(ACCENTED_UNICODE, Store.YES,
+                Index.NOT_ANALYZED));
+        this.config.put("@AllRelatedNos", new FieldConfig(RELATED_NOS, Store.YES, Index.ANALYZED));
+        this.config.put("@StepGloss", new FieldConfig(STEP_GLOSS, Store.YES, Index.ANALYZED));
+        this.config
+                .put("@StrBetaAccented", new FieldConfig(ALTERNATIVE_TRANSLIT1, Store.YES, Index.ANALYZED));
+
+        // stored not indexed
+        this.config.put("@MounceShortDef", new FieldConfig(SHORT_DEF, Store.YES, Index.NO));
+        this.config.put("@MounceMedDef", new FieldConfig(MEDIUM_DEF, Store.YES, Index.NO));
+        this.config.put("@StopWord", new FieldConfig(STOP_WORD, Store.YES, Index.NO));
+        this.config.put("@LsjDefs", new FieldConfig(LSJ_DEFS, Store.YES, Index.NO));
+        this.config.put("@BdbMedDef", new FieldConfig(MEDIUM_DEF, Store.YES, Index.NO));
+        this.config.put("@AcadTransAccented", new FieldConfig(ALTERNATIVE_TRANSLIT1, Store.NO,
+                Index.NOT_ANALYZED));
+        this.config.put("@AcadTransUnaccented", new FieldConfig(ALTERNATIVE_TRANSLIT1_UNACCENTED, Store.NO,
+                Index.NOT_ANALYZED));
+
+        // indexed not stored
+        this.config.put("@2llUnaccented", new FieldConfig(TWO_LETTER_LOOKUP, Store.NO, Index.NOT_ANALYZED));
+        this.config.put("@StrTranslit", new FieldConfig(STRONG_TRANSLITERATION, Store.NO, Index.ANALYZED));
+        this.config.put("@StrPronunc", new FieldConfig(STRONG_PRONUNC, Store.NO, Index.ANALYZED));
+
+        // config.put("@LsjBetaUnaccented", new FieldConfig(ALTERNATIVE_TRANSLIT1_UNACCENTED);
+
+        // hebrew specific mappings
+
+        // temp - TODO - remove when fields have been renamed
+
     }
 
     /**
@@ -314,49 +415,57 @@ public class LexiconLoader extends AbstractClasspathBasedModuleLoader<Definition
             return;
         }
 
-        final Method method = this.methodMappings.get(fieldName);
-        if (method == null) {
-            tryOtherMappings(fieldName, fieldValue);
-            LOGGER.trace("Unable to map [{}]", fieldName);
-            return;
+        final FieldConfig fieldConfig = this.config.get(fieldName);
+        if (fieldConfig != null) {
+            this.document.add(new Field(fieldConfig.getName(), fieldValue, fieldConfig.getStore(),
+                    fieldConfig.getIndex()));
         }
 
-        try {
-            final Class<?>[] parameterTypes = method.getParameterTypes();
-            if (Boolean.class.equals(parameterTypes[0])) {
-                method.invoke(this.currentDefinition, Boolean.parseBoolean(fieldValue));
-            } else {
-                method.invoke(this.currentDefinition, fieldValue);
-            }
+        // final Method method = this.methodMappings.get(fieldName);
+        // if (method == null) {
+        // tryOtherMappings(fieldName, fieldValue);
+        // LOGGER.trace("Unable to map [{}]", fieldName);
+        // return;
+        // }
 
-        } catch (final Exception e) {
-            throw new StepInternalException("Unable to call method for field " + fieldName, e);
-        }
+        // try {
+        //
+        //
+        // final Class<?>[] parameterTypes = method.getParameterTypes();
+        // if (Boolean.class.equals(parameterTypes[0])) {
+        // method.invoke(this.currentDefinition, Boolean.parseBoolean(fieldValue));
+        // } else {
+        // method.invoke(this.currentDefinition, fieldValue);
+        // }
+        //
+        // } catch (final Exception e) {
+        // throw new StepInternalException("Unable to call method for field " + fieldName, e);
+        // }
     }
 
-    /**
-     * Tries other mappings to process the field with
-     * 
-     * @param fieldName the name of the field
-     * @param fieldValue the value of the field
-     */
-    private void tryOtherMappings(final String fieldName, final String fieldValue) {
-        if ("@Translations".equals(fieldName)) {
-            final String[] translations = fieldValue.split("[|]");
-
-            for (final String alternative : translations) {
-                final Translation t = new Translation();
-                t.setAlternativeTranslation(alternative);
-
-                List<Translation> currentTranslations = this.currentDefinition.getTranslations();
-                if (currentTranslations == null) {
-                    currentTranslations = new ArrayList<Translation>();
-                    this.currentDefinition.setTranslations(currentTranslations);
-                }
-                currentTranslations.add(t);
-            }
-        }
-    }
+    // /**
+    // * Tries other mappings to process the field with
+    // *
+    // * @param fieldName the name of the field
+    // * @param fieldValue the value of the field
+    // */
+    // private void tryOtherMappings(final String fieldName, final String fieldValue) {
+    // if ("@Translations".equals(fieldName)) {
+    // final String[] translations = fieldValue.split("[|]");
+    //
+    // for (final String alternative : translations) {
+    // final Translation t = new Translation();
+    // t.setAlternativeTranslation(alternative);
+    //
+    // List<Translation> currentTranslations = this.currentDefinition.getTranslations();
+    // if (currentTranslations == null) {
+    // currentTranslations = new ArrayList<Translation>();
+    // this.currentDefinition.setTranslations(currentTranslations);
+    // }
+    // currentTranslations.add(t);
+    // }
+    // }
+    // }
 
     /**
      * Helper method that gets a trimmed string out

@@ -33,9 +33,13 @@
 package com.tyndalehouse.step.core.data.create;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Properties;
 
+import org.apache.lucene.search.NumericRangeQuery;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -61,16 +65,19 @@ import com.tyndalehouse.step.core.service.jsword.impl.JSwordVersificationService
  */
 @RunWith(MockitoJUnitRunner.class)
 public class LoaderTest extends DataDrivenTestExtension {
-    private static final Logger LOG = LoggerFactory.getLogger(LoaderTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(LoaderTest.class);
 
     @Mock
     private JSwordPassageService jsword;
 
     private EntityManager entityManager;
 
+    /**
+     * sets up the test path for entities
+     */
     @Before
     public void setUp() {
-        this.entityManager = new EntityManager(true, "step/testPath");
+        this.entityManager = new EntityManager(true, "step/testPath/");
     }
 
     /**
@@ -78,11 +85,10 @@ public class LoaderTest extends DataDrivenTestExtension {
      */
     @Test
     public void testGeographyLoader() {
-        final Properties coreProperties = new Properties();
-        coreProperties.put("test.data.path.geography.openbible", "geography.tab");
+        getLoader("test.data.path.geography.openbible", "geography.tab").loadOpenBibleGeography();
+        assertLoaded(1, "obplace", "esvName", "Ekron");
 
-        final Loader l = new Loader(this.jsword, null, getEbean(), coreProperties, this.entityManager);
-        assertEquals(4, l.loadOpenBibleGeography());
+        assertTrue(getEntities(1, "obplace", "references", "Isa.11.11").length > 0);
     }
 
     /**
@@ -90,11 +96,9 @@ public class LoaderTest extends DataDrivenTestExtension {
      */
     @Test
     public void testTimeline() {
-        final Properties coreProperties = new Properties();
-        coreProperties.put("test.data.path.timeline.events.directory", "timeline.csv");
+        getLoader("test.data.path.timeline.events.directory", "timeline.csv").loadTimeline();
 
-        final Loader l = new Loader(this.jsword, null, getEbean(), coreProperties, this.entityManager);
-        assertEquals(4, l.loadTimeline());
+        // assertEquals(4, l.loadTimeline());
     }
 
     /**
@@ -102,11 +106,14 @@ public class LoaderTest extends DataDrivenTestExtension {
      */
     @Test
     public void testHotSpots() {
-        final Properties coreProperties = new Properties();
-        coreProperties.put("test.data.path.timeline.hotspots", "hotspots.csv");
-        final Loader l = new Loader(this.jsword, null, getEbean(), coreProperties, this.entityManager);
+        getLoader("test.data.path.timeline.hotspots", "hotspots.csv").loadHotSpots();
+        final long start = DateTimeUtils.getInstantMillis(DateTime.parse("-2000")) / 60000;
+        final long end = DateTimeUtils.getInstantMillis(DateTime.parse("-1999")) / 60000;
 
-        assertEquals(3, l.loadHotSpots());
+        final EntityIndexReader reader = this.entityManager.getReader("hotspot");
+        final NumericRangeQuery<Long> range = NumericRangeQuery.newLongRange("startTime", start, end, true,
+                true);
+        assertTrue(reader.search(range).length > 0);
     }
 
     /**
@@ -174,6 +181,13 @@ public class LoaderTest extends DataDrivenTestExtension {
         assertEquals("Contracted form", e.get("suffix"));
     }
 
+    /**
+     * Gets a loader to be tested
+     * 
+     * @param key the key to the properties
+     * @param file where the file that should be tested is
+     * @return the loader
+     */
     private Loader getLoader(final String key, final String file) {
         final Properties coreProperties = new Properties();
         coreProperties.put(key, file);
@@ -185,12 +199,23 @@ public class LoaderTest extends DataDrivenTestExtension {
     /**
      * @param num the number of entities that should be loaded
      * @param entityName the entity name
+     * @param key the key for a search using searchUniqueBySingleField
+     * @param value the value to use in the search
      */
     private void assertLoaded(final int num, final String entityName, final String key, final String value) {
         final EntityDoc[] searchUniqueBySingleField = getEntities(num, entityName, key, value);
         assertEquals(num, searchUniqueBySingleField.length);
     }
 
+    /**
+     * Returns all the entities found
+     * 
+     * @param num the max number
+     * @param entityName the name of the entity
+     * @param key the key to the search field
+     * @param value the value
+     * @return all found entities, within numb
+     */
     private EntityDoc[] getEntities(final int num, final String entityName, final String key,
             final String value) {
         final EntityIndexReader reader = this.entityManager.getReader(entityName);

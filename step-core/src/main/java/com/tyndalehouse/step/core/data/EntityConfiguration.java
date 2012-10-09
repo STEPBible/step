@@ -112,7 +112,8 @@ public class EntityConfiguration {
         final String[] parts = split(value, ",");
         final String[] rawFieldMappings = split(parts[0], "\\|");
         final FieldConfig fieldConfig = new FieldConfig(fieldName, rawFieldMappings,
-                Field.Store.valueOf(parts[1]), Field.Index.valueOf(parts[2]));
+                Field.Store.valueOf(parts[1]), Field.Index.valueOf(parts[2]), parts.length > 3 ? parts[3]
+                        : null);
         this.luceneFieldConfiguration.put(fieldName, fieldConfig);
     }
 

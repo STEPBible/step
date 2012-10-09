@@ -54,7 +54,7 @@ import com.tyndalehouse.step.core.exceptions.StepInternalException;
  */
 public class StreamingCsvModuleLoader extends AbstractClasspathBasedModuleLoader<Object> {
     private static final Logger LOG = LoggerFactory.getLogger(StreamingCsvModuleLoader.class);
-    private final char separator = ',';
+    private char separator = ',';
     private final EntityIndexWriter writer;
 
     /**
@@ -91,14 +91,35 @@ public class StreamingCsvModuleLoader extends AbstractClasspathBasedModuleLoader
         try {
             headerLine = csvReader.readNext();
             while ((line = csvReader.readNext()) != null) {
-                for (int ii = 0; ii < line.length; ii++) {
-                    this.writer.addFieldToCurrentDocument(headerLine[ii], line[ii]);
-                }
+                processFields(line, headerLine);
                 this.writer.save();
             }
         } catch (final IOException e) {
             throw new StepInternalException("Failed to read file", e);
         }
+    }
 
+    /**
+     * @param line line read from a csv file
+     * @param headerLine the headers
+     */
+    protected void processFields(final String[] line, final String[] headerLine) {
+        for (int ii = 0; ii < line.length; ii++) {
+            this.writer.addFieldToCurrentDocument(headerLine[ii], line[ii]);
+        }
+    }
+
+    /**
+     * @return the writer
+     */
+    public EntityIndexWriter getWriter() {
+        return this.writer;
+    }
+
+    /**
+     * @param separator the separator to set
+     */
+    public void setSeparator(final char separator) {
+        this.separator = separator;
     }
 }

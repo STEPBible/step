@@ -43,13 +43,10 @@ import org.slf4j.LoggerFactory;
 import com.avaje.ebean.EbeanServer;
 import com.tyndalehouse.step.core.data.EntityIndexWriter;
 import com.tyndalehouse.step.core.data.EntityManager;
-import com.tyndalehouse.step.core.data.entities.GeoPlace;
-import com.tyndalehouse.step.core.data.entities.timeline.HotSpot;
 import com.tyndalehouse.step.core.data.entities.timeline.TimelineEvent;
-import com.tyndalehouse.step.core.data.loaders.CsvModuleLoader;
 import com.tyndalehouse.step.core.data.loaders.CustomTranslationCsvModuleLoader;
+import com.tyndalehouse.step.core.data.loaders.GeoStreamingCsvModuleLoader;
 import com.tyndalehouse.step.core.data.loaders.StreamingCsvModuleLoader;
-import com.tyndalehouse.step.core.data.loaders.translations.OpenBibleDataTranslation;
 import com.tyndalehouse.step.core.data.loaders.translations.TimelineEventTranslation;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.service.jsword.JSwordModuleService;
@@ -81,6 +78,7 @@ public class Loader {
      * @param jswordModule the service helping with installation of jsword modules
      * @param ebean the persistence server
      * @param coreProperties the step core properties
+     * @param entityManager the entity manager
      */
     @Inject
     public Loader(final JSwordPassageService jsword, final JSwordModuleService jswordModule,
@@ -141,11 +139,10 @@ public class Loader {
         loadSpecificForms();
         loadRobinsonMorphology();
         loadVersionInformation();
+        loadOpenBibleGeography();
 
-        // loadHotSpots();
+        loadHotSpots();
         // loadTimeline();
-        // loadOpenBibleGeography();
-        // loadDictionaryArticles();
         LOGGER.info("Finished loading...");
     }
 
@@ -155,16 +152,12 @@ public class Loader {
      * @return number of records loaded
      */
     int loadHotSpots() {
-        try {
-            LOGGER.debug("Loading hotspots");
+        LOGGER.debug("Loading hotspots");
 
-            return new CsvModuleLoader<HotSpot>(this.ebean,
-                    this.coreProperties.getProperty("test.data.path.timeline.hotspots"), HotSpot.class,
-                    this.transaction).init();
-        } finally {
-            this.transaction.flushCommitAndContinue();
-
-        }
+        final EntityIndexWriter writer = new EntityIndexWriter(this.entityManager, "hotspot");
+        new StreamingCsvModuleLoader(writer,
+                this.coreProperties.getProperty("test.data.path.timeline.hotspots")).init();
+        return writer.close();
     }
 
     /**
@@ -220,30 +213,11 @@ public class Loader {
      */
     int loadOpenBibleGeography() {
         LOGGER.debug("Loading Open Bible geography");
-        try {
-            return new CustomTranslationCsvModuleLoader<GeoPlace>(this.ebean,
-                    this.coreProperties.getProperty("test.data.path.geography.openbible"), GeoPlace.class,
-                    new OpenBibleDataTranslation(this.jsword), '\t', this.transaction).init();
-        } finally {
-            this.transaction.flushCommitAndContinue();
-        }
-    }
 
-    /**
-     * loads a set of articles
-     * 
-     * @return the number of articles loaded
-     */
-    int loadDictionaryArticles() {
-        LOGGER.debug("Loading dictionary articles");
-        try {
-            return new DictionaryLoader(this.ebean, this.jsword,
-                    this.coreProperties.getProperty("test.data.path.dictionary.easton"), this.transaction)
-                    .init();
-        } finally {
-            this.transaction.flushCommitAndContinue();
-        }
-
+        final EntityIndexWriter writer = new EntityIndexWriter(this.entityManager, "obplace");
+        new GeoStreamingCsvModuleLoader(writer,
+                this.coreProperties.getProperty("test.data.path.geography.openbible"), this.jsword).init();
+        return writer.close();
     }
 
     /**

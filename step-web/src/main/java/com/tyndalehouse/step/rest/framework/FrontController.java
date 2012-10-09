@@ -263,9 +263,17 @@ public class FrontController extends HttpServlet {
             }
         }
 
-        final String responsePackage = responseValue.getClass().getPackage().getName();
-        return !responsePackage.startsWith(ENTITIES_PACKAGE) && !responsePackage.startsWith(AVAJE_PACKAGE);
+        final Class<?> responseClass = responseValue.getClass();
+        if (responseClass.isArray()) {
+            return isPojoClass(responseClass.getComponentType());
+        } else {
+            return isPojoClass(responseClass);
+        }
+    }
 
+    private boolean isPojoClass(final Class<?> responseClass) {
+        final String responsePackage = responseClass.getPackage().getName();
+        return !responsePackage.startsWith(ENTITIES_PACKAGE) && !responsePackage.startsWith(AVAJE_PACKAGE);
     }
 
     /**

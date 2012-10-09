@@ -56,7 +56,6 @@ import com.tyndalehouse.step.core.guice.providers.DefaultVersionsProvider;
 import com.tyndalehouse.step.core.guice.providers.ServerSessionProvider;
 import com.tyndalehouse.step.core.guice.providers.TestData;
 import com.tyndalehouse.step.core.service.BibleInformationService;
-import com.tyndalehouse.step.core.service.DictionaryService;
 import com.tyndalehouse.step.core.service.FavouritesService;
 import com.tyndalehouse.step.core.service.GeographyService;
 import com.tyndalehouse.step.core.service.ModuleService;
@@ -66,7 +65,6 @@ import com.tyndalehouse.step.core.service.TimelineService;
 import com.tyndalehouse.step.core.service.UserDataService;
 import com.tyndalehouse.step.core.service.VocabularyService;
 import com.tyndalehouse.step.core.service.impl.BibleInformationServiceImpl;
-import com.tyndalehouse.step.core.service.impl.DictionaryServiceImpl;
 import com.tyndalehouse.step.core.service.impl.FavouritesServiceImpl;
 import com.tyndalehouse.step.core.service.impl.GeographyServiceImpl;
 import com.tyndalehouse.step.core.service.impl.ModuleServiceImpl;
@@ -128,7 +126,6 @@ public class StepCoreModule extends AbstractStepGuiceModule {
         bind(GeographyService.class).to(GeographyServiceImpl.class);
         bind(FavouritesService.class).to(FavouritesServiceImpl.class).asEagerSingleton();
         bind(UserDataService.class).to(UserDataServiceImpl.class).asEagerSingleton();
-        bind(DictionaryService.class).to(DictionaryServiceImpl.class);
         bind(Loader.class).asEagerSingleton();
 
         bind(Session.class).toProvider(ServerSessionProvider.class);

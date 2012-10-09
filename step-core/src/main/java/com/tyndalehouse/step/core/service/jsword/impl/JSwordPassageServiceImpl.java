@@ -1026,6 +1026,23 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
         tsep.setParameter("baseVersion", book.getInitials());
     }
 
+    /**
+     * @param references a list of references to be parsed
+     * @param version the version against which the refs are parsed
+     * @return a String representing all the references
+     */
+    @Override
+    public String getAllReferences(final String references, final String version) {
+        final PassageKeyFactory keyFactory = PassageKeyFactory.instance();
+        final Versification av11n = this.versificationService.getVersificationForVersion(version);
+        try {
+            final Key k = keyFactory.getKey(av11n, references);
+            return k.getOsisID();
+        } catch (final NoSuchKeyException e) {
+            throw new StepInternalException("Unable to find keys " + references, e);
+        }
+    }
+
     @Override
     public List<ScriptureReference> resolveReferences(final String references, final String version) {
 

@@ -35,16 +35,14 @@ package com.tyndalehouse.step.rest.controllers;
 import static com.tyndalehouse.step.core.exceptions.UserExceptionType.CONTROLLER_INITIALISATION_ERROR;
 import static com.tyndalehouse.step.core.utils.ValidateUtils.notNull;
 
-import java.util.List;
-
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.tyndalehouse.step.core.data.EntityDoc;
 import com.tyndalehouse.step.core.data.entities.aggregations.TimelineEventsAndDate;
-import com.tyndalehouse.step.core.data.entities.timeline.HotSpot;
 import com.tyndalehouse.step.core.models.EnhancedTimelineEvent;
 import com.tyndalehouse.step.core.service.TimelineService;
 import com.tyndalehouse.step.models.TimelineTranslator;
@@ -153,9 +151,8 @@ public class TimelineController {
      * @return the timebands
      */
     @Cacheable(true)
-    public List<HotSpot> getTimelineConfiguration() {
+    public EntityDoc[] getTimelineConfiguration() {
         LOGGER.debug("Returning timeline configuration");
-
         return this.timelineService.getTimelineConfiguration();
     }
 }

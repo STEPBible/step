@@ -42,15 +42,18 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import org.apache.lucene.search.MatchAllDocsQuery;
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.avaje.ebean.EbeanServer;
 import com.avaje.ebean.Query;
+import com.tyndalehouse.step.core.data.EntityDoc;
+import com.tyndalehouse.step.core.data.EntityIndexReader;
+import com.tyndalehouse.step.core.data.EntityManager;
 import com.tyndalehouse.step.core.data.entities.ScriptureReference;
 import com.tyndalehouse.step.core.data.entities.aggregations.TimelineEventsAndDate;
-import com.tyndalehouse.step.core.data.entities.timeline.HotSpot;
 import com.tyndalehouse.step.core.data.entities.timeline.TimelineEvent;
 import com.tyndalehouse.step.core.models.EnhancedTimelineEvent;
 import com.tyndalehouse.step.core.models.OsisWrapper;
@@ -67,20 +70,23 @@ public class TimelineServiceImpl implements TimelineService {
     private static final Logger LOGGER = LoggerFactory.getLogger(TimelineServiceImpl.class);
     private final EbeanServer ebean;
     private final JSwordPassageService jsword;
+    private final EntityIndexReader hotspots;
 
     /**
      * @param ebean the ebean server with which to lookup data
      * @param jsword the jsword service
      */
     @Inject
-    public TimelineServiceImpl(final EbeanServer ebean, final JSwordPassageService jsword) {
+    public TimelineServiceImpl(final EntityManager manager, final EbeanServer ebean,
+            final JSwordPassageService jsword) {
         this.ebean = ebean;
         this.jsword = jsword;
+        this.hotspots = manager.getReader("hotspot");
     }
 
     @Override
-    public List<HotSpot> getTimelineConfiguration() {
-        return this.ebean.createQuery(HotSpot.class).findList();
+    public EntityDoc[] getTimelineConfiguration() {
+        return this.hotspots.search(new MatchAllDocsQuery());
     }
 
     @Override

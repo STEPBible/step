@@ -58,15 +58,7 @@ public class ScriptureReference implements Serializable {
 
     @ManyToOne(optional = true)
     @Column(nullable = true)
-    private GeoPlace geoPlace;
-
-    @ManyToOne(optional = true)
-    @Column(nullable = true)
     private TimelineEvent timelineEvent;
-
-    @ManyToOne(optional = true)
-    @Column(nullable = true)
-    private DictionaryArticle dictionaryArticle;
 
     @Column
     private TargetType targetType;
@@ -134,20 +126,6 @@ public class ScriptureReference implements Serializable {
     }
 
     /**
-     * @return the geoPlace
-     */
-    public GeoPlace getGeoPlace() {
-        return this.geoPlace;
-    }
-
-    /**
-     * @param geoPlace the geoPlace to set
-     */
-    public void setGeoPlace(final GeoPlace geoPlace) {
-        this.geoPlace = geoPlace;
-    }
-
-    /**
      * @return the timelineEvent
      */
     public TimelineEvent getTimelineEvent() {
@@ -161,17 +139,4 @@ public class ScriptureReference implements Serializable {
         this.timelineEvent = timelineEvent;
     }
 
-    /**
-     * @return the dictionaryArticle
-     */
-    public DictionaryArticle getDictionaryArticle() {
-        return this.dictionaryArticle;
-    }
-
-    /**
-     * @param dictionaryArticle the dictionaryArticle to set
-     */
-    public void setDictionaryArticle(final DictionaryArticle dictionaryArticle) {
-        this.dictionaryArticle = dictionaryArticle;
-    }
 }

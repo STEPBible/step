@@ -37,12 +37,14 @@ import static com.tyndalehouse.step.core.exceptions.UserExceptionType.USER_MISSI
 import static com.tyndalehouse.step.core.utils.ValidateUtils.notEmpty;
 import static com.tyndalehouse.step.core.utils.ValidateUtils.notNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.tyndalehouse.step.core.data.entities.GeoPlace;
+import com.tyndalehouse.step.core.data.EntityDoc;
 import com.tyndalehouse.step.core.service.GeographyService;
+import com.tyndalehouse.step.models.Place;
 
 /**
  * Getting some geographical data to display
@@ -73,9 +75,15 @@ public class GeographyController {
      * @param reference the biblical reference
      * @return the list of places (lat/long/precisions)
      */
-    public List<GeoPlace> getPlaces(final String reference) {
+    public List<Place> getPlaces(final String reference) {
         notEmpty(reference, "A reference is required for looking up geography modules", USER_MISSING_FIELD);
-        return this.geoService.getPlaces(reference);
+        final EntityDoc[] placeDocs = this.geoService.getPlaces(reference);
+
+        final List<Place> places = new ArrayList<Place>(placeDocs.length);
+        for (final EntityDoc d : placeDocs) {
+            places.add(new Place(d));
+        }
+        return places;
     }
 
 }

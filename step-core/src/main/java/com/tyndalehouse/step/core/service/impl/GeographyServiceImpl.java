@@ -32,20 +32,16 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.service.impl;
 
-import static java.lang.String.format;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import org.apache.lucene.queryParser.QueryParser.Operator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.avaje.ebean.EbeanServer;
-import com.tyndalehouse.step.core.data.entities.GeoPlace;
-import com.tyndalehouse.step.core.data.entities.ScriptureReference;
+import com.tyndalehouse.step.core.data.EntityDoc;
+import com.tyndalehouse.step.core.data.EntityIndexReader;
+import com.tyndalehouse.step.core.data.EntityManager;
 import com.tyndalehouse.step.core.service.GeographyService;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 
@@ -57,37 +53,28 @@ import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
  */
 @Singleton
 public class GeographyServiceImpl implements GeographyService {
+    private static final String OPEN_BIBLE_VERSION = "ESV";
     private static final Logger LOG = LoggerFactory.getLogger(GeographyServiceImpl.class);
-    private final EbeanServer ebean;
     private final JSwordPassageService jsword;
+    private final EntityIndexReader openBiblePlaces;
 
     /**
      * creates a new Geography service implementation
      * 
-     * @param ebean ebean server
+     * @param manager the entity manager
      * @param jsword the jsword service for access to Crosswire functionality
      */
     @Inject
-    public GeographyServiceImpl(final EbeanServer ebean, final JSwordPassageService jsword) {
-        this.ebean = ebean;
+    public GeographyServiceImpl(final EntityManager manager, final JSwordPassageService jsword) {
         this.jsword = jsword;
+        this.openBiblePlaces = manager.getReader("obplace");
     }
 
     @Override
-    public List<GeoPlace> getPlaces(final String reference) {
+    public EntityDoc[] getPlaces(final String reference) {
         LOG.debug("Returning places for reference [{}]", reference);
-        final List<ScriptureReference> passageReferences = this.jsword.resolveReferences(reference, "KJV");
-        final List<GeoPlace> placesInScope = new ArrayList<GeoPlace>();
 
-        // TODO rewrite in ebean form
-        final String rawQuery = "t0.id in (select geo_place_id from scripture_reference "
-                + "where start_verse_id <= %s and end_verse_id >= %s and geo_place_id is not null)";
-
-        for (final ScriptureReference sr : passageReferences) {
-            placesInScope.addAll(this.ebean.find(GeoPlace.class).where()
-                    .raw(format(rawQuery, sr.getEndVerseId(), sr.getStartVerseId())).findList());
-        }
-
-        return placesInScope;
+        final String allReferences = this.jsword.getAllReferences(reference, OPEN_BIBLE_VERSION);
+        return this.openBiblePlaces.searchSingleColumn("references", allReferences, Operator.OR, false);
     }
 }

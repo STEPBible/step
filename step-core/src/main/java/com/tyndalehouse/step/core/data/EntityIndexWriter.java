@@ -8,7 +8,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.apache.lucene.document.Document;
-import org.apache.lucene.document.Field;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriter.MaxFieldLength;
 import org.apache.lucene.store.Directory;
@@ -103,10 +102,8 @@ public class EntityIndexWriter {
      * @param fieldName the field name
      * @param fieldValue the field value
      */
-    public void addFieldToCurrentDocument(final String fieldName, final String fieldValue) {
-        if (this.doc == null) {
-            this.doc = new Document();
-        }
+    public void addFieldToCurrentDocument(final String fieldName, final Number fieldValue) {
+        ensureNewDocument();
         final FieldConfig fieldConfig = this.luceneFieldConfigurationByRaw.get(fieldName);
 
         if (fieldConfig == null) {
@@ -114,8 +111,32 @@ public class EntityIndexWriter {
             return;
         }
 
-        this.doc.add(new Field(fieldConfig.getName(), fieldValue, fieldConfig.getStore(), fieldConfig
-                .getIndex()));
+        this.doc.add(fieldConfig.getField(fieldValue));
+    }
+
+    /**
+     * Adds a field to the current document
+     * 
+     * @param fieldName the field name
+     * @param fieldValue the field value
+     */
+    public void addFieldToCurrentDocument(final String fieldName, final String fieldValue) {
+        ensureNewDocument();
+        final FieldConfig fieldConfig = this.luceneFieldConfigurationByRaw.get(fieldName);
+
+        if (fieldConfig == null) {
+            LOGGER.trace("Skipping field: [{}]", fieldName);
+            return;
+        }
+
+        this.doc.add(fieldConfig.getField(fieldValue));
+    }
+
+    /** Creates a document if it doesn't already exist */
+    private void ensureNewDocument() {
+        if (this.doc == null) {
+            this.doc = new Document();
+        }
     }
 
     /**

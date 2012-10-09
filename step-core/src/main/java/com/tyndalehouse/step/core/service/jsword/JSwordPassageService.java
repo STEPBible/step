@@ -167,4 +167,13 @@ public interface JSwordPassageService {
      * @return the plain text
      */
     String getPlainText(String version, String reference, boolean firstVerse);
+
+    /**
+     * Gets a String representation of all references
+     * 
+     * @param references the list of references
+     * @param version the version
+     * @return the actual representation of all references
+     */
+    String getAllReferences(String references, String version);
 }

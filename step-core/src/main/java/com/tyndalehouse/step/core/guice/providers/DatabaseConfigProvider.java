@@ -42,15 +42,12 @@ import com.avaje.ebean.EbeanServer;
 import com.avaje.ebean.EbeanServerFactory;
 import com.avaje.ebean.config.ServerConfig;
 import com.tyndalehouse.step.core.data.entities.Bookmark;
-import com.tyndalehouse.step.core.data.entities.DictionaryArticle;
-import com.tyndalehouse.step.core.data.entities.GeoPlace;
 import com.tyndalehouse.step.core.data.entities.History;
 import com.tyndalehouse.step.core.data.entities.ScriptureReference;
 import com.tyndalehouse.step.core.data.entities.ScriptureTarget;
 import com.tyndalehouse.step.core.data.entities.Session;
 import com.tyndalehouse.step.core.data.entities.User;
 import com.tyndalehouse.step.core.data.entities.aggregations.TimelineEventsAndDate;
-import com.tyndalehouse.step.core.data.entities.timeline.HotSpot;
 import com.tyndalehouse.step.core.data.entities.timeline.TimelineEvent;
 
 /**
@@ -154,15 +151,14 @@ public class DatabaseConfigProvider implements Provider<EbeanServer> {
     private void addEntities(final ServerConfig config) {
         config.addClass(ScriptureTarget.class);
         config.addClass(ScriptureReference.class);
-        config.addClass(HotSpot.class);
+        // config.addClass(HotSpot.class);
         config.addClass(TimelineEvent.class);
         config.addClass(User.class);
         config.addClass(Session.class);
         config.addClass(Bookmark.class);
         config.addClass(History.class);
-        config.addClass(GeoPlace.class);
+        // config.addClass(GeoPlace.class);
         config.addClass(TimelineEventsAndDate.class);
-        config.addClass(DictionaryArticle.class);
     }
 
     /**

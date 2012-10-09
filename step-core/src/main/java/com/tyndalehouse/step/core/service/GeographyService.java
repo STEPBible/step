@@ -32,9 +32,7 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.service;
 
-import java.util.List;
-
-import com.tyndalehouse.step.core.data.entities.GeoPlace;
+import com.tyndalehouse.step.core.data.EntityDoc;
 
 /**
  * Access to the geography module
@@ -49,5 +47,5 @@ public interface GeographyService {
      * @param reference the biblical reference
      * @return the list of places (lat/long/precisions)
      */
-    List<GeoPlace> getPlaces(String reference);
+    EntityDoc[] getPlaces(String reference);
 }

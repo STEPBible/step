@@ -6,7 +6,6 @@ import static com.tyndalehouse.step.core.utils.ValidateUtils.notBlank;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import org.apache.lucene.search.IndexSearcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,8 +28,7 @@ public class VocabularyServiceImpl implements VocabularyService {
     private static final String HIGHER_STRONG = "STRONG:";
     private static final String LOWER_STRONG = "strong:";
     private static final int START_STRONG_KEY = HIGHER_STRONG.length();
-    // private final EbeanServer ebean;
-    // private final Analyzer a;
+    private final EntityIndexReader definitions;
 
     // define a few extraction methods
     private final LexiconDataProvider transliterationProvider = new LexiconDataProvider() {
@@ -51,16 +49,13 @@ public class VocabularyServiceImpl implements VocabularyService {
             return l.get("accentedUnicode");
         }
     };
-    private IndexSearcher searcher;
-    private final EntityIndexReader definitions;
 
     /**
-     * @param ebean the database server
+     * @param manager the entity manager
      */
     @Inject
     public VocabularyServiceImpl(final EntityManager manager) {
         this.definitions = manager.getReader("definition");
-        // this.ebean = ebean;
     }
 
     //

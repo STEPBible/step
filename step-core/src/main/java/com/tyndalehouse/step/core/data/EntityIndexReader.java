@@ -27,6 +27,7 @@ import org.apache.lucene.search.TopFieldDocs;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.MMapDirectory;
+import org.slf4j.Logger;
 
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.utils.IOUtils;
@@ -38,6 +39,7 @@ import com.tyndalehouse.step.core.utils.IOUtils;
  * 
  */
 public class EntityIndexReader implements Closeable {
+    private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(EntityIndexReader.class);
     private IndexSearcher searcher;
     private Directory directory;
     private final EntityConfiguration config;
@@ -72,7 +74,8 @@ public class EntityIndexReader implements Closeable {
                 this.searcher = new IndexSearcher(this.directory, true);
             }
         } catch (final IOException e) {
-            throw new StepInternalException("Unable to read index", e);
+            LOGGER.warn("Index not readable - it may not yet have been created.");
+            LOGGER.trace("Trace for exception:", e);
         }
     }
 
@@ -333,6 +336,18 @@ public class EntityIndexReader implements Closeable {
         } catch (final ParseException e) {
             throw new StepInternalException("Unable to parse query", e);
         }
+
+    }
+
+    /**
+     * Allows all kinds of queries, but on one column only
+     * 
+     * @param fieldName the name of the field to search for
+     * @param querySyntax the query syntax, can contain wildcards...
+     * @return
+     */
+    public EntityDoc[] searchSingleColumn(final String fieldName, final String querySyntax) {
+        return searchSingleColumn(fieldName, querySyntax, Operator.OR, false);
 
     }
 }

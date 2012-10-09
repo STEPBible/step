@@ -126,7 +126,7 @@ GeographyWidget.prototype.goToReference = function(reference) {
 		var self = this;
 		$.getSafe(GEOGRAPHY_GET_PLACES + reference, function(places) {
 			$.each(places, function(index, place) {
-				var content = "<div>" + place.name + "<br /><div>@ " + place.latitude + ", " + place.longitude + "</div>" + place.comment + "</div>";
+				var content = "<div>" + place.name + "<br /><div>@ " + place.latitude + ", " + place.longitude + "</div>" + "</div>";
 				var infoWindow = new google.maps.InfoWindow({
 				    content: content
 				});

@@ -83,6 +83,8 @@ public class SearchController {
             suggestionType = LexicalSuggestionType.GREEK;
         } else if ("hebrew".equals(greekOrHebrew)) {
             suggestionType = LexicalSuggestionType.HEBREW;
+        } else if ("meaning".equals(greekOrHebrew)) {
+            suggestionType = LexicalSuggestionType.MEANING;
         }
 
         // still null then return

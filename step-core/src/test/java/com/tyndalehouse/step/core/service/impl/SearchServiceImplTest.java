@@ -3,6 +3,7 @@ package com.tyndalehouse.step.core.service.impl;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.tyndalehouse.step.core.data.DataDrivenTestExtension;
+import com.tyndalehouse.step.core.data.EntityManager;
 import com.tyndalehouse.step.core.data.entities.ScriptureReference;
 import com.tyndalehouse.step.core.data.entities.timeline.TimelineEvent;
 import com.tyndalehouse.step.core.models.search.SearchEntry;
@@ -41,11 +43,17 @@ public class SearchServiceImplTest extends DataDrivenTestExtension {
     @Before
     public void setUp() {
         final JSwordVersificationService versificationService = new JSwordVersificationServiceImpl();
-        final JSwordPassageServiceImpl jsword = new JSwordPassageServiceImpl(versificationService, null, null);
+        final JSwordPassageServiceImpl jsword = new JSwordPassageServiceImpl(versificationService, null,
+                null, null);
         this.si = new SearchServiceImpl(getEbean(),
                 new JSwordSearchServiceImpl(versificationService, jsword), jsword, new TimelineServiceImpl(
-                        getEbean(), jsword));
+                        getEbean(), jsword), mock(EntityManager.class));
 
+    }
+
+    @Test
+    public void testSuggestions() {
+        // si.getLexicalSuggestions(LexicalSuggestionType., form, includeAllForms)
     }
 
     /**

@@ -9,6 +9,7 @@ import java.io.Serializable;
  */
 public class LexiconSuggestion implements Serializable {
     private static final long serialVersionUID = 2330563074130087347L;
+    private String strongNumber;
     private String matchingForm;
     private String stepTransliteration;
     private String gloss;
@@ -53,5 +54,19 @@ public class LexiconSuggestion implements Serializable {
      */
     public void setMatchingForm(final String matchingForm) {
         this.matchingForm = matchingForm;
+    }
+
+    /**
+     * @return the strongNumber
+     */
+    public String getStrongNumber() {
+        return this.strongNumber;
+    }
+
+    /**
+     * @param strongNumber the strongNumber to set
+     */
+    public void setStrongNumber(final String strongNumber) {
+        this.strongNumber = strongNumber;
     }
 }

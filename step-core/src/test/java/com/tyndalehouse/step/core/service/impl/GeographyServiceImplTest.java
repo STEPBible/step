@@ -86,7 +86,7 @@ public class GeographyServiceImplTest extends DataDrivenTestExtension {
         assertEquals(1, geoPlaces.get(0).getReferences().size());
 
         final GeographyServiceImpl geo = new GeographyServiceImpl(getEbean(), new JSwordPassageServiceImpl(
-                new JSwordVersificationServiceImpl(), null, null));
+                new JSwordVersificationServiceImpl(), null, null, null));
         final List<GeoPlace> places = geo.getPlaces("Genesis 1:1-15");
 
         assertEquals("ESV Name", places.get(0).getName());

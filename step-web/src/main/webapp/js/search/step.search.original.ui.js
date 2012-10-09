@@ -167,7 +167,10 @@ step.search.ui.original = {
                         suggestionType = "hebrew";
                     } else if(searchType == GREEK_WORDS[0]) {
                         suggestionType = "greek";
-                    }
+                    } 
+//                    else if(searchType == WORDS_MEANING[0]){
+//                        suggestionType = "meaning";
+//                    }
                     
                     if(suggestionType == null) {
                         return response({});

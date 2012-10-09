@@ -39,7 +39,7 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.tyndalehouse.step.core.data.create.loaders.CsvData;
+import com.tyndalehouse.step.core.data.loaders.CsvData;
 
 /**
  * Tests the Csv Data

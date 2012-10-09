@@ -54,12 +54,12 @@ import com.tyndalehouse.step.core.utils.hebrew.VowelStressType;
  * @author chrisburrell
  */
 public final class StringConversionUtils {
-    private static final char K_WITH_LINE = '\u1e35';
-    private static final char T_WITH_DOT = '\u1e6d';
-    private static final char H_WITH_DOT = '\u1e25';
-    private static final char B_WITH_LINE = '\u1E07';
-    private static final char CLOSED_QUOTE = '\u2019';
-    private static final char OPEN_QUOTE = '\u2018';
+    public static final char CLOSED_QUOTE = '\u2019';
+    public static final char OPEN_QUOTE = '\u2018';
+    public static final char K_WITH_LINE = '\u1e35';
+    public static final char T_WITH_DOT = '\u1e6d';
+    public static final char H_WITH_DOT = '\u1e25';
+    public static final char B_WITH_LINE = '\u1E07';
     private static final Logger LOGGER = LoggerFactory.getLogger(StringConversionUtils.class);
     private static final char QAMATS_QATAN = 0x5C7;
 
@@ -477,15 +477,32 @@ public final class StringConversionUtils {
         if (rawForm == null || rawForm.length() == 0) {
             return "";
         }
-        final int firstChar = rawForm.charAt(0);
 
-        if ((firstChar > 0x590 && firstChar < 0x600) || (firstChar > 0xFB10 && firstChar < 0xFB50)) {
+        if (isHebrewText(rawForm)) {
             return transliterateHebrew(rawForm);
         }
 
         final String normalized = Normalizer.normalize(rawForm.toLowerCase(), Form.NFD);
         // then assume Greek
         return transliterateGreek(normalized);
+    }
+
+    /**
+     * @param rawForm the raw form of the word
+     * @return true if it is hebrew text
+     */
+    public static boolean isHebrewText(final String rawForm) {
+        final int firstCharacter = rawForm.charAt(0);
+        return isHebrewCharacter(firstCharacter);
+    }
+
+    /**
+     * @param firstCharacter the character that we are testing
+     * @return true to indicate we are dealing with the Hebrew set of characters
+     */
+    public static boolean isHebrewCharacter(final int firstCharacter) {
+        return (firstCharacter > 0x590 && firstCharacter < 0x600)
+                || (firstCharacter > 0xFB10 && firstCharacter < 0xFB50);
     }
 
     /**
@@ -1498,9 +1515,10 @@ public final class StringConversionUtils {
                     if (!((position == 0 && sb.charAt(1) == 'ρ') || (position > 0 && sb.charAt(0) == 'r'))) {
                         sb.deleteCharAt(position);
                         sb.insert(0, 'h');
+                        position++;
+                        continue;
                     }
-
-                    position++;
+                    sb.deleteCharAt(position);
                     break;
                 default:
                     // remove character since not recognised

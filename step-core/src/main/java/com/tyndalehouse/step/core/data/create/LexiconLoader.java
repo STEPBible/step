@@ -32,48 +32,19 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.data.create;
 
-import static com.tyndalehouse.step.core.data.entities.lexicon.Definition.ACCENTED_UNICODE;
-import static com.tyndalehouse.step.core.data.entities.lexicon.Definition.ALTERNATIVE_TRANSLIT1;
-import static com.tyndalehouse.step.core.data.entities.lexicon.Definition.ALTERNATIVE_TRANSLIT1_UNACCENTED;
-import static com.tyndalehouse.step.core.data.entities.lexicon.Definition.LSJ_DEFS;
-import static com.tyndalehouse.step.core.data.entities.lexicon.Definition.MEDIUM_DEF;
-import static com.tyndalehouse.step.core.data.entities.lexicon.Definition.RELATED_NOS;
-import static com.tyndalehouse.step.core.data.entities.lexicon.Definition.SHORT_DEF;
-import static com.tyndalehouse.step.core.data.entities.lexicon.Definition.STEP_GLOSS;
-import static com.tyndalehouse.step.core.data.entities.lexicon.Definition.STOP_WORD;
-import static com.tyndalehouse.step.core.data.entities.lexicon.Definition.STRONG_NUMBER;
-import static com.tyndalehouse.step.core.data.entities.lexicon.Definition.STRONG_PRONUNC;
-import static com.tyndalehouse.step.core.data.entities.lexicon.Definition.STRONG_TRANSLITERATION;
-import static com.tyndalehouse.step.core.data.entities.lexicon.Definition.TWO_LETTER_LOOKUP;
-import static com.tyndalehouse.step.core.utils.IOUtils.closeQuietly;
 import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import org.apache.lucene.analysis.SimpleAnalyzer;
-import org.apache.lucene.document.Document;
-import org.apache.lucene.document.Field;
-import org.apache.lucene.document.Field.Index;
-import org.apache.lucene.document.Field.Store;
-import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.index.IndexWriter.MaxFieldLength;
-import org.apache.lucene.store.Directory;
-import org.apache.lucene.store.FSDirectory;
-import org.apache.lucene.store.RAMDirectory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.avaje.ebean.EbeanServer;
-import com.tyndalehouse.step.core.data.create.loaders.AbstractClasspathBasedModuleLoader;
-import com.tyndalehouse.step.core.data.entities.lexicon.Definition;
+import com.tyndalehouse.step.core.data.EntityIndexWriter;
+import com.tyndalehouse.step.core.data.loaders.AbstractClasspathBasedModuleLoader;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 
 /**
@@ -82,53 +53,28 @@ import com.tyndalehouse.step.core.exceptions.StepInternalException;
  * @author chrisburrell
  * 
  */
-public class LexiconLoader extends AbstractClasspathBasedModuleLoader<Definition> {
+public class LexiconLoader extends AbstractClasspathBasedModuleLoader<Object> {
     private static final Logger LOGGER = LoggerFactory.getLogger(LexiconLoader.class);
     private static final String START_TOKEN = "==============";
 
     // state used during processing
     private int errors;
     private int count;
-    // private Definition currentDefinition;
-    private Document document;
-    private Map<String, Method> methodMappings;
-    private final boolean isGreek;
-    private final LoaderTransaction transaction;
-    private final RAMDirectory ramDirectory;
-    private IndexWriter writer;
-    private Map<String, FieldConfig> config;
-    private SimpleAnalyzer analyzer;
+    private final EntityIndexWriter writer;
 
     /**
      * Loads up dictionary items
      * 
-     * @param ebean the backend server
+     * @param writer the lucene index writer
      * @param resourcePath the classpath to the data
-     * @param transaction transaction manager
-     * @param isGreek TODO
      */
-    public LexiconLoader(final EbeanServer ebean, final String resourcePath,
-            final LoaderTransaction transaction, final boolean isGreek) {
-        super(ebean, resourcePath, transaction);
-        this.transaction = transaction;
-        this.isGreek = isGreek;
-
-        this.ramDirectory = new RAMDirectory();
-        // DefinitionAnalyzer analyzer = new DefinitionAnalyzer();
-        try {
-            this.analyzer = new SimpleAnalyzer();
-            this.writer = new IndexWriter(this.ramDirectory, this.analyzer, MaxFieldLength.UNLIMITED);
-        } catch (final IOException e) {
-            throw new StepInternalException("Unable to create index", e);
-        }
-
-        initLuceneMappings();
-        // initMappings();
-
+    public LexiconLoader(final EntityIndexWriter writer, final String resourcePath) {
+        super(null, resourcePath, null);
+        this.writer = writer;
     }
 
     @Override
-    protected List<Definition> parseFile(final Reader reader) {
+    protected List<Object> parseFile(final Reader reader) {
         final BufferedReader bufferedReader = new BufferedReader(reader);
         String line = null;
 
@@ -136,49 +82,16 @@ public class LexiconLoader extends AbstractClasspathBasedModuleLoader<Definition
             while ((line = bufferedReader.readLine()) != null) {
                 parseLine(line);
             }
-
-            // save last article
-            saveCurrentDefinition();
-
-            this.writer.close();
-            final File file = new File("d:\\temp\\step");
-            final Directory destination = FSDirectory.open(file);
-
-            final IndexWriter fsWriter = new IndexWriter(destination, this.analyzer, true,
-                    IndexWriter.MaxFieldLength.UNLIMITED);
-            fsWriter.addIndexesNoOptimize(new Directory[] { this.ramDirectory });
-            fsWriter.optimize();
-
-            final int docs = fsWriter.maxDoc();
-            fsWriter.close();
-
-            // Free up the space used by the ram directory
-            this.ramDirectory.close();
-
-        } catch (final IOException io) {
-            LOGGER.warn(io.getMessage(), io);
-        } finally {
-            closeQuietly(bufferedReader);
+        } catch (final IOException e) {
+            throw new StepInternalException("Unable to read a line from the source file ", e);
         }
 
-        LOGGER.info("Loaded [{}] dictionary articles with [{}] errors", this.count, this.errors);
-        return new ArrayList<Definition>();
-    }
+        // save last article
+        saveCurrentDefinition();
 
-    // /**
-    // * TODO slow performance on first call to setter of ebean... chase group post on Google. creates
-    // * transliterations for all definitions
-    // */
-    // private void processTransliterations() {
-    // // step transliterations, with
-    // this.currentDefinition.setStepTransliteration(transliterate(this.currentDefinition
-    // .getAccentedUnicode()));
-    //
-    // // and without the breathing - results may still contain accents - however they are generated from
-    // // unicode without accents
-    // this.currentDefinition.setUnaccentedStepTransliteration(adaptForUnaccentedTransliteration(
-    // this.currentDefinition.getStepTransliteration(), this.isGreek));
-    // }
+        LOGGER.info("Loaded [{}] dictionary articles with [{}] errors", this.count, this.errors);
+        return new ArrayList<Object>();
+    }
 
     /**
      * Parses a line by setting the current state of this loader appropriately
@@ -198,17 +111,7 @@ public class LexiconLoader extends AbstractClasspathBasedModuleLoader<Definition
      * Saves the current article, and if threshold is met, then saves to database
      */
     private void saveCurrentDefinition() {
-        try {
-            if (this.document != null) {
-                this.writer.addDocument(this.document);
-            }
-        } catch (final IOException e) {
-            throw new StepInternalException("Unable to add document to index", e);
-        }
-
-        // if (this.document == null) {
-        // this.document = new Document();
-        // }
+        this.writer.save();
 
         // if (this.currentDefinition != null) {
         // processTransliterations();
@@ -286,99 +189,47 @@ public class LexiconLoader extends AbstractClasspathBasedModuleLoader<Definition
      */
     private void prepareNewDefinition() {
         saveCurrentDefinition();
-        this.document = new Document();
 
         // this.currentDefinition = new Definition();
     }
 
-    private void initLuceneMappings() {
-        this.config = new HashMap<String, FieldConfig>();
-
-        // stored and indexed
-        this.config.put("@StrNo", new FieldConfig(STRONG_NUMBER, Store.YES, Index.NOT_ANALYZED));
-        this.config.put("@UnicodeAccented", new FieldConfig(ACCENTED_UNICODE, Store.YES, Index.NOT_ANALYZED));
-        this.config.put("@StrUnicodeAccented", new FieldConfig(ACCENTED_UNICODE, Store.YES,
-                Index.NOT_ANALYZED));
-        this.config.put("@AllRelatedNos", new FieldConfig(RELATED_NOS, Store.YES, Index.ANALYZED));
-        this.config.put("@StepGloss", new FieldConfig(STEP_GLOSS, Store.YES, Index.ANALYZED));
-        this.config
-                .put("@StrBetaAccented", new FieldConfig(ALTERNATIVE_TRANSLIT1, Store.YES, Index.ANALYZED));
-
-        // stored not indexed
-        this.config.put("@MounceShortDef", new FieldConfig(SHORT_DEF, Store.YES, Index.NO));
-        this.config.put("@MounceMedDef", new FieldConfig(MEDIUM_DEF, Store.YES, Index.NO));
-        this.config.put("@StopWord", new FieldConfig(STOP_WORD, Store.YES, Index.NO));
-        this.config.put("@LsjDefs", new FieldConfig(LSJ_DEFS, Store.YES, Index.NO));
-        this.config.put("@BdbMedDef", new FieldConfig(MEDIUM_DEF, Store.YES, Index.NO));
-        this.config.put("@AcadTransAccented", new FieldConfig(ALTERNATIVE_TRANSLIT1, Store.NO,
-                Index.NOT_ANALYZED));
-        this.config.put("@AcadTransUnaccented", new FieldConfig(ALTERNATIVE_TRANSLIT1_UNACCENTED, Store.NO,
-                Index.NOT_ANALYZED));
-
-        // indexed not stored
-        this.config.put("@2llUnaccented", new FieldConfig(TWO_LETTER_LOOKUP, Store.NO, Index.NOT_ANALYZED));
-        this.config.put("@StrTranslit", new FieldConfig(STRONG_TRANSLITERATION, Store.NO, Index.ANALYZED));
-        this.config.put("@StrPronunc", new FieldConfig(STRONG_PRONUNC, Store.NO, Index.ANALYZED));
-
-        // config.put("@LsjBetaUnaccented", new FieldConfig(ALTERNATIVE_TRANSLIT1_UNACCENTED);
-
-        // hebrew specific mappings
-
-        // temp - TODO - remove when fields have been renamed
-
-    }
-
-    /**
-     * Sets up the mappings between field names and methods
-     */
-    private void initMappings() {
-        this.methodMappings = new HashMap<String, Method>(32);
-        final Class<Definition> defClass = Definition.class;
-
-        try {
-            final Method mediumDef = defClass.getDeclaredMethod("setMediumDef", String.class);
-            final Method alternativeTranslit1Unaccented = defClass.getDeclaredMethod(
-                    "setAlternativeTranslit1Unaccented", String.class);
-            final Method alternativeTrans1 = defClass.getDeclaredMethod("setAlternativeTranslit1",
-                    String.class);
-            final Method unicodeAccented = defClass.getDeclaredMethod("setAccentedUnicode", String.class);
-
-            this.methodMappings.put("@UnicodeAccented",
-                    defClass.getDeclaredMethod("setAccentedUnicode", String.class));
-
-            this.methodMappings.put("@LsjDefs", defClass.getDeclaredMethod("setLsjDefs", String.class));
-            this.methodMappings.put("@StrNo", defClass.getDeclaredMethod("setStrongNumber", String.class));
-            this.methodMappings.put("@StrBetaAccented", alternativeTrans1);
-
-            this.methodMappings.put("@StrTranslit",
-                    defClass.getDeclaredMethod("setStrongTranslit", String.class));
-            this.methodMappings.put("@StrPronunc",
-                    defClass.getDeclaredMethod("setStrongPronunc", String.class));
-            this.methodMappings.put("@AllRelatedNos",
-                    defClass.getDeclaredMethod("setRelatedNos", String.class));
-            this.methodMappings.put("@StepGloss", defClass.getDeclaredMethod("setStepGloss", String.class));
-            this.methodMappings.put("@StopWord", defClass.getDeclaredMethod("setBlacklisted", Boolean.class));
-
-            // greek specific mappings
-            this.methodMappings.put("@MounceShortDef",
-                    defClass.getDeclaredMethod("setShortDef", String.class));
-            this.methodMappings.put("@MounceMedDef", mediumDef);
-            this.methodMappings.put("@LsjBetaUnaccented", alternativeTranslit1Unaccented);
-
-            // hebrew specific mappings
-            this.methodMappings.put("@BdbMedDef", mediumDef);
-            this.methodMappings.put("@AcadTransAccented", alternativeTrans1);
-            this.methodMappings.put("@AcadTransUnaccented", alternativeTranslit1Unaccented);
-            this.methodMappings.put("@2llUnaccented",
-                    defClass.getDeclaredMethod("setTwoLetterLookup", String.class));
-
-            // temp - TODO - remove when fields have been renamed
-            this.methodMappings.put("@StrUnicodeAccented", unicodeAccented);
-
-        } catch (final NoSuchMethodException e) {
-            throw new StepInternalException("Unable to find matching method", e);
-        }
-    }
+    //
+    // private void initLuceneMappings() {
+    // this.config = new HashMap<String, FieldConfig>();
+    //
+    // // stored and indexed
+    // this.config.put("@StrNo", new FieldConfig(STRONG_NUMBER, Store.YES, Index.NOT_ANALYZED));
+    // this.config.put("@UnicodeAccented", new FieldConfig(ACCENTED_UNICODE, Store.YES, Index.NOT_ANALYZED));
+    // this.config.put("@StrUnicodeAccented", new FieldConfig(ACCENTED_UNICODE, Store.YES,
+    // Index.NOT_ANALYZED));
+    // this.config.put("@AllRelatedNos", new FieldConfig(RELATED_NOS, Store.YES, Index.ANALYZED));
+    // this.config.put("@StepGloss", new FieldConfig(STEP_GLOSS, Store.YES, Index.ANALYZED));
+    // this.config
+    // .put("@StrBetaAccented", new FieldConfig(ALTERNATIVE_TRANSLIT1, Store.YES, Index.ANALYZED));
+    //
+    // // stored not indexed
+    // this.config.put("@MounceShortDef", new FieldConfig(SHORT_DEF, Store.YES, Index.NO));
+    // this.config.put("@MounceMedDef", new FieldConfig(MEDIUM_DEF, Store.YES, Index.NO));
+    // this.config.put("@StopWord", new FieldConfig(STOP_WORD, Store.YES, Index.NO));
+    // this.config.put("@LsjDefs", new FieldConfig(LSJ_DEFS, Store.YES, Index.NO));
+    // this.config.put("@BdbMedDef", new FieldConfig(MEDIUM_DEF, Store.YES, Index.NO));
+    // this.config.put("@AcadTransAccented", new FieldConfig(ALTERNATIVE_TRANSLIT1, Store.NO,
+    // Index.NOT_ANALYZED));
+    // this.config.put("@AcadTransUnaccented", new FieldConfig(ALTERNATIVE_TRANSLIT1_UNACCENTED, Store.NO,
+    // Index.NOT_ANALYZED));
+    //
+    // // indexed not stored
+    // this.config.put("@2llUnaccented", new FieldConfig(TWO_LETTER_LOOKUP, Store.NO, Index.NOT_ANALYZED));
+    // this.config.put("@StrTranslit", new FieldConfig(STRONG_TRANSLITERATION, Store.NO, Index.ANALYZED));
+    // this.config.put("@StrPronunc", new FieldConfig(STRONG_PRONUNC, Store.NO, Index.ANALYZED));
+    //
+    // // config.put("@LsjBetaUnaccented", new FieldConfig(ALTERNATIVE_TRANSLIT1_UNACCENTED);
+    //
+    // // hebrew specific mappings
+    //
+    // // temp - TODO - remove when fields have been renamed
+    //
+    // }
 
     /**
      * parses a simple field by examining the type and setting the content (or appending the content to a
@@ -415,32 +266,7 @@ public class LexiconLoader extends AbstractClasspathBasedModuleLoader<Definition
             return;
         }
 
-        final FieldConfig fieldConfig = this.config.get(fieldName);
-        if (fieldConfig != null) {
-            this.document.add(new Field(fieldConfig.getName(), fieldValue, fieldConfig.getStore(),
-                    fieldConfig.getIndex()));
-        }
-
-        // final Method method = this.methodMappings.get(fieldName);
-        // if (method == null) {
-        // tryOtherMappings(fieldName, fieldValue);
-        // LOGGER.trace("Unable to map [{}]", fieldName);
-        // return;
-        // }
-
-        // try {
-        //
-        //
-        // final Class<?>[] parameterTypes = method.getParameterTypes();
-        // if (Boolean.class.equals(parameterTypes[0])) {
-        // method.invoke(this.currentDefinition, Boolean.parseBoolean(fieldValue));
-        // } else {
-        // method.invoke(this.currentDefinition, fieldValue);
-        // }
-        //
-        // } catch (final Exception e) {
-        // throw new StepInternalException("Unable to call method for field " + fieldName, e);
-        // }
+        this.writer.addFieldToCurrentDocument(fieldName, fieldValue);
     }
 
     // /**

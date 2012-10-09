@@ -37,6 +37,12 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
@@ -76,6 +82,43 @@ import com.tyndalehouse.step.core.models.OsisWrapper;
  */
 public class JSwordPassageServiceImplTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(JSwordPassageServiceImplTest.class);
+
+    @Test
+    public void testMe() {
+        try {
+            final FileReader reader = new FileReader(
+                    "D:\\dev\\projects\\step\\step-core\\src\\main\\resources\\com\\tyndalehouse\\step\\core\\data\\create\\lexicon\\specific_forms.txt");
+            final BufferedReader r = new BufferedReader(reader);
+            String line = "";
+            String lastStrong = "";
+            final FileWriter writer = new FileWriter(new File("d:\\temp.txt"));
+            final BufferedWriter w = new BufferedWriter(writer);
+
+            while ((line = r.readLine()) != null) {
+                final String[] split = line.split(",");
+                if (!lastStrong.equals(split[0])) {
+                    w.write('\n');
+                    w.write(split[0]);
+                    w.write(',');
+                } else {
+                    w.write(' ');
+                }
+                // then append to same line
+                w.append(split[1]);
+
+                lastStrong = split[0];
+            }
+
+            w.close();
+            r.close();
+        } catch (final FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (final IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
 
     // Outputs all lexical forms TODO - move to a step-utils project
     // @Test
@@ -150,7 +193,7 @@ public class JSwordPassageServiceImplTest {
     @Test
     public void testNormalize() throws NoSuchKeyException {
         final JSwordPassageServiceImpl jsi = new JSwordPassageServiceImpl(
-                new JSwordVersificationServiceImpl(), null, null);
+                new JSwordVersificationServiceImpl(), null, null, null);
 
         final Book book = Books.installed().getBook("KJV");
 
@@ -168,7 +211,7 @@ public class JSwordPassageServiceImplTest {
     @Test
     public void testExpandNoGap() {
         final JSwordPassageServiceImpl jsi = new JSwordPassageServiceImpl(
-                new JSwordVersificationServiceImpl(), null, null);
+                new JSwordVersificationServiceImpl(), null, null, null);
 
         final Key expandToFullChapter = jsi.expandToFullChapter("Ruth", "1", "22",
                 Books.installed().getBook("KJV"), new Verse(BibleBook.RUTH, 1, 22), 0);
@@ -196,7 +239,7 @@ public class JSwordPassageServiceImplTest {
 
         // do the test
         final JSwordPassageServiceImpl jsi = new JSwordPassageServiceImpl(
-                new JSwordVersificationServiceImpl(), null, null);
+                new JSwordVersificationServiceImpl(), null, null, null);
         final List<LookupOption> options = new ArrayList<LookupOption>();
         // options.add(INTERLINEAR);
 
@@ -229,7 +272,7 @@ public class JSwordPassageServiceImplTest {
 
         // do the test
         final JSwordPassageServiceImpl jsi = new JSwordPassageServiceImpl(
-                new JSwordVersificationServiceImpl(), null, null);
+                new JSwordVersificationServiceImpl(), null, null, null);
         final List<LookupOption> options = new ArrayList<LookupOption>();
 
         final String osisText = jsi.getOsisText("KJV", "Romans 1:4", options, "", InterlinearMode.NONE)
@@ -265,7 +308,7 @@ public class JSwordPassageServiceImplTest {
 
         // do the test
         final JSwordPassageServiceImpl jsi = new JSwordPassageServiceImpl(
-                new JSwordVersificationServiceImpl(), null, null);
+                new JSwordVersificationServiceImpl(), null, null, null);
         final List<LookupOption> options = new ArrayList<LookupOption>();
 
         final String osisText = jsi.getInterleavedVersions(
@@ -284,7 +327,7 @@ public class JSwordPassageServiceImplTest {
     @Test
     public void testSingleReference() {
         final JSwordPassageServiceImpl jsi = new JSwordPassageServiceImpl(
-                new JSwordVersificationServiceImpl(), null, null);
+                new JSwordVersificationServiceImpl(), null, null, null);
         final List<ScriptureReference> refs = jsi.resolveReferences("Gen.1.1", "KJV");
 
         assertEquals(refs.size(), 1);
@@ -298,7 +341,7 @@ public class JSwordPassageServiceImplTest {
     @Test
     public void testMultipleReference() {
         final JSwordPassageServiceImpl jsi = new JSwordPassageServiceImpl(
-                new JSwordVersificationServiceImpl(), null, null);
+                new JSwordVersificationServiceImpl(), null, null, null);
         final List<ScriptureReference> refs = jsi.resolveReferences("Gen.1.1;Gen.1.3", "KJV");
 
         assertEquals(2, refs.size());
@@ -314,7 +357,7 @@ public class JSwordPassageServiceImplTest {
     @Test
     public void testMultiplePassages() {
         final JSwordPassageServiceImpl jsi = new JSwordPassageServiceImpl(
-                new JSwordVersificationServiceImpl(), null, null);
+                new JSwordVersificationServiceImpl(), null, null, null);
         final List<ScriptureReference> refs = jsi.resolveReferences("Gen.1.1-2;Gen.1.4-5", "KJV");
 
         assertEquals(refs.size(), 2);
@@ -330,7 +373,7 @@ public class JSwordPassageServiceImplTest {
     @Test
     public void testGeoPassageExample() {
         final JSwordPassageServiceImpl jsi = new JSwordPassageServiceImpl(
-                new JSwordVersificationServiceImpl(), null, null);
+                new JSwordVersificationServiceImpl(), null, null, null);
 
         // TODO change spaces between 1 and Kgs! This doesn't seem to work...
 
@@ -372,7 +415,7 @@ public class JSwordPassageServiceImplTest {
     public void testGetSiblingChapter() {
         org.crosswire.jsword.versification.BookName.setFullBookName(false);
         final JSwordPassageServiceImpl jsword = new JSwordPassageServiceImpl(
-                new JSwordVersificationServiceImpl(), null, null);
+                new JSwordVersificationServiceImpl(), null, null, null);
 
         // previous chapter tests
         assertEquals("Gen 1", jsword.getSiblingChapter("Genesis 2", "ESV", true).getName());
@@ -406,7 +449,7 @@ public class JSwordPassageServiceImplTest {
     @Test
     public void testGetPreviousRef() throws NoSuchKeyException {
         final JSwordPassageServiceImpl jsword = new JSwordPassageServiceImpl(
-                new JSwordVersificationServiceImpl(), null, null);
+                new JSwordVersificationServiceImpl(), null, null, null);
         final Book book = Books.installed().getBook("KJV");
         final Key key = book.getKey("Genesis 3:17");
 
@@ -424,7 +467,7 @@ public class JSwordPassageServiceImplTest {
     @Test
     public void testGetNextRef() throws NoSuchKeyException {
         final JSwordPassageServiceImpl jsword = new JSwordPassageServiceImpl(
-                new JSwordVersificationServiceImpl(), null, null);
+                new JSwordVersificationServiceImpl(), null, null, null);
         final Book book = Books.installed().getBook("KJV");
         final Key key = book.getKey("Genesis 3:24");
 
@@ -447,7 +490,7 @@ public class JSwordPassageServiceImplTest {
 
         // do the test
         final JSwordPassageServiceImpl jsi = new JSwordPassageServiceImpl(
-                new JSwordVersificationServiceImpl(), null, null);
+                new JSwordVersificationServiceImpl(), null, null, null);
 
         final String[] versions = new String[] { "Byz", "Tisch" };
         final BookData data = new BookData(new Book[] { Books.installed().getBook(versions[0]),
@@ -482,7 +525,7 @@ public class JSwordPassageServiceImplTest {
 
         // do the test
         final JSwordPassageServiceImpl jsi = new JSwordPassageServiceImpl(
-                new JSwordVersificationServiceImpl(), null, null);
+                new JSwordVersificationServiceImpl(), null, null, null);
         final String osisText = jsi.getOsisText(version, ref, new ArrayList<LookupOption>(), null,
                 InterlinearMode.NONE).getValue();
 
@@ -506,8 +549,8 @@ public class JSwordPassageServiceImplTest {
      */
     @Test
     public void testPrettyXml() throws BookException, NoSuchKeyException, JDOMException, IOException {
-        final String version = "ABP";
-        final String ref = "Mark 3:1";
+        final String version = "TR";
+        final String ref = "Acts 5:2";
         final Book currentBook = Books.installed().getBook(version);
         final BookData bookData = new BookData(currentBook, currentBook.getKey(ref));
         final Element osisFragment = bookData.getOsisFragment();
@@ -517,7 +560,7 @@ public class JSwordPassageServiceImplTest {
 
         // do the test
         final JSwordPassageServiceImpl jsi = new JSwordPassageServiceImpl(
-                new JSwordVersificationServiceImpl(), null, null);
+                new JSwordVersificationServiceImpl(), null, null, null);
         final List<LookupOption> options = new ArrayList<LookupOption>();
         options.add(LookupOption.NOTES);
 
@@ -535,7 +578,7 @@ public class JSwordPassageServiceImplTest {
     @Test
     public void testNumberLookup() {
         final JSwordPassageServiceImpl j = new JSwordPassageServiceImpl(new JSwordVersificationServiceImpl(),
-                null, null);
+                null, null, null);
         assertTrue(j
                 .getOsisTextByVerseNumbers("ESV", "KJV", 4, 4, new ArrayList<LookupOption>(), null, null,
                         false).getValue().contains("In the beginning"));

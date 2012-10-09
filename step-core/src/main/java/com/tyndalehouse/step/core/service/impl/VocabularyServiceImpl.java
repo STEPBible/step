@@ -3,31 +3,16 @@ package com.tyndalehouse.step.core.service.impl;
 import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
 import static com.tyndalehouse.step.core.utils.ValidateUtils.notBlank;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
-import org.apache.lucene.document.Document;
-import org.apache.lucene.index.Term;
 import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.ScoreDoc;
-import org.apache.lucene.search.TermQuery;
-import org.apache.lucene.search.TopDocs;
-import org.apache.lucene.store.RAMDirectory;
-import org.apache.lucene.store.SimpleFSDirectory;
-import org.apache.lucene.util.Version;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.avaje.ebean.EbeanServer;
-import com.tyndalehouse.step.core.data.entities.lexicon.Definition;
-import com.tyndalehouse.step.core.exceptions.StepInternalException;
+import com.tyndalehouse.step.core.data.EntityDoc;
+import com.tyndalehouse.step.core.data.EntityIndexReader;
+import com.tyndalehouse.step.core.data.EntityManager;
 import com.tyndalehouse.step.core.exceptions.UserExceptionType;
 import com.tyndalehouse.step.core.service.VocabularyService;
 
@@ -44,106 +29,74 @@ public class VocabularyServiceImpl implements VocabularyService {
     private static final String HIGHER_STRONG = "STRONG:";
     private static final String LOWER_STRONG = "strong:";
     private static final int START_STRONG_KEY = HIGHER_STRONG.length();
-    private final EbeanServer ebean;
-    private final Analyzer a;
+    // private final EbeanServer ebean;
+    // private final Analyzer a;
 
     // define a few extraction methods
     private final LexiconDataProvider transliterationProvider = new LexiconDataProvider() {
         @Override
-        public String getData(final Definition l) {
-            return l.getStepTransliteration();
+        public String getData(final EntityDoc l) {
+            return l.get("stepTransliteration");
         }
     };
     private final LexiconDataProvider englishVocabProvider = new LexiconDataProvider() {
         @Override
-        public String getData(final Definition l) {
-            return l.getStepGloss();
+        public String getData(final EntityDoc l) {
+            return l.get("stepGloss");
         }
     };
     private final LexiconDataProvider greekVocabProvider = new LexiconDataProvider() {
         @Override
-        public String getData(final Definition l) {
-            return l.getAccentedUnicode();
+        public String getData(final EntityDoc l) {
+            return l.get("accentedUnicode");
         }
     };
     private IndexSearcher searcher;
+    private final EntityIndexReader definitions;
 
     /**
      * @param ebean the database server
      */
     @Inject
-    public VocabularyServiceImpl(final EbeanServer ebean) {
-        this.ebean = ebean;
-        this.a = new StandardAnalyzer(Version.LUCENE_30);
-
+    public VocabularyServiceImpl(final EntityManager manager) {
+        this.definitions = manager.getReader("definition");
+        // this.ebean = ebean;
     }
 
-    public IndexSearcher getSearcher() {
-        if (this.searcher == null) {
-            try {
-                final SimpleFSDirectory path = new SimpleFSDirectory(new File("d:\\temp\\step"));
-                final RAMDirectory ramFile = new RAMDirectory(path);
-                this.searcher = new IndexSearcher(ramFile);
-            } catch (final IOException e) {
-                throw new StepInternalException("Some exception has occurred");
-            }
+    //
+    // public IndexSearcher getSearcher() {
+    // if (this.searcher == null) {
+    // try {
+    // final SimpleFSDirectory path = new SimpleFSDirectory(new File("d:\\temp\\step"));
+    // final RAMDirectory ramFile = new RAMDirectory(path);
+    // this.searcher = new IndexSearcher(ramFile);
+    // } catch (final IOException e) {
+    // throw new StepInternalException("Some exception has occurred");
+    // }
+    // }
+    // return this.searcher;
+    // }
+
+    @Override
+    public EntityDoc[] getDefinitions(final String vocabIdentifiers) {
+        notBlank(vocabIdentifiers, "Vocab identifiers was null", UserExceptionType.SERVICE_VALIDATION_ERROR);
+        final String[] strongList = getKeys(vocabIdentifiers);
+
+        if (strongList.length != 0) {
+            return this.definitions.searchUniqueBySingleField("strongNumber", strongList);
         }
-        return this.searcher;
+        return new EntityDoc[0];
     }
 
     @Override
-    public List<Definition> getDefinitions(final String vocabIdentifiers) {
+    public EntityDoc[] getQuickDefinitions(final String vocabIdentifiers) {
         notBlank(vocabIdentifiers, "Vocab identifiers was null", UserExceptionType.SERVICE_VALIDATION_ERROR);
+        final String[] strongList = getKeys(vocabIdentifiers);
 
-        final List<String> strongList = getKeys(vocabIdentifiers);
-        final List<Definition> definitions = new ArrayList<Definition>(strongList.size());
-
-        if (!strongList.isEmpty()) {
-
-            // final QueryParser parser = new QueryParser(Version.LUCENE_30, Definition.STRONG_NUMBER,
-            // this.a);
-
-            final StringBuilder sb = new StringBuilder();
-            for (final String s : strongList) {
-                sb.append(s);
-                sb.append(' ');
-            }
-
-            final long s = System.nanoTime();
-            final TermQuery query = new TermQuery(new Term(Definition.STRONG_NUMBER, sb.toString().trim()));
-            try {
-                // final Query query = parser.parse(sb.toString().trim());
-                final IndexSearcher mySearcher = getSearcher();
-                final TopDocs results = mySearcher.search(query, strongList.size());
-
-                for (final ScoreDoc score : results.scoreDocs) {
-                    final Document doc = mySearcher.doc(score.doc);
-                    definitions.add(new Definition(doc));
-
-                }
-                LOGGER.error("message: [{}] ", System.nanoTime() - s);
-                return definitions;
-            } catch (final IOException e) {
-                throw new StepInternalException("IO exception during search", e);
-            }
-
-            // return this.ebean.find(Definition.class).select("*").where().in("strongNumber", strongList)
-            // .findList();
+        if (strongList.length != 0) {
+            return this.definitions.searchUniqueBySingleField("strongNumber", strongList);
         }
-        return new ArrayList<Definition>();
-    }
-
-    @Override
-    public List<Definition> getQuickDefinitions(final String vocabIdentifiers) {
-        notBlank(vocabIdentifiers, "Vocab identifiers was null", UserExceptionType.SERVICE_VALIDATION_ERROR);
-        final List<String> strongList = getKeys(vocabIdentifiers);
-
-        if (!strongList.isEmpty()) {
-            return this.ebean.find(Definition.class)
-                    .select("accentedUnicode,stepTransliteration,shortDef,stepGloss").where()
-                    .in("strongNumber", strongList).findList();
-        }
-        return new ArrayList<Definition>();
+        return new EntityDoc[0];
     }
 
     @Override
@@ -170,21 +123,21 @@ public class VocabularyServiceImpl implements VocabularyService {
      */
     private String getDataFromLexiconDefinition(final String vocabIdentifiers,
             final LexiconDataProvider provider) {
-        final List<String> keys = getKeys(vocabIdentifiers);
-        if (keys.isEmpty()) {
+        final String[] keys = getKeys(vocabIdentifiers);
+        if (keys.length == 0) {
             return "";
         }
 
         // else we lookup and concatenate
-        final List<Definition> lds = getLexiconDefinitions(keys);
+        final EntityDoc[] lds = getLexiconDefinitions(keys);
 
         // TODO - if nothing there, for now we just return the ids we got
-        if (lds.isEmpty()) {
+        if (lds.length == 0) {
             return vocabIdentifiers;
         }
 
-        final StringBuilder sb = new StringBuilder(lds.size() * 32);
-        for (final Definition l : lds) {
+        final StringBuilder sb = new StringBuilder(lds.length * 32);
+        for (final EntityDoc l : lds) {
             sb.append(provider.getData(l));
         }
 
@@ -197,11 +150,8 @@ public class VocabularyServiceImpl implements VocabularyService {
      * @param keys the keys to match
      * @return the lexicon definitions that were found
      */
-    private List<Definition> getLexiconDefinitions(final List<String> keys) {
-        final List<Definition> lds = this.ebean.find(Definition.class)
-                .select("accentedUnicode,stepTransliteration,stepGloss").where().in("strongNumber", keys)
-                .findList();
-        return lds;
+    private EntityDoc[] getLexiconDefinitions(final String[] keys) {
+        return this.definitions.searchUniqueBySingleField("strongNumber", keys);
     }
 
     /**
@@ -210,24 +160,23 @@ public class VocabularyServiceImpl implements VocabularyService {
      * @param vocabIdentifiers the vocabulary identifiers
      * @return the list of all keys to lookup
      */
-    List<String> getKeys(final String vocabIdentifiers) {
+    String[] getKeys(final String vocabIdentifiers) {
         if (isBlank(vocabIdentifiers)) {
-            return new ArrayList<String>(0);
+            return new String[0];
         }
 
-        final List<String> idList = new ArrayList<String>();
         final String[] ids = vocabIdentifiers.split(STRONG_SEPARATORS);
 
-        for (final String i : ids) {
-            final char firstChar = i.charAt(0);
+        for (int ii = 0; ii < ids.length; ii++) {
+            final char firstChar = ids[ii].charAt(0);
             if (firstChar == 'G' || firstChar == 'H') {
-                idList.add(padStrongNumber(i, false));
-            } else if ((i.startsWith(HIGHER_STRONG) || i.startsWith(LOWER_STRONG))
-                    && i.length() > START_STRONG_KEY) {
-                idList.add(padStrongNumber(i.substring(START_STRONG_KEY), false));
+                ids[ii] = padStrongNumber(ids[ii], false);
+            } else if ((ids[ii].startsWith(HIGHER_STRONG) || ids[ii].startsWith(LOWER_STRONG))
+                    && ids[ii].length() > START_STRONG_KEY) {
+                ids[ii] = padStrongNumber(ids[ii].substring(START_STRONG_KEY), false);
             }
         }
-        return idList;
+        return ids;
     }
 
     /**

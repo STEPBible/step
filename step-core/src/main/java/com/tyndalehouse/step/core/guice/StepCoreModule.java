@@ -46,6 +46,7 @@ import com.avaje.ebean.EbeanServer;
 import com.google.inject.Provides;
 import com.google.inject.TypeLiteral;
 import com.google.inject.name.Names;
+import com.tyndalehouse.step.core.data.EntityManager;
 import com.tyndalehouse.step.core.data.create.Loader;
 import com.tyndalehouse.step.core.data.entities.Session;
 import com.tyndalehouse.step.core.guice.providers.DatabaseConfigProvider;
@@ -138,8 +139,8 @@ public class StepCoreModule extends AbstractStepGuiceModule {
         }).annotatedWith(Names.named("defaultLexiconRefs")).toProvider(DefaultLexiconRefsProvider.class);
         bind(new TypeLiteral<List<Installer>>() {
         }).toProvider(DefaultInstallersProvider.class);
-
-        bind(EbeanServer.class).toProvider(DatabaseConfigProvider.class);
+        bind(EntityManager.class).asEagerSingleton();
+        bind(EbeanServer.class).toProvider(DatabaseConfigProvider.class).asEagerSingleton();
 
         // now bind the test data
         if (Boolean.valueOf(stepProperties.getProperty("test.data.load"))) {

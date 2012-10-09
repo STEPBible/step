@@ -470,9 +470,9 @@ step.search = {
             
             $.each(definitions, function(i, item) {
                 var link = "<input type='checkbox' " +
-                		"value='" + (item.matchingForm == undefined ? "" : item.matchingForm) +"' " +
+                		"value='" + (item.strongNumber == undefined ? "" : item.strongNumber) +"' " +
                 	    "id='ows_" + passageId + "_" + i + "' " +
-                        ($.inArray(item.matchingForm, values) != -1 ? "checked='checked'" : "") +   
+                        ($.inArray(item.strongNumber, values) != -1 ? "checked='checked'" : "") +   
                     " /><label for='ows_" + passageId + "_" + i  + "' ><span class='ancientSearchButton'>" + item.matchingForm + "</span>" +
 //                		"<br />" + item.stepTransliteration + 
                 		"<br />";

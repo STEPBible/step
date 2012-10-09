@@ -29,7 +29,7 @@ public class JSwordSearchServiceImplTest {
     public void setUp() {
         final JSwordVersificationServiceImpl av11nService = new JSwordVersificationServiceImpl();
         this.search = new JSwordSearchServiceImpl(av11nService, new JSwordPassageServiceImpl(av11nService,
-                null, null));
+                null, null, null));
     }
 
     /**

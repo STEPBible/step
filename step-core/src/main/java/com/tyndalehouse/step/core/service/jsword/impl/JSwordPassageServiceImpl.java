@@ -106,6 +106,7 @@ import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
 import com.tyndalehouse.step.core.utils.StringConversionUtils;
 import com.tyndalehouse.step.core.xsl.XslConversionType;
+import com.tyndalehouse.step.core.xsl.impl.ColorCoderProviderImpl;
 import com.tyndalehouse.step.core.xsl.impl.InterleavingProviderImpl;
 
 /**
@@ -124,6 +125,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
     private final MorphologyServiceImpl morphologyProvider;
     private final JSwordVersificationService versificationService;
     private final VocabularyService vocabProvider;
+    private final ColorCoderProviderImpl colorCoder;
 
     /**
      * constructs the jsword service.
@@ -134,10 +136,12 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
      */
     @Inject
     public JSwordPassageServiceImpl(final JSwordVersificationService versificationService,
-            final MorphologyServiceImpl morphologyProvider, final VocabularyService vocabProvider) {
+            final MorphologyServiceImpl morphologyProvider, final VocabularyService vocabProvider,
+            final ColorCoderProviderImpl colorCoder) {
         this.versificationService = versificationService;
         this.morphologyProvider = morphologyProvider;
         this.vocabProvider = vocabProvider;
+        this.colorCoder = colorCoder;
     }
 
     @Override
@@ -764,39 +768,6 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
     }
 
     // FIXME: TODO can be unsynchronized when JS-109 is rewritten
-    /***
-     * 
-     * @param versions the list of all interleaved versions we want to display
-     * @param reference the reference that we wish to look up
-     * @param options the list of options available
-     * @return the OSIS wrapper containing everything we need
-     */
-    // @Override
-    // public synchronized OsisWrapper getInterleavedVersions(final String[] versions, final String reference,
-    // final List<LookupOption> options) {
-    // notNull(versions, "No versions were passed in", UserExceptionType.SERVICE_VALIDATION_ERROR);
-    // notNull(reference, "No reference was passed in", UserExceptionType.SERVICE_VALIDATION_ERROR);
-    //
-    // options.add(LookupOption.VERSE_NEW_LINE);
-    //
-    // final BookData[] data = new BookData[versions.length];
-    // for (int ii = 0; ii < versions.length; ii++) {
-    // data[ii] = getBookData(versions[ii], reference);
-    // }
-    //
-    // final SAXEventProvider provider = buildInterleavedVersions(data);
-    // try {
-    // final TransformingSAXEventProvider transformer = executeStyleSheet(options, null, data[0],
-    // provider);
-    // final OsisWrapper osisWrapper = new OsisWrapper(writeToString(transformer), data[0].getKey()
-    // .getName(), data[0].getFirstBook().getLanguage().getCode(), data[0].getKey().getOsisID());
-    // return osisWrapper;
-    // } catch (final TransformerException e) {
-    // throw new StepInternalException(e.getMessage(), e);
-    // } catch (final SAXException e) {
-    // throw new StepInternalException(e.getMessage(), e);
-    // }
-    // }
 
     /**
      * Changes the input OSIS document to have extra verses, the ones from the other versions
@@ -1030,19 +1001,23 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
             if (lookupOption.getXsltParameterName() != null) {
                 tsep.setParameter(lookupOption.getXsltParameterName(), true);
 
-                if (LookupOption.VERSE_NUMBERS.equals(lookupOption)) {
+                if (LookupOption.VERSE_NUMBERS == lookupOption) {
                     tsep.setParameter(LookupOption.TINY_VERSE_NUMBERS.getXsltParameterName(), true);
                 }
 
-                if (LookupOption.MORPHOLOGY.equals(lookupOption)) {
+                if (LookupOption.MORPHOLOGY == lookupOption) {
                     // tsep.setDevelopmentMode(true);
                     tsep.setParameter("morphologyProvider", this.morphologyProvider);
                 }
 
-                if (LookupOption.ENGLISH_VOCAB.equals(lookupOption)
-                        || LookupOption.TRANSLITERATION.equals(lookupOption)
-                        || LookupOption.GREEK_VOCAB.equals(lookupOption)) {
+                if (LookupOption.ENGLISH_VOCAB == lookupOption
+                        || LookupOption.TRANSLITERATION == lookupOption
+                        || LookupOption.GREEK_VOCAB == lookupOption) {
                     tsep.setParameter("vocabProvider", this.vocabProvider);
+                }
+
+                if (LookupOption.COLOUR_CODE == lookupOption) {
+                    tsep.setParameter("colorCodingProvider", this.colorCoder);
                 }
             }
         }

@@ -1,8 +1,9 @@
 package com.tyndalehouse.step.core.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import com.tyndalehouse.step.core.data.entities.lexicon.Definition;
+import com.tyndalehouse.step.core.data.EntityDoc;
 
 /**
  * Search query object. Defines all parameters required to execute a search
@@ -22,7 +23,7 @@ public class SearchQuery {
     private int currentSearch = 0;
     private boolean allKeys = false;
     private final String sortOrder;
-    private List<Definition> definitions;
+    private List<EntityDoc> definitions;
 
     /**
      * @param searchQuery the query to be run
@@ -170,14 +171,22 @@ public class SearchQuery {
     /**
      * @param strongNumbers the strongNumbers to set
      */
-    public void setDefinitions(final List<Definition> strongNumbers) {
+    public void setDefinitions(final List<EntityDoc> strongNumbers) {
         this.definitions = strongNumbers;
     }
 
     /**
      * @return the strongNumbers
      */
-    public List<Definition> getDefinitions() {
+    public List<EntityDoc> getDefinitions() {
         return this.definitions;
+    }
+
+    public void setDefinitions(final EntityDoc[] definitions) {
+        final List<EntityDoc> list = new ArrayList<EntityDoc>(definitions.length);
+        for (final EntityDoc d : definitions) {
+            list.add(d);
+        }
+        this.definitions = list;
     }
 }

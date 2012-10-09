@@ -30,7 +30,7 @@
 ////////////////////////////////////////
 // LANGUAGE
 ////////////////////////////////////////
-WORDS_MEANING = ["words meaning", "Type the English meaning of the original words."];
+WORDS_MEANING = ["words meaning", "Type the English meaning of the original words. You can choose to select a value from the list, or simply search for the text you enter in the textbox."];
 GREEK_WORDS = ["a Greek word", "Type the start of the word in English letters or Unicode Greek."];
 HEBREW_WORDS = ["a Hebrew word", "Type the start of the word in English letters or Unicode Hebrew."];
 

@@ -50,10 +50,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.avaje.ebean.EbeanServer;
-import com.tyndalehouse.step.core.data.create.loaders.AbstractClasspathBasedModuleLoader;
 import com.tyndalehouse.step.core.data.entities.DictionaryArticle;
 import com.tyndalehouse.step.core.data.entities.ScriptureReference;
 import com.tyndalehouse.step.core.data.entities.reference.TargetType;
+import com.tyndalehouse.step.core.data.loaders.AbstractClasspathBasedModuleLoader;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 

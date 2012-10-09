@@ -1,10 +1,11 @@
 package com.tyndalehouse.step.core.service.impl;
 
 import static org.junit.Assert.assertEquals;
-
-import java.util.List;
+import static org.mockito.Mockito.mock;
 
 import org.junit.Test;
+
+import com.tyndalehouse.step.core.data.EntityManager;
 
 /**
  * Tests {@link VocabularyServiceImpl}
@@ -18,10 +19,9 @@ public class VocabularyServiceImplTest {
      */
     @Test
     public void testKeyExtraction() {
-        final VocabularyServiceImpl vocab = new VocabularyServiceImpl(null);
-        assertEquals("G0016", vocab.getKeys("strong:G16").get(0));
-
-        assertEquals("G0016", vocab.getKeys("strong:G16,strong:G019").get(0));
+        final VocabularyServiceImpl vocab = new VocabularyServiceImpl(mock(EntityManager.class));
+        assertEquals("G0016", vocab.getKeys("strong:G16")[0]);
+        assertEquals("G0016", vocab.getKeys("strong:G16,strong:G019")[0]);
 
     }
 
@@ -30,10 +30,10 @@ public class VocabularyServiceImplTest {
      */
     @Test
     public void testMultipleKeyExtraction() {
-        final VocabularyServiceImpl vocab = new VocabularyServiceImpl(null);
-        final List<String> keys = vocab.getKeys("strong:G16,strong:G09");
-        assertEquals("G0016", keys.get(0));
-        assertEquals("G0009", keys.get(1));
+        final VocabularyServiceImpl vocab = new VocabularyServiceImpl(mock(EntityManager.class));
+        final String[] keys = vocab.getKeys("strong:G16,strong:G09");
+        assertEquals("G0016", keys[0]);
+        assertEquals("G0009", keys[1]);
 
     }
 

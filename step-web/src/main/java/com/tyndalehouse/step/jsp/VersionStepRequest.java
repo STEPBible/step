@@ -42,9 +42,9 @@ import org.crosswire.jsword.versification.Versification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.avaje.ebean.EbeanServer;
 import com.google.inject.Injector;
-import com.tyndalehouse.step.core.data.entities.VersionInfo;
+import com.tyndalehouse.step.core.data.EntityDoc;
+import com.tyndalehouse.step.core.data.EntityManager;
 import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
 
 /**
@@ -111,12 +111,14 @@ public class VersionStepRequest {
     }
 
     public String getTyndaleInfo() {
-        final EbeanServer ebean = this.injector.getInstance(EbeanServer.class);
-        final VersionInfo info = ebean.find(VersionInfo.class, this.book.getInitials());
-        if (info == null) {
+        final EntityManager manager = this.injector.getInstance(EntityManager.class);
+        final EntityDoc[] results = manager.getReader("versionInfo").searchUniqueBySingleField("version", 1,
+                this.book.getInitials());
+
+        if (results.length == 0) {
             return null;
         } else {
-            return info.getInfo();
+            return results[0].get("info");
         }
     }
 

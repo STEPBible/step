@@ -43,9 +43,9 @@ import javax.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.avaje.ebean.EbeanServer;
-import com.tyndalehouse.step.core.data.caches.morphology.MorphologyCache;
-import com.tyndalehouse.step.core.data.entities.morphology.Morphology;
+import com.tyndalehouse.step.core.data.EntityDoc;
+import com.tyndalehouse.step.core.data.EntityIndexReader;
+import com.tyndalehouse.step.core.data.EntityManager;
 import com.tyndalehouse.step.core.service.MorphologyService;
 
 /**
@@ -61,27 +61,26 @@ public class MorphologyServiceImpl implements MorphologyService {
     private static final String ROBINSON_PREFIX = "robinson:";
     private static final int ROBINSON_PREFIX_LENGTH = ROBINSON_PREFIX.length();
     private static final String NON_BREAKING_SPACE = "&nbsp;";
-    private final EbeanServer ebean;
-    private final MorphologyCache cache;
+    // private final EbeanServer ebean;
+    // private final MorphologyCache cache;
+    private final EntityIndexReader morphology;
 
     /**
-     * @param ebean the ebean server to access the information
-     * @param cache the cache storing all the morphology information
+     * @param manager the entity manager
      */
     @Inject
-    public MorphologyServiceImpl(final EbeanServer ebean, final MorphologyCache cache) {
-        this.ebean = ebean;
-        this.cache = cache;
+    public MorphologyServiceImpl(final EntityManager manager) {
+        this.morphology = manager.getReader("morphology");
     }
 
     @Override
-    public List<Morphology> getMorphology(final String code) {
+    public List<EntityDoc> getMorphology(final String code) {
         // split code into keys
         final String[] codes = split(code, SPACE_SEPARATOR);
-        final List<Morphology> morphs = new ArrayList<Morphology>(codes.length);
+        final List<EntityDoc> morphs = new ArrayList<EntityDoc>(codes.length);
         for (final String c : codes) {
             // check cache for key, otherwise obtain from database
-            final Morphology item = retrieveMorphologyByLongName(c);
+            final EntityDoc item = retrieveMorphologyByLongName(c);
 
             if (item != null) {
                 morphs.add(item);
@@ -91,7 +90,7 @@ public class MorphologyServiceImpl implements MorphologyService {
     }
 
     @Override
-    public List<Morphology> getQuickMorphology(final String code) {
+    public List<EntityDoc> getQuickMorphology(final String code) {
         // very little information available, so let's return it all
         return getMorphology(code);
     }
@@ -102,25 +101,30 @@ public class MorphologyServiceImpl implements MorphologyService {
      * @param code long code including scheme (e.g. robinson:) to the morphology item
      * @return the morphology of interest
      */
-    private Morphology retrieveMorphologyByLongName(final String code) {
+    private EntityDoc retrieveMorphologyByLongName(final String code) {
         if (code.length() > ROBINSON_PREFIX_LENGTH) {
             final String key = code.substring(ROBINSON_PREFIX_LENGTH);
-            final Morphology entry = this.cache.get(key);
-            if (entry != null) {
-                LOGGER.trace("Cache hit for key [{}]", key);
-                return entry;
-            }
 
-            LOGGER.trace("Cache miss for key [{}]", key);
-            final Morphology morphFromDb = this.ebean.find(Morphology.class, key);
+            final long currentTimeNanos = System.nanoTime();
+            final EntityDoc[] entry = this.morphology.searchUniqueBySingleField("code", 1, key);
+            LOGGER.debug("Took [{}] nano-seconds", System.nanoTime() - currentTimeNanos);
+            return entry.length > 0 ? entry[0] : null;
+            // final Morphology entry = this.cache.get(key);
+            // if (entry != null) {
+            // LOGGER.trace("Cache hit for key [{}]", key);
+            // return entry;
+            // }
+
+            // LOGGER.trace("Cache miss for key [{}]", key);
+            // final Morphology morphFromDb = this.ebean.find(Morphology.class, key);
 
             // put in cache regardless
-            if (morphFromDb != null) {
-                this.cache.put(key, morphFromDb);
-                return morphFromDb;
-            } else {
-                return null;
-            }
+            // if (morphFromDb != null) {
+            // this.cache.put(key, morphFromDb);
+            // return morphFromDb;
+            // } else {
+            // return null;
+            // }
         }
         return null;
     }
@@ -130,10 +134,10 @@ public class MorphologyServiceImpl implements MorphologyService {
      * @return the string to be displayed to the user
      */
     public String getDisplayMorphology(final String code) {
-        final List<Morphology> morphology = getMorphology(code);
+        final List<EntityDoc> morphologies = getMorphology(code);
         final StringBuilder sb = new StringBuilder(128);
-        for (final Morphology m : morphology) {
-            sb.append(m.getInlineHtml());
+        for (final EntityDoc m : morphologies) {
+            sb.append(m.get("inlineHtml"));
             sb.append(NON_BREAKING_SPACE);
         }
         return sb.toString();

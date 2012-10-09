@@ -85,6 +85,7 @@
   <xsl:param name="interlinearReference" select="''" />
   <xsl:param name="morphologyProvider" />
   <xsl:param name="vocabProvider" />
+  <xsl:param name="colorCodingProvider" />
  
  
   <!--  TODO: support alternate versification -->
@@ -100,8 +101,6 @@
 
   <xsl:variable name="punctuation" select="'|\,./&lt;&gt;?;\#:@~[]{}-=_+`¬!£$%^&amp;*()&quot;'" />
 
-  <!-- set up options for color coding -->
-  <xsl:variable name="colorCodingProvider" select="jsword:com.tyndalehouse.step.core.xsl.impl.ColorCoderProviderImpl.new()" />
 
   <!--=======================================================================-->
   <xsl:template match="/">

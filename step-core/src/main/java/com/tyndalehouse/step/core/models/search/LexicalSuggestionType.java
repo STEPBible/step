@@ -10,25 +10,13 @@ public enum LexicalSuggestionType {
     /**
      * only hebrew should be returned
      */
-    HEBREW("H%"),
+    HEBREW,
     /**
      * only greek should be returned
      */
-    GREEK("G%");
-
-    private final String strongPattern;
-
+    GREEK,
     /**
-     * @param strongPattern the pattern to use in the query
+     * meaning searches
      */
-    LexicalSuggestionType(final String strongPattern) {
-        this.strongPattern = strongPattern;
-    }
-
-    /**
-     * @return the strongPattern
-     */
-    public String getStrongPattern() {
-        return this.strongPattern;
-    }
+    MEANING;
 }

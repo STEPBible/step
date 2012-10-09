@@ -36,8 +36,14 @@ import static java.util.regex.Pattern.compile;
 
 import java.util.regex.Pattern;
 
+import javax.inject.Inject;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.tyndalehouse.step.core.data.EntityDoc;
+import com.tyndalehouse.step.core.data.EntityIndexReader;
+import com.tyndalehouse.step.core.data.EntityManager;
 
 /**
  * A utility to provide colors to an xsl spreadsheet. This is a non-static utility since later on we may wish
@@ -83,13 +89,15 @@ public class ColorCoderProviderImpl {
     private static final int MINIMUM_MORPH_LENGTH = ROBINSON_PREFIX_UC.length() + 2;
 
     // css classes
-    private static final String NEITHER_PLURAL_NOR_SINGULAR = "";
-    private static final String PLURAL_NEUTER = "plur neut";
-    private static final String PLURAL_MASCULINE = "plur mas";
-    private static final String PLURAL_FEMININE = "plur fem";
-    private static final String SINGULAR_NEUTER = "sing neut";
-    private static final String SINGULAR_MASCULINE = "sing mas";
-    private static final String SINGULAR_FEMININE = "sing fem";
+    private final EntityIndexReader morphology;
+
+    /**
+     * @param manager the manager from which to obtain an index reader for morphology information
+     */
+    @Inject
+    public ColorCoderProviderImpl(final EntityManager manager) {
+        this.morphology = manager.getReader("morphology");
+    }
 
     /**
      * @param morph the robinson morphology
@@ -101,81 +109,18 @@ public class ColorCoderProviderImpl {
             return "";
         }
 
+        String classes = null;
         if (morph.startsWith(ROBINSON_PREFIX_LC) || morph.startsWith(ROBINSON_PREFIX_UC)) {
             // we're in business and we know we have at least 3 characters
             LOGGER.debug("Identifying grammar for [{}]", morph);
 
-            // null - none, false = singular, true = plural
-            Boolean plural = null;
-            if (isSingular(morph)) {
-                plural = Boolean.FALSE;
-            } else if (isPlural(morph)) {
-                plural = Boolean.TRUE;
+            final EntityDoc[] results = this.morphology.searchUniqueBySingleField("code", 1,
+                    morph.substring(ROBINSON_PREFIX_LC.length()));
+            if (results.length > 0) {
+                classes = results[0].get("cssClasses");
+
             }
-
-            // null - none, false = feminine, true = masculine
-            Boolean masculine = null;
-            if (isFeminine(morph)) {
-                masculine = Boolean.FALSE;
-            } else if (isMasculine(morph)) {
-                masculine = Boolean.TRUE;
-            }
-            return getCssColor(plural, masculine);
         }
-        return "";
-    }
-
-    /**
-     * calculates the relevant css color
-     * 
-     * @param plural true if plural, false if singular, null otherwise
-     * @param masculine true if masculine, false if feminine, null otherwise
-     * @return the calculated css color
-     */
-    private String getCssColor(final Boolean plural, final Boolean masculine) {
-        if (plural == null) {
-            // neither singular, nor plural, so return normal black, not bold
-            return NEITHER_PLURAL_NOR_SINGULAR;
-        } else if (plural.booleanValue()) {
-            // plural
-            return masculine == null ? PLURAL_NEUTER : masculine.booleanValue() ? PLURAL_MASCULINE
-                    : PLURAL_FEMININE;
-        }
-
-        // else singular
-        return masculine == null ? SINGULAR_NEUTER : masculine.booleanValue() ? SINGULAR_MASCULINE
-                : SINGULAR_FEMININE;
-    }
-
-    /**
-     * @param morph the string to test
-     * @return true if masculine
-     */
-    boolean isMasculine(final String morph) {
-        return MASCULINE_FORM.matcher(morph).find(ROBINSON_PREFIX_UC.length());
-    }
-
-    /**
-     * @param morph the string to test
-     * @return true if feminine
-     */
-    boolean isFeminine(final String morph) {
-        return FEMININE_FORM.matcher(morph).find(ROBINSON_PREFIX_UC.length());
-    }
-
-    /**
-     * @param morph the string to test
-     * @return true if plural
-     */
-    boolean isPlural(final String morph) {
-        return PLURAL_FORM.matcher(morph).find(ROBINSON_PREFIX_UC.length());
-    }
-
-    /**
-     * @param morph the string to test
-     * @return true if singular
-     */
-    boolean isSingular(final String morph) {
-        return SINGULAR_FORM.matcher(morph).find(ROBINSON_PREFIX_UC.length());
+        return classes != null ? classes : "";
     }
 }

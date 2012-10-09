@@ -2,7 +2,7 @@ package com.tyndalehouse.step.core.service.helpers;
 
 import java.util.Comparator;
 
-import com.tyndalehouse.step.core.data.entities.lexicon.Definition;
+import com.tyndalehouse.step.core.data.EntityDoc;
 
 /**
  * Compares a definition by gloss
@@ -10,12 +10,12 @@ import com.tyndalehouse.step.core.data.entities.lexicon.Definition;
  * @author chrisburrell
  * 
  */
-public class GlossComparator implements Comparator<Definition> {
+public class GlossComparator implements Comparator<EntityDoc> {
 
     @Override
-    public int compare(final Definition o1, final Definition o2) {
-        final String stepGloss1 = o1.getStepGloss();
-        final String stepGloss2 = o2.getStepGloss();
+    public int compare(final EntityDoc o1, final EntityDoc o2) {
+        final String stepGloss1 = o1.get("stepGloss");
+        final String stepGloss2 = o2.get("stepGloss");
 
         if (stepGloss1 == null && stepGloss2 == null) {
             return 0;

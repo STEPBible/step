@@ -35,7 +35,7 @@ package com.tyndalehouse.step.models.info;
 import java.io.Serializable;
 import java.util.List;
 
-import com.tyndalehouse.step.core.data.entities.lexicon.Definition;
+import com.tyndalehouse.step.core.data.EntityDoc;
 import com.tyndalehouse.step.core.models.ShortLexiconDefinition;
 
 /**
@@ -71,29 +71,23 @@ public class VocabInfo implements Serializable {
     }
 
     /**
-     * constructs a vocab info from a {@link Definition}
+     * constructs a vocab info from a {@link EntityDoc}
      * 
-     * @param d see {@link Definition}
+     * @param d see a document representing a lexicon definition
+     * @param includeAllInfo true to include all information
      */
-    public VocabInfo(final Definition d, final boolean includeAllInfo) {
-        this.accentedUnicode = d.getAccentedUnicode();
-        this.shortDef = d.getShortDef();
-        this.stepGloss = d.getStepGloss();
-        this.stepTransliteration = d.getStepTransliteration();
+    public VocabInfo(final EntityDoc d, final boolean includeAllInfo) {
+        this.accentedUnicode = d.get("accentedUnicode");
+        this.shortDef = d.get("shortDefinition");
+        this.stepGloss = d.get("stepGloss");
+        this.stepTransliteration = d.get("stepTransliteration");
 
         if (includeAllInfo) {
-            this.alternativeTranslit1 = d.getAlternativeTranslit1();
-            this.alternativeTranslit1Unaccented = d.getAlternativeTranslit1Unaccented();
-            this.lsjDefs = d.getLsjDefs();
-            this.strongNumber = d.getStrongNumber();
-            this.unaccentedUnicode = d.getUnaccentedUnicode();
-            this.strongTranslit = d.getStrongTranslit();
-            this.strongPronunc = d.getStrongPronunc();
-            this.relatedNos = d.getRelatedNos();
-            this.mediumDef = d.getMediumDef();
-            this.unaccentedStepTransliteration = d.getUnaccentedStepTransliteration();
-            this.twoLetterLookup = d.getTwoLetterLookup();
-            this.similarStrongs = d.getSimilarStrongCodes();
+            this.lsjDefs = d.get("lsjDefinition");
+            this.strongNumber = d.get("strongNumber");
+            this.relatedNos = d.get("relatedNumbers");
+            this.mediumDef = d.get("mediumDefinition");
+            this.twoLetterLookup = d.get("twoLetter");
         }
     }
 

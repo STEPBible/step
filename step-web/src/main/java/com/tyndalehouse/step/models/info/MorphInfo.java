@@ -34,16 +34,7 @@ package com.tyndalehouse.step.models.info;
 
 import java.io.Serializable;
 
-import com.tyndalehouse.step.core.data.entities.morphology.Case;
-import com.tyndalehouse.step.core.data.entities.morphology.Function;
-import com.tyndalehouse.step.core.data.entities.morphology.Gender;
-import com.tyndalehouse.step.core.data.entities.morphology.Mood;
-import com.tyndalehouse.step.core.data.entities.morphology.Morphology;
-import com.tyndalehouse.step.core.data.entities.morphology.Number;
-import com.tyndalehouse.step.core.data.entities.morphology.Person;
-import com.tyndalehouse.step.core.data.entities.morphology.Suffix;
-import com.tyndalehouse.step.core.data.entities.morphology.Tense;
-import com.tyndalehouse.step.core.data.entities.morphology.Voice;
+import com.tyndalehouse.step.core.data.EntityDoc;
 
 /**
  * Captures information related to morphology
@@ -95,44 +86,45 @@ public class MorphInfo implements Serializable {
     }
 
     /**
-     * constructs a morph info from a {@link Morphology}
+     * constructs a morph info from a morphology entity document
      * 
-     * @param m see {@link Morphology}
+     * @param m a morphology entity document
+     * @param includeAllInfo true to include everything in the payload
      */
-    public MorphInfo(final Morphology m, final boolean includeAllInfo) {
-        setFunction(m.getFunction());
-        setGender(m.getGender());
-        setMood(m.getMood());
-        setNumber(m.getNumber());
-        setPerson(m.getPerson());
-        setSuffix(m.getSuffix());
-        setTense(m.getTense());
-        setVoice(m.getVoice());
-        setWordCase(m.getWordCase());
+    public MorphInfo(final EntityDoc m, final boolean includeAllInfo) {
+        this.function = m.get("function");
+        this.gender = m.get("gender");
+        this.mood = m.get("mood");
+        this.number = m.get("number");
+        this.person = m.get("person");
+        this.suffix = m.get("suffix");
+        this.tense = m.get("tense");
+        this.voice = m.get("voice");
+        this.wordCase = m.get("case");
 
         if (includeAllInfo) {
-            setExplanation(m.getExplanation());
-            setDescription(m.getDescription());
+            this.explanation = m.get("explained");
+            this.description = m.get("description");
 
-            setFunctionExplained(m.getFunctionExplained());
-            setGenderExplained(m.getGenderExplained());
-            setMoodExplained(m.getMoodExplained());
-            setNumberExplained(m.getNumberExplained());
-            setPersonExplained(m.getPersonExplained());
-            setSuffixExplained(m.getSuffixExplained());
-            setTenseExplained(m.getTenseExplained());
-            setVoiceExplained(m.getVoiceExplained());
-            setCaseExplained(m.getCaseExplained());
+            this.functionExplained = m.get("functionExplained");
+            this.genderExplained = m.get("genderExplained");
+            this.moodExplained = m.get("moodExplained");
+            this.numberExplained = m.get("numberExplained");
+            this.personExplained = m.get("personExplained");
+            this.suffixExplained = m.get("suffixExplained");
+            this.tenseExplained = m.get("tenseExplained");
+            this.voiceExplained = m.get("voiceExplained");
+            this.caseExplained = m.get("caseExplained");
 
-            setFunctionDescription(m.getFunctionDescription());
-            setGenderDescription(m.getGenderDescription());
-            setMoodDescription(m.getMoodDescription());
-            setNumberDescription(m.getNumberDescription());
-            setPersonDescription(m.getPersonDescription());
-            setSuffixDescription(m.getSuffixDescription());
-            setTenseDescription(m.getTenseDescription());
-            setVoiceDescription(m.getVoiceDescription());
-            setCaseDescription(m.getCaseDescription());
+            this.functionDescription = m.get("functionDescription");
+            this.genderDescription = m.get("genderDescription");
+            this.moodDescription = m.get("moodDescription");
+            this.numberDescription = m.get("numberDescription");
+            this.personDescription = m.get("personDescription");
+            this.suffixDescription = m.get("suffixDescription");
+            this.tenseDescription = m.get("tenseDescription");
+            this.voiceDescription = m.get("voiceDescription");
+            this.caseDescription = m.get("caseDescription");
         }
     }
 
@@ -288,102 +280,6 @@ public class MorphInfo implements Serializable {
      */
     public String getTenseNotes() {
         return this.tenseNotes;
-    }
-
-    /**
-     * @param function function
-     */
-    private void setFunction(final Function function) {
-        if (function != null) {
-            this.function = function.toString();
-            if (function.getNotes() != null) {
-                this.functionNotes = function.getNotes();
-            }
-        }
-    }
-
-    /**
-     * 
-     * @param gender gender
-     */
-    private void setGender(final Gender gender) {
-        if (gender != null) {
-            this.gender = gender.toString();
-        }
-
-    }
-
-    /**
-     * 
-     * @param mood mood
-     */
-    private void setMood(final Mood mood) {
-        if (mood != null) {
-            this.mood = mood.toString();
-        }
-    }
-
-    /**
-     * 
-     * @param number number
-     */
-    private void setNumber(final Number number) {
-        if (number != null) {
-            this.number = number.toString();
-        }
-    }
-
-    /**
-     * 
-     * @param person person
-     */
-    private void setPerson(final Person person) {
-        if (person != null) {
-            this.person = person.toString();
-        }
-
-    }
-
-    /**
-     * 
-     * @param suffix suffix
-     */
-    private void setSuffix(final Suffix suffix) {
-        if (suffix != null) {
-            this.suffix = suffix.toString();
-        }
-    }
-
-    /**
-     * 
-     * @param tense tense
-     */
-    private void setTense(final Tense tense) {
-        if (tense != null) {
-            this.tense = tense.toString();
-            if (tense.getNotes() != null) {
-                this.tenseNotes = tense.getNotes();
-            }
-        }
-    }
-
-    /**
-     * 
-     * @param voice voice
-     */
-    private void setVoice(final Voice voice) {
-        if (voice != null) {
-            this.voice = voice.toString();
-        }
-    }
-
-    /**
-     * @param wordCase word case
-     */
-    private void setWordCase(final Case wordCase) {
-        if (wordCase != null) {
-            this.wordCase = wordCase.toString();
-        }
     }
 
     /**

@@ -33,14 +33,10 @@
 package com.tyndalehouse.step.core.data.create;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Properties;
-import java.util.Set;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -49,19 +45,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.tyndalehouse.step.core.data.DataDrivenTestExtension;
-import com.tyndalehouse.step.core.data.entities.lexicon.Definition;
-import com.tyndalehouse.step.core.data.entities.lexicon.SpecificForm;
-import com.tyndalehouse.step.core.data.entities.morphology.Case;
-import com.tyndalehouse.step.core.data.entities.morphology.Function;
-import com.tyndalehouse.step.core.data.entities.morphology.Gender;
-import com.tyndalehouse.step.core.data.entities.morphology.Mood;
-import com.tyndalehouse.step.core.data.entities.morphology.Morphology;
-import com.tyndalehouse.step.core.data.entities.morphology.Number;
-import com.tyndalehouse.step.core.data.entities.morphology.Person;
-import com.tyndalehouse.step.core.data.entities.morphology.Suffix;
-import com.tyndalehouse.step.core.data.entities.morphology.Tense;
-import com.tyndalehouse.step.core.data.entities.morphology.Voice;
-import com.tyndalehouse.step.core.models.HasCsvValueName;
+import com.tyndalehouse.step.core.data.EntityDoc;
+import com.tyndalehouse.step.core.data.EntityIndexReader;
+import com.tyndalehouse.step.core.data.EntityManager;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
 import com.tyndalehouse.step.core.service.jsword.impl.JSwordPassageServiceImpl;
@@ -80,6 +66,13 @@ public class LoaderTest extends DataDrivenTestExtension {
     @Mock
     private JSwordPassageService jsword;
 
+    private EntityManager entityManager;
+
+    @Before
+    public void setUp() {
+        this.entityManager = new EntityManager(true, "step/testPath");
+    }
+
     /**
      * tests the openbible data
      */
@@ -88,7 +81,7 @@ public class LoaderTest extends DataDrivenTestExtension {
         final Properties coreProperties = new Properties();
         coreProperties.put("test.data.path.geography.openbible", "geography.tab");
 
-        final Loader l = new Loader(this.jsword, null, getEbean(), coreProperties);
+        final Loader l = new Loader(this.jsword, null, getEbean(), coreProperties, this.entityManager);
         assertEquals(4, l.loadOpenBibleGeography());
     }
 
@@ -100,7 +93,7 @@ public class LoaderTest extends DataDrivenTestExtension {
         final Properties coreProperties = new Properties();
         coreProperties.put("test.data.path.timeline.events.directory", "timeline.csv");
 
-        final Loader l = new Loader(this.jsword, null, getEbean(), coreProperties);
+        final Loader l = new Loader(this.jsword, null, getEbean(), coreProperties, this.entityManager);
         assertEquals(4, l.loadTimeline());
     }
 
@@ -111,7 +104,7 @@ public class LoaderTest extends DataDrivenTestExtension {
     public void testHotSpots() {
         final Properties coreProperties = new Properties();
         coreProperties.put("test.data.path.timeline.hotspots", "hotspots.csv");
-        final Loader l = new Loader(this.jsword, null, getEbean(), coreProperties);
+        final Loader l = new Loader(this.jsword, null, getEbean(), coreProperties, this.entityManager);
 
         assertEquals(3, l.loadHotSpots());
     }
@@ -121,11 +114,8 @@ public class LoaderTest extends DataDrivenTestExtension {
      */
     @Test
     public void testVersionInfo() {
-        final Properties coreProperties = new Properties();
-        coreProperties.put("test.data.path.versions.info", "versions.csv");
-        final Loader l = new Loader(this.jsword, null, getEbean(), coreProperties);
-
-        assertEquals(2, l.loadVersionInformation());
+        getLoader("test.data.path.versions.info", "versions.csv").loadVersionInformation();
+        assertLoaded(1, "versionInfo", "version", "ESV");
     }
 
     /**
@@ -134,20 +124,8 @@ public class LoaderTest extends DataDrivenTestExtension {
      */
     @Test
     public void testLexiconDefinitions() {
-
-        final Properties coreProperties = new Properties();
-        coreProperties.put("test.data.path.lexicon.definitions.greek", "lexicon_sample.txt");
-        coreProperties.put("test.data.path.lexicon.definitions.hebrew", "lexicon_empty.txt");
-
-        final JSwordVersificationService versificationService = new JSwordVersificationServiceImpl();
-
-        final Loader l = new Loader(new JSwordPassageServiceImpl(versificationService, null, null), null,
-                getEbean(), coreProperties);
-        l.loadLexiconDefinitions();
-
-        // final int count = getEbean().find(Definition.class).findRowCount();
-        //
-        // assertEquals(18, count);
+        getLoader("test.data.path.lexicon.definitions.greek", "lexicon_sample.txt").loadLexiconDefinitions();
+        assertLoaded(1, "definition", "strongNumber", "G0132");
     }
 
     /**
@@ -156,27 +134,9 @@ public class LoaderTest extends DataDrivenTestExtension {
      */
     @Test
     public void testSpecificForms() {
-        final Properties coreProperties = new Properties();
-        coreProperties.put("test.data.path.lexicon.forms", "specific_forms.txt");
-        final JSwordVersificationService versificationService = new JSwordVersificationServiceImpl();
-        final Loader l = new Loader(new JSwordPassageServiceImpl(versificationService, null, null), null,
-                getEbean(), coreProperties);
-
-        // add G1 and G10 so that foreign key relationships are possible
-        final Definition d1 = new Definition();
-        d1.setStrongNumber("GC001");
-        d1.setBlacklisted(false);
-
-        final Definition d2 = new Definition();
-        d2.setStrongNumber("GC010");
-        d2.setBlacklisted(false);
-
-        getEbean().save(d1);
-        getEbean().save(d2);
-
+        final Loader l = getLoader("test.data.path.lexicon.forms", "specific_forms.txt");
         l.loadSpecificForms();
-
-        assertTrue(getEbean().find(SpecificForm.class).findRowCount() > 10);
+        assertLoaded(4, "specificForm", "strongNumber", "GC001");
     }
 
     /**
@@ -184,94 +144,58 @@ public class LoaderTest extends DataDrivenTestExtension {
      */
     @Test
     public void testRobinsonMorphology() {
-        final Properties coreProperties = new Properties();
-        coreProperties.put("test.data.path.morphology.robinson", "robinson_morphology.csv");
-        final Loader l = new Loader(this.jsword, null, getEbean(), coreProperties);
-        final int count = l.loadRobinsonMorphology();
-
-        final Morphology m1 = getEbean().find(Morphology.class, "V-2AAP-DSM");
+        getLoader("test.data.path.morphology.robinson", "robinson_morphology.csv").loadRobinsonMorphology();
 
         // check verb columns
-        assertEquals(Function.VERB, m1.getFunction());
-        assertEquals(Tense.SECOND_AORIST, m1.getTense());
-        assertEquals(Voice.ACTIVE, m1.getVoice());
-        assertEquals(Mood.PARTICIPLE, m1.getMood());
-        assertEquals(Case.DATIVE, m1.getWordCase());
-        assertEquals(Number.SINGULAR, m1.getNumber());
-        assertEquals(Gender.MASCULINE, m1.getGender());
+        EntityDoc[] entities = getEntities(1, "morphology", "code", "V-2AAP-DSM");
+        EntityDoc e = entities[0];
+        assertEquals("Verb", e.get("function"));
+        assertEquals("2nd Aorist", e.get("tense"));
+        assertEquals("Active", e.get("voice"));
+        assertEquals("Participle", e.get("mood"));
+        assertEquals("Dative", e.get("case"));
+        assertEquals("Singular", e.get("number"));
+        assertEquals("Masculine", e.get("gender"));
 
-        final Morphology m2 = getEbean().find(Morphology.class, "F-1ASM");
-        assertEquals(Person.FIRST, m2.getPerson());
-        assertEquals(Function.REFLEXIVE_PRONOUN, m2.getFunction());
+        // check person and function
+        entities = getEntities(1, "morphology", "code", "F-1ASM");
+        e = entities[0];
+        assertEquals("1st", e.get("person"));
+        assertEquals("Reflexive pronoun", e.get("function"));
 
-        final Morphology m3 = getEbean().find(Morphology.class, "D-NPM-C");
-        assertEquals(Suffix.CONTRACTED_FORM, m3.getSuffix());
-        assertEquals(1093, count);
+        // check person and function
+        entities = getEntities(1, "morphology", "code", "F-1ASM");
+        e = entities[0];
+        assertEquals("1st", e.get("person"));
+        assertEquals("Reflexive pronoun", e.get("function"));
 
-        checkAllEnumerationValuesUsed(getEbean().find(Morphology.class).findList());
+        entities = getEntities(1, "morphology", "code", "D-NPM-C");
+        e = entities[0];
+        assertEquals("Contracted form", e.get("suffix"));
+    }
+
+    private Loader getLoader(final String key, final String file) {
+        final Properties coreProperties = new Properties();
+        coreProperties.put(key, file);
+        final JSwordVersificationService versificationService = new JSwordVersificationServiceImpl();
+        return new Loader(new JSwordPassageServiceImpl(versificationService, null, null, null), null,
+                getEbean(), coreProperties, this.entityManager);
     }
 
     /**
-     * checks that we have loaded up all types of enumerations
-     * 
-     * @param morphs the list of all morphologies loaded up
+     * @param num the number of entities that should be loaded
+     * @param entityName the entity name
      */
-    private void checkAllEnumerationValuesUsed(final List<Morphology> morphs) {
-        final Set<Function> functions = new HashSet<Function>();
-        final Set<Case> cases = new HashSet<Case>();
-        final Set<Gender> genders = new HashSet<Gender>();
-        final Set<Mood> moods = new HashSet<Mood>();
-        final Set<Number> numbers = new HashSet<Number>();
-        final Set<Person> persons = new HashSet<Person>();
-        final Set<Suffix> suffixes = new HashSet<Suffix>();
-        final Set<Tense> tenses = new HashSet<Tense>();
-        final Set<Voice> voices = new HashSet<Voice>();
-
-        for (final Morphology m : morphs) {
-            functions.add(m.getFunction());
-            cases.add(m.getWordCase());
-            genders.add(m.getGender());
-            moods.add(m.getMood());
-            numbers.add(m.getNumber());
-            persons.add(m.getPerson());
-            suffixes.add(m.getSuffix());
-            tenses.add(m.getTense());
-            voices.add(m.getVoice());
-        }
-
-        // now iterate through all enumerations
-        final List<HasCsvValueName> missing = new ArrayList<HasCsvValueName>();
-        missing.addAll(checkAllUsed(Function.values(), functions));
-        missing.addAll(checkAllUsed(Case.values(), cases));
-        missing.addAll(checkAllUsed(Gender.values(), genders));
-        missing.addAll(checkAllUsed(Mood.values(), moods));
-        missing.addAll(checkAllUsed(Number.values(), numbers));
-        missing.addAll(checkAllUsed(Person.values(), persons));
-        missing.addAll(checkAllUsed(Suffix.values(), suffixes));
-        missing.addAll(checkAllUsed(Tense.values(), tenses));
-        missing.addAll(checkAllUsed(Voice.values(), voices));
-
-        for (final HasCsvValueName o : missing) {
-            LOG.error("Missing [{}] for [{}]", o.getCsvValueName(), o.getClass().getSimpleName());
-        }
-
-        assertTrue(missing.isEmpty());
+    private void assertLoaded(final int num, final String entityName, final String key, final String value) {
+        final EntityDoc[] searchUniqueBySingleField = getEntities(num, entityName, key, value);
+        assertEquals(num, searchUniqueBySingleField.length);
     }
 
-    /**
-     * @param values a list of values to be contained in a set of enum values
-     * @param enumValues the set of enum values
-     * @param <T> the type of the list elements
-     * @return missing values from enumValues
-     */
-    private <T> List<T> checkAllUsed(final T[] values, final Set<T> enumValues) {
-        final List<T> missing = new ArrayList<T>();
-
-        for (final T t : values) {
-            if (!enumValues.contains(t)) {
-                missing.add(t);
-            }
-        }
-        return missing;
+    private EntityDoc[] getEntities(final int num, final String entityName, final String key,
+            final String value) {
+        final EntityIndexReader reader = this.entityManager.getReader(entityName);
+        final EntityDoc[] searchUniqueBySingleField = reader.searchUniqueBySingleField(key, num, value);
+        return searchUniqueBySingleField;
     }
+
 }

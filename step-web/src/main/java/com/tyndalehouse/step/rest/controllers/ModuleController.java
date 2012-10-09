@@ -43,8 +43,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
-import com.tyndalehouse.step.core.data.entities.lexicon.Definition;
-import com.tyndalehouse.step.core.data.entities.morphology.Morphology;
+import com.tyndalehouse.step.core.data.EntityDoc;
 import com.tyndalehouse.step.core.models.BibleVersion;
 import com.tyndalehouse.step.core.service.ModuleService;
 import com.tyndalehouse.step.core.service.MorphologyService;
@@ -154,10 +153,9 @@ public class ModuleController {
      * @param includeAllInfo true to include all information
      * @return a list of infos
      */
-    private List<VocabInfo> translateToVocabInfo(final List<Definition> definitions,
-            final boolean includeAllInfo) {
-        final List<VocabInfo> morphologyInfos = new ArrayList<VocabInfo>(definitions.size());
-        for (final Definition d : definitions) {
+    private List<VocabInfo> translateToVocabInfo(final EntityDoc[] definitions, final boolean includeAllInfo) {
+        final List<VocabInfo> morphologyInfos = new ArrayList<VocabInfo>(definitions.length);
+        for (final EntityDoc d : definitions) {
             morphologyInfos.add(new VocabInfo(d, includeAllInfo));
         }
         return morphologyInfos;
@@ -170,9 +168,9 @@ public class ModuleController {
      * @param includeAllInfo true to include all information
      * @return the morphology information pojo
      */
-    private List<MorphInfo> translateToInfo(final List<Morphology> morphologies, final boolean includeAllInfo) {
+    private List<MorphInfo> translateToInfo(final List<EntityDoc> morphologies, final boolean includeAllInfo) {
         final List<MorphInfo> morphologyInfos = new ArrayList<MorphInfo>(morphologies.size());
-        for (final Morphology m : morphologies) {
+        for (final EntityDoc m : morphologies) {
             morphologyInfos.add(new MorphInfo(m, includeAllInfo));
         }
         return morphologyInfos;

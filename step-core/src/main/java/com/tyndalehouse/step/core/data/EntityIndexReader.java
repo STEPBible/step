@@ -68,7 +68,9 @@ public class EntityIndexReader implements Closeable {
     private void initialise() {
         try {
             openDirectory(this.config, this.memoryMapped);
-            this.searcher = new IndexSearcher(this.directory, true);
+            if (this.directory != null) {
+                this.searcher = new IndexSearcher(this.directory, true);
+            }
         } catch (final IOException e) {
             throw new StepInternalException("Unable to read index", e);
         }
@@ -97,11 +99,16 @@ public class EntityIndexReader implements Closeable {
     private void openDirectory(final EntityConfiguration config, final boolean memoryMapped) {
         try {
             final URI entityIndexPath = config.getLocation();
-            if (memoryMapped) {
-                this.directory = MMapDirectory.open(new File(entityIndexPath));
+            final File path = new File(entityIndexPath);
+            if (!path.exists()) {
+                return;
             }
 
-            this.directory = FSDirectory.open(new File(entityIndexPath));
+            if (memoryMapped) {
+                this.directory = MMapDirectory.open(path);
+            }
+
+            this.directory = FSDirectory.open(path);
         } catch (final IOException e) {
             throw new StepInternalException("Unable to read directory", e);
         }

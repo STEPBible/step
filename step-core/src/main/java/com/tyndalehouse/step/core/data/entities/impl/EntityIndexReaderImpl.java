@@ -32,6 +32,7 @@ import com.tyndalehouse.step.core.data.AllResultsCollector;
 import com.tyndalehouse.step.core.data.AnalyzedPrefixSearchQueryParser;
 import com.tyndalehouse.step.core.data.EntityConfiguration;
 import com.tyndalehouse.step.core.data.EntityDoc;
+import com.tyndalehouse.step.core.data.EntityIndexReader;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.utils.IOUtils;
 
@@ -41,7 +42,7 @@ import com.tyndalehouse.step.core.utils.IOUtils;
  * @author chrisburrell
  * 
  */
-public class EntityIndexReaderImpl implements com.tyndalehouse.step.core.data.EntityIndexReader {
+public class EntityIndexReaderImpl implements EntityIndexReader {
     private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(EntityIndexReaderImpl.class);
     private IndexSearcher searcher;
     private Directory directory;
@@ -141,12 +142,25 @@ public class EntityIndexReaderImpl implements com.tyndalehouse.step.core.data.En
     @Override
     public EntityDoc[] search(final String[] fieldNames, final String value, final Filter filter,
             final Sort sort, final boolean analyzePrefix) {
-        return search(fieldNames, value, filter, sort, analyzePrefix, null);
+        return search(fieldNames, value, filter, sort, analyzePrefix, null, null);
+    }
+
+    @Override
+    public EntityDoc[] search(final String[] fieldNames, final String value, final Filter strongFilter,
+            final Sort transliterationSort, final boolean analyzePrefix, final Integer maxResults) {
+        return search(fieldNames, value, strongFilter, transliterationSort, analyzePrefix, null, maxResults);
     }
 
     @Override
     public EntityDoc[] search(final String[] fieldNames, final String value, final Filter filter,
             final Sort sort, final boolean analyzePrefix, final String queryRemainder) {
+        return search(fieldNames, value, filter, sort, analyzePrefix, queryRemainder, null);
+    }
+
+    @Override
+    public EntityDoc[] search(final String[] fieldNames, final String value, final Filter filter,
+            final Sort sort, final boolean analyzePrefix, final String queryRemainder,
+            final Integer maxResults) {
         final AllResultsCollector collector = new AllResultsCollector();
         Query parsed = null;
         QueryParser parser;
@@ -169,7 +183,8 @@ public class EntityIndexReaderImpl implements com.tyndalehouse.step.core.data.En
             }
 
             if (sort != null) {
-                final TopFieldDocs search = this.searcher.search(parsed, filter, Integer.MAX_VALUE, sort);
+                final TopFieldDocs search = this.searcher.search(parsed, filter,
+                        maxResults == null ? Integer.MAX_VALUE : maxResults, sort);
                 return extractDocIds(search);
 
             } else {
@@ -308,4 +323,5 @@ public class EntityIndexReaderImpl implements com.tyndalehouse.step.core.data.En
     void setSearcher(final IndexSearcher searcher) {
         this.searcher = searcher;
     }
+
 }

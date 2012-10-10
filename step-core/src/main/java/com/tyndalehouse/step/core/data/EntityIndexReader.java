@@ -77,6 +77,35 @@ public interface EntityIndexReader extends Closeable {
             String queryRemainder);
 
     /**
+     * Searches for a particular value across multiple fields
+     * 
+     * @param fieldNames the names of all fields to be searched
+     * @param value the value to be searched for
+     * @param filter the filter, possibly null
+     * @param sort the sort, possibly null
+     * @param analyzePrefix true to use an analyzer on the prefix
+     * @param maxResults the maximum number of results
+     * @return the expected results
+     */
+    EntityDoc[] search(String[] fieldNames, String value, Filter filter, Sort sort, boolean analyzePrefix,
+            Integer maxResults);
+
+    /**
+     * Searches for a particular value across multiple fields
+     * 
+     * @param fieldNames the names of all fields to be searched
+     * @param value the value to be searched for
+     * @param filter the filter, possibly null
+     * @param sort the sort, possibly null
+     * @param analyzePrefix true to use an analyzer on the prefix
+     * @param queryRemainder an extra bit to add to the query
+     * @param maxResults the maximum number of results
+     * @return the expected results
+     */
+    EntityDoc[] search(String[] fieldNames, String value, Filter filter, Sort sort, boolean analyzePrefix,
+            String queryRemainder, Integer maxResults);
+
+    /**
      * Searches for all documents given by a query
      * 
      * @param query the query

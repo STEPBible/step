@@ -210,7 +210,8 @@ public class SearchServiceImpl implements SearchService {
         final EntityDoc[] results = this.definitions.search(
                 new String[] { "accentedUnicode", "betaAccented", "stepTransliteration",
                         "simplifiedStepTransliteration", "twoLetter", "otherTransliteration" },
-                QueryParser.escape(form) + '*', getStrongFilter(suggestionType), TRANSLITERATION_SORT, true);
+                QueryParser.escape(form) + '*', getStrongFilter(suggestionType), TRANSLITERATION_SORT, true,
+                MAX_SUGGESTIONS);
 
         return convertDefinitionDocsToSuggestion(results);
     }
@@ -242,8 +243,8 @@ public class SearchServiceImpl implements SearchService {
 
         // TODO make into re-usable cache
         final EntityDoc[] searchResults = this.specificForms.search(new String[] { "accentedUnicode",
-                "simplifiedStepTransliteration" }, QueryParser.escape(form) + "*",
-                getStrongFilter(suggestionType), TRANSLITERATION_SORT, true);
+                "simplifiedStepTransliteration" }, QueryParser.escape(form) + '*',
+                getStrongFilter(suggestionType), TRANSLITERATION_SORT, true, MAX_SUGGESTIONS);
 
         for (final EntityDoc f : searchResults) {
             final LexiconSuggestion suggestion = convertToSuggestionFromSpecificForm(f);

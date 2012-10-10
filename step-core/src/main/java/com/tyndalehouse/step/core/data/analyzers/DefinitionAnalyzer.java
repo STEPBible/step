@@ -19,13 +19,18 @@ public class DefinitionAnalyzer extends PerFieldAnalyzerWrapper {
      * @param matchVersion the lucene version
      */
     public DefinitionAnalyzer(final Version matchVersion) {
-        super(new StandardAnalyzer(matchVersion));
+        super(new KeywordAnalyzer());
+        final StandardAnalyzer standard = new StandardAnalyzer(Version.LUCENE_30);
+        final KeywordAnalyzer keyword = new KeywordAnalyzer();
         final TransliterationAnalyzer transliteration = new TransliterationAnalyzer();
+        addAnalyzer("accentedUnicode", new AncientLanguageAnalyzer());
+        addAnalyzer("strongNumber", keyword);
+        addAnalyzer("relatedNumbers", new CommaDelimitedAnalyzer());
+        addAnalyzer("stepGloss", standard);
+        addAnalyzer("betaAccented", new BetaAccentedAnalyzer());
+        addAnalyzer("twoLetter", keyword);
         addAnalyzer("otherTransliteration", transliteration);
         addAnalyzer("simplifiedStepTransliteration", transliteration);
-        addAnalyzer("betaAccented", new BetaAccentedAnalyzer());
-        addAnalyzer("accentedUnicode", new AncientLanguageAnalyzer());
-        addAnalyzer("strongNumber", new KeywordAnalyzer());
-        addAnalyzer("relatedNumbers", new CommaDelimitedAnalyzer());
+        addAnalyzer("translations", standard);
     }
 }

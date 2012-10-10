@@ -88,7 +88,13 @@ $.widget("custom.versions",  {
                  step.autoVersions.currentElement.trigger('change');
                  self.dropdownVersionMenu.hide();
              } else {
-                 step.autoVersions.currentElement.val(step.autoVersions.currentElement.val() + "," + item.item.attr('initials'));
+                 var currentValue = step.autoVersions.currentElement.val();
+                 if(currentValue.trim() == "") {
+                     step.autoVersions.currentElement.val(item.item.attr('initials'));
+                 } else {
+                     step.autoVersions.currentElement.val(currentValue + "," + item.item.attr('initials'));
+                 }
+                 
                  step.autoVersions.currentElement.trigger('change');
              }
             }

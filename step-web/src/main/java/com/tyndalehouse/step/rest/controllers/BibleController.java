@@ -73,7 +73,6 @@ public class BibleController {
      * creates the controller giving access to bible information
      * 
      * @param bibleInformation the service allowing access to biblical material
-     * @param serverSession server-side stored session
      * @param clientSession clientSession given on the request
      * 
      */
@@ -135,6 +134,7 @@ public class BibleController {
      * @param reference the reference to lookup
      * @param options a list of options to be passed in
      * @param interlinearVersion the interlinear version if provided adds lines under the text
+     * @param interlinearMode the mode to use for displaying
      * @return the text to be displayed, formatted as HTML
      */
     @Cacheable(true)

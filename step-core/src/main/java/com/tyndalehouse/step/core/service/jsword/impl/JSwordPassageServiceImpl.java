@@ -862,8 +862,8 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
 
                     // set parameters here
                     setOptions(tsep, options, bookData.getFirstBook());
-                    setInterlinearOptions(tsep, interlinearVersion, bookData.getKey().getOsisID(),
-                            displayMode);
+                    setInterlinearOptions(tsep, getInterlinearVersion(interlinearVersion), bookData.getKey()
+                            .getOsisID(), displayMode);
                     setInterleavingOptions(tsep, displayMode, interleavingVersions);
                     return tsep;
                 } catch (final URISyntaxException e) {
@@ -1043,5 +1043,24 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
         } catch (final NoSuchKeyException e) {
             throw new StepInternalException("Unable to find keys " + references, e);
         }
+    }
+
+    /**
+     * sanitizes the strings, removing leading commas and spaces
+     * 
+     * @param interlinearVersion the input string
+     * @return the output
+     */
+    private String getInterlinearVersion(final String interlinearVersion) {
+        if (isBlank(interlinearVersion)) {
+            return null;
+        }
+
+        String correct = interlinearVersion;
+        if (correct.charAt(0) == ',') {
+            correct = correct.substring(1);
+        }
+
+        return correct.replace(" ", "");
     }
 }

@@ -34,7 +34,6 @@ package com.tyndalehouse.step.models.timeline.simile;
 
 import java.io.Serializable;
 
-import com.tyndalehouse.step.core.data.common.PrecisionType;
 import com.tyndalehouse.step.models.timeline.DigestableTimeline;
 
 /**
@@ -60,12 +59,12 @@ public class SimileEvent implements DigestableTimeline, Serializable {
     private String title;
     private String description;
     private int hotSpotId;
-    private int eventId;
+    private String eventId;
 
     private String image;
     private String link;
-    private PrecisionType startPrecision;
-    private PrecisionType endPrecision;
+    private String startPrecision;
+    private String endPrecision;
     private String certainty;
     private String flags;
 
@@ -184,42 +183,42 @@ public class SimileEvent implements DigestableTimeline, Serializable {
     /**
      * @return the eventId
      */
-    public int getEventId() {
+    public String getEventId() {
         return this.eventId;
     }
 
     /**
      * @param eventId the eventId to set
      */
-    public void setEventId(final int eventId) {
+    public void setEventId(final String eventId) {
         this.eventId = eventId;
     }
 
     /**
      * @return the startPrecision
      */
-    public PrecisionType getStartPrecision() {
+    public String getStartPrecision() {
         return this.startPrecision;
     }
 
     /**
      * @param startPrecision the startPrecision to set
      */
-    public void setStartPrecision(final PrecisionType startPrecision) {
+    public void setStartPrecision(final String startPrecision) {
         this.startPrecision = startPrecision;
     }
 
     /**
      * @return the endPrecision
      */
-    public PrecisionType getEndPrecision() {
+    public String getEndPrecision() {
         return this.endPrecision;
     }
 
     /**
      * @param endPrecision the endPrecision to set
      */
-    public void setEndPrecision(final PrecisionType endPrecision) {
+    public void setEndPrecision(final String endPrecision) {
         this.endPrecision = endPrecision;
     }
 

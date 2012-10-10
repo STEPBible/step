@@ -9,9 +9,9 @@ import javax.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.tyndalehouse.step.core.data.EntityManager;
 import com.tyndalehouse.step.core.data.EntityDoc;
 import com.tyndalehouse.step.core.data.EntityIndexReader;
-import com.tyndalehouse.step.core.data.EntityManager;
 import com.tyndalehouse.step.core.exceptions.UserExceptionType;
 import com.tyndalehouse.step.core.service.VocabularyService;
 

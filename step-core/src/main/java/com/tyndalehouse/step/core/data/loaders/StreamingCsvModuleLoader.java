@@ -36,14 +36,13 @@ import static com.tyndalehouse.step.core.utils.IOUtils.closeQuietly;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import au.com.bytecode.opencsv.CSVReader;
 
-import com.tyndalehouse.step.core.data.EntityIndexWriter;
+import com.tyndalehouse.step.core.data.impl.EntityIndexWriterImpl;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 
 /**
@@ -52,28 +51,27 @@ import com.tyndalehouse.step.core.exceptions.StepInternalException;
  * @author chrisburrell
  * 
  */
-public class StreamingCsvModuleLoader extends AbstractClasspathBasedModuleLoader<Object> {
+public class StreamingCsvModuleLoader extends AbstractClasspathBasedModuleLoader {
     private static final Logger LOG = LoggerFactory.getLogger(StreamingCsvModuleLoader.class);
     private char separator = ',';
-    private final EntityIndexWriter writer;
+    private final EntityIndexWriterImpl writer;
 
     /**
      * @param writer the writer to the index
      * @param resourcePath the resource path to load
      */
-    public StreamingCsvModuleLoader(final EntityIndexWriter writer, final String resourcePath) {
-        super(null, resourcePath, null, null);
+    public StreamingCsvModuleLoader(final EntityIndexWriterImpl writer, final String resourcePath) {
+        super(resourcePath);
         this.writer = writer;
     }
 
     @Override
-    protected List<Object> parseFile(final Reader reader) {
+    protected void parseFile(final Reader reader) {
         CSVReader csvReader = null;
         try {
             LOG.debug("Parsing file with a CsvReader");
             csvReader = new CSVReader(reader, this.separator);
             parseCsvFile(csvReader);
-            return null;
         } finally {
             closeQuietly(csvReader);
         }
@@ -112,7 +110,7 @@ public class StreamingCsvModuleLoader extends AbstractClasspathBasedModuleLoader
     /**
      * @return the writer
      */
-    public EntityIndexWriter getWriter() {
+    public EntityIndexWriterImpl getWriter() {
         return this.writer;
     }
 

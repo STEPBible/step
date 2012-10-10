@@ -39,7 +39,6 @@ import static com.tyndalehouse.step.core.utils.StringUtils.isEmpty;
 import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
 import static com.tyndalehouse.step.core.utils.StringUtils.split;
 import static java.lang.Character.isDigit;
-import static java.lang.String.format;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -74,11 +73,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.avaje.ebean.EbeanServer;
+import com.tyndalehouse.step.core.data.EntityManager;
 import com.tyndalehouse.step.core.data.EntityDoc;
 import com.tyndalehouse.step.core.data.EntityIndexReader;
-import com.tyndalehouse.step.core.data.EntityManager;
-import com.tyndalehouse.step.core.data.entities.ScriptureReference;
-import com.tyndalehouse.step.core.data.entities.timeline.TimelineEvent;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.models.LexiconSuggestion;
 import com.tyndalehouse.step.core.models.OsisWrapper;
@@ -97,6 +94,7 @@ import com.tyndalehouse.step.core.service.helpers.OriginalSpellingComparator;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import com.tyndalehouse.step.core.service.jsword.JSwordSearchService;
 import com.tyndalehouse.step.core.utils.StringConversionUtils;
+import com.tyndalehouse.step.core.utils.StringUtils;
 
 /**
  * A federated search service implementation. see {@link SearchService}
@@ -134,6 +132,7 @@ public class SearchServiceImpl implements SearchService {
     private final TimelineService timeline;
     private final EntityIndexReader definitions;
     private final EntityIndexReader specificForms;
+    private final EntityIndexReader timelineEvents;
 
     /**
      * @param ebean the ebean server to carry out the search from
@@ -152,6 +151,7 @@ public class SearchServiceImpl implements SearchService {
         this.timeline = timeline;
         this.definitions = entityManager.getReader("definition");
         this.specificForms = entityManager.getReader("specificForm");
+        this.timelineEvents = entityManager.getReader("timelineEvent");
 
     }
 
@@ -283,7 +283,7 @@ public class SearchServiceImpl implements SearchService {
 
     private LexiconSuggestion convertToSuggestionFromSpecificForm(final EntityDoc specificForm) {
         final String strongNumber = specificForm.get(STRONG_NUMBER_FIELD);
-        final EntityDoc[] results = this.definitions.searchUniqueBySingleField(STRONG_NUMBER_FIELD, 1,
+        final EntityDoc[] results = this.definitions.searchExactTermBySingleField(STRONG_NUMBER_FIELD, 1,
                 strongNumber);
 
         if (results.length > 0) {
@@ -1200,10 +1200,8 @@ public class SearchServiceImpl implements SearchService {
      * @return the search results
      */
     private SearchResult runTimelineDescriptionSearch(final SearchQuery sq) {
-        final List<TimelineEvent> events = this.ebean.find(TimelineEvent.class).where()
-                .ilike("name", format(LIKE, sq.getCurrentSearch().getQuery())).findList();
-
-        return buildTimelineSearchResults(sq, events);
+        return buildTimelineSearchResults(sq,
+                this.timelineEvents.searchSingleColumn("name", sq.getCurrentSearch().getQuery()));
     }
 
     /**
@@ -1213,7 +1211,7 @@ public class SearchServiceImpl implements SearchService {
      * @return the search results
      */
     private SearchResult runTimelineReferenceSearch(final SearchQuery sq) {
-        final List<TimelineEvent> events = this.timeline.lookupEventsMatchingReference(sq.getCurrentSearch()
+        final EntityDoc[] events = this.timeline.lookupEventsMatchingReference(sq.getCurrentSearch()
                 .getQuery());
         return buildTimelineSearchResults(sq, events);
     }
@@ -1225,17 +1223,19 @@ public class SearchServiceImpl implements SearchService {
      * @param events the list of events retrieved
      * @return the search results
      */
-    private SearchResult buildTimelineSearchResults(final SearchQuery sq, final List<TimelineEvent> events) {
+    private SearchResult buildTimelineSearchResults(final SearchQuery sq, final EntityDoc[] events) {
         final List<SearchEntry> results = new ArrayList<SearchEntry>();
         final SearchResult r = new SearchResult();
         r.setResults(results);
 
-        for (final TimelineEvent e : events) {
-            final List<ScriptureReference> references = e.getReferences();
+        for (final EntityDoc e : events) {
+            final String refs = e.get("storedReferences");
+            final String[] references = StringUtils.split(refs);
+
             final List<VerseSearchEntry> verses = new ArrayList<VerseSearchEntry>();
 
-            // TODO FIXME: REFACTOR to only make 1 jsword call
-            for (final ScriptureReference ref : references) {
+            // TODO FIXME: REFACTOR to only make 1 jsword call?
+            for (final String ref : references) {
                 // TODO: REFACTOR only supports one version lookup
                 final OsisWrapper peakOsisText = this.jsword.peakOsisText(
                         sq.getCurrentSearch().getVersions()[0], TimelineService.KEYED_REFERENCE_VERSION, ref);
@@ -1247,8 +1247,8 @@ public class SearchServiceImpl implements SearchService {
             }
 
             final TimelineEventSearchEntry entry = new TimelineEventSearchEntry();
-            entry.setId(e.getId());
-            entry.setDescription(e.getName());
+            entry.setId(e.get("id"));
+            entry.setDescription(e.get("name"));
             entry.setVerses(verses);
             results.add(entry);
         }

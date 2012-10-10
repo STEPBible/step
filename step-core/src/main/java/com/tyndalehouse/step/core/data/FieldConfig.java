@@ -1,13 +1,14 @@
 package com.tyndalehouse.step.core.data;
 
-import static org.joda.time.DateTime.parse;
-import static org.joda.time.DateTimeUtils.getInstantMillis;
+import static com.tyndalehouse.step.core.utils.ConversionUtils.localDateTimeToEpochMinutes;
+import static com.tyndalehouse.step.core.utils.ConversionUtils.stringToEpochMinutes;
 
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.Field.Index;
 import org.apache.lucene.document.Field.Store;
 import org.apache.lucene.document.Fieldable;
 import org.apache.lucene.document.NumericField;
+import org.joda.time.LocalDateTime;
 
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 
@@ -18,7 +19,6 @@ import com.tyndalehouse.step.core.exceptions.StepInternalException;
  * 
  */
 public class FieldConfig {
-    private static final long MILLISECONDS_IN_MINUTE = 60000;
     private static final String MINUTE = "minute";
     private final Field.Store store;
     private final Field.Index index;
@@ -73,10 +73,22 @@ public class FieldConfig {
         }
 
         if (MINUTE.equals(this.type)) {
-            return getField(getInstantMillis(parse(value)) / MILLISECONDS_IN_MINUTE);
+            return getField(stringToEpochMinutes(value));
         }
 
-        throw new StepInternalException("Unable to recognise type");
+        throw new StepInternalException("Unable to recognise type of field");
+    }
+
+    /**
+     * @param fieldValue a date time
+     * @return the fieldable to be added to the document
+     */
+    public Fieldable getField(final LocalDateTime fieldValue) {
+        if (MINUTE.equals(this.type)) {
+            return getField(localDateTimeToEpochMinutes(fieldValue));
+        }
+
+        throw new StepInternalException("Unable to recognise type of field");
     }
 
     /**
@@ -108,4 +120,5 @@ public class FieldConfig {
     public Field.Index getIndex() {
         return this.index;
     }
+
 }

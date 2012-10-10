@@ -32,13 +32,10 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.service;
 
-import java.util.List;
-
 import org.joda.time.LocalDateTime;
 
 import com.tyndalehouse.step.core.data.EntityDoc;
 import com.tyndalehouse.step.core.data.entities.aggregations.TimelineEventsAndDate;
-import com.tyndalehouse.step.core.data.entities.timeline.TimelineEvent;
 import com.tyndalehouse.step.core.models.EnhancedTimelineEvent;
 
 /**
@@ -54,7 +51,7 @@ public interface TimelineService {
     /**
      * the version used to key the timeline events when they are loaded
      */
-    String KEYED_REFERENCE_VERSION = "KJV";
+    String KEYED_REFERENCE_VERSION = "ESV";
 
     /**
      * Retrieves the whole configuration of the timeline. This defines a number of different bands, each with
@@ -72,7 +69,7 @@ public interface TimelineService {
      * @param to to date
      * @return a list of timeline events contained between the two dates
      */
-    List<TimelineEvent> getTimelineEvents(LocalDateTime from, LocalDateTime to);
+    EntityDoc[] getTimelineEvents(LocalDateTime from, LocalDateTime to);
 
     /**
      * Given a reference to a passage, this looks up the relevant set of events
@@ -89,11 +86,11 @@ public interface TimelineService {
      * @param version the version to use to lookup any associated verse numbers
      * @return the timeline event with all its data
      */
-    EnhancedTimelineEvent getTimelineEvent(int id, String version);
+    EnhancedTimelineEvent getTimelineEvent(String id, String version);
 
     /**
      * @param reference reference of the scripture passage under consideration
      * @return the list of events matching that reference
      */
-    List<TimelineEvent> lookupEventsMatchingReference(String reference);
+    EntityDoc[] lookupEventsMatchingReference(String reference);
 }

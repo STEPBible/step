@@ -1,4 +1,6 @@
-package com.tyndalehouse.step.core.data;
+package com.tyndalehouse.step.core.data.impl;
+
+import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,9 +15,13 @@ import org.apache.lucene.index.IndexWriter.MaxFieldLength;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.RAMDirectory;
+import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.tyndalehouse.step.core.data.EntityConfiguration;
+import com.tyndalehouse.step.core.data.EntityManager;
+import com.tyndalehouse.step.core.data.FieldConfig;
 import com.tyndalehouse.step.core.data.create.PostProcessor;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 
@@ -25,9 +31,9 @@ import com.tyndalehouse.step.core.exceptions.StepInternalException;
  * @author chrisburrell
  * 
  */
-public class EntityIndexWriter {
-    private static final Logger LOGGER = LoggerFactory.getLogger(EntityIndexWriter.class);
-    private final RAMDirectory ramDirectory;
+public class EntityIndexWriterImpl {
+    private static final Logger LOGGER = LoggerFactory.getLogger(EntityIndexWriterImpl.class);
+    private final Directory ramDirectory;
     private IndexWriter writer;
     private final Map<String, FieldConfig> luceneFieldConfigurationByRaw;
     private final EntityConfiguration config;
@@ -41,7 +47,7 @@ public class EntityIndexWriter {
      * @param entityManager the configuration for that entity
      * @param entityName the name of the entity
      */
-    public EntityIndexWriter(final EntityManager entityManager, final String entityName) {
+    public EntityIndexWriterImpl(final EntityManager entityManager, final String entityName) {
         this.manager = entityManager;
         this.config = entityManager.getConfig(entityName);
 
@@ -57,7 +63,7 @@ public class EntityIndexWriter {
             }
         }
 
-        this.ramDirectory = new RAMDirectory();
+        this.ramDirectory = getNewRamDirectory();
         try {
             this.writer = new IndexWriter(this.ramDirectory, this.config.getAnalyzerInstance(),
                     MaxFieldLength.UNLIMITED);
@@ -67,12 +73,19 @@ public class EntityIndexWriter {
     }
 
     /**
+     * @return a new ram directory
+     */
+    Directory getNewRamDirectory() {
+        return new RAMDirectory();
+    }
+
+    /**
      * writes the index to the relevant file location
      * 
      * @return the number of entries in the index
      */
     public int close() {
-        final int numEntries = this.writer.maxDoc();
+        final int numEntries = getNumEntriesInIndex();
         final File file = new File(this.config.getLocation());
         Directory destination;
         try {
@@ -97,12 +110,52 @@ public class EntityIndexWriter {
     }
 
     /**
+     * @return the writer of the index into RAM
+     */
+    IndexWriter getRamWriter() {
+        return this.writer;
+    }
+
+    /**
+     * @return the number of entries in index
+     */
+    int getNumEntriesInIndex() {
+        return this.writer.maxDoc();
+    }
+
+    /**
      * Adds a field to the current document
      * 
      * @param fieldName the field name
      * @param fieldValue the field value
      */
     public void addFieldToCurrentDocument(final String fieldName, final Number fieldValue) {
+        if (fieldValue == null) {
+            return;
+        }
+
+        ensureNewDocument();
+        final FieldConfig fieldConfig = this.luceneFieldConfigurationByRaw.get(fieldName);
+
+        if (fieldConfig == null) {
+            LOGGER.trace("Skipping field: [{}]", fieldName);
+            return;
+        }
+
+        this.doc.add(fieldConfig.getField(fieldValue));
+    }
+
+    /**
+     * Adds a field to the current document
+     * 
+     * @param fieldName the field name
+     * @param fieldValue the field value
+     */
+    public void addFieldToCurrentDocument(final String fieldName, final LocalDateTime fieldValue) {
+        if (fieldValue == null) {
+            return;
+        }
+
         ensureNewDocument();
         final FieldConfig fieldConfig = this.luceneFieldConfigurationByRaw.get(fieldName);
 
@@ -121,6 +174,10 @@ public class EntityIndexWriter {
      * @param fieldValue the field value
      */
     public void addFieldToCurrentDocument(final String fieldName, final String fieldValue) {
+        if (isBlank(fieldValue)) {
+            return;
+        }
+
         ensureNewDocument();
         final FieldConfig fieldConfig = this.luceneFieldConfigurationByRaw.get(fieldName);
 
@@ -163,4 +220,12 @@ public class EntityIndexWriter {
             throw new StepInternalException("Unable to write document", e);
         }
     }
+
+    /**
+     * @return the entity name
+     */
+    String getEntityName() {
+        return this.config.getName();
+    }
+
 }

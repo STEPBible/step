@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.tyndalehouse.step.core.data.entities.timeline.TimelineEvent;
+import com.tyndalehouse.step.core.data.EntityDoc;
 
 /**
  * Adds some key non-persisted fields to the event
@@ -14,7 +14,7 @@ import com.tyndalehouse.step.core.data.entities.timeline.TimelineEvent;
  */
 public class EnhancedTimelineEvent implements Serializable {
     private static final long serialVersionUID = -1338450485439161040L;
-    private TimelineEvent event;
+    private EntityDoc event;
     private List<OsisWrapper> verses;
 
     /**
@@ -27,21 +27,21 @@ public class EnhancedTimelineEvent implements Serializable {
     /**
      * @param event event to be stored
      */
-    public EnhancedTimelineEvent(final TimelineEvent event) {
+    public EnhancedTimelineEvent(final EntityDoc event) {
         this.event = event;
     }
 
     /**
      * @return the event
      */
-    public TimelineEvent getEvent() {
+    public EntityDoc getEvent() {
         return this.event;
     }
 
     /**
      * @param event the event to set
      */
-    public void setEvent(final TimelineEvent event) {
+    public void setEvent(final EntityDoc event) {
         this.event = event;
     }
 

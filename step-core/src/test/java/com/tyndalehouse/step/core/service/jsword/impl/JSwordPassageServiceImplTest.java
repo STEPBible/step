@@ -37,12 +37,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
@@ -68,7 +62,6 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.tyndalehouse.step.core.data.entities.ScriptureReference;
 import com.tyndalehouse.step.core.models.BookName;
 import com.tyndalehouse.step.core.models.InterlinearMode;
 import com.tyndalehouse.step.core.models.LookupOption;
@@ -83,42 +76,42 @@ import com.tyndalehouse.step.core.models.OsisWrapper;
 public class JSwordPassageServiceImplTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(JSwordPassageServiceImplTest.class);
 
-    @Test
-    public void testMe() {
-        try {
-            final FileReader reader = new FileReader(
-                    "D:\\dev\\projects\\step\\step-core\\src\\main\\resources\\com\\tyndalehouse\\step\\core\\data\\create\\lexicon\\specific_forms.txt");
-            final BufferedReader r = new BufferedReader(reader);
-            String line = "";
-            String lastStrong = "";
-            final FileWriter writer = new FileWriter(new File("d:\\temp.txt"));
-            final BufferedWriter w = new BufferedWriter(writer);
-
-            while ((line = r.readLine()) != null) {
-                final String[] split = line.split(",");
-                if (!lastStrong.equals(split[0])) {
-                    w.write('\n');
-                    w.write(split[0]);
-                    w.write(',');
-                } else {
-                    w.write(' ');
-                }
-                // then append to same line
-                w.append(split[1]);
-
-                lastStrong = split[0];
-            }
-
-            w.close();
-            r.close();
-        } catch (final FileNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (final IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    }
+    // @Test
+    // public void testMe() {
+    // try {
+    // final FileReader reader = new FileReader(
+    // "D:\\dev\\projects\\step\\step-core\\src\\main\\resources\\com\\tyndalehouse\\step\\core\\data\\create\\lexicon\\specific_forms.txt");
+    // final BufferedReader r = new BufferedReader(reader);
+    // String line = "";
+    // String lastStrong = "";
+    // final FileWriter writer = new FileWriter(new File("d:\\temp.txt"));
+    // final BufferedWriter w = new BufferedWriter(writer);
+    //
+    // while ((line = r.readLine()) != null) {
+    // final String[] split = line.split(",");
+    // if (!lastStrong.equals(split[0])) {
+    // w.write('\n');
+    // w.write(split[0]);
+    // w.write(',');
+    // } else {
+    // w.write(' ');
+    // }
+    // // then append to same line
+    // w.append(split[1]);
+    //
+    // lastStrong = split[0];
+    // }
+    //
+    // w.close();
+    // r.close();
+    // } catch (final FileNotFoundException e) {
+    // // TODO Auto-generated catch block
+    // e.printStackTrace();
+    // } catch (final IOException e) {
+    // // TODO Auto-generated catch block
+    // e.printStackTrace();
+    // }
+    // }
 
     // Outputs all lexical forms TODO - move to a step-utils project
     // @Test
@@ -328,58 +321,10 @@ public class JSwordPassageServiceImplTest {
     public void testSingleReference() {
         final JSwordPassageServiceImpl jsi = new JSwordPassageServiceImpl(
                 new JSwordVersificationServiceImpl(), null, null, null);
-        final List<ScriptureReference> refs = jsi.resolveReferences("Gen.1.1", "KJV");
+        final String allRefs = jsi.getAllReferences("Gen.1", "ESV");
 
-        assertEquals(refs.size(), 1);
-        assertEquals(4, refs.get(0).getStartVerseId());
-        assertEquals(4, refs.get(0).getEndVerseId());
-    }
-
-    /**
-     * Tests the resolving of passage references
-     */
-    @Test
-    public void testMultipleReference() {
-        final JSwordPassageServiceImpl jsi = new JSwordPassageServiceImpl(
-                new JSwordVersificationServiceImpl(), null, null, null);
-        final List<ScriptureReference> refs = jsi.resolveReferences("Gen.1.1;Gen.1.3", "KJV");
-
-        assertEquals(2, refs.size());
-        assertEquals(4, refs.get(0).getStartVerseId());
-        assertEquals(4, refs.get(0).getEndVerseId());
-        assertEquals(6, refs.get(1).getStartVerseId());
-        assertEquals(6, refs.get(1).getEndVerseId());
-    }
-
-    /**
-     * Tests the resolving of passage references
-     */
-    @Test
-    public void testMultiplePassages() {
-        final JSwordPassageServiceImpl jsi = new JSwordPassageServiceImpl(
-                new JSwordVersificationServiceImpl(), null, null, null);
-        final List<ScriptureReference> refs = jsi.resolveReferences("Gen.1.1-2;Gen.1.4-5", "KJV");
-
-        assertEquals(refs.size(), 2);
-        assertEquals(4, refs.get(0).getStartVerseId());
-        assertEquals(5, refs.get(0).getEndVerseId());
-        assertEquals(7, refs.get(1).getStartVerseId());
-        assertEquals(8, refs.get(1).getEndVerseId());
-    }
-
-    /**
-     * Tests an example from the geo file
-     */
-    @Test
-    public void testGeoPassageExample() {
-        final JSwordPassageServiceImpl jsi = new JSwordPassageServiceImpl(
-                new JSwordVersificationServiceImpl(), null, null, null);
-
-        // TODO change spaces between 1 and Kgs! This doesn't seem to work...
-
-        // final List<ScriptureReference> refs = getPassageReferences(target, "Josh 12:24; Sng 6:4");
-        final List<ScriptureReference> refs = jsi.resolveReferences("Song 6:4", "KJV");
-        assertEquals(refs.size(), 1);
+        assertTrue(allRefs.contains("Gen.1.1"));
+        assertTrue(allRefs.contains("Gen.1.2"));
     }
 
     /**

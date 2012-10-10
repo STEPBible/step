@@ -6,7 +6,7 @@ import static com.tyndalehouse.step.core.utils.StringUtils.isNotEmpty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.tyndalehouse.step.core.data.EntityIndexWriter;
+import com.tyndalehouse.step.core.data.impl.EntityIndexWriterImpl;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 
 /**
@@ -31,8 +31,9 @@ public class GeoStreamingCsvModuleLoader extends StreamingCsvModuleLoader {
      * 
      * @param writer the index writer
      * @param resourcePath the path to the resource
+     * @param jsword access to jsword for populating references
      */
-    public GeoStreamingCsvModuleLoader(final EntityIndexWriter writer, final String resourcePath,
+    public GeoStreamingCsvModuleLoader(final EntityIndexWriterImpl writer, final String resourcePath,
             final JSwordPassageService jsword) {
         super(writer, resourcePath);
         this.jsword = jsword;

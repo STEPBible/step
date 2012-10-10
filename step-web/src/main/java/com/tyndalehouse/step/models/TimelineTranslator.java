@@ -32,11 +32,9 @@
  ******************************************************************************/
 package com.tyndalehouse.step.models;
 
-import java.util.List;
-
 import org.joda.time.LocalDateTime;
 
-import com.tyndalehouse.step.core.data.entities.timeline.TimelineEvent;
+import com.tyndalehouse.step.core.data.EntityDoc;
 import com.tyndalehouse.step.models.timeline.DigestableTimeline;
 import com.tyndalehouse.step.models.timeline.simile.SimileEvent;
 
@@ -54,7 +52,7 @@ public interface TimelineTranslator {
      * @param suggestedDate a date for the timeline
      * @return the wrapped up form of the timeline
      */
-    DigestableTimeline toDigestableForm(final List<TimelineEvent> sourceElement, LocalDateTime suggestedDate);
+    DigestableTimeline toDigestableForm(final EntityDoc[] sourceElement, LocalDateTime suggestedDate);
 
     /**
      * Translates a single event into a simile event
@@ -62,6 +60,6 @@ public interface TimelineTranslator {
      * @param te the timeline
      * @return the simile event to be sent through
      */
-    SimileEvent translateEvent(TimelineEvent te);
+    SimileEvent translateEvent(EntityDoc te);
 
 }

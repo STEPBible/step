@@ -8,21 +8,21 @@ package com.tyndalehouse.step.core.models.search;
  */
 public class TimelineEventSearchEntry implements SearchEntry {
     private static final long serialVersionUID = -1271009882198165554L;
-    private int id;
+    private String id;
     private String description;
     private java.util.List<VerseSearchEntry> verses;
 
     /**
      * @return the id
      */
-    public int getId() {
+    public String getId() {
         return this.id;
     }
 
     /**
      * @param id the id to set
      */
-    public void setId(final int id) {
+    public void setId(final String id) {
         this.id = id;
     }
 

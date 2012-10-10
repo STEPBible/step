@@ -41,7 +41,6 @@ import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
 import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
 import static com.tyndalehouse.step.core.utils.ValidateUtils.notNull;
 import static java.lang.Integer.parseInt;
-import static java.lang.Integer.valueOf;
 import static java.lang.String.format;
 import static org.crosswire.common.xml.XMLUtil.writeToString;
 import static org.crosswire.jsword.book.OSISUtil.OSIS_ATTR_OSISID;
@@ -74,11 +73,9 @@ import org.crosswire.jsword.book.UnAccenter;
 import org.crosswire.jsword.passage.Key;
 import org.crosswire.jsword.passage.KeyUtil;
 import org.crosswire.jsword.passage.NoSuchKeyException;
-import org.crosswire.jsword.passage.NoSuchVerseException;
 import org.crosswire.jsword.passage.Passage;
 import org.crosswire.jsword.passage.PassageKeyFactory;
 import org.crosswire.jsword.passage.RestrictionType;
-import org.crosswire.jsword.passage.RocketPassage;
 import org.crosswire.jsword.passage.Verse;
 import org.crosswire.jsword.passage.VerseRange;
 import org.crosswire.jsword.versification.BibleBook;
@@ -93,7 +90,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
-import com.tyndalehouse.step.core.data.entities.ScriptureReference;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.exceptions.UserExceptionType;
 import com.tyndalehouse.step.core.models.InterlinearMode;
@@ -436,23 +432,21 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
     }
 
     @Override
-    public OsisWrapper peakOsisText(final String version, final String keyedVersion,
-            final ScriptureReference r) {
+    public OsisWrapper peakOsisText(final String version, final String keyedVersion, final String r) {
         // obtain first verse of each reference for display and add "..." on them...
-        final int startVerseId = r.getStartVerseId();
-
         final List<LookupOption> lookupOptions = new ArrayList<LookupOption>();
         lookupOptions.add(LookupOption.HIDE_XGEN);
 
-        final OsisWrapper osisText = this.getOsisTextByVerseNumbers(version, keyedVersion, startVerseId,
-                startVerseId, lookupOptions, null, null, true);
-
-        if (startVerseId != r.getEndVerseId()) {
-            osisText.setFragment(true);
-            osisText.setReference(this.versificationService.getVerseRange(startVerseId, r.getEndVerseId()));
+        final Book currentBook = this.versificationService.getBookFromVersion(keyedVersion);
+        Key keyToPassage;
+        try {
+            keyToPassage = currentBook.getKey(r);
+        } catch (final NoSuchKeyException e) {
+            throw new StepInternalException("An exception whilst parsing the key", e);
         }
 
-        return osisText;
+        final Key firstVerse = this.getFirstverseExcludingZero(keyToPassage, currentBook);
+        return this.getOsisText(version, firstVerse.getOsisID(), lookupOptions, null, InterlinearMode.NONE);
     }
 
     @Override
@@ -1035,50 +1029,19 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
     public String getAllReferences(final String references, final String version) {
         final PassageKeyFactory keyFactory = PassageKeyFactory.instance();
         final Versification av11n = this.versificationService.getVersificationForVersion(version);
+        final StringBuilder referenceString = new StringBuilder();
         try {
             final Key k = keyFactory.getKey(av11n, references);
-            return k.getOsisID();
+            final Iterator<Key> iterator = k.iterator();
+            while (iterator.hasNext()) {
+                referenceString.append(iterator.next().getOsisID());
+                if (iterator.hasNext()) {
+                    referenceString.append(' ');
+                }
+            }
+            return referenceString.toString();
         } catch (final NoSuchKeyException e) {
             throw new StepInternalException("Unable to find keys " + references, e);
         }
     }
-
-    @Override
-    public List<ScriptureReference> resolveReferences(final String references, final String version) {
-
-        LOGGER.trace("Resolving references for [{}]", references);
-        try {
-            final List<ScriptureReference> refs = new ArrayList<ScriptureReference>();
-
-            if (isBlank(references)) {
-                return refs;
-            }
-
-            final PassageKeyFactory keyFactory = PassageKeyFactory.instance();
-            final Versification av11n = this.versificationService.getVersificationForVersion(version);
-            final RocketPassage rp = (RocketPassage) keyFactory.getKey(av11n, references);
-
-            for (int ii = 0; ii < rp.countRanges(RestrictionType.NONE); ii++) {
-                final VerseRange vr = rp.getRangeAt(ii, RestrictionType.NONE);
-                final Verse start = vr.getStart();
-                final Verse end = vr.getEnd();
-
-                final int startVerseId = av11n.getOrdinal(start);
-                final int endVerseId = av11n.getOrdinal(end);
-
-                LOGGER.trace("Found reference [{}] to [{}]", valueOf(startVerseId), valueOf(endVerseId));
-                final ScriptureReference sr = new ScriptureReference();
-
-                sr.setStartVerseId(startVerseId);
-                sr.setEndVerseId(endVerseId);
-                refs.add(sr);
-            }
-            return refs;
-        } catch (final NoSuchVerseException nsve) {
-            throw new StepInternalException("Verse " + references + " does not exist", nsve);
-        } catch (final NoSuchKeyException e) {
-            throw new StepInternalException(e.getMessage(), e);
-        }
-    }
-
 }

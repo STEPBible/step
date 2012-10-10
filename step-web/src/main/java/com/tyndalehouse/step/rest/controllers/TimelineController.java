@@ -107,8 +107,7 @@ public class TimelineController {
      */
     @Cacheable(true)
     public EnhancedSimileEvent getEventInformation(final String eventId, final String version) {
-        final EnhancedTimelineEvent timelineEvent = this.timelineService.getTimelineEvent(
-                Integer.parseInt(eventId), version);
+        final EnhancedTimelineEvent timelineEvent = this.timelineService.getTimelineEvent(eventId, version);
 
         final SimileEvent se = this.translator.translateEvent(timelineEvent.getEvent());
         final EnhancedSimileEvent ese = new EnhancedSimileEvent();

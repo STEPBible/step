@@ -32,12 +32,14 @@
  ******************************************************************************/
 package com.tyndalehouse.step.models.timeline.simile;
 
+import static com.tyndalehouse.step.core.utils.ConversionUtils.epochMinutesStringToLocalDateTime;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import org.joda.time.LocalDateTime;
 
-import com.tyndalehouse.step.core.data.entities.timeline.TimelineEvent;
+import com.tyndalehouse.step.core.data.EntityDoc;
 import com.tyndalehouse.step.models.TimelineTranslator;
 import com.tyndalehouse.step.models.timeline.DigestableTimeline;
 
@@ -51,14 +53,13 @@ public class SimileTimelineTranslatorImpl implements TimelineTranslator {
     private static final String SIMILE_DEFAULT_TIME_FORMAT = "iso8601";
 
     @Override
-    public DigestableTimeline toDigestableForm(final List<TimelineEvent> events,
-            final LocalDateTime suggestedDate) {
+    public DigestableTimeline toDigestableForm(final EntityDoc[] events, final LocalDateTime suggestedDate) {
         final SimileTimelineImpl timeline = new SimileTimelineImpl();
 
         timeline.setDateTimeFormat(SIMILE_DEFAULT_TIME_FORMAT);
 
         final List<SimileEvent> eventList = new ArrayList<SimileEvent>();
-        for (final TimelineEvent te : events) {
+        for (final EntityDoc te : events) {
             final SimileEvent e = translateEvent(te);
             eventList.add(e);
         }
@@ -72,21 +73,23 @@ public class SimileTimelineTranslatorImpl implements TimelineTranslator {
     }
 
     @Override
-    public SimileEvent translateEvent(final TimelineEvent te) {
+    public SimileEvent translateEvent(final EntityDoc te) {
         final SimileEvent e = new SimileEvent();
-        e.setTitle(te.getName());
-        e.setDescription(te.getName());
-        e.setStart(te.getFromDate().toString());
-        e.setEventId(te.getId());
-        e.setCertainty(te.getCertainty());
-        e.setFlags(te.getFlags());
+        final String name = te.get("name");
+        e.setTitle(name);
+        e.setDescription(name);
+        e.setStart(epochMinutesStringToLocalDateTime(te.get("fromDate")).toString());
+        e.setEventId(te.get("id"));
+        e.setCertainty(te.get("certainty"));
+        e.setFlags(te.get("flags"));
 
-        e.setStartPrecision(te.getFromPrecision());
+        e.setStartPrecision(te.get("fromPrecision"));
 
-        final LocalDateTime toDate = te.getToDate();
+        final String toDate = te.get("toDate");
         if (toDate != null) {
-            e.setEnd(te.getToDate().toString());
-            e.setEndPrecision(te.getToPrecision());
+            final LocalDateTime dt = epochMinutesStringToLocalDateTime(toDate);
+            e.setEnd(dt.toString());
+            e.setEndPrecision(te.get("toPrecision"));
             e.setDuration(true);
         } else {
             e.setDuration(false);

@@ -33,13 +33,10 @@
 package com.tyndalehouse.step.core.data.entities.aggregations;
 
 import java.io.Serializable;
-import java.util.List;
-
-import javax.persistence.Entity;
 
 import org.joda.time.LocalDateTime;
 
-import com.tyndalehouse.step.core.data.entities.timeline.TimelineEvent;
+import com.tyndalehouse.step.core.data.EntityDoc;
 
 /**
  * A simple wrapper around a timeline set of events and a central date
@@ -47,23 +44,22 @@ import com.tyndalehouse.step.core.data.entities.timeline.TimelineEvent;
  * @author chrisburrell
  * 
  */
-@Entity
 public class TimelineEventsAndDate implements Serializable {
     private static final long serialVersionUID = -7079914843690188557L;
-    private List<TimelineEvent> events;
+    private EntityDoc[] events;
     private LocalDateTime dateTime;
 
     /**
      * @return the events
      */
-    public List<TimelineEvent> getEvents() {
+    public EntityDoc[] getEvents() {
         return this.events;
     }
 
     /**
      * @param events the events to set
      */
-    public void setEvents(final List<TimelineEvent> events) {
+    public void setEvents(final EntityDoc[] events) {
         this.events = events;
     }
 

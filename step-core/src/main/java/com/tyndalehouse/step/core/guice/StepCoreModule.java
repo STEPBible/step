@@ -49,6 +49,7 @@ import com.google.inject.name.Names;
 import com.tyndalehouse.step.core.data.EntityManager;
 import com.tyndalehouse.step.core.data.create.Loader;
 import com.tyndalehouse.step.core.data.entities.Session;
+import com.tyndalehouse.step.core.data.impl.EntityManagerImpl;
 import com.tyndalehouse.step.core.guice.providers.DatabaseConfigProvider;
 import com.tyndalehouse.step.core.guice.providers.DefaultInstallersProvider;
 import com.tyndalehouse.step.core.guice.providers.DefaultLexiconRefsProvider;
@@ -136,7 +137,7 @@ public class StepCoreModule extends AbstractStepGuiceModule {
         }).annotatedWith(Names.named("defaultLexiconRefs")).toProvider(DefaultLexiconRefsProvider.class);
         bind(new TypeLiteral<List<Installer>>() {
         }).toProvider(DefaultInstallersProvider.class);
-        bind(EntityManager.class).asEagerSingleton();
+        bind(EntityManager.class).to(EntityManagerImpl.class).asEagerSingleton();
         bind(EbeanServer.class).toProvider(DatabaseConfigProvider.class).asEagerSingleton();
 
         // now bind the test data

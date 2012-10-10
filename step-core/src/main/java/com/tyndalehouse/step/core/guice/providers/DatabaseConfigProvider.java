@@ -43,12 +43,8 @@ import com.avaje.ebean.EbeanServerFactory;
 import com.avaje.ebean.config.ServerConfig;
 import com.tyndalehouse.step.core.data.entities.Bookmark;
 import com.tyndalehouse.step.core.data.entities.History;
-import com.tyndalehouse.step.core.data.entities.ScriptureReference;
-import com.tyndalehouse.step.core.data.entities.ScriptureTarget;
 import com.tyndalehouse.step.core.data.entities.Session;
 import com.tyndalehouse.step.core.data.entities.User;
-import com.tyndalehouse.step.core.data.entities.aggregations.TimelineEventsAndDate;
-import com.tyndalehouse.step.core.data.entities.timeline.TimelineEvent;
 
 /**
  * Returns a database connection server instance for use across the application
@@ -149,16 +145,16 @@ public class DatabaseConfigProvider implements Provider<EbeanServer> {
      * @param config the configuration to be enhanced
      */
     private void addEntities(final ServerConfig config) {
-        config.addClass(ScriptureTarget.class);
-        config.addClass(ScriptureReference.class);
+        // config.addClass(ScriptureTarget.class);
+        // config.addClass(ScriptureReference.class);
         // config.addClass(HotSpot.class);
-        config.addClass(TimelineEvent.class);
+        // config.addClass(TimelineEvent.class);
         config.addClass(User.class);
         config.addClass(Session.class);
         config.addClass(Bookmark.class);
         config.addClass(History.class);
         // config.addClass(GeoPlace.class);
-        config.addClass(TimelineEventsAndDate.class);
+        // config.addClass(TimelineEventsAndDate.class);
     }
 
     /**

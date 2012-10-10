@@ -32,33 +32,34 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.service.impl;
 
-import static com.tyndalehouse.step.core.data.entities.reference.TargetType.TIMELINE_EVENT;
+import static com.tyndalehouse.step.core.utils.ConversionUtils.epochMinutesStringToLocalDateTime;
+import static com.tyndalehouse.step.core.utils.ConversionUtils.localDateTimeToEpochMinutes;
+import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
+import static org.apache.lucene.search.NumericRangeQuery.newLongRange;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.Comparator;
-import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import org.apache.lucene.search.BooleanClause.Occur;
+import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.MatchAllDocsQuery;
+import org.apache.lucene.search.NumericRangeQuery;
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.avaje.ebean.EbeanServer;
-import com.avaje.ebean.Query;
+import com.tyndalehouse.step.core.data.EntityManager;
 import com.tyndalehouse.step.core.data.EntityDoc;
 import com.tyndalehouse.step.core.data.EntityIndexReader;
-import com.tyndalehouse.step.core.data.EntityManager;
-import com.tyndalehouse.step.core.data.entities.ScriptureReference;
 import com.tyndalehouse.step.core.data.entities.aggregations.TimelineEventsAndDate;
-import com.tyndalehouse.step.core.data.entities.timeline.TimelineEvent;
 import com.tyndalehouse.step.core.models.EnhancedTimelineEvent;
 import com.tyndalehouse.step.core.models.OsisWrapper;
 import com.tyndalehouse.step.core.service.TimelineService;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
+import com.tyndalehouse.step.core.utils.StringUtils;
 
 /**
  * The implementation of the timeline service, based on JDBC and ORM Lite to access the database.
@@ -68,20 +69,19 @@ import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 @Singleton
 public class TimelineServiceImpl implements TimelineService {
     private static final Logger LOGGER = LoggerFactory.getLogger(TimelineServiceImpl.class);
-    private final EbeanServer ebean;
     private final JSwordPassageService jsword;
     private final EntityIndexReader hotspots;
+    private final EntityIndexReader timelineEvents;
 
     /**
-     * @param ebean the ebean server with which to lookup data
+     * @param manager the entity manager
      * @param jsword the jsword service
      */
     @Inject
-    public TimelineServiceImpl(final EntityManager manager, final EbeanServer ebean,
-            final JSwordPassageService jsword) {
-        this.ebean = ebean;
+    public TimelineServiceImpl(final EntityManager manager, final JSwordPassageService jsword) {
         this.jsword = jsword;
         this.hotspots = manager.getReader("hotspot");
+        this.timelineEvents = manager.getReader("timelineEvent");
     }
 
     @Override
@@ -93,7 +93,7 @@ public class TimelineServiceImpl implements TimelineService {
     public TimelineEventsAndDate getEventsFromScripture(final String reference) {
         final TimelineEventsAndDate timelineEventsAndDate = new TimelineEventsAndDate();
 
-        final List<TimelineEvent> matchingTimelineEvents = lookupEventsMatchingReference(reference);
+        final EntityDoc[] matchingTimelineEvents = lookupEventsMatchingReference(reference);
         timelineEventsAndDate.setEvents(matchingTimelineEvents);
 
         timelineEventsAndDate.setDateTime(getDateForEvents(matchingTimelineEvents));
@@ -108,25 +108,43 @@ public class TimelineServiceImpl implements TimelineService {
      * @param matchingTimelineEvents the number of events
      * @return the localDateTime of the median event, if a duration, then of the start point
      */
-    private LocalDateTime getDateForEvents(final List<TimelineEvent> matchingTimelineEvents) {
-        if (matchingTimelineEvents.isEmpty()) {
+    private LocalDateTime getDateForEvents(final EntityDoc[] matchingTimelineEvents) {
+        if (matchingTimelineEvents.length == 0) {
             return null;
         }
 
         // copy list to new list that can be sorted
-        final List<TimelineEvent> events = new ArrayList<TimelineEvent>(matchingTimelineEvents);
 
-        // first we order events based on the start date
-        Collections.sort(events, new Comparator<TimelineEvent>() {
+        Arrays.sort(matchingTimelineEvents, new Comparator<EntityDoc>() {
 
             @Override
-            public int compare(final TimelineEvent o1, final TimelineEvent o2) {
-                return o1.getFromDate().compareTo(o2.getFromDate());
+            public int compare(final EntityDoc o1, final EntityDoc o2) {
+                final String o1StartString = o1.get("fromDate");
+                final String o2StartString = o2.get("fromDate");
+
+                final boolean blankO1 = isBlank(o1StartString);
+                final boolean blankO2 = isBlank(o2StartString);
+                if (blankO1 && blankO2) {
+                    return 0;
+                }
+
+                if (blankO1) {
+                    return 1;
+                }
+
+                if (blankO2) {
+                    return -1;
+                }
+
+                final long o1Start = Long.parseLong(o1StartString);
+                final long o2Start = Long.parseLong(o2StartString);
+                return Long.compare(o1Start, o2Start);
             }
         });
 
         // now we simply return the median element
-        return events.get(events.size() / 2).getFromDate();
+        return epochMinutesStringToLocalDateTime(matchingTimelineEvents[matchingTimelineEvents.length / 2]
+                .get("fromDate"));
     }
 
     /**
@@ -137,66 +155,69 @@ public class TimelineServiceImpl implements TimelineService {
      * @return the list of events matching the reference
      */
     @Override
-    public List<TimelineEvent> lookupEventsMatchingReference(final String reference) {
+    public EntityDoc[] lookupEventsMatchingReference(final String reference) {
         // first get the kjv reference
-        final List<ScriptureReference> passageReferences = this.jsword.resolveReferences(reference, "KJV");
+        final String allReferences = this.jsword.getAllReferences(reference, "ESV");
 
-        if (passageReferences.isEmpty()) {
-            return new ArrayList<TimelineEvent>();
+        if (isBlank(allReferences)) {
+            return new EntityDoc[0];
         }
 
-        // let's assume for now we only work on one reference
-        final ScriptureReference searchingReference = passageReferences.get(0);
-
-        LOGGER.debug("Finding events overlapping [{}] and [{}]", searchingReference.getStartVerseId(),
-                searchingReference.getEndVerseId());
-
-        // find all timeline events where at least one scripture reference maps to our 1st reference
-        // overlap: if a and b are start and stop of event, then overlap formula is:
-        // search_start < b & search_end > a
-
-        // TODO rewrite using ebean notations rather than query
-        final String queryText = "find timelineEvent where references.targetType = :targetType "
-                + "and :searchStart <= references.endVerseId and :searchEnd >= references.startVerseId";
-        // final String queryText = "find timelineEvent";
-
-        final Query<TimelineEvent> query = this.ebean.createQuery(TimelineEvent.class, queryText).fetch(
-                "references");
-
-        query.setParameter("targetType", TIMELINE_EVENT);
-        query.setParameter("searchStart", searchingReference.getStartVerseId());
-        query.setParameter("searchEnd", searchingReference.getEndVerseId());
-
-        return query.findList();
-
+        // let's assume for now we look up all references
+        LOGGER.debug("Finding events for [{}]", allReferences);
+        return this.timelineEvents.searchSingleColumn("references", allReferences);
     }
 
     @Override
-    public List<TimelineEvent> getTimelineEvents(final LocalDateTime from, final LocalDateTime to) {
-        // fromDate < to and toDate > from is the standard coverage method where we find the overlapping
-        // events
-        // however "toDate" can be null, therefore we need to cater for that
+    public EntityDoc[] getTimelineEvents(final LocalDateTime from, final LocalDateTime to) {
+        final long startMinutes = localDateTimeToEpochMinutes(from);
+        final long endMinutes = localDateTimeToEpochMinutes(to);
 
-        // which gives us
-        // fromDate < to and ((toDate != null and toDate > from) or (toDate == null and fromDate > from ))
+        // start within range
+        final NumericRangeQuery<Long> startInRange = newLongRange("fromDate", startMinutes, endMinutes, true,
+                true);
 
-        // in other words the event starts before the requested period ends, but finishes after the end
+        // events that don't have a to date
+        final NumericRangeQuery<Long> haveToDates = newLongRange("toDate", null, null, false, false);
 
-        final String eventsQuery = "find timelineEvent where fromDate <= :to and "
-                + "((toDate is not null and toDate >= :from) or (toDate is null and fromDate >= :from))";
+        // point events should be within range and not have a to date.
+        final BooleanQuery pointEventsInRage = new BooleanQuery();
+        pointEventsInRage.add(startInRange, Occur.MUST);
+        pointEventsInRage.add(haveToDates, Occur.MUST_NOT);
 
-        final Query<TimelineEvent> query = this.ebean.createQuery(TimelineEvent.class, eventsQuery);
-        query.setParameter("from", from);
-        query.setParameter("to", to);
-        return query.findList();
+        // we want to match those documents that have a from date before the end of the given range, i.e. if
+        // an event finishes 1299BC we want to include it in the range (1300BC, xyz)
+        final NumericRangeQuery<Long> fromIsBeforeEnd = newLongRange("fromDate", null, endMinutes, false,
+                true);
+
+        // now we also want those that start after the given range
+        final NumericRangeQuery<Long> toIsAfterStart = newLongRange("toDate", startMinutes, null, false, true);
+
+        // combine the above two queries
+        final BooleanQuery durationsInRange = new BooleanQuery();
+        durationsInRange.add(fromIsBeforeEnd, Occur.MUST);
+        durationsInRange.add(toIsAfterStart, Occur.MUST);
+
+        // combine the two queries
+        final BooleanQuery docsInRange = new BooleanQuery();
+        docsInRange.add(pointEventsInRage, Occur.SHOULD);
+        docsInRange.add(durationsInRange, Occur.SHOULD);
+
+        return this.timelineEvents.search(docsInRange);
     }
 
     @Override
-    public EnhancedTimelineEvent getTimelineEvent(final int id, final String version) {
-        final EnhancedTimelineEvent ete = new EnhancedTimelineEvent(this.ebean.find(TimelineEvent.class, id));
+    public EnhancedTimelineEvent getTimelineEvent(final String id, final String version) {
+        final EntityDoc[] results = this.timelineEvents.searchExactTermBySingleField("id", 1, id);
+        if (results.length == 0) {
+            return null;
+        }
 
-        final List<ScriptureReference> references = ete.getEvent().getReferences();
-        for (final ScriptureReference r : references) {
+        final EnhancedTimelineEvent ete = new EnhancedTimelineEvent(results[0]);
+
+        final String references = ete.getEvent().get("storedReferences");
+        final String[] refs = StringUtils.split(references);
+        for (final String r : refs) {
             final OsisWrapper osisText = this.jsword.peakOsisText(version, KEYED_REFERENCE_VERSION, r);
             ete.add(osisText);
         }

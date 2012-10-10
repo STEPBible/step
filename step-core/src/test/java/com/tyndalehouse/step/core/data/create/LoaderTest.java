@@ -43,33 +43,25 @@ import org.joda.time.DateTimeUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.tyndalehouse.step.core.data.DataDrivenTestExtension;
 import com.tyndalehouse.step.core.data.EntityDoc;
 import com.tyndalehouse.step.core.data.EntityIndexReader;
 import com.tyndalehouse.step.core.data.EntityManager;
-import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
+import com.tyndalehouse.step.core.data.impl.TestEntityManager;
 import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
 import com.tyndalehouse.step.core.service.jsword.impl.JSwordPassageServiceImpl;
 import com.tyndalehouse.step.core.service.jsword.impl.JSwordVersificationServiceImpl;
 
 /**
- * Tests the loading of the geography loader
+ * Tests the loading of the all loaders
  * 
  * @author chrisburrell
  * 
  */
 @RunWith(MockitoJUnitRunner.class)
 public class LoaderTest extends DataDrivenTestExtension {
-    private static final Logger LOGGER = LoggerFactory.getLogger(LoaderTest.class);
-
-    @Mock
-    private JSwordPassageService jsword;
-
     private EntityManager entityManager;
 
     /**
@@ -77,7 +69,7 @@ public class LoaderTest extends DataDrivenTestExtension {
      */
     @Before
     public void setUp() {
-        this.entityManager = new EntityManager(true, "step/testPath/");
+        this.entityManager = new TestEntityManager();
     }
 
     /**
@@ -97,8 +89,7 @@ public class LoaderTest extends DataDrivenTestExtension {
     @Test
     public void testTimeline() {
         getLoader("test.data.path.timeline.events.directory", "timeline.csv").loadTimeline();
-
-        // assertEquals(4, l.loadTimeline());
+        assertExists(1, "timelineEvent", "name", "John the Baptist");
     }
 
     /**
@@ -193,10 +184,12 @@ public class LoaderTest extends DataDrivenTestExtension {
         coreProperties.put(key, file);
         final JSwordVersificationService versificationService = new JSwordVersificationServiceImpl();
         return new Loader(new JSwordPassageServiceImpl(versificationService, null, null, null), null,
-                getEbean(), coreProperties, this.entityManager);
+                coreProperties, this.entityManager);
     }
 
     /**
+     * Uses an "exact term" approach
+     * 
      * @param num the number of entities that should be loaded
      * @param entityName the entity name
      * @param key the key for a search using searchUniqueBySingleField
@@ -205,6 +198,18 @@ public class LoaderTest extends DataDrivenTestExtension {
     private void assertLoaded(final int num, final String entityName, final String key, final String value) {
         final EntityDoc[] searchUniqueBySingleField = getEntities(num, entityName, key, value);
         assertEquals(num, searchUniqueBySingleField.length);
+    }
+
+    /**
+     * Uses a normal lucene query
+     * 
+     * @param num the number of entities that should be loaded
+     * @param entityName the entity name
+     * @param key the key for a search using searchUniqueBySingleField
+     * @param value the value to use in the search
+     */
+    private void assertExists(final int num, final String entityName, final String key, final String value) {
+        getIndexReader(entityName).searchSingleColumn(key, value);
     }
 
     /**
@@ -218,9 +223,17 @@ public class LoaderTest extends DataDrivenTestExtension {
      */
     private EntityDoc[] getEntities(final int num, final String entityName, final String key,
             final String value) {
+        final EntityIndexReader reader = getIndexReader(entityName);
+        return reader.searchExactTermBySingleField(key, num, value);
+    }
+
+    /**
+     * @param entityName name of entity
+     * @return reader to the relevant index
+     */
+    private EntityIndexReader getIndexReader(final String entityName) {
         final EntityIndexReader reader = this.entityManager.getReader(entityName);
-        final EntityDoc[] searchUniqueBySingleField = reader.searchUniqueBySingleField(key, num, value);
-        return searchUniqueBySingleField;
+        return reader;
     }
 
 }

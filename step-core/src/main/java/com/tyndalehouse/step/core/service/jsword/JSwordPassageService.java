@@ -37,7 +37,6 @@ import java.util.List;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.passage.Key;
 
-import com.tyndalehouse.step.core.data.entities.ScriptureReference;
 import com.tyndalehouse.step.core.models.InterlinearMode;
 import com.tyndalehouse.step.core.models.KeyWrapper;
 import com.tyndalehouse.step.core.models.LookupOption;
@@ -73,14 +72,6 @@ public interface JSwordPassageService {
     OsisWrapper getOsisText(String version, String reference);
 
     /**
-     * 
-     * @param references a list of references
-     * @param version the version name is used to select the correct versification
-     * @return the list of references strongly-typed
-     */
-    List<ScriptureReference> resolveReferences(final String references, String version);
-
-    /**
      * Returns the previous or next chapter
      * 
      * @param reference the reference
@@ -113,10 +104,10 @@ public interface JSwordPassageService {
      * 
      * @param version the version to lookup the text from
      * @param keyedVersion the version with which the passage is keyed
-     * @param r the reference
+     * @param reference the reference
      * @return an osis wrapper
      */
-    OsisWrapper peakOsisText(String version, String keyedVersion, ScriptureReference r);
+    OsisWrapper peakOsisText(String version, String keyedVersion, String reference);
 
     /**
      * Looks up a very short starter for ten

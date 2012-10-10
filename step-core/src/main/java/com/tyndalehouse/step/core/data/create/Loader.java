@@ -40,14 +40,11 @@ import javax.inject.Named;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.avaje.ebean.EbeanServer;
-import com.tyndalehouse.step.core.data.EntityIndexWriter;
 import com.tyndalehouse.step.core.data.EntityManager;
-import com.tyndalehouse.step.core.data.entities.timeline.TimelineEvent;
-import com.tyndalehouse.step.core.data.loaders.CustomTranslationCsvModuleLoader;
+import com.tyndalehouse.step.core.data.impl.EntityIndexWriterImpl;
 import com.tyndalehouse.step.core.data.loaders.GeoStreamingCsvModuleLoader;
 import com.tyndalehouse.step.core.data.loaders.StreamingCsvModuleLoader;
-import com.tyndalehouse.step.core.data.loaders.translations.TimelineEventTranslation;
+import com.tyndalehouse.step.core.data.loaders.TimelineStreamingCsvModuleLoader;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.service.jsword.JSwordModuleService;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
@@ -61,14 +58,11 @@ import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 public class Loader {
     private static final int INSTALL_WAITING = 1000;
     private static final int INSTALL_MAX_WAITING = INSTALL_WAITING * 180;
-    private static final String INDEX_CREATE = "CREATE INDEX %s on %s (%s)";
     private static final String KJV = "KJV";
     private static final Logger LOGGER = LoggerFactory.getLogger(Loader.class);
-    private final EbeanServer ebean;
     private final JSwordPassageService jsword;
     private final Properties coreProperties;
     private final JSwordModuleService jswordModule;
-    private final LoaderTransaction transaction;
     private final EntityManager entityManager;
 
     /**
@@ -76,27 +70,22 @@ public class Loader {
      * 
      * @param jsword the jsword service
      * @param jswordModule the service helping with installation of jsword modules
-     * @param ebean the persistence server
      * @param coreProperties the step core properties
      * @param entityManager the entity manager
      */
     @Inject
     public Loader(final JSwordPassageService jsword, final JSwordModuleService jswordModule,
-            final EbeanServer ebean, @Named("StepCoreProperties") final Properties coreProperties,
-            final EntityManager entityManager) {
+            @Named("StepCoreProperties") final Properties coreProperties, final EntityManager entityManager) {
         this.jsword = jsword;
         this.jswordModule = jswordModule;
-        this.ebean = ebean;
         this.coreProperties = coreProperties;
         this.entityManager = entityManager;
-        this.transaction = new LoaderTransaction(ebean, 1000);
     }
 
     /**
      * Creates the table and loads the initial data set
      */
     public void init() {
-
         // in order to do this, we need some jsword modules available. - we assume someone has kicked off
         // the
         // process
@@ -135,14 +124,14 @@ public class Loader {
     private void loadData() {
         LOGGER.debug("Loading initial data");
 
-        loadLexiconDefinitions();
-        loadSpecificForms();
-        loadRobinsonMorphology();
-        loadVersionInformation();
-        loadOpenBibleGeography();
-
-        loadHotSpots();
-        // loadTimeline();
+        // loadLexiconDefinitions();
+        // loadSpecificForms();
+        // loadRobinsonMorphology();
+        // loadVersionInformation();
+        // loadOpenBibleGeography();
+        //
+        // loadHotSpots();
+        loadTimeline();
         LOGGER.info("Finished loading...");
     }
 
@@ -154,7 +143,7 @@ public class Loader {
     int loadHotSpots() {
         LOGGER.debug("Loading hotspots");
 
-        final EntityIndexWriter writer = new EntityIndexWriter(this.entityManager, "hotspot");
+        final EntityIndexWriterImpl writer = this.entityManager.getNewWriter("hotspot");
         new StreamingCsvModuleLoader(writer,
                 this.coreProperties.getProperty("test.data.path.timeline.hotspots")).init();
         return writer.close();
@@ -167,7 +156,7 @@ public class Loader {
      */
     int loadRobinsonMorphology() {
         LOGGER.debug("Loading robinson morphology");
-        final EntityIndexWriter writer = new EntityIndexWriter(this.entityManager, "morphology");
+        final EntityIndexWriterImpl writer = this.entityManager.getNewWriter("morphology");
         new StreamingCsvModuleLoader(writer,
                 this.coreProperties.getProperty("test.data.path.morphology.robinson")).init();
 
@@ -183,7 +172,7 @@ public class Loader {
      */
     int loadVersionInformation() {
         LOGGER.debug("Loading version information");
-        final EntityIndexWriter writer = new EntityIndexWriter(this.entityManager, "versionInfo");
+        final EntityIndexWriterImpl writer = this.entityManager.getNewWriter("versionInfo");
         new StreamingCsvModuleLoader(writer, this.coreProperties.getProperty("test.data.path.versions.info"))
                 .init();
         return writer.close();
@@ -197,13 +186,12 @@ public class Loader {
      */
     int loadTimeline() {
         LOGGER.debug("Loading timeline");
-        try {
-            return new CustomTranslationCsvModuleLoader<TimelineEvent>(this.ebean,
-                    this.coreProperties.getProperty("test.data.path.timeline.events.directory"),
-                    TimelineEvent.class, new TimelineEventTranslation(this.jsword), this.transaction).init();
-        } finally {
-            this.transaction.flushCommitAndContinue();
-        }
+        final EntityIndexWriterImpl writer = this.entityManager.getNewWriter("timelineEvent");
+
+        new TimelineStreamingCsvModuleLoader(writer,
+                this.coreProperties.getProperty("test.data.path.timeline.events.directory"), this.jsword)
+                .init();
+        return writer.close();
     }
 
     /**
@@ -214,7 +202,7 @@ public class Loader {
     int loadOpenBibleGeography() {
         LOGGER.debug("Loading Open Bible geography");
 
-        final EntityIndexWriter writer = new EntityIndexWriter(this.entityManager, "obplace");
+        final EntityIndexWriterImpl writer = this.entityManager.getNewWriter("obplace");
         new GeoStreamingCsvModuleLoader(writer,
                 this.coreProperties.getProperty("test.data.path.geography.openbible"), this.jsword).init();
         return writer.close();
@@ -227,7 +215,7 @@ public class Loader {
      */
     int loadLexiconDefinitions() {
         LOGGER.debug("Indexing lexicon");
-        final EntityIndexWriter writer = new EntityIndexWriter(this.entityManager, "definition");
+        final EntityIndexWriterImpl writer = this.entityManager.getNewWriter("definition");
 
         LOGGER.debug("-Indexing greek");
         LexiconLoader lexiconLoader = new LexiconLoader(writer,
@@ -256,7 +244,7 @@ public class Loader {
      */
     int loadSpecificForms() {
         LOGGER.debug("Loading lexical forms");
-        final EntityIndexWriter writer = new EntityIndexWriter(this.entityManager, "specificForm");
+        final EntityIndexWriterImpl writer = this.entityManager.getNewWriter("specificForm");
         new SpecificFormsLoader(writer, this.coreProperties.getProperty("test.data.path.lexicon.forms"))
                 .init();
         return writer.close();

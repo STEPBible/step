@@ -5,13 +5,11 @@ import static com.tyndalehouse.step.core.utils.IOUtils.closeQuietly;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.tyndalehouse.step.core.data.EntityIndexWriter;
+import com.tyndalehouse.step.core.data.impl.EntityIndexWriterImpl;
 import com.tyndalehouse.step.core.data.loaders.AbstractClasspathBasedModuleLoader;
 
 /**
@@ -20,21 +18,21 @@ import com.tyndalehouse.step.core.data.loaders.AbstractClasspathBasedModuleLoade
  * @author chrisburrell
  * 
  */
-public class SpecificFormsLoader extends AbstractClasspathBasedModuleLoader<Object> {
+public class SpecificFormsLoader extends AbstractClasspathBasedModuleLoader {
     private static final Logger LOGGER = LoggerFactory.getLogger(LexiconLoader.class);
-    private final EntityIndexWriter writer;
+    private final EntityIndexWriterImpl writer;
 
     /**
      * @param writer to the index file
      * @param resourcePath the file
      */
-    public SpecificFormsLoader(final EntityIndexWriter writer, final String resourcePath) {
-        super(null, resourcePath, null);
+    public SpecificFormsLoader(final EntityIndexWriterImpl writer, final String resourcePath) {
+        super(resourcePath);
         this.writer = writer;
     }
 
     @Override
-    protected List<Object> parseFile(final Reader reader) {
+    protected void parseFile(final Reader reader) {
         final BufferedReader bufferedReader = new BufferedReader(reader);
         String line = null;
 
@@ -49,9 +47,7 @@ public class SpecificFormsLoader extends AbstractClasspathBasedModuleLoader<Obje
         } finally {
             closeQuietly(bufferedReader);
         }
-
         LOGGER.info("Finished loading [{}] specific forms", lines);
-        return new ArrayList<Object>();
     }
 
     /**

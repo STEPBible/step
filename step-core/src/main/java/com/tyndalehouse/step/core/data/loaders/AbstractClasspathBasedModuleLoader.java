@@ -41,97 +41,64 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.avaje.ebean.EbeanServer;
-import com.tyndalehouse.step.core.data.create.LoaderTransaction;
 import com.tyndalehouse.step.core.data.create.ModuleLoader;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 
 /**
  * Loads modules straight from a CSV file to a database form
  * 
- * @param <T> the type of the class to load
  * @author chrisburrell
  */
-public abstract class AbstractClasspathBasedModuleLoader<T> implements ModuleLoader {
+public abstract class AbstractClasspathBasedModuleLoader implements ModuleLoader {
     private static final Logger LOG = LoggerFactory.getLogger(AbstractClasspathBasedModuleLoader.class);
     private final String resourcePath;
-    private final EbeanServer ebean;
-    private PostProcessingAction<T> postProcessingAction;
-    private final LoaderTransaction transaction;
 
     /**
-     * @param ebean the ebean server
      * @param resourcePath the resource path to load
-     * @param transaction the transaction for the loader
      */
-    public AbstractClasspathBasedModuleLoader(final EbeanServer ebean, final String resourcePath,
-            final LoaderTransaction transaction) {
-        this.ebean = ebean;
+    public AbstractClasspathBasedModuleLoader(final String resourcePath) {
         this.resourcePath = resourcePath;
-        this.transaction = transaction;
-    }
-
-    /**
-     * Same as all other constructors but allows a post processing action to be run
-     * 
-     * @param ebean the ebean server
-     * @param resourcePath resourcePath of the file containing all entities
-     * @param action the action that will be run after loading
-     * @param transaction the transaction for the loader
-     */
-    public AbstractClasspathBasedModuleLoader(final EbeanServer ebean, final String resourcePath,
-            final PostProcessingAction<T> action, final LoaderTransaction transaction) {
-        this(ebean, resourcePath, transaction);
-        this.postProcessingAction = action;
     }
 
     @Override
-    public int init() {
+    public void init() {
         LOG.debug("Loading entities for [{}]", this.resourcePath);
-        final long currentTime = System.currentTimeMillis();
-
         readDataFile();
-
-        return 0;
     }
 
     /**
-     * @return all entities that need to be loaded
+     * reads data file
      */
-    private List<T> readDataFile() {
+    private void readDataFile() {
         LOG.debug("Reading resource [{}]", this.resourcePath);
 
         if (this.resourcePath.endsWith("index.txt")) {
             // then we're dealing with a directory, so parse multiple files
-            return parseMultipleCsvFiles();
+            parseMultipleCsvFiles();
+            return;
         }
 
-        return parseSingleFile(this.resourcePath);
+        parseSingleFile(this.resourcePath);
     }
 
     /**
      * parses multiple files held in a index.txt file
-     * 
-     * @return the list of all loaded entities (or partially loaded if batches occur
      */
-    private List<T> parseMultipleCsvFiles() {
+    private void parseMultipleCsvFiles() {
         // read files one by one
         final String directory = this.resourcePath.substring(0, this.resourcePath.lastIndexOf('/') + 1);
         final InputStream stream = ModuleLoader.class.getResourceAsStream(this.resourcePath);
-        final List<T> allEntities = new ArrayList<T>();
         BufferedReader reader = null;
         try {
             reader = new BufferedReader(new InputStreamReader(stream));
             String line = null;
             while ((line = reader.readLine()) != null) {
                 if (!line.startsWith("--")) {
-                    allEntities.addAll(parseSingleFile(directory + line));
+                    parseSingleFile(directory + line);
                 }
             }
         } catch (final IOException e) {
@@ -139,17 +106,14 @@ public abstract class AbstractClasspathBasedModuleLoader<T> implements ModuleLoa
         } finally {
             closeQuietly(reader);
         }
-
-        return allEntities;
     }
 
     /**
      * parses a single csv resource from the classpath
      * 
      * @param csvResource the classpath resource path
-     * @return the list of loaded entities
      */
-    private List<T> parseSingleFile(final String csvResource) {
+    private void parseSingleFile(final String csvResource) {
         // this uses a buffered reader internally
         Reader fileReader = null;
         InputStream stream = null;
@@ -161,7 +125,7 @@ public abstract class AbstractClasspathBasedModuleLoader<T> implements ModuleLoa
             }
             bufferedStream = new BufferedInputStream(stream);
             fileReader = new InputStreamReader(bufferedStream, Charset.forName("UTF-8"));
-            return parseFile(fileReader);
+            parseFile(fileReader);
         } finally {
             closeQuietly(fileReader);
             // closeQuietly(bufferedStream);
@@ -172,14 +136,7 @@ public abstract class AbstractClasspathBasedModuleLoader<T> implements ModuleLoa
     /**
      * 
      * @param reader the reader to read the entities in raw form
-     * @return the list of parsed entities of type T
      */
-    protected abstract List<T> parseFile(Reader reader);
+    protected abstract void parseFile(Reader reader);
 
-    /**
-     * @return the ebean
-     */
-    protected EbeanServer getEbean() {
-        return this.ebean;
-    }
 }

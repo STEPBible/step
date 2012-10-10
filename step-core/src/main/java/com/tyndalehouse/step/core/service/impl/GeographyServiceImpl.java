@@ -39,9 +39,9 @@ import org.apache.lucene.queryParser.QueryParser.Operator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.tyndalehouse.step.core.data.EntityManager;
 import com.tyndalehouse.step.core.data.EntityDoc;
 import com.tyndalehouse.step.core.data.EntityIndexReader;
-import com.tyndalehouse.step.core.data.EntityManager;
 import com.tyndalehouse.step.core.service.GeographyService;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 

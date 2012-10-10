@@ -43,8 +43,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.inject.Injector;
-import com.tyndalehouse.step.core.data.EntityDoc;
 import com.tyndalehouse.step.core.data.EntityManager;
+import com.tyndalehouse.step.core.data.EntityDoc;
+import com.tyndalehouse.step.core.data.impl.EntityManagerImpl;
 import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
 
 /**
@@ -111,8 +112,8 @@ public class VersionStepRequest {
     }
 
     public String getTyndaleInfo() {
-        final EntityManager manager = this.injector.getInstance(EntityManager.class);
-        final EntityDoc[] results = manager.getReader("versionInfo").searchUniqueBySingleField("version", 1,
+        final EntityManager manager = this.injector.getInstance(EntityManagerImpl.class);
+        final EntityDoc[] results = manager.getReader("versionInfo").searchExactTermBySingleField("version", 1,
                 this.book.getInitials());
 
         if (results.length == 0) {

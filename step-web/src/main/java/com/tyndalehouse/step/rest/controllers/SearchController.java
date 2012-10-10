@@ -11,6 +11,9 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.tyndalehouse.step.core.models.LexiconSuggestion;
 import com.tyndalehouse.step.core.models.search.LexicalSuggestionType;
 import com.tyndalehouse.step.core.models.search.SearchResult;
@@ -25,6 +28,7 @@ import com.tyndalehouse.step.core.service.impl.SearchQuery;
  */
 @Singleton
 public class SearchController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(SearchController.class);
     private final SearchService searchService;
 
     /**
@@ -51,6 +55,7 @@ public class SearchController {
         notNull(context, "The context field is required", APP_MISSING_FIELD);
         notNull(pageSize, "Page size is required", APP_MISSING_FIELD);
 
+        LOGGER.debug("Search query is [{}]", searchQuery);
         return this.searchService.search(new SearchQuery(searchQuery.replace('#', '/'), ranked, Integer
                 .parseInt(context), Integer.parseInt(pageNumber), Integer.parseInt(pageSize)));
     }

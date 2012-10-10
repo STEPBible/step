@@ -193,7 +193,7 @@ public class SearchServiceImpl implements SearchService {
         }
 
         final EntityDoc[] results = this.definitions.searchSingleColumn("translations", sb.toString(),
-                Operator.AND, false);
+                Operator.AND, true);
         return convertDefinitionDocsToSuggestion(results);
     }
 
@@ -210,7 +210,7 @@ public class SearchServiceImpl implements SearchService {
         final EntityDoc[] results = this.definitions.search(
                 new String[] { "accentedUnicode", "betaAccented", "stepTransliteration",
                         "simplifiedStepTransliteration", "twoLetter", "otherTransliteration" },
-                QueryParser.escape(form), getStrongFilter(suggestionType), TRANSLITERATION_SORT, false);
+                QueryParser.escape(form) + '*', getStrongFilter(suggestionType), TRANSLITERATION_SORT, true);
 
         return convertDefinitionDocsToSuggestion(results);
     }
@@ -906,7 +906,7 @@ public class SearchServiceImpl implements SearchService {
                 this.definitions.getAnalyzer());
         queryParser.setDefaultOperator(Operator.AND);
         try {
-            final Query parsed = queryParser.parse("-stopWord:true " + QueryParser.escape(query));
+            final Query parsed = queryParser.parse("-stopWord:true " + query);
             final EntityDoc[] matchingMeanings = this.definitions.search(parsed);
 
             final List<String> strongs = new ArrayList<String>(matchingMeanings.length);
@@ -923,7 +923,7 @@ public class SearchServiceImpl implements SearchService {
             // return the strongs that the search will match
             return strongs;
         } catch (final ParseException e) {
-            throw new StepInternalException("Unable to parse query for meaning search");
+            throw new StepInternalException("Unable to parse query for meaning search", e);
         }
     }
 

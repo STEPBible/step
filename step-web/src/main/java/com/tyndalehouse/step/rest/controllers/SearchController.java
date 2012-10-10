@@ -7,6 +7,8 @@ import static com.tyndalehouse.step.core.utils.ValidateUtils.notNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -29,6 +31,7 @@ import com.tyndalehouse.step.core.service.impl.SearchQuery;
 @Singleton
 public class SearchController {
     private static final Logger LOGGER = LoggerFactory.getLogger(SearchController.class);
+    private static final Pattern SQUARE_BRACKETS = Pattern.compile("\\[[^\\]]*\\]");
     private final SearchService searchService;
 
     /**
@@ -56,8 +59,39 @@ public class SearchController {
         notNull(pageSize, "Page size is required", APP_MISSING_FIELD);
 
         LOGGER.debug("Search query is [{}]", searchQuery);
-        return this.searchService.search(new SearchQuery(searchQuery.replace('#', '/'), ranked, Integer
+
+        String newQuery;
+        // work around - because apache is decoding for tomcat (i think) and thereby spaces are removed...
+        final Matcher matcher = SQUARE_BRACKETS.matcher(searchQuery);
+        final boolean find = matcher.find();
+        if (find) {
+            // then we add a plus in front if not already there...
+            newQuery = getNewQuery(matcher, searchQuery);
+        } else {
+            newQuery = searchQuery;
+        }
+
+        return this.searchService.search(new SearchQuery(newQuery.replace('#', '/'), ranked, Integer
                 .parseInt(context), Integer.parseInt(pageNumber), Integer.parseInt(pageSize)));
+    }
+
+    /**
+     * re-adds a plus that apache may have taken out
+     * 
+     * @param matcher the matcher
+     * @param searchQuery the query itself
+     * @return the new string
+     */
+    private String getNewQuery(final Matcher matcher, final String searchQuery) {
+        final int start = matcher.start();
+        if (start > 0) {
+            if (searchQuery.charAt(start - 1) != '+') {
+                final StringBuilder sb = new StringBuilder(searchQuery);
+                sb.insert(start - 1, '+');
+                return sb.toString();
+            }
+        }
+        return searchQuery;
     }
 
     /**

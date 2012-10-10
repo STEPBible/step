@@ -1136,7 +1136,7 @@ public class SearchServiceImpl implements SearchService {
                 null, false);
 
         // finally, if we haven't found anything, then abort
-        if (specificForms != null) {
+        if (specificForms.length != 0) {
             final List<String> strongs = new ArrayList<String>(specificForms.length);
             // nothing to search for..., so abort query
             for (final EntityDoc f : specificForms) {

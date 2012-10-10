@@ -42,7 +42,7 @@ import org.slf4j.LoggerFactory;
 
 import au.com.bytecode.opencsv.CSVReader;
 
-import com.tyndalehouse.step.core.data.impl.EntityIndexWriterImpl;
+import com.tyndalehouse.step.core.data.entities.impl.EntityIndexWriterImpl;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 
 /**

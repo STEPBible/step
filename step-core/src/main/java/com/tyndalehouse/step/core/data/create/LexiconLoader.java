@@ -41,7 +41,7 @@ import java.io.Reader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.tyndalehouse.step.core.data.impl.EntityIndexWriterImpl;
+import com.tyndalehouse.step.core.data.entities.impl.EntityIndexWriterImpl;
 import com.tyndalehouse.step.core.data.loaders.AbstractClasspathBasedModuleLoader;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 

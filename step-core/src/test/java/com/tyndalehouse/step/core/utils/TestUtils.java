@@ -1,7 +1,7 @@
 package com.tyndalehouse.step.core.utils;
 
-import com.tyndalehouse.step.core.data.impl.EntityIndexWriterImpl;
-import com.tyndalehouse.step.core.data.impl.TestEntityManager;
+import com.tyndalehouse.step.core.data.entities.impl.EntityIndexWriterImpl;
+import com.tyndalehouse.step.core.data.entities.impl.TestEntityManager;
 
 /**
  * static utilities for testing, creating entities, etc.

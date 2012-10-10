@@ -1,4 +1,4 @@
-package com.tyndalehouse.step.core.data.impl;
+package com.tyndalehouse.step.core.data.entities.impl;
 
 import java.io.IOException;
 
@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.tyndalehouse.step.core.data.EntityConfiguration;
+import com.tyndalehouse.step.core.data.entities.impl.EntityIndexReaderImpl;
 
 /**
  * Memory only lucene indexes...

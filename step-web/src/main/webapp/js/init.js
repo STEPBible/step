@@ -264,8 +264,6 @@ function initGlobalHandlers() {
  */
 function initModules(passages) {
 	new LexiconDefinition();
-	new Bookmark();
-	new Login();
 
 	var bottomSection = $("#bottomSectionContent");
 	timeline = new TimelineWidget(bottomSection);

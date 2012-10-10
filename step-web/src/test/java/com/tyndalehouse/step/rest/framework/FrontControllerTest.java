@@ -58,10 +58,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import com.avaje.ebean.EbeanServer;
 import com.google.inject.Injector;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
-import com.tyndalehouse.step.core.guice.providers.ServerSessionProvider;
 import com.tyndalehouse.step.core.service.BibleInformationService;
 import com.tyndalehouse.step.guice.providers.ClientSessionProvider;
 import com.tyndalehouse.step.rest.controllers.BibleController;
@@ -83,16 +81,12 @@ public class FrontControllerTest {
     private final Boolean isCacheEnabled = Boolean.FALSE;
 
     @Mock
-    private EbeanServer ebean;
-    @Mock
     private ClientErrorResolver errorResolver;
     @Mock
     private ResponseCache responseCache;
     @Mock
     private StepRequest stepRequest;
 
-    @Mock
-    private ServerSessionProvider serverSessionProvider;
     @Mock
     private ClientSessionProvider clientSessionProvider;
 
@@ -101,8 +95,8 @@ public class FrontControllerTest {
      */
     @Before
     public void setUp() {
-        this.fcUnderTest = new FrontController(this.guiceInjector, this.isCacheEnabled, this.ebean,
-                this.errorResolver, this.responseCache);
+        this.fcUnderTest = new FrontController(this.guiceInjector, this.isCacheEnabled, this.errorResolver,
+                this.responseCache);
     }
 
     /**
@@ -181,8 +175,7 @@ public class FrontControllerTest {
     @Test
     public void testGetControllerMethod() throws IllegalAccessException, InvocationTargetException {
         final BibleInformationService bibleInfo = mock(BibleInformationService.class);
-        final BibleController controllerInstance = new BibleController(bibleInfo, this.serverSessionProvider,
-                this.clientSessionProvider);
+        final BibleController controllerInstance = new BibleController(bibleInfo, this.clientSessionProvider);
 
         // when
         final Method controllerMethod = this.fcUnderTest.getControllerMethod("getAllFeatures",

@@ -47,8 +47,6 @@ import javax.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.tyndalehouse.step.core.data.entities.Session;
-import com.tyndalehouse.step.core.data.entities.User;
 import com.tyndalehouse.step.core.models.BookName;
 import com.tyndalehouse.step.core.models.ClientSession;
 import com.tyndalehouse.step.core.models.EnrichedLookupOption;
@@ -69,7 +67,6 @@ import com.tyndalehouse.step.rest.framework.Cacheable;
 public class BibleController {
     private static final Logger LOGGER = LoggerFactory.getLogger(BibleController.class);
     private final BibleInformationService bibleInformation;
-    private final Provider<Session> serverSession;
     private final Provider<ClientSession> clientSession;
 
     /**
@@ -82,9 +79,8 @@ public class BibleController {
      */
     @Inject
     public BibleController(final BibleInformationService bibleInformation,
-            final Provider<Session> serverSession, final Provider<ClientSession> clientSession) {
+            final Provider<ClientSession> clientSession) {
         this.bibleInformation = bibleInformation;
-        this.serverSession = serverSession;
         this.clientSession = clientSession;
         LOGGER.debug("Created Bible Controller");
     }
@@ -97,10 +93,7 @@ public class BibleController {
      */
     @Cacheable(true)
     public ModulesForLanguageUser getModules(final String allVersions) {
-        final User user = this.serverSession.get().getUser();
-        final String language = user == null || user.getLanguage() == null ? this.clientSession.get()
-                .getLanguage() : user.getLanguage();
-
+        final String language = this.clientSession.get().getLanguage();
         final Locale userLocale = this.clientSession.get().getLocale();
         final ModulesForLanguageUser versions = new ModulesForLanguageUser();
         versions.setLanguageCode(userLocale.getLanguage());

@@ -4,7 +4,7 @@ import static com.tyndalehouse.step.core.data.common.PartialDate.parseDate;
 
 import com.tyndalehouse.step.core.data.common.PartialDate;
 import com.tyndalehouse.step.core.data.common.PrecisionType;
-import com.tyndalehouse.step.core.data.impl.EntityIndexWriterImpl;
+import com.tyndalehouse.step.core.data.entities.impl.EntityIndexWriterImpl;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 
 /**

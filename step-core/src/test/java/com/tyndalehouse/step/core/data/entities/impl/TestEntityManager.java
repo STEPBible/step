@@ -1,9 +1,11 @@
-package com.tyndalehouse.step.core.data.impl;
+package com.tyndalehouse.step.core.data.entities.impl;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import com.tyndalehouse.step.core.data.EntityIndexReader;
+import com.tyndalehouse.step.core.data.entities.impl.EntityIndexWriterImpl;
+import com.tyndalehouse.step.core.data.entities.impl.EntityManagerImpl;
 
 /**
  * a test entity manager, which gives us indexes in memory

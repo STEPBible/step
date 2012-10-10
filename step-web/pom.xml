@@ -45,10 +45,6 @@
 			<artifactId>step-core</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.avaje</groupId>
-			<artifactId>ebean</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>xalan</groupId>
 			<artifactId>xalan</artifactId>
 		</dependency>
@@ -134,15 +130,6 @@
 			<groupId>org.jdom</groupId>
 			<artifactId>jdom</artifactId>
 		</dependency>
-
-		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-			<version>${h2.version}</version>
-			<scope>runtime</scope>
-		</dependency>
-
-
 	</dependencies>
 
 	<build>
@@ -192,13 +179,11 @@
 							    <jsSourceFile>js/jquery-extensions/jquery-detail-slider.js</jsSourceFile>
 								<jsSourceFile>js/ddsmoothmenu.js</jsSourceFile>
 							    <jsSourceFile>js/util.js</jsSourceFile>
-							    <jsSourceFile>js/bookmark.js</jsSourceFile>
 							    <jsSourceFile>js/lexicon_definition.js</jsSourceFile>
 							    <jsSourceFile>js/ui_hooks.js</jsSourceFile>
 							    <jsSourceFile>js/timeline.js</jsSourceFile>
 							    <jsSourceFile>js/geography.js</jsSourceFile>
 							    <jsSourceFile>js/toolbar_menu.js</jsSourceFile>
-							    <jsSourceFile>js/login.js</jsSourceFile>
 								<jsSourceFile>js/defaults/step.defaults.js</jsSourceFile>
 								<jsSourceFile>js/search/step.search.js</jsSourceFile>
 								<jsSourceFile>js/search/step.search.ui.js</jsSourceFile>
@@ -227,6 +212,7 @@
 							    <jsSourceFile>js/passage/step.passage.ui.js</jsSourceFile>
 							    <jsSourceFile>js/passage/step.passage.navigation.js</jsSourceFile>
 							    <jsSourceFile>js/passage/step.passage.navigation.ui.js</jsSourceFile>
+							    <jsSourceFile>js/bookmark/step.bookmark.js</jsSourceFile>
 							    <jsSourceFile>js/bookmark/step.bookmark.ui.js</jsSourceFile>
 							    <jsSourceFile>js/init.js</jsSourceFile>
 							</jsSourceFiles>

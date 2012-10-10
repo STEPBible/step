@@ -1,4 +1,4 @@
-package com.tyndalehouse.step.core.data.impl;
+package com.tyndalehouse.step.core.data.entities.impl;
 
 import java.util.HashMap;
 import java.util.Map;

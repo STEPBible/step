@@ -42,37 +42,28 @@ import net.sf.ehcache.config.Configuration;
 
 import org.crosswire.jsword.book.install.Installer;
 
-import com.avaje.ebean.EbeanServer;
 import com.google.inject.Provides;
 import com.google.inject.TypeLiteral;
 import com.google.inject.name.Names;
 import com.tyndalehouse.step.core.data.EntityManager;
 import com.tyndalehouse.step.core.data.create.Loader;
-import com.tyndalehouse.step.core.data.entities.Session;
-import com.tyndalehouse.step.core.data.impl.EntityManagerImpl;
-import com.tyndalehouse.step.core.guice.providers.DatabaseConfigProvider;
+import com.tyndalehouse.step.core.data.entities.impl.EntityManagerImpl;
 import com.tyndalehouse.step.core.guice.providers.DefaultInstallersProvider;
 import com.tyndalehouse.step.core.guice.providers.DefaultLexiconRefsProvider;
 import com.tyndalehouse.step.core.guice.providers.DefaultVersionsProvider;
-import com.tyndalehouse.step.core.guice.providers.ServerSessionProvider;
-import com.tyndalehouse.step.core.guice.providers.TestData;
 import com.tyndalehouse.step.core.service.BibleInformationService;
-import com.tyndalehouse.step.core.service.FavouritesService;
 import com.tyndalehouse.step.core.service.GeographyService;
 import com.tyndalehouse.step.core.service.ModuleService;
 import com.tyndalehouse.step.core.service.MorphologyService;
 import com.tyndalehouse.step.core.service.SearchService;
 import com.tyndalehouse.step.core.service.TimelineService;
-import com.tyndalehouse.step.core.service.UserDataService;
 import com.tyndalehouse.step.core.service.VocabularyService;
 import com.tyndalehouse.step.core.service.impl.BibleInformationServiceImpl;
-import com.tyndalehouse.step.core.service.impl.FavouritesServiceImpl;
 import com.tyndalehouse.step.core.service.impl.GeographyServiceImpl;
 import com.tyndalehouse.step.core.service.impl.ModuleServiceImpl;
 import com.tyndalehouse.step.core.service.impl.MorphologyServiceImpl;
 import com.tyndalehouse.step.core.service.impl.SearchServiceImpl;
 import com.tyndalehouse.step.core.service.impl.TimelineServiceImpl;
-import com.tyndalehouse.step.core.service.impl.UserDataServiceImpl;
 import com.tyndalehouse.step.core.service.impl.VocabularyServiceImpl;
 import com.tyndalehouse.step.core.service.jsword.JSwordMetadataService;
 import com.tyndalehouse.step.core.service.jsword.JSwordModuleService;
@@ -125,11 +116,7 @@ public class StepCoreModule extends AbstractStepGuiceModule {
         bind(VocabularyService.class).to(VocabularyServiceImpl.class).asEagerSingleton();
         bind(TimelineService.class).to(TimelineServiceImpl.class);
         bind(GeographyService.class).to(GeographyServiceImpl.class);
-        bind(FavouritesService.class).to(FavouritesServiceImpl.class).asEagerSingleton();
-        bind(UserDataService.class).to(UserDataServiceImpl.class).asEagerSingleton();
         bind(Loader.class).asEagerSingleton();
-
-        bind(Session.class).toProvider(ServerSessionProvider.class);
 
         bind(new TypeLiteral<List<String>>() {
         }).annotatedWith(Names.named("defaultVersions")).toProvider(DefaultVersionsProvider.class);
@@ -138,12 +125,7 @@ public class StepCoreModule extends AbstractStepGuiceModule {
         bind(new TypeLiteral<List<Installer>>() {
         }).toProvider(DefaultInstallersProvider.class);
         bind(EntityManager.class).to(EntityManagerImpl.class).asEagerSingleton();
-        bind(EbeanServer.class).toProvider(DatabaseConfigProvider.class).asEagerSingleton();
 
-        // now bind the test data
-        if (Boolean.valueOf(stepProperties.getProperty("test.data.load"))) {
-            bind(TestData.class).asEagerSingleton();
-        }
     }
 
     /**

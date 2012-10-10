@@ -54,13 +54,11 @@
 	    <script src="js/jquery-extensions/jquery-detail-slider.js" type="text/javascript"></script>
 		<script src="js/ddsmoothmenu.js" type="text/javascript"></script>
 	    <script src="js/util.js" type="text/javascript"></script>
-	    <script src="js/bookmark.js" type="text/javascript"></script>
 	    <script src="js/lexicon_definition.js" type="text/javascript"></script>
 	    <script src="js/ui_hooks.js" type="text/javascript"></script>
 	    <script src="js/timeline.js" type="text/javascript"></script>
 	    <script src="js/geography.js" type="text/javascript"></script>
 	    <script src="js/toolbar_menu.js" type="text/javascript"></script>
-	    <script src="js/login.js" type="text/javascript"></script>
 		<script src="js/defaults/step.defaults.js" type="text/javascript"></script>
 		<script src="js/search/step.search.js" type="text/javascript"></script>
 		<script src="js/search/step.search.ui.js" type="text/javascript"></script>
@@ -93,6 +91,7 @@
 	    <script src="js/passage/step.passage.ui.js" type="text/javascript"></script>
 	    <script src="js/passage/step.passage.navigation.js" type="text/javascript"></script>
 	    <script src="js/passage/step.passage.navigation.ui.js" type="text/javascript"></script>
+	    <script src="js/bookmark/step.bookmark.js" type="text/javascript"></script>
 	    <script src="js/bookmark/step.bookmark.ui.js" type="text/javascript"></script>
 	    <script src="js/init.js" type="text/javascript"></script>
 	<%
@@ -188,7 +187,7 @@
 	<p>&copy; Tyndale House 2011</p>
 </div>
 
-<jsp:include page="jsps/login.jsp"></jsp:include>
+<%-- <jsp:include page="jsps/login.jsp"></jsp:include> --%>
 
 <div id="goToDate" style="display: none">
 	Please enter a year: <input type="text" id="scrollToYear" />

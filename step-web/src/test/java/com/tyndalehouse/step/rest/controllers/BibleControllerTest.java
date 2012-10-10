@@ -47,9 +47,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import com.tyndalehouse.step.core.data.entities.Session;
 import com.tyndalehouse.step.core.exceptions.ValidationException;
-import com.tyndalehouse.step.core.guice.providers.ServerSessionProvider;
 import com.tyndalehouse.step.core.models.ClientSession;
 import com.tyndalehouse.step.core.models.LookupOption;
 import com.tyndalehouse.step.core.service.BibleInformationService;
@@ -66,8 +64,6 @@ public class BibleControllerTest {
     private final BibleInformationService bibleInformation = mock(BibleInformationService.class);
 
     @Mock
-    private ServerSessionProvider serverSessionProvider;
-    @Mock
     private ClientSessionProvider clientSessionProvider;
 
     private BibleController testController;
@@ -77,8 +73,7 @@ public class BibleControllerTest {
      */
     @Before
     public void setUp() {
-        this.testController = new BibleController(this.bibleInformation, this.serverSessionProvider,
-                this.clientSessionProvider);
+        this.testController = new BibleController(this.bibleInformation, this.clientSessionProvider);
     }
 
     /**
@@ -88,7 +83,6 @@ public class BibleControllerTest {
     public void testGetBibleVersions() {
         final ClientSession clientSessionMock = mock(ClientSession.class);
         when(clientSessionMock.getLocale()).thenReturn(Locale.getDefault());
-        when(this.serverSessionProvider.get()).thenReturn(mock(Session.class));
         when(this.clientSessionProvider.get()).thenReturn(clientSessionMock);
 
         // do test

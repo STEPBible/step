@@ -5,7 +5,7 @@ import static org.mockito.Mockito.mock;
 
 import org.junit.Test;
 
-import com.tyndalehouse.step.core.data.impl.EntityManagerImpl;
+import com.tyndalehouse.step.core.data.entities.impl.EntityManagerImpl;
 
 /**
  * Tests {@link VocabularyServiceImpl}

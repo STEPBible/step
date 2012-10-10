@@ -1,6 +1,6 @@
 package com.tyndalehouse.step.core.data;
 
-import com.tyndalehouse.step.core.data.impl.EntityIndexWriterImpl;
+import com.tyndalehouse.step.core.data.entities.impl.EntityIndexWriterImpl;
 
 /**
  * Interface for entity managers

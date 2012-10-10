@@ -45,11 +45,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import com.tyndalehouse.step.core.data.DataDrivenTestExtension;
 import com.tyndalehouse.step.core.data.EntityDoc;
 import com.tyndalehouse.step.core.data.EntityIndexReader;
 import com.tyndalehouse.step.core.data.EntityManager;
-import com.tyndalehouse.step.core.data.impl.TestEntityManager;
+import com.tyndalehouse.step.core.data.entities.impl.TestEntityManager;
 import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
 import com.tyndalehouse.step.core.service.jsword.impl.JSwordPassageServiceImpl;
 import com.tyndalehouse.step.core.service.jsword.impl.JSwordVersificationServiceImpl;
@@ -61,7 +60,7 @@ import com.tyndalehouse.step.core.service.jsword.impl.JSwordVersificationService
  * 
  */
 @RunWith(MockitoJUnitRunner.class)
-public class LoaderTest extends DataDrivenTestExtension {
+public class LoaderTest {
     private EntityManager entityManager;
 
     /**

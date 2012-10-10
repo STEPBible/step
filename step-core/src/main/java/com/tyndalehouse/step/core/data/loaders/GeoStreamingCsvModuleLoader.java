@@ -6,7 +6,7 @@ import static com.tyndalehouse.step.core.utils.StringUtils.isNotEmpty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.tyndalehouse.step.core.data.impl.EntityIndexWriterImpl;
+import com.tyndalehouse.step.core.data.entities.impl.EntityIndexWriterImpl;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 
 /**

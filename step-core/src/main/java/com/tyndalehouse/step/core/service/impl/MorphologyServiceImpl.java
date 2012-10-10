@@ -43,9 +43,9 @@ import javax.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.tyndalehouse.step.core.data.EntityManager;
 import com.tyndalehouse.step.core.data.EntityDoc;
 import com.tyndalehouse.step.core.data.EntityIndexReader;
+import com.tyndalehouse.step.core.data.EntityManager;
 import com.tyndalehouse.step.core.service.MorphologyService;
 
 /**
@@ -61,8 +61,6 @@ public class MorphologyServiceImpl implements MorphologyService {
     private static final String ROBINSON_PREFIX = "robinson:";
     private static final int ROBINSON_PREFIX_LENGTH = ROBINSON_PREFIX.length();
     private static final String NON_BREAKING_SPACE = "&nbsp;";
-    // private final EbeanServer ebean;
-    // private final MorphologyCache cache;
     private final EntityIndexReader morphology;
 
     /**
@@ -109,22 +107,6 @@ public class MorphologyServiceImpl implements MorphologyService {
             final EntityDoc[] entry = this.morphology.searchExactTermBySingleField("code", 1, key);
             LOGGER.debug("Took [{}] nano-seconds", System.nanoTime() - currentTimeNanos);
             return entry.length > 0 ? entry[0] : null;
-            // final Morphology entry = this.cache.get(key);
-            // if (entry != null) {
-            // LOGGER.trace("Cache hit for key [{}]", key);
-            // return entry;
-            // }
-
-            // LOGGER.trace("Cache miss for key [{}]", key);
-            // final Morphology morphFromDb = this.ebean.find(Morphology.class, key);
-
-            // put in cache regardless
-            // if (morphFromDb != null) {
-            // this.cache.put(key, morphFromDb);
-            // return morphFromDb;
-            // } else {
-            // return null;
-            // }
         }
         return null;
     }

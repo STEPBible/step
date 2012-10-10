@@ -41,7 +41,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.tyndalehouse.step.core.data.EntityManager;
-import com.tyndalehouse.step.core.data.impl.EntityIndexWriterImpl;
+import com.tyndalehouse.step.core.data.entities.impl.EntityIndexWriterImpl;
 import com.tyndalehouse.step.core.data.loaders.GeoStreamingCsvModuleLoader;
 import com.tyndalehouse.step.core.data.loaders.StreamingCsvModuleLoader;
 import com.tyndalehouse.step.core.data.loaders.TimelineStreamingCsvModuleLoader;
@@ -118,19 +118,46 @@ public class Loader {
         }
     }
 
+    // /**
+    // * installs core jsword modules
+    // *
+    // * @param coreModules a comma separated list of modules
+    // */
+    // private void loadDefaultJSwordModules(final String coreModules) {
+    // final String[] modules = commaSeparate(coreModules);
+    // boolean installerInfoRefreshed = false;
+    //
+    // for (final String m : modules) {
+    // LOGGER.trace("Loading [{}]", m);
+    //
+    // if (!this.jswordModule.isInstalled(m)) {
+    // if (!installerInfoRefreshed) {
+    // LOGGER.trace("Reloading installers");
+    // this.jswordModule.reloadInstallers();
+    // installerInfoRefreshed = true;
+    // }
+    //
+    // LOGGER.trace("Installing {} module", m);
+    // this.jswordModule.installBook(m);
+    // } else {
+    // LOGGER.info("Book {} already installed", m);
+    // }
+    // }
+    // }
+
     /**
      * Loads the data into the database
      */
     private void loadData() {
         LOGGER.debug("Loading initial data");
 
-        // loadLexiconDefinitions();
-        // loadSpecificForms();
-        // loadRobinsonMorphology();
-        // loadVersionInformation();
-        // loadOpenBibleGeography();
-        //
-        // loadHotSpots();
+        loadLexiconDefinitions();
+        loadSpecificForms();
+        loadRobinsonMorphology();
+        loadVersionInformation();
+        loadOpenBibleGeography();
+
+        loadHotSpots();
         loadTimeline();
         LOGGER.info("Finished loading...");
     }

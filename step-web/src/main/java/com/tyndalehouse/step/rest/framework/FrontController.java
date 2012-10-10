@@ -34,7 +34,6 @@ package com.tyndalehouse.step.rest.framework;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -48,8 +47,6 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.avaje.ebean.EbeanServer;
-import com.avaje.ebean.text.json.JsonContext;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
@@ -68,15 +65,12 @@ import com.tyndalehouse.step.core.exceptions.StepInternalException;
 public class FrontController extends HttpServlet {
     private static final Logger LOGGER = LoggerFactory.getLogger(FrontController.class);
     private static final String CONTROLLER_PACKAGE = "com.tyndalehouse.step.rest.controllers";
-    private static final String ENTITIES_PACKAGE = "com.tyndalehouse.step.core.data.entities";
-    private static final String AVAJE_PACKAGE = "com.avaje";
     private static final String UTF_8_ENCODING = "UTF-8";
     private static final char PACKAGE_SEPARATOR = '.';
     private static final long serialVersionUID = 7898656504631346047L;
     private static final String CONTROLLER_SUFFIX = "Controller";
     private final transient Injector guiceInjector;
     private final transient ObjectMapper jsonMapper = new ObjectMapper();
-    private final transient JsonContext ebeanJson;
 
     private final transient Map<String, Method> methodNames = new HashMap<String, Method>();
     private final transient Map<String, Object> controllers = new HashMap<String, Object>();
@@ -90,17 +84,15 @@ public class FrontController extends HttpServlet {
      * 
      * @param guiceInjector the injector used to call the relevant controllers
      * @param isCacheEnabled indicates whether responses should be cached for fast retrieval
-     * @param ebean the db access/persisitence object
      * @param errorResolver the error resolver is the object that helps us translate errors for the client
      * @param responseCache cache in which are put any number of responses to speed up processing
      */
     @Inject
     public FrontController(final Injector guiceInjector,
-            @Named("frontcontroller.cache.enabled") final Boolean isCacheEnabled, final EbeanServer ebean,
+            @Named("frontcontroller.cache.enabled") final Boolean isCacheEnabled,
             final ClientErrorResolver errorResolver, final ResponseCache responseCache) {
         this.guiceInjector = guiceInjector;
         this.responseCache = responseCache;
-        this.ebeanJson = ebean.createJsonContext();
 
         this.errorResolver = errorResolver;
         this.isCacheEnabled = Boolean.TRUE.equals(isCacheEnabled);
@@ -163,33 +155,6 @@ public class FrontController extends HttpServlet {
         // CHECKSTYLE:ON
     }
 
-    // /**
-    // * casts objects to the appropriate types
-    // *
-    // * @param parameterTypes the parameter types expected
-    // * @param args the arguments passed in
-    // * @return the set of cast arguments
-    // */
-    // private Object[] parseArgs(final Class<?>[] parameterTypes, final String[] args) {
-    // final Object[] newArgs = new String[parameterTypes.length];
-    //
-    // for (int ii = 0; ii < parameterTypes.length; ii++) {
-    // // deal with nulls
-    // if (ii > args.length) {
-    // newArgs[ii] = null;
-    // } else {
-    // if (boolean.class.equals(parameterTypes[ii])) {
-    // newArgs[ii] = Boolean.valueOf(args[ii]);
-    // } else {
-    // newArgs[ii] = args[ii];
-    // }
-    // }
-    // }
-    //
-    // // TODO Auto-generated method stub
-    // return null;
-    // }
-
     /**
      * We attempt here to rethrow the exception that caused the invocation target exception, so that we can
      * handle it nicely for the user
@@ -225,16 +190,10 @@ public class FrontController extends HttpServlet {
 
         try {
             String response;
-            // we have normal objects and avaje ebean objects which have been intercepted
-            // therefore we can't just use simple jackson mapper
             if (responseValue == null) {
                 return new byte[0];
             } else {
-                if (isPojo(responseValue)) {
-                    response = this.jsonMapper.writeValueAsString(responseValue);
-                } else {
-                    response = this.ebeanJson.toJsonString(responseValue);
-                }
+                response = this.jsonMapper.writeValueAsString(responseValue);
             }
 
             return response.getBytes(UTF_8_ENCODING);
@@ -245,35 +204,6 @@ public class FrontController extends HttpServlet {
         } catch (final IOException e) {
             throw new StepInternalException(e.getMessage(), e);
         }
-    }
-
-    /**
-     * inspects the response value to determine the correct serialiser
-     * 
-     * @param responseValue the response value
-     * @return true if normal serialisation should be used
-     */
-    private boolean isPojo(final Object responseValue) {
-        if (responseValue instanceof java.util.Collection<?>) {
-            // inspect what the collection contains...
-            final Collection<?> c = (Collection<?>) responseValue;
-            if (((java.util.Collection<?>) responseValue).size() != 0) {
-                final Object o = c.iterator().next();
-                return isPojo(o);
-            }
-        }
-
-        final Class<?> responseClass = responseValue.getClass();
-        if (responseClass.isArray()) {
-            return isPojoClass(responseClass.getComponentType());
-        } else {
-            return isPojoClass(responseClass);
-        }
-    }
-
-    private boolean isPojoClass(final Class<?> responseClass) {
-        final String responsePackage = responseClass.getPackage().getName();
-        return !responsePackage.startsWith(ENTITIES_PACKAGE) && !responsePackage.startsWith(AVAJE_PACKAGE);
     }
 
     /**

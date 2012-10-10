@@ -10,8 +10,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.tyndalehouse.step.core.data.DataDrivenTestExtension;
-import com.tyndalehouse.step.core.data.impl.TestEntityManager;
+import com.tyndalehouse.step.core.data.entities.impl.TestEntityManager;
 import com.tyndalehouse.step.core.models.search.SearchEntry;
 import com.tyndalehouse.step.core.models.search.SearchResult;
 import com.tyndalehouse.step.core.models.search.SubjectHeadingSearchEntry;
@@ -29,7 +28,7 @@ import com.tyndalehouse.step.core.utils.TestUtils;
  * @author chrisburrell
  * 
  */
-public class SearchServiceImplTest extends DataDrivenTestExtension {
+public class SearchServiceImplTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(SearchServiceImplTest.class);
 
     /**
@@ -80,7 +79,7 @@ public class SearchServiceImplTest extends DataDrivenTestExtension {
                 null, null);
         final TestEntityManager entityManager = new TestEntityManager();
 
-        return new SearchServiceImpl(getEbean(), new JSwordSearchServiceImpl(versificationService, jsword),
-                jsword, new TimelineServiceImpl(entityManager, jsword), entityManager);
+        return new SearchServiceImpl(new JSwordSearchServiceImpl(versificationService, jsword), jsword,
+                new TimelineServiceImpl(entityManager, jsword), entityManager);
     }
 }

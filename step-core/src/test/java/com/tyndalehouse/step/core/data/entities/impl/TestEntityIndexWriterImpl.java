@@ -1,4 +1,4 @@
-package com.tyndalehouse.step.core.data.impl;
+package com.tyndalehouse.step.core.data.entities.impl;
 
 import java.io.IOException;
 
@@ -6,6 +6,7 @@ import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.store.Directory;
 
 import com.tyndalehouse.step.core.data.EntityManager;
+import com.tyndalehouse.step.core.data.entities.impl.EntityIndexWriterImpl;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 
 /**

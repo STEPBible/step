@@ -1,4 +1,4 @@
-package com.tyndalehouse.step.core.data.impl;
+package com.tyndalehouse.step.core.data.entities.impl;
 
 import static org.apache.lucene.util.Version.LUCENE_30;
 

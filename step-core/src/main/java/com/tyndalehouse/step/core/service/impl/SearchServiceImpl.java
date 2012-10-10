@@ -72,10 +72,9 @@ import org.crosswire.jsword.passage.Key;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.avaje.ebean.EbeanServer;
-import com.tyndalehouse.step.core.data.EntityManager;
 import com.tyndalehouse.step.core.data.EntityDoc;
 import com.tyndalehouse.step.core.data.EntityIndexReader;
+import com.tyndalehouse.step.core.data.EntityManager;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.models.LexiconSuggestion;
 import com.tyndalehouse.step.core.models.OsisWrapper;
@@ -125,8 +124,6 @@ public class SearchServiceImpl implements SearchService {
     private static final String BASE_HEBREW_VERSION = "OSMHB";
     private static final Logger LOGGER = LoggerFactory.getLogger(SearchServiceImpl.class);
     private static final String STRONG_QUERY = "strong:";
-    private static final String LIKE = "%%%s%%";
-    private final EbeanServer ebean;
     private final JSwordSearchService jswordSearch;
     private final JSwordPassageService jsword;
     private final TimelineService timeline;
@@ -135,17 +132,14 @@ public class SearchServiceImpl implements SearchService {
     private final EntityIndexReader timelineEvents;
 
     /**
-     * @param ebean the ebean server to carry out the search from
      * @param jsword used to convert references to numerals, etc.
      * @param timeline the timeline service
      * @param jswordSearch the search service
      * @param entityManager the manager for all entities stored in lucene
      */
     @Inject
-    public SearchServiceImpl(final EbeanServer ebean, final JSwordSearchService jswordSearch,
-            final JSwordPassageService jsword, final TimelineService timeline,
-            final EntityManager entityManager) {
-        this.ebean = ebean;
+    public SearchServiceImpl(final JSwordSearchService jswordSearch, final JSwordPassageService jsword,
+            final TimelineService timeline, final EntityManager entityManager) {
         this.jswordSearch = jswordSearch;
         this.jsword = jsword;
         this.timeline = timeline;
@@ -1088,13 +1082,6 @@ public class SearchServiceImpl implements SearchService {
             throw new StepInternalException("Unable to parse query", e);
         }
 
-        // List<Definition> definitions = this.ebean.find(Definition.class).select("strongNumber").where()
-        // .like("accentedUnicode", queryLower).eq("blacklisted", false).findList();
-
-        // if (definitions.isEmpty()) {
-        // definitions = this.ebean.find(Definition.class).select("strongNumber").where()
-        // .like("unaccentedUnicode", unaccent(queryLower, sq)).eq("blacklisted", false).findList();
-        // }
         final EntityDoc[] results = this.definitions.search(parsed);
 
         final List<String> matchedStrongs = new ArrayList<String>();
@@ -1144,7 +1131,8 @@ public class SearchServiceImpl implements SearchService {
         final String simplifiedTransliteration = adaptForUnaccentedTransliteration(lowerQuery, isGreek);
 
         final EntityDoc[] specificForms = this.specificForms.search(
-                new String[] { "simplifiedTransliteration" }, query, getFilter(isGreek), null, false);
+                new String[] { "simplifiedTransliteration" }, simplifiedTransliteration, getFilter(isGreek),
+                null, false);
 
         // finally, if we haven't found anything, then abort
         if (specificForms != null) {

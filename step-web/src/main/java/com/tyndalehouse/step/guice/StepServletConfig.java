@@ -32,15 +32,9 @@
  ******************************************************************************/
 package com.tyndalehouse.step.guice;
 
-import java.sql.Driver;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.util.Enumeration;
-
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 
-import org.apache.commons.dbcp.BasicDataSource;
 import org.crosswire.common.util.Reporter;
 import org.crosswire.common.util.ReporterEvent;
 import org.crosswire.common.util.ReporterListener;
@@ -48,13 +42,13 @@ import org.crosswire.jsword.versification.BookName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.avaje.ebeaninternal.server.core.DefaultSqlUpdate;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.google.inject.servlet.ServletModule;
+import com.tyndalehouse.step.core.data.EntityManager;
+import com.tyndalehouse.step.core.data.create.Loader;
 import com.tyndalehouse.step.core.guice.StepCoreModule;
-import com.tyndalehouse.step.core.guice.providers.DatabaseConfigProvider;
 import com.tyndalehouse.step.rest.framework.FrontController;
 
 /**
@@ -65,7 +59,6 @@ import com.tyndalehouse.step.rest.framework.FrontController;
  * 
  */
 public class StepServletConfig extends GuiceServletContextListener {
-    private static final String ORG_H2_DRIVER = "org.h2.Driver";
     private static final Logger LOGGER = LoggerFactory.getLogger(StepServletConfig.class);
 
     @Override
@@ -100,39 +93,17 @@ public class StepServletConfig extends GuiceServletContextListener {
         });
 
         BookName.setFullBookName(false);
+
+        if (Boolean.getBoolean("step.loader")) {
+            getInjector().getInstance(Loader.class).init();
+        }
     }
 
     @Override
     public void contextDestroyed(final ServletContextEvent servletContextEvent) {
-        deregisterDb();
         final ServletContext sc = servletContextEvent.getServletContext();
         sc.removeAttribute(Injector.class.getName());
+        getInjector().getInstance(EntityManager.class).close();
         super.contextDestroyed(servletContextEvent);
-
-    }
-
-    /**
-     * Deregisters database drivers to prevent leaks
-     */
-    private void deregisterDb() {
-        final DatabaseConfigProvider dbConfig = getInjector().getInstance(DatabaseConfigProvider.class);
-        final BasicDataSource ds = dbConfig.getDs();
-
-        // tear down database
-        if (ORG_H2_DRIVER.equals(ds.getDriverClassName()) && !Boolean.getBoolean("leaveDbUp")) {
-            dbConfig.get().execute(new DefaultSqlUpdate("SHUTDOWN"));
-        }
-
-        final Enumeration<Driver> drivers = DriverManager.getDrivers();
-        while (drivers.hasMoreElements()) {
-            final Driver driver = drivers.nextElement();
-
-            try {
-                DriverManager.deregisterDriver(driver);
-                LOGGER.info("Deregistering Jdbc driver: {}", driver);
-            } catch (final SQLException e) {
-                LOGGER.error("Error deregistering driver " + driver.toString(), e);
-            }
-        }
     }
 }

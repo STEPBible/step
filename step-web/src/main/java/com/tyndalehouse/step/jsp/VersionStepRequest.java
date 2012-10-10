@@ -45,7 +45,7 @@ import org.slf4j.LoggerFactory;
 import com.google.inject.Injector;
 import com.tyndalehouse.step.core.data.EntityManager;
 import com.tyndalehouse.step.core.data.EntityDoc;
-import com.tyndalehouse.step.core.data.impl.EntityManagerImpl;
+import com.tyndalehouse.step.core.data.entities.impl.EntityManagerImpl;
 import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
 
 /**

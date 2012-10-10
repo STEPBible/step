@@ -334,9 +334,12 @@
 			      <artifactId>maven-surefire-plugin</artifactId>
 			      <version>2.7.1</version>
 			      <configuration>
-				 <junitArtifactName>junit:junit-dep</junitArtifactName>
-				 <parallel>${junit.parallel}</parallel>
-				 <threadCount>${junit.threads}</threadCount>
+					 <junitArtifactName>junit:junit-dep</junitArtifactName>
+					 <parallel>${junit.parallel}</parallel>
+					 <threadCount>${junit.threads}</threadCount>
+					 <includes>
+					 <include>**/*Test.java</include>
+					</includes>
 			      </configuration>
 			      <dependencies>
 				 <dependency>

@@ -2,6 +2,7 @@ package com.tyndalehouse.step.core.data.impl;
 
 import java.io.IOException;
 
+import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.store.Directory;
 
 import com.tyndalehouse.step.core.data.EntityManager;
@@ -29,9 +30,12 @@ public class TestEntityIndexWriterImpl extends EntityIndexWriterImpl {
     }
 
     @Override
-    public int close() {
+    public synchronized int close() {
         try {
-            getRamWriter().close();
+            final IndexWriter ramWriter = getRamWriter();
+            ramWriter.maybeMerge();
+            ramWriter.optimize(true);
+            ramWriter.close();
         } catch (final IOException e) {
             throw new StepInternalException("Unable to write to ram index", e);
         }

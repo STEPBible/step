@@ -51,9 +51,9 @@ import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.tyndalehouse.step.core.data.EntityManager;
 import com.tyndalehouse.step.core.data.EntityDoc;
 import com.tyndalehouse.step.core.data.EntityIndexReader;
+import com.tyndalehouse.step.core.data.EntityManager;
 import com.tyndalehouse.step.core.data.entities.aggregations.TimelineEventsAndDate;
 import com.tyndalehouse.step.core.models.EnhancedTimelineEvent;
 import com.tyndalehouse.step.core.models.OsisWrapper;
@@ -138,7 +138,8 @@ public class TimelineServiceImpl implements TimelineService {
 
                 final long o1Start = Long.parseLong(o1StartString);
                 final long o2Start = Long.parseLong(o2StartString);
-                return Long.compare(o1Start, o2Start);
+
+                return (o1Start < o2Start) ? -1 : ((o1Start == o2Start) ? 0 : 1);
             }
         });
 

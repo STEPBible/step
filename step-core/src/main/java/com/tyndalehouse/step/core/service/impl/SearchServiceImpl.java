@@ -299,7 +299,7 @@ public class SearchServiceImpl implements SearchService {
     }
 
     /**
-     * convers a definition to a suggested form
+     * converts a definition to a suggested form
      * 
      * @param def the definition
      * @return the suggestion
@@ -315,6 +315,12 @@ public class SearchServiceImpl implements SearchService {
         return suggestion;
     }
 
+    /**
+     * Adds a marker for frequent suggestions
+     * 
+     * @param def the definition
+     * @param suggestion the suggestion
+     */
     private void markUpFrequentSuggestions(final EntityDoc def, final LexiconSuggestion suggestion) {
         final String stopWord = def.get("stopWord");
         if ("true".equals(stopWord)) {

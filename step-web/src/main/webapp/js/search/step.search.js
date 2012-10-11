@@ -40,7 +40,7 @@ step.search = {
         search : function(passageId) {
             var query = step.state.original.originalQuerySyntax(passageId);
             if(query != undefined) {
-                query = query.replace('/', '#');
+                query = step.util.replaceSpecialChars(query);
             } 
             var pageNumber = step.state.original.originalPageNumber(passageId);
             var versions = step.state.original.originalSearchVersion(passageId);
@@ -105,7 +105,7 @@ step.search = {
             }
             
             if(query[0] == 'o') {
-                query = query.replace('/', '#');
+                query = step.util.replaceSpecialChars(query);
             }
             
             var version = this._getQuickVersions(passageId);

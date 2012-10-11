@@ -2,13 +2,12 @@ package com.tyndalehouse.step.rest.controllers;
 
 import static com.tyndalehouse.step.core.exceptions.UserExceptionType.APP_MISSING_FIELD;
 import static com.tyndalehouse.step.core.exceptions.UserExceptionType.USER_MISSING_FIELD;
+import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
 import static com.tyndalehouse.step.core.utils.ValidateUtils.notBlank;
 import static com.tyndalehouse.step.core.utils.ValidateUtils.notNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -31,7 +30,6 @@ import com.tyndalehouse.step.core.service.impl.SearchQuery;
 @Singleton
 public class SearchController {
     private static final Logger LOGGER = LoggerFactory.getLogger(SearchController.class);
-    private static final Pattern SQUARE_BRACKETS = Pattern.compile("\\[[^\\]]*\\]");
     private final SearchService searchService;
 
     /**
@@ -60,38 +58,22 @@ public class SearchController {
 
         LOGGER.debug("Search query is [{}]", searchQuery);
 
-        String newQuery;
-        // work around - because apache is decoding for tomcat (i think) and thereby spaces are removed...
-        final Matcher matcher = SQUARE_BRACKETS.matcher(searchQuery);
-        final boolean find = matcher.find();
-        if (find) {
-            // then we add a plus in front if not already there...
-            newQuery = getNewQuery(matcher, searchQuery);
-        } else {
-            newQuery = searchQuery;
-        }
-
-        return this.searchService.search(new SearchQuery(newQuery.replace('#', '/'), ranked, Integer
+        return this.searchService.search(new SearchQuery(restoreSearchQuery(searchQuery), ranked, Integer
                 .parseInt(context), Integer.parseInt(pageNumber), Integer.parseInt(pageSize)));
     }
 
     /**
-     * re-adds a plus that apache may have taken out
+     * Replaces #plus# and #slash#
      * 
-     * @param matcher the matcher
-     * @param searchQuery the query itself
-     * @return the new string
+     * @param searchQuery the search query
+     * @return the string that has replaced
      */
-    private String getNewQuery(final Matcher matcher, final String searchQuery) {
-        final int start = matcher.start();
-        if (start > 0) {
-            if (searchQuery.charAt(start - 1) != '+') {
-                final StringBuilder sb = new StringBuilder(searchQuery);
-                sb.insert(start - 1, '+');
-                return sb.toString();
-            }
+    private String restoreSearchQuery(final String searchQuery) {
+        if (isBlank(searchQuery)) {
+            return searchQuery;
         }
-        return searchQuery;
+
+        return searchQuery.replace("#slash#", "/").replace("#plus#", "+");
     }
 
     /**
@@ -102,7 +84,8 @@ public class SearchController {
      */
     public long estimateSearch(final String searchQuery) {
         // JSword currently only allows estimates as ranked searches
-        return this.searchService.estimateSearch(new SearchQuery(searchQuery, "false", 0, 0, 0));
+        return this.searchService.estimateSearch(new SearchQuery(restoreSearchQuery(searchQuery), "false", 0,
+                0, 0));
     }
 
     /**
@@ -131,7 +114,7 @@ public class SearchController {
             return new ArrayList<LexiconSuggestion>(0);
         }
 
-        return this.searchService.getLexicalSuggestions(suggestionType, form.replace('#', '/'),
+        return this.searchService.getLexicalSuggestions(suggestionType, restoreSearchQuery(form),
                 Boolean.parseBoolean(includeAllForms));
     }
 

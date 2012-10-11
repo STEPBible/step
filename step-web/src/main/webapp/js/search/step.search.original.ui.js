@@ -177,7 +177,7 @@ step.search.ui.original = {
                     
                     $.getPassageSafe({
                         url : SEARCH_SUGGESTIONS,
-                        args : [suggestionType, encodeURIComponent(request.term.replace('/', '#')), step.search.ui.original.allForms[passageId]], 
+                        args : [suggestionType, encodeURIComponent(step.util.replaceSpecialChars(request.term)), step.search.ui.original.allForms[passageId]], 
                         callback: function(text) {
                             response($.map(text, function(item) {
                                 return { label: "<span>" + 

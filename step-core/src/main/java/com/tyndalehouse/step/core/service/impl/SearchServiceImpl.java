@@ -276,6 +276,10 @@ public class SearchServiceImpl implements SearchService {
         return isGreek ? GREEK_FILTER : HEBREW_FILTER;
     }
 
+    /**
+     * @param specificForm the specific form to be converted
+     * @return the suggestion
+     */
     private LexiconSuggestion convertToSuggestionFromSpecificForm(final EntityDoc specificForm) {
         final String strongNumber = specificForm.get(STRONG_NUMBER_FIELD);
         final EntityDoc[] results = this.definitions.searchExactTermBySingleField(STRONG_NUMBER_FIELD, 1,

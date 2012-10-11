@@ -184,7 +184,7 @@ step.search.ui.original = {
                                         "<span class='suggestionColumn ancientSearchSuggestion'>" + item.matchingForm + "</span>" +
                                         "<span class='suggestionColumn stepTransliteration'>" + step.util.ui.markUpTransliteration(item.stepTransliteration) + "</span>" + 
                                         "<span class='suggestionColumn'>" + item.gloss + "</span>" +
-                                    "</span>", value: item.gloss };
+                                    "</span>", value: suggestionType == "meaning" ? item.gloss : item.matchingForm };
                             }));
                         },
                         passageId : step.passage.getPassageId(this),

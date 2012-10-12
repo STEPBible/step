@@ -130,7 +130,14 @@ step.util = {
 	        return "";
 	    }
 	    
-	    return query.replace('+', '#plus#').replace('/', "#slash#");
+        var str = query;
+        var newStr;
+        while(str != newStr) {
+            newStr = str;
+            str = str.replace('+', '#plus#').replace('/', "#slash#");
+        }
+        
+        return str;	    
 	},
 	
 	undoReplaceSpecialChars : function(query) {

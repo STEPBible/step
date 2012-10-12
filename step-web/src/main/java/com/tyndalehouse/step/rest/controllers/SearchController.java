@@ -88,7 +88,7 @@ public class SearchController {
             return searchQuery;
         }
 
-        return searchQuery.replace("/", "#slash#").replace("+", "#plus#");
+        return searchQuery.replace("/", "~slash~").replace("+", "~plus~");
     }
 
     /**

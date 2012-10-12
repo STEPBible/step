@@ -257,6 +257,8 @@ step.search = {
             }
             
             $.data(this, 'expanded', true);
+            $(this).html($(this).html().replace('&#9654;', '&#9660;'));
+            
             var root = $(this).attr('root');
             var fullHeader = $(this).attr('fullHeader');
             var version = "ESV";

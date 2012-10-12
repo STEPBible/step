@@ -133,6 +133,21 @@ step.util = {
 	    return query.replace('+', '#plus#').replace('/', "#slash#");
 	},
 	
+	undoReplaceSpecialChars : function(query) {
+	    if(this.isBlank(query)) {
+	        return "";
+	    }
+    
+	    var str = query;
+	    var newStr;
+	    while(str != newStr) {
+	        newStr = str;
+	        str = str.replace('#plus#', '+').replace("#slash#", '/');
+	    }
+	    
+	    return str;
+	},
+	
     ui : {
         getVisibleVersions : function(passageId) {
             return $("fieldset:visible", step.util.getPassageContainer(passageId)).find(".searchVersions, .passageVersion, .extraVersions");

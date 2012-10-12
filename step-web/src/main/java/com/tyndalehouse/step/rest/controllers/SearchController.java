@@ -68,8 +68,27 @@ public class SearchController {
 
         LOGGER.debug("Search query is [{}]", searchQuery);
 
-        return this.searchService.search(new SearchQuery(restoreSearchQuery(searchQuery), ranked, Integer
-                .parseInt(context), Integer.parseInt(pageNumber), Integer.parseInt(pageSize)));
+        final SearchResult results = this.searchService.search(new SearchQuery(
+                restoreSearchQuery(searchQuery), ranked, Integer.parseInt(context), Integer
+                        .parseInt(pageNumber), Integer.parseInt(pageSize)));
+
+        results.setQuery(undoRestoreSearchQuery(results.getQuery()));
+
+        return results;
+    }
+
+    /**
+     * opposite of @link {@link SearchController.restoreSearchQuery}
+     * 
+     * @param searchQuery a query
+     * @return the undone version
+     */
+    private String undoRestoreSearchQuery(final String searchQuery) {
+        if (isBlank(searchQuery)) {
+            return searchQuery;
+        }
+
+        return searchQuery.replace("/", "#slash#").replace("+", "#plus#");
     }
 
     /**

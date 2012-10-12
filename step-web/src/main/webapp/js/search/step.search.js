@@ -533,10 +533,11 @@ step.search = {
             return;
         } 
         
-        if(searchQueryResults.query.startsWith("d=") || searchQueryResults.query.startsWith("dr=")) {
+        var queryRan = step.util.undoReplaceSpecialChars(searchQueryResults.query);
+        if(queryRan.startsWith("d=") || queryRan.startsWith("dr=")) {
             results += this._displayTimelineEventResults(searchResults, passageId);
-        } else if(searchQueryResults.query.startsWith("s=") || searchQueryResults.query.startsWith("s+=") || searchQueryResults.query.startsWith("s++=")) {
-            results += this._displaySubjectResults(searchQueryResults.query, searchResults, passageId);
+        } else if(queryRan.startsWith("s=") || queryRan.startsWith("s+=") || queryRan.startsWith("s++=")) {
+            results += this._displaySubjectResults(queryRan, searchResults, passageId);
         } else {
             results += "<table class='searchResults'>";
             

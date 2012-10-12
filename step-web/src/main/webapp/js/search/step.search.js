@@ -148,7 +148,7 @@ step.search = {
         search : function(passageId) {
 //            console.log("Subject search");
             
-            var query = replaceSpecialChars(step.state.subject.subjectQuerySyntax(passageId));
+            var query = step.util.replaceSpecialChars(step.state.subject.subjectQuerySyntax(passageId));
             var pageNumber = step.state.subject.subjectPageNumber(passageId); 
             
             step.search._validateAndRunSearch(passageId, query, "ESV", false, 0, pageNumber);

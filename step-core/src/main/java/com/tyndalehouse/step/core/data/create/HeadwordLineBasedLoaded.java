@@ -51,8 +51,8 @@ import com.tyndalehouse.step.core.exceptions.StepInternalException;
  * @author chrisburrell
  * 
  */
-public class LexiconLoader extends AbstractClasspathBasedModuleLoader {
-    private static final Logger LOGGER = LoggerFactory.getLogger(LexiconLoader.class);
+public class HeadwordLineBasedLoaded extends AbstractClasspathBasedModuleLoader {
+    private static final Logger LOGGER = LoggerFactory.getLogger(HeadwordLineBasedLoaded.class);
     private static final String START_TOKEN = "==============";
 
     // state used during processing
@@ -66,7 +66,7 @@ public class LexiconLoader extends AbstractClasspathBasedModuleLoader {
      * @param writer the lucene index writer
      * @param resourcePath the classpath to the data
      */
-    public LexiconLoader(final EntityIndexWriterImpl writer, final String resourcePath) {
+    public HeadwordLineBasedLoaded(final EntityIndexWriterImpl writer, final String resourcePath) {
         super(resourcePath);
         this.writer = writer;
     }
@@ -80,6 +80,7 @@ public class LexiconLoader extends AbstractClasspathBasedModuleLoader {
             while ((line = bufferedReader.readLine()) != null) {
                 parseLine(line);
             }
+
         } catch (final IOException e) {
             throw new StepInternalException("Unable to read a line from the source file ", e);
         }
@@ -87,7 +88,7 @@ public class LexiconLoader extends AbstractClasspathBasedModuleLoader {
         // save last article
         this.writer.save();
 
-        LOGGER.info("Loaded [{}] dictionary articles with [{}] errors", this.count, this.errors);
+        LOGGER.info("Loaded [{}] entries with [{}] errors", this.count, this.errors);
     }
 
     /**
@@ -98,6 +99,7 @@ public class LexiconLoader extends AbstractClasspathBasedModuleLoader {
     private void parseLine(final String line) {
         // deal with case where we are hitting a new word
         if (line.endsWith(START_TOKEN)) {
+            this.count++;
             this.writer.save();
         }
 

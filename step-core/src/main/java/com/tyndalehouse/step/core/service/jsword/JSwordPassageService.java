@@ -36,6 +36,7 @@ import java.util.List;
 
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.passage.Key;
+import org.crosswire.jsword.passage.Passage;
 
 import com.tyndalehouse.step.core.models.InterlinearMode;
 import com.tyndalehouse.step.core.models.KeyWrapper;
@@ -167,4 +168,27 @@ public interface JSwordPassageService {
      * @return the actual representation of all references
      */
     String getAllReferences(String references, String version);
+
+    /**
+     * Obtains a list of verse ranges from the references provided
+     * 
+     * @param references the refs
+     * @param version the version
+     * @return the passage object
+     */
+    Passage getVerseRanges(String references, String version);
+
+    /**
+     * @param key the big key
+     * @param book the book
+     * @return the new smaller key
+     */
+    Key getFirstVerseExcludingZero(Key key, Book book);
+
+    /**
+     * @param range a particular range of verses
+     * @return the first verse, or verse 1 if verse 0 (only applies if verse 1 is actually in the range!)
+     */
+    Key getFirstVerseFromRange(Key range);
+
 }

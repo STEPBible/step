@@ -75,6 +75,10 @@ import com.tyndalehouse.step.core.service.jsword.impl.JSwordModuleServiceImpl;
 import com.tyndalehouse.step.core.service.jsword.impl.JSwordPassageServiceImpl;
 import com.tyndalehouse.step.core.service.jsword.impl.JSwordSearchServiceImpl;
 import com.tyndalehouse.step.core.service.jsword.impl.JSwordVersificationServiceImpl;
+import com.tyndalehouse.step.core.service.search.OriginalWordSuggestionService;
+import com.tyndalehouse.step.core.service.search.SubjectSearchService;
+import com.tyndalehouse.step.core.service.search.impl.OriginalWordSuggestionServiceImpl;
+import com.tyndalehouse.step.core.service.search.impl.SubjectSearchServiceImpl;
 import com.tyndalehouse.step.core.utils.AbstractStepGuiceModule;
 
 /**
@@ -117,6 +121,10 @@ public class StepCoreModule extends AbstractStepGuiceModule {
         bind(TimelineService.class).to(TimelineServiceImpl.class);
         bind(GeographyService.class).to(GeographyServiceImpl.class);
         bind(Loader.class).asEagerSingleton();
+
+        bind(SubjectSearchService.class).to(SubjectSearchServiceImpl.class).asEagerSingleton();
+        bind(OriginalWordSuggestionService.class).to(OriginalWordSuggestionServiceImpl.class)
+                .asEagerSingleton();
 
         bind(new TypeLiteral<List<String>>() {
         }).annotatedWith(Names.named("defaultVersions")).toProvider(DefaultVersionsProvider.class);

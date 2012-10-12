@@ -72,6 +72,16 @@ public class LoaderTest {
     }
 
     /**
+     * loads the nave module
+     */
+    @Test
+    public void testNaveLoader() {
+        getLoader("test.data.path.subjects.nave", "nave.txt").loadNave();
+
+        assertExists(5, "nave", "root", "AARON");
+    }
+
+    /**
      * tests the openbible data
      */
     @Test

@@ -151,11 +151,25 @@ li.subjectHeading {
 	margin-top: 3px;
 	list-style: none;
 	margin-left: 0px;
-	
 }
 
 .subjectSearchLink {
 	float: right;
+}
+
+.moreSubjects {
+	text-align: center;
+}
+
+.expandableSearchHeading {
+/* 	color: #696; */
+	cursor: pointer;
+	margin-bottom: 1px;
+	padding: 3px;
+}
+
+.expandedHeadingItem {
+	margin-bottom: 5px;	
 }
 
 .smallResultKey {
@@ -301,3 +315,5 @@ h4.lexicalGrouping {
 .quickSearch {
 	font-size: 1em;
 }
+
+

@@ -140,6 +140,11 @@ public class EntityIndexReaderImpl implements EntityIndexReader {
     }
 
     @Override
+    public EntityDoc[] search(final String[] fieldNames, final String value, final Sort sort) {
+        return search(fieldNames, value, null, sort, false, null, null);
+    }
+
+    @Override
     public EntityDoc[] search(final String[] fieldNames, final String value, final Filter filter,
             final Sort sort, final boolean analyzePrefix) {
         return search(fieldNames, value, filter, sort, analyzePrefix, null, null);
@@ -220,6 +225,16 @@ public class EntityIndexReaderImpl implements EntityIndexReader {
     }
 
     @Override
+    public EntityDoc[] search(final String defaultField, final String querySyntax) {
+        final QueryParser parser = new QueryParser(LUCENE_30, defaultField, getAnalyzer());
+        try {
+            return this.search(parser.parse(querySyntax));
+        } catch (final ParseException e) {
+            throw new StepInternalException("Unable to parse query " + querySyntax, e);
+        }
+    }
+
+    @Override
     public EntityDoc[] search(final Query query) {
         final AllResultsCollector collector = new AllResultsCollector();
         try {
@@ -296,20 +311,30 @@ public class EntityIndexReaderImpl implements EntityIndexReader {
     }
 
     @Override
+    public EntityDoc[] searchSingleColumn(final String fieldName, final String querySyntax, final Sort sort) {
+        return searchSingleColumn(fieldName, querySyntax, Operator.OR, false, sort);
+    }
+
+    @Override
     public EntityDoc[] searchSingleColumn(final String fieldName, final String querySyntax,
             final Operator op, final boolean allowLeadingWildcard) {
+        return searchSingleColumn(fieldName, querySyntax, op, allowLeadingWildcard, null);
+    }
+
+    @Override
+    public EntityDoc[] searchSingleColumn(final String fieldName, final String querySyntax,
+            final Operator op, final boolean allowLeadingWildcard, final Sort sort) {
         final QueryParser parser = new QueryParser(LUCENE_30, fieldName, this.getAnalyzer());
         parser.setDefaultOperator(op);
         parser.setAllowLeadingWildcard(allowLeadingWildcard);
 
         try {
             final Query query = parser.parse(querySyntax);
-            return search(query);
+            return search(query, Integer.MAX_VALUE, sort);
 
         } catch (final ParseException e) {
             throw new StepInternalException("Unable to parse query", e);
         }
-
     }
 
     @Override
@@ -323,5 +348,4 @@ public class EntityIndexReaderImpl implements EntityIndexReader {
     void setSearcher(final IndexSearcher searcher) {
         this.searcher = searcher;
     }
-
 }

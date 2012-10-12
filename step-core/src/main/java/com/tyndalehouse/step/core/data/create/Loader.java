@@ -150,7 +150,7 @@ public class Loader {
      */
     private void loadData() {
         LOGGER.debug("Loading initial data");
-
+        loadNave();
         loadLexiconDefinitions();
         loadSpecificForms();
         loadRobinsonMorphology();
@@ -160,6 +160,26 @@ public class Loader {
         loadHotSpots();
         loadTimeline();
         LOGGER.info("Finished loading...");
+    }
+
+    /**
+     * Loads the nave module
+     * 
+     * @return the nave module
+     */
+    int loadNave() {
+        LOGGER.debug("Indexing nave subjects");
+        final EntityIndexWriterImpl writer = this.entityManager.getNewWriter("nave");
+
+        final HeadwordLineBasedLoaded loader = new HeadwordLineBasedLoaded(writer,
+                this.coreProperties.getProperty("test.data.path.subjects.nave"));
+        loader.init();
+
+        LOGGER.debug("Writing Nave index");
+        final int close = writer.close();
+        LOGGER.debug("End Nave");
+        return close;
+
     }
 
     /**
@@ -245,7 +265,7 @@ public class Loader {
         final EntityIndexWriterImpl writer = this.entityManager.getNewWriter("definition");
 
         LOGGER.debug("-Indexing greek");
-        LexiconLoader lexiconLoader = new LexiconLoader(writer,
+        HeadwordLineBasedLoaded lexiconLoader = new HeadwordLineBasedLoaded(writer,
                 this.coreProperties.getProperty("test.data.path.lexicon.definitions.greek"));
         lexiconLoader.init();
 
@@ -253,7 +273,7 @@ public class Loader {
         final String hebrewLexicon = this.coreProperties
                 .getProperty("test.data.path.lexicon.definitions.hebrew");
         if (hebrewLexicon != null) {
-            lexiconLoader = new LexiconLoader(writer, hebrewLexicon);
+            lexiconLoader = new HeadwordLineBasedLoaded(writer, hebrewLexicon);
         }
         lexiconLoader.init();
 
@@ -261,7 +281,6 @@ public class Loader {
         final int close = writer.close();
         LOGGER.debug("End lexicon");
         return close;
-
     }
 
     /**

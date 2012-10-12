@@ -228,7 +228,87 @@ step.search = {
             
             self._doFonts(passageId);
             step.util.ui.addStrongHandlers(passageId, step.util.getPassageContainer(passageId));
+            self._doSpecificSearchRequirements(passageId, query);
         });
+    },
+    
+    
+    _doSpecificSearchRequirements : function(passageId, query) {
+        if(query.startsWith("s=")) {
+            this._addMoreSubjectButton(passageId, query, "Didn't find what you want? Click here!");
+        } else if (query.startsWith("s+=") ){ 
+            this._addMoreSubjectButton(passageId, query, "Go wild and click me again!");
+            this._addSubjectExpandHandlers(passageId);
+        } else if(query.startsWith("s++=")) {
+            this._addMoreSubjectButton(passageId, query, "Back to where you started?");
+            this._addSubjectExpandHandlers(passageId, query);
+        }
+    },
+    
+    _addSubjectExpandHandlers : function(passageId, query) {
+        var content = step.util.getPassageContent(passageId);
+        
+        $(".expandableSearchHeading", content).click(function() {
+            if($.data(this, 'expanded') == true) {
+                $(".expandedHeadingItem", content).remove();
+                
+                $.data(this, 'expanded', false);
+                return;
+            }
+            
+            $.data(this, 'expanded', true);
+            var root = $(this).attr('root');
+            var fullHeader = $(this).attr('fullHeader');
+            var version = "ESV";
+            var currentHeading = this;
+
+            //first delete the headings
+            $(".expandedHeadingItem", content).remove();
+            
+            //get verses for subject search
+            $.getSafe(SUBJECT_VERSES, [root, fullHeader, version] , function(results) {
+                var verses = "";
+                if(results) {
+                    for(var i = 0; i < results.length; i++) {
+                        verses += "<li class='expandedHeadingItem'>";
+                        verses += "<span class='subjectSearchLink'>";
+                        verses += goToPassageArrow(true, results[i].reference, "searchKeyPassageArrow", true);
+                        verses += "<a class='searchRefLink' href='#' onclick='passageArrowTrigger(" + passageId + ", \"" + results[i].reference + "\", true)' >" 
+                        + results[i].reference + "</a>";
+                        verses += goToPassageArrow(false, results[i].reference, "searchKeyPassageArrow", true);
+                        verses += "</span>";
+                        verses += results[i].value;
+                        
+                        if(results[i].fragment) {
+                            verses += " [...]";
+                        }
+                        
+                        verses += "</li>";
+                    }
+                }
+                
+                $(currentHeading).after(verses);
+            });
+        });
+    },
+    
+    _addMoreSubjectButton : function(passageId, query, text) {
+        var moreSubjectsButton = $("<div class='moreSubjects'><a href='#'>" + text + "</a><div>");
+        moreSubjectsButton.find("a").button({}).click(function() {
+            //add in a plus and send it back through
+            var equalIndex = query.indexOf('=');
+            var newQuery = query.substring(0, equalIndex) + '+' + query.substring(equalIndex);
+            
+            if(newQuery.indexOf("+++") != -1) {
+                newQuery = newQuery.replace("+++", "");
+            }
+            
+            step.state.subject.subjectQuerySyntax(passageId, newQuery);
+            step.search.subject.search(passageId);
+        });
+        
+        step.util.getPassageContent(passageId).prepend(moreSubjectsButton);
+        step.util.getPassageContent(passageId).append(moreSubjectsButton.clone());
     },
     
     _doFonts : function(passageId) {
@@ -257,7 +337,7 @@ step.search = {
         termBase = termBase.replace(/[\(\)]*/g, "");
         termBase = termBase.replace(/ AND /g, " ");
         
-        
+        termBase = termBase.replace("+", "");
         
         var matches = termBase.match(/"[^"]*"/);
         if(matches) {
@@ -392,7 +472,7 @@ step.search = {
         return results;
     },
     
-    _displaySubjectResults : function(searchResults, passageId) {
+    _doSimpleSubjectSearchResults : function(searchResults, passageId) {
         var results = "<ul class='subjectSection searchResults'>";
         
         var headingsSearch = searchResults[0].headingsSearch;
@@ -407,6 +487,31 @@ step.search = {
             results += goToPassageArrow(false, headingsResults[i].key, "searchKeyPassageArrow", true);
             results += "</span>";
             results += headingsResults[i].preview;
+            results += "</li>";
+        }
+        
+        return results += "</ul>";
+    },
+    
+  
+    
+    _displaySubjectResults : function(query, searchResults, passageId) {
+        if(query.startsWith("s=")) {
+            return this._doSimpleSubjectSearchResults(searchResults, passageId);
+        } else {
+            return this._doNaveSearchResults(query, searchResults, passageId);
+        }
+    },
+    
+    _doNaveSearchResults : function(query, searchResults, passageId) {
+        var results = "<ul class='subjectSection searchResults'>";
+        
+        //searchResults is the array of results
+        for(var i = 0 ; i < searchResults.length; i++) {
+            results += "<li root='" + searchResults[i].root + 
+            		"' fullHeader='" + searchResults[i].heading +
+            		"' class='expandableSearchHeading ui-state-default ui-corner-all'><span style='font-size: smaller'>&#9654;</span>&nbsp;&nbsp;";
+            results += searchResults[i].root + " &gt; " + searchResults[i].heading;
             results += "</li>";
         }
         
@@ -430,8 +535,8 @@ step.search = {
         
         if(searchQueryResults.query.startsWith("d=") || searchQueryResults.query.startsWith("dr=")) {
             results += this._displayTimelineEventResults(searchResults, passageId);
-        } else if(searchQueryResults.query.startsWith("s=")) {
-            results += this._displaySubjectResults(searchResults, passageId);
+        } else if(searchQueryResults.query.startsWith("s=") || searchQueryResults.query.startsWith("s+=") || searchQueryResults.query.startsWith("s++=")) {
+            results += this._displaySubjectResults(searchQueryResults.query, searchResults, passageId);
         } else {
             results += "<table class='searchResults'>";
             

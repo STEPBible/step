@@ -124,6 +124,16 @@ public interface EntityIndexReader extends Closeable {
     EntityDoc[] search(Query query, int max, Sort sortField);
 
     /**
+     * Searches with a given query
+     * 
+     * @param fields the list of fields to search for
+     * @param value the value
+     * @param sortField the field to sort by
+     * @return the entity documents that have been found
+     */
+    EntityDoc[] search(String[] fields, String value, Sort sortField);
+
+    /**
      * Allows all kinds of queries, but on one column only
      * 
      * @param fieldName the name of the field to search for
@@ -144,4 +154,35 @@ public interface EntityIndexReader extends Closeable {
      */
     EntityDoc[] searchSingleColumn(String fieldName, String querySyntax);
 
+    /**
+     * Allows all kinds of queries, but on one column only with a sort
+     * 
+     * @param fieldName the name of the field to search for
+     * @param querySyntax the query syntax, can contain wildcards...
+     * @param sort the sorting algorithm
+     * @return a list of matching entity documents
+     */
+    EntityDoc[] searchSingleColumn(String fieldName, String querySyntax, Sort sort);
+
+    /**
+     * Allows all kinds of queries, but on one column only with a sort
+     * 
+     * @param fieldName the name of the field to search for
+     * @param querySyntax the query syntax, can contain wildcards...
+     * @param sort the sorting algorithm
+     * @param op the default operator
+     * @param allowLeadingWildcard true to allow leading wildcards
+     * @return a list of matching entity documents
+     */
+    EntityDoc[] searchSingleColumn(String fieldName, String querySyntax, Operator op,
+            boolean allowLeadingWildcard, Sort sort);
+
+    /**
+     * Give a querySyntax and get results back
+     * 
+     * @param querySyntax the syntax of the query
+     * @param defaultField the field that is used if no field is prefixed before a value
+     * @return the results
+     */
+    EntityDoc[] search(String defaultField, String querySyntax);
 }

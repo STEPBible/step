@@ -20,6 +20,7 @@ import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
 import com.tyndalehouse.step.core.service.jsword.impl.JSwordPassageServiceImpl;
 import com.tyndalehouse.step.core.service.jsword.impl.JSwordSearchServiceImpl;
 import com.tyndalehouse.step.core.service.jsword.impl.JSwordVersificationServiceImpl;
+import com.tyndalehouse.step.core.service.search.impl.SubjectSearchServiceImpl;
 import com.tyndalehouse.step.core.utils.TestUtils;
 
 /**
@@ -79,7 +80,8 @@ public class SearchServiceImplTest {
                 null, null);
         final TestEntityManager entityManager = new TestEntityManager();
 
-        return new SearchServiceImpl(new JSwordSearchServiceImpl(versificationService, jsword), jsword,
-                new TimelineServiceImpl(entityManager, jsword), entityManager);
+        final JSwordSearchServiceImpl jswordSearch = new JSwordSearchServiceImpl(versificationService, jsword);
+        return new SearchServiceImpl(jswordSearch, jsword, new SubjectSearchServiceImpl(entityManager,
+                jswordSearch, jsword), new TimelineServiceImpl(entityManager, jsword), entityManager);
     }
 }

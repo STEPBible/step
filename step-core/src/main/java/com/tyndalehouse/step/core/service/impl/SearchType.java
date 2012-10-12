@@ -14,7 +14,15 @@ public enum SearchType {
     /**
      * a subject search that is delegated to the JSword backend
      */
-    SUBJECT,
+    SUBJECT_SIMPLE,
+    /**
+     * a subject search that uses the basic naves headings
+     */
+    SUBJECT_EXTENDED,
+    /**
+     * a subject search that uses the full naves module
+     */
+    SUBJECT_FULL,
 
     /** A timeline description search */
     TIMELINE_DESCRIPTION,

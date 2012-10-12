@@ -32,12 +32,12 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.service.impl;
 
-import static com.tyndalehouse.step.core.models.LookupOption.HEADINGS_ONLY;
+import static com.tyndalehouse.step.core.service.helpers.OriginalWordUtils.STRONG_NUMBER_FIELD;
+import static com.tyndalehouse.step.core.service.helpers.OriginalWordUtils.convertToSuggestion;
+import static com.tyndalehouse.step.core.service.helpers.OriginalWordUtils.getFilter;
 import static com.tyndalehouse.step.core.service.impl.VocabularyServiceImpl.padStrongNumber;
 import static com.tyndalehouse.step.core.utils.StringConversionUtils.adaptForUnaccentedTransliteration;
-import static com.tyndalehouse.step.core.utils.StringUtils.isEmpty;
 import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
-import static com.tyndalehouse.step.core.utils.StringUtils.split;
 import static java.lang.Character.isDigit;
 
 import java.util.ArrayList;
@@ -56,17 +56,11 @@ import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import org.apache.lucene.index.Term;
 import org.apache.lucene.queryParser.MultiFieldQueryParser;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.queryParser.QueryParser.Operator;
-import org.apache.lucene.search.CachingWrapperFilter;
-import org.apache.lucene.search.Filter;
-import org.apache.lucene.search.PrefixFilter;
 import org.apache.lucene.search.Query;
-import org.apache.lucene.search.Sort;
-import org.apache.lucene.search.SortField;
 import org.apache.lucene.util.Version;
 import org.crosswire.jsword.passage.Key;
 import org.slf4j.Logger;
@@ -80,10 +74,8 @@ import com.tyndalehouse.step.core.models.LexiconSuggestion;
 import com.tyndalehouse.step.core.models.OsisWrapper;
 import com.tyndalehouse.step.core.models.search.KeyedSearchResultSearchEntry;
 import com.tyndalehouse.step.core.models.search.KeyedVerseContent;
-import com.tyndalehouse.step.core.models.search.LexicalSuggestionType;
 import com.tyndalehouse.step.core.models.search.SearchEntry;
 import com.tyndalehouse.step.core.models.search.SearchResult;
-import com.tyndalehouse.step.core.models.search.SubjectHeadingSearchEntry;
 import com.tyndalehouse.step.core.models.search.TimelineEventSearchEntry;
 import com.tyndalehouse.step.core.models.search.VerseSearchEntry;
 import com.tyndalehouse.step.core.service.SearchService;
@@ -92,6 +84,7 @@ import com.tyndalehouse.step.core.service.helpers.GlossComparator;
 import com.tyndalehouse.step.core.service.helpers.OriginalSpellingComparator;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import com.tyndalehouse.step.core.service.jsword.JSwordSearchService;
+import com.tyndalehouse.step.core.service.search.SubjectSearchService;
 import com.tyndalehouse.step.core.utils.StringConversionUtils;
 import com.tyndalehouse.step.core.utils.StringUtils;
 
@@ -107,18 +100,10 @@ public class SearchServiceImpl implements SearchService {
     public static final String VOCABULARY_SORT = "Vocabulary";
     /** value representing a original spelling sort */
     public static final Object ORIGINAL_SPELLING_SORT = "Original spelling";
-    private static final String STRONG_NUMBER_FIELD = "strongNumber";
-    private static final Filter GREEK_FILTER = new CachingWrapperFilter(new PrefixFilter(new Term(
-            STRONG_NUMBER_FIELD, "G")));
-    private static final Filter HEBREW_FILTER = new CachingWrapperFilter(new PrefixFilter(new Term(
-            STRONG_NUMBER_FIELD, "H")));
-    private static final Sort TRANSLITERATION_SORT = new Sort(new SortField("stepTransliteration",
-            SortField.STRING));
 
     private static final String STRONG_THE = "G3588";
     private static final String START_OF_STRONG_FIELD = "strong='";
     private static final int START_OF_STRONG_FIELD_LENGTH = START_OF_STRONG_FIELD.length();
-    private static final int MAX_SUGGESTIONS = 50;
     // TODO should this be parameterized?
     private static final String BASE_GREEK_VERSION = "WHNU";
     private static final String BASE_HEBREW_VERSION = "OSMHB";
@@ -130,6 +115,7 @@ public class SearchServiceImpl implements SearchService {
     private final EntityIndexReader definitions;
     private final EntityIndexReader specificForms;
     private final EntityIndexReader timelineEvents;
+    private final SubjectSearchService subjects;
 
     /**
      * @param jsword used to convert references to numerals, etc.
@@ -139,9 +125,11 @@ public class SearchServiceImpl implements SearchService {
      */
     @Inject
     public SearchServiceImpl(final JSwordSearchService jswordSearch, final JSwordPassageService jsword,
-            final TimelineService timeline, final EntityManager entityManager) {
+            final SubjectSearchService subjects, final TimelineService timeline,
+            final EntityManager entityManager) {
         this.jswordSearch = jswordSearch;
         this.jsword = jsword;
+        this.subjects = subjects;
         this.timeline = timeline;
         this.definitions = entityManager.getReader("definition");
         this.specificForms = entityManager.getReader("specificForm");
@@ -152,180 +140,6 @@ public class SearchServiceImpl implements SearchService {
     @Override
     public long estimateSearch(final SearchQuery sq) {
         return this.jswordSearch.estimateSearchResults(sq);
-    }
-
-    @Override
-    public List<LexiconSuggestion> getLexicalSuggestions(final LexicalSuggestionType suggestionType,
-            final String form, final boolean includeAllForms) {
-        if (isEmpty(form)) {
-            return new ArrayList<LexiconSuggestion>();
-        }
-
-        if (suggestionType == LexicalSuggestionType.MEANING) {
-            return getMeaningSuggestions(form);
-        }
-
-        if (includeAllForms) {
-            return getMatchingAllForms(suggestionType, form);
-        } else {
-            return getMatchingFormsFromLexicon(suggestionType, form);
-        }
-    }
-
-    /**
-     * Autocompletes the meaning search
-     * 
-     * @param form the form that we are looking for
-     * @return the list of suggestions
-     */
-    private List<LexiconSuggestion> getMeaningSuggestions(final String form) {
-        // add leading wildcard to last word
-        final String[] split = split(form);
-        final StringBuilder sb = new StringBuilder(form.length() + 2);
-        for (int ii = 0; ii < split.length; ii++) {
-            if (ii == split.length - 1) {
-                sb.append('*');
-            }
-            sb.append(split[ii]);
-            if (ii == split.length - 1) {
-                sb.append('*');
-            }
-        }
-
-        final EntityDoc[] results = this.definitions.searchSingleColumn("translations", sb.toString(),
-                Operator.AND, true);
-        return convertDefinitionDocsToSuggestion(results);
-    }
-
-    /**
-     * retrieves forms from the lexicon
-     * 
-     * @param suggestionType indicates greek/hebrew look ups
-     * @param form the form
-     * @return the list of suggestions
-     */
-    private List<LexiconSuggestion> getMatchingFormsFromLexicon(final LexicalSuggestionType suggestionType,
-            final String form) {
-
-        final EntityDoc[] results = this.definitions.search(
-                new String[] { "accentedUnicode", "betaAccented", "stepTransliteration",
-                        "simplifiedStepTransliteration", "twoLetter", "otherTransliteration" },
-                QueryParser.escape(form) + '*', getStrongFilter(suggestionType), TRANSLITERATION_SORT, true,
-                MAX_SUGGESTIONS);
-
-        return convertDefinitionDocsToSuggestion(results);
-    }
-
-    /**
-     * Takes EntityDocs representing Definition entities and converts them to a suggestion
-     * 
-     * @param results the results
-     * @return true
-     */
-    private List<LexiconSuggestion> convertDefinitionDocsToSuggestion(final EntityDoc[] results) {
-        final List<LexiconSuggestion> suggestions = new ArrayList<LexiconSuggestion>();
-        for (final EntityDoc def : results) {
-            suggestions.add(convertToSuggestion(def));
-        }
-        return suggestions;
-    }
-
-    /**
-     * retrieves forms from the lexicon
-     * 
-     * @param suggestionType indicates greek/hebrew look ups
-     * @param form form in lower case, containing a % if appropriate
-     * @return the list of suggestions
-     */
-    private List<LexiconSuggestion> getMatchingAllForms(final LexicalSuggestionType suggestionType,
-            final String form) {
-        final List<LexiconSuggestion> suggestions = new ArrayList<LexiconSuggestion>();
-
-        // TODO make into re-usable cache
-        final EntityDoc[] searchResults = this.specificForms.search(new String[] { "accentedUnicode",
-                "simplifiedStepTransliteration" }, QueryParser.escape(form) + '*',
-                getStrongFilter(suggestionType), TRANSLITERATION_SORT, true, MAX_SUGGESTIONS);
-
-        for (final EntityDoc f : searchResults) {
-            final LexiconSuggestion suggestion = convertToSuggestionFromSpecificForm(f);
-            if (suggestion != null) {
-                suggestions.add(suggestion);
-            }
-        }
-
-        return suggestions;
-    }
-
-    /**
-     * Filters the query by strong number
-     * 
-     * @param suggestionType the type of suggestion
-     * @return a greek or hebrew filter
-     */
-    private Filter getStrongFilter(final LexicalSuggestionType suggestionType) {
-        return suggestionType == LexicalSuggestionType.GREEK ? GREEK_FILTER : HEBREW_FILTER;
-    }
-
-    /**
-     * Filters the query by strong number
-     * 
-     * @param isGreek true for greek, false for hebrew
-     * @return the filter for greek or hebrew
-     */
-    private Filter getFilter(final boolean isGreek) {
-        return isGreek ? GREEK_FILTER : HEBREW_FILTER;
-    }
-
-    /**
-     * @param specificForm the specific form to be converted
-     * @return the suggestion
-     */
-    private LexiconSuggestion convertToSuggestionFromSpecificForm(final EntityDoc specificForm) {
-        final String strongNumber = specificForm.get(STRONG_NUMBER_FIELD);
-        final EntityDoc[] results = this.definitions.searchExactTermBySingleField(STRONG_NUMBER_FIELD, 1,
-                strongNumber);
-
-        if (results.length > 0) {
-            final LexiconSuggestion suggestion = new LexiconSuggestion();
-            suggestion.setStrongNumber(strongNumber);
-            suggestion.setGloss(results[0].get("stepGloss"));
-            suggestion.setMatchingForm(specificForm.get("accentedUnicode"));
-            suggestion.setStepTransliteration(specificForm.get("stepTransliteration"));
-            markUpFrequentSuggestions(results[0], suggestion);
-            return suggestion;
-        }
-
-        return null;
-    }
-
-    /**
-     * converts a definition to a suggested form
-     * 
-     * @param def the definition
-     * @return the suggestion
-     */
-    private LexiconSuggestion convertToSuggestion(final EntityDoc def) {
-        final LexiconSuggestion suggestion = new LexiconSuggestion();
-        suggestion.setGloss(def.get("stepGloss"));
-        suggestion.setMatchingForm(def.get("accentedUnicode"));
-        suggestion.setStepTransliteration(def.get("stepTransliteration"));
-        suggestion.setStrongNumber(def.get(STRONG_NUMBER_FIELD));
-
-        markUpFrequentSuggestions(def, suggestion);
-        return suggestion;
-    }
-
-    /**
-     * Adds a marker for frequent suggestions
-     * 
-     * @param def the definition
-     * @param suggestion the suggestion
-     */
-    private void markUpFrequentSuggestions(final EntityDoc def, final LexiconSuggestion suggestion) {
-        final String stopWord = def.get("stopWord");
-        if ("true".equals(stopWord)) {
-            suggestion.setMatchingForm(suggestion.getMatchingForm() + " [too frequent]");
-        }
     }
 
     @Override
@@ -577,9 +391,6 @@ public class SearchServiceImpl implements SearchService {
                 case ORIGINAL_HEBREW_EXACT:
                     results = intersect(results, getKeysFromOriginalText(sq));
                     break;
-                case SUBJECT:
-                case TIMELINE_DESCRIPTION:
-                case TIMELINE_REFERENCE:
                 default:
                     throw new StepInternalException(String.format(
                             "Search %s is not support, unable to refine search type [%s]",
@@ -609,9 +420,6 @@ public class SearchServiceImpl implements SearchService {
             case ORIGINAL_HEBREW_RELATED:
             case ORIGINAL_HEBREW_FORMS:
                 return buildCombinedVerseBasedResults(sq, results);
-            case SUBJECT:
-            case TIMELINE_DESCRIPTION:
-            case TIMELINE_REFERENCE:
             default:
                 throw new StepInternalException(String.format(
                         "Search refinement of %s of type %s is not supported", sq.getOriginalQuery(),
@@ -631,12 +439,10 @@ public class SearchServiceImpl implements SearchService {
         switch (currentSearch.getType()) {
             case TEXT:
                 return runTextSearch(sq);
-            case SUBJECT:
-                return runSubjectSearch(sq);
-                // case EXACT_STRONG:
-                // return runExactStrongSearch(sq);
-                // case RELATED_STRONG:
-                // return runRelatedStrongSearch(sq);
+            case SUBJECT_SIMPLE:
+            case SUBJECT_EXTENDED:
+            case SUBJECT_FULL:
+                return this.subjects.search(sq);
             case TIMELINE_DESCRIPTION:
                 return runTimelineDescriptionSearch(sq);
             case TIMELINE_REFERENCE:
@@ -741,29 +547,6 @@ public class SearchServiceImpl implements SearchService {
 
         // build combined results
         return buildCombinedVerseBasedResults(sq, this.jswordSearch.searchKeys(sq));
-    }
-
-    /**
-     * Runs a subject search
-     * 
-     * @param sq the search query to run
-     * @return the results obtained by carrying out the search
-     */
-    private SearchResult runSubjectSearch(final SearchQuery sq) {
-        // TODO we assume we can only search against one version for headings...
-        final SearchResult headingsSearch = this.jswordSearch.search(sq,
-                sq.getCurrentSearch().getVersions()[0], HEADINGS_ONLY);
-
-        // build the results and then return
-        final SubjectHeadingSearchEntry headings = new SubjectHeadingSearchEntry();
-        headings.setHeadingsSearch(headingsSearch);
-
-        // return the results
-        final SearchResult sr = new SearchResult();
-        sr.addEntry(headings);
-        sr.setTotal(headingsSearch.getTotal());
-        sr.setTimeTookToRetrieveScripture(headingsSearch.getTimeTookToRetrieveScripture());
-        return sr;
     }
 
     /**

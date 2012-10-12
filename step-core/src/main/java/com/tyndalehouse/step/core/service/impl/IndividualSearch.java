@@ -2,6 +2,7 @@ package com.tyndalehouse.step.core.service.impl;
 
 import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
 import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
+import static com.tyndalehouse.step.core.utils.StringUtils.split;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -11,7 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
-import com.tyndalehouse.step.core.utils.StringUtils;
 
 /**
  * Represents an individual search
@@ -31,7 +31,7 @@ public class IndividualSearch {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(IndividualSearch.class);
     private static final String TEXT = "t=";
-    private static final String SUBJECT = "s=";
+    private static final String SUBJECT = "s";
     private static final String ORIGINAL = "o";
 
     private static final String TIMELINE_DESCRIPTION = "d=";
@@ -57,7 +57,7 @@ public class IndividualSearch {
         } else if (query.startsWith(SUBJECT)) {
             parseSubjectSearch(query.substring(SUBJECT.length()));
         } else if (query.startsWith(ORIGINAL)) {
-            parseOriginalsearch(query.substring(ORIGINAL.length()));
+            parseOriginalSearch(query.substring(ORIGINAL.length()));
         } else if (query.startsWith(TIMELINE_DESCRIPTION)) {
             this.type = SearchType.TIMELINE_DESCRIPTION;
             matchVersions(query.substring(TIMELINE_DESCRIPTION.length()));
@@ -86,7 +86,7 @@ public class IndividualSearch {
      * 
      * @param parseableQuery the query entered by the user, without the first character (o)
      */
-    private void parseOriginalsearch(final String parseableQuery) {
+    private void parseOriginalSearch(final String parseableQuery) {
         int length = 1;
 
         final char specifier = parseableQuery.charAt(length);
@@ -201,25 +201,47 @@ public class IndividualSearch {
      * @param parsedSubject the parsed and well-formed search query, containing prefix, etc.
      */
     private void parseSubjectSearch(final String parsedSubject) {
-        // fill in the query and versions
-        matchVersions(parsedSubject);
-
-        // amend the query
-        final StringBuilder subjectQuery = new StringBuilder(this.query.length() + 32);
-        final String[] keys = StringUtils.split(this.query);
-
-        for (int i = 0; i < keys.length; i++) {
-            subjectQuery.append(LuceneIndex.FIELD_HEADING);
-            subjectQuery.append(':');
-            subjectQuery.append(keys[i]);
-
-            if (i + 1 < keys.length) {
-                subjectQuery.append(" AND ");
-            }
+        // how many pluses do we have
+        int pluses = 0;
+        while (parsedSubject.charAt(pluses) == '+') {
+            pluses++;
         }
-        this.type = SearchType.SUBJECT;
 
-        this.query = subjectQuery.toString();
+        switch (pluses) {
+            case 0:
+                this.type = SearchType.SUBJECT_SIMPLE;
+                break;
+            case 1:
+                this.type = SearchType.SUBJECT_EXTENDED;
+                break;
+            case 2:
+            default:
+                this.type = SearchType.SUBJECT_FULL;
+                break;
+        }
+
+        final String trimmedQuery = parsedSubject.substring(pluses + 1);
+
+        // fill in the query and versions
+        matchVersions(trimmedQuery);
+
+        if (this.type == SearchType.SUBJECT_SIMPLE) {
+            // amend the query
+            final StringBuilder subjectQuery = new StringBuilder(this.query.length() + 32);
+            final String[] keys = split(this.query);
+
+            for (int i = 0; i < keys.length; i++) {
+                subjectQuery.append(LuceneIndex.FIELD_HEADING);
+                subjectQuery.append(':');
+                subjectQuery.append(keys[i]);
+
+                if (i + 1 < keys.length) {
+                    subjectQuery.append(" AND ");
+                }
+            }
+
+            this.query = subjectQuery.toString();
+        }
     }
 
     /**

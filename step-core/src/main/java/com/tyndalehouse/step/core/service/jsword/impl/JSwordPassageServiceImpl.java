@@ -384,7 +384,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
         try {
             Key key = book.getKey(reference);
             if (firstVerse) {
-                key = getFirstverseExcludingZero(key, book);
+                key = getFirstVerseExcludingZero(key, book);
             }
 
             final BookData data = new BookData(book, key);
@@ -403,13 +403,14 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
      * @param b the book
      * @return the new key representing 1 verse only
      */
-    private Key getFirstverseExcludingZero(final Key key, final Book b) {
+    @Override
+    public Key getFirstVerseExcludingZero(final Key key, final Book b) {
         if (key.getCardinality() < 1) {
             return key;
         }
 
         final Key subKey = key.get(0);
-        if (subKey instanceof Verse) {
+        if (subKey != null && subKey instanceof Verse) {
             final Verse verse = (Verse) subKey;
             if (verse.getVerse() == 0) {
                 // then return verse 1 if available
@@ -420,7 +421,44 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
             }
             return verse;
         }
+
         return key;
+    }
+
+    @Override
+    public Key getFirstVerseFromRange(final Key range) {
+        if (range instanceof VerseRange) {
+            final VerseRange verseRange = (VerseRange) range;
+
+            final Iterator<Key> iterator = verseRange.iterator();
+            if (!iterator.hasNext()) {
+                // empty range
+                return range;
+            }
+
+            final Key next = iterator.next();
+            if (!(next instanceof Verse)) {
+                throw new StepInternalException(
+                        "Iterating through verse range does not give me a verse! Key was: "
+                                + range.toString());
+            }
+
+            final Verse firstElement = (Verse) next;
+            if (firstElement.getVerse() != 0) {
+                return firstElement;
+            }
+
+            // otherwise, we were at verse 0, so try the next one
+            if (!iterator.hasNext()) {
+                // empty range, except for verse 0
+                return range;
+            }
+
+            return iterator.next();
+
+        }
+
+        return range;
     }
 
     @Override
@@ -445,7 +483,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
             throw new StepInternalException("An exception whilst parsing the key", e);
         }
 
-        final Key firstVerse = this.getFirstverseExcludingZero(keyToPassage, currentBook);
+        final Key firstVerse = this.getFirstVerseExcludingZero(keyToPassage, currentBook);
         return this.getOsisText(version, firstVerse.getOsisID(), lookupOptions, null, InterlinearMode.NONE);
     }
 
@@ -1062,5 +1100,22 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
         }
 
         return correct.replace(" ", "");
+    }
+
+    @Override
+    public Passage getVerseRanges(final String references, final String version) {
+        final Versification av11n = this.versificationService.getVersificationForVersion(version);
+        final PassageKeyFactory keyFactory = PassageKeyFactory.instance();
+
+        try {
+            final Key key = keyFactory.getKey(av11n, references);
+            if (key instanceof Passage) {
+                return (Passage) key;
+            }
+            throw new StepInternalException("Was not given a passage back - why?");
+
+        } catch (final NoSuchKeyException e) {
+            throw new StepInternalException("Unable to parse key " + references, e);
+        }
     }
 }

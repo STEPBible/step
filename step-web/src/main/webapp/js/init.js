@@ -37,7 +37,10 @@
 init();
 
 //some extensions (perhaps should go in another file)
-String.prototype.startsWith = function(str) { return (this.match("^"+str)==str); };
+String.prototype.startsWith = function(nonEscapedString) { 
+    var str = nonEscapedString.replace('+', '\\+');
+    return (this.match("^"+str)==nonEscapedString); 
+};
 
 
 

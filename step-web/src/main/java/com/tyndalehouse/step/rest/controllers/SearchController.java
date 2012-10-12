@@ -16,10 +16,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.tyndalehouse.step.core.models.LexiconSuggestion;
+import com.tyndalehouse.step.core.models.OsisWrapper;
 import com.tyndalehouse.step.core.models.search.LexicalSuggestionType;
 import com.tyndalehouse.step.core.models.search.SearchResult;
 import com.tyndalehouse.step.core.service.SearchService;
 import com.tyndalehouse.step.core.service.impl.SearchQuery;
+import com.tyndalehouse.step.core.service.search.OriginalWordSuggestionService;
+import com.tyndalehouse.step.core.service.search.SubjectSearchService;
 
 /**
  * Caters for searching across the data base
@@ -31,13 +34,20 @@ import com.tyndalehouse.step.core.service.impl.SearchQuery;
 public class SearchController {
     private static final Logger LOGGER = LoggerFactory.getLogger(SearchController.class);
     private final SearchService searchService;
+    private final OriginalWordSuggestionService originalWordSuggestions;
+    private final SubjectSearchService subjectSearch;
 
     /**
      * @param search the search service
+     * @param originalWordSuggestions the original word suggestions
      */
     @Inject
-    public SearchController(final SearchService search) {
+    public SearchController(final SearchService search,
+            final OriginalWordSuggestionService originalWordSuggestions,
+            final SubjectSearchService subjectSearch) {
         this.searchService = search;
+        this.originalWordSuggestions = originalWordSuggestions;
+        this.subjectSearch = subjectSearch;
     }
 
     /**
@@ -114,8 +124,17 @@ public class SearchController {
             return new ArrayList<LexiconSuggestion>(0);
         }
 
-        return this.searchService.getLexicalSuggestions(suggestionType, restoreSearchQuery(form),
+        return this.originalWordSuggestions.getLexicalSuggestions(suggestionType, restoreSearchQuery(form),
                 Boolean.parseBoolean(includeAllForms));
     }
 
+    /**
+     * @param root the root word
+     * @param fullHeader the header
+     * @param version to be looked up
+     * @return the list of verses for this subject
+     */
+    public List<OsisWrapper> getSubjectVerses(final String root, final String fullHeader, final String version) {
+        return this.subjectSearch.getSubjectVerses(root, fullHeader, version);
+    }
 }

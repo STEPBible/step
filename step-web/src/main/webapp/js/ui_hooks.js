@@ -75,6 +75,8 @@ SEARCH_DEFAULT =                    STEP_SERVER_BASE_URL + "search/search/";
 SEARCH_ESTIMATES =                  STEP_SERVER_BASE_URL + "search/estimateSearch/"
 SEARCH_SUGGESTIONS =                STEP_SERVER_BASE_URL + "search/getLexicalSuggestions/";
 
+SUBJECT_VERSES =                    STEP_SERVER_BASE_URL + "search/getSubjectVerses/";
+
 TIMELINE_GET_EVENTS =               STEP_SERVER_BASE_URL + "timeline/getEvents/";
 TIMELINE_GET_EVENTS_IN_PERIOD =     STEP_SERVER_BASE_URL + "timeline/getEventsInPeriod/";
 TIMELINE_GET_EVENTS_FROM_REFERENCE= STEP_SERVER_BASE_URL + "timeline/getEventsFromReference/";

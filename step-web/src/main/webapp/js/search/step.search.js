@@ -234,14 +234,17 @@ step.search = {
     
     
     _doSpecificSearchRequirements : function(passageId, query) {
-        if(query.startsWith("s=")) {
-            this._addMoreSubjectButton(passageId, query, "Didn't find what you want? Click here!");
-        } else if (query.startsWith("s+=") ){ 
-            this._addMoreSubjectButton(passageId, query, "Go wild and click me again!");
+        var undoneQuery = step.util.undoReplaceSpecialChars(query);
+        
+        
+        if(undoneQuery.startsWith("s=")) {
+            this._addMoreSubjectButton(passageId, undoneQuery, "Didn't find what you want? Click here!");
+        } else if (undoneQuery.startsWith("s+=") ){ 
+            this._addMoreSubjectButton(passageId, undoneQuery, "Go wild and click me again!");
             this._addSubjectExpandHandlers(passageId);
-        } else if(query.startsWith("s++=")) {
-            this._addMoreSubjectButton(passageId, query, "Back to where you started?");
-            this._addSubjectExpandHandlers(passageId, query);
+        } else if(undoneQuery.startsWith("s++=")) {
+            this._addMoreSubjectButton(passageId, undoneQuery, "Back to where you started?");
+            this._addSubjectExpandHandlers(passageId, undoneQuery);
         }
     },
     

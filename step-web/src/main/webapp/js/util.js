@@ -142,7 +142,7 @@ step.util = {
 	    var newStr;
 	    while(str != newStr) {
 	        newStr = str;
-	        str = str.replace('~plus~', '+').replace("~slash~", '/');
+	        str = str.replace('~plus~', '+').replace("~slash~", '/').replace('#plus#', '+').replace("#slash#", '/');
 	    }
 	    
 	    return str;

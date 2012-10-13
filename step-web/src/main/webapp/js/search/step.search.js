@@ -613,13 +613,17 @@ step.search = {
             //add a toolbar in there for each word
             var originalWordToolbar = $("<div class='originalWordSearchToolbar'></div>");
             var values = step.search.original.filters[passageId] || [];
+            var detailLevel = $("fieldset:visible", step.util.getPassageContainer(passageId)).detailSlider("value");
             
             $.each(definitions, function(i, item) {
+                var topLine = detailLevel == 2 ? item.matchingForm : item.stepTransliteration;
+                var bottomLine = "";
+                
                 var link = "<input type='checkbox' " +
                 		"value='" + (item.strongNumber == undefined ? "" : item.strongNumber) +"' " +
                 	    "id='ows_" + passageId + "_" + i + "' " +
                         ($.inArray(item.strongNumber, values) != -1 ? "checked='checked'" : "") +   
-                    " /><label for='ows_" + passageId + "_" + i  + "' ><span class='ancientSearchButton'>" + item.matchingForm + "</span>" +
+                    " /><label for='ows_" + passageId + "_" + i  + "' ><span class='ancientSearchButton'>" + topLine + "</span>" +
 //                		"<br />" + item.stepTransliteration + 
                 		"<br />";
                 if(item.gloss) {

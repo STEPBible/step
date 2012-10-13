@@ -196,17 +196,8 @@ public class BibleInformationServiceImpl implements BibleInformationService {
             }
         }
 
-        InterlinearMode targetMode = mode;
-        if (mode != INTERLINEAR) {
-            if (options.contains(LookupOption.ENGLISH_VOCAB) || options.contains(LookupOption.GREEK_VOCAB)
-                    || options.contains(LookupOption.TRANSLITERATION)
-                    || options.contains(LookupOption.MORPHOLOGY)) {
-                targetMode = INTERLINEAR;
-            }
-        }
-
         // now trim further depending on modes required:
-        switch (targetMode) {
+        switch (mode) {
             case COLUMN:
             case COLUMN_COMPARE:
             case INTERLEAVED:

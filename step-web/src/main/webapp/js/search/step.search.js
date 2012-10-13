@@ -616,16 +616,21 @@ step.search = {
             var detailLevel = $("fieldset:visible", step.util.getPassageContainer(passageId)).detailSlider("value");
             
             $.each(definitions, function(i, item) {
-                var topLine = detailLevel == 2 ? item.matchingForm : item.stepTransliteration;
-                var bottomLine = "";
+                
                 
                 var link = "<input type='checkbox' " +
                 		"value='" + (item.strongNumber == undefined ? "" : item.strongNumber) +"' " +
                 	    "id='ows_" + passageId + "_" + i + "' " +
                         ($.inArray(item.strongNumber, values) != -1 ? "checked='checked'" : "") +   
-                    " /><label for='ows_" + passageId + "_" + i  + "' ><span class='ancientSearchButton'>" + topLine + "</span>" +
-//                		"<br />" + item.stepTransliteration + 
-                		"<br />";
+                    " /><label for='ows_" + passageId + "_" + i  + "' >";
+                
+                    if(detailLevel == 2) {
+                        link += "<span class='ancientSearchButton'>" + item.matchingForm + "</span>";
+                    } else {
+                        link += item.stepTransliteration;
+                    }
+                
+                   link += "<br />";
                 if(item.gloss) {
                     link += item.gloss;
                 }

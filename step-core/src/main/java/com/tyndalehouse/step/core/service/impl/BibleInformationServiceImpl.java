@@ -196,8 +196,17 @@ public class BibleInformationServiceImpl implements BibleInformationService {
             }
         }
 
+        InterlinearMode targetMode = mode;
+        if (mode != INTERLINEAR) {
+            if (options.contains(LookupOption.ENGLISH_VOCAB) || options.contains(LookupOption.GREEK_VOCAB)
+                    || options.contains(LookupOption.TRANSLITERATION)
+                    || options.contains(LookupOption.MORPHOLOGY)) {
+                targetMode = INTERLINEAR;
+            }
+        }
+
         // now trim further depending on modes required:
-        switch (mode) {
+        switch (targetMode) {
             case COLUMN:
             case COLUMN_COMPARE:
             case INTERLEAVED:
@@ -227,6 +236,8 @@ public class BibleInformationServiceImpl implements BibleInformationService {
         result.remove(LookupOption.ENGLISH_VOCAB);
         result.remove(LookupOption.GREEK_VOCAB);
         result.remove(LookupOption.TRANSLITERATION);
+        result.remove(LookupOption.MORPHOLOGY);
+        result.remove(LookupOption.HEADINGS);
     }
 
     @Override

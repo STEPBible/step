@@ -86,6 +86,7 @@
   <xsl:param name="Interleave" select="'false'" />
   <xsl:param name="interleavingProvider" />
   <xsl:param name="comparing" select="false()" />
+  <xsl:param name="colorCodingProvider" />
 
   <!-- Create a global key factory from which OSIS ids will be generated -->
   <xsl:variable name="keyf" select="jsword:org.crosswire.jsword.passage.PassageKeyFactory.instance()"/>
@@ -97,8 +98,6 @@
   <!-- Create a global number shaper that can transform 0-9 into other number systems. -->
   <xsl:variable name="shaper" select="jsword:org.crosswire.common.icu.NumberShaper.new()"/>
 
-  <!-- set up options for color coding -->
-  <xsl:variable name="colorCodingProvider" select="jsword:com.tyndalehouse.step.core.xsl.impl.ColorCoderProviderImpl.new()" />
 
 
   <!--=======================================================================-->
@@ -618,7 +617,7 @@
 	    <xsl:when test="normalize-space(@lemma) != '' or normalize-space(@morph) != ''">
     		<xsl:choose>
 	    		<xsl:when test="$ColorCoding = 'true'" >
-			    	<xsl:variable name="colorClass" select="jsword:getColorClass($colorCodingProvider, @morph)"/>
+					<xsl:variable name="colorClass" select="jsword:getColorClass($colorCodingProvider, @morph)" />
 			    	<xsl:variable name="lemma" select="conversion:getStrongPaddedKey(@lemma)" />
 			    	<span class="{$colorClass}" strong="{$lemma}" morph="{@morph}"><xsl:apply-templates/></span>
 			    </xsl:when>

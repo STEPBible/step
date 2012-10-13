@@ -36,6 +36,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.mockito.Mockito.mock;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -66,6 +67,7 @@ import com.tyndalehouse.step.core.models.BookName;
 import com.tyndalehouse.step.core.models.InterlinearMode;
 import com.tyndalehouse.step.core.models.LookupOption;
 import com.tyndalehouse.step.core.models.OsisWrapper;
+import com.tyndalehouse.step.core.xsl.impl.ColorCoderProviderImpl;
 
 /**
  * a service providing a wrapper around JSword
@@ -196,6 +198,37 @@ public class JSwordPassageServiceImplTest {
         jsi.normalize(key, Versifications.instance().getDefaultVersification());
         assertFalse(key.get(0).getOsisID().equals("John.4.0"));
 
+    }
+
+    /**
+     * Test for bug TYNSTEP-378
+     */
+    @Test
+    public void testColorCoding() {
+        final JSwordPassageServiceImpl jsi = new JSwordPassageServiceImpl(
+                new JSwordVersificationServiceImpl(), null, null, mock(ColorCoderProviderImpl.class));
+
+        final List<LookupOption> options = new ArrayList<LookupOption>();
+        options.add(LookupOption.COLOUR_CODE);
+        final OsisWrapper osisText = jsi.getOsisText("KJV", "Gen.1.1", options, null, InterlinearMode.NONE);
+        assertTrue(osisText.getValue().contains("In the beginning"));
+    }
+
+    /**
+     * Baseline for bug TYNSTEP-378, checking that in interlinear colour coding still works.
+     */
+    @Test
+    public void testColorCodingInterlinear() {
+        final JSwordPassageServiceImpl jsi = new JSwordPassageServiceImpl(
+                new JSwordVersificationServiceImpl(), null, null, mock(ColorCoderProviderImpl.class));
+
+        final List<LookupOption> options = new ArrayList<LookupOption>();
+        options.add(LookupOption.COLOUR_CODE);
+        options.add(LookupOption.INTERLINEAR);
+
+        final OsisWrapper osisText = jsi.getOsisText("KJV", "Gen.1.1", options, "KJV",
+                InterlinearMode.INTERLINEAR);
+        assertTrue(osisText.getValue().contains("In the beginning"));
     }
 
     /**

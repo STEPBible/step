@@ -176,13 +176,24 @@ public class OriginalWordSuggestionServiceImpl implements OriginalWordSuggestion
     private List<LexiconSuggestion> getMatchingAllForms(final LexicalSuggestionType suggestionType,
             final String form) {
         final List<LexiconSuggestion> suggestions = new ArrayList<LexiconSuggestion>();
+        final EntityDoc[] results;
 
-        // TODO make into re-usable cache
-        final EntityDoc[] searchResults = this.specificForms.search(new String[] { "accentedUnicode",
-                "simplifiedStepTransliteration" }, QueryParser.escape(form) + '*',
-                getStrongFilter(suggestionType), TRANSLITERATION_SORT, true, MAX_SUGGESTIONS);
+        // search by unicode or translit?
+        if (isHebrewText(form) || GreekUtils.isGreekText(form)) {
+            results = this.specificForms.search(new String[] { "accentedUnicode" },
+                    QueryParser.escape(form) + '*', getStrongFilter(suggestionType), TRANSLITERATION_SORT,
+                    true, MAX_SUGGESTIONS);
+        } else {
+            // assume transliteration - at this point suggestionType is not going to be MEANING
+            final String simplifiedTransliteration = getSimplifiedTransliterationClause(
+                    suggestionType == GREEK, form, true);
 
-        for (final EntityDoc f : searchResults) {
+            results = this.specificForms.search(new String[] { "simplifiedStepTransliteration" },
+                    simplifiedTransliteration, getStrongFilter(suggestionType), TRANSLITERATION_SORT, true,
+                    simplifiedTransliteration, MAX_SUGGESTIONS);
+        }
+
+        for (final EntityDoc f : results) {
             final LexiconSuggestion suggestion = convertToSuggestionFromSpecificForm(f);
             if (suggestion != null) {
                 suggestions.add(suggestion);

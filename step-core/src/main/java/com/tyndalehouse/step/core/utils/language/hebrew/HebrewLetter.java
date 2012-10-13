@@ -1,4 +1,4 @@
-package com.tyndalehouse.step.core.utils.hebrew;
+package com.tyndalehouse.step.core.utils.language.hebrew;
 
 /**
  * A collection of enums to identify properties of the letter

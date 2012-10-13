@@ -202,6 +202,7 @@
 	<a href="#" id="previewLeft">See passage on the left pane</a>
 </div><span id="popupText"></span></div>
 
+<div id='stepInDevelopmentWarning'>The STEP software and its data are currently under active development and being checked for accuracy. </div>
 </body>
 
 </HTML>

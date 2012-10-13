@@ -147,6 +147,10 @@ ul.subjectSection {
 	padding-left: 0px;
 }
 
+h3.subjectHeading {
+	color: #696;
+}
+
 li.subjectHeading {
 	margin-top: 3px;
 	list-style: none;

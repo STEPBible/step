@@ -238,9 +238,9 @@ step.search = {
         
         
         if(undoneQuery.startsWith("s=")) {
-            this._addMoreSubjectButton(passageId, undoneQuery, "Didn't find what you want? Click here!");
+            this._addMoreSubjectButton(passageId, undoneQuery, "Search a different set of topics?");
         } else if (undoneQuery.startsWith("s+=") ){ 
-            this._addMoreSubjectButton(passageId, undoneQuery, "Go wild and click me again!");
+            this._addMoreSubjectButton(passageId, undoneQuery, "Search an even larger set of topics?");
             this._addSubjectExpandHandlers(passageId);
         } else if(undoneQuery.startsWith("s++=")) {
             this._addMoreSubjectButton(passageId, undoneQuery, "Back to where you started?");
@@ -299,7 +299,16 @@ step.search = {
     
     _addMoreSubjectButton : function(passageId, query, text) {
         var moreSubjectsButton = $("<div class='moreSubjects'><a href='#'>" + text + "</a><div>");
-        moreSubjectsButton.find("a").button({}).click(function() {
+        moreSubjectsButton.find("a").button({});
+        
+        var passageContent = step.util.getPassageContent(passageId); 
+        passageContent.prepend(moreSubjectsButton);
+        if(passageContent.find(".searchResults").children().size() != 0) {
+            passageContent.append(moreSubjectsButton.clone());
+        }
+    
+        //add click handlers now
+        passageContent.find(".moreSubjects a").click(function() {
             //add in a plus and send it back through
             var equalIndex = query.indexOf('=');
             var newQuery = query.substring(0, equalIndex) + '+' + query.substring(equalIndex);
@@ -311,10 +320,10 @@ step.search = {
             step.state.subject.subjectQuerySyntax(passageId, newQuery);
             step.search.subject.search(passageId);
         });
-        
-        step.util.getPassageContent(passageId).prepend(moreSubjectsButton);
-        step.util.getPassageContent(passageId).append(moreSubjectsButton.clone());
+    
     },
+    
+    
     
     _doFonts : function(passageId) {
         $.each($(".passageContentHolder", step.util.getPassageContainer(passageId)), function(n, item) {
@@ -509,18 +518,44 @@ step.search = {
     },
     
     _doNaveSearchResults : function(query, searchResults, passageId) {
-        var results = "<ul class='subjectSection searchResults'>";
+        var results = "<span class='searchResults'>";
+        var lastHeader = "";
+//        var seeRef = /See [A-Z, ]+/g;
+        
+        if(searchResults.length  == 0) {
+            return;
+        }
+        
+        //add a header
+        lastHeader = searchResults[0].root;
+        results += "<h3 class='subjectHeading'>" + lastHeader +  "</h3>";
+        
+        var ulStart = "<ul class='subjectSection searchResults'>";
+        results += ulStart;
         
         //searchResults is the array of results
         for(var i = 0 ; i < searchResults.length; i++) {
+            if(searchResults[i].root != lastHeader) {
+                lastHeader = searchResults[i].root;
+                results += "</ul>";
+                results += "<h3 class='subjectHeading'>" + lastHeader +  "</h3>";
+                results += ulStart;
+            }
+            
+//            var matches = searchResults[i].heading.exec(seeRef);
+//            if(matches > 1) {
+//                //then we're dealing with a special reference, matches[1] is the actual link
+////                matches[1]
+//            }
+            
             results += "<li root='" + searchResults[i].root + 
             		"' fullHeader='" + searchResults[i].heading +
             		"' class='expandableSearchHeading ui-state-default ui-corner-all'><span style='font-size: smaller'>&#9654;</span>&nbsp;&nbsp;";
-            results += searchResults[i].root + " &gt; " + searchResults[i].heading;
+            results += searchResults[i].heading;
             results += "</li>";
         }
         
-        return results += "</ul>";
+        return results += "</ul></span>";
     },
 
     _displayResults : function(searchQueryResults, passageId) {
@@ -531,7 +566,7 @@ step.search = {
         //remove any hebrew language css
         step.util.getPassageContainer(passageId).removeClass("hebrewLanguage greekLanguage");
         
-        if (searchResults == undefined || searchResults.length == 0) {
+        if (searchResults == undefined || searchResults.length == 0 || (searchQueryResults.total == 0)) {
             results += "<span class='notApplicable'>No search results were found</span>";
             this._changePassageContent(passageId, results);
             this._doOriginalWordToolbar(searchQueryResults.definitions, passageId);

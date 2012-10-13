@@ -150,3 +150,14 @@ legend .detailSliderContainer {
 	font-style: italic;
 	font-size: 1.2em !important;
 }
+
+#stepInDevelopmentWarning {
+	bottom: 0px;
+	right: 0px;
+	position: absolute;
+	font-weight: bold;
+	background-color: red;
+	color: white;
+	width: 150px;
+	padding: 5px;
+}

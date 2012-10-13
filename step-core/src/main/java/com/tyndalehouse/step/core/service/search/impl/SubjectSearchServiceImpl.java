@@ -2,16 +2,15 @@ package com.tyndalehouse.step.core.service.search.impl;
 
 import static com.tyndalehouse.step.core.models.LookupOption.HEADINGS_ONLY;
 import static org.apache.lucene.queryParser.QueryParser.escape;
-import static org.apache.lucene.search.SortField.STRING;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
 import javax.inject.Inject;
 
-import org.apache.lucene.search.Sort;
-import org.apache.lucene.search.SortField;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.passage.Key;
 import org.crosswire.jsword.passage.Passage;
@@ -45,12 +44,11 @@ import com.tyndalehouse.step.core.service.search.SubjectSearchService;
  */
 @Singleton
 public class SubjectSearchServiceImpl implements SubjectSearchService {
-    private final static int AGGREGATING_VERSE_DISTANCE = 10;
+    private static final String SEE_SUBJECT_REFERENCE = "See ";
+    private static final int AGGREGATING_VERSE_DISTANCE = 10;
     private final EntityIndexReader naves;
     private final JSwordSearchService jswordSearch;
     private final JSwordPassageService jsword;
-    private final Sort naveSort = new Sort(new SortField("root", STRING), new SortField("fullHeader",
-            SortField.STRING_VAL));
     private final JSwordVersificationService versificationService;
 
     /**
@@ -227,8 +225,8 @@ public class SubjectSearchServiceImpl implements SubjectSearchService {
      */
     private SearchResult searchExtended(final SearchQuery sq) {
         final long start = System.currentTimeMillis();
-        final EntityDoc[] results = this.naves.searchSingleColumn("root", sq.getCurrentSearch().getQuery(),
-                this.naveSort);
+        final EntityDoc[] results = this.naves.searchSingleColumn("rootStem", sq.getCurrentSearch()
+                .getQuery(), false);
         return getHeadingsSearchEntries(start, results);
     }
 
@@ -240,8 +238,8 @@ public class SubjectSearchServiceImpl implements SubjectSearchService {
      */
     private SearchResult searchFull(final SearchQuery sq) {
         final long start = System.currentTimeMillis();
-        final EntityDoc[] results = this.naves.search(new String[] { "root", "fullHeader" }, sq
-                .getCurrentSearch().getQuery(), this.naveSort);
+        final EntityDoc[] results = this.naves.search(new String[] { "rootStem", "fullHeader" }, sq
+                .getCurrentSearch().getQuery(), false);
         return getHeadingsSearchEntries(start, results);
     }
 
@@ -255,6 +253,38 @@ public class SubjectSearchServiceImpl implements SubjectSearchService {
         for (final EntityDoc d : results) {
             headingMatches.add(new ExpandableSubjectHeadingEntry(d.get("root"), d.get("fullHeader")));
         }
+
+        // sort the results
+        Collections.sort(headingMatches, new Comparator<SearchEntry>() {
+
+            @Override
+            public int compare(final SearchEntry o1, final SearchEntry o2) {
+                final ExpandableSubjectHeadingEntry e1 = (ExpandableSubjectHeadingEntry) o1;
+                final ExpandableSubjectHeadingEntry e2 = (ExpandableSubjectHeadingEntry) o2;
+
+                final int rootCompare = e1.getRoot().compareToIgnoreCase(e2.getRoot());
+                if (rootCompare != 0) {
+                    return rootCompare;
+                }
+
+                // we make sure that entries that start with "See " go to the bottom
+
+                final String e1Heading = e1.getHeading();
+                final String e2Heading = e2.getHeading();
+
+                final boolean isSeeRef1 = e1Heading.startsWith(SEE_SUBJECT_REFERENCE);
+                final boolean isSeeRef2 = e2Heading.startsWith(SEE_SUBJECT_REFERENCE);
+                if (isSeeRef1 && !isSeeRef2) {
+                    return 1;
+                }
+
+                if (!isSeeRef1 && isSeeRef2) {
+                    return -1;
+                }
+
+                return e1Heading.compareToIgnoreCase(e2Heading);
+            }
+        });
 
         final SearchResult sr = new SearchResult();
         sr.setTimeTookTotal(System.currentTimeMillis() - start);

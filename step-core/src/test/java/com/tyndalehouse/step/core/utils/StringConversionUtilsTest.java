@@ -32,16 +32,22 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.utils;
 
+import static com.tyndalehouse.step.core.utils.StringConversionUtils.adaptTransliterationForQuerying;
 import static com.tyndalehouse.step.core.utils.StringConversionUtils.getAnyKey;
 import static com.tyndalehouse.step.core.utils.StringConversionUtils.getStrongLanguageSpecificKey;
 import static com.tyndalehouse.step.core.utils.StringConversionUtils.getStrongPaddedKey;
 import static com.tyndalehouse.step.core.utils.StringConversionUtils.transliterate;
 import static com.tyndalehouse.step.core.utils.StringConversionUtils.unAccent;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import java.util.List;
 
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.tyndalehouse.step.core.utils.language.transliteration.TransliterationOption;
 
 /**
  * Tests the utility method for converting strings
@@ -51,6 +57,46 @@ import org.slf4j.LoggerFactory;
  */
 public class StringConversionUtilsTest {
     private static final Logger LOG = LoggerFactory.getLogger(StringConversionUtilsTest.class);
+
+    /**
+     * testing the hebrew rules for searching a transliteration
+     */
+    @Test
+    public void testHebrewConversionToQuerying() {
+        assertListIs(new String[] { "hesed", "heshed", "hetsed" },
+                adaptTransliterationForQuerying("hesed", false));
+
+        assertListIs(new String[] { "achab", "ahab" }, adaptTransliterationForQuerying("achab", false));
+        assertListIs(new String[] { "a+a", "ata" }, adaptTransliterationForQuerying("a+a", false));
+        assertListIs(new String[] { "atsad", "atzad" }, adaptTransliterationForQuerying("atzad", false));
+    }
+
+    /**
+     * testing the hebrew rules for searching a transliteration
+     */
+    @Test
+    public void testGreekConversionToQuerying() {
+        assertListIs(new String[] { "arhop", "arop", "arhowp", "arowp" },
+                adaptTransliterationForQuerying("arhop", true));
+
+        assertListIs(new String[] { "aggphab", "angphab", "angfab", "aggfab" },
+                adaptTransliterationForQuerying("aggphab", true));
+
+    }
+
+    /**
+     * asserts that options are in translits
+     * 
+     * @param options some words
+     * @param translits the results from the test
+     */
+    private void assertListIs(final String[] options, final List<TransliterationOption> translits) {
+        for (final String o : options) {
+            assertTrue("Options do not contain " + o,
+                    translits.contains(new TransliterationOption(0, new StringBuilder(o))));
+        }
+        assertEquals(options.length, translits.size());
+    }
 
     /**
      * tests that getAnyKey returns the right portion of the string for different keys

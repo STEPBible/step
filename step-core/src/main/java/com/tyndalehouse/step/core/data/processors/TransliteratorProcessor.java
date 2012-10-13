@@ -1,15 +1,13 @@
 package com.tyndalehouse.step.core.data.processors;
 
-import static com.tyndalehouse.step.core.utils.StringConversionUtils.adaptForQueryingSimplifiedTransliteration;
-import static com.tyndalehouse.step.core.utils.StringConversionUtils.isHebrewText;
+import static com.tyndalehouse.step.core.utils.StringConversionUtils.adaptForTransliterationForIndexing;
 import static com.tyndalehouse.step.core.utils.StringConversionUtils.transliterate;
-
-import java.util.Set;
 
 import org.apache.lucene.document.Document;
 
 import com.tyndalehouse.step.core.data.EntityConfiguration;
 import com.tyndalehouse.step.core.data.create.PostProcessor;
+import com.tyndalehouse.step.core.utils.language.HebrewUtils;
 
 /**
  * Adds generated fields to the entity document - affects both "definition" and "specificForm"
@@ -29,7 +27,7 @@ public class TransliteratorProcessor implements PostProcessor {
             return;
         }
 
-        final boolean isHebrew = isHebrewText(accentedUnicode);
+        final boolean isHebrew = HebrewUtils.isHebrewText(accentedUnicode);
         final String transliteration = transliterate(accentedUnicode);
 
         doStepTransliteration(config, doc, transliteration);
@@ -46,11 +44,8 @@ public class TransliteratorProcessor implements PostProcessor {
      */
     private void doSimplifiedStepTransliterations(final Document doc, final boolean isHebrew,
             final String transliteration, final EntityConfiguration config) {
-        final Set<String> simplifiedTransliterations = adaptForQueryingSimplifiedTransliteration(
-                transliteration, !isHebrew);
-        for (final String s : simplifiedTransliterations) {
-            doc.add(config.getField(STEP_SIMPLIFIED_TRANSLITERATION, s));
-        }
+        doc.add(config.getField(STEP_SIMPLIFIED_TRANSLITERATION,
+                adaptForTransliterationForIndexing(transliteration, !isHebrew)));
     }
 
     /**

@@ -36,7 +36,6 @@ import static com.tyndalehouse.step.core.service.helpers.OriginalWordUtils.STRON
 import static com.tyndalehouse.step.core.service.helpers.OriginalWordUtils.convertToSuggestion;
 import static com.tyndalehouse.step.core.service.helpers.OriginalWordUtils.getFilter;
 import static com.tyndalehouse.step.core.service.impl.VocabularyServiceImpl.padStrongNumber;
-import static com.tyndalehouse.step.core.utils.StringConversionUtils.adaptForUnaccentedTransliteration;
 import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
 import static java.lang.Character.isDigit;
 
@@ -85,6 +84,7 @@ import com.tyndalehouse.step.core.service.helpers.OriginalSpellingComparator;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import com.tyndalehouse.step.core.service.jsword.JSwordSearchService;
 import com.tyndalehouse.step.core.service.search.SubjectSearchService;
+import com.tyndalehouse.step.core.service.search.impl.OriginalWordSuggestionServiceImpl;
 import com.tyndalehouse.step.core.utils.StringConversionUtils;
 import com.tyndalehouse.step.core.utils.StringUtils;
 
@@ -922,11 +922,11 @@ public class SearchServiceImpl implements SearchService {
         // first find by transliterations that we have
         final String lowerQuery = query.toLowerCase();
 
-        final String simplifiedTransliteration = adaptForUnaccentedTransliteration(lowerQuery, isGreek);
+        final String simplifiedTransliteration = OriginalWordSuggestionServiceImpl
+                .getSimplifiedTransliterationClause(isGreek, lowerQuery, false);
 
-        final EntityDoc[] specificForms = this.specificForms.search(
-                new String[] { "simplifiedTransliteration" }, simplifiedTransliteration, getFilter(isGreek),
-                null, false);
+        final EntityDoc[] specificForms = this.specificForms.searchSingleColumn("simplifiedTransliteration",
+                simplifiedTransliteration, getFilter(isGreek));
 
         // finally, if we haven't found anything, then abort
         if (specificForms.length != 0) {

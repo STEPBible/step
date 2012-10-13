@@ -273,7 +273,7 @@ step.util = {
                     $(".searchQuerySyntax", step.util.getPassageContainer(passageId)).val(syntax); 
                 }
                 
-                if(syntax.startsWith("o")) {
+                if(syntax.startsWith("o") || syntax.startsWith("s")) {
                     //no estimate for original word search
                     return;
                 }
@@ -281,6 +281,10 @@ step.util = {
                 //finally attempt a search estimation
                 delay(function() {
                     var versions = $("fieldset:visible .searchVersions", step.util.getPassageContainer(passageId)).val();
+                    if(versions == undefined || versions.trim().length == 0) {
+                        versions = "ESV";
+                    }
+                    
                     
                     if(step.search.refinedSearch.length == 0) {
                         $.getSafe(SEARCH_ESTIMATES, [encodeURIComponent(step.util.replaceSpecialChars(syntax)) + " in (" + versions + ")"], function(estimate) {

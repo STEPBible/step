@@ -35,7 +35,7 @@
 		<table class="passageTable">
 			<tr>
 				<td>Translation / Commentary</td>
-				<td><input type="text" class="passageVersion drop" size="15" /> &nbsp; 
+				<td style="white-space: nowrap;"><input type="text" class="passageVersion drop" size="15" /> &nbsp; 
 					<a class="infoAboutVersion" target="_blank" href="version.jsp?version=<%= stepRequest.getThisVersion() %>" title="Information about the <%= stepRequest.getThisVersion() %> Bible / Commentary">&#x24d8;</a>&nbsp;</td>
 				<td style="padding-left: 10px">Bible Text&nbsp;</td>
 				<td><input type="text" class="passageReference drop" size="15" /></td>
@@ -79,7 +79,7 @@
 		<div level="2">Query syntax <input class="simpleTextQuerySyntax querySyntax" style="width: 70%" /> </div>
 	
 		<hr />
-		<jsp:include page="search_toolbar.jsp?namespace=simpleText&context=true&bibleVersions=true"  />
+		<jsp:include page="search_toolbar.jsp?namespace=simpleText&context=true&bibleVersions=true&paging=true&refining=true"  />
 		
 	</fieldset>
 
@@ -205,7 +205,7 @@
 		<hr />
 		
 		
-		<jsp:include page="search_toolbar.jsp?namespace=text&context=true&bibleVersions=true" />
+		<jsp:include page="search_toolbar.jsp?namespace=text&context=true&bibleVersions=true&paging=true&refining=true" />
 	</fieldset>
 
 	<fieldset name="SEARCH_ORIGINAL">
@@ -250,7 +250,7 @@
 		<hr />
 		
 		
-		<jsp:include page="search_toolbar.jsp?namespace=original&context=true&bibleVersions=true" />
+		<jsp:include page="search_toolbar.jsp?namespace=original&context=true&bibleVersions=true&paging=true&refining=true" />
 	</fieldset>
 
 	<fieldset name="SEARCH_SUBJECT">
@@ -264,7 +264,6 @@
 				<td>Query Syntax&nbsp;</td>
 				<td><input type="text" class="subjectQuerySyntax querySyntax" /></td>
 			</tr>
-			
 		</table>
 
 		<div> 
@@ -273,11 +272,8 @@
 		</div>
 					
 		<hr level="2" />
-		
-
-		<hr />
 				
-		<jsp:include page="search_toolbar.jsp?namespace=subject&context=false&bibleVersions=false" />
+		<jsp:include page="search_toolbar.jsp?namespace=subject&context=false&bibleVersions=false&paging=false&refining=false" />
 	</fieldset>
 
 

@@ -22,10 +22,25 @@
 	
 	<input type='hidden' class='searchContext <%=request.getParameter("namespace")%>SearchContext' value='0' readonly='true' /> 
 <!-- 	<a href='#' class='concordanceFormat'>Concordance view</a>  -->
+
+	<%
+		if(request.getParameter("refining").equals("true")) {
+	%>
 	<a href='#' class='refineSearch'>Refine search</a> 
+	<% 
+		}
+	%>
+
+	<%
+		if(request.getParameter("paging").equals("true")) {
+	%>
 	<a href='#' class='adjustPageSize'>Toggles the page size between the default and the number of results currently showing on the screen</a> 
 	<a href='#' class='previousPage'>Previous page of results</a> 
 	<a href='#' class='nextPage'>Next page of results</a> 
+	<%
+		}
+	%>
+	
 	<a href='#' class='showSearchCriteria'>Show search criteria</a> 
 	<a href='#' class='hideSearchCriteria'>Hide search criteria</a>
 	<input type='hidden' class='pageNumber <%=request.getParameter("namespace")%>PageNumber' value='0' readonly='true' />

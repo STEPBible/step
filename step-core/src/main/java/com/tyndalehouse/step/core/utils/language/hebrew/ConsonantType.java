@@ -1,4 +1,4 @@
-package com.tyndalehouse.step.core.utils.hebrew;
+package com.tyndalehouse.step.core.utils.language.hebrew;
 
 /**
  * Hebrew consonant types

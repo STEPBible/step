@@ -151,6 +151,19 @@ h3.subjectHeading {
 	color: #696;
 }
 
+.subjectSection h4 {
+	color: #669;
+	padding: 0px;
+	margin: 0px 10px;
+}
+
+.subjectSection h4 li {
+	color: #669;
+	list-style-type: disc;
+}
+
+
+
 li.subjectHeading {
 	margin-top: 3px;
 	list-style: none;
@@ -159,6 +172,10 @@ li.subjectHeading {
 
 .subjectSearchLink {
 	float: right;
+}
+
+.subjectSearchLink  h3.heading {
+	display: none;
 }
 
 .moreSubjects {

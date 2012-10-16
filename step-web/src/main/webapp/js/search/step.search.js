@@ -264,6 +264,7 @@ step.search = {
             
             var root = $(this).attr('root');
             var fullHeader = $(this).attr('fullHeader');
+            var seeAlso = $(this).attr('seeAlso');
             var version = "ESV";
             var currentHeading = this;
 
@@ -277,10 +278,10 @@ step.search = {
                     for(var i = 0; i < results.length; i++) {
                         verses += "<li class='expandedHeadingItem'>";
                         verses += "<span class='subjectSearchLink'>";
-                        verses += goToPassageArrow(true, results[i].reference, "searchKeyPassageArrow", true);
+                        verses += goToPassageArrow(true, results[i].reference, "searchKeyPassageArrow", false);
                         verses += "<a class='searchRefLink' href='#' onclick='passageArrowTrigger(" + passageId + ", \"" + results[i].reference + "\", true)' >" 
                         + results[i].reference + "</a>";
-                        verses += goToPassageArrow(false, results[i].reference, "searchKeyPassageArrow", true);
+                        verses += goToPassageArrow(false, results[i].reference, "searchKeyPassageArrow", false);
                         verses += "</span>";
                         verses += results[i].value;
                         
@@ -291,8 +292,52 @@ step.search = {
                         verses += "</li>";
                     }
                 }
+                 
+                //also append the see also references as links to do the search again
+                var seeAlsoRefs = "";
+                if(seeAlso) {
+                    seeAlsoRefs = $("<h4 class='expandedHeadingItem'>Other useful entries:</h4>");
+                    var otherLinks = $("<ul class='expandedHeadingItem'></ul");
+                    
+                    var refs = seeAlso.split(";");
+                    for(var i = 0; i < refs.length; i++) {
+                        var link = $("<a href='#'>" + refs[i].trim() + "</a>");
+                        var refLink = refs[i];
+                        $(link).click(function () {
+                            var splitByComma = refLink.split(",");
+                            var query;
+                            var text = "";
+                            if(splitByComma.length == 1) {
+                                //do a s+ search
+                                query = "s+=";
+                            } else {
+                                // do a s++ search
+                                query = "s++="
+                            }
+                            
+                            text += refLink;
+                            
+                            //also add in the root word if the word "above" or "below" appears
+                            if(seeAlso.indexOf('above') != -1 && seeAlso.indexOf('below') != -1) {
+                                //add in the root word
+                                text += " " + root;
+                            }
+                            query += text;
+                            
+                            step.state.subject.subjectText(passageId, text);
+                            step.state.subject.subjectQuerySyntax(passageId, query);
+                            step.search.subject.search(passageId);
+                        });
+                        //wrap the link in a list item
+                        otherLinks.append($("<li></li>").append(link));
+                    }
+                    seeAlsoRefs.after(otherLinks);
+                }
                 
+                verses = $(verses).after(seeAlsoRefs);
                 $(currentHeading).after(verses);
+
+//                $(verses);
             });
         });
     },
@@ -320,9 +365,7 @@ step.search = {
             step.state.subject.subjectQuerySyntax(passageId, newQuery);
             step.search.subject.search(passageId);
         });
-    
     },
-    
     
     
     _doFonts : function(passageId) {
@@ -371,7 +414,6 @@ step.search = {
                 }
             }
         }
-//        console.log(terms);
         return terms;
     },
     
@@ -520,7 +562,6 @@ step.search = {
     _doNaveSearchResults : function(query, searchResults, passageId) {
         var results = "<span class='searchResults'>";
         var lastHeader = "";
-//        var seeRef = /See [A-Z, ]+/g;
         
         if(searchResults.length  == 0) {
             return;
@@ -542,15 +583,13 @@ step.search = {
                 results += ulStart;
             }
             
-//            var matches = searchResults[i].heading.exec(seeRef);
-//            if(matches > 1) {
-//                //then we're dealing with a special reference, matches[1] is the actual link
-////                matches[1]
-//            }
-            
             results += "<li root='" + searchResults[i].root + 
-            		"' fullHeader='" + searchResults[i].heading +
-            		"' class='expandableSearchHeading ui-state-default ui-corner-all'><span style='font-size: smaller'>&#9654;</span>&nbsp;&nbsp;";
+            		"' fullHeader='" + searchResults[i].heading;
+            if(searchResults[i].seeAlso) {
+                results += "' seeAlso='" + searchResults[i].seeAlso;
+            }
+            
+            results += "' class='expandableSearchHeading ui-state-default ui-corner-all'><span style='font-size: smaller'>&#9654;</span>&nbsp;&nbsp;";
             results += searchResults[i].heading;
             results += "</li>";
         }

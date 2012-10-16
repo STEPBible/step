@@ -10,6 +10,7 @@ public class ExpandableSubjectHeadingEntry implements SearchEntry {
     private static final long serialVersionUID = -7042352819214882916L;
     private String root;
     private String heading;
+    private String seeAlso;
 
     /** for serialisation */
     public ExpandableSubjectHeadingEntry() {
@@ -20,9 +21,10 @@ public class ExpandableSubjectHeadingEntry implements SearchEntry {
      * @param root the root entry
      * @param heading the heading
      */
-    public ExpandableSubjectHeadingEntry(final String root, final String heading) {
+    public ExpandableSubjectHeadingEntry(final String root, final String heading, final String seeAlso) {
         this.root = root;
         this.heading = heading;
+        this.seeAlso = seeAlso;
     }
 
     /**
@@ -37,5 +39,19 @@ public class ExpandableSubjectHeadingEntry implements SearchEntry {
      */
     public String getHeading() {
         return this.heading;
+    }
+
+    /**
+     * @return the seeAlso
+     */
+    public String getSeeAlso() {
+        return this.seeAlso;
+    }
+
+    /**
+     * @param seeAlso the seeAlso to set
+     */
+    public void setSeeAlso(final String seeAlso) {
+        this.seeAlso = seeAlso;
     }
 }

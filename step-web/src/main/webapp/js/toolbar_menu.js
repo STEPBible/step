@@ -63,22 +63,24 @@ function ToolbarMenu(passageId, menuRoot) {
  */
 ToolbarMenu.prototype.refreshMenuOptions = function() {
 	var self = this;
-	$.getSafe(BIBLE_GET_FEATURES + step.state.passage.version(this.passageId), function (features) {
+	var version = step.state.passage.version(this.passageId);
+	var mode = step.passage.getDisplayMode(this.passageId).displayMode;
+	if(step.util.isBlank(mode)) {
+	    mode = "NONE";
+	}
+	
+	var displayMenu = $("li[menu-name='DISPLAY']", step.util.getPassageContainer(this.passageId));
+	$.getSafe(BIBLE_GET_FEATURES, [version, mode], function (features) {
 		//build up map of options
-		$("li:contains('Display') a", self.menuRoot).each(function(index, value) {
-			var changed = false;
-			for(var i = 0 ; features[i]; i++) {
-				if(value.name == features[i]) {
-					$(value).removeClass("disabled");
-					changed = true;
-					break;
-				}
-			}
-			
-			if(changed == false) {
-				$(value).addClass("disabled");
-			}
-		});
+	    $("a", displayMenu).removeClass("disabled").removeAttr('title').qtip('destroy');
+		
+		for(var i = 0; i < features.removed.length; i++) {
+		    $("a[name='" + features.removed[i].option + "']", displayMenu)
+		        .addClass("disabled")
+		        .attr('title', features.removed[i].explanation)
+		        .qtip({ position: {my: "center right", at: "left center", viewport: $(window) }});
+		}
+		
 		$.shout("toolbar-menu-options-changed-" + self.passageId);
 	});
 };

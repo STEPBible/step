@@ -90,20 +90,26 @@ function LexiconDefinition() {
     
 LexiconDefinition.prototype.getPopup = function() {
     if (this.popup) {
-        this.popup.css('display', 'inline-block');
         return this.popup;
     }
 
     // create the popup container
     this.popup = $("#lexiconDefinition");
     this.popup.tabs().draggable({
-        handle : "#lexiconDefinitionHeader",
+        handle : "#lexiconDefinitionHeader"
     });
     $("#lexiconDefinition").tabs("select", 0);
     
     $('#lexiconPopupClose').click(function() {
         $('#lexiconDefinition').hide();
     });
+    
+    this.getPopup().position({
+        of : $(window),
+        my : "right bottom",
+        at : "right bottom"
+    });
+    
     return this.popup;
 };
 
@@ -214,13 +220,15 @@ LexiconDefinition.prototype.getShortKey = function(k) {
 LexiconDefinition.prototype.reposition = function() {
     // if left position is negative, then we assume it's off screen and need
     // position
-    if (this.getPopup().css("left")[0] == '-') {
+    var popup = this.getPopup();
+    popup.css('display', 'block');
+    if (popup.css("left")[0] == '-') {
         // position in the middle
         this.getPopup().position({
-            of : $("body"),
-            my : "right top",
-            at : "right top",
-            collision : "fit flip",
+            of : $(window),
+            my : "right bottom",
+            at : "right bottom"
+//            collision : "fit flip",
         });
     }
 };

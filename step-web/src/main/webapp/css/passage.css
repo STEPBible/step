@@ -592,3 +592,8 @@ FONT.usg {
 .versionBreakMenuItem {
 	border-bottom: 1px dashed #696;
 }
+
+.resetVersions {
+	color: red;
+	font-weight: bold;
+}

@@ -40,28 +40,34 @@ step.passage = {
         return $(".passageContainer[passage-id = " + passageId + "] .passageReference").val();
     },
     
+    getDisplayMode : function(passageId) {
+        var container = step.util.getPassageContainer(passageId);
+        var level = $(".advancedSearch fieldset[name='SEARCH_PASSAGE']", container).detailSlider("value");
+        var interlinearVersion = "";
+        var interlinearMode = "NONE";
+        if(level > 0) {
+            interlinearVersion = step.state.passage.extraVersions(passageId);
+            if(!step.util.isBlank(interlinearVersion)) {
+                interlinearVersion = interlinearVersion.trim();
+                interlinearMode = "INTERLEAVED";
+            }
+        }
+
+        if(level > 1 && !step.util.isBlank(interlinearVersion)) {
+            interlinearMode = this._getInterlinearMode(passageId);
+        }
+        
+        return { displayMode : interlinearMode, displayVersions : interlinearVersion };
+    },
+    
     changePassage: function(passageId) {
         var container = step.util.getPassageContainer(passageId);
         var lookupVersion = step.state.passage.version(passageId);
         var lookupReference = step.state.passage.reference(passageId);
         var options = step.state.passage.options(passageId);
-        
-        var level = $("fieldset", container).detailSlider("value");
-        
-        var interlinearVersion = "";
-        var interlinearMode = "";
-        if(level > 0) {
-            interlinearVersion = step.state.passage.extraVersions(passageId)
-            if(interlinearVersion != undefined) {
-                interlinearVersion = interlinearVersion.trim();
-            }
-            interlinearMode = "INTERLEAVED";
-        }
-
-        if(level > 1) {
-            interlinearMode = this._getInterlinearMode(passageId);
-        }
-        
+        var display = this.getDisplayMode(passageId);
+        var interlinearMode = display.displayMode;
+        var interlinearVersion = display.displayVersions;
         
         var self = this;
         if (!step.util.raiseErrorIfBlank(lookupVersion, "A version must be provided")

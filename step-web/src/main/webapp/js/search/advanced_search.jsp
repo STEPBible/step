@@ -42,7 +42,7 @@
 			</tr>
 			<tr level="1">
 				<td>Comparison versions</td>
-				<td><input type="text" class="extraVersions" size="15" /></td>
+				<td><input type="text" class="extraVersions drop" size="15" /> &nbsp;<a href='#' class='resetVersions'>x</a></td>
 				<td level="2" style="padding-left: 10px">will be shown as</td>
 				<td level="2"><input type="text" class="extraVersionsDisplayOptions drop" size="15" readonly=true"/></td>
 			</tr>

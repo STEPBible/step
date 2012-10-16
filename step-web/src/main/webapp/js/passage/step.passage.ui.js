@@ -105,7 +105,10 @@ $(document).ready(function() {
                            ], "passage", step.passage.ui.restoreDefaults);
     
     $(".extraVersionsDisplayOptions").change(function(event) {
-        step.passage.changePassage(step.passage.getPassageId(event.target));
+        //shout a change
+        var passageId = step.passage.getPassageId(event.target);
+        $.shout("version-changed-" + passageId);
+        step.passage.changePassage(passageId);
     });
     
     
@@ -120,6 +123,10 @@ $(document).ready(function() {
         
         elements.css("font-size", newFontSize);
     }).find(".ui-button-text").html("<span class='smallerFont'>A</span>");
+    
+    $(".resetVersions").click(function() {
+        $(this).parent().find(".extraVersions").val("").trigger('change');
+    });
     
     $(".largerFonts").button({
                 text : true        
@@ -153,8 +160,8 @@ $(step.passage.ui).hear("versions-initialisation-completed", function() {
               var passageId = step.passage.getPassageId(target);
               
               //reset displayOptions because interlinear might not be available
+              $.shout("version-changed-" + passageId);
               step.passage.ui.updateDisplayOptions(passageId);
-              
               step.passage.changePassage(passageId);
         });
     });

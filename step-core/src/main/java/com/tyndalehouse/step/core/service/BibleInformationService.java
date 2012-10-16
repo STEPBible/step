@@ -35,11 +35,11 @@ package com.tyndalehouse.step.core.service;
 import java.util.List;
 import java.util.Locale;
 
+import com.tyndalehouse.step.core.models.AvailableFeatures;
 import com.tyndalehouse.step.core.models.BibleVersion;
 import com.tyndalehouse.step.core.models.BookName;
 import com.tyndalehouse.step.core.models.EnrichedLookupOption;
 import com.tyndalehouse.step.core.models.KeyWrapper;
-import com.tyndalehouse.step.core.models.LookupOption;
 import com.tyndalehouse.step.core.models.OsisWrapper;
 
 /**
@@ -53,6 +53,7 @@ public interface BibleInformationService {
 
     /**
      * Queries Jsword to return all the installed versions of the bible
+     * 
      * @param allVersions a boolean indicating whether all versions should be returned
      * @param locale the locale of the requester
      * @param usersLocale TODO
@@ -92,11 +93,13 @@ public interface BibleInformationService {
             String interlinearVersion, Boolean round);
 
     /**
+     * gets any available features, but for this type of view only
      * 
      * @param version the version to lookup
+     * @param displayMode the intended display mode
      * @return the features available for a Bible (for e.g. Strong numbers)
      */
-    List<LookupOption> getFeaturesForVersion(String version);
+    AvailableFeatures getAvailableFeaturesForVersion(String version, String displayMode);
 
     /**
      * Gets a list of all supported features so far

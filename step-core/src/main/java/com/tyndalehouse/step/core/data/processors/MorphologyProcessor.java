@@ -110,9 +110,8 @@ public class MorphologyProcessor implements PostProcessor {
      * @return For pronouns, returns 'Pronoun', otherwise the function
      */
     private String getShortFunction(final String function) {
-        if ("Correlative pronoun".equals(function) ||
-
-        "Demonstrative pronoun".equals(function) || "Indeclinable Noun of Other type".equals(function)
+        if ("Correlative pronoun".equals(function) || "Demonstrative pronoun".equals(function)
+                || "Indeclinable Noun of Other type".equals(function)
                 || "Indeclinable PRoper Noun".equals(function) || "Indefinite pronoun".equals(function)
                 || "Personal pronoun".equals(function) || "Posessive pronoun".equals(function)
                 || "Reciprocal pronoun".equals(function) || "Reflexive pronoun".equals(function)

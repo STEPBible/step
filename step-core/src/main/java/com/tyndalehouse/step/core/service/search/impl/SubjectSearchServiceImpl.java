@@ -1,6 +1,7 @@
 package com.tyndalehouse.step.core.service.search.impl;
 
 import static com.tyndalehouse.step.core.models.LookupOption.HEADINGS_ONLY;
+import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
 import static org.apache.lucene.queryParser.QueryParser.escape;
 
 import java.util.ArrayList;
@@ -13,11 +14,14 @@ import javax.inject.Inject;
 
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.passage.Key;
+import org.crosswire.jsword.passage.NoSuchKeyException;
 import org.crosswire.jsword.passage.Passage;
 import org.crosswire.jsword.passage.RestrictionType;
 import org.crosswire.jsword.passage.Verse;
 import org.crosswire.jsword.passage.VerseRange;
 import org.crosswire.jsword.versification.Versification;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.inject.Singleton;
 import com.tyndalehouse.step.core.data.EntityDoc;
@@ -44,7 +48,7 @@ import com.tyndalehouse.step.core.service.search.SubjectSearchService;
  */
 @Singleton
 public class SubjectSearchServiceImpl implements SubjectSearchService {
-    private static final String SEE_SUBJECT_REFERENCE = "See ";
+    private static final Logger LOGGER = LoggerFactory.getLogger(SubjectSearchServiceImpl.class);
     private static final int AGGREGATING_VERSE_DISTANCE = 10;
     private final EntityIndexReader naves;
     private final JSwordSearchService jswordSearch;
@@ -103,12 +107,14 @@ public class SubjectSearchServiceImpl implements SubjectSearchService {
      * @param verses the verses
      * @param version the version
      * @param references the list of references
+     * @throws NoSuchKeyException unable to look up a key
      */
     private void collectVersesFromReferences(final List<OsisWrapper> verses, final String version,
             final String references) {
         final Passage verseRanges = this.jsword.getVerseRanges(references, version);
         final Iterator<Key> rangeIterator = verseRanges.rangeIterator(RestrictionType.NONE);
         final List<LookupOption> options = new ArrayList<LookupOption>();
+        options.add(LookupOption.HIDE_XGEN);
 
         final Book book = this.versificationService.getBookFromVersion(version);
         final Versification av11n = this.versificationService.getVersificationForVersion(book);
@@ -124,8 +130,13 @@ public class SubjectSearchServiceImpl implements SubjectSearchService {
                 stringBuilder.append(osisWrapper.getReference());
                 stringBuilder.append("; ");
                 stringBuilder.append(range.getName());
-                osisWrapper.setReference(stringBuilder.toString());
-
+                try {
+                    osisWrapper.setReference(book.getKey(stringBuilder.toString()).getName());
+                } catch (final NoSuchKeyException e) {
+                    // fail to get a key, let's log and continue
+                    LOGGER.warn("Unable to get key for reference: [{}]", osisWrapper.getReference());
+                    LOGGER.trace("Root cause is", e);
+                }
             } else {
 
                 final Key firstVerse = this.jsword.getFirstVerseFromRange(range);
@@ -251,7 +262,8 @@ public class SubjectSearchServiceImpl implements SubjectSearchService {
     private SearchResult getHeadingsSearchEntries(final long start, final EntityDoc[] results) {
         final List<SearchEntry> headingMatches = new ArrayList<SearchEntry>(results.length);
         for (final EntityDoc d : results) {
-            headingMatches.add(new ExpandableSubjectHeadingEntry(d.get("root"), d.get("fullHeader")));
+            headingMatches.add(new ExpandableSubjectHeadingEntry(d.get("root"), d.get("fullHeader"), d
+                    .get("alternate")));
         }
 
         // sort the results
@@ -269,11 +281,11 @@ public class SubjectSearchServiceImpl implements SubjectSearchService {
 
                 // we make sure that entries that start with "See " go to the bottom
 
-                final String e1Heading = e1.getHeading();
-                final String e2Heading = e2.getHeading();
+                final String e1SeeAlso = e1.getSeeAlso();
+                final String e2SeeAlso = e2.getSeeAlso();
 
-                final boolean isSeeRef1 = e1Heading.startsWith(SEE_SUBJECT_REFERENCE);
-                final boolean isSeeRef2 = e2Heading.startsWith(SEE_SUBJECT_REFERENCE);
+                final boolean isSeeRef1 = isBlank(e1SeeAlso);
+                final boolean isSeeRef2 = isBlank(e2SeeAlso);
                 if (isSeeRef1 && !isSeeRef2) {
                     return 1;
                 }
@@ -282,7 +294,7 @@ public class SubjectSearchServiceImpl implements SubjectSearchService {
                     return -1;
                 }
 
-                return e1Heading.compareToIgnoreCase(e2Heading);
+                return e1.getHeading().compareToIgnoreCase(e1.getHeading());
             }
         });
 

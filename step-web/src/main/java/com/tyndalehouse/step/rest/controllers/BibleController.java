@@ -47,11 +47,11 @@ import javax.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.tyndalehouse.step.core.models.AvailableFeatures;
 import com.tyndalehouse.step.core.models.BookName;
 import com.tyndalehouse.step.core.models.ClientSession;
 import com.tyndalehouse.step.core.models.EnrichedLookupOption;
 import com.tyndalehouse.step.core.models.KeyWrapper;
-import com.tyndalehouse.step.core.models.LookupOption;
 import com.tyndalehouse.step.core.models.OsisWrapper;
 import com.tyndalehouse.step.core.service.BibleInformationService;
 import com.tyndalehouse.step.models.ModulesForLanguageUser;
@@ -200,11 +200,12 @@ public class BibleController {
      * a REST method that returns version of the Bible that are available
      * 
      * @param version the version initials or full version name to retrieve the versions for
+     * @param displayMode the current displayMode
      * @return all versions of modules that are considered to be Bibles.
      */
     @Cacheable(true)
-    public List<LookupOption> getFeatures(final String version) {
-        return this.bibleInformation.getFeaturesForVersion(version);
+    public AvailableFeatures getFeatures(final String version, final String displayMode) {
+        return this.bibleInformation.getAvailableFeaturesForVersion(version, displayMode);
     }
 
     /**

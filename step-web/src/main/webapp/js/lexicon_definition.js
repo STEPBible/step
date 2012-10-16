@@ -29,6 +29,8 @@
 
 step.lexicon = {
     passageId : 0,
+    positioned : false,
+    
     sameWordSearch : function() {
         this._doSearch(ALL_FORMS);
     },
@@ -104,11 +106,7 @@ LexiconDefinition.prototype.getPopup = function() {
         $('#lexiconDefinition').hide();
     });
     
-    this.getPopup().position({
-        of : $(window),
-        my : "right bottom",
-        at : "right bottom"
-    });
+    $("#lexiconDefinition").offset({top : $(window).height() - $("#lexiconDefinition").height() - 10 });
     
     return this.popup;
 };
@@ -217,18 +215,18 @@ LexiconDefinition.prototype.getShortKey = function(k) {
     return subKey;
 };
 
+
 LexiconDefinition.prototype.reposition = function() {
     // if left position is negative, then we assume it's off screen and need
     // position
     var popup = this.getPopup();
     popup.css('display', 'block');
-    if (popup.css("left")[0] == '-') {
-        // position in the middle
-        this.getPopup().position({
-            of : $(window),
-            my : "right bottom",
-            at : "right bottom"
-//            collision : "fit flip",
+    if (!step.lexicon.positioned || popup.css("left")[0] == '-') {
+        step.lexicon.positioned = true;
+        $("#lexiconDefinition").offset({
+            top  : $(window).height() - $("#lexiconDefinition").height() - 20,
+            left : $(window).width() - $("#lexiconDefinition").width() - 10,
         });
+        
     }
 };

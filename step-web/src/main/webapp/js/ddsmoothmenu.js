@@ -165,8 +165,7 @@ var ddsmoothmenu = {
                 clearTimeout($targetul.data('timers').hidetimer);
                 $targetul.data('timers').showtimer = setTimeout(function() {
                     header._offsets = {
-                        left : $curobj.offset().left,
-                        top : $curobj.offset().top
+                        left : $curobj.offset().left
                     };
                     var menuleft = header.istopheader && setting.orientation != 'v' ? 0 : header._dimensions.w;
                     menuleft = (header._offsets.left + menuleft + header._dimensions.subulw > $(window).width()) ? (header.istopheader

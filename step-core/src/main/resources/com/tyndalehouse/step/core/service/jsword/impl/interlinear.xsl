@@ -211,6 +211,10 @@
     </div>
   </xsl:template>
 
+  <xsl:template match="div[@type='colophon']">
+    <xsl:apply-templates/>
+  </xsl:template>
+  
   <xsl:template match="div">
     <xsl:apply-templates/>
   </xsl:template>

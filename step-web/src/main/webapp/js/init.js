@@ -124,14 +124,13 @@ function hearViewChanges() {
                adjustColumns();
            }});
            adjustColumns();
-           
-       } else if (view == 'SINGLE_HELP_VIEW') {
        } else {
            $(".column").toggle(true);
            $(".leftColumn").removeClass("singleColumn").addClass("column");
            $("#centerPane").toggle(true);
            $("#holdingPage").toggle(false);
            $(".leftColumn").resizable("destroy");
+           step.toolbar.refreshLayout('rightPaneMenu');
        }
         
         $.shout("view-change-done");

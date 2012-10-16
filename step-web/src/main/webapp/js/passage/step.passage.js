@@ -449,7 +449,7 @@ Passage.prototype.initReferenceTextBox = function() {
         $(this).autocomplete("search", $(this).val());
         
         //if no results, then re-run search with nothing
-        if($(".passageReference:first").prop("autocomplete") == "off") {
+        if($(".passageReference", step.util.getPassageContainer(self.passageId)).attr("autocomplete") == "off") {
             //search for nothing
             $(this).autocomplete("search", "");
         }

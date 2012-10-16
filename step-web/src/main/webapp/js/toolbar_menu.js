@@ -34,19 +34,27 @@
 /**
  * Represents the menu that will be at the top of the passage container
  */
+
+
+step.toolbar = {
+    refreshLayout : function(id) {
+        ddsmoothmenu.init({
+            mainmenuid: id,        //menu DIV id
+            zIndexStart: 100,
+            orientation: 'h',               //Horizontal or vertical menu: Set to "h" or "v"
+            classname: 'ddsmoothmenu innerMenu', //class added to menu's outer DIV
+            //customtheme: ["#1c5a80", "#18374a"],
+            contentsource: "markup"
+        });
+    }
+}
+
 function ToolbarMenu(passageId, menuRoot) {
 	this.passageId = passageId;
 	this.menuRoot = $(menuRoot);
 	var self = this;
 	
-	ddsmoothmenu.init({
-		mainmenuid: menuRoot.id, 		//menu DIV id
-		zIndexStart: 100,
-		orientation: 'h', 				//Horizontal or vertical menu: Set to "h" or "v"
-		classname: 'ddsmoothmenu innerMenu', //class added to menu's outer DIV
-		//customtheme: ["#1c5a80", "#18374a"],
-		contentsource: "markup"
-	});
+	step.toolbar.refreshLayout(menuRoot.id)
 	
 	$(menuRoot).hear("version-changed-" + this.passageId, function(selfElement) {
 		self.refreshMenuOptions();

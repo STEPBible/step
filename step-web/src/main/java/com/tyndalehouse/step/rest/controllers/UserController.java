@@ -123,6 +123,7 @@ public class UserController {
             final String ipAddress = this.sessionProvider.get().getIpAddress();
             if (!validValues.contains(ipAddress)) {
                 LOGGER.warn("DENYING ACCESS TO IP ADDRESS [{}]", ipAddress);
+                throw new StepInternalException("This functionality is not available");
             }
         } catch (final UnknownHostException e) {
             throw new StepInternalException("Failed to initialise ip addresses", e);

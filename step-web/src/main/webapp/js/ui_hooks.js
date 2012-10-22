@@ -83,14 +83,9 @@ TIMELINE_GET_EVENTS_FROM_REFERENCE= STEP_SERVER_BASE_URL + "timeline/getEventsFr
 TIMELINE_GET_CONFIGURATION =        STEP_SERVER_BASE_URL + "timeline/getTimelineConfiguration";
 TIMELINE_GET_EVENT_INFO =           STEP_SERVER_BASE_URL + "timeline/getEventInformation/";
 
-USER_LOGIN =                        STEP_SERVER_BASE_URL + "user/login/";
-USER_LOGOUT =                       STEP_SERVER_BASE_URL + "user/logout/";
-USER_REGISTER =                     STEP_SERVER_BASE_URL + "user/register/";
-USER_GET_LOGGED_IN_USER =           STEP_SERVER_BASE_URL + "user/getLoggedInUser";
-
 GEOGRAPHY_GET_PLACES =              STEP_SERVER_BASE_URL + "geography/getPlaces/";
 
-
+USER_CHECK =                        STEP_SERVER_BASE_URL + "user/checkValidUser/";
 
 // ////////////////////////
 // SOME DEFAULTS

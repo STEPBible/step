@@ -202,6 +202,16 @@
 	<a href="#" id="previewLeft">See passage on the left pane</a>
 </div><span id="popupText"></span></div>
 
+<div id="validUser">
+	<div id="validUserQuestion">
+		Please enter the following details<p />
+		<table>
+			<tr><td>Name</td><td><input type="text" id='userName' />*</td></tr>
+			<tr><td>Email</td><td><input type="text" id='userEmail' />*</td></tr>
+		</table>
+		<div style="display: none" id="validationMessage"></div>
+	</div>
+</div>
 <div id='stepInDevelopmentWarning'>The STEP software and its data are currently under active development and being checked for accuracy. </div>
 </body>
 

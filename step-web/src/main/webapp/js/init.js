@@ -49,7 +49,9 @@ var timeline;
 
 function init() {
 	$(document).ready(function() {
-		initMenu();
+	    checkValidUser();
+	    
+	    initMenu();
 		$("li[menu-name] a[name]").bind("click", function() { step.menu.handleClickEvent(this); });
 		
 		initGlobalHandlers();
@@ -70,6 +72,51 @@ function init() {
         hearViewChanges();
         $.shout("view-change");
 	});
+}
+
+function checkValidUser() {
+    $("#validUser").dialog({
+        buttons: {
+            "Register" : function() {
+                //to do register
+                var name = $("#userName").val();
+                var email = $("#userEmail").val();
+                
+                if(step.util.isBlank(name)) {
+                    $("#validationMessage").html("Please provide your name.");
+                    $("#validationMessage").css("display", "block");
+                    $("#userName").focus();
+                    return;
+                } 
+                
+                if(step.util.isBlank(email)) {
+                    $("#validationMessage").html("Please provide your email.");
+                    $("#validationMessage").css("display", "block");
+                    $("#userEmail").focus();
+                    return;
+                }
+                
+                var self = this;
+                $.getSafe(USER_CHECK, [email, name], function(data) {
+                    if(""+data == "true") {
+                        //success so store information
+                        $.localStore("userEmail", email);
+                        $.localStore("userName", name);
+                        $(self).dialog("close");
+                    } else {
+                        //say sorry and reset form
+                        $("#validationMessage").html("We're really sorry, but new users are currently only accepted on an invitation-only basis.");
+                        $("#validationMessage").css("display", "block");
+                    }
+                });
+            }
+        },
+        modal: true,
+        closeOnEscape: false,
+        title: "Register to use STEP!"
+    });
+    
+    $("#ui-dialog-title-validUser").parent().css("display", "none");
 }
 
 function initHelpLinks() {

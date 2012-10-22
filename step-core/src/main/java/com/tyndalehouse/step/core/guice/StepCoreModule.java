@@ -57,6 +57,7 @@ import com.tyndalehouse.step.core.service.ModuleService;
 import com.tyndalehouse.step.core.service.MorphologyService;
 import com.tyndalehouse.step.core.service.SearchService;
 import com.tyndalehouse.step.core.service.TimelineService;
+import com.tyndalehouse.step.core.service.UserService;
 import com.tyndalehouse.step.core.service.VocabularyService;
 import com.tyndalehouse.step.core.service.impl.BibleInformationServiceImpl;
 import com.tyndalehouse.step.core.service.impl.GeographyServiceImpl;
@@ -64,6 +65,7 @@ import com.tyndalehouse.step.core.service.impl.ModuleServiceImpl;
 import com.tyndalehouse.step.core.service.impl.MorphologyServiceImpl;
 import com.tyndalehouse.step.core.service.impl.SearchServiceImpl;
 import com.tyndalehouse.step.core.service.impl.TimelineServiceImpl;
+import com.tyndalehouse.step.core.service.impl.UserServiceImpl;
 import com.tyndalehouse.step.core.service.impl.VocabularyServiceImpl;
 import com.tyndalehouse.step.core.service.jsword.JSwordMetadataService;
 import com.tyndalehouse.step.core.service.jsword.JSwordModuleService;
@@ -121,7 +123,7 @@ public class StepCoreModule extends AbstractStepGuiceModule {
         bind(TimelineService.class).to(TimelineServiceImpl.class);
         bind(GeographyService.class).to(GeographyServiceImpl.class);
         bind(Loader.class).asEagerSingleton();
-
+        bind(UserService.class).to(UserServiceImpl.class);
         bind(SubjectSearchService.class).to(SubjectSearchServiceImpl.class).asEagerSingleton();
         bind(OriginalWordSuggestionService.class).to(OriginalWordSuggestionServiceImpl.class)
                 .asEagerSingleton();

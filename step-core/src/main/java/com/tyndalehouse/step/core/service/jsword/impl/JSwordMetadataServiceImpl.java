@@ -165,7 +165,7 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
             final String searchSoFar) {
         final int lastChapter = versification.getLastChapter(book);
         final List<BookName> chapters = new ArrayList<BookName>();
-        for (int ii = 1; ii < lastChapter; ii++) {
+        for (int ii = 1; ii <= lastChapter; ii++) {
             // final char f = Character.toUpperCase(searchSoFar.charAt(0));
 
             // make sure first letter is CAPS, followed by the rest of the word and the chapter number

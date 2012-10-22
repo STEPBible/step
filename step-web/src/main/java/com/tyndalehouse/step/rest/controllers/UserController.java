@@ -119,7 +119,8 @@ public class UserController {
             validValues.add(localHost.getCanonicalHostName());
             validValues.add(localHost.getHostAddress());
             validValues.add(localHost.getHostName());
-            validValues.add(InetAddress.getLoopbackAddress().getHostAddress());
+            validValues.add("localhost");
+            validValues.add("127.0.0.1");
             final String ipAddress = this.sessionProvider.get().getIpAddress();
             if (!validValues.contains(ipAddress)) {
                 LOGGER.warn("DENYING ACCESS TO IP ADDRESS [{}]", ipAddress);

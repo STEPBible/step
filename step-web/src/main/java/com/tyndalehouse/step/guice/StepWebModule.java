@@ -32,6 +32,7 @@
  ******************************************************************************/
 package com.tyndalehouse.step.guice;
 
+import com.google.inject.servlet.RequestScoped;
 import com.tyndalehouse.step.core.models.ClientSession;
 import com.tyndalehouse.step.core.utils.AbstractStepGuiceModule;
 import com.tyndalehouse.step.guice.providers.ClientSessionProvider;
@@ -60,7 +61,7 @@ public class StepWebModule extends AbstractStepGuiceModule {
     @Override
     protected void doConfigure() {
         // this provider is helpful for getting the request at runtime
-        bind(ClientSession.class).toProvider(ClientSessionProvider.class);
+        bind(ClientSession.class).toProvider(ClientSessionProvider.class).in(RequestScoped.class);
         bind(UiDefaults.class).asEagerSingleton();
 
         bind(TimelineTranslator.class).to(SimileTimelineTranslatorImpl.class);

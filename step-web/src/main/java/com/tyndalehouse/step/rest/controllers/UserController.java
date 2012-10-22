@@ -40,14 +40,16 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
+import javax.inject.Provider;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
+import com.tyndalehouse.step.core.models.ClientSession;
 import com.tyndalehouse.step.core.service.UserService;
-import com.tyndalehouse.step.guice.providers.ClientSessionProvider;
 
 /**
  * Checking user is registered
@@ -59,14 +61,14 @@ import com.tyndalehouse.step.guice.providers.ClientSessionProvider;
 public class UserController {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
     private final UserService userService;
-    private final ClientSessionProvider sessionProvider;
+    private final Provider<ClientSession> sessionProvider;
 
     /**
      * @param userService the main user service
      * @param sessionProvider the provider of request sessions
      */
     @Inject
-    public UserController(final UserService userService, final ClientSessionProvider sessionProvider) {
+    public UserController(final UserService userService, final Provider<ClientSession> sessionProvider) {
         notNull(userService, "Failed to initialise User Controller, userService was null",
                 CONTROLLER_INITIALISATION_ERROR);
         notNull(sessionProvider, "Failed to initialise User Controller, sessionProvider was null",

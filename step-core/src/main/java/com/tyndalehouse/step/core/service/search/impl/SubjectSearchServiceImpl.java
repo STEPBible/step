@@ -294,7 +294,21 @@ public class SubjectSearchServiceImpl implements SubjectSearchService {
                     return -1;
                 }
 
-                return e1.getHeading().compareToIgnoreCase(e1.getHeading());
+                final String heading1 = e1.getHeading();
+                final String heading2 = e1.getHeading();
+                if (heading1 == null && heading2 == null) {
+                    return 0;
+                }
+
+                if (heading1 == null) {
+                    return -1;
+                }
+
+                if (heading2 == null) {
+                    return 1;
+                }
+
+                return heading1.compareToIgnoreCase(heading2);
             }
         });
 

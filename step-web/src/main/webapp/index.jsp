@@ -202,7 +202,7 @@
 	<a href="#" id="previewLeft">See passage on the left pane</a>
 </div><span id="popupText"></span></div>
 
-<div id="validUser">
+<div id="validUser" style="display: none">
 	<div id="validUserQuestion">
 		Please enter the following details<p />
 		<table>

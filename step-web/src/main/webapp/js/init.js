@@ -75,6 +75,11 @@ function init() {
 }
 
 function checkValidUser() {
+    var email = $.localStore("userEmail");
+    if(!step.util.isBlank(email)) {
+        return;
+    }
+    
     $("#validUser").dialog({
         buttons: {
             "Register" : function() {

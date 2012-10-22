@@ -35,9 +35,19 @@ package com.tyndalehouse.step.rest.controllers;
 import static com.tyndalehouse.step.core.exceptions.UserExceptionType.CONTROLLER_INITIALISATION_ERROR;
 import static com.tyndalehouse.step.core.utils.ValidateUtils.notNull;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.service.UserService;
+import com.tyndalehouse.step.guice.providers.ClientSessionProvider;
 
 /**
  * Checking user is registered
@@ -47,17 +57,23 @@ import com.tyndalehouse.step.core.service.UserService;
  */
 @Singleton
 public class UserController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
     private final UserService userService;
+    private final ClientSessionProvider sessionProvider;
 
     /**
-     * Constructs a simple geography service
-     * 
-     * @param userService the user validation lookup service
+     * @param userService the main user service
+     * @param sessionProvider the provider of request sessions
      */
     @Inject
-    public UserController(final UserService userService) {
-        notNull(userService, "Failed to initialise user Controller", CONTROLLER_INITIALISATION_ERROR);
+    public UserController(final UserService userService, final ClientSessionProvider sessionProvider) {
+        notNull(userService, "Failed to initialise User Controller, userService was null",
+                CONTROLLER_INITIALISATION_ERROR);
+        notNull(sessionProvider, "Failed to initialise User Controller, sessionProvider was null",
+                CONTROLLER_INITIALISATION_ERROR);
         this.userService = userService;
+        this.sessionProvider = sessionProvider;
+
     }
 
     /**
@@ -75,6 +91,7 @@ public class UserController {
      * @param enable the enabled to set, true to enable
      */
     public void enable(final String enable) {
+        validateSession();
         this.userService.setEnabled(Boolean.TRUE.toString().equals(enable));
     }
 
@@ -82,12 +99,35 @@ public class UserController {
      * @param autoregister true to automatically create new users
      */
     public void autoregister(final String autoregister) {
+        validateSession();
         this.userService.setAutoRegister(Boolean.TRUE.toString().equals(autoregister));
     }
 
     /** refreshes the list of users */
     public void refresh() {
+        validateSession();
         this.userService.refresh();
     }
 
+    /**
+     * validates a session
+     */
+    private void validateSession() {
+        try {
+            final InetAddress localHost = InetAddress.getLocalHost();
+            final Set<String> validValues = new HashSet<String>();
+            validValues.add(localHost.getCanonicalHostName());
+            validValues.add(localHost.getHostAddress());
+            validValues.add(localHost.getHostName());
+            validValues.add(InetAddress.getLoopbackAddress().getHostAddress());
+            final String ipAddress = this.sessionProvider.get().getIpAddress();
+            if (!validValues.contains(ipAddress)) {
+                LOGGER.warn("DENYING ACCESS TO IP ADDRESS [{}]", ipAddress);
+            }
+        } catch (final UnknownHostException e) {
+            throw new StepInternalException("Failed to initialise ip addresses", e);
+        }
+
+        this.sessionProvider.get().getIpAddress();
+    }
 }

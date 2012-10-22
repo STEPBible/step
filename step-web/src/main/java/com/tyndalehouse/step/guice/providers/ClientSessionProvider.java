@@ -71,6 +71,7 @@ public class ClientSessionProvider implements Provider<ClientSession> {
     public ClientSession get() {
         // check if this has the IP address in it
         final Locale locale = this.request.getLocale();
-        return new WebSessionImpl(this.session.getId(), locale.getISO3Language(), locale);
+        return new WebSessionImpl(this.session.getId(), locale.getISO3Language(),
+                this.request.getRemoteAddr(), locale);
     }
 }

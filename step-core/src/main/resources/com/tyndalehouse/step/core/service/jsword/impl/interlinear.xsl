@@ -212,7 +212,7 @@
   </xsl:template>
 
   <xsl:template match="div[@type='colophon']">
-    <xsl:apply-templates/>
+    <!--  do nothing in interlinears -->
   </xsl:template>
   
   <xsl:template match="div">

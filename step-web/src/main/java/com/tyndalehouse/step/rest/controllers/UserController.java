@@ -36,9 +36,9 @@ import static com.tyndalehouse.step.core.exceptions.UserExceptionType.CONTROLLER
 import static com.tyndalehouse.step.core.utils.ValidateUtils.notNull;
 
 import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.net.UnknownHostException;
-import java.util.HashSet;
-import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -114,22 +114,28 @@ public class UserController {
      */
     private void validateSession() {
         try {
-            final InetAddress localHost = InetAddress.getLocalHost();
-            final Set<String> validValues = new HashSet<String>();
-            validValues.add(localHost.getCanonicalHostName());
-            validValues.add(localHost.getHostAddress());
-            validValues.add(localHost.getHostName());
-            validValues.add("localhost");
-            validValues.add("127.0.0.1");
             final String ipAddress = this.sessionProvider.get().getIpAddress();
-            if (!validValues.contains(ipAddress)) {
-                LOGGER.warn("DENYING ACCESS TO IP ADDRESS [{}]", ipAddress);
-                throw new StepInternalException("This functionality is not available");
+            final InetAddress addr = InetAddress.getByName(ipAddress);
+
+            // Check if the address is a valid special local or loop back
+            if (addr.isAnyLocalAddress() || addr.isLoopbackAddress()) {
+                return;
             }
+
+            // Check if the address is defined on any interface
+            try {
+                if (NetworkInterface.getByInetAddress(addr) != null) {
+                    return;
+                }
+            } catch (final SocketException e) {
+                LOGGER.warn("Socket error: ", e);
+            }
+
+            LOGGER.warn("DENYING ACCESS TO IP ADDRESS [{}]", ipAddress);
+            throw new StepInternalException("This functionality is not available");
         } catch (final UnknownHostException e) {
             throw new StepInternalException("Failed to initialise ip addresses", e);
         }
 
-        this.sessionProvider.get().getIpAddress();
     }
 }

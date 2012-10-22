@@ -209,7 +209,9 @@
   </xsl:template>
 
   <xsl:template match="div[@type='colophon']">
-    <xsl:apply-templates/>
+  	<span class='colophon'>
+    	<xsl:apply-templates/>
+    </span>
   </xsl:template>
 
   <xsl:template match="div">

@@ -107,7 +107,6 @@ public class SubjectSearchServiceImpl implements SubjectSearchService {
      * @param verses the verses
      * @param version the version
      * @param references the list of references
-     * @throws NoSuchKeyException unable to look up a key
      */
     private void collectVersesFromReferences(final List<OsisWrapper> verses, final String version,
             final String references) {
@@ -130,6 +129,7 @@ public class SubjectSearchServiceImpl implements SubjectSearchService {
                 stringBuilder.append(osisWrapper.getReference());
                 stringBuilder.append("; ");
                 stringBuilder.append(range.getName());
+                osisWrapper.setFragment(true);
                 try {
                     osisWrapper.setReference(book.getKey(stringBuilder.toString()).getName());
                 } catch (final NoSuchKeyException e) {
@@ -143,7 +143,8 @@ public class SubjectSearchServiceImpl implements SubjectSearchService {
 
                 final OsisWrapper passage = this.jsword.peakOsisText(book, firstVerse, options);
                 passage.setReference(range.getName());
-                if (passage.getOsisId().indexOf(' ') > 0) {
+
+                if (range.getCardinality() > 1) {
                     passage.setFragment(true);
                 }
                 verses.add(passage);

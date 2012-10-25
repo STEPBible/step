@@ -174,8 +174,13 @@ li.subjectHeading {
 	float: right;
 }
 
-.subjectSearchLink  h3.heading {
+.expandedHeadingItem div.passageContentHolder h3.heading {
 	display: none;
+}
+
+.expandedHeadingItem div.passageContentHolder p {
+	display: inline;
+	padding-left: 5px;
 }
 
 .moreSubjects {

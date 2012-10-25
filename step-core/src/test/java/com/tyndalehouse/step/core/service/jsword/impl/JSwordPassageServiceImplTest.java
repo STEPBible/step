@@ -416,39 +416,6 @@ public class JSwordPassageServiceImplTest {
     }
 
     /**
-     * Justs shows XML on the stdout
-     * 
-     * @throws BookException an exceptioon
-     * @throws NoSuchKeyException an exception
-     * @throws IOException an exception
-     * @throws JDOMException an exception
-     */
-    @Test
-    public void testPrettyXml() throws BookException, NoSuchKeyException, JDOMException, IOException {
-        final String version = "KJV";
-        final String ref = "Phil.4.23";
-        final Book currentBook = Books.installed().getBook(version);
-        final BookData bookData = new BookData(currentBook, currentBook.getKey(ref));
-        final Element osisFragment = bookData.getOsisFragment();
-
-        final XMLOutputter xmlOutputter = new XMLOutputter(Format.getPrettyFormat());
-        LOGGER.debug(xmlOutputter.outputString(osisFragment));
-
-        // do the test
-        final JSwordPassageServiceImpl jsi = new JSwordPassageServiceImpl(
-                new JSwordVersificationServiceImpl(), null, null, null);
-        final List<LookupOption> options = new ArrayList<LookupOption>();
-        options.add(LookupOption.NOTES);
-
-        final String osisText = jsi.getOsisText(version, ref, options, null, InterlinearMode.NONE).getValue();
-        final SAXBuilder sb = new SAXBuilder();
-        final Document d = sb.build(new StringReader(osisText));
-
-        LOGGER.debug("\n {}", xmlOutputter.outputString(d));
-        Assert.assertTrue(osisText.contains("span"));
-    }
-
-    /**
      * Tests a lookup by number
      */
     @Test

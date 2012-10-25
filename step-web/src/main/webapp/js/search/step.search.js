@@ -286,8 +286,8 @@ step.search = {
                         verses += results[i].value;
                         
                         if(results[i].fragment) {
-                            verses += " [...]";
-                        }
+                            verses = verses.substring(0, verses.lastIndexOf("</div>")).trim()  + "[...]</div>";
+                        }   
                         
                         verses += "</li>";
                     }

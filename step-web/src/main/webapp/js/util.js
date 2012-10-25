@@ -895,14 +895,15 @@ function goToPassageArrow(isLeft, ref, classes, goToChapter) {
 
 
 function passageArrowTrigger(passageId, ref, goToChapter) {
+    if(passageId == 1) {
+        step.state.view.ensureTwoColumnView();
+    }
+    
     if(goToChapter) {
         //true value, so get the next reference
         var version = step.state.passage.version(passageId);
         
-        if(passageId == 1) {
-            step.state.view.ensureTwoColumnView();
-        }
-        
+
         step.passage.callbacks[passageId].push(function() {
             $.getSafe(BIBLE_GET_KEY_INFO, [ref, version], function(newRef) {
                 var passageContent = step.util.getPassageContent(passageId);

@@ -49,6 +49,7 @@ import com.google.inject.servlet.ServletModule;
 import com.tyndalehouse.step.core.data.EntityManager;
 import com.tyndalehouse.step.core.data.create.Loader;
 import com.tyndalehouse.step.core.guice.StepCoreModule;
+import com.tyndalehouse.step.rest.controllers.ImageController;
 import com.tyndalehouse.step.rest.framework.FrontController;
 
 /**
@@ -67,6 +68,7 @@ public class StepServletConfig extends GuiceServletContextListener {
             @Override
             protected void configureServlets() {
                 serve("/rest/*").with(FrontController.class);
+                serve("/commentary_images/*").with(ImageController.class);
                 serve("/index.jsp");
             }
         });

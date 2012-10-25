@@ -258,7 +258,7 @@ step.util = {
         
         trackQuerySyntax : function(selector, namespace) {
             $(selector + " input").keyup(function(ev) {
-                if(ev.which < 48 && ev.which != 8) {
+                if(ev.which < 48 && ev.which != 8 && ev.which != 46) {
                     return true;
                 }
                 

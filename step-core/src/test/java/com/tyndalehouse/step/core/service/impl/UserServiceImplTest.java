@@ -24,11 +24,11 @@ public class UserServiceImplTest {
     public void testExistingUser() {
         final UserServiceImpl usi = new UserServiceImpl(false, true, "random");
         final Set<String> users = new HashSet<String>();
-        users.add("chris@chris");
+        users.add("chris@chris.com");
         usi.setUsers(users);
 
-        assertTrue(usi.checkUserIdentity("ChrIs@chris", "Chris"));
-        assertFalse(usi.checkUserIdentity("Charlie@chris", "Charlie"));
+        assertTrue(usi.checkUserIdentity("ChrIs@chris.com", "Chris"));
+        assertFalse(usi.checkUserIdentity("Charlie@chris.com", "Charlie"));
     }
 
     /**
@@ -41,8 +41,8 @@ public class UserServiceImplTest {
         usi.setUserWriter(userWriter);
         usi.setUsers(new HashSet<String>());
 
-        usi.checkUserIdentity("Charlie@chris", "Charlie");
-        assertEquals("charlie@chris,Charlie\n", userWriter.toString());
+        usi.checkUserIdentity("Charlie@chris.com", "Charlie");
+        assertEquals("charlie@chris.com,Charlie\n", userWriter.toString());
     }
 
     /**
@@ -55,7 +55,7 @@ public class UserServiceImplTest {
         usi.setUserWriter(userWriter);
         usi.setUsers(new HashSet<String>());
 
-        usi.checkUserIdentity("Charlie@chris", "Charlie");
+        usi.checkUserIdentity("Charlie@chris.com", "Charlie");
         assertEquals(0, userWriter.toString().length());
     }
 }

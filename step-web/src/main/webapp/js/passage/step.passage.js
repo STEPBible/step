@@ -123,6 +123,7 @@ step.passage = {
                 self._addStrongHandlers(passageId, passageContent);
                 self._updatePageTitle(passageId, passageContent, lookupVersion, lookupReference);
                 self._doTransliterations(passageId, passageContent);
+                step.util.closeInfoErrors(passageId);
                 step.state.passage.reference(passageId, text.reference, false);
             }, 
             passageId: passageId, 
@@ -177,7 +178,7 @@ step.passage = {
         if($(serverResponse.value).children().not(".xgen").size() == 0) {
             var reference = step.state.passage.reference(passageId)
             
-            step.util.raiseInfo(passageId, "The Translation / Commentary does not cover the Bible Text (" + reference + ").");
+            step.util.raiseInfo(passageId, "The Translation / Commentary does not cover the Bible Text (" + reference + ").", 'info', true);
             passageContent.html("");
         } else {
             passageContent.html(serverResponse.value);

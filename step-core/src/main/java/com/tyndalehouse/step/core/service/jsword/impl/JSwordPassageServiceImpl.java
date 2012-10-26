@@ -684,12 +684,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
 
         options.add(LookupOption.VERSE_NEW_LINE);
 
-        final Book[] books = new Book[versions.length];
-        for (int ii = 0; ii < versions.length; ii++) {
-            books[ii] = this.versificationService.getBookFromVersion(versions[ii]);
-        }
-
-        validateInterleavedVersions(displayMode, books);
+        final Book[] books = getValidInterleavedBooks(versions, displayMode);
 
         try {
             final Key key = books[0].getKey(reference);
@@ -701,7 +696,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
             setUnaccenter(data, displayMode);
 
             final TransformingSAXEventProvider transformer = executeStyleSheet(options, null, data,
-                    data.getSAXEventProvider(), displayMode, versions);
+                    data.getSAXEventProvider(), displayMode);
 
             final OsisWrapper osisWrapper = new OsisWrapper(writeToString(transformer), data.getKey(), data
                     .getFirstBook().getLanguage().getCode(), v11n);
@@ -722,6 +717,55 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
         } catch (final NoSuchKeyException e) {
             throw new StepInternalException(e.getMessage(), e);
         }
+    }
+
+    /**
+     * Validates the books given and trims down by removing any following duplicates
+     * 
+     * @param versions the list of versions we are going to look up
+     * @param displayMode the display mode
+     * @return a list of books to use for looking up our data
+     */
+    private Book[] getValidInterleavedBooks(final String[] versions, final InterlinearMode displayMode) {
+        Book[] books = new Book[versions.length];
+        for (int ii = 0; ii < versions.length; ii++) {
+            books[ii] = this.versificationService.getBookFromVersion(versions[ii]);
+        }
+
+        validateInterleavedVersions(displayMode, books);
+        books = removeSameBooks(displayMode, books);
+        return books;
+    }
+
+    /**
+     * Removes any book which is preceded by itself
+     * 
+     * @param displayMode the display mode
+     * @param books the list of books
+     * @return the new list of books
+     */
+    private Book[] removeSameBooks(final InterlinearMode displayMode, final Book[] books) {
+        final List<Book> trimmedBooks = new ArrayList<Book>(books.length);
+        if (isComparingMode(displayMode)) {
+            trimmedBooks.add(books[0]);
+            for (int i = 1; i < books.length; i++) {
+                if (!books[i - 1].getInitials().equals(books[i].getInitials())) {
+                    trimmedBooks.add(books[i]);
+                }
+            }
+        }
+
+        if (trimmedBooks.size() < 2) {
+            throw new StepInternalException("You are trying to compare 2 or more identical texts.");
+        }
+
+        if (trimmedBooks.size() == books.length) {
+            return books;
+        }
+
+        final Book[] tBooks = new Book[trimmedBooks.size()];
+        trimmedBooks.toArray(tBooks);
+        return tBooks;
     }
 
     /**
@@ -883,8 +927,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
 
     private TransformingSAXEventProvider executeStyleSheet(final List<LookupOption> options,
             final String interlinearVersion, final BookData bookData, final SAXEventProvider osissep,
-            final InterlinearMode displayMode, final String... interleavingVersions)
-            throws TransformerException {
+            final InterlinearMode displayMode) throws TransformerException {
         final XslConversionType requiredTransformation = identifyStyleSheet(bookData.getFirstBook()
                 .getBookCategory(), options, displayMode);
 
@@ -902,7 +945,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
                     setOptions(tsep, options, bookData.getFirstBook());
                     setInterlinearOptions(tsep, getInterlinearVersion(interlinearVersion), bookData.getKey()
                             .getOsisID(), displayMode);
-                    setInterleavingOptions(tsep, displayMode, interleavingVersions);
+                    setInterleavingOptions(tsep, displayMode, bookData);
                     return tsep;
                 } catch (final URISyntaxException e) {
                     throw new StepInternalException("Failed to load resource correctly", e);
@@ -996,12 +1039,18 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
      * Sets up interleaving vs column view
      * 
      * @param tsep the transformer
-     * @param versions interleavingProvider the provider of interleaved version names
+     * @param bookData the book data object containing the list of books we are interested in.
      * @param displayMode the display mode that we are interested in
      */
     private void setInterleavingOptions(final TransformingSAXEventProvider tsep,
-            final InterlinearMode displayMode, final String[] versions) {
+            final InterlinearMode displayMode, final BookData bookData) {
         // so long as we're not NONE or INTERLINEAR, we almost always need an InterlinearProvider
+        final Book[] books = bookData.getBooks();
+        final String[] versions = new String[books.length];
+        for (int ii = 0; ii < books.length; ii++) {
+            versions[ii] = books[ii].getInitials();
+        }
+
         if (displayMode != NONE && displayMode != INTERLINEAR) {
             tsep.setParameter("interleavingProvider", new InterleavingProviderImpl(versions,
                     displayMode == INTERLEAVED_COMPARE || displayMode == COLUMN_COMPARE));

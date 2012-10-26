@@ -97,7 +97,7 @@ step.util = {
         var message = error.message ? error.message : error;
         
         $("#errorText").text(message);
-        $("#error").slideDown(250);
+        $("#error").data('numPassageChanges', 0).slideDown(250);
     },
     
 	raiseErrorIfBlank: function(s, message) {
@@ -108,7 +108,7 @@ step.util = {
 	    return true;
 	},
 
-	raiseInfo : function (passageId, message, level) {
+	raiseInfo : function (passageId, message, level, eraseOnNextPassage) {
 	    var infoBar = $(".infoBar", step.util.getPassageContainer(passageId));
 	    var icon = $(".innerInfoBar .ui-icon", infoBar).addClass("ui-icon");
 	    icon.removeClass();
@@ -119,7 +119,25 @@ step.util = {
 	        icon.addClass("ui-icon-info");
 	    }
 	    
-	    infoBar.toggle(true).find(".infoLabel").html(message);
+	    infoBar.toggle(true).data('numPassageChanges', eraseOnNextPassage ? 1 : 0).find(".infoLabel").html(message);
+	},
+	
+	closeInfoErrors : function(passageId) {
+	    var infoBar = $(".infoBar:visible", step.util.getPassageContainer(passageId));
+	    this.hideIfPassageHasAlreadyChanged(infoBar);
+	    this.hideIfPassageHasAlreadyChanged($("#error:visible"));
+	},
+	
+	hideIfPassageHasAlreadyChanged : function(infoBar) {
+        if(infoBar.length != 0) {
+            var passageChanges = infoBar.data('numPassageChanges');
+            if(passageChanges >= 1) {
+                //hide the bar
+                infoBar.toggle(false);
+            } else {
+                infoBar.data('numPassageChanges', 1);
+            }
+        }	    
 	},
 	
 	/**
@@ -737,7 +755,7 @@ function refreshWaitStatus() {
 						});
 					} else {
 					    if(passageId != undefined) {
-					        step.util.raiseInfo(passageId, data.errorMessage, level);					        
+					        step.util.raiseInfo(passageId, data.errorMessage, level, url.startsWith(BIBLE_GET_BIBLE_TEXT));					        
 					    } else {
 		                    step.util.raiseError(data.errorMessage);
 					    }

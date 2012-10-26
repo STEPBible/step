@@ -432,7 +432,6 @@ public class JSwordPassageServiceImplTest {
                 .getOsisTextByVerseNumbers("FreSegond", "KJV", 60000, 60000, new ArrayList<LookupOption>(),
                         null, null, false).getValue()
                 .contains("Que la gr\u00e2ce du Seigneur J\u00e9sus soit avec tous!"));
-
     }
 
     /**

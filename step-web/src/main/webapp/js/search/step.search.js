@@ -278,10 +278,10 @@ step.search = {
                     for(var i = 0; i < results.length; i++) {
                         verses += "<li class='expandedHeadingItem'>";
                         verses += "<span class='subjectSearchLink'>";
-                        verses += goToPassageArrow(true, results[i].reference, "searchKeyPassageArrow", false);
+                        verses += goToPassageArrow(true, results[i].reference, "searchKeyPassageArrow", true);
                         verses += "<a class='searchRefLink' href='#' onclick='passageArrowTrigger(" + passageId + ", \"" + results[i].reference + "\", true)' >" 
                         + results[i].reference + "</a>";
-                        verses += goToPassageArrow(false, results[i].reference, "searchKeyPassageArrow", false);
+                        verses += goToPassageArrow(false, results[i].reference, "searchKeyPassageArrow", true);
                         verses += "</span>";
                         verses += results[i].value;
                         

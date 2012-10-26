@@ -899,7 +899,11 @@ function passageArrowTrigger(passageId, ref, goToChapter) {
         step.state.view.ensureTwoColumnView();
     }
     
-    if(goToChapter) {
+    //so long as we are "goToChapter" and have only one chapter (i.e. just one instance of ':'), then we go to the chapter
+    var indexOfColon = ref.indexOf(':');
+    var multiColons = ref.indexOf(':', indexOfColon + 1) != -1;
+    
+    if(goToChapter && !multiColons) {
         //true value, so get the next reference
         var version = step.state.passage.version(passageId);
         

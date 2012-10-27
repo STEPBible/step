@@ -97,7 +97,7 @@ public final class JSwordUtils {
 
             v.setHasStrongs(b.hasFeature(FeatureType.STRONGS_NUMBERS));
             v.setHasMorphology(b.hasFeature(FeatureType.MORPHOLOGY));
-
+            v.setHasRedLetter(b.hasFeature(FeatureType.WORDS_OF_CHRIST));
             versions.add(v);
         }
 

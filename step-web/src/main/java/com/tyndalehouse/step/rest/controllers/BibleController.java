@@ -42,11 +42,11 @@ import java.util.Locale;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
-import javax.inject.Singleton;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.inject.servlet.RequestScoped;
 import com.tyndalehouse.step.core.models.AvailableFeatures;
 import com.tyndalehouse.step.core.models.BookName;
 import com.tyndalehouse.step.core.models.ClientSession;
@@ -63,7 +63,7 @@ import com.tyndalehouse.step.rest.framework.Cacheable;
  * @author chrisburrell
  * 
  */
-@Singleton
+@RequestScoped
 public class BibleController {
     private static final Logger LOGGER = LoggerFactory.getLogger(BibleController.class);
     private final BibleInformationService bibleInformation;

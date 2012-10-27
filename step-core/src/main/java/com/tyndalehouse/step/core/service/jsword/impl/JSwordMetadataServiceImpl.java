@@ -57,8 +57,9 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
         if (BIBLE.equals(book.getBookCategory())) {
             options.add(LookupOption.VERSE_NUMBERS);
             options.add(LookupOption.VERSE_NEW_LINE);
+        }
 
-            // TODO FIXME bug in modules? in jsword?
+        if (book.getBookMetaData().hasFeature(FeatureType.WORDS_OF_CHRIST)) {
             options.add(LookupOption.RED_LETTER);
         }
 

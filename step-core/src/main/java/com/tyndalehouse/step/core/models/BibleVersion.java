@@ -46,6 +46,7 @@ public class BibleVersion implements Serializable {
     private String name;
     private boolean hasStrongs;
     private boolean hasMorphology;
+    private boolean hasRedLetter;
     private boolean questionable;
     private String languageCode;
     private String category;
@@ -161,5 +162,19 @@ public class BibleVersion implements Serializable {
      */
     public void setLanguageName(final String languageName) {
         this.languageName = languageName;
+    }
+
+    /**
+     * @return the hasRedLetter
+     */
+    public boolean isHasRedLetter() {
+        return this.hasRedLetter;
+    }
+
+    /**
+     * @param hasRedLetter the hasRedLetter to set
+     */
+    public void setHasRedLetter(final boolean hasRedLetter) {
+        this.hasRedLetter = hasRedLetter;
     }
 }

@@ -92,10 +92,14 @@ $.widget("custom.versions",  {
                  if(currentValue.trim() == "") {
                      step.autoVersions.currentElement.val(item.item.attr('initials'));
                  } else {
-                     step.autoVersions.currentElement.val(currentValue + "," + item.item.attr('initials'));
+                     //check this wasn't the last version, if it was, then there is no point in adding it
+                     var selectedVersion = item.item.attr('initials');
+                     if(!currentValue.toLowerCase().endsWith(selectedVersion.toLowerCase())) {
+                         step.autoVersions.currentElement.val(currentValue + "," + selectedVersion);
+                         step.autoVersions.currentElement.trigger('change');
+                     }
                  }
                  
-                 step.autoVersions.currentElement.trigger('change');
                  self.dropdownVersionMenu.hide();
              }
             }
@@ -104,7 +108,18 @@ $.widget("custom.versions",  {
     },
     
     _filter : function(val) {
-        var versions = this._filteredVersions(val);
+        //if val is already a selected module, then show everything, not just the filtered value
+        var lastToken = val;
+        if(!step.util.isBlank(lastToken)) {
+            //check we are not already selecting a module:
+            lastToken = lastToken.split(",").pop();
+            if(step.keyedVersions[lastToken.toUpperCase()]) {
+                lastToken = "";
+            }
+        }
+        
+        
+        var versions = this._filteredVersions(lastToken);
         
         var listItems = $("[initials]", this.dropdownVersionMenu);
         

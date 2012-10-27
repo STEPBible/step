@@ -745,27 +745,28 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
      * @return the new list of books
      */
     private Book[] removeSameBooks(final InterlinearMode displayMode, final Book[] books) {
-        final List<Book> trimmedBooks = new ArrayList<Book>(books.length);
         if (isComparingMode(displayMode)) {
+            final List<Book> trimmedBooks = new ArrayList<Book>(books.length);
             trimmedBooks.add(books[0]);
             for (int i = 1; i < books.length; i++) {
                 if (!books[i - 1].getInitials().equals(books[i].getInitials())) {
                     trimmedBooks.add(books[i]);
                 }
             }
-        }
 
-        if (trimmedBooks.size() < 2) {
-            throw new StepInternalException("You are trying to compare 2 or more identical texts.");
-        }
+            if (trimmedBooks.size() < 2) {
+                throw new StepInternalException("You are trying to compare 2 or more identical texts.");
+            }
 
-        if (trimmedBooks.size() == books.length) {
-            return books;
-        }
+            if (trimmedBooks.size() == books.length) {
+                return books;
+            }
 
-        final Book[] tBooks = new Book[trimmedBooks.size()];
-        trimmedBooks.toArray(tBooks);
-        return tBooks;
+            final Book[] tBooks = new Book[trimmedBooks.size()];
+            trimmedBooks.toArray(tBooks);
+            return tBooks;
+        }
+        return books;
     }
 
     /**

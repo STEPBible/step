@@ -292,7 +292,7 @@ $.widget("custom.versions",  {
         }
         
         if(item.hasRedLetter) {
-            features += " " + "<span class='versionFeature' title='Able to show Jesus\' words in red'>R</span>";
+            features += " " + '<span class="versionFeature" title="Able to show Jesus\' words in red">R</span>';
         }
         
         // return response for dropdowns

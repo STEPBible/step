@@ -121,7 +121,13 @@ $.widget("custom.versions",  {
     },
     
     _filter : function(val) {
-        var versions = this._filteredVersions(val);
+        var lastToken = val;
+        if(!step.util.isBlank(val)) {
+            //obtain the last token
+            lastToken = lastToken.split(",").pop();
+        }
+        
+        var versions = this._filteredVersions(lastToken);
         
         var listItems = $("[initials]", this.dropdownVersionMenu);
         

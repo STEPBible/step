@@ -96,6 +96,7 @@ $.widget("custom.versions",  {
                  }
                  
                  step.autoVersions.currentElement.trigger('change');
+                 self.dropdownVersionMenu.hide();
              }
             }
         }).removeClass("ui-widget-content ui-corner-all");

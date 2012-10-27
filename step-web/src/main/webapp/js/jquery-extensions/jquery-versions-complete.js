@@ -20,6 +20,7 @@ $.widget("custom.versions",  {
             step.autoVersions.currentElement = $(this);
             
             self.dropdownVersionMenu.show();
+            self._filter(self._wasFullToken($(this).val()));
             self.dropdownVersionMenu.css('position', 'absolute').position({
                 my:  "left bottom",
                 at : "left top",
@@ -76,6 +77,18 @@ $.widget("custom.versions",  {
         this._bindHandlers(this);
     },
 
+    _wasFullToken : function(val) {
+        //if val is already a selected module, then show everything, not just the filtered value
+        var lastToken = val;
+        if(!step.util.isBlank(lastToken)) {
+            //check we are not already selecting a module:
+            lastToken = lastToken.split(",").pop();
+            if(step.keyedVersions[lastToken.toUpperCase()]) {
+                lastToken = "";
+            }
+        }
+        return lastToken;
+    },
     
     _bindHandlers : function(that) {
         var self = that;
@@ -108,18 +121,7 @@ $.widget("custom.versions",  {
     },
     
     _filter : function(val) {
-        //if val is already a selected module, then show everything, not just the filtered value
-        var lastToken = val;
-        if(!step.util.isBlank(lastToken)) {
-            //check we are not already selecting a module:
-            lastToken = lastToken.split(",").pop();
-            if(step.keyedVersions[lastToken.toUpperCase()]) {
-                lastToken = "";
-            }
-        }
-        
-        
-        var versions = this._filteredVersions(lastToken);
+        var versions = this._filteredVersions(val);
         
         var listItems = $("[initials]", this.dropdownVersionMenu);
         

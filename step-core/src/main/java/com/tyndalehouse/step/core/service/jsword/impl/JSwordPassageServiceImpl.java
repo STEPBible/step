@@ -489,7 +489,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
 
     @Override
     public OsisWrapper getOsisText(final String version, final String reference) {
-        return getOsisText(version, reference, new ArrayList<LookupOption>(), null, NONE);
+        return getOsisText(version, reference, new ArrayList<LookupOption>(0), null, NONE);
     }
 
     @Override
@@ -592,8 +592,8 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
      * 
      * @return the html text
      */
-    private synchronized OsisWrapper getTextForBookData(final List<LookupOption> options,
-            final String interlinearVersion, final BookData bookData, final InterlinearMode displayMode) {
+    private OsisWrapper getTextForBookData(final List<LookupOption> options, final String interlinearVersion,
+            final BookData bookData, final InterlinearMode displayMode) {
 
         // check we have a book in mind and a reference
         notNull(bookData, "An internal error occurred", UserExceptionType.SERVICE_VALIDATION_ERROR);
@@ -677,7 +677,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
     }
 
     @Override
-    public synchronized OsisWrapper getInterleavedVersions(final String[] versions, final String reference,
+    public OsisWrapper getInterleavedVersions(final String[] versions, final String reference,
             final List<LookupOption> options, final InterlinearMode displayMode) {
         notNull(versions, "No versions were passed in", UserExceptionType.SERVICE_VALIDATION_ERROR);
         notNull(reference, "No reference was passed in", UserExceptionType.SERVICE_VALIDATION_ERROR);
@@ -843,8 +843,6 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
         }
     }
 
-    // FIXME: TODO can be unsynchronized when JS-109 is rewritten
-
     /**
      * Changes the input OSIS document to have extra verses, the ones from the other versions
      * 
@@ -915,8 +913,10 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
                 doc = new Document(amendedOsis);
             }
 
-            final XMLOutputter xmlOutputter = new XMLOutputter(Format.getRawFormat());
-            LOGGER.debug("\n {}", xmlOutputter.outputString(doc));
+            if (LOGGER.isDebugEnabled()) {
+                final XMLOutputter xmlOutputter = new XMLOutputter(Format.getRawFormat());
+                LOGGER.debug("\n {}", xmlOutputter.outputString(doc));
+            }
 
             return new JDOMSAXEventProvider(doc);
 

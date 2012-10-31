@@ -76,6 +76,24 @@ step.search.ui.original = {
         $(".originalSorting", passageContainer).prop("disabled", true);
     },
     
+    _displayGrammar : function(passageId) {
+        var currentType = $(".originalType", passageContainer).val();
+        
+        step.util.getPassageContainer(passageId);
+        if(currentType == GREEK_WORDS[0]) {
+            //do greek options
+            $(".grammarSearchOption").each(function(index, item) {
+                var myItem = $(item);
+                if($(item).hasClass(".function")) {
+                    myItem.append($("<input type='checkbox'  />").attr('value', "noun")).append("Noun");
+                    
+                }
+            });
+        } else if(currentType == HEBREW_WORDS[0]) {
+            //do hebrew
+        }
+    },
+    
     restoreDefaults : function(passageId, force) {
         step.util.ui.resetIfEmpty(passageId, force, step.state.original.originalType,  step.defaults.search.original.originalTypes[0]);
         step.util.ui.resetIfEmpty(passageId, force, step.state.original.originalForms,  step.defaults.search.original.originalForms[1]);

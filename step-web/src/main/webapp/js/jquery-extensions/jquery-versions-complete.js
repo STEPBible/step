@@ -29,8 +29,16 @@ $.widget("custom.versions",  {
         });
         
         
-        this.element.bind("keyup", function() {
-           self._filter($(this).val()); 
+        this.element.bind("keyup", function(event) {
+            var kc = event.keyCode;
+            if(kc >= 48 && kc <= 90 || kc >= 96 && kc <= 111 || kc >= 188 && kc <= 222) {
+                self._filter($(this).val());
+                return;
+            }
+            
+            if(kc == 27) {
+                self.dropdownVersionMenu.hide();
+            }
         });
         
         

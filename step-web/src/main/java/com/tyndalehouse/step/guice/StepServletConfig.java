@@ -38,6 +38,7 @@ import javax.servlet.ServletContextEvent;
 import org.crosswire.common.util.Reporter;
 import org.crosswire.common.util.ReporterEvent;
 import org.crosswire.common.util.ReporterListener;
+import org.crosswire.jsword.book.sword.state.OpenFileStateManager;
 import org.crosswire.jsword.versification.BookName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -95,7 +96,6 @@ public class StepServletConfig extends GuiceServletContextListener {
         });
 
         BookName.setFullBookName(false);
-
         if (Boolean.getBoolean("step.loader")) {
             getInjector().getInstance(Loader.class).init();
         }
@@ -104,6 +104,7 @@ public class StepServletConfig extends GuiceServletContextListener {
     @Override
     public void contextDestroyed(final ServletContextEvent servletContextEvent) {
         final ServletContext sc = servletContextEvent.getServletContext();
+        OpenFileStateManager.shutDown();
         sc.removeAttribute(Injector.class.getName());
         getInjector().getInstance(EntityManager.class).close();
         super.contextDestroyed(servletContextEvent);

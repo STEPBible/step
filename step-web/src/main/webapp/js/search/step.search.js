@@ -248,19 +248,31 @@ step.search = {
         }
     },
     
+    resetExpandableItems : function(passageContent) {
+        $(".expandableSearchHeading", passageContent).each(function(i, item) {
+            $.data(item, 'expanded', false);
+            var arrow = $(this).find("span");
+            arrow.html(arrow.html().replace('\u25bc', '\u25b6'));
+        });
+    },
+    
     _addSubjectExpandHandlers : function(passageId, query) {
         var content = step.util.getPassageContent(passageId);
+        var self = this;
         
         $(".expandableSearchHeading", content).click(function() {
             if($.data(this, 'expanded') == true) {
                 $(".expandedHeadingItem", content).remove();
                 
-                $.data(this, 'expanded', false);
+                self.resetExpandableItems(content);
                 return;
             }
-            
+
+            self.resetExpandableItems(content);
             $.data(this, 'expanded', true);
-            $(this).html($(this).html().replace('&#9654;', '&#9660;'));
+            
+            var arrow = $(this).find("span");
+            arrow.html(arrow.html().replace('\u25b6', '\u25bc'));
             
             var root = $(this).attr('root');
             var fullHeader = $(this).attr('fullHeader');
@@ -297,10 +309,14 @@ step.search = {
                 var seeAlsoRefs = "";
                 if(seeAlso) {
                     seeAlsoRefs = $("<h4 class='expandedHeadingItem'>Other useful entries:</h4>");
-                    var otherLinks = $("<ul class='expandedHeadingItem'></ul");
+                    var otherLinks = $("<ul class='expandedHeadingItem'></ul>");
                     
                     var refs = seeAlso.split(";");
                     for(var i = 0; i < refs.length; i++) {
+                        if(step.util.isBlank(refs[i])) {
+                            continue;
+                        }
+                        
                         var link = $("<a href='#'>" + refs[i].trim() + "</a>");
                         var refLink = refs[i];
                         $(link).click(function () {

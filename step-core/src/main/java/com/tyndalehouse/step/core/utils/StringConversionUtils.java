@@ -1,4 +1,5 @@
 /*******************************************************************************
+
  * Copyright (c) 2012, Directors of the Tyndale STEP Project
  * All rights reserved.
  * 

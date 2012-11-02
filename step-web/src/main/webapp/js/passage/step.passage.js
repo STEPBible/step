@@ -63,7 +63,9 @@ step.passage = {
     changePassage: function(passageId) {
         var container = step.util.getPassageContainer(passageId);
         var lookupVersion = step.state.passage.version(passageId);
-        var lookupReference = step.state.passage.reference(passageId);
+        
+        //get the real value from the textbox
+        var lookupReference = $(".passageReference", container).val();
         var options = step.state.passage.options(passageId);
         var display = this.getDisplayMode(passageId);
         var interlinearMode = display.displayMode;

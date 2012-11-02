@@ -151,7 +151,7 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
             return;
         }
 
-        matchingNames.add(new BookName(bookName.getShortName(), bookName.getLongName()));
+        matchingNames.add(new BookName(bookName.getShortName(), bookName.getLongName(), true));
     }
 
     /**
@@ -173,7 +173,7 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
             final String chapNumber = String.format("%s %d", book.getShortName(), ii);
             final String longChapNumber = String.format("%s %d", book.getLongName(), ii);
 
-            chapters.add(new BookName(chapNumber, longChapNumber));
+            chapters.add(new BookName(chapNumber, longChapNumber, false));
         }
 
         return chapters;

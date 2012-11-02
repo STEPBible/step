@@ -426,7 +426,11 @@ Passage.prototype.initReferenceTextBox = function() {
                 args : [request.term, step.state.passage.version(self.passageId)], 
                 callback: function(text) {
                     response($.map(text, function(item) {
-                        return { label: "<span>" + item.shortName + " <span style='font-size: larger'>&rArr;</span> " + item.fullName + "</span>", value: item.shortName };
+                        return { 
+                            label: "<span>" + item.shortName + " <span style='font-size: larger'>&rArr;</span> " + item.fullName + "</span>", 
+                            value: item.shortName, 
+                            wholeBook : item.wholeBook 
+                        };
                     }));
                 },
                 passageId : self.passageId,
@@ -436,13 +440,18 @@ Passage.prototype.initReferenceTextBox = function() {
         minLength : 0,
         delay : 0,
         select : function(event, ui) {
-            step.state.passage.reference(self.passageId, ui.item.value);
-            $(this).focus();
-            var that = this;
-            
-            delay(function() {
-                $(that).autocomplete("search", $(that).val());
-                }, 50);
+            event.stopPropagation();
+            var fireChange = !ui.item.wholeBook;
+            if(fireChange) {
+                step.state.passage.reference(self.passageId, ui.item.value, fireChange);
+            } else {
+                $(this).focus();
+                var that = this;
+                
+                delay(function() {
+                    $(that).autocomplete("search", ui.item.value);
+                }, 50, "step.passage.reference.dropdown");
+            }
         }
     }).change(function() {
         step.state.passage.reference(self.passageId, $(this).val());

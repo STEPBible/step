@@ -74,7 +74,7 @@ step.state.passage = {
 
     reference : function(passageId, reference, fireChange) {
         //if we've called this, then change the active state
-        step.state.activeSearch(passageId, 'SEARCH_PASSAGE', fireChange);
+        step.state.activeSearch(passageId, 'SEARCH_PASSAGE');
         
         // if we're in sync mode and passageId != -1, then we don't
         // accept any changes, we return reference of passage 0

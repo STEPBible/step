@@ -598,9 +598,20 @@ step.util = {
 
 var delay = (function(){
     var timer = 0;
-    return function(callback, ms){
-      clearTimeout (timer);
-      timer = setTimeout(callback, ms);
+    var timers = {};
+    
+    return function(callback, ms, timerName){
+        if(timerName) {
+            var tn = timers[timerName];
+            if(tn == undefined) {
+                timers[timerName] = tn = 0;
+            }
+            clearTimeout(tn);
+            timers[timerName] = setTimeout(callback, ms);
+        } else {
+            clearTimeout (timer);
+            timer = setTimeout(callback, ms);
+        }        
     };
   })();
 

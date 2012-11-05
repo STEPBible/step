@@ -126,6 +126,10 @@
 	text-align: left;
 }
 
+.simpleTextCriteria, .simpleTextSecondaryCriteria {
+	width: 55px;
+}
+
 .querySyntax {
 	border: solid thin #ABADB3;
 }

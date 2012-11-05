@@ -190,7 +190,7 @@ function hearViewChanges() {
 }
 
 function isSmallScreen() {
-    return window.screen.availWidth < 1200;
+    return window.screen.availWidth < 1030;
 }
 
 function doSmallScreenView() {

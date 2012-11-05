@@ -17,9 +17,6 @@
 	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 	<meta name="description" content="<%= stepRequest.getTitle() %>...">
 	
-	<!-- used for webmaster tools -->
-	<meta name="google-site-verification" content="OZfGjgjfTQq0Gn-m6pecYXYNGoDTllWS6v9aBOi64AU" />
-	
 	<link rel="shortcut icon"  href="images/step-favicon.ico" />
 
 	<%

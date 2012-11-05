@@ -57,14 +57,10 @@ function init() {
 		initGlobalHandlers();
 		initLayout();
 
-		//init modules
-//		initModules()
 		
 		initData();
 		initHelpLinks();
 		
-//		initInitialEvents();
-//		initLogin();
 
 	      // read state from the cookie
         step.state.restore();
@@ -130,7 +126,6 @@ function initHelpLinks() {
        $("#holdingPage").children().not("h1").remove();
        $("#holdingPage").append("<iframe style='width: 100%' src='" + $(this).attr("href") + "' />");
        reCalculateIframeHeight();
-       
     });
 }
 
@@ -160,22 +155,27 @@ function refreshLayout() {
 }
 
 function hearViewChanges() {
+    
     $(window).hear("view-change", function(self, data) {
         var view = data == undefined ||  data.viewName == undefined ? step.state.view.getView() : data.viewName;  
         step.state.view.storeView(view);
         
         if(view == 'SINGLE_COLUMN_VIEW') {
-           $(".leftColumn").removeClass("column").addClass("singleColumn");
-           $(".column").toggle(false);
-           $("#centerPane").toggle(false);
-           
-           //add the holding page
-           $("#holdingPage").toggle(true);
-           $(".leftColumn").resizable({ handles: 'e', resize: function(e, ui) { 
-               //called when the left column is resized
-               adjustColumns();
-           }});
-           adjustColumns();
+            if(isSmallScreen()) {
+                doSmallScreenView();
+            } else {
+                $(".leftColumn").removeClass("column").addClass("singleColumn");
+                $(".column").toggle(false);
+                $("#centerPane").toggle(false);
+                
+                //add the holding page
+                $("#holdingPage").toggle(true);
+                $(".leftColumn").resizable({ handles: 'e', resize: function(e, ui) { 
+                    //called when the left column is resized
+                    adjustColumns();
+                }});
+                adjustColumns();
+            }
        } else {
            $(".column").toggle(true);
            $(".leftColumn").removeClass("singleColumn").addClass("column");
@@ -187,6 +187,15 @@ function hearViewChanges() {
         
         $.shout("view-change-done");
     });
+}
+
+function isSmallScreen() {
+    return window.screen.availWidth < 2000;
+}
+
+function doSmallScreenView() {
+        $(".rightColumn, #holdingPage,#centerPane").css("display", "none");
+        $(".leftColumn").css("width", "100%");
 }
 
 function adjustColumns() {

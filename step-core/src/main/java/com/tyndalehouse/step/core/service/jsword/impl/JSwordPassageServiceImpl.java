@@ -68,6 +68,7 @@ import org.crosswire.jsword.book.BookCategory;
 import org.crosswire.jsword.book.BookData;
 import org.crosswire.jsword.book.BookException;
 import org.crosswire.jsword.book.Books;
+import org.crosswire.jsword.book.OSISUtil;
 import org.crosswire.jsword.book.UnAccenter;
 import org.crosswire.jsword.passage.Key;
 import org.crosswire.jsword.passage.KeyUtil;
@@ -386,7 +387,10 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
                 key = getFirstVerseExcludingZero(key, book);
             }
 
-            return getOsisText(version, key.getName()).getValue();
+            final BookData data = new BookData(book, key);
+            return OSISUtil.getCanonicalText(data.getOsisFragment());
+        } catch (final BookException e) {
+            throw new StepInternalException(e.getMessage(), e);
         } catch (final NoSuchKeyException e) {
             throw new StepInternalException(e.getMessage(), e);
         }

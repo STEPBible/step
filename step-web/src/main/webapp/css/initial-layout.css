@@ -360,6 +360,11 @@ body {
 /* 	right: 0px; */
 }
 
+#origin {
+	overflow-y: auto;
+	max-height: 475px; 
+}
+
 #lexiconPopupClose {
 	float: right; 
 	padding-top: 4px; 

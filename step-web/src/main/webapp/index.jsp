@@ -15,8 +15,7 @@
     <TITLE><%= stepRequest.getVersion(0) %> <%= stepRequest.getReference(0) %>: <%= stepRequest.getTitle() %></TITLE>
     <META http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-	<meta name="description" content="Scripture Tools for Every Person is a Bible study tool, currently showing: <%= stepRequest.getReference(0) %> in the <%= stepRequest.getVersion(0) %> and <%= stepRequest.getReference(1) %> in the <%= stepRequest.getVersion(1) %>">
-	<meta name="keywords" content="bible study kjv esv asv scripture tools for every person interlinear strong robinson timeline" />
+	<meta name="description" content="<%= stepRequest.getTitle() %>...">
 	
 	<!-- used for webmaster tools -->
 	<meta name="google-site-verification" content="OZfGjgjfTQq0Gn-m6pecYXYNGoDTllWS6v9aBOi64AU" />

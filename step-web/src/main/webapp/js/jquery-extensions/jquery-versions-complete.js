@@ -117,10 +117,10 @@ $.widget("custom.versions",  {
                      var selectedVersion = item.item.attr('initials');
                      if(!currentValue.toLowerCase().endsWith(selectedVersion.toLowerCase())) {
                          step.autoVersions.currentElement.val(currentValue + "," + selectedVersion);
+                         step.autoVersions.currentElement.trigger('change');
                      }
                  }
                  
-                 step.autoVersions.currentElement.trigger('change');
                  self.dropdownVersionMenu.hide();
              }
             }

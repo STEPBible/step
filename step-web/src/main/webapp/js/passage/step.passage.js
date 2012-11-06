@@ -465,6 +465,8 @@ Passage.prototype.initReferenceTextBox = function() {
             //search for nothing
             $(this).autocomplete("search", "");
         }
+    }).blur(function() {
+        $(this).trigger('change');
     }).data( "autocomplete" )._renderItem = function( ul, item ) {
         return $( "<li></li>" )
         .data( "item.autocomplete", item )

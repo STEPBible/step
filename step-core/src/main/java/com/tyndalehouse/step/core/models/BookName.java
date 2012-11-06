@@ -12,6 +12,8 @@ public class BookName implements Serializable {
     private static final long serialVersionUID = 2406197083965523605L;
     private String shortName;
     private String fullName;
+
+    /* indicates a whole book, OR a book that should be treated like a chapter */
     private boolean wholeBook;
 
     /**

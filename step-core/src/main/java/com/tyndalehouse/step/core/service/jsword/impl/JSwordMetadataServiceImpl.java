@@ -124,7 +124,7 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
                     || book.getShortName().toLowerCase().startsWith(searchPattern)) {
                 b = book;
 
-                addBookName(matchingNames, book);
+                addBookName(matchingNames, book, versification);
 
             }
         }
@@ -144,14 +144,17 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
      * 
      * @param matchingNames the list of current names
      * @param bookName the book that we are examining
+     * @param versification the versification attached to the book.
      */
-    private void addBookName(final List<BookName> matchingNames, final BibleBook bookName) {
+    private void addBookName(final List<BookName> matchingNames, final BibleBook bookName,
+            final Versification versification) {
         if (BibleBook.INTRO_BIBLE.equals(bookName) || BibleBook.INTRO_NT.equals(bookName)
                 || BibleBook.INTRO_OT.equals(bookName)) {
             return;
         }
 
-        matchingNames.add(new BookName(bookName.getShortName(), bookName.getLongName(), true));
+        matchingNames.add(new BookName(bookName.getShortName(), bookName.getLongName(), versification
+                .getLastChapter(bookName) != 1));
     }
 
     /**

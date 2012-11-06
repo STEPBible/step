@@ -144,9 +144,9 @@ public class VersionsStepRequest {
                 bookList.append(shortCopyright);
             }
 
-            bookList.append("'>&#x24d8;</a> ");
+            bookList.append("'>&#x24d8; ");
             bookList.append(b.getInitials());
-
+            bookList.append("</a>");
             bookList.append("</td>");
 
             bookList.append("<td>");

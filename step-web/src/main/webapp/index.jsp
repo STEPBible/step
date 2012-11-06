@@ -15,7 +15,7 @@
     <TITLE><%= stepRequest.getVersion(0) %> <%= stepRequest.getReference(0) %>: <%= stepRequest.getTitle() %></TITLE>
     <META http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-	<meta name="description" content="<%= stepRequest.getTitle() %>...">
+<%-- 	<meta name="description" content="<%= stepRequest.getTitle() %>..."> --%>
 	
 	<link rel="shortcut icon"  href="images/step-favicon.ico" />
 

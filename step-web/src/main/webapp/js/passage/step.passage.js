@@ -46,7 +46,7 @@ step.passage = {
         var interlinearVersion = "";
         var interlinearMode = "NONE";
         if(level > 0) {
-            interlinearVersion = step.state.passage.extraVersions(passageId);
+            interlinearVersion = $(".extraVersions", container).val();
             if(!step.util.isBlank(interlinearVersion)) {
                 interlinearVersion = interlinearVersion.trim();
                 interlinearMode = "INTERLEAVED";

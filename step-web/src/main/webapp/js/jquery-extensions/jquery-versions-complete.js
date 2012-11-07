@@ -112,6 +112,7 @@ $.widget("custom.versions",  {
                  var currentValue = step.autoVersions.currentElement.val();
                  if(currentValue.trim() == "") {
                      step.autoVersions.currentElement.val(item.item.attr('initials'));
+                     step.autoVersions.currentElement.trigger('change');
                  } else {
                      //check this wasn't the last version, if it was, then there is no point in adding it
                      var selectedVersion = item.item.attr('initials');

@@ -101,6 +101,10 @@ public class HeadwordLineBasedLoaded extends AbstractClasspathBasedModuleLoader 
         if (line.endsWith(START_TOKEN)) {
             this.count++;
             this.writer.save();
+
+            if (this.count % 5000 == 0) {
+                super.getMainLoader().addUpdate("Processed " + this.count + " entries");
+            }
         }
 
         parseField(line);

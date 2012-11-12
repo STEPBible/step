@@ -32,7 +32,11 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.data.create;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -45,25 +49,30 @@ import com.tyndalehouse.step.core.data.entities.impl.EntityIndexWriterImpl;
 import com.tyndalehouse.step.core.data.loaders.GeoStreamingCsvModuleLoader;
 import com.tyndalehouse.step.core.data.loaders.StreamingCsvModuleLoader;
 import com.tyndalehouse.step.core.data.loaders.TimelineStreamingCsvModuleLoader;
-import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.service.jsword.JSwordModuleService;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 
 /**
- * The object that will be responsible for loading all the data into a database
+ * The object that will be responsible for loading all the data into Lucene and downloading key versions of
+ * the Bible.
+ * 
+ * Note, this object is not thread-safe.
  * 
  * @author chrisburrell
  * 
  */
 public class Loader {
+    private static final String ESV_VERSION = "ESV";
+    private static final String KJV_VERSION = "KJV";
     private static final int INSTALL_WAITING = 1000;
-    private static final int INSTALL_MAX_WAITING = INSTALL_WAITING * 180;
-    private static final String KJV = "KJV";
     private static final Logger LOGGER = LoggerFactory.getLogger(Loader.class);
     private final JSwordPassageService jsword;
     private final Properties coreProperties;
     private final JSwordModuleService jswordModule;
     private final EntityManager entityManager;
+
+    private final BlockingQueue<String> progress = new LinkedBlockingQueue<String>();
+    private boolean complete = false;
 
     /**
      * The loader is given a connection source to load the data
@@ -84,38 +93,78 @@ public class Loader {
 
     /**
      * Creates the table and loads the initial data set
+     * 
      */
     public void init() {
-        // in order to do this, we need some jsword modules available. - we assume someone has kicked off
-        // the
-        // process
-        // kick of installation of jsword modules
-        // checkAndWaitForKJV();
+        // attempt to reload the installer list. This ensures we have all the versions in the available bibles
+        // that we need
+        this.jswordModule.reloadInstallers();
+
+        installAndIndex(KJV_VERSION);
+        installAndIndex(ESV_VERSION);
+
+        waitForIndexes(KJV_VERSION, ESV_VERSION);
 
         // now we can load the data
         loadData();
+        this.complete = true;
     }
 
     /**
-     * All modules are based on this version
+     * Installs a module and kicks of indexing thereof in the background
+     * 
+     * @param version the initials of the module to be installed
      */
-    private void checkAndWaitForKJV() {
-        int waitTime = INSTALL_MAX_WAITING;
+    private void installAndIndex(final String version) {
+        syncInstall(version);
+        this.addUpdate("Making the " + version + " searchable");
+        this.jswordModule.index(version);
+    }
+
+    /**
+     * @param versions versions to be waited upon
+     */
+    private void waitForIndexes(final String... versions) {
+        for (final String s : versions) {
+            while (!this.jswordModule.isIndexed(s)) {
+                try {
+                    Thread.sleep(INSTALL_WAITING);
+                } catch (final InterruptedException e) {
+                    LOGGER.warn("Interrupted exception", e);
+                }
+            }
+        }
+    }
+
+    /**
+     * Installs a module and waits for it to be properly installed.
+     * 
+     * @param version the initials of the version to be installed
+     */
+    private void syncInstall(final String version) {
+        if (this.jswordModule.isInstalled(version)) {
+            return;
+        }
+
+        this.progress.offer("Downloading the " + version);
+        this.jswordModule.installBook(version);
 
         // very ugly, but as good as it's going to get for now
-        while (waitTime > 0 && !this.jswordModule.isInstalled(KJV)) {
+        double progress = 0;
+        do {
             try {
-                LOGGER.debug("Waiting for KJV installation to finish...");
-                waitTime -= INSTALL_WAITING;
+
+                LOGGER.info("Waiting for KJV installation to finish...");
                 Thread.sleep(INSTALL_WAITING);
             } catch (final InterruptedException e) {
                 LOGGER.warn("Interrupted exception", e);
             }
-        }
 
-        if (waitTime <= 0) {
-            throw new StepInternalException("KJV module was not installed in time");
-        }
+            progress = this.jswordModule.getProgressOnInstallation(version);
+            this.progress.offer("Downloading the " + version + "(" + (int) (progress * 100) + "%)");
+        } while (progress != 1);
+
+        this.progress.offer("The " + version + " has been installed.");
     }
 
     // /**
@@ -155,10 +204,10 @@ public class Loader {
         loadSpecificForms();
         loadRobinsonMorphology();
         loadVersionInformation();
-        loadOpenBibleGeography();
+        // loadOpenBibleGeography();
 
-        loadHotSpots();
-        loadTimeline();
+        // loadHotSpots();
+        // loadTimeline();
         LOGGER.info("Finished loading...");
     }
 
@@ -169,17 +218,20 @@ public class Loader {
      */
     int loadNave() {
         LOGGER.debug("Indexing nave subjects");
+        this.progress.offer("Installing data for Subject Searches");
+
         final EntityIndexWriterImpl writer = this.entityManager.getNewWriter("nave");
 
         final HeadwordLineBasedLoaded loader = new HeadwordLineBasedLoaded(writer,
                 this.coreProperties.getProperty("test.data.path.subjects.nave"));
-        loader.init();
+        loader.init(this);
 
         LOGGER.debug("Writing Nave index");
         final int close = writer.close();
         LOGGER.debug("End Nave");
-        return close;
 
+        this.progress.offer("Subject searches are ready to use with " + close + " entries");
+        return close;
     }
 
     /**
@@ -188,11 +240,13 @@ public class Loader {
      * @return number of records loaded
      */
     int loadHotSpots() {
+        this.progress.offer("Preparing timeline periods");
+
         LOGGER.debug("Loading hotspots");
 
         final EntityIndexWriterImpl writer = this.entityManager.getNewWriter("hotspot");
         new StreamingCsvModuleLoader(writer,
-                this.coreProperties.getProperty("test.data.path.timeline.hotspots")).init();
+                this.coreProperties.getProperty("test.data.path.timeline.hotspots")).init(this);
         return writer.close();
     }
 
@@ -202,13 +256,18 @@ public class Loader {
      * @return the number of entries
      */
     int loadRobinsonMorphology() {
+        this.progress.offer("Installation grammar data ");
+
         LOGGER.debug("Loading robinson morphology");
         final EntityIndexWriterImpl writer = this.entityManager.getNewWriter("morphology");
         new StreamingCsvModuleLoader(writer,
-                this.coreProperties.getProperty("test.data.path.morphology.robinson")).init();
+                this.coreProperties.getProperty("test.data.path.morphology.robinson")).init(this);
 
         final int total = writer.close();
         LOGGER.debug("End of morphology");
+
+        this.progress.offer(total + " grammar definitions have been installed");
+
         return total;
     }
 
@@ -218,11 +277,16 @@ public class Loader {
      * @return the number of records loaded
      */
     int loadVersionInformation() {
+        this.progress.offer("Installing descriptions of Bible texts and commentaries");
+
         LOGGER.debug("Loading version information");
         final EntityIndexWriterImpl writer = this.entityManager.getNewWriter("versionInfo");
         new StreamingCsvModuleLoader(writer, this.coreProperties.getProperty("test.data.path.versions.info"))
-                .init();
-        return writer.close();
+                .init(this);
+        final int close = writer.close();
+
+        this.progress.offer(close + " descriptions of Bible texts and commentaries are now available");
+        return close;
 
     }
 
@@ -232,13 +296,19 @@ public class Loader {
      * @return number of records loaded
      */
     int loadTimeline() {
+        this.progress.offer("Installing timeline events");
+
         LOGGER.debug("Loading timeline");
         final EntityIndexWriterImpl writer = this.entityManager.getNewWriter("timelineEvent");
 
         new TimelineStreamingCsvModuleLoader(writer,
                 this.coreProperties.getProperty("test.data.path.timeline.events.directory"), this.jsword)
-                .init();
-        return writer.close();
+                .init(this);
+        final int close = writer.close();
+
+        this.progress.offer("Finished installing " + close + " timeline events");
+
+        return close;
     }
 
     /**
@@ -247,12 +317,19 @@ public class Loader {
      * @return the number of records loaded
      */
     int loadOpenBibleGeography() {
+        this.progress.offer("Installing Open Bible data");
+
         LOGGER.debug("Loading Open Bible geography");
 
         final EntityIndexWriterImpl writer = this.entityManager.getNewWriter("obplace");
         new GeoStreamingCsvModuleLoader(writer,
-                this.coreProperties.getProperty("test.data.path.geography.openbible"), this.jsword).init();
-        return writer.close();
+                this.coreProperties.getProperty("test.data.path.geography.openbible"), this.jsword)
+                .init(this);
+
+        final int close = writer.close();
+
+        this.progress.offer("Finished installing " + close + " places");
+        return close;
     }
 
     /**
@@ -261,25 +338,33 @@ public class Loader {
      * @return the number of entries loaded
      */
     int loadLexiconDefinitions() {
+        this.progress.offer("Adding Lexicon definitions.");
+
         LOGGER.debug("Indexing lexicon");
         final EntityIndexWriterImpl writer = this.entityManager.getNewWriter("definition");
 
         LOGGER.debug("-Indexing greek");
+        this.progress.offer("Installing Greek definitions");
         HeadwordLineBasedLoaded lexiconLoader = new HeadwordLineBasedLoaded(writer,
                 this.coreProperties.getProperty("test.data.path.lexicon.definitions.greek"));
-        lexiconLoader.init();
+        lexiconLoader.init(this);
 
         LOGGER.debug("-Indexing hebrew");
+        this.progress.offer("Installing Hebrew definitions.");
         final String hebrewLexicon = this.coreProperties
                 .getProperty("test.data.path.lexicon.definitions.hebrew");
         if (hebrewLexicon != null) {
             lexiconLoader = new HeadwordLineBasedLoaded(writer, hebrewLexicon);
         }
-        lexiconLoader.init();
+        lexiconLoader.init(this);
 
+        this.progress.offer("Optimizing Greek and Hebrew definition lookups.");
         LOGGER.debug("-Writing index");
         final int close = writer.close();
         LOGGER.debug("End lexicon");
+
+        this.progress.offer("Added " + close + " definitions to the lexicon.");
+
         return close;
     }
 
@@ -290,9 +375,39 @@ public class Loader {
      */
     int loadSpecificForms() {
         LOGGER.debug("Loading lexical forms");
+        this.progress.offer("Adding data for Original Word Search");
+
         final EntityIndexWriterImpl writer = this.entityManager.getNewWriter("specificForm");
         new SpecificFormsLoader(writer, this.coreProperties.getProperty("test.data.path.lexicon.forms"))
-                .init();
-        return writer.close();
+                .init(this);
+        final int close = writer.close();
+
+        this.progress.offer("Finished installing " + close + " forms of the original words.");
+        return close;
+    }
+
+    /**
+     * Reads the progress and empties the values therein
+     * 
+     * @return the progress
+     */
+    public List<String> readOnceProgress() {
+        final List<String> updates = new ArrayList<String>();
+        this.progress.drainTo(updates);
+        return updates;
+    }
+
+    /**
+     * @param update the update to be added to the queue
+     */
+    void addUpdate(final String update) {
+        this.progress.offer(update);
+    }
+
+    /**
+     * @return true if the process of installation is complete
+     */
+    public boolean isComplete() {
+        return this.complete;
     }
 }

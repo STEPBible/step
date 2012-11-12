@@ -68,7 +68,7 @@ public interface JSwordModuleService {
      * @param moduleInitials the initials of the modules to check for installation state
      * @return true if the module is installed
      */
-    boolean isInstalled(String moduleInitials);
+    boolean isInstalled(String... moduleInitials);
 
     /**
      * Kicks of a process to install this version (asynchronous)
@@ -112,5 +112,13 @@ public interface JSwordModuleService {
      * @param initials the initials of the book to index
      */
     void reIndex(String initials);
+
+    /**
+     * Checks whether a module is indexed
+     * 
+     * @param version version to be indexed
+     * @return true if the module has been indexed
+     */
+    boolean isIndexed(String versions);
 
 }

@@ -71,6 +71,7 @@ public class StepServletConfig extends GuiceServletContextListener {
                 serve("/rest/*").with(FrontController.class);
                 serve("/commentary_images/*").with(ImageController.class);
                 serve("/index.jsp");
+                filter("/index.jsp", "/").through(SetupRedirectFilter.class);
             }
         });
     }

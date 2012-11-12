@@ -67,6 +67,10 @@ MODULE_GET_ALL_INSTALLABLE_MODULES= STEP_SERVER_BASE_URL + "module/getAllInstall
 MODULE_GET_INFO =                   STEP_SERVER_BASE_URL + "module/getInfo/";
 MODULE_GET_QUICK_INFO =             STEP_SERVER_BASE_URL + "module/getQuickInfo/";
 
+SETUP_INSTALL_FIRST_TIME =          STEP_SERVER_BASE_URL + "setup/installFirstTime/";
+SETUP_GET_PROGRESS =                STEP_SERVER_BASE_URL + "setup/getProgress/";
+SETUP_IS_COMPLETE =                 STEP_SERVER_BASE_URL + "setup/isInstallationComplete/"
+
 SETUP_IS_FIRST_TIME =               STEP_SERVER_BASE_URL + "setup/isFirstTime/";
 SETUP_INSTALL_DEFAULT_MODULES =     STEP_SERVER_BASE_URL + "setup/installDefaultModules/";
 SETUP_INSTALL_BIBLE =               STEP_SERVER_BASE_URL + "setup/installBible/";

@@ -23,6 +23,7 @@ import org.crosswire.jsword.book.BookFilter;
 import org.crosswire.jsword.book.Books;
 import org.crosswire.jsword.book.install.InstallException;
 import org.crosswire.jsword.book.install.Installer;
+import org.crosswire.jsword.index.IndexManager;
 import org.crosswire.jsword.index.IndexManagerFactory;
 import org.crosswire.jsword.index.IndexStatus;
 import org.slf4j.Logger;
@@ -93,13 +94,28 @@ public class JSwordModuleServiceImpl implements JSwordModuleService {
     }
 
     @Override
-    public boolean isInstalled(final String moduleInitials) {
-        return Books.installed().getBook(moduleInitials) != null;
+    public boolean isInstalled(final String... modules) {
+        for (final String moduleInitials : modules) {
+            if (Books.installed().getBook(moduleInitials) == null) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public boolean isIndexed(final String version) {
+        final IndexManager indexManager = IndexManagerFactory.getIndexManager();
+        return indexManager.isIndexed(Books.installed().getBook(version));
     }
 
     @Override
     public void index(final String initials) {
-        IndexManagerFactory.getIndexManager().scheduleIndexCreation(Books.installed().getBook(initials));
+        final IndexManager indexManager = IndexManagerFactory.getIndexManager();
+        final Book book = Books.installed().getBook(initials);
+        if (!indexManager.isIndexed(book)) {
+            indexManager.scheduleIndexCreation(book);
+        }
     }
 
     @Override
@@ -125,7 +141,7 @@ public class JSwordModuleServiceImpl implements JSwordModuleService {
             for (final Installer i : this.bookInstallers) {
                 final Book bookToBeInstalled = i.getBook(initials);
 
-                // TODO TODO TODO FIME
+                // TODO TODO TODO FIXME
                 if (bookToBeInstalled != null) {
                     // then we can kick off installation and return
                     try {

@@ -41,6 +41,10 @@ public class SpecificFormsLoader extends AbstractClasspathBasedModuleLoader {
             while ((line = bufferedReader.readLine()) != null) {
                 parseLine(line);
                 lines++;
+
+                if (lines % 10000 == 0) {
+                    getMainLoader().addUpdate("Added " + lines + " specific forms of the original text.");
+                }
             }
         } catch (final IOException io) {
             LOGGER.warn(io.getMessage(), io);

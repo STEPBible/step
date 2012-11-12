@@ -34,20 +34,12 @@ package com.tyndalehouse.step.rest.controllers;
 
 import static com.tyndalehouse.step.core.exceptions.UserExceptionType.CONTROLLER_INITIALISATION_ERROR;
 import static com.tyndalehouse.step.core.utils.ValidateUtils.notNull;
-
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
-import java.net.UnknownHostException;
+import static com.tyndalehouse.step.rest.framework.RequestUtils.validateSession;
 
 import javax.inject.Provider;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
-import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.models.ClientSession;
 import com.tyndalehouse.step.core.service.UserService;
 
@@ -59,7 +51,6 @@ import com.tyndalehouse.step.core.service.UserService;
  */
 @RequestScoped
 public class UserController {
-    private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
     private final UserService userService;
     private final Provider<ClientSession> sessionProvider;
 
@@ -93,7 +84,7 @@ public class UserController {
      * @param enable the enabled to set, true to enable
      */
     public void enable(final String enable) {
-        validateSession();
+        validateSession(this.sessionProvider);
         this.userService.setEnabled(Boolean.TRUE.toString().equals(enable));
     }
 
@@ -101,43 +92,14 @@ public class UserController {
      * @param autoregister true to automatically create new users
      */
     public void autoregister(final String autoregister) {
-        validateSession();
+        validateSession(this.sessionProvider);
         this.userService.setAutoRegister(Boolean.TRUE.toString().equals(autoregister));
     }
 
     /** refreshes the list of users */
     public void refresh() {
-        validateSession();
+        validateSession(this.sessionProvider);
         this.userService.refresh();
     }
 
-    /**
-     * validates a session
-     */
-    private void validateSession() {
-        try {
-            final String ipAddress = this.sessionProvider.get().getIpAddress();
-            final InetAddress addr = InetAddress.getByName(ipAddress);
-
-            // Check if the address is a valid special local or loop back
-            if (addr.isAnyLocalAddress() || addr.isLoopbackAddress()) {
-                return;
-            }
-
-            // Check if the address is defined on any interface
-            try {
-                if (NetworkInterface.getByInetAddress(addr) != null) {
-                    return;
-                }
-            } catch (final SocketException e) {
-                LOGGER.warn("Socket error: ", e);
-            }
-
-            LOGGER.warn("DENYING ACCESS TO IP ADDRESS [{}]", ipAddress);
-            throw new StepInternalException("This functionality is not available");
-        } catch (final UnknownHostException e) {
-            throw new StepInternalException("Failed to initialise ip addresses", e);
-        }
-
-    }
 }

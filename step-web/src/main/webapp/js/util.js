@@ -173,6 +173,12 @@ step.util = {
 	    return str;
 	},
 	
+    trackAnalytics : function(eventType, eventName, eventValue, numValue) {
+        if(window["_gaq"]) {
+            _gaq.push(['_trackEvent', eventType, eventName, eventValue, numValue]);
+        }
+    },
+	
     ui : {
         getVisibleVersions : function(passageId) {
             return $("fieldset:visible", step.util.getPassageContainer(passageId)).find(".searchVersions, .passageVersion, .extraVersions");

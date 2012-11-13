@@ -96,9 +96,15 @@ step.passage = {
         
 
         // send to server
+        var startTime = new Date().getTime();
+
         $.getPassageSafe({
             url : url, 
             callback:  function(text) {
+                step.util.trackAnalytics("passage", "loaded", "time", new Date().getTime() - startTime);
+                step.util.trackAnalytics("passage", "version", lookupVersion);
+                step.util.trackAnalytics("passage", "reference", text.reference);
+                
                 step.state.passage.range(passageId, text.startRange, text.endRange, text.multipleRanges);
     
                 // we get html back, so we insert into passage:
@@ -127,6 +133,7 @@ step.passage = {
                 self._doTransliterations(passageId, passageContent);
                 step.util.closeInfoErrors(passageId);
                 step.state.passage.reference(passageId, text.reference, false);
+
             }, 
             passageId: passageId, 
             level: 'error'

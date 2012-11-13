@@ -215,7 +215,13 @@ step.search = {
         
         var args = [encodeURIComponent(refinedQuery), rankedArg, contextArg, pageNumberArg, pageSizeArg];
         
+        var startTime = new Date().getTime();
         $.getSafe(SEARCH_DEFAULT, args, function(searchQueryResults) {
+            step.util.trackAnalytics("search", "loaded", "time", new Date().getTime() - startTime);
+            step.util.trackAnalytics("search", "loaded", "results", searchQueryResults.total);
+            step.util.trackAnalytics("search", "version", checkedVersion.toUpperCase());
+            step.util.trackAnalytics("search", "query", query);
+            
             self._updateTotal(passageId, searchQueryResults.total, pageNumberArg);
             self.lastSearch = searchQueryResults.query;
             self._displayResults(searchQueryResults, passageId);

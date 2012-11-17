@@ -33,6 +33,7 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.utils;
 
+import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
 import static com.tyndalehouse.step.core.utils.language.GreekUtils.removeGreekTranslitMarkUpForIndexing;
 import static com.tyndalehouse.step.core.utils.language.HebrewUtils.removeHebrewTranslitMarkUpForIndexing;
 
@@ -67,6 +68,17 @@ public final class StringConversionUtils {
      */
     private StringConversionUtils() {
         // hiding implementation
+    }
+
+    /**
+     * @return true if not G3588 and not null/blank. To be extended later to include other words
+     */
+    public boolean isDisplayableStrongNumber(final String strongNumber) {
+        if (isBlank(strongNumber)) {
+            return false;
+        }
+
+        return !"G3588".equalsIgnoreCase(strongNumber);
     }
 
     /**

@@ -67,6 +67,14 @@ function init() {
 
         hearViewChanges();
         $.shout("view-change");
+        
+        //init JIRA hook
+//        $.ajax({
+//            url: "https://stepweb.atlassian.net/s/en_USqwqzqv-418945332/812/155/1.2.7/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector-embededjs/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector-embededjs.js?collectorId=dfa819bd",
+//            type: "get",
+//            cache: true,
+//            dataType: "script"
+//        });
 	});
 }
 

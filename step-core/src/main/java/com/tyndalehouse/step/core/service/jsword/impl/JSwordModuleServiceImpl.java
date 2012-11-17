@@ -25,7 +25,6 @@ import org.crosswire.jsword.book.install.InstallException;
 import org.crosswire.jsword.book.install.Installer;
 import org.crosswire.jsword.index.IndexManager;
 import org.crosswire.jsword.index.IndexManagerFactory;
-import org.crosswire.jsword.index.IndexStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,7 +40,6 @@ import com.tyndalehouse.step.core.utils.ValidateUtils;
  */
 @Singleton
 public class JSwordModuleServiceImpl implements JSwordModuleService {
-    private static final String INSTALLING_BOOK = "Installing book";
     private static final Logger LOGGER = LoggerFactory.getLogger(JSwordModuleServiceImpl.class);
     private static final String ANCIENT_GREEK = "grc";
     private static final String ANCIENT_HEBREW = "hbo";
@@ -69,28 +67,9 @@ public class JSwordModuleServiceImpl implements JSwordModuleService {
                 final Progress job = ev.getJob();
                 LOGGER.trace("Work [{}] at [{}] / [{}]", new Object[] { job.getJobName(), job.getTotalWork(),
                         job.getTotalWork() });
-
-                if (job.isFinished() && job.getJobName().startsWith(INSTALLING_BOOK)) {
-                    handleFinshedBookInstall();
-                }
             }
         });
 
-    }
-
-    /**
-     * When a book finishes installation, we'll index it
-     */
-    void handleFinshedBookInstall() {
-        // usually at most one book needs indexing, so let's kick the process off...
-        final List<Book> books = Books.installed().getBooks();
-        for (final Book b : books) {
-            if (IndexStatus.UNDONE.equals(b.getIndexStatus())) {
-                LOGGER.info("Indexing [{}]", b.getInitials());
-                // TODO
-                // IndexManagerFactory.getIndexManager().scheduleIndexCreation(b);
-            }
-        }
     }
 
     @Override

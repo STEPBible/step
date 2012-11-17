@@ -322,7 +322,7 @@ public class EntityIndexReaderImpl implements EntityIndexReader {
         final Term t = new Term(fieldName);
         final Term[] ts = new Term[values.length];
         for (int ii = 0; ii < ts.length; ii++) {
-            ts[ii] = t.createTerm(values[0]);
+            ts[ii] = t.createTerm(values[ii]);
         }
 
         final BooleanQuery booleanQuery = new BooleanQuery();

@@ -51,6 +51,7 @@ import com.tyndalehouse.step.core.data.entities.impl.EntityManagerImpl;
 import com.tyndalehouse.step.core.guice.providers.DefaultInstallersProvider;
 import com.tyndalehouse.step.core.guice.providers.DefaultLexiconRefsProvider;
 import com.tyndalehouse.step.core.guice.providers.DefaultVersionsProvider;
+import com.tyndalehouse.step.core.guice.providers.OfflineInstallersProvider;
 import com.tyndalehouse.step.core.service.BibleInformationService;
 import com.tyndalehouse.step.core.service.GeographyService;
 import com.tyndalehouse.step.core.service.ModuleService;
@@ -132,8 +133,14 @@ public class StepCoreModule extends AbstractStepGuiceModule {
         }).annotatedWith(Names.named("defaultVersions")).toProvider(DefaultVersionsProvider.class);
         bind(new TypeLiteral<Map<String, String>>() {
         }).annotatedWith(Names.named("defaultLexiconRefs")).toProvider(DefaultLexiconRefsProvider.class);
+
+        // installers, offline and online
         bind(new TypeLiteral<List<Installer>>() {
-        }).toProvider(DefaultInstallersProvider.class);
+        }).annotatedWith(Names.named("onlineInstallers")).toProvider(DefaultInstallersProvider.class);
+
+        bind(new TypeLiteral<List<Installer>>() {
+        }).annotatedWith(Names.named("offlineInstallers")).toProvider(OfflineInstallersProvider.class);
+
         bind(EntityManager.class).to(EntityManagerImpl.class).asEagerSingleton();
 
     }

@@ -26,11 +26,17 @@ import org.crosswire.jsword.book.install.sword.AbstractSwordInstaller;
  */
 public class DirectoryInstaller extends AbstractSwordInstaller {
     /**
+     * the default host convention for directory installers, required as it is used by JSword to create a
+     * temporary directory to stage the "downloads"
+     */
+    public static final String DIRECTORY_HOST = "localhost-directory";
+
+    /**
      * @param holdingDirectory the directory containing all packages
      */
     public DirectoryInstaller(final String holdingDirectory) {
         super.setPackageDirectory(holdingDirectory);
-        super.setHost("localhost-directory");
+        super.setHost(DIRECTORY_HOST);
     }
 
     @Override

@@ -34,16 +34,19 @@ package com.tyndalehouse.step.rest.controllers;
 
 import static com.tyndalehouse.step.core.exceptions.UserExceptionType.CONTROLLER_INITIALISATION_ERROR;
 import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
+import static com.tyndalehouse.step.core.utils.StringUtils.split;
 import static com.tyndalehouse.step.core.utils.ValidateUtils.notNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.crosswire.jsword.book.BookCategory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
 import com.tyndalehouse.step.core.data.EntityDoc;
+import com.tyndalehouse.step.core.exceptions.UserExceptionType;
 import com.tyndalehouse.step.core.models.BibleVersion;
 import com.tyndalehouse.step.core.service.ModuleService;
 import com.tyndalehouse.step.core.service.MorphologyService;
@@ -98,6 +101,24 @@ public class ModuleController {
      * @return all versions of modules that are considered to be modules and usable by STEP.
      */
     public List<BibleVersion> getAllInstallableModules() {
+        return this.moduleService.getAllInstallableModules();
+    }
+
+    /**
+     * a REST method that returns version of the Bible that are not yet installed
+     * 
+     * @param types a comma-delimited list of categories of modules to include
+     * @return all versions of modules that are considered to be modules and usable by STEP.
+     */
+    public List<BibleVersion> getAllInstallableModules(final String types) {
+        notNull(types, "No types of modules were provided", UserExceptionType.SERVICE_VALIDATION_ERROR);
+        final String[] values = split(types, ",");
+
+        final BookCategory[] categories = new BookCategory[values.length];
+        for (int i = 0; i < values.length; i++) {
+            categories[i] = BookCategory.fromString(values[i]);
+        }
+
         return this.moduleService.getAllInstallableModules();
     }
 

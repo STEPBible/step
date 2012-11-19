@@ -47,7 +47,8 @@ public class DirectoryInstallerTest {
             Books.installed().removeBook(tempEsv);
         }
 
-        final JSwordModuleServiceImpl jSwordModuleServiceImpl = new JSwordModuleServiceImpl(installers);
+        final JSwordModuleServiceImpl jSwordModuleServiceImpl = new JSwordModuleServiceImpl(null, installers);
+        jSwordModuleServiceImpl.setOffline(true);
         jSwordModuleServiceImpl.reloadInstallers();
 
         final Thread main = Thread.currentThread();

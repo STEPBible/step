@@ -41,6 +41,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.crosswire.jsword.book.Book;
+import org.crosswire.jsword.book.BookCategory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -96,17 +98,32 @@ public class Loader {
      * 
      */
     public void init() {
+        // remove any internet loader, because we are running locally first...
+        // THIS LINE IS ABSOLUTELY CRITICAL AS IT DISABLES SOCKETS ON AN APPLICATION-WIDE LEVEL
+        this.jswordModule.setOffline(true);
+
         // attempt to reload the installer list. This ensures we have all the versions in the available bibles
         // that we need
         this.jswordModule.reloadInstallers();
 
-        installAndIndex(KJV_VERSION);
-        installAndIndex(ESV_VERSION);
+        final List<Book> availableModules = this.jswordModule.getAllModules(BookCategory.BIBLE,
+                BookCategory.COMMENTARY);
+        final String[] initials = new String[availableModules.size()];
 
-        waitForIndexes(KJV_VERSION, ESV_VERSION);
+        // TODO: revisit as this may put too much stress on smaller systems, since indexing for all modules in
+        // package
+        // would result as happening at the same times
+        for (int ii = 0; ii < availableModules.size(); ii++) {
+            final Book b = availableModules.get(ii);
+            installAndIndex(b.getInitials());
+            initials[ii] = b.getInitials();
+        }
+
+        waitForIndexes(initials);
 
         // now we can load the data
         loadData();
+        this.jswordModule.setOffline(false);
         this.complete = true;
     }
 
@@ -146,7 +163,7 @@ public class Loader {
             return;
         }
 
-        this.progress.offer("Downloading the " + version);
+        this.progress.offer("Installing the " + version + " from the STEP application folder.");
         this.jswordModule.installBook(version);
 
         // very ugly, but as good as it's going to get for now
@@ -161,7 +178,7 @@ public class Loader {
             }
 
             progress = this.jswordModule.getProgressOnInstallation(version);
-            this.progress.offer("Downloading the " + version + "(" + (int) (progress * 100) + "%)");
+            this.progress.offer("Install progress of " + version + ": " + (int) (progress * 100) + "%");
         } while (progress != 1);
 
         this.progress.offer("The " + version + " has been installed.");

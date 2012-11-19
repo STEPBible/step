@@ -86,6 +86,14 @@ public interface JSwordModuleService {
     double getProgressOnInstallation(String bookName);
 
     /**
+     * assesses the progress made on an indexing operation
+     * 
+     * @param bookName the book name
+     * @return the percentage of completion (0 - 1.0)
+     */
+    double getProgressOnIndexing(String bookName);
+
+    /**
      * retrieves all modules that have been installed
      * 
      * @param bookCategory the list of categories to be included
@@ -116,9 +124,20 @@ public interface JSwordModuleService {
     /**
      * Checks whether a module is indexed
      * 
-     * @param version version to be indexed
+     * @param versions version to be indexed
      * @return true if the module has been indexed
      */
     boolean isIndexed(String versions);
 
+    /**
+     * @param offline true to set the installation to be off-line only.
+     */
+    void setOffline(boolean offline);
+
+    /**
+     * Removes a module
+     * 
+     * @param initials initials of the module to remove, e.g. 'WEB'
+     */
+    void removeModule(String initials);
 }

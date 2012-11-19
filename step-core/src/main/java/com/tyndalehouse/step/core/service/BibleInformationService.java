@@ -179,4 +179,23 @@ public interface BibleInformationService {
      */
     KeyWrapper expandKeyToChapter(String version, String reference);
 
+    /**
+     * @param version the version to be queried for
+     * @return a value between 0.0 and 1.0 indicating the progress so far
+     */
+    double getProgressOnInstallation(String version);
+
+    /**
+     * @param version the version that is being indexed
+     * @return a value between 0.0 and 1.0 indicating the progress so far
+     */
+    double getProgressOnIndexing(String version);
+
+    /**
+     * Removes a module
+     * 
+     * @param initials initials of the module to remove, e.g. 'WEB'
+     */
+    void removeModule(String initials);
+
 }

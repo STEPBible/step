@@ -80,6 +80,7 @@ public class ModuleServiceImpl implements ModuleService {
      * @param lexiconRefs the default references that should be used
      * @param jsword the jsword service to retrieve data
      * @param jswordModuleService the service to register and manipulate modules
+     * @param clientSession the client session to validate security
      */
     @Inject
     public ModuleServiceImpl(@Named("defaultLexiconRefs") final Map<String, String> lexiconRefs,
@@ -149,15 +150,15 @@ public class ModuleServiceImpl implements ModuleService {
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<BibleVersion> getAllInstallableModules() {
+    public List<BibleVersion> getAllInstallableModules(final BookCategory... categories) {
+        final BookCategory[] selected = categories.length == 0 ? new BookCategory[] { BookCategory.BIBLE,
+                BookCategory.COMMENTARY } : categories;
+
         LOGGER.info("Returning all modules currently not installed");
-        final List<Book> installedVersions = this.jswordModuleService.getInstalledModules(BookCategory.BIBLE,
-                BookCategory.DICTIONARY, BookCategory.COMMENTARY);
-        final List<Book> allModules = this.jswordModuleService.getAllModules(BookCategory.BIBLE,
-                BookCategory.DICTIONARY, BookCategory.COMMENTARY);
+        final List<Book> installedVersions = this.jswordModuleService.getInstalledModules(selected);
+        final List<Book> allModules = this.jswordModuleService.getAllModules(selected);
 
         return getSortedSerialisableList(CollectionUtils.subtract(allModules, installedVersions),
                 this.clientSession.get().getLocale());
     }
-
 }

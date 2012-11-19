@@ -311,21 +311,9 @@ $.widget("custom.versions",  {
         var showingText = 
             "<span class='versionKey' >" + item.initials + "</span><span style='font-size: larger'>&rArr;</span>&nbsp;" +
             "<span class='versionName'>" + name + "</span>";
-        var features = "";
-        // add to Strongs if applicable, and therefore interlinear
-        if (item.hasStrongs) {
-            features += " " + "<span class='versionFeature' title='Vocabulary available'>V</span>";
-            features += " " + "<span class='versionFeature' title='Interlinear available'>I</span>";
-        }
 
-        // add morphology
-        if (item.hasMorphology) {
-            features += " " + "<span class='versionFeature' title='Grammar available'>G</span>";
-        }
         
-        if(item.hasRedLetter) {
-            features += " " + '<span class="versionFeature" title="Able to show Jesus\' words in red">R</span>';
-        }
+        var features = step.util.ui.getFeaturesLabel(item);
         
         // return response for dropdowns
         var itemHtml = "<li title='" + item.name + " (" + item.languageName.replace("'", "&quot;")  + ")' initials='" + item.initials +  "'><a><span class='features'>" + features + "</span>" + showingText + "</a></li>";

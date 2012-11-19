@@ -180,6 +180,28 @@ step.util = {
     },
 	
     ui : {
+        getFeaturesLabel : function(item) {
+            var features = "";
+            
+            // add to Strongs if applicable, and therefore interlinear
+            if(item.hasRedLetter) {
+                features += " " + '<span class="versionFeature" title="Able to show Jesus\' words in red">R</span>';
+            }
+
+            if (item.hasStrongs) {
+                features += " " + "<span class='versionFeature' title='Vocabulary available'>V</span>";
+                features += " " + "<span class='versionFeature' title='Interlinear available'>I</span>";
+            }
+
+            // add morphology
+            if (item.hasMorphology) {
+                features += " " + "<span class='versionFeature' title='Grammar available'>G</span>";
+            }
+            
+
+            return features;
+        },
+        
         getVisibleVersions : function(passageId) {
             return $("fieldset:visible", step.util.getPassageContainer(passageId)).find(".searchVersions, .passageVersion, .extraVersions");
         },

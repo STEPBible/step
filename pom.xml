@@ -40,6 +40,7 @@
 		<module>step-web</module>
 		<module>step-server</module>
 		<module>step-tools</module>
+		<module>step-packages</module>
 		<!-- <module>step-web-test</module> -->
 	</modules>
 		

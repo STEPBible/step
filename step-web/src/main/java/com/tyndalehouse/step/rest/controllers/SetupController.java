@@ -38,6 +38,7 @@ import static com.tyndalehouse.step.core.utils.ValidateUtils.notBlank;
 import static com.tyndalehouse.step.core.utils.ValidateUtils.notNull;
 import static com.tyndalehouse.step.rest.framework.RequestUtils.validateSession;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Provider;
@@ -50,6 +51,7 @@ import com.google.inject.servlet.RequestScoped;
 import com.tyndalehouse.step.core.data.create.Loader;
 import com.tyndalehouse.step.core.models.ClientSession;
 import com.tyndalehouse.step.core.service.BibleInformationService;
+import com.tyndalehouse.step.core.utils.StringUtils;
 
 /**
  * The controller that will deal with any requests changing the behaviour of the application
@@ -89,6 +91,7 @@ public class SetupController {
      * data.
      */
     public void installFirstTime() {
+        validateSession(this.sessionProvider);
         this.loader.init();
     }
 
@@ -96,6 +99,7 @@ public class SetupController {
      * @return true if the installation has completed and the application is ready to be used
      */
     public boolean isInstallationComplete() {
+        validateSession(this.sessionProvider);
         return this.loader.isComplete();
     }
 
@@ -103,42 +107,59 @@ public class SetupController {
      * @return reads progress state
      */
     public List<String> getProgress() {
+        validateSession(this.sessionProvider);
         return this.loader.readOnceProgress();
     }
 
     /**
-     * a REST method to retrieve events between two dates The arrays match in index, and go by three
-     * (timebandId, from, to), (timebandId, from, to), ...
-     * 
-     * @return true if the software reckons this is the first time
+     * @param versions versions
+     * @return a list of the progresses in the same order given
      */
-    public boolean isFirstTime() {
-        LOGGER.debug("Checking whether this is the first time the software is being run");
-        return !this.bibleInformation.hasCoreModules();
+    public List<Double> getProgressOnInstallation(final String versions) {
+
+        final String[] allVersions = StringUtils.split(versions, ",");
+        final List<Double> progresses = new ArrayList<Double>(allVersions.length);
+
+        for (final String version : allVersions) {
+            progresses.add(this.bibleInformation.getProgressOnInstallation(version));
+        }
+        return progresses;
+    }
+
+    /**
+     * @param versions versions
+     * @return a list of the progresses in the same order given
+     */
+    public List<Double> getProgressOnIndexing(final String versions) {
+        final String[] allVersions = StringUtils.split(versions, ",");
+        final List<Double> progresses = new ArrayList<Double>(allVersions.length);
+
+        for (final String version : allVersions) {
+            progresses.add(this.bibleInformation.getProgressOnIndexing(version));
+        }
+        return progresses;
     }
 
     /**
      * Installing default modules
      * 
+     * @param initials the initials of the bible to install
      */
-    public void installDefaultModules() {
+    public void installBible(final String initials) {
         validateSession(this.sessionProvider);
-        LOGGER.debug("Installing default modules");
-        // this.bibleInformation.installDefaultModules();
-        this.loader.init();
+
+        notBlank(initials, "A reference must be provided to install a bible", USER_MISSING_FIELD);
+        LOGGER.debug("Installing module {}", initials);
+        this.bibleInformation.installModules(initials);
     }
 
     /**
-     * Installing default modules
+     * Removes a module
      * 
-     * @param reference the initials of the bible to install
+     * @param initials the initials referencing the correct module
      */
-    public void installBible(final String reference) {
-        validateSession(this.sessionProvider);
-
-        notBlank(reference, "A reference must be provided to install a bible", USER_MISSING_FIELD);
-        LOGGER.debug("Installing module {}", reference);
-        this.bibleInformation.installModules(reference);
+    public void removeModule(final String initials) {
+        this.bibleInformation.removeModule(initials);
     }
 
     /**

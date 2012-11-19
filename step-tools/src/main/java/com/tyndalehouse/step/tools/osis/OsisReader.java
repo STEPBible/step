@@ -36,13 +36,13 @@ public class OsisReader {
      * @throws Exception any kind of exception
      */
     public static void main(final String[] args) throws Exception {
-        final String version = "WEB";
-        final String ref = "Mark 12:1-44";
+        final String version = "kjv";
+        final String ref = "Mark 12";
         final Book currentBook = Books.installed().getBook(version);
         final BookData bookData = new BookData(currentBook, currentBook.getKey(ref));
         final Element osisFragment = bookData.getOsisFragment();
 
-        final XMLOutputter xmlOutputter = new XMLOutputter(Format.getRawFormat());
+        final XMLOutputter xmlOutputter = new XMLOutputter(Format.getPrettyFormat());
         LOGGER.debug(xmlOutputter.outputString(osisFragment));
 
         // do the test

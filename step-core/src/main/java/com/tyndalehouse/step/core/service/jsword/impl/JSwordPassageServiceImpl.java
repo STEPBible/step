@@ -145,7 +145,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
             final boolean previousChapter) {
         // getting the next chapter
         // FIXME find a way of getting the next chapter from the current key, in the current book, rather than
-        // relying on verisification systems which may contain verses that the Book does not support
+        // relying on versification systems which may contain verses that the Book does not support
         final Book currentBook = Books.installed().getBook(version);
         final Versification v11n = this.versificationService.getVersificationForVersion(currentBook);
 

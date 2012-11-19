@@ -44,7 +44,7 @@ public class SetupRedirectFilter implements Filter {
         if (this.jsword.isInstalled(MANDATORY_MODULES)) {
 
         } else {
-            request.getRequestDispatcher("setup.jsp").forward(request, response);
+            request.getRequestDispatcher("firstTime.jsp").forward(request, response);
         }
         chain.doFilter(request, response);
     }

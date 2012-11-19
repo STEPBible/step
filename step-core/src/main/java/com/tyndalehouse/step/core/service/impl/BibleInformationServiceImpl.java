@@ -415,4 +415,19 @@ public class BibleInformationServiceImpl implements BibleInformationService {
     public KeyWrapper expandKeyToChapter(final String version, final String reference) {
         return this.jswordPassage.expandToChapter(version, reference);
     }
+
+    @Override
+    public double getProgressOnInstallation(final String version) {
+        return this.jswordModule.getProgressOnInstallation(version);
+    }
+
+    @Override
+    public double getProgressOnIndexing(final String version) {
+        return this.jswordModule.getProgressOnIndexing(version);
+    }
+
+    @Override
+    public void removeModule(final String initials) {
+        this.jswordModule.removeModule(initials);
+    }
 }

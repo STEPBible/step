@@ -62,9 +62,11 @@ public class DownloadJSwordBiblesPreReq {
      */
     @Test
     public void installDefaultJSwordDefaultBibleVersions() throws InstallException {
-        final String[] modules = new String[] { "KJV", "ESV", "Byz", "FreSegond" };
+        final String[] modules = new String[] { "KJV", "ESV", "Byz", "FreSegond", "NETfree", "Tisch", "YLT",
+                "ASV", "Montgomery", "FreCrampon" };
 
-        final JSwordModuleServiceImpl jsword = new JSwordModuleServiceImpl(getInstallers());
+        final JSwordModuleServiceImpl jsword = new JSwordModuleServiceImpl(getInstallers(),
+                new ArrayList<Installer>(0));
 
         for (final String moduleInitials : modules) {
             if (!jsword.isInstalled(moduleInitials)) {

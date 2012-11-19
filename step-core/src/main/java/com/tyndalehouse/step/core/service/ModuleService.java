@@ -34,6 +34,8 @@ package com.tyndalehouse.step.core.service;
 
 import java.util.List;
 
+import org.crosswire.jsword.book.BookCategory;
+
 import com.tyndalehouse.step.core.models.BibleVersion;
 import com.tyndalehouse.step.core.models.Definition;
 
@@ -67,8 +69,9 @@ public interface ModuleService {
     List<BibleVersion> getAvailableModules();
 
     /**
+     * @param categories the types of modules to include
      * @return a list of all modules that could be installed
      */
-    List<BibleVersion> getAllInstallableModules();
+    List<BibleVersion> getAllInstallableModules(BookCategory... categories);
 
 }

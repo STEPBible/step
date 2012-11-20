@@ -4,8 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.tyndalehouse.step.core.data.EntityIndexReader;
-import com.tyndalehouse.step.core.data.entities.impl.EntityIndexWriterImpl;
-import com.tyndalehouse.step.core.data.entities.impl.EntityManagerImpl;
 
 /**
  * a test entity manager, which gives us indexes in memory
@@ -34,11 +32,12 @@ public class TestEntityManager extends EntityManagerImpl {
         }
         return entityIndexReader;
     }
-    
+
     /**
      * @param entity the entity name
      * @return entity writer
      */
+    @Override
     public EntityIndexWriterImpl getNewWriter(final String entity) {
         return new TestEntityIndexWriterImpl(this, entity);
     }

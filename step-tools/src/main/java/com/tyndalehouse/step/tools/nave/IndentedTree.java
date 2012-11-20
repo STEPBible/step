@@ -1,3 +1,4 @@
+//CHECKSTYLE:OFF
 package com.tyndalehouse.step.tools.nave;
 
 public class IndentedTree {

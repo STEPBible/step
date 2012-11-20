@@ -16,7 +16,6 @@ import com.tyndalehouse.step.core.xsl.InterleavingProvider;
 public class InterleavingProviderImpl implements InterleavingProvider {
     private String[] versions;
     private int lastAccessed = 0;
-    private final boolean returnedOnce = false;
     private final boolean comparing;
 
     /**
@@ -24,7 +23,7 @@ public class InterleavingProviderImpl implements InterleavingProvider {
      * @param comparing true to indicate we need to duplicate the versions returned
      */
     public InterleavingProviderImpl(final String[] versions, final boolean comparing) {
-        this.versions = versions;
+        this.versions = versions.clone();
         this.comparing = comparing;
         computeVersions();
 

@@ -64,8 +64,6 @@ import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
  * 
  */
 public class Loader {
-    private static final String ESV_VERSION = "ESV";
-    private static final String KJV_VERSION = "KJV";
     private static final int INSTALL_WAITING = 1000;
     private static final Logger LOGGER = LoggerFactory.getLogger(Loader.class);
     private final JSwordPassageService jsword;
@@ -167,7 +165,7 @@ public class Loader {
         this.jswordModule.installBook(version);
 
         // very ugly, but as good as it's going to get for now
-        double progress = 0;
+        double installProgress = 0;
         do {
             try {
 
@@ -177,9 +175,10 @@ public class Loader {
                 LOGGER.warn("Interrupted exception", e);
             }
 
-            progress = this.jswordModule.getProgressOnInstallation(version);
-            this.progress.offer("Install progress of " + version + ": " + (int) (progress * 100) + "%");
-        } while (progress != 1);
+            installProgress = this.jswordModule.getProgressOnInstallation(version);
+            this.progress
+                    .offer("Install progress of " + version + ": " + (int) (installProgress * 100) + "%");
+        } while (installProgress != 1);
 
         this.progress.offer("The " + version + " has been installed.");
     }

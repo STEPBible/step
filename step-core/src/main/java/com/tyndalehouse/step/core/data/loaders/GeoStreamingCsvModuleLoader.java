@@ -120,10 +120,8 @@ public class GeoStreamingCsvModuleLoader extends StreamingCsvModuleLoader {
         // check last character, and remove
         int jj = coordinate.length() - 1;
         while (jj > 0 && !Character.isDigit(coordinate.charAt(jj))) {
-            if (coordinate.charAt(jj) == '?') {
-                if (!PRECISION_UNKNOWN.equals(this.precisionType)) {
-                    this.precisionType = PRECISION_APPROXIMATE;
-                }
+            if (coordinate.charAt(jj) == '?' && !PRECISION_UNKNOWN.equals(this.precisionType)) {
+                this.precisionType = PRECISION_APPROXIMATE;
             }
 
             jj--;

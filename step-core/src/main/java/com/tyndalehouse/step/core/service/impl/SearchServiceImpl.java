@@ -101,10 +101,6 @@ public class SearchServiceImpl implements SearchService {
     /** value representing a original spelling sort */
     public static final Object ORIGINAL_SPELLING_SORT = "Original spelling";
 
-    private static final String STRONG_THE = "G3588";
-    private static final String START_OF_STRONG_FIELD = "strong='";
-    private static final int START_OF_STRONG_FIELD_LENGTH = START_OF_STRONG_FIELD.length();
-    // TODO should this be parameterized?
     private static final String BASE_GREEK_VERSION = "WHNU";
     private static final String BASE_HEBREW_VERSION = "OSMHB";
     private static final Logger LOGGER = LoggerFactory.getLogger(SearchServiceImpl.class);
@@ -202,27 +198,81 @@ public class SearchServiceImpl implements SearchService {
     private void sortByStrongNumber(final SearchQuery sq, final SearchResult result,
             final Comparator<? super EntityDoc> comparator) {
         // sq should have the strong numbers, if we're doing this kind of sort
-        List<EntityDoc> definitions = sq.getDefinitions();
-        if (definitions == null) {
+        List<EntityDoc> strongNumbers = sq.getDefinitions();
+        if (strongNumbers == null) {
             // stop searching
             LOGGER.warn("Attempting to sort by strong number, but no strong numbers available. ");
             return;
         }
 
         final Set<String> strongs = new HashSet<String>(result.getStrongHighlights());
-
         final List<SearchEntry> entries = result.getResults();
         final List<SearchEntry> noOrder = new ArrayList<SearchEntry>(0);
 
         final Map<String, List<VerseSearchEntry>> keyedOrder = new HashMap<String, List<VerseSearchEntry>>(
                 strongs.size());
 
+        extractAllStrongNumbers(strongs, entries, noOrder, keyedOrder);
+
+        // now work out the order of the strong numbers, probably best in terms of the gloss...
+        // order the definitions, then simply re-do the list of verse search entries
+        Collections.sort(strongNumbers, comparator);
+
+        // if we have filters, then we need to reduce further...
+        strongNumbers = filterDefinitions(sq, strongNumbers);
+
+        // now we have sorted definitions, we need to rebuild the search result
+        final List<SearchEntry> newOrder = rebuildSearchResults(strongNumbers, keyedOrder);
+
+        final String[] filter = sq.getCurrentSearch().getOriginalFilter();
+        if (filter == null || filter.length == 0) {
+            newOrder.addAll(noOrder);
+        }
+        result.setResults(specialPaging(sq, newOrder));
+    }
+
+    /**
+     * Takes a new order and rebuilds a list of search results
+     * 
+     * @param lexiconDefinitions the strong numbers, ordered
+     * @param keyedOrder the set of results to be re-ordered
+     * @return a new list of results, now ordered
+     */
+    private List<SearchEntry> rebuildSearchResults(final List<EntityDoc> lexiconDefinitions,
+            final Map<String, List<VerseSearchEntry>> keyedOrder) {
+        final List<SearchEntry> newOrder = new ArrayList<SearchEntry>();
+        for (final EntityDoc def : lexiconDefinitions) {
+            final List<VerseSearchEntry> list = keyedOrder.get(def.get(STRONG_NUMBER_FIELD));
+            if (list != null) {
+                newOrder.addAll(list);
+                for (final VerseSearchEntry e : list) {
+                    e.setStepGloss(def.get("stepGloss"));
+                    e.setStepTransliteration(def.get("stepTransliteration"));
+                    e.setAccentedUnicode(def.get("accentedUnicode"));
+                }
+            }
+        }
+        return newOrder;
+    }
+
+    /**
+     * Extracts all strong numbers from verses
+     * 
+     * @param strongs a place to store the strong numbers found so far in the search results, identified from
+     *            the search itself
+     * @param entries the verse entries that have been found
+     * @param noOrder the "noOrder" list which will contain all verse entries that cannot be matched
+     * @param keyedOrder the new order, to be built up. In this method, we simply store the verses, which are
+     *            sorted later.
+     */
+    private void extractAllStrongNumbers(final Set<String> strongs, final List<SearchEntry> entries,
+            final List<SearchEntry> noOrder, final Map<String, List<VerseSearchEntry>> keyedOrder) {
         for (final SearchEntry entry : entries) {
             boolean added = false;
             if (entry instanceof VerseSearchEntry) {
 
+                final VerseSearchEntry verse = (VerseSearchEntry) entry;
                 for (final String strong : strongs) {
-                    final VerseSearchEntry verse = (VerseSearchEntry) entry;
 
                     if (strong == null) {
                         continue;
@@ -247,44 +297,17 @@ public class SearchServiceImpl implements SearchService {
                 }
             }
         }
-
-        // now work out the order of the strong numbers, probably best in terms of the gloss...
-        // order the definitions, then simply re-do the list of verse search entries
-        Collections.sort(definitions, comparator);
-
-        // if we have filters, then we need to reduce further...
-        definitions = filterDefinitions(sq, definitions);
-
-        // now we have sorted definitions, we need to rebuild the search result
-        final List<SearchEntry> newOrder = new ArrayList<SearchEntry>();
-        for (final EntityDoc def : definitions) {
-            final List<VerseSearchEntry> list = keyedOrder.get(def.get(STRONG_NUMBER_FIELD));
-            if (list != null) {
-                newOrder.addAll(list);
-                for (final VerseSearchEntry e : list) {
-                    e.setStepGloss(def.get("stepGloss"));
-                    e.setStepTransliteration(def.get("stepTransliteration"));
-                    e.setAccentedUnicode(def.get("accentedUnicode"));
-                }
-            }
-        }
-
-        final String[] filter = sq.getCurrentSearch().getOriginalFilter();
-        if (filter == null || filter.length == 0) {
-            newOrder.addAll(noOrder);
-        }
-        result.setResults(specialPaging(sq, newOrder));
     }
 
     /**
      * Sets the definitions onto the result object
      * 
      * @param result the result object
-     * @param definitions the definitions that have been included in the search
+     * @param lexiconDefinitions the definitions that have been included in the search
      */
-    private void setDefinitionForResults(final SearchResult result, final List<EntityDoc> definitions) {
+    private void setDefinitionForResults(final SearchResult result, final List<EntityDoc> lexiconDefinitions) {
         final List<LexiconSuggestion> suggestions = new ArrayList<LexiconSuggestion>();
-        for (final EntityDoc def : definitions) {
+        for (final EntityDoc def : lexiconDefinitions) {
             suggestions.add(convertToSuggestion(def));
         }
         result.setDefinitions(suggestions);
@@ -294,19 +317,19 @@ public class SearchServiceImpl implements SearchService {
      * Keep definitions that are of current interest to the user... Remove all others
      * 
      * @param sq the search criteria
-     * @param definitions the definitions
+     * @param lexiconDefinitions the definitions
      * @return a list of definitions to be included in the filter
      */
-    private List<EntityDoc> filterDefinitions(final SearchQuery sq, final List<EntityDoc> definitions) {
+    private List<EntityDoc> filterDefinitions(final SearchQuery sq, final List<EntityDoc> lexiconDefinitions) {
         final String[] originalFilter = sq.getCurrentSearch().getOriginalFilter();
         if (originalFilter == null || originalFilter.length == 0) {
-            return definitions;
+            return lexiconDefinitions;
         }
 
         // bubble intersection, acceptable, because we're only dealing with a handful of definitions
-        final List<EntityDoc> keep = new ArrayList<EntityDoc>(definitions.size());
+        final List<EntityDoc> keep = new ArrayList<EntityDoc>(lexiconDefinitions.size());
 
-        for (final EntityDoc def : definitions) {
+        for (final EntityDoc def : lexiconDefinitions) {
             for (final String filteredValue : originalFilter) {
                 if (def.get("accentedUnicode").equals(filteredValue)) {
                     keep.add(def);
@@ -411,7 +434,6 @@ public class SearchServiceImpl implements SearchService {
         final IndividualSearch lastSearch = sq.getLastSearch();
         switch (lastSearch.getType()) {
             case TEXT:
-                // case ORIGINAL_FORM:
             case ORIGINAL_MEANING:
             case ORIGINAL_GREEK_EXACT:
             case ORIGINAL_GREEK_FORMS:
@@ -461,72 +483,6 @@ public class SearchServiceImpl implements SearchService {
             default:
                 throw new StepInternalException("Attempted to execute unknown search");
         }
-    }
-
-    /**
-     * Parses the XML crudely, by looking for the strongs tags just prior to any hit
-     * 
-     * @param queryText the query text that we have hit
-     * @param results the results to be parsed
-     * @return a list of strongs
-     */
-    private Set<String> getStrongsForPhrase(final String queryText, final SearchResult results) {
-        final List<SearchEntry> resultEntries = results.getResults();
-        final Set<String> strongs = new HashSet<String>(5);
-
-        for (final SearchEntry se : resultEntries) {
-            if (se instanceof VerseSearchEntry) {
-                final VerseSearchEntry verseSearchEntry = (VerseSearchEntry) se;
-                strongs.addAll(parseVerseSearchEntry(queryText, verseSearchEntry));
-
-            }
-        }
-
-        removeBlacklistedStrongs(strongs);
-
-        return strongs;
-    }
-
-    /**
-     * Removes strongs that can appear all over the place such as for the words "the"
-     * 
-     * @param strongs strong numbers
-     */
-    private void removeBlacklistedStrongs(final Set<String> strongs) {
-        strongs.remove(STRONG_THE);
-    }
-
-    /**
-     * Looks for a hit
-     * 
-     * @param queryString the text that is being searched for
-     * @param verseSearchEntry a verse search entry
-     * @return a list of strongs that have been found in the verse
-     */
-    private Set<String> parseVerseSearchEntry(final String queryString,
-            final VerseSearchEntry verseSearchEntry) {
-        final String preview = verseSearchEntry.getPreview();
-        final Set<String> strongs = new HashSet<String>(4);
-
-        // start at the end and work backwards
-        int firstHit = preview.lastIndexOf(queryString);
-        while (firstHit != -1) {
-            // look for strong field
-            final int startOfStrongField = preview.lastIndexOf(START_OF_STRONG_FIELD, firstHit);
-            if (startOfStrongField != -1) {
-                final int endOfStrongField = preview.indexOf('\'', startOfStrongField
-                        + START_OF_STRONG_FIELD_LENGTH);
-                final String substring = preview.substring(START_OF_STRONG_FIELD_LENGTH + startOfStrongField,
-                        endOfStrongField);
-                final String[] split = substring.split(" ");
-                for (final String potentialStrong : split) {
-                    strongs.add(potentialStrong);
-                }
-            }
-            firstHit = preview.lastIndexOf(queryString, startOfStrongField);
-        }
-
-        return strongs;
     }
 
     /**
@@ -846,7 +802,7 @@ public class SearchServiceImpl implements SearchService {
         final EntityDoc[] results = this.specificForms.search(new String[] { "accentedUnicode" },
                 searchQuery, null, null, false, "-stopWord:false");
         if (results.length == 0) {
-            return lookupFromLexicon(searchQuery, sq);
+            return lookupFromLexicon(searchQuery);
         }
 
         // if we matched more than one, then we don't have our assumed uniqueness... log warning and
@@ -862,10 +818,9 @@ public class SearchServiceImpl implements SearchService {
      * Looks up the search criteria from the lexicon
      * 
      * @param query the query
-     * @param sq the search criteria
      * @return a list of strong numbers
      */
-    private List<String> lookupFromLexicon(final String query, final SearchQuery sq) {
+    private List<String> lookupFromLexicon(final String query) {
         // if we still have nothing, then look through the definitions
         final QueryParser parser = new QueryParser(Version.LUCENE_30, "accentedUnicode",
                 this.definitions.getAnalyzer());
@@ -916,6 +871,7 @@ public class SearchServiceImpl implements SearchService {
      * @param sq
      * 
      * @param query the query to be found
+     * @param isGreek true to indicate Greek, false to indicate Hebrew
      * @return the strongs that have been found/matched.
      */
     private List<String> findByTransliteration(final String query, final boolean isGreek) {
@@ -925,14 +881,14 @@ public class SearchServiceImpl implements SearchService {
         final String simplifiedTransliteration = OriginalWordSuggestionServiceImpl
                 .getSimplifiedTransliterationClause(isGreek, lowerQuery, false);
 
-        final EntityDoc[] specificForms = this.specificForms.searchSingleColumn("simplifiedTransliteration",
-                simplifiedTransliteration, getFilter(isGreek));
+        final EntityDoc[] specificFormEntities = this.specificForms.searchSingleColumn(
+                "simplifiedTransliteration", simplifiedTransliteration, getFilter(isGreek));
 
         // finally, if we haven't found anything, then abort
-        if (specificForms.length != 0) {
-            final List<String> strongs = new ArrayList<String>(specificForms.length);
+        if (specificFormEntities.length != 0) {
+            final List<String> strongs = new ArrayList<String>(specificFormEntities.length);
             // nothing to search for..., so abort query
-            for (final EntityDoc f : specificForms) {
+            for (final EntityDoc f : specificFormEntities) {
                 strongs.add(f.get(STRONG_NUMBER_FIELD));
             }
             return strongs;

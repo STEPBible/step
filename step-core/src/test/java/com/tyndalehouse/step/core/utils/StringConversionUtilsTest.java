@@ -227,6 +227,9 @@ public class StringConversionUtilsTest {
     // - start, lineNumber));
     // }
 
+    /**
+     * Tests the hebrew transliterations does not throw exceptions
+     */
     @Test
     public void testTransliterateHebrew1() {
 
@@ -260,8 +263,6 @@ public class StringConversionUtilsTest {
         testTransliterate("כֻּוּוֹ");
         testTransliterate("דּוֻּן");
         testTransliterate("תּוָֹף");
-        //
-        // testTransliterate("אׇזְנִי");
     }
 
     /**

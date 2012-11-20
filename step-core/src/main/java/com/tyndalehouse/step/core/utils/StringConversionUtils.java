@@ -41,6 +41,7 @@ import java.text.Normalizer;
 import java.text.Normalizer.Form;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -144,7 +145,7 @@ public final class StringConversionUtils {
         }
 
         final StringBuilder sb = new StringBuilder(key.length());
-        final String[] split = key.toUpperCase().split(" ");
+        final String[] split = key.toUpperCase(Locale.ENGLISH).split(" ");
         for (final String s : split) {
             final String strongNumber = getStrongLanguageSpecificKey(s);
 
@@ -161,75 +162,93 @@ public final class StringConversionUtils {
             // check we have G or H
             final char firstChar = strongNumber.charAt(0);
             if (firstChar == 'G' || firstChar == 'H') {
-                switch (length) {
-                    case 1:
-                        sb.append(strongNumber);
-                        break;
-                    case 2:
-                        sb.append(firstChar);
-                        sb.append('0');
-                        sb.append('0');
-                        sb.append('0');
-                        sb.append(strongNumber.charAt(1));
-                        break;
-                    case 3:
-                        sb.append(firstChar);
-                        sb.append('0');
-                        sb.append('0');
-                        sb.append(strongNumber.charAt(1));
-                        sb.append(strongNumber.charAt(2));
-                        break;
-                    case 4:
-                        sb.append(firstChar);
-                        sb.append('0');
-                        sb.append(strongNumber.charAt(1));
-                        sb.append(strongNumber.charAt(2));
-                        sb.append(strongNumber.charAt(3));
-                        break;
-                    case 6:
-                        if (strongNumber.charAt(1) == '0') {
-                            sb.append(firstChar);
-                            sb.append(strongNumber.charAt(2));
-                            sb.append(strongNumber.charAt(3));
-                            sb.append(strongNumber.charAt(4));
-                            sb.append(strongNumber.charAt(5));
-                            break;
-                        }
-
-                        sb.append(strongNumber);
-                        break;
-                    default:
-                        sb.append(strongNumber);
-                        break;
-                }
+                padPrefixedStrongNumber(sb, strongNumber, length, firstChar);
             } else {
-                // we only have the numbers so do our best
-                switch (length) {
-                    case 1:
-                        sb.append('0');
-                        sb.append('0');
-                        sb.append('0');
-                        sb.append(strongNumber.charAt(0));
-                        break;
-                    case 2:
-                        sb.append('0');
-                        sb.append('0');
-                        sb.append(strongNumber.charAt(0));
-                        sb.append(strongNumber.charAt(1));
-                        break;
-                    case 3:
-                        sb.append('0');
-                        sb.append(strongNumber.charAt(0));
-                        sb.append(strongNumber.charAt(1));
-                        sb.append(strongNumber.charAt(2));
-                        break;
-                    default:
-                        sb.append(strongNumber);
-                        break;
-                }
+                padNonPrefixedStrongNumber(sb, strongNumber, length);
             }
         }
         return sb.toString().trim();
+    }
+
+    private static void padNonPrefixedStrongNumber(final StringBuilder sb, final String strongNumber,
+            final int length) {
+        // we only have the numbers so do our best
+        switch (length) {
+            case 1:
+                sb.append('0');
+                sb.append('0');
+                sb.append('0');
+                sb.append(strongNumber.charAt(0));
+                break;
+            case 2:
+                sb.append('0');
+                sb.append('0');
+                sb.append(strongNumber.charAt(0));
+                sb.append(strongNumber.charAt(1));
+                break;
+            case 3:
+                sb.append('0');
+                sb.append(strongNumber.charAt(0));
+                sb.append(strongNumber.charAt(1));
+                sb.append(strongNumber.charAt(2));
+                break;
+            default:
+                sb.append(strongNumber);
+                break;
+        }
+    }
+
+    /**
+     * Pads the given prefixed number, from say G12 to G0012
+     * 
+     * @param sb the string to build up
+     * @param strongNumber the strong number
+     * @param length the length of the string
+     * @param firstChar the first character, i.e. either G or H
+     */
+    private static void padPrefixedStrongNumber(final StringBuilder sb, final String strongNumber,
+            final int length, final char firstChar) {
+        switch (length) {
+            case 1:
+                sb.append(strongNumber);
+                break;
+            case 2:
+                sb.append(firstChar);
+                sb.append('0');
+                sb.append('0');
+                sb.append('0');
+                sb.append(strongNumber.charAt(1));
+                break;
+            case 3:
+                sb.append(firstChar);
+                sb.append('0');
+                sb.append('0');
+                sb.append(strongNumber.charAt(1));
+                sb.append(strongNumber.charAt(2));
+                break;
+            case 4:
+                sb.append(firstChar);
+                sb.append('0');
+                sb.append(strongNumber.charAt(1));
+                sb.append(strongNumber.charAt(2));
+                sb.append(strongNumber.charAt(3));
+                break;
+            case 6:
+                if (strongNumber.charAt(1) == '0') {
+                    sb.append(firstChar);
+                    sb.append(strongNumber.charAt(2));
+                    sb.append(strongNumber.charAt(3));
+                    sb.append(strongNumber.charAt(4));
+                    sb.append(strongNumber.charAt(5));
+                    break;
+                }
+
+                sb.append(strongNumber);
+                break;
+            default:
+                sb.append(strongNumber);
+                break;
+        }
     }
 
     /**
@@ -361,9 +380,9 @@ public final class StringConversionUtils {
             return HebrewUtils.transliterateHebrew(rawForm);
         }
 
-        final String normalized = Normalizer.normalize(rawForm.toLowerCase(), Form.NFD);
         // then assume Greek
-        return GreekUtils.transliterateGreek(normalized);
+        return GreekUtils.transliterateGreek(Normalizer.normalize(rawForm.toLowerCase(Locale.ENGLISH),
+                Form.NFD));
     }
 
     /**

@@ -1,3 +1,4 @@
+//CHECKSTYLE:OFF
 package com.tyndalehouse.step.tools.nave;
 
 import java.io.BufferedReader;
@@ -24,7 +25,7 @@ import org.jdom.input.SAXBuilder;
  * 
  */
 public class NaveXmlDataProcessor {
-    public static void main(final String args[]) throws IOException, JDOMException {
+    public static void main(final String[] args) throws IOException, JDOMException {
         new NaveXmlDataProcessor(
                 "D:\\dev\\projects\\step\\step-core\\src\\test\\resources\\com\\tyndalehouse\\step\\core\\data\\create\\nave.txt",
                 "d:\\temp\\nave.txt");

@@ -78,7 +78,7 @@ public class LoaderTest {
     public void testNaveLoader() {
         getLoader("test.data.path.subjects.nave", "nave.txt").loadNave();
 
-        assertExists(5, "nave", "root", "AARON");
+        assertExists("nave", "root", "AARON");
     }
 
     /**
@@ -98,7 +98,7 @@ public class LoaderTest {
     @Test
     public void testTimeline() {
         getLoader("test.data.path.timeline.events.directory", "timeline.csv").loadTimeline();
-        assertExists(1, "timelineEvent", "name", "John the Baptist");
+        assertExists("timelineEvent", "name", "John the Baptist");
     }
 
     /**
@@ -212,12 +212,11 @@ public class LoaderTest {
     /**
      * Uses a normal lucene query
      * 
-     * @param num the number of entities that should be loaded
      * @param entityName the entity name
      * @param key the key for a search using searchUniqueBySingleField
      * @param value the value to use in the search
      */
-    private void assertExists(final int num, final String entityName, final String key, final String value) {
+    private void assertExists(final String entityName, final String key, final String value) {
         getIndexReader(entityName).searchSingleColumn(key, value);
     }
 
@@ -241,8 +240,7 @@ public class LoaderTest {
      * @return reader to the relevant index
      */
     private EntityIndexReader getIndexReader(final String entityName) {
-        final EntityIndexReader reader = this.entityManager.getReader(entityName);
-        return reader;
+        return this.entityManager.getReader(entityName);
     }
 
 }

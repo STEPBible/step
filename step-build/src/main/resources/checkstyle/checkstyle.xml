@@ -157,7 +157,7 @@
     </module>
     <module name="MissingSwitchDefault"/>
     <module name="ModifiedControlVariable"/>
-    <module name="MultipleStringLiterals"/>
+<!--     <module name="MultipleStringLiterals"/> -->
     <module name="MultipleVariableDeclarations"/>
     <module name="NestedIfDepth"/>
     <module name="NestedTryDepth"/>

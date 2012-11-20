@@ -120,7 +120,6 @@ public class BibleInformationServiceImpl implements BibleInformationService {
     @Override
     public OsisWrapper getPassageText(final String version, final int startVerseId, final int endVerseId,
             final String options, final String interlinearVersion, final Boolean roundUp) {
-        // TODO FIXME: are we assuming that interlinears are not available under unlimited scrolling?
         final OsisWrapper passage = this.jswordPassage.getOsisTextByVerseNumbers(version, version,
                 startVerseId, endVerseId,
                 trim(getLookupOptions(options), version, InterlinearMode.NONE, null), interlinearVersion,
@@ -213,24 +212,7 @@ public class BibleInformationServiceImpl implements BibleInformationService {
             return options;
         }
 
-        final List<LookupOption> available = getFeaturesForVersion(version);
-        final List<LookupOption> result = new ArrayList<LookupOption>(options.size());
-        // do a crazy bubble intersect, but it's tiny so that's fine
-        for (final LookupOption loOption : options) {
-            boolean added = false;
-            for (final LookupOption avOption : available) {
-                if (loOption.equals(avOption)) {
-                    result.add(loOption);
-                    added = true;
-                    break;
-                }
-            }
-
-            // option not available in that particular version
-            if (trimmingExplanations != null && !added) {
-                trimmingExplanations.add(new TrimmedLookupOption(UNAVAILABLE_IN_VERSION, loOption));
-            }
-        }
+        final List<LookupOption> result = getUserOptionsForVersion(options, version, trimmingExplanations);
 
         // if we're not explaining why features aren't available, we don't overwrite the display mode
         InterlinearMode displayMode = mode;
@@ -257,6 +239,38 @@ public class BibleInformationServiceImpl implements BibleInformationService {
                 break;
         }
 
+        return result;
+    }
+
+    /**
+     * Given a set of options selected by the user and a verson, retrieves the options that are actually
+     * available
+     * 
+     * @param options the options given by the user
+     * @param version the version of interest
+     * @param trimmingExplanations the explanations of why options are being removed
+     * @return a potentially smaller set of options that are actually possible
+     */
+    private List<LookupOption> getUserOptionsForVersion(final List<LookupOption> options,
+            final String version, final List<TrimmedLookupOption> trimmingExplanations) {
+        final List<LookupOption> available = getFeaturesForVersion(version);
+        final List<LookupOption> result = new ArrayList<LookupOption>(options.size());
+        // do a crazy bubble intersect, but it's tiny so that's fine
+        for (final LookupOption loOption : options) {
+            boolean added = false;
+            for (final LookupOption avOption : available) {
+                if (loOption.equals(avOption)) {
+                    result.add(loOption);
+                    added = true;
+                    break;
+                }
+            }
+
+            // option not available in that particular version
+            if (trimmingExplanations != null && !added) {
+                trimmingExplanations.add(new TrimmedLookupOption(UNAVAILABLE_IN_VERSION, loOption));
+            }
+        }
         return result;
     }
 

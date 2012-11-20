@@ -83,7 +83,7 @@ public class DirectoryInstaller extends AbstractSwordInstaller {
             throw new InstallException(
                     "File not found (either source or destination). Unable to open stream to copy file.", e);
         } catch (final IOException e) {
-            throw new InstallException("General IOException. Can't read/write to specified files");
+            throw new InstallException("General IOException. Can't read/write to specified files", e);
         } finally {
             IOUtil.close(source);
             IOUtil.close(target);

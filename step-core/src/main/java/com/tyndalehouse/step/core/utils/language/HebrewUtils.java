@@ -129,6 +129,12 @@ public final class HebrewUtils {
         return sb.toString();
     }
 
+    /**
+     * Cleans up a String so that it can be indexed properly
+     * 
+     * @param stepTransliteration the transliteration to be cleaned up
+     * @return the new transliteration
+     */
     public static String removeHebrewTranslitMarkUpForIndexing(final String stepTransliteration) {
         final StringBuilder sb = new StringBuilder(stepTransliteration);
 
@@ -235,44 +241,16 @@ public final class HebrewUtils {
             // iterate through looking for Yods
             for (int ii = 0; ii < input.length; ii++) {
                 if (isHebrewConsonant(input[ii])) {
-                    if (ii >= 2 && processYod(input, letters, ii)) {
-                        // do nothing
-                    } else if (processVav(input, letters, ii)) {
-                        // do nothing
-                    } else {
-                        final HebrewLetter letter = new HebrewLetter(input[ii]);
-                        letter.setHebrewLetterType(HebrewLetterType.CONSONANT);
-                        letters[ii] = letter;
-                    }
-
+                    processHebrewConsonant(letters, input, ii);
                     processForteDagesh(input, ii, letters);
-
                 } else if (isHebrewVowel(input[ii])) {
-                    // a vowel or other pointing
-                    final HebrewLetter letter = new HebrewLetter(input[ii]);
-                    letters[ii] = letter;
-                    letter.setHebrewLetterType(HebrewLetterType.VOWEL);
-
-                    if (isAny(input[ii], SHEVA, HATAF_SEGOL, HATAF_PATAH, HATAF_QAMATS)) {
-                        letter.setVowelLengthType(VowelLengthType.VERY_SHORT);
-                    } else if (isAny(input[ii], TSERE, QAMATS, QAMATS_2, HOLAM)) {
-                        letter.setVowelLengthType(VowelLengthType.LONG);
-                    } else if (input[ii] == HIRIQ && hasAnyPointing(input, ii, true, METEG)
-                            || hasAnyPointing(input, ii, false, METEG)) {
-                        letter.setVowelLengthType(VowelLengthType.LONG);
-                    } else {
-                        letter.setVowelLengthType(VowelLengthType.SHORT);
-                    }
+                    processHebrewVowel(letters, input, ii);
                 } else if (input[ii] != DAGESH) {
-                    // accents
-                    final HebrewLetter letter = new HebrewLetter(input[ii]);
-                    letters[ii] = letter;
-                    letter.setHebrewLetterType(HebrewLetterType.ACCENT);
+                    processNonDagesh(letters, input, ii);
                 } else {
                     // dagesh
                     letters[ii] = new HebrewLetter(input[ii]);
                 }
-
             }
 
             firstPass(letters, input);
@@ -283,6 +261,7 @@ public final class HebrewUtils {
             }
 
             return transliterate(letters);
+            // CHECKSTYLE:OFF
         } catch (final RuntimeException ex) {
             // output the error analysis
             LOGGER.error("==================================================================");
@@ -301,6 +280,71 @@ public final class HebrewUtils {
             LOGGER.error("Error occured during Hebrew transliteration. Analysis is above", ex);
             throw ex;
         }
+        // CHECKSTYLE:ON
+    }
+
+    /**
+     * Processes a hebrew vowel
+     * 
+     * @param letters the input, strongly typed
+     * @param input the input as a string
+     * @param position our current position
+     */
+    private static void processHebrewVowel(final HebrewLetter[] letters, final char[] input,
+            final int position) {
+        // a vowel or other pointing
+        final HebrewLetter letter = new HebrewLetter(input[position]);
+        letter.setHebrewLetterType(HebrewLetterType.VOWEL);
+
+        if (isAny(input[position], SHEVA, HATAF_SEGOL, HATAF_PATAH, HATAF_QAMATS)) {
+            letter.setVowelLengthType(VowelLengthType.VERY_SHORT);
+        } else if (isAny(input[position], TSERE, QAMATS, QAMATS_2, HOLAM)) {
+            letter.setVowelLengthType(VowelLengthType.LONG);
+        } else if (input[position] == HIRIQ && hasAnyPointing(input, position, true, METEG)
+                || hasAnyPointing(input, position, false, METEG)) {
+            letter.setVowelLengthType(VowelLengthType.LONG);
+        } else {
+            letter.setVowelLengthType(VowelLengthType.SHORT);
+        }
+        letters[position] = letter;
+    }
+
+    /**
+     * Pre-parse processing of a Non-Dagesh character. This gets called if input[ii] character is neither a
+     * vowel, nor a consonant, nor a dagesh form
+     * 
+     * @param letters the set of letters found so far. 0-&gt;ii-1 have already been processed. ii-end are yet
+     *            to be processed
+     * @param input the input, ii indicating how far through we are
+     * @param ii ii the index of how far through we are
+     */
+    private static void processNonDagesh(final HebrewLetter[] letters, final char[] input, final int ii) {
+        // accents
+        final HebrewLetter letter = new HebrewLetter(input[ii]);
+        letters[ii] = letter;
+        letter.setHebrewLetterType(HebrewLetterType.ACCENT);
+    }
+
+    /**
+     * Pre-parse processing of a Hebrew consonant, processes the input[ii] character
+     * 
+     * @param letters the set of letters found so far. 0-&gt;ii-1 have already been processed. ii-end are yet
+     *            to be processed
+     * @param input the input, ii indicating how far through we are
+     * @param ii ii the index of how far through we are
+     */
+    private static void processHebrewConsonant(final HebrewLetter[] letters, final char[] input, final int ii) {
+        // CHECKSTYLE:OFF
+        if (ii >= 2 && processYod(input, letters, ii)) {
+            // do nothing
+        } else if (processVav(input, letters, ii)) {
+            // do nothing
+        } else {
+            final HebrewLetter letter = new HebrewLetter(input[ii]);
+            letter.setHebrewLetterType(HebrewLetterType.CONSONANT);
+            letters[ii] = letter;
+        }
+        // CHECKSTYLE:ON
     }
 
     /**
@@ -340,8 +384,13 @@ public final class HebrewUtils {
         }
     }
 
-    private static boolean isNotGeresh(final char[] input, final int ii) {
-        return input[ii] != GERESH_MUQDAM && input[ii] != GERESH;
+    /**
+     * @param input our input
+     * @param position the current position
+     * @return true if the letter is not a GERESH MUQDAM and not a GERESH character
+     */
+    private static boolean isNotGeresh(final char[] input, final int position) {
+        return input[position] != GERESH_MUQDAM && input[position] != GERESH;
     }
 
     /**
@@ -387,6 +436,7 @@ public final class HebrewUtils {
      * Transliterates letters one by one
      * 
      * @param letters the list of letters
+     * @return the transliterated string
      */
     private static String transliterate(final HebrewLetter[] letters) {
         final StringBuilder output = new StringBuilder(letters.length + 16);
@@ -399,9 +449,11 @@ public final class HebrewUtils {
     }
 
     /**
-     * Transliterate
+     * Transliterates the given input. This method creates the actual transliteration.
      * 
+     * @param letter the array of letters identified so far, after the parsing has occurred.
      * @param output current output
+     * @param current the current position in 'letter' to be processed
      */
     public static void transliterate(final HebrewLetter[] letter, final int current,
             final StringBuilder output) {
@@ -417,6 +469,23 @@ public final class HebrewUtils {
 
         final int sizeBeforeAppending = output.length();
 
+        mapHebrewLetterToTransliteratedLetter(current, output, currentLetter, c);
+
+        doubleHyphenateIfApplicable(output, currentLetter, sizeBeforeAppending);
+    }
+
+    /**
+     * Given the current input, examines the letter and outputs the relevant character to the StringBuilder
+     * output.
+     * 
+     * @param current the current position
+     * @param output the rendered output
+     * @param currentLetter the current letter
+     * @param c the char value that we are examining
+     */
+    // CHECKSTYLE:OFF
+    private static void mapHebrewLetterToTransliteratedLetter(final int current, final StringBuilder output,
+            final HebrewLetter currentLetter, final char c) {
         switch (c) {
         // consonants
             case ALEPH:
@@ -570,7 +639,19 @@ public final class HebrewUtils {
             default:
                 break;
         }
+    }
 
+    // CHECKSTYLE:ON
+
+    /**
+     * Adds the hyphens in for doubled letters
+     * 
+     * @param output the output rendered so far
+     * @param currentLetter the current letter under examination
+     * @param sizeBeforeAppending the size of the output, prior to process the currentLetter.
+     */
+    private static void doubleHyphenateIfApplicable(final StringBuilder output,
+            final HebrewLetter currentLetter, final int sizeBeforeAppending) {
         // doubling and hyphenating
         if (currentLetter.isDoubled()) {
             output.append('-');
@@ -677,7 +758,7 @@ public final class HebrewUtils {
      *  (a => a(,
      * </pre>
      * 
-     * @param output
+     * @param output the output which may need letters swapped
      */
     private static void doEndings(final StringBuilder output) {
 
@@ -768,6 +849,14 @@ public final class HebrewUtils {
         return vowel;
     }
 
+    /**
+     * Returns the closest vowel, looking forwards or backwards depending on the parameters passed in
+     * 
+     * @param letters the input
+     * @param currentPosition our current position in the input
+     * @param forwards true for looking ahead, false for looking backwards
+     * @return the Hebrew vowel, or null if not found
+     */
     private static HebrewLetter getCloseVowel(final HebrewLetter[] letters, final int currentPosition,
             final boolean forwards) {
         final int increment = forwards ? 1 : -1;
@@ -817,12 +906,11 @@ public final class HebrewUtils {
         }
 
         final char consonant = input[currentPosition];
-        if (isAny(consonant, BET, GIMEL, DALET, KAF, PE, TAV)) {
-            if (hasAnyPointing(input, currentPosition, false, SHEVA)) {
-                // not dagesh forte if any of those letters
-                letters[currentPosition].setConsonantType(ConsonantType.SINGLE);
-                return;
-            }
+        if (isAny(consonant, BET, GIMEL, DALET, KAF, PE, TAV)
+                && hasAnyPointing(input, currentPosition, false, SHEVA)) {
+            // not dagesh forte if any of those letters
+            letters[currentPosition].setConsonantType(ConsonantType.SINGLE);
+            return;
         }
         letters[currentPosition].setConsonantType(ConsonantType.DOUBLE);
     }
@@ -903,6 +991,13 @@ public final class HebrewUtils {
         return false;
     }
 
+    /**
+     * Finds where the next Hebrew constant is
+     * 
+     * @param inputString the input
+     * @param currentPosition our current position in the input
+     * @return the position of the next hebrew consonant
+     */
     private static int nextHebrewConsonant(final char[] inputString, final int currentPosition) {
         int ii = currentPosition + 1;
         while (ii < inputString.length && !isHebrewConsonant(inputString[ii])) {

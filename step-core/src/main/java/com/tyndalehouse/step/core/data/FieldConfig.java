@@ -44,6 +44,17 @@ public class FieldConfig {
     }
 
     /**
+     * 
+     * @param name the name of the Lucene field
+     * @param rawDataField the names of the matching fields in the data file
+     * @param store the type of store
+     * @param index the type of index
+     */
+    public FieldConfig(final String name, final String[] rawDataField, final Store store, final Index index) {
+        this(name, rawDataField, store, index, null);
+    }
+
+    /**
      * Gets a numerical field
      * 
      * @param fieldValue the field value

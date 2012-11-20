@@ -129,6 +129,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
      * @param versificationService jsword versification service
      * @param morphologyProvider provides morphological information
      * @param vocabProvider the service providing lexicon and vocabulary information
+     * @param colorCoder the service to color code a passage
      */
     @Inject
     public JSwordPassageServiceImpl(final JSwordVersificationService versificationService,
@@ -515,7 +516,6 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
     }
 
     // TODO: can we make this more performant by not re-compiling stylesheet - or is already cached
-    // FIXME TODO: JS-109, email from CJB on 27/02/2011 remove synchronisation once book is fixed
     @Override
     public OsisWrapper getOsisText(final String version, final String reference,
             final List<LookupOption> options, final String interlinearVersion,
@@ -570,6 +570,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
      * Removes verse 0 if present
      * 
      * @param reference the reference we wish to normalize
+     * @param v the versification that goes with the reference
      */
     void normalize(final Key reference, final Versification v) {
         final Passage passage = KeyUtil.getPassage(reference, v);

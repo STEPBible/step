@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.tyndalehouse.step.core.data.EntityConfiguration;
-import com.tyndalehouse.step.core.data.entities.impl.EntityIndexReaderImpl;
 
 /**
  * Memory only lucene indexes...

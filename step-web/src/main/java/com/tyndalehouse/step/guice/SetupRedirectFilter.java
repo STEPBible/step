@@ -42,11 +42,11 @@ public class SetupRedirectFilter implements Filter {
     public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain chain)
             throws IOException, ServletException {
         if (this.jsword.isInstalled(MANDATORY_MODULES)) {
-
+            // do nothing
+            chain.doFilter(request, response);
         } else {
             request.getRequestDispatcher("firstTime.jsp").forward(request, response);
         }
-        chain.doFilter(request, response);
     }
 
     @Override

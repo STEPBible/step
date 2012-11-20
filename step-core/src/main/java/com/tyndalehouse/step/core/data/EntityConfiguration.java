@@ -6,6 +6,7 @@ import static org.apache.lucene.util.Version.LUCENE_30;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,6 +31,7 @@ import com.tyndalehouse.step.core.utils.IOUtils;
  * 
  */
 public class EntityConfiguration {
+    private static final String UNABLE_TO_PARSE_CONFIGURATION_FILE = "Unable to parse configuration file";
     private static final String ENTITY_FIELDS_PREFIX = "entity.fields.";
     private final String name;
     private Map<String, FieldConfig> luceneFieldConfiguration;
@@ -41,7 +43,8 @@ public class EntityConfiguration {
     /**
      * Creates an entity configuration from a file
      * 
-     * @param entityName the resource
+     * @param path the path to where we've stored our entities
+     * @param entityName the name of the entity
      */
     public EntityConfiguration(final String path, final String entityName) {
         this.entityHome = path;
@@ -55,6 +58,7 @@ public class EntityConfiguration {
      * 
      * @param properties the set of properties
      */
+    @SuppressWarnings("unchecked")
     private void parseProperties(final Properties properties) {
         try {
             final String analyzerProperty = properties.getProperty("entity.analyzer");
@@ -75,8 +79,16 @@ public class EntityConfiguration {
             if (isNotBlank(processor)) {
                 this.postProcessorInstance = (PostProcessor) Class.forName(processor).newInstance();
             }
-        } catch (final Exception e) {
-            throw new StepInternalException("Unable to parse configuration file", e);
+        } catch (final IllegalAccessException e) {
+            throw new StepInternalException(UNABLE_TO_PARSE_CONFIGURATION_FILE, e);
+        } catch (final ClassNotFoundException e) {
+            throw new StepInternalException(UNABLE_TO_PARSE_CONFIGURATION_FILE, e);
+        } catch (final InvocationTargetException e) {
+            throw new StepInternalException(UNABLE_TO_PARSE_CONFIGURATION_FILE, e);
+        } catch (final InstantiationException e) {
+            throw new StepInternalException(UNABLE_TO_PARSE_CONFIGURATION_FILE, e);
+        } catch (final NoSuchMethodException e) {
+            throw new StepInternalException(UNABLE_TO_PARSE_CONFIGURATION_FILE, e);
         }
 
         parseFieldConfigs(properties);
@@ -111,9 +123,10 @@ public class EntityConfiguration {
     private void parseFieldConfig(final String fieldName, final String value) {
         final String[] parts = split(value, ",");
         final String[] rawFieldMappings = split(parts[0], "\\|");
-        final FieldConfig fieldConfig = new FieldConfig(fieldName, rawFieldMappings,
-                Field.Store.valueOf(parts[1]), Field.Index.valueOf(parts[2]), parts.length > 3 ? parts[3]
-                        : null);
+
+        final FieldConfig fieldConfig = parts.length > 3 ? new FieldConfig(fieldName, rawFieldMappings,
+                Field.Store.valueOf(parts[1]), Field.Index.valueOf(parts[2]), parts[3]) : new FieldConfig(
+                fieldName, rawFieldMappings, Field.Store.valueOf(parts[1]), Field.Index.valueOf(parts[2]));
         this.luceneFieldConfiguration.put(fieldName, fieldConfig);
     }
 
@@ -194,6 +207,11 @@ public class EntityConfiguration {
         return this.postProcessorInstance;
     }
 
+    /**
+     * @param fieldName the name of the field
+     * @param fieldValue the value of that field
+     * @return a {@link Fieldable} which represents these values
+     */
     public Fieldable getField(final String fieldName, final String fieldValue) {
         return this.luceneFieldConfiguration.get(fieldName).getField(fieldValue);
     }

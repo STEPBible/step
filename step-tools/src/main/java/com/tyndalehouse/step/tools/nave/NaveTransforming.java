@@ -1,3 +1,4 @@
+//CHECKSTYLE:OFF
 package com.tyndalehouse.step.tools.nave;
 
 import java.io.BufferedReader;
@@ -6,7 +7,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -281,31 +281,6 @@ public class NaveTransforming {
             return false;
         }
         return true;
-    }
-
-    private void addLastChildren(final Map<String, Map<String, List<Tree<String>>>> firstAndLast,
-            final Tree<String> value, final String rootKey) {
-        final List<Tree<String>> children = value.getChildren();
-
-        if (children.size() != 0) {
-            for (final Tree<String> child : children) {
-                addLastChildren(firstAndLast, child, rootKey);
-            }
-        } else {
-            Map<String, List<Tree<String>>> map = firstAndLast.get(rootKey);
-            if (map == null) {
-                map = new HashMap<String, List<Tree<String>>>();
-                firstAndLast.put(rootKey, map);
-            }
-
-            List<Tree<String>> list = map.get(value.getRoot().toLowerCase());
-            if (list == null) {
-                // good, first entry = hopefully the only one
-                list = new ArrayList<Tree<String>>(2);
-                map.put(value.getRoot().toLowerCase(), list);
-            }
-            list.add(value);
-        }
     }
 
     private int numSpaces(final String line) {

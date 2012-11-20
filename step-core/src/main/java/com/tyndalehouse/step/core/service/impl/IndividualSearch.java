@@ -138,9 +138,9 @@ public class IndividualSearch {
      */
     private void matchOriginalFilter(final String parseableQuery) {
         this.query = parseableQuery;
-        final String originalFilter = matchFirstGroupAndRemove(ORIGINAL_FILTER);
-        if (isNotBlank(originalFilter)) {
-            this.originalFilter = originalFilter.split(",");
+        final String filter = matchFirstGroupAndRemove(ORIGINAL_FILTER);
+        if (isNotBlank(filter)) {
+            this.originalFilter = filter.split(",");
         }
     }
 
@@ -299,7 +299,7 @@ public class IndividualSearch {
      * @param versions overwrites the versions
      */
     public void setVersions(final String[] versions) {
-        this.versions = versions;
+        this.versions = versions.clone();
 
     }
 

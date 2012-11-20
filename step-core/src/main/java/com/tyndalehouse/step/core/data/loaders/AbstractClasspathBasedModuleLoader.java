@@ -67,8 +67,8 @@ public abstract class AbstractClasspathBasedModuleLoader implements ModuleLoader
     }
 
     @Override
-    public void init(final Loader mainLoader) {
-        this.mainLoader = mainLoader;
+    public void init(final Loader loader) {
+        this.mainLoader = loader;
         LOG.debug("Loading entities for [{}]", this.resourcePath);
         readDataFile();
     }

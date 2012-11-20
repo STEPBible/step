@@ -86,6 +86,7 @@ public final class GreekUtils {
      * @param normalized the normalised string
      * @return the equivalent transliteration
      */
+    // CHECKSTYLE:OFF
     public static String transliterateGreek(final String normalized) {
         final StringBuilder sb = new StringBuilder(normalized);
         int position = 0;
@@ -240,9 +241,10 @@ public final class GreekUtils {
             }
         }
 
-        final String s = sb.toString();
-        return s;
+        return sb.toString();
     }
+
+    // CHECKSTYLE:ON
 
     /**
      * @return gives the hebrew list of transliteration rules

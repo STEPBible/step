@@ -1,1 +1,1 @@
-javaw -jar step-server-${project.version}.jar
+java -jar step-server-${project.version}.jar

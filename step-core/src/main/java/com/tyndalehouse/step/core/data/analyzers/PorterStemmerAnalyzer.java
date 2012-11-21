@@ -19,6 +19,7 @@ public class PorterStemmerAnalyzer extends Analyzer {
      * 
      * @param fieldName the name of the field
      * @param reader the reader of the input string
+     * @return the token stream, with the appropriate filters
      */
     @Override
     public final TokenStream tokenStream(final String fieldName, final Reader reader) {

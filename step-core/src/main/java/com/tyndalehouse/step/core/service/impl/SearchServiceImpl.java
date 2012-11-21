@@ -118,6 +118,7 @@ public class SearchServiceImpl implements SearchService {
      * @param timeline the timeline service
      * @param jswordSearch the search service
      * @param entityManager the manager for all entities stored in lucene
+     * @param subjects the service that executes Subject searches
      */
     @Inject
     public SearchServiceImpl(final JSwordSearchService jswordSearch, final JSwordPassageService jsword,

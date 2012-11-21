@@ -40,6 +40,7 @@ public class SearchController {
     /**
      * @param search the search service
      * @param originalWordSuggestions the original word suggestions
+     * @param subjectSearch the subject searhc service
      */
     @Inject
     public SearchController(final SearchService search,

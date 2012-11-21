@@ -23,6 +23,7 @@ import com.tyndalehouse.step.core.service.VocabularyService;
  */
 @Singleton
 public class VocabularyServiceImpl implements VocabularyService {
+    private static final String MULTI_WORD_SEPARATOR = " | ";
     private static final Logger LOGGER = LoggerFactory.getLogger(VocabularyServiceImpl.class);
     private static final String STRONG_SEPARATORS = "[ ,]+";
     private static final String HIGHER_STRONG = "STRONG:";
@@ -126,7 +127,6 @@ public class VocabularyServiceImpl implements VocabularyService {
         // else we lookup and concatenate
         final EntityDoc[] lds = getLexiconDefinitions(keys);
 
-        // TODO - if nothing there, for now we just return the ids we got
         if (lds.length == 0) {
             return vocabIdentifiers;
         }
@@ -143,7 +143,7 @@ public class VocabularyServiceImpl implements VocabularyService {
             final EntityDoc l = lds[ii];
             sb.append(provider.getData(l));
             if (ii + 1 < lds.length) {
-                sb.append(", ");
+                sb.append(MULTI_WORD_SEPARATOR);
             }
         }
         sb.append(']');

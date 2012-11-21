@@ -183,10 +183,10 @@ public class NaveXmlDataProcessor {
         return retValue;
     }
 
-    private void processEntryFree(final Tree t, final Document doc, final Element entryFree)
+    private void processEntryFree(final Tree<String> t, final Document doc, final Element entryFree)
             throws IOException {
+        @SuppressWarnings("unchecked")
         final List<Content> contents = entryFree.getChildren();
-        final Tree<String> childTree = null;
         for (final Content c : contents) {
             if (c instanceof Element) {
                 final Element element = (Element) c;

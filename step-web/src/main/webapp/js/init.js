@@ -79,6 +79,11 @@ function init() {
 }
 
 function checkValidUser() {
+    //if we're running locally, then just return
+    if(window.location.host.startsWith("localhost")) {
+        return;
+    }
+    
     var email = $.localStore("userEmail");
     if(!step.util.isBlank(email)) {
         return;

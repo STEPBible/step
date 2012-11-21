@@ -958,25 +958,6 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
     }
 
     /**
-     * If the key exists in one of the book, returns true, otherwise false
-     * 
-     * @param bookData the book data containing all books and the key
-     * @return true if the key exists in one of the books
-     */
-    private boolean keyExistsInBook(final BookData bookData) {
-        final Book[] books = bookData.getBooks();
-
-        final Key key = bookData.getKey();
-        for (final Book b : books) {
-            if (b.contains(key)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
      * At the moment, we only support one stylesheet at the moment, so we only need to return one This may
      * change, but at that point we'll have a cleared view on requirements. For now, if one of the options
      * triggers anything but the default, then we return that. returns the stylesheet that should be used to

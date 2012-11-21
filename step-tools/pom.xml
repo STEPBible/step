@@ -62,4 +62,48 @@
 		    <version>2.4</version>
 		</dependency>
 	</dependencies>
+	
+	<build>
+	    <pluginManagement>
+			<plugins>
+			    <plugin>
+			      <groupId>org.apache.maven.plugins</groupId>
+			      <artifactId>maven-eclipse-plugin</artifactId>
+			      <version>2.9</version>
+			      <configuration>
+				 <downloadSources>true</downloadSources>
+				 <downloadJavadocs>false</downloadJavadocs>
+				 <wtpversion>2.0</wtpversion>
+				  <additionalProjectnatures>
+				    <projectnature>org.maven.ide.eclipse.maven2Nature</projectnature>
+				 </additionalProjectnatures>
+				 <additionalBuildcommands>
+				    <buildcommand>com.avaje.eclipse.buildplugin.enhanceBuilder</buildcommand>
+				 </additionalBuildcommands>
+				 <additionalConfig>
+				    <file>
+				       <name>.settings/org.eclipse.jdt.core.prefs</name>
+				       <location>/eclipse/org.eclipse.jdt.core.prefs</location>
+				    </file>
+				    <file>
+				       <name>.settings/org.eclipse.jdt.ui.prefs</name>
+				       <location>/eclipse/org.eclipse.jdt.ui.prefs</location>
+				    </file>
+				    <file>
+				       <name>.settings/org.eclipse.core.resources.prefs</name>
+				       <content><![CDATA[eclipse.preferences.version=1${line.separator}encoding/<project>=${project.build.sourceEncoding}${line.separator}]]></content>
+				    </file>
+				 </additionalConfig>
+			      </configuration>
+			      <dependencies>
+				 <dependency>
+				    <groupId>com.tyndalehouse.step</groupId>
+				    <artifactId>step-build</artifactId>
+				    <version>${project.version}</version>
+				 </dependency>
+			      </dependencies>
+			   </plugin>
+			</plugins>
+	    </pluginManagement>
+	</build>
 </project>

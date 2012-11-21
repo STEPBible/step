@@ -125,6 +125,7 @@ public interface EntityIndexReader extends Closeable {
      * @param analyzePrefix true to use an analyzer on the prefix
      * @param queryRemainder an extra bit to add to the query
      * @param maxResults the maximum number of results
+     * @param useOrOperatorBetweenValues which operator to use, true for OR, false for AND
      * @return the expected results
      */
     EntityDoc[] search(String[] fieldNames, String value, Filter filter, Sort sort, boolean analyzePrefix,

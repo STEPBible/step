@@ -72,6 +72,7 @@ public final class StringConversionUtils {
     }
 
     /**
+     * @param strongNumber the strong number to consider, whether to display or not
      * @return true if not G3588 and not null/blank. To be extended later to include other words
      */
     public boolean isDisplayableStrongNumber(final String strongNumber) {
@@ -170,32 +171,20 @@ public final class StringConversionUtils {
         return sb.toString().trim();
     }
 
+    /**
+     * Pads any strong number that is not prefixed by a letter such as G or H
+     * 
+     * @param sb the output buffer
+     * @param strongNumber the strong number itself
+     * @param length the length of the strong number
+     */
     private static void padNonPrefixedStrongNumber(final StringBuilder sb, final String strongNumber,
             final int length) {
         // we only have the numbers so do our best
-        switch (length) {
-            case 1:
-                sb.append('0');
-                sb.append('0');
-                sb.append('0');
-                sb.append(strongNumber.charAt(0));
-                break;
-            case 2:
-                sb.append('0');
-                sb.append('0');
-                sb.append(strongNumber.charAt(0));
-                sb.append(strongNumber.charAt(1));
-                break;
-            case 3:
-                sb.append('0');
-                sb.append(strongNumber.charAt(0));
-                sb.append(strongNumber.charAt(1));
-                sb.append(strongNumber.charAt(2));
-                break;
-            default:
-                sb.append(strongNumber);
-                break;
+        for (int ii = length; ii < 4; ii++) {
+            sb.append('0');
         }
+        sb.append(strongNumber);
     }
 
     /**

@@ -59,6 +59,7 @@ public class SubjectSearchServiceImpl implements SubjectSearchService {
      * @param entityManager an entity manager providing access to all the different entities.
      * @param jswordSearch the search library for jsword
      * @param jsword the jsword library
+     * @param versificationService the versification service
      */
     @Inject
     public SubjectSearchServiceImpl(final EntityManager entityManager,

@@ -33,9 +33,7 @@
 package com.tyndalehouse.step.core.service.impl;
 
 import static com.tyndalehouse.step.core.utils.JSwordUtils.getSortedSerialisableList;
-import static com.tyndalehouse.step.core.utils.StringUtils.split;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -50,15 +48,12 @@ import org.crosswire.jsword.book.BookCategory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.models.BibleVersion;
 import com.tyndalehouse.step.core.models.ClientSession;
-import com.tyndalehouse.step.core.models.Definition;
 import com.tyndalehouse.step.core.service.ModuleService;
 import com.tyndalehouse.step.core.service.jsword.JSwordModuleService;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import com.tyndalehouse.step.core.utils.CollectionUtils;
-import com.tyndalehouse.step.core.utils.StringConversionUtils;
 
 /**
  * Looks up module information, for example lexicon definitions for particular references
@@ -90,40 +85,6 @@ public class ModuleServiceImpl implements ModuleService {
         this.jsword = jsword;
         this.jswordModuleService = jswordModuleService;
         this.clientSession = clientSession;
-    }
-
-    // TODO: deprecated?
-    @Override
-    public Definition getDefinition(final String reference) {
-        final String lookupModule = getLookupModule(reference);
-        if (lookupModule != null) {
-            return new Definition(reference, this.jsword.getOsisText(lookupModule,
-                    StringConversionUtils.getAnyKey(reference, false)).getReference());
-        }
-
-        LOGGER.warn("No module could be found for [{}]", reference);
-        return null;
-    }
-
-    @Override
-    public List<Definition> getDefinitions(final String references) {
-        // first we split the definitions in separate parts
-        final String[] refs = split(references);
-
-        if (refs == null) {
-            throw new StepInternalException("No references were provided");
-        }
-
-        final List<Definition> defs = new ArrayList<Definition>();
-        for (final String r : refs) {
-            LOGGER.debug("Looking up {}", r);
-            final Definition definition = getDefinition(r);
-            if (definition != null) {
-                defs.add(definition);
-            }
-        }
-
-        return defs;
     }
 
     /**

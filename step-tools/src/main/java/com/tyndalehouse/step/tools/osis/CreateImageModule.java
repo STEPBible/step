@@ -1,7 +1,6 @@
 package com.tyndalehouse.step.tools.osis;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -11,7 +10,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,15 +21,10 @@ public class CreateImageModule {
     private static final List<Verse> verses = new ArrayList<Verse>();
     private static final List<Chapter> chapters = new ArrayList<Chapter>();
     private static final String START_CHAPTER = "<chapter osisID=\"";
-    private static final String START_VERSE_DECLARATION = "<verse osisID=\"";
     private static final String START_FIGURE = "<figure src=\"commentary_images/";
     private static final String END_CHAPTER = "</chapter>";
-    private static final String END_VERSE = "</verse>";
     private static final String END_CHAPTER_DECLARATION = "\">";
-    private static final String END_VERSE_DECLARATION = END_CHAPTER_DECLARATION;
     private static final String END_FIGURE_DECLARATION = "\" />";
-    private static final String START_BOOK = "<div type=\"book\" osisID=\"";
-    private static final String END_BOOK_DECLARATION = "\">";
 
     // e.g. aWord[400242]= "Mat.24.28"
     private static final Pattern verseMatcher = Pattern
@@ -85,8 +78,6 @@ public class CreateImageModule {
 
     private void output() throws IOException, URISyntaxException {
         // read the template
-        final String file = FileUtils.readFileToString(new File(getClass().getResource("/imageModule.txt")
-                .toURI()));
 
         int currentVerse = 0;
         final int oldCurrentVerse = 0;

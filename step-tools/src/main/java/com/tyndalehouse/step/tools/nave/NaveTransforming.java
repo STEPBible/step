@@ -164,8 +164,8 @@ public class NaveTransforming {
      */
     private void matchFiles(final Map<String, Map<String, List<Tree<String>>>> firstAndLast)
             throws IOException {
-        final BufferedReader br = new BufferedReader(new FileReader(("d:\\temp\\nave.txt")));
-        final BufferedWriter wr = new BufferedWriter(new FileWriter(("d:\\temp\\nave_matched.txt")));
+        final BufferedReader br = new BufferedReader(new FileReader("d:\\temp\\nave.txt"));
+        final BufferedWriter wr = new BufferedWriter(new FileWriter("d:\\temp\\nave_matched.txt"));
 
         // read an entry:
         Nave n;

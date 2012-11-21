@@ -20,6 +20,7 @@ public class ExpandableSubjectHeadingEntry implements SearchEntry {
     /**
      * @param root the root entry
      * @param heading the heading
+     * @param seeAlso the field containing internal references to other entries
      */
     public ExpandableSubjectHeadingEntry(final String root, final String heading, final String seeAlso) {
         this.root = root;

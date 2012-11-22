@@ -182,6 +182,11 @@ public class SearchQuery {
         return this.definitions;
     }
 
+    /**
+     * Gives the search query a bunch of definitions that have been found, using it in a "session" fashion.
+     * 
+     * @param definitions the list of definitions.
+     */
     public void setDefinitions(final EntityDoc[] definitions) {
         final List<EntityDoc> list = new ArrayList<EntityDoc>(definitions.length);
         for (final EntityDoc d : definitions) {

@@ -2,24 +2,14 @@ package com.tyndalehouse.step.core.service.search.impl;
 
 import static com.tyndalehouse.step.core.models.LookupOption.HEADINGS_ONLY;
 import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
-import static org.apache.lucene.queryParser.QueryParser.escape;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.inject.Inject;
 
-import org.crosswire.jsword.book.Book;
-import org.crosswire.jsword.passage.Key;
-import org.crosswire.jsword.passage.NoSuchKeyException;
-import org.crosswire.jsword.passage.Passage;
-import org.crosswire.jsword.passage.RestrictionType;
-import org.crosswire.jsword.passage.Verse;
-import org.crosswire.jsword.passage.VerseRange;
-import org.crosswire.jsword.versification.Versification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,18 +17,15 @@ import com.google.inject.Singleton;
 import com.tyndalehouse.step.core.data.EntityDoc;
 import com.tyndalehouse.step.core.data.EntityIndexReader;
 import com.tyndalehouse.step.core.data.EntityManager;
-import com.tyndalehouse.step.core.models.LookupOption;
-import com.tyndalehouse.step.core.models.OsisWrapper;
 import com.tyndalehouse.step.core.models.search.ExpandableSubjectHeadingEntry;
 import com.tyndalehouse.step.core.models.search.SearchEntry;
 import com.tyndalehouse.step.core.models.search.SearchResult;
 import com.tyndalehouse.step.core.models.search.SubjectHeadingSearchEntry;
 import com.tyndalehouse.step.core.service.impl.IndividualSearch;
 import com.tyndalehouse.step.core.service.impl.SearchQuery;
-import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import com.tyndalehouse.step.core.service.jsword.JSwordSearchService;
-import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
 import com.tyndalehouse.step.core.service.search.SubjectSearchService;
+import com.tyndalehouse.step.core.utils.StringUtils;
 
 /**
  * Searches for a subject
@@ -49,149 +36,23 @@ import com.tyndalehouse.step.core.service.search.SubjectSearchService;
 @Singleton
 public class SubjectSearchServiceImpl implements SubjectSearchService {
     private static final Logger LOGGER = LoggerFactory.getLogger(SubjectSearchServiceImpl.class);
-    private static final int AGGREGATING_VERSE_DISTANCE = 10;
     private final EntityIndexReader naves;
     private final JSwordSearchService jswordSearch;
-    private final JSwordPassageService jsword;
-    private final JSwordVersificationService versificationService;
 
     /**
      * @param entityManager an entity manager providing access to all the different entities.
-     * @param jswordSearch the search library for jsword
-     * @param jsword the jsword library
-     * @param versificationService the versification service
+     * @param jswordSearch the search service for text searching in jsword
      */
     @Inject
-    public SubjectSearchServiceImpl(final EntityManager entityManager,
-            final JSwordSearchService jswordSearch, final JSwordPassageService jsword,
-            final JSwordVersificationService versificationService) {
+    public SubjectSearchServiceImpl(final EntityManager entityManager, final JSwordSearchService jswordSearch) {
         this.jswordSearch = jswordSearch;
-        this.jsword = jsword;
-        this.versificationService = versificationService;
         this.naves = entityManager.getReader("nave");
-    }
-
-    @Override
-    public List<OsisWrapper> getSubjectVerses(final String root, final String fullHeader, final String version) {
-        final StringBuilder sb = new StringBuilder(root.length() + fullHeader.length() + 64);
-
-        sb.append("+root:\"");
-        sb.append(escape(root));
-        sb.append("\" ");
-
-        sb.append("+fullHeader:\"");
-        sb.append(escape(fullHeader));
-        sb.append("\"");
-
-        return getVersesForResults(this.naves.search("root", sb.toString()), version);
-    }
-
-    /**
-     * obtains the verses for all results
-     * 
-     * @param results the results
-     * @param version the version in which to look it up
-     * @return the verses
-     */
-    private List<OsisWrapper> getVersesForResults(final EntityDoc[] results, final String version) {
-        final List<OsisWrapper> verses = new ArrayList<OsisWrapper>(32);
-        for (final EntityDoc doc : results) {
-            final String references = doc.get("references");
-            collectVersesFromReferences(verses, version, references);
-        }
-        return verses;
-    }
-
-    /**
-     * Collects individual ranges
-     * 
-     * @param verses the verses
-     * @param version the version
-     * @param references the list of references
-     */
-    private void collectVersesFromReferences(final List<OsisWrapper> verses, final String version,
-            final String references) {
-        final Passage verseRanges = this.jsword.getVerseRanges(references, version);
-        final Iterator<Key> rangeIterator = verseRanges.rangeIterator(RestrictionType.NONE);
-        final List<LookupOption> options = new ArrayList<LookupOption>();
-        options.add(LookupOption.HIDE_XGEN);
-
-        final Book book = this.versificationService.getBookFromVersion(version);
-        final Versification av11n = this.versificationService.getVersificationForVersion(book);
-
-        Verse lastVerse = null;
-        while (rangeIterator.hasNext()) {
-            final Key range = rangeIterator.next();
-
-            // get the distance between the first verse in the range and the last verse
-            if (lastVerse != null && isCloseVerse(av11n, lastVerse, range)) {
-                final OsisWrapper osisWrapper = verses.get(verses.size() - 1);
-                final StringBuilder stringBuilder = new StringBuilder();
-                stringBuilder.append(osisWrapper.getReference());
-                stringBuilder.append("; ");
-                stringBuilder.append(range.getName());
-                osisWrapper.setFragment(true);
-                try {
-                    osisWrapper.setReference(book.getKey(stringBuilder.toString()).getName());
-                } catch (final NoSuchKeyException e) {
-                    // fail to get a key, let's log and continue
-                    LOGGER.warn("Unable to get key for reference: [{}]", osisWrapper.getReference());
-                    LOGGER.trace("Root cause is", e);
-                }
-            } else {
-
-                final Key firstVerse = this.jsword.getFirstVerseFromRange(range);
-
-                final OsisWrapper passage = this.jsword.peakOsisText(book, firstVerse, options);
-                passage.setReference(range.getName());
-
-                if (range.getCardinality() > 1) {
-                    passage.setFragment(true);
-                }
-                verses.add(passage);
-            }
-
-            // record last verse
-            if (range instanceof VerseRange) {
-                final VerseRange verseRange = (VerseRange) range;
-                lastVerse = verseRange.getEnd();
-            } else if (range instanceof Verse) {
-                lastVerse = (Verse) range;
-            }
-
-        }
-    }
-
-    /**
-     * @param av11n the versification
-     * @param range the range/verse
-     * @param lastVerse the last verse
-     * @return true if the verse should be wrapped in with the range before
-     */
-    private boolean isCloseVerse(final Versification av11n, final Verse lastVerse, final Key range) {
-        Verse startOfNextRange = null;
-        if (range instanceof VerseRange) {
-            final VerseRange verseRange = (VerseRange) range;
-            startOfNextRange = verseRange.getStart();
-        } else if (range instanceof Verse) {
-            startOfNextRange = (Verse) range;
-        } else {
-            // unable to determine whether the verses are close or not...
-            return false;
-        }
-
-        final int distance = Math.abs(av11n.distance(lastVerse, startOfNextRange));
-
-        if (distance < AGGREGATING_VERSE_DISTANCE) {
-            return true;
-        }
-
-        return false;
     }
 
     @Override
     public SearchResult search(final SearchQuery sq) {
         final IndividualSearch currentSearch = sq.getCurrentSearch();
+        LOGGER.debug("Executing subject search of type [{}]", currentSearch.getType());
 
         switch (currentSearch.getType()) {
             case SUBJECT_SIMPLE:
@@ -210,11 +71,10 @@ public class SubjectSearchServiceImpl implements SubjectSearchService {
     /**
      * runs a simple subject search
      * 
-     * @return the results
      * @param sq the search query
+     * @return the results
      **/
     private SearchResult searchSimple(final SearchQuery sq) {
-        // TODO we assume we can only search against one version for headings...
         final SearchResult headingsSearch = this.jswordSearch.search(sq,
                 sq.getCurrentSearch().getVersions()[0], HEADINGS_ONLY);
 
@@ -238,8 +98,17 @@ public class SubjectSearchServiceImpl implements SubjectSearchService {
      */
     private SearchResult searchExtended(final SearchQuery sq) {
         final long start = System.currentTimeMillis();
-        final EntityDoc[] results = this.naves.searchSingleColumn("rootStem", sq.getCurrentSearch()
-                .getQuery(), false);
+        final String query = sq.getCurrentSearch().getQuery();
+
+        final String[] split = StringUtils.split(query, ",");
+        final StringBuilder sb = new StringBuilder(query.length() + 16);
+        for (final String s : split) {
+            // set mandatory
+            sb.append('+');
+            sb.append(s);
+        }
+
+        final EntityDoc[] results = this.naves.searchSingleColumn("rootStem", query, false);
         return getHeadingsSearchEntries(start, results);
     }
 
@@ -276,42 +145,9 @@ public class SubjectSearchServiceImpl implements SubjectSearchService {
                 final ExpandableSubjectHeadingEntry e1 = (ExpandableSubjectHeadingEntry) o1;
                 final ExpandableSubjectHeadingEntry e2 = (ExpandableSubjectHeadingEntry) o2;
 
-                final int rootCompare = e1.getRoot().compareToIgnoreCase(e2.getRoot());
-                if (rootCompare != 0) {
-                    return rootCompare;
-                }
-
-                // we make sure that entries that start with "See " go to the bottom
-
-                final String e1SeeAlso = e1.getSeeAlso();
-                final String e2SeeAlso = e2.getSeeAlso();
-
-                final boolean isSeeRef1 = isBlank(e1SeeAlso);
-                final boolean isSeeRef2 = isBlank(e2SeeAlso);
-                if (isSeeRef1 && !isSeeRef2) {
-                    return 1;
-                }
-
-                if (!isSeeRef1 && isSeeRef2) {
-                    return -1;
-                }
-
-                final String heading1 = e1.getHeading();
-                final String heading2 = e1.getHeading();
-                if (heading1 == null && heading2 == null) {
-                    return 0;
-                }
-
-                if (heading1 == null) {
-                    return -1;
-                }
-
-                if (heading2 == null) {
-                    return 1;
-                }
-
-                return heading1.compareToIgnoreCase(heading2);
+                return compareSubjectEntries(e1, e2);
             }
+
         });
 
         final SearchResult sr = new SearchResult();
@@ -320,5 +156,56 @@ public class SubjectSearchServiceImpl implements SubjectSearchService {
         sr.setResults(headingMatches);
         sr.setTotal(headingMatches.size());
         return sr;
+    }
+
+    /**
+     * Compares two entries.
+     * 
+     * @param e1 the first entry
+     * @param e2 the second entry
+     * @return See {@link Comparable } for the return values
+     */
+    private int compareSubjectEntries(final ExpandableSubjectHeadingEntry e1,
+            final ExpandableSubjectHeadingEntry e2) {
+        final int rootCompare = e1.getRoot().compareToIgnoreCase(e2.getRoot());
+        if (rootCompare != 0) {
+            return rootCompare;
+        }
+
+        // we make sure that entries that start with "See " go to the bottom
+
+        final String e1SeeAlso = e1.getSeeAlso();
+        final String e2SeeAlso = e2.getSeeAlso();
+
+        final boolean isSeeRef1 = isBlank(e1SeeAlso);
+        final boolean isSeeRef2 = isBlank(e2SeeAlso);
+        if (isSeeRef1 && !isSeeRef2) {
+            return 1;
+        } else if (!isSeeRef1 && isSeeRef2) {
+            return -1;
+        }
+
+        final String heading1 = e1.getHeading();
+        final String heading2 = e1.getHeading();
+        return compareHeadings(heading1, heading2);
+    }
+
+    /**
+     * Compares the headings of two entries
+     * 
+     * @param heading1 first heading
+     * @param heading2 second heading
+     * @return accounts for nulls, such that two nulls are equal, a single null comes before any other string
+     */
+    private int compareHeadings(final String heading1, final String heading2) {
+        if (heading1 == null && heading2 == null) {
+            return 0;
+        } else if (heading1 == null) {
+            return -1;
+        } else if (heading2 == null) {
+            return 1;
+        }
+
+        return heading1.compareToIgnoreCase(heading2);
     }
 }

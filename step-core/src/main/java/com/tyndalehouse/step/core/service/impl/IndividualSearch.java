@@ -231,6 +231,9 @@ public class IndividualSearch {
             final String[] keys = split(this.query);
 
             for (int i = 0; i < keys.length; i++) {
+                if (isBlank(keys[i])) {
+                    continue;
+                }
                 subjectQuery.append(LuceneIndex.FIELD_HEADING);
                 subjectQuery.append(':');
                 subjectQuery.append(keys[i]);

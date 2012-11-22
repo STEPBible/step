@@ -17,3 +17,8 @@
   font-weight: 700;
   src: local('Cardo Bold'), local('Cardo-Bold'), url(../fonts/cardo-bold.woff) format('woff');
 }
+
+@font-face {
+    font-family : "SBL_Hbrw";
+    src: url('../fonts/SBL_Hbrw.woff');
+}

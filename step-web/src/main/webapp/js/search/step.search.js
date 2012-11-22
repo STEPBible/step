@@ -400,9 +400,10 @@ step.search = {
     
     _highlightingTerms : function(query) {
         var terms = [];
-        var termBase = query.substring(2);
+        var termBase = query.substring(query.indexOf('=') + 1);
 
         //remove the search in (v1, v2, v3)
+        termBase = termBase.replace("#plus#", "")
         termBase = termBase.replace(/in \([^)]+\)/gi, "");
         termBase = termBase.replace("=>", " ")
         

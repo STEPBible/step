@@ -22,7 +22,7 @@ import com.tyndalehouse.step.core.models.search.SearchResult;
 import com.tyndalehouse.step.core.service.SearchService;
 import com.tyndalehouse.step.core.service.impl.SearchQuery;
 import com.tyndalehouse.step.core.service.search.OriginalWordSuggestionService;
-import com.tyndalehouse.step.core.service.search.SubjectSearchService;
+import com.tyndalehouse.step.core.service.search.SubjectEntrySearchService;
 
 /**
  * Caters for searching across the data base
@@ -35,20 +35,20 @@ public class SearchController {
     private static final Logger LOGGER = LoggerFactory.getLogger(SearchController.class);
     private final SearchService searchService;
     private final OriginalWordSuggestionService originalWordSuggestions;
-    private final SubjectSearchService subjectSearch;
+    private final SubjectEntrySearchService subjectEntries;
 
     /**
      * @param search the search service
      * @param originalWordSuggestions the original word suggestions
-     * @param subjectSearch the subject searhc service
+     * @param subjectEntries is able to retrieve the search entries
      */
     @Inject
     public SearchController(final SearchService search,
             final OriginalWordSuggestionService originalWordSuggestions,
-            final SubjectSearchService subjectSearch) {
+            final SubjectEntrySearchService subjectEntries) {
         this.searchService = search;
         this.originalWordSuggestions = originalWordSuggestions;
-        this.subjectSearch = subjectSearch;
+        this.subjectEntries = subjectEntries;
     }
 
     /**
@@ -155,6 +155,6 @@ public class SearchController {
      * @return the list of verses for this subject
      */
     public List<OsisWrapper> getSubjectVerses(final String root, final String fullHeader, final String version) {
-        return this.subjectSearch.getSubjectVerses(root, fullHeader, version);
+        return this.subjectEntries.getSubjectVerses(root, fullHeader, version);
     }
 }

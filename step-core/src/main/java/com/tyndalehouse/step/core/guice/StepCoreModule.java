@@ -79,8 +79,10 @@ import com.tyndalehouse.step.core.service.jsword.impl.JSwordPassageServiceImpl;
 import com.tyndalehouse.step.core.service.jsword.impl.JSwordSearchServiceImpl;
 import com.tyndalehouse.step.core.service.jsword.impl.JSwordVersificationServiceImpl;
 import com.tyndalehouse.step.core.service.search.OriginalWordSuggestionService;
+import com.tyndalehouse.step.core.service.search.SubjectEntrySearchService;
 import com.tyndalehouse.step.core.service.search.SubjectSearchService;
 import com.tyndalehouse.step.core.service.search.impl.OriginalWordSuggestionServiceImpl;
+import com.tyndalehouse.step.core.service.search.impl.SubjectEntryServiceImpl;
 import com.tyndalehouse.step.core.service.search.impl.SubjectSearchServiceImpl;
 import com.tyndalehouse.step.core.utils.AbstractStepGuiceModule;
 
@@ -119,13 +121,16 @@ public class StepCoreModule extends AbstractStepGuiceModule {
 
         bind(BibleInformationService.class).to(BibleInformationServiceImpl.class).asEagerSingleton();
         bind(ModuleService.class).to(ModuleServiceImpl.class).asEagerSingleton();
-        bind(MorphologyService.class).to(MorphologyServiceImpl.class).asEagerSingleton();
-        bind(VocabularyService.class).to(VocabularyServiceImpl.class).asEagerSingleton();
+        bind(MorphologyService.class).to(MorphologyServiceImpl.class);
+        bind(VocabularyService.class).to(VocabularyServiceImpl.class);
         bind(TimelineService.class).to(TimelineServiceImpl.class);
         bind(GeographyService.class).to(GeographyServiceImpl.class);
         bind(Loader.class).asEagerSingleton();
         bind(UserService.class).to(UserServiceImpl.class);
-        bind(SubjectSearchService.class).to(SubjectSearchServiceImpl.class).asEagerSingleton();
+
+        bind(SubjectSearchService.class).to(SubjectSearchServiceImpl.class);
+        bind(SubjectEntrySearchService.class).to(SubjectEntryServiceImpl.class);
+
         bind(OriginalWordSuggestionService.class).to(OriginalWordSuggestionServiceImpl.class)
                 .asEagerSingleton();
 

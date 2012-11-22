@@ -54,7 +54,7 @@ public final class GreekUtils {
      */
     public static String unAccent(final String word) {
         return Normalizer.normalize(word, Normalizer.Form.NFD).replaceAll(
-                "[\\p{InCombiningDiacriticalMarks}\u2e00-\u2e02]*", "");
+                "[\\p{InCombiningDiacriticalMarks}\u2e00-\u2E3B]*", "");
     }
 
     /**

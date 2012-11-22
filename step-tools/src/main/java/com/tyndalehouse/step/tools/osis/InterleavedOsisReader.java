@@ -36,8 +36,9 @@ public class InterleavedOsisReader {
      * @throws Exception any kind of exception
      */
     public static void main(final String[] args) throws Exception {
-        final String[] versions = new String[] { "ESV", "TR" };
-        final String ref = "Rev 1-2";
+        final String[] versions = new String[] { "SBLGNT", "TR" };
+        final String ref = "Mar 3:3";
+        final boolean unicodeBreakDown = true;
         final Book currentBook = Books.installed().getBook(versions[0]);
 
         final Book[] books = new Book[versions.length];
@@ -49,18 +50,47 @@ public class InterleavedOsisReader {
         final Element osisFragment = bookData.getOsisFragment();
 
         final XMLOutputter xmlOutputter = new XMLOutputter(Format.getPrettyFormat());
-        LOGGER.debug(xmlOutputter.outputString(osisFragment));
+        final String inputString = xmlOutputter.outputString(osisFragment);
+        LOGGER.debug(inputString);
+
+        if (unicodeBreakDown) {
+            outputUnicode(inputString);
+        }
 
         // do the test
         final JSwordPassageServiceImpl jsi = new JSwordPassageServiceImpl(
                 new JSwordVersificationServiceImpl(), null, null, null);
         final List<LookupOption> options = new ArrayList<LookupOption>();
 
-        final String osisText = jsi.getInterleavedVersions(versions, ref, options, InterlinearMode.NONE)
-                .getValue();
+        final String osisText = jsi.getInterleavedVersions(versions, ref, options,
+                InterlinearMode.INTERLEAVED_COMPARE).getValue();
         final SAXBuilder sb = new SAXBuilder();
         final Document d = sb.build(new StringReader(osisText));
 
-        LOGGER.debug("Transformed is:\n {}", xmlOutputter.outputString(d));
+        final String output = xmlOutputter.outputString(d);
+        LOGGER.debug("Transformed is:\n {}", output);
+
+        if (unicodeBreakDown) {
+            outputUnicode(output);
+        }
+    }
+
+    public static void outputUnicode(final String s) {
+        StringBuilder chars = new StringBuilder(16);
+        StringBuilder intVals = new StringBuilder(16);
+
+        for (int ii = 0; ii < s.length(); ii++) {
+
+            final char c = s.charAt(ii);
+            if (c == ' ') {
+                LOGGER.debug("[{}] => [{}]", chars.toString(), intVals.toString());
+                chars = new StringBuilder(16);
+                intVals = new StringBuilder(16);
+            } else {
+                chars.append(c);
+                intVals.append((int) c);
+                intVals.append(", ");
+            }
+        }
     }
 }

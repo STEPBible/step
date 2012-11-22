@@ -184,7 +184,7 @@ public class DefaultInstallersProvider implements Provider<List<Installer>> {
             }
 
             // finally set to what the address actually says
-            installer.setProxyHost(address.getHostString());
+            installer.setProxyHost(address.getHostName());
             installer.setProxyPort(address.getPort());
         }
     }

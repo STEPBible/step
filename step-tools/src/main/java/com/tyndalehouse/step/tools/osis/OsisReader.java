@@ -42,8 +42,9 @@ public class OsisReader {
         final BookData bookData = new BookData(currentBook, currentBook.getKey(ref));
         final Element osisFragment = bookData.getOsisFragment();
 
-        final XMLOutputter xmlOutputter = new XMLOutputter(Format.getPrettyFormat());
+        final XMLOutputter xmlOutputter = new XMLOutputter(Format.getRawFormat());
         LOGGER.debug(xmlOutputter.outputString(osisFragment));
+        xmlOutputter.outputString(osisFragment);
 
         // do the test
         final JSwordPassageServiceImpl jsi = new JSwordPassageServiceImpl(
@@ -55,5 +56,7 @@ public class OsisReader {
         final Document d = sb.build(new StringReader(osisText));
 
         LOGGER.debug("Transformed is:\n {}", xmlOutputter.outputString(d));
+        xmlOutputter.outputString(d);
     }
+
 }

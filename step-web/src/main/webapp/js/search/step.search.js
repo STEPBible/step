@@ -394,6 +394,10 @@ step.search = {
         $.each($(".passageContentHolder", step.util.getPassageContainer(passageId)), function(n, item) {
             if(step.util.isUnicode(item)) {
                 $(item).addClass("unicodeFont");
+                
+                if(step.util.isHebrew(item)) {
+                    $(item).addClass("hbFont");
+                }
             }
         });
     },

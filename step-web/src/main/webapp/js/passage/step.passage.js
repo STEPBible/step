@@ -181,13 +181,21 @@ step.passage = {
         if((interlinearVersions != null && interlinearVersions.length > 0 && interlinearMode == "INTERLINEAR") || isInterlinearOption) {
             $(".interlinear").find("span.interlinear, .ancientVocab, .text", passageContent).filter(function() {
                 return step.util.isUnicode(this);
-            }).addClass("unicodeFont");
+            }).addClass("unicodeFont").filter(function() {
+                return step.util.isHebrew(this);
+            }).addClass("hbFont");
         }
         
         if(interlinearMode == "" || interlinearMode == undefined || interlinearVersions  == undefined || interlinearVersions == "") {
             //examine the first verse's contents, remove spaces and numbers
-            if(step.util.isUnicode($(".verse:first", passageContent))) {
-                    $(".passageContentHolder", passageContent).addClass("unicodeFont");
+            var val = $(".verse:first", passageContent);
+            if(step.util.isUnicode(val)) {
+                var passageContentHolder = $(".passageContentHolder", passageContent);    
+                passageContentHolder.addClass("unicodeFont");
+                    
+                    if(step.util.isHebrew(val)) {
+                        passageContentHolder.addClass("hbFont");
+                    }
             }
         }
     },

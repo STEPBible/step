@@ -75,22 +75,34 @@ step.util = {
 	},
 	
 	isUnicode : function(element) {
+	    return this.isClassOfUnicode(element, function(c) {
+	        return c > 255; 
+	    });
+	},
+	
+	isHebrew : function(element) {
+	    return this.isClassOfUnicode(element, function(c) {
+	        return (c > 0x590 && c < 0x600) || (c > 0xFB10 && c < 0xFB50);
+	    });
+	},
+	
+	isClassOfUnicode : function(element, limiter) {
 	    var text = "";
-	    if(element.text) {
-	        text = element.text();
-	    } else if(element.innerText) {
-	        text = element.innerText;
-	    } else if(element.charCodeAt) {
-	        text = element;
-	    }
-	    
-	    text = text.replace(/[0-9\s,.;:'“”]/g, "").trim();
-	    
+        if(element.text) {
+            text = element.text();
+        } else if(element.innerText) {
+            text = element.innerText;
+        } else if(element.charCodeAt) {
+            text = element;
+        }
+        
+        text = text.replace(/[0-9\s,.;:'“”]/g, "").trim();
+        
         try {
-                return text.charCodeAt(0) > 255;
+            return limiter(text.charCodeAt(0));
         } catch(err) {
             return false;
-        }
+        } 
 	},
 	
     raiseError: function (error) {

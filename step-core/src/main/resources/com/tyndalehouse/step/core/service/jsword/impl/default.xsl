@@ -273,7 +273,7 @@
    		<xsl:choose>
    			<xsl:when test="./ancestor::cell/@xml:lang">
 				<xsl:choose>
-   					<xsl:when test="./ancestor::cell/@xml:lang = 'he'">unicodeFont</xsl:when>
+   					<xsl:when test="./ancestor::cell/@xml:lang = 'he'">unicodeFont hbFont</xsl:when>
    					<xsl:when test="./ancestor::cell/@xml:lang = 'grc'">unicodeFont</xsl:when>
 					<xsl:otherwise><xsl:value-of select="''" /></xsl:otherwise>
 				</xsl:choose>   			
@@ -1297,9 +1297,7 @@
     	<xsl:otherwise>
     		<xsl:choose>
     			<xsl:when test="cell[@role = 'label']">
-    				<xsl:if test="$comparing = true()">
     					<tr><td></td><xsl:call-template name="outputComparingTableHeader"></xsl:call-template></tr>
-    				</xsl:if>
     			</xsl:when>
     			<xsl:otherwise>
     				<tr class="row">
@@ -1417,7 +1415,7 @@
 		   		<xsl:choose>
 		   			<xsl:when test="@xml:lang">
 						<xsl:choose>
-		   					<xsl:when test="@xml:lang = 'he'">unicodeFont</xsl:when>
+		   					<xsl:when test="@xml:lang = 'he'">unicodeFont hbFont</xsl:when>
 		   					<xsl:when test="@xml:lang = 'grc'">unicodeFont</xsl:when>
 							<xsl:otherwise><xsl:value-of select="''" /></xsl:otherwise>
 						</xsl:choose>   			
@@ -1463,7 +1461,7 @@
 		   		<xsl:choose>
 		   			<xsl:when test="@xml:lang">
 						<xsl:choose>
-		   					<xsl:when test="@xml:lang = 'he'">unicodeFont</xsl:when>
+		   					<xsl:when test="@xml:lang = 'he'">unicodeFont hbFont</xsl:when>
 		   					<xsl:when test="@xml:lang = 'grc'">unicodeFont</xsl:when>
 							<xsl:otherwise><xsl:value-of select="''" /></xsl:otherwise>
 						</xsl:choose>   			

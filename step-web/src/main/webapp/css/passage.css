@@ -32,7 +32,7 @@ span.interlinear span span { /* Make this stack on top of each other. */
 	/* Turn off floating and padding that was added by the previous rule. */
 	float: none;
 	padding: 0;
-	height: 20px;
+/* 	height: 20px; */
 }
 
 
@@ -40,6 +40,19 @@ span.interlinear span span { /* Make this stack on top of each other. */
 	font-family: Cardo;
 	font-size: 140%;
 /* 	font-size: 14px; */
+}
+
+.hbFont {
+	font-family: SBL_Hbrw;
+	font-size: 250%;	
+}
+
+.hbFont h2, .unicodeFont h2 {
+	font-size: large;
+}
+
+.hbFont .verseNumber, .unicodeFont .verseNumber {
+	font-size: small;
 }
 
 .rtlDirection {

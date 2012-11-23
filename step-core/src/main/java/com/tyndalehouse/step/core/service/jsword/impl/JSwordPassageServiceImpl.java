@@ -113,6 +113,7 @@ import com.tyndalehouse.step.core.xsl.impl.InterleavingProviderImpl;
  */
 @Singleton
 public class JSwordPassageServiceImpl implements JSwordPassageService {
+    private static final int MAX_SMALL_BOOK_CHAPTER_COUNT = 5;
     private static final String OSIS_ID_BOOK_CHAPTER = "%s.%s";
     private static final int MAX_VERSES_RETRIEVED = 300;
     private static final String OSIS_CHAPTER_FORMAT = "%s.%d";
@@ -543,19 +544,14 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
 
             // TODO, work this one out
             final int cardinality = key.getCardinality();
-            if (cardinality > MAX_VERSES_RETRIEVED) {
-                // then we go for the first chapter instead...
-                // if the reference was for a whole book, we go for chapter 1, otherwise, we trim the range
-                // down to the limit
 
-                final Passage requestedPassage = KeyUtil.getPassage(key, v11n);
-                if (requestedPassage.countRanges(RestrictionType.NONE) == 1
-                        && requestedPassage.getRangeAt(0, RestrictionType.NONE).isWholeBook()) {
-                    // ignoring chapter 0
-                    key = requestedPassage.getRangeAt(1, RestrictionType.CHAPTER);
-                } else {
-                    requestedPassage.trimVerses(MAX_VERSES_RETRIEVED);
-                }
+            // if we're looking at a whole book, then we will deal with it in one way,
+            final Passage requestedPassage = KeyUtil.getPassage(key, v11n);
+            if (requestedPassage.countRanges(RestrictionType.NONE) == 1
+                    && isWholeBook(v11n, requestedPassage)) {
+                key = trimExceedingVersesFromWholeReference(v11n, requestedPassage);
+            } else if (cardinality > MAX_VERSES_RETRIEVED) {
+                requestedPassage.trimVerses(MAX_VERSES_RETRIEVED);
             } else if (key.getCardinality() == 0) {
                 throw new NoSuchKeyException("Cardinality of key is 0");
             }
@@ -564,6 +560,90 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
         } catch (final NoSuchKeyException e) {
             throw new StepInternalException("The Bible text (" + reference + ")  is invalid.", e);
         }
+    }
+
+    /**
+     * We have a whole book reference. If the book is less than 5 chapters, we display the whole book.
+     * Otherwise we display the first chapter only.
+     * 
+     * @param v11n the alternative versification
+     * @param requestedPassage the passage
+     * @return the new key
+     */
+    private Key trimExceedingVersesFromWholeReference(final Versification v11n, final Passage requestedPassage) {
+        if (v11n.getLastChapter(requestedPassage.getRangeAt(0, RestrictionType.NONE).getStart().getBook()) <= MAX_SMALL_BOOK_CHAPTER_COUNT) {
+            // return whole chapter
+            return requestedPassage;
+        }
+
+        // else return first chapter only.
+        VerseRange firstChapter = requestedPassage.getRangeAt(0, RestrictionType.CHAPTER);
+        if (firstChapter.getStart().getChapter() == 0) {
+            // go for second chapter, which is chapter 1, going [0, 1, ...]
+            firstChapter = requestedPassage.getRangeAt(1, RestrictionType.CHAPTER);
+        }
+        return firstChapter;
+    }
+
+    /**
+     * @param requestedPassage the key passage object
+     * @param v11n the versification that goes with the reference
+     * @return true if represents a whole book.
+     */
+    private boolean isWholeBook(final Versification v11n, final Passage requestedPassage) {
+        // remove verse 0 if present
+        // normalize(requestedPassage, v11n);
+
+        final VerseRange rangeAt = requestedPassage.getRangeAt(0, RestrictionType.NONE);
+
+        // spanning multiple books?
+        if (rangeAt.isMultipleBooks()) {
+            return false;
+        }
+
+        // no range at all?
+        if (rangeAt.getCardinality() <= 0) {
+            return false;
+        }
+
+        // first verse is verse 0 or verse 1
+        final Verse firstVerse = rangeAt.getStart();
+
+        if (!isFirstVerseInChapter(firstVerse)) {
+            return false;
+        }
+
+        // start of book has been established, check end of book
+        final Verse lastVerse = rangeAt.getEnd();
+        if (!v11n.isEndOfBook(lastVerse)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @param firstVerse a verse
+     * @return true if isFirstChapter and isFirstVerse also return true
+     */
+    private boolean isFirstVerseInChapter(final Verse firstVerse) {
+        return isFirstVerse(firstVerse) && isFirstChapter(firstVerse);
+    }
+
+    /**
+     * @param firstVerse a verse
+     * @return true if the first chapter of the book
+     */
+    private boolean isFirstChapter(final Verse firstVerse) {
+        return firstVerse.getChapter() < 2;
+    }
+
+    /**
+     * @param firstVerse a verse
+     * @return true if verse number is 0 or 1, i.e. less than 2
+     **/
+    private boolean isFirstVerse(final Verse firstVerse) {
+        return firstVerse.getVerse() < 2;
     }
 
     /**

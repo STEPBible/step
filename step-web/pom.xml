@@ -200,7 +200,6 @@
 								<jsSourceFile>js/state/step.state.original.js</jsSourceFile>
 							    <jsSourceFile>js/menu/step.menu.js</jsSourceFile>
 							    <jsSourceFile>js/menu/top/help.js</jsSourceFile>
-							    <jsSourceFile>js/menu/top/tools.js</jsSourceFile>
 							    <jsSourceFile>js/menu/top/view.js</jsSourceFile>
 							    <jsSourceFile>js/menu/top/top.menu.ui.js</jsSourceFile>
 							    <jsSourceFile>js/menu/passage/context.js</jsSourceFile>

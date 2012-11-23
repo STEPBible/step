@@ -74,7 +74,6 @@
 
 	    <script src="js/menu/step.menu.js" type="text/javascript"></script>
 	    <script src="js/menu/top/help.js" type="text/javascript"></script>
-	    <script src="js/menu/top/tools.js" type="text/javascript"></script>
 	    <script src="js/menu/top/view.js" type="text/javascript"></script>
 	    <script src="js/menu/top/top.menu.ui.js" type="text/javascript"></script>
 	    <script src="js/menu/passage/context.js" type="text/javascript"></script>

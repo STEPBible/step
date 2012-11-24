@@ -48,6 +48,7 @@
 	    <script src="js/jquery-extensions/jquery-versions-complete.js" type="text/javascript"></script>
 	    <script src="js/jquery-extensions/jquery-lexical-complete.js" type="text/javascript"></script>
 	    <script src="js/jquery-extensions/jquery-detail-slider.js" type="text/javascript"></script>
+	    <script src="js/jquery-extensions/jquery-sort.js" type="text/javascript"></script>
 		<script src="js/ddsmoothmenu.js" type="text/javascript"></script>
 	    <script src="js/util.js" type="text/javascript"></script>
 	    <script src="js/lexicon_definition.js" type="text/javascript"></script>

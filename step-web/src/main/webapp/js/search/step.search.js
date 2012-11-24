@@ -684,7 +684,7 @@ step.search = {
             $.each(definitions, function(i, item) {
                 
                 
-                var link = "<input type='checkbox' " +
+                var link = "<span class='sortable'><input type='checkbox' " +
                 		"value='" + (item.strongNumber == undefined ? "" : item.strongNumber) +"' " +
                 	    "id='ows_" + passageId + "_" + i + "' " +
                         ($.inArray(item.strongNumber, values) != -1 ? "checked='checked'" : "") +   
@@ -700,7 +700,7 @@ step.search = {
                 if(item.gloss) {
                     link += item.gloss;
                 }
-                link += "</label>";
+                link += "</label></span>";
                 originalWordToolbar.append(link);
             });
             
@@ -716,10 +716,17 @@ step.search = {
                 step.search.original.search(passageId);
             });
             
-            originalWordToolbar.buttonset();
+            //first need to sort the buttons
+
+            
 
             var bar = $("<div></div>").append("<h4 class='lexicalGrouping'>The following lexical forms have been included in the search:</h4>").append(originalWordToolbar).append("<hr />");
             passageContent.prepend(bar);
+
+            $(".sortable").sortElements(function(a, b) { 
+                return $(a).find("label").text() < $(b).find("label").text() ? -1 : 1; 
+            });
+            originalWordToolbar.buttonset();
         }
     },
     

@@ -177,6 +177,7 @@
 							    <jsSourceFile>js/jquery-extensions/jquery-versions-complete.js</jsSourceFile>
 							    <jsSourceFile>js/jquery-extensions/jquery-lexical-complete.js</jsSourceFile>
 							    <jsSourceFile>js/jquery-extensions/jquery-detail-slider.js</jsSourceFile>
+							    <jsSourceFile>js/jquery-extensions/jquery-sort.js</jsSourceFile>
 								<jsSourceFile>js/ddsmoothmenu.js</jsSourceFile>
 							    <jsSourceFile>js/util.js</jsSourceFile>
 							    <jsSourceFile>js/lexicon_definition.js</jsSourceFile>

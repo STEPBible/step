@@ -22,7 +22,7 @@ $.widget("custom.lexicalcomplete", $.ui.autocomplete, {
         this._restoreState(ul);
 
         
-        $(ul).find("input").click(function(event) {
+        $(ul).addClass("stepComplete").find("input").click(function(event) {
             var passageId = step.passage.getPassageId(self.element[0]);
             step.search.ui.original.allForms[passageId] = $(this).prop('checked');    
             $.shout("lexical-filter-change", { passageId : passageId} );

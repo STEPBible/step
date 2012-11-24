@@ -513,7 +513,7 @@ public class SearchServiceImpl implements SearchService {
      * @return the result from the corresponding text search
      */
     private SearchResult runMeaningSearch(final SearchQuery sq) {
-        final List<String> strongs = adaptQueryForMeaningSearch(sq);
+        final Set<String> strongs = adaptQueryForMeaningSearch(sq);
 
         final SearchResult result = runStrongTextSearch(sq, strongs);
         setDefinitionForResults(result, sq.getDefinitions());
@@ -530,7 +530,7 @@ public class SearchServiceImpl implements SearchService {
      * @return the results
      */
     private SearchResult runAllFormsStrongSearch(final SearchQuery sq) {
-        final List<String> strongs = adaptQueryForStrongSearch(sq);
+        final Set<String> strongs = adaptQueryForStrongSearch(sq);
 
         // TODO jsword bug - email 09-Jul-2012 - 19:11 GMT
         // and then run the search
@@ -544,7 +544,7 @@ public class SearchServiceImpl implements SearchService {
      * @return the results
      */
     private SearchResult runRelatedStrongSearch(final SearchQuery sq) {
-        final List<String> strongs = adaptQueryForRelatedStrongSearch(sq);
+        final Set<String> strongs = adaptQueryForRelatedStrongSearch(sq);
 
         // and then run the search
         final SearchResult result = runStrongTextSearch(sq, strongs);
@@ -573,9 +573,9 @@ public class SearchServiceImpl implements SearchService {
      * @param strongs the list of strongs that were searched for
      * @return the search results
      */
-    private SearchResult runStrongTextSearch(final SearchQuery sq, final List<String> strongs) {
+    private SearchResult runStrongTextSearch(final SearchQuery sq, final Set<String> strongs) {
         final SearchResult textResults = runTextSearch(sq);
-        textResults.setStrongHighlights(strongs);
+        textResults.setStrongHighlights(new ArrayList(strongs));
         return textResults;
     }
 
@@ -611,23 +611,23 @@ public class SearchServiceImpl implements SearchService {
      * @param sq the search criteria
      * @return a list of match strong numbers
      */
-    private List<String> getStrongsFromTextCriteria(final SearchQuery sq) {
+    private Set<String> getStrongsFromTextCriteria(final SearchQuery sq) {
         // we can be dealing with a strong number, if so, no work required...
         final String query = sq.getCurrentSearch().getQuery();
         if (query.isEmpty()) {
-            return new ArrayList<String>(0);
+            return new HashSet<String>(0);
         }
 
         final boolean wildcard = query.charAt(query.length() - 1) == '*';
         final String searchQuery = wildcard ? query.replace("*", "%") : query;
 
-        List<String> strongs;
+        Set<String> strongs;
         if (isDigit(query.charAt(0)) || (query.length() > 1 && isDigit(query.charAt(1)))) {
             // then we're dealing with a strong number, without its G/H prefix
             strongs = getStrongsFromCurrentSearch(sq);
         } else {
             // we're dealing with some sort of greek/hebrew form so we search the tables for this
-            strongs = searchTextFieldsForDefinition(searchQuery, sq);
+            strongs = searchTextFieldsForDefinition(searchQuery);
         }
 
         // run rules for transliteration
@@ -650,7 +650,7 @@ public class SearchServiceImpl implements SearchService {
      * @param sq search criteria
      * @return a list of matching strongs
      */
-    private List<String> adaptQueryForMeaningSearch(final SearchQuery sq) {
+    private Set<String> adaptQueryForMeaningSearch(final SearchQuery sq) {
         final String query = sq.getCurrentSearch().getQuery();
 
         final QueryParser queryParser = new QueryParser(Version.LUCENE_30, "translations",
@@ -660,7 +660,7 @@ public class SearchServiceImpl implements SearchService {
             final Query parsed = queryParser.parse("-stopWord:true " + query);
             final EntityDoc[] matchingMeanings = this.definitions.search(parsed);
 
-            final List<String> strongs = new ArrayList<String>(matchingMeanings.length);
+            final Set<String> strongs = new HashSet<String>(matchingMeanings.length);
             for (final EntityDoc d : matchingMeanings) {
                 final String strongNumber = d.get(STRONG_NUMBER_FIELD);
                 if (isInFilter(strongNumber, sq)) {
@@ -705,8 +705,8 @@ public class SearchServiceImpl implements SearchService {
      * @param sq the search query
      * @return a list of all matching strongs
      */
-    private List<String> adaptQueryForStrongSearch(final SearchQuery sq) {
-        final List<String> strongs = getStrongsFromTextCriteria(sq);
+    private Set<String> adaptQueryForStrongSearch(final SearchQuery sq) {
+        final Set<String> strongs = getStrongsFromTextCriteria(sq);
 
         final String textQuery = getQuerySyntaxForStrongs(strongs, sq);
 
@@ -723,9 +723,9 @@ public class SearchServiceImpl implements SearchService {
      * @param sq the search query object
      * @return a list of strong numbers
      */
-    private List<String> adaptQueryForRelatedStrongSearch(final SearchQuery sq) {
-        final List<String> strongsFromQuery = getStrongsFromTextCriteria(sq);
-        final List<String> filteredStrongs = new ArrayList<String>(strongsFromQuery.size());
+    private Set<String> adaptQueryForRelatedStrongSearch(final SearchQuery sq) {
+        final Set<String> strongsFromQuery = getStrongsFromTextCriteria(sq);
+        final Set<String> filteredStrongs = new HashSet<String>(strongsFromQuery.size());
         final StringBuilder fullQuery = new StringBuilder(64);
         final QueryParser p = new QueryParser(Version.LUCENE_30, STRONG_NUMBER_FIELD,
                 this.definitions.getAnalyzer());
@@ -739,12 +739,41 @@ public class SearchServiceImpl implements SearchService {
         final EntityDoc[] relatedResults = retrieveStrongDefinitions(sq, filteredStrongs, p, relatedQuery,
                 fullQuery);
 
-        final EntityDoc[] joinedDocs = Arrays.copyOf(results, results.length + relatedResults.length);
-        System.arraycopy(relatedResults, 0, joinedDocs, results.length, relatedResults.length);
+        setUniqueConsideredDefinitions(sq, results, relatedResults);
 
-        sq.getCurrentSearch().setQuery(fullQuery.toString());
-        sq.setDefinitions(joinedDocs);
+        sq.getCurrentSearch().setQuery(fullQuery.toString().toLowerCase());
         return filteredStrongs;
+    }
+
+    /**
+     * Sets up all definitions that are related, regardless of whether they have been filtered out. Makes a
+     * unique set of these
+     * 
+     * @param sq the search query that is being
+     * @param results the results from the direct strong search
+     * @param relatedResults the related results
+     */
+    private void setUniqueConsideredDefinitions(final SearchQuery sq, final EntityDoc[] results,
+            final EntityDoc[] relatedResults) {
+        // make entity docs unique:
+        final Set<EntityDoc> joinedDocs = new HashSet<EntityDoc>(relatedResults.length + results.length);
+        final Set<String> strongNumbers = new HashSet<String>(relatedResults.length + results.length);
+        for (final EntityDoc queryDoc : results) {
+            final String strong = queryDoc.get(STRONG_NUMBER_FIELD);
+            if (!strongNumbers.contains(strong)) {
+                joinedDocs.add(queryDoc);
+                strongNumbers.add(strong);
+            }
+        }
+
+        for (final EntityDoc relatedDoc : relatedResults) {
+            final String strong = relatedDoc.get(STRONG_NUMBER_FIELD);
+            if (!strongNumbers.contains(strong)) {
+                joinedDocs.add(relatedDoc);
+                strongNumbers.add(strong);
+            }
+        }
+        sq.setDefinitions(new ArrayList<EntityDoc>(joinedDocs));
     }
 
     /**
@@ -769,13 +798,14 @@ public class SearchServiceImpl implements SearchService {
      * @param filteredStrongs the list of filtered strongs so far
      * @param p the parser
      * @param query the query
+     * @param fullQuery the full query so far
      * @return the list of matched entity documents
      */
-    private EntityDoc[] retrieveStrongDefinitions(final SearchQuery sq, final List<String> filteredStrongs,
+    private EntityDoc[] retrieveStrongDefinitions(final SearchQuery sq, final Set<String> filteredStrongs,
             final QueryParser p, final String query, final StringBuilder fullQuery) {
         Query q;
         try {
-            q = p.parse(query.toString());
+            q = p.parse(query);
         } catch (final ParseException e) {
             throw new StepInternalException("Unable to parse query", e);
         }
@@ -800,7 +830,7 @@ public class SearchServiceImpl implements SearchService {
      * @param strongsFromQuery the strong numbers to select
      * @return a query looking up all the Strong numbers
      */
-    private String retrieveStrongs(final List<String> strongsFromQuery) {
+    private String retrieveStrongs(final Set<String> strongsFromQuery) {
         final StringBuilder query = new StringBuilder(strongsFromQuery.size() * 6 + 16);
         query.append("-stopWord:true ");
         for (final String strong : strongsFromQuery) {
@@ -814,10 +844,9 @@ public class SearchServiceImpl implements SearchService {
      * Searches the underlying DB for the relevant entry
      * 
      * @param searchQuery the query that is being passed in
-     * @param sq the search criteria
      * @return the list of strongs matched
      */
-    private List<String> searchTextFieldsForDefinition(final String searchQuery, final SearchQuery sq) {
+    private Set<String> searchTextFieldsForDefinition(final String searchQuery) {
         // first look through the text forms
         final EntityDoc[] results = this.specificForms.search(new String[] { "accentedUnicode" },
                 searchQuery, null, null, false, "-stopWord:false");
@@ -827,7 +856,7 @@ public class SearchServiceImpl implements SearchService {
 
         // if we matched more than one, then we don't have our assumed uniqueness... log warning and
         // continue with first matched strong
-        final List<String> listOfStrongs = new ArrayList<String>();
+        final Set<String> listOfStrongs = new HashSet<String>();
         for (final EntityDoc f : results) {
             listOfStrongs.add(f.get(STRONG_NUMBER_FIELD));
         }
@@ -840,7 +869,7 @@ public class SearchServiceImpl implements SearchService {
      * @param query the query
      * @return a list of strong numbers
      */
-    private List<String> lookupFromLexicon(final String query) {
+    private Set<String> lookupFromLexicon(final String query) {
         // if we still have nothing, then look through the definitions
         final QueryParser parser = new QueryParser(Version.LUCENE_30, "accentedUnicode",
                 this.definitions.getAnalyzer());
@@ -853,7 +882,7 @@ public class SearchServiceImpl implements SearchService {
 
         final EntityDoc[] results = this.definitions.search(parsed);
 
-        final List<String> matchedStrongs = new ArrayList<String>();
+        final Set<String> matchedStrongs = new HashSet<String>();
         for (final EntityDoc d : results) {
             matchedStrongs.add(d.get(STRONG_NUMBER_FIELD));
         }
@@ -894,7 +923,7 @@ public class SearchServiceImpl implements SearchService {
      * @param isGreek true to indicate Greek, false to indicate Hebrew
      * @return the strongs that have been found/matched.
      */
-    private List<String> findByTransliteration(final String query, final boolean isGreek) {
+    private Set<String> findByTransliteration(final String query, final boolean isGreek) {
         // first find by transliterations that we have
         final String lowerQuery = query.toLowerCase();
 
@@ -906,7 +935,7 @@ public class SearchServiceImpl implements SearchService {
 
         // finally, if we haven't found anything, then abort
         if (specificFormEntities.length != 0) {
-            final List<String> strongs = new ArrayList<String>(specificFormEntities.length);
+            final Set<String> strongs = new HashSet<String>(specificFormEntities.length);
             // nothing to search for..., so abort query
             for (final EntityDoc f : specificFormEntities) {
                 strongs.add(f.get(STRONG_NUMBER_FIELD));
@@ -925,7 +954,7 @@ public class SearchServiceImpl implements SearchService {
             if (results.length == 0) {
                 throw new AbortQueryException("No definitions found for input");
             }
-            final List<String> strongs = new ArrayList<String>(results.length);
+            final Set<String> strongs = new HashSet<String>(results.length);
             for (final EntityDoc d : results) {
                 strongs.add(d.get(STRONG_NUMBER_FIELD));
             }
@@ -942,12 +971,12 @@ public class SearchServiceImpl implements SearchService {
      * @param sq the search query
      * @return the list of strongs
      */
-    private List<String> getStrongsFromCurrentSearch(final SearchQuery sq) {
+    private Set<String> getStrongsFromCurrentSearch(final SearchQuery sq) {
         final IndividualSearch currentSearch = sq.getCurrentSearch();
         final String searchStrong = currentSearch.getQuery();
 
         LOGGER.debug("Searching for strongs [{}]", searchStrong);
-        final List<String> strongs = splitToStrongs(searchStrong, sq.getCurrentSearch().getType());
+        final Set<String> strongs = splitToStrongs(searchStrong, sq.getCurrentSearch().getType());
         return strongs;
     }
 
@@ -1018,7 +1047,7 @@ public class SearchServiceImpl implements SearchService {
      * @param sq the current search criteria containing the range of interest
      * @return the query syntax
      */
-    private String getQuerySyntaxForStrongs(final List<String> strongs, final SearchQuery sq) {
+    private String getQuerySyntaxForStrongs(final Set<String> strongs, final SearchQuery sq) {
         final StringBuilder query = new StringBuilder(64);
 
         // adding a space in front in case we prepend a range
@@ -1044,9 +1073,9 @@ public class SearchServiceImpl implements SearchService {
      * @param searchType type of search, this includes greek vs hebrew...
      * @return the list of strongs
      */
-    private List<String> splitToStrongs(final String searchStrong, final SearchType searchType) {
+    private Set<String> splitToStrongs(final String searchStrong, final SearchType searchType) {
         final List<String> strongs = Arrays.asList(searchStrong.split("[, ;]+"));
-        final List<String> strongList = new ArrayList<String>();
+        final Set<String> strongList = new HashSet<String>();
         for (final String s : strongs) {
             final String prefixedStrong = isDigit(s.charAt(0)) ? getPrefixed(s, searchType) : s;
             strongList.add(padStrongNumber(prefixedStrong.toUpperCase(Locale.ENGLISH), false));

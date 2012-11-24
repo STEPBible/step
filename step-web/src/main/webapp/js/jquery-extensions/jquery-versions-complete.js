@@ -20,12 +20,15 @@ $.widget("custom.versions",  {
             step.autoVersions.currentElement = $(this);
             
             self.dropdownVersionMenu.show();
+            
             self._filter(self._wasFullToken($(this).val()));
             self.dropdownVersionMenu.css('position', 'absolute').position({
                 my:  "left bottom",
                 at : "left top",
-                of: self.element
+                of: self.element,
+                collision: "flip",
             });
+            self.ensureInWindow();
         });
         
         
@@ -44,7 +47,7 @@ $.widget("custom.versions",  {
         
         if(!$.data(document, 'versions-rendered')) {
             //render menu
-            this.dropdownVersionMenu = $("<div class='versionsAutoComplete ui-widget-content ui-corner-all'></div>");
+            this.dropdownVersionMenu = $("<div class='versionsAutoComplete stepComplete ui-widget-content ui-corner-all'></div>");
             this._renderFilterOptions();
             this._renderVersions();
             this._filter();
@@ -85,6 +88,19 @@ $.widget("custom.versions",  {
         this._bindHandlers(this);
     },
 
+    ensureInWindow : function(dropdown) {
+        var windowHeight = $(window).height();
+        var dropdownHeight = $(this.dropdownVersionMenu).height();
+        var dropdownTop = $(this.dropdownVersionMenu).position().top;
+        
+        if(dropdownHeight + dropdownTop > windowHeight) {
+            //it's off screen.
+            // console.log("Dropdown is off screen");
+            //our best attempt is going to be to move it up a bit 
+            this.dropdownVersionMenu.css('top', dropdownTop - (dropdownHeight + dropdownTop - windowHeight));
+        }
+    },
+    
     _wasFullToken : function(val) {
         //if val is already a selected module, then show everything, not just the filtered value
         var lastToken = val;

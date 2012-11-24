@@ -409,7 +409,7 @@ body {
 /**************************/
 .versionsListMenu {
  	overflow-y: auto; 
-	max-height: 400px;
+/* 	max-height: 400px; */
 	width: 100%;
 }
 
@@ -423,5 +423,7 @@ body {
 
 .stepComplete {
 	max-height: 60%;
-	z-index: 10 !important;
+	z-index: 1000 !important;
+	overflow-x: hidden;
+	overflow-y: auto;
 }

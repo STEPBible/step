@@ -493,6 +493,8 @@ Passage.prototype.initReferenceTextBox = function() {
     }).blur(function() {
         $(this).trigger('change');
     }).data( "autocomplete" )._renderItem = function( ul, item ) {
+        ul.addClass("stepComplete");
+        
         return $( "<li></li>" )
         .data( "item.autocomplete", item )
         .append( "<a>" + item.label + "</a>" )

@@ -14,7 +14,7 @@ import com.tyndalehouse.step.core.models.LexiconSuggestion;
  * @author chrisburrell
  * 
  */
-public class OriginalWordUtils {
+public final class OriginalWordUtils {
     /** strong number field */
     public static final String STRONG_NUMBER_FIELD = "strongNumber";
     private static final Filter GREEK_FILTER = new CachingWrapperFilter(new PrefixFilter(new Term(

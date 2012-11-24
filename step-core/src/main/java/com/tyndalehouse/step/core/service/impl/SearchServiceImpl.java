@@ -662,8 +662,9 @@ public class SearchServiceImpl implements SearchService {
 
             final List<String> strongs = new ArrayList<String>(matchingMeanings.length);
             for (final EntityDoc d : matchingMeanings) {
-                if (isInFilter(d, sq)) {
-                    strongs.add(d.get(STRONG_NUMBER_FIELD));
+                final String strongNumber = d.get(STRONG_NUMBER_FIELD);
+                if (isInFilter(strongNumber, sq)) {
+                    strongs.add(strongNumber);
                 }
             }
 
@@ -679,34 +680,18 @@ public class SearchServiceImpl implements SearchService {
     }
 
     /**
-     * Returns true to indicate that the specified definition object should be included in the text search
-     * 
-     * @param d the definition
-     * @param sq the search criteria
-     * @return true if the object is to be included
+     * @param strongNumber the strong number
+     * @param sq the search query
+     * @return true if the filter is empty, or if the strong number is in the filter
      */
-    private boolean isInFilter(final EntityDoc d, final SearchQuery sq) {
+    private boolean isInFilter(final String strongNumber, final SearchQuery sq) {
         final String[] originalFilter = sq.getCurrentSearch().getOriginalFilter();
         if (originalFilter == null || originalFilter.length == 0) {
             return true;
         }
 
         for (final String filterValue : originalFilter) {
-            if (filterValue.equals(d.get(STRONG_NUMBER_FIELD))) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private boolean isInFilter(final String s, final SearchQuery sq) {
-        final String[] originalFilter = sq.getCurrentSearch().getOriginalFilter();
-        if (originalFilter == null || originalFilter.length == 0) {
-            return true;
-        }
-
-        for (final String filterValue : originalFilter) {
-            if (filterValue.equals(s)) {
+            if (filterValue.equals(strongNumber)) {
                 return true;
             }
         }
@@ -740,54 +725,89 @@ public class SearchServiceImpl implements SearchService {
      */
     private List<String> adaptQueryForRelatedStrongSearch(final SearchQuery sq) {
         final List<String> strongsFromQuery = getStrongsFromTextCriteria(sq);
-
+        final List<String> filteredStrongs = new ArrayList<String>(strongsFromQuery.size());
+        final StringBuilder fullQuery = new StringBuilder(64);
         final QueryParser p = new QueryParser(Version.LUCENE_30, STRONG_NUMBER_FIELD,
                 this.definitions.getAnalyzer());
-        final StringBuilder query = new StringBuilder(strongsFromQuery.size() * 6 + 16);
-        query.append("-stopWord:true ");
-        for (final String strong : strongsFromQuery) {
-            query.append(strong);
-            query.append(' ');
 
-            // add related strong field
-            query.append("relatedNumbers:");
-            query.append(strong);
-            query.append(' ');
+        // get all words suggested in query
+        final String query = retrieveStrongs(strongsFromQuery);
+        final EntityDoc[] results = retrieveStrongDefinitions(sq, filteredStrongs, p, query, fullQuery);
+
+        // now get all related words:
+        final String relatedQuery = getRelatedStrongQuery(results);
+        final EntityDoc[] relatedResults = retrieveStrongDefinitions(sq, filteredStrongs, p, relatedQuery,
+                fullQuery);
+
+        final EntityDoc[] joinedDocs = Arrays.copyOf(results, results.length + relatedResults.length);
+        System.arraycopy(relatedResults, 0, joinedDocs, results.length, relatedResults.length);
+
+        sq.getCurrentSearch().setQuery(fullQuery.toString());
+        sq.setDefinitions(joinedDocs);
+        return filteredStrongs;
+    }
+
+    /**
+     * Builds a query that gets the related-strong number entity documents
+     * 
+     * @param results the source numbers
+     * @return the query that gets the related numbers
+     */
+    private String getRelatedStrongQuery(final EntityDoc[] results) {
+        final StringBuilder relatedQuery = new StringBuilder(results.length * 7);
+        relatedQuery.append("-stopWord:true ");
+        for (final EntityDoc doc : results) {
+            relatedQuery.append(doc.get("relatedNumbers").replace(',', ' '));
         }
+        return relatedQuery.toString();
+    }
 
+    /**
+     * Retrieves the correct entity documents from a built up query and passed in parser
+     * 
+     * @param sq the search query
+     * @param filteredStrongs the list of filtered strongs so far
+     * @param p the parser
+     * @param query the query
+     * @return the list of matched entity documents
+     */
+    private EntityDoc[] retrieveStrongDefinitions(final SearchQuery sq, final List<String> filteredStrongs,
+            final QueryParser p, final String query, final StringBuilder fullQuery) {
         Query q;
         try {
             q = p.parse(query.toString());
         } catch (final ParseException e) {
             throw new StepInternalException("Unable to parse query", e);
         }
-
         final EntityDoc[] results = this.definitions.search(q);
 
-        // filter original set:
-        final List<String> filteredStrongs = new ArrayList<String>(strongsFromQuery.size());
-        for (final String s : strongsFromQuery) {
-            if (isInFilter(s, sq)) {
-                filteredStrongs.add(s);
-            }
-        }
-
-        // matchedStrongs.addAll(strongs);
         for (final EntityDoc doc : results) {
             // remove from matched strong if not in filter
-            if (isInFilter(doc, sq)) {
-                filteredStrongs.add(doc.get(STRONG_NUMBER_FIELD));
+            final String strongNumber = doc.get(STRONG_NUMBER_FIELD);
+            if (isInFilter(strongNumber, sq)) {
+                filteredStrongs.add(strongNumber);
+                fullQuery.append(STRONG_QUERY);
+                fullQuery.append(strongNumber);
+                fullQuery.append(' ');
             }
         }
+        return results;
+    }
 
-        final String queryString = getQuerySyntaxForStrongs(filteredStrongs, sq);
-
-        // we can now change the individual search query, to the real text search
-        sq.getCurrentSearch().setQuery(queryString);
-        sq.setDefinitions(results);
-
-        // return the strongs that the search will match
-        return strongsFromQuery;
+    /**
+     * Gets a query that retrieves a list of strong numbers
+     * 
+     * @param strongsFromQuery the strong numbers to select
+     * @return a query looking up all the Strong numbers
+     */
+    private String retrieveStrongs(final List<String> strongsFromQuery) {
+        final StringBuilder query = new StringBuilder(strongsFromQuery.size() * 6 + 16);
+        query.append("-stopWord:true ");
+        for (final String strong : strongsFromQuery) {
+            query.append(strong);
+            query.append(' ');
+        }
+        return query.toString();
     }
 
     /**
@@ -799,7 +819,6 @@ public class SearchServiceImpl implements SearchService {
      */
     private List<String> searchTextFieldsForDefinition(final String searchQuery, final SearchQuery sq) {
         // first look through the text forms
-
         final EntityDoc[] results = this.specificForms.search(new String[] { "accentedUnicode" },
                 searchQuery, null, null, false, "-stopWord:false");
         if (results.length == 0) {

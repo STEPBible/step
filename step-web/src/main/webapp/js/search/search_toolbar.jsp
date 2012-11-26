@@ -40,7 +40,8 @@
 	<%
 		}
 	%>
-	
+	<a class="smallerFonts" href="#" title="Smaller fonts">A</a>
+	<a class="largerFonts" href="#" title="Larger fonts">A</a>
 	<a href='#' class='showSearchCriteria'>Show search criteria</a> 
 	<a href='#' class='hideSearchCriteria'>Hide search criteria</a>
 	<input type='hidden' class='pageNumber <%=request.getParameter("namespace")%>PageNumber' value='0' readonly='true' />

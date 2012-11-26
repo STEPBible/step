@@ -21,7 +21,8 @@
 			class="nextChapter"
 			href="?reference=<%=stepRequest.getNextReference(Integer.parseInt(request
 							.getParameter("passageId")))%>&version=<%=stepRequest.getVersion(Integer.parseInt(request
-							.getParameter("passageId")))%>">Displays the next chapter (or expands to the end of the chapter)</a> <a
+							.getParameter("passageId")))%>">Displays the next chapter (or expands to the end of the chapter)</a> 
+		<a
 			class="bookmarkPassageLink">Add a bookmark</a> <a class="smallerFonts"
 			href="#" title="Smaller fonts">A</a> <a class="largerFonts" href="#"
 			title="Larger fonts">A</a>

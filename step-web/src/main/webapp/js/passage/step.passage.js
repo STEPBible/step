@@ -161,9 +161,19 @@ step.passage = {
     },
     
     _redoTextSize : function(passageId, passageContent) {
-        var fontSize = step.passage.ui.fontSizes[passageId];
+
+        var contentHolder = $(".passageContentHolder", passageContent); 
+        
+        //we're only going to be cater for one font size initially, so pick the major version one.
+        var fontKey = step.passage.ui.getFontKey(contentHolder);
+        var fontSizes = step.passage.ui.fontSizes[passageId];
+        var fontSize;
+        if(fontSizes != undefined) {
+            fontSize = fontSizes[fontKey];
+        }
+        
         if(fontSize != undefined) {
-            $(".passageContentHolder", passageContent).css("font-size", fontSize);
+            contentHolder.css("font-size", fontSize);
         }
     },
     

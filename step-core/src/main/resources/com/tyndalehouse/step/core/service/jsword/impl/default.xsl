@@ -447,10 +447,10 @@
 		        -->
 		      <xsl:choose>
 		        <xsl:when test="$TinyVNum = 'true' and $Notes = 'true'">
-		          <a name="{@osisID}"><span class="verseNumber"><xsl:value-of select="$versenum"/></span></a>
+		          <a name="{@osisID}"><span class="verseNumber"><xsl:value-of select="$versenum"/>&#160;</span></a>
 		        </xsl:when>
 		        <xsl:when test="$TinyVNum = 'true' and $Notes = 'false'">
-		          <a name="{@osisID}"><span class="verseNumber"><xsl:value-of select="$versenum"/></span></a>
+		          <a name="{@osisID}"><span class="verseNumber"><xsl:value-of select="$versenum"/>&#160;</span></a>
 		        </xsl:when>
 		        <xsl:when test="$TinyVNum = 'false' and $Notes = 'true'">
 		          <a name="{@osisID}">(<xsl:value-of select="$versenum"/>)</a>

@@ -117,7 +117,7 @@ public class Loader {
             initials[ii] = b.getInitials();
         }
 
-        waitForIndexes(initials);
+        this.jswordModule.waitForIndexes(initials);
 
         // now we can load the data
         loadData();
@@ -134,21 +134,6 @@ public class Loader {
         syncInstall(version);
         this.addUpdate("Making the " + version + " searchable");
         this.jswordModule.index(version);
-    }
-
-    /**
-     * @param versions versions to be waited upon
-     */
-    private void waitForIndexes(final String... versions) {
-        for (final String s : versions) {
-            while (!this.jswordModule.isIndexed(s)) {
-                try {
-                    Thread.sleep(INSTALL_WAITING);
-                } catch (final InterruptedException e) {
-                    LOGGER.warn("Interrupted exception", e);
-                }
-            }
-        }
     }
 
     /**

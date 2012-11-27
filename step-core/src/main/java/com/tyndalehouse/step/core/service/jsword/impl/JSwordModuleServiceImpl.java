@@ -41,6 +41,7 @@ import com.tyndalehouse.step.core.utils.ValidateUtils;
  */
 @Singleton
 public class JSwordModuleServiceImpl implements JSwordModuleService {
+    private static final int INDEX_WAITING = 1000;
     private static final Logger LOGGER = LoggerFactory.getLogger(JSwordModuleServiceImpl.class);
     private static final String ANCIENT_GREEK = "grc";
     private static final String ANCIENT_HEBREW = "hbo";
@@ -352,6 +353,19 @@ public class JSwordModuleServiceImpl implements JSwordModuleService {
             } catch (final BookException e) {
                 // book wasn't found probably
                 LOGGER.warn("Deleting book failed: " + initials, e);
+            }
+        }
+    }
+
+    @Override
+    public void waitForIndexes(final String... versions) {
+        for (final String s : versions) {
+            while (!this.isIndexed(s)) {
+                try {
+                    Thread.sleep(INDEX_WAITING);
+                } catch (final InterruptedException e) {
+                    LOGGER.warn("Interrupted exception", e);
+                }
             }
         }
     }

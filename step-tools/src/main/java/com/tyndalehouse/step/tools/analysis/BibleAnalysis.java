@@ -13,8 +13,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.SortedMap;
-import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.regex.Pattern;
 
@@ -375,9 +373,6 @@ public class BibleAnalysis {
             final Map<String, List<Word>> currentPhrases, final Map<String, List<Word>> currentVerses,
             final Map<String, Integer> currentWordsCounts) throws Exception {
         final Book b = Books.installed().getBook(initials);
-
-        final Pattern m = Pattern.compile("([GH]+[0-9]+)[.,;·]?");
-        final SortedMap<String, Set<String>> strongs = new TreeMap<String, Set<String>>();
 
         final Filter filter = new StrongAndVerseElements();
         final Key key = b.getKey(SCOPE);

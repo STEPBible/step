@@ -2,9 +2,7 @@
 package com.tyndalehouse.step.tools.nave;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -13,6 +11,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import com.tyndalehouse.step.core.utils.IOUtils;
 import com.tyndalehouse.step.core.utils.StringUtils;
 
 /**
@@ -29,134 +28,140 @@ public class NaveTransforming {
     final Map<String, Tree<String>> trees;
 
     public NaveTransforming(final String source) throws IOException {
-        final BufferedReader br = new BufferedReader(new FileReader(source));
-        String line = br.readLine();
-        Tree<String> root = null;
+        BufferedReader br = null;
+        try {
+            br = new BufferedReader(new FileReader(source));
+            String line = br.readLine();
+            Tree<String> root = null;
 
-        final Map<String, Tree<String>> trees = new LinkedHashMap<String, Tree<String>>();
+            final Map<String, Tree<String>> trees = new LinkedHashMap<String, Tree<String>>();
 
-        int indentation = 0;
-        final List<IndentedTree> parents = new ArrayList<IndentedTree>();
-        Tree<String> lastChild = null;
-        int ignoreIndent = 256;
-        while ((line = br.readLine()) != null) {
-            if (line.startsWith("$$")) {
-                continue;
-            }
-
-            final String trimmedLine = line.trim();
-            if (trimmedLine.length() == 0) {
-                continue;
-            }
-
-            final char c = trimmedLine.charAt(0);
-            if (c == '#') {
-                // count number of spaces
-                final int numberOfSpaces = line.indexOf('#');
-
-                String ref = trimmedLine.substring(1);
-                if (ref.charAt(ref.length() - 1) == '|') {
-                    ref = ref.substring(0, ref.length() - 1);
-                }
-                lastChild.attachReference(ref);
-                ignoreIndent = numberOfSpaces;
-                continue;
-            }
-
-            if (c == '\\') {
-                ignoreIndent = 256;
-                if (root != null) {
-                    // store root against its name
-                    trees.put(parents.get(0).t.root, parents.get(0).t);
+            int indentation = 0;
+            final List<IndentedTree> parents = new ArrayList<IndentedTree>();
+            Tree<String> lastChild = null;
+            int ignoreIndent = 256;
+            while ((line = br.readLine()) != null) {
+                if (line.startsWith("$$")) {
+                    continue;
                 }
 
-                final String entryName = trimmedLine.substring(1, trimmedLine.length() - 1);
-                root = new Tree<String>(entryName);
-                lastChild = root;
-                indentation = 0;
-                parents.clear();
-                parents.add(new IndentedTree(root, 0));
-                continue;
-            }
-
-            if (c == '.' || c == '-') {
-                // count number of spaces...
-                int ii = 0;
-                while (line.charAt(ii) == ' ') {
-                    ii++;
+                final String trimmedLine = line.trim();
+                if (trimmedLine.length() == 0) {
+                    continue;
                 }
 
-                if (indentation == ii) {
-                    lastChild = root.addChild(trimmedLine.substring(1));
-                } else if (ii > indentation) {
-                    // we're going up a level, so add parent to stack
-                    parents.add(new IndentedTree(lastChild, indentation));
-                    root = lastChild;
+                final char c = trimmedLine.charAt(0);
+                if (c == '#') {
+                    // count number of spaces
+                    final int numberOfSpaces = line.indexOf('#');
 
-                    lastChild = root.addChild(trimmedLine.substring(1));
+                    String ref = trimmedLine.substring(1);
+                    if (ref.charAt(ref.length() - 1) == '|') {
+                        ref = ref.substring(0, ref.length() - 1);
+                    }
+                    lastChild.attachReference(ref);
+                    ignoreIndent = numberOfSpaces;
+                    continue;
+                }
+
+                if (c == '\\') {
+                    ignoreIndent = 256;
+                    if (root != null) {
+                        // store root against its name
+                        trees.put(parents.get(0).t.root, parents.get(0).t);
+                    }
+
+                    final String entryName = trimmedLine.substring(1, trimmedLine.length() - 1);
+                    root = new Tree<String>(entryName);
+                    lastChild = root;
+                    indentation = 0;
+                    parents.clear();
+                    parents.add(new IndentedTree(root, 0));
+                    continue;
+                }
+
+                if (c == '.' || c == '-') {
+                    // count number of spaces...
+                    int ii = 0;
+                    while (line.charAt(ii) == ' ') {
+                        ii++;
+                    }
+
+                    if (indentation == ii) {
+                        lastChild = root.addChild(trimmedLine.substring(1));
+                    } else if (ii > indentation) {
+                        // we're going up a level, so add parent to stack
+                        parents.add(new IndentedTree(lastChild, indentation));
+                        root = lastChild;
+
+                        lastChild = root.addChild(trimmedLine.substring(1));
+                    } else {
+                        // we're coming back down
+                        while (parents.size() > 0) {
+                            if (parents.get(parents.size() - 1).indent >= ii) {
+                                // remove because we're not as indented or indented the same
+                                parents.remove(parents.size() - 1);
+                            } else {
+                                // we break because we've reached a point where the list contains our
+                                // immediate
+                                // parent
+                                break;
+                            }
+                            // else keep going...
+                        } // end while
+
+                        // so we've now got the parent at the same level, but we're interested in the level
+                        // before...
+
+                        root = parents.get(parents.size() - 1).t;
+                        lastChild = root.addChild(trimmedLine.substring(1));
+                    }
+
+                    indentation = ii;
+                    ignoreIndent = 256;
+                    continue;
+                } else if (numSpaces(line) == ignoreIndent) {
+                    // attach references
+                    String ref = trimmedLine;
+                    if (ref.charAt(ref.length() - 1) == '|') {
+                        ref = ref.substring(0, ref.length() - 1);
+                    }
+
+                    lastChild.attachReference(ref);
+                    continue;
                 } else {
-                    // we're coming back down
-                    final IndentedTree parent = null;
-                    while (parents.size() > 0) {
-                        if (parents.get(parents.size() - 1).indent >= ii) {
-                            // remove because we're not as indented or indented the same
-                            parents.remove(parents.size() - 1);
-                        } else {
-                            // we break because we've reached a point where the list contains our immediate
-                            // parent
-                            break;
-                        }
-                        // else keep going...
-                    } // end while
-
-                    // so we've now got the parent at the same level, but we're interested in the level
-                    // before...
-
-                    root = parents.get(parents.size() - 1).t;
-                    lastChild = root.addChild(trimmedLine.substring(1));
+                    // it's most likely a header that has been chopped:
+                    lastChild.root = lastChild.root + ' ' + trimmedLine;
+                    continue;
                 }
-
-                indentation = ii;
-                ignoreIndent = 256;
-                continue;
-            } else if (numSpaces(line) == ignoreIndent) {
-                // attach references
-                String ref = trimmedLine;
-                if (ref.charAt(ref.length() - 1) == '|') {
-                    ref = ref.substring(0, ref.length() - 1);
-                }
-
-                lastChild.attachReference(ref);
-                continue;
-            } else {
-                // it's most likely a header that has been chopped:
-                lastChild.root = lastChild.root + ' ' + trimmedLine;
-                continue;
             }
+
+            // do the last entry
+            trees.put(parents.get(0).t.root, parents.get(0).t);
+
+            // final print trees
+            final Set<Entry<String, Tree<String>>> printSet = trees.entrySet();
+            for (final Entry<String, Tree<String>> tree : printSet) {
+                // System.out.println(tree.getKey());
+                tree.getValue().print();
+            }
+
+            this.trees = trees;
+
+            // // create a map of the first and last entry
+            // final Map<String, Map<String, List<Tree<String>>>> firstAndLast = new LinkedHashMap<String,
+            // Map<String, List<Tree<String>>>>();
+            // final Set<Entry<String, Tree<String>>> entrySet = trees.entrySet();
+            // for (final Entry<String, Tree<String>> tree : entrySet) {
+            // addLastChildren(firstAndLast, tree.getValue(), tree.getKey().toLowerCase());
+            // }
+
+            // now we can try and match it against the output file
+            // matchFiles(firstAndLast);
+        } finally {
+            IOUtils.closeQuietly(br);
+
         }
-
-        // do the last entry
-        trees.put(parents.get(0).t.root, parents.get(0).t);
-
-        // final print trees
-        final Set<Entry<String, Tree<String>>> printSet = trees.entrySet();
-        for (final Entry<String, Tree<String>> tree : printSet) {
-            // System.out.println(tree.getKey());
-            tree.getValue().print();
-        }
-
-        this.trees = trees;
-
-        // // create a map of the first and last entry
-        // final Map<String, Map<String, List<Tree<String>>>> firstAndLast = new LinkedHashMap<String,
-        // Map<String, List<Tree<String>>>>();
-        // final Set<Entry<String, Tree<String>>> entrySet = trees.entrySet();
-        // for (final Entry<String, Tree<String>> tree : entrySet) {
-        // addLastChildren(firstAndLast, tree.getValue(), tree.getKey().toLowerCase());
-        // }
-
-        // now we can try and match it against the output file
-        // matchFiles(firstAndLast);
     }
 
     /**
@@ -164,36 +169,41 @@ public class NaveTransforming {
      */
     private void matchFiles(final Map<String, Map<String, List<Tree<String>>>> firstAndLast)
             throws IOException {
-        final BufferedReader br = new BufferedReader(new FileReader("d:\\temp\\nave.txt"));
-        final BufferedWriter wr = new BufferedWriter(new FileWriter("d:\\temp\\nave_matched.txt"));
 
-        // read an entry:
-        Nave n;
-        int errors = 0;
-        while ((n = readEntry(br)) != null) {
-            if (StringUtils.isBlank(n.references)) {
-                continue;
+        BufferedReader br = null;
+        try {
+            br = new BufferedReader(new FileReader("d:\\temp\\nave.txt"));
+
+            // read an entry:
+            Nave n;
+            int errors = 0;
+            while ((n = readEntry(br)) != null) {
+                if (StringUtils.isBlank(n.references)) {
+                    continue;
+                }
+
+                final Map<String, List<Tree<String>>> map = firstAndLast.get(n.level0.toLowerCase());
+                if (map == null) {
+                    errors++;
+                    System.err.println("Can't find " + n.level0);
+                    continue;
+                }
+
+                final List<Tree<String>> matchedEntry = map.get(n.lastHeading.toLowerCase());
+                if (matchedEntry == null) {
+                    errors++;
+                    System.err.println("Can't find last level heading: " + n.highestLevel);
+                    continue;
+                }
+
+                matchesAnyLine(matchedEntry, n);
+
+                // now write nave to file
             }
-
-            final Map<String, List<Tree<String>>> map = firstAndLast.get(n.level0.toLowerCase());
-            if (map == null) {
-                errors++;
-                System.err.println("Can't find " + n.level0);
-                continue;
-            }
-
-            final List<Tree<String>> matchedEntry = map.get(n.lastHeading.toLowerCase());
-            if (matchedEntry == null) {
-                errors++;
-                System.err.println("Can't find last level heading: " + n.highestLevel);
-                continue;
-            }
-
-            matchesAnyLine(matchedEntry, n);
-
-            // now write nave to file
+            System.out.println("Number of errors " + errors);
+        } finally {
+            IOUtils.closeQuietly(br);
         }
-        System.out.println("Number of errors " + errors);
     }
 
     private boolean matchesAnyLine(final List<Tree<String>> matchedEntry, final Nave n) {

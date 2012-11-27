@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Writer;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -67,7 +68,7 @@ public class UserServiceImpl implements UserService {
         }
 
         ensureUsers();
-        final String properEmail = email.toLowerCase();
+        final String properEmail = email.toLowerCase(Locale.ENGLISH);
         if (this.users.contains(properEmail)) {
             return true;
         }

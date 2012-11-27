@@ -185,4 +185,12 @@ public class SetupController {
         notBlank(initials, "A version must be provided", USER_MISSING_FIELD);
         this.bibleInformation.reIndex(initials);
     }
+
+    /**
+     * Indexes all modules
+     */
+    public void indexAll() {
+        validateSession(this.sessionProvider);
+        this.bibleInformation.indexAll();
+    }
 }

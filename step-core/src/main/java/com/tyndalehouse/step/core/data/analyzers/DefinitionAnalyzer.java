@@ -16,7 +16,6 @@ public class DefinitionAnalyzer extends PerFieldAnalyzerWrapper {
     /**
      * Initialises the analyzer
      * 
-     * @param matchVersion the lucene version
      */
     public DefinitionAnalyzer() {
         super(new KeywordAnalyzer());

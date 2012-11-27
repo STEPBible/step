@@ -925,7 +925,7 @@ public class SearchServiceImpl implements SearchService {
      */
     private Set<String> findByTransliteration(final String query, final boolean isGreek) {
         // first find by transliterations that we have
-        final String lowerQuery = query.toLowerCase();
+        final String lowerQuery = query.toLowerCase(Locale.ENGLISH);
 
         final String simplifiedTransliteration = OriginalWordSuggestionServiceImpl
                 .getSimplifiedTransliterationClause(isGreek, lowerQuery, false);

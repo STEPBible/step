@@ -412,7 +412,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
         }
 
         final Key subKey = key.get(0);
-        if (subKey != null && subKey instanceof Verse) {
+        if (subKey instanceof Verse && subKey != null) {
             final Verse verse = (Verse) subKey;
             if (verse.getVerse() == 0) {
                 // then return verse 1 if available
@@ -1007,6 +1007,17 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
         }
     }
 
+    /**
+     * Executes the stylesheet
+     * 
+     * @param options the list of options to pass in
+     * @param interlinearVersion the interlinear version(s)
+     * @param bookData the book data, containing book and reference
+     * @param osissep the XML SAX provider
+     * @param displayMode the display mode
+     * @return a Transforming SAX event provider, from which can be transformed into HTML
+     * @throws TransformerException an exception in the stylesheet that is being executed
+     */
     private TransformingSAXEventProvider executeStyleSheet(final List<LookupOption> options,
             final String interlinearVersion, final BookData bookData, final SAXEventProvider osissep,
             final InterlinearMode displayMode) throws TransformerException {

@@ -87,7 +87,7 @@ public enum LookupOption {
 
     /** not available to the UI */
     CHAPTER_VERSE("CVNum", null),
-
+    /** displays the headings only for a selected XML fragment, e.g. first level subject search */
     HEADINGS_ONLY("HeadingsOnly", XslConversionType.HEADINGS_ONLY),
 
     /**

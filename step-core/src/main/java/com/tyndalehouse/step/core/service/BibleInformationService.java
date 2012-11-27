@@ -198,4 +198,9 @@ public interface BibleInformationService {
      */
     void removeModule(String initials);
 
+    /**
+     * Indexes all modules, sequentially and synchronously, not in parallel
+     */
+    void indexAll();
+
 }

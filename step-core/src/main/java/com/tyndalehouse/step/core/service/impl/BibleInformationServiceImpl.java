@@ -53,6 +53,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
+import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.BookCategory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -150,10 +151,12 @@ public class BibleInformationServiceImpl implements BibleInformationService {
         return passageText;
     }
 
+    /**
+     * @param interlinearMode a selected interlinear mode
+     * @return returns NONE if null, or the value of String as a InterlinearMode enumeration.
+     */
     private InterlinearMode getDisplayMode(final String interlinearMode) {
-        final InterlinearMode desiredModeOfDisplay = interlinearMode == null ? NONE : InterlinearMode
-                .valueOf(interlinearMode);
-        return desiredModeOfDisplay;
+        return interlinearMode == null ? NONE : InterlinearMode.valueOf(interlinearMode);
     }
 
     /**
@@ -167,7 +170,7 @@ public class BibleInformationServiceImpl implements BibleInformationService {
         final String[] versions = StringUtils
                 .split(version + VERSION_SEPARATOR + interlinearVersion, "[, ]+");
         for (int i = 0; i < versions.length; i++) {
-            versions[i] = versions[i].toUpperCase();
+            versions[i] = versions[i].toUpperCase(Locale.ENGLISH);
         }
 
         return versions;
@@ -443,5 +446,16 @@ public class BibleInformationServiceImpl implements BibleInformationService {
     @Override
     public void removeModule(final String initials) {
         this.jswordModule.removeModule(initials);
+    }
+
+    @Override
+    public void indexAll() {
+        final List<Book> installedModules = this.jswordModule.getInstalledModules(BookCategory.BIBLE);
+        for (final Book b : installedModules) {
+            final String initials = b.getInitials();
+            LOGGER.debug("Indexing [{}]", initials);
+            this.jswordModule.index(initials);
+            this.jswordModule.waitForIndexes(initials);
+        }
     }
 }

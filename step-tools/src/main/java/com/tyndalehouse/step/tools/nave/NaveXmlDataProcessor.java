@@ -66,7 +66,6 @@ public class NaveXmlDataProcessor {
             throws IOException {
         final List<Tree<String>> children = t.getChildren();
         for (final Tree<String> c : children) {
-            final int i = 0;
 
             final StringBuilder cBuilder = new StringBuilder(key);
             cBuilder.append(" - ");

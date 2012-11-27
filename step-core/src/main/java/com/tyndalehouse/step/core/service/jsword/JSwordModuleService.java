@@ -140,4 +140,11 @@ public interface JSwordModuleService {
      * @param initials initials of the module to remove, e.g. 'WEB'
      */
     void removeModule(String initials);
+
+    /**
+     * Provides a way of waiting for indexes to be created
+     * 
+     * @param versions versions to be waited upon
+     */
+    void waitForIndexes(String... versions);
 }

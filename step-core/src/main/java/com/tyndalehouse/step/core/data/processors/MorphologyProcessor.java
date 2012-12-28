@@ -91,14 +91,15 @@ public class MorphologyProcessor implements PostProcessor {
      * @param html the HTML builder
      * @return true if a bracket has been opened
      */
-    private boolean renderCase(final Document doc, boolean openBracket, final StringBuilder html) {
+    private boolean renderCase(final Document doc, final boolean openBracket, final StringBuilder html) {
+        boolean originalOpenBracket = openBracket;
         final String wordCase = doc.get("case");
         if (wordCase != null) {
-            openBracket = openBracket(openBracket, html);
+            originalOpenBracket = openBracket(originalOpenBracket, html);
             html.append(wordCase);
             html.append(SPACE_SEPARATOR);
         }
-        return openBracket;
+        return originalOpenBracket;
     }
 
     /**
@@ -109,10 +110,12 @@ public class MorphologyProcessor implements PostProcessor {
      * @param html the HTML builder
      * @return true if a bracket has been opened
      */
-    private boolean renderTense(final Document doc, boolean openBracket, final StringBuilder html) {
+    private boolean renderTense(final Document doc, final boolean openBracket, final StringBuilder html) {
+        boolean originalOpenBracket = openBracket;
+
         final String tense = doc.get("tense");
         if (tense != null) {
-            openBracket = openBracket(openBracket, html);
+            originalOpenBracket = openBracket(originalOpenBracket, html);
             html.append(tense);
             html.append(SPACE_SEPARATOR);
 
@@ -122,7 +125,7 @@ public class MorphologyProcessor implements PostProcessor {
                 html.append(SPACE_SEPARATOR);
             }
         }
-        return openBracket;
+        return originalOpenBracket;
     }
 
     /**

@@ -20,6 +20,7 @@ import com.tyndalehouse.step.core.utils.StringUtils;
  * @author chrisburrell
  * 
  */
+@SuppressWarnings("unused")
 public class NaveTransforming {
     public static void main(final String[] args) throws IOException {
         new NaveTransforming("C:\\Users\\Chris\\Desktop\\nave-tyndale.txt");

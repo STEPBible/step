@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.regex.Pattern;
 
 import org.crosswire.jsword.book.Book;
@@ -34,6 +33,7 @@ import org.slf4j.LoggerFactory;
  * @author chrisburrell
  * 
  */
+@SuppressWarnings("unchecked")
 public class BibleAnalysis {
     Pattern punctuation = Pattern.compile("[ *0-9:.<>,!\";]+");
     Logger LOGGER = LoggerFactory.getLogger(BibleAnalysis.class);
@@ -41,14 +41,10 @@ public class BibleAnalysis {
     private String currentVerse;
     private int currentPosition;
     private Map<String, List<Word>> sourceWords;
-    private Map<String, List<Word>> sourcePhrases;
-    private Map<String, List<Word>> sourceVerses;
-    private Map<String, Integer> sourceWordCounts;
     private Map<String, List<Word>> targetWords;
     private Map<String, List<Word>> targetPhrases;
     private Map<String, List<Word>> targetVerses;
     private Map<String, Integer> targetWordCounts;
-    private Analysis sourceAnalysis;
     private Analysis targetAnalysis;
     private TaggedVersion taggedVersion;
     private Analysis strongAnalysis;
@@ -64,12 +60,6 @@ public class BibleAnalysis {
 
     public void read(final String initials, final String targetLanguage) throws Exception {
         this.sourceWords = new HashMap<String, List<Word>>();
-        this.sourcePhrases = new HashMap<String, List<Word>>();
-        this.sourceVerses = new HashMap<String, List<Word>>();
-
-        this.sourceWordCounts = new HashMap<String, Integer>();
-        this.sourceAnalysis = read(initials, this.sourceWords, this.sourcePhrases, this.sourceVerses,
-                this.sourceWordCounts);
 
         this.targetWords = new HashMap<String, List<Word>>();
         this.targetPhrases = new HashMap<String, List<Word>>();
@@ -256,32 +246,6 @@ public class BibleAnalysis {
         // }
     }
 
-    private void computeMatchToFewerVerses(final Set<String> verses,
-            final Set<AnalyzedWord> wordsInAllTargetVerses, final AnalyzedWord analyzedWord) {
-        // find all words with the exact match, i.e. the same
-        for (final AnalyzedWord w : wordsInAllTargetVerses) {
-            if (w.occurencesInDifferentVerses < verses.size()) {
-                // check if they are the same two verses, if so we have a match of very high confidence
-                if (verses.containsAll(w.verses)) {
-                    markMatchToFewerVerses(verses, w, verses.size(), w.verses.size());
-                }
-            }
-        }
-    }
-
-    /**
-     * Marks a word as a fewer than match
-     * 
-     * @param verses
-     * @param w
-     * @param size
-     * @param size2
-     */
-    private void markMatchToFewerVerses(final Set<String> verses, final AnalyzedWord w, final int size,
-            final int size2) {
-
-    }
-
     /**
      * @return number of words matched
      */
@@ -319,15 +283,6 @@ public class BibleAnalysis {
             e.numVersesForStrong = w.occurencesInDifferentVerses;
             tv.exactMatches.add(e);
         }
-    }
-
-    private void computePotentialMatch(final Set<AnalyzedWord> wordsInAllTargetVerses) {
-        // TODO Auto-generated method stub
-
-    }
-
-    private void getTopWords(final Set<AnalyzedWord> wordsInAllTargetVerses) {
-
     }
 
     private Set<AnalyzedWord> getAnalyzedWordsFromVersesInTarget(final Set<String> verses) {
@@ -479,6 +434,7 @@ public class BibleAnalysis {
             this.currentPosition++;
         } else {
             // not leaf node, so iterate through the content to keep the ordering
+
             final List<Content> content = next.getContent();
             for (final Content c : content) {
                 if (c instanceof Text) {
@@ -539,33 +495,6 @@ public class BibleAnalysis {
             return "WordCount [key=" + this.key + ", occurence=" + this.occurence + "]";
         }
 
-        private BibleAnalysis getOuterType() {
-            return BibleAnalysis.this;
-        }
-    }
-
-    private TreeSet<WordCount> sort(final Map<String, List<Word>> words,
-            final Map<String, Integer> currentWordsCounts) {
-        // output stats
-
-        final TreeSet<WordCount> wordCounts = new TreeSet<BibleAnalysis.WordCount>(
-                new Comparator<WordCount>() {
-                    @Override
-                    public int compare(final WordCount o1, final WordCount o2) {
-                        return o1.occurence < o2.occurence ? -1 : o1.occurence == o2.occurence ? 0 : 1;
-                    }
-                });
-
-        for (final Entry<String, List<Word>> word : words.entrySet()) {
-            final WordCount wc = new WordCount();
-            wc.key = word.getKey();
-            wc.occurence = word.getValue().size();
-            wordCounts.add(wc);
-
-            currentWordsCounts.put(word.getKey(), word.getValue().size());
-        }
-
-        return wordCounts;
     }
 
     private void addPhrase(final Map<String, List<Word>> phrases, final Map<String, List<Word>> words,

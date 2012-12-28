@@ -128,6 +128,7 @@ public interface EntityIndexReader extends Closeable {
      * @param useOrOperatorBetweenValues which operator to use, true for OR, false for AND
      * @return the expected results
      */
+    // CHECKSTYLE:OFF
     EntityDoc[] search(String[] fieldNames, String value, Filter filter, Sort sort, boolean analyzePrefix,
             String queryRemainder, Integer maxResults, boolean useOrOperatorBetweenValues);
 

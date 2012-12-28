@@ -156,8 +156,9 @@ public class CreateImageModule {
     }
 
     private void processChapter(final Matcher matcher) {
-        this.chapters.add(new Chapter(Integer.parseInt(matcher.group(4)), Integer.parseInt(matcher.group(1)),
-                Integer.parseInt(matcher.group(2)), Integer.parseInt(matcher.group(3))));
+        CreateImageModule.chapters.add(new Chapter(Integer.parseInt(matcher.group(4)), Integer
+                .parseInt(matcher.group(1)), Integer.parseInt(matcher.group(2)), Integer.parseInt(matcher
+                .group(3))));
 
         // System.out.println("Chapter " + matcher.group(4) + " of book " + matcher.group(3) + " starts "
         // + matcher.group(1) + " and ends " + matcher.group(2));
@@ -165,7 +166,7 @@ public class CreateImageModule {
 
     private void processVerse(final Matcher matcher) {
         final Verse v = new Verse(matcher.group(2), Integer.parseInt(matcher.group(1)));
-        this.verses.add(v);
+        CreateImageModule.verses.add(v);
         // System.out.println(matcher.group(1) + " " + matcher.group(2));
     }
 

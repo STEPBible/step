@@ -1,5 +1,6 @@
 package com.tyndalehouse.step.core.service.jsword.impl;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
@@ -50,7 +51,7 @@ public class JSwordSearchServiceImplTest {
         for (int i = 0; i < 10 || i < results.size(); i++) {
             LOGGER.debug(((VerseSearchEntry) results.get(i)).getKey());
         }
-        assertTrue(!results.isEmpty());
+        assertFalse(results.isEmpty());
     }
 
     /**

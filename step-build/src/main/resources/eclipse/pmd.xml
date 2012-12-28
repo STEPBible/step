@@ -220,10 +220,6 @@
             <ruleset>Code Size Rules</ruleset>
         </rule>
         <rule>
-            <name>TooManyFields</name>
-            <ruleset>Code Size Rules</ruleset>
-        </rule>
-        <rule>
             <name>NcssMethodCount</name>
             <ruleset>Code Size Rules</ruleset>
         </rule>

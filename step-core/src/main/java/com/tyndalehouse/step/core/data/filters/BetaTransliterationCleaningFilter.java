@@ -39,23 +39,7 @@ public class BetaTransliterationCleaningFilter extends TokenFilter {
                 }
                 lastChar = currentChar;
 
-                // caters for the beta code as well
-                switch (currentChar) {
-                    case '-':
-                    case '\'':
-                    case '/':
-                    case '\\':
-                    case ')':
-                    case '(':
-                    case '=':
-                    case '*':
-                    case '+':
-                    case '|':
-                    case '&':
-                        break;
-                    default:
-                        buf.append(buffer[i]);
-                }
+                appendNonBetaSpecialChar(buffer, buf, i, currentChar);
             }
 
             if (buf.length() != buffer.length) {
@@ -66,6 +50,35 @@ public class BetaTransliterationCleaningFilter extends TokenFilter {
             return true;
         } else {
             return false;
+        }
+    }
+
+    /**
+     * Appends a character if it does not form part of the BETA spec
+     * 
+     * @param buffer the word that is being transliterated
+     * @param buf the builder we are using to build up the transliteration
+     * @param i the current position
+     * @param currentChar our current character
+     */
+    private void appendNonBetaSpecialChar(final char[] buffer, final StringBuilder buf, final int i,
+            final char currentChar) {
+        // caters for the beta code as well
+        switch (currentChar) {
+            case '-':
+            case '\'':
+            case '/':
+            case '\\':
+            case ')':
+            case '(':
+            case '=':
+            case '*':
+            case '+':
+            case '|':
+            case '&':
+                break;
+            default:
+                buf.append(buffer[i]);
         }
     }
 }

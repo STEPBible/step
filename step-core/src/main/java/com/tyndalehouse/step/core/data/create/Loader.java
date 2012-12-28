@@ -108,7 +108,7 @@ public class Loader {
                 BookCategory.COMMENTARY);
         final String[] initials = new String[availableModules.size()];
 
-        // TODO: revisit as this may put too much stress on smaller systems, since indexing for all modules in
+        // This may put too much stress on smaller systems, since indexing for all modules in
         // package
         // would result as happening at the same times
         for (int ii = 0; ii < availableModules.size(); ii++) {

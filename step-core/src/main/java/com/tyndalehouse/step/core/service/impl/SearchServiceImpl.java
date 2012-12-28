@@ -575,7 +575,7 @@ public class SearchServiceImpl implements SearchService {
      */
     private SearchResult runStrongTextSearch(final SearchQuery sq, final Set<String> strongs) {
         final SearchResult textResults = runTextSearch(sq);
-        textResults.setStrongHighlights(new ArrayList(strongs));
+        textResults.setStrongHighlights(new ArrayList<String>(strongs));
         return textResults;
     }
 

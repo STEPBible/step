@@ -121,9 +121,9 @@ public class TimelineServiceImpl implements TimelineService {
             public int compare(final EntityDoc o1, final EntityDoc o2) {
                 final String o1StartString = o1.get("fromDate");
                 final String o2StartString = o2.get("fromDate");
-
                 final boolean blankO1 = isBlank(o1StartString);
                 final boolean blankO2 = isBlank(o2StartString);
+
                 if (blankO1 && blankO2) {
                     return 0;
                 }
@@ -138,7 +138,6 @@ public class TimelineServiceImpl implements TimelineService {
 
                 final long o1Start = Long.parseLong(o1StartString);
                 final long o2Start = Long.parseLong(o2StartString);
-
                 return (o1Start < o2Start) ? -1 : ((o1Start == o2Start) ? 0 : 1);
             }
         });

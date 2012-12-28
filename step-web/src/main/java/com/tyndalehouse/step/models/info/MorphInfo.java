@@ -42,6 +42,7 @@ import com.tyndalehouse.step.core.data.EntityDoc;
  * @author chrisburrell
  * 
  */
+
 public class MorphInfo implements Serializable {
     private static final long serialVersionUID = 4573131041334419L;
     private String function = "";

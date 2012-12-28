@@ -24,6 +24,8 @@ import org.jdom.input.SAXBuilder;
  * @author chrisburrell
  * 
  */
+
+@SuppressWarnings({ "unchecked", "rawtypes" })
 public class NaveXmlDataProcessor {
     public static void main(final String[] args) throws IOException, JDOMException {
         new NaveXmlDataProcessor(
@@ -82,7 +84,7 @@ public class NaveXmlDataProcessor {
         writeIfLeafNode(t, headings, wr, level, key, references);
     }
 
-    private void writeIfLeafNode(final Tree t, final List<String> headings, final BufferedWriter wr,
+    private void writeIfLeafNode(final Tree<String> t, final List<String> headings, final BufferedWriter wr,
             final int level, final StringBuilder cBuilder, final List<String> newReferences)
             throws IOException {
         if (t.getChildren().size() != 0) {
@@ -138,8 +140,8 @@ public class NaveXmlDataProcessor {
         return "";
     }
 
-    private void process(final SAXBuilder builder, final String line, final Tree t) throws JDOMException,
-            IOException {
+    private void process(final SAXBuilder builder, final String line, final Tree<String> t)
+            throws JDOMException, IOException {
         final StringReader stringReader = new StringReader(line);
         final Document doc;
         try {
@@ -163,7 +165,7 @@ public class NaveXmlDataProcessor {
     }
 
     // if returned, the intention is for it to be appended to the existing heading...
-    private String processRefEntry(final Tree t, final Element el) {
+    private String processRefEntry(final Tree<String> t, final Element el) {
         Attribute attribute = el.getAttribute("osisRef");
         String refs;
         String retValue = null;
@@ -198,6 +200,7 @@ public class NaveXmlDataProcessor {
     }
 
     private Tree<String> extractHeadingFromP(final Tree<String> t, final Element element) {
+
         final List childrenOfP = element.getContent();
         final String text = ((Text) childrenOfP.get(0)).getText();
         // if (text.trim().equals("See")) {
@@ -239,9 +242,5 @@ public class NaveXmlDataProcessor {
         }
 
         return childTree;
-    }
-
-    private void newEntry(final BufferedWriter wr) throws IOException {
-        wr.write("\r\n===============================\r\n");
     }
 }

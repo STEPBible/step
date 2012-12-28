@@ -188,6 +188,16 @@ public final class StringConversionUtils {
     }
 
     /**
+     * @param strongNumber a strong number from length 2 (including prefix) to 6.
+     * @return the right padded version for it.
+     */
+    public static String padPrefixedStrongNumber(final String strongNumber) {
+        final StringBuilder b = new StringBuilder(strongNumber.length());
+        padPrefixedStrongNumber(b, strongNumber, strongNumber.length(), strongNumber.charAt(0));
+        return b.toString();
+    }
+
+    /**
      * Pads the given prefixed number, from say G12 to G0012
      * 
      * @param sb the string to build up

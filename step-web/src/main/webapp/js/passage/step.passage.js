@@ -185,7 +185,7 @@ step.passage = {
     
     _doFonts : function(passageId, passageContent, interlinearMode, interlinearVersions) {
         //interlinear or a display option
-        var displayOptions = step.state.passage.options(1);
+        var displayOptions = step.state.passage.options(passageId);
         var isInterlinearOption = displayOptions.indexOf("TRANSLITERATION") || displayOptions.indexOf("GREEK_VOCAB") || displayOptions.indexOf("ENGLISH_VOCAB"); 
         
         if((interlinearVersions != null && interlinearVersions.length > 0 && interlinearMode == "INTERLINEAR") || isInterlinearOption) {

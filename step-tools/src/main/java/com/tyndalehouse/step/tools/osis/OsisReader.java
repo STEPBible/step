@@ -36,8 +36,8 @@ public class OsisReader {
      * @throws Exception any kind of exception
      */
     public static void main(final String[] args) throws Exception {
-        final String version = "kjv";
-        final String ref = "Gen 2:19";
+        final String version = "ESVEx";
+        final String ref = "Gen 2:4";
         final Book currentBook = Books.installed().getBook(version);
         final BookData bookData = new BookData(currentBook, currentBook.getKey(ref));
         final Element osisFragment = bookData.getOsisFragment();

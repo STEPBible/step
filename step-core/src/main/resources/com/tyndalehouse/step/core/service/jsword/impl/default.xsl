@@ -644,7 +644,8 @@
     -->
     <xsl:variable name="siblings" select="../child::node()"/>
     <xsl:variable name="next-position" select="position() + 1"/>
-    <xsl:if test="$siblings[$next-position] and name($siblings[$next-position]) != ''">
+    <xsl:if test="$siblings[$next-position] and (name($siblings[$next-position]) != '' and (name($siblings[$next-position]) != 'seg' or $siblings[$next-position]/@type != 'x-punct'))">
+      <xsl:value-of select="$siblings[$next-position]/@type" />
       <xsl:text> </xsl:text>
     </xsl:if>
   </xsl:template>
@@ -658,7 +659,7 @@
     -->
     <xsl:variable name="siblings" select="../child::node()"/>
     <xsl:variable name="next-position" select="position() + 1"/>
-    <xsl:if test="$siblings[$next-position] and name($siblings[$next-position]) != ''">
+    <xsl:if test="$siblings[$next-position] and (name($siblings[$next-position]) != '' and (name($siblings[$next-position]) != 'seg' or $siblings[$next-position]/@type != 'x-punct'))">
       <xsl:text> </xsl:text>
     </xsl:if>
   </xsl:template>
@@ -677,9 +678,7 @@
           <xsl:apply-templates/>
         </xsl:if>
       </xsl:when>
-      <xsl:otherwise>
-        <xsl:apply-templates/>
-      </xsl:otherwise>
+      <xsl:otherwise><xsl:apply-templates/></xsl:otherwise>
     </xsl:choose>
   </xsl:template>
   

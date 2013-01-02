@@ -122,7 +122,7 @@ public class UserServiceImpl implements UserService {
             this.userWriter.write(',');
             this.userWriter.write(name);
             this.userWriter.write(',');
-            this.userWriter.write(new SimpleDateFormat("yyyy-MMM-dd hh:mm:ss", Locale.ENGLISH)
+            this.userWriter.write(new SimpleDateFormat("yyyy-MMM-dd HH:mm:ss", Locale.ENGLISH)
                     .format(new Date()));
             this.userWriter.write('\n');
             this.userWriter.flush();

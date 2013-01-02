@@ -81,7 +81,7 @@ public class JSwordPassageServiceImplTest {
     /**
      * tests that verse 0 gets excluded
      * 
-     * @throws NoSuchKeyException
+     * @throws NoSuchKeyException e
      */
     @Test
     public void testNormalize() throws NoSuchKeyException {
@@ -90,10 +90,10 @@ public class JSwordPassageServiceImplTest {
 
         final Book book = Books.installed().getBook("KJV");
 
-        final Key key = book.getKey("John 4");
+        Key key = book.getKey("John 4");
 
         assertTrue(key.get(0).getOsisID().equals("John.4.0"));
-        jsi.normalize(key, Versifications.instance().getDefaultVersification());
+        key = jsi.normalize(key, Versifications.instance().getDefaultVersification());
         assertFalse(key.get(0).getOsisID().equals("John.4.0"));
 
     }
@@ -493,5 +493,20 @@ public class JSwordPassageServiceImplTest {
             t1.join();
             t2.join();
         }
+    }
+
+    /**
+     * Tests that we don't allow large passages to be returned...
+     */
+    @Test
+    public void testPassageShrinking() {
+        final JSwordPassageServiceImpl service = new JSwordPassageServiceImpl(
+                new JSwordVersificationServiceImpl(), null, null, null);
+        assertEquals("Gen.1.1-Gen.1.31", service.getBookData("ESV", "Gen 1").getKey().getOsisRef());
+        assertEquals("Gen.1.1-Gen.1.31", service.getBookData("ESV", "Gen").getKey().getOsisRef());
+        assertEquals("Gen.1.1-Gen.1.31", service.getBookData("ESV", "Gen 1-50").getKey().getOsisRef());
+        assertEquals("Gen.1.1-Gen.11.23", service.getBookData("ESV", "Gen 1-12").getKey().getOsisRef());
+        assertEquals("Gen.1.1-Gen.1.31", service.getBookData("ESV", " Gen").getKey().getOsisRef());
+        assertEquals("Gen.1.1-Gen.1.31", service.getBookData("ESV", "Gen ").getKey().getOsisRef());
     }
 }

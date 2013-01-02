@@ -540,7 +540,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
 
         try {
             Key key = currentBook.getKey(reference);
-            normalize(key, v11n);
+            key = normalize(key, v11n);
 
             // TODO, work this one out
             final int cardinality = key.getCardinality();
@@ -552,6 +552,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
                 key = trimExceedingVersesFromWholeReference(v11n, requestedPassage);
             } else if (cardinality > MAX_VERSES_RETRIEVED) {
                 requestedPassage.trimVerses(MAX_VERSES_RETRIEVED);
+                key = requestedPassage;
             } else if (key.getCardinality() == 0) {
                 throw new NoSuchKeyException("Cardinality of key is 0");
             }
@@ -582,7 +583,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
             // go for second chapter, which is chapter 1, going [0, 1, ...]
             firstChapter = requestedPassage.getRangeAt(1, RestrictionType.CHAPTER);
         }
-        return firstChapter;
+        return normalize(firstChapter, v11n);
     }
 
     /**
@@ -651,16 +652,19 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
      * 
      * @param reference the reference we wish to normalize
      * @param v the versification that goes with the reference
+     * @return normalized key, which could be different to the instance passed in
      */
-    void normalize(final Key reference, final Versification v) {
+    Key normalize(final Key reference, final Versification v) {
         final Passage passage = KeyUtil.getPassage(reference, v);
         final int cardinality = passage.getCardinality();
         if (cardinality > 1) {
             final Key firstVerse = passage.get(0);
             if (firstVerse instanceof Verse && v.isStartOfChapter((Verse) firstVerse)) {
                 passage.remove(firstVerse);
+                return passage;
             }
         }
+        return reference;
     }
 
     /**
@@ -681,18 +685,15 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
         notNull(bookData.getFirstBook(), "An internal error occurred",
                 UserExceptionType.SERVICE_VALIDATION_ERROR);
 
-        final Key key = bookData.getKey();
+        Key key = bookData.getKey();
         notNull(key, "An internal error occurred", UserExceptionType.SERVICE_VALIDATION_ERROR);
 
         // the original book
         final Book book = bookData.getFirstBook();
         final Versification versification = this.versificationService.getVersificationForVersion(book);
-        normalize(key, versification);
+        key = normalize(key, versification);
 
         // first check whether the key is contained in the book
-        // if (!keyExistsInBook(bookData)) {
-        // throw new StepInternalException("The specified reference does not exist in this Bible");
-        // }
 
         try {
             final SAXEventProvider osissep = bookData.getSAXEventProvider();
@@ -768,9 +769,9 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
         final Book[] books = getValidInterleavedBooks(versions, displayMode);
 
         try {
-            final Key key = books[0].getKey(reference);
+            Key key = books[0].getKey(reference);
             final Versification v11n = this.versificationService.getVersificationForVersion(books[0]);
-            normalize(key, v11n);
+            key = normalize(key, v11n);
 
             final BookData data = new BookData(books, key, isComparingMode(displayMode));
 

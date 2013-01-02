@@ -9,6 +9,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Writer;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
@@ -119,6 +121,9 @@ public class UserServiceImpl implements UserService {
             this.userWriter.write(email);
             this.userWriter.write(',');
             this.userWriter.write(name);
+            this.userWriter.write(',');
+            this.userWriter.write(new SimpleDateFormat("yyyy-MMM-dd hh:mm:ss", Locale.ENGLISH)
+                    .format(new Date()));
             this.userWriter.write('\n');
             this.userWriter.flush();
 
@@ -178,8 +183,8 @@ public class UserServiceImpl implements UserService {
             String line = null;
             while ((line = reader.readLine()) != null) {
                 final String[] userEntry = line.split("[,]+");
-                if (userEntry.length != 2) {
-                    LOGGER.warn("Invalid user entry: [{}]");
+                if (userEntry.length < 2) {
+                    LOGGER.warn("Invalid user entry: [{}]", line);
                     continue;
                 }
 

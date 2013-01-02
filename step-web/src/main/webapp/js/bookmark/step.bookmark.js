@@ -50,8 +50,9 @@ step.bookmark = {
             var newReference = (reference || "").replace(/['"]/g, "");
             var items = this.getItems(type);
             items = items.replace(newReference, "");
-            
             items = items + "|" + newReference;
+            items = items.replace("||", "|");
+            
             var deleted = this.store(type, items);
             
             

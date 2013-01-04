@@ -645,7 +645,6 @@
     <xsl:variable name="siblings" select="../child::node()"/>
     <xsl:variable name="next-position" select="position() + 1"/>
     <xsl:if test="$siblings[$next-position] and (name($siblings[$next-position]) != '' and (name($siblings[$next-position]) != 'seg' or $siblings[$next-position]/@type != 'x-punct'))">
-      <xsl:value-of select="$siblings[$next-position]/@type" />
       <xsl:text> </xsl:text>
     </xsl:if>
   </xsl:template>

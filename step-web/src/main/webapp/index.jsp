@@ -142,6 +142,8 @@
 					<td><a href="http://help.step.tyndalehouse.com/supportTheProject.html" title="Give your time, skills, etc. towards helping make the STEP project a better tool for everyone" />Support the STEP project</a></td>
 				</tr>
 			</table>
+			<br />
+			&copy; Tyndale House <%= java.util.Calendar.getInstance().get(java.util.Calendar.YEAR)  %>
 		</div>
 		
 		<jsp:include page="js/bookmark/bookmark.jsp"></jsp:include>

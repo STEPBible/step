@@ -69,12 +69,30 @@ function init() {
         $.shout("view-change");
         
         //init JIRA hook
-//        $.ajax({
-//            url: "https://stepweb.atlassian.net/s/en_USqwqzqv-418945332/812/155/1.2.7/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector-embededjs/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector-embededjs.js?collectorId=dfa819bd",
-//            type: "get",
-//            cache: true,
-//            dataType: "script"
-//        });
+        // Requires jQuery!
+        jQuery.ajax({
+            url: "js/jira/issue_collector_dfa819bd.js",
+            type: "get",
+            cache: true,
+            dataType: "script"
+        });
+
+        jQuery.ajax({
+            url: "js/jira/issue_collector_bf70a912.js",
+            type: "get",
+            cache: true,
+            dataType: "script"
+        });
+
+         window.ATL_JQ_PAGE_PROPS =  {
+            "triggerFunction": function(showCollectorDialog) {
+                //Requries that jQuery is available! 
+                jQuery("#provideFeedback").click(function(e) {
+                    e.preventDefault();
+                    showCollectorDialog();
+                });
+            }};
+
 	});
 }
 

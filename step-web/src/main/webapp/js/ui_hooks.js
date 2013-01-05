@@ -200,3 +200,7 @@ function showArticle(headword, instance) {
 function makeMasterInterlinear(element, newVersion) {
     $.shout("make-master-interlinear-" + step.passage.getPassageId(element), newVersion);
 }
+
+function submitFeedback() {
+    
+}

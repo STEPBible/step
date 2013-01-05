@@ -152,7 +152,7 @@ legend .detailSliderContainer {
 }
 
 #stepInDevelopmentWarning {
-	bottom: 0px;
+	bottom: 30px !important;
 	right: 0px;
 	position: absolute;
 	font-weight: bold;

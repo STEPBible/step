@@ -152,6 +152,11 @@ span[strong]:hover {
 	clear: left;
 }
 
+.interlinearChange {
+	color: darkgrey;
+/* 	font-style: italic; */
+}
+
 .smallHeaders {
 	font-size: 6pt !important;
 	padding-right: 2px;

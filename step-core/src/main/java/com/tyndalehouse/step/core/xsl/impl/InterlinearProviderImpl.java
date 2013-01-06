@@ -55,8 +55,15 @@ import java.util.Set;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.BookData;
 import org.crosswire.jsword.book.BookException;
+import org.crosswire.jsword.book.BookMetaData;
 import org.crosswire.jsword.book.Books;
+import org.crosswire.jsword.passage.Key;
+import org.crosswire.jsword.passage.KeyUtil;
 import org.crosswire.jsword.passage.NoSuchKeyException;
+import org.crosswire.jsword.passage.Passage;
+import org.crosswire.jsword.versification.Testament;
+import org.crosswire.jsword.versification.Versification;
+import org.crosswire.jsword.versification.system.Versifications;
 import org.jdom.Content;
 import org.jdom.Element;
 import org.slf4j.Logger;
@@ -65,6 +72,7 @@ import org.slf4j.LoggerFactory;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.xsl.InterlinearProvider;
 
+// TODO: Auto-generated Javadoc
 /**
  * This object is not purposed to be used as a singleton. It builds up textual information on initialisation,
  * and is specific to requests. On initialisation, the OSIS XML is retrieved and iterated through to find all
@@ -74,33 +82,54 @@ import com.tyndalehouse.step.core.xsl.InterlinearProvider;
  * 
  */
 public class InterlinearProviderImpl implements InterlinearProvider {
+
+    /** The Constant LOGGER. */
     private static final Logger LOGGER = LoggerFactory.getLogger(InterlinearProviderImpl.class);
-    /**
-     * limited accuracy tries to do a location look up by using the verse number as part of the key
-     */
+
+    /** limited accuracy tries to do a location look up by using the verse number as part of the key. */
     private final Map<DualKey<String, String>, Deque<Word>> limitedAccuracy = new HashMap<DualKey<String, String>, Deque<Word>>();
+
+    /** The current book. */
+    private Book currentBook;
+
+    /** The hebrew direct mapping. */
+    private Map<String, String> hebrewDirectMapping;
+
+    /** The hebrew indirect mappings. */
+    private Map<String, String> hebrewIndirectMappings;
+
+    /** The testament. */
+    private Testament testament;
 
     /**
      * sets up the interlinear provider with the correct version and text scope.
      * 
      * @param version the version to use to set up the interlinear
      * @param textScope the text scope reference, defining the bounds of the lookup
+     * @param hebrewDirectMapping the hebrew overriding mappings
+     * @param hebrewIndirectMappings the mappings used if no other mapping is found
      */
-    public InterlinearProviderImpl(final String version, final String textScope) {
+    public InterlinearProviderImpl(final String version, final String textScope,
+            final Map<String, String> hebrewDirectMapping, final Map<String, String> hebrewIndirectMappings) {
         // first check whether the values passed in are correct
         if (areAnyBlank(version, textScope)) {
             return;
         }
 
-        final Book currentBook = Books.installed().getBook(version);
-        if (currentBook == null) {
+        this.hebrewIndirectMappings = hebrewIndirectMappings;
+        this.hebrewDirectMapping = hebrewDirectMapping;
+        this.currentBook = Books.installed().getBook(version);
+        if (this.currentBook == null) {
             throw new StepInternalException(format("Couldn't look up book: [%s]", version));
         }
 
         BookData bookData;
 
         try {
-            bookData = new BookData(currentBook, currentBook.getKey(textScope));
+            final Key key = this.currentBook.getKey(textScope);
+            setTestamentType(key);
+
+            bookData = new BookData(this.currentBook, key);
             scanForTextualInformation(bookData.getOsisFragment());
         } catch (final NoSuchKeyException e) {
             throw new StepInternalException(e.getMessage(), e);
@@ -110,12 +139,18 @@ public class InterlinearProviderImpl implements InterlinearProvider {
     }
 
     /**
-     * package private version for testing purposes
+     * package private version for testing purposes.
      */
     InterlinearProviderImpl() {
         // exposing package private constructor
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.tyndalehouse.step.core.xsl.InterlinearProvider#getWord(java.lang.String, java.lang.String,
+     * java.lang.String)
+     */
     @Override
     public String getWord(final String verseNumber, final String strong, final String morph) {
         // we use a linked hashset, because we want the behaviour of a set while we add to it,
@@ -170,7 +205,7 @@ public class InterlinearProviderImpl implements InterlinearProvider {
     }
 
     /**
-     * returns words based on strong and verse number only
+     * returns words based on strong and verse number only.
      * 
      * @param verseNumber the verse number
      * @param strong the strong reference
@@ -183,10 +218,40 @@ public class InterlinearProviderImpl implements InterlinearProvider {
             final Deque<Word> list = this.limitedAccuracy.get(key);
             if (list != null && !list.isEmpty()) {
                 return retrieveWord(list);
+            } else {
+                return lookupMappings(strong);
             }
         }
 
         // it is important to return an empty string here
+        return "";
+    }
+
+    /**
+     * Lookup mappings, if the strong number is there, then it is used
+     * 
+     * @param strong the strong
+     * @return the string
+     */
+    private String lookupMappings(final String strong) {
+        // we ignore mapping lookups for anything greek or hebrew...
+        if ("he".equals(this.currentBook.getLanguage().getCode())
+                || "grc".equals(this.currentBook.getLanguage().getCode())) {
+            return "";
+        }
+
+        // currently only supporting OLD Testament
+        if (this.testament == Testament.OLD) {
+            final String direct = this.hebrewDirectMapping.get(strong);
+            if (direct != null) {
+                return direct;
+            }
+
+            final String indirect = this.hebrewIndirectMappings.get(strong);
+            if (indirect != null) {
+                return indirect;
+            }
+        }
         return "";
     }
 
@@ -220,7 +285,7 @@ public class InterlinearProviderImpl implements InterlinearProvider {
     }
 
     /**
-     * retrieves context textual information from a passage
+     * retrieves context textual information from a passage.
      * 
      * @param osisFragment the fragment of XML that should be examined
      */
@@ -261,7 +326,7 @@ public class InterlinearProviderImpl implements InterlinearProvider {
     }
 
     /**
-     * retrieves textual information and adds it to the provider
+     * retrieves textual information and adds it to the provider.
      * 
      * @param element the element to extract information from
      * @param verseReference verse reference to use for locality of keying
@@ -286,7 +351,7 @@ public class InterlinearProviderImpl implements InterlinearProvider {
         boolean partial = false;
         for (int ii = 0; ii < strongs.length; ii++) {
             final String strongKey = getAnyKey(strongs[ii]);
-            if (!isH00(strongKey)) {
+            if (!isH00(strongKey) && !blacklisted(strongKey)) {
                 words.add(addTextualInfo(verseReference, strongKey, word));
             } else {
                 partial = true;
@@ -301,6 +366,18 @@ public class InterlinearProviderImpl implements InterlinearProvider {
     }
 
     /**
+     * Blacklisted, if the word is contained in a direct mapping for the relevant testament
+     * 
+     * @param strongKey the strong key
+     * @return true, if successful
+     */
+    private boolean blacklisted(final String strongKey) {
+        return this.testament == Testament.OLD && this.hebrewDirectMapping.containsKey(strongKey);
+    }
+
+    /**
+     * Checks if is h00.
+     * 
      * @param currentStrong a strong number
      * @return true, if is a single H followed by only 0s, which indicates that the strong numbers go with
      *         their next occurrence
@@ -323,8 +400,9 @@ public class InterlinearProviderImpl implements InterlinearProvider {
      * Therefore, the first level of lookup should be by Strong number.
      * 
      * @param verseReference the verse reference that specifies locality (least important factor)
-     * @param strong the strong number (identifies the root/meaning of the word)
+     * @param strongKey the strong number (identifies the root/meaning of the word)
      * @param word the word to be stored
+     * @return the word that has been added
      */
     private Word addTextualInfo(final String verseReference, final String strongKey, final String word) {
 
@@ -338,4 +416,25 @@ public class InterlinearProviderImpl implements InterlinearProvider {
         verseKeyedStrongs.add(w);
         return w;
     }
+
+    /**
+     * Sets the testament, to be used to determine the indirect/direct mappings to use when generating the
+     * interlinear.
+     * 
+     * @param key the key to the passage being looked up
+     */
+    private void setTestamentType(final Key key) {
+        final Versification v11n = Versifications.instance().getVersification(
+                (String) this.currentBook.getBookMetaData().getProperty(BookMetaData.KEY_VERSIFICATION));
+        final Passage passage = KeyUtil.getPassage(key, v11n);
+        this.testament = v11n.getTestament(v11n.getOrdinal(passage.getVerseAt(0)));
+    }
+
+    /**
+     * @param currentBook the currentBook to set
+     */
+    void setCurrentBook(final Book currentBook) {
+        this.currentBook = currentBook;
+    }
+
 }

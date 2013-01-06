@@ -616,11 +616,21 @@
 	<xsl:choose>
 		<xsl:when test="normalize-space($nextVersion) != ''">
 			<span class="interlinear">
-				<xsl:call-template name="outputNonBlank">
-					<xsl:with-param name="string">
-						<xsl:value-of select="jsword:getWord($interlinearProvider, normalize-space($nextVersion), $verseNumber, @lemma, @morph)"></xsl:value-of>
-					</xsl:with-param>
-				</xsl:call-template>
+				<xsl:variable name="interlinearWord">
+					<xsl:call-template name="outputNonBlank">
+						<xsl:with-param name="string">
+							<xsl:value-of select="jsword:getWord($interlinearProvider, normalize-space($nextVersion), $verseNumber, @lemma, @morph)" />
+						</xsl:with-param>
+					</xsl:call-template>
+				</xsl:variable>
+				<xsl:choose>
+					<xsl:when test="starts-with($interlinearWord, '#')">
+						<span class='interlinearChange'>[<xsl:value-of select="substring($interlinearWord, 2)" />]</span>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="$interlinearWord"></xsl:value-of>
+					</xsl:otherwise>
+				</xsl:choose>
 			</span>
 			<xsl:call-template name="interlinear">
 				<xsl:with-param name="versions" select="substring-after($versions, ',')" />
@@ -630,11 +640,21 @@
 		<xsl:otherwise>
 		    <xsl:if test="normalize-space($versions) != ''" >
 				<span class="interlinear">
-					<xsl:call-template name="outputNonBlank">
-						<xsl:with-param name="string">
-							<xsl:value-of select="jsword:getWord($interlinearProvider, normalize-space($versions), $verseNumber, @lemma, @morph)"></xsl:value-of>
-						</xsl:with-param>
-					</xsl:call-template>
+					<xsl:variable name="interlinearWord">
+						<xsl:call-template name="outputNonBlank">
+							<xsl:with-param name="string">
+								<xsl:value-of select="jsword:getWord($interlinearProvider, normalize-space($versions), $verseNumber, @lemma, @morph)" />
+							</xsl:with-param>
+						</xsl:call-template>
+					</xsl:variable>
+					<xsl:choose>
+						<xsl:when test="starts-with($interlinearWord, '#')">
+							<span class='interlinearChange'>[<xsl:value-of select="substring($interlinearWord, 2)" />]</span>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="$interlinearWord"></xsl:value-of>
+						</xsl:otherwise>
+					</xsl:choose>
 				</span>
 			</xsl:if>
 		</xsl:otherwise>

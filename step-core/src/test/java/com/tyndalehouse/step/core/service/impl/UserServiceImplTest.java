@@ -42,7 +42,7 @@ public class UserServiceImplTest {
         usi.setUsers(new HashSet<String>());
 
         usi.checkUserIdentity("Charlie@chris.com", "Charlie");
-        assertEquals("charlie@chris.com,Charlie\n", userWriter.toString());
+        assertTrue(userWriter.toString().startsWith("charlie@chris.com,Charlie"));
     }
 
     /**

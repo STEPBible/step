@@ -33,10 +33,14 @@
 package com.tyndalehouse.step.core.xsl.impl;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import org.crosswire.common.util.Language;
+import org.crosswire.jsword.book.Book;
 import org.junit.Test;
 
 /**
@@ -59,6 +63,10 @@ public class InterlinearProviderImplTest {
     public void testInterlinearStrongMorphBased() throws IllegalAccessException, InvocationTargetException,
             NoSuchMethodException {
         final InterlinearProviderImpl interlinear = new InterlinearProviderImpl();
+        final Book mock = mock(Book.class);
+        interlinear.setCurrentBook(mock);
+
+        when(mock.getLanguage()).thenReturn(new Language("fr"));
 
         // NOTE: because we don't want to expose a method called during initialisation as non-private (could
         // break

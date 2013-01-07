@@ -91,7 +91,8 @@ public class MultiInterlinearProviderImpl implements MultiInterlinearProvider {
      */
     private Map<String, String> initHebrewIndirectMappings() {
         final Map<String, String> hebrewLexicon = new HashMap<String, String>(9);
-        hebrewLexicon.put("3588", "#the");
+        hebrewLexicon.put("1961", "#to be");
+        hebrewLexicon.put("3588", "#that");
         hebrewLexicon.put("996", "#between");
         hebrewLexicon.put("413", "#to");
         hebrewLexicon.put("834", "#that");

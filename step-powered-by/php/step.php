@@ -1,19 +1,16 @@
 <?php
     class STEP {
-        private static $STEP_URI = "http://step.tyndalehouse.com/rest/";
-        private static $GET_TEXT = "/bible/getBibleText/%s/%s/%s";
-        private static $version = "1.0";
+        const STEP_URI = "http://step.tyndalehouse.com/rest/";
+        const GET_TEXT = "bible/getBibleText/%s/%s/%s";
+        const API_VERSION = "1.0";
         private $stepSession;
         
         public function getPassage($version, $reference) {
-            $url = "a"; //+self::$STEP_URI; // + sprintf(self::$GET_TEXT, $version, $reference, "HEADINGS,VERSE_NUMBERS");
-            echo "---" + $url + "---";
-            
-            return $this->accessBackend($url);
+            $url = self::STEP_URI . sprintf(STEP::GET_TEXT, $version, $reference, "HEADINGS,VERSE_NUMBERS");
+            return json_decode($this->accessBackend($url))->{"value"};
         }
         
         private function accessBackend($url) {
-            echo $url;
             $stepSession = $ch = curl_init( $url );
 
             // Configuring curl options
@@ -30,9 +27,7 @@
             $response = curl_exec($stepSession);
             
             echo curl_error($stepSession);
-            
             curl_close($stepSession);
-            
             return $response;
         }
     }

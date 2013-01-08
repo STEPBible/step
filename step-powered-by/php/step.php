@@ -1,6 +1,6 @@
 <?php
     class STEP {
-        const STEP_URI = "http://localhost:8080/step-web/external/v1/";
+        const STEP_URI = "http://dev.step.tyndalehouse.com/external/v1/";
         const GET_TEXT = "getBibleText/%s/%s/%s";
         const API_VERSION = "1.0";
         private $stepSession;

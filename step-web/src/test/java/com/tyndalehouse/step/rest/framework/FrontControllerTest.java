@@ -196,7 +196,7 @@ public class FrontControllerTest {
         when(this.guiceInjector.getInstance(BibleController.class)).thenReturn(mockController);
 
         // when
-        final Object controller = this.fcUnderTest.getController(controllerName);
+        final Object controller = this.fcUnderTest.getController(controllerName, false);
 
         // then
         assertEquals(controller.getClass(), mockController.getClass());
@@ -257,7 +257,7 @@ public class FrontControllerTest {
         final BibleController testController = mock(BibleController.class);
 
         final FrontController fc = spy(this.fcUnderTest);
-        doReturn(testController).when(fc).getController("bible");
+        doReturn(testController).when(fc).getController("bible", false);
 
         // do test
         fc.invokeMethod(sr);

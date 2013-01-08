@@ -47,17 +47,28 @@ import com.tyndalehouse.step.core.exceptions.StepInternalException;
 /**
  * A simple class that hold request information, provides various cache keys
  * <p />
+ * .
  * 
  * @author chrisburrell
- * 
  */
 public class StepRequest {
+
+    /** The Constant LOGGER. */
     private static final Logger LOGGER = LoggerFactory.getLogger(StepRequest.class);
 
+    /** The controller name. */
     private final String controllerName;
+
+    /** The method name. */
     private final String methodName;
+
+    /** The args. */
     private final String[] args;
 
+    /** The external. */
+    private final boolean external;
+
+    /** The request uri. */
     private final String requestURI;
 
     /**
@@ -74,18 +85,19 @@ public class StepRequest {
         this.requestURI = requestURI;
         this.controllerName = controllerName;
         this.methodName = methodName;
+        this.external = false;
         this.args = args == null ? new String[] {} : args;
     }
 
     /**
-     * Returns the step request object containing the relevant information about the STEP Request
+     * Returns the step request object containing the relevant information about the STEP Request.
      * 
      * @param request the HTTP request
      * @param encoding the encoding with which to decode the request
      */
     public StepRequest(final HttpServletRequest request, final String encoding) {
         this.requestURI = request.getRequestURI();
-
+        this.external = request.getAttribute("external_request") != null;
         LOGGER.debug("Parsing {}", this.requestURI);
 
         final int requestStart = getPathLength(request) + 1;
@@ -101,11 +113,12 @@ public class StepRequest {
         LOGGER.debug("Request parsed as controller: [{}], method [{}]", this.controllerName, this.methodName);
         final int endOfMethodName = startOfMethodName + this.methodName.length();
         final String[] calculatedArguments = parseArguments(endOfMethodName + 1, encoding);
+
         this.args = calculatedArguments == null ? new String[] {} : calculatedArguments;
     }
 
     /**
-     * gets the arguments out of the requestURI String
+     * gets the arguments out of the requestURI String.
      * 
      * @param parameterStart the location at which the parameters start
      * @param encoding the encoding with which to decode the arguments
@@ -137,7 +150,7 @@ public class StepRequest {
     }
 
     /**
-     * Retrieves the path from the request
+     * Retrieves the path from the request.
      * 
      * @param req the request
      * @return the concatenated request
@@ -147,7 +160,7 @@ public class StepRequest {
     }
 
     /**
-     * returns the cache key to resolve from the cache
+     * returns the cache key to resolve from the cache.
      * 
      * @return the key to the method as expected in the cache.
      */
@@ -167,6 +180,8 @@ public class StepRequest {
     }
 
     /**
+     * Gets the controller name.
+     * 
      * @return the controllerName
      */
     public String getControllerName() {
@@ -174,6 +189,8 @@ public class StepRequest {
     }
 
     /**
+     * Gets the method name.
+     * 
      * @return the methodName
      */
     public String getMethodName() {
@@ -181,6 +198,8 @@ public class StepRequest {
     }
 
     /**
+     * Gets the args.
+     * 
      * @return the args
      */
     public String[] getArgs() {
@@ -188,6 +207,8 @@ public class StepRequest {
     }
 
     /**
+     * To string.
+     * 
      * @return an message describibg the step request
      */
     @Override
@@ -203,5 +224,14 @@ public class StepRequest {
             sb.append(',');
         }
         return sb.toString();
+    }
+
+    /**
+     * Checks if request is external.
+     * 
+     * @return true, if is external
+     */
+    public boolean isExternal() {
+        return this.external;
     }
 }

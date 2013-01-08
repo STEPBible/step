@@ -63,6 +63,7 @@ import com.tyndalehouse.step.core.exceptions.StepInternalException;
  */
 @Singleton
 public class FrontController extends HttpServlet {
+    private static final String EXTERNAL_CONTROLLER_SUB_PACKAGE = "external";
     private static final Logger LOGGER = LoggerFactory.getLogger(FrontController.class);
     private static final String CONTROLLER_PACKAGE = "com.tyndalehouse.step.rest.controllers";
     private static final String UTF_8_ENCODING = "UTF-8";
@@ -134,7 +135,7 @@ public class FrontController extends HttpServlet {
     byte[] invokeMethod(final StepRequest sr) {
 
         // controller instance on which to call a method
-        final Object controllerInstance = getController(sr.getControllerName());
+        final Object controllerInstance = getController(sr.getControllerName(), sr.isExternal());
 
         // resolve method
         final Method controllerMethod = getControllerMethod(sr.getMethodName(), controllerInstance,
@@ -263,12 +264,13 @@ public class FrontController extends HttpServlet {
     }
 
     /**
-     * Retrieves a controller, either from the cache, or from Guice
+     * Retrieves a controller, either from the cache, or from Guice.
      * 
      * @param controllerName the name of the controller (used as the key for the cache)
+     * @param isExternal indicates whether the request should be found in the external controllers
      * @return the controller object
      */
-    Object getController(final String controllerName) {
+    Object getController(final String controllerName, final boolean isExternal) {
         Object controllerInstance = this.controllers.get(controllerName);
 
         // if retrieving yields null, get controller from Guice, and put in cache
@@ -280,6 +282,11 @@ public class FrontController extends HttpServlet {
 
             className.append(packageName);
             className.append(PACKAGE_SEPARATOR);
+            if (isExternal) {
+                className.append(EXTERNAL_CONTROLLER_SUB_PACKAGE);
+                className.append(PACKAGE_SEPARATOR);
+            }
+
             className.append(Character.toUpperCase(controllerName.charAt(0)));
             className.append(controllerName.substring(1));
             className.append(CONTROLLER_SUFFIX);

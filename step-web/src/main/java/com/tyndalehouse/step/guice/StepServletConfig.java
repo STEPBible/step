@@ -68,10 +68,15 @@ public class StepServletConfig extends GuiceServletContextListener {
         return Guice.createInjector(new StepCoreModule(), new StepWebModule(), new ServletModule() {
             @Override
             protected void configureServlets() {
+
+                serve("/" + ExternalPoweredByFilter.EXTERNAL_PREFIX + "*").with(FrontController.class);
                 serve("/rest/*").with(FrontController.class);
                 serve("/commentary_images/*").with(ImageController.class);
                 serve("/index.jsp");
+
+                // filters
                 filter("/index.jsp", "/").through(SetupRedirectFilter.class);
+                filter("/external/*").through(ExternalPoweredByFilter.class);
             }
         });
     }

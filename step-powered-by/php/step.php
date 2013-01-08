@@ -1,12 +1,15 @@
 <?php
     class STEP {
-        const STEP_URI = "http://step.tyndalehouse.com/rest/";
-        const GET_TEXT = "bible/getBibleText/%s/%s/%s";
+        const STEP_URI = "http://localhost:8080/step-web/external/v1/";
+        const GET_TEXT = "getBibleText/%s/%s/%s";
         const API_VERSION = "1.0";
         private $stepSession;
         
         public function getPassage($version, $reference) {
             $url = self::STEP_URI . sprintf(STEP::GET_TEXT, $version, $reference, "HEADINGS,VERSE_NUMBERS");
+            
+            echo $url;
+            echo "aaa...".$this->accessBackend($url)  ."...bbb";
             return json_decode($this->accessBackend($url))->{"value"};
         }
         
@@ -27,6 +30,7 @@
             $response = curl_exec($stepSession);
             
             echo curl_error($stepSession);
+            
             curl_close($stepSession);
             return $response;
         }

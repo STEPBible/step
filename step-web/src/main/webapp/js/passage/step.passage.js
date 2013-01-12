@@ -369,7 +369,7 @@ step.passage = {
                     var text = "";
                     $.each(option.phraseAlternatives, function(pa, alternative) { 
                         text += alternative.type;
-                        text += " <a class='alternative' href='#' matching='" + option.matchingText.replace(/'/ig, "\\'") + "'>" + alternative.alternative + "</a>";
+                        text += " <a class='alternative alt-" + o + "' href='#' matching='" + option.matchingText.replace(/'/ig, "\\'") + "'>" + alternative.alternative + "</a>";
                         if(!step.util.isBlank(alternative.specifier)) {
                             text += " (" + alternative.specifier + ")";
                         }
@@ -392,7 +392,7 @@ step.passage = {
                         },
                         events : {
                             visible : function(event, api) {
-                                $("a.alternative").click(function(event) {
+                                $("a.alt-" + o).click(function(event) {
                                     if(step.passage.versions == undefined) {
                                         step.passage.versions = { warningRaised : true};
                                         step.util.raiseInfo(passageId, "The text shown below has been modified and does not show the original ESV text", 'error', true);

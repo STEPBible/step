@@ -359,10 +359,10 @@ step.passage = {
     },
     
     _doVersions : function(passageId, passageContent) {
-        $.getSafe("http://localhost:8080/step-web/rest/bible/getDummyData", function(data) {
-            console.log("hi");
-            //alert(data);
-        });
+//        $.getSafe("rest/bible/getDummyData", function(data) {
+//            console.log("hi");
+//            //alert(data);
+//        });
     },
     
     _getInterlinearMode : function(passageId) {

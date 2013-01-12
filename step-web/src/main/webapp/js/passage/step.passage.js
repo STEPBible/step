@@ -143,7 +143,7 @@ step.passage = {
                 self._doTransliterations(passageId, passageContent);
                 step.util.closeInfoErrors(passageId);
                 step.state.passage.reference(passageId, text.reference, false);
-
+                self._doVersions(passageId, passageContent);
             }, 
             passageId: passageId, 
             level: 'error'
@@ -356,6 +356,13 @@ step.passage = {
         if(notes.text().trim().length == 0) {
             notes.toggle(false);
         }
+    },
+    
+    _doVersions : function(passageId, passageContent) {
+        $.getSafe("http://localhost:8080/step-web/rest/bible/getDummyData", function(data) {
+            console.log("hi");
+            //alert(data);
+        });
     },
     
     _getInterlinearMode : function(passageId) {

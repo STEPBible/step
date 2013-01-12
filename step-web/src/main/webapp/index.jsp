@@ -134,12 +134,12 @@
 			
 			<table>
 				<tr>
-					<td><a href="http://help.step.tyndalehouse.com/quickStart.html" title="A quick tutorial demonstrating how to get started"/>Help manual</a></td>
+					<td><a href="https://stepweb.atlassian.net/wiki/display/TYNSTEP/STEP+Help+Manual" title="A quick tutorial demonstrating how to get started"/>Help manual</a></td>
 					<td><a href="versions.jsp" title="Detailed information on how to use the software"/>Available versions</a></td>
 				</tr>
 				<tr>
-					<td><a href="http://www.tyndale.cam.ac.uk/index.php?mact=News,cntnt01,detail,0&cntnt01articleid=28&cntnt01returnid=15" title="Find out more about the STEP project developed by Tyndale House"/>About the STEP project</a></td>
-					<td><a href="http://help.step.tyndalehouse.com/supportTheProject.html" title="Give your time, skills, etc. towards helping make the STEP project a better tool for everyone" />Support the STEP project</a></td>
+					<td><a id="aboutPage" target="_new" href="http://www.tyndale.cam.ac.uk/index.php?mact=News,cntnt01,detail,0&cntnt01articleid=28&cntnt01returnid=15" title="Find out more about the STEP project developed by Tyndale House"/>About the STEP project</a></td>
+					<td><a target="_new" href="http://help.step.tyndalehouse.com/supportTheProject.html" title="Give your time, skills, etc. towards helping make the STEP project a better tool for everyone" />Support the STEP project</a></td>
 				</tr>
 			</table>
 			<br />

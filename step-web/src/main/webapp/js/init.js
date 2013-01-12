@@ -67,35 +67,62 @@ function init() {
 
         hearViewChanges();
         $.shout("view-change");
-        
+
+        initJira();
+	});
+}
+
+function initJira() {
+    if(location.hostname.toLowerCase().indexOf("step.tyndalehouse.com") >= 0) {
         //init JIRA hook
-        // Requires jQuery!
         jQuery.ajax({
             url: "js/jira/issue_collector_dfa819bd.js",
             type: "get",
             cache: true,
             dataType: "script"
         });
-
+    
         jQuery.ajax({
             url: "js/jira/issue_collector_bf70a912.js",
             type: "get",
             cache: true,
             dataType: "script"
         });
-
+        
+        jQuery.ajax({
+            url: "js/jira/issue_collector_88fe2a64.js",
+            type: "get",
+            cache: true,
+            dataType: "script"
+        });
+    
          window.ATL_JQ_PAGE_PROPS =  {
-            "triggerFunction": function(showCollectorDialog) {
-                //Requries that jQuery is available! 
-                jQuery("#provideFeedback").click(function(e) {
-                    e.preventDefault();
-                    showCollectorDialog();
-                });
-            }};
+                 "88fe2a64" : {
+                    "triggerFunction": function(showCollectorDialog) {
+                        //Requries that jQuery is available! 
+                        jQuery("#provideFeedback").click(function(e) {
+                            e.preventDefault();
+                            showCollectorDialog();
+                        });
+                    }
+                },
+                "dfa819bd" : {
+                    "triggerFunction": function(showCollectorDialog) {
+                        //Requries that jQuery is available! 
+                        jQuery("#raiseBug").click(function(e) {
+                            e.preventDefault();
+                            showCollectorDialog();
+                        });
+                    }
+                }
+         }
+    } else {
+        //hide some links
+        $("#provideFeedback, #raiseBug").hide();
+    }
 
-	});
 }
-
+	
 function checkValidUser() {
     //if we're running locally, then just return
     if(window.location.host.startsWith("localhost")) {
@@ -152,7 +179,7 @@ function checkValidUser() {
 }
 
 function initHelpLinks() {
-    $("#holdingPage a").click(function() {
+    $("#holdingPage a").not("#aboutPage").click(function() {
         event.preventDefault();
        $("#holdingPage").children().not("h1").remove();
        $("#holdingPage").append("<iframe style='width: 100%' src='" + $(this).attr("href") + "' />");

@@ -8,8 +8,6 @@
         public function getPassage($version, $reference) {
             $url = self::STEP_URI . sprintf(STEP::GET_TEXT, $version, $reference, "HEADINGS,VERSE_NUMBERS");
             
-            echo $url;
-            echo "aaa...".$this->accessBackend($url)  ."...bbb";
             return json_decode($this->accessBackend($url))->{"value"};
         }
         

@@ -645,7 +645,9 @@
     <xsl:variable name="siblings" select="../child::node()"/>
     <xsl:variable name="next-position" select="position() + 1"/>
     <xsl:if test="$siblings[$next-position] and (name($siblings[$next-position]) != '' and (name($siblings[$next-position]) != 'seg' or $siblings[$next-position]/@type != 'x-punct'))">
-      <xsl:text> </xsl:text>
+      <xsl:if test="conversion:startsWithPunctuation($siblings[$next-position]/text()) =  false()">
+	      <xsl:text> </xsl:text>
+      </xsl:if>
     </xsl:if>
   </xsl:template>
   
@@ -659,7 +661,7 @@
     <xsl:variable name="siblings" select="../child::node()"/>
     <xsl:variable name="next-position" select="position() + 1"/>
     <xsl:if test="$siblings[$next-position] and (name($siblings[$next-position]) != '' and (name($siblings[$next-position]) != 'seg' or $siblings[$next-position]/@type != 'x-punct'))">
-      <xsl:text> </xsl:text>
+      	<xsl:text> </xsl:text>
     </xsl:if>
   </xsl:template>
   

@@ -34,6 +34,7 @@
 package com.tyndalehouse.step.core.utils;
 
 import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
+import static com.tyndalehouse.step.core.utils.StringUtils.isEmpty;
 import static com.tyndalehouse.step.core.utils.language.GreekUtils.removeGreekTranslitMarkUpForIndexing;
 import static com.tyndalehouse.step.core.utils.language.HebrewUtils.removeHebrewTranslitMarkUpForIndexing;
 
@@ -398,4 +399,29 @@ public final class StringConversionUtils {
         return HebrewUtils.unPoint(word);
     }
 
+    /**
+     * Starts with punctuation.
+     * 
+     * @param s the s
+     * @return true, if the first character is a punctuation character
+     */
+    public static boolean startsWithPunctuation(final String s) {
+        if (isEmpty(s)) {
+            return false;
+        }
+
+        final char c = s.charAt(0);
+        switch (c) {
+            case ',':
+            case '.':
+            case '?':
+            case '/':
+            case ';':
+            case ':':
+            case '\'':
+            case '!':
+                return true;
+        }
+        return false;
+    }
 }

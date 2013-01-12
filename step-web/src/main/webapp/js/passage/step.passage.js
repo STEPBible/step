@@ -393,7 +393,11 @@ step.passage = {
                         events : {
                             visible : function(event, api) {
                                 $("a.alternative").click(function(event) {
-                                    console.log("clicked");
+                                    if(step.passage.versions == undefined) {
+                                        step.passage.versions = { warningRaised : true};
+                                        step.util.raiseInfo(passageId, "The text shown below has been modified and does not show the original ESV text", 'error', true);
+                                    }
+                                    
                                     $(".av-" + o, scope).first().text($(this).text()).end().not(":first").remove();
                                     
                                 });

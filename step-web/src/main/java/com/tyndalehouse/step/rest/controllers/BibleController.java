@@ -295,12 +295,12 @@ public class BibleController {
         final List<VersionPhraseAlternative> pa2 = new ArrayList<VersionPhraseAlternative>();
         pa2.add(getAlt("heavens", "", ""));
         pa2.add(getAlt("skies", "lit", ""));
-        final VersionVersePhraseOption o2 = new VersionVersePhraseOption("beginning, God created", pa1, 2);
+        final VersionVersePhraseOption o2 = new VersionVersePhraseOption("heavens", pa2, 2);
 
         final List<VersionPhraseAlternative> pa3 = new ArrayList<VersionPhraseAlternative>();
         pa3.add(getAlt("earth.", "prob", "Hebrew"));
         pa3.add(getAlt("earth:", "poss", "conjecture"));
-        final VersionVersePhraseOption o3 = new VersionVersePhraseOption("beginning, God created", pa1, 2);
+        final VersionVersePhraseOption o3 = new VersionVersePhraseOption("earth.", pa3, 2);
 
         final List<VersionVersePhraseOption> options = new ArrayList<VersionVersePhraseOption>();
         options.add(o1);
@@ -315,6 +315,14 @@ public class BibleController {
         return vd;
     }
 
+    /**
+     * Gets the alternative data for one specific option
+     * 
+     * @param alternative the alternative
+     * @param type the type
+     * @param specifier the specifier
+     * @return the alt
+     */
     private VersionPhraseAlternative getAlt(final String alternative, final String type,
             final String specifier) {
         return new VersionPhraseAlternative(alternative, type, specifier);

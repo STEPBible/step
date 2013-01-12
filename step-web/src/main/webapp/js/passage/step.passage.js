@@ -359,10 +359,50 @@ step.passage = {
     },
     
     _doVersions : function(passageId, passageContent) {
-//        $.getSafe("rest/bible/getDummyData", function(data) {
-//            console.log("hi");
-//            //alert(data);
-//        });
+        $.getSafe("rest/bible/getDummyData", function(data) {
+            $.each(data.versionVerses, function(v, verse) {
+                //item has reference and options
+                var scope = $(".verse a[name = '" + verse.reference + "']", passageContent).closest(".verse").get(0);
+                
+                $.each(verse.options, function(o, option) { 
+                    step.util.ui.highlightPhrase(scope, "alternativeVersion av-" + o, option.matchingText);
+                    var text = "";
+                    $.each(option.phraseAlternatives, function(pa, alternative) { 
+                        text += alternative.type;
+                        text += " <a class='alternative' href='#' matching='" + option.matchingText.replace(/'/ig, "\\'") + "'>" + alternative.alternative + "</a>";
+                        if(!step.util.isBlank(alternative.specifier)) {
+                            text += " (" + alternative.specifier + ")";
+                        }
+                        text += "<br />";
+                    });
+                    
+                    $(".av-" + o, scope).qtip({
+                        content: text,
+                        show: { 
+                            event : 'mouseenter',
+                            solo: true
+                        },
+                        hide: { 
+                            event: 'unfocus',
+                        },
+                        
+                        position : {
+                            my: "bottom center",
+                            at: "top center",
+                        },
+                        events : {
+                            visible : function(event, api) {
+                                $("a.alternative").click(function(event) {
+                                    console.log("clicked");
+                                    $(".av-" + o, scope).first().text($(this).text()).end().not(":first").remove();
+                                    
+                                });
+                            }
+                        }
+                     });
+                });
+            });
+        });
     },
     
     _getInterlinearMode : function(passageId) {

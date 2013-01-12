@@ -627,3 +627,14 @@ FONT.usg {
 .figureImage {
 	width: 100%;
 }
+
+
+.alternativeVersion  {
+	text-decoration: overline;
+	background-color: #EEF;
+}
+
+.alternative {
+	color: #696;
+	font-weight: bold;
+}

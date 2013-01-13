@@ -168,33 +168,6 @@ public class Loader {
         this.progress.offer("The " + version + " has been installed.");
     }
 
-    // /**
-    // * installs core jsword modules
-    // *
-    // * @param coreModules a comma separated list of modules
-    // */
-    // private void loadDefaultJSwordModules(final String coreModules) {
-    // final String[] modules = commaSeparate(coreModules);
-    // boolean installerInfoRefreshed = false;
-    //
-    // for (final String m : modules) {
-    // LOGGER.trace("Loading [{}]", m);
-    //
-    // if (!this.jswordModule.isInstalled(m)) {
-    // if (!installerInfoRefreshed) {
-    // LOGGER.trace("Reloading installers");
-    // this.jswordModule.reloadInstallers();
-    // installerInfoRefreshed = true;
-    // }
-    //
-    // LOGGER.trace("Installing {} module", m);
-    // this.jswordModule.installBook(m);
-    // } else {
-    // LOGGER.info("Book {} already installed", m);
-    // }
-    // }
-    // }
-
     /**
      * Loads the data into the database
      */
@@ -205,11 +178,35 @@ public class Loader {
         loadSpecificForms();
         loadRobinsonMorphology();
         loadVersionInformation();
+        loadAlternativeTranslations();
         // loadOpenBibleGeography();
 
         // loadHotSpots();
         // loadTimeline();
         LOGGER.info("Finished loading...");
+    }
+
+    /**
+     * loads the alternative translation data.
+     * 
+     * @return the number of entries that have been loaded
+     */
+    int loadAlternativeTranslations() {
+        LOGGER.debug("Indexing Alternative versions");
+        this.progress.offer("Installing data for alternative translations");
+
+        final EntityIndexWriterImpl writer = this.entityManager.getNewWriter("alternativeTranslations");
+
+        final HeadwordLineBasedLoader loader = new HeadwordLineBasedLoader(writer,
+                this.coreProperties.getProperty("test.data.path.alternatives.translations"));
+        loader.init(this);
+
+        LOGGER.debug("Writing Alternative Versions index");
+        final int close = writer.close();
+        LOGGER.debug("Writing Alternative Versions index");
+
+        this.progress.offer("There are now  " + close + " text variants loaded.");
+        return close;
     }
 
     /**
@@ -223,7 +220,7 @@ public class Loader {
 
         final EntityIndexWriterImpl writer = this.entityManager.getNewWriter("nave");
 
-        final HeadwordLineBasedLoaded loader = new HeadwordLineBasedLoaded(writer,
+        final HeadwordLineBasedLoader loader = new HeadwordLineBasedLoader(writer,
                 this.coreProperties.getProperty("test.data.path.subjects.nave"));
         loader.init(this);
 
@@ -346,7 +343,7 @@ public class Loader {
 
         LOGGER.debug("-Indexing greek");
         this.progress.offer("Installing Greek definitions");
-        HeadwordLineBasedLoaded lexiconLoader = new HeadwordLineBasedLoaded(writer,
+        HeadwordLineBasedLoader lexiconLoader = new HeadwordLineBasedLoader(writer,
                 this.coreProperties.getProperty("test.data.path.lexicon.definitions.greek"));
         lexiconLoader.init(this);
 
@@ -355,7 +352,7 @@ public class Loader {
         final String hebrewLexicon = this.coreProperties
                 .getProperty("test.data.path.lexicon.definitions.hebrew");
         if (hebrewLexicon != null) {
-            lexiconLoader = new HeadwordLineBasedLoaded(writer, hebrewLexicon);
+            lexiconLoader = new HeadwordLineBasedLoader(writer, hebrewLexicon);
         }
         lexiconLoader.init(this);
 

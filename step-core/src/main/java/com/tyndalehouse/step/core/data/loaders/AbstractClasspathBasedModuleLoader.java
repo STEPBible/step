@@ -79,6 +79,10 @@ public abstract class AbstractClasspathBasedModuleLoader implements ModuleLoader
     private void readDataFile() {
         LOG.debug("Reading resource [{}]", this.resourcePath);
 
+        if (this.resourcePath == null) {
+            throw new StepInternalException("Unable to locate resource.");
+        }
+
         if (this.resourcePath.endsWith("index.txt")) {
             // then we're dealing with a directory, so parse multiple files
             parseMultipleCsvFiles();

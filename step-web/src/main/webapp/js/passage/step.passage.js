@@ -359,51 +359,59 @@ step.passage = {
     },
     
     _doVersions : function(passageId, passageContent) {
-        $.getSafe("rest/bible/getDummyData", function(data) {
+        //only do this if we've got a particular parameter set in the URL
+        if($.getUrlVar("altTranslations") != "true") {
+            return;
+        }
+        
+        
+        $.getSafe(ALTERNATIVE_TRANSLATIONS + step.state.passage.reference(passageId), function(data) {
             $.each(data.versionVerses, function(v, verse) {
                 //item has reference and options
                 var scope = $(".verse a[name = '" + verse.reference + "']", passageContent).closest(".verse").get(0);
                 
                 $.each(verse.options, function(o, option) { 
-                    step.util.ui.highlightPhrase(scope, "alternativeVersion av-" + o, option.matchingText);
-                    var text = "";
-                    $.each(option.phraseAlternatives, function(pa, alternative) { 
-                        text += alternative.type;
-                        text += " <a class='alternative alt-" + o + "' href='#' matching='" + option.matchingText.replace(/'/ig, "\\'") + "'>" + alternative.alternative + "</a>";
-                        if(!step.util.isBlank(alternative.specifier)) {
-                            text += " (" + alternative.specifier + ")";
-                        }
-                        text += "<br />";
-                    });
-                    
-                    $(".av-" + o, scope).qtip({
-                        content: text,
-                        show: { 
-                            event : 'mouseenter',
-                            solo: true
-                        },
-                        hide: { 
-                            event: 'unfocus',
-                        },
-                        
-                        position : {
-                            my: "bottom center",
-                            at: "top center",
-                        },
-                        events : {
-                            visible : function(event, api) {
-                                $("a.alt-" + o).click(function(event) {
-                                    if(step.passage.versions == undefined) {
-                                        step.passage.versions = { warningRaised : true};
-                                        step.util.raiseInfo(passageId, "The text shown below has been modified and does not show the original ESV text", 'error', true);
-                                    }
-                                    
-                                    $(".av-" + o, scope).first().text($(this).text()).end().not(":first").remove();
-                                    
-                                });
+                    if(option.matchingText) {
+                        step.util.ui.highlightPhrase(scope, "alternativeVersion av-" + o, option.matchingText);
+                        var text = "";
+                        $.each(option.phraseAlternatives, function(pa, alternative) { 
+                            text += alternative.type;
+                            text += " <a class='alternative alt-" + o + "' href='#' matching='" + option.matchingText.replace(/'/ig, "\\'") + "'>" + alternative.alternative + "</a>";
+                            if(!step.util.isBlank(alternative.specifier)) {
+                                text += " (" + alternative.specifier + ")";
                             }
-                        }
-                     });
+                            text += "<br />";
+                        });
+                        
+                        $(".av-" + o, scope).qtip({
+                            content: text,
+                            show: { 
+                                event : 'mouseenter',
+                                solo: true
+                            },
+                            hide: { 
+                                event: 'unfocus',
+                            },
+                            
+                            position : {
+                                my: "bottom center",
+                                at: "top center",
+                            },
+                            events : {
+                                visible : function(event, api) {
+                                    $("a.alt-" + o).click(function(event) {
+                                        if(step.passage.versions == undefined) {
+                                            step.passage.versions = { warningRaised : true};
+                                            step.util.raiseInfo(passageId, "The text shown below has been modified and does not show the original ESV text", 'error', true);
+                                        }
+                                        
+                                        $(".av-" + o, scope).first().text($(this).text()).end().not(":first").remove();
+                                        
+                                    });
+                                }
+                            }
+                         });
+                    }
                 });
             });
         });

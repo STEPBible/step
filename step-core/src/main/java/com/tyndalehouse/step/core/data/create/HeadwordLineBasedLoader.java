@@ -51,8 +51,8 @@ import com.tyndalehouse.step.core.exceptions.StepInternalException;
  * @author chrisburrell
  * 
  */
-public class HeadwordLineBasedLoaded extends AbstractClasspathBasedModuleLoader {
-    private static final Logger LOGGER = LoggerFactory.getLogger(HeadwordLineBasedLoaded.class);
+public class HeadwordLineBasedLoader extends AbstractClasspathBasedModuleLoader {
+    private static final Logger LOGGER = LoggerFactory.getLogger(HeadwordLineBasedLoader.class);
     private static final String START_TOKEN = "==============";
 
     // state used during processing
@@ -66,7 +66,7 @@ public class HeadwordLineBasedLoaded extends AbstractClasspathBasedModuleLoader 
      * @param writer the lucene index writer
      * @param resourcePath the classpath to the data
      */
-    public HeadwordLineBasedLoaded(final EntityIndexWriterImpl writer, final String resourcePath) {
+    public HeadwordLineBasedLoader(final EntityIndexWriterImpl writer, final String resourcePath) {
         super(resourcePath);
         this.writer = writer;
     }

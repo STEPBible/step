@@ -1,4 +1,4 @@
-package com.tyndalehouse.step.models.versions;
+package com.tyndalehouse.step.core.models.alternativeTranslations;
 
 /**
  * 

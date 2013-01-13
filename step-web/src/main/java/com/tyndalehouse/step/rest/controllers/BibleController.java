@@ -54,12 +54,12 @@ import com.tyndalehouse.step.core.models.ClientSession;
 import com.tyndalehouse.step.core.models.EnrichedLookupOption;
 import com.tyndalehouse.step.core.models.KeyWrapper;
 import com.tyndalehouse.step.core.models.OsisWrapper;
+import com.tyndalehouse.step.core.models.alternativeTranslations.VersionPhraseAlternative;
+import com.tyndalehouse.step.core.models.alternativeTranslations.VersionVersePhraseOption;
+import com.tyndalehouse.step.core.models.alternativeTranslations.VersionVerses;
+import com.tyndalehouse.step.core.models.alternativeTranslations.VersionsData;
 import com.tyndalehouse.step.core.service.BibleInformationService;
 import com.tyndalehouse.step.models.ModulesForLanguageUser;
-import com.tyndalehouse.step.models.versions.VersionPhraseAlternative;
-import com.tyndalehouse.step.models.versions.VersionVersePhraseOption;
-import com.tyndalehouse.step.models.versions.VersionVerses;
-import com.tyndalehouse.step.models.versions.VersionsData;
 import com.tyndalehouse.step.rest.framework.Cacheable;
 
 /**
@@ -290,17 +290,17 @@ public class BibleController {
         final List<VersionPhraseAlternative> pa1 = new ArrayList<VersionPhraseAlternative>();
         pa1.add(getAlt("beginning, God created", "prob", "Hebrew"));
         pa1.add(getAlt("beginning when God created", "poss", "conjecture"));
-        final VersionVersePhraseOption o1 = new VersionVersePhraseOption("beginning, God created", pa1, 2);
+        final VersionVersePhraseOption o1 = new VersionVersePhraseOption("beginning, God created", pa1);
 
         final List<VersionPhraseAlternative> pa2 = new ArrayList<VersionPhraseAlternative>();
         pa2.add(getAlt("heavens", "", ""));
         pa2.add(getAlt("skies", "lit", ""));
-        final VersionVersePhraseOption o2 = new VersionVersePhraseOption("heavens", pa2, 2);
+        final VersionVersePhraseOption o2 = new VersionVersePhraseOption("heavens", pa2);
 
         final List<VersionPhraseAlternative> pa3 = new ArrayList<VersionPhraseAlternative>();
         pa3.add(getAlt("earth.", "prob", "Hebrew"));
         pa3.add(getAlt("earth:", "poss", "conjecture"));
-        final VersionVersePhraseOption o3 = new VersionVersePhraseOption("earth.", pa3, 2);
+        final VersionVersePhraseOption o3 = new VersionVersePhraseOption("earth.", pa3);
 
         final List<VersionVersePhraseOption> options = new ArrayList<VersionVersePhraseOption>();
         options.add(o1);

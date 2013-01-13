@@ -148,6 +148,7 @@ public class FrontController extends HttpServlet {
 
             // CHECKSTYLE:OFF
         } catch (final Exception e) {
+            LOGGER.warn(e.getMessage(), e);
             returnVal = convertExceptionToJson(e);
         }
         final byte[] encodedJsonResponse = getEncodedJsonResponse(returnVal);

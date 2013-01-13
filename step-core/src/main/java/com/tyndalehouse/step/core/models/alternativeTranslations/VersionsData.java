@@ -30,54 +30,33 @@
  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
-package com.tyndalehouse.step.models.versions;
+package com.tyndalehouse.step.core.models.alternativeTranslations;
+
+import java.util.List;
 
 /**
- * Represents a particular alternative.
+ * The Class VersionsData.
  */
-public class VersionPhraseAlternative {
-    private final String alternative;
-    private final String type;
-    private final String specifier;
+public class VersionsData {
+    /** The version verses. */
+    private final List<VersionVerses> versionVerses;
 
     /**
-     * Instantiates a new version phrase alternative.
+     * Instantiates a new versions data.
      * 
-     * @param alternative the alternative
-     * @param type the type
-     * @param specifier the specifier
+     * @param versionVerses the version verses
      */
-    public VersionPhraseAlternative(final String alternative, final String type, final String specifier) {
-        this.alternative = alternative;
-        this.type = type;
-        this.specifier = specifier;
+    public VersionsData(final List<VersionVerses> versionVerses) {
+        this.versionVerses = versionVerses;
     }
 
     /**
-     * Gets the alternative.
+     * Gets the version verses.
      * 
-     * @return the alternative
+     * @return the version verses
      */
-    public String getAlternative() {
-        return this.alternative;
-    }
-
-    /**
-     * Gets the type.
-     * 
-     * @return the type
-     */
-    public String getType() {
-        return this.type;
-    }
-
-    /**
-     * Gets the specifier.
-     * 
-     * @return the specifier
-     */
-    public String getSpecifier() {
-        return this.specifier;
+    public List<VersionVerses> getVersionVerses() {
+        return this.versionVerses;
     }
 
 }

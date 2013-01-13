@@ -30,33 +30,44 @@
  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
-package com.tyndalehouse.step.models.versions;
+package com.tyndalehouse.step.core.models.alternativeTranslations;
 
 import java.util.List;
 
 /**
- * The Class VersionsData.
+ * This repreents a set of verses for a particular verse.
  */
-public class VersionsData {
-    /** The version verses. */
-    private final List<VersionVerses> versionVerses;
+public class VersionVerses {
+    private final String reference;
+    private final List<VersionVersePhraseOption> options;
 
     /**
-     * Instantiates a new versions data.
+     * Instantiates a new version verses.
      * 
-     * @param versionVerses the version verses
+     * @param reference the reference
+     * @param options the options
      */
-    public VersionsData(final List<VersionVerses> versionVerses) {
-        this.versionVerses = versionVerses;
+    public VersionVerses(final String reference, final List<VersionVersePhraseOption> options) {
+        this.reference = reference;
+        this.options = options;
     }
 
     /**
-     * Gets the version verses.
+     * Gets the reference.
      * 
-     * @return the version verses
+     * @return the reference
      */
-    public List<VersionVerses> getVersionVerses() {
-        return this.versionVerses;
+    public String getReference() {
+        return this.reference;
+    }
+
+    /**
+     * Gets the options.
+     * 
+     * @return the options
+     */
+    public List<VersionVersePhraseOption> getOptions() {
+        return this.options;
     }
 
 }

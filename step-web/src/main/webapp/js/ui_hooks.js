@@ -48,6 +48,8 @@ BOOKMARKS_ADD =                     STEP_SERVER_BASE_URL + "favourites/addBookma
 HISTORY_GET =                       STEP_SERVER_BASE_URL + "favourites/getHistory/";
 HISTORY_ADD =                       STEP_SERVER_BASE_URL + "favourites/addHistory/";
 
+ALTERNATIVE_TRANSLATIONS =          STEP_SERVER_BASE_URL + "alternativeTranslations/get/"
+
 BIBLE_GET_MODULES =                 STEP_SERVER_BASE_URL + "bible/getModules/";
 BIBLE_GET_BIBLE_TEXT =              STEP_SERVER_BASE_URL + "bible/getBibleText/";
 BIBLE_GET_FEATURES =                STEP_SERVER_BASE_URL + "bible/getFeatures/";

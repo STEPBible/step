@@ -8,6 +8,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
+import com.google.inject.Injector;
 import com.tyndalehouse.step.core.data.EntityConfiguration;
 import com.tyndalehouse.step.core.data.EntityIndexReader;
 import com.tyndalehouse.step.core.data.EntityManager;
@@ -22,6 +23,7 @@ public class EntityManagerImpl implements Closeable, EntityManager {
     private final boolean memoryMapped;
     private final String indexPath;
     private Map<String, EntityIndexReader> indexReaders = new HashMap<String, EntityIndexReader>();
+    private final Injector injector;
 
     /**
      * Constructs the entity manager
@@ -31,9 +33,10 @@ public class EntityManagerImpl implements Closeable, EntityManager {
      */
     @Inject
     public EntityManagerImpl(@Named("app.index.memoryMapped") final boolean memoryMapped,
-            @Named("app.index.path") final String indexPath) {
+            @Named("app.index.path") final String indexPath, final Injector injector) {
         this.memoryMapped = memoryMapped;
         this.indexPath = indexPath;
+        this.injector = injector;
     }
 
     @Override
@@ -41,7 +44,7 @@ public class EntityManagerImpl implements Closeable, EntityManager {
         EntityConfiguration entityConfiguration = this.configs.get(entityName);
 
         if (entityConfiguration == null) {
-            entityConfiguration = new EntityConfiguration(this.indexPath, entityName);
+            entityConfiguration = new EntityConfiguration(this.indexPath, entityName, this.injector);
             this.configs.put(entityName, entityConfiguration);
         }
         return entityConfiguration;

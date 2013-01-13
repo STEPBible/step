@@ -1191,7 +1191,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
     public String getAllReferences(final String references, final String version) {
         final PassageKeyFactory keyFactory = PassageKeyFactory.instance();
         final Versification av11n = this.versificationService.getVersificationForVersion(version);
-        final StringBuilder referenceString = new StringBuilder();
+        final StringBuilder referenceString = new StringBuilder(1024);
         try {
             final Key k = keyFactory.getKey(av11n, references);
             final Iterator<Key> iterator = k.iterator();
@@ -1242,4 +1242,5 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
             throw new StepInternalException("Unable to parse key " + references, e);
         }
     }
+
 }

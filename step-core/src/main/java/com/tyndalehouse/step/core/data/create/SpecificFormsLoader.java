@@ -19,7 +19,7 @@ import com.tyndalehouse.step.core.data.loaders.AbstractClasspathBasedModuleLoade
  * 
  */
 public class SpecificFormsLoader extends AbstractClasspathBasedModuleLoader {
-    private static final Logger LOGGER = LoggerFactory.getLogger(HeadwordLineBasedLoaded.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(HeadwordLineBasedLoader.class);
     private final EntityIndexWriterImpl writer;
 
     /**

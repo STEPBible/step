@@ -77,8 +77,17 @@ public class LoaderTest {
     @Test
     public void testNaveLoader() {
         getLoader("test.data.path.subjects.nave", "nave.txt").loadNave();
-
         assertExists("nave", "root", "AARON");
+    }
+
+    /**
+     * loads the nave module
+     */
+    @Test
+    public void testAlternativeTranslationsLoader() {
+        getLoader("test.data.path.alternatives.translations", "alternativeTranslations.txt")
+                .loadAlternativeTranslations();
+        assertExists("alternativeTranslations", "reference", "Gen.1.1");
     }
 
     /**
@@ -217,7 +226,7 @@ public class LoaderTest {
      * @param value the value to use in the search
      */
     private void assertExists(final String entityName, final String key, final String value) {
-        getIndexReader(entityName).searchSingleColumn(key, value);
+        assertTrue(getIndexReader(entityName).searchSingleColumn(key, value).length > 0);
     }
 
     /**

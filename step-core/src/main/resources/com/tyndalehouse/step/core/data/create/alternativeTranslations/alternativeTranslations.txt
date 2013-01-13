@@ -1,0 +1,4071 @@
+===============================
+@Reference=	Gen 1:1
+@FullText=	In the beginning, God created
+@MatchingText=	beginning, God created
+@OptionsType1=	esv: prob:  
+@OptionsAlternative1=	beginning, God created
+@OptionsQualifier1=	 (Hebrew)
+@OptionsType2=	|poss: 
+@OptionsAlternative2=	beginning when God created
+@OptionsQualifier2=	 (conjecture)
+===============================
+@Reference=	Gen 1:1
+@FullText=	the heavens
+@MatchingText=	heavens
+@OptionsType1=	esv: 
+@OptionsAlternative1=	heavens
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	skies
+===============================
+@Reference=	Gen 1:1
+@FullText=	 and the earth.
+@MatchingText=	earth.
+@OptionsType1=	esv: prob: 
+@OptionsAlternative1=	earth.
+@OptionsQualifier1=	 (Hebrew)
+@OptionsType2=	|poss: 
+@OptionsAlternative2=	earth:
+@OptionsQualifier2=	 (conjecture)
+===============================
+@Reference=	Gen 1:2
+@FullText=	The earth was without form and void
+@MatchingText=	void
+@OptionsType1=	esv: 
+@OptionsAlternative1=	void
+@OptionsType2=	|or: 
+@OptionsAlternative2=	empty
+===============================
+@Reference=	Gen 1:2
+@FullText=	, and darkness was over the face
+@MatchingText=	face
+@OptionsType1=	esv: 
+@OptionsAlternative1=	face
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	surface
+===============================
+@Reference=	Gen 1:2
+@FullText=	 of the deep. And the Spirit of
+@MatchingText=	the Spirit of
+@OptionsType1=	esv: 
+@OptionsAlternative1=	the Spirit of
+@OptionsType2=	|or: 
+@OptionsAlternative2=	a wind from
+===============================
+@Reference=	Gen 1:2
+@FullText=	 God was hovering
+@MatchingText=	was hovering
+@OptionsType1=	esv: 
+@OptionsAlternative1=	was hovering
+@OptionsType2=	|or: 
+@OptionsAlternative2=	moved
+@OptionsType3=	|or: 
+@OptionsAlternative3=	swept
+===============================
+@Reference=	Gen 1:2
+@FullText=	 over the face
+@MatchingText=	face
+@OptionsType1=	esv: 
+@OptionsAlternative1=	face
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	surface
+===============================
+@Reference=	Gen 1:6
+@FullText=	And God said, "Let there be an expanse
+@MatchingText=	an expanse
+@OptionsType1=	esv: 
+@OptionsAlternative1=	an expanse
+@OptionsType2=	|or: 
+@OptionsAlternative2=	a firmament
+@OptionsType3=	|or: 
+@OptionsAlternative3=	dome
+===============================
+@Reference=	Gen 1:6
+@FullText=	 in the midst of the waters, and let it separate the waters from the waters."
+@MatchingText=	."
+@OptionsType1=	esv: prob: 
+@OptionsAlternative1=	."
+@OptionsQualifier1=	 (Hebrew)
+@OptionsType2=	|poss: 
+@OptionsAlternative2=	.” And it was so 
+===============================
+@Reference=	Gen 1:7
+@FullText=	And God made the expanse
+@MatchingText=	expanse
+@OptionsType1=	esv: 
+@OptionsAlternative1=	expanse
+@OptionsType2=	|or: 
+@OptionsAlternative2=	a firmament
+@OptionsType3=	|or: 
+@OptionsAlternative3=	dome
+===============================
+@Reference=	Gen 1:7
+@FullText=	 and separated the waters that were under the expanse
+@MatchingText=	expanse
+@OptionsType1=	esv: 
+@OptionsAlternative1=	expanse
+@OptionsType2=	|or: 
+@OptionsAlternative2=	a firmament
+@OptionsType3=	|or: 
+@OptionsAlternative3=	dome
+===============================
+@Reference=	Gen 1:7
+@FullText=	 from the waters that were above the expanse
+@MatchingText=	expanse
+@OptionsType1=	esv: 
+@OptionsAlternative1=	expanse
+@OptionsType2=	|or: 
+@OptionsAlternative2=	a firmament
+@OptionsType3=	|or: 
+@OptionsAlternative3=	dome
+===============================
+@Reference=	Gen 1:7
+@FullText=	. And it was so.
+@MatchingText=	And it was so.
+@OptionsType1=	esv: prob: 
+@OptionsAlternative1=	And it was so.
+@OptionsQualifier1=	 (Hebrew)
+@OptionsType2=	|poss: 
+@OptionsAlternative2=	[ ] 
+===============================
+@Reference=	Gen 1:8
+@FullText=	And God called the expanse
+@MatchingText=	expanse
+@OptionsType1=	esv: 
+@OptionsAlternative1=	expanse
+@OptionsType2=	|or: 
+@OptionsAlternative2=	a firmament
+@OptionsType3=	|or: 
+@OptionsAlternative3=	dome
+===============================
+@Reference=	Gen 1:8
+@FullText=	 Heaven
+@MatchingText=	Heaven
+@OptionsType1=	esv: 
+@OptionsAlternative1=	Heaven
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	skies
+===============================
+@Reference=	Gen 1:9
+@FullText=	And God said, "Let the waters under the heavens
+@MatchingText=	heavens
+@OptionsType1=	esv: 
+@OptionsAlternative1=	heavens
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	skies
+===============================
+@Reference=	Gen 1:9
+@FullText=	 be gathered together
+@MatchingText=	gathered together
+@OptionsType1=	esv: 
+@OptionsAlternative1=	gathered together
+@OptionsType2=	|or: 
+@OptionsAlternative2=	pooled
+===============================
+@Reference=	Gen 1:9
+@FullText=	 into one place
+@MatchingText=	one place
+@OptionsType1=	esv: prob: 
+@OptionsAlternative1=	one place
+@OptionsQualifier1=	 (Hebrew)
+@OptionsType2=	|poss: 
+@OptionsAlternative2=	a pool
+===============================
+@Reference=	Gen 1:9
+@FullText=	
+@MatchingText=	
+@OptionsQualifier0=	)
+===============================
+@Reference=	Gen 1:9
+@FullText=	, and let the dry land appear." And it was so.
+@MatchingText=	And it was so.
+@OptionsType1=	esv: prob: 
+@OptionsAlternative1=	And it was so.
+@OptionsQualifier1=	 (Hebrew)
+@OptionsType2=	|poss: 
+@OptionsAlternative2=	[ ]
+@OptionsQualifier2=	 (Greek)
+===============================
+@Reference=	Gen 1:10
+@FullText=	God called the dry land Earth
+@MatchingText=	Earth
+@OptionsType1=	esv: 
+@OptionsAlternative1=	Earth
+@OptionsType2=	|or: 
+@OptionsAlternative2=	Land
+===============================
+@Reference=	Gen 1:11
+@FullText=	And God said, "Let the earth
+@MatchingText=	earth
+@OptionsType1=	esv: 
+@OptionsAlternative1=	earth
+@OptionsType2=	|or: 
+@OptionsAlternative2=	land
+===============================
+@Reference=	Gen 1:11
+@FullText=	 sprout vegetation
+@MatchingText=	vegetation
+@OptionsType1=	esv: 
+@OptionsAlternative1=	vegetation
+@OptionsType2=	|or: 
+@OptionsAlternative2=	green new grass
+===============================
+@Reference=	Gen 1:11
+@FullText=	, plants yielding seed, and fruit trees bearing fruit in which is their seed, each according to its kind
+@MatchingText=	kind
+@OptionsType1=	esv: 
+@OptionsAlternative1=	kind
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	species
+===============================
+@Reference=	Gen 1:11
+@FullText=	, on the earth
+@MatchingText=	earth
+@OptionsType1=	esv: 
+@OptionsAlternative1=	earth
+@OptionsType2=	|or: 
+@OptionsAlternative2=	land
+===============================
+@Reference=	Gen 1:12
+@FullText=	The earth
+@MatchingText=	earth
+@OptionsType1=	esv: 
+@OptionsAlternative1=	earth
+@OptionsType2=	|or: 
+@OptionsAlternative2=	land
+===============================
+@Reference=	Gen 1:12
+@FullText=	 brought forth vegetation
+@MatchingText=	vegetation
+@OptionsType1=	esv: 
+@OptionsAlternative1=	vegetation
+@OptionsType2=	|or: 
+@OptionsAlternative2=	 green new grass
+===============================
+@Reference=	Gen 1:12
+@FullText=	, plants yielding seed according to their own kinds
+@MatchingText=	kinds
+@OptionsType1=	esv: 
+@OptionsAlternative1=	kinds
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	species
+===============================
+@Reference=	Gen 1:12
+@FullText=	, and trees bearing fruit in which is their seed, each according to its kind
+@MatchingText=	kind
+@OptionsType1=	esv: 
+@OptionsAlternative1=	kind
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	species
+===============================
+@Reference=	Gen 1:14
+@FullText=	And God said, "Let there be lights in the expanse
+@MatchingText=	expanse
+@OptionsType1=	esv: 
+@OptionsAlternative1=	expanse
+@OptionsType2=	|or: 
+@OptionsAlternative2=	a firmament
+@OptionsType3=	|or: 
+@OptionsAlternative3=	dome
+===============================
+@Reference=	Gen 1:14
+@FullText=	 of the heavens
+@MatchingText=	heavens
+@OptionsType1=	esv: 
+@OptionsAlternative1=	heavens
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	skies
+===============================
+@Reference=	Gen 1:14
+@FullText=	 to separate the day from the night. And let them be for
+@MatchingText=	be for
+@OptionsType1=	esv: 
+@OptionsAlternative1=	be for
+@OptionsType2=	|or: 
+@OptionsAlternative2=	indicate
+===============================
+@Reference=	Gen 1:14
+@FullText=	 signs
+@MatchingText=	signs
+@OptionsType1=	esv: 
+@OptionsAlternative1=	signs
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	festivals
+===============================
+@Reference=	Gen 1:14
+@FullText=	 and for seasons
+@MatchingText=	and for seasons
+@OptionsType1=	esv: 
+@OptionsAlternative1=	and for seasons
+@OptionsType2=	|or: 
+@OptionsAlternative2=	for the set times
+===============================
+@Reference=	Gen 1:15
+@FullText=	and let them be lights in the expanse
+@MatchingText=	expanse
+@OptionsType1=	esv: 
+@OptionsAlternative1=	expanse
+@OptionsType2=	|or: 
+@OptionsAlternative2=	a firmament
+@OptionsType3=	|or: 
+@OptionsAlternative3=	dome
+===============================
+@Reference=	Gen 1:15
+@FullText=	 of the heavens
+@MatchingText=	heavens
+@OptionsType1=	esv: 
+@OptionsAlternative1=	heavens
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	skies
+===============================
+@Reference=	Gen 1:15
+@FullText=	 to give light upon the earth
+@MatchingText=	earth
+@OptionsType1=	esv: 
+@OptionsAlternative1=	earth
+@OptionsType2=	|or: 
+@OptionsAlternative2=	land
+===============================
+@Reference=	Gen 1:16
+@FullText=	And God made the two great lights- the greater light to rule the day and the lesser light to rule the night- and the stars
+@MatchingText=	to rule the night- and the stars
+@OptionsType1=	esv: 
+@OptionsAlternative1=	to rule the night- and the stars
+@OptionsType2=	|or: 
+@OptionsAlternative2=	and the stars to rule the night
+===============================
+@Reference=	Gen 1:17
+@FullText=	And God set them in the expanse
+@MatchingText=	expanse 
+@OptionsType1=	esv: 
+@OptionsAlternative1=	expanse 
+@OptionsType2=	|or: 
+@OptionsAlternative2=	a firmament
+@OptionsType3=	|or: 
+@OptionsAlternative3=	dome
+===============================
+@Reference=	Gen 1:17
+@FullText=	of the heavens
+@MatchingText=	heavens
+@OptionsType1=	esv: 
+@OptionsAlternative1=	heavens
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	skies
+===============================
+@Reference=	Gen 1:18
+@FullText=	to rule over
+@MatchingText=	rule over
+@OptionsType1=	esv: 
+@OptionsAlternative1=	rule over
+@OptionsType2=	|or: 
+@OptionsAlternative2=	dominate
+===============================
+@Reference=	Gen 1:20
+@FullText=	And God said, "Let the waters swarm
+@MatchingText=	swarm
+@OptionsType1=	esv: 
+@OptionsAlternative1=	swarm
+@OptionsType2=	|or: 
+@OptionsAlternative2=	teem
+===============================
+@Reference=	Gen 1:20
+@FullText=	 with swarms of living creatures, and let birds
+@MatchingText=	birds
+@OptionsType1=	esv: 
+@OptionsAlternative1=	birds
+@OptionsType2=	|or: 
+@OptionsAlternative2=	flying creatures
+===============================
+@Reference=	Gen 1:20
+@FullText=	 fly above the earth
+@MatchingText=	earth
+@OptionsType1=	esv: 
+@OptionsAlternative1=	earth
+@OptionsType2=	|or: 
+@OptionsAlternative2=	land
+===============================
+@Reference=	Gen 1:20
+@FullText=	 across
+@MatchingText=	across
+@OptionsType1=	esv: 
+@OptionsAlternative1=	across
+@OptionsType2=	|or: 
+@OptionsAlternative2=	under
+===============================
+@Reference=	Gen 1:20
+@FullText=	 the expanse 
+@MatchingText=	expanse 
+@OptionsType1=	esv: 
+@OptionsAlternative1=	expanse 
+@OptionsType2=	|or: 
+@OptionsAlternative2=	a firmament
+@OptionsType3=	|or: 
+@OptionsAlternative3=	dome
+===============================
+@Reference=	Gen 1:20
+@FullText=	of the heavens.
+@MatchingText=	heavens.
+@OptionsType1=	esv: 
+@OptionsAlternative1=	heavens
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	skies
+===============================
+@Reference=	Gen 1:20
+@FullText=	 [ ]
+@MatchingText=	 [ ]
+@OptionsType1=	esv: prob: 
+@OptionsAlternative1=	[ ] 
+@OptionsQualifier1=	(Hebrew)
+@OptionsType2=	|poss: 
+@OptionsAlternative2=	And it was so. 
+===============================
+@Reference=	Gen 1:21
+@FullText=	So God created the great sea creatures
+@MatchingText=	sea creatures
+@OptionsType1=	esv: 
+@OptionsAlternative1=	sea creatures
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	monsters
+===============================
+@Reference=	Gen 1:21
+@FullText=	 and every living creature
+@MatchingText=	creature
+@OptionsType1=	esv: 
+@OptionsAlternative1=	creature
+@OptionsType2=	|or: 
+@OptionsAlternative2=	soul
+===============================
+@Reference=	Gen 1:21
+@FullText=	 that moves
+@MatchingText=	moves
+@OptionsType1=	esv: 
+@OptionsAlternative1=	moves
+@OptionsType2=	|or: 
+@OptionsAlternative2=	creeps
+===============================
+@Reference=	Gen 1:21
+@FullText=	, with which the waters swarm
+@MatchingText=	swarm
+@OptionsType1=	esv: 
+@OptionsAlternative1=	swarm
+@OptionsType2=	|or: 
+@OptionsAlternative2=	teem
+===============================
+@Reference=	Gen 1:21
+@FullText=	, according to their kinds
+@MatchingText=	kinds
+@OptionsType1=	esv: 
+@OptionsAlternative1=	kinds
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	species
+===============================
+@Reference=	Gen 1:21
+@FullText=	, and every winged bird
+@MatchingText=	bird
+@OptionsType1=	esv: 
+@OptionsAlternative1=	bird
+@OptionsType2=	|or: 
+@OptionsAlternative2=	flying creature
+===============================
+@Reference=	Gen 1:21
+@FullText=	 according to its kind
+@MatchingText=	kind
+@OptionsType1=	esv: 
+@OptionsAlternative1=	kind
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	species
+===============================
+@Reference=	Gen 1:22
+@FullText=	And God blessed them, saying, "Be fruitful and multiply and fill the waters in the seas, and let birds
+@MatchingText=	birds
+@OptionsType1=	esv: 
+@OptionsAlternative1=	birds
+@OptionsType2=	|or: 
+@OptionsAlternative2=	flying creatures
+===============================
+@Reference=	Gen 1:24
+@FullText=	And God said, "Let the earth
+@MatchingText=	earth
+@OptionsType1=	esv: 
+@OptionsAlternative1=	earth
+@OptionsType2=	|or: 
+@OptionsAlternative2=	land
+===============================
+@Reference=	Gen 1:24
+@FullText=	 bring forth living creatures according to their kinds- livestock and creeping things
+@MatchingText=	creeping things
+@OptionsType1=	esv: 
+@OptionsAlternative1=	creeping things
+@OptionsType2=	|or: 
+@OptionsAlternative2=	tiny creatures
+===============================
+@Reference=	Gen 1:24
+@FullText=	 and beasts of the earth
+@MatchingText=	beasts of the earth
+@OptionsType1=	esv: 
+@OptionsAlternative1=	beasts of the earth
+@OptionsType2=	|or: 
+@OptionsAlternative2=	wild creatures
+===============================
+@Reference=	Gen 1:24
+@FullText=	 according to their kinds
+@MatchingText=	kinds
+@OptionsType1=	esv: 
+@OptionsAlternative1=	kinds
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	species
+===============================
+@Reference=	Gen 1:25
+@FullText=	And God made the beasts of the earth
+@MatchingText=	beasts of the earth
+@OptionsType1=	esv: 
+@OptionsAlternative1=	beasts of the earth
+@OptionsType2=	|or: 
+@OptionsAlternative2=	wild creatures
+===============================
+@Reference=	Gen 1:25
+@FullText=	 according to their kinds
+@MatchingText=	kinds
+@OptionsType1=	esv: 
+@OptionsAlternative1=	kinds
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	species
+===============================
+@Reference=	Gen 1:25
+@FullText=	 and the livestock according to their kinds
+@MatchingText=	kinds
+@OptionsType1=	esv: 
+@OptionsAlternative1=	kinds
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	species
+===============================
+@Reference=	Gen 1:25
+@FullText=	, and everything that creeps on the ground according to its kind
+@MatchingText=	kind
+@OptionsType1=	esv: 
+@OptionsAlternative1=	kind
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	species
+===============================
+@Reference=	Gen 1:26
+@FullText=	Then God said, "Let us make man
+@MatchingText=	man
+@OptionsType1=	esv: 
+@OptionsAlternative1=	man
+@OptionsType2=	|sounds like: 
+@OptionsAlternative2=	Adam
+===============================
+@Reference=	Gen 1:26
+@FullText=	 in our image, after our likeness. And let them have dominion
+@MatchingText=	have dominion
+@OptionsType1=	esv: 
+@OptionsAlternative1=	have dominion
+@OptionsType2=	|or: 
+@OptionsAlternative2=	govern
+===============================
+@Reference=	Gen 1:26
+@FullText=	 over the fish of the sea and over the birds
+@MatchingText=	birds
+@OptionsType1=	esv: 
+@OptionsAlternative1=	birds
+@OptionsType2=	|or: 
+@OptionsAlternative2=	flying creatures
+===============================
+@Reference=	Gen 1:26
+@FullText=	 of the heavens
+@MatchingText=	heavens
+@OptionsType1=	esv: 
+@OptionsAlternative1=	heavens
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	skies
+===============================
+@Reference=	Gen 1:26
+@FullText=	 and over the livestock
+@MatchingText=	livestock
+@OptionsType1=	esv: 
+@OptionsAlternative1=	livestock
+@OptionsType2=	|or: 
+@OptionsAlternative2=	animals
+===============================
+@Reference=	Gen 1:26
+@FullText=	 and over all the earth
+@MatchingText=	all the earth
+@OptionsType1=	esv: prob: 
+@OptionsAlternative1=	all the earth
+@OptionsQualifier1=	 (Hebrew)
+@OptionsType2=	|poss: 
+@OptionsAlternative2=	the wild creatures 
+===============================
+@Reference=	Gen 1:26
+@FullText=	 and over every creeping thing that creeps on the earth
+@MatchingText=	earth
+@OptionsType1=	esv: 
+@OptionsAlternative1=	earth
+@OptionsType2=	|or: 
+@OptionsAlternative2=	land
+===============================
+@Reference=	Gen 1:28
+@FullText=	And God blessed them. And God said to them, "Be fruitful and multiply and fill
+@MatchingText=	fill 
+@OptionsType1=	esv: 
+@OptionsAlternative1=	fill 
+@OptionsType2=	|or: 
+@OptionsAlternative2=	replenish
+===============================
+@Reference=	Gen 1:28
+@FullText=	the earth
+@MatchingText=	earth
+@OptionsType1=	esv: 
+@OptionsAlternative1=	earth
+@OptionsType2=	|or: 
+@OptionsAlternative2=	land
+===============================
+@Reference=	Gen 1:28
+@FullText=	 and subdue
+@MatchingText=	subdue
+@OptionsType1=	esv: 
+@OptionsAlternative1=	subdue
+@OptionsType2=	|or: 
+@OptionsAlternative2=	master
+===============================
+@Reference=	Gen 1:28
+@FullText=	 it and have dominion
+@MatchingText=	have dominion
+@OptionsType1=	esv: 
+@OptionsAlternative1=	have dominion
+@OptionsType2=	|or: 
+@OptionsAlternative2=	govern
+===============================
+@Reference=	Gen 1:28
+@FullText=	 over the fish of the sea and over the birds of the heaven
+@MatchingText=	the birds of the heaven
+@OptionsType1=	esv: prob: 
+@OptionsAlternative1=	the birds of the heaven
+@OptionsType2=	|poss: 
+@OptionsAlternative2=	the birds of the heaven, and the livestock
+@OptionsQualifier2=	 (Syriac)
+@OptionsType3=	|poss: 
+@OptionsAlternative3=	the birds of the heaven, and all the cattle and all the earth, 
+===============================
+@Reference=	Gen 1:29
+@FullText=	And God said, "Behold, I have given you every plant yielding seed that is on the face
+@MatchingText=	face
+@OptionsType1=	esv: 
+@OptionsAlternative1=	face
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	surface
+===============================
+@Reference=	Gen 1:29
+@FullText=	 of all the earth, and every tree with seed in its fruit. You shall have them for food
+@MatchingText=	food
+@OptionsType1=	esv: 
+@OptionsAlternative1=	food
+===============================
+@Reference=	Gen 1:29
+@FullText=	
+@MatchingText=	
+@OptionsType0=	lish: 
+@OptionsAlternative0=	meat
+===============================
+@Reference=	Gen 1:30
+@FullText=	And to every beast of the earth and to every bird
+@MatchingText=	bird
+@OptionsType1=	esv: 
+@OptionsAlternative1=	bird
+@OptionsType2=	|or: 
+@OptionsAlternative2=	flying creature
+===============================
+@Reference=	Gen 1:30
+@FullText=	 of the heavens
+@MatchingText=	heavens
+@OptionsType1=	esv: 
+@OptionsAlternative1=	heavens
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	skies
+===============================
+@Reference=	Gen 1:30
+@FullText=	 and to everything that creeps on the earth
+@MatchingText=	earth
+@OptionsType1=	esv: 
+@OptionsAlternative1=	earth
+@OptionsType2=	|or: 
+@OptionsAlternative2=	land
+===============================
+@Reference=	Gen 1:30
+@FullText=	, everything that has the breath of life
+@MatchingText=	the breath of life
+@OptionsType1=	esv: 
+@OptionsAlternative1=	the breath of life
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	a living soul
+===============================
+@Reference=	Gen 1:30
+@FullText=	, I have given every green plant for food
+@MatchingText=	food
+@OptionsType1=	esv: 
+@OptionsAlternative1=	food
+@OptionsType2=	|Old English: 
+@OptionsAlternative2=	meat
+===============================
+@Reference=	Gen 1:31
+@FullText=	And God saw everything that he had made, and behold, it was very good. And there was evening and there was morning, the sixth day.
+@MatchingText=	
+===============================
+@Reference=	Gen 2:1
+@FullText=	Thus the heavens
+@MatchingText=	heavens
+@OptionsType1=	esv: 
+@OptionsAlternative1=	heavens
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	skies
+===============================
+@Reference=	Gen 2:1
+@FullText=	 and the earth
+@MatchingText=	earth
+@OptionsType1=	esv: 
+@OptionsAlternative1=	earth
+@OptionsType2=	|or: 
+@OptionsAlternative2=	land
+===============================
+@Reference=	Gen 2:1
+@FullText=	 were finished, and all the host
+@MatchingText=	host
+@OptionsType1=	esv: 
+@OptionsAlternative1=	host
+@OptionsType2=	|or: 
+@OptionsAlternative2=	vast array
+===============================
+@Reference=	Gen 2:2
+@FullText=	And on the seventh
+@MatchingText=	on the seventh
+@OptionsType1=	esv: prob: 
+@OptionsAlternative1=	on the seventh
+@OptionsQualifier1=	 (Hebrew)
+@OptionsType2=	|poss: 
+@OptionsAlternative2=	by the sixth
+@OptionsQualifier2=	 (Greek, Samaritan, Syriac)
+===============================
+@Reference=	Gen 2:2
+@FullText=	 day God finished his work that he had done, and he rested
+@MatchingText=	rested
+@OptionsType1=	esv: 
+@OptionsAlternative1=	rested
+@OptionsType2=	|or: 
+@OptionsAlternative2=	ceased
+===============================
+@Reference=	Gen 2:3
+@FullText=	So God blessed the seventh day and made it holy, because on it God rested
+@MatchingText=	rested
+@OptionsType1=	esv: 
+@OptionsAlternative1=	rested
+@OptionsType2=	|or: 
+@OptionsAlternative2=	ceased
+===============================
+@Reference=	Gen 2:3
+@FullText=	 from all his work that he had done in creation
+@MatchingText=	done in creation
+@OptionsType1=	esv: 
+@OptionsAlternative1=	done in creation
+@OptionsType2=	|or: 
+@OptionsAlternative2=	created and made
+===============================
+@Reference=	Gen 2:4
+@FullText=	These are the generations
+@MatchingText=	generations
+@OptionsType1=	esv: 
+@OptionsAlternative1=	generations
+@OptionsType2=	|or: 
+@OptionsAlternative2=	origins
+===============================
+@Reference=	Gen 2:4
+@FullText=	 of the heavens
+@MatchingText=	heavens
+@OptionsType1=	esv: 
+@OptionsAlternative1=	heavens
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	skies
+===============================
+@Reference=	Gen 2:4
+@FullText=	 and the earth
+@MatchingText=	earth
+@OptionsType1=	esv: 
+@OptionsAlternative1=	earth
+@OptionsType2=	|or: 
+@OptionsAlternative2=	land
+===============================
+@Reference=	Gen 2:4
+@FullText=	 when they were created, in the day that
+@MatchingText=	in the day that
+@OptionsType1=	esv: 
+@OptionsAlternative1=	in the day that
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	when
+===============================
+@Reference=	Gen 2:4
+@FullText=	 the LORD God made the earth
+@MatchingText=	earth
+@OptionsType1=	esv: 
+@OptionsAlternative1=	earth
+@OptionsType2=	|or: 
+@OptionsAlternative2=	land
+===============================
+@Reference=	Gen 2:4
+@FullText=	 and the heavens
+@MatchingText=	heavens
+@OptionsType1=	esv: 
+@OptionsAlternative1=	heavens
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	skies
+===============================
+@Reference=	Gen 2:5
+@FullText=	When no bush of the field
+@MatchingText=	field
+@OptionsType1=	esv: 
+@OptionsAlternative1=	field
+@OptionsType2=	|or: 
+@OptionsAlternative2=	open country
+===============================
+@Reference=	Gen 2:5
+@FullText=	 was yet in the land
+@MatchingText=	land
+@OptionsType1=	esv: 
+@OptionsAlternative1=	land
+@OptionsType2=	|or: 
+@OptionsAlternative2=	earth
+===============================
+@Reference=	Gen 2:5
+@FullText=	 and no small plant of the field had yet sprung up- for the LORD God had not caused it to rain on the land
+@MatchingText=	land
+@OptionsType1=	esv: 
+@OptionsAlternative1=	land
+@OptionsType2=	|or: 
+@OptionsAlternative2=	earth
+===============================
+@Reference=	Gen 2:5
+@FullText=	, and there was no man
+@MatchingText=	man
+@OptionsType1=	esv: 
+@OptionsAlternative1=	man
+@OptionsType2=	|sounds like: 
+@OptionsAlternative2=	Adam
+===============================
+@Reference=	Gen 2:5
+@FullText=	 to work the ground
+@MatchingText=	ground
+@OptionsType1=	esv: 
+@OptionsAlternative1=	ground
+@OptionsType2=	|sounds like: 
+@OptionsAlternative2=	adam
+===============================
+@Reference=	Gen 2:6
+@FullText=	and a mist
+@MatchingText=	mist
+@OptionsType1=	esv: 
+@OptionsAlternative1=	mist
+@OptionsType2=	|or: 
+@OptionsAlternative2=	spring
+===============================
+@Reference=	Gen 2:6
+@FullText=	 was going up from the land and was watering the whole face
+@MatchingText=	face
+@OptionsType1=	esv: 
+@OptionsAlternative1=	face
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	surface
+===============================
+@Reference=	Gen 2:6
+@FullText=	 of the ground
+@MatchingText=	ground
+@OptionsType1=	esv: 
+@OptionsAlternative1=	ground
+@OptionsType2=	|sounds like: 
+@OptionsAlternative2=	adam
+===============================
+@Reference=	Gen 2:7
+@FullText=	then the LORD God formed the man
+@MatchingText=	the man
+@OptionsType1=	esv: 
+@OptionsAlternative1=	the man
+@OptionsType2=	sounds like: 
+@OptionsAlternative2=	Adam
+===============================
+@Reference=	Gen 2:7
+@FullText=	 of dust from the ground
+@MatchingText=	ground
+@OptionsType1=	esv: 
+@OptionsAlternative1=	ground
+@OptionsType2=	|sounds like: 
+@OptionsAlternative2=	adam
+===============================
+@Reference=	Gen 2:7
+@FullText=	 and breathed into his nostrils the breath of life, and the man
+@MatchingText=	the man
+@OptionsType1=	esv: 
+@OptionsAlternative1=	the man
+@OptionsType2=	sounds like: 
+@OptionsAlternative2=	Adam
+===============================
+@Reference=	Gen 2:7
+@FullText=	 became a living creature
+@MatchingText=	creature
+@OptionsType1=	esv: 
+@OptionsAlternative1=	creature
+@OptionsType2=	|or: 
+@OptionsAlternative2=	soul
+===============================
+@Reference=	Gen 2:8
+@FullText=	And the LORD God planted a garden
+@MatchingText=	garden
+@OptionsType1=	esv: 
+@OptionsAlternative1=	garden
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	paradise
+===============================
+@Reference=	Gen 2:8
+@FullText=	 in Eden
+@MatchingText=	Eden
+@OptionsType1=	esv: 
+@OptionsAlternative1=	Eden
+@OptionsType2=	|sounds like: 
+===============================
+@Reference=	Gen 2:8
+@FullText=	, in the east
+@MatchingText=	
+@OptionsType1=	esv: 
+@OptionsAlternative1=	in the east
+@OptionsType2=	|or: 
+@OptionsAlternative2=	at dawn
+===============================
+@Reference=	Gen 2:8
+@FullText=	, and there he put the man
+@MatchingText=	the man
+@OptionsType1=	esv: 
+@OptionsAlternative1=	the man
+@OptionsType2=	sounds like: 
+@OptionsAlternative2=	Adam
+===============================
+@Reference=	Gen 2:9
+@FullText=	And out of the ground
+@MatchingText=	ground
+@OptionsType1=	esv: 
+@OptionsAlternative1=	ground
+@OptionsType2=	|sounds like: 
+@OptionsAlternative2=	adam
+===============================
+@Reference=	Gen 2:10
+@FullText=	A river flowed out of Eden
+@MatchingText=	Eden
+@OptionsType1=	esv: 
+@OptionsAlternative1=	Eden
+@OptionsType2=	|sounds like: 
+@OptionsAlternative2=	Pleasant
+===============================
+@Reference=	Gen 2:11
+@FullText=	The name of the first is the Pishon. It is the one that flowed around
+@MatchingText=	flowed around
+@OptionsType1=	esv: 
+@OptionsAlternative1=	flowed around
+@OptionsType2=	|or: 
+@OptionsAlternative2=	winds through
+===============================
+@Reference=	Gen 2:12
+@FullText=	And the gold of that land is good
+@MatchingText=	good
+@OptionsType1=	esv: 
+@OptionsAlternative1=	good
+@OptionsType2=	|or: 
+@OptionsAlternative2=	pure
+===============================
+@Reference=	Gen 2:12
+@FullText=	; bdellium
+@MatchingText=	bdellium
+@OptionsType1=	esv: 
+@OptionsAlternative1=	bdellium
+@OptionsType2=	|or: 
+@OptionsAlternative2=	aromatic resin
+===============================
+@Reference=	Gen 2:12
+@FullText=	 and onyx stone
+@MatchingText=	onyx stone
+@OptionsType1=	esv: 
+@OptionsAlternative1=	onyx stone
+@OptionsType2=	|or: 
+@OptionsAlternative2=	cornelian
+===============================
+@Reference=	Gen 2:13
+@FullText=	The name of the second river is the Gihon. It is the one that flowed around the whole land of Cush
+@MatchingText=	Cush
+@OptionsType1=	esv: 
+@OptionsAlternative1=	Cush
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	Ethiopia
+===============================
+@Reference=	Gen 2:14
+@FullText=	And the name of the third river is the Tigris
+@MatchingText=	Tigris
+@OptionsType1=	esv: 
+@OptionsAlternative1=	Tigris
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	Hiddekel
+===============================
+@Reference=	Gen 2:14
+@FullText=	, which flows east of Assyria
+@MatchingText=	Assyria
+@OptionsType1=	esv: 
+@OptionsAlternative1=	Assyria
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	Ashur
+===============================
+@Reference=	Gen 2:15
+@FullText=	The LORD God took the man
+@MatchingText=	the man
+@OptionsType1=	esv: 
+@OptionsAlternative1=	the man
+@OptionsType2=	sounds like: 
+@OptionsAlternative2=	Adam
+===============================
+@Reference=	Gen 2:15
+@FullText=	 and put him in the garden of Eden
+@MatchingText=	of Eden
+@OptionsType1=	esv: 
+@OptionsAlternative1=	of Eden
+@OptionsType2=	|sound like: 
+@OptionsAlternative2=	Pleasant
+===============================
+@Reference=	Gen 2:15
+@FullText=	 to work
+@MatchingText=	work
+@OptionsType1=	esv: 
+@OptionsAlternative1=	work
+@OptionsType2=	|or: 
+@OptionsAlternative2=	cultivate
+===============================
+@Reference=	Gen 2:15
+@FullText=	 it and keep
+@MatchingText=	keep
+@OptionsType1=	esv: 
+@OptionsAlternative1=	keep
+@OptionsType2=	|or: 
+@OptionsAlternative2=	guard
+@OptionsType3=	or: 
+@OptionsAlternative3=	tend
+===============================
+@Reference=	Gen 2:16
+@FullText=	And the LORD God commanded the man
+@MatchingText=	the man
+@OptionsType1=	esv: 
+@OptionsAlternative1=	the man
+@OptionsType2=	sounds like: 
+@OptionsAlternative2=	Adam
+===============================
+@Reference=	Gen 2:17
+@FullText=	but of the tree of the knowledge of good and evil you shall not eat, for in the day that
+@MatchingText=	in the day that
+@OptionsType1=	esv: 
+@OptionsAlternative1=	in the day that
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	when
+===============================
+@Reference=	Gen 2:17
+@FullText=	 you eat of it you shall surely die
+@MatchingText=	surely die
+@OptionsType1=	esv: 
+@OptionsAlternative1=	surely die
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	die the death
+===============================
+@Reference=	Gen 2:18
+@FullText=	Then the LORD God said, "It is not good that the man
+@MatchingText=	the man
+@OptionsType1=	esv: 
+@OptionsAlternative1=	the man
+@OptionsType2=	sounds like: 
+@OptionsAlternative2=	Adam
+===============================
+@Reference=	Gen 2:18
+@FullText=	 should be alone; I will make him a helper fit for him
+@MatchingText=	fit for him
+@OptionsType1=	esv: 
+@OptionsAlternative1=	fit for him
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	corresponding to him
+===============================
+@Reference=	Gen 2:19
+@FullText=	So out of the ground
+@MatchingText=	out of the ground
+@OptionsType1=	esv: prob: 
+@OptionsAlternative1=	out of the ground
+@OptionsQualifier1=	 (Hebrew)
+@OptionsType2=	|poss: 
+@OptionsAlternative2=	again, out of the ground,
+===============================
+@Reference=	Gen 2:19
+@FullText=	 the LORD God formed every beast
+@MatchingText=	
+@OptionsType1=	esv: 
+@OptionsAlternative1=	beast
+@OptionsType2=	|or: 
+@OptionsAlternative2=	living creature
+===============================
+@Reference=	Gen 2:19
+@FullText=	 of the field and every bird of the heavens
+@MatchingText=	heavens
+@OptionsType1=	esv: 
+@OptionsAlternative1=	heavens
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	skies
+===============================
+@Reference=	Gen 2:19
+@FullText=	 and brought them to the man
+@MatchingText=	the man
+@OptionsType1=	esv: 
+@OptionsAlternative1=	the man
+@OptionsType2=	sounds like: 
+@OptionsAlternative2=	Adam
+===============================
+@Reference=	Gen 2:19
+@FullText=	 to see what he would call them. And whatever the man
+@MatchingText=	the man
+@OptionsType1=	esv: 
+@OptionsAlternative1=	the man
+@OptionsType2=	sounds like: 
+@OptionsAlternative2=	Adam
+===============================
+@Reference=	Gen 2:19
+@FullText=	 called every living creature
+@MatchingText=	every living creature
+@OptionsType1=	esv: prob: 
+@OptionsAlternative1=	every living creature
+@OptionsQualifier1=	 (Hebrew)
+@OptionsType2=	|poss: 
+@OptionsAlternative2=	it
+@OptionsQualifier2=	 (conjecture)
+===============================
+@Reference=	Gen 2:20
+@FullText=	The man
+@MatchingText=	The man
+@OptionsType1=	esv: 
+@OptionsAlternative1=	The man
+@OptionsType2=	sounds like: 
+@OptionsAlternative2=	Adam
+===============================
+@Reference=	Gen 2:20
+@FullText=	 gave names to all livestock and to the birds of the heavens
+@MatchingText=	heavens
+@OptionsType1=	esv: 
+@OptionsAlternative1=	heavens
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	skies
+===============================
+@Reference=	Gen 2:20
+@FullText=	 and to every beast of the field. But for Adam
+@MatchingText=	Adam
+@OptionsType1=	esv: prob: 
+@OptionsAlternative1=	Adam
+@OptionsQualifier1=	 (Hebrew)
+@OptionsType2=	|poss: 
+@OptionsAlternative2=	the man himself
+@OptionsQualifier2=	 (conjecture)
+===============================
+@Reference=	Gen 2:21
+@FullText=	So the LORD God caused a deep sleep to fall upon the man
+@MatchingText=	the man
+@OptionsType1=	esv: 
+@OptionsAlternative1=	the man
+@OptionsType2=	sounds like: 
+@OptionsAlternative2=	Adam
+===============================
+@Reference=	Gen 2:21
+@FullText=	, and while he slept took one of his ribs and closed up
+@MatchingText=	closed up
+@OptionsType1=	esv: 
+@OptionsAlternative1=	closed up
+@OptionsType2=	|or: 
+@OptionsAlternative2=	filled in
+===============================
+@Reference=	Gen 2:22
+@FullText=	And the rib that the LORD God had taken from the man
+@MatchingText=	the man
+@OptionsType1=	esv: 
+@OptionsAlternative1=	the man
+@OptionsType2=	sounds like: 
+@OptionsAlternative2=	Adam
+===============================
+@Reference=	Gen 2:22
+@FullText=	 he made into a woman and brought her to the man
+@MatchingText=	manthe man
+@OptionsType1=	esv: 
+@OptionsAlternative1=	the man
+@OptionsType2=	sounds like: 
+@OptionsAlternative2=	Adam
+===============================
+@Reference=	Gen 2:23
+@FullText=	Then the man
+@MatchingText=	the man
+@OptionsType1=	esv: 
+@OptionsAlternative1=	the man
+@OptionsType2=	sounds like: 
+@OptionsAlternative2=	Adam
+===============================
+@Reference=	Gen 2:23
+@FullText=	 said, "This at last
+@MatchingText=	at last
+@OptionsType1=	esv: 
+@OptionsAlternative1=	at last
+@OptionsType2=	|or: 
+@OptionsAlternative2=	now
+===============================
+@Reference=	Gen 2:24
+@FullText=	Therefore a man shall leave his father and his mother and hold fast
+@MatchingText=	hold fast
+@OptionsType1=	esv: 
+@OptionsAlternative1=	hold fast
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	be united
+===============================
+@Reference=	Gen 2:25
+@FullText=	And the man
+@MatchingText=	the man
+@OptionsType1=	esv: 
+@OptionsAlternative1=	the man
+@OptionsType2=	sounds like: 
+@OptionsAlternative2=	Adam
+===============================
+@Reference=	Gen 2:25
+@FullText=	 and his wife
+@MatchingText=	wife
+@OptionsType1=	esv: 
+@OptionsAlternative1=	wife
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	woman
+===============================
+@Reference=	Gen 3:1
+@FullText=	Now the serpent was more crafty than any other beast of the field
+@MatchingText=	beast of the field
+@OptionsType1=	esv: 
+@OptionsAlternative1=	beast of the field
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	living creature of the field
+===============================
+@Reference=	Gen 3:1
+@FullText=	 that the LORD God had made. He said to the woman, "Did God actually say, ' You shall not eat of any 
+@MatchingText=	'any 
+@OptionsType1=	esv: 
+@OptionsAlternative1=	any
+@OptionsType2=	|or: 
+@OptionsAlternative2=	every
+===============================
+@Reference=	Gen 3:4
+@FullText=	But the serpent said to the woman, "You will not surely die
+@MatchingText=	surely die
+@OptionsType1=	esv: 
+@OptionsAlternative1=	surely die
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	die the death
+===============================
+@Reference=	Gen 3:5
+@FullText=	For God knows that when
+@MatchingText=	when
+@OptionsType1=	esv: 
+@OptionsAlternative1=	when
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	in the day
+===============================
+@Reference=	Gen 3:5
+@FullText=	you eat of it your eyes will be opened, and you will be like God
+@MatchingText=	God
+@OptionsType1=	esv: 
+@OptionsAlternative1=	God
+@OptionsType2=	|or: 
+@OptionsAlternative2=	gods
+===============================
+@Reference=	Gen 3:6
+@FullText=	So when the woman saw that the tree was good for food, and that it was a delight
+@MatchingText=	a delight
+@OptionsType1=	esv: 
+@OptionsAlternative1=	a delight
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	pleasant
+===============================
+@Reference=	Gen 3:6
+@FullText=	 to the eyes, and that the tree was to be desired to make one wise
+@MatchingText=	to make one wise
+@OptionsType1=	esv: 
+@OptionsAlternative1=	to make one wise
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	to be prosperous
+===============================
+@Reference=	Gen 3:6
+@FullText=	, she took of its fruit and ate, and she also gave some to her husband
+@MatchingText=	husband
+@OptionsType1=	esv: 
+@OptionsAlternative1=	husband
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	man
+===============================
+@Reference=	Gen 3:7
+@FullText=	Then the eyes of both were opened, and they knew
+@MatchingText=	knew
+@OptionsType1=	esv: 
+@OptionsAlternative1=	knew
+@OptionsType2=	|or: 
+@OptionsAlternative2=	realized
+===============================
+@Reference=	Gen 3:7
+@FullText=	 that they were naked. And they sewed fig leaves together and made themselves loincloths
+@MatchingText=	loincloths
+@OptionsType1=	esv: 
+@OptionsAlternative1=	loincloths
+@OptionsType2=	|Old English: 
+@OptionsAlternative2=	aprons
+===============================
+@Reference=	Gen 3:8
+@FullText=	And they heard the sound
+@MatchingText=	sound
+@OptionsType1=	esv: 
+@OptionsAlternative1=	sound
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	voice
+===============================
+@Reference=	Gen 3:8
+@FullText=	 of the LORD God walking in the garden in the cool of the day
+@MatchingText=	cool of the day
+@OptionsType1=	esv: 
+@OptionsAlternative1=	cool of the day
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	evening breeze
+===============================
+@Reference=	Gen 3:8
+@FullText=	, and the man and his wife hid themselves from the presence
+@MatchingText=	presence
+@OptionsType1=	esv: 
+@OptionsAlternative1=	presence
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	face
+===============================
+@Reference=	Gen 3:9
+@FullText=	But the LORD God called to the man
+@MatchingText=	the man
+@OptionsType1=	esv: 
+@OptionsAlternative1=	the man
+@OptionsType2=	sounds like: 
+@OptionsAlternative2=	Adam
+===============================
+@Reference=	Gen 3:10
+@FullText=	And he said, "I heard the sound of you
+@MatchingText=	the sound of you
+@OptionsType1=	esv: 
+@OptionsAlternative1=	the sound of you
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	your voice
+===============================
+@Reference=	Gen 3:11
+@FullText=	He said, "Who told you that you were naked? Have you eaten of the tree of which I commanded you not
+@MatchingText=	commanded you not
+@OptionsType1=	esv: 
+@OptionsAlternative1=	commanded you not
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	forbade you
+===============================
+@Reference=	Gen 3:12
+@FullText=	The man
+@MatchingText=	The man
+@OptionsType1=	esv: 
+@OptionsAlternative1=	The man
+@OptionsType2=	sounds like: 
+@OptionsAlternative2=	Adam
+===============================
+@Reference=	Gen 3:13
+@FullText=	Then the LORD God said to the woman, "What is this that you have done?" The woman said, "The serpent deceived
+@MatchingText=	deceived
+@OptionsType1=	esv: 
+@OptionsAlternative1=	deceived
+@OptionsType2=	|or: 
+@OptionsAlternative2=	beguiled
+===============================
+@Reference=	Gen 3:15
+@FullText=	I will put enmity between you and the woman, and between your offspring
+@MatchingText=	offspring
+@OptionsType1=	esv: 
+@OptionsAlternative1=	offspring
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	seed
+===============================
+@Reference=	Gen 3:15
+@FullText=	 and her offspring
+@MatchingText=	offspring
+@OptionsType1=	esv: 
+@OptionsAlternative1=	offspring
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	seed
+===============================
+@Reference=	Gen 3:15
+@FullText=	; he
+@MatchingText=	he
+@OptionsType1=	esv: 
+@OptionsAlternative1=	he
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	her offspring
+===============================
+@Reference=	Gen 3:15
+@FullText=	 shall bruise
+@MatchingText=	bruise
+@OptionsType1=	esv: 
+@OptionsAlternative1=	bruise
+@OptionsType2=	|or: 
+@OptionsAlternative2=	crush
+===============================
+@Reference=	Gen 3:15
+@FullText=	 your head, and you shall bruise
+@MatchingText=	bruise
+@OptionsType1=	esv: 
+@OptionsAlternative1=	bruise
+@OptionsType2=	|or: 
+@OptionsAlternative2=	crush
+===============================
+@Reference=	Gen 3:16
+@FullText=	To the woman he said, "I will surely multiply your pain
+@MatchingText=	pain
+@OptionsType1=	esv: 
+@OptionsAlternative1=	pain
+@OptionsType2=	|or: 
+@OptionsAlternative2=	toil
+===============================
+@Reference=	Gen 3:16
+@FullText=	 in
+@MatchingText=	in
+@OptionsType1=	esv: 
+@OptionsAlternative1=	in
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	and
+===============================
+@Reference=	Gen 3:16
+@FullText=	 childbearing; in pain you shall bring forth children. Your desire shall be for
+@MatchingText=	for
+@OptionsType1=	esv: 
+@OptionsAlternative1=	for
+@OptionsType2=	|or: 
+@OptionsAlternative2=	against
+===============================
+@Reference=	Gen 3:16
+@FullText=		
+@MatchingText=	
+===============================
+@Reference=	Gen 3:16
+@FullText=	 your husband
+@MatchingText=	husband
+@OptionsType1=	esv: 
+@OptionsAlternative1=	husband
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	man
+===============================
+@Reference=	Gen 3:16
+@FullText=	, and
+@MatchingText=	and
+@OptionsType1=	esv: 
+@OptionsAlternative1=	and
+@OptionsType2=	|or: 
+@OptionsAlternative2=	but
+===============================
+@Reference=	Gen 3:17
+@FullText=	And to Adam
+@MatchingText=	Adam
+@OptionsType1=	esv: prob: 
+@OptionsAlternative1=	Adam
+@OptionsQualifier1=	 (Hebrew)
+@OptionsType2=	|poss: 
+@OptionsAlternative2=	the man
+@OptionsQualifier2=	 (conjecture)
+===============================
+@Reference=	Gen 3:17
+@FullText=	 he said, "Because you have listened to the voice of
+@MatchingText=	listened to the voice of
+@OptionsType1=	esv: 
+@OptionsAlternative1=	listened to the voice of
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	obeyed
+===============================
+@Reference=	Gen 3:17
+@FullText=	 your wife
+@MatchingText=	wife
+@OptionsType1=	esv: 
+@OptionsAlternative1=	wife
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	woman
+===============================
+@Reference=	Gen 3:17
+@FullText=	 and have eaten of the tree of which I commanded you, 'You shall not eat of it,' cursed is the ground because of you; in pain
+@MatchingText=	pain
+@OptionsType1=	esv: 
+@OptionsAlternative1=	pain
+@OptionsType2=	|or: 
+@OptionsAlternative2=	sorrow
+@OptionsType3=	|or: 
+@OptionsAlternative3=	toil
+===============================
+@Reference=	Gen 3:18
+@FullText=	thorns and thistles it shall bring forth for you; and you shall eat the plants
+@MatchingText=	plants
+@OptionsType1=	esv: 
+@OptionsAlternative1=	plants
+@OptionsType2=	|or: 
+@OptionsAlternative2=	herbs
+===============================
+@Reference=	Gen 3:19
+@FullText=	By the sweat of your face you shall eat bread
+@MatchingText=	bread
+@OptionsType1=	esv: 
+@OptionsAlternative1=	bread
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	food
+===============================
+@Reference=	Gen 3:20
+@FullText=	The man
+@MatchingText=	The man
+@OptionsType1=	esv: 
+@OptionsAlternative1=	The man
+@OptionsType2=	sounds like: 
+@OptionsAlternative2=	Adam
+===============================
+@Reference=	Gen 3:20
+@FullText=	 called his wife's
+@MatchingText=	wife's
+@OptionsType1=	esv: 
+@OptionsAlternative1=	wife's
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	woman’s
+===============================
+@Reference=	Gen 3:20
+@FullText=	 name Eve
+@MatchingText=	Eve
+@OptionsType1=	esv: 
+@OptionsAlternative1=	Eve
+@OptionsType2=	|sounds like:
+@OptionsAlternative2=	 Life
+===============================
+@Reference=	Gen 3:21
+@FullText=	And the LORD God made for Adam
+@MatchingText=	Adam
+@OptionsType1=	esv: prob: 
+@OptionsAlternative1=	Adam
+@OptionsQualifier1=	 (Hebrew)
+@OptionsType2=	|poss: 
+@OptionsAlternative2=	the man
+@OptionsQualifier2=	 (conj)
+===============================
+@Reference=	Gen 3:21
+@FullText=	 and for his wife
+@MatchingText=	wife
+@OptionsType1=	esv: 
+@OptionsAlternative1=	wife
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	woman
+===============================
+@Reference=	Gen 3:22
+@FullText=	Then the LORD God said, "Behold, the man
+@MatchingText=	the man
+@OptionsType1=	esv: 
+@OptionsAlternative1=	the man
+@OptionsType2=	sounds like: 
+@OptionsAlternative2=	Adam
+===============================
+@Reference=	Gen 3:22
+@FullText=	 has become like one of us in knowing good and evil. Now, lest he
+@MatchingText=	Now, lest he
+@OptionsType1=	esv: 
+@OptionsAlternative1=	Now, lest he
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	He must not be allowed to
+===============================
+@Reference=	Gen 3:23
+@FullText=	therefore the LORD God sent him out from the garden of Eden to work
+@MatchingText=	work
+@OptionsType1=	esv: 
+@OptionsAlternative1=	work
+@OptionsType2=	|or: 
+@OptionsAlternative2=	till
+===============================
+@Reference=	Gen 3:23
+@FullText=	 the ground
+@MatchingText=	ground
+@OptionsType1=	esv: 
+@OptionsAlternative1=	ground
+@OptionsType2=	|sounds like: 
+@OptionsAlternative2=	adam
+===============================
+@Reference=	Gen 3:24
+@FullText=	He drove out the man
+@MatchingText=	the man
+@OptionsType1=	esv: 
+@OptionsAlternative1=	the man
+@OptionsType2=	sounds like: 
+@OptionsAlternative2=	Adam
+===============================
+@Reference=	Gen 3:24
+@FullText=	, and at the east of the garden of Eden he placed the cherubim and a flaming sword that turned every way
+@MatchingText=	turned every way
+@OptionsType1=	esv: 
+@OptionsAlternative1=	turned every way
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	flashed back and forth
+===============================
+@Reference=	Gen 4:1
+@FullText=	Now Adam knew
+@MatchingText=	knew
+@OptionsType1=	esv: 
+@OptionsAlternative1=	knew
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	had intercourse with
+===============================
+@Reference=	Gen 4:1
+@FullText=	 Eve his wife
+@MatchingText=	wife
+@OptionsType1=	esv: 
+@OptionsAlternative1=	wife
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	woman
+===============================
+@Reference=	Gen 4:1
+@FullText=	, and she conceived and bore Cain, saying, "I have gotten a man with the help of
+@MatchingText=	with the help of
+@OptionsType1=	esv: 
+@OptionsAlternative1=	with the help of
+@OptionsType2=	|or: 
+@OptionsAlternative2=	from
+===============================
+@Reference=	Gen 4:2
+@FullText=	And again, she bore his brother Abel. Now Abel was a keeper of sheep
+@MatchingText=	keeper of sheep
+@OptionsType1=	esv: 
+@OptionsAlternative1=	keeper of sheep
+@OptionsType2=	|or: 
+@OptionsAlternative2=	shepherd
+===============================
+@Reference=	Gen 4:2
+@FullText=	, and Cain a worker of
+@MatchingText=	a worker of
+@OptionsType1=	esv: 
+@OptionsAlternative1=	a worker of
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	cultivated
+===============================
+@Reference=	Gen 4:3
+@FullText=	In the course of time
+@MatchingText=	In the course of time
+@OptionsType1=	esv: 
+@OptionsAlternative1=	In the course of time
+@OptionsType2=	|or: 
+@OptionsAlternative2=	It was at the end of the year, and
+===============================
+@Reference=	Gen 4:4
+@FullText=	and Abel also brought of the firstborn of his flock
+@MatchingText=	flock
+@OptionsType1=	esv: 
+@OptionsAlternative1=	flock
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	small cattle
+===============================
+@Reference=	Gen 4:4
+@FullText=	 and of their fat
+@MatchingText=	fat
+@OptionsType1=	esv: 
+@OptionsAlternative1=	fat
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	best sacrificial
+===============================
+@Reference=	Gen 4:4
+@FullText=	 portions. And the LORD had regard for
+@MatchingText=	had regard for
+@OptionsType1=	esv: 
+@OptionsAlternative1=	had regard for
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	looked upon
+===============================
+@Reference=	Gen 4:5
+@FullText=	but for Cain and his offering he had no regard
+@MatchingText=	had no regard
+@OptionsType1=	esv: 
+@OptionsAlternative1=	had no regard
+@OptionsType2=	|or: 
+@OptionsAlternative2=	would not look
+===============================
+@Reference=	Gen 4:5
+@FullText=	. So Cain was very angry
+@MatchingText=	angry
+@OptionsType1=	esv: 
+@OptionsAlternative1=	angry
+@OptionsType2=	|Old English: 
+@OptionsAlternative2=	wroth
+===============================
+@Reference=	Gen 4:5
+@FullText=	, and his face fell
+@MatchingText=	his face fell
+@OptionsType1=	esv: 
+@OptionsAlternative1=	his face fell
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	he looked dejected
+===============================
+@Reference=	Gen 4:6
+@FullText=	The LORD said to Cain, "Why are you angry
+@MatchingText=	angry
+@OptionsType1=	esv: 
+@OptionsAlternative1=	angry
+@OptionsType2=	|Old English: 
+@OptionsAlternative2=	wroth
+===============================
+@Reference=	Gen 4:6
+@FullText=	, and why has your face fallen
+@MatchingText=	has your face fallen
+@OptionsType1=	esv: 
+@OptionsAlternative1=	has your face fallen
+@OptionsType2=	|or: 
+@OptionsAlternative2=	do you look dejected
+===============================
+@Reference=	Gen 4:7
+@FullText=	If you do well, will you not be accepted
+@MatchingText=	accepted
+@OptionsType1=	esv: 
+@OptionsAlternative1=	accepted
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	uplifted
+===============================
+@Reference=	Gen 4:7
+@FullText=	? And if you do not do well, sin is crouching
+@MatchingText=	crouching
+@OptionsType1=	esv: 
+@OptionsAlternative1=	crouching
+@OptionsType2=	|or: 
+@OptionsAlternative2=	lying
+===============================
+@Reference=	Gen 4:7
+@FullText=	 at the door. Its desire is for
+@MatchingText=	for
+@OptionsType1=	esv: 
+@OptionsAlternative1=	for
+@OptionsType2=	|or: 
+@OptionsAlternative2=	against
+@OptionsType3=	|ie: 
+@OptionsAlternative3=	to dominate
+===============================
+@Reference=	Gen 4:8
+@FullText=	Cain spoke to Abel his brother
+@MatchingText=	brother
+@OptionsType1=	esv:: prob: 
+@OptionsAlternative1=	brother
+@OptionsQualifier1=	 (Hebrew)–
+@OptionsType2=	|poss: 
+@OptionsAlternative2=	brother, “Let us go out to the field.”
+===============================
+@Reference=	Gen 4:8
+@FullText=	. And when they were in the field, Cain rose up against
+@MatchingText=	rose up against
+@OptionsType1=	esv: 
+@OptionsAlternative1=	rose up against
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	attacked
+===============================
+@Reference=	Gen 4:9
+@FullText=	Then the LORD said to Cain, "Where is Abel your brother?" He said, "I do not know; am I my brother's keeper
+@MatchingText=	keeper
+@OptionsType1=	esv: 
+@OptionsAlternative1=	keeper
+@OptionsType2=	|or: 
+@OptionsAlternative2=	guardian
+===============================
+@Reference=	Gen 4:10
+@FullText=	And the LORD said, "What have you done? The voice of
+@MatchingText=	The voice of
+@OptionsType1=	esv: 
+@OptionsAlternative1=	The voice of
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	Listen,
+===============================
+@Reference=	Gen 4:11
+@FullText=	And now you are cursed
+@MatchingText=	groundcursed
+@OptionsType1=	esv: 
+@OptionsAlternative1=	cursed
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	banished
+===============================
+@Reference=	Gen 4:12
+@FullText=	When you work the ground, it shall no longer yield to you its strength
+@MatchingText=	strength
+@OptionsType1=	esv: 
+@OptionsAlternative1=	strength
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	produce
+===============================
+@Reference=	Gen 4:12
+@FullText=	. You shall be a fugitive
+@MatchingText=	a fugitive
+@OptionsType1=	esv: 
+@OptionsAlternative1=	a fugitive
+@OptionsType2=	|or: 
+@OptionsAlternative2=	homeless
+===============================
+@Reference=	Gen 4:12
+@FullText=	 and a wanderer
+@MatchingText=	a wanderer
+@OptionsType1=	esv: 
+@OptionsAlternative1=	a wanderer
+@OptionsType2=	|or: 
+@OptionsAlternative2=	aimless
+===============================
+@Reference=	Gen 4:13
+@FullText=	Cain said to the LORD, "My punishment
+@MatchingText=	punishment
+@OptionsType1=	esv: 
+@OptionsAlternative1=	punishment
+@OptionsType2=	|or: 
+@OptionsAlternative2=	sin
+===============================
+@Reference=	Gen 4:14
+@FullText=	Behold, you have driven me today away from the ground
+@MatchingText=	ground
+@OptionsType1=	esv: 
+@OptionsAlternative1=	ground
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	face of the ground
+===============================
+@Reference=	Gen 4:14
+@FullText=	, and from your face
+@MatchingText=	face
+@OptionsType1=	esv: 
+@OptionsAlternative1=	face
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	presence
+===============================
+@Reference=	Gen 4:14
+@FullText=	 I shall be hidden. I shall be a fugitive
+@MatchingText=	a fugitive
+@OptionsType1=	esv: 
+@OptionsAlternative1=	a fugitive
+@OptionsType2=	|or: 
+@OptionsAlternative2=	homeless
+===============================
+@Reference=	Gen 4:14
+@FullText=	 and a wanderer
+@MatchingText=	a wanderer
+@OptionsType1=	esv: 
+@OptionsAlternative1=	a wanderer
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	aimless
+===============================
+@Reference=	Gen 4:15
+@FullText=	Then the LORD said to him, "Not so!
+@MatchingText=	Not so! 
+@OptionsType1=	esv: poss: 
+@OptionsAlternative1=	Not so! 
+@OptionsQualifier1=	 (Greek, [Syriac, Vulgate])
+@OptionsType2=	|prob: 
+@OptionsAlternative2=	“Therefore, 
+===============================
+@Reference=	Gen 4:15
+@FullText=	
+@MatchingText=	
+@OptionsQualifier0=	) 
+===============================
+@Reference=	Gen 4:15
+@FullText=	If anyone kills Cain, vengeance shall be taken on him sevenfold." And the LORD put a mark on Cain, lest any who found him should attack
+@MatchingText=	attack
+@OptionsType1=	esv: 
+@OptionsAlternative1=	attack
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	kill
+===============================
+@Reference=	Gen 4:16
+@FullText=	Then Cain went away from the presence
+@MatchingText=	presence
+@OptionsType1=	esv: 
+@OptionsAlternative1=	presence
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	face
+===============================
+@Reference=	Gen 4:16
+@FullText=	 of the LORD and settled in the land of Nod
+@MatchingText=	Nod
+@OptionsType1=	esv: 
+@OptionsAlternative1=	Nod
+@OptionsType2=	|sounds like: 
+@OptionsAlternative2=	Wandering
+===============================
+@Reference=	Gen 4:16
+@FullText=	, east of Eden
+@MatchingText=	Eden
+@OptionsType1=	esv: 
+@OptionsAlternative1=	Eden
+@OptionsType2=	|sounds like: 
+@OptionsAlternative2=	Pleasant
+===============================
+@Reference=	Gen 4:18
+@FullText=	To Enoch was born Irad, and Irad fathered
+@MatchingText=	fathered
+@OptionsType1=	esv: 
+@OptionsAlternative1=	fathered
+@OptionsType2=	|or: 
+@OptionsAlternative2=	begot
+===============================
+@Reference=	Gen 4:18
+@FullText=	 Mehujael, and Mehujael fathered
+@MatchingText=	fathered
+@OptionsType1=	esv: 
+@OptionsAlternative1=	fathered
+@OptionsType2=	|or: 
+@OptionsAlternative2=	begot
+===============================
+@Reference=	Gen 4:18
+@FullText=	 Methushael, and Methushael fathered
+@MatchingText=	fathered
+@OptionsType1=	esv: 
+@OptionsAlternative1=	fathered
+@OptionsType2=	|or: 
+@OptionsAlternative2=	begot
+===============================
+@Reference=	Gen 4:20
+@FullText=	Adah bore Jabal; he was the father
+@MatchingText=	father
+@OptionsType1=	esv: 
+@OptionsAlternative1=	father
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	ancestor
+===============================
+@Reference=	Gen 4:20
+@FullText=	 of those who dwell in tents and have livestock
+@MatchingText=	livestock
+@OptionsType1=	esv: 
+@OptionsAlternative1=	livestock
+@OptionsType2=	|or: 
+@OptionsAlternative2=	herds
+===============================
+@Reference=	Gen 4:21
+@FullText=	His brother's name was Jubal; he was the father
+@MatchingText=	father
+@OptionsType1=	esv: 
+@OptionsAlternative1=	father
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	ancestor
+===============================
+@Reference=	Gen 4:21
+@FullText=	 of all those who play
+@MatchingText=	play
+@OptionsType1=	esv: 
+@OptionsAlternative1=	play
+@OptionsType2=	|or: 
+@OptionsAlternative2=	handle
+===============================
+@Reference=	Gen 4:22
+@FullText=	Zillah also bore Tubal-cain; he was the forger
+@MatchingText=	forger
+@OptionsType1=	esv: prob: 
+@OptionsAlternative1=	forger
+@OptionsQualifier1=	 (Hebrew)
+@OptionsType2=	|poss: 
+@OptionsAlternative2=	master
+@OptionsQualifier2=	 (Aramaic)
+===============================
+@Reference=	Gen 4:23
+@FullText=	Lamech said to his wives: "Adah and Zillah, hear my voice; you wives of Lamech, listen to what I say: I have killed a man for wounding me
+@MatchingText=	for wounding me
+@OptionsType1=	esv: 
+@OptionsAlternative1=	for wounding me
+@OptionsType2=	|or: 
+@OptionsAlternative2=	to my hurt
+===============================
+@Reference=	Gen 4:23
+@FullText=	, a young man
+@MatchingText=	a young man
+@OptionsType1=	esv: 
+@OptionsAlternative1=	a young man
+@OptionsType2=	|or: 
+@OptionsAlternative2=	boy
+===============================
+@Reference=	Gen 4:23
+@FullText=	 for striking me
+@MatchingText=	for striking me
+@OptionsType1=	esv: 
+@OptionsAlternative1=	for striking me
+@OptionsType2=	|or: 
+@OptionsAlternative2=	to my grief
+===============================
+@Reference=	Gen 4:24
+@FullText=	If Cain's revenge is sevenfold, then Lamech's is seventy-sevenfold
+@MatchingText=	seventy-sevenfold
+@OptionsType1=	esv: prob: 
+@OptionsAlternative1=	seventy-sevenfold
+@OptionsQualifier1=	 (Hebrew)
+@OptionsType2=	|poss: 
+@OptionsAlternative2=	seventy times seven
+===============================
+@Reference=	Gen 4:24
+@FullText=	
+@MatchingText=	
+@OptionsQualifier0=	)
+===============================
+@Reference=	Gen 4:25
+@FullText=	And Adam knew his wife again
+@MatchingText=	again
+@OptionsType1=	esv: prob: 
+@OptionsAlternative1=	again
+@OptionsQualifier1=	 (Hebrew)
+@OptionsType2=	|poss: 
+@OptionsAlternative2=	[ ]
+@OptionsQualifier2=	 (conjecture)
+===============================
+@Reference=	Gen 4:25
+@FullText=	, and she bore a son and called his name Seth
+@MatchingText=	Seth
+@OptionsType1=	esv: 
+@OptionsAlternative1=	Seth
+@OptionsType2=	|sounds like: 
+@OptionsAlternative2=	Appointed
+===============================
+@Reference=	Gen 4:25
+@FullText=	, for she said, "God has appointed for me another offspring
+@MatchingText=	offspring
+@OptionsType1=	esv: 
+@OptionsAlternative1=	offspring
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	seed
+===============================
+@Reference=	Gen 4:26
+@FullText=	To Seth also a son was born, and he called his name Enosh. At that time people began
+@MatchingText=	people began
+@OptionsType1=	esv: prob: 
+@OptionsAlternative1=	people began
+@OptionsQualifier1=	 (Hebrew)
+@OptionsType2=	|poss: 
+@OptionsAlternative2=	trusted 
+===============================
+@Reference=	Gen 4:26
+@FullText=	
+@MatchingText=	
+@OptionsType1=	|poss: 
+@OptionsAlternative1=	this man began 
+===============================
+@Reference=	Gen 4:26
+@FullText=	
+@MatchingText=	
+===============================
+@Reference=	Gen 4:26
+@FullText=	 to call upon
+@MatchingText=	to call upon
+@OptionsType1=	esv: 
+@OptionsAlternative1=	to call upon
+@OptionsType2=	|or: 
+@OptionsAlternative2=	to worship
+===============================
+@Reference=	Gen 4:26
+@FullText=	 the name of the LORD
+@MatchingText=	of the LORD
+@OptionsType1=	esv: 
+@OptionsAlternative1=	of the LORD
+@OptionsType2=	|sounds like: 
+===============================
+@Reference=	Gen 4:26
+@FullText=	
+@MatchingText=	
+===============================
+@Reference=	Gen 5:1
+@FullText=	This is the book
+@MatchingText=	book
+@OptionsType1=	esv: 
+@OptionsAlternative1=	book
+@OptionsType2=	|or: 
+@OptionsAlternative2=	record
+===============================
+@Reference=	Gen 5:1
+@FullText=	 of the generations
+@MatchingText=	generations
+@OptionsType1=	esv: 
+@OptionsAlternative1=	generations
+@OptionsType2=	|or: 
+@OptionsAlternative2=	beginnings
+===============================
+@Reference=	Gen 5:3
+@FullText=	When Adam had lived 130
+@MatchingText=	130
+@OptionsType1=	esv: prob: 
+@OptionsAlternative1=	130
+@OptionsQualifier1=	 (Hebrew, Samaritan)
+@OptionsType2=	|poss: 
+@OptionsAlternative2=	230
+@OptionsQualifier2=	 (Greek)
+===============================
+@Reference=	Gen 5:3
+@FullText=	 years, he fathered
+@MatchingText=	fathered
+@OptionsType1=	esv: 
+@OptionsAlternative1=	fathered
+@OptionsType2=	|or: 
+@OptionsAlternative2=	begot
+===============================
+@Reference=	Gen 5:4
+@FullText=	The days of Adam after he fathered
+@MatchingText=	fathered
+@OptionsType1=	esv: 
+@OptionsAlternative1=	fathered
+@OptionsType2=	|or: 
+@OptionsAlternative2=	begot
+===============================
+@Reference=	Gen 5:4
+@FullText=	 Seth were 800
+@MatchingText=	800
+@OptionsType1=	esv: prob: 
+@OptionsAlternative1=	800
+@OptionsQualifier1=	 (Hebrew, Samaritan)
+@OptionsType2=	|poss: 
+@OptionsAlternative2=	700
+@OptionsQualifier2=	 (Greek)
+===============================
+@Reference=	Gen 5:6
+@FullText=	When Seth had lived 105
+@MatchingText=	105
+@OptionsType1=	esv: prob: 
+@OptionsAlternative1=	105
+@OptionsQualifier1=	 (Hebrew, Samaritan)
+@OptionsType2=	|poss: 
+@OptionsAlternative2=	205
+@OptionsQualifier2=	 (Greek)
+===============================
+@Reference=	Gen 5:6
+@FullText=	 years, he fathered
+@MatchingText=	fathered
+@OptionsType1=	esv: 
+@OptionsAlternative1=	fathered
+@OptionsType2=	|or: 
+@OptionsAlternative2=	begot
+===============================
+@Reference=	Gen 5:7
+@FullText=	Seth lived after he fathered Enosh 807
+@MatchingText=	807
+@OptionsType1=	esv: prob: 
+@OptionsAlternative1=	807
+@OptionsQualifier1=	 (Hebrew, Samaritan)
+@OptionsType2=	|poss: 
+@OptionsAlternative2=	707
+@OptionsQualifier2=	 (Greek)
+===============================
+@Reference=	Gen 5:9
+@FullText=	When Enosh had lived 90
+@MatchingText=	90
+@OptionsType1=	esv: prob: 
+@OptionsAlternative1=	90
+@OptionsQualifier1=	 (Hebrew, Samaritan)
+@OptionsType2=	|poss: 
+@OptionsAlternative2=	190
+@OptionsQualifier2=	 (Greek)
+===============================
+@Reference=	Gen 5:9
+@FullText=	 years, he fathered Kenan
+@MatchingText=	Kenan
+@OptionsType1=	esv: 
+@OptionsAlternative1=	Kenan
+@OptionsType2=	|or: 
+@OptionsAlternative2=	Canaan
+===============================
+@Reference=	Gen 5:10
+@FullText=	Enosh lived after he fathered
+@MatchingText=	fathered
+@OptionsType1=	esv: 
+@OptionsAlternative1=	fathered
+@OptionsType2=	|or: 
+@OptionsAlternative2=	begot
+===============================
+@Reference=	 Kenan 815
+@FullText=	
+@MatchingText=	815
+@OptionsType1=	esv: prob: 
+@OptionsAlternative1=	815
+@OptionsQualifier1=	 (Hebrew, Samaritan)
+@OptionsType2=	|poss: 
+@OptionsAlternative2=	715
+@OptionsQualifier2=	 (Greek)
+===============================
+@Reference=	Gen 5:12
+@FullText=	When Kenan had lived 70
+@MatchingText=	70
+@OptionsType1=	esv: prob: 
+@OptionsAlternative1=	70
+@OptionsQualifier1=	 (Hebrew, Greek)
+@OptionsType2=	|poss: 
+@OptionsAlternative2=	170
+@OptionsQualifier2=	 (Greek)
+===============================
+@Reference=	Gen 5:12
+@FullText=	 years, he fathered
+@MatchingText=	fathered
+@OptionsType1=	esv: 
+@OptionsAlternative1=	fathered
+@OptionsType2=	|or: 
+@OptionsAlternative2=	begot
+===============================
+@Reference=	Gen 5:13
+@FullText=	Kenan lived after he fathered
+@MatchingText=	fathered
+@OptionsType1=	esv: 
+@OptionsAlternative1=	fathered
+@OptionsType2=	|or: 
+@OptionsAlternative2=	begot
+===============================
+@Reference=	 Mahalalel 840
+@FullText=	
+@MatchingText=	840
+@OptionsType1=	esv: prob: 
+@OptionsAlternative1=	840
+@OptionsQualifier1=	 (Hebrew, Samaritan)
+@OptionsType2=	|poss: 
+@OptionsAlternative2=	740
+@OptionsQualifier2=	 (Greek)
+===============================
+@Reference=	Gen 5:15
+@FullText=	When Mahalalel had lived 65
+@MatchingText=	65
+@OptionsType1=	esv: prob: 
+@OptionsAlternative1=	65
+@OptionsQualifier1=	 (Hebrew, Samaritan)
+@OptionsType2=	|poss: 
+@OptionsAlternative2=	165
+@OptionsQualifier2=	 (Greek)
+===============================
+@Reference=	Gen 5:15
+@FullText=	 years, he fathered
+@MatchingText=	fathered
+@OptionsType1=	esv: 
+@OptionsAlternative1=	fathered
+@OptionsType2=	|or: 
+@OptionsAlternative2=	begot
+===============================
+@Reference=	Gen 5:16
+@FullText=	Mahalalel lived after he fathered
+@MatchingText=	fathered
+@OptionsType1=	esv: 
+@OptionsAlternative1=	fathered
+@OptionsType2=	|or: 
+@OptionsAlternative2=	begot
+===============================
+@Reference=	 Jared 830
+@FullText=	
+@MatchingText=	830
+@OptionsType1=	esv: prob: 
+@OptionsAlternative1=	830
+@OptionsQualifier1=	 (Hebrew, Samaritan)
+@OptionsType2=	|poss: 
+@OptionsAlternative2=	730
+@OptionsQualifier2=	 (Greek)
+===============================
+@Reference=	Gen 5:18
+@FullText=	When Jared had lived 162
+@MatchingText=	162
+@OptionsType1=	esv: prob: 
+@OptionsAlternative1=	162
+@OptionsQualifier1=	 (Hebrew, Greek)
+@OptionsType2=	|poss: 
+@OptionsAlternative2=	62
+@OptionsQualifier2=	 (Samaritan)
+===============================
+@Reference=	Gen 5:18
+@FullText=	 years he fathered
+@MatchingText=	fathered
+@OptionsType1=	esv: 
+@OptionsAlternative1=	fathered
+@OptionsType2=	|or: 
+@OptionsAlternative2=	begot
+===============================
+@Reference=	Gen 5:19
+@FullText=	Jared lived after he fathered Enoch 800
+@MatchingText=	800
+@OptionsType1=	esv: prob: 
+@OptionsAlternative1=	800
+@OptionsQualifier1=	 (Hebrew, Greek)
+@OptionsType2=	|poss: 
+@OptionsAlternative2=	785
+@OptionsQualifier2=	 (Samaritan)
+===============================
+@Reference=	Gen 5:21
+@FullText=	When Enoch had lived 65
+@MatchingText=	65
+@OptionsType1=	esv: prob: 
+@OptionsAlternative1=	65
+@OptionsQualifier1=	 (Hebrew, Samaritan)
+@OptionsType2=	|poss: 
+@OptionsAlternative2=	165
+@OptionsQualifier2=	 (Greek)
+===============================
+@Reference=	Gen 5:21
+@FullText=	 years, he fathered
+@MatchingText=	fathered
+@OptionsType1=	esv: 
+@OptionsAlternative1=	fathered
+@OptionsType2=	|or: 
+@OptionsAlternative2=	begot
+===============================
+@Reference=	Gen 5:22
+@FullText=	Enoch walked with God
+@MatchingText=	with God
+@OptionsType1=	esv: prob: 
+@OptionsAlternative1=	with God
+@OptionsQualifier1=	 (Hebrew)
+@OptionsType2=	|poss: 
+@OptionsAlternative2=	with God, and Enoch lived
+@OptionsQualifier2=	 (Greek, Latin)
+===============================
+@Reference=	Gen 5:22
+@FullText=	 after he fathered
+@MatchingText=	fathered
+@OptionsType1=	esv: 
+@OptionsAlternative1=	fathered
+@OptionsType2=	|or: 
+@OptionsAlternative2=	begot
+===============================
+@Reference=	 Methuselah 300
+@FullText=	
+@MatchingText=	300
+@OptionsType1=	esv: prob: 
+@OptionsAlternative1=	300
+@OptionsQualifier1=	 (Hebrew, Samaritan)
+@OptionsType2=	|poss: 
+@OptionsAlternative2=	200
+@OptionsQualifier2=	 (Greek)
+===============================
+@Reference=	Gen 5:24
+@FullText=	Enoch walked with
+@MatchingText=	walked with
+@OptionsType1=	esv: 
+@OptionsAlternative1=	walked with
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	pleased
+===============================
+@Reference=	Gen 5:24
+@FullText=	 God, and
+@MatchingText=	and
+@OptionsType1=	esv: prob: 
+@OptionsAlternative1=	and
+@OptionsQualifier1=	 (Hebrew)
+@OptionsType2=	|poss: 
+@OptionsAlternative2=	and Enoch lived
+@OptionsQualifier2=	 (conjecture)
+===============================
+@Reference=	Gen 5:24
+@FullText=	 he was not
+@MatchingText=	not
+@OptionsType1=	esv: 
+@OptionsAlternative1=	not
+@OptionsType2=	|or: 
+@OptionsAlternative2=	not found
+===============================
+@Reference=	Gen 5:24
+@FullText=	, for God took
+@MatchingText=	took
+@OptionsType1=	esv: 
+@OptionsAlternative1=	took
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	translated
+===============================
+@Reference=	Gen 5:25
+@FullText=	When Methuselah had lived 187
+@MatchingText=	187
+@OptionsType1=	esv: prob: 
+@OptionsAlternative1=	187
+@OptionsQualifier1=	 (Hebrew)
+@OptionsType2=	|poss: 
+@OptionsAlternative2=	67
+@OptionsQualifier2=	 (Samaritan)
+@OptionsType3=	|poss: 
+@OptionsAlternative3=	230
+===============================
+@Reference=	Gen 5:25
+@FullText=	 years, he fathered
+@MatchingText=	fathered
+@OptionsType1=	esv: 
+@OptionsAlternative1=	fathered
+@OptionsType2=	|or: 
+@OptionsAlternative2=	begot
+===============================
+@Reference=	Gen 5:26
+@FullText=	Methuselah lived after he fathered Lamech 782
+@MatchingText=	782
+@OptionsType1=	esv: prob: 
+@OptionsAlternative1=	782
+@OptionsQualifier1=	 (Hebrew)
+@OptionsType2=	|poss: 
+@OptionsAlternative2=	653
+@OptionsQualifier2=	 (Samaritan)
+@OptionsType3=	|poss: 
+@OptionsAlternative3=	802
+===============================
+@Reference=	Gen 5:27
+@FullText=	Thus all the days of Methuselah were 969
+@MatchingText=	969
+@OptionsType1=	esv: prob: 
+@OptionsAlternative1=	969
+@OptionsQualifier1=	 (Hebrew, Greek)
+@OptionsType2=	|poss: 
+@OptionsAlternative2=	720
+@OptionsQualifier2=	 (Samaritan)
+===============================
+@Reference=	Gen 5:28
+@FullText=	When Lamech had lived 182
+@MatchingText=	182
+@OptionsType1=	esv: prob: 
+@OptionsAlternative1=	182
+@OptionsQualifier1=	 (Hebrew)
+@OptionsType2=	|poss: 
+@OptionsAlternative2=	53
+@OptionsQualifier2=	 (Samaritan)
+@OptionsType3=	|poss: 
+@OptionsAlternative3=	188
+===============================
+@Reference=	Gen 5:28
+@FullText=	 years, he fathered
+@MatchingText=	fathered
+@OptionsType1=	esv: 
+@OptionsAlternative1=	fathered
+@OptionsType2=	|or: 
+@OptionsAlternative2=	begot
+===============================
+@Reference=	Gen 5:29
+@FullText=	and called his name Noah
+@MatchingText=	Noah
+@OptionsType1=	esv: 
+@OptionsAlternative1=	Noah
+@OptionsType2=	|sounds like: 
+@OptionsAlternative2=	Rest
+===============================
+@Reference=	Gen 5:29
+@FullText=	, saying, "Out of the ground that the LORD has cursed this one shall bring us relief
+@MatchingText=	relief
+@OptionsType1=	esv: 
+@OptionsAlternative1=	relief
+@OptionsType2=	|or: 
+@OptionsAlternative2=	rest
+===============================
+@Reference=	Gen 5:30
+@FullText=	Lamech lived after he fathered
+@MatchingText=	fathered
+@OptionsType1=	esv: 
+@OptionsAlternative1=	fathered
+@OptionsType2=	|or: 
+@OptionsAlternative2=	begot
+===============================
+@Reference=	 Noah 595
+@FullText=	
+@MatchingText=	595
+@OptionsType1=	esv: prob: 
+@OptionsAlternative1=	595
+@OptionsQualifier1=	 (Hebrew)
+@OptionsType2=	|poss: 
+@OptionsAlternative2=	600
+@OptionsQualifier2=	 (Samaritan)
+@OptionsType3=	|poss: 
+@OptionsAlternative3=	565
+===============================
+@Reference=	Gen 5:31
+@FullText=	Thus all the days of Lamech were 777
+@MatchingText=	777
+@OptionsType1=	esv: prob:
+@OptionsAlternative1=	777
+@OptionsQualifier1=	 (Hebrew)
+@OptionsType2=	|poss: 
+@OptionsAlternative2=	653
+@OptionsQualifier2=	 (Samaritan)
+@OptionsType3=	|poss: 
+@OptionsAlternative3=	753
+===============================
+@Reference=	Gen 5:32
+@FullText=	After Noah was 500 years old, Noah fathered
+@MatchingText=	fathered
+@OptionsType1=	esv: 
+@OptionsAlternative1=	fathered
+@OptionsType2=	|or: 
+@OptionsAlternative2=	begot
+===============================
+@Reference=	Gen 6:1
+@FullText=	When man
+@MatchingText=	man
+@OptionsType1=	esv: 
+@OptionsAlternative1=	man
+@OptionsType2=	|or: 
+@OptionsAlternative2=	mankind
+===============================
+@Reference=	Gen 6:1
+@FullText=	 began to multiply on the face
+@MatchingText=	face
+@OptionsType1=	esv: 
+@OptionsAlternative1=	face
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	surface
+===============================
+@Reference=	Gen 6:2
+@FullText=	the sons of God saw that the daughters of man
+@MatchingText=	man
+@OptionsType1=	esv: 
+@OptionsAlternative1=	man
+@OptionsType2=	|or: 
+@OptionsAlternative2=	mankind
+===============================
+@Reference=	Gen 6:2
+@FullText=	 were attractive
+@MatchingText=	attractive
+@OptionsType1=	esv: 
+@OptionsAlternative1=	attractive
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	good
+===============================
+@Reference=	Gen 6:2
+@FullText=	. And they took as their wives
+@MatchingText=	as their wives
+@OptionsType1=	esv: 
+@OptionsAlternative1=	as their wives
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	women for themselves
+===============================
+@Reference=	Gen 6:3
+@FullText=	Then the LORD said, "My Spirit shall not abide in
+@MatchingText=	abide in
+@OptionsType1=	esv: 
+@OptionsAlternative1=	abide in
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	contend with
+===============================
+@Reference=	Gen 6:3
+@FullText=	 man forever, for he is flesh
+@MatchingText=	flesh
+@OptionsType1=	esv: 
+@OptionsAlternative1=	flesh
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	mortal
+===============================
+@Reference=	Gen 6:4
+@FullText=	The Nephilim
+@MatchingText=	Nephilim
+@OptionsType1=	esv: 
+@OptionsAlternative1=	Nephilim
+@OptionsType2=	|sounds like: 
+@OptionsAlternative2=	Fallen
+@OptionsType3=	|or: 
+@OptionsAlternative3=	giants 
+===============================
+@Reference=	Gen 6:4
+@FullText=	 were on the earth in those days, and also afterward, when the sons of God came in to
+@MatchingText=	came in to
+@OptionsType1=	esv: 
+@OptionsAlternative1=	came in to
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	had intercourse with
+===============================
+@Reference=	Gen 6:4
+@FullText=	 the daughters of man
+@MatchingText=	man
+@OptionsType1=	esv: 
+@OptionsAlternative1=	man
+@OptionsType2=	|or: 
+@OptionsAlternative2=	mankind
+===============================
+@Reference=	Gen 6:4
+@FullText=	 and they bore children to them. These were the mighty men who were of old, the men of renown
+@MatchingText=	renown
+@OptionsType1=	esv: 
+@OptionsAlternative1=	renown
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	the name
+===============================
+@Reference=	Gen 6:5
+@FullText=	The LORD saw that the wickedness of man
+@MatchingText=	man
+@OptionsType1=	esv: 
+@OptionsAlternative1=	man
+@OptionsType2=	|or: 
+@OptionsAlternative2=	mankind
+===============================
+@Reference=	Gen 6:5
+@FullText=	 was great in the earth, and that every intention
+@MatchingText=	intention
+@OptionsType1=	esv: 
+@OptionsAlternative1=	intention
+@OptionsType2=	|or: 
+@OptionsAlternative2=	inclination
+===============================
+@Reference=	Gen 6:5
+@FullText=	 of the thoughts of his heart 
+@MatchingText=	heart 
+@OptionsType1=	esv: 
+@OptionsAlternative1=	heart 
+@OptionsType2=	|or: 
+@OptionsAlternative2=	disposition
+===============================
+@Reference=	Gen 6:5
+@FullText=	was only evil continually
+@MatchingText=	continually
+@OptionsType1=	esv: 
+@OptionsAlternative1=	continually
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	all the day
+===============================
+@Reference=	Gen 6:6
+@FullText=	And the LORD was sorry
+@MatchingText=	was sorry
+@OptionsType1=	esv: 
+@OptionsAlternative1=	was sorry
+@OptionsType2=	|or: 
+@OptionsAlternative2=	repented
+===============================
+@Reference=	Gen 6:6
+@FullText=	 that he had made man
+@MatchingText=	man
+@OptionsType1=	esv: 
+@OptionsAlternative1=	man
+@OptionsType2=	|or: 
+@OptionsAlternative2=	mankind
+===============================
+@Reference=	Gen 6:6
+@FullText=	 on the earth, and it grieved him to his heart
+@MatchingText=	it grieved him to his heart
+@OptionsType1=	esv: 
+@OptionsAlternative1=	it grieved him to his heart
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	he pondered it deeply
+===============================
+@Reference=	Gen 6:7
+@FullText=	So the LORD said, "I will blot out
+@MatchingText=	blot out
+@OptionsType1=	esv: 
+@OptionsAlternative1=	blot out
+@OptionsType2=	|or: 
+@OptionsAlternative2=	destroy
+===============================
+@Reference=	Gen 6:7
+@FullText=	 man
+@MatchingText=	man
+@OptionsType1=	esv: 
+@OptionsAlternative1=	man
+@OptionsType2=	|or: 
+@OptionsAlternative2=	mankind
+===============================
+@Reference=	Gen 6:7
+@FullText=	 whom I have created from the face of the land, man and animals and creeping things and birds of the heavens
+@MatchingText=	heavens
+@OptionsType1=	esv: 
+@OptionsAlternative1=	heavens
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	skies
+===============================
+@Reference=	Gen 6:7
+@FullText=	, for I am sorry
+@MatchingText=	am sorry
+@OptionsType1=	esv: 
+@OptionsAlternative1=	am sorry
+@OptionsType2=	|or: 
+@OptionsAlternative2=	regret
+===============================
+@Reference=	Gen 6:8
+@FullText=	But Noah found favor
+@MatchingText=	favor
+@OptionsType1=	esv: 
+@OptionsAlternative1=	favor
+@OptionsType2=	|or: 
+@OptionsAlternative2=	grace
+===============================
+@Reference=	Gen 6:9
+@FullText=	These are the generations
+@MatchingText=	generations
+@OptionsType1=	esv: 
+@OptionsAlternative1=	generations
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	descendents
+===============================
+@Reference=	Gen 6:9
+@FullText=	 of Noah. Noah was a righteous
+@MatchingText=	righteous
+@OptionsType1=	esv: 
+@OptionsAlternative1=	righteous
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	godly
+===============================
+@Reference=	Gen 6:9
+@FullText=	 man, blameless
+@MatchingText=	blameless
+@OptionsType1=	esv: 
+@OptionsAlternative1=	blameless
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	the only blameless one
+===============================
+@Reference=	Gen 6:9
+@FullText=	 in his generation. Noah walked with
+@MatchingText=	walked with
+@OptionsType1=	esv: 
+@OptionsAlternative1=	walked with
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	was well pleasing to 
+===============================
+@Reference=	Gen 6:11
+@FullText=	Now the earth was corrupt in God's sight
+@MatchingText=	in God's sight
+@OptionsType1=	esv: 
+@OptionsAlternative1=	in God's sight
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	before the face of God
+===============================
+@Reference=	Gen 6:11
+@FullText=	, and the earth was filled with violence
+@MatchingText=	violence
+@OptionsType1=	esv: 
+@OptionsAlternative1=	violence
+@OptionsType2=	|or: 
+@OptionsAlternative2=	iniquity
+@OptionsType3=	|ie: 
+@OptionsAlternative3=	lawlessness
+===============================
+@Reference=	Gen 6:12
+@FullText=	And God saw the earth, and behold, it was corrupt
+@MatchingText=	corrupt
+@OptionsType1=	esv: 
+@OptionsAlternative1=	corrupt
+@OptionsType2=	|or: 
+@OptionsAlternative2=	ruined
+===============================
+@Reference=	Gen 6:12
+@FullText=	, for all flesh
+@MatchingText=	flesh
+@OptionsType1=	esv: 
+@OptionsAlternative1=	flesh
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	mortals
+===============================
+@Reference=	Gen 6:12
+@FullText=	 had corrupted their way
+@MatchingText=	had corrupted their way
+@OptionsType1=	esv: 
+@OptionsAlternative1=	had corrupted their way
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	were sinful
+===============================
+@Reference=	Gen 6:13
+@FullText=	And God said to Noah, "I have determined to make an
+@MatchingText=	I have determined to make an
+@OptionsType1=	esv: 
+@OptionsAlternative1=	I have determined to make an
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	Before me has come the
+===============================
+@Reference=	Gen 6:13
+@FullText=	 end of all flesh, for the earth is filled with violence
+@MatchingText=	violence
+@OptionsType1=	esv: 
+@OptionsAlternative1=	violence
+@OptionsType2=	|or: 
+@OptionsAlternative2=	iniquity
+===============================
+@Reference=	Gen 6:13
+@FullText=	 through them. Behold, I will destroy them
+@MatchingText=	destroy them
+@OptionsType1=	esv: 
+@OptionsAlternative1=	destroy them
+@OptionsType2=	|or: 
+@OptionsAlternative2=	wipe them out
+===============================
+@Reference=	Gen 6:13
+@FullText=	 with the earth
+@MatchingText=	with the earth
+@OptionsType1=	esv: prob: 
+@OptionsAlternative1=	with the earth
+@OptionsQualifier1=	 (Hebrew)
+@OptionsType2=	|poss: 
+@OptionsAlternative2=	from the earth 
+@OptionsQualifier2=	(Samaritan)
+@OptionsType3=	|poss: 
+@OptionsAlternative3=	and the earth
+@OptionsQualifier3=	 (Greek)
+===============================
+@Reference=	Gen 6:14
+@FullText=	Make yourself an ark
+@MatchingText=	an ark
+@OptionsType1=	esv: 
+@OptionsAlternative1=	an ark
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	a ship
+===============================
+@Reference=	Gen 6:14
+@FullText=	 of gopher
+@MatchingText=	gopher
+@OptionsType1=	esv: 
+@OptionsAlternative1=	gopher
+@OptionsType2=	|or: 
+@OptionsAlternative2=	cyprus
+===============================
+@Reference=	Gen 6:14
+@FullText=	 wood. Make rooms in the ark
+@MatchingText=	Make rooms in the ark
+@OptionsType1=	esv: poss: 
+@OptionsAlternative1=	Make rooms in the ark
+@OptionsQualifier1=	 (Hebrew)
+@OptionsType2=	|prob: 
+@OptionsAlternative2=	Make it room by room 
+===============================
+@Reference=	Gen 6:14
+@FullText=	
+@MatchingText=	
+@OptionsType1=	|poss: 
+@OptionsAlternative1=	Make the ark of reeds
+@OptionsQualifier1=	 (conjecture)
+===============================
+@Reference=	Gen 6:14
+@FullText=	, and cover
+@MatchingText=	cover
+@OptionsType1=	esv: 
+@OptionsAlternative1=	cover
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	pitch
+===============================
+@Reference=	Gen 6:15
+@FullText=	This is how you are to make it: the length of the ark 300 cubits
+@MatchingText=	cubits
+@OptionsType1=	esv: 
+@OptionsAlternative1=	cubits
+@OptionsType2=	|or: 
+@OptionsAlternative2=	forearm’s length
+@OptionsQualifier2=	 (about 18 in. or 45 cm)
+===============================
+@Reference=	Gen 6:16
+@FullText=	Make a roof
+@MatchingText=	roof
+@OptionsType1=	esv: 
+@OptionsAlternative1=	roof
+@OptionsType2=	|or: 
+@OptionsAlternative2=	window
+@OptionsType3=	|or: 
+@OptionsAlternative3=	skylight
+===============================
+@Reference=	Gen 6:17
+@FullText=	For behold, I will bring a flood of waters upon the earth to destroy all flesh in which is the breath
+@MatchingText=	breath
+@OptionsType1=	esv: 
+@OptionsAlternative1=	breath
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	spirit
+===============================
+@Reference=	Gen 6:17
+@FullText=	 of life under heaven
+@MatchingText=	heaven
+@OptionsType1=	esv: 
+@OptionsAlternative1=	heaven
+@OptionsType2=	|or: 
+@OptionsAlternative2=	the sky
+===============================
+@Reference=	Gen 6:18
+@FullText=	But I will establish
+@MatchingText=	establish
+@OptionsType1=	esv: 
+@OptionsAlternative1=	establish
+@OptionsType2=	|or: 
+@OptionsAlternative2=	confirm
+===============================
+@Reference=	Gen 6:20
+@FullText=	Of the birds according to their kinds
+@MatchingText=	kinds
+@OptionsType1=	esv: 
+@OptionsAlternative1=	kinds
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	species
+===============================
+@Reference=	Gen 6:20
+@FullText=	, and of the animals according to their kinds
+@MatchingText=	kinds
+@OptionsType1=	esv: 
+@OptionsAlternative1=	kinds
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	species
+===============================
+@Reference=	Gen 6:20
+@FullText=	, of every creeping thing of the ground, according to its kind
+@MatchingText=	kind
+@OptionsType1=	esv: 
+@OptionsAlternative1=	kind
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	species
+===============================
+@Reference=	Gen 6:21
+@FullText=	Also take with you every sort of food that is eaten, and store
+@MatchingText=	store
+@OptionsType1=	esv: 
+@OptionsAlternative1=	store
+@OptionsType2=	|or: 
+@OptionsAlternative2=	gather
+===============================
+@Reference=	Gen 7:1
+@FullText=	Then the LORD said to Noah, "Go into the ark, you and all your household, for I have seen that you are righteous
+@MatchingText=	righteous
+@OptionsType1=	esv: 
+@OptionsAlternative1=	righteous
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	godly
+===============================
+@Reference=	Gen 7:2
+@FullText=	Take with you seven pairs
+@MatchingText=	seven pairs
+@OptionsType1=	esv: 
+@OptionsAlternative1=	seven pairs
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	seven and seven
+===============================
+@Reference=	Gen 7:2
+@FullText=	 of all clean animals, the male and his mate
+@MatchingText=	mate
+@OptionsType1=	esv: 
+@OptionsAlternative1=	mate
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	female
+===============================
+@Reference=	Gen 7:2
+@FullText=	, and a pair of the animals that are not clean, the male and his mate
+@MatchingText=	mate
+@OptionsType1=	esv: 
+@OptionsAlternative1=	mate
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	female
+===============================
+@Reference=	Gen 7:3
+@FullText=	and seven pairs of the birds
+@MatchingText=	birds
+@OptionsType1=	esv: prob: 
+@OptionsAlternative1=	birds
+@OptionsQualifier1=	 (Hebrew)
+@OptionsType2=	|poss: 
+@OptionsAlternative2=	clean birds
+@OptionsQualifier2=	 (Samaritan, Greek, Syriac)
+===============================
+@Reference=	Gen 7:3
+@FullText=	 of the heavens
+@MatchingText=	heavens
+@OptionsType1=	esv: 
+@OptionsAlternative1=	heavens
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	skies
+===============================
+@Reference=	Gen 7:3
+@FullText=	 also, male and female, to keep their offspring
+@MatchingText=	offspring
+@OptionsType1=	esv: 
+@OptionsAlternative1=	offspring
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	seed
+@OptionsType3=	|ie: 
+@OptionsAlternative3=	species
+===============================
+@Reference=	Gen 7:3
+@FullText=	 alive on the face
+@MatchingText=	face
+@OptionsType1=	esv: 
+@OptionsAlternative1=	face
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	surface
+===============================
+@Reference=	Gen 7:4
+@FullText=	For in seven days I will send rain on the earth forty days and forty nights, and every living thing that I have made
+@MatchingText=	I have made
+@OptionsType1=	esv: 
+@OptionsAlternative1=	I have made
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	stands
+@OptionsType3=	|ie: 
+@OptionsAlternative3=	exists
+===============================
+@Reference=	Gen 7:6
+@FullText=	Noah was six hundred years old when the flood of waters
+@MatchingText=	of waters
+@OptionsType1=	esv: poss: 
+@OptionsAlternative1=	of waters
+@OptionsQualifier1=	 (Hebrew)
+@OptionsType2=	|prob: 
+@OptionsAlternative2=	[ ]
+@OptionsQualifier2=	 (Greek)
+===============================
+@Reference=	Gen 7:6
+@FullText=	 came
+@MatchingText=	came
+@OptionsType1=	esv: 
+@OptionsAlternative1=	came
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	were
+===============================
+@Reference=	Gen 7:7
+@FullText=	And Noah and his sons and his wife and his sons' wives with him went into the ark to escape
+@MatchingText=	to escape
+@OptionsType1=	esv: 
+@OptionsAlternative1=	to escape
+@OptionsType2=	|or: 
+@OptionsAlternative2=	because of
+===============================
+@Reference=	Gen 7:10
+@FullText=	And after seven days the waters of the flood came
+@MatchingText=	came
+@OptionsType1=	esv: 
+@OptionsAlternative1=	came
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	were
+===============================
+@Reference=	Gen 7:11
+@FullText=	In the six hundredth year of Noah's life, in the second month, on the seventeenth day of the month, on that day all the fountains
+@MatchingText=	fountains
+@OptionsType1=	esv: 
+@OptionsAlternative1=	fountains
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	sources
+===============================
+@Reference=	Gen 7:11
+@FullText=	 of the great deep burst forth, and the windows
+@MatchingText=	windows
+@OptionsType1=	esv: 
+@OptionsAlternative1=	windows
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	floodgates
+===============================
+@Reference=	Gen 7:11
+@FullText=	 of the heavens
+@MatchingText=	heavens
+@OptionsType1=	esv: 
+@OptionsAlternative1=	heavens
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	skies
+===============================
+@Reference=	Gen 7:12
+@FullText=	And rain fell
+@MatchingText=	fell
+@OptionsType1=	esv: 
+@OptionsAlternative1=	fell
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	was
+===============================
+@Reference=	Gen 7:14
+@FullText=	they
+@MatchingText=	they
+@OptionsType1=	esv: prob: 
+@OptionsAlternative1=	they
+@OptionsType2=	|poss: 
+@OptionsAlternative2=	[ ]
+@OptionsQualifier2=	 (Greek)
+===============================
+@Reference=	Gen 7:14
+@FullText=	 and every beast
+@MatchingText=	beast
+@OptionsType1=	esv: 
+@OptionsAlternative1=	beast
+@OptionsType2=	|or: 
+@OptionsAlternative2=	living creature
+===============================
+@Reference=	Gen 7:14
+@FullText=	, according to its kind
+@MatchingText=	kind
+@OptionsType1=	esv: 
+@OptionsAlternative1=	kind
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	species
+===============================
+@Reference=	Gen 7:14
+@FullText=	, and all the livestock according to their kinds
+@MatchingText=	kinds
+@OptionsType1=	esv: 
+@OptionsAlternative1=	kinds
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	species
+===============================
+@Reference=	Gen 7:14
+@FullText=	, and every creeping thing
+@MatchingText=	creeping thing
+@OptionsType1=	esv: 
+@OptionsAlternative1=	creeping thing
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	tiny creature
+===============================
+@Reference=	Gen 7:14
+@FullText=	 that creeps on the earth, according to its kind
+@MatchingText=	kind
+@OptionsType1=	esv: 
+@OptionsAlternative1=	kind
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	species
+===============================
+@Reference=	Gen 7:14
+@FullText=	, and every bird, according to its kind
+@MatchingText=	kind
+@OptionsType1=	esv: 
+@OptionsAlternative1=	kind
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	species
+===============================
+@Reference=	Gen 7:14
+@FullText=	, every winged creature
+@MatchingText=	, every winged creature
+@OptionsType1=	esv: prob: 
+@OptionsAlternative1=	, every winged creature
+@OptionsQualifier1=	 (Hebrew)
+@OptionsType2=	|poss:: 
+@OptionsAlternative2=	. [ ]
+@OptionsQualifier2=	 (Greek)
+===============================
+@Reference=	Gen 7:15
+@FullText=	They went into the ark with Noah, two and two of all flesh
+@MatchingText=	flesh
+@OptionsType1=	esv: 
+@OptionsAlternative1=	flesh
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	creatures
+===============================
+@Reference=	Gen 7:15
+@FullText=	 in which there was the breath
+@MatchingText=	breath
+@OptionsType1=	esv: 
+@OptionsAlternative1=	breath
+@OptionsType2=	|or: 
+@OptionsAlternative2=	spirit
+===============================
+@Reference=	Gen 7:17
+@FullText=	The flood continued
+@MatchingText=	continued
+@OptionsType1=	esv: 
+@OptionsAlternative1=	continued
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	was 
+===============================
+@Reference=	Gen 7:18
+@FullText=	The waters prevailed
+@MatchingText=	prevailed
+@OptionsType1=	esv: 
+@OptionsAlternative1=	prevailed
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	rose
+===============================
+@Reference=	Gen 7:18
+@FullText=	 and increased greatly on the earth, and the ark floated
+@MatchingText=	floated
+@OptionsType1=	esv: 
+@OptionsAlternative1=	floated
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	went up
+===============================
+@Reference=	Gen 7:18
+@FullText=	 on the face
+@MatchingText=	face
+@OptionsType1=	esv: 
+@OptionsAlternative1=	face
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	surface
+===============================
+@Reference=	Gen 7:19
+@FullText=	And the waters prevailed
+@MatchingText=	prevailed
+@OptionsType1=	esv: 
+@OptionsAlternative1=	prevailed
+@OptionsType2=	|or: 
+@OptionsAlternative2=	rose
+===============================
+@Reference=	Gen 7:19
+@FullText=	 so mightily
+@MatchingText=	so mightily
+@OptionsType1=	esv: 
+@OptionsAlternative1=	so mightily
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	more and more
+===============================
+@Reference=	Gen 7:19
+@FullText=	 on the earth that all the high mountains under the whole heaven
+@MatchingText=	heaven
+@OptionsType1=	esv: 
+@OptionsAlternative1=	heaven
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	sky
+===============================
+@Reference=	Gen 7:20
+@FullText=	The waters prevailed above the mountains, covering them fifteen cubits
+@MatchingText=	cubits
+@OptionsType1=	esv: 
+@OptionsAlternative1=	cubits
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	a forearm’s length
+@OptionsQualifier2=	 (about 18 inches or 45 cm)
+===============================
+@Reference=	Gen 7:21
+@FullText=	And all flesh died that moved on the earth, birds, livestock, beasts, all swarming creatures that swarm
+@MatchingText=	swarming creatures that swarm
+@OptionsType1=	esv: 
+@OptionsAlternative1=	swarming creatures that swarm
+@OptionsType2=	|or: 
+@OptionsAlternative2=	tiny moving creatures
+===============================
+@Reference=	Gen 7:22
+@FullText=	Everything on the dry land in whose nostrils was the breath of life
+@MatchingText=	breath of life
+@OptionsType1=	esv: poss: 
+@OptionsAlternative1=	breath of life
+@OptionsQualifier1=	 (Greek, Latin)
+@OptionsType2=	|prob: 
+@OptionsAlternative2=	breath of the spirit of life
+===============================
+@Reference=	Gen 7:22
+@FullText=	
+@MatchingText=	
+@OptionsQualifier0=	)
+===============================
+@Reference=	Gen 7:23
+@FullText=	He blotted out every living thing that was on
+@MatchingText=	every living thing that was on
+@OptionsType1=	esv: 
+@OptionsAlternative1=	every living thing that was on
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	all that stands upon
+@OptionsType3=	|ie: 
+@OptionsAlternative3=	everything that exists on
+===============================
+@Reference=	Gen 7:23
+@FullText=	 the face
+@MatchingText=	face
+@OptionsType1=	esv: 
+@OptionsAlternative1=	face
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	surface
+===============================
+@Reference=	Gen 7:23
+@FullText=	 of the ground, man
+@MatchingText=	man
+@OptionsType1=	esv: 
+@OptionsAlternative1=	man
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	from man
+===============================
+@Reference=	Gen 7:23
+@FullText=	 and animals and creeping things
+@MatchingText=	creeping things
+@OptionsType1=	esv: 
+@OptionsAlternative1=	creeping things
+@OptionsType2=	|or: 
+@OptionsAlternative2=	tiny creatures
+===============================
+@Reference=	Gen 7:23
+@FullText=	 and
+@MatchingText=	and
+@OptionsType1=	esv: 
+@OptionsAlternative1=	and
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	to the
+===============================
+@Reference=	Gen 7:23
+@FullText=	 birds of the heavens
+@MatchingText=	heavens
+@OptionsType1=	esv: 
+@OptionsAlternative1=	heavens
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	skies
+===============================
+@Reference=	Gen 7:24
+@FullText=	And the waters prevailed
+@MatchingText=	prevailed
+@OptionsType1=	esv: 
+@OptionsAlternative1=	prevailed
+@OptionsType2=	|or: 
+@OptionsAlternative2=	rose
+===============================
+@Reference=	Gen 8:1
+@FullText=	But God remembered Noah and all the beasts
+@MatchingText=	beasts 
+@OptionsType1=	esv: 
+@OptionsAlternative1=	beasts 
+@OptionsType2=	|or: 
+@OptionsAlternative2=	wildlife
+===============================
+@Reference=	Gen 8:1
+@FullText=	and all the livestock 
+@MatchingText=	livestock 
+@OptionsType1=	esv: 
+@OptionsAlternative1=	livestock 
+@OptionsType2=	|or: 
+@OptionsAlternative2=	domestic animals
+===============================
+@Reference=	Gen 8:2
+@FullText=	The fountains of the deep and the windows
+@MatchingText=	windows
+@OptionsType1=	esv: 
+@OptionsAlternative1=	windows
+@OptionsType2=	|or: 
+@OptionsAlternative2=	floodgates
+===============================
+@Reference=	Gen 8:2
+@FullText=	 of the heavens
+@MatchingText=	heavens
+@OptionsType1=	esv: 
+@OptionsAlternative1=	heavens
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	skies
+===============================
+@Reference=	Gen 8:2
+@FullText=	 were closed, the rain from the heavens
+@MatchingText=	heavens
+@OptionsType1=	esv: 
+@OptionsAlternative1=	heavens
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	skies
+===============================
+@Reference=	Gen 8:2
+@FullText=	 was restrained
+@MatchingText=	was restrained
+@OptionsType1=	esv: 
+@OptionsAlternative1=	was restrained
+@OptionsType2=	|or: 
+@OptionsAlternative2=	had stopped
+===============================
+@Reference=	Gen 8:3
+@FullText=	and the waters receded
+@MatchingText=	receded
+@OptionsType1=	esv: 
+@OptionsAlternative1=	receded
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	were going down
+===============================
+@Reference=	Gen 8:5
+@FullText=	And the waters continued to abate
+@MatchingText=	continued to abate
+@OptionsType1=	esv: 
+@OptionsAlternative1=	continued to abate
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	were going down
+===============================
+@Reference=	Gen 8:5
+@FullText=	 until the tenth month; in the tenth month, on the first day of the month, the tops
+@MatchingText=	tops
+@OptionsType1=	esv: 
+@OptionsAlternative1=	tops
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	heads
+@OptionsType3=	|or: 
+@OptionsAlternative3=	peaks
+===============================
+@Reference=	Gen 8:7
+@FullText=	and sent forth a raven
+@MatchingText=	raven
+@OptionsType1=	esv: prob: 
+@OptionsAlternative1=	raven
+@OptionsQualifier1=	 (Hebrew)
+@OptionsType2=	|poss: 
+@OptionsAlternative2=	raven to see whether the waters had diminished
+@OptionsQualifier2=	 (Greek)
+===============================
+@Reference=	Gen 8:8
+@FullText=	Then
+@MatchingText=	Then
+@OptionsType1=	esv: prob: 
+@OptionsAlternative1=	Then
+@OptionsQualifier1=	 (Hebrew)
+@OptionsType2=	|poss: 
+@OptionsAlternative2=	Noah waited seven days and then 
+===============================
+@Reference=	Gen 8:8
+@FullText=	
+@MatchingText=	
+===============================
+@Reference=	Gen 8:8
+@FullText=	 he sent forth a dove from him, to see if the waters had subsided from the face
+@MatchingText=	face
+@OptionsType1=	esv: 
+@OptionsAlternative1=	face
+@OptionsType2=	|or: 
+@OptionsAlternative2=	surface
+===============================
+@Reference=	Gen 8:9
+@FullText=	But the dove found no place to set her foot
+@MatchingText=	set her foot
+@OptionsType1=	esv: 
+@OptionsAlternative1=	set her foot
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	rest for her foot
+@OptionsType3=	|ie: 
+@OptionsAlternative3=	perch
+===============================
+@Reference=	Gen 8:9
+@FullText=	, and she returned to him to the ark, for the waters were still on the face
+@MatchingText=	face
+@OptionsType1=	esv: 
+@OptionsAlternative1=	face
+@OptionsType2=	|or: 
+@OptionsAlternative2=	surface
+===============================
+@Reference=	Gen 8:10
+@FullText=	He waited another seven days, and again he sent forth
+@MatchingText=	sent forth
+@OptionsType1=	esv: 
+@OptionsAlternative1=	sent forth
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	released
+===============================
+@Reference=	Gen 8:12
+@FullText=	Then he waited another seven days and sent forth
+@MatchingText=	sent forth
+@OptionsType1=	esv: 
+@OptionsAlternative1=	sent forth
+@OptionsType2=	|or: 
+@OptionsAlternative2=	released
+===============================
+@Reference=	Gen 8:13
+@FullText=	In the six hundred and first year
+@MatchingText=	year
+@OptionsType1=	esv: prob:  
+@OptionsAlternative1=	year
+@OptionsQualifier1=	 (Hebrew)
+@OptionsType2=	|poss: 
+@OptionsAlternative2=	year of Noah’s life
+@OptionsQualifier2=	 (Greek)
+===============================
+@Reference=	Gen 8:13
+@FullText=	, in the first month, the first day of the month, the waters were dried from off the earth. And Noah removed the covering of the ark and looked, and behold,
+@MatchingText=	looked, and behold,
+@OptionsType1=	esv: 
+@OptionsAlternative1=	looked, and behold,
+@OptionsType2=	|or: 
+@OptionsAlternative2=	saw that
+===============================
+@Reference=	Gen 8:13
+@FullText=	 the face
+@MatchingText=	face
+@OptionsType1=	esv: 
+@OptionsAlternative1=	face
+@OptionsType2=	|or: 
+@OptionsAlternative2=	surface
+===============================
+@Reference=	Gen 8:15
+@FullText=	Then God said to Noah,
+@MatchingText=	said to Noah,
+@OptionsType1=	esv: 
+@OptionsAlternative1=	said to Noah,
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	spoke to Noah, saying
+===============================
+@Reference=	Gen 8:17
+@FullText=	Bring
+@MatchingText=	Bring
+@OptionsType1=	esv: prob: 
+@OptionsAlternative1=	Bring
+===============================
+@Reference=	Gen 8:17
+@FullText=	
+@MatchingText=	
+@OptionsQualifier0=	)
+@OptionsType1=	|lit: 
+@OptionsAlternative1=	Send
+@OptionsType2=	poss: 
+@OptionsAlternative2=	Take
+===============================
+@Reference=	Gen 8:17
+@FullText=	
+@MatchingText=	
+===============================
+@Reference=	Gen 8:17
+@FullText=	 out with you every living thing
+@MatchingText=	every living thing
+@OptionsType1=	esv: 
+@OptionsAlternative1=	every living thing
+@OptionsType2=	|or: 
+@OptionsAlternative2=	all that exists
+===============================
+@Reference=	Gen 8:17
+@FullText=	 that is with you of all flesh- birds and animals and every creeping thing
+@MatchingText=	creeping thing
+@OptionsType1=	esv: 
+@OptionsAlternative1=	creeping thing
+@OptionsType2=	|or: 
+@OptionsAlternative2=	tiny creature
+===============================
+@Reference=	Gen 8:19
+@FullText=	Every beast, every creeping thing, and every bird, everything that moves
+@MatchingText=	every creeping thing, and every bird, everything that moves
+@OptionsType1=	esv: prob: 
+@OptionsAlternative1=	every creeping thing, and every bird, everything that moves
+@OptionsQualifier1=	 (Hebrew)
+@OptionsType2=	|poss: 
+@OptionsAlternative2=	and all cattle, and every bird and every creeping thing that creeps
+@OptionsQualifier2=	 (Greek)
+===============================
+@Reference=	Gen 8:19
+@FullText=	 on the earth, went out by families
+@MatchingText=	by families
+@OptionsType1=	esv: 
+@OptionsAlternative1=	by families
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	according to their species
+===============================
+@Reference=	Gen 8:21
+@FullText=	And when the LORD smelled the pleasing aroma
+@MatchingText=	the pleasing aroma
+@OptionsType1=	esv: 
+@OptionsAlternative1=	the pleasing aroma
+@OptionsType2=	|or: 
+@OptionsAlternative2=	a sweet savour
+===============================
+@Reference=	Gen 8:21
+@FullText=	, the LORD said in his heart, "I will never again curse 
+@MatchingText=	curse 
+@OptionsType1=	esv: 
+@OptionsAlternative1=	curse 
+@OptionsType2=	|or: 
+@OptionsAlternative2=	doom
+===============================
+@Reference=	Gen 8:21
+@FullText=	the ground because of man, for
+@MatchingText=	for
+@OptionsType1=	esv: 
+@OptionsAlternative1=	for
+@OptionsType2=	|or: 
+@OptionsAlternative2=	even though
+===============================
+@Reference=	Gen 8:21
+@FullText=	 the intention
+@MatchingText=	intention
+@OptionsType1=	esv: 
+@OptionsAlternative1=	intention
+@OptionsType2=	|or: 
+@OptionsAlternative2=	tendency
+===============================
+@Reference=	Gen 8:22
+@FullText=	While the earth remains
+@MatchingText=	While the earth remains
+@OptionsType1=	esv: 
+@OptionsAlternative1=	While the earth remains
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	In all the days of the earth
+===============================
+@Reference=	Gen 9:2
+@FullText=	The fear of you and the dread of you shall be upon every beast of the earth and upon every bird of the heavens
+@MatchingText=	heavens
+@OptionsType1=	esv: 
+@OptionsAlternative1=	heavens
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	skies
+===============================
+@Reference=	Gen 9:2
+@FullText=	, upon everything that creeps on the ground
+@MatchingText=	ground
+@OptionsType1=	esv: 
+@OptionsAlternative1=	ground
+@OptionsType2=	|sounds like: 
+@OptionsAlternative2=	adamah
+===============================
+@Reference=	Gen 9:2
+@FullText=	 and all the fish of the sea. Into your hand
+@MatchingText=	hand
+@OptionsType1=	esv: 
+@OptionsAlternative1=	hand
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	power
+===============================
+@Reference=	Gen 9:2
+@FullText=	 they are delivered
+@MatchingText=	delivered
+@OptionsType1=	esv: 
+@OptionsAlternative1=	delivered
+@OptionsType2=	|or: 
+@OptionsAlternative2=	given
+===============================
+@Reference=	Gen 9:4
+@FullText=	But you shall not eat flesh
+@MatchingText=	flesh
+@OptionsType1=	esv: 
+@OptionsAlternative1=	flesh
+@OptionsType2=	|or: 
+@OptionsAlternative2=	meat
+===============================
+@Reference=	Gen 9:4
+@FullText=	 with its life
+@MatchingText=	life
+@OptionsType1=	esv: 
+@OptionsAlternative1=	life
+@OptionsType2=	|or: 
+@OptionsAlternative2=	soul
+===============================
+@Reference=	Gen 9:5
+@FullText=	And for your
+@MatchingText=	your
+@OptionsType1=	esv: 
+@OptionsAlternative1=	your
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	your own
+===============================
+@Reference=	Gen 9:5
+@FullText=	 lifeblood
+@MatchingText=	lifeblood
+@OptionsType1=	esv: 
+@OptionsAlternative1=	lifeblood
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	the blood of your souls
+===============================
+@Reference=	Gen 9:5
+@FullText=	 I will require a reckoning
+@MatchingText=	require a reckoning
+@OptionsType1=	esv: 
+@OptionsAlternative1=	require a reckoning
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	exact justice
+===============================
+@Reference=	Gen 9:5
+@FullText=	: from
+@MatchingText=	from
+@OptionsType1=	esv: 
+@OptionsAlternative1=	from
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	from the hand of
+===============================
+@Reference=	Gen 9:5
+@FullText=	 every beast I will require it 
+@MatchingText=	require it 
+@OptionsType1=	esv: 
+@OptionsAlternative1=	require it 
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	exact justice
+===============================
+@Reference=	Gen 9:5
+@FullText=	and from man. From his fellow man
+@MatchingText=	his fellow man
+@OptionsType1=	esv: 
+@OptionsAlternative1=	his fellow man
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	a man’s brother
+===============================
+@Reference=	Gen 9:5
+@FullText=	 I will require a reckoning
+@MatchingText=	require a reckoning
+@OptionsType1=	esv: 
+@OptionsAlternative1=	require a reckoning
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	exact justice
+===============================
+@Reference=	Gen 9:5
+@FullText=	 for the life
+@MatchingText=	life
+@OptionsType1=	esv: 
+@OptionsAlternative1=	life
+@OptionsType2=	|or: 
+@OptionsAlternative2=	soul
+===============================
+@Reference=	Gen 9:7
+@FullText=	And you, be fruitful and multiply, teem on the earth and multiply in it
+@MatchingText=	multiply in it
+@OptionsType1=	esv: prob: 
+@OptionsAlternative1=	multiply in it
+@OptionsQualifier1=	 (Hebrew)
+@OptionsType2=	|poss: 
+@OptionsAlternative2=	reign over it
+===============================
+@Reference=	Gen 9:7
+@FullText=	
+@MatchingText=	
+===============================
+@Reference=	Gen 9:9
+@FullText=	"Behold, I establish my covenant with you and your offspring
+@MatchingText=	offspring
+@OptionsType1=	esv: 
+@OptionsAlternative1=	offspring
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	seed
+===============================
+@Reference=	Gen 9:10
+@FullText=	and with every living creature
+@MatchingText=	creature
+@OptionsType1=	esv: 
+@OptionsAlternative1=	creature
+@OptionsType2=	|or: 
+@OptionsAlternative2=	soul
+===============================
+@Reference=	Gen 9:10
+@FullText=	 that is with you, the birds, the livestock, and every beast
+@MatchingText=	beast
+@OptionsType1=	esv: 
+@OptionsAlternative1=	beast
+@OptionsType2=	|or: 
+@OptionsAlternative2=	living creature
+@OptionsType3=	|or: 
+@OptionsAlternative3=	wild animal
+===============================
+@Reference=	Gen 9:10
+@FullText=	 of the earth with you, as many as came out of the ark; it is for every beast of the earth
+@MatchingText=	it is for every beast of the earth
+@OptionsType1=	esv: prob: 
+@OptionsAlternative1=	; it is for every beast of the earth
+@OptionsQualifier1=	 (Hebrew)
+@OptionsType2=	|poss: 
+@OptionsAlternative2=	[ ]
+@OptionsQualifier2=	 (Greek)
+===============================
+@Reference=	Gen 9:11
+@FullText=	I establish my covenant with you, that never again shall all flesh
+@MatchingText=	flesh
+@OptionsType1=	esv: 
+@OptionsAlternative1=	flesh
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	life
+===============================
+@Reference=	Gen 9:12
+@FullText=	And God said, "This is the sign of the covenant that I make between me and you and every living creature that is with you, for all future generations
+@MatchingText=	future generations
+@OptionsType1=	esv: 
+@OptionsAlternative1=	future generations
+@OptionsType2=	|or: 
+@OptionsAlternative2=	generations, perpetually
+===============================
+@Reference=	Gen 9:13
+@FullText=	I have set my bow
+@MatchingText=	bow
+@OptionsType1=	esv: 
+@OptionsAlternative1=	bow
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	rainbow
+===============================
+@Reference=	Gen 9:14
+@FullText=	When I bring clouds over the earth and the bow
+@MatchingText=	bow
+@OptionsType1=	esv: 
+@OptionsAlternative1=	bow
+@OptionsType2=	|or: 
+@OptionsAlternative2=	rainbow
+===============================
+@Reference=	Gen 9:15
+@FullText=	I will remember my covenant that is between me and you and every living creature of all flesh
+@MatchingText=	flesh
+@OptionsType1=	esv: 
+@OptionsAlternative1=	flesh
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	kinds
+===============================
+@Reference=	Gen 9:16
+@FullText=	When the bow
+@MatchingText=	bow
+@OptionsType1=	esv: 
+@OptionsAlternative1=	bow
+@OptionsType2=	|or: 
+@OptionsAlternative2=	rainbow
+===============================
+@Reference=	Gen 9:16
+@FullText=	 is in the clouds, I will see it and remember the everlasting covenant between God and every living creature of all flesh
+@MatchingText=	all flesh
+@OptionsType1=	esv: 
+@OptionsAlternative1=	all flesh
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	every kind
+===============================
+@Reference=	Gen 9:17
+@FullText=	God said to Noah, "This is the sign of the covenant that I have established between me and all flesh
+@MatchingText=	flesh 
+@OptionsType1=	esv: 
+@OptionsAlternative1=	flesh 
+@OptionsType2=	|or: 
+@OptionsAlternative2=	living things
+===============================
+@Reference=	Gen 9:17
+@FullText=	that is
+@MatchingText=	is
+@OptionsType1=	esv: 
+@OptionsAlternative1=	is
+@OptionsType2=	|or: 
+@OptionsAlternative2=	are
+===============================
+@Reference=	Gen 9:19
+@FullText=	These three were the sons of Noah, and from these the people of the whole earth were dispersed
+@MatchingText=	were dispersed
+@OptionsType1=	esv: 
+@OptionsAlternative1=	were dispersed
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	was populated
+===============================
+@Reference=	Gen 9:20
+@FullText=	Noah began to be a man of the soil, and he
+@MatchingText=	began to be a man of the soil, and he
+@OptionsType1=	esv: 
+@OptionsAlternative1=	began to be a man of the soil, and he
+@OptionsType2=	|or: 
+@OptionsAlternative2=	was the first man of the soil who
+===============================
+@Reference=	Gen 9:21
+@FullText=	He drank of the wine and became drunk and lay uncovered
+@MatchingText=	uncovered
+@OptionsType1=	esv: 
+@OptionsAlternative1=	uncovered
+@OptionsType2=	|or: 
+@OptionsAlternative2=	naked
+===============================
+@Reference=	Gen 9:25
+@FullText=	he said, "Cursed be Canaan; a servant of servants
+@MatchingText=	a servant of servants
+@OptionsType1=	esv: 
+@OptionsAlternative1=	a servant of servants
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	the lowest of servants
+===============================
+@Reference=	Gen 9:26
+@FullText=	He also said, "Blessed be
+@MatchingText=	Blessed be
+@OptionsType1=	esv: 
+@OptionsAlternative1=	Blessed be
+@OptionsType2=	|or: 
+@OptionsAlternative2=	Praise
+===============================
+@Reference=	Gen 9:27
+@FullText=	May God enlarge Japheth
+@MatchingText=	Japheth
+@OptionsType1=	esv: 
+@OptionsAlternative1=	Japheth
+@OptionsType2=	|sounds like: 
+@OptionsAlternative2=	Enlarger
+===============================
+@Reference=	Gen 9:27
+@FullText=	, and let him dwell in the tents
+@MatchingText=	dwell in the tents
+@OptionsType1=	esv: 
+@OptionsAlternative1=	dwell in the tents
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	share the blessings
+===============================
+@Reference=	Gen 10:1
+@FullText=	These are the generations
+@MatchingText=	generations
+@OptionsType1=	esv: 
+@OptionsAlternative1=	generations
+@OptionsType2=	|or: 
+@OptionsAlternative2=	descendents
+===============================
+@Reference=	Gen 10:2
+@FullText=	The sons of Japheth: Gomer, Magog, Madai, Javan, Tubal, Meshech
+@MatchingText=	Meshech
+@OptionsType1=	esv: poss: 
+@OptionsAlternative1=	Meshech
+@OptionsQualifier1=	 (Hebrew)
+@OptionsType2=	|prob: 
+@OptionsAlternative2=	Moshech
+@OptionsQualifier2=	 (Samaritan, Greek)
+===============================
+@Reference=	Gen 10:4
+@FullText=	The sons of Javan: Elishah, Tarshish, Kittim, and Dodanim
+@MatchingText=	Dodanim
+@OptionsType1=	esv: poss: 
+@OptionsAlternative1=	Dodanim
+@OptionsQualifier1=	 (Hebrew)
+@OptionsType2=	|prob: 
+@OptionsAlternative2=	Rodanim
+@OptionsQualifier2=	 (Masoretic Mss, Samaritan, Greek)
+===============================
+@Reference=	Gen 10:5
+@FullText=	From these the coastland
+@MatchingText=	coastland
+@OptionsType1=	esv: 
+@OptionsAlternative1=	coastland
+@OptionsType2=	|or: 
+@OptionsAlternative2=	island
+===============================
+@Reference=	Gen 10:5
+@FullText=	 peoples
+@MatchingText=	peoples
+@OptionsType1=	esv: 
+@OptionsAlternative1=	peoples
+@OptionsQualifier1=	 (Hebrew)
+@OptionsType2=	|or: 
+@OptionsAlternative2=	peoples—these are the sons of Japhet—
+===============================
+@Reference=	Gen 10:5
+@FullText=	
+@MatchingText=	
+@OptionsQualifier0=	) 
+===============================
+@Reference=	Gen 10:6
+@FullText=	The sons of Ham: Cush
+@MatchingText=	Cush
+@OptionsType1=	esv: 
+@OptionsAlternative1=	Cush
+@OptionsType2=	|or: 
+@OptionsAlternative2=	Ethiopia
+===============================
+@Reference=	Gen 10:8
+@FullText=	Cush fathered
+@MatchingText=	fathered
+@OptionsType1=	esv: 
+@OptionsAlternative1=	fathered
+@OptionsType2=	|or: 
+@OptionsAlternative2=	begot
+===============================
+@Reference=	Gen 10:9
+@FullText=	He was a mighty hunter before the LORD
+@MatchingText=	a mighty hunter before the LORD
+@OptionsType1=	esv: 
+@OptionsAlternative1=	a mighty hunter before the LORD
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	the mightiest hunter
+===============================
+@Reference=	Gen 10:9
+@FullText=	. Therefore it is said, "Like Nimrod
+@MatchingText=	Like Nimrod
+@OptionsType1=	esv: 
+@OptionsAlternative1=	Like Nimrod
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	This man is like Nimrod,
+===============================
+@Reference=	Gen 10:10
+@FullText=	The beginning
+@MatchingText=	beginning
+@OptionsType1=	esv: 
+@OptionsAlternative1=	beginning
+@OptionsType2=	|or: 
+@OptionsAlternative2=	primary centers
+===============================
+@Reference=	Gen 10:10
+@FullText=	 of his kingdom was
+@MatchingText=	was
+@OptionsType1=	esv: 
+@OptionsAlternative1=	was
+@OptionsType2=	|or: 
+@OptionsAlternative2=	were
+===============================
+@Reference=	Gen 10:10
+@FullText=	 Babel
+@MatchingText=	Babel
+@OptionsType1=	esv: 
+@OptionsAlternative1=	Babel
+@OptionsType2=	|or: 
+@OptionsAlternative2=	Babylon
+===============================
+@Reference=	Gen 10:10
+@FullText=	, Erech
+@MatchingText=	Erech
+@OptionsType1=	esv: 
+@OptionsAlternative1=	Erech
+@OptionsType2=	|or: 
+@OptionsAlternative2=	Uruk
+===============================
+@Reference=	Gen 10:10
+@FullText=	, Accad, and Calneh,
+@MatchingText=	Calneh,
+@OptionsType1=	esv: poss: 
+@OptionsAlternative1=	Calneh,
+@OptionsQualifier1=	 (Hebrew)
+@OptionsType2=	|prob: 
+@OptionsAlternative2=	all of them
+@OptionsQualifier2=	 (conjecture)
+===============================
+@Reference=	Gen 10:10
+@FullText=	 in the land of Shinar
+@MatchingText=	Shinar
+@OptionsType1=	esv: 
+@OptionsAlternative1=	Shinar
+@OptionsType2=	|or: 
+@OptionsAlternative2=	Babylonia
+===============================
+@Reference=	Gen 10:11
+@FullText=	From that land he went into Assyria
+@MatchingText=	Assyria
+@OptionsType1=	esv: 
+@OptionsAlternative1=	Assyria
+@OptionsType2=	|sounds like: 
+@OptionsAlternative2=	Ashur
+===============================
+@Reference=	Gen 10:11
+@FullText=	 and built Nineveh, Rehoboth-Ir
+@MatchingText=	Rehoboth-Ir
+@OptionsType1=	esv: 
+@OptionsAlternative1=	Rehoboth-Ir
+@OptionsType2=	|sounds like: 
+@OptionsAlternative2=	City of Broad Streets
+===============================
+@Reference=	Gen 10:13
+@FullText=	Egypt fathered
+@MatchingText=	fathered
+@OptionsType1=	esv: 
+@OptionsAlternative1=	fathered
+@OptionsType2=	|or: 
+@OptionsAlternative2=	begot
+===============================
+@Reference=	Gen 10:14
+@FullText=	Pathrusim, Casluhim (from whom the Philistines came), and Caphtorim
+@MatchingText=	(from whom the Philistines came), and Caphtorim
+@OptionsType1=	esv: prob: 
+@OptionsAlternative1=	(from whom the Philistines came), and Caphtorim
+@OptionsQualifier1=	 (Hebrew)
+@OptionsType2=	|poss: 
+@OptionsAlternative2=	and Caphtorim (from whom the Philistines came)
+===============================
+@Reference=	Gen 10:14
+@FullText=	
+@MatchingText=	
+@OptionsQualifier0=	)
+===============================
+@Reference=	Gen 10:15
+@FullText=	Canaan fathered
+@MatchingText=	fathered
+@OptionsType1=	esv: 
+@OptionsAlternative1=	fathered
+@OptionsType2=	|or: 
+@OptionsAlternative2=	begot
+===============================
+@Reference=	Gen 10:15
+@FullText=	 Sidon his firstborn and Heth
+@MatchingText=	Heth
+@OptionsType1=	esv: 
+@OptionsAlternative1=	Heth
+@OptionsType2=	|ie: 
+@OptionsAlternative2=	the Hittites
+===============================
+@Reference=	Gen 10:19
+@FullText=	And the territory of the Canaanites extended from Sidon in the direction of
+@MatchingText=	in the direction of
+@OptionsType1=	esv: 
+@OptionsAlternative1=	in the direction of
+@OptionsType2=	|or: 
+@OptionsAlternative2=	as you go towards
+===============================
+@Reference=	Gen 10:23
+@FullText=	The sons of Aram: Uz, Hul, Gether, and Mash
+@MatchingText=	Mash
+@OptionsType1=	esv: 
+@OptionsAlternative1=	Mash
+@OptionsType2=	|or: 
+@OptionsAlternative2=	Meshek
+===============================
+@Reference=	Gen 10:24
+@FullText=	Arpachshad fathered
+@MatchingText=	fathered
+@OptionsType1=	esv: 
+@OptionsAlternative1=	fathered
+@OptionsType2=	|or: 
+@OptionsAlternative2=	begot
+===============================
+@Reference=	Gen 10:24
+@FullText=	 Shelah; and Shelah fathered
+@MatchingText=	fathered
+@OptionsType1=	esv: 
+@OptionsAlternative1=	fathered
+@OptionsType2=	|or: 
+@OptionsAlternative2=	begot
+===============================
+@Reference=	Gen 10:25
+@FullText=	To Eber were born two sons: the name of the one was Peleg
+@MatchingText=	Peleg
+@OptionsType1=	esv: 
+@OptionsAlternative1=	Peleg
+@OptionsType2=	|sounds like: 
+@OptionsAlternative2=	Division
+===============================
+@Reference=	Gen 10:26
+@FullText=	Joktan fathered
+@MatchingText=	fathered
+@OptionsType1=	esv: 
+@OptionsAlternative1=	fathered
+@OptionsType2=	|or: 
+@OptionsAlternative2=	begot
+===============================
+@Reference=	Gen 10:30
+@FullText=	The territory in which they lived
+@MatchingText=	The territory in which they lived
+@OptionsType1=	esv: 
+@OptionsAlternative1=	The territory in which they lived
+@OptionsType2=	|lit: 
+@OptionsAlternative2=	Their dwellings
+@OptionsType3=	|ie: 
+@OptionsAlternative3=	their settlement
+===============================
+@Reference=	Gen 10:32
+@FullText=	These are the clans of the sons of Noah, according to their genealogies
+@MatchingText=	genealogies
+@OptionsType1=	esv: 
+@OptionsAlternative1=	genealogies
+@OptionsType2=	|or: 
+@OptionsAlternative2=	generations

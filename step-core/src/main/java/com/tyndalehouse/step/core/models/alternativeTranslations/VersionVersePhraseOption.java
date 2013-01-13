@@ -30,44 +30,45 @@
  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
-package com.tyndalehouse.step.models.versions;
+package com.tyndalehouse.step.core.models.alternativeTranslations;
 
 import java.util.List;
 
 /**
- * This repreents a set of verses for a particular verse.
+ * Represents a portion of text that has alternatives.
  */
-public class VersionVerses {
-    private final String reference;
-    private final List<VersionVersePhraseOption> options;
+public class VersionVersePhraseOption {
+    private final String matchingText;
+    private final List<VersionPhraseAlternative> phraseAlternatives;
 
     /**
-     * Instantiates a new version verses.
+     * Instantiates a new version verse phrase option.
      * 
-     * @param reference the reference
-     * @param options the options
+     * @param matchingText the matching text
+     * @param phraseAlternatives the phrase alternatives
      */
-    public VersionVerses(final String reference, final List<VersionVersePhraseOption> options) {
-        this.reference = reference;
-        this.options = options;
+    public VersionVersePhraseOption(final String matchingText,
+            final List<VersionPhraseAlternative> phraseAlternatives) {
+        this.matchingText = matchingText;
+        this.phraseAlternatives = phraseAlternatives;
     }
 
     /**
-     * Gets the reference.
+     * Gets the matching text.
      * 
-     * @return the reference
+     * @return the matching text
      */
-    public String getReference() {
-        return this.reference;
+    public String getMatchingText() {
+        return this.matchingText;
     }
 
     /**
-     * Gets the options.
+     * Gets the phrase alternatives.
      * 
-     * @return the options
+     * @return the phrase alternatives
      */
-    public List<VersionVersePhraseOption> getOptions() {
-        return this.options;
+    public List<VersionPhraseAlternative> getPhraseAlternatives() {
+        return this.phraseAlternatives;
     }
 
 }

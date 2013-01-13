@@ -20,6 +20,7 @@ import org.apache.lucene.document.Fieldable;
 import org.apache.lucene.util.Version;
 import org.crosswire.common.util.CWProject;
 
+import com.google.inject.Injector;
 import com.tyndalehouse.step.core.data.create.PostProcessor;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.utils.IOUtils;
@@ -39,16 +40,19 @@ public class EntityConfiguration {
     private PostProcessor postProcessorInstance;
     private String path;
     private final String entityHome;
+    private final Injector injector;
 
     /**
      * Creates an entity configuration from a file
      * 
      * @param path the path to where we've stored our entities
      * @param entityName the name of the entity
+     * @param injector
      */
-    public EntityConfiguration(final String path, final String entityName) {
+    public EntityConfiguration(final String path, final String entityName, final Injector injector) {
         this.entityHome = path;
         this.name = entityName;
+        this.injector = injector;
         final Properties properties = loadProperties(entityName);
         parseProperties(properties);
     }
@@ -77,7 +81,9 @@ public class EntityConfiguration {
 
             final String processor = properties.getProperty("entity.postProcessor");
             if (isNotBlank(processor)) {
-                this.postProcessorInstance = (PostProcessor) Class.forName(processor).newInstance();
+
+                this.postProcessorInstance = (PostProcessor) this.injector.getInstance(Class
+                        .forName(processor));
             }
         } catch (final IllegalAccessException e) {
             throw new StepInternalException(UNABLE_TO_PARSE_CONFIGURATION_FILE, e);

@@ -848,11 +848,11 @@ function refreshWaitStatus() {
                 vars[hash[0]] = hash[1];
             }
             return vars;
-            },
+        },
             
-            getUrlVar: function(name){
-              return $.getUrlVars()[name];
-            }
+        getUrlVar: function(name){
+          return $.getUrlVars()[name];
+        }
 	});
 
 	$.fn.disableSelection = function() {

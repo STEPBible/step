@@ -30,57 +30,20 @@
  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
-package com.tyndalehouse.step.models.versions;
+package com.tyndalehouse.step.core.service;
 
-import java.util.List;
+import com.tyndalehouse.step.core.models.alternativeTranslations.VersionsData;
 
 /**
- * Represents a portion of text that has alternatives.
+ * Allows access to the alternative translation data
  */
-public class VersionVersePhraseOption {
-    private final String matchingText;
-    private final List<VersionPhraseAlternative> phraseAlternatives;
-    private final int position;
+public interface AlternativeVersionsService {
 
     /**
-     * Instantiates a new version verse phrase option.
+     * Gets the alternatives for a particular passage
      * 
-     * @param matchingText the matching text
-     * @param phraseAlternatives the phrase alternatives
-     * @param position the position
+     * @param passage the reference
+     * @return the versions data
      */
-    public VersionVersePhraseOption(final String matchingText,
-            final List<VersionPhraseAlternative> phraseAlternatives, final int position) {
-        this.matchingText = matchingText;
-        this.phraseAlternatives = phraseAlternatives;
-        this.position = position;
-    }
-
-    /**
-     * Gets the matching text.
-     * 
-     * @return the matching text
-     */
-    public String getMatchingText() {
-        return this.matchingText;
-    }
-
-    /**
-     * Gets the phrase alternatives.
-     * 
-     * @return the phrase alternatives
-     */
-    public List<VersionPhraseAlternative> getPhraseAlternatives() {
-        return this.phraseAlternatives;
-    }
-
-    /**
-     * Gets the position.
-     * 
-     * @return the position
-     */
-    public int getPosition() {
-        return this.position;
-    }
-
+    VersionsData get(String passage);
 }

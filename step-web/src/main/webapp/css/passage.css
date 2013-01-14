@@ -653,3 +653,7 @@ FONT.usg {
 .noAlternativeWidth {
 	max-width: none !important;
 }
+
+.altered {
+	color: red;	
+}

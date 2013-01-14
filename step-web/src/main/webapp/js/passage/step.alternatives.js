@@ -53,6 +53,7 @@ step.alternatives = {
                                 position : {
                                     my: "bottom center",
                                     at: "top center",
+                                    viewport: $(window),
                                 },
                                 events : {
                                     visible : function(event, api) {
@@ -62,7 +63,7 @@ step.alternatives = {
                                                 step.util.raiseInfo(passageId, "The text shown below has been modified and does not show the original ESV text", 'error', true);
                                             }
                                             
-                                            $(".av-" + o, scope).first().text($(this).text()).end().not(":first").remove();
+                                            $(".av-" + o, scope).first().text($(this).text()).addClass("altered").end().not(":first").remove();
                                             
                                         });
                                     }

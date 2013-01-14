@@ -629,12 +629,27 @@ FONT.usg {
 }
 
 
-.alternativeVersion  {
+.alternativePartialMatch {
 	text-decoration: overline;
+}
+
+.alternativeContext {
+	text-decoration: underline;
+}
+
+.alternativeVersion  {
 	background-color: #EEF;
 }
 
 .alternative {
 	color: #696;
 	font-weight: bold;
+}
+
+.singleAlternative {
+	white-space: nowrap;
+}
+
+.noAlternativeWidth {
+	max-width: none !important;
 }

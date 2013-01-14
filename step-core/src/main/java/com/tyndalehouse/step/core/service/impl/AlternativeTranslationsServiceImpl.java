@@ -97,7 +97,7 @@ public class AlternativeTranslationsServiceImpl implements AlternativeVersionsSe
 
             // add an option
             final VersionVersePhraseOption phraseChangeOption = new VersionVersePhraseOption(
-                    d.get("matchingText"), new ArrayList<VersionPhraseAlternative>(8));
+                    d.get("matchingText"), d.get("fullText"), new ArrayList<VersionPhraseAlternative>(8));
             vv.getOptions().add(phraseChangeOption);
 
             for (int ii = 0; ii < this.fields.length; ii++) {

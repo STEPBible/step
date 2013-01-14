@@ -372,15 +372,28 @@ step.passage = {
                 
                 $.each(verse.options, function(o, option) { 
                     if(option.matchingText) {
-                        step.util.ui.highlightPhrase(scope, "alternativeVersion av-" + o, option.matchingText);
+                        //do the match twice, once with the matchingText once with the context
+                        step.util.ui.highlightPhrase(scope, "alternativePartialMatch", option.matchingText);
+                        step.util.ui.highlightPhrase(scope, "alternativeContext", option.context);
+                        
+                        //now get anything that has both classes:
+                        $(".alternativePartialMatch:has(.alternativeContext)", scope).addClass("alternativeVersion av-" + o);
+                        
+                        //now clean up and remove classes
+                        $(".alternativePartialMatch", scope).removeClass("alternativePartialMatch");
+                        $('.alternativeContext').contents().filter(function() {
+                            return this.nodeType === 3
+                        }).unwrap();
+                        
+                        
                         var text = "";
                         $.each(option.phraseAlternatives, function(pa, alternative) { 
-                            text += alternative.type;
+                            text += "<span class='singleAlternative'>" + alternative.type;
                             text += " <a class='alternative alt-" + o + "' href='#' matching='" + option.matchingText.replace(/'/ig, "\\'") + "'>" + alternative.alternative + "</a>";
                             if(!step.util.isBlank(alternative.specifier)) {
-                                text += " (" + alternative.specifier + ")";
+                                text += " " + alternative.specifier;
                             }
-                            text += "<br />";
+                            text += "</span><br />";
                         });
                         
                         $(".av-" + o, scope).qtip({
@@ -409,6 +422,9 @@ step.passage = {
                                         
                                     });
                                 }
+                            },
+                            style: { 
+                                classes: 'ui-tooltip-default noAlternativeWidth'
                             }
                          });
                     }

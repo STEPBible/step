@@ -39,17 +39,20 @@ import java.util.List;
  */
 public class VersionVersePhraseOption {
     private final String matchingText;
+    private final String context;
     private final List<VersionPhraseAlternative> phraseAlternatives;
 
     /**
      * Instantiates a new version verse phrase option.
      * 
      * @param matchingText the matching text
+     * @param context the context to find the text within, usually preceding
      * @param phraseAlternatives the phrase alternatives
      */
-    public VersionVersePhraseOption(final String matchingText,
+    public VersionVersePhraseOption(final String matchingText, final String context,
             final List<VersionPhraseAlternative> phraseAlternatives) {
         this.matchingText = matchingText;
+        this.context = context;
         this.phraseAlternatives = phraseAlternatives;
     }
 
@@ -71,4 +74,10 @@ public class VersionVersePhraseOption {
         return this.phraseAlternatives;
     }
 
+    /**
+     * @return the context
+     */
+    public String getContext() {
+        return this.context;
+    }
 }

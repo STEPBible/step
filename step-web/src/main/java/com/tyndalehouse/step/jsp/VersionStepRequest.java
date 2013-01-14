@@ -32,6 +32,11 @@
  ******************************************************************************/
 package com.tyndalehouse.step.jsp;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.crosswire.jsword.book.Book;
@@ -43,10 +48,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.inject.Injector;
-import com.tyndalehouse.step.core.data.EntityManager;
 import com.tyndalehouse.step.core.data.EntityDoc;
+import com.tyndalehouse.step.core.data.EntityManager;
 import com.tyndalehouse.step.core.data.entities.impl.EntityManagerImpl;
 import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
+import com.tyndalehouse.step.core.utils.IOUtils;
 
 /**
  * A WebCookieRequest stores information from the request and the cookie for easy use in the jsp page
@@ -63,6 +69,8 @@ public class VersionStepRequest {
     private Versification versificationForVersion;
     private JSwordVersificationService versification;
     private Key globalKeyList;
+    private EntityDoc[] results;
+    private String miniPreface;
 
     /**
      * wraps around the servlet request for easy access
@@ -97,6 +105,14 @@ public class VersionStepRequest {
         bookList.append("<table id='bookListTable' class='listingTable'>");
         bookList.append("<tr><th>Bible book name</th><th>Chapters in the book</th></tr>");
 
+        // output the preface
+        if (this.getMiniPreface().length() != 0) {
+            bookList.append("<tr class=\"even\"><td class=\"bookName\">Preface</td><td><a href=\"preface.jsp?version=");
+            bookList.append(this.book.getInitials());
+            bookList.append("\">Preface</a></td></tr>");
+
+        }
+
         final BibleBookList books = this.versificationForVersion.getBooks();
         int ii = 0;
         for (final BibleBook bb : books) {
@@ -112,14 +128,66 @@ public class VersionStepRequest {
     }
 
     public String getTyndaleInfo() {
-        final EntityManager manager = this.injector.getInstance(EntityManagerImpl.class);
-        final EntityDoc[] results = manager.getReader("versionInfo").searchExactTermBySingleField("version", 1,
-                this.book.getInitials());
+        final EntityDoc[] results = getVersionInfo();
 
         if (results.length == 0) {
             return null;
         } else {
             return results[0].get("info");
+        }
+    }
+
+    private EntityDoc[] getVersionInfo() {
+        if (this.results == null) {
+
+            final EntityManager manager = this.injector.getInstance(EntityManagerImpl.class);
+            this.results = manager.getReader("versionInfo").searchExactTermBySingleField("version", 1,
+                    this.book.getInitials());
+        }
+        return this.results;
+    }
+
+    /**
+     * @return a text that the author would like us to include on our information page
+     */
+    public String getMiniPreface() {
+        if (this.miniPreface == null) {
+            this.miniPreface = readMiniPreface();
+        }
+        return this.miniPreface;
+    }
+
+    private String readMiniPreface() {
+        InputStream s = null;
+        InputStreamReader in = null;
+        BufferedReader reader = null;
+
+        try {
+            s = getClass().getResourceAsStream(
+                    "/com/tyndalehouse/step/core/data/create/versions/" + this.book.getInitials()
+                            + "_mini.txt");
+            if (s == null) {
+                return "";
+            }
+
+            in = new InputStreamReader(s, "UTF-8");
+            reader = new BufferedReader(in);
+            final StringBuilder sb = new StringBuilder(64000);
+
+            final char[] chars = new char[8192];
+            int l = -1;
+            while ((l = reader.read(chars)) != -1) {
+                sb.append(chars, 0, l);
+            }
+
+            return sb.toString();
+        } catch (final IOException e) {
+            LOG.warn("Unable to read file for resource: " + this.book.getInitials());
+            return "";
+        } finally {
+            IOUtils.closeQuietly(in);
+            IOUtils.closeQuietly(reader);
+            IOUtils.closeQuietly(s);
         }
     }
 

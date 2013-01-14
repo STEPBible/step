@@ -37,7 +37,6 @@ import static com.tyndalehouse.step.core.exceptions.UserExceptionType.USER_MISSI
 import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
 import static com.tyndalehouse.step.core.utils.ValidateUtils.notEmpty;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -54,10 +53,6 @@ import com.tyndalehouse.step.core.models.ClientSession;
 import com.tyndalehouse.step.core.models.EnrichedLookupOption;
 import com.tyndalehouse.step.core.models.KeyWrapper;
 import com.tyndalehouse.step.core.models.OsisWrapper;
-import com.tyndalehouse.step.core.models.alternativeTranslations.VersionPhraseAlternative;
-import com.tyndalehouse.step.core.models.alternativeTranslations.VersionVersePhraseOption;
-import com.tyndalehouse.step.core.models.alternativeTranslations.VersionVerses;
-import com.tyndalehouse.step.core.models.alternativeTranslations.VersionsData;
 import com.tyndalehouse.step.core.service.BibleInformationService;
 import com.tyndalehouse.step.models.ModulesForLanguageUser;
 import com.tyndalehouse.step.rest.framework.Cacheable;
@@ -281,50 +276,4 @@ public class BibleController {
         return this.bibleInformation.getKeyInfo(reference, version);
     }
 
-    /**
-     * Gets the dummy data.
-     * 
-     * @return the dummy data
-     */
-    public VersionsData getDummyData() {
-        final List<VersionPhraseAlternative> pa1 = new ArrayList<VersionPhraseAlternative>();
-        pa1.add(getAlt("beginning, God created", "prob", "Hebrew"));
-        pa1.add(getAlt("beginning when God created", "poss", "conjecture"));
-        final VersionVersePhraseOption o1 = new VersionVersePhraseOption("beginning, God created", pa1);
-
-        final List<VersionPhraseAlternative> pa2 = new ArrayList<VersionPhraseAlternative>();
-        pa2.add(getAlt("heavens", "", ""));
-        pa2.add(getAlt("skies", "lit", ""));
-        final VersionVersePhraseOption o2 = new VersionVersePhraseOption("heavens", pa2);
-
-        final List<VersionPhraseAlternative> pa3 = new ArrayList<VersionPhraseAlternative>();
-        pa3.add(getAlt("earth.", "prob", "Hebrew"));
-        pa3.add(getAlt("earth:", "poss", "conjecture"));
-        final VersionVersePhraseOption o3 = new VersionVersePhraseOption("earth.", pa3);
-
-        final List<VersionVersePhraseOption> options = new ArrayList<VersionVersePhraseOption>();
-        options.add(o1);
-        options.add(o2);
-        options.add(o3);
-
-        final VersionVerses vv = new VersionVerses("Gen.1.1", options);
-        final List<VersionVerses> verses = new ArrayList<VersionVerses>();
-        verses.add(vv);
-
-        final VersionsData vd = new VersionsData(verses);
-        return vd;
-    }
-
-    /**
-     * Gets the alternative data for one specific option
-     * 
-     * @param alternative the alternative
-     * @param type the type
-     * @param specifier the specifier
-     * @return the alt
-     */
-    private VersionPhraseAlternative getAlt(final String alternative, final String type,
-            final String specifier) {
-        return new VersionPhraseAlternative(alternative, type, specifier);
-    }
 }

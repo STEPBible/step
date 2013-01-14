@@ -115,7 +115,7 @@ public class V1Controller {
     }
 
     /**
-     * a REST method that returns version of the Bible that are available.
+     * a REST method that returns the features available for a particular version
      * 
      * @param version the version initials or full version name to retrieve the versions for
      * @return all versions of modules that are considered to be Bibles.
@@ -127,7 +127,8 @@ public class V1Controller {
     }
 
     /**
-     * a REST method that returns version of the Bible that are available.
+     * a REST method that returns the features available for a particular version and a particlular display
+     * mode
      * 
      * @param version the version initials or full version name to retrieve the versions for
      * @param displayMode the current displayMode (values are defined by {@link InterlinearMode} for more

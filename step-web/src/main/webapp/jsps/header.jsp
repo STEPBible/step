@@ -15,5 +15,5 @@
 <body>
 
 <div class="header">
-	<h1>STEP :: Scripture Tools for Every Person</h1>
+	<h1><a href="./">STEP :: Scripture Tools for Every Person</a></h1>
 </div>

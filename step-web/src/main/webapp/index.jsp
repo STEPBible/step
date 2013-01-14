@@ -83,6 +83,8 @@
 	    <script src="js/menu/passage/search.js" type="text/javascript"></script>
 
 	    <script src="js/passage/step.version.js" type="text/javascript"></script>
+
+	    <script src="js/passage/step.alternatives.js" type="text/javascript"></script>
 	    <script src="js/passage/step.passage.js" type="text/javascript"></script>
 	    <script src="js/passage/step.passage.ui.js" type="text/javascript"></script>
 	    <script src="js/passage/step.passage.navigation.js" type="text/javascript"></script>

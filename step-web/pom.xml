@@ -208,6 +208,7 @@
 							    <jsSourceFile>js/menu/passage/passageTools.js</jsSourceFile>
 							    <jsSourceFile>js/menu/passage/search.js</jsSourceFile>
 							    <jsSourceFile>js/passage/step.version.js</jsSourceFile>
+							    <jsSourceFile>js/passage/step.alternatives.js</jsSourceFile>
 							    <jsSourceFile>js/passage/step.passage.js</jsSourceFile>
 							    <jsSourceFile>js/passage/step.passage.ui.js</jsSourceFile>
 							    <jsSourceFile>js/passage/step.passage.navigation.js</jsSourceFile>

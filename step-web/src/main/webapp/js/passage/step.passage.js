@@ -359,78 +359,7 @@ step.passage = {
     },
     
     _doVersions : function(passageId, passageContent) {
-        //only do this if we've got a particular parameter set in the URL
-        if($.getUrlVar("altTranslations") != "true") {
-            return;
-        }
-        
-        
-        $.getSafe(ALTERNATIVE_TRANSLATIONS + step.state.passage.reference(passageId), function(data) {
-            $.each(data.versionVerses, function(v, verse) {
-                //item has reference and options
-                var scope = $(".verse a[name = '" + verse.reference + "']", passageContent).closest(".verse").get(0);
-                
-                $.each(verse.options, function(o, option) { 
-                    if(option.matchingText) {
-                        //do the match twice, once with the matchingText once with the context
-                        step.util.ui.highlightPhrase(scope, "alternativePartialMatch", option.matchingText);
-                        step.util.ui.highlightPhrase(scope, "alternativeContext", option.context);
-                        
-                        //now get anything that has both classes:
-                        $(".alternativePartialMatch:has(.alternativeContext)", scope).addClass("alternativeVersion av-" + o);
-                        
-                        //now clean up and remove classes
-                        $(".alternativePartialMatch", scope).removeClass("alternativePartialMatch");
-                        $('.alternativeContext').contents().filter(function() {
-                            return this.nodeType === 3
-                        }).unwrap();
-                        
-                        
-                        var text = "";
-                        $.each(option.phraseAlternatives, function(pa, alternative) { 
-                            text += "<span class='singleAlternative'>" + alternative.type;
-                            text += " <a class='alternative alt-" + o + "' href='#' matching='" + option.matchingText.replace(/'/ig, "\\'") + "'>" + alternative.alternative + "</a>";
-                            if(!step.util.isBlank(alternative.specifier)) {
-                                text += " " + alternative.specifier;
-                            }
-                            text += "</span><br />";
-                        });
-                        
-                        $(".av-" + o, scope).qtip({
-                            content: text,
-                            show: { 
-                                event : 'mouseenter',
-                                solo: true
-                            },
-                            hide: { 
-                                event: 'unfocus',
-                            },
-                            
-                            position : {
-                                my: "bottom center",
-                                at: "top center",
-                            },
-                            events : {
-                                visible : function(event, api) {
-                                    $("a.alt-" + o).click(function(event) {
-                                        if(step.passage.versions == undefined) {
-                                            step.passage.versions = { warningRaised : true};
-                                            step.util.raiseInfo(passageId, "The text shown below has been modified and does not show the original ESV text", 'error', true);
-                                        }
-                                        
-                                        $(".av-" + o, scope).first().text($(this).text()).end().not(":first").remove();
-                                        
-                                    });
-                                }
-                            },
-                            style: { 
-                                classes: 'ui-tooltip-default noAlternativeWidth'
-                            }
-                         });
-                    }
-                });
-            });
-        });
+        step.alternatives.enrichPassage(passageId, passageContent);
     },
     
     _getInterlinearMode : function(passageId) {

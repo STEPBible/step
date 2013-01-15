@@ -179,11 +179,11 @@ function checkValidUser() {
 }
 
 function initHelpLinks() {
-    $("#holdingPage a").not("#aboutPage").click(function() {
+    $("#holdingPage a").not("#aboutPage").click(function(event) {
         event.preventDefault();
-       $("#holdingPage").children().not("h1").remove();
-       $("#holdingPage").append("<iframe style='width: 100%' src='" + $(this).attr("href") + "' />");
-       reCalculateIframeHeight();
+        $("#holdingPage").children().not("h1").remove();
+        $("#holdingPage").append("<iframe style='width: 100%' src='" + $(this).attr("href") + "' />");
+        reCalculateIframeHeight();
     });
 }
 

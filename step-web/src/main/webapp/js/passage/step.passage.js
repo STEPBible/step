@@ -309,7 +309,8 @@ step.passage = {
             $(this).qtip({
                 position: {
                     my: "top " + myPosition,
-                    at: "top " + atPosition
+                    at: "top " + atPosition,
+                    viewport: $(window)
                 },
                 content : {
                     title : {

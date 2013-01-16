@@ -37,8 +37,16 @@ step.passage.ui = {
     resize : function() {
         var windowHeight = $(window).height();
         $(".passageContent").each(function(i, item) {
-            $(item).height(windowHeight - $(item).position().top);
+            
+            var toolbarHeight = $(".passageToolbarFloatingContainer:visible", step.util.getPassageContainer(i)).height();
+            
+            var height = windowHeight - $(item).position().top - toolbarHeight - 8;
+            $(item).height(height);
         });
+        
+        $(".leftColumn, .rightColumn, #holdingPage, .passageContainer").height(windowHeight - $(".topMenu").height() - 10);
+        
+//        $("#holdingPage").height(height - 100);
     },
     
     restoreDefaults : function(passageId, force) {

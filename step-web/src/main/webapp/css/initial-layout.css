@@ -427,3 +427,7 @@ body {
 	overflow-x: hidden;
 	overflow-y: auto;
 }
+
+.dynHelpOver {
+	border: 4px solid orange !important;
+}

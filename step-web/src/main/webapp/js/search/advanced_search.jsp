@@ -35,7 +35,7 @@
 		<table class="passageTable">
 			<tr>
 				<td>Translation / Commentary</td>
-				<td style="white-space: nowrap;"><input type="text" class="passageVersion drop" size="15" /> &nbsp; 
+				<td style="white-space: nowrap;"><input type="text" class="passageVersion drop dynHelp" size="15" /> &nbsp; 
 					<a class="infoAboutVersion" target="_blank" href="version.jsp?version=<%= stepRequest.getThisVersion() %>" title="Information about the <%= stepRequest.getThisVersion() %> Bible / Commentary">&#x24d8;</a>&nbsp;</td>
 				<td style="padding-left: 10px">Bible Text&nbsp;</td>
 				<td><input type="text" class="passageReference drop" size="15" /></td>

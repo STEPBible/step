@@ -1,7 +1,18 @@
+<%@ page pageEncoding="UTF-8" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+<% if(request.getParameter("lang") != null) { %>
+		<fmt:setLocale value='<%= request.getParameter("lang") %>' />
+<% } else { %> 
+		<fmt:setLocale value="en" />
+<% } %>
+<fmt:setBundle basename="UiBundle" />
+
+
 <div id="topMenu-ajax" class="ddsmoothmenu" name="top">
 <!-- <a id="loginLink" class="login" href="#" onclick="login()">Login</a> -->
 <ul>
-	<li menu-name="VIEW"><a href="#">View</a>
+	<li menu-name="VIEW"><a href="#"><fmt:message key="menu.view" /></a>
 	<ul>
 		<li><a href="#" name="SINGLE_COLUMN_VIEW" >Single column view</a></li>
 		<li><a href="#" name="TWO_COLUMN_VIEW" >Two column view</a></li>
@@ -18,7 +29,7 @@
 	</ul>
 	</li>
 
-	<li menu-name="TOOLS"><a href="#">Tools</a>
+	<li menu-name="TOOLS"><a href="#"><fmt:message key="menu.tools" /></a>
 	<ul>
 <!-- 		<li><a href="http://step.tyndalehouse.com/step.zip" target="_blank">Download the Desktop application</a></li> -->
 		<li><a href="#" onclick='window.localStorage.clear(); window.location.reload();'>Forget my profile</a></li>
@@ -29,9 +40,10 @@
 	</li>
 
 	
-	<li menu-name="HELP"><a href="#">Help</a>
+	<li menu-name="HELP"><a href="#"><fmt:message key="menu.help" /></a>
 	<ul>
 		<li><a href="http://stepweb.atlassian.net/wiki/display/TYNSTEP/STEP+Help+Manual" target="_blank">Online Help manual</a></li>
+
 <!-- 		<li><a href="http://stepweb.atlassian.net/wiki/display/TYNSTEP/STEP+Help+Manual" onclick="">Submit feedback or suggest a feature</a></li> -->
 		<li><a href="#" id="provideFeedback">Provide some feedback</a></li>
 		<li><a href="#" id="raiseBug" >Raise a bug</a></li>

@@ -32,11 +32,6 @@
  ******************************************************************************/
 package com.tyndalehouse.step.jsp;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.crosswire.jsword.book.Book;
@@ -158,37 +153,10 @@ public class VersionStepRequest {
     }
 
     private String readMiniPreface() {
-        InputStream s = null;
-        InputStreamReader in = null;
-        BufferedReader reader = null;
+        final String fileName = "/com/tyndalehouse/step/core/data/create/versions/" + this.book.getInitials()
+                + "_mini.txt";
 
-        try {
-            s = getClass().getResourceAsStream(
-                    "/com/tyndalehouse/step/core/data/create/versions/" + this.book.getInitials()
-                            + "_mini.txt");
-            if (s == null) {
-                return "";
-            }
-
-            in = new InputStreamReader(s, "UTF-8");
-            reader = new BufferedReader(in);
-            final StringBuilder sb = new StringBuilder(64000);
-
-            final char[] chars = new char[8192];
-            int l = -1;
-            while ((l = reader.read(chars)) != -1) {
-                sb.append(chars, 0, l);
-            }
-
-            return sb.toString();
-        } catch (final IOException e) {
-            LOG.warn("Unable to read file for resource: " + this.book.getInitials());
-            return "";
-        } finally {
-            IOUtils.closeQuietly(in);
-            IOUtils.closeQuietly(reader);
-            IOUtils.closeQuietly(s);
-        }
+        return IOUtils.readEntireClasspathResource(fileName);
     }
 
     /**

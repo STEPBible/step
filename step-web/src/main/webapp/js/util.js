@@ -132,6 +132,7 @@ step.util = {
 	    }
 	    
 	    infoBar.toggle(true).data('numPassageChanges', eraseOnNextPassage ? 1 : 0).find(".infoLabel").html(message);
+	    step.passage.ui.resize();
 	},
 	
 	closeInfoErrors : function(passageId) {
@@ -146,6 +147,7 @@ step.util = {
             if(passageChanges >= 1) {
                 //hide the bar
                 infoBar.toggle(false);
+                step.passage.ui.resize();
             } else {
                 infoBar.data('numPassageChanges', 1);
             }
@@ -325,13 +327,14 @@ step.util = {
                 //re-evaluate query
                 var passageId = step.passage.getPassageId(this);
                 var syntax = step.search.ui[namespace].evaluateQuerySyntax(passageId);
+
                 
                 //also write it up the top
                 if(syntax) {
                     $(".searchQuerySyntax", step.util.getPassageContainer(passageId)).val(syntax); 
                 }
                 
-                if(syntax.startsWith("o") || syntax.startsWith("s")) {
+                if(syntax == undefined || syntax.startsWith("o") || syntax.startsWith("s")) {
                     //no estimate for original word search
                     return;
                 }

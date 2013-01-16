@@ -59,8 +59,6 @@ function init() {
 
 		
 		initData();
-		initHelpLinks();
-		
 
 	      // read state from the cookie
         step.state.restore();
@@ -178,23 +176,6 @@ function checkValidUser() {
     $("#ui-dialog-title-validUser").parent().css("display", "none");
 }
 
-function initHelpLinks() {
-    $("#holdingPage a").not("#aboutPage").click(function(event) {
-        event.preventDefault();
-        $("#holdingPage").children().not("h1").remove();
-        $("#holdingPage").append("<iframe style='width: 100%' src='" + $(this).attr("href") + "' />");
-        reCalculateIframeHeight();
-    });
-}
-
-function reCalculateIframeHeight() {
-    if($("#holdingPage:visible").length != 0) {
-        var windowHeight = $(window).height();
-        var h1HoldingPage = $("#holdingPage h1");
-        var leftOverHeight = windowHeight - $("#holdingPage h1").position().top - $("#holdingPage h1").height() - 5; 
-        $("iframe", "#holdingPage").height(leftOverHeight);
-    }
-}
 
 function refreshLayout() {
 	//we resize the heights:
@@ -205,7 +186,7 @@ function refreshLayout() {
 	var windowWithoutMenuNorModule = windowHeight - topMenuHeight - bottomSectionHeight; 
 	var bookmarkHeight = windowWithoutMenuNorModule - imageAndFooterHeight ;
 	
-	
+	$("body").height($(window).height()-10);
 	$(".bookmarkPane").height(bookmarkHeight);
 	
 	
@@ -376,8 +357,22 @@ function initGlobalHandlers() {
 	var infoBar = $(".infoBar").toggle(false);
 	infoBar.find(".closeInfoBar").click(function() {
 	    $(this).closest(".infoBar").toggle(false);
+	    step.passage.ui.resize();
 	}); 
 }
+
+function isFullyVisible (elem) {
+    var off = elem.offset();
+    var et = off.top;
+    var el = off.left;
+    var eh = elem.height();
+    var ew = elem.width();
+    var wh = window.innerHeight;
+    var ww = window.innerWidth;
+    var wx = window.pageXOffset;
+    var wy = window.pageYOffset;
+    return (et >= wy && el >= wx && et + eh <= wh + wy && el + ew <= ww + wx);  
+  }
 
 /**
  * initialises the modules 	

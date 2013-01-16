@@ -114,12 +114,12 @@
 	%>
 </HEAD>
 <body>
-<div id="topMenu" class="ddsmoothmenu"><jsp:include page="js/menu/top/menu.html" /></div>
+<div id="topMenu" class="ddsmoothmenu"><jsp:include page="js/menu/top/menu.jsp" /></div>
 <div>
 	<div id="middleSection">
 		<div class="column leftColumn">
 			<div class="passageContainer" passage-id=0>
-				<div id="leftPaneMenu" class="innerMenus"><jsp:include page="js/menu/passage/menu.html" /></div>
+				<div id="leftPaneMenu" class="innerMenus"><jsp:include page="js/menu/passage/menu.jsp" /></div>
 			    <div class="passageText ui-widget">
 			    	<div class="headingContainer">
 			    		<jsp:include page="js/search/advanced_search.jsp?passageId=0" />
@@ -136,23 +136,25 @@
 			
 			<table>
 				<tr>
-					<td><a href="https://stepweb.atlassian.net/wiki/display/TYNSTEP/STEP+Help+Manual" title="A quick tutorial demonstrating how to get started"/>Help manual</a></td>
-					<td><a href="versions.jsp" title="Detailed information on how to use the software"/>Available versions</a></td>
+					<td><a target="_new" href="https://stepweb.atlassian.net/wiki/display/TYNSTEP/STEP+Help+Manual" title="A quick tutorial demonstrating how to get started"/>Help manual</a></td>
+					<td><a target="_new" href="versions.jsp" title="Detailed information on how to use the software"/>Available versions</a></td>
 				</tr>
 				<tr>
-					<td><a id="aboutPage" target="_new" href="http://www.tyndale.cam.ac.uk/index.php?mact=News,cntnt01,detail,0&cntnt01articleid=28&cntnt01returnid=15" title="Find out more about the STEP project developed by Tyndale House"/>About the STEP project</a></td>
-					<td><a target="_new" href="http://help.step.tyndalehouse.com/supportTheProject.html" title="Give your time, skills, etc. towards helping make the STEP project a better tool for everyone" />Support the STEP project</a></td>
+					<td><a target="_new" href="http://www.tyndale.cam.ac.uk/index.php?mact=News,cntnt01,detail,0&cntnt01articleid=28&cntnt01returnid=15" title="Find out more about the STEP project developed by Tyndale House"/>About the STEP project</a></td>
+					<td><a target="_new" href="http://www.facebook.com/pages/STEP-Development-Scripture-Tools-from-Tyndale-House-Cambridge/218909814807605?sk=app_208195102528120" title="Give your time & skills, etc. towards helping making STEP a better tool for everyone" />Volunteers required</a></td>
 				</tr>
 			</table>
 			<br />
-			&copy; Tyndale House <%= java.util.Calendar.getInstance().get(java.util.Calendar.YEAR)  %>
+			<a target="_new" href="http://www.tyndale.cam.ac.uk" >Tyndale House</a> 
+			<br />
+			&copy; <%= java.util.Calendar.getInstance().get(java.util.Calendar.YEAR)  %>
 		</div>
 		
 		<jsp:include page="js/bookmark/bookmark.jsp"></jsp:include>
 			
 		<div class="column rightColumn">
 			<div class="passageContainer" passage-id=1>
-				<div id="rightPaneMenu" class="innerMenus"><jsp:include page="js/menu/passage/menu.html" /></div>
+				<div id="rightPaneMenu" class="innerMenus"><jsp:include page="js/menu/passage/menu.jsp" /></div>
 			    <div class="passageText ui-widget">
 			    	<div class="headingContainer">
 			    		<jsp:include page="js/search/advanced_search.jsp?passageId=1" />

@@ -1,6 +1,16 @@
+<%@ page pageEncoding="UTF-8" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+<% if(request.getParameter("lang") != null) { %>
+		<fmt:setLocale value='<%= request.getParameter("lang") %>' />
+<% } else { %> 
+		<fmt:setLocale value="en" />
+<% } %>
+<fmt:setBundle basename="UiBundle" />
+
 <!-- <input type="text" class='searchQuerySyntax quickSearch' /> -->
 <ul class="paneMenuBar">
-	<li menu-name="DISPLAY"><a href="#" menu-name="DISPLAY">Display</a>
+	<li menu-name="DISPLAY"><a href="#" menu-name="DISPLAY"><fmt:message key="menu.display" /></a>
 	<ul>
 		<li><a href="#" name="HEADINGS" >Headings</a></li>
 		<li><a href="#" name="VERSE_NUMBERS">Verse Numbers</a></li>
@@ -20,7 +30,7 @@
 <!-- 		<li><a href="#" name="GEOGRAPHY">Maps</a></li> -->
 <!-- 	</ul> -->
 <!-- 	</li> -->
-	<li  menu-name="SEARCH"><a href="#">Search</a>
+	<li  menu-name="SEARCH"><a href="#"><fmt:message key="menu.search" /></a>
 	<ul>
 		<li><a href="#" name="SEARCH_PASSAGE">Passage lookup</a></li>
 		<li class="menuSectionStart"><a href="#" name="SEARCH_SIMPLE_TEXT">Text search</a></li>
@@ -31,7 +41,7 @@
 		<li class="menuSectionStart"><a href="#" name="SEARCH_TEXT">Advanced text search</a></li>
 	</ul>
 	</li>
-	<li menu-name="PASSAGE-TOOLS"><a href="#">Tools</a>
+	<li menu-name="PASSAGE-TOOLS"><a href="#"><fmt:message key="menu.tools" /></a>
 	<ul>
 		<li><a href="#" name="BOOKMARK" class="bookmarkPassageMenuItem">Bookmark passage</a></li>
 	</ul>

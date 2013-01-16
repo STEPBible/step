@@ -45,8 +45,6 @@ step.passage.ui = {
         });
         
         $(".leftColumn, .rightColumn, #holdingPage, .passageContainer").height(windowHeight - $(".topMenu").height() - 10);
-        
-//        $("#holdingPage").height(height - 100);
     },
     
     restoreDefaults : function(passageId, force) {

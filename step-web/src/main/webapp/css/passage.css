@@ -525,6 +525,10 @@ FONT.usg {
     padding: 5px 0px;
 }
 
+.draggable-tooltip .qtip-titlebar {
+	padding: 4px 26px 5px 10px;
+}
+
 .ui-tooltip-content {
  	max-height: 400px;
 	overflow: auto;

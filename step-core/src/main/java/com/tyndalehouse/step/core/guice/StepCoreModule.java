@@ -149,7 +149,7 @@ public class StepCoreModule extends AbstractStepGuiceModule {
 
         bind(EntityManager.class).to(EntityManagerImpl.class).asEagerSingleton();
 
-        bind(ResourceBundle.class).toInstance(ResourceBundle.getBundle("MenuBundle"));
+        bind(ResourceBundle.class).toInstance(ResourceBundle.getBundle("HtmlBundle"));
 
     }
 

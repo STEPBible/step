@@ -6,7 +6,7 @@
 <% } else { %> 
 		<fmt:setLocale value="en" />
 <% } %>
-<fmt:setBundle basename="MenuBundle" />
+<fmt:setBundle basename="HtmlBundle" />
 
 <!-- <input type="text" class='searchQuerySyntax quickSearch' /> -->
 <ul class="paneMenuBar">

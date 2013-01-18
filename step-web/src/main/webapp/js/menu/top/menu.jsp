@@ -6,7 +6,7 @@
 <% } else { %> 
 		<fmt:setLocale value="en" />
 <% } %>
-<fmt:setBundle basename="MenuBundle" />
+<fmt:setBundle basename="HtmlBundle" />
 
 
 <div id="topMenu-ajax" class="ddsmoothmenu" name="top">

@@ -735,11 +735,6 @@ step.search = {
         passageContent.html(content);
         refreshLayout();
     },
-    
-    showToolbar : function(passageId) {
-        var passageContainer = step.util.getPassageContainer(passageId);
-        step.state._showFieldSet(passageContainer, "Search toolbar");
-    }
 };
 
 

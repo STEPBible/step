@@ -190,13 +190,13 @@ step.state = {
         $(".advancedSearch fieldset", passageContainer).hide();
 
         var option = $("a[name ^= 'SEARCH_']:has(img.selectingTick)", passageContainer);
-        var optionName = option.text();
+        var optionName = option.attr('name');
         this._showFieldSet(passageContainer, optionName);
     },
     
     _showFieldSet : function(passageContainer, optionName) {
-        $(".passageToolbarContainer", passageContainer).toggle(optionName == "Passage lookup");
-        var targetFieldset = $(".advancedSearch legend:contains('" + optionName + "')", passageContainer).parent();
+        $(".passageToolbarContainer", passageContainer).toggle(optionName == "SEARCH_PASSAGE");
+        var targetFieldset = $(".advancedSearch fieldset[name='" + optionName + "']", passageContainer);
         targetFieldset.show();
     },
 

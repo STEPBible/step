@@ -848,7 +848,10 @@ function refreshWaitStatus() {
             for(var i = 0; i < hashes.length; i++) {
                 hash = hashes[i].split('=');
                 vars.push(hash[0]);
-                vars[hash[0]] = hash[1];
+                if(hash[1]) {
+                    vars[hash[0]] = hash[1].split('#')[0];
+                }
+                
             }
             return vars;
         },

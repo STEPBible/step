@@ -3,7 +3,7 @@ step.alternatives = {
             var self = this;
             
             // only do this if we've got a particular parameter set in the URL
-            if($.getUrlVar("altTranslations") != "true") {
+            if($.getUrlVar("altMeanings") != "true") {
                 return;
             }
             
@@ -32,8 +32,10 @@ step.alternatives = {
                             
                             var text = "";
                             $.each(option.phraseAlternatives, function(pa, alternative) { 
+                                var isEsvOption = alternative.type.indexOf("ESV:") >= 0;
+                                
                                 text += "<span class='singleAlternative'>" + self.enrichTypeQualifier(alternative.type);
-                                text += " <a class='alternative alt-" + o + "' href='#' matching='" + option.matchingText.replace(/'/ig, "\\'") + "'>" + alternative.alternative + "</a>";
+                                text += " <a class='alternative alt-" + o + "' href='#' matching='" + option.matchingText.replace(/'/ig, "\\'") + "' esv='" + isEsvOption + "'>" + alternative.alternative + "</a>";
                                 if(!step.util.isBlank(alternative.specifier)) {
                                     text += " (" + self.enrichTypeQualifier(alternative.specifier) + ")";
                                 }
@@ -63,7 +65,31 @@ step.alternatives = {
                                                 step.util.raiseInfo(passageId, "The text shown below has been modified and does not show the original ESV text", 'error', true);
                                             }
                                             
-                                            $(".av-" + o, scope).first().text($(this).text()).addClass("altered").end().not(":first").remove();
+                                            
+                                            var all = $(".av-" + o, scope);
+                                            var first = all.first();
+                                            var others = first.text($(this).text()).end().not(":first");
+                                            
+                                            var firstParent = first.parent();
+                                            $.each(others, function(i, element) {
+                                                var item = $(element);
+                                                var parent = item.parent();
+                                                
+                                                $(item).remove();
+                                                
+                                                if(parent.children().length == 0) {
+                                                    //add strongs and morphs
+                                                    firstParent.attr('morph', firstParent.attr('morph') + " " + parent.attr('morph'));
+                                                    firstParent.attr('strong', firstParent.attr('strong') + " " + parent.attr('strong'));
+                                                    parent.remove();
+                                                }
+                                            })
+                                            
+                                            if($(this).attr('esv') != 'true') {
+                                                first.addClass("altered ui-state-highlight");
+                                            } else {
+                                                first.removeClass("altered ui-state-highlight");
+                                            }
                                             
                                         });
                                     }
@@ -112,8 +138,8 @@ step.alternatives = {
             else if (compare == "egyptian")            { extraValue = "?"; } 
             else if (compare == "scribal note" )       { extraValue = "Manuscript margins (Masora incl. Qere)";}  
             else if (compare == "conjecture" )         { extraValue = "No manuscript support";} 
-            else if (compare == "prob:" )              { extraValue = "Probable original text";} 
-            else if (compare == "poss:" )              { extraValue = "Possible original text";} 
+            else if (compare == "prob:" )              { extraValue = "Probable original text, according to UBS";} 
+            else if (compare == "poss:" )              { extraValue = "Possible original text, according to UBS";} 
             else if (compare == "or:")                 { extraValue = "Alternative meaning";} 
             else if (compare == "lit:")                { extraValue = "More literal meaning";} 
             else if (compare == "ie:")                 { extraValue = "More idiomatic meaning";} 

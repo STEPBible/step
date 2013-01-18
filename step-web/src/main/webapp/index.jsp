@@ -1,9 +1,18 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java" %> 
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 
 <%@ page import="com.tyndalehouse.step.jsp.WebStepRequest" %>
 <%@ page import="com.google.inject.Injector"%>
 <%@ page import="com.google.inject.Guice"%>
+
+<% if(request.getParameter("lang") != null) { %>
+		<fmt:setLocale value='<%= request.getParameter("lang") %>' />
+<% } else { %> 
+		<fmt:setLocale value="en" />
+<% } %>
+<fmt:setBundle basename="HtmlBundle" />
+
 
 <%
 	Injector injector = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
@@ -136,12 +145,12 @@
 			
 			<table>
 				<tr>
-					<td><a target="_new" href="https://stepweb.atlassian.net/wiki/display/TYNSTEP/STEP+Help+Manual" title="A quick tutorial demonstrating how to get started"/>Help manual</a></td>
-					<td><a target="_new" href="versions.jsp" title="Detailed information on how to use the software"/>Available versions</a></td>
+					<td><a target="_new" href="https://stepweb.atlassian.net/wiki/display/TYNSTEP/STEP+Help+Manual" title="A quick tutorial demonstrating how to get started"/><fmt:message key="help_manual" /></a></td>
+					<td><a target="_new" href="versions.jsp" title="Detailed information on how to use the software"/><fmt:message key="available_versions" /></a></td>
 				</tr>
 				<tr>
-					<td><a target="_new" href="http://www.tyndale.cam.ac.uk/index.php?mact=News,cntnt01,detail,0&cntnt01articleid=28&cntnt01returnid=15" title="Find out more about the STEP project developed by Tyndale House"/>About the STEP project</a></td>
-					<td><a target="_new" href="http://www.facebook.com/pages/STEP-Development-Scripture-Tools-from-Tyndale-House-Cambridge/218909814807605?sk=app_208195102528120" title="Give your time & skills, etc. towards helping making STEP a better tool for everyone" />Volunteers required</a></td>
+					<td><a target="_new" href="http://www.tyndale.cam.ac.uk/index.php?mact=News,cntnt01,detail,0&cntnt01articleid=28&cntnt01returnid=15" title="Find out more about the STEP project developed by Tyndale House"/><fmt:message key="about_step_project" /></a></td>
+					<td><a target="_new" href="http://www.facebook.com/pages/STEP-Development-Scripture-Tools-from-Tyndale-House-Cambridge/218909814807605?sk=app_208195102528120" title="Give your time & skills, etc. towards helping making STEP a better tool for everyone" /><fmt:message key="volunteers_required" /></a></td>
 				</tr>
 			</table>
 			<br />

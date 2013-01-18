@@ -3,11 +3,22 @@
 <%@ page import="com.tyndalehouse.step.jsp.WebStepRequest" %>
 <%@ page import="com.google.inject.Injector"%>
 <%@ page import="com.google.inject.Guice"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <%
 	Injector injector = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
 	WebStepRequest stepRequest = new WebStepRequest(injector, request);
 %>
+
+
+<% if(request.getParameter("lang") != null) { %>
+		<fmt:setLocale value='<%= request.getParameter("lang") %>' />
+<% } else { %> 
+		<fmt:setLocale value="en" />
+<% } %>
+<fmt:setBundle basename="HtmlBundle" />
+
+
 
 
 <div class="advancedSearch" style="clear: both">
@@ -30,27 +41,27 @@
 
 	<!-- Passage search -->
 	<fieldset name="SEARCH_PASSAGE">
-		<legend>Passage lookup</legend>
+		<legend><fmt:message key="search_passage_lookup" /></legend>
 
 		<table class="passageTable">
 			<tr>
-				<td>Translation / Commentary</td>
+				<td><fmt:message key="translation_commentary" /></td>
 				<td style="white-space: nowrap;"><input type="text" class="passageVersion drop" size="15" /> &nbsp; 
 					<a class="infoAboutVersion" target="_blank" href="version.jsp?version=<%= stepRequest.getThisVersion() %>" title="Information about the <%= stepRequest.getThisVersion() %> Bible / Commentary">&#x24d8;</a>&nbsp;</td>
-				<td style="padding-left: 10px">Bible Text&nbsp;</td>
+				<td style="padding-left: 10px"><fmt:message key="bible_text" />&nbsp;</td>
 				<td><input type="text" class="passageReference drop" size="15" /></td>
 			</tr>
 			<tr level="1">
-				<td>Comparison versions</td>
+				<td><fmt:message key="comparison_versions" /></td>
 				<td><input type="text" class="extraVersions drop" size="15" /> &nbsp;<a href='#' class='resetVersions'>x</a></td>
-				<td level="2" style="padding-left: 10px">will be shown as</td>
+				<td level="2" style="padding-left: 10px"><fmt:message key="will_be_shown_as" /></td>
 				<td level="2"><input type="text" class="extraVersionsDisplayOptions drop" size="15" readonly=true"/></td>
 			</tr>
 		</table>
 	</fieldset>
 
 	<fieldset class="simpleTextFields" name="SEARCH_SIMPLE_TEXT">
-		<legend>Text search</legend>
+		<legend><fmt:message key="search_text" /></legend>
 
 		<table>
 			<tr>
@@ -85,7 +96,7 @@
 
 
 	<fieldset name="SEARCH_TEXT">
-		<legend>Advanced text search</legend>
+		<legend><fmt:message key="search_advanced_text" /></legend>
 
 		<table class="textSearchTable">
 			<tr>
@@ -209,7 +220,7 @@
 	</fieldset>
 
 	<fieldset name="SEARCH_ORIGINAL">
-		<legend>Word search</legend>
+		<legend><fmt:message key="search_word" /></legend>
 
 		<table class="wordSearch" >
 			<tr>
@@ -285,7 +296,7 @@
 	</fieldset>
 
 	<fieldset name="SEARCH_SUBJECT">
-		<legend>Subject search</legend>
+		<legend><fmt:message key="search_subject" /></legend>
 		<table class="subjectSearchTable">
 			<tr>
 				<td>Subject&nbsp;</td>

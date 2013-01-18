@@ -641,6 +641,10 @@ FONT.usg {
 	background-color: #EEF;
 }
 
+.alternativeVersion:hover {
+	text-decoration: overline;
+}
+
 .alternative {
 	color: #696;
 	font-weight: bold;
@@ -656,4 +660,5 @@ FONT.usg {
 
 .altered {
 	color: red;	
+	font-family: Comic Sans MS;
 }

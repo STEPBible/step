@@ -342,8 +342,8 @@ step.passage = {
                             handle: api.elements.titlebar
                         });
                         
-                        $(api.elements.titlebar).append(goToPassageArrow(true, xref, "leftPassagePreview"));
-                        $(api.elements.titlebar).append(goToPassageArrow(false, xref, "rightPassagePreview"));
+                        $(api.elements.titlebar).prepend(goToPassageArrow(true, xref, "leftPassagePreview"));
+                        $(api.elements.titlebar).prepend(goToPassageArrow(false, xref, "rightPassagePreview"));
                         $(".leftPassagePreview, .rightPassagePreview", api.elements.titlebar).button().click(function () { api.hide(); });
                     }
                 }

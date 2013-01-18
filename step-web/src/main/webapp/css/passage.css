@@ -463,20 +463,16 @@ FONT.usg {
 	margin: 5px;
 }
 
-.leftPassagePreview {
-	right: 44px !important;
+.leftPassagePreview, .rightPassagePreview {
 	font-size: 130%;
 	height: 14px;
 	font-weight: bold;
 	background-position-y: -50px;
+	float:right;
 }
 
-.rightPassagePreview {
-	right: 25px !important;
-	font-size: 130%;
-	height: 14px;
-	font-weight: bold;
-	background-position-y: -50px;
+.leftPassagePreview, .leftPassagePreview *, .rightPassagePreview, .rightPassagePreview * {
+	padding: 0px;
 }
 
 

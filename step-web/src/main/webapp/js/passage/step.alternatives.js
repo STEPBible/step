@@ -7,6 +7,12 @@ step.alternatives = {
                 return;
             }
             
+            //check version next
+            var version = step.state.passage.version(passageId);
+            if(!version || (version.toLowerCase() != "esv" && version.toLowerCase() != "esvex")) {
+                return;
+            }
+            
             
             $.getSafe(ALTERNATIVE_TRANSLATIONS + step.state.passage.reference(passageId), function(data) {
                 $.each(data.versionVerses, function(v, verse) {

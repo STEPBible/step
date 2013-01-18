@@ -14,7 +14,7 @@
 @MatchingText=	heavens
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	heavens
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	skies
 ===============================
 @Reference=	Gen 1:1
@@ -40,7 +40,7 @@
 @MatchingText=	face
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	face
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	surface
 ===============================
 @Reference=	Gen 1:2
@@ -66,7 +66,7 @@
 @MatchingText=	face
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	face
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	surface
 ===============================
 @Reference=	Gen 1:6
@@ -142,7 +142,7 @@
 @MatchingText=	Heaven
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	Heaven
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	skies
 ===============================
 @Reference=	Gen 1:9
@@ -150,7 +150,7 @@
 @MatchingText=	heavens
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	heavens
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	skies
 ===============================
 @Reference=	Gen 1:9
@@ -214,7 +214,7 @@
 @MatchingText=	kind
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	kind
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	species
 ===============================
 @Reference=	Gen 1:11
@@ -246,7 +246,7 @@
 @MatchingText=	kinds
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	kinds
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	species
 ===============================
 @Reference=	Gen 1:12
@@ -254,7 +254,7 @@
 @MatchingText=	kind
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	kind
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	species
 ===============================
 @Reference=	Gen 1:14
@@ -272,7 +272,7 @@
 @MatchingText=	heavens
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	heavens
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	skies
 ===============================
 @Reference=	Gen 1:14
@@ -288,7 +288,7 @@
 @MatchingText=	signs
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	signs
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	festivals
 ===============================
 @Reference=	Gen 1:14
@@ -314,7 +314,7 @@
 @MatchingText=	heavens
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	heavens
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	skies
 ===============================
 @Reference=	Gen 1:15
@@ -348,7 +348,7 @@
 @MatchingText=	heavens
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	heavens
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	skies
 ===============================
 @Reference=	Gen 1:18
@@ -406,7 +406,7 @@
 @MatchingText=	heavens.
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	heavens
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	skies
 ===============================
 @Reference=	Gen 1:20
@@ -423,7 +423,7 @@
 @MatchingText=	sea creatures
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	sea creatures
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	monsters
 ===============================
 @Reference=	Gen 1:21
@@ -455,7 +455,7 @@
 @MatchingText=	kinds
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	kinds
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	species
 ===============================
 @Reference=	Gen 1:21
@@ -471,7 +471,7 @@
 @MatchingText=	kind
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	kind
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	species
 ===============================
 @Reference=	Gen 1:22
@@ -511,7 +511,7 @@
 @MatchingText=	kinds
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	kinds
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	species
 ===============================
 @Reference=	Gen 1:25
@@ -527,7 +527,7 @@
 @MatchingText=	kinds
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	kinds
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	species
 ===============================
 @Reference=	Gen 1:25
@@ -535,7 +535,7 @@
 @MatchingText=	kinds
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	kinds
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	species
 ===============================
 @Reference=	Gen 1:25
@@ -543,7 +543,7 @@
 @MatchingText=	kind
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	kind
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	species
 ===============================
 @Reference=	Gen 1:26
@@ -575,7 +575,7 @@
 @MatchingText=	heavens
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	heavens
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	skies
 ===============================
 @Reference=	Gen 1:26
@@ -651,7 +651,7 @@
 @MatchingText=	face
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	face
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	surface
 ===============================
 @Reference=	Gen 1:29
@@ -679,7 +679,7 @@
 @MatchingText=	heavens
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	heavens
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	skies
 ===============================
 @Reference=	Gen 1:30
@@ -695,7 +695,7 @@
 @MatchingText=	the breath of life
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	the breath of life
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	a living soul
 ===============================
 @Reference=	Gen 1:30
@@ -715,7 +715,7 @@
 @MatchingText=	heavens
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	heavens
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	skies
 ===============================
 @Reference=	Gen 2:1
@@ -781,7 +781,7 @@
 @MatchingText=	heavens
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	heavens
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	skies
 ===============================
 @Reference=	Gen 2:4
@@ -797,7 +797,7 @@
 @MatchingText=	in the day that
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	in the day that
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	when
 ===============================
 @Reference=	Gen 2:4
@@ -813,7 +813,7 @@
 @MatchingText=	heavens
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	heavens
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	skies
 ===============================
 @Reference=	Gen 2:5
@@ -869,7 +869,7 @@
 @MatchingText=	face
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	face
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	surface
 ===============================
 @Reference=	Gen 2:6
@@ -917,7 +917,7 @@
 @MatchingText=	garden
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	garden
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	paradise
 ===============================
 @Reference=	Gen 2:8
@@ -996,7 +996,7 @@
 @MatchingText=	Cush
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	Cush
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	Ethiopia
 ===============================
 @Reference=	Gen 2:14
@@ -1004,7 +1004,7 @@
 @MatchingText=	Tigris
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	Tigris
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	Hiddekel
 ===============================
 @Reference=	Gen 2:14
@@ -1012,7 +1012,7 @@
 @MatchingText=	Assyria
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	Assyria
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	Ashur
 ===============================
 @Reference=	Gen 2:15
@@ -1062,7 +1062,7 @@
 @MatchingText=	in the day that
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	in the day that
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	when
 ===============================
 @Reference=	Gen 2:17
@@ -1070,7 +1070,7 @@
 @MatchingText=	surely die
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	surely die
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	die the death
 ===============================
 @Reference=	Gen 2:18
@@ -1086,7 +1086,7 @@
 @MatchingText=	fit for him
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	fit for him
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	corresponding to him
 ===============================
 @Reference=	Gen 2:19
@@ -1111,7 +1111,7 @@
 @MatchingText=	heavens
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	heavens
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	skies
 ===============================
 @Reference=	Gen 2:19
@@ -1153,7 +1153,7 @@
 @MatchingText=	heavens
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	heavens
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	skies
 ===============================
 @Reference=	Gen 2:20
@@ -1219,7 +1219,7 @@
 @MatchingText=	hold fast
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	hold fast
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	be united
 ===============================
 @Reference=	Gen 2:25
@@ -1235,7 +1235,7 @@
 @MatchingText=	wife
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	wife
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	woman
 ===============================
 @Reference=	Gen 3:1
@@ -1243,7 +1243,7 @@
 @MatchingText=	beast of the field
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	beast of the field
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	living creature of the field
 ===============================
 @Reference=	Gen 3:1
@@ -1259,7 +1259,7 @@
 @MatchingText=	surely die
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	surely die
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	die the death
 ===============================
 @Reference=	Gen 3:5
@@ -1267,7 +1267,7 @@
 @MatchingText=	when
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	when
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	in the day
 ===============================
 @Reference=	Gen 3:5
@@ -1283,7 +1283,7 @@
 @MatchingText=	a delight
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	a delight
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	pleasant
 ===============================
 @Reference=	Gen 3:6
@@ -1291,7 +1291,7 @@
 @MatchingText=	to make one wise
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	to make one wise
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	to be prosperous
 ===============================
 @Reference=	Gen 3:6
@@ -1299,7 +1299,7 @@
 @MatchingText=	husband
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	husband
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	man
 ===============================
 @Reference=	Gen 3:7
@@ -1323,7 +1323,7 @@
 @MatchingText=	sound
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	sound
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	voice
 ===============================
 @Reference=	Gen 3:8
@@ -1331,7 +1331,7 @@
 @MatchingText=	cool of the day
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	cool of the day
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	evening breeze
 ===============================
 @Reference=	Gen 3:8
@@ -1339,7 +1339,7 @@
 @MatchingText=	presence
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	presence
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	face
 ===============================
 @Reference=	Gen 3:9
@@ -1355,7 +1355,7 @@
 @MatchingText=	the sound of you
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	the sound of you
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	your voice
 ===============================
 @Reference=	Gen 3:11
@@ -1363,7 +1363,7 @@
 @MatchingText=	commanded you not
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	commanded you not
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	forbade you
 ===============================
 @Reference=	Gen 3:12
@@ -1387,7 +1387,7 @@
 @MatchingText=	offspring
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	offspring
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	seed
 ===============================
 @Reference=	Gen 3:15
@@ -1395,7 +1395,7 @@
 @MatchingText=	offspring
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	offspring
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	seed
 ===============================
 @Reference=	Gen 3:15
@@ -1403,7 +1403,7 @@
 @MatchingText=	he
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	he
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	her offspring
 ===============================
 @Reference=	Gen 3:15
@@ -1435,7 +1435,7 @@
 @MatchingText=	in
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	in
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	and
 ===============================
 @Reference=	Gen 3:16
@@ -1455,7 +1455,7 @@
 @MatchingText=	husband
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	husband
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	man
 ===============================
 @Reference=	Gen 3:16
@@ -1481,7 +1481,7 @@
 @MatchingText=	listened to the voice of
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	listened to the voice of
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	obeyed
 ===============================
 @Reference=	Gen 3:17
@@ -1489,7 +1489,7 @@
 @MatchingText=	wife
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	wife
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	woman
 ===============================
 @Reference=	Gen 3:17
@@ -1515,7 +1515,7 @@
 @MatchingText=	bread
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	bread
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	food
 ===============================
 @Reference=	Gen 3:20
@@ -1531,7 +1531,7 @@
 @MatchingText=	wife's
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	wife's
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	woman’s
 ===============================
 @Reference=	Gen 3:20
@@ -1557,7 +1557,7 @@
 @MatchingText=	wife
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	wife
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	woman
 ===============================
 @Reference=	Gen 3:22
@@ -1573,7 +1573,7 @@
 @MatchingText=	Now, lest he
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	Now, lest he
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	He must not be allowed to
 ===============================
 @Reference=	Gen 3:23
@@ -1605,7 +1605,7 @@
 @MatchingText=	turned every way
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	turned every way
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	flashed back and forth
 ===============================
 @Reference=	Gen 4:1
@@ -1613,7 +1613,7 @@
 @MatchingText=	knew
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	knew
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	had intercourse with
 ===============================
 @Reference=	Gen 4:1
@@ -1621,7 +1621,7 @@
 @MatchingText=	wife
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	wife
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	woman
 ===============================
 @Reference=	Gen 4:1
@@ -1645,7 +1645,7 @@
 @MatchingText=	a worker of
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	a worker of
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	cultivated
 ===============================
 @Reference=	Gen 4:3
@@ -1661,7 +1661,7 @@
 @MatchingText=	flock
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	flock
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	small cattle
 ===============================
 @Reference=	Gen 4:4
@@ -1669,7 +1669,7 @@
 @MatchingText=	fat
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	fat
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	best sacrificial
 ===============================
 @Reference=	Gen 4:4
@@ -1677,7 +1677,7 @@
 @MatchingText=	had regard for
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	had regard for
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	looked upon
 ===============================
 @Reference=	Gen 4:5
@@ -1701,7 +1701,7 @@
 @MatchingText=	his face fell
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	his face fell
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	he looked dejected
 ===============================
 @Reference=	Gen 4:6
@@ -1725,7 +1725,7 @@
 @MatchingText=	accepted
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	accepted
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	uplifted
 ===============================
 @Reference=	Gen 4:7
@@ -1743,7 +1743,7 @@
 @OptionsAlternative1=	for
 @OptionsType2=	or: 
 @OptionsAlternative2=	against
-@OptionsType3=	ie: 
+@OptionsType3=	or: 
 @OptionsAlternative3=	to dominate
 ===============================
 @Reference=	Gen 4:8
@@ -1760,7 +1760,7 @@
 @MatchingText=	rose up against
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	rose up against
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	attacked
 ===============================
 @Reference=	Gen 4:9
@@ -1776,7 +1776,7 @@
 @MatchingText=	The voice of
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	The voice of
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	Listen,
 ===============================
 @Reference=	Gen 4:11
@@ -1784,7 +1784,7 @@
 @MatchingText=	groundcursed
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	cursed
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	banished
 ===============================
 @Reference=	Gen 4:12
@@ -1792,7 +1792,7 @@
 @MatchingText=	strength
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	strength
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	produce
 ===============================
 @Reference=	Gen 4:12
@@ -1824,7 +1824,7 @@
 @MatchingText=	ground
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	ground
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	face of the ground
 ===============================
 @Reference=	Gen 4:14
@@ -1832,7 +1832,7 @@
 @MatchingText=	face
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	face
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	presence
 ===============================
 @Reference=	Gen 4:14
@@ -1848,7 +1848,7 @@
 @MatchingText=	a wanderer
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	a wanderer
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	aimless
 ===============================
 @Reference=	Gen 4:15
@@ -1870,7 +1870,7 @@
 @MatchingText=	attack
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	attack
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	kill
 ===============================
 @Reference=	Gen 4:16
@@ -1878,7 +1878,7 @@
 @MatchingText=	presence
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	presence
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	face
 ===============================
 @Reference=	Gen 4:16
@@ -1926,7 +1926,7 @@
 @MatchingText=	father
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	father
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	ancestor
 ===============================
 @Reference=	Gen 4:20
@@ -1942,7 +1942,7 @@
 @MatchingText=	father
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	father
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	ancestor
 ===============================
 @Reference=	Gen 4:21
@@ -2024,7 +2024,7 @@
 @MatchingText=	offspring
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	offspring
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	seed
 ===============================
 @Reference=	Gen 4:26
@@ -2332,7 +2332,7 @@
 @MatchingText=	walked with
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	walked with
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	pleased
 ===============================
 @Reference=	Gen 5:24
@@ -2358,7 +2358,7 @@
 @MatchingText=	took
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	took
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	translated
 ===============================
 @Reference=	Gen 5:25
@@ -2492,7 +2492,7 @@
 @MatchingText=	face
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	face
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	surface
 ===============================
 @Reference=	Gen 6:2
@@ -2508,7 +2508,7 @@
 @MatchingText=	attractive
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	attractive
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	good
 ===============================
 @Reference=	Gen 6:2
@@ -2516,7 +2516,7 @@
 @MatchingText=	as their wives
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	as their wives
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	women for themselves
 ===============================
 @Reference=	Gen 6:3
@@ -2524,7 +2524,7 @@
 @MatchingText=	abide in
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	abide in
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	contend with
 ===============================
 @Reference=	Gen 6:3
@@ -2532,7 +2532,7 @@
 @MatchingText=	flesh
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	flesh
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	mortal
 ===============================
 @Reference=	Gen 6:4
@@ -2550,7 +2550,7 @@
 @MatchingText=	came in to
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	came in to
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	had intercourse with
 ===============================
 @Reference=	Gen 6:4
@@ -2566,7 +2566,7 @@
 @MatchingText=	renown
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	renown
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	the name
 ===============================
 @Reference=	Gen 6:5
@@ -2598,7 +2598,7 @@
 @MatchingText=	continually
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	continually
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	all the day
 ===============================
 @Reference=	Gen 6:6
@@ -2622,7 +2622,7 @@
 @MatchingText=	it grieved him to his heart
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	it grieved him to his heart
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	he pondered it deeply
 ===============================
 @Reference=	Gen 6:7
@@ -2646,7 +2646,7 @@
 @MatchingText=	heavens
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	heavens
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	skies
 ===============================
 @Reference=	Gen 6:7
@@ -2670,7 +2670,7 @@
 @MatchingText=	generations
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	generations
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	descendents
 ===============================
 @Reference=	Gen 6:9
@@ -2678,7 +2678,7 @@
 @MatchingText=	righteous
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	righteous
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	godly
 ===============================
 @Reference=	Gen 6:9
@@ -2686,7 +2686,7 @@
 @MatchingText=	blameless
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	blameless
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	the only blameless one
 ===============================
 @Reference=	Gen 6:9
@@ -2694,7 +2694,7 @@
 @MatchingText=	walked with
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	walked with
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	was well pleasing to 
 ===============================
 @Reference=	Gen 6:11
@@ -2702,7 +2702,7 @@
 @MatchingText=	in God's sight
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	in God's sight
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	before the face of God
 ===============================
 @Reference=	Gen 6:11
@@ -2712,7 +2712,7 @@
 @OptionsAlternative1=	violence
 @OptionsType2=	or: 
 @OptionsAlternative2=	iniquity
-@OptionsType3=	ie: 
+@OptionsType3=	or: 
 @OptionsAlternative3=	lawlessness
 ===============================
 @Reference=	Gen 6:12
@@ -2728,7 +2728,7 @@
 @MatchingText=	flesh
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	flesh
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	mortals
 ===============================
 @Reference=	Gen 6:12
@@ -2736,7 +2736,7 @@
 @MatchingText=	had corrupted their way
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	had corrupted their way
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	were sinful
 ===============================
 @Reference=	Gen 6:13
@@ -2744,7 +2744,7 @@
 @MatchingText=	I have determined to make an
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	I have determined to make an
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	Before me has come the
 ===============================
 @Reference=	Gen 6:13
@@ -2781,7 +2781,7 @@
 @MatchingText=	an ark
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	an ark
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	a ship
 ===============================
 @Reference=	Gen 6:14
@@ -2813,7 +2813,7 @@
 @MatchingText=	cover
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	cover
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	pitch
 ===============================
 @Reference=	Gen 6:15
@@ -2840,7 +2840,7 @@
 @MatchingText=	breath
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	breath
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	spirit
 ===============================
 @Reference=	Gen 6:17
@@ -2864,7 +2864,7 @@
 @MatchingText=	kinds
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	kinds
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	species
 ===============================
 @Reference=	Gen 6:20
@@ -2872,7 +2872,7 @@
 @MatchingText=	kinds
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	kinds
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	species
 ===============================
 @Reference=	Gen 6:20
@@ -2880,7 +2880,7 @@
 @MatchingText=	kind
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	kind
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	species
 ===============================
 @Reference=	Gen 6:21
@@ -2896,7 +2896,7 @@
 @MatchingText=	righteous
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	righteous
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	godly
 ===============================
 @Reference=	Gen 7:2
@@ -2904,7 +2904,7 @@
 @MatchingText=	seven pairs
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	seven pairs
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	seven and seven
 ===============================
 @Reference=	Gen 7:2
@@ -2912,7 +2912,7 @@
 @MatchingText=	mate
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	mate
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	female
 ===============================
 @Reference=	Gen 7:2
@@ -2920,7 +2920,7 @@
 @MatchingText=	mate
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	mate
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	female
 ===============================
 @Reference=	Gen 7:3
@@ -2938,7 +2938,7 @@
 @MatchingText=	heavens
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	heavens
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	skies
 ===============================
 @Reference=	Gen 7:3
@@ -2946,9 +2946,9 @@
 @MatchingText=	offspring
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	offspring
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	seed
-@OptionsType3=	ie: 
+@OptionsType3=	or: 
 @OptionsAlternative3=	species
 ===============================
 @Reference=	Gen 7:3
@@ -2956,7 +2956,7 @@
 @MatchingText=	face
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	face
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	surface
 ===============================
 @Reference=	Gen 7:4
@@ -2964,9 +2964,9 @@
 @MatchingText=	I have made
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	I have made
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	stands
-@OptionsType3=	ie: 
+@OptionsType3=	or: 
 @OptionsAlternative3=	exists
 ===============================
 @Reference=	Gen 7:6
@@ -2984,7 +2984,7 @@
 @MatchingText=	came
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	came
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	were
 ===============================
 @Reference=	Gen 7:7
@@ -3000,7 +3000,7 @@
 @MatchingText=	came
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	came
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	were
 ===============================
 @Reference=	Gen 7:11
@@ -3008,7 +3008,7 @@
 @MatchingText=	fountains
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	fountains
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	sources
 ===============================
 @Reference=	Gen 7:11
@@ -3016,7 +3016,7 @@
 @MatchingText=	windows
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	windows
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	floodgates
 ===============================
 @Reference=	Gen 7:11
@@ -3024,7 +3024,7 @@
 @MatchingText=	heavens
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	heavens
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	skies
 ===============================
 @Reference=	Gen 7:12
@@ -3032,7 +3032,7 @@
 @MatchingText=	fell
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	fell
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	was
 ===============================
 @Reference=	Gen 7:14
@@ -3057,7 +3057,7 @@
 @MatchingText=	kind
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	kind
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	species
 ===============================
 @Reference=	Gen 7:14
@@ -3065,7 +3065,7 @@
 @MatchingText=	kinds
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	kinds
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	species
 ===============================
 @Reference=	Gen 7:14
@@ -3073,7 +3073,7 @@
 @MatchingText=	creeping thing
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	creeping thing
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	tiny creature
 ===============================
 @Reference=	Gen 7:14
@@ -3081,7 +3081,7 @@
 @MatchingText=	kind
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	kind
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	species
 ===============================
 @Reference=	Gen 7:14
@@ -3089,7 +3089,7 @@
 @MatchingText=	kind
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	kind
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	species
 ===============================
 @Reference=	Gen 7:14
@@ -3107,7 +3107,7 @@
 @MatchingText=	flesh
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	flesh
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	creatures
 ===============================
 @Reference=	Gen 7:15
@@ -3123,7 +3123,7 @@
 @MatchingText=	continued
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	continued
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	was 
 ===============================
 @Reference=	Gen 7:18
@@ -3131,7 +3131,7 @@
 @MatchingText=	prevailed
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	prevailed
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	rose
 ===============================
 @Reference=	Gen 7:18
@@ -3139,7 +3139,7 @@
 @MatchingText=	floated
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	floated
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	went up
 ===============================
 @Reference=	Gen 7:18
@@ -3147,7 +3147,7 @@
 @MatchingText=	face
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	face
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	surface
 ===============================
 @Reference=	Gen 7:19
@@ -3163,7 +3163,7 @@
 @MatchingText=	so mightily
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	so mightily
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	more and more
 ===============================
 @Reference=	Gen 7:19
@@ -3171,7 +3171,7 @@
 @MatchingText=	heaven
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	heaven
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	sky
 ===============================
 @Reference=	Gen 7:20
@@ -3179,7 +3179,7 @@
 @MatchingText=	cubits
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	cubits
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	a forearm’s length
 @OptionsQualifier2=	about 18 inches or 45 cm
 ===============================
@@ -3210,9 +3210,9 @@
 @MatchingText=	every living thing that was on
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	every living thing that was on
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	all that stands upon
-@OptionsType3=	ie: 
+@OptionsType3=	or: 
 @OptionsAlternative3=	everything that exists on
 ===============================
 @Reference=	Gen 7:23
@@ -3220,7 +3220,7 @@
 @MatchingText=	face
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	face
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	surface
 ===============================
 @Reference=	Gen 7:23
@@ -3228,7 +3228,7 @@
 @MatchingText=	man
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	man
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	from man
 ===============================
 @Reference=	Gen 7:23
@@ -3244,7 +3244,7 @@
 @MatchingText=	and
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	and
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	to the
 ===============================
 @Reference=	Gen 7:23
@@ -3252,7 +3252,7 @@
 @MatchingText=	heavens
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	heavens
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	skies
 ===============================
 @Reference=	Gen 7:24
@@ -3292,7 +3292,7 @@
 @MatchingText=	heavens
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	heavens
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	skies
 ===============================
 @Reference=	Gen 8:2
@@ -3300,7 +3300,7 @@
 @MatchingText=	heavens
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	heavens
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	skies
 ===============================
 @Reference=	Gen 8:2
@@ -3316,7 +3316,7 @@
 @MatchingText=	receded
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	receded
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	were going down
 ===============================
 @Reference=	Gen 8:5
@@ -3324,7 +3324,7 @@
 @MatchingText=	continued to abate
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	continued to abate
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	were going down
 ===============================
 @Reference=	Gen 8:5
@@ -3332,7 +3332,7 @@
 @MatchingText=	tops
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	tops
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	heads
 @OptionsType3=	or: 
 @OptionsAlternative3=	peaks
@@ -3373,9 +3373,9 @@
 @MatchingText=	set her foot
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	set her foot
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	rest for her foot
-@OptionsType3=	ie: 
+@OptionsType3=	or: 
 @OptionsAlternative3=	perch
 ===============================
 @Reference=	Gen 8:9
@@ -3391,7 +3391,7 @@
 @MatchingText=	sent forth
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	sent forth
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	released
 ===============================
 @Reference=	Gen 8:12
@@ -3433,7 +3433,7 @@
 @MatchingText=	said to Noah,
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	said to Noah,
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	spoke to Noah, saying
 ===============================
 @Reference=	Gen 8:17
@@ -3446,7 +3446,7 @@
 @FullText=	
 @MatchingText=	
 @OptionsQualifier0=	)
-@OptionsType1=	lit: 
+@OptionsType1=	or: 
 @OptionsAlternative1=	Send
 @OptionsType2=	poss: 
 @OptionsAlternative2=	Take
@@ -3486,7 +3486,7 @@
 @MatchingText=	by families
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	by families
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	according to their species
 ===============================
 @Reference=	Gen 8:21
@@ -3526,7 +3526,7 @@
 @MatchingText=	While the earth remains
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	While the earth remains
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	In all the days of the earth
 ===============================
 @Reference=	Gen 9:2
@@ -3534,7 +3534,7 @@
 @MatchingText=	heavens
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	heavens
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	skies
 ===============================
 @Reference=	Gen 9:2
@@ -3550,7 +3550,7 @@
 @MatchingText=	hand
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	hand
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	power
 ===============================
 @Reference=	Gen 9:2
@@ -3582,7 +3582,7 @@
 @MatchingText=	your
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	your
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	your own
 ===============================
 @Reference=	Gen 9:5
@@ -3590,7 +3590,7 @@
 @MatchingText=	lifeblood
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	lifeblood
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	the blood of your souls
 ===============================
 @Reference=	Gen 9:5
@@ -3598,7 +3598,7 @@
 @MatchingText=	require a reckoning
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	require a reckoning
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	exact justice
 ===============================
 @Reference=	Gen 9:5
@@ -3606,7 +3606,7 @@
 @MatchingText=	from
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	from
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	from the hand of
 ===============================
 @Reference=	Gen 9:5
@@ -3614,7 +3614,7 @@
 @MatchingText=	require it 
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	require it 
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	exact justice
 ===============================
 @Reference=	Gen 9:5
@@ -3622,7 +3622,7 @@
 @MatchingText=	his fellow man
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	his fellow man
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	a man’s brother
 ===============================
 @Reference=	Gen 9:5
@@ -3630,7 +3630,7 @@
 @MatchingText=	require a reckoning
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	require a reckoning
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	exact justice
 ===============================
 @Reference=	Gen 9:5
@@ -3659,7 +3659,7 @@
 @MatchingText=	offspring
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	offspring
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	seed
 ===============================
 @Reference=	Gen 9:10
@@ -3695,7 +3695,7 @@
 @MatchingText=	flesh
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	flesh
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	life
 ===============================
 @Reference=	Gen 9:12
@@ -3711,7 +3711,7 @@
 @MatchingText=	bow
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	bow
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	rainbow
 ===============================
 @Reference=	Gen 9:14
@@ -3727,7 +3727,7 @@
 @MatchingText=	flesh
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	flesh
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	kinds
 ===============================
 @Reference=	Gen 9:16
@@ -3743,7 +3743,7 @@
 @MatchingText=	all flesh
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	all flesh
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	every kind
 ===============================
 @Reference=	Gen 9:17
@@ -3767,7 +3767,7 @@
 @MatchingText=	were dispersed
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	were dispersed
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	was populated
 ===============================
 @Reference=	Gen 9:20
@@ -3791,7 +3791,7 @@
 @MatchingText=	a servant of servants
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	a servant of servants
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	the lowest of servants
 ===============================
 @Reference=	Gen 9:26
@@ -3815,7 +3815,7 @@
 @MatchingText=	dwell in the tents
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	dwell in the tents
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	share the blessings
 ===============================
 @Reference=	Gen 10:1
@@ -3889,7 +3889,7 @@
 @MatchingText=	a mighty hunter before the LORD
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	a mighty hunter before the LORD
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	the mightiest hunter
 ===============================
 @Reference=	Gen 10:9
@@ -3897,7 +3897,7 @@
 @MatchingText=	Like Nimrod
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	Like Nimrod
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	This man is like Nimrod,
 ===============================
 @Reference=	Gen 10:10
@@ -4001,7 +4001,7 @@
 @MatchingText=	Heth
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	Heth
-@OptionsType2=	ie: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	the Hittites
 ===============================
 @Reference=	Gen 10:19
@@ -4057,9 +4057,9 @@
 @MatchingText=	The territory in which they lived
 @OptionsType1=	ESV: 
 @OptionsAlternative1=	The territory in which they lived
-@OptionsType2=	lit: 
+@OptionsType2=	or: 
 @OptionsAlternative2=	Their dwellings
-@OptionsType3=	ie: 
+@OptionsType3=	or: 
 @OptionsAlternative3=	their settlement
 ===============================
 @Reference=	Gen 10:32

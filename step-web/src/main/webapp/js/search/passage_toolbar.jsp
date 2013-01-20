@@ -1,4 +1,4 @@
-
+<%@page import="javax.servlet.jsp.jstl.core.Config"%>
 <%@ page contentType="text/html; charset=UTF-8" language="java" %> 
 
 <%@ page import="com.tyndalehouse.step.jsp.WebStepRequest" %>
@@ -7,11 +7,11 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 
-<% if(request.getParameter("lang") != null) { %>
-		<fmt:setLocale value='<%= request.getParameter("lang") %>' />
-<% } else { %> 
-		<fmt:setLocale value="en" />
-<% } %>
+<% if(request.getParameter("lang") != null) {
+	Config.set(session, Config.FMT_LOCALE, request.getParameter("lang"));
+} else { 
+	Config.set(session, Config.FMT_LOCALE, request.getLocale().getLanguage());
+} %>
 <fmt:setBundle basename="HtmlBundle" />
 
 
@@ -34,8 +34,8 @@
 							.getParameter("passageId")))%>"><fmt:message key="passage_next_chapter" /></a> 
 		<a
 			class="bookmarkPassageLink"><fmt:message key="passage_tools_bookmark" /></a> <a class="smallerFonts"
-			href="#" title="Smaller fonts"><fmt:message key="passage_font_size_symbol" /></a> <a class="largerFonts" href="#"
-			title="Larger fonts"><fmt:message key="passage_font_size_symbol" /></a>
+			href="#" title="<fmt:message key="passage_smaller_fonts" />"><fmt:message key="passage_font_size_symbol" /></a> <a class="largerFonts" href="#"
+			title="<fmt:message key="passage_larger_fonts" />"><fmt:message key="passage_font_size_symbol" /></a>
 		</span>
 	</span>
 </div>

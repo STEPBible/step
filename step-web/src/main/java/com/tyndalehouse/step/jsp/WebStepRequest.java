@@ -248,4 +248,5 @@ public class WebStepRequest {
             throw new StepInternalException("An error occured while trying to parse the request", e);
         }
     }
+
 }

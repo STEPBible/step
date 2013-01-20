@@ -4,7 +4,7 @@
 
 <web-app>
 	<display-name>STEP :: Scripture Tools for Every Person</display-name>
-
+	
 	<servlet id="jsp">
 		<servlet-name>jsp</servlet-name>
 		<servlet-class>org.apache.jasper.servlet.JspServlet</servlet-class>

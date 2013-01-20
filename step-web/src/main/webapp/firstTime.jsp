@@ -1,4 +1,15 @@
+<%@page import="javax.servlet.jsp.jstl.core.Config"%>
 <%@ page contentType="text/html; charset=UTF-8" language="java" %> 
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+<% if(request.getParameter("lang") != null) {
+	Config.set(session, Config.FMT_LOCALE, request.getParameter("lang"));
+} else { 
+	Config.set(session, Config.FMT_LOCALE, request.getLocale().getLanguage());
+} %>
+<fmt:setBundle basename="HtmlBundle" />
+
+
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <HTML>
@@ -23,10 +34,10 @@
 		<h1>STEP :: Scripture Tools for Every Person</h1>
 	</div>
 
-	<h2>Welcome to STEP!</h2>
+	<h2><fmt:message key="welcome_to_step" /></h2>
 	<p />
-	This is the first time you have run the STEP software. Please be patient while it installs. <br />
-	Please note these actions do NOT require any access to the Internet. 
+		<fmt:message key="first_time_notice" />
+	 
 	<p />
 	
 	<div style="height: 300px; overflow-y: scroll; border: 1px solid lightgrey">

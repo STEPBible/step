@@ -1,3 +1,6 @@
+<%@page import="javax.servlet.jsp.jstl.core.Config"%>
+<%@page import="java.util.Locale"%>
+<%@page import="java.util.ResourceBundle"%>
 <%@ page contentType="text/html; charset=UTF-8" language="java" %> 
 
 
@@ -8,19 +11,46 @@
 <%
 	Injector injector = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
 	PrefaceStepRequest stepRequest = new PrefaceStepRequest(injector, request);
+	
+	Locale locale;
+	
+	String overridenLocale = request.getParameter("lang");
+	if(overridenLocale != null) {
+		locale = new Locale(overridenLocale);
+	} else if(request.getLocale() != null) {
+		locale = request.getLocale();
+	} else {
+		locale = Locale.ENGLISH;	
+	}
+	
+	Config.set(session, Config.FMT_LOCALE, locale.getLanguage());
+
+	ResourceBundle bundle = ResourceBundle.getBundle("HtmlBundle", locale);
 %>
 
+<% 
+	String book = "";
+	String title = "";
+	String longTitle = "";
+	try {
+		book =  stepRequest.getBook().getInitials();
+		title = String.format(bundle.getString("preface_title"), book);
+		longTitle = String.format(bundle.getString("preface_description"), book);
+	} catch(Exception e) {
+		
+	}
+%>
+
+
 <jsp:include page="jsps/header.jsp">
-	<jsp:param value="<%= stepRequest.getBook().getName() + \" preface\" %>" name="title"/>
-	<jsp:param value="The preface to the <%= stepRequest.getBook().getName()  %>" name="description"/>
-	<jsp:param value="<%= stepRequest.getBook().getName() + \" preface\" %>" name="keywords"/>
+	<jsp:param value="<%= title %>" name="title"/>
+	<jsp:param value="<%= longTitle %>" name="description"/>
+	<jsp:param value="<%= title %>" name="keywords"/>
 </jsp:include>
 
-<% if(!stepRequest.isSuccess()) { %>
-	Unable to obtain information about this version: <%= request.getParameter("version") %>
-<% } else { %>
-		<%= stepRequest.getPreface() %>
-<% } %>
+<%= !stepRequest.isSuccess() ?  
+		bundle.getString("unable_to_obtain_version_information") + " " + request.getParameter("version")
+		: stepRequest.getPreface() %>
 
 
 </body>

@@ -1,11 +1,12 @@
+<%@page import="javax.servlet.jsp.jstl.core.Config"%>
 <%@ page contentType="text/html; charset=UTF-8" language="java" %> 
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<% if(request.getParameter("lang") != null) { %>
-		<fmt:setLocale value='<%= request.getParameter("lang") %>' />
-<% } else { %> 
-		<fmt:setLocale value="en" />
-<% } %>
+<% if(request.getParameter("lang") != null) {
+	Config.set(session, Config.FMT_LOCALE, request.getParameter("lang"));
+} else { 
+	Config.set(session, Config.FMT_LOCALE, request.getLocale().getLanguage());
+} %>
 <fmt:setBundle basename="HtmlBundle" />
 
 
@@ -49,8 +50,8 @@
 	<%
 		}
 	%>
-	<a class="smallerFonts" href="#" title="Smaller fonts">A</a>
-	<a class="largerFonts" href="#" title="Larger fonts">A</a>
+	<a class="smallerFonts" href="#" title="<fmt:message key="passage_smaller_fonts" />"><fmt:message key="passage_font_size_symbol" /></a>
+	<a class="largerFonts" href="#" title="<fmt:message key="passage_larger_fonts" />"><fmt:message key="passage_font_size_symbol" /></a>
 	<a href='#' class='showSearchCriteria'><fmt:message key="search_show_criteria" /></a> 
 	<a href='#' class='hideSearchCriteria'><fmt:message key="search_hide_criteria" /></a>
 	<input type='hidden' class='pageNumber <%=request.getParameter("namespace")%>PageNumber' value='0' readonly='true' />

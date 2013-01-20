@@ -1,11 +1,13 @@
+<%@page import="javax.servlet.jsp.jstl.core.Config"%>
 <%@ page pageEncoding="UTF-8" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<% if(request.getParameter("lang") != null) { %>
-		<fmt:setLocale value='<%= request.getParameter("lang") %>' />
-<% } else { %> 
-		<fmt:setLocale value="en" />
-<% } %>
+<% if(request.getParameter("lang") != null) {
+	Config.set(session, Config.FMT_LOCALE, request.getParameter("lang"));
+} else { 
+	Config.set(session, Config.FMT_LOCALE, request.getLocale().getLanguage());
+} %>
+
 <fmt:setBundle basename="HtmlBundle" />
 
 <!-- <input type="text" class='searchQuerySyntax quickSearch' /> -->

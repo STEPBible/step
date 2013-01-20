@@ -1,3 +1,4 @@
+<%@page import="javax.servlet.jsp.jstl.core.Config"%>
 <%@ page contentType="text/html; charset=UTF-8" language="java" %> 
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
@@ -6,11 +7,11 @@
 <%@ page import="com.google.inject.Injector"%>
 <%@ page import="com.google.inject.Guice"%>
 
-<% if(request.getParameter("lang") != null) { %>
-		<fmt:setLocale value='<%= request.getParameter("lang") %>' />
-<% } else { %> 
-		<fmt:setLocale value="en" />
-<% } %>
+<% if(request.getParameter("lang") != null) {
+	Config.set(session, Config.FMT_LOCALE, request.getParameter("lang"));
+} else { 
+	Config.set(session, Config.FMT_LOCALE, request.getLocale().getLanguage());
+} %>
 <fmt:setBundle basename="HtmlBundle" />
 
 
@@ -141,16 +142,16 @@
 		<div id="holdingPage">
 			<h1>STEP<br /> <em>S</em>cripture <em>T</em>ools for <em>E</em>very <em>P</em>erson</h1>
 			<img src="images/step-logo-big.png" title="STEP" /><br />
-			<em>Stepping into the Bible.</em><br /><br />
+			<em><fmt:message key="step_tag_line" /></em><br /><br />
 			
 			<table>
 				<tr>
-					<td><a target="_new" href="https://stepweb.atlassian.net/wiki/display/TYNSTEP/STEP+Help+Manual" title="A quick tutorial demonstrating how to get started"/><fmt:message key="help_manual" /></a></td>
-					<td><a target="_new" href="versions.jsp" title="Detailed information on how to use the software"/><fmt:message key="available_versions" /></a></td>
+					<td><a target="_new" href="https://stepweb.atlassian.net/wiki/display/TYNSTEP/STEP+Help+Manual" title="<fmt:message key="quick_tutorial" />"/><fmt:message key="help_manual" /></a></td>
+					<td><a target="_new" href="versions.jsp" title="<fmt:message key="detailed_help_manual" />"/><fmt:message key="available_versions" /></a></td>
 				</tr>
 				<tr>
-					<td><a target="_new" href="http://www.tyndale.cam.ac.uk/index.php?mact=News,cntnt01,detail,0&cntnt01articleid=28&cntnt01returnid=15" title="Find out more about the STEP project developed by Tyndale House"/><fmt:message key="about_step_project" /></a></td>
-					<td><a target="_new" href="http://www.facebook.com/pages/STEP-Development-Scripture-Tools-from-Tyndale-House-Cambridge/218909814807605?sk=app_208195102528120" title="Give your time & skills, etc. towards helping making STEP a better tool for everyone" /><fmt:message key="volunteers_required" /></a></td>
+					<td><a target="_new" href="http://www.tyndale.cam.ac.uk/index.php?mact=News,cntnt01,detail,0&cntnt01articleid=28&cntnt01returnid=15" title="<fmt:message key="find_out_more_about_step" />"><fmt:message key="about_step_project" /></a></td>
+					<td><a target="_new" href="http://www.facebook.com/pages/STEP-Development-Scripture-Tools-from-Tyndale-House-Cambridge/218909814807605?sk=app_208195102528120" title="<fmt:message key="support_the_project"/>" /><fmt:message key="volunteers_required" /></a></td>
 				</tr>
 			</table>
 			<br />
@@ -178,10 +179,10 @@
 	<div id="bottomSection" class="bottomModule timeline">
 		<div id="bottomModuleHeader" >
 			<span class="timelineContext" style="padding-right: 10px"></span>
-			<span class="timelineContext" style="float: right;" onclick="step.navigation.hideBottomSection();">Close</span>
+			<span class="timelineContext" style="float: right;" onclick="step.navigation.hideBottomSection();"><fmt:message key="close" /></span>
 		</div>
 		<div id="bottomSectionContent" style="clear: both;">	
-			No modules have yet been loaded.
+			<fmt:message key="no_modules_loaded_yet" />
 		</div>
 	</div>
 </div>
@@ -199,7 +200,7 @@
 <!--<div id="loading"><img alt="Loading..." src="images/wait16.gif" />Loading...</div>-->
 <div id="error" class="ui-state-error" style="display: none">
 	<span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
-	<span id="errorText">A placeholder for error messages</span>
+	<span id="errorText"><fmt:message key="error_message_holder" /></span>
 </div>
 
 <!--  The about popup -->
@@ -207,35 +208,35 @@
 <div id="about">
 	<img id="aboutLogo" src="images/step-logo.png" />
 	<h3 id="aboutTitle">STEP :: Scripture Tools for Every Person</h3>
-	<p>&copy; Tyndale House 2011</p>
+	<p>&copy; Tyndale House &copy; <%= java.util.Calendar.getInstance().get(java.util.Calendar.YEAR)  %></p>
 </div>
 
 <%-- <jsp:include page="jsps/login.jsp"></jsp:include> --%>
 
 <div id="goToDate" style="display: none">
-	Please enter a year: <input type="text" id="scrollToYear" />
+	<fmt:message key="please_enter_year" /> <input type="text" id="scrollToYear" />
 </div>
 
 <!--  The popup that can have lots of helpful information -->
 <jsp:include page="jsps/lexicon_definition.jsp"  />
 <img src="images/wait_big.gif" id="waiting" />
 <div id="previewReference" style="display: none"><div id="previewBar" style="display: none;">
-	<a href="#" id="previewClose">Close this popup</a>
-	<a href="#" id="previewRight">See passage on the right pane</a>
-	<a href="#" id="previewLeft">See passage on the left pane</a>
+	<a href="#" id="previewClose"><fmt:message key="close_this_popup" /></a>
+	<a href="#" id="previewRight"><fmt:message key="see_passage_on_right_pane" /></a>
+	<a href="#" id="previewLeft"><fmt:message key="see_passage_on_left_pane" /></a>
 </div><span id="popupText"></span></div>
 
 <div id="validUser" style="display: none">
 	<div id="validUserQuestion">
-		Please enter the following details<p />
+		<fmt:message key="register_tag_line" /><p />
 		<table>
-			<tr><td>Name</td><td><input type="text" id='userName' />*</td></tr>
-			<tr><td>Email</td><td><input type="text" id='userEmail' />*</td></tr>
+			<tr><td><fmt:message key="register_name" /></td><td><input type="text" id='userName' />*</td></tr>
+			<tr><td><fmt:message key="register_email" /></td><td><input type="text" id='userEmail' />*</td></tr>
 		</table>
 		<div style="display: none" id="validationMessage"></div>
 	</div>
 </div>
-<div id='stepInDevelopmentWarning'>The STEP software and its data are currently under active development and being checked for accuracy. </div>
+<div id='stepInDevelopmentWarning'><fmt:message key="step_disclaimer" /></div>
 </body>
 
 </HTML>

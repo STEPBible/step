@@ -1,11 +1,21 @@
+<%@page import="javax.servlet.jsp.jstl.core.Config"%>
 <%@ page contentType="text/html; charset=UTF-8" language="java" %> 
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+
+<% if(request.getParameter("lang") != null) {
+	Config.set(session, Config.FMT_LOCALE, request.getParameter("lang"));
+} else { 
+	Config.set(session, Config.FMT_LOCALE, request.getLocale().getLanguage());
+} %>
+<fmt:setBundle basename="HtmlBundle" />
 
 
 <span id='lexiconDefinition'>
 	<ul id="lexiconDefinitionHeader">
 		<span id="lexiconPopupClose">x</span>
-			<li><a href="#origin">Original Word</a></li>
-			<li><a href="#context">Context</a></li>
+			<li><a href="#origin"><fmt:message key="original_word" /></a></li>
+			<li><a href="#context"><fmt:message key="original_word_context" /></a></li>
 	</ul>
 
 	<div id="origin" name="LEXICON_DEFINITION">

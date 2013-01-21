@@ -24,7 +24,7 @@ $(function() {
                 value : self._getValue() + 1
             });
             
-    	    var label = $("<span class='sliderDetailLevelLabel'>Basic view</span>");
+    	    var label = $("<span class='sliderDetailLevelLabel'>" + DETAIL_LEVELS[0] + "</span>");
             var widgetContent = $("<span class='detailSliderContainer'></span>").append(label).append(slider);
             
             if(this.options.title) {
@@ -96,7 +96,7 @@ $(function() {
     	},
     	
     	_updateLabel : function() {
-    	    $(".sliderDetailLevelLabel", this.element).html(DETAIL_LEVELS[this._getValue()] + " view");
+    	    $(".sliderDetailLevelLabel", this.element).html(DETAIL_LEVELS[this._getValue()]);
     	}
     });
 });

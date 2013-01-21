@@ -98,7 +98,7 @@ USER_CHECK =                        STEP_SERVER_BASE_URL + "user/checkValidUser/
 // SOME DEFAULTS
 // ////////////////////////
 var DEFAULT_POPUP_WIDTH = 500;
-var DETAIL_LEVELS = [ "Basic", "Intermediate", "Advanced" ];
+var DETAIL_LEVELS = [ "Basic view", "Intermediate view", "Advanced view" ];
 
 /** a simple toggler for the menu items */
 function toggleMenuItem(menuItem) {

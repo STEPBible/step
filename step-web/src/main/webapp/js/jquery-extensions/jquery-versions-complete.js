@@ -238,14 +238,14 @@ $.widget("custom.versions",  {
         var toolbar = "";
         toolbar += '<table width="100%">';
         
-        toolbar += '<tr class=""><td class="filterHeader">Resource type</td><td>';
-        toolbar += '<span class="filterButtonSet"><input type="checkbox" id="bibles" value="bibles" name="textType" key="bibles" checked="checked" /><label for="bibles">Bibles</label>';
-        toolbar += '<input type="checkbox" id="commentaries" value="commentaries" name="textType"  key="commentaries" /><label for="commentaries">Commentaries</label></span>';
+        toolbar += '<tr class=""><td class="filterHeader">' + __s.resource_type + '</td><td>';
+        toolbar += '<span class="filterButtonSet"><input type="checkbox" id="bibles" value="bibles" name="textType" key="bibles" checked="checked" /><label for="bibles">' + __s.bibles + '</label>';
+        toolbar += '<input type="checkbox" id="commentaries" value="commentaries" name="textType"  key="commentaries" /><label for="commentaries">' + __s.commentaries + '</label></span>';
         toolbar += '</td>';    
         toolbar += '</tr>';
 
-        toolbar += '<tr class="filterButtonSet languageFilters"><td class="filterHeader">Languages</td><td>';
-        toolbar += '<span ><input type="checkbox" id="languageAll" value="langAll" name="language" key="langAll" /><label for="languageAll">All</label></span>';
+        toolbar += '<tr class="filterButtonSet languageFilters"><td class="filterHeader">' + __s.languages + '</td><td>';
+        toolbar += '<span ><input type="checkbox" id="languageAll" value="langAll" name="language" key="langAll" /><label for="languageAll">' + __s.all + '</label></span>';
 
         toolbar += '<input type="checkbox" id="languageMy" value="langMy" name="language"  key="langMy" ';
         if(languageCode == 'en') {
@@ -255,16 +255,16 @@ $.widget("custom.versions",  {
         toolbar += '/><label for="languageMy">' + languageName + '</label>';
         
         if(languageCode != 'en') {
-            toolbar += '<input type="checkbox" id="languageMyAndEnglish" value="langMyAndEnglish"  key="langMyEnglish" name="language" checked="checked" /><label for="languageMyAndEnglish">' + languageName + ' + English</label>';
+            toolbar += '<input type="checkbox" id="languageMyAndEnglish" value="langMyAndEnglish"  key="langMyEnglish" name="language" checked="checked" /><label for="languageMyAndEnglish">' + languageName + ' + ' + __s.english + '</label>';
         }
         
-        toolbar += '<span ><input type="checkbox" id="languageAncient" value="langAncient"  key="langAncient" name="language" /><label for="languageAncient">Ancient</label></span>';
+        toolbar += '<span ><input type="checkbox" id="languageAncient" value="langAncient"  key="langAncient" name="language" /><label for="languageAncient">' + __s.ancient + '</label></span>';
         
         toolbar += '</td></tr>';
             
         
         toolbar += '</table>';
-        toolbar += '<div class="filterTagLine">Filtering ' + step.versions.length + ' Bibles &amp; Commentaries</div><hr />';
+        toolbar += '<div class="filterTagLine">' + sprintf(__s.filtering_bibles_and_commentaries, step.versions.length) + '</div><hr />';
         
         
         toolbarContainer.append($(toolbar));

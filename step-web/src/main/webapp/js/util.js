@@ -199,17 +199,17 @@ step.util = {
             
             // add to Strongs if applicable, and therefore interlinear
             if(item.hasRedLetter) {
-                features += " " + '<span class="versionFeature" title="Able to show Jesus\' words in red">R</span>';
+                features += " " + '<span class="versionFeature" title="' + __s.jesus_words_in_red_available + '">' + __s.jesus_words_in_red_available_initial + '</span>';
             }
 
             if (item.hasStrongs) {
-                features += " " + "<span class='versionFeature' title='Vocabulary available'>V</span>";
-                features += " " + "<span class='versionFeature' title='Interlinear available'>I</span>";
+                features += " " + "<span class='versionFeature' title='" + __s.vocabulary_available + "'>" + __s.vocabulary_available_initial + "</span>";
+                features += " " + "<span class='versionFeature' title='" + __s.interlinear_available + "'>" + __s.interlinear_available_initial + "</span>";
             }
 
             // add morphology
             if (item.hasMorphology) {
-                features += " " + "<span class='versionFeature' title='Grammar available'>G</span>";
+                features += " " + "<span class='versionFeature' title='" + __s.grammar_available + "'>" + __s.grammar_available_initial + "</span>";
             }
             
 
@@ -249,7 +249,7 @@ step.util = {
                         }
                         
                         vocabInfo += "<span class='infoTagLine'>" +
-                        "More information can be found by clicking on the word in the verse." +
+                        __s.more_info_on_click_of_word +
                         "</span>";
                         
                         //"<span class='ancientSearch'>" + item.accentedUnicode + "</span> (<em>" + item.stepTransliteration + "</em>): " + (item.stepGloss == undefined ? "-" : item.stepGloss);
@@ -350,7 +350,7 @@ step.util = {
                     if(step.search.refinedSearch.length == 0) {
                         $.getSafe(SEARCH_ESTIMATES, [encodeURIComponent(step.util.replaceSpecialChars(syntax)) + " in (" + versions + ")"], function(estimate) {
                             $("fieldset:visible .resultEstimates", step.util.getPassageContainer(passageId))
-                                .html("~ <em>" + estimate + "</em> results")
+                                .html(sprintf(__s.approx_results, estimate))
                                 .css("color", "#" + step.util.ui._calculateEstimateBackgroundColour(estimate));
                             
                         });
@@ -565,7 +565,7 @@ step.util = {
                 var passageContainer = step.util.getPassageContainer(this);
                 step.search.refinedSearch.push(step.search.lastSearch);
 
-                $(".refinedSearch .refinedSearchLabel", passageContainer).html("Refining results from last search: " + step.search.refinedSearch.join("=>"));
+                $(".refinedSearch .refinedSearchLabel", passageContainer).html(__s.refine_search_results + " " + step.search.refinedSearch.join("=>"));
                 
                 //blank the results
                 $("fieldset:visible .resultEstimates", passageContainer).html("");
@@ -703,7 +703,7 @@ function isEmpty(s) {
  */
 function addButtonToAutoComplete(textbox, icon) {
 	$("<button>&nbsp;</button>").attr("tabIndex", -1).attr("title",
-			"Show all Bible versions").insertAfter(textbox).button({
+			__s.show_all_bible_versions).insertAfter(textbox).button({
 		icons : {
 			primary : icon
 		},
@@ -1038,7 +1038,7 @@ function passageArrowTrigger(passageId, ref, goToChapter) {
 
 function addNotApplicableString(val) {
 	if(val == null || val == "") {
-		return "<span class='notApplicable'>N/A</span>";
+		return "<span class='notApplicable'>" + __s.not_applicable + "</span>";
 	}
 	return val;
 }

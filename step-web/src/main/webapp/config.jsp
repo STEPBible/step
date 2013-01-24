@@ -23,6 +23,7 @@
 	<link rel="shortcut icon"  href="images/step-favicon.ico" />
     
 	<script src="js_init/initLib.js" type="text/javascript"></script>   
+  	<script src="international/interactive.js" type="text/javascript"></script>
     <script src="libs/jquery-1.8.2.min.js" type="text/javascript"></script>
 	<script src="libs/jquery-ui-1.8.23.custom.min.js" type="text/javascript"></script>
 
@@ -41,8 +42,8 @@
 	<fmt:message key="configuration_intro" />
 	
 	<div class="configOptions">
-		<input type="button" value="I want to add modules from the internet." id="dismissWarning" />
-		<input type="button" value="I'd like to use the STEP application" id="useStep" onclick='window.location.href="index.jsp";' />
+		<input type="button" value="installation_add_modules_from_internet" id="dismissWarning" />
+		<input type="button" value="<fmt:message key="installation_use_step_application" />" id="useStep" onclick='window.location.href="index.jsp";' />
 	</div>
 
 	<p />

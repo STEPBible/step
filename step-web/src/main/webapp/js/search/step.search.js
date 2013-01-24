@@ -244,12 +244,12 @@ step.search = {
         
         
         if(undoneQuery.startsWith("s=")) {
-            this._addMoreSubjectButton(passageId, undoneQuery, "Search a different set of topics?");
+            this._addMoreSubjectButton(passageId, undoneQuery, __s.subject_search_first);
         } else if (undoneQuery.startsWith("s+=") ){ 
-            this._addMoreSubjectButton(passageId, undoneQuery, "Search an even larger set of topics?");
+            this._addMoreSubjectButton(passageId, undoneQuery, __s.subject_search_second);
             this._addSubjectExpandHandlers(passageId);
         } else if(undoneQuery.startsWith("s++=")) {
-            this._addMoreSubjectButton(passageId, undoneQuery, "Back to where you started?");
+            this._addMoreSubjectButton(passageId, undoneQuery, __s.subject_search_third);
             this._addSubjectExpandHandlers(passageId, undoneQuery);
         }
     },
@@ -314,7 +314,7 @@ step.search = {
                 //also append the see also references as links to do the search again
                 var seeAlsoRefs = "";
                 if(seeAlso) {
-                    seeAlsoRefs = $("<h4 class='expandedHeadingItem'>Other useful entries:</h4>");
+                    seeAlsoRefs = $("<h4 class='expandedHeadingItem'>" + __s.subject_other_useful_entries + "</h4>");
                     var otherLinks = $("<ul class='expandedHeadingItem'></ul>");
                     
                     var refs = seeAlso.split(";");
@@ -473,7 +473,7 @@ step.search = {
         var end = pageNumber * step.search.pageSize;
         end = end < total ? end : total;
         
-        resultsLabel.html("Showing results <em>" + start + " - " + end + "</em> of <em>" + total + "</em>");
+        resultsLabel.html(sprintf(__s.paging_showing_x_to_y_out_of_z_results, start, end, total));
         
         this.totalResults = total;  
     },
@@ -633,7 +633,7 @@ step.search = {
         step.util.getPassageContainer(passageId).removeClass("hebrewLanguage greekLanguage");
         
         if (searchResults == undefined || searchResults.length == 0 || (searchQueryResults.total == 0)) {
-            results += "<span class='notApplicable'>No search results were found</span>";
+            results += "<span class='notApplicable'>" + __s.search_no_search_results_found + "</span>";
             this._changePassageContent(passageId, results);
             this._doOriginalWordToolbar(searchQueryResults.definitions, passageId);
             return;
@@ -665,7 +665,7 @@ step.search = {
         
 
         if (searchQueryResults.maxReached == true) {
-            results += "<span class='notApplicable'>The maximum number of search results was reached. Please refine your search to see continue.</span>";
+            results += "<span class='notApplicable'>" + __s.search_too_many_results+ "</span>";
         }
         
         this._changePassageContent(passageId, results);
@@ -720,7 +720,7 @@ step.search = {
 
             
 
-            var bar = $("<div></div>").append("<h4 class='lexicalGrouping'>The following lexical forms have been included in the search:</h4>").append(originalWordToolbar).append("<hr />");
+            var bar = $("<div></div>").append("<h4 class='lexicalGrouping'>" + __s.search_lexical_forms + "</h4>").append(originalWordToolbar).append("<hr />");
             passageContent.prepend(bar);
 
             $(".sortable").sortElements(function(a, b) { 

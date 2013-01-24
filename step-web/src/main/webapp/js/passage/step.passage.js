@@ -82,8 +82,8 @@ step.passage = {
         var interlinearVersion = display.displayVersions;
         
         var self = this;
-        if (!step.util.raiseErrorIfBlank(lookupVersion, "A version must be provided")
-                || !step.util.raiseErrorIfBlank(lookupReference, "A reference must be provided")) {
+        if (!step.util.raiseErrorIfBlank(lookupVersion, __s.error_version_missing)
+                || !step.util.raiseErrorIfBlank(lookupReference, __s.error_reference_missing)) {
             return;
         }
 
@@ -215,7 +215,7 @@ step.passage = {
         if($(serverResponse.value).children().not(".xgen").size() == 0) {
             var reference = step.state.passage.reference(passageId)
             
-            step.util.raiseInfo(passageId, "The Translation / Commentary does not cover the Bible Text (" + reference + ").", 'info', true);
+            step.util.raiseInfo(passageId, sprintf(__s.error_bible_doesn_t_have_passage, reference), 'info', true);
             passageContent.html("");
         } else {
             passageContent.html(serverResponse.value);
@@ -449,7 +449,7 @@ Passage.prototype.initVersionsTextBox = function() {
     $(this.version).versions();
     $(this.version).bind('change', function(event) {
             var value = $(event.target).val();
-            if (step.util.raiseErrorIfBlank(value, "A version must be selected.")) {
+            if (step.util.raiseErrorIfBlank(value, __s.version_must_be_selected)) {
                   //need to refresh the options of interleaving/interlinear, etc.
                   step.passage.ui.updateDisplayOptions(self.passageId);
                   step.state.passage.version(self.passageId, value);

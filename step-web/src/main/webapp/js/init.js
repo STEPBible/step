@@ -162,7 +162,7 @@ function checkValidUser() {
                         $(self).dialog("close");
                     } else {
                         //say sorry and reset form
-                        $("#validationMessage").html("We're really sorry, but new users are currently only accepted on an invitation-only basis.");
+                        $("#validationMessage").html(__s.error_registration_closed);
                         $("#validationMessage").css("display", "block");
                     }
                 });
@@ -170,7 +170,7 @@ function checkValidUser() {
         },
         modal: true,
         closeOnEscape: false,
-        title: "Register to use STEP!"
+        title: __s.register_to_use_step
     });
     
     $("#ui-dialog-title-validUser").parent().css("display", "none");
@@ -248,7 +248,7 @@ function adjustColumns() {
  */
 function initLayout() {
     //add the defaults slider bar
-    $("#topMenu").detailSlider({title: "Controls the level of detail across the whole application.", key : "top"});
+    $("#topMenu").detailSlider({title: __s.view_title_controls_level_of_detail, key : "top"});
     $(document).hear("slideView-top", function(self, data) {
         var value = $("#topMenu").detailSlider("value");
         $(".detailSliderContainer").parent().not("#topMenu").detailSlider("update", { value : value});

@@ -71,7 +71,10 @@ step.version = {
         
         updateInfoLink : function(passageId) {
             var version = step.state.passage.version(passageId);
-            $(".infoAboutVersion", step.util.getPassageContainer(passageId)).attr("href", "version.jsp?version=" + version).attr("title", "Information about the " + version + " Bible / Commentary");
+            $(".infoAboutVersion", 
+                    step.util.getPassageContainer(passageId))
+                        .attr("href", "version.jsp?version=" + version)
+                        .attr("title", sprintf(__s.info_about_bible, version));
         },
         
         warnIfNoStrongs : function(passageId, version) {

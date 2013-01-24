@@ -45,10 +45,10 @@ step.lexicon = {
 
     _doSearch : function(searchType) {
         var query = $("span[info-name ='strongNumber']").text();
-        if(step.util.raiseErrorIfBlank(query, "No strong data is available")) {
+        if(step.util.raiseErrorIfBlank(query, __s.error_no_strong_data)) {
             var targetPassageId = (parseInt(this.passageId) + 1) % 2;
             
-            step.state.original.originalScope(targetPassageId, "Gen-Rev");
+            step.state.original.originalScope(targetPassageId, __s.whole_bible_range);
             step.state.original.originalType(targetPassageId, query[0] == 'H' ? HEBREW_WORDS[0] : GREEK_WORDS[0]);
             step.state.original.originalWord(targetPassageId, query);
             step.state.original.originalForms(targetPassageId, searchType);

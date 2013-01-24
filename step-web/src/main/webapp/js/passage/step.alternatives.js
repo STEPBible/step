@@ -68,7 +68,7 @@ step.alternatives = {
                                         $("a.alt-" + o).click(function(event) {
                                             if(step.passage.versions == undefined) {
                                                 step.passage.versions = { warningRaised : true};
-                                                step.util.raiseInfo(passageId, "The text shown below has been modified and does not show the original ESV text", 'error', true);
+                                                step.util.raiseInfo(passageId, __s.alternatives_esv_warning, 'error', true);
                                             }
                                             
                                             
@@ -118,43 +118,32 @@ step.alternatives = {
             }
             
             var compare = text.toLowerCase().trim();
+            var esvPrefix = "";
             
             if(compare.startsWith("esv")) {
+                esvPrefix = "<span title=\"" + __s.alternatives_esv_source + "\">ESV: </span>";
                 compare = compare.substring(3).trim();
             }
             
             if(compare == "") {
-                return text;
+                return esvPrefix;
             }
             
-            if(compare.startsWith(":")) {
-                compare = compare.substring(1).trim();
+            
+            var internationalKey = compare.trim().replace(/:+/ig, '').trim().replace(/\s+/ig, '_').trim();
+            if(internationalKey == "") {
+                return esvPrefix;
             }
             
-            if      (compare == "hebrew")              { extraValue = "Leningrad Codex"; } 
-            else if (compare == "aramaic")             { extraValue = "Ancient translation (Targum)";} 
-            else if (compare == "syriac")              { extraValue = "Ancient translation (Peshitta)";} 
-            else if (compare == "greek")               { extraValue = "Ancient translation (Septuagint)";} 
-            else if (compare == "greek mss")           { extraValue = "Ancient translation (Old Greek)"; } 
-            else if (compare == "latin")               { extraValue = "Ancient translation (Vulgate)";} 
-            else if (compare == "samaritan")           { extraValue = "Pentateuch preserved by Samaritans";} 
-            else if (compare == "judean Desert mss")   { extraValue = "Hebrew fragments from the Dead Sea and Judean wilderness";}  
-            else if (compare == "egyptian mss")        { extraValue = "Hebrew manuscripts from the Cairo Geniza";} 
-            else if (compare == "masoretic mss")       { extraValue = "Manuscripts different to Leningrad Codex";} 
-            else if (compare == "egyptian")            { extraValue = "?"; } 
-            else if (compare == "scribal note" )       { extraValue = "Manuscript margins (Masora incl. Qere)";}  
-            else if (compare == "conjecture" )         { extraValue = "No manuscript support";} 
-            else if (compare == "prob:" )              { extraValue = "Probable original text, according to UBS";} 
-            else if (compare == "poss:" )              { extraValue = "Possible original text, according to UBS";} 
-            else if (compare == "or:")                 { extraValue = "Alternative meaning";} 
-            else if (compare == "lit:")                { extraValue = "More literal meaning";} 
-            else if (compare == "ie:")                 { extraValue = "More idiomatic meaning";} 
-            else if (compare == "old eng:")            { extraValue = "King James English";} 
-            else if (compare == "sounds like:")        { extraValue = "Pun or similar word";} 
+            var longInternationalKey  = "alternative_long_" + internationalKey;
+            var shortInternationalKey = "alternative_" + internationalKey;
             
+            
+            var fullText = sprintf("%1$s%2$s", esvPrefix, __s[shortInternationalKey]);
+            var extraValue = __s[longInternationalKey];
             if(extraValue != "") {
-                return "<span title='" + extraValue + "'>" + text + "</span>";
+                return "<span title=\"" + extraValue + "\">" + fullText + "</span>";
             }
-            return text;
+            return fullText;
         },
 }

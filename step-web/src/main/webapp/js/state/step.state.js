@@ -129,7 +129,7 @@ step.state = {
         if (activeSearch) {
             //then show warning sign if attempting to refine a search
             if( (activeSearch == "SEARCH_TIMELINE" || activeSearch == "SEARCH_SUBJECT") && refiningSearches) {
-                step.util.raiseError("This type of search does not support the 'Refine search' feature. Please close the 'Refine Search' feature to proceed.");
+                step.util.raiseError(__s.error_refined_search_not_supported);
                 return;
             } else {
                 // tick the right menu item

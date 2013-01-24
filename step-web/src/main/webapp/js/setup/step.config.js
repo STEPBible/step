@@ -149,22 +149,31 @@ step.config = {
     renderVersion : function(item, column) {
         var self = this;
 
-        var category = item.category == 'BIBLE' ? "Bible" : "Commentary";
+        var category = item.category == 'BIBLE' ? __s.bible : __s.commentary;
         var features = step.util.ui.getFeaturesLabel(item);
         if (features == "") {
-            features = "N/A";
+            features = __s.not_applicable;
         }
 
         var module = $(
                 "<div class='version ui-corner-all'>" + 
                 "<div class='versionContainer'><div class='versionHeader'>" + 
-                "<span class='name'>" + item.name + "</span>" + 
-                " (<span class='initials'>" + item.initials + "</span>) " + "</div>" + 
-                "<div class='versionColumn'>Category: <div class='category'>" + category + "</div></div>"
-                        + "<div class='versionColumn'>Language: <div class='languageName'>" + item.languageName + "</div> (<span class='languageCode'>" +
-                        	item.languageCode + "</span>)</div>" + "<div class='features'>Features: " + features + "</div>"
-                        + "<div class='installNow'><a href='#'>Install now</a></div>" + 
-                          "<div class='removeNow'><a href='#'>Remove</a></div>" +                
+                "<span class='name'>" + 
+                item.name + 
+                "</span>" + 
+                " (<span class='initials'>" + item.initials + "</span>) " + 
+                "</div>" + 
+                "<div class='versionColumn'>" +
+                __s.category +
+                "<div class='category'>" + category + "</div></div>" + 
+                "<div class='versionColumn'>" + __s.language +
+                "<div class='languageName'>" + item.languageName + "</div> (<span class='languageCode'>" +
+                        	item.languageCode + "</span>)</div>" + "<div class='features'>" +
+                        			__s.features + features + "</div>"
+                        + "<div class='installNow'><a href='#'>" + __s.install_now +
+                        		"</a></div>" + 
+                          "<div class='removeNow'><a href='#'>" + __s.remove +
+                          "</a></div>" +                
                             "</div></div>").draggable({
             revert : "invalid",
             containment : "document",

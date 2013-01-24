@@ -41,7 +41,7 @@ step.firstTime = {
         init : function() {
             var self = this;
             
-            self.addProgressItem("Starting installation...");
+            self.addProgressItem(__s.starting_installation);
             self.delayProgressUpdate();
             
             $.get(SETUP_INSTALL_FIRST_TIME, function(data) {

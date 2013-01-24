@@ -22,7 +22,9 @@
     <link rel="stylesheet" type="text/css" href="static/static.css" />
 	<link rel="shortcut icon"  href="images/step-favicon.ico" />
     
-	<script src="js_init/initLib.js" type="text/javascript"></script>   
+	<script src="js_init/initLib.js" type="text/javascript"></script>  
+	<script src="international/interactive.js" type="text/javascript"></script>
+	 
     <script src="libs/jquery-1.8.2.min.js" type="text/javascript"></script>
 	<script src="libs/jquery-ui-1.8.23.custom.min.js" type="text/javascript"></script>
 

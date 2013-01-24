@@ -172,7 +172,7 @@ step.state.passage = {
 
     scrolling : function(passageId, scrolling) {
         if (this.multiRange(passageId)) {
-            step.util.raiseError("Continuous scrolling cannot be enabled for mutliple ranges");
+            step.util.raiseError(__s.error_continuous_scroll_on_multiple_refs);
             return false;
         }
 

@@ -63,10 +63,11 @@ import com.tyndalehouse.step.core.exceptions.StepInternalException;
  */
 @Singleton
 public class FrontController extends HttpServlet {
+    /** The Constant UTF_8_ENCODING. */
+    public static final String UTF_8_ENCODING = "UTF-8";
     private static final String EXTERNAL_CONTROLLER_SUB_PACKAGE = "external";
     private static final Logger LOGGER = LoggerFactory.getLogger(FrontController.class);
     private static final String CONTROLLER_PACKAGE = "com.tyndalehouse.step.rest.controllers";
-    private static final String UTF_8_ENCODING = "UTF-8";
     private static final char PACKAGE_SEPARATOR = '.';
     private static final long serialVersionUID = 7898656504631346047L;
     private static final String CONTROLLER_SUFFIX = "Controller";

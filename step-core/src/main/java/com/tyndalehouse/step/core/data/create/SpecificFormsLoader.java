@@ -43,7 +43,7 @@ public class SpecificFormsLoader extends AbstractClasspathBasedModuleLoader {
                 lines++;
 
                 if (lines % 10000 == 0) {
-                    getMainLoader().addUpdate("Added " + lines + " specific forms of the original text.");
+                    getMainLoader().addUpdate("install_original_word_forms_progress", lines);
                 }
             }
         } catch (final IOException io) {

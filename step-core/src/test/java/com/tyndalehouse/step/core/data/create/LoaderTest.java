@@ -35,7 +35,9 @@ package com.tyndalehouse.step.core.data.create;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Locale;
 import java.util.Properties;
+import java.util.ResourceBundle;
 
 import org.apache.lucene.search.NumericRangeQuery;
 import org.joda.time.DateTime;
@@ -202,7 +204,7 @@ public class LoaderTest {
         coreProperties.put(key, file);
         final JSwordVersificationService versificationService = new JSwordVersificationServiceImpl();
         return new Loader(new JSwordPassageServiceImpl(versificationService, null, null, null), null,
-                coreProperties, this.entityManager);
+                coreProperties, this.entityManager, ResourceBundle.getBundle("SetupBundle", Locale.ENGLISH));
     }
 
     /**

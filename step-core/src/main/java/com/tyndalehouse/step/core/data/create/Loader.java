@@ -35,6 +35,7 @@ package com.tyndalehouse.step.core.data.create;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.ResourceBundle;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -73,22 +74,26 @@ public class Loader {
 
     private final BlockingQueue<String> progress = new LinkedBlockingQueue<String>();
     private boolean complete = false;
+    private final ResourceBundle resourceBundle;
 
     /**
-     * The loader is given a connection source to load the data
+     * The loader is given a connection source to load the data.
      * 
      * @param jsword the jsword service
      * @param jswordModule the service helping with installation of jsword modules
      * @param coreProperties the step core properties
      * @param entityManager the entity manager
+     * @param resourceBundle the resource bundle
      */
     @Inject
     public Loader(final JSwordPassageService jsword, final JSwordModuleService jswordModule,
-            @Named("StepCoreProperties") final Properties coreProperties, final EntityManager entityManager) {
+            @Named("StepCoreProperties") final Properties coreProperties, final EntityManager entityManager,
+            @Named("SetupBundle") final ResourceBundle resourceBundle) {
         this.jsword = jsword;
         this.jswordModule = jswordModule;
         this.coreProperties = coreProperties;
         this.entityManager = entityManager;
+        this.resourceBundle = resourceBundle;
     }
 
     /**
@@ -132,7 +137,7 @@ public class Loader {
      */
     private void installAndIndex(final String version) {
         syncInstall(version);
-        this.addUpdate("Making the " + version + " searchable");
+        this.addUpdate("install_making_version_searchable", version);
         this.jswordModule.index(version);
     }
 
@@ -146,7 +151,7 @@ public class Loader {
             return;
         }
 
-        this.progress.offer("Installing the " + version + " from the STEP application folder.");
+        this.addUpdate("installing_version_local", version);
         this.jswordModule.installBook(version);
 
         // very ugly, but as good as it's going to get for now
@@ -161,11 +166,10 @@ public class Loader {
             }
 
             installProgress = this.jswordModule.getProgressOnInstallation(version);
-            this.progress
-                    .offer("Install progress of " + version + ": " + (int) (installProgress * 100) + "%");
+            this.addUpdate("install_progress", version, (int) (installProgress * 100));
         } while (installProgress != 1);
 
-        this.progress.offer("The " + version + " has been installed.");
+        this.addUpdate("installed_version_success", version);
     }
 
     /**
@@ -193,7 +197,7 @@ public class Loader {
      */
     int loadAlternativeTranslations() {
         LOGGER.debug("Indexing Alternative versions");
-        this.progress.offer("Installing data for alternative translations");
+        this.addUpdate("install_alternative_meanings");
 
         final EntityIndexWriterImpl writer = this.entityManager.getNewWriter("alternativeTranslations");
 
@@ -205,7 +209,7 @@ public class Loader {
         final int close = writer.close();
         LOGGER.debug("Writing Alternative Versions index");
 
-        this.progress.offer("There are now  " + close + " text variants loaded.");
+        this.addUpdate("install_alternative_meanings_complete", close);
         return close;
     }
 
@@ -216,7 +220,7 @@ public class Loader {
      */
     int loadNave() {
         LOGGER.debug("Indexing nave subjects");
-        this.progress.offer("Installing data for Subject Searches");
+        this.addUpdate("install_subject_search");
 
         final EntityIndexWriterImpl writer = this.entityManager.getNewWriter("nave");
 
@@ -228,7 +232,7 @@ public class Loader {
         final int close = writer.close();
         LOGGER.debug("End Nave");
 
-        this.progress.offer("Subject searches are ready to use with " + close + " entries");
+        this.addUpdate("install_subject_search_complete", close);
         return close;
     }
 
@@ -238,7 +242,7 @@ public class Loader {
      * @return number of records loaded
      */
     int loadHotSpots() {
-        this.progress.offer("Preparing timeline periods");
+        this.addUpdate("install_timeline_periods");
 
         LOGGER.debug("Loading hotspots");
 
@@ -254,7 +258,7 @@ public class Loader {
      * @return the number of entries
      */
     int loadRobinsonMorphology() {
-        this.progress.offer("Installation grammar data ");
+        this.addUpdate("install_grammar");
 
         LOGGER.debug("Loading robinson morphology");
         final EntityIndexWriterImpl writer = this.entityManager.getNewWriter("morphology");
@@ -264,7 +268,7 @@ public class Loader {
         final int total = writer.close();
         LOGGER.debug("End of morphology");
 
-        this.progress.offer(total + " grammar definitions have been installed");
+        this.addUpdate("install_grammar_complete", total);
 
         return total;
     }
@@ -275,7 +279,7 @@ public class Loader {
      * @return the number of records loaded
      */
     int loadVersionInformation() {
-        this.progress.offer("Installing descriptions of Bible texts and commentaries");
+        this.addUpdate("install_descriptions");
 
         LOGGER.debug("Loading version information");
         final EntityIndexWriterImpl writer = this.entityManager.getNewWriter("versionInfo");
@@ -283,7 +287,7 @@ public class Loader {
                 .init(this);
         final int close = writer.close();
 
-        this.progress.offer(close + " descriptions of Bible texts and commentaries are now available");
+        this.addUpdate("install_descriptions_complete", close);
         return close;
 
     }
@@ -294,7 +298,7 @@ public class Loader {
      * @return number of records loaded
      */
     int loadTimeline() {
-        this.progress.offer("Installing timeline events");
+        this.addUpdate("install_timeline");
 
         LOGGER.debug("Loading timeline");
         final EntityIndexWriterImpl writer = this.entityManager.getNewWriter("timelineEvent");
@@ -304,7 +308,7 @@ public class Loader {
                 .init(this);
         final int close = writer.close();
 
-        this.progress.offer("Finished installing " + close + " timeline events");
+        this.addUpdate("intall_timeline_complete", close);
 
         return close;
     }
@@ -315,7 +319,7 @@ public class Loader {
      * @return the number of records loaded
      */
     int loadOpenBibleGeography() {
-        this.progress.offer("Installing Open Bible data");
+        this.addUpdate("install_maps");
 
         LOGGER.debug("Loading Open Bible geography");
 
@@ -326,7 +330,7 @@ public class Loader {
 
         final int close = writer.close();
 
-        this.progress.offer("Finished installing " + close + " places");
+        this.addUpdate("install_maps_complete", close);
         return close;
     }
 
@@ -336,19 +340,19 @@ public class Loader {
      * @return the number of entries loaded
      */
     int loadLexiconDefinitions() {
-        this.progress.offer("Adding Lexicon definitions.");
+        this.addUpdate("install_hebrew_definitions");
 
         LOGGER.debug("Indexing lexicon");
         final EntityIndexWriterImpl writer = this.entityManager.getNewWriter("definition");
 
         LOGGER.debug("-Indexing greek");
-        this.progress.offer("Installing Greek definitions");
+        this.addUpdate("install_greek_definitions");
         HeadwordLineBasedLoader lexiconLoader = new HeadwordLineBasedLoader(writer,
                 this.coreProperties.getProperty("test.data.path.lexicon.definitions.greek"));
         lexiconLoader.init(this);
 
         LOGGER.debug("-Indexing hebrew");
-        this.progress.offer("Installing Hebrew definitions.");
+        this.addUpdate("install_hebrew_definitions");
         final String hebrewLexicon = this.coreProperties
                 .getProperty("test.data.path.lexicon.definitions.hebrew");
         if (hebrewLexicon != null) {
@@ -356,12 +360,12 @@ public class Loader {
         }
         lexiconLoader.init(this);
 
-        this.progress.offer("Optimizing Greek and Hebrew definition lookups.");
+        this.addUpdate("install_optimizing_definitions");
         LOGGER.debug("-Writing index");
         final int close = writer.close();
         LOGGER.debug("End lexicon");
 
-        this.progress.offer("Added " + close + " definitions to the lexicon.");
+        this.addUpdate("install_definitions_finished", close);
 
         return close;
     }
@@ -373,14 +377,14 @@ public class Loader {
      */
     int loadSpecificForms() {
         LOGGER.debug("Loading lexical forms");
-        this.progress.offer("Adding data for Original Word Search");
+        this.addUpdate("install_original_word_forms");
 
         final EntityIndexWriterImpl writer = this.entityManager.getNewWriter("specificForm");
         new SpecificFormsLoader(writer, this.coreProperties.getProperty("test.data.path.lexicon.forms"))
                 .init(this);
         final int close = writer.close();
 
-        this.progress.offer("Finished installing " + close + " forms of the original words.");
+        this.addUpdate("install_original_word_forms_complete", close);
         return close;
     }
 
@@ -396,10 +400,13 @@ public class Loader {
     }
 
     /**
-     * @param update the update to be added to the queue
+     * Adds the update.
+     * 
+     * @param key the key to the Setup resource bundle
+     * @param args the args the arguments to use in the format
      */
-    void addUpdate(final String update) {
-        this.progress.offer(update);
+    void addUpdate(final String key, final Object... args) {
+        this.progress.offer(String.format(this.resourceBundle.getString(key), args));
     }
 
     /**

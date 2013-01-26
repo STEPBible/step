@@ -44,6 +44,9 @@ import javax.inject.Named;
 
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.BookCategory;
+import org.crosswire.jsword.internationalisation.DefaultLocaleProvider;
+import org.crosswire.jsword.internationalisation.LocaleProvider;
+import org.crosswire.jsword.internationalisation.LocaleProviderManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -101,6 +104,10 @@ public class Loader {
      * 
      */
     public void init() {
+        // set the locale provider to default first
+        final LocaleProvider appProvider = LocaleProviderManager.getLocaleProvider();
+        LocaleProviderManager.setLocaleProvider(new DefaultLocaleProvider());
+
         // remove any internet loader, because we are running locally first...
         // THIS LINE IS ABSOLUTELY CRITICAL AS IT DISABLES SOCKETS ON AN APPLICATION-WIDE LEVEL
         this.jswordModule.setOffline(true);
@@ -128,6 +135,8 @@ public class Loader {
         loadData();
         this.jswordModule.setOffline(false);
         this.complete = true;
+
+        LocaleProviderManager.setLocaleProvider(appProvider);
     }
 
     /**

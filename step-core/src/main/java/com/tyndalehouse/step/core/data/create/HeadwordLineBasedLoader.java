@@ -103,7 +103,7 @@ public class HeadwordLineBasedLoader extends AbstractClasspathBasedModuleLoader 
             this.writer.save();
 
             if (this.count % 5000 == 0) {
-                super.getMainLoader().addUpdate("headword_entries_progress", this.count);
+                super.getMainLoader().addUpdate("install_generic_progress", this.count);
             }
         }
 

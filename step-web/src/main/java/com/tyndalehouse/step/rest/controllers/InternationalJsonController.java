@@ -70,7 +70,7 @@ public class InternationalJsonController extends HttpServlet {
 
         final Locale locale;
         if (isNotBlank(req.getParameter("lang"))) {
-            locale = Locale.forLanguageTag(req.getParameter("lang"));
+            locale = new Locale("zh");
         } else {
             locale = req.getLocale();
         }

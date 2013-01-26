@@ -69,8 +69,10 @@ public class InternationalJsonController extends HttpServlet {
             throws ServletException, IOException {
 
         final Locale locale;
-        if (isNotBlank(req.getParameter("lang"))) {
-            locale = new Locale("zh");
+
+        final String langParameter = req.getParameter("lang");
+        if (isNotBlank(langParameter)) {
+            locale = new Locale(langParameter);
         } else {
             locale = req.getLocale();
         }

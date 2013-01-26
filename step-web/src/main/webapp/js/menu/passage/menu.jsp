@@ -26,13 +26,13 @@
 		<li><a href="#" name="COLOUR_CODE" ><fmt:message key="display_grammarColor" /></a></li>
 	</ul>
 	</li>
-<!-- 	<li  menu-name="CONTEXT"><a href="#">Context</a> -->
-<!-- 	<ul> -->
-<!-- 		<li><a href="#" name="TIMELINE"><fmt:message key="context_timeline" /></a></li> -->
+	<li  menu-name="CONTEXT"><a href="#">Context</a>
+	<ul>
+		<li><a href="#" name="TIMELINE"><fmt:message key="context_timeline" /></a></li>
 <!-- 		<li><a href="#" name="GEOGRAPHY"><fmt:message key="context_geography" /></a></li> -->
 <!-- 		<li><a href="#" name="GENEALOGY"><fmt:message key="context_genealogy" /></a></li> -->
-<!-- 	</ul> -->
-<!-- 	</li> -->
+	</ul>
+	</li>
 	<li  menu-name="SEARCH"><a href="#"><fmt:message key="search" /></a>
 	<ul>
 		<li><a href="#" name="SEARCH_PASSAGE"><fmt:message key="search_passage_lookup" /></a></li>

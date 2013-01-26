@@ -32,9 +32,12 @@
  ******************************************************************************/
 package com.tyndalehouse.step.guice.providers;
 
+import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
+
 import java.util.Locale;
 
 import javax.inject.Provider;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -52,6 +55,7 @@ import com.tyndalehouse.step.models.WebSessionImpl;
  */
 @RequestScoped
 public class ClientSessionProvider implements Provider<ClientSession> {
+    private static final String COOKIE_REQUEST_PARAM = "lang";
     private final HttpSession session;
     private final HttpServletRequest request;
 
@@ -70,8 +74,31 @@ public class ClientSessionProvider implements Provider<ClientSession> {
     @Override
     public ClientSession get() {
         // check if this has the IP address in it
-        final Locale locale = this.request.getLocale();
+        final Locale locale = getLocale();
         return new WebSessionImpl(this.session.getId(), locale.getISO3Language(),
                 this.request.getRemoteAddr(), locale);
+    }
+
+    /**
+     * Gets the locale.
+     * 
+     * @return the locale
+     */
+    private Locale getLocale() {
+        if (isNotBlank(this.request.getParameter(COOKIE_REQUEST_PARAM))) {
+            return new Locale(this.request.getParameter(COOKIE_REQUEST_PARAM));
+        }
+
+        // take from session next
+        if (this.session != null) {
+            final Cookie[] cookies = this.request.getCookies();
+            for (final Cookie c : cookies) {
+                if (COOKIE_REQUEST_PARAM.equals(c.getName())) {
+                    return new Locale(c.getValue());
+                }
+            }
+        }
+
+        return this.request.getLocale();
     }
 }

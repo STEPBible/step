@@ -49,6 +49,7 @@ var timeline;
 
 function init() {
 	$(document).ready(function() {
+	    initLocale();
 	    checkValidUser();
 	    
 	    initMenu();
@@ -68,6 +69,17 @@ function init() {
 
         initJira();
 	});
+}
+
+function initLocale() {
+    var lang = $.getUrlVar("lang");
+    if(lang) {
+        //set cookie session-scope
+        $.cookie("lang", lang);
+    } else {
+        //delete the value
+        $.cookie("lang", null);
+    }
 }
 
 function initJira() {

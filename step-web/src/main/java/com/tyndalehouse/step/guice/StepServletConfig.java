@@ -32,6 +32,8 @@
  ******************************************************************************/
 package com.tyndalehouse.step.guice;
 
+import java.util.Locale;
+
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 
@@ -39,34 +41,38 @@ import org.crosswire.common.util.Reporter;
 import org.crosswire.common.util.ReporterEvent;
 import org.crosswire.common.util.ReporterListener;
 import org.crosswire.jsword.book.sword.state.OpenFileStateManager;
+import org.crosswire.jsword.internationalisation.LocaleProvider;
+import org.crosswire.jsword.internationalisation.LocaleProviderManager;
 import org.crosswire.jsword.versification.BookName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.Provider;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.google.inject.servlet.ServletModule;
 import com.tyndalehouse.step.core.data.EntityManager;
 import com.tyndalehouse.step.core.data.create.Loader;
 import com.tyndalehouse.step.core.guice.StepCoreModule;
+import com.tyndalehouse.step.core.models.ClientSession;
 import com.tyndalehouse.step.rest.controllers.ImageController;
 import com.tyndalehouse.step.rest.controllers.InternationalJsonController;
 import com.tyndalehouse.step.rest.framework.FrontController;
 
 /**
  * Configures the listener for the web app to return the injector used to configure the whole of the
- * application
+ * application.
  * 
  * @author chrisburrell
- * 
  */
 public class StepServletConfig extends GuiceServletContextListener {
     private static final Logger LOGGER = LoggerFactory.getLogger(StepServletConfig.class);
+    private Injector injector;
 
     @Override
     protected Injector getInjector() {
-        return Guice.createInjector(new StepCoreModule(), new StepWebModule(), new ServletModule() {
+        this.injector = Guice.createInjector(new StepCoreModule(), new StepWebModule(), new ServletModule() {
             @Override
             protected void configureServlets() {
 
@@ -81,14 +87,33 @@ public class StepServletConfig extends GuiceServletContextListener {
                 filter("/external/*").through(ExternalPoweredByFilter.class);
             }
         });
+        return this.injector;
     }
 
+    /**
+     * Context initialized.
+     * 
+     * @param servletContextEvent the servlet context event
+     */
     @Override
     public void contextInitialized(final ServletContextEvent servletContextEvent) {
         // No call to super as it also calls getInjector()
         final ServletContext sc = servletContextEvent.getServletContext();
         sc.setAttribute(Injector.class.getName(), getInjector());
 
+        configureJSword();
+        configureJSwordErrorReporting();
+
+        if (Boolean.getBoolean("step.loader")) {
+            getInjector().getInstance(Loader.class).init();
+        }
+
+    }
+
+    /**
+     * Configure JSword error reporting.
+     */
+    private void configureJSwordErrorReporting() {
         Reporter.addReporterListener(new ReporterListener() {
             @Override
             public void reportMessage(final ReporterEvent ev) {
@@ -102,13 +127,31 @@ public class StepServletConfig extends GuiceServletContextListener {
 
             }
         });
-
-        BookName.setFullBookName(false);
-        if (Boolean.getBoolean("step.loader")) {
-            getInjector().getInstance(Loader.class).init();
-        }
     }
 
+    /**
+     * Configure JSword.
+     */
+    private void configureJSword() {
+        // set the type of book name
+        BookName.setFullBookName(false);
+        final Provider<ClientSession> provider = this.injector.getProvider(ClientSession.class);
+
+        // set the locale resolution
+        LocaleProviderManager.setLocaleProvider(new LocaleProvider() {
+
+            @Override
+            public Locale getUserLocale() {
+                return provider.get().getLocale();
+            }
+        });
+    }
+
+    /**
+     * Context destroyed.
+     * 
+     * @param servletContextEvent the servlet context event
+     */
     @Override
     public void contextDestroyed(final ServletContextEvent servletContextEvent) {
         final ServletContext sc = servletContextEvent.getServletContext();

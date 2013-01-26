@@ -49,8 +49,8 @@ import org.slf4j.LoggerFactory;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.google.inject.OutOfScopeException;
 import com.google.inject.Provider;
+import com.google.inject.ProvisionException;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.google.inject.servlet.ServletModule;
 import com.tyndalehouse.step.core.data.EntityManager;
@@ -145,7 +145,7 @@ public class StepServletConfig extends GuiceServletContextListener {
             public Locale getUserLocale() {
                 try {
                     return provider.get().getLocale();
-                } catch (final OutOfScopeException ex) {
+                } catch (final ProvisionException ex) {
                     return Locale.ENGLISH;
                 }
             }

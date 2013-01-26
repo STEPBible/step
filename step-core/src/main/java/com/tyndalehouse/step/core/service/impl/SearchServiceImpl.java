@@ -97,14 +97,14 @@ import com.tyndalehouse.step.core.utils.StringUtils;
 @Singleton
 public class SearchServiceImpl implements SearchService {
     /** value representing a vocabulary sort */
-    public static final String VOCABULARY_SORT = "Vocabulary"; //$NON-NLS-1$
+    public static final String VOCABULARY_SORT = "Vocabulary";
     /** value representing a original spelling sort */
-    public static final Object ORIGINAL_SPELLING_SORT = "Original spelling"; //$NON-NLS-1$
+    public static final Object ORIGINAL_SPELLING_SORT = "Original spelling";
 
-    private static final String BASE_GREEK_VERSION = "WHNU"; //$NON-NLS-1$
-    private static final String BASE_HEBREW_VERSION = "OSMHB"; //$NON-NLS-1$
+    private static final String BASE_GREEK_VERSION = "WHNU";
+    private static final String BASE_HEBREW_VERSION = "OSMHB";
     private static final Logger LOGGER = LoggerFactory.getLogger(SearchServiceImpl.class);
-    private static final String STRONG_QUERY = "strong:"; //$NON-NLS-1$
+    private static final String STRONG_QUERY = "strong:";
     private final JSwordSearchService jswordSearch;
     private final JSwordPassageService jsword;
     private final TimelineService timeline;
@@ -128,9 +128,9 @@ public class SearchServiceImpl implements SearchService {
         this.jsword = jsword;
         this.subjects = subjects;
         this.timeline = timeline;
-        this.definitions = entityManager.getReader("definition"); //$NON-NLS-1$
-        this.specificForms = entityManager.getReader("specificForm"); //$NON-NLS-1$
-        this.timelineEvents = entityManager.getReader("timelineEvent"); //$NON-NLS-1$
+        this.definitions = entityManager.getReader("definition");
+        this.specificForms = entityManager.getReader("specificForm");
+        this.timelineEvents = entityManager.getReader("timelineEvent");
 
     }
 
@@ -202,7 +202,7 @@ public class SearchServiceImpl implements SearchService {
         List<EntityDoc> strongNumbers = sq.getDefinitions();
         if (strongNumbers == null) {
             // stop searching
-            LOGGER.warn("Attempting to sort by strong number, but no strong numbers available. "); //$NON-NLS-1$
+            LOGGER.warn("Attempting to sort by strong number, but no strong numbers available. ");
             return;
         }
 
@@ -247,9 +247,9 @@ public class SearchServiceImpl implements SearchService {
             if (list != null) {
                 newOrder.addAll(list);
                 for (final VerseSearchEntry e : list) {
-                    e.setStepGloss(def.get("stepGloss")); //$NON-NLS-1$
-                    e.setStepTransliteration(def.get("stepTransliteration")); //$NON-NLS-1$
-                    e.setAccentedUnicode(def.get("accentedUnicode")); //$NON-NLS-1$
+                    e.setStepGloss(def.get("stepGloss"));
+                    e.setStepTransliteration(def.get("stepTransliteration"));
+                    e.setAccentedUnicode(def.get("accentedUnicode"));
                 }
             }
         }
@@ -332,7 +332,7 @@ public class SearchServiceImpl implements SearchService {
 
         for (final EntityDoc def : lexiconDefinitions) {
             for (final String filteredValue : originalFilter) {
-                if (def.get("accentedUnicode").equals(filteredValue)) { //$NON-NLS-1$
+                if (def.get("accentedUnicode").equals(filteredValue)) {
                     keep.add(def);
 
                     // break out of filterValues loop, and proceed with next definition
@@ -417,7 +417,7 @@ public class SearchServiceImpl implements SearchService {
                     break;
                 default:
                     throw new StepInternalException(String.format(
-                            Messages.getString("SearchServiceImpl.13"), //$NON-NLS-1$
+                            "Search %s is not support, unable to refine search type [%s]",
                             sq.getOriginalQuery(), sq.getCurrentSearch().getType()));
             }
         } while (sq.hasMoreSearches());
@@ -445,7 +445,7 @@ public class SearchServiceImpl implements SearchService {
                 return buildCombinedVerseBasedResults(sq, results);
             default:
                 throw new StepInternalException(String.format(
-                        Messages.getString("SearchServiceImpl.14"), sq.getOriginalQuery(), //$NON-NLS-1$
+                        "Search refinement of %s of type %s is not supported", sq.getOriginalQuery(),
                         lastSearch.getType()));
 
         }
@@ -482,7 +482,7 @@ public class SearchServiceImpl implements SearchService {
             case ORIGINAL_MEANING:
                 return runMeaningSearch(sq);
             default:
-                throw new StepInternalException("Attempted to execute unknown search"); //$NON-NLS-1$
+                throw new StepInternalException("Attempted to execute unknown search");
         }
     }
 
@@ -619,7 +619,7 @@ public class SearchServiceImpl implements SearchService {
         }
 
         final boolean wildcard = query.charAt(query.length() - 1) == '*';
-        final String searchQuery = wildcard ? query.replace("*", "%") : query; //$NON-NLS-1$ //$NON-NLS-2$
+        final String searchQuery = wildcard ? query.replace("*", "%") : query;
 
         Set<String> strongs;
         if (isDigit(query.charAt(0)) || (query.length() > 1 && isDigit(query.charAt(1)))) {
@@ -653,11 +653,11 @@ public class SearchServiceImpl implements SearchService {
     private Set<String> adaptQueryForMeaningSearch(final SearchQuery sq) {
         final String query = sq.getCurrentSearch().getQuery();
 
-        final QueryParser queryParser = new QueryParser(Version.LUCENE_30, "translations", //$NON-NLS-1$
+        final QueryParser queryParser = new QueryParser(Version.LUCENE_30, "translations",
                 this.definitions.getAnalyzer());
         queryParser.setDefaultOperator(Operator.AND);
         try {
-            final Query parsed = queryParser.parse("-stopWord:true " + query); //$NON-NLS-1$
+            final Query parsed = queryParser.parse("-stopWord:true " + query);
             final EntityDoc[] matchingMeanings = this.definitions.search(parsed);
 
             final Set<String> strongs = new HashSet<String>(matchingMeanings.length);
@@ -675,7 +675,7 @@ public class SearchServiceImpl implements SearchService {
             // return the strongs that the search will match
             return strongs;
         } catch (final ParseException e) {
-            throw new StepInternalException(Messages.getString("SearchServiceImpl.20"), e); //$NON-NLS-1$
+            throw new StepInternalException("Unable to parse query for meaning search", e);
         }
     }
 
@@ -784,9 +784,9 @@ public class SearchServiceImpl implements SearchService {
      */
     private String getRelatedStrongQuery(final EntityDoc[] results) {
         final StringBuilder relatedQuery = new StringBuilder(results.length * 7);
-        relatedQuery.append("-stopWord:true "); //$NON-NLS-1$
+        relatedQuery.append("-stopWord:true ");
         for (final EntityDoc doc : results) {
-            relatedQuery.append(doc.get("relatedNumbers").replace(',', ' ')); //$NON-NLS-1$
+            relatedQuery.append(doc.get("relatedNumbers").replace(',', ' '));
         }
         return relatedQuery.toString();
     }
@@ -807,7 +807,7 @@ public class SearchServiceImpl implements SearchService {
         try {
             q = p.parse(query);
         } catch (final ParseException e) {
-            throw new StepInternalException("Unable to parse query", e); //$NON-NLS-1$
+            throw new StepInternalException("Unable to parse query", e);
         }
         final EntityDoc[] results = this.definitions.search(q);
 
@@ -832,7 +832,7 @@ public class SearchServiceImpl implements SearchService {
      */
     private String retrieveStrongs(final Set<String> strongsFromQuery) {
         final StringBuilder query = new StringBuilder(strongsFromQuery.size() * 6 + 16);
-        query.append("-stopWord:true "); //$NON-NLS-1$
+        query.append("-stopWord:true ");
         for (final String strong : strongsFromQuery) {
             query.append(strong);
             query.append(' ');
@@ -848,8 +848,8 @@ public class SearchServiceImpl implements SearchService {
      */
     private Set<String> searchTextFieldsForDefinition(final String searchQuery) {
         // first look through the text forms
-        final EntityDoc[] results = this.specificForms.search(new String[] { "accentedUnicode" }, //$NON-NLS-1$
-                searchQuery, null, null, false, "-stopWord:false"); //$NON-NLS-1$
+        final EntityDoc[] results = this.specificForms.search(new String[] { "accentedUnicode" },
+                searchQuery, null, null, false, "-stopWord:false");
         if (results.length == 0) {
             return lookupFromLexicon(searchQuery);
         }
@@ -871,13 +871,13 @@ public class SearchServiceImpl implements SearchService {
      */
     private Set<String> lookupFromLexicon(final String query) {
         // if we still have nothing, then look through the definitions
-        final QueryParser parser = new QueryParser(Version.LUCENE_30, "accentedUnicode", //$NON-NLS-1$
+        final QueryParser parser = new QueryParser(Version.LUCENE_30, "accentedUnicode",
                 this.definitions.getAnalyzer());
         Query parsed;
         try {
             parsed = parser.parse(QueryParser.escape(query));
         } catch (final ParseException e) {
-            throw new StepInternalException(Messages.getString("SearchServiceImpl.28"), e); //$NON-NLS-1$
+            throw new StepInternalException("Unable to parse query", e);
         }
 
         final EntityDoc[] results = this.definitions.search(parsed);
@@ -931,7 +931,7 @@ public class SearchServiceImpl implements SearchService {
                 .getSimplifiedTransliterationClause(isGreek, lowerQuery, false);
 
         final EntityDoc[] specificFormEntities = this.specificForms.searchSingleColumn(
-                "simplifiedTransliteration", simplifiedTransliteration, getFilter(isGreek)); //$NON-NLS-1$
+                "simplifiedTransliteration", simplifiedTransliteration, getFilter(isGreek));
 
         // finally, if we haven't found anything, then abort
         if (specificFormEntities.length != 0) {
@@ -944,15 +944,15 @@ public class SearchServiceImpl implements SearchService {
         }
 
         final MultiFieldQueryParser queryParser = new MultiFieldQueryParser(Version.LUCENE_30, new String[] {
-                "simplifiedTransliteration", "stepTransliteration", "otherTransliteration" }, //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                "simplifiedTransliteration", "stepTransliteration", "otherTransliteration" },
                 this.definitions.getAnalyzer());
 
         try {
-            final Query luceneQuery = queryParser.parse("-stopWord:true " + lowerQuery); //$NON-NLS-1$
+            final Query luceneQuery = queryParser.parse("-stopWord:true " + lowerQuery);
             final EntityDoc[] results = this.definitions.search(luceneQuery);
 
             if (results.length == 0) {
-                throw new AbortQueryException("No definitions found for input"); //$NON-NLS-1$
+                throw new AbortQueryException("No definitions found for input");
             }
             final Set<String> strongs = new HashSet<String>(results.length);
             for (final EntityDoc d : results) {
@@ -960,7 +960,7 @@ public class SearchServiceImpl implements SearchService {
             }
             return strongs;
         } catch (final ParseException e) {
-            throw new StepInternalException(Messages.getString("SearchServiceImpl.35"), e); //$NON-NLS-1$
+            throw new StepInternalException("Unable to parse query", e);
         }
 
     }
@@ -975,7 +975,7 @@ public class SearchServiceImpl implements SearchService {
         final IndividualSearch currentSearch = sq.getCurrentSearch();
         final String searchStrong = currentSearch.getQuery();
 
-        LOGGER.debug("Searching for strongs [{}]", searchStrong); //$NON-NLS-1$
+        LOGGER.debug("Searching for strongs [{}]", searchStrong);
         final Set<String> strongs = splitToStrongs(searchStrong, sq.getCurrentSearch().getType());
         return strongs;
     }
@@ -988,7 +988,7 @@ public class SearchServiceImpl implements SearchService {
      */
     private SearchResult runTimelineDescriptionSearch(final SearchQuery sq) {
         return buildTimelineSearchResults(sq,
-                this.timelineEvents.searchSingleColumn("name", sq.getCurrentSearch().getQuery())); //$NON-NLS-1$
+                this.timelineEvents.searchSingleColumn("name", sq.getCurrentSearch().getQuery()));
     }
 
     /**
@@ -1016,7 +1016,7 @@ public class SearchServiceImpl implements SearchService {
         r.setResults(results);
 
         for (final EntityDoc e : events) {
-            final String refs = e.get("storedReferences"); //$NON-NLS-1$
+            final String refs = e.get("storedReferences");
             final String[] references = StringUtils.split(refs);
 
             final List<VerseSearchEntry> verses = new ArrayList<VerseSearchEntry>();
@@ -1034,8 +1034,8 @@ public class SearchServiceImpl implements SearchService {
             }
 
             final TimelineEventSearchEntry entry = new TimelineEventSearchEntry();
-            entry.setId(e.get("id")); //$NON-NLS-1$
-            entry.setDescription(e.get("name")); //$NON-NLS-1$
+            entry.setId(e.get("id"));
+            entry.setDescription(e.get("name"));
             entry.setVerses(verses);
             results.add(entry);
         }
@@ -1074,7 +1074,7 @@ public class SearchServiceImpl implements SearchService {
      * @return the list of strongs
      */
     private Set<String> splitToStrongs(final String searchStrong, final SearchType searchType) {
-        final List<String> strongs = Arrays.asList(searchStrong.split("[, ;]+")); //$NON-NLS-1$
+        final List<String> strongs = Arrays.asList(searchStrong.split("[, ;]+"));
         final Set<String> strongList = new HashSet<String>();
         for (final String s : strongs) {
             final String prefixedStrong = isDigit(s.charAt(0)) ? getPrefixed(s, searchType) : s;

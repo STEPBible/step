@@ -32,6 +32,8 @@
  ******************************************************************************/
 package com.tyndalehouse.step.rest.controllers;
 
+import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Locale;
@@ -66,7 +68,12 @@ public class InternationalJsonController extends HttpServlet {
     protected void doGet(final HttpServletRequest req, final HttpServletResponse response)
             throws ServletException, IOException {
 
-        final Locale locale = req.getLocale();
+        final Locale locale;
+        if (isNotBlank(req.getParameter("lang"))) {
+            locale = Locale.forLanguageTag(req.getParameter("lang"));
+        } else {
+            locale = req.getLocale();
+        }
         String qualifiedResponse = BUNDLES.get(locale);
         if (qualifiedResponse == null) {
             qualifiedResponse = readBundle(locale);

@@ -28,7 +28,14 @@
 <%-- 	<meta name="description" content="<%= stepRequest.getTitle() %>..."> --%>
 	
 	<link rel="shortcut icon"  href="images/step-favicon.ico" />
-	<script src="international/interactive.js" type="text/javascript"></script>
+	
+	<%
+		if(request.getParameter("lang") == null) {
+	%>
+		<script src="international/interactive.js" type="text/javascript"></script>
+	<% } else { %>
+		<script src="international/interactive.js?lang=<%= request.getParameter("lang") %>" type="text/javascript"></script>
+	<% } %>
 
 	<%
 		if(request.getParameter("debug") != null) {

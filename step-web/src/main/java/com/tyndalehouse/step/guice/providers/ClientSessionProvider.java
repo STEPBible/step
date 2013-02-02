@@ -73,10 +73,8 @@ public class ClientSessionProvider implements Provider<ClientSession> {
 
     @Override
     public ClientSession get() {
-        // check if this has the IP address in it
-        final Locale locale = getLocale();
-        return new WebSessionImpl(this.session.getId(), locale.getISO3Language(),
-                this.request.getRemoteAddr(), locale);
+        return new WebSessionImpl(this.session.getId(), getLocale().getISO3Language(),
+                this.request.getRemoteAddr(), getLocale());
     }
 
     /**
@@ -86,7 +84,7 @@ public class ClientSessionProvider implements Provider<ClientSession> {
      */
     private Locale getLocale() {
         if (isNotBlank(this.request.getParameter(COOKIE_REQUEST_PARAM))) {
-            return new Locale(this.request.getParameter(COOKIE_REQUEST_PARAM));
+            return getLocaleFromTag(this.request.getParameter(COOKIE_REQUEST_PARAM));
         }
 
         // take from session next
@@ -94,11 +92,26 @@ public class ClientSessionProvider implements Provider<ClientSession> {
             final Cookie[] cookies = this.request.getCookies();
             for (final Cookie c : cookies) {
                 if (COOKIE_REQUEST_PARAM.equals(c.getName())) {
-                    return new Locale(c.getValue());
+                    return getLocaleFromTag(c.getValue());
                 }
             }
         }
 
         return this.request.getLocale();
+    }
+
+    /**
+     * Gets the locale from tag, splitting if necessary
+     * 
+     * @param tag the tag
+     * @return the locale from tag
+     */
+    private Locale getLocaleFromTag(final String tag) {
+        final String[] tagParts = tag.split("[-_]");
+        if (tagParts.length == 1) {
+            return new Locale(tag);
+        } else {
+            return new Locale(tagParts[0], tagParts[1]);
+        }
     }
 }

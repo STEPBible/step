@@ -34,6 +34,7 @@ package com.tyndalehouse.step.core.data.create;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.concurrent.BlockingQueue;
@@ -48,6 +49,7 @@ import org.crosswire.jsword.book.BookCategory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.inject.ProvisionException;
 import com.tyndalehouse.step.core.data.EntityManager;
 import com.tyndalehouse.step.core.data.entities.impl.EntityIndexWriterImpl;
 import com.tyndalehouse.step.core.data.loaders.GeoStreamingCsvModuleLoader;
@@ -408,9 +410,16 @@ public class Loader {
      * @param args the args the arguments to use in the format
      */
     void addUpdate(final String key, final Object... args) {
-        this.progress.offer(String.format(
-                ResourceBundle.getBundle("SetupBundle", this.clientSessionProvider.get().getLocale())
-                        .getString(key), args));
+        Locale locale;
+        try {
+            locale = this.clientSessionProvider.get().getLocale();
+        } catch (final ProvisionException ex) {
+            LOGGER.debug("Loader can't get client session");
+            LOGGER.trace("Unable to provision", ex);
+            locale = Locale.ENGLISH;
+        }
+        this.progress.offer(String.format(ResourceBundle.getBundle("SetupBundle", locale).getString(key),
+                args));
     }
 
     /**

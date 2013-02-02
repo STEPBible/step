@@ -47,6 +47,7 @@ import static org.mockito.Mockito.when;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Locale;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -60,6 +61,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import com.google.inject.Injector;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
+import com.tyndalehouse.step.core.models.ClientSession;
 import com.tyndalehouse.step.core.service.BibleInformationService;
 import com.tyndalehouse.step.guice.providers.ClientSessionProvider;
 import com.tyndalehouse.step.rest.controllers.BibleController;
@@ -95,6 +97,10 @@ public class FrontControllerTest {
      */
     @Before
     public void setUp() {
+        final ClientSession clientSession = mock(ClientSession.class);
+        when(clientSession.getLocale()).thenReturn(Locale.ENGLISH);
+        when(this.clientSessionProvider.get()).thenReturn(clientSession);
+
         this.fcUnderTest = new FrontController(this.guiceInjector, this.isCacheEnabled, this.errorResolver,
                 this.responseCache, this.clientSessionProvider);
     }

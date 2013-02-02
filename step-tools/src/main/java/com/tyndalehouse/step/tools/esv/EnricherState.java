@@ -14,7 +14,6 @@ import com.tyndalehouse.step.core.utils.StringUtils;
 
 public class EnricherState {
     private static final Pattern BY_STRONG = Pattern.compile("\\|");
-    private static final Pattern BY_GRAMMAR = Pattern.compile("@");
     private static final boolean ADD_TAG = true;
     private static final Logger LOGGER = LoggerFactory.getLogger(EnricherState.class);
     private final Map<String, Deque<Word>> verseContent;

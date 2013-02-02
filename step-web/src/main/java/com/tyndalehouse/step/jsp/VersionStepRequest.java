@@ -32,6 +32,8 @@
  ******************************************************************************/
 package com.tyndalehouse.step.jsp;
 
+import java.util.ResourceBundle;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.crosswire.jsword.book.Book;
@@ -46,6 +48,7 @@ import com.google.inject.Injector;
 import com.tyndalehouse.step.core.data.EntityDoc;
 import com.tyndalehouse.step.core.data.EntityManager;
 import com.tyndalehouse.step.core.data.entities.impl.EntityManagerImpl;
+import com.tyndalehouse.step.core.models.ClientSession;
 import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
 import com.tyndalehouse.step.core.utils.IOUtils;
 
@@ -66,6 +69,7 @@ public class VersionStepRequest {
     private Key globalKeyList;
     private EntityDoc[] results;
     private String miniPreface;
+    private ResourceBundle bundle;
 
     /**
      * wraps around the servlet request for easy access
@@ -83,7 +87,10 @@ public class VersionStepRequest {
                 this.book = this.versification.getBookFromVersion(version);
                 this.globalKeyList = this.book.getGlobalKeyList();
                 this.versificationForVersion = this.versification.getVersificationForVersion(this.book);
+                this.bundle = ResourceBundle.getBundle("HtmlBundle", injector
+                        .getInstance(ClientSession.class).getLocale());
                 this.success = true;
+
             }
         } catch (final Exception e) {
             // failed to retrieve information
@@ -98,13 +105,22 @@ public class VersionStepRequest {
     public String getBookList() {
         final StringBuilder bookList = new StringBuilder(1024 * 8);
         bookList.append("<table id='bookListTable' class='listingTable'>");
-        bookList.append("<tr><th>Bible book name</th><th>Chapters in the book</th></tr>");
+        bookList.append("<tr><th>");
+        bookList.append(this.bundle.getString("bible_book_name"));
+        bookList.append("</th><th>");
+        bookList.append(this.bundle.getString("chapters_in_book"));
+        bookList.append("</th></tr>");
 
         // output the preface
         if (this.getMiniPreface().length() != 0) {
-            bookList.append("<tr class=\"even\"><td class=\"bookName\">Preface</td><td><a href=\"preface.jsp?version=");
+            bookList.append("<tr class=\"even\"><td class=\"bookName\">");
+            final String copyrightHolderIntro = this.bundle.getString("intro_from_copyright_holder");
+            bookList.append(copyrightHolderIntro);
+            bookList.append("</td><td><a href=\"preface.jsp?version=");
             bookList.append(this.book.getInitials());
-            bookList.append("\">Preface</a></td></tr>");
+            bookList.append("\">");
+            bookList.append(copyrightHolderIntro);
+            bookList.append("</a></td></tr>");
 
         }
 

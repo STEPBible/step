@@ -30,44 +30,45 @@
  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
-package com.tyndalehouse.step.core.models.alternativeTranslations;
-
-import java.util.List;
+package com.tyndalehouse.step.core.exceptions;
 
 /**
- * This repreents a set of verses for a particular verse.
+ * The default exception to be thrown throughout the application. It is of type {@link RuntimeException} so
+ * that it does not require explicit catching
+ * 
+ * @author chrisburrell
+ * 
  */
-public class VersionVerses {
-    private final String reference;
-    private final List<VersionVersePhraseOption> options;
+public class LocalisedException extends StepInternalException {
+    private static final long serialVersionUID = -1083871793637352613L;
+    private final String message;
 
     /**
-     * Instantiates a new version verses.
+     * creates the generic step internal exception to be used on the server.
      * 
-     * @param reference the reference
-     * @param options the options
+     * @param t the cause of the exception
+     * @param message the message for the exception
      */
-    public VersionVerses(final String reference, final List<VersionVersePhraseOption> options) {
-        this.reference = reference;
-        this.options = options;
+    public LocalisedException(final Throwable t, final String message) {
+        super(t.getMessage(), t);
+        this.message = message;
     }
 
     /**
-     * Gets the reference.
+     * creates the generic runtime exception to be used on the server.
      * 
-     * @return the reference
+     * @param message the message
      */
-    public String getReference() {
-        return this.reference;
+    public LocalisedException(final String message) {
+        super(message);
+        this.message = message;
     }
 
     /**
-     * Gets the options.
-     * 
-     * @return the options
+     * @return the message
      */
-    public List<VersionVersePhraseOption> getOptions() {
-        return this.options;
+    @Override
+    public String getMessage() {
+        return this.message;
     }
-
 }

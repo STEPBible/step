@@ -37,27 +37,27 @@
 		<junit.parallel>method</junit.parallel>
 		<junit.threads>4</junit.threads>
 
-		<junit.version>4.10</junit.version>
+		<junit.version>4.11</junit.version>
 
 		<!-- jsword dependencies -->
 		<jsword.version>1.6.1-SNAPSHOT</jsword.version>
 		<jdom.version>1.1.1</jdom.version>
 		<javatar.version>2.5</javatar.version>
 
-		<jackson-mapper-asl.version>1.9.6</jackson-mapper-asl.version>
-		<org.slf4j.version>1.6.4</org.slf4j.version>
+		<jackson-mapper-asl.version>1.9.11</jackson-mapper-asl.version>
+		<org.slf4j.version>1.7.2</org.slf4j.version>
 		<servlet-api.version>2.5</servlet-api.version>
-		<jsp-api.version>2.1</jsp-api.version>
+		<jsp-api.version>2.2.1</jsp-api.version>
 		<jstl.version>1.2</jstl.version>
 		<pjl-comp-filter.version>1.7</pjl-comp-filter.version>
 		<guice.version>3.0.0</guice.version>
 		<guice-servlet.version>3.0</guice-servlet.version>
 		<opencsv.version>2.3</opencsv.version>
-		<jetty.version>8.1.5.v20120716</jetty.version>
+		<jetty.version>9.0.0.M5</jetty.version>
 		<xalan.version>2.7.1</xalan.version>
 
 		<joda-time.version>2.1</joda-time.version>
-		<ehcache.version>2.5.2</ehcache.version>
+		<ehcache.version>2.6.3</ehcache.version>
 		<ehcache-web.version>2.0.4</ehcache-web.version>
 		<lucene.version>3.0.3</lucene.version>
 
@@ -68,7 +68,7 @@
 		<commons-httpclient.version>3.1</commons-httpclient.version>
 
 		<!-- testing dependencies -->
-		<mockito.version>1.9.0</mockito.version>
+		<mockito.version>1.9.5</mockito.version>
 	</properties>
 
 	<url>http://crosswire.org/wiki/Frontends:TyndaleStep</url>

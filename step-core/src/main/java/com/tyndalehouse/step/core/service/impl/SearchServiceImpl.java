@@ -68,7 +68,7 @@ import org.slf4j.LoggerFactory;
 import com.tyndalehouse.step.core.data.EntityDoc;
 import com.tyndalehouse.step.core.data.EntityIndexReader;
 import com.tyndalehouse.step.core.data.EntityManager;
-import com.tyndalehouse.step.core.exceptions.StepInternalException;
+import com.tyndalehouse.step.core.exceptions.TranslatedException;
 import com.tyndalehouse.step.core.models.LexiconSuggestion;
 import com.tyndalehouse.step.core.models.OsisWrapper;
 import com.tyndalehouse.step.core.models.search.KeyedSearchResultSearchEntry;
@@ -97,9 +97,9 @@ import com.tyndalehouse.step.core.utils.StringUtils;
 @Singleton
 public class SearchServiceImpl implements SearchService {
     /** value representing a vocabulary sort */
-    public static final String VOCABULARY_SORT = "Vocabulary";
+    public static final String VOCABULARY_SORT = "VOCABULARY";
     /** value representing a original spelling sort */
-    public static final Object ORIGINAL_SPELLING_SORT = "Original spelling";
+    public static final Object ORIGINAL_SPELLING_SORT = "ORIGINAL_SPELLING";
 
     private static final String BASE_GREEK_VERSION = "WHNU";
     private static final String BASE_HEBREW_VERSION = "OSMHB";
@@ -416,9 +416,8 @@ public class SearchServiceImpl implements SearchService {
                     results = intersect(results, getKeysFromOriginalText(sq));
                     break;
                 default:
-                    throw new StepInternalException(String.format(
-                            "Search %s is not support, unable to refine search type [%s]",
-                            sq.getOriginalQuery(), sq.getCurrentSearch().getType()));
+                    throw new TranslatedException("refinement_not_supported", sq.getOriginalQuery(), sq
+                            .getCurrentSearch().getType().getLanguageKey());
             }
         } while (sq.hasMoreSearches());
         return results;
@@ -444,9 +443,8 @@ public class SearchServiceImpl implements SearchService {
             case ORIGINAL_HEBREW_FORMS:
                 return buildCombinedVerseBasedResults(sq, results);
             default:
-                throw new StepInternalException(String.format(
-                        "Search refinement of %s of type %s is not supported", sq.getOriginalQuery(),
-                        lastSearch.getType()));
+                throw new TranslatedException("refinement_not_supported", sq.getOriginalQuery(), lastSearch
+                        .getType().getLanguageKey());
 
         }
     }
@@ -482,7 +480,7 @@ public class SearchServiceImpl implements SearchService {
             case ORIGINAL_MEANING:
                 return runMeaningSearch(sq);
             default:
-                throw new StepInternalException("Attempted to execute unknown search");
+                throw new TranslatedException("search_unknown");
         }
     }
 
@@ -519,7 +517,6 @@ public class SearchServiceImpl implements SearchService {
         setDefinitionForResults(result, sq.getDefinitions());
 
         // we can now use the filter and save ourselves some effort
-
         return result;
     }
 
@@ -675,7 +672,7 @@ public class SearchServiceImpl implements SearchService {
             // return the strongs that the search will match
             return strongs;
         } catch (final ParseException e) {
-            throw new StepInternalException("Unable to parse query for meaning search", e);
+            throw new TranslatedException(e, "search_invalid");
         }
     }
 
@@ -807,7 +804,7 @@ public class SearchServiceImpl implements SearchService {
         try {
             q = p.parse(query);
         } catch (final ParseException e) {
-            throw new StepInternalException("Unable to parse query", e);
+            throw new TranslatedException(e, "search_invalid");
         }
         final EntityDoc[] results = this.definitions.search(q);
 
@@ -877,7 +874,7 @@ public class SearchServiceImpl implements SearchService {
         try {
             parsed = parser.parse(QueryParser.escape(query));
         } catch (final ParseException e) {
-            throw new StepInternalException("Unable to parse query", e);
+            throw new TranslatedException(e, "search_invalid");
         }
 
         final EntityDoc[] results = this.definitions.search(parsed);
@@ -960,7 +957,7 @@ public class SearchServiceImpl implements SearchService {
             }
             return strongs;
         } catch (final ParseException e) {
-            throw new StepInternalException("Unable to parse query", e);
+            throw new TranslatedException(e, "search_invalid");
         }
 
     }
@@ -976,8 +973,7 @@ public class SearchServiceImpl implements SearchService {
         final String searchStrong = currentSearch.getQuery();
 
         LOGGER.debug("Searching for strongs [{}]", searchStrong);
-        final Set<String> strongs = splitToStrongs(searchStrong, sq.getCurrentSearch().getType());
-        return strongs;
+        return splitToStrongs(searchStrong, sq.getCurrentSearch().getType());
     }
 
     /**

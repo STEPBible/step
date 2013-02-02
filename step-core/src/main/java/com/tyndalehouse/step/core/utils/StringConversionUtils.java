@@ -421,7 +421,8 @@ public final class StringConversionUtils {
             case '\'':
             case '!':
                 return true;
+            default:
+                return false;
         }
-        return false;
     }
 }

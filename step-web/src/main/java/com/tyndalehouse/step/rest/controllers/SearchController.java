@@ -61,7 +61,7 @@ public class SearchController {
      */
     public SearchResult search(final String searchQuery, final String ranked, final String context,
             final String pageNumber, final String pageSize) {
-        notNull(searchQuery, "Please enter a search query", USER_MISSING_FIELD);
+        notNull(searchQuery, "blank_search_provided", USER_MISSING_FIELD);
         notNull(pageNumber, "Page number is required", APP_MISSING_FIELD);
         notNull(ranked, "The ranking field is required", APP_MISSING_FIELD);
         notNull(context, "The context field is required", APP_MISSING_FIELD);

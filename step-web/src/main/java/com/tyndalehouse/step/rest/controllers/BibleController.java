@@ -138,9 +138,8 @@ public class BibleController {
     @Cacheable(true)
     public OsisWrapper getBibleText(final String version, final String reference, final String options,
             final String interlinearVersion, final String interlinearMode) {
-        // TODO de-duplicate for internationalisation
-        notEmpty(version, "You need to provide a version", USER_MISSING_FIELD);
-        notEmpty(reference, "You need to provide a reference", USER_MISSING_FIELD);
+        notEmpty(version, "bible_required", USER_MISSING_FIELD);
+        notEmpty(reference, "reference_required", USER_MISSING_FIELD);
 
         return this.bibleInformation.getPassageText(version, reference, options, interlinearVersion,
                 interlinearMode);
@@ -177,7 +176,7 @@ public class BibleController {
     public OsisWrapper getBibleByVerseNumber(final String version, final String startVerseId,
             final String endVerseId, final String roundUp, final String options,
             final String interlinearVersion) {
-        notEmpty(version, "You need to provide a version", USER_MISSING_FIELD);
+        notEmpty(version, "bible_required", USER_MISSING_FIELD);
         notEmpty(startVerseId, "You need to provide a start verse id", APP_MISSING_FIELD);
         notEmpty(endVerseId, "You need to a provide a end verse id", APP_MISSING_FIELD);
 

@@ -58,7 +58,6 @@ import org.slf4j.LoggerFactory;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.utils.IOUtils;
 
-// TODO: Auto-generated Javadoc
 /**
  * Serves the images by downloading them from a remote source if they do not already exist.
  * 
@@ -93,12 +92,6 @@ public class ImageController extends HttpServlet {
         this.remoteSource = remoteSource;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest,
-     * javax.servlet.http.HttpServletResponse)
-     */
     @Override
     protected void doGet(final HttpServletRequest req, final HttpServletResponse response)
             throws ServletException, IOException {

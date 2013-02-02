@@ -30,54 +30,44 @@
  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
-package com.tyndalehouse.step.core.models.alternativeTranslations;
+package com.tyndalehouse.step.core.models.meanings;
+
+import java.util.List;
 
 /**
- * Represents a particular alternative.
+ * This repreents a set of verses for a particular verse.
  */
-public class VersionPhraseAlternative {
-    private final String alternative;
-    private final String type;
-    private final String specifier;
+public class VersionVerses {
+    private final String reference;
+    private final List<VersionVersePhraseOption> options;
 
     /**
-     * Instantiates a new version phrase alternative.
+     * Instantiates a new version verses.
      * 
-     * @param alternative the alternative
-     * @param type the type
-     * @param specifier the specifier
+     * @param reference the reference
+     * @param options the options
      */
-    public VersionPhraseAlternative(final String alternative, final String type, final String specifier) {
-        this.alternative = alternative;
-        this.type = type;
-        this.specifier = specifier;
+    public VersionVerses(final String reference, final List<VersionVersePhraseOption> options) {
+        this.reference = reference;
+        this.options = options;
     }
 
     /**
-     * Gets the alternative.
+     * Gets the reference.
      * 
-     * @return the alternative
+     * @return the reference
      */
-    public String getAlternative() {
-        return this.alternative;
+    public String getReference() {
+        return this.reference;
     }
 
     /**
-     * Gets the type.
+     * Gets the options.
      * 
-     * @return the type
+     * @return the options
      */
-    public String getType() {
-        return this.type;
-    }
-
-    /**
-     * Gets the specifier.
-     * 
-     * @return the specifier
-     */
-    public String getSpecifier() {
-        return this.specifier;
+    public List<VersionVersePhraseOption> getOptions() {
+        return this.options;
     }
 
 }

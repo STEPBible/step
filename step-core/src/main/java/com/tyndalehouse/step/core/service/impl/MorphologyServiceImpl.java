@@ -99,6 +99,7 @@ public class MorphologyServiceImpl implements MorphologyService {
      * @param code long code including scheme (e.g. robinson:) to the morphology item
      * @return the morphology of interest
      */
+    @SuppressWarnings("PMD")
     private EntityDoc retrieveMorphologyByLongName(final String code) {
         if (code.length() > ROBINSON_PREFIX_LENGTH) {
             final String key = code.substring(ROBINSON_PREFIX_LENGTH);

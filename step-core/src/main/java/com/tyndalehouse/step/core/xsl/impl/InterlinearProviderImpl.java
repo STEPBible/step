@@ -72,7 +72,6 @@ import org.slf4j.LoggerFactory;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.xsl.InterlinearProvider;
 
-// TODO: Auto-generated Javadoc
 /**
  * This object is not purposed to be used as a singleton. It builds up textual information on initialisation,
  * and is specific to requests. On initialisation, the OSIS XML is retrieved and iterated through to find all
@@ -145,12 +144,6 @@ public class InterlinearProviderImpl implements InterlinearProvider {
         // exposing package private constructor
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.tyndalehouse.step.core.xsl.InterlinearProvider#getWord(java.lang.String, java.lang.String,
-     * java.lang.String)
-     */
     @Override
     public String getWord(final String verseNumber, final String strong, final String morph) {
         // we use a linked hashset, because we want the behaviour of a set while we add to it,

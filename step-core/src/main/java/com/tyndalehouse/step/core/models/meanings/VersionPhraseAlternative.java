@@ -30,54 +30,54 @@
  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
-package com.tyndalehouse.step.core.models.alternativeTranslations;
-
-import java.util.List;
+package com.tyndalehouse.step.core.models.meanings;
 
 /**
- * Represents a portion of text that has alternatives.
+ * Represents a particular alternative.
  */
-public class VersionVersePhraseOption {
-    private final String matchingText;
-    private final String context;
-    private final List<VersionPhraseAlternative> phraseAlternatives;
+public class VersionPhraseAlternative {
+    private final String alternative;
+    private final String type;
+    private final String specifier;
 
     /**
-     * Instantiates a new version verse phrase option.
+     * Instantiates a new version phrase alternative.
      * 
-     * @param matchingText the matching text
-     * @param context the context to find the text within, usually preceding
-     * @param phraseAlternatives the phrase alternatives
+     * @param alternative the alternative
+     * @param type the type
+     * @param specifier the specifier
      */
-    public VersionVersePhraseOption(final String matchingText, final String context,
-            final List<VersionPhraseAlternative> phraseAlternatives) {
-        this.matchingText = matchingText;
-        this.context = context;
-        this.phraseAlternatives = phraseAlternatives;
+    public VersionPhraseAlternative(final String alternative, final String type, final String specifier) {
+        this.alternative = alternative;
+        this.type = type;
+        this.specifier = specifier;
     }
 
     /**
-     * Gets the matching text.
+     * Gets the alternative.
      * 
-     * @return the matching text
+     * @return the alternative
      */
-    public String getMatchingText() {
-        return this.matchingText;
+    public String getAlternative() {
+        return this.alternative;
     }
 
     /**
-     * Gets the phrase alternatives.
+     * Gets the type.
      * 
-     * @return the phrase alternatives
+     * @return the type
      */
-    public List<VersionPhraseAlternative> getPhraseAlternatives() {
-        return this.phraseAlternatives;
+    public String getType() {
+        return this.type;
     }
 
     /**
-     * @return the context
+     * Gets the specifier.
+     * 
+     * @return the specifier
      */
-    public String getContext() {
-        return this.context;
+    public String getSpecifier() {
+        return this.specifier;
     }
+
 }

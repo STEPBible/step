@@ -1,3 +1,4 @@
+<%@page import="com.tyndalehouse.step.core.models.ClientSession"%>
 <%@page import="javax.servlet.jsp.jstl.core.Config"%>
 <%@page import="java.util.Locale"%>
 <%@page import="java.util.ResourceBundle"%>
@@ -11,24 +12,10 @@
 <%
 	Injector injector = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
 	PrefaceStepRequest stepRequest = new PrefaceStepRequest(injector, request);
-	
-	Locale locale;
-	
-	String overridenLocale = request.getParameter("lang");
-	if(overridenLocale != null) {
-		locale = new Locale(overridenLocale);
-	} else if(request.getLocale() != null) {
-		locale = request.getLocale();
-	} else {
-		locale = Locale.ENGLISH;	
-	}
-	
+	Locale locale = injector.getInstance(ClientSession.class).getLocale();
 	Config.set(session, Config.FMT_LOCALE, locale.getLanguage());
-
 	ResourceBundle bundle = ResourceBundle.getBundle("HtmlBundle", locale);
-%>
 
-<% 
 	String book = "";
 	String title = "";
 	String longTitle = "";

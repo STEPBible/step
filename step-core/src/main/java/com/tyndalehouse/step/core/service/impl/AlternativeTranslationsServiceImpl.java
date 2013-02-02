@@ -44,10 +44,10 @@ import javax.inject.Inject;
 import com.tyndalehouse.step.core.data.EntityDoc;
 import com.tyndalehouse.step.core.data.EntityIndexReader;
 import com.tyndalehouse.step.core.data.EntityManager;
-import com.tyndalehouse.step.core.models.alternativeTranslations.VersionPhraseAlternative;
-import com.tyndalehouse.step.core.models.alternativeTranslations.VersionVersePhraseOption;
-import com.tyndalehouse.step.core.models.alternativeTranslations.VersionVerses;
-import com.tyndalehouse.step.core.models.alternativeTranslations.VersionsData;
+import com.tyndalehouse.step.core.models.meanings.VersionPhraseAlternative;
+import com.tyndalehouse.step.core.models.meanings.VersionVersePhraseOption;
+import com.tyndalehouse.step.core.models.meanings.VersionVerses;
+import com.tyndalehouse.step.core.models.meanings.VersionsData;
 import com.tyndalehouse.step.core.service.AlternativeVersionsService;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 

@@ -24,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
+import com.tyndalehouse.step.core.exceptions.TranslatedException;
 import com.tyndalehouse.step.core.service.UserService;
 import com.tyndalehouse.step.core.utils.IOUtils;
 
@@ -99,7 +100,7 @@ public class UserServiceImpl implements UserService {
      */
     private void validateEmail(final String email) {
         if (!EMAIL.matcher(email).matches()) {
-            throw new StepInternalException("An invalid email was provided.");
+            throw new TranslatedException("invalid_email", email);
         }
 
     }

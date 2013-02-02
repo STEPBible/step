@@ -1,3 +1,4 @@
+<%@page import="com.tyndalehouse.step.core.models.ClientSession"%>
 <%@page import="com.tyndalehouse.step.jsp.SimpleSearchStepRequest"%>
 <%@page import="java.util.ResourceBundle"%>
 <%@page import="org.crosswire.common.util.Language"%>
@@ -11,22 +12,11 @@
 <%@ page import="com.google.inject.Guice"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<% 
-	Locale locale;
-	
-	String overridenLocale = request.getParameter("lang");
-	if(overridenLocale != null) {
-		locale = new Locale(overridenLocale);
-	} else if(request.getLocale() != null) {
-		locale = request.getLocale();
-	} else {
-		locale = Locale.ENGLISH;	
-	}
-	
-	Config.set(session, Config.FMT_LOCALE, locale.getLanguage());
-
+<%
 	Injector injector = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
-	SimpleSearchStepRequest stepRequest = new SimpleSearchStepRequest(injector, request, locale);
+	Locale locale = injector.getInstance(ClientSession.class).getLocale();
+	Config.set(session, Config.FMT_LOCALE, locale.getLanguage());
+	SimpleSearchStepRequest stepRequest = new SimpleSearchStepRequest(injector, request);
 %>
 
 

@@ -32,7 +32,7 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.service;
 
-import com.tyndalehouse.step.core.models.alternativeTranslations.VersionsData;
+import com.tyndalehouse.step.core.models.meanings.VersionsData;
 
 /**
  * Allows access to the alternative translation data

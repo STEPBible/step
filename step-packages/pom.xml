@@ -44,11 +44,7 @@
 	
 	<profiles>
 		<profile>
-			<activation>
-				<property>
-					<name>downloadInternetVersions</name>
-				</property>
-			</activation>
+			<id>standalone-install</id>
 			
 			<build>
 				<plugins>

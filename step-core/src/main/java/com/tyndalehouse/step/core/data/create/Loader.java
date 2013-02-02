@@ -41,6 +41,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.inject.Provider;
 
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.BookCategory;
@@ -52,6 +53,7 @@ import com.tyndalehouse.step.core.data.entities.impl.EntityIndexWriterImpl;
 import com.tyndalehouse.step.core.data.loaders.GeoStreamingCsvModuleLoader;
 import com.tyndalehouse.step.core.data.loaders.StreamingCsvModuleLoader;
 import com.tyndalehouse.step.core.data.loaders.TimelineStreamingCsvModuleLoader;
+import com.tyndalehouse.step.core.models.ClientSession;
 import com.tyndalehouse.step.core.service.jsword.JSwordModuleService;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 
@@ -74,7 +76,7 @@ public class Loader {
 
     private final BlockingQueue<String> progress = new LinkedBlockingQueue<String>();
     private boolean complete = false;
-    private final ResourceBundle resourceBundle;
+    private final Provider<ClientSession> clientSessionProvider;
 
     /**
      * The loader is given a connection source to load the data.
@@ -83,17 +85,17 @@ public class Loader {
      * @param jswordModule the service helping with installation of jsword modules
      * @param coreProperties the step core properties
      * @param entityManager the entity manager
-     * @param resourceBundle the resource bundle
+     * @param clientSessionProvider the client session provider
      */
     @Inject
     public Loader(final JSwordPassageService jsword, final JSwordModuleService jswordModule,
             @Named("StepCoreProperties") final Properties coreProperties, final EntityManager entityManager,
-            @Named("SetupBundle") final ResourceBundle resourceBundle) {
+            final Provider<ClientSession> clientSessionProvider) {
         this.jsword = jsword;
         this.jswordModule = jswordModule;
         this.coreProperties = coreProperties;
         this.entityManager = entityManager;
-        this.resourceBundle = resourceBundle;
+        this.clientSessionProvider = clientSessionProvider;
     }
 
     /**
@@ -406,7 +408,9 @@ public class Loader {
      * @param args the args the arguments to use in the format
      */
     void addUpdate(final String key, final Object... args) {
-        this.progress.offer(String.format(this.resourceBundle.getString(key), args));
+        this.progress.offer(String.format(
+                ResourceBundle.getBundle("SetupBundle", this.clientSessionProvider.get().getLocale())
+                        .getString(key), args));
     }
 
     /**

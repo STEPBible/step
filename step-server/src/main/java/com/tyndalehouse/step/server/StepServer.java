@@ -80,6 +80,7 @@ public final class StepServer {
 
             // configure our web application
             jetty.setHandler(new WebAppContext(warURL.toExternalForm(), "/step-web"));
+            jetty.setHandler(new ShutdownHandler(jetty, "/shutdown"));
 
             // start the server
             jetty.start();

@@ -96,7 +96,7 @@ public class FrontControllerTest {
     @Before
     public void setUp() {
         this.fcUnderTest = new FrontController(this.guiceInjector, this.isCacheEnabled, this.errorResolver,
-                this.responseCache);
+                this.responseCache, this.clientSessionProvider);
     }
 
     /**

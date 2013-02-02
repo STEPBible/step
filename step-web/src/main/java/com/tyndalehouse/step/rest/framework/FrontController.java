@@ -32,11 +32,16 @@
  ******************************************************************************/
 package com.tyndalehouse.step.rest.framework;
 
+import static java.lang.String.format;
+
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
+import java.util.ResourceBundle;
 
+import javax.inject.Provider;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -51,7 +56,11 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
+import com.tyndalehouse.step.core.exceptions.LocalisedException;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
+import com.tyndalehouse.step.core.exceptions.TranslatedException;
+import com.tyndalehouse.step.core.exceptions.ValidationException;
+import com.tyndalehouse.step.core.models.ClientSession;
 
 /**
  * The FrontController acts like a minimal REST server. The paths are resolved as follows:
@@ -79,24 +88,29 @@ public class FrontController extends HttpServlet {
     private final boolean isCacheEnabled;
     private final transient ClientErrorResolver errorResolver;
     private final transient ResponseCache responseCache;
+    private final Provider<ClientSession> clientSessionProvider;
 
     /**
      * creates the front controller which will dispatch all the requests
      * <p />
+     * .
      * 
      * @param guiceInjector the injector used to call the relevant controllers
      * @param isCacheEnabled indicates whether responses should be cached for fast retrieval
      * @param errorResolver the error resolver is the object that helps us translate errors for the client
      * @param responseCache cache in which are put any number of responses to speed up processing
+     * @param clientSessionProvider the client session provider
      */
     @Inject
     public FrontController(final Injector guiceInjector,
             @Named("frontcontroller.cache.enabled") final Boolean isCacheEnabled,
-            final ClientErrorResolver errorResolver, final ResponseCache responseCache) {
+            final ClientErrorResolver errorResolver, final ResponseCache responseCache,
+            final Provider<ClientSession> clientSessionProvider) {
         this.guiceInjector = guiceInjector;
         this.responseCache = responseCache;
 
         this.errorResolver = errorResolver;
+        this.clientSessionProvider = clientSessionProvider;
         this.isCacheEnabled = Boolean.TRUE.equals(isCacheEnabled);
     }
 
@@ -169,17 +183,8 @@ public class FrontController extends HttpServlet {
         // first we check to see if it's a step exception, or an illegal argument exception
 
         final Throwable cause = e.getCause();
-        if (cause instanceof StepInternalException) {
-            LOGGER.trace(e.getMessage(), e);
-            return new ClientHandledIssue(cause.getMessage(), this.errorResolver.resolve(cause.getClass()));
-        } else if (cause instanceof IllegalArgumentException) {
-            // a validation exception occurred
-            LOGGER.warn(e.getMessage(), e);
-            return new ClientHandledIssue(cause.getMessage());
-        }
-
-        LOGGER.error(e.getMessage(), e);
-        return new ClientHandledIssue("An internal error has occurred");
+        return new ClientHandledIssue(getExceptionMessageAndLog(cause), this.errorResolver.resolve(cause
+                .getClass()));
     }
 
     /**
@@ -250,12 +255,10 @@ public class FrontController extends HttpServlet {
         try {
             requestId = sr == null ? "Failed to parse request?" : sr.getCacheKey().getResultsKey();
             if (e != null) {
-                final ClientHandledIssue issue = new ClientHandledIssue(e.getMessage());
+                final ClientHandledIssue issue = new ClientHandledIssue(getExceptionMessageAndLog(e));
                 final byte[] errorMessage = this.getEncodedJsonResponse(issue);
                 response.getOutputStream().write(errorMessage);
                 setupHeaders(response, errorMessage.length);
-
-                LOGGER.error("An internal error has occurred for [{}]", requestId, e);
             }
             // CHECKSTYLE:OFF We allow catching errors here, since we are at the top of the structure
         } catch (final Exception unableToSendError) {
@@ -263,6 +266,61 @@ public class FrontController extends HttpServlet {
             LOGGER.error("Unable to output error for request" + requestId, unableToSendError);
             LOGGER.error("Due to original Throwable", e);
         }
+    }
+
+    /**
+     * Gets the exception message.
+     * 
+     * @param e the e
+     * @return the exception message
+     */
+    private String getExceptionMessageAndLog(final Throwable e) {
+        final Locale locale = this.clientSessionProvider.get().getLocale();
+        final ResourceBundle bundle = ResourceBundle.getBundle("ErrorBundle", locale);
+
+        if (!(e instanceof StepInternalException)) {
+            return returnInternalError(e, bundle);
+        }
+
+        // else we're looking at a STEP caught exception
+        if (e instanceof LocalisedException) {
+            return e.getMessage();
+        }
+
+        if (e instanceof TranslatedException) {
+            final TranslatedException translatedException = (TranslatedException) e;
+            return format(bundle.getString(translatedException.getMessage()), translatedException.getArgs());
+        }
+
+        if (e instanceof ValidationException) {
+            final ValidationException validationException = (ValidationException) e;
+            switch (validationException.getExceptionType()) {
+                case LOGIN_REQUIRED:
+                    return bundle.getString("error_login");
+                case USER_MISSING_FIELD:
+                    return bundle.getString("error_missing_field");
+                case USER_VALIDATION_ERROR:
+                    return bundle.getString("error_validation");
+                case APP_MISSING_FIELD:
+                case CONTROLLER_INITIALISATION_ERROR:
+                case SERVICE_VALIDATION_ERROR:
+                default:
+                    return returnInternalError(e, bundle);
+            }
+        }
+        return returnInternalError(e, bundle);
+    }
+
+    /**
+     * Return internal error.
+     * 
+     * @param e the e
+     * @param bundle the bundle
+     * @return the string
+     */
+    private String returnInternalError(final Throwable e, final ResourceBundle bundle) {
+        LOGGER.error(e.getMessage(), e);
+        return bundle.getString("error_internal");
     }
 
     /**

@@ -90,7 +90,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
+import com.tyndalehouse.step.core.exceptions.LocalisedException;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
+import com.tyndalehouse.step.core.exceptions.TranslatedException;
 import com.tyndalehouse.step.core.exceptions.UserExceptionType;
 import com.tyndalehouse.step.core.models.InterlinearMode;
 import com.tyndalehouse.step.core.models.KeyWrapper;
@@ -192,7 +194,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
             // now we've got our target verse, use it, trim off the verse number
             return new KeyWrapper(currentBook.getKey(getChapter(targetVerse, v11n)));
         } catch (final NoSuchKeyException e) {
-            throw new StepInternalException("Cannot find next chapter", e);
+            throw new LocalisedException(e, e.getMessage());
         }
     }
 
@@ -261,7 +263,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
             key = currentBook.getKey(reference);
             return new KeyWrapper(key);
         } catch (final NoSuchKeyException e) {
-            throw new StepInternalException("Unable to resolve key: " + reference, e);
+            throw new LocalisedException(e, e.getMessage());
         }
     }
 
@@ -392,9 +394,9 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
             final BookData data = new BookData(book, key);
             return OSISUtil.getCanonicalText(data.getOsisFragment());
         } catch (final BookException e) {
-            throw new StepInternalException(e.getMessage(), e);
+            throw new LocalisedException(e, e.getMessage());
         } catch (final NoSuchKeyException e) {
-            throw new StepInternalException(e.getMessage(), e);
+            throw new LocalisedException(e, e.getMessage());
         }
     }
 
@@ -412,7 +414,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
         }
 
         final Key subKey = key.get(0);
-        if (subKey instanceof Verse && subKey != null) {
+        if (subKey instanceof Verse) {
             final Verse verse = (Verse) subKey;
             if (verse.getVerse() == 0) {
                 // then return verse 1 if available
@@ -482,7 +484,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
         try {
             keyToPassage = currentBook.getKey(r);
         } catch (final NoSuchKeyException e) {
-            throw new StepInternalException("An exception whilst parsing the key", e);
+            throw new LocalisedException(e, e.getMessage());
         }
 
         final Key firstVerse = this.getFirstVerseExcludingZero(keyToPassage, currentBook);
@@ -542,24 +544,9 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
             Key key = currentBook.getKey(reference);
             key = normalize(key, v11n);
 
-            // TODO, work this one out
-            final int cardinality = key.getCardinality();
-
-            // if we're looking at a whole book, then we will deal with it in one way,
-            final Passage requestedPassage = KeyUtil.getPassage(key, v11n);
-            if (requestedPassage.countRanges(RestrictionType.NONE) == 1
-                    && isWholeBook(v11n, requestedPassage)) {
-                key = trimExceedingVersesFromWholeReference(v11n, requestedPassage);
-            } else if (cardinality > MAX_VERSES_RETRIEVED) {
-                requestedPassage.trimVerses(MAX_VERSES_RETRIEVED);
-                key = requestedPassage;
-            } else if (key.getCardinality() == 0) {
-                throw new NoSuchKeyException("Cardinality of key is 0");
-            }
-
             return new BookData(currentBook, key);
         } catch (final NoSuchKeyException e) {
-            throw new StepInternalException("The Bible text (" + reference + ")  is invalid.", e);
+            throw new TranslatedException(e, "invalid_reference", reference);
         }
     }
 
@@ -570,8 +557,10 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
      * @param v11n the alternative versification
      * @param requestedPassage the passage
      * @return the new key
+     * @throws NoSuchKeyException the no such key exception
      */
-    private Key trimExceedingVersesFromWholeReference(final Versification v11n, final Passage requestedPassage) {
+    private Key trimExceedingVersesFromWholeReference(final Versification v11n, final Passage requestedPassage)
+            throws NoSuchKeyException {
         if (v11n.getLastChapter(requestedPassage.getRangeAt(0, RestrictionType.NONE).getStart().getBook()) <= MAX_SMALL_BOOK_CHAPTER_COUNT) {
             // return whole chapter
             return requestedPassage;
@@ -648,23 +637,51 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
     }
 
     /**
-     * Removes verse 0 if present
+     * Removes verse 0 if present.
      * 
      * @param reference the reference we wish to normalize
-     * @param v the versification that goes with the reference
+     * @param v11n the versification that goes with the reference
      * @return normalized key, which could be different to the instance passed in
+     * @throws NoSuchKeyException the exception indicating no key
      */
-    Key normalize(final Key reference, final Versification v) {
-        final Passage passage = KeyUtil.getPassage(reference, v);
+    Key normalize(final Key reference, final Versification v11n) throws NoSuchKeyException {
+        final Passage passage = KeyUtil.getPassage(reference, v11n);
         final int cardinality = passage.getCardinality();
         if (cardinality > 1) {
             final Key firstVerse = passage.get(0);
-            if (firstVerse instanceof Verse && v.isStartOfChapter((Verse) firstVerse)) {
+            if (firstVerse instanceof Verse && v11n.isStartOfChapter((Verse) firstVerse)) {
                 passage.remove(firstVerse);
-                return passage;
+                return reduceKeySize(passage, v11n);
             }
         }
-        return reference;
+
+        return reduceKeySize(reference, v11n);
+    }
+
+    /**
+     * Reduce key size to something acceptable by copyright holders.
+     * 
+     * @param inputKey the input key
+     * @param v11n the versification
+     * @return the key
+     * @throws NoSuchKeyException the no such key exception
+     */
+    private Key reduceKeySize(final Key inputKey, final Versification v11n) throws NoSuchKeyException {
+        Key key = inputKey;
+        final int cardinality = key.getCardinality();
+
+        // if we're looking at a whole book, then we will deal with it in one way,
+        final Passage requestedPassage = KeyUtil.getPassage(key, v11n);
+        if (requestedPassage.countRanges(RestrictionType.NONE) == 1 && isWholeBook(v11n, requestedPassage)) {
+            key = trimExceedingVersesFromWholeReference(v11n, requestedPassage);
+        } else if (cardinality > MAX_VERSES_RETRIEVED) {
+            requestedPassage.trimVerses(MAX_VERSES_RETRIEVED);
+            key = requestedPassage;
+        } else if (key.getCardinality() == 0) {
+            throw new NoSuchKeyException("Cardinality of key is 0");
+        }
+
+        return key;
     }
 
     /**
@@ -691,11 +708,10 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
         // the original book
         final Book book = bookData.getFirstBook();
         final Versification versification = this.versificationService.getVersificationForVersion(book);
-        key = normalize(key, versification);
-
-        // first check whether the key is contained in the book
 
         try {
+            // first check whether the key is contained in the book
+            key = normalize(key, versification);
             final SAXEventProvider osissep = bookData.getSAXEventProvider();
 
             final TransformingSAXEventProvider htmlsep = executeStyleSheet(options, interlinearVersion,
@@ -723,15 +739,13 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
 
             return osisWrapper;
         } catch (final BookException e) {
-            final String reference = key.getOsisID();
-            final String version = bookData.getFirstBook().getInitials();
-
-            throw new StepInternalException("Unable to query the book data to retrieve specified passage: "
-                    + version + ", " + reference, e);
+            throw new LocalisedException(e, e.getMessage());
         } catch (final SAXException e) {
             throw new StepInternalException(e.getMessage(), e);
         } catch (final TransformerException e) {
             throw new StepInternalException(e.getMessage(), e);
+        } catch (final NoSuchKeyException e) {
+            throw new LocalisedException(e, e.getMessage());
         }
     }
 
@@ -795,9 +809,9 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
         } catch (final SAXException e) {
             throw new StepInternalException(e.getMessage(), e);
         } catch (final BookException e) {
-            throw new StepInternalException(e.getMessage(), e);
+            throw new LocalisedException(e, e.getMessage());
         } catch (final NoSuchKeyException e) {
-            throw new StepInternalException(e.getMessage(), e);
+            throw new LocalisedException(e, e.getMessage());
         }
     }
 
@@ -837,7 +851,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
             }
 
             if (trimmedBooks.size() < 2) {
-                throw new StepInternalException("You are trying to compare 2 or more identical texts.");
+                throw new TranslatedException("identical_texts");
             }
 
             if (trimmedBooks.size() == books.length) {
@@ -869,8 +883,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
                 // otherwise we add and hope another version turns up
                 languageCodes.add(code);
             }
-            throw new StepInternalException(
-                    "Cannot compare the selected versions as they are written in different languages");
+            throw new TranslatedException("translations_in_different_languages");
         }
 
     }
@@ -1004,7 +1017,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
             return new JDOMSAXEventProvider(doc);
 
         } catch (final BookException e) {
-            throw new StepInternalException(e.getMessage(), e);
+            throw new LocalisedException(e, e.getMessage());
         }
     }
 
@@ -1203,7 +1216,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
             }
             return referenceString.toString();
         } catch (final NoSuchKeyException e) {
-            throw new StepInternalException("Unable to find keys " + references, e);
+            throw new LocalisedException(e, e.getMessage());
         }
     }
 
@@ -1239,7 +1252,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
             throw new StepInternalException("Was not given a passage back - why?");
 
         } catch (final NoSuchKeyException e) {
-            throw new StepInternalException("Unable to parse key " + references, e);
+            throw new LocalisedException(e, e.getMessage());
         }
     }
 

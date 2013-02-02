@@ -98,7 +98,8 @@ step.defaults = {
                              GREEK_WORDS[0], 
                              HEBREW_WORDS[0]],
             originalForms: [ALL_RELATED, ALL_FORMS, SPECIFIC_FORM, ],
-            originalSorting: [SCRIPTURE, VOCABULARY, ORIGINAL_SPELLING]
+            originalSorting:        [SCRIPTURE, VOCABULARY, ORIGINAL_SPELLING],
+            originalSortingValues:  ["SCRIPTURE", "VOCABULARY", "ORIGINAL_SPELLING"]
         }
     }
 };

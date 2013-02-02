@@ -179,10 +179,12 @@ public class EntityIndexReaderImpl implements EntityIndexReader {
         return search(fields, query, null, null, false, null, null, useOrOperator);
     }
 
+    // CHECKSTYLE:OFF
     @Override
     public EntityDoc[] search(final String[] fieldNames, final String value, final Filter filter,
             final Sort sort, final boolean analyzePrefix, final String queryRemainder,
             final Integer maxResults, final boolean useOrOperatorBetweenValues) {
+        // CHECKSTYLE:ON
         final AllResultsCollector collector = new AllResultsCollector();
         Query parsed = null;
         QueryParser parser;

@@ -41,9 +41,9 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.tyndalehouse.step.core.data.EntityManager;
 import com.tyndalehouse.step.core.data.EntityDoc;
 import com.tyndalehouse.step.core.data.EntityIndexReader;
+import com.tyndalehouse.step.core.data.EntityManager;
 
 /**
  * A utility to provide colors to an xsl spreadsheet. This is a non-static utility since later on we may wish
@@ -103,7 +103,6 @@ public class ColorCoderProviderImpl {
      * @param morph the robinson morphology
      * @return the classname
      */
-    // TODO this doesn't work for multiple morphs - rework for colours? share a cache system...
     public String getColorClass(final String morph) {
         if (morph == null || morph.length() < MINIMUM_MORPH_LENGTH) {
             return "";
@@ -114,8 +113,16 @@ public class ColorCoderProviderImpl {
             // we're in business and we know we have at least 3 characters
             LOGGER.debug("Identifying grammar for [{}]", morph);
 
-            final EntityDoc[] results = this.morphology.searchExactTermBySingleField("code", 1,
-                    morph.substring(ROBINSON_PREFIX_LC.length()));
+            final int length = ROBINSON_PREFIX_LC.length();
+            final int firstSpace = morph.indexOf(' ', length);
+            String code;
+            if (firstSpace != -1) {
+                code = morph.substring(length, firstSpace);
+            } else {
+                code = morph.substring(length);
+            }
+
+            final EntityDoc[] results = this.morphology.searchExactTermBySingleField("code", 1, code);
             if (results.length > 0) {
                 classes = results[0].get("cssClasses");
 

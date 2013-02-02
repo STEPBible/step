@@ -1,12 +1,16 @@
+<%@page import="com.google.inject.Injector"%>
+<%@page import="com.tyndalehouse.step.core.models.ClientSession"%>
+<%@page import="java.util.Locale"%>
 <%@page import="javax.servlet.jsp.jstl.core.Config"%>
 <%@ page contentType="text/html; charset=UTF-8" language="java" %> 
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<% if(request.getParameter("lang") != null) {
-	Config.set(session, Config.FMT_LOCALE, request.getParameter("lang"));
-} else { 
-	Config.set(session, Config.FMT_LOCALE, request.getLocale().getLanguage());
-} %>
+
+<%
+	Injector injector = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
+	Locale locale = injector.getInstance(ClientSession.class).getLocale();
+	Config.set(session, Config.FMT_LOCALE, locale.getLanguage());
+%>
 <fmt:setBundle basename="HtmlBundle" />
 
 

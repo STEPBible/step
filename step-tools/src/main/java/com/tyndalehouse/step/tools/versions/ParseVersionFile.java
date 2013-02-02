@@ -67,7 +67,6 @@ public class ParseVersionFile {
         String currentRef = null;
         StringBuilder text = new StringBuilder(256);
         StringBuilder partialLine = new StringBuilder(256);
-        final StringBuilder partialMatch = new StringBuilder(128);
 
         int count = 0;
         for (int k = 0; k < range.numParagraphs(); k++) {

@@ -15,6 +15,7 @@ import com.tyndalehouse.step.core.data.create.PostProcessor;
  * @author chrisburrell
  * 
  */
+@SuppressWarnings("PMD")
 public class MorphologyProcessor implements PostProcessor {
     private static final char SPACE_SEPARATOR = ' ';
 
@@ -159,6 +160,8 @@ public class MorphologyProcessor implements PostProcessor {
      * @param function the function of the word
      * @return For pronouns, returns 'Pronoun', otherwise the function
      */
+    @SuppressWarnings("PMD")
+    // CHECKSTYLE:OFF
     private String getShortFunction(final String function) {
         if ("Correlative pronoun".equals(function) || "Demonstrative pronoun".equals(function)
                 || "Indeclinable Noun of Other type".equals(function)
@@ -171,11 +174,13 @@ public class MorphologyProcessor implements PostProcessor {
         return function;
     }
 
+    // CHECKSTYLE:ON
+
     /**
      * @param function the function
      * @return comments about the function
      */
-    // CHECKSTYLE:OFF
+    @SuppressWarnings("PMD")
     private String getFunctionNotes(final String function) {
         if ("Correlative pronoun".equals(function)) {
             return "Correlative pronoun";
@@ -219,8 +224,6 @@ public class MorphologyProcessor implements PostProcessor {
 
         return null;
     }
-
-    // CHECKSTYLE:ON
 
     /**
      * closes the bracket

@@ -1,3 +1,4 @@
+<%@page import="com.tyndalehouse.step.core.models.ClientSession"%>
 <%@page import="javax.servlet.jsp.jstl.core.Config"%>
 <%@page import="java.util.Locale"%>
 <%@ page contentType="text/html; charset=UTF-8" language="java" %> 
@@ -10,14 +11,9 @@
 <%
 	Injector injector = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
 	WebStepRequest stepRequest = new WebStepRequest(injector, request);
+	Locale locale = injector.getInstance(ClientSession.class).getLocale();
+	Config.set(session, Config.FMT_LOCALE, locale.getLanguage());
 %>
-
-<% if(request.getParameter("lang") != null) {
-	 Config.set(session, Config.FMT_LOCALE, request.getParameter("lang"));
-} else { 
-	Config.set(session, Config.FMT_LOCALE, request.getLocale().getLanguage());
-} %>
-
 <fmt:setBundle basename="HtmlBundle" />
 
 

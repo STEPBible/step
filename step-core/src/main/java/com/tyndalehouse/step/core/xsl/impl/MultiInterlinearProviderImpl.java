@@ -117,12 +117,6 @@ public class MultiInterlinearProviderImpl implements MultiInterlinearProvider {
         return blackList;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.tyndalehouse.step.core.xsl.MultiInterlinearProvider#getWord(java.lang.String,
-     * java.lang.String, java.lang.String, java.lang.String)
-     */
     @Override
     public String getWord(final String version, final String verseNumber, final String strong,
             final String morph) {

@@ -59,20 +59,6 @@ public class VocabularyServiceImpl implements VocabularyService {
         this.definitions = manager.getReader("definition");
     }
 
-    //
-    // public IndexSearcher getSearcher() {
-    // if (this.searcher == null) {
-    // try {
-    // final SimpleFSDirectory path = new SimpleFSDirectory(new File("d:\\temp\\step"));
-    // final RAMDirectory ramFile = new RAMDirectory(path);
-    // this.searcher = new IndexSearcher(ramFile);
-    // } catch (final IOException e) {
-    // throw new StepInternalException("Some exception has occurred");
-    // }
-    // }
-    // return this.searcher;
-    // }
-
     @Override
     public EntityDoc[] getDefinitions(final String vocabIdentifiers) {
         notBlank(vocabIdentifiers, "Vocab identifiers was null", UserExceptionType.SERVICE_VALIDATION_ERROR);

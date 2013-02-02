@@ -30,57 +30,54 @@
  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
-package com.tyndalehouse.step.core.exceptions;
+package com.tyndalehouse.step.core.models.meanings;
+
+import java.util.List;
 
 /**
- * The default exception to be thrown throughout the application. It is of type {@link RuntimeException} so
- * that it does not require explicit catching
- * 
- * @author chrisburrell
- * 
+ * Represents a portion of text that has alternatives.
  */
-public class TranslatedException extends StepInternalException {
-    private static final long serialVersionUID = -1083871793637352613L;
-    private final String message;
-    private final String[] args;
+public class VersionVersePhraseOption {
+    private final String matchingText;
+    private final String context;
+    private final List<VersionPhraseAlternative> phraseAlternatives;
 
     /**
-     * creates the generic step internal exception to be used on the server.
+     * Instantiates a new version verse phrase option.
      * 
-     * @param t the cause of the exception
-     * @param message the message for the exception
-     * @param args the args to the localised message key
+     * @param matchingText the matching text
+     * @param context the context to find the text within, usually preceding
+     * @param phraseAlternatives the phrase alternatives
      */
-    public TranslatedException(final Throwable t, final String message, final String... args) {
-        super(t.getMessage(), t);
-        this.message = message;
-        this.args = args;
+    public VersionVersePhraseOption(final String matchingText, final String context,
+            final List<VersionPhraseAlternative> phraseAlternatives) {
+        this.matchingText = matchingText;
+        this.context = context;
+        this.phraseAlternatives = phraseAlternatives;
     }
 
     /**
-     * creates the generic runtime exception to be used on the server.
+     * Gets the matching text.
      * 
-     * @param message the message
-     * @param args the args to the localised message key
+     * @return the matching text
      */
-    public TranslatedException(final String message, final String... args) {
-        super(message);
-        this.message = message;
-        this.args = args;
+    public String getMatchingText() {
+        return this.matchingText;
     }
 
     /**
-     * @return the message
+     * Gets the phrase alternatives.
+     * 
+     * @return the phrase alternatives
      */
-    @Override
-    public String getMessage() {
-        return this.message;
+    public List<VersionPhraseAlternative> getPhraseAlternatives() {
+        return this.phraseAlternatives;
     }
 
     /**
-     * @return the args
+     * @return the context
      */
-    public Object[] getArgs() {
-        return this.args;
+    public String getContext() {
+        return this.context;
     }
 }

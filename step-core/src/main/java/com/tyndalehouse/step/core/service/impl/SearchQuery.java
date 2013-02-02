@@ -32,6 +32,7 @@ public class SearchQuery {
      * @param context how many verses either side to include
      * @param pageNumber the page number required
      * @param pageSize the size of the page to be returned
+     * @param locale
      */
     public SearchQuery(final String searchQuery, final String sortOrder, final int context,
             final int pageNumber, final int pageSize) {

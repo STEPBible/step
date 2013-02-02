@@ -48,8 +48,20 @@ step.search = {
 
             var passageContainer = step.util.getPassageContainer(passageId);
             var sortOrder;
+            
             if($(".originalSorting:enabled", passageContainer).size() > 0) {
-                sortOrder = $("fieldset:visible", passageContainer).detailSlider("value") > 0 ? step.state.original.originalSorting(passageId) : false;
+                var sortOrderString = $("fieldset:visible", passageContainer).detailSlider("value") > 0 ? step.state.original.originalSorting(passageId) : false;
+                
+                //find the index of the sort order
+                var allSortings = step.defaults.search.original.originalSorting;
+                for(var i = 0; i < allSortings.length; i++) {
+                    if(allSortings[i] == sortOrderString) {
+                        sortOrder = step.defaults.search.original.originalSortingValues[i];
+                    }
+                }
+                if(!sortOrder) {
+                    sortOrder = undefined;
+                }
             } else {
                 sortOrder = false;
             }

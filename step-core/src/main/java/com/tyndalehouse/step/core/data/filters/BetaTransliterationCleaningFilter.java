@@ -61,8 +61,10 @@ public class BetaTransliterationCleaningFilter extends TokenFilter {
      * @param i the current position
      * @param currentChar our current character
      */
+    // CHECKSTYLE:OFF
     private void appendNonBetaSpecialChar(final char[] buffer, final StringBuilder buf, final int i,
             final char currentChar) {
+        // CHECKSTYLE:ON
         // caters for the beta code as well
         switch (currentChar) {
             case '-':

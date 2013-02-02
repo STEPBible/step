@@ -35,7 +35,6 @@ package com.tyndalehouse.step.core.guice;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.ResourceBundle;
 
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.config.CacheConfiguration;
@@ -148,10 +147,6 @@ public class StepCoreModule extends AbstractStepGuiceModule {
         }).annotatedWith(Names.named("offlineInstallers")).toProvider(OfflineInstallersProvider.class);
 
         bind(EntityManager.class).to(EntityManagerImpl.class).asEagerSingleton();
-
-        bind(ResourceBundle.class).annotatedWith(Names.named("SetupBundle")).toInstance(
-                ResourceBundle.getBundle("SetupBundle"));
-
     }
 
     /**

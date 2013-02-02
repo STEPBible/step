@@ -200,8 +200,6 @@
     <module name="MutableException"/>
     <module name="VisibilityModifier"/>
     <module name="BooleanExpressionComplexity"/>
-    <module name="NPathComplexity"/>
-    <module name="CyclomaticComplexity"/>
     <module name="ArrayTypeStyle"/>
     <module name="FinalParameters"/>
     <!-- this should be covered by eclipse's reformatter profile 

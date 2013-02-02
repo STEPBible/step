@@ -32,12 +32,12 @@
  ******************************************************************************/
 package com.tyndalehouse.step.jsp;
 
-import java.util.Locale;
 import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
 
 import com.google.inject.Injector;
+import com.tyndalehouse.step.core.models.ClientSession;
 
 /**
  * A WebCookieRequest stores information from the request and the cookie for easy use in the jsp page.
@@ -67,12 +67,11 @@ public class AdvancedSearchStepRequest extends WebStepRequest {
      * 
      * @param injector the injector for the application
      * @param request the servlet request
-     * @param userLocale the user locale
      */
-    public AdvancedSearchStepRequest(final Injector injector, final HttpServletRequest request,
-            final Locale userLocale) {
+    public AdvancedSearchStepRequest(final Injector injector, final HttpServletRequest request) {
         super(injector, request);
-        this.bundle = ResourceBundle.getBundle("HtmlBundle", userLocale);
+        this.bundle = ResourceBundle.getBundle("HtmlBundle", injector.getInstance(ClientSession.class)
+                .getLocale());
     }
 
     /**

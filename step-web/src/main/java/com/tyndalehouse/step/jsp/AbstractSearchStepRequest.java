@@ -38,6 +38,7 @@ import java.util.ResourceBundle;
 import javax.servlet.http.HttpServletRequest;
 
 import com.google.inject.Injector;
+import com.tyndalehouse.step.core.models.ClientSession;
 
 /**
  * The Class AbstractSearchStepRequest.
@@ -51,12 +52,10 @@ public abstract class AbstractSearchStepRequest extends WebStepRequest {
      * 
      * @param injector the injector
      * @param request the request
-     * @param userLocale the user locale
      */
-    public AbstractSearchStepRequest(final Injector injector, final HttpServletRequest request,
-            final Locale userLocale) {
+    public AbstractSearchStepRequest(final Injector injector, final HttpServletRequest request) {
         super(injector, request);
-        this.userLocale = userLocale;
+        this.userLocale = injector.getInstance(ClientSession.class).getLocale();
     }
 
     /**

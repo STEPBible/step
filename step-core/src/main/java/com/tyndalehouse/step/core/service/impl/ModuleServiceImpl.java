@@ -52,7 +52,6 @@ import com.tyndalehouse.step.core.models.BibleVersion;
 import com.tyndalehouse.step.core.models.ClientSession;
 import com.tyndalehouse.step.core.service.ModuleService;
 import com.tyndalehouse.step.core.service.jsword.JSwordModuleService;
-import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import com.tyndalehouse.step.core.utils.CollectionUtils;
 
 /**
@@ -65,24 +64,20 @@ import com.tyndalehouse.step.core.utils.CollectionUtils;
 public class ModuleServiceImpl implements ModuleService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ModuleServiceImpl.class);
     private final Map<String, String> defaultLexiconsRefs;
-    private final JSwordPassageService jsword;
     private final JSwordModuleService jswordModuleService;
     private final Provider<ClientSession> clientSession;
 
     /**
-     * constructs a service to give module information and content
+     * constructs a service to give module information and content.
      * 
      * @param lexiconRefs the default references that should be used
-     * @param jsword the jsword service to retrieve data
      * @param jswordModuleService the service to register and manipulate modules
      * @param clientSession the client session to validate security
      */
     @Inject
     public ModuleServiceImpl(@Named("defaultLexiconRefs") final Map<String, String> lexiconRefs,
-            final JSwordPassageService jsword, final JSwordModuleService jswordModuleService,
-            final Provider<ClientSession> clientSession) {
+            final JSwordModuleService jswordModuleService, final Provider<ClientSession> clientSession) {
         this.defaultLexiconsRefs = lexiconRefs;
-        this.jsword = jsword;
         this.jswordModuleService = jswordModuleService;
         this.clientSession = clientSession;
     }
@@ -109,7 +104,6 @@ public class ModuleServiceImpl implements ModuleService {
                 BookCategory.DICTIONARY, BookCategory.COMMENTARY), this.clientSession.get().getLocale());
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public List<BibleVersion> getAllInstallableModules(final BookCategory... categories) {
         final BookCategory[] selected = categories.length == 0 ? new BookCategory[] { BookCategory.BIBLE,

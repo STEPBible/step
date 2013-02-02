@@ -34,10 +34,13 @@ package com.tyndalehouse.step.core.data.create;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.util.Locale;
 import java.util.Properties;
-import java.util.ResourceBundle;
+
+import javax.inject.Provider;
 
 import org.apache.lucene.search.NumericRangeQuery;
 import org.joda.time.DateTime;
@@ -45,12 +48,14 @@ import org.joda.time.DateTimeUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import com.tyndalehouse.step.core.data.EntityDoc;
 import com.tyndalehouse.step.core.data.EntityIndexReader;
 import com.tyndalehouse.step.core.data.EntityManager;
 import com.tyndalehouse.step.core.data.entities.impl.TestEntityManager;
+import com.tyndalehouse.step.core.models.ClientSession;
 import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
 import com.tyndalehouse.step.core.service.jsword.impl.JSwordPassageServiceImpl;
 import com.tyndalehouse.step.core.service.jsword.impl.JSwordVersificationServiceImpl;
@@ -63,6 +68,8 @@ import com.tyndalehouse.step.core.service.jsword.impl.JSwordVersificationService
  */
 @RunWith(MockitoJUnitRunner.class)
 public class LoaderTest {
+    @Mock
+    private Provider<ClientSession> clientSessionProvider;
     private EntityManager entityManager;
 
     /**
@@ -71,6 +78,9 @@ public class LoaderTest {
     @Before
     public void setUp() {
         this.entityManager = new TestEntityManager();
+        final ClientSession session = mock(ClientSession.class);
+        when(this.clientSessionProvider.get()).thenReturn(session);
+        when(session.getLocale()).thenReturn(Locale.ENGLISH);
     }
 
     /**
@@ -204,7 +214,7 @@ public class LoaderTest {
         coreProperties.put(key, file);
         final JSwordVersificationService versificationService = new JSwordVersificationServiceImpl();
         return new Loader(new JSwordPassageServiceImpl(versificationService, null, null, null), null,
-                coreProperties, this.entityManager, ResourceBundle.getBundle("SetupBundle", Locale.ENGLISH));
+                coreProperties, this.entityManager, this.clientSessionProvider);
     }
 
     /**

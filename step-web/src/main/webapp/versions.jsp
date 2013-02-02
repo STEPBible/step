@@ -1,6 +1,7 @@
+<%@page import="com.tyndalehouse.step.core.models.ClientSession"%>
+<%@page import="java.util.Locale"%>
 <%@page import="javax.servlet.jsp.jstl.core.Config"%>
-<%@ page contentType="text/html; charset=UTF-8" language="java" %> 
-
+<%@page contentType="text/html; charset=UTF-8" language="java" %> 
 
 <%@ page import="com.tyndalehouse.step.jsp.VersionsStepRequest" %>
 <%@ page import="com.google.inject.Injector"%>
@@ -9,21 +10,25 @@
 
 <%
 	Injector injector = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
-	VersionsStepRequest stepRequest = new VersionsStepRequest(injector, request);
+	Locale locale = injector.getInstance(ClientSession.class).getLocale();
+	Config.set(session, Config.FMT_LOCALE, locale.getLanguage());
+	VersionsStepRequest stepRequest = new VersionsStepRequest(injector);
 %>
-
-<% if(request.getParameter("lang") != null) {
-	Config.set(session, Config.FMT_LOCALE, request.getParameter("lang"));
-} else { 
-	Config.set(session, Config.FMT_LOCALE, request.getLocale().getLanguage());
-} %>
 <fmt:setBundle basename="HtmlBundle" />
 
-
+<% request.setCharacterEncoding("utf-8"); %>
 <jsp:include page="jsps/header.jsp">
-	<jsp:param value="<fmt:message key="available_versions_in_step" />" name="title"/>
-	<jsp:param value="<fmt:message key="all_available_versions" />" name="description"/>
-	<jsp:param value="<fmt:message key="esv_kjv_asv_greek_hebrew"/>" name="keywords"/>
+	<jsp:param><jsp:attribute name='name'>title</jsp:attribute>
+		<jsp:attribute name='value'><fmt:message key='available_versions_in_step' /></jsp:attribute>
+	</jsp:param>
+	<jsp:param>
+		<jsp:attribute name='name'>description</jsp:attribute>
+		<jsp:attribute name='value'><fmt:message key='all_available_versions' /></jsp:attribute>
+	</jsp:param>
+	<jsp:param>
+		<jsp:attribute name='name'>keywords</jsp:attribute>
+		<jsp:attribute name='value'><fmt:message key='esv_kjv_asv_greek_hebrew' /></jsp:attribute>
+	</jsp:param>
 </jsp:include>
 
 

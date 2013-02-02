@@ -148,7 +148,7 @@ public class SetupController {
     public void installBible(final String initials) {
         validateSession(this.sessionProvider);
 
-        notBlank(initials, "A reference must be provided to install a bible", USER_MISSING_FIELD);
+        notBlank(initials, "bible_for_install", USER_MISSING_FIELD);
         LOGGER.debug("Installing module {}", initials);
         this.bibleInformation.installModules(initials);
     }
@@ -170,7 +170,7 @@ public class SetupController {
     public void index(final String initials) {
         validateSession(this.sessionProvider);
 
-        notBlank(initials, "A version must be provided", USER_MISSING_FIELD);
+        notBlank(initials, "bible_for_install", USER_MISSING_FIELD);
         this.bibleInformation.index(initials);
     }
 
@@ -182,7 +182,7 @@ public class SetupController {
     public void reIndex(final String initials) {
         validateSession(this.sessionProvider);
 
-        notBlank(initials, "A version must be provided", USER_MISSING_FIELD);
+        notBlank(initials, "bible_for_install", USER_MISSING_FIELD);
         this.bibleInformation.reIndex(initials);
     }
 

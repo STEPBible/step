@@ -54,7 +54,6 @@ public class EsvOsisEnricher {
             NoSuchKeyException, TransformerFactoryConfigurationError, TransformerException {
         init(mappingFile);
 
-        final File f = new File(osisFile);
         final SAXBuilder builder = new SAXBuilder();
         builder.setValidation(false);
 

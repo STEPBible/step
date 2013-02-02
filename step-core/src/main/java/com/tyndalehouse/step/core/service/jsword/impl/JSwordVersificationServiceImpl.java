@@ -10,7 +10,7 @@ import org.crosswire.jsword.passage.VerseRange;
 import org.crosswire.jsword.versification.Versification;
 import org.crosswire.jsword.versification.system.Versifications;
 
-import com.tyndalehouse.step.core.exceptions.StepInternalException;
+import com.tyndalehouse.step.core.exceptions.TranslatedException;
 import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
 
 /**
@@ -78,8 +78,7 @@ public class JSwordVersificationServiceImpl implements JSwordVersificationServic
         final Book currentBook = Books.installed().getBook(version);
 
         if (currentBook == null) {
-            throw new StepInternalException("The Translation / Commentary (" + version
-                    + ") could not be found.");
+            throw new TranslatedException("book_not_found", version);
         }
         return currentBook;
     }

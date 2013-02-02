@@ -35,7 +35,7 @@ package com.tyndalehouse.step.rest.controllers;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import com.tyndalehouse.step.core.models.alternativeTranslations.VersionsData;
+import com.tyndalehouse.step.core.models.meanings.VersionsData;
 import com.tyndalehouse.step.core.service.impl.AlternativeTranslationsServiceImpl;
 
 /**

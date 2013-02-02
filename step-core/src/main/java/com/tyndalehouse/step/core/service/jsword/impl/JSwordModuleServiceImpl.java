@@ -30,6 +30,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
+import com.tyndalehouse.step.core.exceptions.TranslatedException;
 import com.tyndalehouse.step.core.service.jsword.JSwordModuleService;
 import com.tyndalehouse.step.core.utils.ValidateUtils;
 
@@ -150,7 +151,6 @@ public class JSwordModuleServiceImpl implements JSwordModuleService {
             for (final Installer i : installers) {
                 final Book bookToBeInstalled = i.getBook(initials);
 
-                // TODO TODO TODO FIXME
                 if (bookToBeInstalled != null) {
                     // then we can kick off installation and return
                     try {
@@ -169,7 +169,7 @@ public class JSwordModuleServiceImpl implements JSwordModuleService {
             }
             // if we get here, then we were unable to install the book
             // since we couldn't find it.
-            throw new StepInternalException("Unable to find book with initials " + initials);
+            throw new TranslatedException("book_not_found", initials);
         }
 
         // if we get here then we had already installed the book - how come we're asking for this again?

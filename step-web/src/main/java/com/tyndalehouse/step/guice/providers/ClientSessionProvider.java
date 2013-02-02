@@ -90,9 +90,11 @@ public class ClientSessionProvider implements Provider<ClientSession> {
         // take from session next
         if (this.session != null) {
             final Cookie[] cookies = this.request.getCookies();
-            for (final Cookie c : cookies) {
-                if (COOKIE_REQUEST_PARAM.equals(c.getName())) {
-                    return getLocaleFromTag(c.getValue());
+            if (cookies != null) {
+                for (final Cookie c : cookies) {
+                    if (COOKIE_REQUEST_PARAM.equals(c.getName())) {
+                        return getLocaleFromTag(c.getValue());
+                    }
                 }
             }
         }

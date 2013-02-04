@@ -190,12 +190,7 @@ public class BibleInformationServiceImpl implements BibleInformationService {
 
     @Override
     public Map<String, SortedSet<LexiconSuggestion>> getStrongNumbers(final String reference) {
-        final long l = System.nanoTime();
-        try {
-            return new JSwordStrongNumberHelper(this.entityManager, reference).getVerseStrongs();
-        } finally {
-            LOGGER.warn("{}", (System.nanoTime() - l) / 1000000);
-        }
+        return new JSwordStrongNumberHelper(this.entityManager, reference).getVerseStrongs();
     }
 
     /**

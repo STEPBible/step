@@ -136,6 +136,7 @@ public class StringConversionUtilsTest {
         assertEquals("0012", getStrongPaddedKey("strong:12"));
         assertEquals("0123", getStrongPaddedKey("strong:123"));
         assertEquals("1234", getStrongPaddedKey("strong:1234"));
+        assertEquals("H1234 H5678", getStrongPaddedKey("H01234 H5678"));
     }
 
     /**

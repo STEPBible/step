@@ -39,6 +39,8 @@ import static com.tyndalehouse.step.core.utils.ValidateUtils.notEmpty;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.SortedSet;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -52,6 +54,7 @@ import com.tyndalehouse.step.core.models.BookName;
 import com.tyndalehouse.step.core.models.ClientSession;
 import com.tyndalehouse.step.core.models.EnrichedLookupOption;
 import com.tyndalehouse.step.core.models.KeyWrapper;
+import com.tyndalehouse.step.core.models.LexiconSuggestion;
 import com.tyndalehouse.step.core.models.OsisWrapper;
 import com.tyndalehouse.step.core.service.BibleInformationService;
 import com.tyndalehouse.step.models.ModulesForLanguageUser;
@@ -190,7 +193,17 @@ public class BibleController {
         }
         return this.bibleInformation.getPassageText(version, Integer.parseInt(startVerseId),
                 Integer.parseInt(endVerseId), options, interlinearVersion, roundingUp);
+    }
 
+    /**
+     * Gets the strong numbers for a particular passage
+     * 
+     * @param reference the reference the passage reference
+     * @return the strong numbers attached to the passage
+     */
+    public Map<String, SortedSet<LexiconSuggestion>> getStrongNumbers(final String reference) {
+        notEmpty(reference, "A verse must be provided", APP_MISSING_FIELD);
+        return this.bibleInformation.getStrongNumbers(reference);
     }
 
     /**

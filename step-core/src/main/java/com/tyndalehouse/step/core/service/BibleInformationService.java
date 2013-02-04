@@ -34,12 +34,15 @@ package com.tyndalehouse.step.core.service;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.SortedSet;
 
 import com.tyndalehouse.step.core.models.AvailableFeatures;
 import com.tyndalehouse.step.core.models.BibleVersion;
 import com.tyndalehouse.step.core.models.BookName;
 import com.tyndalehouse.step.core.models.EnrichedLookupOption;
 import com.tyndalehouse.step.core.models.KeyWrapper;
+import com.tyndalehouse.step.core.models.LexiconSuggestion;
 import com.tyndalehouse.step.core.models.OsisWrapper;
 
 /**
@@ -202,5 +205,13 @@ public interface BibleInformationService {
      * Indexes all modules, sequentially and synchronously, not in parallel
      */
     void indexAll();
+
+    /**
+     * Gets the strong numbers for a particular verse.
+     * 
+     * @param reference the reference to be looked up
+     * @return the strong numbers return keyed by OSIS ID
+     */
+    Map<String, SortedSet<LexiconSuggestion>> getStrongNumbers(String reference);
 
 }

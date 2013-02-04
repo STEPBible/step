@@ -48,7 +48,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.SortedSet;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -60,6 +62,7 @@ import org.crosswire.jsword.book.BookCategory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.tyndalehouse.step.core.data.EntityManager;
 import com.tyndalehouse.step.core.models.AvailableFeatures;
 import com.tyndalehouse.step.core.models.BibleVersion;
 import com.tyndalehouse.step.core.models.BookName;
@@ -67,6 +70,7 @@ import com.tyndalehouse.step.core.models.ClientSession;
 import com.tyndalehouse.step.core.models.EnrichedLookupOption;
 import com.tyndalehouse.step.core.models.InterlinearMode;
 import com.tyndalehouse.step.core.models.KeyWrapper;
+import com.tyndalehouse.step.core.models.LexiconSuggestion;
 import com.tyndalehouse.step.core.models.LookupOption;
 import com.tyndalehouse.step.core.models.OsisWrapper;
 import com.tyndalehouse.step.core.models.TrimmedLookupOption;
@@ -74,10 +78,11 @@ import com.tyndalehouse.step.core.service.BibleInformationService;
 import com.tyndalehouse.step.core.service.jsword.JSwordMetadataService;
 import com.tyndalehouse.step.core.service.jsword.JSwordModuleService;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
+import com.tyndalehouse.step.core.service.jsword.helpers.JSwordStrongNumberHelper;
 import com.tyndalehouse.step.core.utils.StringUtils;
 
 /**
- * Command handler returning all available bible versions
+ * Command handler returning all available bible versions.
  * 
  * @author CJBurrell
  */
@@ -90,6 +95,7 @@ public class BibleInformationServiceImpl implements BibleInformationService {
     private final JSwordModuleService jswordModule;
     private final JSwordMetadataService jswordMetadata;
     private final Provider<ClientSession> clientSessionProvider;
+    private final EntityManager entityManager;
 
     /**
      * The bible information service, retrieving content and meta data.
@@ -103,14 +109,24 @@ public class BibleInformationServiceImpl implements BibleInformationService {
     @Inject
     public BibleInformationServiceImpl(@Named("defaultVersions") final List<String> defaultVersions,
             final JSwordPassageService jswordPassage, final JSwordModuleService jswordModule,
-            final JSwordMetadataService jswordMetadata, final Provider<ClientSession> clientSessionProvider) {
+            final JSwordMetadataService jswordMetadata, final Provider<ClientSession> clientSessionProvider,
+            final EntityManager entityManager) {
         this.jswordPassage = jswordPassage;
         this.defaultVersions = defaultVersions;
         this.jswordModule = jswordModule;
         this.jswordMetadata = jswordMetadata;
         this.clientSessionProvider = clientSessionProvider;
+        this.entityManager = entityManager;
     }
 
+    /**
+     * Gets the available modules.
+     * 
+     * @param allVersions the all versions
+     * @param locale the locale
+     * @param userLocale the user locale
+     * @return the available modules
+     */
     @Override
     public List<BibleVersion> getAvailableModules(final boolean allVersions, final String locale,
             final Locale userLocale) {
@@ -119,16 +135,37 @@ public class BibleInformationServiceImpl implements BibleInformationService {
                 BookCategory.BIBLE, BookCategory.COMMENTARY), userLocale);
     }
 
+    /**
+     * Gets the passage text.
+     * 
+     * @param version the version
+     * @param startVerseId the start verse id
+     * @param endVerseId the end verse id
+     * @param options the options
+     * @param interlinearVersion the interlinear version
+     * @param roundUp the round up
+     * @return the passage text
+     */
     @Override
     public OsisWrapper getPassageText(final String version, final int startVerseId, final int endVerseId,
             final String options, final String interlinearVersion, final Boolean roundUp) {
+        final List<LookupOption> lookupOptions = trim(getLookupOptions(options), version,
+                InterlinearMode.NONE, null);
         final OsisWrapper passage = this.jswordPassage.getOsisTextByVerseNumbers(version, version,
-                startVerseId, endVerseId,
-                trim(getLookupOptions(options), version, InterlinearMode.NONE, null), interlinearVersion,
-                roundUp, false);
+                startVerseId, endVerseId, lookupOptions, interlinearVersion, roundUp, false);
         return passage;
     }
 
+    /**
+     * Gets the passage text.
+     * 
+     * @param version the version
+     * @param reference the reference
+     * @param options the options
+     * @param interlinearVersion the interlinear version
+     * @param interlinearMode the interlinear mode
+     * @return the passage text
+     */
     @Override
     public OsisWrapper getPassageText(final String version, final String reference, final String options,
             final String interlinearVersion, final String interlinearMode) {
@@ -136,20 +173,29 @@ public class BibleInformationServiceImpl implements BibleInformationService {
         final InterlinearMode desiredModeOfDisplay = getDisplayMode(interlinearMode);
 
         OsisWrapper passageText;
+        final List<LookupOption> lookupOptions = trim(getLookupOptions(options), version,
+                desiredModeOfDisplay, null);
         if (INTERLINEAR != desiredModeOfDisplay && NONE != desiredModeOfDisplay) {
             // split the versions
             final String[] versions = getInterleavedVersions(version, interlinearVersion);
-            passageText = this.jswordPassage.getInterleavedVersions(versions, reference,
-                    trim(getLookupOptions(options), version, desiredModeOfDisplay, null),
+            passageText = this.jswordPassage.getInterleavedVersions(versions, reference, lookupOptions,
                     desiredModeOfDisplay);
             return passageText;
         } else {
-
-            passageText = this.jswordPassage.getOsisText(version, reference,
-                    trim(getLookupOptions(options), version, desiredModeOfDisplay, null), interlinearVersion,
-                    desiredModeOfDisplay);
+            passageText = this.jswordPassage.getOsisText(version, reference, lookupOptions,
+                    interlinearVersion, desiredModeOfDisplay);
         }
         return passageText;
+    }
+
+    @Override
+    public Map<String, SortedSet<LexiconSuggestion>> getStrongNumbers(final String reference) {
+        final long l = System.nanoTime();
+        try {
+            return new JSwordStrongNumberHelper(this.entityManager, reference).getVerseStrongs();
+        } finally {
+            LOGGER.warn("{}", (System.nanoTime() - l) / 1000000);
+        }
     }
 
     /**
@@ -377,6 +423,11 @@ public class BibleInformationServiceImpl implements BibleInformationService {
         }
     }
 
+    /**
+     * Gets the all features.
+     * 
+     * @return the all features
+     */
     @Override
     public List<EnrichedLookupOption> getAllFeatures() {
         final LookupOption[] lo = LookupOption.values();
@@ -392,6 +443,13 @@ public class BibleInformationServiceImpl implements BibleInformationService {
         return elo;
     }
 
+    /**
+     * Gets the available features for version.
+     * 
+     * @param version the version
+     * @param displayMode the display mode
+     * @return the available features for version
+     */
     @Override
     public AvailableFeatures getAvailableFeaturesForVersion(final String version, final String displayMode) {
         final List<LookupOption> allLookupOptions = Arrays.asList(LookupOption.values());
@@ -410,6 +468,11 @@ public class BibleInformationServiceImpl implements BibleInformationService {
         return this.jswordMetadata.getFeatures(version);
     }
 
+    /**
+     * Checks for core modules.
+     * 
+     * @return true, if successful
+     */
     @Override
     public boolean hasCoreModules() {
         for (final String version : this.defaultVersions) {
@@ -420,6 +483,9 @@ public class BibleInformationServiceImpl implements BibleInformationService {
         return true;
     }
 
+    /**
+     * Install default modules.
+     */
     @Override
     public void installDefaultModules() {
         // we install the module for every core module in the list
@@ -428,57 +494,121 @@ public class BibleInformationServiceImpl implements BibleInformationService {
         }
     }
 
+    /**
+     * Install modules.
+     * 
+     * @param reference the reference
+     */
     @Override
     public void installModules(final String reference) {
         this.jswordModule.installBook(reference);
     }
 
+    /**
+     * Gets the bible book names.
+     * 
+     * @param bookStart the book start
+     * @param version the version
+     * @return the bible book names
+     */
     @Override
     public List<BookName> getBibleBookNames(final String bookStart, final String version) {
         return this.jswordMetadata.getBibleBookNames(bookStart, version);
     }
 
+    /**
+     * Gets the sibling chapter.
+     * 
+     * @param reference the reference
+     * @param version the version
+     * @param previousChapter the previous chapter
+     * @return the sibling chapter
+     */
     @Override
     public KeyWrapper getSiblingChapter(final String reference, final String version,
             final boolean previousChapter) {
         return this.jswordPassage.getSiblingChapter(reference, version, previousChapter);
     }
 
+    /**
+     * Gets the key info.
+     * 
+     * @param reference the reference
+     * @param version the version
+     * @return the key info
+     */
     @Override
     public KeyWrapper getKeyInfo(final String reference, final String version) {
         return this.jswordPassage.getKeyInfo(reference, version);
     }
 
+    /**
+     * Index.
+     * 
+     * @param initials the initials
+     */
     @Override
     public void index(final String initials) {
         this.jswordModule.index(initials);
     }
 
+    /**
+     * Re index.
+     * 
+     * @param initials the initials
+     */
     @Override
     public void reIndex(final String initials) {
         this.jswordModule.reIndex(initials);
     }
 
+    /**
+     * Expand key to chapter.
+     * 
+     * @param version the version
+     * @param reference the reference
+     * @return the key wrapper
+     */
     @Override
     public KeyWrapper expandKeyToChapter(final String version, final String reference) {
         return this.jswordPassage.expandToChapter(version, reference);
     }
 
+    /**
+     * Gets the progress on installation.
+     * 
+     * @param version the version
+     * @return the progress on installation
+     */
     @Override
     public double getProgressOnInstallation(final String version) {
         return this.jswordModule.getProgressOnInstallation(version);
     }
 
+    /**
+     * Gets the progress on indexing.
+     * 
+     * @param version the version
+     * @return the progress on indexing
+     */
     @Override
     public double getProgressOnIndexing(final String version) {
         return this.jswordModule.getProgressOnIndexing(version);
     }
 
+    /**
+     * Removes the module.
+     * 
+     * @param initials the initials
+     */
     @Override
     public void removeModule(final String initials) {
         this.jswordModule.removeModule(initials);
     }
 
+    /**
+     * Index all.
+     */
     @Override
     public void indexAll() {
         final List<Book> installedModules = this.jswordModule.getInstalledModules(BookCategory.BIBLE);

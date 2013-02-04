@@ -654,11 +654,27 @@ FONT.usg {
 	white-space: nowrap;
 }
 
-.noAlternativeWidth {
+.noQtipWidth {
 	max-width: none !important;
 }
 
 .altered {
 	color: red;	
 	font-family: Comic Sans MS;
+}
+
+/****************************/
+/* verse numbers            */
+/****************************/
+.verseNumberStrongs a, .verseNumberStrongs a:visited {
+	color: #696;
+}
+
+.verseNumberStrongs td {
+	padding-left: 25px;
+	padding-left: 0px;	
+}
+
+.verseNumberStrongs td.even {
+	padding-right: 25px;
 }

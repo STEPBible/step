@@ -55,7 +55,9 @@ step.alternatives = {
                                     solo: true
                                 },
                                 hide: { 
-                                    event: 'unfocus',
+                                    event: 'unfocus mouseleave',
+                                    fixed: true,
+                                    delay: 200
                                 },
                                 
                                 position : {
@@ -101,7 +103,7 @@ step.alternatives = {
                                     }
                                 },
                                 style: { 
-                                    classes: 'ui-tooltip-default noAlternativeWidth'
+                                    classes: 'ui-tooltip-default noQtipWidth'
                                 }
                              });
                         }

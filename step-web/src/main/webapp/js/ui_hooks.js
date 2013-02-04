@@ -60,6 +60,7 @@ BIBLE_GET_PREVIOUS_CHAPTER =        STEP_SERVER_BASE_URL + "bible/getPreviousCha
 BIBLE_GET_BY_NUMBER =               STEP_SERVER_BASE_URL + "bible/getBibleByVerseNumber/";
 BIBLE_GET_KEY_INFO =                STEP_SERVER_BASE_URL + "bible/getKeyInfo/";
 BIBLE_EXPAND_TO_CHAPTER =           STEP_SERVER_BASE_URL + "bible/expandKeyToChapter/";
+BIBLE_GET_STRONGS =                 STEP_SERVER_BASE_URL + "bible/getStrongNumbers/";
 
 DICTIONARY_GET_BY_HEADWORD =        STEP_SERVER_BASE_URL + "dictionary/lookupDictionaryByHeadword/";
 DICTIONARY_SEARCH_BY_HEADWORD =     STEP_SERVER_BASE_URL + "dictionary/searchDictionaryByHeadword/";
@@ -162,12 +163,20 @@ function login() {
 /**
  * called when click on a piece of text.
  */
-function showDef(source) {
-    var s = $(source);
-
-    var strong = s.attr("strong");
-    var morph = s.attr("morph");
-    var passageId = step.passage.getPassageId(s);
+function showDef(source, passage) {
+    var strong;
+    var morph;
+    var passageId;
+    
+    if (typeof source == "string") {
+        strong = source;
+        passageId = passage;
+    } else {
+        var s = $(source);
+        strong = s.attr("strong");
+        morph = s.attr("morph");
+        passageId = step.passage.getPassageId(s);
+    }
 
     $.shout("show-all-strong-morphs", {
         strong : strong,

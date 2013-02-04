@@ -132,7 +132,7 @@ public final class StringConversionUtils {
         if (key.startsWith(UPPER_STRONG_PREFIX)) {
             return key.substring(STRONG_PREFIX_LENGTH);
         }
-        return null;
+        return key;
     }
 
     /**

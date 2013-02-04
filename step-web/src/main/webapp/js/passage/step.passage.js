@@ -144,6 +144,7 @@ step.passage = {
                 step.util.closeInfoErrors(passageId);
                 step.state.passage.reference(passageId, text.reference, false);
                 self._doVersions(passageId, passageContent);
+                self._doVerseNumbers(passageId, passageContent, options, text.reference);
             }, 
             passageId: passageId, 
             level: 'error'
@@ -291,6 +292,83 @@ step.passage = {
         
         //if no ltr, then assume, rtl
         $(".passageContentHolder", passageContent).addClass("rtlDirection");
+    },
+    
+    _doVerseNumbers : function(passageId, passageContent, options, reference) {
+        if(options == undefined || options.indexOf("VERSE_NUMBERS") == -1) {
+            //nothing to do:
+            return;
+        }
+        
+        //otherwise, exciting new strong numbers to apply:
+        $.getSafe(BIBLE_GET_STRONGS, [reference], function(data) {
+            $.each(data, function(key, value) {
+                //there may be multiple values of this kind of format: 
+//                "strongNumber": "H0430",
+//                "matchingForm": "אֱלֹהִים",
+//                "stepTransliteration": "’.e-lo-hiym",
+//                "gloss": "angels"
+                
+                var text = "<table class='verseNumberStrongs'>";
+                $.each(value, function(i, item) {
+                    var even = (i % 2) == 0;
+                    
+                   if(even) {
+                       text += "<tr>";
+                   } 
+                   
+                   text += "<td class='";
+                   if(even) {
+                       text += "even";
+                   }
+                   
+                   text += "'>";
+                   text += "<a href='#' onclick='showDef(\"";
+                   text += item.strongNumber;
+                   text += ", ";
+                   text += passageId;
+                   text += "\")'>";
+                   text += item.gloss;
+                   text += " (";
+                   text += item.stepTransliteration;
+                   text += ", <span class='unicodeFont'>";
+                   text += item.matchingForm;
+                   text += "</span>)</a>";
+                   text += "</td>";
+                   
+                   if(!even) {
+                       text += "</tr>";
+                   }
+                });
+                
+                if((value.length %2) == 1) {
+                    text += "</tr>";
+                }
+                text += "</table>";
+                
+                $("a[name='" + key + "']").qtip({
+                    content: text,
+                    show: { 
+                        event : 'mouseenter',
+                        solo: true,
+                    },
+                    hide: { 
+                        event: 'unfocus mouseleave',
+                        fixed: true,
+                        delay: 200
+                    },
+                    
+                    position : {
+                        my: "bottom center",
+                        at: "top center",
+                        viewport: $(window),
+                    },
+                    style : {
+                        classes : "ui-tooltip-default noQtipWidth"
+                    }
+                });
+            });
+        });
     },
     
     _doSideNotes : function(passageId, passageContent) {

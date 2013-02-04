@@ -66,6 +66,15 @@ step.util = {
 	    return this.passageContents[passageIdOrElement];
 	},
 	
+	getOtherPassageId : function(passageId) {
+	    if(parseInt(passageId) == 1) {
+	        return 0;
+	    } else if(step.state.view.getView() == 'SINGLE_COLUMN_VIEW') {
+	        //passageId = 0, so need to work out the column layout
+	        return 0;
+	    }
+	    return 1;
+	},
 	
 	isBlank: function(s) {
 	    if(s == null) {

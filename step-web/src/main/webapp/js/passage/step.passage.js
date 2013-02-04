@@ -131,6 +131,7 @@ step.passage = {
                 
     
                 //finally add handlers to elements containing xref
+                self._doVerseNumbers(passageId, passageContent, options, text.reference);
                 self._doFonts(passageId, passageContent, interlinearMode, interlinearVersion);
                 self._doInlineNotes(passageId, passageContent);
                 self._doNonInlineNotes(passageContent);
@@ -144,7 +145,6 @@ step.passage = {
                 step.util.closeInfoErrors(passageId);
                 step.state.passage.reference(passageId, text.reference, false);
                 self._doVersions(passageId, passageContent);
-                self._doVerseNumbers(passageId, passageContent, options, text.reference);
             }, 
             passageId: passageId, 
             level: 'error'
@@ -323,6 +323,27 @@ step.passage = {
                    }
                    
                    text += "'>";
+                   
+                   //add search icon:
+                   text += "<a href='#' class='ui-icon ui-icon-search verseStrongSearch' onclick='step.lexicon.passageId=";
+                   text += passageId;
+                   text += "; step.lexicon.sameWordSearch(\"";
+                   text += item.strongNumber;
+                   text +="\")' title='";
+                   text += __s.search_for_this_word;
+                   text += "'></a>";
+                   
+                   //add related search icon
+                   text += "<a href='#' class='ui-icon ui-icon-zoomin verseStrongSearch' onclick='step.lexicon.passageId=";
+                   text += passageId;
+                   text += "; step.lexicon.relatedWordSearch(\"";
+                   text += item.strongNumber;
+                   text +="\")' title='";
+                   text += __s.search_for_related_words;
+                   text += "'></a>";
+                                      
+                   
+                   
                    text += "<a href='#' onclick='showDef(\"";
                    text += item.strongNumber;
                    text += ", ";

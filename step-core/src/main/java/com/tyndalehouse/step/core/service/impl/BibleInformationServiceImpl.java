@@ -610,7 +610,7 @@ public class BibleInformationServiceImpl implements BibleInformationService {
         for (final Book b : installedModules) {
             final String initials = b.getInitials();
             LOGGER.debug("Indexing [{}]", initials);
-            this.jswordModule.index(initials);
+            this.jswordModule.index("WEB");
             this.jswordModule.waitForIndexes(initials);
         }
     }

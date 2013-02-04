@@ -31,22 +31,28 @@ step.lexicon = {
     passageId : 0,
     positioned : false,
     
-    sameWordSearch : function() {
-        this._doSearch(ALL_FORMS);
+    sameWordSearch : function(strongNumber) {
+        this.doSearch(ALL_FORMS, strongNumber);
     },
 
-    relatedWordSearch : function() {
-        this._doSearch(ALL_RELATED);
+    relatedWordSearch : function(strongNumber) {
+        this.doSearch(ALL_RELATED, strongNumber);
     },
 
     wordGrammarSearch : function() {
         //not yet implemented 
     },
 
-    _doSearch : function(searchType) {
-        var query = $("span[info-name ='strongNumber']").text();
+    doSearch : function(searchType, strongNumber) {
+        var query;
+        if(strongNumber) {
+            query = strongNumber;
+        } else {
+            query = $("span[info-name ='strongNumber']").text();
+        }
+        
         if(step.util.raiseErrorIfBlank(query, __s.error_no_strong_data)) {
-            var targetPassageId = (parseInt(this.passageId) + 1) % 2;
+            var targetPassageId = step.util.getOtherPassageId(this.passageId);
             
             step.state.original.originalScope(targetPassageId, __s.whole_bible_range);
             step.state.original.originalType(targetPassageId, query[0] == 'H' ? HEBREW_WORDS[0] : GREEK_WORDS[0]);

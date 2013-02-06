@@ -41,6 +41,7 @@ import org.crosswire.common.util.Reporter;
 import org.crosswire.common.util.ReporterEvent;
 import org.crosswire.common.util.ReporterListener;
 import org.crosswire.jsword.book.sword.state.OpenFileStateManager;
+import org.crosswire.jsword.index.IndexManagerFactory;
 import org.crosswire.jsword.internationalisation.LocaleProvider;
 import org.crosswire.jsword.internationalisation.LocaleProviderManager;
 import org.crosswire.jsword.versification.BookName;
@@ -150,6 +151,8 @@ public class StepServletConfig extends GuiceServletContextListener {
                 }
             }
         });
+
+        org.crosswire.common.util.Logger.setShowLocationForInfoDebugTrace(false);
     }
 
     /**
@@ -160,7 +163,10 @@ public class StepServletConfig extends GuiceServletContextListener {
     @Override
     public void contextDestroyed(final ServletContextEvent servletContextEvent) {
         final ServletContext sc = servletContextEvent.getServletContext();
+        // close some JSword things
         OpenFileStateManager.shutDown();
+        IndexManagerFactory.getIndexManager().closeAllIndexes();
+
         sc.removeAttribute(Injector.class.getName());
         getInjector().getInstance(EntityManager.class).close();
         super.contextDestroyed(servletContextEvent);

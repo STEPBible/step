@@ -300,9 +300,16 @@ step.passage = {
             return;
         }
         
+        var book = reference;
+        var firstSpace = reference.indexOf(' ');
+        if(firstSpace != -1) {
+            book = reference.substring(0, firstSpace);
+        }
+        
+        var self = this;
         //otherwise, exciting new strong numbers to apply:
         $.getSafe(BIBLE_GET_STRONGS, [reference], function(data) {
-            $.each(data, function(key, value) {
+            $.each(data.strongData, function(key, value) {
                 //there may be multiple values of this kind of format: 
 //                "strongNumber": "H0430",
 //                "matchingForm": "אֱלֹהִים",
@@ -310,6 +317,14 @@ step.passage = {
 //                "gloss": "angels"
                 
                 var text = "<table class='verseNumberStrongs'>";
+                
+                //append header row
+                var header = "<th></th><th>" + __s.bible_book + "</th><th>" + (data.strongData.ot ? __s.OT : __s.NT) + "</th>";
+                text += "<tr>";
+                text += header;
+                text += header;
+                text += "</tr>";
+                
                 $.each(value, function(i, item) {
                     var even = (i % 2) == 0;
                     
@@ -317,33 +332,11 @@ step.passage = {
                        text += "<tr>";
                    } 
                    
-                   text += "<td class='";
-                   if(even) {
-                       text += "even";
-                   }
-                   
-                   text += "'>";
-                   
-                   //add search icon:
-                   text += "<a href='#' class='ui-icon ui-icon-search verseStrongSearch' onclick='step.lexicon.passageId=";
-                   text += passageId;
-                   text += "; step.lexicon.sameWordSearch(\"";
-                   text += item.strongNumber;
-                   text +="\")' title='";
-                   text += __s.search_for_this_word;
-                   text += "'></a>";
-                   
-                   //add related search icon
-                   text += "<a href='#' class='ui-icon ui-icon-zoomin verseStrongSearch' onclick='step.lexicon.passageId=";
-                   text += passageId;
-                   text += "; step.lexicon.relatedWordSearch(\"";
-                   text += item.strongNumber;
-                   text +="\")' title='";
-                   text += __s.search_for_related_words;
-                   text += "'></a>";
-                                      
-                   
-                   
+                   text += "<td>";
+                   //add search icon
+                   text += self._addLinkToLexicalSearch(passageId, "ui-icon ui-icon-search verseStrongSearch", "sameWordSearch", item.strongNumber, __s.search_for_this_word, "");
+                   text += self._addLinkToLexicalSearch(passageId, "ui-icon ui-icon-zoomin verseStrongSearch", "relatedWordSearch", item.strongNumber, __s.search_for_related_words, "");
+
                    text += "<a href='#' onclick='showDef(\"";
                    text += item.strongNumber;
                    text += ", ";
@@ -354,7 +347,19 @@ step.passage = {
                    text += item.stepTransliteration;
                    text += ", <span class='unicodeFont'>";
                    text += item.matchingForm;
-                   text += "</span>)</a>";
+                   text += "</span>)</a> ";
+
+                   //add count in book icon:
+                   text += "</td><td>";
+                   text += self._addLinkToLexicalSearch(passageId, "strongCount", "sameWordSearch", item.strongNumber, "", sprintf(__s.times, data.counts[item.strongNumber].book));
+                   text += "</td>";
+                   		
+                   text += "<td class='";
+                   if(even) {
+                       text += "even";
+                   }
+                   text += "'>";
+                   text += self._addLinkToLexicalSearch(passageId, "strongCount", "sameWordSearch", item.strongNumber, "", sprintf(__s.times, data.counts[item.strongNumber].bible));
                    text += "</td>";
                    
                    if(!even) {
@@ -390,6 +395,19 @@ step.passage = {
                 });
             });
         });
+    },
+    
+    
+    _addLinkToLexicalSearch : function(passageId, classes, functionName, strongNumber, title, innerText) {
+        var text = "";
+        text += "<a href='#' class='" + classes + "' onclick='step.lexicon.passageId=";
+        text += passageId;
+        text += "; step.lexicon." + functionName + "(\"";
+        text += strongNumber;
+        text +="\")' title='";
+        text += title.replace(/'/g, "&apos;");
+        text += "'>" + innerText + "</a>";
+        return text;
     },
     
     _doSideNotes : function(passageId, passageContent) {

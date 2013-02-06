@@ -108,6 +108,8 @@
   <xsl:param name="interleavingProvider" />
   <xsl:param name="comparing" select="false()" />
   <xsl:param name="colorCodingProvider" />
+  <xsl:param name="xrefProvider" />
+  
 
   <!-- Create a global key factory from which OSIS ids will be generated -->
   <xsl:variable name="keyf" select="jsword:org.crosswire.jsword.passage.PassageKeyFactory.instance()"/>

@@ -63,6 +63,10 @@ public enum LookupOption {
      * Showing cross references
      */
     NOTES("Notes", XslConversionType.DEFAULT, true),
+
+    /** The cross refs. */
+    EXTENDED_XREFS("ExtendsXRefs", XslConversionType.DEFAULT, true),
+
     /** English vocabulary interlinear */
     ENGLISH_VOCAB("EnglishVocab", XslConversionType.INTERLINEAR),
     /** Transliteration interlinear */

@@ -372,10 +372,6 @@
             <ruleset>Design Rules</ruleset>
         </rule>
         <rule>
-            <name>MissingBreakInSwitch</name>
-            <ruleset>Design Rules</ruleset>
-        </rule>
-        <rule>
             <name>UseNotifyAllInsteadOfNotify</name>
             <ruleset>Design Rules</ruleset>
         </rule>

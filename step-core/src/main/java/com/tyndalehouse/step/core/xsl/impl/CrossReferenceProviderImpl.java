@@ -30,46 +30,46 @@
  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
-package com.tyndalehouse.step.core.data.processors;
+package com.tyndalehouse.step.core.xsl.impl;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.inject.Inject;
 
-import org.apache.lucene.document.Document;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.tyndalehouse.step.core.data.EntityConfiguration;
-import com.tyndalehouse.step.core.data.create.PostProcessor;
-import com.tyndalehouse.step.core.exceptions.StepInternalException;
-import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
+import com.tyndalehouse.step.core.data.EntityDoc;
+import com.tyndalehouse.step.core.data.EntityIndexReader;
+import com.tyndalehouse.step.core.data.EntityManager;
 
 /**
- * Takes the reference provided and turns into an Osis version
+ * Provides extra cross-references to be displayed next to the passage
  */
-public class AlternativeTranslationsProcessor implements PostProcessor {
-    private static final Logger LOGGER = LoggerFactory.getLogger(AlternativeTranslationsProcessor.class);
-    private final JSwordPassageService jswordPassage;
+public class CrossReferenceProviderImpl {
+
+    private final EntityIndexReader nave;
 
     /**
-     * Instantiates a new reference processor.
+     * Instantiates a new cross reference provider impl.
      * 
-     * @param jswordPassage the jsword passage
+     * @param manager the data manager
      */
     @Inject
-    public AlternativeTranslationsProcessor(final JSwordPassageService jswordPassage) {
-        this.jswordPassage = jswordPassage;
+    public CrossReferenceProviderImpl(final EntityManager manager) {
+        this.nave = manager.getReader("nave");
     }
 
-    @Override
-    public void process(final EntityConfiguration config, final Document doc) {
-        final String reference = doc.get("reference");
-        doc.removeField("reference");
-        try {
-            doc.add(config.getField("reference", this.jswordPassage.getKeyInfo(reference, "ESV")
-                    .getOsisKeyId()));
-        } catch (final StepInternalException e) {
-            LOGGER.error("Alternative Meanings: {}", e.getMessage());
-            LOGGER.trace("Failed alternative mean verse:", e);
+    /**
+     * Gets the references.
+     * 
+     * @param osisID the osis id
+     * @return the references that have been found
+     */
+    public Set<String> getReferences(final String osisID) {
+        final EntityDoc[] results = this.nave.search("expandedReferences", osisID);
+        final Set<String> refs = new HashSet<String>(results.length * 2);
+        for (int i = 0; i < results.length; i++) {
+            refs.add(results[i].get("references"));
         }
+        return refs;
     }
 }

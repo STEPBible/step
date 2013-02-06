@@ -683,3 +683,8 @@ FONT.usg {
 	float: left;
 	background-image: url('images/ui-icons_ef8c08_256x240.png');
 }
+
+.strongCount {
+	width: 5ex;
+	text-align: center;
+}

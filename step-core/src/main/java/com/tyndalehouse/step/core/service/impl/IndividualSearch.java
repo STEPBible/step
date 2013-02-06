@@ -78,6 +78,19 @@ public class IndividualSearch {
     private String[] originalFilter;
 
     /**
+     * Instantiates a single search to be executed.
+     * 
+     * @param type the type of the search
+     * @param version the version to be used to carry out the search
+     * @param query the query to be run
+     */
+    public IndividualSearch(final SearchType type, final String version, final String query) {
+        this.type = type;
+        this.query = query;
+        this.versions = new String[] { version };
+    }
+
+    /**
      * Initialises the search from the query string.
      * 
      * @param query the query that is being sent to the app to search for

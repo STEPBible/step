@@ -352,9 +352,6 @@ public class SearchServiceImpl implements SearchService {
      */
     private List<SearchEntry> specialPaging(final SearchQuery sq, final List<SearchEntry> newOrder) {
         // runs paging after a special sort
-        sq.getPageNumber();
-        sq.getPageSize();
-
         // we want
         final int firstElement = (sq.getPageNumber() - 1) * sq.getPageSize();
         final int lastElement = firstElement + sq.getPageSize();

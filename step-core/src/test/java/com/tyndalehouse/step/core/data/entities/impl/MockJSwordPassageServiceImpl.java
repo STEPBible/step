@@ -210,8 +210,7 @@ public class MockJSwordPassageServiceImpl implements JSwordPassageService {
      */
     @Override
     public String getAllReferences(final String references, final String version) {
-
-        return null;
+        return "a ref";
     }
 
     /**

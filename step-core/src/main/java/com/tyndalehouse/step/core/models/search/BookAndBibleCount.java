@@ -30,46 +30,50 @@
  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
-package com.tyndalehouse.step.core.data.processors;
-
-import javax.inject.Inject;
-
-import org.apache.lucene.document.Document;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.tyndalehouse.step.core.data.EntityConfiguration;
-import com.tyndalehouse.step.core.data.create.PostProcessor;
-import com.tyndalehouse.step.core.exceptions.StepInternalException;
-import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
+package com.tyndalehouse.step.core.models.search;
 
 /**
- * Takes the reference provided and turns into an Osis version
+ * The Class OTAndBibleCount.
  */
-public class AlternativeTranslationsProcessor implements PostProcessor {
-    private static final Logger LOGGER = LoggerFactory.getLogger(AlternativeTranslationsProcessor.class);
-    private final JSwordPassageService jswordPassage;
+public class BookAndBibleCount {
+    private int book;
+    private int bible;
 
     /**
-     * Instantiates a new reference processor.
-     * 
-     * @param jswordPassage the jsword passage
+     * Instantiates a new count holder model
      */
-    @Inject
-    public AlternativeTranslationsProcessor(final JSwordPassageService jswordPassage) {
-        this.jswordPassage = jswordPassage;
+    public BookAndBibleCount() {
     }
 
-    @Override
-    public void process(final EntityConfiguration config, final Document doc) {
-        final String reference = doc.get("reference");
-        doc.removeField("reference");
-        try {
-            doc.add(config.getField("reference", this.jswordPassage.getKeyInfo(reference, "ESV")
-                    .getOsisKeyId()));
-        } catch (final StepInternalException e) {
-            LOGGER.error("Alternative Meanings: {}", e.getMessage());
-            LOGGER.trace("Failed alternative mean verse:", e);
-        }
+    /**
+     * Gets the book.
+     * 
+     * @return the book
+     */
+    public int getBook() {
+        return this.book;
+    }
+
+    /**
+     * Gets the number of occurrences within the whole Bible.
+     * 
+     * @return the bible
+     */
+    public int getBible() {
+        return this.bible;
+    }
+
+    /**
+     * @param book the book to set
+     */
+    public void setBook(final int book) {
+        this.book = book;
+    }
+
+    /**
+     * @param bible the bible to set
+     */
+    public void setBible(final int bible) {
+        this.bible = bible;
     }
 }

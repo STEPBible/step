@@ -48,9 +48,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.SortedSet;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -70,14 +68,15 @@ import com.tyndalehouse.step.core.models.ClientSession;
 import com.tyndalehouse.step.core.models.EnrichedLookupOption;
 import com.tyndalehouse.step.core.models.InterlinearMode;
 import com.tyndalehouse.step.core.models.KeyWrapper;
-import com.tyndalehouse.step.core.models.LexiconSuggestion;
 import com.tyndalehouse.step.core.models.LookupOption;
 import com.tyndalehouse.step.core.models.OsisWrapper;
 import com.tyndalehouse.step.core.models.TrimmedLookupOption;
+import com.tyndalehouse.step.core.models.search.StrongsAndCounts;
 import com.tyndalehouse.step.core.service.BibleInformationService;
 import com.tyndalehouse.step.core.service.jsword.JSwordMetadataService;
 import com.tyndalehouse.step.core.service.jsword.JSwordModuleService;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
+import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
 import com.tyndalehouse.step.core.service.jsword.helpers.JSwordStrongNumberHelper;
 import com.tyndalehouse.step.core.utils.StringUtils;
 
@@ -96,6 +95,7 @@ public class BibleInformationServiceImpl implements BibleInformationService {
     private final JSwordMetadataService jswordMetadata;
     private final Provider<ClientSession> clientSessionProvider;
     private final EntityManager entityManager;
+    private final JSwordVersificationService jswordVersification;
 
     /**
      * The bible information service, retrieving content and meta data.
@@ -105,18 +105,21 @@ public class BibleInformationServiceImpl implements BibleInformationService {
      * @param jswordModule provides information and handles information relating to module installation, etc.
      * @param jswordMetadata provides metadata on jsword modules
      * @param clientSessionProvider the client session provider
+     * @param entityManager the entity manager
+     * @param jswordSearch the jsword search service
      */
     @Inject
     public BibleInformationServiceImpl(@Named("defaultVersions") final List<String> defaultVersions,
             final JSwordPassageService jswordPassage, final JSwordModuleService jswordModule,
             final JSwordMetadataService jswordMetadata, final Provider<ClientSession> clientSessionProvider,
-            final EntityManager entityManager) {
+            final EntityManager entityManager, final JSwordVersificationService jswordVersification) {
         this.jswordPassage = jswordPassage;
         this.defaultVersions = defaultVersions;
         this.jswordModule = jswordModule;
         this.jswordMetadata = jswordMetadata;
         this.clientSessionProvider = clientSessionProvider;
         this.entityManager = entityManager;
+        this.jswordVersification = jswordVersification;
     }
 
     /**
@@ -189,8 +192,9 @@ public class BibleInformationServiceImpl implements BibleInformationService {
     }
 
     @Override
-    public Map<String, SortedSet<LexiconSuggestion>> getStrongNumbers(final String reference) {
-        return new JSwordStrongNumberHelper(this.entityManager, reference).getVerseStrongs();
+    public StrongsAndCounts getStrongNumbers(final String reference) {
+        return new JSwordStrongNumberHelper(this.entityManager, reference, this.jswordVersification)
+                .getVerseStrongs();
     }
 
     /**

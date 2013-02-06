@@ -30,46 +30,64 @@
  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
-package com.tyndalehouse.step.core.data.processors;
+package com.tyndalehouse.step.core.models.search;
 
-import javax.inject.Inject;
+import java.util.Map;
+import java.util.SortedSet;
 
-import org.apache.lucene.document.Document;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.tyndalehouse.step.core.data.EntityConfiguration;
-import com.tyndalehouse.step.core.data.create.PostProcessor;
-import com.tyndalehouse.step.core.exceptions.StepInternalException;
-import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
+import com.tyndalehouse.step.core.models.LexiconSuggestion;
 
 /**
- * Takes the reference provided and turns into an Osis version
+ * A holder for counts of strongs in the bibles and the actual Strongs data
  */
-public class AlternativeTranslationsProcessor implements PostProcessor {
-    private static final Logger LOGGER = LoggerFactory.getLogger(AlternativeTranslationsProcessor.class);
-    private final JSwordPassageService jswordPassage;
+public class StrongsAndCounts {
+    private Map<String, SortedSet<LexiconSuggestion>> strongData;
+    private Map<String, BookAndBibleCount> counts;
+    private boolean isOT;
 
     /**
-     * Instantiates a new reference processor.
+     * Sets the counts.
      * 
-     * @param jswordPassage the jsword passage
+     * @param counts the counts
      */
-    @Inject
-    public AlternativeTranslationsProcessor(final JSwordPassageService jswordPassage) {
-        this.jswordPassage = jswordPassage;
+    public void setCounts(final Map<String, BookAndBibleCount> counts) {
+        this.counts = counts;
     }
 
-    @Override
-    public void process(final EntityConfiguration config, final Document doc) {
-        final String reference = doc.get("reference");
-        doc.removeField("reference");
-        try {
-            doc.add(config.getField("reference", this.jswordPassage.getKeyInfo(reference, "ESV")
-                    .getOsisKeyId()));
-        } catch (final StepInternalException e) {
-            LOGGER.error("Alternative Meanings: {}", e.getMessage());
-            LOGGER.trace("Failed alternative mean verse:", e);
-        }
+    /**
+     * Sets the strong data.
+     * 
+     * @param strongData the strong data
+     */
+    public void setStrongData(final Map<String, SortedSet<LexiconSuggestion>> strongData) {
+        this.strongData = strongData;
+    }
+
+    /**
+     * @return the strongData
+     */
+    public Map<String, SortedSet<LexiconSuggestion>> getStrongData() {
+        return this.strongData;
+    }
+
+    /**
+     * @return the counts
+     */
+    public Map<String, BookAndBibleCount> getCounts() {
+        return this.counts;
+    }
+
+    /**
+     * @return the isOT
+     */
+    public boolean isOT() {
+        return this.isOT;
+    }
+
+    /**
+     * @param ot the isOT to set
+     */
+    public void setOT(final boolean ot) {
+        this.isOT = ot;
     }
 }

@@ -31,8 +31,8 @@ step.lexicon = {
     passageId : 0,
     positioned : false,
     
-    sameWordSearch : function(strongNumber) {
-        this.doSearch(ALL_FORMS, strongNumber);
+    sameWordSearch : function(strongNumber, refLimit) {
+        this.doSearch(ALL_FORMS, strongNumber, refLimit);
     },
 
     relatedWordSearch : function(strongNumber) {
@@ -43,7 +43,7 @@ step.lexicon = {
         //not yet implemented 
     },
 
-    doSearch : function(searchType, strongNumber) {
+    doSearch : function(searchType, strongNumber, refLimit) {
         var query;
         if(strongNumber) {
             query = strongNumber;
@@ -54,7 +54,15 @@ step.lexicon = {
         if(step.util.raiseErrorIfBlank(query, __s.error_no_strong_data)) {
             var targetPassageId = step.util.getOtherPassageId(this.passageId);
             
-            step.state.original.originalScope(targetPassageId, __s.whole_bible_range);
+            if(refLimit) {
+                step.state.original.originalScope(targetPassageId, refLimit);
+                
+                if(step.search.ui.original.getLevel(targetPassageId) < 1) {
+                    step.search.ui.original.updateSliderLevel(targetPassageId, 1);
+                }
+            } else {
+                step.state.original.originalScope(targetPassageId, __s.whole_bible_range);
+            }
             step.state.original.originalType(targetPassageId, query[0] == 'H' ? HEBREW_WORDS[0] : GREEK_WORDS[0]);
             step.state.original.originalWord(targetPassageId, query);
             step.state.original.originalForms(targetPassageId, searchType);

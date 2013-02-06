@@ -30,82 +30,55 @@
  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
-package com.tyndalehouse.step.core.models.search;
-
-import java.util.List;
-import java.util.Map;
-import java.util.SortedSet;
-
-import com.tyndalehouse.step.core.models.LexiconSuggestion;
+package com.tyndalehouse.step.core.models;
 
 /**
- * A holder for counts of strongs in the bibles and the actual Strongs data
+ * The Class Language.
  */
-public class StrongsAndCounts {
-    private Map<String, SortedSet<LexiconSuggestion>> strongData;
-    private Map<String, BookAndBibleCount> counts;
-    private boolean ot;
-    private Map<String, List<String>> significantlyRelatedVerses;
+public class Language {
+    private String code;
+    private String originalLanguageName;
+    private String userLocaleLanguageName;
 
     /**
-     * Sets the counts.
-     * 
-     * @param counts the counts
+     * @return the code
      */
-    public void setCounts(final Map<String, BookAndBibleCount> counts) {
-        this.counts = counts;
+    public String getCode() {
+        return this.code;
     }
 
     /**
-     * Sets the strong data.
-     * 
-     * @param strongData the strong data
+     * @param code the code to set
      */
-    public void setStrongData(final Map<String, SortedSet<LexiconSuggestion>> strongData) {
-        this.strongData = strongData;
+    public void setCode(final String code) {
+        this.code = code;
     }
 
     /**
-     * @return the strongData
+     * @return the originalLanguageName
      */
-    public Map<String, SortedSet<LexiconSuggestion>> getStrongData() {
-        return this.strongData;
+    public String getOriginalLanguageName() {
+        return this.originalLanguageName;
     }
 
     /**
-     * @return the counts
+     * @param originalLanguageName the originalLanguageName to set
      */
-    public Map<String, BookAndBibleCount> getCounts() {
-        return this.counts;
+    public void setOriginalLanguageName(final String originalLanguageName) {
+        this.originalLanguageName = originalLanguageName;
     }
 
     /**
-     * @return the isOT
+     * @return the userLocaleLanguageName
      */
-    public boolean isOT() {
-        return this.ot;
+    public String getUserLocaleLanguageName() {
+        return this.userLocaleLanguageName;
     }
 
     /**
-     * @param ot the isOT to set
+     * @param userLocaleLanguageName the userLocaleLanguageName to set
      */
-    public void setOT(final boolean ot) {
-        this.ot = ot;
-    }
-
-    /**
-     * Sets the related verses.
-     * 
-     * @param relatedVerses the new related verses
-     */
-    public void setRelatedVerses(final Map<String, List<String>> relatedVerses) {
-        this.significantlyRelatedVerses = relatedVerses;
-    }
-
-    /**
-     * @return the significantlyRelatedVerses
-     */
-    public Map<String, List<String>> getSignificantlyRelatedVerses() {
-        return this.significantlyRelatedVerses;
+    public void setUserLocaleLanguageName(final String userLocaleLanguageName) {
+        this.userLocaleLanguageName = userLocaleLanguageName;
     }
 }

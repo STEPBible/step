@@ -112,9 +112,17 @@ step.search.ui.original = {
         step.search.ui.original._displayCorrectOptions(passageId);
     },
     
+    updateSliderLevel : function(passageId, newLevel) {
+        $("fieldset:visible", step.util.getPassageContainer(passageId)).detailSlider("update",  { value: newLevel });
+    },
+    
+    getLevel : function(passageId) {
+        return $("fieldset:visible", step.util.getPassageContainer(passageId)).detailSlider("value");
+    },
+    
     evaluateQuerySyntax : function(passageId) {
         var passageContainer = step.util.getPassageContainer(passageId);
-        var level = $("fieldset:visible", passageContainer).detailSlider("value");
+        var level = this.getLevel(passageId);
         var originalType = $(".originalType", passageContainer).val();
         var originalWord = $(".originalWord", passageContainer).val();
         

@@ -50,12 +50,14 @@
 		<jsp-api.version>2.2</jsp-api.version>
 		<jstl.version>1.2</jstl.version>
 		<pjl-comp-filter.version>1.7</pjl-comp-filter.version>
-		<guice.version>3.0.0</guice.version>
+		<guice.version>3.0</guice.version>
 		<guice-servlet.version>3.0</guice-servlet.version>
 		<opencsv.version>2.3</opencsv.version>
 		<jetty.version>9.0.0.M5</jetty.version>
 		<xalan.version>2.7.1</xalan.version>
-
+	
+		<yammer-metrics.version>2.2.0</yammer-metrics.version>
+		
 		<joda-time.version>2.1</joda-time.version>
 		<ehcache.version>2.6.3</ehcache.version>
 		<ehcache-web.version>2.0.4</ehcache-web.version>
@@ -202,9 +204,9 @@
 
 			<!-- TODO: build against google released artifacts -->
 			<dependency>
-				<groupId>com.jolira</groupId>
+				<groupId>com.google.inject</groupId>
 				<artifactId>guice</artifactId>
-				<version>${guice.version}</version>
+            	<version>${guice.version}</version>
 			</dependency>
 
 			<dependency>
@@ -213,6 +215,22 @@
 				<version>${guice-servlet.version}</version>
 			</dependency>
 
+		    <dependency>
+		        <groupId>com.yammer.metrics</groupId>
+		        <artifactId>metrics-core</artifactId>
+		        <version>${yammer-metrics.version}</version>
+		    </dependency>
+			<dependency>
+				<groupId>com.yammer.metrics</groupId>
+				<artifactId>metrics-guice</artifactId>
+				<version>${yammer-metrics.version}</version>
+			</dependency>
+		    <dependency>
+				<groupId>com.yammer.metrics</groupId>
+				<artifactId>metrics-servlet</artifactId>
+				<version>${yammer-metrics.version}</version>
+			</dependency>
+            
 			<!-- we don't bring in anything if possible, to avoid bloating the Android 
 				app -->
 			<dependency>

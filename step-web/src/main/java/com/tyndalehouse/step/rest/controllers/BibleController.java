@@ -39,6 +39,7 @@ import static com.tyndalehouse.step.core.utils.ValidateUtils.notEmpty;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -55,8 +56,10 @@ import com.tyndalehouse.step.core.models.KeyWrapper;
 import com.tyndalehouse.step.core.models.OsisWrapper;
 import com.tyndalehouse.step.core.models.search.StrongsAndCounts;
 import com.tyndalehouse.step.core.service.BibleInformationService;
+import com.tyndalehouse.step.core.utils.language.ContemporaryLanguageUtils;
 import com.tyndalehouse.step.models.ModulesForLanguageUser;
 import com.tyndalehouse.step.rest.framework.Cacheable;
+import com.yammer.metrics.annotation.Timed;
 
 /**
  * The controller for retrieving information on the bible or texts from the bible.
@@ -95,7 +98,8 @@ public class BibleController {
         final Locale userLocale = this.clientSession.get().getLocale();
         final ModulesForLanguageUser versions = new ModulesForLanguageUser();
         versions.setLanguageCode(userLocale.getLanguage());
-        versions.setLanguageName(userLocale.getDisplayLanguage(userLocale));
+        versions.setLanguageName(ContemporaryLanguageUtils.capitaliseFirstLetter(userLocale
+                .getDisplayLanguage(userLocale)));
         versions.setVersions(this.bibleInformation.getAvailableModules(Boolean.valueOf(allVersions),
                 language, userLocale));
         return versions;
@@ -137,6 +141,7 @@ public class BibleController {
      * @return the text to be displayed, formatted as HTML
      */
     @Cacheable(true)
+    @Timed(name = "getText", rateUnit = TimeUnit.SECONDS, durationUnit = TimeUnit.MILLISECONDS)
     public OsisWrapper getBibleText(final String version, final String reference, final String options,
             final String interlinearVersion, final String interlinearMode) {
         notEmpty(version, "bible_required", USER_MISSING_FIELD);
@@ -199,6 +204,7 @@ public class BibleController {
      * @param reference the reference the passage reference
      * @return the strong numbers attached to the passage
      */
+    @Timed(name = "strong-number-counts", rateUnit = TimeUnit.SECONDS, durationUnit = TimeUnit.MILLISECONDS)
     public StrongsAndCounts getStrongNumbers(final String reference) {
         notEmpty(reference, "A verse must be provided", APP_MISSING_FIELD);
         return this.bibleInformation.getStrongNumbers(reference);

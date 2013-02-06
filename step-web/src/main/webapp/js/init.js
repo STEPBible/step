@@ -73,13 +73,21 @@ function init() {
 
 function initLocale() {
     var lang = $.getUrlVar("lang");
+    var previousLang = $.cookie("lang");
+    
     if(lang) {
         //set cookie session-scope
         $.cookie("lang", lang);
+
+        if(lang != previousLang) {
+            forgetProfile();
+        }
     } else {
         //delete the value
         $.cookie("lang", null);
     }
+    
+    
 }
 
 function initJira() {

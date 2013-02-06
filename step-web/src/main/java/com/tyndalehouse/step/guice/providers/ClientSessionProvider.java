@@ -44,6 +44,7 @@ import javax.servlet.http.HttpSession;
 import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
 import com.tyndalehouse.step.core.models.ClientSession;
+import com.tyndalehouse.step.core.utils.language.ContemporaryLanguageUtils;
 import com.tyndalehouse.step.models.WebSessionImpl;
 
 /**
@@ -84,7 +85,8 @@ public class ClientSessionProvider implements Provider<ClientSession> {
      */
     private Locale getLocale() {
         if (isNotBlank(this.request.getParameter(COOKIE_REQUEST_PARAM))) {
-            return getLocaleFromTag(this.request.getParameter(COOKIE_REQUEST_PARAM));
+            return ContemporaryLanguageUtils
+                    .getLocaleFromTag(this.request.getParameter(COOKIE_REQUEST_PARAM));
         }
 
         // take from session next
@@ -93,27 +95,12 @@ public class ClientSessionProvider implements Provider<ClientSession> {
             if (cookies != null) {
                 for (final Cookie c : cookies) {
                     if (COOKIE_REQUEST_PARAM.equals(c.getName())) {
-                        return getLocaleFromTag(c.getValue());
+                        return ContemporaryLanguageUtils.getLocaleFromTag(c.getValue());
                     }
                 }
             }
         }
 
         return this.request.getLocale();
-    }
-
-    /**
-     * Gets the locale from tag, splitting if necessary
-     * 
-     * @param tag the tag
-     * @return the locale from tag
-     */
-    private Locale getLocaleFromTag(final String tag) {
-        final String[] tagParts = tag.split("[-_]");
-        if (tagParts.length == 1) {
-            return new Locale(tag);
-        } else {
-            return new Locale(tagParts[0], tagParts[1]);
-        }
     }
 }

@@ -61,6 +61,8 @@ import com.tyndalehouse.step.core.models.ClientSession;
 import com.tyndalehouse.step.rest.controllers.ImageController;
 import com.tyndalehouse.step.rest.controllers.InternationalJsonController;
 import com.tyndalehouse.step.rest.framework.FrontController;
+import com.yammer.metrics.guice.InstrumentationModule;
+import com.yammer.metrics.reporting.AdminServlet;
 
 /**
  * Configures the listener for the web app to return the injector used to configure the whole of the
@@ -74,21 +76,23 @@ public class StepServletConfig extends GuiceServletContextListener {
 
     @Override
     protected Injector getInjector() {
-        this.injector = Guice.createInjector(new StepCoreModule(), new StepWebModule(), new ServletModule() {
-            @Override
-            protected void configureServlets() {
+        this.injector = Guice.createInjector(new StepCoreModule(), new StepWebModule(),
+                new InstrumentationModule(), new ServletModule() {
+                    @Override
+                    protected void configureServlets() {
+                        serve("/" + ExternalPoweredByFilter.EXTERNAL_PREFIX + "*")
+                                .with(FrontController.class);
+                        serve("/rest/*").with(FrontController.class);
+                        serve("/commentary_images/*").with(ImageController.class);
+                        serve("/index.jsp");
+                        serve("/international/interactive.js").with(InternationalJsonController.class);
+                        serve("/metrics/*").with(AdminServlet.class);
 
-                serve("/" + ExternalPoweredByFilter.EXTERNAL_PREFIX + "*").with(FrontController.class);
-                serve("/rest/*").with(FrontController.class);
-                serve("/commentary_images/*").with(ImageController.class);
-                serve("/index.jsp");
-                serve("/international/interactive.js").with(InternationalJsonController.class);
-
-                // filters
-                filter("/index.jsp", "/").through(SetupRedirectFilter.class);
-                filter("/external/*").through(ExternalPoweredByFilter.class);
-            }
-        });
+                        // filters
+                        filter("/index.jsp", "/").through(SetupRedirectFilter.class);
+                        filter("/external/*").through(ExternalPoweredByFilter.class);
+                    }
+                });
         return this.injector;
     }
 

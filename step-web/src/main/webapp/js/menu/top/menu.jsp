@@ -1,3 +1,6 @@
+<%@page import="com.tyndalehouse.step.core.models.Language"%>
+<%@page import="java.util.List"%>
+<%@page import="com.tyndalehouse.step.core.service.LanguageService"%>
 <%@page import="com.google.inject.Injector"%>
 <%@page import="com.tyndalehouse.step.core.models.ClientSession"%>
 <%@page import="java.util.Locale"%>
@@ -7,8 +10,21 @@
 
 <%
 	Injector injector = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
+	List<Language> languages = injector.getInstance(LanguageService.class).getAvailableLanguages();
 	Locale locale = injector.getInstance(ClientSession.class).getLocale();
 	Config.set(session, Config.FMT_LOCALE, locale.getLanguage());
+	
+	StringBuilder sb = new StringBuilder(1024);
+	for(Language l : languages) {
+		sb.append("<a href='./?lang=");
+		sb.append(l.getCode());
+	    sb.append("' >");
+		sb.append(l.getOriginalLanguageName());
+		sb.append(" - (");
+		sb.append(l.getUserLocaleLanguageName());
+		sb.append(")");
+		sb.append("</a>");
+	}
 %>
 <fmt:setBundle basename="HtmlBundle" />
 
@@ -36,7 +52,13 @@
 	<li menu-name="TOOLS"><a href="#"><fmt:message key="tools" /></a>
 	<ul>
 <!-- 		<li><a href="http://step.tyndalehouse.com/step.zip" target="_blank"><fmt:message key="tools_download_desktop_application" /></a></li> -->
-		<li><a href="#" onclick='window.localStorage.clear(); window.location.reload();'><fmt:message key="tools_forget_my_profile" /></a></li>
+			<li><a href="#" onclick='forgetProfile()'><fmt:message key="tools_forget_my_profile" /></a></li>
+			<li>
+				<a href="#"><fmt:message key="installation_book_language" /></a>
+				<ul>
+					<%= sb.toString() %>
+				</ul>
+			</li>
 <!-- 		<li><a href="#" class="notYetImplemented">Install Core Bibles [Coming soon]</a></li> -->
 <!-- 		<li><a href="#" class="notYetImplemented">Update [Coming soon]</a></li> -->
 <!-- 		<li><a href="#" class="notYetImplemented">User preferences [Coming soon]</a></li> -->

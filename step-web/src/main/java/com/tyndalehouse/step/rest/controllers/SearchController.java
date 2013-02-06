@@ -8,6 +8,7 @@ import static com.tyndalehouse.step.core.utils.ValidateUtils.notNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -23,6 +24,7 @@ import com.tyndalehouse.step.core.service.SearchService;
 import com.tyndalehouse.step.core.service.impl.SearchQuery;
 import com.tyndalehouse.step.core.service.search.OriginalWordSuggestionService;
 import com.tyndalehouse.step.core.service.search.SubjectEntrySearchService;
+import com.yammer.metrics.annotation.Timed;
 
 /**
  * Caters for searching across the data base
@@ -59,6 +61,7 @@ public class SearchController {
      * @param pageSize the size of the page that is desired
      * @return the search result(s)
      */
+    @Timed(name = "search-main", group = "search", rateUnit = TimeUnit.SECONDS, durationUnit = TimeUnit.MILLISECONDS)
     public SearchResult search(final String searchQuery, final String ranked, final String context,
             final String pageNumber, final String pageSize) {
         notNull(searchQuery, "blank_search_provided", USER_MISSING_FIELD);
@@ -76,6 +79,50 @@ public class SearchController {
         results.setQuery(undoRestoreSearchQuery(results.getQuery()));
 
         return results;
+    }
+
+    /**
+     * Estimates the number of hits for a particular search query
+     * 
+     * @param searchQuery the search query.
+     * @return the number of results
+     */
+    @Timed(name = "estimate", group = "search", rateUnit = TimeUnit.SECONDS, durationUnit = TimeUnit.MILLISECONDS)
+    public long estimateSearch(final String searchQuery) {
+        // JSword currently only allows estimates as ranked searches
+        return this.searchService.estimateSearch(new SearchQuery(restoreSearchQuery(searchQuery), "false", 0,
+                0, 0));
+    }
+
+    /**
+     * Obtains a list of suggestions to display to the user
+     * 
+     * @param greekOrHebrew "greek" if greek is desired, otherwise "hebrew", if null, then returns immediately
+     * @param form the form input so far
+     * @param includeAllForms whether to include all known forms
+     * @return a list of suggestions
+     */
+    @Timed(name = "lexical-suggestions", group = "languages", rateUnit = TimeUnit.SECONDS, durationUnit = TimeUnit.MILLISECONDS)
+    public List<LexiconSuggestion> getLexicalSuggestions(final String greekOrHebrew, final String form,
+            final String includeAllForms) {
+        notBlank(form, "Blank lexical prefix passed.", APP_MISSING_FIELD);
+
+        LexicalSuggestionType suggestionType = null;
+        if ("greek".equals(greekOrHebrew)) {
+            suggestionType = LexicalSuggestionType.GREEK;
+        } else if ("hebrew".equals(greekOrHebrew)) {
+            suggestionType = LexicalSuggestionType.HEBREW;
+        } else if ("meaning".equals(greekOrHebrew)) {
+            suggestionType = LexicalSuggestionType.MEANING;
+        }
+
+        // still null then return
+        if (suggestionType == null) {
+            return new ArrayList<LexiconSuggestion>(0);
+        }
+
+        return this.originalWordSuggestions.getLexicalSuggestions(suggestionType, restoreSearchQuery(form),
+                Boolean.parseBoolean(includeAllForms));
     }
 
     /**
@@ -104,48 +151,6 @@ public class SearchController {
         }
 
         return searchQuery.replace("#slash#", "/").replace("#plus#", "+");
-    }
-
-    /**
-     * Estimates the number of hits for a particular search query
-     * 
-     * @param searchQuery the search query.
-     * @return the number of results
-     */
-    public long estimateSearch(final String searchQuery) {
-        // JSword currently only allows estimates as ranked searches
-        return this.searchService.estimateSearch(new SearchQuery(restoreSearchQuery(searchQuery), "false", 0,
-                0, 0));
-    }
-
-    /**
-     * Obtains a list of suggestions to display to the user
-     * 
-     * @param greekOrHebrew "greek" if greek is desired, otherwise "hebrew", if null, then returns immediately
-     * @param form the form input so far
-     * @param includeAllForms whether to include all known forms
-     * @return a list of suggestions
-     */
-    public List<LexiconSuggestion> getLexicalSuggestions(final String greekOrHebrew, final String form,
-            final String includeAllForms) {
-        notBlank(form, "Blank lexical prefix passed.", APP_MISSING_FIELD);
-
-        LexicalSuggestionType suggestionType = null;
-        if ("greek".equals(greekOrHebrew)) {
-            suggestionType = LexicalSuggestionType.GREEK;
-        } else if ("hebrew".equals(greekOrHebrew)) {
-            suggestionType = LexicalSuggestionType.HEBREW;
-        } else if ("meaning".equals(greekOrHebrew)) {
-            suggestionType = LexicalSuggestionType.MEANING;
-        }
-
-        // still null then return
-        if (suggestionType == null) {
-            return new ArrayList<LexiconSuggestion>(0);
-        }
-
-        return this.originalWordSuggestions.getLexicalSuggestions(suggestionType, restoreSearchQuery(form),
-                Boolean.parseBoolean(includeAllForms));
     }
 
     /**

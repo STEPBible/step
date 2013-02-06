@@ -98,14 +98,16 @@
 			<artifactId>ehcache-web</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.jolira</groupId>
-			<artifactId>guice</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>com.google.inject.extensions</groupId>
 			<artifactId>guice-servlet</artifactId>
 		</dependency>
-
+	    <dependency>
+			<groupId>com.yammer.metrics</groupId>
+			<artifactId>metrics-servlet</artifactId>
+			<version>${yammer-metrics.version}</version>
+		</dependency>
+            
+            
 		<!-- test dependencies -->
 		<dependency>
 			<groupId>org.mockito</groupId>

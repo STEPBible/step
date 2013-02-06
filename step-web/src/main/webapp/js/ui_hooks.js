@@ -212,3 +212,16 @@ function makeMasterInterlinear(element, newVersion) {
     $.shout("make-master-interlinear-" + step.passage.getPassageId(element), newVersion);
 }
 
+function forgetProfile() {
+    window.localStorage.clear(); 
+    window.location.reload();
+}
+
+function getRelatedVerses(refs, passageId) {
+    if(refs == null || refs.length == 0) {
+        return;
+    }
+    
+    var otherPassage = step.util.getOtherPassageId(passageId);
+    step.state.passage.reference(otherPassage, refs);
+}

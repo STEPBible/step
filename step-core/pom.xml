@@ -104,10 +104,20 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.jolira</groupId>
+			<groupId>com.google.inject</groupId>
 			<artifactId>guice</artifactId>
 		</dependency>
-
+            
+	    <dependency>
+	        <groupId>com.yammer.metrics</groupId>
+	        <artifactId>metrics-core</artifactId>
+	    </dependency>
+		<dependency>
+			<groupId>com.yammer.metrics</groupId>
+			<artifactId>metrics-guice</artifactId>
+			<version>${yammer-metrics.version}</version>
+		</dependency>
+            
 		<dependency>
 			<groupId>net.sf.opencsv</groupId>
 			<artifactId>opencsv</artifactId>

@@ -54,6 +54,7 @@ import com.tyndalehouse.step.core.guice.providers.DefaultVersionsProvider;
 import com.tyndalehouse.step.core.guice.providers.OfflineInstallersProvider;
 import com.tyndalehouse.step.core.service.BibleInformationService;
 import com.tyndalehouse.step.core.service.GeographyService;
+import com.tyndalehouse.step.core.service.LanguageService;
 import com.tyndalehouse.step.core.service.ModuleService;
 import com.tyndalehouse.step.core.service.MorphologyService;
 import com.tyndalehouse.step.core.service.SearchService;
@@ -62,6 +63,7 @@ import com.tyndalehouse.step.core.service.UserService;
 import com.tyndalehouse.step.core.service.VocabularyService;
 import com.tyndalehouse.step.core.service.impl.BibleInformationServiceImpl;
 import com.tyndalehouse.step.core.service.impl.GeographyServiceImpl;
+import com.tyndalehouse.step.core.service.impl.LanguageServiceImpl;
 import com.tyndalehouse.step.core.service.impl.ModuleServiceImpl;
 import com.tyndalehouse.step.core.service.impl.MorphologyServiceImpl;
 import com.tyndalehouse.step.core.service.impl.SearchServiceImpl;
@@ -111,21 +113,23 @@ public class StepCoreModule extends AbstractStepGuiceModule {
         // for now just have a method that statically initialises the cache
         initialiseCacheManager();
 
+        // services used on start-up
         bind(SearchService.class).to(SearchServiceImpl.class).asEagerSingleton();
-
+        bind(LanguageService.class).to(LanguageServiceImpl.class).asEagerSingleton();
         bind(JSwordPassageService.class).to(JSwordPassageServiceImpl.class).asEagerSingleton();
         bind(JSwordModuleService.class).to(JSwordModuleServiceImpl.class).asEagerSingleton();
         bind(JSwordMetadataService.class).to(JSwordMetadataServiceImpl.class).asEagerSingleton();
         bind(JSwordVersificationService.class).to(JSwordVersificationServiceImpl.class).asEagerSingleton();
-        bind(JSwordSearchService.class).to(JSwordSearchServiceImpl.class);
-
         bind(BibleInformationService.class).to(BibleInformationServiceImpl.class).asEagerSingleton();
         bind(ModuleService.class).to(ModuleServiceImpl.class).asEagerSingleton();
+
+        // others that can wait
+        bind(JSwordSearchService.class).to(JSwordSearchServiceImpl.class);
         bind(MorphologyService.class).to(MorphologyServiceImpl.class);
         bind(VocabularyService.class).to(VocabularyServiceImpl.class);
         bind(TimelineService.class).to(TimelineServiceImpl.class);
         bind(GeographyService.class).to(GeographyServiceImpl.class);
-        bind(Loader.class).asEagerSingleton();
+        bind(Loader.class);
         bind(UserService.class).to(UserServiceImpl.class);
 
         bind(SubjectSearchService.class).to(SubjectSearchServiceImpl.class);

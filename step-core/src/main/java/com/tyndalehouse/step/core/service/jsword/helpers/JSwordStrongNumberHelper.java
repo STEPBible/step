@@ -33,6 +33,7 @@
 package com.tyndalehouse.step.core.service.jsword.helpers;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -43,9 +44,16 @@ import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import org.apache.lucene.document.Document;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.index.TermDocs;
+import org.apache.lucene.search.BooleanClause.Occur;
+import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.TermQuery;
+import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.search.TopScoreDocCollector;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.BookData;
 import org.crosswire.jsword.book.BookException;
@@ -79,16 +87,23 @@ import com.tyndalehouse.step.core.utils.StringConversionUtils;
  * <p>
  * TODO: is it worth introducing a cache here for all verses? Raise JIRA to work that one out at some point //
  * TODO: change to ESV book, rather than KJV TOD: Should we cache intermediate strongs? since they can be
- * re-used without looking up Lucene - on the other hand, Lucene is very quick
+ * re-used without looking up Lucene - on the other hand, Lucene is very quick.
+ * <p>
+ * 
+ * Note, this object is not thread-safe. The intention is for it to be a use-once, throw-away type of object.
  */
 public class JSwordStrongNumberHelper {
     private static final Logger LOG = org.slf4j.LoggerFactory.getLogger(JSwordStrongNumberHelper.class);
+    private static final int SIGNIFICANT_CUT_OFF = 200;
     private static final String STRONG_REF_VERSION = "KJV";
     private static final Book STRONG_REF_VERSION_BOOK = Books.installed().getBook(STRONG_REF_VERSION);
     private final JSwordVersificationService versification;
     private Map<String, SortedSet<LexiconSuggestion>> verseStrongs;
     private Map<String, BookAndBibleCount> allStrongs;
+    private Map<String, List<String>> relatedVerses;
     private boolean isOT;
+    private final EntityIndexReader definitions;
+    private final String reference;
 
     /**
      * Instantiates a new strong number provider impl.
@@ -101,23 +116,33 @@ public class JSwordStrongNumberHelper {
     public JSwordStrongNumberHelper(final EntityManager manager, final String reference,
             final JSwordVersificationService versification) {
         this.versification = versification;
+        this.definitions = manager.getReader("definition");
+        this.reference = reference;
+    }
+
+    /**
+     * Calculate counts for a particular key.
+     * 
+     */
+    private void calculateCounts() {
         try {
-            final Key key = STRONG_REF_VERSION_BOOK.getKey(reference);
+            final Key key = STRONG_REF_VERSION_BOOK.getKey(this.reference);
             this.verseStrongs = new TreeMap<String, SortedSet<LexiconSuggestion>>();
             this.allStrongs = new HashMap<String, BookAndBibleCount>(256);
 
             final List<Element> elements = getOsisElements(key);
 
             for (final Element e : elements) {
-                readDataFromLexicon(manager.getReader("definition"),
-                        e.getAttributeValue(OSISUtil.OSIS_ATTR_OSISID), OSISUtil.getStrongsNumbers(e));
+
+                readDataFromLexicon(this.definitions, e.getAttributeValue(OSISUtil.OSIS_ATTR_OSISID),
+                        OSISUtil.getStrongsNumbers(e));
             }
 
             // now get counts in the relevant portion of text
             applySearchCounts(getBookFromKey(key));
 
             // is it OT or NT
-            final Versification v11n = versification.getVersificationForVersion(STRONG_REF_VERSION_BOOK);
+            final Versification v11n = this.versification.getVersificationForVersion(STRONG_REF_VERSION_BOOK);
             this.isOT = v11n.getTestament(v11n.getOrdinal((Verse) key.get(0))) == Testament.OLD;
 
         } catch (final NoSuchKeyException ex) {
@@ -150,45 +175,59 @@ public class JSwordStrongNumberHelper {
      * @param bookName the book name
      */
     private void applySearchCounts(final String bookName) {
-        final IndexManager indexManager = IndexManagerFactory.getIndexManager();
-        Index index;
+
         try {
-            index = indexManager.getIndex(STRONG_REF_VERSION_BOOK);
-
-            if (!(index instanceof LuceneIndex)) {
-                LOG.warn("Unsupport Lucene Index type [{}]", index.getClass());
-                return;
-            }
-
-            @SuppressWarnings("resource")
-            final LuceneIndex li = (LuceneIndex) index;
-            final IndexSearcher is = (IndexSearcher) li.getSearcher();
-
+            final IndexSearcher is = getIndexSearcher();
             final TermDocs termDocs = is.getIndexReader().termDocs();
             for (final Entry<String, BookAndBibleCount> strong : this.allStrongs.entrySet()) {
                 termDocs.seek(new Term(LuceneIndex.FIELD_STRONG, strong.getKey()));
+                // we'll never need more than 200 documents as this is the cut off point
+
                 int bible = 0;
                 int book = 0;
                 while (termDocs.next()) {
                     final int freq = termDocs.freq();
                     bible += freq;
 
-                    final String docRef = is.doc(termDocs.doc()).get(LuceneIndex.FIELD_KEY);
+                    final Document doc = is.doc(termDocs.doc());
+                    final String docRef = doc.get(LuceneIndex.FIELD_KEY);
                     if (docRef != null && docRef.startsWith(bookName)) {
                         book += freq;
                     }
                 }
-                final BookAndBibleCount value = strong.getValue();
 
+                final BookAndBibleCount value = strong.getValue();
                 value.setBible(bible);
                 value.setBook(book);
                 bible = 0;
                 book = 0;
+
             }
-        } catch (final BookException e) {
-            throw new StepInternalException(e.getMessage(), e);
         } catch (final IOException e) {
             throw new StepInternalException(e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Gets the index searcher.
+     * 
+     * @return the index searcher, or null if it failed
+     */
+    private IndexSearcher getIndexSearcher() {
+        final IndexManager indexManager = IndexManagerFactory.getIndexManager();
+        Index index;
+        try {
+            index = indexManager.getIndex(STRONG_REF_VERSION_BOOK);
+            if (!(index instanceof LuceneIndex)) {
+                LOG.warn("Unsupport Lucene Index type [{}]", index.getClass());
+                throw new StepInternalException("Unable to obtain index");
+            }
+
+            @SuppressWarnings("resource")
+            final LuceneIndex li = (LuceneIndex) index;
+            return (IndexSearcher) li.getSearcher();
+        } catch (final BookException ex) {
+            throw new StepInternalException("Unable to obtain index", ex);
         }
     }
 
@@ -259,10 +298,57 @@ public class JSwordStrongNumberHelper {
      * @return the verseStrongs
      */
     public StrongsAndCounts getVerseStrongs() {
+        calculateCounts();
+        getRelatedVerses();
+
         final StrongsAndCounts sac = new StrongsAndCounts();
         sac.setCounts(this.allStrongs);
         sac.setStrongData(this.verseStrongs);
         sac.setOT(this.isOT);
+        sac.setRelatedVerses(this.relatedVerses);
         return sac;
+    }
+
+    /**
+     * Gets the related verses.
+     * 
+     * @return the related verses
+     */
+    private void getRelatedVerses() {
+        this.relatedVerses = new HashMap<String, List<String>>(this.verseStrongs.size() * 2);
+        final IndexSearcher is = getIndexSearcher();
+
+        // for each verse
+        for (final Entry<String, SortedSet<LexiconSuggestion>> verseEntry : this.verseStrongs.entrySet()) {
+            // we're going to make a Lucene query to look for at least 2 of the strong numbers
+            final BooleanQuery bq = new BooleanQuery();
+            bq.setMinimumNumberShouldMatch(2);
+
+            final SortedSet<LexiconSuggestion> strongs = verseEntry.getValue();
+            for (final LexiconSuggestion sugg : strongs) {
+                final String strongNumber = sugg.getStrongNumber();
+                if (this.allStrongs.get(strongNumber).getBible() < SIGNIFICANT_CUT_OFF) {
+                    bq.add(new TermQuery(new Term(LuceneIndex.FIELD_STRONG, strongNumber)), Occur.SHOULD);
+                }
+            }
+
+            try {
+                final TopScoreDocCollector collector = TopScoreDocCollector.create(30, true);
+                is.search(bq, collector);
+
+                final TopDocs topDocs = collector.topDocs();
+                final ScoreDoc[] scoreDocs = topDocs.scoreDocs;
+                final List<String> verses = new ArrayList<String>(16);
+                for (int ii = 0; ii < scoreDocs.length; ii++) {
+                    verses.add(is.doc(scoreDocs[ii].doc).get(LuceneIndex.FIELD_KEY));
+                }
+
+                if (verses.size() != 0) {
+                    this.relatedVerses.put(verseEntry.getKey(), verses);
+                }
+            } catch (final IOException e) {
+                LOG.error("Unable to carry out search", e);
+            }
+        }
     }
 }

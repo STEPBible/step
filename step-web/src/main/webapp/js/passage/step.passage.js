@@ -317,6 +317,7 @@ step.passage = {
 //                "gloss": "angels"
                 
                 var text = "<table class='verseNumberStrongs'>";
+                var bookKey = key.substring(0, key.indexOf('.'));
                 
                 //append header row
                 var header = "<th></th><th>" + __s.bible_book + "</th><th>" + (data.strongData.ot ? __s.OT : __s.NT) + "</th>";
@@ -351,7 +352,7 @@ step.passage = {
 
                    //add count in book icon:
                    text += "</td><td>";
-                   text += self._addLinkToLexicalSearch(passageId, "strongCount", "sameWordSearch", item.strongNumber, "", sprintf(__s.times, data.counts[item.strongNumber].book));
+                   text += self._addLinkToLexicalSearch(passageId, "strongCount", "sameWordSearch", item.strongNumber + "\", \"" + bookKey, "", sprintf(__s.times, data.counts[item.strongNumber].book));
                    text += "</td>";
                    		
                    text += "<td class='";
@@ -371,6 +372,10 @@ step.passage = {
                     text += "</tr>";
                 }
                 text += "</table>";
+                
+                if(data.significantlyRelatedVerses[key] && data.significantlyRelatedVerses[key].length != 0) {
+                    text += "<br/><a class='relatedVerses' href='#' onclick='getRelatedVerses(\"" + data.significantlyRelatedVerses[key].join('; ') + "\" ," + passageId + ")'>" + __s.see_related_verses + "</a>";
+                }
                 
                 $("a[name='" + key + "']").qtip({
                     content: text,

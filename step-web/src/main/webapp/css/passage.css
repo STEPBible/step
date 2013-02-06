@@ -688,3 +688,9 @@ FONT.usg {
 	width: 5ex;
 	text-align: center;
 }
+
+a.relatedVerses, a.relatedVerses:visited {
+	font-weight: bold;
+	color: #696;	
+	
+}

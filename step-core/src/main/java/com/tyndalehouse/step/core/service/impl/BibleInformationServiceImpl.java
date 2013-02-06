@@ -106,7 +106,7 @@ public class BibleInformationServiceImpl implements BibleInformationService {
      * @param jswordMetadata provides metadata on jsword modules
      * @param clientSessionProvider the client session provider
      * @param entityManager the entity manager
-     * @param jswordSearch the jsword search service
+     * @param jswordVersification the jsword versification
      */
     @Inject
     public BibleInformationServiceImpl(@Named("defaultVersions") final List<String> defaultVersions,
@@ -133,7 +133,7 @@ public class BibleInformationServiceImpl implements BibleInformationService {
     @Override
     public List<BibleVersion> getAvailableModules(final boolean allVersions, final String locale,
             final Locale userLocale) {
-        LOGGER.info("Getting bible versions with locale [{}] and allVersions=[{}]", locale, allVersions);
+        LOGGER.debug("Getting bible versions with locale [{}] and allVersions=[{}]", locale, allVersions);
         return getSortedSerialisableList(this.jswordModule.getInstalledModules(allVersions, locale,
                 BookCategory.BIBLE, BookCategory.COMMENTARY), userLocale);
     }

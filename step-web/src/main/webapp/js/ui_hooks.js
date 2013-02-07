@@ -60,7 +60,7 @@ BIBLE_GET_PREVIOUS_CHAPTER =        STEP_SERVER_BASE_URL + "bible/getPreviousCha
 BIBLE_GET_BY_NUMBER =               STEP_SERVER_BASE_URL + "bible/getBibleByVerseNumber/";
 BIBLE_GET_KEY_INFO =                STEP_SERVER_BASE_URL + "bible/getKeyInfo/";
 BIBLE_EXPAND_TO_CHAPTER =           STEP_SERVER_BASE_URL + "bible/expandKeyToChapter/";
-BIBLE_GET_STRONGS =                 STEP_SERVER_BASE_URL + "bible/getStrongNumbers/";
+BIBLE_GET_STRONGS_AND_SUBJECTS =    STEP_SERVER_BASE_URL + "bible/getStrongNumbersAndSubjects/";
 
 DICTIONARY_GET_BY_HEADWORD =        STEP_SERVER_BASE_URL + "dictionary/lookupDictionaryByHeadword/";
 DICTIONARY_SEARCH_BY_HEADWORD =     STEP_SERVER_BASE_URL + "dictionary/searchDictionaryByHeadword/";
@@ -227,4 +227,10 @@ function getRelatedVerses(refs, passageId) {
     
     var otherPassage = step.util.getOtherPassageId(passageId);
     step.state.passage.reference(otherPassage, refs);
+}
+
+function getRelatedSubjects(key, passageId) {
+    var link = $("a[name='" + key + "']")[0];
+    var relatedSubjects = $.data(link, "relatedSubjects");
+    step.search._doResultsRender(1, relatedSubjects, 1, "", relatedSubjects.query);
 }

@@ -40,14 +40,19 @@
 		<li><a href="#" name="TWO_COLUMN_VIEW" ><fmt:message key="view_two_columns" /></a></li>
 
 		<li menu-name="SYNC" class="menuSectionStart"><a href="#"><fmt:message key="view_both_passages_sync" /></a>
-		<ul>
-			<li><a href="#" name="NO_SYNC"><fmt:message key="view_switch_sync_off" /></a></li>
-			<li><a href="#" name="SYNC_LEFT"><fmt:message key="view_sync_with_left" /></a></li>
-			<li><a href="#" name="SYNC_RIGHT"><fmt:message key="view_sync_with_right" /></a></li>
-		</ul>
-		
+			<ul>
+				<li><a href="#" name="NO_SYNC"><fmt:message key="view_switch_sync_off" /></a></li>
+				<li><a href="#" name="SYNC_LEFT"><fmt:message key="view_sync_with_left" /></a></li>
+				<li><a href="#" name="SYNC_RIGHT"><fmt:message key="view_sync_with_right" /></a></li>
+			</ul>		
 		</li>
 		<li><a href="#" name="SWAP_BOTH_PASSAGES"><fmt:message key="view_swap_left_and_right" /></a></li>
+		<li>
+			<a href="#"><fmt:message key="installation_book_language" /></a>
+			<ul>
+				<%= sb.toString() %>
+			</ul>
+		</li>
 	</ul>
 	</li>
 
@@ -55,12 +60,7 @@
 	<ul>
 <!-- 		<li><a href="http://step.tyndalehouse.com/step.zip" target="_blank"><fmt:message key="tools_download_desktop_application" /></a></li> -->
 			<li><a href="#" onclick='forgetProfile()'><fmt:message key="tools_forget_my_profile" /></a></li>
-			<li>
-				<a href="#"><fmt:message key="installation_book_language" /></a>
-				<ul>
-					<%= sb.toString() %>
-				</ul>
-			</li>
+
 <!-- 		<li><a href="#" class="notYetImplemented">Install Core Bibles [Coming soon]</a></li> -->
 <!-- 		<li><a href="#" class="notYetImplemented">Update [Coming soon]</a></li> -->
 <!-- 		<li><a href="#" class="notYetImplemented">User preferences [Coming soon]</a></li> -->

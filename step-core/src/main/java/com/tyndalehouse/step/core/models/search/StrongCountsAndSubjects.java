@@ -41,11 +41,12 @@ import com.tyndalehouse.step.core.models.LexiconSuggestion;
 /**
  * A holder for counts of strongs in the bibles and the actual Strongs data
  */
-public class StrongsAndCounts {
+public class StrongCountsAndSubjects {
     private Map<String, SortedSet<LexiconSuggestion>> strongData;
     private Map<String, BookAndBibleCount> counts;
     private boolean ot;
     private Map<String, List<String>> significantlyRelatedVerses;
+    private Map<String, SearchResult> relatedSubjects;
 
     /**
      * Sets the counts.
@@ -80,26 +81,24 @@ public class StrongsAndCounts {
     }
 
     /**
-     * @return the isOT
+     * @param significantlyRelatedVerses the significantlyRelatedVerses to set
      */
-    public boolean isOT() {
+    public void setSignificantlyRelatedVerses(final Map<String, List<String>> significantlyRelatedVerses) {
+        this.significantlyRelatedVerses = significantlyRelatedVerses;
+    }
+
+    /**
+     * @return the ot
+     */
+    public boolean isOt() {
         return this.ot;
     }
 
     /**
-     * @param ot the isOT to set
+     * @param otValue the ot to set
      */
-    public void setOT(final boolean ot) {
-        this.ot = ot;
-    }
-
-    /**
-     * Sets the related verses.
-     * 
-     * @param relatedVerses the new related verses
-     */
-    public void setRelatedVerses(final Map<String, List<String>> relatedVerses) {
-        this.significantlyRelatedVerses = relatedVerses;
+    public void setOT(final boolean otValue) {
+        this.ot = otValue;
     }
 
     /**
@@ -107,5 +106,21 @@ public class StrongsAndCounts {
      */
     public Map<String, List<String>> getSignificantlyRelatedVerses() {
         return this.significantlyRelatedVerses;
+    }
+
+    /**
+     * Sets the related subjects.
+     * 
+     * @param versesToSubjects the verses to subjects
+     */
+    public void setRelatedSubjects(final Map<String, SearchResult> versesToSubjects) {
+        this.relatedSubjects = versesToSubjects;
+    }
+
+    /**
+     * @return the relatedSubjects
+     */
+    public Map<String, SearchResult> getRelatedSubjects() {
+        return this.relatedSubjects;
     }
 }

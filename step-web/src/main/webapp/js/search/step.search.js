@@ -234,22 +234,25 @@ step.search = {
             step.util.trackAnalytics("search", "version", checkedVersion.toUpperCase());
             step.util.trackAnalytics("search", "query", query);
             
-            self._updateTotal(passageId, searchQueryResults.total, pageNumberArg);
-            self.lastSearch = searchQueryResults.query;
-            self._displayResults(searchQueryResults, passageId);
-            
-            if(searchQueryResults.strongHighlights) {
-                self._highlightStrongs(passageId, searchQueryResults.strongHighlights);
-            } else {
-                self._highlightResults(passageId, highlightTerms);
-            }
-            
-            self._doFonts(passageId);
-            step.util.ui.addStrongHandlers(passageId, step.util.getPassageContainer(passageId));
-            self._doSpecificSearchRequirements(passageId, query);
+            self._doResultsRender(passageId, searchQueryResults, pageNumberArg, highlightTerms, query);
         });
     },
     
+    _doResultsRender : function(passageId, searchQueryResults, pageNumberArg, highlightTerms, query) {
+        this._updateTotal(passageId, searchQueryResults.total, pageNumberArg);
+        this.lastSearch = searchQueryResults.query;
+        this._displayResults(searchQueryResults, passageId);
+        
+        if(searchQueryResults.strongHighlights) {
+            this._highlightStrongs(passageId, searchQueryResults.strongHighlights);
+        } else {
+            this._highlightResults(passageId, highlightTerms);
+        }
+        
+        this._doFonts(passageId);
+        step.util.ui.addStrongHandlers(passageId, step.util.getPassageContainer(passageId));
+        this._doSpecificSearchRequirements(passageId, query);
+    },
     
     _doSpecificSearchRequirements : function(passageId, query) {
         var undoneQuery = step.util.undoReplaceSpecialChars(query);
@@ -262,6 +265,8 @@ step.search = {
             this._addSubjectExpandHandlers(passageId);
         } else if(undoneQuery.startsWith("s++=")) {
             this._addMoreSubjectButton(passageId, undoneQuery, __s.subject_search_third);
+            this._addSubjectExpandHandlers(passageId, undoneQuery);
+        } else if(undoneQuery.startsWith("sr=")) {
             this._addSubjectExpandHandlers(passageId, undoneQuery);
         }
     },
@@ -654,7 +659,7 @@ step.search = {
         var queryRan = step.util.undoReplaceSpecialChars(searchQueryResults.query);
         if(queryRan.startsWith("d=") || queryRan.startsWith("dr=")) {
             results += this._displayTimelineEventResults(searchResults, passageId);
-        } else if(queryRan.startsWith("s=") || queryRan.startsWith("s+=") || queryRan.startsWith("s++=")) {
+        } else if(queryRan.startsWith("s=") || queryRan.startsWith("s+=") || queryRan.startsWith("s++=") || queryRan.startsWith("sr=")) {
             results += this._displaySubjectResults(queryRan, searchResults, passageId);
         } else {
             results += "<table class='searchResults'>";

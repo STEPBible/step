@@ -689,7 +689,7 @@ FONT.usg {
 	text-align: center;
 }
 
-a.relatedVerses, a.relatedVerses:visited {
+a.related, a.related:visited {
 	font-weight: bold;
 	color: #696;	
 	

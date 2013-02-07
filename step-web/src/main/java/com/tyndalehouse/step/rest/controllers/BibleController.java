@@ -54,7 +54,7 @@ import com.tyndalehouse.step.core.models.ClientSession;
 import com.tyndalehouse.step.core.models.EnrichedLookupOption;
 import com.tyndalehouse.step.core.models.KeyWrapper;
 import com.tyndalehouse.step.core.models.OsisWrapper;
-import com.tyndalehouse.step.core.models.search.StrongsAndCounts;
+import com.tyndalehouse.step.core.models.search.StrongCountsAndSubjects;
 import com.tyndalehouse.step.core.service.BibleInformationService;
 import com.tyndalehouse.step.core.utils.language.ContemporaryLanguageUtils;
 import com.tyndalehouse.step.models.ModulesForLanguageUser;
@@ -204,10 +204,10 @@ public class BibleController {
      * @param reference the reference the passage reference
      * @return the strong numbers attached to the passage
      */
-    @Timed(name = "strong-number-counts", rateUnit = TimeUnit.SECONDS, durationUnit = TimeUnit.MILLISECONDS)
-    public StrongsAndCounts getStrongNumbers(final String reference) {
+    @Timed(name = "strong-subject-counts", rateUnit = TimeUnit.SECONDS, durationUnit = TimeUnit.MILLISECONDS)
+    public StrongCountsAndSubjects getStrongNumbersAndSubjects(final String reference) {
         notEmpty(reference, "A verse must be provided", APP_MISSING_FIELD);
-        return this.bibleInformation.getStrongNumbers(reference);
+        return this.bibleInformation.getStrongNumbersAndSubjects(reference);
     }
 
     /**

@@ -41,7 +41,7 @@ import com.tyndalehouse.step.core.models.BookName;
 import com.tyndalehouse.step.core.models.EnrichedLookupOption;
 import com.tyndalehouse.step.core.models.KeyWrapper;
 import com.tyndalehouse.step.core.models.OsisWrapper;
-import com.tyndalehouse.step.core.models.search.StrongsAndCounts;
+import com.tyndalehouse.step.core.models.search.StrongCountsAndSubjects;
 
 /**
  * Interface to the service that gives information about the books of the bible, the different types of bible,
@@ -210,6 +210,6 @@ public interface BibleInformationService {
      * @param reference the reference to be looked up
      * @return the strong numbers return keyed by OSIS ID
      */
-    StrongsAndCounts getStrongNumbers(String reference);
+    StrongCountsAndSubjects getStrongNumbersAndSubjects(String reference);
 
 }

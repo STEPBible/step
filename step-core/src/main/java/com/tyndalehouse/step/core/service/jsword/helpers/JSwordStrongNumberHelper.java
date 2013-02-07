@@ -78,7 +78,7 @@ import com.tyndalehouse.step.core.data.EntityManager;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.models.LexiconSuggestion;
 import com.tyndalehouse.step.core.models.search.BookAndBibleCount;
-import com.tyndalehouse.step.core.models.search.StrongsAndCounts;
+import com.tyndalehouse.step.core.models.search.StrongCountsAndSubjects;
 import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
 import com.tyndalehouse.step.core.utils.StringConversionUtils;
 
@@ -297,15 +297,15 @@ public class JSwordStrongNumberHelper {
     /**
      * @return the verseStrongs
      */
-    public StrongsAndCounts getVerseStrongs() {
+    public StrongCountsAndSubjects getVerseStrongs() {
         calculateCounts();
         findRelatedVerses();
 
-        final StrongsAndCounts sac = new StrongsAndCounts();
+        final StrongCountsAndSubjects sac = new StrongCountsAndSubjects();
         sac.setCounts(this.allStrongs);
         sac.setStrongData(this.verseStrongs);
         sac.setOT(this.isOT);
-        sac.setRelatedVerses(this.relatedVerses);
+        sac.setSignificantlyRelatedVerses(this.relatedVerses);
         return sac;
     }
 

@@ -50,6 +50,23 @@ public class SubjectSearchServiceImpl implements SubjectSearchService {
     }
 
     @Override
+    public SearchResult searchByReference(final String reference) {
+        final SearchResult sr = new SearchResult();
+        sr.setQuery("sr=" + reference);
+        final EntityDoc[] results = this.naves.search("expandedReferences", reference);
+        final List<SearchEntry> resultList = new ArrayList<SearchEntry>(results.length);
+        for (final EntityDoc d : results) {
+            final ExpandableSubjectHeadingEntry entry = new ExpandableSubjectHeadingEntry(d.get("root"),
+                    d.get("fullHeader"), d.get("alternate"));
+            resultList.add(entry);
+        }
+
+        sr.setResults(resultList);
+        sr.setTotal(resultList.size());
+        return sr;
+    }
+
+    @Override
     public SearchResult search(final SearchQuery sq) {
         final IndividualSearch currentSearch = sq.getCurrentSearch();
         LOGGER.debug("Executing subject search of type [{}]", currentSearch.getType());

@@ -46,9 +46,12 @@ import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -71,13 +74,15 @@ import com.tyndalehouse.step.core.models.KeyWrapper;
 import com.tyndalehouse.step.core.models.LookupOption;
 import com.tyndalehouse.step.core.models.OsisWrapper;
 import com.tyndalehouse.step.core.models.TrimmedLookupOption;
-import com.tyndalehouse.step.core.models.search.StrongsAndCounts;
+import com.tyndalehouse.step.core.models.search.SearchResult;
+import com.tyndalehouse.step.core.models.search.StrongCountsAndSubjects;
 import com.tyndalehouse.step.core.service.BibleInformationService;
 import com.tyndalehouse.step.core.service.jsword.JSwordMetadataService;
 import com.tyndalehouse.step.core.service.jsword.JSwordModuleService;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
 import com.tyndalehouse.step.core.service.jsword.helpers.JSwordStrongNumberHelper;
+import com.tyndalehouse.step.core.service.search.SubjectSearchService;
 import com.tyndalehouse.step.core.utils.StringUtils;
 
 /**
@@ -96,6 +101,7 @@ public class BibleInformationServiceImpl implements BibleInformationService {
     private final Provider<ClientSession> clientSessionProvider;
     private final EntityManager entityManager;
     private final JSwordVersificationService jswordVersification;
+    private final SubjectSearchService subjectSearchService;
 
     /**
      * The bible information service, retrieving content and meta data.
@@ -112,7 +118,8 @@ public class BibleInformationServiceImpl implements BibleInformationService {
     public BibleInformationServiceImpl(@Named("defaultVersions") final List<String> defaultVersions,
             final JSwordPassageService jswordPassage, final JSwordModuleService jswordModule,
             final JSwordMetadataService jswordMetadata, final Provider<ClientSession> clientSessionProvider,
-            final EntityManager entityManager, final JSwordVersificationService jswordVersification) {
+            final EntityManager entityManager, final JSwordVersificationService jswordVersification,
+            final SubjectSearchService subjectSearchService) {
         this.jswordPassage = jswordPassage;
         this.defaultVersions = defaultVersions;
         this.jswordModule = jswordModule;
@@ -120,6 +127,7 @@ public class BibleInformationServiceImpl implements BibleInformationService {
         this.clientSessionProvider = clientSessionProvider;
         this.entityManager = entityManager;
         this.jswordVersification = jswordVersification;
+        this.subjectSearchService = subjectSearchService;
     }
 
     /**
@@ -192,9 +200,21 @@ public class BibleInformationServiceImpl implements BibleInformationService {
     }
 
     @Override
-    public StrongsAndCounts getStrongNumbers(final String reference) {
-        return new JSwordStrongNumberHelper(this.entityManager, reference, this.jswordVersification)
-                .getVerseStrongs();
+    public StrongCountsAndSubjects getStrongNumbersAndSubjects(final String reference) {
+        final StrongCountsAndSubjects verseStrongs = new JSwordStrongNumberHelper(this.entityManager,
+                reference, this.jswordVersification).getVerseStrongs();
+
+        final Set<String> osisIds = verseStrongs.getStrongData().keySet();
+        final Map<String, SearchResult> versesToSubjects = new HashMap<String, SearchResult>(osisIds.size());
+        for (final String ref : osisIds) {
+            final SearchResult subjects = this.subjectSearchService.searchByReference(ref);
+            if (subjects.getTotal() != 0) {
+                versesToSubjects.put(ref, subjects);
+            }
+        }
+
+        verseStrongs.setRelatedSubjects(versesToSubjects);
+        return verseStrongs;
     }
 
     /**

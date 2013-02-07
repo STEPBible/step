@@ -308,19 +308,15 @@ step.passage = {
         
         var self = this;
         //otherwise, exciting new strong numbers to apply:
-        $.getSafe(BIBLE_GET_STRONGS, [reference], function(data) {
+        $.getSafe(BIBLE_GET_STRONGS_AND_SUBJECTS, [reference], function(data) {
             $.each(data.strongData, function(key, value) {
                 //there may be multiple values of this kind of format: 
-//                "strongNumber": "H0430",
-//                "matchingForm": "אֱלֹהִים",
-//                "stepTransliteration": "’.e-lo-hiym",
-//                "gloss": "angels"
-                
                 var text = "<table class='verseNumberStrongs'>";
                 var bookKey = key.substring(0, key.indexOf('.'));
+                var internalVerseLink = $("a[name='" + key + "']", passageContent);
                 
                 //append header row
-                var header = "<th></th><th>" + __s.bible_book + "</th><th>" + (data.strongData.ot ? __s.OT : __s.NT) + "</th>";
+                var header = "<th></th><th>" + __s.bible_book + "</th><th>" + (data.ot ? __s.OT : __s.NT) + "</th>";
                 text += "<tr>";
                 text += header;
                 text += header;
@@ -371,13 +367,36 @@ step.passage = {
                 if((value.length %2) == 1) {
                     text += "</tr>";
                 }
-                text += "</table>";
+                text += "</table><br />";
                 
                 if(data.significantlyRelatedVerses[key] && data.significantlyRelatedVerses[key].length != 0) {
-                    text += "<br/><a class='relatedVerses' href='#' onclick='getRelatedVerses(\"" + data.significantlyRelatedVerses[key].join('; ') + "\" ," + passageId + ")'>" + __s.see_related_verses + "</a>";
+                    text += "<a class='related' href='#' onclick='getRelatedVerses(\"" + data.significantlyRelatedVerses[key].join('; ') + "\" ," + passageId + ")'>" + __s.see_related_verses + "</a>&nbsp;&nbsp;";
                 }
                 
-                $("a[name='" + key + "']", passageContent).qtip({
+                if(data.relatedSubjects[key] && data.relatedSubjects[key].total != 0) {
+                    //attach data to internal link (so that it goes when passage goes
+                    var subjects = data.relatedSubjects[key];
+                    $.data(internalVerseLink[0], "relatedSubjects", subjects);
+                    
+                    var subjectOverview = "";
+                    var i =  0;
+                    for(i = 0; i < 5 && i < subjects.results.length; i++) {
+                        subjectOverview += subjects.results[i].root;
+                        subjectOverview += ", ";
+                        subjectOverview += subjects.results[i].heading;
+                        subjectOverview += " ; ";
+                    }
+                    
+                    if(i < subjects.length) {
+                        subjectOverview += "...";
+                    }
+                    
+                    
+                    text += "<a class='related' href='#' title='" + subjectOverview.replace(/'/g, "&apos;") +
+                    		"' onclick='getRelatedSubjects(\"" + key + "\", " + passageId + ")'>" + __s.see_related_subjects + "</a>&nbsp;&nbsp;";
+                }
+                
+                internalVerseLink.qtip({
                     content: text,
                     show: { 
                         event : 'mouseenter',

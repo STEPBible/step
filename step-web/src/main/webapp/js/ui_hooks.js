@@ -212,8 +212,11 @@ function makeMasterInterlinear(element, newVersion) {
     $.shout("make-master-interlinear-" + step.passage.getPassageId(element), newVersion);
 }
 
-function forgetProfile() {
-    window.localStorage.clear(); 
+function forgetProfile(callback) {
+    window.localStorage.clear();
+    if(callback) {
+        callback();
+    }
     window.location.reload();
 }
 

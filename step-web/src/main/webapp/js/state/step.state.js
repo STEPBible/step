@@ -168,7 +168,8 @@ step.state = {
         // restore active search
         step.state.view.restore();
         
-
+        //restore active language
+        this._restoreLanguage();
         
         var passageIds = step.util.getAllPassageIds();
 
@@ -185,6 +186,15 @@ step.state = {
         step.util.ui.initSearchToolbar();
     },
 
+    _restoreLanguage : function() {
+        var language = $.cookie("lang");
+        if(step.util.isBlank(language)) {
+            language = "en";
+        }
+        
+        step.menu.tickMenuItem($("a[lang='" + language + "']"));
+    },
+    
     _showRelevantFieldSet : function(passageId) {
         var passageContainer = step.util.getPassageContainer(passageId);
         $(".advancedSearch fieldset", passageContainer).hide();

@@ -16,7 +16,9 @@
 	
 	StringBuilder sb = new StringBuilder(1024);
 	for(Language l : languages) {
-		sb.append("<a href='./?lang=");
+		sb.append("<a lang='");
+		sb.append(l.getCode());
+		sb.append("' href='./?lang=");
 		sb.append(l.getCode());
 	    sb.append("' >");
 		sb.append(l.getOriginalLanguageName());

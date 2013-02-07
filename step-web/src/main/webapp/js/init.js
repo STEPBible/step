@@ -80,7 +80,15 @@ function initLocale() {
         $.cookie("lang", lang);
 
         if(lang != previousLang) {
-            forgetProfile();
+            //record user email and user name
+            var email = $.localStore("userEmail");
+            var name = $.localStore("userName");
+            
+            forgetProfile(function() {
+                //restore userEmail and userName
+                $.localStore("userEmail", email);
+                $.localStore("userName", name);
+            });
         }
     } else {
         //delete the value

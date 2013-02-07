@@ -230,7 +230,12 @@ function getRelatedVerses(refs, passageId) {
 }
 
 function getRelatedSubjects(key, passageId) {
-    var link = $("a[name='" + key + "']")[0];
+    var otherPassage = step.util.getOtherPassageId(passageId);
+    var link = $("a[name='" + key + "']", step.util.getPassageContent(passageId))[0];
     var relatedSubjects = $.data(link, "relatedSubjects");
-    step.search._doResultsRender(1, relatedSubjects, 1, "", relatedSubjects.query);
+    
+    //first change the fieldset:
+    step.state.activeSearch(otherPassage, "SEARCH_SUBJECT", false);
+    
+    step.search._doResultsRender(otherPassage, relatedSubjects, 1, "", relatedSubjects.query);
 }

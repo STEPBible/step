@@ -387,7 +387,7 @@ step.passage = {
                         subjectOverview += " ; ";
                     }
                     
-                    if(i < subjects.length) {
+                    if(i < subjects.results.length) {
                         subjectOverview += "...";
                     }
                     

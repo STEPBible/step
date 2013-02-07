@@ -377,7 +377,7 @@ step.passage = {
                     text += "<br/><a class='relatedVerses' href='#' onclick='getRelatedVerses(\"" + data.significantlyRelatedVerses[key].join('; ') + "\" ," + passageId + ")'>" + __s.see_related_verses + "</a>";
                 }
                 
-                $("a[name='" + key + "']").qtip({
+                $("a[name='" + key + "']", passageContent).qtip({
                     content: text,
                     show: { 
                         event : 'mouseenter',

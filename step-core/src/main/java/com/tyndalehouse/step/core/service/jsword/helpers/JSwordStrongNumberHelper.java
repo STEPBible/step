@@ -299,7 +299,7 @@ public class JSwordStrongNumberHelper {
      */
     public StrongsAndCounts getVerseStrongs() {
         calculateCounts();
-        getRelatedVerses();
+        findRelatedVerses();
 
         final StrongsAndCounts sac = new StrongsAndCounts();
         sac.setCounts(this.allStrongs);
@@ -314,7 +314,7 @@ public class JSwordStrongNumberHelper {
      * 
      * @return the related verses
      */
-    private void getRelatedVerses() {
+    private void findRelatedVerses() {
         this.relatedVerses = new HashMap<String, List<String>>(this.verseStrongs.size() * 2);
         final IndexSearcher is = getIndexSearcher();
 
@@ -340,7 +340,10 @@ public class JSwordStrongNumberHelper {
                 final ScoreDoc[] scoreDocs = topDocs.scoreDocs;
                 final List<String> verses = new ArrayList<String>(16);
                 for (int ii = 0; ii < scoreDocs.length; ii++) {
-                    verses.add(is.doc(scoreDocs[ii].doc).get(LuceneIndex.FIELD_KEY));
+                    final String potentialVerse = is.doc(scoreDocs[ii].doc).get(LuceneIndex.FIELD_KEY);
+                    if (!potentialVerse.equals(verseEntry.getKey())) {
+                        verses.add(potentialVerse);
+                    }
                 }
 
                 if (verses.size() != 0) {

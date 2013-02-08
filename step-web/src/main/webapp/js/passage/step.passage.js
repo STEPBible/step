@@ -90,11 +90,13 @@ step.passage = {
         var url = BIBLE_GET_BIBLE_TEXT + lookupVersion.toUpperCase() + "/" + lookupReference;
         if (options && options.length != 0) {
             url += "/" + options;
-
-            if (interlinearVersion && interlinearVersion.length != 0) {
-                url += "/" + interlinearVersion.toUpperCase();
-                url += "/" + interlinearMode;
-            }
+        } else {
+            url += "/";
+        }
+        
+        if (interlinearVersion && interlinearVersion.length != 0) {
+            url += "/" + interlinearVersion.toUpperCase();
+            url += "/" + interlinearMode;
         }
         
         if(this.lastUrls[passageId] == url) {
@@ -131,7 +133,7 @@ step.passage = {
                 
     
                 //finally add handlers to elements containing xref
-                self._doVerseNumbers(passageId, passageContent, options, text.reference);
+                self._doVerseNumbers(passageId, passageContent, options, interlinearMode, text.reference);
                 self._doFonts(passageId, passageContent, interlinearMode, interlinearVersion);
                 self._doInlineNotes(passageId, passageContent);
                 self._doNonInlineNotes(passageContent);
@@ -294,8 +296,12 @@ step.passage = {
         $(".passageContentHolder", passageContent).addClass("rtlDirection");
     },
     
-    _doVerseNumbers : function(passageId, passageContent, options, reference) {
-        if(options == undefined || options.indexOf("VERSE_NUMBERS") == -1) {
+    _doVerseNumbers : function(passageId, passageContent, options, interlinearMode, reference) {
+        //if interleaved mode or column mode, then we want this to continue
+        //if no options, or no verse numbers, then exit
+        var hasVerseNumbersByDefault = interlinearMode != undefined && interlinearMode != "" && interlinearMode != 'INTERLINEAR';
+        
+        if(options == undefined || (options.indexOf("VERSE_NUMBERS") == -1 && !hasVerseNumbersByDefault)) {
             //nothing to do:
             return;
         }
@@ -314,6 +320,11 @@ step.passage = {
                 var text = "<table class='verseNumberStrongs'>";
                 var bookKey = key.substring(0, key.indexOf('.'));
                 var internalVerseLink = $("a[name='" + key + "']", passageContent);
+                
+                if(internalVerseLink[0] == undefined) {
+                    //no point in continuing here, since we have no verse to attach it to.
+                    return;
+                }
                 
                 //append header row
                 var header = "<th></th><th>" + __s.bible_book + "</th><th>" + (data.ot ? __s.OT : __s.NT) + "</th>";

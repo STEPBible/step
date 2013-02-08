@@ -400,30 +400,31 @@
   		<xsl:param name="includeBook" />
   		
 		<xsl:variable name="firstOsisID" select="substring-before(concat($verse/@osisID, ' '), ' ')"/>
-        
-        <xsl:if test="normalize-space($firstOsisID) != ''" >
-	        <xsl:variable name="book" select="substring-before($firstOsisID, '.')"/>
-			<xsl:variable name="chapter" select="jsword:shape($shaper, substring-before(substring-after($firstOsisID, '.'), '.'))"/>
-			<xsl:variable name="verse">
-			  <xsl:choose>
-			    <xsl:when test="@n">
-			      <xsl:value-of select="jsword:shape($shaper, string(@n))"/>
-			    </xsl:when>
-			    <xsl:otherwise>
-			      <xsl:value-of select="jsword:shape($shaper, substring-after(substring-after($firstOsisID, '.'), '.'))"/>
-			    </xsl:otherwise>
-			  </xsl:choose>
-			</xsl:variable>
-			
-			<xsl:choose>
-				<xsl:when test="$includeBook = true()">
-	  				<xsl:value-of select="concat($book, ' ', $chapter, ':', $verse)"/>
-				</xsl:when>
-				<xsl:otherwise>
-	  				<xsl:value-of select="concat($chapter, ':', $verse)"/>
-				</xsl:otherwise>
-			</xsl:choose>
-        </xsl:if>
+        <a name="{$firstOsisID}">
+	        <xsl:if test="normalize-space($firstOsisID) != ''" >
+		        <xsl:variable name="book" select="substring-before($firstOsisID, '.')"/>
+				<xsl:variable name="chapter" select="jsword:shape($shaper, substring-before(substring-after($firstOsisID, '.'), '.'))"/>
+				<xsl:variable name="verse">
+				  <xsl:choose>
+				    <xsl:when test="@n">
+				      <xsl:value-of select="jsword:shape($shaper, string(@n))"/>
+				    </xsl:when>
+				    <xsl:otherwise>
+				      <xsl:value-of select="jsword:shape($shaper, substring-after(substring-after($firstOsisID, '.'), '.'))"/>
+				    </xsl:otherwise>
+				  </xsl:choose>
+				</xsl:variable>
+				
+				<xsl:choose>
+					<xsl:when test="$includeBook = true()">
+		  				<xsl:value-of select="concat($book, ' ', $chapter, ':', $verse)"/>
+					</xsl:when>
+					<xsl:otherwise>
+		  				<xsl:value-of select="concat($chapter, ':', $verse)"/>
+					</xsl:otherwise>
+				</xsl:choose>
+	        </xsl:if>
+        </a>
   </xsl:template>
   
   <xsl:template name="interleavedVersion">

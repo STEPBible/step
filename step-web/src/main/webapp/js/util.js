@@ -34,6 +34,7 @@
 step.util = {
     passageContainers: [null, null],
     passageContents: [null, null],
+    septuagintVersions : ["LXX", "ABPGRK", "ABP"],
         
 	getPassageContainer: function(passageIdOrElement) {
 	    //check if we have a number
@@ -206,21 +207,27 @@ step.util = {
         getFeaturesLabel : function(item) {
             var features = "";
             
+
             // add to Strongs if applicable, and therefore interlinear
             if(item.hasRedLetter) {
                 features += " " + '<span class="versionFeature" title="' + __s.jesus_words_in_red_available + '">' + __s.jesus_words_in_red_available_initial + '</span>';
             }
-
-            if (item.hasStrongs) {
-                features += " " + "<span class='versionFeature' title='" + __s.vocabulary_available + "'>" + __s.vocabulary_available_initial + "</span>";
-                features += " " + "<span class='versionFeature' title='" + __s.interlinear_available + "'>" + __s.interlinear_available_initial + "</span>";
-            }
-
+            
             // add morphology
             if (item.hasMorphology) {
                 features += " " + "<span class='versionFeature' title='" + __s.grammar_available + "'>" + __s.grammar_available_initial + "</span>";
             }
             
+            if (item.hasStrongs) {
+                features += " " + "<span class='versionFeature' title='" + __s.vocabulary_available + "'>" + __s.vocabulary_available_initial + "</span>";
+                
+                if($.inArray(item.initials, step.util.septuagintVersions) != -1) {
+                    features += " " + "<span class='versionFeature' title='" + __s.septuagint_interlinear_available + "'>" + __s.septuagint_interlinear_available_initial + "</span>";
+                } else {
+                    features += " " + "<span class='versionFeature' title='" + __s.interlinear_available + "'>" + __s.interlinear_available_initial + "</span>";
+                }
+            }
+
 
             return features;
         },

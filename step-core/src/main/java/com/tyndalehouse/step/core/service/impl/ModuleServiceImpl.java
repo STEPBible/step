@@ -35,11 +35,8 @@ package com.tyndalehouse.step.core.service.impl;
 import static com.tyndalehouse.step.core.utils.JSwordUtils.getSortedSerialisableList;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 
@@ -63,7 +60,6 @@ import com.tyndalehouse.step.core.utils.CollectionUtils;
 @Singleton
 public class ModuleServiceImpl implements ModuleService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ModuleServiceImpl.class);
-    private final Map<String, String> defaultLexiconsRefs;
     private final JSwordModuleService jswordModuleService;
     private final Provider<ClientSession> clientSession;
 
@@ -75,26 +71,10 @@ public class ModuleServiceImpl implements ModuleService {
      * @param clientSession the client session to validate security
      */
     @Inject
-    public ModuleServiceImpl(@Named("defaultLexiconRefs") final Map<String, String> lexiconRefs,
-            final JSwordModuleService jswordModuleService, final Provider<ClientSession> clientSession) {
-        this.defaultLexiconsRefs = lexiconRefs;
+    public ModuleServiceImpl(final JSwordModuleService jswordModuleService,
+            final Provider<ClientSession> clientSession) {
         this.jswordModuleService = jswordModuleService;
         this.clientSession = clientSession;
-    }
-
-    /**
-     * Returns the module that should be used to lookup a reference
-     * 
-     * @param reference the reference to base the lookup option on
-     * @return the initials of the module to lookup
-     */
-    String getLookupModule(final String reference) {
-        for (final Entry<String, String> e : this.defaultLexiconsRefs.entrySet()) {
-            if (reference.startsWith(e.getKey())) {
-                return e.getValue();
-            }
-        }
-        return null;
     }
 
     @Override

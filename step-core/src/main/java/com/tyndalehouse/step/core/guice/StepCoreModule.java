@@ -33,7 +33,6 @@
 package com.tyndalehouse.step.core.guice;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 
 import net.sf.ehcache.CacheManager;
@@ -49,7 +48,6 @@ import com.tyndalehouse.step.core.data.EntityManager;
 import com.tyndalehouse.step.core.data.create.Loader;
 import com.tyndalehouse.step.core.data.entities.impl.EntityManagerImpl;
 import com.tyndalehouse.step.core.guice.providers.DefaultInstallersProvider;
-import com.tyndalehouse.step.core.guice.providers.DefaultLexiconRefsProvider;
 import com.tyndalehouse.step.core.guice.providers.DefaultVersionsProvider;
 import com.tyndalehouse.step.core.guice.providers.OfflineInstallersProvider;
 import com.tyndalehouse.step.core.service.BibleInformationService;
@@ -140,8 +138,6 @@ public class StepCoreModule extends AbstractStepGuiceModule {
 
         bind(new TypeLiteral<List<String>>() {
         }).annotatedWith(Names.named("defaultVersions")).toProvider(DefaultVersionsProvider.class);
-        bind(new TypeLiteral<Map<String, String>>() {
-        }).annotatedWith(Names.named("defaultLexiconRefs")).toProvider(DefaultLexiconRefsProvider.class);
 
         // installers, offline and online
         bind(new TypeLiteral<List<Installer>>() {

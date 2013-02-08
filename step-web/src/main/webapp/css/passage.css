@@ -246,6 +246,11 @@ SUP.verseNumber {
 	color: gray;
 }
 
+sup.variant.note {
+	font-size: 65%;
+	color: #696;
+}
+
 SUP.note a {
 	font-size: 100%;
 	font-weight: bold;

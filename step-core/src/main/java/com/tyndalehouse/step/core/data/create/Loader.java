@@ -180,7 +180,7 @@ public class Loader {
      * Loads the data into the database
      */
     private void loadData() {
-        LOGGER.debug("Loading initial data");
+        LOGGER.info("Loading initial data");
         loadNave();
         loadLexiconDefinitions();
         loadSpecificForms();

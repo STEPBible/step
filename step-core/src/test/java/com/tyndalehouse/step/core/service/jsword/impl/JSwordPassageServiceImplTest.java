@@ -414,6 +414,7 @@ public class JSwordPassageServiceImplTest {
         final String outputString = xmlOutputter.outputString(d);
         LOGGER.info(outputString);
         assertTrue(outputString.contains("ειδως"));
+        assertTrue(outputString.contains("title=\"ιδων"));
     }
 
     /**

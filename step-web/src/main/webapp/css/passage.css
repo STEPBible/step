@@ -120,8 +120,10 @@ td.primary {
 }
 
 span[strong]:hover {
-	border-bottom: 2px #696 dashed;
-	margin-bottom: -2px;
+	color: #696;
+	cursor: pointer;
+/* 	border-bottom: 2px #696 dashed; */
+/* 	margin-bottom: 5px; */
 }
 
 .singleVerse {

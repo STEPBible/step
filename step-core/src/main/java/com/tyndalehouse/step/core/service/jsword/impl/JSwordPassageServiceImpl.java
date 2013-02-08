@@ -103,6 +103,7 @@ import com.tyndalehouse.step.core.service.impl.MorphologyServiceImpl;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
 import com.tyndalehouse.step.core.utils.StringConversionUtils;
+import com.tyndalehouse.step.core.utils.StringUtils;
 import com.tyndalehouse.step.core.xsl.XslConversionType;
 import com.tyndalehouse.step.core.xsl.impl.ColorCoderProviderImpl;
 import com.tyndalehouse.step.core.xsl.impl.InterleavingProviderImpl;
@@ -1226,17 +1227,28 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
      * @param interlinearVersion the input string
      * @return the output
      */
-    private String getInterlinearVersion(final String interlinearVersion) {
+    String getInterlinearVersion(final String interlinearVersion) {
         if (isBlank(interlinearVersion)) {
             return null;
         }
 
-        String correct = interlinearVersion;
-        if (correct.charAt(0) == ',') {
-            correct = correct.substring(1);
+        final String[] versions = StringUtils.split(interlinearVersion, "[ ,]+");
+        final StringBuilder sb = new StringBuilder(interlinearVersion.length());
+
+        for (int i = 0; i < versions.length; i++) {
+            final String s = versions[i];
+            if (s.length() == 0) {
+                continue;
+            }
+
+            sb.append(s);
+
+            if (i + 1 < versions.length) {
+                sb.append(',');
+            }
         }
 
-        return correct.replace(" ", "");
+        return sb.toString();
     }
 
     @Override

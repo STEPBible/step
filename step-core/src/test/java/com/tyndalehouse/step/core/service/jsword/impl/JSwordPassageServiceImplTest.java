@@ -509,4 +509,24 @@ public class JSwordPassageServiceImplTest {
         assertEquals("Gen.1.1-Gen.1.31", service.getBookData("ESV", " Gen").getKey().getOsisRef());
         assertEquals("Gen.1.1-Gen.1.31", service.getBookData("ESV", "Gen ").getKey().getOsisRef());
     }
+
+    /**
+     * Gets the gets the interlinear versions.
+     * 
+     */
+    @Test
+    public void testGetInterlinearVersions() {
+        final JSwordPassageServiceImpl jsword = new JSwordPassageServiceImpl(null, null, null, null);
+        assertEquals("ESV", jsword.getInterlinearVersion("ESV"));
+        assertEquals("ESV,KJV", jsword.getInterlinearVersion("ESV,KJV"));
+        assertEquals("ESV,KJV", jsword.getInterlinearVersion("ESV,,KJV"));
+        assertEquals("ESV,KJV", jsword.getInterlinearVersion("ESV,,,KJV"));
+        assertEquals("ESV,KJV", jsword.getInterlinearVersion("ESV,,,,KJV"));
+        assertEquals("ESV,KJV", jsword.getInterlinearVersion("ESV,KJV,"));
+        assertEquals("ESV,KJV", jsword.getInterlinearVersion(",ESV,KJV"));
+        assertEquals("ESV", jsword.getInterlinearVersion(",ESV,"));
+        assertEquals("ESV", jsword.getInterlinearVersion(",,ESV,,"));
+        assertEquals("ESV,KJV,AV", jsword.getInterlinearVersion(",,ESV,,KJV,,,AV"));
+
+    }
 }

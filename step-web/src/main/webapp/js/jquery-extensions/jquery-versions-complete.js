@@ -127,13 +127,13 @@ $.widget("custom.versions",  {
              } else {
                  var currentValue = step.autoVersions.currentElement.val();
                  if(currentValue.trim() == "") {
-                     step.autoVersions.currentElement.val(item.item.attr('initials'));
+                     step.autoVersions.currentElement.val(self.sanitizeVersions(item.item.attr('initials')));
                      step.autoVersions.currentElement.trigger('change');
                  } else {
                      //check this wasn't the last version, if it was, then there is no point in adding it
                      var selectedVersion = item.item.attr('initials');
                      if(!currentValue.toLowerCase().endsWith(selectedVersion.toLowerCase())) {
-                         step.autoVersions.currentElement.val(currentValue + "," + selectedVersion);
+                         step.autoVersions.currentElement.val(self.sanitizeVersions(currentValue + "," + selectedVersion));
                          step.autoVersions.currentElement.trigger('change');
                      }
                  }
@@ -143,6 +143,10 @@ $.widget("custom.versions",  {
             }
         }).removeClass("ui-widget-content ui-corner-all");
 
+    },
+    
+    sanitizeVersions : function(item) {
+        return item.replace(/,,+/g, ',');
     },
     
     _filter : function(val) {

@@ -32,9 +32,7 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.xsl.impl;
 
-import static java.util.regex.Pattern.compile;
-
-import java.util.regex.Pattern;
+import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
 
 import javax.inject.Inject;
 
@@ -78,11 +76,6 @@ import com.tyndalehouse.step.core.data.EntityManager;
  * @author chrisburrell
  */
 public class ColorCoderProviderImpl {
-    static final Pattern FEMININE_FORM = compile("SF|PF");
-    static final Pattern MASCULINE_FORM = compile("SM|PM");
-    static final Pattern SINGULAR_FORM = compile("S[MFN]$|S[MFN]-[A-Z]|[123]S|[CDFIKPQRSTX]-[123][A-Z]S");
-    static final Pattern PLURAL_FORM = compile("P[MFN]$|P[MFN]-[A-Z]|[123]P|[CDFIKPQRSTX]-[123][A-Z]P");
-
     private static final Logger LOGGER = LoggerFactory.getLogger(ColorCoderProviderImpl.class);
     private static final String ROBINSON_PREFIX_LC = "robinson:";
     private static final String ROBINSON_PREFIX_UC = "ROBINSON:";
@@ -125,7 +118,11 @@ public class ColorCoderProviderImpl {
             final EntityDoc[] results = this.morphology.searchExactTermBySingleField("code", 1, code);
             if (results.length > 0) {
                 classes = results[0].get("cssClasses");
+            }
 
+            if (isBlank(classes) && firstSpace != -1) {
+                // redo the same process, but with less of the string,
+                return getColorClass(morph.substring(firstSpace + 1));
             }
         }
         return classes != null ? classes : "";

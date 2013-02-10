@@ -561,6 +561,5 @@ public class JSwordPassageServiceImplTest {
         assertEquals("ESV", jsword.getInterlinearVersion(",ESV,"));
         assertEquals("ESV", jsword.getInterlinearVersion(",,ESV,,"));
         assertEquals("ESV,KJV,AV", jsword.getInterlinearVersion(",,ESV,,KJV,,,AV"));
-
     }
 }

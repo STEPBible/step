@@ -249,8 +249,19 @@ public class JSwordStrongNumberHelper {
 
                     @Override
                     public int compare(final LexiconSuggestion o1, final LexiconSuggestion o2) {
-                        return o1.getGloss().toLowerCase(Locale.ENGLISH)
-                                .compareTo(o2.getGloss().toLowerCase(Locale.ENGLISH));
+
+                        final String gloss1 = o1.getGloss();
+                        final String gloss2 = o2.getGloss();
+                        if (gloss1 == null) {
+                            return -1;
+                        }
+
+                        if (gloss2 == null) {
+                            return 1;
+                        }
+
+                        return gloss1.toLowerCase(Locale.ENGLISH).compareTo(
+                                gloss2.toLowerCase(Locale.ENGLISH));
                     }
                 });
 

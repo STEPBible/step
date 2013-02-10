@@ -57,7 +57,7 @@
 			</tr>
 		</table>
 	</fieldset>
-
+	<jsp:include page="personal_notes.jsp" />
 	<jsp:include page="simple_text_search.jsp" />
 	<jsp:include page="advanced_search_fragment.jsp" />	
 

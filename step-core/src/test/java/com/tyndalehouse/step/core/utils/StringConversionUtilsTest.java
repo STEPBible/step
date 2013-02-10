@@ -126,6 +126,11 @@ public class StringConversionUtilsTest {
      */
     @Test
     public void testGetStrongPaddedKey() {
+        assertEquals("", getStrongPaddedKey(null));
+        assertEquals("", getStrongPaddedKey(""));
+        assertEquals("G", getStrongPaddedKey("G"));
+        assertEquals("H", getStrongPaddedKey("H"));
+        assertEquals("000A", getStrongPaddedKey("A"));
         assertEquals("G1020", getStrongPaddedKey("strong:G1020"));
         assertEquals("G0001", getStrongPaddedKey("strong:G1"));
         assertEquals("G0012", getStrongPaddedKey("strong:G12"));

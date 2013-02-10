@@ -98,10 +98,14 @@ step.util = {
 	
 	isClassOfUnicode : function(element, limiter) {
 	    var text = "";
-        if(element.text) {
-            text = element.text();
-        } else if(element.innerText) {
-            text = element.innerText;
+        if(element.text || element.innerText) {
+            var el = $(element);
+            var children = el.children();
+            if(children.length != 0) {
+                text = children.not("sup,a").text();
+            } else {
+                text = el.text()
+            }
         } else if(element.charCodeAt) {
             text = element;
         }

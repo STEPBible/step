@@ -44,6 +44,7 @@
 <!-- 		<li><a href="#" name="SEARCH_LEXICON_DEFINITION">Lexicon definition search</a></li> -->
 <!-- 		<li><a href="#" name="SEARCH_TIMELINE">Timeline search</a></li> -->
 		<li class="menuSectionStart"><a href="#" name="SEARCH_TEXT"><fmt:message key="search_advanced_text" /></a></li>
+		<li class="menuSectionStart"><a href="#" name="SEARCH_PERSONAL_NOTES"><fmt:message key="personal_notes" /></a></li>
 	</ul>
 	</li>
 	<li menu-name="PASSAGE-TOOLS"><a href="#"><fmt:message key="tools" /></a>

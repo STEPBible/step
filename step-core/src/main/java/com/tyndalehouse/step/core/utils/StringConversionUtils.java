@@ -142,7 +142,7 @@ public final class StringConversionUtils {
      * @return the strong number, padded
      */
     public static String getStrongPaddedKey(final String key) {
-        if (key == null) {
+        if (StringUtils.isBlank(key)) {
             return "";
         }
 

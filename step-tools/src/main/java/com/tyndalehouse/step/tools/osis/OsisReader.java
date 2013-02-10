@@ -38,7 +38,9 @@ public class OsisReader {
     public static void main(final String[] args) throws Exception {
         final String version = "WHNU";
         final String ref = "Mat.1.9";
+
         final Book currentBook = Books.installed().getBook(version);
+
         final BookData bookData = new BookData(currentBook, currentBook.getKey(ref));
         final Element osisFragment = bookData.getOsisFragment();
 

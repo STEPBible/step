@@ -225,6 +225,8 @@ step.state = {
             $.shout("simpleText-search-state-has-changed", { passageId : passageId });
         } else if(active == 'SEARCH_SUBJECT') {
             $.shout("subject-search-state-has-changed", { passageId : passageId });
+        } else if(active == 'SEARCH_PERSONAL_NOTES') {
+            $.shout("personal-notes-state-has-changed", { passageId : passageId });
         }
         
 //        this._recomputeHash();

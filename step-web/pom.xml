@@ -197,6 +197,7 @@
 								<jsSourceFile>js/search/step.search.textual.ui.js</jsSourceFile>
 								<jsSourceFile>js/search/step.search.timeline.ui.js</jsSourceFile>
 								<jsSourceFile>js/search/step.search.subject.ui.js</jsSourceFile>
+								<jsSourceFile>js/search/step.search.personalnotes.ui.js</jsSourceFile>
 								<jsSourceFile>js/navigation/step.navigation.js</jsSourceFile>	    
 								<jsSourceFile>js/state/step.state.js</jsSourceFile>
 								<jsSourceFile>js/state/step.state.view.js</jsSourceFile>

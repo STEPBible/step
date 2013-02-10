@@ -346,4 +346,14 @@ h4.lexicalGrouping {
 	font-size: 1em;
 }
 
+.personalNotesFields a {
+	float: left;
+}
 
+.fullSearchWidth {
+	width: 60%;
+}
+
+.fullSearchWidth input {
+	width: 95%;
+}

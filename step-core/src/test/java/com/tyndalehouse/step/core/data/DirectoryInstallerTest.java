@@ -76,7 +76,11 @@ public class DirectoryInstallerTest {
             if (jSwordModuleServiceImpl.isInstalled("ESVTemp")) {
                 return;
             }
-            Thread.sleep(1000);
+            try {
+                Thread.sleep(1000);
+            } catch (final InterruptedException e) {
+                // ignore;
+            }
         }
 
         fail("ESVTemp was not installed in time");

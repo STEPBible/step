@@ -43,6 +43,7 @@ import java.util.Locale;
 import org.crosswire.common.util.Language;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.FeatureType;
+import org.crosswire.jsword.versification.BibleBook;
 
 import com.tyndalehouse.step.core.models.BibleVersion;
 
@@ -110,5 +111,17 @@ public final class JSwordUtils {
         });
 
         return versions;
+    }
+
+    /**
+     * Returns true if the bible book is the Introduction to the Bible, to the New Testament or to the Old
+     * Testament
+     * 
+     * @param bb the bb
+     * @return true, if is intro
+     */
+    public static boolean isIntro(final BibleBook bb) {
+        return BibleBook.INTRO_BIBLE.equals(bb) || BibleBook.INTRO_NT.equals(bb)
+                || BibleBook.INTRO_OT.equals(bb);
     }
 }

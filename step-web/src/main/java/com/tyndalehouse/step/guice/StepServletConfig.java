@@ -60,6 +60,7 @@ import com.tyndalehouse.step.core.guice.StepCoreModule;
 import com.tyndalehouse.step.core.models.ClientSession;
 import com.tyndalehouse.step.rest.controllers.ImageController;
 import com.tyndalehouse.step.rest.controllers.InternationalJsonController;
+import com.tyndalehouse.step.rest.controllers.SiteMapController;
 import com.tyndalehouse.step.rest.framework.FrontController;
 import com.yammer.metrics.guice.InstrumentationModule;
 import com.yammer.metrics.reporting.AdminServlet;
@@ -87,7 +88,8 @@ public class StepServletConfig extends GuiceServletContextListener {
                         serve("/index.jsp");
                         serve("/international/interactive.js").with(InternationalJsonController.class);
                         serve("/metrics/*").with(AdminServlet.class);
-
+                        serve("/sitemap*").with(SiteMapController.class);
+                        serve("/SITEMAP*").with(SiteMapController.class);
                         // filters
                         filter("/index.jsp", "/").through(SetupRedirectFilter.class);
                         filter("/external/*").through(ExternalPoweredByFilter.class);

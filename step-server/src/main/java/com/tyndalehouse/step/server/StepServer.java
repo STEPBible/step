@@ -49,6 +49,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.Calendar;
 
 import javax.imageio.ImageIO;
@@ -87,7 +88,16 @@ public final class StepServer {
      * @return the Server object if required to make modifications
      */
     private Server start() {
-        final InetAddress listeningAddress = InetAddress.getLoopbackAddress();
+        InetAddress listeningAddress;
+        try {
+            listeningAddress = InetAddress.getLocalHost();
+        } catch (final UnknownHostException e1) {
+            try {
+                listeningAddress = InetAddress.getByName("127.0.0.1");
+            } catch (final UnknownHostException e) {
+                throw new RuntimeException("Unable to get a suitable local host address");
+            }
+        }
         final InetSocketAddress socket = new InetSocketAddress(listeningAddress, STEP_PORT);
 
         final Server jetty = new Server(socket);

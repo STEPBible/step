@@ -101,15 +101,12 @@ public class MorphologyServiceImpl implements MorphologyService {
      */
     @SuppressWarnings("PMD")
     private EntityDoc retrieveMorphologyByLongName(final String code) {
-        if (code.length() > ROBINSON_PREFIX_LENGTH) {
-            final String key = code.substring(ROBINSON_PREFIX_LENGTH);
+        final String key = code.startsWith(ROBINSON_PREFIX) ? code.substring(ROBINSON_PREFIX_LENGTH) : code;
 
-            final long currentTimeNanos = System.nanoTime();
-            final EntityDoc[] entry = this.morphology.searchExactTermBySingleField("code", 1, key);
-            LOGGER.debug("Took [{}] nano-seconds", System.nanoTime() - currentTimeNanos);
-            return entry.length > 0 ? entry[0] : null;
-        }
-        return null;
+        final long currentTimeNanos = System.nanoTime();
+        final EntityDoc[] entry = this.morphology.searchExactTermBySingleField("code", 1, key);
+        LOGGER.debug("Took [{}] nano-seconds", System.nanoTime() - currentTimeNanos);
+        return entry.length > 0 ? entry[0] : null;
     }
 
     /**

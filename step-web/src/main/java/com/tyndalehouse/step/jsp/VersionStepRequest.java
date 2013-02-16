@@ -51,6 +51,7 @@ import com.tyndalehouse.step.core.data.entities.impl.EntityManagerImpl;
 import com.tyndalehouse.step.core.models.ClientSession;
 import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
 import com.tyndalehouse.step.core.utils.IOUtils;
+import com.tyndalehouse.step.core.utils.JSwordUtils;
 
 /**
  * A WebCookieRequest stores information from the request and the cookie for easy use in the jsp page
@@ -197,8 +198,7 @@ public class VersionStepRequest {
      */
     private void outputBook(final StringBuilder bookList, final BibleBook bb, final int rowNum) {
 
-        if (BibleBook.INTRO_BIBLE.equals(bb) || BibleBook.INTRO_NT.equals(bb)
-                || BibleBook.INTRO_OT.equals(bb)) {
+        if (JSwordUtils.isIntro(bb)) {
             return;
         }
 

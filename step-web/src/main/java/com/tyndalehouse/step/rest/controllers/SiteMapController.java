@@ -88,10 +88,7 @@ public class SiteMapController extends HttpServlet {
     protected void doGet(final HttpServletRequest req, final HttpServletResponse response)
             throws ServletException, IOException {
         if (this.stepBase == null) {
-            final StringBuffer requestURL = req.getRequestURL();
-            // remove to the last slash
-            this.stepBase = requestURL.delete(requestURL.lastIndexOf("/") + 1, requestURL.length())
-                    .toString();
+            this.stepBase = "http://step.tyndalehouse.com/";
         }
 
         // response.setContentType("application/x-gzip");

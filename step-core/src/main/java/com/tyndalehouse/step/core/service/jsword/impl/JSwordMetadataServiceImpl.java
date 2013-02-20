@@ -5,6 +5,7 @@ import static com.tyndalehouse.step.core.utils.StringUtils.isNotEmpty;
 import static org.crosswire.jsword.book.BookCategory.BIBLE;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
@@ -14,7 +15,6 @@ import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.Books;
 import org.crosswire.jsword.book.FeatureType;
 import org.crosswire.jsword.versification.BibleBook;
-import org.crosswire.jsword.versification.BibleBookList;
 import org.crosswire.jsword.versification.Versification;
 import org.crosswire.jsword.versification.system.Versifications;
 
@@ -171,13 +171,15 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
         final String searchPattern = bookStart.toLowerCase(Locale.getDefault()).trim();
 
         final List<BookName> matchingNames = new ArrayList<BookName>();
-        final BibleBookList books = versification.getBooks();
+
+        final Iterator<BibleBook> bookIterator = versification.getBookIterator();
 
         BibleBook b = null;
-        for (final BibleBook book : books) {
-            if (book.getLongName().toLowerCase().startsWith(searchPattern)
-                    || book.getPreferredName().toLowerCase().startsWith(searchPattern)
-                    || book.getShortName().toLowerCase().startsWith(searchPattern)) {
+        while (bookIterator.hasNext()) {
+            final BibleBook book = bookIterator.next();
+            if (versification.getLongName(book).toLowerCase().startsWith(searchPattern)
+                    || versification.getPreferredName(book).toLowerCase().startsWith(searchPattern)
+                    || versification.getShortName(book).toLowerCase().startsWith(searchPattern)) {
                 b = book;
 
                 addBookName(matchingNames, book, versification);

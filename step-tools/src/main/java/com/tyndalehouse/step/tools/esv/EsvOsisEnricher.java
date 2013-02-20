@@ -47,7 +47,7 @@ public class EsvOsisEnricher {
 
     public static void main(final String[] args) throws JDOMException, IOException, NoSuchKeyException,
             TransformerFactoryConfigurationError, TransformerException {
-        new EsvOsisEnricher().process("D:\\Downloads\\esv-osis-sect.xml", "d:\\temp\\tagging.csv");
+        new EsvOsisEnricher().process("c:\\Downloads\\esv-osis-sect.xml", "c:\\temp\\tagging.csv");
     }
 
     private void process(final String osisFile, final String mappingFile) throws JDOMException, IOException,

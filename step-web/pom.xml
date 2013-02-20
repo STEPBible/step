@@ -200,6 +200,7 @@
 								<jsSourceFile>js/search/step.search.personalnotes.ui.js</jsSourceFile>
 								<jsSourceFile>js/navigation/step.navigation.js</jsSourceFile>	    
 								<jsSourceFile>js/state/step.state.js</jsSourceFile>
+								<jsSourceFile>js/state/step.state.browser.js</jsSourceFile>
 								<jsSourceFile>js/state/step.state.view.js</jsSourceFile>
 								<jsSourceFile>js/state/step.state.passage.js</jsSourceFile>
 								<jsSourceFile>js/state/step.state.original.js</jsSourceFile>

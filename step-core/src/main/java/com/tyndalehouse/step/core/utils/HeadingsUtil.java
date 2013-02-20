@@ -5,6 +5,7 @@ import org.crosswire.jsword.passage.KeyUtil;
 import org.crosswire.jsword.passage.NoSuchKeyException;
 import org.crosswire.jsword.passage.PassageKeyFactory;
 import org.crosswire.jsword.passage.Verse;
+import org.crosswire.jsword.versification.BibleBook;
 import org.crosswire.jsword.versification.BookName;
 import org.crosswire.jsword.versification.Versification;
 import org.slf4j.Logger;
@@ -66,7 +67,8 @@ public final class HeadingsUtil {
      * @return the String representing the long header
      */
     private static String longNameFromKey(final Versification v11n, final Key key) {
-        final Verse verse = KeyUtil.getVerse(key, v11n);
-        return key.getName().replace(verse.getBook().getShortName(), verse.getBook().getLongName());
+        final Verse verse = KeyUtil.getVerse(key);
+        final BibleBook book = verse.getBook();
+        return key.getName().replace(v11n.getShortName(book), v11n.getLongName(book));
     }
 }

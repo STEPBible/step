@@ -419,7 +419,7 @@ public class InterlinearProviderImpl implements InterlinearProvider {
     private void setTestamentType(final Key key) {
         final Versification v11n = Versifications.instance().getVersification(
                 (String) this.currentBook.getBookMetaData().getProperty(BookMetaData.KEY_VERSIFICATION));
-        final Passage passage = KeyUtil.getPassage(key, v11n);
+        final Passage passage = KeyUtil.getPassage(key);
         this.testament = v11n.getTestament(v11n.getOrdinal(passage.getVerseAt(0)));
     }
 

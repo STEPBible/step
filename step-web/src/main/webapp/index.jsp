@@ -87,6 +87,7 @@
 
 
 		<script src="js/state/step.state.js" type="text/javascript"></script>
+		<script src="js/state/step.state.browser.js" type="text/javascript"></script>
 		<script src="js/state/step.state.view.js" type="text/javascript"></script>
 		<script src="js/state/step.state.passage.js" type="text/javascript"></script>
 		<script src="js/state/step.state.original.js" type="text/javascript"></script>

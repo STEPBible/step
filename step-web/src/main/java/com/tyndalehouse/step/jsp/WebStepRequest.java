@@ -197,7 +197,7 @@ public class WebStepRequest {
 
         try {
             return this.injector.getInstance(BibleController.class)
-                    .getBibleText(version, reference, "VERSE_NUMBERS").getValue();
+                    .getBibleText(version, reference, "VERSE_NUMBERS,NOTES").getValue();
         } catch (final StepInternalException e) {
             // silently ignore and log as debug
             LOG.trace("Unable to restore state", e);

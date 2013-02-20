@@ -147,6 +147,7 @@ step.passage = {
                 step.util.closeInfoErrors(passageId);
                 step.state.passage.reference(passageId, text.reference, false);
                 self._doVersions(passageId, passageContent);
+                self._doHash(passageId, text.reference, lookupVersion, options, interlinearMode, interlinearVersion);
             }, 
             passageId: passageId, 
             level: 'error'
@@ -509,6 +510,10 @@ step.passage = {
         if(notes.text().trim().length == 0) {
             notes.toggle(false);
         }
+    },
+    
+    _doHash : function(passageId, reference, version, options, interlinearMode, interlinearVersion) {
+        step.state.browser.changePassage(passageId, reference, version, options, interlinearMode, interlinearVersion);
     },
     
     _doVersions : function(passageId, passageContent) {

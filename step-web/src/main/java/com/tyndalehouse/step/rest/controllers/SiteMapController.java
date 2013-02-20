@@ -297,7 +297,8 @@ public class SiteMapController extends HttpServlet {
 
             for (int ii = 1; ii <= lastChapter; ii++) {
                 addUrl(siteMap, null, null, null, "index.jsp?version=", book.getInitials(),
-                        "&amp;reference=", bb.getBookName().getShortName(), "%20", Integer.toString(ii));
+                        "&amp;reference=", versificationForVersion.getShortName(bb), "%20",
+                        Integer.toString(ii));
             }
         }
     }

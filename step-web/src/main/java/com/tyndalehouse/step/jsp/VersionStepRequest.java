@@ -32,6 +32,7 @@
  ******************************************************************************/
 package com.tyndalehouse.step.jsp;
 
+import java.util.Iterator;
 import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
@@ -39,7 +40,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.passage.Key;
 import org.crosswire.jsword.versification.BibleBook;
-import org.crosswire.jsword.versification.BibleBookList;
 import org.crosswire.jsword.versification.Versification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -125,10 +125,10 @@ public class VersionStepRequest {
 
         }
 
-        final BibleBookList books = this.versificationForVersion.getBooks();
+        final Iterator<BibleBook> books = this.versificationForVersion.getBookIterator();
         int ii = 0;
-        for (final BibleBook bb : books) {
-            outputBook(bookList, bb, ii);
+        while (books.hasNext()) {
+            outputBook(bookList, books.next(), ii);
             ii++;
         }
         bookList.append("</table>");

@@ -181,9 +181,7 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
                     || versification.getPreferredName(book).toLowerCase().startsWith(searchPattern)
                     || versification.getShortName(book).toLowerCase().startsWith(searchPattern)) {
                 b = book;
-
                 addBookName(matchingNames, book, versification);
-
             }
         }
 
@@ -211,8 +209,8 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
             return;
         }
 
-        matchingNames.add(new BookName(bookName.getShortName(), bookName.getLongName(), versification
-                .getLastChapter(bookName) != 1));
+        matchingNames.add(new BookName(versification.getShortName(bookName), versification
+                .getLongName(bookName), versification.getLastChapter(bookName) != 1));
     }
 
     /**
@@ -229,8 +227,10 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
             // final char f = Character.toUpperCase(searchSoFar.charAt(0));
 
             // make sure first letter is CAPS, followed by the rest of the word and the chapter number
-            final String chapNumber = String.format(BOOK_CHAPTER_FORMAT, book.getShortName(), ii);
-            final String longChapNumber = String.format(BOOK_CHAPTER_FORMAT, book.getLongName(), ii);
+            final String chapNumber = String
+                    .format(BOOK_CHAPTER_FORMAT, versification.getShortName(book), ii);
+            final String longChapNumber = String.format(BOOK_CHAPTER_FORMAT, versification.getLongName(book),
+                    ii);
 
             chapters.add(new BookName(chapNumber, longChapNumber, false));
         }

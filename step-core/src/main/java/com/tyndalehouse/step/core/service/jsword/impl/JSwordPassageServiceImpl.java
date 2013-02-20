@@ -164,26 +164,26 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
 
             if (previousChapter) {
                 if (chapter > 1) {
-                    targetVerse = new Verse(verse.getBook(), chapter - 1, 1);
+                    targetVerse = new Verse(v11n, verse.getBook(), chapter - 1, 1);
                 } else {
                     // we go down a book
                     final BibleBook previousBook = getNonIntroPreviousBook(bibleBook, v11n);
 
-                    targetVerse = previousBook == null ? new Verse(BibleBook.GEN, 1, 1) : new Verse(
-                            previousBook, v11n.getLastChapter(previousBook), 1);
+                    targetVerse = previousBook == null ? new Verse(v11n, BibleBook.GEN, 1, 1) : new Verse(
+                            v11n, previousBook, v11n.getLastChapter(previousBook), 1);
                 }
             } else {
                 final int lastChapterInBook = v11n.getLastChapter(verse.getBook());
                 if (chapter < lastChapterInBook) {
-                    targetVerse = new Verse(verse.getBook(), chapter + 1, 1);
+                    targetVerse = new Verse(v11n, verse.getBook(), chapter + 1, 1);
                 } else {
                     // we go up a book
                     final BibleBook nextBook = getNonIntroNextBook(bibleBook, v11n);
 
                     final int lastChapter = v11n.getLastChapter(BibleBook.REV);
                     final int lastVerse = v11n.getLastVerse(BibleBook.REV, lastChapter);
-                    targetVerse = nextBook == null ? new Verse(BibleBook.REV, lastChapter, lastVerse)
-                            : new Verse(nextBook, 1, 1);
+                    targetVerse = nextBook == null ? new Verse(v11n, BibleBook.REV, lastChapter, lastVerse)
+                            : new Verse(v11n, nextBook, 1, 1);
                 }
             }
 

@@ -93,7 +93,7 @@ public class JSwordPassageServiceImplTest {
         Key key = book.getKey("John 4");
 
         assertTrue(key.get(0).getOsisID().equals("John.4.0"));
-        key = jsi.normalize(key, Versifications.instance().getDefaultVersification());
+        key = jsi.normalize(key, Versifications.instance().getVersification("KJV"));
         assertFalse(key.get(0).getOsisID().equals("John.4.0"));
 
     }
@@ -138,7 +138,9 @@ public class JSwordPassageServiceImplTest {
                 new JSwordVersificationServiceImpl(), null, null, null);
 
         final Key expandToFullChapter = jsi.expandToFullChapter("Ruth", "1", "22",
-                Books.installed().getBook("KJV"), new Verse(BibleBook.RUTH, 1, 22), 0);
+                Books.installed().getBook("KJV"),
+                new Verse(Versifications.instance().getVersification(Versifications.DEFAULT_V11N),
+                        BibleBook.RUTH, 1, 22), 0);
         LOGGER.debug(expandToFullChapter.getName());
     }
 

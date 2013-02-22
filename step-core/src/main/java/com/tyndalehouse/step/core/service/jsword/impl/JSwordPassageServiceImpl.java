@@ -613,23 +613,8 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
      * @return true if isFirstChapter and isFirstVerse also return true
      */
     private boolean isFirstVerseInChapter(final Verse firstVerse) {
-        return isFirstVerse(firstVerse) && isFirstChapter(firstVerse);
-    }
-
-    /**
-     * @param firstVerse a verse
-     * @return true if the first chapter of the book
-     */
-    private boolean isFirstChapter(final Verse firstVerse) {
-        return firstVerse.getChapter() < 2;
-    }
-
-    /**
-     * @param firstVerse a verse
-     * @return true if verse number is 0 or 1, i.e. less than 2
-     **/
-    private boolean isFirstVerse(final Verse firstVerse) {
-        return firstVerse.getVerse() < 2;
+        final Versification versification = firstVerse.getVersification();
+        return versification.isStartOfChapter(firstVerse) && versification.isStartOfChapter(firstVerse);
     }
 
     /**
@@ -641,16 +626,6 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
      * @throws NoSuchKeyException the exception indicating no key
      */
     Key normalize(final Key reference, final Versification v11n) throws NoSuchKeyException {
-        final Passage passage = KeyUtil.getPassage(reference);
-        final int cardinality = passage.getCardinality();
-        if (cardinality > 1) {
-            final Key firstVerse = passage.get(0);
-            if (firstVerse instanceof Verse && v11n.isStartOfChapter((Verse) firstVerse)) {
-                passage.remove(firstVerse);
-                return reduceKeySize(passage, v11n);
-            }
-        }
-
         return reduceKeySize(reference, v11n);
     }
 

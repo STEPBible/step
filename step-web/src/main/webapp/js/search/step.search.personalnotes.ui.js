@@ -88,8 +88,6 @@ $(document).ready(function() {
                            ".personalNotesSearch",
                            ".personalNotesCurrent",
                            ], namespace);
-
-    step.util.ui.trackQuerySyntax(".subjectSearchTable", namespace);
     
     $(".personalNotesSave").button({
         icons : { primary : "ui-icon-disk" }, text : false

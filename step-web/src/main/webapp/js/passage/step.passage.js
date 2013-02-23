@@ -544,6 +544,9 @@ $(step.passage).hear("passage-state-has-changed", function(s, data) {
 });
 
 $(step.passage).hear("slideView-SEARCH_PASSAGE", function (s, data) {
+    //notify hash change
+    step.state.browser.updateDetail(data.passageId);
+
     step.passage.changePassage(data.passageId);
 });
 

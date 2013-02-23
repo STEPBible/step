@@ -37,7 +37,9 @@ step.state.browser = {
         }
         
         this._restorePassageId(0);
-        this._restorePassageId(1);
+        if(step.state.view.getView() == 'TWO_COLUMN_VIEW') {
+            this._restorePassageId(1);
+        }
     },
     
     changeHash : function(hash) {
@@ -100,9 +102,31 @@ step.state.browser = {
         //store it in the form passageId-osisId
         var hash = window.location.hash;
         var detail = "detail=" + $("fieldset[name='SEARCH_PASSAGE']", step.util.getPassageContainer(passageId)).detailSlider("value");
-        var newValue = this._getNonNullKey(['SEARCH_PASSAGE', "", reference, version, options, interlinearMode, interlinearVersion]);
+        var newValue = this._getNonNullKey(['SEARCH_PASSAGE', detail, reference, version, options, interlinearMode, interlinearVersion]);
         
         this.changePassageHash(passageId, newValue);
+    },
+    
+    updateDetail : function(passageId) {
+        var hash = window.location.hash;
+        var detail = "detail=" + $("fieldset[name='SEARCH_PASSAGE']", step.util.getPassageContainer(passageId)).detailSlider("value");
+        
+        var parts = hash.split("|");
+        if(parts == undefined || parts.length == 0) {
+            return;
+        }
+        
+        for(var ii = 0; ii < parts.length; ii++) {
+            if(parts[ii].indexOf("passageId" + passageId + "=") == 0) {
+                //this is the fragment we want to rewrite
+                parts[ii] = parts[ii].replace(/detail=\d+/ig, detail);
+            }
+        }
+        
+        var newValue = parts.join("|");
+        if(window.location.hash != newValue) {
+            window.location.hash = newValue;
+        }
     },
     
     _restorePassageId : function(passageId) {
@@ -127,13 +151,16 @@ step.state.browser = {
     },
     
     _restorePassage : function(passageId, passageArgs) {
-        $("fieldset[name='SEARCH_PASSAGE']", step.util.getPassageContainer(passageId)).detailSlider("value", passageArgs[1]);
+        $("fieldset[name='SEARCH_PASSAGE']", step.util.getPassageContainer(passageId)).detailSlider("value", 
+                { value: parseInt((passageArgs[1] || "").replace("detail=", "")) }
+        );
+        
         step.state.passage.reference(passageId, passageArgs[2]);
         step.state.passage.version(passageId, passageArgs[3]);
         step.state.passage.options(passageId, passageArgs[4]);
         step.state.passage.extraVersionsDisplayOptions(passageId, 
                 this.translateCollectionOption(passageArgs[5], step.defaults.passage.interNamedOptions, step.defaults.passage.interOptions));
-        step.state.passage.extraVersions(passageId, passageArgs[6]);  
+        step.state.passage.extraVersions(passageId, passageArgs[6]);
     },
     
     _restoreTrackedKeys : function(passageId, formArgs) {
@@ -141,10 +168,17 @@ step.state.browser = {
         
         for(var ii = 0; ii < formArgs.length; ii++) {
             var parts = formArgs[ii].split('=');
-            var key = parts[0];
+            
+            if(parts.length < 2) {
+                //no key/value pair
+                continue;
+            }
+            
+            var key = parts.shift();
+            console.log("key", key);
             var value = "";
-            if(parts.length > 1) {
-                value = parts.pop().join('=');
+            if(parts.length > 0) {
+                value = parts.join('=');
             } 
             
             $("." + key, passageContainer).val(value);

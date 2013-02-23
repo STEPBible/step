@@ -35,7 +35,7 @@ $(function() {
     	    this.element.addClass("detailSlider")
     	    
     	    this._updateLabel();
-    	    this._updateSliderImpact(this._getValue(), false);
+    	    this._updateSliderImpact(this._getValue(), false, true);
 //    	    console.log("Done for " + this.options.key);
     	},
     	
@@ -45,6 +45,10 @@ $(function() {
     	},
     	
     	value : function(event) {
+    	    if(event) {
+    	        this.update(event);
+    	    }
+    	    
     	    return this._getValue();
     	},
     	
@@ -74,12 +78,16 @@ $(function() {
             }
     	},
     	
-    	_updateSliderImpact : function(newLevel, fire) {
+    	/**
+    	 * isInitialising indicates that we are in the process of initialising the components 
+    	 * and therefore may require to do extra/or different things
+    	 */
+    	_updateSliderImpact : function(newLevel, fire, isInitialising) {
     	  //update level
     	    var passageId = step.passage.getPassageId(this.element);
             step.state._storeAndRetrieveCookieState(passageId, "slideView-" + this.options.key, newLevel, false);
     	    this._updateLabel(newLevel);
-    
+
     	    // show all relevant levels
     	    var allElements = $("*", this.options.scopeSelector);
     	    allElements.filter(function() {
@@ -92,6 +100,13 @@ $(function() {
     	    
     	    if(fire == undefined || fire == true) {
     	        $.shout("slideView-" + this.options.key, { passageId : passageId});
+
+    	        //fire change for hash browser          
+                var optionName = $(this.element).closest("fieldset").attr('name');
+                if(!isInitialising && optionName) {
+                    console.log("Triggering hash change", newLevel, step.passage.getPassageId(this.element));
+                    step.state.browser.changeTrackedSearch(passageId, optionName);
+                }
     	    }
     	},
     	

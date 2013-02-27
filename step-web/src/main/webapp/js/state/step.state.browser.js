@@ -76,7 +76,7 @@ step.state.browser = {
         } else if(searchType == 'SEARCH_ORIGINAL') {
             namespace = "original";
         } else if(searchType == 'SEARCH_SIMPLE_TEXT') {
-            namespace = "simpletext";
+            namespace = "simpleText";
         } else if(searchType == 'SEARCH_TEXT') {
             namespace = 'textual';
         } else if(searchType == 'SEARCH_SUBJECT') {

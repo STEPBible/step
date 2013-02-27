@@ -44,6 +44,7 @@ import static java.lang.Integer.parseInt;
 import static java.lang.String.format;
 import static org.crosswire.common.xml.XMLUtil.writeToString;
 import static org.crosswire.jsword.book.OSISUtil.OSIS_ATTR_OSISID;
+import static org.crosswire.jsword.book.OSISUtil.OSIS_ELEMENT_VERSE;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -80,11 +81,12 @@ import org.crosswire.jsword.passage.Verse;
 import org.crosswire.jsword.passage.VerseRange;
 import org.crosswire.jsword.versification.BibleBook;
 import org.crosswire.jsword.versification.Versification;
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.filter.Filter;
-import org.jdom.output.Format;
-import org.jdom.output.XMLOutputter;
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.filter.ElementFilter;
+import org.jdom2.filter.Filter;
+import org.jdom2.output.Format;
+import org.jdom2.output.XMLOutputter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
@@ -926,16 +928,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
                 versions.put(bookData.getFirstBook().getInitials(), osis);
             }
 
-            final Filter verseFilter = new Filter() {
-                @Override
-                public boolean matches(final Object element) {
-                    if (element instanceof Element) {
-                        final Element e = (Element) element;
-                        return "verse".equalsIgnoreCase(e.getName());
-                    }
-                    return false;
-                }
-            };
+            final Filter<Element> verseFilter = new ElementFilter(OSIS_ELEMENT_VERSE);
 
             // select one version and iterate through the others and change the OSIS
             boolean firstVersion = true;
@@ -965,7 +958,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
                         }
 
                         final Element parentElement = childVerse.getParentElement();
-                        parentElement.addContent(parentElement.indexOf(childVerse), (Element) e.clone());
+                        parentElement.addContent(parentElement.indexOf(childVerse), e.clone());
                         previousAppendedElement = childVerse;
                     }
                 }

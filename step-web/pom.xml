@@ -128,10 +128,10 @@
 			<groupId>javatar</groupId>
 			<artifactId>javatar</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>org.jdom</groupId>
-			<artifactId>jdom</artifactId>
-		</dependency>
+<!-- 		<dependency> -->
+<!-- 			<groupId>org.jdom</groupId> -->
+<!-- 			<artifactId>jdom</artifactId> -->
+<!-- 		</dependency> -->
 	</dependencies>
 
 	<build>

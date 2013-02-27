@@ -59,7 +59,9 @@ step.defaults = {
     passage : {
         interOptions : [ __s.passage_interleaved, __s.passage_interleaved_with_comparison, __s.passage_interlinear, __s.passage_column_view, __s.passage_column_view_with_compare],
         interNamedOptions : ["INTERLEAVED", "INTERLEAVED_COMPARE", "INTERLINEAR", "COLUMN", "COLUMN_COMPARE"],
-        interOptionsNoInterlinear : [__s.passage_interleaved, __s.passage_interleaved_with_comparison, __s.passage_column_view, __s.passage_column_view_with_compare]
+        interOptionsNoInterlinear : [__s.passage_interleaved, __s.passage_interleaved_with_comparison, __s.passage_column_view, __s.passage_column_view_with_compare],
+        interNoInterlinearDefault : __s.passage_interleaved,
+        interInterlinearDefault : __s.passage_interlinear
     },
     
     search: {

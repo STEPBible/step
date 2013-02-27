@@ -521,6 +521,9 @@ step.passage = {
     },
     
     _getInterlinearMode : function(passageId) {
+        //first ensure we have an interlinear mode selected
+        step.passage.ui.updateDisplayOptions(passageId);
+        
         var name = step.state.passage.extraVersionsDisplayOptions(passageId);
         var index = step.defaults.passage.interOptions.indexOf(name);
         return step.defaults.passage.interNamedOptions[index];

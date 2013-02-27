@@ -158,9 +158,15 @@ step.state.browser = {
         step.state.passage.reference(passageId, passageArgs[2]);
         step.state.passage.version(passageId, passageArgs[3]);
         step.state.passage.options(passageId, passageArgs[4]);
-        step.state.passage.extraVersionsDisplayOptions(passageId, 
-                this.translateCollectionOption(passageArgs[5], step.defaults.passage.interNamedOptions, step.defaults.passage.interOptions));
+        
+        var value = this.translateCollectionOption(passageArgs[5], step.defaults.passage.interNamedOptions, step.defaults.passage.interOptions);
+        if(value != 'NONE') {
+            step.state.passage.extraVersionsDisplayOptions(passageId, value);
+        } else {
+            step.state.passage.extraVersionsDisplayOptions(passageId, "");
+        }
         step.state.passage.extraVersions(passageId, passageArgs[6]);
+        step.passage.ui.updateDisplayOptions(passageId);
     },
     
     _restoreTrackedKeys : function(passageId, formArgs) {

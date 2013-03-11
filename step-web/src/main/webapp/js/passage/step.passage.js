@@ -73,7 +73,7 @@ step.passage = {
     changePassage: function(passageId) {
         var container = step.util.getPassageContainer(passageId);
         var lookupVersion = step.state.passage.version(passageId);
-        
+
         //get the real value from the textbox
         var lookupReference = this.getReference(passageId);
         var options = step.state.passage.options(passageId);
@@ -412,7 +412,7 @@ step.passage = {
                     content: text,
                     show: { 
                         event : 'mouseenter',
-                        solo: true,
+                        solo: true
                     },
                     hide: { 
                         event: 'unfocus mouseleave',
@@ -423,7 +423,7 @@ step.passage = {
                     position : {
                         my: "bottom center",
                         at: "top center",
-                        viewport: $(window),
+                        viewport: $(window)
                     },
                     style : {
                         classes : "ui-tooltip-default noQtipWidth"
@@ -478,7 +478,7 @@ step.passage = {
                         success : function(data, status) {
                             this.set('content.title.text', data.longName);
                             this.set('content.text', data.value);
-                        },
+                        }
                     }
                 },
                 style: {

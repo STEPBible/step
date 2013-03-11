@@ -20,10 +20,12 @@ import org.crosswire.jsword.book.BookData;
 import org.crosswire.jsword.book.Books;
 import org.crosswire.jsword.book.OSISUtil;
 import org.crosswire.jsword.passage.Key;
-import org.jdom.Content;
-import org.jdom.Element;
-import org.jdom.Text;
-import org.jdom.filter.Filter;
+import org.jdom2.Content;
+import org.jdom2.Element;
+import org.jdom2.Text;
+import org.jdom2.filter.AttributeFilter;
+import org.jdom2.filter.ElementFilter;
+import org.jdom2.filter.Filter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -329,7 +331,7 @@ public class BibleAnalysis {
             final Map<String, Integer> currentWordsCounts) throws Exception {
         final Book b = Books.installed().getBook(initials);
 
-        final Filter filter = new StrongAndVerseElements();
+        final Filter filter = new ElementFilter("verse").and(new AttributeFilter(OSISUtil.ATTRIBUTE_W_LEMMA));
         final Key key = b.getKey(SCOPE);
         final BookData bookData = new BookData(b, key);
         final Element osis = bookData.getOsis();

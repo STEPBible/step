@@ -10,13 +10,13 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jdom.Attribute;
-import org.jdom.Content;
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.jdom.Text;
-import org.jdom.input.SAXBuilder;
+import org.jdom2.Attribute;
+import org.jdom2.Content;
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.JDOMException;
+import org.jdom2.Text;
+import org.jdom2.input.SAXBuilder;
 
 /**
  * transforming the nave's file
@@ -187,16 +187,13 @@ public class NaveXmlDataProcessor {
     private void processEntryFree(final Tree<String> t, final Document doc, final Element entryFree)
             throws IOException {
         @SuppressWarnings("unchecked")
-        final List<Content> contents = entryFree.getChildren();
-        for (final Content c : contents) {
-            if (c instanceof Element) {
+        final List<Element> contents = entryFree.getChildren();
+        for (final Element c : contents) {
                 final Element element = (Element) c;
                 if (element.getName().equals("p")) {
                     extractHeadingFromP(t, element);
                 }
-            }
         }
-
     }
 
     private Tree<String> extractHeadingFromP(final Tree<String> t, final Element element) {
@@ -232,8 +229,8 @@ public class NaveXmlDataProcessor {
                     }
 
                 } else if (childName.equals("list")) {
-                    final List<Content> children = childElement.getChildren();
-                    for (final Content item : children) {
+                    final List<Element> children = childElement.getChildren();
+                    for (final Element item : children) {
                         // recurse and process as a paragraph
                         extractHeadingFromP(childTree, (Element) item);
                     }

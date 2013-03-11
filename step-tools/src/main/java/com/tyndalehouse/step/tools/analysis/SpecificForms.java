@@ -1,24 +1,18 @@
 //CHECKSTYLE:OFF
 package com.tyndalehouse.step.tools.analysis;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.SortedMap;
-import java.util.TreeMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.crosswire.jsword.book.Book;
-import org.crosswire.jsword.book.BookData;
-import org.crosswire.jsword.book.BookException;
-import org.crosswire.jsword.book.Books;
-import org.crosswire.jsword.book.OSISUtil;
+import org.crosswire.jsword.book.*;
 import org.crosswire.jsword.passage.Key;
 import org.crosswire.jsword.passage.NoSuchKeyException;
-import org.jdom.Element;
-import org.jdom.filter.Filter;
+import org.jdom2.Element;
+import org.jdom2.filter.AttributeFilter;
+import org.jdom2.filter.ElementFilter;
+import org.jdom2.filter.Filter;
+
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class SpecificForms {
 
@@ -27,7 +21,8 @@ public class SpecificForms {
         final Pattern m = Pattern.compile("([GH]+[0-9]+)[.,;·]?");
         final SortedMap<String, Set<String>> strongs = new TreeMap<String, Set<String>>();
 
-        final Filter filter = new StrongElements();
+
+        final Filter filter = new ElementFilter().and(new AttributeFilter(OSISUtil.ATTRIBUTE_W_LEMMA));
 
         for (final Book b : Books.installed().getBooks()) {
             if (!"grc".equalsIgnoreCase(b.getLanguage().getCode())

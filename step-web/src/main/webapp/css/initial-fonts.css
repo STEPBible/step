@@ -69,6 +69,14 @@ body {
 	text-align: left;
 }
 
+.selectedWordLink {
+    font-weight: bold;
+}
+
+/*.lexiconWordLink {*/
+    /*margin-right: 5px;*/
+/*}*/
+
 legend .detailSliderContainer {
 	float: right;
 }

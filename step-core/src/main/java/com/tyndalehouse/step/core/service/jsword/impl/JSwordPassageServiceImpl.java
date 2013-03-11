@@ -44,6 +44,7 @@ import static java.lang.Integer.parseInt;
 import static java.lang.String.format;
 import static org.crosswire.common.xml.XMLUtil.writeToString;
 import static org.crosswire.jsword.book.OSISUtil.OSIS_ATTR_OSISID;
+import static org.crosswire.jsword.book.OSISUtil.OSIS_ELEMENT_VERSE;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -79,13 +80,13 @@ import org.crosswire.jsword.passage.RestrictionType;
 import org.crosswire.jsword.passage.Verse;
 import org.crosswire.jsword.passage.VerseRange;
 import org.crosswire.jsword.versification.BibleBook;
-import org.crosswire.jsword.versification.BibleBookList;
 import org.crosswire.jsword.versification.Versification;
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.filter.Filter;
-import org.jdom.output.Format;
-import org.jdom.output.XMLOutputter;
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.filter.ElementFilter;
+import org.jdom2.filter.Filter;
+import org.jdom2.output.Format;
+import org.jdom2.output.XMLOutputter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
@@ -157,8 +158,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
         try {
             final Key key = currentBook.getKey(reference);
 
-            final Verse verse = KeyUtil.getVerse(previousChapter ? key : key.get(key.getCardinality() - 1),
-                    v11n);
+            final Verse verse = KeyUtil.getVerse(previousChapter ? key : key.get(key.getCardinality() - 1));
             final int chapter = verse.getChapter();
             final BibleBook bibleBook = verse.getBook();
 
@@ -166,29 +166,26 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
 
             if (previousChapter) {
                 if (chapter > 1) {
-                    targetVerse = new Verse(verse.getBook(), chapter - 1, 1);
+                    targetVerse = new Verse(v11n, verse.getBook(), chapter - 1, 1);
                 } else {
                     // we go down a book
-                    final BibleBookList books = v11n.getBooks();
+                    final BibleBook previousBook = getNonIntroPreviousBook(bibleBook, v11n);
 
-                    final BibleBook previousBook = getNonIntroPreviousBook(bibleBook, books);
-
-                    targetVerse = previousBook == null ? new Verse(BibleBook.GEN, 1, 1) : new Verse(
-                            previousBook, v11n.getLastChapter(previousBook), 1);
+                    targetVerse = previousBook == null ? new Verse(v11n, BibleBook.GEN, 1, 1) : new Verse(
+                            v11n, previousBook, v11n.getLastChapter(previousBook), 1);
                 }
             } else {
                 final int lastChapterInBook = v11n.getLastChapter(verse.getBook());
                 if (chapter < lastChapterInBook) {
-                    targetVerse = new Verse(verse.getBook(), chapter + 1, 1);
+                    targetVerse = new Verse(v11n, verse.getBook(), chapter + 1, 1);
                 } else {
                     // we go up a book
-                    final BibleBookList books = v11n.getBooks();
-                    final BibleBook nextBook = getNonIntroNextBook(bibleBook, books);
+                    final BibleBook nextBook = getNonIntroNextBook(bibleBook, v11n);
 
                     final int lastChapter = v11n.getLastChapter(BibleBook.REV);
                     final int lastVerse = v11n.getLastVerse(BibleBook.REV, lastChapter);
-                    targetVerse = nextBook == null ? new Verse(BibleBook.REV, lastChapter, lastVerse)
-                            : new Verse(nextBook, 1, 1);
+                    targetVerse = nextBook == null ? new Verse(v11n, BibleBook.REV, lastChapter, lastVerse)
+                            : new Verse(v11n, nextBook, 1, 1);
                 }
             }
 
@@ -226,11 +223,11 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
      * @param books the list of books
      * @return the next bible book that is not an introduction
      */
-    private BibleBook getNonIntroNextBook(final BibleBook bibleBook, final BibleBookList books) {
+    private BibleBook getNonIntroNextBook(final BibleBook bibleBook, final Versification v11n) {
         BibleBook nextBook = bibleBook;
         do {
-            nextBook = books.getNextBook(nextBook);
-        } while (nextBook != null && isIntro(nextBook));
+            nextBook = v11n.getNextBook(nextBook);
+        } while (nextBook != null && isIntro(nextBook, v11n));
         return nextBook;
     }
 
@@ -239,11 +236,11 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
      * @param books the list of books
      * @return the previous bible book that is not an introduction
      **/
-    private BibleBook getNonIntroPreviousBook(final BibleBook bibleBook, final BibleBookList books) {
+    private BibleBook getNonIntroPreviousBook(final BibleBook bibleBook, final Versification v11n) {
         BibleBook previousBook = bibleBook;
         do {
-            previousBook = books.getPreviousBook(previousBook);
-        } while (previousBook != null && isIntro(previousBook));
+            previousBook = v11n.getPreviousBook(previousBook);
+        } while (previousBook != null && isIntro(previousBook, v11n));
         return previousBook;
     }
 
@@ -251,7 +248,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
      * @param book the book to test
      * @return true to indicate the book is an introduction to the NT/OT/Bible
      */
-    private boolean isIntro(final BibleBook book) {
+    private boolean isIntro(final BibleBook book, final Versification v11n) {
         return book.getOSIS().startsWith("Intro");
     }
 
@@ -618,23 +615,8 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
      * @return true if isFirstChapter and isFirstVerse also return true
      */
     private boolean isFirstVerseInChapter(final Verse firstVerse) {
-        return isFirstVerse(firstVerse) && isFirstChapter(firstVerse);
-    }
-
-    /**
-     * @param firstVerse a verse
-     * @return true if the first chapter of the book
-     */
-    private boolean isFirstChapter(final Verse firstVerse) {
-        return firstVerse.getChapter() < 2;
-    }
-
-    /**
-     * @param firstVerse a verse
-     * @return true if verse number is 0 or 1, i.e. less than 2
-     **/
-    private boolean isFirstVerse(final Verse firstVerse) {
-        return firstVerse.getVerse() < 2;
+        final Versification versification = firstVerse.getVersification();
+        return versification.isStartOfChapter(firstVerse) && versification.isStartOfChapter(firstVerse);
     }
 
     /**
@@ -646,16 +628,6 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
      * @throws NoSuchKeyException the exception indicating no key
      */
     Key normalize(final Key reference, final Versification v11n) throws NoSuchKeyException {
-        final Passage passage = KeyUtil.getPassage(reference, v11n);
-        final int cardinality = passage.getCardinality();
-        if (cardinality > 1) {
-            final Key firstVerse = passage.get(0);
-            if (firstVerse instanceof Verse && v11n.isStartOfChapter((Verse) firstVerse)) {
-                passage.remove(firstVerse);
-                return reduceKeySize(passage, v11n);
-            }
-        }
-
         return reduceKeySize(reference, v11n);
     }
 
@@ -672,7 +644,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
         final int cardinality = key.getCardinality();
 
         // if we're looking at a whole book, then we will deal with it in one way,
-        final Passage requestedPassage = KeyUtil.getPassage(key, v11n);
+        final Passage requestedPassage = KeyUtil.getPassage(key);
         if (requestedPassage.countRanges(RestrictionType.NONE) == 1 && isWholeBook(v11n, requestedPassage)) {
             key = trimExceedingVersesFromWholeReference(v11n, requestedPassage);
         } else if (cardinality > MAX_VERSES_RETRIEVED) {
@@ -956,16 +928,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
                 versions.put(bookData.getFirstBook().getInitials(), osis);
             }
 
-            final Filter verseFilter = new Filter() {
-                @Override
-                public boolean matches(final Object element) {
-                    if (element instanceof Element) {
-                        final Element e = (Element) element;
-                        return "verse".equalsIgnoreCase(e.getName());
-                    }
-                    return false;
-                }
-            };
+            final Filter<Element> verseFilter = new ElementFilter(OSIS_ELEMENT_VERSE);
 
             // select one version and iterate through the others and change the OSIS
             boolean firstVersion = true;
@@ -995,7 +958,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
                         }
 
                         final Element parentElement = childVerse.getParentElement();
-                        parentElement.addContent(parentElement.indexOf(childVerse), (Element) e.clone());
+                        parentElement.addContent(parentElement.indexOf(childVerse), e.clone());
                         previousAppendedElement = childVerse;
                     }
                 }

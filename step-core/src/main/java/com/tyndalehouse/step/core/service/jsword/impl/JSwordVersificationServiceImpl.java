@@ -94,7 +94,7 @@ public class JSwordVersificationServiceImpl implements JSwordVersificationServic
                 (String) version.getBookMetaData().getProperty(BookMetaData.KEY_VERSIFICATION));
 
         if (versification == null) {
-            return Versifications.instance().getDefaultVersification();
+            return Versifications.instance().getVersification(Versifications.DEFAULT_V11N);
         }
         return versification;
     }
@@ -125,7 +125,8 @@ public class JSwordVersificationServiceImpl implements JSwordVersificationServic
     private VerseRange roundRangeDown(final VerseRange range) {
         final Versification versification = range.getVersification();
         final Verse end = range.getEnd();
-        return new VerseRange(versification, versification.getFirstVerseInChapter(end), end);
+        return new VerseRange(versification, new Verse(versification, end.getBook(), end.getChapter(), 1),
+                end);
     }
 
     /**
@@ -137,6 +138,8 @@ public class JSwordVersificationServiceImpl implements JSwordVersificationServic
     private VerseRange roundRangeUp(final VerseRange range) {
         final Versification versification = range.getVersification();
         final Verse end = range.getEnd();
-        return new VerseRange(versification, range.getStart(), versification.getLastVerseInChapter(end));
+        final Verse endOfChapter = new Verse(versification, end.getBook(), end.getChapter(),
+                versification.getLastVerse(end.getBook(), end.getChapter()));
+        return new VerseRange(versification, range.getStart(), endOfChapter);
     }
 }

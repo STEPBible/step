@@ -34,6 +34,7 @@ package com.tyndalehouse.step.rest.controllers;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -47,7 +48,6 @@ import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.BookCategory;
 import org.crosswire.jsword.passage.Key;
 import org.crosswire.jsword.versification.BibleBook;
-import org.crosswire.jsword.versification.BibleBookList;
 import org.crosswire.jsword.versification.Versification;
 
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
@@ -268,15 +268,16 @@ public class SiteMapController extends HttpServlet {
                 .getVersificationForVersion(book);
         final Key globalKeyList = book.getGlobalKeyList();
 
-        final BibleBookList books = versificationForVersion.getBooks();
+        final Iterator<BibleBook> books = versificationForVersion.getBookIterator();
 
-        for (final BibleBook bb : books) {
+        while (books.hasNext()) {
+            final BibleBook bb = books.next();
             if (JSwordUtils.isIntro(bb)) {
                 continue;
             }
             Key keyToBook;
             try {
-                keyToBook = book.getValidKey(bb.getBookName().getShortName());
+                keyToBook = book.getValidKey(versificationForVersion.getShortName(bb));
                 keyToBook.retainAll(globalKeyList);
                 if (keyToBook.getCardinality() == 0) {
                     continue;
@@ -296,7 +297,8 @@ public class SiteMapController extends HttpServlet {
 
             for (int ii = 1; ii <= lastChapter; ii++) {
                 addUrl(siteMap, null, null, null, "index.jsp?version=", book.getInitials(),
-                        "&amp;reference=", bb.getBookName().getShortName(), "%20", Integer.toString(ii));
+                        "&amp;reference=", versificationForVersion.getShortName(bb), "%20",
+                        Integer.toString(ii));
             }
         }
     }

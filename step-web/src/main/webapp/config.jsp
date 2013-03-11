@@ -1,3 +1,5 @@
+<%@page import="com.google.inject.Injector"%>
+<%@page import="com.tyndalehouse.step.jsp.WebStepRequest"%>
 <%@page import="com.tyndalehouse.step.core.models.ClientSession"%>
 <%@page import="java.util.Locale"%>
 <%@page import="javax.servlet.jsp.jstl.core.Config"%>

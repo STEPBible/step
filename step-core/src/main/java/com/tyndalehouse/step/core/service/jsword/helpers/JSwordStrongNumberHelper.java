@@ -32,6 +32,8 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.service.jsword.helpers;
 
+import static org.crosswire.jsword.book.OSISUtil.OSIS_ELEMENT_VERSE;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -68,8 +70,8 @@ import org.crosswire.jsword.passage.NoSuchKeyException;
 import org.crosswire.jsword.passage.Verse;
 import org.crosswire.jsword.versification.Testament;
 import org.crosswire.jsword.versification.Versification;
-import org.jdom.Element;
-import org.jdom.filter.Filter;
+import org.jdom2.Element;
+import org.jdom2.filter.ElementFilter;
 import org.slf4j.Logger;
 
 import com.tyndalehouse.step.core.data.EntityDoc;
@@ -290,18 +292,8 @@ public class JSwordStrongNumberHelper {
     @SuppressWarnings({ "unchecked", "serial" })
     private List<Element> getOsisElements(final Key key) throws NoSuchKeyException, BookException {
         final BookData data = new BookData(STRONG_REF_VERSION_BOOK, key);
-        final List<Element> elements = data.getOsisFragment().getContent(new Filter() {
-            @Override
-            public boolean matches(final Object object) {
-                if (object instanceof Element) {
-                    final Element element = (Element) object;
-                    if (OSISUtil.OSIS_ELEMENT_VERSE.equals(element.getName())) {
-                        return true;
-                    }
-                }
-                return false;
-            }
-        });
+        final List<Element> elements = data.getOsisFragment().getContent(
+                new ElementFilter(OSIS_ELEMENT_VERSE));
         return elements;
     }
 

@@ -24,9 +24,12 @@
 	<div id="origin" name="LEXICON_DEFINITION">
 			
 			<div><fmt:message key="lexicon_searches" /></div>
+
 			<p />
 			<!--  Vocab -->
 			<div id="vocabContainer" class="metadataContainer">
+                <div id="vocabEntries"></div>
+
 				<h3><fmt:message key="lexicon_vocab" /></h3>
 				<div level="0">
 					<div><h5 class='stepTransliteration' info-name="stepTransliteration"></h5> (<span info-name="accentedUnicode" class="unicodeFont"></span>): <span info-name="shortDef"></span></div>
@@ -38,7 +41,7 @@
 				</div>	
 				<div level="2">
 					<hr />
-					<div<fmt:message key="lexicon_related_words" /> <span info-name="relatedNos" class="ancientLanguage"></span></div>
+					<div><fmt:message key="lexicon_related_words" /> <span info-name="relatedNos" class="ancientLanguage"></span></div>
 					<h5><fmt:message key="lexicon_lsj_definition" /></h5><div info-name="lsjDefs" ></div>
 				</div>
 			</div>
@@ -95,7 +98,7 @@
 						<tr depends-on="caseDescription">
 							<td><h5><fmt:message key="lexicon_grammar_case" /></h5></td>
 							<td><span info-name="wordCase"></span></td>
-							<td><h5<fmt:message key="lexicon_ie" /></h5></td>
+							<td><h5><fmt:message key="lexicon_ie" /></h5></td>
 							<td><span info-name="caseExplained"></span></td>
 						</tr>
 						<tr depends-on="tenseDescription">

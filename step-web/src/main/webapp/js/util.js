@@ -793,7 +793,6 @@ function refreshWaitStatus() {
 		 *            url
 		 * @param the
 		 *            userFunction to call on success of the query
-		 * @deprecated
 		 */
 		getSafe : function(url, args, userFunction, passageId, level) {
 		    

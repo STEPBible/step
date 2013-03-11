@@ -52,6 +52,8 @@ step.passage.ui = {
     },
     
     updateDisplayOptions : function(passageId) {
+        var self = this;
+        
         if(step.versions == undefined) {
             //don't have it from server yet, so return immediately
             return;
@@ -85,10 +87,11 @@ step.passage.ui = {
                     if(step.defaults.passage.interNamedOptions[step.defaults.passage.interOptions.indexOf(displayOptions.val())] == "INTERLINEAR") {
                         displayOptions.val(step.defaults.passage.interOptions[0]);
                         displayOptions.trigger('change');
-                    } 
+                    }
                     
                     //change available options
                     displayOptions.autocomplete("option", "source", step.defaults.passage.interOptionsNoInterlinear);
+                    self._ensureDefaultOption(passageId, step.defaults.passage.interNoInterlinearDefault);
                     return;
                 }
             }
@@ -96,6 +99,12 @@ step.passage.ui = {
         
         //if we get here, then we need to allow interlinears:
         displayOptions.autocomplete("option", "source", step.defaults.passage.interOptions);
+        self._ensureDefaultOption(passageId, step.defaults.passage.interInterlinearDefault);
+    },
+
+    _ensureDefaultOption : function(passageId, option) {
+//        displayOptions.val(option);
+        step.state.passage.extraVersionsDisplayOptions(passageId, option);
     },
     
     /**
@@ -170,8 +179,8 @@ $(step.passage.ui).hear("versions-initialisation-completed", function() {
               var passageId = step.passage.getPassageId(target);
               
               //reset displayOptions because interlinear might not be available
-              $.shout("version-changed-" + passageId);
               step.passage.ui.updateDisplayOptions(passageId);
+              $.shout("version-changed-" + passageId);
               step.passage.changePassage(passageId);
         });
     });

@@ -44,7 +44,9 @@ step.state = {
          var key = selector.substring(1);
          selected.change(function(){
              var controlValue = this.type == 'checkbox' ? $(this).prop('checked') : $(this).val();
-             step.state[namespace][key](step.passage.getPassageId(this), controlValue);
+             
+             var passageId = step.passage.getPassageId(this);
+             step.state[namespace][key](passageId, controlValue);
          });
          
          
@@ -184,7 +186,14 @@ step.state = {
         }
         
         step.util.ui.initSearchToolbar();
-    },
+        
+        //finally start listening for hash changes
+        window.onhashchange = function() {
+            step.state.browser.hashChange();
+        };
+        
+        step.state.browser.hashChange();
+     },
 
     _restoreLanguage : function() {
         var language = $.cookie("lang");
@@ -202,6 +211,9 @@ step.state = {
         var option = $("a[name ^= 'SEARCH_']:has(img.selectingTick)", passageContainer);
         var optionName = option.attr('name');
         this._showFieldSet(passageContainer, optionName);
+        
+        //need to link field set to optionbeing displayed
+        step.state.browser.changeTrackedSearch(passageId, optionName);
     },
     
     _showFieldSet : function(passageContainer, optionName) {

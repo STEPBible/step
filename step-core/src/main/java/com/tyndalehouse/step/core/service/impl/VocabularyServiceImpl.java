@@ -15,6 +15,9 @@ import com.tyndalehouse.step.core.data.EntityManager;
 import com.tyndalehouse.step.core.exceptions.UserExceptionType;
 import com.tyndalehouse.step.core.service.VocabularyService;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * defines all vocab related queries
  * 
@@ -65,9 +68,34 @@ public class VocabularyServiceImpl implements VocabularyService {
         final String[] strongList = getKeys(vocabIdentifiers);
 
         if (strongList.length != 0) {
-            return this.definitions.searchUniqueBySingleField("strongNumber", strongList);
+            final EntityDoc[] strongDefs = this.definitions.searchUniqueBySingleField("strongNumber", strongList);
+            return reOrder(strongList, strongDefs);
         }
+
         return new EntityDoc[0];
+    }
+
+    /**
+     * Re-orders based on the input
+     * @param strongList the order list of stongs
+     * @param strongDefs the definitions that have been found
+     */
+    private EntityDoc[] reOrder(String[] strongList, EntityDoc[] strongDefs) {
+        Map<String, EntityDoc> entitiesByStrong = new HashMap<String, EntityDoc>(strongList.length*2);
+        for (EntityDoc def : strongDefs) {
+            entitiesByStrong.put(def.get("strongNumber"), def);
+        }
+
+        EntityDoc[] results = new EntityDoc[strongDefs.length];
+        int current = 0;
+        for(String strong : strongList) {
+            final EntityDoc entityDoc = entitiesByStrong.get(strong);
+            if(entityDoc != null) {
+                results[current++] = entityDoc;
+            }
+        }
+
+        return results;
     }
 
     @Override

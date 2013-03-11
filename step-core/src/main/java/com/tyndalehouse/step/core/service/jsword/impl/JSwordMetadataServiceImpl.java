@@ -5,6 +5,7 @@ import static com.tyndalehouse.step.core.utils.StringUtils.isNotEmpty;
 import static org.crosswire.jsword.book.BookCategory.BIBLE;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
@@ -14,7 +15,6 @@ import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.Books;
 import org.crosswire.jsword.book.FeatureType;
 import org.crosswire.jsword.versification.BibleBook;
-import org.crosswire.jsword.versification.BibleBookList;
 import org.crosswire.jsword.versification.Versification;
 import org.crosswire.jsword.versification.system.Versifications;
 
@@ -171,17 +171,17 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
         final String searchPattern = bookStart.toLowerCase(Locale.getDefault()).trim();
 
         final List<BookName> matchingNames = new ArrayList<BookName>();
-        final BibleBookList books = versification.getBooks();
+
+        final Iterator<BibleBook> bookIterator = versification.getBookIterator();
 
         BibleBook b = null;
-        for (final BibleBook book : books) {
-            if (book.getLongName().toLowerCase().startsWith(searchPattern)
-                    || book.getPreferredName().toLowerCase().startsWith(searchPattern)
-                    || book.getShortName().toLowerCase().startsWith(searchPattern)) {
+        while (bookIterator.hasNext()) {
+            final BibleBook book = bookIterator.next();
+            if (versification.getLongName(book).toLowerCase().startsWith(searchPattern)
+                    || versification.getPreferredName(book).toLowerCase().startsWith(searchPattern)
+                    || versification.getShortName(book).toLowerCase().startsWith(searchPattern)) {
                 b = book;
-
                 addBookName(matchingNames, book, versification);
-
             }
         }
 
@@ -209,8 +209,8 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
             return;
         }
 
-        matchingNames.add(new BookName(bookName.getShortName(), bookName.getLongName(), versification
-                .getLastChapter(bookName) != 1));
+        matchingNames.add(new BookName(versification.getShortName(bookName), versification
+                .getLongName(bookName), versification.getLastChapter(bookName) != 1));
     }
 
     /**
@@ -227,8 +227,10 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
             // final char f = Character.toUpperCase(searchSoFar.charAt(0));
 
             // make sure first letter is CAPS, followed by the rest of the word and the chapter number
-            final String chapNumber = String.format(BOOK_CHAPTER_FORMAT, book.getShortName(), ii);
-            final String longChapNumber = String.format(BOOK_CHAPTER_FORMAT, book.getLongName(), ii);
+            final String chapNumber = String
+                    .format(BOOK_CHAPTER_FORMAT, versification.getShortName(book), ii);
+            final String longChapNumber = String.format(BOOK_CHAPTER_FORMAT, versification.getLongName(book),
+                    ii);
 
             chapters.add(new BookName(chapNumber, longChapNumber, false));
         }

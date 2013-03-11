@@ -32,6 +32,7 @@
  ******************************************************************************/
 package com.tyndalehouse.step.jsp;
 
+import java.util.Iterator;
 import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
@@ -39,7 +40,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.passage.Key;
 import org.crosswire.jsword.versification.BibleBook;
-import org.crosswire.jsword.versification.BibleBookList;
 import org.crosswire.jsword.versification.Versification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -125,10 +125,10 @@ public class VersionStepRequest {
 
         }
 
-        final BibleBookList books = this.versificationForVersion.getBooks();
+        final Iterator<BibleBook> books = this.versificationForVersion.getBookIterator();
         int ii = 0;
-        for (final BibleBook bb : books) {
-            outputBook(bookList, bb, ii);
+        while (books.hasNext()) {
+            outputBook(bookList, this.versificationForVersion, books.next(), ii);
             ii++;
         }
         bookList.append("</table>");
@@ -194,15 +194,17 @@ public class VersionStepRequest {
 
     /**
      * @param bookList a list of books
+     * @param v11n
      * @param bb bible book
      */
-    private void outputBook(final StringBuilder bookList, final BibleBook bb, final int rowNum) {
+    private void outputBook(final StringBuilder bookList, final Versification v11n, final BibleBook bb,
+            final int rowNum) {
 
         if (JSwordUtils.isIntro(bb)) {
             return;
         }
 
-        final Key keyToBook = this.book.getValidKey(bb.getBookName().getShortName());
+        final Key keyToBook = this.book.getValidKey(v11n.getShortName(bb));
         keyToBook.retainAll(this.globalKeyList);
         if (keyToBook.getCardinality() == 0) {
             return;
@@ -217,7 +219,7 @@ public class VersionStepRequest {
         }
         bookList.append("'>");
         bookList.append("<td class='bookName'>");
-        bookList.append(bb.getLongName());
+        bookList.append(v11n.getLongName(bb));
         bookList.append("</td>");
         bookList.append("<td>");
         final int lastChapter = this.versificationForVersion.getLastChapter(bb);
@@ -226,7 +228,7 @@ public class VersionStepRequest {
             bookList.append("<a href='index.jsp?version=");
             bookList.append(this.book.getInitials());
             bookList.append("&reference=");
-            bookList.append(bb.getBookName().getShortName());
+            bookList.append(v11n.getShortName(bb));
             bookList.append("%20");
             bookList.append(ii);
             bookList.append("'>");

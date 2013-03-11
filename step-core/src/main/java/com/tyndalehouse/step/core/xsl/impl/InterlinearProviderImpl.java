@@ -37,10 +37,6 @@ import static com.tyndalehouse.step.core.utils.StringUtils.areAnyBlank;
 import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
 import static com.tyndalehouse.step.core.utils.StringUtils.split;
 import static java.lang.String.format;
-import static org.crosswire.jsword.book.OSISUtil.ATTRIBUTE_W_LEMMA;
-import static org.crosswire.jsword.book.OSISUtil.OSIS_ATTR_OSISID;
-import static org.crosswire.jsword.book.OSISUtil.OSIS_ELEMENT_VERSE;
-import static org.crosswire.jsword.book.OSISUtil.OSIS_ELEMENT_W;
 
 import java.util.ArrayList;
 import java.util.Deque;
@@ -57,6 +53,7 @@ import org.crosswire.jsword.book.BookData;
 import org.crosswire.jsword.book.BookException;
 import org.crosswire.jsword.book.BookMetaData;
 import org.crosswire.jsword.book.Books;
+import org.crosswire.jsword.book.OSISUtil;
 import org.crosswire.jsword.passage.Key;
 import org.crosswire.jsword.passage.KeyUtil;
 import org.crosswire.jsword.passage.NoSuchKeyException;
@@ -64,12 +61,13 @@ import org.crosswire.jsword.passage.Passage;
 import org.crosswire.jsword.versification.Testament;
 import org.crosswire.jsword.versification.Versification;
 import org.crosswire.jsword.versification.system.Versifications;
-import org.jdom.Content;
-import org.jdom.Element;
+import org.jdom2.Content;
+import org.jdom2.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
+import com.tyndalehouse.step.core.utils.StringUtils;
 import com.tyndalehouse.step.core.xsl.InterlinearProvider;
 
 /**
@@ -159,7 +157,7 @@ public class InterlinearProviderImpl implements InterlinearProvider {
 
         // the keys passed in may have multiple references and morphologies, therefore, we need to lookup
         // multiple items.
-        final String[] strongs = split(strong);
+        final String[] strongs = StringUtils.split(strong);
 
         // There are at most strongs.length words, and we might have morphological data to help
         for (final String s : strongs) {
@@ -296,11 +294,11 @@ public class InterlinearProviderImpl implements InterlinearProvider {
     @SuppressWarnings("unchecked")
     private void scanForTextualInformation(final Element element, final String currentVerse) {
         // check to see if we've hit a new verse, if so, we update the verse
-        final String verseToBeUsed = element.getName().equals(OSIS_ELEMENT_VERSE) ? element
-                .getAttributeValue(OSIS_ATTR_OSISID) : currentVerse;
+        final String verseToBeUsed = element.getName().equals(OSISUtil.OSIS_ELEMENT_VERSE) ? element
+                .getAttributeValue(OSISUtil.OSIS_ATTR_OSISID) : currentVerse;
 
         // check to see if we've hit a node of interest
-        if (element.getName().equals(OSIS_ELEMENT_W)) {
+        if (element.getName().equals(OSISUtil.OSIS_ELEMENT_W)) {
             extractTextualInfoFromNode(element, verseToBeUsed);
             return;
         }
@@ -325,7 +323,7 @@ public class InterlinearProviderImpl implements InterlinearProvider {
      * @param verseReference verse reference to use for locality of keying
      */
     private void extractTextualInfoFromNode(final Element element, final String verseReference) {
-        final String strong = element.getAttributeValue(ATTRIBUTE_W_LEMMA);
+        final String strong = element.getAttributeValue(OSISUtil.ATTRIBUTE_W_LEMMA);
         final String word = element.getText();
 
         // do we need to do any manipulation? probably not because we are going to be
@@ -419,7 +417,7 @@ public class InterlinearProviderImpl implements InterlinearProvider {
     private void setTestamentType(final Key key) {
         final Versification v11n = Versifications.instance().getVersification(
                 (String) this.currentBook.getBookMetaData().getProperty(BookMetaData.KEY_VERSIFICATION));
-        final Passage passage = KeyUtil.getPassage(key, v11n);
+        final Passage passage = KeyUtil.getPassage(key);
         this.testament = v11n.getTestament(v11n.getOrdinal(passage.getVerseAt(0)));
     }
 

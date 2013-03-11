@@ -89,10 +89,10 @@
 			<groupId>org.crosswire</groupId>
 			<artifactId>jsword</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>org.jdom</groupId>
-			<artifactId>jdom</artifactId>
-		</dependency>
+<!-- 		<dependency> -->
+<!-- 			<groupId>org.jdom</groupId> -->
+<!-- 			<artifactId>jdom</artifactId> -->
+<!-- 		</dependency> -->
 		<dependency>
 			<groupId>xalan</groupId>
 			<artifactId>xalan</artifactId>
@@ -140,38 +140,38 @@
 
 
 		<!-- transitive dependencies not picked up by jsword -->
-		<dependency>
-			<groupId>javatar</groupId>
-			<artifactId>javatar</artifactId>
-		</dependency>
+<!-- 		<dependency> -->
+<!-- 			<groupId>javatar</groupId> -->
+<!-- 			<artifactId>javatar</artifactId> -->
+<!-- 		</dependency> -->
 
-		<dependency>
-			<groupId>commons-httpclient</groupId>
-			<artifactId>commons-httpclient </artifactId>
-			<scope>test</scope>
-		</dependency>
+<!-- 		<dependency> -->
+<!-- 			<groupId>commons-httpclient</groupId> -->
+<!-- 			<artifactId>commons-httpclient </artifactId> -->
+<!-- 			<scope>test</scope> -->
+<!-- 		</dependency> -->
 
-		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpclient</artifactId>
-			<version>4.1-beta1</version>
-		</dependency>
+<!-- 		<dependency> -->
+<!-- 			<groupId>org.apache.httpcomponents</groupId> -->
+<!-- 			<artifactId>httpclient</artifactId> -->
+<!-- 			<version>4.1-beta1</version> -->
+<!-- 		</dependency> -->
 
-		<dependency>
-			<groupId>org.apache.lucene</groupId>
-			<artifactId>lucene-core</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.lucene</groupId>
-			<artifactId>lucene-snowball</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.lucene</groupId>
-			<artifactId>lucene-smartcn</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.lucene</groupId>
-			<artifactId>lucene-analyzers</artifactId>
-		</dependency>
+<!-- 		<dependency> -->
+<!-- 			<groupId>org.apache.lucene</groupId> -->
+<!-- 			<artifactId>lucene-core</artifactId> -->
+<!-- 		</dependency> -->
+<!-- 		<dependency> -->
+<!-- 			<groupId>org.apache.lucene</groupId> -->
+<!-- 			<artifactId>lucene-snowball</artifactId> -->
+<!-- 		</dependency> -->
+<!-- 		<dependency> -->
+<!-- 			<groupId>org.apache.lucene</groupId> -->
+<!-- 			<artifactId>lucene-smartcn</artifactId> -->
+<!-- 		</dependency> -->
+<!-- 		<dependency> -->
+<!-- 			<groupId>org.apache.lucene</groupId> -->
+<!-- 			<artifactId>lucene-analyzers</artifactId> -->
+<!-- 		</dependency> -->
 	</dependencies>
 </project>

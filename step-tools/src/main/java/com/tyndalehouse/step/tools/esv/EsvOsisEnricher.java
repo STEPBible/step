@@ -24,10 +24,10 @@ import org.apache.commons.io.IOUtils;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.Books;
 import org.crosswire.jsword.passage.NoSuchKeyException;
-import org.jdom.Content;
-import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.jdom.input.SAXBuilder;
+import org.jdom2.Content;
+import org.jdom2.Element;
+import org.jdom2.JDOMException;
+import org.jdom2.input.SAXBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,7 +47,7 @@ public class EsvOsisEnricher {
 
     public static void main(final String[] args) throws JDOMException, IOException, NoSuchKeyException,
             TransformerFactoryConfigurationError, TransformerException {
-        new EsvOsisEnricher().process("D:\\Downloads\\esv-osis-sect.xml", "d:\\temp\\tagging.csv");
+        new EsvOsisEnricher().process("c:\\Downloads\\esv-osis-sect.xml", "c:\\temp\\tagging.csv");
     }
 
     private void process(final String osisFile, final String mappingFile) throws JDOMException, IOException,

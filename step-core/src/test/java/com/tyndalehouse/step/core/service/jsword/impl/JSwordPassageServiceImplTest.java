@@ -33,7 +33,6 @@
 package com.tyndalehouse.step.core.service.jsword.impl;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
@@ -52,12 +51,12 @@ import org.crosswire.jsword.passage.NoSuchKeyException;
 import org.crosswire.jsword.passage.Verse;
 import org.crosswire.jsword.versification.BibleBook;
 import org.crosswire.jsword.versification.system.Versifications;
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.jdom.input.SAXBuilder;
-import org.jdom.output.Format;
-import org.jdom.output.XMLOutputter;
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.JDOMException;
+import org.jdom2.input.SAXBuilder;
+import org.jdom2.output.Format;
+import org.jdom2.output.XMLOutputter;
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -93,9 +92,8 @@ public class JSwordPassageServiceImplTest {
         Key key = book.getKey("John 4");
 
         assertTrue(key.get(0).getOsisID().equals("John.4.0"));
-        key = jsi.normalize(key, Versifications.instance().getDefaultVersification());
-        assertFalse(key.get(0).getOsisID().equals("John.4.0"));
-
+        key = jsi.normalize(key, Versifications.instance().getVersification("KJV"));
+        assertEquals("Joh 4", key.getName());
     }
 
     /**
@@ -138,7 +136,9 @@ public class JSwordPassageServiceImplTest {
                 new JSwordVersificationServiceImpl(), null, null, null);
 
         final Key expandToFullChapter = jsi.expandToFullChapter("Ruth", "1", "22",
-                Books.installed().getBook("KJV"), new Verse(BibleBook.RUTH, 1, 22), 0);
+                Books.installed().getBook("KJV"),
+                new Verse(Versifications.instance().getVersification(Versifications.DEFAULT_V11N),
+                        BibleBook.RUTH, 1, 22), 0);
         LOGGER.debug(expandToFullChapter.getName());
     }
 
@@ -536,12 +536,12 @@ public class JSwordPassageServiceImplTest {
     public void testPassageShrinking() {
         final JSwordPassageServiceImpl service = new JSwordPassageServiceImpl(
                 new JSwordVersificationServiceImpl(), null, null, null);
-        assertEquals("Gen.1.1-Gen.1.31", service.getBookData("ESV", "Gen 1").getKey().getOsisRef());
-        assertEquals("Gen.1.1-Gen.1.31", service.getBookData("ESV", "Gen").getKey().getOsisRef());
-        assertEquals("Gen.1.1-Gen.1.31", service.getBookData("ESV", "Gen 1-50").getKey().getOsisRef());
-        assertEquals("Gen.1.1-Gen.11.23", service.getBookData("ESV", "Gen 1-12").getKey().getOsisRef());
-        assertEquals("Gen.1.1-Gen.1.31", service.getBookData("ESV", " Gen").getKey().getOsisRef());
-        assertEquals("Gen.1.1-Gen.1.31", service.getBookData("ESV", "Gen ").getKey().getOsisRef());
+        assertEquals("Gen.1", service.getBookData("ESV", "Gen 1").getKey().getOsisRef());
+        assertEquals("Gen.1", service.getBookData("ESV", "Gen").getKey().getOsisRef());
+        assertEquals("Gen.1", service.getBookData("ESV", "Gen 1-50").getKey().getOsisRef());
+        assertEquals("Gen.1-Gen.11.22", service.getBookData("ESV", "Gen 1-12").getKey().getOsisRef());
+        assertEquals("Gen.1", service.getBookData("ESV", " Gen").getKey().getOsisRef());
+        assertEquals("Gen.1", service.getBookData("ESV", "Gen ").getKey().getOsisRef());
     }
 
     /**

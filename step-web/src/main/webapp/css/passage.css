@@ -701,3 +701,20 @@ a.related, a.related:visited {
 	color: #696;	
 	
 }
+
+/**
+Analysis tabs
+*/
+.passageContent .ui-tabs {
+    margin-top: 10px;
+}
+
+.passageContent .ui-tabs, .passageContent .ui-tabs-nav {
+    background-color: transparent;
+    background-image: none;
+    border: none;
+}
+
+.passageContent .ui-tabs-panel {
+    border: thin solid lightgrey;
+}

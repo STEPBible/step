@@ -48,7 +48,8 @@ BOOKMARKS_ADD =                     STEP_SERVER_BASE_URL + "favourites/addBookma
 HISTORY_GET =                       STEP_SERVER_BASE_URL + "favourites/getHistory/";
 HISTORY_ADD =                       STEP_SERVER_BASE_URL + "favourites/addHistory/";
 
-ALTERNATIVE_TRANSLATIONS =          STEP_SERVER_BASE_URL + "alternativeTranslations/get/"
+ALTERNATIVE_TRANSLATIONS =          STEP_SERVER_BASE_URL + "alternativeTranslations/get/";
+ANALYSIS_STATS =                    STEP_SERVER_BASE_URL + "analysis/analyseStats/";
 
 BIBLE_GET_MODULES =                 STEP_SERVER_BASE_URL + "bible/getModules/";
 BIBLE_GET_BIBLE_TEXT =              STEP_SERVER_BASE_URL + "bible/getBibleText/";
@@ -72,7 +73,7 @@ MODULE_GET_QUICK_INFO =             STEP_SERVER_BASE_URL + "module/getQuickInfo/
 
 SETUP_INSTALL_FIRST_TIME =          STEP_SERVER_BASE_URL + "setup/installFirstTime/";
 SETUP_GET_PROGRESS =                STEP_SERVER_BASE_URL + "setup/getProgress/";
-SETUP_IS_COMPLETE =                 STEP_SERVER_BASE_URL + "setup/isInstallationComplete/"
+SETUP_IS_COMPLETE =                 STEP_SERVER_BASE_URL + "setup/isInstallationComplete/";
 SETUP_INSTALL_BIBLE =               STEP_SERVER_BASE_URL + "setup/installBible/";
 SETUP_PROGRESS_INSTALL =            STEP_SERVER_BASE_URL + "setup/getProgressOnInstallation/";
 SETUP_PROGRESS_INDEX =              STEP_SERVER_BASE_URL + "setup/getProgressOnIndexing/";
@@ -80,7 +81,7 @@ SETUP_REMOVE_MODULE =               STEP_SERVER_BASE_URL + "setup/removeModule/"
 SETUP_REINDEX =                     STEP_SERVER_BASE_URL + "setup/reIndex/";
 
 SEARCH_DEFAULT =                    STEP_SERVER_BASE_URL + "search/search/";
-SEARCH_ESTIMATES =                  STEP_SERVER_BASE_URL + "search/estimateSearch/"
+SEARCH_ESTIMATES =                  STEP_SERVER_BASE_URL + "search/estimateSearch/";
 SEARCH_SUGGESTIONS =                STEP_SERVER_BASE_URL + "search/getLexicalSuggestions/";
 
 SUBJECT_VERSES =                    STEP_SERVER_BASE_URL + "search/getSubjectVerses/";
@@ -119,7 +120,7 @@ function toggleMenuItem(menuItem) {
         },
         passageId : passageId
     });
-};
+}
 
 function getParentMenuName(menuItem) {
     var menu = $(menuItem).closest("li[menu-name]");
@@ -134,6 +135,7 @@ function getParentMenuName(menuItem) {
  * 
  * @param element
  * @param passageReference
+ * @param passageIdOrElement
  */
 function viewPassage(passageIdOrElement, passageReference, element) {
     // only shout preview if the preview bar is not displaying options on it.
@@ -150,14 +152,6 @@ function viewPassage(passageIdOrElement, passageReference, element) {
         });
     }
 }
-
-
-/**
- * shows the login popup
- */
-function login() {
-    $.shout("show-login-popup");
-};
 
 
 /**
@@ -183,28 +177,6 @@ function showDef(source, passage) {
         morph : morph,
         source : source,
         passageId: passageId
-    });
-};
-
-/**
- * TODO: move this out of here to utils.js if we have more utility
- * classes/functions helper function for morph and strongs
- */
-function showInfo(tag, sourceElement) {
-    // trigger the parent event - to show everything
-    $(sourceElement).parent().click();
-
-    // need to find what event is coming in, to get the clicked element and pass
-    // that down
-    $("#lexiconDefinition span:contains(" + tag + ")").parent().click();
-};
-
-function showArticle(headword, instance) {
-    var passageId = $("#selectedPane").val();
-
-    $.getSafe(DICTIONARY_GET_BY_HEADWORD + headword + "/" + instance, function(data) {
-        // TODO finish this off...
-        $(".passageContainer[passage-id = " + passageId + "]").html(data.text);
     });
 }
 

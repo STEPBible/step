@@ -113,6 +113,7 @@ public class BibleInformationServiceImpl implements BibleInformationService {
      * @param clientSessionProvider the client session provider
      * @param entityManager the entity manager
      * @param jswordVersification the jsword versification
+     * @param subjectSearchService the subject search service
      */
     @Inject
     public BibleInformationServiceImpl(@Named("defaultVersions") final List<String> defaultVersions,

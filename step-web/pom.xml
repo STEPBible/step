@@ -172,6 +172,7 @@
 							    <jsSourceFile>libs/jquery-1.8.2.min.js</jsSourceFile>
 								<jsSourceFile>libs/jquery-ui-1.8.23.custom.min.js</jsSourceFile>
 								<jsSourceFile>libs/sprintf-0.7-beta1.js</jsSourceFile>
+								<jsSourceFile>libs/jquery.tagcloud.js</jsSourceFile>
 							    <jsSourceFile>js/jquery-extensions/jquery-qtip.js</jsSourceFile>
 							    <jsSourceFile>js/jquery-extensions/jquery-hover-intent.js</jsSourceFile>
 							    <jsSourceFile>js/jquery-extensions/jquery-cookie.js</jsSourceFile>

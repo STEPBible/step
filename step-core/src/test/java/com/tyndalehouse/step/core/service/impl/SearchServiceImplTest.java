@@ -82,6 +82,6 @@ public class SearchServiceImplTest {
 
         final JSwordSearchServiceImpl jswordSearch = new JSwordSearchServiceImpl(versificationService, jsword);
         return new SearchServiceImpl(jswordSearch, jsword, new SubjectSearchServiceImpl(entityManager,
-                jswordSearch), new TimelineServiceImpl(entityManager, jsword), entityManager);
+                jswordSearch, jsword), new TimelineServiceImpl(entityManager, jsword), entityManager);
     }
 }

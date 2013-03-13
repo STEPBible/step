@@ -30,42 +30,48 @@
  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
-package com.tyndalehouse.step.core.service.search;
+package com.tyndalehouse.step.core.models.stats;
 
-import com.tyndalehouse.step.core.models.search.SearchResult;
-import com.tyndalehouse.step.core.service.impl.SearchQuery;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * Searches for a specific subject
- * 
  * @author chrisburrell
- * 
  */
-public interface SubjectSearchService {
+public class PassageStat {
+    private Map<String, Integer> stats = new HashMap<String, Integer>(128);
 
     /**
-     * Runs a subject search
-     * 
-     * @param sq the search query to run
-     * @return the results obtained by carrying out the search
+     * Used for serialisation
      */
-    SearchResult search(SearchQuery sq);
+    public PassageStat() {
+    }
 
     /**
-     * Search by a reference, or references if separated by a space.
+     * Adds the word to the current stats
      * 
-     * @param reference the reference to be looked up in the expanded references fields
-     * @return the search result a list of topics that match.
+     * @param word the word
      */
-    SearchResult searchByReference(String reference);
+    public void addWord(final String word) {
+        Integer counts = this.stats.get(word);
+        if (counts == null) {
+            counts = 0;
+        }
+
+        this.stats.put(word, counts + 1);
+    }
 
     /**
-     * First resolves the reference and expands it to its full form (e.g. Gen.1.1-3 goes to Gen.1.1 Gen.1.2
-     * Gen 1.3), Then carries out a search against all subjects.
-     * 
-     * @param version the version
-     * @param references the references
-     * @return the search result
+     * @return the stats
      */
-    SearchResult searchByMultipleReferences(String version, String references);
+    public Map<String, Integer> getStats() {
+        return this.stats;
+    }
+
+    /**
+     * @param stats the new stats
+     */
+    public void setStats(final Map<String,Integer> stats) {
+        this.stats = stats;
+    }
 }

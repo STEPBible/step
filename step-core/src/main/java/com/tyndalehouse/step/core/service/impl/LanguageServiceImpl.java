@@ -142,7 +142,7 @@ public class LanguageServiceImpl implements LanguageService {
      * Sort languages by their original language name, and puts the current locale language at the top.
      * 
      * @param currentLanguage the current language
-     * @param languages
+     * @param languages a list of languages to be sorted
      */
     private void sortLanguages(final Language currentLanguage, final List<Language> languages) {
         // sort list of languages

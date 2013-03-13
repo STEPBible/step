@@ -30,42 +30,22 @@
  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
-package com.tyndalehouse.step.core.service.search;
+package com.tyndalehouse.step.core.service.jsword.impl;
 
-import com.tyndalehouse.step.core.models.search.SearchResult;
-import com.tyndalehouse.step.core.service.impl.SearchQuery;
+import java.util.regex.Pattern;
+
+import org.junit.Test;
 
 /**
- * Searches for a specific subject
- * 
- * @author chrisburrell
- * 
+ * The Class JSwordAnalysisServiceImplTest.
  */
-public interface SubjectSearchService {
+public class JSwordAnalysisServiceImplTest {
 
     /**
-     * Runs a subject search
-     * 
-     * @param sq the search query to run
-     * @return the results obtained by carrying out the search
+     * Test pattern is correct.
      */
-    SearchResult search(SearchQuery sq);
-
-    /**
-     * Search by a reference, or references if separated by a space.
-     * 
-     * @param reference the reference to be looked up in the expanded references fields
-     * @return the search result a list of topics that match.
-     */
-    SearchResult searchByReference(String reference);
-
-    /**
-     * First resolves the reference and expands it to its full form (e.g. Gen.1.1-3 goes to Gen.1.1 Gen.1.2
-     * Gen 1.3), Then carries out a search against all subjects.
-     * 
-     * @param version the version
-     * @param references the references
-     * @return the search result
-     */
-    SearchResult searchByMultipleReferences(String version, String references);
+    @Test
+    public void testPatternIsCorrect() {
+        Pattern.compile(JSwordAnalysisServiceImpl.WORD_SPLIT);
+    }
 }

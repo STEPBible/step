@@ -30,42 +30,38 @@
  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
-package com.tyndalehouse.step.core.service.search;
+package com.tyndalehouse.step.rest.controllers;
 
-import com.tyndalehouse.step.core.models.search.SearchResult;
-import com.tyndalehouse.step.core.service.impl.SearchQuery;
+import javax.inject.Inject;
+
+import com.tyndalehouse.step.core.models.stats.CombinedPassageStats;
+import com.tyndalehouse.step.core.service.AnalysisService;
 
 /**
- * Searches for a specific subject
- * 
- * @author chrisburrell
- * 
+ * Exposes various analytical tools
  */
-public interface SubjectSearchService {
+public class AnalysisController {
+    private final AnalysisService analysis;
 
     /**
-     * Runs a subject search
+     * Instantiates a new analysis controller.
      * 
-     * @param sq the search query to run
-     * @return the results obtained by carrying out the search
+     * @param analysis the analysis
      */
-    SearchResult search(SearchQuery sq);
+    @Inject
+    public AnalysisController(final AnalysisService analysis) {
+        this.analysis = analysis;
+    }
 
     /**
-     * Search by a reference, or references if separated by a space.
-     * 
-     * @param reference the reference to be looked up in the expanded references fields
-     * @return the search result a list of topics that match.
-     */
-    SearchResult searchByReference(String reference);
-
-    /**
-     * First resolves the reference and expands it to its full form (e.g. Gen.1.1-3 goes to Gen.1.1 Gen.1.2
-     * Gen 1.3), Then carries out a search against all subjects.
+     * Analyse stats for a given passage in a given book, obtaining the word, subject and strong stats from
+     * them.
      * 
      * @param version the version
-     * @param references the references
-     * @return the search result
+     * @param reference the reference
+     * @return the combined passage stats
      */
-    SearchResult searchByMultipleReferences(String version, String references);
+    public CombinedPassageStats analyseStats(final String version, final String reference) {
+        return this.analysis.getStatsForPassage(version, reference);
+    }
 }

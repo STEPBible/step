@@ -201,9 +201,6 @@ public class JSwordStrongNumberHelper {
                 final BookAndBibleCount value = strong.getValue();
                 value.setBible(bible);
                 value.setBook(book);
-                bible = 0;
-                book = 0;
-
             }
         } catch (final IOException e) {
             throw new StepInternalException(e.getMessage(), e);
@@ -292,9 +289,8 @@ public class JSwordStrongNumberHelper {
     @SuppressWarnings({ "unchecked", "serial" })
     private List<Element> getOsisElements(final Key key) throws NoSuchKeyException, BookException {
         final BookData data = new BookData(STRONG_REF_VERSION_BOOK, key);
-        final List<Element> elements = data.getOsisFragment().getContent(
+        return data.getOsisFragment().getContent(
                 new ElementFilter(OSIS_ELEMENT_VERSE));
-        return elements;
     }
 
     /**
@@ -314,8 +310,6 @@ public class JSwordStrongNumberHelper {
 
     /**
      * Gets the related verses.
-     * 
-     * @return the related verses
      */
     private void findRelatedVerses() {
         this.relatedVerses = new HashMap<String, List<String>>(this.verseStrongs.size() * 2);

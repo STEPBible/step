@@ -911,8 +911,6 @@ public class SearchServiceImpl implements SearchService {
     /**
      * Runs the transliteration rules on the input in an attempt to match an entry in the lexicon
      * 
-     * @param sq
-     * 
      * @param query the query to be found
      * @param isGreek true to indicate Greek, false to indicate Hebrew
      * @return the strongs that have been found/matched.

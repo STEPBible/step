@@ -36,8 +36,8 @@ public class OsisReader {
      * @throws Exception any kind of exception
      */
     public static void main(final String[] args) throws Exception {
-        final String version = "WHNU";
-        final String ref = "Mat.1.9";
+        final String version = "JPS";
+        final String ref = "Ps.51";
 
         final Book currentBook = Books.installed().getBook(version);
 

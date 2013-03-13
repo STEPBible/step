@@ -36,10 +36,6 @@ step.passage = {
         return $(element).closest(".passageContainer").attr("passage-id");
     },
 
-    getReference : function(passageId) {
-        return $(".passageContainer[passage-id = " + passageId + "] .passageReference").val();
-    },
-    
     getDisplayMode : function(passageId) {
         var container = step.util.getPassageContainer(passageId);
         var level = $(".advancedSearch fieldset[name='SEARCH_PASSAGE']", container).detailSlider("value");
@@ -69,18 +65,17 @@ step.passage = {
         
         return $(".passageReference", step.util.getPassageContainer(syncMode)).val();
     },
-    
+
     changePassage: function(passageId) {
-        var container = step.util.getPassageContainer(passageId);
         var lookupVersion = step.state.passage.version(passageId);
 
-        //get the real value from the textbox
+        //get the real value from the text box
         var lookupReference = this.getReference(passageId);
         var options = step.state.passage.options(passageId);
         var display = this.getDisplayMode(passageId);
         var interlinearMode = display.displayMode;
         var interlinearVersion = display.displayVersions;
-        
+
         var self = this;
         if (!step.util.raiseErrorIfBlank(lookupVersion, __s.error_version_missing)
                 || !step.util.raiseErrorIfBlank(lookupReference, __s.error_reference_missing)) {
@@ -93,47 +88,48 @@ step.passage = {
         } else {
             url += "/";
         }
-        
+
         if (interlinearVersion && interlinearVersion.length != 0) {
             url += "/" + interlinearVersion.toUpperCase();
             url += "/" + interlinearMode;
         }
-        
+
         if(this.lastUrls[passageId] == url) {
             //execute all callbacks only
             step.passage.executeCallbacks(passageId);
             return;
         }
         this.lastUrls[passageId] = url;
-        
+
 
         // send to server
         var startTime = new Date().getTime();
 
         $.getPassageSafe({
-            url : url, 
+            url : url,
             callback:  function(text) {
                 step.util.trackAnalytics("passage", "loaded", "time", new Date().getTime() - startTime);
                 step.util.trackAnalytics("passage", "version", lookupVersion);
                 step.util.trackAnalytics("passage", "reference", text.reference);
-                
+
                 step.state.passage.range(passageId, text.startRange, text.endRange, text.multipleRanges);
-    
+
                 // we get html back, so we insert into passage:
                 var passageContent = step.util.getPassageContent(passageId);
                 self._setPassageContent(passageId, passageContent, text);
-                
+
                 // passage change was successful, so we let the rest of the UI know
                 $.shout("passage-changed", {
                     passageId : passageId
                 });
-    
+
                 // execute all callbacks
                 step.passage.executeCallbacks(passageId);
-                
-    
+
+
                 //finally add handlers to elements containing xref
                 self._doVerseNumbers(passageId, passageContent, options, interlinearMode, text.reference);
+                self._doStats(passageId, passageContent, lookupVersion, text.reference);
                 self._doFonts(passageId, passageContent, interlinearMode, interlinearVersion);
                 self._doInlineNotes(passageId, passageContent);
                 self._doNonInlineNotes(passageContent);
@@ -148,26 +144,26 @@ step.passage = {
                 step.state.passage.reference(passageId, text.reference, false);
                 self._doVersions(passageId, passageContent);
                 self._doHash(passageId, text.reference, lookupVersion, options, interlinearMode, interlinearVersion);
-            }, 
-            passageId: passageId, 
+            },
+            passageId: passageId,
             level: 'error'
          });
     },
-    
+
     _updatePageTitle : function(passageId, passageContent, version, reference) {
         if(passageId == 0) {
             $("title").html(version + " " + reference + " " + $(".verse", passageContent).text().replace("1", ""));
         }
     },
-    
+
     _addStrongHandlers : function(passageId, passageContent) {
         step.util.ui.addStrongHandlers(passageId, passageContent)
     },
-    
+
     _redoTextSize : function(passageId, passageContent) {
 
-        var contentHolder = $(".passageContentHolder", passageContent); 
-        
+        var contentHolder = $(".passageContentHolder", passageContent);
+
         //we're only going to be cater for one font size initially, so pick the major version one.
         var fontKey = step.passage.ui.getFontKey(contentHolder);
         var fontSizes = step.passage.ui.fontSizes[passageId];
@@ -175,23 +171,23 @@ step.passage = {
         if(fontSizes != undefined) {
             fontSize = fontSizes[fontKey];
         }
-        
+
         if(fontSize != undefined) {
             contentHolder.css("font-size", fontSize);
         }
     },
-    
+
     _doTransliterations : function(passageId, passageContent) {
         $.each($(".stepTransliteration", passageContent), function(i, item) {
-           step.util.ui.markUpTransliteration($(this)); 
+           step.util.ui.markUpTransliteration($(this));
         });
     },
-    
+
     _doFonts : function(passageId, passageContent, interlinearMode, interlinearVersions) {
         //interlinear or a display option
         var displayOptions = step.state.passage.options(passageId);
-        var isInterlinearOption = displayOptions.indexOf("TRANSLITERATION") != -1 || displayOptions.indexOf("GREEK_VOCAB")  != -1 || displayOptions.indexOf("ENGLISH_VOCAB")  != -1; 
-        
+        var isInterlinearOption = displayOptions.indexOf("TRANSLITERATION") != -1 || displayOptions.indexOf("GREEK_VOCAB")  != -1 || displayOptions.indexOf("ENGLISH_VOCAB")  != -1;
+
         if((interlinearVersions != null && interlinearVersions.length > 0 && interlinearMode == "INTERLINEAR") || isInterlinearOption) {
             $(".interlinear").find("span.interlinear, .ancientVocab, .text", passageContent).filter(function() {
                 return step.util.isUnicode(this);
@@ -199,41 +195,41 @@ step.passage = {
                 return step.util.isHebrew(this);
             }).addClass("hbFont");
         }
-        
+
         if(interlinearMode == "" || interlinearMode == undefined || interlinearVersions  == undefined || interlinearVersions == "") {
             //examine the first verse's contents, remove spaces and numbers
             var val = $(".verse:first", passageContent);
             if(step.util.isUnicode(val)) {
-                var passageContentHolder = $(".passageContentHolder", passageContent);    
+                var passageContentHolder = $(".passageContentHolder", passageContent);
                 passageContentHolder.addClass("unicodeFont");
-                    
+
                     if(step.util.isHebrew(val)) {
                         passageContentHolder.addClass("hbFont");
                     }
             }
         }
     },
-    
+
     _setPassageContent : function(passageId, passageContent, serverResponse) {
         //first check that we have non-xgen elements
         if($(serverResponse.value).children().not(".xgen").size() == 0) {
             var reference = step.state.passage.reference(passageId)
-            
+
             step.util.raiseInfo(passageId, sprintf(__s.error_bible_doesn_t_have_passage, reference), 'info', true);
             passageContent.html("");
         } else {
             passageContent.html(serverResponse.value);
         }
     },
-    
+
     _doNonInlineNotes : function(passageContent) {
         var verseNotes = $(".verse .note", passageContent);
         var nonInlineNotes = verseNotes.not(verseNotes.has(".inlineNote"));
-        
+
         nonInlineNotes.each(function(i, item) {
             var link = $("a", this);
             var passageContainer = step.util.getPassageContainer(link);
-            
+
             $(link).hover(function() {
                 $(".notesPane strong", passageContainer).filter(function() {
                     return $(this).text() == link.text();
@@ -243,19 +239,19 @@ step.passage = {
                     return $(this).text() == link.text();
                 }).closest(".margin").removeClass("ui-state-highlight");
             });
-        });  
+        });
     },
-    
+
     _doInlineNotes : function(passageId, passageContent) {
         var myPosition = passageId == 0 ? "left" : "right";
-        var atPosition = passageId == 0 ? "right" : "left"; 
+        var atPosition = passageId == 0 ? "right" : "left";
 
         $(".verse .note", passageContent).has(".inlineNote").each(function(i, item) {
             var link = $("a", this);
             var note = $(".inlineNote", this);
-            
+
             link.attr("title", note.html());
-            
+
             $(link).qtip({
                     position: {
                         my: "center " + myPosition,
@@ -264,18 +260,18 @@ step.passage = {
                     style: {
                         classes : "visibleInlineNote"
                     },
-                
+
                     events : {
                         show : function() {
                             var qtipApi = $(this).qtip("api");
                             var yPosition = qtipApi.elements.target.offset().top;
                             var centerPane = $("#centerPane");
                             var xPosition = centerPane.offset().left;
-                            
+
                             if(passageId == 1) {
                                 xPosition += centerPane.width();
                             }
-                            
+
                             var currentPosition = $(this).qtip("option", "position");
                             currentPosition.target = [xPosition, yPosition];
                         }
@@ -283,45 +279,101 @@ step.passage = {
             });
         });
     },
-    
+
     _adjustTextAlignment : function(passageContent) {
         //we right align
-        
+
         //if we have only rtl, we right-align, so
         //A- if any ltr, then return immediately
         if($(".ltr", passageContent).size() > 0 || $("[dir='ltr']", passageContent).size() > 0 || $(".ltrDirection", passageContent).size() > 0) {
             return;
-        } 
-        
+        }
+
         //if no ltr, then assume, rtl
         $(".passageContentHolder", passageContent).addClass("rtlDirection");
     },
-    
+
+    /**
+     * Gets the stats for a passage and shows a wordle
+     * @param passageId the passage ID
+     * @param passageContent the passage Content
+     * @param version the version
+     * @param reference the reference
+     * @private
+     */
+    _doStats: function (passageId, passageContent, version, reference) {
+        var self = this;
+        $.getSafe(ANALYSIS_STATS, [version, reference], function(data) {
+            //create 3 tabs
+            var linksToTabs = $("<ul></ul>");
+
+            var headers = [__s.word_stats, __s.strong_stats, __s.subject_stats];
+            var tabNames = ["wordStat", "strongStat", "subjectStat"];
+            for(var i = 0; i < headers.length; i++) {
+                linksToTabs.append("<li><a href='#" + tabNames[i] + "'>" + headers[i] + "</a></li>");
+            }
+
+            var tabHolder = $("<div></div>");
+            tabHolder.append(linksToTabs);
+
+            //create a link with rel for each bit in stat.
+            tabHolder.append(self._createWordleTab(data.wordStat, tabNames[0]));
+            tabHolder.append(self._createWordleTab(data.strongsStat, tabNames[1]));
+            tabHolder.append(self._createWordleTab(data.subjectStat, tabNames[2]));
+
+            $(tabHolder).tabs();
+
+            passageContent.append(tabHolder);
+        });
+    },
+
+    _createWordleTab : function(wordleData, headerName) {
+        var container = $("<div></div>").attr('id', headerName);
+        $.each(wordleData.stats, function(key, value) {
+            var wordLink = $("<a></a>").attr('href', '#').attr('rel', value).html(key);
+            container.append(wordLink);
+            container.append(" ");
+        });
+
+        $("a", container).tagcloud({
+            size : {
+                start : 9,
+                end: 28,
+                unit : "px"
+            },
+            color : {
+                start : "#000",
+                end : "#696"
+            }
+        });
+        return container;
+    },
+
     _doVerseNumbers : function(passageId, passageContent, options, interlinearMode, reference) {
         //if interleaved mode or column mode, then we want this to continue
         //if no options, or no verse numbers, then exit
         var hasVerseNumbersByDefault = interlinearMode != undefined && interlinearMode != "" && interlinearMode != 'INTERLINEAR';
-        
+
         if(options == undefined || (options.indexOf("VERSE_NUMBERS") == -1 && !hasVerseNumbersByDefault)) {
             //nothing to do:
             return;
         }
-        
+
         var book = reference;
         var firstSpace = reference.indexOf(' ');
         if(firstSpace != -1) {
             book = reference.substring(0, firstSpace);
         }
-        
+
         var self = this;
         //otherwise, exciting new strong numbers to apply:
         $.getSafe(BIBLE_GET_STRONGS_AND_SUBJECTS, [reference], function(data) {
             $.each(data.strongData, function(key, value) {
-                //there may be multiple values of this kind of format: 
+                //there may be multiple values of this kind of format:
                 var text = "<table class='verseNumberStrongs'>";
                 var bookKey = key.substring(0, key.indexOf('.'));
                 var internalVerseLink = $("a[name='" + key + "']", passageContent);
-                
+
                 if(internalVerseLink[0] == undefined) {
                     //no point in continuing here, since we have no verse to attach it to.
                     return;

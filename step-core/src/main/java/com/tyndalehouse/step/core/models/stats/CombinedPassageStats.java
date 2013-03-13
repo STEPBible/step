@@ -30,42 +30,80 @@
  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
-package com.tyndalehouse.step.core.service.search;
+package com.tyndalehouse.step.core.models.stats;
 
-import com.tyndalehouse.step.core.models.search.SearchResult;
-import com.tyndalehouse.step.core.service.impl.SearchQuery;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
- * Searches for a specific subject
- * 
- * @author chrisburrell
- * 
+ * Combined passage stats has stats based on word occurrences, subjects as well as strong numbers.
  */
-public interface SubjectSearchService {
+public class CombinedPassageStats {
+    private PassageStat wordStat;
+    private PassageStat strongsStat;
+    private PassageStat subjectStat;
 
     /**
-     * Runs a subject search
-     * 
-     * @param sq the search query to run
-     * @return the results obtained by carrying out the search
+     * @return the wordStat
      */
-    SearchResult search(SearchQuery sq);
+    public PassageStat getWordStat() {
+        return this.wordStat;
+    }
 
     /**
-     * Search by a reference, or references if separated by a space.
-     * 
-     * @param reference the reference to be looked up in the expanded references fields
-     * @return the search result a list of topics that match.
+     * @param wordStat the wordStat to set
      */
-    SearchResult searchByReference(String reference);
+    public void setWordStat(final PassageStat wordStat) {
+        this.wordStat = wordStat;
+    }
 
     /**
-     * First resolves the reference and expands it to its full form (e.g. Gen.1.1-3 goes to Gen.1.1 Gen.1.2
-     * Gen 1.3), Then carries out a search against all subjects.
-     * 
-     * @param version the version
-     * @param references the references
-     * @return the search result
+     * @return the strongsStat
      */
-    SearchResult searchByMultipleReferences(String version, String references);
+    public PassageStat getStrongsStat() {
+        return this.strongsStat;
+    }
+
+    /**
+     * @param strongsStat the strongsStat to set
+     */
+    public void setStrongsStat(final PassageStat strongsStat) {
+        this.strongsStat = strongsStat;
+    }
+
+    /**
+     * @return the subjectStat
+     */
+    public PassageStat getSubjectStat() {
+        return this.subjectStat;
+    }
+
+    /**
+     * @param subjectStat the subjectStat to set
+     */
+    public void setSubjectStat(final PassageStat subjectStat) {
+        this.subjectStat = subjectStat;
+    }
+
+    public void trim() {
+        trim(this.wordStat);
+        trim(this.strongsStat);
+        trim(this.subjectStat);
+    }
+
+    /**
+     * Trims any result with just 1 occurence out of the equation
+     * @param wordStat
+     */
+    private void trim(final PassageStat wordStat) {
+        final Map<String,Integer> stats = wordStat.getStats();
+
+        final Iterator<Map.Entry<String,Integer>> iterator = stats.entrySet().iterator();
+        while(iterator.hasNext()) {
+            final Map.Entry<String, Integer> next = iterator.next();
+            if(next.getValue() == 1) {
+                iterator.remove();
+            }
+        }
+    }
 }

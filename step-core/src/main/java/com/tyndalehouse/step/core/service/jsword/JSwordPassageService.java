@@ -161,7 +161,7 @@ public interface JSwordPassageService {
     String getPlainText(String version, String reference, boolean firstVerse);
 
     /**
-     * Gets a String representation of all references
+     * Gets a String representation of all references, separated by a space.
      * 
      * @param references the list of references
      * @param version the version

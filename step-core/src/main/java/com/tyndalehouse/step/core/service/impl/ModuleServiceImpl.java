@@ -66,7 +66,6 @@ public class ModuleServiceImpl implements ModuleService {
     /**
      * constructs a service to give module information and content.
      * 
-     * @param lexiconRefs the default references that should be used
      * @param jswordModuleService the service to register and manipulate modules
      * @param clientSession the client session to validate security
      */

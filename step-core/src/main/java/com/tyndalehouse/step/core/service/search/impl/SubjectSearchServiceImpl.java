@@ -1,3 +1,35 @@
+/*******************************************************************************
+ * Copyright (c) 2012, Directors of the Tyndale STEP Project
+ * All rights reserved.
+ * 
+ * Redistribution and use in source and binary forms, with or without 
+ * modification, are permitted provided that the following conditions 
+ * are met:
+ * 
+ * Redistributions of source code must retain the above copyright 
+ * notice, this list of conditions and the following disclaimer.
+ * Redistributions in binary form must reproduce the above copyright 
+ * notice, this list of conditions and the following disclaimer in 
+ * the documentation and/or other materials provided with the 
+ * distribution.
+ * Neither the name of the Tyndale House, Cambridge (www.TyndaleHouse.com)  
+ * nor the names of its contributors may be used to endorse or promote 
+ * products derived from this software without specific prior written 
+ * permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
+ * COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING 
+ * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
+ * THE POSSIBILITY OF SUCH DAMAGE.
+ ******************************************************************************/
 package com.tyndalehouse.step.core.service.search.impl;
 
 import static com.tyndalehouse.step.core.models.LookupOption.HEADINGS_ONLY;
@@ -23,6 +55,7 @@ import com.tyndalehouse.step.core.models.search.SearchResult;
 import com.tyndalehouse.step.core.models.search.SubjectHeadingSearchEntry;
 import com.tyndalehouse.step.core.service.impl.IndividualSearch;
 import com.tyndalehouse.step.core.service.impl.SearchQuery;
+import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import com.tyndalehouse.step.core.service.jsword.JSwordSearchService;
 import com.tyndalehouse.step.core.service.search.SubjectSearchService;
 import com.tyndalehouse.step.core.utils.StringUtils;
@@ -38,15 +71,28 @@ public class SubjectSearchServiceImpl implements SubjectSearchService {
     private static final Logger LOGGER = LoggerFactory.getLogger(SubjectSearchServiceImpl.class);
     private final EntityIndexReader naves;
     private final JSwordSearchService jswordSearch;
+    private final JSwordPassageService jswordPassage;
 
     /**
+     * Instantiates a new subject search service impl.
+     * 
      * @param entityManager an entity manager providing access to all the different entities.
      * @param jswordSearch the search service for text searching in jsword
+     * @param jswordPassage the jsword passage
      */
     @Inject
-    public SubjectSearchServiceImpl(final EntityManager entityManager, final JSwordSearchService jswordSearch) {
+    public SubjectSearchServiceImpl(final EntityManager entityManager,
+            final JSwordSearchService jswordSearch, final JSwordPassageService jswordPassage) {
         this.jswordSearch = jswordSearch;
+        this.jswordPassage = jswordPassage;
         this.naves = entityManager.getReader("nave");
+    }
+
+    @Override
+    public SearchResult searchByMultipleReferences(final String version, final String references) {
+        final String allReferences = this.jswordPassage.getAllReferences(references, version);
+        return searchByReference(allReferences);
+
     }
 
     @Override
@@ -125,6 +171,7 @@ public class SubjectSearchServiceImpl implements SubjectSearchService {
             sb.append(s);
         }
 
+        // TODO: sb is never used, should it be?
         final EntityDoc[] results = this.naves.searchSingleColumn("rootStem", query, false);
         return getHeadingsSearchEntries(start, results);
     }

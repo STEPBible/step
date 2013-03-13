@@ -56,6 +56,7 @@
 	    <script src="libs/jquery-1.8.2.min.js" type="text/javascript"></script>
 		<script src="libs/jquery-ui-1.8.23.custom.min.js" type="text/javascript"></script>
 		<script src="libs/sprintf-0.7-beta1.js" type="text/javascript"></script>
+		<script src="libs/jquery.tagcloud.js" type="text/javascript"></script>
 <!-- 		<script src="libs/jquery-ui-1.9-beta.min.js" type="text/javascript"></script> -->
 	    <script src="js/jquery-extensions/jquery-qtip.js" type="text/javascript"></script>
 	    <script src="js/jquery-extensions/jquery-hover-intent.js" type="text/javascript"></script>

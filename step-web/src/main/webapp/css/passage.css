@@ -147,7 +147,9 @@ span[strong]:hover {
 .verseNumber {
 	vertical-align: top;
 	font-size: 6pt;
-	padding-right: 2px;
+	margin-right: 2px;
+    background-color: #eef;
+    cursor: hand;
 }
 
 .interlinear .verseNumber {

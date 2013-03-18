@@ -219,28 +219,32 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
     }
 
     /**
+     * Gets the non intro next book.
+     * 
      * @param bibleBook the current book
-     * @param books the list of books
+     * @param v11n the v11n
      * @return the next bible book that is not an introduction
      */
     private BibleBook getNonIntroNextBook(final BibleBook bibleBook, final Versification v11n) {
         BibleBook nextBook = bibleBook;
         do {
             nextBook = v11n.getNextBook(nextBook);
-        } while (nextBook != null && isIntro(nextBook, v11n));
+        } while (nextBook != null && isIntro(nextBook));
         return nextBook;
     }
 
     /**
+     * Gets the non intro previous book.
+     * 
      * @param bibleBook the current book
-     * @param books the list of books
+     * @param v11n the v11n
      * @return the previous bible book that is not an introduction
-     **/
+     */
     private BibleBook getNonIntroPreviousBook(final BibleBook bibleBook, final Versification v11n) {
         BibleBook previousBook = bibleBook;
         do {
             previousBook = v11n.getPreviousBook(previousBook);
-        } while (previousBook != null && isIntro(previousBook, v11n));
+        } while (previousBook != null && isIntro(previousBook));
         return previousBook;
     }
 
@@ -248,7 +252,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
      * @param book the book to test
      * @return true to indicate the book is an introduction to the NT/OT/Bible
      */
-    private boolean isIntro(final BibleBook book, final Versification v11n) {
+    private boolean isIntro(final BibleBook book) {
         return book.getOSIS().startsWith("Intro");
     }
 
@@ -575,13 +579,9 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
 
     /**
      * @param requestedPassage the key passage object
-     * @param v11n the versification that goes with the reference
      * @return true if represents a whole book.
      */
-    private boolean isWholeBook(final Versification v11n, final Passage requestedPassage) {
-        // remove verse 0 if present
-        // normalize(requestedPassage, v11n);
-
+    private boolean isWholeBook(final Passage requestedPassage) {
         final VerseRange rangeAt = requestedPassage.getRangeAt(0, RestrictionType.NONE);
 
         // spanning multiple books?
@@ -594,29 +594,11 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
             return false;
         }
 
-        // first verse is verse 0 or verse 1
         final Verse firstVerse = rangeAt.getStart();
-
-        if (!isFirstVerseInChapter(firstVerse)) {
-            return false;
-        }
-
-        // start of book has been established, check end of book
-        final Verse lastVerse = rangeAt.getEnd();
-        if (!v11n.isEndOfBook(lastVerse)) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * @param firstVerse a verse
-     * @return true if isFirstChapter and isFirstVerse also return true
-     */
-    private boolean isFirstVerseInChapter(final Verse firstVerse) {
+        final Verse endVerse = rangeAt.getEnd();
         final Versification versification = firstVerse.getVersification();
-        return versification.isStartOfChapter(firstVerse) && versification.isStartOfChapter(firstVerse);
+
+        return versification.isStartOfBook(firstVerse) && versification.isEndOfBook(endVerse);
     }
 
     /**
@@ -645,7 +627,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
 
         // if we're looking at a whole book, then we will deal with it in one way,
         final Passage requestedPassage = KeyUtil.getPassage(key);
-        if (requestedPassage.countRanges(RestrictionType.NONE) == 1 && isWholeBook(v11n, requestedPassage)) {
+        if (requestedPassage.countRanges(RestrictionType.NONE) == 1 && isWholeBook(requestedPassage)) {
             key = trimExceedingVersesFromWholeReference(v11n, requestedPassage);
         } else if (cardinality > MAX_VERSES_RETRIEVED) {
             requestedPassage.trimVerses(MAX_VERSES_RETRIEVED);

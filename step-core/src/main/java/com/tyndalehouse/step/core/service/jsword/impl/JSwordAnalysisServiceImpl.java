@@ -35,8 +35,10 @@ package com.tyndalehouse.step.core.service.jsword.impl;
 import static com.tyndalehouse.step.core.utils.StringUtils.split;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import com.tyndalehouse.step.core.utils.StringConversionUtils;
+import com.tyndalehouse.step.core.utils.StringUtils;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.BookData;
 import org.crosswire.jsword.book.BookException;
@@ -48,6 +50,10 @@ import com.tyndalehouse.step.core.models.stats.CombinedPassageStats;
 import com.tyndalehouse.step.core.models.stats.PassageStat;
 import com.tyndalehouse.step.core.service.jsword.JSwordAnalysisService;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * The Class JSwordAnalysisServiceImpl.
  * 
@@ -57,6 +63,8 @@ public class JSwordAnalysisServiceImpl implements JSwordAnalysisService {
     static final String WORD_SPLIT = "[,./<>?!;:'\\[\\]\\{\\}!\"\\-\u2013 ]+";
     private static final String STRONG_VERSION = "KJV";
     private final JSwordVersificationServiceImpl versification;
+    private final Set<String> stopWords;
+    private final Set<String> stopStrongs;
 
     /**
      * Instantiates a new jsword analysis service impl.
@@ -64,8 +72,21 @@ public class JSwordAnalysisServiceImpl implements JSwordAnalysisService {
      * @param versification the versification
      */
     @Inject
-    public JSwordAnalysisServiceImpl(final JSwordVersificationServiceImpl versification) {
+    public JSwordAnalysisServiceImpl(final JSwordVersificationServiceImpl versification,
+                                     @Named("analysis.stopWords") final String configuredStopWords,
+                                     @Named("analysis.stopStrongs") final String configuredStopStrongs) {
         this.versification = versification;
+        stopWords = createStopList(configuredStopWords);
+        stopStrongs = createStopList(configuredStopStrongs);
+    }
+
+    private Set<String> createStopList(final String configuredStopWords) {
+        final String[] splitWords = StringUtils.split(configuredStopWords);
+        Set<String> words = new HashSet<String>(splitWords.length *2);
+        for (String splitWord : splitWords) {
+            words.add(splitWord);
+        }
+        return words;
     }
 
     @Override
@@ -114,7 +135,10 @@ public class JSwordAnalysisServiceImpl implements JSwordAnalysisService {
 
             final PassageStat stat = new PassageStat();
             for (final String word : words) {
-                stat.addWord(word);
+                //only add word if not in STOP list
+                if(!stopWords.contains(word)) {
+                    stat.addWord(word);
+                }
             }
             return stat;
 
@@ -135,7 +159,10 @@ public class JSwordAnalysisServiceImpl implements JSwordAnalysisService {
     private PassageStat getStatsFromStrongArray(final String[] words) {
         final PassageStat stat = new PassageStat();
         for (final String word : words) {
-            stat.addWord(StringConversionUtils.getStrongPaddedKey(word));
+            final String paddedStrongNumber = StringConversionUtils.getStrongPaddedKey(word);
+            if(!this.stopStrongs.contains(paddedStrongNumber)) {
+                stat.addWord(paddedStrongNumber);
+            }
         }
         return stat;
     }

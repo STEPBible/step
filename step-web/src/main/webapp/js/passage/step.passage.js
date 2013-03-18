@@ -711,7 +711,7 @@ Passage.prototype.initReferenceTextBox = function() {
             }
         }
     }).change(function() {
-        step.state.passage.reference(self.passageId, $(this).val());
+//        step.state.passage.reference(self.passageId, $(this).val());
     }).click(function() {
         $(this).autocomplete("search", $(this).val());
         

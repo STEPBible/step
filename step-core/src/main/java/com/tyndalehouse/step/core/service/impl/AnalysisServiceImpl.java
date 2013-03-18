@@ -59,7 +59,7 @@ import com.tyndalehouse.step.core.service.search.SubjectSearchService;
  */
 public class AnalysisServiceImpl implements AnalysisService {
     private final SubjectSearchService subjects;
-    private LexiconDefinitionService definitions;
+    private final LexiconDefinitionService definitions;
     private final JSwordAnalysisService jswordAnalysis;
 
     /**
@@ -67,10 +67,11 @@ public class AnalysisServiceImpl implements AnalysisService {
      * 
      * @param jswordAnalysis the jsword analysis
      * @param subjects the subjects
+     * @param definitions the definitions
      */
     @Inject
     public AnalysisServiceImpl(final JSwordAnalysisServiceImpl jswordAnalysis,
-            final SubjectSearchService subjects, LexiconDefinitionService definitions) {
+            final SubjectSearchService subjects, final LexiconDefinitionService definitions) {
         this.jswordAnalysis = jswordAnalysis;
         this.subjects = subjects;
         this.definitions = definitions;
@@ -91,17 +92,20 @@ public class AnalysisServiceImpl implements AnalysisService {
 
     /**
      * Converts the stats from numbers to their equivalent definition
+     * 
      * @param statsForPassage the stats currently held for a particular passage.
      */
     private void convertWordStatsToDefinitions(final CombinedPassageStats statsForPassage) {
         final PassageStat strongsStat = statsForPassage.getStrongsStat();
-        final Map<String,Integer> stats = strongsStat.getStats();
+        final Map<String, Integer> stats = strongsStat.getStats();
         final Map<String, Integer> newStats = new HashMap<String, Integer>();
 
-        Map<String, LexiconSuggestion> lexiconEntries = definitions.lookup(stats.keySet());
-        for (Map.Entry<String, Integer> entry : stats.entrySet()) {
+        final Map<String, LexiconSuggestion> lexiconEntries = this.definitions.lookup(stats.keySet());
+        for (final Map.Entry<String, Integer> entry : stats.entrySet()) {
             final LexiconSuggestion lexiconSuggestion = lexiconEntries.get(entry.getKey());
-            newStats.put(String.format("%s (%s)", lexiconSuggestion.getGloss(), lexiconSuggestion.getMatchingForm()), entry.getValue());
+            newStats.put(
+                    String.format("%s (%s)", lexiconSuggestion.getGloss(),
+                            lexiconSuggestion.getMatchingForm()), entry.getValue());
         }
 
         strongsStat.setStats(newStats);

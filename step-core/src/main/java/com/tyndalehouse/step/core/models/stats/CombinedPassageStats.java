@@ -32,8 +32,6 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.models.stats;
 
-import java.util.Iterator;
-import java.util.Map;
 
 /**
  * Combined passage stats has stats based on word occurrences, subjects as well as strong numbers.
@@ -43,6 +41,15 @@ public class CombinedPassageStats {
     private PassageStat strongsStat;
     private PassageStat subjectStat;
 
+    /**
+     * Trims all stats contained in this object
+     */
+    public void trim() {
+        this.wordStat.trim();
+        this.strongsStat.trim();
+        this.subjectStat.trim();
+    }
+    
     /**
      * @return the wordStat
      */
@@ -85,25 +92,5 @@ public class CombinedPassageStats {
         this.subjectStat = subjectStat;
     }
 
-    public void trim() {
-        trim(this.wordStat);
-        trim(this.strongsStat);
-        trim(this.subjectStat);
-    }
 
-    /**
-     * Trims any result with just 1 occurence out of the equation
-     * @param wordStat
-     */
-    private void trim(final PassageStat wordStat) {
-        final Map<String,Integer> stats = wordStat.getStats();
-
-        final Iterator<Map.Entry<String,Integer>> iterator = stats.entrySet().iterator();
-        while(iterator.hasNext()) {
-            final Map.Entry<String, Integer> next = iterator.next();
-            if(next.getValue() == 1) {
-                iterator.remove();
-            }
-        }
-    }
 }

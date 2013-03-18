@@ -28,8 +28,15 @@ public class LexiconDefinitionServiceImpl implements LexiconDefinitionService {
 
     @Override
     public Map<String, LexiconSuggestion> lookup(final Set<String> strongNumbers) {
+
         final Map<String, LexiconSuggestion> results = new HashMap<String, LexiconSuggestion>(
                 strongNumbers.size() * 2);
+
+        // exit early if no strong numbers
+        if (strongNumbers.size() == 0) {
+            return results;
+        }
+
         final StringBuilder query = new StringBuilder(strongNumbers.size() * 7);
         for (final String strong : strongNumbers) {
             query.append(strong);

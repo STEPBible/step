@@ -33,6 +33,7 @@
 package com.tyndalehouse.step.core.models.stats;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -40,12 +41,6 @@ import java.util.Map;
  */
 public class PassageStat {
     private Map<String, Integer> stats = new HashMap<String, Integer>(128);
-
-    /**
-     * Used for serialisation
-     */
-    public PassageStat() {
-    }
 
     /**
      * Adds the word to the current stats
@@ -62,6 +57,19 @@ public class PassageStat {
     }
 
     /**
+     * Trims any result with just 1 occurrence out of the equation
+     */
+    public void trim() {
+        final Iterator<Map.Entry<String, Integer>> iterator = this.stats.entrySet().iterator();
+        while (iterator.hasNext()) {
+            final Map.Entry<String, Integer> next = iterator.next();
+            if (next.getValue() == 1) {
+                iterator.remove();
+            }
+        }
+    }
+
+    /**
      * @return the stats
      */
     public Map<String, Integer> getStats() {
@@ -71,7 +79,8 @@ public class PassageStat {
     /**
      * @param stats the new stats
      */
-    public void setStats(final Map<String,Integer> stats) {
+    public void setStats(final Map<String, Integer> stats) {
         this.stats = stats;
     }
+
 }

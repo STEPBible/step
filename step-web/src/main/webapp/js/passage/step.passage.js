@@ -317,22 +317,28 @@ step.passage = {
             tabHolder.append(linksToTabs);
 
             //create a link with rel for each bit in stat.
-            tabHolder.append(self._createWordleTab(data.wordStat, tabNames[0]));
-            tabHolder.append(self._createWordleTab(data.strongsStat, tabNames[1]));
-            tabHolder.append(self._createWordleTab(data.subjectStat, tabNames[2]));
+            
+            self._createWordleTab(tabHolder, data.wordStat, tabNames, 0);
+            self._createWordleTab(tabHolder, data.strongsStat, tabNames, 1);
+            self._createWordleTab(tabHolder, data.subjectStat, tabNames, 2);
 
             $(tabHolder).tabs();
-
+            
             passageContent.append(tabHolder);
         });
     },
 
-    _createWordleTab : function(wordleData, headerName) {
+    _createWordleTab : function(tabHolder, wordleData, headerNames, headerIndex) {
+        var headerName = headerNames[headerIndex];
+        
         var container = $("<div></div>").attr('id', headerName);
+        var added = false;
+        
         $.each(wordleData.stats, function(key, value) {
             var wordLink = $("<a></a>").attr('href', '#').attr('rel', value).html(key);
             container.append(wordLink);
             container.append(" ");
+            added = true;
         });
 
         $("a", container).tagcloud({
@@ -346,7 +352,13 @@ step.passage = {
                 end : "#696"
             }
         });
-        return container;
+        
+        if(added) {
+            tabHolder.append(container);
+        } else {
+            //remove header
+            $("[href='#" + headerNames[headerIndex] + "']", tabHolder).remove();
+        }
     },
 
     _doVerseNumbers : function(passageId, passageContent, options, interlinearMode, reference) {
@@ -710,9 +722,11 @@ Passage.prototype.initReferenceTextBox = function() {
                 }, 50, "step.passage.reference.dropdown");
             }
         }
-    }).change(function() {
+    })
+//    .blur(function() {
 //        step.state.passage.reference(self.passageId, $(this).val());
-    }).click(function() {
+//    })
+    .click(function() {
         $(this).autocomplete("search", $(this).val());
         
         //if no results, then re-run search with nothing

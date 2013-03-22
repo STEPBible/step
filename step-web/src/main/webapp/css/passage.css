@@ -85,7 +85,8 @@ span.interlinear span span span {
 }
 
 .verseGrouping * p {
-	display: none;
+	margin-left: 5px;
+	display: inline;
 }
 
 td.primary {

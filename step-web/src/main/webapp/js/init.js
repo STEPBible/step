@@ -148,7 +148,41 @@ function initJira() {
     }
 
 }
-	
+
+function registerUser() {
+    //to do register
+    var name = $("#userName").val();
+    var email = $("#userEmail").val();
+    
+    if(step.util.isBlank(name)) {
+        $("#validationMessage").html("Please provide your name.");
+        $("#validationMessage").css("display", "block");
+        $("#userName").focus();
+        return;
+    } 
+    
+    if(step.util.isBlank(email)) {
+        $("#validationMessage").html("Please provide your email.");
+        $("#validationMessage").css("display", "block");
+        $("#userEmail").focus();
+        return;
+    }
+    
+    var self = this;
+    $.getSafe(USER_CHECK, [email, name], function(data) {
+        if(""+data == "true") {
+            //success so store information
+            $.localStore("userEmail", email);
+            $.localStore("userName", name);
+            $("#validUser").dialog("close");
+        } else {
+            //say sorry and reset form
+            $("#validationMessage").html(__s.error_registration_closed);
+            $("#validationMessage").css("display", "block");
+        }
+    });
+}
+
 function checkValidUser() {
     //if we're running locally, then just return
     if(window.location.host.startsWith("localhost")) {
@@ -160,40 +194,18 @@ function checkValidUser() {
         return;
     }
     
+    var name = $("#userName, #userEmail").keypress(function(event) {
+        var code = (event.keyCode ? event.keyCode : event.which);
+        //Enter keycode
+        if(code == 13) {
+            registerUser();
+        }
+    });
+    
     $("#validUser").dialog({
         buttons: {
             "Register" : function() {
-                //to do register
-                var name = $("#userName").val();
-                var email = $("#userEmail").val();
-                
-                if(step.util.isBlank(name)) {
-                    $("#validationMessage").html("Please provide your name.");
-                    $("#validationMessage").css("display", "block");
-                    $("#userName").focus();
-                    return;
-                } 
-                
-                if(step.util.isBlank(email)) {
-                    $("#validationMessage").html("Please provide your email.");
-                    $("#validationMessage").css("display", "block");
-                    $("#userEmail").focus();
-                    return;
-                }
-                
-                var self = this;
-                $.getSafe(USER_CHECK, [email, name], function(data) {
-                    if(""+data == "true") {
-                        //success so store information
-                        $.localStore("userEmail", email);
-                        $.localStore("userName", name);
-                        $(self).dialog("close");
-                    } else {
-                        //say sorry and reset form
-                        $("#validationMessage").html(__s.error_registration_closed);
-                        $("#validationMessage").css("display", "block");
-                    }
-                });
+                registerUser();
             }
         },
         modal: true,

@@ -163,7 +163,7 @@ public class FrontController extends HttpServlet {
 
             // CHECKSTYLE:OFF
         } catch (final Exception e) {
-            LOGGER.warn(e.getMessage(), e);
+            // LOGGER.warn(e.getMessage(), e);
             returnVal = convertExceptionToJson(e);
         }
         final byte[] encodedJsonResponse = getEncodedJsonResponse(returnVal);
@@ -275,6 +275,8 @@ public class FrontController extends HttpServlet {
      * @return the exception message
      */
     private String getExceptionMessageAndLog(final Throwable e) {
+        LOGGER.trace("Tracing exception: ", e);
+
         final Locale locale = this.clientSessionProvider.get().getLocale();
         final ResourceBundle bundle = ResourceBundle.getBundle("ErrorBundle", locale);
 

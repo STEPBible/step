@@ -1046,6 +1046,8 @@ function passageArrowTrigger(passageId, ref, goToChapter) {
 
         
         $.getSafe(BIBLE_EXPAND_TO_CHAPTER, [version, ref], function(newChapterRef) {
+            //reset the URL to force a passage lookup
+            step.passage.lastUrls[passageId] = '';
             step.state.passage.reference(passageId, newChapterRef.name);
         });
         

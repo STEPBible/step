@@ -338,6 +338,10 @@ step.util = {
         
         trackQuerySyntax : function(selector, namespace) {
             $(selector + " input").keyup(function(ev) {
+                if(ev.ctrlKey || ev.altKey || ev.metaKey) {
+                    return true;
+                }
+                
                 if(ev.which < 48 && ev.which != 8 && ev.which != 46) {
                     return true;
                 }

@@ -151,6 +151,8 @@ span[strong]:hover {
 	margin-right: 2px;
     background-color: #eef;
     cursor: hand;
+    color: #699;
+	font-weight: bold;
 }
 
 .interlinear .verseNumber {

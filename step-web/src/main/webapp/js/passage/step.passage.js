@@ -129,7 +129,7 @@ step.passage = {
 
                 //finally add handlers to elements containing xref
                 self._doVerseNumbers(passageId, passageContent, options, interlinearMode, text.reference);
-                self._doStats(passageId, passageContent, lookupVersion, text.reference);
+//                self._doStats(passageId, passageContent, lookupVersion, text.reference);
                 self._doFonts(passageId, passageContent, interlinearMode, interlinearVersion);
                 self._doInlineNotes(passageId, passageContent);
                 self._doNonInlineNotes(passageContent);
@@ -293,73 +293,73 @@ step.passage = {
         $(".passageContentHolder", passageContent).addClass("rtlDirection");
     },
 
-    /**
-     * Gets the stats for a passage and shows a wordle
-     * @param passageId the passage ID
-     * @param passageContent the passage Content
-     * @param version the version
-     * @param reference the reference
-     * @private
-     */
-    _doStats: function (passageId, passageContent, version, reference) {
-        var self = this;
-        $.getSafe(ANALYSIS_STATS, [version, reference], function(data) {
-            //create 3 tabs
-            var linksToTabs = $("<ul></ul>");
-
-            var headers = [__s.word_stats, __s.strong_stats, __s.subject_stats];
-            var tabNames = ["wordStat", "strongStat", "subjectStat"];
-            for(var i = 0; i < headers.length; i++) {
-                linksToTabs.append("<li><a href='#" + tabNames[i] + "'>" + headers[i] + "</a></li>");
-            }
-
-            var tabHolder = $("<div></div>");
-            tabHolder.append(linksToTabs);
-
-            //create a link with rel for each bit in stat.
-            
-            self._createWordleTab(tabHolder, data.wordStat, tabNames, 0);
-            self._createWordleTab(tabHolder, data.strongsStat, tabNames, 1);
-            self._createWordleTab(tabHolder, data.subjectStat, tabNames, 2);
-
-            $(tabHolder).tabs();
-            
-            passageContent.append(tabHolder);
-        });
-    },
-
-    _createWordleTab : function(tabHolder, wordleData, headerNames, headerIndex) {
-        var headerName = headerNames[headerIndex];
-        
-        var container = $("<div></div>").attr('id', headerName);
-        var added = false;
-        
-        $.each(wordleData.stats, function(key, value) {
-            var wordLink = $("<a></a>").attr('href', '#').attr('rel', value).html(key);
-            container.append(wordLink);
-            container.append(" ");
-            added = true;
-        });
-
-        $("a", container).tagcloud({
-            size : {
-                start : 9,
-                end: 28,
-                unit : "px"
-            },
-            color : {
-                start : "#000",
-                end : "#696"
-            }
-        });
-        
-        if(added) {
-            tabHolder.append(container);
-        } else {
-            //remove header
-            $("[href='#" + headerNames[headerIndex] + "']", tabHolder).remove();
-        }
-    },
+//    /**
+//     * Gets the stats for a passage and shows a wordle
+//     * @param passageId the passage ID
+//     * @param passageContent the passage Content
+//     * @param version the version
+//     * @param reference the reference
+//     * @private
+//     */
+//    _doStats: function (passageId, passageContent, version, reference) {
+//        var self = this;
+//        $.getSafe(ANALYSIS_STATS, [version, reference], function(data) {
+//            //create 3 tabs
+//            var linksToTabs = $("<ul></ul>");
+//
+//            var headers = [__s.word_stats, __s.strong_stats, __s.subject_stats];
+//            var tabNames = ["wordStat", "strongStat", "subjectStat"];
+//            for(var i = 0; i < headers.length; i++) {
+//                linksToTabs.append("<li><a href='#" + tabNames[i] + "'>" + headers[i] + "</a></li>");
+//            }
+//
+//            var tabHolder = $("<div></div>");
+//            tabHolder.append(linksToTabs);
+//
+//            //create a link with rel for each bit in stat.
+//            
+//            self._createWordleTab(tabHolder, data.wordStat, tabNames, 0);
+//            self._createWordleTab(tabHolder, data.strongsStat, tabNames, 1);
+//            self._createWordleTab(tabHolder, data.subjectStat, tabNames, 2);
+//
+//            $(tabHolder).tabs();
+//            
+//            passageContent.append(tabHolder);
+//        });
+//    },
+//
+//    _createWordleTab : function(tabHolder, wordleData, headerNames, headerIndex) {
+//        var headerName = headerNames[headerIndex];
+//        
+//        var container = $("<div></div>").attr('id', headerName);
+//        var added = false;
+//        
+//        $.each(wordleData.stats, function(key, value) {
+//            var wordLink = $("<a></a>").attr('href', '#').attr('rel', value).html(key);
+//            container.append(wordLink);
+//            container.append(" ");
+//            added = true;
+//        });
+//
+//        $("a", container).tagcloud({
+//            size : {
+//                start : 9,
+//                end: 28,
+//                unit : "px"
+//            },
+//            color : {
+//                start : "#000",
+//                end : "#696"
+//            }
+//        });
+//        
+//        if(added) {
+//            tabHolder.append(container);
+//        } else {
+//            //remove header
+//            $("[href='#" + headerNames[headerIndex] + "']", tabHolder).remove();
+//        }
+//    },
 
     _doVerseNumbers : function(passageId, passageContent, options, interlinearMode, reference) {
         //if interleaved mode or column mode, then we want this to continue
@@ -490,7 +490,7 @@ step.passage = {
                         viewport: $(window)
                     },
                     style : {
-                        classes : "ui-tooltip-default noQtipWidth"
+                        classes : "ui-tooltip-default noQtipWidth ui-state-highlight"
                     }
                 });
             });
@@ -736,11 +736,11 @@ Passage.prototype.initReferenceTextBox = function() {
         }
     }).blur(function() {
         $(this).trigger('change');
-    }).data( "autocomplete" )._renderItem = function( ul, item ) {
+    }).data( "ui-autocomplete" )._renderItem = function( ul, item ) {
         ul.addClass("stepComplete");
         
         return $( "<li></li>" )
-        .data( "item.autocomplete", item )
+        .data( "ui-autocomplete-item", item )
         .append( "<a>" + item.label + "</a>" )
         .appendTo( ul );
     };

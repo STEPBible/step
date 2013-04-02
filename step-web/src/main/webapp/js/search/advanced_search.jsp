@@ -45,19 +45,19 @@
 			<tr>
 				<td><fmt:message key="translation_commentary" /></td>
 				<td style="white-space: nowrap;"><input type="text" class="passageVersion drop" size="15" /> &nbsp; 
-					<a class="infoAboutVersion" target="_blank" href="version.jsp?version=<%= stepRequest.getThisVersion() %>" title="<fmt:message key="passage_info_about_version" />">&#x24d8;</a>&nbsp;</td>
+					<a class="infoAboutVersion primaryDarkBold" target="_blank" href="version.jsp?version=<%= stepRequest.getThisVersion() %>" title="<fmt:message key="passage_info_about_version" />">&#x24d8;</a>&nbsp;</td>
 				<td style="padding-left: 10px"><fmt:message key="bible_text" />&nbsp;</td>
 				<td><input type="text" class="passageReference drop" size="15" /></td>
 			</tr>
 			<tr level="1">
 				<td><fmt:message key="comparison_versions" /></td>
-				<td><input type="text" class="extraVersions drop" size="15" /> &nbsp;<a href='#' class='resetVersions'>x</a></td>
+				<td><input type="text" class="extraVersions drop" size="15" /> &nbsp;<a href='#' class='primaryDarkBold'>x</a></td>
 				<td level="2" style="padding-left: 10px"><fmt:message key="will_be_shown_as" /></td>
 				<td level="2"><input type="text" class="extraVersionsDisplayOptions drop" size="15" readonly=true"/></td>
 			</tr>
 		</table>
 	</fieldset>
-	<jsp:include page="personal_notes.jsp" />
+<%-- 	<jsp:include page="personal_notes.jsp" /> --%>
 	<jsp:include page="simple_text_search.jsp" />
 	<jsp:include page="advanced_search_fragment.jsp" />	
 

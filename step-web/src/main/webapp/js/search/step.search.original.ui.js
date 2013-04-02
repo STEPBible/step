@@ -218,8 +218,8 @@ step.search.ui.original = {
                             level : 'error'
                        });
                     }
-                }).data("lexicalcomplete")._renderItem = function(ul, item) {
-                    return $("<li></li>").data("item.autocomplete", item).append("<a>" + item.label + "</a>").appendTo(ul);
+                }).data("customLexicalcomplete")._renderItem = function(ul, item) {
+                    return $("<li></li>").data("ui-autocomplete-item", item).append("<a>" + item.label + "</a>").appendTo(ul);
                 }
             });
             

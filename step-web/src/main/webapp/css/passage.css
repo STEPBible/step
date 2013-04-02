@@ -149,9 +149,9 @@ span[strong]:hover {
 	vertical-align: top;
 	font-size: 6pt;
 	margin-right: 2px;
-    background-color: #eef;
     cursor: hand;
-    color: #699;
+    background-color: #F3E5B4;
+    color: #991C32;
 	font-weight: bold;
 }
 
@@ -177,7 +177,7 @@ a.smallHeaders {
 .notesPane {
 	padding: 2px !important;
 	display: block;
-	background-color: #F4F4E8;
+	background-color: #FCF8E8;
 	padding: 1px;
 	max-width: 100px;
 	height: 100%;
@@ -196,7 +196,7 @@ a.smallHeaders {
 
 
 .notesPane a {
-	color: #669;
+	color: #991C32;
 	font-weight: bold;
 	font-size: x-small;
 }
@@ -377,14 +377,14 @@ H4.heading  {
 
 H2.xgen {
 	font-family: times;
-	color: #669966;
+	color: #991C32;
 	font-variant:small-caps;
 	font-style: italic;
 }
 
 
 H2.heading, input.heading {
-	color: #669966;
+	color: #991C32;
 	font-weight: bold;
 }
 
@@ -593,8 +593,6 @@ FONT.usg {
 
 .infoAboutVersion, .versionInfo {
 	font-size: 120%;
-	color: #696;
-	font-weight: bold;	
 }
 
 
@@ -621,11 +619,6 @@ FONT.usg {
 
 .versionBreakMenuItem {
 	border-bottom: 1px dashed #696;
-}
-
-.resetVersions {
-	color: red;
-	font-weight: bold;
 }
 
 .colophon {
@@ -693,7 +686,7 @@ FONT.usg {
 
 .verseStrongSearch {
 	float: left;
-	background-image: url('images/ui-icons_ef8c08_256x240.png');
+	background-image: url('images/ui-icons_991C32_256x240.png');
 }
 
 .strongCount {

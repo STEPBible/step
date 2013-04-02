@@ -39,7 +39,7 @@
 		if(request.getParameter("debug") != null) {
 	%>
 
-		<link rel="stylesheet" type="text/css" href="css/jquery-ui-1.8.23.custom.css" />
+		<link rel="stylesheet" type="text/css" href="css/jquery-ui-1.10.2.custom.min.css" />
 		<link rel="stylesheet" type="text/css" href="css/qtip.css" />
 		<link rel="stylesheet" type="text/css" href="css/ddsmoothmenu.css" />
 		<link rel="stylesheet" type="text/css" href="css/ddsmoothmenu-v.css" />
@@ -53,10 +53,10 @@
 		<script src="js_init/initLib.js" type="text/javascript"></script>   
 	    <script src="libs/dohighlight-min.js" type="text/javascript"></script>
 	    <script src="libs/timeline_js/timeline-api.js" type="text/javascript"></script>
-	    <script src="libs/jquery-1.8.2.min.js" type="text/javascript"></script>
-		<script src="libs/jquery-ui-1.8.23.custom.min.js" type="text/javascript"></script>
+	    <script src="libs/jquery-1.9.1.min.js" type="text/javascript"></script>
+		<script src="libs/jquery-ui-1.10.2.custom.min.js" type="text/javascript"></script>
 		<script src="libs/sprintf-0.7-beta1.js" type="text/javascript"></script>
-		<script src="libs/jquery.tagcloud.js" type="text/javascript"></script>
+<!-- 		<script src="libs/jquery.tagcloud.js" type="text/javascript"></script> -->
 <!-- 		<script src="libs/jquery-ui-1.9-beta.min.js" type="text/javascript"></script> -->
 	    <script src="js/jquery-extensions/jquery-qtip.js" type="text/javascript"></script>
 	    <script src="js/jquery-extensions/jquery-hover-intent.js" type="text/javascript"></script>
@@ -83,7 +83,7 @@
 		<script src="js/search/step.search.textual.ui.js" type="text/javascript"></script>
 		<script src="js/search/step.search.timeline.ui.js" type="text/javascript"></script>
 		<script src="js/search/step.search.subject.ui.js" type="text/javascript"></script>
-		<script src="js/search/step.search.personalnotes.ui.js" type="text/javascript"></script>
+<!-- 		<script src="js/search/step.search.personalnotes.ui.js" type="text/javascript"></script> -->
 		<script src="js/navigation/step.navigation.js" type="text/javascript"></script>	    
 
 
@@ -246,7 +246,7 @@
 		<div style="display: none" id="validationMessage"></div>
 	</div>
 </div>
-<div id='stepInDevelopmentWarning'><fmt:message key="step_disclaimer" /></div>
+<div id='stepInDevelopmentWarning' class="ui-state-highlight"><fmt:message key="step_disclaimer" /></div>
 </body>
 
 </HTML>

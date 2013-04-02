@@ -50,6 +50,7 @@ var timeline;
 function init() {
 	$(document).ready(function() {
 	    initLocale();
+	    
 	    checkValidUser();
 	    
 	    initMenu();
@@ -184,13 +185,35 @@ function registerUser() {
 }
 
 function checkValidUser() {
+    var email = $.localStore("userEmail");
     //if we're running locally, then just return
     if(window.location.host.startsWith("localhost")) {
+      return;
+    }
+
+    //if we already have an email address, then exit
+    if(!step.util.isBlank(email)) {
+        return;
+    }
+
+    //if first use, then simply record the date
+    var firstUseDate = $.localStore("firstDate");
+    if(firstUseDate == undefined) {
+        $.localStore("firstDate", new Date().toUTCString());
         return;
     }
     
-    var email = $.localStore("userEmail");
-    if(!step.util.isBlank(email)) {
+    //otherwise check if 3 month have passed
+    var date = new Date(firstUseDate);
+    var currentDate = new Date(); 
+    
+    var diffInMilliseconds = currentDate.getTime() - date.getTime();
+    
+    // 3 months, 30 days, 24 hours, 60 minutes, 60 seconds, 1000 milliseconds
+    var term = 3 * 30 * 24 * 60 * 60 * 1000;
+    
+    if(term > diffInMilliseconds) {
+        //haven't yet reached the period yet.
         return;
     }
     
@@ -204,16 +227,19 @@ function checkValidUser() {
     
     $("#validUser").dialog({
         buttons: {
+            "Cancel" : function() {
+                //remind in 3 months
+                $.localStore("firstDate", new Date().toUTCString());
+                $("#validUser").dialog("close");
+            },
             "Register" : function() {
                 registerUser();
             }
         },
         modal: true,
-        closeOnEscape: false,
+        closeOnEscape: true,
         title: __s.register_to_use_step
     });
-    
-    $("#ui-dialog-title-validUser").parent().css("display", "none");
 }
 
 
@@ -260,7 +286,12 @@ function hearViewChanges() {
            $(".leftColumn").removeClass("singleColumn").addClass("column");
            $("#centerPane").toggle(true);
            $("#holdingPage").toggle(false);
-           $(".leftColumn").resizable("destroy");
+           
+           var leftColumn = $(".leftColumn");
+           
+           if(leftColumn.hasClass("ui-resizable")) {
+               leftColumn.resizable("destroy");
+           }
            step.toolbar.refreshLayout('rightPaneMenu');
        }
         
@@ -289,6 +320,7 @@ function adjustColumns() {
 function initLayout() {
     //add the defaults slider bar
     $("#topMenu").detailSlider({title: __s.view_title_controls_level_of_detail, key : "top"});
+    $("#topMenu .sliderDetailLevelLabel").addClass("primaryDark");
     $(document).hear("slideView-top", function(self, data) {
         var value = $("#topMenu").detailSlider("value");
         $(".detailSliderContainer").parent().not("#topMenu").detailSlider("update", { value : value});

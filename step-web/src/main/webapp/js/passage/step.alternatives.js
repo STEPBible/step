@@ -103,7 +103,7 @@ step.alternatives = {
                                     }
                                 },
                                 style: { 
-                                    classes: 'ui-tooltip-default noQtipWidth'
+                                    classes: 'ui-tooltip-default noQtipWidth ui-state-highlight'
                                 }
                              });
                         }

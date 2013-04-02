@@ -248,7 +248,7 @@ LexiconDefinition.prototype.getPopup = function() {
     this.popup.tabs().draggable({
         handle : "#lexiconDefinitionHeader"
     });
-    lexiconDefinitionSelector.tabs("select", 0);
+    lexiconDefinitionSelector.tabs( "option", "active", 0);
     
     $('#lexiconPopupClose').click(function() {
         $('#lexiconDefinition').hide();

@@ -70,9 +70,8 @@
 	
 	<li menu-name="HELP"><a href="javascript:void(0)"><fmt:message key="help" /></a>
 	<ul>
-		<li><a href="http://stepweb.atlassian.net/wiki/display/TYNSTEP/STEP+Help+Manual" target="_blank"><fmt:message key="help_online" /></a></li>
+		<li><a href="https://stepweb.atlassian.net/wiki/display/SUG/STEP+User+Guide" target="_blank"><fmt:message key="help_online" /></a></li>
 		<li><a href="javascript:void(0)" id="provideFeedback"><fmt:message key="help_feedback" /></a></li>
-		<li><a href="javascript:void(0)" id="raiseBug" ><fmt:message key="help_raise_a_bug" /></a></li>
 		<li><a href="javascript:void(0)" name="ABOUT"><fmt:message key="help_about" /></a></li>
 	</ul>
 	</li>

@@ -3,6 +3,7 @@ body {
 	font-family: Verdana;
 }
 
+
 .notYetImplemented {
 	background-color: black !important ;
 }
@@ -134,7 +135,7 @@ legend .detailSliderContainer {
 }
 
 .passage-arrow {
-	background-image: url('images/ui-icons_669966_256x240.png');
+	background-image: url('images/ui-icons_991C32_256x240.png');
 }
 
 
@@ -164,8 +165,21 @@ legend .detailSliderContainer {
 	right: 0px;
 	position: absolute;
 	font-weight: bold;
-	background-color: red;
-	color: white;
 	width: 150px;
 	padding: 5px;
+}
+
+
+.primaryDark {
+	color: #991C32;
+}
+
+.primaryDarkBold {
+	color: #991C32;
+	font-weight: bold;
+}
+
+.primaryDarkBg {
+	background-color: #991C32;
+	color: #F3E5B4;
 }

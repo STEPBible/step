@@ -70,10 +70,11 @@ body {
 	margin: 0px 5px;
 	border: 1px solid #cccc99;
 	text-align: center;
+	background-color: #FCF8E8;
 }
 
 .bookmarkPane h3 {
-	color: #C77405;
+	color: #991C32;
 	cursor: pointer;
 	margin-bottom: 1px;
 }
@@ -113,9 +114,9 @@ body {
 	font-size: 1em;
 }
 
-#topMenu .detailSliderContainer .sliderDetailLevelLabel {
-	color: white !important;
-}
+/* #topMenu .detailSliderContainer .sliderDetailLevelLabel { */
+/* 	color: white !important; */
+/* } */
 
 #topMenu a.login {
 	padding-top: 7px;
@@ -192,11 +193,6 @@ body {
 
 .smallerFont {
 	font-size: 75%;
-	color: #EC8E0C !important;
-}
-
-.largerFonts {
-	color: #EC8E0C !important;
 }
 
 .nextChapter, .nextPage {
@@ -280,10 +276,6 @@ body {
 .no-left-border {
 /*	 border-left: none; */
 	margin-left: -1px; 
-}
-
-.bookmarkPane {
-	background: #EEF;
 }
 
 .logo, .northBookmark {

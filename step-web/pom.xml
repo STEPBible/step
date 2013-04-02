@@ -152,7 +152,7 @@
 						<configuration>
 							<cssSourceDir>.</cssSourceDir>
 							<cssSourceFiles>
-								<cssSourceFile>css/jquery-ui-1.8.23.custom.css</cssSourceFile>
+								<cssSourceFile>css/jquery-ui-1.10.2.custom.min.css</cssSourceFile>
 								<cssSourceFile>css/qtip.css</cssSourceFile>
 								<cssSourceFile>css/ddsmoothmenu.css</cssSourceFile>
 								<cssSourceFile>css/ddsmoothmenu-v.css</cssSourceFile>
@@ -169,8 +169,8 @@
 								<jsSourceFile>js_init/initLib.js</jsSourceFile>   
 							    <jsSourceFile>libs/dohighlight-min.js</jsSourceFile>
 							    <jsSourceFile>libs/timeline_js/timeline-api.js</jsSourceFile>
-							    <jsSourceFile>libs/jquery-1.8.2.min.js</jsSourceFile>
-								<jsSourceFile>libs/jquery-ui-1.8.23.custom.min.js</jsSourceFile>
+							    <jsSourceFile>libs/jquery-1.9.1.min.js</jsSourceFile>
+								<jsSourceFile>libs/jquery-ui-1.10.2.custom.min.js</jsSourceFile>
 								<jsSourceFile>libs/sprintf-0.7-beta1.js</jsSourceFile>
 								<jsSourceFile>libs/jquery.tagcloud.js</jsSourceFile>
 							    <jsSourceFile>js/jquery-extensions/jquery-qtip.js</jsSourceFile>
@@ -198,7 +198,7 @@
 								<jsSourceFile>js/search/step.search.textual.ui.js</jsSourceFile>
 								<jsSourceFile>js/search/step.search.timeline.ui.js</jsSourceFile>
 								<jsSourceFile>js/search/step.search.subject.ui.js</jsSourceFile>
-								<jsSourceFile>js/search/step.search.personalnotes.ui.js</jsSourceFile>
+<!-- 								<jsSourceFile>js/search/step.search.personalnotes.ui.js</jsSourceFile> -->
 								<jsSourceFile>js/navigation/step.navigation.js</jsSourceFile>	    
 								<jsSourceFile>js/state/step.state.js</jsSourceFile>
 								<jsSourceFile>js/state/step.state.browser.js</jsSourceFile>

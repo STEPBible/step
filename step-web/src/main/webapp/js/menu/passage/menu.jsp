@@ -23,7 +23,7 @@
 		<li><a href="javascript:void(0)" name="NOTES"><fmt:message key="display_notes" /></a></li>
 		<li><a href="javascript:void(0)" name="ENGLISH_VOCAB"><fmt:message key="display_englishVocab" /></a></li>
 		<li><a href="javascript:void(0)" name="GREEK_VOCAB"><fmt:message key="display_greekVocab" /></a></li>
-		<li><a href="javascript:void(0)" name="TRANSLITERATION"><fmt:message key="display_transliteration" /></a></li>
+<%-- 		<li><a href="javascript:void(0)" name="TRANSLITERATION"><fmt:message key="display_transliteration" /></a></li> --%>
 		<li><a href="javascript:void(0)" name="MORPHOLOGY"><fmt:message key="display_grammar" /></a></li>
 		<li><a href="javascript:void(0)" name="COLOUR_CODE" ><fmt:message key="display_grammarColor" /></a></li>
 	</ul>
@@ -44,7 +44,7 @@
 <!-- 		<li><a href="javascript:void(0)" name="SEARCH_LEXICON_DEFINITION">Lexicon definition search</a></li> -->
 <!-- 		<li><a href="javascript:void(0)" name="SEARCH_TIMELINE">Timeline search</a></li> -->
 		<li class="menuSectionStart"><a href="javascript:void(0)" name="SEARCH_TEXT"><fmt:message key="search_advanced_text" /></a></li>
-		<li class="menuSectionStart"><a href="javascript:void(0)" name="SEARCH_PERSONAL_NOTES"><fmt:message key="personal_notes" /></a></li>
+<%-- 		<li class="menuSectionStart"><a href="javascript:void(0)" name="SEARCH_PERSONAL_NOTES"><fmt:message key="personal_notes" /></a></li> --%>
 	</ul>
 	</li>
 	<li menu-name="PASSAGE-TOOLS"><a href="javascript:void(0)"><fmt:message key="tools" /></a>

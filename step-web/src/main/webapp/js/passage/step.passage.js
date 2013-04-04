@@ -709,7 +709,7 @@ Passage.prototype.initReferenceTextBox = function() {
         minLength : 0,
         delay : 0,
         select : function(event, ui) {
-            event.stopPropagation();
+//            event.stopPropagation();
             var fireChange = !ui.item.wholeBook;
             if(fireChange) {
                 step.state.passage.reference(self.passageId, ui.item.value, fireChange);

@@ -223,8 +223,9 @@ li.subjectHeading {
 
 .closeRefinedSearch, .closeInfoBar {
 	float: right;
-	background-image: url(images/ui-icons_991C32_256x240.png) !important;
-	margin-top: 3px;
+	font-size: 75% !important;
+	margin-top: 2px;
+	margin-right: 2px;
 }
 
 .closeRefinedSearch:HOVER, .closeInfoBar:HOVER {

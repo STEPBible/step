@@ -135,8 +135,17 @@ step.util = {
 	},
 
 	raiseInfo : function (passageId, message, level, eraseOnNextPassage) {
-	    var infoBar = $(".infoBar", step.util.getPassageContainer(passageId));
+	    var passageContainer = step.util.getPassageContainer(passageId);
+	    var infoBar = $(".infoBar", passageContainer);
 	    var icon = $(".innerInfoBar .ui-icon", infoBar).addClass("ui-icon");
+	    
+	    $(".closeInfoBar", infoBar).button({
+	       icons : {
+	           primary : "ui-icon-close"
+	       },
+	       text : false
+	    });
+	    
 	    icon.removeClass();
 
 	    if(level == 'error') {

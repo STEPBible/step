@@ -31,8 +31,8 @@
 // LANGUAGE
 ////////////////////////////////////////
 WORDS_MEANING = ["words meaning", "Type the English meaning of the original words. You can choose to select a value from the list, or simply search for the text you enter in the textbox."];
-GREEK_WORDS = ["a Greek word", "Type the start of the word in English letters or Unicode Greek."];
-HEBREW_WORDS = ["a Hebrew word", "Type the start of the word in English letters or Unicode Hebrew."];
+GREEK_WORDS = ["a Greek word", "Type the start of the word in English letters or Unicode Greek (accents are not needed)."];
+HEBREW_WORDS = ["a Hebrew word", "Type the start of the word in English letters or Unicode Hebrew (pointing is not needed)."];
 
 
 SPECIFIC_FORM = "this specific form of this word";

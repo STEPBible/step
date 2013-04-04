@@ -485,8 +485,8 @@ step.passage = {
                     },
                     
                     position : {
-                        my: "bottom center",
-                        at: "top center",
+                        my: "bottom",
+                        at: "top",
                         viewport: $(window)
                     },
                     style : {

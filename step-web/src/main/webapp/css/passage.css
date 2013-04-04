@@ -586,6 +586,9 @@ FONT.usg {
 	font-size: 0.8em;
 }
 
+.passageContainer .ui-buttonset .ui-button {
+	margin-right: -0.5em
+}
 
 .filterTagLine {
 	font-size: 10px;

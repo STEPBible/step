@@ -117,7 +117,7 @@ $.widget("custom.versions",  {
     _bindHandlers : function(that) {
         var self = that;
         $(".versionsListMenu", this.dropdownVersionMenu).menu({
-            selected: function(event, item) {
+            select: function(event, item) {
              
              var isMulti = step.autoVersions.currentElement.versions("option", "multi");
              if(!isMulti) {

@@ -48,9 +48,6 @@ $(step.menu).hear("MENU-VIEW", function(self, menuTrigger) {
         step.state.passage.version(1, version0, false);
         step.state.passage.reference(1, reference0);
     }
-	
-	
-	
 });
 
 

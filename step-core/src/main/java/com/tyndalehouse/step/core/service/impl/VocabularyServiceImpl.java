@@ -9,11 +9,14 @@ import javax.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.tyndalehouse.step.core.data.EntityManager;
 import com.tyndalehouse.step.core.data.EntityDoc;
 import com.tyndalehouse.step.core.data.EntityIndexReader;
+import com.tyndalehouse.step.core.data.EntityManager;
 import com.tyndalehouse.step.core.exceptions.UserExceptionType;
 import com.tyndalehouse.step.core.service.VocabularyService;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * defines all vocab related queries
@@ -23,6 +26,7 @@ import com.tyndalehouse.step.core.service.VocabularyService;
  */
 @Singleton
 public class VocabularyServiceImpl implements VocabularyService {
+    private static final String MULTI_WORD_SEPARATOR = " | ";
     private static final Logger LOGGER = LoggerFactory.getLogger(VocabularyServiceImpl.class);
     private static final String STRONG_SEPARATORS = "[ ,]+";
     private static final String HIGHER_STRONG = "STRONG:";
@@ -58,29 +62,40 @@ public class VocabularyServiceImpl implements VocabularyService {
         this.definitions = manager.getReader("definition");
     }
 
-    //
-    // public IndexSearcher getSearcher() {
-    // if (this.searcher == null) {
-    // try {
-    // final SimpleFSDirectory path = new SimpleFSDirectory(new File("d:\\temp\\step"));
-    // final RAMDirectory ramFile = new RAMDirectory(path);
-    // this.searcher = new IndexSearcher(ramFile);
-    // } catch (final IOException e) {
-    // throw new StepInternalException("Some exception has occurred");
-    // }
-    // }
-    // return this.searcher;
-    // }
-
     @Override
     public EntityDoc[] getDefinitions(final String vocabIdentifiers) {
         notBlank(vocabIdentifiers, "Vocab identifiers was null", UserExceptionType.SERVICE_VALIDATION_ERROR);
         final String[] strongList = getKeys(vocabIdentifiers);
 
         if (strongList.length != 0) {
-            return this.definitions.searchUniqueBySingleField("strongNumber", strongList);
+            final EntityDoc[] strongDefs = this.definitions.searchUniqueBySingleField("strongNumber", strongList);
+            return reOrder(strongList, strongDefs);
         }
+
         return new EntityDoc[0];
+    }
+
+    /**
+     * Re-orders based on the input
+     * @param strongList the order list of stongs
+     * @param strongDefs the definitions that have been found
+     */
+    private EntityDoc[] reOrder(String[] strongList, EntityDoc[] strongDefs) {
+        Map<String, EntityDoc> entitiesByStrong = new HashMap<String, EntityDoc>(strongList.length*2);
+        for (EntityDoc def : strongDefs) {
+            entitiesByStrong.put(def.get("strongNumber"), def);
+        }
+
+        EntityDoc[] results = new EntityDoc[strongDefs.length];
+        int current = 0;
+        for(String strong : strongList) {
+            final EntityDoc entityDoc = entitiesByStrong.get(strong);
+            if(entityDoc != null) {
+                results[current++] = entityDoc;
+            }
+        }
+
+        return results;
     }
 
     @Override
@@ -126,16 +141,26 @@ public class VocabularyServiceImpl implements VocabularyService {
         // else we lookup and concatenate
         final EntityDoc[] lds = getLexiconDefinitions(keys);
 
-        // TODO - if nothing there, for now we just return the ids we got
         if (lds.length == 0) {
             return vocabIdentifiers;
         }
 
-        final StringBuilder sb = new StringBuilder(lds.length * 32);
-        for (final EntityDoc l : lds) {
-            sb.append(provider.getData(l));
+        if (lds.length == 1) {
+            return provider.getData(lds[0]);
         }
 
+        // otherwise, we need to resort to concatenating the fields
+        final StringBuilder sb = new StringBuilder(lds.length * 32);
+        sb.append('[');
+
+        for (int ii = 0; ii < lds.length; ii++) {
+            final EntityDoc l = lds[ii];
+            sb.append(provider.getData(l));
+            if (ii + 1 < lds.length) {
+                sb.append(MULTI_WORD_SEPARATOR);
+            }
+        }
+        sb.append(']');
         return sb.toString();
     }
 

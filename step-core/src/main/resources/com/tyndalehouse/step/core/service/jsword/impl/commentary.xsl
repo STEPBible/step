@@ -20,7 +20,15 @@
 
 	<xsl:template match="/">
 		<div>
-			<xsl:apply-templates select="//verse" />
+			<xsl:choose>
+				<xsl:when test="count(//verse) != 0">
+					<xsl:apply-templates select="//verse" />
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:apply-templates select="//figure" />
+				</xsl:otherwise>
+			</xsl:choose>
+		
 		</div>
 	</xsl:template>
 
@@ -77,5 +85,9 @@
 	</span>
   </xsl:template>
 
+
+	<xsl:template match="figure">
+		<img src="{@src}" alt="{@alt}" class='figureImage' />
+	</xsl:template>
 
 </xsl:stylesheet>

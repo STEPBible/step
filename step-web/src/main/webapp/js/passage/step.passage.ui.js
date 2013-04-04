@@ -32,12 +32,19 @@ $(window).resize(function() {
 });
 
 step.passage.ui = {
-    fontSizes : [undefined, undefined],
+    fontSizes : [{}, {}],
+    
     resize : function() {
         var windowHeight = $(window).height();
         $(".passageContent").each(function(i, item) {
-            $(item).height(windowHeight - $(item).position().top);
+            
+            var toolbarHeight = $(".passageToolbarFloatingContainer:visible", step.util.getPassageContainer(i)).height();
+            
+            var height = windowHeight - $(item).position().top - toolbarHeight - 8;
+            $(item).height(height);
         });
+        
+        $(".leftColumn, .rightColumn, #holdingPage, .passageContainer").height(windowHeight - $(".topMenu").height() - 10);
     },
     
     restoreDefaults : function(passageId, force) {
@@ -45,6 +52,8 @@ step.passage.ui = {
     },
     
     updateDisplayOptions : function(passageId) {
+        var self = this;
+        
         if(step.versions == undefined) {
             //don't have it from server yet, so return immediately
             return;
@@ -78,10 +87,11 @@ step.passage.ui = {
                     if(step.defaults.passage.interNamedOptions[step.defaults.passage.interOptions.indexOf(displayOptions.val())] == "INTERLINEAR") {
                         displayOptions.val(step.defaults.passage.interOptions[0]);
                         displayOptions.trigger('change');
-                    } 
+                    }
                     
                     //change available options
                     displayOptions.autocomplete("option", "source", step.defaults.passage.interOptionsNoInterlinear);
+                    self._ensureDefaultOption(passageId, step.defaults.passage.interNoInterlinearDefault);
                     return;
                 }
             }
@@ -89,6 +99,12 @@ step.passage.ui = {
         
         //if we get here, then we need to allow interlinears:
         displayOptions.autocomplete("option", "source", step.defaults.passage.interOptions);
+        self._ensureDefaultOption(passageId, step.defaults.passage.interInterlinearDefault);
+    },
+
+    _ensureDefaultOption : function(passageId, option) {
+//        displayOptions.val(option);
+        step.state.passage.extraVersionsDisplayOptions(passageId, option);
     },
     
     /**
@@ -96,6 +112,26 @@ step.passage.ui = {
      */
     getSelectedVersion : function(versionName) {
         return step.keyedVersions[versionName.toUpperCase()];
+    },
+    
+    getFontKey : function(passageContentHolder) {
+        return $(passageContentHolder).hasClass("hbFont") ? "hb" : ($(passageContentHolder).hasClass("unicodeFont") ? "unicode" : "default");
+    },
+    
+    changeFontSize : function(source, increment) {
+        var elements = $(".passageContentHolder", step.util.getPassageContainer(source));
+        var passageId = step.passage.getPassageId(source);
+        
+        
+        var  key = this.getFontKey(elements);
+        $.each(elements, function(i, item) {
+            var fontSize = parseInt($(this).css("font-size"));
+            var newFontSize = fontSize + increment;
+            
+            //key it to be the default font, unicodeFont or Hebrew font
+            step.passage.ui.fontSizes[passageId][key] = newFontSize;
+            $(this).css("font-size", newFontSize);
+        })
     }
 };
 
@@ -105,33 +141,23 @@ $(document).ready(function() {
                            ], "passage", step.passage.ui.restoreDefaults);
     
     $(".extraVersionsDisplayOptions").change(function(event) {
-        step.passage.changePassage(step.passage.getPassageId(event.target));
+        //shout a change
+        var passageId = step.passage.getPassageId(event.target);
+        $.shout("version-changed-" + passageId);
+        step.passage.changePassage(passageId);
     });
     
     
-    $(".smallerFonts").button({
-            text : true
-    }).click(function() {
-        var elements = $(".passageContentHolder", step.util.getPassageContainer(this));
-        var fontSize = parseInt(elements.css("font-size"));
-        var newFontSize = fontSize -1;
-        
-        step.passage.ui.fontSizes[step.passage.getPassageId(this)] = newFontSize;
-        
-        elements.css("font-size", newFontSize);
+    $(".smallerFonts").button({ text : true }).click(function() {
+        step.passage.ui.changeFontSize(this, -1);
     }).find(".ui-button-text").html("<span class='smallerFont'>A</span>");
     
-    $(".largerFonts").button({
-                text : true        
-        }
-    ).click(function() {
-        var elements = $(".passageContentHolder", step.util.getPassageContainer(this));
-        $.each(elements, function(i, item) {
-            var fontSize = parseInt($(this).css("font-size"));
-            var newFontSize = fontSize + 1;
-            step.passage.ui.fontSizes[step.passage.getPassageId(this)] = newFontSize;
-            $(this).css("font-size", newFontSize);
-        })
+    $(".resetVersions").click(function() {
+        $(this).parent().find(".extraVersions").val("").trigger('change');
+    });
+    
+    $(".largerFonts").button({ text : true }).click(function() {
+        step.passage.ui.changeFontSize(this, 1);
     });
     
     $(".passageSizeButtons").buttonset();
@@ -154,7 +180,7 @@ $(step.passage.ui).hear("versions-initialisation-completed", function() {
               
               //reset displayOptions because interlinear might not be available
               step.passage.ui.updateDisplayOptions(passageId);
-              
+              $.shout("version-changed-" + passageId);
               step.passage.changePassage(passageId);
         });
     });

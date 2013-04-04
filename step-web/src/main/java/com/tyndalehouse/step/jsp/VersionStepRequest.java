@@ -32,21 +32,26 @@
  ******************************************************************************/
 package com.tyndalehouse.step.jsp;
 
+import java.util.Iterator;
+import java.util.ResourceBundle;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.passage.Key;
 import org.crosswire.jsword.versification.BibleBook;
-import org.crosswire.jsword.versification.BibleBookList;
 import org.crosswire.jsword.versification.Versification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.inject.Injector;
-import com.tyndalehouse.step.core.data.EntityManager;
 import com.tyndalehouse.step.core.data.EntityDoc;
+import com.tyndalehouse.step.core.data.EntityManager;
 import com.tyndalehouse.step.core.data.entities.impl.EntityManagerImpl;
+import com.tyndalehouse.step.core.models.ClientSession;
 import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
+import com.tyndalehouse.step.core.utils.IOUtils;
+import com.tyndalehouse.step.core.utils.JSwordUtils;
 
 /**
  * A WebCookieRequest stores information from the request and the cookie for easy use in the jsp page
@@ -63,6 +68,9 @@ public class VersionStepRequest {
     private Versification versificationForVersion;
     private JSwordVersificationService versification;
     private Key globalKeyList;
+    private EntityDoc[] results;
+    private String miniPreface;
+    private ResourceBundle bundle;
 
     /**
      * wraps around the servlet request for easy access
@@ -80,7 +88,10 @@ public class VersionStepRequest {
                 this.book = this.versification.getBookFromVersion(version);
                 this.globalKeyList = this.book.getGlobalKeyList();
                 this.versificationForVersion = this.versification.getVersificationForVersion(this.book);
+                this.bundle = ResourceBundle.getBundle("HtmlBundle", injector
+                        .getInstance(ClientSession.class).getLocale());
                 this.success = true;
+
             }
         } catch (final Exception e) {
             // failed to retrieve information
@@ -95,12 +106,29 @@ public class VersionStepRequest {
     public String getBookList() {
         final StringBuilder bookList = new StringBuilder(1024 * 8);
         bookList.append("<table id='bookListTable' class='listingTable'>");
-        bookList.append("<tr><th>Bible book name</th><th>Chapters in the book</th></tr>");
+        bookList.append("<tr><th>");
+        bookList.append(this.bundle.getString("bible_book_name"));
+        bookList.append("</th><th>");
+        bookList.append(this.bundle.getString("chapters_in_book"));
+        bookList.append("</th></tr>");
 
-        final BibleBookList books = this.versificationForVersion.getBooks();
+        // output the preface
+        if (this.getMiniPreface().length() != 0) {
+            bookList.append("<tr class=\"even\"><td class=\"bookName\">");
+            final String copyrightHolderIntro = this.bundle.getString("intro_from_copyright_holder");
+            bookList.append(copyrightHolderIntro);
+            bookList.append("</td><td><a href=\"preface.jsp?version=");
+            bookList.append(this.book.getInitials());
+            bookList.append("\">");
+            bookList.append(copyrightHolderIntro);
+            bookList.append("</a></td></tr>");
+
+        }
+
+        final Iterator<BibleBook> books = this.versificationForVersion.getBookIterator();
         int ii = 0;
-        for (final BibleBook bb : books) {
-            outputBook(bookList, bb, ii);
+        while (books.hasNext()) {
+            outputBook(bookList, this.versificationForVersion, books.next(), ii);
             ii++;
         }
         bookList.append("</table>");
@@ -112,15 +140,40 @@ public class VersionStepRequest {
     }
 
     public String getTyndaleInfo() {
-        final EntityManager manager = this.injector.getInstance(EntityManagerImpl.class);
-        final EntityDoc[] results = manager.getReader("versionInfo").searchExactTermBySingleField("version", 1,
-                this.book.getInitials());
+        final EntityDoc[] results = getVersionInfo();
 
         if (results.length == 0) {
             return null;
         } else {
             return results[0].get("info");
         }
+    }
+
+    private EntityDoc[] getVersionInfo() {
+        if (this.results == null) {
+
+            final EntityManager manager = this.injector.getInstance(EntityManagerImpl.class);
+            this.results = manager.getReader("versionInfo").searchExactTermBySingleField("version", 1,
+                    this.book.getInitials());
+        }
+        return this.results;
+    }
+
+    /**
+     * @return a text that the author would like us to include on our information page
+     */
+    public String getMiniPreface() {
+        if (this.miniPreface == null) {
+            this.miniPreface = readMiniPreface();
+        }
+        return this.miniPreface;
+    }
+
+    private String readMiniPreface() {
+        final String fileName = "/com/tyndalehouse/step/core/data/create/versions/" + this.book.getInitials()
+                + "_mini.txt";
+
+        return IOUtils.readEntireClasspathResource(fileName);
     }
 
     /**
@@ -141,16 +194,17 @@ public class VersionStepRequest {
 
     /**
      * @param bookList a list of books
+     * @param v11n
      * @param bb bible book
      */
-    private void outputBook(final StringBuilder bookList, final BibleBook bb, final int rowNum) {
+    private void outputBook(final StringBuilder bookList, final Versification v11n, final BibleBook bb,
+            final int rowNum) {
 
-        if (BibleBook.INTRO_BIBLE.equals(bb) || BibleBook.INTRO_NT.equals(bb)
-                || BibleBook.INTRO_OT.equals(bb)) {
+        if (JSwordUtils.isIntro(bb)) {
             return;
         }
 
-        final Key keyToBook = this.book.getValidKey(bb.getBookName().getShortName());
+        final Key keyToBook = this.book.getValidKey(v11n.getShortName(bb));
         keyToBook.retainAll(this.globalKeyList);
         if (keyToBook.getCardinality() == 0) {
             return;
@@ -165,7 +219,7 @@ public class VersionStepRequest {
         }
         bookList.append("'>");
         bookList.append("<td class='bookName'>");
-        bookList.append(bb.getLongName());
+        bookList.append(v11n.getLongName(bb));
         bookList.append("</td>");
         bookList.append("<td>");
         final int lastChapter = this.versificationForVersion.getLastChapter(bb);
@@ -174,7 +228,7 @@ public class VersionStepRequest {
             bookList.append("<a href='index.jsp?version=");
             bookList.append(this.book.getInitials());
             bookList.append("&reference=");
-            bookList.append(bb.getBookName().getShortName());
+            bookList.append(v11n.getShortName(bb));
             bookList.append("%20");
             bookList.append(ii);
             bookList.append("'>");

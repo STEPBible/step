@@ -3,6 +3,7 @@ body {
 	font-family: Verdana;
 }
 
+
 .notYetImplemented {
 	background-color: black !important ;
 }
@@ -69,6 +70,14 @@ body {
 	text-align: left;
 }
 
+.selectedWordLink {
+    font-weight: bold;
+}
+
+/*.lexiconWordLink {*/
+    /*margin-right: 5px;*/
+/*}*/
+
 legend .detailSliderContainer {
 	float: right;
 }
@@ -126,7 +135,7 @@ legend .detailSliderContainer {
 }
 
 .passage-arrow {
-	background-image: url('images/ui-icons_669966_256x240.png');
+	background-image: url('images/ui-icons_991C32_256x240.png');
 }
 
 
@@ -149,4 +158,28 @@ legend .detailSliderContainer {
 	font-family: Arial;
 	font-style: italic;
 	font-size: 1.2em !important;
+}
+
+#stepInDevelopmentWarning {
+	bottom: 30px !important;
+	right: 0px;
+	position: absolute;
+	font-weight: bold;
+	width: 150px;
+	padding: 5px;
+}
+
+
+.primaryDark {
+	color: #991C32;
+}
+
+.primaryDarkBold {
+	color: #991C32;
+	font-weight: bold;
+}
+
+.primaryDarkBg {
+	background-color: #991C32;
+	color: #F3E5B4;
 }

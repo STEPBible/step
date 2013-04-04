@@ -11,4 +11,6 @@ target
 db-create.sql
 db-drop.sql
 bin
+*.iml
+.idea
 

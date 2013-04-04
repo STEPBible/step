@@ -33,10 +33,14 @@
 package com.tyndalehouse.step.core.xsl.impl;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import org.crosswire.common.util.Language;
+import org.crosswire.jsword.book.Book;
 import org.junit.Test;
 
 /**
@@ -59,21 +63,22 @@ public class InterlinearProviderImplTest {
     public void testInterlinearStrongMorphBased() throws IllegalAccessException, InvocationTargetException,
             NoSuchMethodException {
         final InterlinearProviderImpl interlinear = new InterlinearProviderImpl();
+        final Book mock = mock(Book.class);
+        interlinear.setCurrentBook(mock);
+
+        when(mock.getLanguage()).thenReturn(new Language("fr"));
 
         // NOTE: because we don't want to expose a method called during initialisation as non-private (could
         // break
         // the initialisation, of the provider, we use reflection to open up its access for testing purposes!
         final Method method = interlinear.getClass().getDeclaredMethod("addTextualInfo", String.class,
-                String.class, String.class, String.class);
+                String.class, String.class);
         method.setAccessible(true);
 
         // add a word based on a strong,morph
-        method.invoke(interlinear, "v1", "strong", "morph", "word");
+        method.invoke(interlinear, "v1", "strong", "word");
 
-        assertEquals(interlinear.getWord("v1", "strong", "morph"), "word");
-        assertEquals(interlinear.getWord("x", "strong", "morph"), "word");
-        assertEquals(interlinear.getWord("x", "strong", ""), "word");
-        assertEquals(interlinear.getWord("x", "strong", null), "word");
-        assertEquals(interlinear.getWord("x", "strong"), "word");
+        assertEquals(interlinear.getWord("v1", "strong"), "word");
+        assertEquals(interlinear.getWord("x", "strong"), "");
     }
 }

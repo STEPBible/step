@@ -34,6 +34,7 @@
 step.util = {
     passageContainers: [null, null],
     passageContents: [null, null],
+    septuagintVersions : ["LXX", "ABPGRK", "ABP"],
         
 	getPassageContainer: function(passageIdOrElement) {
 	    //check if we have a number
@@ -66,6 +67,15 @@ step.util = {
 	    return this.passageContents[passageIdOrElement];
 	},
 	
+	getOtherPassageId : function(passageId) {
+	    if(parseInt(passageId) == 1) {
+	        return 0;
+	    } else if(step.state.view.getView() == 'SINGLE_COLUMN_VIEW') {
+	        //passageId = 0, so need to work out the column layout
+	        return 0;
+	    }
+	    return 1;
+	},
 	
 	isBlank: function(s) {
 	    if(s == null) {
@@ -75,29 +85,45 @@ step.util = {
 	},
 	
 	isUnicode : function(element) {
+	    return this.isClassOfUnicode(element, function(c) {
+	        return c > 255; 
+	    });
+	},
+	
+	isHebrew : function(element) {
+	    return this.isClassOfUnicode(element, function(c) {
+	        return (c > 0x590 && c < 0x600) || (c > 0xFB10 && c < 0xFB50);
+	    });
+	},
+	
+	isClassOfUnicode : function(element, limiter) {
 	    var text = "";
-	    if(element.text) {
-	        text = element.text();
-	    } else if(element.innerText) {
-	        text = element.innerText;
-	    } else if(element.charCodeAt) {
-	        text = element;
-	    }
-	    
-	    text = text.replace(/[0-9\s,.;:'“”]/g, "").trim();
-	    
+        if(element.text || element.innerText) {
+            var el = $(element);
+            var children = el.children();
+            if(children.length != 0) {
+                text = children.not("sup,a").text();
+            } else {
+                text = el.text()
+            }
+        } else if(element.charCodeAt) {
+            text = element;
+        }
+        
+        text = text.replace(/[0-9\s,.;:'“”]/g, "").trim();
+        
         try {
-                return text.charCodeAt(0) > 255;
+            return limiter(text.charCodeAt(0));
         } catch(err) {
             return false;
-        }
+        } 
 	},
 	
     raiseError: function (error) {
         var message = error.message ? error.message : error;
         
         $("#errorText").text(message);
-        $("#error").slideDown(250);
+        $("#error").data('numPassageChanges', 0).slideDown(250);
     },
     
 	raiseErrorIfBlank: function(s, message) {
@@ -108,7 +134,7 @@ step.util = {
 	    return true;
 	},
 
-	raiseInfo : function (passageId, message, level) {
+	raiseInfo : function (passageId, message, level, eraseOnNextPassage) {
 	    var infoBar = $(".infoBar", step.util.getPassageContainer(passageId));
 	    var icon = $(".innerInfoBar .ui-icon", infoBar).addClass("ui-icon");
 	    icon.removeClass();
@@ -119,7 +145,27 @@ step.util = {
 	        icon.addClass("ui-icon-info");
 	    }
 	    
-	    infoBar.toggle(true).find(".infoLabel").html(message);
+	    infoBar.toggle(true).data('numPassageChanges', eraseOnNextPassage ? 1 : 0).find(".infoLabel").html(message);
+	    step.passage.ui.resize();
+	},
+	
+	closeInfoErrors : function(passageId) {
+	    var infoBar = $(".infoBar:visible", step.util.getPassageContainer(passageId));
+	    this.hideIfPassageHasAlreadyChanged(infoBar);
+	    this.hideIfPassageHasAlreadyChanged($("#error:visible"));
+	},
+	
+	hideIfPassageHasAlreadyChanged : function(infoBar) {
+        if(infoBar.length != 0) {
+            var passageChanges = infoBar.data('numPassageChanges');
+            if(passageChanges >= 1) {
+                //hide the bar
+                infoBar.toggle(false);
+                step.passage.ui.resize();
+            } else {
+                infoBar.data('numPassageChanges', 1);
+            }
+        }	    
 	},
 	
 	/**
@@ -130,10 +176,66 @@ step.util = {
 	        return "";
 	    }
 	    
-	    return query.replace('+', '#plus#').replace('/', "#slash#");
+        var str = query;
+        var newStr;
+        while(str != newStr) {
+            newStr = str;
+            str = str.replace('+', '#plus#').replace('/', "#slash#");
+        }
+        
+        return str;	    
 	},
 	
+	undoReplaceSpecialChars : function(query) {
+	    if(this.isBlank(query)) {
+	        return "";
+	    }
+    
+	    var str = query;
+	    var newStr;
+	    while(str != newStr) {
+	        newStr = str;
+	        str = str.replace('~plus~', '+').replace("~slash~", '/').replace('#plus#', '+').replace("#slash#", '/');
+	    }
+	    
+	    return str;
+	},
+	
+    trackAnalytics : function(eventType, eventName, eventValue, numValue) {
+        if(window["_gaq"]) {
+            _gaq.push(['_trackEvent', eventType, eventName, eventValue, numValue]);
+        }
+    },
+	
     ui : {
+        getFeaturesLabel : function(item) {
+            var features = "";
+            
+
+            // add to Strongs if applicable, and therefore interlinear
+            if(item.hasRedLetter) {
+                features += " " + '<span class="versionFeature" title="' + __s.jesus_words_in_red_available + '">' + __s.jesus_words_in_red_available_initial + '</span>';
+            }
+            
+            // add morphology
+            if (item.hasMorphology) {
+                features += " " + "<span class='versionFeature' title='" + __s.grammar_available + "'>" + __s.grammar_available_initial + "</span>";
+            }
+            
+            if (item.hasStrongs) {
+                features += " " + "<span class='versionFeature' title='" + __s.vocabulary_available + "'>" + __s.vocabulary_available_initial + "</span>";
+                
+                if($.inArray(item.initials, step.util.septuagintVersions) != -1) {
+                    features += " " + "<span class='versionFeature' title='" + __s.septuagint_interlinear_available + "'>" + __s.septuagint_interlinear_available_initial + "</span>";
+                } else {
+                    features += " " + "<span class='versionFeature' title='" + __s.interlinear_available + "'>" + __s.interlinear_available_initial + "</span>";
+                }
+            }
+
+
+            return features;
+        },
+        
         getVisibleVersions : function(passageId) {
             return $("fieldset:visible", step.util.getPassageContainer(passageId)).find(".searchVersions, .passageVersion, .extraVersions");
         },
@@ -167,7 +269,7 @@ step.util = {
                         }
                         
                         vocabInfo += "<span class='infoTagLine'>" +
-                        "More information can be found by clicking on the word in the verse." +
+                        __s.more_info_on_click_of_word +
                         "</span>";
                         
                         //"<span class='ancientSearch'>" + item.accentedUnicode + "</span> (<em>" + item.stepTransliteration + "</em>): " + (item.stepGloss == undefined ? "-" : item.stepGloss);
@@ -236,7 +338,11 @@ step.util = {
         
         trackQuerySyntax : function(selector, namespace) {
             $(selector + " input").keyup(function(ev) {
-                if(ev.which < 48) {
+                if(ev.ctrlKey || ev.altKey || ev.metaKey) {
+                    return true;
+                }
+                
+                if(ev.which < 48 && ev.which != 8 && ev.which != 46) {
                     return true;
                 }
                 
@@ -245,13 +351,14 @@ step.util = {
                 //re-evaluate query
                 var passageId = step.passage.getPassageId(this);
                 var syntax = step.search.ui[namespace].evaluateQuerySyntax(passageId);
+
                 
                 //also write it up the top
                 if(syntax) {
                     $(".searchQuerySyntax", step.util.getPassageContainer(passageId)).val(syntax); 
                 }
                 
-                if(syntax.startsWith("o")) {
+                if(syntax == undefined || syntax.startsWith("o") || syntax.startsWith("s")) {
                     //no estimate for original word search
                     return;
                 }
@@ -259,11 +366,15 @@ step.util = {
                 //finally attempt a search estimation
                 delay(function() {
                     var versions = $("fieldset:visible .searchVersions", step.util.getPassageContainer(passageId)).val();
+                    if(versions == undefined || versions.trim().length == 0) {
+                        versions = "ESV";
+                    }
+                    
                     
                     if(step.search.refinedSearch.length == 0) {
                         $.getSafe(SEARCH_ESTIMATES, [encodeURIComponent(step.util.replaceSpecialChars(syntax)) + " in (" + versions + ")"], function(estimate) {
                             $("fieldset:visible .resultEstimates", step.util.getPassageContainer(passageId))
-                                .html("~ <em>" + estimate + "</em> results")
+                                .html(sprintf(__s.approx_results, estimate))
                                 .css("color", "#" + step.util.ui._calculateEstimateBackgroundColour(estimate));
                             
                         });
@@ -478,7 +589,7 @@ step.util = {
                 var passageContainer = step.util.getPassageContainer(this);
                 step.search.refinedSearch.push(step.search.lastSearch);
 
-                $(".refinedSearch .refinedSearchLabel", passageContainer).html("Refining results from last search: " + step.search.refinedSearch.join("=>"));
+                $(".refinedSearch .refinedSearchLabel", passageContainer).html(__s.refine_search_results + " " + step.search.refinedSearch.join("=>"));
                 
                 //blank the results
                 $("fieldset:visible .resultEstimates", passageContainer).html("");
@@ -548,15 +659,37 @@ step.util = {
                 }
             }
             return translitHtml;
+        },
+        
+        highlightPhrase : function(nonJqElement, cssClasses, phrase) {
+            var regexPattern = phrase.replace(/ /g,' +').replace(/"/g, '["\u201d]'); 
+            var regex = new RegExp(regexPattern, "ig");
+//            try {
+                doHighlight(nonJqElement, cssClasses, regex);
+//            } catch(e) {
+                //not sure what to do with this... TODO: need to investigate
+//                console.log(e);
+//            }
         }
     },
 };
 
 var delay = (function(){
     var timer = 0;
-    return function(callback, ms){
-      clearTimeout (timer);
-      timer = setTimeout(callback, ms);
+    var timers = {};
+    
+    return function(callback, ms, timerName){
+        if(timerName) {
+            var tn = timers[timerName];
+            if(tn == undefined) {
+                timers[timerName] = tn = 0;
+            }
+            clearTimeout(tn);
+            timers[timerName] = setTimeout(callback, ms);
+        } else {
+            clearTimeout (timer);
+            timer = setTimeout(callback, ms);
+        }        
     };
   })();
 
@@ -594,7 +727,7 @@ function isEmpty(s) {
  */
 function addButtonToAutoComplete(textbox, icon) {
 	$("<button>&nbsp;</button>").attr("tabIndex", -1).attr("title",
-			"Show all Bible versions").insertAfter(textbox).button({
+			__s.show_all_bible_versions).insertAfter(textbox).button({
 		icons : {
 			primary : icon
 		},
@@ -664,7 +797,6 @@ function refreshWaitStatus() {
 		 *            url
 		 * @param the
 		 *            userFunction to call on success of the query
-		 * @deprecated
 		 */
 		getSafe : function(url, args, userFunction, passageId, level) {
 		    
@@ -711,7 +843,7 @@ function refreshWaitStatus() {
 						});
 					} else {
 					    if(passageId != undefined) {
-					        step.util.raiseInfo(passageId, data.errorMessage, level);					        
+					        step.util.raiseInfo(passageId, data.errorMessage, level, url.startsWith(BIBLE_GET_BIBLE_TEXT));					        
 					    } else {
 		                    step.util.raiseError(data.errorMessage);
 					    }
@@ -739,14 +871,17 @@ function refreshWaitStatus() {
             for(var i = 0; i < hashes.length; i++) {
                 hash = hashes[i].split('=');
                 vars.push(hash[0]);
-                vars[hash[0]] = hash[1];
+                if(hash[1]) {
+                    vars[hash[0]] = hash[1].split('#')[0];
+                }
+                
             }
             return vars;
-            },
+        },
             
-            getUrlVar: function(name){
-              return $.getUrlVars()[name];
-            }
+        getUrlVar: function(name){
+          return $.getUrlVars()[name];
+        }
 	});
 
 	$.fn.disableSelection = function() {
@@ -869,14 +1004,19 @@ function goToPassageArrow(isLeft, ref, classes, goToChapter) {
 
 
 function passageArrowTrigger(passageId, ref, goToChapter) {
-    if(goToChapter) {
+    if(passageId == 1) {
+        step.state.view.ensureTwoColumnView();
+    }
+    
+    //so long as we are "goToChapter" and have only one chapter (i.e. just one instance of ':'), then we go to the chapter
+    var indexOfColon = ref.indexOf(':');
+    var multiColons = ref.indexOf(':', indexOfColon + 1) != -1;
+    
+    if(goToChapter && !multiColons) {
         //true value, so get the next reference
         var version = step.state.passage.version(passageId);
         
-        if(passageId == 1) {
-            step.state.view.ensureTwoColumnView();
-        }
-        
+
         step.passage.callbacks[passageId].push(function() {
             $.getSafe(BIBLE_GET_KEY_INFO, [ref, version], function(newRef) {
                 var passageContent = step.util.getPassageContent(passageId);
@@ -910,6 +1050,8 @@ function passageArrowTrigger(passageId, ref, goToChapter) {
 
         
         $.getSafe(BIBLE_EXPAND_TO_CHAPTER, [version, ref], function(newChapterRef) {
+            //reset the URL to force a passage lookup
+            step.passage.lastUrls[passageId] = '';
             step.state.passage.reference(passageId, newChapterRef.name);
         });
         
@@ -921,7 +1063,7 @@ function passageArrowTrigger(passageId, ref, goToChapter) {
 
 function addNotApplicableString(val) {
 	if(val == null || val == "") {
-		return "<span class='notApplicable'>N/A</span>";
+		return "<span class='notApplicable'>" + __s.not_applicable + "</span>";
 	}
 	return val;
 }

@@ -45,6 +45,7 @@ import java.nio.charset.Charset;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.tyndalehouse.step.core.data.create.Loader;
 import com.tyndalehouse.step.core.data.create.ModuleLoader;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 
@@ -56,6 +57,7 @@ import com.tyndalehouse.step.core.exceptions.StepInternalException;
 public abstract class AbstractClasspathBasedModuleLoader implements ModuleLoader {
     private static final Logger LOG = LoggerFactory.getLogger(AbstractClasspathBasedModuleLoader.class);
     private final String resourcePath;
+    private Loader mainLoader;
 
     /**
      * @param resourcePath the resource path to load
@@ -65,7 +67,8 @@ public abstract class AbstractClasspathBasedModuleLoader implements ModuleLoader
     }
 
     @Override
-    public void init() {
+    public void init(final Loader loader) {
+        this.mainLoader = loader;
         LOG.debug("Loading entities for [{}]", this.resourcePath);
         readDataFile();
     }
@@ -75,6 +78,10 @@ public abstract class AbstractClasspathBasedModuleLoader implements ModuleLoader
      */
     private void readDataFile() {
         LOG.debug("Reading resource [{}]", this.resourcePath);
+
+        if (this.resourcePath == null) {
+            throw new StepInternalException("Unable to locate resource.");
+        }
 
         if (this.resourcePath.endsWith("index.txt")) {
             // then we're dealing with a directory, so parse multiple files
@@ -131,6 +138,13 @@ public abstract class AbstractClasspathBasedModuleLoader implements ModuleLoader
             // closeQuietly(bufferedStream);
             closeQuietly(stream);
         }
+    }
+
+    /**
+     * @return the mainLoader
+     */
+    public Loader getMainLoader() {
+        return this.mainLoader;
     }
 
     /**

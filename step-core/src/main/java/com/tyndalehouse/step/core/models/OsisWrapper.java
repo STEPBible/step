@@ -33,6 +33,8 @@
 package com.tyndalehouse.step.core.models;
 
 import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
 
 import org.crosswire.jsword.passage.Key;
 import org.crosswire.jsword.versification.Versification;
@@ -58,6 +60,7 @@ public class OsisWrapper implements Serializable {
     private boolean containsGreek = false;
     private boolean containsHebrew = false;
     private final String longName;
+    private Map<String, List<LexiconSuggestion>> strongNumbers;
 
     /**
      * the value to be wrapped
@@ -213,5 +216,21 @@ public class OsisWrapper implements Serializable {
      */
     public String getLongName() {
         return this.longName;
+    }
+
+    /**
+     * Sets the strong numbers.
+     * 
+     * @param strongNumbers the verse strongs
+     */
+    public void setStrongNumbers(final Map<String, List<LexiconSuggestion>> strongNumbers) {
+        this.strongNumbers = strongNumbers;
+    }
+
+    /**
+     * @return the strongNumbers
+     */
+    public Map<String, List<LexiconSuggestion>> getStrongNumbers() {
+        return this.strongNumbers;
     }
 }

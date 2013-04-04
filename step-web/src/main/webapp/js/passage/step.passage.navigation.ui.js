@@ -60,11 +60,11 @@ $(document).ready(function() {
         if(icon == "ui-icon-script") {
             enabled = true;
             $(this).button("option", "icons", {primary: "ui-icon-document-b"});
-            $(this).attr("title", "Click here to display the selected passage only");
+            $(this).attr("title", __s.passage_no_continuous_scroll);
         } else {
             enabled = false;
             $(this).button("option", "icons", {primary: "ui-icon-script"});
-            $(this).attr("title", "Click here to display the passage as one large scroll");
+            $(this).attr("title", __s.passage_continuous_scroll);
         }
         
         step.passage.navigation.handleContinuousScrolling(step.passage.getPassageId(this), enabled);
@@ -72,10 +72,10 @@ $(document).ready(function() {
         if (step.state.passage.multiRange(step.passage.getPassageId(this))) {
             // disable button
             $(button).attr("disabled", "disabled");
-            $(button).continuousPassage.attr("title", "Continous passage scrolling is only available when one scripture reference is entered.");
+            $(button).continuousPassage.attr("title", __s.error_continuous_scroll_on_multiple_refs);
         } else {
             $(button).removeAttr("disabled");
-            $(button).attr("title", "Click here to display the passage as one large scroll");
+            $(button).attr("title", __s.passage_continuous_scroll);
         }
     });
     
@@ -99,5 +99,4 @@ $(document).ready(function() {
             toggleMenuItem($("a[name = 'NO_SYNC']").get(0));
         }
     });
-    
 });

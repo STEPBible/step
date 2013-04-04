@@ -59,8 +59,6 @@ public class DefaultVersionsProvider implements Provider<List<String>> {
         final List<String> versions = new ArrayList<String>();
         versions.add("ESV");
         versions.add("KJV");
-        versions.add("StrongsHebrew");
-        versions.add("StrongsGreek");
         versions.add("Byz");
         return versions;
     }

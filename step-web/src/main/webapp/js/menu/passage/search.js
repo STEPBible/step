@@ -38,7 +38,6 @@ $(step.menu).hear("MENU-SEARCH", function(self, menuTrigger) {
 	    refreshLayout();
 	} else {
 	    step.menu.tickOneItemInMenuGroup(menuTrigger);
-//	    $.shout("refresh-passage-display", menuTrigger.passageId);
-	    step.state.activeSearch(menuTrigger.passageId, menuTrigger.menuItem.name);
+	    step.state.activeSearch(menuTrigger.passageId, menuTrigger.menuItem.name, true);
 	}
 });

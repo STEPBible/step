@@ -72,7 +72,7 @@ public abstract class AbstractStepGuiceModule extends AbstractModule {
     private Properties readProperties() {
         InputStream stream = null;
         try {
-            stream = getClass().getResourceAsStream(this.propertyFileUrl);
+            stream = AbstractStepGuiceModule.class.getResourceAsStream(this.propertyFileUrl);
             this.moduleProperties = new Properties();
             this.moduleProperties.load(stream);
             applySystemPropertiesOverride();

@@ -32,18 +32,16 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.xsl.impl;
 
-import static java.util.regex.Pattern.compile;
-
-import java.util.regex.Pattern;
+import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
 
 import javax.inject.Inject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.tyndalehouse.step.core.data.EntityManager;
 import com.tyndalehouse.step.core.data.EntityDoc;
 import com.tyndalehouse.step.core.data.EntityIndexReader;
+import com.tyndalehouse.step.core.data.EntityManager;
 
 /**
  * A utility to provide colors to an xsl spreadsheet. This is a non-static utility since later on we may wish
@@ -78,11 +76,6 @@ import com.tyndalehouse.step.core.data.EntityIndexReader;
  * @author chrisburrell
  */
 public class ColorCoderProviderImpl {
-    static final Pattern FEMININE_FORM = compile("SF|PF");
-    static final Pattern MASCULINE_FORM = compile("SM|PM");
-    static final Pattern SINGULAR_FORM = compile("S[MFN]$|S[MFN]-[A-Z]|[123]S|[CDFIKPQRSTX]-[123][A-Z]S");
-    static final Pattern PLURAL_FORM = compile("P[MFN]$|P[MFN]-[A-Z]|[123]P|[CDFIKPQRSTX]-[123][A-Z]P");
-
     private static final Logger LOGGER = LoggerFactory.getLogger(ColorCoderProviderImpl.class);
     private static final String ROBINSON_PREFIX_LC = "robinson:";
     private static final String ROBINSON_PREFIX_UC = "ROBINSON:";
@@ -103,7 +96,6 @@ public class ColorCoderProviderImpl {
      * @param morph the robinson morphology
      * @return the classname
      */
-    // TODO this doesn't work for multiple morphs - rework for colours? share a cache system...
     public String getColorClass(final String morph) {
         if (morph == null || morph.length() < MINIMUM_MORPH_LENGTH) {
             return "";
@@ -114,11 +106,23 @@ public class ColorCoderProviderImpl {
             // we're in business and we know we have at least 3 characters
             LOGGER.debug("Identifying grammar for [{}]", morph);
 
-            final EntityDoc[] results = this.morphology.searchExactTermBySingleField("code", 1,
-                    morph.substring(ROBINSON_PREFIX_LC.length()));
+            final int length = ROBINSON_PREFIX_LC.length();
+            final int firstSpace = morph.indexOf(' ', length);
+            String code;
+            if (firstSpace != -1) {
+                code = morph.substring(length, firstSpace);
+            } else {
+                code = morph.substring(length);
+            }
+
+            final EntityDoc[] results = this.morphology.searchExactTermBySingleField("code", 1, code);
             if (results.length > 0) {
                 classes = results[0].get("cssClasses");
+            }
 
+            if (isBlank(classes) && firstSpace != -1) {
+                // redo the same process, but with less of the string,
+                return getColorClass(morph.substring(firstSpace + 1));
             }
         }
         return classes != null ? classes : "";

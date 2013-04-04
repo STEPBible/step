@@ -47,6 +47,8 @@ public class EntityIndexWriterImpl {
      * @param entityManager the configuration for that entity
      * @param entityName the name of the entity
      */
+    // we specifically allow a method to be overridden for testing purposes.
+    @SuppressWarnings("PMD")
     public EntityIndexWriterImpl(final EntityManager entityManager, final String entityName) {
         this.manager = entityManager;
         this.config = entityManager.getConfig(entityName);
@@ -210,6 +212,7 @@ public class EntityIndexWriterImpl {
     /**
      * adds a document to the index
      */
+    @SuppressWarnings("PMD")
     private void addDocument() {
         try {
             if (this.doc != null) {

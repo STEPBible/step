@@ -48,6 +48,9 @@ BOOKMARKS_ADD =                     STEP_SERVER_BASE_URL + "favourites/addBookma
 HISTORY_GET =                       STEP_SERVER_BASE_URL + "favourites/getHistory/";
 HISTORY_ADD =                       STEP_SERVER_BASE_URL + "favourites/addHistory/";
 
+ALTERNATIVE_TRANSLATIONS =          STEP_SERVER_BASE_URL + "alternativeTranslations/get/";
+ANALYSIS_STATS =                    STEP_SERVER_BASE_URL + "analysis/analyseStats/";
+
 BIBLE_GET_MODULES =                 STEP_SERVER_BASE_URL + "bible/getModules/";
 BIBLE_GET_BIBLE_TEXT =              STEP_SERVER_BASE_URL + "bible/getBibleText/";
 BIBLE_GET_FEATURES =                STEP_SERVER_BASE_URL + "bible/getFeatures/";
@@ -58,6 +61,7 @@ BIBLE_GET_PREVIOUS_CHAPTER =        STEP_SERVER_BASE_URL + "bible/getPreviousCha
 BIBLE_GET_BY_NUMBER =               STEP_SERVER_BASE_URL + "bible/getBibleByVerseNumber/";
 BIBLE_GET_KEY_INFO =                STEP_SERVER_BASE_URL + "bible/getKeyInfo/";
 BIBLE_EXPAND_TO_CHAPTER =           STEP_SERVER_BASE_URL + "bible/expandKeyToChapter/";
+BIBLE_GET_STRONGS_AND_SUBJECTS =    STEP_SERVER_BASE_URL + "bible/getStrongNumbersAndSubjects/";
 
 DICTIONARY_GET_BY_HEADWORD =        STEP_SERVER_BASE_URL + "dictionary/lookupDictionaryByHeadword/";
 DICTIONARY_SEARCH_BY_HEADWORD =     STEP_SERVER_BASE_URL + "dictionary/searchDictionaryByHeadword/";
@@ -67,13 +71,20 @@ MODULE_GET_ALL_INSTALLABLE_MODULES= STEP_SERVER_BASE_URL + "module/getAllInstall
 MODULE_GET_INFO =                   STEP_SERVER_BASE_URL + "module/getInfo/";
 MODULE_GET_QUICK_INFO =             STEP_SERVER_BASE_URL + "module/getQuickInfo/";
 
-SETUP_IS_FIRST_TIME =               STEP_SERVER_BASE_URL + "setup/isFirstTime/";
-SETUP_INSTALL_DEFAULT_MODULES =     STEP_SERVER_BASE_URL + "setup/installDefaultModules/";
+SETUP_INSTALL_FIRST_TIME =          STEP_SERVER_BASE_URL + "setup/installFirstTime/";
+SETUP_GET_PROGRESS =                STEP_SERVER_BASE_URL + "setup/getProgress/";
+SETUP_IS_COMPLETE =                 STEP_SERVER_BASE_URL + "setup/isInstallationComplete/";
 SETUP_INSTALL_BIBLE =               STEP_SERVER_BASE_URL + "setup/installBible/";
+SETUP_PROGRESS_INSTALL =            STEP_SERVER_BASE_URL + "setup/getProgressOnInstallation/";
+SETUP_PROGRESS_INDEX =              STEP_SERVER_BASE_URL + "setup/getProgressOnIndexing/";
+SETUP_REMOVE_MODULE =               STEP_SERVER_BASE_URL + "setup/removeModule/";
+SETUP_REINDEX =                     STEP_SERVER_BASE_URL + "setup/reIndex/";
 
 SEARCH_DEFAULT =                    STEP_SERVER_BASE_URL + "search/search/";
-SEARCH_ESTIMATES =                  STEP_SERVER_BASE_URL + "search/estimateSearch/"
+SEARCH_ESTIMATES =                  STEP_SERVER_BASE_URL + "search/estimateSearch/";
 SEARCH_SUGGESTIONS =                STEP_SERVER_BASE_URL + "search/getLexicalSuggestions/";
+
+SUBJECT_VERSES =                    STEP_SERVER_BASE_URL + "search/getSubjectVerses/";
 
 TIMELINE_GET_EVENTS =               STEP_SERVER_BASE_URL + "timeline/getEvents/";
 TIMELINE_GET_EVENTS_IN_PERIOD =     STEP_SERVER_BASE_URL + "timeline/getEventsInPeriod/";
@@ -81,20 +92,15 @@ TIMELINE_GET_EVENTS_FROM_REFERENCE= STEP_SERVER_BASE_URL + "timeline/getEventsFr
 TIMELINE_GET_CONFIGURATION =        STEP_SERVER_BASE_URL + "timeline/getTimelineConfiguration";
 TIMELINE_GET_EVENT_INFO =           STEP_SERVER_BASE_URL + "timeline/getEventInformation/";
 
-USER_LOGIN =                        STEP_SERVER_BASE_URL + "user/login/";
-USER_LOGOUT =                       STEP_SERVER_BASE_URL + "user/logout/";
-USER_REGISTER =                     STEP_SERVER_BASE_URL + "user/register/";
-USER_GET_LOGGED_IN_USER =           STEP_SERVER_BASE_URL + "user/getLoggedInUser";
-
 GEOGRAPHY_GET_PLACES =              STEP_SERVER_BASE_URL + "geography/getPlaces/";
 
-
+USER_CHECK =                        STEP_SERVER_BASE_URL + "user/checkValidUser/";
 
 // ////////////////////////
 // SOME DEFAULTS
 // ////////////////////////
 var DEFAULT_POPUP_WIDTH = 500;
-var DETAIL_LEVELS = [ "Basic", "Intermediate", "Advanced" ];
+var DETAIL_LEVELS = [ __s.basic_view, __s.intermediate_view, __s.advanced_view ];
 
 /** a simple toggler for the menu items */
 function toggleMenuItem(menuItem) {
@@ -114,7 +120,7 @@ function toggleMenuItem(menuItem) {
         },
         passageId : passageId
     });
-};
+}
 
 function getParentMenuName(menuItem) {
     var menu = $(menuItem).closest("li[menu-name]");
@@ -129,6 +135,7 @@ function getParentMenuName(menuItem) {
  * 
  * @param element
  * @param passageReference
+ * @param passageIdOrElement
  */
 function viewPassage(passageIdOrElement, passageReference, element) {
     // only shout preview if the preview bar is not displaying options on it.
@@ -148,22 +155,22 @@ function viewPassage(passageIdOrElement, passageReference, element) {
 
 
 /**
- * shows the login popup
- */
-function login() {
-    $.shout("show-login-popup");
-};
-
-
-/**
  * called when click on a piece of text.
  */
-function showDef(source) {
-    var s = $(source);
-
-    var strong = s.attr("strong");
-    var morph = s.attr("morph");
-    var passageId = step.passage.getPassageId(s);
+function showDef(source, passage) {
+    var strong;
+    var morph;
+    var passageId;
+    
+    if (typeof source == "string") {
+        strong = source;
+        passageId = passage;
+    } else {
+        var s = $(source);
+        strong = s.attr("strong");
+        morph = s.attr("morph");
+        passageId = step.passage.getPassageId(s);
+    }
 
     $.shout("show-all-strong-morphs", {
         strong : strong,
@@ -171,30 +178,36 @@ function showDef(source) {
         source : source,
         passageId: passageId
     });
-};
-
-/**
- * TODO: move this out of here to utils.js if we have more utility
- * classes/functions helper function for morph and strongs
- */
-function showInfo(tag, sourceElement) {
-    // trigger the parent event - to show everything
-    $(sourceElement).parent().click();
-
-    // need to find what event is coming in, to get the clicked element and pass
-    // that down
-    $("#lexiconDefinition span:contains(" + tag + ")").parent().click();
-};
-
-function showArticle(headword, instance) {
-    var passageId = $("#selectedPane").val();
-
-    $.getSafe(DICTIONARY_GET_BY_HEADWORD + headword + "/" + instance, function(data) {
-        // TODO finish this off...
-        $(".passageContainer[passage-id = " + passageId + "]").html(data.text);
-    });
 }
 
 function makeMasterInterlinear(element, newVersion) {
     $.shout("make-master-interlinear-" + step.passage.getPassageId(element), newVersion);
+}
+
+function forgetProfile(callback) {
+    window.localStorage.clear();
+    if(callback) {
+        callback();
+    }
+    window.location.reload();
+}
+
+function getRelatedVerses(refs, passageId) {
+    if(refs == null || refs.length == 0) {
+        return;
+    }
+    
+    var otherPassage = step.util.getOtherPassageId(passageId);
+    step.state.passage.reference(otherPassage, refs);
+}
+
+function getRelatedSubjects(key, passageId) {
+    var otherPassage = step.util.getOtherPassageId(passageId);
+    var link = $("a[name='" + key + "']", step.util.getPassageContent(passageId))[0];
+    var relatedSubjects = $.data(link, "relatedSubjects");
+    
+    //first change the fieldset:
+    step.state.activeSearch(otherPassage, "SEARCH_SUBJECT", false);
+    
+    step.search._doResultsRender(otherPassage, relatedSubjects, 1, "", relatedSubjects.query);
 }

@@ -30,17 +30,17 @@
 ////////////////////////////////////////
 // LANGUAGE
 ////////////////////////////////////////
-WORDS_MEANING = ["words meaning", "Type the English meaning of the original words. You can choose to select a value from the list, or simply search for the text you enter in the textbox."];
-GREEK_WORDS = ["a Greek word", "Type the start of the word in English letters or Unicode Greek (accents are not needed)."];
-HEBREW_WORDS = ["a Hebrew word", "Type the start of the word in English letters or Unicode Hebrew (pointing is not needed)."];
+WORDS_MEANING = [__s.words_meaning, __s.words_meaning_explanation];
+GREEK_WORDS = [__s.greek_word, __s.greek_word_explanation];
+HEBREW_WORDS = [__s.hebrew_word, __s.hebrew_word_explanation];
 
-
-SPECIFIC_FORM = "this specific form of this word";
-ALL_FORMS = "all forms of this word";
-ALL_RELATED = "all related words";
-SPECIFIC_GRAMMAR = "specific grammar...";
-ORIGINAL_SPELLING =  "Original spelling";
-VOCABULARY = "Vocabulary";
+SPECIFIC_FORM = __s.specific_form;
+ALL_FORMS = __s.all_forms;
+ALL_RELATED = __s.all_related_words;
+SPECIFIC_GRAMMAR = __s.specific_grammar;
+ORIGINAL_SPELLING =  __s.original_spelling;
+VOCABULARY = __s.vocabulary;
+SCRIPTURE= __s.scripture;
 
 step.defaults = {
     detailLevel : 0,
@@ -57,31 +57,41 @@ step.defaults = {
         }
     ],
     passage : {
-        interOptions : [ "Interleaved", "Interleaved with comparison", "Interlinear", "Column view", "Column view with comparison" ],
+        interOptions : [ __s.passage_interleaved, __s.passage_interleaved_with_comparison, __s.passage_interlinear, __s.passage_column_view, __s.passage_column_view_with_compare],
         interNamedOptions : ["INTERLEAVED", "INTERLEAVED_COMPARE", "INTERLINEAR", "COLUMN", "COLUMN_COMPARE"],
-        interOptionsNoInterlinear : [ "Interleaved", "Interleaved with comparison", "Column view", "Column view with comparison" ]
+        interOptionsNoInterlinear : [__s.passage_interleaved, __s.passage_interleaved_with_comparison, __s.passage_column_view, __s.passage_column_view_with_compare],
+        interNoInterlinearDefault : __s.passage_interleaved,
+        interInterlinearDefault : __s.passage_interlinear
     },
     
     search: {
         textual : {
             sortByRelevance : true,
-            availableRanges : [ { label: "Whole Bible",         value: "Gen-Rev" }, 
-                                { label: "Old Testament",       value: "Gen-Mal" },
-                                { label: "New Testament",       value: "Mat-Rev" },
-                                { label: "The Pentateuch",      value: "Gen-Deu" },
-                                { label: "History Books",       value: "Josh-Est" },
-                                { label: "Poetic Books",        value: "Job-Song" },
-                                { label: "Prophets",            value: "Isa-Mal" },
-                                { label: "Gospels and Acts",    value: "Mat-Acts" },
-                                { label: "Epistles",            value: "Rom-Rev" },
-                                { label: "List books...", value: ""}
+            availableRanges : [ { label: __s.whole_bible,         value: __s.whole_bible_range }, 
+                                { label: __s.old_testament,       value: __s.old_testament_range },
+                                { label: __s.new_testament,       value: __s.new_testament_range },
+                                { label: __s.the_pentateuch,      value: __s.the_pentateuch_range },
+                                { label: __s.history_books,       value: __s.history_books_range },
+                                { label: __s.poetic_books,        value: __s.poetic_books_range },
+                                { label: __s.prophets,            value: __s.prophets_range },
+                                { label: __s.gospels_and_acts,    value: __s.gospels_and_acts_range },
+                                { label: __s.epistles,            value: __s.epistles_range },
+                                { label: __s.list_books,            value: ""}
                               ],
             //order and indices are important below
-            simpleTextTypes : [ "one or more words", "all of the words", "the exact phrase", "words similar to", "words starting with"],
-            simpleTextSecondaryTypes : [ "all of the words", "the exact phrase"],
-            simpleTextIncludes : ["include", "exclude"],
-            simpleTextProximities : ["the same verse", "1 verse either side", "2 verses either side", "6 verses either side", "30 verses either size"],
-            simpleTextSortBy : [ "relevance", " occurrence in the Bible text"]
+            simpleTextTypes : [ __s.simple_search_types_one_or_more_words, 
+                                __s.simple_search_types_all_words, 
+                                __s.simple_search_types_exact, 
+                                __s.simple_search_types_similar, 
+                                __s.simple_search_types_starting_with],
+            simpleTextSecondaryTypes : [ __s.simple_search_types_all_words, __s.simple_search_types_exact],
+            simpleTextIncludes : [__s.simple_search_includes_include, __s.simple_search_includes_exclude],
+            simpleTextProximities : [__s.simple_search_proximity_same_verse,
+                                     __s.simple_search_proximity_1_verse,
+                                     __s.simple_search_proximity_2_verses,
+                                     __s.simple_search_proximity_6_verses,
+                                     __s.simple_search_proximity_30_verses],
+            simpleTextSortBy : [ __s.simple_search_sort_by_relevance, __s.simple_search_sort_by_bible_occurence]
             
         },
         
@@ -90,7 +100,8 @@ step.defaults = {
                              GREEK_WORDS[0], 
                              HEBREW_WORDS[0]],
             originalForms: [ALL_RELATED, ALL_FORMS, SPECIFIC_FORM, ],
-            originalSorting: ["Scripture", VOCABULARY, ORIGINAL_SPELLING]
+            originalSorting:        [SCRIPTURE, VOCABULARY, ORIGINAL_SPELLING],
+            originalSortingValues:  ["SCRIPTURE", "VOCABULARY", "ORIGINAL_SPELLING"]
         }
     }
 };

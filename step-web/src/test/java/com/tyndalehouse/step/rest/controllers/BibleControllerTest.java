@@ -164,8 +164,8 @@ public class BibleControllerTest {
     @Test
     public void testGetFeatures() {
         final String version = "abp";
-        this.testController.getFeatures(version);
-        verify(this.bibleInformation).getFeaturesForVersion(version);
+        this.testController.getFeatures(version, "NONE");
+        verify(this.bibleInformation).getAvailableFeaturesForVersion(version, "NONE");
     }
 
     /**

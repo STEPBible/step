@@ -76,6 +76,24 @@ step.search.ui.original = {
         $(".originalSorting", passageContainer).prop("disabled", true);
     },
     
+    _displayGrammar : function(passageId) {
+        var currentType = $(".originalType", passageContainer).val();
+        
+        step.util.getPassageContainer(passageId);
+        if(currentType == GREEK_WORDS[0]) {
+            //do greek options
+            $(".grammarSearchOption").each(function(index, item) {
+                var myItem = $(item);
+                if($(item).hasClass(".function")) {
+                    myItem.append($("<input type='checkbox'  />").attr('value', "noun")).append("Noun");
+                    
+                }
+            });
+        } else if(currentType == HEBREW_WORDS[0]) {
+            //do hebrew
+        }
+    },
+    
     restoreDefaults : function(passageId, force) {
         step.util.ui.resetIfEmpty(passageId, force, step.state.original.originalType,  step.defaults.search.original.originalTypes[0]);
         step.util.ui.resetIfEmpty(passageId, force, step.state.original.originalForms,  step.defaults.search.original.originalForms[1]);
@@ -94,9 +112,17 @@ step.search.ui.original = {
         step.search.ui.original._displayCorrectOptions(passageId);
     },
     
+    updateSliderLevel : function(passageId, newLevel) {
+        $("fieldset:visible", step.util.getPassageContainer(passageId)).detailSlider("update",  { value: newLevel });
+    },
+    
+    getLevel : function(passageId) {
+        return $("fieldset:visible", step.util.getPassageContainer(passageId)).detailSlider("value");
+    },
+    
     evaluateQuerySyntax : function(passageId) {
         var passageContainer = step.util.getPassageContainer(passageId);
-        var level = $("fieldset:visible", passageContainer).detailSlider("value");
+        var level = this.getLevel(passageId);
         var originalType = $(".originalType", passageContainer).val();
         var originalWord = $(".originalWord", passageContainer).val();
         
@@ -144,61 +170,62 @@ step.search.ui.original = {
         $(document).ready(function() {
             var target = $(".originalWord");
             
-            target.lexicalcomplete({
-                minLength : 2,
-                select : function(event, ui) {
-                    //manually change the text, so that the change() method can fire against the right version
-                    $(this).val(ui.item.value);
-                    $(this).change();
-                    $(this).trigger('keyup');
-                },
-                open: function(event, ui) {
-                    //check we've got the right size
-                    $(".ui-autocomplete").map(function() {
-                        //check if 'this' has a child containing the text of the first option
-                            $(this).css('width', '400px').css("overflow-x", "hidden");
-                    });
-                },
-                source : function(request, response) {
-                    var passageId =  step.passage.getPassageId(this.element);
-                    var searchType = step.state.original.originalType(passageId);
-                    var suggestionType = undefined;
-                    if(searchType == HEBREW_WORDS[0]) {
-                        suggestionType = "hebrew";
-                    } else if(searchType == GREEK_WORDS[0]) {
-                        suggestionType = "greek";
-                    } else if(searchType == WORDS_MEANING[0]){
-                        suggestionType = "meaning";
+            $.each(target, function(i, singleTarget) {
+                $(singleTarget).lexicalcomplete({
+                    minLength : 2,
+                    select : function(event, ui) {
+                        //manually change the text, so that the change() method can fire against the right version
+                        $(this).val(ui.item.value);
+                        $(this).change();
+                        $(this).trigger('keyup');
+                    },
+                    open: function(event, ui) {
+                        //check we've got the right size
+                        $(".ui-autocomplete").map(function() {
+                            //check if 'this' has a child containing the text of the first option
+                                $(this).css('width', '400px').css("overflow-x", "hidden");
+                        });
+                    },
+                    source : function(request, response) {
+                        var passageId =  step.passage.getPassageId(this.element);
+                        var searchType = step.state.original.originalType(passageId);
+                        var suggestionType = undefined;
+                        if(searchType == HEBREW_WORDS[0]) {
+                            suggestionType = "hebrew";
+                        } else if(searchType == GREEK_WORDS[0]) {
+                            suggestionType = "greek";
+                        } else if(searchType == WORDS_MEANING[0]){
+                            suggestionType = "meaning";
+                        }
+                        
+                        if(suggestionType == null) {
+                            return response({});
+                        }
+                        
+                        $.getPassageSafe({
+                            url : SEARCH_SUGGESTIONS,
+                            args : [suggestionType, encodeURIComponent(step.util.replaceSpecialChars(request.term)), step.search.ui.original.allForms[passageId]], 
+                            callback: function(text) {
+                                response($.map(text, function(item) {
+                                    return { label: "<span>" + 
+                                            "<span class='suggestionColumn ancientSearchSuggestion'>" + item.matchingForm + "</span>" +
+                                            "<span class='suggestionColumn stepTransliteration'>" + step.util.ui.markUpTransliteration(item.stepTransliteration) + "</span>" + 
+                                            "<span class='suggestionColumn'>" + item.gloss + "</span>" +
+                                        "</span>", value: suggestionType == "meaning" ? item.gloss : item.matchingForm };
+                                }));
+                            },
+                            passageId : step.passage.getPassageId(this),
+                            level : 'error'
+                       });
                     }
-                    
-                    if(suggestionType == null) {
-                        return response({});
-                    }
-                    
-                    $.getPassageSafe({
-                        url : SEARCH_SUGGESTIONS,
-                        args : [suggestionType, encodeURIComponent(step.util.replaceSpecialChars(request.term)), step.search.ui.original.allForms[passageId]], 
-                        callback: function(text) {
-                            response($.map(text, function(item) {
-                                return { label: "<span>" + 
-                                        "<span class='suggestionColumn ancientSearchSuggestion'>" + item.matchingForm + "</span>" +
-                                        "<span class='suggestionColumn stepTransliteration'>" + step.util.ui.markUpTransliteration(item.stepTransliteration) + "</span>" + 
-                                        "<span class='suggestionColumn'>" + item.gloss + "</span>" +
-                                    "</span>", value: item.gloss };
-                            }));
-                        },
-                        passageId : step.passage.getPassageId(this),
-                        level : 'error'
-                   });
+                }).data("customLexicalcomplete")._renderItem = function(ul, item) {
+                    return $("<li></li>").data("ui-autocomplete-item", item).append("<a>" + item.label + "</a>").appendTo(ul);
                 }
-            }).data("lexicalcomplete")._renderItem = function(ul, item) {
-                return $("<li></li>").data("item.autocomplete", item).append("<a>" + item.label + "</a>").appendTo(ul);
-            }
+            });
             
             target.click(function() {
                $(this).lexicalcomplete("search");
             });
-            
             
             $(step.search.ui.original).hear("lexical-filter-change", function(self, data) {
                 var wordBox = $(".originalWord", step.util.getPassageContainer(data.passageId));

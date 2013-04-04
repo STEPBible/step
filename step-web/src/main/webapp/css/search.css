@@ -126,6 +126,10 @@
 	text-align: left;
 }
 
+.simpleTextCriteria, .simpleTextSecondaryCriteria {
+	width: 55px;
+}
+
 .querySyntax {
 	border: solid thin #ABADB3;
 }
@@ -134,8 +138,7 @@
 	background-image: url('../images/downarrow.png');
 	background-repeat: no-repeat;
 	background-position: right center;
-	border: solid thin;
-	color: #696;
+	border: solid thin #991C32;
 }
 
 input.drop:hover {
@@ -147,15 +150,55 @@ ul.subjectSection {
 	padding-left: 0px;
 }
 
+h3.subjectHeading {
+	color: #696;
+}
+
+.subjectSection h4 {
+	color: #669;
+	padding: 0px;
+	margin: 0px 10px;
+}
+
+.subjectSection h4 li {
+	color: #669;
+	list-style-type: disc;
+}
+
+
+
 li.subjectHeading {
 	margin-top: 3px;
 	list-style: none;
 	margin-left: 0px;
-	
 }
 
 .subjectSearchLink {
 	float: right;
+}
+
+.expandedHeadingItem div.passageContentHolder h3.heading {
+	display: none;
+}
+
+.expandedHeadingItem div.passageContentHolder p {
+	display: inline;
+	padding-left: 5px;
+}
+
+.moreSubjects {
+	text-align: center;
+}
+
+.expandableSearchHeading {
+/* 	color: #696; */
+	cursor: pointer;
+	margin-bottom: 1px;
+	padding: 3px;
+}
+
+.expandedHeadingItem {
+	margin-bottom: 5px;	
 }
 
 .smallResultKey {
@@ -232,7 +275,7 @@ h4.lexicalGrouping {
 }
 
 .advancedSearch legend {
-	color: #696;
+	color: #991C32;
 	font-weight: bold;
 }
 
@@ -300,4 +343,16 @@ h4.lexicalGrouping {
 /*******************************************/
 .quickSearch {
 	font-size: 1em;
+}
+
+.personalNotesFields a {
+	float: left;
+}
+
+.fullSearchWidth {
+	width: 60%;
+}
+
+.fullSearchWidth input {
+	width: 95%;
 }

@@ -19,7 +19,7 @@ import com.tyndalehouse.step.core.data.loaders.AbstractClasspathBasedModuleLoade
  * 
  */
 public class SpecificFormsLoader extends AbstractClasspathBasedModuleLoader {
-    private static final Logger LOGGER = LoggerFactory.getLogger(LexiconLoader.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(HeadwordLineBasedLoader.class);
     private final EntityIndexWriterImpl writer;
 
     /**
@@ -41,6 +41,10 @@ public class SpecificFormsLoader extends AbstractClasspathBasedModuleLoader {
             while ((line = bufferedReader.readLine()) != null) {
                 parseLine(line);
                 lines++;
+
+                if (lines % 10000 == 0) {
+                    getMainLoader().addUpdate("install_original_word_forms_progress", lines);
+                }
             }
         } catch (final IOException io) {
             LOGGER.warn(io.getMessage(), io);

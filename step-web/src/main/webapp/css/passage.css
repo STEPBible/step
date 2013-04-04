@@ -32,7 +32,7 @@ span.interlinear span span { /* Make this stack on top of each other. */
 	/* Turn off floating and padding that was added by the previous rule. */
 	float: none;
 	padding: 0;
-	height: 20px;
+/* 	height: 20px; */
 }
 
 
@@ -40,6 +40,19 @@ span.interlinear span span { /* Make this stack on top of each other. */
 	font-family: Cardo;
 	font-size: 140%;
 /* 	font-size: 14px; */
+}
+
+.hbFont {
+	font-family: SBL_Hbrw;
+	font-size: 250%;	
+}
+
+.hbFont h2, .unicodeFont h2 {
+	font-size: large;
+}
+
+.hbFont .verseNumber, .unicodeFont .verseNumber {
+	font-size: small;
 }
 
 .rtlDirection {
@@ -72,7 +85,8 @@ span.interlinear span span span {
 }
 
 .verseGrouping * p {
-	display: none;
+	margin-left: 5px;
+	display: inline;
 }
 
 td.primary {
@@ -107,8 +121,10 @@ td.primary {
 }
 
 span[strong]:hover {
-	border-bottom: 2px #696 dashed;
-	margin-bottom: -2px;
+	color: #696;
+	cursor: pointer;
+/* 	border-bottom: 2px #696 dashed; */
+/* 	margin-bottom: 5px; */
 }
 
 .singleVerse {
@@ -132,11 +148,20 @@ span[strong]:hover {
 .verseNumber {
 	vertical-align: top;
 	font-size: 6pt;
-	padding-right: 2px;
+	margin-right: 2px;
+    cursor: hand;
+    background-color: #F3E5B4;
+    color: #991C32;
+	font-weight: bold;
 }
 
 .interlinear .verseNumber {
 	clear: left;
+}
+
+.interlinearChange {
+	color: darkgrey;
+/* 	font-style: italic; */
 }
 
 .smallHeaders {
@@ -152,7 +177,7 @@ a.smallHeaders {
 .notesPane {
 	padding: 2px !important;
 	display: block;
-	background-color: #F4F4E8;
+	background-color: #FCF8E8;
 	padding: 1px;
 	max-width: 100px;
 	height: 100%;
@@ -171,7 +196,7 @@ a.smallHeaders {
 
 
 .notesPane a {
-	color: #669;
+	color: #991C32;
 	font-weight: bold;
 	font-size: x-small;
 }
@@ -224,6 +249,11 @@ span.strongs a {
 SUP.verseNumber {
 	font-size: 75%;
 	color: gray;
+}
+
+sup.variant.note {
+	font-size: 65%;
+	color: #696;
 }
 
 SUP.note a {
@@ -347,14 +377,14 @@ H4.heading  {
 
 H2.xgen {
 	font-family: times;
-	color: #669966;
+	color: #991C32;
 	font-variant:small-caps;
 	font-style: italic;
 }
 
 
 H2.heading, input.heading {
-	color: #669966;
+	color: #991C32;
 	font-weight: bold;
 }
 
@@ -445,20 +475,16 @@ FONT.usg {
 	margin: 5px;
 }
 
-.leftPassagePreview {
-	right: 44px !important;
+.leftPassagePreview, .rightPassagePreview {
 	font-size: 130%;
 	height: 14px;
 	font-weight: bold;
 	background-position-y: -50px;
+	float:right;
 }
 
-.rightPassagePreview {
-	right: 25px !important;
-	font-size: 130%;
-	height: 14px;
-	font-weight: bold;
-	background-position-y: -50px;
+.leftPassagePreview, .leftPassagePreview *, .rightPassagePreview, .rightPassagePreview * {
+	padding: 0px;
 }
 
 
@@ -509,6 +535,10 @@ FONT.usg {
     color: #696;
 /*     width: 100%; */
     padding: 5px 0px;
+}
+
+.draggable-tooltip .qtip-titlebar {
+	padding: 4px 26px 5px 10px;
 }
 
 .ui-tooltip-content {
@@ -563,8 +593,6 @@ FONT.usg {
 
 .infoAboutVersion, .versionInfo {
 	font-size: 120%;
-	color: #696;
-	font-weight: bold;	
 }
 
 
@@ -591,4 +619,100 @@ FONT.usg {
 
 .versionBreakMenuItem {
 	border-bottom: 1px dashed #696;
+}
+
+.colophon {
+	color: darkgrey;
+	font-style: italic;	
+	display: block;
+	text-align: right;
+	margin-top: 10px;
+}
+
+.figureImage {
+	width: 100%;
+}
+
+
+.alternativePartialMatch {
+	text-decoration: overline;
+}
+
+.alternativeContext {
+	text-decoration: underline;
+}
+
+.alternativeVersion  {
+	background-color: #EEF;
+}
+
+.alternativeVersion:hover {
+	text-decoration: overline;
+}
+
+.alternative {
+	color: #696;
+	font-weight: bold;
+}
+
+.singleAlternative {
+	white-space: nowrap;
+}
+
+.noQtipWidth {
+	max-width: none !important;
+}
+
+.altered {
+	color: red;	
+	font-family: Comic Sans MS;
+}
+
+/****************************/
+/* verse numbers            */
+/****************************/
+.verseNumberStrongs a, .verseNumberStrongs a:visited {
+	color: #696;
+}
+
+.verseNumberStrongs td {
+	padding-left: 25px;
+	padding-left: 0px;	
+}
+
+.verseNumberStrongs td.even {
+	padding-right: 25px;
+}
+
+.verseStrongSearch {
+	float: left;
+	background-image: url('images/ui-icons_991C32_256x240.png');
+}
+
+.strongCount {
+	width: 5ex;
+	text-align: center;
+}
+
+a.related, a.related:visited {
+	font-weight: bold;
+	color: #696;	
+	
+}
+
+/**
+Analysis tabs
+*/
+.passageContent .ui-tabs {
+    margin-top: 10px;
+}
+
+.passageContent .ui-tabs, .passageContent .ui-tabs-nav {
+    background-color: transparent;
+    background-image: none;
+    border: none;
+}
+
+.passageContent .ui-tabs-panel {
+    border: thin solid lightgrey;
 }

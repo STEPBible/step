@@ -5,6 +5,7 @@ import static com.tyndalehouse.step.core.utils.StringUtils.isNotEmpty;
 import static org.crosswire.jsword.book.BookCategory.BIBLE;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
@@ -14,7 +15,6 @@ import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.Books;
 import org.crosswire.jsword.book.FeatureType;
 import org.crosswire.jsword.versification.BibleBook;
-import org.crosswire.jsword.versification.BibleBookList;
 import org.crosswire.jsword.versification.Versification;
 import org.crosswire.jsword.versification.system.Versifications;
 
@@ -30,7 +30,7 @@ import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
  * 
  */
 public class JSwordMetadataServiceImpl implements JSwordMetadataService {
-
+    private static final String BOOK_CHAPTER_FORMAT = "%s %d";
     private final JSwordVersificationService versificationService;
 
     /**
@@ -54,30 +54,24 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
         }
 
         // some options are always there for Bibles:
-        if (BIBLE.equals(book.getBookCategory())) {
-            options.add(LookupOption.VERSE_NUMBERS);
-            options.add(LookupOption.VERSE_NEW_LINE);
+        addBibleCategoryOptions(book, options);
+        addRedLetterOptions(book, options);
+        addStrongNumberOptions(book, options);
+        addMorphologyOptions(book, options);
+        addNotesOptions(book, options);
 
-            // TODO FIXME bug in modules? in jsword?
-            options.add(LookupOption.RED_LETTER);
-        }
+        addAllMatchingLookupOptions(book, options);
 
-        if (book.getBookMetaData().hasFeature(FeatureType.STRONGS_NUMBERS)) {
-            options.add(LookupOption.ENGLISH_VOCAB);
-            options.add(LookupOption.GREEK_VOCAB);
-            options.add(LookupOption.TRANSLITERATION);
-            options.add(LookupOption.INTERLINEAR);
-        }
+        return options;
+    }
 
-        if (book.hasFeature(FeatureType.MORPHOLOGY)) {
-            options.add(LookupOption.COLOUR_CODE);
-        }
-
-        if (book.getBookMetaData().hasFeature(FeatureType.FOOTNOTES)
-                || book.getBookMetaData().hasFeature(FeatureType.SCRIPTURE_REFERENCES)) {
-            options.add(LookupOption.NOTES);
-        }
-
+    /**
+     * Add all options when the options match by their XsltParameter Name
+     * 
+     * @param book the book
+     * @param options the options to be added to
+     */
+    private void addAllMatchingLookupOptions(final Book book, final List<LookupOption> options) {
         // cycle through each option
         for (final LookupOption lo : LookupOption.values()) {
             final FeatureType ft = FeatureType.fromString(lo.getXsltParameterName());
@@ -85,8 +79,71 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
                 options.add(lo);
             }
         }
+    }
 
-        return options;
+    /**
+     * Adds options for notes
+     * 
+     * @param book the book
+     * @param options the options to be added to
+     */
+    private void addNotesOptions(final Book book, final List<LookupOption> options) {
+        if (book.getBookMetaData().hasFeature(FeatureType.FOOTNOTES)
+                || book.getBookMetaData().hasFeature(FeatureType.SCRIPTURE_REFERENCES)) {
+            options.add(LookupOption.NOTES);
+        }
+    }
+
+    /**
+     * Adds options for morphology
+     * 
+     * @param book the book
+     * @param options the options to be added to
+     */
+    private void addMorphologyOptions(final Book book, final List<LookupOption> options) {
+        if (book.hasFeature(FeatureType.MORPHOLOGY)) {
+            options.add(LookupOption.COLOUR_CODE);
+        }
+    }
+
+    /**
+     * Adds options for strong numbers
+     * 
+     * @param book the book
+     * @param options the options to be added to
+     */
+    private void addStrongNumberOptions(final Book book, final List<LookupOption> options) {
+        if (book.getBookMetaData().hasFeature(FeatureType.STRONGS_NUMBERS)) {
+            options.add(LookupOption.ENGLISH_VOCAB);
+            options.add(LookupOption.GREEK_VOCAB);
+            options.add(LookupOption.TRANSLITERATION);
+            options.add(LookupOption.INTERLINEAR);
+        }
+    }
+
+    /**
+     * Adds options for red letter Bible
+     * 
+     * @param book the book
+     * @param options the options to be added to
+     */
+    private void addRedLetterOptions(final Book book, final List<LookupOption> options) {
+        if (book.getBookMetaData().hasFeature(FeatureType.WORDS_OF_CHRIST)) {
+            options.add(LookupOption.RED_LETTER);
+        }
+    }
+
+    /**
+     * Adds options if module is a Bible
+     * 
+     * @param book the book
+     * @param options the options to be added to
+     */
+    private void addBibleCategoryOptions(final Book book, final List<LookupOption> options) {
+        if (BIBLE.equals(book.getBookCategory())) {
+            options.add(LookupOption.VERSE_NUMBERS);
+            options.add(LookupOption.VERSE_NEW_LINE);
+        }
     }
 
     @Override
@@ -114,22 +171,22 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
         final String searchPattern = bookStart.toLowerCase(Locale.getDefault()).trim();
 
         final List<BookName> matchingNames = new ArrayList<BookName>();
-        final BibleBookList books = versification.getBooks();
+
+        final Iterator<BibleBook> bookIterator = versification.getBookIterator();
 
         BibleBook b = null;
-        for (final BibleBook book : books) {
-            if (book.getLongName().toLowerCase().startsWith(searchPattern)
-                    || book.getPreferredName().toLowerCase().startsWith(searchPattern)
-                    || book.getShortName().toLowerCase().startsWith(searchPattern)) {
+        while (bookIterator.hasNext()) {
+            final BibleBook book = bookIterator.next();
+            if (versification.getLongName(book).toLowerCase().startsWith(searchPattern)
+                    || versification.getPreferredName(book).toLowerCase().startsWith(searchPattern)
+                    || versification.getShortName(book).toLowerCase().startsWith(searchPattern)) {
                 b = book;
-
-                addBookName(matchingNames, book);
-
+                addBookName(matchingNames, book, versification);
             }
         }
 
         if (matchingNames.size() == 1) {
-            final List<BookName> optionsInBook = getChapters(versification, b, searchPattern);
+            final List<BookName> optionsInBook = getChapters(versification, b);
             if (!optionsInBook.isEmpty()) {
                 return optionsInBook;
             }
@@ -143,14 +200,17 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
      * 
      * @param matchingNames the list of current names
      * @param bookName the book that we are examining
+     * @param versification the versification attached to the book.
      */
-    private void addBookName(final List<BookName> matchingNames, final BibleBook bookName) {
+    private void addBookName(final List<BookName> matchingNames, final BibleBook bookName,
+            final Versification versification) {
         if (BibleBook.INTRO_BIBLE.equals(bookName) || BibleBook.INTRO_NT.equals(bookName)
                 || BibleBook.INTRO_OT.equals(bookName)) {
             return;
         }
 
-        matchingNames.add(new BookName(bookName.getShortName(), bookName.getLongName()));
+        matchingNames.add(new BookName(versification.getShortName(bookName), versification
+                .getLongName(bookName), versification.getLastChapter(bookName) != 1));
     }
 
     /**
@@ -158,21 +218,21 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
      * 
      * @param versification the versification
      * @param book the book
-     * @param searchSoFar the search so far
      * @return a list of books
      */
-    private List<BookName> getChapters(final Versification versification, final BibleBook book,
-            final String searchSoFar) {
+    private List<BookName> getChapters(final Versification versification, final BibleBook book) {
         final int lastChapter = versification.getLastChapter(book);
         final List<BookName> chapters = new ArrayList<BookName>();
-        for (int ii = 1; ii < lastChapter; ii++) {
+        for (int ii = 1; ii <= lastChapter; ii++) {
             // final char f = Character.toUpperCase(searchSoFar.charAt(0));
 
             // make sure first letter is CAPS, followed by the rest of the word and the chapter number
-            final String chapNumber = String.format("%s %d", book.getShortName(), ii);
-            final String longChapNumber = String.format("%s %d", book.getLongName(), ii);
+            final String chapNumber = String
+                    .format(BOOK_CHAPTER_FORMAT, versification.getShortName(book), ii);
+            final String longChapNumber = String.format(BOOK_CHAPTER_FORMAT, versification.getLongName(book),
+                    ii);
 
-            chapters.add(new BookName(chapNumber, longChapNumber));
+            chapters.add(new BookName(chapNumber, longChapNumber, false));
         }
 
         return chapters;

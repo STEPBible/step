@@ -69,20 +69,20 @@ public final class MenuOperations {
     /**
      * disables all options for a passasge pane
      * 
-     * @param p passage
+     * @param passage passage
      * @param menuName the name of the menu
      */
-    public static void disableAllOptions(final Passage p, final String menuName) {
-        final WebElement menu = openMenu(p, menuName);
+    public static void disableAllOptions(final Passage passage, final String menuName) {
+        final WebElement menu = openMenu(passage, menuName);
 
         // there may be no options, so reduce the implicit timings
-        p.getDriver().manage().timeouts().implicitlyWait(500, TimeUnit.MILLISECONDS);
+        passage.getDriver().manage().timeouts().implicitlyWait(500, TimeUnit.MILLISECONDS);
         final List<WebElement> findElements = menu.findElements(By.xpath("..//li/a[img]"));
         for (final WebElement w : findElements) {
-            waitToClick(p.getDriver(), w);
+            waitToClick(passage.getDriver(), w);
         }
 
-        final WebDriverWait wait = new WebDriverWait(p.getDriver(), 10);
+        final WebDriverWait wait = new WebDriverWait(passage.getDriver(), 10);
         wait.until(new Predicate<WebDriver>() {
 
             @Override
@@ -90,7 +90,7 @@ public final class MenuOperations {
                 return menu.findElements(By.xpath(".//li/a[img]")).size() == 0;
             }
         });
-        p.getDriver().manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+        passage.getDriver().manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
     }
 
     public static List<WebElement> getOptionsForTopMenu(final WebDriver driver, final String menuName) {

@@ -4,80 +4,27 @@
 
 
 /* top menu */
-.topMenu {
-	background-color: #629914; /*background of menu bar (default state)*/
+.ddsmoothmenu {
+	background-image: url('../images/background-header.png');
+	background-repeat: repeat-y; 
+	background-position: right;
+	background-color: #991C32; /*background of menu bar (default state)*/
 	border-bottom: 1px solid white;
 }
 
-/*Top level menu link items style*/
-.topMenu ul li a,.ddsmoothmenu ul li label {
-	background-color: #629914; /*background of menu items (default state)*/
+.ddsmoothmenu ul li a, .ddsmoothmenu ul li label {
 	border-right: 1px solid white;
 	color: white;
 }
 
 
-.topMenu ul li ul li a {
-		border-bottom: 1px solid white;
-}
-
-
-.topMenu ul li label {
-	color: white;
-}
-
-.topMenu ul li a:link,.ddsmoothmenu ul li a:visited {
-	color: white;
-}
-
-.topMenu ul li a.selected {
-	/*CSS class that's dynamically added to the currently active menu items' LI A element*/
-	background: #EC8E0C;
-	color: white;
-}
-
-.topMenu ul li a:hover {
-	background: #EC8E0C;
-	/*background of menu items during onmouseover (hover state)*/
-	color: white;
-}
-
-/* inner menu */
-.innerMenu {
-	background-color: #4EB305; /*background of menu bar (default state)*/
+.ddsmoothmenu ul li ul li a {
 	border-bottom: 1px solid white;
 }
 
-/*Top level menu link items style*/
-.innerMenu ul li a,.ddsmoothmenu ul li label {
-	background-color: #4EB305; /*background of menu items (default state)*/
-	border-right: 1px solid white;
-	color: white;
-}
-
-.innerMenu ul li ul li a {
-		border-bottom: 1px solid white;
-}
-
-
-.innerMenu ul li label {
-	color: white;
-}
-
-.innerMenu ul li a:link,.ddsmoothmenu ul li a:visited {
-	color: white;
-}
-
-.innerMenu ul li a.selected {
-	/*CSS class that's dynamically added to the currently active menu items' LI A element*/
-	background: #EC8E0C;
-	color: white;
-}
-
-.innerMenu ul li a:hover {
-	background: #EC8E0C;
-	/*background of menu items during onmouseover (hover state)*/
-	color: white;
+#leftPaneMenu {
+	background-color: #991C32;
+	background-image: none;
 }
 
 .ddsmoothmenu ul li ul li a.disabled {
@@ -143,6 +90,8 @@
 
 /*Sub level menu list items (undo style from Top level List Items)*/
 .ddsmoothmenu ul li ul li {
+/* 	background-color: #991C32; */
+/* 	color: white; */
 	display: list-item;
 	float: none;
 }
@@ -152,16 +101,30 @@
 	top: 0;
 }
 
+.ddsmoothmenu ul li a.selected {
+	/*CSS class that's dynamically added to the currently active menu items' LI A element*/
+	background-color: #F3E5B4;
+	color: #991C32;
+	font-weight: bold;
+}
+
+.ddsmoothmenu ul li ul li a:hover {
+	background-color: #F3E5B4;
+	color: #991C32;
+	font-weight: bold;
+}
 
 /* Sub level menu links style */
 .ddsmoothmenu ul li ul li a {
 	font-weight: normal;
-/*	 13px Verdana;*/
-	width: 175px; /*width of sub menus*/
+	background-color: #991C32;
+	color: white;
+	width: 175px; 
 	padding: 5px;
 	margin: 0;
 	border-top-width: 0;
 }
+
 
 #topMenu .ddsmoothmenu ul li ul li a {
 	width: 250px !important;
@@ -171,7 +134,7 @@
 * html .ddsmoothmenu {
 	height: 1%;
 }  /*Holly Hack for IE7 and below*/
-/* ######### CSS classes applied to down and right arrow images  ######### */
+
 .downarrowclass {
 	position: absolute;
 	top: 12px;

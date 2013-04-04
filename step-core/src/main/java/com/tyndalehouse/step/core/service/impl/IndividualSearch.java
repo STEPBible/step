@@ -1,7 +1,40 @@
+/*******************************************************************************
+ * Copyright (c) 2012, Directors of the Tyndale STEP Project
+ * All rights reserved.
+ * 
+ * Redistribution and use in source and binary forms, with or without 
+ * modification, are permitted provided that the following conditions 
+ * are met:
+ * 
+ * Redistributions of source code must retain the above copyright 
+ * notice, this list of conditions and the following disclaimer.
+ * Redistributions in binary form must reproduce the above copyright 
+ * notice, this list of conditions and the following disclaimer in 
+ * the documentation and/or other materials provided with the 
+ * distribution.
+ * Neither the name of the Tyndale House, Cambridge (www.TyndaleHouse.com)  
+ * nor the names of its contributors may be used to endorse or promote 
+ * products derived from this software without specific prior written 
+ * permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
+ * COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING 
+ * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
+ * THE POSSIBILITY OF SUCH DAMAGE.
+ ******************************************************************************/
 package com.tyndalehouse.step.core.service.impl;
 
 import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
 import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
+import static com.tyndalehouse.step.core.utils.StringUtils.split;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -10,8 +43,7 @@ import org.crosswire.jsword.index.lucene.LuceneIndex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.tyndalehouse.step.core.exceptions.StepInternalException;
-import com.tyndalehouse.step.core.utils.StringUtils;
+import com.tyndalehouse.step.core.exceptions.TranslatedException;
 
 /**
  * Represents an individual search
@@ -31,7 +63,7 @@ public class IndividualSearch {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(IndividualSearch.class);
     private static final String TEXT = "t=";
-    private static final String SUBJECT = "s=";
+    private static final String SUBJECT = "s";
     private static final String ORIGINAL = "o";
 
     private static final String TIMELINE_DESCRIPTION = "d=";
@@ -46,7 +78,20 @@ public class IndividualSearch {
     private String[] originalFilter;
 
     /**
-     * Initialises the search from the query string
+     * Instantiates a single search to be executed.
+     * 
+     * @param type the type of the search
+     * @param version the version to be used to carry out the search
+     * @param query the query to be run
+     */
+    public IndividualSearch(final SearchType type, final String version, final String query) {
+        this.type = type;
+        this.query = query;
+        this.versions = new String[] { version };
+    }
+
+    /**
+     * Initialises the search from the query string.
      * 
      * @param query the query that is being sent to the app to search for
      */
@@ -57,7 +102,7 @@ public class IndividualSearch {
         } else if (query.startsWith(SUBJECT)) {
             parseSubjectSearch(query.substring(SUBJECT.length()));
         } else if (query.startsWith(ORIGINAL)) {
-            parseOriginalsearch(query.substring(ORIGINAL.length()));
+            parseOriginalSearch(query.substring(ORIGINAL.length()));
         } else if (query.startsWith(TIMELINE_DESCRIPTION)) {
             this.type = SearchType.TIMELINE_DESCRIPTION;
             matchVersions(query.substring(TIMELINE_DESCRIPTION.length()));
@@ -73,7 +118,7 @@ public class IndividualSearch {
         }
         if (isBlank(this.query)) {
             // return straight away
-            throw new StepInternalException("Unable to search, as query provided was blank.");
+            throw new TranslatedException("blank_search_provided");
         }
 
         LOGGER.debug(
@@ -86,7 +131,7 @@ public class IndividualSearch {
      * 
      * @param parseableQuery the query entered by the user, without the first character (o)
      */
-    private void parseOriginalsearch(final String parseableQuery) {
+    private void parseOriginalSearch(final String parseableQuery) {
         int length = 1;
 
         final char specifier = parseableQuery.charAt(length);
@@ -119,7 +164,7 @@ public class IndividualSearch {
             case 'f':
                 break;
             default:
-                throw new StepInternalException("Unsupported search for query o" + parseableQuery);
+                throw new TranslatedException("The requested search is not yet supported o" + parseableQuery);
         }
 
         matchOriginalFilter(parseableQuery.substring(length + 1));
@@ -138,9 +183,9 @@ public class IndividualSearch {
      */
     private void matchOriginalFilter(final String parseableQuery) {
         this.query = parseableQuery;
-        final String originalFilter = matchFirstGroupAndRemove(ORIGINAL_FILTER);
-        if (isNotBlank(originalFilter)) {
-            this.originalFilter = originalFilter.split(",");
+        final String filter = matchFirstGroupAndRemove(ORIGINAL_FILTER);
+        if (isNotBlank(filter)) {
+            this.originalFilter = filter.split(",");
         }
     }
 
@@ -183,7 +228,7 @@ public class IndividualSearch {
         final Matcher capturedVersions = IN_VERSIONS.matcher(textQuery);
 
         if (!capturedVersions.find()) {
-            throw new StepInternalException("Unable to match query string to find versions " + textQuery);
+            throw new TranslatedException("no_search_version", textQuery);
         }
 
         final String versionGroup = capturedVersions.group(1);
@@ -201,25 +246,50 @@ public class IndividualSearch {
      * @param parsedSubject the parsed and well-formed search query, containing prefix, etc.
      */
     private void parseSubjectSearch(final String parsedSubject) {
-        // fill in the query and versions
-        matchVersions(parsedSubject);
-
-        // amend the query
-        final StringBuilder subjectQuery = new StringBuilder(this.query.length() + 32);
-        final String[] keys = StringUtils.split(this.query);
-
-        for (int i = 0; i < keys.length; i++) {
-            subjectQuery.append(LuceneIndex.FIELD_HEADING);
-            subjectQuery.append(':');
-            subjectQuery.append(keys[i]);
-
-            if (i + 1 < keys.length) {
-                subjectQuery.append(" AND ");
-            }
+        // how many pluses do we have
+        int pluses = 0;
+        while (parsedSubject.charAt(pluses) == '+') {
+            pluses++;
         }
-        this.type = SearchType.SUBJECT;
 
-        this.query = subjectQuery.toString();
+        switch (pluses) {
+            case 0:
+                this.type = SearchType.SUBJECT_SIMPLE;
+                break;
+            case 1:
+                this.type = SearchType.SUBJECT_EXTENDED;
+                break;
+            case 2:
+            default:
+                this.type = SearchType.SUBJECT_FULL;
+                break;
+        }
+
+        final String trimmedQuery = parsedSubject.substring(pluses + 1);
+
+        // fill in the query and versions
+        matchVersions(trimmedQuery);
+
+        if (this.type == SearchType.SUBJECT_SIMPLE) {
+            // amend the query
+            final StringBuilder subjectQuery = new StringBuilder(this.query.length() + 32);
+            final String[] keys = split(this.query);
+
+            for (int i = 0; i < keys.length; i++) {
+                if (isBlank(keys[i])) {
+                    continue;
+                }
+                subjectQuery.append(LuceneIndex.FIELD_HEADING);
+                subjectQuery.append(':');
+                subjectQuery.append(keys[i]);
+
+                if (i + 1 < keys.length) {
+                    subjectQuery.append(" AND ");
+                }
+            }
+
+            this.query = subjectQuery.toString();
+        }
     }
 
     /**
@@ -277,7 +347,7 @@ public class IndividualSearch {
      * @param versions overwrites the versions
      */
     public void setVersions(final String[] versions) {
-        this.versions = versions;
+        this.versions = versions.clone();
 
     }
 

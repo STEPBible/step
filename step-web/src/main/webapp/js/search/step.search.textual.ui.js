@@ -78,7 +78,7 @@ step.search.ui.textual = {
         
         var restrictionExclude = $(".textRestrictionExclude", passageContainer).val();
         if(!step.util.isBlank(restrictionExclude) && !step.util.isBlank(restriction)) {
-            step.util.raiseError("Both a restriction and an inclusion of range have been specified. The range restriction will be used.");
+            step.util.raiseError(__s.error_search_restriction_and_inclusion);
         } else {
             query = this._evalTextRestrictionExclude(restrictionExclude, query);
         }

@@ -1,12 +1,107 @@
-#installationOptions {
-	min-height: 300px;
+
+.halfColumn {
+	width: 48%;
+	float: left;	
+}
+
+.optionContainer {
+	background-color: #eef;
+	padding: 2px;
+	margin: 2px;
+}
+
+.optionContainer a, .optionContainer a:visited {
+	color: #696;	
+	font-weight: bold;
+}
+
+.miniBox {
+	height: 50px;	
+}
+
+.miniBox div {
 	height: 100%;
 }
 
-.installed {
-	color: green;
+#leftColumn .container, #rightColumn .container {
+	background-color: #eef;
+	padding: 2px;
+	margin: 2px;
+	height: 100%;
 }
 
-.notInstalled {
-	color: red;
+.version {
+	margin: 2px;
+	padding: 2px;
+	cursor: pointer;
+}
+
+.installNow, .removeNow {
+	color: blue;
+	right: 5px;
+	bottom: 5px;
+	position: absolute;
+}
+
+.installNow a, .installNow a:hover, .installNow .a:visited {
+	color: blue;
+}
+
+.name {
+	font-weight: bold;
+}
+
+#rightColumn .version {
+	background-color: lightgreen;
+}
+
+#leftColumn .version {
+	background-color: lightpink;
+}
+
+#rightColumn .installNow {
+	display: none;
+}
+
+#leftColumn .removeNow {
+	display: none;
+}
+
+.initials {
+	font-style: italic;
+}
+
+.versionColumn {
+	width: 49%;
+	display: inline-block;
+}
+
+.versionColumn * {
+	display: inline-block;
+}
+
+
+
+.features {
+	width: 49%;
+	display: inline-block;	
+}
+
+.waitingLabel {
+	display: none;
+	text-align: center;
+}
+
+.progress {
+	background-color: red !important;
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	right: 0px;
+	top: 0px;
+	opacity: 0.5;
+}
+
+.waiting {
+	text-align: center;
 }

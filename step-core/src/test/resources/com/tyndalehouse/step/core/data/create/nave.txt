@@ -1,1 +1,21 @@
-<entryFree n="WIND"> <p>Blasting<lb/> <ref osisRef="Bible:2Kgs.19.7">2Ki 19:7</ref>,<ref osisRef="Bible:2Kgs.19.35">35</ref> </p> <p>East <list> <item>Hot and blasting in Egypt<lb/> <ref osisRef="Bible:Gen.41.6">Ge 41:6</ref> </item> <item>In the valley of the Euphrates River<lb/> <ref osisRef="Bible:Ezek.19.12">Eze 19:12</ref> </item> <item>In Canaan<lb/> <ref osisRef="Bible:Hos.13.15">Ho 13:15</ref>; <ref osisRef="Bible:Luke.12.55">Lu 12:55</ref> </item> <item>At the city of Nineveh<lb/> <ref osisRef="Bible:Jonah.4.8">Jon 4:8</ref> </item> <item>Tempestuous in the land of Uz<lb/> <ref osisRef="Bible:Job.27.21">Job 27:21</ref> </item> </list> </p> <p>West <list> <item>Took away the plague of locusts from the land of Egypt<lb/> <ref osisRef="Bible:Exod.10.19">Ex 10:19</ref> </item> </list> </p> <p>North <list> <item>Free from humidity in Canaan<lb/> <ref osisRef="Bible:Prov.25.23">Pr 25:23</ref> </item> </list> </p> <p>South <list> <item>Soothing<lb/> <ref osisRef="Bible:Job.37.17">Job 37:17</ref> </item> <item>Tempestuous<lb/> <ref osisRef="Bible:Job.37.9">Job 37:9</ref> </item> <item>Purifying<lb/> <ref osisRef="Bible:Job.37.21">Job 37:21</ref> </item> </list> </p> <p>FIGURATIVE<lb/> <ref osisRef="Bible:Hos.4.19">Ho 4:19</ref> <list> <item>Of the judgments of God<lb/> <ref osisRef="Bible:Jer.22.22">Jer 22:22</ref>; <ref osisRef="Bible:Hos.13.15">Ho 13:15</ref>; <ref osisRef="Bible:Matt.7.25">Mt 7:25</ref> </item> <item>Of the Spirit<lb/> <ref osisRef="Bible:John.3.8">Joh 3:8</ref> </item> <item>Of heresy<lb/> <ref osisRef="Bible:Eph.4.14">Eph 4:14</ref> </item> </list> </p> </entryFree>
+===================================================
+@EntryRoot=	AARON
+@FullHeader=	Lineage of
+@References=	Ex 6:16-20; Jos 21:4,10; 1Ch 6:2,3; 23:13 
+===================================================
+@EntryRoot=	AARON
+@FullHeader=	Marriage of
+@References=	Ex 6:23 
+===================================================
+@EntryRoot=	AARON
+@FullHeader=	Children of
+@References=	Ex 6:23,25; 1Ch 6:3; 1Ch 24:1,2 
+===================================================
+@EntryRoot=	AARON
+@FullHeader=	Descendants of
+@References=	Ex 6:23,25; 1Ch 6:3-15,50-53; 24 
+===================================================
+@EntryRoot=	AARON
+@FullHeader=	Meets, Moses in the wilderness and is made spokesman for Moses
+@References=	Ex 4:14-16,27-31; 7:1,2 
+===================================================

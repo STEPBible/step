@@ -98,14 +98,16 @@
 			<artifactId>ehcache-web</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.jolira</groupId>
-			<artifactId>guice</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>com.google.inject.extensions</groupId>
 			<artifactId>guice-servlet</artifactId>
 		</dependency>
-
+	    <dependency>
+			<groupId>com.yammer.metrics</groupId>
+			<artifactId>metrics-servlet</artifactId>
+			<version>${yammer-metrics.version}</version>
+		</dependency>
+            
+            
 		<!-- test dependencies -->
 		<dependency>
 			<groupId>org.mockito</groupId>
@@ -126,10 +128,10 @@
 			<groupId>javatar</groupId>
 			<artifactId>javatar</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>org.jdom</groupId>
-			<artifactId>jdom</artifactId>
-		</dependency>
+<!-- 		<dependency> -->
+<!-- 			<groupId>org.jdom</groupId> -->
+<!-- 			<artifactId>jdom</artifactId> -->
+<!-- 		</dependency> -->
 	</dependencies>
 
 	<build>
@@ -150,7 +152,7 @@
 						<configuration>
 							<cssSourceDir>.</cssSourceDir>
 							<cssSourceFiles>
-								<cssSourceFile>css/jquery-ui-1.8.23.custom.css</cssSourceFile>
+								<cssSourceFile>css/jquery-ui-1.10.2.custom.min.css</cssSourceFile>
 								<cssSourceFile>css/qtip.css</cssSourceFile>
 								<cssSourceFile>css/ddsmoothmenu.css</cssSourceFile>
 								<cssSourceFile>css/ddsmoothmenu-v.css</cssSourceFile>
@@ -167,8 +169,10 @@
 								<jsSourceFile>js_init/initLib.js</jsSourceFile>   
 							    <jsSourceFile>libs/dohighlight-min.js</jsSourceFile>
 							    <jsSourceFile>libs/timeline_js/timeline-api.js</jsSourceFile>
-							    <jsSourceFile>libs/jquery-1.8.2.min.js</jsSourceFile>
-								<jsSourceFile>libs/jquery-ui-1.8.23.custom.min.js</jsSourceFile>
+							    <jsSourceFile>libs/jquery-1.9.1.min.js</jsSourceFile>
+								<jsSourceFile>libs/jquery-ui-1.10.2.custom.min.js</jsSourceFile>
+								<jsSourceFile>libs/sprintf-0.7-beta1.js</jsSourceFile>
+								<jsSourceFile>libs/jquery.tagcloud.js</jsSourceFile>
 							    <jsSourceFile>js/jquery-extensions/jquery-qtip.js</jsSourceFile>
 							    <jsSourceFile>js/jquery-extensions/jquery-hover-intent.js</jsSourceFile>
 							    <jsSourceFile>js/jquery-extensions/jquery-cookie.js</jsSourceFile>
@@ -177,6 +181,7 @@
 							    <jsSourceFile>js/jquery-extensions/jquery-versions-complete.js</jsSourceFile>
 							    <jsSourceFile>js/jquery-extensions/jquery-lexical-complete.js</jsSourceFile>
 							    <jsSourceFile>js/jquery-extensions/jquery-detail-slider.js</jsSourceFile>
+							    <jsSourceFile>js/jquery-extensions/jquery-sort.js</jsSourceFile>
 								<jsSourceFile>js/ddsmoothmenu.js</jsSourceFile>
 							    <jsSourceFile>js/util.js</jsSourceFile>
 							    <jsSourceFile>js/lexicon_definition.js</jsSourceFile>
@@ -193,14 +198,15 @@
 								<jsSourceFile>js/search/step.search.textual.ui.js</jsSourceFile>
 								<jsSourceFile>js/search/step.search.timeline.ui.js</jsSourceFile>
 								<jsSourceFile>js/search/step.search.subject.ui.js</jsSourceFile>
+<!-- 								<jsSourceFile>js/search/step.search.personalnotes.ui.js</jsSourceFile> -->
 								<jsSourceFile>js/navigation/step.navigation.js</jsSourceFile>	    
 								<jsSourceFile>js/state/step.state.js</jsSourceFile>
+								<jsSourceFile>js/state/step.state.browser.js</jsSourceFile>
 								<jsSourceFile>js/state/step.state.view.js</jsSourceFile>
 								<jsSourceFile>js/state/step.state.passage.js</jsSourceFile>
 								<jsSourceFile>js/state/step.state.original.js</jsSourceFile>
 							    <jsSourceFile>js/menu/step.menu.js</jsSourceFile>
 							    <jsSourceFile>js/menu/top/help.js</jsSourceFile>
-							    <jsSourceFile>js/menu/top/tools.js</jsSourceFile>
 							    <jsSourceFile>js/menu/top/view.js</jsSourceFile>
 							    <jsSourceFile>js/menu/top/top.menu.ui.js</jsSourceFile>
 							    <jsSourceFile>js/menu/passage/context.js</jsSourceFile>
@@ -208,6 +214,7 @@
 							    <jsSourceFile>js/menu/passage/passageTools.js</jsSourceFile>
 							    <jsSourceFile>js/menu/passage/search.js</jsSourceFile>
 							    <jsSourceFile>js/passage/step.version.js</jsSourceFile>
+							    <jsSourceFile>js/passage/step.alternatives.js</jsSourceFile>
 							    <jsSourceFile>js/passage/step.passage.js</jsSourceFile>
 							    <jsSourceFile>js/passage/step.passage.ui.js</jsSourceFile>
 							    <jsSourceFile>js/passage/step.passage.navigation.js</jsSourceFile>

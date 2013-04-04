@@ -10,7 +10,7 @@ import org.crosswire.jsword.passage.VerseRange;
 import org.crosswire.jsword.versification.Versification;
 import org.crosswire.jsword.versification.system.Versifications;
 
-import com.tyndalehouse.step.core.exceptions.StepInternalException;
+import com.tyndalehouse.step.core.exceptions.TranslatedException;
 import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
 
 /**
@@ -78,8 +78,7 @@ public class JSwordVersificationServiceImpl implements JSwordVersificationServic
         final Book currentBook = Books.installed().getBook(version);
 
         if (currentBook == null) {
-            throw new StepInternalException("The Translation / Commentary (" + version
-                    + ") could not be found.");
+            throw new TranslatedException("book_not_found", version);
         }
         return currentBook;
     }
@@ -95,7 +94,7 @@ public class JSwordVersificationServiceImpl implements JSwordVersificationServic
                 (String) version.getBookMetaData().getProperty(BookMetaData.KEY_VERSIFICATION));
 
         if (versification == null) {
-            return Versifications.instance().getDefaultVersification();
+            return Versifications.instance().getVersification(Versifications.DEFAULT_V11N);
         }
         return versification;
     }
@@ -126,7 +125,8 @@ public class JSwordVersificationServiceImpl implements JSwordVersificationServic
     private VerseRange roundRangeDown(final VerseRange range) {
         final Versification versification = range.getVersification();
         final Verse end = range.getEnd();
-        return new VerseRange(versification, versification.getFirstVerseInChapter(end), end);
+        return new VerseRange(versification, new Verse(versification, end.getBook(), end.getChapter(), 1),
+                end);
     }
 
     /**
@@ -138,6 +138,8 @@ public class JSwordVersificationServiceImpl implements JSwordVersificationServic
     private VerseRange roundRangeUp(final VerseRange range) {
         final Versification versification = range.getVersification();
         final Verse end = range.getEnd();
-        return new VerseRange(versification, range.getStart(), versification.getLastVerseInChapter(end));
+        final Verse endOfChapter = new Verse(versification, end.getBook(), end.getChapter(),
+                versification.getLastVerse(end.getBook(), end.getChapter()));
+        return new VerseRange(versification, range.getStart(), endOfChapter);
     }
 }

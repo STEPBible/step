@@ -130,13 +130,23 @@ public class EntityIndexReaderImpl implements EntityIndexReader {
     public EntityDoc[] searchExactTermBySingleField(final String fieldName, final int max,
             final String... values) {
         final Query query = getQuery(fieldName, values);
-        return search(query, max, null);
+        return search(query, max, null, null);
     }
 
     @Override
     public EntityDoc[] searchUniqueBySingleField(final String fieldName, final String... values) {
         final Query query = getQuery(fieldName, values);
-        return search(query, values.length, null);
+        return search(query, values.length, null, null);
+    }
+
+    @Override
+    public EntityDoc[] search(final String[] fieldNames, final String value) {
+        return search(fieldNames, value, null, null, false, null, null);
+    }
+
+    @Override
+    public EntityDoc[] search(final String[] fieldNames, final String value, final Sort sort) {
+        return search(fieldNames, value, null, sort, false, null, null);
     }
 
     @Override
@@ -161,6 +171,20 @@ public class EntityIndexReaderImpl implements EntityIndexReader {
     public EntityDoc[] search(final String[] fieldNames, final String value, final Filter filter,
             final Sort sort, final boolean analyzePrefix, final String queryRemainder,
             final Integer maxResults) {
+        return search(fieldNames, value, filter, sort, analyzePrefix, queryRemainder, maxResults, true);
+    }
+
+    @Override
+    public EntityDoc[] search(final String[] fields, final String query, final boolean useOrOperator) {
+        return search(fields, query, null, null, false, null, null, useOrOperator);
+    }
+
+    // CHECKSTYLE:OFF
+    @Override
+    public EntityDoc[] search(final String[] fieldNames, final String value, final Filter filter,
+            final Sort sort, final boolean analyzePrefix, final String queryRemainder,
+            final Integer maxResults, final boolean useOrOperatorBetweenValues) {
+        // CHECKSTYLE:ON
         final AllResultsCollector collector = new AllResultsCollector();
         Query parsed = null;
         QueryParser parser;
@@ -170,6 +194,8 @@ public class EntityIndexReaderImpl implements EntityIndexReader {
         } else {
             parser = new MultiFieldQueryParser(LUCENE_30, fieldNames, this.config.getAnalyzerInstance());
         }
+
+        parser.setDefaultOperator(useOrOperatorBetweenValues ? Operator.OR : Operator.AND);
 
         try {
             if (queryRemainder != null) {
@@ -181,6 +207,8 @@ public class EntityIndexReaderImpl implements EntityIndexReader {
             } else {
                 parsed = parser.parse(value);
             }
+
+            LOGGER.debug("Search query is [{}]", parsed);
 
             if (sort != null) {
                 final TopFieldDocs search = this.searcher.search(parsed, filter,
@@ -220,9 +248,20 @@ public class EntityIndexReaderImpl implements EntityIndexReader {
     }
 
     @Override
+    public EntityDoc[] search(final String defaultField, final String querySyntax) {
+        final QueryParser parser = new QueryParser(LUCENE_30, defaultField, getAnalyzer());
+        try {
+            return this.search(parser.parse(querySyntax));
+        } catch (final ParseException e) {
+            throw new StepInternalException("Unable to parse query " + querySyntax, e);
+        }
+    }
+
+    @Override
     public EntityDoc[] search(final Query query) {
         final AllResultsCollector collector = new AllResultsCollector();
         try {
+            LOGGER.debug("Search query is [{}]", query);
             this.searcher.search(query, collector);
             return extractDocIds(collector);
         } catch (final IOException e) {
@@ -250,13 +289,14 @@ public class EntityIndexReaderImpl implements EntityIndexReader {
     }
 
     @Override
-    public EntityDoc[] search(final Query query, final int max, final Sort sortField) {
+    public EntityDoc[] search(final Query query, final int max, final Sort sortField, final Filter filter) {
+        LOGGER.debug("Search query is [{}]", query);
         try {
             final TopDocs search;
             if (sortField != null) {
-                search = this.searcher.search(query, null, max, sortField);
+                search = this.searcher.search(query, filter, max, sortField);
             } else {
-                search = this.searcher.search(query, max);
+                search = this.searcher.search(query, filter, max);
             }
 
             final EntityDoc[] results = new EntityDoc[search.scoreDocs.length];
@@ -284,7 +324,7 @@ public class EntityIndexReaderImpl implements EntityIndexReader {
         final Term t = new Term(fieldName);
         final Term[] ts = new Term[values.length];
         for (int ii = 0; ii < ts.length; ii++) {
-            ts[ii] = t.createTerm(values[0]);
+            ts[ii] = t.createTerm(values[ii]);
         }
 
         final BooleanQuery booleanQuery = new BooleanQuery();
@@ -297,24 +337,52 @@ public class EntityIndexReaderImpl implements EntityIndexReader {
 
     @Override
     public EntityDoc[] searchSingleColumn(final String fieldName, final String querySyntax,
+            final Filter filter) {
+        return searchSingleColumn(fieldName, querySyntax, Operator.OR, false, null, filter);
+    }
+
+    @Override
+    public EntityDoc[] searchSingleColumn(final String fieldName, final String querySyntax, final Sort sort) {
+        return searchSingleColumn(fieldName, querySyntax, Operator.OR, false, sort);
+    }
+
+    @Override
+    public EntityDoc[] searchSingleColumn(final String fieldName, final String querySyntax,
             final Operator op, final boolean allowLeadingWildcard) {
+        return searchSingleColumn(fieldName, querySyntax, op, allowLeadingWildcard, null);
+    }
+
+    @Override
+    public EntityDoc[] searchSingleColumn(final String fieldName, final String query,
+            final boolean useOrOperator) {
+        return searchSingleColumn(fieldName, query, useOrOperator ? Operator.OR : Operator.AND, false);
+    }
+
+    @Override
+    public EntityDoc[] searchSingleColumn(final String fieldName, final String querySyntax) {
+        return searchSingleColumn(fieldName, querySyntax, Operator.OR, false);
+    }
+
+    @Override
+    public EntityDoc[] searchSingleColumn(final String fieldName, final String querySyntax,
+            final Operator op, final boolean allowLeadingWildcard, final Sort sort) {
+        return searchSingleColumn(fieldName, querySyntax, op, allowLeadingWildcard, sort, null);
+    }
+
+    @Override
+    public EntityDoc[] searchSingleColumn(final String fieldName, final String querySyntax,
+            final Operator op, final boolean allowLeadingWildcard, final Sort sort, final Filter filter) {
         final QueryParser parser = new QueryParser(LUCENE_30, fieldName, this.getAnalyzer());
         parser.setDefaultOperator(op);
         parser.setAllowLeadingWildcard(allowLeadingWildcard);
 
         try {
             final Query query = parser.parse(querySyntax);
-            return search(query);
+            return search(query, Integer.MAX_VALUE, sort, filter);
 
         } catch (final ParseException e) {
             throw new StepInternalException("Unable to parse query", e);
         }
-
-    }
-
-    @Override
-    public EntityDoc[] searchSingleColumn(final String fieldName, final String querySyntax) {
-        return searchSingleColumn(fieldName, querySyntax, Operator.OR, false);
     }
 
     /**

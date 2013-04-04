@@ -36,10 +36,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.SortedMap;
 import java.util.TreeMap;
-
-import javax.servlet.http.HttpServletRequest;
 
 import org.crosswire.common.util.Language;
 import org.crosswire.jsword.book.Book;
@@ -47,6 +46,7 @@ import org.crosswire.jsword.book.BookCategory;
 import org.crosswire.jsword.book.Books;
 
 import com.google.inject.Injector;
+import com.tyndalehouse.step.core.models.ClientSession;
 import com.tyndalehouse.step.core.utils.StringUtils;
 
 /**
@@ -57,7 +57,8 @@ import com.tyndalehouse.step.core.utils.StringUtils;
  */
 // CHECKSTYLE:OFF
 public class VersionsStepRequest {
-    private final HttpServletRequest request;
+    private final Locale userLocale;
+    private final ResourceBundle bundle;
 
     /**
      * wraps around the servlet request for easy access
@@ -65,8 +66,9 @@ public class VersionsStepRequest {
      * @param request the servlet request
      * @param injector the injector for the application
      */
-    public VersionsStepRequest(final Injector injector, final HttpServletRequest request) {
-        this.request = request;
+    public VersionsStepRequest(final Injector injector) {
+        this.userLocale = injector.getInstance(ClientSession.class).getLocale();
+        this.bundle = ResourceBundle.getBundle("HtmlBundle", this.userLocale);
     }
 
     /**
@@ -93,18 +95,17 @@ public class VersionsStepRequest {
             }
         }
 
-        final Locale userLocale = this.request.getLocale();
         final StringBuilder bookListData = new StringBuilder(1024 * 8);
         for (final Map.Entry<String, List<Book>> entry : booksByLanguage.entrySet()) {
             bookListData.append("<h3>");
-            bookListData.append(new Locale(entry.getKey()).getDisplayLanguage(userLocale));
+            bookListData.append(new Locale(entry.getKey()).getDisplayLanguage(this.userLocale));
             bookListData.append("</h3>");
             outputVersions(bookListData, entry.getValue());
             bookListData.append("<p />");
         }
 
         bookListData.append("<h3>");
-        bookListData.append("Uncategorized");
+        bookListData.append(this.bundle.getString("uncategorised"));
         bookListData.append("</h3>");
         outputVersions(bookListData, other);
         bookListData.append("<p />");
@@ -115,11 +116,20 @@ public class VersionsStepRequest {
     /**
      * Outputs the list of books
      * 
+     * @param bundle
+     * 
      * @param value the list of books
      */
     private void outputVersions(final StringBuilder bookList, final List<Book> books) {
         bookList.append("<table id='versionListTable' class='listingTable'>");
-        bookList.append("<tr><th class='versionInitialsColumn'>Initials</th><th  class='versionNameColumn'>Name</th><th class='versionCategoryColumn'>Category</th></tr>");
+        bookList.append("<tr><th class='versionInitialsColumn'>");
+        bookList.append(this.bundle.getString("installation_book_initials"));
+        bookList.append("</th><th  class='versionNameColumn'>");
+        bookList.append(this.bundle.getString("installation_book_name"));
+        bookList.append("</th><th class='versionCategoryColumn'>");
+        bookList.append(this.bundle.getString("installation_book_category"));
+        bookList.append("</th></tr>");
+
         int ii = 0;
         for (final Book b : books) {
             if (!BookCategory.BIBLE.equals(b.getBookCategory())
@@ -144,9 +154,9 @@ public class VersionsStepRequest {
                 bookList.append(shortCopyright);
             }
 
-            bookList.append("'>&#x24d8;</a> ");
+            bookList.append("'>&#x24d8; ");
             bookList.append(b.getInitials());
-
+            bookList.append("</a>");
             bookList.append("</td>");
 
             bookList.append("<td>");

@@ -53,10 +53,13 @@ public class WebSessionImpl implements ClientSession {
      * 
      * @param id the id of the session
      * @param language the ISO 3-character long language name
+     * @param ipAddress the user's IP address
+     * @param locale the user's locale
      */
-    public WebSessionImpl(final String id, final String language, final Locale locale) {
+    public WebSessionImpl(final String id, final String language, final String ipAddress, final Locale locale) {
         this.sessionId = id;
         this.language = language;
+        this.ipAddress = ipAddress;
         this.locale = locale;
     }
 

@@ -35,12 +35,13 @@ package com.tyndalehouse.step.core.service;
 import java.util.List;
 import java.util.Locale;
 
+import com.tyndalehouse.step.core.models.AvailableFeatures;
 import com.tyndalehouse.step.core.models.BibleVersion;
 import com.tyndalehouse.step.core.models.BookName;
 import com.tyndalehouse.step.core.models.EnrichedLookupOption;
 import com.tyndalehouse.step.core.models.KeyWrapper;
-import com.tyndalehouse.step.core.models.LookupOption;
 import com.tyndalehouse.step.core.models.OsisWrapper;
+import com.tyndalehouse.step.core.models.search.StrongCountsAndSubjects;
 
 /**
  * Interface to the service that gives information about the books of the bible, the different types of bible,
@@ -53,6 +54,7 @@ public interface BibleInformationService {
 
     /**
      * Queries Jsword to return all the installed versions of the bible
+     * 
      * @param allVersions a boolean indicating whether all versions should be returned
      * @param locale the locale of the requester
      * @param usersLocale TODO
@@ -92,11 +94,13 @@ public interface BibleInformationService {
             String interlinearVersion, Boolean round);
 
     /**
+     * gets any available features, but for this type of view only
      * 
      * @param version the version to lookup
+     * @param displayMode the intended display mode
      * @return the features available for a Bible (for e.g. Strong numbers)
      */
-    List<LookupOption> getFeaturesForVersion(String version);
+    AvailableFeatures getAvailableFeaturesForVersion(String version, String displayMode);
 
     /**
      * Gets a list of all supported features so far
@@ -175,5 +179,37 @@ public interface BibleInformationService {
      * @return the new reference with full chapter
      */
     KeyWrapper expandKeyToChapter(String version, String reference);
+
+    /**
+     * @param version the version to be queried for
+     * @return a value between 0.0 and 1.0 indicating the progress so far
+     */
+    double getProgressOnInstallation(String version);
+
+    /**
+     * @param version the version that is being indexed
+     * @return a value between 0.0 and 1.0 indicating the progress so far
+     */
+    double getProgressOnIndexing(String version);
+
+    /**
+     * Removes a module
+     * 
+     * @param initials initials of the module to remove, e.g. 'WEB'
+     */
+    void removeModule(String initials);
+
+    /**
+     * Indexes all modules, sequentially and synchronously, not in parallel
+     */
+    void indexAll();
+
+    /**
+     * Gets the strong numbers for a particular verse.
+     * 
+     * @param reference the reference to be looked up
+     * @return the strong numbers return keyed by OSIS ID
+     */
+    StrongCountsAndSubjects getStrongNumbersAndSubjects(String reference);
 
 }

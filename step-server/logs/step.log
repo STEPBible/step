@@ -1,0 +1,392 @@
+2013-02-08 13:10:02,763 WARN   - Config error at <Call name="addConnector"><Arg>
+          <New class="org.eclipse.jetty.server.nio.SelectChannelConnector"><Set name="port"><SystemProperty name="jetty.port" default="8989"/></Set><Set name="host">127.0.0.1</Set></New>
+      </Arg></Call>
+2013-02-08 13:10:02,765 ERROR  - org.eclipse.jetty.server.nio.SelectChannelConnector
+java.lang.ClassNotFoundException: org.eclipse.jetty.server.nio.SelectChannelConnector
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:366)
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:355)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:354)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:423)
+	at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:308)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:356)
+	at org.eclipse.jetty.util.Loader.loadClass(Loader.java:100)
+	at org.eclipse.jetty.xml.XmlConfiguration$JettyXmlConfiguration.nodeClass(XmlConfiguration.java:354)
+	at org.eclipse.jetty.xml.XmlConfiguration$JettyXmlConfiguration.newObj(XmlConfiguration.java:743)
+	at org.eclipse.jetty.xml.XmlConfiguration$JettyXmlConfiguration.itemValue(XmlConfiguration.java:1109)
+	at org.eclipse.jetty.xml.XmlConfiguration$JettyXmlConfiguration.value(XmlConfiguration.java:1014)
+	at org.eclipse.jetty.xml.XmlConfiguration$JettyXmlConfiguration.call(XmlConfiguration.java:710)
+	at org.eclipse.jetty.xml.XmlConfiguration$JettyXmlConfiguration.configure(XmlConfiguration.java:407)
+	at org.eclipse.jetty.xml.XmlConfiguration$JettyXmlConfiguration.configure(XmlConfiguration.java:289)
+	at org.eclipse.jetty.xml.XmlConfiguration.configure(XmlConfiguration.java:248)
+	at com.tyndalehouse.step.server.StepServer.start(StepServer.java:80)
+	at com.tyndalehouse.step.server.StepServer.main(StepServer.java:132)
+2013-02-08 13:10:26,567 WARN   - Config error at <Call name="addConnector"><Arg>
+          <New class="org.eclipse.jetty.server.nio.SelectChannelConnector"><Set name="port"><SystemProperty name="jetty.port" default="8989"/></Set><Set name="host">127.0.0.1</Set></New>
+      </Arg></Call>
+2013-02-08 13:10:26,570 ERROR  - org.eclipse.jetty.server.nio.SelectChannelConnector
+java.lang.ClassNotFoundException: org.eclipse.jetty.server.nio.SelectChannelConnector
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:366)
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:355)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:354)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:423)
+	at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:308)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:356)
+	at org.eclipse.jetty.util.Loader.loadClass(Loader.java:100)
+	at org.eclipse.jetty.xml.XmlConfiguration$JettyXmlConfiguration.nodeClass(XmlConfiguration.java:354)
+	at org.eclipse.jetty.xml.XmlConfiguration$JettyXmlConfiguration.newObj(XmlConfiguration.java:743)
+	at org.eclipse.jetty.xml.XmlConfiguration$JettyXmlConfiguration.itemValue(XmlConfiguration.java:1109)
+	at org.eclipse.jetty.xml.XmlConfiguration$JettyXmlConfiguration.value(XmlConfiguration.java:1014)
+	at org.eclipse.jetty.xml.XmlConfiguration$JettyXmlConfiguration.call(XmlConfiguration.java:710)
+	at org.eclipse.jetty.xml.XmlConfiguration$JettyXmlConfiguration.configure(XmlConfiguration.java:407)
+	at org.eclipse.jetty.xml.XmlConfiguration$JettyXmlConfiguration.configure(XmlConfiguration.java:289)
+	at org.eclipse.jetty.xml.XmlConfiguration.configure(XmlConfiguration.java:248)
+	at com.tyndalehouse.step.server.StepServer.start(StepServer.java:80)
+	at com.tyndalehouse.step.server.StepServer.main(StepServer.java:132)
+2013-02-08 13:11:07,772 WARN   - Config error at <Call name="addConnector"><Arg>
+          <New class="org.eclipse.jetty.server.nio.SelectChannelConnector"><Set name="port"><SystemProperty name="jetty.port" default="8989"/></Set><Set name="host">127.0.0.1</Set></New>
+      </Arg></Call>
+2013-02-08 13:11:07,775 ERROR  - org.eclipse.jetty.server.nio.SelectChannelConnector
+java.lang.ClassNotFoundException: org.eclipse.jetty.server.nio.SelectChannelConnector
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:366)
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:355)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:354)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:423)
+	at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:308)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:356)
+	at org.eclipse.jetty.util.Loader.loadClass(Loader.java:100)
+	at org.eclipse.jetty.xml.XmlConfiguration$JettyXmlConfiguration.nodeClass(XmlConfiguration.java:354)
+	at org.eclipse.jetty.xml.XmlConfiguration$JettyXmlConfiguration.newObj(XmlConfiguration.java:743)
+	at org.eclipse.jetty.xml.XmlConfiguration$JettyXmlConfiguration.itemValue(XmlConfiguration.java:1109)
+	at org.eclipse.jetty.xml.XmlConfiguration$JettyXmlConfiguration.value(XmlConfiguration.java:1014)
+	at org.eclipse.jetty.xml.XmlConfiguration$JettyXmlConfiguration.call(XmlConfiguration.java:710)
+	at org.eclipse.jetty.xml.XmlConfiguration$JettyXmlConfiguration.configure(XmlConfiguration.java:407)
+	at org.eclipse.jetty.xml.XmlConfiguration$JettyXmlConfiguration.configure(XmlConfiguration.java:289)
+	at org.eclipse.jetty.xml.XmlConfiguration.configure(XmlConfiguration.java:248)
+	at com.tyndalehouse.step.server.StepServer.start(StepServer.java:80)
+	at com.tyndalehouse.step.server.StepServer.main(StepServer.java:132)
+2013-02-08 13:11:53,687 WARN   - Config error at <Call name="addConnector"><Arg>
+          <New class="org.eclipse.jetty.server.nio.SelectChannelConnector"><Set name="port"><SystemProperty name="jetty.port" default="8989"/></Set><Set name="host">127.0.0.1</Set></New>
+      </Arg></Call>
+2013-02-08 13:11:53,690 ERROR  - org.eclipse.jetty.server.nio.SelectChannelConnector
+java.lang.ClassNotFoundException: org.eclipse.jetty.server.nio.SelectChannelConnector
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:366)
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:355)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:354)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:423)
+	at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:308)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:356)
+	at org.eclipse.jetty.util.Loader.loadClass(Loader.java:100)
+	at org.eclipse.jetty.xml.XmlConfiguration$JettyXmlConfiguration.nodeClass(XmlConfiguration.java:354)
+	at org.eclipse.jetty.xml.XmlConfiguration$JettyXmlConfiguration.newObj(XmlConfiguration.java:743)
+	at org.eclipse.jetty.xml.XmlConfiguration$JettyXmlConfiguration.itemValue(XmlConfiguration.java:1109)
+	at org.eclipse.jetty.xml.XmlConfiguration$JettyXmlConfiguration.value(XmlConfiguration.java:1014)
+	at org.eclipse.jetty.xml.XmlConfiguration$JettyXmlConfiguration.call(XmlConfiguration.java:710)
+	at org.eclipse.jetty.xml.XmlConfiguration$JettyXmlConfiguration.configure(XmlConfiguration.java:407)
+	at org.eclipse.jetty.xml.XmlConfiguration$JettyXmlConfiguration.configure(XmlConfiguration.java:289)
+	at org.eclipse.jetty.xml.XmlConfiguration.configure(XmlConfiguration.java:248)
+	at com.tyndalehouse.step.server.StepServer.start(StepServer.java:80)
+	at com.tyndalehouse.step.server.StepServer.main(StepServer.java:132)
+2013-02-08 13:13:01,468 WARN   - Config error at <Call name="addConnector"><Arg>
+          <New class="org.eclipse.jetty.server.nio.SelectChannelConnector"><Set name="port"><SystemProperty name="jetty.port" default="8989"/></Set><Set name="host">127.0.0.1</Set></New>
+      </Arg></Call>
+2013-02-08 13:13:01,471 ERROR  - org.eclipse.jetty.server.nio.SelectChannelConnector
+java.lang.ClassNotFoundException: org.eclipse.jetty.server.nio.SelectChannelConnector
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:366)
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:355)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:354)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:423)
+	at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:308)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:356)
+	at org.eclipse.jetty.util.Loader.loadClass(Loader.java:100)
+	at org.eclipse.jetty.xml.XmlConfiguration$JettyXmlConfiguration.nodeClass(XmlConfiguration.java:354)
+	at org.eclipse.jetty.xml.XmlConfiguration$JettyXmlConfiguration.newObj(XmlConfiguration.java:743)
+	at org.eclipse.jetty.xml.XmlConfiguration$JettyXmlConfiguration.itemValue(XmlConfiguration.java:1109)
+	at org.eclipse.jetty.xml.XmlConfiguration$JettyXmlConfiguration.value(XmlConfiguration.java:1014)
+	at org.eclipse.jetty.xml.XmlConfiguration$JettyXmlConfiguration.call(XmlConfiguration.java:710)
+	at org.eclipse.jetty.xml.XmlConfiguration$JettyXmlConfiguration.configure(XmlConfiguration.java:407)
+	at org.eclipse.jetty.xml.XmlConfiguration$JettyXmlConfiguration.configure(XmlConfiguration.java:289)
+	at org.eclipse.jetty.xml.XmlConfiguration.configure(XmlConfiguration.java:248)
+	at com.tyndalehouse.step.server.StepServer.start(StepServer.java:80)
+	at com.tyndalehouse.step.server.StepServer.main(StepServer.java:132)
+2013-02-08 13:13:12,869 WARN   - Config error at <Call name="addConnector"><Arg>
+          <New class="org.eclipse.jetty.server.nio.SelectChannelConnector"><Set name="port"><SystemProperty name="jetty.port" default="8989"/></Set><Set name="host">127.0.0.1</Set></New>
+      </Arg></Call>
+2013-02-08 13:13:12,872 ERROR  - org.eclipse.jetty.server.nio.SelectChannelConnector
+java.lang.ClassNotFoundException: org.eclipse.jetty.server.nio.SelectChannelConnector
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:366)
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:355)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:354)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:423)
+	at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:308)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:356)
+	at org.eclipse.jetty.util.Loader.loadClass(Loader.java:100)
+	at org.eclipse.jetty.xml.XmlConfiguration$JettyXmlConfiguration.nodeClass(XmlConfiguration.java:354)
+	at org.eclipse.jetty.xml.XmlConfiguration$JettyXmlConfiguration.newObj(XmlConfiguration.java:743)
+	at org.eclipse.jetty.xml.XmlConfiguration$JettyXmlConfiguration.itemValue(XmlConfiguration.java:1109)
+	at org.eclipse.jetty.xml.XmlConfiguration$JettyXmlConfiguration.value(XmlConfiguration.java:1014)
+	at org.eclipse.jetty.xml.XmlConfiguration$JettyXmlConfiguration.call(XmlConfiguration.java:710)
+	at org.eclipse.jetty.xml.XmlConfiguration$JettyXmlConfiguration.configure(XmlConfiguration.java:407)
+	at org.eclipse.jetty.xml.XmlConfiguration$JettyXmlConfiguration.configure(XmlConfiguration.java:289)
+	at org.eclipse.jetty.xml.XmlConfiguration.configure(XmlConfiguration.java:248)
+	at com.tyndalehouse.step.server.StepServer.start(StepServer.java:80)
+	at com.tyndalehouse.step.server.StepServer.main(StepServer.java:132)
+2013-02-08 13:20:36,664 INFO   - jetty-9.0.0.M5
+2013-02-08 13:20:36,757 INFO   - Started ServerConnector@4033d6f1{HTTP/1.1}{localhost:8989}
+2013-02-08 13:20:55,056 INFO   - jetty-9.0.0.M5
+2013-02-08 13:20:55,165 INFO   - Started ServerConnector@3a8c9a17{HTTP/1.1}{localhost:8989}
+2013-02-08 13:21:18,993 INFO   - jetty-9.0.0.M5
+2013-02-08 13:21:19,051 WARN   - FAILED ServerConnector@5e7e6ceb{HTTP/1.1}{localhost:8989}: java.net.BindException: Address already in use: bind
+java.net.BindException: Address already in use: bind
+	at sun.nio.ch.Net.bind0(Native Method)
+	at sun.nio.ch.Net.bind(Net.java:344)
+	at sun.nio.ch.Net.bind(Net.java:336)
+	at sun.nio.ch.ServerSocketChannelImpl.bind(ServerSocketChannelImpl.java:199)
+	at sun.nio.ch.ServerSocketAdaptor.bind(ServerSocketAdaptor.java:74)
+	at org.eclipse.jetty.server.ServerConnector.open(ServerConnector.java:227)
+	at org.eclipse.jetty.server.AbstractNetworkConnector.doStart(AbstractNetworkConnector.java:80)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:69)
+	at org.eclipse.jetty.server.Server.doStart(Server.java:297)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:69)
+	at com.tyndalehouse.step.server.StepServer.start(StepServer.java:88)
+	at com.tyndalehouse.step.server.StepServer.main(StepServer.java:133)
+2013-02-08 13:21:19,055 WARN   - FAILED org.eclipse.jetty.server.Server@4bfa385a: java.net.BindException: Address already in use: bind
+java.net.BindException: Address already in use: bind
+	at sun.nio.ch.Net.bind0(Native Method)
+	at sun.nio.ch.Net.bind(Net.java:344)
+	at sun.nio.ch.Net.bind(Net.java:336)
+	at sun.nio.ch.ServerSocketChannelImpl.bind(ServerSocketChannelImpl.java:199)
+	at sun.nio.ch.ServerSocketAdaptor.bind(ServerSocketAdaptor.java:74)
+	at org.eclipse.jetty.server.ServerConnector.open(ServerConnector.java:227)
+	at org.eclipse.jetty.server.AbstractNetworkConnector.doStart(AbstractNetworkConnector.java:80)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:69)
+	at org.eclipse.jetty.server.Server.doStart(Server.java:297)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:69)
+	at com.tyndalehouse.step.server.StepServer.start(StepServer.java:88)
+	at com.tyndalehouse.step.server.StepServer.main(StepServer.java:133)
+2013-02-08 13:21:19,056 ERROR  - Address already in use: bind
+java.net.BindException: Address already in use: bind
+	at sun.nio.ch.Net.bind0(Native Method)
+	at sun.nio.ch.Net.bind(Net.java:344)
+	at sun.nio.ch.Net.bind(Net.java:336)
+	at sun.nio.ch.ServerSocketChannelImpl.bind(ServerSocketChannelImpl.java:199)
+	at sun.nio.ch.ServerSocketAdaptor.bind(ServerSocketAdaptor.java:74)
+	at org.eclipse.jetty.server.ServerConnector.open(ServerConnector.java:227)
+	at org.eclipse.jetty.server.AbstractNetworkConnector.doStart(AbstractNetworkConnector.java:80)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:69)
+	at org.eclipse.jetty.server.Server.doStart(Server.java:297)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:69)
+	at com.tyndalehouse.step.server.StepServer.start(StepServer.java:88)
+	at com.tyndalehouse.step.server.StepServer.main(StepServer.java:133)
+2013-02-08 13:21:26,167 INFO   - jetty-9.0.0.M5
+2013-02-08 13:21:26,247 INFO   - Started ServerConnector@4033d6f1{HTTP/1.1}{localhost:8989}
+2013-02-08 13:23:48,766 INFO   - jetty-9.0.0.M5
+2013-02-08 13:23:48,851 INFO   - Started ServerConnector@2befdb3{HTTP/1.1}{localhost:8989}
+2013-02-08 13:24:17,249 INFO   - jetty-9.0.0.M5
+2013-02-08 13:24:17,337 INFO   - Started ServerConnector@37fca526{HTTP/1.1}{localhost:8989}
+2013-02-08 13:25:38,575 INFO   - jetty-9.0.0.M5
+2013-02-08 13:25:38,638 WARN   - FAILED ServerConnector@3e20e8c4{HTTP/1.1}{localhost:8989}: java.net.BindException: Address already in use: bind
+java.net.BindException: Address already in use: bind
+	at sun.nio.ch.Net.bind0(Native Method)
+	at sun.nio.ch.Net.bind(Net.java:344)
+	at sun.nio.ch.Net.bind(Net.java:336)
+	at sun.nio.ch.ServerSocketChannelImpl.bind(ServerSocketChannelImpl.java:199)
+	at sun.nio.ch.ServerSocketAdaptor.bind(ServerSocketAdaptor.java:74)
+	at org.eclipse.jetty.server.ServerConnector.open(ServerConnector.java:227)
+	at org.eclipse.jetty.server.AbstractNetworkConnector.doStart(AbstractNetworkConnector.java:80)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:69)
+	at org.eclipse.jetty.server.Server.doStart(Server.java:297)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:69)
+	at com.tyndalehouse.step.server.StepServer.start(StepServer.java:88)
+	at com.tyndalehouse.step.server.StepServer.main(StepServer.java:131)
+2013-02-08 13:25:38,641 WARN   - FAILED org.eclipse.jetty.server.Server@1889c3ae: java.net.BindException: Address already in use: bind
+java.net.BindException: Address already in use: bind
+	at sun.nio.ch.Net.bind0(Native Method)
+	at sun.nio.ch.Net.bind(Net.java:344)
+	at sun.nio.ch.Net.bind(Net.java:336)
+	at sun.nio.ch.ServerSocketChannelImpl.bind(ServerSocketChannelImpl.java:199)
+	at sun.nio.ch.ServerSocketAdaptor.bind(ServerSocketAdaptor.java:74)
+	at org.eclipse.jetty.server.ServerConnector.open(ServerConnector.java:227)
+	at org.eclipse.jetty.server.AbstractNetworkConnector.doStart(AbstractNetworkConnector.java:80)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:69)
+	at org.eclipse.jetty.server.Server.doStart(Server.java:297)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:69)
+	at com.tyndalehouse.step.server.StepServer.start(StepServer.java:88)
+	at com.tyndalehouse.step.server.StepServer.main(StepServer.java:131)
+2013-02-08 13:25:38,642 ERROR  - Address already in use: bind
+java.net.BindException: Address already in use: bind
+	at sun.nio.ch.Net.bind0(Native Method)
+	at sun.nio.ch.Net.bind(Net.java:344)
+	at sun.nio.ch.Net.bind(Net.java:336)
+	at sun.nio.ch.ServerSocketChannelImpl.bind(ServerSocketChannelImpl.java:199)
+	at sun.nio.ch.ServerSocketAdaptor.bind(ServerSocketAdaptor.java:74)
+	at org.eclipse.jetty.server.ServerConnector.open(ServerConnector.java:227)
+	at org.eclipse.jetty.server.AbstractNetworkConnector.doStart(AbstractNetworkConnector.java:80)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:69)
+	at org.eclipse.jetty.server.Server.doStart(Server.java:297)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:69)
+	at com.tyndalehouse.step.server.StepServer.start(StepServer.java:88)
+	at com.tyndalehouse.step.server.StepServer.main(StepServer.java:131)
+2013-02-08 13:25:48,159 INFO   - jetty-9.0.0.M5
+2013-02-08 13:25:48,239 INFO   - Started ServerConnector@7567e1fa{HTTP/1.1}{localhost:8989}
+2013-02-08 13:26:25,543 INFO   - jetty-9.0.0.M5
+2013-02-08 13:26:25,634 INFO   - Started ServerConnector@64d87a08{HTTP/1.1}{localhost:8989}
+2013-02-08 13:26:45,298 INFO   - jetty-9.0.0.M5
+2013-02-08 13:26:45,381 INFO   - Started ServerConnector@34fc84f2{HTTP/1.1}{localhost:8989}
+2013-02-08 13:27:26,184 INFO   - jetty-9.0.0.M5
+2013-02-08 13:27:26,270 INFO   - Started ServerConnector@7567e1fa{HTTP/1.1}{localhost:8989}
+2013-02-08 13:27:41,476 INFO   - Graceful shutdown org.eclipse.jetty.server.Server@1b2d6c22 by 
+2013-02-08 13:27:41,510 INFO   - Stopped ServerConnector@7567e1fa{HTTP/1.1}{localhost:8989}
+2013-02-08 13:28:13,413 INFO   - jetty-9.0.0.M5
+2013-02-08 13:28:13,497 INFO   - Started ServerConnector@6d287249{HTTP/1.1}{localhost:8989}
+2013-02-08 13:28:27,089 INFO   - Graceful shutdown org.eclipse.jetty.server.Server@37041974 by 
+2013-02-08 13:28:27,104 INFO   - Stopped ServerConnector@6d287249{HTTP/1.1}{localhost:8989}
+2013-02-08 13:28:35,495 INFO   - jetty-9.0.0.M5
+2013-02-08 13:28:35,571 INFO   - Started ServerConnector@64d87a08{HTTP/1.1}{localhost:8989}
+2013-02-08 13:28:40,494 INFO   - Graceful shutdown org.eclipse.jetty.server.Server@2a3dc5d6 by 
+2013-02-08 13:28:40,518 INFO   - Stopped ServerConnector@64d87a08{HTTP/1.1}{localhost:8989}
+2013-02-08 13:29:29,067 INFO   - jetty-9.0.0.M5
+2013-02-08 13:29:32,384 INFO   - started o.e.j.w.WebAppContext@2ae38d8e{/step-web,file:/C:/temp/temp/step-web/,AVAILABLE}{file:/C:/temp/temp/step-web/}
+2013-02-08 13:29:32,407 INFO   - Started ServerConnector@75e1010c{HTTP/1.1}{localhost:8989}
+2013-02-08 13:29:34,289 WARN   - 
+org.apache.jasper.JasperException: PWC6034: Unable to load class for JSP
+	at org.apache.jasper.JspCompilationContext.load(JspCompilationContext.java:659)
+	at org.apache.jasper.servlet.JspServletWrapper.getServlet(JspServletWrapper.java:202)
+	at org.apache.jasper.servlet.JspServletWrapper.service(JspServletWrapper.java:386)
+	at org.apache.jasper.servlet.JspServlet.serviceJspFile(JspServlet.java:492)
+	at org.apache.jasper.servlet.JspServlet.service(JspServlet.java:378)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:848)
+	at org.eclipse.jetty.servlet.ServletHolder.handle(ServletHolder.java:671)
+	at org.eclipse.jetty.servlet.ServletHandler.doHandle(ServletHandler.java:448)
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:138)
+	at org.eclipse.jetty.security.SecurityHandler.handle(SecurityHandler.java:582)
+	at org.eclipse.jetty.server.session.SessionHandler.doHandle(SessionHandler.java:213)
+	at org.eclipse.jetty.server.handler.ContextHandler.doHandle(ContextHandler.java:1070)
+	at org.eclipse.jetty.servlet.ServletHandler.doScope(ServletHandler.java:375)
+	at org.eclipse.jetty.server.session.SessionHandler.doScope(SessionHandler.java:175)
+	at org.eclipse.jetty.server.handler.ContextHandler.doScope(ContextHandler.java:1004)
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:136)
+	at org.eclipse.jetty.server.Dispatcher.forward(Dispatcher.java:261)
+	at org.eclipse.jetty.server.Dispatcher.forward(Dispatcher.java:101)
+	at org.eclipse.jetty.servlet.DefaultServlet.doGet(DefaultServlet.java:546)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:735)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:848)
+	at org.eclipse.jetty.servlet.ServletHolder.handle(ServletHolder.java:671)
+	at org.eclipse.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1436)
+	at com.google.inject.servlet.FilterChainInvocation.doFilter(FilterChainInvocation.java:66)
+	at com.google.inject.servlet.FilterDefinition.doFilter(FilterDefinition.java:168)
+	at com.google.inject.servlet.FilterChainInvocation.doFilter(FilterChainInvocation.java:58)
+	at com.tyndalehouse.step.guice.SetupRedirectFilter.doFilter(SetupRedirectFilter.java:46)
+	at com.google.inject.servlet.FilterDefinition.doFilter(FilterDefinition.java:163)
+	at com.google.inject.servlet.FilterChainInvocation.doFilter(FilterChainInvocation.java:58)
+	at com.google.inject.servlet.FilterDefinition.doFilter(FilterDefinition.java:168)
+	at com.google.inject.servlet.FilterChainInvocation.doFilter(FilterChainInvocation.java:58)
+	at com.google.inject.servlet.ManagedFilterPipeline.dispatch(ManagedFilterPipeline.java:118)
+	at com.google.inject.servlet.GuiceFilter.doFilter(GuiceFilter.java:113)
+	at org.eclipse.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1407)
+	at org.eclipse.jetty.servlet.ServletHandler.doHandle(ServletHandler.java:446)
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:138)
+	at org.eclipse.jetty.security.SecurityHandler.handle(SecurityHandler.java:564)
+	at org.eclipse.jetty.server.session.SessionHandler.doHandle(SessionHandler.java:213)
+	at org.eclipse.jetty.server.handler.ContextHandler.doHandle(ContextHandler.java:1070)
+	at org.eclipse.jetty.servlet.ServletHandler.doScope(ServletHandler.java:375)
+	at org.eclipse.jetty.server.session.SessionHandler.doScope(SessionHandler.java:175)
+	at org.eclipse.jetty.server.handler.ContextHandler.doScope(ContextHandler.java:1004)
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:136)
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:97)
+	at org.eclipse.jetty.server.Server.handle(Server.java:439)
+	at org.eclipse.jetty.server.HttpChannel.run(HttpChannel.java:246)
+	at org.eclipse.jetty.server.HttpConnection.onFillable(HttpConnection.java:265)
+	at org.eclipse.jetty.io.AbstractConnection$ReadCallback.run(AbstractConnection.java:240)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:589)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$3.run(QueuedThreadPool.java:520)
+	at java.lang.Thread.run(Thread.java:722)
+Caused by: java.lang.ClassNotFoundException: org.apache.jsp.index_jsp
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:366)
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:355)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:354)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:423)
+	at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:308)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:356)
+	at org.eclipse.jetty.webapp.WebAppClassLoader.loadClass(WebAppClassLoader.java:429)
+	at org.eclipse.jetty.webapp.WebAppClassLoader.loadClass(WebAppClassLoader.java:382)
+	at org.apache.jasper.JspCompilationContext.load(JspCompilationContext.java:654)
+	... 50 more
+2013-02-08 13:30:14,587 INFO   - jetty-9.0.0.M5
+2013-02-08 13:30:17,732 INFO   - started o.e.j.w.WebAppContext@5a8c6647{/step-web,file:/C:/temp/temp/step-mvn-1.0-SNAPSHOT-package-step-standalone/step-web/,AVAILABLE}{file:/C:/temp/temp/step-mvn-1.0-SNAPSHOT-package-step-standalone/step-web/}
+2013-02-08 13:30:17,755 INFO   - Started ServerConnector@280650d{HTTP/1.1}{localhost:8989}
+2013-02-08 13:34:05,045 INFO   - jetty-9.0.0.M5
+2013-02-08 13:34:07,682 INFO   - started o.e.j.w.WebAppContext@5835b0c9{/step-web,file:/C:/temp/temp/step-mvn-1.0-SNAPSHOT-package-step-standalone/step-web/,AVAILABLE}{file:/C:/temp/temp/step-mvn-1.0-SNAPSHOT-package-step-standalone/step-web/}
+2013-02-08 13:34:07,704 INFO   - Started ServerConnector@91ee3aa{HTTP/1.1}{localhost:8989}
+2013-02-08 13:34:23,392 INFO   - Graceful shutdown org.eclipse.jetty.server.Server@71328280 by 
+2013-02-08 13:34:23,397 INFO   - Stopped ServerConnector@91ee3aa{HTTP/1.1}{localhost:8989}
+2013-02-08 13:34:23,404 INFO   - javax.el.BeanELResolver purged
+2013-02-08 13:34:23,492 INFO   - stopped o.e.j.w.WebAppContext@5835b0c9{/step-web,file:/C:/temp/temp/step-mvn-1.0-SNAPSHOT-package-step-standalone/step-web/,UNAVAILABLE}{file:/C:/temp/temp/step-mvn-1.0-SNAPSHOT-package-step-standalone/step-web/}
+2013-02-08 13:34:34,571 INFO   - jetty-9.0.0.M5
+2013-02-08 13:34:37,320 INFO   - started o.e.j.w.WebAppContext@5c2a3157{/step-web,file:/C:/temp/temp/step-mvn-1.0-SNAPSHOT-package-step-standalone/step-web/,AVAILABLE}{file:/C:/temp/temp/step-mvn-1.0-SNAPSHOT-package-step-standalone/step-web/}
+2013-02-08 13:34:37,344 INFO   - Started ServerConnector@c1f8bbe{HTTP/1.1}{localhost:8989}
+2013-02-08 13:34:47,694 INFO   - Graceful shutdown org.eclipse.jetty.server.Server@7a25a893 by 
+2013-02-08 13:34:47,715 INFO   - Stopped ServerConnector@c1f8bbe{HTTP/1.1}{localhost:8989}
+2013-02-08 13:34:47,723 INFO   - javax.el.BeanELResolver purged
+2013-02-08 13:34:47,822 INFO   - stopped o.e.j.w.WebAppContext@5c2a3157{/step-web,file:/C:/temp/temp/step-mvn-1.0-SNAPSHOT-package-step-standalone/step-web/,UNAVAILABLE}{file:/C:/temp/temp/step-mvn-1.0-SNAPSHOT-package-step-standalone/step-web/}
+2013-02-08 14:14:37,547 INFO   - jetty-9.0.0.M5
+2013-02-08 14:14:40,205 INFO   - started o.e.j.w.WebAppContext@63eccc03{/step-web,file:/C:/temp/temp/step-mvn-1.0-SNAPSHOT-package-step-standalone/step-web/,AVAILABLE}{file:/C:/temp/temp/step-mvn-1.0-SNAPSHOT-package-step-standalone/step-web/}
+2013-02-08 14:14:40,228 INFO   - Started ServerConnector@222584d4{HTTP/1.1}{localhost:8989}
+2013-02-08 14:16:39,722 INFO   - jetty-9.0.0.M5
+2013-02-08 14:16:42,377 INFO   - started o.e.j.w.WebAppContext@5d89ced4{/step-web,file:/C:/temp/temp/step-mvn-1.0-SNAPSHOT-package-step-standalone/step-web/,AVAILABLE}{file:/C:/temp/temp/step-mvn-1.0-SNAPSHOT-package-step-standalone/step-web/}
+2013-02-08 14:16:42,399 INFO   - Started ServerConnector@1f36db31{HTTP/1.1}{localhost:8989}
+2013-02-08 14:19:56,145 INFO   - jetty-9.0.0.M5
+2013-02-08 14:19:58,857 INFO   - started o.e.j.w.WebAppContext@1879c4e3{/step-web,file:/C:/temp/temp/step-mvn-1.0-SNAPSHOT-package-step-standalone/step-web/,AVAILABLE}{file:/C:/temp/temp/step-mvn-1.0-SNAPSHOT-package-step-standalone/step-web/}
+2013-02-08 14:19:58,881 INFO   - Started ServerConnector@15f5d079{HTTP/1.1}{localhost:8989}
+2013-02-08 14:24:46,944 INFO   - jetty-9.0.0.M5
+2013-02-08 14:24:49,714 INFO   - started o.e.j.w.WebAppContext@1005629{/step-web,file:/C:/temp/temp/step-mvn-1.0-SNAPSHOT-package-step-standalone/step-web/,AVAILABLE}{file:/C:/temp/temp/step-mvn-1.0-SNAPSHOT-package-step-standalone/step-web/}
+2013-02-08 14:24:49,737 INFO   - Started ServerConnector@7861a781{HTTP/1.1}{localhost:8989}
+2013-02-08 14:25:08,934 INFO   - Graceful shutdown org.eclipse.jetty.server.Server@45ed56a8 by 
+2013-02-08 14:25:08,939 INFO   - Stopped ServerConnector@7861a781{HTTP/1.1}{localhost:8989}
+2013-02-08 14:25:08,945 INFO   - javax.el.BeanELResolver purged
+2013-02-08 14:25:09,040 INFO   - stopped o.e.j.w.WebAppContext@1005629{/step-web,file:/C:/temp/temp/step-mvn-1.0-SNAPSHOT-package-step-standalone/step-web/,UNAVAILABLE}{file:/C:/temp/temp/step-mvn-1.0-SNAPSHOT-package-step-standalone/step-web/}
+2013-02-08 14:33:08,607 INFO   - jetty-9.0.0.M5
+2013-02-08 14:33:11,339 INFO   - started o.e.j.w.WebAppContext@238d4e2{/step-web,file:/C:/temp/temp/step-mvn-1.0-SNAPSHOT-package-step-standalone/step-web/,AVAILABLE}{file:/C:/temp/temp/step-mvn-1.0-SNAPSHOT-package-step-standalone/step-web/}
+2013-02-08 14:33:11,363 INFO   - Started ServerConnector@4b71e076{HTTP/1.1}{localhost:8989}
+2013-02-08 14:33:49,693 INFO   - jetty-9.0.0.M5
+2013-02-08 14:33:52,503 INFO   - started o.e.j.w.WebAppContext@3ede04e7{/step-web,file:/C:/temp/temp/step-mvn-1.0-SNAPSHOT-package-step-standalone/step-web/,AVAILABLE}{file:/C:/temp/temp/step-mvn-1.0-SNAPSHOT-package-step-standalone/step-web/}
+2013-02-08 14:33:52,530 INFO   - Started ServerConnector@69bcf8f6{HTTP/1.1}{localhost:8989}
+2013-02-08 14:34:22,605 INFO   - jetty-9.0.0.M5
+2013-02-08 14:34:25,352 INFO   - started o.e.j.w.WebAppContext@235a75e3{/step-web,file:/C:/temp/temp/step-mvn-1.0-SNAPSHOT-package-step-standalone/step-web/,AVAILABLE}{file:/C:/temp/temp/step-mvn-1.0-SNAPSHOT-package-step-standalone/step-web/}
+2013-02-08 14:34:25,376 INFO   - Started ServerConnector@362be31c{HTTP/1.1}{localhost:8989}
+2013-02-08 14:35:29,195 INFO   - jetty-9.0.0.M5
+2013-02-08 14:35:31,870 INFO   - started o.e.j.w.WebAppContext@7a9ca906{/step-web,file:/C:/temp/temp/step-mvn-1.0-SNAPSHOT-package-step-standalone/step-web/,AVAILABLE}{file:/C:/temp/temp/step-mvn-1.0-SNAPSHOT-package-step-standalone/step-web/}
+2013-02-08 14:35:31,893 INFO   - Started ServerConnector@13cb35da{HTTP/1.1}{localhost:8989}
+2013-02-08 14:39:55,551 INFO   - jetty-9.0.0.M5
+2013-02-08 14:39:58,229 INFO   - started o.e.j.w.WebAppContext@7f19c37{/step-web,file:/C:/temp/temp/step-mvn-1.0-SNAPSHOT-package-step-standalone/step-web/,AVAILABLE}{file:/C:/temp/temp/step-mvn-1.0-SNAPSHOT-package-step-standalone/step-web/}
+2013-02-08 14:39:58,252 INFO   - Started ServerConnector@7b4b5f0c{HTTP/1.1}{localhost:8989}
+2013-02-08 14:40:11,639 INFO   - jetty-9.0.0.M5
+2013-02-08 14:40:14,386 INFO   - started o.e.j.w.WebAppContext@d7dec37{/step-web,file:/C:/temp/temp/step-mvn-1.0-SNAPSHOT-package-step-standalone/step-web/,AVAILABLE}{file:/C:/temp/temp/step-mvn-1.0-SNAPSHOT-package-step-standalone/step-web/}
+2013-02-08 14:40:14,410 INFO   - Started ServerConnector@66dab355{HTTP/1.1}{localhost:8989}
+2013-02-08 14:52:52,025 INFO   - jetty-9.0.0.M5
+2013-02-08 14:52:54,793 INFO   - started o.e.j.w.WebAppContext@1dd25868{/step-web,file:/C:/temp/temp/step-mvn-1.0-SNAPSHOT-package-step-standalone/step-web/,AVAILABLE}{file:/C:/temp/temp/step-mvn-1.0-SNAPSHOT-package-step-standalone/step-web/}
+2013-02-08 14:52:54,816 INFO   - Started ServerConnector@653e1009{HTTP/1.1}{localhost:8989}
+2013-02-08 14:53:11,464 INFO   - Graceful shutdown org.eclipse.jetty.server.Server@7ab908c9 by 
+2013-02-08 14:53:11,468 INFO   - Stopped ServerConnector@653e1009{HTTP/1.1}{localhost:8989}
+2013-02-08 14:53:11,475 INFO   - javax.el.BeanELResolver purged
+2013-02-08 14:53:11,569 INFO   - stopped o.e.j.w.WebAppContext@1dd25868{/step-web,file:/C:/temp/temp/step-mvn-1.0-SNAPSHOT-package-step-standalone/step-web/,UNAVAILABLE}{file:/C:/temp/temp/step-mvn-1.0-SNAPSHOT-package-step-standalone/step-web/}
+2013-02-08 14:55:17,591 INFO   - jetty-9.0.0.M5
+2013-02-08 14:55:20,325 INFO   - started o.e.j.w.WebAppContext@71631ce8{/step-web,file:/C:/temp/temp/step-mvn-1.0-SNAPSHOT-package-step-standalone/step-web/,AVAILABLE}{file:/C:/temp/temp/step-mvn-1.0-SNAPSHOT-package-step-standalone/step-web/}
+2013-02-08 14:55:20,348 INFO   - Started ServerConnector@9c320cc{HTTP/1.1}{localhost:8989}
+2013-02-08 15:02:45,116 INFO   - Graceful shutdown org.eclipse.jetty.server.Server@3a877ab0 by 
+2013-02-08 15:02:45,118 INFO   - Stopped ServerConnector@9c320cc{HTTP/1.1}{localhost:8989}
+2013-02-08 15:02:45,124 INFO   - javax.el.BeanELResolver purged
+2013-02-08 15:02:45,214 INFO   - stopped o.e.j.w.WebAppContext@71631ce8{/step-web,file:/C:/temp/temp/step-mvn-1.0-SNAPSHOT-package-step-standalone/step-web/,UNAVAILABLE}{file:/C:/temp/temp/step-mvn-1.0-SNAPSHOT-package-step-standalone/step-web/}
+2013-02-08 16:33:44,822 INFO   - jetty-9.0.0.M5
+2013-02-08 16:33:47,533 INFO   - started o.e.j.w.WebAppContext@97ab6cd{/step-web,file:/C:/temp/temp/step-mvn-1.0-SNAPSHOT-package-step-standalone/step-web/,AVAILABLE}{file:/C:/temp/temp/step-mvn-1.0-SNAPSHOT-package-step-standalone/step-web/}
+2013-02-08 16:33:47,556 INFO   - Started ServerConnector@2e1022ec{HTTP/1.1}{localhost:8989}
+2013-02-08 16:35:45,498 INFO   - Graceful shutdown org.eclipse.jetty.server.Server@37900c04 by 
+2013-02-08 16:35:45,501 INFO   - Stopped ServerConnector@2e1022ec{HTTP/1.1}{localhost:8989}
+2013-02-08 16:35:45,507 INFO   - javax.el.BeanELResolver purged
+2013-02-08 16:35:45,607 INFO   - stopped o.e.j.w.WebAppContext@97ab6cd{/step-web,file:/C:/temp/temp/step-mvn-1.0-SNAPSHOT-package-step-standalone/step-web/,UNAVAILABLE}{file:/C:/temp/temp/step-mvn-1.0-SNAPSHOT-package-step-standalone/step-web/}

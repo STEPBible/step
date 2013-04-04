@@ -4,7 +4,7 @@
 
 <web-app>
 	<display-name>STEP :: Scripture Tools for Every Person</display-name>
-
+	
 	<servlet id="jsp">
 		<servlet-name>jsp</servlet-name>
 		<servlet-class>org.apache.jasper.servlet.JspServlet</servlet-class>
@@ -25,12 +25,13 @@
 		<filter-name>guiceFilter</filter-name>
 		<filter-class>com.google.inject.servlet.GuiceFilter</filter-class>
 	</filter>
-
+	
 	<filter-mapping>
 		<filter-name>guiceFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 
+	
 	<listener>
 		<listener-class>com.tyndalehouse.step.guice.StepServletConfig</listener-class>
 	</listener>

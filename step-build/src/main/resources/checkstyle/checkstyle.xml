@@ -121,7 +121,7 @@
     <module name="CovariantEquals"/>
     <module name="DefaultComesLast"/>
     <module name="DeclarationOrder"/>
-    <module name="DoubleCheckedLocking"/>
+<!--     <module name="DoubleCheckedLocking"/> -->
     <module name="EmptyStatement"/>
     <module name="EqualsAvoidNull"/>
     <module name="EqualsHashCode"/>
@@ -156,8 +156,8 @@
       <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
     </module>
     <module name="MissingSwitchDefault"/>
-    <module name="ModifiedControlVariable"/>
-    <module name="MultipleStringLiterals"/>
+<!--     <module name="ModifiedControlVariable"/> -->
+<!--     <module name="MultipleStringLiterals"/> -->
     <module name="MultipleVariableDeclarations"/>
     <module name="NestedIfDepth"/>
     <module name="NestedTryDepth"/>
@@ -200,8 +200,6 @@
     <module name="MutableException"/>
     <module name="VisibilityModifier"/>
     <module name="BooleanExpressionComplexity"/>
-    <module name="NPathComplexity"/>
-    <module name="CyclomaticComplexity"/>
     <module name="ArrayTypeStyle"/>
     <module name="FinalParameters"/>
     <!-- this should be covered by eclipse's reformatter profile 

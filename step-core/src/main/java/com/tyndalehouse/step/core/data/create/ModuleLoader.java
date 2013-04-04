@@ -41,7 +41,9 @@ package com.tyndalehouse.step.core.data.create;
 public interface ModuleLoader {
     /**
      * loads up the data
+     * 
+     * @param mainLoader the loader to which to write updates
      */
-    void init();
+    void init(Loader mainLoader);
 
 }

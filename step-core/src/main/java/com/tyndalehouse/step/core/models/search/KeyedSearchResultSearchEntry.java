@@ -40,6 +40,11 @@ public class KeyedSearchResultSearchEntry implements SearchEntry {
         this.verseContent = verseContent;
     }
 
+    /**
+     * adds an entry to the results
+     * 
+     * @param keyedVerseContent the content to be added
+     */
     public void addEntry(final KeyedVerseContent keyedVerseContent) {
         if (this.verseContent == null) {
             this.verseContent = new ArrayList<KeyedVerseContent>();

@@ -53,7 +53,10 @@ $(document).ready(function() {
         step.state.subject.subjectQuerySyntax(passageId, "");
     });
 
-      step.util.ui.searchButton(".subjectSearch",  'SEARCH_SUBJECT');
+    
+      step.util.ui.searchButton(".subjectSearch",  'SEARCH_SUBJECT', undefined, function(passageId) {
+          step.search.ui.subject.evaluateQuerySyntax(passageId);
+      });
 });
 
 $(step.search.ui).hear("subject-search-state-has-changed", function(s, data) {

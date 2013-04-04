@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.crosswire.common.progress.JobManager;
@@ -23,12 +24,13 @@ import org.crosswire.jsword.book.BookFilter;
 import org.crosswire.jsword.book.Books;
 import org.crosswire.jsword.book.install.InstallException;
 import org.crosswire.jsword.book.install.Installer;
+import org.crosswire.jsword.index.IndexManager;
 import org.crosswire.jsword.index.IndexManagerFactory;
-import org.crosswire.jsword.index.IndexStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
+import com.tyndalehouse.step.core.exceptions.TranslatedException;
 import com.tyndalehouse.step.core.service.jsword.JSwordModuleService;
 import com.tyndalehouse.step.core.utils.ValidateUtils;
 
@@ -40,19 +42,40 @@ import com.tyndalehouse.step.core.utils.ValidateUtils;
  */
 @Singleton
 public class JSwordModuleServiceImpl implements JSwordModuleService {
-    private static final String INSTALLING_BOOK = "Installing book";
+    private static final int INDEX_WAITING = 1000;
     private static final Logger LOGGER = LoggerFactory.getLogger(JSwordModuleServiceImpl.class);
     private static final String ANCIENT_GREEK = "grc";
     private static final String ANCIENT_HEBREW = "hbo";
     private static final String CURRENT_BIBLE_INSTALL_JOB = "Installing book: %s";
+    private static final String CURRENT_BIBLE_INDEX_JOB = "Creating index. Processing %s";
+
+    // BE CAREFUL about using these installers.
     private final List<Installer> bookInstallers;
+    private final List<Installer> offlineInstallers;
+    private boolean offline = false;
 
     /**
+     * This method is deliberately placed at the top of the file to raise awareness that sensitive countries
+     * may not wish to access the internet.
+     * <p />
+     * If the installation is set to "offline", then only return the offline installers.
+     * 
+     * @return a set of installers
+     */
+    private List<Installer> getInstallers() {
+        return this.offline ? this.offlineInstallers : this.bookInstallers;
+    }
+
+    // CHECKSTYLE:OFF
+    /**
      * @param installers a list of installers to use to download books
+     * @param offlineInstallers the set of installers to use offline, rather than online
      */
     @Inject
-    public JSwordModuleServiceImpl(final List<Installer> installers) {
+    public JSwordModuleServiceImpl(@Named("onlineInstallers") final List<Installer> installers,
+            @Named("offlineInstallers") final List<Installer> offlineInstallers) {
         this.bookInstallers = installers;
+        this.offlineInstallers = offlineInstallers;
 
         // add a handler to be notified of all job progresses
         JobManager.addWorkListener(new WorkListener() {
@@ -68,38 +91,40 @@ public class JSwordModuleServiceImpl implements JSwordModuleService {
                 final Progress job = ev.getJob();
                 LOGGER.trace("Work [{}] at [{}] / [{}]", new Object[] { job.getJobName(), job.getTotalWork(),
                         job.getTotalWork() });
-
-                if (job.isFinished() && job.getJobName().startsWith(INSTALLING_BOOK)) {
-                    handleFinshedBookInstall();
-                }
             }
         });
-
     }
 
-    /**
-     * When a book finishes installation, we'll index it
-     */
-    void handleFinshedBookInstall() {
-        // usually at most one book needs indexing, so let's kick the process off...
-        final List<Book> books = Books.installed().getBooks();
-        for (final Book b : books) {
-            if (IndexStatus.UNDONE.equals(b.getIndexStatus())) {
-                LOGGER.info("Indexing [{}]", b.getInitials());
-                // TODO
-                // IndexManagerFactory.getIndexManager().scheduleIndexCreation(b);
-            }
-        }
+    // CHECKSTYLE:ON
+
+    @Override
+    public void setOffline(final boolean offline) {
+        this.offline = offline;
     }
 
     @Override
-    public boolean isInstalled(final String moduleInitials) {
-        return Books.installed().getBook(moduleInitials) != null;
+    public boolean isInstalled(final String... modules) {
+        for (final String moduleInitials : modules) {
+            if (Books.installed().getBook(moduleInitials) == null) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public boolean isIndexed(final String version) {
+        final IndexManager indexManager = IndexManagerFactory.getIndexManager();
+        return indexManager.isIndexed(Books.installed().getBook(version));
     }
 
     @Override
     public void index(final String initials) {
-        IndexManagerFactory.getIndexManager().scheduleIndexCreation(Books.installed().getBook(initials));
+        final IndexManager indexManager = IndexManagerFactory.getIndexManager();
+        final Book book = Books.installed().getBook(initials);
+        if (!indexManager.isIndexed(book)) {
+            indexManager.scheduleIndexCreation(book);
+        }
     }
 
     @Override
@@ -122,10 +147,10 @@ public class JSwordModuleServiceImpl implements JSwordModuleService {
         if (!isInstalled(initials)) {
             LOGGER.debug("Book was not already installed, so kicking off installation process for [{}]",
                     initials);
-            for (final Installer i : this.bookInstallers) {
+            final List<Installer> installers = getInstallers();
+            for (final Installer i : installers) {
                 final Book bookToBeInstalled = i.getBook(initials);
 
-                // TODO TODO TODO FIME
                 if (bookToBeInstalled != null) {
                     // then we can kick off installation and return
                     try {
@@ -144,7 +169,7 @@ public class JSwordModuleServiceImpl implements JSwordModuleService {
             }
             // if we get here, then we were unable to install the book
             // since we couldn't find it.
-            throw new StepInternalException("Unable to find book with initials " + initials);
+            throw new TranslatedException("book_not_found", initials);
         }
 
         // if we get here then we had already installed the book - how come we're asking for this again?
@@ -183,10 +208,43 @@ public class JSwordModuleServiceImpl implements JSwordModuleService {
     }
 
     @Override
+    public double getProgressOnIndexing(final String bookName) {
+        notBlank(bookName, "The book name to be indexed was blank", SERVICE_VALIDATION_ERROR);
+
+        if (isIndexed(bookName)) {
+            return 1;
+        }
+
+        final Set<Progress> jswordJobs = JobManager.getJobs();
+        // not yet installed (or at least wasn't on the lines above, so check job list
+        for (final Progress p : jswordJobs) {
+            final String expectedJobName = format(CURRENT_BIBLE_INDEX_JOB, bookName);
+            if (expectedJobName.equals(p.getJobName())) {
+                if (p.isFinished()) {
+                    return 1;
+                }
+
+                return (double) p.getWork() / p.getTotalWork();
+            }
+        }
+
+        // the job may have completed by now, while we did the search, so do a final check
+        if (isIndexed(bookName)) {
+            return 1;
+        }
+
+        throw new StepInternalException(
+                "An unknown error has occurred: the job has disappeared of the job list, "
+                        + "but the module is not installed");
+    }
+
+    @Override
     public void reloadInstallers() {
         boolean errors = false;
         LOGGER.trace("About to reload installers");
-        for (final Installer i : this.bookInstallers) {
+        final List<Installer> installers = getInstallers();
+
+        for (final Installer i : installers) {
             try {
                 LOGGER.trace("Reloading installer [{}]", i.getInstallerDefinition());
                 i.reloadBookList();
@@ -252,26 +310,31 @@ public class JSwordModuleServiceImpl implements JSwordModuleService {
                 || locale.equals(book.getLanguage().getCode());
     }
 
-    /**
-     * @param bibleCategory the categories of books that should be considered
-     * @return returns a list of installed modules
-     */
     @Override
     public List<Book> getInstalledModules(final BookCategory... bibleCategory) {
         return getInstalledModules(true, null, bibleCategory);
     }
 
-    /**
-     * @param bibleCategory the list of books that should be considered
-     * @return a list of all modules
-     */
     @Override
     public List<Book> getAllModules(final BookCategory... bibleCategory) {
         final List<Book> books = new ArrayList<Book>();
-        for (final Installer installer : this.bookInstallers) {
+        final List<Installer> installers = getInstallers();
+        for (final Installer installer : installers) {
             try {
                 installer.reloadBookList();
-                books.addAll(installer.getBooks());
+
+                final List<Book> installerBooks = installer.getBooks();
+
+                // iterate through books, doing a linear search for each category, because the list is only 1
+                // - 4 items bigs, likely 2
+                for (final Book b : installerBooks) {
+                    for (final BookCategory cat : bibleCategory) {
+                        if (cat.equals(b.getBookCategory())) {
+                            books.add(b);
+                            break;
+                        }
+                    }
+                }
             } catch (final InstallException e) {
                 // log an error
                 LOGGER.error("Unable to update installer", e);
@@ -280,4 +343,30 @@ public class JSwordModuleServiceImpl implements JSwordModuleService {
         return books;
     }
 
+    @Override
+    public void removeModule(final String initials) {
+        final Book book = Books.installed().getBook(initials);
+
+        if (book != null) {
+            try {
+                Books.installed().removeBook(book);
+            } catch (final BookException e) {
+                // book wasn't found probably
+                LOGGER.warn("Deleting book failed: " + initials, e);
+            }
+        }
+    }
+
+    @Override
+    public void waitForIndexes(final String... versions) {
+        for (final String s : versions) {
+            while (!this.isIndexed(s)) {
+                try {
+                    Thread.sleep(INDEX_WAITING);
+                } catch (final InterruptedException e) {
+                    LOGGER.warn("Interrupted exception", e);
+                }
+            }
+        }
+    }
 }

@@ -9,13 +9,11 @@
 	<meta name="description" content="<%= request.getParameter("description") %>">
 	<meta name="keywords" content="<%= request.getParameter("keywords") %>" />
 	
-	<!-- used for webmaster tools -->
-	<meta name="google-site-verification" content="OZfGjgjfTQq0Gn-m6pecYXYNGoDTllWS6v9aBOi64AU" />
 	<link rel="stylesheet" type="text/css" href="static/static.css" />
 	<link rel="shortcut icon"  href="images/step-favicon.ico" />
 </HEAD>
 <body>
 
 <div class="header">
-	<h1>STEP :: Scripture Tools for Every Person</h1>
+	<h1><a href="./">STEP :: Scripture Tools for Every Person</a></h1>
 </div>

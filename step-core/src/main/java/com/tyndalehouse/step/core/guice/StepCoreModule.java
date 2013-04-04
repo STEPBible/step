@@ -33,9 +33,10 @@
 package com.tyndalehouse.step.core.guice;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 
+import com.tyndalehouse.step.core.service.*;
+import com.tyndalehouse.step.core.service.impl.*;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.config.CacheConfiguration;
 import net.sf.ehcache.config.Configuration;
@@ -49,32 +50,26 @@ import com.tyndalehouse.step.core.data.EntityManager;
 import com.tyndalehouse.step.core.data.create.Loader;
 import com.tyndalehouse.step.core.data.entities.impl.EntityManagerImpl;
 import com.tyndalehouse.step.core.guice.providers.DefaultInstallersProvider;
-import com.tyndalehouse.step.core.guice.providers.DefaultLexiconRefsProvider;
 import com.tyndalehouse.step.core.guice.providers.DefaultVersionsProvider;
-import com.tyndalehouse.step.core.service.BibleInformationService;
-import com.tyndalehouse.step.core.service.GeographyService;
-import com.tyndalehouse.step.core.service.ModuleService;
-import com.tyndalehouse.step.core.service.MorphologyService;
-import com.tyndalehouse.step.core.service.SearchService;
-import com.tyndalehouse.step.core.service.TimelineService;
-import com.tyndalehouse.step.core.service.VocabularyService;
-import com.tyndalehouse.step.core.service.impl.BibleInformationServiceImpl;
-import com.tyndalehouse.step.core.service.impl.GeographyServiceImpl;
-import com.tyndalehouse.step.core.service.impl.ModuleServiceImpl;
-import com.tyndalehouse.step.core.service.impl.MorphologyServiceImpl;
-import com.tyndalehouse.step.core.service.impl.SearchServiceImpl;
-import com.tyndalehouse.step.core.service.impl.TimelineServiceImpl;
-import com.tyndalehouse.step.core.service.impl.VocabularyServiceImpl;
+import com.tyndalehouse.step.core.guice.providers.OfflineInstallersProvider;
+import com.tyndalehouse.step.core.service.jsword.JSwordAnalysisService;
 import com.tyndalehouse.step.core.service.jsword.JSwordMetadataService;
 import com.tyndalehouse.step.core.service.jsword.JSwordModuleService;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import com.tyndalehouse.step.core.service.jsword.JSwordSearchService;
 import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
+import com.tyndalehouse.step.core.service.jsword.impl.JSwordAnalysisServiceImpl;
 import com.tyndalehouse.step.core.service.jsword.impl.JSwordMetadataServiceImpl;
 import com.tyndalehouse.step.core.service.jsword.impl.JSwordModuleServiceImpl;
 import com.tyndalehouse.step.core.service.jsword.impl.JSwordPassageServiceImpl;
 import com.tyndalehouse.step.core.service.jsword.impl.JSwordSearchServiceImpl;
 import com.tyndalehouse.step.core.service.jsword.impl.JSwordVersificationServiceImpl;
+import com.tyndalehouse.step.core.service.search.OriginalWordSuggestionService;
+import com.tyndalehouse.step.core.service.search.SubjectEntrySearchService;
+import com.tyndalehouse.step.core.service.search.SubjectSearchService;
+import com.tyndalehouse.step.core.service.search.impl.OriginalWordSuggestionServiceImpl;
+import com.tyndalehouse.step.core.service.search.impl.SubjectEntryServiceImpl;
+import com.tyndalehouse.step.core.service.search.impl.SubjectSearchServiceImpl;
 import com.tyndalehouse.step.core.utils.AbstractStepGuiceModule;
 
 /**
@@ -102,30 +97,44 @@ public class StepCoreModule extends AbstractStepGuiceModule {
         // for now just have a method that statically initialises the cache
         initialiseCacheManager();
 
+        // services used on start-up
         bind(SearchService.class).to(SearchServiceImpl.class).asEagerSingleton();
-
+        bind(LanguageService.class).to(LanguageServiceImpl.class).asEagerSingleton();
         bind(JSwordPassageService.class).to(JSwordPassageServiceImpl.class).asEagerSingleton();
         bind(JSwordModuleService.class).to(JSwordModuleServiceImpl.class).asEagerSingleton();
         bind(JSwordMetadataService.class).to(JSwordMetadataServiceImpl.class).asEagerSingleton();
         bind(JSwordVersificationService.class).to(JSwordVersificationServiceImpl.class).asEagerSingleton();
-        bind(JSwordSearchService.class).to(JSwordSearchServiceImpl.class);
-
         bind(BibleInformationService.class).to(BibleInformationServiceImpl.class).asEagerSingleton();
         bind(ModuleService.class).to(ModuleServiceImpl.class).asEagerSingleton();
-        bind(MorphologyService.class).to(MorphologyServiceImpl.class).asEagerSingleton();
-        bind(VocabularyService.class).to(VocabularyServiceImpl.class).asEagerSingleton();
+
+        // others that can wait
+        bind(JSwordAnalysisService.class).to(JSwordAnalysisServiceImpl.class);
+        bind(AnalysisService.class).to(AnalysisServiceImpl.class);
+        bind(JSwordSearchService.class).to(JSwordSearchServiceImpl.class);
+        bind(MorphologyService.class).to(MorphologyServiceImpl.class);
+        bind(VocabularyService.class).to(VocabularyServiceImpl.class);
         bind(TimelineService.class).to(TimelineServiceImpl.class);
         bind(GeographyService.class).to(GeographyServiceImpl.class);
-        bind(Loader.class).asEagerSingleton();
+        bind(Loader.class);
+        bind(UserService.class).to(UserServiceImpl.class);
+        bind(LexiconDefinitionService.class).to(LexiconDefinitionServiceImpl.class);
+        bind(SubjectSearchService.class).to(SubjectSearchServiceImpl.class);
+        bind(SubjectEntrySearchService.class).to(SubjectEntryServiceImpl.class);
+
+        bind(OriginalWordSuggestionService.class).to(OriginalWordSuggestionServiceImpl.class)
+                .asEagerSingleton();
 
         bind(new TypeLiteral<List<String>>() {
         }).annotatedWith(Names.named("defaultVersions")).toProvider(DefaultVersionsProvider.class);
-        bind(new TypeLiteral<Map<String, String>>() {
-        }).annotatedWith(Names.named("defaultLexiconRefs")).toProvider(DefaultLexiconRefsProvider.class);
-        bind(new TypeLiteral<List<Installer>>() {
-        }).toProvider(DefaultInstallersProvider.class);
-        bind(EntityManager.class).to(EntityManagerImpl.class).asEagerSingleton();
 
+        // installers, offline and online
+        bind(new TypeLiteral<List<Installer>>() {
+        }).annotatedWith(Names.named("onlineInstallers")).toProvider(DefaultInstallersProvider.class);
+
+        bind(new TypeLiteral<List<Installer>>() {
+        }).annotatedWith(Names.named("offlineInstallers")).toProvider(OfflineInstallersProvider.class);
+
+        bind(EntityManager.class).to(EntityManagerImpl.class).asEagerSingleton();
     }
 
     /**

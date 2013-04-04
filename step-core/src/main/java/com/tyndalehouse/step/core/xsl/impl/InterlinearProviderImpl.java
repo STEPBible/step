@@ -33,22 +33,17 @@
 package com.tyndalehouse.step.core.xsl.impl;
 
 import static com.tyndalehouse.step.core.utils.StringConversionUtils.getAnyKey;
-import static com.tyndalehouse.step.core.utils.StringConversionUtils.getStrongKey;
 import static com.tyndalehouse.step.core.utils.StringUtils.areAnyBlank;
 import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
-import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
 import static com.tyndalehouse.step.core.utils.StringUtils.split;
 import static java.lang.String.format;
-import static org.crosswire.jsword.book.OSISUtil.ATTRIBUTE_W_LEMMA;
-import static org.crosswire.jsword.book.OSISUtil.ATTRIBUTE_W_MORPH;
-import static org.crosswire.jsword.book.OSISUtil.OSIS_ATTR_OSISID;
-import static org.crosswire.jsword.book.OSISUtil.OSIS_ELEMENT_VERSE;
-import static org.crosswire.jsword.book.OSISUtil.OSIS_ELEMENT_W;
 
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -56,14 +51,23 @@ import java.util.Set;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.BookData;
 import org.crosswire.jsword.book.BookException;
+import org.crosswire.jsword.book.BookMetaData;
 import org.crosswire.jsword.book.Books;
+import org.crosswire.jsword.book.OSISUtil;
+import org.crosswire.jsword.passage.Key;
+import org.crosswire.jsword.passage.KeyUtil;
 import org.crosswire.jsword.passage.NoSuchKeyException;
-import org.jdom.Content;
-import org.jdom.Element;
+import org.crosswire.jsword.passage.Passage;
+import org.crosswire.jsword.versification.Testament;
+import org.crosswire.jsword.versification.Versification;
+import org.crosswire.jsword.versification.system.Versifications;
+import org.jdom2.Content;
+import org.jdom2.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
+import com.tyndalehouse.step.core.utils.StringUtils;
 import com.tyndalehouse.step.core.xsl.InterlinearProvider;
 
 /**
@@ -75,45 +79,54 @@ import com.tyndalehouse.step.core.xsl.InterlinearProvider;
  * 
  */
 public class InterlinearProviderImpl implements InterlinearProvider {
+
+    /** The Constant LOGGER. */
     private static final Logger LOGGER = LoggerFactory.getLogger(InterlinearProviderImpl.class);
 
-    /**
-     * bestAccuracy gives a word by its dual key (strong,morph)
-     */
-    private final Map<DualKey<String, String>, String> bestAccuracy = new HashMap<DualKey<String, String>, String>();
+    /** limited accuracy tries to do a location look up by using the verse number as part of the key. */
+    private final Map<DualKey<String, String>, Deque<Word>> limitedAccuracy = new HashMap<DualKey<String, String>, Deque<Word>>();
 
-    /**
-     * limited accuracy tries to do a location look up by using the verse number as part of the key
-     */
-    private final Map<DualKey<String, String>, List<String>> limitedAccuracy = new HashMap<DualKey<String, String>, List<String>>();
+    /** The current book. */
+    private Book currentBook;
 
-    /**
-     * finally, this is just a list of all the strongs and their mappings. Still would be fairly good as long
-     * as the same word isn't used multiple times.
-     */
-    private final Map<String, String> worstAccuracy = new HashMap<String, String>();
+    /** The hebrew direct mapping. */
+    private Map<String, String> hebrewDirectMapping;
+
+    /** The hebrew indirect mappings. */
+    private Map<String, String> hebrewIndirectMappings;
+
+    /** The testament. */
+    private Testament testament;
 
     /**
      * sets up the interlinear provider with the correct version and text scope.
      * 
      * @param version the version to use to set up the interlinear
      * @param textScope the text scope reference, defining the bounds of the lookup
+     * @param hebrewDirectMapping the hebrew overriding mappings
+     * @param hebrewIndirectMappings the mappings used if no other mapping is found
      */
-    public InterlinearProviderImpl(final String version, final String textScope) {
+    public InterlinearProviderImpl(final String version, final String textScope,
+            final Map<String, String> hebrewDirectMapping, final Map<String, String> hebrewIndirectMappings) {
         // first check whether the values passed in are correct
         if (areAnyBlank(version, textScope)) {
             return;
         }
 
-        final Book currentBook = Books.installed().getBook(version);
-        if (currentBook == null) {
+        this.hebrewIndirectMappings = hebrewIndirectMappings;
+        this.hebrewDirectMapping = hebrewDirectMapping;
+        this.currentBook = Books.installed().getBook(version);
+        if (this.currentBook == null) {
             throw new StepInternalException(format("Couldn't look up book: [%s]", version));
         }
 
         BookData bookData;
 
         try {
-            bookData = new BookData(currentBook, currentBook.getKey(textScope));
+            final Key key = this.currentBook.getKey(textScope);
+            setTestamentType(key);
+
+            bookData = new BookData(this.currentBook, key);
             scanForTextualInformation(bookData.getOsisFragment());
         } catch (final NoSuchKeyException e) {
             throw new StepInternalException(e.getMessage(), e);
@@ -123,7 +136,7 @@ public class InterlinearProviderImpl implements InterlinearProvider {
     }
 
     /**
-     * package private version for testing purposes
+     * package private version for testing purposes.
      */
     InterlinearProviderImpl() {
         // exposing package private constructor
@@ -144,34 +157,16 @@ public class InterlinearProviderImpl implements InterlinearProvider {
 
         // the keys passed in may have multiple references and morphologies, therefore, we need to lookup
         // multiple items.
-        final String[] strongs = split(strong);
-        final String[] morphs = morph == null ? new String[0] : split(morph);
+        final String[] strongs = StringUtils.split(strong);
 
         // There are at most strongs.length words, and we might have morphological data to help
         for (final String s : strongs) {
-            boolean foundMatchForStrong = false;
 
             // find corresponding strong:
             LOGGER.debug("Finding strong key [{}]", s);
             final String strongKey = getAnyKey(s);
 
-            // each could be using the morphs we have, so try them all - this gets skipped if we have no
-            // morphs
-            for (final String m : morphs) {
-                // lookup (strong,morph) -> word first
-                final DualKey<String, String> key = new DualKey<String, String>(getStrongKey(strongKey), m);
-                final String word = this.bestAccuracy.get(key);
-
-                if (word != null) {
-                    results.add(word);
-                    foundMatchForStrong = true;
-                }
-            }
-
-            // have we found a match? if not, we better try and find one using the verse
-            if (!foundMatchForStrong) {
-                results.add(getWord(verseNumber, strongKey));
-            }
+            results.add(getWord(verseNumber, strongKey));
         }
 
         return convertToString(results);
@@ -185,7 +180,7 @@ public class InterlinearProviderImpl implements InterlinearProvider {
      */
     private String convertToString(final Set<String> results) {
         final Iterator<String> iterator = results.iterator();
-        final StringBuffer sb = new StringBuffer(results.size() * 14);
+        final StringBuilder sb = new StringBuilder(results.size() * 16);
 
         // add the first word without a space
         if (iterator.hasNext()) {
@@ -201,7 +196,7 @@ public class InterlinearProviderImpl implements InterlinearProvider {
     }
 
     /**
-     * returns words based on strong and verse number only
+     * returns words based on strong and verse number only.
      * 
      * @param verseNumber the verse number
      * @param strong the strong reference
@@ -211,24 +206,77 @@ public class InterlinearProviderImpl implements InterlinearProvider {
         if (strong != null && verseNumber != null) {
             final DualKey<String, String> key = new DualKey<String, String>(strong, verseNumber);
 
-            final List<String> list = this.limitedAccuracy.get(key);
+            final Deque<Word> list = this.limitedAccuracy.get(key);
             if (list != null && !list.isEmpty()) {
-                return list.get(0);
+                return retrieveWord(list);
+            } else {
+                return lookupMappings(strong);
             }
-        }
-        // so we didn't find anything even with the verse number, now we need to look for a strong
-        // on its own
-        final String lastChance = this.worstAccuracy.get(strong);
-        if (lastChance == null) {
-            return "";
         }
 
         // it is important to return an empty string here
-        return lastChance;
+        return "";
     }
 
     /**
-     * retrieves context textual information from a passage
+     * Lookup mappings, if the strong number is there, then it is used
+     * 
+     * @param strong the strong
+     * @return the string
+     */
+    private String lookupMappings(final String strong) {
+        // we ignore mapping lookups for anything greek or hebrew...
+        if ("he".equals(this.currentBook.getLanguage().getCode())
+                || "grc".equals(this.currentBook.getLanguage().getCode())) {
+            return "";
+        }
+
+        // currently only supporting OLD Testament
+        if (this.testament == Testament.OLD) {
+            final String direct = this.hebrewDirectMapping.get(strong);
+            if (direct != null) {
+                return direct;
+            }
+
+            final String indirect = this.hebrewIndirectMappings.get(strong);
+            if (indirect != null) {
+                return indirect;
+            }
+        }
+        return "";
+    }
+
+    /**
+     * Retrieves the first word from the list, and removes from the list. If the word is PARTIAL, then
+     * retrieves the next one too, and concatenates
+     * 
+     * @param list a dequue containing all the items in question
+     * @return the string
+     */
+    private String retrieveWord(final Deque<Word> list) {
+        Word word = list.removeFirst();
+        if (!word.isPartial()) {
+            return word.getText();
+        }
+
+        final StringBuilder text = new StringBuilder(32);
+        while (word != null && word.isPartial()) {
+            text.append(word.getText());
+            text.append(", ");
+
+            // increment to next word
+            word = list.pollFirst();
+        }
+
+        // append the last word
+        if (word != null) {
+            text.append(word.getText());
+        }
+        return text.toString();
+    }
+
+    /**
+     * retrieves context textual information from a passage.
      * 
      * @param osisFragment the fragment of XML that should be examined
      */
@@ -246,11 +294,11 @@ public class InterlinearProviderImpl implements InterlinearProvider {
     @SuppressWarnings("unchecked")
     private void scanForTextualInformation(final Element element, final String currentVerse) {
         // check to see if we've hit a new verse, if so, we update the verse
-        final String verseToBeUsed = element.getName().equals(OSIS_ELEMENT_VERSE) ? element
-                .getAttributeValue(OSIS_ATTR_OSISID) : currentVerse;
+        final String verseToBeUsed = element.getName().equals(OSISUtil.OSIS_ELEMENT_VERSE) ? element
+                .getAttributeValue(OSISUtil.OSIS_ATTR_OSISID) : currentVerse;
 
         // check to see if we've hit a node of interest
-        if (element.getName().equals(OSIS_ELEMENT_W)) {
+        if (element.getName().equals(OSISUtil.OSIS_ELEMENT_W)) {
             extractTextualInfoFromNode(element, verseToBeUsed);
             return;
         }
@@ -269,14 +317,13 @@ public class InterlinearProviderImpl implements InterlinearProvider {
     }
 
     /**
-     * retrieves textual information and adds it to the provider
+     * retrieves textual information and adds it to the provider.
      * 
      * @param element the element to extract information from
      * @param verseReference verse reference to use for locality of keying
      */
     private void extractTextualInfoFromNode(final Element element, final String verseReference) {
-        final String strong = element.getAttributeValue(ATTRIBUTE_W_LEMMA);
-        final String morph = element.getAttributeValue(ATTRIBUTE_W_MORPH);
+        final String strong = element.getAttributeValue(OSISUtil.ATTRIBUTE_W_LEMMA);
         final String word = element.getText();
 
         // do we need to do any manipulation? probably not because we are going to be
@@ -284,7 +331,6 @@ public class InterlinearProviderImpl implements InterlinearProvider {
         // however, some attributes may contain multiple strongs and morphs tagged to one word.
         // therefore we do need to split the text.
         final String[] strongs = split(strong);
-        final String[] morphs = split(morph);
 
         if (strongs == null) {
             return;
@@ -292,15 +338,49 @@ public class InterlinearProviderImpl implements InterlinearProvider {
 
         // there is no way of know which strong goes with which morph, and we only
         // have one phrase anyway
+        final List<Word> words = new ArrayList<Word>(2);
+        boolean partial = false;
         for (int ii = 0; ii < strongs.length; ii++) {
-            if (morphs != null && morphs.length != 0) {
-                for (int jj = 0; jj < morphs.length; jj++) {
-                    addTextualInfo(verseReference, strongs[ii], morphs[jj], word);
-                }
+            final String strongKey = getAnyKey(strongs[ii]);
+            if (!isH00(strongKey) && !blacklisted(strongKey)) {
+                words.add(addTextualInfo(verseReference, strongKey, word));
             } else {
-                addTextualInfo(verseReference, strongs[ii], null, word);
+                partial = true;
             }
         }
+
+        if (partial) {
+            for (final Word w : words) {
+                w.setPartial(true);
+            }
+        }
+    }
+
+    /**
+     * Blacklisted, if the word is contained in a direct mapping for the relevant testament
+     * 
+     * @param strongKey the strong key
+     * @return true, if successful
+     */
+    private boolean blacklisted(final String strongKey) {
+        return this.testament == Testament.OLD && this.hebrewDirectMapping.containsKey(strongKey);
+    }
+
+    /**
+     * Checks if is h00.
+     * 
+     * @param currentStrong a strong number
+     * @return true, if is a single H followed by only 0s, which indicates that the strong numbers go with
+     *         their next occurrence
+     */
+    private boolean isH00(final String currentStrong) {
+        for (int ii = 0; ii < currentStrong.length(); ii++) {
+            if (currentStrong.charAt(ii) != '0') {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -310,37 +390,42 @@ public class InterlinearProviderImpl implements InterlinearProvider {
      * word that we want to retrieve. Without the strong number, we don't have any information at all.
      * Therefore, the first level of lookup should be by Strong number.
      * 
-     * Morphology-wise, each word might have a small number of options, so a linked list will do for this
-     * 
-     * One would think that strong -> morph -> word will be unique. In the case of having just strong, we
-     * should use verse locality to maximise our chance of getting the right word (strong -> verse -> word)
-     * 
-     * So in summary, we use: strong -> morph -> word strong -> verse -> list(word) (not unique)
-     * 
      * @param verseReference the verse reference that specifies locality (least important factor)
-     * @param strong the strong number (identifies the root/meaning of the word)
-     * @param morph the morphology (identifies how the used is word in the sentence - i.e. grammar)
+     * @param strongKey the strong number (identifies the root/meaning of the word)
      * @param word the word to be stored
+     * @return the word that has been added
      */
-    private void addTextualInfo(final String verseReference, final String strong, final String morph,
-            final String word) {
-        final String strongKey = getAnyKey(strong);
-
-        if (isNotBlank(strongKey) && isNotBlank(morph)) {
-            final DualKey<String, String> strongMorphKey = new DualKey<String, String>(strongKey, morph);
-            this.bestAccuracy.put(strongMorphKey, word);
-        }
+    private Word addTextualInfo(final String verseReference, final String strongKey, final String word) {
 
         final DualKey<String, String> strongVerseKey = new DualKey<String, String>(strongKey, verseReference);
-
-        List<String> verseKeyedStrongs = this.limitedAccuracy.get(strongVerseKey);
+        Deque<Word> verseKeyedStrongs = this.limitedAccuracy.get(strongVerseKey);
         if (verseKeyedStrongs == null) {
-            verseKeyedStrongs = new ArrayList<String>();
+            verseKeyedStrongs = new LinkedList<Word>();
             this.limitedAccuracy.put(strongVerseKey, verseKeyedStrongs);
         }
-        verseKeyedStrongs.add(word);
-
-        // finally add it to the worst accuracy - i.e. just based on strongs (could probably refactor)
-        this.worstAccuracy.put(strongKey, word);
+        final Word w = new Word(word);
+        verseKeyedStrongs.add(w);
+        return w;
     }
+
+    /**
+     * Sets the testament, to be used to determine the indirect/direct mappings to use when generating the
+     * interlinear.
+     * 
+     * @param key the key to the passage being looked up
+     */
+    private void setTestamentType(final Key key) {
+        final Versification v11n = Versifications.instance().getVersification(
+                (String) this.currentBook.getBookMetaData().getProperty(BookMetaData.KEY_VERSIFICATION));
+        final Passage passage = KeyUtil.getPassage(key);
+        this.testament = v11n.getTestament(v11n.getOrdinal(passage.getVerseAt(0)));
+    }
+
+    /**
+     * @param currentBook the currentBook to set
+     */
+    void setCurrentBook(final Book currentBook) {
+        this.currentBook = currentBook;
+    }
+
 }

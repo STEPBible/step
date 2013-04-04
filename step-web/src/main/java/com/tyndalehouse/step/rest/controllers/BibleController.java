@@ -39,42 +39,44 @@ import static com.tyndalehouse.step.core.utils.ValidateUtils.notEmpty;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
-import javax.inject.Singleton;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.inject.servlet.RequestScoped;
+import com.tyndalehouse.step.core.models.AvailableFeatures;
 import com.tyndalehouse.step.core.models.BookName;
 import com.tyndalehouse.step.core.models.ClientSession;
 import com.tyndalehouse.step.core.models.EnrichedLookupOption;
 import com.tyndalehouse.step.core.models.KeyWrapper;
-import com.tyndalehouse.step.core.models.LookupOption;
 import com.tyndalehouse.step.core.models.OsisWrapper;
+import com.tyndalehouse.step.core.models.search.StrongCountsAndSubjects;
 import com.tyndalehouse.step.core.service.BibleInformationService;
+import com.tyndalehouse.step.core.utils.language.ContemporaryLanguageUtils;
 import com.tyndalehouse.step.models.ModulesForLanguageUser;
 import com.tyndalehouse.step.rest.framework.Cacheable;
+import com.yammer.metrics.annotation.Timed;
 
 /**
- * The controller for retrieving information on the bible or texts from the bible
+ * The controller for retrieving information on the bible or texts from the bible.
  * 
  * @author chrisburrell
- * 
  */
-@Singleton
+@RequestScoped
 public class BibleController {
     private static final Logger LOGGER = LoggerFactory.getLogger(BibleController.class);
     private final BibleInformationService bibleInformation;
     private final Provider<ClientSession> clientSession;
 
     /**
-     * creates the controller giving access to bible information
+     * creates the controller giving access to bible information.
      * 
      * @param bibleInformation the service allowing access to biblical material
      * @param clientSession clientSession given on the request
-     * 
      */
     @Inject
     public BibleController(final BibleInformationService bibleInformation,
@@ -85,7 +87,7 @@ public class BibleController {
     }
 
     /**
-     * a REST method that returns version of the Bible that are available
+     * a REST method that returns version of the Bible that are available.
      * 
      * @param allVersions boolean to indicate whether all versions should be returned
      * @return all versions of modules that are considered to be Bibles.
@@ -96,14 +98,15 @@ public class BibleController {
         final Locale userLocale = this.clientSession.get().getLocale();
         final ModulesForLanguageUser versions = new ModulesForLanguageUser();
         versions.setLanguageCode(userLocale.getLanguage());
-        versions.setLanguageName(userLocale.getDisplayLanguage(userLocale));
+        versions.setLanguageName(ContemporaryLanguageUtils.capitaliseFirstLetter(userLocale
+                .getDisplayLanguage(userLocale)));
         versions.setVersions(this.bibleInformation.getAvailableModules(Boolean.valueOf(allVersions),
                 language, userLocale));
         return versions;
     }
 
     /**
-     * a REST method that returns text from the Bible
+     * a REST method that returns text from the Bible.
      * 
      * @param version the initials identifying the version
      * @param reference the reference to lookup
@@ -115,7 +118,7 @@ public class BibleController {
     }
 
     /**
-     * a REST method that returns text from the Bible
+     * a REST method that returns text from the Bible.
      * 
      * @param version the initials identifying the version
      * @param reference the reference to lookup
@@ -128,7 +131,7 @@ public class BibleController {
     }
 
     /**
-     * a REST method that returns
+     * a REST method that returns.
      * 
      * @param version the initials identifying the version
      * @param reference the reference to lookup
@@ -138,18 +141,18 @@ public class BibleController {
      * @return the text to be displayed, formatted as HTML
      */
     @Cacheable(true)
+    @Timed(name = "getText", rateUnit = TimeUnit.SECONDS, durationUnit = TimeUnit.MILLISECONDS)
     public OsisWrapper getBibleText(final String version, final String reference, final String options,
             final String interlinearVersion, final String interlinearMode) {
-        // TODO de-duplicate for internationalisation
-        notEmpty(version, "You need to provide a version", USER_MISSING_FIELD);
-        notEmpty(reference, "You need to provide a reference", USER_MISSING_FIELD);
+        notEmpty(version, "bible_required", USER_MISSING_FIELD);
+        notEmpty(reference, "reference_required", USER_MISSING_FIELD);
 
         return this.bibleInformation.getPassageText(version, reference, options, interlinearVersion,
                 interlinearMode);
     }
 
     /**
-     * Looks up the bible text by verse numbers, mostly used for continuous scrolling
+     * Looks up the bible text by verse numbers, mostly used for continuous scrolling.
      * 
      * @param version the version initials
      * @param startVerseId the start verse ordinal
@@ -165,21 +168,21 @@ public class BibleController {
     }
 
     /**
-     * Looks up the bible text by verse numbers, mostly used for continuous scrolling
+     * Looks up the bible text by verse numbers, mostly used for continuous scrolling.
      * 
      * @param version the version initials
      * @param startVerseId the start verse ordinal
      * @param endVerseId the end verse ordinal
-     * @param options the comma-separated list of options (optional)
-     * @param interlinearVersion an interlinear versions if available (optional)
      * @param roundUp true to indicate rounding up, false to indicate rounding down, anything else for no
      *            rounding
+     * @param options the comma-separated list of options (optional)
+     * @param interlinearVersion an interlinear versions if available (optional)
      * @return the osis wrapper
      */
     public OsisWrapper getBibleByVerseNumber(final String version, final String startVerseId,
             final String endVerseId, final String roundUp, final String options,
             final String interlinearVersion) {
-        notEmpty(version, "You need to provide a version", USER_MISSING_FIELD);
+        notEmpty(version, "bible_required", USER_MISSING_FIELD);
         notEmpty(startVerseId, "You need to provide a start verse id", APP_MISSING_FIELD);
         notEmpty(endVerseId, "You need to a provide a end verse id", APP_MISSING_FIELD);
 
@@ -193,22 +196,34 @@ public class BibleController {
         }
         return this.bibleInformation.getPassageText(version, Integer.parseInt(startVerseId),
                 Integer.parseInt(endVerseId), options, interlinearVersion, roundingUp);
-
     }
 
     /**
-     * a REST method that returns version of the Bible that are available
+     * Gets the strong numbers for a particular passage
+     * 
+     * @param reference the reference the passage reference
+     * @return the strong numbers attached to the passage
+     */
+    @Timed(name = "strong-subject-counts", rateUnit = TimeUnit.SECONDS, durationUnit = TimeUnit.MILLISECONDS)
+    public StrongCountsAndSubjects getStrongNumbersAndSubjects(final String reference) {
+        notEmpty(reference, "A verse must be provided", APP_MISSING_FIELD);
+        return this.bibleInformation.getStrongNumbersAndSubjects(reference);
+    }
+
+    /**
+     * a REST method that returns version of the Bible that are available.
      * 
      * @param version the version initials or full version name to retrieve the versions for
+     * @param displayMode the current displayMode
      * @return all versions of modules that are considered to be Bibles.
      */
     @Cacheable(true)
-    public List<LookupOption> getFeatures(final String version) {
-        return this.bibleInformation.getFeaturesForVersion(version);
+    public AvailableFeatures getFeatures(final String version, final String displayMode) {
+        return this.bibleInformation.getAvailableFeaturesForVersion(version, displayMode);
     }
 
     /**
-     * retrieves the list of features currently supported by the application
+     * retrieves the list of features currently supported by the application.
      * 
      * @return a list of features currently supported by the application
      */
@@ -218,6 +233,7 @@ public class BibleController {
     }
 
     /**
+     * Gets the bible book names.
      * 
      * @param bookStart the phrase input so far in a textbox to use for the lookup
      * @param version the version to lookup upon
@@ -229,7 +245,7 @@ public class BibleController {
     }
 
     /**
-     * ascertains the next reference to lookup
+     * ascertains the next reference to lookup.
      * 
      * @param reference the current ref
      * @param version the current version
@@ -241,7 +257,7 @@ public class BibleController {
     }
 
     /**
-     * ascertains the previous reference to lookup
+     * ascertains the previous reference to lookup.
      * 
      * @param reference the current ref
      * @param version the current version
@@ -253,10 +269,10 @@ public class BibleController {
     }
 
     /**
-     * Takes a reference and returns the chapter it is part of
+     * Takes a reference and returns the chapter it is part of.
      * 
-     * @param reference the reference that we are interested in
      * @param version the version to lookup the key in
+     * @param reference the reference that we are interested in
      * @return the new reference with full chapter
      */
     @Cacheable(true)
@@ -265,7 +281,7 @@ public class BibleController {
     }
 
     /**
-     * Retrieves key information
+     * Retrieves key information.
      * 
      * @param reference the reference that we are interested in
      * @param version the version to lookup the key in
@@ -275,4 +291,5 @@ public class BibleController {
     public KeyWrapper getKeyInfo(final String reference, final String version) {
         return this.bibleInformation.getKeyInfo(reference, version);
     }
+
 }

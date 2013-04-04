@@ -32,18 +32,18 @@
  ******************************************************************************/
 
 var HEBREW_MONTH_NAMES = [ 
-    ["January", "Tevet" ], 
-    ["February", "Shevat" ], 
-    ["March", "Adar" ], 
-    ["April", "Abib", "Nisan" ], 
-    ["May", "Iyar" ], 
-    ["June", "Sivan" ], 
-    ["July", "Tamuz" ], 
-    ["August", "Ab" ], 
-    ["September", "Elul" ], 
-    ["October", "Tishri" ], 
-    ["November", "Marcheshvan" ], 
-    ["December", "Kislev" ]
+    [__s.timeline_month_january, "Tevet" ], 
+    [__s.timeline_month_february, "Shevat" ], 
+    [__s.timeline_month_march, "Adar" ], 
+    [__s.timeline_month_april, "Abib", "Nisan" ], 
+    [__s.timeline_month_may, "Iyar" ], 
+    [__s.timeline_month_june, "Sivan" ], 
+    [__s.timeline_month_july, "Tamuz" ], 
+    [__s.timeline_month_august, "Ab" ], 
+    [__s.timeline_month_september, "Elul" ], 
+    [__s.timeline_month_october, "Tishri" ], 
+    [__s.timeline_month_november, "Marcheshvan" ], 
+    [__s.timeline_month_december, "Kislev" ]
 ];
     
 var OT_CUT_OFF_DATE = -10;
@@ -305,12 +305,12 @@ TimelineWidget.prototype.initToolbar = function() {
 	var self = this;
 	
 	var toolbar = $("#bottomModuleHeader");
-	this.addToolbarButton(toolbar, "scrollTimelineLeft", "Scroll left", 'ui-icon-seek-prev');
-	this.addToolbarButton(toolbar, "scrollTimelineRight", "Scroll right", 'ui-icon-seek-next');
-	this.addToolbarButton(toolbar, "zoomInTimeline", "Zoom in", 'ui-icon-zoomin');
-	this.addToolbarButton(toolbar, "zoomOutTimeline", "Zoom out", 'ui-icon-zoomout');
-	this.addToolbarButton(toolbar, "scrollTimelineToDate", "Scroll to date", 'ui-icon-search');
-	this.addToolbarButton(toolbar, "linkToPassage", "Unlink from passage", 'ui-icon-pin-s');
+	this.addToolbarButton(toolbar, "scrollTimelineLeft", __s.timeline_scroll_left, 'ui-icon-seek-prev');
+	this.addToolbarButton(toolbar, "scrollTimelineRight", __s.timeline_scroll_right, 'ui-icon-seek-next');
+	this.addToolbarButton(toolbar, "zoomInTimeline", __s.timeline_zoom_in, 'ui-icon-zoomin');
+	this.addToolbarButton(toolbar, "zoomOutTimeline", __s.timeline_zoom_out, 'ui-icon-zoomout');
+	this.addToolbarButton(toolbar, "scrollTimelineToDate", __s.timeline_scroll_to_date, 'ui-icon-search');
+	this.addToolbarButton(toolbar, "linkToPassage", __s.timeline_unlink_from_passage, 'ui-icon-pin-s');
 	
 	$("#bottomModuleHeader #scrollTimelineLeft").click(function() {
 			var mainBand = self.tl.getBand(0);
@@ -357,7 +357,7 @@ TimelineWidget.prototype.initToolbar = function() {
 		datePopup.dialog({ title: "Please enter a year:",
 						   modal: true, 
 						   buttons : [{ 
-						            	  text: "OK", 
+						            	  text: __s.ok, 
 						            	  click: function() { 
 						            		  $(this).dialog("close"); 
 						            		  var yearValue = $("#scrollToYear", datePopup).val();
@@ -408,9 +408,9 @@ TimelineWidget.prototype.onResize = function() {
     		var hebrewMonth = HEBREW_MONTH_NAMES[rawDate.getMonth()];
     		
     		if(hebrewMonth.length > 2 && rawDate.getFullYear() >= 0) {
-    			text += "<span title='" + hebrewMonth[2] + " is approximately equivalent to " + hebrewMonth[0] + "'>" + hebrewMonth[2] + "</span>";
+    			text += "<span title='" + sprintf(__s.timeline_month_equivalence, hebrewMonth[2], hebrewMonth[0]) + "'>" + hebrewMonth[2] + "</span>";
     		} else {
-    			text += "<span title='" + hebrewMonth[1] + " is approximately equivalent to " + hebrewMonth[0] + "'>" + hebrewMonth[1] + "</span>";
+    			text += "<span title='" + sprintf(__s.timeline_month_equivalence, hebrewMonth[1],  hebrewMonth[0]) + "'>" + hebrewMonth[1] + "</span>";
     		}
     		text += " ";
     	}
@@ -425,7 +425,7 @@ TimelineWidget.prototype.onResize = function() {
     
     
     TimelineWidget.prototype.getDateAdBc = function(rawDate) {
-    	return rawDate.getFullYear() < 0 ? "BC" : "AD";
+    	return rawDate.getFullYear() < 0 ? __s.timeline_bc : __s.timeline_ad;
     };
     
 function initTimelineMethods() {    
@@ -458,27 +458,27 @@ function initTimelineMethods() {
     			var accuracy = [];
     			if(isAlpha(c)) {
     				if(c == 'Y') {
-    					accuracy = ["year(s)", 'Y'];
+    					accuracy = [__s.timeline_accuracy_years, __s.timeline_accuracy_years_initial];
     				} else if (c == 'M') {
-    					accuracy = ["month(s)", "M"];
+    					accuracy = [__s.timeline_accuracy_months, __s.timeline_accuracy_months_initial];
     				}
     				certainty = certainty.substring(0, certainty.length -1);
     			} else {
     				switch(eventInfo.event.startPrecision) {
     					case "DAY":
-    						accuracy = ["day(s)", "D"];
+    						accuracy = [__s.timeline_accuracy_days, __s.timeline_accuracy_days_initial];
     					case "MONTH":
-    						accuracy = ["month(s)", "M"];
+    						accuracy = [__s.timeline_accuracy_months, __s.timeline_accuracy_months_initial];
     					case "YEAR":
-    						accuracy = ["year(s)", "Y"];
+    						accuracy = [__s.timeline_accuracy_years, __s.timeline_accuracy_years_initial];
     						break;
-    					default: accuracy = ["year(s)", 'Y'];
+    					default: accuracy = [__s.timeline_accuracy_years, __s.timeline_accuracy_years_initial];
     				}
     			}
     			
     			
-    			dating += "&nbsp;<span class='timelineCertainty' title='Dating of this event is known within approximately " 
-    					+ certainty + " " + accuracy[0] + "'>" + certainty + accuracy[1] + "</span>";
+    			dating += "&nbsp;<span class='timelineCertainty' title=' " +
+    			        sprintf(__s.timeline_dating_known_within, certainty, accuracy[0]) + "'>" + certainty + accuracy[1] + "</span>";
     		}
     		
     		var flags = eventInfo.event.flags;
@@ -486,9 +486,11 @@ function initTimelineMethods() {
     			dating += "&nbsp;<span class='timelineFlags'  title='";
     
     			if(flags == "EY") {
-    				dating += "Estimated year - The year has been estimated in order to preserve the order of events.";
+    			    flags = __s.timeline_estimated_year_intials;
+    				dating += __s.timeline_estimated_year;
     			} else if(flags == "EM") {
-    				dating += "Estimated month - The month has been estimated in order to preserve the order of events.";
+    			    flags = __s.timeline_estimated_month_initials;
+    				dating += __s.timeline_estimated_month;
     			}
     			dating += "'>" + flags + "</span>";
     		}

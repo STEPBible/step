@@ -49,8 +49,11 @@ import com.tyndalehouse.step.core.xsl.MultiInterlinearProvider;
  * 
  */
 public class MultiInterlinearProviderImpl implements MultiInterlinearProvider {
-    /** we separate by commas and spaces */
+
+    /** we separate by commas and spaces. */
     static final String VERSION_SEPARATOR = ", ?";
+
+    /** The interlinear providers. */
     private final Map<String, InterlinearProvider> interlinearProviders = new HashMap<String, InterlinearProvider>();
 
     /**
@@ -66,16 +69,52 @@ public class MultiInterlinearProviderImpl implements MultiInterlinearProvider {
             return;
         }
 
+        final Map<String, String> hebrewDirectMapping = initHebrewDirectMapping();
+        final Map<String, String> hebrewIndirectMappings = initHebrewIndirectMappings();
         final String[] differentVersions = split(versions, VERSION_SEPARATOR);
         if (differentVersions != null) {
             for (final String version : differentVersions) {
                 if (isNotBlank(version)) {
                     final String normalisedVersion = version.trim();
                     this.interlinearProviders.put(normalisedVersion, new InterlinearProviderImpl(
-                            normalisedVersion, textScope));
+                            normalisedVersion, textScope, hebrewDirectMapping, hebrewIndirectMappings));
                 }
             }
         }
+
+    }
+
+    /**
+     * Inits the hebrew indirect mappings. These are used if no link is found.
+     * 
+     * @return the mapping between the strong numbers and their corresponding English.
+     */
+    private Map<String, String> initHebrewIndirectMappings() {
+        final Map<String, String> hebrewLexicon = new HashMap<String, String>(9);
+        hebrewLexicon.put("1961", "#to be");
+        hebrewLexicon.put("3588", "#that");
+        hebrewLexicon.put("996", "#between");
+        hebrewLexicon.put("413", "#to");
+        hebrewLexicon.put("834", "#that");
+        hebrewLexicon.put("3605", "#all");
+        hebrewLexicon.put("3606", "#all");
+        hebrewLexicon.put("5921", "#on");
+        hebrewLexicon.put("4480", "#from");
+        hebrewLexicon.put("3651", "#thus");
+        return hebrewLexicon;
+    }
+
+    /**
+     * Inits the hebrew direct mapping. The override, regardless of whether the interlineared text contains a
+     * mapping
+     * 
+     * @return the mappings between strong numbers and the words that should appear
+     */
+    private Map<String, String> initHebrewDirectMapping() {
+        final Map<String, String> blackList = new HashMap<String, String>(2);
+        blackList.put("853", "#the");
+        blackList.put("854", "#the");
+        return blackList;
     }
 
     @Override

@@ -8,13 +8,177 @@
 //   2012-01-29
 //     fixed a bug which caused special regex characters in the
 //     search string to break the highlighter
-// Notes: Minified using YUI Compressor (http://refresh-sf.com/yui/),
 
-function doHighlight(A,c,z,s){var G=document;if(typeof A==="string"){A=G.getElementById(A)}if(typeof z==="string"){z=new RegExp(z.replace(/[.*+?|()\[\]{}\\$^]/g,"\\$&"),"ig")
-}s=s||0;var j=[],u=[],B=0,o=A.childNodes.length,v,w=0,l=[],k,d,h;for(;;){while(B<o){k=A.childNodes[B++];if(k.nodeType===3){j.push({i:w,n:k});v=k.nodeValue;u.push(v);
-w+=v.length}else{if(k.nodeType===1){if(k.tagName.search(/^(script|style)$/i)>=0){continue}if(k.tagName.search(/^(a|b|basefont|bdo|big|em|font|i|s|small|span|strike|strong|su[bp]|tt|u)$/i)<0){u.push(" ");
-w++}d=k.childNodes.length;if(d){l.push({n:A,l:o,i:B});A=k;o=d;B=0}}}}if(!l.length){break}h=l.pop();A=h.n;o=h.l;B=h.i}if(!j.length){return}u=u.join("");j.push({i:u.length});
-var p,r,E,y,D,g,F,f,b,m,e,a,t,q,C,n,x;for(;;){r=z.exec(u);if(!r||r.length<=s||!r[s].length){break}E=r.index;for(p=1;p<s;p++){E+=r[p].length}y=E+r[s].length;g=0;F=j.length;
-while(g<F){D=g+F>>1;if(E<j[D].i){F=D}else{if(E>=j[D+1].i){g=D+1}else{g=F=D}}}f=g;while(f<j.length){b=j[f];A=b.n;v=A.nodeValue;m=A.parentNode;e=A.nextSibling;t=E-b.i;
-q=Math.min(y,j[f+1].i)-b.i;C=null;if(t>0){C=v.substring(0,t)}n=v.substring(t,q);x=null;if(q<v.length){x=v.substr(q)}if(C){A.nodeValue=C}else{m.removeChild(A)}a=G.createElement("span");
-a.appendChild(G.createTextNode(n));a.className=c;m.insertBefore(a,e);if(x){a=G.createTextNode(x);m.insertBefore(a,e);j[f]={n:a,i:y}}f++;if(y<=j[f].i){break}}}};
+function doHighlight(node,className,searchFor,which){
+	var doc = document;
+
+	// normalize node argument
+	if (typeof node === 'string') {
+		node = doc.getElementById(node);
+		}
+
+	// normalize search arguments, here is what is accepted:
+	// - single string
+	// - single regex (optionally, a 'which' argument, default to 0)
+	if (typeof searchFor === 'string') {
+		// rhill 2012-01-29: escape regex chars first
+		// http://stackoverflow.com/questions/280793/case-insensitive-string-replacement-in-javascript
+		searchFor = new RegExp(searchFor.replace(/[.*+?|()\[\]{}\\$^]/g,'\\$&'),'ig');
+		}
+	which = which || 0;
+
+	// initialize root loop
+	var indices = [],
+		text = [], // will be morphed into a string later
+		iNode = 0,
+		nNodes = node.childNodes.length,
+		nodeText,
+		textLength = 0,
+		stack = [],
+		child, nChildren,
+		state;
+	// collect text and index-node pairs
+	for (;;){
+		while (iNode<nNodes){
+			child=node.childNodes[iNode++];
+			// text: collect and save index-node pair
+			if (child.nodeType === 3){
+				indices.push({i:textLength, n:child});
+				nodeText = child.nodeValue;
+				text.push(nodeText);
+				textLength += nodeText.length;
+				}
+			// element: collect text of child elements,
+			// except from script or style tags
+			else if (child.nodeType === 1){
+				// skip style/script tags
+				if (child.tagName.search(/^(script|style)$/i)>=0 || $(child).hasClass("note")){
+					continue;
+					}
+				// add extra space for tags which fall naturally on word boundaries
+				if (child.tagName.search(/^(a|b|basefont|bdo|big|em|font|i|s|small|span|strike|strong|su[bp]|tt|u)$/i)<0){
+					text.push(' ');
+					textLength++;
+					}
+				// save parent's loop state
+				nChildren = child.childNodes.length;
+				if (nChildren){
+					stack.push({n:node, l:nNodes, i:iNode});
+					// initialize child's loop
+					node = child;
+					nNodes = nChildren;
+					iNode = 0;
+					}
+				}
+			}
+		// restore parent's loop state
+		if (!stack.length){
+			break;
+			}
+		state = stack.pop();
+		node = state.n;
+		nNodes = state.l;
+		iNode = state.i;
+		}
+
+	// quit if found nothing
+	if (!indices.length){
+		return;
+		}
+
+	// morph array of text into contiguous text
+	text = text.join('');
+
+	// sentinel
+	indices.push({i:text.length});
+
+	// find and hilight all matches
+	var iMatch, matchingText,
+		iTextStart, iTextEnd,
+		i, iLeft, iRight,
+		iEntry, entry,
+		parentNode, nextNode, newNode,
+		iNodeTextStart, iNodeTextEnd,
+		textStart, textMiddle, textEnd;
+
+	// loop until no more matches
+	for (;;){
+
+		// find matching text, stop if none
+		matchingText = searchFor.exec(text);
+		if (!matchingText || matchingText.length<=which || !matchingText[which].length){
+			break;
+			}
+
+		// calculate a span from the absolute indices
+		// for start and end of match
+		iTextStart = matchingText.index;
+		for (iMatch=1; iMatch < which; iMatch++){
+			iTextStart += matchingText[iMatch].length;
+			}
+		iTextEnd = iTextStart + matchingText[which].length;
+
+		// find entry in indices array (using binary search)
+		iLeft = 0;
+		iRight = indices.length;
+		while (iLeft < iRight) {
+			i=iLeft + iRight >> 1;
+			if (iTextStart < indices[i].i){iRight = i;}
+			else if (iTextStart >= indices[i+1].i){iLeft = i + 1;}
+			else {iLeft = iRight = i;}
+			}
+		iEntry = iLeft;
+
+		// for every entry which intersect with the span of the
+		// match, extract the intersecting text, and put it into
+		// a span tag with specified class
+		while (iEntry < indices.length){
+			entry = indices[iEntry];
+			node = entry.n;
+			nodeText = node.nodeValue;
+			parentNode = node.parentNode;
+			nextNode = node.nextSibling;
+			iNodeTextStart = iTextStart - entry.i;
+			iNodeTextEnd = Math.min(iTextEnd,indices[iEntry+1].i) - entry.i;
+
+			// slice of text before hilighted slice
+			textStart = null;
+			if (iNodeTextStart > 0){
+				textStart = nodeText.substring(0,iNodeTextStart);
+				}
+
+			// hilighted slice
+			textMiddle = nodeText.substring(iNodeTextStart,iNodeTextEnd);
+
+			// slice of text after hilighted slice
+			textEnd = null;
+			if (iNodeTextEnd < nodeText.length){
+				textEnd = nodeText.substr(iNodeTextEnd);
+				}
+
+			// update DOM according to found slices of text
+			if (textStart){
+				node.nodeValue = textStart;
+				}
+			else {
+				parentNode.removeChild(node);
+				}
+			newNode = doc.createElement('span');
+			newNode.appendChild(doc.createTextNode(textMiddle));
+			newNode.className = className;
+			parentNode.insertBefore(newNode,nextNode);
+			if (textEnd){
+				newNode = doc.createTextNode(textEnd);
+				parentNode.insertBefore(newNode,nextNode);
+				indices[iEntry] = {n:newNode,i:iTextEnd}; // important: make a copy, do not overwrite
+				}
+
+			// if the match doesn't intersect with the following
+			// index-node pair, this means this match is completed
+			iEntry++;
+			if (iTextEnd <= indices[iEntry].i){
+				break;
+				}
+			}
+		}
+	}

@@ -48,8 +48,20 @@ step.search = {
 
             var passageContainer = step.util.getPassageContainer(passageId);
             var sortOrder;
+            
             if($(".originalSorting:enabled", passageContainer).size() > 0) {
-                sortOrder = $("fieldset:visible", passageContainer).detailSlider("value") > 0 ? step.state.original.originalSorting(passageId) : false;
+                var sortOrderString = $("fieldset:visible", passageContainer).detailSlider("value") > 0 ? step.state.original.originalSorting(passageId) : false;
+                
+                //find the index of the sort order
+                var allSortings = step.defaults.search.original.originalSorting;
+                for(var i = 0; i < allSortings.length; i++) {
+                    if(allSortings[i] == sortOrderString) {
+                        sortOrder = step.defaults.search.original.originalSortingValues[i];
+                    }
+                }
+                if(!sortOrder) {
+                    sortOrder = undefined;
+                }
             } else {
                 sortOrder = false;
             }
@@ -148,7 +160,7 @@ step.search = {
         search : function(passageId) {
 //            console.log("Subject search");
             
-            var query = step.state.subject.subjectQuerySyntax(passageId);
+            var query = step.util.replaceSpecialChars(step.state.subject.subjectQuerySyntax(passageId));
             var pageNumber = step.state.subject.subjectPageNumber(passageId); 
             
             step.search._validateAndRunSearch(passageId, query, "ESV", false, 0, pageNumber);
@@ -215,35 +227,204 @@ step.search = {
         
         var args = [encodeURIComponent(refinedQuery), rankedArg, contextArg, pageNumberArg, pageSizeArg];
         
+        var startTime = new Date().getTime();
         $.getSafe(SEARCH_DEFAULT, args, function(searchQueryResults) {
-            self._updateTotal(passageId, searchQueryResults.total, pageNumberArg);
-            self.lastSearch = searchQueryResults.query;
-            self._displayResults(searchQueryResults, passageId);
+            step.util.trackAnalytics("search", "loaded", "time", new Date().getTime() - startTime);
+            step.util.trackAnalytics("search", "loaded", "results", searchQueryResults.total);
+            step.util.trackAnalytics("search", "version", checkedVersion.toUpperCase());
+            step.util.trackAnalytics("search", "query", query);
             
-            if(searchQueryResults.strongHighlights) {
-                self._highlightStrongs(passageId, searchQueryResults.strongHighlights);
-            } else {
-                self._highlightResults(passageId, highlightTerms);
-            }
-            
-            self._doFonts(passageId);
-            step.util.ui.addStrongHandlers(passageId, step.util.getPassageContainer(passageId));
+            self._doResultsRender(passageId, searchQueryResults, pageNumberArg, highlightTerms, query);
         });
     },
+    
+    _doResultsRender : function(passageId, searchQueryResults, pageNumberArg, highlightTerms, query) {
+        this._updateTotal(passageId, searchQueryResults.total, pageNumberArg);
+        this.lastSearch = searchQueryResults.query;
+        this._displayResults(searchQueryResults, passageId);
+        
+        if(searchQueryResults.strongHighlights) {
+            this._highlightStrongs(passageId, searchQueryResults.strongHighlights);
+        } else {
+            this._highlightResults(passageId, highlightTerms);
+        }
+        
+        this._doFonts(passageId);
+        step.util.ui.addStrongHandlers(passageId, step.util.getPassageContainer(passageId));
+        this._doSpecificSearchRequirements(passageId, query);
+    },
+    
+    _doSpecificSearchRequirements : function(passageId, query) {
+        var undoneQuery = step.util.undoReplaceSpecialChars(query);
+        
+        
+        if(undoneQuery.startsWith("s=")) {
+            this._addMoreSubjectButton(passageId, undoneQuery, __s.subject_search_first);
+        } else if (undoneQuery.startsWith("s+=") ){ 
+            this._addMoreSubjectButton(passageId, undoneQuery, __s.subject_search_second);
+            this._addSubjectExpandHandlers(passageId);
+        } else if(undoneQuery.startsWith("s++=")) {
+            this._addMoreSubjectButton(passageId, undoneQuery, __s.subject_search_third);
+            this._addSubjectExpandHandlers(passageId, undoneQuery);
+        } else if(undoneQuery.startsWith("sr=")) {
+            this._addSubjectExpandHandlers(passageId, undoneQuery);
+        }
+    },
+    
+    resetExpandableItems : function(passageContent) {
+        $(".expandableSearchHeading", passageContent).each(function(i, item) {
+            $.data(item, 'expanded', false);
+            var arrow = $(this).find("span");
+            arrow.html(arrow.html().replace('\u25bc', '\u25b6'));
+        });
+    },
+    
+    _addSubjectExpandHandlers : function(passageId, query) {
+        var content = step.util.getPassageContent(passageId);
+        var self = this;
+        
+        $(".expandableSearchHeading", content).click(function() {
+            if($.data(this, 'expanded') == true) {
+                $(".expandedHeadingItem", content).remove();
+                
+                self.resetExpandableItems(content);
+                return;
+            }
+
+            self.resetExpandableItems(content);
+            $.data(this, 'expanded', true);
+            
+            var arrow = $(this).find("span");
+            arrow.html(arrow.html().replace('\u25b6', '\u25bc'));
+            
+            var root = $(this).attr('root');
+            var fullHeader = $(this).attr('fullHeader');
+            var seeAlso = $(this).attr('seeAlso');
+            var version = "ESV";
+            var currentHeading = this;
+
+            //first delete the headings
+            $(".expandedHeadingItem", content).remove();
+            
+            //get verses for subject search
+            $.getSafe(SUBJECT_VERSES, [root, fullHeader, version] , function(results) {
+                var verses = "";
+                if(results) {
+                    for(var i = 0; i < results.length; i++) {
+                        verses += "<li class='expandedHeadingItem'>";
+                        verses += "<span class='subjectSearchLink'>";
+                        verses += goToPassageArrow(true, results[i].reference, "searchKeyPassageArrow", true);
+                        verses += "<a class='searchRefLink' href='#' onclick='passageArrowTrigger(" + passageId + ", \"" + results[i].reference + "\", true)' >" 
+                        + results[i].reference + "</a>";
+                        verses += goToPassageArrow(false, results[i].reference, "searchKeyPassageArrow", true);
+                        verses += "</span>";
+                        verses += results[i].value;
+                        
+                        if(results[i].fragment) {
+                            verses = verses.substring(0, verses.lastIndexOf("</div>")).trim()  + "[...]</div>";
+                        }   
+                        
+                        verses += "</li>";
+                    }
+                }
+                 
+                //also append the see also references as links to do the search again
+                var seeAlsoRefs = "";
+                if(seeAlso) {
+                    seeAlsoRefs = $("<h4 class='expandedHeadingItem'>" + __s.subject_other_useful_entries + "</h4>");
+                    var otherLinks = $("<ul class='expandedHeadingItem'></ul>");
+                    
+                    var refs = seeAlso.split(";");
+                    for(var i = 0; i < refs.length; i++) {
+                        if(step.util.isBlank(refs[i])) {
+                            continue;
+                        }
+                        
+                        var link = $("<a href='#'>" + refs[i].trim() + "</a>");
+                        var refLink = refs[i];
+                        $(link).click(function () {
+                            var splitByComma = refLink.split(",");
+                            var query;
+                            var text = "";
+                            if(splitByComma.length == 1) {
+                                //do a s+ search
+                                query = "s+=";
+                            } else {
+                                // do a s++ search
+                                query = "s++="
+                            }
+                            
+                            text += refLink;
+                            
+                            //also add in the root word if the word "above" or "below" appears
+                            if(seeAlso.indexOf('above') != -1 && seeAlso.indexOf('below') != -1) {
+                                //add in the root word
+                                text += " " + root;
+                            }
+                            query += text;
+                            
+                            step.state.subject.subjectText(passageId, text);
+                            step.state.subject.subjectQuerySyntax(passageId, query);
+                            step.search.subject.search(passageId);
+                        });
+                        //wrap the link in a list item
+                        otherLinks.append($("<li></li>").append(link));
+                    }
+                    seeAlsoRefs.after(otherLinks);
+                }
+                
+                verses = $(verses).after(seeAlsoRefs);
+                $(currentHeading).after(verses);
+
+//                $(verses);
+            });
+        });
+    },
+    
+    _addMoreSubjectButton : function(passageId, query, text) {
+        var moreSubjectsButton = $("<div class='moreSubjects'><a href='#'>" + text + "</a><div>");
+        moreSubjectsButton.find("a").button({});
+        
+        var passageContent = step.util.getPassageContent(passageId); 
+        passageContent.prepend(moreSubjectsButton);
+        if(passageContent.find(".searchResults").children().size() != 0) {
+            passageContent.append(moreSubjectsButton.clone());
+        }
+    
+        //add click handlers now
+        passageContent.find(".moreSubjects a").click(function() {
+            //add in a plus and send it back through
+            var equalIndex = query.indexOf('=');
+            var newQuery = query.substring(0, equalIndex) + '+' + query.substring(equalIndex);
+            
+            if(newQuery.indexOf("+++") != -1) {
+                newQuery = newQuery.replace("+++", "");
+            }
+            
+            step.state.subject.subjectQuerySyntax(passageId, newQuery);
+            step.search.subject.search(passageId);
+        });
+    },
+    
     
     _doFonts : function(passageId) {
         $.each($(".passageContentHolder", step.util.getPassageContainer(passageId)), function(n, item) {
             if(step.util.isUnicode(item)) {
                 $(item).addClass("unicodeFont");
+                
+                if(step.util.isHebrew(item)) {
+                    $(item).addClass("hbFont");
+                }
             }
         });
     },
     
     _highlightingTerms : function(query) {
         var terms = [];
-        var termBase = query.substring(2);
+        var termBase = query.substring(query.indexOf('=') + 1);
 
         //remove the search in (v1, v2, v3)
+        termBase = termBase.replace("#plus#", "")
         termBase = termBase.replace(/in \([^)]+\)/gi, "");
         termBase = termBase.replace("=>", " ")
         
@@ -257,7 +438,7 @@ step.search = {
         termBase = termBase.replace(/[\(\)]*/g, "");
         termBase = termBase.replace(/ AND /g, " ");
         
-        
+        termBase = termBase.replace("+", "");
         
         var matches = termBase.match(/"[^"]*"/);
         if(matches) {
@@ -277,7 +458,6 @@ step.search = {
                 }
             }
         }
-//        console.log(terms);
         return terms;
     },
     
@@ -310,7 +490,7 @@ step.search = {
         var end = pageNumber * step.search.pageSize;
         end = end < total ? end : total;
         
-        resultsLabel.html("Showing results <em>" + start + " - " + end + "</em> of <em>" + total + "</em>");
+        resultsLabel.html(sprintf(__s.paging_showing_x_to_y_out_of_z_results, start, end, total));
         
         this.totalResults = total;  
     },
@@ -392,7 +572,7 @@ step.search = {
         return results;
     },
     
-    _displaySubjectResults : function(searchResults, passageId) {
+    _doSimpleSubjectSearchResults : function(searchResults, passageId) {
         var results = "<ul class='subjectSection searchResults'>";
         
         var headingsSearch = searchResults[0].headingsSearch;
@@ -412,6 +592,54 @@ step.search = {
         
         return results += "</ul>";
     },
+    
+  
+    
+    _displaySubjectResults : function(query, searchResults, passageId) {
+        if(query.startsWith("s=")) {
+            return this._doSimpleSubjectSearchResults(searchResults, passageId);
+        } else {
+            return this._doNaveSearchResults(query, searchResults, passageId);
+        }
+    },
+    
+    _doNaveSearchResults : function(query, searchResults, passageId) {
+        var results = "<span class='searchResults'>";
+        var lastHeader = "";
+        
+        if(searchResults.length  == 0) {
+            return;
+        }
+        
+        //add a header
+        lastHeader = searchResults[0].root;
+        results += "<h3 class='subjectHeading'>" + lastHeader +  "</h3>";
+        
+        var ulStart = "<ul class='subjectSection searchResults'>";
+        results += ulStart;
+        
+        //searchResults is the array of results
+        for(var i = 0 ; i < searchResults.length; i++) {
+            if(searchResults[i].root != lastHeader) {
+                lastHeader = searchResults[i].root;
+                results += "</ul>";
+                results += "<h3 class='subjectHeading'>" + lastHeader +  "</h3>";
+                results += ulStart;
+            }
+            
+            results += "<li root='" + searchResults[i].root + 
+            		"' fullHeader='" + searchResults[i].heading;
+            if(searchResults[i].seeAlso) {
+                results += "' seeAlso='" + searchResults[i].seeAlso;
+            }
+            
+            results += "' class='expandableSearchHeading ui-state-default ui-corner-all'><span style='font-size: smaller'>&#9654;</span>&nbsp;&nbsp;";
+            results += searchResults[i].heading;
+            results += "</li>";
+        }
+        
+        return results += "</ul></span>";
+    },
 
     _displayResults : function(searchQueryResults, passageId) {
         var results = "";
@@ -421,17 +649,18 @@ step.search = {
         //remove any hebrew language css
         step.util.getPassageContainer(passageId).removeClass("hebrewLanguage greekLanguage");
         
-        if (searchResults == undefined || searchResults.length == 0) {
-            results += "<span class='notApplicable'>No search results were found</span>";
+        if (searchResults == undefined || searchResults.length == 0 || (searchQueryResults.total == 0)) {
+            results += "<span class='notApplicable'>" + __s.search_no_search_results_found + "</span>";
             this._changePassageContent(passageId, results);
             this._doOriginalWordToolbar(searchQueryResults.definitions, passageId);
             return;
         } 
         
-        if(searchQueryResults.query.startsWith("d=") || searchQueryResults.query.startsWith("dr=")) {
+        var queryRan = step.util.undoReplaceSpecialChars(searchQueryResults.query);
+        if(queryRan.startsWith("d=") || queryRan.startsWith("dr=")) {
             results += this._displayTimelineEventResults(searchResults, passageId);
-        } else if(searchQueryResults.query.startsWith("s=")) {
-            results += this._displaySubjectResults(searchResults, passageId);
+        } else if(queryRan.startsWith("s=") || queryRan.startsWith("s+=") || queryRan.startsWith("s++=") || queryRan.startsWith("sr=")) {
+            results += this._displaySubjectResults(queryRan, searchResults, passageId);
         } else {
             results += "<table class='searchResults'>";
             
@@ -453,7 +682,7 @@ step.search = {
         
 
         if (searchQueryResults.maxReached == true) {
-            results += "<span class='notApplicable'>The maximum number of search results was reached. Please refine your search to see continue.</span>";
+            results += "<span class='notApplicable'>" + __s.search_too_many_results+ "</span>";
         }
         
         this._changePassageContent(passageId, results);
@@ -467,19 +696,28 @@ step.search = {
             //add a toolbar in there for each word
             var originalWordToolbar = $("<div class='originalWordSearchToolbar'></div>");
             var values = step.search.original.filters[passageId] || [];
+            var detailLevel = $("fieldset:visible", step.util.getPassageContainer(passageId)).detailSlider("value");
             
             $.each(definitions, function(i, item) {
-                var link = "<input type='checkbox' " +
+                
+                
+                var link = "<span class='sortable'><input type='checkbox' " +
                 		"value='" + (item.strongNumber == undefined ? "" : item.strongNumber) +"' " +
                 	    "id='ows_" + passageId + "_" + i + "' " +
                         ($.inArray(item.strongNumber, values) != -1 ? "checked='checked'" : "") +   
-                    " /><label for='ows_" + passageId + "_" + i  + "' ><span class='ancientSearchButton'>" + item.matchingForm + "</span>" +
-//                		"<br />" + item.stepTransliteration + 
-                		"<br />";
+                    " /><label for='ows_" + passageId + "_" + i  + "' >";
+                
+                    if(detailLevel == 2) {
+                        link += "<span class='ancientSearchButton'>" + item.matchingForm + "</span>";
+                    } else {
+                        link += item.stepTransliteration;
+                    }
+                
+                   link += "<br />";
                 if(item.gloss) {
                     link += item.gloss;
                 }
-                link += "</label>";
+                link += "</label></span>";
                 originalWordToolbar.append(link);
             });
             
@@ -495,10 +733,17 @@ step.search = {
                 step.search.original.search(passageId);
             });
             
-            originalWordToolbar.buttonset();
+            //first need to sort the buttons
 
-            var bar = $("<div></div>").append("<h4 class='lexicalGrouping'>The following lexical forms have been included in the search:</h4>").append(originalWordToolbar).append("<hr />");
+            
+
+            var bar = $("<div></div>").append("<h4 class='lexicalGrouping'>" + __s.search_lexical_forms + "</h4>").append(originalWordToolbar).append("<hr />");
             passageContent.prepend(bar);
+
+            $(".sortable").sortElements(function(a, b) { 
+                return $(a).find("label").text() < $(b).find("label").text() ? -1 : 1; 
+            });
+            originalWordToolbar.buttonset();
         }
     },
     
@@ -507,11 +752,6 @@ step.search = {
         passageContent.html(content);
         refreshLayout();
     },
-    
-    showToolbar : function(passageId) {
-        var passageContainer = step.util.getPassageContainer(passageId);
-        step.state._showFieldSet(passageContainer, "Search toolbar");
-    }
 };
 
 

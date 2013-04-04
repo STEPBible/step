@@ -9,8 +9,14 @@ $.widget("custom.lexicalcomplete", $.ui.autocomplete, {
             if (index == 0) {
                 var toolbar = "";
                 toolbar += '<div class="lexicalOptions">';
-                toolbar += 'Include all forms <input type="checkbox" id="includeAllForms" class="includeAllForms" key="includeAllForms" />';
-                toolbar += '</div><div class="suggestionHeader"><span class="suggestionColumnTitle">Greek / Hebrew</span><span class="suggestionColumnTitle">Transliteration</span><span class="suggestionColumnTitle">Meaning</span>';
+                toolbar += __s.include_all_forms + ' <input type="checkbox" id="includeAllForms" class="includeAllForms" key="includeAllForms" />';
+                toolbar += '</div><div class="suggestionHeader"><span class="suggestionColumnTitle">';
+                toolbar += __s.greek_hebrew;
+                toolbar += '</span><span class="suggestionColumnTitle">';
+                toolbar += __s.transliteration;
+                toolbar += '</span><span class="suggestionColumnTitle">'
+                toolbar += __s.meaning;
+                toolbar += '</span>';
                 toolbar += '</div><hr />';
                 
                 ul.append(toolbar);
@@ -22,7 +28,7 @@ $.widget("custom.lexicalcomplete", $.ui.autocomplete, {
         this._restoreState(ul);
 
         
-        $(ul).find("input").click(function(event) {
+        $(ul).addClass("stepComplete").find("input").click(function(event) {
             var passageId = step.passage.getPassageId(self.element[0]);
             step.search.ui.original.allForms[passageId] = $(this).prop('checked');    
             $.shout("lexical-filter-change", { passageId : passageId} );

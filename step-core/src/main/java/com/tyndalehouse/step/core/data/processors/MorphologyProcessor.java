@@ -1,6 +1,7 @@
 package com.tyndalehouse.step.core.data.processors;
 
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Fieldable;
@@ -14,6 +15,7 @@ import com.tyndalehouse.step.core.data.create.PostProcessor;
  * @author chrisburrell
  * 
  */
+@SuppressWarnings("PMD")
 public class MorphologyProcessor implements PostProcessor {
     private static final char SPACE_SEPARATOR = ' ';
 
@@ -47,18 +49,74 @@ public class MorphologyProcessor implements PostProcessor {
             html.append(SPACE_SEPARATOR);
         }
 
-        final String mood = doc.get("mood");
-        if ("Infinitive".equals(mood)) {
-            html.append(mood);
-            html.append(SPACE_SEPARATOR);
-        }
+        renderMood(doc, html);
 
         appendNonNullSpacedItem(html, doc.get("gender"));
         appendNonNullSpacedItem(html, doc.get("number"));
 
+        openBracket = renderTense(doc, openBracket, html);
+        openBracket = renderCase(doc, openBracket, html);
+
+        closeBracket(openBracket, html);
+
+        html.append("' class='");
+        html.append(doc.get("cssClasses"));
+        html.append("'>");
+
+        renderParticiple(doc, html, function);
+
+        html.append("</span>");
+        doc.add(config.getField("inlineHtml", html.toString()));
+    }
+
+    /**
+     * Rends HTML for the participle
+     * 
+     * @param doc the document from Lucene
+     * @param html the HTML builder
+     * @param function the function within this document
+     */
+    private void renderParticiple(final Document doc, final StringBuilder html, final String function) {
+        if ("Participle".equals(doc.get("mood"))) {
+            html.append("Participle");
+        } else {
+            html.append(getShortFunction(function));
+        }
+    }
+
+    /**
+     * Renders HTML for the word case
+     * 
+     * @param doc the document from Lucene
+     * @param openBracket whether there is an open bracket
+     * @param html the HTML builder
+     * @return true if a bracket has been opened
+     */
+    private boolean renderCase(final Document doc, final boolean openBracket, final StringBuilder html) {
+        boolean originalOpenBracket = openBracket;
+        final String wordCase = doc.get("case");
+        if (wordCase != null) {
+            originalOpenBracket = openBracket(originalOpenBracket, html);
+            html.append(wordCase);
+            html.append(SPACE_SEPARATOR);
+        }
+        return originalOpenBracket;
+    }
+
+    /**
+     * Renders HTML for the tense
+     * 
+     * @param doc the document from Lucene
+     * @param openBracket whether there is an open bracket
+     * @param html the HTML builder
+     * @return true if a bracket has been opened
+     */
+    private boolean renderTense(final Document doc, final boolean openBracket, final StringBuilder html) {
+        boolean originalOpenBracket = openBracket;
+
         final String tense = doc.get("tense");
         if (tense != null) {
-            openBracket = openBracket(openBracket, html);
+            originalOpenBracket = openBracket(originalOpenBracket, html);
             html.append(tense);
             html.append(SPACE_SEPARATOR);
 
@@ -68,28 +126,21 @@ public class MorphologyProcessor implements PostProcessor {
                 html.append(SPACE_SEPARATOR);
             }
         }
+        return originalOpenBracket;
+    }
 
-        final String wordCase = doc.get("case");
-        if (wordCase != null) {
-            openBracket = openBracket(openBracket, html);
-            html.append(wordCase);
+    /**
+     * Renders HTML for the mood
+     * 
+     * @param doc the document from Lucene
+     * @param html the HTML builder
+     */
+    private void renderMood(final Document doc, final StringBuilder html) {
+        final String mood = doc.get("mood");
+        if ("Infinitive".equals(mood)) {
+            html.append(mood);
             html.append(SPACE_SEPARATOR);
         }
-
-        closeBracket(openBracket, html);
-
-        html.append("' class='");
-        html.append(doc.get("cssClasses"));
-        html.append("'>");
-
-        if ("Participle".equals(doc.get("mood"))) {
-            html.append("Participle");
-        } else {
-            html.append(getShortFunction(function));
-        }
-
-        html.append("</span>");
-        doc.add(config.getField("inlineHtml", html.toString()));
     }
 
     /**
@@ -109,10 +160,11 @@ public class MorphologyProcessor implements PostProcessor {
      * @param function the function of the word
      * @return For pronouns, returns 'Pronoun', otherwise the function
      */
+    @SuppressWarnings("PMD")
+    // CHECKSTYLE:OFF
     private String getShortFunction(final String function) {
-        if ("Correlative pronoun".equals(function) ||
-
-        "Demonstrative pronoun".equals(function) || "Indeclinable Noun of Other type".equals(function)
+        if ("Correlative pronoun".equals(function) || "Demonstrative pronoun".equals(function)
+                || "Indeclinable Noun of Other type".equals(function)
                 || "Indeclinable PRoper Noun".equals(function) || "Indefinite pronoun".equals(function)
                 || "Personal pronoun".equals(function) || "Posessive pronoun".equals(function)
                 || "Reciprocal pronoun".equals(function) || "Reflexive pronoun".equals(function)
@@ -122,10 +174,13 @@ public class MorphologyProcessor implements PostProcessor {
         return function;
     }
 
+    // CHECKSTYLE:ON
+
     /**
      * @param function the function
      * @return comments about the function
      */
+    @SuppressWarnings("PMD")
     private String getFunctionNotes(final String function) {
         if ("Correlative pronoun".equals(function)) {
             return "Correlative pronoun";
@@ -294,7 +349,7 @@ public class MorphologyProcessor implements PostProcessor {
         }
 
         for (final String field : fieldNames) {
-            final String lowerName = field.toLowerCase();
+            final String lowerName = field.toLowerCase(Locale.ENGLISH);
             if (lowerName.endsWith("explained") || lowerName.endsWith("description")) {
                 cleanUp(config, document, field);
             }

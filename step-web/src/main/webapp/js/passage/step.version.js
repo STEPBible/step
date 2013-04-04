@@ -71,7 +71,10 @@ step.version = {
         
         updateInfoLink : function(passageId) {
             var version = step.state.passage.version(passageId);
-            $(".infoAboutVersion", step.util.getPassageContainer(passageId)).attr("href", "version.jsp?version=" + version).attr("title", "Information about the " + version + " Bible / Commentary");
+            $(".infoAboutVersion", 
+                    step.util.getPassageContainer(passageId))
+                        .attr("href", "version.jsp?version=" + version)
+                        .attr("title", sprintf(__s.info_about_bible, version));
         },
         
         warnIfNoStrongs : function(passageId, version) {
@@ -93,18 +96,21 @@ $(step.version).hear("versions-initialisation-completed", function(source, data)
     step.version.warnIfNoStrongs(1, step.state.passage.version(1));
 });
 
-$(step.version).hear("version-changed-0", function(source, version) {
+$(step.version).hear("version-changed-0", function(source) {
     step.version.updateInfoLink(0);
    
     //raise info box to warn, if not strong version...
-    step.version.warnIfNoStrongs(0, version);
+    step.version.warnIfNoStrongs(0, step.state.passage.version(0));
+    
+    step.util.trackAnalytics("version", "changed", step.state.passage.version(0));
 });
 
-$(step.version).hear("version-changed-1", function(source, version) {
+$(step.version).hear("version-changed-1", function(source) {
     step.version.updateInfoLink(1); 
     
     //raise info box to warn, if not strong version...
-    step.version.warnIfNoStrongs(1, version);
+    step.version.warnIfNoStrongs(1, step.state.passage.version(1));
+    step.util.trackAnalytics("version", "changed", step.state.passage.version(1));
  });
 
 

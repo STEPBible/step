@@ -30,32 +30,36 @@
 	<properties>
 		<project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>utf-8</project.reporting.outputEncoding>
+		<final.jsword.package>packages</final.jsword.package>
+		
 		<java.version>1.6</java.version>
 
 		<junit.parallel>method</junit.parallel>
 		<junit.threads>4</junit.threads>
 
-		<junit.version>4.10</junit.version>
+		<junit.version>4.11</junit.version>
 
 		<!-- jsword dependencies -->
 		<jsword.version>1.6.1-SNAPSHOT</jsword.version>
-		<jdom.version>1.1.1</jdom.version>
+<!-- 		<jdom.version>1.1.1</jdom.version> -->
 		<javatar.version>2.5</javatar.version>
 
-		<jackson-mapper-asl.version>1.9.6</jackson-mapper-asl.version>
-		<org.slf4j.version>1.6.4</org.slf4j.version>
+		<jackson-mapper-asl.version>1.9.11</jackson-mapper-asl.version>
+		<org.slf4j.version>1.7.2</org.slf4j.version>
 		<servlet-api.version>2.5</servlet-api.version>
-		<jsp-api.version>2.1</jsp-api.version>
+		<jsp-api.version>2.2</jsp-api.version>
 		<jstl.version>1.2</jstl.version>
 		<pjl-comp-filter.version>1.7</pjl-comp-filter.version>
-		<guice.version>3.0.0</guice.version>
+		<guice.version>3.0</guice.version>
 		<guice-servlet.version>3.0</guice-servlet.version>
 		<opencsv.version>2.3</opencsv.version>
-		<jetty.version>8.1.5.v20120716</jetty.version>
+		<jetty.version>9.0.0.M5</jetty.version>
 		<xalan.version>2.7.1</xalan.version>
-
+	
+		<yammer-metrics.version>2.2.0</yammer-metrics.version>
+		
 		<joda-time.version>2.1</joda-time.version>
-		<ehcache.version>2.5.2</ehcache.version>
+		<ehcache.version>2.6.3</ehcache.version>
 		<ehcache-web.version>2.0.4</ehcache-web.version>
 		<lucene.version>3.0.3</lucene.version>
 
@@ -66,30 +70,38 @@
 		<commons-httpclient.version>3.1</commons-httpclient.version>
 
 		<!-- testing dependencies -->
-		<mockito.version>1.9.0</mockito.version>
+		<mockito.version>1.9.5</mockito.version>
 	</properties>
 
-	<url>http://crosswire.org/wiki/Frontends:TyndaleStep</url>
+	<url>http://step.tyndalehouse.com</url>
 	<issueManagement>
 		<system>JIRA</system>
-		<url>http://crosswire.org/bugs</url>
+		<url>stepweb.atlassian.net</url>
 	</issueManagement>
-	<scm>
-		<connection>scm:git:git://github.com/tyndale/step.gittrunk</connection>
-		<developerConnection>scm:git:git@github.com:tyndale/step.git</developerConnection>
-		<url>https://crosswire.org/svn/tynstep/trunk/</url>
-	</scm>
+	
+	<organization>
+		<name>Tyndale House, Cambridge, UK</name>
+		<url>http://www.tyndale.cam.ac.uk/</url>
+	</organization>
+	
+	<developers>
+		<developer>
+			<id>chrisburrell</id>
+			<name>Chris Burrell</name>
+			<timezone>GMT</timezone>
+		</developer>
+	</developers>
 
-
-	<distributionManagement>
-		<snapshotRepository>
-			<id>crosswire.mvn</id>
-			<url>http://crosswire.org/mvn/content/repositories/snapshots/</url>
-			<uniqueVersion>true</uniqueVersion>
-		</snapshotRepository>
-	</distributionManagement>
 
 	<repositories>
+		<repository>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<id>maven-central</id>
+			<name>Maven Central</name>
+			<url>http://repo1.maven.org/maven2</url>
+		</repository>
 		<repository>
 			<releases>
 				<enabled>true</enabled>
@@ -141,11 +153,11 @@
 				<artifactId>javatar</artifactId>
 				<version>${javatar.version}</version>
 			</dependency>
-			<dependency>
-				<groupId>org.jdom</groupId>
-				<artifactId>jdom</artifactId>
-				<version>${jdom.version}</version>
-			</dependency>
+<!-- 			<dependency> -->
+<!-- 				<groupId>org.jdom</groupId> -->
+<!-- 				<artifactId>jdom</artifactId> -->
+<!-- 				<version>${jdom.version}</version> -->
+<!-- 			</dependency> -->
 
 			<dependency>
 				<groupId>org.codehaus.jackson</groupId>
@@ -192,9 +204,9 @@
 
 			<!-- TODO: build against google released artifacts -->
 			<dependency>
-				<groupId>com.jolira</groupId>
+				<groupId>com.google.inject</groupId>
 				<artifactId>guice</artifactId>
-				<version>${guice.version}</version>
+            	<version>${guice.version}</version>
 			</dependency>
 
 			<dependency>
@@ -203,6 +215,22 @@
 				<version>${guice-servlet.version}</version>
 			</dependency>
 
+		    <dependency>
+		        <groupId>com.yammer.metrics</groupId>
+		        <artifactId>metrics-core</artifactId>
+		        <version>${yammer-metrics.version}</version>
+		    </dependency>
+			<dependency>
+				<groupId>com.yammer.metrics</groupId>
+				<artifactId>metrics-guice</artifactId>
+				<version>${yammer-metrics.version}</version>
+			</dependency>
+		    <dependency>
+				<groupId>com.yammer.metrics</groupId>
+				<artifactId>metrics-servlet</artifactId>
+				<version>${yammer-metrics.version}</version>
+			</dependency>
+            
 			<!-- we don't bring in anything if possible, to avoid bloating the Android 
 				app -->
 			<dependency>
@@ -285,10 +313,7 @@
 		</dependency>
 	</dependencies>
 
-	<organization>
-		<name>Tyndale House</name>
-		<url>http://http://www.tyndale.cam.ac.uk/</url>
-	</organization>
+
 
 	<build>
 		<pluginManagement>

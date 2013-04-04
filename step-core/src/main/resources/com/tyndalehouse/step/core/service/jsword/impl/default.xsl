@@ -1,4 +1,25 @@
 <?xml version="1.0"?>
+<!--
+ * Distribution License:
+ * JSword is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License, version 2.1 as published by
+ * the Free Software Foundation. This program is distributed in the hope
+ * that it will be useful, but WITHOUT ANY WARRANTY; without even the
+ * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details.
+ *
+ * The License is available on the internet at:
+ *       http://www.gnu.org/copyleft/lgpl.html
+ * or by writing to:
+ *      Free Software Foundation, Inc.
+ *      59 Temple Place - Suite 330
+ *      Boston, MA 02111-1307, USA
+ *
+ * Copyright: 2005
+ *     The copyright to this program is held by it's authors.
+ *
+ * ID: $Id: simple.xsl 2226 2012-02-02 19:25:21Z dmsmith $
+ -->
  <!--
  * Transforms OSIS to HTML for viewing within JSword browsers.
  * Note: There are custom protocols which the browser must handle.
@@ -86,6 +107,9 @@
   <xsl:param name="Interleave" select="'false'" />
   <xsl:param name="interleavingProvider" />
   <xsl:param name="comparing" select="false()" />
+  <xsl:param name="colorCodingProvider" />
+  <xsl:param name="xrefProvider" />
+  
 
   <!-- Create a global key factory from which OSIS ids will be generated -->
   <xsl:variable name="keyf" select="jsword:org.crosswire.jsword.passage.PassageKeyFactory.instance()"/>
@@ -97,8 +121,6 @@
   <!-- Create a global number shaper that can transform 0-9 into other number systems. -->
   <xsl:variable name="shaper" select="jsword:org.crosswire.common.icu.NumberShaper.new()"/>
 
-  <!-- set up options for color coding -->
-  <xsl:variable name="colorCodingProvider" select="jsword:com.tyndalehouse.step.core.xsl.impl.ColorCoderProviderImpl.new()" />
 
 
   <!--=======================================================================-->
@@ -209,6 +231,12 @@
     </div>
   </xsl:template>
 
+  <xsl:template match="div[@type='colophon']">
+  	<span class='colophon'>
+    	<xsl:apply-templates/>
+    </span>
+  </xsl:template>
+
   <xsl:template match="div">
     <xsl:apply-templates/>
   </xsl:template>
@@ -268,7 +296,7 @@
    		<xsl:choose>
    			<xsl:when test="./ancestor::cell/@xml:lang">
 				<xsl:choose>
-   					<xsl:when test="./ancestor::cell/@xml:lang = 'he'">unicodeFont</xsl:when>
+   					<xsl:when test="./ancestor::cell/@xml:lang = 'he'">unicodeFont hbFont</xsl:when>
    					<xsl:when test="./ancestor::cell/@xml:lang = 'grc'">unicodeFont</xsl:when>
 					<xsl:otherwise><xsl:value-of select="''" /></xsl:otherwise>
 				</xsl:choose>   			
@@ -283,7 +311,7 @@
     <!-- Always output the verse -->
     <xsl:choose>
       <xsl:when test="$VLine = 'true'">
-        <div class="l {$languageDirection}Direction {$languageFont}" dir="{$languageDirection}"><a name="{@osisID}"><xsl:call-template name="versenum"/></a><xsl:apply-templates/></div>
+        <div class="verse l {$languageDirection}Direction {$languageFont}" dir="{$languageDirection}"><a name="{@osisID}"><xsl:call-template name="versenum"/></a><xsl:apply-templates/></div>
       </xsl:when>
       <xsl:otherwise>
         <span class="verse {$languageDirection}Direction {$languageFont}" dir="{$languageDirection}"><xsl:call-template name="versenum"/><xsl:apply-templates/></span>
@@ -372,30 +400,31 @@
   		<xsl:param name="includeBook" />
   		
 		<xsl:variable name="firstOsisID" select="substring-before(concat($verse/@osisID, ' '), ' ')"/>
-        
-        <xsl:if test="normalize-space($firstOsisID) != ''" >
-	        <xsl:variable name="book" select="substring-before($firstOsisID, '.')"/>
-			<xsl:variable name="chapter" select="jsword:shape($shaper, substring-before(substring-after($firstOsisID, '.'), '.'))"/>
-			<xsl:variable name="verse">
-			  <xsl:choose>
-			    <xsl:when test="@n">
-			      <xsl:value-of select="jsword:shape($shaper, string(@n))"/>
-			    </xsl:when>
-			    <xsl:otherwise>
-			      <xsl:value-of select="jsword:shape($shaper, substring-after(substring-after($firstOsisID, '.'), '.'))"/>
-			    </xsl:otherwise>
-			  </xsl:choose>
-			</xsl:variable>
-			
-			<xsl:choose>
-				<xsl:when test="$includeBook = true()">
-	  				<xsl:value-of select="concat($book, ' ', $chapter, ':', $verse)"/>
-				</xsl:when>
-				<xsl:otherwise>
-	  				<xsl:value-of select="concat($chapter, ':', $verse)"/>
-				</xsl:otherwise>
-			</xsl:choose>
-        </xsl:if>
+        <a name="{$firstOsisID}">
+	        <xsl:if test="normalize-space($firstOsisID) != ''" >
+		        <xsl:variable name="book" select="substring-before($firstOsisID, '.')"/>
+				<xsl:variable name="chapter" select="jsword:shape($shaper, substring-before(substring-after($firstOsisID, '.'), '.'))"/>
+				<xsl:variable name="verse">
+				  <xsl:choose>
+				    <xsl:when test="@n">
+				      <xsl:value-of select="jsword:shape($shaper, string(@n))"/>
+				    </xsl:when>
+				    <xsl:otherwise>
+				      <xsl:value-of select="jsword:shape($shaper, substring-after(substring-after($firstOsisID, '.'), '.'))"/>
+				    </xsl:otherwise>
+				  </xsl:choose>
+				</xsl:variable>
+				
+				<xsl:choose>
+					<xsl:when test="$includeBook = true()">
+		  				<xsl:value-of select="concat($book, ' ', $chapter, ':', $verse)"/>
+					</xsl:when>
+					<xsl:otherwise>
+		  				<xsl:value-of select="concat($chapter, ':', $verse)"/>
+					</xsl:otherwise>
+				</xsl:choose>
+	        </xsl:if>
+        </a>
   </xsl:template>
   
   <xsl:template name="interleavedVersion">
@@ -442,10 +471,10 @@
 		        -->
 		      <xsl:choose>
 		        <xsl:when test="$TinyVNum = 'true' and $Notes = 'true'">
-		          <a name="{@osisID}"><span class="verseNumber"><xsl:value-of select="$versenum"/></span></a>
+		          <a name="{@osisID}"><span class="verseNumber"><xsl:value-of select="$versenum"/>&#160;</span></a>
 		        </xsl:when>
 		        <xsl:when test="$TinyVNum = 'true' and $Notes = 'false'">
-		          <a name="{@osisID}"><span class="verseNumber"><xsl:value-of select="$versenum"/></span></a>
+		          <a name="{@osisID}"><span class="verseNumber"><xsl:value-of select="$versenum"/>&#160;</span></a>
 		        </xsl:when>
 		        <xsl:when test="$TinyVNum = 'false' and $Notes = 'true'">
 		          <a name="{@osisID}">(<xsl:value-of select="$versenum"/>)</a>
@@ -618,7 +647,7 @@
 	    <xsl:when test="normalize-space(@lemma) != '' or normalize-space(@morph) != ''">
     		<xsl:choose>
 	    		<xsl:when test="$ColorCoding = 'true'" >
-			    	<xsl:variable name="colorClass" select="jsword:getColorClass($colorCodingProvider, @morph)"/>
+					<xsl:variable name="colorClass" select="jsword:getColorClass($colorCodingProvider, @morph)" />
 			    	<xsl:variable name="lemma" select="conversion:getStrongPaddedKey(@lemma)" />
 			    	<span class="{$colorClass}" strong="{$lemma}" morph="{@morph}"><xsl:apply-templates/></span>
 			    </xsl:when>
@@ -639,8 +668,10 @@
     -->
     <xsl:variable name="siblings" select="../child::node()"/>
     <xsl:variable name="next-position" select="position() + 1"/>
-    <xsl:if test="$siblings[$next-position] and name($siblings[$next-position]) != ''">
-      <xsl:text> </xsl:text>
+    <xsl:if test="$siblings[$next-position] and (name($siblings[$next-position]) != '' and (name($siblings[$next-position]) != 'seg' or $siblings[$next-position]/@type != 'x-punct'))">
+      <xsl:if test="conversion:startsWithPunctuation($siblings[$next-position]/text()) =  false()">
+	      <xsl:text> </xsl:text>
+      </xsl:if>
     </xsl:if>
   </xsl:template>
   
@@ -653,8 +684,8 @@
     -->
     <xsl:variable name="siblings" select="../child::node()"/>
     <xsl:variable name="next-position" select="position() + 1"/>
-    <xsl:if test="$siblings[$next-position] and name($siblings[$next-position]) != ''">
-      <xsl:text> </xsl:text>
+    <xsl:if test="$siblings[$next-position] and (name($siblings[$next-position]) != '' and (name($siblings[$next-position]) != 'seg' or $siblings[$next-position]/@type != 'x-punct'))">
+      	<xsl:text> </xsl:text>
     </xsl:if>
   </xsl:template>
   
@@ -668,13 +699,19 @@
         <font size="{substring-before(substring-after(@type, 'font-size: '), ';')}"><xsl:apply-templates/></font>
       </xsl:when>
       <xsl:when test="@type = 'x-variant'">
-        <xsl:if test="@subType = 'x-class-1'">
-          <xsl:apply-templates/>
-        </xsl:if>
+        <xsl:choose>
+        	<xsl:when test="@subType = 'x-class-1' or @subType ='x-1'">
+	          <xsl:apply-templates/>
+        	</xsl:when>
+        	<xsl:otherwise>
+        		<xsl:variable name="variantText">
+        			<xsl:value-of select="."/>
+        		</xsl:variable>
+        		<sup class="note variant" title="{$variantText}">va</sup>
+        	</xsl:otherwise>
+        </xsl:choose>
       </xsl:when>
-      <xsl:otherwise>
-        <xsl:apply-templates/>
-      </xsl:otherwise>
+      <xsl:otherwise><xsl:apply-templates/></xsl:otherwise>
     </xsl:choose>
   </xsl:template>
   
@@ -687,7 +724,7 @@
         <font size="{substring-before(substring-after(@type, 'font-size: '), ';')}"><xsl:apply-templates mode="jesus"/></font>
       </xsl:when>
       <xsl:when test="@type = 'x-variant'">
-        <xsl:if test="@subType = 'x-class:1'">
+        <xsl:if test="@subType = 'x-class:1' or @subType ='x-1'">
           <xsl:apply-templates mode="jesus"/>
         </xsl:if>
       </xsl:when>
@@ -1292,9 +1329,7 @@
     	<xsl:otherwise>
     		<xsl:choose>
     			<xsl:when test="cell[@role = 'label']">
-    				<xsl:if test="$comparing = true()">
     					<tr><td></td><xsl:call-template name="outputComparingTableHeader"></xsl:call-template></tr>
-    				</xsl:if>
     			</xsl:when>
     			<xsl:otherwise>
     				<tr class="row">
@@ -1412,7 +1447,7 @@
 		   		<xsl:choose>
 		   			<xsl:when test="@xml:lang">
 						<xsl:choose>
-		   					<xsl:when test="@xml:lang = 'he'">unicodeFont</xsl:when>
+		   					<xsl:when test="@xml:lang = 'he'">unicodeFont hbFont</xsl:when>
 		   					<xsl:when test="@xml:lang = 'grc'">unicodeFont</xsl:when>
 							<xsl:otherwise><xsl:value-of select="''" /></xsl:otherwise>
 						</xsl:choose>   			
@@ -1458,7 +1493,7 @@
 		   		<xsl:choose>
 		   			<xsl:when test="@xml:lang">
 						<xsl:choose>
-		   					<xsl:when test="@xml:lang = 'he'">unicodeFont</xsl:when>
+		   					<xsl:when test="@xml:lang = 'he'">unicodeFont hbFont</xsl:when>
 		   					<xsl:when test="@xml:lang = 'grc'">unicodeFont</xsl:when>
 							<xsl:otherwise><xsl:value-of select="''" /></xsl:otherwise>
 						</xsl:choose>   			

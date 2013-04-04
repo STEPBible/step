@@ -151,6 +151,7 @@ public final class StringUtils {
 
         if (p == null) {
             p = Pattern.compile(patternRegex);
+            PATTERNS.put(patternRegex, p);
         }
         return p.split(value);
     }

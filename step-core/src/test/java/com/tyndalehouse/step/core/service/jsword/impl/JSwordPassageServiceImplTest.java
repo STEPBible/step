@@ -33,9 +33,9 @@
 package com.tyndalehouse.step.core.service.jsword.impl;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.mockito.Mockito.mock;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -51,12 +51,12 @@ import org.crosswire.jsword.passage.NoSuchKeyException;
 import org.crosswire.jsword.passage.Verse;
 import org.crosswire.jsword.versification.BibleBook;
 import org.crosswire.jsword.versification.system.Versifications;
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.jdom.input.SAXBuilder;
-import org.jdom.output.Format;
-import org.jdom.output.XMLOutputter;
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.JDOMException;
+import org.jdom2.input.SAXBuilder;
+import org.jdom2.output.Format;
+import org.jdom2.output.XMLOutputter;
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -66,6 +66,7 @@ import com.tyndalehouse.step.core.models.BookName;
 import com.tyndalehouse.step.core.models.InterlinearMode;
 import com.tyndalehouse.step.core.models.LookupOption;
 import com.tyndalehouse.step.core.models.OsisWrapper;
+import com.tyndalehouse.step.core.xsl.impl.ColorCoderProviderImpl;
 
 /**
  * a service providing a wrapper around JSword
@@ -76,112 +77,10 @@ import com.tyndalehouse.step.core.models.OsisWrapper;
 public class JSwordPassageServiceImplTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(JSwordPassageServiceImplTest.class);
 
-    // @Test
-    // public void testMe() {
-    // try {
-    // final FileReader reader = new FileReader(
-    // "D:\\dev\\projects\\step\\step-core\\src\\main\\resources\\com\\tyndalehouse\\step\\core\\data\\create\\lexicon\\specific_forms.txt");
-    // final BufferedReader r = new BufferedReader(reader);
-    // String line = "";
-    // String lastStrong = "";
-    // final FileWriter writer = new FileWriter(new File("d:\\temp.txt"));
-    // final BufferedWriter w = new BufferedWriter(writer);
-    //
-    // while ((line = r.readLine()) != null) {
-    // final String[] split = line.split(",");
-    // if (!lastStrong.equals(split[0])) {
-    // w.write('\n');
-    // w.write(split[0]);
-    // w.write(',');
-    // } else {
-    // w.write(' ');
-    // }
-    // // then append to same line
-    // w.append(split[1]);
-    //
-    // lastStrong = split[0];
-    // }
-    //
-    // w.close();
-    // r.close();
-    // } catch (final FileNotFoundException e) {
-    // // TODO Auto-generated catch block
-    // e.printStackTrace();
-    // } catch (final IOException e) {
-    // // TODO Auto-generated catch block
-    // e.printStackTrace();
-    // }
-    // }
-
-    // Outputs all lexical forms TODO - move to a step-utils project
-    // @Test
-    // public void testOutput() throws BookException, NoSuchKeyException {
-    // final Pattern m = Pattern.compile("([GH]+[0-9]+)[.,;·]?");
-    // final SortedMap<String, Set<String>> strongs = new TreeMap<String, Set<String>>();
-    //
-    // final Filter filter = new Filter() {
-    // private static final long serialVersionUID = 1L;
-    //
-    // @Override
-    // public boolean matches(final Object arg) {
-    // if (arg instanceof Element) {
-    // final Element element = (Element) arg;
-    // final Attribute attribute = element.getAttribute(OSISUtil.ATTRIBUTE_W_LEMMA);
-    // return attribute != null;
-    // }
-    // return false;
-    // }
-    // };
-    //
-    // for (final Book b : Books.installed().getBooks()) {
-    // if (!"grc".equalsIgnoreCase(b.getLanguage().getCode())
-    // && !"he".equalsIgnoreCase(b.getLanguage().getCode())) {
-    // continue;
-    // }
-    // System.err.println("Processing " + b.getInitials());
-    //
-    // final Key key = b.getKey("Gen-Rev");
-    // final BookData bookData = new BookData(b, key);
-    // final Element osis = bookData.getOsis();
-    // final Iterator<Element> descendants = osis.getDescendants(filter);
-    //
-    // while (descendants.hasNext()) {
-    // final Element el = descendants.next();
-    // final Matcher matcher = m.matcher(el.getAttributeValue(OSISUtil.ATTRIBUTE_W_LEMMA));
-    //
-    // final StringBuilder sb = new StringBuilder();
-    // while (matcher.find()) {
-    // sb.append(matcher.group(1));
-    // sb.append("|");
-    // }
-    // if (sb.length() == 0) {
-    // // System.err.println(el.getAttributeValue(OSISUtil.ATTRIBUTE_W_LEMMA));
-    // continue;
-    // }
-    //
-    // sb.deleteCharAt(sb.length() - 1);
-    //
-    // Set<String> set = strongs.get(sb.toString());
-    // if (set == null) {
-    // set = new HashSet<String>(10);
-    // strongs.put(sb.toString(), set);
-    // }
-    // set.add(el.getTextTrim());
-    // }
-    // }
-    //
-    // for (final Entry<String, Set<String>> entry : strongs.entrySet()) {
-    // final Set<String> s = entry.getValue();
-    // final String key = entry.getKey();
-    // for (final String v : s) {
-    // System.out.println(String.format("%s,%s", key, v));
-    // }
-    // }
-    // }
     /**
      * tests that verse 0 gets excluded
      * 
-     * @throws NoSuchKeyException
+     * @throws NoSuchKeyException e
      */
     @Test
     public void testNormalize() throws NoSuchKeyException {
@@ -190,12 +89,42 @@ public class JSwordPassageServiceImplTest {
 
         final Book book = Books.installed().getBook("KJV");
 
-        final Key key = book.getKey("John 4");
+        Key key = book.getKey("John 4");
 
         assertTrue(key.get(0).getOsisID().equals("John.4.0"));
-        jsi.normalize(key, Versifications.instance().getDefaultVersification());
-        assertFalse(key.get(0).getOsisID().equals("John.4.0"));
+        key = jsi.normalize(key, Versifications.instance().getVersification("KJV"));
+        assertEquals("Joh 4", key.getName());
+    }
 
+    /**
+     * Test for bug TYNSTEP-378
+     */
+    @Test
+    public void testColorCoding() {
+        final JSwordPassageServiceImpl jsi = new JSwordPassageServiceImpl(
+                new JSwordVersificationServiceImpl(), null, null, mock(ColorCoderProviderImpl.class));
+
+        final List<LookupOption> options = new ArrayList<LookupOption>();
+        options.add(LookupOption.COLOUR_CODE);
+        final OsisWrapper osisText = jsi.getOsisText("KJV", "Gen.1.1", options, null, InterlinearMode.NONE);
+        assertTrue(osisText.getValue().contains("In the beginning"));
+    }
+
+    /**
+     * Baseline for bug TYNSTEP-378, checking that in interlinear colour coding still works.
+     */
+    @Test
+    public void testColorCodingInterlinear() {
+        final JSwordPassageServiceImpl jsi = new JSwordPassageServiceImpl(
+                new JSwordVersificationServiceImpl(), null, null, mock(ColorCoderProviderImpl.class));
+
+        final List<LookupOption> options = new ArrayList<LookupOption>();
+        options.add(LookupOption.COLOUR_CODE);
+        options.add(LookupOption.INTERLINEAR);
+
+        final OsisWrapper osisText = jsi.getOsisText("KJV", "Gen.1.1", options, "KJV",
+                InterlinearMode.INTERLINEAR);
+        assertTrue(osisText.getValue().contains("In the beginning"));
     }
 
     /**
@@ -207,7 +136,9 @@ public class JSwordPassageServiceImplTest {
                 new JSwordVersificationServiceImpl(), null, null, null);
 
         final Key expandToFullChapter = jsi.expandToFullChapter("Ruth", "1", "22",
-                Books.installed().getBook("KJV"), new Verse(BibleBook.RUTH, 1, 22), 0);
+                Books.installed().getBook("KJV"),
+                new Verse(Versifications.instance().getVersification(Versifications.DEFAULT_V11N),
+                        BibleBook.RUTH, 1, 22), 0);
         LOGGER.debug(expandToFullChapter.getName());
     }
 
@@ -461,6 +392,40 @@ public class JSwordPassageServiceImplTest {
      * @throws JDOMException an exception
      */
     @Test
+    public void testSegVariants() throws BookException, NoSuchKeyException, JDOMException, IOException {
+        final XMLOutputter xmlOutputter = new XMLOutputter(Format.getPrettyFormat());
+        final String ref = "Mat.9.4";
+        final String version = "WHNU";
+
+        final Book book = Books.installed().getBook(version);
+
+        // do the test
+        final JSwordPassageServiceImpl jsi = new JSwordPassageServiceImpl(
+                new JSwordVersificationServiceImpl(), null, null, null);
+
+        final BookData data = new BookData(book, book.getKey(ref));
+
+        LOGGER.info("Original is:\n {}", xmlOutputter.outputString(data.getOsisFragment()));
+
+        final OsisWrapper interleavedVersions = jsi.getOsisText(version, ref);
+
+        final SAXBuilder sb = new SAXBuilder();
+        final Document d = sb.build(new StringReader(interleavedVersions.getValue()));
+        final String outputString = xmlOutputter.outputString(d);
+        LOGGER.info(outputString);
+        assertTrue(outputString.contains("ειδως"));
+        assertTrue(outputString.contains("title=\"ιδων"));
+    }
+
+    /**
+     * Justs shows XML on the stdout
+     * 
+     * @throws BookException an exceptioon
+     * @throws NoSuchKeyException an exception
+     * @throws IOException an exception
+     * @throws JDOMException an exception
+     */
+    @Test
     public void testLongHeaders() throws BookException, NoSuchKeyException, JDOMException, IOException {
         final String version = "ESV";
         final String ref = "Luk 4:27";
@@ -485,39 +450,6 @@ public class JSwordPassageServiceImplTest {
     }
 
     /**
-     * Justs shows XML on the stdout
-     * 
-     * @throws BookException an exceptioon
-     * @throws NoSuchKeyException an exception
-     * @throws IOException an exception
-     * @throws JDOMException an exception
-     */
-    @Test
-    public void testPrettyXml() throws BookException, NoSuchKeyException, JDOMException, IOException {
-        final String version = "TR";
-        final String ref = "Acts 5:2";
-        final Book currentBook = Books.installed().getBook(version);
-        final BookData bookData = new BookData(currentBook, currentBook.getKey(ref));
-        final Element osisFragment = bookData.getOsisFragment();
-
-        final XMLOutputter xmlOutputter = new XMLOutputter(Format.getPrettyFormat());
-        LOGGER.debug(xmlOutputter.outputString(osisFragment));
-
-        // do the test
-        final JSwordPassageServiceImpl jsi = new JSwordPassageServiceImpl(
-                new JSwordVersificationServiceImpl(), null, null, null);
-        final List<LookupOption> options = new ArrayList<LookupOption>();
-        options.add(LookupOption.NOTES);
-
-        final String osisText = jsi.getOsisText(version, ref, options, null, InterlinearMode.NONE).getValue();
-        final SAXBuilder sb = new SAXBuilder();
-        final Document d = sb.build(new StringReader(osisText));
-
-        LOGGER.debug("\n {}", xmlOutputter.outputString(d));
-        Assert.assertTrue(osisText.contains("span"));
-    }
-
-    /**
      * Tests a lookup by number
      */
     @Test
@@ -534,7 +466,6 @@ public class JSwordPassageServiceImplTest {
                 .getOsisTextByVerseNumbers("FreSegond", "KJV", 60000, 60000, new ArrayList<LookupOption>(),
                         null, null, false).getValue()
                 .contains("Que la gr\u00e2ce du Seigneur J\u00e9sus soit avec tous!"));
-
     }
 
     /**
@@ -544,131 +475,91 @@ public class JSwordPassageServiceImplTest {
      * @throws BookException a book exception
      * @throws InterruptedException when the thread is interrupted
      */
-    // FIXME: currently disabled
-    // @Test
-    // public void testConcurrencyIssueThroughStep() throws NoSuchKeyException, BookException,
-    // InterruptedException {
-    // final String[] names = { "KJV", "ESV" };
-    // final String[] ref = { "Rom.2", "John 7", "2Ki.2", "Rom.1;John 4;2Ki.2", "Acts 3:4-6" };
-    //
-    // final ThreadMXBean thbean = ManagementFactory.getThreadMXBean();
-    // thbean.setThreadContentionMonitoringEnabled(true);
-    // final JSwordPassageServiceImpl jsi = new JSwordPassageServiceImpl(
-    // new JSwordVersificationServiceImpl(), null, null);
-    //
-    // final Queue<Long> times = new ConcurrentLinkedQueue<Long>();
-    // final AtomicLong iterations = new AtomicLong();
-    //
-    // final Runnable r1 = new Runnable() {
-    // @Override
-    // public void run() {
-    // for (int ii = 0; ii < 1000; ii++) {
-    // final long l = System.currentTimeMillis();
-    // jsi.getOsisText(names[ii % 2], ref[ii % 5]);
-    // times.add(System.currentTimeMillis() - l);
-    // iterations.incrementAndGet();
-    // }
-    //
-    // final ThreadInfo threadInfo = thbean.getThreadInfo(new long[] { Thread.currentThread()
-    // .getId() }, true, true)[0];
-    // System.err.println("Waited a total of " + threadInfo.getBlockedCount()
-    // + " times, resulting in " + threadInfo.getBlockedTime() + "ms wasted time");
-    // }
-    // };
-    //
-    // int ii = 0;
-    //
-    // final long start = System.currentTimeMillis();
-    // final List<Thread> threads = new ArrayList<Thread>();
-    // while (ii++ < 16) {
-    // final Thread t1 = new Thread(r1);
-    // t1.start();
-    // threads.add(t1);
-    // }
-    //
-    // new Thread(new Runnable() {
-    // @Override
-    // public void run() {
-    // while (true) {
-    // try {
-    // Thread.sleep(10000);
-    // } catch (final InterruptedException e) {
-    // e.printStackTrace();
-    // }
-    // System.out.println(iterations.get() + " iterations so far");
-    // }
-    //
-    // }
-    // }).start();
-    //
-    // for (final Thread t : threads) {
-    // t.join();
-    // }
-    //
-    // final long total = System.currentTimeMillis() - start;
-    // System.err.println(String.format("Executed: %d in %d ms, %f ms / iteration", iterations.get(), total,
-    // (double) total / (double) iterations.get()));
-    //
-    // }
-    // /**
-    // * tries to replicate the issue with bookdata not being able to be read in a concurrent fashion
-    // *
-    // * @throws NoSuchKeyException a no such key exception
-    // * @throws BookException a book exception
-    // * @throws InterruptedException when the thread is interrupted
-    // */
-    // // FIXME: currently disabled
-    // @Test
-    // public void testConcurrencyIssueOnBookData() throws NoSuchKeyException, BookException,
-    // InterruptedException {
-    // final String[] names = { "KJV", "ESV" };
-    // final String ref = "Rom.1.1";
-    //
-    // final Runnable r1 = new Runnable() {
-    // @Override
-    // public void run() {
-    // final Book b0 = Books.installed().getBook(names[0]);
-    // BookData bd1;
-    // try {
-    // bd1 = new BookData(b0, b0.getKey(ref));
-    // bd1.getSAXEventProvider();
-    // } catch (final NoSuchKeyException e) {
-    // LOGGER.error("A jsword error during test", e);
-    // Assert.fail("JSword bug has occured");
-    // } catch (final BookException e) {
-    // LOGGER.error("A jsword error during test", e);
-    // Assert.fail("JSword bug has occured");
-    // }
-    // }
-    // };
-    //
-    // final Runnable r2 = new Runnable() {
-    // @Override
-    // public void run() {
-    // final Book b0 = Books.installed().getBook(names[1]);
-    // BookData bd1;
-    // try {
-    // bd1 = new BookData(b0, b0.getKey(ref));
-    // bd1.getSAXEventProvider();
-    // } catch (final NoSuchKeyException e) {
-    // LOGGER.error("A jsword error during test", e);
-    // Assert.fail("JSword bug has occured");
-    // } catch (final BookException e) {
-    // LOGGER.error("A jsword error during test", e);
-    // Assert.fail("JSword bug has occured");
-    // }
-    // }
-    // };
-    //
-    // int ii = 0;
-    // while (ii++ < 15) {
-    // final Thread t1 = new Thread(r1);
-    // final Thread t2 = new Thread(r2);
-    // t1.start();
-    // t2.start();
-    //
-    // t1.join();
-    // t2.join();
-    // }
-    // }
+    @Test
+    public void testConcurrencyIssueOnBookData() throws NoSuchKeyException, BookException,
+            InterruptedException {
+        final String[] names = { "KJV", "ESV" };
+        final String ref = "Rom.1.1";
+
+        final Runnable r1 = new Runnable() {
+            @Override
+            public void run() {
+                final Book b0 = Books.installed().getBook(names[0]);
+                BookData bd1;
+                try {
+                    bd1 = new BookData(b0, b0.getKey(ref));
+                    bd1.getSAXEventProvider();
+                } catch (final NoSuchKeyException e) {
+                    LOGGER.error("A jsword error during test", e);
+                    Assert.fail("JSword bug has occured");
+                } catch (final BookException e) {
+                    LOGGER.error("A jsword error during test", e);
+                    Assert.fail("JSword bug has occured");
+                }
+            }
+        };
+
+        final Runnable r2 = new Runnable() {
+            @Override
+            public void run() {
+                final Book b0 = Books.installed().getBook(names[1]);
+                BookData bd1;
+                try {
+                    bd1 = new BookData(b0, b0.getKey(ref));
+                    bd1.getSAXEventProvider();
+                } catch (final NoSuchKeyException e) {
+                    LOGGER.error("A jsword error during test", e);
+                    Assert.fail("JSword bug has occured");
+                } catch (final BookException e) {
+                    LOGGER.error("A jsword error during test", e);
+                    Assert.fail("JSword bug has occured");
+                }
+            }
+        };
+
+        int ii = 0;
+        while (ii++ < 20) {
+            final Thread t1 = new Thread(r1);
+            final Thread t2 = new Thread(r2);
+            t1.start();
+            t2.start();
+
+            t1.join();
+            t2.join();
+        }
+    }
+
+    /**
+     * Tests that we don't allow large passages to be returned...
+     */
+    @Test
+    public void testPassageShrinking() {
+        final JSwordPassageServiceImpl service = new JSwordPassageServiceImpl(
+                new JSwordVersificationServiceImpl(), null, null, null);
+        assertEquals("Gen.1", service.getBookData("ESV", "Gen 1").getKey().getOsisRef());
+        assertEquals("Gen.1", service.getBookData("ESV", "Gen").getKey().getOsisRef());
+        assertEquals("Gen.1", service.getBookData("ESV", "Gen 1-50").getKey().getOsisRef());
+        assertEquals("Gen.1-Gen.11.22", service.getBookData("ESV", "Gen 1-12").getKey().getOsisRef());
+        assertEquals("Gen.1", service.getBookData("ESV", " Gen").getKey().getOsisRef());
+        assertEquals("Gen.1", service.getBookData("ESV", "Gen ").getKey().getOsisRef());
+    }
+
+    /**
+     * Gets the gets the interlinear versions.
+     * 
+     */
+    @Test
+    public void testGetInterlinearVersions() {
+        final JSwordPassageServiceImpl jsword = new JSwordPassageServiceImpl(null, null, null, null);
+        assertEquals("ESV", jsword.getInterlinearVersion("ESV"));
+        assertEquals("ESV,KJV", jsword.getInterlinearVersion("ESV,KJV"));
+        assertEquals("ESV,KJV", jsword.getInterlinearVersion("ESV,,KJV"));
+        assertEquals("ESV,KJV", jsword.getInterlinearVersion("ESV,,,KJV"));
+        assertEquals("ESV,KJV", jsword.getInterlinearVersion("ESV,,,,KJV"));
+        assertEquals("ESV,KJV", jsword.getInterlinearVersion("ESV,KJV,"));
+        assertEquals("ESV,KJV", jsword.getInterlinearVersion(",ESV,KJV"));
+        assertEquals("ESV", jsword.getInterlinearVersion(",ESV,"));
+        assertEquals("ESV", jsword.getInterlinearVersion(",,ESV,,"));
+        assertEquals("ESV,KJV,AV", jsword.getInterlinearVersion(",,ESV,,KJV,,,AV"));
+    }
 }

@@ -76,7 +76,7 @@ public class GeographyController {
      * @return the list of places (lat/long/precisions)
      */
     public List<Place> getPlaces(final String reference) {
-        notEmpty(reference, "A reference is required for looking up geography modules", USER_MISSING_FIELD);
+        notEmpty(reference, "reference_for_maps", USER_MISSING_FIELD);
         final EntityDoc[] placeDocs = this.geoService.getPlaces(reference);
 
         final List<Place> places = new ArrayList<Place>(placeDocs.length);

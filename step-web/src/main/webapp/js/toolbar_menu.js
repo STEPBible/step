@@ -34,19 +34,27 @@
 /**
  * Represents the menu that will be at the top of the passage container
  */
+
+
+step.toolbar = {
+    refreshLayout : function(id) {
+        ddsmoothmenu.init({
+            mainmenuid: id,        //menu DIV id
+            zIndexStart: 100,
+            orientation: 'h',               //Horizontal or vertical menu: Set to "h" or "v"
+            classname: 'ddsmoothmenu innerMenu', //class added to menu's outer DIV
+            //customtheme: ["#1c5a80", "#18374a"],
+            contentsource: "markup"
+        });
+    }
+}
+
 function ToolbarMenu(passageId, menuRoot) {
 	this.passageId = passageId;
 	this.menuRoot = $(menuRoot);
 	var self = this;
 	
-	ddsmoothmenu.init({
-		mainmenuid: menuRoot.id, 		//menu DIV id
-		zIndexStart: 100,
-		orientation: 'h', 				//Horizontal or vertical menu: Set to "h" or "v"
-		classname: 'ddsmoothmenu innerMenu', //class added to menu's outer DIV
-		//customtheme: ["#1c5a80", "#18374a"],
-		contentsource: "markup"
-	});
+	step.toolbar.refreshLayout(menuRoot.id)
 	
 	$(menuRoot).hear("version-changed-" + this.passageId, function(selfElement) {
 		self.refreshMenuOptions();
@@ -63,22 +71,24 @@ function ToolbarMenu(passageId, menuRoot) {
  */
 ToolbarMenu.prototype.refreshMenuOptions = function() {
 	var self = this;
-	$.getSafe(BIBLE_GET_FEATURES + step.state.passage.version(this.passageId), function (features) {
+	var version = step.state.passage.version(this.passageId);
+	var mode = step.passage.getDisplayMode(this.passageId).displayMode;
+	if(step.util.isBlank(mode)) {
+	    mode = "NONE";
+	}
+	
+	var displayMenu = $("li[menu-name='DISPLAY']", step.util.getPassageContainer(this.passageId));
+	$.getSafe(BIBLE_GET_FEATURES, [version, mode], function (features) {
 		//build up map of options
-		$("li:contains('Display') a", self.menuRoot).each(function(index, value) {
-			var changed = false;
-			for(var i = 0 ; features[i]; i++) {
-				if(value.name == features[i]) {
-					$(value).removeClass("disabled");
-					changed = true;
-					break;
-				}
-			}
-			
-			if(changed == false) {
-				$(value).addClass("disabled");
-			}
-		});
+	    $("a", displayMenu).removeClass("disabled").removeAttr('title').qtip('destroy');
+		
+		for(var i = 0; i < features.removed.length; i++) {
+		    $("a[name='" + features.removed[i].option + "']", displayMenu)
+		        .addClass("disabled")
+		        .attr('title', features.removed[i].explanation)
+		        .qtip({ position: {my: "center right", at: "left center", viewport: $(window) }});
+		}
+		
 		$.shout("toolbar-menu-options-changed-" + self.passageId);
 	});
 };

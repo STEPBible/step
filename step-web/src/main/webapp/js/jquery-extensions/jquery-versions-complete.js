@@ -20,22 +20,34 @@ $.widget("custom.versions",  {
             step.autoVersions.currentElement = $(this);
             
             self.dropdownVersionMenu.show();
+            
+            self._filter(self._wasFullToken($(this).val()));
             self.dropdownVersionMenu.css('position', 'absolute').position({
                 my:  "left bottom",
                 at : "left top",
-                of: self.element
+                of: self.element,
+                collision: "flip",
             });
+            self.ensureInWindow();
         });
         
         
-        this.element.bind("keyup", function() {
-           self._filter($(this).val()); 
+        this.element.bind("keyup", function(event) {
+            var kc = event.keyCode;
+            if(kc >= 48 && kc <= 90 || kc >= 96 && kc <= 111 || kc >= 188 && kc <= 222) {
+                self._filter($(this).val());
+                return;
+            }
+            
+            if(kc == 27) {
+                self.dropdownVersionMenu.hide();
+            }
         });
         
         
         if(!$.data(document, 'versions-rendered')) {
             //render menu
-            this.dropdownVersionMenu = $("<div class='versionsAutoComplete ui-widget-content ui-corner-all'></div>");
+            this.dropdownVersionMenu = $("<div class='versionsAutoComplete stepComplete ui-widget-content ui-corner-all'></div>");
             this._renderFilterOptions();
             this._renderVersions();
             this._filter();
@@ -76,6 +88,31 @@ $.widget("custom.versions",  {
         this._bindHandlers(this);
     },
 
+    ensureInWindow : function(dropdown) {
+        var windowHeight = $(window).height();
+        var dropdownHeight = $(this.dropdownVersionMenu).height();
+        var dropdownTop = $(this.dropdownVersionMenu).position().top;
+        
+        if(dropdownHeight + dropdownTop > windowHeight) {
+            //it's off screen.
+            // console.log("Dropdown is off screen");
+            //our best attempt is going to be to move it up a bit 
+            this.dropdownVersionMenu.css('top', dropdownTop - (dropdownHeight + dropdownTop - windowHeight));
+        }
+    },
+    
+    _wasFullToken : function(val) {
+        //if val is already a selected module, then show everything, not just the filtered value
+        var lastToken = val;
+        if(!step.util.isBlank(lastToken)) {
+            //check we are not already selecting a module:
+            lastToken = lastToken.split(",").pop();
+            if(step.keyedVersions[lastToken.toUpperCase()]) {
+                lastToken = "";
+            }
+        }
+        return lastToken;
+    },
     
     _bindHandlers : function(that) {
         var self = that;
@@ -90,20 +127,36 @@ $.widget("custom.versions",  {
              } else {
                  var currentValue = step.autoVersions.currentElement.val();
                  if(currentValue.trim() == "") {
-                     step.autoVersions.currentElement.val(item.item.attr('initials'));
+                     step.autoVersions.currentElement.val(self.sanitizeVersions(item.item.attr('initials')));
+                     step.autoVersions.currentElement.trigger('change');
                  } else {
-                     step.autoVersions.currentElement.val(currentValue + "," + item.item.attr('initials'));
+                     //check this wasn't the last version, if it was, then there is no point in adding it
+                     var selectedVersion = item.item.attr('initials');
+                     if(!currentValue.toLowerCase().endsWith(selectedVersion.toLowerCase())) {
+                         step.autoVersions.currentElement.val(self.sanitizeVersions(currentValue + "," + selectedVersion));
+                         step.autoVersions.currentElement.trigger('change');
+                     }
                  }
                  
-                 step.autoVersions.currentElement.trigger('change');
+                 self.dropdownVersionMenu.hide();
              }
             }
         }).removeClass("ui-widget-content ui-corner-all");
 
     },
     
+    sanitizeVersions : function(item) {
+        return item.replace(/,,+/g, ',');
+    },
+    
     _filter : function(val) {
-        var versions = this._filteredVersions(val);
+        var lastToken = val;
+        if(!step.util.isBlank(val)) {
+            //obtain the last token
+            lastToken = lastToken.split(",").pop();
+        }
+        
+        var versions = this._filteredVersions(lastToken);
         
         var listItems = $("[initials]", this.dropdownVersionMenu);
         
@@ -189,14 +242,14 @@ $.widget("custom.versions",  {
         var toolbar = "";
         toolbar += '<table width="100%">';
         
-        toolbar += '<tr class=""><td class="filterHeader">Resource type</td><td>';
-        toolbar += '<span class="filterButtonSet"><input type="checkbox" id="bibles" value="bibles" name="textType" key="bibles" checked="checked" /><label for="bibles">Bibles</label>';
-        toolbar += '<input type="checkbox" id="commentaries" value="commentaries" name="textType"  key="commentaries" /><label for="commentaries">Commentaries</label></span>';
+        toolbar += '<tr class=""><td class="filterHeader">' + __s.resource_type + '</td><td>';
+        toolbar += '<span class="filterButtonSet"><input type="checkbox" id="bibles" value="bibles" name="textType" key="bibles" checked="checked" /><label for="bibles">' + __s.bibles + '</label>';
+        toolbar += '<input type="checkbox" id="commentaries" value="commentaries" name="textType"  key="commentaries" /><label for="commentaries">' + __s.commentaries + '</label></span>';
         toolbar += '</td>';    
         toolbar += '</tr>';
 
-        toolbar += '<tr class="filterButtonSet languageFilters"><td class="filterHeader">Languages</td><td>';
-        toolbar += '<span ><input type="checkbox" id="languageAll" value="langAll" name="language" key="langAll" /><label for="languageAll">All</label></span>';
+        toolbar += '<tr class="filterButtonSet languageFilters"><td class="filterHeader">' + __s.languages + '</td><td>';
+        toolbar += '<span ><input type="checkbox" id="languageAll" value="langAll" name="language" key="langAll" /><label for="languageAll">' + __s.all + '</label></span>';
 
         toolbar += '<input type="checkbox" id="languageMy" value="langMy" name="language"  key="langMy" ';
         if(languageCode == 'en') {
@@ -206,16 +259,16 @@ $.widget("custom.versions",  {
         toolbar += '/><label for="languageMy">' + languageName + '</label>';
         
         if(languageCode != 'en') {
-            toolbar += '<input type="checkbox" id="languageMyAndEnglish" value="langMyAndEnglish"  key="langMyEnglish" name="language" checked="checked" /><label for="languageMyAndEnglish">' + languageName + ' + English</label>';
+            toolbar += '<input type="checkbox" id="languageMyAndEnglish" value="langMyAndEnglish"  key="langMyEnglish" name="language" checked="checked" /><label for="languageMyAndEnglish">' + languageName + ' + ' + __s.english + '</label>';
         }
         
-        toolbar += '<span ><input type="checkbox" id="languageAncient" value="langAncient"  key="langAncient" name="language" /><label for="languageAncient">Ancient</label></span>';
+        toolbar += '<span ><input type="checkbox" id="languageAncient" value="langAncient"  key="langAncient" name="language" /><label for="languageAncient">' + __s.ancient + '</label></span>';
         
         toolbar += '</td></tr>';
             
         
         toolbar += '</table>';
-        toolbar += '<div class="filterTagLine">Filtering ' + step.versions.length + ' Bibles &amp; Commentaries</div><hr />';
+        toolbar += '<div class="filterTagLine">' + sprintf(__s.filtering_bibles_and_commentaries, step.versions.length) + '</div><hr />';
         
         
         toolbarContainer.append($(toolbar));
@@ -278,17 +331,9 @@ $.widget("custom.versions",  {
         var showingText = 
             "<span class='versionKey' >" + item.initials + "</span><span style='font-size: larger'>&rArr;</span>&nbsp;" +
             "<span class='versionName'>" + name + "</span>";
-        var features = "";
-        // add to Strongs if applicable, and therefore interlinear
-        if (item.hasStrongs) {
-            features += " " + "<span class='versionFeature' title='Vocabulary available'>V</span>";
-            features += " " + "<span class='versionFeature' title='Interlinear available'>I</span>";
-        }
 
-        // add morphology
-        if (item.hasMorphology) {
-            features += " " + "<span class='versionFeature' title='Grammar available'>G</span>";
-        }
+        
+        var features = step.util.ui.getFeaturesLabel(item);
         
         // return response for dropdowns
         var itemHtml = "<li title='" + item.name + " (" + item.languageName.replace("'", "&quot;")  + ")' initials='" + item.initials +  "'><a><span class='features'>" + features + "</span>" + showingText + "</a></li>";

@@ -59,6 +59,7 @@ public class TimelineEventsAndDate implements Serializable {
     /**
      * @param events the events to set
      */
+    @SuppressWarnings("PMD")
     public void setEvents(final EntityDoc[] events) {
         this.events = events;
     }

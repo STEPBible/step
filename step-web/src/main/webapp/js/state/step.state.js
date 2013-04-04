@@ -44,7 +44,9 @@ step.state = {
          var key = selector.substring(1);
          selected.change(function(){
              var controlValue = this.type == 'checkbox' ? $(this).prop('checked') : $(this).val();
-             step.state[namespace][key](step.passage.getPassageId(this), controlValue);
+             
+             var passageId = step.passage.getPassageId(this);
+             step.state[namespace][key](passageId, controlValue);
          });
          
          
@@ -129,7 +131,7 @@ step.state = {
         if (activeSearch) {
             //then show warning sign if attempting to refine a search
             if( (activeSearch == "SEARCH_TIMELINE" || activeSearch == "SEARCH_SUBJECT") && refiningSearches) {
-                step.util.raiseError("This type of search does not support the 'Refine search' feature. Please close the 'Refine Search' feature to proceed.");
+                step.util.raiseError(__s.error_refined_search_not_supported);
                 return;
             } else {
                 // tick the right menu item
@@ -168,7 +170,8 @@ step.state = {
         // restore active search
         step.state.view.restore();
         
-
+        //restore active language
+        this._restoreLanguage();
         
         var passageIds = step.util.getAllPassageIds();
 
@@ -183,20 +186,39 @@ step.state = {
         }
         
         step.util.ui.initSearchToolbar();
-    },
+        
+        //finally start listening for hash changes
+        window.onhashchange = function() {
+            step.state.browser.hashChange();
+        };
+        
+        step.state.browser.hashChange();
+     },
 
+    _restoreLanguage : function() {
+        var language = $.cookie("lang");
+        if(step.util.isBlank(language)) {
+            language = "en";
+        }
+        
+        step.menu.tickMenuItem($("a[lang='" + language + "']"));
+    },
+    
     _showRelevantFieldSet : function(passageId) {
         var passageContainer = step.util.getPassageContainer(passageId);
         $(".advancedSearch fieldset", passageContainer).hide();
 
         var option = $("a[name ^= 'SEARCH_']:has(img.selectingTick)", passageContainer);
-        var optionName = option.text();
+        var optionName = option.attr('name');
         this._showFieldSet(passageContainer, optionName);
+        
+        //need to link field set to optionbeing displayed
+        step.state.browser.changeTrackedSearch(passageId, optionName);
     },
     
     _showFieldSet : function(passageContainer, optionName) {
-        $(".passageToolbarContainer", passageContainer).toggle(optionName == "Passage lookup");
-        var targetFieldset = $(".advancedSearch legend:contains('" + optionName + "')", passageContainer).parent();
+        $(".passageToolbarContainer", passageContainer).toggle(optionName == "SEARCH_PASSAGE");
+        var targetFieldset = $(".advancedSearch fieldset[name='" + optionName + "']", passageContainer);
         targetFieldset.show();
     },
 
@@ -215,6 +237,8 @@ step.state = {
             $.shout("simpleText-search-state-has-changed", { passageId : passageId });
         } else if(active == 'SEARCH_SUBJECT') {
             $.shout("subject-search-state-has-changed", { passageId : passageId });
+        } else if(active == 'SEARCH_PERSONAL_NOTES') {
+            $.shout("personal-notes-state-has-changed", { passageId : passageId });
         }
         
 //        this._recomputeHash();

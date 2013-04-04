@@ -1,5 +1,6 @@
 package com.tyndalehouse.step.core.data;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,7 +15,8 @@ import org.codehaus.jackson.annotate.JsonIgnore;
  * @author chrisburrell
  * 
  */
-public class EntityDoc {
+public class EntityDoc implements Serializable {
+    private static final long serialVersionUID = -8509022678959062751L;
     private final Document doc;
 
     /**

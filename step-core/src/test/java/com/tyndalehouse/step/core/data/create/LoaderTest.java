@@ -34,8 +34,13 @@ package com.tyndalehouse.step.core.data.create;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
+import java.util.Locale;
 import java.util.Properties;
+
+import javax.inject.Provider;
 
 import org.apache.lucene.search.NumericRangeQuery;
 import org.joda.time.DateTime;
@@ -43,12 +48,14 @@ import org.joda.time.DateTimeUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import com.tyndalehouse.step.core.data.EntityDoc;
 import com.tyndalehouse.step.core.data.EntityIndexReader;
 import com.tyndalehouse.step.core.data.EntityManager;
 import com.tyndalehouse.step.core.data.entities.impl.TestEntityManager;
+import com.tyndalehouse.step.core.models.ClientSession;
 import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
 import com.tyndalehouse.step.core.service.jsword.impl.JSwordPassageServiceImpl;
 import com.tyndalehouse.step.core.service.jsword.impl.JSwordVersificationServiceImpl;
@@ -61,6 +68,8 @@ import com.tyndalehouse.step.core.service.jsword.impl.JSwordVersificationService
  */
 @RunWith(MockitoJUnitRunner.class)
 public class LoaderTest {
+    @Mock
+    private Provider<ClientSession> clientSessionProvider;
     private EntityManager entityManager;
 
     /**
@@ -69,6 +78,28 @@ public class LoaderTest {
     @Before
     public void setUp() {
         this.entityManager = new TestEntityManager();
+        final ClientSession session = mock(ClientSession.class);
+        when(this.clientSessionProvider.get()).thenReturn(session);
+        when(session.getLocale()).thenReturn(Locale.ENGLISH);
+    }
+
+    /**
+     * loads the nave module
+     */
+    @Test
+    public void testNaveLoader() {
+        getLoader("test.data.path.subjects.nave", "nave.txt").loadNave();
+        assertExists("nave", "root", "AARON");
+    }
+
+    /**
+     * loads the nave module
+     */
+    @Test
+    public void testAlternativeTranslationsLoader() {
+        getLoader("test.data.path.alternatives.translations", "alternativeTranslations.txt")
+                .loadAlternativeTranslations();
+        assertExists("alternativeTranslations", "reference", "Gen.1.1");
     }
 
     /**
@@ -88,7 +119,7 @@ public class LoaderTest {
     @Test
     public void testTimeline() {
         getLoader("test.data.path.timeline.events.directory", "timeline.csv").loadTimeline();
-        assertExists(1, "timelineEvent", "name", "John the Baptist");
+        assertExists("timelineEvent", "name", "John the Baptist");
     }
 
     /**
@@ -183,7 +214,7 @@ public class LoaderTest {
         coreProperties.put(key, file);
         final JSwordVersificationService versificationService = new JSwordVersificationServiceImpl();
         return new Loader(new JSwordPassageServiceImpl(versificationService, null, null, null), null,
-                coreProperties, this.entityManager);
+                coreProperties, this.entityManager, this.clientSessionProvider);
     }
 
     /**
@@ -202,13 +233,12 @@ public class LoaderTest {
     /**
      * Uses a normal lucene query
      * 
-     * @param num the number of entities that should be loaded
      * @param entityName the entity name
      * @param key the key for a search using searchUniqueBySingleField
      * @param value the value to use in the search
      */
-    private void assertExists(final int num, final String entityName, final String key, final String value) {
-        getIndexReader(entityName).searchSingleColumn(key, value);
+    private void assertExists(final String entityName, final String key, final String value) {
+        assertTrue(getIndexReader(entityName).searchSingleColumn(key, value).length > 0);
     }
 
     /**
@@ -231,8 +261,7 @@ public class LoaderTest {
      * @return reader to the relevant index
      */
     private EntityIndexReader getIndexReader(final String entityName) {
-        final EntityIndexReader reader = this.entityManager.getReader(entityName);
-        return reader;
+        return this.entityManager.getReader(entityName);
     }
 
 }

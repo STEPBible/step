@@ -1,5 +1,6 @@
 package com.tyndalehouse.step.core.service.jsword.impl;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
@@ -50,7 +51,7 @@ public class JSwordSearchServiceImplTest {
         for (int i = 0; i < 10 || i < results.size(); i++) {
             LOGGER.debug(((VerseSearchEntry) results.get(i)).getKey());
         }
-        assertTrue(!results.isEmpty());
+        assertFalse(results.isEmpty());
     }
 
     /**
@@ -62,6 +63,20 @@ public class JSwordSearchServiceImplTest {
                 new SearchQuery("+[Mat-Rev] good~ in (KJV)", "true", 0, 1, 1000000), "ESV").getResults();
         for (int i = 0; i < results.size(); i++) {
             LOGGER.trace(((VerseSearchEntry) results.get(i)).getKey());
+        }
+        assertTrue(!results.isEmpty());
+    }
+
+    /**
+     * Random tests
+     */
+    @Test
+    public void testMorphology() {
+        final List<SearchEntry> results = this.search.search(
+                new SearchQuery("+[Mat-Rev] +morph:G2570*A-NSM* in (KJV)", "true", 0, 1, 1000000), "ESV")
+                .getResults();
+        for (int i = 0; i < results.size(); i++) {
+            LOGGER.info(((VerseSearchEntry) results.get(i)).getKey());
         }
         assertTrue(!results.isEmpty());
     }

@@ -68,7 +68,7 @@ public interface JSwordModuleService {
      * @param moduleInitials the initials of the modules to check for installation state
      * @return true if the module is installed
      */
-    boolean isInstalled(String moduleInitials);
+    boolean isInstalled(String... moduleInitials);
 
     /**
      * Kicks of a process to install this version (asynchronous)
@@ -84,6 +84,14 @@ public interface JSwordModuleService {
      * @return the percentage of completion (0 - 1.0)
      */
     double getProgressOnInstallation(String bookName);
+
+    /**
+     * assesses the progress made on an indexing operation
+     * 
+     * @param bookName the book name
+     * @return the percentage of completion (0 - 1.0)
+     */
+    double getProgressOnIndexing(String bookName);
 
     /**
      * retrieves all modules that have been installed
@@ -113,4 +121,30 @@ public interface JSwordModuleService {
      */
     void reIndex(String initials);
 
+    /**
+     * Checks whether a module is indexed
+     * 
+     * @param versions version to be indexed
+     * @return true if the module has been indexed
+     */
+    boolean isIndexed(String versions);
+
+    /**
+     * @param offline true to set the installation to be off-line only.
+     */
+    void setOffline(boolean offline);
+
+    /**
+     * Removes a module
+     * 
+     * @param initials initials of the module to remove, e.g. 'WEB'
+     */
+    void removeModule(String initials);
+
+    /**
+     * Provides a way of waiting for indexes to be created
+     * 
+     * @param versions versions to be waited upon
+     */
+    void waitForIndexes(String... versions);
 }

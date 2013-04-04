@@ -13,15 +13,20 @@ public class BookName implements Serializable {
     private String shortName;
     private String fullName;
 
+    /* indicates a whole book, OR a book that should be treated like a chapter */
+    private boolean wholeBook;
+
     /**
      * wraps around a book name, giving the abbreviation and the full name
      * 
      * @param shortName the short name
      * @param fullName the full name
+     * @param isWholeBook true to indicate the option refers to a whole book
      */
-    public BookName(final String shortName, final String fullName) {
+    public BookName(final String shortName, final String fullName, final boolean isWholeBook) {
         this.shortName = shortName;
         this.fullName = fullName;
+        this.wholeBook = isWholeBook;
     }
 
     /**
@@ -50,5 +55,19 @@ public class BookName implements Serializable {
      */
     public void setFullName(final String fulllName) {
         this.fullName = fulllName;
+    }
+
+    /**
+     * @return the isWholeBook
+     */
+    public boolean isWholeBook() {
+        return this.wholeBook;
+    }
+
+    /**
+     * @param isWholeBook the isWholeBook to set
+     */
+    public void setWholeBook(final boolean isWholeBook) {
+        this.wholeBook = isWholeBook;
     }
 }

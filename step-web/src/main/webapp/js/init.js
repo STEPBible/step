@@ -37,7 +37,10 @@
 init();
 
 //some extensions (perhaps should go in another file)
-String.prototype.startsWith = function(str) { return (this.match("^"+str)==str); };
+String.prototype.startsWith = function(nonEscapedString) { 
+    var str = nonEscapedString.replace('+', '\\+');
+    return (this.match("^"+str)==nonEscapedString); 
+};
 
 
 
@@ -46,47 +49,199 @@ var timeline;
 
 function init() {
 	$(document).ready(function() {
-		initMenu();
+	    initLocale();
+	    
+	    checkValidUser();
+	    
+	    initMenu();
 		$("li[menu-name] a[name]").bind("click", function() { step.menu.handleClickEvent(this); });
 		
 		initGlobalHandlers();
 		initLayout();
 
-		//init modules
-//		initModules()
 		
 		initData();
-		initHelpLinks();
-		
-//		initInitialEvents();
-//		initLogin();
 
 	      // read state from the cookie
         step.state.restore();
 
         hearViewChanges();
         $.shout("view-change");
+
+        initJira();
 	});
 }
 
-function initHelpLinks() {
-    $("#holdingPage a").click(function() {
-        event.preventDefault();
-       $("#holdingPage").children().not("h1").remove();
-       $("#holdingPage").append("<iframe style='width: 100%' src='" + $(this).attr("href") + "' />");
-       reCalculateIframeHeight();
-       
+function initLocale() {
+    var lang = $.getUrlVar("lang");
+    var previousLang = $.cookie("lang");
+    
+    if(lang) {
+        //set cookie session-scope
+        $.cookie("lang", lang);
+
+        if(lang != previousLang) {
+            //record user email and user name
+            var email = $.localStore("userEmail");
+            var name = $.localStore("userName");
+            
+            forgetProfile(function() {
+                //restore userEmail and userName
+                $.localStore("userEmail", email);
+                $.localStore("userName", name);
+            });
+        }
+    } else {
+        //delete the value
+        $.cookie("lang", null);
+    }
+    
+    
+}
+
+function initJira() {
+    if(location.hostname.toLowerCase().indexOf("step.tyndalehouse.com") >= 0) {
+        //init JIRA hook
+        jQuery.ajax({
+            url: "js/jira/issue_collector_dfa819bd.js",
+            type: "get",
+            cache: true,
+            dataType: "script"
+        });
+    
+        jQuery.ajax({
+            url: "js/jira/issue_collector_bf70a912.js",
+            type: "get",
+            cache: true,
+            dataType: "script"
+        });
+        
+        jQuery.ajax({
+            url: "js/jira/issue_collector_88fe2a64.js",
+            type: "get",
+            cache: true,
+            dataType: "script"
+        });
+    
+         window.ATL_JQ_PAGE_PROPS =  {
+                 "88fe2a64" : {
+                    "triggerFunction": function(showCollectorDialog) {
+                        //Requries that jQuery is available! 
+                        jQuery("#provideFeedback").click(function(e) {
+                            e.preventDefault();
+                            showCollectorDialog();
+                        });
+                    }
+                },
+                "dfa819bd" : {
+                    "triggerFunction": function(showCollectorDialog) {
+                        //Requries that jQuery is available! 
+                        jQuery("#raiseBug").click(function(e) {
+                            e.preventDefault();
+                            showCollectorDialog();
+                        });
+                    }
+                }
+         }
+    } else {
+        //hide some links
+        $("#provideFeedback, #raiseBug").hide();
+    }
+
+}
+
+function registerUser() {
+    //to do register
+    var name = $("#userName").val();
+    var email = $("#userEmail").val();
+    
+    if(step.util.isBlank(name)) {
+        $("#validationMessage").html("Please provide your name.");
+        $("#validationMessage").css("display", "block");
+        $("#userName").focus();
+        return;
+    } 
+    
+    if(step.util.isBlank(email)) {
+        $("#validationMessage").html("Please provide your email.");
+        $("#validationMessage").css("display", "block");
+        $("#userEmail").focus();
+        return;
+    }
+    
+    var self = this;
+    $.getSafe(USER_CHECK, [email, name], function(data) {
+        if(""+data == "true") {
+            //success so store information
+            $.localStore("userEmail", email);
+            $.localStore("userName", name);
+            $("#validUser").dialog("close");
+        } else {
+            //say sorry and reset form
+            $("#validationMessage").html(__s.error_registration_closed);
+            $("#validationMessage").css("display", "block");
+        }
     });
 }
 
-function reCalculateIframeHeight() {
-    if($("#holdingPage:visible").length != 0) {
-        var windowHeight = $(window).height();
-        var h1HoldingPage = $("#holdingPage h1");
-        var leftOverHeight = windowHeight - $("#holdingPage h1").position().top - $("#holdingPage h1").height() - 5; 
-        $("iframe", "#holdingPage").height(leftOverHeight);
+function checkValidUser() {
+    var email = $.localStore("userEmail");
+    //if we're running locally, then just return
+    if(window.location.host.startsWith("localhost")) {
+      return;
     }
+
+    //if we already have an email address, then exit
+    if(!step.util.isBlank(email)) {
+        return;
+    }
+
+    //if first use, then simply record the date
+    var firstUseDate = $.localStore("firstDate");
+    if(firstUseDate == undefined) {
+        $.localStore("firstDate", new Date().toUTCString());
+        return;
+    }
+    
+    //otherwise check if 3 month have passed
+    var date = new Date(firstUseDate);
+    var currentDate = new Date(); 
+    
+    var diffInMilliseconds = currentDate.getTime() - date.getTime();
+    
+    // 3 months, 30 days, 24 hours, 60 minutes, 60 seconds, 1000 milliseconds
+    var term = 3 * 30 * 24 * 60 * 60 * 1000;
+    
+    if(term > diffInMilliseconds) {
+        //haven't yet reached the period yet.
+        return;
+    }
+    
+    var name = $("#userName, #userEmail").keypress(function(event) {
+        var code = (event.keyCode ? event.keyCode : event.which);
+        //Enter keycode
+        if(code == 13) {
+            registerUser();
+        }
+    });
+    
+    $("#validUser").dialog({
+        buttons: {
+            "Cancel" : function() {
+                //remind in 3 months
+                $.localStore("firstDate", new Date().toUTCString());
+                $("#validUser").dialog("close");
+            },
+            "Register" : function() {
+                registerUser();
+            }
+        },
+        modal: true,
+        closeOnEscape: true,
+        title: __s.register_to_use_step
+    });
 }
+
 
 function refreshLayout() {
 	//we resize the heights:
@@ -97,7 +252,7 @@ function refreshLayout() {
 	var windowWithoutMenuNorModule = windowHeight - topMenuHeight - bottomSectionHeight; 
 	var bookmarkHeight = windowWithoutMenuNorModule - imageAndFooterHeight ;
 	
-	
+	$("body").height($(window).height()-10);
 	$(".bookmarkPane").height(bookmarkHeight);
 	
 	
@@ -105,34 +260,52 @@ function refreshLayout() {
 }
 
 function hearViewChanges() {
+    
     $(window).hear("view-change", function(self, data) {
         var view = data == undefined ||  data.viewName == undefined ? step.state.view.getView() : data.viewName;  
         step.state.view.storeView(view);
         
         if(view == 'SINGLE_COLUMN_VIEW') {
-           $(".leftColumn").removeClass("column").addClass("singleColumn");
-           $(".column").toggle(false);
-           $("#centerPane").toggle(false);
-           
-           //add the holding page
-           $("#holdingPage").toggle(true);
-           $(".leftColumn").resizable({ handles: 'e', resize: function(e, ui) { 
-               //called when the left column is resized
-               adjustColumns();
-           }});
-           adjustColumns();
-           
-       } else if (view == 'SINGLE_HELP_VIEW') {
+            if(isSmallScreen()) {
+                doSmallScreenView();
+            } else {
+                $(".leftColumn").removeClass("column").addClass("singleColumn");
+                $(".column").toggle(false);
+                $("#centerPane").toggle(false);
+                
+                //add the holding page
+                $("#holdingPage").toggle(true);
+                $(".leftColumn").resizable({ handles: 'e', resize: function(e, ui) { 
+                    //called when the left column is resized
+                    adjustColumns();
+                }});
+                adjustColumns();
+            }
        } else {
            $(".column").toggle(true);
            $(".leftColumn").removeClass("singleColumn").addClass("column");
            $("#centerPane").toggle(true);
            $("#holdingPage").toggle(false);
-           $(".leftColumn").resizable("destroy");
+           
+           var leftColumn = $(".leftColumn");
+           
+           if(leftColumn.hasClass("ui-resizable")) {
+               leftColumn.resizable("destroy");
+           }
+           step.toolbar.refreshLayout('rightPaneMenu');
        }
         
         $.shout("view-change-done");
     });
+}
+
+function isSmallScreen() {
+    return window.screen.availWidth < 1030;
+}
+
+function doSmallScreenView() {
+        $(".rightColumn, #holdingPage,#centerPane").css("display", "none");
+        $(".leftColumn").css("width", "100%");
 }
 
 function adjustColumns() {
@@ -146,7 +319,8 @@ function adjustColumns() {
  */
 function initLayout() {
     //add the defaults slider bar
-    $("#topMenu").detailSlider({title: "Controls the level of detail across the whole application.", key : "top"});
+    $("#topMenu").detailSlider({title: __s.view_title_controls_level_of_detail, key : "top"});
+    $("#topMenu .sliderDetailLevelLabel").addClass("primaryDark");
     $(document).hear("slideView-top", function(self, data) {
         var value = $("#topMenu").detailSlider("value");
         $(".detailSliderContainer").parent().not("#topMenu").detailSlider("update", { value : value});
@@ -255,8 +429,22 @@ function initGlobalHandlers() {
 	var infoBar = $(".infoBar").toggle(false);
 	infoBar.find(".closeInfoBar").click(function() {
 	    $(this).closest(".infoBar").toggle(false);
+	    step.passage.ui.resize();
 	}); 
 }
+
+function isFullyVisible (elem) {
+    var off = elem.offset();
+    var et = off.top;
+    var el = off.left;
+    var eh = elem.height();
+    var ew = elem.width();
+    var wh = window.innerHeight;
+    var ww = window.innerWidth;
+    var wx = window.pageXOffset;
+    var wy = window.pageYOffset;
+    return (et >= wy && el >= wx && et + eh <= wh + wy && el + ew <= ww + wx);  
+  }
 
 /**
  * initialises the modules 	

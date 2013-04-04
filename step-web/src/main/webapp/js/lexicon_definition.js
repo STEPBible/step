@@ -29,24 +29,37 @@
 
 step.lexicon = {
     passageId : 0,
-    sameWordSearch : function() {
-        this._doSearch(ALL_FORMS);
+    positioned : false,
+    currentLexiconData : undefined,
+    
+    sameWordSearch : function(strongNumber, refLimit) {
+        this.doSearch(ALL_FORMS, strongNumber, refLimit);
     },
 
-    relatedWordSearch : function() {
-        this._doSearch(ALL_RELATED);
+    relatedWordSearch : function(strongNumber) {
+        this.doSearch(ALL_RELATED, strongNumber);
     },
 
-    wordGrammarSearch : function() {
-        //not yet implemented 
-    },
-
-    _doSearch : function(searchType) {
-        var query = $("span[info-name ='strongNumber']").text();
-        if(step.util.raiseErrorIfBlank(query, "No strong data is available")) {
-            var targetPassageId = (parseInt(this.passageId) + 1) % 2;
+    doSearch : function(searchType, strongNumber, refLimit) {
+        var query;
+        if(strongNumber) {
+            query = strongNumber;
+        } else {
+            query = $("span[info-name ='strongNumber']").text();
+        }
+        
+        if(step.util.raiseErrorIfBlank(query, __s.error_no_strong_data)) {
+            var targetPassageId = step.util.getOtherPassageId(this.passageId);
             
-            step.state.original.originalScope(targetPassageId, "Gen-Rev");
+            if(refLimit) {
+                step.state.original.originalScope(targetPassageId, refLimit);
+                
+                if(step.search.ui.original.getLevel(targetPassageId) < 1) {
+                    step.search.ui.original.updateSliderLevel(targetPassageId, 1);
+                }
+            } else {
+                step.state.original.originalScope(targetPassageId, __s.whole_bible_range);
+            }
             step.state.original.originalType(targetPassageId, query[0] == 'H' ? HEBREW_WORDS[0] : GREEK_WORDS[0]);
             step.state.original.originalWord(targetPassageId, query);
             step.state.original.originalForms(targetPassageId, searchType);
@@ -61,8 +74,145 @@ step.lexicon = {
             
             step.state.activeSearch(targetPassageId, 'SEARCH_ORIGINAL', true);
         }
+    },
+
+    resetContainer : function (container) {
+        $("*", container).each(function (index, element) {
+            if ($(element).attr("info-name")) {
+                $(element).html("");
+            }
+        });
+    },
+
+    populateNames : function (indexToWord, data, container) {
+        this.resetContainer(container);
+
+        // now check if we have information, if not, then hide
+        if (data.length == 0) {
+            $(container).hide();
+            return;
+        } else {
+            $(container).show();
+        }
+
+        $("*", container).each(function (index, item) {
+            var infoName = $(item).attr("info-name");
+            if (infoName) {
+                var infos = infoName.split("|");
+                var content = data[indexToWord][infos[0]];
+                if (content == "") {
+                    content = data[indexToWord][infos[1]];
+                }
+
+                if (content) {
+                    if (content.replace) {
+                        content = content.replace(/_([^_]*)_/g, "<span class=\"emphasisePopupText\">$1</span>");
+                    }
+
+                    var targetItem = $(item);
+                    if (targetItem.length > 0) {
+                        targetItem.html(content);
+                    }
+                }
+            }
+
+            var dependencyList = $(item).attr("depends-on");
+            if (dependencyList) {
+                var dependencies = dependencyList.split(",");
+
+                // if any one of the dependencies is to be shown, then we show
+                for (var ii = 0; ii < dependencies.length; ii++) {
+                    if (data[indexToWord][dependencies[ii]] != "") {
+                        $(item).toggle(true);
+                        return;
+                    }
+                }
+                $(item).toggle(false);
+            }
+        });
+    },
+
+    switchWords : function(strongNumber) {
+        if(this.currentLexiconData == undefined) {
+            //an error occurred:
+            log.console("Trying to switch words for undefined data.");
+        }
+
+        for(var i = 0; i < this.currentLexiconData.vocabInfos.length; i++) {
+            if(this.currentLexiconData.vocabInfos[i].strongNumber == strongNumber) {
+                //we're in business, so need to trigger the display again.
+                this.showSingleWordOnPopup(i);
+            }
+        }
+    },
+
+    showSingleWordOnPopup : function(index) {
+        var data = this.currentLexiconData;
+
+        step.lexicon.populateNames(index, data.morphInfos, "#grammarContainer");
+        step.lexicon.populateNames(index, data.vocabInfos, "#vocabContainer");
+
+        if (data.vocabInfos[index] && data.vocabInfos[index].similarStrongs) {
+            var similarStrongs = "";
+            for (var i in data.vocabInfos[0].similarStrongs) {
+                similarStrongs += "<a onclick='alert(\"" + data.vocabInfos[0].similarStrongs[i].code + "\");'>" + data.vocabInfos[0].similarStrongs[i].word + "</a>";
+            }
+            $("*[info-name = 'similarStrongLinks']", "#vocabContainer").html(similarStrongs);
+        }
+
+        this.clearWordLinks();
+
+        this.updateWordLinks(data.vocabInfos, index);
+        var translit = $("[info-name='stepTransliteration']");
+        step.util.ui.markUpTransliteration(translit);
+    },
+
+    /**
+     * clears all entries contained in word links
+     */
+    clearWordLinks: function () {
+        var entries = $("#vocabEntries");
+        entries.empty();
+    },
+
+    updateWordLinks : function (vocabInfos, index) {
+        //we don't do anything if we have only 1 vocabInfo
+        if(vocabInfos && vocabInfos.length < 2) {
+            return;
+        }
+
+        //create list from vocab infos
+        var self = this;
+        var links = "";
+        var entries = $("#vocabEntries");
+
+        entries = entries.append("<h5>Selected words: </h5>");
+
+        for(var i = vocabInfos.length -1; i >= 0; i--) {
+            var link = $("<a href='#' class='lexiconWordLink'></a>").html(vocabInfos[i].stepGloss);
+            self.addWordLinkClickHandler(link, vocabInfos[i]);
+
+            if(i == index) {
+                link.addClass("selectedWordLink");
+            }
+
+            entries.append(link.append(" "));
+        }
+    },
+
+    /**
+     * To avoid closure issues, we create a new function, in order to pass a copy of the vocabInfo.
+     * This simply adds an onclick event
+     * @param link that is being created
+     * @param vocabInfo the vocabInfo containing the strong number
+     */
+    addWordLinkClickHandler : function(link, vocabInfo) {
+        link.click(function(){
+            step.lexicon.switchWords(vocabInfo.strongNumber);
+        });
     }
 };
+
 
 /**
  * The bookmarks components record events that are happening across the
@@ -81,7 +231,6 @@ function LexiconDefinition() {
         $("span[info-name ='strong']").val(data.strong);
     });
 
-    var currentLevel = step.state.view.getDetail();
     $("#origin").detailSlider({
         key: "lexicon",
         scopeSelector : "#lexiconDefinition"
@@ -90,20 +239,23 @@ function LexiconDefinition() {
     
 LexiconDefinition.prototype.getPopup = function() {
     if (this.popup) {
-        this.popup.css('display', 'inline-block');
         return this.popup;
     }
 
     // create the popup container
-    this.popup = $("#lexiconDefinition");
+    var lexiconDefinitionSelector = $("#lexiconDefinition");
+    this.popup = lexiconDefinitionSelector;
     this.popup.tabs().draggable({
-        handle : "#lexiconDefinitionHeader",
+        handle : "#lexiconDefinitionHeader"
     });
-    $("#lexiconDefinition").tabs("select", 0);
+    lexiconDefinitionSelector.tabs( "option", "active", 0);
     
     $('#lexiconPopupClose').click(function() {
         $('#lexiconDefinition').hide();
     });
+    
+    lexiconDefinitionSelector.offset({top : $(window).height() - lexiconDefinitionSelector.height() - 10 });
+    
     return this.popup;
 };
 
@@ -125,102 +277,30 @@ LexiconDefinition.prototype.showDef = function(data) {
     this.reposition();
 };
 
+
 LexiconDefinition.prototype.showOriginalWordData = function(data) {
-    // remove previous information
-    this.populateNames(data.morphInfos, "#grammarContainer");
-    this.populateNames(data.vocabInfos, "#vocabContainer");
-    
-    //finally do the odd-ones out - TODO - deal with multiple vocabs
-    if(data.vocabInfos[0] && data.vocabInfos[0].similarStrongs) {
-        var similarStrongs = "";
-        for(var i in data.vocabInfos[0].similarStrongs) {
-            similarStrongs += "<a onclick='alert(\"" + data.vocabInfos[0].similarStrongs[i].code + "\");'>" + data.vocabInfos[0].similarStrongs[i].word + "</a>&nbsp;";
-        }
-        
-        $("*[info-name = 'similarStrongLinks']", "#vocabContainer").html(similarStrongs);
-    }
-    
-
-    
-    var translit = $("[info-name='stepTransliteration']");
-    step.util.ui.markUpTransliteration(translit);
-   
-};
-
-LexiconDefinition.prototype.resetContainer = function(container) {
-    $("*", container).each(function(index, element) {
-        if ($(element).attr("info-name")) {
-            $(element).html("");
-        }
-    });
-};
-
-LexiconDefinition.prototype.populateNames = function(data, container) {
-    this.resetContainer(container);
-
-    // now check if we have information, if not, then hide
-    if (data.length == 0) {
-        $(container).hide();
+    //finally do the odd-ones out
+    //we use the last info, as the main info
+    if(data.vocabInfos.length == 0) {
         return;
-    } else {
-        $(container).show();
     }
-
-    $("*", container).each(function(index, item) {
-        var infoName = $(item).attr("info-name");
-        if (infoName) {
-            var infos = infoName.split("|");
-            var content = data[0][infos[0]];
-            if(content == "") {
-                content = data[0][infos[1]];
-            }
-            
-            if (content) {
-                if (content.replace) {
-                    content = content.replace(/_([^_]*)_/g, "<span class=\"emphasisePopupText\">$1</span>");
-                }
-
-                var targetItem = $(item);
-                if(targetItem.length > 0) {
-                    targetItem.html(content);
-                }
-            }
-        }
-
-        var dependencyList = $(item).attr("depends-on");
-        if (dependencyList) {
-            var dependencies = dependencyList.split(",");
-
-            // if any one of the dependencies is to be shown, then we show
-            for ( var ii = 0; ii < dependencies.length; ii++) {
-                if (data[0][dependencies[ii]] != "") {
-                    $(item).toggle(true);
-                    return;
-                }
-            }
-            $(item).toggle(false);
-        }
-    });
-};
-
-LexiconDefinition.prototype.getShortKey = function(k) {
-    var subKey = k.substring(k.indexOf(':') + 1);
-    if (subKey[0] == 'G' || subKey[0] == 'H') {
-        return subKey.substring(1);
-    }
-    return subKey;
+    // remove previous information
+    step.lexicon.currentLexiconData = data;
+    step.lexicon.showSingleWordOnPopup(data.vocabInfos.length - 1);
 };
 
 LexiconDefinition.prototype.reposition = function() {
     // if left position is negative, then we assume it's off screen and need
     // position
-    if (this.getPopup().css("left")[0] == '-') {
-        // position in the middle
-        this.getPopup().position({
-            of : $("body"),
-            my : "right top",
-            at : "right top",
-            collision : "fit flip",
+    var popup = this.getPopup();
+    popup.css('display', 'block');
+    if (!step.lexicon.positioned || popup.css("left")[0] == '-') {
+        step.lexicon.positioned = true;
+        var lexiconDefinition = $("#lexiconDefinition");
+        lexiconDefinition.offset({
+            top  : $(window).height() - lexiconDefinition.height() - 20,
+            left : $(window).width() - lexiconDefinition.width() - 10
         });
+        
     }
 };

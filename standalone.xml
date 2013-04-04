@@ -22,6 +22,16 @@
 		</moduleSet>
 		<moduleSet>
 			<includes>
+				<include>com.tyndalehouse.step:step-packages:jar:${project.version}</include>
+			</includes>
+			<binaries>
+				<outputDirectory>/offlineModules</outputDirectory>
+				<unpack>true</unpack>
+				<includeDependencies>false</includeDependencies>
+			</binaries>
+		</moduleSet>
+		<moduleSet>
+			<includes>
 				<include>com.tyndalehouse.step:step-server:jar:${project.version}</include>
 			</includes>
 			<binaries>

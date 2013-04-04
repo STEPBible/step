@@ -15,30 +15,32 @@
 	<version>1.0-SNAPSHOT</version>
 	<name>STEP :: Scripture Tools for Every pastor</name>
 
-	<url>http://crosswire.org/~chrisburrell/step</url>
+	<url>http://step.tyndalehouse.com</url>
 	<issueManagement>
 		<system>JIRA</system>
-		<url>http://www.crosswire.org/bugs</url>
+		<url>stepweb.atlassian.net</url>
 	</issueManagement>
 	
 	<organization>
-		<name>Tyndale House Cambridge &amp; Crosswire</name>
+		<name>Tyndale House, Cambridge, UK</name>
 	</organization>
-
-	<distributionManagement>
-		<repository>
-			<id>crosswire.releases</id>
-			<name>Crosswire repository</name>
-			<url>http://crosswire.org/mvn/content/groups/public/</url>
-		</repository>
-	</distributionManagement>
 	
+	<developers>
+		<developer>
+			<id>chrisburrell</id>
+			<name>Chris Burrell</name>
+			<timezone>GMT</timezone>
+		</developer>
+	</developers>
+
 	<modules>
 		<module>step-parent</module>
 		<module>step-build</module>
 		<module>step-core</module>
 		<module>step-web</module>
 		<module>step-server</module>
+	<!--	<module>step-tools</module> -->
+		<module>step-packages</module>
 		<!-- <module>step-web-test</module> -->
 	</modules>
 		

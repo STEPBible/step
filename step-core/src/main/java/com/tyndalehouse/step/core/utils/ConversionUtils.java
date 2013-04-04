@@ -8,7 +8,7 @@ import static org.joda.time.DateTimeUtils.getInstantMillis;
 import org.joda.time.LocalDateTime;
 
 /**
- * Utilities to convert from one form ot another
+ * Utilities to convert from one form to another
  * 
  * @author chrisburrell
  */

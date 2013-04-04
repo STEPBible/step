@@ -108,7 +108,7 @@ td.primary {
 }
 
 .comparingVersionName {
-	color: #696;
+	color: #33339F;
 	text-align: center;
 }
 
@@ -121,7 +121,7 @@ td.primary {
 }
 
 span[strong]:hover {
-	color: #696;
+	color: #33339F;
 	cursor: pointer;
 /* 	border-bottom: 2px #696 dashed; */
 /* 	margin-bottom: 5px; */
@@ -136,12 +136,12 @@ span[strong]:hover {
 }
 
 .cmpStrike {
-	color: #696;
+	color: #33339F;
 	font-weight: bold;
 }
 
 .cmpUnderline {
-	color: #669; 
+	color: #33339F; 
 	font-weight: bold;
 }
 
@@ -171,27 +171,29 @@ span[strong]:hover {
 }
 
 a.smallHeaders {
-	color: #696;
+	color: #33339F;
 }
 
 .notesPane {
 	padding: 2px !important;
 	display: block;
-	background-color: #FCF8E8;
 	padding: 1px;
 	max-width: 100px;
 	height: 100%;
-	color: green !important  ;
+	color: #33339F !important;
+	
 }
 
 .leftColumn .notesPane {
 	margin-left: 5px;
 	float: right;
+	border-left: 1px solid #EAEAEA
 }
 
 .rightColumn .notesPane {
 	margin-right: 5px;
 	float: left;
+	border-right: 1px solid #EAEAEA
 }
 
 
@@ -253,19 +255,19 @@ SUP.verseNumber {
 
 sup.variant.note {
 	font-size: 65%;
-	color: #696;
+	color: #33339F;
 }
 
 SUP.note a {
 	font-size: 100%;
 	font-weight: bold;
-	color: #696;
+	color: #33339F;
 }
 
 SUP.note a:visited {
 	font-size: 100%;
 	font-weight: bold;
-	color: #696;
+	color: #33339F;
 }
 
 FONT.lex {
@@ -342,13 +344,13 @@ H6.level {
 
 H3.heading  {
 	font-size: 110%;
-	color: #666699;
+	color: #33339F;
 	font-weight: bold;
 }
 
 H4.heading  {
 	font-size: 100%;
-	color: #666699;
+	color: #33339F;
 	font-weight: bold;
 	padding: 0px;
 	margin: 0px;
@@ -411,7 +413,7 @@ TD.text {
 
 
 .notes a {
-	color: #666699;
+	color: #33339F;
 	font-weight: bold;
 	front-size: xx-small;
 }
@@ -433,13 +435,13 @@ TD.text {
 
 
 a.linkRef {
-	color: #696;
+	color: #33339F;
 	font-weight: normal;
 	front-size: smaller;
 }
 
 a:hover.linkRef {
-	color: #696;	
+	color: #33339F;	
 	font-weight: normal;
 	front-size: smaller;
 }
@@ -532,7 +534,7 @@ FONT.usg {
 
 .draggable-tooltip .ui-tooltip-titlebar {
     cursor: move;
-    color: #696;
+    color: #33339F;
 /*     width: 100%; */
     padding: 5px 0px;
 }
@@ -618,7 +620,7 @@ FONT.usg {
 }
 
 .versionBreakMenuItem {
-	border-bottom: 1px dashed #696;
+	border-bottom: 1px dashed #33339F;
 }
 
 .colophon {
@@ -651,7 +653,7 @@ FONT.usg {
 }
 
 .alternative {
-	color: #696;
+	color: #33339F;
 	font-weight: bold;
 }
 
@@ -672,7 +674,7 @@ FONT.usg {
 /* verse numbers            */
 /****************************/
 .verseNumberStrongs a, .verseNumberStrongs a:visited {
-	color: #696;
+	color: #33339F;
 }
 
 .verseNumberStrongs td {
@@ -696,7 +698,7 @@ FONT.usg {
 
 a.related, a.related:visited {
 	font-weight: bold;
-	color: #696;	
+	color: #33339F;	
 	
 }
 

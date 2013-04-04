@@ -16,7 +16,7 @@
 
 <span id='lexiconDefinition'>
 	<ul id="lexiconDefinitionHeader">
-		<span id="lexiconPopupClose">x</span>
+			<span id="lexiconPopupClose"></span>
 			<li><a href="#origin"><fmt:message key="original_word" /></a></li>
 			<li><a href="#context"><fmt:message key="original_word_context" /></a></li>
 	</ul>

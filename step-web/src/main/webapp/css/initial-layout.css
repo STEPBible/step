@@ -154,7 +154,7 @@ body {
 }
 
 #holdingPage h1 {
-	color: #696;
+	color: #33339F;
 	font-family: Times;
 }
 
@@ -172,7 +172,7 @@ body {
 }
 
 #holdingPage a {
-	color: #696;
+	color: #33339F;
 	font-weight: bold;
 }
 
@@ -225,7 +225,7 @@ body {
 
 .versionFeature {
 	font-size: xx-small;
-	color: #696; 
+	color: #33339F; 
 	font-weight: bold;	
 }
 
@@ -359,9 +359,7 @@ body {
 
 #lexiconPopupClose {
 	float: right; 
-	padding-top: 4px; 
-	padding-right: 4px;
-	cursor: pointer;
+	padding-top: 10px; 
 }
 
 #selectedPane {

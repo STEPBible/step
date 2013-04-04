@@ -64,7 +64,14 @@
         var $iframeContainer = $("<div id='atlwdg-container'/>").addClass("atlwdg-popup atlwdg-box-shadow atlwdg-hidden");
         var $blanket = $("<div id='atlwdg-blanket' class='atlwdg-blanket'/>").hide();
         $body.append($blanket).append($iframeContainer);
-        if ($.browser.msie && (ATL_JQ.isQuirksMode() || $.browser.version < 9)) {
+
+        //ie version less than 9
+        var isIE = navigator.appVersion.indexOf("MSIE") != -1;
+        var versionCapture = new RegExp("MSIE +([^;]+)").exec(navigator.appVersion);
+        var ieVersion = versionCapture == null || versionCapture.length < 1 || isNaN(parseInt(versionCapture[1])) ? -1 : parseInt(versionCapture[1]);
+        
+        if (isIE && (ATL_JQ.isQuirksMode() || ieVersion < 9)) {
+
             $("head").append("<style type='text/css'>" + cssIE + "</style>");
             var triggerAdjuster = function(e) {
             };

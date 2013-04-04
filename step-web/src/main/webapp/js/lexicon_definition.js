@@ -245,12 +245,19 @@ LexiconDefinition.prototype.getPopup = function() {
     // create the popup container
     var lexiconDefinitionSelector = $("#lexiconDefinition");
     this.popup = lexiconDefinitionSelector;
+
     this.popup.tabs().draggable({
         handle : "#lexiconDefinitionHeader"
     });
     lexiconDefinitionSelector.tabs( "option", "active", 0);
     
-    $('#lexiconPopupClose').click(function() {
+    
+    $('#lexiconPopupClose').button({
+        icons : {
+            primary : "ui-icon-closethick",
+        }, 
+        text : false
+    }).click(function() {
         $('#lexiconDefinition').hide();
     });
     

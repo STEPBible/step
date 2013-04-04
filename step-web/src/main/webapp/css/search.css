@@ -31,7 +31,7 @@
 }
 
 .searchResultKey {
-	color: #696;
+	color: #33339F;
 	background-color: #eef;
 	white-space: nowrap;
 }
@@ -41,7 +41,7 @@
 }
 
 .searchRefLink {
-	color: #696;
+	color: #33339F;
 }
 
 .searchResults, .masterSearchResultRow {
@@ -55,11 +55,11 @@
 }
 
 .masterSearchResultRow {
-	color: #696;
+	color: #33339F;
 }
 
 .masterSearchResultRow a {
-	color: #696;
+	color: #33339F;
 }
 
 .masterSearchTable * td.searchResultKey {
@@ -151,7 +151,7 @@ ul.subjectSection {
 }
 
 h3.subjectHeading {
-	color: #696;
+	color: #33339F;
 }
 
 .subjectSection h4 {
@@ -191,7 +191,7 @@ li.subjectHeading {
 }
 
 .expandableSearchHeading {
-/* 	color: #696; */
+/* 	color: #33339F; */
 	cursor: pointer;
 	margin-bottom: 1px;
 	padding: 3px;
@@ -203,7 +203,7 @@ li.subjectHeading {
 
 .smallResultKey {
 	font-size: x-small;
-	color: #696;
+	color: #33339F;
 }
 
 .multiVersionSubResult {
@@ -223,7 +223,7 @@ li.subjectHeading {
 
 .closeRefinedSearch, .closeInfoBar {
 	float: right;
-	background-image: url(images/ui-icons_ef8c08_256x240.png) !important;
+	background-image: url(images/ui-icons_991C32_256x240.png) !important;
 	margin-top: 3px;
 }
 
@@ -247,7 +247,7 @@ td.rightHandBorder {
 }
 
 th.searchResultStrongHeader {
-	color: #666699;
+	color: #33339F;
 }
 
 h4.lexicalGrouping {
@@ -264,7 +264,7 @@ h4.lexicalGrouping {
 }
 
 .advancedSearch h4 {
-	color: #696;
+	color: #33339F;
 	margin: 0px;
 	padding: 0px;
 	font-style: italic;

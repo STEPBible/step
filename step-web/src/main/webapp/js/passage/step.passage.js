@@ -485,8 +485,8 @@ step.passage = {
                     },
                     
                     position : {
-                        my: "bottom",
-                        at: "top",
+                        my: "bottom center",
+                        at: "top center",
                         viewport: $(window)
                     },
                     style : {
@@ -530,20 +530,25 @@ step.passage = {
                     viewport: $(window)
                 },
                 content : {
+                    text : function(event, api) {
+                        $.getSafe(BIBLE_GET_BIBLE_TEXT + step.state.passage.version(passageId) + "/" + encodeURIComponent(xref), function(data) {
+                            api.set('content.title.text', data.longName);
+                            api.set('content.text', data.value);
+                        });
+                    },
+                    
                     title : {
                         text: xref,
-                        button : true
+                        button : false
                     },
-                    ajax : {
-                        url : BIBLE_GET_BIBLE_TEXT + step.state.passage.version(passageId) + "/" + encodeURIComponent(xref),
-                        type : 'GET',
-                        data : {},
-                        dataType : 'json',
-                        success : function(data, status) {
-                            this.set('content.title.text', data.longName);
-                            this.set('content.text', data.value);
-                        }
-                    }
+//                    ajax : {
+//                        url : ,
+//                        type : 'GET',
+//                        data : {},
+//                        dataType : 'json',
+//                        success : function(data, status) {
+//                        }
+//                    }
                 },
                 style: {
                     tip: false,
@@ -559,9 +564,21 @@ step.passage = {
                             handle: api.elements.titlebar
                         });
                         
-                        $(api.elements.titlebar).prepend(goToPassageArrow(true, xref, "leftPassagePreview"));
-                        $(api.elements.titlebar).prepend(goToPassageArrow(false, xref, "rightPassagePreview"));
-                        $(".leftPassagePreview, .rightPassagePreview", api.elements.titlebar).button().click(function () { api.hide(); });
+                        $(api.elements.titlebar).css("padding-right", "0px");
+
+                        $(api.elements.titlebar).prepend(goToPassageArrowButton(true, xref, "leftPassagePreview"));
+                        $(api.elements.titlebar).prepend(goToPassageArrowButton(false, xref, "rightPassagePreview"));
+                        $(api.elements.titlebar).prepend($("<a>&nbsp;</a>").button({ icons : { primary : "ui-icon-close" }}).addClass("closePassagePreview").click(function(){ api.hide(); }));
+                        
+                        $(".leftPassagePreview, .rightPassagePreview", api.elements.titlebar).first().button({
+                            icons : {
+                                primary : "ui-icon-arrowthick-1-e"
+                            }
+                        }).next().button({
+                            icons : {
+                                primary : "ui-icon-arrowthick-1-w"
+                            }
+                        }).end().click(function () { api.hide(); });
                     }
                 }
             });                 

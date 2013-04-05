@@ -477,17 +477,11 @@ FONT.usg {
 	margin: 5px;
 }
 
-.leftPassagePreview, .rightPassagePreview {
-	font-size: 130%;
-	height: 14px;
-	font-weight: bold;
-	background-position-y: -50px;
-	float:right;
+.leftPassagePreview, .rightPassagePreview, .closePassagePreview {
+	font-size: 60%;
+	float: right;
 }
 
-.leftPassagePreview, .leftPassagePreview *, .rightPassagePreview, .rightPassagePreview * {
-	padding: 0px;
-}
 
 
 #previewReference H2.xgen {

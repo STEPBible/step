@@ -990,6 +990,19 @@ function expandSelection(range) {
 	} 
 };
 
+function goToPassageArrowButton(isLeft, ref, classes, goToChapter, handler) {
+    return $("<a>&nbsp;</a>").button({
+        icons : {
+            primary : isLeft ? "ui-icon-arrowthick-1-e" : "ui-icon-arrowthick-1-w"
+        }
+    }).click(function() {
+        if(handler) {
+            handler();
+        }
+        passageArrowTrigger(isLeft ? 0 : 1, ref, goToChapter);
+    }).addClass(classes);
+};
+
 function goToPassageArrow(isLeft, ref, classes, goToChapter) {
     if(goToChapter != true) {
         goToChapter = false;

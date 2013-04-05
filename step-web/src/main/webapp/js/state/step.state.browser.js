@@ -44,7 +44,7 @@ step.state.browser = {
     
     changeHash : function(hash) {
         this.ignoreHash = true;
-        window.location.hash = hash;
+//        window.location.hash = hash;
     },
 
     changePassageHash : function(passageId, newValue) {
@@ -125,7 +125,7 @@ step.state.browser = {
         
         var newValue = parts.join("|");
         if(window.location.hash != newValue) {
-            window.location.hash = newValue;
+//            window.location.hash = newValue;
         }
     },
     

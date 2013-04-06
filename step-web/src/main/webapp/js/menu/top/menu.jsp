@@ -51,6 +51,7 @@
 			<a href="javascript:void(0)"><fmt:message key="installation_book_language" /></a>
 			<ul>
 				<%= sb.toString() %>
+				<li><a href="http://crowdin.net/project/step" target="_new"><fmt:message key="translate_step" /></a>
 			</ul>
 		</li>
 	</ul>

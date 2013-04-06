@@ -156,7 +156,7 @@
 			
 			<table>
 				<tr>
-					<td><a target="_new" href="https://stepweb.atlassian.net/wiki/display/TYNSTEP/STEP+Help+Manual" title="<fmt:message key="quick_tutorial" />"/><fmt:message key="help_manual" /></a></td>
+					<td><a target="_new" href="https://stepweb.atlassian.net/wiki/display/SUG/STEP+User+Guide" title="<fmt:message key="quick_tutorial" />"/><fmt:message key="help_manual" /></a></td>
 					<td><a target="_new" href="versions.jsp" title="<fmt:message key="detailed_help_manual" />"/><fmt:message key="available_versions" /></a></td>
 				</tr>
 				<tr>
@@ -165,7 +165,7 @@
 				</tr>
 			</table>
 			<br />
-			<a target="_new" href="http://www.tyndale.cam.ac.uk" >Tyndale House</a> 
+			<a target="_new" href="http://www.tyndale.cam.ac.uk" style="color: #991c32">Tyndale House</a> 
 			<br />
 			&copy; <%= java.util.Calendar.getInstance().get(java.util.Calendar.YEAR)  %>
 		</div>

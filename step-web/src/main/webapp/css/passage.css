@@ -103,7 +103,7 @@ td.primary {
 
 
 .headingVerseNumber {
-	color: #669;
+	color: #33339F;
 	vertical-align: top;
 }
 
@@ -553,7 +553,7 @@ FONT.usg {
 }
 
 .commentaryVerseNumber {
-	color: #669;
+	color: #33339F;
 	font-weight: bold;
 	padding-right: 5px;
 }
@@ -592,8 +592,15 @@ FONT.usg {
 
 .infoAboutVersion, .versionInfo {
 	font-size: 120%;
+	margin-left: 2px;
+	color: #33339F;
 }
 
+.resetVersions {
+	margin-left: 5px;
+	font-weight: bold;
+	color: #33339F;
+}
 
 .quickLexiconDefinition {
 	width: 300px;

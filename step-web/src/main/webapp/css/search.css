@@ -155,13 +155,13 @@ h3.subjectHeading {
 }
 
 .subjectSection h4 {
-	color: #669;
+	color: #33339F;
 	padding: 0px;
 	margin: 0px 10px;
 }
 
 .subjectSection h4 li {
-	color: #669;
+	color: #33339F;
 	list-style-type: disc;
 }
 
@@ -252,7 +252,7 @@ th.searchResultStrongHeader {
 }
 
 h4.lexicalGrouping {
-	color: #669966;
+	color: #33339F;
 	padding-top: 0px;
 	margin-top: 0px;
  }

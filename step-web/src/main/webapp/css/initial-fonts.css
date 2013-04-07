@@ -86,7 +86,8 @@ legend .detailSliderContainer {
 	clear: both;
 	float: right;
 	font-style: italic;
-	color: darkslategrey;
+	color: #991C32;
+	font-weight: bold;
 	margin-bottom: 4px;
 	padding-left: 15px;
 }

@@ -677,6 +677,11 @@ FONT.usg {
 /****************************/
 /* verse numbers            */
 /****************************/
+.verseNumberStrong { 
+	border-spacing: 0px;
+	border-collapse: collapse;
+}
+
 .verseNumberStrongs a, .verseNumberStrongs a:visited {
 	color: #33339F;
 }

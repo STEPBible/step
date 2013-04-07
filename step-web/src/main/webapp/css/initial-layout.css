@@ -103,15 +103,12 @@ body {
 /* TOP MENU               */
 /**************************/
 
-
 #topMenu .detailSliderContainer {
-	float: right;
-	font-size: 10px;
 	margin-right: 10px;
 }
 
 #topMenu .detailSliderContainer .detailLevel {
-	font-size: 1em;
+/* 	font-size: 1em; */
 }
 
 /* #topMenu .detailSliderContainer .sliderDetailLevelLabel { */

@@ -78,8 +78,9 @@ body {
     /*margin-right: 5px;*/
 /*}*/
 
-legend .detailSliderContainer {
+.detailSliderContainer {
 	float: right;
+	font-size: 10px;
 }
 
 .sliderDetailLevelLabel {
@@ -104,7 +105,7 @@ legend .detailSliderContainer {
 }
 
 .metadataContainer span {
-/* 	font-size: 8pt; */
+	color: black;
 }
 
 .metadataContainer div {
@@ -183,4 +184,8 @@ legend .detailSliderContainer {
 .primaryDarkBg {
 	background-color: #991C32;
 	color: #F3E5B4;
+}
+
+.primaryLightBg {
+	background-color: #F3E5B4;
 }

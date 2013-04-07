@@ -490,7 +490,7 @@ step.passage = {
                         viewport: $(window)
                     },
                     style : {
-                        classes : "ui-tooltip-default noQtipWidth ui-state-highlight"
+                        classes : "primaryLightBg noQtipWidth"
                     }
                 });
             });

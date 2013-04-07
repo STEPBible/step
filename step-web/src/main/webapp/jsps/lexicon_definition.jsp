@@ -18,7 +18,7 @@
 	<ul id="lexiconDefinitionHeader">
 			<span id="lexiconPopupClose"></span>
 			<li><a href="#origin"><fmt:message key="original_word" /></a></li>
-			<li><a href="#context"><fmt:message key="original_word_context" /></a></li>
+<%-- 			<li><a href="#context"><fmt:message key="original_word_context" /></a></li> --%>
 	</ul>
 
 	<div id="origin" name="LEXICON_DEFINITION">
@@ -41,7 +41,7 @@
 				</div>	
 				<div level="2">
 					<hr />
-					<div><fmt:message key="lexicon_related_words" /> <span info-name="relatedNos" class="ancientLanguage"></span></div>
+					<h5><fmt:message key="lexicon_related_words" /></h5><div><span info-name="relatedNos" class="ancientLanguage"></span></div>
 					<h5><fmt:message key="lexicon_lsj_definition" /></h5><div info-name="lsjDefs" ></div>
 				</div>
 			</div>

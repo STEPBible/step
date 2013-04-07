@@ -49,6 +49,8 @@ var timeline;
 
 function init() {
 	$(document).ready(function() {
+	    $.fn.qtip.defaults.style.classes="primaryLightBg";
+	    
 	    initLocale();
 	    
 	    checkValidUser();

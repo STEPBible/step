@@ -6,6 +6,7 @@ import static java.lang.String.format;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -184,9 +185,10 @@ public class JSwordModuleServiceImpl implements JSwordModuleService {
             return 1;
         }
 
-        final Set<Progress> jswordJobs = JobManager.getJobs();
         // not yet installed (or at least wasn't on the lines above, so check job list
-        for (final Progress p : jswordJobs) {
+        final Iterator<Progress> iterator = JobManager.iterator();
+        while (iterator.hasNext()) {
+            final Progress p = iterator.next();
             final String expectedJobName = format(CURRENT_BIBLE_INSTALL_JOB, bookName);
             if (expectedJobName.equals(p.getJobName())) {
                 if (p.isFinished()) {
@@ -215,9 +217,10 @@ public class JSwordModuleServiceImpl implements JSwordModuleService {
             return 1;
         }
 
-        final Set<Progress> jswordJobs = JobManager.getJobs();
         // not yet installed (or at least wasn't on the lines above, so check job list
-        for (final Progress p : jswordJobs) {
+        final Iterator<Progress> iterator = JobManager.iterator();
+        while (iterator.hasNext()) {
+            final Progress p = iterator.next();
             final String expectedJobName = format(CURRENT_BIBLE_INDEX_JOB, bookName);
             if (expectedJobName.equals(p.getJobName())) {
                 if (p.isFinished()) {

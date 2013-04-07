@@ -41,6 +41,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
@@ -61,7 +62,11 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.Books;
+import org.crosswire.jsword.passage.Key;
 import org.crosswire.jsword.passage.NoSuchKeyException;
+import org.crosswire.jsword.passage.Passage;
+import org.crosswire.jsword.passage.Verse;
+import org.crosswire.jsword.versification.Testament;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Attr;
@@ -164,8 +169,8 @@ public class EsvXmlEnhancer {
         if ("verse".equals(esv.getNodeName())) {
             this.currentVerse = esv.getAttribute("osisID");
             this.error = false;
-            //
-            // if ("Gen.2.1".equals(this.currentVerse)) {
+            // limit processing up until
+            // if ("Gen.22.15".equals(this.currentVerse)) {
             // throw new AbortTagException();
             // }
 
@@ -185,8 +190,8 @@ public class EsvXmlEnhancer {
                             final int advanceTokens = processVerseContent((Text) item, this.verseTagging);
 
                             if (advanceTokens != 0) {
-                                LOGGER.debug("Avancing by [{}] token(s)", advanceTokens);
-                                i += advanceTokens;
+                                LOGGER.debug("Avancing by [{}] token(s)", 1);
+                                i++;
                             }
                         } catch (final AbortTagException e) {
                             // already logged
@@ -368,7 +373,7 @@ public class EsvXmlEnhancer {
                         remainder.positionInSourceText++;
                         // if we've tagged a word, move i forward to reflect below correctly and break
                         if (remainder.advance > 0) {
-                            ii++;
+                            ii += remainder.advance;
                             break;
                         }
                     } else {
@@ -413,8 +418,8 @@ public class EsvXmlEnhancer {
 
             int finalPosition = 0;
             if (remainder.positionInSourceText != 0) {
-                final int position = remainder.positionInSourceText == 0 ? 0 : nthOccurrence(
-                        item.getTextContent(), ' ', remainder.positionInSourceText - 1);
+                final int position = remainder.positionInSourceText == 0 ? 0 : findWordPosition(
+                        item.getTextContent(), remainder.positionInSourceText - 1);
                 if (position == -1) {
                     LOGGER.error("Couldn't find a matched word to tag.");
                     throw new AbortTagException();
@@ -426,19 +431,34 @@ public class EsvXmlEnhancer {
 
             final Text wordInDoc = item.splitText(finalPosition);
 
-            if (wordInDoc.getTextContent().length() == tagData.getTaggedText().length()) {
+            final String textContent = wordInDoc.getTextContent();
+            if (textContent.length() == tagData.getTaggedText().length()) {
                 // take the whole tag
-            } else {
+                createAndWrapWElement(tagData, item, remainder, wordInDoc);
+                return;
+            } else if (textContent.length() > tagData.getTaggedText().length()) {
                 // need to split further
                 wordInDoc.splitText(tagData.getTaggedText().length());
-            }
+                createAndWrapWElement(tagData, item, remainder, wordInDoc);
+                return;
+            } else {
+                LOGGER.trace("{}: Cross-tag: Not enough content in Text item", this.currentVerse,
+                        textContent, tagData.getTaggedText().length());
 
-            // double check that we're tagging is what's in the word we've selected
-            // Several things to think about
-            // A- We must check that what we're tagging is the same as what's in the wordInDoc
-            if (!wordInDoc.getTextContent().equalsIgnoreCase(tagData.getTaggedText())) {
-                LOGGER.warn("The tagged content [{}] differs from the select portion of the Text node [{}]",
-                        wordInDoc.getTextContent());
+                // we need to look ahead and store up the nodes that we're going to wrap
+                // so, wordInDoc is the last portion of text.
+                final Node n = wordInDoc.getNextSibling();
+                final ArrayList<Node> matchingNodes = new ArrayList<Node>(8);
+                matchingNodes.add(wordInDoc);
+                grabMatchingNodes(matchingNodes, wordInDoc, tagData,
+                        getLeftOverText(wordInDoc.getTextContent(), tagData.getTaggedText()));
+                remainder.advance += tagData.getTaggedText().split(" ").length;
+
+                // we're looking for text content
+                // TODO remove after testing
+                // this.error = true;
+                // throw new AbortTagException();
+
             }
 
             // TODO TODO TODO
@@ -447,19 +467,289 @@ public class EsvXmlEnhancer {
             // C- We need some way of telling the calling method that we have tagged the whole tag, not just a
             // little bit of it. As a result, we may need to increment bits further
 
-            final Element w = createWElement(tagData, wordInDoc);
-
-            item.getParentNode().insertBefore(w, wordInDoc);
-
-            // move the text into the w node
-            w.appendChild(wordInDoc);
-
-            remainder.advance++;
-
         } else {
-            LOGGER.info("{}: Tagging data across tags: [{}], original was [{}]", this.currentVerse,
+            LOGGER.warn("{}: Tagging data has been split: [{}], original was [{}]", this.currentVerse,
                     tagData.getTaggedText(), tagData.getOriginalTaggedText());
         }
+    }
+
+    private String getLeftOverText(final String textContent, final String taggedText)
+            throws AbortTagException {
+        // we're looking for the bit in tagged text that has not yet been tagged
+        int jj = 0;
+        for (int ii = 0; ii < textContent.length(); ii++) {
+            if (!Character.isLetterOrDigit(textContent.charAt(ii))) {
+                continue;
+            }
+
+            // advance jj as far as is possible
+            while (!Character.isLetterOrDigit(taggedText.charAt(jj))) {
+                jj++;
+            }
+
+            // advance in sync with both strings
+            if (Character.toLowerCase(taggedText.charAt(jj)) == Character.toLowerCase(textContent.charAt(ii))) {
+                jj++;
+            } else {
+                LOGGER.error("{}: Somehow we were unable to match the given texts [{}] and [{}]",
+                        this.currentVerse, textContent, taggedText);
+                this.error = true;
+                throw new AbortTagException();
+            }
+        }
+
+        while (!Character.isLetterOrDigit(taggedText.charAt(jj))) {
+            jj++;
+        }
+        return taggedText.substring(jj);
+    }
+
+    private void grabMatchingNodes(final List<Node> matchingNodes, final Node wordInDoc,
+            final Tagging tagData, final String textLeftOver) throws AbortTagException {
+        final String remainingTextLeftOver = textLeftOver;
+        final Node nextSibling = getNextSiblingToMatch(matchingNodes, wordInDoc, tagData, textLeftOver);
+
+        // we have a next sibling
+        if (nextSibling instanceof Element && isIgnoreable((Element) nextSibling)) {
+            // then add to the list - i.e. add a note to the list - we tag the whole note with the lemma
+            matchingNodes.add(nextSibling);
+        } else if (nextSibling instanceof Element) {
+            // non-ignoreable node
+            // i.e. we need to traverse it - and hope for the best -i.e. that what we're going to try and
+            // match will be a whole tag, rather than a bit.
+            // otherwise we can't tag the element.
+            if (nextSibling.getNodeName().equalsIgnoreCase("verse")) {
+                LOGGER.error("[{}] We've gone too far - something didn't match [{}]", this.currentVerse,
+                        tagData.getTaggedText());
+                this.error = true;
+                throw new AbortTagException();
+            }
+
+            // traverse children nodes...
+            // TODO
+            LOGGER.warn("{}: Need to traverse children - scenario not yet catered for. Data was [{}]",
+                    tagData.getTaggedText());
+            this.error = true;
+            throw new AbortTagException();
+        } else if (nextSibling instanceof Text) {
+            // we've got some text, so we may want to split it
+            final boolean done = getNodePart((Text) nextSibling, textLeftOver);
+
+            if (done) {
+                // match is complete
+                matchingNodes.add(nextSibling);
+
+                // check all nodes have the same parent
+                Node previousParent = null;
+                for (final Node n : matchingNodes) {
+                    if (previousParent == null) {
+                        previousParent = n.getParentNode();
+                    } else {
+                        // check that we have the same parent
+                        if (previousParent != n.getParentNode()) {
+                            // TODO
+                            LOGGER.warn(
+                                    "{}: Attempting to tag elements with different parents. One case has not yet been catered for"
+                                            + ", which is if the child is the only element different parent, then we can roll up. Portion of text was [{}]",
+                                    this.currentVerse, tagData.getTaggedText());
+                            this.error = true;
+                            throw new AbortTagException();
+                        }
+                    }
+                }
+
+                // all nodes have the same parent
+                final Element createWElement = createWElement(tagData, nextSibling.getOwnerDocument());
+
+                // we insert it before the first element in our list
+                final Node firstMatchedNode = matchingNodes.get(0);
+                firstMatchedNode.getParentNode().insertBefore(createWElement, firstMatchedNode);
+                for (final Node n : matchingNodes) {
+                    createWElement.appendChild(n);
+                }
+                return;
+            } else {
+                // need to continue on to the next node
+                // now work out how much text is left over, hopefully none, but you never know...
+            }
+        } else {
+            this.error = true;
+            LOGGER.error("{}: Attemping to match [{}] but unknown node type found: [{}]", this.currentVerse,
+                    nextSibling.getNodeType());
+            throw new AbortTagException();
+        }
+
+        // go round the loop again
+        grabMatchingNodes(matchingNodes, nextSibling, tagData, remainingTextLeftOver);
+    }
+
+    private Node getNextSiblingToMatch(final List<Node> matchingNodes, final Node wordInDoc,
+            final Tagging tagData, final String textLeftOver) throws AbortTagException {
+        final Node nextSibling = wordInDoc.getNextSibling();
+
+        if (nextSibling == null) {
+            LOGGER.trace(
+                    "{}: Attemping to match [{}] to [{}] but no siblings available. Attempting to roll up.",
+                    this.currentVerse, wordInDoc.getTextContent(), tagData.getTaggedText());
+
+            // then, let's see if we can replace part of the list by the parent node
+            replaceNodesByParent(matchingNodes, wordInDoc, tagData, textLeftOver);
+            return getNextSiblingToMatch(matchingNodes, matchingNodes.get(matchingNodes.size() - 1), tagData,
+                    textLeftOver);
+        }
+        return nextSibling;
+    }
+
+    private void replaceNodesByParent(final List<Node> matchingNodes, final Node refNode,
+            final Tagging tagData, final String remainingText) throws AbortTagException {
+        final Node parentNode = refNode.getParentNode();
+        // if (parentNode.getChildNodes().getLength() > matchingNodes.size()) {
+        // LOGGER.warn("{}: Impossible tag: Not enough nodes in match for [{}]. Impossible portion is [{}]",
+        // this.currentVerse, tagData.getTaggedText(), remainingText);
+        // this.error = true;
+        // throw new AbortTagException();
+        // }
+
+        // otherwise, we may be lucky, so process the list from the end
+        final NodeList childNodes = parentNode.getChildNodes();
+        for (int ii = 0; ii < childNodes.getLength(); ii++) {
+            if (!matchingNodes.remove(childNodes.item(ii))) {
+
+                // node was not present. That's ok, so long as it is either a note or something that can be
+                // ignored, or its text content is nothing but punctuation
+                // or whitespace... At which point it's best to tag that even though it might look a bit funny
+                if (isRollableNode(childNodes.item(ii))) {
+                    // safely ignore
+                } else {
+
+                    LOGGER.warn(
+                            "{}: Impossible tag. Not all nodes from parent are present. Tag data [{}]. Impossible portion is [{}]",
+                            this.currentVerse, tagData.getTaggedText(), remainingText);
+                    this.error = true;
+                    throw new AbortTagException();
+                }
+            }
+        }
+
+        // all nodes from parent were there, so simply add on to the end the parent node
+        matchingNodes.add(parentNode);
+    }
+
+    /**
+     * Check is rollable node, rollable if either whitespace or punctuation or ignoreable
+     * 
+     * @param candidate the candidate
+     */
+    private boolean isRollableNode(final Node candidate) {
+        if (candidate instanceof Element && isIgnoreable((Element) candidate)) {
+            return true;
+        } else if (candidate instanceof Text
+                && isPunctuationAndWhiteSpace(((Text) candidate).getTextContent())) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isPunctuationAndWhiteSpace(final String textContent) {
+        for (int ii = 0; ii < textContent.length(); ii++) {
+            if (Character.isLetterOrDigit(textContent.charAt(ii))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Gets the node part.
+     * 
+     * @param nextSibling the next sibling, may get split during the operation
+     * @param textLeftOver the text left over
+     * @return true if we're done, false otherwise
+     * @throws AbortTagException the abort tag exception
+     */
+    private boolean getNodePart(final Text nextSibling, final String textLeftOver) throws AbortTagException {
+        final String siblingText = nextSibling.getTextContent();
+
+        int jj = 0;
+        for (int ii = 0; ii < siblingText.length(); ii++) {
+            final char siblingChar = siblingText.charAt(ii);
+            // if jj has reached the end of textLeftOver - we've got a full match on the tag,
+            // so depending on where i is, we return either part of the whole sibling
+            if (jj >= textLeftOver.length()) {
+                // by doing this here, we ensure that i < siblingText, so we need only part of the node
+                nextSibling.splitText(ii);
+                return true;
+            }
+
+            if (Character.isLetterOrDigit(siblingChar)) {
+
+                // move jj up to next character
+                while (!Character.isLetterOrDigit(textLeftOver.charAt(jj))) {
+                    jj++;
+                }
+
+                // /attempt to match against text left over.
+                if (Character.toLowerCase(siblingChar) == Character.toLowerCase(textLeftOver.charAt(jj))) {
+                    // we've matched
+                    jj++;
+                } else {
+                    // we're not a match, so abort
+                    LOGGER.warn("{}: Failed to match [{}] against [{}] in cross-tag", this.currentVerse,
+                            nextSibling, textLeftOver);
+                    this.error = true;
+                    throw new AbortTagException();
+                }
+            } // else move on to next character
+        }
+
+        // if we get here, then we may only got a partial match on the tagged text, but we've matched the
+        // whole content of the sibling node
+        if (jj >= textLeftOver.length()) {
+            // we have a full match on textLeftOver, and ii > the text size, so return the whole node -
+            // we're done
+            return true;
+        } else {
+            // there is more matching to do, but we still want the whole node
+            return false;
+        }
+    }
+
+    private void createAndWrapWElement(final Tagging tagData, final Text item, final Remainder remainder,
+            final Text wordInDoc) {
+        // double check that we're tagging is what's in the word we've selected
+        // Several things to think about
+        // A- We must check that what we're tagging is the same as what's in the wordInDoc
+        if (!equalsIngorePunctuationAndCase(tagData.getTaggedText(), wordInDoc.getTextContent())) {
+            LOGGER.warn("{}: The tagged content [{}] differs from the select portion of the Text node [{}]",
+                    this.currentVerse, wordInDoc.getTextContent(), tagData.getTaggedText());
+        }
+
+        final Element w = createWElement(tagData, wordInDoc.getOwnerDocument());
+        item.getParentNode().insertBefore(w, wordInDoc);
+
+        // move the text into the w node
+        w.appendChild(wordInDoc);
+
+        // we move by the number of words in the tag
+        remainder.advance += tagData.getTaggedText().split(" ").length;
+    }
+
+    boolean equalsIngorePunctuationAndCase(final String text1, final String text2) {
+        if (text1.length() != text2.length()) {
+            return false;
+        }
+
+        // same length, compare char by char
+        for (int ii = 0; ii < text1.length(); ii++) {
+            final char c1 = text1.charAt(ii);
+            final char c2 = text2.charAt(ii);
+            if (Character.isLetterOrDigit(c1) && Character.toLowerCase(c1) != Character.toLowerCase(c2)) {
+                return false;
+            }
+            // for every other case we basically accept the letters
+        }
+        return true;
+
     }
 
     private int fastForwardNonAlphaNumeric(final String str) {
@@ -471,8 +761,7 @@ public class EsvXmlEnhancer {
         return start;
     }
 
-    private Element createWElement(final Tagging tagData, final Text wordInDoc) {
-        final Document ownerDocument = wordInDoc.getOwnerDocument();
+    private Element createWElement(final Tagging tagData, final Document ownerDocument) {
         final Element w = ownerDocument.createElement("w");
         final Attr lemma = ownerDocument.createAttribute("lemma");
         lemma.setNodeValue(createLemmaAttribute(tagData));
@@ -505,14 +794,34 @@ public class EsvXmlEnhancer {
         return s.toString();
     }
 
-    private int nthOccurrence(final String str, final char c, int n) {
+    int findWordPosition(final String str, final int n) {
         final int start = fastForwardNonAlphaNumeric(str);
 
-        int pos = str.indexOf(c, start);
-        while (n-- > 0 && pos != -1) {
-            pos = str.indexOf(c, pos + 1);
+        boolean foundLetter = true;
+        int count = n;
+        int ii = start;
+        // now we start counting, and consider spaces and punctuation as word separators
+        for (ii = start; ii < str.length(); ii++) {
+            if (!Character.isLetterOrDigit(str.charAt(ii))) {
+                // we found a separator - only accept as separator if previous character wasn't also a
+                // separator
+                if (foundLetter) {
+                    count--;
+                }
+                foundLetter = false;
+            } else {
+                foundLetter = true;
+            }
+            if (count < 0) {
+                // we fastforward if there is a bit more here too
+                while (ii + 1 < str.length() && !Character.isLetterOrDigit(str.charAt(ii + 1))) {
+                    ii++;
+                }
+                break;
+            }
         }
-        return pos;
+
+        return ii;
     }
 
     private void processVerse(final Element esv, final MultiMap<String, Tagging, Deque<Tagging>> indexTagging) {
@@ -533,9 +842,9 @@ public class EsvXmlEnhancer {
 
     private void cleanupTagging(final List<Tagging> rawTagging) throws Exception {
         for (final Tagging t : rawTagging) {
-            cleanRef(t);
             removePunctuation(t);
             splitStrong(t);
+            cleanRef(t);
 
             t.setOriginalTaggedText(t.getTaggedText());
         }
@@ -595,7 +904,34 @@ public class EsvXmlEnhancer {
             LOGGER.warn("Unable to parse reference [{}]", t.getRef());
             return;
         }
-        t.setRef(ESV.getKey(reference).getOsisID());
+
+        final Key key = ESV.getKey(reference);
+        t.setRef(key.getOsisID());
+
+        Verse v = null;
+        if (key instanceof Passage) {
+            v = (Verse) key.get(0);
+        } else if (key instanceof Verse) {
+            v = (Verse) key;
+        }
+        final int ordinal = v.getOrdinal();
+        if (v.getVersification().getTestament(ordinal) == Testament.OLD) {
+            prefixStrong(t, 'H');
+        } else {
+            prefixStrong(t, 'G');
+        }
+    }
+
+    private void prefixStrong(final Tagging t, final char prefixLetter) {
+        final String strongs = t.getStrongs();
+        final String[] splits = strongs.split(" ");
+        final StringBuilder sb = new StringBuilder(strongs.length() + 16);
+
+        for (final String s : splits) {
+            sb.append(prefixLetter);
+            sb.append(s);
+        }
+        t.setStrongs(sb.toString());
     }
 
     /**

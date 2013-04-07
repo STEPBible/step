@@ -91,7 +91,7 @@ step.passage.ui = {
                     
                     //change available options
                     displayOptions.autocomplete("option", "source", step.defaults.passage.interOptionsNoInterlinear);
-                    self._ensureDefaultOption(passageId, step.defaults.passage.interNoInterlinearDefault);
+                    self._ensureDefaultOption(passageId, step.defaults.passage.interOptionsNoInterlinear, displayOptions.val(), step.defaults.passage.interNoInterlinearDefault);
                     return;
                 }
             }
@@ -99,12 +99,18 @@ step.passage.ui = {
         
         //if we get here, then we need to allow interlinears:
         displayOptions.autocomplete("option", "source", step.defaults.passage.interOptions);
-        self._ensureDefaultOption(passageId, step.defaults.passage.interInterlinearDefault);
+        self._ensureDefaultOption(passageId, step.defaults.passage.interOptions, displayOptions.val(), step.defaults.passage.interInterlinearDefault);
     },
 
-    _ensureDefaultOption : function(passageId, option) {
-//        displayOptions.val(option);
-        step.state.passage.extraVersionsDisplayOptions(passageId, option);
+    _ensureDefaultOption : function(passageId, availableOptions, currentOption, defaultOption) {
+        //check that the current option is available
+        for(var i = 0; i < availableOptions.length; i++) {
+            if(availableOptions[i] == currentOption) {
+                return;
+            }
+        }
+        
+        step.state.passage.extraVersionsDisplayOptions(passageId, defaultOption);
     },
     
     /**

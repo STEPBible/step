@@ -49,7 +49,7 @@ var timeline;
 
 function init() {
 	$(document).ready(function() {
-	    $.fn.qtip.defaults.style.classes="primaryLightBg";
+	    $.fn.qtip.defaults.style.classes="primaryLightBg primaryLighBorder";
 	    
 	    initLocale();
 	    
@@ -422,6 +422,16 @@ function initGlobalHandlers() {
 	$("#error").click(function() {
 		$(this).slideUp(250);
 	});
+	
+	//transform button
+    $("#closeError").button({
+        icons : {
+            primary : "ui-icon-close"
+        },
+        text : false
+    }).click(function() {
+        $("#error").slideUp(250);
+    });
 	
 	$("#error").hear("caught-error-message", function(selfElement, data) {
 		step.util.raiseError(data);

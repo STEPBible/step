@@ -337,6 +337,22 @@ body {
 	width: 100%;
 }
 
+#closeError {
+	float: right;
+	margin-right: 10px;
+	margin-top: 2px;
+}
+
+#closeError .ui-icon-close {
+	/* Override default ui-state error */
+	background-image: url("images/ui-icons_991C32_256x240.png");
+}
+
+#closeError.ui-state-hover .ui-icon-close {
+	/* Override default ui-state error */
+	background-image: url(images/ui-icons_F3E5B4_256x240.png);
+}
+
 /**************************/
 /* LEXICON DEFINITION     */
 /**************************/

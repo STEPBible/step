@@ -490,7 +490,7 @@ step.passage = {
                         viewport: $(window)
                     },
                     style : {
-                        classes : "primaryLightBg noQtipWidth"
+                        classes : "primaryLightBg primaryLighBorder noQtipWidth"
                     }
                 });
             });
@@ -541,14 +541,6 @@ step.passage = {
                         text: xref,
                         button : false
                     },
-//                    ajax : {
-//                        url : ,
-//                        type : 'GET',
-//                        data : {},
-//                        dataType : 'json',
-//                        success : function(data, status) {
-//                        }
-//                    }
                 },
                 style: {
                     tip: false,

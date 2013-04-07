@@ -177,7 +177,6 @@ a.smallHeaders {
 .notesPane {
 	padding: 2px !important;
 	display: block;
-	padding: 1px;
 	max-width: 100px;
 	height: 100%;
 	color: #33339F !important;
@@ -525,6 +524,9 @@ FONT.usg {
 .fem { color: #C90000; }
 .neut { color: black; }   
 
+.draggable-tooltip {
+	border-color: #F3E5B4;
+}
 
 .draggable-tooltip .ui-tooltip-titlebar {
     cursor: move;
@@ -535,6 +537,10 @@ FONT.usg {
 
 .draggable-tooltip .qtip-titlebar {
 	padding: 4px 26px 5px 10px;
+	border: 1px solid #aaa;
+	background: #F3E5B4 url(images/ui-bg_highlight-soft_75_F3E5B4_1x100.png) 50% 50% repeat-x;
+	color: #991C32;
+	font-weight: bold;
 }
 
 .ui-tooltip-content {
@@ -542,6 +548,9 @@ FONT.usg {
 	overflow: auto;
 }
 
+.draggable-tooltip .qtip-content {
+	background-color: white;
+}
 
 .draggable-tooltip * .xgen {
 	display: none;
@@ -726,4 +735,8 @@ Analysis tabs
 
 .passageContent .ui-tabs-panel {
     border: thin solid lightgrey;
+}
+
+.searchPassage {
+	font-size: 75% !important;
 }

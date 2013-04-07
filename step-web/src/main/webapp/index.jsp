@@ -209,6 +209,7 @@
 
 <!--<div id="loading"><img alt="Loading..." src="images/wait16.gif" />Loading...</div>-->
 <div id="error" class="ui-state-error" style="display: none">
+	<span id="closeError"></span>
 	<span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
 	<span id="errorText"><fmt:message key="error_message_holder" /></span>
 </div>

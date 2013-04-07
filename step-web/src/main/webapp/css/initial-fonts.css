@@ -123,6 +123,13 @@ body {
 	display: inline;
 }
 
+.metadataContainer h5 * {
+	color: inherit;
+	font-size: 8pt;
+	display: inline;
+}
+
+
 .emphasisePopupText {
 	font-style: italic;
 }
@@ -187,5 +194,9 @@ body {
 }
 
 .primaryLightBg {
-	background-color: #F3E5B4;
+	background-color: #F6ECC7;
+}
+
+.primaryLighBorder {
+	border-color: #F3E5B4;
 }

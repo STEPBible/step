@@ -153,6 +153,14 @@ $(document).ready(function() {
         step.passage.changePassage(passageId);
     });
     
+    $(".searchPassage").button({
+        icons : {
+            primary : "ui-icon-search"
+        },
+        text : false
+    }).click(function() {
+        step.passage.changePassage(step.passage.getPassageId(this));
+    });
     
     $(".smallerFonts").button({ text : true }).click(function() {
         step.passage.ui.changeFontSize(this, -1);

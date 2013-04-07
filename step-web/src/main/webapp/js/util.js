@@ -124,6 +124,7 @@ step.util = {
         
         $("#errorText").text(message);
         $("#error").data('numPassageChanges', 0).slideDown(250);
+        
     },
     
 	raiseErrorIfBlank: function(s, message) {

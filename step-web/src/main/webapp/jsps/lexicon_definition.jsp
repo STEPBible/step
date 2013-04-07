@@ -32,7 +32,7 @@
 
 				<h3><fmt:message key="lexicon_vocab" /></h3>
 				<div level="0">
-					<div><h5 class='stepTransliteration' info-name="stepTransliteration"></h5> (<span info-name="accentedUnicode" class="unicodeFont"></span>): <span info-name="shortDef"></span></div>
+					<div><h5 class='stepTransliteration' info-name="stepTransliteration" title="<fmt:message key="step_disclaimer" />"></h5><span title="<fmt:message key="step_disclaimer" />">*</span> (<span info-name="accentedUnicode" class="unicodeFont"></span>): <span info-name="shortDef"></span></div>
 				</div>
 				<div level="1">
 					<hr />

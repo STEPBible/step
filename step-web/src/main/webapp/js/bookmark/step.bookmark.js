@@ -118,13 +118,8 @@ step.bookmark = {
         _renderSingleItem : function(reference, ascending, container) {
             
             if(!step.util.isBlank(reference)) {
-                var item = "<div class='bookmarkItem' ref='" + reference + "'>";
-                item += goToPassageArrow(true, reference, "bookmarkArrow leftBookmarkArrow");
-                item += "<a class='searchRefLink' href='#' onclick='passageArrowTrigger(0, \"" + reference + "\", false)' >"
-                item += reference;
-                item += "</a>";
-                item += goToPassageArrow(false, reference, "bookmarkArrow rightBookmarkArrow");
-                item += "</div>";
+                var item = $("<div>").addClass('bookmarkItem');
+                item.pasageButtons({ ref : reference });
                 
                 if(ascending) {
                     container.append(item);

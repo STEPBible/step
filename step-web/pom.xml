@@ -159,7 +159,7 @@
 							    <cssSourceFile>css/initial-layout.css</cssSourceFile>
 							    <cssSourceFile>css/initial-fonts.css</cssSourceFile>
 							    <cssSourceFile>css/passage.css</cssSourceFile>
-							    <cssSourceFile>css/timeline.css</cssSourceFile>
+<!-- 							    <cssSourceFile>css/timeline.css</cssSourceFile> -->
 							    <cssSourceFile>css/search.css</cssSourceFile>
 							    <cssSourceFile>css/cardo.css</cssSourceFile>
 							</cssSourceFiles>
@@ -168,11 +168,11 @@
 							<jsSourceFiles>
 								<jsSourceFile>js_init/initLib.js</jsSourceFile>   
 							    <jsSourceFile>libs/dohighlight-min.js</jsSourceFile>
-							    <jsSourceFile>libs/timeline_js/timeline-api.js</jsSourceFile>
+<!-- 							    <jsSourceFile>libs/timeline_js/timeline-api.js</jsSourceFile> -->
 							    <jsSourceFile>libs/jquery-1.9.1.min.js</jsSourceFile>
 								<jsSourceFile>libs/jquery-ui-1.10.2.custom.min.js</jsSourceFile>
 								<jsSourceFile>libs/sprintf-0.7-beta1.js</jsSourceFile>
-								<jsSourceFile>libs/jquery.tagcloud.js</jsSourceFile>
+<!-- 								<jsSourceFile>libs/jquery.tagcloud.js</jsSourceFile> -->
 							    <jsSourceFile>js/jquery-extensions/jquery-qtip.js</jsSourceFile>
 							    <jsSourceFile>js/jquery-extensions/jquery-hover-intent.js</jsSourceFile>
 							    <jsSourceFile>js/jquery-extensions/jquery-cookie.js</jsSourceFile>
@@ -182,6 +182,7 @@
 							    <jsSourceFile>js/jquery-extensions/jquery-lexical-complete.js</jsSourceFile>
 							    <jsSourceFile>js/jquery-extensions/jquery-detail-slider.js</jsSourceFile>
 							    <jsSourceFile>js/jquery-extensions/jquery-sort.js</jsSourceFile>
+							    <jsSourceFile>js/jquery-extensions/jquery-passage-buttons.js</jsSourceFile>
 								<jsSourceFile>js/ddsmoothmenu.js</jsSourceFile>
 							    <jsSourceFile>js/util.js</jsSourceFile>
 							    <jsSourceFile>js/lexicon_definition.js</jsSourceFile>

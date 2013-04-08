@@ -252,10 +252,10 @@ function refreshLayout() {
 	var imageAndFooterHeight = $(".northBookmark").height() + $(".logo").height();
 	var bottomSectionHeight = $("#bottomSection").height();
 	var windowWithoutMenuNorModule = windowHeight - topMenuHeight - bottomSectionHeight; 
-	var bookmarkHeight = windowWithoutMenuNorModule - imageAndFooterHeight ;
+	var bookmarkHeight = windowWithoutMenuNorModule - imageAndFooterHeight;
 	
 	$("body").height($(window).height()-10);
-	$(".bookmarkPane").height(bookmarkHeight);
+	$(".bookmarkPane").height(bookmarkHeight - 5);
 	
 	
 	step.passage.ui.resize();
@@ -465,9 +465,9 @@ function isFullyVisible (elem) {
 function initModules(passages) {
 	new LexiconDefinition();
 
-	var bottomSection = $("#bottomSectionContent");
-	timeline = new TimelineWidget(bottomSection);
-	new GeographyWidget(bottomSection, passages);
+//	var bottomSection = $("#bottomSectionContent");
+//	timeline = new TimelineWidget(bottomSection);
+//	new GeographyWidget(bottomSection, passages);
 }
 
 

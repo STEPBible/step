@@ -282,6 +282,9 @@ $(document).ready(function() {
             my: "bottom center",
             at: "top center",
             viewport: $(window)
+        },
+        style : {
+            classes : "primaryLightBg primaryLighBorder"
         }
     });
 
@@ -293,6 +296,9 @@ $(document).ready(function() {
             my: "bottom center",
             at: "top center",
             viewport: $(window)
+        },
+        style : {
+            classes : "primaryLightBg primaryLighBorder"
         }
     });
 });

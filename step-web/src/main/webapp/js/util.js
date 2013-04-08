@@ -997,11 +997,21 @@ function goToPassageArrowButton(isLeft, ref, classes, goToChapter, handler) {
             primary : isLeft ? "ui-icon-arrowthick-1-e" : "ui-icon-arrowthick-1-w"
         }
     }).click(function() {
+        $($(".column")[isLeft ? 0 : 1]).removeClass("primaryLightBg");
         if(handler) {
             handler();
         }
         passageArrowTrigger(isLeft ? 0 : 1, ref, goToChapter);
-    }).addClass(classes);
+    }).addClass(classes)
+};
+
+function passageArrowHover(element, ref, isLeft) {
+    element.hover(
+        function() {
+            $($(".column")[isLeft ? 0 : 1]).addClass("primaryLightBg") ;
+        }, function() { 
+            $($(".column")[isLeft ? 0 : 1]).removeClass("primaryLightBg");
+        });
 };
 
 function goToPassageArrow(isLeft, ref, classes, goToChapter) {

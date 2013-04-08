@@ -70,13 +70,9 @@ body {
 	text-align: left;
 }
 
-.selectedWordLink {
-    font-weight: bold;
+.metadataContainer label * {
+	color: inherit !important;
 }
-
-/*.lexiconWordLink {*/
-    /*margin-right: 5px;*/
-/*}*/
 
 .detailSliderContainer {
 	float: right;

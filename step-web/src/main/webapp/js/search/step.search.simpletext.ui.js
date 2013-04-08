@@ -175,6 +175,9 @@ $(document).ready(function() {
               at: "right center",
               my: "left center",
               viewport: $(window)
+          },
+          style : {
+              classes : "primaryLightBg primaryLighBorder"
           }
       });
 });

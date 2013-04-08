@@ -740,3 +740,7 @@ Analysis tabs
 .searchPassage {
 	font-size: 75% !important;
 }
+
+.noWrapcell {
+	white-space: nowrap;
+}

@@ -46,13 +46,13 @@
 	    <link rel="stylesheet" type="text/css" href="css/initial-layout.css" />
 	    <link rel="stylesheet" type="text/css" href="css/initial-fonts.css" />
 	    <link rel="stylesheet" type="text/css" href="css/passage.css" />
-	    <link rel="stylesheet" type="text/css" href="css/timeline.css" />
+<!-- 	    <link rel="stylesheet" type="text/css" href="css/timeline.css" /> -->
 	    <link rel="stylesheet" type="text/css" href="css/search.css" />
 	    <link rel="stylesheet" type="text/css" href="css/cardo.css" />
 		
 		<script src="js_init/initLib.js" type="text/javascript"></script>   
 	    <script src="libs/dohighlight-min.js" type="text/javascript"></script>
-	    <script src="libs/timeline_js/timeline-api.js" type="text/javascript"></script>
+<!-- 	    <script src="libs/timeline_js/timeline-api.js" type="text/javascript"></script> -->
 	    <script src="libs/jquery-1.9.1.min.js" type="text/javascript"></script>
 		<script src="libs/jquery-ui-1.10.2.custom.min.js" type="text/javascript"></script>
 		<script src="libs/sprintf-0.7-beta1.js" type="text/javascript"></script>
@@ -67,12 +67,13 @@
 	    <script src="js/jquery-extensions/jquery-lexical-complete.js" type="text/javascript"></script>
 	    <script src="js/jquery-extensions/jquery-detail-slider.js" type="text/javascript"></script>
 	    <script src="js/jquery-extensions/jquery-sort.js" type="text/javascript"></script>
+	    <script src="js/jquery-extensions/jquery-passage-buttons.js" type="text/javascript"></script>
 		<script src="js/ddsmoothmenu.js" type="text/javascript"></script>
 	    <script src="js/util.js" type="text/javascript"></script>
 	    <script src="js/lexicon_definition.js" type="text/javascript"></script>
 	    <script src="js/ui_hooks.js" type="text/javascript"></script>
-	    <script src="js/timeline.js" type="text/javascript"></script>
-	    <script src="js/geography.js" type="text/javascript"></script>
+<!-- 	    <script src="js/timeline.js" type="text/javascript"></script> -->
+<!-- 	    <script src="js/geography.js" type="text/javascript"></script> -->
 	    <script src="js/toolbar_menu.js" type="text/javascript"></script>
 		<script src="js/defaults/step.defaults.js" type="text/javascript"></script>
 		<script src="js/search/step.search.js" type="text/javascript"></script>

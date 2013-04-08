@@ -186,17 +186,22 @@ step.lexicon = {
         var links = "";
         var entries = $("#vocabEntries");
 
-        entries = entries.append("<h5>Selected words: </h5>");
+        entries = entries.append("<h5>" + __s.selected_lexicon_word + ": </h5>");
 
         for(var i = vocabInfos.length -1; i >= 0; i--) {
-            var link = $("<a href='#' class='lexiconWordLink'></a>").html(vocabInfos[i].stepGloss);
+            var link = $("<input type='radio' class='lexiconWordLink' name='lexiconWordLink' />").attr("id", "lexiconWordLink" + i);
+            var label = $("<label></label>").attr("for", "lexiconWordLink" + i).html(vocabInfos[i].stepGloss);
+            
+            
             self.addWordLinkClickHandler(link, vocabInfos[i]);
 
             if(i == index) {
-                link.addClass("selectedWordLink");
+                link.prop("checked", "true");
             }
 
+            entries.append(label);
             entries.append(link.append(" "));
+            link.button();
         }
     },
 

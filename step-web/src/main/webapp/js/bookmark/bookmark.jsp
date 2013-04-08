@@ -34,6 +34,6 @@
 		</div>
 	</div>
 	<div class="logo">
-		<span class="copyright">&copy; Tyndale House</span>
+		<span class="copyright">&copy; <a target="_new" href="http://www.tyndale.cam.ac.uk" style="color: #991c32; font-weight: bold;">Tyndale House</a></span>
 	</div>
 </div>

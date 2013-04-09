@@ -183,6 +183,8 @@
 							    <jsSourceFile>js/jquery-extensions/jquery-detail-slider.js</jsSourceFile>
 							    <jsSourceFile>js/jquery-extensions/jquery-sort.js</jsSourceFile>
 							    <jsSourceFile>js/jquery-extensions/jquery-passage-buttons.js</jsSourceFile>
+							    <jsSourceFile>js/jquery-extensions/jquery-original-word-toolbar.js</jsSourceFile>
+							    <jsSourceFile>js/jquery-extensions/jquery-search-result.js</jsSourceFile>
 								<jsSourceFile>js/ddsmoothmenu.js</jsSourceFile>
 							    <jsSourceFile>js/util.js</jsSourceFile>
 							    <jsSourceFile>js/lexicon_definition.js</jsSourceFile>

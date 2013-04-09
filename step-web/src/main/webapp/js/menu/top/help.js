@@ -31,7 +31,7 @@ $(step.menu).hear("MENU-HELP", function(self, menuTrigger) {
 		//show popup for About box
 		var okString = __s.ok;
 	    $( "#about" ).dialog({ 
-			buttons: { okString : function() { $(this).dialog("close"); } },
+			buttons: [ { text : __s.ok, click  : function() { $(this).dialog("close"); } }],
 			width: DEFAULT_POPUP_WIDTH,
 			title: "STEP :: Scripture Tools for Every Person",
 		});

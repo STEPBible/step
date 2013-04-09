@@ -188,6 +188,7 @@ body {
 	font-size: 70%;
 	white-space: nowrap;
 	margin-right: 2px;
+	overflow: hidden;
 }
 
 .passageSizeButtons  {

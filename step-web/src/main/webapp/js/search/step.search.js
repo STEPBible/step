@@ -694,56 +694,13 @@ step.search = {
         var passageContent = step.util.getPassageContent(passageId);
         if(definitions) {
             //add a toolbar in there for each word
-            var originalWordToolbar = $("<div class='originalWordSearchToolbar'></div>");
-            var values = step.search.original.filters[passageId] || [];
-            var detailLevel = $("fieldset:visible", step.util.getPassageContainer(passageId)).detailSlider("value");
-            
-            $.each(definitions, function(i, item) {
-                
-                
-                var link = "<span class='sortable'><input type='checkbox' " +
-                		"value='" + (item.strongNumber == undefined ? "" : item.strongNumber) +"' " +
-                	    "id='ows_" + passageId + "_" + i + "' " +
-                        ($.inArray(item.strongNumber, values) != -1 ? "checked='checked'" : "") +   
-                    " /><label for='ows_" + passageId + "_" + i  + "' >";
-                
-                    if(detailLevel == 2) {
-                        link += "<span class='ancientSearchButton'>" + item.matchingForm + "</span>";
-                    } else {
-                        link += item.stepTransliteration;
-                    }
-                
-                   link += "<br />";
-                if(item.gloss) {
-                    link += item.gloss;
-                }
-                link += "</label></span>";
-                originalWordToolbar.append(link);
-            });
-            
-            originalWordToolbar.find("input").button().click(function() {
-                //get all selected checkboxes
-                var options = $(this).closest(".originalWordSearchToolbar").find("input[type='checkbox']:checked");
-                var filter = [];
-                $.each(options, function(i, item) {
-                  filter.push($(this).val());  
-                });
-                
-                step.search.original.filters[passageId] = filter;
-                step.search.original.search(passageId);
+            var originalWordToolbar = $("<div>").addClass("originalWordSearchToolbar").originalWordToolbar({
+                passageId : passageId,
+                definitions : definitions
             });
             
             //first need to sort the buttons
-
-            
-
-            var bar = $("<div></div>").append("<h4 class='lexicalGrouping'>" + __s.search_lexical_forms + "</h4>").append(originalWordToolbar).append("<hr />");
-            passageContent.prepend(bar);
-
-            $(".sortable").sortElements(function(a, b) { 
-                return $(a).find("label").text() < $(b).find("label").text() ? -1 : 1; 
-            });
-            originalWordToolbar.buttonset();
+            passageContent.prepend(originalWordToolbar);
         }
     },
     

@@ -57873,7 +57873,7 @@
 ===============
 @EntryRoot=	MIRACLES
 @FullHeader=	Design of
-@References=	Exo.3:19,21; Exo.4:2-9; Exo.7:5,17; Exo.8:8-10,22; Exo.9:14-16,29; Exo.10:1,2,16,17; Exo.11:1,7-9; Exo.12:29-33; Exo.14:4,18,24,25,31; Exo.16:4-6; Exo.19:4,5,9; Num.14:11; Num.16:28-35; Num.17:1-13; Deu.4:33-35; Deu.11:1-8; Deu.29:5,6; Jos.2:9-11; Jos.3:10,11; Jos.4:23,24; Jos.5:1; Jdg.2:7; 1Sa.6:6-18; 1Sa.12:17,18; 1Ki.18:24,37-39; 2Ki.5:14,15; 2Ch.7:1-3; Psa.78:10-32; Psa.106:9-12; Jer.32:20; Dan.2:47; Dan.3:28,29; Dan.6:20-27; Jon.1:14-16; Zec.2:9; Mat.4:3; Mat.11:3-5; Mar.2:9-12; Mar.18:42,43; Joh.2:11; Joh.4:48; Joh.5:36; Joh.9:3; Joh.11:4,40-42; Act.2:22; Act.3:1-10; Act.4:21,22; 1Co.1:22
+@References=	Exo.3:19,21; Exo.4:2-9; Exo.7:5,17; Exo.8:8-10,22; Exo.9:14-16,29; Exo.10:1,2,16,17; Exo.11:1,7-9; Exo.12:29-33; Exo.14:4,18,24,25,31; Exo.16:4-6; Exo.19:4,5,9; Num.14:11; Num.16:28-35; Num.17:1-13; Deu.4:33-35; Deu.11:1-8; Deu.29:5,6; Jos.2:9-11; Jos.3:10,11; Jos.4:23,24; Jos.5:1; Jdg.2:7; 1Sa.6:6-18; 1Sa.12:17,18; 1Ki.18:24,37-39; 2Ki.5:14,15; 2Ch.7:1-3; Psa.78:10-32; Psa.106:9-12; Jer.32:20; Dan.2:47; Dan.3:28,29; Dan.6:20-27; Jon.1:14-16; Zec.2:9; Mat.4:3; Mat.11:3-5; Mar.2:9-12; Mar.1:42,43; Joh.2:11; Joh.4:48; Joh.5:36; Joh.9:3; Joh.11:4,40-42; Act.2:22; Act.3:1-10; Act.4:21,22; 1Co.1:22
 ===============
 @EntryRoot=	MIRACLES
 @FullHeader=	Gifts of the Holy Spirit : Foretold

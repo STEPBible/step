@@ -42,6 +42,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.apache.lucene.queryParser.QueryParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -163,16 +164,16 @@ public class SubjectSearchServiceImpl implements SubjectSearchService {
         final long start = System.currentTimeMillis();
         final String query = sq.getCurrentSearch().getQuery();
 
-        final String[] split = StringUtils.split(query, ",");
+        final String[] split = StringUtils.split(query, "[, -=:]+");
         final StringBuilder sb = new StringBuilder(query.length() + 16);
         for (final String s : split) {
             // set mandatory
-            sb.append('+');
-            sb.append(s);
+            sb.append(" ");
+            sb.append(QueryParser.escape(s.trim()));
         }
 
         // TODO: sb is never used, should it be?
-        final EntityDoc[] results = this.naves.searchSingleColumn("rootStem", query, false);
+        final EntityDoc[] results = this.naves.searchSingleColumn("rootStem", sb.toString(), false);
         return getHeadingsSearchEntries(start, results);
     }
 
@@ -184,8 +185,8 @@ public class SubjectSearchServiceImpl implements SubjectSearchService {
      */
     private SearchResult searchFull(final SearchQuery sq) {
         final long start = System.currentTimeMillis();
-        final EntityDoc[] results = this.naves.search(new String[] { "rootStem", "fullHeader" }, sq
-                .getCurrentSearch().getQuery(), false);
+        final EntityDoc[] results = this.naves.search(new String[] { "rootStem", "fullHeader" },
+                QueryParser.escape(sq.getCurrentSearch().getQuery()), false);
         return getHeadingsSearchEntries(start, results);
     }
 

@@ -65,9 +65,21 @@ $.widget("custom.originalWordToolbar",  {
         });
         
         //now that it is attached to the dom, sort the elements
-        $(toolbar).find(".sortable").sortElements(function(a, b) { 
+        var sortables = $(toolbar).find(".sortable");
+        sortables.sortElements(function(a, b) { 
             return $(a).find("label").text() < $(b).find("label").text() ? -1 : 1; 
         });
+        
+        //add hovers
+        sortables.hover(
+                function() { 
+                   step.passage.higlightStrongs({
+                           passageId: step.passage.getPassageId(this), 
+                           strong: $(this).find("input[type='checkbox']").val() 
+                       }); 
+                }, function() { 
+                    step.passage.removeStrongsHighlights(step.passage.getPassageId(this));
+                });
         
         toolbar.buttonset();
         return toolbar;

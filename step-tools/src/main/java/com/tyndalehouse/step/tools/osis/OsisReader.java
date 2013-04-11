@@ -9,6 +9,7 @@ import org.crosswire.jsword.book.BookData;
 import org.crosswire.jsword.book.Books;
 import org.jdom2.Document;
 import org.jdom2.Element;
+import org.jdom2.input.JDOMParseException;
 import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
@@ -37,7 +38,7 @@ public class OsisReader {
      */
     public static void main(final String[] args) throws Exception {
         final String version = "ESV";
-        final String ref = "Exo 3:5-5:12";
+        final String ref = "Gen.1.1";
 
         final Book currentBook = Books.installed().getBook(version);
 
@@ -53,12 +54,19 @@ public class OsisReader {
                 new JSwordVersificationServiceImpl(), null, null, null);
         final List<LookupOption> options = new ArrayList<LookupOption>();
 
+        options.add(LookupOption.HEADINGS_ONLY);
+
         final String osisText = jsi.getOsisText(version, ref, options, null, InterlinearMode.NONE).getValue();
         final SAXBuilder sb = new SAXBuilder();
-        final Document d = sb.build(new StringReader(osisText));
 
-        LOGGER.debug("Transformed is:\n {}", xmlOutputter.outputString(d));
-        xmlOutputter.outputString(d);
+        try {
+            final Document d = sb.build(new StringReader(osisText));
+
+            LOGGER.debug("Transformed is:\n {}", xmlOutputter.outputString(d));
+            xmlOutputter.outputString(d);
+        } catch (final JDOMParseException e) {
+            LOGGER.debug("Transformed is:\n [{}]", osisText);
+        }
     }
 
 }

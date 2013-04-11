@@ -168,7 +168,7 @@
 				</tr>
 			</table>
 			<br />
-			<a target="_new" href="http://www.tyndale.cam.ac.uk" style="color: #991c32">Tyndale House</a> 
+			<a target="_new" href="http://www.tyndale.cam.ac.uk" style="color: #991c32">Tyndale House<br />Cambridge</a> 
 			<br />
 			&copy; <%= java.util.Calendar.getInstance().get(java.util.Calendar.YEAR)  %>
 		</div>
@@ -222,7 +222,7 @@
 <div id="about">
 	<img id="aboutLogo" src="images/step-logo.png" />
 	<h3 id="aboutTitle">STEP :: Scripture Tools for Every Person</h3>
-	<p>&copy; Tyndale House &copy; <%= java.util.Calendar.getInstance().get(java.util.Calendar.YEAR)  %></p>
+	<p>&copy; Tyndale House, Cambridge&copy; <%= java.util.Calendar.getInstance().get(java.util.Calendar.YEAR)  %></p>
 </div>
 
 <%-- <jsp:include page="jsps/login.jsp"></jsp:include> --%>

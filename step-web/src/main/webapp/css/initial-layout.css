@@ -191,6 +191,14 @@ body {
 	overflow: hidden;
 }
 
+.passageButtonsWidgetInline {
+	width: 150px;
+	display: inline-block;
+	padding-bottom: 10px;
+	float: left;
+	clear: left;
+}
+
 .passageSizeButtons  {
 	clear: right;
 	margin-top: 5px;

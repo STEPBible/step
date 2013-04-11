@@ -119,7 +119,7 @@ step.bookmark = {
             
             if(!step.util.isBlank(reference)) {
                 var item = $("<div>").addClass('bookmarkItem');
-                item.pasageButtons({ ref : reference });
+                item.passageButtons({ ref : reference });
                 
                 if(ascending) {
                     container.append(item);

@@ -236,7 +236,10 @@ li.subjectHeading {
 }
 
 .innerRefinedSearch, .innerInfoBar {
-	padding: 5px;	
+	padding: 5px;
+	border:1px solid #F3E5B4;
+	background:#F3E5B4 url(images/ui-bg_diagonals-thick_50_F3E5B4_40x40.png) 50% 50% repeat;
+	color:#991C32	
 }
 
 .closeRefinedSearch, .closeInfoBar {

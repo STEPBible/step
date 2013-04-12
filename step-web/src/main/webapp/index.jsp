@@ -222,7 +222,7 @@
 <div id="about">
 	<img id="aboutLogo" src="images/step-logo.png" />
 	<h3 id="aboutTitle">STEP :: Scripture Tools for Every Person</h3>
-	<p>&copy; Tyndale House, Cambridge&copy; <%= java.util.Calendar.getInstance().get(java.util.Calendar.YEAR)  %></p>
+	<p>&copy; Tyndale House, Cambridge &copy; <%= java.util.Calendar.getInstance().get(java.util.Calendar.YEAR)  %></p>
 </div>
 
 <%-- <jsp:include page="jsps/login.jsp"></jsp:include> --%>

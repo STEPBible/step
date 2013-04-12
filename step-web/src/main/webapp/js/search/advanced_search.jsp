@@ -22,7 +22,7 @@
 <div class="advancedSearch" style="clear: both">
 	<div class="infoBar">
 		<a class="closeInfoBar">&nbsp;</a>
-		<div class="innerInfoBar ui-state-highlight">
+		<div class="innerInfoBar">
 			<span class="ui-icon ui-icon-info"></span>
 			<span class="infoLabel"></span>
 		</div>

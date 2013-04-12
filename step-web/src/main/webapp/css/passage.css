@@ -238,8 +238,8 @@ span.strongs, span.morphs, span.interVerseNumbers {
 }
 
 .ancientVocab {
-	font-style: italic;
-	font-family: Cardo-italic;
+	font-family: Cardo;
+	font-size: 140%;
 }
 
 span.strongs a {

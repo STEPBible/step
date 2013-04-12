@@ -44,13 +44,13 @@
 		<table class="passageTable">
 			<tr>
 				<td><fmt:message key="translation_commentary" /></td>
-				<td style="white-space: nowrap;"><input type="text" class="passageVersion drop" size="15" /><a class="infoAboutVersion primaryDarkBold" target="_blank" href="version.jsp?version=<%= stepRequest.getThisVersion() %>" title="<fmt:message key="passage_info_about_version" />">&#x24d8;</a></td>
+				<td class="noWrapCell"><input type="text" class="passageVersion drop" size="15" /> <a class="infoAboutVersion primaryDarkBold searchPassageButtons" target="_blank" href="version.jsp?version=<%= stepRequest.getThisVersion() %>" title="<fmt:message key="passage_info_about_version" />">&#x24d8;</a></td>
 				<td style="padding-left: 10px"><fmt:message key="bible_text" />&nbsp;</td>
-				<td class="noWrapcell"><input type="text" class="passageReference drop" size="15" /> <a href='javascript:void' class="searchPassage" type="button" title="<fmt:message key="search_search_button" />">&nbsp;</a></td>
+				<td class="noWrapCell"><input type="text" class="passageReference drop" size="15" /> <a href='javascript:void' class="searchPassageButtons searchPassage" type="button" title="<fmt:message key="search_search_button" />">&nbsp;</a></td>
 			</tr>
 			<tr level="1">
 				<td><fmt:message key="comparison_versions" /></td>
-				<td><input type="text" class="extraVersions drop" size="15" /><a href='#' class='resetVersions primaryDarkBold'>x</a></td>
+				<td class="noWrapCell"><input type="text" class="extraVersions drop" size="15" /> <a href='#' class='resetVersions primaryDarkBold searchPassageButtons'>x</a></td>
 				<td level="2" style="padding-left: 10px"><fmt:message key="will_be_shown_as" /></td>
 				<td level="2"><input type="text" class="extraVersionsDisplayOptions drop" size="15" readonly=true"/></td>
 			</tr>

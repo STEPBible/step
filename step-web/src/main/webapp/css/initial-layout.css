@@ -18,7 +18,7 @@ body {
 }
 
 #aboutTitle {
-	display: inline;	
+	display: inline;
 	white-space: nowrap;
 }
 
@@ -39,11 +39,11 @@ body {
 
 .interlinearChoices input {
 	float: left;
-}	
+}
 
 .interlinearChoices label {
 	float: left;
-	margin-right: 10px;	
+	margin-right: 10px;
 }
 
 /**************************/
@@ -65,7 +65,7 @@ body {
 .northBookmark img {
 	width: 75px;
 	height: 56px;
-} 
+}
 
 .bookmarkPane {
 	margin: 0px 5px;
@@ -80,12 +80,10 @@ body {
 	margin-bottom: 1px;
 }
 
-
 .bookmarkItem {
 	clear: both;
-	display: block;	
+	display: block;
 }
-
 
 .leftBookmarkArrow {
 	float: left;
@@ -103,19 +101,17 @@ body {
 /**************************/
 /* TOP MENU               */
 /**************************/
-
 #topMenu .detailSliderContainer {
 	margin-right: 10px;
 }
 
-#topMenu .detailSliderContainer .detailLevel {
-/* 	font-size: 1em; */
+#topMenu .detailSliderContainer .detailLevel { /* 	font-size: 1em; */
+	
 }
 
 /* #topMenu .detailSliderContainer .sliderDetailLevelLabel { */
 /* 	color: white !important; */
 /* } */
-
 #topMenu a.login {
 	padding-top: 7px;
 	padding-right: 8px;
@@ -131,9 +127,9 @@ body {
 /**************************/
 /* COLUMNS                */
 /**************************/
-.column { 
+.column {
 	border: 0px;
-	width: 45%;  /* 2 columns */ 
+	width: 45%; /* 2 columns */
 	float: left;
 }
 
@@ -161,7 +157,7 @@ body {
 }
 
 #holdingPage table {
-	margin-left: auto; 
+	margin-left: auto;
 	margin-right: auto;
 }
 
@@ -178,6 +174,7 @@ body {
 /* PASSAGE CONTAINERS     */
 /**************************/
 .passageContainer {
+	
 }
 
 .passageButtons {
@@ -199,7 +196,7 @@ body {
 	clear: left;
 }
 
-.passageSizeButtons  {
+.passageSizeButtons {
 	clear: right;
 	margin-top: 5px;
 }
@@ -208,14 +205,14 @@ body {
 	font-size: 75%;
 }
 
-.nextChapter, .nextPage {
+.nextChapter,.nextPage {
 	-moz-transform: scaleX(-1);
-    -o-transform: scaleX(-1);
-    -webkit-transform: scaleX(-1);
-    -ms-transform: scaleX(-1);
-    transform: scaleX(-1);
-/*     filter: FlipH; */
-/*     -ms-filter: "FlipH"; */
+	-o-transform: scaleX(-1);
+	-webkit-transform: scaleX(-1);
+	-ms-transform: scaleX(-1);
+	transform: scaleX(-1);
+	/*     filter: FlipH; */
+	/*     -ms-filter: "FlipH"; */
 }
 
 .passageText {
@@ -232,16 +229,15 @@ body {
 }
 
 .features {
-	float: right;	
+	float: right;
 	text-align: right;
 }
 
 .versionFeature {
 	font-size: xx-small;
-	color: #33339F; 
-	font-weight: bold;	
+	color: #33339F;
+	font-weight: bold;
 }
-
 
 .questionableFeature {
 	background-color: red;
@@ -263,45 +259,41 @@ body {
 /*********************************************/
 /** BOTTOM COMPONENT                         */
 /*********************************************/
-#bottomSection { 
+#bottomSection {
 	height: 0px;
 	position: absolute;
 	bottom: 5px;
 	left: 0px;
 	width: 99%;
-	border: 1px solid #000; 
-	margin-left: 5px; 
+	border: 1px solid #000;
+	margin-left: 5px;
 	margin-right: 5px;
 	display: none;
 }
 
 #bottomModuleHeader {
 	height: 25px;
-	background-color: #4EB305; 
+	background-color: #4EB305;
 }
 
 .timelineContext {
-	color: #fff; 	
+	color: #fff;
 	font-weight: bold;
 }
 
-
-.no-left-border {
-/*	 border-left: none; */
-	margin-left: -1px; 
+.no-left-border { /*	 border-left: none; */
+	margin-left: -1px;
 }
 
-.logo, .northBookmark {
+.logo,.northBookmark {
 	border: none;
 }
-
 
 .column {
 	border: 0 !important;
 	padding-top: 0px;
 	padding-bottom: 0px;
 }
-
 
 .ui-autocomplete {
 	max-height: 500px;
@@ -320,8 +312,7 @@ body {
 	padding-bottom: 5px;
 }
 
-.toolbarContainer {
-/*	display: none; */
+.toolbarContainer { /*	display: none; */
 	margin-top: 3px;
 	margin-bottom: 3px;
 	text-align: left;
@@ -337,7 +328,7 @@ body {
 	font-style: italic;
 }
 
-#loading { 
+#loading {
 	margin-top: 3px;
 	display: none;
 	z-index: 9998; /** always on top, but not on top of lexicon def? */
@@ -349,7 +340,7 @@ body {
 	padding: 2px;
 	margin: 0px;
 	z-index: 99999;
-/* 	background-color: pink; */
+	/* 	background-color: pink; */
 	width: 100%;
 }
 
@@ -359,8 +350,7 @@ body {
 	margin-top: 2px;
 }
 
-#closeError .ui-icon-close {
-	/* Override default ui-state error */
+#closeError .ui-icon-close { /* Override default ui-state error */
 	background-image: url("images/ui-icons_991C32_256x240.png");
 }
 
@@ -377,28 +367,30 @@ body {
 	display: none;
 	z-index: 9999;
 	width: 600px;
-/* 	bottom: 0px; */
-/* 	right: 0px; */
+	/* 	bottom: 0px; */
+	/* 	right: 0px; */
 }
 
 #origin {
 	overflow-y: auto;
-	max-height: 475px; 
+	max-height: 475px;
 }
 
 #lexiconPopupClose {
-	float: right; 
-	padding-top: 10px; 
+	float: right;
+	padding-top: 10px;
 }
 
 #selectedPane {
 	float: right;
 }
+
+
 /**************************/
 /* LOGIN POPUP            */
 /**************************/
 #login {
-	display: none;	
+	display: none;
 }
 
 #login label {
@@ -409,7 +401,6 @@ body {
 	margin-right: 0.5em;
 	display: block
 }
-
 
 #waiting {
 	position: absolute;
@@ -422,13 +413,12 @@ body {
 	clear: both;
 }
 
-
 /**************************/
 /* Version menu           */
 /**************************/
 .versionsListMenu {
- 	overflow-y: auto; 
-/* 	max-height: 400px; */
+	overflow-y: auto;
+	/* 	max-height: 400px; */
 	width: 100%;
 }
 

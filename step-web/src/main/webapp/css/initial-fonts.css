@@ -108,6 +108,14 @@ body {
 	font-size: 8pt;
 }
 
+.lexiconRelatedWord a, .lexiconRelatedWord span {
+	color: #991C32;
+}
+
+.lexiconRelatedWord a:hover, .lexiconRelatedWord span:hover, .lexiconRelatedWord span:hover * {
+	color: #F3E5B4;
+}
+
 #origin a {
 	color: #33339F;
 	font-size: 8pt;

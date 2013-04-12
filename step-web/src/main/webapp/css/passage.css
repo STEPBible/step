@@ -601,19 +601,16 @@ FONT.usg {
 
 .infoAboutVersion, .versionInfo {
 	font-size: 120%;
-	margin-left: 2px;
 	color: #33339F;
 }
 
 .resetVersions {
-	margin-left: 5px;
 	font-weight: bold;
 	color: #33339F;
 }
 
 .quickLexiconDefinition {
 	width: 300px;
-/* 	height: 300px; */
 	overflow: auto;
 	position: absolute;
 	bottom: 0px;
@@ -737,10 +734,10 @@ Analysis tabs
     border: thin solid lightgrey;
 }
 
-.searchPassage {
+.searchPassageButtons {
 	font-size: 75% !important;
 }
 
-.noWrapcell {
+.noWrapCell {
 	white-space: nowrap;
 }

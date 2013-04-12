@@ -36,13 +36,14 @@
 				</div>
 				<div level="1">
 					<hr />
-					<div><h5><fmt:message key="lexicon_translated_as" /> </h5></div>
 					<div><h5><fmt:message key="lexicon_meaning" /> </h5> <span info-name="mediumDef"></span> </div>
 				</div>	
 				<div level="2">
 					<hr />
-					<h5><fmt:message key="lexicon_related_words" /></h5><div><span info-name="relatedNos" class="ancientLanguage"></span></div>
 					<h5><fmt:message key="lexicon_lsj_definition" /></h5><div info-name="lsjDefs" ></div>
+					<br />
+					<h5><fmt:message key="lexicon_related_words" /></h5><div><span info-name="relatedNos"></span></div>
+					<br />
 				</div>
 			</div>
 			<p />

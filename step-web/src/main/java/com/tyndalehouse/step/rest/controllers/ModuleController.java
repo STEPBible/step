@@ -48,6 +48,7 @@ import com.google.inject.Inject;
 import com.tyndalehouse.step.core.data.EntityDoc;
 import com.tyndalehouse.step.core.exceptions.UserExceptionType;
 import com.tyndalehouse.step.core.models.BibleVersion;
+import com.tyndalehouse.step.core.models.VocabResponse;
 import com.tyndalehouse.step.core.service.ModuleService;
 import com.tyndalehouse.step.core.service.MorphologyService;
 import com.tyndalehouse.step.core.service.VocabularyService;
@@ -168,16 +169,19 @@ public class ModuleController {
     }
 
     /**
-     * Copies over information
+     * Copies over information.
      * 
-     * @param definitions info from definitions is copied over
+     * @param vocabResponse the vocab response, including the definitions and the mappings to their related
+     *            words
      * @param includeAllInfo true to include all information
      * @return a list of infos
      */
-    private List<VocabInfo> translateToVocabInfo(final EntityDoc[] definitions, final boolean includeAllInfo) {
-        final List<VocabInfo> morphologyInfos = new ArrayList<VocabInfo>(definitions.length);
-        for (final EntityDoc d : definitions) {
-            morphologyInfos.add(new VocabInfo(d, includeAllInfo));
+    private List<VocabInfo> translateToVocabInfo(final VocabResponse vocabResponse,
+            final boolean includeAllInfo) {
+        final List<VocabInfo> morphologyInfos = new ArrayList<VocabInfo>(
+                vocabResponse.getDefinitions().length);
+        for (final EntityDoc d : vocabResponse.getDefinitions()) {
+            morphologyInfos.add(new VocabInfo(d, vocabResponse.getRelatedWords(), includeAllInfo));
         }
         return morphologyInfos;
     }

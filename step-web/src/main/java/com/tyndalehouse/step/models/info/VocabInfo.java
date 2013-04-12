@@ -34,9 +34,10 @@ package com.tyndalehouse.step.models.info;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 import com.tyndalehouse.step.core.data.EntityDoc;
-import com.tyndalehouse.step.core.models.ShortLexiconDefinition;
+import com.tyndalehouse.step.core.models.LexiconSuggestion;
 
 /**
  * Captures information related to morphology
@@ -54,14 +55,13 @@ public class VocabInfo implements Serializable {
     private String unaccentedUnicode;
     private String strongTranslit;
     private String strongPronunc;
-    private String relatedNos;
+    private List<LexiconSuggestion> relatedNos;
     private String shortDef;
     private String mediumDef;
     private String stepGloss;
     private String stepTransliteration;
     private String unaccentedStepTransliteration;
     private String twoLetterLookup;
-    private List<ShortLexiconDefinition> similarStrongs;
 
     /**
      * for serialisation
@@ -71,12 +71,14 @@ public class VocabInfo implements Serializable {
     }
 
     /**
-     * constructs a vocab info from a {@link EntityDoc}
+     * constructs a vocab info from a {@link EntityDoc}.
      * 
      * @param d see a document representing a lexicon definition
+     * @param relatedVocabs the related vocabs, but also could contain tags non related to this document.
      * @param includeAllInfo true to include all information
      */
-    public VocabInfo(final EntityDoc d, final boolean includeAllInfo) {
+    public VocabInfo(final EntityDoc d, final Map<String, List<LexiconSuggestion>> relatedVocabs,
+            final boolean includeAllInfo) {
         this.accentedUnicode = d.get("accentedUnicode");
         this.shortDef = d.get("shortDefinition");
         this.stepGloss = d.get("stepGloss");
@@ -85,9 +87,12 @@ public class VocabInfo implements Serializable {
         if (includeAllInfo) {
             this.lsjDefs = d.get("lsjDefinition");
             this.strongNumber = d.get("strongNumber");
-            this.relatedNos = d.get("relatedNumbers");
             this.mediumDef = d.get("mediumDefinition");
             this.twoLetterLookup = d.get("twoLetter");
+
+            if (this.strongNumber != null) {
+                this.relatedNos = relatedVocabs.get(this.strongNumber);
+            }
         }
     }
 
@@ -206,14 +211,14 @@ public class VocabInfo implements Serializable {
     /**
      * @return the relatedNos
      */
-    public String getRelatedNos() {
+    public List<LexiconSuggestion> getRelatedNos() {
         return this.relatedNos;
     }
 
     /**
      * @param relatedNos the relatedNos to set
      */
-    public void setRelatedNos(final String relatedNos) {
+    public void setRelatedNos(final List<LexiconSuggestion> relatedNos) {
         this.relatedNos = relatedNos;
     }
 
@@ -300,19 +305,4 @@ public class VocabInfo implements Serializable {
     public void setTwoLetterLookup(final String twoLetterLookup) {
         this.twoLetterLookup = twoLetterLookup;
     }
-
-    /**
-     * @return the similarStrongs
-     */
-    public List<ShortLexiconDefinition> getSimilarStrongs() {
-        return this.similarStrongs;
-    }
-
-    /**
-     * @param similarStrongs the similarStrongs to set
-     */
-    public void setSimilarStrongs(final List<ShortLexiconDefinition> similarStrongs) {
-        this.similarStrongs = similarStrongs;
-    }
-
 }

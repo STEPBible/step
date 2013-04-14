@@ -25,7 +25,6 @@ span.rtl span { /* Make each word follow the other */
 	float: none;
 }
 
-
 /* Make the different views of a word stack. This rule can also be surrounded with a .jesus span*/
 span.interlinear span span { /* Make this stack on top of each other. */
 	display: block;

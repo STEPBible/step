@@ -153,7 +153,8 @@
 			</div>
 		</div>
 		<div id="holdingPage">
-			<h1>STEP<br /> <em>S</em>cripture <em>T</em>ools for <em>E</em>very <em>P</em>erson</h1>
+			<h1><span class="primaryDark">STEP</span><br /> <em>S</em>cripture <em>T</em>ools for <em>E</em>very <em>P</em>erson</h1>
+			<h2 >from <a href="http://www.tyndalehouse.com" target="_new">Tyndale House, Cambridge</a></h2>
 			<img src="images/step-logo-big.png" title="STEP" /><br />
 			<em><fmt:message key="step_tag_line" /></em><br /><br />
 			
@@ -221,7 +222,7 @@
 
 <div id="about">
 	<img id="aboutLogo" src="images/step-logo.png" />
-	<h3 id="aboutTitle">STEP :: Scripture Tools for Every Person</h3>
+	<h3 id="aboutTitle">STEP :: Scripture Tools for Every Person<br /></h3>
 	<p>&copy; Tyndale House, Cambridge <%= java.util.Calendar.getInstance().get(java.util.Calendar.YEAR)  %></p>
 </div>
 

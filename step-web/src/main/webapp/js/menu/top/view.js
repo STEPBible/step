@@ -127,5 +127,6 @@ $(step.menu).hear("view-change-done", function(self, data) {
     }
     
     optionsMenu.toggle();
+    refreshLayout();
 });
 

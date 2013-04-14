@@ -147,12 +147,16 @@ body {
 	text-align: center;
 }
 
-#holdingPage h1 {
+#holdingPage h1, #holdingPage h2 {
 	color: #33339F;
 	font-family: Times;
 }
 
-#holdingPage em {
+#holdingPage h2 {
+	font-size: 1.8em;
+}
+
+#holdingPage em, #holdingPage h2 a {
 	color: #991c32;
 }
 

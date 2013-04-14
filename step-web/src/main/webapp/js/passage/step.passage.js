@@ -131,6 +131,7 @@ step.passage = {
                 self._doVerseNumbers(passageId, passageContent, options, interlinearMode, text.reference);
 //                self._doStats(passageId, passageContent, lookupVersion, text.reference);
                 self._doFonts(passageId, passageContent, interlinearMode, interlinearVersion);
+                self._doInterlinearVerseNumbers(passageContent, interlinearMode);
                 self._doInlineNotes(passageId, passageContent);
                 self._doNonInlineNotes(passageContent);
                 self._doSideNotes(passageId, passageContent);
@@ -182,7 +183,23 @@ step.passage = {
            step.util.ui.markUpTransliteration($(this));
         });
     },
-
+    
+    _doInterlinearVerseNumbers : function(passageContent, interlinearMode) {
+        if(interlinearMode == "INTERLINEAR") {
+            $.each($(".verseStart", passageContent).children(), function(i, item) { 
+                var nextItem = $(this).parent().next().children().get(i);
+                var height = $(nextItem).height();
+                var thisItem = $(this);
+                var currentLineHeight = parseInt(thisItem.css("font-size").replace("px", "")) * 1.5;
+                thisItem.height(height);
+                
+                var paddingRequired = height - currentLineHeight;
+                thisItem.css("padding-top", paddingRequired /2);
+                
+            });
+        }
+    },
+    
     _doFonts : function(passageId, passageContent, interlinearMode, interlinearVersions) {
         //interlinear or a display option
         var displayOptions = step.state.passage.options(passageId);

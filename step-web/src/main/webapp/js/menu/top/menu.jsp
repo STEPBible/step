@@ -57,16 +57,14 @@
 	</ul>
 	</li>
 
-	<li menu-name="TOOLS"><a href="javascript:void(0)"><fmt:message key="tools" /></a>
-	<ul>
+<%-- 	<li menu-name="TOOLS"><a href="javascript:void(0)"><fmt:message key="tools" /></a> --%>
+<!-- 	<ul> -->
 <!-- 		<li><a href="http://step.tyndalehouse.com/step.zip" target="_blank"><fmt:message key="tools_download_desktop_application" /></a></li> -->
-			<li><a href="javascript:void(0)" onclick='forgetProfile()'><fmt:message key="tools_forget_my_profile" /></a></li>
-
 <!-- 		<li><a href="javascript:void(0)" class="notYetImplemented">Install Core Bibles [Coming soon]</a></li> -->
 <!-- 		<li><a href="javascript:void(0)" class="notYetImplemented">Update [Coming soon]</a></li> -->
 <!-- 		<li><a href="javascript:void(0)" class="notYetImplemented">User preferences [Coming soon]</a></li> -->
-	</ul>
-	</li>
+<!-- 	</ul> -->
+<!-- 	</li> -->
 
 	
 	<li menu-name="HELP"><a href="javascript:void(0)"><fmt:message key="help" /></a>
@@ -74,6 +72,7 @@
 		<li><a href="https://stepweb.atlassian.net/wiki/x/AgAW" target="_blank"><fmt:message key="help_online" /></a></li>
 		<li><a href="https://stepweb.atlassian.net/wiki/x/iICV" target="_blank"><fmt:message key="we_need_help" /></a>
 		<li><a href="javascript:void(0)" id="provideFeedback"><fmt:message key="help_feedback" /></a></li>
+		<li><a href="javascript:void(0)" onclick='forgetProfile()'><fmt:message key="tools_forget_my_profile" /></a></li>
 		<li><a href="javascript:void(0)" name="ABOUT"><fmt:message key="help_about" /></a></li>
 	</ul>
 	</li>

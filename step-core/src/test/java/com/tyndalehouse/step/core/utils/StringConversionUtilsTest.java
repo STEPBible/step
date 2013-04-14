@@ -152,7 +152,7 @@ public class StringConversionUtilsTest {
         final String transliterate = StringConversionUtils.transliterate("");
         LOG.debug(transliterate);
         assertEquals("hén", outputAndTestTransliterate("ἣν"));
-        assertEquals("huwde", outputAndTestTransliterate("ὧδε"));
+        assertEquals("howde", outputAndTestTransliterate("ὧδε"));
         assertEquals("salpingos", outputAndTestTransliterate("σάλπιγγος"));
         assertEquals("lalousés", outputAndTestTransliterate("λαλούσης"));
         assertEquals("adikésés", outputAndTestTransliterate("ἀδικήσῃς"));
@@ -165,10 +165,10 @@ public class StringConversionUtilsTest {
 
         assertEquals("psuchén", outputAndTestTransliterate("ψυχὴν"));
         assertEquals("farisaioi", outputAndTestTransliterate("Φαρισαῖοι"));
-        assertEquals("héruwdianuwn", outputAndTestTransliterate("Ἡρῳδιανῶν"));
+        assertEquals("hérowdianown", outputAndTestTransliterate("Ἡρῳδιανῶν"));
 
         assertEquals("ioudaias", outputAndTestTransliterate("Ἰουδαίας"));
-        assertEquals("hierosolumuwn", outputAndTestTransliterate("Ἱεροσολύμων"));
+        assertEquals("hierosolumown", outputAndTestTransliterate("Ἱεροσολύμων"));
         assertEquals("mastigas", outputAndTestTransliterate("μάστιγας"));
 
         assertEquals("exérammenén", outputAndTestTransliterate("ἐξηραμμένην"));

@@ -92,6 +92,7 @@ public class StepServletConfig extends GuiceServletContextListener {
                         serve("/SITEMAP*").with(SiteMapController.class);
                         // filters
                         filter("/index.jsp", "/").through(SetupRedirectFilter.class);
+                        filter("*_escaped_fragment_*", "/").through(HashBangFragmentFilter.class);
                         filter("/external/*").through(ExternalPoweredByFilter.class);
                     }
                 });

@@ -48,11 +48,11 @@ step.defaults = {
     syncMode : -1,
     passages : [{
             version : 'KJV',
-            reference : 'John 3:16-17',
+            reference : 'Mat 1',
             options : ["HEADINGS", "VERSE_NUMBERS", "NOTES"]
         }, {
             version : 'ESV',
-            reference : 'Ephesians 6:10-18',
+            reference : 'Gen 1',
             options : ["HEADINGS", "VERSE_NUMBERS", "NOTES"]
         }
     ],

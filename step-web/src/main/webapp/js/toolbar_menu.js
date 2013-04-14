@@ -60,6 +60,10 @@ function ToolbarMenu(passageId, menuRoot) {
 		self.refreshMenuOptions();
 	});
 	
+	$(menuRoot).hear("slideView-SEARCH_PASSAGE", function() {
+	   self.refreshMenuOptions(); 
+	});
+	
 	$(menuRoot).hear("version-changed-dynamically" + this.passageId, function(selfElement) {
 		self.refreshMenuOptions();
 	});

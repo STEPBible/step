@@ -52,8 +52,8 @@ public class InterleavingProviderImplTest {
         final InterleavingProviderImpl interleavingProviderImpl = new InterleavingProviderImpl(new String[] {
                 "KJV", "ESV", "NETfree", "Byz", "Tisch", "YLT", "ASV", "Montgomery", "FreCrampon" }, true);
 
-        final String[] expected = new String[] { "KJV", "ESV", "ESV", "NETfree", "Byz", "Tisch", "YLT",
-                "ASV", "ASV", "Montgomery", };
+        final String[] expected = new String[] { "KJV", "ESV", "KJV", "NETfree", "KJV", "YLT", "KJV", "ASV",
+                "KJV", "Montgomery", };
         for (int ii = 0; ii < expected.length; ii++) {
             assertEquals(expected[ii], interleavingProviderImpl.getVersions()[ii]);
         }

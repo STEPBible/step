@@ -67,8 +67,19 @@ public final class HeadingsUtil {
      * @return the String representing the long header
      */
     private static String longNameFromKey(final Versification v11n, final Key key) {
-        final Verse verse = KeyUtil.getVerse(key);
-        final BibleBook book = verse.getBook();
+        final Verse firstVerse = KeyUtil.getVerse(key);
+        final BibleBook book = firstVerse.getBook();
+
+        if (v11n.isIntro(firstVerse)) {
+            // then exclude that verse from the key
+            try {
+                key.removeAll(firstVerse);
+            } catch (final UnsupportedOperationException ex) {
+                // silently fail
+                LOGGER.trace("Unable to remove verse, but continuing.", ex);
+            }
+        }
+
         return key.getName().replace(v11n.getShortName(book), v11n.getLongName(book));
     }
 }

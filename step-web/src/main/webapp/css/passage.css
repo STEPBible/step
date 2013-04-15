@@ -611,8 +611,8 @@ FONT.usg {
 .quickLexiconDefinition {
 	width: 300px;
 	overflow: auto;
-	position: absolute;
-	bottom: 0px;
+/* 	position: absolute; */
+/* 	bottom: 0px; */
 	z-index: 10000;
 }
 

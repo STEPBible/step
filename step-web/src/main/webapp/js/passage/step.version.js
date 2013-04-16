@@ -52,18 +52,30 @@ step.version = {
             ab          : {name : "Translation of Greek Septuagint (OT)"},
             ylt         : {name : "Young's over-literal translation of Hebrew & Greek"},
             
-            abp         : {name : "Interlinear for Greek Septuagint (OT)" }, 
-            etheridge   : {name : "Translation of Syriac Peshitta (NT)"}, 
+            aleppo   : {name : "Heb.OT: Aleppo Codex"}, 
+            osmhb   : {name : "Heb.OT: Leningrad Codex based on BHS"}, 
+            wlc   : {name : "Heb.OT: Leningrad Codex based on BHS"}, 
 
-            abpgrk      : {name : "Orthodox Greek Septuagint (Grk, OT)"},
-            lxx         : {name : "Septuagint from Rahlf+Goettingen (Grk, OT)"},
-            peshitta    : {name : "Syriac version (Syriac, NT)"},
-            tnt         : {name : "Greek edition of Tregelles (Grk. NT)"},
-            vulgate     : {name : "Latin Bible by Jerome (Lat. +Ap)"},
-            whnu        : {name : "Westcott & Hort + NA27/UBS3 (Grk. NT)"},
-            wlc         : {name : "BHS corrected to Leningrad codex (Heb. OT)"},
+            lxx   : {name : "Grk.OT: Septuagint (Rahlf+Goettingen)"}, 
+   //         lxx2012   : {name : "Gkr.OT: Eng.trans. (Brenton rev.)"}, 
+            abpgrk   : {name : "Grk.OT: Septuagint (Orthodox trad.)"}, 
+            abp   : {name : "Grk.OT: Eng.trans. (Brenton rev.)  "}, 
+
+            antoniades   : {name : "Grk.NT: Orthodox Patriarchal Edition"}, 
+            byz   : {name : "Grk.NT: Majority or Byzantine text"}, 
+            elzevir   : {name : "Grk.NT: Elzevir 'Textus Receptus'"}, 
+            sblgnt   : {name : "Grk.NT: SBL edition"}, 
+            tnt   : {name : "Grk.NT: Tregelles ed. with corrections"}, 
+            tr   : {name : "Grk.NT: 'Textus Receptus' of the KJV"}, 
+            whnu   : {name : "Grk.NT: W+Hort with NA+UBS variants"}, 
+
+            vulgate   : {name : "Latin Bible, Vulgate by Jerome"}, 
+    //        drc   : {name : "Latin Bible Eng.trans.(Douay-Rheims)"}, 
+
+            peshitta   : {name : "Syriac NT Peshitta"}, 
+            etheridge   : {name : "Syriac NT Peshitta English transl."}, 
+            mudock   : {name : "Syriac NT Peshitta English transl."}, 
             
-            //            DRC = Translation of Latin Vulgate (Eng. OT+Ap+NT)
             chiuns      : {name: "和合本圣经 （简体版）" },
             chincvs     : {name: "新译本 （简体版）" },
             chincvt     : {name: "新譯本 (繁體版)"}

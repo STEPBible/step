@@ -188,30 +188,63 @@ step.passage = {
         var interlinearMode = this.getDisplayMode(passageId).displayMode;
         
         if(interlinearMode == "INTERLINEAR") {
+            //obtain heights first...
             var passageContent = step.util.getPassageContent(passageId);
-            var immediateChildren = $(".verseStart", passageContent).children(); 
-            var elements = [];
-            $.each(immediateChildren, function(i, item) {
-                if($(item).is("span")) {
-                    elements.push(item);
-                } else {
-                    //check only one child, and if the case, check span
-                    var children = $(item).children();
-                    if(children.length == 1 && $(children.get(0)).is("span")) {
-                        elements.push(children.get(0));
+            var individualBlocks = $(".passageContentHolder", passageContent).children().children();
+            
+            if(individualBlocks == 0) {
+                return;
+            }
+            
+            var sizes = [];
+            var obtainedSizes = 0;
+            
+            //get sizes
+            for(var i = 0; i < individualBlocks.length; i++) {
+                var block = individualBlocks.eq(i);
+                var blockChildren = block.children();
+                
+                //initialise if not already done
+                if(sizes.length == 0) {
+                    for(var j = 0; j < blockChildren.length; j++) {
+                        sizes.push(0);
+                    }
+                }
+
+                if(block.hasClass("verseStart")) {
+                    continue;
+                }
+
+                for(var j = 0; j < blockChildren.length; j++) {
+                    var blockChild = blockChildren.eq(j);
+                    if(!step.util.isBlank(blockChild.text()) ) {
+                        if(sizes[j] == 0) {
+                            sizes[j] = blockChild.height();
+                            obtainedSizes++;
+                        }
+                    }
+                    
+                }
+                if(obtainedSizes == sizes.length) {
+                    break;
+                }
+            }
+            
+            //do verse numbers
+            $.each($(".verseStart", passageContent), function(i, item){
+                var verseBlocks = $(item).children();
+                for(var i = 0; i < verseBlocks.length; i++) {
+                    if(i < sizes.length && sizes[i] != 0) {
+                        verseBlocks.eq(i).height(sizes[i]).css('line-height', sizes[i] + "px");
                     }
                 }
             });
             
-            $.each(elements, function(i, item) { 
-                
-                var nextItem = $(this).closest(".verseStart").next().children().get(i);
-                
-                var height = $(nextItem).height();
-                var thisItem = $(this);
-                thisItem.height(height);
-                thisItem.css("line-height", height + "px");
-            });
+            //do all empty nodes as well.
+            console.log(new Date().getTime());
+            $(".passageContentHolder", passageContent).children().not(".verseStart").filter(function(index) {
+                return step.util.isBlank($(this).text());
+            }).height(sizes[i]).css('line-height', sizes[i] + "px");
         }
     },
     

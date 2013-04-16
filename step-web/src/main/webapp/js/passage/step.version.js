@@ -50,16 +50,16 @@ step.version = {
             leb         : {name : "Lexham English Bible "},
             rotherham   : {name : "Emphasized Bible "},
             ab          : {name : "Translation of Greek Septuagint (OT)"},
-            ylt         : {name : "Young's over-literal translation of Hebrew & Greek"},
+            ylt         : {name : "Young's very literal translation"},
             
             aleppo   : {name : "Heb.OT: Aleppo Codex"}, 
             osmhb   : {name : "Heb.OT: Leningrad Codex based on BHS"}, 
             wlc   : {name : "Heb.OT: Leningrad Codex based on BHS"}, 
 
             lxx   : {name : "Grk.OT: Septuagint (Rahlf+Goettingen)"}, 
-   //         lxx2012   : {name : "Gkr.OT: Eng.trans. (Brenton rev.)"}, 
+   //         lxx2012   : {name : "Gkr.OT: Eng.trans. (Brenton rev.)", level : 2}, 
             abpgrk   : {name : "Grk.OT: Septuagint (Orthodox trad.)"}, 
-            abp   : {name : "Grk.OT: Eng.trans. (Brenton rev.)  "}, 
+            abp   : {name : "Grk.OT: Eng.trans. (Brenton rev.)", level : 2}, 
 
             antoniades   : {name : "Grk.NT: Orthodox Patriarchal Edition"}, 
             byz   : {name : "Grk.NT: Majority or Byzantine text"}, 
@@ -71,11 +71,14 @@ step.version = {
             whnu   : {name : "Grk.NT: W+Hort with NA+UBS variants"}, 
 
             vulgate   : {name : "Latin Bible, Vulgate by Jerome"}, 
+            vulgsistine   : {name : "Latin Bible, Vulgate, 1590 ed."}, 
+            vulgate_hebps    : {level : 0},
+            oxfordtr    : {level : 0},
     //        drc   : {name : "Latin Bible Eng.trans.(Douay-Rheims)"}, 
 
-            peshitta   : {name : "Syriac NT Peshitta"}, 
-            etheridge   : {name : "Syriac NT Peshitta English transl."}, 
-            mudock   : {name : "Syriac NT Peshitta English transl."}, 
+            peshitta   : {name : "Syriac NT Peshitta", level : 2}, 
+            etheridge   : {name : "Syriac NT Peshitta English transl.", level : 2}, 
+            murdock   : {name : "Syriac NT Peshitta English transl.", level : 2}, 
             
             chiuns      : {name: "和合本圣经 （简体版）" },
             chincvs     : {name: "新译本 （简体版）" },

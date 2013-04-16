@@ -241,10 +241,21 @@ step.passage = {
             });
             
             //do all empty nodes as well.
-            console.log(new Date().getTime());
-            $(".passageContentHolder", passageContent).children().not(".verseStart").filter(function(index) {
-                return step.util.isBlank($(this).text());
-            }).height(sizes[i]).css('line-height', sizes[i] + "px");
+            $(".passageContentHolder", passageContent).children().children().not(".verseStart").children().each(function(index) {
+                if($(this).hasClass("w")) {
+                    //we're looking at a parent element, so do the same for the children
+                    var wChildren = $(this).children();
+                    for(var j = 0; j < wChildren.length; j++) {
+                        wChildren.eq(j).height(sizes[j]).css('line-height', sizes[j] + "px")
+                    }
+                } else if(step.util.isBlank($(this).text())) {
+                    //work out index
+                    var indexInParent = $(this).index();
+                    if(indexInParent < sizes.length && sizes[indexInParent] != 0) {
+                        $(this).height(sizes[indexInParent]).css('line-height', sizes[indexInParent] + "px");
+                    }
+                }
+            });
         }
     },
     

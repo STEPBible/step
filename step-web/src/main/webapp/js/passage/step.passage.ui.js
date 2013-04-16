@@ -137,7 +137,9 @@ step.passage.ui = {
             //key it to be the default font, unicodeFont or Hebrew font
             step.passage.ui.fontSizes[passageId][key] = newFontSize;
             $(this).css("font-size", newFontSize);
-        })
+        });
+        
+        step.passage.doInterlinearVerseNumbers(passageId);
     }
 };
 

@@ -131,7 +131,7 @@ step.passage = {
                 self._doVerseNumbers(passageId, passageContent, options, interlinearMode, text.reference);
 //                self._doStats(passageId, passageContent, lookupVersion, text.reference);
                 self._doFonts(passageId, passageContent, interlinearMode, interlinearVersion);
-                self._doInterlinearVerseNumbers(passageContent, interlinearMode);
+                self.doInterlinearVerseNumbers(passageId);
                 self._doInlineNotes(passageId, passageContent);
                 self._doNonInlineNotes(passageContent);
                 self._doSideNotes(passageId, passageContent);
@@ -184,18 +184,33 @@ step.passage = {
         });
     },
     
-    _doInterlinearVerseNumbers : function(passageContent, interlinearMode) {
+    doInterlinearVerseNumbers : function(passageId) {
+        var interlinearMode = this.getDisplayMode(passageId).displayMode;
+        
         if(interlinearMode == "INTERLINEAR") {
-            $.each($(".verseStart", passageContent).children(), function(i, item) { 
-                var nextItem = $(this).parent().next().children().get(i);
+            var passageContent = step.util.getPassageContent(passageId);
+            var immediateChildren = $(".verseStart", passageContent).children(); 
+            var elements = [];
+            $.each(immediateChildren, function(i, item) {
+                if($(item).is("span")) {
+                    elements.push(item);
+                } else {
+                    //check only one child, and if the case, check span
+                    var children = $(item).children();
+                    if(children.length == 1 && $(children.get(0)).is("span")) {
+                        elements.push(children.get(0));
+                    }
+                }
+            });
+            
+            $.each(elements, function(i, item) { 
+                
+                var nextItem = $(this).closest(".verseStart").next().children().get(i);
+                
                 var height = $(nextItem).height();
                 var thisItem = $(this);
-                var currentLineHeight = parseInt(thisItem.css("font-size").replace("px", "")) * 1.5;
                 thisItem.height(height);
-                
-                var paddingRequired = height - currentLineHeight;
-                thisItem.css("padding-top", paddingRequired /2);
-                
+                thisItem.css("line-height", height + "px");
             });
         }
     },

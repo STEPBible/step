@@ -65,6 +65,7 @@ step.version = {
             byz   : {name : "Grk.NT: Majority or Byzantine text"}, 
             elzevir   : {name : "Grk.NT: Elzevir 'Textus Receptus'"}, 
             sblgnt   : {name : "Grk.NT: SBL edition"}, 
+            tisch   : {name : "Grk.NT: Tischendorf 8th ed."}, 
             tnt   : {name : "Grk.NT: Tregelles ed. with corrections"}, 
             tr   : {name : "Grk.NT: 'Textus Receptus' of the KJV"}, 
             whnu   : {name : "Grk.NT: W+Hort with NA+UBS variants"}, 

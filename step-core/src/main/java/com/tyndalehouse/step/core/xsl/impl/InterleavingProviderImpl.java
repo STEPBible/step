@@ -45,17 +45,23 @@ public class InterleavingProviderImpl implements InterleavingProvider {
      * the same language then we don't output a difference, and therefore, it skips a column
      */
     private void computeComparingVersions() {
+        if (this.versions.length == 0) {
+            return;
+        }
+
+        final String masterVersion = this.versions[0];
+        final String masterLanguage = getLanguageForVersion(0);
+
         final List<String> newVersions = new ArrayList<String>();
         for (int ii = 0; ii < this.versions.length - 1; ii++) {
-            final String currentLanguage = getLanguageForVersion(ii);
 
             // if not last
             if (ii + 1 < this.versions.length) {
                 final String nextLanguage = getLanguageForVersion(ii + 1);
 
                 // if this language and next are equal, add the pair, since we will compare them
-                if (currentLanguage.equals(nextLanguage)) {
-                    newVersions.add(this.versions[ii]);
+                if (masterLanguage.equals(nextLanguage)) {
+                    newVersions.add(masterVersion);
                     newVersions.add(this.versions[ii + 1]);
                 }
                 // if not equal, then we're not going to compare them, so no need to add them

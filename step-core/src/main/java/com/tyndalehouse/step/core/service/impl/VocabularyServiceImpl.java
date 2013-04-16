@@ -1,7 +1,49 @@
+/*******************************************************************************
+ * Copyright (c) 2012, Directors of the Tyndale STEP Project
+ * All rights reserved.
+ * 
+ * Redistribution and use in source and binary forms, with or without 
+ * modification, are permitted provided that the following conditions 
+ * are met:
+ * 
+ * Redistributions of source code must retain the above copyright 
+ * notice, this list of conditions and the following disclaimer.
+ * Redistributions in binary form must reproduce the above copyright 
+ * notice, this list of conditions and the following disclaimer in 
+ * the documentation and/or other materials provided with the 
+ * distribution.
+ * Neither the name of the Tyndale House, Cambridge (www.TyndaleHouse.com)  
+ * nor the names of its contributors may be used to endorse or promote 
+ * products derived from this software without specific prior written 
+ * permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
+ * COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING 
+ * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
+ * THE POSSIBILITY OF SUCH DAMAGE.
+ ******************************************************************************/
 package com.tyndalehouse.step.core.service.impl;
 
 import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
+import static com.tyndalehouse.step.core.utils.StringUtils.split;
 import static com.tyndalehouse.step.core.utils.ValidateUtils.notBlank;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -13,10 +55,10 @@ import com.tyndalehouse.step.core.data.EntityDoc;
 import com.tyndalehouse.step.core.data.EntityIndexReader;
 import com.tyndalehouse.step.core.data.EntityManager;
 import com.tyndalehouse.step.core.exceptions.UserExceptionType;
+import com.tyndalehouse.step.core.models.LexiconSuggestion;
+import com.tyndalehouse.step.core.models.VocabResponse;
 import com.tyndalehouse.step.core.service.VocabularyService;
-
-import java.util.HashMap;
-import java.util.Map;
+import com.tyndalehouse.step.core.service.helpers.OriginalWordUtils;
 
 /**
  * defines all vocab related queries
@@ -63,34 +105,111 @@ public class VocabularyServiceImpl implements VocabularyService {
     }
 
     @Override
-    public EntityDoc[] getDefinitions(final String vocabIdentifiers) {
+    public VocabResponse getDefinitions(final String vocabIdentifiers) {
         notBlank(vocabIdentifiers, "Vocab identifiers was null", UserExceptionType.SERVICE_VALIDATION_ERROR);
         final String[] strongList = getKeys(vocabIdentifiers);
 
         if (strongList.length != 0) {
-            final EntityDoc[] strongDefs = this.definitions.searchUniqueBySingleField("strongNumber", strongList);
-            return reOrder(strongList, strongDefs);
+            final EntityDoc[] strongDefs = this.definitions.searchUniqueBySingleField("strongNumber",
+                    strongList);
+
+            final EntityDoc[] definitions = reOrder(strongList, strongDefs);
+            final Map<String, List<LexiconSuggestion>> relatedWords = readRelatedWords(definitions);
+            return new VocabResponse(definitions, relatedWords);
         }
 
-        return new EntityDoc[0];
+        return new VocabResponse();
     }
 
     /**
-     * Re-orders based on the input
+     * Read related words, i.e. all the words that are in the related numbers fields.
+     * 
+     * @param defs the definitions that have been looked up.
+     * @return the map
+     */
+    private Map<String, List<LexiconSuggestion>> readRelatedWords(final EntityDoc[] defs) {
+        // this map keys the original word strong number to all the related codes
+        final Map<String, SortedSet<LexiconSuggestion>> relatedWords = new HashMap<String, SortedSet<LexiconSuggestion>>(
+                defs.length * 2);
+
+        // to avoid doing lookups twice, we key each short definition by its code as well
+        final Map<String, LexiconSuggestion> lookedUpWords = new HashMap<String, LexiconSuggestion>(
+                defs.length * 2);
+
+        for (final EntityDoc doc : defs) {
+            final String sourceNumber = doc.get("strongNumber");
+            final String relatedWordNumbers = doc.get("relatedNumbers");
+            final String[] allRelatedWords = split(relatedWordNumbers, "[ ,]+");
+            for (final String relatedWord : allRelatedWords) {
+                LexiconSuggestion shortLexiconDefinition = lookedUpWords.get(relatedWord);
+
+                // look up related word from index
+                if (shortLexiconDefinition == null) {
+                    final EntityDoc[] relatedDoc = this.definitions.searchUniqueBySingleField("strongNumber",
+                            relatedWord);
+                    // assume first doc
+                    if (relatedDoc.length > 0) {
+                        shortLexiconDefinition = OriginalWordUtils.convertToSuggestion(relatedDoc[0]);
+                        lookedUpWords.put(relatedWord, shortLexiconDefinition);
+                    }
+                }
+
+                // store as a link to its source number
+                if (shortLexiconDefinition != null) {
+                    SortedSet<LexiconSuggestion> associatedNumbersSoFar = relatedWords.get(sourceNumber);
+                    if (associatedNumbersSoFar == null) {
+                        associatedNumbersSoFar = new TreeSet<LexiconSuggestion>(
+                                new Comparator<LexiconSuggestion>() {
+
+                                    @Override
+                                    public int compare(final LexiconSuggestion o1, final LexiconSuggestion o2) {
+                                        return o1.getGloss().compareTo(o2.getGloss());
+                                    }
+
+                                });
+                        relatedWords.put(sourceNumber, associatedNumbersSoFar);
+                    }
+
+                    associatedNumbersSoFar.add(shortLexiconDefinition);
+                }
+            }
+        }
+        return convertToListMap(relatedWords);
+    }
+
+    /**
+     * Convert to list map, from a map of sets to a map of lists. This also orders the definitions.
+     * 
+     * @param relatedWords the related words
+     * @return the map
+     */
+    private Map<String, List<LexiconSuggestion>> convertToListMap(
+            final Map<String, SortedSet<LexiconSuggestion>> relatedWords) {
+        final Map<String, List<LexiconSuggestion>> results = new HashMap<String, List<LexiconSuggestion>>();
+        for (final Entry<String, SortedSet<LexiconSuggestion>> relatedWordSet : relatedWords.entrySet()) {
+            results.put(relatedWordSet.getKey(), new ArrayList<LexiconSuggestion>(relatedWordSet.getValue()));
+        }
+        return results;
+    }
+
+    /**
+     * Re-orders based on the input.
+     * 
      * @param strongList the order list of stongs
      * @param strongDefs the definitions that have been found
+     * @return the entity doc[]
      */
-    private EntityDoc[] reOrder(String[] strongList, EntityDoc[] strongDefs) {
-        Map<String, EntityDoc> entitiesByStrong = new HashMap<String, EntityDoc>(strongList.length*2);
-        for (EntityDoc def : strongDefs) {
+    private EntityDoc[] reOrder(final String[] strongList, final EntityDoc[] strongDefs) {
+        final Map<String, EntityDoc> entitiesByStrong = new HashMap<String, EntityDoc>(strongList.length * 2);
+        for (final EntityDoc def : strongDefs) {
             entitiesByStrong.put(def.get("strongNumber"), def);
         }
 
-        EntityDoc[] results = new EntityDoc[strongDefs.length];
+        final EntityDoc[] results = new EntityDoc[strongDefs.length];
         int current = 0;
-        for(String strong : strongList) {
+        for (final String strong : strongList) {
             final EntityDoc entityDoc = entitiesByStrong.get(strong);
-            if(entityDoc != null) {
+            if (entityDoc != null) {
                 results[current++] = entityDoc;
             }
         }
@@ -99,14 +218,14 @@ public class VocabularyServiceImpl implements VocabularyService {
     }
 
     @Override
-    public EntityDoc[] getQuickDefinitions(final String vocabIdentifiers) {
+    public VocabResponse getQuickDefinitions(final String vocabIdentifiers) {
         notBlank(vocabIdentifiers, "Vocab identifiers was null", UserExceptionType.SERVICE_VALIDATION_ERROR);
         final String[] strongList = getKeys(vocabIdentifiers);
 
         if (strongList.length != 0) {
-            return this.definitions.searchUniqueBySingleField("strongNumber", strongList);
+            return new VocabResponse(this.definitions.searchUniqueBySingleField("strongNumber", strongList));
         }
-        return new EntityDoc[0];
+        return new VocabResponse();
     }
 
     @Override

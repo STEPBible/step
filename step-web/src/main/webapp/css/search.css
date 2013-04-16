@@ -72,6 +72,11 @@
 	list-style: none;
 }
 
+.searchResultRow .passageButtonsWidget {
+	width: 120px;
+	vertical-align: top;
+}
+
 .originalWordSearchToolbar .ui-button-text {
 	font-size: 10px;
 }
@@ -195,10 +200,23 @@ li.subjectHeading {
 	cursor: pointer;
 	margin-bottom: 1px;
 	padding: 3px;
+	list-style-type: none;
 }
 
 .expandedHeadingItem {
-	margin-bottom: 5px;	
+	margin-bottom: 5px;
+}
+
+.expandedHeadingItemContents a {
+	color: #33339F;
+}
+
+.simpleSubjectSearch {
+	width: 100%;
+}
+
+.simpleSubjectSearch .passageButtonsWidget  {
+	width: 120px;
 }
 
 .smallResultKey {
@@ -218,7 +236,10 @@ li.subjectHeading {
 }
 
 .innerRefinedSearch, .innerInfoBar {
-	padding: 5px;	
+	padding: 5px;
+	border:1px solid #F3E5B4;
+	background:#F3E5B4 url(images/ui-bg_diagonals-thick_50_F3E5B4_40x40.png) 50% 50% repeat;
+	color:#991C32	
 }
 
 .closeRefinedSearch, .closeInfoBar {

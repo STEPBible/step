@@ -1,7 +1,9 @@
-$.widget("custom.pasageButtons",  {
+$.widget("custom.passageButtons",  {
     options : {
         passageId : 0,
-        ref : null
+        ref : null,
+        showChapter : false,
+        display : null,
     },
     
     /**
@@ -13,6 +15,12 @@ $.widget("custom.pasageButtons",  {
         
         
         this.element.addClass("passageButtonsWidget").attr('ref', this.options.ref);
+
+        //add css style
+        if(this.options.display == "inline") {
+            this.element.addClass("passageButtonsWidgetInline");
+        }
+        
         var isLeft = this.options.passageId == 0 || this.options.passageId == undefined;
         var majorElement = isLeft ? leftLink : rightLink;
         var minorElement = isLeft ? rightLink : leftLink;
@@ -24,11 +32,13 @@ $.widget("custom.pasageButtons",  {
 
         //icons
         leftLink.button({ icons : { primary : "ui-icon-arrowthick-1-w" }, text : isLeft });
-        rightLink.button({ icons : { primary : "ui-icon-arrowthick-1-e" }, text : !isLeft });
+        rightLink.button({ icons : { primary : undefined, secondary : "ui-icon-arrowthick-1-e" }, text : !isLeft });
         
         //append to containing elements
         this.element.append([leftLink, rightLink]);
         this.element.buttonset();
+        
+        
         
         //add handlers
         var self = this;
@@ -40,7 +50,7 @@ $.widget("custom.pasageButtons",  {
     },
     
     _clickHandler : function(passageId) {
-        passageArrowTrigger(passageId, this.options.ref);
+        passageArrowTrigger(passageId, this.options.ref, this.options.showChapter);
         $($(".column")[passageId]).removeClass("primaryLightBg");
 
     }

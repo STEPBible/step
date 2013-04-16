@@ -1,13 +1,15 @@
 var hearingFilteredComplete = false;
 
 step.autoVersions = {
-    currentElement : undefined
+    currentElement : undefined,
 };
 
 $.widget("custom.versions",  {
     _rendered : false,
     options : {
-        multi : false
+        multi : false,
+        suggestedEnglish : ['ESV', 'KJV', 'ASV', 'DRC'],
+        suggestedAncient : ['Byz', 'TR', 'WHNU', 'OSMHB', 'LXX']
     },
     
     _create : function() {
@@ -285,6 +287,10 @@ $.widget("custom.versions",  {
                 }
             }
             
+            if(group == "language") {
+                self._reRenderVersions();
+            }
+            
             self._filter();
         });
 
@@ -293,23 +299,31 @@ $.widget("custom.versions",  {
         this.dropdownVersionMenu.append(toolbarContainer);
     },
     
+    _reRenderVersions : function() {
+        $(".versionsListMenu", this.dropdownVersionMenu).remove();
+        this._renderVersions();
+        this._bindHandlers(this);
+    },
+    
     _renderVersions : function() {
         var self = this;
         var menu = $("<ul class='versionsListMenu'></ul>");
         
-        if(step.strongVersions) {
-            $.each(step.strongVersions, function(i, version) {
-                menu.append(self._renderItem(version));
-            });
-
-            menu.append(self._renderItem(step.keyedVersions["ESV"]));
-            
-            //get last item, and mark it out
-            var items = menu.find("li");
-            var lastItem = items[items.length - 1];
-            $(lastItem).addClass("versionBreakMenuItem");
+        //check language button
+        var selectedView = this.dropdownVersionMenu.find("input:checkbox[name=language]:checked").val();
+        if(selectedView == "langMy" && step.state.language(1) == "en" || selectedView == "languageMyAndEnglish") {
+            this._renderList(menu, this.options.suggestedEnglish);
+        } else if(selectedView == "langAncient") {
+            this._renderList(menu, this.options.suggestedAncient);            
+        } else if (selectedView == "langAll" && step.strongVersions) {
+           this._renderStrongVersions(menu);
         }
-        
+
+        //get last item, and mark it out
+        var items = menu.find("li");
+        var lastItem = items[items.length - 1];
+        $(lastItem).addClass("versionBreakMenuItem");
+
         
         if(step.versions) {
             $.each(step.versions, function(i, version) {
@@ -319,6 +333,25 @@ $.widget("custom.versions",  {
             this._rendered = true;
             this.dropdownVersionMenu.append(menu);
         }
+    },
+
+    _renderList : function(menu, list) {
+        if(list == undefined) {
+            return;
+        }
+        
+        for(var ii = 0; ii < list.length; ii++) {
+            menu.append(this._renderItem(step.keyedVersions[list[ii].toUpperCase()]));
+        }
+    },
+    
+    _renderStrongVersions : function(menu) {
+        var self = this;
+        menu.append(this._renderItem(step.keyedVersions["ESV"]));
+        $.each(step.strongVersions, function(i, version) {
+            menu.append(self._renderItem(version));
+        });
+
     },
     
     _renderItem : function(item) {

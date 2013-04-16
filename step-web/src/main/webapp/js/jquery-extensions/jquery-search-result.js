@@ -8,6 +8,7 @@ $.widget("custom.searchResult",  {
      * Creates the passageButtons
      */
     _create : function() {
+        
     },
 });
 

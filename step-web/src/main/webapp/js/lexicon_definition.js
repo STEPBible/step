@@ -152,12 +152,24 @@ step.lexicon = {
         step.lexicon.populateNames(index, data.morphInfos, "#grammarContainer");
         step.lexicon.populateNames(index, data.vocabInfos, "#vocabContainer");
 
-        if (data.vocabInfos[index] && data.vocabInfos[index].similarStrongs) {
-            var similarStrongs = "";
-            for (var i in data.vocabInfos[0].similarStrongs) {
-                similarStrongs += "<a onclick='alert(\"" + data.vocabInfos[0].similarStrongs[i].code + "\");'>" + data.vocabInfos[0].similarStrongs[i].word + "</a>";
-            }
-            $("*[info-name = 'similarStrongLinks']", "#vocabContainer").html(similarStrongs);
+        if (data.vocabInfos[index] && data.vocabInfos[index].relatedNos) {
+            var linkContainer =  $("*[info-name = 'relatedNos']", "#vocabContainer");
+            $.each(data.vocabInfos[index].relatedNos, function(i, item) {
+                //build a link, with gloss (unicode title='translit') 
+                var unicode = $("<span>").append(item.matchingForm).addClass("ancientLanguage").prop("href", "javascript:void");
+                var link = $("<a>").append(item.gloss + " (");
+                link.append(unicode);
+                link.append(")");
+                link.prop("title", item.stepTransliteration)
+                link.prop("strongNumber", item.strongNumber);
+                link.addClass("lexiconRelatedWord");
+                linkContainer.append(link);
+            });
+            
+            $("span[info-name='relatedNos'] a").button().click(function() {
+                showDef($(this).prop("strongNumber"));
+            });
+            $("span[info-name='relatedNos']").buttonset();
         }
 
         this.clearWordLinks();

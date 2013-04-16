@@ -44,12 +44,16 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.lucene.search.MatchAllDocsQuery;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.BookCategory;
 import org.crosswire.jsword.passage.Key;
 import org.crosswire.jsword.versification.BibleBook;
 import org.crosswire.jsword.versification.Versification;
 
+import com.tyndalehouse.step.core.data.EntityDoc;
+import com.tyndalehouse.step.core.data.EntityIndexReader;
+import com.tyndalehouse.step.core.data.EntityManager;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.models.BibleVersion;
 import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
@@ -64,11 +68,13 @@ public class SiteMapController extends HttpServlet {
     private final ModuleController modules;
     private String stepBase;
     private final JSwordVersificationService versificationService;
+    private final EntityIndexReader definitions;
 
     /** Site map */
     private enum SiteMapType {
         SITEMAP_BIBLE,
-        SITEMAP_COMMENTARY
+        SITEMAP_COMMENTARY,
+        SITEMAP_LEXICON
     }
 
     /**
@@ -79,16 +85,17 @@ public class SiteMapController extends HttpServlet {
      */
     @Inject
     public SiteMapController(final ModuleController modules,
-            final JSwordVersificationService versificationService) {
+            final JSwordVersificationService versificationService, final EntityManager entityManager) {
         this.modules = modules;
         this.versificationService = versificationService;
+        this.definitions = entityManager.getReader("definition");
     }
 
     @Override
     protected void doGet(final HttpServletRequest req, final HttpServletResponse response)
             throws ServletException, IOException {
         if (this.stepBase == null) {
-            this.stepBase = "http://step.tyndalehouse.com/";
+            this.stepBase = "http://www.stepbible.com/";
         }
 
         // response.setContentType("application/x-gzip");
@@ -106,8 +113,10 @@ public class SiteMapController extends HttpServlet {
             final char specifier = indexName.charAt(indexName.length() - 1);
             if (indexName.contains("SITEMAP_BIBLE")) {
                 mapType = SiteMapType.SITEMAP_BIBLE;
-            } else {
+            } else if (indexName.contains("SITEMAP_COMMENTARY")) {
                 mapType = SiteMapType.SITEMAP_COMMENTARY;
+            } else {
+                mapType = SiteMapType.SITEMAP_LEXICON;
             }
 
             response.setHeader("Content-Disposition", "attachment; filename=" + siteNameWithExtension);
@@ -135,6 +144,10 @@ public class SiteMapController extends HttpServlet {
      */
     private void addSubMaps(final StringBuilder siteMap) {
         for (final SiteMapType smt : SiteMapType.values()) {
+            if (smt == SiteMapType.SITEMAP_LEXICON) {
+                continue;
+            }
+
             for (int ii = 0; ii < 26; ii++) {
                 siteMap.append("<sitemap><loc>");
                 siteMap.append(this.stepBase);
@@ -145,6 +158,12 @@ public class SiteMapController extends HttpServlet {
                 siteMap.append("</loc></sitemap>");
             }
         }
+
+        // add lexicon map
+        siteMap.append("<sitemap><loc>");
+        siteMap.append(this.stepBase);
+        siteMap.append("SITEMAP_LEXICON.xml");
+        siteMap.append("</loc></sitemap>");
     }
 
     /**
@@ -184,6 +203,9 @@ public class SiteMapController extends HttpServlet {
                 addUrl(siteMap, null, null, null, "versions.jsp");
                 addVersions(siteMap, BookCategory.BIBLE, specifier);
                 break;
+            case SITEMAP_LEXICON:
+                addLexicon(siteMap);
+                break;
             default:
                 break;
         }
@@ -193,6 +215,21 @@ public class SiteMapController extends HttpServlet {
             return siteMap.toString().getBytes("UTF-8");
         } catch (final UnsupportedEncodingException e) {
             throw new StepInternalException("Unable to convert to UTF-8", e);
+        }
+    }
+
+    /**
+     * Adds the lexicon to the sitemap.
+     * 
+     * @param siteMap the site map
+     */
+    private void addLexicon(final StringBuilder siteMap) {
+        final EntityDoc[] allDefinitions = this.definitions.search(new MatchAllDocsQuery());
+        for (final EntityDoc doc : allDefinitions) {
+            final String strong = doc.get("strongNumber");
+            if (strong != null) {
+                addUrl(siteMap, null, null, null, "#!lexicon=strong=", strong);
+            }
         }
     }
 

@@ -131,6 +131,7 @@ step.passage = {
                 self._doVerseNumbers(passageId, passageContent, options, interlinearMode, text.reference);
 //                self._doStats(passageId, passageContent, lookupVersion, text.reference);
                 self._doFonts(passageId, passageContent, interlinearMode, interlinearVersion);
+                self._doInterlinearVerseNumbers(passageContent, interlinearMode);
                 self._doInlineNotes(passageId, passageContent);
                 self._doNonInlineNotes(passageContent);
                 self._doSideNotes(passageId, passageContent);
@@ -182,7 +183,23 @@ step.passage = {
            step.util.ui.markUpTransliteration($(this));
         });
     },
-
+    
+    _doInterlinearVerseNumbers : function(passageContent, interlinearMode) {
+        if(interlinearMode == "INTERLINEAR") {
+            $.each($(".verseStart", passageContent).children(), function(i, item) { 
+                var nextItem = $(this).parent().next().children().get(i);
+                var height = $(nextItem).height();
+                var thisItem = $(this);
+                var currentLineHeight = parseInt(thisItem.css("font-size").replace("px", "")) * 1.5;
+                thisItem.height(height);
+                
+                var paddingRequired = height - currentLineHeight;
+                thisItem.css("padding-top", paddingRequired /2);
+                
+            });
+        }
+    },
+    
     _doFonts : function(passageId, passageContent, interlinearMode, interlinearVersions) {
         //interlinear or a display option
         var displayOptions = step.state.passage.options(passageId);
@@ -608,10 +625,55 @@ step.passage = {
             items.pop()();
         }
     },
+    
+    /**
+     * highlights all strongs match parameter strongReference
+     * 
+     * @strongReference the reference look for across this passage pane and
+     *                  highlight
+     */
+    highlightStrong : function(passageId, strongReference) {
+        var container = step.util.getPassageContainer(passageId);
+        // check for black listed strongs
+        if ($.inArray(strongReference, this.blacklistedStrongs) == -1) {
+            $(".verse span[strong~='" + strongReference + "']", container).addClass("emphasisePassagePhrase");
+            $("span.w[strong~='" + strongReference + "'] span.text", container).addClass("emphasisePassagePhrase");
+        }
+    },
+    
+    /**
+     * if a number of strongs are given, separated by a space, highlights all of
+     * them
+     * 
+     * @param strongMorphReference
+     *            the references of all strongs and morphs asked for
+     */
+    higlightStrongs : function(strongMorphReference) {
+        if (strongMorphReference.strong == null) {
+            return;
+        }
+
+        var references = strongMorphReference.strong.split();
+        var container = step.util.getPassageContainer(strongMorphReference.passageId);
+        
+        
+        // reset all spans that are underlined:
+        this.removeStrongsHighlights(strongMorphReference.passageId);
+        
+        for ( var ii = 0; ii < references.length; ii++) {
+            this.highlightStrong(strongMorphReference.passageId, references[ii]);
+        }
+    },
+
+    removeStrongsHighlights : function(passageId) {
+        var container = step.util.getPassageContainer(passageId);
+        $(".verse span", container).removeClass("emphasisePassagePhrase");
+        $("span.text", container).removeClass("emphasisePassagePhrase");
+    },
 
     /* 2 queues of calls backs for passages */
-    callbacks : [ [], [] ]
-
+    callbacks : [ [], [] ],
+    blacklistedStrongs : [ "G3588" ],
 };
 
 
@@ -650,7 +712,7 @@ function Passage(passageContainer, passageId) {
 
     // register to listen for events that click a word/phrase:
     this.passage.hear("show-all-strong-morphs", function(selfElement, data) {
-        self.higlightStrongs(data);
+        step.passage.higlightStrongs(data);
     });
 
     // register when we want to be alerted that a bookmark has changed
@@ -759,43 +821,9 @@ Passage.prototype.initReferenceTextBox = function() {
  * changes the passage, with optional parameters
  */
 
-/**
- * highlights all strongs match parameter strongReference
- * 
- * @strongReference the reference look for across this passage pane and
- *                  highlight
- */
-Passage.prototype.highlightStrong = function(strongReference) {
-    // check for black listed strongs
-    if ($.inArray(strongReference, Passage.getBlackListedStrongs()) == -1) {
-        $(".verse span[strong='" + strongReference + "']", this.container).addClass("emphasisePassagePhrase");
-        $("span.w[strong='" + strongReference + "'] span.text", this.container).addClass("emphasisePassagePhrase");
-    }
-};
 
 
-/**
- * if a number of strongs are given, separated by a space, highlights all of
- * them
- * 
- * @param strongMorphReference
- *            the references of all strongs and morphs asked for
- */
-Passage.prototype.higlightStrongs = function(strongMorphReference) {
-    if (strongMorphReference.strong == null) {
-        return;
-    }
 
-    var references = strongMorphReference.strong.split();
-
-    // reset all spans that are underlined:
-    $(".verse span", this.container).removeClass("emphasisePassagePhrase");
-    $("span.text", this.container).removeClass("emphasisePassagePhrase");
-
-    for ( var ii = 0; ii < references.length; ii++) {
-        this.highlightStrong(references[ii]);
-    }
-};
 
 /**
  * shows a preview of the current text desired
@@ -826,12 +854,6 @@ Passage.prototype.showPreview = function(previewData) {
             popup.hide();
         });
     });
-};
-/**
- * static method that returns strongs that should not be tagged in the UI
- */
-Passage.getBlackListedStrongs = function() {
-    return [ "G3588" ];
 };
 
 $(step.passage).hear("SEARCH_PASSAGE-activated", function(self, data) {

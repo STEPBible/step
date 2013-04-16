@@ -1,3 +1,4 @@
+<%@page import="com.tyndalehouse.step.core.models.LexiconSuggestion"%>
 <%@page import="java.util.List"%>
 <%@page import="com.tyndalehouse.step.models.info.MorphInfo"%>
 <%@page import="com.tyndalehouse.step.core.models.ShortLexiconDefinition"%>
@@ -25,56 +26,58 @@
 	
 	String morphValue = lexiconMorph != null ? lexiconMorph : ""; 
 	Info infos = controller.getInfo(lexiconStrongs, morphValue, "");
-	
-	VocabInfo vocab = infos.getVocabInfos().get(infos.getVocabInfos().size() -1);
 %>
+
 <fmt:setBundle basename="HtmlBundle" />
-
-
-
 <% request.setCharacterEncoding("utf-8"); %>
 
-<h2>
-	<%= vocab.getAccentedUnicode() %> - <%= vocab.getStepGloss() %> 
-	(<%= vocab.getStepTransliteration() %> <%= vocab.getStrongNumber() %>)
-</h2>
-
-
-<% if (vocab.getShortDef() != null) { %>
-<h3>Short Definition</h3>
-<%= vocab.getShortDef() %>
-
-<% } %>
-
-
-<% if (vocab.getMediumDef() != null) { %>
-	<h3>Medium Definition</h3>
-	<%= vocab.getMediumDef() %>
-
-<% } %>
-
-<% if (vocab.getShortDef() != null) { %>
-<h3>Long Definition</h3>
-<%= vocab.getLsjDefs() %>
-<% } %>
-
-<h3>Related numbers</h3>
 <% 
-	List<ShortLexiconDefinition> similarStrongs = vocab.getSimilarStrongs();
-	if(similarStrongs != null) {
-		for(ShortLexiconDefinition def : similarStrongs) {
+	for(VocabInfo vocab : infos.getVocabInfos()) {
 %>
-	<a href="#!somelink?<%= def.getCode() %>"><%= def.getWord() %></a>		
-<%
+	<h2>
+		<%= vocab.getAccentedUnicode() %> - <%= vocab.getStepGloss() %> 
+		(<%= vocab.getStepTransliteration() %> <%= vocab.getStrongNumber() %>)
+	</h2>
+	
+	
+	<% if (vocab.getShortDef() != null) { %>
+	<h3>Short Definition</h3>
+	<%= vocab.getShortDef() %>
+	
+	<% } %>
+	
+	
+	<% if (vocab.getMediumDef() != null) { %>
+		<h3>Medium Definition</h3>
+		<%= vocab.getMediumDef() %>
+	
+	<% } %>
+	
+	<% if (vocab.getShortDef() != null) { %>
+	<h3>Long Definition</h3>
+	<%= vocab.getLsjDefs() %>
+	<% } %>
+	
+	<h3>Related numbers</h3>
+	<% 
+		List<LexiconSuggestion> similarStrongs = vocab.getRelatedNos();
+		if(similarStrongs != null) {
+			for(LexiconSuggestion def : similarStrongs) {
+	%>
+		<a href="#!somelink?<%= def.getStrongNumber() %>"><%= def.getGloss() %> - <%= def.getMatchingForm() %></a>		
+	<%
+			}
 		}
-	}
+	%>
+	
+	<h3>Other transliterations</h3>
+	<%= vocab.getAlternativeTranslit1() != null ? vocab.getAlternativeTranslit1() : "" %><br />
+	<%= vocab.getStrongTranslit() != null ? vocab.getStrongTranslit()  : "" %><br />
+	<%= vocab.getStrongPronunc() != null ? vocab.getStrongPronunc()  : "" %><br />
+
+<% 
+} // end for loop 
 %>
-
-<h3>Other transliterations</h3>
-<%= vocab.getAlternativeTranslit1() != null ? vocab.getAlternativeTranslit1() : "" %><br />
-<%= vocab.getStrongTranslit() != null ? vocab.getStrongTranslit()  : "" %><br />
-<%= vocab.getStrongPronunc() != null ? vocab.getStrongPronunc()  : "" %><br />
-
 
 <!-- Now do morphology -->
 <%

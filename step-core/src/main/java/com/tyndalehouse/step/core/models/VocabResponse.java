@@ -30,32 +30,74 @@
  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
-package com.tyndalehouse.step.core.xsl.impl;
+package com.tyndalehouse.step.core.models;
 
-import static org.junit.Assert.assertEquals;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import org.junit.Test;
+import com.tyndalehouse.step.core.data.EntityDoc;
 
 /**
- * A simple test class to test to the provider
- * 
- * @author chrisburrell
- * 
+ * The Class VocabResponse.
  */
-public class InterleavingProviderImplTest {
+public class VocabResponse {
+    private EntityDoc[] definitions;
+    private Map<String, List<LexiconSuggestion>> relatedWords;
 
     /**
-     * check that comparing adds the right set of versions
+     * Instantiates a new vocab response.
+     * 
+     * @param definitions the definitions
+     * @param relatedWords the related words
      */
-    @Test
-    public void testInterleavingCompare() {
-        final InterleavingProviderImpl interleavingProviderImpl = new InterleavingProviderImpl(new String[] {
-                "KJV", "ESV", "NETfree", "Byz", "Tisch", "YLT", "ASV", "Montgomery", "FreCrampon" }, true);
+    public VocabResponse(final EntityDoc[] definitions,
+            final Map<String, List<LexiconSuggestion>> relatedWords) {
+        this.definitions = definitions;
+        this.relatedWords = relatedWords;
+    }
 
-        final String[] expected = new String[] { "KJV", "ESV", "KJV", "NETfree", "KJV", "YLT", "KJV", "ASV",
-                "KJV", "Montgomery", };
-        for (int ii = 0; ii < expected.length; ii++) {
-            assertEquals(expected[ii], interleavingProviderImpl.getVersions()[ii]);
-        }
+    /**
+     * Instantiates a new vocab response, all empty
+     */
+    public VocabResponse() {
+        this(new EntityDoc[0]);
+    }
+
+    /**
+     * Instantiates a new vocab response, only with definitions.
+     * 
+     * @param definitions the definitions
+     */
+    public VocabResponse(final EntityDoc[] definitions) {
+        this(definitions, new HashMap<String, List<LexiconSuggestion>>());
+    }
+
+    /**
+     * @return the definitions
+     */
+    public EntityDoc[] getDefinitions() {
+        return this.definitions;
+    }
+
+    /**
+     * @param definitions the definitions to set
+     */
+    public void setDefinitions(final EntityDoc[] definitions) {
+        this.definitions = definitions;
+    }
+
+    /**
+     * @return the relatedWords
+     */
+    public Map<String, List<LexiconSuggestion>> getRelatedWords() {
+        return this.relatedWords;
+    }
+
+    /**
+     * @param relatedWords the relatedWords to set
+     */
+    public void setRelatedWords(final Map<String, List<LexiconSuggestion>> relatedWords) {
+        this.relatedWords = relatedWords;
     }
 }

@@ -162,6 +162,10 @@ $(document).ready(function() {
         step.passage.changePassage(step.passage.getPassageId(this));
     });
     
+    $(".infoAboutVersion").button({ icons : { primary : "ui-icon-info" }, text : false});
+    $(".resetVersions").button({ icons : { primary : "ui-icon-close" }, text : false})
+    $(".interlinearHelp").button({ icons : { primary : "ui-icon-help" }, text : false})
+    
     $(".smallerFonts").button({ text : true }).click(function() {
         step.passage.ui.changeFontSize(this, -1);
     }).find(".ui-button-text").html("<span class='smallerFont'>A</span>");

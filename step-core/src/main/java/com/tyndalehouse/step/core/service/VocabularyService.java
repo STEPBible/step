@@ -32,7 +32,7 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.service;
 
-import com.tyndalehouse.step.core.data.EntityDoc;
+import com.tyndalehouse.step.core.models.VocabResponse;
 
 /**
  * The service providing morphology information
@@ -45,7 +45,7 @@ public interface VocabularyService {
      * @param vocabIdentifiers the identifier of the vocab entry (e.g. strong:G0001)
      * @return the lexicon definitions
      */
-    EntityDoc[] getDefinitions(String vocabIdentifiers);
+    VocabResponse getDefinitions(String vocabIdentifiers);
 
     /**
      * Gets the default transliteration as a string
@@ -77,5 +77,5 @@ public interface VocabularyService {
      * @param vocabIdentifiers the identifier
      * @return the quick information
      */
-    EntityDoc[] getQuickDefinitions(String vocabIdentifiers);
+    VocabResponse getQuickDefinitions(String vocabIdentifiers);
 }

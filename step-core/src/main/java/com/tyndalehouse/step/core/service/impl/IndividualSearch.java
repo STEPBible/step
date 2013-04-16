@@ -39,6 +39,7 @@ import static com.tyndalehouse.step.core.utils.StringUtils.split;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.lucene.queryParser.QueryParser;
 import org.crosswire.jsword.index.lucene.LuceneIndex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -281,7 +282,7 @@ public class IndividualSearch {
                 }
                 subjectQuery.append(LuceneIndex.FIELD_HEADING);
                 subjectQuery.append(':');
-                subjectQuery.append(keys[i]);
+                subjectQuery.append(QueryParser.escape(keys[i]));
 
                 if (i + 1 < keys.length) {
                     subjectQuery.append(" AND ");

@@ -252,55 +252,59 @@ step.util = {
         
         addStrongHandlers : function(passageId, passageContent) {
             var that = this;
-            $("[strong]", passageContent).click(function() { 
+            var allStrongElements = $("[strong]", passageContent);
+            
+            allStrongElements.click(function() { 
                 showDef(this);
-            }).hover(function() {
-                var self = this;
-                delay(function() {
-                    var strong = $(self).attr('strong');
-                    var morph = $(self).attr('morph');
-                    
-                    $.getSafe(MODULE_GET_QUICK_INFO + strong + "/" + morph + "/", function(data) {
-                        var vocabInfo = "";
-                        if(data.vocabInfos) {
-                            $.each(data.vocabInfos, function(i, item) {
-                                vocabInfo +=    "<h1>" +
-                                                "<span class='unicodeFont'>" +
-                                                item.accentedUnicode + 
-                                                "</span> (<span class='stepTransliteration'>" +
-                                                that.markUpTransliteration(item.stepTransliteration) +
-                                                "): " +
-                                                item.stepGloss +
-                                                "</h1>" +
-                                                "<span>" + 
-                                                (item.shortDef == undefined ? "" : item.shortDef) +
-                                                "</span></p>";
+            });
+            
+            $.each(allStrongElements, function(j, element) {
+                $(element).qtip({
+                    style : {
+                        tip : false,
+                        classes : "quickLexiconDefinition primaryLightBg"
+                    },
+                    position: {
+                        my: "top right",
+                        at: "top right",
+                        viewport : $(window),
+                        target : $("body"),
+                        effect : false
+                    },
+                    show : {
+                        delay : 500
+                    },
+                    content : {
+                        text : function(event, api) {
+                            var strong = $(element).attr('strong');
+                            var morph = $(element).attr('morph');
+    
+                            $.getSafe(MODULE_GET_QUICK_INFO + strong + "/" + morph + "/", function(data) {
+                                var vocabInfo = "";
+                                if(data.vocabInfos) {
+                                    $.each(data.vocabInfos, function(i, item) {
+                                        vocabInfo +=    "<h1>" +
+                                                        "<span class='unicodeFont'>" +
+                                                        item.accentedUnicode + 
+                                                        "</span> (<span class='stepTransliteration'>" +
+                                                        that.markUpTransliteration(item.stepTransliteration) +
+                                                        "): " +
+                                                        item.stepGloss +
+                                                        "</h1>" +
+                                                        "<span>" + 
+                                                        (item.shortDef == undefined ? "" : item.shortDef) +
+                                                        "</span></p>";
+                                    });
+                                }
+                                
+                                vocabInfo += "<span class='infoTagLine'>" +
+                                __s.more_info_on_click_of_word +
+                                "</span>";
+                                api.set('content.text', vocabInfo);
                             });
                         }
-                        
-                        vocabInfo += "<span class='infoTagLine'>" +
-                        __s.more_info_on_click_of_word +
-                        "</span>";
-                        
-                        //"<span class='ancientSearch'>" + item.accentedUnicode + "</span> (<em>" + item.stepTransliteration + "</em>): " + (item.stepGloss == undefined ? "-" : item.stepGloss);
-                        
-                        $(".quickLexiconDefinition").remove();
-                        var infoContent = "<div class='quickLexiconDefinition ui-state-highlight'>" +
-                                    vocabInfo +
-                                    "</div>";
-                        var infoBox = $(infoContent);
-                        
-                        $("body").append(infoBox);
-                        infoBox.css('right', "0px");
-    
-                    });
-                }
-             , 600);
-            }, function() {
-                var self = this;
-                delay(function() {
-                    $(".quickLexiconDefinition").remove();
-                }, 150);
+                     }
+                });
             });
         },
         autocompleteSearch : function(selector, data, readonly, preChangeHandler) {

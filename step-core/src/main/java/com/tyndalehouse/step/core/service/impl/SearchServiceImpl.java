@@ -719,6 +719,8 @@ public class SearchServiceImpl implements SearchService {
      */
     private Set<String> adaptQueryForRelatedStrongSearch(final SearchQuery sq) {
         final Set<String> strongsFromQuery = getStrongsFromTextCriteria(sq);
+
+        // look up the related strong numbers
         final Set<String> filteredStrongs = new HashSet<String>(strongsFromQuery.size());
         final StringBuilder fullQuery = new StringBuilder(64);
         final QueryParser p = new QueryParser(Version.LUCENE_30, STRONG_NUMBER_FIELD,
@@ -734,6 +736,12 @@ public class SearchServiceImpl implements SearchService {
                 fullQuery);
 
         setUniqueConsideredDefinitions(sq, results, relatedResults);
+
+        // append range to query
+        final String mainRange = sq.getCurrentSearch().getMainRange();
+        if (isNotBlank(mainRange)) {
+            fullQuery.insert(0, mainRange);
+        }
 
         sq.getCurrentSearch().setQuery(fullQuery.toString().toLowerCase());
         return filteredStrongs;
@@ -816,22 +824,6 @@ public class SearchServiceImpl implements SearchService {
             }
         }
         return results;
-    }
-
-    /**
-     * Gets a query that retrieves a list of strong numbers
-     * 
-     * @param strongsFromQuery the strong numbers to select
-     * @return a query looking up all the Strong numbers
-     */
-    private String retrieveStrongs(final Set<String> strongsFromQuery) {
-        final StringBuilder query = new StringBuilder(strongsFromQuery.size() * 6 + 16);
-        query.append("-stopWord:true ");
-        for (final String strong : strongsFromQuery) {
-            query.append(strong);
-            query.append(' ');
-        }
-        return query.toString();
     }
 
     /**
@@ -1055,6 +1047,23 @@ public class SearchServiceImpl implements SearchService {
 
         }
         return query.toString().trim().toLowerCase();
+    }
+
+    /**
+     * Gets a query that retrieves a list of strong numbers. This query is used agains the lexicon definitions
+     * lucene index, not the JSword-managed Bibles
+     * 
+     * @param strongsFromQuery the strong numbers to select
+     * @return a query looking up all the Strong numbers
+     */
+    private String retrieveStrongs(final Set<String> strongsFromQuery) {
+        final StringBuilder query = new StringBuilder(strongsFromQuery.size() * 6 + 16);
+        query.append("-stopWord:true ");
+        for (final String strong : strongsFromQuery) {
+            query.append(strong);
+            query.append(' ');
+        }
+        return query.toString();
     }
 
     /**

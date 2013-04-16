@@ -25,7 +25,6 @@ span.rtl span { /* Make each word follow the other */
 	float: none;
 }
 
-
 /* Make the different views of a word stack. This rule can also be surrounded with a .jesus span*/
 span.interlinear span span { /* Make this stack on top of each other. */
 	display: block;
@@ -238,8 +237,8 @@ span.strongs, span.morphs, span.interVerseNumbers {
 }
 
 .ancientVocab {
-	font-style: italic;
-	font-family: Cardo-italic;
+	font-family: Cardo;
+	font-size: 140%;
 }
 
 span.strongs a {
@@ -601,22 +600,19 @@ FONT.usg {
 
 .infoAboutVersion, .versionInfo {
 	font-size: 120%;
-	margin-left: 2px;
 	color: #33339F;
 }
 
 .resetVersions {
-	margin-left: 5px;
 	font-weight: bold;
 	color: #33339F;
 }
 
 .quickLexiconDefinition {
 	width: 300px;
-/* 	height: 300px; */
 	overflow: auto;
-	position: absolute;
-	bottom: 0px;
+/* 	position: absolute; */
+/* 	bottom: 0px; */
 	z-index: 10000;
 }
 
@@ -737,10 +733,10 @@ Analysis tabs
     border: thin solid lightgrey;
 }
 
-.searchPassage {
+.searchPassageButtons {
 	font-size: 75% !important;
 }
 
-.noWrapcell {
+.noWrapCell {
 	white-space: nowrap;
 }

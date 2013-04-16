@@ -213,7 +213,7 @@ public final class GreekUtils {
                     sb.insert(position++, 's');
                     break;
                 case 'ω':
-                    sb.setCharAt(position++, 'u');
+                    sb.setCharAt(position++, 'o');
                     sb.insert(position++, 'w');
                     break;
                 //

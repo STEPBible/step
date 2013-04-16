@@ -274,7 +274,7 @@ step.search = {
     resetExpandableItems : function(passageContent) {
         $(".expandableSearchHeading", passageContent).each(function(i, item) {
             $.data(item, 'expanded', false);
-            var arrow = $(this).find("span");
+            var arrow = $(this).find("span.arrow");
             arrow.html(arrow.html().replace('\u25bc', '\u25b6'));
         });
     },
@@ -294,12 +294,12 @@ step.search = {
             self.resetExpandableItems(content);
             $.data(this, 'expanded', true);
             
-            var arrow = $(this).find("span");
+            var arrow = $(this).find("span.arrow");
             arrow.html(arrow.html().replace('\u25b6', '\u25bc'));
             
-            var root = $(this).attr('root');
-            var fullHeader = $(this).attr('fullHeader');
-            var seeAlso = $(this).attr('seeAlso');
+            var root = $(this).prop("root");
+            var fullHeader = $(this).prop("fullHeader");
+            var seeAlso = $(this).prop("seeAlso");
             var version = "ESV";
             var currentHeading = this;
 
@@ -308,31 +308,33 @@ step.search = {
             
             //get verses for subject search
             $.getSafe(SUBJECT_VERSES, [root, fullHeader, version] , function(results) {
-                var verses = "";
+                var verses = $("<table>").addClass("expandedHeadingItem");
                 if(results) {
                     for(var i = 0; i < results.length; i++) {
-                        verses += "<li class='expandedHeadingItem'>";
-                        verses += "<span class='subjectSearchLink'>";
-                        verses += goToPassageArrow(true, results[i].reference, "searchKeyPassageArrow", true);
-                        verses += "<a class='searchRefLink' href='#' onclick='passageArrowTrigger(" + passageId + ", \"" + results[i].reference + "\", true)' >" 
-                        + results[i].reference + "</a>";
-                        verses += goToPassageArrow(false, results[i].reference, "searchKeyPassageArrow", true);
-                        verses += "</span>";
-                        verses += results[i].value;
-                        
+                        var verseContent = results[i].value;                     
                         if(results[i].fragment) {
-                            verses = verses.substring(0, verses.lastIndexOf("</div>")).trim()  + "[...]</div>";
-                        }   
+                            verseContent = verseContent.substring(0, verseContent.lastIndexOf("</div>")).trim()  + "[...]</div>";
+                        } 
                         
-                        verses += "</li>";
+                        var row = $("<tr>");
+                        row.append($("<td>").passageButtons({ 
+                            passageId : passageId, 
+                            ref : results[i].reference, 
+                            showChapter : true,
+                            display : "inline"
+                        }));
+                        
+                        verseContent = $("<td>").append(verseContent);
+                        row.append(verseContent);
+                        verses.append(row);
                     }
                 }
                  
                 //also append the see also references as links to do the search again
                 var seeAlsoRefs = "";
                 if(seeAlso) {
-                    seeAlsoRefs = $("<h4 class='expandedHeadingItem'>" + __s.subject_other_useful_entries + "</h4>");
-                    var otherLinks = $("<ul class='expandedHeadingItem'></ul>");
+                    seeAlsoRefs = $("<h4>").addClass("expandedHeadingItem").html(__s.subject_other_useful_entries);
+                    var otherLinks = $("<span>").addClass("expandedHeadingItemContents");
                     
                     var refs = seeAlso.split(";");
                     for(var i = 0; i < refs.length; i++) {
@@ -340,7 +342,7 @@ step.search = {
                             continue;
                         }
                         
-                        var link = $("<a href='#'>" + refs[i].trim() + "</a>");
+                        var link = $("<a>").attr("href", "javascript:void").html(refs[i].trim());
                         var refLink = refs[i];
                         $(link).click(function () {
                             var splitByComma = refLink.split(",");
@@ -367,16 +369,17 @@ step.search = {
                             step.state.subject.subjectQuerySyntax(passageId, query);
                             step.search.subject.search(passageId);
                         });
-                        //wrap the link in a list item
-                        otherLinks.append($("<li></li>").append(link));
+                        
+                        seeAlsoRefs.append($("<br />"));
+                        otherLinks.append(link);
                     }
-                    seeAlsoRefs.after(otherLinks);
+                    
+                    
+                    seeAlsoRefs.append(otherLinks);
                 }
                 
-                verses = $(verses).after(seeAlsoRefs);
+                verses = $(verses || "<span>").append(seeAlsoRefs);
                 $(currentHeading).after(verses);
-
-//                $(verses);
             });
         });
     },
@@ -512,85 +515,98 @@ step.search = {
     },
     
     _displayTimelineEventResults : function(results, passageId) {
-        var resultHtml = "<table>";
+        var resultHtml = $("<table>");
         var self = this;
         $.each(results, function(i, item) {
-            var resultItem = "";
             var aTarget = "";
             if(item.verses && item.verses.length > 0) {
                 aTarget = $.map(item.verses, function(item, i) { return item.key; }).join();
-                
-                resultItem += "<table class='masterSearchTable'>";
-                resultItem += self._displayPassageResults(item.verses, passageId, false, undefined);
-                resultItem += "</table>";
+                var newTable = $("<table>").addClass("masterSearchTable");
+                self._displayPassageResults(resultHtml, item.verses, passageId, false, undefined);
+                resultHtml.append(newTable);
             }
             
-            resultItem = "<tr><td class='masterSearchResultRow'><a class='' href='#' onclick='step.timeline.show("+ passageId + ", \"" + aTarget + "\")'>" + item.description +  "</a></td><td>" + resultItem +"</td>";
-                        
-            resultHtml += resultItem;
+            var link = $("<a>").attr('href', 'javascript:void').html(item.description).click(function() {
+                step.timeline.show(passageId, aTarget);
+            });
+            
+            var cell = $("<td>").addClass("masterSearchResultRow").append(link);
+            var row = $("<tr>").append(cell).append($("<td>").append(resultItem));
+            
+            resultHtml.append(row);
         });
         
-        resultHtml += "</table>";
         return resultHtml;
     },
     
     // qualifiedSearchResults = {result: , key: }
-    _displayPassageResults : function(searchResults, passageId, goToChapter, sortOrder, contentGenerator) {
+    _displayPassageResults : function(table, searchResults, passageId, goToChapter, sortOrder, contentGenerator) {
         var results = "";
         
         var lastUnicode = "";
-                
+        
+        
         $.each(searchResults, function(i, item) {
             if(item.accentedUnicode && item.accentedUnicode != lastUnicode) {
-                results += "<th class='searchResultStrongHeader' colspan='2'>";
+                var header = $("<th>").addClass("searchResultStrongHeader").prop("colspan", "2");
+                table.append(header);
                 
                 if(sortOrder == VOCABULARY) {
-                    results += (item.stepGloss == undefined ? "-" : item.stepGloss) + " (<em class='stepTransliteration'>" + step.util.ui.markUpTransliteration(item.stepTransliteration) + "</em> ; " +  "<span class='ancientSearch'>" + item.accentedUnicode + "</span>)";
+                    header.append(item.stepGloss == undefined ? "-" : item.stepGloss);
+                    header.append($("<em>").addClass("stepTransliteration").append(step.util.ui.markUpTransliteration(item.stepTransliteration)));
+                    header.append($("<span>").addClass("ancientSearch").append(item.accentedUnicode));
                 } else {
-                    results += "<span class='ancientSearch'>" + item.accentedUnicode + "</span> (<em class='stepTransliteration'>" + step.util.ui.markUpTransliteration(item.stepTransliteration) + "</em>): " + (item.stepGloss == undefined ? "-" : item.stepGloss);
+                    header.append($("<span>").addClass("ancientSearch").append(item.accentedUnicode));
+                    header.append("(");
+                    header.append($("<em>").addClass("stepTransliteration").append(step.util.ui.markUpTransliteration(item.stepTransliteration)));
+                    header.append("): ");
+                    header.append(item.stepGloss == undefined ? "-" : item.stepGloss);
                 }
                 
-                results += "</th>";
                 lastUnicode = item.accentedUnicode;
             }
             
-            results += "<tr class='searchResultRow'><td class='searchResultKey'> ";
-            results += goToPassageArrow(true, item.key, "searchKeyPassageArrow", goToChapter);
-            results += "<a class='searchRefLink' href='#' onclick='passageArrowTrigger(" + passageId + ", \"" + item.key + "\", " + goToChapter + ")' >" 
-                + item.key + "</a>";
-            results += goToPassageArrow(false, item.key, "searchKeyPassageArrow", goToChapter);
-            results += "</td><td class='searchResultRow'>";
+            var newRow = $("<tr>").addClass("searchResultRow");
+            var buttons = $("<td>").passageButtons({
+                passageId : passageId,
+                ref : item.key,
+                showChapter : true,
+            });
+            newRow.append(buttons);
+            var contentCell = $("<td>").addClass("searchResultRow");
+            newRow.append(contentCell);
             
             if(contentGenerator != undefined) {
-                results += contentGenerator(item);
+                contentCell.append(contentGenerator(contentCell, item));
             } else {
-                results += item.preview;
+                contentCell.append(item.preview);
             }
             
-            results += "</td></tr>";
+            table.append(newRow);
         });
-        return results;
     },
     
     _doSimpleSubjectSearchResults : function(searchResults, passageId) {
-        var results = "<ul class='subjectSection searchResults'>";
+        var results = $("<table>").addClass("subjectSection searchResults simpleSubjectSearch");
+
         
         var headingsSearch = searchResults[0].headingsSearch;
         var headingsResults = headingsSearch.results;
         
         for(var i = 0; i < headingsResults.length; i++) {
-            results += "<li class='subjectHeading'>";
-            results += "<span class='subjectSearchLink'>";
-            results += goToPassageArrow(true, headingsResults[i].key, "searchKeyPassageArrow", true);
-            results += "<a class='searchRefLink' href='#' onclick='passageArrowTrigger(" + passageId + ", \"" + headingsResults[i].key + "\", true)' >" 
-            + headingsResults[i].key + "</a>";
-            results += goToPassageArrow(false, headingsResults[i].key, "searchKeyPassageArrow", true);
-            results += "</span>";
-            results += headingsResults[i].preview;
-            results += "</li>";
+            var item = $("<tr>");
+            var button = $("<td>").addClass("subjectHeading").passageButtons({
+                passageId : passageId,
+                ref : headingsResults[i].key,
+                showChapter : true
+            });
+            
+            item.append(button);
+            item.append($("<td>").append(headingsResults[i].preview));
+            results.append(item);
         }
         
-        return results += "</ul>";
+        return results;
     },
     
   
@@ -604,7 +620,8 @@ step.search = {
     },
     
     _doNaveSearchResults : function(query, searchResults, passageId) {
-        var results = "<span class='searchResults'>";
+        var results = $("<span>").addClass("searchResults");
+        
         var lastHeader = "";
         
         if(searchResults.length  == 0) {
@@ -613,36 +630,43 @@ step.search = {
         
         //add a header
         lastHeader = searchResults[0].root;
-        results += "<h3 class='subjectHeading'>" + lastHeader +  "</h3>";
         
-        var ulStart = "<ul class='subjectSection searchResults'>";
-        results += ulStart;
+        var heading = $("<h3>").addClass("subjectHeading").append(lastHeader);
+        results.append(heading);
+        
+        var list = $("<ul>").addClass("subjectSection searchResults");
+        results.append(list);
+        
         
         //searchResults is the array of results
         for(var i = 0 ; i < searchResults.length; i++) {
             if(searchResults[i].root != lastHeader) {
+                //append a new header
+//                heading = $("<h3>").addClass("subjectHeading").append(searchResults[i].root);
+                list = $("<ul>").addClass("subjectSection searchResults");
+                results.append(list);
+//                heading.after(list);
                 lastHeader = searchResults[i].root;
-                results += "</ul>";
-                results += "<h3 class='subjectHeading'>" + lastHeader +  "</h3>";
-                results += ulStart;
             }
+
+            var item = $("<li>")
+                .append($("<span>").addClass("arrow").css("font-size", "smaller").html("&#9654;")).append("&nbsp;&nbsp;")
+                .append(searchResults[i].heading).addClass("expandableSearchHeading ui-state-default ui-corner-all")
+                    .prop("root", searchResults[i].root)
+                    .prop("fullHeader", searchResults[i].heading);
             
-            results += "<li root='" + searchResults[i].root + 
-            		"' fullHeader='" + searchResults[i].heading;
             if(searchResults[i].seeAlso) {
-                results += "' seeAlso='" + searchResults[i].seeAlso;
+                item.prop("seeAlso", searchResults[i].seeAlso);
             }
-            
-            results += "' class='expandableSearchHeading ui-state-default ui-corner-all'><span style='font-size: smaller'>&#9654;</span>&nbsp;&nbsp;";
-            results += searchResults[i].heading;
-            results += "</li>";
+
+            results.append(item);
         }
         
-        return results += "</ul></span>";
+        return results;
     },
 
     _displayResults : function(searchQueryResults, passageId) {
-        var results = "";
+        var results = $("<span>");
         var searchResults = searchQueryResults.results;
         var sortOrder = searchQueryResults.order;
 
@@ -650,7 +674,7 @@ step.search = {
         step.util.getPassageContainer(passageId).removeClass("hebrewLanguage greekLanguage");
         
         if (searchResults == undefined || searchResults.length == 0 || (searchQueryResults.total == 0)) {
-            results += "<span class='notApplicable'>" + __s.search_no_search_results_found + "</span>";
+            this._notApplicableMessage(results, __s.search_no_search_results_found);
             this._changePassageContent(passageId, results);
             this._doOriginalWordToolbar(searchQueryResults.definitions, passageId);
             return;
@@ -658,36 +682,43 @@ step.search = {
         
         var queryRan = step.util.undoReplaceSpecialChars(searchQueryResults.query);
         if(queryRan.startsWith("d=") || queryRan.startsWith("dr=")) {
-            results += this._displayTimelineEventResults(searchResults, passageId);
+            results.append(this._displayTimelineEventResults(searchResults, passageId));
         } else if(queryRan.startsWith("s=") || queryRan.startsWith("s+=") || queryRan.startsWith("s++=") || queryRan.startsWith("sr=")) {
-            results += this._displaySubjectResults(queryRan, searchResults, passageId);
+            results.append(this._displaySubjectResults(queryRan, searchResults, passageId));
         } else {
-            results += "<table class='searchResults'>";
+            var table = $("<table>").addClass("searchResults");
             
             if(searchResults[0].preview) {
-                    results += this._displayPassageResults(searchResults, passageId, true, sortOrder);
+                this._displayPassageResults(table, searchResults, passageId, true, sortOrder);
             } else {
                 //we customize the generation of the actual verse content to add the version
-                results += this._displayPassageResults(searchResults, passageId, true, sortOrder, function (item) {
-                    var content= "";
+                this._displayPassageResults(table, searchResults, passageId, true, sortOrder, function (cell, item) {
+                    var surrounding = $("<span>");
                     $.each(item.verseContent, function(i, verseContent) {
-                        content += "<div class='multiVersionSubResult'><span class='smallResultKey'>(" + verseContent.contentKey + ")</span> " + verseContent.preview +"</div>";
+                        var content = $("<div>").addClass("multiVersionSubResult");
+                        content.append($("<span>").addClass("smallResultKey").append(verseContent.contentKey));
+                        content.append(verseContent.preview);
+                        surrounding.append(content);
                     });
-                    return content;
+                    return surrounding;
                 });
             }
             
-            results += "</table>";
+            results.append(table);
         }
         
 
         if (searchQueryResults.maxReached == true) {
-            results += "<span class='notApplicable'>" + __s.search_too_many_results+ "</span>";
+            this._notApplicableMessage(results, __s.search_too_many_results);
         }
         
         this._changePassageContent(passageId, results);
-
         this._doOriginalWordToolbar(searchQueryResults.definitions, passageId);
+    },
+    
+    _notApplicableMessage : function(results, message) {
+        var notApplicable = $("<span>").addClass("notApplicable").html(message);
+        results.append(notApplicable);        
     },
     
     _doOriginalWordToolbar : function(definitions, passageId) {
@@ -706,7 +737,7 @@ step.search = {
     
     _changePassageContent : function(passageId, content) {
         var passageContent = $(step.util.getPassageContent(passageId));
-        passageContent.html(content);
+        passageContent.empty().append(content);
         refreshLayout();
     },
 };

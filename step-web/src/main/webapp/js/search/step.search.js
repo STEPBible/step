@@ -248,7 +248,7 @@ step.search = {
         } else {
             this._highlightResults(passageId, highlightTerms);
         }
-        
+        f
         this._doFonts(passageId);
         step.util.ui.addStrongHandlers(passageId, step.util.getPassageContainer(passageId));
         this._doSpecificSearchRequirements(passageId, query);
@@ -473,7 +473,7 @@ step.search = {
         var passageContainer = step.util.getPassageContainer(passageId);
 
         for(var i = 0; i < strongsList.length; i++) {
-            $("span[strong~='" + strongsList[i] + "']", passageContainer).addClass("ui-state-highlight");
+            $("span[strong~='" + strongsList[i] + "']", passageContainer).addClass("secondaryBackground");
         }
     },
    
@@ -509,7 +509,7 @@ step.search = {
         for(var i = 0; i < highlightTerms.length; i++) {
             if(!step.util.isBlank(highlightTerms[i])) {
                 var regex = new RegExp("\\b" + highlightTerms[i] + "\\b", "ig");
-                doHighlight(verses, "ui-state-highlight", regex);
+                doHighlight(verses, "secondaryBackground", regex);
             }
         }
     },

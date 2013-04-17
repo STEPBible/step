@@ -201,6 +201,10 @@ body {
 	background-color: rgb(235, 235, 241);
 }
 
-.primaryLighBorder {
+.primaryLightBorder {
 	border-color: #F3E5B4;
+}
+
+.secondaryBackground {
+	background-color: #F3E5B4;
 }

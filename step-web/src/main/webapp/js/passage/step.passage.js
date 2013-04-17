@@ -566,7 +566,7 @@ step.passage = {
                         viewport: $(window)
                     },
                     style : {
-                        classes : "primaryLightBg primaryLighBorder noQtipWidth"
+                        classes : "primaryLightBg primaryLightBorder noQtipWidth"
                     }
                 });
             });

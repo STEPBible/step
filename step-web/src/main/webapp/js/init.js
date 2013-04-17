@@ -49,7 +49,7 @@ var timeline;
 
 function init() {
 	$(document).ready(function() {
-	    $.fn.qtip.defaults.style.classes="primaryLightBg primaryLighBorder";
+	    $.fn.qtip.defaults.style.classes="primaryLightBg primaryLightBorder";
 	    
 	    initLocale();
 	    

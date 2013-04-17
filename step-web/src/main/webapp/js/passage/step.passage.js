@@ -131,7 +131,7 @@ step.passage = {
                 self._doVerseNumbers(passageId, passageContent, options, interlinearMode, text.reference);
 //                self._doStats(passageId, passageContent, lookupVersion, text.reference);
                 self._doFonts(passageId, passageContent, interlinearMode, interlinearVersion);
-                self._doInterlinearVerseNumbers(passageContent, interlinearMode);
+                self.doInterlinearVerseNumbers(passageId);
                 self._doInlineNotes(passageId, passageContent);
                 self._doNonInlineNotes(passageContent);
                 self._doSideNotes(passageId, passageContent);
@@ -184,18 +184,77 @@ step.passage = {
         });
     },
     
-    _doInterlinearVerseNumbers : function(passageContent, interlinearMode) {
+    doInterlinearVerseNumbers : function(passageId) {
+        var interlinearMode = this.getDisplayMode(passageId).displayMode;
+        
         if(interlinearMode == "INTERLINEAR") {
-            $.each($(".verseStart", passageContent).children(), function(i, item) { 
-                var nextItem = $(this).parent().next().children().get(i);
-                var height = $(nextItem).height();
-                var thisItem = $(this);
-                var currentLineHeight = parseInt(thisItem.css("font-size").replace("px", "")) * 1.5;
-                thisItem.height(height);
+            //obtain heights first...
+            var passageContent = step.util.getPassageContent(passageId);
+            var individualBlocks = $(".passageContentHolder", passageContent).children().children();
+            
+            if(individualBlocks == 0) {
+                return;
+            }
+            
+            var sizes = [];
+            var obtainedSizes = 0;
+            
+            //get sizes
+            for(var i = 0; i < individualBlocks.length; i++) {
+                var block = individualBlocks.eq(i);
+                var blockChildren = block.children();
                 
-                var paddingRequired = height - currentLineHeight;
-                thisItem.css("padding-top", paddingRequired /2);
-                
+                //initialise if not already done
+                if(sizes.length == 0) {
+                    for(var j = 0; j < blockChildren.length; j++) {
+                        sizes.push(0);
+                    }
+                }
+
+                if(block.hasClass("verseStart")) {
+                    continue;
+                }
+
+                for(var j = 0; j < blockChildren.length; j++) {
+                    var blockChild = blockChildren.eq(j);
+                    if(!step.util.isBlank(blockChild.text()) ) {
+                        if(sizes[j] == 0) {
+                            sizes[j] = blockChild.height();
+                            obtainedSizes++;
+                        }
+                    }
+                    
+                }
+                if(obtainedSizes == sizes.length) {
+                    break;
+                }
+            }
+            
+            //do verse numbers
+            $.each($(".verseStart", passageContent), function(i, item){
+                var verseBlocks = $(item).children();
+                for(var i = 0; i < verseBlocks.length; i++) {
+                    if(i < sizes.length && sizes[i] != 0) {
+                        verseBlocks.eq(i).height(sizes[i]).css('line-height', sizes[i] + "px");
+                    }
+                }
+            });
+            
+            //do all empty nodes as well.
+            $(".passageContentHolder", passageContent).children().children().not(".verseStart").children().each(function(index) {
+                if($(this).hasClass("w")) {
+                    //we're looking at a parent element, so do the same for the children
+                    var wChildren = $(this).children();
+                    for(var j = 0; j < wChildren.length; j++) {
+                        wChildren.eq(j).height(sizes[j]).css('line-height', sizes[j] + "px")
+                    }
+                } else if(step.util.isBlank($(this).text())) {
+                    //work out index
+                    var indexInParent = $(this).index();
+                    if(indexInParent < sizes.length && sizes[indexInParent] != 0) {
+                        $(this).height(sizes[indexInParent]).css('line-height', sizes[indexInParent] + "px");
+                    }
+                }
             });
         }
     },
@@ -507,7 +566,7 @@ step.passage = {
                         viewport: $(window)
                     },
                     style : {
-                        classes : "primaryLightBg primaryLighBorder noQtipWidth"
+                        classes : "primaryLightBg primaryLightBorder noQtipWidth"
                     }
                 });
             });

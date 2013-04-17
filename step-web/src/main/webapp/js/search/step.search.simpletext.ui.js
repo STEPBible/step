@@ -177,7 +177,7 @@ $(document).ready(function() {
               viewport: $(window)
           },
           style : {
-              classes : "primaryLightBg primaryLighBorder"
+              classes : "primaryLightBg primaryLightBorder"
           }
       });
 });

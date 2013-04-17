@@ -218,6 +218,7 @@ step.util = {
     },
 	
     ui : {
+        appleKey : false,
         getFeaturesLabel : function(item) {
             var features = "";
             
@@ -351,6 +352,7 @@ step.util = {
         },
         
         trackQuerySyntax : function(selector, namespace) {
+            var self = this;
             $(selector + " input").keyup(function(ev) {
                 if(ev.ctrlKey || ev.altKey || ev.metaKey) {
                     return true;
@@ -358,6 +360,16 @@ step.util = {
                 
                 if(ev.which < 48 && ev.which != 8 && ev.which != 46) {
                     return true;
+                }
+             
+                //special handling of apple keys
+                if(ev.which == 224 || ev.which == 17 || ev.which == 91 || ev.which == 93) {
+                    self.appleKey = true;
+                    return;
+                }
+                
+                if(self.appleKey) {
+                    return;
                 }
                 
                 $(this).change();
@@ -395,6 +407,11 @@ step.util = {
                     }
                 }, 500);
                 return true;
+            }).keydown(function(ev) {
+                if(ev.which == 224 || ev.which == 17 || ev.which == 91 || ev.which == 93) {
+                    self.appleKey = false;
+                    return;
+                }
             });
         },
         

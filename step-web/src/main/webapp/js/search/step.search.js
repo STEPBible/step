@@ -248,7 +248,7 @@ step.search = {
         } else {
             this._highlightResults(passageId, highlightTerms);
         }
-        f
+
         this._doFonts(passageId);
         step.util.ui.addStrongHandlers(passageId, step.util.getPassageContainer(passageId));
         this._doSpecificSearchRequirements(passageId, query);

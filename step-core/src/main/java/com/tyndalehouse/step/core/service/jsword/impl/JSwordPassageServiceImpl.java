@@ -50,11 +50,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -783,7 +781,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
             books[ii] = this.versificationService.getBookFromVersion(versions[ii]);
         }
 
-        validateInterleavedVersions(displayMode, books);
+        books = removeDifferentLanguageIfCompare(displayMode, books);
         books = removeSameBooks(displayMode, books);
         return books;
     }
@@ -826,21 +824,30 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
      * @param displayMode the display mode
      * @param books the books that have been found
      */
-    private void validateInterleavedVersions(final InterlinearMode displayMode, final Book[] books) {
-        final Set<String> languageCodes = new HashSet<String>(books.length);
-        if (isComparingMode(displayMode)) {
-            // check that we have at least two books of the same language
-            for (final Book b : books) {
-                final String code = b.getLanguage().getCode();
-                if (languageCodes.contains(code)) {
-                    return;
-                }
-                // otherwise we add and hope another version turns up
-                languageCodes.add(code);
+    private Book[] removeDifferentLanguageIfCompare(final InterlinearMode displayMode, final Book[] books) {
+        if (books.length == 0) {
+            return books;
+        }
+
+        if (!isComparingMode(displayMode)) {
+            return books;
+        }
+
+        final String firstLanguage = books[0].getLanguage().getCode();
+        final List<Book> booksOfSameLanguage = new ArrayList<Book>();
+
+        // check that we have at least two books of the same language
+        for (final Book b : books) {
+            if (firstLanguage.equals(b.getLanguage().getCode())) {
+                booksOfSameLanguage.add(b);
             }
+        }
+
+        if (booksOfSameLanguage.size() < 2) {
             throw new TranslatedException("translations_in_different_languages");
         }
 
+        return booksOfSameLanguage.toArray(new Book[0]);
     }
 
     /**

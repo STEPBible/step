@@ -58,4 +58,18 @@ public class InterleavingProviderImplTest {
             assertEquals(expected[ii], interleavingProviderImpl.getVersions()[ii]);
         }
     }
+
+    /**
+     * check that comparing adds the right set of versions
+     */
+    @Test
+    public void testInterleavingNoCompare() {
+        final InterleavingProviderImpl interleavingProviderImpl = new InterleavingProviderImpl(new String[] {
+                "ESV", "SBLGNT" }, false);
+
+        final String[] expected = new String[] { "ESV", "SBLGNT" };
+        for (int ii = 0; ii < expected.length; ii++) {
+            assertEquals(expected[ii], interleavingProviderImpl.getVersions()[ii]);
+        }
+    }
 }

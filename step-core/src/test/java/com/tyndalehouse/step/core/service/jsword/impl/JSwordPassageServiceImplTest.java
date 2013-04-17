@@ -219,12 +219,12 @@ public class JSwordPassageServiceImplTest {
     @Test
     public void testComparing() throws BookException, NoSuchKeyException, JDOMException, IOException {
         final Book currentBook = Books.installed().getBook("ESV");
-        final Book secondaryBook = Books.installed().getBook("KJV");
-        final Book tertiaryBook = Books.installed().getBook("ASV");
+        final Book secondaryBook = Books.installed().getBook("SBLGNT");
+        // final Book tertiaryBook = Books.installed().getBook("ASV");
 
-        final String reference = "Mark 3:1-2";
-        final BookData bookData = new BookData(new Book[] { currentBook, secondaryBook, tertiaryBook },
-                currentBook.getKey(reference), true);
+        final String reference = "Gen 1";
+        final BookData bookData = new BookData(new Book[] { currentBook, secondaryBook },
+                currentBook.getKey(reference), false);
         final Element osisFragment = bookData.getOsisFragment();
 
         final XMLOutputter xmlOutputter = new XMLOutputter(Format.getPrettyFormat());
@@ -237,7 +237,7 @@ public class JSwordPassageServiceImplTest {
 
         final String osisText = jsi.getInterleavedVersions(
                 new String[] { currentBook.getInitials(), secondaryBook.getInitials() }, reference, options,
-                InterlinearMode.INTERLEAVED_COMPARE).getValue();
+                InterlinearMode.INTERLEAVED).getValue();
         final SAXBuilder sb = new SAXBuilder();
         final Document d = sb.build(new StringReader(osisText));
 

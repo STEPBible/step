@@ -1461,12 +1461,10 @@
 	    <xsl:choose>
     	<!-- interleaving or tabular column form -->
     	<xsl:when test="$Interleave = 'true'">
-    		<xsl:if test="./verse">
     			<xsl:if test="$comparing = false()">
-					<xsl:call-template name="interleaveVerse">
-						<xsl:with-param name="cell-direction" select="$cell-direction" />
-					</xsl:call-template>
-				</xsl:if>
+				<xsl:call-template name="interleaveVerse">
+					<xsl:with-param name="cell-direction" select="$cell-direction" />
+				</xsl:call-template>
 			</xsl:if>
 			<!-- output twice the cell of those diffs we have found if we are comparing -->
     		<xsl:if test="$comparing = true() and not(./verse)">
@@ -1482,13 +1480,11 @@
 			</xsl:if>
     	</xsl:when>
     	<xsl:otherwise>
-    		<xsl:if test="./verse">
 	   			<xsl:if test="$comparing = false()">
 					<xsl:call-template name="columnVerse">
 						<xsl:with-param name="cell-direction" select="$cell-direction" />
 					</xsl:call-template>
 				</xsl:if>
-			</xsl:if>
 			<xsl:variable name="languageFont">
 		   		<xsl:choose>
 		   			<xsl:when test="@xml:lang">

@@ -145,7 +145,7 @@ $(document).ready(function() {
                            ".simpleTextPageNumber"
                            ], namespace, [step.search.ui.simpleText.restoreDefaults, step.search.ui.simpleText.restoreIncludeExclude]);
 
-    step.util.ui.trackQuerySyntax(".simpleTextFields", namespace);
+    step.util.ui.trackQuerySyntax(".simpleTextFieldsTable", namespace);
     $(".simpleTextClear").click(function() {
         //  reset texts
         var passageId = step.passage.getPassageId(this);

@@ -354,8 +354,8 @@ step.util = {
         trackQuerySyntax : function(selector, namespace) {
             var self = this;
             
-            //do all the form elements in the selector
-            $(selector + " input").keyup(function(ev) {
+            //do all the form elements in the selector, except for query syntax which are handled separately
+            $(selector + " input").not(".querySyntax").keyup(function(ev) {
                 if(ev.ctrlKey || ev.altKey || ev.metaKey) {
                     return true;
                 }

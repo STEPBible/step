@@ -37,8 +37,8 @@ public class OsisReader {
      * @throws Exception any kind of exception
      */
     public static void main(final String[] args) throws Exception {
-        final String version = "ESV";
-        final String ref = "Gen.1.1";
+        final String version = "KJV";
+        final String ref = "Psa.120";
 
         final Book currentBook = Books.installed().getBook(version);
 
@@ -54,7 +54,7 @@ public class OsisReader {
                 new JSwordVersificationServiceImpl(), null, null, null);
         final List<LookupOption> options = new ArrayList<LookupOption>();
 
-        options.add(LookupOption.HEADINGS_ONLY);
+        // options.add(LookupOption.HEADINGS_ONLY);
 
         final String osisText = jsi.getOsisText(version, ref, options, null, InterlinearMode.NONE).getValue();
         final SAXBuilder sb = new SAXBuilder();

@@ -41,6 +41,7 @@ import static java.lang.String.format;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -63,6 +64,7 @@ import org.crosswire.jsword.versification.Versification;
 import org.crosswire.jsword.versification.system.Versifications;
 import org.jdom2.Content;
 import org.jdom2.Element;
+import org.jdom2.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -83,6 +85,9 @@ public class InterlinearProviderImpl implements InterlinearProvider {
     /** The Constant LOGGER. */
     private static final Logger LOGGER = LoggerFactory.getLogger(InterlinearProviderImpl.class);
 
+    /** contains the set of tags that may contain biblical text, all lower case */
+    private static final Set<String> VALID_TEXT_ELEMENTS = new HashSet<String>();
+
     /** limited accuracy tries to do a location look up by using the verse number as part of the key. */
     private final Map<DualKey<String, String>, Deque<Word>> limitedAccuracy = new HashMap<DualKey<String, String>, Deque<Word>>();
 
@@ -97,6 +102,18 @@ public class InterlinearProviderImpl implements InterlinearProvider {
 
     /** The testament. */
     private Testament testament;
+
+    static {
+        VALID_TEXT_ELEMENTS.add("divinename");
+        VALID_TEXT_ELEMENTS.add("a");
+        VALID_TEXT_ELEMENTS.add("foreign");
+        VALID_TEXT_ELEMENTS.add("hi");
+        VALID_TEXT_ELEMENTS.add("name");
+        VALID_TEXT_ELEMENTS.add("q");
+        VALID_TEXT_ELEMENTS.add("w");
+        VALID_TEXT_ELEMENTS.add("seg");
+        VALID_TEXT_ELEMENTS.add("transChange");
+    }
 
     /**
      * sets up the interlinear provider with the correct version and text scope.
@@ -324,7 +341,7 @@ public class InterlinearProviderImpl implements InterlinearProvider {
      */
     private void extractTextualInfoFromNode(final Element element, final String verseReference) {
         final String strong = element.getAttributeValue(OSISUtil.ATTRIBUTE_W_LEMMA);
-        final String word = element.getText();
+        final String word = getText(element);
 
         // do we need to do any manipulation? probably not because we are going to be
         // comparing against other OSIS XML texts which should be formatted in the same way!
@@ -352,6 +369,46 @@ public class InterlinearProviderImpl implements InterlinearProvider {
         if (partial) {
             for (final Word w : words) {
                 w.setPartial(true);
+            }
+        }
+    }
+
+    /**
+     * Gets the text of the element and its children
+     * 
+     * @param element the element
+     * @return the text
+     */
+    private String getText(final Element element) {
+        // can contain <a> and <seg>, both of which we need to output
+        final StringBuilder sb = new StringBuilder(32);
+        getTextRecurively(sb, element);
+        return sb.toString();
+    }
+
+    /**
+     * Gets the text recurively.
+     * 
+     * @param sb the sb
+     * @param content the content
+     */
+    private void getTextRecurively(final StringBuilder sb, final Content content) {
+        if (content instanceof Text) {
+            sb.append(((Text) content).getText());
+            return;
+        }
+
+        if (content instanceof Element) {
+            // iterate through all children
+            final Element element = (Element) content;
+            // we only consider some elements
+            if (!VALID_TEXT_ELEMENTS.contains(element.getName().toLowerCase())) {
+                return;
+            }
+
+            final List<Content> children = element.getContent();
+            for (final Content c : children) {
+                getTextRecurively(sb, c);
             }
         }
     }

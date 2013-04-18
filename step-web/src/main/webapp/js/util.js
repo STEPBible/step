@@ -353,6 +353,8 @@ step.util = {
         
         trackQuerySyntax : function(selector, namespace) {
             var self = this;
+            
+            //do all the form elements in the selector
             $(selector + " input").keyup(function(ev) {
                 if(ev.ctrlKey || ev.altKey || ev.metaKey) {
                     return true;
@@ -364,7 +366,7 @@ step.util = {
              
                 //special handling of apple keys
                 if(ev.which == 224 || ev.which == 17 || ev.which == 91 || ev.which == 93) {
-                    self.appleKey = true;
+                    self.appleKey = false;
                     return;
                 }
                 
@@ -409,8 +411,7 @@ step.util = {
                 return true;
             }).keydown(function(ev) {
                 if(ev.which == 224 || ev.which == 17 || ev.which == 91 || ev.which == 93) {
-                    self.appleKey = false;
-                    return;
+                    self.appleKey = true;
                 }
             });
         },
@@ -419,7 +420,6 @@ step.util = {
             var i = 0;
             for(i = 0; i < 100; i++) {
                 $("fieldset:visible .resultEstimates").prev().css("background-color", "#" + this._calculateEstimateBackgroundColour(i));
-                
             }
         },
         

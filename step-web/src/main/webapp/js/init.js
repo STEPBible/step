@@ -102,7 +102,7 @@ function initLocale() {
 }
 
 function initJira() {
-    if(location.hostname.toLowerCase().indexOf("step.tyndalehouse.com") >= 0) {
+    if(location.hostname.toLowerCase().indexOf("stepbible") >= 0) {
         //init JIRA hook
         jQuery.ajax({
             url: "js/jira/issue_collector_dfa819bd.js",

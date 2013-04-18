@@ -78,7 +78,7 @@ step.state = {
                      }
                      return checkboxValue;
              } else {
-                 if (value != null) { 
+                 if (value != null && specificSelector.val() != value) { 
                      specificSelector.val(value); 
                  }
                  return step.state._storeAndRetrieveCookieState(passageId, key, value, false);

@@ -75,6 +75,18 @@ public class DualKey<T, S> {
     @Override
     public int hashCode() {
         // we need to return the same hashcode based on s and t
+        if (this.s == null && this.t == null) {
+            return super.hashCode();
+        }
+
+        if (this.s == null) {
+            return this.t.hashCode();
+        }
+
+        if (this.t == null) {
+            return this.s.hashCode();
+        }
+
         return this.t.toString().concat(this.s.toString()).hashCode();
     }
 

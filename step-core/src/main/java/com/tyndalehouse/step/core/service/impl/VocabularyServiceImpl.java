@@ -337,7 +337,14 @@ public class VocabularyServiceImpl implements VocabularyService {
             // perhaps someone added some random information at the end
             if (subStrong != null && subStrong.length() > 3) {
                 final String first4Chars = subStrong.substring(0, 4);
-                return String.format("%c%04d", strongNumber.charAt(baseIndex), Integer.parseInt(first4Chars));
+                try {
+                    return String.format("%c%04d", strongNumber.charAt(baseIndex),
+                            Integer.parseInt(first4Chars));
+                } catch (final NumberFormatException ex) {
+                    // couldn't convert to a padded number
+                    LOGGER.trace("Unable to convert [{}] to a padded number.", first4Chars);
+                    return strongNumber;
+                }
             }
 
             return "err";

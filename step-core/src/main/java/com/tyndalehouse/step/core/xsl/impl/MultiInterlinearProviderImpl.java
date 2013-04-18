@@ -39,6 +39,9 @@ import static com.tyndalehouse.step.core.utils.StringUtils.split;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.tyndalehouse.step.core.xsl.InterlinearProvider;
 import com.tyndalehouse.step.core.xsl.MultiInterlinearProvider;
 
@@ -49,6 +52,7 @@ import com.tyndalehouse.step.core.xsl.MultiInterlinearProvider;
  * 
  */
 public class MultiInterlinearProviderImpl implements MultiInterlinearProvider {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MultiInterlinearProviderImpl.class);
 
     /** we separate by commas and spaces. */
     static final String VERSION_SEPARATOR = ", ?";
@@ -69,17 +73,25 @@ public class MultiInterlinearProviderImpl implements MultiInterlinearProvider {
             return;
         }
 
-        final Map<String, String> hebrewDirectMapping = initHebrewDirectMapping();
-        final Map<String, String> hebrewIndirectMappings = initHebrewIndirectMappings();
-        final String[] differentVersions = split(versions, VERSION_SEPARATOR);
-        if (differentVersions != null) {
-            for (final String version : differentVersions) {
-                if (isNotBlank(version)) {
-                    final String normalisedVersion = version.trim();
-                    this.interlinearProviders.put(normalisedVersion, new InterlinearProviderImpl(
-                            normalisedVersion, textScope, hebrewDirectMapping, hebrewIndirectMappings));
+        try {
+            final Map<String, String> hebrewDirectMapping = initHebrewDirectMapping();
+            final Map<String, String> hebrewIndirectMappings = initHebrewIndirectMappings();
+            final String[] differentVersions = split(versions, VERSION_SEPARATOR);
+            if (differentVersions != null) {
+                for (final String version : differentVersions) {
+                    if (isNotBlank(version)) {
+                        final String normalisedVersion = version.trim();
+                        this.interlinearProviders.put(normalisedVersion, new InterlinearProviderImpl(
+                                normalisedVersion, textScope, hebrewDirectMapping, hebrewIndirectMappings));
+                    }
                 }
             }
+            // CHECKSTYLE:OFF
+            // called by an XSLT so need to trap error and log, then throw up perhaps
+        } catch (final RuntimeException ex) {
+            // CHECKSTYLE:ON
+            LOGGER.error(ex.getMessage(), ex);
+            throw ex;
         }
 
     }

@@ -47,6 +47,7 @@ import org.crosswire.jsword.book.Books;
 
 import com.google.inject.Injector;
 import com.tyndalehouse.step.core.models.ClientSession;
+import com.tyndalehouse.step.core.service.helpers.VersionResolver;
 import com.tyndalehouse.step.core.utils.StringUtils;
 
 /**
@@ -59,6 +60,7 @@ import com.tyndalehouse.step.core.utils.StringUtils;
 public class VersionsStepRequest {
     private final Locale userLocale;
     private final ResourceBundle bundle;
+    private final VersionResolver versionResolver;
 
     /**
      * wraps around the servlet request for easy access
@@ -68,6 +70,7 @@ public class VersionsStepRequest {
      */
     public VersionsStepRequest(final Injector injector) {
         this.userLocale = injector.getInstance(ClientSession.class).getLocale();
+        this.versionResolver = injector.getInstance(VersionResolver.class);
         this.bundle = ResourceBundle.getBundle("HtmlBundle", this.userLocale);
     }
 
@@ -132,6 +135,8 @@ public class VersionsStepRequest {
 
         int ii = 0;
         for (final Book b : books) {
+            final String initials = this.versionResolver.getShortName(b.getInitials());
+
             if (!BookCategory.BIBLE.equals(b.getBookCategory())
                     && !BookCategory.COMMENTARY.equals(b.getBookCategory())) {
                 continue;
@@ -146,7 +151,7 @@ public class VersionsStepRequest {
             bookList.append("<td>");
 
             bookList.append("<a href='version.jsp?version=");
-            bookList.append(b.getInitials());
+            bookList.append(initials);
             bookList.append("' class='info' title='");
 
             final String shortCopyright = (String) b.getBookMetaData().getProperty("ShortCopyright");
@@ -155,7 +160,7 @@ public class VersionsStepRequest {
             }
 
             bookList.append("'>&#x24d8; ");
-            bookList.append(b.getInitials());
+            bookList.append(initials);
             bookList.append("</a>");
             bookList.append("</td>");
 

@@ -691,12 +691,16 @@ step.passage = {
      * @strongReference the reference look for across this passage pane and
      *                  highlight
      */
-    highlightStrong : function(passageId, strongReference) {
-        var container = step.util.getPassageContainer(passageId);
+    highlightStrong : function(passageId, strongReference, emphasiseClass) {
+        var classes = emphasiseClass || "emphasisePassagePhrase";
+        
+        var container = passageId ? step.util.getPassageContainer(passageId) : $("body");
+        
+        
         // check for black listed strongs
         if ($.inArray(strongReference, this.blacklistedStrongs) == -1) {
-            $(".verse span[strong~='" + strongReference + "']", container).addClass("emphasisePassagePhrase");
-            $("span.w[strong~='" + strongReference + "'] span.text", container).addClass("emphasisePassagePhrase");
+            $(".verse span[strong~='" + strongReference + "']", container).addClass(classes);
+            $("span.w[strong~='" + strongReference + "'] span.text", container).addClass(classes);
         }
     },
     
@@ -712,22 +716,24 @@ step.passage = {
             return;
         }
 
-        var references = strongMorphReference.strong.split();
+        var references = strongMorphReference.strong.split(" ");
         var container = step.util.getPassageContainer(strongMorphReference.passageId);
         
         
         // reset all spans that are underlined:
-        this.removeStrongsHighlights(strongMorphReference.passageId);
+        this.removeStrongsHighlights(strongMorphReference.passageId, strongMorphReference.classes);
         
         for ( var ii = 0; ii < references.length; ii++) {
-            this.highlightStrong(strongMorphReference.passageId, references[ii]);
+            this.highlightStrong(strongMorphReference.passageId, references[ii], strongMorphReference.classes);
         }
     },
 
-    removeStrongsHighlights : function(passageId) {
-        var container = step.util.getPassageContainer(passageId);
-        $(".verse span", container).removeClass("emphasisePassagePhrase");
-        $("span.text", container).removeClass("emphasisePassagePhrase");
+    removeStrongsHighlights : function(passageId, classes) {
+        var classes = classes || "emphasisePassagePhrase";
+        
+        var container = passageId ? step.util.getPassageContainer(passageId) : $("body");
+        $(".verse span", container).removeClass(classes);
+        $("span.text", container).removeClass(classes);
     },
 
     /* 2 queues of calls backs for passages */

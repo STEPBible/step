@@ -257,6 +257,15 @@ step.util = {
             
             allStrongElements.click(function() { 
                 showDef(this);
+            }).hover(function() { 
+                step.passage.higlightStrongs({
+                    passageId : undefined,
+                    strong: $(this).attr('strong'),
+                    morph : $(this).attr('morph'),
+                    classes : "primaryLightBg"
+                });
+            }, function() { 
+                step.passage.removeStrongsHighlights(undefined, "primaryLightBg");
             });
             
             $.each(allStrongElements, function(j, element) {

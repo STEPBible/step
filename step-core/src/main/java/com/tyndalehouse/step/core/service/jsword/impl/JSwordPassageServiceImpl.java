@@ -97,6 +97,7 @@ import com.tyndalehouse.step.core.models.KeyWrapper;
 import com.tyndalehouse.step.core.models.LookupOption;
 import com.tyndalehouse.step.core.models.OsisWrapper;
 import com.tyndalehouse.step.core.service.VocabularyService;
+import com.tyndalehouse.step.core.service.helpers.VersionResolver;
 import com.tyndalehouse.step.core.service.impl.MorphologyServiceImpl;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
@@ -125,6 +126,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
     private final JSwordVersificationService versificationService;
     private final VocabularyService vocabProvider;
     private final ColorCoderProviderImpl colorCoder;
+    private final VersionResolver resolver;
 
     /**
      * constructs the jsword service.
@@ -137,11 +139,12 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
     @Inject
     public JSwordPassageServiceImpl(final JSwordVersificationService versificationService,
             final MorphologyServiceImpl morphologyProvider, final VocabularyService vocabProvider,
-            final ColorCoderProviderImpl colorCoder) {
+            final ColorCoderProviderImpl colorCoder, final VersionResolver resolver) {
         this.versificationService = versificationService;
         this.morphologyProvider = morphologyProvider;
         this.vocabProvider = vocabProvider;
         this.colorCoder = colorCoder;
+        this.resolver = resolver;
     }
 
     @Override
@@ -1092,7 +1095,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
         final Book[] books = bookData.getBooks();
         final String[] versions = new String[books.length];
         for (int ii = 0; ii < books.length; ii++) {
-            versions[ii] = books[ii].getInitials();
+            versions[ii] = this.resolver.getShortName(books[ii].getInitials());
         }
 
         if (displayMode != NONE && displayMode != INTERLINEAR) {

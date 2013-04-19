@@ -401,9 +401,14 @@ step.util = {
                     
                     if(step.search.refinedSearch.length == 0) {
                         $.getSafe(SEARCH_ESTIMATES, [encodeURIComponent(step.util.replaceSpecialChars(syntax)) + " in (" + versions + ")"], function(estimate) {
-                            $("fieldset:visible .resultEstimates", step.util.getPassageContainer(passageId))
-                                .html(sprintf(__s.approx_results, estimate))
+                            var field = $("fieldset:visible .resultEstimates", step.util.getPassageContainer(passageId));
+                            if(estimate == -1) {
+                                field.html("");
+                            } else {
+                                field.html(sprintf(__s.approx_results, estimate))
                                 .css("color", "#" + step.util.ui._calculateEstimateBackgroundColour(estimate));
+                            }
+                            
                             
                         });
                     }

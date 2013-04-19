@@ -53,7 +53,6 @@ import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.BookData;
 import org.crosswire.jsword.book.BookException;
 import org.crosswire.jsword.book.BookMetaData;
-import org.crosswire.jsword.book.Books;
 import org.crosswire.jsword.book.OSISUtil;
 import org.crosswire.jsword.passage.Key;
 import org.crosswire.jsword.passage.KeyUtil;
@@ -69,6 +68,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
+import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
 import com.tyndalehouse.step.core.utils.StringUtils;
 import com.tyndalehouse.step.core.xsl.InterlinearProvider;
 
@@ -118,13 +118,16 @@ public class InterlinearProviderImpl implements InterlinearProvider {
     /**
      * sets up the interlinear provider with the correct version and text scope.
      * 
+     * @param versificationService versification service
+     * 
      * @param version the version to use to set up the interlinear
      * @param textScope the text scope reference, defining the bounds of the lookup
      * @param hebrewDirectMapping the hebrew overriding mappings
      * @param hebrewIndirectMappings the mappings used if no other mapping is found
      */
-    public InterlinearProviderImpl(final String version, final String textScope,
-            final Map<String, String> hebrewDirectMapping, final Map<String, String> hebrewIndirectMappings) {
+    public InterlinearProviderImpl(final JSwordVersificationService versificationService,
+            final String version, final String textScope, final Map<String, String> hebrewDirectMapping,
+            final Map<String, String> hebrewIndirectMappings) {
         // first check whether the values passed in are correct
         if (areAnyBlank(version, textScope)) {
             return;
@@ -132,7 +135,7 @@ public class InterlinearProviderImpl implements InterlinearProvider {
 
         this.hebrewIndirectMappings = hebrewIndirectMappings;
         this.hebrewDirectMapping = hebrewDirectMapping;
-        this.currentBook = Books.installed().getBook(version);
+        this.currentBook = versificationService.getBookFromVersion(version);
         if (this.currentBook == null) {
             throw new StepInternalException(format("Couldn't look up book: [%s]", version));
         }

@@ -66,6 +66,7 @@ import com.tyndalehouse.step.core.models.BookName;
 import com.tyndalehouse.step.core.models.InterlinearMode;
 import com.tyndalehouse.step.core.models.LookupOption;
 import com.tyndalehouse.step.core.models.OsisWrapper;
+import com.tyndalehouse.step.core.utils.TestUtils;
 import com.tyndalehouse.step.core.xsl.impl.ColorCoderProviderImpl;
 
 /**
@@ -85,7 +86,7 @@ public class JSwordPassageServiceImplTest {
     @Test
     public void testNormalize() throws NoSuchKeyException {
         final JSwordPassageServiceImpl jsi = new JSwordPassageServiceImpl(
-                new JSwordVersificationServiceImpl(), null, null, null);
+                TestUtils.mockVersificationService(), null, null, null);
 
         final Book book = Books.installed().getBook("KJV");
 
@@ -102,7 +103,7 @@ public class JSwordPassageServiceImplTest {
     @Test
     public void testColorCoding() {
         final JSwordPassageServiceImpl jsi = new JSwordPassageServiceImpl(
-                new JSwordVersificationServiceImpl(), null, null, mock(ColorCoderProviderImpl.class));
+                TestUtils.mockVersificationService(), null, null, mock(ColorCoderProviderImpl.class));
 
         final List<LookupOption> options = new ArrayList<LookupOption>();
         options.add(LookupOption.COLOUR_CODE);
@@ -116,7 +117,7 @@ public class JSwordPassageServiceImplTest {
     @Test
     public void testColorCodingInterlinear() {
         final JSwordPassageServiceImpl jsi = new JSwordPassageServiceImpl(
-                new JSwordVersificationServiceImpl(), null, null, mock(ColorCoderProviderImpl.class));
+                TestUtils.mockVersificationService(), null, null, mock(ColorCoderProviderImpl.class));
 
         final List<LookupOption> options = new ArrayList<LookupOption>();
         options.add(LookupOption.COLOUR_CODE);
@@ -133,7 +134,7 @@ public class JSwordPassageServiceImplTest {
     @Test
     public void testExpandNoGap() {
         final JSwordPassageServiceImpl jsi = new JSwordPassageServiceImpl(
-                new JSwordVersificationServiceImpl(), null, null, null);
+                TestUtils.mockVersificationService(), null, null, null);
 
         final Key expandToFullChapter = jsi.expandToFullChapter("Ruth", "1", "22",
                 Books.installed().getBook("KJV"),
@@ -163,7 +164,7 @@ public class JSwordPassageServiceImplTest {
 
         // do the test
         final JSwordPassageServiceImpl jsi = new JSwordPassageServiceImpl(
-                new JSwordVersificationServiceImpl(), null, null, null);
+                TestUtils.mockVersificationService(), null, null, null);
         final List<LookupOption> options = new ArrayList<LookupOption>();
         // options.add(INTERLINEAR);
 
@@ -196,7 +197,7 @@ public class JSwordPassageServiceImplTest {
 
         // do the test
         final JSwordPassageServiceImpl jsi = new JSwordPassageServiceImpl(
-                new JSwordVersificationServiceImpl(), null, null, null);
+                TestUtils.mockVersificationService(), null, null, null);
         final List<LookupOption> options = new ArrayList<LookupOption>();
 
         final String osisText = jsi.getOsisText("KJV", "Romans 1:4", options, "", InterlinearMode.NONE)
@@ -232,7 +233,7 @@ public class JSwordPassageServiceImplTest {
 
         // do the test
         final JSwordPassageServiceImpl jsi = new JSwordPassageServiceImpl(
-                new JSwordVersificationServiceImpl(), null, null, null);
+                TestUtils.mockVersificationService(), null, null, null);
         final List<LookupOption> options = new ArrayList<LookupOption>();
 
         final String osisText = jsi.getInterleavedVersions(
@@ -251,7 +252,7 @@ public class JSwordPassageServiceImplTest {
     @Test
     public void testSingleReference() {
         final JSwordPassageServiceImpl jsi = new JSwordPassageServiceImpl(
-                new JSwordVersificationServiceImpl(), null, null, null);
+                TestUtils.mockVersificationService(), null, null, null);
         final String allRefs = jsi.getAllReferences("Gen.1", "ESV");
 
         assertTrue(allRefs.contains("Gen.1.1"));
@@ -264,7 +265,7 @@ public class JSwordPassageServiceImplTest {
     @Test
     public void testGetBibleBooks() {
         final JSwordMetadataServiceImpl jsi = new JSwordMetadataServiceImpl(
-                new JSwordVersificationServiceImpl());
+                TestUtils.mockVersificationService());
 
         final List<BookName> bibleBookNames = jsi.getBibleBookNames("Ma", "ESV");
         final String[] containedAbbrevations = new String[] { "Mal", "Mat", "Mar" };
@@ -291,7 +292,7 @@ public class JSwordPassageServiceImplTest {
     public void testGetSiblingChapter() {
         org.crosswire.jsword.versification.BookName.setFullBookName(false);
         final JSwordPassageServiceImpl jsword = new JSwordPassageServiceImpl(
-                new JSwordVersificationServiceImpl(), null, null, null);
+                TestUtils.mockVersificationService(), null, null, null);
 
         // previous chapter tests
         assertEquals("Gen 1", jsword.getSiblingChapter("Genesis 2", "ESV", true).getName());
@@ -325,7 +326,7 @@ public class JSwordPassageServiceImplTest {
     @Test
     public void testGetPreviousRef() throws NoSuchKeyException {
         final JSwordPassageServiceImpl jsword = new JSwordPassageServiceImpl(
-                new JSwordVersificationServiceImpl(), null, null, null);
+                TestUtils.mockVersificationService(), null, null, null);
         final Book book = Books.installed().getBook("KJV");
         final Key key = book.getKey("Genesis 3:17");
 
@@ -343,7 +344,7 @@ public class JSwordPassageServiceImplTest {
     @Test
     public void testGetNextRef() throws NoSuchKeyException {
         final JSwordPassageServiceImpl jsword = new JSwordPassageServiceImpl(
-                new JSwordVersificationServiceImpl(), null, null, null);
+                TestUtils.mockVersificationService(), null, null, null);
         final Book book = Books.installed().getBook("KJV");
         final Key key = book.getKey("Genesis 3:24");
 
@@ -366,7 +367,7 @@ public class JSwordPassageServiceImplTest {
 
         // do the test
         final JSwordPassageServiceImpl jsi = new JSwordPassageServiceImpl(
-                new JSwordVersificationServiceImpl(), null, null, null);
+                TestUtils.mockVersificationService(), null, null, null);
 
         final String[] versions = new String[] { "Byz", "Tisch" };
         final BookData data = new BookData(new Book[] { Books.installed().getBook(versions[0]),
@@ -401,7 +402,7 @@ public class JSwordPassageServiceImplTest {
 
         // do the test
         final JSwordPassageServiceImpl jsi = new JSwordPassageServiceImpl(
-                new JSwordVersificationServiceImpl(), null, null, null);
+                TestUtils.mockVersificationService(), null, null, null);
 
         final BookData data = new BookData(book, book.getKey(ref));
 
@@ -435,7 +436,7 @@ public class JSwordPassageServiceImplTest {
 
         // do the test
         final JSwordPassageServiceImpl jsi = new JSwordPassageServiceImpl(
-                new JSwordVersificationServiceImpl(), null, null, null);
+                TestUtils.mockVersificationService(), null, null, null);
         final String osisText = jsi.getOsisText(version, ref, new ArrayList<LookupOption>(), null,
                 InterlinearMode.NONE).getValue();
 
@@ -454,7 +455,7 @@ public class JSwordPassageServiceImplTest {
      */
     @Test
     public void testNumberLookup() {
-        final JSwordPassageServiceImpl j = new JSwordPassageServiceImpl(new JSwordVersificationServiceImpl(),
+        final JSwordPassageServiceImpl j = new JSwordPassageServiceImpl(TestUtils.mockVersificationService(),
                 null, null, null);
         assertTrue(j
                 .getOsisTextByVerseNumbers("ESV", "KJV", 4, 4, new ArrayList<LookupOption>(), null, null,
@@ -535,7 +536,7 @@ public class JSwordPassageServiceImplTest {
     @Test
     public void testPassageShrinking() {
         final JSwordPassageServiceImpl service = new JSwordPassageServiceImpl(
-                new JSwordVersificationServiceImpl(), null, null, null);
+                TestUtils.mockVersificationService(), null, null, null);
         assertEquals("Gen.1", service.getBookData("ESV", "Gen 1").getKey().getOsisRef());
         assertEquals("Gen.1", service.getBookData("ESV", "Gen").getKey().getOsisRef());
         assertEquals("Gen.1", service.getBookData("ESV", "Gen 1-50").getKey().getOsisRef());

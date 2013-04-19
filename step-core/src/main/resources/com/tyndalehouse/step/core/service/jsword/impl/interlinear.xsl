@@ -103,11 +103,12 @@
   <xsl:param name="baseVersion" select="''" />
   <!--  a comma separated list of versions to display, if provided, then we display the interlinear -->
   <xsl:param name="interlinearVersion" select="''" />
-  <xsl:param name="interlinearReference" select="''" />
   <xsl:param name="morphologyProvider" />
   <xsl:param name="vocabProvider" />
   <xsl:param name="colorCodingProvider" />
  
+  <!--  set up interlinear provider, if we have requested it -->
+  <xsl:param name="interlinearProvider" />
  
   <!--  TODO: support alternate versification -->
   <xsl:variable name="v11nf" select="jsword:org.crosswire.jsword.versification.system.Versifications.instance()"/>
@@ -117,8 +118,6 @@
   <!-- Create a global number shaper that can transform 0-9 into other number systems. -->
   <xsl:variable name="shaper" select="jsword:org.crosswire.common.icu.NumberShaper.new()"/>
   
-  <!--  set up interlinear provider, if we have requested it -->
-  <xsl:variable name="interlinearProvider" select="jsword:com.tyndalehouse.step.core.xsl.impl.MultiInterlinearProviderImpl.new(string($interlinearVersion), string($interlinearReference))" />
 
   <xsl:variable name="punctuation" select="'|\,./&lt;&gt;?;\#:@~[]{}-=_+`¬!£$%^&amp;*()&quot;'" />
 

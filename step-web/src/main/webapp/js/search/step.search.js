@@ -99,7 +99,7 @@ step.search = {
         
            //iterate through all versions of interest
            for(var j = 0; j < vs.length; j++) {
-               //looking for them in step.versions
+               //looking for them in step.strongVersions
                if(step.strongVersions[vs[j].toUpperCase()]) {
                    return true;
                }

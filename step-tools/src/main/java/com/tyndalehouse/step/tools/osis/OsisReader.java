@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
 import com.tyndalehouse.step.core.models.InterlinearMode;
 import com.tyndalehouse.step.core.models.LookupOption;
 import com.tyndalehouse.step.core.service.jsword.impl.JSwordPassageServiceImpl;
-import com.tyndalehouse.step.core.service.jsword.impl.JSwordVersificationServiceImpl;
+import com.tyndalehouse.step.core.utils.TestUtils;
 
 /**
  * Reads an osis ref in a module
@@ -51,7 +51,7 @@ public class OsisReader {
 
         // do the test
         final JSwordPassageServiceImpl jsi = new JSwordPassageServiceImpl(
-                new JSwordVersificationServiceImpl(), null, null, null);
+                TestUtils.mockVersificationService(), null, null, null);
         final List<LookupOption> options = new ArrayList<LookupOption>();
 
         // options.add(LookupOption.HEADINGS_ONLY);

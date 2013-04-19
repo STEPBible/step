@@ -66,7 +66,6 @@ import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.BookCategory;
 import org.crosswire.jsword.book.BookData;
 import org.crosswire.jsword.book.BookException;
-import org.crosswire.jsword.book.Books;
 import org.crosswire.jsword.book.OSISUtil;
 import org.crosswire.jsword.book.UnAccenter;
 import org.crosswire.jsword.passage.Key;
@@ -106,6 +105,7 @@ import com.tyndalehouse.step.core.utils.StringUtils;
 import com.tyndalehouse.step.core.xsl.XslConversionType;
 import com.tyndalehouse.step.core.xsl.impl.ColorCoderProviderImpl;
 import com.tyndalehouse.step.core.xsl.impl.InterleavingProviderImpl;
+import com.tyndalehouse.step.core.xsl.impl.MultiInterlinearProviderImpl;
 
 /**
  * a service providing a wrapper around JSword
@@ -150,7 +150,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
         // getting the next chapter
         // FIXME find a way of getting the next chapter from the current key, in the current book, rather than
         // relying on versification systems which may contain verses that the Book does not support
-        final Book currentBook = Books.installed().getBook(version);
+        final Book currentBook = this.versificationService.getBookFromVersion(version);
         final Versification v11n = this.versificationService.getVersificationForVersion(currentBook);
 
         try {
@@ -256,7 +256,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
 
     @Override
     public KeyWrapper getKeyInfo(final String reference, final String version) {
-        final Book currentBook = Books.installed().getBook(version);
+        final Book currentBook = this.versificationService.getBookFromVersion(version);
 
         try {
             Key key;
@@ -361,7 +361,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
 
     @Override
     public KeyWrapper expandToChapter(final String version, final String reference) {
-        final Key k = Books.installed().getBook(version).getValidKey(reference);
+        final Key k = this.versificationService.getBookFromVersion(version).getValidKey(reference);
         k.blur(100, RestrictionType.CHAPTER);
         return new KeyWrapper(k);
     }
@@ -715,7 +715,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
 
         for (final String v : versions) {
             if (isNotBlank(v)) {
-                final Book book = Books.installed().getBook(v.trim());
+                final Book book = this.versificationService.getBookFromVersion(v.trim());
                 if (book != null) {
                     final String code = book.getLanguage().getCode();
                     setIfContainsHebrew(osisWrapper, code);
@@ -1067,12 +1067,15 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
     private void setInterlinearOptions(final TransformingSAXEventProvider tsep,
             final String interlinearVersion, final String reference, final InterlinearMode displayMode) {
         if (displayMode == InterlinearMode.INTERLINEAR) {
-            tsep.setParameter("interlinearReference", reference);
             tsep.setParameter("VLine", false);
 
             if (isNotBlank(interlinearVersion)) {
                 tsep.setParameter("interlinearVersion", interlinearVersion);
             }
+
+            final MultiInterlinearProviderImpl multiInterlinear = new MultiInterlinearProviderImpl(
+                    interlinearVersion, reference, this.versificationService);
+            tsep.setParameter("interlinearProvider", multiInterlinear);
         }
     }
 
@@ -1093,8 +1096,8 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
         }
 
         if (displayMode != NONE && displayMode != INTERLINEAR) {
-            tsep.setParameter("interleavingProvider", new InterleavingProviderImpl(versions,
-                    displayMode == INTERLEAVED_COMPARE || displayMode == COLUMN_COMPARE));
+            tsep.setParameter("interleavingProvider", new InterleavingProviderImpl(this.versificationService,
+                    versions, displayMode == INTERLEAVED_COMPARE || displayMode == COLUMN_COMPARE));
         }
 
         if (displayMode == INTERLEAVED || displayMode == INTERLEAVED_COMPARE) {

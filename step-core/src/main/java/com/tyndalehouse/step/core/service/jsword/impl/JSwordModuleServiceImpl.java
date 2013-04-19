@@ -33,6 +33,7 @@ import org.slf4j.LoggerFactory;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.exceptions.TranslatedException;
 import com.tyndalehouse.step.core.service.jsword.JSwordModuleService;
+import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
 import com.tyndalehouse.step.core.utils.ValidateUtils;
 
 /**
@@ -54,6 +55,7 @@ public class JSwordModuleServiceImpl implements JSwordModuleService {
     private final List<Installer> bookInstallers;
     private final List<Installer> offlineInstallers;
     private boolean offline = false;
+    private final JSwordVersificationService versificationService;
 
     /**
      * This method is deliberately placed at the top of the file to raise awareness that sensitive countries
@@ -74,9 +76,11 @@ public class JSwordModuleServiceImpl implements JSwordModuleService {
      */
     @Inject
     public JSwordModuleServiceImpl(@Named("onlineInstallers") final List<Installer> installers,
-            @Named("offlineInstallers") final List<Installer> offlineInstallers) {
+            @Named("offlineInstallers") final List<Installer> offlineInstallers,
+            final JSwordVersificationService versificationService) {
         this.bookInstallers = installers;
         this.offlineInstallers = offlineInstallers;
+        this.versificationService = versificationService;
 
         // add a handler to be notified of all job progresses
         JobManager.addWorkListener(new WorkListener() {
@@ -106,7 +110,7 @@ public class JSwordModuleServiceImpl implements JSwordModuleService {
     @Override
     public boolean isInstalled(final String... modules) {
         for (final String moduleInitials : modules) {
-            if (Books.installed().getBook(moduleInitials) == null) {
+            if (this.versificationService.getBookSilently(moduleInitials) == null) {
                 return false;
             }
         }
@@ -116,13 +120,13 @@ public class JSwordModuleServiceImpl implements JSwordModuleService {
     @Override
     public boolean isIndexed(final String version) {
         final IndexManager indexManager = IndexManagerFactory.getIndexManager();
-        return indexManager.isIndexed(Books.installed().getBook(version));
+        return indexManager.isIndexed(this.versificationService.getBookFromVersion(version));
     }
 
     @Override
     public void index(final String initials) {
         final IndexManager indexManager = IndexManagerFactory.getIndexManager();
-        final Book book = Books.installed().getBook(initials);
+        final Book book = this.versificationService.getBookFromVersion(initials);
         if (!indexManager.isIndexed(book)) {
             indexManager.scheduleIndexCreation(book);
         }
@@ -130,7 +134,7 @@ public class JSwordModuleServiceImpl implements JSwordModuleService {
 
     @Override
     public void reIndex(final String initials) {
-        final Book book = Books.installed().getBook(initials);
+        final Book book = this.versificationService.getBookFromVersion(initials);
         try {
             IndexManagerFactory.getIndexManager().deleteIndex(book);
         } catch (final BookException e) {
@@ -348,7 +352,7 @@ public class JSwordModuleServiceImpl implements JSwordModuleService {
 
     @Override
     public void removeModule(final String initials) {
-        final Book book = Books.installed().getBook(initials);
+        final Book book = this.versificationService.getBookFromVersion(initials);
 
         if (book != null) {
             try {

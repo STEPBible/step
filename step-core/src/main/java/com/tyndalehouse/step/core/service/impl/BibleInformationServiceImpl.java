@@ -77,6 +77,7 @@ import com.tyndalehouse.step.core.models.TrimmedLookupOption;
 import com.tyndalehouse.step.core.models.search.SearchResult;
 import com.tyndalehouse.step.core.models.search.StrongCountsAndSubjects;
 import com.tyndalehouse.step.core.service.BibleInformationService;
+import com.tyndalehouse.step.core.service.helpers.VersionResolver;
 import com.tyndalehouse.step.core.service.jsword.JSwordMetadataService;
 import com.tyndalehouse.step.core.service.jsword.JSwordModuleService;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
@@ -102,6 +103,7 @@ public class BibleInformationServiceImpl implements BibleInformationService {
     private final EntityManager entityManager;
     private final JSwordVersificationService jswordVersification;
     private final SubjectSearchService subjectSearchService;
+    private final VersionResolver resolver;
 
     /**
      * The bible information service, retrieving content and meta data.
@@ -120,7 +122,7 @@ public class BibleInformationServiceImpl implements BibleInformationService {
             final JSwordPassageService jswordPassage, final JSwordModuleService jswordModule,
             final JSwordMetadataService jswordMetadata, final Provider<ClientSession> clientSessionProvider,
             final EntityManager entityManager, final JSwordVersificationService jswordVersification,
-            final SubjectSearchService subjectSearchService) {
+            final SubjectSearchService subjectSearchService, final VersionResolver resolver) {
         this.jswordPassage = jswordPassage;
         this.defaultVersions = defaultVersions;
         this.jswordModule = jswordModule;
@@ -129,6 +131,7 @@ public class BibleInformationServiceImpl implements BibleInformationService {
         this.entityManager = entityManager;
         this.jswordVersification = jswordVersification;
         this.subjectSearchService = subjectSearchService;
+        this.resolver = resolver;
     }
 
     /**
@@ -144,7 +147,7 @@ public class BibleInformationServiceImpl implements BibleInformationService {
             final Locale userLocale) {
         LOGGER.debug("Getting bible versions with locale [{}] and allVersions=[{}]", locale, allVersions);
         return getSortedSerialisableList(this.jswordModule.getInstalledModules(allVersions, locale,
-                BookCategory.BIBLE, BookCategory.COMMENTARY), userLocale);
+                BookCategory.BIBLE, BookCategory.COMMENTARY), userLocale, this.resolver);
     }
 
     /**

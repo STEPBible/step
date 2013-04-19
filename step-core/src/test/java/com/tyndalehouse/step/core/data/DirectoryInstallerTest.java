@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.tyndalehouse.step.core.service.jsword.impl.JSwordModuleServiceImpl;
+import com.tyndalehouse.step.core.utils.TestUtils;
 
 /**
  * Test installations from a directory
@@ -47,7 +48,8 @@ public class DirectoryInstallerTest {
             Books.installed().removeBook(tempEsv);
         }
 
-        final JSwordModuleServiceImpl jSwordModuleServiceImpl = new JSwordModuleServiceImpl(null, installers);
+        final JSwordModuleServiceImpl jSwordModuleServiceImpl = new JSwordModuleServiceImpl(null, installers,
+                TestUtils.mockVersificationService());
         jSwordModuleServiceImpl.setOffline(true);
         jSwordModuleServiceImpl.reloadInstallers();
 

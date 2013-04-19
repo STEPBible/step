@@ -58,7 +58,7 @@ import com.tyndalehouse.step.core.data.entities.impl.TestEntityManager;
 import com.tyndalehouse.step.core.models.ClientSession;
 import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
 import com.tyndalehouse.step.core.service.jsword.impl.JSwordPassageServiceImpl;
-import com.tyndalehouse.step.core.service.jsword.impl.JSwordVersificationServiceImpl;
+import com.tyndalehouse.step.core.utils.TestUtils;
 
 /**
  * Tests the loading of the all loaders
@@ -212,7 +212,7 @@ public class LoaderTest {
     private Loader getLoader(final String key, final String file) {
         final Properties coreProperties = new Properties();
         coreProperties.put(key, file);
-        final JSwordVersificationService versificationService = new JSwordVersificationServiceImpl();
+        final JSwordVersificationService versificationService = TestUtils.mockVersificationService();
         return new Loader(new JSwordPassageServiceImpl(versificationService, null, null, null), null,
                 coreProperties, this.entityManager, this.clientSessionProvider);
     }

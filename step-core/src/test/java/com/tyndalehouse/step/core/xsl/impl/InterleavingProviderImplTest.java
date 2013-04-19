@@ -33,8 +33,17 @@
 package com.tyndalehouse.step.core.xsl.impl;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
+import org.crosswire.jsword.book.Book;
+import org.crosswire.jsword.book.Books;
 import org.junit.Test;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+
+import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
 
 /**
  * A simple test class to test to the provider
@@ -49,8 +58,19 @@ public class InterleavingProviderImplTest {
      */
     @Test
     public void testInterleavingCompare() {
-        final InterleavingProviderImpl interleavingProviderImpl = new InterleavingProviderImpl(new String[] {
-                "KJV", "ESV", "NETfree", "Byz", "Tisch", "YLT", "ASV", "Montgomery", "FreCrampon" }, true);
+        final JSwordVersificationService versification = mock(JSwordVersificationService.class);
+
+        when(versification.getBookFromVersion(anyString())).thenAnswer(new Answer<Book>() {
+
+            @Override
+            public Book answer(final InvocationOnMock invocation) {
+                return Books.installed().getBook((String) invocation.getArguments()[0]);
+            }
+        });
+
+        final InterleavingProviderImpl interleavingProviderImpl = new InterleavingProviderImpl(versification,
+                new String[] { "KJV", "ESV", "NETfree", "Byz", "Tisch", "YLT", "ASV", "Montgomery",
+                        "FreCrampon" }, true);
 
         final String[] expected = new String[] { "KJV", "ESV", "KJV", "NETfree", "KJV", "YLT", "KJV", "ASV",
                 "KJV", "Montgomery", };
@@ -64,8 +84,8 @@ public class InterleavingProviderImplTest {
      */
     @Test
     public void testInterleavingNoCompare() {
-        final InterleavingProviderImpl interleavingProviderImpl = new InterleavingProviderImpl(new String[] {
-                "ESV", "SBLGNT" }, false);
+        final InterleavingProviderImpl interleavingProviderImpl = new InterleavingProviderImpl(null,
+                new String[] { "ESV", "SBLGNT" }, false);
 
         final String[] expected = new String[] { "ESV", "SBLGNT" };
         for (int ii = 0; ii < expected.length; ii++) {

@@ -46,6 +46,7 @@ import org.crosswire.jsword.book.FeatureType;
 import org.crosswire.jsword.versification.BibleBook;
 
 import com.tyndalehouse.step.core.models.BibleVersion;
+import com.tyndalehouse.step.core.service.helpers.VersionResolver;
 
 /**
  * a set of utility methods to manipulate the JSword objects coming out
@@ -67,10 +68,11 @@ public final class JSwordUtils {
      * 
      * @param bibles a list of jsword bibles
      * @param userLocale the local for the user
+     * @param resolver TODO
      * @return the list of bibles
      */
     public static List<BibleVersion> getSortedSerialisableList(final Collection<Book> bibles,
-            final Locale userLocale) {
+            final Locale userLocale, final VersionResolver resolver) {
         final List<BibleVersion> versions = new ArrayList<BibleVersion>();
 
         // we only send back what we need
@@ -78,6 +80,7 @@ public final class JSwordUtils {
             final BibleVersion v = new BibleVersion();
             v.setName(b.getName());
             v.setInitials(b.getInitials());
+            v.setShortInitials(resolver.getShortName(b.getInitials()));
             v.setQuestionable(b.isQuestionable());
             v.setCategory(b.getBookCategory().name());
             final Language language = b.getLanguage();

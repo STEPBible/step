@@ -42,6 +42,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
 import com.tyndalehouse.step.core.xsl.InterlinearProvider;
 import com.tyndalehouse.step.core.xsl.MultiInterlinearProvider;
 
@@ -54,11 +55,13 @@ import com.tyndalehouse.step.core.xsl.MultiInterlinearProvider;
 public class MultiInterlinearProviderImpl implements MultiInterlinearProvider {
     private static final Logger LOGGER = LoggerFactory.getLogger(MultiInterlinearProviderImpl.class);
 
+    /** The interlinear providers. */
+    private final Map<String, InterlinearProvider> interlinearProviders = new HashMap<String, InterlinearProvider>();
+
     /** we separate by commas and spaces. */
     static final String VERSION_SEPARATOR = ", ?";
 
-    /** The interlinear providers. */
-    private final Map<String, InterlinearProvider> interlinearProviders = new HashMap<String, InterlinearProvider>();
+    private final JSwordVersificationService versificationService;
 
     /**
      * sets up the interlinear provider with the correct version and text scope.
@@ -66,8 +69,12 @@ public class MultiInterlinearProviderImpl implements MultiInterlinearProvider {
      * @param versions the versions to use to set up the interlinear
      * @param textScope the reference, or passage range that should be considered when setting up the
      *            interlinear provider
+     * @param versificationService
      */
-    public MultiInterlinearProviderImpl(final String versions, final String textScope) {
+    public MultiInterlinearProviderImpl(final String versions, final String textScope,
+            final JSwordVersificationService versificationService) {
+        this.versificationService = versificationService;
+
         // first check whether the values passed in are correct
         if (areAnyBlank(versions, textScope)) {
             return;
@@ -82,7 +89,8 @@ public class MultiInterlinearProviderImpl implements MultiInterlinearProvider {
                     if (isNotBlank(version)) {
                         final String normalisedVersion = version.trim();
                         this.interlinearProviders.put(normalisedVersion, new InterlinearProviderImpl(
-                                normalisedVersion, textScope, hebrewDirectMapping, hebrewIndirectMappings));
+                                versificationService, normalisedVersion, textScope, hebrewDirectMapping,
+                                hebrewIndirectMappings));
                     }
                 }
             }

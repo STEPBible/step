@@ -368,9 +368,11 @@ function initData() {
 	    step.strongVersions = {};
 	    for(var i = 0; i < step.versions.length; i++) {
 	        step.keyedVersions[step.versions[i].initials.toUpperCase()] = step.versions[i];
+	        step.keyedVersions[step.versions[i].shortInitials.toUpperCase()] = step.versions[i];
 	        
 	        if(step.versions[i].hasStrongs) {
 	            step.strongVersions[step.versions[i].initials.toUpperCase()] = step.versions[i];
+	            step.strongVersions[step.versions[i].shortInitials.toUpperCase()] = step.versions[i];
 	        }
 	    }
 	    

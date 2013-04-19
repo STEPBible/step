@@ -13,6 +13,8 @@ import org.slf4j.LoggerFactory;
 import com.tyndalehouse.step.core.models.search.SearchEntry;
 import com.tyndalehouse.step.core.models.search.VerseSearchEntry;
 import com.tyndalehouse.step.core.service.impl.SearchQuery;
+import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
+import com.tyndalehouse.step.core.utils.TestUtils;
 
 /**
  * Tests the various searches
@@ -28,9 +30,9 @@ public class JSwordSearchServiceImplTest {
      */
     @Before
     public void setUp() {
-        final JSwordVersificationServiceImpl av11nService = new JSwordVersificationServiceImpl();
-        this.search = new JSwordSearchServiceImpl(av11nService, new JSwordPassageServiceImpl(av11nService,
-                null, null, null));
+        final JSwordVersificationService mockVersificationService = TestUtils.mockVersificationService();
+        this.search = new JSwordSearchServiceImpl(mockVersificationService, new JSwordPassageServiceImpl(
+                mockVersificationService, null, null, null));
     }
 
     /**
@@ -64,7 +66,7 @@ public class JSwordSearchServiceImplTest {
         for (int i = 0; i < results.size(); i++) {
             LOGGER.trace(((VerseSearchEntry) results.get(i)).getKey());
         }
-        assertTrue(!results.isEmpty());
+        assertFalse(results.isEmpty());
     }
 
     /**
@@ -78,7 +80,7 @@ public class JSwordSearchServiceImplTest {
         for (int i = 0; i < results.size(); i++) {
             LOGGER.info(((VerseSearchEntry) results.get(i)).getKey());
         }
-        assertTrue(!results.isEmpty());
+        assertFalse(results.isEmpty());
     }
 
     // @Test

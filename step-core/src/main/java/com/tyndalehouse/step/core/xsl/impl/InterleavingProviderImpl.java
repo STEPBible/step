@@ -3,8 +3,7 @@ package com.tyndalehouse.step.core.xsl.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.crosswire.jsword.book.Books;
-
+import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
 import com.tyndalehouse.step.core.xsl.InterleavingProvider;
 
 /**
@@ -17,12 +16,16 @@ public class InterleavingProviderImpl implements InterleavingProvider {
     private String[] versions;
     private int lastAccessed = 0;
     private final boolean comparing;
+    private final JSwordVersificationService versificationService;
 
     /**
+     * @param versificationService
      * @param versions versions to interleave
      * @param comparing true to indicate we need to duplicate the versions returned
      */
-    public InterleavingProviderImpl(final String[] versions, final boolean comparing) {
+    public InterleavingProviderImpl(final JSwordVersificationService versificationService,
+            final String[] versions, final boolean comparing) {
+        this.versificationService = versificationService;
         this.versions = versions.clone();
         this.comparing = comparing;
         computeVersions();
@@ -76,7 +79,8 @@ public class InterleavingProviderImpl implements InterleavingProvider {
      * @return the language code
      */
     private String getLanguageForVersion(final int ii) {
-        return Books.installed().getBook(this.versions[ii]).getBookMetaData().getLanguage().getCode();
+        return this.versificationService.getBookFromVersion(this.versions[ii]).getBookMetaData()
+                .getLanguage().getCode();
     }
 
     /**

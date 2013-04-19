@@ -15,7 +15,7 @@ $.widget("custom.versions",  {
                         [__s.greek_ot, ["LXX", "ABPGRK", "ABP"]],
                         [__s.greek_nt, ["Antoniades", "Byz", "Elzevir", "SBLGNT", "TNT", "TR", "WHNU"]], 
                         [__s.latin_texts, ["Vulgate", "DRC"]], 
-                        [__s.syriac_texts, ["Peshitta", "Murdock"]]
+                        [__s.syriac_texts, ["Peshitta", "Etheridge", "Murdock"]]
                        ]
     },
     
@@ -168,12 +168,11 @@ $.widget("custom.versions",  {
         var versions = this._filteredVersions(lastToken);
         
         var listItems = $("[initials]", this.dropdownVersionMenu);
-        
-        var language = this.dropdownVersionMenu.find("input:checkbox[name=language]:checked").val();
         $.each(listItems, function(i, item) {
             var jqItem = $(item);
             var initials = jqItem.attr('initials');
-            if(versions[initials] == undefined) {
+            //look up the normalized version, as initials may be the short form
+            if(versions[step.keyedVersions[initials.toUpperCase()].initials] == undefined) {
                 //hide element
                 jqItem.hide();
             } else {
@@ -195,7 +194,7 @@ $.widget("custom.versions",  {
        $.each(step.versions, function(index, item) {
            if(val) {
                var lv = val.toLowerCase();
-               if(item.initials.toLowerCase().indexOf(lv) == -1 && item.name.toLowerCase().indexOf(lv) == -1) {
+               if(item.shortInitials.toLowerCase().indexOf(lv) == -1 && item.initials.toLowerCase().indexOf(lv) == -1 && item.name.toLowerCase().indexOf(lv) == -1) {
                    //reject
                    return;
                } else {
@@ -216,7 +215,7 @@ $.widget("custom.versions",  {
   
             var lang = item.languageCode;
             if(language == "langAncient" && lang != 'grc' && lang != 'la' && lang != 'he' && lang != 'syr') {
-                if(item.initials != 'DRC' && item.initials != 'Murdock' && item.initials != 'ABP') {
+                if(item.initials != 'DRC' && item.initials != 'Murdock' && item.initials != 'ABP' && item.initials != 'Etheridge') {
                     return;
                 }
             }
@@ -372,8 +371,13 @@ $.widget("custom.versions",  {
     _renderStrongVersions : function(menu) {
         var self = this;
         menu.append(this._renderItem(step.keyedVersions["ESV"]));
+        var renderedVersion = {};
+        
         $.each(step.strongVersions, function(i, version) {
-            menu.append(self._renderItem(version));
+            if(renderedVersion[version.initials] == undefined) {
+                menu.append(self._renderItem(version));
+                renderedVersion[version.initials] = true;
+            }
         });
 
     },
@@ -386,14 +390,14 @@ $.widget("custom.versions",  {
         }
         
         var showingText = 
-            "<span class='versionKey' >" + item.initials + "</span><span style='font-size: larger'>&rArr;</span>&nbsp;" +
+            "<span class='versionKey' >" + item.shortInitials + "</span><span style='font-size: larger'>&rArr;</span>&nbsp;" +
             "<span class='versionName'>" + name + "</span>";
 
         
         var features = step.util.ui.getFeaturesLabel(item);
         
         // return response for dropdowns
-        var itemHtml = "<li title='" + item.name + " (" + item.languageName.replace("'", "&quot;")  + ")' initials='" + item.initials +  "'><a><span class='features'>" + features + "</span>" + showingText + "</a></li>";
+        var itemHtml = "<li title='" + item.name + " (" + item.languageName.replace("'", "&quot;")  + ")' initials='" + item.shortInitials +  "'><a><span class='features'>" + features + "</span>" + showingText + "</a></li>";
         return $(itemHtml);
     }
 });

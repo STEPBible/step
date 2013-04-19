@@ -9,7 +9,14 @@ $.widget("custom.versions",  {
     options : {
         multi : false,
         suggestedEnglish : ['ESV', 'KJV', 'ASV', 'DRC'],
-        suggestedAncient : ['Byz', 'TR', 'WHNU', 'OSMHB', 'LXX']
+        suggestedAncient : ['OSMHB', 'LXX', 'Byz', 'TR', 'WHNU'],
+        ancientOrder : [
+                        [__s.hebrew_ot, ["Aleppo", "OSMHB", "WLC"]], 
+                        [__s.greek_ot, ["LXX", "ABPGRK", "ABP"]],
+                        [__s.greek_nt, ["Antoniades", "Byz", "Elzevir", "SBLGNT", "TNT", "TR", "WHNU"]], 
+                        [__s.latin_texts, ["Vulgate", "DRC"]], 
+                        [__s.syriac_texts, ["Peshitta", "Murdock"]]
+                       ]
     },
     
     _create : function() {
@@ -162,19 +169,16 @@ $.widget("custom.versions",  {
         
         var listItems = $("[initials]", this.dropdownVersionMenu);
         
-        //on ancient, we only keep the versions once.
         var language = this.dropdownVersionMenu.find("input:checkbox[name=language]:checked").val();
-        var kept = {};
         $.each(listItems, function(i, item) {
             var jqItem = $(item);
             var initials = jqItem.attr('initials');
-            if(versions[initials] == undefined || (language == 'langAncient' && kept[initials])) {
+            if(versions[initials] == undefined) {
                 //hide element
                 jqItem.hide();
             } else {
                 //show element
                 jqItem.show();
-                kept[initials] = true;
             }
         });
     },
@@ -211,8 +215,10 @@ $.widget("custom.versions",  {
             
   
             var lang = item.languageCode;
-            if(language == "langAncient" && lang != 'grc' && lang != 'la' && lang != 'he') {
-                return;
+            if(language == "langAncient" && lang != 'grc' && lang != 'la' && lang != 'he' && lang != 'syr') {
+                if(item.initials != 'DRC' && item.initials != 'Murdock' && item.initials != 'ABP') {
+                    return;
+                }
             }
 
             var currentLang = step.state.language(1);
@@ -220,7 +226,6 @@ $.widget("custom.versions",  {
             //if we've got those buttons, i.e. currentLang != English
             if( currentLang != 'en' &&       
                     language == "langMyAndEnglish" && lang != currentLang && lang != 'en') {
-                return;
             }
             
             
@@ -314,15 +319,26 @@ $.widget("custom.versions",  {
         if(selectedView == "langMy" && step.state.language(1) == "en" || selectedView == "languageMyAndEnglish") {
             this._renderList(menu, this.options.suggestedEnglish);
         } else if(selectedView == "langAncient") {
-            this._renderList(menu, this.options.suggestedAncient);            
+            this._renderList(menu, this.options.suggestedAncient);  
+            this._drawLineBelowLastItem(menu);
+            
+            //render each part of ancientOrder separately
+            $.each(this.options.ancientOrder, function(i, arrayOfVersions) {
+                //we add a header from the first element, and the list of versions
+                //from the second
+                var header = $("<li>").addClass("header").append(arrayOfVersions[0]);
+                menu.append(header);
+                
+                menu.append(self._renderList(menu, arrayOfVersions[1]));
+            });
+            this._attachBuiltMenu(menu);
+            return;
         } else if (selectedView == "langAll" && step.strongVersions) {
            this._renderStrongVersions(menu);
         }
 
         //get last item, and mark it out
-        var items = menu.find("li");
-        var lastItem = items[items.length - 1];
-        $(lastItem).addClass("versionBreakMenuItem");
+        this._drawLineBelowLastItem(menu);
 
         
         if(step.versions) {
@@ -330,9 +346,17 @@ $.widget("custom.versions",  {
                 menu.append(self._renderItem(version));
             });
             
-            this._rendered = true;
-            this.dropdownVersionMenu.append(menu);
         }
+        this._attachBuiltMenu(menu);
+    },
+    
+    _attachBuiltMenu : function(menu) {
+        this._rendered = true;
+        this.dropdownVersionMenu.append(menu);
+    },
+    
+    _drawLineBelowLastItem : function(menu) {
+        menu.find("li:last").addClass("versionBreakMenuItem");
     },
 
     _renderList : function(menu, list) {

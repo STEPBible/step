@@ -430,6 +430,13 @@ body {
 	cursor: pointer;
 }
 
+.versionsListMenu li.header {
+	margin-top: 10px;
+	color: #33339F;
+	font-weight: bold;
+	font-size: smaller;
+}
+
 .versionsAutoComplete {
 	width: 400px;
 }

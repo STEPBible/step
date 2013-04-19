@@ -806,7 +806,7 @@ Passage.prototype.initVersionsTextBox = function() {
     $(this.version).versions();
     $(this.version).bind('change', function(event) {
             var value = $(event.target).val();
-            if (step.util.raiseErrorIfBlank(value, __s.version_must_be_selected)) {
+            if (step.util.raiseErrorIfBlank(value, __s.error_version_must_be_selected)) {
                   //need to refresh the options of interleaving/interlinear, etc.
                   step.passage.ui.updateDisplayOptions(self.passageId);
                   step.state.passage.version(self.passageId, value);

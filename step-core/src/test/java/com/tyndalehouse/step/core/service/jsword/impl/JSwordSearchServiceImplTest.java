@@ -2,6 +2,7 @@ package com.tyndalehouse.step.core.service.jsword.impl;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
 
 import java.util.List;
 
@@ -12,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import com.tyndalehouse.step.core.models.search.SearchEntry;
 import com.tyndalehouse.step.core.models.search.VerseSearchEntry;
+import com.tyndalehouse.step.core.service.helpers.VersionResolver;
 import com.tyndalehouse.step.core.service.impl.SearchQuery;
 import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
 import com.tyndalehouse.step.core.utils.TestUtils;
@@ -32,7 +34,7 @@ public class JSwordSearchServiceImplTest {
     public void setUp() {
         final JSwordVersificationService mockVersificationService = TestUtils.mockVersificationService();
         this.search = new JSwordSearchServiceImpl(mockVersificationService, new JSwordPassageServiceImpl(
-                mockVersificationService, null, null, null));
+                mockVersificationService, null, null, null, mock(VersionResolver.class)));
     }
 
     /**

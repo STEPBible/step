@@ -56,6 +56,7 @@ import com.tyndalehouse.step.core.data.EntityIndexReader;
 import com.tyndalehouse.step.core.data.EntityManager;
 import com.tyndalehouse.step.core.data.entities.impl.TestEntityManager;
 import com.tyndalehouse.step.core.models.ClientSession;
+import com.tyndalehouse.step.core.service.helpers.VersionResolver;
 import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
 import com.tyndalehouse.step.core.service.jsword.impl.JSwordPassageServiceImpl;
 import com.tyndalehouse.step.core.utils.TestUtils;
@@ -213,8 +214,9 @@ public class LoaderTest {
         final Properties coreProperties = new Properties();
         coreProperties.put(key, file);
         final JSwordVersificationService versificationService = TestUtils.mockVersificationService();
-        return new Loader(new JSwordPassageServiceImpl(versificationService, null, null, null), null,
-                coreProperties, this.entityManager, this.clientSessionProvider);
+        return new Loader(new JSwordPassageServiceImpl(versificationService, null, null, null,
+                mock(VersionResolver.class)), null, coreProperties, this.entityManager,
+                this.clientSessionProvider);
     }
 
     /**

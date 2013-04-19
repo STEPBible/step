@@ -83,9 +83,18 @@ public final class TestUtils {
      * @return the j sword versification service
      */
     public static JSwordVersificationService mockVersificationService() {
-        final VersionResolver resolver = mock(VersionResolver.class);
+        final VersionResolver resolver = mockVersionResolver();
         final JSwordVersificationService versification = new JSwordVersificationServiceImpl(resolver);
+        return versification;
+    }
 
+    /**
+     * Mocks a version resolver.
+     * 
+     * @return the version resolver
+     */
+    public static VersionResolver mockVersionResolver() {
+        final VersionResolver resolver = mock(VersionResolver.class);
         when(resolver.getLongName(anyString())).thenAnswer(new Answer<String>() {
 
             @Override
@@ -93,7 +102,13 @@ public final class TestUtils {
                 return (String) invocation.getArguments()[0];
             }
         });
+        when(resolver.getShortName(anyString())).thenAnswer(new Answer<String>() {
 
-        return versification;
+            @Override
+            public String answer(final InvocationOnMock invocation) {
+                return (String) invocation.getArguments()[0];
+            }
+        });
+        return resolver;
     }
 }

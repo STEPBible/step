@@ -3,6 +3,7 @@ package com.tyndalehouse.step.core.service.impl;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
 
 import java.util.List;
 
@@ -16,6 +17,7 @@ import com.tyndalehouse.step.core.models.search.SearchResult;
 import com.tyndalehouse.step.core.models.search.SubjectHeadingSearchEntry;
 import com.tyndalehouse.step.core.models.search.TimelineEventSearchEntry;
 import com.tyndalehouse.step.core.models.search.VerseSearchEntry;
+import com.tyndalehouse.step.core.service.helpers.VersionResolver;
 import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
 import com.tyndalehouse.step.core.service.jsword.impl.JSwordPassageServiceImpl;
 import com.tyndalehouse.step.core.service.jsword.impl.JSwordSearchServiceImpl;
@@ -76,7 +78,7 @@ public class SearchServiceImplTest {
     private SearchServiceImpl getSearchServiceUnderTest() {
         final JSwordVersificationService versificationService = TestUtils.mockVersificationService();
         final JSwordPassageServiceImpl jsword = new JSwordPassageServiceImpl(versificationService, null,
-                null, null);
+                null, null, mock(VersionResolver.class));
         final TestEntityManager entityManager = new TestEntityManager();
 
         final JSwordSearchServiceImpl jswordSearch = new JSwordSearchServiceImpl(versificationService, jsword);

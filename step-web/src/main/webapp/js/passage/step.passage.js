@@ -141,6 +141,7 @@ step.passage = {
                 self._addStrongHandlers(passageId, passageContent);
                 self._updatePageTitle(passageId, passageContent, lookupVersion, lookupReference);
                 self._doTransliterations(passageId, passageContent);
+                self._doInterlinearDividers(passageContent);
                 step.util.closeInfoErrors(passageId);
                 step.state.passage.reference(passageId, text.reference, false);
                 self._doVersions(passageId, passageContent);
@@ -437,6 +438,10 @@ step.passage = {
 //        }
 //    },
 
+    _doInterlinearDividers : function(passageContent) {
+        $(".w:not([strong]):not(.verseStart)", passageContent).next().css("border-left", "none");  
+    },
+    
     _doVerseNumbers : function(passageId, passageContent, options, interlinearMode, reference) {
         //if interleaved mode or column mode, then we want this to continue
         //if no options, or no verse numbers, then exit
@@ -699,8 +704,8 @@ step.passage = {
         
         // check for black listed strongs
         if ($.inArray(strongReference, this.blacklistedStrongs) == -1) {
-            $(".verse span[strong~='" + strongReference + "']", container).addClass(classes);
-            $("span.w[strong~='" + strongReference + "'] span.text", container).addClass(classes);
+            $(".verse [strong~='" + strongReference + "']", container).addClass(classes);
+            $("span.w[strong~='" + strongReference + "'] span", container).addClass(classes);
         }
     },
     
@@ -733,7 +738,7 @@ step.passage = {
         
         var container = passageId ? step.util.getPassageContainer(passageId) : $("body");
         $(".verse span", container).removeClass(classes);
-        $("span.text", container).removeClass(classes);
+        $("span.w span", container).removeClass(classes);
     },
 
     /* 2 queues of calls backs for passages */

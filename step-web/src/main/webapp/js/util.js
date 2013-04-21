@@ -100,7 +100,7 @@ step.util = {
 	    var text = "";
         if(element.text || element.innerText) {
             var el = $(element);
-            var children = el.children();
+            var children = el.contents();
             if(children.length != 0) {
                 text = children.not("sup,a").text();
             } else {

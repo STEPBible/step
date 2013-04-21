@@ -44,6 +44,7 @@
 			<groupId>com.tyndalehouse.step</groupId>
 			<artifactId>step-core</artifactId>
 		</dependency>
+
 		<dependency>
 			<groupId>xalan</groupId>
 			<artifactId>xalan</artifactId>
@@ -68,9 +69,17 @@
 			<artifactId>jul-to-slf4j</artifactId>
 			<version>1.6.6</version>
 		</dependency>
-		            
+
 
 		<!-- Servlet -->
+		<dependency>
+			<groupId>org.sonatype.sisu.inject</groupId>
+			<artifactId>guice-servlet</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.yammer.metrics</groupId>
+			<artifactId>metrics-guice</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
@@ -86,10 +95,6 @@
 			<artifactId>jstl</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>net.sourceforge.pjl-comp-filter</groupId>
-			<artifactId>pjl-comp-filter</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>net.sf.ehcache</groupId>
 			<artifactId>ehcache-core</artifactId>
 		</dependency>
@@ -98,16 +103,11 @@
 			<artifactId>ehcache-web</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.google.inject.extensions</groupId>
-			<artifactId>guice-servlet</artifactId>
-		</dependency>
-	    <dependency>
 			<groupId>com.yammer.metrics</groupId>
 			<artifactId>metrics-servlet</artifactId>
-			<version>${yammer-metrics.version}</version>
 		</dependency>
-            
-            
+
+
 		<!-- test dependencies -->
 		<dependency>
 			<groupId>org.mockito</groupId>
@@ -128,10 +128,6 @@
 			<groupId>javatar</groupId>
 			<artifactId>javatar</artifactId>
 		</dependency>
-<!-- 		<dependency> -->
-<!-- 			<groupId>org.jdom</groupId> -->
-<!-- 			<artifactId>jdom</artifactId> -->
-<!-- 		</dependency> -->
 	</dependencies>
 
 	<build>
@@ -156,42 +152,42 @@
 								<cssSourceFile>css/qtip.css</cssSourceFile>
 								<cssSourceFile>css/ddsmoothmenu.css</cssSourceFile>
 								<cssSourceFile>css/ddsmoothmenu-v.css</cssSourceFile>
-							    <cssSourceFile>css/initial-layout.css</cssSourceFile>
-							    <cssSourceFile>css/initial-fonts.css</cssSourceFile>
-							    <cssSourceFile>css/passage.css</cssSourceFile>
-<!-- 							    <cssSourceFile>css/timeline.css</cssSourceFile> -->
-							    <cssSourceFile>css/search.css</cssSourceFile>
-							    <cssSourceFile>css/cardo.css</cssSourceFile>
+								<cssSourceFile>css/initial-layout.css</cssSourceFile>
+								<cssSourceFile>css/initial-fonts.css</cssSourceFile>
+								<cssSourceFile>css/passage.css</cssSourceFile>
+								<!-- <cssSourceFile>css/timeline.css</cssSourceFile> -->
+								<cssSourceFile>css/search.css</cssSourceFile>
+								<cssSourceFile>css/cardo.css</cssSourceFile>
 							</cssSourceFiles>
 							<cssFinalFile>step.css</cssFinalFile>
 							<jsSourceDir>.</jsSourceDir>
 							<jsSourceFiles>
-								<jsSourceFile>js_init/initLib.js</jsSourceFile>   
-							    <jsSourceFile>libs/dohighlight-min.js</jsSourceFile>
-<!-- 							    <jsSourceFile>libs/timeline_js/timeline-api.js</jsSourceFile> -->
-							    <jsSourceFile>libs/jquery-1.9.1.min.js</jsSourceFile>
+								<jsSourceFile>js_init/initLib.js</jsSourceFile>
+								<jsSourceFile>libs/dohighlight-min.js</jsSourceFile>
+								<!-- <jsSourceFile>libs/timeline_js/timeline-api.js</jsSourceFile> -->
+								<jsSourceFile>libs/jquery-1.9.1.min.js</jsSourceFile>
 								<jsSourceFile>libs/jquery-ui-1.10.2.custom.min.js</jsSourceFile>
 								<jsSourceFile>libs/sprintf-0.7-beta1.js</jsSourceFile>
-<!-- 								<jsSourceFile>libs/jquery.tagcloud.js</jsSourceFile> -->
-							    <jsSourceFile>js/jquery-extensions/jquery-qtip.js</jsSourceFile>
-							    <jsSourceFile>js/jquery-extensions/jquery-hover-intent.js</jsSourceFile>
-							    <jsSourceFile>js/jquery-extensions/jquery-cookie.js</jsSourceFile>
-							    <jsSourceFile>js/jquery-extensions/jquery-local-store.js</jsSourceFile>
+								<!-- <jsSourceFile>libs/jquery.tagcloud.js</jsSourceFile> -->
+								<jsSourceFile>js/jquery-extensions/jquery-qtip.js</jsSourceFile>
+								<jsSourceFile>js/jquery-extensions/jquery-hover-intent.js</jsSourceFile>
+								<jsSourceFile>js/jquery-extensions/jquery-cookie.js</jsSourceFile>
+								<jsSourceFile>js/jquery-extensions/jquery-local-store.js</jsSourceFile>
 								<jsSourceFile>js/jquery-extensions/jquery-shout.js</jsSourceFile>
-							    <jsSourceFile>js/jquery-extensions/jquery-versions-complete.js</jsSourceFile>
-							    <jsSourceFile>js/jquery-extensions/jquery-lexical-complete.js</jsSourceFile>
-							    <jsSourceFile>js/jquery-extensions/jquery-detail-slider.js</jsSourceFile>
-							    <jsSourceFile>js/jquery-extensions/jquery-sort.js</jsSourceFile>
-							    <jsSourceFile>js/jquery-extensions/jquery-passage-buttons.js</jsSourceFile>
-							    <jsSourceFile>js/jquery-extensions/jquery-original-word-toolbar.js</jsSourceFile>
-							    <jsSourceFile>js/jquery-extensions/jquery-search-result.js</jsSourceFile>
+								<jsSourceFile>js/jquery-extensions/jquery-versions-complete.js</jsSourceFile>
+								<jsSourceFile>js/jquery-extensions/jquery-lexical-complete.js</jsSourceFile>
+								<jsSourceFile>js/jquery-extensions/jquery-detail-slider.js</jsSourceFile>
+								<jsSourceFile>js/jquery-extensions/jquery-sort.js</jsSourceFile>
+								<jsSourceFile>js/jquery-extensions/jquery-passage-buttons.js</jsSourceFile>
+								<jsSourceFile>js/jquery-extensions/jquery-original-word-toolbar.js</jsSourceFile>
+								<jsSourceFile>js/jquery-extensions/jquery-search-result.js</jsSourceFile>
 								<jsSourceFile>js/ddsmoothmenu.js</jsSourceFile>
-							    <jsSourceFile>js/util.js</jsSourceFile>
-							    <jsSourceFile>js/lexicon_definition.js</jsSourceFile>
-							    <jsSourceFile>js/ui_hooks.js</jsSourceFile>
-							    <jsSourceFile>js/timeline.js</jsSourceFile>
-							    <jsSourceFile>js/geography.js</jsSourceFile>
-							    <jsSourceFile>js/toolbar_menu.js</jsSourceFile>
+								<jsSourceFile>js/util.js</jsSourceFile>
+								<jsSourceFile>js/lexicon_definition.js</jsSourceFile>
+								<jsSourceFile>js/ui_hooks.js</jsSourceFile>
+								<jsSourceFile>js/timeline.js</jsSourceFile>
+								<jsSourceFile>js/geography.js</jsSourceFile>
+								<jsSourceFile>js/toolbar_menu.js</jsSourceFile>
 								<jsSourceFile>js/defaults/step.defaults.js</jsSourceFile>
 								<jsSourceFile>js/search/step.search.js</jsSourceFile>
 								<jsSourceFile>js/search/step.search.ui.js</jsSourceFile>
@@ -201,30 +197,30 @@
 								<jsSourceFile>js/search/step.search.textual.ui.js</jsSourceFile>
 								<jsSourceFile>js/search/step.search.timeline.ui.js</jsSourceFile>
 								<jsSourceFile>js/search/step.search.subject.ui.js</jsSourceFile>
-<!-- 								<jsSourceFile>js/search/step.search.personalnotes.ui.js</jsSourceFile> -->
-								<jsSourceFile>js/navigation/step.navigation.js</jsSourceFile>	    
+								<!-- <jsSourceFile>js/search/step.search.personalnotes.ui.js</jsSourceFile> -->
+								<jsSourceFile>js/navigation/step.navigation.js</jsSourceFile>
 								<jsSourceFile>js/state/step.state.js</jsSourceFile>
 								<jsSourceFile>js/state/step.state.browser.js</jsSourceFile>
 								<jsSourceFile>js/state/step.state.view.js</jsSourceFile>
 								<jsSourceFile>js/state/step.state.passage.js</jsSourceFile>
 								<jsSourceFile>js/state/step.state.original.js</jsSourceFile>
-							    <jsSourceFile>js/menu/step.menu.js</jsSourceFile>
-							    <jsSourceFile>js/menu/top/help.js</jsSourceFile>
-							    <jsSourceFile>js/menu/top/view.js</jsSourceFile>
-							    <jsSourceFile>js/menu/top/top.menu.ui.js</jsSourceFile>
-							    <jsSourceFile>js/menu/passage/context.js</jsSourceFile>
-							    <jsSourceFile>js/menu/passage/display.js</jsSourceFile>
-							    <jsSourceFile>js/menu/passage/passageTools.js</jsSourceFile>
-							    <jsSourceFile>js/menu/passage/search.js</jsSourceFile>
-							    <jsSourceFile>js/passage/step.version.js</jsSourceFile>
-							    <jsSourceFile>js/passage/step.alternatives.js</jsSourceFile>
-							    <jsSourceFile>js/passage/step.passage.js</jsSourceFile>
-							    <jsSourceFile>js/passage/step.passage.ui.js</jsSourceFile>
-							    <jsSourceFile>js/passage/step.passage.navigation.js</jsSourceFile>
-							    <jsSourceFile>js/passage/step.passage.navigation.ui.js</jsSourceFile>
-							    <jsSourceFile>js/bookmark/step.bookmark.js</jsSourceFile>
-							    <jsSourceFile>js/bookmark/step.bookmark.ui.js</jsSourceFile>
-							    <jsSourceFile>js/init.js</jsSourceFile>
+								<jsSourceFile>js/menu/step.menu.js</jsSourceFile>
+								<jsSourceFile>js/menu/top/help.js</jsSourceFile>
+								<jsSourceFile>js/menu/top/view.js</jsSourceFile>
+								<jsSourceFile>js/menu/top/top.menu.ui.js</jsSourceFile>
+								<jsSourceFile>js/menu/passage/context.js</jsSourceFile>
+								<jsSourceFile>js/menu/passage/display.js</jsSourceFile>
+								<jsSourceFile>js/menu/passage/passageTools.js</jsSourceFile>
+								<jsSourceFile>js/menu/passage/search.js</jsSourceFile>
+								<jsSourceFile>js/passage/step.version.js</jsSourceFile>
+								<jsSourceFile>js/passage/step.alternatives.js</jsSourceFile>
+								<jsSourceFile>js/passage/step.passage.js</jsSourceFile>
+								<jsSourceFile>js/passage/step.passage.ui.js</jsSourceFile>
+								<jsSourceFile>js/passage/step.passage.navigation.js</jsSourceFile>
+								<jsSourceFile>js/passage/step.passage.navigation.ui.js</jsSourceFile>
+								<jsSourceFile>js/bookmark/step.bookmark.js</jsSourceFile>
+								<jsSourceFile>js/bookmark/step.bookmark.ui.js</jsSourceFile>
+								<jsSourceFile>js/init.js</jsSourceFile>
 							</jsSourceFiles>
 							<jsFinalFile>step.js</jsFinalFile>
 						</configuration>
@@ -240,8 +236,8 @@
 					<container>
 						<containerId>tomcat6x</containerId>
 						<home>/opt/bitnami/dev-step-tomcat</home>
-				        </container>
-				        <configuration>
+					</container>
+					<configuration>
 						<type>existing</type>
 						<home>/opt/bitnami/dev-step-tomcat</home>
 					</configuration>
@@ -262,12 +258,12 @@
 				</configuration>
 				<executions>
 					<execution>
-			            <id>deploy-tomcat</id>
-			            <phase>integration-test</phase>
-			            <goals>
-			               <goal>redeploy</goal>
-			            </goals>
-			          </execution>
+						<id>deploy-tomcat</id>
+						<phase>integration-test</phase>
+						<goals>
+							<goal>redeploy</goal>
+						</goals>
+					</execution>
 				</executions>
 			</plugin>
 		</plugins>
@@ -275,34 +271,34 @@
 
 	<profiles>
 		<profile>
-			<!--  deployment locally, or for local use-->
+			<!-- deployment locally, or for local use -->
 			<id>deploy-local</id>
 			<properties>
 				<skipTomcat>false</skipTomcat>
 			</properties>
 		</profile>
 		<profile>
-			<!--  deployment locally, or for local use-->
+			<!-- deployment locally, or for local use -->
 			<id>standalone-install</id>
 			<build>
 				<plugins>
 					<plugin>
-					   <groupId>org.mortbay.jetty</groupId>
-					   <artifactId>jetty-jspc-maven-plugin</artifactId>
-					   <version>8.1.5.v20120716</version>
-					   <executions>
-					     <execution>
-					       <id>jspc</id>
-					       <goals>
-					         <goal>jspc</goal>
-					       </goals>
-					       <configuration>
-					       		<packageRoot>com.tyndalehouse.step</packageRoot>
-					       </configuration>
-					     </execution>
-					   </executions>
-					 </plugin>
-					 <plugin>
+						<groupId>org.mortbay.jetty</groupId>
+						<artifactId>jetty-jspc-maven-plugin</artifactId>
+						<version>8.1.5.v20120716</version>
+						<executions>
+							<execution>
+								<id>jspc</id>
+								<goals>
+									<goal>jspc</goal>
+								</goals>
+								<configuration>
+									<packageRoot>com.tyndalehouse.step</packageRoot>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-war-plugin</artifactId>
 						<configuration>

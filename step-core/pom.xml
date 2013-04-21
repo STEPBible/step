@@ -89,10 +89,10 @@
 			<groupId>org.crosswire</groupId>
 			<artifactId>jsword</artifactId>
 		</dependency>
-<!-- 		<dependency> -->
-<!-- 			<groupId>org.jdom</groupId> -->
-<!-- 			<artifactId>jdom</artifactId> -->
-<!-- 		</dependency> -->
+		<!-- <dependency> -->
+		<!-- <groupId>org.jdom</groupId> -->
+		<!-- <artifactId>jdom</artifactId> -->
+		<!-- </dependency> -->
 		<dependency>
 			<groupId>xalan</groupId>
 			<artifactId>xalan</artifactId>
@@ -103,21 +103,17 @@
 			<artifactId>jackson-mapper-asl</artifactId>
 		</dependency>
 
+		<!-- Take the sisu version because Google's version lacks a few fixes -->
 		<dependency>
-			<groupId>com.google.inject</groupId>
-			<artifactId>guice</artifactId>
+			<groupId>org.sonatype.sisu</groupId>
+			<artifactId>sisu-guice</artifactId>
 		</dependency>
-            
-	    <dependency>
-	        <groupId>com.yammer.metrics</groupId>
-	        <artifactId>metrics-core</artifactId>
-	    </dependency>
+		
 		<dependency>
 			<groupId>com.yammer.metrics</groupId>
-			<artifactId>metrics-guice</artifactId>
-			<version>${yammer-metrics.version}</version>
+			<artifactId>metrics-core</artifactId>
 		</dependency>
-            
+
 		<dependency>
 			<groupId>net.sf.opencsv</groupId>
 			<artifactId>opencsv</artifactId>
@@ -127,7 +123,7 @@
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>net.sf.ehcache</groupId>
 			<artifactId>ehcache-core</artifactId>
@@ -140,38 +136,38 @@
 
 
 		<!-- transitive dependencies not picked up by jsword -->
-<!-- 		<dependency> -->
-<!-- 			<groupId>javatar</groupId> -->
-<!-- 			<artifactId>javatar</artifactId> -->
-<!-- 		</dependency> -->
+		<!-- <dependency> -->
+		<!-- <groupId>javatar</groupId> -->
+		<!-- <artifactId>javatar</artifactId> -->
+		<!-- </dependency> -->
 
-<!-- 		<dependency> -->
-<!-- 			<groupId>commons-httpclient</groupId> -->
-<!-- 			<artifactId>commons-httpclient </artifactId> -->
-<!-- 			<scope>test</scope> -->
-<!-- 		</dependency> -->
+		<!-- <dependency> -->
+		<!-- <groupId>commons-httpclient</groupId> -->
+		<!-- <artifactId>commons-httpclient </artifactId> -->
+		<!-- <scope>test</scope> -->
+		<!-- </dependency> -->
 
-<!-- 		<dependency> -->
-<!-- 			<groupId>org.apache.httpcomponents</groupId> -->
-<!-- 			<artifactId>httpclient</artifactId> -->
-<!-- 			<version>4.1-beta1</version> -->
-<!-- 		</dependency> -->
+		<!-- <dependency> -->
+		<!-- <groupId>org.apache.httpcomponents</groupId> -->
+		<!-- <artifactId>httpclient</artifactId> -->
+		<!-- <version>4.1-beta1</version> -->
+		<!-- </dependency> -->
 
-<!-- 		<dependency> -->
-<!-- 			<groupId>org.apache.lucene</groupId> -->
-<!-- 			<artifactId>lucene-core</artifactId> -->
-<!-- 		</dependency> -->
-<!-- 		<dependency> -->
-<!-- 			<groupId>org.apache.lucene</groupId> -->
-<!-- 			<artifactId>lucene-snowball</artifactId> -->
-<!-- 		</dependency> -->
-<!-- 		<dependency> -->
-<!-- 			<groupId>org.apache.lucene</groupId> -->
-<!-- 			<artifactId>lucene-smartcn</artifactId> -->
-<!-- 		</dependency> -->
-<!-- 		<dependency> -->
-<!-- 			<groupId>org.apache.lucene</groupId> -->
-<!-- 			<artifactId>lucene-analyzers</artifactId> -->
-<!-- 		</dependency> -->
+		<!-- <dependency> -->
+		<!-- <groupId>org.apache.lucene</groupId> -->
+		<!-- <artifactId>lucene-core</artifactId> -->
+		<!-- </dependency> -->
+		<!-- <dependency> -->
+		<!-- <groupId>org.apache.lucene</groupId> -->
+		<!-- <artifactId>lucene-snowball</artifactId> -->
+		<!-- </dependency> -->
+		<!-- <dependency> -->
+		<!-- <groupId>org.apache.lucene</groupId> -->
+		<!-- <artifactId>lucene-smartcn</artifactId> -->
+		<!-- </dependency> -->
+		<!-- <dependency> -->
+		<!-- <groupId>org.apache.lucene</groupId> -->
+		<!-- <artifactId>lucene-analyzers</artifactId> -->
+		<!-- </dependency> -->
 	</dependencies>
 </project>

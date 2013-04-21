@@ -180,6 +180,8 @@ $.widget("custom.versions",  {
                 jqItem.show();
             }
         });
+        
+        this.dropdownVersionMenu.show();
     },
     
     _filteredVersions : function(val) {

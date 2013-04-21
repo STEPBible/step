@@ -39,7 +39,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -51,7 +50,6 @@ import com.tyndalehouse.step.core.models.Language;
 import com.tyndalehouse.step.core.service.LanguageService;
 import com.tyndalehouse.step.core.utils.StringUtils;
 import com.tyndalehouse.step.core.utils.language.ContemporaryLanguageUtils;
-import com.yammer.metrics.annotation.Timed;
 
 /**
  * A simple service that returns all the languages that are available
@@ -80,7 +78,6 @@ public class LanguageServiceImpl implements LanguageService {
      * @return the available languages
      */
     @Override
-    @Timed(name = "language-list-creation", rateUnit = TimeUnit.SECONDS, durationUnit = TimeUnit.MILLISECONDS)
     public List<Language> getAvailableLanguages() {
         return init();
     }

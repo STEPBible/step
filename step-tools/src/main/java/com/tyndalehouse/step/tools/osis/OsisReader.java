@@ -51,7 +51,7 @@ public class OsisReader {
 
         // do the test
         final JSwordPassageServiceImpl jsi = new JSwordPassageServiceImpl(
-                TestUtils.mockVersificationService(), null, null, null);
+                TestUtils.mockVersificationService(), null, null, null, TestUtils.mockVersionResolver());
         final List<LookupOption> options = new ArrayList<LookupOption>();
 
         // options.add(LookupOption.HEADINGS_ONLY);

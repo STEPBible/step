@@ -62,6 +62,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.Books;
+import org.crosswire.jsword.book.OSISUtil;
 import org.crosswire.jsword.passage.Key;
 import org.crosswire.jsword.passage.NoSuchKeyException;
 import org.crosswire.jsword.passage.Passage;
@@ -763,19 +764,37 @@ public class EsvXmlEnhancer {
 
     private Element createWElement(final Tagging tagData, final Document ownerDocument) {
         final Element w = ownerDocument.createElement("w");
-        final Attr lemma = ownerDocument.createAttribute("lemma");
+        final Attr lemma = ownerDocument.createAttribute(OSISUtil.ATTRIBUTE_W_LEMMA);
         lemma.setNodeValue(createLemmaAttribute(tagData));
         w.setAttributeNode(lemma);
+
+        final Attr morph = ownerDocument.createAttribute(OSISUtil.ATTRIBUTE_W_MORPH);
+        morph.setNodeValue(createMorphAttribute(tagData));
         return w;
+    }
+
+    private String createMorphAttribute(final Tagging tagData) {
+        final String grammar = tagData.getGrammar();
+        final String[] splitGrammar = grammar.length() == 0 ? new String[0] : grammar.split(" ");
+        final StringBuilder s = new StringBuilder(grammar.length() + 32);
+
+        for (int i = 0; i < splitGrammar.length; i++) {
+            s.append("morph:");
+            s.append(splitGrammar[i]);
+
+            if (i < splitGrammar.length - 1) {
+                s.append(' ');
+            }
+        }
+
+        return s.toString();
     }
 
     private String createLemmaAttribute(final Tagging tagData) {
         final String strongs = tagData.getStrongs();
-        final String grammar = tagData.getGrammar();
 
         final String[] splitLemmas = strongs.split(" ");
-        final String[] splitGrammar = grammar.length() == 0 ? new String[0] : grammar.split(" ");
-        final StringBuilder s = new StringBuilder(strongs.length() + grammar.length() + 32);
+        final StringBuilder s = new StringBuilder(strongs.length() + 32);
         for (int i = 0; i < splitLemmas.length; i++) {
             s.append("strong:");
             s.append(splitLemmas[i]);
@@ -783,12 +802,6 @@ public class EsvXmlEnhancer {
             if (i < splitLemmas.length - 1) {
                 s.append(" ");
             }
-        }
-
-        for (int i = 0; i < splitGrammar.length; i++) {
-            s.append(' ');
-            s.append("morph:");
-            s.append(splitGrammar[i]);
         }
 
         return s.toString();

@@ -135,6 +135,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
      * @param morphologyProvider provides morphological information
      * @param vocabProvider the service providing lexicon and vocabulary information
      * @param colorCoder the service to color code a passage
+     * @param resolver the resolver
      */
     @Inject
     public JSwordPassageServiceImpl(final JSwordVersificationService versificationService,
@@ -622,7 +623,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
      * @return the key
      * @throws NoSuchKeyException the no such key exception
      */
-    private Key reduceKeySize(final Key inputKey, final Versification v11n) throws NoSuchKeyException {
+    Key reduceKeySize(final Key inputKey, final Versification v11n) throws NoSuchKeyException {
         Key key = inputKey;
         final int cardinality = key.getCardinality();
 

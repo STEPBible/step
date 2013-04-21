@@ -36,7 +36,8 @@
   xmlns:jsword="http://xml.apache.org/xalan/java"
   xmlns:morph="xalan://com.tyndalehouse.step.core.service.impl.MorphologyServiceImpl"
   xmlns:vocab="xalan://com.tyndalehouse.step.core.service.impl.VocabularyServiceImpl"
-  extension-element-prefixes="jsword morph vocab">
+  xmlns:conversion="xalan://com.tyndalehouse.step.core.utils.StringConversionUtils"
+  extension-element-prefixes="jsword morph vocab conversion">
 
   <!--  Version 3.0 is necessary to get br to work correctly. -->
   <xsl:output method="html" version="3.0" omit-xml-declaration="yes" indent="no"/>
@@ -564,7 +565,8 @@
 				</xsl:choose>
 			</xsl:variable>
     
-			<span class="{$classes} {$colorClass}" strong="{@lemma}" morph="{@morph}">
+    		<xsl:variable name="lemma" select="conversion:getStrongPaddedKey(@lemma)" />
+			<span class="{$classes} {$colorClass}" strong="{$lemma}" morph="{@morph}">
 				<xsl:if test="normalize-space($remainingText) != ''">
 					<!-- 1st - Output first line or a blank if no text available. -->
 					<span class="text">

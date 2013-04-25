@@ -366,7 +366,11 @@ $.widget("custom.versions",  {
         }
         
         for(var ii = 0; ii < list.length; ii++) {
-            menu.append(this._renderItem(step.keyedVersions[list[ii].toUpperCase()]));
+            var version = step.keyedVersions[list[ii].toUpperCase()];
+            //the version may not be installed and we're now listing the versions client side
+            if(version != undefined) {
+                menu.append(this._renderItem(version));
+            }
         }
     },
     

@@ -58,6 +58,11 @@
 		<script src="libs/sprintf-0.7-beta1.js" type="text/javascript"></script>
 <!-- 		<script src="libs/jquery.tagcloud.js" type="text/javascript"></script> -->
 <!-- 		<script src="libs/jquery-ui-1.9-beta.min.js" type="text/javascript"></script> -->
+
+        <script src="libs/underscore-min.js" type="text/javascript"></script>
+        <script src="libs/json2.js" type="text/javascript"></script>
+        <script src="libs/backbone-min.js" type="text/javascript"></script>
+
 	    <script src="js/jquery-extensions/jquery-qtip.js" type="text/javascript"></script>
 	    <script src="js/jquery-extensions/jquery-hover-intent.js" type="text/javascript"></script>
 	    <script src="js/jquery-extensions/jquery-cookie.js" type="text/javascript"></script>
@@ -114,6 +119,9 @@
 	    <script src="js/passage/step.passage.navigation.ui.js" type="text/javascript"></script>
 	    <script src="js/bookmark/step.bookmark.js" type="text/javascript"></script>
 	    <script src="js/bookmark/step.bookmark.ui.js" type="text/javascript"></script>
+
+        <script src="js/backbone/passage.js" type="text/javascript"></script>
+
 	    <script src="js/init.js" type="text/javascript"></script>
 	<%
 		} else {

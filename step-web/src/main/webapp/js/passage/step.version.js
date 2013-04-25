@@ -34,8 +34,6 @@ NO_STRONGS = "The selected Bible will not be clickable as it does not support th
 
 step.version = {
         warned : {},
-        quickEnglish : ["ASV", "BBE", "DRC", "ESV", "KJV", "NETtext", "RWebster", "WEB"],
-        deeperEnglish : ["JPS", "LEB", "Rotherham", "AB", "YLT"],
         names : {
             asv         : {name : "American Standard Version "},
             bbe         : {name : "Bible in Basic English "},
@@ -57,9 +55,8 @@ step.version = {
             wlc         : {name : "Heb.OT: Leningrad Codex based on BHS"}, 
 
             lxx         : {name : "Grk.OT: Septuagint (Rahlf+Goettingen)"}, 
-   //         lxx2012   : {name : "Gkr.OT: Eng.trans. (Brenton rev.)", level : 2}, 
             abpgrk      : {name : "Grk.OT: Septuagint (Orthodox trad.)"}, 
-            abp         : {name : "Grk.OT: Eng.trans. (Brenton rev.)", level : 2}, 
+            abp         : {name : "Grk.OT: Eng.trans. (Brenton rev.)"}, 
 
             antoniades  : {name : "Grk.NT: Orthodox Patriarchal Edition"}, 
             byz         : {name : "Grk.NT: Majority or Byzantine text"}, 
@@ -70,15 +67,12 @@ step.version = {
             tr          : {name : "Grk.NT: 'Textus Receptus' of the KJV"}, 
             whnu        : {name : "Grk.NT: W+Hort with NA+UBS variants"}, 
 
-            vulgate   : {name : "Latin Bible, Vulgate by Jerome"}, 
-            vulgsistine   : {name : "Latin Bible, Vulgate, 1590 ed."}, 
-            vulgate_hebps    : {level : 0},
-            oxfordtr    : {level : 0},
-    //        drc   : {name : "Latin Bible Eng.trans.(Douay-Rheims)"}, 
+            vulgate     : {name : "Latin Bible, Vulgate by Jerome"}, 
+            vulgsistine : {name : "Latin Bible, Vulgate, 1590 ed."}, 
 
-            peshitta   : {name : "Syriac NT Peshitta", level : 2}, 
-            etheridge   : {name : "Syriac NT Peshitta English transl.", level : 2}, 
-            murdock   : {name : "Syriac NT Peshitta English transl.", level : 2}, 
+            peshitta   : {name : "Syriac NT Peshitta" }, 
+            etheridge   : {name : "Syriac NT Peshitta English transl." }, 
+            murdock   : {name : "Syriac NT Peshitta English transl." }, 
             
             chiuns      : {name: "和合本圣经 （简体版）" },
             chincvs     : {name: "新译本 （简体版）" },

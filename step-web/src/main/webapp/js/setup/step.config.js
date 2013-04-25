@@ -161,7 +161,7 @@ step.config = {
                 "<span class='name'>" + 
                 item.name + 
                 "</span>" + 
-                " (<span class='initials'>" + item.initials + "</span>) " + 
+                " (<span class='initials'>" + item.shortInitials + "</span>) " + 
                 "</div>" + 
                 "<div class='versionColumn'>" +
                 __s.category +

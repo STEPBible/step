@@ -13,7 +13,7 @@ import org.crosswire.jsword.book.BookException;
 import org.crosswire.jsword.passage.NoSuchKeyException;
 
 import com.tyndalehouse.step.core.service.jsword.impl.JSwordPassageServiceImpl;
-import com.tyndalehouse.step.core.service.jsword.impl.JSwordVersificationServiceImpl;
+import com.tyndalehouse.step.core.utils.TestUtils;
 
 public class PerformancePassageRetrieval {
     /**
@@ -32,7 +32,7 @@ public class PerformancePassageRetrieval {
         final ThreadMXBean thbean = ManagementFactory.getThreadMXBean();
         thbean.setThreadContentionMonitoringEnabled(true);
         final JSwordPassageServiceImpl jsi = new JSwordPassageServiceImpl(
-                new JSwordVersificationServiceImpl(), null, null, null);
+                TestUtils.mockVersificationService(), null, null, null, TestUtils.mockVersionResolver());
 
         final Queue<Long> times = new ConcurrentLinkedQueue<Long>();
         final AtomicLong iterations = new AtomicLong();

@@ -136,11 +136,37 @@ public class SearchServiceImpl implements SearchService {
 
     @Override
     public long estimateSearch(final SearchQuery sq) {
-        return this.jswordSearch.estimateSearchResults(sq);
+        try {
+            return this.jswordSearch.estimateSearchResults(sq);
+            // CHECKSTYLE:OFF
+        } catch (final Exception ex) {
+            // we catch any exception, trace log it
+            LOGGER.warn("Unable to estimate query: [{}]. Exception message: [{}]", sq.getOriginalQuery(),
+                    ex.getMessage());
+            LOGGER.trace(ex.getMessage(), ex);
+            return -1;
+            // CHECKSTYLE:ON
+        }
     }
 
     @Override
     public SearchResult search(final SearchQuery sq) {
+        try {
+            return doSearch(sq);
+            // CHECKSTYLE:OFF
+        } catch (final Exception ex) {
+            // CHECKSTYLE:ON
+            throw new TranslatedException(ex, "search_invalid");
+        }
+    }
+
+    /**
+     * Carries out the required search
+     * 
+     * @param sq the sq
+     * @return the search result
+     */
+    private SearchResult doSearch(final SearchQuery sq) {
         final long start = System.currentTimeMillis();
 
         SearchResult result;

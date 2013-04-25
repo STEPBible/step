@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
 import com.tyndalehouse.step.core.models.InterlinearMode;
 import com.tyndalehouse.step.core.models.LookupOption;
 import com.tyndalehouse.step.core.service.jsword.impl.JSwordPassageServiceImpl;
-import com.tyndalehouse.step.core.service.jsword.impl.JSwordVersificationServiceImpl;
+import com.tyndalehouse.step.core.utils.TestUtils;
 
 /**
  * Reads an osis ref in a module
@@ -59,7 +59,7 @@ public class InterleavedOsisReader {
 
         // do the test
         final JSwordPassageServiceImpl jsi = new JSwordPassageServiceImpl(
-                new JSwordVersificationServiceImpl(), null, null, null);
+                TestUtils.mockVersificationService(), null, null, null, TestUtils.mockVersionResolver());
         final List<LookupOption> options = new ArrayList<LookupOption>();
 
         final String osisText = jsi.getInterleavedVersions(versions, ref, options,

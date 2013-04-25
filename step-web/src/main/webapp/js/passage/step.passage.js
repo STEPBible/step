@@ -141,6 +141,7 @@ step.passage = {
                 self._addStrongHandlers(passageId, passageContent);
                 self._updatePageTitle(passageId, passageContent, lookupVersion, lookupReference);
                 self._doTransliterations(passageId, passageContent);
+                self._doInterlinearDividers(passageContent);
                 step.util.closeInfoErrors(passageId);
                 step.state.passage.reference(passageId, text.reference, false);
                 self._doVersions(passageId, passageContent);
@@ -437,6 +438,10 @@ step.passage = {
 //        }
 //    },
 
+    _doInterlinearDividers : function(passageContent) {
+        $(".w:not([strong]):not(.verseStart)", passageContent).next().css("border-left", "none");  
+    },
+    
     _doVerseNumbers : function(passageId, passageContent, options, interlinearMode, reference) {
         //if interleaved mode or column mode, then we want this to continue
         //if no options, or no verse numbers, then exit
@@ -691,12 +696,16 @@ step.passage = {
      * @strongReference the reference look for across this passage pane and
      *                  highlight
      */
-    highlightStrong : function(passageId, strongReference) {
-        var container = step.util.getPassageContainer(passageId);
+    highlightStrong : function(passageId, strongReference, emphasiseClass) {
+        var classes = emphasiseClass || "emphasisePassagePhrase";
+        
+        var container = passageId ? step.util.getPassageContainer(passageId) : $("body");
+        
+        
         // check for black listed strongs
         if ($.inArray(strongReference, this.blacklistedStrongs) == -1) {
-            $(".verse span[strong~='" + strongReference + "']", container).addClass("emphasisePassagePhrase");
-            $("span.w[strong~='" + strongReference + "'] span.text", container).addClass("emphasisePassagePhrase");
+            $(".verse [strong~='" + strongReference + "']", container).addClass(classes);
+            $("span.w[strong~='" + strongReference + "'] span", container).addClass(classes);
         }
     },
     
@@ -712,22 +721,24 @@ step.passage = {
             return;
         }
 
-        var references = strongMorphReference.strong.split();
+        var references = strongMorphReference.strong.split(" ");
         var container = step.util.getPassageContainer(strongMorphReference.passageId);
         
         
         // reset all spans that are underlined:
-        this.removeStrongsHighlights(strongMorphReference.passageId);
+        this.removeStrongsHighlights(strongMorphReference.passageId, strongMorphReference.classes);
         
         for ( var ii = 0; ii < references.length; ii++) {
-            this.highlightStrong(strongMorphReference.passageId, references[ii]);
+            this.highlightStrong(strongMorphReference.passageId, references[ii], strongMorphReference.classes);
         }
     },
 
-    removeStrongsHighlights : function(passageId) {
-        var container = step.util.getPassageContainer(passageId);
-        $(".verse span", container).removeClass("emphasisePassagePhrase");
-        $("span.text", container).removeClass("emphasisePassagePhrase");
+    removeStrongsHighlights : function(passageId, classes) {
+        var classes = classes || "emphasisePassagePhrase";
+        
+        var container = passageId ? step.util.getPassageContainer(passageId) : $("body");
+        $(".verse span", container).removeClass(classes);
+        $("span.w span", container).removeClass(classes);
     },
 
     /* 2 queues of calls backs for passages */
@@ -806,7 +817,7 @@ Passage.prototype.initVersionsTextBox = function() {
     $(this.version).versions();
     $(this.version).bind('change', function(event) {
             var value = $(event.target).val();
-            if (step.util.raiseErrorIfBlank(value, __s.version_must_be_selected)) {
+            if (step.util.raiseErrorIfBlank(value, __s.error_version_must_be_selected)) {
                   //need to refresh the options of interleaving/interlinear, etc.
                   step.passage.ui.updateDisplayOptions(self.passageId);
                   step.state.passage.version(self.passageId, value);

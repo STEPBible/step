@@ -51,6 +51,7 @@ public class BibleVersion implements Serializable {
     private String languageCode;
     private String category;
     private String languageName;
+    private String shortInitials;
 
     /**
      * @return true if the version contains strong-tagged information
@@ -176,5 +177,19 @@ public class BibleVersion implements Serializable {
      */
     public void setHasRedLetter(final boolean hasRedLetter) {
         this.hasRedLetter = hasRedLetter;
+    }
+
+    /**
+     * @return the shortInitials
+     */
+    public String getShortInitials() {
+        return this.shortInitials;
+    }
+
+    /**
+     * @param shortInitials the shortInitials to set
+     */
+    public void setShortInitials(final String shortInitials) {
+        this.shortInitials = shortInitials;
     }
 }

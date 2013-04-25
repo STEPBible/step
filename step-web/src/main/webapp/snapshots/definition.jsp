@@ -64,7 +64,7 @@
 		if(similarStrongs != null) {
 			for(LexiconSuggestion def : similarStrongs) {
 	%>
-		<a href="#!somelink?<%= def.getStrongNumber() %>"><%= def.getGloss() %> - <%= def.getMatchingForm() %></a>		
+		<a href="#!lexicon=strong=<%= def.getStrongNumber() %>"><%= def.getGloss() %> - <%= def.getMatchingForm() %></a>		
 	<%
 			}
 		}

@@ -45,6 +45,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.tyndalehouse.step.core.service.jsword.impl.JSwordModuleServiceImpl;
+import com.tyndalehouse.step.core.utils.TestUtils;
 
 /**
  * Downloads the jsword bible versions
@@ -66,7 +67,7 @@ public class DownloadJSwordBiblesPreReq {
                 "ASV", "Montgomery", "FreCrampon" };
 
         final JSwordModuleServiceImpl jsword = new JSwordModuleServiceImpl(getInstallers(),
-                new ArrayList<Installer>(0));
+                new ArrayList<Installer>(0), TestUtils.mockVersificationService());
 
         for (final String moduleInitials : modules) {
             if (!jsword.isInstalled(moduleInitials)) {

@@ -12,7 +12,6 @@ import java.util.Locale;
 import javax.inject.Inject;
 
 import org.crosswire.jsword.book.Book;
-import org.crosswire.jsword.book.Books;
 import org.crosswire.jsword.book.FeatureType;
 import org.crosswire.jsword.versification.BibleBook;
 import org.crosswire.jsword.versification.Versification;
@@ -46,7 +45,7 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
     @Override
     public List<LookupOption> getFeatures(final String version) {
         // obtain the book
-        final Book book = Books.installed().getBook(version);
+        final Book book = this.versificationService.getBookFromVersion(version);
         final List<LookupOption> options = new ArrayList<LookupOption>(LookupOption.values().length + 1);
 
         if (book == null) {
@@ -240,6 +239,6 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
 
     @Override
     public boolean hasVocab(final String version) {
-        return Books.installed().getBook(version).hasFeature(FeatureType.STRONGS_NUMBERS);
+        return this.versificationService.getBookFromVersion(version).hasFeature(FeatureType.STRONGS_NUMBERS);
     }
 }

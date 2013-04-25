@@ -34,6 +34,7 @@ $(document).ready(function() {
     $("input[type = 'text']", ".advancedSearch").on("keydown", function(event) {
         if(event.keyCode == 13) {
             var passageId = step.passage.getPassageId(event.target);
+            $(this).change();
             step.state._fireStateChanged(passageId);
         }
     });

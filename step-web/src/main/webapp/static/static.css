@@ -1,4 +1,4 @@
-body, h1 {
+body,h1 {
 	padding: 0px;
 	margin: 0px;
 	font-family: Verdana;
@@ -10,7 +10,7 @@ h1 {
 	color: white;
 }
 
-h1 a, h1 a:visited {
+h1 a,h1 a:visited {
 	color: white;
 	text-decoration: none;
 }
@@ -31,18 +31,21 @@ h3 {
 	margin-left: 5px;
 	font-size: 11px;
 	min-width: 200px;
-/* 	float: left; */
+	/* 	float: left; */
 }
 
-
 .header {
-	background-color: #629914;
-	color: white; 
+	background-image: url('../images/background-header.png');
+	background-repeat: repeat-y;
+	background-position: left;
+	background-color: #F3E5B4;
+	border-bottom: 1px solid white;
+	color: #F3E5B4;
 	height: 39px;
 }
 
 .listingTable tr.even {
-	background-color: #F0F0F0 ; 
+	background-color: #F0F0F0;
 }
 
 #bookListContainer {
@@ -56,9 +59,8 @@ h3 {
 	border: solid 1px lightgrey;
 }
 
-
 .listingTable th {
-	background-color: #4EB305;
+	background-color: #991C32;
 	color: white;
 	font-size: 12px;
 }
@@ -67,10 +69,9 @@ h3 {
 	border-collapse: collapse;
 }
 
-.listingTable tr, #bookListTable td {
+.listingTable tr,#bookListTable td {
 	border-bottom: solid 1px lightgrey;
 	border-right: solid 1px lightgrey;
-
 	margin: 0px;
 	font-size: 12px;
 }
@@ -83,22 +84,19 @@ h3 {
 	padding: 2px;
 }
 
-
 .bookName {
 	color: #33339F;
 	font-weight: bold;
 	padding-left: 5px;
 }
 
-.listingTable a  {
+.listingTable a {
 	color: #33339F;
 }
 
 /******************/
 /** versions page */
 /******************/
-
-
 a.info {
 	color: #33339F;
 	text-decoration: none;

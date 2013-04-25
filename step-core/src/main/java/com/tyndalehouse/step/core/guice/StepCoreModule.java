@@ -35,8 +35,6 @@ package com.tyndalehouse.step.core.guice;
 import java.util.List;
 import java.util.Properties;
 
-import com.tyndalehouse.step.core.service.*;
-import com.tyndalehouse.step.core.service.impl.*;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.config.CacheConfiguration;
 import net.sf.ehcache.config.Configuration;
@@ -52,6 +50,29 @@ import com.tyndalehouse.step.core.data.entities.impl.EntityManagerImpl;
 import com.tyndalehouse.step.core.guice.providers.DefaultInstallersProvider;
 import com.tyndalehouse.step.core.guice.providers.DefaultVersionsProvider;
 import com.tyndalehouse.step.core.guice.providers.OfflineInstallersProvider;
+import com.tyndalehouse.step.core.service.AnalysisService;
+import com.tyndalehouse.step.core.service.BibleInformationService;
+import com.tyndalehouse.step.core.service.GeographyService;
+import com.tyndalehouse.step.core.service.LanguageService;
+import com.tyndalehouse.step.core.service.LexiconDefinitionService;
+import com.tyndalehouse.step.core.service.ModuleService;
+import com.tyndalehouse.step.core.service.MorphologyService;
+import com.tyndalehouse.step.core.service.SearchService;
+import com.tyndalehouse.step.core.service.TimelineService;
+import com.tyndalehouse.step.core.service.UserService;
+import com.tyndalehouse.step.core.service.VocabularyService;
+import com.tyndalehouse.step.core.service.helpers.VersionResolver;
+import com.tyndalehouse.step.core.service.impl.AnalysisServiceImpl;
+import com.tyndalehouse.step.core.service.impl.BibleInformationServiceImpl;
+import com.tyndalehouse.step.core.service.impl.GeographyServiceImpl;
+import com.tyndalehouse.step.core.service.impl.LanguageServiceImpl;
+import com.tyndalehouse.step.core.service.impl.LexiconDefinitionServiceImpl;
+import com.tyndalehouse.step.core.service.impl.ModuleServiceImpl;
+import com.tyndalehouse.step.core.service.impl.MorphologyServiceImpl;
+import com.tyndalehouse.step.core.service.impl.SearchServiceImpl;
+import com.tyndalehouse.step.core.service.impl.TimelineServiceImpl;
+import com.tyndalehouse.step.core.service.impl.UserServiceImpl;
+import com.tyndalehouse.step.core.service.impl.VocabularyServiceImpl;
 import com.tyndalehouse.step.core.service.jsword.JSwordAnalysisService;
 import com.tyndalehouse.step.core.service.jsword.JSwordMetadataService;
 import com.tyndalehouse.step.core.service.jsword.JSwordModuleService;
@@ -106,6 +127,8 @@ public class StepCoreModule extends AbstractStepGuiceModule {
         bind(JSwordVersificationService.class).to(JSwordVersificationServiceImpl.class).asEagerSingleton();
         bind(BibleInformationService.class).to(BibleInformationServiceImpl.class).asEagerSingleton();
         bind(ModuleService.class).to(ModuleServiceImpl.class).asEagerSingleton();
+
+        bind(VersionResolver.class).asEagerSingleton();
 
         // others that can wait
         bind(JSwordAnalysisService.class).to(JSwordAnalysisServiceImpl.class);

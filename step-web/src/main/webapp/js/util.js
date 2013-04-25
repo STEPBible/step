@@ -100,7 +100,7 @@ step.util = {
 	    var text = "";
         if(element.text || element.innerText) {
             var el = $(element);
-            var children = el.children();
+            var children = el.contents();
             if(children.length != 0) {
                 text = children.not("sup,a").text();
             } else {
@@ -257,6 +257,15 @@ step.util = {
             
             allStrongElements.click(function() { 
                 showDef(this);
+            }).hover(function() { 
+                step.passage.higlightStrongs({
+                    passageId : undefined,
+                    strong: $(this).attr('strong'),
+                    morph : $(this).attr('morph'),
+                    classes : "primaryLightBg"
+                });
+            }, function() { 
+                step.passage.removeStrongsHighlights(undefined, "primaryLightBg");
             });
             
             $.each(allStrongElements, function(j, element) {
@@ -353,7 +362,9 @@ step.util = {
         
         trackQuerySyntax : function(selector, namespace) {
             var self = this;
-            $(selector + " input").keyup(function(ev) {
+            
+            //do all the form elements in the selector, except for query syntax which are handled separately
+            $(selector + " input").not(".querySyntax").keyup(function(ev) {
                 if(ev.ctrlKey || ev.altKey || ev.metaKey) {
                     return true;
                 }
@@ -364,7 +375,7 @@ step.util = {
              
                 //special handling of apple keys
                 if(ev.which == 224 || ev.which == 17 || ev.which == 91 || ev.which == 93) {
-                    self.appleKey = true;
+                    self.appleKey = false;
                     return;
                 }
                 
@@ -399,9 +410,14 @@ step.util = {
                     
                     if(step.search.refinedSearch.length == 0) {
                         $.getSafe(SEARCH_ESTIMATES, [encodeURIComponent(step.util.replaceSpecialChars(syntax)) + " in (" + versions + ")"], function(estimate) {
-                            $("fieldset:visible .resultEstimates", step.util.getPassageContainer(passageId))
-                                .html(sprintf(__s.approx_results, estimate))
+                            var field = $("fieldset:visible .resultEstimates", step.util.getPassageContainer(passageId));
+                            if(estimate == -1) {
+                                field.html("");
+                            } else {
+                                field.html(sprintf(__s.approx_results, estimate))
                                 .css("color", "#" + step.util.ui._calculateEstimateBackgroundColour(estimate));
+                            }
+                            
                             
                         });
                     }
@@ -409,8 +425,7 @@ step.util = {
                 return true;
             }).keydown(function(ev) {
                 if(ev.which == 224 || ev.which == 17 || ev.which == 91 || ev.which == 93) {
-                    self.appleKey = false;
-                    return;
+                    self.appleKey = true;
                 }
             });
         },
@@ -419,7 +434,6 @@ step.util = {
             var i = 0;
             for(i = 0; i < 100; i++) {
                 $("fieldset:visible .resultEstimates").prev().css("background-color", "#" + this._calculateEstimateBackgroundColour(i));
-                
             }
         },
         

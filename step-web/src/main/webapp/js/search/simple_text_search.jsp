@@ -26,7 +26,7 @@
 <fieldset class="simpleTextFields" name="SEARCH_SIMPLE_TEXT">
 	<legend><fmt:message key="search_text" /></legend>
 
-	<table>
+	<table class="simpleTextFieldsTable">
 		<%=stepRequest.getSearch() %>
 	</table>
 
@@ -37,7 +37,7 @@
 	</div>
 
 	<hr level="2" />
-	<div level="2"><fmt:message key="search_query_syntax" /> <input class="simpleTextQuerySyntax querySyntax" style="width: 70%" /> </div>
+	<div level="2"><fmt:message key="search_query_syntax" /> <input type="text" class="simpleTextQuerySyntax querySyntax" style="width: 70%" /> </div>
 
 	<hr />
 	<jsp:include page="search_toolbar.jsp?namespace=simpleText&context=true&bibleVersions=true&paging=true&refining=true"  />

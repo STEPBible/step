@@ -50,11 +50,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -68,7 +66,6 @@ import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.BookCategory;
 import org.crosswire.jsword.book.BookData;
 import org.crosswire.jsword.book.BookException;
-import org.crosswire.jsword.book.Books;
 import org.crosswire.jsword.book.OSISUtil;
 import org.crosswire.jsword.book.UnAccenter;
 import org.crosswire.jsword.passage.Key;
@@ -100,6 +97,7 @@ import com.tyndalehouse.step.core.models.KeyWrapper;
 import com.tyndalehouse.step.core.models.LookupOption;
 import com.tyndalehouse.step.core.models.OsisWrapper;
 import com.tyndalehouse.step.core.service.VocabularyService;
+import com.tyndalehouse.step.core.service.helpers.VersionResolver;
 import com.tyndalehouse.step.core.service.impl.MorphologyServiceImpl;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
@@ -108,6 +106,7 @@ import com.tyndalehouse.step.core.utils.StringUtils;
 import com.tyndalehouse.step.core.xsl.XslConversionType;
 import com.tyndalehouse.step.core.xsl.impl.ColorCoderProviderImpl;
 import com.tyndalehouse.step.core.xsl.impl.InterleavingProviderImpl;
+import com.tyndalehouse.step.core.xsl.impl.MultiInterlinearProviderImpl;
 
 /**
  * a service providing a wrapper around JSword
@@ -127,6 +126,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
     private final JSwordVersificationService versificationService;
     private final VocabularyService vocabProvider;
     private final ColorCoderProviderImpl colorCoder;
+    private final VersionResolver resolver;
 
     /**
      * constructs the jsword service.
@@ -135,15 +135,17 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
      * @param morphologyProvider provides morphological information
      * @param vocabProvider the service providing lexicon and vocabulary information
      * @param colorCoder the service to color code a passage
+     * @param resolver the resolver
      */
     @Inject
     public JSwordPassageServiceImpl(final JSwordVersificationService versificationService,
             final MorphologyServiceImpl morphologyProvider, final VocabularyService vocabProvider,
-            final ColorCoderProviderImpl colorCoder) {
+            final ColorCoderProviderImpl colorCoder, final VersionResolver resolver) {
         this.versificationService = versificationService;
         this.morphologyProvider = morphologyProvider;
         this.vocabProvider = vocabProvider;
         this.colorCoder = colorCoder;
+        this.resolver = resolver;
     }
 
     @Override
@@ -152,7 +154,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
         // getting the next chapter
         // FIXME find a way of getting the next chapter from the current key, in the current book, rather than
         // relying on versification systems which may contain verses that the Book does not support
-        final Book currentBook = Books.installed().getBook(version);
+        final Book currentBook = this.versificationService.getBookFromVersion(version);
         final Versification v11n = this.versificationService.getVersificationForVersion(currentBook);
 
         try {
@@ -258,7 +260,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
 
     @Override
     public KeyWrapper getKeyInfo(final String reference, final String version) {
-        final Book currentBook = Books.installed().getBook(version);
+        final Book currentBook = this.versificationService.getBookFromVersion(version);
 
         try {
             Key key;
@@ -363,7 +365,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
 
     @Override
     public KeyWrapper expandToChapter(final String version, final String reference) {
-        final Key k = Books.installed().getBook(version).getValidKey(reference);
+        final Key k = this.versificationService.getBookFromVersion(version).getValidKey(reference);
         k.blur(100, RestrictionType.CHAPTER);
         return new KeyWrapper(k);
     }
@@ -621,7 +623,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
      * @return the key
      * @throws NoSuchKeyException the no such key exception
      */
-    private Key reduceKeySize(final Key inputKey, final Versification v11n) throws NoSuchKeyException {
+    Key reduceKeySize(final Key inputKey, final Versification v11n) throws NoSuchKeyException {
         Key key = inputKey;
         final int cardinality = key.getCardinality();
 
@@ -717,7 +719,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
 
         for (final String v : versions) {
             if (isNotBlank(v)) {
-                final Book book = Books.installed().getBook(v.trim());
+                final Book book = this.versificationService.getBookFromVersion(v.trim());
                 if (book != null) {
                     final String code = book.getLanguage().getCode();
                     setIfContainsHebrew(osisWrapper, code);
@@ -783,7 +785,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
             books[ii] = this.versificationService.getBookFromVersion(versions[ii]);
         }
 
-        validateInterleavedVersions(displayMode, books);
+        books = removeDifferentLanguageIfCompare(displayMode, books);
         books = removeSameBooks(displayMode, books);
         return books;
     }
@@ -826,21 +828,30 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
      * @param displayMode the display mode
      * @param books the books that have been found
      */
-    private void validateInterleavedVersions(final InterlinearMode displayMode, final Book[] books) {
-        final Set<String> languageCodes = new HashSet<String>(books.length);
-        if (isComparingMode(displayMode)) {
-            // check that we have at least two books of the same language
-            for (final Book b : books) {
-                final String code = b.getLanguage().getCode();
-                if (languageCodes.contains(code)) {
-                    return;
-                }
-                // otherwise we add and hope another version turns up
-                languageCodes.add(code);
+    private Book[] removeDifferentLanguageIfCompare(final InterlinearMode displayMode, final Book[] books) {
+        if (books.length == 0) {
+            return books;
+        }
+
+        if (!isComparingMode(displayMode)) {
+            return books;
+        }
+
+        final String firstLanguage = books[0].getLanguage().getCode();
+        final List<Book> booksOfSameLanguage = new ArrayList<Book>();
+
+        // check that we have at least two books of the same language
+        for (final Book b : books) {
+            if (firstLanguage.equals(b.getLanguage().getCode())) {
+                booksOfSameLanguage.add(b);
             }
+        }
+
+        if (booksOfSameLanguage.size() < 2) {
             throw new TranslatedException("translations_in_different_languages");
         }
 
+        return booksOfSameLanguage.toArray(new Book[0]);
     }
 
     /**
@@ -1060,12 +1071,15 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
     private void setInterlinearOptions(final TransformingSAXEventProvider tsep,
             final String interlinearVersion, final String reference, final InterlinearMode displayMode) {
         if (displayMode == InterlinearMode.INTERLINEAR) {
-            tsep.setParameter("interlinearReference", reference);
             tsep.setParameter("VLine", false);
 
             if (isNotBlank(interlinearVersion)) {
                 tsep.setParameter("interlinearVersion", interlinearVersion);
             }
+
+            final MultiInterlinearProviderImpl multiInterlinear = new MultiInterlinearProviderImpl(
+                    interlinearVersion, reference, this.versificationService);
+            tsep.setParameter("interlinearProvider", multiInterlinear);
         }
     }
 
@@ -1082,12 +1096,12 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
         final Book[] books = bookData.getBooks();
         final String[] versions = new String[books.length];
         for (int ii = 0; ii < books.length; ii++) {
-            versions[ii] = books[ii].getInitials();
+            versions[ii] = this.resolver.getShortName(books[ii].getInitials());
         }
 
         if (displayMode != NONE && displayMode != INTERLINEAR) {
-            tsep.setParameter("interleavingProvider", new InterleavingProviderImpl(versions,
-                    displayMode == INTERLEAVED_COMPARE || displayMode == COLUMN_COMPARE));
+            tsep.setParameter("interleavingProvider", new InterleavingProviderImpl(this.versificationService,
+                    versions, displayMode == INTERLEAVED_COMPARE || displayMode == COLUMN_COMPARE));
         }
 
         if (displayMode == INTERLEAVED || displayMode == INTERLEAVED_COMPARE) {

@@ -1,3 +1,4 @@
+<%@page import="com.tyndalehouse.step.core.service.helpers.VersionResolver"%>
 <%@page import="java.util.ResourceBundle"%>
 <%@ page import="com.tyndalehouse.step.core.models.ClientSession"%>
 <%@ page import="java.util.Locale"%>
@@ -10,6 +11,7 @@
 
 <% 
 	Injector injector = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
+	VersionResolver resolver = injector.getInstance(VersionResolver.class);
 	Locale locale = injector.getInstance(ClientSession.class).getLocale();
 	Config.set(session, Config.FMT_LOCALE, locale.getLanguage());
 	VersionStepRequest stepRequest = new VersionStepRequest(injector, request);
@@ -32,7 +34,7 @@
 </jsp:include>
 
 
-	<h2><%= stepRequest.getBook().getName() %> (<%= stepRequest.getBook().getInitials() %>)</h1>
+	<h2><%= stepRequest.getBook().getName() %> (<%= resolver.getShortName(stepRequest.getBook().getInitials()) %>)</h1>
 		<% 
 			String info = stepRequest.getTyndaleInfo();
 			if(info != null) {

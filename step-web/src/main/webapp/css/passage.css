@@ -120,8 +120,9 @@ td.primary {
 }
 
 span[strong]:hover {
-	color: #33339F;
+/* 	color: #33339F; */
 	cursor: pointer;
+	background-color: rgb(235, 235, 241);
 /* 	border-bottom: 2px #696 dashed; */
 /* 	margin-bottom: 5px; */
 }

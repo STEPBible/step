@@ -653,9 +653,11 @@
     <xsl:variable name="next-position" select="position() + 1"/>
     <xsl:if test="$siblings[$next-position] and (name($siblings[$next-position]) != '' and (name($siblings[$next-position]) != 'seg' or $siblings[$next-position]/@type != 'x-punct'))">
       <xsl:if test="$siblings[$next-position]/@type != 'x-maqqef'">
+      	<xsl:if test="$siblings[$next-position]/@type != 'x-sof-pasuq'">
 	      <xsl:if test="conversion:startsWithPunctuation($siblings[$next-position]/text()) =  false()">
 		      <xsl:text> </xsl:text>
-	      </xsl:if>
+		  </xsl:if>
+	    </xsl:if>
       </xsl:if>
     </xsl:if>
   </xsl:template>

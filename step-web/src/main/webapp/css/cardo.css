@@ -22,3 +22,8 @@
     font-family : "SBL_Hbrw";
     src: url('../fonts/SBL_Hbrw.woff');
 }
+
+@font-face {
+	font-family : "SIL_EZRA";
+    src: url('../fonts/SILEOT.woff');
+}

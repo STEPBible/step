@@ -292,7 +292,7 @@
    		</xsl:choose>
    	</xsl:variable>
    	    	
-    <!-- Always output the verse -->
+    <!-- Always output the verse number -->
     <xsl:choose>
       <xsl:when test="$VLine = 'true'">
         <div class="verse l {$languageDirection}Direction" dir="{$languageDirection}"><a name="{@osisID}"><xsl:call-template name="versenum"/></a><xsl:apply-templates/></div>
@@ -640,7 +640,6 @@
 	    	    	<span strong="{$lemma}" morph="{@morph}"><xsl:apply-templates/></span>
 			    </xsl:otherwise>
 		    </xsl:choose>
-	    
 	    </xsl:when>
 		<xsl:otherwise>
 			<xsl:apply-templates/>
@@ -653,8 +652,10 @@
     <xsl:variable name="siblings" select="../child::node()"/>
     <xsl:variable name="next-position" select="position() + 1"/>
     <xsl:if test="$siblings[$next-position] and (name($siblings[$next-position]) != '' and (name($siblings[$next-position]) != 'seg' or $siblings[$next-position]/@type != 'x-punct'))">
-      <xsl:if test="conversion:startsWithPunctuation($siblings[$next-position]/text()) =  false()">
-	      <xsl:text> </xsl:text>
+      <xsl:if test="$siblings[$next-position]/@type != 'x-maqqef'">
+	      <xsl:if test="conversion:startsWithPunctuation($siblings[$next-position]/text()) =  false()">
+		      <xsl:text> </xsl:text>
+	      </xsl:if>
       </xsl:if>
     </xsl:if>
   </xsl:template>

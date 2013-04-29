@@ -64,7 +64,7 @@ step.state.passage = {
         
         //now that we've updated, alert if we intended change
         if(version) {
-            step.passage.ui.updateDisplayOptions(passageId);
+//            step.passage.ui.updateDisplayOptions(passageId);
             
             $.shout("version-changed-" + passageId, version);
         }

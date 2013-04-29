@@ -62,6 +62,7 @@
         <script src="libs/underscore-min.js" type="text/javascript"></script>
         <script src="libs/json2.js" type="text/javascript"></script>
         <script src="libs/backbone-min.js" type="text/javascript"></script>
+        <script src="libs/backbone.localStorage-min.js" type="text/javascript"></script>
 
 	    <script src="js/jquery-extensions/jquery-qtip.js" type="text/javascript"></script>
 	    <script src="js/jquery-extensions/jquery-hover-intent.js" type="text/javascript"></script>
@@ -75,6 +76,8 @@
 	    <script src="js/jquery-extensions/jquery-passage-buttons.js" type="text/javascript"></script>
 	    <script src="js/jquery-extensions/jquery-original-word-toolbar.js" type="text/javascript"></script>
 	    <script src="js/jquery-extensions/jquery-search-result.js" type="text/javascript"></script>
+        <script src="js/jquery-extensions/jquery-bible-books.js" type="text/javascript"></script>
+
 		<script src="js/ddsmoothmenu.js" type="text/javascript"></script>
 	    <script src="js/util.js" type="text/javascript"></script>
 	    <script src="js/lexicon_definition.js" type="text/javascript"></script>
@@ -92,7 +95,7 @@
 		<script src="js/search/step.search.timeline.ui.js" type="text/javascript"></script>
 		<script src="js/search/step.search.subject.ui.js" type="text/javascript"></script>
 <!-- 		<script src="js/search/step.search.personalnotes.ui.js" type="text/javascript"></script> -->
-		<script src="js/navigation/step.navigation.js" type="text/javascript"></script>	    
+		<script src="js/navigation/step.navigation.js" type="text/javascript"></script>
 
 
 		<script src="js/state/step.state.js" type="text/javascript"></script>
@@ -120,9 +123,16 @@
 	    <script src="js/bookmark/step.bookmark.js" type="text/javascript"></script>
 	    <script src="js/bookmark/step.bookmark.ui.js" type="text/javascript"></script>
 
-        <script src="js/backbone/passage.js" type="text/javascript"></script>
+        <script src="js/backbone/models/passage_model.js" type="text/javascript"></script>
+        <script src="js/backbone/views/passage_display_view.js" type="text/javascript"></script>
+        <script src="js/backbone/router.js" type="text/javascript"></script>
+
+        <script src="js/backbone/views/passage_menu_view.js" type="text/javascript"></script>
+        <script src="js/backbone/views/passage_criteria_view.js" type="text/javascript"></script>
+
 
 	    <script src="js/init.js" type="text/javascript"></script>
+        <script src="js/backbone/step.js" type="text/javascript"></script>
 	<%
 		} else {
 	%>

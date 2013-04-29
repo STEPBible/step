@@ -88,7 +88,7 @@ step.version = {
         },
         
         warnIfNoStrongs : function(passageId, version) {
-            if(!step.keyedVersions) {
+            if(!step.keyedVersions || !version) {
                 return;
             }
             

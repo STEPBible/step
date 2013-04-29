@@ -76,7 +76,8 @@ function ToolbarMenu(passageId, menuRoot) {
 ToolbarMenu.prototype.refreshMenuOptions = function() {
 	var self = this;
 	var version = step.state.passage.version(this.passageId);
-	var mode = step.passage.getDisplayMode(this.passageId).displayMode;
+//	var mode = step.passage.getDisplayMode(this.passageId).displayMode;
+    var mode = undefined;
 	if(step.util.isBlank(mode)) {
 	    mode = "NONE";
 	}

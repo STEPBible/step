@@ -51,75 +51,7 @@ step.passage.ui = {
         step.util.ui.resetIfEmpty(passageId, force, step.state.passage.extraVersionsDisplayOptions, step.defaults.passage.interOptions[0]);
     },
     
-    updateDisplayOptions : function(passageId) {
-        var self = this;
-        
-        if(step.versions == undefined) {
-            //don't have it from server yet, so return immediately
-            return;
-        }
-        
-        
-        var passageContainer = step.util.getPassageContainer(passageId);
-        var displayOptions = $(".extraVersionsDisplayOptions", passageContainer);
-        
-        var comparisonVersions = $(".extraVersions", passageContainer).val().replace(/ +/g, "");
 
-        //check for no versions
-        if(comparisonVersions == undefined || comparisonVersions.length == 0) {
-            //then we disable the box and return immediately
-            displayOptions.prop("disabled", true);
-            return;
-        } else {
-            //otherwise we enable it
-            displayOptions.prop("disabled", false);
-        }
-        
-        //if we're looking at an interlinear option, then we need to check all versions support that
-        if(comparisonVersions) {
-            var versions = comparisonVersions.split(",");
-            versions.push(step.state.passage.version(passageId));
-            
-            for(var i = 0; i < versions.length; i++) {
-                //check that each version contains
-                var features = this.getSelectedVersion(versions[i]);
-                if(features && !features.hasStrongs) {
-                    if(step.defaults.passage.interNamedOptions[step.defaults.passage.interOptions.indexOf(displayOptions.val())] == "INTERLINEAR") {
-                        displayOptions.val(step.defaults.passage.interOptions[0]);
-                        displayOptions.trigger('change');
-                    }
-                    
-                    //change available options
-                    displayOptions.autocomplete("option", "source", step.defaults.passage.interOptionsNoInterlinear);
-                    self._ensureDefaultOption(passageId, step.defaults.passage.interOptionsNoInterlinear, displayOptions.val(), step.defaults.passage.interNoInterlinearDefault);
-                    return;
-                }
-            }
-        }
-        
-        //if we get here, then we need to allow interlinears:
-        displayOptions.autocomplete("option", "source", step.defaults.passage.interOptions);
-        self._ensureDefaultOption(passageId, step.defaults.passage.interOptions, displayOptions.val(), step.defaults.passage.interInterlinearDefault);
-    },
-
-    _ensureDefaultOption : function(passageId, availableOptions, currentOption, defaultOption) {
-        //check that the current option is available
-        for(var i = 0; i < availableOptions.length; i++) {
-            if(availableOptions[i] == currentOption) {
-                return;
-            }
-        }
-        
-        step.state.passage.extraVersionsDisplayOptions(passageId, defaultOption);
-    },
-    
-    /**
-     * Simple forward search
-     */
-    getSelectedVersion : function(versionName) {
-        return step.keyedVersions[versionName.toUpperCase()];
-    },
-    
     getFontKey : function(passageContentHolder) {
         return $(passageContentHolder).hasClass("hbFont") ? "hb" : ($(passageContentHolder).hasClass("unicodeFont") ? "unicode" : "default");
     },
@@ -144,64 +76,35 @@ step.passage.ui = {
 };
 
 $(document).ready(function() {
-    step.state.trackState([
-                           ".extraVersions", ".extraVersionsDisplayOptions"
-                           ], "passage", step.passage.ui.restoreDefaults);
-    
-    $(".extraVersionsDisplayOptions").change(function(event) {
-        //shout a change
-        var passageId = step.passage.getPassageId(event.target);
-        $.shout("version-changed-" + passageId);
-        step.passage.changePassage(passageId);
-    });
-    
-    $(".searchPassage").button({
-        icons : {
-            primary : "ui-icon-search"
-        },
-        text : false
-    }).click(function() {
-        step.passage.changePassage(step.passage.getPassageId(this));
-    });
-    
-    $(".infoAboutVersion").button({ icons : { primary : "ui-icon-info" }, text : false});
-    $(".resetVersions").button({ icons : { primary : "ui-icon-close" }, text : false})
-    $(".interlinearHelp").button({ icons : { primary : "ui-icon-help" }, text : false})
-    
+//    step.state.trackState([
+//                           ".extraVersions", ".extraVersionsDisplayOptions"
+//                           ], "passage", step.passage.ui.restoreDefaults);
+
+
     $(".smallerFonts").button({ text : true }).click(function() {
         step.passage.ui.changeFontSize(this, -1);
     }).find(".ui-button-text").html("<span class='smallerFont'>A</span>");
-    
-    $(".resetVersions").click(function() {
-        $(this).parent().find(".extraVersions").val("").trigger('change');
-    });
-    
+
+//    $(".resetVersions").click(function() {
+//        $(this).parent().find(".extraVersions").val("").trigger('change');
+//    });
+
     $(".largerFonts").button({ text : true }).click(function() {
         step.passage.ui.changeFontSize(this, 1);
     });
-    
+
     $(".passageSizeButtons").buttonset();
     $(".passageLookupButtons").buttonset();
 
-    step.util.ui.autocompleteSearch(".extraVersionsDisplayOptions", step.defaults.passage.interOptions);
+
 });
 
 $(step.passage.ui).hear("versions-initialisation-completed", function() {
-    for(var i = 0; i < step.util.passageContents.length; i++) {
-        step.passage.ui.updateDisplayOptions(i);
-    }
+//    for(var i = 0; i < step.util.passageContents.length; i++) {
+//        step.passage.ui.updateDisplayOptions(i);
+//    }
     
     $.each($(".extraVersions"), function(i, item) {
-        $(item).versions({
-            multi : true
-        }).bind('change', function(event) {
-              var target = event.target;
-              var passageId = step.passage.getPassageId(target);
-              
-              //reset displayOptions because interlinear might not be available
-              step.passage.ui.updateDisplayOptions(passageId);
-              $.shout("version-changed-" + passageId);
-              step.passage.changePassage(passageId);
-        });
+
     });
 });

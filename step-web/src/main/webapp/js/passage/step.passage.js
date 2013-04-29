@@ -37,23 +37,25 @@ step.passage = {
     },
 
     getDisplayMode : function(passageId) {
-        var container = step.util.getPassageContainer(passageId);
-        var level = $(".advancedSearch fieldset[name='SEARCH_PASSAGE']", container).detailSlider("value");
-        var interlinearVersion = "";
-        var interlinearMode = "NONE";
-        if(level > 0) {
-            interlinearVersion = $(".extraVersions", container).val();
-            if(!step.util.isBlank(interlinearVersion)) {
-                interlinearVersion = interlinearVersion.trim();
-                interlinearMode = "INTERLEAVED";
-            }
-        }
+        console.log("getDisplayMode is deprecated and useless");
 
-        if(level > 1 && !step.util.isBlank(interlinearVersion)) {
-            interlinearMode = this._getInterlinearMode(passageId);
-        }
-        
-        return { displayMode : interlinearMode, displayVersions : interlinearVersion };
+//        var container = step.util.getPassageContainer(passageId);
+//        var level = $(".advancedSearch fieldset[name='SEARCH_PASSAGE']", container).detailSlider("value");
+//        var interlinearVersion = "";
+//        var interlinearMode = "NONE";
+//        if(level > 0) {
+//            interlinearVersion = $(".extraVersions", container).val();
+//            if(!step.util.isBlank(interlinearVersion)) {
+//                interlinearVersion = interlinearVersion.trim();
+//                interlinearMode = "INTERLEAVED";
+//            }
+//        }
+//
+//        if(level > 1 && !step.util.isBlank(interlinearVersion)) {
+//            interlinearMode = this._getInterlinearMode(passageId);
+//        }
+//
+//        return { displayMode : interlinearMode, displayVersions : interlinearVersion };
     },
     
     getReference : function(passageId) {
@@ -67,89 +69,7 @@ step.passage = {
     },
 
     changePassage: function(passageId) {
-        var lookupVersion = step.state.passage.version(passageId);
-
-        //get the real value from the text box
-        var lookupReference = this.getReference(passageId);
-        var options = step.state.passage.options(passageId);
-        var display = this.getDisplayMode(passageId);
-        var interlinearMode = display.displayMode;
-        var interlinearVersion = display.displayVersions;
-
-        var self = this;
-        if (!step.util.raiseErrorIfBlank(lookupVersion, __s.error_version_missing)
-                || !step.util.raiseErrorIfBlank(lookupReference, __s.error_reference_missing)) {
-            return;
-        }
-
-        var url = BIBLE_GET_BIBLE_TEXT + lookupVersion.toUpperCase() + "/" + lookupReference;
-        if (options && options.length != 0) {
-            url += "/" + options;
-        } else {
-            url += "/";
-        }
-
-        if (interlinearVersion && interlinearVersion.length != 0) {
-            url += "/" + interlinearVersion.toUpperCase();
-            url += "/" + interlinearMode;
-        }
-
-        if(this.lastUrls[passageId] == url) {
-            //execute all callbacks only
-            step.passage.executeCallbacks(passageId);
-            return;
-        }
-        this.lastUrls[passageId] = url;
-
-
-        // send to server
-        var startTime = new Date().getTime();
-
-        $.getPassageSafe({
-            url : url,
-            callback:  function(text) {
-                step.util.trackAnalytics("passage", "loaded", "time", new Date().getTime() - startTime);
-                step.util.trackAnalytics("passage", "version", lookupVersion);
-                step.util.trackAnalytics("passage", "reference", text.reference);
-
-                step.state.passage.range(passageId, text.startRange, text.endRange, text.multipleRanges);
-
-                // we get html back, so we insert into passage:
-                var passageContent = step.util.getPassageContent(passageId);
-                self._setPassageContent(passageId, passageContent, text);
-
-                // passage change was successful, so we let the rest of the UI know
-                $.shout("passage-changed", {
-                    passageId : passageId
-                });
-
-                // execute all callbacks
-                step.passage.executeCallbacks(passageId);
-
-
-                //finally add handlers to elements containing xref
-                self._doVerseNumbers(passageId, passageContent, options, interlinearMode, text.reference);
-//                self._doStats(passageId, passageContent, lookupVersion, text.reference);
-                self._doFonts(passageId, passageContent, interlinearMode, interlinearVersion);
-                self.doInterlinearVerseNumbers(passageId);
-                self._doInlineNotes(passageId, passageContent);
-                self._doNonInlineNotes(passageContent);
-                self._doSideNotes(passageId, passageContent);
-                self._doHideEmptyNotesPane(passageContent);
-                self._adjustTextAlignment(passageContent);
-                self._redoTextSize(passageId, passageContent);
-                self._addStrongHandlers(passageId, passageContent);
-                self._updatePageTitle(passageId, passageContent, lookupVersion, lookupReference);
-                self._doTransliterations(passageId, passageContent);
-                self._doInterlinearDividers(passageContent);
-                step.util.closeInfoErrors(passageId);
-                step.state.passage.reference(passageId, text.reference, false);
-                self._doVersions(passageId, passageContent);
-                self._doHash(passageId, text.reference, lookupVersion, options, interlinearMode, interlinearVersion);
-            },
-            passageId: passageId,
-            level: 'error'
-         });
+        console.log("changePassage is deprecated");
     },
 
     _updatePageTitle : function(passageId, passageContent, version, reference) {
@@ -284,18 +204,6 @@ step.passage = {
                         passageContentHolder.addClass("hbFont");
                     }
             }
-        }
-    },
-
-    _setPassageContent : function(passageId, passageContent, serverResponse) {
-        //first check that we have non-xgen elements
-        if($(serverResponse.value).children().not(".xgen").size() == 0) {
-            var reference = step.state.passage.reference(passageId)
-
-            step.util.raiseInfo(passageId, sprintf(__s.error_bible_doesn_t_have_passage, reference), 'info', true);
-            passageContent.html("");
-        } else {
-            passageContent.html(serverResponse.value);
         }
     },
 
@@ -814,13 +722,13 @@ function Passage(passageContainer, passageId) {
 Passage.prototype.initVersionsTextBox = function() {
     var self = this;
     
-    $(this.version).versions();
+//    $(this.version).versions();
     $(this.version).bind('change', function(event) {
             var value = $(event.target).val();
             if (step.util.raiseErrorIfBlank(value, __s.error_version_must_be_selected)) {
                   //need to refresh the options of interleaving/interlinear, etc.
-                  step.passage.ui.updateDisplayOptions(self.passageId);
-                  step.state.passage.version(self.passageId, value);
+//                  step.passage.ui.updateDisplayOptions(self.passageId);
+//                  step.state.passage.version(self.passageId, value);
             }
     });
 };
@@ -828,63 +736,63 @@ Passage.prototype.initVersionsTextBox = function() {
 Passage.prototype.initReferenceTextBox = function() {
     var self = this;
 
-    // set up change for textbox
-    this.reference.autocomplete({
-        source : function(request, response) {
-            $.getPassageSafe({
-                url : BIBLE_GET_BIBLE_BOOK_NAMES,
-                args : [request.term, step.state.passage.version(self.passageId)], 
-                callback: function(text) {
-                    response($.map(text, function(item) {
-                        return { 
-                            label: "<span>" + item.shortName + " <span style='font-size: larger'>&rArr;</span> " + item.fullName + "</span>", 
-                            value: item.shortName, 
-                            wholeBook : item.wholeBook 
-                        };
-                    }));
-                },
-                passageId : self.passageId,
-                level : 'error'
-           });
-        },
-        minLength : 0,
-        delay : 0,
-        select : function(event, ui) {
-//            event.stopPropagation();
-            var fireChange = !ui.item.wholeBook;
-            if(fireChange) {
-                step.state.passage.reference(self.passageId, ui.item.value, fireChange);
-            } else {
-                $(this).focus();
-                var that = this;
-                
-                delay(function() {
-                    $(that).autocomplete("search", ui.item.value);
-                }, 50, "step.passage.reference.dropdown");
-            }
-        }
-    })
-//    .blur(function() {
-//        step.state.passage.reference(self.passageId, $(this).val());
+//    // set up change for textbox
+//    this.reference.autocomplete({
+//        source : function(request, response) {
+//            $.getPassageSafe({
+//                url : BIBLE_GET_BIBLE_BOOK_NAMES,
+//                args : [request.term, step.state.passage.version(self.passageId)],
+//                callback: function(text) {
+//                    response($.map(text, function(item) {
+//                        return {
+//                            label: "<span>" + item.shortName + " <span style='font-size: larger'>&rArr;</span> " + item.fullName + "</span>",
+//                            value: item.shortName,
+//                            wholeBook : item.wholeBook
+//                        };
+//                    }));
+//                },
+//                passageId : self.passageId,
+//                level : 'error'
+//           });
+//        },
+//        minLength : 0,
+//        delay : 0,
+//        select : function(event, ui) {
+////            event.stopPropagation();
+//            var fireChange = !ui.item.wholeBook;
+//            if(fireChange) {
+//                step.state.passage.reference(self.passageId, ui.item.value, fireChange);
+//            } else {
+//                $(this).focus();
+//                var that = this;
+//
+//                delay(function() {
+//                    $(that).autocomplete("search", ui.item.value);
+//                }, 50, "step.passage.reference.dropdown");
+//            }
+//        }
 //    })
-    .click(function() {
-        $(this).autocomplete("search", $(this).val());
-        
-        //if no results, then re-run search with nothing
-        if($(".passageReference", step.util.getPassageContainer(self.passageId)).attr("autocomplete") == "off") {
-            //search for nothing
-            $(this).autocomplete("search", "");
-        }
-    }).blur(function() {
-        $(this).trigger('change');
-    }).data( "ui-autocomplete" )._renderItem = function( ul, item ) {
-        ul.addClass("stepComplete");
-        
-        return $( "<li></li>" )
-        .data( "ui-autocomplete-item", item )
-        .append( "<a>" + item.label + "</a>" )
-        .appendTo( ul );
-    };
+////    .blur(function() {
+////        step.state.passage.reference(self.passageId, $(this).val());
+////    })
+//    .click(function() {
+//        $(this).autocomplete("search", $(this).val());
+//
+//        //if no results, then re-run search with nothing
+//        if($(".passageReference", step.util.getPassageContainer(self.passageId)).attr("autocomplete") == "off") {
+//            //search for nothing
+//            $(this).autocomplete("search", "");
+//        }
+//    }).blur(function() {
+//        $(this).trigger('change');
+//    }).data( "ui-autocomplete" )._renderItem = function( ul, item ) {
+//        ul.addClass("stepComplete");
+//
+//        return $( "<li></li>" )
+//        .data( "ui-autocomplete-item", item )
+//        .append( "<a>" + item.label + "</a>" )
+//        .appendTo( ul );
+//    };
 };
 
 /**

@@ -176,11 +176,11 @@ step.state = {
         var passageIds = step.util.getAllPassageIds();
 
         //add the sliders to every fieldset - this needs to happen before the passages are restored
-        $("fieldset").detailSlider();
+//        $("fieldset").detailSlider();
 
         for ( var i in passageIds) {
             step.menu.tickMenuItem(step.menu.getMenuItem(this.activeSearch(i), i));
-            step.state.passage.restore(i);
+//            step.state.passage.restore(i);
             step.state.original.restore(i);
             this._showRelevantFieldSet(i);
         }
@@ -189,10 +189,10 @@ step.state = {
         
         //finally start listening for hash changes
         window.onhashchange = function() {
-            step.state.browser.hashChange();
+//            step.state.browser.hashChange();
         };
         
-        step.state.browser.hashChange();
+//        step.state.browser.hashChange();
      },
 
     _restoreLanguage : function() {
@@ -213,7 +213,7 @@ step.state = {
         this._showFieldSet(passageContainer, optionName);
         
         //need to link field set to optionbeing displayed
-        step.state.browser.changeTrackedSearch(passageId, optionName);
+//        step.state.browser.changeTrackedSearch(passageId, optionName);
     },
     
     _showFieldSet : function(passageContainer, optionName) {

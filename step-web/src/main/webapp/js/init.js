@@ -71,6 +71,10 @@ function init() {
         $.shout("view-change");
 
         initJira();
+
+        //TODO:temp fix
+        step.state._showFieldSet(step.util.getPassageContainer(0), "SEARCH_PASSAGE")
+
 	});
 }
 
@@ -384,7 +388,7 @@ function initData() {
 	    }
 	    
 	    $.shout("versions-initialisation-completed");
-	    
+        initApp();
 		var passages = initPassages(options);
 		initModules(passages);
 	});

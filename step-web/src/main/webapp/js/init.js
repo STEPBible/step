@@ -111,26 +111,28 @@ function initLocale() {
 function initJira() {
     if (location.hostname.toLowerCase().indexOf("stepbible") >= 0) {
         //init JIRA hook
+//        jQuery.ajax({
+//            url: "js/jira/issue_collector_dfa819bd.js",
+//            type: "get",
+//            cache: true,
+//            dataType: "script"
+//        });
+
         jQuery.ajax({
-            url: "js/jira/issue_collector_dfa819bd.js",
+            url: "https://stepweb.atlassian.net/s/en_US-bbefts-1988229788/6080/169/1.4.0-m2/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector-embededjs/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector-embededjs.js?collectorId=bf70a912",
             type: "get",
             cache: true,
             dataType: "script"
         });
 
+
         jQuery.ajax({
-            url: "js/jira/issue_collector_bf70a912.js",
+            url: "https://stepweb.atlassian.net/s/en_US-bbefts-1988229788/6080/169/1.4.0-m2/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector-embededjs/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector-embededjs.js?collectorId=88fe2a64",
             type: "get",
             cache: true,
             dataType: "script"
         });
 
-        jQuery.ajax({
-            url: "js/jira/issue_collector_88fe2a64.js",
-            type: "get",
-            cache: true,
-            dataType: "script"
-        });
 
         window.ATL_JQ_PAGE_PROPS = {
             "88fe2a64": {
@@ -140,6 +142,12 @@ function initJira() {
                         e.preventDefault();
                         showCollectorDialog();
                     });
+//        jQuery.ajax({
+//            url: "js/jira/issue_collector_88fe2a64.js",
+//            type: "get",
+//            cache: true,
+//            dataType: "script"
+//        });
                 }
             },
             "dfa819bd": {
@@ -154,7 +162,7 @@ function initJira() {
         }
     } else {
         //hide some links
-        $("#provideFeedback, #raiseBug").hide();
+        $("#provideFeedback").hide();
     }
 
 }

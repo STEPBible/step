@@ -1078,7 +1078,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
             }
 
             final MultiInterlinearProviderImpl multiInterlinear = new MultiInterlinearProviderImpl(
-                    interlinearVersion, reference, this.versificationService);
+                    interlinearVersion, reference, this.versificationService, this.vocabProvider);
             tsep.setParameter("interlinearProvider", multiInterlinear);
         }
     }

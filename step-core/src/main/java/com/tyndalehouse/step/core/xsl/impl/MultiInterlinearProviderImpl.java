@@ -39,6 +39,7 @@ import static com.tyndalehouse.step.core.utils.StringUtils.split;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.tyndalehouse.step.core.service.VocabularyService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,14 +66,15 @@ public class MultiInterlinearProviderImpl implements MultiInterlinearProvider {
 
     /**
      * sets up the interlinear provider with the correct version and text scope.
-     * 
+     *
      * @param versions the versions to use to set up the interlinear
      * @param textScope the reference, or passage range that should be considered when setting up the
      *            interlinear provider
-     * @param versificationService
+     * @param versificationService the service for working with a book
+     * @param vocabProvider the provider of vocabulary
      */
     public MultiInterlinearProviderImpl(final String versions, final String textScope,
-            final JSwordVersificationService versificationService) {
+                                        final JSwordVersificationService versificationService, final VocabularyService vocabProvider) {
         this.versificationService = versificationService;
 
         // first check whether the values passed in are correct
@@ -90,7 +92,7 @@ public class MultiInterlinearProviderImpl implements MultiInterlinearProvider {
                         final String normalisedVersion = version.trim();
                         this.interlinearProviders.put(normalisedVersion, new InterlinearProviderImpl(
                                 versificationService, normalisedVersion, textScope, hebrewDirectMapping,
-                                hebrewIndirectMappings));
+                                hebrewIndirectMappings, vocabProvider));
                     }
                 }
             }

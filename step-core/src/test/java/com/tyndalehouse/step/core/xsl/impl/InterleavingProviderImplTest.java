@@ -74,10 +74,31 @@ public class InterleavingProviderImplTest {
 
         final String[] expected = new String[] { "KJV", "ESV", "KJV", "NETfree", "KJV", "YLT", "KJV", "ASV",
                 "KJV", "Montgomery", };
-        for (int ii = 0; ii < expected.length; ii++) {
-            assertEquals(expected[ii], interleavingProviderImpl.getVersions()[ii]);
-        }
+        assertEqualVersions(expected, interleavingProviderImpl);
     }
+
+    /**
+     * Tests that the main version obliterates the presence of the same version within the list.
+     */
+    @Test
+    public void testInterleavingCompareWithSameVersion() {
+        final JSwordVersificationService versification = mock(JSwordVersificationService.class);
+
+        when(versification.getBookFromVersion(anyString())).thenAnswer(new Answer<Book>() {
+
+            @Override
+            public Book answer(final InvocationOnMock invocation) {
+                return Books.installed().getBook((String) invocation.getArguments()[0]);
+            }
+        });
+
+        final InterleavingProviderImpl interleavingProviderImpl = new InterleavingProviderImpl(versification,
+                new String[] { "KJV", "ESV", "KJV", "ESV"}, true);
+
+        assertEqualVersions(new String[] { "KJV", "ESV", "KJV", "ESV"}, interleavingProviderImpl);
+    }
+
+
 
     /**
      * check that comparing adds the right set of versions
@@ -88,6 +109,15 @@ public class InterleavingProviderImplTest {
                 new String[] { "ESV", "SBLGNT" }, false);
 
         final String[] expected = new String[] { "ESV", "SBLGNT" };
+        assertEqualVersions(expected, interleavingProviderImpl);
+    }
+
+    /**
+     *
+     * @param expected the expected versions
+     * @param interleavingProviderImpl the provider of versions
+     */
+    private void assertEqualVersions(final String[] expected, final InterleavingProviderImpl interleavingProviderImpl) {
         for (int ii = 0; ii < expected.length; ii++) {
             assertEquals(expected[ii], interleavingProviderImpl.getVersions()[ii]);
         }

@@ -14,6 +14,7 @@ public class HebrewLetter {
     private VowelLengthType vowelLengthType = null;
     private boolean shureq = false;
     private final char c;
+    private boolean transliterable = true;
 
     /**
      * The character it is representing
@@ -162,5 +163,19 @@ public class HebrewLetter {
      */
     public void setShureq(final boolean shureq) {
         this.shureq = shureq;
+    }
+
+    /**
+     * @param transliterable the transliterable flag
+     */
+    public void setIsTransliterable(boolean transliterable) {
+        this.transliterable = transliterable;
+    }
+
+    /**
+     * @return true if the letter should be considered in the transliteration
+     */
+    public boolean isTransliterable() {
+        return transliterable;
     }
 }

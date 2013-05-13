@@ -139,7 +139,7 @@ public final class GreekUtils {
                     break;
 
                 case 'η':
-                    sb.setCharAt(position++, 'é');
+                    sb.setCharAt(position++, '\u0113');
                     break;
 
                 case 'θ':
@@ -213,10 +213,8 @@ public final class GreekUtils {
                     sb.insert(position++, 's');
                     break;
                 case 'ω':
-                    sb.setCharAt(position++, 'o');
-                    sb.insert(position++, 'w');
+                    sb.setCharAt(position++, '\u014d');
                     break;
-                //
 
                 // leave spaces in, but should never be hit
                 case ' ':

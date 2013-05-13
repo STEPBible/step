@@ -1,11 +1,11 @@
 /*******************************************************************************
  * Copyright (c) 2012, Directors of the Tyndale STEP Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without 
  * modification, are permitted provided that the following conditions 
  * are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright 
  * notice, this list of conditions and the following disclaimer.
  * Redistributions in binary form must reproduce the above copyright 
@@ -16,7 +16,7 @@
  * nor the names of its contributors may be used to endorse or promote 
  * products derived from this software without specific prior written 
  * permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
@@ -40,9 +40,9 @@ import com.tyndalehouse.step.core.xsl.InterleavingProvider;
 
 /**
  * Provides the headings for any interleaved passage
- * 
+ *
  * @author chrisburrell
- * 
+ *
  */
 public class InterleavingProviderImpl implements InterleavingProvider {
     private String[] versions;
@@ -52,7 +52,7 @@ public class InterleavingProviderImpl implements InterleavingProvider {
 
     /**
      * Instantiates a new interleaving provider impl.
-     * 
+     *
      * @param versificationService the versification service
      * @param versions versions to interleave
      * @param comparing true to indicate we need to duplicate the versions returned
@@ -79,7 +79,8 @@ public class InterleavingProviderImpl implements InterleavingProvider {
 
     /**
      * When comparing, things get a bit more tricky. We are interested in the order, but if versions are not
-     * the same language then we don't output a difference, and therefore, it skips a column
+     * the same language then we don't output a difference, and therefore, it skips a column.
+     * We also skip if the version is exactly the same
      */
     private void computeComparingVersions() {
         if (this.versions.length == 0) {
@@ -97,7 +98,7 @@ public class InterleavingProviderImpl implements InterleavingProvider {
                 final String nextLanguage = getLanguageForVersion(ii + 1);
 
                 // if this language and next are equal, add the pair, since we will compare them
-                if (masterLanguage.equals(nextLanguage)) {
+                if (!masterVersion.equals(versions[ii+1]) && masterLanguage.equals(nextLanguage)) {
                     newVersions.add(masterVersion);
                     newVersions.add(this.versions[ii + 1]);
                 }
@@ -138,7 +139,7 @@ public class InterleavingProviderImpl implements InterleavingProvider {
 
     /**
      * increments our count and returns the version name
-     * 
+     *
      * @return the version name
      */
     private String returnAndIncrement() {

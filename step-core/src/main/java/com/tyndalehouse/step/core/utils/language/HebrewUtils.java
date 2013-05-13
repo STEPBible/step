@@ -23,6 +23,7 @@ import com.tyndalehouse.step.core.utils.language.transliteration.Transliteration
  */
 public final class HebrewUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(HebrewUtils.class);
+    public static final char HYPHEN = '.';
     private static transient List<TransliterationRule> transliterationRules;
 
     private static final char CLOSED_QUOTE = '\u2019';
@@ -84,6 +85,7 @@ public final class HebrewUtils {
     private static final char RESH = 0x5E8;
     private static final int SHIN = 0x5E9;
     private static final char TAV = 0x5EA;
+    private static final char MAQAF = 0x05BE;
 
     /** prevent instantiation */
     private HebrewUtils() {
@@ -272,9 +274,9 @@ public final class HebrewUtils {
                 if (hl != null) {
                     LOGGER.error(
                             "char=[0x{}]\tletter=[{}]\tconsonant=[{}]\tvLength[{}]\tvStress[{}]\tsounding[{}]",
-                            new Object[] { Integer.toString(hl.getC(), 16), hl.getHebrewLetterType(),
+                            Integer.toString(hl.getC(), 16), hl.getHebrewLetterType(),
                                     hl.getConsonantType(), hl.getVowelLengthType(), hl.getVowelStressType(),
-                                    hl.getSoundingType() });
+                                    hl.getSoundingType() );
                 }
             }
             LOGGER.error("Error occured during Hebrew transliteration. Analysis is above", ex);
@@ -357,9 +359,9 @@ public final class HebrewUtils {
             LOGGER.trace("{}", hl.getC());
             LOGGER.trace(
                     "char=[0x{}]\tletter=[{}]\tconsonant=[{}]\tvLength[{}]\tvStress[{}]\tsounding[{}]",
-                    new Object[] { Integer.toString(hl.getC(), 16), hl.getHebrewLetterType(),
+                     Integer.toString(hl.getC(), 16), hl.getHebrewLetterType(),
                             hl.getConsonantType(), hl.getVowelLengthType(), hl.getVowelStressType(),
-                            hl.getSoundingType() });
+                            hl.getSoundingType() );
         }
     }
 
@@ -460,9 +462,9 @@ public final class HebrewUtils {
         final HebrewLetter currentLetter = letter[current];
         final char c = currentLetter.getC();
 
-        if (currentLetter.isStressed()) {
-            output.append('*');
-        }
+//        if (currentLetter.isStressed()) {
+//            output.append('*');
+//        }
 
         // hyphenating vowels
         hyphenateSyllables(letter, current, output);
@@ -493,7 +495,7 @@ public final class HebrewUtils {
                 break;
             case BET:
                 if (currentLetter.hasNoDagesh() && current != 0) {
-                    output.append(B_WITH_LINE);
+                    output.append('v');
                 } else {
                     output.append('b');
                 }
@@ -505,14 +507,14 @@ public final class HebrewUtils {
                 output.append('d');
                 break;
             case HE:
-                output.append('h');
+                output.append("h");
                 break;
             case VAV:
                 if (currentLetter.isVowel()) {
                     if (currentLetter.isShureq()) {
                         output.append('u');
                     }
-                    output.append('w');
+//                    output.append('w');
                 } else {
                     output.append('v');
                 }
@@ -521,10 +523,10 @@ public final class HebrewUtils {
                 output.append('z');
                 break;
             case HET:
-                output.append(H_WITH_DOT);
+                output.append("ch");
                 break;
             case TET:
-                output.append(T_WITH_DOT);
+                output.append('t');
                 break;
             case YOD:
                 output.append('y');
@@ -532,7 +534,7 @@ public final class HebrewUtils {
             case FINAL_KAF:
             case KAF:
                 if (currentLetter.hasNoDagesh() && current != 0) {
-                    output.append(K_WITH_LINE);
+                    output.append("kh");
                 } else {
                     output.append('k');
                 }
@@ -584,27 +586,23 @@ public final class HebrewUtils {
             // vowels
             case SHEVA:
                 if (!currentLetter.isSilent()) {
-                    output.append('\'');
                     output.append('e');
                 }
                 break;
             case HATAF_SEGOL:
-                output.append('.');
                 output.append('e');
                 break;
             case HATAF_PATAH:
-                output.append('.');
                 output.append('a');
                 break;
             case HATAF_QAMATS:
-                output.append('.');
                 output.append('o');
                 break;
             case HIRIQ:
                 output.append('i');
                 break;
             case TSERE:
-                output.append('é');
+                output.append('e');
                 break;
             case SEGOL:
                 output.append('e');
@@ -613,7 +611,6 @@ public final class HebrewUtils {
                 output.append('a');
                 break;
             case QAMATS:
-                output.append('a');
                 output.append('a');
                 break;
             case HOLAM:
@@ -654,7 +651,7 @@ public final class HebrewUtils {
             final HebrewLetter currentLetter, final int sizeBeforeAppending) {
         // doubling and hyphenating
         if (currentLetter.isDoubled()) {
-            output.append('-');
+            output.append(HYPHEN);
             // copy to the end, and discount the already added -
             final int endOfDoubleLetter = output.length() - 1;
             for (int ii = sizeBeforeAppending; ii < endOfDoubleLetter; ii++) {
@@ -672,6 +669,17 @@ public final class HebrewUtils {
      */
     private static void hyphenateSyllables(final HebrewLetter[] letters, final int current,
             final StringBuilder output) {
+
+        if(letters[current].getC() == MAQAF) {
+            output.append('-');
+            return;
+        }
+
+        //if previous was a maqaf, then we're not going to hyphenate
+        if(current - 1 >= 0 && letters[current -1 ].getC() == MAQAF) {
+            return;
+        }
+
         if (current == 0 || !letters[current].isConsonant()
                 || isLastHebrewConsonantWithoutVowel(letters, current)) {
             return;
@@ -684,7 +692,7 @@ public final class HebrewUtils {
             if (letters[ii].isVowel()) {
                 if (letters[ii].getC() == HATAF_PATAH || letters[ii].getC() == HATAF_QAMATS
                         || letters[ii].getC() == HATAF_SEGOL || letters[ii].getC() == SHEVA) {
-                    output.append('-');
+                    output.append(HYPHEN);
                     return;
                 }
 
@@ -697,7 +705,7 @@ public final class HebrewUtils {
                 }
 
                 if (foundLongVowel && !foundStressedVowel) {
-                    output.append('-');
+                    output.append(HYPHEN);
                     return;
                 }
             }
@@ -712,7 +720,7 @@ public final class HebrewUtils {
             }
         }
 
-        output.append('-');
+        output.append(HYPHEN);
     }
 
     /**
@@ -907,7 +915,7 @@ public final class HebrewUtils {
 
         final char consonant = input[currentPosition];
         if (isAny(consonant, BET, GIMEL, DALET, KAF, PE, TAV)
-                && hasAnyPointing(input, currentPosition, false, SHEVA)) {
+                && hasAnyPointing(input, currentPosition, false, SHEVA, HATAF_SEGOL, HATAF_PATAH, HATAF_QAMATS)) {
             // not dagesh forte if any of those letters
             letters[currentPosition].setConsonantType(ConsonantType.SINGLE);
             return;

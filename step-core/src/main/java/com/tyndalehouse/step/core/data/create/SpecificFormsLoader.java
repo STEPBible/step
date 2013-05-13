@@ -32,13 +32,19 @@ public class SpecificFormsLoader extends AbstractClasspathBasedModuleLoader {
     }
 
     @Override
-    protected void parseFile(final Reader reader) {
+    protected void parseFile(final Reader reader, int skipLines) {
         final BufferedReader bufferedReader = new BufferedReader(reader);
         String line = null;
 
+        int leftOverSkip = skipLines;
         int lines = 0;
         try {
             while ((line = bufferedReader.readLine()) != null) {
+                leftOverSkip--;
+                if(leftOverSkip >= 0) {
+                    continue;
+                }
+
                 parseLine(line);
                 lines++;
 

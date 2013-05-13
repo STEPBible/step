@@ -1,3 +1,5 @@
+# This data is copyright Tyndale House
+# Please contact us through www.tyndalehouse.com to request permission to use it
 GC001,ἄλφα
 GC001,αλφα
 GC001,α

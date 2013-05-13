@@ -1,3 +1,5 @@
+# This data is copyright Tyndale House
+# Please contact us through www.tyndalehouse.com to request permission to use it
 startTime,endTime,scale,magnify,description,color
 "-2000-01-01T00:00:00.000","-1252-11-01T00:00:00.000",DECADE,0.000625,Pre-Pre-Exodus,#DCBFF6
 "-1255-11-01T00:00:00.000","-1251-11-01T00:00:00.000",YEAR,0.25,Pre-Exodus,#FAEBD7

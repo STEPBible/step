@@ -161,7 +161,7 @@ step.lexicon = {
         if (data.vocabInfos[index] && data.vocabInfos[index].relatedNos) {
             var linkContainer =  $("*[info-name = 'relatedNos']", "#vocabContainer");
             $.each(data.vocabInfos[index].relatedNos, function(i, item) {
-                //build a link, with gloss (unicode title='translit') 
+                //build a link, with gloss (unicode title='translit')
                 var unicode = $("<span>").append(item.matchingForm).addClass("ancientLanguage").prop("href", "javascript:void");
                 var link = $("<a>").append(item.gloss + " (");
                 link.append(unicode);

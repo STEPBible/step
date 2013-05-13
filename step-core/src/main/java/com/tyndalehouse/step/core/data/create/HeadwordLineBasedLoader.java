@@ -56,7 +56,6 @@ public class HeadwordLineBasedLoader extends AbstractClasspathBasedModuleLoader 
     private static final String START_TOKEN = "==============";
 
     // state used during processing
-    private int errors;
     private int count;
     private final EntityIndexWriterImpl writer;
 
@@ -72,7 +71,7 @@ public class HeadwordLineBasedLoader extends AbstractClasspathBasedModuleLoader 
     }
 
     @Override
-    protected void parseFile(final Reader reader) {
+    protected void parseFile(final Reader reader, int skipLines) {
         final BufferedReader bufferedReader = new BufferedReader(reader);
         String line = null;
 
@@ -88,7 +87,7 @@ public class HeadwordLineBasedLoader extends AbstractClasspathBasedModuleLoader 
         // save last article
         this.writer.save();
 
-        LOGGER.info("Loaded [{}] entries with [{}] errors", this.count, this.errors);
+        LOGGER.info("Loaded [{}] entries.", this.count);
     }
 
     /**
@@ -146,16 +145,5 @@ public class HeadwordLineBasedLoader extends AbstractClasspathBasedModuleLoader 
         }
 
         this.writer.addFieldToCurrentDocument(fieldName, fieldValue);
-    }
-
-    /**
-     * Helper method that gets a trimmed string out
-     * 
-     * @param fieldName the name of the field
-     * @param line the content of the line
-     * @return the portion of string representing the string value of the field declared in that line
-     */
-    String parseFieldContent(final String fieldName, final String line) {
-        return line.substring(fieldName.length() + 1).trim();
     }
 }

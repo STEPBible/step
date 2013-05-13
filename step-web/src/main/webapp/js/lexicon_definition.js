@@ -276,7 +276,7 @@ LexiconDefinition.prototype.getPopup = function() {
     
     
     $('#lexiconPopupClose').button({
-        icons : { 
+        icons : {
             primary : "ui-icon-closethick"
         }, 
         text : false

@@ -1,3 +1,5 @@
+# This data is copyright Tyndale House
+# Please contact us through www.tyndalehouse.com to request permission to use it
 @Headword: A
 @Class: T
 @Status: raw

@@ -1,9 +1,8 @@
 var PassageMenuView = Backbone.View.extend({
-    el : "#leftPaneMenu",
+    el : function() { return $(".innerMenu li[menu-name='DISPLAY']").eq(this.model.get("passageId")); },
     events : {
         "click a[name]" : "updateModel"
     },
-    imageTemplate : "<img class='selectingTick' src='images/selected.png' />",
 
     initialize : function() {
         var self = this;
@@ -20,6 +19,31 @@ var PassageMenuView = Backbone.View.extend({
                 self._unselectMenuOption(item);
             }
         });
+
+        //set up listeners, one in particular, which is to render the available menu options depending on the model versions
+        this.listenTo(this.model, "change:version change:interlinearMode change:extraVersions", this.refreshMenuOptions);
+
+        this.refreshMenuOptions();
+    },
+
+    refreshMenuOptions : function() {
+        var self = this;
+        var version = this.model.get("version");
+        var interlinearMode = this.model.get("interlinearMode");
+
+        $.getSafe(BIBLE_GET_FEATURES, [version, interlinearMode], function (features) {
+            //build up map of options
+            $("a", self.$el).removeClass("disabled").removeAttr('title').qtip('destroy');
+
+            for(var i = 0; i < features.removed.length; i++) {
+                $("a[name='" + features.removed[i].option + "']", self.$el)
+                    .addClass("disabled")
+                    .attr('title', features.removed[i].explanation)
+                    .qtip({ position: {my: "center right", at: "left center", viewport: $(window) }});
+            }
+
+            //TODO: $.shout("toolbar-menu-options-changed-" + self.passageId);
+        });
     },
 
     /**
@@ -28,7 +52,7 @@ var PassageMenuView = Backbone.View.extend({
      * @private
      */
     _selectOption : function(element) {
-        $(element).not(":has(img)").append(this.imageTemplate);
+        step.menu.tickMenuItem(element);
     },
 
     /**

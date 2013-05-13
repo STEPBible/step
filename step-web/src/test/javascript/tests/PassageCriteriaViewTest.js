@@ -10,16 +10,11 @@ module("STEP Passage Criteria View Test", {
                 interOptions: ["x", "y", "z", "Interlinear"],
                 interOptionsNoInterlinear : ["x", "y", "z"]}}
         },
-        __s = {};
+        __s = { info_about_bible : "%1$s" };
         $.widget("custom.versions", { options : {}});
-//        $.widget("custom.detailSlider", { options : {},
-//        _create : function() {
-//            console.log("Called here");
-//        }});
-
-        $("<body>").append($("<div id='searchPassage'>"));
+        $("<body>").append($("<div id='someId'>"));
     }
-})
+});
 
 test("PassageCriteriaView Set if changed", function () {
     var model = new PassageModel;
@@ -68,3 +63,21 @@ test("PassageCriteriaView Resync disables and sets the source correctly", functi
     equals(true, view.interlinearMode.disabledValue);
     equals("", view.interlinearMode.value);
 });
+
+test("Tests that link and biblebooks get updated on version update", function() {
+    var model = new PassageModel;
+
+    //we need a link for this to work
+    var link = $("<a>").prop("href", "something").addClass("infoAboutVersion");
+    var el = $("<div>").append(link)
+
+    var view = new PassageCriteriaView({ model : model, el : el});
+
+    model.set("version", "ASV");
+    model.trigger("change:version", {});
+
+    //check text and link has changed
+    ok(link.prop("href").indexOf("ASV") != -1);
+    ok(link.prop("title").indexOf("ASV") != -1);
+});
+

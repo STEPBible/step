@@ -156,17 +156,6 @@ step.search = {
         }
     },
     
-    subject : {
-        search : function(passageId) {
-//            console.log("Subject search");
-            
-            var query = step.util.replaceSpecialChars(step.state.subject.subjectQuerySyntax(passageId));
-            var pageNumber = step.state.subject.subjectPageNumber(passageId); 
-            
-            step.search._validateAndRunSearch(passageId, query, "ESV", false, 0, pageNumber);
-        },
-    },
-    
     simpleText : {
         search : function(passageId) {
 //            console.log("Simple text search...");
@@ -190,53 +179,11 @@ step.search = {
             var pageNumber = step.state.textual.textPageNumber(passageId);
 
             step.search._validateAndRunSearch(passageId, query, version, ranked, context, pageNumber);
-        },
+        }
     },
     
     
-    _validateAndRunSearch : function(passageId, query, version, ranked, context, pageNumber) {
-        if(step.util.isBlank(query)) {
-            step.search._displayResults({}, passageId);
-            return;
-        }
 
-        step.search._doSearch(passageId, query, version, pageNumber, ranked, context);
-    },
-
-    _doSearch : function(passageId, query, version, pageNumber, ranked, context, highlightTerms) {
-        var self = this;
-        
-        var checkedVersion = version;
-        if(version == null || version.trim().length == 0) {
-            checkedVersion = step.state.passage.version(passageId);
-            
-            if(checkedVersion == undefined || checkedVersion.trim().length == 0) {
-                checkedVersion = 'KJV';
-            }
-        }
-        
-        var versionArg = " in (" + checkedVersion.toUpperCase() + ")";
-        var pageNumberArg = pageNumber == null ? 1 : pageNumber;
-        var rankedArg = ranked == undefined ? false : ranked;
-        var contextArg = context == undefined || isNaN(context) ? 0 : context;
-        var pageSizeArg = this.pageSize;
-        var finalInnerQuery = query + versionArg;
-        
-        var refinedQuery = this._joinInRefiningSearches(finalInnerQuery);
-        var highlightTerms = this._highlightingTerms(refinedQuery);
-        
-        var args = [encodeURIComponent(refinedQuery), rankedArg, contextArg, pageNumberArg, pageSizeArg];
-        
-        var startTime = new Date().getTime();
-        $.getSafe(SEARCH_DEFAULT, args, function(searchQueryResults) {
-            step.util.trackAnalytics("search", "loaded", "time", new Date().getTime() - startTime);
-            step.util.trackAnalytics("search", "loaded", "results", searchQueryResults.total);
-            step.util.trackAnalytics("search", "version", checkedVersion.toUpperCase());
-            step.util.trackAnalytics("search", "query", query);
-            
-            self._doResultsRender(passageId, searchQueryResults, pageNumberArg, highlightTerms, query);
-        });
-    },
     
     _doResultsRender : function(passageId, searchQueryResults, pageNumberArg, highlightTerms, query) {
         this._updateTotal(passageId, searchQueryResults.total, pageNumberArg);
@@ -254,160 +201,7 @@ step.search = {
         this._doSpecificSearchRequirements(passageId, query);
     },
     
-    _doSpecificSearchRequirements : function(passageId, query) {
-        var undoneQuery = step.util.undoReplaceSpecialChars(query);
-        
-        
-        if(undoneQuery.startsWith("s=")) {
-            this._addMoreSubjectButton(passageId, undoneQuery, __s.subject_search_first);
-        } else if (undoneQuery.startsWith("s+=") ){ 
-            this._addMoreSubjectButton(passageId, undoneQuery, __s.subject_search_second);
-            this._addSubjectExpandHandlers(passageId);
-        } else if(undoneQuery.startsWith("s++=")) {
-            this._addMoreSubjectButton(passageId, undoneQuery, __s.subject_search_third);
-            this._addSubjectExpandHandlers(passageId, undoneQuery);
-        } else if(undoneQuery.startsWith("sr=")) {
-            this._addSubjectExpandHandlers(passageId, undoneQuery);
-        }
-    },
-    
-    resetExpandableItems : function(passageContent) {
-        $(".expandableSearchHeading", passageContent).each(function(i, item) {
-            $.data(item, 'expanded', false);
-            var arrow = $(this).find("span.arrow");
-            arrow.html(arrow.html().replace('\u25bc', '\u25b6'));
-        });
-    },
-    
-    _addSubjectExpandHandlers : function(passageId, query) {
-        var content = step.util.getPassageContent(passageId);
-        var self = this;
-        
-        $(".expandableSearchHeading", content).click(function() {
-            if($.data(this, 'expanded') == true) {
-                $(".expandedHeadingItem", content).remove();
-                
-                self.resetExpandableItems(content);
-                return;
-            }
 
-            self.resetExpandableItems(content);
-            $.data(this, 'expanded', true);
-            
-            var arrow = $(this).find("span.arrow");
-            arrow.html(arrow.html().replace('\u25b6', '\u25bc'));
-            
-            var root = $(this).prop("root");
-            var fullHeader = $(this).prop("fullHeader");
-            var seeAlso = $(this).prop("seeAlso");
-            var version = "ESV";
-            var currentHeading = this;
-
-            //first delete the headings
-            $(".expandedHeadingItem", content).remove();
-            
-            //get verses for subject search
-            $.getSafe(SUBJECT_VERSES, [root, fullHeader, version] , function(results) {
-                var verses = $("<table>").addClass("expandedHeadingItem");
-                if(results) {
-                    for(var i = 0; i < results.length; i++) {
-                        var verseContent = results[i].value;                     
-                        if(results[i].fragment) {
-                            verseContent = verseContent.substring(0, verseContent.lastIndexOf("</div>")).trim()  + "[...]</div>";
-                        } 
-                        
-                        var row = $("<tr>");
-                        row.append($("<td>").passageButtons({ 
-                            passageId : passageId, 
-                            ref : results[i].reference, 
-                            showChapter : true,
-                            display : "inline"
-                        }));
-                        
-                        verseContent = $("<td>").append(verseContent);
-                        row.append(verseContent);
-                        verses.append(row);
-                    }
-                }
-                 
-                //also append the see also references as links to do the search again
-                var seeAlsoRefs = "";
-                if(seeAlso) {
-                    seeAlsoRefs = $("<h4>").addClass("expandedHeadingItem").html(__s.subject_other_useful_entries);
-                    var otherLinks = $("<span>").addClass("expandedHeadingItemContents");
-                    
-                    var refs = seeAlso.split(";");
-                    for(var i = 0; i < refs.length; i++) {
-                        if(step.util.isBlank(refs[i])) {
-                            continue;
-                        }
-                        
-                        var link = $("<a>").attr("href", "javascript:void").html(refs[i].trim());
-                        var refLink = refs[i];
-                        $(link).click(function () {
-                            var splitByComma = refLink.split(",");
-                            var query;
-                            var text = "";
-                            if(splitByComma.length == 1) {
-                                //do a s+ search
-                                query = "s+=";
-                            } else {
-                                // do a s++ search
-                                query = "s++="
-                            }
-                            
-                            text += refLink;
-                            
-                            //also add in the root word if the word "above" or "below" appears
-                            if(seeAlso.indexOf('above') != -1 && seeAlso.indexOf('below') != -1) {
-                                //add in the root word
-                                text += " " + root;
-                            }
-                            query += text;
-                            
-                            step.state.subject.subjectText(passageId, text);
-                            step.state.subject.subjectQuerySyntax(passageId, query);
-                            step.search.subject.search(passageId);
-                        });
-                        
-                        seeAlsoRefs.append($("<br />"));
-                        otherLinks.append(link);
-                    }
-                    
-                    
-                    seeAlsoRefs.append(otherLinks);
-                }
-                
-                verses = $(verses || "<span>").append(seeAlsoRefs);
-                $(currentHeading).after(verses);
-            });
-        });
-    },
-    
-    _addMoreSubjectButton : function(passageId, query, text) {
-        var moreSubjectsButton = $("<div class='moreSubjects'><a href='#'>" + text + "</a><div>");
-        moreSubjectsButton.find("a").button({});
-        
-        var passageContent = step.util.getPassageContent(passageId); 
-        passageContent.prepend(moreSubjectsButton);
-        if(passageContent.find(".searchResults").children().size() != 0) {
-            passageContent.append(moreSubjectsButton.clone());
-        }
-    
-        //add click handlers now
-        passageContent.find(".moreSubjects a").click(function() {
-            //add in a plus and send it back through
-            var equalIndex = query.indexOf('=');
-            var newQuery = query.substring(0, equalIndex) + '+' + query.substring(equalIndex);
-            
-            if(newQuery.indexOf("+++") != -1) {
-                newQuery = newQuery.replace("+++", "");
-            }
-            
-            step.state.subject.subjectQuerySyntax(passageId, newQuery);
-            step.search.subject.search(passageId);
-        });
-    },
     
     
     _doFonts : function(passageId) {
@@ -477,13 +271,7 @@ step.search = {
         }
     },
    
-    _joinInRefiningSearches : function(query) {
-        if(this.refinedSearch.length != 0) {
-            return this.refinedSearch.join("=>") + "=>" + query;
-        }
-        
-        return query;
-    },
+
     
     _updateTotal : function(passageId, total, pageNumber) {
         var resultsLabel = $("fieldset:visible .resultsLabel", step.util.getPassageContainer(passageId));
@@ -570,7 +358,7 @@ step.search = {
             var buttons = $("<td>").passageButtons({
                 passageId : passageId,
                 ref : item.key,
-                showChapter : true,
+                showChapter : true
             });
             newRow.append(buttons);
             var contentCell = $("<td>").addClass("searchResultRow");
@@ -586,84 +374,10 @@ step.search = {
         });
     },
     
-    _doSimpleSubjectSearchResults : function(searchResults, passageId) {
-        var results = $("<table>").addClass("subjectSection searchResults simpleSubjectSearch");
 
-        
-        var headingsSearch = searchResults[0].headingsSearch;
-        var headingsResults = headingsSearch.results;
-        
-        for(var i = 0; i < headingsResults.length; i++) {
-            var item = $("<tr>");
-            var button = $("<td>").addClass("subjectHeading").passageButtons({
-                passageId : passageId,
-                ref : headingsResults[i].key,
-                showChapter : true
-            });
-            
-            item.append(button);
-            item.append($("<td>").append(headingsResults[i].preview));
-            results.append(item);
-        }
-        
-        return results;
-    },
     
   
     
-    _displaySubjectResults : function(query, searchResults, passageId) {
-        if(query.startsWith("s=")) {
-            return this._doSimpleSubjectSearchResults(searchResults, passageId);
-        } else {
-            return this._doNaveSearchResults(query, searchResults, passageId);
-        }
-    },
-    
-    _doNaveSearchResults : function(query, searchResults, passageId) {
-        var results = $("<span>").addClass("searchResults");
-        
-        var lastHeader = "";
-        
-        if(searchResults.length  == 0) {
-            return;
-        }
-        
-        //add a header
-        lastHeader = searchResults[0].root;
-        
-        var heading = $("<h3>").addClass("subjectHeading").append(lastHeader);
-        results.append(heading);
-        
-        var list = $("<ul>").addClass("subjectSection searchResults");
-        results.append(list);
-        
-        
-        //searchResults is the array of results
-        for(var i = 0 ; i < searchResults.length; i++) {
-            if(searchResults[i].root != lastHeader) {
-                //append a new header
-//                heading = $("<h3>").addClass("subjectHeading").append(searchResults[i].root);
-                list = $("<ul>").addClass("subjectSection searchResults");
-                results.append(list);
-//                heading.after(list);
-                lastHeader = searchResults[i].root;
-            }
-
-            var item = $("<li>")
-                .append($("<span>").addClass("arrow").css("font-size", "smaller").html("&#9654;")).append("&nbsp;&nbsp;")
-                .append(searchResults[i].heading).addClass("expandableSearchHeading ui-state-default ui-corner-all")
-                    .prop("root", searchResults[i].root)
-                    .prop("fullHeader", searchResults[i].heading);
-            
-            if(searchResults[i].seeAlso) {
-                item.prop("seeAlso", searchResults[i].seeAlso);
-            }
-
-            results.append(item);
-        }
-        
-        return results;
-    },
 
     _displayResults : function(searchQueryResults, passageId) {
         var results = $("<span>");
@@ -739,7 +453,7 @@ step.search = {
         var passageContent = $(step.util.getPassageContent(passageId));
         passageContent.empty().append(content);
         refreshLayout();
-    },
+    }
 };
 
 

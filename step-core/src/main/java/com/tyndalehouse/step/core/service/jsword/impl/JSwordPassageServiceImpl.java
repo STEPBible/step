@@ -1,11 +1,11 @@
 /*******************************************************************************
  * Copyright (c) 2012, Directors of the Tyndale STEP Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without 
  * modification, are permitted provided that the following conditions 
  * are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright 
  * notice, this list of conditions and the following disclaimer.
  * Redistributions in binary form must reproduce the above copyright 
@@ -16,7 +16,7 @@
  * nor the names of its contributors may be used to endorse or promote 
  * products derived from this software without specific prior written 
  * permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
@@ -48,11 +48,7 @@ import static org.crosswire.jsword.book.OSISUtil.OSIS_ELEMENT_VERSE;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -62,12 +58,7 @@ import org.crosswire.common.xml.Converter;
 import org.crosswire.common.xml.JDOMSAXEventProvider;
 import org.crosswire.common.xml.SAXEventProvider;
 import org.crosswire.common.xml.TransformingSAXEventProvider;
-import org.crosswire.jsword.book.Book;
-import org.crosswire.jsword.book.BookCategory;
-import org.crosswire.jsword.book.BookData;
-import org.crosswire.jsword.book.BookException;
-import org.crosswire.jsword.book.OSISUtil;
-import org.crosswire.jsword.book.UnAccenter;
+import org.crosswire.jsword.book.*;
 import org.crosswire.jsword.passage.Key;
 import org.crosswire.jsword.passage.KeyUtil;
 import org.crosswire.jsword.passage.NoSuchKeyException;
@@ -110,9 +101,8 @@ import com.tyndalehouse.step.core.xsl.impl.MultiInterlinearProviderImpl;
 
 /**
  * a service providing a wrapper around JSword
- * 
+ *
  * @author CJBurrell
- * 
  */
 @Singleton
 public class JSwordPassageServiceImpl implements JSwordPassageService {
@@ -130,17 +120,17 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
 
     /**
      * constructs the jsword service.
-     * 
+     *
      * @param versificationService jsword versification service
-     * @param morphologyProvider provides morphological information
-     * @param vocabProvider the service providing lexicon and vocabulary information
-     * @param colorCoder the service to color code a passage
-     * @param resolver the resolver
+     * @param morphologyProvider   provides morphological information
+     * @param vocabProvider        the service providing lexicon and vocabulary information
+     * @param colorCoder           the service to color code a passage
+     * @param resolver             the resolver
      */
     @Inject
     public JSwordPassageServiceImpl(final JSwordVersificationService versificationService,
-            final MorphologyServiceImpl morphologyProvider, final VocabularyService vocabProvider,
-            final ColorCoderProviderImpl colorCoder, final VersionResolver resolver) {
+                                    final MorphologyServiceImpl morphologyProvider, final VocabularyService vocabProvider,
+                                    final ColorCoderProviderImpl colorCoder, final VersionResolver resolver) {
         this.versificationService = versificationService;
         this.morphologyProvider = morphologyProvider;
         this.vocabProvider = vocabProvider;
@@ -150,7 +140,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
 
     @Override
     public KeyWrapper getSiblingChapter(final String reference, final String version,
-            final boolean previousChapter) {
+                                        final boolean previousChapter) {
         // getting the next chapter
         // FIXME find a way of getting the next chapter from the current key, in the current book, rather than
         // relying on versification systems which may contain verses that the Book does not support
@@ -200,7 +190,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
 
     /**
      * @param targetVerse the verse for which we want to trim off the verse number
-     * @param v11n the versification of the book considered, required to deal with 1-chapter books
+     * @param v11n        the versification of the book considered, required to deal with 1-chapter books
      * @return the reference without the verse number
      */
     private String getChapter(final Verse targetVerse, final Versification v11n) {
@@ -222,9 +212,9 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
 
     /**
      * Gets the non intro next book.
-     * 
+     *
      * @param bibleBook the current book
-     * @param v11n the v11n
+     * @param v11n      the v11n
      * @return the next bible book that is not an introduction
      */
     private BibleBook getNonIntroNextBook(final BibleBook bibleBook, final Versification v11n) {
@@ -237,9 +227,9 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
 
     /**
      * Gets the non intro previous book.
-     * 
+     *
      * @param bibleBook the current book
-     * @param v11n the v11n
+     * @param v11n      the v11n
      * @return the previous bible book that is not an introduction
      */
     private BibleBook getNonIntroPreviousBook(final BibleBook bibleBook, final Versification v11n) {
@@ -273,9 +263,9 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
 
     /**
      * Roudns up the reference to the next chapter + 1 (1 if it is the last verse)
-     * 
-     * @param ref the current reference, split into up-to three parts (book/chapter/verse)
-     * @param currentKey the current key
+     *
+     * @param ref         the current reference, split into up-to three parts (book/chapter/verse)
+     * @param currentKey  the current key
      * @param currentBook the book containing all valid keys
      * @return the next key in the list
      */
@@ -295,9 +285,9 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
 
     /**
      * attempts to resolve to the next previous chapter
-     * 
-     * @param ref the refParts, each element representing a portion of the OSIS ID
-     * @param currentKey the key that is currently being examined
+     *
+     * @param ref         the refParts, each element representing a portion of the OSIS ID
+     * @param currentKey  the key that is currently being examined
      * @param currentBook the book that is currently being referenced
      * @return the new OSIS ID, whether it exists or not.
      */
@@ -320,16 +310,16 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
     /**
      * attemps to expand to the next chapter if exists, other returns the same key as currently if no new
      * chapter is found
-     * 
-     * @param bookName the name of book, e.g. Gen
+     *
+     * @param bookName      the name of book, e.g. Gen
      * @param chapterNumber the chapter number
-     * @param currentBook the book to look for valid keys
-     * @param currentKey the current position in the book
-     * @param gap -1 for a previous chapter, +1 for a next chapter
+     * @param currentBook   the book to look for valid keys
+     * @param currentKey    the current position in the book
+     * @param gap           -1 for a previous chapter, +1 for a next chapter
      * @return the new key, referring to the next chapter of previous as requested
      */
     Key getAdjacentChapter(final String bookName, final String chapterNumber, final Book currentBook,
-            final Key currentKey, final int gap) {
+                           final Key currentKey, final int gap) {
         final int newChapter = parseInt(chapterNumber) + gap;
 
         return getValidOrSameKey(currentBook, currentKey, format(OSIS_CHAPTER_FORMAT, bookName, newChapter));
@@ -338,18 +328,18 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
     /**
      * Expands the key to full chapter, or if it is the last verse in the chapter, then it expands to the next
      * chapter
-     * 
-     * @param bookName the name of book, e.g. Gen
+     *
+     * @param bookName      the name of book, e.g. Gen
      * @param chapterNumber the chapter number
-     * @param verseNumber the verse number
-     * @param currentBook the book to look for valid keys
-     * @param currentKey the current position in the book
-     * @param gap the increment to expand to, e.g. 1 to the next chapter, -1 to the previous chapter (value in
-     *            approximate verse numbers)
+     * @param verseNumber   the verse number
+     * @param currentBook   the book to look for valid keys
+     * @param currentKey    the current position in the book
+     * @param gap           the increment to expand to, e.g. 1 to the next chapter, -1 to the previous chapter (value in
+     *                      approximate verse numbers)
      * @return the new key, whether it refers to this current chapter or the next
      */
     Key expandToFullChapter(final String bookName, final String chapterNumber, final String verseNumber,
-            final Book currentBook, final Key currentKey, final int gap) {
+                            final Book currentBook, final Key currentKey, final int gap) {
         final int nextVerse = parseInt(verseNumber) + gap;
 
         final Key newKey = getValidOrSameKey(currentBook, currentKey,
@@ -372,10 +362,10 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
 
     /**
      * returns a valid key to the book, either the one specified in the newKeyName or the currentKey
-     * 
+     *
      * @param currentBook the book to look for valid keys
-     * @param currentKey the current key
-     * @param newKeyName the new potential key name
+     * @param currentKey  the current key
+     * @param newKeyName  the new potential key name
      * @return the newKey if newKeyName was a good guess, or currentKey if not
      */
     private Key getValidOrSameKey(final Book currentBook, final Key currentKey, final String newKeyName) {
@@ -406,9 +396,9 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
 
     /**
      * Gets the key for verse 1
-     * 
+     *
      * @param key the current aggregate key
-     * @param b the book
+     * @param b   the book
      * @return the new key representing 1 verse only
      */
     @Override
@@ -502,8 +492,8 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
 
     @Override
     public OsisWrapper getOsisTextByVerseNumbers(final String version, final String numberedVersion,
-            final int startVerseId, final int endVerseId, final List<LookupOption> lookupOptions,
-            final String interlinearVersion, final Boolean roundReference, final boolean ignoreVerse0) {
+                                                 final int startVerseId, final int endVerseId, final List<LookupOption> lookupOptions,
+                                                 final String interlinearVersion, final Boolean roundReference, final boolean ignoreVerse0) {
 
         // coded from numbered version.
         final Versification versificationForNumberedVersion = this.versificationService
@@ -525,8 +515,8 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
     // TODO: can we make this more performant by not re-compiling stylesheet - or is already cached
     @Override
     public OsisWrapper getOsisText(final String version, final String reference,
-            final List<LookupOption> options, final String interlinearVersion,
-            final InterlinearMode displayMode) {
+                                   final List<LookupOption> options, final String interlinearVersion,
+                                   final InterlinearMode displayMode) {
         LOGGER.debug("Retrieving text for ({}, {})", version, reference);
 
         final BookData bookData = getBookData(version, reference);
@@ -535,8 +525,8 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
 
     /**
      * Gets the BookData set up for verse retrieval
-     * 
-     * @param version the version to be used
+     *
+     * @param version   the version to be used
      * @param reference the reference
      * @return the BookData object
      */
@@ -557,8 +547,8 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
     /**
      * We have a whole book reference. If the book is less than 5 chapters, we display the whole book.
      * Otherwise we display the first chapter only.
-     * 
-     * @param v11n the alternative versification
+     *
+     * @param v11n             the alternative versification
      * @param requestedPassage the passage
      * @return the new key
      * @throws NoSuchKeyException the no such key exception
@@ -605,9 +595,9 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
 
     /**
      * Removes verse 0 if present.
-     * 
+     *
      * @param reference the reference we wish to normalize
-     * @param v11n the versification that goes with the reference
+     * @param v11n      the versification that goes with the reference
      * @return normalized key, which could be different to the instance passed in
      * @throws NoSuchKeyException the exception indicating no key
      */
@@ -617,9 +607,9 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
 
     /**
      * Reduce key size to something acceptable by copyright holders.
-     * 
+     *
      * @param inputKey the input key
-     * @param v11n the versification
+     * @param v11n     the versification
      * @return the key
      * @throws NoSuchKeyException the no such key exception
      */
@@ -643,16 +633,15 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
 
     /**
      * Gets the osis text
-     * 
-     * @param options the list of lookup options
+     *
+     * @param options            the list of lookup options
      * @param interlinearVersion the interlinear version if applicable
-     * @param bookData the bookdata to use to look up the required version/reference combo
-     * @param displayMode the mode to display the text with
-     * 
+     * @param bookData           the bookdata to use to look up the required version/reference combo
+     * @param displayMode        the mode to display the text with
      * @return the html text
      */
     private OsisWrapper getTextForBookData(final List<LookupOption> options, final String interlinearVersion,
-            final BookData bookData, final InterlinearMode displayMode) {
+                                           final BookData bookData, final InterlinearMode displayMode) {
 
         // check we have a book in mind and a reference
         notNull(bookData, "An internal error occurred", UserExceptionType.SERVICE_VALIDATION_ERROR);
@@ -674,10 +663,8 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
             final TransformingSAXEventProvider htmlsep = executeStyleSheet(options, interlinearVersion,
                     bookData, osissep, displayMode);
 
-            final OsisWrapper osisWrapper = new OsisWrapper(writeToString(htmlsep), key, book.getLanguage()
-                    .getCode(), versification);
+            final OsisWrapper osisWrapper = new OsisWrapper(writeToString(htmlsep), key, getLanguages(book, displayMode, htmlsep), versification);
 
-            containsAncient(osisWrapper, interlinearVersion);
 
             if (key instanceof Passage) {
                 final Passage p = (Passage) key;
@@ -707,31 +694,63 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
     }
 
     /**
-     * @param osisWrapper the osis wrapper to eventually be returned
-     * @param interlinearVersion the interlinear versions in a comma separated format
+     * Gets languages as set up in the transformer
+     *
+     * @param mainBook the main book used for the interlinear/interleaving
+     * @param mode     the mode of interlinear used
+     * @param htmlsep  the transformer
      */
-    private void containsAncient(final OsisWrapper osisWrapper, final String interlinearVersion) {
-        if (isBlank(interlinearVersion)) {
-            return;
+    private String[] getLanguages(final Book mainBook, final InterlinearMode mode, final TransformingSAXEventProvider htmlsep) {
+        if (mode == InterlinearMode.INTERLINEAR) {
+            return getLanguagesForInterlinear(mainBook, htmlsep);
+        } else {
+            return getLanguagesForInterleaved(mainBook, htmlsep);
+        }
+    }
+
+    /**
+     * Used to identify languages from the interleaving modes
+     *
+     * @param htmlsep
+     * @return the list of language codes
+     */
+    private String[] getLanguagesForInterleaved(final Book mainBook, final TransformingSAXEventProvider htmlsep) {
+        final InterleavingProviderImpl interleavingProvider = (InterleavingProviderImpl) htmlsep.getParameter("interleavingProvider");
+        if(interleavingProvider == null) {
+            return new String[] { mainBook.getLanguage().getCode() };
         }
 
-        final String[] versions = interlinearVersion.split(", ?");
-
-        for (final String v : versions) {
-            if (isNotBlank(v)) {
-                final Book book = this.versificationService.getBookFromVersion(v.trim());
-                if (book != null) {
-                    final String code = book.getLanguage().getCode();
-                    setIfContainsHebrew(osisWrapper, code);
-                    setIfContainsGreek(osisWrapper, code);
-                }
-            }
+        final String[] versions = interleavingProvider.getVersions();
+        final String[] languages = new String[versions.length];
+        for (int i = 0; i < versions.length; i++) {
+            languages[i] = versificationService.getBookFromVersion(versions[i]).getLanguage().getCode();
         }
+
+        return languages;
+    }
+
+    /**
+     * Returns the set of languages when set in interlinear mode
+     *
+     * @param transformer the transforer
+     * @return the array of languages
+     */
+    private String[] getLanguagesForInterlinear(final Book mainBook, final TransformingSAXEventProvider transformer) {
+        final String interlinearVersion = (String) transformer.getParameter("interlinearVersion");
+        final String[] versions = StringUtils.split(interlinearVersion, ", ?");
+        final String[] totalVersions = new String[versions.length + 1];
+
+        totalVersions[0] = mainBook.getLanguage().getCode();
+        for (int ii = 0; ii < versions.length; ii++) {
+            totalVersions[ii + 1] = this.versificationService.getBookFromVersion(versions[ii]).getLanguage().getCode();
+        }
+
+        return totalVersions;
     }
 
     @Override
     public OsisWrapper getInterleavedVersions(final String[] versions, final String reference,
-            final List<LookupOption> options, final InterlinearMode displayMode) {
+                                              final List<LookupOption> options, final InterlinearMode displayMode) {
         notNull(versions, "No versions were passed in", UserExceptionType.SERVICE_VALIDATION_ERROR);
         notNull(reference, "No reference was passed in", UserExceptionType.SERVICE_VALIDATION_ERROR);
 
@@ -751,14 +770,13 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
             final TransformingSAXEventProvider transformer = executeStyleSheet(options, null, data,
                     data.getSAXEventProvider(), displayMode);
 
-            final OsisWrapper osisWrapper = new OsisWrapper(writeToString(transformer), data.getKey(), data
-                    .getFirstBook().getLanguage().getCode(), v11n);
-
-            for (final Book b : books) {
-                final String languageCode = b.getLanguage().getCode();
-                setIfContainsHebrew(osisWrapper, languageCode);
-                setIfContainsGreek(osisWrapper, languageCode);
+            String[] languages = new String[books.length];
+            for (int ii = 0; ii < books.length; ii++) {
+                languages[ii] = books[ii].getLanguage().getCode();
             }
+
+            final OsisWrapper osisWrapper = new OsisWrapper(writeToString(transformer), data.getKey(), languages, v11n);
+
 
             return osisWrapper;
         } catch (final TransformerException e) {
@@ -774,8 +792,8 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
 
     /**
      * Validates the books given and trims down by removing any following duplicates
-     * 
-     * @param versions the list of versions we are going to look up
+     *
+     * @param versions    the list of versions we are going to look up
      * @param displayMode the display mode
      * @return a list of books to use for looking up our data
      */
@@ -792,9 +810,9 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
 
     /**
      * Removes any book which is preceded by itself
-     * 
+     *
      * @param displayMode the display mode
-     * @param books the list of books
+     * @param books       the list of books
      * @return the new list of books
      */
     private Book[] removeSameBooks(final InterlinearMode displayMode, final Book[] books) {
@@ -824,9 +842,9 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
 
     /**
      * Checks that if comparing, we are looking at versions of the same language, or at least two of them
-     * 
+     *
      * @param displayMode the display mode
-     * @param books the books that have been found
+     * @param books       the books that have been found
      */
     private Book[] removeDifferentLanguageIfCompare(final InterlinearMode displayMode, final Book[] books) {
         if (books.length == 0) {
@@ -865,8 +883,8 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
 
     /**
      * if we're comparing, we want to compare unaccented forms
-     * 
-     * @param data the data
+     *
+     * @param data        the data
      * @param displayMode the chosen display mode
      */
     private void setUnaccenter(final BookData data, final InterlinearMode displayMode) {
@@ -882,32 +900,8 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
     }
 
     /**
-     * sets the flag on the osis wrapper if it the code represents the greek
-     * 
-     * @param osisWrapper osis Wrapper
-     * @param code the code to be examined
-     */
-    private void setIfContainsGreek(final OsisWrapper osisWrapper, final String code) {
-        if ("grc".equals(code)) {
-            osisWrapper.setContainsGreek(true);
-        }
-    }
-
-    /**
-     * sets the flag on the osis wrapper if it the code represents the hebrew
-     * 
-     * @param osisWrapper osis Wrapper
-     * @param code the code to be examined
-     */
-    private void setIfContainsHebrew(final OsisWrapper osisWrapper, final String code) {
-        if ("he".equals(code)) {
-            osisWrapper.setContainsHebrew(true);
-        }
-    }
-
-    /**
      * Changes the input OSIS document to have extra verses, the ones from the other versions
-     * 
+     *
      * @param bookDatas the list of all book datas that we will be querying
      * @return the provider of events for the stylesheet to execute upon
      */
@@ -980,18 +974,18 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
 
     /**
      * Executes the stylesheet
-     * 
-     * @param options the list of options to pass in
+     *
+     * @param options            the list of options to pass in
      * @param interlinearVersion the interlinear version(s)
-     * @param bookData the book data, containing book and reference
-     * @param osissep the XML SAX provider
-     * @param displayMode the display mode
+     * @param bookData           the book data, containing book and reference
+     * @param osissep            the XML SAX provider
+     * @param displayMode        the display mode
      * @return a Transforming SAX event provider, from which can be transformed into HTML
      * @throws TransformerException an exception in the stylesheet that is being executed
      */
     private TransformingSAXEventProvider executeStyleSheet(final List<LookupOption> options,
-            final String interlinearVersion, final BookData bookData, final SAXEventProvider osissep,
-            final InterlinearMode displayMode) throws TransformerException {
+                                                           final String interlinearVersion, final BookData bookData, final SAXEventProvider osissep,
+                                                           final InterlinearMode displayMode) throws TransformerException {
         final XslConversionType requiredTransformation = identifyStyleSheet(bookData.getFirstBook()
                 .getBookCategory(), options, displayMode);
 
@@ -1024,15 +1018,14 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
      * change, but at that point we'll have a cleared view on requirements. For now, if one of the options
      * triggers anything but the default, then we return that. returns the stylesheet that should be used to
      * generate the text
-     * 
+     *
      * @param bookCategory the category of the book
-     * 
-     * @param options the list of options that are currently applied to the passage
-     * @param displayMode the display mode with wich to display the style sheet
+     * @param options      the list of options that are currently applied to the passage
+     * @param displayMode  the display mode with wich to display the style sheet
      * @return the stylesheet (of stylesheets)
      */
     private XslConversionType identifyStyleSheet(final BookCategory bookCategory,
-            final List<LookupOption> options, final InterlinearMode displayMode) {
+                                                 final List<LookupOption> options, final InterlinearMode displayMode) {
         if (BookCategory.COMMENTARY.equals(bookCategory)) {
             return XslConversionType.COMMENTARY;
         }
@@ -1062,14 +1055,14 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
 
     /**
      * sets up the default interlinear options
-     * 
-     * @param tsep the transformer that we want to set up
+     *
+     * @param tsep               the transformer that we want to set up
      * @param interlinearVersion the interlinear version(s) that the users have requested
-     * @param reference the reference the user is interested in
-     * @param displayMode the mode to display the passage, i.e. interlinear, interleaved, etc.
+     * @param reference          the reference the user is interested in
+     * @param displayMode        the mode to display the passage, i.e. interlinear, interleaved, etc.
      */
     private void setInterlinearOptions(final TransformingSAXEventProvider tsep,
-            final String interlinearVersion, final String reference, final InterlinearMode displayMode) {
+                                       final String interlinearVersion, final String reference, final InterlinearMode displayMode) {
         if (displayMode == InterlinearMode.INTERLINEAR) {
             tsep.setParameter("VLine", false);
 
@@ -1085,13 +1078,13 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
 
     /**
      * Sets up interleaving vs column view
-     * 
-     * @param tsep the transformer
-     * @param bookData the book data object containing the list of books we are interested in.
+     *
+     * @param tsep        the transformer
+     * @param bookData    the book data object containing the list of books we are interested in.
      * @param displayMode the display mode that we are interested in
      */
     private void setInterleavingOptions(final TransformingSAXEventProvider tsep,
-            final InterlinearMode displayMode, final BookData bookData) {
+                                        final InterlinearMode displayMode, final BookData bookData) {
         // so long as we're not NONE or INTERLINEAR, we almost always need an InterlinearProvider
         final Book[] books = bookData.getBooks();
         final String[] versions = new String[books.length];
@@ -1118,13 +1111,13 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
     /**
      * This method sets up the options for the XSLT transformation. Note: the set of options is trimmed to
      * those actually available
-     * 
-     * @param tsep the xslt transformer
+     *
+     * @param tsep    the xslt transformer
      * @param options the options available
-     * @param book the version to initialise a potential interlinear with
+     * @param book    the version to initialise a potential interlinear with
      */
     protected void setOptions(final TransformingSAXEventProvider tsep, final List<LookupOption> options,
-            final Book book) {
+                              final Book book) {
 
         for (final LookupOption lookupOption : options) {
             if (lookupOption.getXsltParameterName() != null) {
@@ -1157,7 +1150,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
 
     /**
      * @param references a list of references to be parsed
-     * @param version the version against which the refs are parsed
+     * @param version    the version against which the refs are parsed
      * @return a String representing all the references
      */
     @Override
@@ -1182,7 +1175,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
 
     /**
      * sanitizes the strings, removing leading commas and spaces
-     * 
+     *
      * @param interlinearVersion the input string
      * @return the output
      */

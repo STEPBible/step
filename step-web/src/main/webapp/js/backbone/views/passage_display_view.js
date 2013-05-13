@@ -1,11 +1,12 @@
 var PassageDisplayView = Backbone.View.extend({
-    el : ".passageContainer",
-    initialize : function() {
+    el: function() { return $(".passageContainer").eq(this.model.get("passageId")); },
+    initialize: function () {
 //        _.bindAll(this);
         Backbone.Events.on("passage:new:" + this.model.get("passageId"), this.render, this);
+        this.passageContent = this.$el.find(".passageContent");
     },
 
-    render : function(newPassage) {
+    render: function (newPassage) {
         console.log("Rendering change to SCREEN");
 
         step.util.trackAnalytics("passage", "loaded", "time", new Date().getTime() - newPassage.startTime);
@@ -13,47 +14,616 @@ var PassageDisplayView = Backbone.View.extend({
         step.util.trackAnalytics("passage", "reference", newPassage.reference);
 
         //set the range attributes, silently, so as not to cause events
-        this.model.set("startRange", newPassage.startRange, {silent : true });
-        this.model.set("endRange", newPassage.endRange, {silent : true });
-        this.model.set("multipleRanges", newPassage.multipleRanges, {silent : true });
+        this.model.set("startRange", newPassage.startRange, {silent: true });
+        this.model.set("endRange", newPassage.endRange, {silent: true });
+        this.model.set("multipleRanges", newPassage.multipleRanges, {silent: true });
 
-        this._setPassageContent(newPassage);
+
+        var passageHtml = $(newPassage.value);
+        var passageId = this.model.get("passageId");
+        var interlinearMode = this.model.get("interlinearMode");
+        var extraVersions = this.model.get("extraVersions");
+        var reference = this.model.get("reference");
+        var options = this.model.get("options");
+        var version = this.model.get("version");
+        var langaguages = newPassage.languageCode;
+
+        if (this._isPassageValid(passageHtml, reference)) {
+            this._doFonts(passageHtml, options, interlinearMode, langaguages);
+            this._doInlineNotes(passageHtml, passageId);
+            this._doSideNotes(passageHtml, passageId, version);
+            this._doNonInlineNotes(passageHtml);
+
+            this._doVerseNumbers(passageId, passageHtml, options, interlinearMode, reference);
+//        self._doStats(passageId, passageContent, lookupVersion, text.reference);
+            this.doInterlinearVerseNumbers(passageHtml, interlinearMode, options);
+            this._doSideNotes(passageHtml, passageId, version);
+            this._doHideEmptyNotesPane(passageHtml);
+            this._adjustTextAlignment(passageHtml);
+            this._redoTextSize(passageId, passageHtml);
+            this._addStrongHandlers(passageId, passageHtml);
+            this._updatePageTitle(passageId, passageHtml, version, reference);
+            this._doTransliterations(passageHtml);
+            this._doInterlinearDividers(passageHtml);
+            this._doVersions(passageId, passageHtml, version, reference);
+            step.util.closeInfoErrors(passageId);
+            step.util.ui.emptyOffDomAndPopulate(this.passageContent, passageHtml);
+        }
 
         // execute all callbacks
-//        step.passage.executeCallbacks(passageId);
-
-//
-//        //finally add handlers to elements containing xref
-//        this._doVerseNumbers(passageId, passageContent, options, interlinearMode, text.reference);
-////                self._doStats(passageId, passageContent, lookupVersion, text.reference);
-//        this._doFonts(passageId, passageContent, interlinearMode, interlinearVersion);
-//        this.doInterlinearVerseNumbers(passageId);
-//        this._doInlineNotes(passageId, passageContent);
-//        this._doNonInlineNotes(passageContent);
-//        this._doSideNotes(passageId, passageContent);
-//        this._doHideEmptyNotesPane(passageContent);
-//        this._adjustTextAlignment(passageContent);
-//        this._redoTextSize(passageId, passageContent);
-//        this._addStrongHandlers(passageId, passageContent);
-//        this._updatePageTitle(passageId, passageContent, lookupVersion, lookupReference);
-//        this._doTransliterations(passageId, passageContent);
-//        this._doInterlinearDividers(passageContent);
-//        step.util.closeInfoErrors(passageId);
-//        step.state.passage.reference(passageId, text.reference, false);
-//        this._doVersions(passageId, passageContent);
-//        this._doHash(passageId, text.reference, lookupVersion, options, interlinearMode, interlinearVersion);
+//TODO        step.passage.executeCallbacks(passageId);
     },
 
-    _setPassageContent : function(serverResponse) {
-        //first check that we have non-xgen elements
-        if($(serverResponse.value).children().not(".xgen").size() == 0) {
-            var reference = this.model.get("reference");
 
-            step.util.raiseInfo(this.model.get("passageId"), sprintf(__s.error_bible_doesn_t_have_passage, reference), 'info', true);
-            this.$el.find(".passageContent").html("");
-        } else {
-            this.$el.find(".passageContent").html(serverResponse.value);
+    _doInterlinearDividers : function(passageContent) {
+        $(".w:not([strong]):not(.verseStart)", passageContent).next().css("border-left", "none");
+    },
+
+    _doVersions : function(passageId, passageContent, version, reference) {
+        step.alternatives.enrichPassage(passageId, passageContent, version, reference);
+    },
+
+    /**
+     * Takes in the selector for identifying each group element. Then selects children(), and iterates
+     * through each child apply the right CSS class from the array.
+     *
+     * @param passageContent the html jquery object
+     * @param groupSelector the group selector, a w, or a row, each containing a number of children
+     * @param cssClasses the set of css classes to use
+     * @param exclude the exclude function if we want to skip over some items
+     * @param offset the offset, which gets added to be able to ignore say the first item always.
+     * @private
+     */
+    _applyCssClassesRepeatByGroup: function (passageContent, groupSelector, cssClasses, exclude, offset) {
+        if(offset == undefined) {
+            offset = 0;
         }
-    }
 
+        var words = $(groupSelector, passageContent);
+        for(var j = 0; j < words.length; j++) {
+            var jqItem = words.eq(j);
+            var children = jqItem.children();
+            for (var i = offset; i < children.length; i++) {
+                var child = children.eq(i);
+                if(exclude == undefined || !exclude(child)) {
+                    child.addClass(cssClasses[i-offset]);
+                }
+            }
+        }
+    },
+
+    /**
+     *
+     * Checks whether something is unicode, and if so, then sets up the unicode fonts.
+     * @param passageContent passage html containing all the html content, wrapped
+     * @param options the set of options currently selected.
+     * @param interlinearMode the interlinear mode.
+     * @param languages The languages for each line - PLEASE NOTE, these are CHANGED
+     * @private
+     */
+    _doFonts: function (passageContent, options, interlinearMode, languages) {
+        var originalLanguageLength = languages.length;
+
+        //for interlinear options, we need to splice in a few extra languages.
+        var indexToSplice = 1;
+        if(options.indexOf("ENGLISH_VOCAB") != -1) { languages.splice(indexToSplice++, 0, "en"); }
+        if(options.indexOf("TRANSLITERATION") != -1) { languages.splice(indexToSplice++, 0, "en"); }
+        if(options.indexOf("GREEK_VOCAB") != -1) { languages.splice(indexToSplice++, 0, undefined); }
+        if(options.indexOf("MORPHOLOGY") != -1) { languages.splice(indexToSplice++, 0, "en"); }
+
+        //do display options make it an interlinear
+        var isInterlinearOption = languages.length != originalLanguageLength;
+
+        var fonts = this._getFontClasses(languages);
+        if (interlinearMode == "INTERLINEAR" || isInterlinearOption) {
+            //we inspect each line in turn, and stylise each block.
+            this._applyCssClassesRepeatByGroup(passageContent, ".w", fonts, function(child) { child.hasClass("interVerseNumbers"); } );
+        } else if (interlinearMode.indexOf("INTERLEAVED") != -1) {
+            this._applyCssClassesRepeatByGroup(passageContent, ".verseGrouping", fonts, undefined, 1);
+        } else if (interlinearMode.indexOf("COLUMN") != -1) {
+            this._applyCssClassesRepeatByGroup(passageContent, "tr.row", fonts, undefined, 1);
+        } else {
+            //normal mode, so all we need to do is check the language version, and if greek or hebrew then switch the font
+            if (fonts[0]) {
+                passageContent.addClass(fonts[0]);
+            }
+        }
+    },
+
+    /**
+     * Given an array of languages, returns an array of fonts
+     * @param languages the array of languages
+     * @private
+     */
+    _getFontClasses: function (languages) {
+        var fonts = [];
+        for (var i = 0; i < languages.length; i++) {
+            fonts.push(this._getFontClassForLanguage(languages[i]));
+        }
+        return fonts;
+    },
+
+    /**
+     * Eventually, we probably want to do something clever around dynamically loading fonts
+     * @param language the language code as returned by JSword
+     * @returns {string} the class of the font, or undefined if none is required
+     * @private
+     */
+    _getFontClassForLanguage: function (language) {
+        //currently hard-coded
+        if (language == "he") {
+            return "hbFont";
+        } else if (language == "grc") {
+            return "unicodeFont";
+        }
+
+        return null;
+    },
+
+    /**
+     * Checks that the content returned by the server has stuff in it...
+     * @param passageHtml
+     * @returns {boolean}
+     * @private
+     */
+    _isPassageValid: function (passageHtml, reference) {
+        if (passageHtml.find(":not(.xgen):first").length == 0) {
+            var message = sprintf(__s.error_bible_doesn_t_have_passage, reference);
+            this.passageContent.html(message);
+            return false;
+        }
+        return true;
+    },
+
+    /**
+     *
+     * @param passageContent the content that we are processing
+     * @param passageId
+     * @private
+     */
+    _doInlineNotes : function(passageContent, passageId) {
+        var myPosition = passageId == 0 ? "left" : "right";
+        var atPosition = passageId == 0 ? "right" : "left";
+
+        var notes = $(".verse .note", passageContent).has(".inlineNote");
+        for(var i = 0 ; i < notes.length; i++) {
+            var item = notes.get(i);
+            var link = $("a", item);
+            var note = $(".inlineNote", item);
+
+            link.attr("title", note.html());
+            link.qtip({
+                position: {
+                    my: "center " + myPosition,
+                    at: "center " + atPosition
+                },
+                style: { classes : "visibleInlineNote" },
+                events : {
+                    show : function() {
+                        var qtipApi = $(this).qtip("api");
+                        var qtipOffset = qtipApi.elements.target.offset();
+                        var yPosition = qtipOffset.top;
+                        var centerPane = $("#centerPane");
+                        var xPosition = centerPane.offset().left;
+
+                        if(xPosition == 0) {
+                            //most likely in 2 column view, so attempt to place on the same axis as
+                            //where we currently are...
+                            xPosition = $(".leftColumn").width();
+                        }
+
+
+                        if(passageId == 1) {
+                            xPosition += centerPane.width();
+                        }
+
+                        var currentPosition = $(this).qtip("option", "position");
+                        currentPosition.target = [xPosition, yPosition];
+                    }
+                }
+            });
+        }
+    },
+
+    /**
+     * Sets up qtip on all side notes
+     * @param passageId the passage id
+     * @param passageContent the html content
+     * @param version the current version
+     * @private
+     */
+    _doSideNotes : function(passageContent, passageId, version) {
+        var myPosition = passageId == 0 ? "left" : "right";
+        var atPosition = passageId == 0 ? "right" : "left";
+
+        var xrefs = $(".notesPane [xref]", passageContent);
+        for(var i = 0; i < xrefs.length; i++) {
+            var item = xrefs.eq(i);
+            var xref = item.attr("xref");
+
+            item.click(function(e) {
+                e.preventDefault();
+            });
+
+            this._makeSideNoteQtip(item, xref, myPosition, atPosition, version);
+        };
+    },
+
+    /**
+     * Creates a QTIP for a particular xref
+     * @param item the item which is targetted in the side note bar
+     * @param xref the actual cross-reference
+     * @param myPosition the my position
+     * @param atPosition the at position
+     * @param version the version to be used for lookups
+     * @private
+     */
+    _makeSideNoteQtip : function(item, xref, myPosition, atPosition, version) {
+        item.qtip({
+            position: { my: "top " + myPosition, at: "top " + atPosition, viewport: $(window) },
+            style: { tip: false, classes: 'draggable-tooltip', width : { min: 800,  max: 800} },
+            show :  { event: 'click' }, hide : { event: 'click' },
+            content : {
+                text : function(event, api) {
+                    $.getSafe(BIBLE_GET_BIBLE_TEXT + version + "/" + encodeURIComponent(xref), function(data) {
+                        api.set('content.title.text', data.longName);
+                        api.set('content.text', data.value);
+                    });
+                },
+                title : { text: xref, button : false }
+            },
+            events : {
+                render : function(event, api) {
+                    $(this).draggable({
+                        containment: 'window',
+                        handle: api.elements.titlebar
+                    });
+
+                    $(api.elements.titlebar).css("padding-right", "0px");
+
+                    $(api.elements.titlebar).prepend(goToPassageArrowButton(true, xref, "leftPassagePreview"));
+                    $(api.elements.titlebar).prepend(goToPassageArrowButton(false, xref, "rightPassagePreview"));
+                    $(api.elements.titlebar).prepend($("<a>&nbsp;</a>").button({ icons : { primary : "ui-icon-close" }}).addClass("closePassagePreview").click(function(){ api.hide(); }));
+
+                    $(".leftPassagePreview, .rightPassagePreview", api.elements.titlebar)
+                        .first().button({ icons : { primary : "ui-icon-arrowthick-1-e" }})
+                        .next().button({ icons : { primary : "ui-icon-arrowthick-1-w" }}).end()
+                        .click(function () { api.hide(); });
+                }
+            }
+        });
+    },
+
+    /**
+     * Looks at non-inline notes and renders those!
+     * @param passageContent
+     * @private
+     */
+    _doNonInlineNotes : function(passageContent) {
+        var verseNotes = $(".verse .note", passageContent);
+        var nonInlineNotes = verseNotes.not(verseNotes.has(".inlineNote"));
+
+        for(var i = 0; i < nonInlineNotes.length; i++) {
+            var link = this._doHighlightNoteInPane(passageContent, $("a", nonInlineNotes.eq(i)));
+        }
+    },
+
+    /**
+     * Highlights the note in the side pane
+     * @private
+     */
+    _doHighlightNoteInPane : function(passageContent, link) {
+        $(link).hover(function() {
+            $(".notesPane strong", passageContent).filter(function() {
+                return $(this).text() == link.text();
+            }).closest(".margin").addClass("ui-state-highlight");
+        }, function() {
+            $(".notesPane strong", passageContent).filter(function() {
+                return $(this).text() == link.text();
+            }).closest(".margin").removeClass("ui-state-highlight");
+        });
+    },
+
+    _doVerseNumbers : function(passageId, passageContent, options, interlinearMode, reference) {
+        //if interleaved mode or column mode, then we want this to continue
+        //if no options, or no verse numbers, then exit
+        var hasVerseNumbersByDefault = interlinearMode != undefined && interlinearMode != "" && interlinearMode != 'INTERLINEAR';
+
+        if(options == undefined || (options.indexOf("VERSE_NUMBERS") == -1 && !hasVerseNumbersByDefault)) {
+            //nothing to do:
+            return;
+        }
+
+        var book = reference;
+        var firstSpace = reference.indexOf(' ');
+        if(firstSpace != -1) {
+            book = reference.substring(0, firstSpace);
+        }
+
+        var self = this;
+        //otherwise, exciting new strong numbers to apply:
+        $.getSafe(BIBLE_GET_STRONGS_AND_SUBJECTS, [reference], function(data) {
+            $.each(data.strongData, function(key, value) {
+                //there may be multiple values of this kind of format:
+                var text = "<table class='verseNumberStrongs'>";
+                var bookKey = key.substring(0, key.indexOf('.'));
+                var internalVerseLink = $("a[name='" + key + "']", passageContent);
+
+                if(internalVerseLink[0] == undefined) {
+                    //no point in continuing here, since we have no verse to attach it to.
+                    return;
+                }
+
+                //append header row
+                var header = "<th></th><th>" + __s.bible_book + "</th><th>" + (data.ot ? __s.OT : __s.NT) + "</th>";
+                text += "<tr>";
+                text += header;
+                text += header;
+                text += "</tr>";
+
+                $.each(value, function(i, item) {
+                    var even = (i % 2) == 0;
+
+                    if(even) {
+                        text += "<tr>";
+                    }
+
+                    text += "<td>";
+                    //add search icon
+                    text += self._addLinkToLexicalSearch(passageId, "ui-icon ui-icon-search verseStrongSearch", "sameWordSearch", item.strongNumber, __s.search_for_this_word, "");
+                    text += self._addLinkToLexicalSearch(passageId, "ui-icon ui-icon-zoomin verseStrongSearch", "relatedWordSearch", item.strongNumber, __s.search_for_related_words, "");
+
+                    text += "<a href='javascript:void(0)' onclick='showDef(\"";
+                    text += item.strongNumber;
+                    text += ", ";
+                    text += passageId;
+                    text += "\")'>";
+                    text += item.gloss;
+                    text += " (";
+                    text += item.stepTransliteration;
+                    text += ", <span class='unicodeFont'>";
+                    text += item.matchingForm;
+                    text += "</span>)</a> ";
+
+                    //add count in book icon:
+                    text += "</td><td>";
+                    text += self._addLinkToLexicalSearch(passageId, "strongCount", "sameWordSearch", item.strongNumber + "\", \"" + bookKey, "", sprintf(__s.times, data.counts[item.strongNumber].book));
+                    text += "</td>";
+
+                    text += "<td class='";
+                    if(even) {
+                        text += "even";
+                    }
+                    text += "'>";
+                    text += self._addLinkToLexicalSearch(passageId, "strongCount", "sameWordSearch", item.strongNumber, "", sprintf(__s.times, data.counts[item.strongNumber].bible));
+                    text += "</td>";
+
+                    if(!even) {
+                        text += "</tr>";
+                    }
+                });
+
+                if((value.length %2) == 1) {
+                    text += "</tr>";
+                }
+                text += "</table><br />";
+
+                if(data.significantlyRelatedVerses[key] && data.significantlyRelatedVerses[key].length != 0) {
+                    text += "<a class='related' href='javascript:void(0)' onclick='getRelatedVerses(\"" + data.significantlyRelatedVerses[key].join('; ') + "\" ," + passageId + ")'>" + __s.see_related_verses + "</a>&nbsp;&nbsp;";
+                }
+
+                if(data.relatedSubjects[key] && data.relatedSubjects[key].total != 0) {
+                    //attach data to internal link (so that it goes when passage goes
+                    var subjects = data.relatedSubjects[key];
+                    $.data(internalVerseLink[0], "relatedSubjects", subjects);
+
+                    var subjectOverview = "";
+                    var i =  0;
+                    for(i = 0; i < 5 && i < subjects.results.length; i++) {
+                        subjectOverview += subjects.results[i].root;
+                        subjectOverview += ", ";
+                        subjectOverview += subjects.results[i].heading;
+                        subjectOverview += " ; ";
+                    }
+
+                    if(i < subjects.results.length) {
+                        subjectOverview += "...";
+                    }
+
+
+                    text += "<a class='related' href='javascript:void(0)' title='" + subjectOverview.replace(/'/g, "&apos;") +
+                        "' onclick='getRelatedSubjects(\"" + key + "\", " + passageId + ")'>" + __s.see_related_subjects + "</a>&nbsp;&nbsp;";
+                }
+
+                internalVerseLink.qtip({
+                    content: text,
+                    show: {
+                        event : 'mouseenter',
+                        solo: true
+                    },
+                    hide: {
+                        event: 'unfocus mouseleave',
+                        fixed: true,
+                        delay: 200
+                    },
+
+                    position : {
+                        my: "bottom center",
+                        at: "top center",
+                        viewport: $(window)
+                    },
+                    style : {
+                        classes : "primaryLightBg primaryLightBorder noQtipWidth"
+                    }
+                });
+            });
+        });
+    },
+
+    _addLinkToLexicalSearch : function(passageId, classes, functionName, strongNumber, title, innerText) {
+        var text = "";
+        text += "<a href='javascript:void(0)' class='" + classes + "' onclick='step.lexicon.passageId=";
+        text += passageId;
+        text += "; step.lexicon." + functionName + "(\"";
+        text += strongNumber;
+        text +="\")' title='";
+        text += title.replace(/'/g, "&apos;");
+        text += "'>" + innerText + "</a>";
+        return text;
+    },
+
+    _doHideEmptyNotesPane : function(passageContent) {
+        var notes = $(".notesPane", passageContent);
+
+        if(notes.text().trim().length == 0) {
+            notes.toggle(false);
+        }
+    },
+
+    _adjustTextAlignment : function(passageContent) {
+        //if we have only rtl, we right-align, so
+        //A- if any ltr, then return immediately
+        if($(".ltr:first", passageContent).size() > 0 || $("[dir='ltr']:first", passageContent).size() > 0 || $(".ltrDirection:first", passageContent).size() > 0) {
+            return;
+        }
+
+        //if no ltr, then assume, rtl
+        passageContent.addClass("rtlDirection");
+    },
+
+    _updatePageTitle : function(passageId, passageContent, version, reference) {
+        if(passageId == 0) {
+            var title = version + " " + reference + " " + $(".verse:first", passageContent).text().replace("1", "");
+            $("title").html(title);
+        }
+    },
+
+    _addStrongHandlers : function(passageId, passageContent) {
+        step.util.ui.addStrongHandlers(passageId, passageContent)
+    },
+
+    /**
+     * Reinstate previous text sizes
+     * @param passageId
+     * @param passageContent
+     * @private
+     */
+    _redoTextSize : function(passageId, passageContent) {
+        //we're only going to be cater for one font size initially, so pick the major version one.
+        var fontKey = step.passage.ui.getFontKey(passageContent);
+        var fontSizes = step.passage.ui.fontSizes[passageId];
+        var fontSize;
+        if(fontSizes != undefined) {
+            fontSize = fontSizes[fontKey];
+        }
+
+        if(fontSize != undefined) {
+            passageContent.css("font-size", fontSize);
+        }
+    },
+
+    /**
+     * Change the transliterations and format them
+     * @param passageContent
+     * @private
+     */
+    _doTransliterations : function(passageContent) {
+        var transliterations = $(".stepTransliteration", passageContent);
+        for(var i = 0; i < transliterations.length; i++) {
+            step.util.ui.markUpTransliteration(transliterations.eq(i));
+        }
+    },
+
+    /**
+     * Estimates the height of each block in an interlinear like way
+     * @param individualBlocks each individual block in an interlinear.
+     * @returns {Array}
+     * @private
+     */
+    _getBlockSizes: function (individualBlocks) {
+        //get sizes
+        var sizes = [];
+        var obtainedSizes = 0;
+        for(var i = 0; i < individualBlocks.length; i++) {
+            var block = individualBlocks.eq(i);
+            var blockChildren = block.children();
+
+            //initialise if not already done
+            if(sizes.length == 0) {
+                for(var j = 0; j < blockChildren.length; j++) {
+                    sizes.push(0);
+                }
+            }
+
+            if(block.hasClass("verseStart")) {
+                continue;
+            }
+
+            for(var j = 0; j < blockChildren.length; j++) {
+                var blockChild = blockChildren.eq(j);
+                if(!step.util.isBlank(blockChild.text()) ) {
+                    if(sizes[j] == 0) {
+                        sizes[j] = blockChild.height();
+                        obtainedSizes++;
+                    }
+                }
+
+            }
+            if(obtainedSizes == sizes.length) {
+                break;
+            }
+        }
+        return sizes;
+    },
+
+    /**
+     * Resizes the interlinear verse numbers to line them up properly against their counter-part text nodes.
+     * @param interlinearMode
+     */
+    doInterlinearVerseNumbers : function(passageContent, interlinearMode, options) {
+        if( options.indexOf("ENGLISH_VOCAB") != -1 ||
+            options.indexOf("TRANSLITERATION") != -1 ||
+            options.indexOf("GREEK_VOCAB") != -1 ||
+            options.indexOf("MORPHOLOGY") != -1 ||
+            interlinearMode == "INTERLINEAR") {
+
+            //obtain heights first...
+            var individualBlocks = passageContent.children().children();
+            if(individualBlocks.length == 0) {
+                return;
+            }
+
+            var sizes = this._getBlockSizes(individualBlocks);
+
+            //do verse numbers
+            var verseNumbers = $(".verseStart", passageContent);
+            for(var k = 0; k < verseNumbers.length; verseNumbers++) {
+                var verseBlocks = verseNumbers.eq(k).children();
+                for(var i = 0; i < verseBlocks.length; i++) {
+                    if(i < sizes.length && sizes[i] != 0) {
+                        verseBlocks.eq(i).height(sizes[i]).css('line-height', sizes[i] + "px");
+                    }
+                }
+            }
+
+            //do all empty nodes as well.
+            var allTextNodes = individualBlocks.not(".verseStart").children();
+            for(var index = 0; index < allTextNodes.length; index++) {
+                var potentialNode = allTextNodes.eq(index);
+                if(potentialNode.hasClass("w")) {
+                    //we're looking at a parent element, so do the same for the children
+                    var wChildren = potentialNode.children();
+                    for(var j = 0; j < wChildren.length; j++) {
+                        wChildren.eq(j).height(sizes[j]).css('line-height', sizes[j] + "px")
+                    }
+                } else if(step.util.isBlank(potentialNode.text())) {
+                    //work out index
+                    var indexInParent = potentialNode.index();
+                    if(indexInParent < sizes.length && sizes[indexInParent] != 0) {
+                        potentialNode.height(sizes[indexInParent]).css('line-height', sizes[indexInParent] + "px");
+                    }
+                }
+            }
+        }
+    },
 });

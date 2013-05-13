@@ -1,11 +1,11 @@
 /*******************************************************************************
  * Copyright (c) 2012, Directors of the Tyndale STEP Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without 
  * modification, are permitted provided that the following conditions 
  * are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright 
  * notice, this list of conditions and the following disclaimer.
  * Redistributions in binary form must reproduce the above copyright 
@@ -16,7 +16,7 @@
  * nor the names of its contributors may be used to endorse or promote 
  * products derived from this software without specific prior written 
  * permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
@@ -60,12 +60,23 @@ public class EsvXmlEnhancerTest {
         final EsvXmlEnhancer esvXmlEnhancer = new EsvXmlEnhancer(null, null);
         assertTrue(esvXmlEnhancer.equalsIngorePunctuationAndCase("the dog", "the dog"));
         assertTrue(esvXmlEnhancer.equalsIngorePunctuationAndCase("the,dog", "the dog"));
-        assertTrue(esvXmlEnhancer.equalsIngorePunctuationAndCase("the, /dog", "the'! dog"));
+        assertTrue(esvXmlEnhancer.equalsIngorePunctuationAndCase("the dog", "the' dog"));
         assertTrue(esvXmlEnhancer.equalsIngorePunctuationAndCase("the Dog", "tHe dog"));
         assertFalse(esvXmlEnhancer.equalsIngorePunctuationAndCase("the Dog", "thedog"));
         assertFalse(esvXmlEnhancer.equalsIngorePunctuationAndCase("the,Dog", "thedog"));
         assertFalse(esvXmlEnhancer.equalsIngorePunctuationAndCase("the Dog ", "thedog "));
         assertFalse(esvXmlEnhancer.equalsIngorePunctuationAndCase("the Dog a", "the Dog i"));
+        assertTrue(esvXmlEnhancer.equalsIngorePunctuationAndCase("you do", "you, do"));
     }
 
+    @Test
+    public void testGetLengthInDomWord() {
+        final EsvXmlEnhancer esvXmlEnhancer = new EsvXmlEnhancer(null, null);
+        assertEquals(7, esvXmlEnhancer.getLengthInDomWord("the dog", "the dog"));
+        assertEquals(8, esvXmlEnhancer.getLengthInDomWord("the, dog", "the dog"));
+        assertEquals(6, esvXmlEnhancer.getLengthInDomWord("wife's", "wife s"));
+        assertEquals(26, esvXmlEnhancer.getLengthInDomWord(
+                "you, that you have brought, on me and my kingdom a great sin as she tells you for",
+                "you that you have brought"));
+    }
 }

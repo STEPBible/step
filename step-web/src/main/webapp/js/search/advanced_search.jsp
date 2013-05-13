@@ -50,7 +50,7 @@
 			</tr>
 			<tr level="1">
 				<td><fmt:message key="comparison_versions" /></td>
-				<td class="noWrapCell"><input type="text" class="extraVersions drop" size="15" /> <a href='#' class='resetVersions primaryDarkBold searchPassageButtons'>x</a></td>
+				<td class="noWrapCell"><input type="text" class="extraVersions drop" size="15" /> <a href='javascript:void(0)' class='resetVersions primaryDarkBold searchPassageButtons'>x</a></td>
 				<td level="2" style="padding-left: 10px"><fmt:message key="will_be_shown_as" /></td>
 				<td level="2"><input type="text" class="extraVersionsDisplayOptions drop" size="15" readonly="true" /> <a href='https://stepweb.atlassian.net/wiki/x/I4CV' target="_new" class='interlinearHelp primaryDarkBold searchPassageButtons'>Interlinear help</a></td>
 			</tr>

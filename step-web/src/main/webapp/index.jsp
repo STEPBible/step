@@ -93,7 +93,6 @@
 		<script src="js/search/step.search.simpletext.ui.js" type="text/javascript"></script>
 		<script src="js/search/step.search.textual.ui.js" type="text/javascript"></script>
 		<script src="js/search/step.search.timeline.ui.js" type="text/javascript"></script>
-		<script src="js/search/step.search.subject.ui.js" type="text/javascript"></script>
 <!-- 		<script src="js/search/step.search.personalnotes.ui.js" type="text/javascript"></script> -->
 		<script src="js/navigation/step.navigation.js" type="text/javascript"></script>
 
@@ -130,8 +129,16 @@
         <script src="js/backbone/views/passage_menu_view.js" type="text/javascript"></script>
         <script src="js/backbone/views/passage_criteria_view.js" type="text/javascript"></script>
 
+        <script src="js/backbone/models/search_menu_model.js" type="text/javascript"></script>
+        <script src="js/backbone/views/search_menu_view.js" type="text/javascript"></script>
+        <script src="js/backbone/views/criteria_control_view.js" type="text/javascript"></script>
 
-	    <script src="js/init.js" type="text/javascript"></script>
+        <script src="js/backbone/models/subject_search_model.js" type="text/javascript"></script>
+        <script src="js/backbone/views/subject_critieria_view.js" type="text/javascript"></script>
+        <script src="js/backbone/views/subject_display_view.js" type="text/javascript"></script>
+
+
+    <script src="js/init.js" type="text/javascript"></script>
         <script src="js/backbone/step.js" type="text/javascript"></script>
 	<%
 		} else {

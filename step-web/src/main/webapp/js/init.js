@@ -71,10 +71,6 @@ function init() {
         $.shout("view-change");
 
         initJira();
-
-        //TODO:temp fix
-        step.state._showFieldSet(step.util.getPassageContainer(0), "SEARCH_PASSAGE")
-
 	});
 }
 

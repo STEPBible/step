@@ -15,7 +15,7 @@ module("STEP Passage Model", {
                 KJV : { hasStrongs : true }
             }
         };
-        __s = {};
+        __s = { error_javascript_validation : "ERROR"};
         Backbone.Model.prototype.save = function(attributes) { return attributes; };
     }
 })
@@ -59,19 +59,19 @@ test("PassageModel Mixed versions, should be strongless", function () {
 test("PassageModel Fail Validation", function () {
     var model = new PassageModel
     var message = model.validate({ interlinearMode: "Bob" });
-    equals("This is not a valid option", message);
+    equals(__s.error_javascript_validation, message);
 });
 
 test("PassageModel Succeeds Validation", function () {
     var model = new PassageModel
     equals(undefined, model.validate({ interlinearMode: "A" }));
-    equals("This is not a valid option", model.validate({ interlinearMode: "a" }));
+    equals(__s.error_javascript_validation, model.validate({ interlinearMode: "a" }));
 });
 
 test("PassageModel Interlinear mode validates", function () {
     var model = new PassageModel
     equals(undefined, model.validate({ interlinearMode: "A" }));
-    equals("This is not a valid option", model.validate({ interlinearMode: "a" }));
+    equals(__s.error_javascript_validation, model.validate({ interlinearMode: "a" }));
 });
 
 test("PassageModel Safe Interlinear mode", function () {
@@ -161,9 +161,6 @@ test("PassageModel Get Internationalised option", function () {
 
 });
 
-
-
-
 test("PassageModel Test extra versions are proxied correctly", function () {
     var storedExtraVersions = ["ESV"];
     var model = new PassageModel({ detailLevel : 0, extraVersions : storedExtraVersions });
@@ -208,24 +205,31 @@ test("PassageModel - Check pretty URLs", function() {
         options : ["Notes"]
     });
 
-    equals(model.getPassageLocation(), "passage/0/2/ESV/Gen.2/Notes/KJV/INTERLEAVED");
+    equals(model.getLocation(), "0/__passage/2/ESV/Gen.2/Notes/KJV/INTERLEAVED");
 
     //take off an argument and start again - this effectively sets the mode to default to interleaved
     model.set("interlinearMode", "");
-    equals(model.getPassageLocation(), "passage/0/2/ESV/Gen.2/Notes/KJV/INTERLEAVED");
+    equals(model.getLocation(), "0/__passage/2/ESV/Gen.2/Notes/KJV/INTERLEAVED");
 
     //take off an argument and start again
     model.set("extraVersions", []);
-    equals(model.getPassageLocation(), "passage/0/2/ESV/Gen.2/Notes");
+    equals(model.getLocation(), "0/__passage/2/ESV/Gen.2/Notes");
 
     //take off an argument and start again
     model.set("options", []);
-    equals(model.getPassageLocation(), "passage/0/2/ESV/Gen.2");
+    equals(model.getLocation(), "0/__passage/2/ESV/Gen.2");
 
     //put something at the end we get some empty fragments
     model.set("extraVersions", ["ASV"]);
     model.set("interlinearMode", "Interlinear");
-    equals(model.getPassageLocation(), "passage/0/2/ESV/Gen.2//ASV/INTERLEAVED");
-
+    equals(model.getLocation(), "0/__passage/2/ESV/Gen.2//ASV/INTERLEAVED");
 });
 
+test("Test validate options is array", function() {
+    var model = new PassageModel;
+
+    equals(undefined, model._validateOptions(undefined));
+    equals(undefined, model._validateOptions([]));
+    equals(undefined, model._validateOptions(["A", "B"]));
+    equals(__s.error_javascript_validation, model._validateOptions("A,B"));
+});

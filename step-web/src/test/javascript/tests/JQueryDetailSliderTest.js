@@ -13,7 +13,6 @@ module("STEP JQuery Detail Slider widget", {
 //        $.widget("custom.versions", { options : {}});
 //        $.widget("custom.detailSlider", { options : {}});
 //
-//        $("<body>").append($("<div id='searchPassage'>"));
     }
 });
 

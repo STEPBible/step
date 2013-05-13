@@ -1,9 +1,10 @@
 var step;
 var __s;
+BIBLE_GET_FEATURES = "getBibleFeatures";
 
 module("STEP Passage Menu View Test", {
     setup: function () {
-
+        $.getSafe = function() { };
         this.menuElement = $("<div>");
 
         this.option1 = $("<a name='option1'>");
@@ -64,4 +65,24 @@ test("PassageMenuView Menu options are restored", function () {
     equals(this.menu.isTicked(this.option2), false);
     equals(this.menu.isTicked(this.option3), true);
     equals(this.menu.isTicked(this.option4), false);
+});
+
+test("Check Refresh Menu options works disables and enables correctly.", function() {
+    $.getSafe = function(url, args, callback) { callback({ removed : [{explanation: "Removed", option : "option1" }] }); };
+    $.fn.qtip = function() {};
+
+    this.menu.refreshMenuOptions();
+
+    //we should have option 1 as disabled, option 2 selected, option 3 available and option 4 selected
+    equals(this.menu.isSelectable(this.option1), false);
+    equals(this.menu.isSelected(this.option2), true);
+
+    //selectable but not selected
+    equals(this.menu.isSelectable(this.option3), true);
+    equals(this.menu.isSelected(this.option3), false);
+
+    equals(this.menu.isSelected(this.option4), true);
+
+    //option1 was disabled, so should have a title attribute with some text
+    equals("Removed", this.option1.attr("title"));
 });

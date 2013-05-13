@@ -7,7 +7,7 @@ var PassageModel = Backbone.Model.extend({
                 extraVersions: [],
                 interlinearMode: "NONE",
                 detailLevel: 0,
-                options: []
+                options: ["NOTES", "HEADINGS", "VERSE_NUMBERS"]
             }
         },
 
@@ -17,7 +17,26 @@ var PassageModel = Backbone.Model.extend({
          * @returns an error or undefined if not.
          */
         validate: function (attributes) {
-            return this._validateInterlinearMode(attributes.interlinearMode);
+            var returnValue = this._validateInterlinearMode(attributes.interlinearMode) || this._validateOptions(attributes.options);
+            if(returnValue) {
+                //TODO: Have a view whose role is to capture this kind of stuff.
+                step.util.raiseInfo(this.get("passageId"), returnValue);
+                return returnValue;
+            }
+            return undefined;
+        },
+
+        _validateOptions : function(options) {
+            //we only ever allow an array to be stored
+            if(options == undefined) {
+                return;
+            }
+
+            if($.isArray(options)) {
+                return undefined;
+            }
+
+            return __s.error_javascript_validation;
         },
 
         /**
@@ -38,8 +57,18 @@ var PassageModel = Backbone.Model.extend({
                 attributes.extraVersions = this._getSafeExtraVersions(attributes.extraVersions);
             }
 
-            if(attributes.detailLevel) {
+            if (attributes.detailLevel) {
                 attributes.detailLevel = parseInt(attributes.detailLevel);
+            }
+
+            //do not update values if the detail level isn't showing
+            var detailLevel = attributes.detailLevel || this.get("detailLevel");
+            if (detailLevel <= 1) {
+                delete attributes.interlinearMode;
+            }
+
+            if (detailLevel == 0) {
+                delete attributes.extraVersions;
             }
 
             console.log("Saving model passage", attributes);
@@ -142,18 +171,18 @@ var PassageModel = Backbone.Model.extend({
             return step.defaults.passage.interOptions[nameIndex];
         },
 
-        getPassageLocation: function () {
+        getLocation: function () {
             var options = this.get("options") || [];
             var extraVersions = this.get("extraVersions") || [];
             var interlinearMode = this.get("interlinearMode") || "";
 
-            var url = ["passage", this.get("passageId"), this.get("detailLevel"), this.get("version"), this.get("reference"),
+            var url = [this.get("passageId"), "passage", this.get("detailLevel"), this.get("version"), this.get("reference"),
                 options.join(), extraVersions.join(), interlinearMode];
 
             //pop off the bits that aren't used...
             var urlTokens = url.length;
-            for(var ii = urlTokens -1; ii > 0; ii--) {
-                if(url[ii] == "" || (ii == urlTokens -1 && url[ii] == "NONE")) {
+            for (var ii = urlTokens - 1; ii > 0; ii--) {
+                if (url[ii] == "" || (ii == urlTokens - 1 && url[ii] == "NONE")) {
                     url.pop();
                 } else {
                     break;
@@ -285,8 +314,7 @@ var PassageModel = Backbone.Model.extend({
             //check valid option first
             var indexOfName = step.defaults.passage.interNamedOptions.indexOf(interlinearMode);
             if (indexOfName == -1) {
-                step.util.raiseInfo(this.get("passageId"), "This is not a valid option.");
-                return "This is not a valid option";
+                return __s.error_javascript_validation;
             }
             return undefined;
         }

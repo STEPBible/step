@@ -1,6 +1,6 @@
 var PassageCriteriaView;
 PassageCriteriaView = Backbone.View.extend({
-    el: "#searchPassage",
+    el: function() { return $("fieldset[name='SEARCH_PASSAGE']").eq(this.model.get("passageId")); },
     events: {
         "change input.drop": "updateModel",
         "click .searchPassage": "changePassage",
@@ -14,9 +14,8 @@ PassageCriteriaView = Backbone.View.extend({
         this.interlinearMode = this.$el.find(".extraVersionsDisplayOptions");
         this.detailLevel = this.$el.detailSlider();
 
-
+        this.versionInfo = this.$el.find(".infoAboutVersion").button({ icons: { primary: "ui-icon-info" }, text: false});
         this.$el.find(".searchPassage").button({ icons: { primary: "ui-icon-search" }, text: false });
-        this.$el.find(".infoAboutVersion").button({ icons: { primary: "ui-icon-info" }, text: false});
         this.$el.find(".resetVersions").button({ icons: { primary: "ui-icon-close" }, text: false});
         this.$el.find(".interlinearHelp").button({ icons: { primary: "ui-icon-help" }, text: false});
         step.util.ui.autocompleteSearch(this.interlinearMode, step.defaults.passage.interOptions);
@@ -32,17 +31,32 @@ PassageCriteriaView = Backbone.View.extend({
         });
 
         //listen to model changes on version to update the version dropdown
-        this.listenTo(this.model, 'change:version', function(event, args) {
-            self.reference.biblebooks("option", "version", self.model.get("version"))
-        });
-
+        this.listenTo(this.model, 'change:version', this._updateViewWithVersionChange);
         this.listenTo(this.model, 'change', this._resyncModelValues);
 
-
         this._resyncModelValues();
+        this._updateViewWithVersionChange();
     },
 
     /**
+     * Ensures the links are always up to date - as well as the bible books dropdown (reference)
+     * @param event the event that occurred
+     * @param args the arguments ot the model change
+     * @private
+     */
+    _updateViewWithVersionChange : function(event, args) {
+        var version = this.model.get("version");
+
+        //update version held by biblebooks
+        this.reference.biblebooks("option", "version", version);
+
+        //update link to version
+        this.versionInfo.prop("href", "version.jsp?version=" + version);
+        this.versionInfo.prop("title", sprintf(__s.info_about_bible, version));
+    },
+
+
+/**
      * Similar to #updateModel but only does specified attributes
      * @param attributes
      * @private

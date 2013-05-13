@@ -293,8 +293,10 @@ step.util = {
                                 var vocabInfo = "";
                                 if(data.vocabInfos) {
                                     $.each(data.vocabInfos, function(i, item) {
+                                        var fontClass = strong.length > 0 && strong[0] == 'H' ? "hbFontSmall" : 'unicodeFont';
+
                                         vocabInfo +=    "<h1>" +
-                                                        "<span class='unicodeFont'>" +
+                                                        "<span class='" + fontClass + "'>" +
                                                         item.accentedUnicode + 
                                                         "</span> (<span class='stepTransliteration'>" +
                                                         that.markUpTransliteration(item.stepTransliteration) +

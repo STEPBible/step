@@ -114,6 +114,12 @@ step.lexicon = {
                         targetItem.html(content);
                     }
                 }
+
+                if(infoName == 'accentedUnicode') {
+                    //add correct font
+                    targetItem.removeClass();
+                    targetItem.addClass(data[indexToWord].strongNumber[0] == 'H' ? "hbFontSmall" : "unicodeFont");
+                }
             }
 
             var dependencyList = $(item).attr("depends-on");
@@ -155,7 +161,7 @@ step.lexicon = {
         if (data.vocabInfos[index] && data.vocabInfos[index].relatedNos) {
             var linkContainer =  $("*[info-name = 'relatedNos']", "#vocabContainer");
             $.each(data.vocabInfos[index].relatedNos, function(i, item) {
-                //build a link, with gloss (unicode title='translit') 
+                //build a link, with gloss (unicode title='translit')
                 var unicode = $("<span>").append(item.matchingForm).addClass("ancientLanguage").prop("href", "javascript:void");
                 var link = $("<a>").append(item.gloss + " (");
                 link.append(unicode);
@@ -270,8 +276,8 @@ LexiconDefinition.prototype.getPopup = function() {
     
     
     $('#lexiconPopupClose').button({
-        icons : {
-            primary : "ui-icon-closethick",
+        icons : { 
+            primary : "ui-icon-closethick"
         }, 
         text : false
     }).click(function() {

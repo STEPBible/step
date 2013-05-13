@@ -39,6 +39,7 @@ import static org.mockito.Mockito.when;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import com.tyndalehouse.step.core.service.VocabularyService;
 import org.crosswire.common.util.Language;
 import org.crosswire.jsword.book.Book;
 import org.junit.Test;
@@ -64,9 +65,11 @@ public class InterlinearProviderImplTest {
             NoSuchMethodException {
         final InterlinearProviderImpl interlinear = new InterlinearProviderImpl();
         final Book mock = mock(Book.class);
+        final VocabularyService vocabularyService = mock(VocabularyService.class);
         interlinear.setCurrentBook(mock);
-
+        interlinear.setVocabProvider(vocabularyService);
         when(mock.getLanguage()).thenReturn(new Language("fr"));
+
 
         // NOTE: because we don't want to expose a method called during initialisation as non-private (could
         // break

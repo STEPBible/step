@@ -507,7 +507,7 @@ public final class HebrewUtils {
                 output.append('d');
                 break;
             case HE:
-                output.append("h");
+                output.append('h');
                 break;
             case VAV:
                 if (currentLetter.isVowel()) {

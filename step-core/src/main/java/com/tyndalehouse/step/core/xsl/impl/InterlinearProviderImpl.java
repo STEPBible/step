@@ -1,11 +1,11 @@
 /*******************************************************************************
  * Copyright (c) 2012, Directors of the Tyndale STEP Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without 
  * modification, are permitted provided that the following conditions 
  * are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright 
  * notice, this list of conditions and the following disclaimer.
  * Redistributions in binary form must reproduce the above copyright 
@@ -16,7 +16,7 @@
  * nor the names of its contributors may be used to endorse or promote 
  * products derived from this software without specific prior written 
  * permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
@@ -49,6 +49,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.tyndalehouse.step.core.service.VocabularyService;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.BookData;
 import org.crosswire.jsword.book.BookException;
@@ -76,31 +77,45 @@ import com.tyndalehouse.step.core.xsl.InterlinearProvider;
  * This object is not purposed to be used as a singleton. It builds up textual information on initialisation,
  * and is specific to requests. On initialisation, the OSIS XML is retrieved and iterated through to find all
  * strong/morph candidates
- * 
+ *
  * @author chrisburrell
- * 
  */
 public class InterlinearProviderImpl implements InterlinearProvider {
 
-    /** The Constant LOGGER. */
+    /**
+     * The Constant LOGGER.
+     */
     private static final Logger LOGGER = LoggerFactory.getLogger(InterlinearProviderImpl.class);
 
-    /** contains the set of tags that may contain biblical text, all lower case */
+    /**
+     * contains the set of tags that may contain biblical text, all lower case
+     */
     private static final Set<String> VALID_TEXT_ELEMENTS = new HashSet<String>();
 
-    /** limited accuracy tries to do a location look up by using the verse number as part of the key. */
+    /**
+     * limited accuracy tries to do a location look up by using the verse number as part of the key.
+     */
     private final Map<DualKey<String, String>, Deque<Word>> limitedAccuracy = new HashMap<DualKey<String, String>, Deque<Word>>();
+    private final boolean originalLanguage;
 
-    /** The current book. */
+    /**
+     * The current book.
+     */
     private Book currentBook;
 
-    /** The hebrew direct mapping. */
+    /**
+     * The hebrew direct mapping.
+     */
     private Map<String, String> hebrewDirectMapping;
 
-    /** The hebrew indirect mappings. */
+    /**
+     * The hebrew indirect mappings.
+     */
     private Map<String, String> hebrewIndirectMappings;
 
-    /** The testament. */
+    /**
+     * The testament.
+     */
     private Testament testament;
 
     static {
@@ -115,21 +130,24 @@ public class InterlinearProviderImpl implements InterlinearProvider {
         VALID_TEXT_ELEMENTS.add("transChange");
     }
 
+    private VocabularyService vocabProvider;
+
     /**
      * sets up the interlinear provider with the correct version and text scope.
-     * 
-     * @param versificationService versification service
-     * 
-     * @param version the version to use to set up the interlinear
-     * @param textScope the text scope reference, defining the bounds of the lookup
-     * @param hebrewDirectMapping the hebrew overriding mappings
+     *
+     * @param versificationService   versification service
+     * @param version                the version to use to set up the interlinear
+     * @param textScope              the text scope reference, defining the bounds of the lookup
+     * @param hebrewDirectMapping    the hebrew overriding mappings
      * @param hebrewIndirectMappings the mappings used if no other mapping is found
      */
     public InterlinearProviderImpl(final JSwordVersificationService versificationService,
-            final String version, final String textScope, final Map<String, String> hebrewDirectMapping,
-            final Map<String, String> hebrewIndirectMappings) {
+                                   final String version, final String textScope, final Map<String, String> hebrewDirectMapping,
+                                   final Map<String, String> hebrewIndirectMappings, final VocabularyService vocabProvider) {
+        this.vocabProvider = vocabProvider;
         // first check whether the values passed in are correct
         if (areAnyBlank(version, textScope)) {
+            this.originalLanguage = false;
             return;
         }
 
@@ -140,8 +158,10 @@ public class InterlinearProviderImpl implements InterlinearProvider {
             throw new StepInternalException(format("Couldn't look up book: [%s]", version));
         }
 
-        BookData bookData;
+        //mark the book as original language
+        this.originalLanguage = "grc".equals(currentBook.getLanguage().getCode()) || "he".equals(currentBook.getLanguage().getCode());
 
+        BookData bookData;
         try {
             final Key key = this.currentBook.getKey(textScope);
             setTestamentType(key);
@@ -160,14 +180,15 @@ public class InterlinearProviderImpl implements InterlinearProvider {
      */
     InterlinearProviderImpl() {
         // exposing package private constructor
+        originalLanguage = false;
     }
 
     @Override
     public String getWord(final String verseNumber, final String strong, final String morph) {
         // we use a linked hashset, because we want the behaviour of a set while we add to it,
         // but at the end, we will want to return the elements in order
-        LOGGER.trace("Retrieving word for verse [{}], strong [{}], morph [{}]", new Object[] { verseNumber,
-                strong, morph });
+        LOGGER.trace("Retrieving word for verse [{}], strong [{}], morph [{}]", verseNumber,
+                strong, morph);
 
         final Set<String> results = new LinkedHashSet<String>();
         if (isBlank(strong)) {
@@ -194,7 +215,7 @@ public class InterlinearProviderImpl implements InterlinearProvider {
 
     /**
      * Takes a set, and outputs the strings concatenated together (and separated by a space.
-     * 
+     *
      * @param results the results that should be converted to a string
      * @return a String containing results to be displayed
      */
@@ -217,9 +238,9 @@ public class InterlinearProviderImpl implements InterlinearProvider {
 
     /**
      * returns words based on strong and verse number only.
-     * 
+     *
      * @param verseNumber the verse number
-     * @param strong the strong reference
+     * @param strong      the strong reference
      * @return a word that matches or the empty string
      */
     String getWord(final String verseNumber, final String strong) {
@@ -240,19 +261,19 @@ public class InterlinearProviderImpl implements InterlinearProvider {
 
     /**
      * Lookup mappings, if the strong number is there, then it is used
-     * 
+     *
      * @param strong the strong
      * @return the string
      */
     private String lookupMappings(final String strong) {
         // we ignore mapping lookups for anything greek or hebrew...
-        if ("he".equals(this.currentBook.getLanguage().getCode())
-                || "grc".equals(this.currentBook.getLanguage().getCode())) {
+        if(originalLanguage) {
             return "";
         }
 
         // currently only supporting OLD Testament
-        if (this.testament == Testament.OLD) {
+        final boolean isOT = this.testament == Testament.OLD;
+        if (isOT) {
             final String direct = this.hebrewDirectMapping.get(strong);
             if (direct != null) {
                 return direct;
@@ -263,13 +284,20 @@ public class InterlinearProviderImpl implements InterlinearProvider {
                 return indirect;
             }
         }
+
+        //else look up from vocab provider
+        String englishVocab = this.vocabProvider.getEnglishVocab(isOT ? 'H' + strong : 'G' + strong);
+        if(englishVocab != null) {
+            return "#" + englishVocab;
+        }
+
         return "";
     }
 
     /**
      * Retrieves the first word from the list, and removes from the list. If the word is PARTIAL, then
      * retrieves the next one too, and concatenates
-     * 
+     *
      * @param list a dequue containing all the items in question
      * @return the string
      */
@@ -297,7 +325,7 @@ public class InterlinearProviderImpl implements InterlinearProvider {
 
     /**
      * retrieves context textual information from a passage.
-     * 
+     *
      * @param osisFragment the fragment of XML that should be examined
      */
     private void scanForTextualInformation(final Element osisFragment) {
@@ -307,8 +335,8 @@ public class InterlinearProviderImpl implements InterlinearProvider {
 
     /**
      * setups all the initial textual information for fast retrieval during XSL transformation.
-     * 
-     * @param element element to start with.
+     *
+     * @param element      element to start with.
      * @param currentVerse the current verse to use as part of the key
      */
     @SuppressWarnings("unchecked")
@@ -324,8 +352,8 @@ public class InterlinearProviderImpl implements InterlinearProvider {
         }
 
         // iterate through all children and call recursively
-        Object data = null;
-        Element ele = null;
+        Object data;
+        Element ele;
         final Iterator<Content> contentIter = element.getContent().iterator();
         while (contentIter.hasNext()) {
             data = contentIter.next();
@@ -338,8 +366,8 @@ public class InterlinearProviderImpl implements InterlinearProvider {
 
     /**
      * retrieves textual information and adds it to the provider.
-     * 
-     * @param element the element to extract information from
+     *
+     * @param element        the element to extract information from
      * @param verseReference verse reference to use for locality of keying
      */
     private void extractTextualInfoFromNode(final Element element, final String verseReference) {
@@ -378,7 +406,7 @@ public class InterlinearProviderImpl implements InterlinearProvider {
 
     /**
      * Gets the text of the element and its children
-     * 
+     *
      * @param element the element
      * @return the text
      */
@@ -391,8 +419,8 @@ public class InterlinearProviderImpl implements InterlinearProvider {
 
     /**
      * Gets the text recurively.
-     * 
-     * @param sb the sb
+     *
+     * @param sb      the sb
      * @param content the content
      */
     private void getTextRecurively(final StringBuilder sb, final Content content) {
@@ -418,7 +446,7 @@ public class InterlinearProviderImpl implements InterlinearProvider {
 
     /**
      * Blacklisted, if the word is contained in a direct mapping for the relevant testament
-     * 
+     *
      * @param strongKey the strong key
      * @return true, if successful
      */
@@ -428,7 +456,7 @@ public class InterlinearProviderImpl implements InterlinearProvider {
 
     /**
      * Checks if is h00.
-     * 
+     *
      * @param currentStrong a strong number
      * @return true, if is a single H followed by only 0s, which indicates that the strong numbers go with
      *         their next occurrence
@@ -445,14 +473,14 @@ public class InterlinearProviderImpl implements InterlinearProvider {
 
     /**
      * Finally, we have some information to add to this provider. We try and add it in an efficient fashion.
-     * 
+     * <p/>
      * So, how do we store this? The most meaningful piece of data is a STRONG number, since it identifies the
      * word that we want to retrieve. Without the strong number, we don't have any information at all.
      * Therefore, the first level of lookup should be by Strong number.
-     * 
+     *
      * @param verseReference the verse reference that specifies locality (least important factor)
-     * @param strongKey the strong number (identifies the root/meaning of the word)
-     * @param word the word to be stored
+     * @param strongKey      the strong number (identifies the root/meaning of the word)
+     * @param word           the word to be stored
      * @return the word that has been added
      */
     private Word addTextualInfo(final String verseReference, final String strongKey, final String word) {
@@ -471,7 +499,7 @@ public class InterlinearProviderImpl implements InterlinearProvider {
     /**
      * Sets the testament, to be used to determine the indirect/direct mappings to use when generating the
      * interlinear.
-     * 
+     *
      * @param key the key to the passage being looked up
      */
     private void setTestamentType(final Key key) {
@@ -488,4 +516,10 @@ public class InterlinearProviderImpl implements InterlinearProvider {
         this.currentBook = currentBook;
     }
 
+    /**
+     * @param vocabService sets the vocab service
+     */
+    void setVocabProvider(final VocabularyService vocabService) {
+        this.vocabProvider = vocabService;
+    }
 }

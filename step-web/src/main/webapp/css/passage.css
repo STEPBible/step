@@ -46,6 +46,14 @@ span.interlinear span span { /* Make this stack on top of each other. */
 	font-size: 250%;	
 }
 
+.hbFontSmall {
+    font-family: SIL_EZRA;
+    font-size: 180%;
+    font-weight: normal;
+}
+
+
+
 .hbFont h2, .unicodeFont h2 {
 	font-size: large;
 }

@@ -135,10 +135,10 @@ step.state = {
                 return;
             } else {
                 // tick the right menu item
-                step.menu.tickOneItemInMenuGroup('SEARCH', activeSearch, passageId);
+//                step.menu.tickOneItemInMenuGroup('SEARCH', activeSearch, passageId);
 
                 // show the correct field set
-                this._showRelevantFieldSet(passageId);
+//                this._showRelevantFieldSet(passageId);
 
                 if(fireChange == true) {
                     $.shout(activeSearch + "-activated", {passageId: passageId});
@@ -176,23 +176,23 @@ step.state = {
         var passageIds = step.util.getAllPassageIds();
 
         //add the sliders to every fieldset - this needs to happen before the passages are restored
-        $("fieldset").detailSlider();
+//        $("fieldset").detailSlider();
 
         for ( var i in passageIds) {
             step.menu.tickMenuItem(step.menu.getMenuItem(this.activeSearch(i), i));
-            step.state.passage.restore(i);
+//            step.state.passage.restore(i);
             step.state.original.restore(i);
-            this._showRelevantFieldSet(i);
+//            this._showRelevantFieldSet(i);
         }
         
         step.util.ui.initSearchToolbar();
         
         //finally start listening for hash changes
         window.onhashchange = function() {
-            step.state.browser.hashChange();
+//            step.state.browser.hashChange();
         };
         
-        step.state.browser.hashChange();
+//        step.state.browser.hashChange();
      },
 
     _restoreLanguage : function() {
@@ -204,23 +204,23 @@ step.state = {
         step.menu.tickMenuItem($("a[lang='" + language + "']"));
     },
     
-    _showRelevantFieldSet : function(passageId) {
-        var passageContainer = step.util.getPassageContainer(passageId);
-        $(".advancedSearch fieldset", passageContainer).hide();
-
-        var option = $("a[name ^= 'SEARCH_']:has(img.selectingTick)", passageContainer);
-        var optionName = option.attr('name');
-        this._showFieldSet(passageContainer, optionName);
-        
-        //need to link field set to optionbeing displayed
-        step.state.browser.changeTrackedSearch(passageId, optionName);
-    },
-    
-    _showFieldSet : function(passageContainer, optionName) {
-        $(".passageToolbarContainer", passageContainer).toggle(optionName == "SEARCH_PASSAGE");
-        var targetFieldset = $(".advancedSearch fieldset[name='" + optionName + "']", passageContainer);
-        targetFieldset.show();
-    },
+//    _showRelevantFieldSet : function(passageId) {
+//        var passageContainer = step.util.getPassageContainer(passageId);
+//        $(".advancedSearch fieldset", passageContainer).hide();
+//
+//        var option = $("a[name ^= 'SEARCH_']:has(img.selectingTick)", passageContainer);
+//        var optionName = option.attr('name');
+//        this._showFieldSet(passageContainer, optionName);
+//
+//        //need to link field set to optionbeing displayed
+////        step.state.browser.changeTrackedSearch(passageId, optionName);
+//    },
+//
+//    _showFieldSet : function(passageContainer, optionName) {
+//        $(".passageToolbarContainer", passageContainer).toggle(optionName == "SEARCH_PASSAGE");
+//        var targetFieldset = $(".advancedSearch fieldset[name='" + optionName + "']", passageContainer);
+//        targetFieldset.show();
+//    },
 
     _fireStateChanged : function(passageId) {
         var active = this.activeSearch(passageId);

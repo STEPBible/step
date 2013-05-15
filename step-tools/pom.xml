@@ -55,7 +55,11 @@
 			<groupId>com.tyndalehouse.step</groupId>
 			<artifactId>step-core</artifactId>
 		</dependency>
-		
+        <dependency>
+            <groupId>com.tyndalehouse.step</groupId>
+            <artifactId>step-core</artifactId>
+            <type>test-jar</type>
+        </dependency>
 		<dependency>
 	    	<groupId>commons-io</groupId>
 		    <artifactId>commons-io</artifactId>

@@ -37,7 +37,7 @@
 var step = {};
 
 if(typeof console === "undefined") {
-    console = { log: function() { } };
+    console = { log: function(arg, options) { } };
 }
 
 

@@ -42,6 +42,7 @@ ORIGINAL_SPELLING =  __s.original_spelling;
 VOCABULARY = __s.vocabulary;
 SCRIPTURE= __s.scripture;
 
+if(!window.step) { window.step = {}; }
 step.defaults = {
     detailLevel : 0,
     pageSize : 50,

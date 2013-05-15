@@ -349,7 +349,8 @@
           <span class="w verseStart">
           	<!--  the verse number -->
           	<a name="{@osisID}"><span class="interVerseNumbers"><xsl:value-of select="concat($baseVersion, ' ', $versenum)"/></span></a>
-          	
+
+            <!-- The order of these is important for rendering on the UI -->
 			<!-- output a filling gap for strongs -->
 			<xsl:if test="$EnglishVocab = 'true'">
 				<span class="strongs">Eng. V</span>

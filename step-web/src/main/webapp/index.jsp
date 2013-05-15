@@ -58,6 +58,12 @@
 		<script src="libs/sprintf-0.7-beta1.js" type="text/javascript"></script>
 <!-- 		<script src="libs/jquery.tagcloud.js" type="text/javascript"></script> -->
 <!-- 		<script src="libs/jquery-ui-1.9-beta.min.js" type="text/javascript"></script> -->
+
+        <script src="libs/underscore-min.js" type="text/javascript"></script>
+        <script src="libs/json2.js" type="text/javascript"></script>
+        <script src="libs/backbone-min.js" type="text/javascript"></script>
+        <script src="libs/backbone.localStorage-min.js" type="text/javascript"></script>
+
 	    <script src="js/jquery-extensions/jquery-qtip.js" type="text/javascript"></script>
 	    <script src="js/jquery-extensions/jquery-hover-intent.js" type="text/javascript"></script>
 	    <script src="js/jquery-extensions/jquery-cookie.js" type="text/javascript"></script>
@@ -70,6 +76,8 @@
 	    <script src="js/jquery-extensions/jquery-passage-buttons.js" type="text/javascript"></script>
 	    <script src="js/jquery-extensions/jquery-original-word-toolbar.js" type="text/javascript"></script>
 	    <script src="js/jquery-extensions/jquery-search-result.js" type="text/javascript"></script>
+        <script src="js/jquery-extensions/jquery-bible-books.js" type="text/javascript"></script>
+
 		<script src="js/ddsmoothmenu.js" type="text/javascript"></script>
 	    <script src="js/util.js" type="text/javascript"></script>
 	    <script src="js/lexicon_definition.js" type="text/javascript"></script>
@@ -85,9 +93,8 @@
 		<script src="js/search/step.search.simpletext.ui.js" type="text/javascript"></script>
 		<script src="js/search/step.search.textual.ui.js" type="text/javascript"></script>
 		<script src="js/search/step.search.timeline.ui.js" type="text/javascript"></script>
-		<script src="js/search/step.search.subject.ui.js" type="text/javascript"></script>
 <!-- 		<script src="js/search/step.search.personalnotes.ui.js" type="text/javascript"></script> -->
-		<script src="js/navigation/step.navigation.js" type="text/javascript"></script>	    
+		<script src="js/navigation/step.navigation.js" type="text/javascript"></script>
 
 
 		<script src="js/state/step.state.js" type="text/javascript"></script>
@@ -114,7 +121,25 @@
 	    <script src="js/passage/step.passage.navigation.ui.js" type="text/javascript"></script>
 	    <script src="js/bookmark/step.bookmark.js" type="text/javascript"></script>
 	    <script src="js/bookmark/step.bookmark.ui.js" type="text/javascript"></script>
-	    <script src="js/init.js" type="text/javascript"></script>
+
+        <script src="js/backbone/models/passage_model.js" type="text/javascript"></script>
+        <script src="js/backbone/views/passage_display_view.js" type="text/javascript"></script>
+        <script src="js/backbone/router.js" type="text/javascript"></script>
+
+        <script src="js/backbone/views/passage_menu_view.js" type="text/javascript"></script>
+        <script src="js/backbone/views/passage_criteria_view.js" type="text/javascript"></script>
+
+        <script src="js/backbone/models/search_menu_model.js" type="text/javascript"></script>
+        <script src="js/backbone/views/search_menu_view.js" type="text/javascript"></script>
+        <script src="js/backbone/views/criteria_control_view.js" type="text/javascript"></script>
+
+        <script src="js/backbone/models/subject_search_model.js" type="text/javascript"></script>
+        <script src="js/backbone/views/subject_critieria_view.js" type="text/javascript"></script>
+        <script src="js/backbone/views/subject_display_view.js" type="text/javascript"></script>
+
+
+    <script src="js/init.js" type="text/javascript"></script>
+        <script src="js/backbone/step.js" type="text/javascript"></script>
 	<%
 		} else {
 	%>

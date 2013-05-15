@@ -1,11 +1,11 @@
 /*******************************************************************************
  * Copyright (c) 2012, Directors of the Tyndale STEP Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without 
  * modification, are permitted provided that the following conditions 
  * are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright 
  * notice, this list of conditions and the following disclaimer.
  * Redistributions in binary form must reproduce the above copyright 
@@ -16,7 +16,7 @@
  * nor the names of its contributors may be used to endorse or promote 
  * products derived from this software without specific prior written 
  * permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
@@ -58,15 +58,13 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.Books;
 import org.crosswire.jsword.book.OSISUtil;
-import org.crosswire.jsword.passage.Key;
-import org.crosswire.jsword.passage.NoSuchKeyException;
-import org.crosswire.jsword.passage.Passage;
-import org.crosswire.jsword.passage.Verse;
+import org.crosswire.jsword.passage.*;
 import org.crosswire.jsword.versification.Testament;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -103,7 +101,7 @@ public class EsvXmlEnhancer {
 
     /**
      * Instantiates a new esv xml enhancer.
-     * 
+     *
      * @param tagging the tagging
      * @param esvText the esv text
      */
@@ -114,7 +112,7 @@ public class EsvXmlEnhancer {
 
     /**
      * The main method.
-     * 
+     *
      * @param args the arguments
      * @throws Exception the exception
      */
@@ -332,8 +330,6 @@ public class EsvXmlEnhancer {
     }
 
     /**
-     * 
-     * 
      * @param wordsFromESV
      * @param firstTag
      * @param taggedText
@@ -399,7 +395,7 @@ public class EsvXmlEnhancer {
     }
 
     private void tagWord(final String taggedText, final Tagging tagData, final Text item,
-            final Remainder remainder) throws AbortTagException {
+                         final Remainder remainder) throws AbortTagException {
 
         if (tagData == null) {
             return;
@@ -414,7 +410,7 @@ public class EsvXmlEnhancer {
         LOGGER.trace("Tagging [{}] with [{}] in tag [{}]", taggedText, tagData, item);
 
         if (tagData.getOriginalTaggedText().equals(tagData.getTaggedText())) {
-            LOGGER.info("{}: Tagging entire tagData item: [{}] for words at position: [{}]",
+            LOGGER.debug("{}: Tagging entire tagData item: [{}] for words at position: [{}]",
                     this.currentVerse, tagData.getTaggedText(), remainder.positionInSourceText);
 
             int finalPosition = 0;
@@ -438,8 +434,11 @@ public class EsvXmlEnhancer {
                 createAndWrapWElement(tagData, item, remainder, wordInDoc);
                 return;
             } else if (textContent.length() > tagData.getTaggedText().length()) {
-                // need to split further
-                wordInDoc.splitText(tagData.getTaggedText().length());
+                // need to split further. - we've preserved spaces but not other punctuation marks
+                // so we need to figure out how many to fast forward...
+                int lengthInDomElement = getLengthInDomWord(textContent, tagData.getTaggedText());
+
+                wordInDoc.splitText(lengthInDomElement);
                 createAndWrapWElement(tagData, item, remainder, wordInDoc);
                 return;
             } else {
@@ -474,6 +473,42 @@ public class EsvXmlEnhancer {
         }
     }
 
+    /**
+     * Gets the corresponding length the tagged text from the point of view of the dom text
+     *
+     * @param textContent the dom text
+     * @param taggedText  the tagged text
+     * @return
+     */
+    int getLengthInDomWord(final String textContent, final String taggedText) {
+        int baseLength = taggedText.length();
+
+        //now we go through textContent and count the number of non alpha-numeric characters
+        int nonAlpha = 0;
+        char previousChar = 'a';
+        for (int ii = 0; ii < baseLength + nonAlpha; ii++) {
+            final char c = textContent.charAt(ii);
+            if (!Character.isLetterOrDigit(c)) {
+                //cater for double-spaces, just in case
+                if (c == ' ') {
+                    if (previousChar == ' ') {
+                        nonAlpha++;
+                    }
+                } else {
+                    //we only add if there is also a space marker/punctuation somewhere afterwards, given we're talking about English punctuation
+                    if(ii+1 < textContent.length() && !Character.isLetterOrDigit(textContent.charAt(ii+1))) {
+                        nonAlpha++;
+                    }
+                }
+
+            }
+            previousChar = c;
+        }
+
+
+        return baseLength + nonAlpha;
+    }
+
     private String getLeftOverText(final String textContent, final String taggedText)
             throws AbortTagException {
         // we're looking for the bit in tagged text that has not yet been tagged
@@ -506,7 +541,7 @@ public class EsvXmlEnhancer {
     }
 
     private void grabMatchingNodes(final List<Node> matchingNodes, final Node wordInDoc,
-            final Tagging tagData, final String textLeftOver) throws AbortTagException {
+                                   final Tagging tagData, final String textLeftOver) throws AbortTagException {
         final String remainingTextLeftOver = textLeftOver;
         final Node nextSibling = getNextSiblingToMatch(matchingNodes, wordInDoc, tagData, textLeftOver);
 
@@ -585,7 +620,7 @@ public class EsvXmlEnhancer {
     }
 
     private Node getNextSiblingToMatch(final List<Node> matchingNodes, final Node wordInDoc,
-            final Tagging tagData, final String textLeftOver) throws AbortTagException {
+                                       final Tagging tagData, final String textLeftOver) throws AbortTagException {
         final Node nextSibling = wordInDoc.getNextSibling();
 
         if (nextSibling == null) {
@@ -602,7 +637,7 @@ public class EsvXmlEnhancer {
     }
 
     private void replaceNodesByParent(final List<Node> matchingNodes, final Node refNode,
-            final Tagging tagData, final String remainingText) throws AbortTagException {
+                                      final Tagging tagData, final String remainingText) throws AbortTagException {
         final Node parentNode = refNode.getParentNode();
         // if (parentNode.getChildNodes().getLength() > matchingNodes.size()) {
         // LOGGER.warn("{}: Impossible tag: Not enough nodes in match for [{}]. Impossible portion is [{}]",
@@ -638,7 +673,7 @@ public class EsvXmlEnhancer {
 
     /**
      * Check is rollable node, rollable if either whitespace or punctuation or ignoreable
-     * 
+     *
      * @param candidate the candidate
      */
     private boolean isRollableNode(final Node candidate) {
@@ -662,8 +697,8 @@ public class EsvXmlEnhancer {
 
     /**
      * Gets the node part.
-     * 
-     * @param nextSibling the next sibling, may get split during the operation
+     *
+     * @param nextSibling  the next sibling, may get split during the operation
      * @param textLeftOver the text left over
      * @return true if we're done, false otherwise
      * @throws AbortTagException the abort tag exception
@@ -716,12 +751,12 @@ public class EsvXmlEnhancer {
     }
 
     private void createAndWrapWElement(final Tagging tagData, final Text item, final Remainder remainder,
-            final Text wordInDoc) {
+                                       final Text wordInDoc) {
         // double check that we're tagging is what's in the word we've selected
         // Several things to think about
         // A- We must check that what we're tagging is the same as what's in the wordInDoc
         if (!equalsIngorePunctuationAndCase(tagData.getTaggedText(), wordInDoc.getTextContent())) {
-            LOGGER.warn("{}: The tagged content [{}] differs from the select portion of the Text node [{}]",
+            LOGGER.warn("{}: The text node content [{}] differs from the tagged data [{}]",
                     this.currentVerse, wordInDoc.getTextContent(), tagData.getTaggedText());
         }
 
@@ -735,19 +770,25 @@ public class EsvXmlEnhancer {
         remainder.advance += tagData.getTaggedText().split(" ").length;
     }
 
-    boolean equalsIngorePunctuationAndCase(final String text1, final String text2) {
-        if (text1.length() != text2.length()) {
-            return false;
-        }
+    boolean equalsIngorePunctuationAndCase(final String taggedText, final String domText) {
+//        if (text1.length() != text2.length()) {
+//            return false;
+//        }
+        int nonAlpha = 0;
 
         // same length, compare char by char
-        for (int ii = 0; ii < text1.length(); ii++) {
-            final char c1 = text1.charAt(ii);
-            final char c2 = text2.charAt(ii);
+        for (int ii = 0; ii < taggedText.length(); ii++) {
+            final char c1 = taggedText.charAt(ii);
+            final char c2 = domText.charAt(ii + nonAlpha);
             if (Character.isLetterOrDigit(c1) && Character.toLowerCase(c1) != Character.toLowerCase(c2)) {
                 return false;
             }
-            // for every other case we basically accept the letters
+
+            // for every other case we basically accept the letters, but we do an extra
+            // ignore for punctuation in the source text if it is followed by a space
+            if(!Character.isLetterOrDigit(c2) && c2 != ' ' && ii+1 < domText.length() && domText.charAt(ii+1) == ' ') {
+                nonAlpha++;
+            }
         }
         return true;
 
@@ -846,12 +887,40 @@ public class EsvXmlEnhancer {
         final long start = System.currentTimeMillis();
 
         final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+
         final DocumentBuilder newDocumentBuilder = factory.newDocumentBuilder();
+
         final Document esv = newDocumentBuilder.parse(this.esvText);
 
         LOGGER.debug("Took [{}]ms to read ESV into Document", System.currentTimeMillis() - start);
         return esv;
     }
+
+//    private <T extends Node> T preProcessTextNodes(final T esv) {
+//        final NodeList childNodes = esv.getChildNodes();
+//
+//        int size = childNodes.getLength();
+//
+//
+//        Node previousTextNode = childNodes.item(0);
+//        for(int i = 1; i < size; i++) {
+//            final Node item = childNodes.item(i);
+//            if(item instanceof Text) {
+//                //warn if the following text node is also text
+//                if(previousTextNode != null) {
+//                    //join two nodes togehter
+//                    LOGGER.error("Two adjancent text nodes!!!");
+//                }
+//                previousTextNode = item;
+//            } else {
+//                if(item.hasChildNodes()) {
+//                    preProcessTextNodes(item);
+//                }
+//                previousTextNode = null;
+//            }
+//        }
+//        return esv;
+//    }
 
     private void cleanupTagging(final List<Tagging> rawTagging) throws Exception {
         for (final Tagging t : rawTagging) {
@@ -918,21 +987,32 @@ public class EsvXmlEnhancer {
             return;
         }
 
-        final Key key = ESV.getKey(reference);
-        t.setRef(key.getOsisID());
+        try {
+            final Key key = ESV.getKey(reference);
+            t.setRef(key.getOsisID());
 
-        Verse v = null;
-        if (key instanceof Passage) {
-            v = (Verse) key.get(0);
-        } else if (key instanceof Verse) {
-            v = (Verse) key;
+            Verse v = null;
+            if (key instanceof Passage) {
+                v = (Verse) key.get(0);
+            } else if (key instanceof Verse) {
+                v = (Verse) key;
+            }
+            final int ordinal = v.getOrdinal();
+            if (v.getVersification().getTestament(ordinal) == Testament.OLD) {
+                prefixStrong(t, 'H');
+            } else {
+                prefixStrong(t, 'G');
+            }
+        } catch (NoSuchVerseException ex) {
+            LOGGER.warn("Unable to recognise [{}] as a reference", reference);
+
+            //deal with 1John
+            if ("3John.3:15".equals(reference)) {
+                t.setRef(reference);
+                prefixStrong(t, 'G');
+            }
         }
-        final int ordinal = v.getOrdinal();
-        if (v.getVersification().getTestament(ordinal) == Testament.OLD) {
-            prefixStrong(t, 'H');
-        } else {
-            prefixStrong(t, 'G');
-        }
+
     }
 
     private void prefixStrong(final Tagging t, final char prefixLetter) {
@@ -949,7 +1029,7 @@ public class EsvXmlEnhancer {
 
     /**
      * Trace log of the tagging
-     * 
+     *
      * @param indexTagging the index tagging
      */
     private void traceLog(final MultiMap<String, Tagging, Deque<Tagging>> indexTagging) {
@@ -979,16 +1059,21 @@ public class EsvXmlEnhancer {
         return map;
     }
 
-    private List<Tagging> readTagging() throws FileNotFoundException {
-        final ColumnPositionMappingStrategy strat = new ColumnPositionMappingStrategy();
-        strat.setType(Tagging.class);
-        final String[] columns = new String[] { "ref", "nonTaggedText", "taggedText", "rawStrongs" };
-        strat.setColumnMapping(columns);
+    private List<Tagging> readTagging() throws IOException {
 
-        final CsvToBean csv = new CsvToBean();
-        final CSVReader reader = new CSVReader(IOUtils.toBufferedReader(new FileReader(this.tagging)), '\t',
-                '@');
-
-        return csv.parse(strat, reader);
+        LOGGER.debug("Reading in CSV file...");
+        List<Tagging> tags = new ArrayList<Tagging>(32000);
+        final List<String> lines = FileUtils.readLines(this.tagging);
+        for (String line : lines) {
+            String[] lineParts = line.split("\\t");
+            Tagging t = new Tagging();
+            if (lineParts.length > 0) t.setRef(lineParts[0]);
+            if (lineParts.length > 1) t.setNonTaggedText(lineParts[1]);
+            if (lineParts.length > 2) t.setTaggedText(lineParts[2]);
+            if (lineParts.length > 3) t.setRawStrongs(lineParts[3]);
+            tags.add(t);
+        }
+        LOGGER.debug("Finished parsing CSV File...");
+        return tags;
     }
 }

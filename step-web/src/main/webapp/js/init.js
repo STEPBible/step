@@ -383,7 +383,7 @@ function initData() {
 	    }
 	    
 	    $.shout("versions-initialisation-completed");
-	    
+        initApp();
 		var passages = initPassages(options);
 		initModules(passages);
 	});

@@ -168,9 +168,6 @@
 								<jsSourceFile>libs/jquery-1.9.1.min.js</jsSourceFile>
 								<jsSourceFile>libs/jquery-ui-1.10.2.custom.min.js</jsSourceFile>
 								<jsSourceFile>libs/sprintf-0.7-beta1.js</jsSourceFile>
-                                <jsSourceFile>libs/underscore-min.js</jsSourceFile>
-                                <jsSourceFile>libs/json2.js</jsSourceFile>
-                                <jsSourceFile>libs/backbone-min.js</jsSourceFile>
 								<!-- <jsSourceFile>libs/jquery.tagcloud.js</jsSourceFile> -->
 								<jsSourceFile>js/jquery-extensions/jquery-qtip.js</jsSourceFile>
 								<jsSourceFile>js/jquery-extensions/jquery-hover-intent.js</jsSourceFile>
@@ -199,12 +196,13 @@
 								<jsSourceFile>js/search/step.search.simpletext.ui.js</jsSourceFile>
 								<jsSourceFile>js/search/step.search.textual.ui.js</jsSourceFile>
 								<jsSourceFile>js/search/step.search.timeline.ui.js</jsSourceFile>
+								<jsSourceFile>js/search/step.search.subject.ui.js</jsSourceFile>
 								<!-- <jsSourceFile>js/search/step.search.personalnotes.ui.js</jsSourceFile> -->
 								<jsSourceFile>js/navigation/step.navigation.js</jsSourceFile>
 								<jsSourceFile>js/state/step.state.js</jsSourceFile>
 								<jsSourceFile>js/state/step.state.browser.js</jsSourceFile>
 								<jsSourceFile>js/state/step.state.view.js</jsSourceFile>
-								<jsSourceFile>js/state/step.state.passage_model.js</jsSourceFile>
+								<jsSourceFile>js/state/step.state.passage.js</jsSourceFile>
 								<jsSourceFile>js/state/step.state.original.js</jsSourceFile>
 								<jsSourceFile>js/menu/step.menu.js</jsSourceFile>
 								<jsSourceFile>js/menu/top/help.js</jsSourceFile>
@@ -216,7 +214,7 @@
 								<jsSourceFile>js/menu/passage/search.js</jsSourceFile>
 								<jsSourceFile>js/passage/step.version.js</jsSourceFile>
 								<jsSourceFile>js/passage/step.alternatives.js</jsSourceFile>
-								<jsSourceFile>js/passage/step.passage_model.js</jsSourceFile>
+								<jsSourceFile>js/passage/step.passage.js</jsSourceFile>
 								<jsSourceFile>js/passage/step.passage.ui.js</jsSourceFile>
 								<jsSourceFile>js/passage/step.passage.navigation.js</jsSourceFile>
 								<jsSourceFile>js/passage/step.passage.navigation.ui.js</jsSourceFile>

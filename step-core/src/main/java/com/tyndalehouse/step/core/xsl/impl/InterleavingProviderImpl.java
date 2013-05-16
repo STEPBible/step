@@ -151,7 +151,7 @@ public class InterleavingProviderImpl implements InterleavingProvider {
     /**
      * @return the versions
      */
-    public String[] getVersions() {
+    String[] getVersions() {
         return this.versions;
     }
 }

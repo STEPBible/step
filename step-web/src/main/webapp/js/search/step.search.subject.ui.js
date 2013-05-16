@@ -26,18 +26,39 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
-$(step.menu).hear("MENU-SEARCH", function(self, menuTrigger) {
-	
-    var advancedSearch = $(".advancedSearch", step.util.getPassageContainer(menuTrigger.passageId));
-	if(menuTrigger.menuItem.name == "ADVANCED_SEARCH") {
-	    step.menu.untickAll(menuTrigger.menu.element, menuTrigger.passageId);
-	    
-	    //we show all sections:
-	    $("fieldset", advancedSearch).show();
-	    step.state.activeSearch(menuTrigger.passageId, "all");
-	    refreshLayout();
-	} else {
-	    step.menu.tickOneItemInMenuGroup(menuTrigger);
-	    step.state.activeSearch(menuTrigger.passageId, menuTrigger.menuItem.name, true);
-	}
+step.search.ui.subject = {
+        evaluateQuerySyntax : function(passageId) {
+           var query = "s=" + $(".subjectText", step.util.getPassageContainer(passageId)).val();
+           
+           step.state.subject.subjectQuerySyntax(passageId, query);
+           
+           return query;
+        }
+};
+
+$(document).ready(function() {
+    var namespace = "subject";
+    step.state.trackState([
+                           ".subjectText",
+                           ".subjectQuerySyntax",
+                           ".subjectPageNumber"
+                           ], namespace);
+
+    step.util.ui.trackQuerySyntax(".subjectSearchTable", namespace);
+   
+    $(".subjectClear").click(function() {
+        //  reset texts
+        var passageId = step.passage.getPassageId(this);
+        step.state.subject.subjectText(passageId, "");
+        step.state.subject.subjectQuerySyntax(passageId, "");
+    });
+
+    
+      step.util.ui.searchButton(".subjectSearch",  'SEARCH_SUBJECT', undefined, function(passageId) {
+          step.search.ui.subject.evaluateQuerySyntax(passageId);
+      });
+});
+
+$(step.search.ui).hear("subject-search-state-has-changed", function(s, data) {
+    step.search.subject.search(data.passageId);
 });

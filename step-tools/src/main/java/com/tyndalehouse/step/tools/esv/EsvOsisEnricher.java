@@ -1,10 +1,15 @@
 package com.tyndalehouse.step.tools.esv;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.*;
+import java.util.Deque;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import javax.xml.transform.Transformer;
@@ -30,8 +35,9 @@ import au.com.bytecode.opencsv.CSVReader;
 
 /**
  * Reads in an xml file and tries to track progress with a tagging sheet, enriching where it can
- *
+ * 
  * @author chrisburrell
+ * 
  */
 public class EsvOsisEnricher {
     private static Pattern PUNCTUATION = Pattern.compile("[,?!./\\-:;'\"—]+");
@@ -84,46 +90,51 @@ public class EsvOsisEnricher {
     }
 
     private void readMappingFile(final File tagging) throws IOException, NoSuchKeyException {
+        CSVReader reader = null;
         final Book b = Books.installed().getBook("ESV");
 
-        List<String> lines = FileUtils.readLines(tagging);
+        try {
+            final FileReader fr = new FileReader(tagging);
+            reader = new CSVReader(fr);
 
-        this.verseContent = new HashMap<String, Deque<Word>>();
-        Deque<Word> currentVerseWords = null;
-        String currentVerse = null;
-        int lineNumber = 1;
-        for (String lineText : lines) {
-            String[] line = lineText.split("\\t");
-            LOGGER.trace("line: {}", line);
-            Word w;
-            if (line.length <= 1) {
-                LOGGER.warn("Blank line found in file, line {}", lineNumber);
-                continue;
-            } else if (line.length == 2) {
-                w = new Word(line[1]);
-            } else {
-                w = new Word(line[1], line[2]);
-            }
-
-            if (!line[0].equalsIgnoreCase(currentVerse)) {
-                LOGGER.trace("New verse {}", line[0]);
-                currentVerseWords = new LinkedList<Word>();
-                try {
-                    this.verseContent.put(b.getKey(getValidOsisRef(line[0])).getOsisID(),
-                            currentVerseWords);
-                } catch (final NoSuchKeyException e) {
-                    LOGGER.warn("[{}]: Failure to resolve verse to OSIS reference.", line[0]);
+            this.verseContent = new HashMap<String, Deque<Word>>();
+            Deque<Word> currentVerseWords = null;
+            String currentVerse = null;
+            String[] line;
+            int lineNumber = 1;
+            while ((line = reader.readNext()) != null) {
+                LOGGER.trace("line: {}", line);
+                Word w;
+                if (line.length <= 1) {
+                    LOGGER.warn("Blank line found in file, line {}", lineNumber);
                     continue;
+                } else if (line.length == 2) {
+                    w = new Word(line[1]);
+                } else {
+                    w = new Word(line[1], line[2]);
                 }
+
+                if (!line[0].equalsIgnoreCase(currentVerse)) {
+                    LOGGER.trace("New verse {}", line[0]);
+                    currentVerseWords = new LinkedList<Word>();
+                    try {
+                        this.verseContent.put(b.getKey(getValidOsisRef(line[0])).getOsisID(),
+                                currentVerseWords);
+                    } catch (final NoSuchKeyException e) {
+                        LOGGER.warn("[{}]: Failure to resolve verse to OSIS reference.", line[0]);
+                        continue;
+                    }
+                }
+
+                LOGGER.trace("Adding word {}", w.getW());
+                currentVerseWords.add(w);
+
+                currentVerse = line[0];
+                lineNumber++;
             }
-
-            LOGGER.trace("Adding word {}", w.getW());
-            currentVerseWords.add(w);
-
-            currentVerse = line[0];
-            lineNumber++;
+        } finally {
+            IOUtils.closeQuietly(reader);
         }
-
     }
 
     private String getValidOsisRef(final String ref) {

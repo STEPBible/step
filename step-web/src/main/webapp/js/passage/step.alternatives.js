@@ -1,5 +1,5 @@
 step.alternatives = {
-        enrichPassage : function(passageId, passageContent, version, reference) {
+        enrichPassage : function(passageId, passageContent) {
             var self = this;
             
             // only do this if we've got a particular parameter set in the URL
@@ -8,12 +8,13 @@ step.alternatives = {
             }
             
             //check version next
+            var version = step.state.passage.version(passageId);
             if(!version || (version.toLowerCase() != "esv" && version.toLowerCase() != "esvex")) {
                 return;
             }
             
             
-            $.getSafe(ALTERNATIVE_TRANSLATIONS + reference, function(data) {
+            $.getSafe(ALTERNATIVE_TRANSLATIONS + step.state.passage.reference(passageId), function(data) {
                 $.each(data.versionVerses, function(v, verse) {
                     // item has reference and options
                     var scope = $(".verse a[name = '" + verse.reference + "']", passageContent).closest(".verse").get(0);
@@ -49,9 +50,21 @@ step.alternatives = {
                             
                             $(".av-" + o, scope).qtip({
                                 content: text,
-                                show: { event : 'mouseenter', solo: true },
-                                hide: { event: 'unfocus mouseleave', fixed: true, delay: 200 },
-                                position : { my: "bottom center", at: "top center", viewport: $(window) },
+                                show: { 
+                                    event : 'mouseenter',
+                                    solo: true
+                                },
+                                hide: { 
+                                    event: 'unfocus mouseleave',
+                                    fixed: true,
+                                    delay: 200
+                                },
+                                
+                                position : {
+                                    my: "bottom center",
+                                    at: "top center",
+                                    viewport: $(window),
+                                },
                                 events : {
                                     visible : function(event, api) {
                                         $("a.alt-" + o).click(function(event) {

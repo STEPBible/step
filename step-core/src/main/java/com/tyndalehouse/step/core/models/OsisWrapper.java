@@ -56,7 +56,9 @@ public class OsisWrapper implements Serializable {
     private boolean multipleRanges;
     private int startRange;
     private int endRange;
-    private final String[] languageCode;
+    private final String languageCode;
+    private boolean containsGreek = false;
+    private boolean containsHebrew = false;
     private final String longName;
     private Map<String, List<LexiconSuggestion>> strongNumbers;
 
@@ -68,7 +70,7 @@ public class OsisWrapper implements Serializable {
      * @param languageCode the ISO language code
      * @param v11n the versification system used
      */
-    public OsisWrapper(final String value, final Key key, final String[] languageCode, final Versification v11n) {
+    public OsisWrapper(final String value, final Key key, final String languageCode, final Versification v11n) {
         this.value = value;
         this.reference = key.getName();
         this.longName = HeadingsUtil.getLongHeader(v11n, key);
@@ -163,7 +165,7 @@ public class OsisWrapper implements Serializable {
     /**
      * @return the languageCode
      */
-    public String[] getLanguageCode() {
+    public String getLanguageCode() {
         return this.languageCode;
     }
 
@@ -179,6 +181,34 @@ public class OsisWrapper implements Serializable {
      */
     public void setOsisId(final String osisId) {
         this.osisId = osisId;
+    }
+
+    /**
+     * @return the containsGreek
+     */
+    public boolean isContainsGreek() {
+        return this.containsGreek;
+    }
+
+    /**
+     * @param containsGreek the containsGreek to set
+     */
+    public void setContainsGreek(final boolean containsGreek) {
+        this.containsGreek = containsGreek;
+    }
+
+    /**
+     * @return the containsHebrew
+     */
+    public boolean isContainsHebrew() {
+        return this.containsHebrew;
+    }
+
+    /**
+     * @param containsHebrew the containsHebrew to set
+     */
+    public void setContainsHebrew(final boolean containsHebrew) {
+        this.containsHebrew = containsHebrew;
     }
 
     /**

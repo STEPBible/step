@@ -1,7 +1,7 @@
 var hearingFilteredComplete = false;
 
 step.autoVersions = {
-    currentElement : undefined
+    currentElement : undefined,
 };
 
 $.widget("custom.versions",  {

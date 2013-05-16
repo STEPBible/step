@@ -42,8 +42,6 @@ import static com.tyndalehouse.step.core.models.LookupOption.NOTES;
 import static com.tyndalehouse.step.core.models.LookupOption.TRANSLITERATION;
 import static com.tyndalehouse.step.core.models.LookupOption.VERSE_NUMBERS;
 import static com.tyndalehouse.step.core.utils.JSwordUtils.getSortedSerialisableList;
-import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
-import static com.tyndalehouse.step.core.utils.StringUtils.isEmpty;
 import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
 
 import java.util.ArrayList;
@@ -228,7 +226,7 @@ public class BibleInformationServiceImpl implements BibleInformationService {
      * @return returns NONE if null, or the value of String as a InterlinearMode enumeration.
      */
     private InterlinearMode getDisplayMode(final String interlinearMode) {
-        return isBlank(interlinearMode) ? NONE : InterlinearMode.valueOf(interlinearMode);
+        return interlinearMode == null ? NONE : InterlinearMode.valueOf(interlinearMode);
     }
 
     /**

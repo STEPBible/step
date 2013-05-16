@@ -131,23 +131,8 @@ public class BibleController {
     }
 
     /**
-     * a REST method that returns Bible Text
-     *
-     * @param version the initials identifying the version
-     * @param reference the reference to lookup
-     * @param options a list of options to be passed in
-     * @param interlinearVersion the interlinear version if provided adds lines under the text
-     * @return the text to be displayed, formatted as HTML
-     */
-    @Cacheable(true)
-    public OsisWrapper getBibleText(final String version, final String reference, final String options,
-                                    final String interlinearVersion) {
-        return getBibleText(version, reference, options, interlinearVersion, null);
-    }
-
-    /**
      * a REST method that returns.
-     *
+     * 
      * @param version the initials identifying the version
      * @param reference the reference to lookup
      * @param options a list of options to be passed in
@@ -158,15 +143,13 @@ public class BibleController {
     @Cacheable(true)
     @Timed(name = "getText", rateUnit = TimeUnit.SECONDS, durationUnit = TimeUnit.MILLISECONDS)
     public OsisWrapper getBibleText(final String version, final String reference, final String options,
-                                    final String interlinearVersion, final String interlinearMode) {
+            final String interlinearVersion, final String interlinearMode) {
         notEmpty(version, "bible_required", USER_MISSING_FIELD);
         notEmpty(reference, "reference_required", USER_MISSING_FIELD);
 
         return this.bibleInformation.getPassageText(version, reference, options, interlinearVersion,
                 interlinearMode);
     }
-
-
 
     /**
      * Looks up the bible text by verse numbers, mostly used for continuous scrolling.

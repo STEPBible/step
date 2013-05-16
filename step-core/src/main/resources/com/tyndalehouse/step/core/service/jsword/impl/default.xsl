@@ -515,11 +515,11 @@
         <xsl:when test="name($siblings[$next-position]) = 'note'">
         	<xsl:choose>
         		<xsl:when test="@type = 'crossReference'">
-		           <sup class="note"><a href="javascript:void(0)" noteType='{@type}' xref="{@osisID}" ref="{@osisRef}"><xsl:call-template name="generateNoteXref"/></a>, </sup>
+		           <sup class="note"><a href="#" noteType='{@type}' xref="{@osisID}" ref="{@osisRef}"><xsl:call-template name="generateNoteXref"/></a>, </sup>
         		</xsl:when>
 	    		<xsl:otherwise>
 					 <sup class="note">
-					 	<a href="javascript:void(0)" noteType='{@type}' xref="{@osisID}" ref="{@osisRef}">
+					 	<a href="#" noteType='{@type}' xref="{@osisID}" ref="{@osisRef}">
 					 		<xsl:call-template name="generateNoteXref"/>
 					 	</a>
 				 		<span class="inlineNote"><xsl:apply-templates select="." mode="print-notes" /></span>
@@ -530,11 +530,11 @@
         <xsl:otherwise>
         	<xsl:choose>
         		<xsl:when test="@type = 'crossReference'">
-		           <sup class="note"><a href="javascript:void(0)" noteType='{@type}' xref="{@osisID}" ref="{@osisRef}"><xsl:call-template name="generateNoteXref"/></a></sup>
+		           <sup class="note"><a href="#" noteType='{@type}' xref="{@osisID}" ref="{@osisRef}"><xsl:call-template name="generateNoteXref"/></a></sup>
         		</xsl:when>
         		<xsl:otherwise>
 					 <sup class="note">
-					 	<a href="javascript:void(0)" noteType='{@type}' xref="{@osisID}" ref="{@osisRef}">
+					 	<a href="#" noteType='{@type}' xref="{@osisID}" ref="{@osisRef}">
 					 		<xsl:call-template name="generateNoteXref"/>
 					 	</a>
 				 		<span class="inlineNote"><xsl:apply-templates select="." mode="print-notes" /></span>
@@ -555,11 +555,11 @@
         <xsl:when test="name($siblings[$next-position]) = 'note'">
         	<xsl:choose>
         		<xsl:when test="@type = 'crossReference'">
-		           <sup class="note"><a href="javascript:void(0)" noteType='{@type}' xref="{@osisID}" ref="{@osisRef}"><xsl:call-template name="generateNoteXref"/></a>, </sup>
+		           <sup class="note"><a href="#" noteType='{@type}' xref="{@osisID}" ref="{@osisRef}"><xsl:call-template name="generateNoteXref"/></a>, </sup>
         		</xsl:when>
 	    		<xsl:otherwise>
 					 <sup class="note">
-					 	<a href="javascript:void(0)" noteType='{@type}' xref="{@osisID}" ref="{@osisRef}">
+					 	<a href="#" noteType='{@type}' xref="{@osisID}" ref="{@osisRef}">
 					 		<xsl:call-template name="generateNoteXref"/>
 					 	</a>
 				 		<span class="inlineNote"><xsl:apply-templates select="." mode="print-notes" /></span>
@@ -570,11 +570,11 @@
         <xsl:otherwise>
         	<xsl:choose>
         		<xsl:when test="@type = 'crossReference'">
-		           <sup class="note"><a href="javascript:void(0)" noteType='{@type}' xref="{@osisID}" ref="{@osisRef}"><xsl:call-template name="generateNoteXref"/></a></sup>
+		           <sup class="note"><a href="#" noteType='{@type}' xref="{@osisID}" ref="{@osisRef}"><xsl:call-template name="generateNoteXref"/></a></sup>
         		</xsl:when>
         		<xsl:otherwise>
 					 <sup class="note">
-					 	<a href="javascript:void(0)" noteType='{@type}' xref="{@osisID}" ref="{@osisRef}">
+					 	<a href="#" noteType='{@type}' xref="{@osisID}" ref="{@osisRef}">
 					 		<xsl:call-template name="generateNoteXref"/>
 					 	</a>
 				 		<span class="inlineNote"><xsl:apply-templates select="." mode="print-notes" /></span>

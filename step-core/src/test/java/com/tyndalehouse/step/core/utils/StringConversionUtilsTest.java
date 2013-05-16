@@ -281,7 +281,7 @@ public class StringConversionUtilsTest {
         assertEquals("ben", outputAndTestTransliterate("בֵּ֥ין"));
         assertEquals("hay.yom", outputAndTestTransliterate("הַיּ֖וֹם"));
         assertEquals("u.ven", outputAndTestTransliterate("וּבֵ֣ין"));
-        assertEquals("hal.lay.lah", outputAndTestTransliterate("הַלָּ֑יְלָה"));
+        assertEquals("hal.la.ye.lah", outputAndTestTransliterate("הַלָּ֑יְלָה"));
         assertEquals("cha.va.ah", outputAndTestTransliterate("חַבַהַ"));
         assertEquals("a.va.a", outputAndTestTransliterate("עַבַעַ"));
         assertEquals("ha.va.ah", outputAndTestTransliterate("הַבַהַ"));
@@ -300,6 +300,7 @@ public class StringConversionUtilsTest {
         assertEquals("ben-am.mi", outputAndTestTransliterate("בֶּן־עַמִּי"));
         assertEquals("ru.ach", outputAndTestTransliterate("רוּחַ"));
         assertEquals("mal.ki", outputAndTestTransliterate("מַלְכִּ֥י"));
+        assertEquals("mish.pe.chot", outputAndTestTransliterate("מִשְׁפְּחֹת"));
     }
 
     /**

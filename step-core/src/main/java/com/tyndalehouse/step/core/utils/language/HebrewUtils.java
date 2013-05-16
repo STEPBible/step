@@ -374,6 +374,11 @@ public final class HebrewUtils {
      */
     private static void firstPass(final HebrewLetter[] letters, final char[] input) {
         for (int ii = 0; ii < letters.length; ii++) {
+            //ignore the SHIN DOT
+            if(letters[ii].getC() == SHIN_DOT) {
+                continue;
+            }
+
             if (HebrewLetterType.ACCENT.equals(letters[ii].getHebrewLetterType())) {
                 // StringConversionUtils.
                 //
@@ -426,8 +431,9 @@ public final class HebrewUtils {
             } else if (letters[ii].getC() == SHEVA) {
                 if (!isLastLetterInWord(input, ii)
                         && (previousConsonantPosition == 0 ||
-                        letters[previousConsonantPosition].isDoubled() ||
-                        isAfterLongUnstressedVowel(letters, previousConsonantPosition))
+                        !letters[previousConsonantPosition].hasNoDagesh() ||
+                        isAfterLongUnstressedVowel(letters, previousConsonantPosition) ||
+                        hasAnyPointing(input, previousConsonantPosition, true, SHEVA))
                         && !isAfterShortUnstressedVowel(letters, previousConsonantPosition)) {
                     letters[ii].setSoundingType(SoundingType.SOUNDING);
 
@@ -731,6 +737,7 @@ public final class HebrewUtils {
 
     /**
      * Checks whether the letter is the last Hebrew letter in a word, doesn't check past a MAQAF
+     *
      * @param letters  the set of letters
      * @param position our current position
      * @return true if it last without vowel, false if it's last with vowel OR not last consonant
@@ -751,8 +758,9 @@ public final class HebrewUtils {
 
     /**
      * Looks until the end of the word, and stops early if it hits a MAQAF (hebrew hyphen).
+     *
      * @param letters the hebrew letters
-     * @param ii the current position in the (usually) loop
+     * @param ii      the current position in the (usually) loop
      * @return true if we should continue
      */
     private static boolean untilEndOfWord(final HebrewLetter[] letters, final int ii) {
@@ -761,6 +769,7 @@ public final class HebrewUtils {
 
     /**
      * Checks whether it is the last hebrew consonant up to a MAQAF
+     *
      * @param letters  the set of letters
      * @param position our current position
      * @return true if no other consonants are found after the position
@@ -851,15 +860,15 @@ public final class HebrewUtils {
      * @return true if after a long unstressed vowel
      */
     private static boolean isAfterAnUnstressedVowel(final HebrewLetter[] letters,
-                                                      final int consonantPosition, boolean lookingForLong) {
+                                                    final int consonantPosition, boolean lookingForLong) {
         // look for first letter we have
         int ii = consonantPosition - 1;
 
         while (ii >= 0 && !letters[ii].isConsonant()) {
-            boolean isCorrectLength = lookingForLong ? letters[ii].isLong() : !letters[ii].isLong();
+            boolean isCorrectLength = lookingForLong ? letters[ii].isLong() : letters[ii].getVowelLengthType() == VowelLengthType.SHORT;
+            boolean isSheva = letters[ii].getC() == SHEVA;
 
-            if ((letters[ii].isVowel() && isCorrectLength && !letters[ii].isStressed())
-                    || letters[ii].getC() == SHEVA) {
+            if ((letters[ii].isVowel() && isCorrectLength && !letters[ii].isStressed())) {
                 return true;
             }
 
@@ -936,7 +945,7 @@ public final class HebrewUtils {
      * @return true to indicate a vowel
      */
     private static boolean isHebrewVowel(final char c) {
-        return c >= SHEVA && c <= QAMATS_QATAN && c != DAGESH;
+        return c >= SHEVA && c <= QAMATS_QATAN && c != DAGESH && c != SHIN_DOT;
     }
 
     /**

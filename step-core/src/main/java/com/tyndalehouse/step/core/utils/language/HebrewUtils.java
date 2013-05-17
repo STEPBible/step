@@ -259,11 +259,13 @@ public final class HebrewUtils {
             firstPass(letters, input);
             secondPass(letters, input);
 
+
+            String transliteration = transliterate(letters);
             if (LOGGER.isTraceEnabled()) {
-                outputAnalysis(letters);
+                outputAnalysis(letters, inputString, transliteration);
             }
 
-            return transliterate(letters);
+            return transliteration;
             // CHECKSTYLE:OFF
         } catch (final RuntimeException ex) {
             // output the error analysis
@@ -354,8 +356,12 @@ public final class HebrewUtils {
      * Outputs the analysis at trace level
      *
      * @param letters the list of letters
+     * @param inputString the string to be transliterated
+     * @param transliteration the transliteration of these letters
      */
-    private static void outputAnalysis(final HebrewLetter[] letters) {
+    private static void outputAnalysis(final HebrewLetter[] letters, final String inputString, final String transliteration) {
+        LOGGER.trace("**********************************");
+        LOGGER.trace("ANALYSIS FOR: [{}] => [{}]", inputString, transliteration);
         for (final HebrewLetter hl : letters) {
             LOGGER.trace("{}", hl.getC());
             LOGGER.trace(
@@ -364,6 +370,7 @@ public final class HebrewUtils {
                     hl.getConsonantType(), hl.getVowelLengthType(), hl.getVowelStressType(),
                     hl.getSoundingType());
         }
+        LOGGER.trace("**********************************");
     }
 
     /**

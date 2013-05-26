@@ -324,12 +324,21 @@ var PassageDisplayView = Backbone.View.extend({
         });
     },
 
+    /**
+     * Enhances verse numbers with their counts and related subjects popup
+     * @param passageId
+     * @param passageContent
+     * @param options
+     * @param interlinearMode
+     * @param reference
+     * @private
+     */
     _doVerseNumbers : function(passageId, passageContent, options, interlinearMode, reference) {
         //if interleaved mode or column mode, then we want this to continue
         //if no options, or no verse numbers, then exit
         var hasVerseNumbersByDefault = interlinearMode != undefined && interlinearMode != "" && interlinearMode != 'INTERLINEAR';
 
-        if(options == undefined || (options.indexOf("VERSE_NUMBERS") == -1 && !hasVerseNumbersByDefault)) {
+        if(options == undefined || (options.indexOf("V") == -1 && !hasVerseNumbersByDefault)) {
             //nothing to do:
             return;
         }
@@ -625,5 +634,5 @@ var PassageDisplayView = Backbone.View.extend({
                 }
             }
         }
-    },
+    }
 });

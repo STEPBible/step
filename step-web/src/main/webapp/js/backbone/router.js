@@ -248,7 +248,7 @@ var StepRouter = Backbone.Router.extend({
         PassageModels.at(passageId).save({
             version: version,
             reference: reference,
-            options: options.split(),
+            options: options.split(""),
             interlinearMode: interlinearMode,
             extraVersions: extraVersions,
             detailLevel: detail

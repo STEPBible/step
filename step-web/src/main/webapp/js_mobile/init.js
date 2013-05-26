@@ -94,19 +94,19 @@ function updatePassageView() {
 	var url = BIBLE_GET_BIBLE_TEXT + version + "/" + passage + "/";
 
 	if (state.headings) {
-		url += "HEADINGS,";
+		url += "H";
 	}
 
 	if (state.verseNumbers) {
-		url += "VERSE_NUMBERS,";
+		url += "V";
 	}
 
 	if (state.strongs) {
-		url += "STRONG_NUMBERS,";
+		url += "E";
 	}
 
 	if (state.morphs) {
-		url += "MORPHOLOGY,";
+		url += "M";
 	}
 	
 	$.get(url, function(text) {

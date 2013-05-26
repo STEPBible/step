@@ -50,11 +50,11 @@ step.defaults = {
     passages : [{
             version : 'KJV',
             reference : 'Mat 1',
-            options : ["HEADINGS", "VERSE_NUMBERS", "NOTES"]
+            options : ["H", "V", "N"]
         }, {
             version : 'ESV',
             reference : 'Gen 1',
-            options : ["HEADINGS", "VERSE_NUMBERS", "NOTES"]
+            options : ["H", "V", "N"]
         }
     ],
     passage : {

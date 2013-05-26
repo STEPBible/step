@@ -7,7 +7,7 @@ var PassageModel = Backbone.Model.extend({
                 extraVersions: [],
                 interlinearMode: "NONE",
                 detailLevel: 0,
-                options: ["NOTES", "HEADINGS", "VERSE_NUMBERS"]
+                options: ["N", "H", "V"]
             }
         },
 
@@ -177,7 +177,7 @@ var PassageModel = Backbone.Model.extend({
             var interlinearMode = this.get("interlinearMode") || "";
 
             var url = [this.get("passageId"), "passage", this.get("detailLevel"), this.get("version"), this.get("reference"),
-                options.join(), extraVersions.join(), interlinearMode];
+                options.join(""), extraVersions.join(), interlinearMode];
 
             //pop off the bits that aren't used...
             var urlTokens = url.length;

@@ -256,17 +256,14 @@ public class BibleInformationServiceImpl implements BibleInformationService {
      * @return a list of {@link LookupOption}
      */
     private List<LookupOption> getLookupOptions(final String options) {
-        String[] userOptions = null;
-        if (isNotBlank(options)) {
-            userOptions = options.split(VERSION_SEPARATOR);
+        final List<LookupOption> lookupOptions = new ArrayList<LookupOption>();
+
+        if(isBlank(options)) {
+            return lookupOptions;
         }
 
-        final List<LookupOption> lookupOptions = new ArrayList<LookupOption>();
-        if (userOptions != null) {
-            for (final String o : userOptions) {
-
-                lookupOptions.add(LookupOption.valueOf(o.toUpperCase(Locale.ENGLISH)));
-            }
+        for(int ii = 0; ii < options.length(); ii++) {
+            lookupOptions.add(LookupOption.fromUiOption(options.charAt(ii)));
         }
         return lookupOptions;
     }

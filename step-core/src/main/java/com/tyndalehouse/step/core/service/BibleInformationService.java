@@ -87,7 +87,7 @@ public interface BibleInformationService {
      * @param endVerseId the end of the passage, as a numeral
      * @param lookupOptions options to set for retrieval
      * @param interlinearVersion version to use as the interlinear
-     * @param round TODO
+     * @param round true to round the passage up/down
      * @return the HTML string passed back for consumption
      */
     OsisWrapper getPassageText(String version, int startVerseId, int endVerseId, String lookupOptions,

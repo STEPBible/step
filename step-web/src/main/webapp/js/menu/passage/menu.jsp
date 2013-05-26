@@ -16,16 +16,16 @@
 <ul class="paneMenuBar">
 	<li menu-name="DISPLAY"><a href="javascript:void(0)" menu-name="DISPLAY"><fmt:message key="display" /></a>
 	<ul>
-		<li><a href="javascript:void(0)" name="HEADINGS" ><fmt:message key="display_headings" /></a></li>
-		<li><a href="javascript:void(0)" name="VERSE_NUMBERS"><fmt:message key="display_verseNumbers" /></a></li>
-		<li><a href="javascript:void(0)" name="VERSE_NEW_LINE"><fmt:message key="display_separateLines" /></a>
-		<li><a href="javascript:void(0)" name="RED_LETTER"><fmt:message key="display_redLetter" /></a></li>
-		<li><a href="javascript:void(0)" name="NOTES"><fmt:message key="display_notes" /></a></li>
-		<li><a href="javascript:void(0)" name="ENGLISH_VOCAB"><fmt:message key="display_englishVocab" /></a></li>
-		<li><a href="javascript:void(0)" name="GREEK_VOCAB"><fmt:message key="display_greekVocab" /></a></li>
-<%-- 		<li><a href="javascript:void(0)" name="TRANSLITERATION"><fmt:message key="display_transliteration" /></a></li> --%>
-		<li><a href="javascript:void(0)" name="MORPHOLOGY"><fmt:message key="display_grammar" /></a></li>
-		<li><a href="javascript:void(0)" name="COLOUR_CODE" ><fmt:message key="display_grammarColor" /></a></li>
+		<li><a href="javascript:void(0)" name="H" ><fmt:message key="display_headings" /></a></li>
+		<li><a href="javascript:void(0)" name="V"><fmt:message key="display_verseNumbers" /></a></li>
+		<li><a href="javascript:void(0)" name="L"><fmt:message key="display_separateLines" /></a>
+		<li><a href="javascript:void(0)" name="R"><fmt:message key="display_redLetter" /></a></li>
+		<li><a href="javascript:void(0)" name="N"><fmt:message key="display_notes" /></a></li>
+		<li><a href="javascript:void(0)" name="E"><fmt:message key="display_englishVocab" /></a></li>
+		<li><a href="javascript:void(0)" name="A"><fmt:message key="display_greekVocab" /></a></li>
+<%-- 		<li><a href="javascript:void(0)" name="T"><fmt:message key="display_transliteration" /></a></li> --%>
+		<li><a href="javascript:void(0)" name="M"><fmt:message key="display_grammar" /></a></li>
+		<li><a href="javascript:void(0)" name="C" ><fmt:message key="display_grammarColor" /></a></li>
 	</ul>
 	</li>
 <!-- 	<li  menu-name="CONTEXT"><a href="javascript:void(0)">Context</a> -->

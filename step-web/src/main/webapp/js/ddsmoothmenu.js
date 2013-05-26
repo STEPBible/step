@@ -33,8 +33,8 @@ var ddsmoothmenu = {
         offsety : 5
     }, // enable shadow?
     showhidedelay : {
-        showdelay : 100,
-        hidedelay : 200
+        showdelay : 150,
+        hidedelay : 500
     }, // set delay in milliseconds before sub menus appear and disappear,
         // respectively
 

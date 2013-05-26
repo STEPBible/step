@@ -1,11 +1,11 @@
 /*******************************************************************************
  * Copyright (c) 2012, Directors of the Tyndale STEP Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without 
  * modification, are permitted provided that the following conditions 
  * are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright 
  * notice, this list of conditions and the following disclaimer.
  * Redistributions in binary form must reproduce the above copyright 
@@ -16,7 +16,7 @@
  * nor the names of its contributors may be used to endorse or promote 
  * products derived from this software without specific prior written 
  * permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
@@ -39,6 +39,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.google.inject.Injector;
 import com.tyndalehouse.step.core.models.ClientSession;
+import com.tyndalehouse.step.core.utils.StringUtils;
 
 /**
  * The Class AbstractSearchStepRequest.
@@ -49,9 +50,9 @@ public abstract class AbstractSearchStepRequest extends WebStepRequest {
 
     /**
      * Instantiates a new abstract search step request.
-     * 
+     *
      * @param injector the injector
-     * @param request the request
+     * @param request  the request
      */
     public AbstractSearchStepRequest(final Injector injector, final HttpServletRequest request) {
         super(injector, request);
@@ -60,10 +61,10 @@ public abstract class AbstractSearchStepRequest extends WebStepRequest {
 
     /**
      * Adds the row.
-     * 
-     * @param rows the rows
+     *
+     * @param rows  the rows
      * @param basic the basic
-     * @param args the args
+     * @param args  the args
      * @param level the level
      */
     private void addRow(final StringBuilder rows, final String basic, final Object[] args, final int level) {
@@ -86,9 +87,9 @@ public abstract class AbstractSearchStepRequest extends WebStepRequest {
 
     /**
      * Adds a line at a time
-     * 
-     * @param rows the rows
-     * @param level the level
+     *
+     * @param rows   the rows
+     * @param level  the level
      * @param format the format
      */
     private void addLine(final StringBuilder rows, final int level, final String format) {
@@ -97,8 +98,26 @@ public abstract class AbstractSearchStepRequest extends WebStepRequest {
         rows.append("<tr level='");
         rows.append(level);
         rows.append("'>");
-        for (final String cell : splitForm) {
-            rows.append("<td>");
+
+        for (int ii = 0; ii < splitForm.length; ii++) {
+            final String cell = splitForm[ii];
+            if (StringUtils.isBlank(cell)) {
+                continue;
+            }
+
+            int jj = ii + 1;
+            while (jj++ < splitForm.length && StringUtils.isBlank(splitForm[ii + 1])) {
+                //then we continue
+            }
+
+            int colspan = jj - ii;
+            if (colspan > 1) {
+                rows.append("<td colspan='");
+                rows.append(colspan);
+                rows.append("'>");
+            } else {
+                rows.append("<td>");
+            }
             rows.append(cell);
             rows.append("</td>");
         }
@@ -107,7 +126,7 @@ public abstract class AbstractSearchStepRequest extends WebStepRequest {
 
     /**
      * Gets the simple search.
-     * 
+     *
      * @return the simple search
      */
     public String getSearch() {
@@ -125,22 +144,22 @@ public abstract class AbstractSearchStepRequest extends WebStepRequest {
     /**
      * Localizes Object[] such that the first term is replaced with the internationalised version of the
      * second term
-     * 
+     *
      * @param bundle the bundle
-     * @param lines the lines
+     * @param lines  the lines
      */
     protected void localize(final ResourceBundle bundle, final Object[][] lines) {
         for (int ii = 0; ii < lines.length; ii++) {
             if (lines[ii].length == 2) {
-                lines[ii] = new Object[] { String.format((String) lines[ii][0],
-                        bundle.getString((String) lines[ii][1])) };
+                lines[ii] = new Object[]{String.format((String) lines[ii][0],
+                        bundle.getString((String) lines[ii][1]))};
             }
         }
     }
 
     /**
      * Gets the values.
-     * 
+     *
      * @return the values
      */
     abstract Object[][] getValues();

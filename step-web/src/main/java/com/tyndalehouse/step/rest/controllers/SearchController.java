@@ -126,7 +126,7 @@ public class SearchController {
     }
 
     /**
-     * opposite of @link {@link SearchController.restoreSearchQuery}
+     * opposite of @link {@link SearchController#restoreSearchQuery}
      * 
      * @param searchQuery a query
      * @return the undone version

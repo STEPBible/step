@@ -95,7 +95,7 @@ public class SiteMapController extends HttpServlet {
     protected void doGet(final HttpServletRequest req, final HttpServletResponse response)
             throws ServletException, IOException {
         if (this.stepBase == null) {
-            this.stepBase = "http://www.stepbible.com/";
+            this.stepBase = "http://www.stepbible.org/";
         }
 
         // response.setContentType("application/x-gzip");

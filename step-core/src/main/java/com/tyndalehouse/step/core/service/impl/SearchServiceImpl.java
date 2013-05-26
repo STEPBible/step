@@ -1,11 +1,11 @@
 /*******************************************************************************
  * Copyright (c) 2012, Directors of the Tyndale STEP Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without 
  * modification, are permitted provided that the following conditions 
  * are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright 
  * notice, this list of conditions and the following disclaimer.
  * Redistributions in binary form must reproduce the above copyright 
@@ -16,7 +16,7 @@
  * nor the names of its contributors may be used to endorse or promote 
  * products derived from this software without specific prior written 
  * permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
@@ -55,6 +55,7 @@ import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import com.tyndalehouse.step.core.models.search.*;
 import org.apache.lucene.queryParser.MultiFieldQueryParser;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.queryParser.QueryParser;
@@ -71,12 +72,6 @@ import com.tyndalehouse.step.core.data.EntityManager;
 import com.tyndalehouse.step.core.exceptions.TranslatedException;
 import com.tyndalehouse.step.core.models.LexiconSuggestion;
 import com.tyndalehouse.step.core.models.OsisWrapper;
-import com.tyndalehouse.step.core.models.search.KeyedSearchResultSearchEntry;
-import com.tyndalehouse.step.core.models.search.KeyedVerseContent;
-import com.tyndalehouse.step.core.models.search.SearchEntry;
-import com.tyndalehouse.step.core.models.search.SearchResult;
-import com.tyndalehouse.step.core.models.search.TimelineEventSearchEntry;
-import com.tyndalehouse.step.core.models.search.VerseSearchEntry;
 import com.tyndalehouse.step.core.service.SearchService;
 import com.tyndalehouse.step.core.service.TimelineService;
 import com.tyndalehouse.step.core.service.helpers.GlossComparator;
@@ -90,15 +85,18 @@ import com.tyndalehouse.step.core.utils.StringUtils;
 
 /**
  * A federated search service implementation. see {@link SearchService}
- * 
+ *
  * @author chrisburrell
- * 
  */
 @Singleton
 public class SearchServiceImpl implements SearchService {
-    /** value representing a vocabulary sort */
+    /**
+     * value representing a vocabulary sort
+     */
     public static final String VOCABULARY_SORT = "VOCABULARY";
-    /** value representing a original spelling sort */
+    /**
+     * value representing a original spelling sort
+     */
     public static final Object ORIGINAL_SPELLING_SORT = "ORIGINAL_SPELLING";
 
     private static final String BASE_GREEK_VERSION = "WHNU";
@@ -114,16 +112,16 @@ public class SearchServiceImpl implements SearchService {
     private final SubjectSearchService subjects;
 
     /**
-     * @param jsword used to convert references to numerals, etc.
-     * @param timeline the timeline service
-     * @param jswordSearch the search service
+     * @param jsword        used to convert references to numerals, etc.
+     * @param timeline      the timeline service
+     * @param jswordSearch  the search service
      * @param entityManager the manager for all entities stored in lucene
-     * @param subjects the service that executes Subject searches
+     * @param subjects      the service that executes Subject searches
      */
     @Inject
     public SearchServiceImpl(final JSwordSearchService jswordSearch, final JSwordPassageService jsword,
-            final SubjectSearchService subjects, final TimelineService timeline,
-            final EntityManager entityManager) {
+                             final SubjectSearchService subjects, final TimelineService timeline,
+                             final EntityManager entityManager) {
         this.jswordSearch = jswordSearch;
         this.jsword = jsword;
         this.subjects = subjects;
@@ -162,7 +160,7 @@ public class SearchServiceImpl implements SearchService {
 
     /**
      * Carries out the required search
-     * 
+     *
      * @param sq the sq
      * @return the search result
      */
@@ -197,8 +195,8 @@ public class SearchServiceImpl implements SearchService {
 
     /**
      * We may have a special type of sort to operate
-     * 
-     * @param sq the search query
+     *
+     * @param sq     the search query
      * @param result the result to be sorted
      */
     private void specialSort(final SearchQuery sq, final SearchResult result) {
@@ -217,13 +215,13 @@ public class SearchServiceImpl implements SearchService {
     /**
      * For this kind of sort, we find out which strong number is present in a verse, then run a comparator on
      * the strong numbers sorts results by strong number
-     * 
-     * @param sq the search criteria
-     * @param result results
+     *
+     * @param sq         the search criteria
+     * @param result     results
      * @param comparator the comparator to use to sort the strong numbers
      */
     private void sortByStrongNumber(final SearchQuery sq, final SearchResult result,
-            final Comparator<? super EntityDoc> comparator) {
+                                    final Comparator<? super EntityDoc> comparator) {
         // sq should have the strong numbers, if we're doing this kind of sort
         List<EntityDoc> strongNumbers = sq.getDefinitions();
         if (strongNumbers == null) {
@@ -234,9 +232,9 @@ public class SearchServiceImpl implements SearchService {
 
         final Set<String> strongs = new HashSet<String>(result.getStrongHighlights());
         final List<SearchEntry> entries = result.getResults();
-        final List<SearchEntry> noOrder = new ArrayList<SearchEntry>(0);
+        final List<LexicalSearchEntry> noOrder = new ArrayList<LexicalSearchEntry>(0);
 
-        final Map<String, List<VerseSearchEntry>> keyedOrder = new HashMap<String, List<VerseSearchEntry>>(
+        final Map<String, List<LexicalSearchEntry>> keyedOrder = new HashMap<String, List<LexicalSearchEntry>>(
                 strongs.size());
 
         extractAllStrongNumbers(strongs, entries, noOrder, keyedOrder);
@@ -249,7 +247,7 @@ public class SearchServiceImpl implements SearchService {
         strongNumbers = filterDefinitions(sq, strongNumbers);
 
         // now we have sorted definitions, we need to rebuild the search result
-        final List<SearchEntry> newOrder = rebuildSearchResults(strongNumbers, keyedOrder);
+        final List<LexicalSearchEntry> newOrder = rebuildSearchResults(strongNumbers, keyedOrder);
 
         final String[] filter = sq.getCurrentSearch().getOriginalFilter();
         if (filter == null || filter.length == 0) {
@@ -260,19 +258,19 @@ public class SearchServiceImpl implements SearchService {
 
     /**
      * Takes a new order and rebuilds a list of search results
-     * 
+     *
      * @param lexiconDefinitions the strong numbers, ordered
-     * @param keyedOrder the set of results to be re-ordered
+     * @param keyedOrder         the set of results to be re-ordered
      * @return a new list of results, now ordered
      */
-    private List<SearchEntry> rebuildSearchResults(final List<EntityDoc> lexiconDefinitions,
-            final Map<String, List<VerseSearchEntry>> keyedOrder) {
-        final List<SearchEntry> newOrder = new ArrayList<SearchEntry>();
+    private List<LexicalSearchEntry> rebuildSearchResults(final List<EntityDoc> lexiconDefinitions,
+                                                   final Map<String, List<LexicalSearchEntry>> keyedOrder) {
+        final List<LexicalSearchEntry> newOrder = new ArrayList<LexicalSearchEntry>();
         for (final EntityDoc def : lexiconDefinitions) {
-            final List<VerseSearchEntry> list = keyedOrder.get(def.get(STRONG_NUMBER_FIELD));
+            final List<LexicalSearchEntry> list = keyedOrder.get(def.get(STRONG_NUMBER_FIELD));
             if (list != null) {
                 newOrder.addAll(list);
-                for (final VerseSearchEntry e : list) {
+                for (final LexicalSearchEntry e : list) {
                     e.setStepGloss(def.get("stepGloss"));
                     e.setStepTransliteration(def.get("stepTransliteration"));
                     e.setAccentedUnicode(def.get("accentedUnicode"));
@@ -284,52 +282,73 @@ public class SearchServiceImpl implements SearchService {
 
     /**
      * Extracts all strong numbers from verses
-     * 
-     * @param strongs a place to store the strong numbers found so far in the search results, identified from
-     *            the search itself
-     * @param entries the verse entries that have been found
-     * @param noOrder the "noOrder" list which will contain all verse entries that cannot be matched
+     *
+     * @param strongs    a place to store the strong numbers found so far in the search results, identified from
+     *                   the search itself
+     * @param entries    the verse entries that have been found
+     * @param noOrder    the "noOrder" list which will contain all verse entries that cannot be matched
      * @param keyedOrder the new order, to be built up. In this method, we simply store the verses, which are
-     *            sorted later.
+     *                   sorted later.
      */
     private void extractAllStrongNumbers(final Set<String> strongs, final List<SearchEntry> entries,
-            final List<SearchEntry> noOrder, final Map<String, List<VerseSearchEntry>> keyedOrder) {
+                                         final List<LexicalSearchEntry> noOrder, final Map<String, List<LexicalSearchEntry>> keyedOrder) {
         for (final SearchEntry entry : entries) {
             boolean added = false;
             if (entry instanceof VerseSearchEntry) {
-
-                final VerseSearchEntry verse = (VerseSearchEntry) entry;
-                for (final String strong : strongs) {
-
-                    if (strong == null) {
-                        continue;
-                    }
-
-                    if (verse.getPreview().contains(strong)) {
-                        List<VerseSearchEntry> list = keyedOrder.get(strong);
-                        if (list == null) {
-                            list = new ArrayList<VerseSearchEntry>(16);
-                            keyedOrder.put(strong, list);
-                        }
-                        list.add(verse);
-                        added = true;
-                        // break and continue with next entry
+                added = reOrderSearchEntry(strongs, keyedOrder, ((VerseSearchEntry) entry).getPreview(), (VerseSearchEntry) entry);
+            } else if (entry instanceof KeyedSearchResultSearchEntry) {
+                final KeyedSearchResultSearchEntry wrapperEntry = (KeyedSearchResultSearchEntry) entry;
+                for (KeyedVerseContent e : wrapperEntry.getVerseContent()) {
+                    added = reOrderSearchEntry(strongs, keyedOrder, e.getPreview(), wrapperEntry);
+                    if (added) {
                         break;
                     }
                 }
+            }
 
-                // should never happen
-                if (!added) {
-                    noOrder.add(entry);
+            // should never happen
+            if (!added) {
+                if(entry instanceof LexicalSearchEntry) {
+                    noOrder.add((LexicalSearchEntry) entry);
+                } else {
+                    LOGGER.error("Attempting to sort non LexicalSearchEntry.");
                 }
             }
         }
     }
 
     /**
+     * Re-orders the search entry
+     *
+     * @param strongs     the list of strongs in the verses
+     * @param keyedOrder  the order that we're after
+     * @param verseText   the OSIS fragment
+     * @param parentEntry the entry that we're ordering in the list
+     * @return true if the entry was added
+     */
+    private boolean reOrderSearchEntry(final Set<String> strongs, final Map<String, List<LexicalSearchEntry>> keyedOrder, final String verseText, final LexicalSearchEntry parentEntry) {
+        for (final String strong : strongs) {
+            if (strong == null) {
+                continue;
+            }
+
+            if (verseText.contains(strong)) {
+                List<LexicalSearchEntry> list = keyedOrder.get(strong);
+                if (list == null) {
+                    list = new ArrayList<LexicalSearchEntry>(16);
+                    keyedOrder.put(strong, list);
+                }
+                list.add(parentEntry);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Sets the definitions onto the result object
-     * 
-     * @param result the result object
+     *
+     * @param result             the result object
      * @param lexiconDefinitions the definitions that have been included in the search
      */
     private void setDefinitionForResults(final SearchResult result, final List<EntityDoc> lexiconDefinitions) {
@@ -342,8 +361,8 @@ public class SearchServiceImpl implements SearchService {
 
     /**
      * Keep definitions that are of current interest to the user... Remove all others
-     * 
-     * @param sq the search criteria
+     *
+     * @param sq                 the search criteria
      * @param lexiconDefinitions the definitions
      * @return a list of definitions to be included in the filter
      */
@@ -371,12 +390,12 @@ public class SearchServiceImpl implements SearchService {
 
     /**
      * Reduces the results to the correct page size
-     * 
-     * @param sq the search criteria
+     *
+     * @param sq       the search criteria
      * @param newOrder the elements in the new order
      * @return the new set of results, with only pageSize results
      */
-    private List<SearchEntry> specialPaging(final SearchQuery sq, final List<SearchEntry> newOrder) {
+    private List<SearchEntry> specialPaging(final SearchQuery sq, final List<LexicalSearchEntry> newOrder) {
         // runs paging after a special sort
         // we want
         final int firstElement = (sq.getPageNumber() - 1) * sq.getPageSize();
@@ -391,7 +410,7 @@ public class SearchServiceImpl implements SearchService {
 
     /**
      * Runs a number of searches, joining them together (known as "refine searches")
-     * 
+     *
      * @param sq the search query object
      * @return the list of search results
      */
@@ -409,7 +428,7 @@ public class SearchServiceImpl implements SearchService {
 
     /**
      * Runs each individual search and gives us a key that can be used to retrieve every passage
-     * 
+     *
      * @param sq the search query
      * @return the key to all the results
      */
@@ -448,8 +467,8 @@ public class SearchServiceImpl implements SearchService {
 
     /**
      * Extracts the search results from a multi-joined search query
-     * 
-     * @param sq the search query
+     *
+     * @param sq      the search query
      * @param results the results
      * @return the search results ready to send back
      */
@@ -474,7 +493,7 @@ public class SearchServiceImpl implements SearchService {
 
     /**
      * executes a single search
-     * 
+     *
      * @param sq the search query results
      * @return the results from the search query
      */
@@ -509,7 +528,7 @@ public class SearchServiceImpl implements SearchService {
 
     /**
      * Runs a query against the JSword modules backends
-     * 
+     *
      * @param sq the search query contained
      * @return the search to be run
      */
@@ -529,7 +548,7 @@ public class SearchServiceImpl implements SearchService {
 
     /**
      * Obtains all glosses with a particular meaning
-     * 
+     *
      * @param sq the search criteria
      * @return the result from the corresponding text search
      */
@@ -545,7 +564,7 @@ public class SearchServiceImpl implements SearchService {
 
     /**
      * Runs the search looking for particular strongs
-     * 
+     *
      * @param sq the search query
      * @return the results
      */
@@ -559,7 +578,7 @@ public class SearchServiceImpl implements SearchService {
 
     /**
      * Looks up all related strongs then runs the search
-     * 
+     *
      * @param sq the search query
      * @return the results
      */
@@ -575,7 +594,7 @@ public class SearchServiceImpl implements SearchService {
     /**
      * Runs a search using the exact form, i.e. without any lookups, a straight text search on the original
      * text
-     * 
+     *
      * @param sq the search criteria
      * @return the results to be shown
      */
@@ -588,8 +607,8 @@ public class SearchServiceImpl implements SearchService {
 
     /**
      * Runs the search, and adds teh strongs to the search results
-     * 
-     * @param sq the search criteria
+     *
+     * @param sq      the search criteria
      * @param strongs the list of strongs that were searched for
      * @return the search results
      */
@@ -601,7 +620,7 @@ public class SearchServiceImpl implements SearchService {
 
     /**
      * Searches for all passage references matching an original text (greek or hebrew)
-     * 
+     *
      * @param sq the search criteria
      * @return the list of verses
      */
@@ -611,10 +630,10 @@ public class SearchServiceImpl implements SearchService {
 
         // overwrite version with Tisch to do the search
         if (currentSearch.getType() == SearchType.ORIGINAL_GREEK_EXACT) {
-            currentSearch.setVersions(new String[] { BASE_GREEK_VERSION });
+            currentSearch.setVersions(new String[]{BASE_GREEK_VERSION});
             currentSearch.setQuery(unaccent(currentSearch.getQuery(), sq));
         } else {
-            currentSearch.setVersions(new String[] { BASE_HEBREW_VERSION });
+            currentSearch.setVersions(new String[]{BASE_HEBREW_VERSION});
         }
 
         final Key resultKeys = this.jswordSearch.searchKeys(sq);
@@ -627,7 +646,7 @@ public class SearchServiceImpl implements SearchService {
     /**
      * Attempts to recognise the input, whether it is a strong number, a transliteration or a hebrew/greek
      * word
-     * 
+     *
      * @param sq the search criteria
      * @return a list of match strong numbers
      */
@@ -666,7 +685,7 @@ public class SearchServiceImpl implements SearchService {
     /**
      * Looks up all the glosses for a particular word, and then adapts to strong search and continues as
      * before
-     * 
+     *
      * @param sq search criteria
      * @return a list of matching strongs
      */
@@ -701,7 +720,7 @@ public class SearchServiceImpl implements SearchService {
 
     /**
      * @param strongNumber the strong number
-     * @param sq the search query
+     * @param sq           the search query
      * @return true if the filter is empty, or if the strong number is in the filter
      */
     private boolean isInFilter(final String strongNumber, final SearchQuery sq) {
@@ -721,7 +740,7 @@ public class SearchServiceImpl implements SearchService {
     /**
      * Takes in a normal search query, and adapts the current search by rewriting the query syntax so that it
      * can be parsed by JSword
-     * 
+     *
      * @param sq the search query
      * @return a list of all matching strongs
      */
@@ -739,7 +758,7 @@ public class SearchServiceImpl implements SearchService {
 
     /**
      * Adapts the search query to be used in a strong search
-     * 
+     *
      * @param sq the search query object
      * @return a list of strong numbers
      */
@@ -776,13 +795,13 @@ public class SearchServiceImpl implements SearchService {
     /**
      * Sets up all definitions that are related, regardless of whether they have been filtered out. Makes a
      * unique set of these
-     * 
-     * @param sq the search query that is being
-     * @param results the results from the direct strong search
+     *
+     * @param sq             the search query that is being
+     * @param results        the results from the direct strong search
      * @param relatedResults the related results
      */
     private void setUniqueConsideredDefinitions(final SearchQuery sq, final EntityDoc[] results,
-            final EntityDoc[] relatedResults) {
+                                                final EntityDoc[] relatedResults) {
         // make entity docs unique:
         final Set<EntityDoc> joinedDocs = new HashSet<EntityDoc>(relatedResults.length + results.length);
         final Set<String> strongNumbers = new HashSet<String>(relatedResults.length + results.length);
@@ -806,7 +825,7 @@ public class SearchServiceImpl implements SearchService {
 
     /**
      * Builds a query that gets the related-strong number entity documents
-     * 
+     *
      * @param results the source numbers
      * @return the query that gets the related numbers
      */
@@ -821,16 +840,16 @@ public class SearchServiceImpl implements SearchService {
 
     /**
      * Retrieves the correct entity documents from a built up query and passed in parser
-     * 
-     * @param sq the search query
+     *
+     * @param sq              the search query
      * @param filteredStrongs the list of filtered strongs so far
-     * @param p the parser
-     * @param query the query
-     * @param fullQuery the full query so far
+     * @param p               the parser
+     * @param query           the query
+     * @param fullQuery       the full query so far
      * @return the list of matched entity documents
      */
     private EntityDoc[] retrieveStrongDefinitions(final SearchQuery sq, final Set<String> filteredStrongs,
-            final QueryParser p, final String query, final StringBuilder fullQuery) {
+                                                  final QueryParser p, final String query, final StringBuilder fullQuery) {
         Query q;
         try {
             q = p.parse(query);
@@ -854,13 +873,13 @@ public class SearchServiceImpl implements SearchService {
 
     /**
      * Searches the underlying DB for the relevant entry
-     * 
+     *
      * @param searchQuery the query that is being passed in
      * @return the list of strongs matched
      */
     private Set<String> searchTextFieldsForDefinition(final String searchQuery) {
         // first look through the text forms
-        final EntityDoc[] results = this.specificForms.search(new String[] { "accentedUnicode" },
+        final EntityDoc[] results = this.specificForms.search(new String[]{"accentedUnicode"},
                 searchQuery, null, null, false, "-stopWord:false");
         if (results.length == 0) {
             return lookupFromLexicon(searchQuery);
@@ -877,7 +896,7 @@ public class SearchServiceImpl implements SearchService {
 
     /**
      * Looks up the search criteria from the lexicon
-     * 
+     *
      * @param query the query
      * @return a list of strong numbers
      */
@@ -904,9 +923,9 @@ public class SearchServiceImpl implements SearchService {
 
     /**
      * removes accents, hebrew vowels, etc.
-     * 
+     *
      * @param query query
-     * @param sq the current query criteria
+     * @param sq    the current query criteria
      * @return the unaccented string
      */
     private String unaccent(final String query, final SearchQuery sq) {
@@ -928,8 +947,8 @@ public class SearchServiceImpl implements SearchService {
 
     /**
      * Runs the transliteration rules on the input in an attempt to match an entry in the lexicon
-     * 
-     * @param query the query to be found
+     *
+     * @param query   the query to be found
      * @param isGreek true to indicate Greek, false to indicate Hebrew
      * @return the strongs that have been found/matched.
      */
@@ -953,8 +972,8 @@ public class SearchServiceImpl implements SearchService {
             return strongs;
         }
 
-        final MultiFieldQueryParser queryParser = new MultiFieldQueryParser(Version.LUCENE_30, new String[] {
-                "simplifiedTransliteration", "stepTransliteration", "otherTransliteration" },
+        final MultiFieldQueryParser queryParser = new MultiFieldQueryParser(Version.LUCENE_30, new String[]{
+                "simplifiedTransliteration", "stepTransliteration", "otherTransliteration"},
                 this.definitions.getAnalyzer());
 
         try {
@@ -977,7 +996,7 @@ public class SearchServiceImpl implements SearchService {
 
     /**
      * splits up the query syntax and returns a list of all strong numbers required
-     * 
+     *
      * @param sq the search query
      * @return the list of strongs
      */
@@ -991,7 +1010,7 @@ public class SearchServiceImpl implements SearchService {
 
     /**
      * Runs a timeline description search
-     * 
+     *
      * @param sq the search query
      * @return the search results
      */
@@ -1002,7 +1021,7 @@ public class SearchServiceImpl implements SearchService {
 
     /**
      * Runs a timeline search, keyed by reference
-     * 
+     *
      * @param sq the search query
      * @return the search results
      */
@@ -1014,8 +1033,8 @@ public class SearchServiceImpl implements SearchService {
 
     /**
      * Construct the relevant entity structure to represent timeline search results
-     * 
-     * @param sq the search query
+     *
+     * @param sq     the search query
      * @param events the list of events retrieved
      * @return the search results
      */
@@ -1053,7 +1072,7 @@ public class SearchServiceImpl implements SearchService {
 
     /**
      * @param strongs a list of strongs
-     * @param sq the current search criteria containing the range of interest
+     * @param sq      the current search criteria containing the range of interest
      * @return the query syntax
      */
     private String getQuerySyntaxForStrongs(final Set<String> strongs, final SearchQuery sq) {
@@ -1078,7 +1097,7 @@ public class SearchServiceImpl implements SearchService {
     /**
      * Gets a query that retrieves a list of strong numbers. This query is used agains the lexicon definitions
      * lucene index, not the JSword-managed Bibles
-     * 
+     *
      * @param strongsFromQuery the strong numbers to select
      * @return a query looking up all the Strong numbers
      */
@@ -1094,9 +1113,9 @@ public class SearchServiceImpl implements SearchService {
 
     /**
      * Parses the search query, returned in upper case in case a database lookup is required
-     * 
+     *
      * @param searchStrong the search query
-     * @param searchType type of search, this includes greek vs hebrew...
+     * @param searchType   type of search, this includes greek vs hebrew...
      * @return the list of strongs
      */
     private Set<String> splitToStrongs(final String searchStrong, final SearchType searchType) {
@@ -1110,7 +1129,7 @@ public class SearchServiceImpl implements SearchService {
     }
 
     /**
-     * @param s the string to add a prefix to
+     * @param s          the string to add a prefix to
      * @param searchType the type of search
      * @return the prefixed string with H/G
      */
@@ -1132,8 +1151,8 @@ public class SearchServiceImpl implements SearchService {
 
     /**
      * Builds the combined results
-     * 
-     * @param sq the search query object
+     *
+     * @param sq      the search query object
      * @param results the set of keys that have been retrieved by each search
      * @return the set of results
      */
@@ -1197,9 +1216,9 @@ public class SearchServiceImpl implements SearchService {
 
     /**
      * Keeps keys of "results" where they are also in searchKeys
-     * 
-     * @param results the existing results that have already been obtained. If null, then searchKeys is
-     *            returned
+     *
+     * @param results    the existing results that have already been obtained. If null, then searchKeys is
+     *                   returned
      * @param searchKeys the search keys of the current search
      * @return the intersection of both Keys, or searchKeys if results is null
      */

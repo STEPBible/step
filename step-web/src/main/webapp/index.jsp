@@ -3,13 +3,8 @@
 <%@page import="javax.servlet.jsp.jstl.core.Config"%>
 <%@ page contentType="text/html; charset=UTF-8" language="java" %> 
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-
-
 <%@ page import="com.tyndalehouse.step.jsp.WebStepRequest" %>
 <%@ page import="com.google.inject.Injector"%>
-<%@ page import="com.google.inject.Guice"%>
-
-
 <%
 	Injector injector = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
 	Locale locale = injector.getInstance(ClientSession.class).getLocale();
@@ -122,23 +117,35 @@
 	    <script src="js/bookmark/step.bookmark.js" type="text/javascript"></script>
 	    <script src="js/bookmark/step.bookmark.ui.js" type="text/javascript"></script>
 
-        <script src="js/backbone/models/passage_model.js" type="text/javascript"></script>
-        <script src="js/backbone/views/passage_display_view.js" type="text/javascript"></script>
+        <script src="js/backbone/models/model_passage.js" type="text/javascript"></script>
+        <script src="js/backbone/views/view_display_passage.js" type="text/javascript"></script>
         <script src="js/backbone/router.js" type="text/javascript"></script>
 
-        <script src="js/backbone/views/passage_menu_view.js" type="text/javascript"></script>
-        <script src="js/backbone/views/passage_criteria_view.js" type="text/javascript"></script>
+        <script src="js/backbone/views/view_menu_passage.js" type="text/javascript"></script>
+        <script src="js/backbone/views/view_criteria_passage.js" type="text/javascript"></script>
 
-        <script src="js/backbone/models/search_menu_model.js" type="text/javascript"></script>
-        <script src="js/backbone/views/search_menu_view.js" type="text/javascript"></script>
-        <script src="js/backbone/views/criteria_control_view.js" type="text/javascript"></script>
+        <script src="js/backbone/models/model_lookup_menu.js" type="text/javascript"></script>
+        <script src="js/backbone/views/view_menu_search.js" type="text/javascript"></script>
+        <script src="js/backbone/views/view_control_criteria.js" type="text/javascript"></script>
 
-        <script src="js/backbone/models/subject_search_model.js" type="text/javascript"></script>
-        <script src="js/backbone/views/subject_critieria_view.js" type="text/javascript"></script>
-        <script src="js/backbone/views/subject_display_view.js" type="text/javascript"></script>
+        <script src="js/backbone/models/model_search.js" type="text/javascript"></script>
+        <script src="js/backbone/models/model_search_subject.js" type="text/javascript"></script>
+        <script src="js/backbone/models/model_search_original.js" type="text/javascript"></script>
+        <script src="js/backbone/models/model_search_advanced.js" type="text/javascript"></script>
+        <script src="js/backbone/models/model_search_simple.js" type="text/javascript"></script>
 
+        <!-- subject uses a standard criteria view for now -->
+        <script src="js/backbone/views/view_criteria.js" type="text/javascript"></script>
+        <script src="js/backbone/views/view_criteria_word.js" type="text/javascript"></script>
+        <script src="js/backbone/views/view_criteria_advanced.js" type="text/javascript"></script>
+        <script src="js/backbone/views/view_critieria_text.js" type="text/javascript"></script>
 
-    <script src="js/init.js" type="text/javascript"></script>
+        <script src="js/backbone/views/view_display_search.js" type="text/javascript"></script>
+        <script src="js/backbone/views/view_display_subject.js" type="text/javascript"></script>
+        <script src="js/backbone/views/view_display_text.js" type="text/javascript"></script>
+        <script src="js/backbone/views/view_display_word.js" type="text/javascript"></script>
+
+        <script src="js/init.js" type="text/javascript"></script>
         <script src="js/backbone/step.js" type="text/javascript"></script>
 	<%
 		} else {
@@ -170,8 +177,8 @@
 				<div id="leftPaneMenu" class="innerMenus"><jsp:include page="js/menu/passage/menu.jsp" /></div>
 			    <div class="passageText ui-widget">
 			    	<div class="headingContainer">
-			    		<jsp:include page="js/search/advanced_search.jsp?passageId=0" />
-						<jsp:include page="js/search/passage_toolbar.jsp?passageId=0" />
+			    		<jsp:include page="js/search/fragments/advanced_search.jsp?passageId=0" />
+						<jsp:include page="js/search/fragments/passage_toolbar.jsp?passageId=0" />
 			    	</div>
 			    	<div class="passageContent">&nbsp;<%= stepRequest.getPassage(0) %></div>
 			    </div>
@@ -206,8 +213,8 @@
 				<div id="rightPaneMenu" class="innerMenus"><jsp:include page="js/menu/passage/menu.jsp" /></div>
 			    <div class="passageText ui-widget">
 			    	<div class="headingContainer">
-			    		<jsp:include page="js/search/advanced_search.jsp?passageId=1" />
-			    		<jsp:include page="js/search/passage_toolbar.jsp?passageId=1" />
+			    		<jsp:include page="js/search/fragments/advanced_search.jsp?passageId=1" />
+			    		<jsp:include page="js/search/fragments/passage_toolbar.jsp?passageId=1" />
 			    	</div>
 			    	<div class="passageContent">&nbsp;<%= stepRequest.getPassage(1) %></div>
 				</div>

@@ -28,21 +28,21 @@
  ******************************************************************************/
 
 $(document).ready(function() {
-    $(".advancedSearch input[type = 'button']").button({});
-    $(".advancedSearch fieldset").hide();
-
-    $("input[type = 'text']", ".advancedSearch").on("keydown", function(event) {
-        if(event.keyCode == 13) {
-            var passageId = step.passage.getPassageId(event.target);
-            $(this).change();
-            step.state._fireStateChanged(passageId);
-        }
-    });
+//    $(".advancedSearch input[type = 'button']").button({});
+//    $(".advancedSearch fieldset").hide();
+//
+//    $("input[type = 'text']", ".advancedSearch").on("keydown", function(event) {
+//        if(event.keyCode == 13) {
+//            var passageId = step.passage.getPassageId(event.target);
+//            $(this).change();
+//            step.state._fireStateChanged(passageId);
+//        }
+//    });
     
-    $(".closeRefinedSearch").click(function() {
-       $(".refinedSearch", step.util.getPassageContainer(this)).hide();
-       step.search.refinedSearch = [];
-    });
+//    $(".closeRefinedSearch").click(function() {
+//       $(".refinedSearch", step.util.getPassageContainer(this)).hide();
+//       step.search.refinedSearch = [];
+//    });
 
 });
 

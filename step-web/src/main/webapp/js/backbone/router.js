@@ -1,40 +1,43 @@
 var StepRouter = Backbone.Router.extend({
-    fragments : [undefined, undefined],
-    fragmentPrefix : /[0-9]+\/__[a-zA-Z]+\//,
+    fragments: [undefined, undefined],
+    fragmentPrefix: /[0-9]+\/__[a-zA-Z]+\//,
     routes: {
+        /*******************************
+         * This fragment is deliberately placed above everything else to trap fragments starting with __
+         *******************************/
+        "__*fragment": "entireUnparsedUrl",
         ":passageId/passage/:detail/:version/:reference(/:options)(/:extraVersions)(/:interlinearMode)": "changePassage",
         ":passageId/passage/:detail/:version/:reference/(/:extraVersions)(/:interlinearMode)": "changePassageNoOptions",
-        ":passageId/subject/:pageNumber/:querySyntax" : "subjectSearch",
-        "*fragment" : "entireUnparsedUrl"
+        ":passageId/:searchType/:pageNumber/:querySyntax(/:context)(/:version)(/:sortOrder)": "search"
     },
     lastUrls: [],
-    refinedSearch : [],
-    pageSize : step.defaults.pageSize,
+    refinedSearch: [],
+    pageSize: step.defaults.pageSize,
 
     /**
      * Navigates for a particular column only.
      * @param fragment
      * @param options
      */
-    navigatePassage : function(fragment, options) {
+    navigatePassage: function (fragment, options) {
         var trigger = options.trigger;
         delete options.trigger;
 
         var hash = "";
         try {
             hash = Backbone.history.getFragment();
-        } catch(e) {
+        } catch (e) {
             console.log("Unable to get fragment, so assuming blank, as history might not be started");
         }
 
         //if hash is empty then we use the normal mechanism
-        if(hash.length == 0 || hash == '#') {
+        if (hash.length == 0 || hash == '#') {
             this.navigate(fragment, options);
             return;
         }
 
         //trim off the first character if a '#'
-        if(hash[0] == '#') {
+        if (hash[0] == '#') {
             hash = hash.substring(0);
         }
 
@@ -43,7 +46,7 @@ var StepRouter = Backbone.Router.extend({
         var passageIdFromInput = parseInt(fragment.substring(0, fragment.indexOf('/')));
 
         var newFragment = "__/" + fragment;
-        if(fragments[passageIdFromInput] != newFragment) {
+        if (fragments[passageIdFromInput] != newFragment) {
             fragments[passageIdFromInput] = newFragment;
 
             //join all the fragments up again
@@ -61,8 +64,8 @@ var StepRouter = Backbone.Router.extend({
      * current url looks like __/passage/....../__/subject/......
      * @param hash the url/hash that should be split up into several pieces.
      */
-    _getColumnFragments : function(hash) {
-        if(hash == undefined) {
+    _getColumnFragments: function (hash) {
+        if (hash == undefined) {
             return [];
         }
 
@@ -72,7 +75,7 @@ var StepRouter = Backbone.Router.extend({
         //we first calculate the new hash...
         var pos = 1;
         var lastPos = 0;
-        while((pos = hash.indexOf("__/", pos+1)) != -1) {
+        while ((pos = hash.indexOf("__/", pos + 1)) != -1) {
 
             //we remove the trailing slash
             fragments.push(hash.substring(lastPos, pos - 1));
@@ -90,16 +93,16 @@ var StepRouter = Backbone.Router.extend({
      * that we can divide into multiple sections.
      * @param wholeUrl
      */
-    entireUnparsedUrl : function(wholeUrl) {
+    entireUnparsedUrl: function (wholeUrl) {
         console.log("Entire URL was passed in: ", wholeUrl);
 
         //divide the url up
         var fragments = this._getColumnFragments(wholeUrl);
-        for(var i = 0; i < fragments.length; i++) {
+        for (var i = 0; i < fragments.length; i++) {
             //prevent infinite recursion
-            if(fragments[i] != wholeUrl) {
+            if (fragments[i] != wholeUrl) {
                 //also, need to remove the __/ from each fragment
-                if(fragments[i].indexOf("__/") == 0) {
+                if (fragments[i].indexOf("__/") == 0) {
                     Backbone.history.loadUrl(fragments[i].substring("__/".length));
                 }
                 console.log("Unable to route as fragment doesn't start with __/");
@@ -108,13 +111,20 @@ var StepRouter = Backbone.Router.extend({
     },
 
     /**
-     * Carries out a subject search
-     * @param passageId the passage id
-     * @param querySyntax the query syntax
+     * Routes searches to the correct place dependant on the search prefix
+     * @param passageId
+     * @param pageNumber
+     * @param querySyntax
+     * @param context
+     * @param version
      */
-    subjectSearch : function(passageId, pageNumber, querySyntax) {
+    search: function (passageId, searchType, pageNumber, querySyntax, context, version, sortOrder) {
+
+        console.log("TRIGGER SEARCH: ", searchType, querySyntax, new Error().stack);
+
+
         var query = step.util.replaceSpecialChars(querySyntax);
-        this._validateAndRunSearch("subject", passageId, query, "ESV", false, 0, pageNumber);
+        this._validateAndRunSearch(searchType, passageId, query, version, sortOrder, context, pageNumber, sortOrder);
     },
 
     /**
@@ -127,54 +137,57 @@ var StepRouter = Backbone.Router.extend({
      * @param pageNumber
      * @private
      */
-    _validateAndRunSearch : function(searchType, passageId, query, version, ranked, context, pageNumber) {
-        if(step.util.isBlank(query)) {
+    _validateAndRunSearch: function (searchType, passageId, query, version, sortOrder, context, pageNumber) {
+        if (step.util.isBlank(query)) {
             step.search._displayResults({}, passageId);
             return;
         }
 
-        this._doSearch(searchType, passageId, query, version, pageNumber, ranked, context);
-    },
-
-    _doSearch : function(searchType, passageId, query, version, pageNumber, ranked, context, highlightTerms) {
-        var self = this;
-
         var checkedVersion = version;
-        if(version == null || version.trim().length == 0) {
+        if (version == null || version.trim().length == 0) {
             checkedVersion = PassageModels.at(passageId).get("version");
 
-            if(checkedVersion == undefined || checkedVersion.trim().length == 0) {
-                checkedVersion = 'KJV';
+            if (checkedVersion == undefined || checkedVersion.trim().length == 0) {
+                checkedVersion = 'ESV';
             }
         }
 
+        this._doSearch(searchType, passageId, query, checkedVersion, pageNumber, sortOrder, context);
+    },
+
+    _doSearch: function (searchType, passageId, query, version, pageNumber, sortOrder, context) {
+        var self = this;
+
+
         //TODO: this adds a version, if not already present, but we don't need to do the above if we already have it!
-        var versionArg = query.match(/in \([^)]*\)/) != null ? "" : " in (" + checkedVersion.toUpperCase() + ")";
+        var versionArg = query.match(/in \([^)]*\)/) != null ? "" : " in (" + version.toUpperCase() + ")";
         var pageNumberArg = pageNumber == null ? 1 : pageNumber;
-        var rankedArg = ranked == undefined ? false : ranked;
+        var sortingArg = sortOrder == undefined ? false : sortOrder;
         var contextArg = context == undefined || isNaN(context) ? 0 : context;
         var pageSizeArg = this.pageSize;
         var finalInnerQuery = query + versionArg;
 
         var refinedQuery = this._joinInRefiningSearches(finalInnerQuery);
-//        var highlightTerms = this._highlightingTerms(refinedQuery);
 
-        var args = [encodeURIComponent(refinedQuery), rankedArg, contextArg, pageNumberArg, pageSizeArg];
+        var args = [encodeURIComponent(refinedQuery), sortingArg, contextArg, pageNumberArg, pageSizeArg];
 
         var startTime = new Date().getTime();
-        $.getSafe(SEARCH_DEFAULT, args, function(searchQueryResults) {
+        $.getSafe(SEARCH_DEFAULT, args, function (searchQueryResults) {
             step.util.trackAnalytics("search", "loaded", "time", new Date().getTime() - startTime);
             step.util.trackAnalytics("search", "loaded", "results", searchQueryResults.total);
-            step.util.trackAnalytics("search", "version", checkedVersion.toUpperCase());
+            step.util.trackAnalytics("search", "version", versionArg.toUpperCase());
             step.util.trackAnalytics("search", "query", query);
 
-            Backbone.Events.trigger(searchType + ":new:" + passageId, searchQueryResults);
-//            self._doResultsRender(searchType, passageId, searchQueryResults, pageNumberArg, highlightTerms, query);
+            Backbone.Events.trigger(searchType + ":new:" + passageId,
+                {
+                    searchQueryResults: searchQueryResults,
+                    pageNumber: pageNumberArg
+                });
         });
     },
 
-    _joinInRefiningSearches : function(query) {
-        if(this.refinedSearch.length != 0) {
+    _joinInRefiningSearches: function (query) {
+        if (this.refinedSearch.length != 0) {
             return this.refinedSearch.join("=>") + "=>" + query;
         }
 
@@ -233,10 +246,10 @@ var StepRouter = Backbone.Router.extend({
 
         //now sync changes to model, since we've just requested this
         PassageModels.at(passageId).save({
-            version : version,
-            reference : reference,
-            options : options.split(),
-            interlinearMode : interlinearMode,
+            version: version,
+            reference: reference,
+            options: options.split(),
+            interlinearMode: interlinearMode,
             extraVersions: extraVersions,
             detailLevel: detail
         });

@@ -27,210 +27,67 @@
  * POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
 step.search.ui.textual = {
-    evaluateQuerySyntax: function(passageId) {
-        var passageContainer = step.util.getPassageContainer(passageId);
-        var level = $("fieldset:visible").detailSlider("value");
-        
-        var prefix = "t=";
-        var query = "";
-        //level 0
-        query += this._evalExactPhrase($(".textPrimaryExactPhrase", passageContainer).val());
-        query += this._evalAllWords($(".textPrimaryIncludeAllWords", passageContainer).val());
-        query += this._evalAnyWord($(".textPrimaryIncludeWords", passageContainer).val());
-        
-        //level 2
-        if(level == 2) {
-            query += this._evalSpellings($(".textPrimarySimilarSpellings", passageContainer).val());
-            query += this._evalStarting($(".textPrimaryWordsStarting", passageContainer).val());
-            query += this._evalExcludeWord($(".textPrimaryExcludeWords", passageContainer).val());
-            query += this._evalExcludePhrase($(".textPrimaryExcludePhrase", passageContainer).val());
-            query += this._evalWordsWithinRangeOfEachOther(
-                        $(".textPrimaryIncludeRangedWords", passageContainer).val(), 
-                        $(".textPrimaryWithinXWords", passageContainer).val());
-        }
 
-        
-        //level 1
-        var secondaryQuery = "";
-        if(level > 0) {
-            secondaryQuery += this._evalAllWords($(".textCloseByIncludeAllWords", passageContainer).val());
-            secondaryQuery += this._evalExactPhrase($(".textCloseByExactPhrase", passageContainer).val());
-            secondaryQuery += this._evalAnyWord($(".textCloseByIncludeWords", passageContainer).val());
-        }
-        
-        //level 2
-        if(level == 2) {
-            secondaryQuery += this._evalSpellings($(".textCloseBySimilarSpellings", passageContainer).val());
-            secondaryQuery += this._evalStarting($(".textCloseByWordsStarting", passageContainer).val());
-            secondaryQuery += this._evalExcludeWord($(".textCloseByExcludeWords", passageContainer).val());
-            secondaryQuery += this._evalExcludePhrase($(".textCloseByExcludePhrase", passageContainer).val());
-            secondaryQuery += this._evalWordsWithinRangeOfEachOther(
-                        $(".textCloseByIncludeRangedWords", passageContainer).val(), 
-                        $(".textCloseByWithinXWords", passageContainer).val());
-        }
-        
-        if(level > 0) {
-            query = this._evalProximity($(".textVerseProximity", passageContainer).val(), query, secondaryQuery);
-        }
-        
-        var restriction = $(".textRestriction", passageContainer).val();
-        query = this._evalTextRestriction(restriction, query);
-        
-        var restrictionExclude = $(".textRestrictionExclude", passageContainer).val();
-        if(!step.util.isBlank(restrictionExclude) && !step.util.isBlank(restriction)) {
-            step.util.raiseError(__s.error_search_restriction_and_inclusion);
-        } else {
-            query = this._evalTextRestrictionExclude(restrictionExclude, query);
-        }
-        
-        query = prefix + query;
-        step.state.textual.textQuerySyntax(passageId, query);
-        return query;
-    },
-    //TODO think about escaping
-    _evalExactPhrase : function(text) {
-        if(!step.util.isBlank(text)) {
-            return ' "' + text + '" '; 
-        }
-        return "";
-    },
-
-    _evalAllWords : function(text) {
-        if(!step.util.isBlank(text)) {
-            var words = $.trim(text).split(" ").join(" AND ");
-            return words ;
-            //            return "(" + words + ")";
-        }
-        return "";
-    },
-
-    _evalAnyWord : function(text) {
-        return " " + text;
-    },
-    
-    _evalSpellings : function(text) {
-        if(!step.util.isBlank(text)) {
-            return " " + $.trim(text).split(" ").join("~ ") + "~ ";
-        }
-        return "";
-    },
-    
-    _evalStarting : function(text) {
-        if(!step.util.isBlank(text)) {
-            return " " + $.trim(text).split(' ').join('* ') + '* '; 
-        }
-        return "";
-    },
-    
-    _evalExcludeWord : function(text) {
-        if(!step.util.isBlank(text)) {
-            var words = text.split(" ");
-            var syntax = "";
-            for (var i = 0; i < words.length; i++) {
-                syntax += " -" + words[i];
-            }
-            return syntax; 
-        }
-        return "";
-    },
-    
-    _evalExcludePhrase : function(text) {
-        if(!step.util.isBlank(text)) {
-            return ' -"' + text +'"'; 
-        }
-        return "";
-    },
-    
-    _evalWordsWithinRangeOfEachOther : function(text, range) {
-        if(!step.util.isBlank(text)) {
-            return ' "' + text + '"~' + range; 
-        }
-        return "";
-    },
-    
-    _evalProximity : function(proximity, query, secondaryQuery) {
-        if(!step.util.isBlank(proximity)) {
-            //join the two queries up
-            query = "(" + query + ") ~" + proximity + " (" + secondaryQuery + ")"; 
-        }
-        return query;
-    },
-    
-    _evalTextRestriction : function(restriction, query) {
-        if(!step.util.isBlank(restriction)) {
-            //join the two queries up
-            query = query + "+[" + restriction + "] "; 
-        }
-        return query;
-    },
-
-    _evalTextRestrictionExclude : function(restriction, query) {
-        if(!step.util.isBlank(restriction)) {
-            //join the two queries up
-            query = "-[" + restriction + "] " + query; 
-        }
-        return query;
-    }
 
 };
 
 $(document).ready(function() {
-    var namespace = "textual";
-    step.state.trackState([
-                            ".textPrimaryExactPhrase",     
-                            ".textPrimaryIncludeWords",
-                            ".textPrimaryIncludeAllWords",
-                            ".textPrimarySimilarSpellings",
-                            ".textPrimaryWordsStarting",
-                            ".textPrimaryExcludeWords",
-                            ".textPrimaryExcludePhrase",
-                            ".textPrimaryIncludeRangedWords",
-                            ".textPrimaryWithinXWords",
-                            ".textCloseByExactPhrase",
-                            ".textCloseByIncludeWords",
-                            ".textCloseByIncludeAllWords",   
-                            ".textCloseBySimilarSpellings",
-                            ".textCloseByWordsStarting",
-                            ".textCloseByIncludeRangedWords",
-                            ".textCloseByWithinXWords",
-                            ".textVerseProximity",
-                            ".textRestriction",
-                            ".textRestrictionExclude",
-                            ".textSortByRelevance",
-                            ".textQuerySyntax",
-                            ".textSearchContext",
-                            ".textSearchVersion",
-                            ".textPageNumber"
-                           ], namespace);
-    
-    step.util.ui.trackQuerySyntax(".textSearchTable", namespace);
-    step.util.ui.searchButton(".textSearchButton",  'SEARCH_TEXT');
-    $(".textClearButton").click(function() {
-        var passageId = step.passage.getPassageId(this);
-        
-        //need to register state, so don't go straight to the field on the screen
-        step.state.textual.textPrimaryExactPhrase(passageId, "");
-        step.state.textual.textPrimaryIncludeWords(passageId, "");
-        step.state.textual.textPrimaryIncludeAllWords(passageId, "");
-        step.state.textual.textPrimarySimilarSpellings(passageId, "");
-        step.state.textual.textPrimaryWordsStarting(passageId, "");
-        step.state.textual.textPrimaryExcludeWords(passageId, "");
-        step.state.textual.textPrimaryExcludePhrase(passageId, "");
-        step.state.textual.textPrimaryIncludeRangedWords(passageId, "");
-        step.state.textual.textPrimaryWithinXWords(passageId, "");
-        step.state.textual.textCloseByExactPhrase(passageId, "");
-        step.state.textual.textCloseByIncludeWords(passageId, "");
-        step.state.textual.textCloseByIncludeAllWords(passageId, "");
-        step.state.textual.textCloseBySimilarSpellings(passageId, "");
-        step.state.textual.textCloseByWordsStarting(passageId, "");
-        step.state.textual.textCloseByIncludeRangedWords(passageId, "");
-        step.state.textual.textCloseByWithinXWords(passageId, "");
-        step.state.textual.textVerseProximity(passageId, "");
-        step.state.textual.textRestriction(passageId, "");
-        step.state.textual.textRestrictionExclude(passageId, "");
-        step.state.textual.textSortByRelevance(passageId, true);
-        step.state.textual.textQuerySyntax(passageId, "");
-    });
+//    var namespace = "textual";
+//    step.state.trackState([
+//                            ".textPrimaryExactPhrase",
+//                            ".textPrimaryIncludeWords",
+//                            ".textPrimaryIncludeAllWords",
+//                            ".textPrimarySimilarSpellings",
+//                            ".textPrimaryWordsStarting",
+//                            ".textPrimaryExcludeWords",
+//                            ".textPrimaryExcludePhrase",
+//                            ".textPrimaryIncludeRangedWords",
+//                            ".textPrimaryWithinXWords",
+//                            ".textCloseByExactPhrase",
+//                            ".textCloseByIncludeWords",
+//                            ".textCloseByIncludeAllWords",
+//                            ".textCloseBySimilarSpellings",
+//                            ".textCloseByWordsStarting",
+//                            ".textCloseByIncludeRangedWords",
+//                            ".textCloseByWithinXWords",
+//                            ".textVerseProximity",
+//                            ".textRestriction",
+//                            ".textRestrictionExclude",
+//                            ".textSortByRelevance",
+//                            ".textQuerySyntax",
+//                            ".textSearchContext",
+//                            ".textSearchVersion",
+//                            ".textPageNumber"
+//                           ], namespace);
+//
+//    step.util.ui.trackQuerySyntax(".textSearchTable", namespace);
+//    step.util.ui.searchButton(".textSearchButton",  'SEARCH_TEXT');
+//    $(".textClearButton").click(function() {
+//        var passageId = step.passage.getPassageId(this);
+//
+//        //need to register state, so don't go straight to the field on the screen
+//        step.state.textual.textPrimaryExactPhrase(passageId, "");
+//        step.state.textual.textPrimaryIncludeWords(passageId, "");
+//        step.state.textual.textPrimaryIncludeAllWords(passageId, "");
+//        step.state.textual.textPrimarySimilarSpellings(passageId, "");
+//        step.state.textual.textPrimaryWordsStarting(passageId, "");
+//        step.state.textual.textPrimaryExcludeWords(passageId, "");
+//        step.state.textual.textPrimaryExcludePhrase(passageId, "");
+//        step.state.textual.textPrimaryIncludeRangedWords(passageId, "");
+//        step.state.textual.textPrimaryWithinXWords(passageId, "");
+//        step.state.textual.textCloseByExactPhrase(passageId, "");
+//        step.state.textual.textCloseByIncludeWords(passageId, "");
+//        step.state.textual.textCloseByIncludeAllWords(passageId, "");
+//        step.state.textual.textCloseBySimilarSpellings(passageId, "");
+//        step.state.textual.textCloseByWordsStarting(passageId, "");
+//        step.state.textual.textCloseByIncludeRangedWords(passageId, "");
+//        step.state.textual.textCloseByWithinXWords(passageId, "");
+//        step.state.textual.textVerseProximity(passageId, "");
+//        step.state.textual.textRestriction(passageId, "");
+//        step.state.textual.textRestrictionExclude(passageId, "");
+//        step.state.textual.textSortByRelevance(passageId, true);
+//        step.state.textual.textQuerySyntax(passageId, "");
+//    });
     
     
     $(".showRanges").bind( "keydown", function( event ) {

@@ -47,16 +47,16 @@ import com.tyndalehouse.step.core.models.ClientSession;
 // CHECKSTYLE:OFF
 public class SimpleSearchStepRequest extends AbstractSearchStepRequest {
     final Object[][] firstLine = new Object[][] {
-            { "<input type=\"text\" class=\"simpleTextType simpleTextTypePrimary drop\" />" },
-            { "<input type=\"text\" class=\"simpleTextCriteria\" />" },
-            { "<input type=\"text\" class=\"simpleTextScope drop\" title=\"%1$s\" />",
+            { "<input type=\"text\" class=\"simpleTextTypePrimary drop _m\" source=\"step.defaults.search.textual.simpleTextTypes\" ro=\"true\" />" },
+            { "<input type=\"text\" class=\"simpleTextCriteria _m\" />" },
+            { "<input type=\"text\" class=\"simpleTextScope drop _m\" title=\"%1$s\" source=\"step.defaults.search.textual.availableRanges\" ro=\"false\" />",
                     "simple_text_search_scope_of_search_help" } };
 
     private final Object[][] secondLine = new Object[][] {
-            { "<input type=\"text\" class=\"simpleTextInclude drop\" size=\"13\" />" },
-            { "<input type=\"text\" class=\"simpleTextSecondaryTypes simpleTextTypeSecondary drop\" />" },
-            { "<input type=\"text\" class=\"simpleTextSecondaryCriteria\" />" },
-            { "<input type=\"text\" class=\"simpleTextProximity drop\" />" } };
+            { "<input type=\"text\" class=\"simpleTextInclude drop _m\" size=\"13\" source=\"step.defaults.search.textual.simpleTextIncludes\" ro=\"true\" />" },
+            { "<input type=\"text\" class=\"simpleTextTypeSecondary simpleTextSecondaryTypes drop _m\" source=\"step.defaults.search.textual.simpleTextSecondaryTypes\" ro=\"true\" />" },
+            { "<input type=\"text\" class=\"simpleTextSecondaryCriteria _m\" />" },
+            { "<input type=\"text\" class=\"simpleTextProximity drop _m\" source=\"step.defaults.search.textual.simpleTextProximities\" ro=\"true\" />" } };
 
     private final Object[][] values = new Object[][] { { "simple_text_search_level_basic", this.firstLine },
             { "simple_text_search_level_intermediate", this.secondLine } };
@@ -66,7 +66,6 @@ public class SimpleSearchStepRequest extends AbstractSearchStepRequest {
      * 
      * @param injector the injector for the application
      * @param request the servlet request
-     * @param userLocale the user locale
      */
     public SimpleSearchStepRequest(final Injector injector, final HttpServletRequest request) {
         super(injector, request);

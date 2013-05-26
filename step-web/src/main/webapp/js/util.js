@@ -118,6 +118,23 @@ step.util = {
             return false;
         } 
 	},
+
+    getPointer : function (functionName, context) {
+        if(functionName == null || functionName == "") {
+            return undefined;
+        }
+
+        if(!context) {
+            context = window;
+        }
+
+        var namespaces = functionName.split(".");
+        var func = namespaces.pop();
+        for(var i = 0; i < namespaces.length; i++) {
+            context = context[namespaces[i]];
+        }
+        return context[func];
+    },
 	
     raiseError: function (error) {
         var message = error.message ? error.message : error;
@@ -339,7 +356,19 @@ step.util = {
             });
         },
         autocompleteSearch : function(selector, data, readonly, preChangeHandler) {
-            return $(selector).autocomplete({
+            var jqSelector = $(selector);
+            var changed = false;
+            var previousValue = jqSelector.val();
+            if(previousValue == "") {
+                var defaultValue = jqSelector.attr("default");
+
+                var value = defaultValue != null ?  defaultValue : (data[0].label ? data[0].value : data[0]);
+                jqSelector.val(value);
+
+                changed = previousValue != value;
+            }
+
+            jqSelector.autocomplete({
                 minLength: 0,
                 delay : 0,
                 source: data,
@@ -356,6 +385,8 @@ step.util = {
             .click(function() {
                 $(this).autocomplete("search", "");
             }).attr("readonly", readonly == true);
+
+            return changed;
         },
 
         searchButton : function(selector, searchType, callback, preClickHandler) {
@@ -511,10 +542,8 @@ step.util = {
             }
         },
         
-        initSearchToolbar : function() {
-//            var toolbar = $(".searchToolbar");
-            
-            $(".moreSearchContext").button({
+        initSearchToolbar : function(context) {
+            $(".moreSearchContext", context).button({
                 text: false,
                 icons: {
                     primary: "ui-icon-plusthick"
@@ -532,7 +561,7 @@ step.util = {
                 }
             });
             
-            $(".lessSearchContext").button({
+            $(".lessSearchContext", context).button({
                 text: false,
                 icons: {
                     primary: "ui-icon-minusthick"
@@ -550,7 +579,7 @@ step.util = {
             });
 
             
-            $(".adjustPageSize").button({
+            $(".adjustPageSize", context).button({
                 icons : {
                     primary : "ui-icon-arrowstop-1-s"
                 },
@@ -565,7 +594,7 @@ step.util = {
                     step.search.pageSize = step.defaults.pageSize;
                 } else {
                     //find the one that extends beyond the window height
-                    var rows = $("tr.searchResultRow");
+                    var rows = $("tr.searchResultRow", context);
                     for(var i = 0; i < rows.size(); i++) {
                         if(rows.eq(i).offset().top + rows.eq(i).height() > windowHeight) {
                             targetPageSize = i - 1;
@@ -573,13 +602,12 @@ step.util = {
                         }
                     }
                     
-//                    console.log("Target window size is " + targetPageSize);
                     step.search.pageSize = targetPageSize;
                 }
                 step.state._fireStateChanged(step.passage.getPassageId(this));
             });
             
-            $(".previousPage").button({
+            $(".previousPage", context).button({
                 icons : {
                     primary : "ui-icon-arrowreturnthick-1-w"
                 },
@@ -588,7 +616,7 @@ step.util = {
                 e.preventDefault();
                 
                 //decrement the page number if visible fieldset:
-                var pageNumber = $("fieldset:visible .pageNumber", step.util.getPassageContainer(this));
+                var pageNumber = $("fieldset:visible .pageNumber", context);
                 var oldPageNumber = parseInt(pageNumber.val());
                 
                 if(oldPageNumber > 1) {
@@ -598,7 +626,7 @@ step.util = {
                 }
             });
             
-            $(".nextPage").button({
+            $(".nextPage", context).button({
                 icons : {
                     primary : "ui-icon-arrowreturnthick-1-w"
                 },
@@ -607,7 +635,7 @@ step.util = {
                 e.preventDefault();
                 
                 var totalPages = Math.round((step.search.totalResults / step.search.pageSize) + 0.5);
-                var pageNumber = $("fieldset:visible .pageNumber", step.util.getPassageContainer(this));
+                var pageNumber = $("fieldset:visible .pageNumber", context);
                 
                 
                 var oldPageNumber = parseInt(pageNumber.val());
@@ -622,31 +650,7 @@ step.util = {
                 }
             });
             
-//            $(".concordanceFormat").button({
-//                text: false,
-//                icons: {
-//                    primary: "ui-icon-grip-dotted-vertical"
-//                }
-//            }).click(function() {
-//                var terms = step.search.highlightTerms;
-//                if(terms.length != 1) {
-//                    step.util.raiseError("Concordance style is only available for single-term searches");
-//                }
-//                
-////                var term = step.search.highlightTerms[0];
-////                var searchResults = $(".searchResults", step.util.getPassageContainer(this));
-////                $(".searchResultRow", searchResults).each(function(i, item) {
-////                    var textValue = $(item).text();
-////                    
-////                    
-////                    //find the highlights
-////                    var concordanceMiddle = $("<span class='concordanceMiddleColumn'></span>").add($(".highlight", item));
-////                    
-////                    var row = $(item).html(concordanceMiddle);
-////                });
-//            });
-//            
-            $(".refineSearch").button({
+            $(".refineSearch", context).button({
                 text: false,
                 icons: {
                     primary: "ui-icon-pencil"
@@ -655,20 +659,20 @@ step.util = {
                 var passageContainer = step.util.getPassageContainer(this);
                 step.search.refinedSearch.push(step.search.lastSearch);
 
-                $(".refinedSearch .refinedSearchLabel", passageContainer).html(__s.refine_search_results + " " + step.search.refinedSearch.join("=>"));
+                $(".refinedSearch .refinedSearchLabel", context).html(__s.refine_search_results + " " + step.search.refinedSearch.join("=>"));
                 
                 //blank the results
-                $("fieldset:visible .resultEstimates", passageContainer).html("");
+                $("fieldset:visible .resultEstimates", context).html("");
                 
                 //trigger the reset button
-                $("fieldset:visible .resetSearch").trigger("click");
+                $("fieldset:visible .resetSearch", context).trigger("click");
                 
-                $(".refinedSearch", passageContainer).show();
+                $(".refinedSearch", context).show();
             });
             
 
             
-            $(".showSearchCriteria").button({
+            $(".showSearchCriteria", context).button({
                 text: false,
                 icons: {
                     primary: "ui-icon-circle-triangle-s"
@@ -682,7 +686,7 @@ step.util = {
             
             
 
-            $(".hideSearchCriteria").button({
+            $(".hideSearchCriteria", context).button({
                 text : false,
                 icons : {
                     primary : "ui-icon-circle-triangle-n"
@@ -694,7 +698,7 @@ step.util = {
                 refreshLayout();
             });
             
-            $(".searchToolbarButtonSets").buttonset();
+            $(".searchToolbarButtonSets", context).buttonset();
             
             
             $(step.util).hear("versions-initialisation-completed", function() {

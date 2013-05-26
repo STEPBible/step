@@ -1,7 +1,8 @@
 $(function() {
     $.widget("custom.detailSlider", {
     	options : {
-            value : 0
+            value : 0,
+            changed : undefined
         },
 
         /**
@@ -44,7 +45,9 @@ $(function() {
             this.value(value);
             this.options.value = value;
             this._updateSliderImpact(value);
-            this.element.eq(0).trigger("change", value);
+            if(this.options.changed) {
+                this.options.changed(value);
+            }
         },
 
         /**

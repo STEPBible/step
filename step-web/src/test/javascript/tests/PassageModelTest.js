@@ -205,24 +205,24 @@ test("PassageModel - Check pretty URLs", function() {
         options : ["Notes"]
     });
 
-    equals(model.getLocation(), "0/__passage/2/ESV/Gen.2/Notes/KJV/INTERLEAVED");
+    equals(model.getLocation(), "0/passage/2/ESV/Gen.2/Notes/KJV/INTERLEAVED");
 
     //take off an argument and start again - this effectively sets the mode to default to interleaved
     model.set("interlinearMode", "");
-    equals(model.getLocation(), "0/__passage/2/ESV/Gen.2/Notes/KJV/INTERLEAVED");
+    equals(model.getLocation(), "0/passage/2/ESV/Gen.2/Notes/KJV/INTERLEAVED");
 
     //take off an argument and start again
     model.set("extraVersions", []);
-    equals(model.getLocation(), "0/__passage/2/ESV/Gen.2/Notes");
+    equals(model.getLocation(), "0/passage/2/ESV/Gen.2/Notes");
 
     //take off an argument and start again
     model.set("options", []);
-    equals(model.getLocation(), "0/__passage/2/ESV/Gen.2");
+    equals(model.getLocation(), "0/passage/2/ESV/Gen.2");
 
     //put something at the end we get some empty fragments
     model.set("extraVersions", ["ASV"]);
     model.set("interlinearMode", "Interlinear");
-    equals(model.getLocation(), "0/__passage/2/ESV/Gen.2//ASV/INTERLEAVED");
+    equals(model.getLocation(), "0/passage/2/ESV/Gen.2//ASV/INTERLEAVED");
 });
 
 test("Test validate options is array", function() {

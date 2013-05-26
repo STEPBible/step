@@ -28,66 +28,66 @@
  ******************************************************************************/
 step.state = {
      trackState : function(selector, namespace, defaultHandler) {
-         if($.isArray(selector)) {
-             for(var i = 0; i < selector.length; i++) {
-                 this.trackState(selector[i], namespace, defaultHandler);
-             }
-             
-             //add handlers for all defaults too
-             if(defaultHandler) {
-                 this.trackedDefaults.push(defaultHandler);             
-             }
-             return;
-         }
-         
-         var selected = $(selector);
-         var key = selector.substring(1);
-         selected.change(function(){
-             var controlValue = this.type == 'checkbox' ? $(this).prop('checked') : $(this).val();
-             
-             var passageId = step.passage.getPassageId(this);
-             step.state[namespace][key](passageId, controlValue);
-         });
-         
-         
-         if(step.state[namespace] == undefined) {
-             step.state[namespace] = {};
-         }
-         
-         step.state[namespace][key] = function(passageId, value) {
-             var specificSelector = $(selector, step.util.getPassageContainer(passageId));
-             
-             if(specificSelector == undefined) {
-                 console.log("WARNING: specificSelector does not match any elements. Selector given was " + selector);
-             }
-             
-             var selectedElement = specificSelector.get(0);
-             if(selectedElement == undefined) {
-                 console.log("WARNING: specificSelector does not match any elements. Selector given was " + selector);
-                 return;
-             }
-             
-             if(specificSelector.get(0).type == 'checkbox') {
-                     if (value != null) { 
-                         specificSelector.prop('checked', value == "true" || value == true); 
-                     }
-                     
-                     var checkboxValue = step.state._storeAndRetrieveCookieState(passageId, key, value, false);
-                     if(checkboxValue == undefined || checkboxValue == "") {
-                         checkboxValue = step.state._storeAndRetrieveCookieState(passageId, key, "false", false);
-                     }
-                     return checkboxValue;
-             } else {
-                 if (value != null && specificSelector.val() != value) { 
-                     specificSelector.val(value); 
-                 }
-                 return step.state._storeAndRetrieveCookieState(passageId, key, value, false);
-             }
-         };
-         
-         //add to list of tracked elements
-         this.trackedKeys.push([namespace, key, selected.length]);
-         
+//         if($.isArray(selector)) {
+//             for(var i = 0; i < selector.length; i++) {
+//                 this.trackState(selector[i], namespace, defaultHandler);
+//             }
+//
+//             //add handlers for all defaults too
+//             if(defaultHandler) {
+//                 this.trackedDefaults.push(defaultHandler);
+//             }
+//             return;
+//         }
+//
+//         var selected = $(selector);
+//         var key = selector.substring(1);
+//         selected.change(function(){
+//             var controlValue = this.type == 'checkbox' ? $(this).prop('checked') : $(this).val();
+//
+//             var passageId = step.passage.getPassageId(this);
+//             step.state[namespace][key](passageId, controlValue);
+//         });
+//
+//
+//         if(step.state[namespace] == undefined) {
+//             step.state[namespace] = {};
+//         }
+//
+//         step.state[namespace][key] = function(passageId, value) {
+//             var specificSelector = $(selector, step.util.getPassageContainer(passageId));
+//
+//             if(specificSelector == undefined) {
+//                 console.log("WARNING: specificSelector does not match any elements. Selector given was " + selector);
+//             }
+//
+//             var selectedElement = specificSelector.get(0);
+//             if(selectedElement == undefined) {
+//                 console.log("WARNING: specificSelector does not match any elements. Selector given was " + selector);
+//                 return;
+//             }
+//
+//             if(specificSelector.get(0).type == 'checkbox') {
+//                     if (value != null) {
+//                         specificSelector.prop('checked', value == "true" || value == true);
+//                     }
+//
+//                     var checkboxValue = step.state._storeAndRetrieveCookieState(passageId, key, value, false);
+//                     if(checkboxValue == undefined || checkboxValue == "") {
+//                         checkboxValue = step.state._storeAndRetrieveCookieState(passageId, key, "false", false);
+//                     }
+//                     return checkboxValue;
+//             } else {
+//                 if (value != null && specificSelector.val() != value) {
+//                     specificSelector.val(value);
+//                 }
+//                 return step.state._storeAndRetrieveCookieState(passageId, key, value, false);
+//             }
+//         };
+//
+//         //add to list of tracked elements
+//         this.trackedKeys.push([namespace, key, selected.length]);
+//
      }, 
 
      trackedKeys : [],
@@ -164,11 +164,11 @@ step.state = {
     },
     
     restore : function() {
-        this.restoreTrackedKeys();
-        this.restoreTrackedDefaults();
+//        this.restoreTrackedKeys();
+//        this.restoreTrackedDefaults();
         
         // restore active search
-        step.state.view.restore();
+//        step.state.view.restore();
         
         //restore active language
         this._restoreLanguage();
@@ -178,19 +178,19 @@ step.state = {
         //add the sliders to every fieldset - this needs to happen before the passages are restored
 //        $("fieldset").detailSlider();
 
-        for ( var i in passageIds) {
-            step.menu.tickMenuItem(step.menu.getMenuItem(this.activeSearch(i), i));
-//            step.state.passage.restore(i);
-            step.state.original.restore(i);
-//            this._showRelevantFieldSet(i);
-        }
+//        for ( var i in passageIds) {
+//            step.menu.tickMenuItem(step.menu.getMenuItem(this.activeSearch(i), i));
+////            step.state.passage.restore(i);
+//            step.state.original.restore(i);
+////            this._showRelevantFieldSet(i);
+//        }
         
-        step.util.ui.initSearchToolbar();
+//        step.util.ui.initSearchToolbar();
         
         //finally start listening for hash changes
-        window.onhashchange = function() {
+//        window.onhashchange = function() {
 //            step.state.browser.hashChange();
-        };
+//        };
         
 //        step.state.browser.hashChange();
      },

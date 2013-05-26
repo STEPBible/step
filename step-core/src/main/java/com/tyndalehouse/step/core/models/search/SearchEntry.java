@@ -9,5 +9,4 @@ import java.io.Serializable;
  * 
  */
 public interface SearchEntry extends Serializable {
-
 }

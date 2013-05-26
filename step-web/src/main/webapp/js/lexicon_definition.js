@@ -72,7 +72,7 @@ step.lexicon = {
             //if we're in single view, then we would want to bring up the second column
             step.state.view.ensureTwoColumnView();
             
-            step.state.activeSearch(targetPassageId, 'SEARCH_ORIGINAL', true);
+            step.state.activeSearch(targetPassageId, 'original', true);
         }
     },
 

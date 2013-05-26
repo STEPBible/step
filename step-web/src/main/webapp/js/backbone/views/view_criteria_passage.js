@@ -1,6 +1,6 @@
 var PassageCriteriaView;
 PassageCriteriaView = Backbone.View.extend({
-    el: function() { return $("fieldset[name='SEARCH_PASSAGE']").eq(this.model.get("passageId")); },
+    el: function() { return $($("fieldset[name='SEARCH_PASSAGE']")[this.model.get("passageId")]); },
     events: {
         "change input.drop": "updateModel",
         "click .searchPassage": "changePassage",
@@ -8,11 +8,14 @@ PassageCriteriaView = Backbone.View.extend({
     },
 
     initialize: function () {
+        var self = this;
         this.version = this.$el.find(".passageVersion");
         this.reference = this.$el.find(".passageReference");
         this.extraVersions = this.$el.find(".extraVersions");
         this.interlinearMode = this.$el.find(".extraVersionsDisplayOptions");
-        this.detailLevel = this.$el.detailSlider();
+        this.detailLevel = this.$el.detailSlider({ changed : function(newValue) {
+            self.model.save({ detailLevel : newValue });
+        }});
 
         this.versionInfo = this.$el.find(".infoAboutVersion").button({ icons: { primary: "ui-icon-info" }, text: false});
         this.$el.find(".searchPassage").button({ icons: { primary: "ui-icon-search" }, text: false });
@@ -23,12 +26,6 @@ PassageCriteriaView = Backbone.View.extend({
         this.version.versions();
         this.extraVersions.versions({ multi: true });
         this.reference.biblebooks({ version : this.model.get("version") });
-
-        var self = this;
-        this.detailLevel.detailSlider();
-        this.detailLevel.on("change", function (event, newValue) {
-            self.updateModel(event);
-        });
 
         //listen to model changes on version to update the version dropdown
         this.listenTo(this.model, 'change:version', this._updateViewWithVersionChange);

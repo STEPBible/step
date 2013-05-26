@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Wraps around all heading results kind of searches for Subjects
  */
-public class KeyedSearchResultSearchEntry implements SearchEntry {
+public class KeyedSearchResultSearchEntry extends LexicalSearchEntry {
     private static final long serialVersionUID = -5226707320157394428L;
     // key, e.g. the verse reference
     private String key;
@@ -42,7 +42,7 @@ public class KeyedSearchResultSearchEntry implements SearchEntry {
 
     /**
      * adds an entry to the results
-     * 
+     *
      * @param keyedVerseContent the content to be added
      */
     public void addEntry(final KeyedVerseContent keyedVerseContent) {

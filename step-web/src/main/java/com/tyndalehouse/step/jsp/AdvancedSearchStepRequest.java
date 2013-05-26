@@ -47,18 +47,18 @@ import com.tyndalehouse.step.core.models.ClientSession;
 // CHECKSTYLE:OFF
 public class AdvancedSearchStepRequest extends WebStepRequest {
     private static final Object[] PRIMARY_INCLUDE_WITHIN = new Object[] {
-            "<input type=\"text\" class=\"textPrimaryIncludeRangedWords\" size=\"15\" />",
-            "<input type=\"text\" class=\"textPrimaryWithinXWords\" size=\"2\" />" };
+            "<input type=\"text\" class=\"textPrimaryIncludeRangedWords _m\" size=\"15\" />",
+            "<input type=\"text\" class=\"textPrimaryWithinXWords _m\" size=\"2\" />" };
 
     private static final Object[] CLOSE_BY_INCLUDE_WITHIN = new Object[] {
-            "<input type=\"text\" class=\"textCloseByIncludeRangedWords\" size=\"15\" />",
-            "<input type=\"text\" class=\"textCloseByWithinXWords\" size=\"2\" />" };
+            "<input type=\"text\" class=\"textCloseByIncludeRangedWords _m\" size=\"15\" />",
+            "<input type=\"text\" class=\"textCloseByWithinXWords _m\" size=\"2\" />" };
 
     private static final Object[] RESTRICT = new Object[] {
-            "<input type=\"text\" class=\"textRestriction showRanges\" size=\"15\" />",
-            "<input type=\"text\" class=\"textRestrictionExclude showRanges\" size=\"15\" />" };
+            "<input type=\"text\" class=\"textRestriction showRanges drop _m\" size=\"15\" source=\"step.defaults.search.textual.availableRanges\" ro=\"false\"  />",
+            "<input type=\"text\" class=\"textRestrictionExclude showRanges drop _m\" size=\"15\" source=\"step.defaults.search.textual.availableRanges\" ro=\"false\" default=\"\" />" };
 
-    private static final String QUERY_PROXIMITY = "<input type=\"text\" class=\"textVerseProximity\" size=\"2\" />";
+    private static final String QUERY_PROXIMITY = "<input type=\"text\" class=\"textVerseProximity _m\" size=\"2\" />";
 
     private final ResourceBundle bundle;
 

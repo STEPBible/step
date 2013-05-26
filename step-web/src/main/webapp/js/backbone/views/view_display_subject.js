@@ -1,26 +1,13 @@
-var SubjectDisplayView = Backbone.View.extend({
-    el: function () {
-        return $(".passageContainer").eq(this.model.get("passageId"));
-    },
-    initialize: function () {
-        Backbone.Events.on("subject:new:" + this.model.get("passageId"), this.render, this);
-        this.passageContent = this.$el.find(".passageContent");
-    },
-
-    render: function (subjectSearchResults) {
+var SubjectDisplayView = SearchDisplayView.extend({
+    renderSearch: function (searchResults, query) {
         console.log("Rendering subject search results");
-        var query = step.util.undoReplaceSpecialChars(subjectSearchResults.query);
+        var query = step.util.undoReplaceSpecialChars(searchResults.query);
 
-        var results;
-        if(subjectSearchResults.total == 0) {
-            results = $("<div>").append(__s.search_no_search_results_found);
-        } else if (query.startsWith("s=")) {
-            results = this._doSimpleSubjectSearchResults(query, subjectSearchResults.results);
+        if (query.startsWith("s=")) {
+            return this._doSimpleSubjectSearchResults(query, searchResults.results);
         } else {
-            results = this._doNaveSearchResults(query, subjectSearchResults.results);
+            return this._doNaveSearchResults(query, searchResults.results);
         }
-
-        step.util.ui.emptyOffDomAndPopulate(this.passageContent, this._doSpecificSearchRequirements(query, results));
     },
 
     /**

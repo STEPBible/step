@@ -38,12 +38,12 @@
 	<li  menu-name="SEARCH"><a href="javascript:void(0)"><fmt:message key="search" /></a>
 	<ul>
 		<li><a href="javascript:void(0)" name="SEARCH_PASSAGE"><fmt:message key="search_passage_lookup" /></a></li>
-		<li class="menuSectionStart"><a href="javascript:void(0)" name="SEARCH_SIMPLE_TEXT"><fmt:message key="search_text" /></a></li>
-		<li><a href="javascript:void(0)" name="SEARCH_SUBJECT"><fmt:message key="search_subject" /></a></li>
-		<li><a href="javascript:void(0)" name="SEARCH_ORIGINAL"><fmt:message key="search_word" /></a></li>
+		<li class="menuSectionStart"><a href="javascript:void(0)" name="text"><fmt:message key="search_text" /></a></li>
+		<li><a href="javascript:void(0)" name="subject"><fmt:message key="search_subject" /></a></li>
+		<li><a href="javascript:void(0)" name="original"><fmt:message key="search_word" /></a></li>
 <!-- 		<li><a href="javascript:void(0)" name="SEARCH_LEXICON_DEFINITION">Lexicon definition search</a></li> -->
 <!-- 		<li><a href="javascript:void(0)" name="SEARCH_TIMELINE">Timeline search</a></li> -->
-		<li class="menuSectionStart"><a href="javascript:void(0)" name="SEARCH_TEXT"><fmt:message key="search_advanced_text" /></a></li>
+		<li class="menuSectionStart"><a href="javascript:void(0)" name="advanced"><fmt:message key="search_advanced_text" /></a></li>
 <%-- 		<li class="menuSectionStart"><a href="javascript:void(0)" name="SEARCH_PERSONAL_NOTES"><fmt:message key="personal_notes" /></a></li> --%>
 	</ul>
 	</li>

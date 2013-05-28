@@ -157,7 +157,7 @@
 			from <a href="http://www.tyndalehouse.com" target="_new">Tyndale House, Cambridge</a></h1>
 			<img src="images/step-logo-big.png" title="STEP" /><br />
 			<em><fmt:message key="step_tag_line" /></em><br /><br />
-			
+
 			<table>
 				<tr>
 					<td><a target="_new" href="https://stepweb.atlassian.net/wiki/display/SUG/STEP+User+Guide" title="<fmt:message key="quick_tutorial" />"/><fmt:message key="help_manual" /></a></td>
@@ -169,13 +169,13 @@
 				</tr>
 			</table>
 			<br />
-			<a target="_new" href="http://www.tyndale.cam.ac.uk" style="color: #991c32">Tyndale House<br />Cambridge</a> 
+			<a target="_new" href="http://www.tyndale.cam.ac.uk" style="color: #991c32">Tyndale House<br />Cambridge</a>
 			<br />
 			&copy; <%= java.util.Calendar.getInstance().get(java.util.Calendar.YEAR)  %>
 		</div>
-		
+
 		<jsp:include page="js/bookmark/bookmark.jsp"></jsp:include>
-			
+
 		<div class="column rightColumn">
 			<div class="passageContainer" passage-id=1>
 				<div id="rightPaneMenu" class="innerMenus"><jsp:include page="js/menu/passage/menu.jsp" /></div>

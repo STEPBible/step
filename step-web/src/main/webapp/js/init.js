@@ -280,6 +280,7 @@ function hearViewChanges() {
                     //called when the left column is resized
                     adjustColumns();
                 }});
+
                 adjustColumns();
             }
        } else {

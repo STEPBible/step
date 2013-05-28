@@ -549,7 +549,8 @@ step.search = {
         $.each(searchResults, function(i, item) {
             if(item.accentedUnicode && item.accentedUnicode != lastUnicode) {
                 var header = $("<th>").addClass("searchResultStrongHeader").prop("colspan", "2");
-                table.append(header);
+                var headerRow = $("<tr>").append(header);
+                table.append(headerRow);
                 
                 if(sortOrder == VOCABULARY) {
                     header.append(item.stepGloss == undefined ? "-" : item.stepGloss);

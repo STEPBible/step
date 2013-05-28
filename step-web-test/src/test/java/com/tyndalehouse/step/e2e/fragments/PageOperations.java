@@ -1,7 +1,5 @@
 package com.tyndalehouse.step.e2e.fragments;
 
-import javax.annotation.Nullable;
-
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -10,7 +8,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import com.google.common.base.Predicate;
 
 public final class PageOperations {
-    private static final String STEP_URL = "http://localhost:8080/step-web?debug";
+    private static final String STEP_URL = "http://localhost:8080/?debug";
 
     /** prevent instantiation */
     private PageOperations() {
@@ -38,7 +36,7 @@ public final class PageOperations {
         wait.until(new Predicate<WebDriver>() {
 
             @Override
-            public boolean apply(@Nullable final WebDriver input) {
+            public boolean apply(final WebDriver input) {
                 return e.isDisplayed();
             }
         });

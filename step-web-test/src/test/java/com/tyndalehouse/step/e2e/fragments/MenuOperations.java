@@ -5,8 +5,6 @@ import static com.tyndalehouse.step.e2e.fragments.PageOperations.waitToClick;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import javax.annotation.Nullable;
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
@@ -37,7 +35,7 @@ public final class MenuOperations {
             final WebDriverWait wait = new WebDriverWait(p.getDriver(), 2);
             wait.until(new Predicate<WebDriver>() {
                 @Override
-                public boolean apply(@Nullable final WebDriver input) {
+                public boolean apply(final WebDriver input) {
                     try {
                         final WebElement menuLink = p.getDriver().findElement(By.linkText(menuItem));
                         menuLink.click();
@@ -86,7 +84,7 @@ public final class MenuOperations {
         wait.until(new Predicate<WebDriver>() {
 
             @Override
-            public boolean apply(@Nullable final WebDriver input) {
+            public boolean apply(final WebDriver input) {
                 return menu.findElements(By.xpath(".//li/a[img]")).size() == 0;
             }
         });

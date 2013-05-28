@@ -1,6 +1,5 @@
 var StepRouter = Backbone.Router.extend({
     fragments: [undefined, undefined],
-    fragmentPrefix: /[0-9]+\/__[a-zA-Z]+\//,
     routes: {
         /*******************************
          * This fragment is deliberately placed above everything else to trap fragments starting with __
@@ -8,7 +7,7 @@ var StepRouter = Backbone.Router.extend({
         "__*fragment": "entireUnparsedUrl",
         ":passageId/passage/:detail/:version/:reference(/:options)(/:extraVersions)(/:interlinearMode)": "changePassage",
         ":passageId/passage/:detail/:version/:reference/(/:extraVersions)(/:interlinearMode)": "changePassageNoOptions",
-        ":passageId/:searchType/:pageNumber/:querySyntax(/:context)(/:version)(/:sortOrder)": "search"
+        ":passageId/:searchType/:pageNumber/:querySyntax/:context/:version/:sortOrder/:params": "search"
     },
     lastUrls: [],
     refinedSearch: [],
@@ -100,13 +99,17 @@ var StepRouter = Backbone.Router.extend({
         var fragments = this._getColumnFragments(wholeUrl);
         for (var i = 0; i < fragments.length; i++) {
             //prevent infinite recursion
-            if (fragments[i] != wholeUrl) {
+//            if (fragments[i] != wholeUrl) {
                 //also, need to remove the __/ from each fragment
-                if (fragments[i].indexOf("__/") == 0) {
-                    Backbone.history.loadUrl(fragments[i].substring("__/".length));
-                }
-                console.log("Unable to route as fragment doesn't start with __/");
-            }
+//                if (fragments[i].indexOf("__/") == 0) {
+                    if(fragments[i][0] == '/') {
+                        fragments[i] = fragments[i].substring(1);
+                    }
+
+                    Backbone.history.loadUrl(fragments[i]);
+//                }
+//                console.log("Unable to route as fragment doesn't start with __/");
+//            }
         }
     },
 
@@ -118,10 +121,24 @@ var StepRouter = Backbone.Router.extend({
      * @param context
      * @param version
      */
-    search: function (passageId, searchType, pageNumber, querySyntax, context, version, sortOrder) {
+    search: function (passageId, searchType, pageNumber, querySyntax, context, version, sortOrder, params) {
+        console.log("Restoring params", params);
+
+        if(params) {
+            Backbone.Events.trigger(searchType + ":restoreParams:" + passageId, { params : params.split() });
+        }
 
         console.log("TRIGGER SEARCH: ", searchType, querySyntax, new Error().stack);
-
+        var menuModel = MenuModels.at(passageId);
+        if(menuModel != null) {
+            if(menuModel.get("selectedSearch") != searchType) {
+                menuModel.save({ selectedSearch: searchType });
+            } else {
+                console.log("WARN: Skipping update on model, as already in date");
+            }
+        } else {
+            console.log("NO MODEL TO TRIGGER SEARCH");
+        }
 
         var query = step.util.replaceSpecialChars(querySyntax);
         this._validateAndRunSearch(searchType, passageId, query, version, sortOrder, context, pageNumber, sortOrder);
@@ -223,12 +240,12 @@ var StepRouter = Backbone.Router.extend({
 
         var url = BIBLE_GET_BIBLE_TEXT + [version, reference, options, extraVersions, interlinearMode].join("/");
 
-        if (this.lastUrls[passageId] == url) {
-            //execute all callbacks only
-            step.passage.executeCallbacks(passageId);
-            return;
-        }
-        this.lastUrls[passageId] = url;
+//        if (this.lastUrls[passageId] == url) {
+//            //execute all callbacks only
+//            step.passage.executeCallbacks(passageId);
+//            return;
+//        }
+//        this.lastUrls[passageId] = url;
 
 
         // send to server

@@ -134,5 +134,5 @@ step.alternatives = {
                 return "<span title=\"" + extraValue + "\">" + fullText + "</span>";
             }
             return fullText;
-        },
+        }
 }

@@ -17,8 +17,8 @@ import com.tyndalehouse.step.e2e.tests.StepTestSuite;
 
 public class WebDriverTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(WebDriverTest.class);
-    private static WebDriver inOneWindow = null;
-    private WebDriver driver;
+//    private static WebDriver inOneWindow = null;
+    private static WebDriver driver;
 
     public static WebDriver createDriver() {
         try {
@@ -29,7 +29,6 @@ public class WebDriverTest {
             return remoteWebDriver;
         } catch (final IOException e) {
             fail("Fails the test because driver was not created successfully");
-
             throw new IllegalStateException("This will never occur");
         }
     }
@@ -54,33 +53,33 @@ public class WebDriverTest {
         }
     }
 
-    protected WebDriver getDriver() {
-        if (inOneWindow != null) {
-            return inOneWindow;
+    public static WebDriver getDriver() {
+//        if (inOneWindow != null) {
+//            return inOneWindow;
+//        }
+
+        if (driver == null) {
+            driver = createDriver();
         }
 
-        if (this.driver == null) {
-            this.driver = createDriver();
-        }
-
-        return this.driver;
+        return driver;
     }
 
-    protected void setDriver(final WebDriver driver) {
-        this.driver = driver;
-    }
+//    protected void setDriver(final WebDriver driver) {
+//        this.driver = driver;
+//    }
 
-    /**
-     * @param inOneWindow the inOneWindow to set
-     */
-    public static void setInOneWindow(final WebDriver inOneWindow) {
-        WebDriverTest.inOneWindow = inOneWindow;
-    }
+//    /**
+//     * @param inOneWindow the inOneWindow to set
+//     */
+//    public static void setInOneWindow(final WebDriver inOneWindow) {
+////        WebDriverTest.inOneWindow = inOneWindow;
+//    }
 
-    /**
-     * @return the inOneWindow
-     */
-    public static WebDriver getInOneWindow() {
-        return inOneWindow;
-    }
+//    /**
+//     * @return the inOneWindow
+//     */
+//    public static WebDriver getInOneWindow() {
+//        return inOneWindow;
+//    }
 }

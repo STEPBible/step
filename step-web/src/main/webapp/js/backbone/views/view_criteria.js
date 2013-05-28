@@ -43,6 +43,7 @@ var SearchCriteria = Backbone.View.extend({
         this.querySyntax = this.$el.find(".querySyntax");
         this.pageNumber = this.$el.find(".pageNumber");
         this.searchVersions = this.$el.find(".searchVersions");
+        this.searchVersions.versions({ multi: true });
 //        this.context = this.$el.find(".searchContext");
 
         this.detailLevel = this.$el.detailSlider({ changed : function(newValue) {

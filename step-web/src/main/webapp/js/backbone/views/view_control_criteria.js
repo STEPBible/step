@@ -5,7 +5,7 @@ CriteriaControlView = Backbone.View.extend({
     el: function () {
         return $(".advancedSearch").eq(this.model.get("passageId"));
     },
-    defaultPageSize : 50,
+    defaultPageSize: 50,
 
     initialize: function () {
         console.log(step.passage.getPassageId(this.$el));
@@ -46,11 +46,15 @@ CriteriaControlView = Backbone.View.extend({
 
                     //now need to create a view/model object for the fieldset... of the right type...
                     self.createViewFor(selectedSearch, allFieldsets);
-                    self.deferredChangeVisibleCriteria(fieldsets, selectedSearch);
+                    self.deferredChangeVisibleCriteria(selectedSearch);
+
+                    //since we have manually loaded up the view & models, we need to trigger a change
+                    //to force a change update.
+                    self.model.trigger("forceSearch", self.model);
                 });
             }
         } else {
-            this.deferredChangeVisibleCriteria(fieldsets, selectedSearch);
+            this.deferredChangeVisibleCriteria(selectedSearch);
         }
     },
 
@@ -70,7 +74,7 @@ CriteriaControlView = Backbone.View.extend({
                 this._fetch(selectedSearch, fieldsets, SimpleTextModels, SimpleTextSearchModel, TextCriteria, TextDisplayView);
                 break;
             case "original":
-                this._fetch(selectedSearch, fieldsets, WordSearchModels, WordSearchModel , WordCriteria, WordDisplayView);
+                this._fetch(selectedSearch, fieldsets, WordSearchModels, WordSearchModel, WordCriteria, WordDisplayView);
                 break;
             case "advanced":
                 this._fetch(selectedSearch, fieldsets, AdvancedSearchModels, AdvancedSearchModel, AdvancedCriteria, TextDisplayView);
@@ -97,7 +101,7 @@ CriteriaControlView = Backbone.View.extend({
 
             for (var i = 0; i < orderedModels.length; i++) {
                 if (orderedModels[i] == undefined) {
-                    models.add(new modelClass({ passageId: i, searchType : searchType }));
+                    models.add(new modelClass({ passageId: i, searchType: searchType }));
                 }
             }
         }
@@ -113,9 +117,9 @@ CriteriaControlView = Backbone.View.extend({
         if (models.length < passageIds) {
             models.fetch();
             this.createModelsIfRequired(models, passageIds, modelClass, searchType);
-            for(var i = 0; i < passageIds; i++) {
-                new criteriaClass({ model: models.at(i), searchType: searchType, el : fieldsets[i] });
-                new displayClass({ model: models.at(i), searchType: searchType, paged : !paged});
+            for (var i = 0; i < passageIds; i++) {
+                new criteriaClass({ model: models.at(i), searchType: searchType, el: fieldsets[i] });
+                new displayClass({ model: models.at(i), searchType: searchType, paged: !paged});
             }
         }
     },
@@ -125,10 +129,9 @@ CriteriaControlView = Backbone.View.extend({
      * @param fieldsets
      * @param selectedSearch
      */
-    deferredChangeVisibleCriteria: function (fieldsets, selectedSearch) {
+    deferredChangeVisibleCriteria: function (selectedSearch) {
+        var fieldsets = this.$el.find("fieldset");
         this.passageToolbarContainer.toggle(selectedSearch == "SEARCH_PASSAGE");
         fieldsets.hide().filter("[name='" + selectedSearch + "']").show();
-
-        this.trigger("change");
     }
 });

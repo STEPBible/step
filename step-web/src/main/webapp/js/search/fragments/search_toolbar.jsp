@@ -12,7 +12,7 @@
 <fmt:setBundle basename="HtmlBundle" />
 <div class="searchToolbar">
 	<% if(request.getParameter("bibleVersions").equals("true")) { %>
-	    <fmt:message key="search_bible_versions" /> <input type='text' class='searchVersions <%=request.getParameter("namespace")%>SearchVersion _drop _m' />
+	    <fmt:message key="search_bible_versions" /> <input type='text' class='searchVersions <%=request.getParameter("namespace")%>SearchVersion drop _m' />
 	<% } %>
 	<span class="searchToolbarButtonSets"> 
 	

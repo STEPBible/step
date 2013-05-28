@@ -1,7 +1,5 @@
 package com.tyndalehouse.step.e2e.tests;
 
-import javax.annotation.Nullable;
-
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -37,7 +35,7 @@ public class StepBookmarkTest extends WebDriverTest {
         new WebDriverWait(this.getDriver(), 5).until(new Predicate<WebDriver>() {
 
             @Override
-            public boolean apply(@Nullable final WebDriver input) {
+            public boolean apply(final WebDriver input) {
                 return menuItem.isDisplayed();
             }
         });
@@ -59,7 +57,7 @@ public class StepBookmarkTest extends WebDriverTest {
         final WebDriverWait wait = new WebDriverWait(this.getDriver(), 5);
         wait.until(new Predicate<WebDriver>() {
             @Override
-            public boolean apply(@Nullable final WebDriver input) {
+            public boolean apply(final WebDriver input) {
                 return StepBookmarkTest.this.getDriver().findElement(By.cssSelector(".bookmarkItem")).getText()
                         .trim().equals(reference);
             }

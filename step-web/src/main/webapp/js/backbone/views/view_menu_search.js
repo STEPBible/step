@@ -4,6 +4,11 @@ var SearchMenuView = Backbone.View.extend({
         "click a[name]" : "changeView"
     },
 
+    initialize : function() {
+        var searchName = this.model.get("selectedSearch");
+        this.changeView({ target : this.$el.find("[name='" + searchName + "']").get(0) });
+    },
+
     changeView : function(event) {
         //get selected option
         step.menu.tickOneItemInMenuGroup({ menu : { element : this.$el}, menuItem : { element : event.target}});

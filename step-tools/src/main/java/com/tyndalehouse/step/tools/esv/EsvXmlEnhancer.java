@@ -178,6 +178,14 @@ public class EsvXmlEnhancer {
             return;
         }
 
+        if ("chapter".equals(esv.getNodeName())) {
+            this.currentVerse = esv.getAttribute("osisID") + ".0";
+            this.error = false;
+            this.verseTagging = indexTagging.get(this.currentVerse);
+            processVerse(esv, indexTagging);
+            //no return, since we want to process the children.
+        }
+
         final Element element = (Element) esv;
         final NodeList childNodes = element.getChildNodes();
         for (int i = 0; i < childNodes.getLength(); i++) {
@@ -209,8 +217,14 @@ public class EsvXmlEnhancer {
     private boolean isIgnoreable(final Element traversableElement) {
         final String nodeName = traversableElement.getNodeName();
 
-        if (nodeName.equals("note")) {
+        if ("note".equals(nodeName)) {
             return true;
+        }
+
+        //if the node is a title, and is non-canonical, then we ignore
+        if ("title".equals(nodeName)) {
+            String title = traversableElement.getAttribute("canonical");
+            return !title.equalsIgnoreCase("true");
         }
 
         return false;
@@ -496,7 +510,7 @@ public class EsvXmlEnhancer {
                     }
                 } else {
                     //we only add if there is also a space marker/punctuation somewhere afterwards, given we're talking about English punctuation
-                    if(ii+1 < textContent.length() && !Character.isLetterOrDigit(textContent.charAt(ii+1))) {
+                    if (ii + 1 < textContent.length() && !Character.isLetterOrDigit(textContent.charAt(ii + 1))) {
                         nonAlpha++;
                     }
                 }
@@ -786,7 +800,7 @@ public class EsvXmlEnhancer {
 
             // for every other case we basically accept the letters, but we do an extra
             // ignore for punctuation in the source text if it is followed by a space
-            if(!Character.isLetterOrDigit(c2) && c2 != ' ' && ii+1 < domText.length() && domText.charAt(ii+1) == ' ') {
+            if (!Character.isLetterOrDigit(c2) && c2 != ' ' && ii + 1 < domText.length() && domText.charAt(ii + 1) == ' ') {
                 nonAlpha++;
             }
         }
@@ -1004,12 +1018,12 @@ public class EsvXmlEnhancer {
                 prefixStrong(t, 'G');
             }
         } catch (NoSuchVerseException ex) {
-            LOGGER.warn("Unable to recognise [{}] as a reference", reference);
-
             //deal with 1John
-            if ("3John.3:15".equals(reference)) {
+            if ("3John.1.15".equals(reference)) {
                 t.setRef(reference);
                 prefixStrong(t, 'G');
+            } else {
+                LOGGER.warn("Unable to recognise [{}] as a reference", reference);
             }
         }
 

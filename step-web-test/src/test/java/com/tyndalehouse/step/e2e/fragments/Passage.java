@@ -2,8 +2,6 @@ package com.tyndalehouse.step.e2e.fragments;
 
 import static org.junit.Assert.assertEquals;
 
-import javax.annotation.Nullable;
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
@@ -52,7 +50,7 @@ public class Passage {
         w.until(new Predicate<WebDriver>() {
 
             @Override
-            public boolean apply(@Nullable final WebDriver input) {
+            public boolean apply(final WebDriver input) {
                 final String webText = passageText.getText();
                 LOGGER.trace("Passage currently reads [{}]", webText);
                 return webText.contains(text);
@@ -69,7 +67,7 @@ public class Passage {
         w.until(new Predicate<WebDriver>() {
 
             @Override
-            public boolean apply(@Nullable final WebDriver input) {
+            public boolean apply(final WebDriver input) {
                 final String webText = passageText.getText();
                 LOGGER.trace("Passage currently reads [{}]", webText);
                 return !webText.contains(text);
@@ -88,7 +86,7 @@ public class Passage {
         final WebDriverWait w = new WebDriverWait(this.driver, 5);
         w.until(new Predicate<WebDriver>() {
             @Override
-            public boolean apply(@Nullable final WebDriver input) {
+            public boolean apply(final WebDriver input) {
                 return Passage.this.refElement.getAttribute("value").equals(reference);
             }
         });

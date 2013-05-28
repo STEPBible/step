@@ -12,7 +12,7 @@
 	SimpleSearchStepRequest stepRequest = new SimpleSearchStepRequest(injector, request);
 %>
 <fmt:setBundle basename="HtmlBundle" />
-<fieldset class="simpleTextFields" name="SEARCH_SIMPLE_TEXT">
+<fieldset class="simpleTextFields" name="text">
 	<legend><fmt:message key="search_text" /></legend>
 
 	<table class="simpleTextFieldsTable">

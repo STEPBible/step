@@ -41,9 +41,9 @@ public class OsisReader {
         final String version = "ESV";
         final String ref = "Is.53";
 =======
-        final String version = "OSMHB";
-        final String ref = "Gen.1.26";
->>>>>>> 10f6f0c... Font changes + space removal for the hebrew hyphen
+        final String version = "ESVEx";
+        final String ref = "3Jo";
+>>>>>>> 8db87c8... Fixes for various bugs
 
         final Book currentBook = Books.installed().getBook(version);
 

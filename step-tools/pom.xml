@@ -46,7 +46,6 @@
 			<artifactId>slf4j-log4j12</artifactId>
 			<scope>runtime</scope>
 		</dependency>
-
 		<dependency>
 			<groupId>org.crosswire</groupId>
 			<artifactId>jsword</artifactId>

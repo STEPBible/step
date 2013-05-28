@@ -641,6 +641,13 @@ FONT.usg {
 	border-bottom: 1px dashed #33339F;
 }
 
+.introduction {
+
+    color: darkgrey;
+    font-style: italic;
+    display: block;
+}
+
 .colophon {
 	color: darkgrey;
 	font-style: italic;	

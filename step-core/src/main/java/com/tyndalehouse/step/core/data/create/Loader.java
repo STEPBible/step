@@ -163,7 +163,7 @@ public class Loader {
         do {
             try {
 
-                LOGGER.info("Waiting for KJV installation to finish...");
+                LOGGER.info("Waiting for version installation to finish...");
                 Thread.sleep(INSTALL_WAITING);
             } catch (final InterruptedException e) {
                 LOGGER.warn("Interrupted exception", e);

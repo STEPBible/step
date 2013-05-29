@@ -642,7 +642,7 @@ FONT.usg {
 }
 
 .introduction {
-
+    display: none;
     color: darkgrey;
     font-style: italic;
     display: block;

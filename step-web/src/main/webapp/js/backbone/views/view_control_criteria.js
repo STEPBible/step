@@ -8,13 +8,11 @@ CriteriaControlView = Backbone.View.extend({
     defaultPageSize: 50,
 
     initialize: function () {
-        console.log(step.passage.getPassageId(this.$el));
-
         this.listenTo(this.model, "change", this._changeVisibleCriteria);
         this.passageToolbarContainer = this.$el.find(".passageToolbarContainer");
 
         //show the right fieldset
-        this._changeVisibleCriteria();
+//        this._changeVisibleCriteria();
     },
 
     /**
@@ -32,6 +30,7 @@ CriteriaControlView = Backbone.View.extend({
 
             if (!fragmentsLoading[selectedSearch]) {
                 fragmentsLoading[selectedSearch] = true;
+                console.log("Loading ", selectedSearch, "from server", new Error().stack);
                 $.getSafe("js/search/fragments/" + selectedSearch + ".jsp", function (dataFragment) {
                     var fieldset = $($("<span>").html(dataFragment).children()[0]).unwrap();
                     fieldset.insertAfter(fieldsets[fieldsets.length - 1]);
@@ -46,7 +45,7 @@ CriteriaControlView = Backbone.View.extend({
 
                     //now need to create a view/model object for the fieldset... of the right type...
                     self.createViewFor(selectedSearch, allFieldsets);
-                    self.deferredChangeVisibleCriteria(selectedSearch);
+                    self.deferredChangeVisibleCriteria();
 
                     //since we have manually loaded up the view & models, we need to trigger a change
                     //to force a change update.
@@ -54,7 +53,7 @@ CriteriaControlView = Backbone.View.extend({
                 });
             }
         } else {
-            this.deferredChangeVisibleCriteria(selectedSearch);
+            this.deferredChangeVisibleCriteria();
         }
     },
 
@@ -84,28 +83,8 @@ CriteriaControlView = Backbone.View.extend({
         }
     },
 
-    /**
-     * Creates the models for those that are missing
-     * @param models the model list
-     * @param passageIds the total number of passage ids that we support
-     * @param modelClass the class of the model to be created
-     * @param searchType the type of search, e.g. subject, text, original, advanced
-     */
-    createModelsIfRequired: function (models, passageIds, modelClass, searchType) {
-        if (models.length < passageIds) {
-            var orderedModels = [undefined, undefined];
-            for (var i = 0; i < models.length; i++) {
-                var savedModel = models.at(i);
-                orderedModels[savedModel.get("passageId")] = savedModel;
-            }
 
-            for (var i = 0; i < orderedModels.length; i++) {
-                if (orderedModels[i] == undefined) {
-                    models.add(new modelClass({ passageId: i, searchType: searchType }));
-                }
-            }
-        }
-    }, /**
+    /**
      * Fetch models, and creates 2 if they don't exist...
      * @param models the models list
      * @param fieldsets the fieldsets, in the right order
@@ -113,23 +92,19 @@ CriteriaControlView = Backbone.View.extend({
      * @private
      */
     _fetch: function (searchType, fieldsets, models, modelClass, criteriaClass, displayClass, paged) {
-        var passageIds = 2;
-        if (models.length < passageIds) {
-            models.fetch();
-            this.createModelsIfRequired(models, passageIds, modelClass, searchType);
-            for (var i = 0; i < passageIds; i++) {
-                new criteriaClass({ model: models.at(i), searchType: searchType, el: fieldsets[i] });
-                new displayClass({ model: models.at(i), searchType: searchType, paged: !paged});
-            }
+        for (var i = 0; i < PASSAGE_IDS; i++) {
+            new criteriaClass({ model: models.at(i), searchType: searchType, el: fieldsets[i] });
+            new displayClass({ model: models.at(i), searchType: searchType, paged: !paged});
         }
     },
 
     /**
-     * Operations to do, after loading and inserting new fieldset into the DOM
-     * @param fieldsets
-     * @param selectedSearch
+     * Operations to do, after loading and inserting new fieldset into the DOM.
+     * By this time, we may have more fieldsets, or the selected search might be different,
+     * so we always take the latest values from the model.
      */
-    deferredChangeVisibleCriteria: function (selectedSearch) {
+    deferredChangeVisibleCriteria: function () {
+        var selectedSearch = this.model.get("selectedSearch");
         var fieldsets = this.$el.find("fieldset");
         this.passageToolbarContainer.toggle(selectedSearch == "SEARCH_PASSAGE");
         fieldsets.hide().filter("[name='" + selectedSearch + "']").show();

@@ -53,6 +53,7 @@ var SearchCriteria = Backbone.View.extend({
         this.resetButton = this.$el.find(".resetSearch").button();
 
         this.model.on("change", this._updateQuerySyntaxFromModel, this);
+        this.model.on("resync", this.syncValuesWithModel, this);
         step.util.ui.initSearchToolbar(this.$el);
     },
 

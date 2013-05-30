@@ -117,6 +117,7 @@
 	    <script src="js/bookmark/step.bookmark.js" type="text/javascript"></script>
 	    <script src="js/bookmark/step.bookmark.ui.js" type="text/javascript"></script>
 
+        <script src="js/backbone/url_local_storage.js" type="text/javascript"></script>
         <script src="js/backbone/models/model_passage.js" type="text/javascript"></script>
         <script src="js/backbone/views/view_display_passage.js" type="text/javascript"></script>
         <script src="js/backbone/router.js" type="text/javascript"></script>

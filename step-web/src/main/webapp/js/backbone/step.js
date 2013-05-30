@@ -5,6 +5,7 @@ var PassageCriteriaList = Backbone.Collection.extend({
         this.on("search", this.changePassage, this);
         this.on("change", this.changePassage, this);
     },
+
     changePassage: function (model, val, options) {
         console.log("Change to model", model)
         if (model != null) {
@@ -17,7 +18,7 @@ var PassageCriteriaList = Backbone.Collection.extend({
 
 var MenuList = Backbone.Collection.extend({
     model: SearchMenuModel,
-    localStorage: new Backbone.LocalStorage("menu-criteria"),
+    localStorage: new UrlLocalStorage("menu-criteria"),
     initialize: function () {
         this.on("change forceSearch", this.triggerModelChange, this);
     },
@@ -61,7 +62,7 @@ var MenuList = Backbone.Collection.extend({
 
 var SubjectList = Backbone.Collection.extend({
     model: SubjectSearchModel,
-    localStorage: new Backbone.LocalStorage("subject-criteria"),
+    localStorage: new UrlLocalStorage("subject-criteria"),
 
     initialize: function () {
         this.on("search", this.triggerSearch, this);
@@ -83,7 +84,7 @@ var SubjectList = Backbone.Collection.extend({
 
 var SimpleTextList = Backbone.Collection.extend({
     model: SimpleTextSearchModel,
-    localStorage: new Backbone.LocalStorage("simple-text-criteria"),
+    localStorage: new UrlLocalStorage("simple-text-criteria"),
 
     initialize: function () {
         this.on("search", this.triggerSearch, this);
@@ -105,7 +106,7 @@ var SimpleTextList = Backbone.Collection.extend({
 
 var WordSearchList = Backbone.Collection.extend({
     model: WordSearchModel,
-    localStorage: new Backbone.LocalStorage("word-search-criteria"),
+    localStorage: new UrlLocalStorage("word-search-criteria"),
 
     initialize: function () {
         this.on("search", this.triggerSearch, this);
@@ -125,7 +126,7 @@ var WordSearchList = Backbone.Collection.extend({
 
 var AdvancedSearchList = Backbone.Collection.extend({
     model: AdvancedSearchModel,
-    localStorage: new Backbone.LocalStorage("advanced-search-criteria"),
+    localStorage: new UrlLocalStorage("advanced-search-criteria"),
 
     initialize: function () {
         this.on("search", this.triggerSearch, this);
@@ -152,6 +153,30 @@ var WordSearchModels;
 var AdvancedSearchModels;
 
 //var PassageCriterias = new PassageCriteriaList;
+/**
+ * Creates the models for those that are missing
+ * @param models the model list
+ * @param passageIds the total number of passage ids that we support
+ * @param modelClass the class of the model to be created
+ * @param searchType the type of search, e.g. subject, text, original, advanced
+ */
+function createModelsIfRequired(models, modelClass, searchType) {
+    models.fetch();
+    if (models.length < PASSAGE_IDS) {
+        for (var i = 0; i < PASSAGE_IDS; i++) {
+            if (models.at(i) == undefined) {
+                models.add(new modelClass({ passageId: i, searchType: searchType }));
+            }
+        }
+    }
+
+    for(var i = PASSAGE_IDS; i < models.length; i++) {
+        models.remove(models.at(i));
+    }
+}
+
+
+var PASSAGE_IDS = 2;
 function initApp() {
     PassageModels = new PassageCriteriaList;
     MenuModels = new MenuList;
@@ -163,13 +188,17 @@ function initApp() {
     PassageModels.fetch();
     MenuModels.fetch();
 
+    createModelsIfRequired(SubjectModels, SubjectSearchModel, "subject");
+    createModelsIfRequired(SimpleTextModels, SimpleTextSearchModel, "text");
+    createModelsIfRequired(WordSearchModels, WordSearchModel, "original");
+    createModelsIfRequired(AdvancedSearchModels, AdvancedSearchModel, "advanced");
+
     //create new router
     stepRouter = new StepRouter();
 
     //check if we've got any models yet...
-    var passageIds = 2;
     var passageModels = [];
-    for (var i = 0; i < passageIds; i++) {
+    for (var i = 0; i < PASSAGE_IDS; i++) {
         //if i is less than the length of the stored models, then it means we already have a model
         var passageModel = i < PassageModels.length ? PassageModels.at(i) : new PassageModel({ passageId: i });
         var searchModel = i < MenuModels.length ? MenuModels.at(i) : new SearchMenuModel({ passageId: i});
@@ -191,6 +220,7 @@ function initApp() {
     }
 
     Backbone.history.start();
+    MenuModels.at(0).trigger("change", MenuModels.at(0));
 
 //    //trigger changes
 //    for(var i = PassageModels.length -1; i >= 0 ; i--) {

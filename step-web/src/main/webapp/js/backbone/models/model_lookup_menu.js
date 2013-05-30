@@ -4,8 +4,5 @@ var SearchMenuModel = Backbone.Model.extend({
             passageId: 0,
             selectedSearch : "SEARCH_PASSAGE"
         }
-    },
-    initialize : function() {
-        console.log(this.get("passageId"));
     }
 });

@@ -20,10 +20,14 @@ var SearchModel = Backbone.Model.extend({
      * Takes in a set of parameters and checks they are the ones stored in the model. If not overwrites them.
      * @param params an array of fields that should be set
      */
-    updateModel : function(params) {
-        for(var i = 0; i < params; i++) {
-            console.log(params[i]);
+    updateModel : function(options) {
+        for(var i = 0; i < options.params.length; i++) {
+            //split into the key/value
+            var keyValuePair = options.params[i].split("=");
+            this.set(keyValuePair[0], keyValuePair[1]);
         }
+
+        this.trigger("resync", this);
     },
 
     /**
@@ -76,7 +80,7 @@ var SearchModel = Backbone.Model.extend({
             if (name != "passageId" && name != "searchType" && name != "pageNumber"
                 && name != "querySyntax" && name != "id" && name != "detail") {
                 if (params != "") {
-                    params += ",";
+                    params += "|";
                 }
                 params += name + '=' + this.attributes[name];
             }

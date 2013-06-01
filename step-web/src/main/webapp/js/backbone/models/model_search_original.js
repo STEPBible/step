@@ -92,11 +92,11 @@ var WordSearchModel = SearchModel.extend({
 
         var searchVersions = this.get("searchVersions");
         if(step.util.isBlank(searchVersions)) {
-            return "KJV";
+            return "ESV";
         }
 
         if (!this._versionsContainsStrongs(searchVersions)) {
-            return "KJV," + searchVersions;
+            return "ESV," + searchVersions;
         }
 
         return searchVersions;

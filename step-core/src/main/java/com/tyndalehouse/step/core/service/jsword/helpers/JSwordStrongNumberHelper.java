@@ -97,7 +97,7 @@ import com.tyndalehouse.step.core.utils.StringConversionUtils;
 public class JSwordStrongNumberHelper {
     private static final Logger LOG = org.slf4j.LoggerFactory.getLogger(JSwordStrongNumberHelper.class);
     private static final int SIGNIFICANT_CUT_OFF = 200;
-    private static final String STRONG_REF_VERSION = "KJV";
+    private static final String STRONG_REF_VERSION = "ESV";
     private static final Book STRONG_REF_VERSION_BOOK = Books.installed().getBook(STRONG_REF_VERSION);
     private final JSwordVersificationService versification;
     private Map<String, SortedSet<LexiconSuggestion>> verseStrongs;

@@ -113,7 +113,7 @@ public interface BibleInformationService {
      * returns a list of matching names or references in a particular book
      * 
      * @param bookStart the name of the matching key to look across book names
-     * @param version the name of the version, defaults to KJV if not found
+     * @param version the name of the version, defaults to ESV if not found
      * 
      * @return a list of matching bible book names
      */

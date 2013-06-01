@@ -61,7 +61,7 @@ import java.util.Set;
  */
 public class JSwordAnalysisServiceImpl implements JSwordAnalysisService {
     static final String WORD_SPLIT = "[,./<>?!;:'\\[\\]\\{\\}!\"\\-\u2013 ]+";
-    private static final String STRONG_VERSION = "KJV";
+    private static final String STRONG_VERSION = "ESV";
     private final JSwordVersificationServiceImpl versification;
     private final Set<String> stopWords;
     private final Set<String> stopStrongs;

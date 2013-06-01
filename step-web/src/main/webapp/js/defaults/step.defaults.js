@@ -48,7 +48,7 @@ step.defaults = {
     pageSize : 50,
     syncMode : -1,
     passages : [{
-            version : 'KJV',
+            version : 'ESV',
             reference : 'Mat 1',
             options : ["H", "V", "N"]
         }, {

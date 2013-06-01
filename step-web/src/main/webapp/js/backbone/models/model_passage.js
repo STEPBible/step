@@ -2,7 +2,7 @@ var PassageModel = Backbone.Model.extend({
         defaults: function () {
             return {
                 passageId: 0,
-                version: "KJV",
+                version: "ESV",
                 reference: "Mat 1",
                 extraVersions: [],
                 interlinearMode: "NONE",

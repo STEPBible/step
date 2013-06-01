@@ -88,7 +88,7 @@ function setOrRemoveChecked(toggle, element) {
  * http://localhost:8080/step-web/rest/bible/getBibleText/KJV/Jhn%201:1/HEADINGS,VERSE_NUMBERS,STRONG_NUMBERS,MORPHOLOGY
  */
 function updatePassageView() {
-	var version = "KJV";
+	var version = "ESV";
 	var passage = "Romans 1";
 
 	var url = BIBLE_GET_BIBLE_TEXT + version + "/" + passage + "/";

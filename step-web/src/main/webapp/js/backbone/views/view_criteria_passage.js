@@ -144,6 +144,6 @@ PassageCriteriaView = Backbone.View.extend({
      */
     resetVersions: function () {
         this.extraVersions.val("");
-        this.updateModel({ target : this.extraVersions });
+        this.updateModel({ target : this.extraVersions.get(0) });
     }
 });

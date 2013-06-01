@@ -37,8 +37,8 @@ public class OsisReader {
      * @throws Exception any kind of exception
      */
     public static void main(final String[] args) throws Exception {
-        final String version = "ESVEx";
-        final String ref = "Mat.1.1-2";
+        final String version = "ESV";
+        final String ref = "Is.53";
 
         final Book currentBook = Books.installed().getBook(version);
 

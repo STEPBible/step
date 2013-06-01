@@ -19,12 +19,6 @@ var StepRouter = Backbone.Router.extend({
      * @param options
      */
     navigatePassage: function (fragment, options) {
-//        if(!Backbone.History.started) {
-//            return;
-//        }
-
-        console.log("hello", fragment);
-
         var hash = "";
         try {
             hash = Backbone.history.getFragment();
@@ -64,6 +58,8 @@ var StepRouter = Backbone.Router.extend({
             //we trigger the routes manually, for the single individual fragment.
             if (trigger) Backbone.history.loadUrl(fragment);
         }
+
+        refreshLayout();
     },
 
     /**
@@ -103,28 +99,23 @@ var StepRouter = Backbone.Router.extend({
      * @param wholeUrl
      */
     entireUnparsedUrl: function (wholeUrl) {
-//        if(!Backbone.History.started) {
-//            return;
-//        }
-
         console.log("Entire URL was passed in: ", wholeUrl, Backbone.History.started);
 
         //divide the url up
         var fragments = this.getColumnFragments(wholeUrl);
         for (var i = 0; i < fragments.length; i++) {
             //prevent infinite recursion
-//            if (fragments[i] != wholeUrl) {
-                //also, need to remove the __/ from each fragment
-//                if (fragments[i].indexOf("__/") == 0) {
                     if(fragments[i][0] == '/') {
                         fragments[i] = fragments[i].substring(1);
                     }
+
+                    if(fragments[i].indexOf("__/") == 0) {
+                        fragments[i] = fragments[i].substring(3);
+                    }
                     console.log("loading url: ", fragments[i]);
                     Backbone.history.loadUrl(fragments[i]);
-//                }
-//                console.log("Unable to route as fragment doesn't start with __/");
-//            }
         }
+        refreshLayout();
     },
 
     /**
@@ -135,11 +126,11 @@ var StepRouter = Backbone.Router.extend({
     updateMenuModel: function (passageId, searchType) {
         var menuModel = MenuModels.at(passageId);
         if (menuModel != null) {
-            if (menuModel.get("selectedSearch") != searchType) {
+//            if (menuModel.get("selectedSearch") != searchType) {
                 menuModel.save({ selectedSearch: searchType });
-            } else {
-                console.log("WARN: Skipping update on model, as already in date");
-            }
+//            } else {
+//                console.log("WARN: Skipping update on model, as already in date");
+//            }
         } else {
             console.log("NO MODEL TO TRIGGER SEARCH");
         }
@@ -160,7 +151,6 @@ var StepRouter = Backbone.Router.extend({
             Backbone.Events.trigger(searchType + ":restoreParams:" + passageId, { params : params.split("|") });
         }
 
-        console.log("TRIGGER SEARCH: ", searchType, querySyntax, new Error().stack);
         this.updateMenuModel(passageId, searchType);
         var query = step.util.replaceSpecialChars(querySyntax);
         this._validateAndRunSearch(searchType, passageId, query, version, sortOrder, context, pageNumber, sortOrder);

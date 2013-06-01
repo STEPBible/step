@@ -117,7 +117,6 @@
 	    <script src="js/bookmark/step.bookmark.js" type="text/javascript"></script>
 	    <script src="js/bookmark/step.bookmark.ui.js" type="text/javascript"></script>
 
-        <script src="js/backbone/url_local_storage.js" type="text/javascript"></script>
         <script src="js/backbone/models/model_passage.js" type="text/javascript"></script>
         <script src="js/backbone/views/view_display_passage.js" type="text/javascript"></script>
         <script src="js/backbone/router.js" type="text/javascript"></script>
@@ -145,6 +144,9 @@
         <script src="js/backbone/views/view_display_subject.js" type="text/javascript"></script>
         <script src="js/backbone/views/view_display_text.js" type="text/javascript"></script>
         <script src="js/backbone/views/view_display_word.js" type="text/javascript"></script>
+
+        <script src="js/backbone/models/model_quick_lexicon.js" type="text/javascript"></script>
+        <script src="js/backbone/views/view_quick_lexicon.js" type="text/javascript"></script>
 
         <script src="js/init.js" type="text/javascript"></script>
         <script src="js/backbone/step.js" type="text/javascript"></script>

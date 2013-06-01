@@ -7,6 +7,13 @@ var SearchMenuView = Backbone.View.extend({
     initialize : function() {
         var searchName = this.model.get("selectedSearch");
         this.changeView({ target : this.$el.find("[name='" + searchName + "']").get(0) });
+        this.listenTo(this.model, "change", this.syncModel);
+    },
+
+    syncModel : function() {
+        var newlySelectedSearch = this.model.get("selectedSearch");
+        var menuItem = step.menu.getMenuItem(newlySelectedSearch, this.model.get("passageId"));
+        step.menu.tickOneItemInMenuGroup({ menu : { element : this.$el}, menuItem : { element : menuItem }});
     },
 
     changeView : function(event) {

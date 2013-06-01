@@ -3,16 +3,15 @@ $.widget("custom.passageButtons",  {
         passageId : 0,
         ref : null,
         showChapter : false,
-        display : null,
+        display : null
     },
     
     /**
      * Creates the passageButtons
      */
     _create : function() {
-        var leftLink = $("<a>&nbsp;</a>").attr('href', '#'); 
-        var rightLink = $("<a>&nbsp;</a>").attr('href', '#');
-        
+        var leftLink = $("<a>&nbsp;</a>").attr('href', 'javascript:void()');
+        var rightLink = $("<a>&nbsp;</a>").attr('href', 'javascript:void()');
         
         this.element.addClass("passageButtonsWidget").attr('ref', this.options.ref);
 

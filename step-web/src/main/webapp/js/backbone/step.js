@@ -18,7 +18,7 @@ var PassageCriteriaList = Backbone.Collection.extend({
 
 var MenuList = Backbone.Collection.extend({
     model: SearchMenuModel,
-    localStorage: new UrlLocalStorage("menu-criteria"),
+    localStorage: new Backbone.LocalStorage("menu-criteria"),
     initialize: function () {
         this.on("change forceSearch", this.triggerModelChange, this);
     },
@@ -62,7 +62,7 @@ var MenuList = Backbone.Collection.extend({
 
 var SubjectList = Backbone.Collection.extend({
     model: SubjectSearchModel,
-    localStorage: new UrlLocalStorage("subject-criteria"),
+    localStorage: new Backbone.LocalStorage("subject-criteria"),
 
     initialize: function () {
         this.on("search", this.triggerSearch, this);
@@ -84,7 +84,7 @@ var SubjectList = Backbone.Collection.extend({
 
 var SimpleTextList = Backbone.Collection.extend({
     model: SimpleTextSearchModel,
-    localStorage: new UrlLocalStorage("simple-text-criteria"),
+    localStorage: new Backbone.LocalStorage("simple-text-criteria"),
 
     initialize: function () {
         this.on("search", this.triggerSearch, this);
@@ -100,13 +100,12 @@ var SimpleTextList = Backbone.Collection.extend({
         console.log("Trigger SIMPLE TEXT search");
         stepRouter.navigatePassage(model.getLocation(), {trigger: true});
     }
-
 });
 
 
 var WordSearchList = Backbone.Collection.extend({
     model: WordSearchModel,
-    localStorage: new UrlLocalStorage("word-search-criteria"),
+    localStorage: new Backbone.LocalStorage("word-search-criteria"),
 
     initialize: function () {
         this.on("search", this.triggerSearch, this);
@@ -126,7 +125,7 @@ var WordSearchList = Backbone.Collection.extend({
 
 var AdvancedSearchList = Backbone.Collection.extend({
     model: AdvancedSearchModel,
-    localStorage: new UrlLocalStorage("advanced-search-criteria"),
+    localStorage: new Backbone.LocalStorage("advanced-search-criteria"),
 
     initialize: function () {
         this.on("search", this.triggerSearch, this);
@@ -144,6 +143,12 @@ var AdvancedSearchList = Backbone.Collection.extend({
     }
 });
 
+var QuickLexiconList = Backbone.Collection.extend({
+    model: QuickLexiconModel,
+    localStorage: new Backbone.LocalStorage("quick-lexicon")
+});
+
+
 var stepRouter;
 var PassageModels;
 var MenuModels;
@@ -151,6 +156,7 @@ var SubjectModels;
 var SimpleTextModels;
 var WordSearchModels;
 var AdvancedSearchModels;
+var QuickLexiconModels;
 
 //var PassageCriterias = new PassageCriteriaList;
 /**
@@ -184,9 +190,15 @@ function initApp() {
     SimpleTextModels = new SimpleTextList;
     WordSearchModels = new WordSearchList;
     AdvancedSearchModels = new AdvancedSearchList;
+    QuickLexiconModels = new QuickLexiconList;
 
     PassageModels.fetch();
     MenuModels.fetch();
+
+    QuickLexiconModels.fetch();
+    QuickLexiconModels.reset();
+    QuickLexiconModels.add(new QuickLexiconModel);
+    new QuickLexicon({ model : QuickLexiconModels.at(0) });
 
     createModelsIfRequired(SubjectModels, SubjectSearchModel, "subject");
     createModelsIfRequired(SimpleTextModels, SimpleTextSearchModel, "text");
@@ -220,7 +232,7 @@ function initApp() {
     }
 
     Backbone.history.start();
-    MenuModels.at(0).trigger("change", MenuModels.at(0));
+//    MenuModels.at(0).trigger("change", MenuModels.at(0));
 
 //    //trigger changes
 //    for(var i = PassageModels.length -1; i >= 0 ; i--) {

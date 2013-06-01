@@ -36,8 +36,8 @@ step.lexicon = {
         this.doSearch(ALL_FORMS, strongNumber, refLimit);
     },
 
-    relatedWordSearch : function(strongNumber) {
-        this.doSearch(ALL_RELATED, strongNumber);
+    relatedWordSearch : function(strongNumber, refLimit) {
+        this.doSearch(ALL_RELATED, strongNumber, refLimit);
     },
 
     doSearch : function(searchType, strongNumber, refLimit) {
@@ -50,29 +50,31 @@ step.lexicon = {
         
         if(step.util.raiseErrorIfBlank(query, __s.error_no_strong_data)) {
             var targetPassageId = step.util.getOtherPassageId(this.passageId);
-            
+
+            var model = WordSearchModels.at(targetPassageId);
+            var attributes = {};
+
             if(refLimit) {
-                step.state.original.originalScope(targetPassageId, refLimit);
-                
-                if(step.search.ui.original.getLevel(targetPassageId) < 1) {
-                    step.search.ui.original.updateSliderLevel(targetPassageId, 1);
+                attributes.originalScope = refLimit;
+                if(model.get("detail") < 1) {
+                    attributes.detail = 1;
                 }
             } else {
-                step.state.original.originalScope(targetPassageId, __s.whole_bible_range);
+                attributes.originalScope = __s.whole_bible_range;
             }
-            step.state.original.originalType(targetPassageId, query[0] == 'H' ? HEBREW_WORDS[0] : GREEK_WORDS[0]);
-            step.state.original.originalWord(targetPassageId, query);
-            step.state.original.originalForms(targetPassageId, searchType);
-            step.state.original.originalSearchContext(targetPassageId, 0);
-            step.state.original.originalSearchVersion(targetPassageId, step.util.ui.getVisibleVersions(this.passageId).val());
-            
-            //parse the query syntax
-            step.search.ui.original.evaluateQuerySyntax(targetPassageId);
-            
+
+            attributes.originalType = query[0] == 'H' ? HEBREW_WORDS[0] : GREEK_WORDS[0];
+            attributes.originalWord = query;
+            attributes.originalForms = searchType;
+            attributes.searchContext = 0;
+            attributes.originalSearchVersion = step.util.ui.getVisibleVersions(this.passageId).val();
+
+            model.save(attributes);
+            model.trigger("search", model, {});
             //if we're in single view, then we would want to bring up the second column
             step.state.view.ensureTwoColumnView();
             
-            step.state.activeSearch(targetPassageId, 'original', true);
+//            step.state.activeSearch(targetPassageId, 'original', true);
         }
     },
 

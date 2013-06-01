@@ -51,7 +51,8 @@ public final class PageOperations {
         // then move mouse lower
         new Actions(driver).moveByOffset(0, 200).perform();
 
-        return loadPassage(driver, passageId, version, reference);
+        Passage p = loadPassage(driver, passageId, version, reference);
+        return p;
     }
 
 }

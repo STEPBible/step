@@ -17,18 +17,19 @@ import com.google.common.base.Predicate;
 
 /**
  * Helper for menu operations
- * 
+ *
  * @author chrisburrell
- * 
  */
 public final class MenuOperations {
-    /** prevent instantiation */
+    /**
+     * prevent instantiation
+     */
     private MenuOperations() {
         // no op
     }
 
     public static void clickMenuItem(final Passage p, final String menuName, final String menuItem,
-            final int retry) {
+                                     final int retry) {
         openMenu(p, menuName);
 
         try {
@@ -54,11 +55,9 @@ public final class MenuOperations {
 
     private static WebElement openMenu(final Passage p, final String menuName) {
         int realPassageId = p.getPassageId();
-        if ("Tools".equals(menuName)) {
-            realPassageId++;
-        }
 
-        final WebElement topMenu = p.getDriver().findElements(By.linkText(menuName)).get(realPassageId);
+        final List<WebElement> elements = p.getDriver().findElements(By.linkText(menuName));
+        final WebElement topMenu = elements.size() > 1 ? elements.get(realPassageId) : elements.get(0);
         new Actions(p.getDriver()).moveToElement(topMenu).perform();
 
         return topMenu;
@@ -66,8 +65,8 @@ public final class MenuOperations {
 
     /**
      * disables all options for a passasge pane
-     * 
-     * @param passage passage
+     *
+     * @param passage  passage
      * @param menuName the name of the menu
      */
     public static void disableAllOptions(final Passage passage, final String menuName) {
@@ -89,6 +88,7 @@ public final class MenuOperations {
             }
         });
         passage.getDriver().manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+
     }
 
     public static List<WebElement> getOptionsForTopMenu(final WebDriver driver, final String menuName) {

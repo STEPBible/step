@@ -27,30 +27,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
 //hear the resize to resize our passage content
-$(window).resize(function() {
-    step.passage.ui.resize();
-});
-
 step.passage.ui = {
     fontSizes : [{}, {}],
-    
-    resize : function() {
-        var windowHeight = $(window).height();
-        $(".passageContent").each(function(i, item) {
-            
-            var toolbarHeight = $(".passageToolbarFloatingContainer:visible", step.util.getPassageContainer(i)).height();
-            
-            var height = windowHeight - $(item).position().top - toolbarHeight - 8;
-            $(item).height(height);
-        });
-        
-        $(".leftColumn, .rightColumn, #holdingPage, .passageContainer").height(windowHeight - $(".topMenu").height() - 10);
-    },
-    
-    restoreDefaults : function(passageId, force) {
-        step.util.ui.resetIfEmpty(passageId, force, step.state.passage.extraVersionsDisplayOptions, step.defaults.passage.interOptions[0]);
-    },
-    
 
     getFontKey : function(passageContentHolder) {
         return $(passageContentHolder).hasClass("hbFont") ? "hb" : ($(passageContentHolder).hasClass("unicodeFont") ? "unicode" : "default");

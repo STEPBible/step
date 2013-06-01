@@ -23,7 +23,7 @@
 		<li><a href="javascript:void(0)" name="N"><fmt:message key="display_notes" /></a></li>
 		<li><a href="javascript:void(0)" name="E"><fmt:message key="display_englishVocab" /></a></li>
 		<li><a href="javascript:void(0)" name="A"><fmt:message key="display_greekVocab" /></a></li>
-<%-- 		<li><a href="javascript:void(0)" name="T"><fmt:message key="display_transliteration" /></a></li> --%>
+ 		<li><a href="javascript:void(0)" name="T"><fmt:message key="display_transliteration" /></a></li>
 		<li><a href="javascript:void(0)" name="M"><fmt:message key="display_grammar" /></a></li>
 		<li><a href="javascript:void(0)" name="C" ><fmt:message key="display_grammarColor" /></a></li>
 	</ul>

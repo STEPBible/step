@@ -1,5 +1,6 @@
 package com.tyndalehouse.step.e2e.fragments;
 
+import static com.tyndalehouse.step.e2e.framework.WebDriverUtils.selectAll;
 import static org.junit.Assert.assertEquals;
 
 import org.openqa.selenium.By;
@@ -34,31 +35,49 @@ public class Passage {
     }
 
     public void execute() {
+        if(this.passageId == 1) {
+            //check we aren't in the single view, and if so, definitely open up the other view.
+            MenuOperations.clickMenuItem(this, "View", "Two panel view", 0);
+        }
+
 
         this.refElement = findWithinPassage(".passageReference");
-        this.refElement.clear();
+        selectAll(this.refElement);
         this.refElement.sendKeys(this.reference, Keys.TAB);
 
         this.versionElement = findWithinPassage(".passageVersion");
-        this.versionElement.clear();
-        this.versionElement.sendKeys(this.version, Keys.TAB);
+        selectAll(this.versionElement);
+        final WebElement desiredVersion = this.driver.findElement(By.xpath("//*[@initials='" + this.version +"']"));
+//        WebDriverWait wait = new WebDriverWait(this.driver, 5);
+//        wait.until(new Predicate<WebDriver>(){
+//
+//            @Override
+//            public boolean apply(final org.openqa.selenium.WebDriver webDriver) {
+//                return desiredVersion.isDisplayed();
+//            }
+//        });
+        this.versionElement.sendKeys(this.version);
+        desiredVersion.click();
+
+        //focus on other box
+        this.refElement.sendKeys("");
     }
 
     public String checkPassageText(final String text) {
         final WebDriverWait w = new WebDriverWait(this.driver, 5);
-        final WebElement passageText = findWithinPassage(".passageText");
+//        final WebElement passageText = findWithinPassage(".passageContainer");
         w.until(new Predicate<WebDriver>() {
 
             @Override
             public boolean apply(final WebDriver input) {
-                final String webText = passageText.getText();
+                final String webText = findWithinPassage(".passageContent").getText();
                 LOGGER.trace("Passage currently reads [{}]", webText);
                 return webText.contains(text);
 
             }
         });
 
-        return passageText.getText();
+        return findWithinPassage(".passageContent").getText();
     }
 
     public String checkPassageTextDisappeared(final String text) {

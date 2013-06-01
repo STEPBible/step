@@ -31,58 +31,73 @@
  * THE POSSIBILITY OF SUCH DAMAGE.                                                                *
  **************************************************************************************************/
 
-Backbone.LocalStorage.extend = Backbone.Collection.extend;
-var UrlLocalStorage = Backbone.LocalStorage.extend({
-    /**
-     * Override the fetch method to take items from the URL, instead of from the local storage if need be.
-     */
-    findAll : function() {
-        var models = Backbone.LocalStorage.prototype.findAll.call(this);
+var QuickLexicon = Backbone.View.extend({
+    el: function () {
+        return $("<span>").position({ my: "right top", at: "right top", of: $(window) }).hide();
+    },
 
-//        for(var i = 0; i < models.length; i++) {
-//            this.overrideFromUrl(models[i]);
-//        }
-        return models;
+    initialize: function () {
+        this.listenTo(this.model, "change", this.render);
     },
 
     /**
-     * Given a particular part of the URL, extract the parameters section and apply to the model
-     * @param model the model in question
-     * @param urlPart the concatenated form of the parameters
+     * Updates the text and shows it
+     * @param strongNumbers
      */
-    overrideModelValues: function (model, urlPart) {
-        var params = urlPart.split("|");
-        model.updateModel({params : params});
-    },
+    render: function (event) {
+        var self = this;
 
-    overrideFromUrl : function(model) {
-        var passageId = model.passageId;
-
-        //get fragment for passage id
-        var fragments = stepRouter.getColumnFragments(Backbone.history.getFragment());
-        for(var i = 0; i < fragments.length; i++) {
-            if(fragments[i].length <= 3) {
-                continue;
-            }
-
-            if(fragments[i].indexOf("/passage/") != -1) {
-                //then we're dealing with a passage
-            } else {
-                //then we're dealing with a search
-                var urlParts = fragments[i].split("/");
-
-                //first 2nd part at index 1 will always be the passage id
-                if(urlParts.length < 2 || urlParts[1] != passageId) {
-                    continue;
-                }
-
-                //last part is always going to be the list of parameters
-                this.overrideModelValues(model, urlParts[urlParts.length - 1]);
-            }
+        if(this.qtip != undefined) {
+            this.qtip.qtip("destroy");
         }
 
-        //if fragment exists, then get rid of the model
+        this.qtip = $(this.model.get("element")).qtip({
+            style: {
+                tip: false,
+                classes: "quickLexiconDefinition primaryLightBg"
+            },
+            position: {
+                my: "top right",
+                at: "top right",
+                viewport: $(window),
+                target: $("body"),
+                effect: false
+            },
+            hide: {
+                event: 'unfocus mouseleave'
+            },
+            content: {
+                text: function (event, api) {
+                    var strong = self.model.get("strongNumber");
+                    var morph = self.model.get("morph");
 
+                    $.getSafe(MODULE_GET_QUICK_INFO + strong + "/" + morph + "/", function (data) {
+                        var vocabInfo = "";
+                        if (data.vocabInfos) {
+                            $.each(data.vocabInfos, function (i, item) {
+                                vocabInfo += "<h1>" +
+                                    "<span class='unicodeFont'>" +
+                                    item.accentedUnicode +
+                                    "</span> (<span class='stepTransliteration'>" +
+                                    step.util.ui.markUpTransliteration(item.stepTransliteration) +
+                                    "): " +
+                                    item.stepGloss +
+                                    "</h1>" +
+                                    "<span>" +
+                                    (item.shortDef == undefined ? "" : item.shortDef) +
+                                    "</span></p>";
+                            });
+                        }
 
+                        vocabInfo += "<span class='infoTagLine'>" +
+                            __s.more_info_on_click_of_word +
+                            "</span>";
+                        api.set('content.text', vocabInfo);
+                    });
+                }
+            }
+        });
+
+        this.qtip.qtip("show");
     }
 });

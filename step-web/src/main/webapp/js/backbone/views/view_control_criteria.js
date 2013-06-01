@@ -12,7 +12,7 @@ CriteriaControlView = Backbone.View.extend({
         this.passageToolbarContainer = this.$el.find(".passageToolbarContainer");
 
         //show the right fieldset
-//        this._changeVisibleCriteria();
+        this._changeVisibleCriteria();
     },
 
     /**
@@ -104,6 +104,10 @@ CriteriaControlView = Backbone.View.extend({
      * so we always take the latest values from the model.
      */
     deferredChangeVisibleCriteria: function () {
+        if(this.model.get("passageId") == 1) {
+            step.state.view.ensureTwoColumnView();
+        }
+
         var selectedSearch = this.model.get("selectedSearch");
         var fieldsets = this.$el.find("fieldset");
         this.passageToolbarContainer.toggle(selectedSearch == "SEARCH_PASSAGE");

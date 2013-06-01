@@ -5,6 +5,7 @@ import static com.tyndalehouse.step.e2e.fragments.PageOperations.loadPassage;
 import java.util.Arrays;
 import java.util.List;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -22,14 +23,15 @@ import com.tyndalehouse.step.e2e.framework.WebDriverTest;
  */
 @RunWith(Parameterized.class)
 public class StepDisplayOptionsTest extends WebDriverTest {
-    private final String passageId;
+    private final int passageId;
     private final String reference;
     private final String newText;
     private final String menuItem;
     private final String menuName;
+    private static Passage[] passages = new Passage[2];
 
     public StepDisplayOptionsTest(final String menuName, final String menuItem, final String newText,
-            final String reference, final String passageId) {
+            final String reference, final int passageId) {
         this.menuName = menuName;
         this.menuItem = menuItem;
         this.newText = newText;
@@ -37,18 +39,28 @@ public class StepDisplayOptionsTest extends WebDriverTest {
         this.passageId = passageId;
     }
 
-    @Parameters
-    public static List<String[]> getTests() {
-        return Arrays.asList(new String[][] {
-                { "Display", "Headings", "The Birth of Moses", "Exodus 2", "0" },
-                { "Display", "Verse Numbers", "7Then his sister", "Exodus 2", "0" },
-                { "Display", "Verses on separate lines", "\n Then his sister", "Exodus 2", "0" },
-                { "Display", "Notes and References", "Hebrew papyrus reeds", "Exodus 2", "0" },
+    @BeforeClass
+    public static void goToFirstPassages() {
+        // first set the state so that we have no options selected, and use a passage we are not interested in
+        // for the test
+        passages[0] = loadPassage(WebDriverTest.getDriver(), 0, "ESVEx", "Exodus 2", true);
+        passages[1] = loadPassage(WebDriverTest.getDriver(), 1, "ESVEx", "Romans 1", false);
+        MenuOperations.disableAllOptions(passages[0], "Display");
+        MenuOperations.disableAllOptions(passages[1], "Display");
+    }
 
-                { "Display", "Headings", "Longing to Go to Rome", "Romans 1", "1" },
-                { "Display", "Verse Numbers", "1Paul, a servant", "Romans 1", "1" },
+    @Parameters
+    public static List<Object[]> getTests() {
+        return Arrays.asList(new Object[][] {
+                { "Display", "Headings", "The Birth of Moses", "Exodus 2", 0 },
+                { "Display", "Verse numbers", "7 Then his sister", "Exodus 2", 0 },
+                { "Display", "Verses on separate lines", "\n Then his sister", "Exodus 2", 0 },
+                { "Display", "Notes and References", "ch. 6:20; Num. 26:59; 1 Chr. 23:14", "Exodus 2", 0 },
+
+                { "Display", "Headings", "Longing to Go to Rome", "Romans 1", 1 },
+                { "Display", "Verse numbers", "1 Paul, a servant", "Romans 1", 1 },
                 { "Display", "Verses on separate lines", "\n For God is my witness", "Romans 1", "1" },
-                { "Display", "Notes and References", "Or slave; Greek bondservant", "Romans 1", "1" },
+                { "Display", "Notes and References", "1 Cor. 1:1; [1 Cor. 9:1; Heb. 5:4]; See 2 Cor. 1:1", "Romans 1", 1 },
 
         });
     }
@@ -57,19 +69,8 @@ public class StepDisplayOptionsTest extends WebDriverTest {
     public void testMenuOption() {
         // first set the state so that we have no options selected, and use a passage we are not interested in
         // for the test
-        Passage passage = loadPassage(this.getDriver(), Integer.parseInt(this.passageId), "ESV",
-                "Genesis 1:1", true);
-
-        MenuOperations.disableAllOptions(passage, "Display");
-
-        passage = loadPassage(this.getDriver(), Integer.parseInt(this.passageId), "ESV", this.reference,
-                false);
-
-        MenuOperations.clickMenuItem(passage, this.menuName, this.menuItem, 3);
-        passage.checkPassageText(this.newText);
-
-        MenuOperations.clickMenuItem(passage, this.menuName, this.menuItem, 3);
-        passage.checkPassageTextDisappeared(this.newText);
-
+        passages[this.passageId].checkPassageTextDisappeared(this.newText);
+        MenuOperations.clickMenuItem(passages[this.passageId], this.menuName, this.menuItem, 3);
+        passages[this.passageId].checkPassageText(this.newText);
     }
 }

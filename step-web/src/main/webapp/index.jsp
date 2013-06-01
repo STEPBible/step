@@ -220,11 +220,12 @@
 
 <!--  The about popup -->
 
-<div id="about">
+<div id="about" style="text-align: center;">
 	<img id="aboutLogo" src="images/step-logo.png" />
 	<h3 id="aboutTitle">STEP :: Scripture Tools for Every Person<br /></h3>
-    <p><a href='https://stepweb.atlassian.net/wiki/x/C4C_/' target="_new"><fmt:message key="copyright_info_link" /></a></p>
-	<p>&copy; Tyndale House, Cambridge <%= java.util.Calendar.getInstance().get(java.util.Calendar.YEAR)  %></p>
+    <p><a style="color: #33339F" href='https://stepweb.atlassian.net/wiki/x/C4C_/' target="_new"><fmt:message key="copyright_info_link" /></a>
+	<br/>
+    <p>&copy; Tyndale House, Cambridge <%= java.util.Calendar.getInstance().get(java.util.Calendar.YEAR)  %></p>
 </div>
 
 <%-- <jsp:include page="jsps/login.jsp"></jsp:include> --%>

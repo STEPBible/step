@@ -223,6 +223,7 @@
 <div id="about">
 	<img id="aboutLogo" src="images/step-logo.png" />
 	<h3 id="aboutTitle">STEP :: Scripture Tools for Every Person<br /></h3>
+    <p><a href='https://stepweb.atlassian.net/wiki/x/C4C_/' target="_new"><fmt:message key="copyright_info_link" /></a></p>
 	<p>&copy; Tyndale House, Cambridge <%= java.util.Calendar.getInstance().get(java.util.Calendar.YEAR)  %></p>
 </div>
 

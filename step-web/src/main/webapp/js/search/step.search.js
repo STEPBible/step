@@ -74,7 +74,7 @@ step.search = {
             }
             
             if(!this._versionsContainsStrongs(versions)) {
-                versions = "KJV," + versions;
+                versions = "ESV," + versions;
                 step.state.original.originalSearchVersion(passageId, versions);
             }
             
@@ -211,7 +211,7 @@ step.search = {
             checkedVersion = step.state.passage.version(passageId);
             
             if(checkedVersion == undefined || checkedVersion.trim().length == 0) {
-                checkedVersion = 'KJV';
+                checkedVersion = 'ESV';
             }
         }
         

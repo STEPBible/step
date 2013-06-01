@@ -54,7 +54,7 @@ public class OsisReader {
                 TestUtils.mockVersificationService(), null, null, null, TestUtils.mockVersionResolver());
         final List<LookupOption> options = new ArrayList<LookupOption>();
 
-        // options.add(LookupOption.HEADINGS_ONLY);
+        options.add(LookupOption.HEADINGS_ONLY);
 
         final String osisText = jsi.getOsisText(version, ref, options, null, InterlinearMode.NONE).getValue();
         final SAXBuilder sb = new SAXBuilder();

@@ -8,8 +8,8 @@
 
 	
 	<xsl:template match="//verse">
-		<xsl:if test="./preceding-sibling::title[@type='section']">
-			<xsl:value-of select="./preceding-sibling::title[@type='section']" />
+		<xsl:if test="./preceding-sibling::title[not(starts-with(@type, 'x-'))]">
+			<xsl:value-of select="./preceding-sibling::title[not(starts-with(@type, 'x-'))]" />
 		</xsl:if>
 	</xsl:template>
 </xsl:stylesheet>

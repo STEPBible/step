@@ -37,7 +37,7 @@ public class OsisReader {
      * @throws Exception any kind of exception
      */
     public static void main(final String[] args) throws Exception {
-        final String version = "ESVEx";
+        final String version = "ESV";
         final String ref = "3Jo";
 
         final Book currentBook = Books.installed().getBook(version);
@@ -54,7 +54,7 @@ public class OsisReader {
                 TestUtils.mockVersificationService(), null, null, null, TestUtils.mockVersionResolver());
         final List<LookupOption> options = new ArrayList<LookupOption>();
 
-        // options.add(LookupOption.HEADINGS_ONLY);
+        options.add(LookupOption.HEADINGS_ONLY);
 
         final String osisText = jsi.getOsisText(version, ref, options, null, InterlinearMode.NONE).getValue();
         final SAXBuilder sb = new SAXBuilder();

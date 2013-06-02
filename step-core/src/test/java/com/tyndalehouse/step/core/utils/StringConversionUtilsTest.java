@@ -301,8 +301,8 @@ public class StringConversionUtilsTest {
         assertEquals("ru.ach", outputAndTestTransliterate("רוּחַ"));
         assertEquals("mal.ki", outputAndTestTransliterate("מַלְכִּ֥י"));
         assertEquals("mish.pe.chot", outputAndTestTransliterate("מִשְׁפְּחֹת"));
+        assertEquals("re.shit", outputAndTestTransliterate("רֵאשִׁית"));
 //        assertEquals("en.mish.pat", outputAndTestTransliterate("עֵין מִשְׁפָּט"));
-
     }
 
     /**

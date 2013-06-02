@@ -435,13 +435,13 @@ public class JSwordPassageServiceImplTest {
     @Test
     public void testNumberLookup() {
         assertTrue(this.jsi
-                .getOsisTextByVerseNumbers("ESV", "KJV", 4, 4, new ArrayList<LookupOption>(), null, null,
+                .getOsisTextByVerseNumbers("ASV", "ESV", 4, 4, new ArrayList<LookupOption>(), null, null,
                         false).getValue().contains("In the beginning"));
         assertTrue(this.jsi
-                .getOsisTextByVerseNumbers("ESV", "KJV", 60000, 60000, new ArrayList<LookupOption>(), null,
+                .getOsisTextByVerseNumbers("ASV", "ESV", 60000, 60000, new ArrayList<LookupOption>(), null,
                         null, false).getValue().contains("The grace of the Lord Jesus"));
         assertTrue(this.jsi
-                .getOsisTextByVerseNumbers("FreSegond", "KJV", 60000, 60000, new ArrayList<LookupOption>(),
+                .getOsisTextByVerseNumbers("FreSegond", "ESV", 60000, 60000, new ArrayList<LookupOption>(),
                         null, null, false).getValue()
                 .contains("Que la gr\u00e2ce du Seigneur J\u00e9sus soit avec tous!"));
     }

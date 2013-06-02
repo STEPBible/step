@@ -91,7 +91,7 @@ public class EsvXmlEnhancer {
     private static final Logger LOGGER = LoggerFactory.getLogger(EsvXmlEnhancer.class);
     private static final Pattern REF_CLEAN = Pattern.compile("[¬|¦#$]+");
     private static final Pattern PUNCTUATION = Pattern.compile("[—,.;*:'\\[\\]!\"`?’‘()-]+");
-    private static final Pattern STRONGS_SPLITTING = Pattern.compile("<([^>]*)> ?(\\([^)]+\\))?.*");
+    private static final Pattern STRONGS_SPLITTING = Pattern.compile("<(\\d+)[a-z]?>");
     private static final Book ESV = Books.installed().getBook("ESV");
     private final File tagging;
     private final File esvText;
@@ -910,31 +910,6 @@ public class EsvXmlEnhancer {
         return esv;
     }
 
-//    private <T extends Node> T preProcessTextNodes(final T esv) {
-//        final NodeList childNodes = esv.getChildNodes();
-//
-//        int size = childNodes.getLength();
-//
-//
-//        Node previousTextNode = childNodes.item(0);
-//        for(int i = 1; i < size; i++) {
-//            final Node item = childNodes.item(i);
-//            if(item instanceof Text) {
-//                //warn if the following text node is also text
-//                if(previousTextNode != null) {
-//                    //join two nodes togehter
-//                    LOGGER.error("Two adjancent text nodes!!!");
-//                }
-//                previousTextNode = item;
-//            } else {
-//                if(item.hasChildNodes()) {
-//                    preProcessTextNodes(item);
-//                }
-//                previousTextNode = null;
-//            }
-//        }
-//        return esv;
-//    }
 
     private void cleanupTagging(final List<Tagging> rawTagging) throws Exception {
         for (final Tagging t : rawTagging) {
@@ -946,7 +921,7 @@ public class EsvXmlEnhancer {
         }
     }
 
-    private void splitStrong(final Tagging t) {
+    void splitStrong(final Tagging t) {
         final String rawStrongs = t.getRawStrongs();
         if (rawStrongs == null) {
             t.setStrongs("");
@@ -955,23 +930,18 @@ public class EsvXmlEnhancer {
         }
 
         final Matcher matcher = STRONGS_SPLITTING.matcher(rawStrongs);
-        final boolean matches = matcher.matches();
-        if (matches) {
-            if (matcher.groupCount() > 1) {
-                t.setStrongs(matcher.group(1));
-            }
-
-            if (matcher.groupCount() == 2) {
-                final String group = matcher.group(2);
-                if (group != null) {
-                    t.setGrammar(group.replaceAll("[()]+", ""));
+        boolean matches;
+        StringBuilder sb = new StringBuilder();
+        while (matches = matcher.find()) {
+            if (matcher.groupCount() > 0) {
+                if (sb.length() > 0) {
+                    sb.append(' ');
                 }
+                sb.append(matcher.group(1));
             }
         }
 
-        if (t.getStrongs() == null) {
-            t.setStrongs("");
-        }
+        t.setStrongs(sb.toString());
         if (t.getGrammar() == null) {
             t.setGrammar("");
         }
@@ -1035,6 +1005,9 @@ public class EsvXmlEnhancer {
         final StringBuilder sb = new StringBuilder(strongs.length() + 16);
 
         for (final String s : splits) {
+            if(sb.length() > 0) {
+                sb.append(' ');
+            }
             sb.append(prefixLetter);
             sb.append(s);
         }

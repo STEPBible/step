@@ -43,6 +43,26 @@ import org.junit.Test;
  */
 public class EsvXmlEnhancerTest {
     @Test
+    public void testMultipleStrongs() {
+        final EsvXmlEnhancer esvXmlEnhancer = new EsvXmlEnhancer(null, null);
+        Tagging t = new Tagging();
+        t.setRawStrongs("<07651> <03967> <08141> <07657> <07651>");
+        esvXmlEnhancer.splitStrong(t);
+
+        assertEquals("07651 03967 08141 07657 07651", t.getStrongs());
+    }
+
+    @Test
+    public void testMultipleStrongsRemoveSuffix() {
+        final EsvXmlEnhancer esvXmlEnhancer = new EsvXmlEnhancer(null, null);
+        Tagging t = new Tagging();
+        t.setRawStrongs("<08337a> <03967> <0505> <07969> <0505> <02568> <03967> <02572>");
+        esvXmlEnhancer.splitStrong(t);
+
+        assertEquals("08337 03967 0505 07969 0505 02568 03967 02572", t.getStrongs());
+    }
+
+    @Test
     public void testNthOccurrence() {
         final EsvXmlEnhancer esvXmlEnhancer = new EsvXmlEnhancer(null, null);
         assertEquals(3, esvXmlEnhancer.findWordPosition("the dog", 0));

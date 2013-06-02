@@ -23,6 +23,7 @@ import com.tyndalehouse.step.core.utils.language.transliteration.Transliteration
 public final class HebrewUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(HebrewUtils.class);
     public static final char HYPHEN = '.';
+    public static final char MAQAF_HYPHEN = '-';
     private static transient List<TransliterationRule> transliterationRules;
 
     private static final char CLOSED_QUOTE = '\u2019';
@@ -147,7 +148,7 @@ public final class HebrewUtils {
             final char currentLetter = sb.charAt(ii);
             switch (currentLetter) {
                 case '.':
-                case '-':
+                case MAQAF_HYPHEN:
                 case '\'':
                 case '*':
                 case CLOSED_QUOTE:
@@ -690,7 +691,7 @@ public final class HebrewUtils {
                                            final StringBuilder output) {
 
         if (letters[current].getC() == MAQAF) {
-            output.append('-');
+            output.append(MAQAF_HYPHEN);
             return;
         }
 
@@ -703,6 +704,13 @@ public final class HebrewUtils {
                 || isLastHebrewConsonantInWordWithoutVowel(letters, current)) {
             return;
         }
+
+        //if the previous output was a syllable marker, then we're not going to do anything
+        if(output.length() > 0 && (output.charAt(output.length() -1) == HYPHEN || output.charAt(output.length() -1) == MAQAF_HYPHEN)) {
+            //then don't outupt
+            return;
+        }
+
 
         // look for vowels
         boolean foundLongVowel = false;

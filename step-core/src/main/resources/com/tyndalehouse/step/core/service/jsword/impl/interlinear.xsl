@@ -235,8 +235,17 @@
   <xsl:template match="div[@type='colophon']">
     <!--  do nothing in interlinears -->
   </xsl:template>
-  
-  <xsl:template match="div">
+
+    <xsl:template match="div[@type='introduction'][@sID]">
+        &lt;span class='introduction'&gt;
+    </xsl:template>
+
+    <xsl:template match="div[@type='introduction'][@eID]">
+        &lt;/span&gt;
+    </xsl:template>
+
+
+    <xsl:template match="div">
     <xsl:apply-templates/>
   </xsl:template>
 

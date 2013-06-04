@@ -364,9 +364,9 @@ public final class HebrewUtils {
         LOGGER.trace("**********************************");
         LOGGER.trace("ANALYSIS FOR: [{}] => [{}]", inputString, transliteration);
         for (final HebrewLetter hl : letters) {
-            LOGGER.trace("{}", hl.getC());
             LOGGER.trace(
-                    "char=[0x{}]\tletter=[{}]\tconsonant=[{}]\tvLength[{}]\tvStress[{}]\tsounding[{}]",
+                    "char=[{}],xchar=[0x{}]\tletter=[{}]\tconsonant=[{}]\tvLength[{}]\tvStress[{}]\tsounding[{}]",
+                    hl.getC(),
                     Integer.toString(hl.getC(), 16), hl.getHebrewLetterType(),
                     hl.getConsonantType(), hl.getVowelLengthType(), hl.getVowelStressType(),
                     hl.getSoundingType());

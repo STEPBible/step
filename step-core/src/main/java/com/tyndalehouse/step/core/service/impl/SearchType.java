@@ -55,6 +55,11 @@ public enum SearchType {
      */
     SUBJECT_FULL("search_subject"),
 
+    /**
+     * A subject related search allows one to get all subjects relating to a particular verse/book.
+     */
+    SUBJECT_RELATED("subject_related"),
+
     /** A timeline description search */
     TIMELINE_DESCRIPTION("search_timeline"),
 

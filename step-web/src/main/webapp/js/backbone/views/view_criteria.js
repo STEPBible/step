@@ -1,9 +1,9 @@
 var SearchCriteria = Backbone.View.extend({
     events: {
-        "keyup input[type='text']:not(.drop)" : "updateModel",
+        "keyup input[type='text']:not(.drop)": "updateModel",
         "keyup .querySyntax": "updateQuerySyntaxInModel",
-        "change input.drop" : "updateModel",
-        "change input[type='hidden']" : "updateModel",
+        "change input.drop": "updateModel",
+        "change input[type='hidden']": "updateModel",
         "click .resetSearch": "resetSearch",
         "click .doSearch": "doSearch"
     },
@@ -16,7 +16,7 @@ var SearchCriteria = Backbone.View.extend({
         var changed = false;
         this.viewElementsByName = {};
 
-        for(var i = 0; i < viewElements.length; i++) {
+        for (var i = 0; i < viewElements.length; i++) {
             var jqElement = $(viewElements[i]);
             var classes = jqElement.attr("class").split(" ");
             if (classes[0] == "_m") {
@@ -35,7 +35,7 @@ var SearchCriteria = Backbone.View.extend({
         }
 
         var syncRestored = this.syncValuesWithModel();
-        if(!syncRestored && changed) {
+        if (!syncRestored && changed) {
             //save to the model
             this.saveAllToModel();
         }
@@ -46,9 +46,11 @@ var SearchCriteria = Backbone.View.extend({
         this.searchVersions.versions({ multi: true });
 //        this.context = this.$el.find(".searchContext");
 
-        this.detailLevel = this.$el.detailSlider({ changed : function(newValue) {
-            self.model.save({ detail : newValue });
-        }});
+        this.detailLevel = this.$el.detailSlider({
+            changed: function (newValue) {
+                self.model.save({ detail: newValue });
+            },
+            model: self.model});
         this.searchButton = this.$el.find(".doSearch").button();
         this.resetButton = this.$el.find(".resetSearch").button();
 
@@ -106,14 +108,14 @@ var SearchCriteria = Backbone.View.extend({
      * Syncs the values in the view from the model values
      * @return true if any of the values has been changed.
      */
-    syncValuesWithModel : function() {
+    syncValuesWithModel: function () {
         var changed = false;
         var keyValuePairs = this.model.pairs();
-        for(var i = 0; i < keyValuePairs.length; i++) {
-            if(this.viewElementsByName[keyValuePairs[i][0]]) {
+        for (var i = 0; i < keyValuePairs.length; i++) {
+            if (this.viewElementsByName[keyValuePairs[i][0]]) {
                 //get previous value
                 var previousValue = this.viewElementsByName[keyValuePairs[i][0]].val();
-                if(previousValue != this.viewElementsByName[keyValuePairs[i][1]]) {
+                if (previousValue != this.viewElementsByName[keyValuePairs[i][1]]) {
                     changed |= this.viewElementsByName[keyValuePairs[i][0]].val(keyValuePairs[i][1]);
                 }
             }
@@ -125,9 +127,9 @@ var SearchCriteria = Backbone.View.extend({
      * Saves all elements that have changed to the model. For dropdowns, we either take the same value,
      * or its equivalent value
      */
-    saveAllToModel : function() {
+    saveAllToModel: function () {
         var attributes = {};
-        for(var propName in this.viewElementsByName) {
+        for (var propName in this.viewElementsByName) {
             var element = this.viewElementsByName[propName];
 
             attributes[propName] = this._getValue(element);
@@ -140,7 +142,7 @@ var SearchCriteria = Backbone.View.extend({
      * Updates the model, then updates the view of the query syntax
      */
     updateModel: function (event) {
-        if(event == undefined) {
+        if (event == undefined) {
             console.log("WARNING: calling update model with no event");
         }
 
@@ -148,13 +150,13 @@ var SearchCriteria = Backbone.View.extend({
         //that is declared that exactly matches what we're after...
         var targetElement = $(event.target);
         var classes = targetElement.attr("class");
-        if(!classes) {
+        if (!classes) {
             return;
         }
 
         var individualClasses = classes.split(' ');
-        for(var i = 0; i < individualClasses.length; i++) {
-            if(this.viewElementsByName[individualClasses[i]]) {
+        for (var i = 0; i < individualClasses.length; i++) {
+            if (this.viewElementsByName[individualClasses[i]]) {
                 //we've got the right class
                 var fieldName = individualClasses[i];
                 var attributes = {};
@@ -191,20 +193,20 @@ var SearchCriteria = Backbone.View.extend({
      * @returns {*} the value stored in the field.
      * @private
      */
-    _getValue : function(element) {
+    _getValue: function (element) {
         var value = element.val();
         var source = element.attr("source");
 
         //resolve the value from the dropdown...
-        if(source) {
+        if (source) {
             //then switch out the value for its equivalent
             var values = step.util.getPointer(source);
-            for(var i = 0; i < values; i++) {
-                if(values[i] == value) {
+            for (var i = 0; i < values; i++) {
+                if (values[i] == value) {
                     break;
                 }
 
-                if(values[i].label == value) {
+                if (values[i].label == value) {
                     value = values[i].value;
                     break;
                 }
@@ -218,12 +220,12 @@ var SearchCriteria = Backbone.View.extend({
      * @param event the event originating the trigger
      */
     resetSearch: function (event) {
-        for(var propName in this.viewElementsByName) {
+        for (var propName in this.viewElementsByName) {
             var element = this.viewElementsByName[propName];
-            if(element.hasClass("drop")) {
+            if (element.hasClass("drop")) {
                 var source = element.attr("source");
                 var sourceData = step.util.getPointer(source);
-                if(sourceData) {
+                if (sourceData) {
                     element.val(sourceData[0].value ? sourceData[0].value : sourceData[0]);
                     continue;
                 }

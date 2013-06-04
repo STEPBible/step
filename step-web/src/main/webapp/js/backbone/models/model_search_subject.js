@@ -1,5 +1,15 @@
 var SubjectSearchModel = SearchModel.extend({
     _evaluateQuerySyntax : function(attributes) {
-        return "s=" + this.getSafeAttribute(attributes, "subjectText");
+        var subjectText = this.getSafeAttribute(attributes, "subjectText");
+        var subjectRelated = this.getSafeAttribute(attributes, "subjectRelated");
+        var detail = this.getSafeAttribute(attributes, "detail");
+
+        if(!step.util.isBlank(subjectText) || detail == 0) {
+            return "s=" + subjectText;
+        } else if(!step.util.isBlank(subjectRelated)) {
+            return "sr=" + subjectRelated;
+        } else {
+            return "";
+        }
     }
 });

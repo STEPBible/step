@@ -134,8 +134,8 @@
         <script src="js/backbone/models/model_search_advanced.js" type="text/javascript"></script>
         <script src="js/backbone/models/model_search_simple.js" type="text/javascript"></script>
 
-        <!-- subject uses a standard criteria view for now -->
         <script src="js/backbone/views/view_criteria.js" type="text/javascript"></script>
+        <script src="js/backbone/views/view_criteria_subject.js" type="text/javascript"></script>
         <script src="js/backbone/views/view_criteria_word.js" type="text/javascript"></script>
         <script src="js/backbone/views/view_criteria_advanced.js" type="text/javascript"></script>
         <script src="js/backbone/views/view_critieria_text.js" type="text/javascript"></script>

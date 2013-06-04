@@ -49,7 +49,7 @@ var MenuList = Backbone.Collection.extend({
                     passageColumnModel = AdvancedSearchModels.at(passageId);
                     break;
             }
-            if(passageColumnModel != null) {
+            if (passageColumnModel != null) {
                 passageColumnModel.trigger("search", passageColumnModel);
             } else {
                 console.log("ERROR: passageColumnModel was null.");
@@ -176,7 +176,7 @@ function createModelsIfRequired(models, modelClass, searchType) {
         }
     }
 
-    for(var i = PASSAGE_IDS; i < models.length; i++) {
+    for (var i = PASSAGE_IDS; i < models.length; i++) {
         models.remove(models.at(i));
     }
 }
@@ -198,7 +198,7 @@ function initApp() {
     QuickLexiconModels.fetch();
     QuickLexiconModels.reset();
     QuickLexiconModels.add(new QuickLexiconModel);
-    new QuickLexicon({ model : QuickLexiconModels.at(0) });
+    new QuickLexicon({ model: QuickLexiconModels.at(0) });
 
     createModelsIfRequired(SubjectModels, SubjectSearchModel, "subject");
     createModelsIfRequired(SimpleTextModels, SimpleTextSearchModel, "text");
@@ -232,8 +232,22 @@ function initApp() {
     }
 
     Backbone.history.start();
-//    MenuModels.at(0).trigger("change", MenuModels.at(0));
 
+    //now some events may not have been triggered yet, so we'll be looking to trigger them ourselves.
+    //this only affects fieldsets that are not loaded dynamically, i.e. passage.
+    //since others are triggered after this thread of execution is completed, and when a XHR request is
+    //come back - see forceSearch in view_critieria_control.js
+    var columnFragments = stepRouter.getColumnFragments(Backbone.history.getFragment());
+    for(var i = 0; i < PASSAGE_IDS; i++) {
+        if(columnFragments[i] == undefined) {
+            //then we're missing stuff
+            console.log("missing passage id: ", i);
+            MenuModels.at(0).trigger("change", MenuModels.at(0));
+        }
+    }
+
+//    MenuModels.at(0).trigger("change", MenuModels.at(0));
+//
 //    //trigger changes
 //    for(var i = PassageModels.length -1; i >= 0 ; i--) {
 //        var model = PassageModels.at(i);

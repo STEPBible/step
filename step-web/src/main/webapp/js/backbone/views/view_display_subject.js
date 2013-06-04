@@ -6,6 +6,7 @@ var SubjectDisplayView = SearchDisplayView.extend({
         if (query.startsWith("s=")) {
             return this._doSimpleSubjectSearchResults(query, searchResults.results);
         } else {
+            //caters for s+=, s++= and sr=
             return this._doNaveSearchResults(query, searchResults.results);
         }
     },
@@ -96,6 +97,7 @@ var SubjectDisplayView = SearchDisplayView.extend({
             return wrappedSearchResults;
         } else if (undoneQuery.startsWith("sr=")) {
             this._addSubjectExpandHandlers(query, results);
+            return results;
         }
     },
 
@@ -232,6 +234,9 @@ var SubjectDisplayView = SearchDisplayView.extend({
         for (var i = 0; i < searchResults.length; i++) {
             if (searchResults[i].root != lastHeader) {
                 //append a new header
+                heading = $("<h3>").addClass("subjectHeading").append(searchResults[i].root);
+                results.append(heading);
+
                 list = $("<ul>").addClass("subjectSection searchResults");
                 results.append(list);
                 lastHeader = searchResults[i].root;

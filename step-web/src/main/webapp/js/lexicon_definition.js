@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2012, Directors of the Tyndale STEP Project All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright notice, this
  * list of conditions and the following disclaimer. Redistributions in binary
  * form must reproduce the above copyright notice, this list of conditions and
@@ -13,7 +13,7 @@
  * (www.TyndaleHouse.com) nor the names of its contributors may be used to
  * endorse or promote products derived from this software without specific prior
  * written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -28,35 +28,35 @@
  ******************************************************************************/
 
 step.lexicon = {
-    passageId : 0,
-    positioned : false,
-    currentLexiconData : undefined,
-    
-    sameWordSearch : function(strongNumber, refLimit) {
+    passageId: 0,
+    positioned: false,
+    currentLexiconData: undefined,
+
+    sameWordSearch: function (strongNumber, refLimit) {
         this.doSearch(ALL_FORMS, strongNumber, refLimit);
     },
 
-    relatedWordSearch : function(strongNumber, refLimit) {
+    relatedWordSearch: function (strongNumber, refLimit) {
         this.doSearch(ALL_RELATED, strongNumber, refLimit);
     },
 
-    doSearch : function(searchType, strongNumber, refLimit) {
+    doSearch: function (searchType, strongNumber, refLimit) {
         var query;
-        if(strongNumber) {
+        if (strongNumber) {
             query = strongNumber;
         } else {
             query = $("span[info-name ='strongNumber']").text();
         }
-        
-        if(step.util.raiseErrorIfBlank(query, __s.error_no_strong_data)) {
+
+        if (step.util.raiseErrorIfBlank(query, __s.error_no_strong_data)) {
             var targetPassageId = step.util.getOtherPassageId(this.passageId);
 
             var model = WordSearchModels.at(targetPassageId);
             var attributes = {};
 
-            if(refLimit) {
+            if (refLimit) {
                 attributes.originalScope = refLimit;
-                if(model.get("detail") < 1) {
+                if (model.get("detail") < 1) {
                     attributes.detail = 1;
                 }
             } else {
@@ -73,12 +73,12 @@ step.lexicon = {
             model.trigger("search", model, {});
             //if we're in single view, then we would want to bring up the second column
             step.state.view.ensureTwoColumnView();
-            
+
 //            step.state.activeSearch(targetPassageId, 'original', true);
         }
     },
 
-    resetContainer : function (container) {
+    resetContainer: function (container) {
         $("*", container).each(function (index, element) {
             if ($(element).attr("info-name")) {
                 $(element).html("");
@@ -86,7 +86,7 @@ step.lexicon = {
         });
     },
 
-    populateNames : function (indexToWord, data, container) {
+    populateNames: function (indexToWord, data, container) {
         this.resetContainer(container);
 
         // now check if we have information, if not, then hide
@@ -134,29 +134,29 @@ step.lexicon = {
         });
     },
 
-    switchWords : function(strongNumber) {
-        if(this.currentLexiconData == undefined) {
+    switchWords: function (strongNumber) {
+        if (this.currentLexiconData == undefined) {
             //an error occurred:
             log.console("Trying to switch words for undefined data.");
         }
 
-        for(var i = 0; i < this.currentLexiconData.vocabInfos.length; i++) {
-            if(this.currentLexiconData.vocabInfos[i].strongNumber == strongNumber) {
+        for (var i = 0; i < this.currentLexiconData.vocabInfos.length; i++) {
+            if (this.currentLexiconData.vocabInfos[i].strongNumber == strongNumber) {
                 //we're in business, so need to trigger the display again.
                 this.showSingleWordOnPopup(i);
             }
         }
     },
 
-    showSingleWordOnPopup : function(index) {
+    showSingleWordOnPopup: function (index) {
         var data = this.currentLexiconData;
 
         step.lexicon.populateNames(index, data.morphInfos, "#grammarContainer");
         step.lexicon.populateNames(index, data.vocabInfos, "#vocabContainer");
 
         if (data.vocabInfos[index] && data.vocabInfos[index].relatedNos) {
-            var linkContainer =  $("*[info-name = 'relatedNos']", "#vocabContainer");
-            $.each(data.vocabInfos[index].relatedNos, function(i, item) {
+            var linkContainer = $("*[info-name = 'relatedNos']", "#vocabContainer");
+            $.each(data.vocabInfos[index].relatedNos, function (i, item) {
                 //build a link, with gloss (unicode title='translit') 
                 var unicode = $("<span>").append(item.matchingForm).addClass("ancientLanguage").prop("href", "javascript:void");
                 var link = $("<a>").append(item.gloss + " (");
@@ -167,8 +167,8 @@ step.lexicon = {
                 link.addClass("lexiconRelatedWord");
                 linkContainer.append(link);
             });
-            
-            $("span[info-name='relatedNos'] a").button().click(function() {
+
+            $("span[info-name='relatedNos'] a").button().click(function () {
                 showDef($(this).prop("strongNumber"));
             });
             $("span[info-name='relatedNos']").buttonset();
@@ -189,9 +189,9 @@ step.lexicon = {
         entries.empty();
     },
 
-    updateWordLinks : function (vocabInfos, index) {
+    updateWordLinks: function (vocabInfos, index) {
         //we don't do anything if we have only 1 vocabInfo
-        if(vocabInfos && vocabInfos.length < 2) {
+        if (vocabInfos && vocabInfos.length < 2) {
             return;
         }
 
@@ -202,14 +202,14 @@ step.lexicon = {
 
         entries = entries.append("<h5>" + __s.selected_lexicon_word + ": </h5>");
 
-        for(var i = vocabInfos.length -1; i >= 0; i--) {
+        for (var i = vocabInfos.length - 1; i >= 0; i--) {
             var link = $("<input type='radio' class='lexiconWordLink' name='lexiconWordLink' />").attr("id", "lexiconWordLink" + i);
             var label = $("<label></label>").attr("for", "lexiconWordLink" + i).html(vocabInfos[i].stepGloss);
-            
-            
+
+
             self.addWordLinkClickHandler(link, vocabInfos[i]);
 
-            if(i == index) {
+            if (i == index) {
                 link.prop("checked", "true");
             }
 
@@ -225,8 +225,8 @@ step.lexicon = {
      * @param link that is being created
      * @param vocabInfo the vocabInfo containing the strong number
      */
-    addWordLinkClickHandler : function(link, vocabInfo) {
-        link.click(function(){
+    addWordLinkClickHandler: function (link, vocabInfo) {
+        link.click(function () {
             step.lexicon.switchWords(vocabInfo.strongNumber);
         });
     }
@@ -241,7 +241,7 @@ step.lexicon = {
 function LexiconDefinition() {
     var self = this;
     // listen for particular types of events and call the prototype functions
-    this.getPopup().hear("show-all-strong-morphs", function(selfElement, data) {
+    this.getPopup().hear("show-all-strong-morphs", function (selfElement, data) {
 //        console.log(data);
         self.showDef(data);
 
@@ -252,11 +252,11 @@ function LexiconDefinition() {
 
     $("#origin").detailSlider({
         key: "lexicon",
-        scopeSelector : "#lexiconDefinition"
+        scopeSelector: "#lexiconDefinition"
     });
 }
-    
-LexiconDefinition.prototype.getPopup = function() {
+
+LexiconDefinition.prototype.getPopup = function () {
     if (this.popup) {
         return this.popup;
     }
@@ -266,26 +266,21 @@ LexiconDefinition.prototype.getPopup = function() {
     this.popup = lexiconDefinitionSelector;
 
     this.popup.tabs().draggable({
-        handle : "#lexiconDefinitionHeader"
+        handle: "#lexiconDefinitionHeader"
     });
-    lexiconDefinitionSelector.tabs( "option", "active", 0);
-    
-    
-    $('#lexiconPopupClose').button({
-        icons : {
-            primary : "ui-icon-closethick",
-        }, 
-        text : false
-    }).click(function() {
+    lexiconDefinitionSelector.tabs("option", "active", 0);
+
+
+    $('#lexiconPopupClose').button({ icons: { primary: "ui-icon-closethick" }, text: false }).click(function () {
         $('#lexiconDefinition').hide();
     });
-    
-    lexiconDefinitionSelector.offset({top : $(window).height() - lexiconDefinitionSelector.height() - 10 });
-    
+
+    lexiconDefinitionSelector.offset({top: $(window).height() - lexiconDefinitionSelector.height() - 10 });
+
     return this.popup;
 };
 
-LexiconDefinition.prototype.showDef = function(data) {
+LexiconDefinition.prototype.showDef = function (data) {
     var self = this;
 
     step.lexicon.passageId = data.passageId;
@@ -296,7 +291,7 @@ LexiconDefinition.prototype.showDef = function(data) {
     var verse = $(data.source).closest("span.verse").filter("a:first").attr("name");
 
     // Get info on word
-    $.getSafe(MODULE_GET_INFO + strong + "/" + morph + "/" + verse, function(data) {
+    $.getSafe(MODULE_GET_INFO + strong + "/" + morph + "/" + verse, function (data) {
         self.showOriginalWordData(data);
     });
 
@@ -304,10 +299,10 @@ LexiconDefinition.prototype.showDef = function(data) {
 };
 
 
-LexiconDefinition.prototype.showOriginalWordData = function(data) {
+LexiconDefinition.prototype.showOriginalWordData = function (data) {
     //finally do the odd-ones out
     //we use the last info, as the main info
-    if(data.vocabInfos.length == 0) {
+    if (data.vocabInfos.length == 0) {
         return;
     }
     // remove previous information
@@ -315,7 +310,7 @@ LexiconDefinition.prototype.showOriginalWordData = function(data) {
     step.lexicon.showSingleWordOnPopup(data.vocabInfos.length - 1);
 };
 
-LexiconDefinition.prototype.reposition = function() {
+LexiconDefinition.prototype.reposition = function () {
     // if left position is negative, then we assume it's off screen and need
     // position
     var popup = this.getPopup();
@@ -324,9 +319,9 @@ LexiconDefinition.prototype.reposition = function() {
         step.lexicon.positioned = true;
         var lexiconDefinition = $("#lexiconDefinition");
         lexiconDefinition.offset({
-            top  : $(window).height() - lexiconDefinition.height() - 20,
-            left : $(window).width() - lexiconDefinition.width() - 10
+            top: $(window).height() - lexiconDefinition.height() - 20,
+            left: $(window).width() - lexiconDefinition.width() - 10
         });
-        
+
     }
 };

@@ -53,6 +53,12 @@ CriteriaControlView = Backbone.View.extend({
                 });
             }
         } else {
+            //first time, we kick off the forceSearch
+            if(!fragmentsLoading[selectedSearch]) {
+                fragmentsLoading[selectedSearch] = true;
+                this.model.trigger("forceSearch", this.model);
+            }
+
             this.deferredChangeVisibleCriteria();
         }
     },
@@ -67,7 +73,7 @@ CriteriaControlView = Backbone.View.extend({
             case "subject":
                 //if models are empty, then fetch, if still empty after that then create one
                 //subject search
-                this._fetch(selectedSearch, fieldsets, SubjectModels, SubjectSearchModel, SearchCriteria, SubjectDisplayView, false);
+                this._fetch(selectedSearch, fieldsets, SubjectModels, SubjectSearchModel, SubjectCriteria, SubjectDisplayView, false);
                 break;
             case "text":
                 this._fetch(selectedSearch, fieldsets, SimpleTextModels, SimpleTextSearchModel, TextCriteria, TextDisplayView);

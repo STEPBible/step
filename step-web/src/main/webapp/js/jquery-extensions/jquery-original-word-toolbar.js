@@ -74,7 +74,7 @@ $.widget("custom.originalWordToolbar",  {
         sortables.hover(
                 function() { 
                    step.passage.higlightStrongs({
-                           passageId: step.passage.getPassageId(this), 
+                           passageId: step.passage.getPassageId(this),
                            strong: $(this).find("input[type='checkbox']").val() 
                        }); 
                 }, function() { 

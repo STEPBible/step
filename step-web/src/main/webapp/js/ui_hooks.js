@@ -207,7 +207,18 @@ function getRelatedSubjects(key, passageId) {
     var relatedSubjects = $.data(link, "relatedSubjects");
     
     //first change the fieldset:
-    step.state.activeSearch(otherPassage, "SEARCH_SUBJECT", false);
-    
-    step.search._doResultsRender(otherPassage, relatedSubjects, 1, "", relatedSubjects.query);
+    var subjectModel = SubjectModels.at(otherPassage);
+    subjectModel.save({
+        subjectText : "",
+        subjectRelated : key,
+        detail : 2
+    });
+
+    subjectModel.trigger("search", subjectModel, {});
+
+    //if we're in single view, then we would want to bring up the second column
+    step.state.view.ensureTwoColumnView();
+
+//    step.state.activeSearch(otherPassage, "SEARCH_SUBJECT", false);
+//    step.search._doResultsRender(otherPassage, relatedSubjects, 1, "", relatedSubjects.query);
 }

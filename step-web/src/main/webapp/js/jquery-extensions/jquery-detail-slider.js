@@ -16,14 +16,15 @@ $(function() {
                 slide : function(event, ui) {
                     self.handleSlide(ui.value);
                 },
-                value : self.options.value
+                value : self.options.model ? self.options.model.get("detail") : self.options.value
             });
-            
+
+
+
     	    this.label = $("<span class='sliderDetailLevelLabel'>" + DETAIL_LEVELS[0] + "</span>");
             this.widgetContent = $("<span class='detailSliderContainer'></span>").append(this.label).append(this.slider);
     	    this.element.prepend(this.widgetContent);
     	    this.element.addClass("detailSlider");
-
             this.handleSlide(this.value());
     	},
     	

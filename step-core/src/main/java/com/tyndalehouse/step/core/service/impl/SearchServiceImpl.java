@@ -505,6 +505,7 @@ public class SearchServiceImpl implements SearchService {
             case SUBJECT_SIMPLE:
             case SUBJECT_EXTENDED:
             case SUBJECT_FULL:
+            case SUBJECT_RELATED:
                 return this.subjects.search(sq);
             case TIMELINE_DESCRIPTION:
                 return runTimelineDescriptionSearch(sq);

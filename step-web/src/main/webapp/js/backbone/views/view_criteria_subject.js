@@ -31,62 +31,50 @@
  * THE POSSIBILITY OF SUCH DAMAGE.                                                                *
  **************************************************************************************************/
 
-var QuickLexicon = Backbone.View.extend({
-    el: function () {
-        return $("<span>").position({ my: "right top", at: "right top", of: $(window) }).hide();
-    },
+var SubjectCriteria = SearchCriteria.extend({
+    events: _.extend(SearchCriteria.prototype.events, {
+        "click .resetSubjectText" : "resetSubjectText",
+        "click .resetSubjectRelated" : "resetSubjectRelated",
+        "change input[type='text']" : "updateTextStatus",
+        "keyup input[type='text']" : "updateTextStatus"
+    }),
 
     initialize: function () {
-        this.listenTo(this.model, "change", this.render);
+        SearchCriteria.prototype.initialize.call(this);
+        this.viewElementsByName.subjectRelated.biblebooks({ version : 'ESV' });
+        this.updateTextStatus();
+
+        var self = this;
+        this.detailLevel = this.$el.detailSlider({ changed : function(newValue) {
+            self.model.save({ detail : newValue });
+            self.updateTextStatus();
+        }});
+
+        this.$el.find(".resetSubjectText,.resetSubjectRelated").button({ icons: { primary: "ui-icon-close" }, text: false});
     },
 
-    /**
-     * Updates the text and shows it
-     * @param strongNumbers
-     */
-    render: function (event) {
-        var self = this;
+    resetSearch : function() {
+        //call the parent first
+        SearchCriteria.prototype.resetSearch.call(this);
 
-        if(this.qtip != undefined) {
-            this.qtip.qtip("destroy");
-        }
+        //then update the status
+        this.updateTextStatus();
+    },
 
-        this.qtip = $(this.model.get("element")).qtip({
-            style: { tip: false, classes: "quickLexiconDefinition primaryLightBg" },
-            position: { my: "top right", at: "top right", viewport: $(window), target: $("body"), effect: false },
-            hide: { event: 'unfocus mouseleave' },
-            content: {
-                text: function (event, api) {
-                    var strong = self.model.get("strongNumber");
-                    var morph = self.model.get("morph");
+    updateTextStatus : function() {
+        //we only allow text in one of the two boxes we have, and we always prefer the subjectText
+        var hasSubjectText = !step.util.isBlank(this.viewElementsByName.subjectText.val());
 
-                    $.getSafe(MODULE_GET_QUICK_INFO + strong + "/" + morph + "/", function (data) {
-                        var vocabInfo = "";
-                        if (data.vocabInfos) {
-                            $.each(data.vocabInfos, function (i, item) {
-                                vocabInfo += "<h1>" +
-                                    "<span class='unicodeFont'>" +
-                                    item.accentedUnicode +
-                                    "</span> (<span class='stepTransliteration'>" +
-                                    step.util.ui.markUpTransliteration(item.stepTransliteration) +
-                                    "): " +
-                                    item.stepGloss +
-                                    "</h1>" +
-                                    "<span>" +
-                                    (item.shortDef == undefined ? "" : item.shortDef) +
-                                    "</span></p>";
-                            });
-                        }
+        //we disable the other box and update the tip
+        //if text is filled, we disable this, otherwise we enable (always)
+        var detail = this.model.get("detail");
+        this.viewElementsByName.subjectRelated.prop("disabled", hasSubjectText || detail == 0);
 
-                        vocabInfo += "<span class='infoTagLine'>" +
-                            __s.more_info_on_click_of_word +
-                            "</span>";
-                        api.set('content.text', vocabInfo);
-                    });
-                }
-            }
-        });
+        //slightly different here, we only enable if the other one is blank
+        //we also allow subject text enabled if the other one is for some reason disabled
+        var relatedIsFilled = !step.util.isBlank(this.viewElementsByName.subjectRelated.val());
 
-        this.qtip.qtip("show");
+        var enableSubjecText = hasSubjectText || detail == 0 || !relatedIsFilled;
+        this.viewElementsByName.subjectText.prop("disabled", !enableSubjecText);
     }
 });

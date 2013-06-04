@@ -17,8 +17,17 @@
     <table class="subjectSearchTable">
         <tr>
             <td><fmt:message key="subject_search" />&nbsp;</td>
-            <td><input type="text" class="subjectText _m" /></td>
+            <td>
+                <input type="text" class="subjectText _m" title="<fmt:message key="subject_search_text_title" />" />
+            </td>
         </tr>
+        <tr level="1">
+            <td><fmt:message key="subject_related" />&nbsp;</td>
+            <td>
+                <input type="text" class="subjectRelated _m drop" title="<fmt:message key="subject_search_related" />"/>
+            </td>
+        </tr>
+
         <tr level="2">
             <td><fmt:message key="search_query_syntax" />&nbsp;</td>
             <td><input type="text" class="subjectQuerySyntax querySyntax" /></td>

@@ -28,8 +28,8 @@ var StepRouter = Backbone.Router.extend({
 
         //if hash is empty then we use the normal mechanism
         if (hash.length == 0 || hash == '#') {
-            var prefix = fragment.substring(0,3);
-            if(prefix != "__/") {
+            var prefix = fragment.substring(0, 3);
+            if (prefix != "__/") {
                 fragment = "__/" + fragment;
             }
 
@@ -86,11 +86,19 @@ var StepRouter = Backbone.Router.extend({
             fragments.push(hash.substring(lastPos, pos - 1));
             lastPos = pos;
         }
-        fragments.push(hash.substring(lastPos));
+
+        var passageId = this.getPassageIdFromHash(hash);
+        var newHash = hash.substring(lastPos);
+
+        fragments[this.getPassageIdFromHash(newHash)] = newHash;
 
         //start positions of each fragment
         console.log(fragments);
         return fragments;
+    },
+
+    getPassageIdFromHash: function (hash) {
+        return hash.split("/")[1];
     },
 
     /**
@@ -104,16 +112,20 @@ var StepRouter = Backbone.Router.extend({
         //divide the url up
         var fragments = this.getColumnFragments(wholeUrl);
         for (var i = 0; i < fragments.length; i++) {
-            //prevent infinite recursion
-                    if(fragments[i][0] == '/') {
-                        fragments[i] = fragments[i].substring(1);
-                    }
+            if (fragments[i] == undefined) {
+                continue;
+            }
 
-                    if(fragments[i].indexOf("__/") == 0) {
-                        fragments[i] = fragments[i].substring(3);
-                    }
-                    console.log("loading url: ", fragments[i]);
-                    Backbone.history.loadUrl(fragments[i]);
+            //prevent infinite recursion
+            if (fragments[i][0] == '/') {
+                fragments[i] = fragments[i].substring(1);
+            }
+
+            if (fragments[i].indexOf("__/") == 0) {
+                fragments[i] = fragments[i].substring(3);
+            }
+            console.log("loading url: ", fragments[i]);
+            Backbone.history.loadUrl(fragments[i]);
         }
         refreshLayout();
     },
@@ -127,7 +139,7 @@ var StepRouter = Backbone.Router.extend({
         var menuModel = MenuModels.at(passageId);
         if (menuModel != null) {
 //            if (menuModel.get("selectedSearch") != searchType) {
-                menuModel.save({ selectedSearch: searchType });
+            menuModel.save({ selectedSearch: searchType });
 //            } else {
 //                console.log("WARN: Skipping update on model, as already in date");
 //            }
@@ -147,8 +159,8 @@ var StepRouter = Backbone.Router.extend({
     search: function (passageId, searchType, pageNumber, querySyntax, context, version, sortOrder, params) {
         console.log("Restoring params", params);
 
-        if(params) {
-            Backbone.Events.trigger(searchType + ":restoreParams:" + passageId, { params : params.split("|") });
+        if (params) {
+            Backbone.Events.trigger(searchType + ":restoreParams:" + passageId, { params: params.split("|") });
         }
 
         this.updateMenuModel(passageId, searchType);

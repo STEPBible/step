@@ -1,11 +1,11 @@
 /*******************************************************************************
  * Copyright (c) 2012, Directors of the Tyndale STEP Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without 
  * modification, are permitted provided that the following conditions 
  * are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright 
  * notice, this list of conditions and the following disclaimer.
  * Redistributions in binary form must reproduce the above copyright 
@@ -16,7 +16,7 @@
  * nor the names of its contributors may be used to endorse or promote 
  * products derived from this software without specific prior written 
  * permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
@@ -48,7 +48,7 @@ import com.tyndalehouse.step.core.exceptions.TranslatedException;
 
 /**
  * Represents an individual search
- * 
+ *
  * @author chrisburrell
  */
 public class IndividualSearch {
@@ -80,20 +80,20 @@ public class IndividualSearch {
 
     /**
      * Instantiates a single search to be executed.
-     * 
-     * @param type the type of the search
+     *
+     * @param type    the type of the search
      * @param version the version to be used to carry out the search
-     * @param query the query to be run
+     * @param query   the query to be run
      */
     public IndividualSearch(final SearchType type, final String version, final String query) {
         this.type = type;
         this.query = query;
-        this.versions = new String[] { version };
+        this.versions = new String[]{version};
     }
 
     /**
      * Initialises the search from the query string.
-     * 
+     *
      * @param query the query that is being sent to the app to search for
      */
     public IndividualSearch(final String query) {
@@ -124,12 +124,12 @@ public class IndividualSearch {
 
         LOGGER.debug(
                 "The following search has been constructed: type [{}]\nquery [{}]\n subRange [{}], mainRange [{}]",
-                new Object[] { this.type, query, this.subRange, this.mainRange });
+                new Object[]{this.type, query, this.subRange, this.mainRange});
     }
 
     /**
      * Parses the query to be the correct original search
-     * 
+     *
      * @param parseableQuery the query entered by the user, without the first character (o)
      */
     private void parseOriginalSearch(final String parseableQuery) {
@@ -179,7 +179,7 @@ public class IndividualSearch {
 
     /**
      * Matches the original filter, 'where original is' pattern
-     * 
+     *
      * @param parseableQuery query
      */
     private void matchOriginalFilter(final String parseableQuery) {
@@ -206,7 +206,7 @@ public class IndividualSearch {
 
     /**
      * Matches the first group and removes the entire match from the string
-     * 
+     *
      * @param pattern the pattern to use for matching the query
      * @return the string that was matched
      */
@@ -222,7 +222,7 @@ public class IndividualSearch {
 
     /**
      * matches a version in the query of type "xyz in (KJV)"
-     * 
+     *
      * @param textQuery the query without the prefix
      */
     private void matchVersions(final String textQuery) {
@@ -243,30 +243,37 @@ public class IndividualSearch {
 
     /**
      * Constructs the syntax for the subject search
-     * 
+     *
      * @param parsedSubject the parsed and well-formed search query, containing prefix, etc.
      */
     private void parseSubjectSearch(final String parsedSubject) {
-        // how many pluses do we have
-        int pluses = 0;
-        while (parsedSubject.charAt(pluses) == '+') {
-            pluses++;
+        int nextIndex = 0;
+        if (parsedSubject.charAt(0) == 'r') {
+            //subject related search.
+            this.type = SearchType.SUBJECT_RELATED;
+            nextIndex = 1;
+        } else {
+            // how many pluses do we have
+            while (parsedSubject.charAt(nextIndex) == '+') {
+                nextIndex++;
+            }
+
+            switch (nextIndex) {
+                case 0:
+                    this.type = SearchType.SUBJECT_SIMPLE;
+                    break;
+                case 1:
+                    this.type = SearchType.SUBJECT_EXTENDED;
+                    break;
+                case 2:
+                default:
+                    this.type = SearchType.SUBJECT_FULL;
+                    break;
+
+            }
         }
 
-        switch (pluses) {
-            case 0:
-                this.type = SearchType.SUBJECT_SIMPLE;
-                break;
-            case 1:
-                this.type = SearchType.SUBJECT_EXTENDED;
-                break;
-            case 2:
-            default:
-                this.type = SearchType.SUBJECT_FULL;
-                break;
-        }
-
-        final String trimmedQuery = parsedSubject.substring(pluses + 1);
+        final String trimmedQuery = parsedSubject.substring(nextIndex + 1);
 
         // fill in the query and versions
         matchVersions(trimmedQuery);

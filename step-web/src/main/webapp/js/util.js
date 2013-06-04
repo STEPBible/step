@@ -190,7 +190,7 @@ step.util = {
             if (passageChanges >= 1) {
                 //hide the bar
                 infoBar.toggle(false);
-                step.passage.ui.resize();
+                refreshLayout();
             } else {
                 infoBar.data('numPassageChanges', 1);
             }

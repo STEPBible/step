@@ -125,11 +125,22 @@ public class SubjectSearchServiceImpl implements SubjectSearchService {
                 return searchExtended(sq);
             case SUBJECT_FULL:
                 return searchFull(sq);
+            case SUBJECT_RELATED:
+                return relatedSubjects(sq);
             default:
                 break;
 
         }
         return searchSimple(sq);
+    }
+
+    /**
+     * Related subject returns subjects, not verses...
+     * @param sq the search query.
+     * @return the subjects
+     */
+    private SearchResult relatedSubjects(final SearchQuery sq) {
+        return searchByMultipleReferences(sq.getCurrentSearch().getVersions()[0], sq.getCurrentSearch().getQuery());
     }
 
     /**

@@ -36,6 +36,8 @@ import static com.tyndalehouse.step.core.xsl.XslConversionType.DEFAULT;
 
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.xsl.XslConversionType;
+import org.codehaus.jackson.annotate.JsonValue;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -192,6 +194,7 @@ public enum LookupOption {
     /**
      * @return the char to which this option is mapped
      */
+    @JsonValue
     public char getUiName() {
         return uiName;
     }

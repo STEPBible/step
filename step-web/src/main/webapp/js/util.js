@@ -550,7 +550,6 @@ step.util = {
             var translitHtml = translit.html ? translit.html() : translit;
             if(!step.util.isBlank(translitHtml)) {
                 translitHtml = translitHtml.replace(/'e/g, "<span class='superTranslit'>e</span>");
-                translitHtml = translitHtml.replace(/\.([aeiou])/g, "<span class='superTranslit'>$1</span>");
                 translitHtml = translitHtml.replace(/([^*-]*)\*([^*-]*)/g, "<span class='stressTranslit'>$1$2</span>")
 
                 //look for any stars in the word and highlight before and after

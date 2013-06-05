@@ -27,7 +27,7 @@ var SearchModel = Backbone.Model.extend({
             this.set(keyValuePair[0], keyValuePair[1]);
         }
 
-        this.trigger("resync", this);
+        this.trigger("resync", this.model);
     },
 
     /**
@@ -56,7 +56,9 @@ var SearchModel = Backbone.Model.extend({
         }
 
         console.log("Saving search model", attributes);
-        return Backbone.Model.prototype.save.call(this, attributes, options);
+        var saveReturn = Backbone.Model.prototype.save.call(this, attributes, options);
+        this.trigger("resync", this.model);
+        return saveReturn;
     },
 
     /**

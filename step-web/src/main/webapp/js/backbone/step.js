@@ -242,15 +242,7 @@ function initApp() {
         if(columnFragments[i] == undefined) {
             //then we're missing stuff
             console.log("missing passage id: ", i);
-            MenuModels.at(0).trigger("change", MenuModels.at(0));
+            MenuModels.at(i).trigger("change", MenuModels.at(i));
         }
     }
-
-//    MenuModels.at(0).trigger("change", MenuModels.at(0));
-//
-//    //trigger changes
-//    for(var i = PassageModels.length -1; i >= 0 ; i--) {
-//        var model = PassageModels.at(i);
-//        model.trigger("change", model);
-//    }
 }

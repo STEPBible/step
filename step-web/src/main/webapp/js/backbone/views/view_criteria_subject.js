@@ -33,8 +33,6 @@
 
 var SubjectCriteria = SearchCriteria.extend({
     events: _.extend(SearchCriteria.prototype.events, {
-        "click .resetSubjectText" : "resetSubjectText",
-        "click .resetSubjectRelated" : "resetSubjectRelated",
         "change input[type='text']" : "updateTextStatus",
         "keyup input[type='text']" : "updateTextStatus"
     }),

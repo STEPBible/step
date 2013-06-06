@@ -157,7 +157,7 @@
 			from <a href="http://www.tyndalehouse.com" target="_new">Tyndale House, Cambridge</a></h1>
 			<img src="images/step-logo-big.png" title="STEP" /><br />
 			<em><fmt:message key="step_tag_line" /></em><br /><br />
-			
+
 			<table>
 				<tr>
 					<td><a target="_new" href="https://stepweb.atlassian.net/wiki/display/SUG/STEP+User+Guide" title="<fmt:message key="quick_tutorial" />"/><fmt:message key="help_manual" /></a></td>
@@ -169,13 +169,13 @@
 				</tr>
 			</table>
 			<br />
-			<a target="_new" href="http://www.tyndale.cam.ac.uk" style="color: #991c32">Tyndale House<br />Cambridge</a> 
+			<a target="_new" href="http://www.tyndale.cam.ac.uk" style="color: #991c32">Tyndale House<br />Cambridge</a>
 			<br />
 			&copy; <%= java.util.Calendar.getInstance().get(java.util.Calendar.YEAR)  %>
 		</div>
-		
+
 		<jsp:include page="js/bookmark/bookmark.jsp"></jsp:include>
-			
+
 		<div class="column rightColumn">
 			<div class="passageContainer" passage-id=1>
 				<div id="rightPaneMenu" class="innerMenus"><jsp:include page="js/menu/passage/menu.jsp" /></div>
@@ -220,10 +220,12 @@
 
 <!--  The about popup -->
 
-<div id="about">
+<div id="about" style="text-align: center;">
 	<img id="aboutLogo" src="images/step-logo.png" />
 	<h3 id="aboutTitle">STEP :: Scripture Tools for Every Person<br /></h3>
-	<p>&copy; Tyndale House, Cambridge <%= java.util.Calendar.getInstance().get(java.util.Calendar.YEAR)  %></p>
+    <p><a style="color: #33339F" href='https://stepweb.atlassian.net/wiki/x/C4C_/' target="_new"><fmt:message key="copyright_info_link" /></a>
+	<br/>
+    <p>&copy; Tyndale House, Cambridge <%= java.util.Calendar.getInstance().get(java.util.Calendar.YEAR)  %></p>
 </div>
 
 <%-- <jsp:include page="jsps/login.jsp"></jsp:include> --%>

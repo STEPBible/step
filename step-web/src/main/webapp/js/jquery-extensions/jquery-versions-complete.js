@@ -276,7 +276,11 @@ $.widget("custom.versions",  {
             
         
         toolbar += '</table>';
-        toolbar += '<div class="filterTagLine">' + sprintf(__s.filtering_bibles_and_commentaries, step.versions.length) + '</div><hr />';
+        toolbar += '<div class="filterTagLine">' +
+            "<a href='https://stepweb.atlassian.net/wiki/x/GYCV' target='_blank'>" +
+            sprintf(__s.filtering_bibles_and_commentaries, step.versions.length) +
+            "<a/>" +
+            '</div><hr />';
         
         
         toolbarContainer.append($(toolbar));

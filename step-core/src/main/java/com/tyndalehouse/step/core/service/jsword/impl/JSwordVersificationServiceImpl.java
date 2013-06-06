@@ -55,7 +55,7 @@ import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
  */
 @Singleton
 public class JSwordVersificationServiceImpl implements JSwordVersificationService {
-    private static final String DEFAULT_NUMBERED_VERSION = "KJV";
+    private static final String DEFAULT_NUMBERED_VERSION = "ESV";
     private final VersionResolver versionResolver;
 
     /**

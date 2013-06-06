@@ -142,9 +142,13 @@ body {
 #holdingPage {
 	max-width: 50%;
 	display: inline-block;
-	margin: 0px;
+	margin-left: 0px;
+    margin-bottom: 0px;
+    margin-right: 0px;
 	padding: 0px;
 	text-align: center;
+    border-left: 1px dotted lightgrey;
+    margin-left: 1px;
 }
 
 #holdingPage h1 {
@@ -223,6 +227,11 @@ body {
 
 .passageText {
 	overflow: hidden;
+}
+
+#dragSide {
+    margin-left: 3px;
+    border-left: solid #808080;
 }
 
 .headingContainer {

@@ -23,6 +23,7 @@ import com.tyndalehouse.step.core.utils.language.transliteration.Transliteration
 public final class HebrewUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(HebrewUtils.class);
     public static final char HYPHEN = '.';
+    public static final char MAQAF_HYPHEN = '-';
     private static transient List<TransliterationRule> transliterationRules;
 
     private static final char CLOSED_QUOTE = '\u2019';
@@ -147,7 +148,7 @@ public final class HebrewUtils {
             final char currentLetter = sb.charAt(ii);
             switch (currentLetter) {
                 case '.':
-                case '-':
+                case MAQAF_HYPHEN:
                 case '\'':
                 case '*':
                 case CLOSED_QUOTE:
@@ -259,11 +260,13 @@ public final class HebrewUtils {
             firstPass(letters, input);
             secondPass(letters, input);
 
+
+            String transliteration = transliterate(letters);
             if (LOGGER.isTraceEnabled()) {
-                outputAnalysis(letters);
+                outputAnalysis(letters, inputString, transliteration);
             }
 
-            return transliterate(letters);
+            return transliteration;
             // CHECKSTYLE:OFF
         } catch (final RuntimeException ex) {
             // output the error analysis
@@ -354,16 +357,21 @@ public final class HebrewUtils {
      * Outputs the analysis at trace level
      *
      * @param letters the list of letters
+     * @param inputString the string to be transliterated
+     * @param transliteration the transliteration of these letters
      */
-    private static void outputAnalysis(final HebrewLetter[] letters) {
+    private static void outputAnalysis(final HebrewLetter[] letters, final String inputString, final String transliteration) {
+        LOGGER.trace("**********************************");
+        LOGGER.trace("ANALYSIS FOR: [{}] => [{}]", inputString, transliteration);
         for (final HebrewLetter hl : letters) {
-            LOGGER.trace("{}", hl.getC());
             LOGGER.trace(
-                    "char=[0x{}]\tletter=[{}]\tconsonant=[{}]\tvLength[{}]\tvStress[{}]\tsounding[{}]",
+                    "char=[{}],xchar=[0x{}]\tletter=[{}]\tconsonant=[{}]\tvLength[{}]\tvStress[{}]\tsounding[{}]",
+                    hl.getC(),
                     Integer.toString(hl.getC(), 16), hl.getHebrewLetterType(),
                     hl.getConsonantType(), hl.getVowelLengthType(), hl.getVowelStressType(),
                     hl.getSoundingType());
         }
+        LOGGER.trace("**********************************");
     }
 
     /**
@@ -683,7 +691,7 @@ public final class HebrewUtils {
                                            final StringBuilder output) {
 
         if (letters[current].getC() == MAQAF) {
-            output.append('-');
+            output.append(MAQAF_HYPHEN);
             return;
         }
 
@@ -696,6 +704,13 @@ public final class HebrewUtils {
                 || isLastHebrewConsonantInWordWithoutVowel(letters, current)) {
             return;
         }
+
+        //if the previous output was a syllable marker, then we're not going to do anything
+        if(output.length() > 0 && (output.charAt(output.length() -1) == HYPHEN || output.charAt(output.length() -1) == MAQAF_HYPHEN)) {
+            //then don't outupt
+            return;
+        }
+
 
         // look for vowels
         boolean foundLongVowel = false;

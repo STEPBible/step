@@ -74,7 +74,7 @@ step.search = {
             }
             
             if(!this._versionsContainsStrongs(versions)) {
-                versions = "KJV," + versions;
+                versions = "ESV," + versions;
                 step.state.original.originalSearchVersion(passageId, versions);
             }
             
@@ -211,7 +211,7 @@ step.search = {
             checkedVersion = step.state.passage.version(passageId);
             
             if(checkedVersion == undefined || checkedVersion.trim().length == 0) {
-                checkedVersion = 'KJV';
+                checkedVersion = 'ESV';
             }
         }
         
@@ -549,7 +549,8 @@ step.search = {
         $.each(searchResults, function(i, item) {
             if(item.accentedUnicode && item.accentedUnicode != lastUnicode) {
                 var header = $("<th>").addClass("searchResultStrongHeader").prop("colspan", "2");
-                table.append(header);
+                var headerRow = $("<tr>").append(header);
+                table.append(headerRow);
                 
                 if(sortOrder == VOCABULARY) {
                     header.append(item.stepGloss == undefined ? "-" : item.stepGloss);

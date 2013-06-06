@@ -41,7 +41,9 @@ import static com.tyndalehouse.step.core.utils.StringConversionUtils.unAccent;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.io.*;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -174,64 +176,64 @@ public class StringConversionUtilsTest {
         assertEquals("exērammenēn", outputAndTestTransliterate("ἐξηραμμένην"));
     }
 
-    // @Test
-    // public void testTransliterateHebrewFromFile() throws IOException {
-    // final Pattern p = Pattern.compile("[*.]*");
-    //
-    // final FileReader reader = new FileReader(new File("d:\\temp\\sample.txt"));
-    // final BufferedReader br = new BufferedReader(reader);
-    // final FileWriter writer = new FileWriter(new File("d:\\temp\\hebrew-out.txt"));
-    // final BufferedWriter bw = new BufferedWriter(writer, 4 * 1024 * 1024);
-    //
-    // final long start = System.currentTimeMillis();
-    // int lineNumber = 0;
-    // String line;
-    //
-    // while ((line = br.readLine()) != null) {
-    // final String[] split = line.split(",");
-    // bw.write(Integer.toString(lineNumber));
-    // bw.write('\t');
-    // // bw.write(split[0]);
-    // // bw.write('\t');
-    // bw.write(split[1]);
-    // bw.write('\t');
-    //
-    // try {
-    // final String translit = transliterate(split[1]);
-    // bw.write(p.matcher(translit).replaceAll(""));
-    // bw.write('\t');
-    // bw.write(translit);
-    //
-    // } catch (final Exception e) {
-    // // error
-    // bw.write("ERROR: ");
-    // bw.write(e.toString());
-    // }
-    //
-    // bw.newLine();
-    // lineNumber++;
-    //
-    // if ((lineNumber % 2000) == 0) {
-    // reportProgress(start, lineNumber);
-    // }
-    // }
-    //
-    // br.close();
-    // bw.close();
-    //
-    // reportProgress(start, lineNumber);
-    // }
-    //
-    // /**
-    // * outputs the time taken so far and the number of items processed
-    // *
-    // * @param start the time at which we started
-    // * @param lineNumber the number of items processed
-    // */
-    // private void reportProgress(final long start, final int lineNumber) {
-    // System.out.println(String.format("Took %dms to do %d transliterations", System.currentTimeMillis()
-    // - start, lineNumber));
-    // }
+//    @Test
+//    public void testTransliterateHebrewFromFile() throws IOException {
+//    final Pattern p = Pattern.compile("[*.]*");
+//
+//    final FileReader reader = new FileReader(new File("c:\\temp\\sample.txt"));
+//    final BufferedReader br = new BufferedReader(reader);
+//    final FileWriter writer = new FileWriter(new File("c:\\temp\\hebrew-out.txt"));
+//    final BufferedWriter bw = new BufferedWriter(writer, 4 * 1024 * 1024);
+//
+//    final long start = System.currentTimeMillis();
+//    int lineNumber = 0;
+//    String line;
+//
+//    while ((line = br.readLine()) != null) {
+//    final String[] split = line.split(",");
+//    bw.write(Integer.toString(lineNumber));
+//    bw.write('\t');
+//    // bw.write(split[0]);
+//    // bw.write('\t');
+//    bw.write(split[1]);
+//    bw.write('\t');
+//
+//    try {
+//    final String translit = transliterate(split[1]);
+//    bw.write(p.matcher(translit).replaceAll(""));
+//    bw.write('\t');
+//    bw.write(translit);
+//
+//    } catch (final Exception e) {
+//    // error
+//    bw.write("ERROR: ");
+//    bw.write(e.toString());
+//    }
+//
+//    bw.newLine();
+//    lineNumber++;
+//
+//    if ((lineNumber % 2000) == 0) {
+//    reportProgress(start, lineNumber);
+//    }
+//    }
+//
+//    br.close();
+//    bw.close();
+//
+//    reportProgress(start, lineNumber);
+//    }
+//
+//    /**
+//    * outputs the time taken so far and the number of items processed
+//    *
+//    * @param start the time at which we started
+//    * @param lineNumber the number of items processed
+//    */
+//    private void reportProgress(final long start, final int lineNumber) {
+//    System.out.println(String.format("Took %dms to do %d transliterations", System.currentTimeMillis()
+//    - start, lineNumber));
+//    }
 
     /**
      * Tests the hebrew transliterations does not throw exceptions
@@ -301,6 +303,8 @@ public class StringConversionUtilsTest {
         assertEquals("ru.ach", outputAndTestTransliterate("רוּחַ"));
         assertEquals("mal.ki", outputAndTestTransliterate("מַלְכִּ֥י"));
         assertEquals("mish.pe.chot", outputAndTestTransliterate("מִשְׁפְּחֹת"));
+        assertEquals("re.shit", outputAndTestTransliterate("רֵאשִׁית"));
+//        assertEquals("en.mish.pat", outputAndTestTransliterate("עֵין מִשְׁפָּט"));
     }
 
     /**

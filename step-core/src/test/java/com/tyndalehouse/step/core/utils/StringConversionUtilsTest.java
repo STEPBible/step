@@ -1,11 +1,11 @@
 /*******************************************************************************
  * Copyright (c) 2012, Directors of the Tyndale STEP Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without 
  * modification, are permitted provided that the following conditions 
  * are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright 
  * notice, this list of conditions and the following disclaimer.
  * Redistributions in binary form must reproduce the above copyright 
@@ -16,7 +16,7 @@
  * nor the names of its contributors may be used to endorse or promote 
  * products derived from this software without specific prior written 
  * permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
@@ -32,45 +32,52 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.utils;
 
-import static com.tyndalehouse.step.core.utils.StringConversionUtils.adaptTransliterationForQuerying;
-import static com.tyndalehouse.step.core.utils.StringConversionUtils.getAnyKey;
-import static com.tyndalehouse.step.core.utils.StringConversionUtils.getStrongLanguageSpecificKey;
-import static com.tyndalehouse.step.core.utils.StringConversionUtils.getStrongPaddedKey;
-import static com.tyndalehouse.step.core.utils.StringConversionUtils.transliterate;
-import static com.tyndalehouse.step.core.utils.StringConversionUtils.unAccent;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import java.io.*;
-import java.util.List;
-import java.util.regex.Pattern;
-
+import com.tyndalehouse.step.core.utils.language.transliteration.TransliterationOption;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.tyndalehouse.step.core.utils.language.transliteration.TransliterationOption;
+import java.util.List;
+
+import static com.tyndalehouse.step.core.utils.StringConversionUtils.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Tests the utility method for converting strings
- * 
+ *
  * @author chrisburrell
- * 
  */
 public class StringConversionUtilsTest {
     private static final Logger LOG = LoggerFactory.getLogger(StringConversionUtilsTest.class);
+
+//    @Test
+//    public void testReadWholeIndex() throws IOException {
+//            final File path = new File("C:\\Users\\Chris\\AppData\\Roaming\\JSword\\step\\entities\\definition");
+//            FSDirectory directory = FSDirectory.open(path);
+//        final IndexSearcher indexSearcher = new IndexSearcher(directory);
+//        final TopDocs search = indexSearcher.search(new MatchAllDocsQuery(), Integer.MAX_VALUE);
+//
+//        StringBuilder sb = new StringBuilder();
+//        for(int i = 0; i < search.totalHits; i++) {
+//            sb.append(indexSearcher.doc(search.scoreDocs[i].doc).get("accentedUnicode"));
+//            sb.append("\r\n");
+//        }
+//
+//        System.out.println(sb.toString());
+//    }
 
     /**
      * testing the hebrew rules for searching a transliteration
      */
     @Test
     public void testHebrewConversionToQuerying() {
-        assertListIs(new String[] { "hesed", "heshed", "hetsed" },
+        assertListIs(new String[]{"hesed", "heshed", "hetsed"},
                 adaptTransliterationForQuerying("hesed", false));
 
-        assertListIs(new String[] { "achab", "ahab" }, adaptTransliterationForQuerying("achab", false));
-        assertListIs(new String[] { "a+a", "ata" }, adaptTransliterationForQuerying("a+a", false));
-        assertListIs(new String[] { "atsad", "atzad" }, adaptTransliterationForQuerying("atzad", false));
+        assertListIs(new String[]{"achab", "ahab"}, adaptTransliterationForQuerying("achab", false));
+        assertListIs(new String[]{"a+a", "ata"}, adaptTransliterationForQuerying("a+a", false));
+        assertListIs(new String[]{"atsad", "atzad"}, adaptTransliterationForQuerying("atzad", false));
     }
 
     /**
@@ -78,18 +85,18 @@ public class StringConversionUtilsTest {
      */
     @Test
     public void testGreekConversionToQuerying() {
-        assertListIs(new String[] { "arhop", "arop", "arhowp", "arowp" },
+        assertListIs(new String[]{"arhop", "arop", "arhowp", "arowp"},
                 adaptTransliterationForQuerying("arhop", true));
 
-        assertListIs(new String[] { "aggphab", "angphab", "angfab", "aggfab" },
+        assertListIs(new String[]{"aggphab", "angphab", "angfab", "aggfab"},
                 adaptTransliterationForQuerying("aggphab", true));
 
     }
 
     /**
      * asserts that options are in translits
-     * 
-     * @param options some words
+     *
+     * @param options   some words
      * @param translits the results from the test
      */
     private void assertListIs(final String[] options, final List<TransliterationOption> translits) {
@@ -180,7 +187,7 @@ public class StringConversionUtilsTest {
 //    public void testTransliterateHebrewFromFile() throws IOException {
 //    final Pattern p = Pattern.compile("[*.]*");
 //
-//    final FileReader reader = new FileReader(new File("c:\\temp\\sample.txt"));
+//    final FileReader reader = new FileReader(new File("c:\\temp\\hebrew_lexical_forms.txt"));
 //    final BufferedReader br = new BufferedReader(reader);
 //    final FileWriter writer = new FileWriter(new File("c:\\temp\\hebrew-out.txt"));
 //    final BufferedWriter bw = new BufferedWriter(writer, 4 * 1024 * 1024);
@@ -195,11 +202,11 @@ public class StringConversionUtilsTest {
 //    bw.write('\t');
 //    // bw.write(split[0]);
 //    // bw.write('\t');
-//    bw.write(split[1]);
+//    bw.write(split[0]);
 //    bw.write('\t');
 //
 //    try {
-//    final String translit = transliterate(split[1]);
+//    final String translit = transliterate(split[0]);
 //    bw.write(p.matcher(translit).replaceAll(""));
 //    bw.write('\t');
 //    bw.write(translit);
@@ -223,17 +230,17 @@ public class StringConversionUtilsTest {
 //
 //    reportProgress(start, lineNumber);
 //    }
-//
-//    /**
-//    * outputs the time taken so far and the number of items processed
-//    *
-//    * @param start the time at which we started
-//    * @param lineNumber the number of items processed
-//    */
-//    private void reportProgress(final long start, final int lineNumber) {
-//    System.out.println(String.format("Took %dms to do %d transliterations", System.currentTimeMillis()
-//    - start, lineNumber));
-//    }
+
+    /**
+     * outputs the time taken so far and the number of items processed
+     *
+     * @param start      the time at which we started
+     * @param lineNumber the number of items processed
+     */
+    private void reportProgress(final long start, final int lineNumber) {
+        System.out.println(String.format("Took %dms to do %d transliterations", System.currentTimeMillis()
+                - start, lineNumber));
+    }
 
     /**
      * Tests the hebrew transliterations does not throw exceptions
@@ -309,7 +316,7 @@ public class StringConversionUtilsTest {
 
     /**
      * A helper method that logs the transliterations
-     * 
+     *
      * @param s the string to transliterate
      * @return the transliteration
      */

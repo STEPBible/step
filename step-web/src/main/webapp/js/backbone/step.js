@@ -179,6 +179,14 @@ function createModelsIfRequired(models, modelClass, searchType) {
     for (var i = PASSAGE_IDS; i < models.length; i++) {
         models.remove(models.at(i));
     }
+
+    // if the passage ids are the wrong way round then swap them - this is a counter-measure,
+    // as it should never happen in practice.
+    if(models.at(0).get("passageId") == 1) {
+        var firstModel = models.at(0);
+        models.remove(firstModel);
+        models.add(firstModel);
+    }
 }
 
 

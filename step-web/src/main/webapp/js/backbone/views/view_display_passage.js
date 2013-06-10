@@ -52,11 +52,7 @@ var PassageDisplayView = Backbone.View.extend({
 
                 Backbone.Events.trigger("passage:rendered:" + passageId);
             }
-
-            // execute all callbacks
-//TODO        step.passage.executeCallbacks(passageId);
         },
-
 
         _doInterlinearDividers: function (passageContent) {
             $(".w:not([strong]):not(.verseStart)", passageContent).next().css("border-left", "none");

@@ -37,14 +37,16 @@ step.passage.navigation = {
         },
 
         _getSiblingReference : function(passageId, backendURL, scroll) {
-            $.getSafe(backendURL + step.state.passage.reference(passageId) + "/" + step.state.passage.version(passageId), function(newReference) {
+            var passageModel = PassageModels.at(passageId);
+            var reference = passageModel.get("reference");
+            var version = passageModel.get("version");
+
+            $.getSafe(backendURL + reference + "/" + version, function(newReference) {
                 //push callback
-                step.passage.callbacks[passageId].push(function() {
-                    var passage = step.util.getPassageContent(passageId);
-                    passage.scrollTop(scroll);
+                passageModel.save({ reference : newReference.name });
+                Backbone.Events.once("passage:rendered:" + passageId, function() {
+                    step.util.getPassageContent(passageId).scrollTop(scroll);
                 });
-                
-                step.state.passage.reference(passageId, newReference.name);
             });
         }
     },

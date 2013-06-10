@@ -44,7 +44,20 @@
 <!-- 	    <link rel="stylesheet" type="text/css" href="css/timeline.css" /> -->
 	    <link rel="stylesheet" type="text/css" href="css/search.css" />
 	    <link rel="stylesheet" type="text/css" href="css/cardo.css" />
-		
+
+    <%
+        } else {
+    %>
+        <link rel="stylesheet" type="text/css" href="css/step.min.css" />
+    <%
+        }
+    %>
+
+    <%-- Now do javascript --%>
+    <%
+        if(request.getParameter("debug") != null) {
+    %>
+
 		<script src="js_init/initLib.js" type="text/javascript"></script>   
 	    <script src="libs/dohighlight-min.js" type="text/javascript"></script>
 <!-- 	    <script src="libs/timeline_js/timeline-api.js" type="text/javascript"></script> -->
@@ -153,7 +166,6 @@
 	<%
 		} else {
 	%>
-	    <link rel="stylesheet" type="text/css" href="css/step.min.css" />
 		<script src="js/step.min.js" type="text/javascript" ></script>
 		
 		<script type="text/javascript">

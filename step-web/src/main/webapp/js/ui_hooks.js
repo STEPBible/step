@@ -198,7 +198,7 @@ function getRelatedVerses(refs, passageId) {
     }
     
     var otherPassage = step.util.getOtherPassageId(passageId);
-    step.state.passage.reference(otherPassage, refs);
+    PassageModels.at(otherPassage).save({ reference: refs });
 }
 
 function getRelatedSubjects(key, passageId) {

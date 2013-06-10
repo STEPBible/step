@@ -80,16 +80,11 @@ $(document).ready(function() {
     });
     
     $(".syncOtherPassage").button({
-        icons : {
-            primary : "ui-icon-pin-s",
-
-        },
-        text : false
+        icons : { primary : "ui-icon-pin-s" }, text : false
     }).click(function() {
         var icon = $(this).button("option", "icons").primary;
     
         if(icon == "ui-icon-pin-s") {
-            enabled = true;
             if(step.passage.getPassageId(this) == 0) {
                 toggleMenuItem($("a[name = 'SYNC_LEFT']").get(0));
             } else {

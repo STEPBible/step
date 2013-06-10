@@ -7,7 +7,8 @@ var PassageModel = Backbone.Model.extend({
                 extraVersions: [],
                 interlinearMode: "NONE",
                 detailLevel: 0,
-                options: ["N", "H", "V"]
+                options: ["N", "H", "V"],
+                synced : -1
             }
         },
 
@@ -72,7 +73,18 @@ var PassageModel = Backbone.Model.extend({
             }
 
             console.log("Saving model passage", attributes);
-            return Backbone.Model.prototype.save.call(this, attributes, options);
+            var returnValue = Backbone.Model.prototype.save.call(this, attributes, options);
+
+
+            //also need to sync with other synced passaged;
+            for(var i = 0; i < PassageModels.length; i++) {
+                var otherModel = PassageModels.at(i);
+                if(otherModel != this && otherModel.get("synced") == this.get("passageId")) {
+                    otherModel.trigger("change", otherModel);
+                }
+            }
+
+            return returnValue;
         },
 
         /**
@@ -107,6 +119,36 @@ var PassageModel = Backbone.Model.extend({
             }
             return extraVersions;
         },
+
+        /**
+         * returns the normal version, unless synced refers to a particular passage id, at which point
+         * it returns the value of the synced passage model
+         * @param value
+         * @private
+         */
+        _getProxiedReference: function (value) {
+            var synced = this.get("synced");
+            if(synced == -1) {
+                return value;
+            }
+
+            //else return the value from the synced model
+            var otherModel = PassageModels.at(synced);
+            if(otherModel == this) {
+                //we're syncing to ourselves - something is wrong
+                this.model.set("synced", -1);
+                return value;
+            }
+
+            if(otherModel.get("synced") != -1) {
+                //again, something is wrong - only one sync should ever occur...
+                otherModel.set("synced", -1);
+                return value;
+            }
+
+            return otherModel.get("reference");
+        },
+
         /**
          * We override the default functionality, since the detail affects the values returned
          * @param attributeName the name of the attribute we are wanting to return
@@ -121,6 +163,10 @@ var PassageModel = Backbone.Model.extend({
 
             if (attributeName == "extraVersions") {
                 return this.getProxiedExtraVersions(value, this.get("detailLevel"));
+            }
+
+            if(attributeName == "reference") {
+                return this._getProxiedReference(value);
             }
 
             return value;

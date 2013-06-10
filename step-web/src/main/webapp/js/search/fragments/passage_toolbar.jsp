@@ -20,8 +20,8 @@
 <div class="passageToolbarContainer">
 	<span class="passageToolbarFloatingContainer">
 		<span class="passageLookupButtons passageSizeButtons">
-			<a class="syncOtherPassage"><fmt:message key="passage_sync" /></a> <a
-			class="continuousPassage"><fmt:message key="passage_one_scroll" /></a>
+			<a class="syncOtherPassage"><fmt:message key="passage_sync" /></a>
+            <%--<a class="continuousPassage"><fmt:message key="passage_one_scroll" /></a>--%>
 			<a class="previousChapter"
 			href="?reference=<%=stepRequest.getPreviousReference(Integer.parseInt(request
 							.getParameter("passageId")))%>&version=<%=stepRequest.getVersion(Integer.parseInt(request

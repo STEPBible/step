@@ -83,9 +83,10 @@ step.menu.options = {
                 step.menu.options.enablePassage(0);
                 step.menu.options.enablePassage(1);
             } else if(mode == "SYNC_LEFT") {
-                step.state.passage.syncMode(0, fire);
                 step.menu.options.enablePassage(0);
                 step.menu.options.disablePassage(1);
+
+                PassageModels.at(1).save({ synced : 0 });
             } else if(mode == "SYNC_RIGHT") {
                 step.state.passage.syncMode(1, fire);
                 step.menu.options.enablePassage(1);

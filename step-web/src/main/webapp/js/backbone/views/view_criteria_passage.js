@@ -93,10 +93,11 @@ PassageCriteriaView = Backbone.View.extend({
             this.detailLevel.detailSlider("handleSlide", modelDetailValue);
         }
 
-        this._setValIfChanged(this.version, this.model.get("version"));
-        this._setValIfChanged(this.reference, this.model.get("reference"));
-        this._setValIfChanged(this.extraVersions, this.model.get("extraVersions"));
-        this._setValIfChanged(this.interlinearMode, this.model.getInternationalisedInterlinearMode());
+        var changed = false;
+        changed |= this._setValIfChanged(this.version, this.model.get("version"));
+        changed |= this._setValIfChanged(this.reference, this.model.get("reference"));
+        changed |= this._setValIfChanged(this.extraVersions, this.model.get("extraVersions"));
+        changed |= this._setValIfChanged(this.interlinearMode, this.model.getInternationalisedInterlinearMode());
 
         //we also do the interlinear mode dropdown
         this._resyncAvailableInterlinearOption();
@@ -123,13 +124,17 @@ PassageCriteriaView = Backbone.View.extend({
      * Calls the val() method if the value has changed
      * @param input the input on the page
      * @param newValue the new value to be set
+     * @return true if any one value has changed.
      * @private
      */
     _setValIfChanged: function (input, newValue) {
+        var changed = false;
         var previousValue = input.val();
         if (previousValue != newValue) {
             input.val(newValue);
+            changed = true;
         }
+        return changed;
     },
 
     /**

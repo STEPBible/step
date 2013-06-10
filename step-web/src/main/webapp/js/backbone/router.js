@@ -12,6 +12,7 @@ var StepRouter = Backbone.Router.extend({
     lastUrls: [],
     refinedSearch: [],
     pageSize: step.defaults.pageSize,
+    firstSync : false,
 
     /**
      * Navigates for a particular column only.
@@ -19,11 +20,13 @@ var StepRouter = Backbone.Router.extend({
      * @param options
      */
     navigatePassage: function (fragment, options) {
+        console.log("Fragments: ", fragment, options);
+
         var hash = "";
         try {
             hash = Backbone.history.getFragment();
         } catch (e) {
-            console.log("Unable to get fragment, so assuming blank, as history might not be started");
+//            console.log("Unable to get fragment, so assuming blank, as history might not be started");
         }
 
         //if hash is empty then we use the normal mechanism
@@ -52,8 +55,34 @@ var StepRouter = Backbone.Router.extend({
         if (fragments[passageIdFromInput] != newFragment) {
             fragments[passageIdFromInput] = newFragment;
 
+            //check that the models
+            if(fragments[passageIdFromInput].indexOf("/passage/") != -1) {
+                //use replace for all non-synced passages if one exists
+                var isSyncing = false;
+                for(var i = 0; i < PassageModels.length; i++) {
+                    if(PassageModels.at(i).get("synced") != -1) {
+                        isSyncing = true;
+                        break;
+                    }
+                }
+
+                //master version is always triggered first, so we ensure we use replace=true,
+                //since that records what was previously entered in the browser.
+                // for all other passages coming next, we don't want to record the master history url,
+                // since it would show out of sync
+                if(isSyncing && PassageModels.at(passageIdFromInput).get("synced") != -1) {
+                    //if it is the first change since synced, the we need to ensure we indeed do change the URL
+                    if(this.firstSync) {
+                       //don't set the replace flag as we want to record the previous URL.
+                    }
+                    options.replace = true;
+                }
+            }
+
             //join all the fragments up again
-            this.navigate(fragments.join('/'), options);
+            var finalUrl = fragments.join('/');
+            this.navigate(finalUrl, options);
+            console.log("Final URL: ", finalUrl, options.replace);
 
             //we trigger the routes manually, for the single individual fragment.
             if (trigger) Backbone.history.loadUrl(fragment);
@@ -93,7 +122,7 @@ var StepRouter = Backbone.Router.extend({
         fragments[this.getPassageIdFromHash(newHash)] = newHash;
 
         //start positions of each fragment
-        console.log(fragments);
+//        console.log(fragments);
         return fragments;
     },
 
@@ -107,7 +136,7 @@ var StepRouter = Backbone.Router.extend({
      * @param wholeUrl
      */
     entireUnparsedUrl: function (wholeUrl) {
-        console.log("Entire URL was passed in: ", wholeUrl, Backbone.History.started);
+//        console.log("Entire URL was passed in: ", wholeUrl, Backbone.History.started);
 
         //divide the url up
         var fragments = this.getColumnFragments(wholeUrl);
@@ -124,14 +153,14 @@ var StepRouter = Backbone.Router.extend({
             if (fragments[i].indexOf("__/") == 0) {
                 fragments[i] = fragments[i].substring(3);
             }
-            console.log("loading url: ", fragments[i]);
+//            console.log("loading url: ", fragments[i]);
             Backbone.history.loadUrl(fragments[i]);
         }
         refreshLayout();
     },
 
     /**
-     * Resyncs against the menu model, to ensure we're always displaying the right fieldset.
+     * Resyncs against the `menu model, to ensure we're always displaying the right fieldset.
      * @param passageId the passage Id of interest
      * @param searchType the search type
      */
@@ -250,7 +279,7 @@ var StepRouter = Backbone.Router.extend({
      * @param extraVersions the versions with which to see this.
      */
     changePassage: function (passageId, detail, version, reference, options, extraVersions, interlinearMode) {
-        console.log("Changing passage to", version, reference, options, extraVersions, interlinearMode);
+//        console.log("Changing passage to", version, reference, options, extraVersions, interlinearMode);
 
         this.updateMenuModel(passageId, "SEARCH_PASSAGE");
 

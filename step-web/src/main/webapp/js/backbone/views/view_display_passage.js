@@ -8,7 +8,7 @@ var PassageDisplayView = Backbone.View.extend({
         },
 
         render: function (newPassage) {
-            console.log("Rendering change to SCREEN");
+//            console.log("Rendering change to SCREEN");
 
             step.util.trackAnalytics("passage", "loaded", "time", new Date().getTime() - newPassage.startTime);
             step.util.trackAnalytics("passage", "version", this.model.get("version"));

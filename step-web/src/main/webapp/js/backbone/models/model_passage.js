@@ -72,7 +72,7 @@ var PassageModel = Backbone.Model.extend({
                 delete attributes.extraVersions;
             }
 
-            console.log("Saving model passage", attributes);
+//            console.log("Saving model passage", attributes);
             var returnValue = Backbone.Model.prototype.save.call(this, attributes, options);
 
 

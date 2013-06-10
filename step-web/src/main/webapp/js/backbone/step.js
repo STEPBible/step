@@ -7,7 +7,7 @@ var PassageCriteriaList = Backbone.Collection.extend({
     },
 
     changePassage: function (model, val, options) {
-        console.log("Change to model", model)
+//        console.log("Change to model", model)
         if (model != null) {
             stepRouter.navigatePassage(model.getLocation(), {trigger: true});
         } else {
@@ -24,7 +24,7 @@ var MenuList = Backbone.Collection.extend({
     },
 
     triggerModelChange: function (model, val, options) {
-        console.log("Change to model", model)
+//        console.log("Change to model", model)
         if (model != null) {
             var currentSearch = model.get("selectedSearch");
 
@@ -189,6 +189,31 @@ function createModelsIfRequired(models, modelClass, searchType) {
     }
 }
 
+/**
+ * Checks the right menu option in the menu
+ */
+function doSyncMenu() {
+    var passageId = undefined;
+    for(var i = 0; i < PassageModels.length; i++) {
+        if(PassageModels.at(i).get("synced") != -1) {
+            passageId = PassageModels.at(i).get("passageId");
+        }
+    }
+
+    var syncMode = undefined;
+
+    //the non-master passage has the flag.
+    if(passageId == undefined) {
+        syncMode = "NO_SYNC";
+    } else if(passageId == 0) {
+        syncMode = "SYNC_RIGHT";
+    } else if(passageId == 1) {
+        syncMode = "SYNC_LEFT";
+    }
+    $.shout("MENU-SYNC", { menu : { element: $("[menu-name='SYNC']") },
+        menuItem : { name : syncMode, element: $("[name='" + syncMode + "']") }})
+}
+
 
 var PASSAGE_IDS = 2;
 function initApp() {
@@ -238,6 +263,9 @@ function initApp() {
         var criteriaControlView = new CriteriaControlView({ model: searchModel });
         passageModels.push(passageModel);
     }
+
+    doSyncMenu();
+
 
     Backbone.history.start();
 

@@ -79,19 +79,22 @@ step.menu.options = {
         
         _tickSyncMode : function(mode, fire) {
             if(mode == "NO_SYNC") {
-                step.state.passage.syncMode(-1, fire);
+                PassageModels.at(0).save({ synced : -1 });
+                PassageModels.at(1).save({ synced : -1 });
                 step.menu.options.enablePassage(0);
                 step.menu.options.enablePassage(1);
+                stepRouter.firstSync = false;
             } else if(mode == "SYNC_LEFT") {
                 step.menu.options.enablePassage(0);
                 step.menu.options.disablePassage(1);
-
+                stepRouter.firstSync = true;
                 PassageModels.at(1).save({ synced : 0 });
             } else if(mode == "SYNC_RIGHT") {
-                step.state.passage.syncMode(1, fire);
                 step.menu.options.enablePassage(1);
                 step.menu.options.disablePassage(0);
-            }    
+                stepRouter.firstSync = true;
+                PassageModels.at(0).save({ synced : 1 });
+            }
         }
 };
 

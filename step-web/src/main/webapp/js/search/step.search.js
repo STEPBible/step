@@ -644,6 +644,9 @@ step.search = {
             if(searchResults[i].root != lastHeader) {
                 //append a new header
 //                heading = $("<h3>").addClass("subjectHeading").append(searchResults[i].root);
+                heading = $("<h3>").addClass("subjectHeading").append(searchResults[i].root);
+                results.append(heading);
+
                 list = $("<ul>").addClass("subjectSection searchResults");
                 results.append(list);
 //                heading.after(list);

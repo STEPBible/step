@@ -12,7 +12,7 @@ var StepRouter = Backbone.Router.extend({
     lastUrls: [],
     refinedSearch: [],
     pageSize: step.defaults.pageSize,
-    firstSync : false,
+    firstSync: false,
 
     /**
      * Navigates for a particular column only.
@@ -56,11 +56,11 @@ var StepRouter = Backbone.Router.extend({
             fragments[passageIdFromInput] = newFragment;
 
             //check that the models
-            if(fragments[passageIdFromInput].indexOf("/passage/") != -1) {
+            if (fragments[passageIdFromInput].indexOf("/passage/") != -1) {
                 //use replace for all non-synced passages if one exists
                 var isSyncing = false;
-                for(var i = 0; i < PassageModels.length; i++) {
-                    if(PassageModels.at(i).get("synced") != -1) {
+                for (var i = 0; i < PassageModels.length; i++) {
+                    if (PassageModels.at(i).get("synced") != -1) {
                         isSyncing = true;
                         break;
                     }
@@ -70,10 +70,10 @@ var StepRouter = Backbone.Router.extend({
                 //since that records what was previously entered in the browser.
                 // for all other passages coming next, we don't want to record the master history url,
                 // since it would show out of sync
-                if(isSyncing && PassageModels.at(passageIdFromInput).get("synced") != -1) {
+                if (isSyncing && PassageModels.at(passageIdFromInput).get("synced") != -1) {
                     //if it is the first change since synced, the we need to ensure we indeed do change the URL
-                    if(this.firstSync) {
-                       //don't set the replace flag as we want to record the previous URL.
+                    if (this.firstSync) {
+                        //don't set the replace flag as we want to record the previous URL.
                     }
                     options.replace = true;
                 }
@@ -155,9 +155,9 @@ var StepRouter = Backbone.Router.extend({
             }
 //            console.log("loading url: ", fragments[i]);
 
-            if(this.fragments)
+            if (this.fragments)
 
-            Backbone.history.loadUrl(fragments[i]);
+                Backbone.history.loadUrl(fragments[i]);
         }
         refreshLayout();
     },
@@ -211,8 +211,14 @@ var StepRouter = Backbone.Router.extend({
      * @private
      */
     _validateAndRunSearch: function (searchType, passageId, query, version, sortOrder, context, pageNumber) {
-        if (step.util.isBlank(query)) {
-            step.search._displayResults({}, passageId);
+        if (step.util.isBlank(query) ||
+            step.util.isBlank(query.substring(query.indexOf('=')+1)
+                .replace(/#plus#/ig, "")
+                .replace(/\[[^\]]+\]/ig, "")
+                .replace(/\s/ig, ""))
+            ) {
+            Backbone.Events.trigger(searchType + ":new:" + passageId, {
+                searchQueryResults : { query: query , total: 0}, pageNumber : 1});
             return;
         }
 

@@ -101,27 +101,6 @@ step.version = {
         }
 };
 
-$(step.version).hear("versions-initialisation-completed", function(source, data) {
-    step.version.warnIfNoStrongs(0, step.state.passage.version(0));
-    step.version.warnIfNoStrongs(1, step.state.passage.version(1));
-});
-
-$(step.version).hear("version-changed-0", function(source) {
-    step.version.updateInfoLink(0);
-   
-    //raise info box to warn, if not strong version...
-    step.version.warnIfNoStrongs(0, step.state.passage.version(0));
-    
-    step.util.trackAnalytics("version", "changed", step.state.passage.version(0));
-});
-
-$(step.version).hear("version-changed-1", function(source) {
-    step.version.updateInfoLink(1); 
-    
-    //raise info box to warn, if not strong version...
-    step.version.warnIfNoStrongs(1, step.state.passage.version(1));
-    step.util.trackAnalytics("version", "changed", step.state.passage.version(1));
- });
 
 
 $(step.version).hear("filter-versions", function(source, data) {

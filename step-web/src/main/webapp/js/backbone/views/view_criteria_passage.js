@@ -50,6 +50,13 @@ PassageCriteriaView = Backbone.View.extend({
         //update link to version
         this.versionInfo.prop("href", "version.jsp?version=" + version);
         this.versionInfo.prop("title", sprintf(__s.info_about_bible, version));
+
+        //check the version if it has strongs
+        var passageId = this.model.get("passageId");
+        step.version.warnIfNoStrongs(passageId, version);
+
+        //Track analytics
+        step.util.trackAnalytics("version", "changed", version);
     },
 
 

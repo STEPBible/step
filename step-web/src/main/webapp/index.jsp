@@ -90,26 +90,17 @@
 	    <script src="js/util.js" type="text/javascript"></script>
 	    <script src="js/lexicon_definition.js" type="text/javascript"></script>
 	    <script src="js/ui_hooks.js" type="text/javascript"></script>
-<!-- 	    <script src="js/timeline.js" type="text/javascript"></script> -->
-<!-- 	    <script src="js/geography.js" type="text/javascript"></script> -->
+<%-- 	    <script src="js/timeline.js" type="text/javascript"></script> --%>
+<%-- 	    <script src="js/geography.js" type="text/javascript"></script> --%>
 	    <script src="js/toolbar_menu.js" type="text/javascript"></script>
 		<script src="js/defaults/step.defaults.js" type="text/javascript"></script>
 		<script src="js/search/step.search.js" type="text/javascript"></script>
-		<script src="js/search/step.search.ui.js" type="text/javascript"></script>
-		<script src="js/search/step.search.quick.ui.js" type="text/javascript"></script>
-		<script src="js/search/step.search.original.ui.js" type="text/javascript"></script>
-		<script src="js/search/step.search.simpletext.ui.js" type="text/javascript"></script>
-		<script src="js/search/step.search.textual.ui.js" type="text/javascript"></script>
-		<script src="js/search/step.search.timeline.ui.js" type="text/javascript"></script>
-<!-- 		<script src="js/search/step.search.personalnotes.ui.js" type="text/javascript"></script> -->
+<%-- 		<script src="js/search/step.search.personalnotes.ui.js" type="text/javascript"></script> --%>
 		<script src="js/navigation/step.navigation.js" type="text/javascript"></script>
 
 
 		<script src="js/state/step.state.js" type="text/javascript"></script>
-		<script src="js/state/step.state.browser.js" type="text/javascript"></script>
 		<script src="js/state/step.state.view.js" type="text/javascript"></script>
-		<script src="js/state/step.state.passage.js" type="text/javascript"></script>
-		<script src="js/state/step.state.original.js" type="text/javascript"></script>
 
 	    <script src="js/menu/step.menu.js" type="text/javascript"></script>
 	    <script src="js/menu/top/help.js" type="text/javascript"></script>

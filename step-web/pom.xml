@@ -193,19 +193,10 @@
 								<jsSourceFile>js/toolbar_menu.js</jsSourceFile>
 								<jsSourceFile>js/defaults/step.defaults.js</jsSourceFile>
 								<jsSourceFile>js/search/step.search.js</jsSourceFile>
-								<jsSourceFile>js/search/step.search.ui.js</jsSourceFile>
-								<jsSourceFile>js/search/step.search.quick.ui.js</jsSourceFile>
-								<jsSourceFile>js/search/step.search.original.ui.js</jsSourceFile>
-								<jsSourceFile>js/search/step.search.simpletext.ui.js</jsSourceFile>
-								<jsSourceFile>js/search/step.search.textual.ui.js</jsSourceFile>
-								<jsSourceFile>js/search/step.search.timeline.ui.js</jsSourceFile>
 								<!-- <jsSourceFile>js/search/step.search.personalnotes.ui.js</jsSourceFile> -->
 								<jsSourceFile>js/navigation/step.navigation.js</jsSourceFile>
 								<jsSourceFile>js/state/step.state.js</jsSourceFile>
-								<jsSourceFile>js/state/step.state.browser.js</jsSourceFile>
 								<jsSourceFile>js/state/step.state.view.js</jsSourceFile>
-								<jsSourceFile>js/state/step.state.model_passage.js</jsSourceFile>
-								<jsSourceFile>js/state/step.state.original.js</jsSourceFile>
 								<jsSourceFile>js/menu/step.menu.js</jsSourceFile>
 								<jsSourceFile>js/menu/top/help.js</jsSourceFile>
 								<jsSourceFile>js/menu/top/view.js</jsSourceFile>

@@ -22,7 +22,7 @@ var SearchDisplayView = Backbone.View.extend({
 
         var results;
         if (searchResults.total == 0 || searchResults.results.length == 0) {
-            results = $("<div>").append(__s.search_no_search_results_found);
+            results = $("<div>").append(__s.search_no_search_results_found).addClass("notApplicable");
         } else if (searchResults.maxReached) {
             this._notApplicableMessage(results, __s.search_too_many_results);
         } else {

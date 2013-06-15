@@ -379,30 +379,11 @@ function initData() {
 
         $.shout("versions-initialisation-completed");
         initApp();
-        var passages = initPassages(options);
-        initModules(passages);
+
+        initModules();
     });
 }
 
-/**
- * creates the passages components
- * @param allVersions the list of versions to be given to a dropdown
- * @param strongedVersions a list of version containing strong tagging
- * @param options a list of options to be displayed in the toolbar
- * @return a list of passage objects so that synchronous calls can be made
- */
-function initPassages(options) {
-    //set up initial passages with reference data:
-    var passages = [];
-
-    $(".column, .singleColumn").each(
-        function (index) {
-            var passageContainer = $(".passageContainer", this);
-            passages.push(new Passage(passageContainer, index));
-        }
-    );
-    return passages;
-}
 
 function initGlobalHandlers() {
     //set always visible - should probably be its own class
@@ -441,29 +422,11 @@ function initGlobalHandlers() {
     });
 }
 
-function isFullyVisible(elem) {
-    var off = elem.offset();
-    var et = off.top;
-    var el = off.left;
-    var eh = elem.height();
-    var ew = elem.width();
-    var wh = window.innerHeight;
-    var ww = window.innerWidth;
-    var wx = window.pageXOffset;
-    var wy = window.pageYOffset;
-    return (et >= wy && el >= wx && et + eh <= wh + wy && el + ew <= ww + wx);
-}
-
 /**
  * initialises the modules
- * @param passages a list of passages that were provided
  */
-function initModules(passages) {
+function initModules() {
     new LexiconDefinition();
-
-//	var bottomSection = $("#bottomSectionContent");
-//	timeline = new TimelineWidget(bottomSection);
-//	new GeographyWidget(bottomSection, passages);
 }
 
 

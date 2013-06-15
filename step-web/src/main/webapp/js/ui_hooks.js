@@ -218,7 +218,4 @@ function getRelatedSubjects(key, passageId) {
 
     //if we're in single view, then we would want to bring up the second column
     step.state.view.ensureTwoColumnView();
-
-//    step.state.activeSearch(otherPassage, "SEARCH_SUBJECT", false);
-//    step.search._doResultsRender(otherPassage, relatedSubjects, 1, "", relatedSubjects.query);
 }

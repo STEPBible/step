@@ -29,8 +29,6 @@
 	}
 %>
 <fmt:setBundle basename="HtmlBundle" />
-
-
 <div id="topMenu-ajax" class="ddsmoothmenu" name="top">
 <!-- <a id="loginLink" class="login" href="javascript:void(0)" onclick="login()">Login</a> -->
 <ul>

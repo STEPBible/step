@@ -27,14 +27,13 @@
  * POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
 $(document).ready(function() {
-    $(".bookmarkPassageLink").button({
-        icons : {
-            primary : "ui-icon-bookmark"
-        },
-        text : false
-    }).click(function() {
-        $.shout("bookmark-addition-requested", {
-            reference : step.state.passage.reference(step.passage.getPassageId(this))
+    $(".bookmarkPassageLink").button({ icons : { primary : "ui-icon-bookmark" }, text : false }).click(function() {
+        var passageId = step.passage.getPassageId(this);
+        var model = PassageModels.at(passageId);
+
+        Backbone.Events.trigger("bookmark:new", {
+            reference: model.get("reference"),
+            version : model.get("version")
         });
     });
 });

@@ -161,6 +161,10 @@
         <script src="js/backbone/models/model_quick_lexicon.js" type="text/javascript"></script>
         <script src="js/backbone/views/view_quick_lexicon.js" type="text/javascript"></script>
 
+        <script src="js/backbone/models/model_bookmark.js" type="text/javascript"></script>
+        <script src="js/backbone/views/view_bookmarks_history.js" type="text/javascript"></script>
+
+
         <script src="js/init.js" type="text/javascript"></script>
         <script src="js/backbone/step.js" type="text/javascript"></script>
 	<%

@@ -154,6 +154,9 @@ var StepRouter = Backbone.Router.extend({
                 fragments[i] = fragments[i].substring(3);
             }
 //            console.log("loading url: ", fragments[i]);
+
+            if(this.fragments)
+
             Backbone.history.loadUrl(fragments[i]);
         }
         refreshLayout();
@@ -296,12 +299,12 @@ var StepRouter = Backbone.Router.extend({
 
         var url = BIBLE_GET_BIBLE_TEXT + [version, reference, options, extraVersions, interlinearMode].join("/");
 
-//        if (this.lastUrls[passageId] == url) {
-//            //execute all callbacks only
+        if (this.lastUrls[passageId] == url) {
+            //execute all callbacks only
 //            step.passage.executeCallbacks(passageId);
-//            return;
-//        }
-//        this.lastUrls[passageId] = url;
+            return;
+        }
+        this.lastUrls[passageId] = url;
 
 
         // send to server
@@ -311,6 +314,7 @@ var StepRouter = Backbone.Router.extend({
             url: url,
             callback: function (text) {
                 text.startTime = startTime;
+                text.version = version;
                 Backbone.Events.trigger("passage:new:" + passageId, text);
             },
             passageId: passageId,

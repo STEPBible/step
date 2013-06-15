@@ -36,6 +36,22 @@ step.util = {
     passageContents: [null, null],
     septuagintVersions: ["LXX", "ABPGRK", "ABP"],
 
+    // Generate four random hex digits.
+    S4 : function() {
+        return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+    },
+
+    // Generate a pseudo-GUID by concatenating random hexadecimal.
+    guid : function() {
+        return (this.S4()+this.S4()+"-"+this.S4()+"-"+this.S4()+"-"+this.S4()+"-"+this.S4()+this.S4()+this.S4());
+    },
+
+    destroyCollection : function(collection) {
+        while(collection.length > 0) {
+            collection.at(0).destroy();
+        }
+    },
+
     getPassageContainer: function (passageIdOrElement) {
         //check if we have a number
         if (isNaN(parseInt(passageIdOrElement))) {

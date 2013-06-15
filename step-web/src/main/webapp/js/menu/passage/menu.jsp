@@ -4,15 +4,12 @@
 <%@page import="javax.servlet.jsp.jstl.core.Config"%>
 <%@ page pageEncoding="UTF-8" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-
 <%
 	Injector injector = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
 	Locale locale = injector.getInstance(ClientSession.class).getLocale();
 	Config.set(session, Config.FMT_LOCALE, locale.getLanguage());
 %>
 <fmt:setBundle basename="HtmlBundle" />
-
-<!-- <input type="text" class='searchQuerySyntax quickSearch' /> -->
 <ul class="paneMenuBar">
 	<li menu-name="DISPLAY"><a href="javascript:void(0)" menu-name="DISPLAY"><fmt:message key="display" /></a>
 	<ul>

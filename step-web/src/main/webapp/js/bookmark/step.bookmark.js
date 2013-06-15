@@ -140,8 +140,8 @@ $(step.bookmark).hear("bookmark-addition-requested", function(selfElement, data)
 });
 
 $(document).ready(function() {
-    step.bookmark.render("history");
-    step.bookmark.render("bookmark");
+//    step.bookmark.render("history");
+//    step.bookmark.render("bookmark");
     
     //add click handlers for history and bookmarks...
     $("#bookmarkPane h3").click(function() {

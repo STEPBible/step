@@ -327,19 +327,6 @@ function adjustColumns() {
  * initialises layout
  */
 function initLayout() {
-    //add the defaults slider bar
-    $("#topMenu").detailSlider({title: __s.view_title_controls_level_of_detail, key: "top"});
-    $("#topMenu .sliderDetailLevelLabel").addClass("primaryDark");
-    $(document).hear("slideView-top", function (self, data) {
-        var value = $("#topMenu").detailSlider("value");
-        $(".detailSliderContainer").parent().not("#topMenu").detailSlider("update", { value: value});
-    });
-
-
-    $("body").hear("passage-changed", function () {
-        refreshLayout();
-    });
-
     //listen to layout changes and alert
     $(window).resize(function () {
         refreshLayout();

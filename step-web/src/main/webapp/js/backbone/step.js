@@ -149,6 +149,17 @@ var QuickLexiconList = Backbone.Collection.extend({
 });
 
 
+var BookmarkList = Backbone.Collection.extend({
+    model: BookmarkModel,
+    localStorage: new Backbone.LocalStorage("bookmarks")
+});
+
+
+var HistoryList = Backbone.Collection.extend({
+    model: BookmarkModel,
+    localStorage: new Backbone.LocalStorage("history")
+});
+
 var stepRouter;
 var PassageModels;
 var MenuModels;
@@ -157,6 +168,8 @@ var SimpleTextModels;
 var WordSearchModels;
 var AdvancedSearchModels;
 var QuickLexiconModels;
+var BookmarkModels;
+var HistoryModels;
 
 //var PassageCriterias = new PassageCriteriaList;
 /**
@@ -177,7 +190,8 @@ function createModelsIfRequired(models, modelClass, searchType) {
     }
 
     for (var i = PASSAGE_IDS; i < models.length; i++) {
-        models.remove(models.at(i));
+        var model = models.at(i);
+        model.destroy();
     }
 
     // if the passage ids are the wrong way round then swap them - this is a counter-measure,
@@ -224,14 +238,20 @@ function initApp() {
     WordSearchModels = new WordSearchList;
     AdvancedSearchModels = new AdvancedSearchList;
     QuickLexiconModels = new QuickLexiconList;
+    BookmarkModels = new BookmarkList;
+    HistoryModels = new HistoryList;
 
     PassageModels.fetch();
     MenuModels.fetch();
-
+    HistoryModels.fetch();
+    BookmarkModels.fetch();
     QuickLexiconModels.fetch();
-    QuickLexiconModels.reset();
+
+    step.util.destroyCollection(QuickLexiconModels);
     QuickLexiconModels.add(new QuickLexiconModel);
     new QuickLexicon({ model: QuickLexiconModels.at(0) });
+
+    new BookmarkHistory({ model : { history : HistoryModels, bookmarks: BookmarkModels}} );
 
     createModelsIfRequired(SubjectModels, SubjectSearchModel, "subject");
     createModelsIfRequired(SimpleTextModels, SimpleTextSearchModel, "text");

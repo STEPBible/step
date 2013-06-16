@@ -1,4 +1,8 @@
 $.widget("custom.lexicalcomplete", $.ui.autocomplete, {
+    options : {
+        allForms : false
+    },
+
     _renderMenu : function(ul, items) {
         var self = this;
         
@@ -30,14 +34,13 @@ $.widget("custom.lexicalcomplete", $.ui.autocomplete, {
         
         $(ul).addClass("stepComplete").find("input").click(function(event) {
             var passageId = step.passage.getPassageId(self.element[0]);
-            step.search.ui.original.allForms[passageId] = $(this).prop('checked');    
-            $.shout("lexical-filter-change", { passageId : passageId} );
+            self.options.allForms = $(this).prop('checked');
+            $.shout("lexical-filter-change-" + passageId );
         });
     },
 
     _restoreState : function(ul) {
         var passageId = step.passage.getPassageId(this.element[0]);
-        $(".includeAllForms", ul).prop('checked', step.search.ui.original.allForms[passageId]);    
-     },
-        
+        $(".includeAllForms", ul).prop('checked', this.options.allForms);
+     }
 });

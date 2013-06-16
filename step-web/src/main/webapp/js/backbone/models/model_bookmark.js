@@ -40,6 +40,6 @@ var BookmarkModel = Backbone.Model.extend({
     },
 
     initialize : function() {
-        this.set("bookmarkId", step.util.guid());
+        this.set({ bookmarkId : step.util.guid() });
     }
 });

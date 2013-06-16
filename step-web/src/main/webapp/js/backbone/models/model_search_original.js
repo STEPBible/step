@@ -13,6 +13,14 @@ var WordSearchModel = SearchModel.extend({
         return this._getSortOrder();
     },
 
+    set : function(attributes, options) {
+        //filters are arrays, so make sure they get stored as such
+        if(attributes && attributes.filter && !_.isArray(attributes.filter)) {
+            attributes.filter = attributes.filter.split(",");
+        }
+        SearchModel.prototype.set.call(this, attributes, options);
+    },
+
     _getSortOrder : function() {
         var detail = this.get("detail");
         var sorting = this.get("originalSorting");
@@ -41,7 +49,7 @@ var WordSearchModel = SearchModel.extend({
         var originalSorting =   this.getSafeAttribute(attributes, "originalSorting");
         var originalScope =     level == 0 ? __s.whole_bible_range : this.getSafeAttribute(attributes, "originalScope");
         var originalForms =     this.getSafeAttribute(attributes, "originalForms");
-        var filter = this.get("filter");
+        var filter = this.getSafeAttribute(attributes, "filter");
 
         var query = "o";
 

@@ -9,12 +9,11 @@ var WordDisplayView = TextDisplayView.extend({
      * @private
      */
     _doSpecificSearchRequirements: function (query, results, resultsWrapper) {
-        if (resultsWrapper.definitions) {
+        if (resultsWrapper && resultsWrapper.searchQueryResults && resultsWrapper.searchQueryResults.definitions) {
             //add a toolbar in there for each word
             var originalWordToolbar = $("<div>").addClass("originalWordSearchToolbar").originalWordToolbar({
-                //TODO: pass in Model here?
-                passageId: this.model.get("passageId"),
-                definitions: resultsWrapper.definitions
+                model: this.model,
+                definitions: resultsWrapper.searchQueryResults.definitions
             });
 
             results.prepend(originalWordToolbar);

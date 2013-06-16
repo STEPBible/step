@@ -1,6 +1,6 @@
 $.widget("custom.originalWordToolbar",  {
     options : {
-        passageId : 0,
+        model : undefined,
         definitions : undefined
     },
     
@@ -18,13 +18,13 @@ $.widget("custom.originalWordToolbar",  {
     },
     
     _renderToolbar : function() {
-        var values = step.search.original.filters[this.options.passageId] || [];
-        var detailLevel = $("fieldset:visible", step.util.getPassageContainer(this.options.passageId)).detailSlider("value");
+        var values = this.options.model.get("filter") || [];
+        var detailLevel = $("fieldset:visible", step.util.getPassageContainer(this.options.model.get("passageId"))).detailSlider("value");
         var toolbar = $("<div>");
         
         var self = this;
         $.each(this.options.definitions, function(i, item) {
-            var id = "ows_" + self.options.passageId + "_" + i;
+            var id = "ows_" + self.options.model.get("passageId") + "_" + i;
             
             var span = $("<span>").addClass("sortable");
             var input = span.append("<input>").find(":last-child")
@@ -39,9 +39,9 @@ $.widget("custom.originalWordToolbar",  {
                         $.each(options, function(i, item) {
                           filter.push($(this).val());  
                         });
-                        
-                        step.search.original.filters[self.options.passageId] = filter;
-                        step.search.original.search(self.options.passageId);
+
+                        self.options.model.save({ filter : filter });
+                        self.options.model.trigger("search", self.options.model);
                     });
             
             var label = span.append("<label>").find(":last-child").attr("for", id);

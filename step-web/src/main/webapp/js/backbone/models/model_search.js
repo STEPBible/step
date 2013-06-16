@@ -21,11 +21,13 @@ var SearchModel = Backbone.Model.extend({
      * @param params an array of fields that should be set
      */
     updateModel : function(options) {
+        var attributes = {};
         for(var i = 0; i < options.params.length; i++) {
             //split into the key/value
             var keyValuePair = options.params[i].split("=");
-            this.set(keyValuePair[0], keyValuePair[1]);
+            attributes[keyValuePair[0]] = keyValuePair[1];
         }
+        this.set(attributes);
 
         this.trigger("resync", this.model);
     },

@@ -211,7 +211,6 @@
 								<jsSourceFile>js/passage/step.passage.ui.js</jsSourceFile>
 								<jsSourceFile>js/passage/step.passage.navigation.js</jsSourceFile>
 								<jsSourceFile>js/passage/step.passage.navigation.ui.js</jsSourceFile>
-								<jsSourceFile>js/bookmark/step.bookmark.js</jsSourceFile>
 								<jsSourceFile>js/bookmark/step.bookmark.ui.js</jsSourceFile>
 								<jsSourceFile>js/init.js</jsSourceFile>
 							</jsSourceFiles>

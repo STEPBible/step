@@ -28,12 +28,6 @@
  ******************************************************************************/
 $(document).ready(function() {
     $(".bookmarkPassageLink").button({ icons : { primary : "ui-icon-bookmark" }, text : false }).click(function() {
-        var passageId = step.passage.getPassageId(this);
-        var model = PassageModels.at(passageId);
-
-        Backbone.Events.trigger("bookmark:new", {
-            reference: model.get("reference"),
-            version : model.get("version")
-        });
+        step.util.createBookmark(step.passage.getPassageId(this));
     });
 });

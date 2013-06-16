@@ -214,6 +214,18 @@ step.util = {
     },
 
     /**
+     * Creates bookmark
+     * @param passageId the passage id containing the passage we want to bookmark
+     */
+    createBookmark : function(passageId) {
+        var model = PassageModels.at(passageId);
+        Backbone.Events.trigger("bookmark:new", {
+            reference: model.get("reference"),
+            version : model.get("version")
+        });
+    },
+
+    /**
      * used in the search, to ensure apache/tomcat doesn't decode or dismiss special characters
      */
     replaceSpecialChars: function (query) {

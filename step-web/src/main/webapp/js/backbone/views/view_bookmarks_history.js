@@ -49,6 +49,24 @@ var BookmarkHistory = Backbone.View.extend({
         this.listenTo(this.model.history, "remove", this.removeView);
         this.listenTo(this.model.bookmarks, "add", this.addBookmarksView);
         this.listenTo(this.model.bookmarks, "remove", this.removeView);
+
+        //add click handlers for history and bookmarks...
+        $("#bookmarkPane h3").click(function() {
+            //toggle the arrow
+            var eastArrow = "ui-icon-triangle-1-e";
+            var southArrow = "ui-icon-triangle-1-s";
+            var icon = $(":first", this);
+
+            if(icon.hasClass(eastArrow)) {
+                icon.removeClass(eastArrow);
+                icon.addClass(southArrow);
+            } else {
+                icon.addClass(eastArrow);
+                icon.removeClass(southArrow);
+            }
+
+            $(this).next().slideToggle(250);
+        }).disableSelection().next().slideUp(0);
     },
 
     addToBookmarkModels : function(value) {

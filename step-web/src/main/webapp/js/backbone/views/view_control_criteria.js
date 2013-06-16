@@ -9,7 +9,7 @@ CriteriaControlView = Backbone.View.extend({
 
     initialize: function () {
         this.listenTo(this.model, "change", this._changeVisibleCriteria);
-        this.passageToolbarContainer = this.$el.find(".passageToolbarContainer");
+        this.passageToolbarContainer = this.$el.parent().find(".passageToolbarContainer");
 
         //show the right fieldset
         this._changeVisibleCriteria();

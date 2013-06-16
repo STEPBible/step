@@ -118,7 +118,6 @@
 	    <script src="js/passage/step.passage.ui.js" type="text/javascript"></script>
 	    <script src="js/passage/step.passage.navigation.js" type="text/javascript"></script>
 	    <script src="js/passage/step.passage.navigation.ui.js" type="text/javascript"></script>
-	    <script src="js/bookmark/step.bookmark.js" type="text/javascript"></script>
 	    <script src="js/bookmark/step.bookmark.ui.js" type="text/javascript"></script>
 
         <script src="js/backbone/models/model_passage.js" type="text/javascript"></script>

@@ -12,8 +12,7 @@ var SearchDisplayView = Backbone.View.extend({
     },
 
     render: function (resultsWrapper) {
-
-        console.log("Rendering search results [parent block]");
+//        console.log("Rendering search results [parent block]");
         var searchResults = resultsWrapper.searchQueryResults;
         var query = step.util.undoReplaceSpecialChars(searchResults.query);
 
@@ -35,7 +34,10 @@ var SearchDisplayView = Backbone.View.extend({
             }
         }
 
+        step.fonts.redoTextSize(this.model.get("passageId"), results);
         step.util.ui.emptyOffDomAndPopulate(this.passageContent, this._doSpecificSearchRequirements(query, results, resultsWrapper));
+
+        Backbone.Events.trigger("search:rendered:" + this.model.get("passageId"));
     },
 
     /**
@@ -78,13 +80,14 @@ var SearchDisplayView = Backbone.View.extend({
         var resultsLabel = step.util.getPassageContainer(this.$el).find("fieldset:visible .resultsLabel");
 
         //1 = 1 + (pg1 - 1) * 50, 51 = 1 + (pg2 -1) * 50
-        var start = total == 0 ? 0 : 1 + ((pageNumber - 1) * (this.options.paged ? step.defaults.pageSize : 1000000));
-        var end = pageNumber * step.search.pageSize;
+        var pageSize = this.model.get("pageSize");
+        var start = total == 0 ? 0 : 1 + ((pageNumber - 1) * (this.options.paged ? pageSize : 1000000));
+        var end = pageNumber * pageSize;
         end = end < total ? end : total;
 
         resultsLabel.html(sprintf(__s.paging_showing_x_to_y_out_of_z_results, start, end, total));
 
-        this.totalResults = total;
+        stepRouter.totalResults[this.model.get("passageId")] = total;
     },
 
     _highlightResults: function (results, query) {

@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2012, Directors of the Tyndale STEP Project All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright notice, this
  * list of conditions and the following disclaimer. Redistributions in binary
  * form must reproduce the above copyright notice, this list of conditions and
@@ -13,7 +13,7 @@
  * (www.TyndaleHouse.com) nor the names of its contributors may be used to
  * endorse or promote products derived from this software without specific prior
  * written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -27,62 +27,62 @@
  * POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
 //hear the resize to resize our passage content
-step.passage.ui = {
-    fontSizes : [{}, {}],
+step.fonts = {
+    fontSizes: [
+        {},
+        {}
+    ],
 
-    getFontKey : function(passageContentHolder) {
+    fontButtons: function (context, triggerChange) {
+        $(".smallerFonts", context).button({ text: true }).click(function () {
+            step.fonts.changeFontSize(this, -1, triggerChange);
+        }).find(".ui-button-text").html("<span class='smallerFont'>A</span>");
+
+        $(".largerFonts", context).button({ text: true }).click(function () {
+            step.fonts.changeFontSize(this, 1, triggerChange);
+        });
+    },
+
+    getFontKey: function (passageContentHolder) {
         return $(passageContentHolder).hasClass("hbFont") ? "hb" : ($(passageContentHolder).hasClass("unicodeFont") ? "unicode" : "default");
     },
-    
-    changeFontSize : function(source, increment) {
-        var elements = $(".passageContentHolder", step.util.getPassageContainer(source));
+
+    /**
+     * Reinstate previous text sizes
+     * @param passageId
+     * @param passageContent
+     * @private
+     */
+    redoTextSize: function (passageId, passageContent) {
+        //we're only going to be cater for one font size initially, so pick the major version one.
+        var fontKey = this.getFontKey(passageContent);
+        var fontSizes = this.fontSizes[passageId];
+        var fontSize;
+        if (fontSizes != undefined) {
+            fontSize = fontSizes[fontKey];
+        }
+
+        if (fontSize != undefined) {
+            passageContent.css("font-size", fontSize);
+        }
+    },
+
+    changeFontSize: function (source, increment, triggerChange) {
+        var elements = $(".passageContentHolder, .passageButtonsWidget", step.util.getPassageContainer(source));
         var passageId = step.passage.getPassageId(source);
-        
-        
-        var  key = this.getFontKey(elements);
-        $.each(elements, function(i, item) {
+
+        var key = this.getFontKey(elements);
+        $.each(elements, function (i, item) {
             var fontSize = parseInt($(this).css("font-size"));
             var newFontSize = fontSize + increment;
-            
+
             //key it to be the default font, unicodeFont or Hebrew font
-            step.passage.ui.fontSizes[passageId][key] = newFontSize;
+            step.fonts.fontSizes[passageId][key] = newFontSize;
             $(this).css("font-size", newFontSize);
         });
-        
-        step.passage.doInterlinearVerseNumbers(passageId);
+
+        if (triggerChange) {
+            Backbone.Events.trigger("font:change:" + passageId);
+        }
     }
 };
-
-$(document).ready(function() {
-//    step.state.trackState([
-//                           ".extraVersions", ".extraVersionsDisplayOptions"
-//                           ], "passage", step.passage.ui.restoreDefaults);
-
-
-    $(".smallerFonts").button({ text : true }).click(function() {
-        step.passage.ui.changeFontSize(this, -1);
-    }).find(".ui-button-text").html("<span class='smallerFont'>A</span>");
-
-//    $(".resetVersions").click(function() {
-//        $(this).parent().find(".extraVersions").val("").trigger('change');
-//    });
-
-    $(".largerFonts").button({ text : true }).click(function() {
-        step.passage.ui.changeFontSize(this, 1);
-    });
-
-    $(".passageSizeButtons").buttonset();
-    $(".passageLookupButtons").buttonset();
-
-
-});
-
-$(step.passage.ui).hear("versions-initialisation-completed", function() {
-//    for(var i = 0; i < step.util.passageContents.length; i++) {
-//        step.passage.ui.updateDisplayOptions(i);
-//    }
-    
-    $.each($(".extraVersions"), function(i, item) {
-
-    });
-});

@@ -28,8 +28,6 @@
  ******************************************************************************/
 
 step.search = {
-    pageSize: step.defaults.pageSize,
-    totalResults: 0,
     refinedSearch: [],
     lastSearch: ""
 };

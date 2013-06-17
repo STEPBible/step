@@ -28,7 +28,7 @@
 							.getParameter("passageId")))%>"><fmt:message key="passage_next_chapter" /></a> 
 		<a
 			class="bookmarkPassageLink"><fmt:message key="passage_tools_bookmark" /></a> <a class="smallerFonts"
-			href="#" title="<fmt:message key="passage_smaller_fonts" />"><fmt:message key="passage_font_size_symbol" /></a> <a class="largerFonts" href="#"
+			href="javascript:void(0)" title="<fmt:message key="passage_smaller_fonts" />"><fmt:message key="passage_font_size_symbol" /></a> <a class="largerFonts" href="javascript:void(0)"
 			title="<fmt:message key="passage_larger_fonts" />"><fmt:message key="passage_font_size_symbol" /></a>
 		</span>
 	</span>

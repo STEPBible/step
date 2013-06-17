@@ -7,11 +7,11 @@ var StepRouter = Backbone.Router.extend({
         "__*fragment": "entireUnparsedUrl",
         ":passageId/passage/:detail/:version/:reference(/:options)(/:extraVersions)(/:interlinearMode)": "changePassage",
         ":passageId/passage/:detail/:version/:reference/(/:extraVersions)(/:interlinearMode)": "changePassageNoOptions",
-        ":passageId/:searchType/:pageNumber/:querySyntax/:context/:version/:sortOrder/:params": "search"
+        ":passageId/:searchType/:pageNumber/:pageSize/:querySyntax/:context/:version/:sortOrder/:params": "search"
     },
     lastUrls: [],
     refinedSearch: [],
-    pageSize: step.defaults.pageSize,
+    totalResults: [0,0],
     firstSync: false,
 
     /**
@@ -136,8 +136,6 @@ var StepRouter = Backbone.Router.extend({
      * @param wholeUrl
      */
     entireUnparsedUrl: function (wholeUrl) {
-//        console.log("Entire URL was passed in: ", wholeUrl, Backbone.History.started);
-
         //divide the url up
         var fragments = this.getColumnFragments(wholeUrl);
         for (var i = 0; i < fragments.length; i++) {
@@ -184,11 +182,12 @@ var StepRouter = Backbone.Router.extend({
      * Routes searches to the correct place dependant on the search prefix
      * @param passageId
      * @param pageNumber
+     * @param pageSize
      * @param querySyntax
      * @param context
      * @param version
      */
-    search: function (passageId, searchType, pageNumber, querySyntax, context, version, sortOrder, params) {
+    search: function (passageId, searchType, pageNumber, pageSize, querySyntax, context, version, sortOrder, params) {
         console.log("Restoring params", params);
 
         if (params) {
@@ -197,7 +196,7 @@ var StepRouter = Backbone.Router.extend({
 
         this.updateMenuModel(passageId, searchType);
         var query = step.util.replaceSpecialChars(querySyntax);
-        this._validateAndRunSearch(searchType, passageId, query, version, sortOrder, context, pageNumber, sortOrder);
+        this._validateAndRunSearch(searchType, passageId, query, version, sortOrder, context, pageNumber, pageSize, sortOrder);
     },
 
     /**
@@ -210,7 +209,7 @@ var StepRouter = Backbone.Router.extend({
      * @param pageNumber
      * @private
      */
-    _validateAndRunSearch: function (searchType, passageId, query, version, sortOrder, context, pageNumber) {
+    _validateAndRunSearch: function (searchType, passageId, query, version, sortOrder, context, pageNumber, pageSize) {
         if (step.util.isBlank(query) ||
             step.util.isBlank(query.substring(query.indexOf('=')+1)
                 .replace(/#plus#/ig, "")
@@ -231,10 +230,10 @@ var StepRouter = Backbone.Router.extend({
             }
         }
 
-        this._doSearch(searchType, passageId, query, checkedVersion, pageNumber, sortOrder, context);
+        this._doSearch(searchType, passageId, query, checkedVersion, pageNumber, pageSize, sortOrder, context);
     },
 
-    _doSearch: function (searchType, passageId, query, version, pageNumber, sortOrder, context) {
+    _doSearch: function (searchType, passageId, query, version, pageNumber, pageSize, sortOrder, context) {
         var self = this;
 
 
@@ -243,7 +242,7 @@ var StepRouter = Backbone.Router.extend({
         var pageNumberArg = pageNumber == null ? 1 : pageNumber;
         var sortingArg = sortOrder == undefined ? false : sortOrder;
         var contextArg = context == undefined || isNaN(context) ? 0 : context;
-        var pageSizeArg = this.pageSize;
+        var pageSizeArg = pageSize == undefined || pageSize < 1 ? step.defaults.pageSize : pageSize;
         var finalInnerQuery = query + versionArg;
 
         var refinedQuery = this._joinInRefiningSearches(finalInnerQuery);

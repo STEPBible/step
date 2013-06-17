@@ -418,7 +418,7 @@ function initGlobalHandlers() {
     var infoBar = $(".infoBar").toggle(false);
     infoBar.find(".closeInfoBar").click(function () {
         $(this).closest(".infoBar").toggle(false);
-        step.passage.ui.resize();
+        refreshLayout();
     });
 }
 

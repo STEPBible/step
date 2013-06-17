@@ -163,6 +163,8 @@ public class VocabularyServiceImpl implements VocabularyService {
 
                                     @Override
                                     public int compare(final LexiconSuggestion o1, final LexiconSuggestion o2) {
+                                        String firstValue  = o1 == null || o1.getGloss() == null ? "" : o1.getGloss();
+                                        String secondValue = o2 == null || o2.getGloss() == null ? "" : o2.getGloss();
                                         return o1.getGloss().compareTo(o2.getGloss());
                                     }
 

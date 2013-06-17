@@ -5,7 +5,6 @@ CriteriaControlView = Backbone.View.extend({
     el: function () {
         return $(".advancedSearch").eq(this.model.get("passageId"));
     },
-    defaultPageSize: 50,
 
     initialize: function () {
         this.listenTo(this.model, "change", this._changeVisibleCriteria);
@@ -30,7 +29,7 @@ CriteriaControlView = Backbone.View.extend({
 
             if (!fragmentsLoading[selectedSearch]) {
                 fragmentsLoading[selectedSearch] = true;
-                console.log("Loading ", selectedSearch, "from server", new Error().stack);
+//                console.log("Loading ", selectedSearch, "from server", new Error().stack);
                 $.getSafe("js/search/fragments/" + selectedSearch + ".jsp", function (dataFragment) {
                     var fieldset = $($("<span>").html(dataFragment).children()[0]).unwrap();
                     fieldset.insertAfter(fieldsets[fieldsets.length - 1]);

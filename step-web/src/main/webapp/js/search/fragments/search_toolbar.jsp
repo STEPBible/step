@@ -20,8 +20,6 @@
         <a href="javascript:void(0)" class='moreSearchContext'><fmt:message key="search_more_context" /></a>
     	<a href="javascript:void(0)" class='lessSearchContext'><fmt:message key="search_less_context" /></a>
 	<% } %>
-	
-	<input type='hidden' class='searchContext <%=request.getParameter("namespace")%>SearchContext _m' value='0' readonly='true' />
 	<% if(request.getParameter("refining").equals("true")) { %>
 	    <a href="javascript:void(0)" class='refineSearch'><fmt:message key="search_refine_search" /></a>
 	<% } %>

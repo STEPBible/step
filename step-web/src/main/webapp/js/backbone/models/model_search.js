@@ -3,9 +3,11 @@ var SearchModel = Backbone.Model.extend({
         return {
             passageId: 0,
             pageNumber: 1,
+            pageSize : step.defaults.pageSize,
             querySyntax: "",
             detail: 0,
-            searchType: undefined
+            searchType: undefined,
+            context: 0
         }
     },
 
@@ -72,6 +74,7 @@ var SearchModel = Backbone.Model.extend({
             this.get("passageId"),
             this.get("searchType"),
             this.get("pageNumber"),
+            this.getDefaultedValue("pageSize"),
             this.get("querySyntax"),
             this.getDefaultedValue("context"),
             this.getDefaultedValue("searchVersions"),
@@ -120,10 +123,14 @@ var SearchModel = Backbone.Model.extend({
         switch (attributeName) {
             case "context":
                 return 0;
+            case "pageNumber":
+                return 1;
             case "searchVersions":
                 return "ESV";
             case "sortOrder":
                 return "NONE";
+            case "pageSize":
+                return step.defaults.pageSize;
             default:
                 return;
         }

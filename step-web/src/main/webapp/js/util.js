@@ -99,6 +99,12 @@ step.util = {
         if (s == null) {
             return true;
         }
+
+        if(!_.isString(s)) {
+            //we assume that all non-strings are not blank - since they presumably contain a value of some kind.
+            return false;
+        }
+
         return s.match(/^\s*$/g) != null;
     },
 
@@ -404,7 +410,6 @@ step.util = {
             $("fieldset:visible .pageNumber").val(1).trigger('change');
         },
 
-
         testColor: function () {
             var i = 0;
             for (i = 0; i < 100; i++) {
@@ -465,171 +470,6 @@ step.util = {
             }
         },
 
-        initSearchToolbar: function (context) {
-            $(".moreSearchContext", context).button({
-                text: false,
-                icons: {
-                    primary: "ui-icon-plusthick"
-                }
-            }).click(function () {
-                    var currentContext = $(this).siblings(".searchContext", this);
-                    var currentContextValue = parseInt(currentContext.val());
-                    var newContext = currentContextValue + 1;
-                    currentContext.val(newContext);
-
-                    currentContext.trigger('change');
-
-                    if (newContext != currentContextValue) {
-                        step.state._fireStateChanged(step.passage.getPassageId(this));
-                    }
-                });
-
-            $(".lessSearchContext", context).button({
-                text: false,
-                icons: {
-                    primary: "ui-icon-minusthick"
-                }
-            }).click(function () {
-                    var currentContext = $(this).siblings(".searchContext", this);
-                    var currentContextValue = parseInt(currentContext.val());
-                    var newContext = currentContextValue - 1;
-                    currentContext.val(newContext > 0 ? newContext : 0);
-
-                    currentContext.trigger('change');
-                    if (newContext != currentContextValue) {
-                        step.state._fireStateChanged(step.passage.getPassageId(this));
-                    }
-                });
-
-
-            $(".adjustPageSize", context).button({
-                icons: {
-                    primary: "ui-icon-arrowstop-1-s"
-                },
-                text: false
-            }).click(function (e) {
-                    e.preventDefault();
-                    var passageContainer = step.util.getPassageContainer(this);
-                    var windowHeight = $(window).height();
-                    var targetPageSize = 1;
-
-                    if (step.search.pageSize != step.defaults.pageSize) {
-                        step.search.pageSize = step.defaults.pageSize;
-                    } else {
-                        //find the one that extends beyond the window height
-                        var rows = $("tr.searchResultRow", context);
-                        for (var i = 0; i < rows.size(); i++) {
-                            if (rows.eq(i).offset().top + rows.eq(i).height() > windowHeight) {
-                                targetPageSize = i - 1;
-                                break;
-                            }
-                        }
-
-                        step.search.pageSize = targetPageSize;
-                    }
-                    step.state._fireStateChanged(step.passage.getPassageId(this));
-                });
-
-            $(".previousPage", context).button({
-                icons: {
-                    primary: "ui-icon-arrowreturnthick-1-w"
-                },
-                text: false
-            }).click(function (e) {
-                    e.preventDefault();
-
-                    //decrement the page number if visible fieldset:
-                    var pageNumber = $("fieldset:visible .pageNumber", context);
-                    var oldPageNumber = parseInt(pageNumber.val());
-
-                    if (oldPageNumber > 1) {
-                        pageNumber.val(oldPageNumber - 1);
-                        pageNumber.trigger("change");
-                        step.state._fireStateChanged(step.passage.getPassageId(this));
-                    }
-                });
-
-            $(".nextPage", context).button({
-                icons: {
-                    primary: "ui-icon-arrowreturnthick-1-w"
-                },
-                text: false
-            }).click(function (e) {
-                    e.preventDefault();
-
-                    var totalPages = Math.round((step.search.totalResults / step.search.pageSize) + 0.5);
-                    var pageNumber = $("fieldset:visible .pageNumber", context);
-
-
-                    var oldPageNumber = parseInt(pageNumber.val());
-                    if (oldPageNumber == undefined || oldPageNumber == 0 || oldPageNumber == Number.NaN) {
-                        oldPageNumber = 1;
-                    }
-
-                    if (oldPageNumber < totalPages) {
-                        pageNumber.val(oldPageNumber + 1);
-                        pageNumber.trigger("change");
-                        step.state._fireStateChanged(step.passage.getPassageId(this));
-                    }
-                });
-
-            $(".refineSearch", context).button({
-                text: false,
-                icons: {
-                    primary: "ui-icon-pencil"
-                }
-            }).click(function () {
-                    var passageContainer = step.util.getPassageContainer(this);
-                    step.search.refinedSearch.push(step.search.lastSearch);
-
-                    $(".refinedSearch .refinedSearchLabel", context).html(__s.refine_search_results + " " + step.search.refinedSearch.join("=>"));
-
-                    //blank the results
-                    $("fieldset:visible .resultEstimates", context).html("");
-
-                    //trigger the reset button
-                    $("fieldset:visible .resetSearch", context).trigger("click");
-
-                    $(".refinedSearch", context).show();
-                });
-
-
-            $(".showSearchCriteria", context).button({
-                text: false,
-                icons: {
-                    primary: "ui-icon-circle-triangle-s"
-                }
-            }).click(function () {
-                    $(this).parent().find(".hideSearchCriteria").show();
-                    $(this).hide();
-                    $(this).closest(".searchToolbar").closest("fieldset").children().not(".searchToolbar").show();
-                    refreshLayout();
-                }).hide();
-
-
-            $(".hideSearchCriteria", context).button({
-                text: false,
-                icons: {
-                    primary: "ui-icon-circle-triangle-n"
-                }
-            }).click(function () {
-                    $(this).parent().find(".showSearchCriteria").show();
-                    $(this).hide();
-                    $(this).closest(".searchToolbar").closest("fieldset").children().not(".searchToolbar").hide();
-                    refreshLayout();
-                });
-
-            $(".searchToolbarButtonSets", context).buttonset();
-
-
-            $(step.util).hear("versions-initialisation-completed", function () {
-                $.each($(".searchVersions"), function (i, item) {
-                    $(item).versions({
-                        multi: true
-                    });
-                });
-            });
-        },
 
         /** Marks up a element containing a STEP transliteration by doing the following things:
          * '*' makes a syllable uppercase - small caps

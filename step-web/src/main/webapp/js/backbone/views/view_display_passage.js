@@ -4,12 +4,16 @@ var PassageDisplayView = Backbone.View.extend({
         },
         initialize: function () {
             Backbone.Events.on("passage:new:" + this.model.get("passageId"), this.render, this);
+            Backbone.Events.on("font:change:" + this.model.get("passageId"), this.handleFontSizeChange, this);
+
             this.passageContent = this.$el.find(".passageContent");
+            step.fonts.fontButtons(this.$el, true);
+
+            $(".passageSizeButtons").buttonset();
+            $(".passageLookupButtons").buttonset();
         },
 
         render: function (newPassage) {
-//            console.log("Rendering change to SCREEN");
-
             step.util.trackAnalytics("passage", "loaded", "time", new Date().getTime() - newPassage.startTime);
             step.util.trackAnalytics("passage", "version", this.model.get("version"));
             step.util.trackAnalytics("passage", "reference", newPassage.reference);
@@ -41,7 +45,7 @@ var PassageDisplayView = Backbone.View.extend({
                 this._doSideNotes(passageHtml, passageId, version);
                 this._doHideEmptyNotesPane(passageHtml);
                 this._adjustTextAlignment(passageHtml);
-                this._redoTextSize(passageId, passageHtml);
+                step.fonts.redoTextSize(passageId, passageHtml);
                 this._addStrongHandlers(passageId, passageHtml);
                 this._updatePageTitle(passageId, passageHtml, version, reference);
                 this._doTransliterations(passageHtml);
@@ -560,26 +564,6 @@ var PassageDisplayView = Backbone.View.extend({
         },
 
         /**
-         * Reinstate previous text sizes
-         * @param passageId
-         * @param passageContent
-         * @private
-         */
-        _redoTextSize: function (passageId, passageContent) {
-            //we're only going to be cater for one font size initially, so pick the major version one.
-            var fontKey = step.passage.ui.getFontKey(passageContent);
-            var fontSizes = step.passage.ui.fontSizes[passageId];
-            var fontSize;
-            if (fontSizes != undefined) {
-                fontSize = fontSizes[fontKey];
-            }
-
-            if (fontSize != undefined) {
-                passageContent.css("font-size", fontSize);
-            }
-        },
-
-        /**
          * Change the transliterations and format them
          * @param passageContent
          * @private
@@ -633,6 +617,13 @@ var PassageDisplayView = Backbone.View.extend({
             return sizes;
         },
 
+        handleFontSizeChange : function() {
+            this.doInterlinearVerseNumbers(
+                this.$el.find(".passageContent"),
+                this.model.get("interlinearMode"),
+                this.model.get("options"));
+        },
+
         /**
          * Resizes the interlinear verse numbers to line them up properly against their counter-part text nodes.
          * @param interlinearMode
@@ -644,8 +635,13 @@ var PassageDisplayView = Backbone.View.extend({
                 options.indexOf("MORPHOLOGY") != -1 ||
                 interlinearMode == "INTERLINEAR") {
 
+                var targetParentElement = passageContent;
+                if(!targetParentElement.hasClass("passageContentHolder")) {
+                    targetParentElement = targetParentElement.find(".passageContentHolder");
+                }
+
                 //obtain heights first...
-                var individualBlocks = passageContent.children().children();
+                var individualBlocks = targetParentElement.children().children();
                 if (individualBlocks.length == 0) {
                     return;
                 }
@@ -653,7 +649,7 @@ var PassageDisplayView = Backbone.View.extend({
                 var sizes = this._getBlockSizes(individualBlocks);
 
                 //do verse numbers
-                var verseNumbers = $(".verseStart", passageContent);
+                var verseNumbers = $(".verseStart", targetParentElement);
                 for (var k = 0; k < verseNumbers.length; verseNumbers++) {
                     var verseBlocks = verseNumbers.eq(k).children();
                     for (var i = 0; i < verseBlocks.length; i++) {

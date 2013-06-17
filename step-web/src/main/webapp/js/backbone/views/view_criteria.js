@@ -11,6 +11,9 @@ var SearchCriteria = Backbone.View.extend({
     initialize: function () {
         var self = this;
 
+        //always run the following methods in the context of the view
+        _.bindAll(this);
+
         //we have marked fields as _m if they are in the model. The first class indicates the field name
         var viewElements = this.$el.find("._m");
         var changed = false;
@@ -44,7 +47,6 @@ var SearchCriteria = Backbone.View.extend({
         this.pageNumber = this.$el.find(".pageNumber");
         this.searchVersions = this.$el.find(".searchVersions");
         this.searchVersions.versions({ multi: true });
-//        this.context = this.$el.find(".searchContext");
 
         this.detailLevel = this.$el.detailSlider({
             changed: function (newValue) {
@@ -56,8 +58,179 @@ var SearchCriteria = Backbone.View.extend({
 
         this.model.on("change", this._updateQuerySyntaxFromModel, this);
         this.model.on("resync", this.syncValuesWithModel, this);
-        step.util.ui.initSearchToolbar(this.$el);
+        this.initSearchToolbar();
+        Backbone.Events.on("search:rendered:" + this.model.get("passageId"), this.evaluatePageNumberState);
     },
+
+    initSearchButton: function (clazz, icon, modelAttribute, increment, uiStatusFunction, validateFunction) {
+        var self = this;
+        $(clazz, this.$el).button({ text: false, icons: { primary: icon }})
+            .click(function (e) {
+                e.preventDefault();
+
+                var currentContext = self.model.get(modelAttribute);
+                var currentContextValue = parseInt(currentContext);
+                var newContext = currentContextValue + increment;
+
+                //check new value:
+                if(validateFunction(newContext)) {
+                    var newAttributes = {};
+                    newAttributes[modelAttribute] = newContext;
+                    self.model.save(newAttributes);
+                    self.model.trigger("search", self.model);
+                    if(uiStatusFunction) {
+                        uiStatusFunction();
+                    }
+                }
+            });
+    },
+
+    initContextButtons: function () {
+        this.initSearchButton(".moreSearchContext", "ui-icon-plusthick", "context", 1, this.evaluateContextButtonState, this.isValidContext);
+        this.initSearchButton(".lessSearchContext", "ui-icon-minusthick", "context", -1, this.evaluateContextButtonState, this.isValidContext);
+        this.evaluateContextButtonState();
+    },
+
+    previousNextPageButtons: function () {
+        this.initSearchButton(".nextPage", "ui-icon-arrowreturnthick-1-w", "pageNumber", 1, undefined, this.isValidPageNumber);
+        this.initSearchButton(".previousPage", "ui-icon-arrowreturnthick-1-w", "pageNumber", -1, undefined, this.isValidPageNumber);
+        this.evaluatePageNumberState();
+    },
+
+    isValidContext : function(value) {
+        return value >= 0;
+    },
+
+    isValidPageNumber : function(value) {
+        return value > 0 && this.isPageWithinResults(value);
+    },
+
+    isPageWithinResults : function(newValue) {
+        //validate page is within the right scope
+        var approxPages = stepRouter.totalResults[this.model.get("passageId")] / this.model.get("pageSize");
+
+        //we might have an exact number of pages, if we don't, we need to add 1
+        var fullPages = Math.floor(approxPages);
+        var leftOver = approxPages - fullPages;
+        var numPages = leftOver == 0 ? approxPages : fullPages + 1;
+        return newValue <= numPages;
+    },
+
+    adjustPageSizeButtons: function () {
+        var self = this;
+        $(".adjustPageSize", this.$el).button({ icons: { primary: "ui-icon-arrowstop-1-s" }, text: false })
+            .click(function (e) {
+                e.preventDefault();
+                var passageId = self.model.get("passageId");
+                var windowHeight = $(window).height();
+                var targetPageSize = 1;
+                var pageSize = self.model.get("pageSize");
+
+                var container = step.util.getPassageContainer(self.$el);
+                if (pageSize != step.defaults.pageSize) {
+                    targetPageSize = step.defaults.pageSize;
+                } else {
+                    //find the one that extends beyond the window height
+                    var rows = $("tr.searchResultRow", container);
+                    for (var i = 0; i < rows.size(); i++) {
+                        if (rows.eq(i).offset().top + rows.eq(i).height() > windowHeight) {
+                            targetPageSize = i - 1;
+                            break;
+                        }
+                    }
+                }
+
+                var ref = container.find(".searchResultRow:first [ref]").attr("ref");
+                //now that we have adjusted the page size, we need to work out if
+                //we need to work out the corresponding page number
+                var oldPageNumber = self.model.get("pageNumber");
+                var firstResultOnOldPageIndex = (oldPageNumber -1) * pageSize + 1;
+                var newApproxPageNumber = firstResultOnOldPageIndex / targetPageSize;
+                var newWholePage = Math.floor(newApproxPageNumber);
+                var newDecimal = newApproxPageNumber - newWholePage;
+                var newPageNumber = newDecimal == 0 ? newApproxPageNumber : newWholePage + 1;
+
+                Backbone.Events.once("search:rendered:" + self.model.get("passageId"), function() {
+                    var searchResult = $(".searchResultRow [ref='" + ref + "']", container);
+                    var passageContent = container.find(".passageContent");
+                    var linkOffset = searchResult.offset();
+                    var scroll = linkOffset == undefined ? 0 : linkOffset.top - passageContent.height();
+
+                    var originalScrollTop = passageContent.scrollTop();
+                    passageContent.animate({
+                        scrollTop: originalScrollTop + scroll
+                    }, 500, 'swing', function() {
+                        var resultRowParent = $(".searchResultRow [ref='" + ref + "']", container).parent();
+                        resultRowParent.animate({ 'background-color' : '#EBEBF1'}, 600, 'swing', function() {
+                            resultRowParent.animate({ "background-color": 'transparent'}, 600);
+                        });
+                    });
+                });
+
+                self.model.save({ pageSize : targetPageSize, pageNumber: newPageNumber });
+                self.model.trigger("search", self.model);
+            });
+    },
+
+
+
+    refineSearchButton: function () {
+        $(".refineSearch", this.$el).button({
+            text: false,
+            icons: {
+                primary: "ui-icon-pencil"
+            }
+        }).click(function () {
+                var passageContainer = step.util.getPassageContainer(this);
+                step.search.refinedSearch.push(step.search.lastSearch);
+
+                $(".refinedSearch .refinedSearchLabel", this.$el).html(__s.refine_search_results + " " + step.search.refinedSearch.join("=>"));
+
+                //blank the results
+                $("fieldset:visible .resultEstimates", this.$el).html("");
+
+                //trigger the reset button
+                $("fieldset:visible .resetSearch", this.$el).trigger("click");
+
+                $(".refinedSearch", this.$el).show();
+            });
+    }, showHideCriteria: function () {
+        $(".showSearchCriteria", this.$el).button({ text: false, icons: { primary: "ui-icon-circle-triangle-s" }})
+            .click(function () {
+                $(this).parent().find(".hideSearchCriteria").show();
+                $(this).hide();
+                $(this).closest(".searchToolbar").closest("fieldset").children().not(".searchToolbar").show();
+                refreshLayout();
+            }).hide();
+
+
+        $(".hideSearchCriteria", this.$el).button({ text: false, icons: { primary: "ui-icon-circle-triangle-n" }})
+            .click(function () {
+                $(this).parent().find(".showSearchCriteria").show();
+                $(this).hide();
+                $(this).closest(".searchToolbar").closest("fieldset").children().not(".searchToolbar").hide();
+                refreshLayout();
+            });
+    },
+
+    initSearchToolbar: function () {
+        this.initContextButtons();
+        this.adjustPageSizeButtons();
+        this.previousNextPageButtons();
+        this.refineSearchButton();
+        this.showHideCriteria();
+        step.fonts.fontButtons(this.$el);
+
+        $(".searchToolbarButtonSets", this.$el).buttonset();
+        $(step.util).hear("versions-initialisation-completed", function () {
+            $.each($(".searchVersions"), function (i, item) {
+                $(item).versions({
+                    multi: true
+                });
+            });
+        });
+    },
+
 
     /**
      * Sets up the dropdowns
@@ -102,6 +275,17 @@ var SearchCriteria = Backbone.View.extend({
                 style: { classes: "primaryLightBg primaryLightBorder" }
             });
         }
+    },
+
+    evaluateContextButtonState: function () {
+        var currentContext = this.model.get("context");
+        $(".lessSearchContext", this.$el).button("option", "disabled", currentContext == 0);
+    },
+
+    evaluatePageNumberState: function () {
+        var currentPage = this.model.get("pageNumber");
+        $(".previousPage", this.$el).button("option", "disabled", currentPage == 1);
+        $(".nextPage", this.$el).button("option", "disabled", !this.isPageWithinResults(currentPage+1) );
     },
 
     /**

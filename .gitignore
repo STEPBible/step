@@ -13,6 +13,6 @@ db-drop.sql
 bin
 *.iml
 .idea
-.orig
+*.orig
 
 

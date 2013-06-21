@@ -40,6 +40,29 @@ var PassageModel = Backbone.Model.extend({
             return __s.error_javascript_validation;
         },
 
+        switchMasterInterlinearVersion : function(newVersion) {
+
+            var interlinearVersions = this.get("extraVersions");
+            var currentVersion = this.get("version").toUpperCase();
+
+            var newVersions = [];
+            var found = false;
+            for(var i = 0; i < interlinearVersions.length; i++) {
+                if(!found && interlinearVersions[i].toUpperCase() == newVersion.toUpperCase()) {
+                    found = true;
+                    //replace it by the current version
+                    newVersions.push(currentVersion);
+                } else {
+                    newVersions.push(interlinearVersions[i]);
+                }
+            }
+
+            this.save({
+                version : newVersion,
+                extraVersions : newVersions
+            });
+        },
+
         /**
          * we ensure that, A- we save the correct format of parameters, and B- that we save options that are valid
          * @param attributes the set of attributes to be stored

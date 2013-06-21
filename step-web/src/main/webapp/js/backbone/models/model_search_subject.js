@@ -1,5 +1,5 @@
 var SubjectSearchModel = SearchModel.extend({
-    _evaluateQuerySyntax : function(attributes) {
+    _evaluateQuerySyntaxInternal : function(attributes) {
         var subjectText = this.getSafeAttribute(attributes, "subjectText");
         var subjectRelated = this.getSafeAttribute(attributes, "subjectRelated");
         var detail = this.getSafeAttribute(attributes, "detail");

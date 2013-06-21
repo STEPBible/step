@@ -67,35 +67,6 @@ var PassageDisplayView = Backbone.View.extend({
         },
 
         /**
-         * Takes in the selector for identifying each group element. Then selects children(), and iterates
-         * through each child apply the right CSS class from the array.
-         *
-         * @param passageContent the html jquery object
-         * @param groupSelector the group selector, a w, or a row, each containing a number of children
-         * @param cssClasses the set of css classes to use
-         * @param exclude the exclude function if we want to skip over some items
-         * @param offset the offset, which gets added to be able to ignore say the first item always.
-         * @private
-         */
-        _applyCssClassesRepeatByGroup: function (passageContent, groupSelector, cssClasses, exclude, offset) {
-            if (offset == undefined) {
-                offset = 0;
-            }
-
-            var words = $(groupSelector, passageContent);
-            for (var j = 0; j < words.length; j++) {
-                var jqItem = words.eq(j);
-                var children = jqItem.children();
-                for (var i = offset; i < children.length; i++) {
-                    var child = children.eq(i);
-                    if (exclude == undefined || !exclude(child)) {
-                        child.addClass(cssClasses[i - offset]);
-                    }
-                }
-            }
-        },
-
-        /**
          *
          * Checks whether something is unicode, and if so, then sets up the unicode fonts.
          * @param passageContent passage html containing all the html content, wrapped
@@ -125,50 +96,21 @@ var PassageDisplayView = Backbone.View.extend({
             //do display options make it an interlinear
             var isInterlinearOption = languages.length != originalLanguageLength;
 
-            var fonts = this._getFontClasses(languages);
+            var fonts = step.util.ui._getFontClasses(languages);
             if (interlinearMode == "INTERLINEAR" || isInterlinearOption) {
                 //we inspect each line in turn, and stylise each block.
-                this._applyCssClassesRepeatByGroup(passageContent, ".w", fonts, function (child) {
+                step.util.ui._applyCssClassesRepeatByGroup(passageContent, ".w", fonts, function (child) {
                     child.hasClass("interVerseNumbers");
                 });
             } else if (interlinearMode.indexOf("INTERLEAVED") != -1) {
-                this._applyCssClassesRepeatByGroup(passageContent, ".verseGrouping", fonts, undefined, 1);
+                step.util.ui._applyCssClassesRepeatByGroup(passageContent, ".verseGrouping", fonts, undefined, 1);
             } else if (interlinearMode.indexOf("COLUMN") != -1) {
-                this._applyCssClassesRepeatByGroup(passageContent, "tr.row", fonts, undefined, 1);
+                step.util.ui._applyCssClassesRepeatByGroup(passageContent, "tr.row", fonts, undefined, 1);
             } else {
                 //normal mode, so all we need to do is check the language version, and if greek or hebrew then switch the font
                 if (fonts[0]) {
                     passageContent.addClass(fonts[0]);
                 }
-            }
-        },
-
-        /**
-         * Given an array of languages, returns an array of fonts
-         * @param languages the array of languages
-         * @private
-         */
-        _getFontClasses: function (languages) {
-            var fonts = [];
-            for (var i = 0; i < languages.length; i++) {
-                fonts.push(this._getFontClassForLanguage(languages[i]));
-            }
-            return fonts;
-        },
-
-        /**
-         * Eventually, we probably want to do something clever around dynamically loading fonts.
-         * We also cope for strong numbers, taking the first character.
-         * @param language the language code as returned by JSword
-         * @returns {string} the class of the font, or undefined if none is required
-         * @private
-         */
-        _getFontClassForLanguage: function (language) {
-            //currently hard-coded
-            if (language == "he") {
-                return "hbFont";
-            } else if (language == "grc") {
-                return "unicodeFont";
             }
         },
 
@@ -195,7 +137,8 @@ var PassageDisplayView = Backbone.View.extend({
         _isPassageValid: function (passageHtml, reference) {
             if (passageHtml.find(":not(.xgen):first").length == 0) {
                 var message = sprintf(__s.error_bible_doesn_t_have_passage, reference);
-                this.passageContent.html(message);
+                var errorMessage = $("<span>").addClass("notApplicable").html(message);
+                this.passageContent.html(errorMessage);
                 return false;
             }
             return true;

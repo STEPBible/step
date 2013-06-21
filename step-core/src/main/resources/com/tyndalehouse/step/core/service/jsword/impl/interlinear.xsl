@@ -875,14 +875,14 @@
         <xsl:variable name="versification" select="jsword:getVersification($v11nf, $v11n)"/>
         <xsl:variable name="passage" select="jsword:getValidKey($keyf, $versification, @osisRef)"/>
         <xsl:variable name="passageKey" select="jsword:getName($passage)"/>
-        <a href="#" title="Click for more options" class="linkRef" xref="{$passageKey}" onclick="javascript:showOptions();"><xsl:apply-templates/></a>
+        <a href="javascript:void(0)" title="Click for more options" class="linkRef" xref="{$passageKey}" onclick="javascript:showOptions();"><xsl:apply-templates/></a>
   </xsl:template>
   
   <xsl:template match="reference" mode="jesus">
         <xsl:variable name="versification" select="jsword:getVersification($v11nf, $v11n)"/>
         <xsl:variable name="passage" select="jsword:getValidKey($keyf, $versification, @osisRef)"/>
         <xsl:variable name="passageKey" select="jsword:getName($passage)"/>
-        <a href="#" title="Click for more options" xref="{$passageKey}" onclick="javascript:showOptions();"><xsl:apply-templates/></a>
+        <a href="javascript:void(0)" title="Click for more options" xref="{$passageKey}" onclick="javascript:showOptions();"><xsl:apply-templates/></a>
   </xsl:template>
   
   <!--=======================================================================-->
@@ -1564,7 +1564,7 @@
 				<span class="interlinear">
 					<xsl:choose>
 						<xsl:when test="$printVersions != 'no-print'">
-							<a class='smallHeaders' href='#' onclick='javascript:makeMasterInterlinear(this, &quot;{$nextVersion}&quot;)' title='Let this text define the word ordering' >
+							<a class='smallHeaders' href='javascript:void(0)' onclick='javascript:makeMasterInterlinear(this, &quot;{$nextVersion}&quot;)' title='Let this text define the word ordering' >
 							<xsl:call-template name="outputNonBlank">
 								<xsl:with-param name="string">
 									<xsl:value-of select="$nextVersion" />
@@ -1586,7 +1586,7 @@
 					<span class="interlinear">
 						<xsl:choose>
 							<xsl:when test="$printVersions != 'no-print'">
-							<a class='smallHeaders' href="#" onclick='javascript:makeMasterInterlinear(this, &quot;{$versions}&quot;)' title='Let this text define the word ordering'>
+							<a class='smallHeaders' href="javascript:void(0)" onclick='javascript:makeMasterInterlinear(this, &quot;{$versions}&quot;)' title='Let this text define the word ordering'>
 								<xsl:call-template name="outputNonBlank">
 									<xsl:with-param name="string">
 										<xsl:value-of select="$versions" />

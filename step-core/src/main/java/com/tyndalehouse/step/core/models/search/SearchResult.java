@@ -20,6 +20,7 @@ public class SearchResult implements Serializable {
     private List<String> strongHighlights;
     private String order;
     private List<LexiconSuggestion> definitions;
+    private String[] languages;
 
     /**
      * @return the query
@@ -144,5 +145,19 @@ public class SearchResult implements Serializable {
      */
     public void setDefinitions(final List<LexiconSuggestion> definitions) {
         this.definitions = definitions;
+    }
+
+    /**
+     * @param languages The languages that were searched across
+     */
+    public void setLanguages(final String[] languages) {
+        this.languages = languages;
+    }
+
+    /**
+     * @return the languages that were searched across
+     */
+    public String[] getLanguages() {
+        return languages;
     }
 }

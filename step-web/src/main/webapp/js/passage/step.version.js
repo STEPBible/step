@@ -100,16 +100,3 @@ step.version = {
                } 
         }
 };
-
-
-
-$(step.version).hear("filter-versions", function(source, data) {
-    var element = data;
-    var target = $(element);
-    
-    step.version.refreshVersions(target, step.version.filteredVersions(target));
-    //hack for IE.
-    element.focus();
-});
-
-

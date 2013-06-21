@@ -38,15 +38,15 @@ $(step.menu).hear("MENU-VIEW", function(self, menuTrigger) {
 	    step.menu.tickMenuItem(menuTrigger.menuItem.element);
 	    $.shout("view-change", {viewName : menuTrigger.menuItem.name});	
 	} else if(menuTrigger.menuItem.name == "SWAP_BOTH_PASSAGES") {
-        var version0 = step.state.passage.version(0);
-        var version1 = step.state.passage.version(1);
-        var reference0 = step.state.passage.reference(0);
-        var reference1 = step.state.passage.reference(1);
+        var model0 = PassageModels.at(0);
+        var model1= PassageModels.at(1);
+        var version0 = model0.get("version");
+        var version1 = model1.get("version");;
+        var reference0 = model0.get("reference");
+        var reference1 = model1.get("reference");
 
-        step.state.passage.version(0, version1, false);
-        step.state.passage.reference(0, reference1);
-        step.state.passage.version(1, version0, false);
-        step.state.passage.reference(1, reference0);
+        model0.save({ version: version1, reference : reference1});
+        model1.save({ version: version0, reference : reference0});
     }
 });
 
@@ -103,20 +103,6 @@ $(step.menu).hear("MENU-SYNC", function(self, menuTrigger) {
     step.menu.options._tickSyncMode(menuTrigger.menuItem.name);
 });
 
-$(step.menu).hear("initialise-passage-sync", function(s, sync) {
-    var syncName;  
-    
-    if(sync == 0) {
-        syncName = "SYNC_LEFT";
-    } else if(sync == 1) {
-        syncName = "SYNC_RIGHT";
-    } else {
-        syncName = "NO_SYNC";
-    }
-
-    step.menu.tickMenuItem($("a[name='" + syncName+ "']"));
-    step.menu.options._tickSyncMode(syncName, false);
-});
 
 $(step.menu).hear("view-change-done", function(self, data) {
     var optionsMenu = $("li[menu-name = 'OPTIONS']");

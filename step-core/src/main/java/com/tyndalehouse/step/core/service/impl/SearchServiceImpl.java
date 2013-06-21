@@ -56,6 +56,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import com.tyndalehouse.step.core.models.search.*;
+import com.tyndalehouse.step.core.service.jsword.JSwordMetadataService;
 import org.apache.lucene.queryParser.MultiFieldQueryParser;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.queryParser.QueryParser;
@@ -109,6 +110,7 @@ public class SearchServiceImpl implements SearchService {
     private final EntityIndexReader definitions;
     private final EntityIndexReader specificForms;
     private final EntityIndexReader timelineEvents;
+    private final JSwordMetadataService jswordMetadata;
     private final SubjectSearchService subjects;
 
     /**
@@ -120,10 +122,12 @@ public class SearchServiceImpl implements SearchService {
      */
     @Inject
     public SearchServiceImpl(final JSwordSearchService jswordSearch, final JSwordPassageService jsword,
+                             final JSwordMetadataService jswordMetadata,
                              final SubjectSearchService subjects, final TimelineService timeline,
                              final EntityManager entityManager) {
         this.jswordSearch = jswordSearch;
         this.jsword = jsword;
+        this.jswordMetadata = jswordMetadata;
         this.subjects = subjects;
         this.timeline = timeline;
         this.definitions = entityManager.getReader("definition");
@@ -190,7 +194,18 @@ public class SearchServiceImpl implements SearchService {
         result.setTimeTookTotal(System.currentTimeMillis() - start);
         result.setQuery(sq.getOriginalQuery());
         specialSort(sq, result);
+        enrichWithLanguages(sq, result);
         return result;
+    }
+
+    /**
+     * Puts the languages of each module into the result returned to the UI.
+     * @param sq the search query
+     * @param result the result
+     */
+    private void enrichWithLanguages(final SearchQuery sq, final SearchResult result) {
+        IndividualSearch lastSearch = sq.getCurrentSearch();
+        result.setLanguages(jswordMetadata.getLanguages(lastSearch.getVersions()));
     }
 
     /**

@@ -175,26 +175,27 @@ var SearchCriteria = Backbone.View.extend({
 
 
     refineSearchButton: function () {
-        $(".refineSearch", this.$el).button({
-            text: false,
-            icons: {
-                primary: "ui-icon-pencil"
-            }
-        }).click(function () {
-                var passageContainer = step.util.getPassageContainer(this);
-                step.search.refinedSearch.push(step.search.lastSearch);
+        var self = this;
+        $(".refineSearch", this.$el).button({ text: false, icons: { primary: "ui-icon-pencil" } })
+            .click(function () {
+                stepRouter.addRefinedSearch(self.model.get("passageId"));
 
-                $(".refinedSearch .refinedSearchLabel", this.$el).html(__s.refine_search_results + " " + step.search.refinedSearch.join("=>"));
+                var container = step.util.getPassageContainer(self.$el);
+                var refinedSearchBox = container.find(".refinedSearch");
+                refinedSearchBox.find(".refinedSearchLabel")
+                         .html(__s.refine_search_results + " " +
+                        step.util.undoReplaceSpecialChars(self.model.getBaseSearch()));
 
                 //blank the results
-                $("fieldset:visible .resultEstimates", this.$el).html("");
+                self.$el.find(".resultEstimates").html("");
 
                 //trigger the reset button
-                $("fieldset:visible .resetSearch", this.$el).trigger("click");
-
-                $(".refinedSearch", this.$el).show();
+                self.resetSearch();
+                refinedSearchBox.show();
             });
-    }, showHideCriteria: function () {
+    },
+
+    showHideCriteria: function () {
         $(".showSearchCriteria", this.$el).button({ text: false, icons: { primary: "ui-icon-circle-triangle-s" }})
             .click(function () {
                 $(this).parent().find(".hideSearchCriteria").show();
@@ -401,9 +402,8 @@ var SearchCriteria = Backbone.View.extend({
 
     /**
      * Blanks the search
-     * @param event the event originating the trigger
      */
-    resetSearch: function (event) {
+    resetSearch: function () {
         for (var propName in this.viewElementsByName) {
             var element = this.viewElementsByName[propName];
             if (element.hasClass("drop")) {

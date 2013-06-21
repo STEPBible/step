@@ -31,25 +31,6 @@ $(step.menu).hear("MENU-DISPLAY", function(self, menuTrigger) {
 		//do nothing
 		return;
 	}
-	
-		step.menu.toggleMenuItem(menuTrigger.menuItem.element);
-
-		//save the new state of options
-		var selectedOptions = step.menu.getSelectedOptions(menuTrigger.menu.element);
-		step.state.passage.options(menuTrigger.passageId, selectedOptions);
+    step.menu.toggleMenuItem(menuTrigger.menuItem.element);
 });
-
-
-$(step.menu).hear("initialise-passage-display-options", function(self, data) {
-	//refresh ui
-	var passageContainer = step.util.getPassageContainer(data.passageId);
-	step.menu.untickAll("DISPLAY", data.passageId);
-	for(var i in data.menuOptions) {
-		step.menu.tickMenuItem($("a[name='" + data.menuOptions[i] +"']", passageContainer));
-	}
-});
-
-
-
-
-
+    

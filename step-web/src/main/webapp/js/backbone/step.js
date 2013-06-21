@@ -34,7 +34,7 @@ var MenuList = Backbone.Collection.extend({
             switch (currentSearch) {
                 case "SEARCH_PASSAGE":
                 case "passage" :
-                    passageColumnModel = PassageModels.at(passageId);
+                    passageColumnModel = PassageModels.at(passageId)
                     break;
                 case "subject":
                     passageColumnModel = SubjectModels.at(passageId);
@@ -50,6 +50,10 @@ var MenuList = Backbone.Collection.extend({
                     break;
             }
             if (passageColumnModel != null) {
+                if(currentSearch != 'passage') {
+                    stepRouter.lastUrls[passageId] = undefined;
+                }
+
                 passageColumnModel.trigger("search", passageColumnModel);
             } else {
                 console.log("ERROR: passageColumnModel was null.");
@@ -171,7 +175,6 @@ var QuickLexiconModels;
 var BookmarkModels;
 var HistoryModels;
 
-//var PassageCriterias = new PassageCriteriaList;
 /**
  * Creates the models for those that are missing
  * @param models the model list

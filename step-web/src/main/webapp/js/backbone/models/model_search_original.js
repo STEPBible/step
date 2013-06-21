@@ -42,7 +42,7 @@ var WordSearchModel = SearchModel.extend({
         return undefined;
     },
 
-    _evaluateQuerySyntax : function(attributes) {
+    _evaluateQuerySyntaxInternal : function(attributes) {
         var level =             this.getSafeAttribute(attributes, "detail");
         var originalType =      this.getSafeAttribute(attributes, "originalType");
         var originalWord =      this.getSafeAttribute(attributes, "originalWord");

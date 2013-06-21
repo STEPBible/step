@@ -73,8 +73,6 @@ step.lexicon = {
             model.trigger("search", model, {});
             //if we're in single view, then we would want to bring up the second column
             step.state.view.ensureTwoColumnView();
-
-//            step.state.activeSearch(targetPassageId, 'original', true);
         }
     },
 
@@ -242,7 +240,8 @@ function LexiconDefinition() {
     var self = this;
     // listen for particular types of events and call the prototype functions
     this.getPopup().hear("show-all-strong-morphs", function (selfElement, data) {
-//        console.log(data);
+        step.passage.higlightStrongs(data);
+
         self.showDef(data);
 
         // temporary measure, but we can keep it in as a safe-guard against no

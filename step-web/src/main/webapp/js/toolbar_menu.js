@@ -37,63 +37,6 @@
 
 
 step.toolbar = {
-    refreshLayout : function(id) {
-        ddsmoothmenu.init({
-            mainmenuid: id,        //menu DIV id
-            zIndexStart: 100,
-            orientation: 'h',               //Horizontal or vertical menu: Set to "h" or "v"
-            classname: 'ddsmoothmenu innerMenu', //class added to menu's outer DIV
-            //customtheme: ["#1c5a80", "#18374a"],
-            contentsource: "markup"
-        });
-    }
+
 }
 
-function ToolbarMenu(passageId, menuRoot) {
-	this.passageId = passageId;
-	this.menuRoot = $(menuRoot);
-	var self = this;
-	
-	step.toolbar.refreshLayout(menuRoot.id)
-	
-	$(menuRoot).hear("version-changed-" + this.passageId, function(selfElement) {
-		self.refreshMenuOptions();
-	});
-	
-	$(menuRoot).hear("slideView-SEARCH_PASSAGE", function() {
-	   self.refreshMenuOptions(); 
-	});
-	
-	$(menuRoot).hear("version-changed-dynamically" + this.passageId, function(selfElement) {
-		self.refreshMenuOptions();
-	});
-}
-
-/**
- * Refreshes the menu options according to what can currently be displayed
- * @param version the new version of the passage
- */
-ToolbarMenu.prototype.refreshMenuOptions = function() {
-	var self = this;
-	var version = step.state.passage.version(this.passageId);
-//	var mode = step.passage.getDisplayMode(this.passageId).displayMode;
-    var mode = undefined;
-	if(step.util.isBlank(mode)) {
-	    mode = "NONE";
-	}
-	
-	var displayMenu = $("li[menu-name='DISPLAY']", step.util.getPassageContainer(this.passageId));
-//	$.getSafe(BIBLE_GET_FEATURES, [version, mode], function (features) {
-//		//build up map of options
-//	    $("a", displayMenu).removeClass("disabled").removeAttr('title').qtip('destroy');
-//
-//		for(var i = 0; i < features.removed.length; i++) {
-//		    $("a[name='" + features.removed[i].option + "']", displayMenu)
-//		        .addClass("disabled")
-//		        .attr('title', features.removed[i].explanation)
-//		        .qtip({ position: {my: "center right", at: "left center", viewport: $(window) }});
-//		}
-//
-//		$.shout("toolbar-menu-options-changed-" + self.passageId);
-//	});
-};

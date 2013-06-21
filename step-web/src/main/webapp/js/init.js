@@ -60,7 +60,7 @@ function init() {
 
         initGlobalHandlers();
         initLayout();
-
+        initRefineSearch();
 
         initData();
 
@@ -71,6 +71,13 @@ function init() {
         $.shout("view-change");
 
         initJira();
+    });
+}
+
+function initRefineSearch() {
+    $(".refinedSearch .closeRefinedSearch").click(function() {
+        $(this).closest(".refinedSearch").hide();
+        stepRouter.clearRefinedSearch(step.passage.getPassageId(this));
     });
 }
 
@@ -301,7 +308,7 @@ function hearViewChanges() {
             if (leftColumn.hasClass("ui-resizable")) {
                 leftColumn.resizable("destroy");
             }
-            step.toolbar.refreshLayout('rightPaneMenu');
+            step.util.ui.doMenu('rightPaneMenu');
         }
 
         $.shout("view-change-done");
@@ -336,10 +343,9 @@ function initLayout() {
 }
 
 function initMenu() {
-//	topMenu = new TopMenu($("#topMenu-ajax"));		
     var menusToBe = $(".innerMenus");
-    menusToBe.each(function (index, value) {
-        new ToolbarMenu(index, value);
+    menusToBe.each(function () {
+        step.util.ui.doMenu($(this).attr("id"));
     });
 }
 

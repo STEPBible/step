@@ -12,7 +12,6 @@ var SearchDisplayView = Backbone.View.extend({
     },
 
     render: function (resultsWrapper) {
-//        console.log("Rendering search results [parent block]");
         var searchResults = resultsWrapper.searchQueryResults;
         var query = step.util.undoReplaceSpecialChars(searchResults.query);
 
@@ -32,12 +31,23 @@ var SearchDisplayView = Backbone.View.extend({
             } else {
                 this._highlightResults(results, query);
             }
+            this._doFonts(results, searchResults.languages);
         }
 
         step.fonts.redoTextSize(this.model.get("passageId"), results);
         step.util.ui.emptyOffDomAndPopulate(this.passageContent, this._doSpecificSearchRequirements(query, results, resultsWrapper));
 
         Backbone.Events.trigger("search:rendered:" + this.model.get("passageId"));
+    },
+
+    _doFonts: function (results, languages) {
+        var fonts = step.util.ui._getFontClasses(languages);
+        if(languages.length == 1) {
+            //apply to whole passage
+            results.find(".searchResults .passageContentHolder").addClass(fonts[0]);
+        } else {
+            step.util.ui._applyCssClassesRepeatByGroup(results, "td.searchResultRow > span", fonts, undefined, 0);
+        }
     },
 
     /**
@@ -60,20 +70,6 @@ var SearchDisplayView = Backbone.View.extend({
         this._doFonts(passageId);
         step.util.ui.addStrongHandlers(passageId, step.util.getPassageContainer(passageId));
         this._doSpecificSearchRequirements(passageId, query);
-    },
-
-
-    //TODO this should be done differently now?
-    _doFonts: function (passageId) {
-        $.each($(".passageContentHolder", step.util.getPassageContainer(passageId)), function (n, item) {
-            if (step.util.isUnicode(item)) {
-                $(item).addClass("unicodeFont");
-
-                if (step.util.isHebrew(item)) {
-                    $(item).addClass("hbFont");
-                }
-            }
-        });
     },
 
     _updateTotal: function (total, pageNumber) {

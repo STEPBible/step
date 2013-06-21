@@ -82,7 +82,7 @@ public class SearchServiceImplTest {
         final TestEntityManager entityManager = new TestEntityManager();
 
         final JSwordSearchServiceImpl jswordSearch = new JSwordSearchServiceImpl(versificationService, jsword);
-        return new SearchServiceImpl(jswordSearch, jsword, new SubjectSearchServiceImpl(entityManager,
+        return new SearchServiceImpl(jswordSearch, jsword, null, new SubjectSearchServiceImpl(entityManager,
                 jswordSearch, jsword), new TimelineServiceImpl(entityManager, jsword), entityManager);
     }
 }

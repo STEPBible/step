@@ -40,7 +40,7 @@ var SearchModel = Backbone.Model.extend({
      * @param the property to add if not present already
      */
     getSafeAttribute: function (attributes, propName) {
-        if (attributes[propName] == null) {
+        if (attributes == null || attributes[propName] == null) {
             return this.get(propName) || "";
         }
 
@@ -56,13 +56,40 @@ var SearchModel = Backbone.Model.extend({
     save: function (attributes, options) {
         //if we have no query syntax, then evaluate it
         if (!attributes.querySyntax && _.size(attributes) != 0) {
-            attributes.querySyntax = this._evaluateQuerySyntax(attributes);
+            attributes.querySyntax = this.evaluateQuerySyntax(attributes);
         }
 
         console.log("Saving search model", attributes);
         var saveReturn = Backbone.Model.prototype.save.call(this, attributes, options);
         this.trigger("resync", this.model);
         return saveReturn;
+    },
+
+    /**
+     * Evaluates the query syntax by delegating the call to the child class, but
+     * then adds on the refined searches, such that these are in the URLs
+     * @param attributes
+     * @private
+     */
+    evaluateQuerySyntax : function(attributes) {
+        var querySyntax = this._evaluateQuerySyntaxInternal(attributes);
+        return this._joinInRefiningSearches(querySyntax);
+    },
+
+    getBaseSearch : function() {
+        if (stepRouter.refinedSearches[this.get("passageId")].length == 0) {
+            return "";
+        }
+
+        return stepRouter.refinedSearches[this.get("passageId")].join("=>");
+    },
+
+    _joinInRefiningSearches: function (query) {
+        if (stepRouter.refinedSearches[this.get("passageId")].length != 0) {
+            return step.util.undoReplaceSpecialChars(this.getBaseSearch()) + "=>" + query;
+        }
+
+        return query;
     },
 
     /**

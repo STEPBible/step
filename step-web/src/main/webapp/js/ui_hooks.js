@@ -181,7 +181,7 @@ function showDef(source, passage) {
 }
 
 function makeMasterInterlinear(element, newVersion) {
-    $.shout("make-master-interlinear-" + step.passage.getPassageId(element), newVersion);
+    PassageModels.at(step.passage.getPassageId(element)).switchMasterInterlinearVersion(newVersion);
 }
 
 function forgetProfile(callback) {
@@ -189,7 +189,9 @@ function forgetProfile(callback) {
     if(callback) {
         callback();
     }
-    window.location.reload();
+
+    //set the location
+    window.location.href = window.location.href.replace(/#.*/, "");
 }
 
 function getRelatedVerses(refs, passageId) {

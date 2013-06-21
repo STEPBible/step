@@ -29,13 +29,10 @@
 $(step.menu).hear("MENU-HELP", function(self, menuTrigger) {
 	if(menuTrigger.menuItem.name == "ABOUT") {
 		//show popup for About box
-		var okString = __s.ok;
-	    $( "#about" ).dialog({ 
+	    $( "#about" ).dialog({
 			buttons: [ { text : __s.ok, click  : function() { $(this).dialog("close"); } }],
 			width: DEFAULT_POPUP_WIDTH,
-			title: "STEP :: Scripture Tools for Every Person",
-		});
-	    
-	    $("#about").dialog("widget").find(".ui-dialog-title").addClass("primaryDark");
+			title: "STEP :: Scripture Tools for Every Person"
+		}).dialog("widget").find(".ui-dialog-title").addClass("primaryDark");
 	}
 });

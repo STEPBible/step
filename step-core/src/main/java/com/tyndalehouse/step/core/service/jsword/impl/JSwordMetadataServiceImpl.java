@@ -153,7 +153,7 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
 
         final List<BookName> books = getBooks(lookup, versification);
         if (books.isEmpty()) {
-            return getBooks(lookup, Versifications.instance().getDefaultVersification());
+            return getBooks(lookup, Versifications.instance().getVersification(Versifications.DEFAULT_V11N));
         }
 
         return books;
@@ -240,5 +240,16 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
     @Override
     public boolean hasVocab(final String version) {
         return this.versificationService.getBookFromVersion(version).hasFeature(FeatureType.STRONGS_NUMBERS);
+    }
+
+    @Override
+    public String[] getLanguages(final String... versions) {
+        String[] languages = new String[versions.length];
+        for (int i = 0; i < versions.length; i++) {
+            final String version = versions[i];
+            Book b = this.versificationService.getBookFromVersion(version);
+            languages[i] = b.getLanguage().getCode();
+        }
+        return languages;
     }
 }

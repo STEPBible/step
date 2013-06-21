@@ -8,10 +8,22 @@ CriteriaControlView = Backbone.View.extend({
 
     initialize: function () {
         this.listenTo(this.model, "change", this._changeVisibleCriteria);
+        Backbone.Events.on("search:refined:closed:" + this.model.get("passageId"), this.forceResyncOfQuerySyntax, this);
         this.passageToolbarContainer = this.$el.parent().find(".passageToolbarContainer");
 
         //show the right fieldset
         this._changeVisibleCriteria();
+    },
+
+    /**
+     * Forces a resync of the query syntax and then a search.
+     */
+    forceResyncOfQuerySyntax : function() {
+        var modelDescription = this.getClassesForModelType(this.model.get("selectedSearch"));
+        var searchModel = modelDescription.models.at(this.model.get("passageId"));
+        searchModel.save({ querySyntax : searchModel.evaluateQuerySyntax() });
+        searchModel.trigger("search", searchModel);
+
     },
 
     /**
@@ -68,26 +80,44 @@ CriteriaControlView = Backbone.View.extend({
      * @param fieldsets the fieldsets that we pass to the view
      */
     createViewFor: function (selectedSearch, fieldsets) {
-        switch (selectedSearch) {
-            case "subject":
-                //if models are empty, then fetch, if still empty after that then create one
-                //subject search
-                this._fetch(selectedSearch, fieldsets, SubjectModels, SubjectSearchModel, SubjectCriteria, SubjectDisplayView, false);
-                break;
-            case "text":
-                this._fetch(selectedSearch, fieldsets, SimpleTextModels, SimpleTextSearchModel, TextCriteria, TextDisplayView);
-                break;
-            case "original":
-                this._fetch(selectedSearch, fieldsets, WordSearchModels, WordSearchModel, WordCriteria, WordDisplayView);
-                break;
-            case "advanced":
-                this._fetch(selectedSearch, fieldsets, AdvancedSearchModels, AdvancedSearchModel, AdvancedCriteria, TextDisplayView);
-                break;
-            default :
-                console.log("ERROR: Unable to work out which search was desired.", selectedSearch);
-        }
+        var modelDescription = this.getClassesForModelType(selectedSearch);
+        this._fetch(selectedSearch, fieldsets,
+            modelDescription.models, modelDescription.modelType,
+            modelDescription.criteriaType, modelDescription.viewType,
+            modelDescription.paged);
     },
 
+    /**
+     * Returns a {} of the relevant classes for a particular type
+     * @param modelType
+     */
+    getClassesForModelType : function(modelType) {
+        switch (modelType) {
+            case "subject":
+                return {
+                    models : SubjectModels, modelType: SubjectSearchModel,
+                    criteriaType: SubjectCriteria, viewType: SubjectDisplayView, paged : false
+                };
+            case "text":
+                return {
+                    models : SimpleTextModels, modelType: SimpleTextSearchModel,
+                    criteriaType: TextCriteria, viewType: TextDisplayView, paged : true
+                };
+            case "original":
+                return {
+                    models : WordSearchModels, modelType: WordSearchModel,
+                    criteriaType: WordCriteria, viewType: WordDisplayView, paged : true
+                };
+            case "advanced":
+                return {
+                    models : AdvancedSearchModels, modelType: AdvancedSearchModel,
+                    criteriaType: AdvancedCriteria, viewType: TextDisplayView, paged : true
+                };
+            default :
+                console.log("ERROR: Unable to work out which search was desired.", modelType);
+                return undefined;
+        }
+    },
 
     /**
      * Fetch models, and creates 2 if they don't exist...

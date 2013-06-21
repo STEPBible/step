@@ -10,7 +10,8 @@ var StepRouter = Backbone.Router.extend({
         ":passageId/:searchType/:pageNumber/:pageSize/:querySyntax/:context/:version/:sortOrder/:params": "search"
     },
     lastUrls: [],
-    refinedSearch: [],
+    refinedSearches: [[], []],
+    lastSearch : [undefined, undefined],
     totalResults: [0,0],
     firstSync: false,
 
@@ -153,9 +154,9 @@ var StepRouter = Backbone.Router.extend({
             }
 //            console.log("loading url: ", fragments[i]);
 
-            if (this.fragments)
-
+            if (this.fragments) {
                 Backbone.history.loadUrl(fragments[i]);
+            }
         }
         refreshLayout();
     },
@@ -233,19 +234,34 @@ var StepRouter = Backbone.Router.extend({
         this._doSearch(searchType, passageId, query, checkedVersion, pageNumber, pageSize, sortOrder, context);
     },
 
+    /**
+     * True if matches 'in (blah)'
+     * @param querySyntax the syntax to be checked
+     * @private
+     */
+    _hasVersionFragment : function(querySyntax) {
+        return querySyntax.match(/in \([^)]*\)/);
+    },
+
     _doSearch: function (searchType, passageId, query, version, pageNumber, pageSize, sortOrder, context) {
         var self = this;
 
+        //we only ever check the last fragment in a multi query syntax...
+        var versionArg = "";
+        var refiningStart = query.lastIndexOf("=>");
+        versionArg =
+            refiningStart == -1 && this._hasVersionFragment(query)
+                || this._hasVersionFragment(query.substring(refiningStart + 2)) ?
+                "" : " in (" + version.toUpperCase() + ")";
 
-        //TODO: this adds a version, if not already present, but we don't need to do the above if we already have it!
-        var versionArg = query.match(/in \([^)]*\)/) != null ? "" : " in (" + version.toUpperCase() + ")";
         var pageNumberArg = pageNumber == null ? 1 : pageNumber;
         var sortingArg = sortOrder == undefined ? false : sortOrder;
         var contextArg = context == undefined || isNaN(context) ? 0 : context;
         var pageSizeArg = pageSize == undefined || pageSize < 1 ? step.defaults.pageSize : pageSize;
         var finalInnerQuery = query + versionArg;
 
-        var refinedQuery = this._joinInRefiningSearches(finalInnerQuery);
+        var refinedQuery = finalInnerQuery;
+//        this._joinInRefiningSearches(passageId, finalInnerQuery);
 
         var args = [encodeURIComponent(refinedQuery), sortingArg, contextArg, pageNumberArg, pageSizeArg];
 
@@ -261,15 +277,18 @@ var StepRouter = Backbone.Router.extend({
                     searchQueryResults: searchQueryResults,
                     pageNumber: pageNumberArg
                 });
+
+            self.lastSearch[passageId] = refinedQuery;
         });
     },
 
-    _joinInRefiningSearches: function (query) {
-        if (this.refinedSearch.length != 0) {
-            return this.refinedSearch.join("=>") + "=>" + query;
-        }
+    addRefinedSearch : function(passageId) {
+        this.refinedSearches[passageId].push(this.lastSearch[passageId]);
+    },
 
-        return query;
+    clearRefinedSearch : function(passageId) {
+        this.refinedSearches[passageId] = [];
+        Backbone.Events.trigger("search:refined:closed:" + passageId, {} );
     },
 
     changePassageNoOptions: function (passageId, detail, version, reference, extraVersions, interlinearMode) {

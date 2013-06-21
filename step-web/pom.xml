@@ -192,8 +192,6 @@
 								<jsSourceFile>js/geography.js</jsSourceFile>
 								<jsSourceFile>js/toolbar_menu.js</jsSourceFile>
 								<jsSourceFile>js/defaults/step.defaults.js</jsSourceFile>
-								<jsSourceFile>js/search/step.search.js</jsSourceFile>
-								<!-- <jsSourceFile>js/search/step.search.personalnotes.ui.js</jsSourceFile> -->
 								<jsSourceFile>js/navigation/step.navigation.js</jsSourceFile>
 								<jsSourceFile>js/state/step.state.js</jsSourceFile>
 								<jsSourceFile>js/state/step.state.view.js</jsSourceFile>

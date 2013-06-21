@@ -1,5 +1,5 @@
 var SimpleTextSearchModel = AdvancedSearchModel.extend({
-    _evaluateQuerySyntax : function(attributes) {
+    _evaluateQuerySyntaxInternal : function(attributes) {
         var query = "";
         var prefix = "t=";
         var level =             this.getSafeAttribute(attributes, "detail");

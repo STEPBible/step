@@ -292,29 +292,13 @@
    		</xsl:choose>
    	</xsl:variable>
    	    	
-    <xsl:variable name="languageFont">
-   		<xsl:choose>
-   			<xsl:when test="./ancestor::cell/@xml:lang">
-				<xsl:choose>
-   					<xsl:when test="./ancestor::cell/@xml:lang = 'he'">unicodeFont hbFont</xsl:when>
-   					<xsl:when test="./ancestor::cell/@xml:lang = 'grc'">unicodeFont</xsl:when>
-					<xsl:otherwise><xsl:value-of select="''" /></xsl:otherwise>
-				</xsl:choose>   			
-   			</xsl:when>
-   			<xsl:otherwise>
-   				<xsl:value-of select="''" />
-   			</xsl:otherwise>
-   		</xsl:choose>
-   	</xsl:variable>
-   	
-    
     <!-- Always output the verse -->
     <xsl:choose>
       <xsl:when test="$VLine = 'true'">
-        <div class="verse l {$languageDirection}Direction {$languageFont}" dir="{$languageDirection}"><a name="{@osisID}"><xsl:call-template name="versenum"/></a><xsl:apply-templates/></div>
+        <div class="verse l {$languageDirection}Direction" dir="{$languageDirection}"><a name="{@osisID}"><xsl:call-template name="versenum"/></a><xsl:apply-templates/></div>
       </xsl:when>
       <xsl:otherwise>
-        <span class="verse {$languageDirection}Direction {$languageFont}" dir="{$languageDirection}"><xsl:call-template name="versenum"/><xsl:apply-templates/></span>
+        <span class="verse {$languageDirection}Direction" dir="{$languageDirection}"><xsl:call-template name="versenum"/><xsl:apply-templates/></span>
         <!-- Follow the verse with an extra space -->
         <!-- when they don't start on lines to themselves -->
         <xsl:text> </xsl:text>
@@ -1443,21 +1427,7 @@
 			</xsl:if>
 		</xsl:variable>
 		
-		<xsl:variable name="languageFont">
-		   		<xsl:choose>
-		   			<xsl:when test="@xml:lang">
-						<xsl:choose>
-		   					<xsl:when test="@xml:lang = 'he'">unicodeFont hbFont</xsl:when>
-		   					<xsl:when test="@xml:lang = 'grc'">unicodeFont</xsl:when>
-							<xsl:otherwise><xsl:value-of select="''" /></xsl:otherwise>
-						</xsl:choose>   			
-		   			</xsl:when>
-		   			<xsl:otherwise>
-		   				<xsl:value-of select="''" />
-		   			</xsl:otherwise>
-		   		</xsl:choose>
-		   	</xsl:variable>
-		
+
 	    <xsl:choose>
     	<!-- interleaving or tabular column form -->
     	<xsl:when test="$Interleave = 'true'">
@@ -1471,11 +1441,11 @@
 				<!-- output twice, but with slightly different styles -->
 				<xsl:call-template name="interleaveVerse">
 					<xsl:with-param name="cell-direction" select="$cell-direction" />
-					<xsl:with-param name="classes" select="concat('primary', ' ', $languageFont)" />
+					<xsl:with-param name="classes" select="'primary'" />
 				</xsl:call-template>
 				<xsl:call-template name="interleaveVerse">
 					<xsl:with-param name="cell-direction" select="$cell-direction" />
-					<xsl:with-param name="classes" select="concat('secondary', ' ', $languageFont)" />
+					<xsl:with-param name="classes" select="'secondary'" />
 				</xsl:call-template>				
 			</xsl:if>
     	</xsl:when>
@@ -1485,29 +1455,16 @@
 						<xsl:with-param name="cell-direction" select="$cell-direction" />
 					</xsl:call-template>
 				</xsl:if>
-			<xsl:variable name="languageFont">
-		   		<xsl:choose>
-		   			<xsl:when test="@xml:lang">
-						<xsl:choose>
-		   					<xsl:when test="@xml:lang = 'he'">unicodeFont hbFont</xsl:when>
-		   					<xsl:when test="@xml:lang = 'grc'">unicodeFont</xsl:when>
-							<xsl:otherwise><xsl:value-of select="''" /></xsl:otherwise>
-						</xsl:choose>   			
-		   			</xsl:when>
-		   			<xsl:otherwise>
-		   				<xsl:value-of select="''" />
-		   			</xsl:otherwise>
-		   		</xsl:choose>
-		   	</xsl:variable>
+
    	
 			<xsl:if test="$comparing = true()  and not(./verse)">
 					<xsl:call-template name="columnVerse">
 						<xsl:with-param name="cell-direction" select="$cell-direction" />
-						<xsl:with-param name="classes" select="concat('primary', ' ', $languageFont)" />
+						<xsl:with-param name="classes" select="'primary'" />
 					</xsl:call-template>
 					<xsl:call-template name="columnVerse">
 						<xsl:with-param name="cell-direction" select="$cell-direction" />
-						<xsl:with-param name="classes" select="concat('secondary', ' ', $languageFont)" />
+						<xsl:with-param name="classes" select="'secondary'" />
 					</xsl:call-template>
 			</xsl:if>
 		</xsl:otherwise>

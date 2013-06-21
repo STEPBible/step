@@ -67,4 +67,11 @@ public interface JSwordMetadataService {
      * @return true if the version in question contains Strongs
      */
     boolean hasVocab(String version);
+
+    /**
+     * Returns the languages for a set of versions
+     * @param versions
+     * @return
+     */
+    String[] getLanguages(String... versions);
 }

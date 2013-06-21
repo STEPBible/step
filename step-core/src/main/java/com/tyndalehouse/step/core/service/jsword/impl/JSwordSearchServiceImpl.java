@@ -45,15 +45,11 @@ import javax.inject.Singleton;
 
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.BookException;
+import org.crosswire.jsword.index.IndexStatus;
 import org.crosswire.jsword.index.search.DefaultSearchModifier;
 import org.crosswire.jsword.index.search.DefaultSearchRequest;
-import org.crosswire.jsword.passage.Key;
-import org.crosswire.jsword.passage.Passage;
-import org.crosswire.jsword.passage.PassageTally;
+import org.crosswire.jsword.passage.*;
 import org.crosswire.jsword.passage.PassageTally.Order;
-import org.crosswire.jsword.passage.RestrictionType;
-import org.crosswire.jsword.passage.Verse;
-import org.crosswire.jsword.passage.VerseRange;
 import org.crosswire.jsword.versification.Versification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -124,8 +120,13 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
             try {
                 // TODO JS-228 raised for thread-safety
                 synchronized (this) {
-                    resultsPerVersion.put(version,
+                    if(bible.getIndexStatus().equals(IndexStatus.DONE)) {
+                        resultsPerVersion.put(version,
                             bible.find(new DefaultSearchRequest(currentSearch.getQuery(), modifier)));
+                    } else {
+                        LOGGER.error("Module [{}] is not indexed.", version);
+                        resultsPerVersion.put(version, new DefaultKeyList());
+                    }
                 }
             } catch (final BookException e) {
                 throw new StepInternalException("Unable to search for " + currentSearch.getQuery()

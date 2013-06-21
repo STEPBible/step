@@ -21,7 +21,7 @@ var PassageMenuView = Backbone.View.extend({
         });
 
         //set up listeners, one in particular, which is to render the available menu options depending on the model versions
-        this.listenTo(this.model, "change:version change:interlinearMode change:extraVersions", this.refreshMenuOptions);
+        this.listenTo(this.model, "change:version change:interlinearMode change:extraVersions change:detailLevel", this.refreshMenuOptions);
 
         this.refreshMenuOptions();
     },
@@ -41,8 +41,6 @@ var PassageMenuView = Backbone.View.extend({
                     .attr('title', features.removed[i].explanation)
                     .qtip({ position: {my: "center right", at: "left center", viewport: $(window) }});
             }
-
-            //TODO: $.shout("toolbar-menu-options-changed-" + self.passageId);
         });
     },
 

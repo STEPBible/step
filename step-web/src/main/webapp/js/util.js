@@ -273,6 +273,17 @@ step.util = {
     ui: {
         appleKey: false,
 
+        doMenu : function(id) {
+            ddsmoothmenu.init({
+                mainmenuid: id,        //menu DIV id
+                zIndexStart: 100,
+                orientation: 'h',               //Horizontal or vertical menu: Set to "h" or "v"
+                classname: 'ddsmoothmenu innerMenu', //class added to menu's outer DIV
+                //customtheme: ["#1c5a80", "#18374a"],
+                contentsource: "markup"
+            });
+        },
+
         /**
          * Sets the HTML onto the passageContent holder which contains the passage
          * @param passageHtml the JQuery HTML content
@@ -292,6 +303,65 @@ step.util = {
             passageContent.append(passageHtml);
             parent.append(passageContent);
         },
+
+        /**
+         * Takes in the selector for identifying each group element. Then selects children(), and iterates
+         * through each child apply the right CSS class from the array.
+         *
+         * @param passageContent the html jquery object
+         * @param groupSelector the group selector, a w, or a row, each containing a number of children
+         * @param cssClasses the set of css classes to use
+         * @param exclude the exclude function if we want to skip over some items
+         * @param offset the offset, which gets added to be able to ignore say the first item always.
+         * @private
+         */
+        _applyCssClassesRepeatByGroup: function (passageContent, groupSelector, cssClasses, exclude, offset) {
+            if (offset == undefined) {
+                offset = 0;
+            }
+
+            var words = $(groupSelector, passageContent);
+            for (var j = 0; j < words.length; j++) {
+                var jqItem = words.eq(j);
+                var children = jqItem.children();
+                for (var i = offset; i < children.length; i++) {
+                    var child = children.eq(i);
+                    if (exclude == undefined || !exclude(child)) {
+                        child.addClass(cssClasses[i - offset]);
+                    }
+                }
+            }
+        },
+
+        /**
+         * Given an array of languages, returns an array of fonts
+         * @param languages the array of languages
+         * @private
+         */
+        _getFontClasses: function (languages) {
+            var fonts = [];
+            for (var i = 0; i < languages.length; i++) {
+                fonts.push(this._getFontClassForLanguage(languages[i]));
+            }
+            return fonts;
+        },
+
+        /**
+         * Eventually, we probably want to do something clever around dynamically loading fonts.
+         * We also cope for strong numbers, taking the first character.
+         * @param language the language code as returned by JSword
+         * @returns {string} the class of the font, or undefined if none is required
+         * @private
+         */
+        _getFontClassForLanguage: function (language) {
+            //currently hard-coded
+            if (language == "he") {
+                return "hbFont";
+            } else if (language == "grc") {
+                return "unicodeFont";
+            }
+        },
+
 
         getFeaturesLabel: function (item) {
             var features = "";

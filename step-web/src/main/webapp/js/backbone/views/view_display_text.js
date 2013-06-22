@@ -6,9 +6,6 @@ var TextDisplayView = SearchDisplayView.extend({
         var searchResults = serverResults.results;
         var sortOrder = serverResults.order;
 
-        //TODO: is this still required
-        //remove any hebrew language css
-//        step.util.getPassageContainer(passageId).removeClass("hebrewLanguage greekLanguage");
         var table = $("<table>").addClass("searchResults");
         results.append(table);
 

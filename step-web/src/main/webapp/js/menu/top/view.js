@@ -34,9 +34,12 @@ $(step.menu).hear("MENU-VIEW", function(self, menuTrigger) {
 	var optionName = menuTrigger.menuItem.name;
 	
 	if(optionName == 'SINGLE_COLUMN_VIEW' || optionName == 'TWO_COLUMN_VIEW') {
-	    step.menu.untickMenuItem($(menuTrigger.menuItem.element).parent().parent().find("*").not("[level]"));
-	    step.menu.tickMenuItem(menuTrigger.menuItem.element);
-	    $.shout("view-change", {viewName : menuTrigger.menuItem.name});	
+        if(optionName == 'SINGLE_COLUMN_VIEW') {
+            stepRouter.navigatePassage("1/singleColumn", { trigger: true });
+        } else {
+            $.shout("view-change", {viewName : menuTrigger.menuItem.name});
+            MenuModels.at(1).trigger("change", MenuModels.at(1))
+        }
 	} else if(menuTrigger.menuItem.name == "SWAP_BOTH_PASSAGES") {
         var model0 = PassageModels.at(0);
         var model1= PassageModels.at(1);

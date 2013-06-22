@@ -564,12 +564,7 @@ step.util = {
         highlightPhrase : function(nonJqElement, cssClasses, phrase) {
             var regexPattern = phrase.replace(/ /g,' +').replace(/"/g, '["\u201d]'); 
             var regex = new RegExp(regexPattern, "ig");
-//            try {
                 doHighlight(nonJqElement, cssClasses, regex);
-//            } catch(e) {
-                //not sure what to do with this... TODO: need to investigate
-//                console.log(e);
-//            }
         }
     }
 };

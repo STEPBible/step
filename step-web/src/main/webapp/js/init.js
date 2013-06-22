@@ -298,6 +298,8 @@ function hearViewChanges() {
         var view = data == undefined || data.viewName == undefined ? step.state.view.getView() : data.viewName;
         step.state.view.storeView(view);
 
+        step.menu.untickMenuItem($("[name='" + (view == 'SINGLE_COLUMN_VIEW' ? 'TWO_COLUMN_VIEW' : 'SINGLE_COLUMN_VIEW') + "']" ));
+        step.menu.tickMenuItem($("[name='" + view + "']"));
         if (view == 'SINGLE_COLUMN_VIEW') {
             if (isSmallScreen()) {
                 doSmallScreenView();
@@ -418,7 +420,6 @@ function initGlobalHandlers() {
         collision: "fit"
     });
 
-    //TODO refactor as error object
     $("#error").slideUp(0);
     $("#error").click(function () {
         $(this).slideUp(250);

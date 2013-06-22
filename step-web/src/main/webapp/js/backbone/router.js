@@ -7,6 +7,7 @@ var StepRouter = Backbone.Router.extend({
         "__*fragment": "entireUnparsedUrl",
         ":passageId/passage/:detail/:version/:reference(/:options)(/:extraVersions)(/:interlinearMode)": "changePassage",
         ":passageId/passage/:detail/:version/:reference/(/:extraVersions)(/:interlinearMode)": "changePassageNoOptions",
+        ":passageId/singleColumn" : "changeSingleColumn",
         ":passageId/:searchType/:pageNumber/:pageSize/:querySyntax/:context/:version/:sortOrder/:params": "search"
     },
     lastUrls: [],
@@ -14,6 +15,10 @@ var StepRouter = Backbone.Router.extend({
     lastSearch : [undefined, undefined],
     totalResults: [0,0],
     firstSync: false,
+
+    changeSingleColumn : function() {
+        $.shout("view-change", {viewName : 'SINGLE_COLUMN_VIEW' });
+    },
 
     /**
      * Navigates for a particular column only.

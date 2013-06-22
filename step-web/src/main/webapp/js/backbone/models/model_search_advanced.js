@@ -56,7 +56,6 @@ var AdvancedSearchModel = SearchModel.extend({
         query = prefix + query;
         return this._getFinalQuerySyntax(query);
     },
-    //TODO think about escaping
     _evalExactPhrase : function(text) {
         if(!step.util.isBlank(text)) {
             return ' "' + text + '" ';

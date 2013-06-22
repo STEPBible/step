@@ -20,7 +20,6 @@ var PassageModel = Backbone.Model.extend({
         validate: function (attributes) {
             var returnValue = this._validateInterlinearMode(attributes.interlinearMode) || this._validateOptions(attributes.options);
             if(returnValue) {
-                //TODO: Have a view whose role is to capture this kind of stuff.
                 step.util.raiseInfo(this.get("passageId"), returnValue);
                 return returnValue;
             }

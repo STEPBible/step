@@ -7,6 +7,7 @@ import static org.mockito.Mockito.mock;
 
 import java.util.List;
 
+import com.tyndalehouse.step.core.service.jsword.JSwordMetadataService;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -76,13 +77,14 @@ public class SearchServiceImplTest {
      * @return the search service to test
      */
     private SearchServiceImpl getSearchServiceUnderTest() {
+        final JSwordMetadataService meta = mock(JSwordMetadataService.class);
         final JSwordVersificationService versificationService = TestUtils.mockVersificationService();
         final JSwordPassageServiceImpl jsword = new JSwordPassageServiceImpl(versificationService, null,
                 null, null, mock(VersionResolver.class));
         final TestEntityManager entityManager = new TestEntityManager();
 
         final JSwordSearchServiceImpl jswordSearch = new JSwordSearchServiceImpl(versificationService, jsword);
-        return new SearchServiceImpl(jswordSearch, jsword, null, new SubjectSearchServiceImpl(entityManager,
+        return new SearchServiceImpl(jswordSearch, jsword, meta, new SubjectSearchServiceImpl(entityManager,
                 jswordSearch, jsword), new TimelineServiceImpl(entityManager, jsword), entityManager);
     }
 }

@@ -51,8 +51,9 @@ var PassageDisplayView = Backbone.View.extend({
                 this._doVersions(passageId, passageHtml, version, reference);
                 step.util.closeInfoErrors(passageId);
                 step.util.ui.emptyOffDomAndPopulate(this.passageContent, passageHtml);
-                this.doInterlinearVerseNumbers(passageHtml, interlinearMode, options);
 
+                //needs to happen after appending to DOM
+                this.doInterlinearVerseNumbers(passageHtml, interlinearMode, options);
                 Backbone.Events.trigger("passage:rendered:" + passageId);
             }
         },

@@ -1454,11 +1454,11 @@
 				<!-- output twice, but with slightly different styles -->
 				<xsl:call-template name="interleaveVerse">
 					<xsl:with-param name="cell-direction" select="$cell-direction" />
-					<xsl:with-param name="classes" select="'primary'" />
+					<xsl:with-param name="classes" select="'primary '" />
 				</xsl:call-template>
 				<xsl:call-template name="interleaveVerse">
 					<xsl:with-param name="cell-direction" select="$cell-direction" />
-					<xsl:with-param name="classes" select="'secondary'" />
+					<xsl:with-param name="classes" select="'secondary '" />
 				</xsl:call-template>				
 			</xsl:if>
     	</xsl:when>
@@ -1473,11 +1473,11 @@
 			<xsl:if test="$comparing = true()  and not(./verse)">
 					<xsl:call-template name="columnVerse">
 						<xsl:with-param name="cell-direction" select="$cell-direction" />
-						<xsl:with-param name="classes" select="'primary'" />
+						<xsl:with-param name="classes" select="'primary '" />
 					</xsl:call-template>
 					<xsl:call-template name="columnVerse">
 						<xsl:with-param name="cell-direction" select="$cell-direction" />
-						<xsl:with-param name="classes" select="'secondary'" />
+						<xsl:with-param name="classes" select="'secondary '" />
 					</xsl:call-template>
 			</xsl:if>
 		</xsl:otherwise>

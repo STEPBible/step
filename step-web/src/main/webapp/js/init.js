@@ -49,8 +49,13 @@ var timeline;
 
 function init() {
 	$(document).ready(function() {
-	    $.fn.qtip.defaults.style.classes="primaryLightBg primaryLightBorder";
-	    
+	    //fix to IE10 menus:
+        $("li[menu-name] ul li").css("list-style", "none");
+
+        $.fn.qtip.defaults.style.classes="primaryLightBg primaryLightBorder";
+
+
+
 	    initLocale();
 	    
 	    checkValidUser();

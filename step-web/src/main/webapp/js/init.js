@@ -45,12 +45,13 @@ String.prototype.startsWith = function (nonEscapedString) {
 var topMenu;
 var timeline;
 
+
 function init() {
     $(document).ready(function () {
         $.fn.qtip.defaults.style.classes = "primaryLightBg primaryLightBorder";
 
         initLocale();
-
+        initBetaWarning();
         checkValidUser();
 
         initMenu();
@@ -71,6 +72,14 @@ function init() {
         $.shout("view-change");
 
         initJira();
+    });
+}
+
+function initBetaWarning() {
+    $("#stepInDevelopmentWarning").hover(function() {
+       $(this).css("opacity", "0");
+    }, function() {
+        $(this).css("opacity", "1");
     });
 }
 

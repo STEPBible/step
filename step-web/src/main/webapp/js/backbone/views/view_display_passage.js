@@ -42,7 +42,6 @@ var PassageDisplayView = Backbone.View.extend({
                 this._doVerseNumbers(passageId, passageHtml, options, interlinearMode, reference);
 //        self._doStats(passageId, passageContent, lookupVersion, text.reference);
                 this.doInterlinearVerseNumbers(passageHtml, interlinearMode, options);
-                this._doSideNotes(passageHtml, passageId, version);
                 this._doHideEmptyNotesPane(passageHtml);
                 this._adjustTextAlignment(passageHtml);
                 step.fonts.redoTextSize(passageId, passageHtml);

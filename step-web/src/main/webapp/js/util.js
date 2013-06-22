@@ -988,3 +988,25 @@ function addNotApplicableString(val) {
 	}
 	return val;
 }
+
+function debugElement(selector) {
+    var cssStyles = getComputedStyle($(selector).get(0));
+//    console.log("##############################");
+//    console.log("##############################")
+//    console.log($(this).attr('class'), $(this).attr('name'), $(this).attr('menu-name'));
+//    for(var x in cssStyles) {
+//        console.log(x + " " + cssStyles[x]);
+//    }
+//    console.log("##############################");
+//
+    $.each($(selector).find("*"), function() {
+        var cssStyles = getComputedStyle($(this).get(0));
+        console.log("##############################");
+        console.log("##############################")
+        console.log($(this).attr('class'), $(this).attr('name'), $(this).attr('menu-name'));
+        for(var x in cssStyles) {
+            console.log(x + " " + cssStyles[x]);
+        }
+        console.log("##############################");
+    });
+}

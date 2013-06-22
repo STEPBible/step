@@ -52,114 +52,109 @@
     <%
         }
     %>
+    <!-- Set up some library variables -->
+    <script type="text/javascript">
+        var step = {};
+        if(typeof console === "undefined") {
+            console = { log: function(arg, options) { } };
+        }
+        //Set up the variables for accessing the server
+        STEP_SERVER_BASE_URL = "rest/";
+
+        //Set up timeline:
+        Timeline_ajax_url="libs/timeline_ajax/simile-ajax-api.js?bundle=true";
+        Timeline_urlPrefix="libs/timeline_js/";
+        Timeline_parameters="bundle=true";
+    </script>
 
     <%-- Now do javascript --%>
     <%
         if(request.getParameter("debug") != null) {
     %>
-
-		<script src="js_init/initLib.js" type="text/javascript"></script>   
-	    <script src="libs/dohighlight-min.js" type="text/javascript"></script>
-<!-- 	    <script src="libs/timeline_js/timeline-api.js" type="text/javascript"></script> -->
-	    <script src="libs/jquery-1.9.1.min.js" type="text/javascript"></script>
-		<script src="libs/jquery-ui-1.10.2.custom.min.js" type="text/javascript"></script>
-		<script src="libs/sprintf-0.7-beta1.js" type="text/javascript"></script>
-<!-- 		<script src="libs/jquery.tagcloud.js" type="text/javascript"></script> -->
-<!-- 		<script src="libs/jquery-ui-1.9-beta.min.js" type="text/javascript"></script> -->
-
+        <%-- NOTE: do not include in prod web minifying and use minified versions otherwise --%>
+        <script src="libs/jquery-1.10.1.js" type="text/javascript"></script>
+        <script src="libs/jquery-ui-1.10.2.custom.js" type="text/javascript"></script>
+        <script src="libs/dohighlight-min.js" type="text/javascript"></script>
+        <script src="libs/sprintf-0.7-beta1.js" type="text/javascript"></script>
+<%-- 		<script src="libs/jquery.tagcloud.js" type="text/javascript"></script> --%>
         <script src="libs/underscore-min.js" type="text/javascript"></script>
         <script src="libs/json2.js" type="text/javascript"></script>
         <script src="libs/backbone-min.js" type="text/javascript"></script>
         <script src="libs/backbone.localStorage-min.js" type="text/javascript"></script>
-
-	    <script src="js/jquery-extensions/jquery-qtip.js" type="text/javascript"></script>
-	    <script src="js/jquery-extensions/jquery-hover-intent.js" type="text/javascript"></script>
-	    <script src="js/jquery-extensions/jquery-cookie.js" type="text/javascript"></script>
-	    <script src="js/jquery-extensions/jquery-local-store.js" type="text/javascript"></script>
-		<script src="js/jquery-extensions/jquery-shout.js" type="text/javascript"></script>
-	    <script src="js/jquery-extensions/jquery-versions-complete.js" type="text/javascript"></script>
-	    <script src="js/jquery-extensions/jquery-lexical-complete.js" type="text/javascript"></script>
-	    <script src="js/jquery-extensions/jquery-detail-slider.js" type="text/javascript"></script>
-	    <script src="js/jquery-extensions/jquery-sort.js" type="text/javascript"></script>
-	    <script src="js/jquery-extensions/jquery-passage-buttons.js" type="text/javascript"></script>
-	    <script src="js/jquery-extensions/jquery-original-word-toolbar.js" type="text/javascript"></script>
-	    <script src="js/jquery-extensions/jquery-search-result.js" type="text/javascript"></script>
+        <script src="js/jquery-extensions/jquery-qtip.js" type="text/javascript"></script>
+        <script src="js/jquery-extensions/jquery-hover-intent.js" type="text/javascript"></script>
+        <script src="js/jquery-extensions/jquery-cookie.js" type="text/javascript"></script>
+        <script src="js/jquery-extensions/jquery-local-store.js" type="text/javascript"></script>
+        <script src="js/jquery-extensions/jquery-shout.js" type="text/javascript"></script>
+        <script src="js/jquery-extensions/jquery-versions-complete.js" type="text/javascript"></script>
+        <script src="js/jquery-extensions/jquery-lexical-complete.js" type="text/javascript"></script>
+        <script src="js/jquery-extensions/jquery-detail-slider.js" type="text/javascript"></script>
+        <script src="js/jquery-extensions/jquery-sort.js" type="text/javascript"></script>
+        <script src="js/jquery-extensions/jquery-passage-buttons.js" type="text/javascript"></script>
+        <script src="js/jquery-extensions/jquery-original-word-toolbar.js" type="text/javascript"></script>
+        <script src="js/jquery-extensions/jquery-search-result.js" type="text/javascript"></script>
         <script src="js/jquery-extensions/jquery-bible-books.js" type="text/javascript"></script>
-
-		<script src="js/ddsmoothmenu.js" type="text/javascript"></script>
-	    <script src="js/util.js" type="text/javascript"></script>
-	    <script src="js/lexicon_definition.js" type="text/javascript"></script>
-	    <script src="js/ui_hooks.js" type="text/javascript"></script>
+        <script src="js/ddsmoothmenu.js" type="text/javascript"></script>
+        <script src="js/util.js" type="text/javascript"></script>
+        <script src="js/lexicon_definition.js" type="text/javascript"></script>
+        <script src="js/ui_hooks.js" type="text/javascript"></script>
 <%-- 	    <script src="js/timeline.js" type="text/javascript"></script> --%>
 <%-- 	    <script src="js/geography.js" type="text/javascript"></script> --%>
-	    <script src="js/toolbar_menu.js" type="text/javascript"></script>
-		<script src="js/defaults/step.defaults.js" type="text/javascript"></script>
-		<script src="js/navigation/step.navigation.js" type="text/javascript"></script>
-
-
-		<script src="js/state/step.state.js" type="text/javascript"></script>
-		<script src="js/state/step.state.view.js" type="text/javascript"></script>
-
-	    <script src="js/menu/step.menu.js" type="text/javascript"></script>
-	    <script src="js/menu/top/help.js" type="text/javascript"></script>
-	    <script src="js/menu/top/view.js" type="text/javascript"></script>
-	    <script src="js/menu/top/top.menu.ui.js" type="text/javascript"></script>
-	    <script src="js/menu/passage/context.js" type="text/javascript"></script>
-	    <script src="js/menu/passage/display.js" type="text/javascript"></script>
-	    <script src="js/menu/passage/passageTools.js" type="text/javascript"></script>
-	    <script src="js/menu/passage/search.js" type="text/javascript"></script>
-
-	    <script src="js/passage/step.version.js" type="text/javascript"></script>
-
-	    <script src="js/passage/step.alternatives.js" type="text/javascript"></script>
-	    <script src="js/passage/step.passage.js" type="text/javascript"></script>
-	    <script src="js/passage/step.fonts.js" type="text/javascript"></script>
-	    <script src="js/passage/step.passage.navigation.js" type="text/javascript"></script>
-	    <script src="js/passage/step.passage.navigation.ui.js" type="text/javascript"></script>
-	    <script src="js/bookmark/step.bookmark.ui.js" type="text/javascript"></script>
-
+        <script src="js/toolbar_menu.js" type="text/javascript"></script>
+        <script src="js/defaults/step.defaults.js" type="text/javascript"></script>
+        <script src="js/navigation/step.navigation.js" type="text/javascript"></script>
+        <script src="js/state/step.state.js" type="text/javascript"></script>
+        <script src="js/state/step.state.view.js" type="text/javascript"></script>
+        <script src="js/menu/step.menu.js" type="text/javascript"></script>
+        <script src="js/menu/top/help.js" type="text/javascript"></script>
+        <script src="js/menu/top/view.js" type="text/javascript"></script>
+        <script src="js/menu/top/top.menu.ui.js" type="text/javascript"></script>
+        <script src="js/menu/passage/context.js" type="text/javascript"></script>
+        <script src="js/menu/passage/display.js" type="text/javascript"></script>
+        <script src="js/menu/passage/passageTools.js" type="text/javascript"></script>
+        <script src="js/menu/passage/search.js" type="text/javascript"></script>
+        <script src="js/passage/step.version.js" type="text/javascript"></script>
+        <script src="js/passage/step.alternatives.js" type="text/javascript"></script>
+        <script src="js/passage/step.passage.js" type="text/javascript"></script>
+        <script src="js/passage/step.fonts.js" type="text/javascript"></script>
+        <script src="js/passage/step.passage.navigation.js" type="text/javascript"></script>
+        <script src="js/passage/step.passage.navigation.ui.js" type="text/javascript"></script>
+        <script src="js/bookmark/step.bookmark.ui.js" type="text/javascript"></script>
         <script src="js/backbone/models/model_passage.js" type="text/javascript"></script>
         <script src="js/backbone/views/view_display_passage.js" type="text/javascript"></script>
         <script src="js/backbone/router.js" type="text/javascript"></script>
-
         <script src="js/backbone/views/view_menu_passage.js" type="text/javascript"></script>
         <script src="js/backbone/views/view_criteria_passage.js" type="text/javascript"></script>
-
         <script src="js/backbone/models/model_lookup_menu.js" type="text/javascript"></script>
         <script src="js/backbone/views/view_menu_search.js" type="text/javascript"></script>
         <script src="js/backbone/views/view_control_criteria.js" type="text/javascript"></script>
-
         <script src="js/backbone/models/model_search.js" type="text/javascript"></script>
         <script src="js/backbone/models/model_search_subject.js" type="text/javascript"></script>
         <script src="js/backbone/models/model_search_original.js" type="text/javascript"></script>
         <script src="js/backbone/models/model_search_advanced.js" type="text/javascript"></script>
         <script src="js/backbone/models/model_search_simple.js" type="text/javascript"></script>
-
         <script src="js/backbone/views/view_criteria.js" type="text/javascript"></script>
         <script src="js/backbone/views/view_criteria_subject.js" type="text/javascript"></script>
         <script src="js/backbone/views/view_criteria_word.js" type="text/javascript"></script>
         <script src="js/backbone/views/view_criteria_advanced.js" type="text/javascript"></script>
-        <script src="js/backbone/views/view_critieria_text.js" type="text/javascript"></script>
-
+        <script src="js/backbone/views/view_criteria_text.js" type="text/javascript"></script>
         <script src="js/backbone/views/view_display_search.js" type="text/javascript"></script>
         <script src="js/backbone/views/view_display_subject.js" type="text/javascript"></script>
         <script src="js/backbone/views/view_display_text.js" type="text/javascript"></script>
         <script src="js/backbone/views/view_display_word.js" type="text/javascript"></script>
-
         <script src="js/backbone/models/model_quick_lexicon.js" type="text/javascript"></script>
         <script src="js/backbone/views/view_quick_lexicon.js" type="text/javascript"></script>
-
         <script src="js/backbone/models/model_bookmark.js" type="text/javascript"></script>
         <script src="js/backbone/views/view_bookmarks_history.js" type="text/javascript"></script>
-
-
         <script src="js/init.js" type="text/javascript"></script>
         <script src="js/backbone/step.js" type="text/javascript"></script>
 	<%
 		} else {
 	%>
+        <%-- Include some resources from CDN first --%>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js" type="text/javascript" ></script>
+        <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js" type="text/javascript" ></script>
 		<script src="js/step.min.js" type="text/javascript" ></script>
-		
 		<script type="text/javascript">
 		  var _gaq = _gaq || [];
 		  _gaq.push(['_setAccount', 'UA-36285759-1']);
@@ -199,12 +194,12 @@
 
 			<table>
 				<tr>
-					<td><a target="_new" href="https://stepweb.atlassian.net/wiki/display/SUG/STEP+User+Guide" title="<fmt:message key="quick_tutorial" />"/><fmt:message key="help_manual" /></a></td>
-					<td><a target="_new" href="versions.jsp" title="<fmt:message key="detailed_help_manual" />"/><fmt:message key="available_versions" /></a></td>
+					<td><a target="_new" href="https://stepweb.atlassian.net/wiki/display/SUG/STEP+User+Guide" title="<fmt:message key="quick_tutorial" />"><fmt:message key="help_manual" /></a></td>
+					<td><a target="_new" href="versions.jsp" title="<fmt:message key="detailed_help_manual" />"><fmt:message key="available_versions" /></a></td>
 				</tr>
 				<tr>
 					<td><a target="_new" href="http://www.tyndale.cam.ac.uk/index.php?mact=News,cntnt01,detail,0&cntnt01articleid=28&cntnt01returnid=15" title="<fmt:message key="find_out_more_about_step" />"><fmt:message key="about_step_project" /></a></td>
-					<td><a target="_new" href="http://www.facebook.com/pages/STEP-Development-Scripture-Tools-from-Tyndale-House-Cambridge/218909814807605?sk=app_208195102528120" title="<fmt:message key="support_the_project"/>" /><fmt:message key="volunteers_required" /></a></td>
+					<td><a target="_new" href="http://www.facebook.com/pages/STEP-Development-Scripture-Tools-from-Tyndale-House-Cambridge/218909814807605?sk=app_208195102528120" title="<fmt:message key="support_the_project"/>"><fmt:message key="volunteers_required" /></a></td>
 				</tr>
 			</table>
 			<br />
@@ -277,9 +272,9 @@
 <jsp:include page="jsps/lexicon_definition.jsp"  />
 <img src="images/wait_big.gif" id="waiting" />
 <div id="previewReference" style="display: none"><div id="previewBar" style="display: none;">
-	<a href="#" id="previewClose"><fmt:message key="close_this_popup" /></a>
-	<a href="#" id="previewRight"><fmt:message key="see_passage_on_right_pane" /></a>
-	<a href="#" id="previewLeft"><fmt:message key="see_passage_on_left_pane" /></a>
+	<a href="javascript:void(0)" id="previewClose"><fmt:message key="close_this_popup" /></a>
+	<a href="javascript:void(0)" id="previewRight"><fmt:message key="see_passage_on_right_pane" /></a>
+	<a href="javascript:void(0)" id="previewLeft"><fmt:message key="see_passage_on_left_pane" /></a>
 </div><span id="popupText"></span></div>
 
 <div id="validUser" style="display: none">

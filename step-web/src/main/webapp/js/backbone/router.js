@@ -27,7 +27,7 @@ var StepRouter = Backbone.Router.extend({
         try {
             hash = Backbone.history.getFragment();
         } catch (e) {
-//            console.log("Unable to get fragment, so assuming blank, as history might not be started");
+            console.log("Unable to get fragment, so assuming blank, as history might not be started");
         }
 
         //if hash is empty then we use the normal mechanism

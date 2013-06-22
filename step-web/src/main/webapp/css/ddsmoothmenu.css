@@ -6,7 +6,7 @@
 /* top menu */
 .ddsmoothmenu {
 	background-image: url('../images/background-header.png');
-	background-repeat: repeat-y; 
+	background-repeat: repeat-y;
 	background-position: right;
 	background-color: #991C32; /*background of menu bar (default state)*/
 	border-bottom: 1px solid white;

@@ -158,7 +158,7 @@ var ddsmoothmenu = {
 //                    return;
 //                }
 
-                
+
                 var $targetul = $subul; // reference UL to reveal
                 var header = $curobj.get(0); // reference header LI as DOM
                                                 // object

@@ -2,6 +2,7 @@ var SearchCriteria = Backbone.View.extend({
     events: {
         "keyup input[type='text']:not(.drop)": "updateModel",
         "keyup .querySyntax": "updateQuerySyntaxInModel",
+        "keyup input": "keySearch",
         "change input.drop": "updateModel",
         "change input[type='hidden']": "updateModel",
         "click .resetSearch": "resetSearch",
@@ -73,12 +74,12 @@ var SearchCriteria = Backbone.View.extend({
                 var newContext = currentContextValue + increment;
 
                 //check new value:
-                if(validateFunction(newContext)) {
+                if (validateFunction(newContext)) {
                     var newAttributes = {};
                     newAttributes[modelAttribute] = newContext;
                     self.model.save(newAttributes);
                     self.model.trigger("search", self.model);
-                    if(uiStatusFunction) {
+                    if (uiStatusFunction) {
                         uiStatusFunction();
                     }
                 }
@@ -97,15 +98,15 @@ var SearchCriteria = Backbone.View.extend({
         this.evaluatePageNumberState();
     },
 
-    isValidContext : function(value) {
+    isValidContext: function (value) {
         return value >= 0;
     },
 
-    isValidPageNumber : function(value) {
+    isValidPageNumber: function (value) {
         return value > 0 && this.isPageWithinResults(value);
     },
 
-    isPageWithinResults : function(newValue) {
+    isPageWithinResults: function (newValue) {
         //validate page is within the right scope
         var approxPages = stepRouter.totalResults[this.model.get("passageId")] / this.model.get("pageSize");
 
@@ -144,13 +145,13 @@ var SearchCriteria = Backbone.View.extend({
                 //now that we have adjusted the page size, we need to work out if
                 //we need to work out the corresponding page number
                 var oldPageNumber = self.model.get("pageNumber");
-                var firstResultOnOldPageIndex = (oldPageNumber -1) * pageSize + 1;
+                var firstResultOnOldPageIndex = (oldPageNumber - 1) * pageSize + 1;
                 var newApproxPageNumber = firstResultOnOldPageIndex / targetPageSize;
                 var newWholePage = Math.floor(newApproxPageNumber);
                 var newDecimal = newApproxPageNumber - newWholePage;
                 var newPageNumber = newDecimal == 0 ? newApproxPageNumber : newWholePage + 1;
 
-                Backbone.Events.once("search:rendered:" + self.model.get("passageId"), function() {
+                Backbone.Events.once("search:rendered:" + self.model.get("passageId"), function () {
                     var searchResult = $(".searchResultRow [ref='" + ref + "']", container);
                     var passageContent = container.find(".passageContent");
                     var linkOffset = searchResult.offset();
@@ -159,19 +160,18 @@ var SearchCriteria = Backbone.View.extend({
                     var originalScrollTop = passageContent.scrollTop();
                     passageContent.animate({
                         scrollTop: originalScrollTop + scroll
-                    }, 500, 'swing', function() {
+                    }, 500, 'swing', function () {
                         var resultRowParent = $(".searchResultRow [ref='" + ref + "']", container).parent();
-                        resultRowParent.animate({ 'background-color' : '#EBEBF1'}, 600, 'swing', function() {
+                        resultRowParent.animate({ 'background-color': '#EBEBF1'}, 600, 'swing', function () {
                             resultRowParent.animate({ "background-color": 'transparent'}, 600);
                         });
                     });
                 });
 
-                self.model.save({ pageSize : targetPageSize, pageNumber: newPageNumber });
+                self.model.save({ pageSize: targetPageSize, pageNumber: newPageNumber });
                 self.model.trigger("search", self.model);
             });
     },
-
 
 
     refineSearchButton: function () {
@@ -183,17 +183,54 @@ var SearchCriteria = Backbone.View.extend({
                 var container = step.util.getPassageContainer(self.$el);
                 var refinedSearchBox = container.find(".refinedSearch");
                 refinedSearchBox.find(".refinedSearchLabel")
-                         .html(__s.refine_search_results + " " +
+                    .html(__s.refine_search_results + " " +
                         step.util.undoReplaceSpecialChars(self.model.getBaseSearch()));
 
                 //blank the results
-                self.$el.find(".resultEstimates").html("");
+                self.clearEstimate();
 
                 //trigger the reset button
                 self.resetSearch();
                 refinedSearchBox.show();
             });
     },
+
+    clearEstimate : function() {
+        this.$el.find(".resultEstimates").html("&nbsp;");
+    },
+
+    estimateSearch: function () {
+        var self = this;
+        var syntax = this.model.get("querySyntax");
+        if (syntax == undefined || syntax.startsWith("o") || syntax.startsWith("s")) {
+            //no estimate for original word search
+            return;
+        }
+
+        //finally attempt a search estimation
+        delay(function () {
+            var versions = self.model.get("searchVersions");
+            if (versions == undefined || versions.trim().length == 0) {
+                versions = "ESV";
+            }
+
+
+            if (stepRouter.refinedSearches[self.model.get("passageId")].length == 0) {
+                $.getSafe(SEARCH_ESTIMATES, [encodeURIComponent(step.util.replaceSpecialChars(syntax)) +
+                    " in (" + versions + ")"],
+                    function (estimate) {
+                        var field = self.$el.find(".resultEstimates");
+                        if (estimate == -1) {
+                            field.html("");
+                        } else {
+                            field.html(sprintf(__s.approx_results, estimate))
+                                .css("color", "#" + step.util.ui._calculateEstimateBackgroundColour(estimate));
+                        }
+                    });
+            }
+        }, 500);
+    },
+
 
     showHideCriteria: function () {
         $(".showSearchCriteria", this.$el).button({ text: false, icons: { primary: "ui-icon-circle-triangle-s" }})
@@ -286,7 +323,7 @@ var SearchCriteria = Backbone.View.extend({
     evaluatePageNumberState: function () {
         var currentPage = this.model.get("pageNumber");
         $(".previousPage", this.$el).button("option", "disabled", currentPage == 1);
-        $(".nextPage", this.$el).button("option", "disabled", !this.isPageWithinResults(currentPage+1) );
+        $(".nextPage", this.$el).button("option", "disabled", !this.isPageWithinResults(currentPage + 1));
     },
 
     /**
@@ -294,13 +331,14 @@ var SearchCriteria = Backbone.View.extend({
      * @return true if any of the values has been changed.
      */
     syncValuesWithModel: function () {
+        console.log("hello");
         var changed = false;
         var keyValuePairs = this.model.pairs();
         for (var i = 0; i < keyValuePairs.length; i++) {
             if (this.viewElementsByName[keyValuePairs[i][0]]) {
                 //get previous value
                 var previousValue = this.viewElementsByName[keyValuePairs[i][0]].val();
-                if (previousValue != this.viewElementsByName[keyValuePairs[i][1]]) {
+                if (previousValue != keyValuePairs[i][1]) {
                     changed |= this.viewElementsByName[keyValuePairs[i][0]].val(keyValuePairs[i][1]);
                 }
             }
@@ -347,6 +385,7 @@ var SearchCriteria = Backbone.View.extend({
                 var attributes = {};
                 attributes[fieldName] = this._getValue(targetElement);
                 this.model.save(attributes);
+                this.estimateSearch();
                 return;
             }
         }
@@ -420,6 +459,13 @@ var SearchCriteria = Backbone.View.extend({
 
         this.querySyntax.val("");
         this.saveAllToModel();
+        this.clearEstimate();
+    },
+
+    keySearch: function (event) {
+        if (event.keyCode == 13) {
+            this.doSearch();
+        }
     },
 
     /**

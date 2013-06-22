@@ -70,12 +70,6 @@ var SubjectList = Backbone.Collection.extend({
 
     initialize: function () {
         this.on("search", this.triggerSearch, this);
-        this.on("change", this.triggerModelChange, this);
-    },
-
-    triggerModelChange: function (model, val, options) {
-        //estimate search
-        console.log("Estimate search");
     },
 
     triggerSearch: function (model, val, options) {
@@ -92,12 +86,6 @@ var SimpleTextList = Backbone.Collection.extend({
 
     initialize: function () {
         this.on("search", this.triggerSearch, this);
-        this.on("change", this.triggerModelChange, this);
-    },
-
-    triggerModelChange: function (model, val, options) {
-        //estimate search
-        console.log("Estimate search");
     },
 
     triggerSearch: function (model, val, options) {
@@ -113,12 +101,6 @@ var WordSearchList = Backbone.Collection.extend({
 
     initialize: function () {
         this.on("search", this.triggerSearch, this);
-        this.on("change", this.triggerModelChange, this);
-    },
-
-    triggerModelChange: function (model, val, options) {
-        //estimate search
-        console.log("Estimate search");
     },
 
     triggerSearch: function (model, val, options) {
@@ -133,12 +115,6 @@ var AdvancedSearchList = Backbone.Collection.extend({
 
     initialize: function () {
         this.on("search", this.triggerSearch, this);
-        this.on("change", this.triggerModelChange, this);
-    },
-
-    triggerModelChange: function (model, val, options) {
-        //estimate search
-        console.log("Estimate search");
     },
 
     triggerSearch: function (model, val, options) {

@@ -13,9 +13,12 @@ PassageCriteriaView = Backbone.View.extend({
         this.reference = this.$el.find(".passageReference");
         this.extraVersions = this.$el.find(".extraVersions");
         this.interlinearMode = this.$el.find(".extraVersionsDisplayOptions");
-        this.detailLevel = this.$el.detailSlider({ changed : function(newValue) {
-            self.model.save({ detailLevel : newValue });
-        }});
+        this.detailLevel = this.$el.detailSlider({
+            changed : function(newValue) {
+                self.model.save({ detailLevel : newValue });
+            },
+            value : this.model.get("detailLevel")
+        });
 
         this.versionInfo = this.$el.find(".infoAboutVersion").button({ icons: { primary: "ui-icon-info" }, text: false});
         this.$el.find(".searchPassage").button({ icons: { primary: "ui-icon-search" }, text: false });

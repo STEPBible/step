@@ -33,7 +33,6 @@
 	<%
 		if(request.getParameter("debug") != null) {
 	%>
-
 		<link rel="stylesheet" type="text/css" href="css/jquery-ui-1.10.2.custom.min.css" />
 		<link rel="stylesheet" type="text/css" href="css/qtip.css" />
 		<link rel="stylesheet" type="text/css" href="css/ddsmoothmenu.css" />
@@ -44,7 +43,6 @@
 <!-- 	    <link rel="stylesheet" type="text/css" href="css/timeline.css" /> -->
 	    <link rel="stylesheet" type="text/css" href="css/search.css" />
 	    <link rel="stylesheet" type="text/css" href="css/cardo.css" />
-
     <%
         } else {
     %>

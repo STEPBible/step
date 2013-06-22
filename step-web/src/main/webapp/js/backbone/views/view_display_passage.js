@@ -31,17 +31,16 @@ var PassageDisplayView = Backbone.View.extend({
             var reference = this.model.get("reference");
             var options = this.model.get("options");
             var version = this.model.get("version");
-            var langaguages = newPassage.languageCode;
+            var languages = newPassage.languageCode;
 
             if (this._isPassageValid(passageHtml, reference)) {
-                this._doFonts(passageHtml, options, interlinearMode, langaguages);
+                this._doFonts(passageHtml, options, interlinearMode, languages);
                 this._doInlineNotes(passageHtml, passageId);
                 this._doSideNotes(passageHtml, passageId, version);
                 this._doNonInlineNotes(passageHtml);
 
                 this._doVerseNumbers(passageId, passageHtml, options, interlinearMode, reference);
 //        self._doStats(passageId, passageContent, lookupVersion, text.reference);
-                this.doInterlinearVerseNumbers(passageHtml, interlinearMode, options);
                 this._doHideEmptyNotesPane(passageHtml);
                 this._adjustTextAlignment(passageHtml);
                 step.fonts.redoTextSize(passageId, passageHtml);
@@ -52,6 +51,7 @@ var PassageDisplayView = Backbone.View.extend({
                 this._doVersions(passageId, passageHtml, version, reference);
                 step.util.closeInfoErrors(passageId);
                 step.util.ui.emptyOffDomAndPopulate(this.passageContent, passageHtml);
+                this.doInterlinearVerseNumbers(passageHtml, interlinearMode, options);
 
                 Backbone.Events.trigger("passage:rendered:" + passageId);
             }
@@ -99,7 +99,7 @@ var PassageDisplayView = Backbone.View.extend({
             if (interlinearMode == "INTERLINEAR" || isInterlinearOption) {
                 //we inspect each line in turn, and stylise each block.
                 step.util.ui._applyCssClassesRepeatByGroup(passageContent, ".w", fonts, function (child) {
-                    child.hasClass("interVerseNumbers");
+                    return child.parent().hasClass("verseStart");
                 });
             } else if (interlinearMode.indexOf("INTERLEAVED") != -1) {
                 step.util.ui._applyCssClassesRepeatByGroup(passageContent, ".verseGrouping", fonts, undefined, 1);

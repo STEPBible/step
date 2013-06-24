@@ -10,6 +10,10 @@ var SearchModel = Backbone.Model.extend({
             context: 0
         }
     },
+    /**
+     * A map of keys to references used to resolve the values in the various fields.
+     */
+    referenceKeys : {},
 
     /**
      * sets up the listening capabilities
@@ -27,7 +31,7 @@ var SearchModel = Backbone.Model.extend({
         for(var i = 0; i < options.params.length; i++) {
             //split into the key/value
             var keyValuePair = options.params[i].split("=");
-            attributes[keyValuePair[0]] = keyValuePair[1];
+            attributes[keyValuePair[0]] = this.resolveFromReference(keyValuePair[0], keyValuePair[1]);
         }
         this.set(attributes);
 
@@ -112,11 +116,11 @@ var SearchModel = Backbone.Model.extend({
         var params = "";
         for (var name in this.attributes) {
             if (name != "passageId" && name != "searchType" && name != "pageNumber"
-                && name != "querySyntax" && name != "id" && name != "detail") {
+                && name != "querySyntax" && name != "id") {
                 if (params != "") {
                     params += "|";
                 }
-                params += name + '=' + this.attributes[name];
+                params += name + '=' + this.resolveToReference(name, this.attributes[name]);
             }
         }
         urlParts.push(params);
@@ -133,6 +137,51 @@ var SearchModel = Backbone.Model.extend({
         //add an argument if any one argument following
         //the current item is non-null, since we will need it in the URL
         return urlParts.join("/");
+    },
+
+    /**
+     * By default, it simply returns the value, however, for any keys specified in a map (referenceKeys), it returns
+     * the equivalent value matching the key. For example, "Original spelling" would return ORIGINAL SPELLING
+     * @param key the field key
+     * @param value the current value
+     */
+    resolveToReference : function(key, value){
+        return this.resolve(key, value, "textValues", "referenceValues");
+    },
+
+    /**
+     * From a reference value, gets the text equivalent
+     * @param key the key to the field
+     * @param value the value to be looked up
+     * @returns {*}
+     */
+    resolveFromReference : function(key, value){
+        return this.resolve(key, value, "referenceValues", "textValues");
+    },
+
+    /**
+     * By default, it simply returns the value, however, for any keys specified in a map (referenceKeys), it returns
+     * the equivalent value matching the key. For example, "Original spelling" would return ORIGINAL SPELLING,
+     * or vice-versa depending on the order in which the lookup and corresponding lists are specified.
+     * @param key the field key
+     * @param value the current value
+     */
+    resolve : function(key, value, lookupList, correspondingList){
+        if(this.referenceKeys[key]) {
+            var textValues = this.referenceKeys[key][lookupList];
+            var i = 0;
+            for(var i = 0; i < textValues.length; i++) {
+                if(textValues[i] == value) {
+                    break;
+                }
+            }
+
+            if(i < textValues.length) {
+                return this.referenceKeys[key][correspondingList][i];
+            }
+        }
+
+        return value;
     },
 
     /**

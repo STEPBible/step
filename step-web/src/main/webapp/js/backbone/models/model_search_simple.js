@@ -1,4 +1,11 @@
 var SimpleTextSearchModel = AdvancedSearchModel.extend({
+    referenceKeys : {
+        simpleTextTypePrimary: { textValues : step.defaults.search.textual.simpleTextTypes , referenceValues : step.defaults.search.textual.simpleTextTypesReference },
+        simpleTextInclude: { textValues : step.defaults.search.textual.simpleTextIncludes, referenceValues : step.defaults.search.textual.simpleTextIncludesReference },
+        simpleTextTypeSecondary: { textValues : step.defaults.search.textual.simpleTextSecondaryTypes, referenceValues : step.defaults.search.textual.simpleTextSecondaryTypesReference},
+        simpleTextProximity : { textValues : step.defaults.search.textual.simpleTextProximities, referenceValues : step.defaults.search.textual.simpleTextProximitiesReference }
+    },
+
     _evaluateQuerySyntaxInternal : function(attributes) {
         var query = "";
         var prefix = "t=";

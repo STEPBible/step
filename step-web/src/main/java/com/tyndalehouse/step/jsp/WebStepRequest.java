@@ -178,6 +178,11 @@ public class WebStepRequest {
 
     public String getTitle() {
         try {
+            //shareable parameter
+            if("true".equals(this.request.getParameter("sh"))) {
+                return "STEP : Scripture Tools for Every Person";
+            }
+
             final JSwordPassageServiceImpl jsword = this.injector.getInstance(JSwordPassageServiceImpl.class);
             return jsword.getPlainText(this.getVersion(0), this.getReference(0), true).replaceAll("[<>]", "");
         } catch (final Exception e) {

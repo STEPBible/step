@@ -331,7 +331,6 @@ var SearchCriteria = Backbone.View.extend({
      * @return true if any of the values has been changed.
      */
     syncValuesWithModel: function () {
-        console.log("hello");
         var changed = false;
         var keyValuePairs = this.model.pairs();
         for (var i = 0; i < keyValuePairs.length; i++) {

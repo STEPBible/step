@@ -221,3 +221,10 @@ function getRelatedSubjects(key, passageId) {
     //if we're in single view, then we would want to bring up the second column
     step.state.view.ensureTwoColumnView();
 }
+
+function facebookShare(element) {
+
+    window.open('https://www.facebook.com/sharer/sharer.php?description=me&u='+ encodeURIComponent(stepRouter.getShareableColumnUrl(element)),
+        'fb-share-dialog', 'width=626,height=436');
+    return false;
+}

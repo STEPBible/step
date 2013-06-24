@@ -20,6 +20,29 @@ var StepRouter = Backbone.Router.extend({
         $.shout("view-change", {viewName : 'SINGLE_COLUMN_VIEW' });
     },
 
+    getShareableColumnUrl : function(element, encodeFragment) {
+        var fragment = stepRouter.getSingleFragment(step.passage.getPassageId(element));
+        if(encodeFragment) {
+            fragment = encodeURIComponent(fragment);
+        }
+
+        //sh=true indicates a sharing url
+        return Backbone.history.location.origin + "&sh=true/#" + fragment;
+    },
+
+    getSingleFragment : function(passageId) {
+        var hash = Backbone.history.getFragment();
+        if(hash == null || hash.length == 0) {
+            return "";
+        }
+
+        var fragments = this.getColumnFragments(hash);
+        if(passageId < fragments.length) {
+            return fragments[passageId];
+        }
+        return "";
+    },
+
     /**
      * Navigates for a particular column only.
      * @param fragment

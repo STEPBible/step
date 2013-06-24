@@ -462,3 +462,24 @@ body {
 .dynHelpOver {
 	border: 4px solid orange !important;
 }
+
+.topShare {
+    float: right;
+    margin-top: 4px;
+    margin-right: 4px;
+}
+
+.sharingBar {
+    float: left;
+    margin-top: 1px;
+    height: 20px;
+    overflow: hidden;
+}
+
+.sharingBar div {
+
+}
+
+.sharingBar img {
+    border: none;
+}

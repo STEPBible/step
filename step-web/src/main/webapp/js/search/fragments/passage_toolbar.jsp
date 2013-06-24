@@ -14,8 +14,15 @@
 %>
 <fmt:setBundle basename="HtmlBundle" />
 <div class="passageToolbarContainer">
+    <div class="sharingBar">
+            <a class="facebookShare" href="javascript:void(0)" onclick="facebookShare(this)" title="<fmt:message key="share_on_facebook" />">
+                <img src="images/facebook.png" />
+            </a>
+    </div>
 	<span class="passageToolbarFloatingContainer">
 		<span class="passageLookupButtons passageSizeButtons">
+
+
 			<a class="syncOtherPassage"><fmt:message key="passage_sync" /></a>
             <%--<a class="continuousPassage"><fmt:message key="passage_one_scroll" /></a>--%>
 			<a class="previousChapter"

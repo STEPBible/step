@@ -49,6 +49,7 @@ var PassageDisplayView = Backbone.View.extend({
                 this._doTransliterations(passageHtml);
                 this._doInterlinearDividers(passageHtml);
                 this._doVersions(passageId, passageHtml, version, reference);
+                this._doSocial(passageId);
                 step.util.closeInfoErrors(passageId);
                 step.util.ui.emptyOffDomAndPopulate(this.passageContent, passageHtml);
 
@@ -56,6 +57,29 @@ var PassageDisplayView = Backbone.View.extend({
                 this.doInterlinearVerseNumbers(passageHtml, interlinearMode, options);
                 Backbone.Events.trigger("passage:rendered:" + passageId);
             }
+        },
+
+        _doSocial : function() {
+
+            var sharingBar = this.$el.find(".sharingBar");
+
+            //remove twitter and google+
+            sharingBar.find("div:last").remove();
+            sharingBar.find("iframe:last").remove();
+
+            var url = stepRouter.getShareableColumnUrl(this.$el, true);
+
+            //do google plus
+            var gPlusOne = $('<div class="g-plusone" data-size="medium" data-annotation="none"></div>');
+            gPlusOne.attr("data-href", url);
+            sharingBar.append(gPlusOne);
+            gapi.plusone.go(sharingBar.get(0));
+
+            //do twitter
+            var twitter = $('<a href="https://twitter.com/share" class="twitter-share-button" data-via="Tyndale_House" data-count="none">Tweet</a>');
+            twitter.attr("data-url", url);
+            sharingBar.append(twitter);
+            twttr.widgets.load();
         },
 
         _doInterlinearDividers: function (passageContent) {

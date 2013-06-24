@@ -85,13 +85,17 @@ step.defaults = {
                                 __s.simple_search_types_exact, 
                                 __s.simple_search_types_similar, 
                                 __s.simple_search_types_starting_with],
+            simpleTextTypesReference : ["ANY", "ALL", "EXACT", "SIMILAR", "STARTS"],
             simpleTextSecondaryTypes : [ __s.simple_search_types_all_words, __s.simple_search_types_exact],
+            simpleTextSecondaryTypesReference : ["ALL", "EXACT"],
             simpleTextIncludes : [__s.simple_search_includes_include, __s.simple_search_includes_exclude],
+            simpleTextIncludesReference : ["INCLUDE", "EXCLUDE"],
             simpleTextProximities : [__s.simple_search_proximity_same_verse,
                                      __s.simple_search_proximity_1_verse,
                                      __s.simple_search_proximity_2_verses,
                                      __s.simple_search_proximity_6_verses,
                                      __s.simple_search_proximity_30_verses],
+            simpleTextProximitiesReference : [0,1,2,6,30],
             simpleTextSortBy : [ __s.simple_search_sort_by_relevance, __s.simple_search_sort_by_bible_occurence]
             
         },
@@ -100,7 +104,9 @@ step.defaults = {
             originalTypes : [WORDS_MEANING[0],
                              GREEK_WORDS[0], 
                              HEBREW_WORDS[0]],
+            originalTypesReference : ["MEANING", "GREEK", "HEBREW"],
             originalForms: [ALL_RELATED, ALL_FORMS, SPECIFIC_FORM],
+            originalFormsReference : ["RELATED", "ALL", "SPECIFIC"],
             originalSorting:        [SCRIPTURE, VOCABULARY, ORIGINAL_SPELLING],
             originalSortingValues:  ["SCRIPTURE", "VOCABULARY", "ORIGINAL_SPELLING"]
         }

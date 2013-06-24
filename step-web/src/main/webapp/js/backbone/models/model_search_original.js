@@ -1,36 +1,41 @@
 var WordSearchModel = SearchModel.extend({
+    referenceKeys: {
+        originalType: { textValues: step.defaults.search.original.originalTypes, referenceValues: step.defaults.search.original.originalTypesReference },
+        originalForms: { textValues: step.defaults.search.original.originalForms, referenceValues: step.defaults.search.original.originalFormsReference },
+        originalSorting: { textValues: step.defaults.search.original.originalSorting, referenceValues: step.defaults.search.original.originalSortingValues}
+    },
 
     /**
-      * Override to intercept the get method for sort order
+     * Override to intercept the get method for sort order
      * @param attributeName
      */
-    get : function(attributeName){
+    get: function (attributeName) {
         //this doesn't really exist, but is stored as originalSorting
-        if(attributeName != "sortOrder") {
+        if (attributeName != "sortOrder") {
             return SearchModel.prototype.get.call(this, attributeName);
         }
 
         return this._getSortOrder();
     },
 
-    set : function(attributes, options) {
+    set: function (attributes, options) {
         //filters are arrays, so make sure they get stored as such
-        if(attributes && attributes.filter && !_.isArray(attributes.filter)) {
+        if (attributes && attributes.filter && !_.isArray(attributes.filter)) {
             attributes.filter = attributes.filter.split(",");
         }
         SearchModel.prototype.set.call(this, attributes, options);
     },
 
-    _getSortOrder : function() {
+    _getSortOrder: function () {
         var detail = this.get("detail");
         var sorting = this.get("originalSorting");
         var sortOrder = undefined;
 
-        if(sorting == undefined) {
+        if (sorting == undefined) {
             return undefined;
         }
 
-        if(detail > 0) {
+        if (detail > 0) {
             //find the index of the sort order
             var allSortings = step.defaults.search.original.originalSorting;
             for (var i = 0; i < allSortings.length; i++) {
@@ -42,29 +47,29 @@ var WordSearchModel = SearchModel.extend({
         return undefined;
     },
 
-    _evaluateQuerySyntaxInternal : function(attributes) {
-        var level =             this.getSafeAttribute(attributes, "detail");
-        var originalType =      this.getSafeAttribute(attributes, "originalType");
-        var originalWord =      this.getSafeAttribute(attributes, "originalWord");
-        var originalSorting =   this.getSafeAttribute(attributes, "originalSorting");
-        var originalScope =     level == 0 ? __s.whole_bible_range : this.getSafeAttribute(attributes, "originalScope");
-        var originalForms =     this.getSafeAttribute(attributes, "originalForms");
+    _evaluateQuerySyntaxInternal: function (attributes) {
+        var level = this.getSafeAttribute(attributes, "detail");
+        var originalType = this.getSafeAttribute(attributes, "originalType");
+        var originalWord = this.getSafeAttribute(attributes, "originalWord");
+        var originalSorting = this.getSafeAttribute(attributes, "originalSorting");
+        var originalScope = level == 0 ? __s.whole_bible_range : this.getSafeAttribute(attributes, "originalScope");
+        var originalForms = this.getSafeAttribute(attributes, "originalForms");
         var filter = this.getSafeAttribute(attributes, "filter");
 
         var query = "o";
 
-        if(originalType == WORDS_MEANING[0]) {
+        if (originalType == WORDS_MEANING[0]) {
             query += "m";
         } else {
             if (originalType == GREEK_WORDS[0]) {
                 query += "g";
-            } else if(originalType == HEBREW_WORDS[0]) {
+            } else if (originalType == HEBREW_WORDS[0]) {
                 query += "h";
             }
 
-            if(originalForms == ALL_RELATED) {
+            if (originalForms == ALL_RELATED) {
                 query += "~"
-            } else if(originalForms == ALL_FORMS) {
+            } else if (originalForms == ALL_FORMS) {
                 query += "*";
             }
         }
@@ -85,13 +90,13 @@ var WordSearchModel = SearchModel.extend({
      * Override the defaulted value for the search versions
      * @param attributeName
      */
-    getDefaultedValue : function(attributeName) {
-        if(attributeName != "searchVersions") {
+    getDefaultedValue: function (attributeName) {
+        if (attributeName != "searchVersions") {
             return SearchModel.prototype.getDefaultedValue.call(this, attributeName);
         }
 
         var searchVersions = this.get("searchVersions");
-        if(step.util.isBlank(searchVersions)) {
+        if (step.util.isBlank(searchVersions)) {
             return "ESV";
         }
 

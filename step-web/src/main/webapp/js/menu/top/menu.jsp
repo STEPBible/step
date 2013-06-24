@@ -7,7 +7,6 @@
 <%@page import="javax.servlet.jsp.jstl.core.Config"%>
 <%@ page pageEncoding="UTF-8" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-
 <%
 	Injector injector = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
 	List<Language> languages = injector.getInstance(LanguageService.class).getAvailableLanguages();
@@ -30,6 +29,7 @@
 %>
 <fmt:setBundle basename="HtmlBundle" />
 <div id="topMenu-ajax" class="ddsmoothmenu" name="top">
+    
 <!-- <a id="loginLink" class="login" href="javascript:void(0)" onclick="login()">Login</a> -->
 <ul>
 	<li menu-name="VIEW"><a href="javascript:void(0)"><fmt:message key="view" /></a>

@@ -175,7 +175,7 @@ body {
 
 #stepInDevelopmentWarning {
 	bottom: 0px !important;
-	right: 25px;
+	right: 110px;
 	position: absolute;
 	font-weight: bold;
 	width: 350px;

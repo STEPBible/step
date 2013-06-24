@@ -13,7 +13,7 @@
 %>
 <fmt:setBundle basename="HtmlBundle" />
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<HTML>
+<HTML xmlns:fb="http://ogp.me/ns/fb#">
 <HEAD>
     <TITLE><%= stepRequest.getVersion(0) %> <%= stepRequest.getReference(0) %>: <%= stepRequest.getTitle() %></TITLE>
     <META http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -21,8 +21,8 @@
 <%-- 	<meta name="description" content="<%= stepRequest.getTitle() %>..."> --%>
 	
 	<link rel="shortcut icon"  href="images/step-favicon.ico" />
-	
-	<%
+    <link rel="canonical" href="http://www.stepbible.com" />
+    <%
 		if(request.getParameter("lang") == null) {
 	%>
 		<script src="international/interactive.js" type="text/javascript"></script>
@@ -169,6 +169,16 @@
 	%>
 </HEAD>
 <body>
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en_GB/all.js#xfbml=1";
+    fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
 <div id="topMenu" class="ddsmoothmenu"><jsp:include page="js/menu/top/menu.jsp" /></div>
 <div>
 	<div id="middleSection">
@@ -286,6 +296,10 @@
 	</div>
 </div>
 <div id='stepInDevelopmentWarning' class="ui-state-highlight"><fmt:message key="step_disclaimer" /></div>
-</body>
 
+<script type="text/javascript" src="https://apis.google.com/js/plusone.js">
+    {lang: 'en-GB'}
+</script>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+</body>
 </HTML>

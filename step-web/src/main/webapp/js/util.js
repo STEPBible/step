@@ -290,7 +290,7 @@ step.util = {
             sharingBar.find("div:last").remove();
             sharingBar.find("iframe:last").remove();
 
-            var url = stepRouter.getShareableColumnUrl(this.$el, true);
+            var url = stepRouter.getShareableColumnUrl(element, true);
 
             //do google plus
             var gPlusOne = $('<div class="g-plusone" data-size="medium" data-annotation="none"></div>');

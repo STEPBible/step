@@ -38,8 +38,12 @@ var SearchDisplayView = Backbone.View.extend({
         step.util.ui.emptyOffDomAndPopulate(this.passageContent, this._doSpecificSearchRequirements(query, results, resultsWrapper));
 
         step.util.ui.doSocialButtons(this.$el.find(".searchToolbar"));
-
+        this.doTitle();
         Backbone.Events.trigger("search:rendered:" + this.model.get("passageId"));
+    },
+
+    doTitle : function() {
+        $("title").html("STEP : " + this.titleFragment);
     },
 
     _doFonts: function (results, languages) {

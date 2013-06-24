@@ -1,4 +1,5 @@
 var WordDisplayView = TextDisplayView.extend({
+    titleFragment : __s.search_word,
     /**
      * Allows a search to add in headers, footers, etc. In this case
      * we add in a header with the buttons to filter the results

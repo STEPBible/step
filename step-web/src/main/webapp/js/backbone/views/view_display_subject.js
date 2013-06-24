@@ -1,4 +1,5 @@
 var SubjectDisplayView = SearchDisplayView.extend({
+    titleFragment : __s.search_subject,
     renderSearch: function (searchResults, query) {
         console.log("Rendering subject search results");
         var query = step.util.undoReplaceSpecialChars(searchResults.query);

@@ -1,4 +1,5 @@
 var TextDisplayView = SearchDisplayView.extend({
+    titleFragment : __s.search_text,
     renderSearch: function (serverResults, query) {
         console.log("Rendering text search results");
 

@@ -49,7 +49,7 @@ var PassageDisplayView = Backbone.View.extend({
                 this._doTransliterations(passageHtml);
                 this._doInterlinearDividers(passageHtml);
                 this._doVersions(passageId, passageHtml, version, reference);
-                this._doSocial(passageId);
+                this._doSocial();
                 step.util.closeInfoErrors(passageId);
                 step.util.ui.emptyOffDomAndPopulate(this.passageContent, passageHtml);
 
@@ -501,10 +501,11 @@ var PassageDisplayView = Backbone.View.extend({
         },
 
         _updatePageTitle: function (passageId, passageContent, version, reference) {
-            if (passageId == 0) {
-                var title = version + " " + reference + " " + $(".verse:first", passageContent).text().replace("1", "");
-                $("title").html(title);
-            }
+            var clonedVerse = $(".verse:first", passageContent).clone();
+            clonedVerse.find(".verseNumber, .note, sup").remove();
+
+            var title = version + " " + reference + " " + clonedVerse.text();
+            $("title").html(title);
         },
 
         _addStrongHandlers: function (passageId, passageContent) {

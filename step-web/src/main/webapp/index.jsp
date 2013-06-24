@@ -13,15 +13,18 @@
 %>
 <fmt:setBundle basename="HtmlBundle" />
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<HTML xmlns:fb="http://ogp.me/ns/fb#">
+<HTML xmlns:fb="http://ogp.me/ns/fb#" itemscope itemtype="http://schema.org/Book">
 <HEAD>
     <TITLE><%= stepRequest.getTitle() %></TITLE>
     <META http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 <%-- 	<meta name="description" content="<%= stepRequest.getTitle() %>..."> --%>
-	
+
+    <meta itemprop="name" content="STEP">
+    <meta itemprop="description" content="Scripture Tools for Every Person">
+    <meta itemprop="image" content="http://www.stepbible.org/images/step-logo.png">
 	<link rel="shortcut icon"  href="images/step-favicon.ico" />
-    <link rel="canonical" href="http://www.stepbible.com" />
+    <link rel="canonical" href="http://www.stepbible.org" />
     <%
 		if(request.getParameter("lang") == null) {
 	%>

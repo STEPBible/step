@@ -227,7 +227,7 @@ function facebookShare(element) {
         encodeURIComponent(stepRouter.getShareableColumnUrl(element)) +
         "&p%5Bsummary%5D=" +
         encodeURIComponent($("title").text()+ "...") +
-        "&p%5Bimages%5D%5B0%5D=http%3A%2F%2F" + Backbone.history.location.origin + "%2Fimages%2Fstep-logo-100.png",
+        "&p%5Bimages%5D%5B0%5D=" + encodeURIComponent(Backbone.history.location.origin + "/images/step-logo-100.png"),
         'fb-share-dialog', 'width=626,height=436');
     return false;
 }

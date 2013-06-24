@@ -60,26 +60,7 @@ var PassageDisplayView = Backbone.View.extend({
         },
 
         _doSocial : function() {
-
-            var sharingBar = this.$el.find(".sharingBar");
-
-            //remove twitter and google+
-            sharingBar.find("div:last").remove();
-            sharingBar.find("iframe:last").remove();
-
-            var url = stepRouter.getShareableColumnUrl(this.$el, true);
-
-            //do google plus
-            var gPlusOne = $('<div class="g-plusone" data-size="medium" data-annotation="none"></div>');
-            gPlusOne.attr("data-href", url);
-            sharingBar.append(gPlusOne);
-            gapi.plusone.go(sharingBar.get(0));
-
-            //do twitter
-            var twitter = $('<a href="https://twitter.com/share" class="twitter-share-button" data-via="Tyndale_House" data-count="none">Tweet</a>');
-            twitter.attr("data-url", url);
-            sharingBar.append(twitter);
-            twttr.widgets.load();
+            step.util.ui.doSocialButtons(this.$el.find(".passageToolbarContainer"));
         },
 
         _doInterlinearDividers: function (passageContent) {

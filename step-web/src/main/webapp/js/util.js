@@ -284,6 +284,31 @@ step.util = {
             });
         },
 
+        doSocialButtons : function(element) {
+            var sharingBar = element.find(".sharingBar");
+            //remove twitter and google+
+            sharingBar.find("div:last").remove();
+            sharingBar.find("iframe:last").remove();
+
+            var url = stepRouter.getShareableColumnUrl(this.$el, true);
+
+            //do google plus
+            var gPlusOne = $('<div class="g-plusone" data-size="medium" data-annotation="none"></div>');
+            gPlusOne.attr("data-href", url);
+            sharingBar.append(gPlusOne);
+            if (typeof(gapi) != 'undefined') {
+                gapi.plusone.go(sharingBar.get(0));
+            }
+
+            //do twitter
+            var twitter = $('<a href="https://twitter.com/share" class="twitter-share-button" data-via="Tyndale_House" data-count="none">Tweet</a>');
+            twitter.attr("data-url", url);
+            sharingBar.append(twitter);
+            if (typeof(twttr) != 'undefined') {
+                twttr.widgets.load();
+            }
+        },
+
         /**
          * Sets the HTML onto the passageContent holder which contains the passage
          * @param passageHtml the JQuery HTML content

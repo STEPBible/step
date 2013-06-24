@@ -36,6 +36,8 @@ var SearchCriteria = Backbone.View.extend({
             this.viewElementsByName[classes[0]] = jqElement;
             changed |= this.doDropdowns(jqElement, classes);
             this.doQtips(jqElement);
+
+            step.util.ui.doSocialButtons(this.$el.find(".searchToolbar"));
         }
 
         var syncRestored = this.syncValuesWithModel();

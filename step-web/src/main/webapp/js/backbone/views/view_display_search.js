@@ -37,6 +37,8 @@ var SearchDisplayView = Backbone.View.extend({
         step.fonts.redoTextSize(this.model.get("passageId"), results);
         step.util.ui.emptyOffDomAndPopulate(this.passageContent, this._doSpecificSearchRequirements(query, results, resultsWrapper));
 
+        step.util.ui.doSocialButtons(this.$el.find(".searchToolbar"));
+
         Backbone.Events.trigger("search:rendered:" + this.model.get("passageId"));
     },
 

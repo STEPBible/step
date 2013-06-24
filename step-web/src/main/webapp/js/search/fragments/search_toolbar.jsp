@@ -37,5 +37,11 @@
 	<input type='hidden' class='pageNumber <%=request.getParameter("namespace")%>PageNumber' value='0' readonly='true' />
 	</span>
 
-	<div class="resultsLabel"></div>
+    <div class="resultsLabel"></div>
+    <div class="sharingBar">
+        <a class="facebookShare" href="javascript:void(0)" onclick="facebookShare(this)" title="<fmt:message key="share_on_facebook" />">
+            <img src="images/facebook.png" />
+        </a>
+    </div>
+
 </div>

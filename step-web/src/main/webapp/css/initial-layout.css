@@ -476,8 +476,8 @@ body {
     overflow: hidden;
 }
 
-.sharingBar div {
-
+.sharingBar iframe {
+    margin-left: 4px;
 }
 
 .sharingBar img {

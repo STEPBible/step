@@ -223,8 +223,11 @@ function getRelatedSubjects(key, passageId) {
 }
 
 function facebookShare(element) {
-
-    window.open('https://www.facebook.com/sharer/sharer.php?description=me&u='+ encodeURIComponent(stepRouter.getShareableColumnUrl(element)),
+    window.open('https://www.facebook.com/sharer/sharer.php?s=100&p%5Btitle%5D=STEP&p%5Burl%5D='+
+        encodeURIComponent(stepRouter.getShareableColumnUrl(element)) +
+        "&p%5Bsummary%5D=" +
+        encodeURIComponent($("title").text()+ "...") +
+        "&p[images]=http%3A%2F%2Fwww.stepbible.org%2Fimages%2Fstep-logo.png",
         'fb-share-dialog', 'width=626,height=436');
     return false;
 }

@@ -27,7 +27,11 @@ var StepRouter = Backbone.Router.extend({
         }
 
         //sh=true indicates a sharing url
-        return Backbone.history.location.origin + "&sh=true/#" + fragment;
+        var origin = Backbone.history.location.origin;
+        if(Backbone.history.location.origin == "http://localhost:8080") {
+            origin = "http://www.stepbible.org";
+        }
+        return Backbone.history.location.origin + "/?" + "sh=true" + "#" + fragment;
     },
 
     getSingleFragment : function(passageId) {

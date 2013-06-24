@@ -1,11 +1,11 @@
 /*******************************************************************************
  * Copyright (c) 2012, Directors of the Tyndale STEP Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without 
  * modification, are permitted provided that the following conditions 
  * are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright 
  * notice, this list of conditions and the following disclaimer.
  * Redistributions in binary form must reproduce the above copyright 
@@ -16,7 +16,7 @@
  * nor the names of its contributors may be used to endorse or promote 
  * products derived from this software without specific prior written 
  * permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
@@ -55,9 +55,8 @@ import com.tyndalehouse.step.rest.controllers.BibleController;
 
 /**
  * A WebCookieRequest stores information from the request and the cookie for easy use in the jsp page
- * 
+ *
  * @author chrisburrell
- * 
  */
 // CHECKSTYLE:OFF
 public class WebStepRequest {
@@ -78,8 +77,8 @@ public class WebStepRequest {
 
     /**
      * wraps around the servlet request for easy access
-     * 
-     * @param request the servlet request
+     *
+     * @param request  the servlet request
      * @param injector the injector for the application
      */
     public WebStepRequest(final Injector injector, final HttpServletRequest request) {
@@ -100,15 +99,15 @@ public class WebStepRequest {
     /**
      * Initialises the state of the web request, with either the request parameter, the cookie, or the
      * failsafe-default value
-     * 
-     * @param servletRequest the request object
-     * @param store the store in which to store the value we are calcualting
+     *
+     * @param servletRequest   the request object
+     * @param store            the store in which to store the value we are calcualting
      * @param requestParamName the name of the request parameter in the url
-     * @param cookieName the name of the cookie key
-     * @param failsafeValue the default value
+     * @param cookieName       the name of the cookie key
+     * @param failsafeValue    the default value
      */
     private void init(final HttpServletRequest servletRequest, final List<String> store,
-            final String requestParamName, final String cookieName, final String failsafeValue) {
+                      final String requestParamName, final String cookieName, final String failsafeValue) {
         final String passageReference = servletRequest.getParameter(requestParamName);
         if (!isEmpty(passageReference)) {
             store.add(passageReference);
@@ -124,7 +123,7 @@ public class WebStepRequest {
 
     /**
      * returns the reference of interest
-     * 
+     *
      * @param passageId the passage column to look up
      * @return the reference
      */
@@ -164,7 +163,7 @@ public class WebStepRequest {
 
     /**
      * returns the version of interest
-     * 
+     *
      * @param passageId the passage column to look up
      * @return the reference
      */
@@ -179,12 +178,13 @@ public class WebStepRequest {
     public String getTitle() {
         try {
             //shareable parameter
-            if("true".equals(this.request.getParameter("sh"))) {
+            if ("true".equals(this.request.getParameter("sh"))) {
                 return "STEP : Scripture Tools for Every Person";
             }
 
             final JSwordPassageServiceImpl jsword = this.injector.getInstance(JSwordPassageServiceImpl.class);
-            return jsword.getPlainText(this.getVersion(0), this.getReference(0), true).replaceAll("[<>]", "");
+            return this.getThisVersion() + " " + this.getThisVersion() + ": " +
+                    jsword.getPlainText(this.getVersion(0), this.getReference(0), true).replaceAll("[<>]", "");
         } catch (final Exception e) {
             return "";
         }
@@ -192,7 +192,7 @@ public class WebStepRequest {
 
     /**
      * gets the passage for the page load
-     * 
+     *
      * @param passageId the passage id
      * @return the html to put into the page
      */
@@ -224,7 +224,7 @@ public class WebStepRequest {
 
     /**
      * returns the value of the cookie
-     * 
+     *
      * @param cookieName the key to the cookies from the page
      * @return the value requested
      */

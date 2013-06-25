@@ -4,7 +4,7 @@ var StepRouter = Backbone.Router.extend({
         /*******************************
          * This fragment is deliberately placed above everything else to trap fragments starting with __
          *******************************/
-        "__*fragment": "entireUnparsedUrl",
+        "!__*fragment": "entireUnparsedUrl",
         ":passageId/passage/:detail/:version/:reference(/:options)(/:extraVersions)(/:interlinearMode)": "changePassage",
         ":passageId/passage/:detail/:version/:reference/(/:extraVersions)(/:interlinearMode)": "changePassageNoOptions",
         ":passageId/singleColumn" : "changeSingleColumn",
@@ -31,6 +31,10 @@ var StepRouter = Backbone.Router.extend({
         if(Backbone.history.location.origin == "http://localhost:8080") {
             origin = "http://www.stepbible.org";
         }
+
+        //if fragment has __1, we're going to put it in the first column instead
+        fragment = fragment.replace(/__\/1\//, "__/0/") + "/__/1/singleColumn";
+
         return Backbone.history.location.origin + "/?" + "sh=true" + "#" + fragment;
     },
 
@@ -114,7 +118,7 @@ var StepRouter = Backbone.Router.extend({
 
             //join all the fragments up again
             var finalUrl = fragments.join('/');
-            this.navigate(finalUrl, options);
+            this.navigate("!" + finalUrl, options);
             console.log("Final URL: ", finalUrl, options.replace);
 
             //we trigger the routes manually, for the single individual fragment.
@@ -138,6 +142,11 @@ var StepRouter = Backbone.Router.extend({
 
         //now, we need to find out the location of each fragment
         var fragments = [];
+
+        //remove the leading BANG! since it does not form part of a column fragment
+        if(hash.length > 0 && hash[0] == '!') {
+            hash = hash.substring(1);
+        }
 
         //we first calculate the new hash...
         var pos = 1;

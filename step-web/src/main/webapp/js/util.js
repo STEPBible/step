@@ -289,6 +289,7 @@ step.util = {
             //remove twitter and google+
             sharingBar.find("div:last").remove();
             sharingBar.find("iframe:last").remove();
+            sharingBar.find("[class*='twitter']").remove();
 
             var url = stepRouter.getShareableColumnUrl(element, true);
 

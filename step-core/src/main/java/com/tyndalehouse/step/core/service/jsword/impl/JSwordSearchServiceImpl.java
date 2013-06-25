@@ -173,11 +173,27 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
     public SearchResult retrieveResultsFromKeys(final SearchQuery sq, final Key results,
             final String version, final LookupOption... options) {
         final int total = getTotal(results);
-        final long startRefRetrieval = System.currentTimeMillis();
 
         LOGGER.debug("Total of [{}] results.", total);
         final Key newResults = rankAndTrimResults(sq, results);
         LOGGER.debug("Trimmed down to [{}].", newResults.getCardinality());
+        return getResultsFromTrimmedKeys(sq, version, total, newResults, options);
+
+
+    }
+
+    /**
+     * Assumes the page size logic has already been run, retrieves results from the actual book in quest
+     * @param sq the search criteria
+     * @param version the version
+     * @param total the total number of items
+     * @param newResults the page of keys to retrieve
+     * @param options the options to retrieve the passage with
+     * @return the search result passages
+     */
+    @Override
+    public SearchResult getResultsFromTrimmedKeys(final SearchQuery sq, final String version, final int total, final Key newResults, final LookupOption... options) {
+        final long startRefRetrieval = System.currentTimeMillis();
 
         // if context > 0, then we need to add verse numbers:
         final List<LookupOption> lookupOptions = new ArrayList<LookupOption>();
@@ -266,7 +282,8 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
      * @param results the result to be trimmed
      * @return the results
      */
-    private Key rankAndTrimResults(final SearchQuery sq, final Key results) {
+    @Override
+    public Key rankAndTrimResults(final SearchQuery sq, final Key results) {
         rankResults(sq.isRanked(), results);
 
         final Passage passage = (Passage) results;

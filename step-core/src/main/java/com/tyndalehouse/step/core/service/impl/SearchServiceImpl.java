@@ -1183,10 +1183,12 @@ public class SearchServiceImpl implements SearchService {
         // combine the results into 1 giant keyed map
         final IndividualSearch currentSearch = sq.getCurrentSearch();
 
+        final Key pagedKeys = this.jswordSearch.rankAndTrimResults(sq, results);
+
         // iterate through the versions, first, to obtain all the results
         for (final String v : currentSearch.getVersions()) {
             // retrieve scripture content and set up basics
-            final SearchResult s = this.jswordSearch.retrieveResultsFromKeys(sq, results, v);
+            final SearchResult s = this.jswordSearch.getResultsFromTrimmedKeys(sq, v, sr.getTotal(), pagedKeys);
 
             // key in to aggregating map
             for (final SearchEntry e : s.getResults()) {

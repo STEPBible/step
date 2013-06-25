@@ -58,4 +58,23 @@ public interface JSwordSearchService {
      * @return the results
      */
     SearchResult retrieveResultsFromKeys(SearchQuery sq, Key results, String version, LookupOption... options);
+
+    /**
+     * Given a criteria and a set of results, calculates the proper page
+     * @param sq the search criteria
+     * @param results the large number of keys
+     * @return a reduced set of keys matching the page size and the correct page number
+     */
+    Key rankAndTrimResults(SearchQuery sq, Key results);
+
+    /**
+     * Can be called if we have already trimmed down the key - used in multi-version searches
+     * @param sq the search criteria
+     * @param version the version
+     * @param total the total number of results
+     * @param newResults the paged key
+     * @param options the options to set when generating the HTML
+     * @return the passages
+     */
+    SearchResult getResultsFromTrimmedKeys(SearchQuery sq, String version, int total, Key newResults, LookupOption... options);
 }

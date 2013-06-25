@@ -46,6 +46,7 @@ import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import com.tyndalehouse.step.core.utils.StringUtils;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.index.TermDocs;
@@ -239,6 +240,11 @@ public class JSwordStrongNumberHelper {
      */
     private void readDataFromLexicon(final EntityIndexReader reader, final String verseRef,
             final String strongNumbers) {
+
+        if(StringUtils.isBlank(strongNumbers)) {
+            LOG.warn("Attempting to search for 'no strongs' in verse [{}]", verseRef);
+            return;
+        }
 
         final String strongQuery = StringConversionUtils.getStrongPaddedKey(strongNumbers);
 

@@ -35,7 +35,7 @@ var StepRouter = Backbone.Router.extend({
         //if fragment has __1, we're going to put it in the first column instead
         fragment = fragment.replace(/__\/1\//, "__/0/") + "/__/1/singleColumn";
 
-        return Backbone.history.location.origin + "/?" + "sh=true" + "#" + fragment;
+        return Backbone.history.location.origin + "/?" + "sh=true" + "#!" + fragment;
     },
 
     getSingleFragment : function(passageId) {

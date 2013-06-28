@@ -49,7 +49,7 @@
     <%
         } else {
     %>
-        <link rel="stylesheet" type="text/css" href="css/step.min.css" />
+        <link rel="stylesheet" type="text/css" href="css/step.${project.version}.min.css" />
     <%
         }
     %>
@@ -155,7 +155,7 @@
         <%-- Include some resources from CDN first --%>
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js" type="text/javascript" ></script>
         <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js" type="text/javascript" ></script>
-		<script src="js/step.min.js" type="text/javascript" ></script>
+		<script src="js/step.${project.version}.min.js" type="text/javascript" ></script>
 		<script type="text/javascript">
 		  var _gaq = _gaq || [];
 		  _gaq.push(['_setAccount', 'UA-36285759-1']);

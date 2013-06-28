@@ -132,8 +132,23 @@
 
 	<build>
 		<finalName>step-web</finalName>
-
 		<plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <configuration>
+                    <webResources>
+                        <resource>
+                            <directory>${basedir}/src/main/webapp</directory>
+                            <filtering>true</filtering>
+                            <includes>
+                                <include>index.jsp</include>
+                            </includes>
+                        </resource>
+                    </webResources>
+                </configuration>
+            </plugin>
+
 			<plugin>
 				<groupId>com.samaxes.maven</groupId>
 				<artifactId>minify-maven-plugin</artifactId>
@@ -159,7 +174,7 @@
 								<cssSourceFile>css/search.css</cssSourceFile>
 								<cssSourceFile>css/cardo.css</cssSourceFile>
 							</cssSourceFiles>
-							<cssFinalFile>step.css</cssFinalFile>
+							<cssFinalFile>step.${project.version}.css</cssFinalFile>
 							<jsSourceDir>.</jsSourceDir>
 							<jsSourceFiles>
                                 <jsSourceFile>libs/dohighlight-min.js</jsSourceFile>
@@ -234,7 +249,7 @@
                                 <jsSourceFile>js/init.js</jsSourceFile>
                                 <jsSourceFile>js/backbone/step.js</jsSourceFile>
 							</jsSourceFiles>
-							<jsFinalFile>step.js</jsFinalFile>
+							<jsFinalFile>step.${project.version}.js</jsFinalFile>
 						</configuration>
 					</execution>
 				</executions>

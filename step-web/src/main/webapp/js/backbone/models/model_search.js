@@ -77,6 +77,10 @@ var SearchModel = Backbone.Model.extend({
      */
     evaluateQuerySyntax : function(attributes) {
         var querySyntax = this._evaluateQuerySyntaxInternal(attributes);
+
+        //finalise query, then join them
+        querySyntax = this._getFinalQuerySyntax(querySyntax);
+
         return this._joinInRefiningSearches(querySyntax);
     },
 
@@ -214,11 +218,16 @@ var SearchModel = Backbone.Model.extend({
     },
 
     /**
-     * Trims and removes extra spaces
+     * Trims and removes extra spaces, and adds the versions in
      * @param querySyntax the query syntax built in its almost final form
      * @private
      */
     _getFinalQuerySyntax: function (querySyntax) {
-        return $.trim(querySyntax).replace(/ +/g, " ");
+        var newSyntax = $.trim(querySyntax).replace(/ +/g, " ");
+        if(newSyntax != "") {
+            newSyntax += " in (" + this.getDefaultedValue("searchVersions") + ")"
+        }
+
+        return newSyntax;
     }
 });

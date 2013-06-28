@@ -31,7 +31,7 @@ var SimpleTextSearchModel = AdvancedSearchModel.extend({
 
         if(level == 0 || secondaryCriteria == null || $.trim(secondaryCriteria) == "") {
             var finalQuery = prefix + restrictionQuery + query;
-            return this._getFinalQuerySyntax(finalQuery);
+            return finalQuery;
         }
 
         var firstSpace = proximity.indexOf(' ');
@@ -55,7 +55,7 @@ var SimpleTextSearchModel = AdvancedSearchModel.extend({
             }
         }
 
-        return this._getFinalQuerySyntax(prefix + restrictionQuery + query);
+        return prefix + restrictionQuery + query;
     },
 
     _evalCriteria : function(searchType, criteria, query) {

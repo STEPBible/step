@@ -83,7 +83,7 @@ var WordSearchModel = SearchModel.extend({
             query += " where original is (" + filter.join() + ") ";
         }
 
-        return this._getFinalQuerySyntax(query);
+        return query;
     },
 
     /**

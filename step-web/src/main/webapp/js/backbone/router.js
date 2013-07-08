@@ -12,6 +12,7 @@ var StepRouter = Backbone.Router.extend({
     },
     lastUrls: [],
     refinedSearches: [[], []],
+    fullSearchUrl : [undefined, undefined],
     lastSearch : [undefined, undefined],
     totalResults: [0,0],
     firstSync: false,
@@ -287,6 +288,11 @@ var StepRouter = Backbone.Router.extend({
     _doSearch: function (searchType, passageId, query, version, pageNumber, pageSize, sortOrder, context) {
         var self = this;
 
+        var masterVersion = "ESV";
+        if(version) {
+            masterVersion = version.split(",")[0];
+        }
+
         //we only ever check the last fragment in a multi query syntax...
         var versionArg = "";
         var refiningStart = query.lastIndexOf("=>");
@@ -307,6 +313,15 @@ var StepRouter = Backbone.Router.extend({
         var args = [encodeURIComponent(refinedQuery), sortingArg, contextArg, pageNumberArg, pageSizeArg];
 
         var startTime = new Date().getTime();
+
+
+        //mark the full search URL, so that we don't ever carry it again
+        var fullUrl = args.join();
+        if(this.fullSearchUrl[passageId] == fullUrl) {
+            return;
+        }
+        this.fullSearchUrl[passageId] = fullUrl;
+
         $.getSafe(SEARCH_DEFAULT, args, function (searchQueryResults) {
             step.util.trackAnalytics("search", "loaded", "time", new Date().getTime() - startTime);
             step.util.trackAnalytics("search", "loaded", "results", searchQueryResults.total);
@@ -316,7 +331,8 @@ var StepRouter = Backbone.Router.extend({
             Backbone.Events.trigger(searchType + ":new:" + passageId,
                 {
                     searchQueryResults: searchQueryResults,
-                    pageNumber: pageNumberArg
+                    pageNumber: pageNumberArg,
+                    masterVersion : masterVersion
                 });
 
             self.lastSearch[passageId] = refinedQuery;
@@ -350,7 +366,6 @@ var StepRouter = Backbone.Router.extend({
 //        console.log("Changing passage to", version, reference, options, extraVersions, interlinearMode);
 
         this.updateMenuModel(passageId, "SEARCH_PASSAGE");
-
 
         options = options || "";
         interlinearMode = interlinearMode || "";
@@ -395,5 +410,7 @@ var StepRouter = Backbone.Router.extend({
             extraVersions: extraVersions,
             detailLevel: detail
         });
+
+        this.fullSearchUrl[passageId] = undefined;
     }
 });

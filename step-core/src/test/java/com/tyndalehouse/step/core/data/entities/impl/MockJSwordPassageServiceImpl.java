@@ -152,7 +152,7 @@ public class MockJSwordPassageServiceImpl implements JSwordPassageService {
      * @return the key info
      */
     @Override
-    public KeyWrapper getKeyInfo(final String reference, final String version) {
+    public KeyWrapper getKeyInfo(final String reference, final String sourceVersion, final String version) {
         final KeyWrapper keyWrapper = new KeyWrapper();
         keyWrapper.setOsisKeyId("Gen.1.1");
         return keyWrapper;

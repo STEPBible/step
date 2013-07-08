@@ -1,11 +1,11 @@
 /*******************************************************************************
  * Copyright (c) 2012, Directors of the Tyndale STEP Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without 
  * modification, are permitted provided that the following conditions 
  * are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright 
  * notice, this list of conditions and the following disclaimer.
  * Redistributions in binary form must reproduce the above copyright 
@@ -16,7 +16,7 @@
  * nor the names of its contributors may be used to endorse or promote 
  * products derived from this software without specific prior written 
  * permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
@@ -32,17 +32,14 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.service.jsword.impl;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
+import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import com.tyndalehouse.step.core.exceptions.LuceneSearchException;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.BookException;
 import org.crosswire.jsword.index.IndexStatus;
@@ -51,6 +48,7 @@ import org.crosswire.jsword.index.search.DefaultSearchRequest;
 import org.crosswire.jsword.passage.*;
 import org.crosswire.jsword.passage.PassageTally.Order;
 import org.crosswire.jsword.versification.Versification;
+import org.crosswire.jsword.versification.VersificationsMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -68,24 +66,24 @@ import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
 
 /**
  * API to search across the data
- * 
+ *
  * @author chrisburrell
- * 
  */
 @Singleton
 public class JSwordSearchServiceImpl implements JSwordSearchService {
     private static final Logger LOGGER = LoggerFactory.getLogger(JSwordSearchServiceImpl.class);
     private static final int MAX_RESULTS = 50000;
+    private static final Pattern GEN_REV_RANGE = Pattern.compile("(\\+)\\[Gen-Rev\\]");
     private final JSwordVersificationService av11nService;
     private final JSwordPassageService jsword;
 
     /**
      * @param av11nService the versification service
-     * @param jsword the jsword lookup service to retrieve the references
+     * @param jsword       the jsword lookup service to retrieve the references
      */
     @Inject
     public JSwordSearchServiceImpl(final JSwordVersificationService av11nService,
-            final JSwordPassageService jsword) {
+                                   final JSwordPassageService jsword) {
         this.av11nService = av11nService;
         this.jsword = jsword;
 
@@ -104,7 +102,10 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
     @Override
     public Key searchKeys(final SearchQuery sq) {
         final DefaultSearchModifier modifier = new DefaultSearchModifier();
-        final Map<String, Key> resultsPerVersion = new HashMap<String, Key>();
+
+        // we have a linked hashmap, because we want to preserve the order of the versions we're looking up
+        // this was we end up with the results in the correct versification
+        final Map<String, Key> resultsPerVersion = new LinkedHashMap<String, Key>();
         modifier.setRanked(sq.isRanked());
 
         // need to set to something sensible, other we may experience a
@@ -117,20 +118,25 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
             // now for each version, we do the search and store it in a map
             final Book bible = this.av11nService.getBookFromVersion(version);
 
-            try {
-                // TODO JS-228 raised for thread-safety
-                synchronized (this) {
-                    if(bible.getIndexStatus().equals(IndexStatus.DONE)) {
-                        resultsPerVersion.put(version,
-                            bible.find(new DefaultSearchRequest(currentSearch.getQuery(), modifier)));
-                    } else {
-                        LOGGER.error("Module [{}] is not indexed.", version);
-                        resultsPerVersion.put(version, new DefaultKeyList());
+            // TODO JS-228 raised for thread-safety
+            synchronized (this) {
+                if (bible.getIndexStatus().equals(IndexStatus.DONE)) {
+                    final Key luceneSearchResults;
+                    try {
+                        String query = currentSearch.getQuery();
+                        //small optimization and cater for versions that don't support Gen-Rev as a range:
+                        query = GEN_REV_RANGE.matcher(query).replaceAll("");
+                        luceneSearchResults = bible.find(new DefaultSearchRequest(query, modifier));
+                    } catch (final BookException e) {
+                        throw new LuceneSearchException("Unable to search for " + currentSearch.getQuery()
+                                + " with Bible " + version, e);
                     }
+
+                    resultsPerVersion.put(version, luceneSearchResults);
+                } else {
+                    LOGGER.error("Module [{}] is not indexed.", version);
+                    resultsPerVersion.put(version, new DefaultKeyList());
                 }
-            } catch (final BookException e) {
-                throw new StepInternalException("Unable to search for " + currentSearch.getQuery()
-                        + " with Bible " + version, e);
             }
         }
 
@@ -142,12 +148,13 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
 
     /**
      * merges all search results together
-     * 
+     *
      * @param resultsPerVersion the results per version
      * @return the list of results
      */
     private Key mergeSearches(final Map<String, Key> resultsPerVersion) {
         Key all = null;
+        Versification allVersification = null;
 
         for (final Entry<String, Key> entry : resultsPerVersion.entrySet()) {
             final Key value = entry.getValue();
@@ -155,8 +162,25 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
 
             if (all == null) {
                 all = value;
+
+                if(all instanceof VerseKey) {
+                    allVersification = ((VerseKey) all).getVersification();
+                }
             } else {
-                all.addAll(value);
+                boolean valueIsVerseKey = value instanceof VerseKey;
+                if(valueIsVerseKey && allVersification == null) {
+                    throw new StepInternalException("Trying to combine versified key with non-versified key.");
+                }
+
+                //i.e. and allVersification != null
+                Key convertedKey = value;
+                if(valueIsVerseKey) {
+                    final VerseKey versifiedResults = (VerseKey) value;
+                    final Passage versifiedPassageResults = KeyUtil.getPassage(versifiedResults);
+                    convertedKey = VersificationsMapper.instance().map(versifiedPassageResults, allVersification);
+                }
+
+                all.addAll(convertedKey);
             }
         }
 
@@ -171,7 +195,7 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
 
     @Override
     public SearchResult retrieveResultsFromKeys(final SearchQuery sq, final Key results,
-            final String version, final LookupOption... options) {
+                                                final String version, final LookupOption... options) {
         final int total = getTotal(results);
 
         LOGGER.debug("Total of [{}] results.", total);
@@ -184,11 +208,12 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
 
     /**
      * Assumes the page size logic has already been run, retrieves results from the actual book in quest
-     * @param sq the search criteria
-     * @param version the version
-     * @param total the total number of items
+     *
+     * @param sq         the search criteria
+     * @param version    the version
+     * @param total      the total number of items
      * @param newResults the page of keys to retrieve
-     * @param options the options to retrieve the passage with
+     * @param options    the options to retrieve the passage with
      * @return the search result passages
      */
     @Override
@@ -211,7 +236,7 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
 
     /**
      * returns the total or -1 if not available
-     * 
+     *
      * @param results the key to set of results
      * @return the results
      */
@@ -222,14 +247,14 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
 
     /**
      * Constructs the search result object
-     * 
+     *
      * @param resultPassages the resulting passages
-     * @param total the total number of hits
-     * @param retrievalTime the time taken to retrieve the references attached to the search results
+     * @param total          the total number of hits
+     * @param retrievalTime  the time taken to retrieve the references attached to the search results
      * @return the search result to be returned to the service caller
      */
     private SearchResult getSearchResult(final List<SearchEntry> resultPassages, final int total,
-            final long retrievalTime) {
+                                         final long retrievalTime) {
         final SearchResult r = new SearchResult();
         r.setResults(resultPassages);
 
@@ -241,15 +266,15 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
 
     /**
      * Looks up all passages represented by the key
-     * 
-     * @param bible the bible under examination
+     *
+     * @param bible   the bible under examination
      * @param results the list of results
      * @param context amount of context to add
      * @param options to use to lookup the right parameterization of the text
      * @return the list of entries found
      */
     private List<SearchEntry> getPassagesForResults(final Book bible, final Key results, final int context,
-            final List<LookupOption> options) {
+                                                    final List<LookupOption> options) {
         final List<SearchEntry> resultPassages = new ArrayList<SearchEntry>();
         final Iterator<Key> iterator = ((Passage) results).iterator();
 
@@ -259,8 +284,8 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
 
             if (verse instanceof Verse) {
                 // then we need to make it into a verse range
-                final Versification v11n = this.av11nService.getVersificationForVersion(bible);
-                final VerseRange vr = new VerseRange(v11n, (Verse) verse);
+                final Verse verseAsVerse = (Verse) verse;
+                final VerseRange vr = new VerseRange(verseAsVerse.getVersification(), verseAsVerse);
                 vr.blur(context, RestrictionType.NONE);
                 lookupKey = vr;
             } else {
@@ -278,7 +303,7 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
     }
 
     /**
-     * @param sq search query
+     * @param sq      search query
      * @param results the result to be trimmed
      * @return the results
      */
@@ -305,8 +330,8 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
 
     /**
      * Sets up the passage tally to rank the results
-     * 
-     * @param ranked true to indicate ranking occurs
+     *
+     * @param ranked  true to indicate ranking occurs
      * @param results the results, amended to reflect what is desired
      */
     private void rankResults(final boolean ranked, final Key results) {

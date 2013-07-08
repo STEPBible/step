@@ -113,6 +113,7 @@ var BookmarkHistory = Backbone.View.extend({
         this._renderSingleItem(
             singleModel.get("bookmarkId"),
             singleModel.get("reference"),
+            singleModel.get("version"),
             this._getAscending(type),
             this._getContainer(type));
     },
@@ -124,15 +125,15 @@ var BookmarkHistory = Backbone.View.extend({
     renderAll: function (list, ascending, container) {
         for (var i = 0; i < list.length; i++) {
             var singleModel = list.at(i);
-            this._renderSingleItem(singleModel.get("bookmarkId"), singleModel.get("reference"), ascending, container);
+            this._renderSingleItem(singleModel.get("bookmarkId"), singleModel.get("reference"), singleModel.get("version"), ascending, container);
         }
     },
 
-    _renderSingleItem: function (bookmarkId, reference, ascending, container) {
+    _renderSingleItem: function (bookmarkId, reference, version, ascending, container) {
         if (!step.util.isBlank(reference)) {
             var item = $("<div>").addClass('bookmarkItem');
             item.attr("bookmarkId", bookmarkId);
-            item.passageButtons({ ref: reference });
+            item.passageButtons({ ref: reference, version : version });
 
             if (ascending) {
                 container.append(item);

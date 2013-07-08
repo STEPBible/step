@@ -139,6 +139,10 @@ span[strong]:hover {
 	display: block;	
 }
 
+.singleVerse h2, .singleVerse h3, .singleVerse h4 {
+    display: inline;
+}
+
 .singleVerse div.l {
 	display: inline;
 }

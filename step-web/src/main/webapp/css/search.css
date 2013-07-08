@@ -209,6 +209,7 @@ li.subjectHeading {
 
 .expandedHeadingItemContents a {
 	color: #33339F;
+    margin-left: 6px;
 }
 
 .simpleSubjectSearch {

@@ -37,8 +37,8 @@ var SearchCriteria = Backbone.View.extend({
             changed |= this.doDropdowns(jqElement, classes);
             this.doQtips(jqElement);
 
-            step.util.ui.doSocialButtons(this.$el.find(".searchToolbar"));
         }
+        step.util.ui.doSocialButtons(this.$el.find(".searchToolbar"));
 
         var syncRestored = this.syncValuesWithModel();
         if (!syncRestored && changed) {
@@ -218,8 +218,7 @@ var SearchCriteria = Backbone.View.extend({
 
 
             if (stepRouter.refinedSearches[self.model.get("passageId")].length == 0) {
-                $.getSafe(SEARCH_ESTIMATES, [encodeURIComponent(step.util.replaceSpecialChars(syntax)) +
-                    " in (" + versions + ")"],
+                $.getSafe(SEARCH_ESTIMATES, [encodeURIComponent(step.util.replaceSpecialChars(syntax))],
                     function (estimate) {
                         var field = self.$el.find(".resultEstimates");
                         if (estimate == -1) {

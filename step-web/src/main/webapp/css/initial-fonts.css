@@ -1,210 +1,211 @@
 body {
-	font-size: 70%;
-	font-family: Verdana;
+    font-size: 70%;
+    font-family: Verdana;
 }
 
-
 .notYetImplemented {
-	background-color: black !important ;
+    background-color: black !important;
 }
 
 .ui-widget {
-	font-family: Verdana;
-}
-	
-	
-.ui-menu-item * {
-	font-size: x-small;
-	/* min-width: 100px; */
-	white-space: nowrap;
+    font-family: Verdana;
 }
 
-	
+.ui-menu-item * {
+    font-size: x-small;
+    /* min-width: 100px; */
+    white-space: nowrap;
+}
+
 .ui-menu-item {
-	font-size: x-small;	
+    font-size: x-small;
 }
 
 .ui-menu-item a {
-		line-height: normal !important;
+    line-height: normal !important;
 }
 
 .ui-widget-header .ui-state-default {
-	color: #991C32 ;	
+    color: #991C32;
 }
 
 .logo {
-	text-align: center;
-	font-size: xx-small;
+    text-align: center;
+    font-size: xx-small;
 }
 
 .toolbarContainer label {
-	font-size: x-small;
-	padding: 0px 3px 0px 3px;
+    font-size: x-small;
+    padding: 0px 3px 0px 3px;
 }
 
 .selectingTick {
-	float: right;
-	margin-right: 2px;
-	border: 0px;		
+    float: right;
+    margin-right: 2px;
+    border: 0px;
 }
 
 /********************************/
 /** Lexicon popup               */
 /********************************/
 #lexiconDefinitionHeader a {
-	font-size: smaller;
+    font-size: smaller;
 }
 
 .superTranslit {
-	vertical-align: super;
+    vertical-align: super;
 }
 
 .stressTranslit {
-	font-variant: small-caps;	
+    font-variant: small-caps;
 }
 
 .lexiconTable {
-	width: 100%;
-	border: 1px dotted lightgray;
-	margin-bottom: 10px;
-	text-align: left;
+    width: 100%;
+    border: 1px dotted lightgray;
+    margin-bottom: 10px;
+    text-align: left;
 }
 
 .metadataContainer label * {
-	color: inherit !important;
+    color: inherit !important;
 }
 
 .detailSliderContainer {
-	float: right;
-	font-size: 10px;
+    float: right;
+    font-size: 10px;
 }
 
 .sliderDetailLevelLabel {
-	clear: both;
-	float: right;
-	font-style: italic;
-	color: #991C32;
-	font-weight: bold;
-	margin-bottom: 4px;
-	padding-left: 15px;
+    clear: both;
+    float: right;
+    font-style: italic;
+    color: #991C32;
+    font-weight: bold;
+    margin-bottom: 4px;
+    padding-left: 15px;
 }
 
 .detailLevel {
-	clear: both;
-	float: right;
-	width: 50px;
+    clear: both;
+    float: right;
+    width: 50px;
 }
 
 .metadataContainer h3 {
-	margin: 0px;
-	color: #33339F;
+    margin: 0px;
+    color: #33339F;
 }
 
 .metadataContainer span {
-	color: black;
+    color: black;
 }
 
 .metadataContainer div {
-	font-size: 8pt;
+    font-size: 8pt;
 }
 
 .lexiconRelatedWord a, .lexiconRelatedWord span {
-	color: #991C32;
+    color: #991C32;
 }
 
 .lexiconRelatedWord a:hover, .lexiconRelatedWord span:hover, .lexiconRelatedWord span:hover * {
-	color: #F3E5B4;
+    color: #F3E5B4;
 }
 
 #origin a {
-	color: #33339F;
-	font-size: 8pt;
+    color: #33339F;
+    font-size: 8pt;
 }
 
-
 .metadataContainer h5 {
-	font-size: 8pt;
-	display: inline;
+    font-size: 8pt;
+    display: inline;
 }
 
 .metadataContainer h5 * {
-	color: inherit;
-	font-size: 8pt;
-	display: inline;
+    color: inherit;
+    font-size: 8pt;
+    display: inline;
 }
-
 
 .emphasisePopupText {
-	font-style: italic;
+    font-style: italic;
 }
-
 
 /********************************/
 /** Other labels                */
 /********************************/
-.notApplicable {
-	color: grey;
-	font-style: italic;
+.notApplicable, .duplicate {
+    color: grey;
+    font-style: italic;
+}
+
+.duplicate-notice {
+    float: left;
+}
+
+.versification-notice {
+    font-size: 75%;
+    float: left;
+    color: #991C32;
 }
 
 /* .passage-arrow { */
 /* 	background-image: url('images/ui-icons_991C32_256x240.png'); */
 /* } */
 
-
 .filterOptions, .filterOptions * {
-	font-size: 10px !important;
-	white-space: nowrap;
+    font-size: 10px !important;
+    white-space: nowrap;
 }
 
 .filterOptions .detailSlider {
-	float: right;
-	margin-right: 10px;
+    float: right;
+    margin-right: 10px;
 }
 
 .filterButtonSet {
-	margin-top: 3px;
+    margin-top: 3px;
 }
 
-
 .stepTransliteration {
-	font-family: Arial;
-	font-style: italic;
-	font-size: 1.2em !important;
+    font-family: Arial;
+    font-style: italic;
+    font-size: 1.2em !important;
 }
 
 #stepInDevelopmentWarning {
-	bottom: 0px !important;
-	right: 110px;
-	position: absolute;
-	font-weight: bold;
-	width: 350px;
-	padding: 5px;
+    bottom: 0px !important;
+    right: 110px;
+    position: absolute;
+    font-weight: bold;
+    width: 350px;
+    padding: 5px;
 }
 
-
 .primaryDark {
-	color: #991C32;
+    color: #991C32;
 }
 
 .primaryDarkBold {
-	color: #991C32;
-	font-weight: bold;
+    color: #991C32;
+    font-weight: bold;
 }
 
 .primaryDarkBg {
-	background-color: #991C32;
-	color: #F3E5B4;
+    background-color: #991C32;
+    color: #F3E5B4;
 }
 
 .primaryLightBg {
-	background-color: rgb(235, 235, 241);
+    background-color: rgb(235, 235, 241);
 }
 
 .primaryLightBorder {
-	border-color: #F3E5B4;
+    border-color: #F3E5B4;
 }
 
 .secondaryBackground {
-	background-color: #F3E5B4;
+    background-color: #F3E5B4;
 }

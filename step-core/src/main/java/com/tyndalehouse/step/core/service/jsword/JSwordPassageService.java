@@ -127,7 +127,7 @@ public interface JSwordPassageService {
      * @param version version to look up the key in
      * @return the key with its osis ID
      */
-    KeyWrapper getKeyInfo(String reference, String version);
+    KeyWrapper getKeyInfo(String reference, String sourceVersion, String version);
 
     /**
      * Expands the current reference to the whole chapter it is contained by

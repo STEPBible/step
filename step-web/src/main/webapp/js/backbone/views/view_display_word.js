@@ -9,7 +9,7 @@ var WordDisplayView = TextDisplayView.extend({
      * and results
      * @private
      */
-    _doSpecificSearchRequirements: function (query, results, resultsWrapper) {
+    _doSpecificSearchRequirements: function (query, results, resultsWrapper, masterVersion) {
         if (resultsWrapper && resultsWrapper.searchQueryResults && resultsWrapper.searchQueryResults.definitions) {
             //add a toolbar in there for each word
             var originalWordToolbar = $("<div>").addClass("originalWordSearchToolbar").originalWordToolbar({

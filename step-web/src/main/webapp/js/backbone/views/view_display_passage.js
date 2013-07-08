@@ -45,6 +45,7 @@ var PassageDisplayView = Backbone.View.extend({
                 this._adjustTextAlignment(passageHtml);
                 step.fonts.redoTextSize(passageId, passageHtml);
                 this._addStrongHandlers(passageId, passageHtml);
+                this._doDuplicateNotice(passageId, passageHtml);
                 this._updatePageTitle(passageId, passageHtml, version, reference);
                 this._doTransliterations(passageHtml);
                 this._doInterlinearDividers(passageHtml);
@@ -59,7 +60,19 @@ var PassageDisplayView = Backbone.View.extend({
             }
         },
 
-        _doSocial : function() {
+        _doDuplicateNotice: function (passageId, passageHtml) {
+            var notices = $(".versification-notice", passageHtml);
+            for (var ii = 0; ii < notices.length; ii++) {
+                var notice = notices.eq(ii);
+                var noticeType = notice.attr("international");
+                notice.attr("title", __s[noticeType]);
+                if (notice.hasClass("duplicate")) {
+                    notice.css("float", "left");
+                }
+            }
+        },
+
+        _doSocial: function () {
             step.util.ui.doSocialButtons(this.$el.find(".passageToolbarContainer"));
         },
 
@@ -258,8 +271,8 @@ var PassageDisplayView = Backbone.View.extend({
 
                             $(api.elements.titlebar).css("padding-right", "0px");
 
-                            $(api.elements.titlebar).prepend(goToPassageArrowButton(true, xref, "leftPassagePreview"));
-                            $(api.elements.titlebar).prepend(goToPassageArrowButton(false, xref, "rightPassagePreview"));
+                            $(api.elements.titlebar).prepend(goToPassageArrowButton(true, version, xref, "leftPassagePreview"));
+                            $(api.elements.titlebar).prepend(goToPassageArrowButton(false, version, xref, "rightPassagePreview"));
                             $(api.elements.titlebar).prepend($("<a>&nbsp;</a>").button({ icons: { primary: "ui-icon-close" }}).addClass("closePassagePreview").click(function () {
                                 api.hide();
                             }));
@@ -308,6 +321,7 @@ var PassageDisplayView = Backbone.View.extend({
 
         _addSubjectAndRelatedWordsPopup: function (element) {
             var reference = element.attr("name");
+            var version = this.model.get("version");
             var self = this;
             var passageId = self.model.get("passageId");
 
@@ -320,7 +334,7 @@ var PassageDisplayView = Backbone.View.extend({
                 content: {
                     text: function (event, api) {
                         //otherwise, exciting new strong numbers to apply:
-                        $.getSafe(BIBLE_GET_STRONGS_AND_SUBJECTS, [reference], function (data) {
+                        $.getSafe(BIBLE_GET_STRONGS_AND_SUBJECTS, [version, reference], function (data) {
                             for (var key in data.strongData) {
                                 var value = data.strongData[key];
 
@@ -566,7 +580,7 @@ var PassageDisplayView = Backbone.View.extend({
             return sizes;
         },
 
-        handleFontSizeChange : function() {
+        handleFontSizeChange: function () {
             this.doInterlinearVerseNumbers(
                 this.$el.find(".passageContent"),
                 this.model.get("interlinearMode"),
@@ -585,7 +599,7 @@ var PassageDisplayView = Backbone.View.extend({
                 interlinearMode == "INTERLINEAR") {
 
                 var targetParentElement = passageContent;
-                if(!targetParentElement.hasClass("passageContentHolder")) {
+                if (!targetParentElement.hasClass("passageContentHolder")) {
                     targetParentElement = targetParentElement.find(".passageContentHolder");
                 }
 

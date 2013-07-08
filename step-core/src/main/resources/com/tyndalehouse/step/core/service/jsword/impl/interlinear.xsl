@@ -271,7 +271,6 @@
       </xsl:choose>
     </xsl:for-each>
     <!-- Handle the KJV paragraph marker. -->
-    <xsl:if test="milestone[@type = 'x-p']"><p /></xsl:if>
     <!-- If the verse doesn't start on its own line and -->
     <!-- the verse is not the first verse of a set of siblings, -->
     <!-- output an extra space. -->
@@ -297,7 +296,6 @@
       <h3 class="heading"><xsl:value-of select="$title"/></h3>
     </xsl:if>
     <!-- Handle the KJV paragraph marker. -->
-    <xsl:if test="milestone[@type = 'x-p']"><p /></xsl:if>
     <!-- Always output the verse -->
         <xsl:call-template name="versenum"/><xsl:apply-templates mode="jesus"/>
         <!-- Follow the verse with an extra space -->
@@ -505,11 +503,11 @@
 
   <!--=======================================================================-->
   <xsl:template match="p">
-    <p><xsl:apply-templates/></p>
+    <xsl:apply-templates/>
   </xsl:template>
   
   <xsl:template match="p" mode="jesus">
-    <p><xsl:apply-templates mode="jesus"/></p>
+    <xsl:apply-templates mode="jesus"/>
   </xsl:template>
   
   <!--=======================================================================-->
@@ -1024,8 +1022,8 @@
   <xsl:template match="l[@sID]"/>
   <xsl:template match="l[@sID]" mode="jesus"/>
 
-  <xsl:template match="l[@eID]"><p /></xsl:template>
-  <xsl:template match="l[@eID]" mode="jesus"><p /></xsl:template>
+  <xsl:template match="l[@eID]"></xsl:template>
+  <xsl:template match="l[@eID]" mode="jesus"></xsl:template>
 
   <xsl:template match="l">
     <xsl:apply-templates/><br/>
@@ -1157,12 +1155,14 @@
   <xsl:template match="milestone[@type = 'x-p']"> <!-- <xsl:text> </xsl:text><xsl:value-of select="@marker"/><xsl:text> </xsl:text> --></xsl:template>
   <xsl:template match="milestone[@type = 'x-p']" mode="jesus"><!-- <xsl:text> </xsl:text><xsl:value-of select="@marker"/><xsl:text> </xsl:text> --></xsl:template>
 
-  <xsl:template match="milestone[@type = 'cQuote']">
-    <xsl:value-of select="@marker"/>
+  <xsl:template match="milestone[@type = 'cQuote']" name="interlinearMilestone" >
+        <xsl:call-template name="outputBlankColumnWithText">
+            <xsl:with-param name="quoteText" select="@marker" />
+        </xsl:call-template>
   </xsl:template>
 
   <xsl:template match="milestone[@type = 'cQuote']" mode="jesus">
-    <xsl:value-of select="@marker"/>
+    <xsl:call-template name="interlinearMilestone" />
   </xsl:template>
 
   <xsl:template match="milestone[@type = 'line']"><br/></xsl:template>
@@ -1186,7 +1186,7 @@
   </xsl:template>
 
   <!-- If there is a milestoned q then just output a quotation mark -->
-  <xsl:template match="q[@sID or @eID]">
+  <xsl:template match="q[@sID or @eID]" name="interlinearQuote">
     <xsl:variable name="quoteText">
 	    <xsl:choose>
 	      <xsl:when test="@marker"><xsl:value-of select="@marker"/></xsl:when>
@@ -1194,109 +1194,64 @@
 	      <xsl:otherwise>"</xsl:otherwise>
 	    </xsl:choose>
 	</xsl:variable>
-	
-   		<span class="w">
-			<span class="text">
-				<xsl:value-of select="$quoteText" />
-			</span>
-
-		<!-- output a filling gap for strongs -->
-		<xsl:if test="$EnglishVocab = 'true'">
-			<span class="strongs">
-				<xsl:call-template name="outputNonBlank">
-					<xsl:with-param name="string" select="''" />
-				</xsl:call-template>
-			</span>
-		</xsl:if>
-		<xsl:if test="$Transliteration = 'true'">
-			<span class="strongs  stepTransliteration">
-				<xsl:call-template name="outputNonBlank">
-					<xsl:with-param name="string" select="''" />
-				</xsl:call-template>
-			</span>
-		</xsl:if>
-		<xsl:if test="$GreekVocab = 'true'">
-			<span class="ancientVocab">
-				<xsl:call-template name="outputNonBlank">
-					<xsl:with-param name="string" select="''" />
-				</xsl:call-template>
-			</span>
-		</xsl:if>
-
-		<!-- output a filling gap for morphs -->
-		<xsl:if test="$Morph = 'true'">
-			<span class="morphs">
-				<xsl:call-template name="outputNonBlank">
-					<xsl:with-param name="string" select="''" />
-				</xsl:call-template>
-			</span>
-		</xsl:if>
-	
-		<!--  fill up with spaces where we have extra versions shown -->
-		<xsl:if test="normalize-space($interlinearVersion) != ''">
-			<xsl:call-template name="blanksForVersions">
-				<xsl:with-param name="versions" select="$interlinearVersion" />
-			</xsl:call-template>
-		</xsl:if>
-	</span>
-  
+      <xsl:call-template name="outputBlankColumnWithText">
+        <xsl:with-param name="quoteText" select="$quoteText" />
+      </xsl:call-template>
   </xsl:template>
-  
+
+
   <xsl:template match="q[@sID or @eID]" mode="jesus">
-    <xsl:variable name="quoteText">
-	    <xsl:choose>
-	      <xsl:when test="@marker"><xsl:value-of select="@marker"/></xsl:when>
-	      <!-- The chosen mark should be based on the work's author's locale. -->
-	      <xsl:otherwise>"</xsl:otherwise>
-	    </xsl:choose>
-	</xsl:variable>
-	
-   		<span class="w">
-			<span>
-				<xsl:value-of select="$quoteText" />
-			</span>
-
-		<!-- output a filling gap for strongs -->
-		<xsl:if test="$EnglishVocab = 'true'">
-			<span class="strongs">
-				<xsl:call-template name="outputNonBlank">
-					<xsl:with-param name="string" select="''" />
-				</xsl:call-template>
-			</span>
-		</xsl:if>
-		<xsl:if test="$Transliteration = 'true'">
-			<span class="strongs  stepTransliteration">
-				<xsl:call-template name="outputNonBlank">
-					<xsl:with-param name="string" select="''" />
-				</xsl:call-template>
-			</span>
-		</xsl:if>
-		<xsl:if test="$GreekVocab = 'true'">
-			<span class="ancientVocab">
-				<xsl:call-template name="outputNonBlank">
-					<xsl:with-param name="string" select="''" />
-				</xsl:call-template>
-			</span>
-		</xsl:if>
-
-		<!-- output a filling gap for morphs -->
-		<xsl:if test="$Morph = 'true'">
-			<span class="morphs">
-				<xsl:call-template name="outputNonBlank">
-					<xsl:with-param name="string" select="''" />
-				</xsl:call-template>
-			</span>
-		</xsl:if>
-	
-		<!--  fill up with spaces where we have extra versions shown -->
-		<xsl:if test="normalize-space($interlinearVersion) != ''">
-			<xsl:call-template name="blanksForVersions">
-				<xsl:with-param name="versions" select="$interlinearVersion" />
-			</xsl:call-template>
-		</xsl:if>
-	</span>  
+    <xsl:call-template name="interlinearQuote" />
   </xsl:template>
-  
+
+    <xsl:template name="outputBlankColumnWithText">
+        <xsl:param name="quoteText" />
+        <span class="w">
+            <span>
+                <xsl:value-of select="$quoteText" />
+            </span>
+
+            <!-- output a filling gap for strongs -->
+            <xsl:if test="$EnglishVocab = 'true'">
+                <span class="strongs">
+                    <xsl:call-template name="outputNonBlank">
+                        <xsl:with-param name="string" select="''" />
+                    </xsl:call-template>
+                </span>
+            </xsl:if>
+            <xsl:if test="$Transliteration = 'true'">
+                <span class="strongs  stepTransliteration">
+                    <xsl:call-template name="outputNonBlank">
+                        <xsl:with-param name="string" select="''" />
+                    </xsl:call-template>
+                </span>
+            </xsl:if>
+            <xsl:if test="$GreekVocab = 'true'">
+                <span class="ancientVocab">
+                    <xsl:call-template name="outputNonBlank">
+                        <xsl:with-param name="string" select="''" />
+                    </xsl:call-template>
+                </span>
+            </xsl:if>
+
+            <!-- output a filling gap for morphs -->
+            <xsl:if test="$Morph = 'true'">
+                <span class="morphs">
+                    <xsl:call-template name="outputNonBlank">
+                        <xsl:with-param name="string" select="''" />
+                    </xsl:call-template>
+                </span>
+            </xsl:if>
+
+            <!--  fill up with spaces where we have extra versions shown -->
+            <xsl:if test="normalize-space($interlinearVersion) != ''">
+                <xsl:call-template name="blanksForVersions">
+                    <xsl:with-param name="versions" select="$interlinearVersion" />
+                </xsl:call-template>
+            </xsl:if>
+        </span>
+    </xsl:template>
+
   <xsl:template match="q[@who = 'Jesus']">
     	<xsl:choose>
 	  	<xsl:when test="$RedLetterText = 'true'">

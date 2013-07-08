@@ -58,6 +58,7 @@ BIBLE_GET_ALL_FEATURES =            STEP_SERVER_BASE_URL + "bible/getAllFeatures
 BIBLE_GET_BIBLE_BOOK_NAMES =        STEP_SERVER_BASE_URL + "bible/getBibleBookNames/";
 BIBLE_GET_NEXT_CHAPTER =            STEP_SERVER_BASE_URL + "bible/getNextChapter/";
 BIBLE_GET_PREVIOUS_CHAPTER =        STEP_SERVER_BASE_URL + "bible/getPreviousChapter/";
+BIBLE_CONVERT_VERSIFICATION =       STEP_SERVER_BASE_URL + "bible/convertReferenceForBook/";
 BIBLE_GET_BY_NUMBER =               STEP_SERVER_BASE_URL + "bible/getBibleByVerseNumber/";
 BIBLE_GET_KEY_INFO =                STEP_SERVER_BASE_URL + "bible/getKeyInfo/";
 BIBLE_EXPAND_TO_CHAPTER =           STEP_SERVER_BASE_URL + "bible/expandKeyToChapter/";
@@ -227,7 +228,8 @@ function facebookShare(element) {
         encodeURIComponent(stepRouter.getShareableColumnUrl(element)) +
         "&p%5Bsummary%5D=" +
         encodeURIComponent($("title").text()+ "...") +
-        "&p%5Bimages%5D%5B0%5D=" + encodeURIComponent(Backbone.history.location.origin + "/images/step-logo-100.png"),
+        "&p%5Bimages%5D%5B0%5D=" + encodeURIComponent(Backbone.history.location.origin + "/images/step-logo-100.png") +
+        "&status=0",
         'fb-share-dialog', 'width=626,height=436');
     return false;
 }

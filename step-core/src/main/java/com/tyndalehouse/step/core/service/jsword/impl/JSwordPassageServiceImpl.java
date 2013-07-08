@@ -249,16 +249,9 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
     }
 
     @Override
-    public KeyWrapper getKeyInfo(final String reference, final String version) {
+    public KeyWrapper getKeyInfo(final String reference, final String sourceVersion, String version) {
         final Book currentBook = this.versificationService.getBookFromVersion(version);
-
-        try {
-            Key key;
-            key = currentBook.getKey(reference);
-            return new KeyWrapper(key);
-        } catch (final NoSuchKeyException e) {
-            throw new LocalisedException(e, e.getMessage());
-        }
+        return this.versificationService.convertReference(reference, sourceVersion, version);
     }
 
     /**
@@ -660,7 +653,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
             key = normalize(key, versification);
             final SAXEventProvider osissep = bookData.getSAXEventProvider();
 
-            final TransformingSAXEventProvider htmlsep = executeStyleSheet(options, interlinearVersion,
+            final TransformingSAXEventProvider htmlsep = executeStyleSheet(versification, options, interlinearVersion,
                     bookData, osissep, displayMode);
 
             final OsisWrapper osisWrapper = new OsisWrapper(writeToString(htmlsep), key, getLanguages(book, displayMode, htmlsep), versification);
@@ -767,7 +760,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
 
             setUnaccenter(data, displayMode);
 
-            final TransformingSAXEventProvider transformer = executeStyleSheet(options, null, data,
+            final TransformingSAXEventProvider transformer = executeStyleSheet(v11n, options, null, data,
                     data.getSAXEventProvider(), displayMode);
 
             String[] languages = new String[books.length];
@@ -975,6 +968,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
     /**
      * Executes the stylesheet
      *
+     * @param masterVersification the versification of the top line
      * @param options            the list of options to pass in
      * @param interlinearVersion the interlinear version(s)
      * @param bookData           the book data, containing book and reference
@@ -983,7 +977,8 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
      * @return a Transforming SAX event provider, from which can be transformed into HTML
      * @throws TransformerException an exception in the stylesheet that is being executed
      */
-    private TransformingSAXEventProvider executeStyleSheet(final List<LookupOption> options,
+    private TransformingSAXEventProvider executeStyleSheet(final Versification masterVersification,
+                                                           final List<LookupOption> options,
                                                            final String interlinearVersion, final BookData bookData, final SAXEventProvider osissep,
                                                            final InterlinearMode displayMode) throws TransformerException {
         final XslConversionType requiredTransformation = identifyStyleSheet(bookData.getFirstBook()
@@ -1001,7 +996,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
 
                     // set parameters here
                     setOptions(tsep, options, bookData.getFirstBook());
-                    setInterlinearOptions(tsep, getInterlinearVersion(interlinearVersion), bookData.getKey()
+                    setInterlinearOptions(tsep, masterVersification, getInterlinearVersion(interlinearVersion), bookData.getKey()
                             .getOsisID(), displayMode);
                     setInterleavingOptions(tsep, displayMode, bookData);
                     return tsep;
@@ -1057,11 +1052,12 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
      * sets up the default interlinear options
      *
      * @param tsep               the transformer that we want to set up
+     * @param masterVersification the versification of the top line
      * @param interlinearVersion the interlinear version(s) that the users have requested
      * @param reference          the reference the user is interested in
      * @param displayMode        the mode to display the passage, i.e. interlinear, interleaved, etc.
      */
-    private void setInterlinearOptions(final TransformingSAXEventProvider tsep,
+    private void setInterlinearOptions(final TransformingSAXEventProvider tsep, final Versification masterVersification,
                                        final String interlinearVersion, final String reference, final InterlinearMode displayMode) {
         if (displayMode == InterlinearMode.INTERLINEAR) {
             tsep.setParameter("VLine", false);
@@ -1070,7 +1066,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
                 tsep.setParameter("interlinearVersion", interlinearVersion);
             }
 
-            final MultiInterlinearProviderImpl multiInterlinear = new MultiInterlinearProviderImpl(
+            final MultiInterlinearProviderImpl multiInterlinear = new MultiInterlinearProviderImpl(masterVersification,
                     interlinearVersion, reference, this.versificationService, this.vocabProvider);
             tsep.setParameter("interlinearProvider", multiInterlinear);
         }

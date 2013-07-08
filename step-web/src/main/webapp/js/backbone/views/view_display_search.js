@@ -24,7 +24,7 @@ var SearchDisplayView = Backbone.View.extend({
         } else if (searchResults.maxReached) {
             this._notApplicableMessage(results, __s.search_too_many_results);
         } else {
-            results = this.renderSearch(searchResults, query);
+            results = this.renderSearch(searchResults, query, resultsWrapper.masterVersion);
 
             if (searchResults.strongHighlights) {
                 this._highlightStrongs(results, searchResults.strongHighlights);
@@ -35,7 +35,7 @@ var SearchDisplayView = Backbone.View.extend({
         }
 
         step.fonts.redoTextSize(this.model.get("passageId"), results);
-        step.util.ui.emptyOffDomAndPopulate(this.passageContent, this._doSpecificSearchRequirements(query, results, resultsWrapper));
+        step.util.ui.emptyOffDomAndPopulate(this.passageContent, this._doSpecificSearchRequirements(query, results, resultsWrapper, resultsWrapper.masterVersion));
 
         step.util.ui.doSocialButtons(this.$el.find(".searchToolbar"));
         this.doTitle();
@@ -63,19 +63,19 @@ var SearchDisplayView = Backbone.View.extend({
      * @param resultsWrapper the wrapper containing all meta information about this current search
      * @private
      */
-    _doSpecificSearchRequirements: function (query, results, resultsWrapper) {
+    _doSpecificSearchRequirements: function (query, results, resultsWrapper, masterVersion) {
         //do nothing
         return results;
     },
 
 
-    _doResultsRender: function (passageId, searchQueryResults, pageNumberArg, highlightTerms, query) {
+    _doResultsRender: function (masterVersion, passageId, searchQueryResults, pageNumberArg, highlightTerms, query) {
         this._displayResults(searchQueryResults, passageId);
 
 
         this._doFonts(passageId);
         step.util.ui.addStrongHandlers(passageId, step.util.getPassageContainer(passageId));
-        this._doSpecificSearchRequirements(passageId, query);
+        this._doSpecificSearchRequirements(passageId, query, null, masterVersion);
     },
 
     _updateTotal: function (total, pageNumber) {

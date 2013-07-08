@@ -35,12 +35,14 @@ package com.tyndalehouse.step.core.service.jsword.impl;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import com.tyndalehouse.step.core.exceptions.StepInternalException;
+import com.tyndalehouse.step.core.models.KeyWrapper;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.BookMetaData;
 import org.crosswire.jsword.book.Books;
-import org.crosswire.jsword.passage.Verse;
-import org.crosswire.jsword.passage.VerseRange;
+import org.crosswire.jsword.passage.*;
 import org.crosswire.jsword.versification.Versification;
+import org.crosswire.jsword.versification.VersificationsMapper;
 import org.crosswire.jsword.versification.system.Versifications;
 
 import com.tyndalehouse.step.core.exceptions.TranslatedException;
@@ -131,6 +133,19 @@ public class JSwordVersificationServiceImpl implements JSwordVersificationServic
     @Override
     public Book getBookSilently(final String version) {
         return Books.installed().getBook(this.versionResolver.getLongName(version));
+    }
+
+    @Override
+    public KeyWrapper convertReference(final String reference, final String sourceVersion, final String targetVersion) {
+        final Versification source = this.getVersificationForVersion(sourceVersion);
+        final Versification target = this.getVersificationForVersion(targetVersion);
+
+        try {
+            Passage p = PassageKeyFactory.instance().getKey(source, reference);
+            return new KeyWrapper(VersificationsMapper.instance().map(p, target));
+        } catch (NoSuchKeyException e) {
+            throw new StepInternalException(e.getMessage(), e);
+        }
     }
 
     @Override

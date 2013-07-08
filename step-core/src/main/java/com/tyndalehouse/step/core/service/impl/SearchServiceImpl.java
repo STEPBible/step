@@ -55,6 +55,7 @@ import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import com.tyndalehouse.step.core.exceptions.LuceneSearchException;
 import com.tyndalehouse.step.core.models.search.*;
 import com.tyndalehouse.step.core.service.jsword.JSwordMetadataService;
 import org.apache.lucene.queryParser.MultiFieldQueryParser;
@@ -156,7 +157,7 @@ public class SearchServiceImpl implements SearchService {
         try {
             return doSearch(sq);
             // CHECKSTYLE:OFF
-        } catch (final Exception ex) {
+        } catch (final LuceneSearchException ex) {
             // CHECKSTYLE:ON
             throw new TranslatedException(ex, "search_invalid");
         }

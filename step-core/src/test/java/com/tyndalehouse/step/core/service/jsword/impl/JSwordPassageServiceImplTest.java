@@ -1,11 +1,11 @@
 /*******************************************************************************
  * Copyright (c) 2012, Directors of the Tyndale STEP Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without 
  * modification, are permitted provided that the following conditions 
  * are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright 
  * notice, this list of conditions and the following disclaimer.
  * Redistributions in binary form must reproduce the above copyright 
@@ -16,7 +16,7 @@
  * nor the names of its contributors may be used to endorse or promote 
  * products derived from this software without specific prior written 
  * permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
@@ -32,23 +32,17 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.service.jsword.impl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-import static org.mockito.Mockito.mock;
-
-import java.io.IOException;
-import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.List;
-
+import com.tyndalehouse.step.core.models.BookName;
+import com.tyndalehouse.step.core.models.InterlinearMode;
+import com.tyndalehouse.step.core.models.LookupOption;
+import com.tyndalehouse.step.core.models.OsisWrapper;
+import com.tyndalehouse.step.core.utils.TestUtils;
+import com.tyndalehouse.step.core.xsl.impl.ColorCoderProviderImpl;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.BookData;
 import org.crosswire.jsword.book.BookException;
 import org.crosswire.jsword.book.Books;
-import org.crosswire.jsword.passage.Key;
-import org.crosswire.jsword.passage.NoSuchKeyException;
-import org.crosswire.jsword.passage.Verse;
+import org.crosswire.jsword.passage.*;
 import org.crosswire.jsword.versification.BibleBook;
 import org.crosswire.jsword.versification.Versification;
 import org.crosswire.jsword.versification.system.Versifications;
@@ -64,18 +58,18 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.tyndalehouse.step.core.models.BookName;
-import com.tyndalehouse.step.core.models.InterlinearMode;
-import com.tyndalehouse.step.core.models.LookupOption;
-import com.tyndalehouse.step.core.models.OsisWrapper;
-import com.tyndalehouse.step.core.utils.TestUtils;
-import com.tyndalehouse.step.core.xsl.impl.ColorCoderProviderImpl;
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
 
 /**
  * a service providing a wrapper around JSword
- * 
+ *
  * @author CJBurrell
- * 
  */
 public class JSwordPassageServiceImplTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(JSwordPassageServiceImplTest.class);
@@ -92,7 +86,7 @@ public class JSwordPassageServiceImplTest {
 
     /**
      * tests that verse 0 gets excluded
-     * 
+     *
      * @throws NoSuchKeyException e
      */
     @Test
@@ -132,6 +126,11 @@ public class JSwordPassageServiceImplTest {
         assertTrue(osisText.getValue().contains("In the beginning"));
     }
 
+    @Test
+    public void readRev12FromNrsvEsv() {
+        this.jsi.getOsisText("ESV", "Rev.12.17-18");
+    }
+
     /**
      * should expand Ruth.1.22 to Ruth.1
      */
@@ -146,12 +145,11 @@ public class JSwordPassageServiceImplTest {
 
     /**
      * tests what happens when we select interlinear
-     * 
+     *
      * @throws NoSuchKeyException uncaught exceptions
-     * @throws BookException uncaught exception
-     * @throws IOException uncaught exception
-     * @throws JDOMException uncaught exception
-     * 
+     * @throws BookException      uncaught exception
+     * @throws IOException        uncaught exception
+     * @throws JDOMException      uncaught exception
      */
     @Test
     public void testInterlinearTransformation() throws NoSuchKeyException, BookException, JDOMException,
@@ -179,11 +177,11 @@ public class JSwordPassageServiceImplTest {
 
     /**
      * tests that the XSLT transformation is handled correctly
-     * 
-     * @throws BookException uncaught exception
+     *
+     * @throws BookException      uncaught exception
      * @throws NoSuchKeyException uncaught exception
-     * @throws IOException uncaught exception
-     * @throws JDOMException uncaught exception
+     * @throws IOException        uncaught exception
+     * @throws JDOMException      uncaught exception
      */
     @Test
     public void testXslTransformation() throws BookException, NoSuchKeyException, JDOMException, IOException {
@@ -208,20 +206,20 @@ public class JSwordPassageServiceImplTest {
 
     /**
      * tests that the XSLT transformation is handled correctly
-     * 
-     * @throws BookException uncaught exception
+     *
+     * @throws BookException      uncaught exception
      * @throws NoSuchKeyException uncaught exception
-     * @throws IOException uncaught exception
-     * @throws JDOMException uncaught exception
+     * @throws IOException        uncaught exception
+     * @throws JDOMException      uncaught exception
      */
     @Test
     public void testComparing() throws BookException, NoSuchKeyException, JDOMException, IOException {
         final Book currentBook = Books.installed().getBook("ESV");
-        final Book secondaryBook = Books.installed().getBook("SBLGNT");
+        final Book secondaryBook = Books.installed().getBook("KJV");
 
-        final String reference = "Gen 1";
-        final BookData bookData = new BookData(new Book[] { currentBook, secondaryBook },
-                currentBook.getKey(reference), false);
+        final String reference = "Psalm.3";
+        final BookData bookData = new BookData(new Book[]{currentBook, secondaryBook},
+                currentBook.getKey(reference), true);
         final Element osisFragment = bookData.getOsisFragment();
 
         final XMLOutputter xmlOutputter = new XMLOutputter(Format.getPrettyFormat());
@@ -231,12 +229,12 @@ public class JSwordPassageServiceImplTest {
         final List<LookupOption> options = new ArrayList<LookupOption>();
 
         final String osisText = this.jsi.getInterleavedVersions(
-                new String[] { currentBook.getInitials(), secondaryBook.getInitials() }, reference, options,
-                InterlinearMode.INTERLEAVED).getValue();
+                new String[]{currentBook.getInitials(), secondaryBook.getInitials()}, reference, options,
+                InterlinearMode.INTERLEAVED_COMPARE).getValue();
         final SAXBuilder sb = new SAXBuilder();
         final Document d = sb.build(new StringReader(osisText));
 
-        LOGGER.debug("\n {}", xmlOutputter.outputString(d));
+        LOGGER.info("\n {}", xmlOutputter.outputString(d));
         Assert.assertTrue(osisText.contains("span"));
     }
 
@@ -260,7 +258,7 @@ public class JSwordPassageServiceImplTest {
                 TestUtils.mockVersificationService());
 
         final List<BookName> bibleBookNames = jsi.getBibleBookNames("Ma", "ESV");
-        final String[] containedAbbrevations = new String[] { "Mal", "Mat", "Mar" };
+        final String[] containedAbbrevations = new String[]{"Mal", "Mat", "Mar"};
 
         for (final String s : containedAbbrevations) {
             boolean found = false;
@@ -310,7 +308,7 @@ public class JSwordPassageServiceImplTest {
 
     /**
      * testing variations of getting the previous reference
-     * 
+     *
      * @throws NoSuchKeyException uncaught exception
      */
     @Test
@@ -318,16 +316,16 @@ public class JSwordPassageServiceImplTest {
         final Book book = Books.installed().getBook("KJV");
         final Key key = book.getKey("Genesis 3:17");
 
-        assertEquals("Gen.3", this.jsi.getPreviousRef(new String[] { "Gen", "3", "17" }, key, book)
+        assertEquals("Gen.3", this.jsi.getPreviousRef(new String[]{"Gen", "3", "17"}, key, book)
                 .getOsisRef());
-        assertEquals("Gen.2", this.jsi.getPreviousRef(new String[] { "Gen", "3", "1" }, key, book)
+        assertEquals("Gen.2", this.jsi.getPreviousRef(new String[]{"Gen", "3", "1"}, key, book)
                 .getOsisRef());
-        assertEquals("Gen.2", this.jsi.getPreviousRef(new String[] { "Gen", "3" }, key, book).getOsisRef());
+        assertEquals("Gen.2", this.jsi.getPreviousRef(new String[]{"Gen", "3"}, key, book).getOsisRef());
     }
 
     /**
      * testing variations of getting the previous reference
-     * 
+     *
      * @throws NoSuchKeyException uncaught exception
      */
     @Test
@@ -335,17 +333,17 @@ public class JSwordPassageServiceImplTest {
         final Book book = Books.installed().getBook("KJV");
         final Key key = book.getKey("Genesis 3:24");
 
-        assertEquals("Gen.4", this.jsi.getNextRef(new String[] { "Gen", "3", "24" }, key, book).getOsisRef());
-        assertEquals("Gen.4", this.jsi.getNextRef(new String[] { "Gen", "3" }, key, book).getOsisRef());
+        assertEquals("Gen.4", this.jsi.getNextRef(new String[]{"Gen", "3", "24"}, key, book).getOsisRef());
+        assertEquals("Gen.4", this.jsi.getNextRef(new String[]{"Gen", "3"}, key, book).getOsisRef());
     }
 
     /**
      * Justs shows XML on the stdout
-     * 
-     * @throws BookException an exceptioon
+     *
+     * @throws BookException      an exceptioon
      * @throws NoSuchKeyException an exception
-     * @throws IOException an exception
-     * @throws JDOMException an exception
+     * @throws IOException        an exception
+     * @throws JDOMException      an exception
      */
     @Test
     public void testInterleave() throws BookException, NoSuchKeyException, JDOMException, IOException {
@@ -353,9 +351,9 @@ public class JSwordPassageServiceImplTest {
         final String ref = "John 4:1";
 
         // do the test
-        final String[] versions = new String[] { "Byz", "Tisch" };
-        final BookData data = new BookData(new Book[] { Books.installed().getBook(versions[0]),
-                Books.installed().getBook(versions[1]) }, Books.installed().getBook(versions[0]).getKey(ref),
+        final String[] versions = new String[]{"Byz", "Tisch"};
+        final BookData data = new BookData(new Book[]{Books.installed().getBook(versions[0]),
+                Books.installed().getBook(versions[1])}, Books.installed().getBook(versions[0]).getKey(ref),
                 true);
 
         LOGGER.debug("Original is:\n {}", xmlOutputter.outputString(data.getOsisFragment()));
@@ -370,11 +368,11 @@ public class JSwordPassageServiceImplTest {
 
     /**
      * Justs shows XML on the stdout
-     * 
-     * @throws BookException an exceptioon
+     *
+     * @throws BookException      an exceptioon
      * @throws NoSuchKeyException an exception
-     * @throws IOException an exception
-     * @throws JDOMException an exception
+     * @throws IOException        an exception
+     * @throws JDOMException      an exception
      */
     @Test
     public void testSegVariants() throws BookException, NoSuchKeyException, JDOMException, IOException {
@@ -401,11 +399,11 @@ public class JSwordPassageServiceImplTest {
 
     /**
      * Justs shows XML on the stdout
-     * 
-     * @throws BookException an exceptioon
+     *
+     * @throws BookException      an exceptioon
      * @throws NoSuchKeyException an exception
-     * @throws IOException an exception
-     * @throws JDOMException an exception
+     * @throws IOException        an exception
+     * @throws JDOMException      an exception
      */
     @Test
     public void testLongHeaders() throws BookException, NoSuchKeyException, JDOMException, IOException {
@@ -448,15 +446,15 @@ public class JSwordPassageServiceImplTest {
 
     /**
      * tries to replicate the issue with bookdata not being able to be read in a concurrent fashion
-     * 
-     * @throws NoSuchKeyException a no such key exception
-     * @throws BookException a book exception
+     *
+     * @throws NoSuchKeyException   a no such key exception
+     * @throws BookException        a book exception
      * @throws InterruptedException when the thread is interrupted
      */
     @Test
     public void testConcurrencyIssueOnBookData() throws NoSuchKeyException, BookException,
             InterruptedException {
-        final String[] names = { "KJV", "ESV" };
+        final String[] names = {"KJV", "ESV"};
         final String ref = "Rom.1.1";
 
         final Runnable r1 = new Runnable() {
@@ -522,7 +520,6 @@ public class JSwordPassageServiceImplTest {
 
     /**
      * Gets the gets the interlinear versions.
-     * 
      */
     @Test
     public void testGetInterlinearVersions() {
@@ -540,7 +537,7 @@ public class JSwordPassageServiceImplTest {
 
     /**
      * Reducing the key size to something appropriate for the UI and acceptable for copyright holders.
-     * 
+     *
      * @throws NoSuchKeyException the no such key exception
      */
     @Test
@@ -561,9 +558,9 @@ public class JSwordPassageServiceImplTest {
 
     /**
      * Reduce key size.
-     * 
-     * @param v the versification
-     * @param b the book
+     *
+     * @param v         the versification
+     * @param b         the book
      * @param keyString the key string
      * @return the key
      * @throws NoSuchKeyException the no such key exception
@@ -572,4 +569,5 @@ public class JSwordPassageServiceImplTest {
             throws NoSuchKeyException {
         return this.jsi.reduceKeySize(b.getKey(keyString), v);
     }
+
 }

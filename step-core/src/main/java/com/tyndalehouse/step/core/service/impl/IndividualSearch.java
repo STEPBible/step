@@ -52,13 +52,13 @@ import com.tyndalehouse.step.core.exceptions.TranslatedException;
  * @author chrisburrell
  */
 public class IndividualSearch {
+    public static final Pattern MAIN_RANGE = Pattern.compile("(\\+\\[[^\\]]+\\])");
     private static final char RELATED_WORDS = '~';
     private static final char SIMILAR_FORMS = '*';
 
     private static final Pattern IN_VERSIONS = Pattern
             .compile("in ?\\(([^)]+)\\)$", Pattern.CASE_INSENSITIVE);
 
-    private static final Pattern MAIN_RANGE = Pattern.compile("(\\+\\[[^\\]]+\\])");
     private static final Pattern SUB_RANGE = Pattern.compile("\\{([^}]+)\\}");
     private static final Pattern ORIGINAL_FILTER = Pattern.compile(" where original is \\(([^)]+)\\)");
 

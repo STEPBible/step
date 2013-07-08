@@ -1,6 +1,6 @@
 var TextDisplayView = SearchDisplayView.extend({
     titleFragment : __s.search_text,
-    renderSearch: function (serverResults, query) {
+    renderSearch: function (serverResults, query, masterVersion) {
         console.log("Rendering text search results");
 
         var results = $("<span>");
@@ -12,10 +12,10 @@ var TextDisplayView = SearchDisplayView.extend({
 
         //multiple vs singular version
         if (searchResults[0].preview) {
-            this._displayPassageResults(table, searchResults, sortOrder);
+            this._displayPassageResults(masterVersion, table, searchResults, sortOrder);
         } else {
             //we customize the generation of the actual verse content to add the version
-            this._displayPassageResults(table, searchResults, sortOrder, function (cell, item) {
+            this._displayPassageResults(masterVersion, table, searchResults, sortOrder, function (cell, item) {
                 var surrounding = $("<span>");
                 for (var i = 0; i < item.verseContent.length; i++) {
                     var verseContent = item.verseContent[i];
@@ -34,12 +34,12 @@ var TextDisplayView = SearchDisplayView.extend({
      * Displays a verse list
      * qualifiedSearchResults = {result: , key: }
      */
-    _displayPassageResults: function (table, searchResults, sortOrder, contentGenerator) {
+    _displayPassageResults: function (masterVersion, table, searchResults, sortOrder, contentGenerator) {
         var results = "";
         var lastUnicode = "";
         for (var i = 0; i < searchResults.length; i++) {
             this.doGroupHeader(table, searchResults[i], sortOrder);
-            this.getVerseRow(table, contentGenerator, searchResults[i]);
+            this.getVerseRow(masterVersion, table, contentGenerator, searchResults[i]);
         }
     },
 
@@ -53,12 +53,13 @@ var TextDisplayView = SearchDisplayView.extend({
         //by default, we don't group items
     },
 
-    getVerseRow: function getVerseRow(table, contentGenerator, item) {
+    getVerseRow: function getVerseRow(masterVersion, table, contentGenerator, item) {
         var newRow = $("<tr>").addClass("searchResultRow");
         var buttons = $("<td>").passageButtons({
             passageId: this.model.get("passageId"),
             ref: item.key,
-            showChapter: true
+            showChapter: true,
+            version : masterVersion
         });
         newRow.append(buttons);
         var contentCell = $("<td>").addClass("searchResultRow");

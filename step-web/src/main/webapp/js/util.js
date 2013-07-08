@@ -904,7 +904,7 @@ function expandSelection(range) {
 	} 
 };
 
-function goToPassageArrowButton(isLeft, ref, classes, goToChapter, handler) {
+function goToPassageArrowButton(isLeft, version, ref, classes, goToChapter, handler) {
     return passageArrowHover($("<a>&nbsp;</a>").button({
         icons : {
             primary : isLeft ? "ui-icon-arrowthick-1-e" : "ui-icon-arrowthick-1-w"
@@ -914,7 +914,7 @@ function goToPassageArrowButton(isLeft, ref, classes, goToChapter, handler) {
         if(handler) {
             handler();
         }
-        passageArrowTrigger(isLeft ? 0 : 1, ref, goToChapter);
+        passageArrowTrigger(isLeft ? 0 : 1, version, ref, goToChapter);
     }).addClass(classes), ref, isLeft);
 };
 
@@ -927,29 +927,8 @@ function passageArrowHover(element, ref, isLeft) {
         });
 };
 
-function goToPassageArrow(isLeft, ref, classes, goToChapter) {
-    if(goToChapter != true) {
-        goToChapter = false;
-    }
-    
-    if(isLeft) {
-		var text = "<a class='ui-icon ui-icon-arrowthick-1-w passage-arrow ";
-		
-		if(classes) {
-			text += classes;
-		}
-		return text + "' href='#' onclick='passageArrowTrigger(0, \""+ ref + "\", " + goToChapter +");'>&nbsp;</a>";
-	} else {
-		var text = "<a class='ui-icon ui-icon-arrowthick-1-e passage-arrow ";
-		if(classes) {
-			text += classes;
-		}
-		return text + "' href='#' onclick='passageArrowTrigger(1, \""+ ref + "\", " + goToChapter +");'>&nbsp;</a>";
-	}
-};
 
-
-function passageArrowTrigger(passageId, ref, goToChapter) {
+function passageArrowTrigger(passageId, sourceVersion, ref, goToChapter) {
     if(passageId == 1) {
         step.state.view.ensureTwoColumnView();
     }
@@ -958,12 +937,12 @@ function passageArrowTrigger(passageId, ref, goToChapter) {
     var indexOfColon = ref.indexOf(':');
     var multiColons = ref.indexOf(':', indexOfColon + 1) != -1;
     
+    var version = PassageModels.at(passageId).get("version");
     if(goToChapter && !multiColons) {
         //true value, so get the next reference
-        var version = PassageModels.at(passageId).get("version");
-        
+
         Backbone.Events.once("passage:rendered:" + passageId, function () {
-            $.getSafe(BIBLE_GET_KEY_INFO, [ref, version], function(newRef) {
+            $.getSafe(BIBLE_GET_KEY_INFO, [ref, sourceVersion, version], function(newRef) {
                 var passageContent = step.util.getPassageContent(passageId);
 
                 var scrolled = false;
@@ -993,12 +972,14 @@ function passageArrowTrigger(passageId, ref, goToChapter) {
             });            
         });
 
-        $.getSafe(BIBLE_EXPAND_TO_CHAPTER, [version, ref], function(newChapterRef) {
+        $.getSafe(BIBLE_EXPAND_TO_CHAPTER, [sourceVersion, version, ref], function(newChapterRef) {
             //reset the URL to force a passage lookup
             PassageModels.at(passageId).save({ reference: newChapterRef.name });
         });
     } else {
-        PassageModels.at(passageId).save({ reference: ref });
+        $.getSafe(BIBLE_CONVERT_VERSIFICATION, [ref, sourceVersion, version], function(data) {
+            PassageModels.at(passageId).save({ reference: data.name });
+        });
     }
 };
 

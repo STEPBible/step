@@ -139,7 +139,8 @@ CriteriaControlView = Backbone.View.extend({
      * so we always take the latest values from the model.
      */
     deferredChangeVisibleCriteria: function () {
-        if(this.model.get("passageId") == 1) {
+        var passageId = this.model.get("passageId");
+        if(passageId == 1) {
             step.state.view.ensureTwoColumnView();
         }
 
@@ -147,5 +148,8 @@ CriteriaControlView = Backbone.View.extend({
         var fieldsets = this.$el.find("fieldset");
         this.passageToolbarContainer.toggle(selectedSearch == "SEARCH_PASSAGE");
         fieldsets.hide().filter("[name='" + selectedSearch + "']").show();
+
+        //always empty the passage content
+        step.util.ui.emptyOffDomAndPopulate(step.util.getPassageContent(passageId), $("<div>"))
     }
 });

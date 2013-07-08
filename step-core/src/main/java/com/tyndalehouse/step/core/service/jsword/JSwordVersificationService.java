@@ -32,6 +32,7 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.service.jsword;
 
+import com.tyndalehouse.step.core.models.KeyWrapper;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.passage.Verse;
 import org.crosswire.jsword.passage.VerseRange;
@@ -111,4 +112,13 @@ public interface JSwordVersificationService {
      * @return the book returning null if not found
      */
     Book getBookSilently(String version);
+
+    /**
+     Converts from one av11n to another
+     * @param reference the reference
+     * @param sourceVersion source book
+     * @param targetVersion target book
+     * @return the converted reference
+     */
+    KeyWrapper convertReference(String reference, String sourceVersion, String targetVersion);
 }

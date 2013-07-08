@@ -2,6 +2,7 @@ $.widget("custom.passageButtons",  {
     options : {
         passageId : 0,
         ref : null,
+        version : null,
         showChapter : false,
         display : null
     },
@@ -10,8 +11,8 @@ $.widget("custom.passageButtons",  {
      * Creates the passageButtons
      */
     _create : function() {
-        var leftLink = $("<a>&nbsp;</a>").attr('href', 'javascript:void()');
-        var rightLink = $("<a>&nbsp;</a>").attr('href', 'javascript:void()');
+        var leftLink = $("<a>&nbsp;</a>").attr('href', 'javascript:void(0)');
+        var rightLink = $("<a>&nbsp;</a>").attr('href', 'javascript:void(0)');
         
         this.element.addClass("passageButtonsWidget").attr('ref', this.options.ref);
 
@@ -49,7 +50,7 @@ $.widget("custom.passageButtons",  {
     },
     
     _clickHandler : function(passageId) {
-        passageArrowTrigger(passageId, this.options.ref, this.options.showChapter);
+        passageArrowTrigger(passageId, this.options.version, this.options.ref, this.options.showChapter);
         $($(".column")[passageId]).removeClass("primaryLightBg");
 
     }

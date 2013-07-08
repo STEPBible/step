@@ -42,6 +42,12 @@ import java.lang.reflect.Method;
 import com.tyndalehouse.step.core.service.VocabularyService;
 import org.crosswire.common.util.Language;
 import org.crosswire.jsword.book.Book;
+import org.crosswire.jsword.passage.KeyFactory;
+import org.crosswire.jsword.passage.NoSuchKeyException;
+import org.crosswire.jsword.passage.PassageKeyFactory;
+import org.crosswire.jsword.versification.Versification;
+import org.crosswire.jsword.versification.system.SystemKJV;
+import org.crosswire.jsword.versification.system.Versifications;
 import org.junit.Test;
 
 /**
@@ -62,7 +68,7 @@ public class InterlinearProviderImplTest {
      */
     @Test
     public void testInterlinearStrongMorphBased() throws IllegalAccessException, InvocationTargetException,
-            NoSuchMethodException {
+            NoSuchMethodException, NoSuchKeyException {
         final InterlinearProviderImpl interlinear = new InterlinearProviderImpl();
         final Book mock = mock(Book.class);
         final VocabularyService vocabularyService = mock(VocabularyService.class);
@@ -79,9 +85,12 @@ public class InterlinearProviderImplTest {
         method.setAccessible(true);
 
         // add a word based on a strong,morph
-        method.invoke(interlinear, "v1", "strong", "word");
+        method.invoke(interlinear, "Gen.1.1", "strong", "word");
 
-        assertEquals(interlinear.getWord("v1", "strong"), "word");
-        assertEquals(interlinear.getWord("x", "strong"), "");
+        Versification KJV = Versifications.instance().getVersification("KJV");
+        assertEquals(interlinear.getWord(PassageKeyFactory.instance().getKey(
+               KJV, "Gen.1.1"), "strong"), "word");
+        assertEquals(interlinear.getWord(PassageKeyFactory.instance().getKey(
+                KJV, "Gen.2.1"), "strong"), "");
     }
 }

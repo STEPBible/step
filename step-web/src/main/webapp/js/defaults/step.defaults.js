@@ -109,6 +109,10 @@ step.defaults = {
             originalFormsReference : ["RELATED", "ALL", "SPECIFIC"],
             originalSorting:        [SCRIPTURE, VOCABULARY, ORIGINAL_SPELLING],
             originalSortingValues:  ["SCRIPTURE", "VOCABULARY", "ORIGINAL_SPELLING"]
+        },
+
+        subject : {
+            subjectTypes : ["ESV", "NAVE", "NAVE_EXTENDED"]
         }
     }
 };

@@ -34,6 +34,8 @@
         </tr>
     </table>
 
+    <input class="subjectSearchType _m" type='hidden' value="" />
+
     <div>
         <input type="button" class="subjectClear resetSearch" value="<fmt:message key="search_reset_form" />" title="<fmt:message key="search_reset_form_title" />" />
         <input type="button" class="subjectSearch doSearch" value="<fmt:message key="search_search_button" />" title="<fmt:message key="search_search_button_title" />" />

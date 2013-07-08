@@ -43,7 +43,6 @@ import static com.tyndalehouse.step.core.models.LookupOption.TRANSLITERATION;
 import static com.tyndalehouse.step.core.models.LookupOption.VERSE_NUMBERS;
 import static com.tyndalehouse.step.core.utils.JSwordUtils.getSortedSerialisableList;
 import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
-import static com.tyndalehouse.step.core.utils.StringUtils.isEmpty;
 import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
 
 import java.util.ArrayList;
@@ -62,6 +61,7 @@ import javax.inject.Singleton;
 
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.BookCategory;
+import org.crosswire.jsword.passage.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -206,9 +206,18 @@ public class BibleInformationServiceImpl implements BibleInformationService {
     }
 
     @Override
-    public StrongCountsAndSubjects getStrongNumbersAndSubjects(final String reference) {
+    public StrongCountsAndSubjects getStrongNumbersAndSubjects(final String version, final String reference) {
+
+        Verse key = null;
+        try {
+            key = VerseFactory.fromString(this.jswordVersification.getVersificationForVersion(version), reference);
+        } catch (NoSuchKeyException e) {
+            LOGGER.error("Unable to look up strongs for [{}]", key.getOsisID(), e);
+            return new StrongCountsAndSubjects();
+        }
+
         final StrongCountsAndSubjects verseStrongs = new JSwordStrongNumberHelper(this.entityManager,
-                reference, this.jswordVersification).getVerseStrongs();
+                key, this.jswordVersification).getVerseStrongs();
 
         final Set<String> osisIds = verseStrongs.getStrongData().keySet();
         final Map<String, SearchResult> versesToSubjects = new HashMap<String, SearchResult>(osisIds.size());
@@ -221,6 +230,11 @@ public class BibleInformationServiceImpl implements BibleInformationService {
 
         verseStrongs.setRelatedSubjects(versesToSubjects);
         return verseStrongs;
+    }
+
+    @Override
+    public KeyWrapper convertReferenceForBook(final String reference, final String sourceVersion, final String targetVersion) {
+        return jswordVersification.convertReference(reference, sourceVersion, targetVersion);
     }
 
     /**
@@ -555,13 +569,15 @@ public class BibleInformationServiceImpl implements BibleInformationService {
     /**
      * Gets the key info.
      * 
+     *
      * @param reference the reference
+     * @param sourceVersion the version attached to the reference
      * @param version the version
      * @return the key info
      */
     @Override
-    public KeyWrapper getKeyInfo(final String reference, final String version) {
-        return this.jswordPassage.getKeyInfo(reference, version);
+    public KeyWrapper getKeyInfo(final String reference, final String sourceVersion, final String version) {
+        return this.jswordPassage.getKeyInfo(reference, sourceVersion, version);
     }
 
     /**
@@ -584,16 +600,11 @@ public class BibleInformationServiceImpl implements BibleInformationService {
         this.jswordModule.reIndex(initials);
     }
 
-    /**
-     * Expand key to chapter.
-     * 
-     * @param version the version
-     * @param reference the reference
-     * @return the key wrapper
-     */
     @Override
-    public KeyWrapper expandKeyToChapter(final String version, final String reference) {
-        return this.jswordPassage.expandToChapter(version, reference);
+    public KeyWrapper expandKeyToChapter(final String sourceVersion, final String version, final String reference) {
+        //convert first to the correct key, then expand to chapter
+        String newRef = this.jswordVersification.convertReference(reference, sourceVersion, version).getOsisKeyId();
+        return this.jswordPassage.expandToChapter(version, newRef);
     }
 
     /**

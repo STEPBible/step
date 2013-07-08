@@ -222,9 +222,10 @@ public class BibleController {
      * @return the strong numbers attached to the passage
      */
     @Timed(name = "strong-subject-counts", rateUnit = TimeUnit.SECONDS, durationUnit = TimeUnit.MILLISECONDS)
-    public StrongCountsAndSubjects getStrongNumbersAndSubjects(final String reference) {
+    public StrongCountsAndSubjects getStrongNumbersAndSubjects(final String version, final String reference) {
         notEmpty(reference, "A verse must be provided", APP_MISSING_FIELD);
-        return this.bibleInformation.getStrongNumbersAndSubjects(reference);
+        notEmpty(reference, "A version must be provided", APP_MISSING_FIELD);
+        return this.bibleInformation.getStrongNumbersAndSubjects(version, reference);
     }
 
     /**
@@ -274,6 +275,18 @@ public class BibleController {
     }
 
     /**
+     * ascertains the next reference to lookup.
+     *
+     * @param reference the current ref
+     * @param version the current version
+     * @return the next reference
+     */
+    @Cacheable(true)
+    public KeyWrapper convertReferenceForBook(final String reference, final String sourceVersion, final String targetVersion) {
+        return this.bibleInformation.convertReferenceForBook(reference, sourceVersion, targetVersion);
+    }
+
+    /**
      * ascertains the previous reference to lookup.
      * 
      * @param reference the current ref
@@ -293,20 +306,21 @@ public class BibleController {
      * @return the new reference with full chapter
      */
     @Cacheable(true)
-    public KeyWrapper expandKeyToChapter(final String version, final String reference) {
-        return this.bibleInformation.expandKeyToChapter(version, reference);
+    public KeyWrapper expandKeyToChapter(final String sourceVersion, final String version, final String reference) {
+        return this.bibleInformation.expandKeyToChapter(sourceVersion, version, reference);
     }
 
     /**
      * Retrieves key information.
      * 
      * @param reference the reference that we are interested in
+     * @param sourceVersion the version attached to the reference text
      * @param version the version to lookup the key in
      * @return the information about that particular key, e.g. OSIS-ID
      */
     @Cacheable(true)
-    public KeyWrapper getKeyInfo(final String reference, final String version) {
-        return this.bibleInformation.getKeyInfo(reference, version);
+    public KeyWrapper getKeyInfo(final String reference, final String sourceVersion, final String version) {
+        return this.bibleInformation.getKeyInfo(reference, sourceVersion, version);
     }
 
 }

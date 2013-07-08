@@ -1,11 +1,11 @@
 /*******************************************************************************
  * Copyright (c) 2012, Directors of the Tyndale STEP Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without 
  * modification, are permitted provided that the following conditions 
  * are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright 
  * notice, this list of conditions and the following disclaimer.
  * Redistributions in binary form must reproduce the above copyright 
@@ -16,7 +16,7 @@
  * nor the names of its contributors may be used to endorse or promote 
  * products derived from this software without specific prior written 
  * permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
@@ -68,9 +68,11 @@ import org.crosswire.jsword.index.IndexManagerFactory;
 import org.crosswire.jsword.index.lucene.LuceneIndex;
 import org.crosswire.jsword.passage.Key;
 import org.crosswire.jsword.passage.NoSuchKeyException;
+import org.crosswire.jsword.passage.Passage;
 import org.crosswire.jsword.passage.Verse;
 import org.crosswire.jsword.versification.Testament;
 import org.crosswire.jsword.versification.Versification;
+import org.crosswire.jsword.versification.VersificationsMapper;
 import org.jdom2.Element;
 import org.jdom2.filter.ElementFilter;
 import org.slf4j.Logger;
@@ -87,12 +89,10 @@ import com.tyndalehouse.step.core.utils.StringConversionUtils;
 
 /**
  * Provides each strong number given a verse.
- * <p>
+ * <p/>
  * TODO: is it worth introducing a cache here for all verses? Raise JIRA to work that one out at some point //
- * TODO: change to ESV book, rather than KJV TOD: Should we cache intermediate strongs? since they can be
- * re-used without looking up Lucene - on the other hand, Lucene is very quick.
- * <p>
- * 
+ * <p/>
+ * <p/>
  * Note, this object is not thread-safe. The intention is for it to be a use-once, throw-away type of object.
  */
 public class JSwordStrongNumberHelper {
@@ -101,35 +101,48 @@ public class JSwordStrongNumberHelper {
     private static final String STRONG_REF_VERSION = "ESV";
     private static final Book STRONG_REF_VERSION_BOOK = Books.installed().getBook(STRONG_REF_VERSION);
     private final JSwordVersificationService versification;
+    private static volatile Versification v11n;
     private Map<String, SortedSet<LexiconSuggestion>> verseStrongs;
     private Map<String, BookAndBibleCount> allStrongs;
     private Map<String, List<String>> relatedVerses;
     private boolean isOT;
     private final EntityIndexReader definitions;
-    private final String reference;
+    private final Verse reference;
 
     /**
      * Instantiates a new strong number provider impl.
-     * 
-     * @param manager the manager that helps look up references
-     * @param reference the reference in the KJV versification equivalent
+     *
+     * @param manager       the manager that helps look up references
+     * @param reference     the reference in the KJV versification equivalent
      * @param versification the versification service to lookup the versification of the reference book
-     *            (avoiding statics here!)
      */
-    public JSwordStrongNumberHelper(final EntityManager manager, final String reference,
-            final JSwordVersificationService versification) {
+    public JSwordStrongNumberHelper(final EntityManager manager, final Verse reference,
+                                    final JSwordVersificationService versification) {
         this.versification = versification;
         this.definitions = manager.getReader("definition");
         this.reference = reference;
+        initReferenceVersification();
+    }
+
+    /**
+     * Inits the reference versification system so that we don't ever need to do this again
+     */
+    private void initReferenceVersification() {
+        if (v11n == null) {
+            synchronized (JSwordStrongNumberHelper.class) {
+                if (v11n == null) {
+                    v11n = this.versification.getVersificationForVersion(STRONG_REF_VERSION_BOOK);
+                }
+            }
+        }
     }
 
     /**
      * Calculate counts for a particular key.
-     * 
      */
     private void calculateCounts() {
         try {
-            final Key key = STRONG_REF_VERSION_BOOK.getKey(this.reference);
+            final Key key = VersificationsMapper.instance().mapVerse(this.reference, v11n);
             this.verseStrongs = new TreeMap<String, SortedSet<LexiconSuggestion>>();
             this.allStrongs = new HashMap<String, BookAndBibleCount>(256);
 
@@ -145,7 +158,6 @@ public class JSwordStrongNumberHelper {
             applySearchCounts(getBookFromKey(key));
 
             // is it OT or NT
-            final Versification v11n = this.versification.getVersificationForVersion(STRONG_REF_VERSION_BOOK);
             this.isOT = v11n.getTestament(v11n.getOrdinal((Verse) key.get(0))) == Testament.OLD;
 
         } catch (final NoSuchKeyException ex) {
@@ -158,7 +170,7 @@ public class JSwordStrongNumberHelper {
     /**
      * The book of the OSIS ID reference, or the passed in parameter in every other case where the OSIS ID
      * does not contain multiple part.
-     * 
+     *
      * @param key the key, used to lookup the OSIS ID
      * @return the book from osis
      */
@@ -174,7 +186,7 @@ public class JSwordStrongNumberHelper {
 
     /**
      * Applies the search counts for every strong number.
-     * 
+     *
      * @param bookName the book name
      */
     private void applySearchCounts(final String bookName) {
@@ -210,7 +222,7 @@ public class JSwordStrongNumberHelper {
 
     /**
      * Gets the index searcher.
-     * 
+     *
      * @return the index searcher, or null if it failed
      */
     private IndexSearcher getIndexSearcher() {
@@ -233,15 +245,15 @@ public class JSwordStrongNumberHelper {
 
     /**
      * Read data from lexicon.
-     * 
-     * @param reader the reader
-     * @param verseRef the verse ref
+     *
+     * @param reader        the reader
+     * @param verseRef      the verse ref
      * @param strongNumbers the strong numbers
      */
     private void readDataFromLexicon(final EntityIndexReader reader, final String verseRef,
-            final String strongNumbers) {
+                                     final String strongNumbers) {
 
-        if(StringUtils.isBlank(strongNumbers)) {
+        if (StringUtils.isBlank(strongNumbers)) {
             LOG.warn("Attempting to search for 'no strongs' in verse [{}]", verseRef);
             return;
         }
@@ -286,13 +298,13 @@ public class JSwordStrongNumberHelper {
 
     /**
      * Gets the osis elements.
-     * 
+     *
      * @param key the key
      * @return the osis elements
      * @throws NoSuchKeyException the no such key exception
-     * @throws BookException the book exception
+     * @throws BookException      the book exception
      */
-    @SuppressWarnings({ "unchecked", "serial" })
+    @SuppressWarnings({"unchecked", "serial"})
     private List<Element> getOsisElements(final Key key) throws NoSuchKeyException, BookException {
         final BookData data = new BookData(STRONG_REF_VERSION_BOOK, key);
         return data.getOsisFragment().getContent(

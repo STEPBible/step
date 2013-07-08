@@ -57,7 +57,7 @@ public interface BibleInformationService {
      * 
      * @param allVersions a boolean indicating whether all versions should be returned
      * @param locale the locale of the requester
-     * @param usersLocale TODO
+     * @param usersLocale the locale of the user
      * 
      * @return all the available versions of the bible
      */
@@ -165,20 +165,24 @@ public interface BibleInformationService {
     /**
      * Obtains information about a particular key, including its OSIS ID
      * 
+     *
      * @param reference the reference we are looking up
+     * @param sourceVersion the version attached to the reference
      * @param version the initials of the version we are wanting to look up 'reference' in.
      * @return a wrapper around the info retrieved
      */
-    KeyWrapper getKeyInfo(String reference, String version);
+    KeyWrapper getKeyInfo(String reference, final String sourceVersion, String version);
 
     /**
      * Takes a reference and returns the chapter it is part of
      * 
-     * @param reference the reference that we are interested in
+     *
+     * @param sourceVersion the version attached to the reference
      * @param version the version to lookup the key in
+     * @param reference the reference that we are interested in
      * @return the new reference with full chapter
      */
-    KeyWrapper expandKeyToChapter(String version, String reference);
+    KeyWrapper expandKeyToChapter(final String sourceVersion, String version, String reference);
 
     /**
      * @param version the version to be queried for
@@ -206,10 +210,20 @@ public interface BibleInformationService {
 
     /**
      * Gets the strong numbers for a particular verse.
-     * 
+     *
+     * @param version the version attached to the reference
      * @param reference the reference to be looked up
      * @return the strong numbers return keyed by OSIS ID
      */
-    StrongCountsAndSubjects getStrongNumbersAndSubjects(String reference);
+    StrongCountsAndSubjects getStrongNumbersAndSubjects(final String version, String reference);
+
+    /**
+     * Converts a reference from the source versification to the target versification
+     * @param reference the reference itself
+     * @param sourceVersion the versification of the given reference
+     * @param targetVersion our chosen final versification
+     * @return
+     */
+    KeyWrapper convertReferenceForBook(String reference, String sourceVersion, String targetVersion);
 
 }

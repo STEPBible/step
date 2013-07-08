@@ -40,7 +40,6 @@ var PassageModel = Backbone.Model.extend({
         },
 
         switchMasterInterlinearVersion : function(newVersion) {
-
             var interlinearVersions = this.get("extraVersions");
             var currentVersion = this.get("version").toUpperCase();
 
@@ -56,9 +55,13 @@ var PassageModel = Backbone.Model.extend({
                 }
             }
 
-            this.save({
-                version : newVersion,
-                extraVersions : newVersions
+            var self = this;
+            $.getSafe(BIBLE_CONVERT_VERSIFICATION, [this.get("reference"), currentVersion, newVersion], function(data) {
+                self.save({
+                    version : newVersion,
+                    extraVersions : newVersions,
+                    reference : data.name
+                });
             });
         },
 

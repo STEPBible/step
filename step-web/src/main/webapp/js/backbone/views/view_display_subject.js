@@ -1,11 +1,11 @@
 var SubjectDisplayView = SearchDisplayView.extend({
     titleFragment : __s.search_subject,
-    renderSearch: function (searchResults, query) {
+    renderSearch: function (searchResults, query, masterVersion) {
         console.log("Rendering subject search results");
         var query = step.util.undoReplaceSpecialChars(searchResults.query);
 
         if (query.startsWith("s=")) {
-            return this._doSimpleSubjectSearchResults(query, searchResults.results);
+            return this._doSimpleSubjectSearchResults(masterVersion, query, searchResults.results);
         } else {
             //caters for s+=, s++= and sr=
             return this._doNaveSearchResults(query, searchResults.results);
@@ -19,7 +19,7 @@ var SubjectDisplayView = SearchDisplayView.extend({
      * @returns {*|jQuery}
      * @private
      */
-    _doSimpleSubjectSearchResults: function (query, searchResults) {
+    _doSimpleSubjectSearchResults: function (masterVersion, query, searchResults) {
         var results = $("<table>").addClass("subjectSection searchResults simpleSubjectSearch");
         var headingsSearch = searchResults[0].headingsSearch;
         var headingsResults = headingsSearch.results;
@@ -29,7 +29,8 @@ var SubjectDisplayView = SearchDisplayView.extend({
             var button = $("<td>").addClass("subjectHeading").passageButtons({
                 passageId: this.model.get("passageId"),
                 ref: headingsResults[i].key,
-                showChapter: true
+                showChapter: true,
+                version : masterVersion
             });
 
             item.append(button);
@@ -56,11 +57,18 @@ var SubjectDisplayView = SearchDisplayView.extend({
             var equalIndex = query.indexOf('=');
             var newQuery = query.substring(0, equalIndex) + '+' + query.substring(equalIndex);
 
-            if (newQuery.indexOf("+++") != -1) {
-                newQuery = newQuery.replace("+++", "");
+            //find the current model type
+            var currentSubjectType = model.get("subjectSearchType");
+            var i = 0;
+            for(var i = 0; i < step.defaults.search.subject.subjectTypes.length; i++) {
+                   if(currentSubjectType == step.defaults.search.subject.subjectTypes[i]) {
+                       break;
+                   }
             }
 
-            model.save({ querySyntax : newQuery });
+            model.save({
+                subjectSearchType : step.defaults.search.subject.subjectTypes[(i+1) % step.defaults.search.subject.subjectTypes.length]
+            });
             model.trigger("search", model);
         });
 
@@ -83,21 +91,21 @@ var SubjectDisplayView = SearchDisplayView.extend({
      * @param query the query syntax that was used to search
      * @private
      */
-    _doSpecificSearchRequirements: function (query, results) {
+    _doSpecificSearchRequirements: function (query, results, resultsWrapper, masterVersion) {
         var undoneQuery = step.util.undoReplaceSpecialChars(query);
 
         if (undoneQuery.startsWith("s=")) {
             return this._addMoreSubjectButton(query, results, __s.subject_search_first);
         } else if (undoneQuery.startsWith("s+=")) {
             var wrappedSearchResults = this._addMoreSubjectButton(query, results,__s.subject_search_second);
-            this._addSubjectExpandHandlers(query, results);
+            this._addSubjectExpandHandlers(masterVersion, query, results);
             return wrappedSearchResults;
         } else if (undoneQuery.startsWith("s++=")) {
             var wrappedSearchResults = this._addMoreSubjectButton(query, results, __s.subject_search_third);
-            this._addSubjectExpandHandlers(query, results);
+            this._addSubjectExpandHandlers(masterVersion, query, results);
             return wrappedSearchResults;
         } else if (undoneQuery.startsWith("sr=")) {
-            this._addSubjectExpandHandlers(query, results);
+            this._addSubjectExpandHandlers(masterVersion, query, results);
             return results;
         }
     },
@@ -110,7 +118,7 @@ var SubjectDisplayView = SearchDisplayView.extend({
         });
     },
 
-    _addSubjectExpandHandlers: function (query, results) {
+    _addSubjectExpandHandlers: function (masterVersion, query, results) {
         var self = this;
 
         $(".expandableSearchHeading", results).click(function () {
@@ -150,7 +158,8 @@ var SubjectDisplayView = SearchDisplayView.extend({
                             passageId: self.model.get("passageId"),
                             ref: results[i].reference,
                             showChapter: true,
-                            display: "inline"
+                            display: "inline",
+                            version : masterVersion
                         }));
 
                         verseContent = $("<td>").append(verseContent);
@@ -171,7 +180,7 @@ var SubjectDisplayView = SearchDisplayView.extend({
                             continue;
                         }
 
-                        var link = $("<a>").attr("href", "javascript:void").html(refs[i].trim());
+                        var link = $("<a>").attr("href", "javascript:void(0)").html(refs[i].trim());
                         var refLink = refs[i];
                         $(link).click(function () {
                             var splitByComma = refLink.split(",");
@@ -194,9 +203,10 @@ var SubjectDisplayView = SearchDisplayView.extend({
                             }
                             query += text;
 
-                            step.state.subject.subjectText(passageId, text);
-                            step.state.subject.subjectQuerySyntax(passageId, query);
-                            step.search.subject.search(passageId);
+                            self.model.save({
+                                subjectText :  text
+                            })
+                            self.model.trigger("search", self.model);
                         });
 
                         seeAlsoRefs.append($("<br />"));

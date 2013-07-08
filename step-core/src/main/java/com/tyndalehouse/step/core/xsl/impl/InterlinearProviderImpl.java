@@ -55,12 +55,10 @@ import org.crosswire.jsword.book.BookData;
 import org.crosswire.jsword.book.BookException;
 import org.crosswire.jsword.book.BookMetaData;
 import org.crosswire.jsword.book.OSISUtil;
-import org.crosswire.jsword.passage.Key;
-import org.crosswire.jsword.passage.KeyUtil;
-import org.crosswire.jsword.passage.NoSuchKeyException;
-import org.crosswire.jsword.passage.Passage;
+import org.crosswire.jsword.passage.*;
 import org.crosswire.jsword.versification.Testament;
 import org.crosswire.jsword.versification.Versification;
+import org.crosswire.jsword.versification.VersificationsMapper;
 import org.crosswire.jsword.versification.system.Versifications;
 import org.jdom2.Content;
 import org.jdom2.Element;
@@ -97,6 +95,7 @@ public class InterlinearProviderImpl implements InterlinearProvider {
      */
     private final Map<DualKey<String, String>, Deque<Word>> limitedAccuracy = new HashMap<DualKey<String, String>, Deque<Word>>();
     private final boolean originalLanguage;
+    private Versification versification;
 
     /**
      * The current book.
@@ -130,6 +129,7 @@ public class InterlinearProviderImpl implements InterlinearProvider {
         VALID_TEXT_ELEMENTS.add("transChange");
     }
 
+    private Versification masterVersification;
     private VocabularyService vocabProvider;
 
     /**
@@ -137,16 +137,18 @@ public class InterlinearProviderImpl implements InterlinearProvider {
      *
      * @param versificationService   versification service
      * @param version                the version to use to set up the interlinear
-     * @param textScope              the text scope reference, defining the bounds of the lookup
+     * @param versifiedKey           the text scope reference, defining the bounds of the lookup
      * @param hebrewDirectMapping    the hebrew overriding mappings
      * @param hebrewIndirectMappings the mappings used if no other mapping is found
      */
-    public InterlinearProviderImpl(final JSwordVersificationService versificationService,
-                                   final String version, final String textScope, final Map<String, String> hebrewDirectMapping,
+    public InterlinearProviderImpl(Versification masterVersification, JSwordVersificationService versificationService,
+                                   final String version, final Key versifiedKey, final Map<String, String> hebrewDirectMapping,
                                    final Map<String, String> hebrewIndirectMappings, final VocabularyService vocabProvider) {
+        this.masterVersification = masterVersification;
         this.vocabProvider = vocabProvider;
+
         // first check whether the values passed in are correct
-        if (areAnyBlank(version, textScope)) {
+        if (areAnyBlank(version)) {
             this.originalLanguage = false;
             return;
         }
@@ -154,6 +156,7 @@ public class InterlinearProviderImpl implements InterlinearProvider {
         this.hebrewIndirectMappings = hebrewIndirectMappings;
         this.hebrewDirectMapping = hebrewDirectMapping;
         this.currentBook = versificationService.getBookFromVersion(version);
+        this.versification = versificationService.getVersificationForVersion(currentBook);
         if (this.currentBook == null) {
             throw new StepInternalException(format("Couldn't look up book: [%s]", version));
         }
@@ -163,13 +166,10 @@ public class InterlinearProviderImpl implements InterlinearProvider {
 
         BookData bookData;
         try {
-            final Key key = this.currentBook.getKey(textScope);
-            setTestamentType(key);
+            setTestamentType(versifiedKey);
 
-            bookData = new BookData(this.currentBook, key);
+            bookData = new BookData(this.currentBook, versifiedKey);
             scanForTextualInformation(bookData.getOsisFragment());
-        } catch (final NoSuchKeyException e) {
-            throw new StepInternalException(e.getMessage(), e);
         } catch (final BookException e) {
             throw new StepInternalException(e.getMessage(), e);
         }
@@ -180,7 +180,7 @@ public class InterlinearProviderImpl implements InterlinearProvider {
      */
     InterlinearProviderImpl() {
         // exposing package private constructor
-        originalLanguage = false;
+        this.originalLanguage = false;
     }
 
     @Override
@@ -200,6 +200,15 @@ public class InterlinearProviderImpl implements InterlinearProvider {
         // multiple items.
         final String[] strongs = StringUtils.split(strong);
 
+        //create the versified key, and convert to the bit we want
+        final Key key;
+        try {
+            key = VersificationsMapper.instance().mapVerse(VerseFactory.fromString(this.masterVersification, verseNumber), this.versification);
+        } catch (NoSuchVerseException e) {
+            LOGGER.error(e.getMessage(), e);
+            return "";
+        }
+
         // There are at most strongs.length words, and we might have morphological data to help
         for (final String s : strongs) {
 
@@ -207,7 +216,7 @@ public class InterlinearProviderImpl implements InterlinearProvider {
             LOGGER.debug("Finding strong key [{}]", s);
             final String strongKey = getAnyKey(s);
 
-            results.add(getWord(verseNumber, strongKey));
+            results.add(getWord(key, strongKey));
         }
 
         return convertToString(results);
@@ -239,19 +248,24 @@ public class InterlinearProviderImpl implements InterlinearProvider {
     /**
      * returns words based on strong and verse number only.
      *
-     * @param verseNumber the verse number
-     * @param strong      the strong reference
+     * @param equivalentVerses the verse number
+     * @param strong           the strong reference
      * @return a word that matches or the empty string
      */
-    String getWord(final String verseNumber, final String strong) {
-        if (strong != null && verseNumber != null) {
-            final DualKey<String, String> key = new DualKey<String, String>(strong, verseNumber);
+    String getWord(final Key equivalentVerses, final String strong) {
+        if (strong != null && equivalentVerses != null) {
 
-            final Deque<Word> list = this.limitedAccuracy.get(key);
-            if (list != null && !list.isEmpty()) {
-                return retrieveWord(list);
-            } else {
-                return lookupMappings(strong);
+            //Key may be made up of several keys
+            Iterator<Key> keyIterator = equivalentVerses.iterator();
+            while (keyIterator.hasNext()) {
+                final DualKey<String, String> key = new DualKey<String, String>(strong, keyIterator.next().getOsisID());
+
+                final Deque<Word> list = this.limitedAccuracy.get(key);
+                if (list != null && !list.isEmpty()) {
+                    return retrieveWord(list);
+                } else {
+                    return lookupMappings(strong);
+                }
             }
         }
 
@@ -267,7 +281,7 @@ public class InterlinearProviderImpl implements InterlinearProvider {
      */
     private String lookupMappings(final String strong) {
         // we ignore mapping lookups for anything greek or hebrew...
-        if(originalLanguage) {
+        if (originalLanguage) {
             return "";
         }
 
@@ -287,7 +301,7 @@ public class InterlinearProviderImpl implements InterlinearProvider {
 
         //else look up from vocab provider
         String englishVocab = this.vocabProvider.getEnglishVocab(isOT ? 'H' + strong : 'G' + strong);
-        if(englishVocab != null) {
+        if (englishVocab != null) {
             return "#" + englishVocab;
         }
 
@@ -340,10 +354,11 @@ public class InterlinearProviderImpl implements InterlinearProvider {
      * @param currentVerse the current verse to use as part of the key
      */
     @SuppressWarnings("unchecked")
-    private void scanForTextualInformation(final Element element, final String currentVerse) {
+    private void scanForTextualInformation(final Element element, final Verse currentVerse) {
         // check to see if we've hit a new verse, if so, we update the verse
-        final String verseToBeUsed = element.getName().equals(OSISUtil.OSIS_ELEMENT_VERSE) ? element
-                .getAttributeValue(OSISUtil.OSIS_ATTR_OSISID) : currentVerse;
+        final Verse verseToBeUsed = element.getName().equals(OSISUtil.OSIS_ELEMENT_VERSE) ?
+                getVerseFromReference(element) :
+                currentVerse;
 
         // check to see if we've hit a node of interest
         if (element.getName().equals(OSISUtil.OSIS_ELEMENT_W)) {
@@ -365,12 +380,27 @@ public class InterlinearProviderImpl implements InterlinearProvider {
     }
 
     /**
+     * Parses the reference into a verse. This is because incoming osis ID could come in the form of
+     * KJV.Gen.1.1!a
+     * @param element the osis XML element
+     * @return the verse that has been construction, throws an exception if this fails.
+     */
+    private Verse getVerseFromReference(final Element element) {
+        final String osisId = element.getAttributeValue(OSISUtil.OSIS_ATTR_OSISID);
+        try {
+            return VerseFactory.fromString(this.versification, osisId);
+        } catch (NoSuchVerseException ex) {
+            throw new StepInternalException("Unable to get verse for OSIS ID: " + osisId, ex);
+        }
+    }
+
+    /**
      * retrieves textual information and adds it to the provider.
      *
      * @param element        the element to extract information from
      * @param verseReference verse reference to use for locality of keying
      */
-    private void extractTextualInfoFromNode(final Element element, final String verseReference) {
+    private void extractTextualInfoFromNode(final Element element, final Verse verseReference) {
         final String strong = element.getAttributeValue(OSISUtil.ATTRIBUTE_W_LEMMA);
         final String word = getText(element);
 
@@ -483,9 +513,9 @@ public class InterlinearProviderImpl implements InterlinearProvider {
      * @param word           the word to be stored
      * @return the word that has been added
      */
-    private Word addTextualInfo(final String verseReference, final String strongKey, final String word) {
+    private Word addTextualInfo(final Verse verseReference, final String strongKey, final String word) {
 
-        final DualKey<String, String> strongVerseKey = new DualKey<String, String>(strongKey, verseReference);
+        final DualKey<String, String> strongVerseKey = new DualKey<String, String>(strongKey, verseReference.getOsisID());
         Deque<Word> verseKeyedStrongs = this.limitedAccuracy.get(strongVerseKey);
         if (verseKeyedStrongs == null) {
             verseKeyedStrongs = new LinkedList<Word>();

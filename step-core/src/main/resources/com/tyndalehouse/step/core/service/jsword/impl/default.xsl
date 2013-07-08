@@ -245,9 +245,20 @@
         &lt;/span&gt;
     </xsl:template>
 
+    <xsl:template match="div[@subType='x-duplicate']">
+        <span class="duplicate">
+            <span class="versification-notice duplicate-notice" international="duplicate_notice">*</span>
+            <xsl:apply-templates/>
+        </span>
+    </xsl:template>
+
+    <xsl:template match="div[@subType='x-omitted-verses']">
+        <span class="versification-notice" international="omitted_notice">*</span>
+        <xsl:apply-templates/>
+    </xsl:template>
 
 
-  <xsl:template match="div">
+    <xsl:template match="div">
     <xsl:apply-templates/>
   </xsl:template>
 
@@ -783,6 +794,13 @@
 
   <!--=======================================================================-->
   <xsl:template match="title[@subType ='x-preverse' or @subtype = 'x-preverse']">
+        <!-- Verses handle most titles, however, if they are not in a verse, then we handle them here. -->
+        <xsl:if test="not(./ancestor::verse)">
+            <h3 class="heading">
+                <xsl:apply-templates/>
+            </h3>
+        </xsl:if>
+
   <!-- Done by a line in [verse]
     <h3 class="heading">
       <xsl:apply-templates/>
@@ -858,7 +876,7 @@
   
   <xsl:template match="title" name="normalTile">
     <!-- Always show canonical titles or if headings is turned on -->
-    <xsl:if test="(@canonical = 'true' or $Headings = 'true' or @type = 'x-gen')">
+    <xsl:if test="@canonical = 'true' or $Headings = 'true' or @type = 'x-gen'">
       <xsl:choose>
       	<xsl:when test="@type = 'x-gen'">
       		<xsl:if test="$HideXGen != 'true'">
@@ -1356,17 +1374,6 @@
 	
 		<xsl:element name="span">
 			<xsl:attribute name="class">singleVerse <xsl:value-of select="$classes" /><xsl:value-of select="$cell-direction" /></xsl:attribute>
-			<!--  Should attempt to support user languages that operate right to left at some point -->
-			<!-- 			<xsl:if test="@xml:lang"> -->
-			<!-- 				<xsl:attribute name="dir"> -->
-			<!-- 				          <xsl:value-of select="$cell-direction" /> -->
-			<!-- 				</xsl:attribute> -->
-			<!-- 			</xsl:if> -->
-			<!-- 			<xsl:if test="$cell-direction = 'rtl'"> -->
-			<!-- 				<xsl:attribute name="align"> -->
-			<!-- 			          <xsl:value-of select="'right'" /> -->
-			<!-- 				</xsl:attribute> -->
-			<!-- 			</xsl:if> -->
 			<xsl:call-template name="interleavedVersion" />
 			<xsl:apply-templates />
 		</xsl:element>
@@ -1411,21 +1418,17 @@
 		</xsl:if>
 		<!-- hack alert -->
 		<xsl:choose>
-			<xsl:when test="$cell-direction = 'rtl'">
-				<xsl:text>&#8235;</xsl:text>
-				<xsl:apply-templates />
-				<xsl:text>&#8236;</xsl:text>
-			</xsl:when>
-			<xsl:when test="$cell-direction = 'ltr'">
-				<xsl:text>&#8234;</xsl:text>
-				<xsl:apply-templates />
-				<xsl:text>&#8236;</xsl:text>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:apply-templates />
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:element>	
+            <xsl:when test="$cell-direction = 'rtl'">
+                <xsl:apply-templates/>
+            </xsl:when>
+            <xsl:when test="$cell-direction = 'ltr'">
+                <xsl:apply-templates/>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:apply-templates/>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:element>
   </xsl:template>
   
   <xsl:template match="cell">
@@ -1450,7 +1453,7 @@
 				</xsl:call-template>
 			</xsl:if>
 			<!-- output twice the cell of those diffs we have found if we are comparing -->
-    		<xsl:if test="$comparing = true() and not(./verse)">
+    		<xsl:if test="$comparing = true() and not(.//verse) and not(.//title)">
 				<!-- output twice, but with slightly different styles -->
 				<xsl:call-template name="interleaveVerse">
 					<xsl:with-param name="cell-direction" select="$cell-direction" />
@@ -1470,7 +1473,7 @@
 				</xsl:if>
 
    	
-			<xsl:if test="$comparing = true()  and not(./verse)">
+			<xsl:if test="$comparing = true()  and not(.//verse) and not(.//title)">
 					<xsl:call-template name="columnVerse">
 						<xsl:with-param name="cell-direction" select="$cell-direction" />
 						<xsl:with-param name="classes" select="'primary '" />

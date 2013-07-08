@@ -1,1 +1,1 @@
-Sitemap: http://www.stepbible.com/sitemap.xml
+Sitemap: http://www.stepbible.org/sitemap.xml

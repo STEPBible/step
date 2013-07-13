@@ -265,9 +265,12 @@ public class WebStepRequest {
         }
     }
 
+    /**
+     * We will never be displaying other than 0 to people without javascript
+     * @return the version for passage id 0
+     */
     public String getThisVersion() {
-        final int passageId = Integer.parseInt(this.request.getParameter("passageId"));
-        return this.versions.get(passageId);
+        return this.versions.get(0);
     }
 
     public String getThisReference() {

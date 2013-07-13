@@ -374,6 +374,6 @@ public class MorphologyProcessor implements PostProcessor {
         }
 
         document.removeField(fieldName);
-        document.add(config.getField(fieldName, sb.toString()));
+        document.add(config.getField(fieldName, sb.toString().trim()));
     }
 }

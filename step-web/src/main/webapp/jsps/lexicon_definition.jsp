@@ -39,11 +39,11 @@
                     </div>
 				</div>
 				<div level="1">
-					<hr />
-					<div><h5><fmt:message key="lexicon_meaning" /> </h5> <span info-name="mediumDef" class="lexiconContentText"></span> </div>
+					<p />
+					<div><h5><fmt:message key="lexicon_meaning" /> </h5><br /><span info-name="mediumDef" class="lexiconContentText"></span> </div>
 				</div>	
 				<div level="2">
-					<hr />
+					<p />
 					<h5><span id="lsjBdbHeader"></span></h5><div  class="lexiconContentText" info-name="lsjDefs" ></div>
 					<br />
 					<h5><fmt:message key="lexicon_related_words" /></h5><div><span info-name="relatedNos"></span></div>
@@ -56,16 +56,25 @@
 				<h3><fmt:message key="lexicon_grammar" /></h3>
 				<!-- Quick view -->
 				<div level="0">
-					<h5 info-name="functionNotes|function"></h5>:
-                    <span info-name="morphSummary"></span><br/>
-					<span info-name="explanation"></span><br/>
-					<span level="1" info-name="description"></span><br/>
-					<br />
-				</div>
-				<div level="1" depends-on="description">
+                    <table>
+                        <tr>
+                            <td><h5 info-name="functionNotes|function"></h5></td>
+                            <td><span info-name="morphSummary"></span></td>
+                        </tr>
+                        <tr>
+                            <td><h5><fmt:message key="lexicon_ie" /></h5></td>
+                            <td><span info-name="explanation"></span></td>
+                        </tr>
+                        <tr  level="1">
+                            <td><h5><fmt:message key="lexicon_eg" /></h5></td>
+                            <td>"<span info-name="description"></span>"</td>
+                        </tr>
+                    </table>
 				</div>
 				<div level="2">
-					<table>
+                    <p />
+                    <h5><fmt:message key="detailed_grammar_info" /></h5>
+					<table class="lexiconContentText">
 						<tr depends-on="functionDescription">
 							<td><h5><fmt:message key="lexicon_grammar_function" /></h5></td>
 							<td><span info-name="function"></span></td>

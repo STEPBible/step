@@ -163,6 +163,17 @@ step.lexicon = {
     },
 
     /**
+     * Adds the person, with the word 'Person'
+     * @param morphData the morph data.
+     */
+    addPerson: function (morphData) {
+        var person = morphData.person;
+        if (person != null && person != "") {
+            morphData.morphSummary += person + " " + __s.lexicon_grammar_1st_2nd_3rd_person + " ";
+        }
+    },
+
+    /**
      * Enhances by creating two new attributes to capture the HTML fragments for the morphology
      * @param index the index into our morphology data
      * @param morphInfos the morphology
@@ -179,20 +190,28 @@ step.lexicon = {
             morphData.morphSummary =
                 this.addNonNull(morphData.tense) + " " +
                 this.addNonNull(morphData.voice) + " " +
-                this.addNonNull(morphData.mood) + " (" +
-                this.addNonNull(morphData.person) + " " +
+                this.addNonNull(morphData.mood) + " (";
+
+            this.addPerson(morphData);
+            morphData.morphSummary +=
                 this.addNonNull(morphData.number) + " " +
                 this.addNonNull(morphData.gender) + " " +
                 this.addNonNull(morphData.wordCase) + ")";
         } else {
             morphData.morphSummary =
-                this.addNonNull(morphData.gender) + " " +
+                this.addNonNull(morphData.gender) + " ";
+            this.addPerson(morphData);
+            morphData.morphSummary +=
                 this.addNonNull(morphData.person) + " " +
                 this.addNonNull(morphData.number) + " (" +
                 this.addNonNull(morphData.wordCase) + ")";
         }
 
-        morphData.morphSummary = morphData.morphSummary.replace(/  /g, " ").replace(/\( /g, "(").replace(/ \)/g, ")");
+        morphData.morphSummary = morphData.morphSummary
+            .replace(/  /g, " ")
+            .replace(/\( /g, "(")
+            .replace(/ \)/g, ")")
+            .replace(/\(\)/g, "");
     },
 
     addNonNull : function(input) {
@@ -216,6 +235,12 @@ step.lexicon = {
                 $(this).hide();
             } else {
                 $(this).show();
+            }
+
+            if(step.util.isBlank(tds.eq(3).text())) {
+                tds.eq(2).hide();
+            } else {
+                tds.eq(2).show();
             }
         });
 

@@ -16,6 +16,10 @@ span.interlinear span { /* Make each word follow the other */
 	white-space: nowrap;
 }
 
+.verseGrouping span.rtl {
+    text-align: right;
+}
+
 
 span.rtl span { /* Make each word follow the other */
 	float: right;

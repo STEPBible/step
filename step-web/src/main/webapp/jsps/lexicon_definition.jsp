@@ -55,7 +55,7 @@
 			<div id="grammarContainer" class="metadataContainer">
 				<h3><fmt:message key="lexicon_grammar" /></h3>
 				<!-- Quick view -->
-				<span level="0">
+				<div level="0">
 					<h5 info-name="functionNotes|function"></h5>: <span info-name="person"></span> <span depends-on="person"><fmt:message key="lexicon_grammar_1st_2nd_3rd_person" /></span> 
 					<span info-name="number"></span> <span info-name="gender"></span> 
 					
@@ -70,11 +70,11 @@
 					<br/>
 					<span info-name="description"></span>
 					<br />
-				</span>
-				<span level="1" depends-on="explanation">
-					<span info-name="explanation"></span><br />
-				</span>
-				<span level="2">
+				</div>
+				<div level="1" depends-on="explanation">
+					<span info-name="explanation"></span><p />
+				</div>
+				<div level="2">
 					<table>
 						<tr depends-on="functionDescription">
 							<td><h5><fmt:message key="lexicon_grammar_function" /></h5></td>
@@ -131,7 +131,7 @@
 							<td><span info-name="suffixExplained"></span></td>
 						</tr>
 					</table>
-				</span>
+				</div>
 			</div>
 			
 	</div>

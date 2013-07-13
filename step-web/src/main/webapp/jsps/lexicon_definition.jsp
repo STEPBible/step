@@ -56,23 +56,13 @@
 				<h3><fmt:message key="lexicon_grammar" /></h3>
 				<!-- Quick view -->
 				<div level="0">
-					<h5 info-name="functionNotes|function"></h5>: <span info-name="person"></span> <span depends-on="person"><fmt:message key="lexicon_grammar_1st_2nd_3rd_person" /></span> 
-					<span info-name="number"></span> <span info-name="gender"></span> 
-					
-					<span depends-on="wordCase,mood,gender,suffix">
-						(
-						<span info-name="wordCase"></span> <span info-name="tense"></span>
-						<span info-name="voice"></span> <span info-name="mood"></span> 
-						<span info-name="gender"></span>
-						<span info-name="suffix"></span>
-						) 
-					</span>
-					<br/>
-					<span info-name="description"></span>
+					<h5 info-name="functionNotes|function"></h5>:
+                    <span info-name="morphSummary"></span><br/>
+					<span info-name="explanation"></span><br/>
+					<span level="1" info-name="description"></span><br/>
 					<br />
 				</div>
-				<div level="1" depends-on="explanation">
-					<span info-name="explanation"></span><p />
+				<div level="1" depends-on="description">
 				</div>
 				<div level="2">
 					<table>

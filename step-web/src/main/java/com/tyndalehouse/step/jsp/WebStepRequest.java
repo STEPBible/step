@@ -232,7 +232,7 @@ public class WebStepRequest {
             }
 
             final JSwordPassageServiceImpl jsword = this.injector.getInstance(JSwordPassageServiceImpl.class);
-            return this.getThisVersion() + " " + this.getThisVersion() + ": " +
+            return this.getThisVersion() + " " + this.getThisReference() + ": " +
                     jsword.getPlainText(this.getVersion(0), this.getReference(0), true).replaceAll("[<>]", "");
         } catch (final Exception e) {
             return "";

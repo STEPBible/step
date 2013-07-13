@@ -64,6 +64,16 @@ body {
     font-variant: small-caps;
 }
 
+#grammarContainer td {
+    padding: 0px;
+    margin: 0px;
+}
+
+#grammarContainer table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
 .lexiconTable {
     width: 100%;
     border: 1px dotted lightgray;

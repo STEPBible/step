@@ -29,12 +29,12 @@
 			href="?reference=<%=stepRequest.getPreviousReference(Integer.parseInt(request
 							.getParameter("passageId")))%>&version=<%=stepRequest.getVersion(Integer.parseInt(request
 							.getParameter("passageId")))%>" title="<fmt:message key="passage_previous_chapter" />"><%=stepRequest.getPreviousReferenceDisplay(Integer.parseInt(request
-                    .getParameter("passageId")))%></a> <a
+                    .getParameter("passageId")))%>&nbsp;</a> <a
 			class="nextChapter"
 			href="?reference=<%=stepRequest.getNextReference(Integer.parseInt(request
 							.getParameter("passageId")))%>&version=<%=stepRequest.getVersion(Integer.parseInt(request
 							.getParameter("passageId")))%>" title="<fmt:message key="passage_next_chapter" />"><%=stepRequest.getNextReferenceDisplay(Integer.parseInt(request
-                .getParameter("passageId")))%></a>
+                .getParameter("passageId")))%>&nbsp;</a>
 		<a
 			class="bookmarkPassageLink"><fmt:message key="passage_tools_bookmark" /></a> <a class="smallerFonts"
 			href="javascript:void(0)" title="<fmt:message key="passage_smaller_fonts" />"><fmt:message key="passage_font_size_symbol" /></a> <a class="largerFonts" href="javascript:void(0)"

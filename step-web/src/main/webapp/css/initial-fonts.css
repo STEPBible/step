@@ -137,8 +137,12 @@ body {
 /** Other labels                */
 /********************************/
 .notApplicable, .duplicate {
-    color: grey;
+    color: grey !important;
     font-style: italic;
+}
+
+.duplicate .heading {
+    color: grey;
 }
 
 .duplicate-notice {

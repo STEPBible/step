@@ -800,12 +800,6 @@
                 <xsl:apply-templates/>
             </h3>
         </xsl:if>
-
-  <!-- Done by a line in [verse]
-    <h3 class="heading">
-      <xsl:apply-templates/>
-    </h3>
-  -->
   </xsl:template>
 
   <xsl:template match="title[@subType ='x-preverse' or @subtype = 'x-preverse']" mode="jesus">

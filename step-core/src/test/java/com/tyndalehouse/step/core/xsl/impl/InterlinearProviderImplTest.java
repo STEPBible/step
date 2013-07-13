@@ -45,6 +45,7 @@ import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.passage.KeyFactory;
 import org.crosswire.jsword.passage.NoSuchKeyException;
 import org.crosswire.jsword.passage.PassageKeyFactory;
+import org.crosswire.jsword.passage.VerseFactory;
 import org.crosswire.jsword.versification.Versification;
 import org.crosswire.jsword.versification.system.SystemKJV;
 import org.crosswire.jsword.versification.system.Versifications;
@@ -67,8 +68,7 @@ public class InterlinearProviderImplTest {
      * @throws NoSuchMethodException reflect exception which should fail the test
      */
     @Test
-    public void testInterlinearStrongMorphBased() throws IllegalAccessException, InvocationTargetException,
-            NoSuchMethodException, NoSuchKeyException {
+    public void testInterlinearStrongMorphBased() throws NoSuchKeyException {
         final InterlinearProviderImpl interlinear = new InterlinearProviderImpl();
         final Book mock = mock(Book.class);
         final VocabularyService vocabularyService = mock(VocabularyService.class);
@@ -80,17 +80,12 @@ public class InterlinearProviderImplTest {
         // NOTE: because we don't want to expose a method called during initialisation as non-private (could
         // break
         // the initialisation, of the provider, we use reflection to open up its access for testing purposes!
-        final Method method = interlinear.getClass().getDeclaredMethod("addTextualInfo", String.class,
-                String.class, String.class);
-        method.setAccessible(true);
 
-        // add a word based on a strong,morph
-        method.invoke(interlinear, "Gen.1.1", "strong", "word");
-
-        Versification KJV = Versifications.instance().getVersification("KJV");
+        Versification NRSV = Versifications.instance().getVersification("NRSV");
+        interlinear.addTextualInfo(VerseFactory.fromString(NRSV, "Gen.1.1"), "strong", "word");
         assertEquals(interlinear.getWord(PassageKeyFactory.instance().getKey(
-               KJV, "Gen.1.1"), "strong"), "word");
+                NRSV, "Gen.1.1"), "strong"), "word");
         assertEquals(interlinear.getWord(PassageKeyFactory.instance().getKey(
-                KJV, "Gen.2.1"), "strong"), "");
+                NRSV, "Gen.2.1"), "strong"), "");
     }
 }

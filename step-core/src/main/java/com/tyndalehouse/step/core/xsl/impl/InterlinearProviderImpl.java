@@ -89,6 +89,7 @@ public class InterlinearProviderImpl implements InterlinearProvider {
      * contains the set of tags that may contain biblical text, all lower case
      */
     private static final Set<String> VALID_TEXT_ELEMENTS = new HashSet<String>();
+    public static final String NO_VERSE = "NO_VERSE";
 
     /**
      * limited accuracy tries to do a location look up by using the verse number as part of the key.
@@ -96,7 +97,8 @@ public class InterlinearProviderImpl implements InterlinearProvider {
     private final Map<DualKey<String, String>, Deque<Word>> limitedAccuracy = new HashMap<DualKey<String, String>, Deque<Word>>();
     private final boolean originalLanguage;
     private Versification versification;
-
+    // a temporary, non-thread-safe, transient, working variable, which keeps track of the verse we're in.
+    private Verse currentVerse;
     /**
      * The current book.
      */
@@ -263,10 +265,9 @@ public class InterlinearProviderImpl implements InterlinearProvider {
                 final Deque<Word> list = this.limitedAccuracy.get(key);
                 if (list != null && !list.isEmpty()) {
                     return retrieveWord(list);
-                } else {
-                    return lookupMappings(strong);
                 }
             }
+            return lookupMappings(strong);
         }
 
         // it is important to return an empty string here
@@ -338,31 +339,18 @@ public class InterlinearProviderImpl implements InterlinearProvider {
     }
 
     /**
-     * retrieves context textual information from a passage.
-     *
-     * @param osisFragment the fragment of XML that should be examined
-     */
-    private void scanForTextualInformation(final Element osisFragment) {
-        // redirect with null verse
-        scanForTextualInformation(osisFragment, null);
-    }
-
-    /**
      * setups all the initial textual information for fast retrieval during XSL transformation.
      *
      * @param element      element to start with.
-     * @param currentVerse the current verse to use as part of the key
      */
     @SuppressWarnings("unchecked")
-    private void scanForTextualInformation(final Element element, final Verse currentVerse) {
+    private void scanForTextualInformation(final Element element) {
         // check to see if we've hit a new verse, if so, we update the verse
-        final Verse verseToBeUsed = element.getName().equals(OSISUtil.OSIS_ELEMENT_VERSE) ?
-                getVerseFromReference(element) :
-                currentVerse;
+        updateVerseRef(element);
 
         // check to see if we've hit a node of interest
         if (element.getName().equals(OSISUtil.OSIS_ELEMENT_W)) {
-            extractTextualInfoFromNode(element, verseToBeUsed);
+            extractTextualInfoFromNode(element);
             return;
         }
 
@@ -374,23 +362,25 @@ public class InterlinearProviderImpl implements InterlinearProvider {
             data = contentIter.next();
             if (data instanceof Element) {
                 ele = (Element) data;
-                scanForTextualInformation(ele, verseToBeUsed);
+                scanForTextualInformation(ele);
             }
         }
     }
 
     /**
-     * Parses the reference into a verse. This is because incoming osis ID could come in the form of
-     * KJV.Gen.1.1!a
-     * @param element the osis XML element
-     * @return the verse that has been construction, throws an exception if this fails.
+     * Gets the OSIS id if any
+     *
+     * @param element the osis element
      */
-    private Verse getVerseFromReference(final Element element) {
+    private void updateVerseRef(final Element element) {
         final String osisId = element.getAttributeValue(OSISUtil.OSIS_ATTR_OSISID);
-        try {
-            return VerseFactory.fromString(this.versification, osisId);
-        } catch (NoSuchVerseException ex) {
-            throw new StepInternalException("Unable to get verse for OSIS ID: " + osisId, ex);
+        Verse result = currentVerse;
+        if (osisId != null) {
+            try {
+                currentVerse = VerseFactory.fromString(this.versification, osisId);
+            } catch (NoSuchVerseException ex) {
+                LOGGER.trace("Unable to convert ref - probably not a verse reference.", ex);
+            }
         }
     }
 
@@ -398,9 +388,8 @@ public class InterlinearProviderImpl implements InterlinearProvider {
      * retrieves textual information and adds it to the provider.
      *
      * @param element        the element to extract information from
-     * @param verseReference verse reference to use for locality of keying
      */
-    private void extractTextualInfoFromNode(final Element element, final Verse verseReference) {
+    private void extractTextualInfoFromNode(final Element element) {
         final String strong = element.getAttributeValue(OSISUtil.ATTRIBUTE_W_LEMMA);
         final String word = getText(element);
 
@@ -421,7 +410,7 @@ public class InterlinearProviderImpl implements InterlinearProvider {
         for (int ii = 0; ii < strongs.length; ii++) {
             final String strongKey = getAnyKey(strongs[ii]);
             if (!isH00(strongKey) && !blacklisted(strongKey)) {
-                words.add(addTextualInfo(verseReference, strongKey, word));
+                words.add(addTextualInfo(currentVerse, strongKey, word));
             } else {
                 partial = true;
             }
@@ -507,15 +496,16 @@ public class InterlinearProviderImpl implements InterlinearProvider {
      * So, how do we store this? The most meaningful piece of data is a STRONG number, since it identifies the
      * word that we want to retrieve. Without the strong number, we don't have any information at all.
      * Therefore, the first level of lookup should be by Strong number.
+     * <p />
+     * Made package private for testing purposes only.
      *
      * @param verseReference the verse reference that specifies locality (least important factor)
      * @param strongKey      the strong number (identifies the root/meaning of the word)
      * @param word           the word to be stored
      * @return the word that has been added
      */
-    private Word addTextualInfo(final Verse verseReference, final String strongKey, final String word) {
-
-        final DualKey<String, String> strongVerseKey = new DualKey<String, String>(strongKey, verseReference.getOsisID());
+    Word addTextualInfo(final Verse verseReference, final String strongKey, final String word) {
+        final DualKey<String, String> strongVerseKey = new DualKey<String, String>(strongKey, verseReference == null ? NO_VERSE : verseReference.getOsisID());
         Deque<Word> verseKeyedStrongs = this.limitedAccuracy.get(strongVerseKey);
         if (verseKeyedStrongs == null) {
             verseKeyedStrongs = new LinkedList<Word>();

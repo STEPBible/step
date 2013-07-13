@@ -246,8 +246,11 @@
 
 
     <xsl:template match="div">
-    <xsl:apply-templates/>
-  </xsl:template>
+        <xsl:if test="@osisID">
+            <xsl:value-of select="jsword:setLastSeenOsisId($interlinearProvider, @osisID)" />
+        </xsl:if>
+        <xsl:apply-templates/>
+    </xsl:template>
 
   <xsl:template match="div" mode="jesus">
     <xsl:apply-templates mode="jesus"/>
@@ -640,9 +643,9 @@
   	<xsl:param name="versions" />  	
 
 	<xsl:variable name="nextVersion" select="normalize-space(substring-before($versions, ','))" />
-	<xsl:variable name="verseNumber" select="concat(../@osisID , ../../@osisID)" />
-	
-	<!--  if next version is not empty, then there was a comma, so we output this version and call template again -->
+    <xsl:variable name="verseNumber" select="concat(../@osisID , ../../@osisID)" />
+
+      <!--  if next version is not empty, then there was a comma, so we output this version and call template again -->
 	<xsl:choose>
 		<xsl:when test="normalize-space($nextVersion) != ''">
 			<span class="interlinear">
@@ -793,20 +796,15 @@
   </xsl:template>
 
   <!--=======================================================================-->
-  <xsl:template match="title[@subType ='x-preverse' or @subtype = 'x-preverse']">
-  <!-- Done by a line in [verse]
-    <h3 class="heading">
-      <xsl:apply-templates/>
-    </h3>
-  -->
+  <xsl:template match="title[@subType ='x-preverse' or @subtype = 'x-preverse']" name="outputCanonicalTitlesOutsideVerse">
+      <!-- Verses handle most titles, however, if they are not in a verse, then we handle them here. -->
+      <xsl:if test="not(./ancestor::verse)">
+          <span class="interlinear {$direction}"><xsl:apply-templates/></span>
+      </xsl:if>
   </xsl:template>
 
   <xsl:template match="title[@subType ='x-preverse' or @subtype = 'x-preverse']" mode="jesus">
-  <!-- Done by a line in [verse]
-    <h3 class="heading">
-      <xsl:apply-templates/>
-    </h3>
-  -->
+    <xsl:call-template name="outputCanonicalTitlesOutsideVerse" />
   </xsl:template>
 
   <!--=======================================================================-->

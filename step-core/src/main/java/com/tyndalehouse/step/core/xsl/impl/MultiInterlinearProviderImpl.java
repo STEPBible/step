@@ -32,15 +32,12 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.xsl.impl;
 
-import static com.tyndalehouse.step.core.utils.StringUtils.areAnyBlank;
-import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
-import static com.tyndalehouse.step.core.utils.StringUtils.split;
-
 import java.util.HashMap;
 import java.util.Map;
 
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.service.VocabularyService;
+import com.tyndalehouse.step.core.utils.StringUtils;
 import org.crosswire.jsword.passage.Key;
 import org.crosswire.jsword.passage.PassageKeyFactory;
 import org.crosswire.jsword.versification.Versification;
@@ -50,6 +47,8 @@ import org.slf4j.LoggerFactory;
 import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
 import com.tyndalehouse.step.core.xsl.InterlinearProvider;
 import com.tyndalehouse.step.core.xsl.MultiInterlinearProvider;
+
+import static com.tyndalehouse.step.core.utils.StringUtils.*;
 
 /**
  * This implementation will support multiple versions, so each of the methods is keyed by version requested.
@@ -70,6 +69,7 @@ public class MultiInterlinearProviderImpl implements MultiInterlinearProvider {
     static final String VERSION_SEPARATOR = ", ?";
 
     private final JSwordVersificationService versificationService;
+    private String lastSeenOsisId;
 
     /**
      * sets up the interlinear provider with the correct version and text scope.
@@ -151,6 +151,13 @@ public class MultiInterlinearProviderImpl implements MultiInterlinearProvider {
     @Override
     public String getWord(final String version, final String verseNumber, final String strong,
                           final String morph) {
-        return this.interlinearProviders.get(version).getWord(verseNumber, strong, morph);
+        return this.interlinearProviders.get(version).getWord(isBlank(verseNumber) ? lastSeenOsisId : verseNumber, strong, morph);
+    }
+
+    /**
+     * @param lastSeenOsisId the last seen osis ID, mainly used for out of verse elements
+     */
+    public void setLastSeenOsisId(String lastSeenOsisId) {
+        this.lastSeenOsisId = lastSeenOsisId;
     }
 }

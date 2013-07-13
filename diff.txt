@@ -1,9 +1,0 @@
-Files ./.git/ORIG_HEAD and ../backup/step/.git/ORIG_HEAD differ
-Files ./.git/index and ../backup/step/.git/index differ
-Files ./.git/logs/HEAD and ../backup/step/.git/logs/HEAD differ
-Files ./.git/logs/refs/heads/playing-with-backbone.js and ../backup/step/.git/logs/refs/heads/playing-with-backbone.js differ
-Only in ./.git/objects/76: 97b30c274f58288a20a082343b45f2529132e0
-Files ./.git/refs/heads/playing-with-backbone.js and ../backup/step/.git/refs/heads/playing-with-backbone.js differ
-Only in .: diff.txt
-Only in ./target/step-mvn-1.0-SNAPSHOT-package-step-standalone/offlineModules/META-INF: maven
-Only in ./target/step-mvn-1.0-SNAPSHOT-package-step-standalone/step-web/META-INF/maven/com.tyndalehouse.step: step-web

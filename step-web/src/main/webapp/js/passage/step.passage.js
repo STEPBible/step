@@ -50,6 +50,7 @@ step.passage = {
 
         // check for black listed strongs
         if ($.inArray(strongReference, this.blacklistedStrongs) == -1) {
+            $(".heading [strong~='" + strongReference + "']", container).addClass(classes);
             $(".verse [strong~='" + strongReference + "']", container).addClass(classes);
             $("span.w[strong~='" + strongReference + "'] span", container).addClass(classes);
         }

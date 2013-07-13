@@ -37,26 +37,6 @@ step.passage = {
     blacklistedStrongs : [ "G3588" ],
 
     /**
-     * highlights all strongs match parameter strongReference
-     *
-     * @strongReference the reference look for across this passage pane and
-     *                  highlight
-     */
-    highlightStrong : function(passageId, strongReference, emphasiseClass) {
-        var classes = emphasiseClass || "emphasisePassagePhrase";
-
-        var container = passageId ? step.util.getPassageContainer(passageId) : $("body");
-
-
-        // check for black listed strongs
-        if ($.inArray(strongReference, this.blacklistedStrongs) == -1) {
-            $(".heading [strong~='" + strongReference + "']", container).addClass(classes);
-            $(".verse [strong~='" + strongReference + "']", container).addClass(classes);
-            $("span.w[strong~='" + strongReference + "'] span", container).addClass(classes);
-        }
-    },
-
-    /**
      * if a number of strongs are given, separated by a space, highlights all of
      * them
      *
@@ -80,11 +60,30 @@ step.passage = {
         }
     },
 
+    /**
+     * highlights all strongs match parameter strongReference
+     *
+     * @strongReference the reference look for across this passage pane and
+     *                  highlight
+     */
+    highlightStrong : function(passageId, strongReference, emphasiseClass) {
+        var classes = emphasiseClass || "emphasisePassagePhrase";
+
+        var container = passageId ? step.util.getPassageContainer(passageId) : $("body");
+
+
+        // check for black listed strongs
+        if ($.inArray(strongReference, this.blacklistedStrongs) == -1) {
+            $(".heading [strong~='" + strongReference + "']", container).addClass(classes);
+            $(".verse [strong~='" + strongReference + "']", container).addClass(classes);
+            $("span.w[strong~='" + strongReference + "'] span", container).addClass(classes);
+        }
+    },
+
     removeStrongsHighlights : function(passageId, classes) {
         var classes = classes || "emphasisePassagePhrase";
 
         var container = passageId ? step.util.getPassageContainer(passageId) : $("body");
-        $(".verse span", container).removeClass(classes);
-        $("span.w span", container).removeClass(classes);
+        $(".verse span, span.w span, .heading span", container).removeClass(classes);
     }
 };

@@ -44,6 +44,7 @@ import java.util.Map;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
+import com.tyndalehouse.step.core.models.KeyWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,13 +63,7 @@ import com.tyndalehouse.step.rest.controllers.BibleController;
 public class WebStepRequest {
     private static final Logger LOG = LoggerFactory.getLogger(WebStepRequest.class);
     private static final String REF_0_PARAM = "reference";
-    private static final String REF_1_PARAM = "reference-1";
     private static final String VERSION_0_PARAM = "version";
-    private static final String VERSION_1_PARAM = "version-1";
-    private static final String CURRENT_REFERENCE_0 = "step.passage.0.reference";
-    private static final String CURRENT_REFERENCE_1 = "step.passage.1.reference";
-    private static final String CURRENT_VERSION_0 = "step.passage.0.version";
-    private static final String CURRENT_VERSION_1 = "step.passage.1.version";
     private final HttpServletRequest request;
     private Map<String, String> cookieMap;
     private final Injector injector;
@@ -89,11 +84,8 @@ public class WebStepRequest {
         this.references = new ArrayList<String>();
         this.versions = new ArrayList<String>();
 
-        init(request, this.references, REF_0_PARAM, CURRENT_REFERENCE_0, defaults.getDefaultReference1());
-        init(request, this.references, REF_1_PARAM, CURRENT_REFERENCE_1, defaults.getDefaultReference2());
-
-        init(request, this.versions, VERSION_0_PARAM, CURRENT_VERSION_0, defaults.getDefaultVersion1());
-        init(request, this.versions, VERSION_1_PARAM, CURRENT_VERSION_1, defaults.getDefaultVersion2());
+        init(request, this.references, REF_0_PARAM, defaults.getDefaultReference1());
+        init(request, this.versions, VERSION_0_PARAM, defaults.getDefaultVersion1());
     }
 
     /**
@@ -103,21 +95,15 @@ public class WebStepRequest {
      * @param servletRequest   the request object
      * @param store            the store in which to store the value we are calcualting
      * @param requestParamName the name of the request parameter in the url
-     * @param cookieName       the name of the cookie key
      * @param failsafeValue    the default value
      */
     private void init(final HttpServletRequest servletRequest, final List<String> store,
-                      final String requestParamName, final String cookieName, final String failsafeValue) {
+                      final String requestParamName, final String failsafeValue) {
         final String passageReference = servletRequest.getParameter(requestParamName);
         if (!isEmpty(passageReference)) {
             store.add(passageReference);
         } else {
-            final String cookieValue = getCookieValue(cookieName);
-            if (!isEmpty(cookieValue)) {
-                store.add(cookieValue);
-            } else {
-                store.add(failsafeValue);
-            }
+            store.add(failsafeValue);
         }
     }
 
@@ -128,6 +114,10 @@ public class WebStepRequest {
      * @return the reference
      */
     public String getReference(final int passageId) {
+        if(passageId > 0) {
+            return "";
+        }
+
         try {
             return this.references.get(passageId);
         } catch (final Exception e) {
@@ -140,9 +130,12 @@ public class WebStepRequest {
      * @return the next reference
      */
     public String getNextReference(final int passageId) {
+        if(passageId > 0) {
+            return "";
+        }
+
         try {
-            return this.injector.getInstance(BibleController.class)
-                    .getNextChapter(getReference(passageId), getVersion(0)).getOsisKeyId();
+            return getNextChapter(passageId).getOsisKeyId();
         } catch (final Exception e) {
             return "";
         }
@@ -150,16 +143,68 @@ public class WebStepRequest {
 
     /**
      * @param passageId the passageId of interest
-     * @return the previous reference
+     * @return the next reference
      */
-    public String getPreviousReference(final int passageId) {
+    public String getNextReferenceDisplay(final int passageId) {
+        if(passageId > 0) {
+            return "";
+        }
+
         try {
-            return this.injector.getInstance(BibleController.class)
-                    .getPreviousChapter(getReference(passageId), getVersion(0)).getOsisKeyId();
+            return getNextChapter(passageId).getName();
         } catch (final Exception e) {
             return "";
         }
     }
+
+
+    /**
+     * @param passageId the passage id
+     * @return the key wrapper representing the previous chapter
+     */
+    private KeyWrapper getNextChapter(final int passageId) {
+        return this.injector.getInstance(BibleController.class)
+                .getNextChapter(getReference(passageId), getVersion(0));
+    }
+
+    /**
+     * @param passageId the passageId of interest
+     * @return the previous reference
+     */
+    public String getPreviousReference(final int passageId) {
+        if(passageId > 0) {
+            return "";
+        }
+
+        try {
+            return getPreviousChapter(passageId).getOsisKeyId();
+        } catch (final Exception e) {
+            return "";
+        }
+    }
+
+    /**
+     * @param passageId the passage id
+     * @return the string to be displayed on the screen
+     */
+    public String getPreviousReferenceDisplay(final int passageId) {
+        if(passageId > 0) {
+            return "";
+        }
+
+        return getPreviousChapter(passageId).getName();
+    }
+
+    /**
+     * @param passageId the passage id
+     * @return the keywrapper for the correct passage
+     */
+    private KeyWrapper getPreviousChapter(final int passageId) {
+        return this.injector.getInstance(BibleController.class)
+                .getPreviousChapter(getReference(passageId), getVersion(passageId));
+    }
+
+
 
     /**
      * returns the version of interest
@@ -168,6 +213,10 @@ public class WebStepRequest {
      * @return the reference
      */
     public String getVersion(final int passageId) {
+        if(passageId > 0) {
+            return "";
+        }
+
         try {
             return this.versions.get(passageId);
         } catch (final Exception e) {
@@ -197,15 +246,19 @@ public class WebStepRequest {
      * @return the html to put into the page
      */
     public String getPassage(final int passageId) {
+        if(passageId > 0) {
+            return "";
+        }
+
         final String reference = getReference(passageId);
         final String version = getVersion(passageId);
 
         try {
             return this.injector.getInstance(BibleController.class)
-                    .getBibleText(version, reference, "VERSE_NUMBERS,NOTES").getValue();
+                    .getBibleText(version, reference, "N").getValue();
         } catch (final StepInternalException e) {
             // silently ignore and log as debug
-            LOG.trace("Unable to restore state", e);
+            LOG.error("Unable to restore state", e);
             return "";
         } catch (final Exception e) {
             return "";

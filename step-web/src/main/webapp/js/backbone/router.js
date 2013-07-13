@@ -71,7 +71,7 @@ var StepRouter = Backbone.Router.extend({
         if (hash.length == 0 || hash == '#') {
             var prefix = fragment.substring(0, 3);
             if (prefix != "__/") {
-                fragment = "__/" + fragment;
+                fragment = "!__/" + fragment;
             }
 
             //we still have the trigger flag as it gets deleted below.

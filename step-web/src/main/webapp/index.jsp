@@ -229,7 +229,7 @@
 			    		<jsp:include page="js/search/fragments/advanced_search.jsp?passageId=1" />
 			    		<jsp:include page="js/search/fragments/passage_toolbar.jsp?passageId=1" />
 			    	</div>
-			    	<div class="passageContent">&nbsp;<%= stepRequest.getPassage(1) %></div>
+			    	<div class="passageContent">&nbsp;</div>
 				</div>
 			</div>
 		</div>

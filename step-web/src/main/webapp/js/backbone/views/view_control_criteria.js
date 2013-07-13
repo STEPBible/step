@@ -30,7 +30,7 @@ CriteriaControlView = Backbone.View.extend({
      * Changes the field set that is current showing
      */
     _changeVisibleCriteria: function () {
-        var selectedSearch = this.model.get("selectedSearch");
+        var selectedSearch = this.model.get("selectedSearch") || "SEARCH_PASSAGE";
 
         //check if criteria is present on the page, otherwise load it dynamically! Woohoo!
         var fieldsets = this.$el.find("fieldset");

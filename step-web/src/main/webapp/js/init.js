@@ -50,7 +50,7 @@ function init() {
     $(document).ready(function () {
         //fix to IE10 menus:
         $("li[menu-name] ul li").css("list-style", "none");
-
+        $.cookie("step", "true");
         $.fn.qtip.defaults.style.classes = "primaryLightBg primaryLightBorder";
 
 

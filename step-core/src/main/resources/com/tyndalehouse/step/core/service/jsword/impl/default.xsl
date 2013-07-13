@@ -535,7 +535,7 @@
         <xsl:otherwise>
         	<xsl:choose>
         		<xsl:when test="@type = 'crossReference'">
-		           <sup class="note"><a href="javascript:void(0)" noteType='{@type}' xref="{@osisID}" ref="{@osisRef}"><xsl:call-template name="generateNoteXref"/></a></sup>
+		           <sup class="note"><a href="javascript:void(0)" noteType='{@type}' xref="{@osisID}" ref="{@osisRef}"><xsl:call-template name="generateNoteXref"/></a>&amp;nbsp;</sup>
         		</xsl:when>
         		<xsl:otherwise>
 					 <sup class="note">

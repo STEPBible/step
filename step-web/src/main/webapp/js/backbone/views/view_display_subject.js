@@ -182,26 +182,17 @@ var SubjectDisplayView = SearchDisplayView.extend({
 
                         var link = $("<a>").attr("href", "javascript:void(0)").html(refs[i].trim());
                         var refLink = refs[i];
-                        $(link).click(function () {
-                            var splitByComma = refLink.split(",");
+                        $(link).click({value : { refLink : refLink, seeAlso : seeAlso } }, function (event) {
+                            var splitByComma = event.data.value.refLink.split(",");
                             var query;
                             var text = "";
-                            if (splitByComma.length == 1) {
-                                //do a s+ search
-                                query = "s+=";
-                            } else {
-                                // do a s++ search
-                                query = "s++="
-                            }
-
-                            text += refLink;
+                            text += event.data.value.refLink;
 
                             //also add in the root word if the word "above" or "below" appears
-                            if (seeAlso.indexOf('above') != -1 && seeAlso.indexOf('below') != -1) {
+                            if (event.data.value.seeAlso.indexOf('above') != -1 && event.data.value.seeAlso.indexOf('below') != -1) {
                                 //add in the root word
                                 text += " " + root;
                             }
-                            query += text;
 
                             self.model.save({
                                 subjectText :  text

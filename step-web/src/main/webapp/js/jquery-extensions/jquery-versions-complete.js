@@ -35,7 +35,7 @@ $.widget("custom.versions",  {
                 my:  "left bottom",
                 at : "left top",
                 of: self.element,
-                collision: "flip",
+                collision: "flip"
             });
             self.ensureInWindow();
         });
@@ -43,12 +43,16 @@ $.widget("custom.versions",  {
         
         this.element.bind("keyup", function(event) {
             var kc = event.keyCode;
+
+            //48 to 90 = 0-9A-z
+            //96 to 111 = num pad keys
+            //188 to 222 = punctuation
             if(kc >= 48 && kc <= 90 || kc >= 96 && kc <= 111 || kc >= 188 && kc <= 222) {
                 self._filter($(this).val());
                 return;
             }
             
-            if(kc == 27) {
+            if(kc == 27 || kc == 9 || kc == 13) {
                 self.dropdownVersionMenu.hide();
             }
         });
@@ -97,7 +101,7 @@ $.widget("custom.versions",  {
         this._bindHandlers(this);
     },
 
-    ensureInWindow : function(dropdown) {
+    ensureInWindow : function() {
         var windowHeight = $(window).height();
         var dropdownHeight = $(this.dropdownVersionMenu).height();
         var dropdownTop = $(this.dropdownVersionMenu).position().top;

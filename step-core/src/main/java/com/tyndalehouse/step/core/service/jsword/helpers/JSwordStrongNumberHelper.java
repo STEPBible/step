@@ -33,7 +33,6 @@
 package com.tyndalehouse.step.core.service.jsword.helpers;
 
 import static org.crosswire.jsword.book.OSISUtil.OSIS_ELEMENT_VERSE;
-import static org.crosswire.jsword.book.OSISUtil.OSIS_ELEMENT_W;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -309,7 +308,7 @@ public class JSwordStrongNumberHelper {
     private List<Element> getOsisElements(final Key key) throws NoSuchKeyException, BookException {
         final BookData data = new BookData(STRONG_REF_VERSION_BOOK, key);
         return data.getOsisFragment().getContent(
-                new ElementFilter(OSIS_ELEMENT_W));
+                new ElementFilter(OSIS_ELEMENT_VERSE));
     }
 
     /**

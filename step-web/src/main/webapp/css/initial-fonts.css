@@ -52,6 +52,10 @@ body {
     font-size: smaller;
 }
 
+.lexiconContentText {
+    color: black;
+}
+
 .superTranslit {
     vertical-align: super;
 }
@@ -138,6 +142,7 @@ body {
 /********************************/
 .notApplicable, .duplicate {
     color: grey !important;
+    font-weight: normal;
     font-style: italic;
 }
 

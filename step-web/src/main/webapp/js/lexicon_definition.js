@@ -68,7 +68,7 @@ step.lexicon = {
             attributes.originalForms = searchType;
             attributes.searchContext = 0;
             attributes.originalSearchVersion = step.util.ui.getVisibleVersions(this.passageId).val();
-            
+
             model.save(attributes);
             model.trigger("search", model, {});
             //if we're in single view, then we would want to bring up the second column
@@ -95,12 +95,16 @@ step.lexicon = {
             $(container).show();
         }
 
+        if(!step.util.isBlank(data[indexToWord].strongNumber)) {
+            $("#lsjBdbHeader").html(data[indexToWord].strongNumber[0].toLowerCase() == 'g' ? __s.lexicon_lsj_definition : __s.lexicon_bdb_definition );
+        }
+
         $("*", container).each(function (index, item) {
             var infoName = $(item).attr("info-name");
             if (infoName) {
                 var infos = infoName.split("|");
                 var content = data[indexToWord][infos[0]];
-                if (content == "") {
+                if (step.util.isBlank(content)) {
                     content = data[indexToWord][infos[1]];
                 }
 

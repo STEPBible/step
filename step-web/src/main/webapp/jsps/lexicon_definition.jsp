@@ -32,15 +32,19 @@
 
 				<h3><fmt:message key="lexicon_vocab" /></h3>
 				<div level="0">
-					<div><h5 class='stepTransliteration' info-name="stepTransliteration" title="<fmt:message key="step_disclaimer" />"></h5> (<span info-name="accentedUnicode" class="unicodeFont"></span>): <span info-name="shortDef"></span></div>
+					<div class='lexiconContentText'>
+                        <span info-name="accentedUnicode" class="unicodeFont"></span>
+                        (<span class='stepTransliteration' info-name="stepTransliteration" title="<fmt:message key="step_disclaimer" />"></span>):
+                        <span info-name="shortDef|stepGloss"></span>
+                    </div>
 				</div>
 				<div level="1">
 					<hr />
-					<div><h5><fmt:message key="lexicon_meaning" /> </h5> <span info-name="mediumDef"></span> </div>
+					<div><h5><fmt:message key="lexicon_meaning" /> </h5> <span info-name="mediumDef" class="lexiconContentText"></span> </div>
 				</div>	
 				<div level="2">
 					<hr />
-					<h5><fmt:message key="lexicon_lsj_definition" /></h5><div info-name="lsjDefs" ></div>
+					<h5><span id="lsjBdbHeader"></span></h5><div  class="lexiconContentText" info-name="lsjDefs" ></div>
 					<br />
 					<h5><fmt:message key="lexicon_related_words" /></h5><div><span info-name="relatedNos"></span></div>
 					<br />

@@ -186,7 +186,7 @@ step.lexicon = {
         var morphData = data[index];
 
         //TODO: this will not work if we ever internationalise the morphology.
-        if(morphData.function == "Verb") {
+        if(morphData["function"] == "Verb") {
             morphData.morphSummary =
                 this.addNonNull(morphData.tense) + " " +
                 this.addNonNull(morphData.voice) + " " +

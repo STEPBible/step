@@ -9,7 +9,13 @@ var PassageCriteriaList = Backbone.Collection.extend({
     changePassage: function (model, val, options) {
 //        console.log("Change to model", model)
         if (model != null) {
-            stepRouter.navigatePassage(model.getLocation(), {trigger: true});
+            //we make one exception, and that is if were previous syncing
+            var previousSyncValue = model.previousAttributes().synced;
+            var currentSyncValue = model.get("synced");
+
+            if(previousSyncValue == currentSyncValue || currentSyncValue != -1) {
+                stepRouter.navigatePassage(model.getLocation(), {trigger: true});
+            }
         } else {
             console.log("Model was null so can't route to a passage location")
         }

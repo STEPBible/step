@@ -38,14 +38,16 @@ public class OsisReader {
      */
     public static void main(final String[] args) throws Exception {
         final String version = "OSMHB";
-        final String ref = "2Chr.25.14";
+        final String ref = "2Ch 25:14";
+        boolean format = true;
 
         final Book currentBook = Books.installed().getBook(version);
 
         final BookData bookData = new BookData(currentBook, currentBook.getKey(ref));
         final Element osisFragment = bookData.getOsisFragment();
 
-        final XMLOutputter xmlOutputter = new XMLOutputter(Format.getRawFormat());
+
+        final XMLOutputter xmlOutputter = new XMLOutputter(format ? Format.getPrettyFormat() : Format.getRawFormat());
         LOGGER.debug(xmlOutputter.outputString(osisFragment));
         xmlOutputter.outputString(osisFragment);
 

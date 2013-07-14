@@ -661,12 +661,34 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
 
             if (key instanceof Passage) {
                 final Passage p = (Passage) key;
-                osisWrapper.setMultipleRanges(p.hasRanges(RestrictionType.NONE));
+                final boolean hasMultipleRanges = p.hasRanges(RestrictionType.NONE);
+                osisWrapper.setMultipleRanges(hasMultipleRanges);
 
-                // get the first "range" and set up the start and ends
-                final VerseRange r = (VerseRange) p.rangeIterator(RestrictionType.NONE).next();
-                osisWrapper.setStartRange(versification.getOrdinal(r.getStart()));
-                osisWrapper.setEndRange(versification.getOrdinal(r.getEnd()));
+                if(hasMultipleRanges) {
+                    // get the first "range" and set up the start and ends
+                    final VerseRange r = (VerseRange) p.rangeIterator(RestrictionType.NONE).next();
+                    osisWrapper.setStartRange(versification.getOrdinal(r.getStart()));
+                    osisWrapper.setEndRange(versification.getOrdinal(r.getEnd()));
+                } else {
+                    Iterator<Key> keys = p.iterator();
+                    Verse start = null;
+                    Verse end = null;
+                    while(keys.hasNext()) {
+                        if(start == null) {
+                            start = (Verse) keys.next();
+                        } else {
+                            end = (Verse) keys.next();
+                        }
+                    }
+                    if(start != null) {
+                        osisWrapper.setStartRange(start.getOrdinal());
+                    }
+                    if(end != null) {
+                        osisWrapper.setEndRange(end.getOrdinal());
+                    } else {
+                        osisWrapper.setEndRange(start.getOrdinal());
+                    }
+                }
             } else if (key instanceof VerseRange) {
                 final VerseRange vr = (VerseRange) key;
                 osisWrapper.setStartRange(versification.getOrdinal(vr.getStart()));

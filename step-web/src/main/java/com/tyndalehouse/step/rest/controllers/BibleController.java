@@ -278,7 +278,8 @@ public class BibleController {
      * ascertains the next reference to lookup.
      *
      * @param reference the current ref
-     * @param version the current version
+     * @param sourceVersion the current version
+     * @param targetVersion the version in which we want the reference
      * @return the next reference
      */
     @Cacheable(true)

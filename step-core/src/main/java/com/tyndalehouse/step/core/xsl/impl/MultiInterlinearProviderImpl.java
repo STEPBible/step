@@ -151,7 +151,13 @@ public class MultiInterlinearProviderImpl implements MultiInterlinearProvider {
     @Override
     public String getWord(final String version, final String verseNumber, final String strong,
                           final String morph) {
-        return this.interlinearProviders.get(version).getWord(isBlank(verseNumber) ? lastSeenOsisId : verseNumber, strong, morph);
+        try {
+            return this.interlinearProviders.get(version).getWord(isBlank(verseNumber) ? lastSeenOsisId : verseNumber, strong, morph);
+        } catch(Exception ex) {
+            //we catch and deal with all exceptions here:
+            LOGGER.error(ex.getMessage(), ex);
+            return "";
+        }
     }
 
     /**

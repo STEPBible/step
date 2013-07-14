@@ -35,6 +35,12 @@ CriteriaControlView = Backbone.View.extend({
         //check if criteria is present on the page, otherwise load it dynamically! Woohoo!
         var fieldsets = this.$el.find("fieldset");
         var criteria = fieldsets.filter("[name='" + selectedSearch + "']");
+
+        if(selectedSearch != "SEARCH_PASSAGE") {
+            //we're moving away from passage, so we need to remove the pinning
+            step.menu.options.tickSyncMode("NO_SYNC");
+        }
+
         if (criteria.length == 0) {
             //not yet loaded
             var self = this;
@@ -146,10 +152,13 @@ CriteriaControlView = Backbone.View.extend({
 
         var selectedSearch = this.model.get("selectedSearch");
         var fieldsets = this.$el.find("fieldset");
-        this.passageToolbarContainer.toggle(selectedSearch == "SEARCH_PASSAGE");
+
+        var changeToPassage = selectedSearch == "SEARCH_PASSAGE";
+        this.passageToolbarContainer.toggle(changeToPassage);
+
         fieldsets.hide().filter("[name='" + selectedSearch + "']").show();
 
         //always empty the passage content
-        step.util.ui.emptyOffDomAndPopulate(step.util.getPassageContent(passageId), $("<div>"))
+        step.util.ui.emptyOffDomAndPopulate(step.util.getPassageContent(passageId), $("<div>"));
     }
 });

@@ -646,7 +646,7 @@
   </xsl:template>
 
   <!--=======================================================================-->
-  <xsl:template match="w">
+  <xsl:template match="w" name="processW">
     <!-- Output the content followed by all the lemmas and then all the morphs. -->
     <xsl:choose>
 	    <xsl:when test="normalize-space(@lemma) != '' or normalize-space(@morph) != ''">
@@ -946,11 +946,11 @@
   </xsl:template>
   
   <xsl:template match="divineName">
-    <xsl:apply-templates mode="small-caps"/>
+  <span class="small-caps"><xsl:apply-templates /></span>
   </xsl:template>
   
   <xsl:template match="divineName" mode="jesus">
-    <xsl:apply-templates mode="small-caps"/>
+  <span class="small-caps"><xsl:apply-templates /></span>
   </xsl:template>
   
   <xsl:template match="figure">

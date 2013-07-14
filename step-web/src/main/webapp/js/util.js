@@ -932,7 +932,9 @@ function passageArrowTrigger(passageId, sourceVersion, ref, goToChapter) {
     if(passageId == 1) {
         step.state.view.ensureTwoColumnView();
     }
-    
+
+    step.menu.options.tickSyncMode("NO_SYNC");
+
     //so long as we are "goToChapter" and have only one chapter (i.e. just one instance of ':'), then we go to the chapter
     var indexOfColon = ref.indexOf(':');
     var multiColons = ref.indexOf(':', indexOfColon + 1) != -1;

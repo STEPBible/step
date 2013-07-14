@@ -150,6 +150,28 @@ step.menu = {
         });
     },
 
+    /**
+     * Gets a menu trigger that can be sent to the tick functions
+     * @param menuItemName the item we are dealing with
+     * @param parentItemName the parent item name
+     * @returns {{menu: *, menuItem: {element: *, name: *}, passageId: *}}
+     */
+    getMenuTrigger : function(menuItemName, parentItemName) {
+        var parentElement = $("li[menu-name='" + parentItemName + "']");
+        var menuItem = parentElement.find("a[name='" + menuItemName + "']");
+
+        var menu = this.getParentMenu(parentElement);
+
+        return {
+            menu : menu,
+            menuItem : {
+                element : menuItem,
+                name : menuItemName
+            },
+            passageId : ""
+        }
+    },
+
     getParentMenu : function(menuItem) {
         var menu = $(menuItem).closest("li[menu-name]");
         return {

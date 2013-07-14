@@ -59,6 +59,7 @@ step.menu.options = {
             var passageContainer = $(".passageContainer[passage-id=" + enabledPassageId + "]");
             
             $(".passageReference", passageContainer).prop("disabled", false);
+            $(".previousChapter, .nextChapter", passageContainer).button("enable");
             $(".syncOtherPassage", passageContainer)
                 .button("enable")
                 .button("option", "icons", {primary: "ui-icon-pin-s"})
@@ -69,6 +70,7 @@ step.menu.options = {
             var passageContainer = $(".passageContainer[passage-id=" + disablePassageId + "]");
             
             $(".passageReference", passageContainer).prop("disabled", true);
+            $(".previousChapter, .nextChapter", passageContainer).button("disable");
             $(".syncOtherPassage", passageContainer)
                 .button("disable")
                 .button("option", "icons", {primary: "ui-icon-pin-s"});
@@ -80,10 +82,19 @@ step.menu.options = {
                 .attr("title", "Make passages independent");
         },
         
-        _tickSyncMode : function(mode, fire) {
+        tickSyncMode : function(mode, menuTrigger) {
+            if(!menuTrigger) {
+                menuTrigger = step.menu.getMenuTrigger(mode, "SYNC");
+            }
+
+            step.menu.tickOneItemInMenuGroup(menuTrigger);
+
+
             if(mode == "NO_SYNC") {
-                PassageModels.at(0).save({ synced : -1 });
-                PassageModels.at(1).save({ synced : -1 });
+                PassageModels.at(0).set({ synced : -1 });
+                PassageModels.at(1).set({ synced : -1 });
+                PassageModels.at(0).save({});
+                PassageModels.at(1).save({});
                 step.menu.options.enablePassage(0);
                 step.menu.options.enablePassage(1);
                 stepRouter.firstSync = false;
@@ -102,8 +113,7 @@ step.menu.options = {
 };
 
 $(step.menu).hear("MENU-SYNC", function(self, menuTrigger) {
-    step.menu.tickOneItemInMenuGroup(menuTrigger);
-    step.menu.options._tickSyncMode(menuTrigger.menuItem.name);
+    step.menu.options.tickSyncMode(menuTrigger.menuItem.name, menuTrigger);
 });
 
 

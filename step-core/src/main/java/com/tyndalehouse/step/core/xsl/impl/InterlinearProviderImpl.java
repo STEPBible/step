@@ -205,7 +205,11 @@ public class InterlinearProviderImpl implements InterlinearProvider {
         //create the versified key, and convert to the bit we want
         final Key key;
         try {
-            key = VersificationsMapper.instance().mapVerse(VerseFactory.fromString(this.masterVersification, verseNumber), this.versification);
+            if(verseNumber == null) {
+                throw new NoSuchVerseException("Unable to convert verse number to target versification: " + verseNumber);
+            }
+            final Verse inputVerse = VerseFactory.fromString(this.masterVersification, verseNumber);
+            key = VersificationsMapper.instance().mapVerse(inputVerse, this.versification);
         } catch (NoSuchVerseException e) {
             LOGGER.error(e.getMessage(), e);
             return "";

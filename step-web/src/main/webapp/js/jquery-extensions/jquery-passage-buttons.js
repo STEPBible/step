@@ -50,7 +50,7 @@ $.widget("custom.passageButtons",  {
     },
     
     _clickHandler : function(passageId) {
-        passageArrowTrigger(passageId, this.options.version, this.options.ref, this.options.showChapter);
+        passageArrowTrigger(passageId, this.options.version, this.options.ref, this.options.showChapter, true);
         $($(".column")[passageId]).removeClass("primaryLightBg");
 
     }

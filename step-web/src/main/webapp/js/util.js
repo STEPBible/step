@@ -927,19 +927,35 @@ function passageArrowHover(element, ref, isLeft) {
         });
 };
 
-
-function passageArrowTrigger(passageId, sourceVersion, ref, goToChapter) {
+/**
+ *
+ * @param passageId the particular column we're interested in
+ * @param sourceVersion the source version that we will be displaying
+ * @param ref the reference
+ * @param goToChapter the chapter
+ * @param followSync the sync flag, defaults to false. If true & sync is on, we update both passages.
+ */
+function passageArrowTrigger(passageId, sourceVersion, ref, goToChapter, followSync) {
     if(passageId == 1) {
         step.state.view.ensureTwoColumnView();
     }
 
-    step.menu.options.tickSyncMode("NO_SYNC");
+    var targetModel = PassageModels.at(passageId);
+    var synced = targetModel.get("synced");
+    if(synced != -1) {
+        if(followSync) {
+            passageId = synced;
+            targetModel = PassageModels.at(synced);
+        } else {
+            step.menu.options.tickSyncMode("NO_SYNC");
+        }
+    }
 
     //so long as we are "goToChapter" and have only one chapter (i.e. just one instance of ':'), then we go to the chapter
     var indexOfColon = ref.indexOf(':');
     var multiColons = ref.indexOf(':', indexOfColon + 1) != -1;
-    
-    var version = PassageModels.at(passageId).get("version");
+
+    var version = targetModel.get("version");
     if(goToChapter && !multiColons) {
         //true value, so get the next reference
 

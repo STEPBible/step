@@ -215,6 +215,30 @@ function doSyncMenu() {
 
 
 var PASSAGE_IDS = 2;
+function doRequestParams() {
+    var attributes = {};
+
+    var ref = $.getUrlVar("reference");
+    if(ref != null) {
+        attributes.reference = decodeURIComponent(ref);
+    }
+
+    var version = $.getUrlVar("version");
+    if(version != null) {
+        attributes.version = decodeURIComponent(version);
+    }
+
+    if(attributes.version || attributes.reference) {
+        PassageModels.at(0).save(attributes);
+
+        //now redirect
+        //add the debug flag if need be:
+        var addDebug = window.location.href.indexOf("debug") != -1;
+        window.location.href = window.location.href.replace(/\?.*/g, "") + addDebug ? "?debug" : "";
+    }
+};
+
+
 function initApp() {
     PassageModels = new PassageCriteriaList;
     MenuModels = new MenuList;
@@ -268,6 +292,10 @@ function initApp() {
         var criteriaControlView = new CriteriaControlView({ model: searchModel });
         passageModels.push(passageModel);
     }
+
+    //deal with request parameters by saving into model and redirecting
+    doRequestParams();
+
 
     doSyncMenu();
 

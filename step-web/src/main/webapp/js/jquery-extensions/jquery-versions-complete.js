@@ -47,7 +47,8 @@ $.widget("custom.versions",  {
             //48 to 90 = 0-9A-z
             //96 to 111 = num pad keys
             //188 to 222 = punctuation
-            if(kc >= 48 && kc <= 90 || kc >= 96 && kc <= 111 || kc >= 188 && kc <= 222) {
+            //8 = backspace
+            if(kc >= 48 && kc <= 90 || kc >= 96 && kc <= 111 || kc >= 188 && kc <= 222 || kc == 8) {
                 self._filter($(this).val());
                 return;
             }
@@ -199,12 +200,15 @@ $.widget("custom.versions",  {
        
        $.each(step.versions, function(index, item) {
            if(val) {
-               var lv = val.toLowerCase();
-               if(item.shortInitials.toLowerCase().indexOf(lv) == -1 && item.initials.toLowerCase().indexOf(lv) == -1 && item.name.toLowerCase().indexOf(lv) == -1) {
-                   //reject
+                var regex = new RegExp("\\b" + val, "ig");
+               val.match()
+               if(item.shortInitials.match(regex) != null ||
+                       item.initials.match(regex) != null ||
+                       item.name.match(regex) != null) {
+                   filteredVersionResult[item.initials] = 'keep';
                    return;
                } else {
-                   filteredVersionResult[item.initials] = 'keep';
+                   //reject
                    return;
                }
            }

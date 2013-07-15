@@ -1113,6 +1113,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
         if (displayMode != NONE && displayMode != INTERLINEAR) {
             tsep.setParameter("interleavingProvider", new InterleavingProviderImpl(this.versificationService,
                     versions, displayMode == INTERLEAVED_COMPARE || displayMode == COLUMN_COMPARE));
+            tsep.setParameter("HideXGen", true);
         }
 
         if (displayMode == INTERLEAVED || displayMode == INTERLEAVED_COMPARE) {

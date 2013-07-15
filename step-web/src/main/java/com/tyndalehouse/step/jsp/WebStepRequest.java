@@ -114,13 +114,14 @@ public class WebStepRequest {
      * @return the reference
      */
     public String getReference(final int passageId) {
-        if(passageId > 0) {
+        if (passageId > 0) {
             return "";
         }
 
         try {
             return this.references.get(passageId);
         } catch (final Exception e) {
+            LOG.warn(e.getMessage(), e);
             return "";
         }
     }
@@ -130,13 +131,14 @@ public class WebStepRequest {
      * @return the next reference
      */
     public String getNextReference(final int passageId) {
-        if(passageId > 0) {
+        if (passageId > 0) {
             return "";
         }
 
         try {
             return getNextChapter(passageId).getOsisKeyId();
         } catch (final Exception e) {
+            LOG.warn(e.getMessage(), e);
             return "";
         }
     }
@@ -146,13 +148,14 @@ public class WebStepRequest {
      * @return the next reference
      */
     public String getNextReferenceDisplay(final int passageId) {
-        if(passageId > 0) {
+        if (passageId > 0) {
             return "";
         }
 
         try {
             return getNextChapter(passageId).getName();
         } catch (final Exception e) {
+            LOG.warn(e.getMessage(), e);
             return "";
         }
     }
@@ -172,13 +175,14 @@ public class WebStepRequest {
      * @return the previous reference
      */
     public String getPreviousReference(final int passageId) {
-        if(passageId > 0) {
+        if (passageId > 0) {
             return "";
         }
 
         try {
             return getPreviousChapter(passageId).getOsisKeyId();
         } catch (final Exception e) {
+            LOG.warn(e.getMessage(), e);
             return "";
         }
     }
@@ -188,11 +192,15 @@ public class WebStepRequest {
      * @return the string to be displayed on the screen
      */
     public String getPreviousReferenceDisplay(final int passageId) {
-        if(passageId > 0) {
+        if (passageId > 0) {
             return "";
         }
-
-        return getPreviousChapter(passageId).getName();
+        try {
+            return getPreviousChapter(passageId).getName();
+        } catch (final Exception e) {
+            LOG.warn(e.getMessage(), e);
+            return "";
+        }
     }
 
     /**
@@ -205,7 +213,6 @@ public class WebStepRequest {
     }
 
 
-
     /**
      * returns the version of interest
      *
@@ -213,13 +220,14 @@ public class WebStepRequest {
      * @return the reference
      */
     public String getVersion(final int passageId) {
-        if(passageId > 0) {
+        if (passageId > 0) {
             return "";
         }
 
         try {
             return this.versions.get(passageId);
         } catch (final Exception e) {
+            LOG.warn(e.getMessage(), e);
             return "";
         }
     }
@@ -235,6 +243,7 @@ public class WebStepRequest {
             return this.getThisVersion() + " " + this.getThisReference() + ": " +
                     jsword.getPlainText(this.getVersion(0), this.getReference(0), true).replaceAll("[<>]", "");
         } catch (final Exception e) {
+            LOG.warn(e.getMessage(), e);
             return "";
         }
     }
@@ -246,7 +255,7 @@ public class WebStepRequest {
      * @return the html to put into the page
      */
     public String getPassage(final int passageId) {
-        if(passageId > 0) {
+        if (passageId > 0) {
             return "";
         }
 
@@ -267,15 +276,28 @@ public class WebStepRequest {
 
     /**
      * We will never be displaying other than 0 to people without javascript
+     *
      * @return the version for passage id 0
      */
     public String getThisVersion() {
-        return this.versions.get(0);
+        try {
+            return this.versions.get(0);
+        } catch (final Exception e) {
+            LOG.warn(e.getMessage(), e);
+            return "";
+        }
+
     }
 
     public String getThisReference() {
-        final int passageId = Integer.parseInt(this.request.getParameter("passageId"));
-        return this.references.get(passageId);
+        try {
+            final int passageId = Integer.parseInt(this.request.getParameter("passageId"));
+            return this.references.get(passageId);
+        } catch (final Exception e) {
+            LOG.warn(e.getMessage(), e);
+            return "";
+        }
+
     }
 
     /**

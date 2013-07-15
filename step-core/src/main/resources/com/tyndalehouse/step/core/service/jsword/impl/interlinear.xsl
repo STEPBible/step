@@ -720,9 +720,7 @@
           <xsl:apply-templates/>
         </xsl:if>
       </xsl:when>
-      <xsl:otherwise>
-        <xsl:apply-templates/>
-      </xsl:otherwise>
+      <xsl:otherwise><xsl:apply-templates/></xsl:otherwise>
     </xsl:choose>
   </xsl:template>
   
@@ -739,9 +737,7 @@
           <xsl:apply-templates mode="jesus"/>
         </xsl:if>
       </xsl:when>
-      <xsl:otherwise>
-        <xsl:apply-templates mode="jesus"/>
-      </xsl:otherwise>
+      <xsl:otherwise><xsl:apply-templates mode="jesus"/></xsl:otherwise>
     </xsl:choose>
   </xsl:template>
   

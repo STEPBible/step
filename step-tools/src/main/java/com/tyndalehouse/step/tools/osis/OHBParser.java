@@ -104,8 +104,4 @@ public class OHBParser {
         }
         return null;
     }
-
-    private static void mergeToMaster(final Document masterDoc, final Document doc) {
-        //To change body of created methods use File | Settings | File Templates.
-    }
 }

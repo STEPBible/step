@@ -38,8 +38,8 @@ public class OsisReader {
      * @throws Exception any kind of exception
      */
     public static void main(final String[] args) throws Exception {
-        final String version = "ESV";
-        final String ref = "Psalm.51.1";
+        final String version = "WLC";
+        final String ref = "Gen.1.1";
         boolean format = true;
 
         final Book currentBook = Books.installed().getBook(version);
@@ -47,7 +47,7 @@ public class OsisReader {
         final BookData bookData = new BookData(currentBook, currentBook.getKey(ref));
         final Element osisFragment = bookData.getOsisFragment();
 
-        final XMLOutputter xmlOutputter = new XMLOutputter(format ? Format.getPrettyFormat() : Format.getRawFormat());
+        final XMLOutputter xmlOutputter = new XMLOutputter(format ? Format.getRawFormat() : Format.getRawFormat());
         LOGGER.debug(xmlOutputter.outputString(osisFragment));
         xmlOutputter.outputString(osisFragment);
 
@@ -56,9 +56,9 @@ public class OsisReader {
                 TestUtils.mockVersificationService(), null, null, null, TestUtils.mockVersionResolver());
         final List<LookupOption> options = new ArrayList<LookupOption>();
 
-//        options.add(LookupOption.HEADINGS_ONLY);
+        options.add(LookupOption.DIVIDE_HEBREW);
 
-        final String osisText = jsi.getOsisText(version, ref, options, null, InterlinearMode.NONE).getValue();
+        final String osisText = jsi.getOsisText(version, ref, options, "ESV", InterlinearMode.NONE).getValue();
         final SAXBuilder sb = new SAXBuilder();
 
         try {

@@ -70,7 +70,8 @@
 
   <!-- Whether to show non-canonical "headings" or not -->
   <xsl:param name="Headings" select="'false'"/>
-  
+  <xsl:param name="DivideHebrew" select="'false'" />
+
 	<!--  This is set if we are interested in a preview only and the x-gen information is of no interest. -->
   <xsl:param name="Preview" select="'false'"/>
 
@@ -719,7 +720,11 @@
         	</xsl:otherwise>
         </xsl:choose>
       </xsl:when>
-      <xsl:otherwise><xsl:apply-templates/></xsl:otherwise>
+        <xsl:when test="$DivideHebrew = 'true'">
+            <xsl:variable name="cssClass" select="concat('segC', position() mod 2)" />
+            <span class='{$cssClass}'><xsl:apply-templates/></span>
+        </xsl:when>
+        <xsl:otherwise><xsl:apply-templates/></xsl:otherwise>
     </xsl:choose>
   </xsl:template>
   

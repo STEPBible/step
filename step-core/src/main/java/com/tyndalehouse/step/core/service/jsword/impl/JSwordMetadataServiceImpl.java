@@ -58,10 +58,22 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
         addStrongNumberOptions(book, options);
         addMorphologyOptions(book, options);
         addNotesOptions(book, options);
-
+        addHebrewOptions(book, options);
         addAllMatchingLookupOptions(book, options);
 
         return options;
+    }
+
+    /**
+     * For Hebrew books, we hard code availability of seg divisions for OHB and WLC
+     * @param book the Book in question
+     * @param options the available options
+     */
+    private void addHebrewOptions(final Book book, final List<LookupOption> options) {
+        if("OSMHB".equals(book.getInitials()) || "OHB".equals(book.getInitials()) || "OSHB".equals(book.getInitials())
+                || "WLC".equals(book.getInitials())) {
+            options.add(LookupOption.DIVIDE_HEBREW);
+        }
     }
 
     /**

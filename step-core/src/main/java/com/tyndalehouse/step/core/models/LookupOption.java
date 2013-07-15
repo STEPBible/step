@@ -88,6 +88,11 @@ public enum LookupOption {
     GREEK_VOCAB('A', "GreekVocab", XslConversionType.INTERLINEAR),
 
     /**
+     * Helps the division of the Hebrew words
+     */
+    DIVIDE_HEBREW('D', "DivideHebrew", XslConversionType.DEFAULT),
+
+    /**
      * Morphology
      */
     MORPHOLOGY('M', "Morph", XslConversionType.INTERLINEAR),

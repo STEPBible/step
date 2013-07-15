@@ -228,3 +228,12 @@ body {
 .secondaryBackground {
     background-color: #F3E5B4;
 }
+
+/* seg divisions */
+.segC0 {
+    color: black;
+}
+
+.segC1 {
+    color: #33339F;
+}

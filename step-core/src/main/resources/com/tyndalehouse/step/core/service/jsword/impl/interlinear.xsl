@@ -97,6 +97,7 @@
   
   <!--  true to display color coding information -->
   <xsl:param name="ColorCoding" select="'false'" />
+  <xsl:param name="DivideHebrew" select="'false'" />
 
   <!-- Whether to show an interlinear and the provider helping with the lookup -->
   <xsl:param name="infoFunctionCall" select="'javascript:showInfo'" />
@@ -701,7 +702,7 @@
   		<xsl:when test="normalize-space($string) != ''">
   			<xsl:value-of select="normalize-space($string)" />
   		</xsl:when>
-  		<xsl:otherwise><xsl:value-of select="$nextText"/><xsl:value-of select="'&#160;'" /></xsl:otherwise>
+        <xsl:otherwise><xsl:value-of select="$nextText"/><xsl:value-of select="'&#160;'" /></xsl:otherwise>
   	</xsl:choose>
   	
   </xsl:template>
@@ -1738,24 +1739,22 @@
   <!-- Matching simple text when not matched elsewhere? -->
   <xsl:template match="text()" name="matchSimpleText">
   		<xsl:choose>
+            <xsl:when test="name(..) = 'seg' and name(../..) = 'w'"><xsl:value-of select="."/></xsl:when>
 			<xsl:when test="not(jsword:com.tyndalehouse.step.core.utils.StringUtils.containsAlphaNumeric(normalize-space(.)))" />
 	  		<xsl:when test="normalize-space(.) != ''">
 	  			<span class="w">
-	  			
-	  			<xsl:variable name="lookAhead" select="normalize-space(../following-sibling::node()[1][self::text()])" />	  			
-				<!-- we only output the next portion if it is punctuation -->
-				<xsl:variable name="nextPartOfText">
-					<xsl:choose>
-						<xsl:when
-							test="jsword:com.tyndalehouse.step.core.utils.StringUtils.containsAlphaNumeric($lookAhead)"></xsl:when>
-						<xsl:otherwise>
-							<xsl:value-of select="$lookAhead" />
-						</xsl:otherwise>
-					</xsl:choose>
-				</xsl:variable>
-	  			
-	  			
-	  				<span class="text"><xsl:value-of select="."/><xsl:value-of select="$nextPartOfText"/></span>
+                    <xsl:variable name="lookAhead" select="normalize-space(../following-sibling::node()[1][self::text()])" />
+                    <!-- we only output the next portion if it is punctuation -->
+                    <xsl:variable name="nextPartOfText">
+                        <xsl:choose>
+                            <xsl:when
+                                test="jsword:com.tyndalehouse.step.core.utils.StringUtils.containsAlphaNumeric($lookAhead)"></xsl:when>
+                            <xsl:otherwise>
+                                <xsl:value-of select="$lookAhead" />
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </xsl:variable>
+                    <span class="text"><xsl:value-of select="."/><xsl:value-of select="$nextPartOfText"/></span>
 	  				<!-- now we need to put the set of spans for strongs/morphs/interlinear versions -->
 
 					<!-- output a filling gap for strongs -->

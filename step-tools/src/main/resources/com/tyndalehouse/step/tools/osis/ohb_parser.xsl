@@ -15,7 +15,7 @@
                     <xsl:value-of select="concat('strong:H', $currentInput)"/>
                 </xsl:when>
                 <xsl:otherwise>
-                    <xsl:value-of select="$currentInput"/>
+                    <!--<xsl:value-of select="$currentInput"/>-->
                 </xsl:otherwise>
             </xsl:choose>
             <xsl:value-of select="' '"/>

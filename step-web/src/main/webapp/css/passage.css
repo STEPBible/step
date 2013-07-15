@@ -45,6 +45,11 @@ span.interlinear span span { /* Make this stack on top of each other. */
 /* 	font-size: 14px; */
 }
 
+.copticFont {
+    font-family: Conv_newathu405;
+    font-size: 130%;
+}
+
 .hbFont {
 	font-family: SIL_EZRA;
 	font-size: 250%;	

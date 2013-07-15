@@ -28,3 +28,10 @@
 	font-family : "SIL_EZRA";
     src: url('../fonts/SILEOT.woff');
 }
+
+@font-face {
+    font-family: 'Conv_newathu405';
+    src: url('../fonts/newathu405.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}

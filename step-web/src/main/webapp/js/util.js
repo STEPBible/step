@@ -385,6 +385,8 @@ step.util = {
                 return "hbFont";
             } else if (language == "grc") {
                 return "unicodeFont";
+            } else if (language == "cop"){
+                return "copticFont";
             }
         },
 

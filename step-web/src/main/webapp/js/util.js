@@ -991,11 +991,23 @@ function passageArrowTrigger(passageId, sourceVersion, ref, goToChapter, followS
         });
 
         $.getSafe(BIBLE_EXPAND_TO_CHAPTER, [sourceVersion, version, ref], function(newChapterRef) {
+            if(step.util.isBlank(newChapterRef.name)) {
+                step.util.raiseInfo(passageId, sprintf(__s.error_bible_doesn_t_have_passage, ref), 'error', true);
+                Backbone.Events.trigger("passage:rendered:" + passageId);
+                return;
+            }
+
             //reset the URL to force a passage lookup
             PassageModels.at(passageId).save({ reference: newChapterRef.name });
         });
     } else {
         $.getSafe(BIBLE_CONVERT_VERSIFICATION, [ref, sourceVersion, version], function(data) {
+            if(step.util.isBlank(newChapterRef.name)) {
+                step.util.raiseInfo(passageId, sprintf(__s.error_bible_doesn_t_have_passage, ref), 'error', true);
+                Backbone.Events.trigger("passage:rendered:" + passageId);
+                return;
+            }
+
             PassageModels.at(passageId).save({ reference: data.name });
         });
     }

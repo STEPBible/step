@@ -1003,14 +1003,14 @@ function passageArrowTrigger(passageId, sourceVersion, ref, goToChapter, followS
             PassageModels.at(passageId).save({ reference: newChapterRef.name });
         });
     } else {
-        $.getSafe(BIBLE_CONVERT_VERSIFICATION, [ref, sourceVersion, version], function(data) {
+        $.getSafe(BIBLE_CONVERT_VERSIFICATION, [ref, sourceVersion, version], function(newChapterRef) {
             if(step.util.isBlank(newChapterRef.name)) {
                 step.util.raiseInfo(passageId, sprintf(__s.error_bible_doesn_t_have_passage, ref), 'error', true);
                 Backbone.Events.trigger("passage:rendered:" + passageId);
                 return;
             }
 
-            PassageModels.at(passageId).save({ reference: data.name });
+            PassageModels.at(passageId).save({ reference: newChapterRef.name });
         });
     }
 };

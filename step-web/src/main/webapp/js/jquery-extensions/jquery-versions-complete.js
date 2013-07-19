@@ -197,14 +197,21 @@ $.widget("custom.versions",  {
        
        var filteredVersionResult = {};
        var ancientAlreadyIn = {};
-       
+       var regex = new RegExp("\\b" + val, "ig");
+
+        for(var key in step.versions.name) {
+            if(key.match(regex) || step.versions.name[key].match(regex)) {
+                filteredVersionResult[item.initials] = 'keep';
+            }
+        }
+
        $.each(step.versions, function(index, item) {
            if(val) {
-                var regex = new RegExp("\\b" + val, "ig");
                val.match()
                if(item.shortInitials.match(regex) != null ||
                        item.initials.match(regex) != null ||
-                       item.name.match(regex) != null) {
+                       item.name.match(regex) != null
+                   ) {
                    filteredVersionResult[item.initials] = 'keep';
                    return;
                } else {

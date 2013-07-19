@@ -50,9 +50,29 @@ span.interlinear span span { /* Make this stack on top of each other. */
     font-size: 130%;
 }
 
+.syriacFont {
+    font-family: SyrCOMEdessa;
+    font-size: 170%;
+}
+
+.burmeseFont {
+    font-family: Padauk;
+    font-size: 150%;
+}
+
+.arabicFont {
+    font-size: 130%;
+    line-height: 1.5;
+}
+
+.chineseFont {
+    font-size: 120%;
+    line-height: 1.4;
+}
+
 .hbFont {
 	font-family: SIL_EZRA;
-	font-size: 250%;	
+	font-size: 180%;
 }
 
 .hbFontSmall {

@@ -387,6 +387,14 @@ step.util = {
                 return "unicodeFont";
             } else if (language == "cop"){
                 return "copticFont";
+            } else if (language == "my") {
+                return "burmeseFont";
+            } else if (language == "syr") {
+                return "syriacFont";
+            } else if(language == "ar") {
+                return "arabicFont";
+            } else if (language == "zh") {
+                return "chineseFont";
             }
         },
 

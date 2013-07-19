@@ -11,11 +11,12 @@ $.widget("custom.versions",  {
         suggestedEnglish : ['ESV', 'KJV', 'ASV', 'DRC'],
         suggestedAncient : ['OSMHB', 'LXX', 'Byz', 'TR', 'WHNU'],
         ancientOrder : [
-                        [__s.hebrew_ot, ["Aleppo", "OSMHB", "WLC"]], 
+                        [__s.hebrew_ot, ["Aleppo", "OSMHB", "SP", "WLC"]],
                         [__s.greek_ot, ["LXX", "ABPGRK", "ABP"]],
                         [__s.greek_nt, ["Antoniades", "Byz", "Elzevir", "SBLGNT", "TNT", "TR", "WHNU"]], 
-                        [__s.latin_texts, ["Vulgate", "DRC"]], 
-                        [__s.syriac_texts, ["Peshitta", "Etheridge", "Murdock"]]
+                        [__s.latin_texts, ["Vulgate", "VulgSistine", "VulgHetzenauer", "VulgConte", "VulgClementine", "DRC"]],
+                        [__s.syriac_texts, ["Peshitta", "Etheridge", "Murdock"]],
+                        [__s.alternative_samaritan, ["SP", "SPMT", "SPVar", "SPDSS", "SPE"]]
                        ]
     },
     
@@ -232,7 +233,7 @@ $.widget("custom.versions",  {
   
             var lang = item.languageCode;
             if(language == "langAncient" && lang != 'grc' && lang != 'la' && lang != 'he' && lang != 'syr') {
-                if(item.initials != 'DRC' && item.initials != 'Murdock' && item.initials != 'ABP' && item.initials != 'Etheridge') {
+                if(item.initials != 'DRC' && item.initials != 'SPE' && item.initials != 'Murdock' && item.initials != 'ABP' && item.initials != 'Etheridge') {
                     return;
                 }
             }
@@ -354,7 +355,7 @@ $.widget("custom.versions",  {
             this._attachBuiltMenu(menu);
             return;
         } else if (selectedView == "langAll" && step.strongVersions) {
-           this._renderStrongVersions(menu);
+            this._renderStrongVersions(menu);
         }
 
         //get last item, and mark it out
@@ -362,10 +363,44 @@ $.widget("custom.versions",  {
 
         
         if(step.versions) {
-            $.each(step.versions, function(i, version) {
-                menu.append(self._renderItem(version));
-            });
-            
+            if(selectedView == 'langAll') {
+                var sortedVersions = step.versions.slice(0);
+                sortedVersions.sort(function(a,b) {
+                    if(a == undefined) {
+                        return 1;
+                    }
+
+                    if (b == undefined) {
+                        return -1;
+                    }
+
+                    if(a.languageName < b.languageName) {
+                        return -1;
+                    }
+
+                    if(a.languageName > b.languageName) {
+                        return 1;
+                    }
+
+                    return 0;
+                });
+
+                var lastLanguage = null;
+                $.each(sortedVersions, function(i, version) {
+                    if(lastLanguage != version.languageName) {
+                        var header = $("<li>").addClass("header").append(version.languageName);
+                        menu.append(header);
+                    }
+
+                    menu.append(self._renderItem(version));
+                    lastLanguage = version.languageName;
+                });
+
+            } else {
+                $.each(step.versions, function(i, version) {
+                    menu.append(self._renderItem(version));
+                });
+            }
         }
         this._attachBuiltMenu(menu);
     },

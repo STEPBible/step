@@ -35,3 +35,17 @@
     font-weight: normal;
     font-style: normal;
 }
+
+@font-face {
+    font-family: 'SyrCOMEdessa';
+    src: url('../fonts/SyrCOMEdessa') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Padauk';
+    src: url('../fonts/Padauk.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}

@@ -110,7 +110,7 @@
   <xsl:param name="colorCodingProvider" />
  
   <!--  set up interlinear provider, if we have requested it -->
-  <xsl:param name="interlinearProvider" />
+  <xsl:param name="interlinearProvider" select="''" />
  
   <!--  TODO: support alternate versification -->
   <xsl:variable name="v11nf" select="jsword:org.crosswire.jsword.versification.system.Versifications.instance()"/>
@@ -248,7 +248,9 @@
 
     <xsl:template match="div">
         <xsl:if test="@osisID">
-            <xsl:value-of select="jsword:setLastSeenOsisId($interlinearProvider, @osisID)" />
+            <xsl:if test="$interlinearProvider != ''">
+                <xsl:value-of select="jsword:setLastSeenOsisId($interlinearProvider, @osisID)" />
+            </xsl:if>
         </xsl:if>
         <xsl:apply-templates/>
     </xsl:template>

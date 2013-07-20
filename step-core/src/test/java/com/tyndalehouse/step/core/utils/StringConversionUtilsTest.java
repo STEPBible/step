@@ -332,6 +332,7 @@ public class StringConversionUtilsTest {
         assertEquals("chet", outputAndTestTransliterate("חֵטְא"));
         assertEquals("yiz.re.el", outputAndTestTransliterate("יִזְרְעֵאל"));
         assertEquals("ye.ho.vah", outputAndTestTransliterate("יְהֹוָה"));
+        assertEquals("lat", outputAndTestTransliterate("לָאט"));
 
 
 

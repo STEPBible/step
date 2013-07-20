@@ -656,7 +656,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
             final TransformingSAXEventProvider htmlsep = executeStyleSheet(versification, options, interlinearVersion,
                     bookData, osissep, displayMode);
 
-            final OsisWrapper osisWrapper = new OsisWrapper(writeToString(htmlsep), key, getLanguages(book, displayMode, htmlsep), versification);
+            final OsisWrapper osisWrapper = new OsisWrapper(writeToString(htmlsep), key, getLanguages(book, displayMode, htmlsep, options), versification);
 
 
             if (key instanceof Passage) {
@@ -664,7 +664,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
                 final boolean hasMultipleRanges = p.hasRanges(RestrictionType.NONE);
                 osisWrapper.setMultipleRanges(hasMultipleRanges);
 
-                if(hasMultipleRanges) {
+                if (hasMultipleRanges) {
                     // get the first "range" and set up the start and ends
                     final VerseRange r = (VerseRange) p.rangeIterator(RestrictionType.NONE).next();
                     osisWrapper.setStartRange(versification.getOrdinal(r.getStart()));
@@ -673,17 +673,17 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
                     Iterator<Key> keys = p.iterator();
                     Verse start = null;
                     Verse end = null;
-                    while(keys.hasNext()) {
-                        if(start == null) {
+                    while (keys.hasNext()) {
+                        if (start == null) {
                             start = (Verse) keys.next();
                         } else {
                             end = (Verse) keys.next();
                         }
                     }
-                    if(start != null) {
+                    if (start != null) {
                         osisWrapper.setStartRange(start.getOrdinal());
                     }
-                    if(end != null) {
+                    if (end != null) {
                         osisWrapper.setEndRange(end.getOrdinal());
                     } else {
                         osisWrapper.setEndRange(start.getOrdinal());
@@ -715,30 +715,66 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
      * @param mode     the mode of interlinear used
      * @param htmlsep  the transformer
      */
-    private String[] getLanguages(final Book mainBook, final InterlinearMode mode, final TransformingSAXEventProvider htmlsep) {
+    private String[] getLanguages(final Book mainBook, final InterlinearMode mode, final TransformingSAXEventProvider htmlsep, List<LookupOption> options) {
         if (mode == InterlinearMode.INTERLINEAR) {
             return getLanguagesForInterlinear(mainBook, htmlsep);
         } else {
-            return getLanguagesForInterleaved(mainBook, htmlsep);
+            return getLanguagesForInterleaved(mainBook, htmlsep, options);
         }
     }
 
     /**
      * Used to identify languages from the interleaving modes
      *
-     * @param htmlsep
+     * @param htmlsep the transformer
+     * @param options the list of options
      * @return the list of language codes
      */
-    private String[] getLanguagesForInterleaved(final Book mainBook, final TransformingSAXEventProvider htmlsep) {
+    private String[] getLanguagesForInterleaved(final Book mainBook, final TransformingSAXEventProvider htmlsep, final List<LookupOption> options) {
         final InterleavingProviderImpl interleavingProvider = (InterleavingProviderImpl) htmlsep.getParameter("interleavingProvider");
-        if(interleavingProvider == null) {
-            return new String[] { mainBook.getLanguage().getCode() };
+
+        boolean englishVocab = false, transliteration = false, greekVocab = false;
+        int extra = 0;
+        if (options.contains(LookupOption.ENGLISH_VOCAB)) {
+            extra++;
+            englishVocab = true;
         }
 
-        final String[] versions = interleavingProvider.getVersions();
-        final String[] languages = new String[versions.length];
+        if (options.contains(LookupOption.TRANSLITERATION)) {
+            extra++;
+            transliteration = true;
+        }
+
+        if (options.contains(LookupOption.GREEK_VOCAB)) {
+            extra++;
+            greekVocab = true;
+        }
+
+        if (interleavingProvider == null && !(englishVocab || transliteration || greekVocab)) {
+            return new String[]{mainBook.getLanguage().getCode()};
+        }
+
+        final String[] versions = interleavingProvider == null ? new String[0] : interleavingProvider.getVersions();
+        final String[] languages = new String[versions == null ? 0 : versions.length + extra + 1];
+
+
+        int offset = 0;
+        languages[offset++] = mainBook.getLanguage().getCode();
+        if (englishVocab) {
+            languages[offset++] = "en";
+        }
+
+        if (transliteration) {
+            languages[offset++] = "en";
+        }
+
+
+        if (greekVocab) {
+            languages[offset++] = "";
+        }
+
         for (int i = 0; i < versions.length; i++) {
-            languages[i] = versificationService.getBookFromVersion(versions[i]).getLanguage().getCode();
+            languages[offset++] = versificationService.getBookFromVersion(versions[i]).getLanguage().getCode();
         }
 
         return languages;
@@ -991,11 +1027,11 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
      * Executes the stylesheet
      *
      * @param masterVersification the versification of the top line
-     * @param options            the list of options to pass in
-     * @param interlinearVersion the interlinear version(s)
-     * @param bookData           the book data, containing book and reference
-     * @param osissep            the XML SAX provider
-     * @param displayMode        the display mode
+     * @param options             the list of options to pass in
+     * @param interlinearVersion  the interlinear version(s)
+     * @param bookData            the book data, containing book and reference
+     * @param osissep             the XML SAX provider
+     * @param displayMode         the display mode
      * @return a Transforming SAX event provider, from which can be transformed into HTML
      * @throws TransformerException an exception in the stylesheet that is being executed
      */
@@ -1073,11 +1109,11 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
     /**
      * sets up the default interlinear options
      *
-     * @param tsep               the transformer that we want to set up
+     * @param tsep                the transformer that we want to set up
      * @param masterVersification the versification of the top line
-     * @param interlinearVersion the interlinear version(s) that the users have requested
-     * @param reference          the reference the user is interested in
-     * @param displayMode        the mode to display the passage, i.e. interlinear, interleaved, etc.
+     * @param interlinearVersion  the interlinear version(s) that the users have requested
+     * @param reference           the reference the user is interested in
+     * @param displayMode         the mode to display the passage, i.e. interlinear, interleaved, etc.
      */
     private void setInterlinearOptions(final TransformingSAXEventProvider tsep, final Versification masterVersification,
                                        final String interlinearVersion, final String reference, final InterlinearMode displayMode) {

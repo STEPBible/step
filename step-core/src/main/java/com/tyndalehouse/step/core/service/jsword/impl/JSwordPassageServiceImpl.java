@@ -719,62 +719,26 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
         if (mode == InterlinearMode.INTERLINEAR) {
             return getLanguagesForInterlinear(mainBook, htmlsep);
         } else {
-            return getLanguagesForInterleaved(mainBook, htmlsep, options);
+            return getLanguagesForInterleaved(mainBook, htmlsep);
         }
     }
 
     /**
      * Used to identify languages from the interleaving modes
      *
-     * @param htmlsep the transformer
-     * @param options the list of options
+     * @param htmlsep
      * @return the list of language codes
      */
-    private String[] getLanguagesForInterleaved(final Book mainBook, final TransformingSAXEventProvider htmlsep, final List<LookupOption> options) {
+    private String[] getLanguagesForInterleaved(final Book mainBook, final TransformingSAXEventProvider htmlsep) {
         final InterleavingProviderImpl interleavingProvider = (InterleavingProviderImpl) htmlsep.getParameter("interleavingProvider");
-
-        boolean englishVocab = false, transliteration = false, greekVocab = false;
-        int extra = 0;
-        if (options.contains(LookupOption.ENGLISH_VOCAB)) {
-            extra++;
-            englishVocab = true;
+        if(interleavingProvider == null) {
+            return new String[] { mainBook.getLanguage().getCode() };
         }
 
-        if (options.contains(LookupOption.TRANSLITERATION)) {
-            extra++;
-            transliteration = true;
-        }
-
-        if (options.contains(LookupOption.GREEK_VOCAB)) {
-            extra++;
-            greekVocab = true;
-        }
-
-        if (interleavingProvider == null && !(englishVocab || transliteration || greekVocab)) {
-            return new String[]{mainBook.getLanguage().getCode()};
-        }
-
-        final String[] versions = interleavingProvider == null ? new String[0] : interleavingProvider.getVersions();
-        final String[] languages = new String[versions == null ? 0 : versions.length + extra + 1];
-
-
-        int offset = 0;
-        languages[offset++] = mainBook.getLanguage().getCode();
-        if (englishVocab) {
-            languages[offset++] = "en";
-        }
-
-        if (transliteration) {
-            languages[offset++] = "en";
-        }
-
-
-        if (greekVocab) {
-            languages[offset++] = "";
-        }
-
+        final String[] versions = interleavingProvider.getVersions();
+        final String[] languages = new String[versions.length];
         for (int i = 0; i < versions.length; i++) {
-            languages[offset++] = versificationService.getBookFromVersion(versions[i]).getLanguage().getCode();
+            languages[i] = versificationService.getBookFromVersion(versions[i]).getLanguage().getCode();
         }
 
         return languages;

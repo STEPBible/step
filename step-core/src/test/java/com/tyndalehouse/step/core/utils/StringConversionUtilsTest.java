@@ -285,7 +285,7 @@ public class StringConversionUtilsTest {
      */
     @Test
     public void testTransliterateHebrew() {
-        assertEquals("has.sha.ma.yim", outputAndTestTransliterate("הַשָּׁמַ֔יִם"));
+        assertEquals("hash.sha.ma.yim", outputAndTestTransliterate("הַשָּׁמַ֔יִם"));
         assertEquals("le.hav.dil", outputAndTestTransliterate("לְהַבְדִּ֕יל"));
         assertEquals("ben", outputAndTestTransliterate("בֵּ֥ין"));
         assertEquals("hay.yom", outputAndTestTransliterate("הַיּ֖וֹם"));
@@ -298,9 +298,9 @@ public class StringConversionUtilsTest {
         assertEquals("shv.va.ah", outputAndTestTransliterate("שׁוַּהַ"));
         assertEquals("sv.va.ah", outputAndTestTransliterate("שׂוָּהַ"));
         assertEquals("shav.v.teh", outputAndTestTransliterate("שַּׁוְּטֶה"));
-        assertEquals("be.v.vey", outputAndTestTransliterate("בֵוֶּי"));
-        assertEquals("do.v.vet", outputAndTestTransliterate("דֹוֵּת"));
-        assertEquals("do.v.vi", outputAndTestTransliterate("דֹוִּע"));
+        assertEquals("bev.ve", outputAndTestTransliterate("בֵוֶּי"));
+        assertEquals("dov.vet", outputAndTestTransliterate("דֹוֵּת"));
+        assertEquals("dov.vi", outputAndTestTransliterate("דֹוִּע"));
         assertEquals("pv.vikh", outputAndTestTransliterate("פּוִּךְ"));
         assertEquals("gev.vi", outputAndTestTransliterate("גֶּוִּי"));
         assertEquals("kuuo", outputAndTestTransliterate("כֻּוּוֹ"));
@@ -311,7 +311,31 @@ public class StringConversionUtilsTest {
         assertEquals("mal.ki", outputAndTestTransliterate("מַלְכִּ֥י"));
         assertEquals("mish.pe.chot", outputAndTestTransliterate("מִשְׁפְּחֹת"));
         assertEquals("re.shit", outputAndTestTransliterate("רֵאשִׁית"));
-//        assertEquals("en.mish.pat", outputAndTestTransliterate("עֵין מִשְׁפָּט"));
+        assertEquals("a.vi giv.on", outputAndTestTransliterate("אֲבִי גִבְעוֹן"));
+        assertEquals("ta.vor", outputAndTestTransliterate("תָּבוֹר"));
+        assertEquals("az.not ta.vor", outputAndTestTransliterate("אַזְנוֹת תָּבוֹר"));
+        assertEquals("bet hash.shim.shi", outputAndTestTransliterate("בֵּית הַשִּׁמְשִׁי"));
+        assertEquals("e.vil me.ro.dakh", outputAndTestTransliterate("אֱוִיל מְרֹדַךְ"));
+        assertEquals("na.vah", outputAndTestTransliterate("נָוָה"));
+        assertEquals("na.vit", outputAndTestTransliterate("נָוִית"));
+        assertEquals("bet a.ven", outputAndTestTransliterate("בֵּית אָוֶן"));
+        assertEquals("to.viy.yah", outputAndTestTransliterate("טוֹבִיָּה"));
+        assertEquals("tov a.do.niy.ya.hu", outputAndTestTransliterate("טוֹב אֲדֹנִיָּהוּ"));
+        assertEquals("ki.lay", outputAndTestTransliterate("כִּילַי"));
+        assertEquals("ma.a.se.yah", outputAndTestTransliterate("מַעֲשֵׂיָה"));
+        assertEquals("shav", outputAndTestTransliterate("שָׁוְא"));
+        assertEquals("bet ba.al me.on", outputAndTestTransliterate("בֵּית בַּעַל מְעוֹן"));
+        assertEquals("zat.tu", outputAndTestTransliterate("זַתּוּא"));
+        assertEquals("da.niy.yel", outputAndTestTransliterate("דָּנִיֵּאל"));
+        assertEquals("bet ar.bel", outputAndTestTransliterate("בֵּית אַרְבֵּאל"));
+        assertEquals("chet", outputAndTestTransliterate("חֵטְא"));
+        assertEquals("chet", outputAndTestTransliterate("חֵטְא"));
+        assertEquals("yiz.re.el", outputAndTestTransliterate("יִזְרְעֵאל"));
+        assertEquals("ye.ho.vah", outputAndTestTransliterate("יְהֹוָה"));
+
+
+
+
     }
 
     /**

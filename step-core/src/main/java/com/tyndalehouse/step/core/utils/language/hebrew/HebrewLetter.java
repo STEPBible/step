@@ -15,6 +15,7 @@ public class HebrewLetter {
     private boolean shureq = false;
     private final char c;
     private boolean transliterable = true;
+    private boolean isShin = false;
 
     /**
      * The character it is representing
@@ -165,17 +166,18 @@ public class HebrewLetter {
         this.shureq = shureq;
     }
 
-    /**
-     * @param transliterable the transliterable flag
-     */
-    public void setIsTransliterable(boolean transliterable) {
-        this.transliterable = transliterable;
+    public void setIsShin(final boolean shin) {
+        isShin = shin;
+    }
+
+    public boolean isShin() {
+        return isShin;
     }
 
     /**
-     * @return true if the letter should be considered in the transliteration
+     * @param shin true to indicate SHIN
      */
-    public boolean isTransliterable() {
-        return transliterable;
+    public void setShin(final boolean shin) {
+        isShin = shin;
     }
 }

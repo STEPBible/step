@@ -638,6 +638,7 @@ FONT.usg {
 	font-size: 10px;
 	font-style: italic;
 	text-align: right;
+    color: #33339F;
 }
 
 .infoAboutVersion, .versionInfo {

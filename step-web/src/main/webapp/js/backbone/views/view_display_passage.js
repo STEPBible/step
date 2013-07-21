@@ -105,7 +105,7 @@ var PassageDisplayView = Backbone.View.extend({
                 languages.splice(indexToSplice++, 0, "en");
             }
             if (options.indexOf("A") != -1) {
-                languages.splice(indexToSplice++, 0, undefined);
+                languages.splice(indexToSplice++, 0, "he");
             }
             if (options.indexOf("M") != -1) {
                 languages.splice(indexToSplice++, 0, "en");

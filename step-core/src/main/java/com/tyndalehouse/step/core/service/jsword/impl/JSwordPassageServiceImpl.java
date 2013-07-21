@@ -68,6 +68,7 @@ import org.crosswire.jsword.passage.RestrictionType;
 import org.crosswire.jsword.passage.Verse;
 import org.crosswire.jsword.passage.VerseRange;
 import org.crosswire.jsword.versification.BibleBook;
+import org.crosswire.jsword.versification.Testament;
 import org.crosswire.jsword.versification.Versification;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -1019,7 +1020,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
                     // set parameters here
                     setOptions(tsep, options, bookData.getFirstBook());
                     setInterlinearOptions(tsep, masterVersification, getInterlinearVersion(interlinearVersion), bookData.getKey()
-                            .getOsisID(), displayMode);
+                            .getOsisID(), displayMode, bookData.getKey());
                     setInterleavingOptions(tsep, displayMode, bookData);
                     return tsep;
                 } catch (final URISyntaxException e) {
@@ -1078,11 +1079,23 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
      * @param interlinearVersion  the interlinear version(s) that the users have requested
      * @param reference           the reference the user is interested in
      * @param displayMode         the mode to display the passage, i.e. interlinear, interleaved, etc.
+     * @param key                 the key to the passage
      */
     private void setInterlinearOptions(final TransformingSAXEventProvider tsep, final Versification masterVersification,
-                                       final String interlinearVersion, final String reference, final InterlinearMode displayMode) {
+                                       final String interlinearVersion, final String reference, final InterlinearMode displayMode, final Key key) {
         if (displayMode == InterlinearMode.INTERLINEAR) {
             tsep.setParameter("VLine", false);
+
+            //TODO: work out OT or NT
+            Iterator<Key> keys = key.iterator();
+            if(keys.hasNext()) {
+                Key firstKey = keys.next();
+                if(firstKey instanceof Verse) {
+                    final Verse verse = (Verse) firstKey;
+                    Testament t = masterVersification.getTestament(verse.getOrdinal());
+                    tsep.setParameter("isOT", t == Testament.OLD);
+                }
+            }
 
             if (isNotBlank(interlinearVersion)) {
                 tsep.setParameter("interlinearVersion", interlinearVersion);

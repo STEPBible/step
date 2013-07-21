@@ -174,6 +174,9 @@ $.widget("custom.versions",  {
         var versions = this._filteredVersions(lastToken);
         
         var listItems = $("[initials]", this.dropdownVersionMenu);
+        $("li.header", this.dropdownVersionMenu).show();
+
+
         $.each(listItems, function(i, item) {
             var jqItem = $(item);
             var initials = jqItem.attr('initials');
@@ -186,7 +189,25 @@ $.widget("custom.versions",  {
                 jqItem.show();
             }
         });
-        
+
+        //hide sibling headers
+        var allElements = $("li:visible", this.dropdownVersionMenu);
+        var wasHeader = allElements.first().hasClass("header");
+        for(var i = 1; i < allElements.length; i++) {
+            var newHeader = allElements.eq(i).hasClass("header");
+
+            console.log(allElements.eq(i).text(), wasHeader, newHeader);
+            if(wasHeader && newHeader) {
+                allElements.eq(i-1).hide();
+            }
+            wasHeader = newHeader;
+        }
+
+        var lastHeader = allElements.last();
+        if(lastHeader.hasClass("header")) {
+            lastHeader.hide();
+        }
+
         this.dropdownVersionMenu.show();
     },
     
@@ -240,12 +261,6 @@ $.widget("custom.versions",  {
 
             var currentLang = step.state.language(1);
             
-            //if we've got those buttons, i.e. currentLang != English
-            if( currentLang != 'en' &&       
-                    language == "langMyAndEnglish" && lang != currentLang && lang != 'en') {
-            }
-            
-            
             if((language == "langMy" || language == undefined) && lang != currentLang) {
                 return;
             }
@@ -276,15 +291,8 @@ $.widget("custom.versions",  {
         toolbar += '<span ><input type="checkbox" id="languageAll" value="langAll" name="language" key="langAll" /><label for="languageAll">' + __s.all + '</label></span>';
 
         toolbar += '<input type="checkbox" id="languageMy" value="langMy" name="language"  key="langMy" ';
-        if(languageCode == 'en') {
-            //default to english
-            toolbar += 'checked="checked"';
-        }
+        toolbar += 'checked="checked" ';
         toolbar += '/><label for="languageMy">' + languageName + '</label>';
-        
-        if(languageCode != 'en') {
-            toolbar += '<input type="checkbox" id="languageMyAndEnglish" value="langMyAndEnglish"  key="langMyEnglish" name="language" checked="checked" /><label for="languageMyAndEnglish">' + languageName + ' + ' + __s.english + '</label>';
-        }
         
         toolbar += '<span ><input type="checkbox" id="languageAncient" value="langAncient"  key="langAncient" name="language" /><label for="languageAncient">' + __s.ancient + '</label></span>';
         
@@ -337,7 +345,7 @@ $.widget("custom.versions",  {
         
         //check language button
         var selectedView = this.dropdownVersionMenu.find("input:checkbox[name=language]:checked").val();
-        if(selectedView == "langMy" && step.state.language(1) == "en" || selectedView == "languageMyAndEnglish") {
+        if(selectedView == "langMy" && step.state.language(1) == "en" ) {
             this._renderList(menu, this.options.suggestedEnglish);
         } else if(selectedView == "langAncient") {
             this._renderList(menu, this.options.suggestedAncient);  

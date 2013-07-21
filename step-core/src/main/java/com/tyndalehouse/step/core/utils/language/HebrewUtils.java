@@ -149,6 +149,7 @@ public final class HebrewUtils {
             final char currentLetter = sb.charAt(ii);
             switch (currentLetter) {
                 case '.':
+                case '-':
                 case '\'':
                 case '*':
                 case CLOSED_QUOTE:
@@ -212,20 +213,29 @@ public final class HebrewUtils {
         // check again if it has been initialized, as we may be coming second
         if (transliterationRules == null) {
             final List<TransliterationRule> rules = new ArrayList<TransliterationRule>();
+            rules.add(new StringToStringRule("b", new String[]{"v"}));
             rules.add(new StringToStringRule("v", new String[]{"b", "w"}));
-            rules.add(new StringToStringRule("w", new String[]{"v"}));
+            rules.add(new StringToStringRule("w", new String[]{"v" }));
+            rules.add(new StringToStringRule("h", new String[]{"ch", "chch"}));
+            rules.add(new StringToStringRule("ch", new String[]{"h", "chch"}));
             rules.add(new StringToStringRule("j", new String[]{"y"}));
-            rules.add(new StringToStringRule("x", new String[]{"h"}));
+            rules.add(new StringToStringRule("x", new String[]{"h", "ch", "chch" }));
             rules.add(new StringToStringRule("+", new String[]{"t"}));
             rules.add(new StringToStringRule("$", new String[]{"s"}));
-            rules.add(new StringToStringRule("s", new String[]{"sh", "ts"}));
-            rules.add(new StringToStringRule("ch", new String[]{"h"}));
+            rules.add(new StringToStringRule("s", new String[]{"sh", "ts", "shsh", "tsts"}));
+            rules.add(new StringToStringRule("sh", new String[]{"shsh"}));
             rules.add(new StringToStringRule("gh", new String[]{"g"}));
             rules.add(new StringToStringRule("kh", new String[]{"k"}));
+            rules.add(new StringToStringRule("k", new String[]{"kh" }));
             rules.add(new StringToStringRule("dh", new String[]{"d"}));
             rules.add(new StringToStringRule("th", new String[]{"t"}));
-            rules.add(new StringToStringRule("ph", new String[]{"p"}));
-            rules.add(new StringToStringRule("tz", new String[]{"ts"}));
+            rules.add(new StringToStringRule("ph", new String[]{"p" }));
+            rules.add(new StringToStringRule("p", new String[]{"ph"}));
+            rules.add(new StringToStringRule("tz", new String[]{"ts", "tsts" }));
+            rules.add(new StringToStringRule("y", new String[]{""}));
+            rules.add(new StringToStringRule("a", new String[]{""}));
+            rules.add(new StringToStringRule("e", new String[]{""}));
+            rules.add(new StringToStringRule("é", new String[]{"e"}));
 
             transliterationRules = rules;
         }

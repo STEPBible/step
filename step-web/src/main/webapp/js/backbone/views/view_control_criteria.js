@@ -41,6 +41,12 @@ CriteriaControlView = Backbone.View.extend({
             step.menu.options.tickSyncMode("NO_SYNC");
         }
 
+        if(selectedSearch == 'SINGLE_COLUMN') {
+            stepRouter.navigatePassage("1/singleColumn", { trigger: true });
+            return;
+        }
+
+
         if (criteria.length == 0) {
             //not yet loaded
             var self = this;

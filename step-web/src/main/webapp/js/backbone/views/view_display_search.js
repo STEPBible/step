@@ -34,12 +34,14 @@ var SearchDisplayView = Backbone.View.extend({
             this._doFonts(results, searchResults.languages);
         }
 
-        step.fonts.redoTextSize(this.model.get("passageId"), results);
+        var passageId = this.model.get("passageId");
+        step.fonts.redoTextSize(passageId, results);
         step.util.ui.emptyOffDomAndPopulate(this.passageContent, this._doSpecificSearchRequirements(query, results, resultsWrapper, resultsWrapper.masterVersion));
+        step.util.ui.addStrongHandlers(passageId, this.passageContent);
 
         step.util.ui.doSocialButtons(this.$el.find(".searchToolbar"));
         this.doTitle();
-        Backbone.Events.trigger("search:rendered:" + this.model.get("passageId"));
+        Backbone.Events.trigger("search:rendered:" + passageId);
     },
 
     doTitle : function() {
@@ -66,16 +68,6 @@ var SearchDisplayView = Backbone.View.extend({
     _doSpecificSearchRequirements: function (query, results, resultsWrapper, masterVersion) {
         //do nothing
         return results;
-    },
-
-
-    _doResultsRender: function (masterVersion, passageId, searchQueryResults, pageNumberArg, highlightTerms, query) {
-        this._displayResults(searchQueryResults, passageId);
-
-
-        this._doFonts(passageId);
-        step.util.ui.addStrongHandlers(passageId, step.util.getPassageContainer(passageId));
-        this._doSpecificSearchRequirements(passageId, query, null, masterVersion);
     },
 
     _updateTotal: function (total, pageNumber) {

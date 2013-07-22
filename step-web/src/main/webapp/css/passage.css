@@ -75,6 +75,11 @@ span.interlinear span span { /* Make this stack on top of each other. */
 	font-size: 180%;
 }
 
+.ancientVocab a {
+    font-style: italic;
+    color: black;
+}
+
 .hbFontSmall {
     font-family: SIL_EZRA;
     font-size: 180%;

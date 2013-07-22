@@ -36,6 +36,7 @@ import com.tyndalehouse.step.core.models.BookName;
 import com.tyndalehouse.step.core.models.InterlinearMode;
 import com.tyndalehouse.step.core.models.LookupOption;
 import com.tyndalehouse.step.core.models.OsisWrapper;
+import com.tyndalehouse.step.core.service.VocabularyService;
 import com.tyndalehouse.step.core.utils.TestUtils;
 import com.tyndalehouse.step.core.xsl.impl.ColorCoderProviderImpl;
 import org.crosswire.jsword.book.Book;
@@ -80,7 +81,7 @@ public class JSwordPassageServiceImplTest {
      */
     @Before
     public void setUp() {
-        this.jsi = new JSwordPassageServiceImpl(TestUtils.mockVersificationService(), null, null,
+        this.jsi = new JSwordPassageServiceImpl(TestUtils.mockVersificationService(), null, mock(VocabularyService.class),
                 mock(ColorCoderProviderImpl.class), TestUtils.mockVersionResolver());
     }
 
@@ -154,8 +155,8 @@ public class JSwordPassageServiceImplTest {
     @Test
     public void testInterlinearTransformation() throws NoSuchKeyException, BookException, JDOMException,
             IOException {
-        final Book currentBook = Books.installed().getBook("KJV");
-        final BookData bookData = new BookData(currentBook, currentBook.getKey("Romans 1:1-3"));
+        final Book currentBook = Books.installed().getBook("OSMHB");
+        final BookData bookData = new BookData(currentBook, currentBook.getKey("Ps.51"));
         final Element osisFragment = bookData.getOsisFragment();
 
         final XMLOutputter xmlOutputter = new XMLOutputter(Format.getPrettyFormat());
@@ -165,7 +166,7 @@ public class JSwordPassageServiceImplTest {
         final List<LookupOption> options = new ArrayList<LookupOption>();
         // options.add(INTERLINEAR);
 
-        final String osisText = this.jsi.getOsisText("KJV", "Romans 1:1-3", options, "KJV",
+        final String osisText = this.jsi.getOsisText("OSMHB", "Ps.51", options, "ESV",
                 InterlinearMode.INTERLINEAR).getValue();
         final SAXBuilder sb = new SAXBuilder();
         final Document d = sb.build(new StringReader(osisText));

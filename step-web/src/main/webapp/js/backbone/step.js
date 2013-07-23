@@ -272,14 +272,22 @@ function initApp() {
 
     //check if we've got any models yet...
     var passageModels = [];
+    var previouslyExistingModels = PassageModels.length;
     for (var i = 0; i < PASSAGE_IDS; i++) {
         //if i is less than the length of the stored models, then it means we already have a model
         var passageModel = i < PassageModels.length ? PassageModels.at(i) : new PassageModel({ passageId: i });
         var searchModel = i < MenuModels.length ? MenuModels.at(i) : new SearchMenuModel({ passageId: i});
 
+
         //add to collections to store state locally
         PassageModels.add(passageModel);
         MenuModels.add(searchModel);
+
+        //after adding to list, but before adding to view
+        if(i == 1 && previouslyExistingModels < 2) {
+            //we've just created the new model
+            searchModel.save({ selectedSearch : 'SINGLE_COLUMN' });
+        }
 
         var passageCriteria = new PassageCriteriaView({ model: passageModel });
         var passageDisplay = new PassageDisplayView({ model: passageModel });
@@ -295,10 +303,7 @@ function initApp() {
 
     //deal with request parameters by saving into model and redirecting
     doRequestParams();
-
-
     doSyncMenu();
-
 
     Backbone.history.start();
 
@@ -309,9 +314,14 @@ function initApp() {
     var columnFragments = stepRouter.getColumnFragments(Backbone.history.getFragment());
     for(var i = 0; i < PASSAGE_IDS; i++) {
         if(columnFragments[i] == undefined) {
-            //then we're missing stuff
-            console.log("missing passage id: ", i);
-            MenuModels.at(i).trigger("change", MenuModels.at(i));
+            if(i == 1 && previouslyExistingModels < 2) {
+                //open the foot
+                stepRouter.navigatePassage("1/singleColumn", { trigger : true });
+            } else {
+                //then we're missing stuff
+                console.log("missing passage id: ", i);
+                MenuModels.at(i).trigger("change", MenuModels.at(i));
+            }
         }
     }
 }

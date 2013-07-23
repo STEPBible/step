@@ -98,16 +98,16 @@ var PassageDisplayView = Backbone.View.extend({
 
             //for interlinear options, we need to splice in a few extra languages.
             var indexToSplice = 1;
-            if (options.indexOf("ENGLISH_VOCAB") != -1) {
+            if (options.indexOf("E") != -1) {
                 languages.splice(indexToSplice++, 0, "en");
             }
-            if (options.indexOf("TRANSLITERATION") != -1) {
+            if (options.indexOf("T") != -1) {
                 languages.splice(indexToSplice++, 0, "en");
             }
-            if (options.indexOf("GREEK_VOCAB") != -1) {
-                languages.splice(indexToSplice++, 0, undefined);
+            if (options.indexOf("A") != -1) {
+                languages.splice(indexToSplice++, 0, "he");
             }
-            if (options.indexOf("MORPHOLOGY") != -1) {
+            if (options.indexOf("M") != -1) {
                 languages.splice(indexToSplice++, 0, "en");
             }
 
@@ -592,10 +592,10 @@ var PassageDisplayView = Backbone.View.extend({
          * @param interlinearMode
          */
         doInterlinearVerseNumbers: function (passageContent, interlinearMode, options) {
-            if (options.indexOf("ENGLISH_VOCAB") != -1 ||
-                options.indexOf("TRANSLITERATION") != -1 ||
-                options.indexOf("GREEK_VOCAB") != -1 ||
-                options.indexOf("MORPHOLOGY") != -1 ||
+            if (options.indexOf("E") != -1 ||
+                options.indexOf("T") != -1 ||
+                options.indexOf("A") != -1 ||
+                options.indexOf("M") != -1 ||
                 interlinearMode == "INTERLINEAR") {
 
                 var targetParentElement = passageContent;

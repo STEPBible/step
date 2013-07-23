@@ -28,7 +28,12 @@
  ******************************************************************************/
 step.state = {
     language : function(numParts) {
-        var lang = window.navigator.userLanguage || window.navigator.language;
+        //first take from URL var
+        var lang = $.getUrlVar("lang") || $.cookie("lang");
+        if(lang == null) {
+            lang = window.navigator.userLanguage || window.navigator.language;
+        }
+
         if(numParts == 1) {
             return lang.split("-")[0];
         } 

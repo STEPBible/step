@@ -278,11 +278,16 @@ public final class GreekUtils {
             rules.add(new StringToStringRule("x", new String[] { "ch" }));
             rules.add(new StringToStringRule("ph", new String[] { "f" }));
             rules.add(new StringToStringRule("y", new String[] { "ps" }));
-            rules.add(new StringToStringRule("oo", new String[] { "ow" }));
-            rules.add(new StringToStringRule("o", new String[] { "ow" }));
+            rules.add(new StringToStringRule("ow", new String[] { "\u014d" }));
+            rules.add(new StringToStringRule("w", new String[] { "\u014d" }));
+            rules.add(new StringToStringRule("oo", new String[] { "\u014d" }));
+            rules.add(new StringToStringRule("o", new String[] { "\u014d" }));
             rules.add(new StringToStringRule("mb", new String[] { "mp" }));
             rules.add(new StringToStringRule("nd", new String[] { "nt" }));
             rules.add(new StringToStringRule("rh", new String[] { "r" }));
+            rules.add(new StringToStringRule("e", new String[] { "\u0113" }));
+            rules.add(new StringToStringRule("é", new String[] { "\u0113" }));
+            rules.add(new StringToStringRule("h", new String[] { "\u0113" }));
 
             transliterationRules = rules;
         }

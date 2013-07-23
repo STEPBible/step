@@ -81,9 +81,9 @@ test("Test Passage check fonts are applied", function() {
     view._doFonts(undefined, [], "INTERLEAVED_COMPARED", []);
     view._doFonts(undefined, [], "COLUMN", []);
     view._doFonts(undefined, [], "COLUMN_COMPARED", []);
-    view._doFonts(undefined, ["TRANSLITERATION"], "NONE", []);
-    view._doFonts(undefined, ["GREEK_VOCAB"], "NONE", []);
-    view._doFonts(undefined, ["ENGLISH_VOCAB"], "NONE", []);
+    view._doFonts(undefined, ["T"], "NONE", []);
+    view._doFonts(undefined, ["A"], "NONE", []);
+    view._doFonts(undefined, ["E"], "NONE", []);
     view._doFonts(undefined, ["NOTES", "ENGLISH_VOCAB"], "NONE", []);
     view._doFonts(undefined, ["NOTES", "ENGLISH_VOCAB"], "INTERLEAVED_COMPARE", []);
 });

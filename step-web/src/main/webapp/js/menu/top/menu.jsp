@@ -47,9 +47,9 @@
 		<li><a href="javascript:void(0)" name="SWAP_BOTH_PASSAGES"><fmt:message key="view_swap_left_and_right" /></a></li>
 		<li>
 			<a href="javascript:void(0)"><fmt:message key="installation_book_language" /></a>
-			<ul>
-				<%= sb.toString() %>
+			<ul id="languageMenu">
 				<li><a href="http://crowdin.net/project/step" target="_new"><fmt:message key="translate_step" /></a>
+				<%= sb.toString() %>
 			</ul>
 		</li>
 	</ul>

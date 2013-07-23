@@ -108,9 +108,10 @@
   <xsl:param name="morphologyProvider" />
   <xsl:param name="vocabProvider" />
   <xsl:param name="colorCodingProvider" />
+  <xsl:param name="isOT" select="'false'" />
  
   <!--  set up interlinear provider, if we have requested it -->
-  <xsl:param name="interlinearProvider" select="''" />
+  <xsl:param name="interlinearProvider" />
  
   <!--  TODO: support alternate versification -->
   <xsl:variable name="v11nf" select="jsword:org.crosswire.jsword.versification.system.Versifications.instance()"/>
@@ -248,9 +249,7 @@
 
     <xsl:template match="div">
         <xsl:if test="@osisID">
-            <xsl:if test="$interlinearProvider != ''">
-                <xsl:value-of select="jsword:setLastSeenOsisId($interlinearProvider, @osisID)" />
-            </xsl:if>
+            <xsl:if test="$interlinearVersion != ''"><xsl:value-of select="jsword:setLastSeenOsisId($interlinearProvider, @osisID)" /></xsl:if>
         </xsl:if>
         <xsl:apply-templates/>
     </xsl:template>
@@ -361,7 +360,7 @@
         <xsl:when test="$TinyVNum = 'true' and $Notes = 'true'">
           <span class="w verseStart">
           	<!--  the verse number -->
-          	<a name="{@osisID}"><span class="interVerseNumbers"><xsl:value-of select="concat($baseVersion, ' ', $versenum)"/></span></a>
+          	<a name="{@osisID}"><span class="interVerseNumbers verseNumber"><xsl:value-of select="concat($baseVersion, ' ', $versenum)"/></span></a>
 
             <!-- The order of these is important for rendering on the UI -->
 			<!-- output a filling gap for strongs -->
@@ -392,7 +391,7 @@
         <xsl:when test="$TinyVNum = 'true' and $Notes = 'false'">
           <span class="w verseStart">
           	<!--  the verse number -->
-          	<a name="{@osisID}"><span class="text"><span class="smallHeaders interVerseNumbers"><xsl:value-of select="concat($baseVersion, ' ', $versenum)"/></span></span></a>
+          	<a name="{@osisID}"><span class="text"><span class="smallHeaders interVerseNumbers verseNumber"><xsl:value-of select="concat($baseVersion, ' ', $versenum)"/></span></span></a>
           	
 			<!-- output a filling gap for strongs -->
 			<xsl:if test="$EnglishVocab = 'true'">
@@ -611,7 +610,13 @@
 						</span>
 					</xsl:if>
 					<xsl:if test="$GreekVocab = 'true'">
-						<span class="ancientVocab">
+                        <xsl:variable name="ancientClass">
+                            <xsl:choose>
+                                <xsl:when test="$isOT = 'true'">hbFont ancientVocab</xsl:when>
+                                <xsl:otherwise>unicodeFont</xsl:otherwise>
+                            </xsl:choose>
+                        </xsl:variable>
+						<span class="{$ancientClass}">
 							<a href="javascript:showInfo('@lemma', this);">
 								<xsl:value-of
 									select="vocab:getGreekVocab($vocabProvider, @lemma)" />

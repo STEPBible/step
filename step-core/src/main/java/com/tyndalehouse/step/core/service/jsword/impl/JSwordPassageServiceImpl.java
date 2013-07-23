@@ -68,6 +68,7 @@ import org.crosswire.jsword.passage.RestrictionType;
 import org.crosswire.jsword.passage.Verse;
 import org.crosswire.jsword.passage.VerseRange;
 import org.crosswire.jsword.versification.BibleBook;
+import org.crosswire.jsword.versification.Testament;
 import org.crosswire.jsword.versification.Versification;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -719,62 +720,26 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
         if (mode == InterlinearMode.INTERLINEAR) {
             return getLanguagesForInterlinear(mainBook, htmlsep);
         } else {
-            return getLanguagesForInterleaved(mainBook, htmlsep, options);
+            return getLanguagesForInterleaved(mainBook, htmlsep);
         }
     }
 
     /**
      * Used to identify languages from the interleaving modes
      *
-     * @param htmlsep the transformer
-     * @param options the list of options
+     * @param htmlsep
      * @return the list of language codes
      */
-    private String[] getLanguagesForInterleaved(final Book mainBook, final TransformingSAXEventProvider htmlsep, final List<LookupOption> options) {
+    private String[] getLanguagesForInterleaved(final Book mainBook, final TransformingSAXEventProvider htmlsep) {
         final InterleavingProviderImpl interleavingProvider = (InterleavingProviderImpl) htmlsep.getParameter("interleavingProvider");
-
-        boolean englishVocab = false, transliteration = false, greekVocab = false;
-        int extra = 0;
-        if (options.contains(LookupOption.ENGLISH_VOCAB)) {
-            extra++;
-            englishVocab = true;
+        if(interleavingProvider == null) {
+            return new String[] { mainBook.getLanguage().getCode() };
         }
 
-        if (options.contains(LookupOption.TRANSLITERATION)) {
-            extra++;
-            transliteration = true;
-        }
-
-        if (options.contains(LookupOption.GREEK_VOCAB)) {
-            extra++;
-            greekVocab = true;
-        }
-
-        if (interleavingProvider == null && !(englishVocab || transliteration || greekVocab)) {
-            return new String[]{mainBook.getLanguage().getCode()};
-        }
-
-        final String[] versions = interleavingProvider == null ? new String[0] : interleavingProvider.getVersions();
-        final String[] languages = new String[versions == null ? 0 : versions.length + extra + 1];
-
-
-        int offset = 0;
-        languages[offset++] = mainBook.getLanguage().getCode();
-        if (englishVocab) {
-            languages[offset++] = "en";
-        }
-
-        if (transliteration) {
-            languages[offset++] = "en";
-        }
-
-
-        if (greekVocab) {
-            languages[offset++] = "";
-        }
-
+        final String[] versions = interleavingProvider.getVersions();
+        final String[] languages = new String[versions.length];
         for (int i = 0; i < versions.length; i++) {
-            languages[offset++] = versificationService.getBookFromVersion(versions[i]).getLanguage().getCode();
+            languages[i] = versificationService.getBookFromVersion(versions[i]).getLanguage().getCode();
         }
 
         return languages;
@@ -1055,7 +1020,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
                     // set parameters here
                     setOptions(tsep, options, bookData.getFirstBook());
                     setInterlinearOptions(tsep, masterVersification, getInterlinearVersion(interlinearVersion), bookData.getKey()
-                            .getOsisID(), displayMode);
+                            .getOsisID(), displayMode, bookData.getKey());
                     setInterleavingOptions(tsep, displayMode, bookData);
                     return tsep;
                 } catch (final URISyntaxException e) {
@@ -1114,11 +1079,23 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
      * @param interlinearVersion  the interlinear version(s) that the users have requested
      * @param reference           the reference the user is interested in
      * @param displayMode         the mode to display the passage, i.e. interlinear, interleaved, etc.
+     * @param key                 the key to the passage
      */
     private void setInterlinearOptions(final TransformingSAXEventProvider tsep, final Versification masterVersification,
-                                       final String interlinearVersion, final String reference, final InterlinearMode displayMode) {
+                                       final String interlinearVersion, final String reference, final InterlinearMode displayMode, final Key key) {
         if (displayMode == InterlinearMode.INTERLINEAR) {
             tsep.setParameter("VLine", false);
+
+            //TODO: work out OT or NT
+            Iterator<Key> keys = key.iterator();
+            if(keys.hasNext()) {
+                Key firstKey = keys.next();
+                if(firstKey instanceof Verse) {
+                    final Verse verse = (Verse) firstKey;
+                    Testament t = masterVersification.getTestament(verse.getOrdinal());
+                    tsep.setParameter("isOT", t == Testament.OLD);
+                }
+            }
 
             if (isNotBlank(interlinearVersion)) {
                 tsep.setParameter("interlinearVersion", interlinearVersion);

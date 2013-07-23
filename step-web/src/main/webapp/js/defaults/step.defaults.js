@@ -77,7 +77,6 @@ step.defaults = {
                                 { label: __s.prophets,            value: __s.prophets_range },
                                 { label: __s.gospels_and_acts,    value: __s.gospels_and_acts_range },
                                 { label: __s.epistles,            value: __s.epistles_range },
-                                { label: __s.list_books,            value: ""}
                               ],
             //order and indices are important below
             simpleTextTypes : [ __s.simple_search_types_one_or_more_words, 

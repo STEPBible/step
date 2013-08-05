@@ -59,14 +59,7 @@ import org.crosswire.common.xml.JDOMSAXEventProvider;
 import org.crosswire.common.xml.SAXEventProvider;
 import org.crosswire.common.xml.TransformingSAXEventProvider;
 import org.crosswire.jsword.book.*;
-import org.crosswire.jsword.passage.Key;
-import org.crosswire.jsword.passage.KeyUtil;
-import org.crosswire.jsword.passage.NoSuchKeyException;
-import org.crosswire.jsword.passage.Passage;
-import org.crosswire.jsword.passage.PassageKeyFactory;
-import org.crosswire.jsword.passage.RestrictionType;
-import org.crosswire.jsword.passage.Verse;
-import org.crosswire.jsword.passage.VerseRange;
+import org.crosswire.jsword.passage.*;
 import org.crosswire.jsword.versification.BibleBook;
 import org.crosswire.jsword.versification.Testament;
 import org.crosswire.jsword.versification.Versification;
@@ -118,6 +111,8 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
     private final VocabularyService vocabProvider;
     private final ColorCoderProviderImpl colorCoder;
     private final VersionResolver resolver;
+    private final Book kjvaBook;
+    private final Book esvBook;
 
     /**
      * constructs the jsword service.
@@ -137,6 +132,9 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
         this.vocabProvider = vocabProvider;
         this.colorCoder = colorCoder;
         this.resolver = resolver;
+
+        kjvaBook = Books.installed().getBook("KJVA");
+        esvBook = Books.installed().getBook("ESV");
     }
 
     @Override
@@ -534,8 +532,44 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
 
             return new BookData(currentBook, key);
         } catch (final NoSuchKeyException e) {
-            throw new TranslatedException(e, "invalid_reference", reference);
+            return handlePassageLookupNSKException(reference, currentBook, v11n, e);
+
         }
+    }
+
+    /**
+     * Handles the NoSuchKey Exception when a passage lookup occurs
+     * @param reference the reference that cannot be found
+     * @param currentBook the current book in question
+     * @param v11n the associated v11n
+     * @param e the exception that was the cause
+     * @return the returned bookdata (of size 0) if we can
+     */
+    private BookData handlePassageLookupNSKException(final String reference, final Book currentBook, final Versification v11n, final NoSuchKeyException e) {
+        //attempt to resolve the reference in the KJVA and if that isn't present then the ESV
+        //and if that isn't present, throw the exception anyway.
+        if(kjvaBook != null) {
+            try {
+                //attempt the parse
+                kjvaBook.getKey(reference);
+                return new BookData(currentBook, new DefaultKeyList());
+            } catch (NoSuchKeyException ex) {
+                //swallow this exception, and allow through
+            }
+        }
+
+        //same thing for esv
+        if(esvBook != null) {
+            try {
+                //attempt the parse
+                esvBook.getKey(reference);
+                return new BookData(currentBook, new RocketPassage(v11n));
+            } catch (NoSuchKeyException ex) {
+                //swallow this exception, and allow through
+            }
+        }
+
+        throw new TranslatedException(e, "invalid_reference", reference);
     }
 
     /**
@@ -618,10 +652,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
         } else if (cardinality > MAX_VERSES_RETRIEVED) {
             requestedPassage.trimVerses(MAX_VERSES_RETRIEVED);
             key = requestedPassage;
-        } else if (key.getCardinality() == 0) {
-            throw new NoSuchKeyException("Cardinality of key is 0");
         }
-
         return key;
     }
 
@@ -686,7 +717,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
                     }
                     if (end != null) {
                         osisWrapper.setEndRange(end.getOrdinal());
-                    } else {
+                    } else if(start != null) {
                         osisWrapper.setEndRange(start.getOrdinal());
                     }
                 }
@@ -773,14 +804,18 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
         options.add(LookupOption.VERSE_NEW_LINE);
 
         final Book[] books = getValidInterleavedBooks(versions, displayMode);
-
+        final Versification v11n = this.versificationService.getVersificationForVersion(books[0]);
+        BookData data = null;
         try {
             Key key = books[0].getKey(reference);
-            final Versification v11n = this.versificationService.getVersificationForVersion(books[0]);
             key = normalize(key, v11n);
 
-            final BookData data = new BookData(books, key, isComparingMode(displayMode));
+            data = new BookData(books, key, isComparingMode(displayMode));
+        } catch(NoSuchKeyException nske) {
+            data = handlePassageLookupNSKException(reference, books[0], v11n, nske);
+        }
 
+        try {
             setUnaccenter(data, displayMode);
 
             final TransformingSAXEventProvider transformer = executeStyleSheet(v11n, options, null, data,
@@ -800,8 +835,6 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
         } catch (final SAXException e) {
             throw new StepInternalException(e.getMessage(), e);
         } catch (final BookException e) {
-            throw new LocalisedException(e, e.getMessage());
-        } catch (final NoSuchKeyException e) {
             throw new LocalisedException(e, e.getMessage());
         }
     }

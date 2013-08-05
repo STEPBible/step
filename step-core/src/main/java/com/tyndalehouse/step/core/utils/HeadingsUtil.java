@@ -13,9 +13,8 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Lengthens the name of a header
- * 
+ *
  * @author chrisburrell
- * 
  */
 public final class HeadingsUtil {
     private static final Logger LOGGER = LoggerFactory.getLogger(HeadingsUtil.class);
@@ -28,7 +27,7 @@ public final class HeadingsUtil {
     }
 
     /**
-     * @param v11n the versification system
+     * @param v11n        the versification system
      * @param shortHeader the short header
      * @return the String representing the long header
      */
@@ -50,7 +49,7 @@ public final class HeadingsUtil {
 
     /**
      * @param v11n the versification system
-     * @param key the key to get the long name from
+     * @param key  the key to get the long name from
      * @return the String representing the long header
      */
     public static String getLongHeader(final Versification v11n, final Key key) {
@@ -63,23 +62,29 @@ public final class HeadingsUtil {
 
     /**
      * @param v11n the versification system
-     * @param key the key to get the long name from
+     * @param key  the key to get the long name from
      * @return the String representing the long header
      */
     private static String longNameFromKey(final Versification v11n, final Key key) {
-        final Verse firstVerse = KeyUtil.getVerse(key);
-        final BibleBook book = firstVerse.getBook();
+        try {
+            final Verse firstVerse = KeyUtil.getVerse(key);
 
-        if (v11n.isIntro(firstVerse)) {
-            // then exclude that verse from the key
-            try {
-                key.removeAll(firstVerse);
-            } catch (final UnsupportedOperationException ex) {
-                // silently fail
-                LOGGER.trace("Unable to remove verse, but continuing.", ex);
+            final BibleBook book = firstVerse.getBook();
+
+            if (v11n.isIntro(firstVerse)) {
+                // then exclude that verse from the key
+                try {
+                    key.removeAll(firstVerse);
+                } catch (final UnsupportedOperationException ex) {
+                    // silently fail
+                    LOGGER.trace("Unable to remove verse, but continuing.", ex);
+                }
             }
-        }
 
-        return key.getName().replace(v11n.getShortName(book), v11n.getLongName(book));
+            return key.getName().replace(v11n.getShortName(book), v11n.getLongName(book));
+        } catch (ArrayIndexOutOfBoundsException ex) {
+            //occurs for a zero-sized key
+            return "";
+        }
     }
 }

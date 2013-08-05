@@ -35,10 +35,13 @@ var TextDisplayView = SearchDisplayView.extend({
      * qualifiedSearchResults = {result: , key: }
      */
     _displayPassageResults: function (masterVersion, table, searchResults, sortOrder, contentGenerator) {
-        var results = "";
-        var lastUnicode = "";
+        var lastHeader = undefined;
         for (var i = 0; i < searchResults.length; i++) {
-            this.doGroupHeader(table, searchResults[i], sortOrder);
+            var newHeader = this.doGroupHeader(table, searchResults[i], sortOrder, lastHeader);
+            if(newHeader != null) {
+                lastHeader = newHeader;
+            }
+
             this.getVerseRow(masterVersion, table, contentGenerator, searchResults[i]);
         }
     },
@@ -48,8 +51,10 @@ var TextDisplayView = SearchDisplayView.extend({
      * @param table the table that is being built up
      * @param result the particular result in question (i.e. one row of the search results)
      * @param sortOrder the sort order that was specified in the request (taken from the response, in case we want to override)
+     * @param lastHeader the last header that was output
+     * @return the header that is output, or null otherwise
      */
-    doGroupHeader : function(table, result, sortOrder) {
+    doGroupHeader : function(table, result, sortOrder, lastHeader) {
         //by default, we don't group items
     },
 

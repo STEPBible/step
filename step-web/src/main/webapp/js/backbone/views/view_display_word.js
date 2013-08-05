@@ -27,9 +27,11 @@ var WordDisplayView = TextDisplayView.extend({
      * Adds a header for groups of verses, in this case a header indicating the various
      * different words
      * @param item
+     * @param sortOrder the type of sort
+     * @param lastHeader the last seen header that was output
      */
-    doGroupHeader: function (table, item, sortOrder) {
-        if (item.accentedUnicode && item.accentedUnicode != this.lastUnicode) {
+    doGroupHeader: function (table, item, sortOrder, lastHeader) {
+        if (item.accentedUnicode && item.accentedUnicode != lastHeader) {
             var header = $("<th>").addClass("searchResultStrongHeader").prop("colspan", "2");
 
             //add a new row
@@ -47,7 +49,7 @@ var WordDisplayView = TextDisplayView.extend({
                 header.append(item.stepGloss == undefined ? "-" : item.stepGloss);
             }
 
-            this.lastUnicode = item.accentedUnicode;
+            return item.accentedUnicode;
         }
     }
 });

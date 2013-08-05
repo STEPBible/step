@@ -39,10 +39,10 @@
 
 		<li menu-name="SYNC" class="menuSectionStart"><a href="javascript:void(0)"><fmt:message key="view_both_passages_sync" /></a>
 			<ul>
-				<li><a href="javascript:void(0)" name="NO_SYNC"><fmt:message key="view_switch_sync_off" /></a></li>
 				<li><a href="javascript:void(0)" name="SYNC_LEFT"><fmt:message key="view_sync_with_left" /></a></li>
 				<li><a href="javascript:void(0)" name="SYNC_RIGHT"><fmt:message key="view_sync_with_right" /></a></li>
-			</ul>		
+				<li><a href="javascript:void(0)" name="NO_SYNC"><fmt:message key="view_switch_sync_off" /></a></li>
+			</ul>
 		</li>
 		<li><a href="javascript:void(0)" name="SWAP_BOTH_PASSAGES"><fmt:message key="view_swap_left_and_right" /></a></li>
 		<li>

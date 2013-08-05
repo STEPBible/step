@@ -753,7 +753,15 @@ function refreshWaitStatus() {
 		    
 		    outstandingRequests++;
             refreshWaitStatus();
-            $.get(url, function(data) {
+            $.get(url, function(data, textStatus, jqXHR) {
+                if(step.state.responseLanguage == undefined) {
+                    //set the language
+                    var lang = jqXHR.getResponseHeader("step-language");
+                    if(!step.util.isBlank(lang)) {
+                        step.state.responseLanguage = lang;
+                    }
+                }
+
 			    outstandingRequests--;
 			    refreshWaitStatus();
 			    

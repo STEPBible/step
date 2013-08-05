@@ -234,11 +234,15 @@ public class FrontController extends HttpServlet {
      * @param length the length of the message
      */
     void setupHeaders(final HttpServletResponse response, final int length) {
+        //get the request specific language
+        final Provider<ClientSession> languageProvider = this.guiceInjector.getProvider(ClientSession.class);
+
         // we ensure that headers are set up appropriately
         response.addDateHeader("Date", System.currentTimeMillis());
         response.setCharacterEncoding(UTF_8_ENCODING);
         response.setContentType("application/json");
         response.setContentLength(length);
+        response.setHeader("step-language", languageProvider.get().getLocale().getLanguage());
     }
 
     /**

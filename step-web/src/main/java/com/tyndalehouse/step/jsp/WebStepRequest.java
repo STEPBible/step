@@ -121,7 +121,7 @@ public class WebStepRequest {
         try {
             return this.references.get(passageId);
         } catch (final Exception e) {
-            LOG.warn(e.getMessage(), e);
+            LOG.debug(e.getMessage(), e);
             return "";
         }
     }
@@ -138,7 +138,7 @@ public class WebStepRequest {
         try {
             return getNextChapter(passageId).getOsisKeyId();
         } catch (final Exception e) {
-            LOG.warn(e.getMessage(), e);
+            LOG.debug(e.getMessage(), e);
             return "";
         }
     }
@@ -155,7 +155,7 @@ public class WebStepRequest {
         try {
             return getNextChapter(passageId).getName();
         } catch (final Exception e) {
-            LOG.warn(e.getMessage(), e);
+            LOG.debug(e.getMessage(), e);
             return "";
         }
     }
@@ -182,7 +182,7 @@ public class WebStepRequest {
         try {
             return getPreviousChapter(passageId).getOsisKeyId();
         } catch (final Exception e) {
-            LOG.warn(e.getMessage(), e);
+            LOG.debug(e.getMessage(), e);
             return "";
         }
     }
@@ -198,7 +198,7 @@ public class WebStepRequest {
         try {
             return getPreviousChapter(passageId).getName();
         } catch (final Exception e) {
-            LOG.warn(e.getMessage(), e);
+            LOG.debug(e.getMessage(), e);
             return "";
         }
     }
@@ -227,7 +227,7 @@ public class WebStepRequest {
         try {
             return this.versions.get(passageId);
         } catch (final Exception e) {
-            LOG.warn(e.getMessage(), e);
+            LOG.debug(e.getMessage(), e);
             return "";
         }
     }
@@ -243,7 +243,7 @@ public class WebStepRequest {
             return this.getThisVersion() + " " + this.getThisReference() + ": " +
                     jsword.getPlainText(this.getVersion(0), this.getReference(0), true).replaceAll("[<>]", "");
         } catch (final Exception e) {
-            LOG.warn(e.getMessage(), e);
+            LOG.debug(e.getMessage(), e);
             return "";
         }
     }
@@ -267,7 +267,7 @@ public class WebStepRequest {
                     .getBibleText(version, reference, "N").getValue();
         } catch (final StepInternalException e) {
             // silently ignore and log as debug
-            LOG.error("Unable to restore state", e);
+            LOG.debug("Unable to restore state", e);
             return "";
         } catch (final Exception e) {
             return "";
@@ -283,7 +283,7 @@ public class WebStepRequest {
         try {
             return this.versions.get(0);
         } catch (final Exception e) {
-            LOG.warn(e.getMessage(), e);
+            LOG.debug(e.getMessage(), e);
             return "";
         }
 
@@ -294,7 +294,7 @@ public class WebStepRequest {
             final int passageId = Integer.parseInt(this.request.getParameter("passageId"));
             return this.references.get(passageId);
         } catch (final Exception e) {
-            LOG.warn(e.getMessage(), e);
+            LOG.debug(e.getMessage(), e);
             return "";
         }
 

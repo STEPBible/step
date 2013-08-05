@@ -27,7 +27,12 @@
  * POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
 step.state = {
+    responseLanguage : undefined,
     language : function(numParts) {
+        if(this.responseLanguage != undefined) {
+            return this.responseLanguage;
+        }
+
         //first take from URL var
         var lang = $.getUrlVar("lang") || $.cookie("lang");
         if(lang == null) {

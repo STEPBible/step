@@ -365,6 +365,7 @@ function initData() {
 
     //get all supported versions
     var options = {};
+    var langHeader = null;
     $.getSafe(BIBLE_GET_ALL_FEATURES, function (data) {
         options = data;
     });

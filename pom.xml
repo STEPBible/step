@@ -25,6 +25,10 @@
 		<name>Tyndale House, Cambridge, UK</name>
 	</organization>
 
+    <scm>
+        <developerConnection>scm:git:git@github.com:tyndale/step.git</developerConnection>
+    </scm>
+
 	<developers>
 		<developer>
 			<id>chrisburrell</id>

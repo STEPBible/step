@@ -20,11 +20,11 @@
 		<system>JIRA</system>
 		<url>stepweb.atlassian.net</url>
 	</issueManagement>
-	
+
 	<organization>
 		<name>Tyndale House, Cambridge, UK</name>
 	</organization>
-	
+
 	<developers>
 		<developer>
 			<id>chrisburrell</id>
@@ -43,7 +43,7 @@
 		<module>step-packages</module>
 		<!-- <module>step-web-test</module> -->
 	</modules>
-		
+
 	<build>
 		<plugins>
 			<plugin>

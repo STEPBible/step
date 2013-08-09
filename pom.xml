@@ -26,6 +26,7 @@
 	</organization>
 
     <scm>
+        <url>scm:git:git@github.com:tyndale/step.git</url>
         <developerConnection>scm:git:git@github.com:tyndale/step.git</developerConnection>
     </scm>
 

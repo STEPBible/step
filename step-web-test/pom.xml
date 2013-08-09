@@ -25,14 +25,14 @@
 	<parent>
 		<groupId>com.tyndalehouse.step</groupId>
 		<artifactId>step-parent</artifactId>
-		<version>1.0-SNAPSHOT</version>
+		<version>1.0.2-SNAPSHOT</version>
 		<relativePath>../step-parent/pom.xml</relativePath>
 	</parent>
 
 	<groupId>com.tyndalehouse.step</groupId>
 	<artifactId>step-web-test</artifactId>
 	<packaging>jar</packaging>
-	<version>1.0-SNAPSHOT</version>
+	<version>1.0.2-SNAPSHOT</version>
 	<name>STEP :: Step Web Tests</name>
 
 	<dependencies>

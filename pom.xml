@@ -11,7 +11,7 @@
 	<groupId>com.tyndalehouse.step</groupId>
 	<artifactId>step-mvn</artifactId>
 	<packaging>pom</packaging>
-	<version>1.0.2-SNAPSHOT</version>
+	<version>1.0.1</version>
 	<name>STEP :: Scripture Tools for Every pastor</name>
 
 	<url>http://step.tyndalehouse.com</url>

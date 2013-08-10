@@ -23,15 +23,13 @@
 
 	<parent>
 		<groupId>com.tyndalehouse.step</groupId>
-		<artifactId>step-parent</artifactId>
+		<artifactId>step-mvn</artifactId>
 		<version>1.0.2-SNAPSHOT</version>
-		<relativePath>../step-parent/pom.xml</relativePath>
 	</parent>
 
 	<groupId>com.tyndalehouse.step</groupId>
 	<artifactId>step-web</artifactId>
 	<packaging>war</packaging>
-	<version>1.0.2-SNAPSHOT</version>
 	<name>STEP :: Step Web project</name>
 
 	<properties>

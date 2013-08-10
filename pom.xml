@@ -1,81 +1,480 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<parent>
-		<groupId>com.tyndalehouse.step</groupId>
-		<artifactId>step-parent</artifactId>
-		<version>1.0.2-SNAPSHOT</version>
-		<relativePath>step-parent/pom.xml</relativePath>
-	</parent>
+    <groupId>com.tyndalehouse.step</groupId>
+    <artifactId>step-mvn</artifactId>
+    <version>1.0.2-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>STEP :: Scripture Tools for Every pastor</name>
 
-	<groupId>com.tyndalehouse.step</groupId>
-	<artifactId>step-mvn</artifactId>
-	<packaging>pom</packaging>
-	<version>1.0.2-SNAPSHOT</version>
-	<name>STEP :: Scripture Tools for Every pastor</name>
+    <properties>
+        <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>utf-8</project.reporting.outputEncoding>
+        <final.jsword.package>packages</final.jsword.package>
 
-	<url>http://step.tyndalehouse.com</url>
-	<issueManagement>
-		<system>JIRA</system>
-		<url>stepweb.atlassian.net</url>
-	</issueManagement>
+        <java.version>1.6</java.version>
 
-	<organization>
-		<name>Tyndale House, Cambridge, UK</name>
-	</organization>
+        <junit.parallel>method</junit.parallel>
+        <junit.threads>4</junit.threads>
+
+        <junit.version>4.11</junit.version>
+
+        <!-- jsword dependencies -->
+        <jsword.version>1.6.1-SNAPSHOT</jsword.version>
+        <!-- <jdom.version>1.1.1</jdom.version> -->
+        <javatar.version>2.5</javatar.version>
+
+        <jackson-mapper-asl.version>1.9.11</jackson-mapper-asl.version>
+        <org.slf4j.version>1.7.2</org.slf4j.version>
+        <servlet-api.version>2.5</servlet-api.version>
+        <jsp-api.version>2.2</jsp-api.version>
+        <jstl.version>1.2</jstl.version>
+        <pjl-comp-filter.version>1.7</pjl-comp-filter.version>
+        <guava.version>13.0.1</guava.version>
+        <guice.version>3.1.3</guice.version>
+        <guice-servlet.version>3.0</guice-servlet.version>
+        <opencsv.version>2.3</opencsv.version>
+        <jetty.version>9.0.0.M5</jetty.version>
+        <xalan.version>2.7.1</xalan.version>
+
+        <yammer-metrics.version>2.2.0</yammer-metrics.version>
+
+        <joda-time.version>2.1</joda-time.version>
+        <ehcache.version>2.6.3</ehcache.version>
+        <ehcache-web.version>2.0.4</ehcache-web.version>
+        <lucene.version>3.0.3</lucene.version>
+
+        <!-- Commons -->
+        <commons-beanutils.version>1.8.3</commons-beanutils.version>
+        <commons-collections.version>3.2.1</commons-collections.version>
+        <commons-configuration.version>1.8</commons-configuration.version>
+        <commons-httpclient.version>3.1</commons-httpclient.version>
+
+        <!-- testing dependencies -->
+        <mockito.version>1.9.5</mockito.version>
+    </properties>
+
+
+    <url>http://www.stepbible.org</url>
+    <issueManagement>
+        <system>JIRA</system>
+        <url>http://stepweb.atlassian.net</url>
+    </issueManagement>
+
+    <organization>
+        <name>Tyndale House, Cambridge, UK</name>
+        <url>http://www.tyndale.cam.ac.uk/</url>
+    </organization>
 
     <scm>
         <url>scm:git:git@github.com:tyndale/step.git</url>
         <developerConnection>scm:git:git@github.com:tyndale/step.git</developerConnection>
-      <tag>HEAD</tag>
-  </scm>
+        <tag>HEAD</tag>
+    </scm>
 
-	<developers>
-		<developer>
-			<id>chrisburrell</id>
-			<name>Chris Burrell</name>
-			<timezone>GMT</timezone>
-		</developer>
-	</developers>
+    <developers>
+        <developer>
+            <id>chrisburrell</id>
+            <name>Chris Burrell</name>
+            <timezone>GMT</timezone>
+        </developer>
+    </developers>
 
-	<modules>
-		<module>step-parent</module>
-		<module>step-build</module>
-		<module>step-core</module>
-		<module>step-web</module>
-		<module>step-server</module>
-		<module>step-tools</module>
-		<module>step-packages</module>
-		<!-- <module>step-web-test</module> -->
-	</modules>
+    <repositories>
+        <repository>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <id>maven-central</id>
+            <name>Maven Central</name>
+            <url>http://repo1.maven.org/maven2</url>
+        </repository>
+        <repository>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+                <checksumPolicy>warn</checksumPolicy>
+            </releases>
+            <id>crosswire.public</id>
+            <name>Codehaus Public Repo</name>
+            <url>http://crosswire.org/mvn/content/groups/public/</url>
+            <layout>default</layout>
+        </repository>
+    </repositories>
 
-	<build>
-		<plugins>
-			<plugin>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<version>2.2.1</version>
-				<configuration>
-					<final-name>step-standalone-${project.version}</final-name>
-					<descriptors>
-						<descriptor>standalone.xml</descriptor>
-					</descriptors>
-					<archive>
-						<manifest>
-							<mainClass>com.tyndalehouse.step.server.StepServer</mainClass>
-							<addClasspath>true</addClasspath>
-						</manifest>
-					</archive>
-				</configuration>
-				<executions>
-					<execution>
-						<id>packaging-application</id>
-						<phase>package</phase>
-						<goals>
-							<goal>single</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
+    <modules>
+        <module>step-build</module>
+        <module>step-core</module>
+        <module>step-web</module>
+        <module>step-server</module>
+        <module>step-tools</module>
+        <module>step-packages</module>
+        <module>step-assembly</module>
+        <!-- <module>step-web-test</module> -->
+    </modules>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <configuration>
+                        <encoding>UTF-8</encoding>
+                        <source>${java.version}</source>
+                        <target>${java.version}</target>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-assembly-plugin</artifactId>
+                    <version>2.4</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>2.7.1</version>
+                    <configuration>
+                        <junitArtifactName>junit:junit-dep</junitArtifactName>
+                        <parallel>${junit.parallel}</parallel>
+                        <threadCount>${junit.threads}</threadCount>
+                        <includes>
+                            <include>**/*Test.java</include>
+                        </includes>
+                    </configuration>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.apache.maven.surefire</groupId>
+                            <artifactId>surefire-junit47</artifactId>
+                            <version>2.7.1</version>
+                        </dependency>
+                    </dependencies>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-clean-plugin</artifactId>
+                    <version>2.4</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-war-plugin</artifactId>
+                    <version>2.4</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>exec-maven-plugin</artifactId>
+                    <version>1.1.1</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.mortbay.jetty</groupId>
+                    <artifactId>maven-jetty-plugin</artifactId>
+                    <version>6.1.22</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-eclipse-plugin</artifactId>
+                    <version>2.9</version>
+                    <configuration>
+                        <downloadSources>true</downloadSources>
+                        <downloadJavadocs>false</downloadJavadocs>
+                        <wtpversion>2.0</wtpversion>
+                        <additionalProjectnatures>
+                            <projectnature>net.sourceforge.pmd.eclipse.plugin.pmdNature</projectnature>
+                            <projectnature>net.sf.eclipsecs.core.CheckstyleNature</projectnature>
+                            <projectnature>edu.umd.cs.findbugs.plugin.eclipse.findbugsNature</projectnature>
+                            <projectnature>org.maven.ide.eclipse.maven2Nature</projectnature>
+                            <projectnature>com.avaje.eclipse.buildplugin.enhanceNature</projectnature>
+                        </additionalProjectnatures>
+                        <additionalBuildcommands>
+                            <buildcommand>net.sourceforge.pmd.eclipse.plugin.pmdBuilder</buildcommand>
+                            <buildcommand>edu.umd.cs.findbugs.plugin.eclipse.findbugsBuilder</buildcommand>
+                            <buildcommand>net.sf.eclipsecs.core.CheckstyleBuilder</buildcommand>
+                            <buildcommand>com.avaje.eclipse.buildplugin.enhanceBuilder</buildcommand>
+                        </additionalBuildcommands>
+                        <additionalConfig>
+                            <file>
+                                <name>.settings/org.eclipse.jdt.core.prefs</name>
+                                <location>/eclipse/org.eclipse.jdt.core.prefs</location>
+                            </file>
+                            <file>
+                                <name>.settings/org.eclipse.jdt.ui.prefs</name>
+                                <location>/eclipse/org.eclipse.jdt.ui.prefs</location>
+                            </file>
+                            <file>
+                                <name>.checkstyle</name>
+                                <location>/eclipse/.checkstyle</location>
+                            </file>
+                            <file>
+                                <name>.checkstyle.config.xml</name>
+                                <location>/checkstyle/checkstyle.xml</location>
+                            </file>
+                            <file>
+                                <name>.checkstyle.config.test.xml</name>
+                                <location>/checkstyle/checkstyle.test.xml</location>
+                            </file>
+                            <file>
+                                <name>.pmd</name>
+                                <location>/eclipse/pmd.xml</location>
+                            </file>
+                            <file>
+                                <name>.fbprefs</name>
+                                <location>/eclipse/.fbprefs</location>
+                            </file>
+                            <file>
+                                <name>.LICENSE.txt</name>
+                                <location>/checkstyle/license.txt</location>
+                            </file>
+                            <file>
+                                <name>.settings/org.eclipse.core.resources.prefs</name>
+                                <content>
+                                    <![CDATA[eclipse.preferences.version=1${line.separator}encoding/<project>=${project.build.sourceEncoding}${line.separator}]]></content>
+                            </file>
+                        </additionalConfig>
+                    </configuration>
+                    <dependencies>
+                        <dependency>
+                            <groupId>com.tyndalehouse.step</groupId>
+                            <artifactId>step-build</artifactId>
+                            <version>${project.version}</version>
+                        </dependency>
+                    </dependencies>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>cobertura-maven-plugin</artifactId>
+                    <version>2.4</version>
+                    <configuration>
+                        <check>
+                            <branchRate>20</branchRate>
+                            <lineRate>20</lineRate>
+                            <haltOnFailure>true</haltOnFailure>
+                            <totalBranchRate>20</totalBranchRate>
+                            <totalLineRate>20</totalLineRate>
+                        </check>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-release-plugin</artifactId>
+                    <version>2.4.1</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.tyndalehouse.step</groupId>
+                <artifactId>step-core</artifactId>
+                <version>${project.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>guice</artifactId>
+                        <groupId>com.google.inject</groupId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>com.tyndalehouse.step</groupId>
+                <artifactId>step-core</artifactId>
+                <type>test-jar</type>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.crosswire</groupId>
+                <artifactId>jsword</artifactId>
+                <version>${jsword.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.lucene</groupId>
+                <artifactId>lucene-core</artifactId>
+                <version>${lucene.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.lucene</groupId>
+                <artifactId>lucene-analyzers</artifactId>
+                <version>${lucene.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.lucene</groupId>
+                <artifactId>lucene-snowball</artifactId>
+                <version>${lucene.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.lucene</groupId>
+                <artifactId>lucene-smartcn</artifactId>
+                <version>${lucene.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>javatar</groupId>
+                <artifactId>javatar</artifactId>
+                <version>${javatar.version}</version>
+            </dependency>
+            <!-- <dependency> -->
+            <!-- <groupId>org.jdom</groupId> -->
+            <!-- <artifactId>jdom</artifactId> -->
+            <!-- <version>${jdom.version}</version> -->
+            <!-- </dependency> -->
+
+            <dependency>
+                <groupId>org.codehaus.jackson</groupId>
+                <artifactId>jackson-mapper-asl</artifactId>
+                <version>${jackson-mapper-asl.version}</version>
+            </dependency>
+
+            <!-- Logging -->
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${org.slf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-log4j12</artifactId>
+                <version>${org.slf4j.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+
+            <!-- Servlet -->
+            <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>servlet-api</artifactId>
+                <version>${servlet-api.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>javax.servlet.jsp</groupId>
+                <artifactId>jsp-api</artifactId>
+                <version>${jsp-api.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>jstl</artifactId>
+                <version>${jstl.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.sourceforge.pjl-comp-filter</groupId>
+                <artifactId>pjl-comp-filter</artifactId>
+                <version>${pjl-comp-filter.version}</version>
+            </dependency>
+
+            <!-- Use SiSU as they have fixed the leaks -->
+            <dependency>
+                <groupId>org.sonatype.sisu</groupId>
+                <artifactId>sisu-guice</artifactId>
+                <version>${guice.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.sonatype.sisu.inject</groupId>
+                <artifactId>guice-servlet</artifactId>
+                <version>${guice.version}</version>
+            </dependency>
+
+
+            <dependency>
+                <groupId>com.yammer.metrics</groupId>
+                <artifactId>metrics-core</artifactId>
+                <version>${yammer-metrics.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.yammer.metrics</groupId>
+                <artifactId>metrics-servlet</artifactId>
+                <version>${yammer-metrics.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.yammer.metrics</groupId>
+                <artifactId>metrics-guice</artifactId>
+                <version>${yammer-metrics.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>guice</artifactId>
+                        <groupId>com.google.inject</groupId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <!-- we don't bring in anything if possible, to avoid bloating the Android
+                app -->
+            <dependency>
+                <groupId>commons-collections</groupId>
+                <artifactId>commons-collections</artifactId>
+                <version>${commons-collections.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+
+            <dependency>
+                <groupId>commons-httpclient</groupId>
+                <artifactId>commons-httpclient</artifactId>
+                <version>${commons-httpclient.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-core</artifactId>
+                <version>${mockito.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>net.sf.opencsv</groupId>
+                <artifactId>opencsv</artifactId>
+                <version>${opencsv.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-server</artifactId>
+                <version>${jetty.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-webapp</artifactId>
+                <version>${jetty.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-jsp</artifactId>
+                <version>${jetty.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${junit.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.sf.ehcache</groupId>
+                <artifactId>ehcache-core</artifactId>
+                <version>${ehcache.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.sf.ehcache</groupId>
+                <artifactId>ehcache-web</artifactId>
+                <version>${ehcache-web.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>joda-time</groupId>
+                <artifactId>joda-time</artifactId>
+                <version>${joda-time.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>xalan</groupId>
+                <artifactId>xalan</artifactId>
+                <version>${xalan.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 </project>

@@ -149,7 +149,6 @@
 			<plugin>
 				<groupId>com.samaxes.maven</groupId>
 				<artifactId>minify-maven-plugin</artifactId>
-				<version>1.5.3-SNAPSHOT</version>
 				<executions>
 					<execution>
 						<id>minify-all-step-resources</id>

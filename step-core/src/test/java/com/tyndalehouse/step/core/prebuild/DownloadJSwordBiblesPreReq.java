@@ -64,12 +64,13 @@ public class DownloadJSwordBiblesPreReq {
     @Test
     public void installDefaultJSwordDefaultBibleVersions() throws InstallException {
         final String[] modules = new String[] { "KJV", "ESV", "Byz", "FreSegond", "NETfree", "Tisch", "YLT",
-                "ASV", "Montgomery", "FreCrampon" };
+                "ASV", "Montgomery", "FreCrampon", "SBLGNT", "TR", "WHNU", "OSMHB" };
 
         final JSwordModuleServiceImpl jsword = new JSwordModuleServiceImpl(getInstallers(),
                 new ArrayList<Installer>(0), TestUtils.mockVersificationService());
 
         for (final String moduleInitials : modules) {
+            LOGGER.debug("Checking [{}] for install", moduleInitials);
             if (!jsword.isInstalled(moduleInitials)) {
                 LOGGER.debug("Installing [{}] to install: ", moduleInitials);
                 jsword.installBook(moduleInitials);
@@ -83,6 +84,12 @@ public class DownloadJSwordBiblesPreReq {
                         LOGGER.warn("Download was interrupted: [{}]", moduleInitials);
                     }
                 }
+            }
+
+            LOGGER.debug("Checking [{}] for index: ", moduleInitials);
+            if(!jsword.isIndexed(moduleInitials)) {
+                LOGGER.debug("Indexing [{}]", moduleInitials);
+                jsword.index(moduleInitials);
             }
         }
     }

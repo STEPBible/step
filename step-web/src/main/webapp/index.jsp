@@ -36,7 +36,7 @@
 	<%
 		if(request.getParameter("debug") != null) {
 	%>
-		<link rel="stylesheet" type="text/css" href="css/jquery-ui-1.10.2.custom.min.css" />
+        <%@include file="jsps/offlineJqueryCss.jsp" %>
 		<link rel="stylesheet" type="text/css" href="css/qtip.css" />
 		<link rel="stylesheet" type="text/css" href="css/ddsmoothmenu.css" />
 		<link rel="stylesheet" type="text/css" href="css/ddsmoothmenu-v.css" />
@@ -53,28 +53,16 @@
     <%
         }
     %>
-    <!-- Set up some library variables -->
-    <script type="text/javascript">
-        var step = {};
-        if(typeof console === "undefined") {
-            console = { log: function(arg, options) { } };
-        }
-        //Set up the variables for accessing the server
-        STEP_SERVER_BASE_URL = "rest/";
 
-        //Set up timeline:
-        Timeline_ajax_url="libs/timeline_ajax/simile-ajax-api.js?bundle=true";
-        Timeline_urlPrefix="libs/timeline_js/";
-        Timeline_parameters="bundle=true";
-    </script>
+    <%@include file="jsps/initLib.jsp" %>
 
     <%-- Now do javascript --%>
     <%
         if(request.getParameter("debug") != null) {
     %>
         <%-- NOTE: do not include in prod web minifying and use minified versions otherwise --%>
-        <script src="libs/jquery-1.10.1.js" type="text/javascript"></script>
-        <script src="libs/jquery-ui-1.10.2.custom.js" type="text/javascript"></script>
+        <%@include file="jsps/offlineJqueryJs.jsp" %>
+
         <script src="libs/dohighlight-min.js" type="text/javascript"></script>
         <script src="libs/sprintf-0.7-beta1.js" type="text/javascript"></script>
 <%-- 		<script src="libs/jquery.tagcloud.js" type="text/javascript"></script> --%>

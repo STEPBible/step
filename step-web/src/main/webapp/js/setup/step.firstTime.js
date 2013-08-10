@@ -78,7 +78,7 @@ step.firstTime = {
         },
         
         addProgressItem : function(text) {
-            $("#progressStatus").append("<li><b style='color: #696'>" + new Date().toLocaleTimeString() + "</b> <span>" + text + "</span></li>");
+            $("#progressStatus").append("<li><b style='color: #33339F'>" + new Date().toLocaleTimeString() + "</b> <span>" + text + "</span></li>");
             $("#progressStatus").parent().scrollTop($("#progressStatus").parent()[0].scrollHeight);
         },
         

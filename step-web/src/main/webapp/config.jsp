@@ -21,15 +21,13 @@
     <META http-equiv="Content-Type" content="text/html; charset=utf-8">
     <TITLE>STEP :: Scripture Tools for Every Person</TITLE>
 
-	<link rel="stylesheet" type="text/css" href="css/jquery-ui-1.8.23.custom.css" />
+    <%@include file="jsps/offlinePage.jsp" %>
     <link rel="stylesheet" type="text/css" href="css/setup-layout.css" />
     <link rel="stylesheet" type="text/css" href="static/static.css" />
 	<link rel="shortcut icon"  href="images/step-favicon.ico" />
-    
-	<script src="js_init/initLib.js" type="text/javascript"></script>   
-  	<script src="international/interactive.js" type="text/javascript"></script>
-    <script src="libs/jquery-1.8.2.min.js" type="text/javascript"></script>
-	<script src="libs/jquery-ui-1.8.23.custom.min.js" type="text/javascript"></script>
+
+
+    <script src="international/interactive.js" type="text/javascript"></script>
 
     <script src="js/ui_hooks.js" type="text/javascript"></script>
     <script src="js/util.js" type="text/javascript"></script>

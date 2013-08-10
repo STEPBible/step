@@ -81,27 +81,22 @@
         </developer>
     </developers>
 
-    <repositories>
+    <distributionManagement>
         <repository>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <id>maven-central</id>
-            <name>Maven Central</name>
-            <url>http://repo1.maven.org/maven2</url>
-        </repository>
-        <repository>
-            <releases>
-                <enabled>true</enabled>
-                <updatePolicy>always</updatePolicy>
-                <checksumPolicy>warn</checksumPolicy>
-            </releases>
-            <id>crosswire.public</id>
-            <name>Codehaus Public Repo</name>
-            <url>http://crosswire.org/mvn/content/groups/public/</url>
+            <uniqueVersion>true</uniqueVersion>
+            <id>step-bible-releases</id>
+            <name>StepBible Releases</name>
+            <url>scp://stepbible.org/~/release-repo</url>
             <layout>default</layout>
         </repository>
-    </repositories>
+        <snapshotRepository>
+            <uniqueVersion>false</uniqueVersion>
+            <id>step-bible-snapshots</id>
+            <name>StepBible Snapshots</name>
+            <url>scp://stepbible.org/home/step/release-repo</url>
+            <layout>default</layout>
+        </snapshotRepository>
+    </distributionManagement>
 
     <modules>
         <module>step-build</module>
@@ -261,6 +256,13 @@
                 </plugin>
             </plugins>
         </pluginManagement>
+        <extensions>
+            <extension>
+                <groupId>org.apache.maven.wagon</groupId>
+                <artifactId>wagon-ssh</artifactId>
+                <version>2.4</version>
+            </extension>
+        </extensions>
     </build>
 
     <dependencyManagement>

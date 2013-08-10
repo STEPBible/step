@@ -182,10 +182,10 @@ public class JSwordModuleServiceImpl implements JSwordModuleService {
     }
 
     @Override
-    public double getProgressOnInstallation(final String bookName) {
-        notBlank(bookName, "The book name provided was blank", SERVICE_VALIDATION_ERROR);
+    public double getProgressOnInstallation(final String version) {
+        notBlank(version, "The book name provided was blank", SERVICE_VALIDATION_ERROR);
 
-        if (isInstalled(bookName)) {
+        if (isInstalled(version)) {
             return 1;
         }
 
@@ -193,18 +193,19 @@ public class JSwordModuleServiceImpl implements JSwordModuleService {
         final Iterator<Progress> iterator = JobManager.iterator();
         while (iterator.hasNext()) {
             final Progress p = iterator.next();
-            final String expectedJobName = format(CURRENT_BIBLE_INSTALL_JOB, bookName);
-            if (expectedJobName.equals(p.getJobName())) {
+            final String expectedJobName = format(Progress.INSTALL_BOOK, version);
+            if (expectedJobName.equals(p.getJobID())) {
                 if (p.isFinished()) {
                     return 1;
                 }
 
-                return (double) p.getWork() / p.getTotalWork();
+
+                return (double) p.getWorkDone() / p.getTotalWork();
             }
         }
 
         // the job may have completed by now, while we did the search, so do a final check
-        if (isInstalled(bookName)) {
+        if (isInstalled(version)) {
             return 1;
         }
 

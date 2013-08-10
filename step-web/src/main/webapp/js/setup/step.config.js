@@ -72,14 +72,14 @@ step.config = {
             $(parent).find(".container").prepend(module);
             
             //index module
+            //bible is about to be installed - add progress bar...
+            self.currentInstalls.push(item.initials);
             $.get(SETUP_INSTALL_BIBLE + item.initials, function() {
-                //bible is being installed - add progress bar...
-                self.currentInstalls.push(item.initials);
             });
         } else {
             //remove item
-            $.get(SETUP_REMOVE_MODULE + item.initials, function() {
-                //do nothing
+            $.get(SETUP_REMOVE_MODULE + item.initials, function(data) {
+
             });
         }
     },
@@ -112,9 +112,9 @@ step.config = {
         var self = this;
         this.queryProgress(SETUP_PROGRESS_INSTALL, this.currentInstalls, 0, function(initials) {
             //now kick off indexing
+            //indexing is now in progress
+            self.currentIndexing.push(initials);
             $.get(SETUP_REINDEX + initials, function() {
-                //indexing is now in progress
-                self.currentIndexing.push(initials);
             });
         });
 
@@ -128,10 +128,14 @@ step.config = {
         if(versions != 0) {
             $.get(progressUrl + versions.join(), function(data) {
                 for(var i = 0; i < versions.length; i++) {
-                    $("#" + versions[i]).animate({
+                    var item = $("#" + versions[i]);
+                    var currentWidth = item.width();
+                    var newWidth = 100 - ((data[i] * 100 / 2) + offsetProgress)  + "%";
+                    var realNewWidth = currentWidth > newWidth ? currentWidth : newWidth;
+                    item.animate({
                         //because we do indexing to, the current progress is only up-to 50%
-                        width: 100 - ((data[i] * 100 / 2) + offsetProgress)  + "%" 
-                    }, 1000);
+                        width: realNewWidth
+                    }, 900);
                     
                     if(data[i] == 1) {
                         //remove from in progress list
@@ -182,6 +186,10 @@ step.config = {
 
         module.find(".installNow a").click(function() {
             self.receiveItem(module, $("#rightColumn"));
+        });
+
+        module.find(".removeNow a").click(function() {
+            self.receiveItem(module, $("#leftColumn"));
         });
 
         $.data(module.get(0), "item", item);

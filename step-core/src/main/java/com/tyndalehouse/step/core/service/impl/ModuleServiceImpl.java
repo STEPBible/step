@@ -34,7 +34,7 @@ package com.tyndalehouse.step.core.service.impl;
 
 import static com.tyndalehouse.step.core.utils.JSwordUtils.getSortedSerialisableList;
 
-import java.util.List;
+import java.util.*;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -50,7 +50,6 @@ import com.tyndalehouse.step.core.models.ClientSession;
 import com.tyndalehouse.step.core.service.ModuleService;
 import com.tyndalehouse.step.core.service.helpers.VersionResolver;
 import com.tyndalehouse.step.core.service.jsword.JSwordModuleService;
-import com.tyndalehouse.step.core.utils.CollectionUtils;
 
 /**
  * Looks up module information, for example lexicon definitions for particular references
@@ -96,7 +95,31 @@ public class ModuleServiceImpl implements ModuleService {
         final List<Book> installedVersions = this.jswordModuleService.getInstalledModules(selected);
         final List<Book> allModules = this.jswordModuleService.getAllModules(selected);
 
-        return getSortedSerialisableList(CollectionUtils.subtract(allModules, installedVersions),
+        return getSortedSerialisableList(subtract(allModules, installedVersions),
                 this.clientSession.get().getLocale(), this.resolver);
+    }
+
+    /**
+     *
+     * @param originalBooks list a the master list
+     * @param booksToRemove list b the list of items to take out
+     * @return the trimmed list
+     */
+    public static Collection<Book> subtract(final List<Book> originalBooks, final List<Book> booksToRemove) {
+        //unfortunately, can't use Book.equals(), and therefore normal sets, because
+        //Book.equals() compares all of the SwordBookMetaData, which can be different
+        //if STEP has its own version of the books.
+        //convert the first list to a map, keyed by version intials
+        Map<String, Book> books = new HashMap<String, Book>(originalBooks.size()*2);
+        for(Book b : originalBooks) {
+            books.put(b.getInitials(), b);
+        }
+
+
+        for(Book b : booksToRemove) {
+            books.remove(b.getInitials());
+        }
+
+        return books.values();
     }
 }

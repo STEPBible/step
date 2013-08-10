@@ -116,6 +116,7 @@ public class SetupController {
      * @return a list of the progresses in the same order given
      */
     public List<Double> getProgressOnInstallation(final String versions) {
+        validateSession(this.sessionProvider);
 
         final String[] allVersions = StringUtils.split(versions, ",");
         final List<Double> progresses = new ArrayList<Double>(allVersions.length);
@@ -158,8 +159,12 @@ public class SetupController {
      * 
      * @param initials the initials referencing the correct module
      */
-    public void removeModule(final String initials) {
+    public boolean removeModule(final String initials) {
+        validateSession(this.sessionProvider);
+
+        notBlank(initials, "bible_for_install", USER_MISSING_FIELD);
         this.bibleInformation.removeModule(initials);
+        return true;
     }
 
     /**

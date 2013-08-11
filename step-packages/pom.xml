@@ -18,74 +18,89 @@
 	ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT 
 	(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF 
 	THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<parent>
-		<groupId>com.tyndalehouse.step</groupId>
-		<artifactId>step-mvn</artifactId>
-		<version>1.0.2-SNAPSHOT</version>
-	</parent>
+    <parent>
+        <groupId>com.tyndalehouse.step</groupId>
+        <artifactId>step-mvn</artifactId>
+        <version>1.0.2-SNAPSHOT</version>
+    </parent>
 
-	<groupId>com.tyndalehouse.step</groupId>
-	<artifactId>step-packages</artifactId>
-	<packaging>jar</packaging>
-	<name>STEP :: A set of packages to be distributed with the desktop application</name>
+    <groupId>com.tyndalehouse.step</groupId>
+    <artifactId>step-packages</artifactId>
+    <packaging>jar</packaging>
+    <name>STEP :: A set of packages to be distributed with the desktop application</name>
 
-	<properties>
-		<packages>${project.build.outputDirectory}</packages>
-		<explodedPackages>${project.build.directory}/explodedPackages</explodedPackages>
-	</properties>
-	
+    <properties>
+        <packages>${project.build.outputDirectory}</packages>
+        <sword.home>c:\Users\Chris\AppData\Roaming\Sword</sword.home>
+        <explodedPackages>${project.build.directory}/explodedPackages</explodedPackages>
+    </properties>
 
-	
-	<profiles>
-		<profile>
-			<id>standalone-install</id>
-			
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-antrun-plugin</artifactId>
-						<version>1.7</version>
-						<executions>
-						  <execution>
-							<phase>compile</phase>
-							<configuration>
-							  <target>
-									<mkdir dir="${packages}" />
-									<get src="http://crosswire.org/ftpmirror/pub/sword/packages/rawzip/KJV.zip" dest="${packages}" />
-									<get src="http://crosswire.org/ftpmirror/pub/sword/packages/rawzip/ESV.zip" dest="${packages}" />
-									 
-									<unzip dest="${explodedPackages}">
-										<fileset dir="${packages}">
-											<include name="**/*.zip" />
-										</fileset>
-									</unzip>
-									
-									<!-- next we need to pack up all mods.d/*.conf files... -->
-									<tar destFile="${explodedPackages}/mods.d.tar" basedir="${explodedPackages}">
-										<include name="mods.d/*" />
-									</tar>
-									
-									<gzip src="${explodedPackages}/mods.d.tar" destFile="${packages}/mods.d.tar.gz" />
-									
-									<!-- The final files to bring in are under ${explodedPackages} -->
-									
-							  </target>
-							</configuration>
-							<goals>
-							  <goal>run</goal>
-							</goals>
-						  </execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>			
-			
-			
-			
-		</profile>
-	</profiles>
+
+    <profiles>
+        <profile>
+            <id>standalone-install</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <version>1.7</version>
+                        <executions>
+                            <execution>
+                                <phase>compile</phase>
+                                <configuration>
+                                    <target>
+                                        <mkdir dir="${packages}"/>
+
+                                        <copy toDir="${explodedPackages}">
+                                            <fileset dir="${sword.home}">
+                                                <include name="**/esv.conf" />
+                                                <include name="**/esv/**" />
+
+                                                <include name="**/osmhb.conf" />
+                                                <include name="**/osmhb/**" />
+
+                                                <include name="**/KJV.conf" />
+                                                <include name="**/KJV/**" />
+                                            </fileset>
+                                        </copy>
+
+                                        <!--<get src="http://crosswire.org/ftpmirror/pub/sword/packages/rawzip/KJV.zip" dest="${packages}" />-->
+                                        <!--<get src="http://crosswire.org/ftpmirror/pub/sword/packages/rawzip/ESV.zip" dest="${packages}" />-->
+                                        <!---->
+
+                                        <unzip dest="${explodedPackages}">
+                                            <fileset dir="${packages}">
+                                                <include name="**/*.zip"/>
+                                            </fileset>
+                                        </unzip>
+
+                                        <!-- next we need to pack up all mods.d/*.conf files... -->
+                                        <tar destFile="${explodedPackages}/mods.d.tar" basedir="${explodedPackages}">
+                                            <include name="mods.d/*"/>
+                                        </tar>
+
+                                        <gzip src="${explodedPackages}/mods.d.tar"
+                                              destFile="${packages}/mods.d.tar.gz"/>
+
+                                        <!-- The final files to bring in are under ${explodedPackages} -->
+
+                                    </target>
+                                </configuration>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+
+
+        </profile>
+    </profiles>
 </project>

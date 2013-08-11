@@ -4,16 +4,12 @@
 <%@page import="javax.servlet.jsp.jstl.core.Config"%>
 <%@ page contentType="text/html; charset=UTF-8" language="java" %> 
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-
-
 <%
 	Injector injector = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
 	Locale locale = injector.getInstance(ClientSession.class).getLocale();
 	Config.set(session, Config.FMT_LOCALE, locale.getLanguage());
 %>
 <fmt:setBundle basename="HtmlBundle" />
-
-
 <span id='lexiconDefinition'>
 	<ul id="lexiconDefinitionHeader">
 			<span id="lexiconPopupClose"></span>

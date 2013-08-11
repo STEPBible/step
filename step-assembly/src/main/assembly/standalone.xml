@@ -5,7 +5,6 @@
 
 	<formats>
 		<format>dir</format>
-		<format>zip</format>
 	</formats>
 
 	<includeBaseDirectory>false</includeBaseDirectory>
@@ -13,7 +12,7 @@
 		<moduleSet>
             <useAllReactorProjects>true</useAllReactorProjects>
 			<includes>
-				<include>com.tyndalehouse.step:step-web:war:${project.version}</include>
+				<include>com.tyndalehouse.step:step-war-precompiled:war:${project.version}</include>
 			</includes>
 			<binaries>
 				<outputDirectory>/step-web</outputDirectory>

@@ -35,7 +35,7 @@
         <guice.version>3.1.3</guice.version>
         <guice-servlet.version>3.0</guice-servlet.version>
         <opencsv.version>2.3</opencsv.version>
-        <jetty.version>9.0.0.M5</jetty.version>
+        <jetty.version>9.0.4.v20130625</jetty.version>
         <xalan.version>2.7.1</xalan.version>
 
         <yammer-metrics.version>2.2.0</yammer-metrics.version>
@@ -104,10 +104,26 @@
         <module>step-web</module>
         <module>step-server</module>
         <module>step-tools</module>
-        <module>step-packages</module>
-        <module>step-assembly</module>
         <!-- <module>step-web-test</module> -->
     </modules>
+
+    <profiles>
+        <profile>
+            <!-- deployment locally, or for local use in Jetty -->
+            <id>standalone-install</id>
+            <modules>
+                <module>step-build</module>
+                <module>step-core</module>
+                <module>step-web</module>
+                <module>step-server</module>
+                <module>step-tools</module>
+                <module>step-packages</module>
+                <module>step-war-precompiled</module>
+                <module>step-assembly</module>
+            </modules>
+        </profile>
+    </profiles>
+
 
     <build>
         <pluginManagement>
@@ -287,6 +303,12 @@
                 <groupId>com.tyndalehouse.step</groupId>
                 <artifactId>step-core</artifactId>
                 <type>test-jar</type>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.tyndalehouse.step</groupId>
+                <artifactId>step-web</artifactId>
+                <type>war</type>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

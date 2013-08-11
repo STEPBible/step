@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <install4j version="5.1.6" transformSequenceNumber="4">
-  <directoryPresets config="C:/dev/projects/step/step-web/src/main/webapp/images" />
-  <application name="Scripture Tools for Every Person" distributionSourceDir="" applicationId="1137-2379-2234-7255" mediaDir="./target" mediaFilePattern="${compiler:sys.shortName}_${compiler:sys.platform}_${compiler:sys.version}" compression="6" lzmaCompression="false" pack200Compression="false" excludeSignedFromPacking="true" commonExternalFiles="false" createMd5Sums="true" shrinkRuntime="true" shortName="STEP" publisher="Tyndale House" publisherWeb="http://www.tyndalehouse.cam.ac.uk" version="1.0-RC0" allPathsRelative="false" backupOnSave="false" autoSave="false" convertDotsToUnderscores="true" macSignature="????" installerName="" javaMinVersion="1.6" javaMaxVersion="" allowBetaVM="false" jdkMode="runtimeJre" jdkName="">
+  <directoryPresets config="../../../../../step-install-resources/chromium/mini_installer.exe" />
+  <application name="Scripture Tools for Every Person" distributionSourceDir="" applicationId="1137-2379-2234-7255" mediaDir="../../../target" mediaFilePattern="${compiler:sys.shortName}_${compiler:sys.platform}_${compiler:sys.version}" compression="6" lzmaCompression="false" pack200Compression="false" excludeSignedFromPacking="true" commonExternalFiles="false" createMd5Sums="true" shrinkRuntime="true" shortName="STEP" publisher="Tyndale House, Cambridge, UK" publisherWeb="http://www.tyndalehouse.cam.ac.uk" version="1.0.2-SNAPSHOT" allPathsRelative="true" backupOnSave="false" autoSave="false" convertDotsToUnderscores="true" macSignature="????" installerName="" javaMinVersion="1.6" javaMaxVersion="" allowBetaVM="false" jdkMode="runtimeJre" jdkName="">
     <languages skipLanguageSelection="false" languageSelectionInPrincipalLanguage="false">
       <principalLanguage id="en" customLocalizationFile="" />
       <additionalLanguages />
@@ -16,24 +16,69 @@
     <codeSigning macEnabled="false" macPkcs12File="" windowsEnabled="false" windowsKeySource="pkcs12" windowsPvkFile="" windowsSpcFile="" windowsPkcs12File="" />
   </application>
   <files keepModificationTimes="false" missingFilesStrategy="warn" globalExcludeSuffixes="" defaultOverwriteMode="4" defaultUninstallMode="0" launcherOverwriteMode="3" defaultFileMode="644" defaultDirMode="755">
-    <filesets />
-    <roots />
+    <filesets>
+      <fileset name="MacOSX" id="187" customizedId="" />
+      <fileset name="Windows" id="192" customizedId="" />
+    </filesets>
+    <roots>
+      <root id="118" fileset="" location="${installer:sys.userHome}" />
+      <root id="188" fileset="187" location="" />
+      <root id="193" fileset="192" location="" />
+    </roots>
     <mountPoints>
+      <mountPoint id="111" root="" location="logs" mode="755" />
       <mountPoint id="23" root="" location="" mode="755" />
+      <mountPoint id="120" root="118" location="${compiler:sys.shortName}" mode="755" />
+      <mountPoint id="121" root="118" location="${compiler:sys.shortName}/logs" mode="755" />
+      <mountPoint id="194" root="188" location="" mode="755" />
+      <mountPoint id="195" root="193" location="" mode="755" />
     </mountPoints>
     <entries>
-      <dirEntry mountPoint="23" file="C:/dev/projects/step/target/step-mvn-1.0-SNAPSHOT-package-step-standalone" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="false" overrideOverwriteMode="false" overrideUninstallMode="false" entryMode="direct" subDirectory="step-mvn-1.0-SNAPSHOT-package-step-standalone" excludeSuffixes="" dirMode="755" overrideDirMode="false">
+      <dirEntry mountPoint="23" file="../../../target/step-assembly-${compiler:sys.version}-package-step-standalone" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="false" overrideOverwriteMode="false" overrideUninstallMode="false" entryMode="direct" subDirectory="step-mvn-1.0-SNAPSHOT-package-step-standalone" excludeSuffixes="" dirMode="755" overrideDirMode="false">
         <exclude />
       </dirEntry>
+      <fileEntry mountPoint="194" file="../../../../../step-install-resources/chromium/ChromiumOSX_28.0.1500.71.dmg" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="false" overrideOverwriteMode="false" overrideUninstallMode="false" />
+      <fileEntry mountPoint="195" file="../../../../../step-install-resources/chromium/mini_installer.exe" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="false" overrideOverwriteMode="false" overrideUninstallMode="false" />
     </entries>
-    <components />
+    <components>
+      <component name="Scripture Tools for Every Person" id="96" customizedId="" displayDescription="false" hideHelpButton="false" selected="true" changeable="false" downloadable="false" hidden="true">
+        <description />
+        <include all="false">
+          <entry location="lib" fileType="regular" />
+          <entry location="offlineModules" fileType="regular" />
+          <entry location="runStep.bat" fileType="regular" />
+          <entry location="runStep.sh" fileType="regular" />
+          <entry location="step-server-1.0.2-SNAPSHOT.jar" fileType="regular" />
+          <entry location="step-web" fileType="regular" />
+          <entry location="webapps" fileType="regular" />
+          <entry location="logs" fileType="regular" />
+          <entry location="step" fileType="launcher" />
+          <entry location=".i4j_external_118" fileType="regular" />
+        </include>
+        <dependencies />
+      </component>
+      <component name="Chromium (Windows)" id="95" customizedId="" displayDescription="false" hideHelpButton="false" selected="false" changeable="true" downloadable="false" hidden="false">
+        <description />
+        <include all="false">
+          <entry location=".i4j_fileset_192" fileType="regular" />
+        </include>
+        <dependencies />
+      </component>
+      <component name="Chromium (MacOS X)" id="182" customizedId="" displayDescription="false" hideHelpButton="false" selected="false" changeable="true" downloadable="false" hidden="false">
+        <description />
+        <include all="false">
+          <entry location=".i4j_fileset_187" fileType="regular" />
+        </include>
+        <dependencies />
+      </component>
+    </components>
   </files>
   <launchers>
     <launcher name="step" id="28" customizedId="" external="false" excludeFromMenu="false" unixMode="755" menuName="" icnsFile="" customMacBundleIdentifier="false" macBundleIdentifier="" swtApp="false" fileset="" macBundleBinary="JavaApplicationStub" addMacEntitlements="false" macEntitlementsFile="">
-      <executable name="step" type="1" iconSet="true" iconFile="" executableDir="" redirectStderr="false" stderrFile="error.log" stderrMode="overwrite" redirectStdout="false" stdoutFile="output.log" stdoutMode="overwrite" failOnStderrOutput="true" executableMode="2" changeWorkingDirectory="true" workingDirectory="." singleInstance="true" serviceStartType="2" serviceDependencies="" serviceDescription="" jreLocation="" executionLevel="asInvoker" checkConsoleParameter="false" globalSingleInstance="false">
+      <executable name="step" type="1" iconSet="true" iconFile="" executableDir="" redirectStderr="true" stderrFile="${installer:sys.userHome}/${installer:sys.userHome}/STEP/logs/install4j-error.log" stderrMode="append" redirectStdout="true" stdoutFile="${installer:sys.userHome}/${installer:sys.userHome}/STEP/logs/install4j-output.log" stdoutMode="append" failOnStderrOutput="true" executableMode="1" changeWorkingDirectory="true" workingDirectory="." singleInstance="true" serviceStartType="2" serviceDependencies="" serviceDescription="" jreLocation="" executionLevel="asInvoker" checkConsoleParameter="false" globalSingleInstance="false">
         <versionInfo include="false" fileVersion="" fileDescription="" legalCopyright="" internalName="" productName="" />
       </executable>
-      <splashScreen show="true" autoOff="true" alwaysOnTop="true" width="0" height="0" bitmapFile="C:/dev/projects/step/step-web/src/main/webapp/images/step-logo-big.png" java6SplashScreen="true">
+      <splashScreen show="false" autoOff="true" alwaysOnTop="true" width="0" height="0" bitmapFile="../../../../step-web/src/main/webapp/images/step-logo-big.png" java6SplashScreen="false">
         <text>
           <statusLine x="20" y="20" text="" font="Arial" fontSize="8" fontColor="0,0,0" fontWeight="500" />
           <versionLine x="20" y="40" text="version ${compiler:sys.version}" font="Arial" fontSize="8" fontColor="0,0,0" fontWeight="500" />
@@ -41,7 +86,7 @@
       </splashScreen>
       <java mainClass="com.tyndalehouse.step.server.StepServer" vmParameters="" arguments="" allowVMPassthroughParameters="true" preferredVM="" bundleRuntime="true">
         <classPath>
-          <archive location="step-server-1.0-SNAPSHOT.jar" failOnError="false" />
+          <archive location="step-server-${compiler:sys.version}.jar" failOnError="false" />
         </classPath>
         <nativeLibraryDirectories />
       </java>
@@ -57,7 +102,7 @@
         <content />
       </infoPlist>
       <iconImageFiles>
-        <file path="C:/dev/projects/step/step-web/src/main/webapp/images/step-favicon.ico" />
+        <file path="../../../../step-web/src/main/webapp/images/step-favicon.ico" />
       </iconImageFiles>
     </launcher>
   </launchers>
@@ -164,7 +209,14 @@
           <screen name="" id="6" customizedId="" beanClass="com.install4j.runtime.beans.screens.ComponentsScreen" enabled="true" commentSet="false" comment="" actionElevationType="inherit" rollbackBarrier="false" backButton="2" finishScreen="false" wizardIndexChangeType="unchanged" wizardIndexKey="">
             <serializedBean>
               <java class="java.beans.XMLDecoder">
-                <object class="com.install4j.runtime.beans.screens.ComponentsScreen" />
+                <object class="com.install4j.runtime.beans.screens.ComponentsScreen">
+                  <void property="allowNewFolderCreation">
+                    <boolean>true</boolean>
+                  </void>
+                  <void property="showInstallationDirectoryChooser">
+                    <boolean>true</boolean>
+                  </void>
+                </object>
               </java>
             </serializedBean>
             <condition />
@@ -191,6 +243,58 @@
             <actions />
             <formComponents />
           </screen>
+          <screen name="" id="100" customizedId="" beanClass="com.install4j.runtime.beans.screens.AdditionalConfirmationsScreen" enabled="true" commentSet="false" comment="" actionElevationType="inherit" rollbackBarrier="false" backButton="2" finishScreen="false" wizardIndexChangeType="unchanged" wizardIndexKey="">
+            <serializedBean>
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.screens.AdditionalConfirmationsScreen" />
+              </java>
+            </serializedBean>
+            <condition />
+            <validation />
+            <preActivation />
+            <postActivation />
+            <actions />
+            <formComponents>
+              <formComponent name="Add a desktop link" id="101" customizedId="" beanClass="com.install4j.runtime.beans.formcomponents.CheckboxComponent" enabled="true" commentSet="false" comment="" insetTop="" insetLeft="" insetBottom="" insetRight="" resetInitOnPrevious="false">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.formcomponents.CheckboxComponent">
+                      <void property="checkboxText">
+                        <string>${i18n:CreateDesktopIcon}</string>
+                      </void>
+                      <void property="initiallySelected">
+                        <boolean>true</boolean>
+                      </void>
+                      <void property="variableName">
+                        <string>createDesktopLinkAction</string>
+                      </void>
+                    </object>
+                  </java>
+                </serializedBean>
+                <initScript />
+                <visibilityScript />
+              </formComponent>
+              <formComponent name="Create a quick launch icon" id="103" customizedId="" beanClass="com.install4j.runtime.beans.formcomponents.CheckboxComponent" enabled="true" commentSet="false" comment="" insetTop="" insetLeft="" insetBottom="" insetRight="" resetInitOnPrevious="false">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.formcomponents.CheckboxComponent">
+                      <void property="checkboxText">
+                        <string>${i18n:CreateQuickLaunchIcon}</string>
+                      </void>
+                      <void property="initiallySelected">
+                        <boolean>true</boolean>
+                      </void>
+                      <void property="variableName">
+                        <string>createQuicklaunchIconAction</string>
+                      </void>
+                    </object>
+                  </java>
+                </serializedBean>
+                <initScript />
+                <visibilityScript>Util.isWindows()</visibilityScript>
+              </formComponent>
+            </formComponents>
+          </screen>
           <screen name="" id="8" customizedId="" beanClass="com.install4j.runtime.beans.screens.InstallationScreen" enabled="true" commentSet="false" comment="" actionElevationType="inherit" rollbackBarrier="true" backButton="2" finishScreen="false" wizardIndexChangeType="unchanged" wizardIndexKey="">
             <serializedBean>
               <java class="java.beans.XMLDecoder">
@@ -209,6 +313,57 @@
                   </java>
                 </serializedBean>
                 <condition />
+              </action>
+              <action name="Install Chromium Windows" id="104" customizedId="" beanClass="com.install4j.runtime.beans.actions.misc.RunExecutableAction" enabled="true" commentSet="false" comment="" actionElevationType="elevated" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.misc.RunExecutableAction">
+                      <void property="executable">
+                        <object class="java.io.File">
+                          <string>mini_installer.exe</string>
+                        </object>
+                      </void>
+                      <void property="wait">
+                        <boolean>true</boolean>
+                      </void>
+                      <void property="workingDirectory">
+                        <object class="java.io.File">
+                          <string>${installer:sys.installationDir}</string>
+                        </object>
+                      </void>
+                    </object>
+                  </java>
+                </serializedBean>
+                <condition>// This expression only evalutes to true if the installer is run on Windows.
+// Otherwise, it will return false, and the current element will be skipped.
+// Note that the Util class has many other utility methods for determining the operating system.
+Util.isWindows()
+
+</condition>
+              </action>
+              <action name="Install Chromium Mac" id="180" customizedId="" beanClass="com.install4j.runtime.beans.actions.misc.RunExecutableAction" enabled="true" commentSet="false" comment="" actionElevationType="elevated" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.misc.RunExecutableAction">
+                      <void property="executable">
+                        <object class="java.io.File">
+                          <string>ChromiumOSX_28.0.1500.71.dmg</string>
+                        </object>
+                      </void>
+                      <void property="wait">
+                        <boolean>true</boolean>
+                      </void>
+                      <void property="workingDirectory">
+                        <object class="java.io.File">
+                          <string>${installer:sys.installationDir}</string>
+                        </object>
+                      </void>
+                    </object>
+                  </java>
+                </serializedBean>
+                <condition>Util.isMacOS()
+
+</condition>
               </action>
               <action name="" id="10" customizedId="" beanClass="com.install4j.runtime.beans.actions.desktop.CreateProgramGroupAction" enabled="true" commentSet="false" comment="" actionElevationType="elevated" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
                 <serializedBean>
@@ -234,6 +389,23 @@
                 </serializedBean>
                 <condition />
               </action>
+              <action name="" id="209" customizedId="" beanClass="com.install4j.runtime.beans.actions.desktop.CreateDesktopLinkAction" enabled="true" commentSet="false" comment="" actionElevationType="elevated" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.desktop.CreateDesktopLinkAction">
+                      <void property="file">
+                        <object class="java.io.File">
+                          <string>${installer:sys.contentDir}/step.exe</string>
+                        </object>
+                      </void>
+                      <void property="name">
+                        <string>${compiler:sys.fullName}</string>
+                      </void>
+                    </object>
+                  </java>
+                </serializedBean>
+                <condition>context.getBooleanVariable("createDesktopLinkAction")</condition>
+              </action>
             </actions>
             <formComponents />
           </screen>
@@ -247,8 +419,41 @@
             <validation />
             <preActivation />
             <postActivation />
-            <actions />
-            <formComponents />
+            <actions>
+              <action name="" id="97" customizedId="" beanClass="com.install4j.runtime.beans.actions.finish.ExecuteLauncherAction" enabled="true" commentSet="false" comment="" actionElevationType="none" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.finish.ExecuteLauncherAction">
+                      <void property="launcherId">
+                        <string>28</string>
+                      </void>
+                    </object>
+                  </java>
+                </serializedBean>
+                <condition>context.getBooleanVariable("executeLauncherAction") &amp;&amp; (!context.isUnattended())</condition>
+              </action>
+            </actions>
+            <formComponents>
+              <formComponent name="Execute launcher" id="98" customizedId="" beanClass="com.install4j.runtime.beans.formcomponents.CheckboxComponent" enabled="true" commentSet="false" comment="" insetTop="" insetLeft="" insetBottom="" insetRight="" resetInitOnPrevious="false">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.formcomponents.CheckboxComponent">
+                      <void property="checkboxText">
+                        <string>${i18n:RunEntryExec("${compiler:sys.fullName}")}</string>
+                      </void>
+                      <void property="initiallySelected">
+                        <boolean>true</boolean>
+                      </void>
+                      <void property="variableName">
+                        <string>executeLauncherAction</string>
+                      </void>
+                    </object>
+                  </java>
+                </serializedBean>
+                <initScript />
+                <visibilityScript />
+              </formComponent>
+            </formComponents>
           </screen>
         </screens>
       </application>
@@ -359,21 +564,43 @@
     </applications>
   </installerGui>
   <mediaSets>
-    <windows name="Windows" id="25" customizedId="" mediaFileName="" installDir="STEP" overridePrincipalLanguage="false" jreBitType="32" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" useLegacyMediaFileIds="false" legacyMediaFileIds="" includedJRE="" manualJREEntry="false" bundleType="1" jreURL="" jreShared="false" directDownload="false" installOnlyIfNecessary="false" customInstallBaseDir="" contentFilesType="1" downloadURL="" verifyIntegrity="true">
+    <windows name="Windows with Java And Chrome" id="25" customizedId="" mediaFileName="" installDir="STEP" overridePrincipalLanguage="false" jreBitType="32" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" useLegacyMediaFileIds="false" legacyMediaFileIds="" includedJRE="windows-x86-1.7.0_25" manualJREEntry="false" bundleType="1" jreURL="" jreShared="true" directDownload="false" installOnlyIfNecessary="true" customInstallBaseDir="" contentFilesType="1" downloadURL="" verifyIntegrity="true">
       <excludedLaunchers />
       <excludedBeans />
       <overriddenPrincipalLanguage id="en" customLocalizationFile="" />
-      <exclude />
+      <exclude>
+        <entry location=".i4j_fileset_187" fileType="regular" />
+      </exclude>
       <variables />
       <autoUpdate useMinUpdatableVersion="false" minUpdatableVersion="" useMaxUpdatableVersion="false" maxUpdatableVersion="">
         <commentFiles />
         <customAttributes />
       </autoUpdate>
-      <excludedComponents />
+      <excludedComponents>
+        <component id="182" />
+      </excludedComponents>
       <includedDownloadableComponents />
     </windows>
+    <macos name="Mac OS X With Java and Chrome" id="178" customizedId="" mediaFileName="" installDir="STEP" overridePrincipalLanguage="false" jreBitType="all" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" useLegacyMediaFileIds="false" legacyMediaFileIds="" includedJRE="macosx-amd64-1.7.0_25" manualJREEntry="false" bundleType="1" jreURL="" jreShared="false" directDownload="false" installOnlyIfNecessary="false" appleJre="false" customInstallBaseDir="" contentFilesType="1" downloadURL="" signLaunchers="false" launcherId="28">
+      <excludedBeans />
+      <overriddenPrincipalLanguage id="en" customLocalizationFile="" />
+      <exclude>
+        <entry location=".i4j_fileset_192" fileType="regular" />
+      </exclude>
+      <variables />
+      <autoUpdate useMinUpdatableVersion="false" minUpdatableVersion="" useMaxUpdatableVersion="false" maxUpdatableVersion="">
+        <commentFiles />
+        <customAttributes />
+      </autoUpdate>
+      <excludedComponents>
+        <component id="95" />
+      </excludedComponents>
+      <includedDownloadableComponents />
+    </macos>
   </mediaSets>
-  <buildIds buildAll="true" />
+  <buildIds buildAll="false">
+    <mediaSet refId="25" />
+  </buildIds>
   <buildOptions verbose="false" faster="false" disableSigning="false" debug="false" />
 </install4j>
 

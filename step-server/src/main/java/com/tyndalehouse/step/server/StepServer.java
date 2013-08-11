@@ -88,16 +88,7 @@ public final class StepServer {
      * @return the Server object if required to make modifications
      */
     private Server start() {
-        InetAddress listeningAddress;
-        try {
-            listeningAddress = InetAddress.getLocalHost();
-        } catch (final UnknownHostException e1) {
-            try {
-                listeningAddress = InetAddress.getByName("127.0.0.1");
-            } catch (final UnknownHostException e) {
-                throw new RuntimeException("Unable to get a suitable local host address");
-            }
-        }
+        InetAddress listeningAddress = InetAddress.getLoopbackAddress();
         final InetSocketAddress socket = new InetSocketAddress(listeningAddress, STEP_PORT);
 
         final Server jetty = new Server(socket);
@@ -175,6 +166,7 @@ public final class StepServer {
 
         final TrayIcon trayIcon = new TrayIcon(icon);
         final MenuItem aboutItem = new MenuItem("About");
+        final MenuItem launchStepBrowser = new MenuItem("Launch STEP Browser");
         final MenuItem exitItem = new MenuItem("Exit");
         final PopupMenu popupMenu = new PopupMenu();
 
@@ -207,6 +199,14 @@ public final class StepServer {
             }
         });
 
+        launchStepBrowser.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                launchBrowser();
+            }
+        });
+
+        popupMenu.add(launchStepBrowser);
         popupMenu.add(aboutItem);
         popupMenu.add(exitItem);
         trayIcon.setToolTip("STEP :: Scripture Tools for Every Person");

@@ -1,47 +1,40 @@
 package com.tyndalehouse.step.guice;
 
-import java.io.IOException;
+import com.tyndalehouse.step.core.utils.AppManager;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Singleton;
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-
-import com.tyndalehouse.step.core.service.jsword.JSwordModuleService;
+import javax.servlet.*;
+import java.io.IOException;
 
 /**
- * Intercepts and works out whether JSword has been installed with modules...
- * 
+ * Intercepts and works out whether STEP has finished the installation process
+ *
  * @author chrisburrell
- * 
  */
 @Singleton
 public class SetupRedirectFilter implements Filter {
-    private static final String[] MANDATORY_MODULES = { "ESV", "KJV" };
-    private final JSwordModuleService jsword;
+    //sourced from step.core.properties, identifies the version of the currently running application
+    private String runningAppVersion;
 
     /**
-     * @param jsword jsword service
+     * @param runningAppVersion the version of the running application
      */
     @Inject
-    public SetupRedirectFilter(final JSwordModuleService jsword) {
-        this.jsword = jsword;
-
+    public SetupRedirectFilter(@Named(AppManager.APP_VERSION) final String runningAppVersion) {
+        this.runningAppVersion = runningAppVersion;
     }
 
     @Override
     public void init(final FilterConfig filterConfig) throws ServletException {
-        // nothing to record
     }
 
     @Override
     public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain chain)
             throws IOException, ServletException {
-        if (this.jsword.isInstalled(MANDATORY_MODULES)) {
+        String installedVersion = AppManager.instance().getAppVersion();
+        if (installedVersion != null && installedVersion.equals(runningAppVersion)) {
             // do nothing
             chain.doFilter(request, response);
         } else {

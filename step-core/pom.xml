@@ -33,6 +33,23 @@
     <name>STEP :: Step Core functionality</name>
 
     <build>
+        <resources>
+            <resource>
+                <filtering>false</filtering>
+                <directory>${basedir}/src/main/resources</directory>
+                <excludes>
+                    <exclude>step.core.properties</exclude>
+                </excludes>
+            </resource>
+            <resource>
+                <filtering>true</filtering>
+                <directory>${basedir}/src/main/resources</directory>
+                <includes>
+                    <include>step.core.properties</include>
+                </includes>
+            </resource>
+        </resources>
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -63,21 +80,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <!-- <plugin> -->
-            <!-- <groupId>org.codehaus.mojo</groupId> -->
-            <!-- <artifactId>cobertura-maven-plugin</artifactId> -->
-            <!-- <configuration> -->
-            <!-- <instrumentation> -->
-            <!-- <excludes> -->
-            <!-- Controllers are generally empty and provide validation only -->
-            <!-- <exclude>com/tyndalehouse/step/rest/controllers/*.class</exclude> -->
-            <!-- <exclude>com/tyndalehouse/step/core/data/entities/*.class</exclude> -->
-            <!-- <exclude>com/tyndalehouse/step/core/models/*.class</exclude> -->
-            <!-- </excludes> -->
-            <!-- </instrumentation> -->
-            <!-- </configuration> -->
-            <!-- </plugin> -->
-
         </plugins>
     </build>
 
@@ -97,10 +99,6 @@
             <groupId>org.crosswire</groupId>
             <artifactId>jsword</artifactId>
         </dependency>
-        <!-- <dependency> -->
-        <!-- <groupId>org.jdom</groupId> -->
-        <!-- <artifactId>jdom</artifactId> -->
-        <!-- </dependency> -->
         <dependency>
             <groupId>xalan</groupId>
             <artifactId>xalan</artifactId>
@@ -141,41 +139,5 @@
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
         </dependency>
-
-
-        <!-- transitive dependencies not picked up by jsword -->
-        <!-- <dependency> -->
-        <!-- <groupId>javatar</groupId> -->
-        <!-- <artifactId>javatar</artifactId> -->
-        <!-- </dependency> -->
-
-        <!-- <dependency> -->
-        <!-- <groupId>commons-httpclient</groupId> -->
-        <!-- <artifactId>commons-httpclient </artifactId> -->
-        <!-- <scope>test</scope> -->
-        <!-- </dependency> -->
-
-        <!-- <dependency> -->
-        <!-- <groupId>org.apache.httpcomponents</groupId> -->
-        <!-- <artifactId>httpclient</artifactId> -->
-        <!-- <version>4.1-beta1</version> -->
-        <!-- </dependency> -->
-
-        <!-- <dependency> -->
-        <!-- <groupId>org.apache.lucene</groupId> -->
-        <!-- <artifactId>lucene-core</artifactId> -->
-        <!-- </dependency> -->
-        <!-- <dependency> -->
-        <!-- <groupId>org.apache.lucene</groupId> -->
-        <!-- <artifactId>lucene-snowball</artifactId> -->
-        <!-- </dependency> -->
-        <!-- <dependency> -->
-        <!-- <groupId>org.apache.lucene</groupId> -->
-        <!-- <artifactId>lucene-smartcn</artifactId> -->
-        <!-- </dependency> -->
-        <!-- <dependency> -->
-        <!-- <groupId>org.apache.lucene</groupId> -->
-        <!-- <artifactId>lucene-analyzers</artifactId> -->
-        <!-- </dependency> -->
     </dependencies>
 </project>

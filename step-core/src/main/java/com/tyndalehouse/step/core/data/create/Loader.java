@@ -1,11 +1,11 @@
 /*******************************************************************************
  * Copyright (c) 2012, Directors of the Tyndale STEP Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without 
  * modification, are permitted provided that the following conditions 
  * are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright 
  * notice, this list of conditions and the following disclaimer.
  * Redistributions in binary form must reproduce the above copyright 
@@ -16,7 +16,7 @@
  * nor the names of its contributors may be used to endorse or promote 
  * products derived from this software without specific prior written 
  * permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
@@ -44,6 +44,8 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;
 
+import com.tyndalehouse.step.core.utils.AppManager;
+import org.crosswire.common.util.NetUtil;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.BookCategory;
 import org.slf4j.Logger;
@@ -62,11 +64,10 @@ import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 /**
  * The object that will be responsible for loading all the data into Lucene and downloading key versions of
  * the Bible.
- * 
+ * <p/>
  * Note, this object is not thread-safe.
- * 
+ *
  * @author chrisburrell
- * 
  */
 public class Loader {
     private static final int INSTALL_WAITING = 1000;
@@ -79,64 +80,71 @@ public class Loader {
     private final BlockingQueue<String> progress = new LinkedBlockingQueue<String>();
     private boolean complete = false;
     private final Provider<ClientSession> clientSessionProvider;
+    private String runningAppVersion;
 
     /**
      * The loader is given a connection source to load the data.
-     * 
-     * @param jsword the jsword service
-     * @param jswordModule the service helping with installation of jsword modules
-     * @param coreProperties the step core properties
-     * @param entityManager the entity manager
+     *
+     * @param jsword                the jsword service
+     * @param jswordModule          the service helping with installation of jsword modules
+     * @param coreProperties        the step core properties
+     * @param entityManager         the entity manager
      * @param clientSessionProvider the client session provider
+     * @param runningAppVersion     the STEP runtime version
      */
     @Inject
     public Loader(final JSwordPassageService jsword, final JSwordModuleService jswordModule,
-            @Named("StepCoreProperties") final Properties coreProperties, final EntityManager entityManager,
-            final Provider<ClientSession> clientSessionProvider) {
+                  @Named("StepCoreProperties") final Properties coreProperties, final EntityManager entityManager,
+                  final Provider<ClientSession> clientSessionProvider,
+                  @Named(AppManager.APP_VERSION) final String runningAppVersion) {
         this.jsword = jsword;
         this.jswordModule = jswordModule;
         this.coreProperties = coreProperties;
         this.entityManager = entityManager;
         this.clientSessionProvider = clientSessionProvider;
+        this.runningAppVersion = runningAppVersion;
     }
 
     /**
      * Creates the table and loads the initial data set
-     * 
      */
     public void init() {
         // remove any internet loader, because we are running locally first...
-        // THIS LINE IS ABSOLUTELY CRITICAL AS IT DISABLES SOCKETS ON AN APPLICATION-WIDE LEVEL
-        this.jswordModule.setOffline(true);
+        // THIS LINE IS ABSOLUTELY CRITICAL AS IT DISABLES HTTP INSTALLER ON AN APPLICATION-WIDE LEVEL
+        try {
+            this.jswordModule.setOffline(true);
 
-        // attempt to reload the installer list. This ensures we have all the versions in the available bibles
-        // that we need
-        this.jswordModule.reloadInstallers();
+            // attempt to reload the installer list. This ensures we have all the versions in the available bibles
+            // that we need
+            this.jswordModule.reloadInstallers();
 
-        final List<Book> availableModules = this.jswordModule.getAllModules(BookCategory.BIBLE,
-                BookCategory.COMMENTARY);
-        final String[] initials = new String[availableModules.size()];
+            final List<Book> availableModules = this.jswordModule.getAllModules(BookCategory.BIBLE,
+                    BookCategory.COMMENTARY);
+            final String[] initials = new String[availableModules.size()];
 
-        // This may put too much stress on smaller systems, since indexing for all modules in
-        // package
-        // would result as happening at the same times
-        for (int ii = 0; ii < availableModules.size(); ii++) {
-            final Book b = availableModules.get(ii);
-            installAndIndex(b.getInitials());
-            initials[ii] = b.getInitials();
+            // This may put too much stress on smaller systems, since indexing for all modules in
+            // package
+            // would result as happening at the same times
+            for (int ii = 0; ii < availableModules.size(); ii++) {
+                final Book b = availableModules.get(ii);
+                installAndIndex(b.getInitials());
+                initials[ii] = b.getInitials();
+            }
+
+            this.jswordModule.waitForIndexes(initials);
+
+            // now we can load the data
+            loadData();
+            this.complete = true;
+            AppManager.instance().setAndSaveAppVersion(runningAppVersion);
+        } finally {
+            this.jswordModule.setOffline(false);
         }
-
-        this.jswordModule.waitForIndexes(initials);
-
-        // now we can load the data
-        loadData();
-        this.jswordModule.setOffline(false);
-        this.complete = true;
     }
 
     /**
      * Installs a module and kicks of indexing thereof in the background
-     * 
+     *
      * @param version the initials of the module to be installed
      */
     private void installAndIndex(final String version) {
@@ -147,7 +155,7 @@ public class Loader {
 
     /**
      * Installs a module and waits for it to be properly installed.
-     * 
+     *
      * @param version the initials of the version to be installed
      */
     private void syncInstall(final String version) {
@@ -196,7 +204,7 @@ public class Loader {
 
     /**
      * loads the alternative translation data.
-     * 
+     *
      * @return the number of entries that have been loaded
      */
     int loadAlternativeTranslations() {
@@ -219,7 +227,7 @@ public class Loader {
 
     /**
      * Loads the nave module
-     * 
+     *
      * @return the nave module
      */
     int loadNave() {
@@ -242,7 +250,7 @@ public class Loader {
 
     /**
      * loads all hotspots
-     * 
+     *
      * @return number of records loaded
      */
     int loadHotSpots() {
@@ -258,7 +266,7 @@ public class Loader {
 
     /**
      * Loads all of robinson's morphological data
-     * 
+     *
      * @return the number of entries
      */
     int loadRobinsonMorphology() {
@@ -279,7 +287,7 @@ public class Loader {
 
     /**
      * Loads Tyndale's version information
-     * 
+     *
      * @return the number of records loaded
      */
     int loadVersionInformation() {
@@ -298,7 +306,7 @@ public class Loader {
 
     /**
      * loads the timeline events
-     * 
+     *
      * @return number of records loaded
      */
     int loadTimeline() {
@@ -319,7 +327,7 @@ public class Loader {
 
     /**
      * loads the open bible geography data
-     * 
+     *
      * @return the number of records loaded
      */
     int loadOpenBibleGeography() {
@@ -340,7 +348,7 @@ public class Loader {
 
     /**
      * Loads lexicon definitions
-     * 
+     *
      * @return the number of entries loaded
      */
     int loadLexiconDefinitions() {
@@ -376,7 +384,7 @@ public class Loader {
 
     /**
      * loads all lexical forms for all words found in the Bible
-     * 
+     *
      * @return the number of forms loaded, ~200,000
      */
     int loadSpecificForms() {
@@ -394,7 +402,7 @@ public class Loader {
 
     /**
      * Reads the progress and empties the values therein
-     * 
+     *
      * @return the progress
      */
     public List<String> readOnceProgress() {
@@ -405,8 +413,8 @@ public class Loader {
 
     /**
      * Adds the update.
-     * 
-     * @param key the key to the Setup resource bundle
+     *
+     * @param key  the key to the Setup resource bundle
      * @param args the args the arguments to use in the format
      */
     void addUpdate(final String key, final Object... args) {

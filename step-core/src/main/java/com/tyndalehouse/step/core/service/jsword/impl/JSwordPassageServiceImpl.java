@@ -249,7 +249,6 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
 
     @Override
     public KeyWrapper getKeyInfo(final String reference, final String sourceVersion, String version) {
-        final Book currentBook = this.versificationService.getBookFromVersion(version);
         return this.versificationService.convertReference(reference, sourceVersion, version);
     }
 

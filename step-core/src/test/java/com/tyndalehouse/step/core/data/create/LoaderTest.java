@@ -216,7 +216,7 @@ public class LoaderTest {
         final JSwordVersificationService versificationService = TestUtils.mockVersificationService();
         return new Loader(new JSwordPassageServiceImpl(versificationService, null, null, null,
                 mock(VersionResolver.class)), null, coreProperties, this.entityManager,
-                this.clientSessionProvider);
+                this.clientSessionProvider, "0.1");
     }
 
     /**

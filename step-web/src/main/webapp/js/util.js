@@ -285,6 +285,10 @@ step.util = {
         },
 
         doSocialButtons : function(element) {
+            if(step.state.isLocal()) {
+                return;
+            }
+
             var sharingBar = element.find(".sharingBar");
             //remove twitter and google+
             sharingBar.find("div:last").remove();

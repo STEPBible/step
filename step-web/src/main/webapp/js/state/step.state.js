@@ -58,41 +58,12 @@ step.state = {
         
         step.menu.tickMenuItem($("a[lang='" + language + "']"));
     },
-    
 
-
-
-    _storeAndRetrieveCookieState : function(passageId, key, obj, fireChange, changeHandler) {
-        var localKey = passageId != undefined ? "step.passage." + passageId + "." + key : "step." + key;
-        var originalValue = $.localStore(localKey);
-        var fired = false;
-        
-        if (obj != null) {
-            var newObj = obj;
-            if ($.isArray(obj)) {
-                newObj = obj.join();
-            }
-
-            if (newObj != originalValue || fireChange == true) {
-                // store first
-                $.localStore(localKey, obj);
-                if (fireChange == null || fireChange == true) {
-                    step.state._fireStateChanged(passageId);
-                    fired = true;
-                }
-
-                // then return
-                var storedValue = $.localStore(localKey);
-                if(changeHandler) { 
-                    changeHandler(fired);
-                }
-                return storedValue;
-            }
+    isLocal : function() {
+        if(this.local == undefined) {
+            this.local = $("meta[step-local]").attr("content") == "true";
         }
-
-        if(changeHandler) { 
-            changeHandler(fired);
-        }
-        return originalValue;
+        return this.local;
     }
+    
 };

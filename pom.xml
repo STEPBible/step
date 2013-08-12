@@ -41,13 +41,12 @@
         <yammer-metrics.version>2.2.0</yammer-metrics.version>
 
         <joda-time.version>2.1</joda-time.version>
-        <ehcache.version>2.6.3</ehcache.version>
-        <ehcache-web.version>2.0.4</ehcache-web.version>
         <lucene.version>3.0.3</lucene.version>
 
         <!-- Commons -->
         <commons-beanutils.version>1.8.3</commons-beanutils.version>
         <commons-collections.version>3.2.1</commons-collections.version>
+        <commons-io.version>2.5</commons-io.version>
         <commons-configuration.version>1.8</commons-configuration.version>
         <commons-httpclient.version>3.1</commons-httpclient.version>
 
@@ -435,6 +434,11 @@
                 <scope>test</scope>
             </dependency>
 
+            <dependency>
+                <groupId>commons-collections</groupId>
+                <artifactId>commons-collections</artifactId>
+                <version>${commons-io.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>commons-httpclient</groupId>
@@ -475,16 +479,6 @@
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
                 <version>${junit.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>net.sf.ehcache</groupId>
-                <artifactId>ehcache-core</artifactId>
-                <version>${ehcache.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>net.sf.ehcache</groupId>
-                <artifactId>ehcache-web</artifactId>
-                <version>${ehcache-web.version}</version>
             </dependency>
             <dependency>
                 <groupId>joda-time</groupId>

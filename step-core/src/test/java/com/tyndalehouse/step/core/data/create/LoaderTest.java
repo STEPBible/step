@@ -42,6 +42,7 @@ import java.util.Properties;
 
 import javax.inject.Provider;
 
+import com.tyndalehouse.step.core.service.AppManagerService;
 import org.apache.lucene.search.NumericRangeQuery;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeUtils;
@@ -216,7 +217,7 @@ public class LoaderTest {
         final JSwordVersificationService versificationService = TestUtils.mockVersificationService();
         return new Loader(new JSwordPassageServiceImpl(versificationService, null, null, null,
                 mock(VersionResolver.class)), null, coreProperties, this.entityManager,
-                this.clientSessionProvider, "0.1");
+                this.clientSessionProvider, mock(AppManagerService.class));
     }
 
     /**

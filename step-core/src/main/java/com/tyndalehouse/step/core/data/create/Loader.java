@@ -32,11 +32,7 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.data.create;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Properties;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -44,8 +40,12 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;
 
-import com.tyndalehouse.step.core.utils.AppManager;
-import org.crosswire.common.util.NetUtil;
+import com.tyndalehouse.step.core.exceptions.StepInternalException;
+import com.tyndalehouse.step.core.service.AppManagerService;
+import com.tyndalehouse.step.core.utils.StringUtils;
+import org.crosswire.common.progress.JobManager;
+import org.crosswire.common.progress.WorkEvent;
+import org.crosswire.common.progress.WorkListener;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.BookCategory;
 import org.slf4j.Logger;
@@ -78,9 +78,12 @@ public class Loader {
     private final EntityManager entityManager;
 
     private final BlockingQueue<String> progress = new LinkedBlockingQueue<String>();
+    private final Set<String> appSpecificModules = new HashSet<String>();
     private boolean complete = false;
     private final Provider<ClientSession> clientSessionProvider;
     private String runningAppVersion;
+    private AppManagerService appManager;
+    private WorkListener workListener;
 
     /**
      * The loader is given a connection source to load the data.
@@ -90,19 +93,24 @@ public class Loader {
      * @param coreProperties        the step core properties
      * @param entityManager         the entity manager
      * @param clientSessionProvider the client session provider
-     * @param runningAppVersion     the STEP runtime version
      */
     @Inject
     public Loader(final JSwordPassageService jsword, final JSwordModuleService jswordModule,
                   @Named("StepCoreProperties") final Properties coreProperties, final EntityManager entityManager,
                   final Provider<ClientSession> clientSessionProvider,
-                  @Named(AppManager.APP_VERSION) final String runningAppVersion) {
+                  AppManagerService appManager
+                  ) {
         this.jsword = jsword;
         this.jswordModule = jswordModule;
         this.coreProperties = coreProperties;
         this.entityManager = entityManager;
         this.clientSessionProvider = clientSessionProvider;
-        this.runningAppVersion = runningAppVersion;
+        this.runningAppVersion = coreProperties.getProperty(AppManagerService.APP_VERSION);
+        this.appManager = appManager;
+        String[] specificModules = StringUtils.split(coreProperties.getProperty("app.install.specific.modules"), ",");
+        for(String module : specificModules) {
+            this.appSpecificModules.add(module);
+        }
     }
 
     /**
@@ -111,6 +119,8 @@ public class Loader {
     public void init() {
         // remove any internet loader, because we are running locally first...
         // THIS LINE IS ABSOLUTELY CRITICAL AS IT DISABLES HTTP INSTALLER ON AN APPLICATION-WIDE LEVEL
+        listenInJobs();
+
         try {
             this.jswordModule.setOffline(true);
 
@@ -136,10 +146,32 @@ public class Loader {
             // now we can load the data
             loadData();
             this.complete = true;
-            AppManager.instance().setAndSaveAppVersion(runningAppVersion);
-        } finally {
+            appManager.setAndSaveAppVersion(runningAppVersion);
+        } catch(Exception ex) {
+            //wrap it into an internal exception so that we get some logging.
+            throw new StepInternalException(ex.getMessage(), ex);
+        }
+        finally {
+            if(workListener != null) {
+                JobManager.removeWorkListener(workListener);
+            }
             this.jswordModule.setOffline(false);
         }
+    }
+
+    private void listenInJobs() {
+        workListener = new WorkListener() {
+            @Override
+            public void workProgressed(final WorkEvent ev) {
+                Loader.this.progress.offer(String.format("%s (%s%%)", ev.getJob().getJobName(), ev.getJob().getWork()));
+            }
+
+            @Override
+            public void workStateChanged(final WorkEvent ev) {
+                Loader.this.progress.offer(String.format("%s (%d%%)", ev.getJob().getJobName(), ev.getJob().getWork()));
+            }
+        };
+        JobManager.addWorkListener(workListener);
     }
 
     /**
@@ -150,7 +182,7 @@ public class Loader {
     private void installAndIndex(final String version) {
         syncInstall(version);
         this.addUpdate("install_making_version_searchable", version);
-        this.jswordModule.index(version);
+        this.jswordModule.reIndex(version);
     }
 
     /**
@@ -159,6 +191,8 @@ public class Loader {
      * @param version the initials of the version to be installed
      */
     private void syncInstall(final String version) {
+        uninstallSpecificPackages(version);
+
         if (this.jswordModule.isInstalled(version)) {
             return;
         }
@@ -168,20 +202,32 @@ public class Loader {
 
         // very ugly, but as good as it's going to get for now
         double installProgress = 0;
-        do {
-            try {
+//        do {
+//            try {
+//
+//                LOGGER.info("Waiting for version installation to finish...");
+//                Thread.sleep(INSTALL_WAITING);
+//            } catch (final InterruptedException e) {
+//                LOGGER.warn("Interrupted exception", e);
+//            }
 
-                LOGGER.info("Waiting for version installation to finish...");
-                Thread.sleep(INSTALL_WAITING);
-            } catch (final InterruptedException e) {
-                LOGGER.warn("Interrupted exception", e);
-            }
-
-            installProgress = this.jswordModule.getProgressOnInstallation(version);
-            this.addUpdate("install_progress", version, (int) (installProgress * 100));
-        } while (installProgress != 1);
+//            installProgress = this.jswordModule.getProgressOnInstallation(version);
+//            this.addUpdate("install_progress", version, (int) (installProgress * 100));
+//        } while (installProgress != 1);
 
         this.addUpdate("installed_version_success", version);
+    }
+
+    /**
+     * If the module is marked as required for re-installation, then we delete it here.
+     * @param version version
+     */
+    private void uninstallSpecificPackages(final String version) {
+        if(this.appSpecificModules.contains(version)) {
+            if(this.jswordModule.isInstalled(version)) {
+                this.jswordModule.removeModule(version);
+            }
+        }
     }
 
     /**

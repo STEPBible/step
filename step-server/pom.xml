@@ -78,6 +78,9 @@
 							<classpathPrefix>lib/</classpathPrefix>
 							<mainClass>com.tyndalehouse.step.server.StepServer</mainClass>
 						</manifest>
+                        <manifestEntries>
+                            <SplashScreen-Image>splash.jpg</SplashScreen-Image>
+                        </manifestEntries>
 					</archive>
 				</configuration>
 			</plugin>

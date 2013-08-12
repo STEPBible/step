@@ -37,70 +37,71 @@
         <packages>${project.build.outputDirectory}</packages>
         <sword.home>c:\Users\Chris\AppData\Roaming\Sword</sword.home>
         <explodedPackages>${project.build.directory}/explodedPackages</explodedPackages>
+        <modulesToInclude>esv,osmhb,whnu,lxx,sblgnt</modulesToInclude>
     </properties>
 
 
-    <profiles>
-        <profile>
-            <id>standalone-install</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-antrun-plugin</artifactId>
-                        <version>1.7</version>
-                        <executions>
-                            <execution>
-                                <phase>compile</phase>
-                                <configuration>
-                                    <target>
-                                        <mkdir dir="${packages}"/>
-
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.7</version>
+                <executions>
+                    <execution>
+                        <phase>compile</phase>
+                        <configuration>
+                            <target>
+                                <ac:for list="${modulesToInclude}" param="version" xmlns:ac="antlib:net.sf.antcontrib">
+                                    <sequential>
                                         <copy toDir="${explodedPackages}">
                                             <fileset dir="${sword.home}">
-                                                <include name="**/esv.conf" />
-                                                <include name="**/esv/**" />
-
-                                                <include name="**/osmhb.conf" />
-                                                <include name="**/osmhb/**" />
-
-                                                <include name="**/KJV.conf" />
-                                                <include name="**/KJV/**" />
+                                                <include name="**/@{version}.conf"/>
+                                                <include name="**/@{version}/**"/>
                                             </fileset>
                                         </copy>
-
-                                        <!--<get src="http://crosswire.org/ftpmirror/pub/sword/packages/rawzip/KJV.zip" dest="${packages}" />-->
-                                        <!--<get src="http://crosswire.org/ftpmirror/pub/sword/packages/rawzip/ESV.zip" dest="${packages}" />-->
-                                        <!---->
-
-                                        <unzip dest="${explodedPackages}">
-                                            <fileset dir="${packages}">
-                                                <include name="**/*.zip"/>
+                                        <zip destFile="${packages}/@{version}.zip">
+                                            <fileset dir="${explodedPackages}">
+                                                <include name="**/@{version}.conf"/>
+                                                <include name="**/@{version}/**"/>
                                             </fileset>
-                                        </unzip>
+                                        </zip>
+                                    </sequential>
 
-                                        <!-- next we need to pack up all mods.d/*.conf files... -->
-                                        <tar destFile="${explodedPackages}/mods.d.tar" basedir="${explodedPackages}">
-                                            <include name="mods.d/*"/>
-                                        </tar>
+                                </ac:for>
+                                <!-- next we need to pack up all mods.d/*.conf files... -->
+                                <tar destFile="${explodedPackages}/mods.d.tar" basedir="${explodedPackages}">
+                                    <include name="mods.d/*"/>
+                                </tar>
 
-                                        <gzip src="${explodedPackages}/mods.d.tar"
-                                              destFile="${packages}/mods.d.tar.gz"/>
-
-                                        <!-- The final files to bring in are under ${explodedPackages} -->
-
-                                    </target>
-                                </configuration>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-
-
-        </profile>
-    </profiles>
+                                <gzip src="${explodedPackages}/mods.d.tar"
+                                      destFile="${packages}/mods.d.tar.gz"/>
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>ant-contrib</groupId>
+                        <artifactId>ant-contrib</artifactId>
+                        <version>1.0b3</version>
+                        <exclusions>
+                            <exclusion>
+                                <groupId>ant</groupId>
+                                <artifactId>ant</artifactId>
+                            </exclusion>
+                        </exclusions>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.apache.ant</groupId>
+                        <artifactId>ant-nodeps</artifactId>
+                        <version>1.8.1</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+        </plugins>
+    </build>
 </project>

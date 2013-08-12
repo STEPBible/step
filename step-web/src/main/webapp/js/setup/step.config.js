@@ -156,7 +156,7 @@ step.config = {
         var category = item.category == 'BIBLE' ? __s.bible : __s.commentary;
         var features = step.util.ui.getFeaturesLabel(item);
         if (features == "") {
-            features = __s.not_applicable;
+            features = " " + __s.not_applicable;
         }
 
         var module = $(

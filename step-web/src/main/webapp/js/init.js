@@ -199,10 +199,11 @@ function registerUser() {
     });
 }
 
+
 function checkValidUser() {
     var email = $.localStore("userEmail");
     //if we're running locally, then just return
-    if (window.location.host.startsWith("localhost")) {
+    if (step.state.isLocal()) {
         return;
     }
 

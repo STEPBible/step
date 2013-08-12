@@ -8,8 +8,7 @@
 <%@ page import="com.google.inject.Injector"%>
 <%@ page import="com.google.inject.Guice"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-
-<% 
+<%
 	Injector injector = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
 	VersionResolver resolver = injector.getInstance(VersionResolver.class);
 	Locale locale = injector.getInstance(ClientSession.class).getLocale();
@@ -17,15 +16,12 @@
 	VersionStepRequest stepRequest = new VersionStepRequest(injector, request);
 %>
 <fmt:setBundle basename="HtmlBundle" />
-
-<% if(!stepRequest.isSuccess()) { 
+<% if(!stepRequest.isSuccess()) {
 	ResourceBundle r = ResourceBundle.getBundle("HtmlBundle", locale);
 	response.sendError(404, r.getString("unable_to_obtain_version_information"));
 	return; 
 }
 %>
-
-
 <% request.setCharacterEncoding("utf-8"); %>
 <jsp:include page="jsps/header.jsp">
 	<jsp:param value="<%= stepRequest.getBook().getName() %>" name="title"/>
@@ -33,8 +29,7 @@
 	<jsp:param value="<%= stepRequest.getBook().getName() %>" name="keywords"/>
 </jsp:include>
 
-
-	<h2><%= stepRequest.getBook().getName() %> (<%= resolver.getShortName(stepRequest.getBook().getInitials()) %>)</h1>
+	<h2><%= stepRequest.getBook().getName() %> (<%= resolver.getShortName(stepRequest.getBook().getInitials()) %>)</h2>
 		<% 
 			String info = stepRequest.getTyndaleInfo();
 			if(info != null) {
@@ -46,23 +41,27 @@
 		<% 
 			}
 		%>
-	</div>
+
 
 	<span id="bookListContainer">
 		<h3><fmt:message key="book_list" /></h3>
 		<%= stepRequest.getBookList() %>
 	</span>
-	
+
+    <span class="copyright" style="margin: 0px !important;">
+        <span class="about"><fmt:message key="module_from_sword" /></span>
+        <p></p>
+    </span>
+
 	<span class="copyright">
 		<h3><fmt:message key="copyright_information" /></h3>
-		<span class="shortCopyright"><%= stepRequest.getShortCopyright() %></h1>
-		<p />
-		<span class="shortPromo"><%= stepRequest.getShortPromo() %></h1>
-		<p />
-		<span class="about"><%= ((String) stepRequest.getBook().getBookMetaData().getProperty("About")).replace("\\par", "<p />") %></h1>
-		<p />
+		<span class="shortCopyright"><%= stepRequest.getShortCopyright() %></span>
+		<p></p>
+		<span class="shortPromo"><%= stepRequest.getShortPromo() %></span>
+		<p></p>
+		<span class="about"><%= ((String) stepRequest.getBook().getBookMetaData().getProperty("About")).replace("\\par", "<p />") %>
+		<p></p>
 		<%= stepRequest.getMiniPreface() %>
-
-	</span>
-
+    	</span>
+    </span>
 </body>

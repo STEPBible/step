@@ -91,14 +91,6 @@
 			<artifactId>jstl</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>net.sf.ehcache</groupId>
-			<artifactId>ehcache-core</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>net.sf.ehcache</groupId>
-			<artifactId>ehcache-web</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>com.yammer.metrics</groupId>
 			<artifactId>metrics-servlet</artifactId>
 		</dependency>
@@ -158,7 +150,8 @@
 						<configuration>
 							<cssSourceDir>.</cssSourceDir>
 							<cssSourceFiles>
-								<cssSourceFile>css/jquery-ui-1.10.2.custom.min.css</cssSourceFile>
+                                <!-- JQuery UI css is not on a CDN due to customizations/ui styles/etc. -->
+                                <cssSourceFile>css/jquery-ui-1.10.2.custom.min.css</cssSourceFile>
 								<cssSourceFile>css/qtip.css</cssSourceFile>
 								<cssSourceFile>css/ddsmoothmenu.css</cssSourceFile>
 								<cssSourceFile>css/ddsmoothmenu-v.css</cssSourceFile>

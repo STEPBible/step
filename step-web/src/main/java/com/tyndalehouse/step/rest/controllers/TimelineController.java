@@ -49,7 +49,6 @@ import com.tyndalehouse.step.models.TimelineTranslator;
 import com.tyndalehouse.step.models.timeline.DigestableTimeline;
 import com.tyndalehouse.step.models.timeline.simile.EnhancedSimileEvent;
 import com.tyndalehouse.step.models.timeline.simile.SimileEvent;
-import com.tyndalehouse.step.rest.framework.Cacheable;
 
 /**
  * The timeline controller retrieves information about past events
@@ -86,7 +85,6 @@ public class TimelineController {
      * @return a list of events to be shown on a timeline, including the origin of the timeline and the scale
      *         of the timeline
      */
-    @Cacheable(true)
     public DigestableTimeline getEventsFromReference(final String bibleReference) {
         LOGGER.debug("Getting events for scripture [{}]", bibleReference);
 
@@ -105,7 +103,6 @@ public class TimelineController {
      *            in the correct version
      * @return all the information available for a particular timeline
      */
-    @Cacheable(true)
     public EnhancedSimileEvent getEventInformation(final String eventId, final String version) {
         final EnhancedTimelineEvent timelineEvent = this.timelineService.getTimelineEvent(eventId, version);
 
@@ -126,7 +123,6 @@ public class TimelineController {
      * 
      *         TODO going to have to cache this more appropriately, as we'll otherwise hammer the database
      */
-    @Cacheable(true)
     public DigestableTimeline getEventsInPeriod(final String from, final String to) {
         LOGGER.debug("Getting events between [{}] and [{}]", from, to);
 
@@ -149,7 +145,6 @@ public class TimelineController {
      * 
      * @return the timebands
      */
-    @Cacheable(true)
     public EntityDoc[] getTimelineConfiguration() {
         LOGGER.debug("Returning timeline configuration");
         return this.timelineService.getTimelineConfiguration();

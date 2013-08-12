@@ -27,7 +27,7 @@ var StepRouter = Backbone.Router.extend({
             fragment = encodeURIComponent(fragment);
         }
 
-        //sh=true indicates a sharing url
+        //sh=true indicates a sharing url - debug - on local app we won't allow sharing buttons at all.
         var origin = Backbone.history.location.origin;
         if(Backbone.history.location.origin == "http://localhost:8080") {
             origin = "http://www.stepbible.org";

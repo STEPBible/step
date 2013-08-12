@@ -43,7 +43,6 @@ import com.tyndalehouse.step.core.models.EnrichedLookupOption;
 import com.tyndalehouse.step.core.models.InterlinearMode;
 import com.tyndalehouse.step.core.models.OsisWrapper;
 import com.tyndalehouse.step.rest.controllers.BibleController;
-import com.tyndalehouse.step.rest.framework.Cacheable;
 
 /**
  * Allows look up of passages.
@@ -79,7 +78,6 @@ public class V1Controller {
      * @param reference the reference to lookup
      * @return the text to be displayed, formatted as HTML
      */
-    @Cacheable(true)
     public OsisWrapper getBibleText(final String version, final String reference) {
         return poweredBy(this.bibleController.getBibleText(version, reference));
     }
@@ -92,7 +90,6 @@ public class V1Controller {
      * @param options the list of options to be passed through and affect the retrieval process
      * @return the text to be displayed, formatted as HTML
      */
-    @Cacheable(true)
     public OsisWrapper getBibleText(final String version, final String reference, final String options) {
         return poweredBy(this.bibleController.getBibleText(version, reference, options));
     }
@@ -107,7 +104,6 @@ public class V1Controller {
      * @param interlinearMode the mode to use for displaying (see {@link InterlinearMode} for more details)
      * @return the text to be displayed, formatted as HTML
      */
-    @Cacheable(true)
     public OsisWrapper getBibleText(final String version, final String reference, final String options,
             final String interlinearVersion, final String interlinearMode) {
         return poweredBy(this.bibleController.getBibleText(version, reference, options, interlinearVersion,
@@ -121,7 +117,6 @@ public class V1Controller {
      * @return all versions of modules that are considered to be Bibles.
      * @see http://step.tyndalehouse.com/external/v1/getFeatures
      */
-    @Cacheable(true)
     public AvailableFeatures getFeatures(final String version) {
         return this.bibleController.getFeatures(version, null);
     }
@@ -136,7 +131,6 @@ public class V1Controller {
      * @return all versions of modules that are considered to be Bibles.
      * @see http://step.tyndalehouse.com/external/v1/getFeatures
      */
-    @Cacheable(true)
     public AvailableFeatures getFeatures(final String version, final String displayMode) {
         return this.bibleController.getFeatures(version, displayMode);
     }
@@ -146,7 +140,6 @@ public class V1Controller {
      * 
      * @return a list of features currently supported by the application
      */
-    @Cacheable(true)
     public List<EnrichedLookupOption> getAllFeatures() {
         return this.bibleController.getAllFeatures();
     }
@@ -157,7 +150,6 @@ public class V1Controller {
      * @param version the version to lookup upon
      * @return a list of items
      */
-    @Cacheable(true)
     public List<BookName> getBibleBookNames(final String version) {
         return this.bibleController.getBibleBookNames("", version);
     }

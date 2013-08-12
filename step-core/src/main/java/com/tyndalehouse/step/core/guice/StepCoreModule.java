@@ -1,11 +1,11 @@
 /*******************************************************************************
  * Copyright (c) 2012, Directors of the Tyndale STEP Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without 
  * modification, are permitted provided that the following conditions 
  * are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright 
  * notice, this list of conditions and the following disclaimer.
  * Redistributions in binary form must reproduce the above copyright 
@@ -16,7 +16,7 @@
  * nor the names of its contributors may be used to endorse or promote 
  * products derived from this software without specific prior written 
  * permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
@@ -32,16 +32,6 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.guice;
 
-import java.util.List;
-import java.util.Properties;
-
-import net.sf.ehcache.CacheManager;
-import net.sf.ehcache.config.CacheConfiguration;
-import net.sf.ehcache.config.Configuration;
-
-import org.crosswire.jsword.book.install.Installer;
-
-import com.google.inject.Provides;
 import com.google.inject.TypeLiteral;
 import com.google.inject.name.Names;
 import com.tyndalehouse.step.core.data.EntityManager;
@@ -50,41 +40,11 @@ import com.tyndalehouse.step.core.data.entities.impl.EntityManagerImpl;
 import com.tyndalehouse.step.core.guice.providers.DefaultInstallersProvider;
 import com.tyndalehouse.step.core.guice.providers.DefaultVersionsProvider;
 import com.tyndalehouse.step.core.guice.providers.OfflineInstallersProvider;
-import com.tyndalehouse.step.core.service.AnalysisService;
-import com.tyndalehouse.step.core.service.BibleInformationService;
-import com.tyndalehouse.step.core.service.GeographyService;
-import com.tyndalehouse.step.core.service.LanguageService;
-import com.tyndalehouse.step.core.service.LexiconDefinitionService;
-import com.tyndalehouse.step.core.service.ModuleService;
-import com.tyndalehouse.step.core.service.MorphologyService;
-import com.tyndalehouse.step.core.service.SearchService;
-import com.tyndalehouse.step.core.service.TimelineService;
-import com.tyndalehouse.step.core.service.UserService;
-import com.tyndalehouse.step.core.service.VocabularyService;
+import com.tyndalehouse.step.core.service.*;
 import com.tyndalehouse.step.core.service.helpers.VersionResolver;
-import com.tyndalehouse.step.core.service.impl.AnalysisServiceImpl;
-import com.tyndalehouse.step.core.service.impl.BibleInformationServiceImpl;
-import com.tyndalehouse.step.core.service.impl.GeographyServiceImpl;
-import com.tyndalehouse.step.core.service.impl.LanguageServiceImpl;
-import com.tyndalehouse.step.core.service.impl.LexiconDefinitionServiceImpl;
-import com.tyndalehouse.step.core.service.impl.ModuleServiceImpl;
-import com.tyndalehouse.step.core.service.impl.MorphologyServiceImpl;
-import com.tyndalehouse.step.core.service.impl.SearchServiceImpl;
-import com.tyndalehouse.step.core.service.impl.TimelineServiceImpl;
-import com.tyndalehouse.step.core.service.impl.UserServiceImpl;
-import com.tyndalehouse.step.core.service.impl.VocabularyServiceImpl;
-import com.tyndalehouse.step.core.service.jsword.JSwordAnalysisService;
-import com.tyndalehouse.step.core.service.jsword.JSwordMetadataService;
-import com.tyndalehouse.step.core.service.jsword.JSwordModuleService;
-import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
-import com.tyndalehouse.step.core.service.jsword.JSwordSearchService;
-import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
-import com.tyndalehouse.step.core.service.jsword.impl.JSwordAnalysisServiceImpl;
-import com.tyndalehouse.step.core.service.jsword.impl.JSwordMetadataServiceImpl;
-import com.tyndalehouse.step.core.service.jsword.impl.JSwordModuleServiceImpl;
-import com.tyndalehouse.step.core.service.jsword.impl.JSwordPassageServiceImpl;
-import com.tyndalehouse.step.core.service.jsword.impl.JSwordSearchServiceImpl;
-import com.tyndalehouse.step.core.service.jsword.impl.JSwordVersificationServiceImpl;
+import com.tyndalehouse.step.core.service.impl.*;
+import com.tyndalehouse.step.core.service.jsword.*;
+import com.tyndalehouse.step.core.service.jsword.impl.*;
 import com.tyndalehouse.step.core.service.search.OriginalWordSuggestionService;
 import com.tyndalehouse.step.core.service.search.SubjectEntrySearchService;
 import com.tyndalehouse.step.core.service.search.SubjectSearchService;
@@ -92,12 +52,15 @@ import com.tyndalehouse.step.core.service.search.impl.OriginalWordSuggestionServ
 import com.tyndalehouse.step.core.service.search.impl.SubjectEntryServiceImpl;
 import com.tyndalehouse.step.core.service.search.impl.SubjectSearchServiceImpl;
 import com.tyndalehouse.step.core.utils.AbstractStepGuiceModule;
+import org.crosswire.jsword.book.install.Installer;
+
+import java.util.List;
+import java.util.Properties;
 
 /**
  * The module configuration that configures the application via guice
- * 
+ *
  * @author chrisburrell
- * 
  */
 @SuppressWarnings("PMD.CouplingBetweenObjects")
 public class StepCoreModule extends AbstractStepGuiceModule {
@@ -115,10 +78,8 @@ public class StepCoreModule extends AbstractStepGuiceModule {
         final Properties stepProperties = getModuleProperties();
         bind(Properties.class).annotatedWith(Names.named("StepCoreProperties")).toInstance(stepProperties);
 
-        // for now just have a method that statically initialises the cache
-        initialiseCacheManager();
-
         // services used on start-up
+        bind(AppManagerService.class).to(AppManagerImpl.class).asEagerSingleton();
         bind(SearchService.class).to(SearchServiceImpl.class).asEagerSingleton();
         bind(LanguageService.class).to(LanguageServiceImpl.class).asEagerSingleton();
         bind(JSwordPassageService.class).to(JSwordPassageServiceImpl.class).asEagerSingleton();
@@ -159,25 +120,4 @@ public class StepCoreModule extends AbstractStepGuiceModule {
 
         bind(EntityManager.class).to(EntityManagerImpl.class).asEagerSingleton();
     }
-
-    /**
-     * we return the singleton instance here
-     * 
-     * @return the singleton cache manager
-     */
-    @Provides
-    public CacheManager getCacheManager() {
-        return CacheManager.getInstance();
-    }
-
-    /**
-     * initialises the cache manager. e.g. disables update checker
-     */
-    private void initialiseCacheManager() {
-        final Configuration config = new Configuration();
-        config.setUpdateCheck(false);
-        config.defaultCache(new CacheConfiguration());
-        CacheManager.create(config);
-    }
-
 }

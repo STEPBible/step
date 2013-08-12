@@ -24,6 +24,7 @@ import org.crosswire.jsword.book.BookException;
 import org.crosswire.jsword.book.BookFilter;
 import org.crosswire.jsword.book.Books;
 import org.crosswire.jsword.book.install.InstallException;
+import org.crosswire.jsword.book.install.InstallManager;
 import org.crosswire.jsword.book.install.Installer;
 import org.crosswire.jsword.index.IndexManager;
 import org.crosswire.jsword.index.IndexManagerFactory;
@@ -38,9 +39,8 @@ import com.tyndalehouse.step.core.utils.ValidateUtils;
 
 /**
  * Service to manipulate modules
- * 
+ *
  * @author chrisburrell
- * 
  */
 @Singleton
 public class JSwordModuleServiceImpl implements JSwordModuleService {
@@ -60,9 +60,9 @@ public class JSwordModuleServiceImpl implements JSwordModuleService {
     /**
      * This method is deliberately placed at the top of the file to raise awareness that sensitive countries
      * may not wish to access the internet.
-     * <p />
+     * <p/>
      * If the installation is set to "offline", then only return the offline installers.
-     * 
+     *
      * @return a set of installers
      */
     private List<Installer> getInstallers() {
@@ -70,14 +70,15 @@ public class JSwordModuleServiceImpl implements JSwordModuleService {
     }
 
     // CHECKSTYLE:OFF
+
     /**
-     * @param installers a list of installers to use to download books
+     * @param installers        a list of installers to use to download books
      * @param offlineInstallers the set of installers to use offline, rather than online
      */
     @Inject
     public JSwordModuleServiceImpl(@Named("onlineInstallers") final List<Installer> installers,
-            @Named("offlineInstallers") final List<Installer> offlineInstallers,
-            final JSwordVersificationService versificationService) {
+                                   @Named("offlineInstallers") final List<Installer> offlineInstallers,
+                                   final JSwordVersificationService versificationService) {
         this.bookInstallers = installers;
         this.offlineInstallers = offlineInstallers;
         this.versificationService = versificationService;
@@ -94,8 +95,8 @@ public class JSwordModuleServiceImpl implements JSwordModuleService {
             public void workProgressed(final WorkEvent ev) {
                 // ignore for now...
                 final Progress job = ev.getJob();
-                LOGGER.trace("Work [{}] at [{}] / [{}]", new Object[] { job.getJobName(), job.getTotalWork(),
-                        job.getTotalWork() });
+                LOGGER.trace("Work [{}] at [{}] / [{}]", new Object[]{job.getJobName(), job.getTotalWork(),
+                        job.getTotalWork()});
             }
         });
     }
@@ -138,7 +139,8 @@ public class JSwordModuleServiceImpl implements JSwordModuleService {
         try {
             IndexManagerFactory.getIndexManager().deleteIndex(book);
         } catch (final BookException e) {
-            LOGGER.warn("Error deleting index. Attempting to rebuild index all the same", e);
+            LOGGER.info("Error deleting index. Attempting to rebuild index all the same");
+            LOGGER.trace("Error deleting index. Attempting to rebuild index all the same", e);
         }
         IndexManagerFactory.getIndexManager().scheduleIndexCreation(book);
     }
@@ -270,7 +272,7 @@ public class JSwordModuleServiceImpl implements JSwordModuleService {
 
     @Override
     public List<Book> getInstalledModules(final boolean allVersions, final String language,
-            final BookCategory... bibleCategory) {
+                                          final BookCategory... bibleCategory) {
 
         if (!allVersions) {
             ValidateUtils.notNull(language, "Locale was not passed by requester", SERVICE_VALIDATION_ERROR);
@@ -309,7 +311,7 @@ public class JSwordModuleServiceImpl implements JSwordModuleService {
 
     /**
      * @param locale the language we are interested in
-     * @param book the book we are testing
+     * @param book   the book we are testing
      * @return true if we are to accept the book
      */
     private boolean isAcceptableVersions(final Book book, final String locale) {
@@ -357,7 +359,9 @@ public class JSwordModuleServiceImpl implements JSwordModuleService {
 
         if (book != null) {
             try {
-                Books.installed().removeBook(book);
+                Book deadBook = Books.installed().getBook(initials);
+                IndexManagerFactory.getIndexManager().deleteIndex(deadBook);
+                deadBook.getDriver().delete(deadBook);
             } catch (final BookException e) {
                 // book wasn't found probably
                 LOGGER.warn("Deleting book failed: " + initials, e);

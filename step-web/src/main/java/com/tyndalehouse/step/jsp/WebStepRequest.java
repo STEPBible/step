@@ -289,47 +289,16 @@ public class WebStepRequest {
 
     }
 
+    /**
+     * @return the reference for passage id 0
+     */
     public String getThisReference() {
         try {
-            final int passageId = Integer.parseInt(this.request.getParameter("passageId"));
-            return this.references.get(passageId);
+            return this.references.get(0);
         } catch (final Exception e) {
             LOG.debug(e.getMessage(), e);
             return "";
         }
 
     }
-
-    /**
-     * returns the value of the cookie
-     *
-     * @param cookieName the key to the cookies from the page
-     * @return the value requested
-     */
-    private String getCookieValue(final String cookieName) {
-        if (this.cookieMap == null) {
-            this.cookieMap = new HashMap<String, String>();
-
-            final Cookie[] cookies = this.request.getCookies();
-            if (cookies != null) {
-                for (final Cookie c : cookies) {
-                    this.cookieMap.put(c.getName(), c.getValue());
-                }
-            }
-        }
-
-        try {
-            String v = this.cookieMap.get(cookieName);
-            if (isEmpty(v)) {
-                return null;
-            } else {
-                v = URLDecoder.decode(v, "UTF-8");
-            }
-
-            return v;
-        } catch (final UnsupportedEncodingException e) {
-            throw new StepInternalException("An error occured while trying to parse the request", e);
-        }
-    }
-
 }

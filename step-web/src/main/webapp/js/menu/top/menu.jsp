@@ -5,11 +5,13 @@
 <%@page import="com.tyndalehouse.step.core.models.ClientSession"%>
 <%@page import="java.util.Locale"%>
 <%@page import="javax.servlet.jsp.jstl.core.Config"%>
+<%@ page import="com.tyndalehouse.step.core.service.AppManagerService" %>
 <%@ page pageEncoding="UTF-8" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%
 	Injector injector = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
-	List<Language> languages = injector.getInstance(LanguageService.class).getAvailableLanguages();
+    AppManagerService appManager = injector.getInstance(AppManagerService.class);
+    List<Language> languages = injector.getInstance(LanguageService.class).getAvailableLanguages();
 	Locale locale = injector.getInstance(ClientSession.class).getLocale();
 	Config.set(session, Config.FMT_LOCALE, locale.getLanguage());
 	
@@ -55,22 +57,21 @@
 	</ul>
 	</li>
 
-<%-- 	<li menu-name="TOOLS"><a href="javascript:void(0)"><fmt:message key="tools" /></a> --%>
-<!-- 	<ul> -->
-<!-- 		<li><a href="http://step.tyndalehouse.com/step.zip" target="_blank"><fmt:message key="tools_download_desktop_application" /></a></li> -->
-<!-- 		<li><a href="javascript:void(0)" class="notYetImplemented">Install Core Bibles [Coming soon]</a></li> -->
-<!-- 		<li><a href="javascript:void(0)" class="notYetImplemented">Update [Coming soon]</a></li> -->
-<!-- 		<li><a href="javascript:void(0)" class="notYetImplemented">User preferences [Coming soon]</a></li> -->
-<!-- 	</ul> -->
-<!-- 	</li> -->
-
-	
 	<li menu-name="HELP"><a href="javascript:void(0)"><fmt:message key="help" /></a>
 	<ul>
 		<li><a href="https://stepweb.atlassian.net/wiki/x/AgAW" target="_blank"><fmt:message key="help_online" /></a></li>
 		<li><a href="https://stepweb.atlassian.net/wiki/x/iICV" target="_blank"><fmt:message key="we_need_help" /></a>
-		<li><a href="javascript:void(0)" id="provideFeedback"><fmt:message key="help_feedback" /></a></li>
 		<li><a href="javascript:void(0)" onclick='forgetProfile()'><fmt:message key="tools_forget_my_profile" /></a></li>
+        <%
+            if(appManager.isLocal()) {
+        %>
+            <li><a href="/step-web/config.jsp"><fmt:message key="tools_settings" /></a></li>
+            <li><a href="/shutdown"><fmt:message key="tools_exit" /></a></li>
+        <%
+            } else {
+        %>
+            <li><a href="javascript:void(0)" id="provideFeedback"><fmt:message key="help_feedback" /></a></li>
+        <%  } %>
 		<li><a href="javascript:void(0)" name="ABOUT"><fmt:message key="help_about" /></a></li>
 	</ul>
 	</li>

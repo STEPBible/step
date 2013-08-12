@@ -32,8 +32,24 @@
  ******************************************************************************/
 package com.tyndalehouse.step.rest.framework;
 
-import static java.lang.String.format;
+import com.google.inject.Inject;
+import com.google.inject.Injector;
+import com.google.inject.Singleton;
+import com.tyndalehouse.step.core.exceptions.LocalisedException;
+import com.tyndalehouse.step.core.exceptions.StepInternalException;
+import com.tyndalehouse.step.core.exceptions.TranslatedException;
+import com.tyndalehouse.step.core.exceptions.ValidationException;
+import com.tyndalehouse.step.core.models.ClientSession;
+import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.inject.Provider;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -41,26 +57,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-import javax.inject.Provider;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.map.JsonMappingException;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.google.inject.Inject;
-import com.google.inject.Injector;
-import com.google.inject.Singleton;
-import com.google.inject.name.Named;
-import com.tyndalehouse.step.core.exceptions.LocalisedException;
-import com.tyndalehouse.step.core.exceptions.StepInternalException;
-import com.tyndalehouse.step.core.exceptions.TranslatedException;
-import com.tyndalehouse.step.core.exceptions.ValidationException;
-import com.tyndalehouse.step.core.models.ClientSession;
+import static java.lang.String.format;
 
 /**
  * The FrontController acts like a minimal REST server. The paths are resolved as follows:
@@ -85,52 +82,36 @@ public class FrontController extends HttpServlet {
 
     private final transient Map<String, Method> methodNames = new HashMap<String, Method>();
     private final transient Map<String, Object> controllers = new HashMap<String, Object>();
-    private final boolean isCacheEnabled;
     private final transient ClientErrorResolver errorResolver;
-    private final transient ResponseCache responseCache;
     private final Provider<ClientSession> clientSessionProvider;
 
     /**
      * creates the front controller which will dispatch all the requests
      * <p />
-     * .
-     * 
+     *
      * @param guiceInjector the injector used to call the relevant controllers
-     * @param isCacheEnabled indicates whether responses should be cached for fast retrieval
      * @param errorResolver the error resolver is the object that helps us translate errors for the client
-     * @param responseCache cache in which are put any number of responses to speed up processing
      * @param clientSessionProvider the client session provider
      */
     @Inject
     public FrontController(final Injector guiceInjector,
-            @Named("frontcontroller.cache.enabled") final Boolean isCacheEnabled,
-            final ClientErrorResolver errorResolver, final ResponseCache responseCache,
+            final ClientErrorResolver errorResolver,
             final Provider<ClientSession> clientSessionProvider) {
         this.guiceInjector = guiceInjector;
-        this.responseCache = responseCache;
 
         this.errorResolver = errorResolver;
         this.clientSessionProvider = clientSessionProvider;
-        this.isCacheEnabled = Boolean.TRUE.equals(isCacheEnabled);
     }
 
     @Override
     protected void doGet(final HttpServletRequest request, final HttpServletResponse response) {
-        // first of all check cache against URI: (only cached responses go here)
-        byte[] jsonEncoded = this.responseCache.get(request.getRequestURI());
+        byte[] jsonEncoded;
 
         StepRequest sr = null;
         try {
-            // cache miss?
-            if (jsonEncoded == null || jsonEncoded.length == 0) {
                 sr = new StepRequest(request, UTF_8_ENCODING);
-                if (jsonEncoded == null) {
                     LOGGER.debug("The cache was missed so invoking method now...");
                     jsonEncoded = invokeMethod(sr);
-                }
-            } else {
-                LOGGER.debug("Returning answer from cache [{}]", request.getRequestURI());
-            }
 
             setupHeaders(response, jsonEncoded.length);
             response.getOutputStream().write(jsonEncoded);
@@ -166,9 +147,7 @@ public class FrontController extends HttpServlet {
             // LOGGER.warn(e.getMessage(), e);
             returnVal = convertExceptionToJson(e);
         }
-        final byte[] encodedJsonResponse = getEncodedJsonResponse(returnVal);
-        cache(encodedJsonResponse, sr, controllerMethod);
-        return encodedJsonResponse;
+        return getEncodedJsonResponse(returnVal);
         // CHECKSTYLE:ON
     }
 
@@ -214,18 +193,6 @@ public class FrontController extends HttpServlet {
         }
     }
 
-    /**
-     * caches the results for future use
-     * 
-     * @param jsonEncoded json encoding of the response
-     * @param sr the processed request URI containg the the cache key
-     * @param controllerMethod the method so that we can inspect whether an annotation is present
-     */
-    void cache(final byte[] jsonEncoded, final StepRequest sr, final Method controllerMethod) {
-        if (this.isCacheEnabled && controllerMethod.isAnnotationPresent(Cacheable.class)) {
-            this.responseCache.put(sr.getCacheKey().getResultsKey(), jsonEncoded);
-        }
-    }
 
     /**
      * sets up the headers and the length of the message
@@ -378,7 +345,7 @@ public class FrontController extends HttpServlet {
      */
     Method getControllerMethod(final String methodName, final Object controllerInstance, final Object[] args,
             final String cacheKey) {
-        final Class<? extends Object> controllerClass = controllerInstance.getClass();
+        final Class<?> controllerClass = controllerInstance.getClass();
 
         // retrieve method from cache, or put in cache if not there
         Method controllerMethod = this.methodNames.get(cacheKey);
@@ -388,9 +355,8 @@ public class FrontController extends HttpServlet {
             try {
                 final Class<?>[] classes = getClasses(args);
                 controllerMethod = controllerClass.getMethod(methodName, classes);
-                this.methodNames.put(cacheKey, controllerMethod);
-
                 // put method in cache
+                this.methodNames.put(cacheKey, controllerMethod);
             } catch (final NoSuchMethodException e) {
                 throw new StepInternalException("Unable to find matching method for " + methodName, e);
             }

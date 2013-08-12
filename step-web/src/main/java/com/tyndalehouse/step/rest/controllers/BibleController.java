@@ -58,7 +58,6 @@ import com.tyndalehouse.step.core.models.search.StrongCountsAndSubjects;
 import com.tyndalehouse.step.core.service.BibleInformationService;
 import com.tyndalehouse.step.core.utils.language.ContemporaryLanguageUtils;
 import com.tyndalehouse.step.models.ModulesForLanguageUser;
-import com.tyndalehouse.step.rest.framework.Cacheable;
 import com.yammer.metrics.annotation.Timed;
 
 /**
@@ -92,7 +91,7 @@ public class BibleController {
      * @param allVersions boolean to indicate whether all versions should be returned
      * @return all versions of modules that are considered to be Bibles.
      */
-    @Cacheable(true)
+
     public ModulesForLanguageUser getModules(final String allVersions) {
         final String language = this.clientSession.get().getLanguage();
         final Locale userLocale = this.clientSession.get().getLocale();
@@ -112,7 +111,7 @@ public class BibleController {
      * @param reference the reference to lookup
      * @return the text to be displayed, formatted as HTML
      */
-    @Cacheable(true)
+
     public OsisWrapper getBibleText(final String version, final String reference) {
         return getBibleText(version, reference, null, null, null);
     }
@@ -125,7 +124,7 @@ public class BibleController {
      * @param options the list of options to be passed through and affect the retrieval process
      * @return the text to be displayed, formatted as HTML
      */
-    @Cacheable(true)
+
     public OsisWrapper getBibleText(final String version, final String reference, final String options) {
         return getBibleText(version, reference, options, null, null);
     }
@@ -139,7 +138,7 @@ public class BibleController {
      * @param interlinearVersion the interlinear version if provided adds lines under the text
      * @return the text to be displayed, formatted as HTML
      */
-    @Cacheable(true)
+
     public OsisWrapper getBibleText(final String version, final String reference, final String options,
                                     final String interlinearVersion) {
         return getBibleText(version, reference, options, interlinearVersion, null);
@@ -155,7 +154,7 @@ public class BibleController {
      * @param interlinearMode the mode to use for displaying
      * @return the text to be displayed, formatted as HTML
      */
-    @Cacheable(true)
+
     @Timed(name = "getText", rateUnit = TimeUnit.SECONDS, durationUnit = TimeUnit.MILLISECONDS)
     public OsisWrapper getBibleText(final String version, final String reference, final String options,
                                     final String interlinearVersion, final String interlinearMode) {
@@ -235,7 +234,6 @@ public class BibleController {
      * @param displayMode the current displayMode
      * @return all versions of modules that are considered to be Bibles.
      */
-    @Cacheable(true)
     public AvailableFeatures getFeatures(final String version, final String displayMode) {
         return this.bibleInformation.getAvailableFeaturesForVersion(version, displayMode);
     }
@@ -245,7 +243,6 @@ public class BibleController {
      * 
      * @return a list of features currently supported by the application
      */
-    @Cacheable(true)
     public List<EnrichedLookupOption> getAllFeatures() {
         return this.bibleInformation.getAllFeatures();
     }
@@ -257,7 +254,6 @@ public class BibleController {
      * @param version the version to lookup upon
      * @return a list of items
      */
-    @Cacheable(true)
     public List<BookName> getBibleBookNames(final String bookStart, final String version) {
         return this.bibleInformation.getBibleBookNames(bookStart, version);
     }
@@ -269,7 +265,6 @@ public class BibleController {
      * @param version the current version
      * @return the next reference
      */
-    @Cacheable(true)
     public KeyWrapper getNextChapter(final String reference, final String version) {
         return this.bibleInformation.getSiblingChapter(reference, version, false);
     }
@@ -282,7 +277,6 @@ public class BibleController {
      * @param targetVersion the version in which we want the reference
      * @return the next reference
      */
-    @Cacheable(true)
     public KeyWrapper convertReferenceForBook(final String reference, final String sourceVersion, final String targetVersion) {
         return this.bibleInformation.convertReferenceForBook(reference, sourceVersion, targetVersion);
     }
@@ -294,7 +288,6 @@ public class BibleController {
      * @param version the current version
      * @return the previous reference
      */
-    @Cacheable(true)
     public KeyWrapper getPreviousChapter(final String reference, final String version) {
         return this.bibleInformation.getSiblingChapter(reference, version, true);
     }
@@ -306,7 +299,6 @@ public class BibleController {
      * @param reference the reference that we are interested in
      * @return the new reference with full chapter
      */
-    @Cacheable(true)
     public KeyWrapper expandKeyToChapter(final String sourceVersion, final String version, final String reference) {
         return this.bibleInformation.expandKeyToChapter(sourceVersion, version, reference);
     }
@@ -319,7 +311,6 @@ public class BibleController {
      * @param version the version to lookup the key in
      * @return the information about that particular key, e.g. OSIS-ID
      */
-    @Cacheable(true)
     public KeyWrapper getKeyInfo(final String reference, final String sourceVersion, final String version) {
         return this.bibleInformation.getKeyInfo(reference, sourceVersion, version);
     }

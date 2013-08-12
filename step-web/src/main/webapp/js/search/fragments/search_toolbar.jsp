@@ -2,11 +2,13 @@
 <%@page import="com.tyndalehouse.step.core.models.ClientSession"%>
 <%@page import="java.util.Locale"%>
 <%@page import="javax.servlet.jsp.jstl.core.Config"%>
+<%@ page import="com.tyndalehouse.step.core.service.AppManagerService" %>
 <%@ page contentType="text/html; charset=UTF-8" language="java" %> 
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%
 	Injector injector = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
-	Locale locale = injector.getInstance(ClientSession.class).getLocale();
+    AppManagerService appManager = injector.getInstance(AppManagerService.class);
+    Locale locale = injector.getInstance(ClientSession.class).getLocale();
 	Config.set(session, Config.FMT_LOCALE, locale.getLanguage());
 %>
 <fmt:setBundle basename="HtmlBundle" />
@@ -39,9 +41,13 @@
 
     <div class="resultsLabel"></div>
     <div class="sharingBar">
+        <%
+            if(!appManager.isLocal()) {
+        %>
         <a class="facebookShare" href="javascript:void(0)" onclick="facebookShare(this)" title="<fmt:message key="share_on_facebook" />">
             <img src="images/facebook.png" />
         </a>
+        <% } %>
     </div>
 
 </div>

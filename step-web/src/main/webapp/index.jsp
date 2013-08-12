@@ -5,24 +5,26 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page import="com.tyndalehouse.step.jsp.WebStepRequest" %>
 <%@ page import="com.google.inject.Injector"%>
+<%@ page import="com.tyndalehouse.step.core.service.AppManagerService" %>
 <%
 	Injector injector = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
 	Locale locale = injector.getInstance(ClientSession.class).getLocale();
 	Config.set(session, Config.FMT_LOCALE, locale.getLanguage());
 	WebStepRequest stepRequest = new WebStepRequest(injector, request);
+    AppManagerService appManager = injector.getInstance(AppManagerService.class);
 %>
 <fmt:setBundle basename="HtmlBundle" />
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <HTML xmlns:fb="http://ogp.me/ns/fb#" itemscope itemtype="http://schema.org/Book">
 <HEAD>
     <TITLE><%= stepRequest.getTitle() %></TITLE>
-    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 <%-- 	<meta name="description" content="<%= stepRequest.getTitle() %>..."> --%>
-
-    <meta itemprop="name" content="STEP">
-    <meta itemprop="description" content="Scripture Tools for Every Person">
-    <meta itemprop="image" content="http://www.stepbible.org/images/step-logo.png">
+    <meta step-local content="<%= appManager.isLocal() %>" />
+    <meta itemprop="name" content="STEP" />
+    <meta itemprop="description" content="Scripture Tools for Every Person" />
+    <meta itemprop="image" content="http://www.stepbible.org/images/step-logo.png" />
 	<link rel="shortcut icon"  href="images/step-favicon.ico" />
     <link rel="canonical" href="http://www.stepbible.org" />
     <%
@@ -49,11 +51,11 @@
     <%
         } else {
     %>
+        <%-- Contains the jquery ui css --%>
         <link rel="stylesheet" type="text/css" href="css/step.${project.version}.min.css" />
     <%
         }
     %>
-
     <%@include file="jsps/initLib.jsp" %>
 
     <%-- Now do javascript --%>
@@ -140,27 +142,42 @@
 	<%
 		} else {
 	%>
-        <%-- Include some resources from CDN first --%>
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js" type="text/javascript" ></script>
-        <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js" type="text/javascript" ></script>
+        <%-- If local, then we need to include our own copy of JQuery. Otherwise, include from CDN --%>
+        <%
+            if(appManager.isLocal()) {
+        %>
+            <%@include file="jsps/offlineJqueryJs.jsp" %>
+        <%
+            } else {
+        %>
+            <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js" type="text/javascript" ></script>
+            <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js" type="text/javascript" ></script>
+        <%
+            }
+        %>
+
 		<script src="js/step.${project.version}.min.js" type="text/javascript" ></script>
-		<script type="text/javascript">
-		  var _gaq = _gaq || [];
-		  _gaq.push(['_setAccount', 'UA-36285759-1']);
-		  _gaq.push(['_trackPageview']);
-		
-		  (function() {
-		    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-		    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-		    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-		  })();
-		</script>
+
+        <% if (!appManager.isLocal()) { %>
+             <script type="text/javascript">
+              var _gaq = _gaq || [];
+              _gaq.push(['_setAccount', 'UA-36285759-1']);
+              _gaq.push(['_trackPageview']);
+
+              (function() {
+                var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+                ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+              })();
+            </script>
+        <% } %>
 	<%
 	}
 	%>
 </HEAD>
 <body>
 <div id="fb-root"></div>
+<% if (!appManager.isLocal()) { %>
 <script>(function(d, s, id) {
     var js, fjs = d.getElementsByTagName(s)[0];
     if (d.getElementById(id)) return;
@@ -168,7 +185,7 @@
     js.src = "//connect.facebook.net/en_GB/all.js#xfbml=1";
     fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));</script>
-
+<% } %>
 
 <div id="topMenu" class="ddsmoothmenu"><jsp:include page="js/menu/top/menu.jsp" /></div>
 <div>
@@ -288,9 +305,12 @@
 </div>
 <div id='stepInDevelopmentWarning' class="ui-state-highlight"><fmt:message key="step_disclaimer" /></div>
 
+
+<% if(!appManager.isLocal()) { %>
 <script type="text/javascript" src="https://apis.google.com/js/plusone.js" async>
     {lang: 'en-GB'}
 </script>
 <script type="text/javascript" async>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+<% } %>
 </body>
 </HTML>

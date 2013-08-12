@@ -37,8 +37,6 @@ import java.util.Locale;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 
-import net.sf.ehcache.CacheManager;
-
 import org.crosswire.common.util.Reporter;
 import org.crosswire.common.util.ReporterEvent;
 import org.crosswire.common.util.ReporterListener;
@@ -179,7 +177,6 @@ public class StepServletConfig extends GuiceServletContextListener {
         sc.removeAttribute(Injector.class.getName());
         getInjector().getInstance(EntityManager.class).close();
 
-        CacheManager.getCacheManager(null).shutdown();
         super.contextDestroyed(servletContextEvent);
     }
 }

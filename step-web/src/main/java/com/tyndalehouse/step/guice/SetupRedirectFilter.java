@@ -1,6 +1,6 @@
 package com.tyndalehouse.step.guice;
 
-import com.tyndalehouse.step.core.utils.AppManager;
+import com.tyndalehouse.step.core.service.AppManagerService;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -17,13 +17,16 @@ import java.io.IOException;
 public class SetupRedirectFilter implements Filter {
     //sourced from step.core.properties, identifies the version of the currently running application
     private String runningAppVersion;
+    private AppManagerService appManager;
 
     /**
      * @param runningAppVersion the version of the running application
      */
     @Inject
-    public SetupRedirectFilter(@Named(AppManager.APP_VERSION) final String runningAppVersion) {
+    public SetupRedirectFilter(@Named(AppManagerService.APP_VERSION) final String runningAppVersion,
+                               AppManagerService appManager) {
         this.runningAppVersion = runningAppVersion;
+        this.appManager = appManager;
     }
 
     @Override
@@ -33,8 +36,9 @@ public class SetupRedirectFilter implements Filter {
     @Override
     public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain chain)
             throws IOException, ServletException {
-        String installedVersion = AppManager.instance().getAppVersion();
-        if (installedVersion != null && installedVersion.equals(runningAppVersion)) {
+        String installedVersion = appManager.getAppVersion();
+        //server installations always going forward
+        if (!appManager.isLocal() || (installedVersion != null && installedVersion.equals(runningAppVersion))) {
             // do nothing
             chain.doFilter(request, response);
         } else {

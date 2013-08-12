@@ -55,7 +55,6 @@ import com.tyndalehouse.step.core.service.VocabularyService;
 import com.tyndalehouse.step.models.info.Info;
 import com.tyndalehouse.step.models.info.MorphInfo;
 import com.tyndalehouse.step.models.info.VocabInfo;
-import com.tyndalehouse.step.rest.framework.Cacheable;
 
 /**
  * The Module Controller servicing requests for module information
@@ -131,7 +130,7 @@ public class ModuleController {
      * @param osisId the id of the verse that we are looking up
      * @return the definition(s) that can be resolved from the reference provided
      */
-    @Cacheable(true)
+
     public Info getInfo(final String vocabIdentifiers, final String morphIdentifiers, final String osisId) {
         // notEmpty(strong, "A reference must be provided to obtain a definition", USER_MISSING_FIELD);
         LOGGER.debug("Getting information for [{}], [{}], [{}]", new Object[] { this.vocab, morphIdentifiers,
@@ -153,7 +152,6 @@ public class ModuleController {
      * @param morphIdentifiers the morphology code to lookup
      * @return the definition(s) that can be resolved from the reference provided
      */
-    @Cacheable(true)
     public Info getQuickInfo(final String vocabIdentifiers, final String morphIdentifiers) {
         // notEmpty(strong, "A reference must be provided to obtain a definition", USER_MISSING_FIELD);
         LOGGER.debug("Getting quick information for [{}], [{}]",

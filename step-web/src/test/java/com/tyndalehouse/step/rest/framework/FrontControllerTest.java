@@ -1,11 +1,11 @@
 /*******************************************************************************
  * Copyright (c) 2012, Directors of the Tyndale STEP Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without 
  * modification, are permitted provided that the following conditions 
  * are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright 
  * notice, this list of conditions and the following disclaimer.
  * Redistributions in binary form must reproduce the above copyright 
@@ -16,7 +16,7 @@
  * nor the names of its contributors may be used to endorse or promote 
  * products derived from this software without specific prior written 
  * permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
@@ -68,9 +68,8 @@ import com.tyndalehouse.step.rest.controllers.BibleController;
 
 /**
  * tests the front controller parsing process
- * 
+ *
  * @author chrisburrell
- * 
  */
 @SuppressWarnings("PMD.TooManyMethods")
 @RunWith(MockitoJUnitRunner.class)
@@ -84,8 +83,6 @@ public class FrontControllerTest {
 
     @Mock
     private ClientErrorResolver errorResolver;
-    @Mock
-    private ResponseCache responseCache;
     @Mock
     private StepRequest stepRequest;
 
@@ -101,13 +98,13 @@ public class FrontControllerTest {
         when(clientSession.getLocale()).thenReturn(Locale.ENGLISH);
         when(this.clientSessionProvider.get()).thenReturn(clientSession);
 
-        this.fcUnderTest = new FrontController(this.guiceInjector, this.isCacheEnabled, this.errorResolver,
-                this.responseCache, this.clientSessionProvider);
+        this.fcUnderTest = new FrontController(this.guiceInjector, this.errorResolver,
+                this.clientSessionProvider);
     }
 
     /**
      * Tests normal operation of a GET method
-     * 
+     *
      * @throws IOException uncaught exception
      */
     @Test
@@ -125,7 +122,7 @@ public class FrontControllerTest {
         final ServletOutputStream mockOutputStream = mock(ServletOutputStream.class);
 
         doReturn(mockOutputStream).when(response).getOutputStream();
-        final byte[] sampleResponse = new byte[] { 1, 2, 3 };
+        final byte[] sampleResponse = new byte[]{1, 2, 3};
         doReturn(sampleResponse).when(fc).invokeMethod(any(StepRequest.class));
 
         // do the test
@@ -144,7 +141,7 @@ public class FrontControllerTest {
 
         final FrontController fc = spy(this.fcUnderTest);
         final StepRequest parsedRequest = new StepRequest("blah", "SomeController", "someMethod",
-                new String[] { "arg1", "arg2" });
+                new String[]{"arg1", "arg2"});
 
         // TODO remove this/
         // doThrow(testException).when(fc).parseRequest(request);
@@ -174,8 +171,8 @@ public class FrontControllerTest {
 
     /**
      * tests that resolving method works
-     * 
-     * @throws IllegalAccessException uncaught exception
+     *
+     * @throws IllegalAccessException    uncaught exception
      * @throws InvocationTargetException uncaught exception
      */
     @Test
@@ -215,8 +212,8 @@ public class FrontControllerTest {
     public void testGetClasses() {
         assertEquals(0, this.fcUnderTest.getClasses(null).length);
         assertEquals(0, this.fcUnderTest.getClasses(new Object[0]).length);
-        assertArrayEquals(new Class<?>[] { String.class, Integer.class },
-                this.fcUnderTest.getClasses(new Object[] { "hello", Integer.valueOf(1) }));
+        assertArrayEquals(new Class<?>[]{String.class, Integer.class},
+                this.fcUnderTest.getClasses(new Object[]{"hello", Integer.valueOf(1)}));
 
     }
 
@@ -228,14 +225,14 @@ public class FrontControllerTest {
         final byte[] encodedJsonResponse = this.fcUnderTest.getEncodedJsonResponse("abc");
 
         // this reprensents the string "{abc}"
-        final byte[] expectedValues = new byte[] { 34, 97, 98, 99, 34 };
+        final byte[] expectedValues = new byte[]{34, 97, 98, 99, 34};
 
         assertArrayEquals(expectedValues, encodedJsonResponse);
     }
 
     /**
      * If an error was thrown, we should map it and output
-     * 
+     *
      * @throws IOException uncaught exception
      */
     @Test
@@ -259,7 +256,7 @@ public class FrontControllerTest {
      */
     @Test
     public void testInvokeMethod() {
-        final StepRequest sr = new StepRequest("blah", "bible", "getAllFeatures", new String[] {});
+        final StepRequest sr = new StepRequest("blah", "bible", "getAllFeatures", new String[]{});
         final BibleController testController = mock(BibleController.class);
 
         final FrontController fc = spy(this.fcUnderTest);

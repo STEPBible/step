@@ -2,12 +2,10 @@
 <%@page import="java.util.Locale"%>
 <%@page import="javax.servlet.jsp.jstl.core.Config"%>
 <%@page contentType="text/html; charset=UTF-8" language="java" %> 
-
 <%@ page import="com.tyndalehouse.step.jsp.VersionsStepRequest" %>
 <%@ page import="com.google.inject.Injector"%>
 <%@ page import="com.google.inject.Guice"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-
 <%
 	Injector injector = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
 	Locale locale = injector.getInstance(ClientSession.class).getLocale();
@@ -15,7 +13,6 @@
 	VersionsStepRequest stepRequest = new VersionsStepRequest(injector);
 %>
 <fmt:setBundle basename="HtmlBundle" />
-
 <% request.setCharacterEncoding("utf-8"); %>
 <jsp:include page="jsps/header.jsp">
 	<jsp:param><jsp:attribute name='name'>title</jsp:attribute>
@@ -33,7 +30,11 @@
 
 
 	<h2><fmt:message key="list_available_versions"/></h2>
+    <span style="font-size: 12px"><fmt:message key="modules_from_crosswire"/></span>
+    <p></p>
 	<span id="bookListContainer">
 		<%= stepRequest.getVersionList() %>
+        <p></p>
 	</span>
+
 </body>

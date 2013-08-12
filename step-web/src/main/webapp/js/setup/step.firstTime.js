@@ -53,7 +53,7 @@ step.firstTime = {
           //now start a timer thread that updates the page regularly.
             setTimeout(function() {
                 step.firstTime.updateProgress();
-            }, 1000);            
+            }, 2000);
         },
         
         updateProgress : function() {

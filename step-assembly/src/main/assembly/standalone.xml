@@ -55,14 +55,14 @@
 			<outputDirectory>/webapps</outputDirectory>
 		</file>
 		<file>
-			<source>src/main/assembly/runStep.bat</source>
-			<outputDirectory>/</outputDirectory>
-			<filtered>true</filtered>
-		</file>
-		<file>
 			<source>src/main/assembly/runStep.sh</source>
 			<outputDirectory>/</outputDirectory>
 			<filtered>true</filtered>
 		</file>
+        <file>
+            <source>src/main/assembly/log4j.properties</source>
+            <outputDirectory>/</outputDirectory>
+            <filtered>true</filtered>
+        </file>
 	</files>
 </assembly>

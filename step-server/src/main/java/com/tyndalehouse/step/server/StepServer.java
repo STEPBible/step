@@ -1,11 +1,11 @@
 /*******************************************************************************
  * Copyright (c) 2012, Directors of the Tyndale STEP Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without 
  * modification, are permitted provided that the following conditions 
  * are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright 
  * notice, this list of conditions and the following disclaimer.
  * Redistributions in binary form must reproduce the above copyright 
@@ -16,7 +16,7 @@
  * nor the names of its contributors may be used to endorse or promote 
  * products derived from this software without specific prior written 
  * permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
@@ -32,31 +32,6 @@
  ******************************************************************************/
 package com.tyndalehouse.step.server;
 
-import java.awt.AWTException;
-import java.awt.Desktop;
-import java.awt.Image;
-import java.awt.MenuItem;
-import java.awt.PopupMenu;
-import java.awt.SystemTray;
-import java.awt.TrayIcon;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.net.UnknownHostException;
-import java.util.Calendar;
-
-import javax.imageio.ImageIO;
-import javax.swing.JOptionPane;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
-
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerList;
@@ -65,86 +40,177 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
+import java.net.*;
+import java.util.Calendar;
+import java.util.Locale;
+import java.util.ResourceBundle;
+
 /**
- * the main class that kicks off the application
- * 
+ * The main class that kicks off the application. Reads in the following system properties
+ * step.war.path the location on disk to the WAR directory
+ * step.war.context the context on which the server listens.
+ *
  * @author chrisburrell
- * 
  */
 public final class StepServer {
     private static final Logger LOGGER = LoggerFactory.getLogger(StepServer.class);
-    private static final int STEP_PORT = 8989;
+    private static final int DEFAULT_STEP_PORT = 8989;
+    private static final String DEFAULT_WAR_LOCATION = "step-web";
+    public static final String SHUTDOWN_CONTEXT = "shutdown";
+    public static final String ENGLISH_GENERIC_ERROR = "An error has occurred";
+    public static final String ENGLISH_BROWSER_ERROR = "STEP was unable to launch the browser.";
+    private final InetAddress listeningAddress;
+    private final InetSocketAddress socket;
+    private final URL warURL;
+    private final int stepPort;
+    private final String contextPath;
+    private final ResourceBundle resourceBundle;
+    private final String browserUrl;
+    private ResourceBundle setupMessages = null;
+    private ResourceBundle errorMessages = null;
+    private ResourceBundle htmlMessages = null;
+    private boolean ignoreBrowserError = Boolean.getBoolean("ignoreBrowserError");
 
     /**
-     * hiding implementation
+     * Initialises all the common variables required to setup the server
+     *
+     * @throws MalformedURLException couldn't create a location to our disk
      */
-    private StepServer() {
-        // hiding implementation
+    public StepServer() throws MalformedURLException {
+        listeningAddress = InetAddress.getLoopbackAddress();
+        this.stepPort = getStepPort();
+        socket = new InetSocketAddress(listeningAddress, this.stepPort);
+        warURL = getWarUrl();
+        contextPath = getContextPath();
+        browserUrl = String.format("http://%s:%s/%s/", this.listeningAddress.getHostName(), this.stepPort, this.contextPath);
+        resourceBundle = loadLanguage();
+    }
+
+    /**
+     * @return loads the language based on the Desktop locale - we accept this may be different from the browser locale
+     */
+    private ResourceBundle loadLanguage() {
+
+        return null;
     }
 
     /**
      * creates and configures the Jetty server
-     * 
+     *
      * @return the Server object if required to make modifications
      */
     private Server start() {
-        InetAddress listeningAddress = InetAddress.getLoopbackAddress();
-        final InetSocketAddress socket = new InetSocketAddress(listeningAddress, STEP_PORT);
-
         final Server jetty = new Server(socket);
         jetty.setStopAtShutdown(true);
 
         // configure jetty
         try {
-            final URL warURL = getWarUrl();
-
             // configure our web application
             final HandlerList handlers = new HandlerList();
-            handlers.setHandlers(new Handler[] { new WebAppContext(warURL.toExternalForm(), "/step-web"),
-                    new ShutdownHandler(jetty, "/shutdown") });
+            final WebAppContext webAppContext = new WebAppContext(warURL.toExternalForm(), "/" + this.contextPath);
+            handlers.setHandlers(new Handler[]{webAppContext,
+                    new ShutdownHandler(jetty, SHUTDOWN_CONTEXT, webAppContext)});
             jetty.setHandler(handlers);
 
             // start the server
             jetty.start();
-            launchBrowser();
-
+            initLanguages(webAppContext.getClassLoader());
             addSystemTray(jetty);
 
+            finishStartUp();
             jetty.join();
+        } catch(final BindException ex) {
+            LOGGER.info("Attempting to start STEP when already started.");
+            try {
+                jetty.stop();
+            } catch(Exception e) {
+                LOGGER.warn("Failed to stop extra Jetty instance.", e);
+            }
+
+            finishStartUp();
         } catch (final SAXException e) {
             LOGGER.error(e.getMessage(), e);
         } catch (final IOException e) {
             LOGGER.error(e.getMessage(), e);
-            // CHECKSTYLE:OFF
         } catch (final Exception e) {
-            // CHECKSTYLE:ON
             LOGGER.error(e.getMessage(), e);
         }
         return jetty;
     }
 
-    /**
-     * Launch browser.
-     * 
-     */
-    private void launchBrowser() {
-        try {
-            Desktop.getDesktop().browse(new URI("http://localhost:8989/step-web/"));
-        } catch (final IOException e1) {
-            LOGGER.error("Unable to launch browser.", e1);
-            JOptionPane.showMessageDialog(null, "Unable to show browser. Please contact the STEP team.",
-                    "An error has occurred", JOptionPane.ERROR_MESSAGE);
-        } catch (final URISyntaxException e1) {
-            JOptionPane.showMessageDialog(null, "Unable to show browser. Please contact the STEP team.",
-                    "An error has occurred", JOptionPane.ERROR_MESSAGE);
-            LOGGER.error("Unable to launch browser.", e1);
-        }
-
+    private void finishStartUp() {
+        launchBrowser();
+        closeSpashScreen();
     }
 
     /**
+     * Closes the splash screen
+     */
+    private void closeSpashScreen() {
+        SplashScreen screen = SplashScreen.getSplashScreen();
+        if (screen != null) {
+            screen.close();
+        }
+    }
+
+    /**
+     * Reads the bundles of translations from the various bundles in step-core.
+     * We pass in a class loader, so that we can read the bundle off there!
+     *
+     * @param classLoader
+     */
+    private void initLanguages(final ClassLoader classLoader) {
+        setupMessages = ResourceBundle.getBundle("SetupBundle", Locale.getDefault(), classLoader);
+        htmlMessages = ResourceBundle.getBundle("HtmlBundle", Locale.getDefault(), classLoader);
+        errorMessages = ResourceBundle.getBundle("ErrorBundle", Locale.getDefault(), classLoader);
+    }
+
+
+    /**
+     * Launch browser.
+     */
+    private void launchBrowser() {
+        try {
+            Desktop.getDesktop().browse(new URI(browserUrl));
+        } catch (final IOException e1) {
+            if (!ignoreBrowserError) {
+                showError("error_generic", ENGLISH_GENERIC_ERROR, "error_unable_to_show_browser", ENGLISH_BROWSER_ERROR);
+            }
+            LOGGER.error("Unable to launch browser.", e1);
+        } catch (final URISyntaxException e1) {
+            if (!ignoreBrowserError) {
+                showError("error_generic", ENGLISH_GENERIC_ERROR, "error_unable_to_show_browser", ENGLISH_BROWSER_ERROR);
+            }
+            LOGGER.error("Unable to launch browser.", e1);
+        }
+    }
+
+    /**
+     * Reads the error bundle, if loaded, or defaults to the default parameters and shows a dialog message
+     *
+     * @param title                 the title bar message
+     * @param defaultTitle          the title if no error bundle has been loaded
+     * @param bundleKey             the key to the error bundle
+     * @param defaultEnglishMessage the message to display if no error bundle has been loaded
+     */
+    private void showError(String title, String defaultTitle, String bundleKey, String defaultEnglishMessage, String... args) {
+        String finalTitle = this.errorMessages == null ? defaultTitle : this.errorMessages.getString(title);
+        String message = this.errorMessages == null ? defaultEnglishMessage : setupMessages.getString(bundleKey);
+        String formattedMessage = String.format(message, args);
+        JOptionPane.showMessageDialog(null, formattedMessage, finalTitle, JOptionPane.ERROR_MESSAGE);
+    }
+
+
+    /**
      * Adds the system tray.
-     * 
+     *
      * @param server the server
      */
     private void addSystemTray(final Server server) {
@@ -165,9 +231,9 @@ public final class StepServer {
         }
 
         final TrayIcon trayIcon = new TrayIcon(icon);
-        final MenuItem aboutItem = new MenuItem("About");
-        final MenuItem launchStepBrowser = new MenuItem("Launch STEP Browser");
-        final MenuItem exitItem = new MenuItem("Exit");
+        final MenuItem aboutItem = new MenuItem(htmlMessages.getString("help_about"));
+        final MenuItem launchStepBrowser = new MenuItem(htmlMessages.getString("launch_browser"));
+        final MenuItem exitItem = new MenuItem(htmlMessages.getString("tools_exit"));
         final PopupMenu popupMenu = new PopupMenu();
 
         aboutItem.addActionListener(new ActionListener() {
@@ -178,8 +244,9 @@ public final class StepServer {
                         "STEP :: Scripture Tools for Every Person\n\u00a9 Tyndale House "
                                 + Calendar.getInstance().get(Calendar.YEAR),
                         "STEP :: Scripture Tools for Every Person", JOptionPane.OK_CANCEL_OPTION,
-                        JOptionPane.INFORMATION_MESSAGE, null, new Object[] { "Launch STEP!", "Close" },
-                        "Launch STEP!");
+                        JOptionPane.INFORMATION_MESSAGE, null,
+                        new Object[]{htmlMessages.getString("launch_browser"), htmlMessages.getString("close")},
+                        htmlMessages.getString("launch_browser"));
 
                 if (showOptionDialog == 0) {
                     launchBrowser();
@@ -220,6 +287,9 @@ public final class StepServer {
         trayIcon.setPopupMenu(popupMenu);
         try {
             SystemTray.getSystemTray().add(trayIcon);
+            trayIcon.displayMessage(
+                    htmlMessages.getString("step_running"),
+                    String.format(htmlMessages.getString("open_browser"), browserUrl), TrayIcon.MessageType.INFO);
         } catch (final AWTException e) {
             LOGGER.error("Unable to add system tray icon", e);
         }
@@ -243,8 +313,32 @@ public final class StepServer {
     }
 
     /**
-     * Gets the war url.
-     * 
+     * @return the port on which the server listens
+     */
+    private int getStepPort() {
+        Integer port = Integer.getInteger("step.war.port");
+        if (port == null) {
+            return DEFAULT_STEP_PORT;
+        }
+        return port;
+    }
+
+
+    /**
+     * @return the context on which STEP will live. either step.war.context, or the default location which matches
+     *         the default location on file.
+     */
+    private String getContextPath() {
+        final String pathToWar = System.getProperty("step.war.context");
+        if (pathToWar == null || pathToWar.length() == 0) {
+            return DEFAULT_WAR_LOCATION;
+        }
+        return pathToWar;
+    }
+
+    /**
+     * Gets the war url, to the location on disk where the WAR is stored.
+     *
      * @return the war url
      * @throws MalformedURLException the malformed url exception
      */
@@ -259,7 +353,7 @@ public final class StepServer {
         }
 
         if (warDirectory == null) {
-            warDirectory = new File("step-web");
+            warDirectory = new File(DEFAULT_WAR_LOCATION);
         }
 
         return warDirectory.toURI().toURL();
@@ -268,15 +362,22 @@ public final class StepServer {
     /**
      * @param args a list of unused arguments on the command line
      */
-    // CHECKSTYLE:OFF
     public static void main(final String[] args) {
         try {
+            System.setProperty("step.jetty", "true");
             final StepServer ms = new StepServer();
             ms.start();
-
+            //////
+            //note: if successful, never gets past the line above.
+            /////
         } catch (final Exception e) {
-            LOGGER.debug(e.getMessage(), e);
+            failedToLaunchWarning();
+            LOGGER.error(e.getMessage(), e);
         }
     }
-    // CHECKSTYLE:ON
+
+    private static void failedToLaunchWarning() {
+        JOptionPane.showMessageDialog(null, "STEP was unable to launch. Please try again, or contact the STEP team for help",
+                ENGLISH_GENERIC_ERROR, JOptionPane.ERROR_MESSAGE);
+    }
 }

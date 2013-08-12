@@ -4,9 +4,9 @@
 <HTML>
 <HEAD>
     <TITLE><%= request.getParameter("title") %></TITLE>
-    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-	<meta name="description" content="<%= request.getParameter("description") %>">
+	<meta name="description" content="<%= request.getParameter("description") %>" />
 	<meta name="keywords" content="<%= request.getParameter("keywords") %>" />
 	
 	<link rel="stylesheet" type="text/css" href="static/static.css" />

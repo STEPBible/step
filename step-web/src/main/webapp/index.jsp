@@ -67,7 +67,7 @@
 
         <script src="libs/dohighlight-min.js" type="text/javascript"></script>
         <script src="libs/sprintf-0.7-beta1.js" type="text/javascript"></script>
-<%-- 		<script src="libs/jquery.tagcloud.js" type="text/javascript"></script> --%>
+ 		<script src="libs/jquery.tagcloud.js" type="text/javascript"></script>
         <script src="libs/underscore-min.js" type="text/javascript"></script>
         <script src="libs/json2.js" type="text/javascript"></script>
         <script src="libs/backbone-min.js" type="text/javascript"></script>
@@ -137,6 +137,7 @@
         <script src="js/backbone/views/view_quick_lexicon.js" type="text/javascript"></script>
         <script src="js/backbone/models/model_bookmark.js" type="text/javascript"></script>
         <script src="js/backbone/views/view_bookmarks_history.js" type="text/javascript"></script>
+        <script src="js/backbone/views/view_wordle_stat.js" type="text/javascript"></script>
         <script src="js/init.js" type="text/javascript"></script>
         <script src="js/backbone/step.js" type="text/javascript"></script>
 	<%

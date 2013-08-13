@@ -488,7 +488,7 @@ var PassageDisplayView = Backbone.View.extend({
             text.addClass(classes);
             text.append(innerText);
             text.click(function () {
-                step.lexicon.passageId = passageId;
+                step.lexicon.setPassageIdInFocus(passageId);
                 step.lexicon[functionName](strongNumber, bookKey);
             });
 

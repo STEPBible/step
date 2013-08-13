@@ -167,6 +167,7 @@
 							<jsSourceFiles>
                                 <jsSourceFile>libs/dohighlight-min.js</jsSourceFile>
                                 <jsSourceFile>libs/sprintf-0.7-beta1.js</jsSourceFile>
+                                <jsSourceFile>libs/jquery.tagcloud.js</jsSourceFile>
                                 <jsSourceFile>libs/underscore-min.js</jsSourceFile>
                                 <jsSourceFile>libs/json2.js</jsSourceFile>
                                 <jsSourceFile>libs/backbone-min.js</jsSourceFile>
@@ -234,6 +235,7 @@
                                 <jsSourceFile>js/backbone/views/view_quick_lexicon.js</jsSourceFile>
                                 <jsSourceFile>js/backbone/models/model_bookmark.js</jsSourceFile>
                                 <jsSourceFile>js/backbone/views/view_bookmarks_history.js</jsSourceFile>
+                                <jsSourceFile>js/backbone/views/view_wordle_stat.js</jsSourceFile>
                                 <jsSourceFile>js/init.js</jsSourceFile>
                                 <jsSourceFile>js/backbone/step.js</jsSourceFile>
 							</jsSourceFiles>

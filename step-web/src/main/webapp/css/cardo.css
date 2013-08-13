@@ -1,27 +1,10 @@
+/* Refactor font names to be abstracted away, since Cardo isn't really cardo!  */
 @font-face {
   font-family: 'Cardo';
   font-style: normal;
   font-weight: 400;
   font-size: 18px;
   src: local('GentiumPlus-R'), local('GentiumPlus-R'), src: url('../fonts/GenBasR.woff'); format('woff');
-}
-/*@font-face {*/
-  /*font-family: 'Cardo';*/
-  /*font-style: italic;*/
-  /*font-weight: 400;*/
-  /*src: local('Cardo Italic'), local('Cardo-Italic'), url(../fonts/cardo-italic.woff) format('woff');*/
-/*}*/
-
-/*@font-face {*/
-  /*font-family: 'Cardo';*/
-  /*font-style: normal;*/
-  /*font-weight: 700;*/
-  /*src: local('Cardo Bold'), local('Cardo-Bold'), url(../fonts/cardo-bold.woff) format('woff');*/
-/*}*/
-
-@font-face {
-    font-family : "SBL_Hbrw";
-    src: url('../fonts/SBL_Hbrw.woff');
 }
 
 @font-face {

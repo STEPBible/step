@@ -273,6 +273,14 @@ step.util = {
     ui : {
         appleKey : false,
 
+        getFontForStrong : function(strong) {
+            if(strong == null || strong.length < 1) {
+                return "";
+            }
+
+            return strong[0] == 'G' ? 'greekLanguage' : 'hebrewLanguage';
+        },
+
         doMenu : function(id) {
             ddsmoothmenu.init({
                 mainmenuid: id,        //menu DIV id

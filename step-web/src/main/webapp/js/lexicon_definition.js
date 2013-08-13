@@ -32,6 +32,11 @@ step.lexicon = {
     positioned : false,
     currentLexiconData : undefined,
 
+    setPassageIdInFocus : function(passageId) {
+        this.passageId = passageId;
+        this.wordleView.relistenToModel();
+    },
+
     sameWordSearch : function(strongNumber, refLimit) {
         this.doSearch(ALL_FORMS, strongNumber, refLimit);
     },
@@ -320,6 +325,7 @@ step.lexicon = {
             step.lexicon.switchWords(vocabInfo.strongNumber);
         });
     }
+
 };
 
 
@@ -345,6 +351,9 @@ function LexiconDefinition() {
         key: "lexicon",
         scopeSelector : "#lexiconDefinition"
     });
+
+    //add the word model:
+    step.lexicon.wordleView = new ViewLexiconWordle;
 }
 
 LexiconDefinition.prototype.getPopup = function() {
@@ -373,8 +382,7 @@ LexiconDefinition.prototype.getPopup = function() {
 
 LexiconDefinition.prototype.showDef = function(data) {
     var self = this;
-
-    step.lexicon.passageId = data.passageId;
+    step.lexicon.setPassageIdInFocus(data.passageId);
 
     // create all tabs - first remove everything, then re-add.
     var strong = data.strong;

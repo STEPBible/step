@@ -47,6 +47,7 @@ import com.tyndalehouse.step.core.models.stats.PassageStat;
 import com.tyndalehouse.step.core.service.AnalysisService;
 import com.tyndalehouse.step.core.service.LexiconDefinitionService;
 import com.tyndalehouse.step.core.service.jsword.JSwordAnalysisService;
+import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import com.tyndalehouse.step.core.service.jsword.impl.JSwordAnalysisServiceImpl;
 import com.tyndalehouse.step.core.service.search.SubjectSearchService;
 
@@ -60,6 +61,7 @@ import com.tyndalehouse.step.core.service.search.SubjectSearchService;
 public class AnalysisServiceImpl implements AnalysisService {
     private final SubjectSearchService subjects;
     private final LexiconDefinitionService definitions;
+    private JSwordPassageService jSwordPassageService;
     private final JSwordAnalysisService jswordAnalysis;
 
     /**
@@ -71,16 +73,17 @@ public class AnalysisServiceImpl implements AnalysisService {
      */
     @Inject
     public AnalysisServiceImpl(final JSwordAnalysisServiceImpl jswordAnalysis,
-            final SubjectSearchService subjects, final LexiconDefinitionService definitions) {
+            final SubjectSearchService subjects, final LexiconDefinitionService definitions,
+            JSwordPassageService jSwordPassageService) {
         this.jswordAnalysis = jswordAnalysis;
         this.subjects = subjects;
         this.definitions = definitions;
+        this.jSwordPassageService = jSwordPassageService;
     }
 
     @Override
     public CombinedPassageStats getStatsForPassage(final String version, final String reference) {
-        final CombinedPassageStats statsForPassage = this.jswordAnalysis.getStatsForPassage(version,
-                reference);
+        final CombinedPassageStats statsForPassage = this.jswordAnalysis.getStatsForPassage(version, reference);
         statsForPassage.setSubjectStat(getSubjectStats(version, reference));
 
         statsForPassage.trim();
@@ -96,19 +99,9 @@ public class AnalysisServiceImpl implements AnalysisService {
      * @param statsForPassage the stats currently held for a particular passage.
      */
     private void convertWordStatsToDefinitions(final CombinedPassageStats statsForPassage) {
-        final PassageStat strongsStat = statsForPassage.getStrongsStat();
-        final Map<String, Integer> stats = strongsStat.getStats();
-        final Map<String, Integer> newStats = new HashMap<String, Integer>();
-
-        final Map<String, LexiconSuggestion> lexiconEntries = this.definitions.lookup(stats.keySet());
-        for (final Map.Entry<String, Integer> entry : stats.entrySet()) {
-            final LexiconSuggestion lexiconSuggestion = lexiconEntries.get(entry.getKey());
-            newStats.put(
-                    String.format("%s (%s)", lexiconSuggestion.getGloss(),
-                            lexiconSuggestion.getMatchingForm()), entry.getValue());
-        }
-
-        strongsStat.setStats(newStats);
+        final Map<String, LexiconSuggestion> lexiconEntries =
+                this.definitions.lookup(statsForPassage.getStrongsStat().getStats().keySet());
+        statsForPassage.setLexiconWords(lexiconEntries);
 
     }
 

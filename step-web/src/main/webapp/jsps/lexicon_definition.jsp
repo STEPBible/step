@@ -14,8 +14,17 @@
 	<ul id="lexiconDefinitionHeader">
 			<span id="lexiconPopupClose"></span>
 			<li><a href="#origin"><fmt:message key="original_word" /></a></li>
-<%-- 			<li><a href="#context"><fmt:message key="original_word_context" /></a></li> --%>
+ 			<li><a class="statTab" href="#wordStat"><fmt:message key="strong_stats" /></a></li>
+ 			<li><a class="statTab" href="#textStat"><fmt:message key="text_stats" /></a></li>
+ 			<li><a class="statTab" href="#subjectStat"><fmt:message key="subject_stats" /></a></li>
 	</ul>
+
+    <div id="wordStat">
+    </div>
+    <div id="textStat">
+    </div>
+    <div id="subjectStat">
+    </div>
 
 	<div id="origin" name="LEXICON_DEFINITION">
 			

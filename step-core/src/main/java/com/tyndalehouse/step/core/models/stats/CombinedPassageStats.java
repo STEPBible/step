@@ -33,6 +33,10 @@
 package com.tyndalehouse.step.core.models.stats;
 
 
+import com.tyndalehouse.step.core.models.LexiconSuggestion;
+
+import java.util.Map;
+
 /**
  * Combined passage stats has stats based on word occurrences, subjects as well as strong numbers.
  */
@@ -40,6 +44,7 @@ public class CombinedPassageStats {
     private PassageStat wordStat;
     private PassageStat strongsStat;
     private PassageStat subjectStat;
+    private Map<String, LexiconSuggestion> lexiconWords;
 
     /**
      * Trims all stats contained in this object
@@ -92,5 +97,17 @@ public class CombinedPassageStats {
         this.subjectStat = subjectStat;
     }
 
+    /**
+     * @param lexiconWords the words to be attached to this analysis
+     */
+    public void setLexiconWords(final Map<String, LexiconSuggestion> lexiconWords) {
+        this.lexiconWords = lexiconWords;
+    }
 
+    /**
+     * @return the words attached to this lexicon
+     */
+    public Map<String, LexiconSuggestion> getLexiconWords() {
+        return lexiconWords;
+    }
 }

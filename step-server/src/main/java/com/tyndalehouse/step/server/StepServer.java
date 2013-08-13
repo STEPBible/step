@@ -95,7 +95,7 @@ public final class StepServer {
                 } catch(UnknownHostException ex3) {
                     //can't do much here
                     LOGGER.error("Unable to obtain IP address to bind on.");
-                    throw new RuntimeException(ex.getMessage(), ex);
+                    throw new RuntimeException(ex3.getMessage());
                 }
             }
         }

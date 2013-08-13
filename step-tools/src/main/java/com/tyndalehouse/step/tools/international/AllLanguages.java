@@ -47,7 +47,7 @@ public class AllLanguages {
     public static void main(final String[] args) {
         final String[] isoLanguages = Locale.getISOLanguages();
         for (final String lang : isoLanguages) {
-            final Locale locale = Locale.forLanguageTag(lang);
+            final Locale locale = new Locale(lang);
             System.out.println(locale.getLanguage() + "\t" + locale.getDisplayLanguage(locale) + "\t"
                     + locale.getDisplayLanguage(Locale.ENGLISH));
         }

@@ -62,7 +62,7 @@
         <file>
             <source>src/main/assembly/log4j.properties</source>
             <outputDirectory>/</outputDirectory>
-            <filtered>true</filtered>
+            <filtered>false</filtered>
         </file>
 	</files>
 </assembly>

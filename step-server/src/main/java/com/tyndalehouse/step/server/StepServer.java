@@ -66,7 +66,7 @@ public final class StepServer {
     public static final String SHUTDOWN_CONTEXT = "shutdown";
     public static final String ENGLISH_GENERIC_ERROR = "An error has occurred";
     public static final String ENGLISH_BROWSER_ERROR = "STEP was unable to launch the browser.";
-    private final InetAddress listeningAddress;
+    private InetAddress listeningAddress;
     private final InetSocketAddress socket;
     private final URL warURL;
     private final int stepPort;
@@ -84,7 +84,21 @@ public final class StepServer {
      * @throws MalformedURLException couldn't create a location to our disk
      */
     public StepServer() throws MalformedURLException {
-        listeningAddress = InetAddress.getLoopbackAddress();
+        try {
+            listeningAddress = InetAddress.getByName("localhost");
+        } catch(UnknownHostException ex) {
+            try {
+                listeningAddress = InetAddress.getByAddress("localhost", new byte[] {0x7f,0x00,0x00,0x01});
+            } catch (UnknownHostException ex1) {
+                try {
+                    listeningAddress = InetAddress.getLocalHost();
+                } catch(UnknownHostException ex3) {
+                    //can't do much here
+                    LOGGER.error("Unable to obtain IP address to bind on.");
+                    throw new RuntimeException(ex.getMessage(), ex);
+                }
+            }
+        }
         this.stepPort = getStepPort();
         socket = new InetSocketAddress(listeningAddress, this.stepPort);
         warURL = getWarUrl();

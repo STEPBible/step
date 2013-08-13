@@ -34,6 +34,7 @@ package com.tyndalehouse.step.server;
 
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.handler.ContextHandlerCollection;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.slf4j.Logger;
@@ -127,14 +128,19 @@ public final class StepServer {
         // configure jetty
         try {
             // configure our web application
-            final HandlerList handlers = new HandlerList();
+            final ContextHandlerCollection handlers = new ContextHandlerCollection();
             final WebAppContext webAppContext = new WebAppContext(warURL.toExternalForm(), "/" + this.contextPath);
-            handlers.setHandlers(new Handler[]{webAppContext,
-                    new ShutdownHandler(jetty, SHUTDOWN_CONTEXT, webAppContext)});
+            final ShutdownHandler shutdownHandler = new ShutdownHandler(jetty, SHUTDOWN_CONTEXT, webAppContext);
             jetty.setHandler(handlers);
 
             // start the server
             jetty.start();
+
+            //add handlers after start, since start may fail on bind() of address
+            handlers.addHandler(webAppContext);
+            webAppContext.start();
+            shutdownHandler.start();
+
             initLanguages(webAppContext.getClassLoader());
             addSystemTray(jetty);
 

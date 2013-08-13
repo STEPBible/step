@@ -47,6 +47,7 @@ public class BibleVersion implements Serializable {
     private boolean hasStrongs;
     private boolean hasMorphology;
     private boolean hasRedLetter;
+    private boolean hasNotes;
     private boolean questionable;
     private String languageCode;
     private String category;
@@ -191,5 +192,19 @@ public class BibleVersion implements Serializable {
      */
     public void setShortInitials(final String shortInitials) {
         this.shortInitials = shortInitials;
+    }
+
+    /**
+     * @param hasNotes true to indicate notes
+     */
+    public void setHasNotes(final boolean hasNotes) {
+        this.hasNotes = hasNotes;
+    }
+
+    /**
+     * @return has notes
+     */
+    public boolean isHasNotes() {
+        return hasNotes;
     }
 }

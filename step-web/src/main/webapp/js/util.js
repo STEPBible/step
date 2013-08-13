@@ -411,6 +411,10 @@ step.util = {
             if(item.hasRedLetter) {
                 features += " " + '<span class="versionFeature" title="' + __s.jesus_words_in_red_available + '">' + __s.jesus_words_in_red_available_initial + '</span>';
             }
+
+            if(item.hasNotes) {
+                features += " " + '<span class="versionFeature" title="' + __s.notes_available + '">' + __s.notes_available_initials + '</span>';
+            }
             
             // add morphology
             if (item.hasMorphology) {

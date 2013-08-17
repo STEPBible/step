@@ -42,6 +42,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import com.tyndalehouse.step.core.models.ScopeType;
 import org.apache.lucene.queryParser.QueryParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -89,6 +90,7 @@ public class SubjectSearchServiceImpl implements SubjectSearchService {
         this.naves = entityManager.getReader("nave");
     }
 
+
     @Override
     public SearchResult searchByMultipleReferences(final String version, final String references) {
         final String allReferences = this.jswordPassage.getAllReferences(references, version);
@@ -97,10 +99,12 @@ public class SubjectSearchServiceImpl implements SubjectSearchService {
     }
 
     @Override
-    public SearchResult searchByReference(final String reference) {
+    public SearchResult searchByReference(final String referenceQuerySyntax) {
         final SearchResult sr = new SearchResult();
-        sr.setQuery("sr=" + reference);
-        final EntityDoc[] results = this.naves.search("expandedReferences", reference);
+        sr.setQuery("sr=" + referenceQuerySyntax);
+
+        //referenceQuerySyntax could be a full referenceQuerySyntax, or could be the start of a referenceQuerySyntax here
+        final EntityDoc[] results = this.naves.searchSingleColumn("expandedReferences", referenceQuerySyntax);
         final List<SearchEntry> resultList = new ArrayList<SearchEntry>(results.length);
         for (final EntityDoc d : results) {
             final ExpandableSubjectHeadingEntry entry = new ExpandableSubjectHeadingEntry(d.get("root"),

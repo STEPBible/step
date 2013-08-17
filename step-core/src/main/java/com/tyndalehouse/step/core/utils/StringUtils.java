@@ -33,7 +33,9 @@
 package com.tyndalehouse.step.core.utils;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 /**
@@ -168,4 +170,19 @@ public final class StringUtils {
         }
         return false;
     }
+
+    /**
+     * Creates a list from the String of words given, in upper case form.
+     * @param wordList the list of words as 1 String
+     * @return the set of words
+     */
+    public static Set<String> createSet(final String wordList) {
+        final String[] splitWords = StringUtils.split(wordList);
+        Set<String> words = new HashSet<String>(splitWords.length *2);
+        for (String splitWord : splitWords) {
+            words.add(splitWord.toUpperCase());
+        }
+        return words;
+    }
+
 }

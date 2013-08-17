@@ -32,6 +32,7 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.service.search;
 
+import com.tyndalehouse.step.core.models.ScopeType;
 import com.tyndalehouse.step.core.models.search.SearchResult;
 import com.tyndalehouse.step.core.service.impl.SearchQuery;
 
@@ -52,17 +53,18 @@ public interface SubjectSearchService {
     SearchResult search(SearchQuery sq);
 
     /**
-     * Search by a reference, or references if separated by a space.
+     * Search by a referenceQuerySyntax, or references if separated by a space.
      * 
-     * @param reference the reference to be looked up in the expanded references fields
+     * @param referenceQuerySyntax the referenceQuerySyntax or a Lucene query syntax to be looked up in the expanded references fields
      * @return the search result a list of topics that match.
      */
-    SearchResult searchByReference(String reference);
+    SearchResult searchByReference(String referenceQuerySyntax);
 
     /**
      * First resolves the reference and expands it to its full form (e.g. Gen.1.1-3 goes to Gen.1.1 Gen.1.2
      * Gen 1.3), Then carries out a search against all subjects.
      * 
+     *
      * @param version the version
      * @param references the references
      * @return the search result

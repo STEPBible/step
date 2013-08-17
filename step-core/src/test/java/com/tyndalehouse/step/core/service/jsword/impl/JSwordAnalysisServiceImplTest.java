@@ -32,9 +32,14 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.service.jsword.impl;
 
+import com.tyndalehouse.step.core.models.ScopeType;
+import com.tyndalehouse.step.core.utils.TestUtils;
+import org.junit.Test;
+
 import java.util.regex.Pattern;
 
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * The Class JSwordAnalysisServiceImplTest.
@@ -47,5 +52,36 @@ public class JSwordAnalysisServiceImplTest {
     @Test
     public void testPatternIsCorrect() {
         Pattern.compile(JSwordAnalysisServiceImpl.WORD_SPLIT);
+    }
+
+    @Test
+    public void testExpand() {
+        JSwordAnalysisServiceImpl impl = new JSwordAnalysisServiceImpl(TestUtils.mockVersificationService(), null, null);
+
+        //normal use cases
+        assertEquals("Gen.3", impl.getExpandedBookData("Gen.3.3", ScopeType.CHAPTER, impl.getStrongsV11n(), impl.getStrongsBook()).getKey().getOsisRef());
+        assertEquals("Gen.2-Gen.4", impl.getExpandedBookData("Gen.3.3", ScopeType.NEAR_BY_CHAPTER, impl.getStrongsV11n(), impl.getStrongsBook()).getKey().getOsisRef());
+        assertEquals("Gen", impl.getExpandedBookData("Gen.3.3", ScopeType.BOOK, impl.getStrongsV11n(), impl.getStrongsBook()).getKey().getOsisRef());
+
+        //beginning of a book
+        assertEquals("Gen.1", impl.getExpandedBookData("Gen.1.3", ScopeType.CHAPTER, impl.getStrongsV11n(), impl.getStrongsBook()).getKey().getOsisRef());
+        assertEquals("Gen.1-Gen.2", impl.getExpandedBookData("Gen.1.3", ScopeType.NEAR_BY_CHAPTER, impl.getStrongsV11n(), impl.getStrongsBook()).getKey().getOsisRef());
+        assertEquals("Gen", impl.getExpandedBookData("Gen.1.3", ScopeType.BOOK, impl.getStrongsV11n(), impl.getStrongsBook()).getKey().getOsisRef());
+
+        //end of a book
+        assertEquals("Rev.22", impl.getExpandedBookData("Rev.22.3", ScopeType.CHAPTER, impl.getStrongsV11n(), impl.getStrongsBook()).getKey().getOsisRef());
+        assertEquals("Rev.21-Rev.22", impl.getExpandedBookData("Rev.22.3", ScopeType.NEAR_BY_CHAPTER, impl.getStrongsV11n(), impl.getStrongsBook()).getKey().getOsisRef());
+        assertEquals("Rev", impl.getExpandedBookData("Rev.22.3", ScopeType.BOOK, impl.getStrongsV11n(), impl.getStrongsBook()).getKey().getOsisRef());
+
+        //test short book
+        assertEquals("3John", impl.getExpandedBookData("3John.2", ScopeType.CHAPTER, impl.getStrongsV11n(), impl.getStrongsBook()).getKey().getOsisRef());
+        assertEquals("3John", impl.getExpandedBookData("3John.2", ScopeType.NEAR_BY_CHAPTER, impl.getStrongsV11n(), impl.getStrongsBook()).getKey().getOsisRef());
+        assertEquals("3John", impl.getExpandedBookData("3John.2", ScopeType.BOOK, impl.getStrongsV11n(), impl.getStrongsBook()).getKey().getOsisRef());
+
+        //test cross chapter
+        assertEquals("Gen.3-Gen.4", impl.getExpandedBookData("Gen.3.3-Gen.4.2", ScopeType.CHAPTER, impl.getStrongsV11n(), impl.getStrongsBook()).getKey().getOsisRef());
+        assertEquals("Gen.2-Gen.5", impl.getExpandedBookData("Gen.3.3-Gen.4.2", ScopeType.NEAR_BY_CHAPTER, impl.getStrongsV11n(), impl.getStrongsBook()).getKey().getOsisRef());
+        assertEquals("Gen", impl.getExpandedBookData("Gen.3.3-Gen.4.2", ScopeType.BOOK, impl.getStrongsV11n(), impl.getStrongsBook()).getKey().getOsisRef());
+
     }
 }

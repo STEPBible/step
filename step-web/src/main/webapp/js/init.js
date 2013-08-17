@@ -44,7 +44,7 @@ String.prototype.startsWith = function (nonEscapedString) {
 
 var topMenu;
 var timeline;
-
+var lexiconDefinition;
 
 function init() {
     $(document).ready(function () {
@@ -396,8 +396,8 @@ function initData() {
 
         $.shout("versions-initialisation-completed");
         initApp();
-
         initModules();
+
     });
 }
 
@@ -442,7 +442,7 @@ function initGlobalHandlers() {
  * initialises the modules
  */
 function initModules() {
-    new LexiconDefinition();
+    lexiconDefinition = new LexiconDefinition();
 }
 
 

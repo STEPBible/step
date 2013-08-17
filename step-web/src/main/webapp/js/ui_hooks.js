@@ -213,6 +213,7 @@ function getRelatedSubjects(key, passageId) {
     var subjectModel = SubjectModels.at(otherPassage);
     subjectModel.save({
         subjectText : "",
+        subjectSearchType : "",
         subjectRelated : key,
         detail : 2
     });

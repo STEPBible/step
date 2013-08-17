@@ -78,6 +78,10 @@ var SearchModel = Backbone.Model.extend({
     evaluateQuerySyntax : function(attributes) {
         var querySyntax = this._evaluateQuerySyntaxInternal(attributes);
 
+        if(step.util.isBlank(querySyntax)) {
+            console.log("ERROR ERROR - empty query syntax - ERROR ERROR");
+        }
+
         //finalise query, then join them
         querySyntax = this._getFinalQuerySyntax(querySyntax);
 

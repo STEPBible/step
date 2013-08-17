@@ -1,11 +1,11 @@
 /*******************************************************************************
  * Copyright (c) 2012, Directors of the Tyndale STEP Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without 
  * modification, are permitted provided that the following conditions 
  * are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright 
  * notice, this list of conditions and the following disclaimer.
  * Redistributions in binary form must reproduce the above copyright 
@@ -16,7 +16,7 @@
  * nor the names of its contributors may be used to endorse or promote 
  * products derived from this software without specific prior written 
  * permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
@@ -34,6 +34,8 @@ package com.tyndalehouse.step.rest.controllers;
 
 import javax.inject.Inject;
 
+import com.tyndalehouse.step.core.models.ScopeType;
+import com.tyndalehouse.step.core.models.StatType;
 import com.tyndalehouse.step.core.models.stats.CombinedPassageStats;
 import com.tyndalehouse.step.core.service.AnalysisService;
 
@@ -45,7 +47,7 @@ public class AnalysisController {
 
     /**
      * Instantiates a new analysis controller.
-     * 
+     *
      * @param analysis the analysis
      */
     @Inject
@@ -56,12 +58,14 @@ public class AnalysisController {
     /**
      * Analyse stats for a given passage in a given book, obtaining the word, subject and strong stats from
      * them.
-     * 
-     * @param version the version
+     *
+     * @param version   the version
      * @param reference the reference
+     * @param statType  WORD, SUBJECT or TEXT
+     * @param scope     the scope of the passage, or a particular reference to override the passage that is viewed
      * @return the combined passage stats
      */
-    public CombinedPassageStats analyseStats(final String version, final String reference) {
-        return this.analysis.getStatsForPassage(version, reference);
+    public CombinedPassageStats analyseStats(final String version, final String reference, final String statType, final String scope) {
+        return this.analysis.getStatsForPassage(version, reference, StatType.valueOf(statType), ScopeType.valueOf(scope));
     }
 }

@@ -64,7 +64,17 @@ step.defaults = {
         interNoInterlinearDefault : __s.passage_interleaved,
         interInterlinearDefault : __s.passage_interlinear
     },
-    
+    analysis : {
+        scope : [__s.stats_scope_chapter, __s.stats_scope_nearby_chapters, __s.stats_scope_book],
+        scopeType : ["CHAPTER", "NEAR_BY_CHAPTER", "BOOK" ],
+        kind : [__s.stats_type_word, __s.stats_type_text, __s.stats_type_subjects],
+        //it is deliberate that PASSAGE has no associated translation. - it should be the last unmatched element
+        kindTypes : ["WORD", "TEXT", "SUBJECT", "PASSAGE"]
+    },
+    infoPopup : {
+        lexiconTab : 0,
+        wordleTab : 1
+    },
     search: {
         textual : {
             sortByRelevance : true,
@@ -76,7 +86,7 @@ step.defaults = {
                                 { label: __s.poetic_books,        value: __s.poetic_books_range },
                                 { label: __s.prophets,            value: __s.prophets_range },
                                 { label: __s.gospels_and_acts,    value: __s.gospels_and_acts_range },
-                                { label: __s.epistles,            value: __s.epistles_range },
+                                { label: __s.epistles,            value: __s.epistles_range }
                               ],
             //order and indices are important below
             simpleTextTypes : [ __s.simple_search_types_one_or_more_words, 

@@ -795,3 +795,10 @@ Analysis tabs
 .noWrapCell {
 	white-space: nowrap;
 }
+
+.analysisButton {
+    float: right;
+    font-style: normal;
+    font-size: 10px !important;
+    font-variant: normal;
+}

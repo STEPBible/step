@@ -99,7 +99,7 @@ public class Loader {
                   @Named("StepCoreProperties") final Properties coreProperties, final EntityManager entityManager,
                   final Provider<ClientSession> clientSessionProvider,
                   AppManagerService appManager
-                  ) {
+    ) {
         this.jsword = jsword;
         this.jswordModule = jswordModule;
         this.coreProperties = coreProperties;
@@ -108,7 +108,7 @@ public class Loader {
         this.runningAppVersion = coreProperties.getProperty(AppManagerService.APP_VERSION);
         this.appManager = appManager;
         String[] specificModules = StringUtils.split(coreProperties.getProperty("app.install.specific.modules"), ",");
-        for(String module : specificModules) {
+        for (String module : specificModules) {
             this.appSpecificModules.add(module);
         }
     }
@@ -122,37 +122,37 @@ public class Loader {
         listenInJobs();
 
         try {
-            this.jswordModule.setOffline(true);
+            if (!Boolean.getBoolean("step.skipBookInstallation")) {
+                this.jswordModule.setOffline(true);
 
-            // attempt to reload the installer list. This ensures we have all the versions in the available bibles
-            // that we need
-            this.jswordModule.reloadInstallers();
+                // attempt to reload the installer list. This ensures we have all the versions in the available bibles
+                // that we need
+                this.jswordModule.reloadInstallers();
 
-            final List<Book> availableModules = this.jswordModule.getAllModules(BookCategory.BIBLE,
-                    BookCategory.COMMENTARY);
-            final String[] initials = new String[availableModules.size()];
+                final List<Book> availableModules = this.jswordModule.getAllModules(BookCategory.BIBLE,
+                        BookCategory.COMMENTARY);
+                final String[] initials = new String[availableModules.size()];
 
-            // This may put too much stress on smaller systems, since indexing for all modules in
-            // package
-            // would result as happening at the same times
-            for (int ii = 0; ii < availableModules.size(); ii++) {
-                final Book b = availableModules.get(ii);
-                installAndIndex(b.getInitials());
-                initials[ii] = b.getInitials();
+                // This may put too much stress on smaller systems, since indexing for all modules in
+                // package
+                // would result as happening at the same times
+                for (int ii = 0; ii < availableModules.size(); ii++) {
+                    final Book b = availableModules.get(ii);
+                    installAndIndex(b.getInitials());
+                    initials[ii] = b.getInitials();
+                }
+
+                this.jswordModule.waitForIndexes(initials);
             }
-
-            this.jswordModule.waitForIndexes(initials);
-
             // now we can load the data
             loadData();
             this.complete = true;
             appManager.setAndSaveAppVersion(runningAppVersion);
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             //wrap it into an internal exception so that we get some logging.
             throw new StepInternalException(ex.getMessage(), ex);
-        }
-        finally {
-            if(workListener != null) {
+        } finally {
+            if (workListener != null) {
                 JobManager.removeWorkListener(workListener);
             }
             this.jswordModule.setOffline(false);
@@ -202,29 +202,17 @@ public class Loader {
 
         // very ugly, but as good as it's going to get for now
         double installProgress = 0;
-//        do {
-//            try {
-//
-//                LOGGER.info("Waiting for version installation to finish...");
-//                Thread.sleep(INSTALL_WAITING);
-//            } catch (final InterruptedException e) {
-//                LOGGER.warn("Interrupted exception", e);
-//            }
-
-//            installProgress = this.jswordModule.getProgressOnInstallation(version);
-//            this.addUpdate("install_progress", version, (int) (installProgress * 100));
-//        } while (installProgress != 1);
-
         this.addUpdate("installed_version_success", version);
     }
 
     /**
      * If the module is marked as required for re-installation, then we delete it here.
+     *
      * @param version version
      */
     private void uninstallSpecificPackages(final String version) {
-        if(this.appSpecificModules.contains(version)) {
-            if(this.jswordModule.isInstalled(version)) {
+        if (this.appSpecificModules.contains(version)) {
+            if (this.jswordModule.isInstalled(version)) {
                 this.jswordModule.removeModule(version);
             }
         }

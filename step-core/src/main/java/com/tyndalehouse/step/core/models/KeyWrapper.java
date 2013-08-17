@@ -1,5 +1,6 @@
 package com.tyndalehouse.step.core.models;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.crosswire.jsword.passage.Key;
 
 /**
@@ -11,6 +12,8 @@ import org.crosswire.jsword.passage.Key;
 public class KeyWrapper {
     private String osisKeyId;
     private String name;
+    @JsonIgnore
+    private Key key;
 
     /**
      * for use by serialisation
@@ -25,6 +28,7 @@ public class KeyWrapper {
      * @param k the key
      */
     public KeyWrapper(final Key k) {
+        this.key = k;
         this.name = k.getName();
         this.osisKeyId = k.getOsisID();
     }
@@ -55,5 +59,12 @@ public class KeyWrapper {
      */
     public void setName(final String name) {
         this.name = name;
+    }
+
+    /**
+     * @return the key at the origin of this
+     */
+    public Key getKey() {
+        return key;
     }
 }

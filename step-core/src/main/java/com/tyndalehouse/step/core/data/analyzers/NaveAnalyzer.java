@@ -6,6 +6,8 @@ import org.apache.lucene.analysis.PerFieldAnalyzerWrapper;
 import org.apache.lucene.analysis.WhitespaceAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 
+import javax.inject.Inject;
+
 /**
  * analyzes Nave modules
  * 
@@ -13,6 +15,8 @@ import org.apache.lucene.analysis.standard.StandardAnalyzer;
  * 
  */
 public class NaveAnalyzer extends PerFieldAnalyzerWrapper {
+    @Inject
+
     /**
      * nave analyzer
      */
@@ -21,6 +25,6 @@ public class NaveAnalyzer extends PerFieldAnalyzerWrapper {
         final PorterStemmerAnalyzer portStemmerAnalyzer = new PorterStemmerAnalyzer();
         addAnalyzer("fullHeader", portStemmerAnalyzer);
         addAnalyzer("rootStem", portStemmerAnalyzer);
-        addAnalyzer("expandedReferences", new WhitespaceAnalyzer());
+        addAnalyzer("expandedReferences", new ReferenceAnalyzer());
     }
 }

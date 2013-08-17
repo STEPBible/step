@@ -40,7 +40,7 @@ var PassageDisplayView = Backbone.View.extend({
                 this._doNonInlineNotes(passageHtml);
 
                 this._doVerseNumbers(passageId, passageHtml, options, interlinearMode, reference);
-//        self._doStats(passageId, passageContent, lookupVersion, text.reference);
+//        self.doStats(passageId, passageContent, lookupVersion, text.reference);
                 this._doHideEmptyNotesPane(passageHtml);
                 this._adjustTextAlignment(passageHtml);
                 step.fonts.redoTextSize(passageId, passageHtml);
@@ -50,6 +50,7 @@ var PassageDisplayView = Backbone.View.extend({
                 this._doTransliterations(passageHtml);
                 this._doInterlinearDividers(passageHtml);
                 this._doVersions(passageId, passageHtml, version, reference);
+                this._doAnalysisButton(passageId, passageHtml);
                 this._doSocial();
                 step.util.closeInfoErrors(passageId);
                 step.util.ui.emptyOffDomAndPopulate(this.passageContent, passageHtml);
@@ -58,6 +59,20 @@ var PassageDisplayView = Backbone.View.extend({
                 this.doInterlinearVerseNumbers(passageHtml, interlinearMode, options);
                 Backbone.Events.trigger("passage:rendered:" + passageId);
             }
+        },
+
+        _doAnalysisButton : function(passageId, passageHtml) {
+            var header = passageHtml.find("h2:first");
+
+            var analysisButton = $("<span></span>");
+            analysisButton.prepend(__s.stats_analysis_button).addClass("analysisButton");
+            header.append(analysisButton);
+
+            analysisButton.button({ text : true });
+            analysisButton.click(function() {
+                step.lexicon.wordleView.passageId = passageId;
+                lexiconDefinition.reposition(step.defaults.infoPopup.wordleTab);
+            });
         },
 
         _doDuplicateNotice: function (passageId, passageHtml) {

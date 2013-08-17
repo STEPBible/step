@@ -41,60 +41,21 @@ import java.util.Map;
  * Combined passage stats has stats based on word occurrences, subjects as well as strong numbers.
  */
 public class CombinedPassageStats {
-    private PassageStat wordStat;
-    private PassageStat strongsStat;
-    private PassageStat subjectStat;
+    private PassageStat passageStat;
     private Map<String, LexiconSuggestion> lexiconWords;
 
     /**
-     * Trims all stats contained in this object
+     * @return the passageStat
      */
-    public void trim() {
-        this.wordStat.trim();
-        this.strongsStat.trim();
-        this.subjectStat.trim();
-    }
-    
-    /**
-     * @return the wordStat
-     */
-    public PassageStat getWordStat() {
-        return this.wordStat;
+    public PassageStat getPassageStat() {
+        return this.passageStat;
     }
 
     /**
-     * @param wordStat the wordStat to set
+     * @param passageStat the passageStat to set
      */
-    public void setWordStat(final PassageStat wordStat) {
-        this.wordStat = wordStat;
-    }
-
-    /**
-     * @return the strongsStat
-     */
-    public PassageStat getStrongsStat() {
-        return this.strongsStat;
-    }
-
-    /**
-     * @param strongsStat the strongsStat to set
-     */
-    public void setStrongsStat(final PassageStat strongsStat) {
-        this.strongsStat = strongsStat;
-    }
-
-    /**
-     * @return the subjectStat
-     */
-    public PassageStat getSubjectStat() {
-        return this.subjectStat;
-    }
-
-    /**
-     * @param subjectStat the subjectStat to set
-     */
-    public void setSubjectStat(final PassageStat subjectStat) {
-        this.subjectStat = subjectStat;
+    public void setPassageStat(final PassageStat passageStat) {
+        this.passageStat = passageStat;
     }
 
     /**

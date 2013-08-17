@@ -108,7 +108,6 @@ body {
 
 .metadataContainer h3 {
     margin: 0px;
-    color: #33339F;
 }
 
 .metadataContainer span {
@@ -125,6 +124,14 @@ body {
 
 .lexiconRelatedWord a:hover, .lexiconRelatedWord span:hover, .lexiconRelatedWord span:hover * {
     color: #F3E5B4;
+}
+#wordStat .cloudContainer {
+    overflow-y: auto;
+    max-height: 375px;
+}
+
+#wordStat a, #textStat a, #subjectStat a {
+    color: #33339F;
 }
 
 #origin a {

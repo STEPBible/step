@@ -1,6 +1,8 @@
 package com.tyndalehouse.step.core.service.jsword;
 
+import com.tyndalehouse.step.core.models.ScopeType;
 import com.tyndalehouse.step.core.models.stats.CombinedPassageStats;
+import com.tyndalehouse.step.core.models.stats.PassageStat;
 
 /**
  * Defines an interface for obtaining various stats on a passage.
@@ -9,13 +11,23 @@ import com.tyndalehouse.step.core.models.stats.CombinedPassageStats;
  * 
  */
 public interface JSwordAnalysisService {
-
     /**
-     * Obtains stats for a particular versions, word stats, strong stats
-     * 
+     * Strong stats, counts by strong number.
+     *
+     *
+     * @param reference the reference
+     * @param scopeType the scope, whether chapter, near by chapters, or whole book
+     * @return the passage stat
+     */
+    PassageStat getWordStats(String reference, final ScopeType scopeType);
+    /**
+     * Gets the text stats.
+     *
+     *
      * @param version the version
      * @param reference the reference
-     * @return the all stats
+     * @param scopeType the scope, whether chapter, near by chapters, or whole book
+     * @return the word stats
      */
-    CombinedPassageStats getStatsForPassage(String version, String reference);
+    PassageStat getTextStats(String version, String reference, final ScopeType scopeType);
 }

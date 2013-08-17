@@ -28,38 +28,50 @@
  ******************************************************************************/
 
 step.lexicon = {
-    passageId : 0,
-    positioned : false,
-    currentLexiconData : undefined,
+    passageId: 0,
+    positioned: false,
+    currentLexiconData: undefined,
 
-    setPassageIdInFocus : function(passageId) {
+    setPassageIdInFocus: function (passageId) {
         this.passageId = passageId;
-        this.wordleView.relistenToModel();
     },
 
-    sameWordSearch : function(strongNumber, refLimit) {
+    /**
+     * @param strongNumber
+     * @param refLimit the bible text range/scope - i.e. Gen-Rev
+     */
+    sameWordSearch: function (strongNumber, refLimit) {
         this.doSearch(ALL_FORMS, strongNumber, refLimit);
     },
 
+    /**
+     * @param strongNumber
+     * @param refLimit the bible text range/scope - i.e. Gen-Rev
+     */
     relatedWordSearch: function (strongNumber, refLimit) {
         this.doSearch(ALL_RELATED, strongNumber, refLimit);
     },
 
-    doSearch : function(searchType, strongNumber, refLimit) {
+    /**
+     * @param searchType the type of search, eithe ALL_FORMS or ALL_RELATED
+     * @param strongNumber
+     * @param refLimit the bible text range/scope - i.e. Gen-Rev
+     */
+    doSearch: function (searchType, strongNumber, refLimit) {
         var query;
-        if(strongNumber) {
+        if (strongNumber) {
             query = strongNumber;
         } else {
             query = $("span[info-name ='strongNumber']").text();
         }
 
-        if(step.util.raiseErrorIfBlank(query, __s.error_no_strong_data)) {
+        if (step.util.raiseErrorIfBlank(query, __s.error_no_strong_data)) {
             var targetPassageId = step.util.getOtherPassageId(this.passageId);
 
             var model = WordSearchModels.at(targetPassageId);
             var attributes = {};
 
-            if(refLimit) {
+            if (refLimit) {
                 attributes.originalScope = refLimit;
                 if (model.get("detail") < 1) {
                     attributes.detail = 1;
@@ -81,7 +93,7 @@ step.lexicon = {
         }
     },
 
-    resetContainer : function (container) {
+    resetContainer: function (container) {
         $("*", container).each(function (index, element) {
             if ($(element).attr("info-name")) {
                 $(element).html("");
@@ -95,7 +107,7 @@ step.lexicon = {
      * @param data the data itself
      * @param container the HTML container
      */
-    populateNames : function (indexToWord, data, container) {
+    populateNames: function (indexToWord, data, container) {
         this.resetContainer(container);
 
         // now check if we have information, if not, then hide
@@ -106,8 +118,8 @@ step.lexicon = {
             $(container).show();
         }
 
-        if(!step.util.isBlank(data[indexToWord].strongNumber)) {
-            $("#lsjBdbHeader").html(data[indexToWord].strongNumber[0].toLowerCase() == 'g' ? __s.lexicon_lsj_definition : __s.lexicon_bdb_definition );
+        if (!step.util.isBlank(data[indexToWord].strongNumber)) {
+            $("#lsjBdbHeader").html(data[indexToWord].strongNumber[0].toLowerCase() == 'g' ? __s.lexicon_lsj_definition : __s.lexicon_bdb_definition);
         }
 
         $("*", container).each(function (index, item) {
@@ -130,7 +142,7 @@ step.lexicon = {
                     }
                 }
 
-                if(infoName == 'accentedUnicode') {
+                if (infoName == 'accentedUnicode') {
                     //add correct font
                     targetItem.removeClass();
                     targetItem.addClass(data[indexToWord].strongNumber[0] == 'H' ? "hbFontSmall" : "unicodeFont");
@@ -153,14 +165,14 @@ step.lexicon = {
         });
     },
 
-    switchWords : function(strongNumber) {
-        if(this.currentLexiconData == undefined) {
+    switchWords: function (strongNumber) {
+        if (this.currentLexiconData == undefined) {
             //an error occurred:
             log.console("Trying to switch words for undefined data.");
         }
 
-        for(var i = 0; i < this.currentLexiconData.vocabInfos.length; i++) {
-            if(this.currentLexiconData.vocabInfos[i].strongNumber == strongNumber) {
+        for (var i = 0; i < this.currentLexiconData.vocabInfos.length; i++) {
+            if (this.currentLexiconData.vocabInfos[i].strongNumber == strongNumber) {
                 //we're in business, so need to trigger the display again.
                 this.showSingleWordOnPopup(i);
             }
@@ -184,32 +196,32 @@ step.lexicon = {
      * @param morphInfos the morphology
      */
     enhanceMorphology: function (index, data) {
-        if(data == undefined || index >= data.length) {
+        if (data == undefined || index >= data.length) {
             return;
         }
 
         var morphData = data[index];
 
         //TODO: this will not work if we ever internationalise the morphology.
-        if(morphData["function"] == "Verb") {
+        if (morphData["function"] == "Verb") {
             morphData.morphSummary =
                 this.addNonNull(morphData.tense) + " " +
-                this.addNonNull(morphData.voice) + " " +
-                this.addNonNull(morphData.mood) + " (";
+                    this.addNonNull(morphData.voice) + " " +
+                    this.addNonNull(morphData.mood) + " (";
 
             this.addPerson(morphData);
             morphData.morphSummary +=
                 this.addNonNull(morphData.number) + " " +
-                this.addNonNull(morphData.gender) + " " +
-                this.addNonNull(morphData.wordCase) + ")";
+                    this.addNonNull(morphData.gender) + " " +
+                    this.addNonNull(morphData.wordCase) + ")";
         } else {
             morphData.morphSummary =
                 this.addNonNull(morphData.gender) + " ";
             this.addPerson(morphData);
             morphData.morphSummary +=
                 this.addNonNull(morphData.person) + " " +
-                this.addNonNull(morphData.number) + " (" +
-                this.addNonNull(morphData.wordCase) + ")";
+                    this.addNonNull(morphData.number) + " (" +
+                    this.addNonNull(morphData.wordCase) + ")";
         }
 
         morphData.morphSummary = morphData.morphSummary
@@ -219,14 +231,14 @@ step.lexicon = {
             .replace(/\(\)/g, "");
     },
 
-    addNonNull : function(input) {
-          if(input == null) {
-              return "";
-          }
+    addNonNull: function (input) {
+        if (input == null) {
+            return "";
+        }
         return input;
     },
 
-    showSingleWordOnPopup : function(index) {
+    showSingleWordOnPopup: function (index) {
         var data = this.currentLexiconData;
 
         this.enhanceMorphology(index, data.morphInfos);
@@ -234,15 +246,15 @@ step.lexicon = {
         step.lexicon.populateNames(index, data.vocabInfos, "#vocabContainer");
 
         //now hide/show the grammar items:
-        $("#grammarContainer table tr").each(function(i, item) {
+        $("#grammarContainer table tr").each(function (i, item) {
             var tds = $(this).find("td");
-            if(step.util.isBlank(tds.eq(1).text())) {
+            if (step.util.isBlank(tds.eq(1).text())) {
                 $(this).hide();
             } else {
                 $(this).show();
             }
 
-            if(step.util.isBlank(tds.eq(3).text())) {
+            if (step.util.isBlank(tds.eq(3).text())) {
                 tds.eq(2).hide();
             } else {
                 tds.eq(2).show();
@@ -250,8 +262,8 @@ step.lexicon = {
         });
 
         if (data.vocabInfos[index] && data.vocabInfos[index].relatedNos) {
-            var linkContainer =  $("*[info-name = 'relatedNos']", "#vocabContainer");
-            $.each(data.vocabInfos[index].relatedNos, function(i, item) {
+            var linkContainer = $("*[info-name = 'relatedNos']", "#vocabContainer");
+            $.each(data.vocabInfos[index].relatedNos, function (i, item) {
                 //build a link, with gloss (unicode title='translit')
                 var unicode = $("<span>").append(item.matchingForm).addClass("ancientLanguage").prop("href", "javascript:void(0)");
                 var link = $("<a>").append(item.gloss + " (");
@@ -263,7 +275,7 @@ step.lexicon = {
                 linkContainer.append(link);
             });
 
-            $("span[info-name='relatedNos'] a").button().click(function() {
+            $("span[info-name='relatedNos'] a").button().click(function () {
                 showDef($(this).prop("strongNumber"));
             });
             $("span[info-name='relatedNos']").buttonset();
@@ -284,9 +296,9 @@ step.lexicon = {
         entries.empty();
     },
 
-    updateWordLinks : function (vocabInfos, index) {
+    updateWordLinks: function (vocabInfos, index) {
         //we don't do anything if we have only 1 vocabInfo
-        if(vocabInfos && vocabInfos.length < 2) {
+        if (vocabInfos && vocabInfos.length < 2) {
             return;
         }
 
@@ -297,14 +309,14 @@ step.lexicon = {
 
         entries = entries.append("<h5>" + __s.selected_lexicon_word + ": </h5>");
 
-        for(var i = vocabInfos.length -1; i >= 0; i--) {
+        for (var i = vocabInfos.length - 1; i >= 0; i--) {
             var link = $("<input type='radio' class='lexiconWordLink' name='lexiconWordLink' />").attr("id", "lexiconWordLink" + i);
             var label = $("<label></label>").attr("for", "lexiconWordLink" + i).html(vocabInfos[i].stepGloss);
 
 
             self.addWordLinkClickHandler(link, vocabInfos[i]);
 
-            if(i == index) {
+            if (i == index) {
                 link.prop("checked", "true");
             }
 
@@ -320,8 +332,8 @@ step.lexicon = {
      * @param link that is being created
      * @param vocabInfo the vocabInfo containing the strong number
      */
-    addWordLinkClickHandler : function(link, vocabInfo) {
-        link.click(function(){
+    addWordLinkClickHandler: function (link, vocabInfo) {
+        link.click(function () {
             step.lexicon.switchWords(vocabInfo.strongNumber);
         });
     }
@@ -337,7 +349,7 @@ step.lexicon = {
 function LexiconDefinition() {
     var self = this;
     // listen for particular types of events and call the prototype functions
-    this.getPopup().hear("show-all-strong-morphs", function(selfElement, data) {
+    this.getPopup().hear("show-all-strong-morphs", function (selfElement, data) {
         step.passage.higlightStrongs(data);
 
         self.showDef(data);
@@ -349,14 +361,11 @@ function LexiconDefinition() {
 
     $("#origin").detailSlider({
         key: "lexicon",
-        scopeSelector : "#lexiconDefinition"
+        scopeSelector: "#lexiconDefinition"
     });
-
-    //add the word model:
-    step.lexicon.wordleView = new ViewLexiconWordle;
 }
 
-LexiconDefinition.prototype.getPopup = function() {
+LexiconDefinition.prototype.getPopup = function () {
     if (this.popup) {
         return this.popup;
     }
@@ -365,43 +374,55 @@ LexiconDefinition.prototype.getPopup = function() {
     var lexiconDefinitionSelector = $("#lexiconDefinition");
     this.popup = lexiconDefinitionSelector;
 
-    this.popup.tabs().draggable({
-        handle : "#lexiconDefinitionHeader"
+    step.lexicon.wordleView = new ViewLexiconWordle;
+    this.popup.tabs({
+        activate : function(event, ui) {
+            if("ANALYSIS" == ui.newPanel.attr("name")) {
+                step.lexicon.wordleView.doStats();
+            }
+        }
+    }).draggable({
+        handle: "#lexiconDefinitionHeader"
     });
-    lexiconDefinitionSelector.tabs( "option", "active", 0);
+    lexiconDefinitionSelector.tabs("option", "active", 0);
 
 
     $('#lexiconPopupClose').button({ icons: { primary: "ui-icon-closethick" }, text: false }).click(function () {
         $('#lexiconDefinition').hide();
     });
-
-    lexiconDefinitionSelector.offset({top : $(window).height() - lexiconDefinitionSelector.height() - 10 });
+    lexiconDefinitionSelector.offset({top: $(window).height() - lexiconDefinitionSelector.height() - 10 });
 
     return this.popup;
 };
 
-LexiconDefinition.prototype.showDef = function(data) {
+LexiconDefinition.prototype.showDef = function (data) {
     var self = this;
-    step.lexicon.setPassageIdInFocus(data.passageId);
+
+    if (data.passageId) {
+        step.lexicon.wordleView.passageId = data.passageId;
+        step.lexicon.setPassageIdInFocus(data.passageId);
+    }
 
     // create all tabs - first remove everything, then re-add.
     var strong = data.strong;
     var morph = data.morph;
     var verse = $(data.source).closest("span.verse").filter("a:first").attr("name");
 
+    //get the right tab in focus
+
     // Get info on word
-    $.getSafe(MODULE_GET_INFO + strong + "/" + morph + "/" + verse, function(data) {
+    $.getSafe(MODULE_GET_INFO + strong + "/" + morph + "/" + verse, function (data) {
         self.showOriginalWordData(data);
     });
 
-    this.reposition();
+    this.reposition(step.defaults.infoPopup.lexiconTab);
 };
 
 
-LexiconDefinition.prototype.showOriginalWordData = function(data) {
+LexiconDefinition.prototype.showOriginalWordData = function (data) {
     //finally do the odd-ones out
     //we use the last info, as the main info
-    if(data.vocabInfos.length == 0) {
+    if (data.vocabInfos.length == 0) {
         return;
     }
     // remove previous information
@@ -409,7 +430,7 @@ LexiconDefinition.prototype.showOriginalWordData = function(data) {
     step.lexicon.showSingleWordOnPopup(data.vocabInfos.length - 1);
 };
 
-LexiconDefinition.prototype.reposition = function() {
+LexiconDefinition.prototype.reposition = function (tabNumber) {
     // if left position is negative, then we assume it's off screen and need
     // position
     var popup = this.getPopup();
@@ -418,9 +439,9 @@ LexiconDefinition.prototype.reposition = function() {
         step.lexicon.positioned = true;
         var lexiconDefinition = $("#lexiconDefinition");
         lexiconDefinition.offset({
-            top  : $(window).height() - lexiconDefinition.height() - 20,
-            left : $(window).width() - lexiconDefinition.width() - 10
+            top: $(window).height() - lexiconDefinition.height() - 20,
+            left: $(window).width() - lexiconDefinition.width() - 10
         });
-
     }
+    this.popup.tabs({ active : tabNumber });
 };

@@ -1219,6 +1219,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
      */
     @Override
     public String getAllReferences(final String references, final String version) {
+        //TODO - can be refactored to optimize the reference query when used in subject searches...
         final PassageKeyFactory keyFactory = PassageKeyFactory.instance();
         final Versification av11n = this.versificationService.getVersificationForVersion(version);
         final StringBuilder referenceString = new StringBuilder(1024);

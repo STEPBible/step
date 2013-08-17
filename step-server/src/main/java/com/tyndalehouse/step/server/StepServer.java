@@ -32,10 +32,8 @@
  ******************************************************************************/
 package com.tyndalehouse.step.server;
 
-import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
-import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,6 +65,7 @@ public final class StepServer {
     public static final String SHUTDOWN_CONTEXT = "shutdown";
     public static final String ENGLISH_GENERIC_ERROR = "An error has occurred";
     public static final String ENGLISH_BROWSER_ERROR = "STEP was unable to launch the browser.";
+    public static final String BACKGROUND_LAUNCH = "backgroundLaunch";
     private InetAddress listeningAddress;
     private final InetSocketAddress socket;
     private final URL warURL;
@@ -78,22 +77,24 @@ public final class StepServer {
     private ResourceBundle errorMessages = null;
     private ResourceBundle htmlMessages = null;
     private boolean ignoreBrowserError = Boolean.getBoolean("ignoreBrowserError");
+    private boolean backgroundLaunch;
 
     /**
      * Initialises all the common variables required to setup the server
      *
      * @throws MalformedURLException couldn't create a location to our disk
      */
-    public StepServer() throws MalformedURLException {
+    public StepServer(boolean backgroundLaunch) throws MalformedURLException {
+        this.backgroundLaunch = backgroundLaunch;
         try {
             listeningAddress = InetAddress.getByName("localhost");
-        } catch(UnknownHostException ex) {
+        } catch (UnknownHostException ex) {
             try {
-                listeningAddress = InetAddress.getByAddress("localhost", new byte[] {0x7f,0x00,0x00,0x01});
+                listeningAddress = InetAddress.getByAddress("localhost", new byte[]{0x7f, 0x00, 0x00, 0x01});
             } catch (UnknownHostException ex1) {
                 try {
                     listeningAddress = InetAddress.getLocalHost();
-                } catch(UnknownHostException ex3) {
+                } catch (UnknownHostException ex3) {
                     //can't do much here
                     LOGGER.error("Unable to obtain IP address to bind on.");
                     throw new RuntimeException(ex3.getMessage());
@@ -146,11 +147,11 @@ public final class StepServer {
 
             finishStartUp();
             jetty.join();
-        } catch(final BindException ex) {
+        } catch (final BindException ex) {
             LOGGER.info("Attempting to start STEP when already started.");
             try {
                 jetty.stop();
-            } catch(Exception e) {
+            } catch (Exception e) {
                 LOGGER.warn("Failed to stop extra Jetty instance.", e);
             }
 
@@ -166,8 +167,10 @@ public final class StepServer {
     }
 
     private void finishStartUp() {
-        launchBrowser();
-        closeSpashScreen();
+        if (!this.backgroundLaunch) {
+            launchBrowser();
+            closeSpashScreen();
+        }
     }
 
     /**
@@ -307,9 +310,11 @@ public final class StepServer {
         trayIcon.setPopupMenu(popupMenu);
         try {
             SystemTray.getSystemTray().add(trayIcon);
-            trayIcon.displayMessage(
-                    htmlMessages.getString("step_running"),
-                    String.format(htmlMessages.getString("open_browser"), browserUrl), TrayIcon.MessageType.INFO);
+            if (!backgroundLaunch) {
+                trayIcon.displayMessage(
+                        htmlMessages.getString("step_running"),
+                        String.format(htmlMessages.getString("open_browser"), browserUrl), TrayIcon.MessageType.INFO);
+            }
         } catch (final AWTException e) {
             LOGGER.error("Unable to add system tray icon", e);
         }
@@ -385,7 +390,14 @@ public final class StepServer {
     public static void main(final String[] args) {
         try {
             System.setProperty("step.jetty", "true");
-            final StepServer ms = new StepServer();
+            final boolean backgroundLaunch = args.length > 0 && BACKGROUND_LAUNCH.equals(args[0]);
+            if (backgroundLaunch) {
+                if (SplashScreen.getSplashScreen() != null) {
+                    SplashScreen.getSplashScreen().close();
+                }
+            }
+
+            final StepServer ms = new StepServer(backgroundLaunch);
             ms.start();
             //////
             //note: if successful, never gets past the line above.

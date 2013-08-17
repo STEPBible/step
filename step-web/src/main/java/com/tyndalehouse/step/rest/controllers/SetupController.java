@@ -43,6 +43,7 @@ import java.util.List;
 
 import javax.inject.Provider;
 
+import com.tyndalehouse.step.models.setup.InstallationProgress;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -106,9 +107,9 @@ public class SetupController {
     /**
      * @return reads progress state
      */
-    public List<String> getProgress() {
+    public InstallationProgress getProgress() {
         validateSession(this.sessionProvider);
-        return this.loader.readOnceProgress();
+        return new InstallationProgress(this.loader.readOnceProgress(), this.loader.getTotalProgress());
     }
 
     /**

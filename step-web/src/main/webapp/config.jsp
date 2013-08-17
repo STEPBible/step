@@ -5,7 +5,6 @@
 <%@page import="javax.servlet.jsp.jstl.core.Config"%>
 <%@ page contentType="text/html; charset=UTF-8" language="java" %> 
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-
 <%
 	Injector injector = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
 	Locale locale = injector.getInstance(ClientSession.class).getLocale();
@@ -13,8 +12,6 @@
 	WebStepRequest stepRequest = new WebStepRequest(injector, request);
 %>
 <fmt:setBundle basename="HtmlBundle" />
-
-
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <HTML>
 <HEAD>
@@ -25,8 +22,6 @@
     <link rel="stylesheet" type="text/css" href="css/setup-layout.css" />
     <link rel="stylesheet" type="text/css" href="static/static.css" />
 	<link rel="shortcut icon"  href="images/step-favicon.ico" />
-
-
     <script src="international/interactive.js" type="text/javascript"></script>
 
     <script src="js/ui_hooks.js" type="text/javascript"></script>

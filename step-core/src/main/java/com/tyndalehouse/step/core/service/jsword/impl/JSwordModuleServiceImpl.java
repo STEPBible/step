@@ -138,7 +138,7 @@ public class JSwordModuleServiceImpl implements JSwordModuleService {
         final Book book = this.versificationService.getBookFromVersion(initials);
         try {
             IndexManagerFactory.getIndexManager().deleteIndex(book);
-        } catch (final BookException e) {
+        } catch (final Exception e) {
             LOGGER.info("Error deleting index. Attempting to rebuild index all the same");
             LOGGER.trace("Error deleting index. Attempting to rebuild index all the same", e);
         }
@@ -362,7 +362,7 @@ public class JSwordModuleServiceImpl implements JSwordModuleService {
                 Book deadBook = Books.installed().getBook(initials);
                 IndexManagerFactory.getIndexManager().deleteIndex(deadBook);
                 deadBook.getDriver().delete(deadBook);
-            } catch (final BookException e) {
+            } catch (final Exception e) {
                 // book wasn't found probably
                 LOGGER.warn("Deleting book failed: " + initials, e);
             }

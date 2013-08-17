@@ -257,6 +257,27 @@
                 <initScript />
                 <visibilityScript />
               </formComponent>
+              <formComponent name="" id="276" customizedId="" beanClass="com.install4j.runtime.beans.formcomponents.CheckboxComponent" enabled="true" commentSet="false" comment="" insetTop="" insetLeft="" insetBottom="" insetRight="" resetInitOnPrevious="false">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.formcomponents.CheckboxComponent">
+                      <void property="checkboxText">
+                        <string>Allow faster launches</string>
+                      </void>
+                      <void property="helpText">
+                        <string>By ticking this option, STEP starts up when the computer starts up. 
+This means faster start-up times when you come to use STEP. 
+It also means STEP is always accessible from your browser.</string>
+                      </void>
+                      <void property="variableName">
+                        <string>createBackgroundLaunch</string>
+                      </void>
+                    </object>
+                  </java>
+                </serializedBean>
+                <initScript />
+                <visibilityScript />
+              </formComponent>
             </formComponents>
           </screen>
           <screen name="" id="8" customizedId="" beanClass="com.install4j.runtime.beans.screens.InstallationScreen" enabled="true" commentSet="false" comment="" actionElevationType="inherit" rollbackBarrier="true" backButton="2" finishScreen="false" wizardIndexChangeType="unchanged" wizardIndexKey="">
@@ -318,6 +339,26 @@
                   </java>
                 </serializedBean>
                 <condition>context.getBooleanVariable("createDesktopLinkAction")</condition>
+              </action>
+              <action name="" id="277" customizedId="" beanClass="com.install4j.runtime.beans.actions.desktop.AddStartupItemAction" enabled="true" commentSet="false" comment="" actionElevationType="elevated" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.desktop.AddStartupItemAction">
+                      <void property="allUsers">
+                        <boolean>true</boolean>
+                      </void>
+                      <void property="executable">
+                        <object class="java.io.File">
+                          <string>step backgroundLaunch</string>
+                        </object>
+                      </void>
+                      <void property="name">
+                        <string>STEP (Background)</string>
+                      </void>
+                    </object>
+                  </java>
+                </serializedBean>
+                <condition>context.getBooleanVariable("createBackgroundLaunch")</condition>
               </action>
             </actions>
             <formComponents />

@@ -85,6 +85,18 @@ public class LoaderTest {
         when(session.getLocale()).thenReturn(Locale.ENGLISH);
     }
 
+    @Test
+    public void testLoaderProgress() {
+        Loader l = new Loader(null, null, new Properties(), null, null, null);
+        assertEquals(0, l.getTotalProgress());
+
+        l.setTotalProgress(1);
+        assertEquals(1 / l.getTotalItems(), l.getTotalProgress());
+
+        l.setTotalItems(l.getTotalItems());
+        assertEquals(1, l.getTotalProgress());
+    }
+
     /**
      * loads the nave module
      */

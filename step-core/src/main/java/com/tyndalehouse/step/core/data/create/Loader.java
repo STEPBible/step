@@ -84,6 +84,9 @@ public class Loader {
     private String runningAppVersion;
     private AppManagerService appManager;
     private WorkListener workListener;
+    private int totalProgress = 0;
+    private int totalItems = 6;
+    private boolean inProgress = false;
 
     /**
      * The loader is given a connection source to load the data.
@@ -117,12 +120,16 @@ public class Loader {
      * Creates the table and loads the initial data set
      */
     public void init() {
-        // remove any internet loader, because we are running locally first...
-        // THIS LINE IS ABSOLUTELY CRITICAL AS IT DISABLES HTTP INSTALLER ON AN APPLICATION-WIDE LEVEL
-        listenInJobs();
-
+        if (this.inProgress) {
+            return;
+        }
+        this.totalProgress = 0;
         try {
+            this.inProgress = true;
+            listenInJobs();
             if (!Boolean.getBoolean("step.skipBookInstallation")) {
+                // remove any internet loader, because we are running locally first...
+                // THIS LINE IS ABSOLUTELY CRITICAL AS IT DISABLES HTTP INSTALLER ON AN APPLICATION-WIDE LEVEL
                 this.jswordModule.setOffline(true);
 
                 // attempt to reload the installer list. This ensures we have all the versions in the available bibles
@@ -136,6 +143,7 @@ public class Loader {
                 // This may put too much stress on smaller systems, since indexing for all modules in
                 // package
                 // would result as happening at the same times
+                this.totalItems += availableModules.size() * 2;
                 for (int ii = 0; ii < availableModules.size(); ii++) {
                     final Book b = availableModules.get(ii);
                     installAndIndex(b.getInitials());
@@ -156,6 +164,7 @@ public class Loader {
                 JobManager.removeWorkListener(workListener);
             }
             this.jswordModule.setOffline(false);
+            this.inProgress = false;
         }
     }
 
@@ -181,8 +190,10 @@ public class Loader {
      */
     private void installAndIndex(final String version) {
         syncInstall(version);
+        this.totalProgress += 1;
         this.addUpdate("install_making_version_searchable", version);
         this.jswordModule.reIndex(version);
+        this.totalProgress += 1;
     }
 
     /**
@@ -224,11 +235,17 @@ public class Loader {
     private void loadData() {
         LOGGER.info("Loading initial data");
         loadNave();
+        this.totalProgress += 1;
         loadLexiconDefinitions();
+        this.totalProgress += 1;
         loadSpecificForms();
+        this.totalProgress += 1;
         loadRobinsonMorphology();
+        this.totalProgress += 1;
         loadVersionInformation();
+        this.totalProgress += 1;
         loadAlternativeTranslations();
+        this.totalProgress += 1;
         // loadOpenBibleGeography();
 
         // loadHotSpots();
@@ -442,7 +459,17 @@ public class Loader {
     public List<String> readOnceProgress() {
         final List<String> updates = new ArrayList<String>();
         this.progress.drainTo(updates);
+        for (String line : updates) {
+            LOGGER.info(line);
+        }
         return updates;
+    }
+
+    /**
+     * @return the the total amount of progress of the installation so far
+     */
+    public int getTotalProgress() {
+        return (int) ((double) this.totalProgress / this.totalItems * 100);
     }
 
     /**
@@ -469,5 +496,26 @@ public class Loader {
      */
     public boolean isComplete() {
         return this.complete;
+    }
+
+    /**
+     * @param totalProgress the total amount of progress so far
+     */
+    void setTotalProgress(final int totalProgress) {
+        this.totalProgress = totalProgress;
+    }
+
+    /**
+     * @param totalItems the total number of items to be processed
+     */
+    void setTotalItems(final int totalItems) {
+        this.totalItems = totalItems;
+    }
+
+    /**
+     * @return the total number of items.
+     */
+    int getTotalItems() {
+        return totalItems;
     }
 }

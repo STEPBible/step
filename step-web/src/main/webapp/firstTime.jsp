@@ -4,7 +4,6 @@
 <%@page import="javax.servlet.jsp.jstl.core.Config"%>
 <%@ page contentType="text/html; charset=UTF-8" language="java" %> 
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-
 <%
 	Injector injector = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
 	Locale locale = injector.getInstance(ClientSession.class).getLocale();
@@ -21,7 +20,7 @@
     <link rel="stylesheet" type="text/css" href="css/setup-layout.css" />
     <link rel="stylesheet" type="text/css" href="static/static.css" />
 	<link rel="shortcut icon"  href="images/step-favicon.ico" />
-
+    <script src="libs/sprintf-0.7-beta1.js" type="text/javascript"></script>
     <script src="international/interactive.js" type="text/javascript"></script>
     <script src="js/ui_hooks.js" type="text/javascript"></script>
     <script src="js/setup/step.firstTime.js" type="text/javascript"></script>
@@ -34,13 +33,13 @@
 	<h2><fmt:message key="welcome_to_step" /></h2>
 	<p />
 		<fmt:message key="first_time_notice" />
-	 
 	<p />
-	
-	<div style="height: 300px; overflow-y: scroll; border: 1px solid lightgrey">
-		<ul id="progressStatus">
-			
-		</ul>
-	</div>
+
+    <div id="totalProgress">
+        <span id="progressLabel"></span>
+        <span id=progressBar></span>
+    </div>
+    <p />
+	<div id="progressLog"></div>
 </body>
 </HTML>

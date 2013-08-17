@@ -53,7 +53,7 @@ var QuickLexicon = Backbone.View.extend({
 
         this.qtip = $(this.model.get("element")).qtip({
             style: { tip: false, classes: "quickLexiconDefinition primaryLightBg" },
-            position: { my: "top right", at: "top right", viewport: $(window), target: $("body"), effect: false },
+            position: { my: "top center", at: "top center", viewport: $(window), target: $("body"), effect: false },
             hide: { event: 'unfocus mouseleave' },
             content: {
                 text: function (event, api) {

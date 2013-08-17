@@ -210,6 +210,10 @@ body {
     padding: 5px;
 }
 
+#stepInDevelopmentWarning:hover {
+    opacity: 0;
+}
+
 .primaryDark {
     color: #991C32;
 }

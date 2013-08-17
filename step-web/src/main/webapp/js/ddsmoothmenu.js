@@ -90,10 +90,6 @@ var ddsmoothmenu = {
         $mainmenu.parent().get(0).className = setting.classname || "ddsmoothmenu";
         var $headers = $mainmenu.find("ul").parent();
         $headers.hover(function(e) {
-//            if(ddsmoothmenu.ignoreHoverDDSmoothMenu < 2) {
-//                ddsmoothmenu.ignoreHoverDDSmoothMenu++;
-//                return;
-//            }
             $(this).children('a:eq(0)').addClass('selected');
         }, function(e) {
             $(this).children('a:eq(0)').removeClass('selected');

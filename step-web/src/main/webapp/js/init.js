@@ -55,7 +55,6 @@ function init() {
 
 
         initLocale();
-        initBetaWarning();
         checkValidUser();
 
         initMenu();
@@ -79,13 +78,6 @@ function init() {
     });
 }
 
-function initBetaWarning() {
-    $("#stepInDevelopmentWarning").hover(function () {
-        $(this).css("opacity", "0");
-    }, function () {
-        $(this).css("opacity", "1");
-    });
-}
 
 function initRefineSearch() {
     $(".refinedSearch .closeRefinedSearch").click(function () {

@@ -472,8 +472,17 @@ var SearchCriteria = Backbone.View.extend({
      * Do the search
      */
     doSearch: function () {
+        var newValues = { pageNumber: 1 };
+        var versions = this.searchVersions.val();
+
+        if(step.util.isBlank(versions)) {
+            var defaultVersion = step.defaults.passages[0].version;
+            this.searchVersions.val(defaultVersion);
+            newValues.searchVersions = defaultVersion;
+        }
+
         //reset the page number
-        this.model.save({ pageNumber: 1 });
+        this.model.save(newValues);
         this.pageNumber.val(this.model.get("pageNumber"));
         this.model.trigger("search", this.model);
     }

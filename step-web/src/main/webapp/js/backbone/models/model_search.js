@@ -7,7 +7,9 @@ var SearchModel = Backbone.Model.extend({
             querySyntax: "",
             detail: 0,
             searchType: undefined,
-            context: 0
+            context: 0,
+            searchVersions : "ESV"
+
         }
     },
     /**

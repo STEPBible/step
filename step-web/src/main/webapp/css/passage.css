@@ -742,6 +742,10 @@ FONT.usg {
 	border-collapse: collapse;
 }
 
+.verseNumberStrongs th {
+    color: #991C32;
+}
+
 .verseNumberStrongs a, .verseNumberStrongs a:visited {
 	color: #33339F;
 }
@@ -801,4 +805,10 @@ Analysis tabs
     font-style: normal;
     font-size: 10px !important;
     font-variant: normal;
+}
+
+.versePopup {
+    border-width: 2px;
+    border-color: #F4E7BA;
+    background-color: white;
 }

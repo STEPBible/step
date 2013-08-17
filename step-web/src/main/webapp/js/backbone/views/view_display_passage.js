@@ -344,7 +344,7 @@ var PassageDisplayView = Backbone.View.extend({
                 show: { event: 'mouseenter', solo: true },
                 hide: { event: 'unfocus mouseleave', fixed: true, delay: 200 },
                 position: { my: "bottom center", at: "top center", of: element, viewport: $(window), effect: false },
-                style: { classes: "primaryLightBg primaryLightBorder noQtipWidth" },
+                style: { classes: "versePopup noQtipWidth" },
                 overwrite: false,
                 content: {
                     text: function (event, api) {

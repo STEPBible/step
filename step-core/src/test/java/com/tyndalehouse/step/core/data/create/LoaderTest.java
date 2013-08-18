@@ -91,10 +91,10 @@ public class LoaderTest {
         assertEquals(0, l.getTotalProgress());
 
         l.setTotalProgress(1);
-        assertEquals(1 / l.getTotalItems(), l.getTotalProgress());
+        assertEquals((int) ((double) 1 / l.getTotalItems() * 100), l.getTotalProgress());
 
-        l.setTotalItems(l.getTotalItems());
-        assertEquals(1, l.getTotalProgress());
+        l.setTotalProgress(l.getTotalItems());
+        assertEquals(100, l.getTotalProgress());
     }
 
     /**

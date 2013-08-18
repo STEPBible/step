@@ -572,8 +572,7 @@ FONT.usg {
 }
 
 .emphasisePassagePhrase {
-	text-decoration: underline;
-	/* border: 2px dotted #E78F08; */
+    background-color: #F3E5B4;
 }
 
 /**********************************************/

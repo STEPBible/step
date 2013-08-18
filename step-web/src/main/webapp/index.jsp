@@ -216,7 +216,7 @@
 				</tr>
 				<tr>
 					<td><a target="_new" href="http://www.tyndale.cam.ac.uk/index.php?mact=News,cntnt01,detail,0&cntnt01articleid=28&cntnt01returnid=15" title="<fmt:message key="find_out_more_about_step" />"><fmt:message key="about_step_project" /></a></td>
-					<td><a target="_new" href="http://www.facebook.com/pages/STEP-Development-Scripture-Tools-from-Tyndale-House-Cambridge/218909814807605?sk=app_208195102528120" title="<fmt:message key="support_the_project"/>"><fmt:message key="volunteers_required" /></a></td>
+					<td><a target="_new" href="https://stepweb.atlassian.net/wiki/x/iICV" title="<fmt:message key="support_the_project"/>"><fmt:message key="volunteers_required" /></a></td>
 				</tr>
 			</table>
 			<br />

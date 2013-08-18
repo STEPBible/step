@@ -47,9 +47,9 @@ var QuickLexicon = Backbone.View.extend({
     render: function (event) {
         var self = this;
 
-        if(this.qtip != undefined) {
-            this.qtip.qtip("destroy");
-        }
+//        if(this.qtip != undefined) {
+//            this.qtip.qtip("destroy");
+//        }
 
         this.qtip = $(this.model.get("element")).qtip({
             style: { tip: false, classes: "quickLexiconDefinition primaryLightBg" },
@@ -85,6 +85,11 @@ var QuickLexicon = Backbone.View.extend({
                             "</span>";
                         api.set('content.text', vocabInfo);
                     });
+                }
+            },
+            events: {
+                hidden: function(event, api) {
+                    api.destroy(true);
                 }
             }
         });

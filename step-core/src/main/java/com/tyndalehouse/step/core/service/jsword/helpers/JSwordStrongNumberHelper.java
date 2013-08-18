@@ -277,8 +277,16 @@ public class JSwordStrongNumberHelper {
                             return 1;
                         }
 
-                        return gloss1.toLowerCase(Locale.ENGLISH).compareTo(
+                        //if they are equal, we still want to preserve, so compare based on the
+                        //hebrew instead.
+                        int equalGlosses = gloss1.toLowerCase(Locale.ENGLISH).compareTo(
                                 gloss2.toLowerCase(Locale.ENGLISH));
+
+                        if(equalGlosses != 0) {
+                            return equalGlosses;
+                        }
+
+                        return o1.getMatchingForm().compareTo(o2.getMatchingForm());
                     }
                 });
 

@@ -266,8 +266,8 @@ function refreshLayout() {
     var passageContents = $(".passageContent");
     for (var i = 0; i < passageContents.length; i++) {
         var pc = passageContents.get(i);
-        var toolbarHeight = $(".passageToolbarFloatingContainer:visible", step.util.getPassageContainer(i)).height();
-        var height = windowHeight - $(pc).position().top - toolbarHeight - 8;
+        var warningHeight = $("#stepInDevelopmentWarning").height();
+        var height = windowHeight - $(pc).position().top - warningHeight - 8;
         $(pc).height(height);
     }
 

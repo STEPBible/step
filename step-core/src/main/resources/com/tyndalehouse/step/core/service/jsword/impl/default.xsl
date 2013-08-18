@@ -801,9 +801,19 @@
   <xsl:template match="title[@subType ='x-preverse' or @subtype = 'x-preverse']">
         <!-- Verses handle most titles, however, if they are not in a verse, then we handle them here. -->
         <xsl:if test="not(./ancestor::verse)">
-            <h3 class="heading">
-                <xsl:apply-templates/>
-            </h3>
+            <xsl:choose>
+                <xsl:when test="@canonical = 'true' and @type='psalm'">
+                    <h3 class="psalmHeading"><xsl:apply-templates/></h3>
+                </xsl:when>
+                <xsl:when test="@canonical = 'true'">
+                    <h3 class="canonicalHeading"><xsl:apply-templates/></h3>
+                </xsl:when>
+                <xsl:otherwise>
+                    <h3 class="heading">
+                        <xsl:apply-templates/>
+                    </h3>
+                </xsl:otherwise>
+            </xsl:choose>
         </xsl:if>
   </xsl:template>
 

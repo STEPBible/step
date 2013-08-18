@@ -393,6 +393,16 @@ H3.heading  {
 	font-weight: bold;
 }
 
+/* Deal with canonical titles as well */
+h3.canonicalHeading {
+    color: black;
+}
+
+h3.psalmHeading {
+    color: black;
+    font-variant: small-caps;
+}
+
 H4.heading  {
 	font-size: 100%;
 	color: #33339F;
@@ -461,6 +471,11 @@ TD.text {
 	color: #33339F;
 	font-weight: bold;
 	front-size: xx-small;
+}
+
+h3.psalmHeading .note {
+    font-variant: normal;
+    font-size: x-small;
 }
 
 .hebrewLanguage {

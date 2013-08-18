@@ -47,14 +47,19 @@ var QuickLexicon = Backbone.View.extend({
     render: function (event) {
         var self = this;
 
-//        if(this.qtip != undefined) {
-//            this.qtip.qtip("destroy");
-//        }
+        if(this.qtip != undefined) {
+            this.qtip.qtip("destroy");
+        }
 
         this.qtip = $(this.model.get("element")).qtip({
             style: { tip: false, classes: "quickLexiconDefinition primaryLightBg" },
             position: { my: "top center", at: "top center", viewport: $(window), target: $("body"), effect: false },
             hide: { event: 'unfocus mouseleave' },
+            events : {
+                show: function(event, api) {
+                    self.showRelatedNumbers($.data(self.qtip, "relatedNumbers"));
+                }
+            },
             content: {
                 text: function (event, api) {
                     var strong = self.model.get("strongNumber");
@@ -64,6 +69,9 @@ var QuickLexicon = Backbone.View.extend({
                         var vocabInfo = "";
                         if (data.vocabInfos) {
                             $.each(data.vocabInfos, function (i, item) {
+                                $.data(self.qtip, "relatedNumbers", item.rawRelatedNumbers);
+                                self.showRelatedNumbers($.data(self.qtip, "relatedNumbers"));
+
                                 var fontClass = strong.length > 0 && strong[0] == 'H' ? "hbFontSmall" : 'unicodeFont';
 
                                 vocabInfo += "<h1>" +
@@ -86,14 +94,18 @@ var QuickLexicon = Backbone.View.extend({
                         api.set('content.text', vocabInfo);
                     });
                 }
-            },
-            events: {
-                hidden: function(event, api) {
-                    api.destroy(true);
-                }
             }
         });
 
         this.qtip.qtip("show");
+    },
+
+    /**
+     * @param rawRelatedNumbers the related raw numbers
+     */
+    showRelatedNumbers : function(rawRelatedNumbers) {
+        if(rawRelatedNumbers) {
+            step.passage.highlightStrong(null, rawRelatedNumbers.replace(/,/ig, ""), "relatedWordEmphasisHover");
+        }
     }
 });

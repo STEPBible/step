@@ -62,6 +62,7 @@ public class VocabInfo implements Serializable {
     private String stepTransliteration;
     private String unaccentedStepTransliteration;
     private String twoLetterLookup;
+    private String rawRelatedNumbers;
 
     /**
      * for serialisation
@@ -93,6 +94,8 @@ public class VocabInfo implements Serializable {
             if (this.strongNumber != null) {
                 this.relatedNos = relatedVocabs.get(this.strongNumber);
             }
+        } else {
+            this.rawRelatedNumbers = d.get("relatedNumbers");
         }
     }
 
@@ -304,5 +307,19 @@ public class VocabInfo implements Serializable {
      */
     public void setTwoLetterLookup(final String twoLetterLookup) {
         this.twoLetterLookup = twoLetterLookup;
+    }
+
+    /**
+     * @return * A comma-space-separated list of the related numbers
+     */
+    public String getRawRelatedNumbers() {
+        return rawRelatedNumbers;
+    }
+
+    /**
+     * @param rawRelatedNumbers the list of related numbers
+     */
+    public void setRawRelatedNumbers(final String rawRelatedNumbers) {
+        this.rawRelatedNumbers = rawRelatedNumbers;
     }
 }

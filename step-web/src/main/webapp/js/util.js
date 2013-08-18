@@ -471,7 +471,7 @@ step.util = {
 
                     }, 500, 'show-quick-lexicon');
                 }, function () {
-                    step.passage.removeStrongsHighlights(undefined, "primaryLightBg");
+                    step.passage.removeStrongsHighlights(undefined, "primaryLightBg relatedWordEmphasisHover");
                     delay(undefined, 0, 'show-quick-lexicon');
                 });
         },

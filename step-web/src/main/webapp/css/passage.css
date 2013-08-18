@@ -575,6 +575,15 @@ FONT.usg {
     background-color: #F3E5B4;
 }
 
+.relatedWordEmphasis {
+    text-decoration: underline;
+}
+
+.relatedWordEmphasisHover {
+    text-decoration: overline;
+}
+
+
 /**********************************************/
 /** Grammar colour coding                     */
 /**********************************************/

@@ -336,6 +336,20 @@ step.lexicon = {
         link.click(function () {
             step.lexicon.switchWords(vocabInfo.strongNumber);
         });
+    },
+
+    showRelatedWords : function(data) {
+        if(!data || !data.vocabInfos || data.vocabInfos.length == 0) {
+            return;
+        }
+
+        for(var j = 0; j < data.vocabInfos.length; j++) {
+            var relatedStrongs = data.vocabInfos[j].relatedNos || [];
+            for(var i = 0; i < relatedStrongs.length; i++) {
+                step.passage.highlightStrong(undefined, relatedStrongs[i].strongNumber, "relatedWordEmphasis");
+            }
+
+        }
     }
 
 };
@@ -413,6 +427,7 @@ LexiconDefinition.prototype.showDef = function (data) {
     // Get info on word
     $.getSafe(MODULE_GET_INFO + strong + "/" + morph + "/" + verse, function (data) {
         self.showOriginalWordData(data);
+        step.lexicon.showRelatedWords(data);
     });
 
     this.reposition(step.defaults.infoPopup.lexiconTab);

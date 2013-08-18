@@ -56,7 +56,7 @@ step.passage = {
         this.removeStrongsHighlights(strongMorphReference.passageId, strongMorphReference.classes);
 
         for ( var ii = 0; ii < references.length; ii++) {
-            this.highlightStrong(strongMorphReference.passageId, references[ii], strongMorphReference.classes);
+            this.highlightStrong(undefined, references[ii], strongMorphReference.classes);
         }
     },
 
@@ -67,21 +67,27 @@ step.passage = {
      *                  highlight
      */
     highlightStrong : function(passageId, strongReference, emphasiseClass) {
+        if(!strongReference) {
+            return;
+        }
+
         var classes = emphasiseClass || "emphasisePassagePhrase";
 
         var container = passageId ? step.util.getPassageContainer(passageId) : $("body");
 
-
-        // check for black listed strongs
-        if ($.inArray(strongReference, this.blacklistedStrongs) == -1) {
-            $(".heading [strong~='" + strongReference + "']", container).addClass(classes);
-            $(".verse [strong~='" + strongReference + "']", container).addClass(classes);
-            $("span.w[strong~='" + strongReference + "'] span", container).addClass(classes);
+        var strongs = strongReference.split(' ');
+        for(var i = 0; i < strongs.length; i++) {
+            // check for black listed strongs
+            if ($.inArray(strongs[i], this.blacklistedStrongs) == -1) {
+                $(".heading [strong~='" + strongs[i] + "']", container).addClass(classes);
+                $(".verse [strong~='" + strongs[i] + "']", container).addClass(classes);
+                $("span.w[strong~='" + strongs[i] + "'] span", container).addClass(classes);
+            }
         }
     },
 
     removeStrongsHighlights : function(passageId, classes) {
-        var classes = classes || "emphasisePassagePhrase";
+        var classes = classes || "emphasisePassagePhrase relatedWordEmphasis";
 
         var container = passageId ? step.util.getPassageContainer(passageId) : $("body");
         $(".verse span, span.w span, .heading span", container).removeClass(classes);

@@ -380,6 +380,8 @@ function LexiconDefinition() {
 }
 
 LexiconDefinition.prototype.getPopup = function () {
+    var self = this;
+
     if (this.popup) {
         return this.popup;
     }
@@ -394,7 +396,8 @@ LexiconDefinition.prototype.getPopup = function () {
             if("ANALYSIS" == ui.newPanel.attr("name")) {
                 step.lexicon.wordleView.doStats();
             }
-        }
+        },
+        collapsible: true
     }).draggable({
         handle: "#lexiconDefinitionHeader"
     });
@@ -404,6 +407,20 @@ LexiconDefinition.prototype.getPopup = function () {
     $('#lexiconPopupClose').button({ icons: { primary: "ui-icon-closethick" }, text: false }).click(function () {
         $('#lexiconDefinition').hide();
     });
+
+    $('#lexiconPopupMinimize').button({ icons: { primary: "ui-icon-minusthick" }, text: false }).click(function () {
+//        var option = self.popup.tabs("option", "collapsible");
+        var currentActiveTab = self.popup.tabs("option", "active");
+        if(isNaN(parseInt(currentActiveTab))) {
+            var previouslyActiveTab = $.data(self.popup, "previouslyActiveTab");
+            self.popup.tabs("option", "active", previouslyActiveTab);
+        } else {
+            $.data(self.popup, "previouslyActiveTab", currentActiveTab);
+            self.popup.tabs("option", "active", false);
+        }
+    });
+
+
     lexiconDefinitionSelector.offset({top: $(window).height() - lexiconDefinitionSelector.height() - 10 });
 
     return this.popup;

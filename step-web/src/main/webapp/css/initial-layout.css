@@ -415,7 +415,13 @@ body {
 	max-height: 475px;
 }
 
+
 #lexiconPopupClose {
+    float: right;
+    padding-top: 10px;
+}
+
+#lexiconPopupMinimize {
 	float: right;
 	padding-top: 10px;
 }

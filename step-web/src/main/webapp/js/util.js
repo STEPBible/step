@@ -334,9 +334,7 @@ step.util = {
 
             //we garbage collect in the background after the passage has loaded
             var children = passageContent.children().detach();
-            setTimeout(function () {
-                children.remove();
-            }, 5000);
+            children.remove();
 
             passageContent.append(passageHtml);
             parent.append(passageContent);

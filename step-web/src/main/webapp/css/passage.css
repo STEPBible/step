@@ -580,7 +580,7 @@ FONT.usg {
 }
 
 .relatedWordEmphasisHover {
-    text-decoration: overline;
+    text-decoration: underline;
 }
 
 
@@ -610,6 +610,7 @@ FONT.usg {
 	background: #F3E5B4 url(images/ui-bg_highlight-soft_75_F3E5B4_1x100.png) 50% 50% repeat-x;
 	color: #991C32;
 	font-weight: bold;
+    cursor: pointer;
 }
 
 .ui-tooltip-content {

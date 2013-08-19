@@ -105,13 +105,11 @@
 	/*CSS class that's dynamically added to the currently active menu items' LI A element*/
 	background-color: #F3E5B4;
 	color: #991C32;
-	font-weight: bold;
 }
 
 .ddsmoothmenu ul li ul li a:hover {
 	background-color: #F3E5B4;
 	color: #991C32;
-	font-weight: bold;
 }
 
 /* Sub level menu links style */

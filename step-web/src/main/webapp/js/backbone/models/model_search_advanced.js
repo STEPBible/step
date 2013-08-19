@@ -67,13 +67,15 @@ var AdvancedSearchModel = SearchModel.extend({
         if(!step.util.isBlank(text)) {
             var words = "+" + $.trim(text).split(" ").join(" +");
             return words ;
-            //            return "(" + words + ")";
         }
         return "";
     },
 
     _evalAnyWord : function(text) {
-        return " +(" + text + ")";
+        if(!step.util.isBlank(text)) {
+            return " +(" + text + ")";
+        }
+        return "";
     },
 
     _evalSpellings : function(text) {

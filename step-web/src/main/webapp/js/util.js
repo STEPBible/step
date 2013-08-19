@@ -846,6 +846,8 @@ function refreshWaitStatus() {
                 };
             });
     };
+
+    $.isChrome = /chrom(e|ium)/.test(navigator.userAgent.toLowerCase());
 })(jQuery);
 
 

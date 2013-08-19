@@ -11,6 +11,8 @@ var PassageDisplayView = Backbone.View.extend({
 
             $(".passageSizeButtons").buttonset();
             $(".passageLookupButtons").buttonset();
+
+            Backbone.Events.on("window-resize", this._doChromeHack, this);
         },
 
         render: function (newPassage) {
@@ -56,10 +58,116 @@ var PassageDisplayView = Backbone.View.extend({
                 step.util.ui.emptyOffDomAndPopulate(this.passageContent, passageHtml);
 
                 //needs to happen after appending to DOM
+                this._doChromeHack(undefined, passageHtml, interlinearMode, options);
                 this.doInterlinearVerseNumbers(passageHtml, interlinearMode, options);
                 Backbone.Events.trigger("passage:rendered:" + passageId);
             }
         },
+
+        //Can be removed when/if Chrome fixes this
+        _doChromeHack : function(eventName, passageHtml, interlinearMode, options) {
+            //only applies to Chrome
+            if(!$.isChrome) {
+                return;
+            }
+
+            if(!passageHtml) {
+                passageHtml = this.passageContent;
+            }
+
+            if(!interlinearMode) {
+                if(this.model == undefined) {
+                    //no point in continuing if no model, since there can't be much on the page.
+                    return;
+                }
+                interlinearMode = this.model.get("interlinearMode");
+            }
+
+            if(!options) {
+                options = this.model.get("options");
+            }
+
+
+            if(!this._isInterlinearMode(interlinearMode, options)) {
+                return;
+            }
+            var interlinearBlocks = passageHtml.find(".interlinear span.w");
+
+            //reset the 'clear' values
+            interlinearBlocks.not(".verseStart").css("clear", "none");
+            var previousElementOffset = undefined;
+
+            for(var i = 0; i < interlinearBlocks.length; i++) {
+                var element = interlinearBlocks.eq(i);
+                var elementOffset = element.offset();
+
+                //skip the first element
+                if(previousElementOffset) {
+                    //check that previous element is either left or higher up
+                    var currentPadding = 0;
+                    if(previousElementOffset.top < elementOffset.top) {
+                        element.css("clear", "left");
+                    }
+                    elementOffset = element.offset();
+                }
+                previousElementOffset = elementOffset;
+            }
+        },
+
+        //the hack below operates on offending elements. the hack above, attempts to add some new line space
+//        _doChromeHack : function(passageHtml, interlinearMode, options) {
+//            console.log(new Date().getTime());
+//            if(!passageHtml) {
+//                passageHtml = this.passageContent;
+//            }
+//
+//            if(!interlinearMode) {
+//                if(this.model == undefined) {
+//                    //no point in continuing if no model, since there can't be much on the page.
+//                    return;
+//                }
+//                interlinearMode = this.model.get("interlinearMode");
+//            }
+//
+//            if(!options) {
+//                options = this.model.get("options");
+//            }
+//
+//
+//            if(!this._isInterlinearMode(interlinearMode, options)) {
+//                return;
+//            }
+//            var interlinearBlocks = passageHtml.find(".interlinear span.w");
+//            var previousElementOffset = undefined;
+//            var paddingIncrement = 50;
+//            var maxPadding = 100;
+//
+//            for(var i = 0; i < interlinearBlocks.length; i++) {
+//                var element = interlinearBlocks.eq(i);
+//                var elementOffset = element.offset();
+//
+//                //skip the first element
+//                if(previousElementOffset) {
+//                    var totalPadding = 0;
+//                    //check that previous element is either left or higher up
+//                    var j = 1;
+//                    var currentPadding = 0;
+//                    while(previousElementOffset.top > elementOffset.top && currentPadding < maxPadding) {
+//                        //then we're in a situation where the previous element is below the current element
+//                        //this should never happen
+//                        currentPadding = j * paddingIncrement;
+//                        element.css("clear", "left");
+//                        elementOffset = element.offset();
+//                        j++;
+//                        //do this once only as otherwise not performance - and looks liek rendering isn't
+//                        //synchronous
+//                        break;
+//                    }
+//                }
+//                previousElementOffset = elementOffset;
+//            }
+//            console.log(new Date().getTime());
+//        },
 
         _doAnalysisButton : function(passageId, passageHtml) {
             var header = passageHtml.find("h2:first");
@@ -602,16 +710,20 @@ var PassageDisplayView = Backbone.View.extend({
                 this.model.get("options"));
         },
 
+        _isInterlinearMode : function(interlinearMode, options) {
+            return options.indexOf("E") != -1 ||
+                options.indexOf("T") != -1 ||
+                options.indexOf("A") != -1 ||
+                options.indexOf("M") != -1 ||
+            interlinearMode == "INTERLINEAR"
+        },
+
         /**
          * Resizes the interlinear verse numbers to line them up properly against their counter-part text nodes.
          * @param interlinearMode
          */
         doInterlinearVerseNumbers: function (passageContent, interlinearMode, options) {
-            if (options.indexOf("E") != -1 ||
-                options.indexOf("T") != -1 ||
-                options.indexOf("A") != -1 ||
-                options.indexOf("M") != -1 ||
-                interlinearMode == "INTERLINEAR") {
+            if (this._isInterlinearMode(interlinearMode, options)) {
 
                 var targetParentElement = passageContent;
                 if (!targetParentElement.hasClass("passageContentHolder")) {

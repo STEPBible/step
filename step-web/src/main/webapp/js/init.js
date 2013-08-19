@@ -272,6 +272,10 @@ function refreshLayout() {
     }
 
     $(".leftColumn, .rightColumn, #holdingPage, .passageContainer").height(windowHeight - $(".topMenu").height() - 10);
+    delay(function() {
+        Backbone.Events.trigger("window-resize", {});
+    }, 250, "window-resize-chrome-fix");
+
 }
 
 function hearViewChanges() {

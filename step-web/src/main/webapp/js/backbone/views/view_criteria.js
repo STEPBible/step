@@ -447,10 +447,15 @@ var SearchCriteria = Backbone.View.extend({
             var element = this.viewElementsByName[propName];
             if (element.hasClass("drop")) {
                 var source = element.attr("source");
-                var sourceData = step.util.getPointer(source);
-                if (sourceData) {
-                    element.val(sourceData[0].value ? sourceData[0].value : sourceData[0]);
-                    continue;
+                var defaultValue = element.attr("default");
+                if(defaultValue == undefined) {
+                    var sourceData = step.util.getPointer(source);
+                    if (sourceData) {
+                        element.val(sourceData[0].value ? sourceData[0].value : sourceData[0]);
+                        continue;
+                    }
+                } else {
+                    element.val(defaultValue);
                 }
             }
 

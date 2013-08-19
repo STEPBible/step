@@ -65,7 +65,7 @@ var AdvancedSearchModel = SearchModel.extend({
 
     _evalAllWords : function(text) {
         if(!step.util.isBlank(text)) {
-            var words = $.trim(text).split(" ").join(" AND ");
+            var words = "+" + $.trim(text).split(" ").join(" +");
             return words ;
             //            return "(" + words + ")";
         }
@@ -73,7 +73,7 @@ var AdvancedSearchModel = SearchModel.extend({
     },
 
     _evalAnyWord : function(text) {
-        return " " + text;
+        return " +(" + text + ")";
     },
 
     _evalSpellings : function(text) {
@@ -127,7 +127,7 @@ var AdvancedSearchModel = SearchModel.extend({
     _evalTextRestriction : function(restriction, query) {
         if(!step.util.isBlank(restriction)) {
             //join the two queries up
-            query = query + "+[" + restriction + "] ";
+            query = "+[" + restriction + "] " + query;
         }
         return query;
     },

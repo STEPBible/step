@@ -130,6 +130,7 @@ var SearchDisplayView = Backbone.View.extend({
         termBase = termBase.replace(/~[0-9]+/g, "");
         termBase = termBase.replace(/[\(\)]*/g, "");
         termBase = termBase.replace(/ AND /g, " ");
+        termBase = termBase.replace(/\+/g, " ");
 
         termBase = termBase.replace("+", "");
 

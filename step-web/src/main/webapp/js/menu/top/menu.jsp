@@ -46,7 +46,7 @@
 				<li><a href="javascript:void(0)" name="NO_SYNC"><fmt:message key="view_switch_sync_off" /></a></li>
 			</ul>
 		</li>
-		<li><a href="javascript:void(0)" name="SWAP_BOTH_PASSAGES"><fmt:message key="view_swap_left_and_right" /></a></li>
+		<!--<li><a href="javascript:void(0)" name="SWAP_BOTH_PASSAGES"><fmt:message key="view_swap_left_and_right" /></a></li>-->
 		<li>
 			<a href="javascript:void(0)"><fmt:message key="installation_book_language" /></a>
 			<ul id="languageMenu">
@@ -54,6 +54,14 @@
 				<%= sb.toString() %>
 			</ul>
 		</li>
+        <%
+            if(appManager.isLocal()) {
+        %>
+        <li><a href="/step-web/config.jsp"><fmt:message key="tools_settings" /></a></li>
+        <li><a href="/shutdown"><fmt:message key="tools_exit" /></a></li>
+        <%
+            }
+        %>
 	</ul>
 	</li>
 
@@ -63,12 +71,7 @@
 		<li><a href="https://stepweb.atlassian.net/wiki/x/iICV" target="_blank"><fmt:message key="we_need_help" /></a>
 		<li><a href="javascript:void(0)" onclick='forgetProfile()'><fmt:message key="tools_forget_my_profile" /></a></li>
         <%
-            if(appManager.isLocal()) {
-        %>
-            <li><a href="/step-web/config.jsp"><fmt:message key="tools_settings" /></a></li>
-            <li><a href="/shutdown"><fmt:message key="tools_exit" /></a></li>
-        <%
-            } else {
+            if(!appManager.isLocal()) {
         %>
             <li><a href="javascript:void(0)" id="provideFeedback"><fmt:message key="help_feedback" /></a></li>
         <%  } %>

@@ -80,6 +80,10 @@ span.interlinear span span { /* Make this stack on top of each other. */
     color: black;
 }
 
+.qereQetifTitle {
+    font-weight: bold;
+}
+
 .hbFontSmall {
     font-family: SIL_EZRA;
     font-size: 180%;

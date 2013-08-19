@@ -1278,8 +1278,25 @@
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
-  
-  <!-- An alternate reading. -->
+
+    <xsl:template match="rdg[@type='x-qere']">
+        <p>
+            <span class='hbFontSmall'>
+                <xsl:apply-templates/>
+            </span> (Qere)
+        </p>
+    </xsl:template>
+
+    <xsl:template match="rdg[@type='x-accent']">
+        <p>
+            <span class='hbFontSmall'>
+                <xsl:apply-templates/>
+            </span>
+        </p>
+    </xsl:template>
+
+
+    <!-- An alternate reading. -->
   <xsl:template match="rdg">
     <xsl:apply-templates/>
   </xsl:template>

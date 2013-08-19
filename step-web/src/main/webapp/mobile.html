@@ -1,63 +1,69 @@
-<!DOCTYPE html> 
-<html> 
-	<head> 
-	<title>STEP :: Scripture Tools For Every Person</title> 
-	<meta name="viewport" content="width=device-width, initial-scale=1"> 
-	<link rel="stylesheet" type="text/css" href="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.css" />
 
-	<link rel="stylesheet" type="text/css" href="css_mobile/jquery.mobile.simpledialog.min.css" />
-	<link rel="stylesheet" type="text/css" href="css_mobile/init-layout.css" />
-	<link rel="stylesheet" type="text/css" href="css/passage.css" />
+<!DOCTYPE html>
+<!--HTML5 doctype-->
+<html>
+<head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+    <!-- <script type="text/javascript" charset="utf-8" src="http://localhost:58888/_appMobi/appmobi.js"></script> -->
 
-	<script src="js_init/initLib.js" type="text/javascript"></script>   
 
-	<script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
-	<script src="http://code.jquery.com/mobile/1.1.1/jquery.mobile-1.1.1.min.js"></script>
-	
-	<script src="libs/jquery.mobile.simpledialog2.min.js"></script>
-	<script src="js/ui_hooks.js" type="text/javascript"></script>
-	<script src="js_mobile/init.js" type="text/javascript"></script>
-</head> 
+
+    <script src="js_mobile/appframework.ui.min.js"></script>
+    <script>
+        $.ui.autoLaunch=false;
+        $.ui.useOSThemes=true;
+        $.ui.blockPageScroll();
+        $(document).ready(function(){
+            if($.ui.useOSThemes&&!$.os.ios&&$("#afui").get(0).className!=="ios")
+                $("#afui").removeClass("ios");
+
+            $.getJSON(
+               "/rest/bible/getBibleText/ESV/Mat%202/NHV//", null,
+               function(data) {
+                    console.log("hi");
+                    console.log(data);
+                    $(".myPanel").html(data.value);
+                }
+            );
+        });
+    </script>
+    <link href="css_mobile/icons.css" rel="stylesheet" type="text/css" />
+    <link href="css_mobile/af.ui.css" rel="stylesheet" type="text/css" />
+</head>
 <body>
+<div id="afui" class='ios'>
 
-<div data-role="page" id="main" >
+    <div id="header">Some header info</div>
 
-	<div data-role="header" data-position="fixed" >
-		<h1>STEP</h1>
-		<a href="#" id="optionsButton" data-role="button" data-icon="gears">Options</a>
-	</div>
-	
-	<div data-role="content">
-		<div id="contentPane"></div>
-	</div>
-	
+    <div id="content" style="">
+    HI
+        <div class="panel myPanel" title="Main" data-nav="nav_0" id="page_0" selected="selected" style="">
+            Hi
+            <a class="button" href="#" style="" data-appbuilder-object="button" data-position="static">Hello World</a>
+        </div>
+    </div>
+
+    <div id="navbar">
+        <a href="#page_0" class="icon home">Home</a>
+    </div>
+
+    <header id="header_0" data-appbuilder-object="header">
+        <a id="backButton" href="#" class="button back" style="visibility: visible; ">Back</a>
+        <h1 id="pageTitle" class="">
+            test
+        </h1>
+
+    </header>
+    <nav id="nav_0" data-appbuilder-object="nav">
+
+        <h1>
+            Side Menu
+        </h1>
+
+    </nav>
 </div>
-
-<div id="optionsContent" style="display: none">
-
-	<div data-role="fieldcontain">
-		<label for="versions" class="select" data-theme="c">Version</label>
-		<select name="versions" id="versions">
-		</select>
-	</div>
-
-	<input type="checkbox" checked="checked" name="verseNumbers" id="verseNumbers" data-theme="c" />
-	<label for="verseNumbers">Verse numbers</label>
-	
-	<input type="checkbox" checked="checked" name="headings" id="headings"  data-theme="c" />
-	<label for="headings">Headings</label>
-	
-	<input type="checkbox" name="strongs" id="strongs"  data-theme="c" />
-	<label for="strongs">Strong numbers</label>
-	
-	<input type="checkbox" name="morphs" id="morphs"  data-theme="c" />
-	<label for="morphs">Morphology</label>
-
-	<div class="ui-grid-a">
-		<div class="ui-block-a"><a rel="close" data-role="button" id="updateView" href="#">Update</a></div>
-		<div class="ui-block-b"><a rel="close" data-role="button" data-icon="delete" data-theme="c" href="#">Cancel</a></div>
-	</div>
-</div>
-
 </body>
 </html>

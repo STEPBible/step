@@ -23,7 +23,7 @@ var WordSearchModel = SearchModel.extend({
         if (attributes && attributes.filter && !_.isArray(attributes.filter)) {
             attributes.filter = attributes.filter.split(",");
         }
-        SearchModel.prototype.set.call(this, attributes, options);
+        return SearchModel.prototype.set.call(this, attributes, options);
     },
 
     _getSortOrder: function () {
@@ -56,8 +56,11 @@ var WordSearchModel = SearchModel.extend({
         var originalForms = this.getSafeAttribute(attributes, "originalForms");
         var filter = this.getSafeAttribute(attributes, "filter");
 
-        var query = "o";
+        if(step.util.isBlank(originalWord)) {
+            return "";
+        }
 
+        var query = "o";
         if (originalType == WORDS_MEANING[0]) {
             query += "m";
         } else {

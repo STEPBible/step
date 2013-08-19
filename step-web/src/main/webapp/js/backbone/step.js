@@ -245,6 +245,7 @@ function initApp() {
     SubjectModels = new SubjectList;
     SimpleTextModels = new SimpleTextList;
     WordSearchModels = new WordSearchList;
+
     AdvancedSearchModels = new AdvancedSearchList;
     QuickLexiconModels = new QuickLexiconList;
     BookmarkModels = new BookmarkList;

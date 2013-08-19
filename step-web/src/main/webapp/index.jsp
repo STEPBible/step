@@ -70,8 +70,14 @@
  		<script src="libs/jquery.tagcloud.js" type="text/javascript"></script>
         <script src="libs/underscore-min.js" type="text/javascript"></script>
         <script src="libs/json2.js" type="text/javascript"></script>
-        <script src="libs/backbone-min.js" type="text/javascript"></script>
-        <script src="libs/backbone.localStorage-min.js" type="text/javascript"></script>
+
+        <% if(request.getParameter("debugBackbone") != null) { %>
+            <script src="libs/backbone.js" type="text/javascript"></script>
+            <script src="libs/backbone.localStorage.js" type="text/javascript"></script>
+        <% } else { %>
+            <script src="libs/backbone-min.js" type="text/javascript"></script>
+            <script src="libs/backbone.localStorage-min.js" type="text/javascript"></script>
+        <% } %>
         <script src="js/jquery-extensions/jquery-qtip.js" type="text/javascript"></script>
         <script src="js/jquery-extensions/jquery-hover-intent.js" type="text/javascript"></script>
         <script src="js/jquery-extensions/jquery-cookie.js" type="text/javascript"></script>

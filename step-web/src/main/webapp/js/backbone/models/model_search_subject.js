@@ -5,6 +5,10 @@ var SubjectSearchModel = SearchModel.extend({
         var detail = this.getSafeAttribute(attributes, "detail");
         var subjectType = this.getSafeAttribute(attributes, "subjectSearchType");
 
+        if(step.util.isBlank(subjectText) || step.util.isBlank(subjectRelated)) {
+            return;
+        }
+
         //hidden field
         if(subjectType == "") {
             this.set("subjectSearchType", step.defaults.search.subject.subjectTypes[0]);

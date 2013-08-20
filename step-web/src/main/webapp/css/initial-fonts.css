@@ -52,8 +52,11 @@ body {
     font-size: smaller;
 }
 
-.lexiconContentText {
+.lexiconSearchLink {
     color: black;
+}
+.lexiconSearchLink {
+    font-weight: bold;
 }
 
 .superTranslit {

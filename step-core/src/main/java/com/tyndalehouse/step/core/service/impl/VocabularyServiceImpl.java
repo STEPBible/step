@@ -1,11 +1,11 @@
 /*******************************************************************************
  * Copyright (c) 2012, Directors of the Tyndale STEP Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without 
  * modification, are permitted provided that the following conditions 
  * are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright 
  * notice, this list of conditions and the following disclaimer.
  * Redistributions in binary form must reproduce the above copyright 
@@ -16,7 +16,7 @@
  * nor the names of its contributors may be used to endorse or promote 
  * products derived from this software without specific prior written 
  * permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
@@ -37,7 +37,6 @@ import static com.tyndalehouse.step.core.utils.StringUtils.split;
 import static com.tyndalehouse.step.core.utils.ValidateUtils.notBlank;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,6 +47,7 @@ import java.util.TreeSet;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import com.tyndalehouse.step.core.utils.SortingUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,9 +62,9 @@ import com.tyndalehouse.step.core.service.helpers.OriginalWordUtils;
 
 /**
  * defines all vocab related queries
- * 
+ *
  * @author chrisburrell
- * 
+ *
  */
 @Singleton
 public class VocabularyServiceImpl implements VocabularyService {
@@ -123,7 +123,7 @@ public class VocabularyServiceImpl implements VocabularyService {
 
     /**
      * Read related words, i.e. all the words that are in the related numbers fields.
-     * 
+     *
      * @param defs the definitions that have been looked up.
      * @return the map
      */
@@ -159,16 +159,7 @@ public class VocabularyServiceImpl implements VocabularyService {
                     SortedSet<LexiconSuggestion> associatedNumbersSoFar = relatedWords.get(sourceNumber);
                     if (associatedNumbersSoFar == null) {
                         associatedNumbersSoFar = new TreeSet<LexiconSuggestion>(
-                                new Comparator<LexiconSuggestion>() {
-
-                                    @Override
-                                    public int compare(final LexiconSuggestion o1, final LexiconSuggestion o2) {
-                                        String firstValue  = o1 == null || o1.getGloss() == null ? "" : o1.getGloss();
-                                        String secondValue = o2 == null || o2.getGloss() == null ? "" : o2.getGloss();
-                                        return firstValue.compareTo(secondValue);
-                                    }
-
-                                });
+                                SortingUtils.LEXICON_SUGGESTION_COMPARATOR);
                         relatedWords.put(sourceNumber, associatedNumbersSoFar);
                     }
 
@@ -181,7 +172,7 @@ public class VocabularyServiceImpl implements VocabularyService {
 
     /**
      * Convert to list map, from a map of sets to a map of lists. This also orders the definitions.
-     * 
+     *
      * @param relatedWords the related words
      * @return the map
      */
@@ -196,7 +187,7 @@ public class VocabularyServiceImpl implements VocabularyService {
 
     /**
      * Re-orders based on the input.
-     * 
+     *
      * @param strongList the order list of stongs
      * @param strongDefs the definitions that have been found
      * @return the entity doc[]
@@ -247,7 +238,7 @@ public class VocabularyServiceImpl implements VocabularyService {
 
     /**
      * gets data from the matched lexicon definitions
-     * 
+     *
      * @param vocabIdentifiers the identifiers
      * @param provider the provider used to get data from it
      * @return the data in String form
@@ -287,7 +278,7 @@ public class VocabularyServiceImpl implements VocabularyService {
 
     /**
      * returns the lexicon definitions
-     * 
+     *
      * @param keys the keys to match
      * @return the lexicon definitions that were found
      */
@@ -297,7 +288,7 @@ public class VocabularyServiceImpl implements VocabularyService {
 
     /**
      * Extracts a compound key into several keys
-     * 
+     *
      * @param vocabIdentifiers the vocabulary identifiers
      * @return the list of all keys to lookup
      */
@@ -322,7 +313,7 @@ public class VocabularyServiceImpl implements VocabularyService {
 
     /**
      * Pads a strong number with the correct number of 0s
-     * 
+     *
      * @param strongNumber the strong number
      * @param prefix true to indicate the strongNumber is preceded with strong:
      * @return the padded strong number

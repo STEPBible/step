@@ -36,16 +36,15 @@ import static org.crosswire.jsword.book.OSISUtil.OSIS_ELEMENT_VERSE;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import com.tyndalehouse.step.core.utils.SortingUtils;
 import com.tyndalehouse.step.core.utils.StringUtils;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.Term;
@@ -68,7 +67,6 @@ import org.crosswire.jsword.index.IndexManagerFactory;
 import org.crosswire.jsword.index.lucene.LuceneIndex;
 import org.crosswire.jsword.passage.Key;
 import org.crosswire.jsword.passage.NoSuchKeyException;
-import org.crosswire.jsword.passage.Passage;
 import org.crosswire.jsword.passage.Verse;
 import org.crosswire.jsword.versification.Testament;
 import org.crosswire.jsword.versification.Versification;
@@ -261,34 +259,7 @@ public class JSwordStrongNumberHelper {
         final String strongQuery = StringConversionUtils.getStrongPaddedKey(strongNumbers);
 
         final EntityDoc[] docs = reader.search("strongNumber", strongQuery);
-        final SortedSet<LexiconSuggestion> verseSuggestions = new TreeSet<LexiconSuggestion>(
-                new Comparator<LexiconSuggestion>() {
-
-                    @Override
-                    public int compare(final LexiconSuggestion o1, final LexiconSuggestion o2) {
-
-                        final String gloss1 = o1.getGloss();
-                        final String gloss2 = o2.getGloss();
-                        if (gloss1 == null) {
-                            return -1;
-                        }
-
-                        if (gloss2 == null) {
-                            return 1;
-                        }
-
-                        //if they are equal, we still want to preserve, so compare based on the
-                        //hebrew instead.
-                        int equalGlosses = gloss1.toLowerCase(Locale.ENGLISH).compareTo(
-                                gloss2.toLowerCase(Locale.ENGLISH));
-
-                        if(equalGlosses != 0) {
-                            return equalGlosses;
-                        }
-
-                        return o1.getMatchingForm().compareTo(o2.getMatchingForm());
-                    }
-                });
+        final SortedSet<LexiconSuggestion> verseSuggestions = new TreeSet<LexiconSuggestion>(SortingUtils.LEXICON_SUGGESTION_COMPARATOR);
 
         for (final EntityDoc d : docs) {
             final LexiconSuggestion ls = new LexiconSuggestion();

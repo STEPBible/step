@@ -261,6 +261,7 @@ step.lexicon = {
             }
         });
 
+        //deal with related numbers
         if (data.vocabInfos[index] && data.vocabInfos[index].relatedNos) {
             var linkContainer = $("*[info-name = 'relatedNos']", "#vocabContainer");
             $.each(data.vocabInfos[index].relatedNos, function (i, item) {
@@ -275,10 +276,11 @@ step.lexicon = {
                 linkContainer.append(link);
             });
 
-            $("span[info-name='relatedNos'] a").button().click(function () {
+            var relatedNosContainer = $("span[info-name='relatedNos']");
+            relatedNosContainer.find("a").button().click(function () {
                 showDef($(this).prop("strongNumber"));
             });
-            $("span[info-name='relatedNos']").buttonset();
+            relatedNosContainer.buttonset();
         }
 
         this.clearWordLinks();

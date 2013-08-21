@@ -48,16 +48,6 @@ public final class SortingUtils {
 
         @Override
         public int compare(final LexiconSuggestion o1, final LexiconSuggestion o2) {
-            final int equalGlosses = compareValues(o1.getGloss(), o2.getGloss());
-            if (equalGlosses != 0) {
-                return equalGlosses;
-            }
-
-            final int equalMatchingForms = compareValues(o1.getMatchingForm(), o2.getMatchingForm());
-            if (equalMatchingForms != 0) {
-                return equalMatchingForms;
-            }
-
             final int equalStrongs = compareValues(o1.getStrongNumber(), o2.getStrongNumber());
             if (equalStrongs != 0) {
                 return equalStrongs;

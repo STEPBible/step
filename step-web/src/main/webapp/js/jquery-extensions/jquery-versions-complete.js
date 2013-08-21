@@ -145,12 +145,31 @@ $.widget("custom.versions",  {
                      step.autoVersions.currentElement.val(self.sanitizeVersions(item.item.attr('initials')));
                      step.autoVersions.currentElement.trigger('change');
                  } else {
-                     //check this wasn't the last version, if it was, then there is no point in adding it
                      var selectedVersion = item.item.attr('initials');
-                     if(!currentValue.toLowerCase().endsWith(selectedVersion.toLowerCase())) {
-                         step.autoVersions.currentElement.val(self.sanitizeVersions(currentValue + "," + selectedVersion));
-                         step.autoVersions.currentElement.trigger('change');
+                     var currentEntries = currentValue.split(',');
+
+                     // The entry currently being edited by the user
+                     var editPos = step.autoVersions.currentElement.context.selectionStart;
+                     var editVersion = "";
+                     var editIndex = 0;
+
+                     // Let's find the text the user entered
+                     var entryPos = 0;
+                     for(var i = 0; i < currentEntries.length; i++) {
+                         entryPos += currentEntries[i].length + 1;
+                         if(editPos < entryPos) {
+                             editVersion = currentEntries[i];
+                             editIndex = i;
+                             break;
+                         }
                      }
+
+                     // Replace what the user typed with what he picked
+                     currentEntries[editIndex] = selectedVersion
+                     var newValue = currentEntries.join(',') + ",";
+
+                     step.autoVersions.currentElement.val(self.sanitizeVersions(newValue));
+                     step.autoVersions.currentElement.trigger('change');
                  }
                  
                  self.dropdownVersionMenu.hide();

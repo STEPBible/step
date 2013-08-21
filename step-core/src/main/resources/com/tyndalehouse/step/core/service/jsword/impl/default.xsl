@@ -594,12 +594,26 @@
 
   <!--=======================================================================-->
   <xsl:template match="note" mode="print-notes">
-    <div class="margin">
+      <div class="margin">
       <strong><xsl:call-template name="generateNoteXref"/></strong>
       <a name="note-{generate-id(.)}">
         <xsl:text> </xsl:text>
       </a>
-      <xsl:apply-templates/>
+      <xsl:choose>
+          <xsl:when test=".//rdg[@type='x-qere']">
+              <div dir="{$direction}" class="qereDisplay">
+                <xsl:apply-templates/>
+              </div>
+          </xsl:when>
+          <xsl:when test=".//rdg[@type='x-accent']">
+              <div dir="{$direction}" class="accentDisplay">
+                <xsl:apply-templates/>
+              </div>
+          </xsl:when>
+          <xsl:otherwise>
+              <xsl:apply-templates/>
+          </xsl:otherwise>
+      </xsl:choose>
     </div>
   </xsl:template>
 
@@ -932,7 +946,12 @@
   </xsl:template>
   
   <xsl:template match="catchWord">
-    <xsl:apply-templates/>
+      <!-- If the parent has got a rd of type qere or accent, then we output Hebrew fonts for now -->
+      <xsl:choose>
+          <xsl:when test="count(..//rdg[@type='x-qere']) > 0"><div class="hbFontSmall"><xsl:apply-templates/> (Ketiv)</div></xsl:when>
+          <xsl:when test="count(..//rdg) > 0"><span class="hbFontSmall"><xsl:apply-templates/></span></xsl:when>
+          <xsl:otherwise><xsl:apply-templates/></xsl:otherwise>
+      </xsl:choose>
   </xsl:template>
   
   <xsl:template match="catchWord" mode="jesus">
@@ -1280,11 +1299,9 @@
   </xsl:template>
 
     <xsl:template match="rdg[@type='x-qere']">
-        <p>
-            <span class='hbFontSmall'>
-                <xsl:apply-templates/>
-            </span> (Qere)
-        </p>
+        <div class='hbFontSmall'>
+            <xsl:apply-templates/>
+        (Qere)</div>
     </xsl:template>
 
     <xsl:template match="rdg[@type='x-accent']">

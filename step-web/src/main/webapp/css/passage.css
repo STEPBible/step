@@ -84,6 +84,15 @@ span.interlinear span span { /* Make this stack on top of each other. */
     font-weight: bold;
 }
 
+.qereDisplay, .accentDisplay {
+    direction: rtl;
+    text-align: right;
+}
+
+.qereDisplay div, .accentDisplay div {
+    padding: 8px 0px;
+}
+
 .hbFontSmall {
     font-family: SIL_EZRA;
     font-size: 180%;

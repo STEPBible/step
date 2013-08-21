@@ -36,10 +36,12 @@
         </xsl:attribute>
     </xsl:template>
 
+
+
     <xsl:template match="text()" name="split">
         <xsl:param name="pText" select="."/>
         <xsl:choose>
-            <xsl:when test="name(..) = 'w'">
+            <xsl:when test="name(..) = 'w' or name(..) = 'catchWord'">
                 <xsl:if test="string-length($pText)">
                     <seg>
                         <xsl:value-of select="substring-before(concat($pText,'/'),'/')"/>

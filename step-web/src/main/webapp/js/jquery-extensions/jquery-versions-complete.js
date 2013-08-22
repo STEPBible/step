@@ -232,6 +232,8 @@ $.widget("custom.versions",  {
     
     _filteredVersions : function(val) {
         var widget = this.dropdownVersionMenu;
+        if(val !== undefined)
+            val = val.trim();
         
         var resource = widget.find("input:checkbox[name=textType]:checked").val();
         var language = widget.find("input:checkbox[name=language]:checked").val();

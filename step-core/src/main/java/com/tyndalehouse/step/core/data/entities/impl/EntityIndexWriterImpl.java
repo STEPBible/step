@@ -10,6 +10,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.apache.lucene.document.Document;
+import org.apache.lucene.document.Field;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriter.MaxFieldLength;
 import org.apache.lucene.store.Directory;
@@ -181,13 +182,25 @@ public class EntityIndexWriterImpl {
         }
 
         ensureNewDocument();
-        final FieldConfig fieldConfig = this.luceneFieldConfigurationByRaw.get(fieldName);
 
+
+
+        final FieldConfig fieldConfig = this.luceneFieldConfigurationByRaw.get(fieldName);
         if (fieldConfig == null) {
             LOGGER.trace("Skipping field: [{}]", fieldName);
             return;
         }
 
+        //check if we've got the field already...
+        //if so, then we'll simply append to the existing data, as we don't want
+        //to be storing stuff in different fields...
+        Field existingValue = this.doc.getField(fieldConfig.getName());
+        if(existingValue != null && fieldConfig.isAppend()) {
+            existingValue.setValue(existingValue.stringValue() + " " + fieldValue);
+            return;
+        }
+
+        //otherwise, either add for the first time, or add multiple times
         this.doc.add(fieldConfig.getField(fieldValue));
     }
 

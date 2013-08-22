@@ -167,7 +167,10 @@ public class LoaderTest {
     @Test
     public void testLexiconDefinitions() {
         getLoader("test.data.path.lexicon.definitions.greek", "lexicon_sample.txt").loadLexiconDefinitions();
-        assertLoaded(1, "definition", "strongNumber", "G0132");
+        assertLoaded(1, "definition", "strongNumber", "G0002");
+        assertLoaded(1, "definition", "strongNumber", "H0006");
+
+        assertEquals("H0175, G1223, G0939,", getEntities(1, "definition", "strongNumber", "G0002")[0].get("relatedNumbers"));
     }
 
     /**

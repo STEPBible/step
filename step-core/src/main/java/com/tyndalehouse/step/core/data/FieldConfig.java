@@ -25,9 +25,10 @@ public class FieldConfig {
     private final String[] rawDataField;
     private final String name;
     private final String type;
+    private boolean append = false;
 
     /**
-     * 
+     *
      * @param name the name of the lucene field
      * @param rawDataField the names of the matching fields in the data file
      * @param store the type of store
@@ -35,12 +36,27 @@ public class FieldConfig {
      * @param type the type of field, if not a string
      */
     public FieldConfig(final String name, final String[] rawDataField, final Store store, final Index index,
-            final String type) {
+                       final String type, boolean append) {
         this.name = name;
-        this.type = type;
+        //default to null if string is empty
+        this.type = "".equals(type) ? null : type;
         this.rawDataField = rawDataField.clone();
         this.store = store;
         this.index = index;
+        this.append = append;
+    }
+
+    /**
+     *
+     * @param name the name of the lucene field
+     * @param rawDataField the names of the matching fields in the data file
+     * @param store the type of store
+     * @param index the type of index
+     * @param type the type of field, if not a string
+     */
+    public FieldConfig(final String name, final String[] rawDataField, final Store store, final Index index,
+                       final String type) {
+        this(name, rawDataField, store, index, type, false);
     }
 
     /**
@@ -132,4 +148,10 @@ public class FieldConfig {
         return this.index;
     }
 
+    /**
+     * @return true to indicate fields should be appended into each other
+     */
+    public boolean isAppend() {
+        return this.append;
+    }
 }

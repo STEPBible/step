@@ -310,6 +310,7 @@ var StepRouter = Backbone.Router.extend({
         var refinedQuery = finalInnerQuery;
 //        this._joinInRefiningSearches(passageId, finalInnerQuery);
 
+        //page number is importantly postioned at -1 from the end - and this is relied upon by the search scroll results
         var args = [encodeURIComponent(refinedQuery), sortingArg, contextArg, pageNumberArg, pageSizeArg];
 
         var startTime = new Date().getTime();
@@ -323,16 +324,14 @@ var StepRouter = Backbone.Router.extend({
         this.fullSearchUrl[passageId] = fullUrl;
 
         $.getSafe(SEARCH_DEFAULT, args, function (searchQueryResults) {
-            step.util.trackAnalytics("search", "loaded", "time", new Date().getTime() - startTime);
-            step.util.trackAnalytics("search", "loaded", "results", searchQueryResults.total);
-            step.util.trackAnalytics("search", "version", versionArg.toUpperCase());
-            step.util.trackAnalytics("search", "query", query);
-
+            step.util.trackAnalyticsSearch(startTime, searchQueryResults, versionArg, args[0]);
             Backbone.Events.trigger(searchType + ":new:" + passageId,
                 {
                     searchQueryResults: searchQueryResults,
                     pageNumber: pageNumberArg,
-                    masterVersion : masterVersion
+                    masterVersion : masterVersion,
+                    searchArgs : args,
+                    versionArg : versionArg
                 });
 
             self.lastSearch[passageId] = refinedQuery;

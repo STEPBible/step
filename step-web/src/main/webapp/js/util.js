@@ -270,6 +270,13 @@ step.util = {
         }
     },
 
+    trackAnalyticsSearch : function(startTime, searchQueryResults, versionArg, query) {
+        this.trackAnalytics("search", "loaded", "time", new Date().getTime() - startTime);
+        this.trackAnalytics("search", "loaded", "results", searchQueryResults.total);
+        this.trackAnalytics("search", "version", versionArg.toUpperCase());
+        this.trackAnalytics("search", "query", query);
+    },
+
     ui: {
         appleKey: false,
 

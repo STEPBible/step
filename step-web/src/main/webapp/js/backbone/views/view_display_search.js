@@ -9,14 +9,24 @@ var SearchDisplayView = Backbone.View.extend({
     initialize: function () {
         Backbone.Events.on(this.options.searchType + ":new:" + this.model.get("passageId"), this.render, this);
         this.passageContent = this.$el.find(".passageContent");
+        this.resultsLabel = step.util.getPassageContainer(this.$el).find("fieldset:visible .resultsLabel")
     },
 
-    render: function (resultsWrapper) {
+    render: function (resultsWrapper, append) {
+        var self = this;
         var searchResults = resultsWrapper.searchQueryResults;
         var query = step.util.undoReplaceSpecialChars(searchResults.query);
 
-        this._updateTotal(searchResults.total, resultsWrapper.pageNumber);
+        this.args = resultsWrapper.searchArgs;
+        this.versionArg = resultsWrapper.versionArg;
+        this.masterVersion = resultsWrapper.masterVersion;
         this.lastSearch = searchResults.query;
+        
+        if(append) {
+            this._updateTotalAppend(searchResults.results ? searchResults.results.length : 0);
+        } else {
+            this._updateTotal(searchResults.total, resultsWrapper.pageNumber);
+        }
 
         var results;
         if (searchResults.total == 0 || searchResults.results.length == 0) {
@@ -24,7 +34,7 @@ var SearchDisplayView = Backbone.View.extend({
         } else if (searchResults.maxReached) {
             this._notApplicableMessage(results, __s.search_too_many_results);
         } else {
-            results = this.renderSearch(searchResults, query, resultsWrapper.masterVersion);
+            results = this.renderSearch(searchResults, query, this.masterVersion);
 
             if (searchResults.strongHighlights) {
                 this._highlightStrongs(results, searchResults.strongHighlights);
@@ -36,21 +46,74 @@ var SearchDisplayView = Backbone.View.extend({
 
         var passageId = this.model.get("passageId");
         step.fonts.redoTextSize(passageId, results);
-        step.util.ui.emptyOffDomAndPopulate(this.passageContent, this._doSpecificSearchRequirements(query, results, resultsWrapper, resultsWrapper.masterVersion));
-        step.util.ui.addStrongHandlers(passageId, this.passageContent);
 
+        var passageHtml = this._doSpecificSearchRequirements(query, results, resultsWrapper, resultsWrapper.masterVersion);
+        if(append) {
+            this.passageContent.append(passageHtml);    
+        } else {
+            step.util.ui.emptyOffDomAndPopulate(this.passageContent, passageHtml);
+            this.passageContent.scroll(function () {
+                self.getMoreResults();
+            });
+        }
         step.util.ui.doSocialButtons(this.$el.find(".searchToolbar"));
+
         this.doTitle();
+        step.util.ui.addStrongHandlers(passageId, this.passageContent);
         Backbone.Events.trigger("search:rendered:" + passageId);
     },
 
-    doTitle : function() {
+    getMoreResults: function () {
+        var self = this;
+        
+        if(this.fetching == true) {
+            return;
+        }
+        
+        var scrollDownProportion = this.passageContent.scrollTop() / this.passageContent.prop("scrollHeight");
+        var scrollDownLeftOver = this.passageContent.prop("scrollHeight") - this.passageContent.scrollTop();
+        if (scrollDownProportion > 0.9 || scrollDownProportion == this.passageContent.height() || scrollDownLeftOver < 800) {
+            var currentPageNumber = this.args[this.args.length - 2];
+            var newPageNumber = parseInt(currentPageNumber) + 1;
+            var pageSize = this.model.get("pageSize");
+            
+            //check page size
+            if(currentPageNumber * pageSize > this.currentTotal) {
+                return;
+            }
+            this.fetching = true;
+            
+            //append results
+            //change page number to be one more...
+            var startTime = new Date().getTime();
+            this.args[this.args.length - 2] = newPageNumber;
+            
+            
+            $.getSafe(SEARCH_DEFAULT, this.args, function (searchQueryResults) {
+                step.util.trackAnalyticsSearch(startTime, searchQueryResults, self.versionArg, self.args[0]);
+                console.log("Getting more results", searchQueryResults);
+                
+                //render the results
+                self.render({
+                    searchQueryResults: searchQueryResults,
+                    pageNumber: newPageNumber,
+                    masterVersion : self.versionArg,
+                    searchArgs : self.args,
+                    versionArg : self.versionArg
+                }, true);
+                
+                self.fetching = false;
+            });
+        }
+    },
+
+    doTitle: function () {
         $("title").html("STEP : " + this.titleFragment);
     },
 
     _doFonts: function (results, languages) {
         var fonts = step.util.ui._getFontClasses(languages);
-        if(languages.length == 1) {
+        if (languages.length == 1) {
             //apply to whole passage
             results.find(".searchResults .passageContentHolder").addClass(fonts[0]);
         } else {
@@ -70,16 +133,22 @@ var SearchDisplayView = Backbone.View.extend({
         return results;
     },
 
+    _updateTotalAppend: function(newResults) {
+        this.currentEnd = this.currentEnd + newResults;
+        this.resultsLabel.html(sprintf(__s.paging_showing_x_to_y_out_of_z_results, this.currentStart, this.currentEnd, this.currentTotal));
+    },
+    
     _updateTotal: function (total, pageNumber) {
-        var resultsLabel = step.util.getPassageContainer(this.$el).find("fieldset:visible .resultsLabel");
-
         //1 = 1 + (pg1 - 1) * 50, 51 = 1 + (pg2 -1) * 50
         var pageSize = this.model.get("pageSize");
         var start = total == 0 ? 0 : 1 + ((pageNumber - 1) * (this.options.paged ? pageSize : 1000000));
         var end = pageNumber * pageSize;
         end = end < total ? end : total;
 
-        resultsLabel.html(sprintf(__s.paging_showing_x_to_y_out_of_z_results, start, end, total));
+        this.currentStart = start;
+        this.currentEnd = end;
+        this.currentTotal = total;
+        this.resultsLabel.html(sprintf(__s.paging_showing_x_to_y_out_of_z_results, start, end, total));
 
         stepRouter.totalResults[this.model.get("passageId")] = total;
     },

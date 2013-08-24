@@ -203,7 +203,7 @@ var SearchCriteria = Backbone.View.extend({
 
     estimateSearch: function () {
         var self = this;
-        var syntax = this.model.get("querySyntax");
+        var syntax = this.model.evaluateQuerySyntax();
         if (syntax == undefined || syntax.startsWith("o") || syntax.startsWith("s")) {
             //no estimate for original word search
             return;
@@ -216,8 +216,7 @@ var SearchCriteria = Backbone.View.extend({
                 versions = "ESV";
             }
 
-
-            if (stepRouter.refinedSearches[self.model.get("passageId")].length == 0) {
+            if (stepRouter.refinedSearches[self.model.get("passageId")].length == 0 & !step.util.isBlank(syntax)) {
                 $.getSafe(SEARCH_ESTIMATES, [encodeURIComponent(step.util.replaceSpecialChars(syntax))],
                     function (estimate) {
                         var field = self.$el.find(".resultEstimates");

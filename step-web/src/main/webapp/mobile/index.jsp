@@ -1,19 +1,3 @@
-<%@page import="com.tyndalehouse.step.core.models.ClientSession"%>
-<%@page import="java.util.Locale"%>
-<%@page import="javax.servlet.jsp.jstl.core.Config"%>
-<%@ page contentType="text/html; charset=UTF-8" language="java" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ page import="com.tyndalehouse.step.jsp.WebStepRequest" %>
-<%@ page import="com.google.inject.Injector"%>
-<%@ page import="com.tyndalehouse.step.core.service.AppManagerService" %>
-<%
-    Injector injector = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
-    Locale locale = injector.getInstance(ClientSession.class).getLocale();
-    Config.set(session, Config.FMT_LOCALE, locale.getLanguage());
-    WebStepRequest stepRequest = new WebStepRequest(injector, request);
-    AppManagerService appManager = injector.getInstance(AppManagerService.class);
-%>
-<fmt:setBundle basename="HtmlBundle" />
 <!DOCTYPE html>
 <!--HTML5 doctype-->
 <html>
@@ -132,7 +116,6 @@
         
         <div class="input-group">
 
-            <%--<label ><fmt:message key="display_headings" /></label>--%>
             <input type="checkbox"  id="H" value="1" />
             <label for="H">Headings</label>
 
@@ -146,7 +129,6 @@
             <br />
 </div>
 
-        <%--</div>--%>
         <a class="button" value="Search" onclick="javascript:doPassageSearch()" >Search</a>
             </nav>
 </body>

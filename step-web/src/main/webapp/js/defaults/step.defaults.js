@@ -45,7 +45,7 @@ SCRIPTURE= __s.scripture;
 if(!window.step) { window.step = {}; }
 step.defaults = {
     detailLevel : 0,
-    pageSize : 50,
+    pageSize : 20,
     syncMode : -1,
     passages : [{
             version : 'ESV',

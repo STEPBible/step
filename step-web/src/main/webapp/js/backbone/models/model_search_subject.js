@@ -5,7 +5,7 @@ var SubjectSearchModel = SearchModel.extend({
         var detail = this.getSafeAttribute(attributes, "detail");
         var subjectType = this.getSafeAttribute(attributes, "subjectSearchType");
 
-        if(step.util.isBlank(subjectText) || step.util.isBlank(subjectRelated)) {
+        if(step.util.isBlank(subjectText) && step.util.isBlank(subjectRelated)) {
             return;
         }
 

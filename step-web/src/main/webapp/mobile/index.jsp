@@ -19,7 +19,7 @@
     -->
     <script type="text/javascript" charset="utf-8" src="ui/af.ui.min.js"></script>
     <!--<script type="text/javascript" charset="utf-8" src="plugins/af.selectBox.js"></script>-->
-    <!--<script type="text/javascript" charset="utf-8" src="plugins/af.scroller.js"></script>-->
+    <script type="text/javascript" charset="utf-8" src="plugins/af.scroller.js"></script>
     <!-- include touch on desktop browsers only -->
     <script>
         if (!((window.DocumentTouch && document instanceof DocumentTouch) || 'ontouchstart' in window)) {
@@ -35,7 +35,7 @@
 
         function doPassageSearch() {
             //do the passage search.
-            javascript:$.ui.toggleSideMenu();
+            $.ui.toggleSideMenu();
 
             var options = "";
             if($("#H").prop("checked")) { options += 'H'; }
@@ -45,7 +45,10 @@
             $.getJSON(
                     "/rest/bible/getBibleText/" + $("#book").val()+ "/" + $("#reference").val() + "/" + options, null,
                     function(data) {
-                        $("#passageContainer").html(data.value);
+                        $(".passageContentHolder").remove();
+                        $("#passageContainer").append(data.value);
+                        $(".passageContentHolder").scroller();
+                        
                     }
             );
         }
@@ -56,6 +59,7 @@
         var init = function () {
             $.ui.setBackButtonVisibility(true);
             $.ui.setBackButtonText("Back");// We override the back button text to always say "Back"
+//            $.ui.disableNativeScrolling(true);
             $.ui.launch();
         };
 
@@ -89,8 +93,8 @@
     </div>
     <div id="content">
         <!-- here is where you can add your panels -->
-        <div title='Welcome' id="main" class="panel" selected="true">
-            <div id="passageContainer">
+        <div title='Welcome' id="main" class="panel" selected="true" >
+            <div id="passageContainer" js-scrolling="true">
 
             </div>
 

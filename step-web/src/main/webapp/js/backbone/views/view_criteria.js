@@ -50,6 +50,7 @@ var SearchCriteria = Backbone.View.extend({
         this.pageNumber = this.$el.find(".pageNumber");
         this.searchVersions = this.$el.find(".searchVersions");
         this.searchVersions.versions({ multi: true });
+        this.freeTextFields = this.$el.find("._m").not(".drop");
 
         this.detailLevel = this.$el.detailSlider({
             changed: function (newValue) {
@@ -59,6 +60,7 @@ var SearchCriteria = Backbone.View.extend({
         this.searchButton = this.$el.find(".doSearch").button();
         this.resetButton = this.$el.find(".resetSearch").button();
 
+        this.validate();
         this.model.on("change", this._updateQuerySyntaxFromModel, this);
         this.model.on("resync", this.syncValuesWithModel, this);
         this.initSearchToolbar();
@@ -197,8 +199,29 @@ var SearchCriteria = Backbone.View.extend({
             });
     },
 
-    clearEstimate : function() {
+    clearEstimate: function () {
         this.$el.find(".resultEstimates").html("&nbsp;");
+    },
+
+    /**
+     * Highlights fields that are invalid
+     * @returns {boolean}
+     */
+    validate: function () {
+        //we allow almost every character except for the ones specified in the regex
+        var validFieldRegex = step.defaults.search.luceneValidateRegex;
+        var valid = true;
+        for (var i = 0; i < this.freeTextFields.length; i++) {
+            var field = this.freeTextFields.eq(i);
+            var validField = validFieldRegex.exec(field.val()) == null;
+            if (validField) {
+                field.removeClass("invalid");
+            } else {
+                field.addClass("invalid");
+            }
+            valid &= validField;
+        }
+        return valid;
     },
 
     estimateSearch: function () {
@@ -209,6 +232,8 @@ var SearchCriteria = Backbone.View.extend({
             return;
         }
 
+        var valid = this.validate();
+
         //finally attempt a search estimation
         delay(function () {
             var versions = self.model.get("searchVersions");
@@ -216,7 +241,11 @@ var SearchCriteria = Backbone.View.extend({
                 versions = "ESV";
             }
 
-            if (stepRouter.refinedSearches[self.model.get("passageId")].length == 0 & !step.util.isBlank(syntax)) {
+            if(!valid) {
+                self.clearEstimate();
+            }
+            
+            if (stepRouter.refinedSearches[self.model.get("passageId")].length == 0 & !step.util.isBlank(syntax) && valid) {
                 $.getSafe(SEARCH_ESTIMATES, [encodeURIComponent(step.util.replaceSpecialChars(syntax))],
                     function (estimate) {
                         var field = self.$el.find(".resultEstimates");
@@ -447,7 +476,7 @@ var SearchCriteria = Backbone.View.extend({
             if (element.hasClass("drop")) {
                 var source = element.attr("source");
                 var defaultValue = element.attr("default");
-                if(defaultValue == undefined) {
+                if (defaultValue == undefined) {
                     var sourceData = step.util.getPointer(source);
                     if (sourceData) {
                         element.val(sourceData[0].value ? sourceData[0].value : sourceData[0]);
@@ -479,7 +508,12 @@ var SearchCriteria = Backbone.View.extend({
         var newValues = { pageNumber: 1 };
         var versions = this.searchVersions.val();
 
-        if(step.util.isBlank(versions)) {
+        if (!this.validate()) {
+            step.util.raiseInfo(this.model.get("passageId"), __s.error_search, "error", true);
+            return;
+        }
+
+        if (step.util.isBlank(versions)) {
             var defaultVersion = step.defaults.passages[0].version;
             this.searchVersions.val(defaultVersion);
             newValues.searchVersions = defaultVersion;

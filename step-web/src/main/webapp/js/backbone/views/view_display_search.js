@@ -56,6 +56,7 @@ var SearchDisplayView = Backbone.View.extend({
                 self.getMoreResults();
             });
         }
+        step.util.closeInfoErrors(passageId);
         step.util.ui.doSocialButtons(this.$el.find(".searchToolbar"));
 
         this.doTitle();

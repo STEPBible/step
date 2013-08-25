@@ -27,14 +27,6 @@
     <meta itemprop="image" content="http://www.stepbible.org/images/step-logo.png" />
 	<link rel="shortcut icon"  href="images/step-favicon.ico" />
     <link rel="canonical" href="http://www.stepbible.org" />
-    <%
-		if(request.getParameter("lang") == null) {
-	%>
-		<script src="international/interactive.js" type="text/javascript"></script>
-	<% } else { %>
-		<script src="international/interactive.js?lang=<%= request.getParameter("lang") %>" type="text/javascript"></script>
-	<% } %>
-
 	<%
 		if(request.getParameter("debug") != null) {
 	%>
@@ -56,6 +48,19 @@
     <%
         }
     %>
+
+    <%
+        if(request.getParameter("lang") == null) {
+    %>
+        <script src="international/interactive.js" type="text/javascript"></script>
+    <% } else { %>
+        <script src="international/interactive.js?lang=<%= request.getParameter("lang") %>" type="text/javascript"></script>
+    <% } %>
+
+
+
+
+
     <%@include file="jsps/initLib.jsp" %>
 
     <%-- Now do javascript --%>

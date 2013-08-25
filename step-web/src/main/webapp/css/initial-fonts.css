@@ -251,3 +251,8 @@ body {
 .segC1 {
     color: black;
 }
+
+.invalid {
+    background-color: #991c32;
+    color: white;
+}

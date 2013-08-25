@@ -76,6 +76,7 @@ step.defaults = {
         wordleTab : 1
     },
     search: {
+        luceneValidateRegex : /[!\&\|/():~\[\]{}^+-]|AND|OR|NOT/,
         textual : {
             sortByRelevance : true,
             availableRanges : [ { label: __s.whole_bible,         value: __s.whole_bible_range }, 

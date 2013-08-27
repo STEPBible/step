@@ -36,6 +36,8 @@ import java.util.Locale;
 
 import com.tyndalehouse.step.core.models.ClientSession;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * A web session which wraps around the jsession id...
  * 
@@ -47,20 +49,23 @@ public class WebSessionImpl implements ClientSession {
     private String ipAddress;
     private String language;
     private Locale locale;
+    private HttpServletRequest request;
 
     /**
      * creates a web session
-     * 
+     *
      * @param id the id of the session
      * @param language the ISO 3-character long language name
      * @param ipAddress the user's IP address
      * @param locale the user's locale
+     * @param request
      */
-    public WebSessionImpl(final String id, final String language, final String ipAddress, final Locale locale) {
+    public WebSessionImpl(final String id, final String language, final String ipAddress, final Locale locale, final HttpServletRequest request) {
         this.sessionId = id;
         this.language = language;
         this.ipAddress = ipAddress;
         this.locale = locale;
+        this.request = request;
     }
 
     /**
@@ -110,6 +115,11 @@ public class WebSessionImpl implements ClientSession {
         return this.locale;
     }
 
+    @Override
+    public String getParam(String name) {
+        return this.request.getParameter(name);
+    }
+    
     /**
      * @param locale the locale to set
      */

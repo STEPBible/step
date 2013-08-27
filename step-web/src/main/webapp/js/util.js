@@ -499,7 +499,7 @@ step.util = {
                     $(this).val(ui.item.value);
 
                     if (preChangeHandler) {
-                        preChangeHandler(this, ui.item.value);
+                        preChangeHandler(this, ui.item.value, ui.item.label);
                     }
 
                     $(this).change();

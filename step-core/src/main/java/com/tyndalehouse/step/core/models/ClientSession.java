@@ -1,11 +1,11 @@
 /*******************************************************************************
  * Copyright (c) 2012, Directors of the Tyndale STEP Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without 
  * modification, are permitted provided that the following conditions 
  * are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright 
  * notice, this list of conditions and the following disclaimer.
  * Redistributions in binary form must reproduce the above copyright 
@@ -16,7 +16,7 @@
  * nor the names of its contributors may be used to endorse or promote 
  * products derived from this software without specific prior written 
  * permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
@@ -36,21 +36,20 @@ import java.util.Locale;
 
 /**
  * At the moment, the "Client Session" object just wraps around an id.
- * 
+ *
  * @author chrisburrell
- * 
  */
 public interface ClientSession {
     /**
      * an identifier to the client session
-     * 
+     *
      * @return the session id
      */
     String getSessionId();
 
     /**
      * return the IP address that the user is currently coming in on
-     * 
+     *
      * @return the IP address
      */
     String getIpAddress();
@@ -65,4 +64,9 @@ public interface ClientSession {
      */
     Locale getLocale();
 
+    /**
+     * @param name the name of the parameter
+     * @return the servlet request parameter value
+     */
+    String getParam(String name);
 }

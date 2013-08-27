@@ -75,7 +75,7 @@ public class ClientSessionProvider implements Provider<ClientSession> {
     @Override
     public ClientSession get() {
         return new WebSessionImpl(this.session.getId(), getLocale().getISO3Language(),
-                this.request.getRemoteAddr(), getLocale());
+                this.request.getRemoteAddr(), getLocale(), this.request);
     }
 
     /**

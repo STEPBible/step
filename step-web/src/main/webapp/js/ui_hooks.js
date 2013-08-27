@@ -97,6 +97,9 @@ GEOGRAPHY_GET_PLACES =              STEP_SERVER_BASE_URL + "geography/getPlaces/
 
 USER_CHECK =                        STEP_SERVER_BASE_URL + "user/checkValidUser/";
 
+//deliberately no final slash, as mimicking a REST interface for backbone
+NOTES_BASE =                        STEP_SERVER_BASE_URL + "notes/notes";
+
 // ////////////////////////
 // SOME DEFAULTS
 // ////////////////////////

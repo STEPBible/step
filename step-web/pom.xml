@@ -168,6 +168,7 @@
                                 <jsSourceFile>libs/dohighlight-min.js</jsSourceFile>
                                 <jsSourceFile>libs/sprintf-0.7-beta1.js</jsSourceFile>
                                 <jsSourceFile>libs/jquery.tagcloud.js</jsSourceFile>
+                                <jsSourceFile>libs/tinymce/jquery.tinymce.min.js</jsSourceFile>
                                 <jsSourceFile>libs/underscore-min.js</jsSourceFile>
                                 <jsSourceFile>libs/json2.js</jsSourceFile>
                                 <jsSourceFile>libs/backbone-min.js</jsSourceFile>
@@ -222,15 +223,18 @@
                                 <jsSourceFile>js/backbone/models/model_search_original.js</jsSourceFile>
                                 <jsSourceFile>js/backbone/models/model_search_advanced.js</jsSourceFile>
                                 <jsSourceFile>js/backbone/models/model_search_simple.js</jsSourceFile>
+                                <jsSourceFile>js/backbone/models/model_notes.js</jsSourceFile>
                                 <jsSourceFile>js/backbone/views/view_criteria.js</jsSourceFile>
                                 <jsSourceFile>js/backbone/views/view_criteria_subject.js</jsSourceFile>
                                 <jsSourceFile>js/backbone/views/view_criteria_word.js</jsSourceFile>
                                 <jsSourceFile>js/backbone/views/view_criteria_advanced.js</jsSourceFile>
                                 <jsSourceFile>js/backbone/views/view_criteria_text.js</jsSourceFile>
+                                <jsSourceFile>js/backbone/views/view_criteria_notes.js</jsSourceFile>
                                 <jsSourceFile>js/backbone/views/view_display_search.js</jsSourceFile>
                                 <jsSourceFile>js/backbone/views/view_display_subject.js</jsSourceFile>
                                 <jsSourceFile>js/backbone/views/view_display_text.js</jsSourceFile>
                                 <jsSourceFile>js/backbone/views/view_display_word.js</jsSourceFile>
+                                <jsSourceFile>js/backbone/views/view_display_notes.js</jsSourceFile>
                                 <jsSourceFile>js/backbone/models/model_quick_lexicon.js</jsSourceFile>
                                 <jsSourceFile>js/backbone/views/view_quick_lexicon.js</jsSourceFile>
                                 <jsSourceFile>js/backbone/models/model_bookmark.js</jsSourceFile>

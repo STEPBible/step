@@ -146,6 +146,15 @@ var HistoryList = Backbone.Collection.extend({
     localStorage: new Backbone.LocalStorage("history")
 });
 
+var NotesList = Backbone.Collection.extend({
+    model: WordSearchModel,
+    url : NOTES_BASE,
+    initialize: function () {
+    }
+
+});
+
+
 var stepRouter;
 var PassageModels;
 var MenuModels;
@@ -156,6 +165,7 @@ var AdvancedSearchModels;
 var QuickLexiconModels;
 var BookmarkModels;
 var HistoryModels;
+var NotesModels;
 
 /**
  * Creates the models for those that are missing
@@ -250,7 +260,8 @@ function initApp() {
     QuickLexiconModels = new QuickLexiconList;
     BookmarkModels = new BookmarkList;
     HistoryModels = new HistoryList;
-
+    NotesModels = new NotesList;
+    
     PassageModels.fetch();
     MenuModels.fetch();
     HistoryModels.fetch();

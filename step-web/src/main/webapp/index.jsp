@@ -73,6 +73,7 @@
         <script src="libs/dohighlight-min.js" type="text/javascript"></script>
         <script src="libs/sprintf-0.7-beta1.js" type="text/javascript"></script>
  		<script src="libs/jquery.tagcloud.js" type="text/javascript"></script>
+        <script src="libs/tinymce/jquery.tinymce.min.js" type="text/javascript"></script>
         <script src="libs/underscore-min.js" type="text/javascript"></script>
         <script src="libs/json2.js" type="text/javascript"></script>
 
@@ -135,20 +136,24 @@
         <script src="js/backbone/models/model_search_original.js" type="text/javascript"></script>
         <script src="js/backbone/models/model_search_advanced.js" type="text/javascript"></script>
         <script src="js/backbone/models/model_search_simple.js" type="text/javascript"></script>
+        <script src="js/backbone/models/model_notes.js" type="text/javascript"></script>
         <script src="js/backbone/views/view_criteria.js" type="text/javascript"></script>
         <script src="js/backbone/views/view_criteria_subject.js" type="text/javascript"></script>
         <script src="js/backbone/views/view_criteria_word.js" type="text/javascript"></script>
         <script src="js/backbone/views/view_criteria_advanced.js" type="text/javascript"></script>
         <script src="js/backbone/views/view_criteria_text.js" type="text/javascript"></script>
+        <script src="js/backbone/views/view_criteria_notes.js" type="text/javascript"></script>
         <script src="js/backbone/views/view_display_search.js" type="text/javascript"></script>
         <script src="js/backbone/views/view_display_subject.js" type="text/javascript"></script>
         <script src="js/backbone/views/view_display_text.js" type="text/javascript"></script>
         <script src="js/backbone/views/view_display_word.js" type="text/javascript"></script>
+        <script src="js/backbone/views/view_display_notes.js" type="text/javascript"></script>
         <script src="js/backbone/models/model_quick_lexicon.js" type="text/javascript"></script>
         <script src="js/backbone/views/view_quick_lexicon.js" type="text/javascript"></script>
         <script src="js/backbone/models/model_bookmark.js" type="text/javascript"></script>
         <script src="js/backbone/views/view_bookmarks_history.js" type="text/javascript"></script>
         <script src="js/backbone/views/view_wordle_stat.js" type="text/javascript"></script>
+        
         <script src="js/init.js" type="text/javascript"></script>
         <script src="js/backbone/step.js" type="text/javascript"></script>
 	<%

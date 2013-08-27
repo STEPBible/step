@@ -125,6 +125,11 @@ CriteriaControlView = Backbone.View.extend({
                     models : AdvancedSearchModels, modelType: AdvancedSearchModel,
                     criteriaType: AdvancedCriteria, viewType: TextDisplayView, paged : true
                 };
+            case "notes":
+                return {
+                    models : NotesModels, modelType: NotesDisplayView,
+                    criteriaType: NotesCriteria, viewType: NotesDisplayView, page: false
+                }
             default :
                 console.log("ERROR: Unable to work out which search was desired.", modelType);
                 return undefined;

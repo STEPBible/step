@@ -64,7 +64,7 @@
     </issueManagement>
 
     <organization>
-        <name>Tyndale House, Cambridge, Cambridgeshire, UK</name>
+        <name>Tyndale House, Cambridge, UK</name>
         <url>http://www.tyndale.cam.ac.uk/</url>
     </organization>
 
@@ -75,6 +75,11 @@
     </scm>
 
     <developers>
+        <developer>
+            <id>DavidIB</id>
+            <name>David Instone-Brewer</name>
+            <timezone>GMT</timezone>
+        </developer>
         <developer>
             <id>chrisburrell</id>
             <name>Chris Burrell</name>

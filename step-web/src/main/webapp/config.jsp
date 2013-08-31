@@ -37,44 +37,45 @@
 	<h2><fmt:message key="welcome_to_step_configuration" /></h2>
 	<p />
 	<fmt:message key="configuration_intro" />
-	
-	<div class="configOptions">
-		<input type="button" value="<fmt:message key="installation_add_modules_from_internet" />" id="dismissWarning" />
-		<input type="button" value="<fmt:message key="installation_use_step_application" />" id="useStep" onclick='window.location.href="index.jsp";' />
+
+    <p />
+    <fmt:message key="installation_instructions" />
+
+    <div class="configOptions">
+         <input type="button" value="<fmt:message key="installation_use_step_application" />" id="useStep" onclick='window.location.href="index.jsp";' />
+         <input type="button" value="<fmt:message key="installation_add_modules_from_internet" />" id="dismissWarning" />
 	</div>
 
-	<p />
-	<fmt:message key="installation_instructions" />
 
-	<p />
-	
+    <p />
+
 	<div class="halfColumn miniBox">
 		<h3><fmt:message key="installation_sort_by" /></h3>
 		<div class='optionContainer'>
-			<input type='text' style='visibility: hidden' /><br />
+			<%--<input type='text' style='visibility: hidden' /><br />--%>
 			<a href="#" onclick="step.config.sortBy('name');"><fmt:message key="installation_book_name" /></a>&nbsp;&nbsp;
 			<a href="#" onclick="step.config.sortBy('initials');"><fmt:message key="installation_book_initials" /></a>&nbsp;&nbsp;
 			<a href="#" onclick="step.config.sortBy('languageName');"><fmt:message key="installation_book_language" /></a>&nbsp;&nbsp;
-			<a href="#" onclick="step.config.sortBy('languageCode');"><fmt:message key="installation_book_language_code" /></a>&nbsp;&nbsp;
+			<%--<a href="#" onclick="step.config.sortBy('languageCode');"><fmt:message key="installation_book_language_code" /></a>&nbsp;&nbsp;--%>
 			<a href="#" onclick="step.config.sortBy('category');"><fmt:message key="installation_book_category" /></a>
 			<br />
 		</div>
-		
+
 	</div>
-	
+
 	<div class="halfColumn miniBox">
 		<h3><fmt:message key="installation_filter_by" /></h3>
 		<div class='optionContainer'>
-			<fmt:message key="installation_filter_by_value" /> 		<input type='text' value="" id='filterValue' /><br />
-			<fmt:message key="instlalation_filters" /> 
+			<fmt:message key="installation_filter_by_value" /> 		<input type='text' value="" size="6" id='filterValue' />
+			<fmt:message key="instlalation_filters" />
 			<a href="#" onclick="step.config.filterBy('name');"><fmt:message key="installation_book_name" /></a>&nbsp;&nbsp;
 			<a href="#" onclick="step.config.filterBy('initials');"><fmt:message key="installation_book_initials" /></a>&nbsp;&nbsp;
 			<a href="#" onclick="step.config.filterBy('language');"><fmt:message key="installation_book_language" /></a>&nbsp;&nbsp;
 			<a href="#" onclick="step.config.filterBy('category');"><fmt:message key="installation_book_category" /></a>&nbsp;&nbsp;
 		</div>
 	</div>
-	<br /><br /><br /><br /><br /><br />	
-	<div id="content">
+    <br /><br /><br /><br /><br /><br />
+    <div id="content">
 		<div id="leftColumn" class='halfColumn'>
 			<h3><fmt:message key="installation_downloadable_modules" /></h3>
 			<p />
@@ -89,7 +90,7 @@
 			</div>
 		</div>
 		<div id="rightColumn" class='halfColumn'><h3><fmt:message key="installation_installed_modules" /></h3><p /><div class='container'></div></div>
-	</div>	
+	</div>
 	<p />
 </body>
 </HTML>

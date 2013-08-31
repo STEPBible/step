@@ -129,7 +129,6 @@
             <input type="checkbox"  id="A" value="1" />
             <label for="A">Ancient Vocab</label>
 
-
             <br />
 </div>
 

@@ -5,6 +5,12 @@
     if(typeof console === "undefined") {
         console = { log: function(arg, options) { } };
     }
+    
+    //define array indexOf for IE8
+    if(!Array.prototype.indexOf){
+        Array.prototype.indexOf=function(e){"use strict";if(this==null){throw new TypeError}var t,n,r=Object(this),i=r.length>>>0;if(i===0){return-1}t=0;if(arguments.length>1){t=Number(arguments[1]);if(t!=t){t=0}else if(t!=0&&t!=Infinity&&t!=-Infinity){t=(t>0||-1)*Math.floor(Math.abs(t))}}if(t>=i){return-1}for(n=t>=0?t:Math.max(i-Math.abs(t),0);n<i;n++){if(n in r&&r[n]===e){return n}}return-1};
+    }
+    
     //Set up the variables for accessing the server
     STEP_SERVER_BASE_URL = "rest/";
 

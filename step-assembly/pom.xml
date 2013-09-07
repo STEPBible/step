@@ -37,6 +37,7 @@
                     </execution>
                 </executions>
             </plugin>
+            
             <plugin>
                 <groupId>org.sonatype.install4j</groupId>
                 <artifactId>install4j-maven-plugin</artifactId>
@@ -50,6 +51,26 @@
                         </goals>
                         <configuration>
                             <projectFile>${project.basedir}/src/main/assembly/step.install4j</projectFile>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-resources</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>/opt/bitnami/apache2/htdocs/downloads/</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${project.build.directory}/media</directory>
+                                </resource>
+                            </resources>
                         </configuration>
                     </execution>
                 </executions>

@@ -26,7 +26,7 @@ public class TransliteratorProcessor implements PostProcessor {
         Field strongNumber = doc.getField("strongNumber");
         if(strongNumber != null) {
             final String strongStringValue = strongNumber.stringValue();
-            if(Character.isAlphabetic(strongStringValue.charAt(strongStringValue.length() - 1))) {
+            if(Character.isLetter(strongStringValue.charAt(strongStringValue.length() - 1))) {
                 strongNumber.setValue(strongStringValue.substring(0, strongStringValue.length() -1));
             }
         }

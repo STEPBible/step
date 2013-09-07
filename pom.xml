@@ -75,6 +75,21 @@
         <tag>HEAD</tag>
     </scm>
 
+    <licenses>
+        <license>
+            <name>BSD - 3 Clause</name>
+            <url>http://opensource.org/licenses/BSD-3-Clause</url>
+            <distribution>repo</distribution>
+            <comments>All our code is licensed with the BSD 3-Clause license to faciliate re-use.</comments>
+        </license>
+        <license>
+            <name>Attribution-NonCommercial-NoDerivs 3.0 License</name>
+            <url>http://creativecommons.org/licenses/by-nc-nd/3.0/deed.en_GB</url>
+            <distribution>repo</distribution>
+            <comments>All data is licensed under the Creative commons BY-NC-ND</comments>
+        </license>
+    </licenses>
+    
     <developers>
         <developer>
             <id>DavidIB</id>
@@ -513,4 +528,14 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+    
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.9.1</version>
+            </plugin>
+        </plugins>
+    </reporting>
 </project>

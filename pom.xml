@@ -11,8 +11,9 @@
     <properties>
         <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>utf-8</project.reporting.outputEncoding>
+        <site.location>${project.build.directory}/site</site.location>
         <final.jsword.package>packages</final.jsword.package>
-
+        
         <java.version>1.6</java.version>
 
         <junit.parallel>method</junit.parallel>
@@ -102,6 +103,11 @@
             <url>scp://stepbible.org/home/step/release-repo</url>
             <layout>default</layout>
         </snapshotRepository>
+        <site>
+            <id>step</id>
+            <name>STEP Documentation</name>
+            <url>${site.location}</url>
+        </site>
     </distributionManagement>
 
     <modules>

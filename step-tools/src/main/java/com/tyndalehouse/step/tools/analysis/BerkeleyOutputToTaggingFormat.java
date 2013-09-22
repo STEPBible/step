@@ -56,11 +56,11 @@ public class BerkeleyOutputToTaggingFormat {
     public static void main(String[] args) throws IOException {
 
 
-        final String root = "c:\\temp\\berkeley\\asv-led-5-iterations\\";
+        final String root = "c:\\temp\\berkeley\\asv-nt-20-iterations\\";
         final String strongs = FileUtils.readFileToString(new File(root + "bible.s"));
         final String other = FileUtils.readFileToString(new File(root + "bible.o"));
         final String results = FileUtils.readFileToString(new File(root + "training.align"));
-        final String keyFile = FileUtils.readFileToString(new File("c:\\temp\\berkeley\\keyList.txt"));
+        final String keyFile = FileUtils.readFileToString(new File("c:\\temp\\berkeley\\keyList-nt.txt"));
 
 
         List<String[]> strongSentences = splitByWord(strongs);

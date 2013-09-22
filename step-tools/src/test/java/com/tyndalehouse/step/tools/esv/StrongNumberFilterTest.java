@@ -43,11 +43,15 @@ import org.crosswire.jsword.book.Books;
 import org.crosswire.jsword.index.lucene.analysis.StrongsNumberAnalyzer;
 import org.crosswire.jsword.index.lucene.analysis.StrongsNumberFilter;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class StrongNumberFilterTest.
  */
 public class StrongNumberFilterTest {
+    private static final Logger LOGGER = LoggerFactory.getLogger(StrongNumberFilterTest.class);
+
     @Test
     public void testNumberFilter() throws IOException {
         final TokenStream stream = mock(TokenStream.class);
@@ -64,7 +68,7 @@ public class StrongNumberFilterTest {
 
         while (strongsNumberFilter.incrementToken()) {
             final TermAttribute attribute = strongsNumberFilter.getAttribute(TermAttribute.class);
-            System.out.println("Incrementing: " + attribute.term());
+            LOGGER.trace("Incrementing: {}", attribute.term());
         }
     }
 }

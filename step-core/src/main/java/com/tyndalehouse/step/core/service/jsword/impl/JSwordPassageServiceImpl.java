@@ -551,7 +551,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
             try {
                 //attempt the parse
                 kjvaBook.getKey(reference);
-                return new BookData(currentBook, new DefaultKeyList());
+                return new BookData(currentBook, new RocketPassage(v11n));
             } catch (NoSuchKeyException ex) {
                 //swallow this exception, and allow through
             }

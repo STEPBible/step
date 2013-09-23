@@ -13,7 +13,6 @@
 	Config.set(session, Config.FMT_LOCALE, locale.getLanguage());
 	WebStepRequest stepRequest = new WebStepRequest(injector, request);
     AppManagerService appManager = injector.getInstance(AppManagerService.class);    
-    pageContext.setAttribute("stepRequest", stepRequest);
 %>
 <fmt:setBundle basename="HtmlBundle" />
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
@@ -236,7 +235,7 @@
 		<div id="holdingPage">
 			<h1>STEP<br /> <em>S</em>cripture <em>T</em>ools for <em>E</em>very <em>P</em>erson<br />
 			from <a href="http://www.tyndalehouse.com" target="_new">Tyndale House, Cambridge</a></h1>
-			<img src="images/step-logo-big.png" title="STEP" /><br />
+			<img src="images/step-logo-big.png" title="STEP" width="265" height="340" /><br />
 			<em><fmt:message key="step_tag_line" /></em><br /><br />
 
 			<table>

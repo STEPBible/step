@@ -89,8 +89,10 @@ public class WebStepRequest {
      * @param injector the injector for the application
      */
     public WebStepRequest(final Injector injector, final HttpServletRequest request) {
-        this(injector, request, init(request, REF_0_PARAM, getDefaults(injector).getDefaultReference1()),
-                init(request, VERSION_0_PARAM, getDefaults(injector).getDefaultVersion1()));
+        this(injector, request,
+                init(request, VERSION_0_PARAM, getDefaults(injector).getDefaultVersion1()),
+                init(request, REF_0_PARAM, getDefaults(injector).getDefaultReference1())
+                );
     }
 
     /**
@@ -112,6 +114,7 @@ public class WebStepRequest {
             this.description = bible.getPlainText(this.version, this.reference, true).replaceAll("[<>'\",.:;()]", "");
             stats = this.analysis.getStatsForPassage(this.version, this.reference, StatType.TEXT, ScopeType.PASSAGE);
         } catch (Exception ex) {
+            LOG.error(ex.getMessage(), ex);
             this.referenceKey = null;
             this.description = "";
         }

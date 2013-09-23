@@ -13,7 +13,7 @@
 <div class="bookmarks" id="centerPane">
 	<div class="northBookmark">
 		<img id="topLogo" src="images/step-logo.png"
-			alt="STEP :: Scripture Tools for Every Person" />
+			alt="STEP :: Scripture Tools for Every Person"  height="56" width="88"  />
 	</div>
 	<div id="bookmarkPane" class="bookmarkPane ui-corner-all expandable">
 		<h3 class="ui-helper-reset ui-state-default ui-corner-all">

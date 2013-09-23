@@ -56,7 +56,7 @@
 <%-- Do first passage --%>
 <% if(version0 != null && reference0 != null) { %>
 <h1><%= version0 %> - <%= reference0 %></h1>
-<div>
+<div itemscope itemtype="http://schema.org/CreativeWork" itemprop="text">
     <%=	bible.getBibleText(version0, reference0).getValue() %>
 </div>
 <% } %>

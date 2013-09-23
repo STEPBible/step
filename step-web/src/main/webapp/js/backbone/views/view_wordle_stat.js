@@ -1,7 +1,7 @@
 var ViewLexiconWordle = Backbone.View.extend({
         events: {
         },
-        minFont: 8,
+        minFont: 9,
         maxFont: 32,
         passageId: 0,
 

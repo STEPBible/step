@@ -154,11 +154,13 @@ public class AnalysisServiceImpl implements AnalysisService {
             if (entry instanceof ExpandableSubjectHeadingEntry) {
                 final ExpandableSubjectHeadingEntry subjectEntry = (ExpandableSubjectHeadingEntry) entry;
 
-                if (!stopSubjects.contains(subjectEntry.getRoot().toUpperCase())) {
-                    stat.addWord(subjectEntry.getRoot());
+                final String root = subjectEntry.getRoot();
+                if (root != null && !stopSubjects.contains(root.toUpperCase())) {
+                    stat.addWord(root);
                 }
-                if (!stopSubjects.contains(subjectEntry.getHeading().toUpperCase())) {
-                    stat.addWord(subjectEntry.getHeading());
+                final String subjectHeading = subjectEntry.getHeading();
+                if (subjectHeading != null && !stopSubjects.contains(subjectHeading.toUpperCase())) {
+                    stat.addWord(subjectHeading);
                 }
             }
         }

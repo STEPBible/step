@@ -52,8 +52,7 @@ import com.tyndalehouse.step.core.models.stats.PassageStat;
 import com.tyndalehouse.step.core.service.jsword.JSwordAnalysisService;
 import org.crosswire.jsword.versification.Versification;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * The Class JSwordAnalysisServiceImpl.
@@ -63,11 +62,13 @@ import java.util.Set;
 public class JSwordAnalysisServiceImpl implements JSwordAnalysisService {
     static final String WORD_SPLIT = "[,./<>?!;:'\\[\\]\\{\\}!\"\\-\u2013 ]+";
     private static final String STRONG_VERSION = "ESV";
+    private static final String LANGUAGE_STOP_LIST = "analysis.stopWords.%s";
     private final JSwordVersificationService versification;
-    private final Set<String> stopWords;
+    private final Map<String, Set<String>> stopWords = new HashMap<String, Set<String>>(32);
     private final Set<String> stopStrongs;
     private final Versification strongsV11n;
     private final Book strongsBook;
+    private final Properties stopWordsProperties;
 
     /**
      * Instantiates a new jsword analysis service impl.
@@ -76,10 +77,10 @@ public class JSwordAnalysisServiceImpl implements JSwordAnalysisService {
      */
     @Inject
     public JSwordAnalysisServiceImpl(final JSwordVersificationService versification,
-                                     @Named("analysis.stopWords") final String configuredStopWords,
+                                     @Named("StepCoreProperties") final Properties stopWordsProperties,
                                      @Named("analysis.stopStrongs") final String configuredStopStrongs) {
         this.versification = versification;
-        stopWords = StringUtils.createSet(configuredStopWords);
+        this.stopWordsProperties = stopWordsProperties;
         stopStrongs = StringUtils.createSet(configuredStopStrongs);
         strongsBook = this.versification.getBookFromVersion(STRONG_VERSION);
         strongsV11n = this.versification.getVersificationForVersion(strongsBook);
@@ -106,10 +107,12 @@ public class JSwordAnalysisServiceImpl implements JSwordAnalysisService {
             final String canonicalText = OSISUtil.getCanonicalText(bookData.getOsisFragment());
             final String[] words = split(canonicalText, WORD_SPLIT);
 
+            Set<String> languageStopWords = getLanguageStopList(book);
+
             final PassageStat stat = new PassageStat();
             for (final String word : words) {
                 //only add word if not in STOP list
-                if (!stopWords.contains(word.toUpperCase())) {
+                if (!languageStopWords.contains(StringConversionUtils.unAccent(word.toUpperCase(), true))) {
                     stat.addWord(word);
                 }
             }
@@ -117,6 +120,29 @@ public class JSwordAnalysisServiceImpl implements JSwordAnalysisService {
         } catch (final BookException e) {
             throw new StepInternalException("Unable to read passage text", e);
         }
+    }
+
+    /**
+     * Lazily obtains the stop list for the specific language of a book
+     *
+     * @param book the book that the viewer is looking at
+     * @return the set of words that form part of the stop list
+     */
+    private Set<String> getLanguageStopList(final Book book) {
+        String code = book.getLanguage().getCode();
+        Set<String> languageStopList = this.stopWords.get(code);
+        if (languageStopList == null) {
+            //only one language gets loaded at any one time
+            synchronized (this) {
+                languageStopList = this.stopWords.get(code);
+                if (languageStopList == null) {
+                    languageStopList = StringUtils.createSet(this.stopWordsProperties.getProperty(String.format(LANGUAGE_STOP_LIST, code.toLowerCase())), true);
+                    this.stopWords.put(code, languageStopList);
+                }
+            }
+        }
+
+        return languageStopList;
     }
 
 
@@ -139,7 +165,7 @@ public class JSwordAnalysisServiceImpl implements JSwordAnalysisService {
         }
 
         if (scopeType == ScopeType.PASSAGE) {
-            return new BookData(strongsBook, key);
+            return new BookData(bookFromVersion, key);
         }
 
         //validate the key is a verse key
@@ -197,7 +223,7 @@ public class JSwordAnalysisServiceImpl implements JSwordAnalysisService {
             default:
                 throw new StepInternalException("Unable to recognise passed-in scope type.");
         }
-        return new BookData(strongsBook, new VerseRange(v11n, start, end));
+        return new BookData(bookFromVersion, new VerseRange(v11n, start, end));
 
     }
 

@@ -1,11 +1,11 @@
 /*******************************************************************************
  * Copyright (c) 2012, Directors of the Tyndale STEP Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without 
  * modification, are permitted provided that the following conditions 
  * are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright 
  * notice, this list of conditions and the following disclaimer.
  * Redistributions in binary form must reproduce the above copyright 
@@ -16,7 +16,7 @@
  * nor the names of its contributors may be used to endorse or promote 
  * products derived from this software without specific prior written 
  * permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
@@ -41,21 +41,22 @@ import java.util.regex.Pattern;
 /**
  * To avoid having large libraries, we provide here a small set of methods that can be used to perform various
  * string operations
- * 
+ *
  * @author chrisburrell
- * 
  */
 public final class StringUtils {
     private static final Map<String, Pattern> PATTERNS = new HashMap<String, Pattern>();
 
-    /** no op */
+    /**
+     * no op
+     */
     private StringUtils() {
         // No-op
     }
 
     /**
      * checks for null and zero length
-     * 
+     *
      * @param s the string
      * @return true if null or zero length
      */
@@ -73,7 +74,7 @@ public final class StringUtils {
 
     /**
      * if any of the passed in values are blank, then returns true
-     * 
+     *
      * @param strings the list of strings to evaluate
      * @return true if one or more strings are blank
      */
@@ -89,7 +90,7 @@ public final class StringUtils {
 
     /**
      * checks if a field is blank
-     * 
+     *
      * @param s the string to be tested
      * @return true if blank (ie. only whitespace)
      */
@@ -121,7 +122,7 @@ public final class StringUtils {
 
     /**
      * Uses a pre-compiled regular expression to comma separate - maybe a tad overkill
-     * 
+     *
      * @param value the string to be split up
      * @return the array of strings containing the split values
      */
@@ -131,7 +132,7 @@ public final class StringUtils {
 
     /**
      * Splits by space
-     * 
+     *
      * @param value the value to split
      * @return the array of split values
      */
@@ -140,7 +141,7 @@ public final class StringUtils {
     }
 
     /**
-     * @param value the value to split
+     * @param value        the value to split
      * @param patternRegex the delimiter regex
      * @return the array of split values
      */
@@ -173,14 +174,27 @@ public final class StringUtils {
 
     /**
      * Creates a list from the String of words given, in upper case form.
+     *
      * @param wordList the list of words as 1 String
      * @return the set of words
      */
     public static Set<String> createSet(final String wordList) {
+        return createSet(wordList, false);
+    }
+
+    /**
+     * Creates a list from the String of words given, in upper case form.
+     *
+     * @param wordList         the list of words as 1 String
+     * @param removeDiacritics remove any decoration of texts, such as accents, and the like
+     * @return the set of words
+     */
+    public static Set<String> createSet(final String wordList, boolean removeDiacritics) {
         final String[] splitWords = StringUtils.split(wordList);
-        Set<String> words = new HashSet<String>(splitWords.length *2);
+        Set<String> words = new HashSet<String>(splitWords.length * 2);
         for (String splitWord : splitWords) {
-            words.add(splitWord.toUpperCase());
+            //treat as Greek
+            words.add(StringConversionUtils.unAccent(splitWord.toUpperCase(), removeDiacritics));
         }
         return words;
     }

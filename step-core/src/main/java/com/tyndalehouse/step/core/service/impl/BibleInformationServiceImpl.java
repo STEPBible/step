@@ -1,11 +1,11 @@
 /*******************************************************************************
  * Copyright (c) 2012, Directors of the Tyndale STEP Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without 
  * modification, are permitted provided that the following conditions 
  * are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright 
  * notice, this list of conditions and the following disclaimer.
  * Redistributions in binary form must reproduce the above copyright 
@@ -16,7 +16,7 @@
  * nor the names of its contributors may be used to endorse or promote 
  * products derived from this software without specific prior written 
  * permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
@@ -90,7 +90,7 @@ import com.tyndalehouse.step.core.utils.StringUtils;
 
 /**
  * Command handler returning all available bible versions.
- * 
+ *
  * @author CJBurrell
  */
 @Singleton
@@ -109,22 +109,22 @@ public class BibleInformationServiceImpl implements BibleInformationService {
 
     /**
      * The bible information service, retrieving content and meta data.
-     * 
-     * @param defaultVersions a list of the default versions that should be installed
-     * @param jswordPassage the jsword service
-     * @param jswordModule provides information and handles information relating to module installation, etc.
-     * @param jswordMetadata provides metadata on jsword modules
+     *
+     * @param defaultVersions       a list of the default versions that should be installed
+     * @param jswordPassage         the jsword service
+     * @param jswordModule          provides information and handles information relating to module installation, etc.
+     * @param jswordMetadata        provides metadata on jsword modules
      * @param clientSessionProvider the client session provider
-     * @param entityManager the entity manager
-     * @param jswordVersification the jsword versification
-     * @param subjectSearchService the subject search service
+     * @param entityManager         the entity manager
+     * @param jswordVersification   the jsword versification
+     * @param subjectSearchService  the subject search service
      */
     @Inject
     public BibleInformationServiceImpl(@Named("defaultVersions") final List<String> defaultVersions,
-            final JSwordPassageService jswordPassage, final JSwordModuleService jswordModule,
-            final JSwordMetadataService jswordMetadata, final Provider<ClientSession> clientSessionProvider,
-            final EntityManager entityManager, final JSwordVersificationService jswordVersification,
-            final SubjectSearchService subjectSearchService, final VersionResolver resolver) {
+                                       final JSwordPassageService jswordPassage, final JSwordModuleService jswordModule,
+                                       final JSwordMetadataService jswordMetadata, final Provider<ClientSession> clientSessionProvider,
+                                       final EntityManager entityManager, final JSwordVersificationService jswordVersification,
+                                       final SubjectSearchService subjectSearchService, final VersionResolver resolver) {
         this.jswordPassage = jswordPassage;
         this.defaultVersions = defaultVersions;
         this.jswordModule = jswordModule;
@@ -138,15 +138,15 @@ public class BibleInformationServiceImpl implements BibleInformationService {
 
     /**
      * Gets the available modules.
-     * 
+     *
      * @param allVersions the all versions
-     * @param locale the locale
-     * @param userLocale the user locale
+     * @param locale      the locale
+     * @param userLocale  the user locale
      * @return the available modules
      */
     @Override
     public List<BibleVersion> getAvailableModules(final boolean allVersions, final String locale,
-            final Locale userLocale) {
+                                                  final Locale userLocale) {
         LOGGER.debug("Getting bible versions with locale [{}] and allVersions=[{}]", locale, allVersions);
         return getSortedSerialisableList(this.jswordModule.getInstalledModules(allVersions, locale,
                 BookCategory.BIBLE, BookCategory.COMMENTARY), userLocale, this.resolver);
@@ -154,18 +154,18 @@ public class BibleInformationServiceImpl implements BibleInformationService {
 
     /**
      * Gets the passage text.
-     * 
-     * @param version the version
-     * @param startVerseId the start verse id
-     * @param endVerseId the end verse id
-     * @param options the options
+     *
+     * @param version            the version
+     * @param startVerseId       the start verse id
+     * @param endVerseId         the end verse id
+     * @param options            the options
      * @param interlinearVersion the interlinear version
-     * @param roundUp the round up
+     * @param roundUp            the round up
      * @return the passage text
      */
     @Override
     public OsisWrapper getPassageText(final String version, final int startVerseId, final int endVerseId,
-            final String options, final String interlinearVersion, final Boolean roundUp) {
+                                      final String options, final String interlinearVersion, final Boolean roundUp) {
         final List<LookupOption> lookupOptions = trim(getLookupOptions(options), version,
                 InterlinearMode.NONE, null);
         final OsisWrapper passage = this.jswordPassage.getOsisTextByVerseNumbers(version, version,
@@ -175,17 +175,17 @@ public class BibleInformationServiceImpl implements BibleInformationService {
 
     /**
      * Gets the passage text.
-     * 
-     * @param version the version
-     * @param reference the reference
-     * @param options the options
+     *
+     * @param version            the version
+     * @param reference          the reference
+     * @param options            the options
      * @param interlinearVersion the interlinear version
-     * @param interlinearMode the interlinear mode
+     * @param interlinearMode    the interlinear mode
      * @return the passage text
      */
     @Override
     public OsisWrapper getPassageText(final String version, final String reference, final String options,
-            final String interlinearVersion, final String interlinearMode) {
+                                      final String interlinearVersion, final String interlinearMode) {
 
         final InterlinearMode desiredModeOfDisplay = getDisplayMode(interlinearMode);
 
@@ -203,6 +203,10 @@ public class BibleInformationServiceImpl implements BibleInformationService {
                     interlinearVersion, desiredModeOfDisplay);
         }
         return passageText;
+    }
+    @Override
+    public String getPlainText(final String version, final String reference, final boolean firstVerseOnly) {
+        return jswordPassage.getPlainText(version, reference, firstVerseOnly);
     }
 
     @Override
@@ -247,8 +251,8 @@ public class BibleInformationServiceImpl implements BibleInformationService {
 
     /**
      * Joins version with interlinear version and returns an upper case array
-     * 
-     * @param version the base version
+     *
+     * @param version            the base version
      * @param interlinearVersion the interlinear version
      * @return the array of well-formatted versions for use in the stylesheet
      */
@@ -265,18 +269,18 @@ public class BibleInformationServiceImpl implements BibleInformationService {
 
     /**
      * Translates the options provided over the HTTP interface to something palatable by the service layer
-     * 
+     *
      * @param options the list of options, comma-separated.
      * @return a list of {@link LookupOption}
      */
     private List<LookupOption> getLookupOptions(final String options) {
         final List<LookupOption> lookupOptions = new ArrayList<LookupOption>();
 
-        if(isBlank(options)) {
+        if (isBlank(options)) {
             return lookupOptions;
         }
 
-        for(int ii = 0; ii < options.length(); ii++) {
+        for (int ii = 0; ii < options.length(); ii++) {
             lookupOptions.add(LookupOption.fromUiOption(options.charAt(ii)));
         }
         return lookupOptions;
@@ -284,17 +288,17 @@ public class BibleInformationServiceImpl implements BibleInformationService {
 
     /**
      * Trims the options down to what is supported by the version.
-     * 
-     * @param options the options
-     * @param version the version that is being selected
-     * @param mode the display mode, because we remove some options depending on what is selected
+     *
+     * @param options              the options
+     * @param version              the version that is being selected
+     * @param mode                 the display mode, because we remove some options depending on what is selected
      * @param trimmingExplanations can be null, if provided then it is populated with the reasons why an
-     *            option has been removed. If trimmingExplanations is not null, then it is assume that we do
-     *            not want to rewrite the displayMode
+     *                             option has been removed. If trimmingExplanations is not null, then it is assume that we do
+     *                             not want to rewrite the displayMode
      * @return a new list of options where both list have been intersected.
      */
     private List<LookupOption> trim(final List<LookupOption> options, final String version,
-            final InterlinearMode mode, final List<TrimmedLookupOption> trimmingExplanations) {
+                                    final InterlinearMode mode, final List<TrimmedLookupOption> trimmingExplanations) {
         // obtain error messages
         final ResourceBundle errors = ResourceBundle.getBundle("ErrorBundle", this.clientSessionProvider
                 .get().getLocale());
@@ -334,14 +338,14 @@ public class BibleInformationServiceImpl implements BibleInformationService {
     /**
      * Determine display mode, if there are no explanations, display mode is NONE and there are interlinear
      * options, then mode gets override to INTERLINEAR
-     * 
-     * @param options the options
-     * @param mode the mode
+     *
+     * @param options              the options
+     * @param mode                 the mode
      * @param trimmingExplanations the trimming explanations
      * @return the interlinear mode
      */
     private InterlinearMode determineDisplayMode(final List<LookupOption> options,
-            final InterlinearMode mode, final List<TrimmedLookupOption> trimmingExplanations) {
+                                                 final InterlinearMode mode, final List<TrimmedLookupOption> trimmingExplanations) {
         InterlinearMode displayMode = mode;
         if (mode == NONE && trimmingExplanations == null && hasInterlinearOption(options)) {
             displayMode = INTERLINEAR;
@@ -352,17 +356,16 @@ public class BibleInformationServiceImpl implements BibleInformationService {
     /**
      * Given a set of options selected by the user and a verson, retrieves the options that are actually
      * available
-     * 
-     * @param errors the error messages
-     * @param options the options given by the user
-     * @param version the version of interest
+     *
+     * @param errors               the error messages
+     * @param options              the options given by the user
+     * @param version              the version of interest
      * @param trimmingExplanations the explanations of why options are being removed
-     * 
      * @return a potentially smaller set of options that are actually possible
      */
     private List<LookupOption> getUserOptionsForVersion(final ResourceBundle errors,
-            final List<LookupOption> options, final String version,
-            final List<TrimmedLookupOption> trimmingExplanations) {
+                                                        final List<LookupOption> options, final String version,
+                                                        final List<TrimmedLookupOption> trimmingExplanations) {
         final List<LookupOption> available = getFeaturesForVersion(version);
         final List<LookupOption> result = new ArrayList<LookupOption>(options.size());
         // do a crazy bubble intersect, but it's tiny so that's fine
@@ -397,16 +400,16 @@ public class BibleInformationServiceImpl implements BibleInformationService {
 
     /**
      * Removes the interleaving options.
-     * 
-     * @param errors the error mesages
-     * @param trimmingExplanations explanations on why something was removed
-     * @param result result
+     *
+     * @param errors                 the error mesages
+     * @param trimmingExplanations   explanations on why something was removed
+     * @param result                 result
      * @param originalModeHasChanged true to indicate that the chosen display mode has been forced upon the
-     *            user
+     *                               user
      */
     private void removeInterleavingOptions(final ResourceBundle errors,
-            final List<TrimmedLookupOption> trimmingExplanations, final List<LookupOption> result,
-            final boolean originalModeHasChanged) {
+                                           final List<TrimmedLookupOption> trimmingExplanations, final List<LookupOption> result,
+                                           final boolean originalModeHasChanged) {
         final String interleavedMessage = errors.getString("option_not_available_interleaved");
         explainRemove(errors, VERSE_NUMBERS, result, trimmingExplanations, originalModeHasChanged,
                 interleavedMessage);
@@ -432,17 +435,17 @@ public class BibleInformationServiceImpl implements BibleInformationService {
 
     /**
      * explains why an option has been removed.
-     * 
-     * @param errors the errors
-     * @param option the option we want to remove
-     * @param result the resulting options
-     * @param trimmingOptions the list of options
+     *
+     * @param errors              the errors
+     * @param option              the option we want to remove
+     * @param result              the resulting options
+     * @param trimmingOptions     the list of options
      * @param originalModeChanged tru if the original mode has changed
-     * @param explanation the explanation
+     * @param explanation         the explanation
      */
     private void explainRemove(final ResourceBundle errors, final LookupOption option,
-            final List<LookupOption> result, final List<TrimmedLookupOption> trimmingOptions,
-            final boolean originalModeChanged, final String explanation) {
+                               final List<LookupOption> result, final List<TrimmedLookupOption> trimmingOptions,
+                               final boolean originalModeChanged, final String explanation) {
         if (result.remove(option) && trimmingOptions != null) {
 
             final TrimmedLookupOption trimmedOption;
@@ -461,7 +464,7 @@ public class BibleInformationServiceImpl implements BibleInformationService {
 
     /**
      * Gets the all features.
-     * 
+     *
      * @return the all features
      */
     @Override
@@ -481,8 +484,8 @@ public class BibleInformationServiceImpl implements BibleInformationService {
 
     /**
      * Gets the available features for version.
-     * 
-     * @param version the version
+     *
+     * @param version     the version
      * @param displayMode the display mode
      * @return the available features for version
      */
@@ -506,7 +509,7 @@ public class BibleInformationServiceImpl implements BibleInformationService {
 
     /**
      * Checks for core modules.
-     * 
+     *
      * @return true, if successful
      */
     @Override
@@ -532,7 +535,7 @@ public class BibleInformationServiceImpl implements BibleInformationService {
 
     /**
      * Install modules.
-     * 
+     *
      * @param reference the reference
      */
     @Override
@@ -542,9 +545,9 @@ public class BibleInformationServiceImpl implements BibleInformationService {
 
     /**
      * Gets the bible book names.
-     * 
+     *
      * @param bookStart the book start
-     * @param version the version
+     * @param version   the version
      * @return the bible book names
      */
     @Override
@@ -554,25 +557,24 @@ public class BibleInformationServiceImpl implements BibleInformationService {
 
     /**
      * Gets the sibling chapter.
-     * 
-     * @param reference the reference
-     * @param version the version
+     *
+     * @param reference       the reference
+     * @param version         the version
      * @param previousChapter the previous chapter
      * @return the sibling chapter
      */
     @Override
     public KeyWrapper getSiblingChapter(final String reference, final String version,
-            final boolean previousChapter) {
+                                        final boolean previousChapter) {
         return this.jswordPassage.getSiblingChapter(reference, version, previousChapter);
     }
 
     /**
      * Gets the key info.
-     * 
      *
-     * @param reference the reference
+     * @param reference     the reference
      * @param sourceVersion the version attached to the reference
-     * @param version the version
+     * @param version       the version
      * @return the key info
      */
     @Override
@@ -582,7 +584,7 @@ public class BibleInformationServiceImpl implements BibleInformationService {
 
     /**
      * Index.
-     * 
+     *
      * @param initials the initials
      */
     @Override
@@ -592,7 +594,7 @@ public class BibleInformationServiceImpl implements BibleInformationService {
 
     /**
      * Re index.
-     * 
+     *
      * @param initials the initials
      */
     @Override
@@ -609,7 +611,7 @@ public class BibleInformationServiceImpl implements BibleInformationService {
 
     /**
      * Gets the progress on installation.
-     * 
+     *
      * @param version the version
      * @return the progress on installation
      */
@@ -620,7 +622,7 @@ public class BibleInformationServiceImpl implements BibleInformationService {
 
     /**
      * Gets the progress on indexing.
-     * 
+     *
      * @param version the version
      * @return the progress on indexing
      */
@@ -631,7 +633,7 @@ public class BibleInformationServiceImpl implements BibleInformationService {
 
     /**
      * Removes the module.
-     * 
+     *
      * @param initials the initials
      */
     @Override

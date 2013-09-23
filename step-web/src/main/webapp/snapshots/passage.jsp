@@ -6,6 +6,7 @@
 <%@ page import="com.tyndalehouse.step.rest.controllers.BibleController" %>
 <%@ page import="com.tyndalehouse.step.rest.controllers.SearchController" %>
 <%@ page import="com.tyndalehouse.step.jsp.PassageSearchRequest" %>
+<%@ page import="com.tyndalehouse.step.jsp.WebStepRequest" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%
     Injector injector = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
@@ -30,8 +31,25 @@
     String pageSize1 = request.getParameter("pageSize1");
 
     PassageSearchRequest passageSearchRequest = new PassageSearchRequest(injector);
-
+    WebStepRequest stepRequest = null;
+    boolean isFirstPassage = version0 != null && reference0 != null; 
+    if(isFirstPassage) {
+        stepRequest = new WebStepRequest(injector, request, version0, reference0);
+    }
+    
 %>
+<HTML xmlns:fb="http://ogp.me/ns/fb#" itemscope itemtype="http://schema.org/Book">
+<HEAD>
+    <% if(isFirstPassage) { %>
+        <TITLE><%= stepRequest.getTitle() %></TITLE>
+        <meta name="description" content="<%= stepRequest.getDescription() %>" />
+        <meta name="keywords" content="<%= stepRequest.getKeywords() %>" />
+        <link rel="canonical" href="http://www.stepbible.org/?version=<%= stepRequest.getThisVersion() %>&amp;reference=<%= stepRequest.getThisReference() %>" />
+    <%
+    }
+    %>
+</HEAD>
+<body>
 <fmt:setBundle basename="HtmlBundle" />
 <% request.setCharacterEncoding("utf-8"); %>
 
@@ -62,3 +80,5 @@
 <div><%= passageSearchRequest.getOutput(querySyntax1, context1, pageNumber1, pageSize1) %></div>
 <% } %>
 
+</body>
+</HTML>

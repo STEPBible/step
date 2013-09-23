@@ -5,88 +5,40 @@
  * https://github.com/addywaddy/jquery.tagcloud.js
  * created by Adam Groves
  */
-(function($) {
+(function ($) {
 
-  /*global jQuery*/
-  "use strict";
+    /*global jQuery*/
+    "use strict";
 
-  var compareWeights = function(a, b)
-  {
-    return a - b;
-  };
+    var compareWeights = function (a, b) {
+        return a - b;
+    };
+    
+    $.fn.tagcloud = function (options) {
 
-  // Converts hex to an RGB array
-  var toRGB = function(code) {
-    if (code.length === 4) {
-      code = code.replace(/(\w)(\w)(\w)/gi, "\$1\$1\$2\$2\$3\$3");
-    }
-    var hex = /(\w{2})(\w{2})(\w{2})/.exec(code);
-    return [parseInt(hex[1], 16), parseInt(hex[2], 16), parseInt(hex[3], 16)];
-  };
+        var opts = $.extend({}, $.fn.tagcloud.defaults, options);
+        var tagWeights = this.map(function () {
+            return $(this).attr("rel");
+        });
+        tagWeights = jQuery.makeArray(tagWeights).sort(compareWeights);
 
-  // Converts an RGB array to hex
-  var toHex = function(ary) {
-    return "#" + jQuery.map(ary, function(i) {
-      var hex =  i.toString(16);
-      hex = (hex.length === 1) ? "0" + hex : hex;
-      return hex;
-    }).join("");
-  };
-
-  var colorIncrement = function(color, range) {
-    return jQuery.map(toRGB(color.end), function(n, i) {
-      return (n - toRGB(color.start)[i])/range;
-    });
-  };
-
-  var tagColor = function(color, increment, weighting) {
-    var rgb = jQuery.map(toRGB(color.start), function(n, i) {
-      var ref = Math.round(n + (increment[i] * weighting));
-      if (ref > 255) {
-        ref = 255;
-      } else {
-        if (ref < 0) {
-          ref = 0;
+        var lowest = tagWeights[0];
+        var highest = tagWeights.pop();
+        var constant = Math.log(highest - (lowest - 1)) / (opts.size.end - opts.size.start);
+        if (constant == 0) {
+            constant = 1;
         }
-      }
-      return ref;
-    });
-    return toHex(rgb);
-  };
 
-  $.fn.tagcloud = function(options) {
+        return this.each(function () {
+            if (opts.size) {
+                var weighting = Math.log($(this).attr("rel") - (lowest - 1)) / constant + opts.size.start;
+                $(this).css({"font-size": weighting + opts.size.unit});
+            }
+        });
+    };
 
-    var opts = $.extend({}, $.fn.tagcloud.defaults, options);
-    var tagWeights = this.map(function(){
-      return $(this).attr("rel");
-    });
-    tagWeights = jQuery.makeArray(tagWeights).sort(compareWeights);
-    var lowest = tagWeights[0];
-    var highest = tagWeights.pop();
-    var range = highest - lowest;
-    if(range === 0) {range = 1;}
-    // Sizes
-    var fontIncr, colorIncr;
-    if (opts.size) {
-      fontIncr = (opts.size.end - opts.size.start)/range;
-    }
-    // Colors
-    if (opts.color) {
-      colorIncr = colorIncrement (opts.color, range);
-    }
-    return this.each(function() {
-      var weighting = $(this).attr("rel") - lowest;
-      if (opts.size) {
-        $(this).css({"font-size": opts.size.start + (weighting * fontIncr) + opts.size.unit});
-      }
-      if (opts.color) {
-        $(this).css({"color": tagColor(opts.color, colorIncr, weighting)});
-      }
-    });
-  };
-
-  $.fn.tagcloud.defaults = {
-    size: {start: 14, end: 18, unit: "pt"}
-  };
+    $.fn.tagcloud.defaults = {
+        size: {start: 14, end: 18, unit: "pt"}
+    };
 
 })(jQuery);

@@ -191,7 +191,6 @@ $.widget("custom.versions",  {
         }
         
         var versions = this._filteredVersions(lastToken);
-        
         var listItems = $("[initials]", this.dropdownVersionMenu);
         $("li.header", this.dropdownVersionMenu).show();
 
@@ -215,7 +214,7 @@ $.widget("custom.versions",  {
         for(var i = 1; i < allElements.length; i++) {
             var newHeader = allElements.eq(i).hasClass("header");
 
-            console.log(allElements.eq(i).text(), wasHeader, newHeader);
+//            console.log(allElements.eq(i).text(), wasHeader, newHeader);
             if(wasHeader && newHeader) {
                 allElements.eq(i-1).hide();
             }
@@ -250,7 +249,6 @@ $.widget("custom.versions",  {
 
        $.each(step.versions, function(index, item) {
            if(val) {
-               val.match()
                if(item.shortInitials.match(regex) != null ||
                        item.initials.match(regex) != null ||
                        item.name.match(regex) != null

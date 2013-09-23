@@ -126,7 +126,7 @@
 
   <!--=======================================================================-->
   <xsl:template match="/">
-      <div class="passageContentHolder">
+      <div class="passageContentHolder" >
         <!-- If there are notes, output a table with notes in the 2nd column. -->
         <!-- There is a rendering bug which prevents the notes from adhering to the right edge. -->
         <xsl:choose>

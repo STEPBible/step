@@ -170,6 +170,7 @@ var ViewLexiconWordle = Backbone.View.extend({
                         wordLink.append(' (');
                         wordLink.append(ancientVocab);
                         wordLink.append(')');
+                        wordLink.prop("strong", key);
                     } else {
                         wordLink.append(lexiconWords[key].gloss);
                     }
@@ -184,13 +185,26 @@ var ViewLexiconWordle = Backbone.View.extend({
                 });
             });
 
-            $("a", container).tagcloud({
+            var links = $("a", container);
+            links.tagcloud({
                 size: {
                     start: self.minFont,
                     end: self.maxFont,
                     unit: "px"
                 }
             });
+            
+            if(statType == 'WORD') {
+                links.hover(
+                    function() {
+                        step.passage.higlightStrongs({
+                            strong: $(this).prop("strong")
+                        });
+                    }, function() {
+                        step.passage.removeStrongsHighlights(step.passage.getPassageId(this));
+                    }
+                );
+            }
         }
     })
     ;

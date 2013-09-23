@@ -3,6 +3,7 @@
 <%@page import="javax.servlet.jsp.jstl.core.Config"%>
 <%@ page contentType="text/html; charset=UTF-8" language="java" %> 
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="com.tyndalehouse.step.jsp.WebStepRequest" %>
 <%@ page import="com.google.inject.Injector"%>
 <%@ page import="com.tyndalehouse.step.core.service.AppManagerService" %>
@@ -11,7 +12,8 @@
 	Locale locale = injector.getInstance(ClientSession.class).getLocale();
 	Config.set(session, Config.FMT_LOCALE, locale.getLanguage());
 	WebStepRequest stepRequest = new WebStepRequest(injector, request);
-    AppManagerService appManager = injector.getInstance(AppManagerService.class);
+    AppManagerService appManager = injector.getInstance(AppManagerService.class);    
+    pageContext.setAttribute("stepRequest", stepRequest);
 %>
 <fmt:setBundle basename="HtmlBundle" />
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
@@ -22,11 +24,23 @@
 	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 <%-- 	<meta name="description" content="<%= stepRequest.getTitle() %>..."> --%>
     <meta step-local content="<%= appManager.isLocal() %>" />
+    <meta name="description" content="<%= stepRequest.getDescription() %>" />
+    <meta name="keywords" content="<%= stepRequest.getKeywords() %>" />
     <meta itemprop="name" content="STEP" />
-    <meta itemprop="description" content="Scripture Tools for Every Person" />
     <meta itemprop="image" content="http://www.stepbible.org/images/step-logo.png" />
 	<link rel="shortcut icon"  href="images/step-favicon.ico" />
-    <link rel="canonical" href="http://www.stepbible.org" />
+
+    <% 
+        if (stepRequest.getThisVersion().length() > 0 || stepRequest.getThisReference().length() > 0) {
+    %>
+        <link rel="canonical" href="http://www.stepbible.org/?version=<%= stepRequest.getThisVersion() %>&amp;reference=<%= stepRequest.getThisReference() %>" />
+    <%
+    } else {
+    %>
+            <link rel="canonical" href="http://www.stepbible.org" />
+    <%    
+    }
+    %>
 	<%
 		if(request.getParameter("debug") != null) {
 	%>
@@ -208,14 +222,14 @@
 <div>
 	<div id="middleSection">
 		<div class="column leftColumn">
-			<div class="passageContainer" passage-id=0>
+			<div class="passageContainer" passage-id=0 itemscope itemtype="http://schema.org/CreativeWork">
 				<div id="leftPaneMenu" class="innerMenus"><jsp:include page="js/menu/passage/menu.jsp" /></div>
 			    <div class="passageText ui-widget">
 			    	<div class="headingContainer">
 			    		<jsp:include page="js/search/fragments/advanced_search.jsp?passageId=0" />
 						<jsp:include page="js/search/fragments/passage_toolbar.jsp?passageId=0" />
 			    	</div>
-			    	<div class="passageContent">&nbsp;<%= stepRequest.getPassage(0) %></div>
+			    	<div class="passageContent" itemprop="text">&nbsp;<%= stepRequest.getPassage(0) %></div>
 			    </div>
 			</div>
 		</div>

@@ -36,15 +36,19 @@ import static com.tyndalehouse.step.core.utils.StringUtils.isEmpty;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 import com.tyndalehouse.step.core.models.KeyWrapper;
+import com.tyndalehouse.step.core.models.ScopeType;
+import com.tyndalehouse.step.core.models.StatType;
+import com.tyndalehouse.step.core.models.stats.CombinedPassageStats;
+import com.tyndalehouse.step.core.service.AnalysisService;
+import com.tyndalehouse.step.core.service.BibleInformationService;
+import com.tyndalehouse.step.core.service.impl.AnalysisServiceImpl;
+import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -64,11 +68,19 @@ public class WebStepRequest {
     private static final Logger LOG = LoggerFactory.getLogger(WebStepRequest.class);
     private static final String REF_0_PARAM = "reference";
     private static final String VERSION_0_PARAM = "version";
+    public static final int RECOMMENDED_TITLE_LENGTH = 70;
+    private static UiDefaults defaults;
     private final HttpServletRequest request;
-    private Map<String, String> cookieMap;
+    private final AnalysisService analysis;
     private final Injector injector;
-    private final List<String> references;
-    private final List<String> versions;
+    private final String reference;
+    private KeyWrapper referenceKey;
+    private final String version;
+    private final BibleInformationService bible;
+    private KeyWrapper nextChapter;
+    private KeyWrapper previousChapter;
+    private CombinedPassageStats stats;
+    private String description;
 
     /**
      * wraps around the servlet request for easy access
@@ -77,34 +89,69 @@ public class WebStepRequest {
      * @param injector the injector for the application
      */
     public WebStepRequest(final Injector injector, final HttpServletRequest request) {
+        this(injector, request, init(request, REF_0_PARAM, getDefaults(injector).getDefaultReference1()),
+                init(request, VERSION_0_PARAM, getDefaults(injector).getDefaultVersion1()));
+    }
+
+    /**
+     * Constructs the web request, with a properly formed key
+     * @param injector the injector
+     * @param request the servlet request
+     * @param version the version of the bible to look up
+     * @param reference the reference
+     */
+    public WebStepRequest(final Injector injector, final HttpServletRequest request, final String version, final String reference) {
         this.injector = injector;
         this.request = request;
-        final UiDefaults defaults = injector.getInstance(UiDefaults.class);
-
-        this.references = new ArrayList<String>();
-        this.versions = new ArrayList<String>();
-
-        init(request, this.references, REF_0_PARAM, defaults.getDefaultReference1());
-        init(request, this.versions, VERSION_0_PARAM, defaults.getDefaultVersion1());
+        this.analysis = injector.getInstance(AnalysisService.class);
+        this.bible = injector.getInstance(BibleInformationService.class);
+        this.reference = reference;
+        this.version = version;
+        try {
+            this.referenceKey = bible.getKeyInfo(this.reference, this.version, this.version);
+            this.description = bible.getPlainText(this.version, this.reference, true).replaceAll("[<>'\",.:;()]", "");
+            stats = this.analysis.getStatsForPassage(this.version, this.reference, StatType.TEXT, ScopeType.PASSAGE);
+        } catch (Exception ex) {
+            this.referenceKey = null;
+            this.description = "";
+        }
     }
+
+    /**
+     * Lazily obtain the defaults, only once
+     * @param injector the guice injector
+     * @return the default values
+     */
+    private static UiDefaults getDefaults(final Injector injector) {
+        if (defaults == null) {
+            defaults = injector.getInstance(UiDefaults.class);
+        }
+        return defaults;
+    }
+
 
     /**
      * Initialises the state of the web request, with either the request parameter, the cookie, or the
      * failsafe-default value
      *
      * @param servletRequest   the request object
-     * @param store            the store in which to store the value we are calcualting
      * @param requestParamName the name of the request parameter in the url
      * @param failsafeValue    the default value
      */
-    private void init(final HttpServletRequest servletRequest, final List<String> store,
-                      final String requestParamName, final String failsafeValue) {
+    private static String init(final HttpServletRequest servletRequest, final String requestParamName, final String failsafeValue) {
         final String passageReference = servletRequest.getParameter(requestParamName);
         if (!isEmpty(passageReference)) {
-            store.add(passageReference);
+            return passageReference;
         } else {
-            store.add(failsafeValue);
+            return failsafeValue;
         }
+    }
+
+    /**
+     * @return the reference for passage id 0
+     */
+    public String getThisReference() {
+        return this.reference;
     }
 
     /**
@@ -117,13 +164,7 @@ public class WebStepRequest {
         if (passageId > 0) {
             return "";
         }
-
-        try {
-            return this.references.get(passageId);
-        } catch (final Exception e) {
-            LOG.debug(e.getMessage(), e);
-            return "";
-        }
+        return this.reference;
     }
 
     /**
@@ -136,7 +177,7 @@ public class WebStepRequest {
         }
 
         try {
-            return getNextChapter(passageId).getOsisKeyId();
+            return getNextChapter().getOsisKeyId();
         } catch (final Exception e) {
             LOG.debug(e.getMessage(), e);
             return "";
@@ -153,7 +194,7 @@ public class WebStepRequest {
         }
 
         try {
-            return getNextChapter(passageId).getName();
+            return getNextChapter().getName();
         } catch (final Exception e) {
             LOG.debug(e.getMessage(), e);
             return "";
@@ -162,12 +203,13 @@ public class WebStepRequest {
 
 
     /**
-     * @param passageId the passage id
      * @return the key wrapper representing the previous chapter
      */
-    private KeyWrapper getNextChapter(final int passageId) {
-        return this.injector.getInstance(BibleController.class)
-                .getNextChapter(getReference(passageId), getVersion(0));
+    private KeyWrapper getNextChapter() {
+        if (this.nextChapter == null) {
+            this.nextChapter = this.bible.getSiblingChapter(this.reference, this.version, false);
+        }
+        return this.nextChapter;
     }
 
     /**
@@ -180,7 +222,7 @@ public class WebStepRequest {
         }
 
         try {
-            return getPreviousChapter(passageId).getOsisKeyId();
+            return getPreviousChapter().getOsisKeyId();
         } catch (final Exception e) {
             LOG.debug(e.getMessage(), e);
             return "";
@@ -196,7 +238,7 @@ public class WebStepRequest {
             return "";
         }
         try {
-            return getPreviousChapter(passageId).getName();
+            return getPreviousChapter().getName();
         } catch (final Exception e) {
             LOG.debug(e.getMessage(), e);
             return "";
@@ -204,14 +246,23 @@ public class WebStepRequest {
     }
 
     /**
-     * @param passageId the passage id
      * @return the keywrapper for the correct passage
      */
-    private KeyWrapper getPreviousChapter(final int passageId) {
-        return this.injector.getInstance(BibleController.class)
-                .getPreviousChapter(getReference(passageId), getVersion(passageId));
+    private KeyWrapper getPreviousChapter() {
+        if (this.previousChapter == null) {
+            this.previousChapter = this.bible.getSiblingChapter(this.reference, this.version, true);
+        }
+        return this.previousChapter;
     }
 
+    /**
+     * We will never be displaying other than 0 to people without javascript
+     *
+     * @return the version for passage id 0
+     */
+    public String getThisVersion() {
+        return this.version;
+    }
 
     /**
      * returns the version of interest
@@ -223,29 +274,83 @@ public class WebStepRequest {
         if (passageId > 0) {
             return "";
         }
-
-        try {
-            return this.versions.get(passageId);
-        } catch (final Exception e) {
-            LOG.debug(e.getMessage(), e);
-            return "";
-        }
+        return this.version;
     }
 
     public String getTitle() {
         try {
             //shareable parameter
             if ("true".equals(this.request.getParameter("sh"))) {
-                return "STEP : Scripture Tools for Every Person";
+                return "STEP | Scripture Tools for Every Person";
             }
 
-            final JSwordPassageServiceImpl jsword = this.injector.getInstance(JSwordPassageServiceImpl.class);
-            return this.getThisVersion() + " " + this.getThisReference() + ": " +
-                    jsword.getPlainText(this.getVersion(0), this.getReference(0), true).replaceAll("[<>]", "");
+            String keyName = this.referenceKey != null ? this.referenceKey.getName() + " | " : "";
+
+            final String currentTitle = keyName + this.getThisVersion() + " | STEP | ";
+            int currentLength = currentTitle.length();
+            String shortDescription = "";
+            if (currentLength < 70 && this.description.length() > 0) {
+                int leftOverLength = RECOMMENDED_TITLE_LENGTH - currentLength;
+                if (leftOverLength > 0) {
+                    int lastSpace = this.description.lastIndexOf(' ', leftOverLength);
+                    if (lastSpace != -1) {
+                        shortDescription = this.description.substring(0, lastSpace);
+                    }
+                }
+            }
+            return currentTitle + shortDescription;
         } catch (final Exception e) {
             LOG.debug(e.getMessage(), e);
             return "";
         }
+    }
+
+    /**
+     * @return the list of keywords
+     */
+    public String getKeywords() {
+        if (stats == null) {
+            return "";
+        }
+
+        Map<String, Integer> passageStats = stats.getPassageStat().getStats();
+        int max = 0;
+        TreeMap<Integer, List<String>> orderedStats = new TreeMap<Integer, List<String>>(new Comparator<Integer>() {
+
+            @Override
+            public int compare(final Integer o1, final Integer o2) {
+                return o2.compareTo(o1);
+            }
+        });
+
+        for (Map.Entry<String, Integer> stat : passageStats.entrySet()) {
+            List<String> words = orderedStats.get(stat.getValue());
+            if (words == null) {
+                words = new ArrayList<String>();
+                orderedStats.put(stat.getValue(), words);
+            }
+            words.add(stat.getKey());
+        }
+
+        StringBuilder keywords = new StringBuilder(128);
+        for (List<String> value : orderedStats.values()) {
+            for (String word : value) {
+                keywords.append(word);
+                keywords.append(' ');
+
+                if (keywords.length() > 150) {
+                    return keywords.toString();
+                }
+            }
+        }
+        return "";
+    }
+
+    /**
+     * @return the description of the page
+     */
+    public String getDescription() {
+        return description;
     }
 
     /**
@@ -272,33 +377,5 @@ public class WebStepRequest {
         } catch (final Exception e) {
             return "";
         }
-    }
-
-    /**
-     * We will never be displaying other than 0 to people without javascript
-     *
-     * @return the version for passage id 0
-     */
-    public String getThisVersion() {
-        try {
-            return this.versions.get(0);
-        } catch (final Exception e) {
-            LOG.debug(e.getMessage(), e);
-            return "";
-        }
-
-    }
-
-    /**
-     * @return the reference for passage id 0
-     */
-    public String getThisReference() {
-        try {
-            return this.references.get(0);
-        } catch (final Exception e) {
-            LOG.debug(e.getMessage(), e);
-            return "";
-        }
-
     }
 }

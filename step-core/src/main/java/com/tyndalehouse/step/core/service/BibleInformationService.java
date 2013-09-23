@@ -209,6 +209,15 @@ public interface BibleInformationService {
     void indexAll();
 
     /**
+     * @param version        the version of interest
+     * @param reference      the reference of interest
+     * @param firstVerseOnly true to indicate only the first verse should be retrieved
+     * @return
+     */
+
+    String getPlainText(String version, String reference, boolean firstVerseOnly);
+
+    /**
      * Gets the strong numbers for a particular verse.
      *
      * @param version the version attached to the reference

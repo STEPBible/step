@@ -63,8 +63,8 @@ var ViewLexiconWordle = Backbone.View.extend({
 
         listenToModels: function () {
             //update the model, in case we're not looking at the right one.
-            this.listenTo(PassageModels.at(0), "change:reference", this.doStats);
-            this.listenTo(PassageModels.at(1), "change:reference", this.doStats);
+            this.listenTo(PassageModels.at(0), "passage:rendered:", this.doStats);
+            this.listenTo(PassageModels.at(1), "passage:rendered:", this.doStats);
 
         },
 

@@ -63,9 +63,8 @@ var ViewLexiconWordle = Backbone.View.extend({
 
         listenToModels: function () {
             //update the model, in case we're not looking at the right one.
-            this.listenTo(PassageModels.at(0), "passage:rendered:", this.doStats);
-            this.listenTo(PassageModels.at(1), "passage:rendered:", this.doStats);
-
+            this.listenTo(Backbone.Events, "passage:rendered:0", function() { this.doStats(PassageModels.at(0)); } );
+            this.listenTo(Backbone.Events, "passage:rendered:1", function() { this.doStats(PassageModels.at(1)); } );
         },
 
         _getStats: function (statsContainer, statType, scope, title, callback) {

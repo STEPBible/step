@@ -426,6 +426,11 @@ body {
 	padding-top: 10px;
 }
 
+#lexiconPopupHelp {
+    float: right;
+    padding-top: 10px;
+}
+
 #selectedPane {
 	float: right;
 }

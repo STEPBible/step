@@ -1,11 +1,11 @@
 /*******************************************************************************
  * Copyright (c) 2012, Directors of the Tyndale STEP Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without 
  * modification, are permitted provided that the following conditions 
  * are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright 
  * notice, this list of conditions and the following disclaimer.
  * Redistributions in binary form must reproduce the above copyright 
@@ -16,7 +16,7 @@
  * nor the names of its contributors may be used to endorse or promote 
  * products derived from this software without specific prior written 
  * permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
@@ -43,19 +43,22 @@ import com.tyndalehouse.step.core.data.create.PostProcessor;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 
+import java.util.regex.Pattern;
+
 /**
  * Adds generated fields to the entity document - affects both "definition" and "specificForm"
- * 
+ *
  * @author chrisburrell
- * 
  */
 public class NaveProcessor implements PostProcessor {
     private static final Logger LOGGER = LoggerFactory.getLogger(NaveProcessor.class);
+    private static final Pattern STRIP_ALTERNATIVES = Pattern.compile("\\s?\\[[^\\]]+]\\s?");
     private final JSwordPassageService jswordPassage;
+
 
     /**
      * Instantiates a new reference processor.
-     * 
+     *
      * @param jswordPassage the jsword passage
      */
     @Inject
@@ -65,14 +68,28 @@ public class NaveProcessor implements PostProcessor {
 
     @Override
     public void process(final EntityConfiguration config, final Document doc) {
-        doc.add(config.getField("rootStem", doc.get("root")));
+        doc.add(config.getField("root", stripAlternatives(doc.get("rootStem"))));
+        final String fullHeaderAnalyzed = doc.get("fullHeaderAnalyzed");
+        if (fullHeaderAnalyzed != null) {
+            doc.add(config.getField("fullHeader", stripAlternatives(fullHeaderAnalyzed)));
+        }
         doc.add(config.getField("expandedReferences", expandRefs(doc.get("references"))));
 
     }
 
     /**
+     * Strips the characters between a [ and ] to leave just the title
+     *
+     * @param rootFullAlternatives the root full alternatives
+     * @return new title to use as the root element in the nave flattened tree
+     */
+    String stripAlternatives(final String rootFullAlternatives) {
+        return STRIP_ALTERNATIVES.matcher(rootFullAlternatives).replaceAll(" ");
+    }
+
+    /**
      * Expand refs to their full blown set.
-     * 
+     *
      * @param refs the string
      * @return the string
      */

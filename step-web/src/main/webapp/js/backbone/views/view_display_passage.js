@@ -641,7 +641,7 @@ var PassageDisplayView = Backbone.View.extend({
             var clonedVerse = $(".verse:first", passageContent).clone();
             clonedVerse.find(".verseNumber, .note, sup").remove();
 
-            var title = version + " " + reference + " " + clonedVerse.text();
+            var title = reference + " | " + version + " | STEP | " + clonedVerse.text();
             $("title").html(title);
         },
 

@@ -24,6 +24,7 @@ public class NaveAnalyzer extends PerFieldAnalyzerWrapper {
         super(new StandardAnalyzer(LUCENE_30));
         final PorterStemmerAnalyzer portStemmerAnalyzer = new PorterStemmerAnalyzer();
         addAnalyzer("fullHeader", portStemmerAnalyzer);
+        addAnalyzer("fullHeaderAnalyzed", portStemmerAnalyzer);
         addAnalyzer("rootStem", portStemmerAnalyzer);
         addAnalyzer("expandedReferences", new ReferenceAnalyzer());
     }

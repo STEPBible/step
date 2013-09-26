@@ -410,6 +410,8 @@ LexiconDefinition.prototype.getPopup = function () {
         $('#lexiconDefinition').hide();
     });
 
+    $('#lexiconPopupClose').button({ icons: { primary: "ui-icon-help" }, text: false });
+
     $('#lexiconPopupMinimize').button({ icons: { primary: "ui-icon-minusthick" }, text: false }).click(function () {
 //        var option = self.popup.tabs("option", "collapsible");
         var currentActiveTab = self.popup.tabs("option", "active");

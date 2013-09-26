@@ -109,7 +109,7 @@ var SearchDisplayView = Backbone.View.extend({
     },
 
     doTitle: function () {
-        $("title").html("STEP : " + this.titleFragment);
+        $("title").html(this.titleFragment + " | STEP");
     },
 
     _doFonts: function (results, languages) {

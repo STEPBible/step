@@ -187,7 +187,6 @@ public class SubjectSearchServiceImpl implements SubjectSearchService {
             sb.append(QueryParser.escape(s.trim()));
         }
 
-        // TODO: sb is never used, should it be?
         final EntityDoc[] results = this.naves.searchSingleColumn("rootStem", sb.toString(), false);
         return getHeadingsSearchEntries(start, results);
     }
@@ -200,7 +199,7 @@ public class SubjectSearchServiceImpl implements SubjectSearchService {
      */
     private SearchResult searchFull(final SearchQuery sq) {
         final long start = System.currentTimeMillis();
-        final EntityDoc[] results = this.naves.search(new String[] { "rootStem", "fullHeader" },
+        final EntityDoc[] results = this.naves.search(new String[] { "rootStem", "fullHeaderAnalyzed" },
                 QueryParser.escape(sq.getCurrentSearch().getQuery()), false);
         return getHeadingsSearchEntries(start, results);
     }

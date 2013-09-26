@@ -410,7 +410,9 @@ LexiconDefinition.prototype.getPopup = function () {
         $('#lexiconDefinition').hide();
     });
 
-    $('#lexiconPopupClose').button({ icons: { primary: "ui-icon-help" }, text: false });
+    $('#lexiconPopupHelp').button({ icons: { primary: "ui-icon-help" }, text: false }).click(function() {
+        window.open("https://stepweb.atlassian.net/wiki/x/FAA5AQ", '_blank');
+    });
 
     $('#lexiconPopupMinimize').button({ icons: { primary: "ui-icon-minusthick" }, text: false }).click(function () {
 //        var option = self.popup.tabs("option", "collapsible");

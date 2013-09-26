@@ -14,7 +14,7 @@
 	<ul id="lexiconDefinitionHeader">
 			<span id="lexiconPopupClose"></span>
             <span id="lexiconPopupMinimize"></span>
-            <span id="lexiconPopupHelp"><a href="">Help</a></span>
+            <span id="lexiconPopupHelp"></span>
 			<li><a href="#origin"><fmt:message key="original_word" /></a></li>
  			<li><a class="statTab" href="#wordStat"><fmt:message key="passage_stats" /></a></li>
 	</ul>

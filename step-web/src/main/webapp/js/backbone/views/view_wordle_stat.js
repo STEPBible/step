@@ -72,6 +72,10 @@ var ViewLexiconWordle = Backbone.View.extend({
             var model = PassageModels.at(this.passageId);
             var reference = model.get("reference");
 
+            if(!this.wordStats.is(":visible")) {
+                return;
+            }
+            
             statsContainer.empty();
 
             //internationalized scopes:
@@ -88,6 +92,8 @@ var ViewLexiconWordle = Backbone.View.extend({
             }
 
             $.getSafe(ANALYSIS_STATS, [model.get("version"), reference, typeKey, scopeKey], function (data) {
+                _gaq.push(['_trackEvent', 'analysis', 'type', typeKey]);
+                _gaq.push(['_trackEvent', 'analysis', 'scope', scopeKey]);
                 self._createWordleTab(statsContainer, scope, title, data.passageStat, typeKey, callback, data.lexiconWords);
             });
         },

@@ -92,8 +92,8 @@ var ViewLexiconWordle = Backbone.View.extend({
             }
 
             $.getSafe(ANALYSIS_STATS, [model.get("version"), reference, typeKey, scopeKey], function (data) {
-                _gaq.push(['_trackEvent', 'analysis', 'type', typeKey]);
-                _gaq.push(['_trackEvent', 'analysis', 'scope', scopeKey]);
+                step.util.trackAnalytics('wordle', 'type', typeKey);
+                step.util.trackAnalytics('wordle', 'scope', scopeKey);
                 self._createWordleTab(statsContainer, scope, title, data.passageStat, typeKey, callback, data.lexiconWords);
             });
         },

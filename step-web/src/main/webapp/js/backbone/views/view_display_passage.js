@@ -52,7 +52,7 @@ var PassageDisplayView = Backbone.View.extend({
                 this._doTransliterations(passageHtml);
                 this._doInterlinearDividers(passageHtml);
                 this._doVersions(passageId, passageHtml, version, reference);
-                this._doAnalysisButton(passageId, passageHtml);
+                this._doAnalysisButton(passageId, passageHtml, interlinearMode);
                 this._doSocial();
                 step.util.closeInfoErrors(passageId);
                 step.util.ui.emptyOffDomAndPopulate(this.passageContent, passageHtml);
@@ -65,30 +65,30 @@ var PassageDisplayView = Backbone.View.extend({
         },
 
         //Can be removed when/if Chrome fixes this
-        _doChromeHack : function(eventName, passageHtml, interlinearMode, options) {
+        _doChromeHack: function (eventName, passageHtml, interlinearMode, options) {
             //only applies to Chrome
-            if(!$.isChrome) {
+            if (!$.isChrome) {
                 return;
             }
 
-            if(!passageHtml) {
+            if (!passageHtml) {
                 passageHtml = this.passageContent;
             }
 
-            if(!interlinearMode) {
-                if(this.model == undefined) {
+            if (!interlinearMode) {
+                if (this.model == undefined) {
                     //no point in continuing if no model, since there can't be much on the page.
                     return;
                 }
                 interlinearMode = this.model.get("interlinearMode");
             }
 
-            if(!options) {
+            if (!options) {
                 options = this.model.get("options");
             }
 
 
-            if(!this._isInterlinearMode(interlinearMode, options)) {
+            if (!this._isInterlinearMode(interlinearMode, options)) {
                 return;
             }
             var interlinearBlocks = passageHtml.find(".interlinear span.w");
@@ -97,15 +97,15 @@ var PassageDisplayView = Backbone.View.extend({
             interlinearBlocks.not(".verseStart").css("clear", "none");
             var previousElementOffset = undefined;
 
-            for(var i = 0; i < interlinearBlocks.length; i++) {
+            for (var i = 0; i < interlinearBlocks.length; i++) {
                 var element = interlinearBlocks.eq(i);
                 var elementOffset = element.offset();
 
                 //skip the first element
-                if(previousElementOffset) {
+                if (previousElementOffset) {
                     //check that previous element is either left or higher up
                     var currentPadding = 0;
-                    if(previousElementOffset.top < elementOffset.top) {
+                    if (previousElementOffset.top < elementOffset.top) {
                         element.css("clear", "left");
                     }
                     elementOffset = element.offset();
@@ -114,70 +114,32 @@ var PassageDisplayView = Backbone.View.extend({
             }
         },
 
-        //the hack below operates on offending elements. the hack above, attempts to add some new line space
-//        _doChromeHack : function(passageHtml, interlinearMode, options) {
-//            console.log(new Date().getTime());
-//            if(!passageHtml) {
-//                passageHtml = this.passageContent;
-//            }
-//
-//            if(!interlinearMode) {
-//                if(this.model == undefined) {
-//                    //no point in continuing if no model, since there can't be much on the page.
-//                    return;
-//                }
-//                interlinearMode = this.model.get("interlinearMode");
-//            }
-//
-//            if(!options) {
-//                options = this.model.get("options");
-//            }
-//
-//
-//            if(!this._isInterlinearMode(interlinearMode, options)) {
-//                return;
-//            }
-//            var interlinearBlocks = passageHtml.find(".interlinear span.w");
-//            var previousElementOffset = undefined;
-//            var paddingIncrement = 50;
-//            var maxPadding = 100;
-//
-//            for(var i = 0; i < interlinearBlocks.length; i++) {
-//                var element = interlinearBlocks.eq(i);
-//                var elementOffset = element.offset();
-//
-//                //skip the first element
-//                if(previousElementOffset) {
-//                    var totalPadding = 0;
-//                    //check that previous element is either left or higher up
-//                    var j = 1;
-//                    var currentPadding = 0;
-//                    while(previousElementOffset.top > elementOffset.top && currentPadding < maxPadding) {
-//                        //then we're in a situation where the previous element is below the current element
-//                        //this should never happen
-//                        currentPadding = j * paddingIncrement;
-//                        element.css("clear", "left");
-//                        elementOffset = element.offset();
-//                        j++;
-//                        //do this once only as otherwise not performance - and looks liek rendering isn't
-//                        //synchronous
-//                        break;
-//                    }
-//                }
-//                previousElementOffset = elementOffset;
-//            }
-//            console.log(new Date().getTime());
-//        },
-
-        _doAnalysisButton : function(passageId, passageHtml) {
-            var header = passageHtml.find("h2:first");
-
+        _doAnalysisButton: function (passageId, passageHtml, interlinearMode) {
             var analysisButton = $("<span></span>");
             analysisButton.prepend(__s.stats_analysis_button).addClass("analysisButton");
-            header.append(analysisButton);
 
-            analysisButton.button({ text : true });
-            analysisButton.click(function() {
+            analysisButton.button({ text: true });
+
+            switch (interlinearMode) {
+                case "NONE":
+                    passageHtml.find("h2:first").append(analysisButton);
+                    break;
+                case "INTERLINEAR":
+                    analysisButton.insertBefore(passageHtml.find(".interlinear:first"));
+                    break;
+                case "INTERLEAVED":
+                case "INTERLEAVED_COMPARE":
+                    analysisButton.insertBefore(passageHtml.find(".verseGrouping:first"));
+                    break;
+                case "COLUMN":
+                case "COLUMN_COMPARE":
+                    analysisButton.insertBefore(passageHtml.find("table:first"));
+                    break;
+                default:
+                    console.log("Unable to ascertain where to put Analysis button - omitting");
+                    return;
+            }
+            analysisButton.click(function () {
                 step.lexicon.wordleView.passageId = passageId;
                 lexiconDefinition.reposition(step.defaults.infoPopup.wordleTab);
             });
@@ -710,12 +672,12 @@ var PassageDisplayView = Backbone.View.extend({
                 this.model.get("options"));
         },
 
-        _isInterlinearMode : function(interlinearMode, options) {
+        _isInterlinearMode: function (interlinearMode, options) {
             return options.indexOf("E") != -1 ||
                 options.indexOf("T") != -1 ||
                 options.indexOf("A") != -1 ||
                 options.indexOf("M") != -1 ||
-            interlinearMode == "INTERLINEAR"
+                interlinearMode == "INTERLINEAR"
         },
 
         /**

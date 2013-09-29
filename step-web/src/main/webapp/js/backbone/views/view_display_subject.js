@@ -1,5 +1,11 @@
 var SubjectDisplayView = SearchDisplayView.extend({
-    titleFragment : __s.search_subject,
+    titleFragment: __s.search_subject,
+
+    initialize: function () {
+        SearchDisplayView.prototype.initialize.call(this);
+        this.hasPages = false;
+    },
+
     renderSearch: function (searchResults, query, masterVersion) {
         console.log("Rendering subject search results");
         var query = step.util.undoReplaceSpecialChars(searchResults.query);
@@ -30,7 +36,7 @@ var SubjectDisplayView = SearchDisplayView.extend({
                 passageId: this.model.get("passageId"),
                 ref: headingsResults[i].key,
                 showChapter: true,
-                version : masterVersion
+                version: masterVersion
             });
 
             item.append(button);
@@ -52,7 +58,7 @@ var SubjectDisplayView = SearchDisplayView.extend({
         var moreSubjectLink = $("<a href='javascript:void(0)'>").append(text);
 
         //set up click link, which we will clone if required
-        moreSubjectLink.click(function() {
+        moreSubjectLink.click(function () {
             //add in a plus and send it back through
             var equalIndex = query.indexOf('=');
             var newQuery = query.substring(0, equalIndex) + '+' + query.substring(equalIndex);
@@ -60,14 +66,14 @@ var SubjectDisplayView = SearchDisplayView.extend({
             //find the current model type
             var currentSubjectType = model.get("subjectSearchType");
             var i = 0;
-            for(var i = 0; i < step.defaults.search.subject.subjectTypes.length; i++) {
-                   if(currentSubjectType == step.defaults.search.subject.subjectTypes[i]) {
-                       break;
-                   }
+            for (var i = 0; i < step.defaults.search.subject.subjectTypes.length; i++) {
+                if (currentSubjectType == step.defaults.search.subject.subjectTypes[i]) {
+                    break;
+                }
             }
 
             model.save({
-                subjectSearchType : step.defaults.search.subject.subjectTypes[(i+1) % step.defaults.search.subject.subjectTypes.length]
+                subjectSearchType: step.defaults.search.subject.subjectTypes[(i + 1) % step.defaults.search.subject.subjectTypes.length]
             });
             model.trigger("search", model);
         });
@@ -97,7 +103,7 @@ var SubjectDisplayView = SearchDisplayView.extend({
         if (undoneQuery.startsWith("s=")) {
             return this._addMoreSubjectButton(query, results, __s.subject_search_first);
         } else if (undoneQuery.startsWith("s+=")) {
-            var wrappedSearchResults = this._addMoreSubjectButton(query, results,__s.subject_search_second);
+            var wrappedSearchResults = this._addMoreSubjectButton(query, results, __s.subject_search_second);
             this._addSubjectExpandHandlers(masterVersion, query, results);
             return wrappedSearchResults;
         } else if (undoneQuery.startsWith("s++=")) {
@@ -159,7 +165,7 @@ var SubjectDisplayView = SearchDisplayView.extend({
                             ref: results[i].reference,
                             showChapter: true,
                             display: "inline",
-                            version : masterVersion
+                            version: masterVersion
                         }));
 
                         verseContent = $("<td>").append(verseContent);
@@ -182,7 +188,7 @@ var SubjectDisplayView = SearchDisplayView.extend({
 
                         var link = $("<a>").attr("href", "javascript:void(0)").html(refs[i].trim());
                         var refLink = refs[i];
-                        $(link).click({value : { refLink : refLink, seeAlso : seeAlso } }, function (event) {
+                        $(link).click({value: { refLink: refLink, seeAlso: seeAlso } }, function (event) {
                             var splitByComma = event.data.value.refLink.split(",");
                             var query;
                             var text = "";
@@ -195,7 +201,7 @@ var SubjectDisplayView = SearchDisplayView.extend({
                             }
 
                             self.model.save({
-                                subjectText :  text
+                                subjectText: text
                             })
                             self.model.trigger("search", self.model);
                         });
@@ -214,7 +220,7 @@ var SubjectDisplayView = SearchDisplayView.extend({
         });
     },
 
-    _doNaveSearchResults : function (query, searchResults) {
+    _doNaveSearchResults: function (query, searchResults) {
         var results = $("<span>").addClass("searchResults");
 
         var lastHeader = "";

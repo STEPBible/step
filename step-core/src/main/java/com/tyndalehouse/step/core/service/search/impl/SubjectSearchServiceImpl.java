@@ -32,21 +32,6 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.service.search.impl;
 
-import static com.tyndalehouse.step.core.models.LookupOption.HEADINGS_ONLY;
-import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
-import javax.inject.Inject;
-
-import com.tyndalehouse.step.core.models.ScopeType;
-import org.apache.lucene.queryParser.QueryParser;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.inject.Singleton;
 import com.tyndalehouse.step.core.data.EntityDoc;
 import com.tyndalehouse.step.core.data.EntityIndexReader;
@@ -61,6 +46,18 @@ import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import com.tyndalehouse.step.core.service.jsword.JSwordSearchService;
 import com.tyndalehouse.step.core.service.search.SubjectSearchService;
 import com.tyndalehouse.step.core.utils.StringUtils;
+import org.apache.lucene.queryParser.QueryParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
+import static com.tyndalehouse.step.core.models.LookupOption.HEADINGS_ONLY;
+import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
 
 /**
  * Searches for a subject
@@ -154,6 +151,8 @@ public class SubjectSearchServiceImpl implements SubjectSearchService {
      * @return the results
      **/
     private SearchResult searchSimple(final SearchQuery sq) {
+        sq.setAllKeys(true);
+        
         final SearchResult headingsSearch = this.jswordSearch.search(sq,
                 sq.getCurrentSearch().getVersions()[0], HEADINGS_ONLY);
 

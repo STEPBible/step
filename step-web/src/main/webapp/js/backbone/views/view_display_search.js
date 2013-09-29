@@ -9,7 +9,8 @@ var SearchDisplayView = Backbone.View.extend({
     initialize: function () {
         Backbone.Events.on(this.options.searchType + ":new:" + this.model.get("passageId"), this.render, this);
         this.passageContent = this.$el.find(".passageContent");
-        this.resultsLabel = step.util.getPassageContainer(this.$el).find("fieldset:visible .resultsLabel")
+        this.resultsLabel = step.util.getPassageContainer(this.$el).find("fieldset:visible .resultsLabel");
+        this.hasPages = true;
     },
 
     render: function (resultsWrapper, append) {
@@ -22,10 +23,11 @@ var SearchDisplayView = Backbone.View.extend({
         this.masterVersion = resultsWrapper.masterVersion;
         this.lastSearch = searchResults.query;
         
+        var numReturned = searchResults.results ? searchResults.results.length : 0;
         if(append) {
-            this._updateTotalAppend(searchResults.results ? searchResults.results.length : 0);
+            this._updateTotalAppend(numReturned);
         } else {
-            this._updateTotal(searchResults.total, resultsWrapper.pageNumber);
+            this._updateTotal(searchResults.total, resultsWrapper.pageNumber, numReturned);
         }
 
         var results;
@@ -66,6 +68,11 @@ var SearchDisplayView = Backbone.View.extend({
 
     getMoreResults: function () {
         var self = this;
+        
+        //never load new pages
+        if(!this.hasPages) {
+            return;
+        }
         
         if(this.fetching == true) {
             return;
@@ -139,9 +146,9 @@ var SearchDisplayView = Backbone.View.extend({
         this.resultsLabel.html(sprintf(__s.paging_showing_x_to_y_out_of_z_results, this.currentStart, this.currentEnd, this.currentTotal));
     },
     
-    _updateTotal: function (total, pageNumber) {
+     _updateTotal: function (total, pageNumber, totalResultsReturned) {
         //1 = 1 + (pg1 - 1) * 50, 51 = 1 + (pg2 -1) * 50
-        var pageSize = this.model.get("pageSize");
+        var pageSize = totalResultsReturned;
         var start = total == 0 ? 0 : 1 + ((pageNumber - 1) * (this.options.paged ? pageSize : 1000000));
         var end = pageNumber * pageSize;
         end = end < total ? end : total;

@@ -16,7 +16,7 @@
 %>
 <fmt:setBundle basename="HtmlBundle" />
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<HTML xmlns:fb="http://ogp.me/ns/fb#" itemscope itemtype="http://schema.org/Book">
+<HTML xmlns:fb="http://ogp.me/ns/fb#">
 <HEAD>
     <TITLE><%= stepRequest.getTitle() %></TITLE>
     <META http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -25,8 +25,6 @@
     <meta step-local content="<%= appManager.isLocal() %>" />
     <meta name="description" content="<%= stepRequest.getDescription() %>" />
     <meta name="keywords" content="<%= stepRequest.getKeywords() %>" />
-    <meta itemprop="name" content="STEP" />
-    <meta itemprop="image" content="http://www.stepbible.org/images/step-logo.png" />
 	<link rel="shortcut icon"  href="images/step-favicon.ico" />
 
     <% 
@@ -221,7 +219,7 @@
 <div>
 	<div id="middleSection">
 		<div class="column leftColumn">
-			<div class="passageContainer" passage-id=0 itemscope itemtype="http://schema.org/CreativeWork">
+			<div class="passageContainer" passage-id=0 itemscope itemtype="http://schema.org/Book">
 				<div id="leftPaneMenu" class="innerMenus"><jsp:include page="js/menu/passage/menu.jsp" /></div>
 			    <div class="passageText ui-widget">
 			    	<div class="headingContainer">

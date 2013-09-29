@@ -323,6 +323,7 @@ step.util = {
             //do twitter
             var twitter = $('<a href="https://twitter.com/share" class="twitter-share-button" data-via="Tyndale_House" data-count="none">Tweet</a>');
             twitter.attr("data-url", url);
+            twitter.attr("data-text", $("title").text());
             sharingBar.append(twitter);
             if (typeof(twttr) != 'undefined') {
                 twttr.widgets.load();

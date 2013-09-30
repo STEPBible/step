@@ -133,6 +133,16 @@ body {
     max-height: 375px;
 }
 
+#sortCloudLabel {
+    margin-bottom: 3px;
+    font-size: 80%;
+}
+
+#sortCloudLabel span {
+    padding-top: 1px;
+    padding-bottom: 1px;
+}
+
 #wordStat a, #textStat a, #subjectStat a {
     color: #33339F;
 }

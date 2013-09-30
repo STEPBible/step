@@ -12,7 +12,8 @@ var ViewLexiconWordle = Backbone.View.extend({
             this.wordScope = this.wordStatsTab.find(".scope");
             this.wordType = this.wordStatsTab.find(".statKind");
             this.passageButtons = this.wordStatsTab.find(".passageSelector");
-
+            this.sortCloud = this.wordStatsTab.find("#sortCloud");
+            
             this.wordScope.prop("title", __s.stat_scope_explanation).qtip({
                 position: { my: "bottom center", at: "top center", effect: false },
                 hide: { event: 'blur' },
@@ -22,6 +23,16 @@ var ViewLexiconWordle = Backbone.View.extend({
             this.populateMenu(step.defaults.analysis.scope, this.wordScope, false);
             this.populateMenu(step.defaults.analysis.kind, this.wordType, true);
 
+            this.sortCloud.button({ label: __s.stat_sort_off }).click(function() {
+                var button = $(this);
+                if(button.prop('checked')) {
+                    button.button("option", "label", __s.stat_sort_on);
+                } else {
+                    button.button("option", "label", __s.stat_sort_off);
+                }
+                self.doStats();
+            });
+            
             this.passageButtons.passageButtons({
                 showReference: false,
                 selectable: true,
@@ -33,6 +44,8 @@ var ViewLexiconWordle = Backbone.View.extend({
                 }
             });
 
+            
+            
             this.listenToModels();
         },
 
@@ -113,8 +126,6 @@ var ViewLexiconWordle = Backbone.View.extend({
             }
             this.passageButtons.passageButtons("select", this.passageId);
 
-
-
             this._getStats(this.wordStats, this.wordType.val(), this.wordScope.val(), __s.word_cloud, function (key, statType) {
                 var otherPassage = step.util.getOtherPassageId(step.lexicon.passageId);
                 if (statType == 'WORD') {
@@ -158,8 +169,23 @@ var ViewLexiconWordle = Backbone.View.extend({
         _createWordleTab: function (container, scope, title, wordleData, statType, callback, lexiconWords) {
             var self = this;
 
+            //create order of strong numbers
+            var strongs = [];
             $.each(wordleData.stats, function (key, value) {
+                 strongs.push(key);
+            });
+            
+            var shouldSort = this.sortCloud.prop("checked");
+            if(shouldSort) {
+                strongs.sort(function(a,b) {
+                    return wordleData.stats[b] - wordleData.stats[a]; 
+                });
+            }
+            
+            
+            $.each(strongs, function (index, key) {
                 var newKey = key;
+                var value = wordleData.stats[key];
                 var wordLink = $("<a></a>")
                     .attr('href', 'javascript:void(0)')
                     .attr('rel', value)

@@ -53,7 +53,7 @@ step.passage = {
 
 
         // reset all spans that are underlined:
-        this.removeStrongsHighlights(strongMorphReference.passageId, strongMorphReference.classes);
+        this.removeStrongsHighlights(undefined, strongMorphReference.classes);
 
         for ( var ii = 0; ii < references.length; ii++) {
             this.highlightStrong(undefined, references[ii], strongMorphReference.classes);

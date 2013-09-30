@@ -24,6 +24,7 @@
             <fmt:message key="analyse_label">
                 <fmt:param value="<input type='text' class='statKind drop' />" />
                 <fmt:param value="<input type='text' class='scope drop' />" />
+                <fmt:param value="<input type='checkbox' id='sortCloud' /><label id='sortCloudLabel' for='sortCloud'></label>" />
             </fmt:message>
             <span class="passageSelector">
             </span>

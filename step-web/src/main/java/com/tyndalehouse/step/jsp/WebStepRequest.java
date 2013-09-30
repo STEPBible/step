@@ -112,7 +112,7 @@ public class WebStepRequest {
         try {
             this.referenceKey = bible.getKeyInfo(this.reference, this.version, this.version);
             this.description = bible.getPlainText(this.version, this.reference, true).replaceAll("[<>'\",.:;()]", "");
-            stats = this.analysis.getStatsForPassage(this.version, this.reference, StatType.TEXT, ScopeType.PASSAGE);
+            stats = this.analysis.getStatsForPassage(this.version, this.reference, StatType.TEXT, ScopeType.PASSAGE, false);
         } catch (Exception ex) {
             LOG.error(ex.getMessage(), ex);
             this.referenceKey = null;

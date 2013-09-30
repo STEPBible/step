@@ -26,9 +26,12 @@
                 <fmt:param value="<input type='text' class='scope drop' />" />
                 <fmt:param value="<input type='checkbox' id='sortCloud' /><label id='sortCloudLabel' for='sortCloud'></label>" />
             </fmt:message>
+            
             <span class="passageSelector">
             </span>
         </span>
+        <br />
+        <button id="animateCloud" >Play</button>&nbsp;<span id="currentReference"></span>
         <h3><fmt:message key="word_cloud" /></h3>
         <div class="cloudContainer"></div>
     </div>

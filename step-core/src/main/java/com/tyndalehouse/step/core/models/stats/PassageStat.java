@@ -41,6 +41,7 @@ import java.util.Map;
  */
 public class PassageStat {
     private Map<String, Integer> stats = new HashMap<String, Integer>(128);
+    private String reference;
 
     /**
      * Adds the word to the current stats
@@ -96,4 +97,17 @@ public class PassageStat {
         this.stats = stats;
     }
 
+    /**
+     * @return the reference for this particular stat
+     */
+    public String getReference() {
+        return reference;
+    }
+
+    /**
+     * @param reference the reference for this particular stat
+     */
+    public void setReference(final String reference) {
+        this.reference = reference;
+    }
 }

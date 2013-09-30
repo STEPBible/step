@@ -59,13 +59,14 @@ public class AnalysisController {
      * Analyse stats for a given passage in a given book, obtaining the word, subject and strong stats from
      * them.
      *
-     * @param version   the version
-     * @param reference the reference
-     * @param statType  WORD, SUBJECT or TEXT
-     * @param scope     the scope of the passage, or a particular reference to override the passage that is viewed
+     * @param version             the version
+     * @param reference           the reference
+     * @param statType            WORD, SUBJECT or TEXT
+     * @param scope               the scope of the passage, or a particular reference to override the passage that is viewed
+     * @param considerNextChapter true to indicate we're interested in the next chapter
      * @return the combined passage stats
      */
-    public CombinedPassageStats analyseStats(final String version, final String reference, final String statType, final String scope) {
-        return this.analysis.getStatsForPassage(version, reference, StatType.valueOf(statType), ScopeType.valueOf(scope));
+    public CombinedPassageStats analyseStats(final String version, final String reference, final String statType, final String scope, String considerNextChapter) {
+        return this.analysis.getStatsForPassage(version, reference, StatType.valueOf(statType), ScopeType.valueOf(scope), Boolean.parseBoolean(considerNextChapter));
     }
 }

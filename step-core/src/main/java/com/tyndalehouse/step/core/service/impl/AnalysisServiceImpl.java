@@ -100,26 +100,30 @@ public class AnalysisServiceImpl implements AnalysisService {
     @Override
     public CombinedPassageStats getStatsForPassage(
             final String version, final String reference,
-            final StatType statType, final ScopeType scopeType) {
+            final StatType statType, final ScopeType scopeType, boolean nextChapter) {
+        
+        final String centralReference = nextChapter ? jSwordPassageService.getSiblingChapter(reference, "ESV" , false).getName() : reference;
+        
         final CombinedPassageStats statsForPassage = new CombinedPassageStats();
         PassageStat stat;
         switch (statType) {
             case WORD:
-                stat = this.jswordAnalysis.getWordStats(reference, scopeType);
+                stat = this.jswordAnalysis.getWordStats(centralReference, scopeType);
                 stat.trim(maxWords);
                 statsForPassage.setLexiconWords(convertWordStatsToDefinitions(stat));
                 break;
             case TEXT:
-                stat = this.jswordAnalysis.getTextStats(version, reference, scopeType);
+                stat = this.jswordAnalysis.getTextStats(version, centralReference, scopeType);
                 stat.trim(maxWords);
                 break;
             case SUBJECT:
-                stat = getSubjectStats(version, reference, scopeType);
+                stat = getSubjectStats(version, centralReference, scopeType);
                 stat.trim(maxWords);
                 break;
             default:
                 throw new StepInternalException("Unsupported type of stat asked for.");
         }
+        stat.setReference(centralReference);
         statsForPassage.setPassageStat(stat);
         return statsForPassage;
     }
@@ -146,8 +150,6 @@ public class AnalysisServiceImpl implements AnalysisService {
      */
     private PassageStat getSubjectStats(final String version, final String reference, final ScopeType scopeType) {
         final SearchResult subjectResults = this.subjects.searchByReference(getReferenceSyntax(reference, version, scopeType));
-
-
         final PassageStat stat = new PassageStat();
         final List<SearchEntry> results = subjectResults.getResults();
         for (final SearchEntry entry : results) {

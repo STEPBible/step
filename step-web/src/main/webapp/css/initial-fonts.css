@@ -133,6 +133,18 @@ body {
     max-height: 375px;
 }
 
+#currentReference, #animateCloud {
+    float: right;
+    margin-top: 2px;
+}
+
+#animateCloud {
+    height: 16px;
+    margin-left: 5px;
+    clear: right;
+    margin-top: 2px;
+}
+
 #sortCloudLabel {
     margin-bottom: 3px;
     font-size: 80%;

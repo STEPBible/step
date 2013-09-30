@@ -159,7 +159,7 @@ var ViewLexiconWordle = Backbone.View.extend({
                     subjectModel.trigger("search", subjectModel, {});
                     step.state.view.ensureTwoColumnView();
                 }
-            }, true);
+            }, false);
         },
 
         /**
@@ -188,7 +188,6 @@ var ViewLexiconWordle = Backbone.View.extend({
                     return wordleData.stats[b] - wordleData.stats[a]; 
                 });
             }
-            
             
             $.each(strongs, function (index, key) {
                 var newKey = key;

@@ -812,6 +812,10 @@ a.related, a.related:visited {
 	
 }
 
+.passageContentHolder {
+    line-height: 1.5;
+}
+
 /**
 Analysis tabs
 */

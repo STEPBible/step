@@ -80,7 +80,7 @@ var ViewLexiconWordle = Backbone.View.extend({
             this.listenTo(Backbone.Events, "passage:rendered:1", function() { this.doStats(PassageModels.at(1)); } );
         },
 
-        _getStats: function (statsContainer, statType, scope, title, callback) {
+        _getStats: function (statsContainer, statType, scope, title, callback, animate) {
             var self = this;
             var model = PassageModels.at(this.passageId);
             var reference = model.get("reference");
@@ -89,7 +89,9 @@ var ViewLexiconWordle = Backbone.View.extend({
                 return;
             }
             
-            statsContainer.empty();
+            if(!animate) {
+                statsContainer.empty();
+            }
 
             //internationalized scopes:
             var index = step.defaults.analysis.scope.indexOf(scope);
@@ -107,10 +109,14 @@ var ViewLexiconWordle = Backbone.View.extend({
             $.getSafe(ANALYSIS_STATS, [model.get("version"), reference, typeKey, scopeKey], function (data) {
                 step.util.trackAnalytics('wordle', 'type', typeKey);
                 step.util.trackAnalytics('wordle', 'scope', scopeKey);
-                self._createWordleTab(statsContainer, scope, title, data.passageStat, typeKey, callback, data.lexiconWords);
+                self._createWordleTab(statsContainer, scope, title, data.passageStat, typeKey, callback, data.lexiconWords, animate);
             });
         },
 
+        animateWordle : function() {
+              
+        },
+        
         /**
          * Gets the stats for a passage and shows a wordle
          * @param passageId the passage ID
@@ -153,7 +159,7 @@ var ViewLexiconWordle = Backbone.View.extend({
                     subjectModel.trigger("search", subjectModel, {});
                     step.state.view.ensureTwoColumnView();
                 }
-            });
+            }, true);
         },
 
         /**
@@ -164,9 +170,10 @@ var ViewLexiconWordle = Backbone.View.extend({
          * @param statType WORD / SUBJECT/ TEXT
          * @param callback the callback when a word is clicked
          * @param lexiconWords the lexicon words
+         * @param animate - true to indicate previous results weren't cleared, and that an animation is required
          * @private
          */
-        _createWordleTab: function (container, scope, title, wordleData, statType, callback, lexiconWords) {
+        _createWordleTab: function (container, scope, title, wordleData, statType, callback, lexiconWords, animate) {
             var self = this;
 
             //create order of strong numbers

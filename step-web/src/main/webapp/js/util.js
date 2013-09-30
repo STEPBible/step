@@ -339,6 +339,7 @@ step.util = {
         emptyOffDomAndPopulate: function (passageContent, passageHtml) {
             var parent = passageContent.parent();
             passageContent.detach();
+            passageContent.off("scroll");
 
             //we garbage collect in the background after the passage has loaded
             var children = passageContent.children().detach();

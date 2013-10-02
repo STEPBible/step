@@ -223,9 +223,7 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
         // if context > 0, then we need to add verse numbers:
         final List<LookupOption> lookupOptions = new ArrayList<LookupOption>();
         Collections.addAll(lookupOptions, options);
-        if (sq.getContext() > 0) {
-            lookupOptions.add(LookupOption.VERSE_NUMBERS);
-        }
+        lookupOptions.add(LookupOption.VERSE_NUMBERS);
 
         final Book bible = this.av11nService.getBookFromVersion(version);
         final List<SearchEntry> resultPassages = getPassagesForResults(bible, newResults, sq.getContext(),

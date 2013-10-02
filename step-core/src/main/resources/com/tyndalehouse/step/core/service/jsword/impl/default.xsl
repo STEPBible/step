@@ -927,13 +927,13 @@
   <xsl:template match="reference">
         <xsl:variable name="passage" select="jsword:getValidKey($keyf, $versification, @osisRef)"/>
         <xsl:variable name="passageKey" select="jsword:getName($passage)"/>
-        <a href="?reference={$passageKey}&amp;version={$baseVersion}" title="Click for more options" class="linkRef" xref="{$passageKey}"><xsl:apply-templates/></a>
+        <a href="?version={$baseVersion}&amp;reference={$passageKey}" title="{$passageKey}" class="linkRef" xref="{$passageKey}"><xsl:apply-templates/></a>
   </xsl:template>
   
   <xsl:template match="reference" mode="jesus">
         <xsl:variable name="passage" select="jsword:getValidKey($keyf, $versification, @osisRef)"/>
         <xsl:variable name="passageKey" select="jsword:getName($passage)"/>
-        <a href="?reference={$passageKey}&amp;version={$baseVersion}" title="Click for more options" xref="{$passageKey}" onclick="javascript:showPreviewOptions();"><xsl:apply-templates/></a>
+        <a href="?version={$baseVersion}&amp;reference={$passageKey}" title="{$passageKey}" xref="{$passageKey}" onclick="javascript:showPreviewOptions();"><xsl:apply-templates/></a>
   </xsl:template>
   
   <!--=======================================================================-->

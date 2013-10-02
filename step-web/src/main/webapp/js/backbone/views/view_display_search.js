@@ -63,6 +63,7 @@ var SearchDisplayView = Backbone.View.extend({
 
         this.doTitle();
         step.util.ui.addStrongHandlers(passageId, this.passageContent);
+        step.util.ui.enhanceVerseNumbers(passageId, this.passageContent, resultsWrapper.masterVersion);
         Backbone.Events.trigger("search:rendered:" + passageId);
     },
 

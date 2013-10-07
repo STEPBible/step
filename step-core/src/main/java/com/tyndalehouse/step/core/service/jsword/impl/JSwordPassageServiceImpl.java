@@ -181,7 +181,15 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
             }
 
             // now we've got our target verse, use it, trim off the verse number
-            return new KeyWrapper(currentBook.getKey(getChapter(targetVerse, v11n)));
+            final Key finalKey = currentBook.getKey(getChapter(targetVerse, v11n));
+            final KeyWrapper keyWrapper = new KeyWrapper(finalKey);
+
+            //check whether the target verse is in the last chapter
+            if(v11n.getLastChapter(targetVerse.getBook()) == targetVerse.getChapter()) {
+                keyWrapper.setLastChapter(true);
+            }
+
+            return keyWrapper;
         } catch (final NoSuchKeyException e) {
             throw new LocalisedException(e, e.getMessage());
         }

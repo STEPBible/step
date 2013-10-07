@@ -32,6 +32,8 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.models.stats;
 
+import com.tyndalehouse.step.core.models.KeyWrapper;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -41,7 +43,7 @@ import java.util.Map;
  */
 public class PassageStat {
     private Map<String, Integer> stats = new HashMap<String, Integer>(128);
-    private String reference;
+    private KeyWrapper reference;
 
     /**
      * Adds the word to the current stats
@@ -100,14 +102,14 @@ public class PassageStat {
     /**
      * @return the reference for this particular stat
      */
-    public String getReference() {
+    public KeyWrapper getReference() {
         return reference;
     }
 
     /**
      * @param reference the reference for this particular stat
      */
-    public void setReference(final String reference) {
+    public void setReference(final KeyWrapper reference) {
         this.reference = reference;
     }
 }

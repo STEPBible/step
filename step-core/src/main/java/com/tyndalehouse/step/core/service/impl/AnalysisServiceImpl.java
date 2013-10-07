@@ -102,22 +102,26 @@ public class AnalysisServiceImpl implements AnalysisService {
             final String version, final String reference,
             final StatType statType, final ScopeType scopeType, boolean nextChapter) {
         
-        final String centralReference = nextChapter ? jSwordPassageService.getSiblingChapter(reference, "ESV" , false).getName() : reference;
+        
+        final String keyResolutionVersion = statType == StatType.TEXT ? version : JSwordPassageService.REFERENCE_BOOK;
+        final KeyWrapper centralReference = nextChapter ? 
+                jSwordPassageService.getSiblingChapter(reference, keyResolutionVersion , false): 
+                jSwordPassageService.getKeyInfo(reference, keyResolutionVersion, keyResolutionVersion);
         
         final CombinedPassageStats statsForPassage = new CombinedPassageStats();
         PassageStat stat;
         switch (statType) {
             case WORD:
-                stat = this.jswordAnalysis.getWordStats(centralReference, scopeType);
+                stat = this.jswordAnalysis.getWordStats(centralReference.getKey(), scopeType);
                 stat.trim(maxWords);
                 statsForPassage.setLexiconWords(convertWordStatsToDefinitions(stat));
                 break;
             case TEXT:
-                stat = this.jswordAnalysis.getTextStats(version, centralReference, scopeType);
+                stat = this.jswordAnalysis.getTextStats(version, centralReference.getKey(), scopeType);
                 stat.trim(maxWords);
                 break;
             case SUBJECT:
-                stat = getSubjectStats(version, centralReference, scopeType);
+                stat = getSubjectStats(version, centralReference.getName(), scopeType);
                 stat.trim(maxWords);
                 break;
             default:

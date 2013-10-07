@@ -12,6 +12,7 @@ import org.crosswire.jsword.passage.Key;
 public class KeyWrapper {
     private String osisKeyId;
     private String name;
+    private boolean lastChapter;
     @JsonIgnore
     private Key key;
 
@@ -66,5 +67,20 @@ public class KeyWrapper {
      */
     public Key getKey() {
         return key;
+    }
+
+    /**
+     * WARNING: this is not always set and defaults to 'false'
+     * @return true if the key is in the last chapter, not always populated
+     */
+    public boolean isLastChapter() {
+        return lastChapter;
+    }
+
+    /**
+     * @param lastChapter true to indicate last chapter
+     */
+    public void setLastChapter(final boolean lastChapter) {
+        this.lastChapter = lastChapter;
     }
 }

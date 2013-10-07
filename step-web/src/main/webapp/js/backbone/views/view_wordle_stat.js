@@ -37,14 +37,7 @@ var ViewLexiconWordle = Backbone.View.extend({
         });
 
         this.animateCloud.button({ icons: { primary: "ui-icon-play" }, text : false }).click(function () {
-            self.isAnimating = !self.isAnimating;
-            if (self.isAnimating) {
-                self.doStats();
-                $(this).button("option", { icons: { primary: "ui-icon-pause"}});
-            } else {
-                var button = $(this);
-                button.button("option", { icons: { primary: "ui-icon-play"}});
-            }
+            self.animateWordleHandler();
         });
 
         this.passageButtons.passageButtons({
@@ -128,14 +121,34 @@ var ViewLexiconWordle = Backbone.View.extend({
         $.getSafe(ANALYSIS_STATS, [model.get("version"), reference, typeKey, scopeKey, animate == true], function (data) {
             step.util.trackAnalytics('wordle', 'type', typeKey);
             step.util.trackAnalytics('wordle', 'scope', scopeKey);
-            self.transientReference = data.passageStat.reference;
+            self.transientReference = data.passageStat.reference.name;
             self.reference.html(self.transientReference);
+            
+            //we're going to animate this, but we're going to finish and not keep going if the flag is set
+            if(data.passageStat.reference.lastChapter) {
+                self.animateWordleHandler();
+            }
+            
             self._createWordleTab(statsContainer, scope, title, data.passageStat, typeKey, callback, data.lexiconWords, animate);
         });
     },
 
-    animateWordle: function () {
-
+    animateWordleHandler : function () {
+        this.isAnimating = !this.isAnimating;
+        if (this.isAnimating) {
+            this.previousSortValue = this.sortCloud.prop('checked');
+            this.sortCloud.prop("checked", true).button("refresh").button("disable");
+            
+            this.previousScopeValue = this.wordScope.val();
+            this.wordScope.val(step.defaults.analysis.scope[1]).prop("disabled", true);
+            this.animateCloud.button("option", { icons: { primary: "ui-icon-pause"}});
+            this.doStats();
+        } else {
+            this.sortCloud.prop("checked", this.previousSortValue || false).button("enable");
+            this.wordScope.val(this.previousScopeValue).prop("disabled", false);
+            this.animateCloud.button("option", { icons: { primary: "ui-icon-play"}});
+        }
+        this.animateCloud.button("refresh").blur();
     },
 
     /**
@@ -248,6 +261,10 @@ var ViewLexiconWordle = Backbone.View.extend({
             strongs.sort(function (a, b) {
                 return wordleData.stats[b] - wordleData.stats[a];
             });
+        } else {
+            strongs.sort(function(a, b) {
+                return a.toLowerCase() < b.toLowerCase() ? -1 : 1;
+            });
         }
 
         $("a", container).attr("rel", 0);
@@ -301,7 +318,8 @@ var ViewLexiconWordle = Backbone.View.extend({
             );
         }
 
-        if (animate) {
+        //base it on the isAnimating rather than passed in value
+        if (this.isAnimating) {
             delay(function () {
                 self.doStats();
             }, 3500);

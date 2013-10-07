@@ -927,6 +927,9 @@ function refreshWaitStatus() {
                 }
             }
 
+            //introduce some caching...
+            
+            
             outstandingRequests++;
             refreshWaitStatus();
             $.get(url, function (data, textStatus, jqXHR) {
@@ -944,7 +947,6 @@ function refreshWaitStatus() {
 //			    console.log("Received url ", url, " ", data);
                 if (data && data.errorMessage) {
                     // handle an error message here
-//					$.shout("caught-error-message", data);
                     if (data.operation) {
                         // so we now have an operation to perform before we
                         // continue with the user

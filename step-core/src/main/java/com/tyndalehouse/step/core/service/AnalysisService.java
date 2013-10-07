@@ -1,7 +1,7 @@
 package com.tyndalehouse.step.core.service;
 
-import com.tyndalehouse.step.core.models.ScopeType;
-import com.tyndalehouse.step.core.models.StatType;
+import com.tyndalehouse.step.core.models.stats.ScopeType;
+import com.tyndalehouse.step.core.models.stats.StatType;
 import com.tyndalehouse.step.core.models.stats.CombinedPassageStats;
 
 /**

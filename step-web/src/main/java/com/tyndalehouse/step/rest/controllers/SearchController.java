@@ -13,6 +13,7 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import com.tyndalehouse.step.core.service.search.SubjectSearchService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,6 +39,7 @@ public class SearchController {
     private final SearchService searchService;
     private final OriginalWordSuggestionService originalWordSuggestions;
     private final SubjectEntrySearchService subjectEntries;
+    private SubjectSearchService subjectSearchService;
 
     /**
      * @param search the search service
@@ -47,10 +49,12 @@ public class SearchController {
     @Inject
     public SearchController(final SearchService search,
             final OriginalWordSuggestionService originalWordSuggestions,
-            final SubjectEntrySearchService subjectEntries) {
+            final SubjectEntrySearchService subjectEntries,
+            final SubjectSearchService subjectSearchService) {
         this.searchService = search;
         this.originalWordSuggestions = originalWordSuggestions;
         this.subjectEntries = subjectEntries;
+        this.subjectSearchService = subjectSearchService;
     }
 
     /**
@@ -123,6 +127,14 @@ public class SearchController {
 
         return this.originalWordSuggestions.getLexicalSuggestions(suggestionType, restoreSearchQuery(form),
                 Boolean.parseBoolean(includeAllForms));
+    }
+
+    /**
+     * @param term the term entered by the user
+     * @return the list of terms matching the entered text
+     */
+    public List<String> autocompleteSubject(String term) {
+        return this.subjectSearchService.autocomplete(term);
     }
 
     /**

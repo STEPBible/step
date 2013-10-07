@@ -5,24 +5,19 @@ import static org.apache.lucene.util.Version.LUCENE_30;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import com.tyndalehouse.step.core.utils.LuceneUtils;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queryParser.MultiFieldQueryParser;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.queryParser.QueryParser.Operator;
+import org.apache.lucene.search.*;
 import org.apache.lucene.search.BooleanClause.Occur;
-import org.apache.lucene.search.BooleanQuery;
-import org.apache.lucene.search.Filter;
-import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.Query;
-import org.apache.lucene.search.ScoreDoc;
-import org.apache.lucene.search.Sort;
-import org.apache.lucene.search.TermQuery;
-import org.apache.lucene.search.TopDocs;
-import org.apache.lucene.search.TopFieldDocs;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.MMapDirectory;
@@ -38,9 +33,8 @@ import com.tyndalehouse.step.core.utils.IOUtils;
 
 /**
  * Reads an entity
- * 
+ *
  * @author chrisburrell
- * 
  */
 public class EntityIndexReaderImpl implements EntityIndexReader {
     private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(EntityIndexReaderImpl.class);
@@ -51,8 +45,8 @@ public class EntityIndexReaderImpl implements EntityIndexReader {
 
     /**
      * Entity reader
-     * 
-     * @param config the config about the reader
+     *
+     * @param config       the config about the reader
      * @param memoryMapped true to indicate index should be stored in memory
      */
     public EntityIndexReaderImpl(final EntityConfiguration config, final boolean memoryMapped) {
@@ -63,7 +57,7 @@ public class EntityIndexReaderImpl implements EntityIndexReader {
 
     /**
      * Entity reader - does not initialise it entirely - careful when using this.
-     * 
+     *
      * @param config the config about the reader
      */
     EntityIndexReaderImpl(final EntityConfiguration config) {
@@ -104,8 +98,8 @@ public class EntityIndexReaderImpl implements EntityIndexReader {
 
     /**
      * Gets the best implementation of the directory
-     * 
-     * @param configuration config
+     *
+     * @param configuration      config
      * @param memoryMapDirectory memory mapped directories
      */
     private void openDirectory(final EntityConfiguration configuration, final boolean memoryMapDirectory) {
@@ -128,7 +122,7 @@ public class EntityIndexReaderImpl implements EntityIndexReader {
 
     @Override
     public EntityDoc[] searchExactTermBySingleField(final String fieldName, final int max,
-            final String... values) {
+                                                    final String... values) {
         final Query query = getQuery(fieldName, values);
         return search(query, max, null, null);
     }
@@ -151,26 +145,26 @@ public class EntityIndexReaderImpl implements EntityIndexReader {
 
     @Override
     public EntityDoc[] search(final String[] fieldNames, final String value, final Filter filter,
-            final Sort sort, final boolean analyzePrefix) {
+                              final Sort sort, final boolean analyzePrefix) {
         return search(fieldNames, value, filter, sort, analyzePrefix, null, null);
     }
 
     @Override
     public EntityDoc[] search(final String[] fieldNames, final String value, final Filter strongFilter,
-            final Sort transliterationSort, final boolean analyzePrefix, final Integer maxResults) {
+                              final Sort transliterationSort, final boolean analyzePrefix, final Integer maxResults) {
         return search(fieldNames, value, strongFilter, transliterationSort, analyzePrefix, null, maxResults);
     }
 
     @Override
     public EntityDoc[] search(final String[] fieldNames, final String value, final Filter filter,
-            final Sort sort, final boolean analyzePrefix, final String queryRemainder) {
+                              final Sort sort, final boolean analyzePrefix, final String queryRemainder) {
         return search(fieldNames, value, filter, sort, analyzePrefix, queryRemainder, null);
     }
 
     @Override
     public EntityDoc[] search(final String[] fieldNames, final String value, final Filter filter,
-            final Sort sort, final boolean analyzePrefix, final String queryRemainder,
-            final Integer maxResults) {
+                              final Sort sort, final boolean analyzePrefix, final String queryRemainder,
+                              final Integer maxResults) {
         return search(fieldNames, value, filter, sort, analyzePrefix, queryRemainder, maxResults, true);
     }
 
@@ -182,8 +176,8 @@ public class EntityIndexReaderImpl implements EntityIndexReader {
     // CHECKSTYLE:OFF
     @Override
     public EntityDoc[] search(final String[] fieldNames, final String value, final Filter filter,
-            final Sort sort, final boolean analyzePrefix, final String queryRemainder,
-            final Integer maxResults, final boolean useOrOperatorBetweenValues) {
+                              final Sort sort, final boolean analyzePrefix, final String queryRemainder,
+                              final Integer maxResults, final boolean useOrOperatorBetweenValues) {
         // CHECKSTYLE:ON
         final AllResultsCollector collector = new AllResultsCollector();
         Query parsed = null;
@@ -227,9 +221,26 @@ public class EntityIndexReaderImpl implements EntityIndexReader {
         }
     }
 
+    @Override
+    public Set<String> findSetOfTermsStartingWith(String searchTerm, final String... fieldNames) {
+        if(fieldNames.length == 0) {
+            return new HashSet<String>(0);
+        }
+        
+        if (fieldNames.length == 1) {
+            return new HashSet<String>(LuceneUtils.getAllTermsPrefixedWith(this.searcher, fieldNames[0], searchTerm));
+        }
+
+        Set<String> suggestions = new HashSet<String>(256);
+        for (int ii = 0; ii < fieldNames.length; ii++) {
+            suggestions.addAll(LuceneUtils.getAllTermsPrefixedWith(this.searcher, fieldNames[ii], searchTerm));
+        }
+        return suggestions;
+    }
+
     /**
      * Extracts all the results
-     * 
+     *
      * @param results the results that have been collected
      * @return the results
      */
@@ -271,7 +282,7 @@ public class EntityIndexReaderImpl implements EntityIndexReader {
 
     /**
      * Extracts the query results into an entity doc
-     * 
+     *
      * @param collector the collector with the results
      * @return all the entity documents
      */
@@ -312,9 +323,9 @@ public class EntityIndexReaderImpl implements EntityIndexReader {
 
     /**
      * Returns a query that matches the provided terms
-     * 
+     *
      * @param fieldName the field name
-     * @param values the values passed in
+     * @param values    the values passed in
      * @return query
      */
     private Query getQuery(final String fieldName, final String... values) {
@@ -337,7 +348,7 @@ public class EntityIndexReaderImpl implements EntityIndexReader {
 
     @Override
     public EntityDoc[] searchSingleColumn(final String fieldName, final String querySyntax,
-            final Filter filter) {
+                                          final Filter filter) {
         return searchSingleColumn(fieldName, querySyntax, Operator.OR, false, null, filter);
     }
 
@@ -348,13 +359,13 @@ public class EntityIndexReaderImpl implements EntityIndexReader {
 
     @Override
     public EntityDoc[] searchSingleColumn(final String fieldName, final String querySyntax,
-            final Operator op, final boolean allowLeadingWildcard) {
+                                          final Operator op, final boolean allowLeadingWildcard) {
         return searchSingleColumn(fieldName, querySyntax, op, allowLeadingWildcard, null);
     }
 
     @Override
     public EntityDoc[] searchSingleColumn(final String fieldName, final String query,
-            final boolean useOrOperator) {
+                                          final boolean useOrOperator) {
         return searchSingleColumn(fieldName, query, useOrOperator ? Operator.OR : Operator.AND, false);
     }
 
@@ -365,13 +376,13 @@ public class EntityIndexReaderImpl implements EntityIndexReader {
 
     @Override
     public EntityDoc[] searchSingleColumn(final String fieldName, final String querySyntax,
-            final Operator op, final boolean allowLeadingWildcard, final Sort sort) {
+                                          final Operator op, final boolean allowLeadingWildcard, final Sort sort) {
         return searchSingleColumn(fieldName, querySyntax, op, allowLeadingWildcard, sort, null);
     }
 
     @Override
     public EntityDoc[] searchSingleColumn(final String fieldName, final String querySyntax,
-            final Operator op, final boolean allowLeadingWildcard, final Sort sort, final Filter filter) {
+                                          final Operator op, final boolean allowLeadingWildcard, final Sort sort, final Filter filter) {
         final QueryParser parser = new QueryParser(LUCENE_30, fieldName, this.getAnalyzer());
         parser.setDefaultOperator(op);
         parser.setAllowLeadingWildcard(allowLeadingWildcard);

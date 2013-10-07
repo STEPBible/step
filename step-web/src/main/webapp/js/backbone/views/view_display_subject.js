@@ -13,6 +13,14 @@ var SubjectDisplayView = SearchDisplayView.extend({
         if (query.startsWith("s=")) {
             return this._doSimpleSubjectSearchResults(masterVersion, query, searchResults.results);
         } else {
+            //if we're looking at a search that was override, then let's overwrite the various variables of interest
+            var subjectType = this.model.get("subjectSearchType");
+            var returnedSearchType = this.model.getReverseSearchTypePrefix(query.substring(0, query.indexOf('=') + 1));
+            
+            if(subjectType != returnedSearchType) {
+                this.model.save({ subjectSearchType : returnedSearchType });
+            }
+            
             //caters for s+=, s++= and sr=
             return this._doNaveSearchResults(query, searchResults.results);
         }

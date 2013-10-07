@@ -47,8 +47,36 @@ var SubjectCriteria = SearchCriteria.extend({
             self.model.save({ detail : newValue });
             self.updateTextStatus();
         }});
-
+        this.autocomplete();
         this.$el.find(".resetSubjectText,.resetSubjectRelated").button({ icons: { primary: "ui-icon-close" }, text: false});
+    },
+
+    autocomplete: function () {
+        var self = this;
+        $(this.viewElementsByName.subjectText).autocomplete({
+            minLength: 3,
+            select: function (event, ui) {
+                //manually change the text, so that the change() method can fire against the right version
+                $(this).val(ui.item.value);
+                $(this).change();
+                $(this).trigger('keyup');
+                self.doSearch();
+            },
+            source: function (request, response) {
+                var that = this;
+                $.getPassageSafe({
+                    url: SUBJECT_SUGGESTION,
+                    args: [encodeURIComponent(step.util.replaceSpecialChars(request.term))],
+                    callback: response,
+                    passageId: self.model.get("passageId"),
+                    level: 'error'
+                });
+            }
+        });
+
+        this.viewElementsByName.subjectText.click(function () {
+            $(this).autocomplete("search");
+        });
     },
 
     resetSearch : function() {

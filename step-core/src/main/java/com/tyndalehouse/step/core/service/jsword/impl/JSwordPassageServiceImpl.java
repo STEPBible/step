@@ -134,7 +134,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
         this.resolver = resolver;
 
         kjvaBook = Books.installed().getBook("KJVA");
-        esvBook = Books.installed().getBook("ESV");
+        esvBook = Books.installed().getBook(JSwordPassageService.REFERENCE_BOOK);
     }
 
     @Override

@@ -15,6 +15,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import com.tyndalehouse.step.core.service.SearchService;
 import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.queryParser.QueryParser.Operator;
 import org.apache.lucene.search.Filter;
@@ -41,7 +42,6 @@ public class OriginalWordSuggestionServiceImpl implements OriginalWordSuggestion
     private static final String SIMPLIFIED_TRANSLITERATION = "simplifiedStepTransliteration:";
     private static final Sort TRANSLITERATION_SORT = new Sort(new SortField("stepTransliteration",
             SortField.STRING_VAL));
-    private static final int MAX_SUGGESTIONS = 50;
     private final EntityIndexReader definitions;
     private final EntityIndexReader specificForms;
 
@@ -111,7 +111,7 @@ public class OriginalWordSuggestionServiceImpl implements OriginalWordSuggestion
         if (isHebrewText(form) || GreekUtils.isGreekText(form)) {
             results = this.definitions.search(new String[] { "accentedUnicode" },
                     QueryParser.escape(form) + '*', getStrongFilter(suggestionType), TRANSLITERATION_SORT,
-                    true, MAX_SUGGESTIONS);
+                    true, SearchService.MAX_SUGGESTIONS);
         } else {
             // assume transliteration - at this point suggestionType is not going to be MEANING
             final String simplifiedTransliteration = getSimplifiedTransliterationClause(
@@ -122,7 +122,7 @@ public class OriginalWordSuggestionServiceImpl implements OriginalWordSuggestion
             results = this.definitions.search(new String[] { "betaAccented", "stepTransliteration",
                     "twoLetter", "otherTransliteration" }, QueryParser.escape(unmarkedUpTranslit) + '*',
                     getStrongFilter(suggestionType), TRANSLITERATION_SORT, true, simplifiedTransliteration,
-                    MAX_SUGGESTIONS);
+                    SearchService.MAX_SUGGESTIONS);
         }
         return convertDefinitionDocsToSuggestion(results);
     }
@@ -182,7 +182,7 @@ public class OriginalWordSuggestionServiceImpl implements OriginalWordSuggestion
         if (isHebrewText(form) || GreekUtils.isGreekText(form)) {
             results = this.specificForms.search(new String[] { "accentedUnicode" },
                     QueryParser.escape(form) + '*', getStrongFilter(suggestionType), TRANSLITERATION_SORT,
-                    true, MAX_SUGGESTIONS);
+                    true, SearchService.MAX_SUGGESTIONS);
         } else {
             // assume transliteration - at this point suggestionType is not going to be MEANING
             final String simplifiedTransliteration = getSimplifiedTransliterationClause(
@@ -190,7 +190,7 @@ public class OriginalWordSuggestionServiceImpl implements OriginalWordSuggestion
 
             results = this.specificForms.search(new String[] { "simplifiedStepTransliteration" },
                     simplifiedTransliteration, getStrongFilter(suggestionType), TRANSLITERATION_SORT, true,
-                    simplifiedTransliteration, MAX_SUGGESTIONS);
+                    simplifiedTransliteration, SearchService.MAX_SUGGESTIONS);
         }
 
         for (final EntityDoc f : results) {

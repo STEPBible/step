@@ -37,7 +37,8 @@ import static com.tyndalehouse.step.core.utils.StringUtils.split;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import com.tyndalehouse.step.core.models.ScopeType;
+import com.tyndalehouse.step.core.models.stats.ScopeType;
+import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
 import com.tyndalehouse.step.core.utils.StringConversionUtils;
 import com.tyndalehouse.step.core.utils.StringUtils;
@@ -61,7 +62,6 @@ import java.util.*;
  */
 public class JSwordAnalysisServiceImpl implements JSwordAnalysisService {
     static final String WORD_SPLIT = "[,./<>?!;:'\\[\\]\\{\\}!\"\\-\u2013 ]+";
-    private static final String STRONG_VERSION = "ESV";
     private static final String LANGUAGE_STOP_LIST = "analysis.stopWords.%s";
     private final JSwordVersificationService versification;
     private final Map<String, Set<String>> stopWords = new HashMap<String, Set<String>>(32);
@@ -82,7 +82,7 @@ public class JSwordAnalysisServiceImpl implements JSwordAnalysisService {
         this.versification = versification;
         this.stopWordsProperties = stopWordsProperties;
         stopStrongs = StringUtils.createSet(configuredStopStrongs);
-        strongsBook = this.versification.getBookFromVersion(STRONG_VERSION);
+        strongsBook = this.versification.getBookFromVersion(JSwordPassageService.REFERENCE_BOOK);
         strongsV11n = this.versification.getVersificationForVersion(strongsBook);
     }
 

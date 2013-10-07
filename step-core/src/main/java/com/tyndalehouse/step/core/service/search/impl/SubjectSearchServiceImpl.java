@@ -1,11 +1,11 @@
 /*******************************************************************************
  * Copyright (c) 2012, Directors of the Tyndale STEP Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without 
  * modification, are permitted provided that the following conditions 
  * are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright 
  * notice, this list of conditions and the following disclaimer.
  * Redistributions in binary form must reproduce the above copyright 
@@ -16,7 +16,7 @@
  * nor the names of its contributors may be used to endorse or promote 
  * products derived from this software without specific prior written 
  * permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
@@ -45,25 +45,23 @@ import com.tyndalehouse.step.core.service.impl.SearchQuery;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import com.tyndalehouse.step.core.service.jsword.JSwordSearchService;
 import com.tyndalehouse.step.core.service.search.SubjectSearchService;
+import com.tyndalehouse.step.core.utils.LuceneUtils;
 import com.tyndalehouse.step.core.utils.StringUtils;
 import org.apache.lucene.queryParser.QueryParser;
+import org.crosswire.jsword.index.lucene.LuceneIndex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 import static com.tyndalehouse.step.core.models.LookupOption.HEADINGS_ONLY;
 import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
 
 /**
  * Searches for a subject
- * 
+ *
  * @author chrisburrell
- * 
  */
 @Singleton
 public class SubjectSearchServiceImpl implements SubjectSearchService {
@@ -74,19 +72,39 @@ public class SubjectSearchServiceImpl implements SubjectSearchService {
 
     /**
      * Instantiates a new subject search service impl.
-     * 
+     *
      * @param entityManager an entity manager providing access to all the different entities.
-     * @param jswordSearch the search service for text searching in jsword
+     * @param jswordSearch  the search service for text searching in jsword
      * @param jswordPassage the jsword passage
      */
     @Inject
     public SubjectSearchServiceImpl(final EntityManager entityManager,
-            final JSwordSearchService jswordSearch, final JSwordPassageService jswordPassage) {
+                                    final JSwordSearchService jswordSearch, final JSwordPassageService jswordPassage) {
         this.jswordSearch = jswordSearch;
         this.jswordPassage = jswordPassage;
         this.naves = entityManager.getReader("nave");
     }
 
+    @Override
+    public List<String> autocomplete(String userEnteredTerm) {
+        if (StringUtils.isBlank(userEnteredTerm)) {
+            return new ArrayList<String>(0);
+        }
+
+        //take the last word
+        final String trimmedUserEntry = userEnteredTerm.toLowerCase().trim();
+        int lastWordStart = trimmedUserEntry.indexOf(' ');
+        String searchTerm = lastWordStart != -1 ? trimmedUserEntry.substring(lastWordStart + 1) : trimmedUserEntry;
+
+        Set<String> naveTerms = this.naves.findSetOfTermsStartingWith(QueryParser.escape(searchTerm), "root", "fullHeaderAnalyzed");
+        naveTerms.addAll(LuceneUtils.getAllTermsPrefixedWith(this.jswordSearch.getIndexSearcher(JSwordPassageService.REFERENCE_BOOK),
+                LuceneIndex.FIELD_HEADING,
+                searchTerm));
+
+        final ArrayList<String> results = new ArrayList<String>(naveTerms);
+        Collections.sort(results);
+        return results;
+    }
 
     @Override
     public SearchResult searchByMultipleReferences(final String version, final String references) {
@@ -119,24 +137,65 @@ public class SubjectSearchServiceImpl implements SubjectSearchService {
         final IndividualSearch currentSearch = sq.getCurrentSearch();
         LOGGER.debug("Executing subject search of type [{}]", currentSearch.getType());
 
+        SearchQuery currentQuery = sq;
         switch (currentSearch.getType()) {
             case SUBJECT_SIMPLE:
-                return searchSimple(sq);
+                final SearchResult simpleSearchResults = searchSimple(currentQuery);
+                if (haveSearchResults(simpleSearchResults)) {
+                    return simpleSearchResults;
+                }
+                //otherwise fall-through, and convert search to a nave search
+                currentQuery = convertToNewSubjectSearchQuery(currentQuery, "s=", "s+=");
             case SUBJECT_EXTENDED:
-                return searchExtended(sq);
+                final SearchResult searchResult = searchExtended(currentQuery);
+                if (haveSearchResults(searchResult)) {
+                    searchResult.setQuery(currentSearch.getQuery());
+                    return searchResult;
+                }
+                //otherwise fall-through
+                currentQuery = convertToNewSubjectSearchQuery(currentQuery, "s+=", "s++=");
             case SUBJECT_FULL:
-                return searchFull(sq);
+                return searchFull(currentQuery);
             case SUBJECT_RELATED:
-                return relatedSubjects(sq);
+                return relatedSubjects(currentQuery);
             default:
                 break;
 
         }
-        return searchSimple(sq);
+        return searchSimple(currentQuery);
+    }
+
+    /**
+     * Promotes or demotes a query by recreating the search query
+     * @param expectedPrefix the expected prefix
+     * @param newSearchPrefix the new search prefix
+     * @param sq the search query
+     * @return the new search query
+     */
+    private SearchQuery convertToNewSubjectSearchQuery(final SearchQuery sq, final String expectedPrefix, final String newSearchPrefix) {
+        
+        final SearchQuery newSearchQuery = new SearchQuery(sq.getOriginalQuery().replaceFirst(expectedPrefix, newSearchPrefix),
+                sq.getSortOrder(),
+                sq.getContext(),
+                sq.getPageNumber(),
+                sq.getPageSize());
+        sq.setOriginalQuery(newSearchQuery.getOriginalQuery());
+        return newSearchQuery;
+    }
+
+    /**
+     * Returns true if we have search results.
+     *
+     * @param searchResult the search results themselves
+     * @return true if more than 1 result is found
+     */
+    private boolean haveSearchResults(final SearchResult searchResult) {
+        return searchResult.getTotal() != 0;
     }
 
     /**
      * Related subject returns subjects, not verses...
+     *
      * @param sq the search query.
      * @return the subjects
      */
@@ -146,13 +205,13 @@ public class SubjectSearchServiceImpl implements SubjectSearchService {
 
     /**
      * runs a simple subject search
-     * 
+     *
      * @param sq the search query
      * @return the results
-     **/
+     */
     private SearchResult searchSimple(final SearchQuery sq) {
         sq.setAllKeys(true);
-        
+
         final SearchResult headingsSearch = this.jswordSearch.search(sq,
                 sq.getCurrentSearch().getVersions()[0], HEADINGS_ONLY);
 
@@ -170,7 +229,7 @@ public class SubjectSearchServiceImpl implements SubjectSearchService {
 
     /**
      * Carries out the extended search
-     * 
+     *
      * @param sq the search query
      * @return results with the headings only
      */
@@ -192,19 +251,19 @@ public class SubjectSearchServiceImpl implements SubjectSearchService {
 
     /**
      * Carries out the full search
-     * 
+     *
      * @param sq the search query
      * @return results with the headings only
      */
     private SearchResult searchFull(final SearchQuery sq) {
         final long start = System.currentTimeMillis();
-        final EntityDoc[] results = this.naves.search(new String[] { "rootStem", "fullHeaderAnalyzed" },
+        final EntityDoc[] results = this.naves.search(new String[]{"rootStem", "fullHeaderAnalyzed"},
                 QueryParser.escape(sq.getCurrentSearch().getQuery()), false);
         return getHeadingsSearchEntries(start, results);
     }
 
     /**
-     * @param start the start time
+     * @param start   the start time
      * @param results the results that have been found
      * @return the list of results
      */
@@ -238,13 +297,13 @@ public class SubjectSearchServiceImpl implements SubjectSearchService {
 
     /**
      * Compares two entries.
-     * 
+     *
      * @param e1 the first entry
      * @param e2 the second entry
      * @return See {@link Comparable } for the return values
      */
     private int compareSubjectEntries(final ExpandableSubjectHeadingEntry e1,
-            final ExpandableSubjectHeadingEntry e2) {
+                                      final ExpandableSubjectHeadingEntry e2) {
         final int rootCompare = e1.getRoot().compareToIgnoreCase(e2.getRoot());
         if (rootCompare != 0) {
             return rootCompare;
@@ -270,7 +329,7 @@ public class SubjectSearchServiceImpl implements SubjectSearchService {
 
     /**
      * Compares the headings of two entries
-     * 
+     *
      * @param heading1 first heading
      * @param heading2 second heading
      * @return accounts for nulls, such that two nulls are equal, a single null comes before any other string

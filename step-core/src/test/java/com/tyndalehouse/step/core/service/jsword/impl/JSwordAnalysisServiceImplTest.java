@@ -32,7 +32,7 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.service.jsword.impl;
 
-import com.tyndalehouse.step.core.models.ScopeType;
+import com.tyndalehouse.step.core.models.stats.ScopeType;
 import com.tyndalehouse.step.core.utils.TestUtils;
 import org.junit.Test;
 

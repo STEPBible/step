@@ -1,7 +1,6 @@
 package com.tyndalehouse.step.core.service.jsword;
 
-import com.tyndalehouse.step.core.models.ScopeType;
-import com.tyndalehouse.step.core.models.stats.CombinedPassageStats;
+import com.tyndalehouse.step.core.models.stats.ScopeType;
 import com.tyndalehouse.step.core.models.stats.PassageStat;
 
 /**

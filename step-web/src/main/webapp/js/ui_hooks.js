@@ -84,7 +84,7 @@ SETUP_REINDEX =                     STEP_SERVER_BASE_URL + "setup/reIndex/";
 SEARCH_DEFAULT =                    STEP_SERVER_BASE_URL + "search/search/";
 SEARCH_ESTIMATES =                  STEP_SERVER_BASE_URL + "search/estimateSearch/";
 SEARCH_SUGGESTIONS =                STEP_SERVER_BASE_URL + "search/getLexicalSuggestions/";
-
+SUBJECT_SUGGESTION =                STEP_SERVER_BASE_URL + "search/autocompleteSubject/"
 SUBJECT_VERSES =                    STEP_SERVER_BASE_URL + "search/getSubjectVerses/";
 
 TIMELINE_GET_EVENTS =               STEP_SERVER_BASE_URL + "timeline/getEvents/";

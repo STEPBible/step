@@ -42,6 +42,9 @@ import com.tyndalehouse.step.core.service.impl.SearchQuery;
  * 
  */
 public interface SearchService {
+    /** Max number of terms to retrieve when auto-completing a dropdown */
+    int MAX_SUGGESTIONS = 50;
+
     /**
      * Runs a search against STEP
      * 

@@ -59,6 +59,7 @@ import javax.inject.Named;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 
+import com.tyndalehouse.step.core.service.jsword.*;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.BookCategory;
 import org.crosswire.jsword.passage.*;
@@ -80,10 +81,6 @@ import com.tyndalehouse.step.core.models.search.SearchResult;
 import com.tyndalehouse.step.core.models.search.StrongCountsAndSubjects;
 import com.tyndalehouse.step.core.service.BibleInformationService;
 import com.tyndalehouse.step.core.service.helpers.VersionResolver;
-import com.tyndalehouse.step.core.service.jsword.JSwordMetadataService;
-import com.tyndalehouse.step.core.service.jsword.JSwordModuleService;
-import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
-import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
 import com.tyndalehouse.step.core.service.jsword.helpers.JSwordStrongNumberHelper;
 import com.tyndalehouse.step.core.service.search.SubjectSearchService;
 import com.tyndalehouse.step.core.utils.StringUtils;
@@ -101,6 +98,7 @@ public class BibleInformationServiceImpl implements BibleInformationService {
     private final JSwordPassageService jswordPassage;
     private final JSwordModuleService jswordModule;
     private final JSwordMetadataService jswordMetadata;
+    private final JSwordSearchService jswordSearch;
     private final Provider<ClientSession> clientSessionProvider;
     private final EntityManager entityManager;
     private final JSwordVersificationService jswordVersification;
@@ -114,6 +112,7 @@ public class BibleInformationServiceImpl implements BibleInformationService {
      * @param jswordPassage         the jsword service
      * @param jswordModule          provides information and handles information relating to module installation, etc.
      * @param jswordMetadata        provides metadata on jsword modules
+     * @param jswordSearch
      * @param clientSessionProvider the client session provider
      * @param entityManager         the entity manager
      * @param jswordVersification   the jsword versification
@@ -122,13 +121,14 @@ public class BibleInformationServiceImpl implements BibleInformationService {
     @Inject
     public BibleInformationServiceImpl(@Named("defaultVersions") final List<String> defaultVersions,
                                        final JSwordPassageService jswordPassage, final JSwordModuleService jswordModule,
-                                       final JSwordMetadataService jswordMetadata, final Provider<ClientSession> clientSessionProvider,
+                                       final JSwordMetadataService jswordMetadata, final JSwordSearchService jswordSearch, final Provider<ClientSession> clientSessionProvider,
                                        final EntityManager entityManager, final JSwordVersificationService jswordVersification,
                                        final SubjectSearchService subjectSearchService, final VersionResolver resolver) {
         this.jswordPassage = jswordPassage;
         this.defaultVersions = defaultVersions;
         this.jswordModule = jswordModule;
         this.jswordMetadata = jswordMetadata;
+        this.jswordSearch = jswordSearch;
         this.clientSessionProvider = clientSessionProvider;
         this.entityManager = entityManager;
         this.jswordVersification = jswordVersification;
@@ -221,7 +221,7 @@ public class BibleInformationServiceImpl implements BibleInformationService {
         }
 
         final StrongCountsAndSubjects verseStrongs = new JSwordStrongNumberHelper(this.entityManager,
-                key, this.jswordVersification).getVerseStrongs();
+                key, this.jswordVersification, this.jswordSearch).getVerseStrongs();
 
         final Set<String> osisIds = verseStrongs.getStrongData().keySet();
         final Map<String, SearchResult> versesToSubjects = new HashMap<String, SearchResult>(osisIds.size());

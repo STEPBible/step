@@ -50,6 +50,8 @@ import com.tyndalehouse.step.core.models.OsisWrapper;
  * 
  */
 public interface JSwordPassageService {
+    String REFERENCE_BOOK = "ESV";
+
     /**
      * returns the Osis Text as a String
      * 

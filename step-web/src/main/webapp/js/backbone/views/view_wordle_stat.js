@@ -15,7 +15,8 @@ var ViewLexiconWordle = Backbone.View.extend({
         this.passageButtons = this.wordStatsTab.find(".passageSelector");
         this.sortCloud = this.wordStatsTab.find("#sortCloud");
         this.animateCloud = this.wordStatsTab.find("#animateCloud");
-
+        this.reference = this.wordStatsTab.find("#currentReference");
+        
         this.wordScope.prop("title", __s.stat_scope_explanation).qtip({
             position: { my: "bottom center", at: "top center", effect: false },
             hide: { event: 'blur' },
@@ -41,7 +42,8 @@ var ViewLexiconWordle = Backbone.View.extend({
                 self.doStats();
                 $(this).button("option", { icons: { primary: "ui-icon-pause"}});
             } else {
-                $(this).button("option", { icons: { primary: "ui-icon-play"}});
+                var button = $(this);
+                button.button("option", { icons: { primary: "ui-icon-play"}});
             }
         });
 
@@ -99,7 +101,8 @@ var ViewLexiconWordle = Backbone.View.extend({
         var self = this;
         var model = PassageModels.at(this.passageId);
 
-        var reference = this.transientReference || model.get("reference");
+        var modelReference = model.get("reference");
+        var reference = this.isAnimating ? this.transientReference || modelReference : modelReference;
 
         if (!this.wordStats.is(":visible")) {
             return;
@@ -126,7 +129,7 @@ var ViewLexiconWordle = Backbone.View.extend({
             step.util.trackAnalytics('wordle', 'type', typeKey);
             step.util.trackAnalytics('wordle', 'scope', scopeKey);
             self.transientReference = data.passageStat.reference;
-            $("#currentReference").html(self.transientReference);
+            self.reference.html(self.transientReference);
             self._createWordleTab(statsContainer, scope, title, data.passageStat, typeKey, callback, data.lexiconWords, animate);
         });
     },

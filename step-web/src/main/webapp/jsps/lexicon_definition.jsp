@@ -21,18 +21,26 @@
 
     <div id="wordStat" class="stat" name="ANALYSIS">
         <span class="scopeContainer">
-            <fmt:message key="analyse_label">
-                <fmt:param value="<input type='text' class='statKind drop' />" />
-                <fmt:param value="<input type='text' class='scope drop' />" />
-                <fmt:param value="<input type='checkbox' id='sortCloud' /><label id='sortCloudLabel' for='sortCloud'></label>" />
-            </fmt:message>
-            
-            <span class="passageSelector">
-            </span>
+            <div class="floatingStatSidebar">
+                <fmt:message key="analyse_label">
+                    <fmt:param value="<input type='text' class='statKind drop' />" />
+                    <fmt:param value="<input type='text' class='scope drop' />" />
+                </fmt:message>
+                <span class="passageSelector"></span>
+            </div>
+            <div class="floatingStatSidebar">
+                <fmt:message key="analyse_sort_label">
+                    <fmt:param value="<input type='checkbox' id='sortCloud' /><label id='sortCloudLabel' for='sortCloud'></label>" />
+                </fmt:message>
+                &nbsp;
+                <fmt:message key="analyse_animate_label">
+                    <fmt:param value="<button id='animateCloud'>&nbsp;</button>" />
+                </fmt:message>                
+                
+            </div>
         </span>
-        <br />
-        <button id="animateCloud" >Play</button>&nbsp;<span id="currentReference"></span>
-        <h3><fmt:message key="word_cloud" /></h3>
+        <h3><fmt:message key="word_cloud" /> (<span id="currentReference"></span>) </h3>
+
         <div class="cloudContainer"></div>
     </div>
 

@@ -58,7 +58,7 @@ var StepRouter = Backbone.Router.extend({
      * @param options
      */
     navigatePassage: function (fragment, options) {
-        console.log("Fragments: ", fragment, options);
+//        console.log("Fragments: ", fragment, options);
 
         var hash = "";
         try {

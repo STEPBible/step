@@ -209,13 +209,13 @@ var SearchDisplayView = Backbone.View.extend({
         termBase = termBase.replace(/[\(\)]*/g, "");
         termBase = termBase.replace(/ AND /g, " ");
         termBase = termBase.replace(/\+/g, " ");
-
         termBase = termBase.replace("+", "");
 
         var matches = termBase.match(/"[^"]*"/);
         if (matches) {
             for (var i = 0; i < matches.length; i++) {
-                terms.push(matches[i].substring(1, matches[i].length - 1));
+                
+                terms.push(this.cleanup(matches[i].substring(1, matches[i].length - 1)));
             }
         }
 
@@ -231,6 +231,24 @@ var SearchDisplayView = Backbone.View.extend({
             }
         }
         return terms;
+    },
+
+    /**
+     * Removes speed marks from beginning
+     * @param str the string
+     * @returns {*} the string, after removal of speech marks
+     */
+    cleanup : function(str) {
+        //remove leading/trailing speech marks
+        if(str.length > 0 && (str[0] == "'" || str[0] == '"')) {
+            str = str.substring(1);
+        }
+
+        if(str.length > 0 && (str[str.length - 1] == "'" || str[str.length - 1] == '"')) {
+            str = str.substring(0, str.length -1);
+        }
+
+        return str;
     },
 
     _notApplicableMessage: function (results, message) {

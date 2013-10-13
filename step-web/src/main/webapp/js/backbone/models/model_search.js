@@ -65,7 +65,6 @@ var SearchModel = Backbone.Model.extend({
             attributes.querySyntax = this.evaluateQuerySyntax(attributes);
         }
 
-        console.log("Saving search model", attributes);
         var saveReturn = Backbone.Model.prototype.save.call(this, attributes, options);
         this.trigger("resync", this.model);
         return saveReturn;

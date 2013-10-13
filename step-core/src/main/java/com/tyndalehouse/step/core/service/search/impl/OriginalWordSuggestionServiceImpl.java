@@ -61,14 +61,15 @@ public class OriginalWordSuggestionServiceImpl implements OriginalWordSuggestion
             return new ArrayList<LexiconSuggestion>();
         }
 
+        String searchableForm = form.toLowerCase();
         if (suggestionType == LexicalSuggestionType.MEANING) {
-            return getMeaningSuggestions(form);
+            return getMeaningSuggestions(searchableForm);
         }
 
         if (includeAllForms) {
-            return getMatchingAllForms(suggestionType, form);
+            return getMatchingAllForms(suggestionType, searchableForm);
         } else {
-            return getMatchingFormsFromLexicon(suggestionType, form);
+            return getMatchingFormsFromLexicon(suggestionType, searchableForm);
         }
     }
 

@@ -36,6 +36,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -68,6 +69,7 @@ import org.crosswire.jsword.passage.Verse;
  */
 public class AnalysisServiceImpl implements AnalysisService {
     public static final String OSIS_CHAPTER_STARTS_WITH = ".* ";
+    public static final Pattern CLEAN_UP_DIGITS = Pattern.compile("[0-9]+\\.?\\w?");
     private final Set<String> stopSubjects;
     private int maxWords;
     private final SubjectSearchService subjects;
@@ -155,19 +157,25 @@ public class AnalysisServiceImpl implements AnalysisService {
     private PassageStat getSubjectStats(final String version, final String reference, final ScopeType scopeType) {
         final SearchResult subjectResults = this.subjects.searchByReference(getReferenceSyntax(reference, version, scopeType));
         final PassageStat stat = new PassageStat();
+        
+        //we duplicate the set here because we'd like to keep the casing...
         final List<SearchEntry> results = subjectResults.getResults();
         for (final SearchEntry entry : results) {
             if (entry instanceof ExpandableSubjectHeadingEntry) {
                 final ExpandableSubjectHeadingEntry subjectEntry = (ExpandableSubjectHeadingEntry) entry;
 
-                final String root = subjectEntry.getRoot();
-                if (root != null && !stopSubjects.contains(root.toUpperCase())) {
-                    stat.addWord(root);
-                }
+                //we will first do the subheading because ideally we want that 'case' to be the master case,
+                //i.e. David rather than DAVID
                 final String subjectHeading = subjectEntry.getHeading();
                 if (subjectHeading != null && !stopSubjects.contains(subjectHeading.toUpperCase())) {
-                    stat.addWord(subjectHeading);
+                    stat.addWordTryCases(CLEAN_UP_DIGITS.matcher(subjectHeading).replaceAll(""));
                 }
+                
+                final String root = subjectEntry.getRoot();
+                if (root != null && !stopSubjects.contains(root.toUpperCase())) {
+                    stat.addWordTryCases(CLEAN_UP_DIGITS.matcher(subjectHeading).replaceAll(root));
+                }
+                
             }
         }
         return stat;

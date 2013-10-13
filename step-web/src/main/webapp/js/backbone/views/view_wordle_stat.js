@@ -2,6 +2,7 @@ var ViewLexiconWordle = Backbone.View.extend({
     events: {
     },
     minFont: 9,
+    minSubjectFont : 12,
     maxFont: 32,
     passageId: 0,
 
@@ -27,12 +28,7 @@ var ViewLexiconWordle = Backbone.View.extend({
         this.populateMenu(step.defaults.analysis.kind, this.wordType, true);
 
         this.sortCloud.button({ label: __s.stat_sort_off }).click(function () {
-            var button = $(this);
-            if (button.prop('checked')) {
-                button.button("option", "label", __s.stat_sort_on);
-            } else {
-                button.button("option", "label", __s.stat_sort_off);
-            }
+            self.sortCloudHandler();
             self.doStats();
         });
 
@@ -133,11 +129,24 @@ var ViewLexiconWordle = Backbone.View.extend({
         });
     },
 
+    /**
+     * Handles the sort button, but does not trigger a refresh - this is done in the caller method
+     */
+    sortCloudHandler : function() {
+        if (this.sortCloud.prop('checked')) {
+            this.sortCloud.button("option", "label", __s.stat_sort_on);
+        } else {
+            this.sortCloud.button("option", "label", __s.stat_sort_off);
+        }
+    },
+    
     animateWordleHandler : function () {
         this.isAnimating = !this.isAnimating;
         if (this.isAnimating) {
             this.previousSortValue = this.sortCloud.prop('checked');
-            this.sortCloud.prop("checked", true).button("refresh").button("disable");
+            this.sortCloud.prop("checked", true).button("disable");
+            this.sortCloudHandler();
+            this.sortCloud.button("refresh");
             
             this.previousScopeValue = this.wordScope.val();
             this.wordScope.val(step.defaults.analysis.scope[1]).prop("disabled", true);
@@ -145,6 +154,9 @@ var ViewLexiconWordle = Backbone.View.extend({
             this.doStats();
         } else {
             this.sortCloud.prop("checked", this.previousSortValue || false).button("enable");
+            this.sortCloudHandler();
+            this.sortCloud.button("refresh");
+            
             this.wordScope.val(this.previousScopeValue).prop("disabled", false);
             this.animateCloud.button("option", { icons: { primary: "ui-icon-play"}});
         }
@@ -299,7 +311,7 @@ var ViewLexiconWordle = Backbone.View.extend({
         var links = $("a", container);
         links.tagcloud({
             size: {
-                start: self.minFont,
+                start: statType == "SUBJECT" ? self.minSubjectFont : self.minFont,
                 end: self.maxFont,
                 unit: "px"
             },

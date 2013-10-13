@@ -199,4 +199,28 @@ public final class StringUtils {
         return words;
     }
 
+    /**
+     * @param input    the string input
+     * @param eachWord true to indicate each word should be put into title case
+     * @return the string capitalized
+     */
+    public static String toTitleCase(String input, boolean eachWord) {
+        StringBuilder titleCase = new StringBuilder();
+        boolean nextTitleCase = true;
+
+        for (char c : input.toCharArray()) {
+            if (Character.isSpaceChar(c) && eachWord) {
+                nextTitleCase = true;
+            } else if (nextTitleCase) {
+                c = Character.toTitleCase(c);
+                nextTitleCase = false;
+            } else {
+                c = Character.toLowerCase(c);
+            }
+
+            titleCase.append(c);
+        }
+
+        return titleCase.toString();
+    }
 }

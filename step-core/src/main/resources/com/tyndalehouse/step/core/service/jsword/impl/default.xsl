@@ -36,6 +36,7 @@
   xmlns:jsword="http://xml.apache.org/xalan/java"
   xmlns:interleaving="xalan://com.tyndalehouse.step.core.xsl.impl.InterleavingProviderImpl"
   xmlns:conversion="xalan://com.tyndalehouse.step.core.utils.StringConversionUtils"
+  xmlns:url="http://whatever/java/java.net.URLEncoder"
   extension-element-prefixes="jsword interleaving conversion">
 
   <!--  Version 3.0 is necessary to get br to work correctly. -->
@@ -516,9 +517,14 @@
 <xsl:if test="$Notes = 'true'">
       <!-- If there is a following sibling that is a note, emit a separator -->
       <xsl:variable name="siblings" select="../child::node()"/>
-      <xsl:variable name="next-position" select="position() + 1"/>
+    <xsl:variable name="next-position">
+        <xsl:choose>
+            <xsl:when test="normalize-space(./following-sibling::node()) = ','"><xsl:value-of select="position() + 2" /></xsl:when>
+            <xsl:otherwise><xsl:value-of select="position() + 1" /></xsl:otherwise>
+        </xsl:choose> 
+      </xsl:variable>
       <xsl:choose>
-        <xsl:when test="name($siblings[$next-position]) = 'note'">
+        <xsl:when test="name($siblings[number($next-position)]) = 'note'">
         	<xsl:choose>
         		<xsl:when test="@type = 'crossReference'">
 		           <sup class="note"><a href="javascript:void(0)" noteType='{@type}' xref="{@osisID}" ref="{@osisRef}"><xsl:call-template name="generateNoteXref"/></a>, </sup>
@@ -536,7 +542,7 @@
         <xsl:otherwise>
         	<xsl:choose>
         		<xsl:when test="@type = 'crossReference'">
-		           <sup class="note"><a href="javascript:void(0)" noteType='{@type}' xref="{@osisID}" ref="{@osisRef}"><xsl:call-template name="generateNoteXref"/></a>&amp;nbsp;</sup>
+                    <sup class="note"><a href="javascript:void(0)" noteType='{@type}' xref="{@osisID}" ref="{@osisRef}"><xsl:call-template name="generateNoteXref"/></a>&amp;nbsp;</sup>
         		</xsl:when>
         		<xsl:otherwise>
 					 <sup class="note">
@@ -926,7 +932,7 @@
   <!--=======================================================================-->
   <xsl:template match="reference">
         <xsl:variable name="passage" select="jsword:getValidKey($keyf, $versification, @osisRef)"/>
-        <xsl:variable name="passageKey" select="jsword:getName($passage)"/>
+        <xsl:variable name="passageKey" select="url:encode(jsword:getName($passage))"/>
         <a href="?version={$baseVersion}&amp;reference={$passageKey}" title="{$passageKey}" class="linkRef" xref="{$passageKey}"><xsl:apply-templates/></a>
   </xsl:template>
   
@@ -1710,11 +1716,19 @@
   <xsl:value-of select="translate(., 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ')"/>
   </xsl:template>
 
-  <!--
-    The direction is deduced from the xml:lang attribute and is assumed to be meaningful for those elements.
-    Note: there is a bug that prevents dir=rtl from working.
-    see: http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4296022 and 4866977
-  -->
+    <xsl:template match="text()">
+        <xsl:choose>
+            <xsl:when test="name(./preceding-sibling::node()) and name(./following-sibling::node()) = 'note' and normalize-space(.) = ','"></xsl:when>
+            <xsl:otherwise><xsl:value-of select="." /></xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+
+
+    <!--
+      The direction is deduced from the xml:lang attribute and is assumed to be meaningful for those elements.
+      Note: there is a bug that prevents dir=rtl from working.
+      see: http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4296022 and 4866977
+    -->
   <xsl:template name="getDirection">
     <xsl:param name="lang"/>
     <xsl:choose>

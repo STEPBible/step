@@ -145,6 +145,17 @@ public class ModuleController {
         return i;
     }
 
+
+    /**
+     * a method that returns all the definitions for a particular key
+     *
+     * @param vocabIdentifiers the strong number
+     * @return the definition(s) that can be resolved from the reference provided
+     */
+    public Info getQuickInfo(final String vocabIdentifiers) {
+        return getQuickInfo(vocabIdentifiers, null);
+    }
+    
     /**
      * a method that returns all the definitions for a particular key
      * 

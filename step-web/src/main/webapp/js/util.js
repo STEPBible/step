@@ -475,7 +475,6 @@ step.util = {
                             morph: $(hoverContext).attr('morph'),
                             element: hoverContext
                         });
-
                     }, 500, 'show-quick-lexicon');
                 }, function () {
                     step.passage.removeStrongsHighlights(undefined, "primaryLightBg relatedWordEmphasisHover");
@@ -908,7 +907,7 @@ function refreshWaitStatus() {
          * @param the
          *            userFunction to call on success of the query
          */
-        getSafe: function (url, args, userFunction, passageId, level) {
+        getSafe: function (url, args, userFunction, passageId, level, errorHandler) {
 
             //args is optional, so we test whether it is a function
             if ($.isFunction(args)) {
@@ -946,6 +945,9 @@ function refreshWaitStatus() {
 
 //			    console.log("Received url ", url, " ", data);
                 if (data && data.errorMessage) {
+                    if(errorHandler) {
+                        errorHandler();
+                    }
                     // handle an error message here
                     if (data.operation) {
                         // so we now have an operation to perform before we

@@ -260,14 +260,15 @@ var SearchCriteria = Backbone.View.extend({
         }, 500);
     },
 
-
     showHideCriteria: function () {
+        var self = this;
         $(".showSearchCriteria", this.$el).button({ text: false, icons: { primary: "ui-icon-circle-triangle-s" }})
             .click(function () {
                 $(this).parent().find(".hideSearchCriteria").show();
                 $(this).hide();
                 $(this).closest(".searchToolbar").closest("fieldset").children().not(".searchToolbar").show();
                 refreshLayout();
+                self.detailLevel.detailSlider("refresh");
             }).hide();
 
 

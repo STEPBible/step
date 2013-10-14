@@ -37,11 +37,11 @@
 	<li menu-name="VIEW"><a href="javascript:void(0)"><fmt:message key="view" /></a>
 	<ul>
 		<li class="menuSectionStart">
-            <fmt:message key="download_desktop_step" />
+            <a href="javascript:void(0)"><fmt:message key="download_desktop_step" /></a>
             <ul>
-                <li><a href="javascript:void(0)"><fmt:message key="view" /></a></li>
-                <li><a href="javascript:void(0)"><fmt:message key="view" /></a></li>
-                <li><a href="javascript:void(0)"><fmt:message key="view" /></a></li>
+                <li><a href="javascript:void(0)" name="DOWNLOAD_WINDOWS"><fmt:message key="download_windows_edition" /></a></li>
+                <li><a href="javascript:void(0)" name="DOWNLOAD_MAC"><fmt:message key="download_macos" /></a></li>
+                <li><a href="javascript:void(0)" name="DOWNLOAD_MAC_NO_JAVA"><fmt:message key="download_macos_no_java" /></a></li>
             </ul>
             
         <li><a href="javascript:void(0)" name="SINGLE_COLUMN_VIEW" ><fmt:message key="view_single_column" /></a></li>

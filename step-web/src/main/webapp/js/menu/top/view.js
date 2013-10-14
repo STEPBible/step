@@ -58,6 +58,12 @@ $(step.menu).hear("MENU-VIEW", function(self, menuTrigger) {
 
         model0.save({ version: version1, reference : reference1});
         model1.save({ version: version0, reference : reference0});
+    } else if(menuTrigger.menuItem.name == "DOWNLOAD_WINDOWS") {
+        step.menu.options.downloadApp("windows");
+    } else if(menuTrigger.menuItem.name == "DOWNLOAD_MAC") {
+        step.menu.options.downloadApp("windows");
+    } else if(menuTrigger.menuItem.name == "DOWNLOAD_MAC_NO_JAVA") {
+        step.menu.options.downloadApp("windows");
     }
 });
 
@@ -117,7 +123,22 @@ step.menu.options = {
                 stepRouter.firstSync = true;
                 PassageModels.at(0).save({ synced : 1 });
             }
+        },
+        downloadApp : function(downloadType) {
+            step.util.trackAnalytics('download', downloadType);
+
+            //STEP_SERVER_VERSION_TOKEN is defined in the POM file
+            var version = "STEP_SERVER_VERSION_TOKEN".replace(/\./g, "_");
+            var url = "http://www.stepbible.org/downloads/STEP_" + downloadType + "_" + version;
+            if(downloadType == 'windows') {
+                url += ".exe";
+            } else {
+                url += ".dmg";
+            }
+            
+            $("body").append($("<iframe></iframe>").attr("src", url));
         }
+    
 };
 
 $(step.menu).hear("MENU-SYNC", function(self, menuTrigger) {

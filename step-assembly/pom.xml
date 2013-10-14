@@ -55,28 +55,7 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>com.google.code.maven-replacer-plugin</groupId>
-                <artifactId>replacer</artifactId>
-                <version>1.5.2</version>
-                <executions>
-                    <execution>
-                        <phase>prepare-package</phase>
-                        <goals>
-                            <goal>replace</goal>
-                        </goals>                   
-                    </execution>
-                </executions>
-                <configuration>
-                    <file>${project.basedir}/src/main/assembly/step.install4j</file>
-                    <replacements>
-                        <replacement>
-                            <token>&lt;version&gt;&quot;STEP_VERSION&quot;&lt;/version&gt;</token>
-                            <value>${project.version}</value>
-                        </replacement>         
-                    </replacements>
-                </configuration>
-            </plugin>
+            
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
                 <executions>

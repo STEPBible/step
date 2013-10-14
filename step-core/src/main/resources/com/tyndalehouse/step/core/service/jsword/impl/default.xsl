@@ -514,10 +514,11 @@
   <xsl:template match="note[@type = 'x-strongsMarkup']" mode="print-notes"/>
 
   <xsl:template match="note">
-<xsl:if test="$Notes = 'true'">
+      <xsl:text> </xsl:text>
+    <xsl:if test="$Notes = 'true'">
       <!-- If there is a following sibling that is a note, emit a separator -->
       <xsl:variable name="siblings" select="../child::node()"/>
-    <xsl:variable name="next-position">
+      <xsl:variable name="next-position">
         <xsl:choose>
             <xsl:when test="normalize-space(./following-sibling::node()) = ','"><xsl:value-of select="position() + 2" /></xsl:when>
             <xsl:otherwise><xsl:value-of select="position() + 1" /></xsl:otherwise>
@@ -562,7 +563,12 @@
     <xsl:if test="$Notes = 'true'">
       <!-- If there is a following sibling that is a note, emit a separator -->
       <xsl:variable name="siblings" select="../child::node()"/>
-      <xsl:variable name="next-position" select="position() + 1"/>
+      <xsl:variable name="next-position">
+        <xsl:choose>
+            <xsl:when test="normalize-space(./following-sibling::node()) = ','"><xsl:value-of select="position() + 2" /></xsl:when>
+            <xsl:otherwise><xsl:value-of select="position() + 1" /></xsl:otherwise>
+        </xsl:choose>
+      </xsl:variable>
       <xsl:choose>
         <xsl:when test="name($siblings[$next-position]) = 'note'">
         	<xsl:choose>

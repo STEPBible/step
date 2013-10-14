@@ -39,7 +39,7 @@ public class OsisReader {
      */
     public static void main(final String[] args) throws Exception {
         final String version = "ESV";
-        final String ref = "Mat.27.1-2";
+        final String ref = "Gen.3.15-17";
         boolean format = false;
 
         final Book currentBook = Books.installed().getBook(version);
@@ -57,7 +57,7 @@ public class OsisReader {
         final List<LookupOption> options = new ArrayList<LookupOption>();
 
 //        options.add(LookupOption.DIVIDE_HEBREW);
-//        options.add(LookupOption.NOTES);
+        options.add(LookupOption.NOTES);
 
         final String osisText = jsi.getOsisText(version, ref, options, "ESV", InterlinearMode.NONE).getValue();
         final SAXBuilder sb = new SAXBuilder();

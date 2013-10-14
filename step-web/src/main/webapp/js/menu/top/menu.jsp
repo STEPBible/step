@@ -36,7 +36,15 @@
 <ul>
 	<li menu-name="VIEW"><a href="javascript:void(0)"><fmt:message key="view" /></a>
 	<ul>
-		<li><a href="javascript:void(0)" name="SINGLE_COLUMN_VIEW" ><fmt:message key="view_single_column" /></a></li>
+		<li class="menuSectionStart">
+            <fmt:message key="download_desktop_step" />
+            <ul>
+                <li><a href="javascript:void(0)"><fmt:message key="view" /></a></li>
+                <li><a href="javascript:void(0)"><fmt:message key="view" /></a></li>
+                <li><a href="javascript:void(0)"><fmt:message key="view" /></a></li>
+            </ul>
+            
+        <li><a href="javascript:void(0)" name="SINGLE_COLUMN_VIEW" ><fmt:message key="view_single_column" /></a></li>
 		<li><a href="javascript:void(0)" name="TWO_COLUMN_VIEW" ><fmt:message key="view_two_columns" /></a></li>
 
 		<li menu-name="SYNC" class="menuSectionStart"><a href="javascript:void(0)"><fmt:message key="view_both_passages_sync" /></a>

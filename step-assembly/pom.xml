@@ -65,7 +65,7 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>/opt/bitnami/apache2/htdocs/downloads/</outputDirectory>
+                            <outputDirectory>/opt/bitnami/apache2/htdocs/downloads/nightly</outputDirectory>
                             <resources>
                                 <resource>
                                     <directory>${project.build.directory}/media</directory>

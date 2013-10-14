@@ -37,7 +37,7 @@
         <packages>${project.build.outputDirectory}</packages>
         <sword.home>c:\Users\Chris\AppData\Roaming\Sword</sword.home>
         <explodedPackages>${project.build.directory}/explodedPackages</explodedPackages>
-        <modulesToInclude>esv,osmhb,whnu,lxx,sblgnt</modulesToInclude>
+        <modulesToInclude>esv,kjv,osmhb,whnu,lxx,sblgnt</modulesToInclude>
     </properties>
 
 

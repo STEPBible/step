@@ -67,11 +67,6 @@
     <% } else { %>
         <script src="international/interactive.js?lang=<%= request.getParameter("lang") %>" type="text/javascript"></script>
     <% } %>
-
-
-
-
-
     <%@include file="jsps/initLib.jsp" %>
 
     <%-- Now do javascript --%>

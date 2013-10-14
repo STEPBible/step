@@ -211,6 +211,10 @@ step.config = {
     },
     
     sortBy : function(field) {
+        $("#sortLinks a").removeClass("selected");
+        $("#" + field + "Sort").addClass('selected');
+
+
         var comparator = function(a, b) { return $.data(a, "item")[field] < $.data(b, "item")[field] ? -1 : 1; };
         $("#rightColumn .version").sortElements(comparator);
         $("#leftColumn .version").sortElements(comparator);
@@ -220,13 +224,24 @@ step.config = {
     },
     
     filterBy : function(field) {
+        if(field) {
+            $("#filterLinks a").removeClass("selected");
+            $("#" + field + "Filter").addClass('selected');
+        } else {
+            field = $("#filterLinks a.selected").attr("filterType");
+        }
+        
+        
         var value = $("#filterValue").val();
-        var lc = $("#leftColumn .version:contains(" + value +")").css('display', 'block');
-        var rc = $("#rightColumn .version:contains(" + value +")").css('display', 'block');
-        $(".version").not(lc).not(rc).css('display', "none");
+        $(".version").hide();
+        var lc = $("#leftColumn ." + field + ":contains(\"" + value +"\")").closest(".version").show();
+        var rc = $("#rightColumn ." + field + ":contains(\"" + value +"\")").closest(".version").show();
     }
 }
 
 $(document).ready(function() {
     step.config.init();
+    $("#filterValue").keyup(function() {
+        step.config.filterBy();
+    });
 });

@@ -27,5 +27,6 @@ public class NaveAnalyzer extends PerFieldAnalyzerWrapper {
         addAnalyzer("fullHeaderAnalyzed", portStemmerAnalyzer);
         addAnalyzer("rootStem", portStemmerAnalyzer);
         addAnalyzer("expandedReferences", new ReferenceAnalyzer());
+        addAnalyzer("fullTerm", new WhitespaceAnalyzer());
     }
 }

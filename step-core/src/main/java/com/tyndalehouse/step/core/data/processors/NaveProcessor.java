@@ -68,13 +68,15 @@ public class NaveProcessor implements PostProcessor {
 
     @Override
     public void process(final EntityConfiguration config, final Document doc) {
-        doc.add(config.getField("root", stripAlternatives(doc.get("rootStem"))));
+        final String rootStem = doc.get("rootStem");
         final String fullHeaderAnalyzed = doc.get("fullHeaderAnalyzed");
+        
+        doc.add(config.getField("root", stripAlternatives(rootStem)));
         if (fullHeaderAnalyzed != null) {
             doc.add(config.getField("fullHeader", stripAlternatives(fullHeaderAnalyzed)));
         }
         doc.add(config.getField("expandedReferences", expandRefs(doc.get("references"))));
-
+        doc.add(config.getField("fullTerm", rootStem + " " + fullHeaderAnalyzed));
     }
 
     /**

@@ -96,7 +96,7 @@ public class SubjectSearchServiceImpl implements SubjectSearchService {
         int lastWordStart = trimmedUserEntry.indexOf(' ');
         String searchTerm = lastWordStart != -1 ? trimmedUserEntry.substring(lastWordStart + 1) : trimmedUserEntry;
 
-        Set<String> naveTerms = this.naves.findSetOfTermsStartingWith(QueryParser.escape(searchTerm), "root", "fullHeaderAnalyzed");
+        Set<String> naveTerms = this.naves.findSetOfTermsStartingWith(QueryParser.escape(searchTerm), "fullTerm");
         naveTerms.addAll(LuceneUtils.getAllTermsPrefixedWith(this.jswordSearch.getIndexSearcher(JSwordPassageService.REFERENCE_BOOK),
                 LuceneIndex.FIELD_HEADING,
                 searchTerm));

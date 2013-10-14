@@ -237,7 +237,6 @@ function checkValidUser() {
         buttons: {
             "Cancel": function () {
                 //remind in 3 months
-                $.localStore("firstDate", new Date().toUTCString());
                 $("#validUser").dialog("close");
             },
             "Register": function () {
@@ -248,6 +247,9 @@ function checkValidUser() {
         closeOnEscape: true,
         title: __s.register_to_use_step
     });
+    
+    //set the reminder today
+    $.localStore("firstDate", new Date().toUTCString());
 }
 
 

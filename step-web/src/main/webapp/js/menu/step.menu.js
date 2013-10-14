@@ -54,7 +54,7 @@ step.menu = {
             return false;
         }
 
-        $(selectedItem).not(":has(img)").append("<img class='selectingTick' src='images/selected.png' />");
+        $(selectedItem).not(":has(img)").append("<img class='selectingTick' src='images/selected.png' width='17' height='16' />");
         return true;
     },
 

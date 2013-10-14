@@ -926,12 +926,13 @@ function refreshWaitStatus() {
                 }
             }
 
-            //introduce some caching...
-            
-            
             outstandingRequests++;
             refreshWaitStatus();
-            $.get(url, function (data, textStatus, jqXHR) {
+            
+            var lang = step.state.language();
+            var langParam = step.util.isBlank(lang) ? "" : "?lang=" + lang;
+            
+            $.get(url + langParam, function (data, textStatus, jqXHR) {
                 if (step.state.responseLanguage == undefined) {
                     //set the language
                     var lang = jqXHR.getResponseHeader("step-language");

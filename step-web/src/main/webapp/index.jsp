@@ -299,7 +299,7 @@
 <!--  The about popup -->
 
 <div id="about" style="text-align: center;">
-	<img id="aboutLogo" src="images/step-logo.png" />
+	<img id="aboutLogo" src="images/step-logo.png" width="88" height="56" />
 	<h3 id="aboutTitle">STEP :: Scripture Tools for Every Person<br /></h3>
     <p><a style="color: #33339F" href='https://stepweb.atlassian.net/wiki/x/C4C_/' target="_new"><fmt:message key="copyright_info_link" /></a>
 	<br/>

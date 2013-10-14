@@ -290,9 +290,9 @@
     <!-- If the verse doesn't start on its own line and -->
     <!-- the verse is not the first verse of a set of siblings, -->
     <!-- output an extra space. -->
-    <xsl:if test="$VLine = 'false' and preceding-sibling::*[local-name() = 'verse']">
-      <xsl:text>&#160;</xsl:text>
-    </xsl:if>
+    <!--<xsl:if test="$VLine = 'false' and preceding-sibling::*[local-name() = 'verse']">-->
+      <!--<xsl:text>&#160;</xsl:text>-->
+    <!--</xsl:if>-->
     
     <!--  set up the direction variable -->
     <xsl:variable name="cell-direction">

@@ -216,7 +216,7 @@ var PassageDisplayView = Backbone.View.extend({
                 }
             }
         },
- 
+
         /**
          * Checks that the content returned by the server has stuff in it...
          * @param passageHtml
@@ -320,43 +320,47 @@ var PassageDisplayView = Backbone.View.extend({
          */
         _makeSideNoteQtip: function (item, xref, myPosition, atPosition, version) {
             item.mouseover(function () {
-                item.qtip({
-                    position: { my: "top " + myPosition, at: "top " + atPosition, viewport: $(window) },
-                    style: { tip: false, classes: 'draggable-tooltip', width: { min: 800, max: 800} },
-                    show: { event: 'click' }, hide: { event: 'click' },
-                    content: {
-                        text: function (event, api) {
-                            $.getSafe(BIBLE_GET_BIBLE_TEXT + version + "/" + encodeURIComponent(xref), function (data) {
-                                api.set('content.title.text', data.longName);
-                                api.set('content.text', data.value);
-                            });
-                        },
-                        title: { text: xref, button: false }
-                    },
-                    events: {
-                        render: function (event, api) {
-                            $(this).draggable({
-                                containment: 'window',
-                                handle: api.elements.titlebar
-                            });
-
-                            $(api.elements.titlebar).css("padding-right", "0px");
-
-                            $(api.elements.titlebar).prepend(goToPassageArrowButton(true, version, xref, "leftPassagePreview"));
-                            $(api.elements.titlebar).prepend(goToPassageArrowButton(false, version, xref, "rightPassagePreview"));
-                            $(api.elements.titlebar).prepend($("<a>&nbsp;</a>").button({ icons: { primary: "ui-icon-close" }}).addClass("closePassagePreview").click(function () {
-                                api.hide();
-                            }));
-
-                            $(".leftPassagePreview, .rightPassagePreview", api.elements.titlebar)
-                                .first().button({ icons: { primary: "ui-icon-arrowthick-1-e" }})
-                                .next().button({ icons: { primary: "ui-icon-arrowthick-1-w" }}).end()
-                                .click(function () {
-                                    api.hide();
+                if(!$.data(item, "initialised")) {
+                    item.qtip({
+                        position: { my: "top " + myPosition, at: "top " + atPosition, viewport: $(window) },
+                        style: { tip: false, classes: 'draggable-tooltip', width: { min: 800, max: 800} },
+                        show: { event: 'click' }, hide: { event: 'click' },
+                        content: {
+                            text: function (event, api) {
+                                $.getSafe(BIBLE_GET_BIBLE_TEXT + version + "/" + encodeURIComponent(xref), function (data) {
+                                    api.set('content.title.text', data.longName);
+                                    api.set('content.text', data.value);
                                 });
+                            },
+                            title: { text: xref, button: false }
+                        },
+                        events: {
+                            render: function (event, api) {
+                                $(this).draggable({
+                                    containment: 'window',
+                                    handle: api.elements.titlebar
+                                });
+    
+                                $(api.elements.titlebar).css("padding-right", "0px");
+    
+                                $(api.elements.titlebar).prepend(goToPassageArrowButton(true, version, xref, "leftPassagePreview"));
+                                $(api.elements.titlebar).prepend(goToPassageArrowButton(false, version, xref, "rightPassagePreview"));
+                                $(api.elements.titlebar).prepend($("<a>&nbsp;</a>").button({ icons: { primary: "ui-icon-close" }}).addClass("closePassagePreview").click(function () {
+                                    api.hide();
+                                }));
+    
+                                $(".leftPassagePreview, .rightPassagePreview", api.elements.titlebar)
+                                    .first().button({ icons: { primary: "ui-icon-arrowthick-1-e" }})
+                                    .next().button({ icons: { primary: "ui-icon-arrowthick-1-w" }}).end()
+                                    .click(function () {
+                                        api.hide();
+                                    });
+                            }
                         }
-                    }
-                });
+                    });
+                    //set to initialized
+                    $.data(item, "initialised", true);
+                }
             });
         },
 
@@ -389,7 +393,7 @@ var PassageDisplayView = Backbone.View.extend({
                 }).closest(".margin").removeClass("ui-state-highlight");
             });
         },
-        
+
         /**
          * Enhances verse numbers with their counts and related subjects popup
          * @param passageId

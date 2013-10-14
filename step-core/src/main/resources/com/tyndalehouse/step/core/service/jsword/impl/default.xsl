@@ -932,14 +932,16 @@
   <!--=======================================================================-->
   <xsl:template match="reference">
         <xsl:variable name="passage" select="jsword:getValidKey($keyf, $versification, @osisRef)"/>
-        <xsl:variable name="passageKey" select="url:encode(jsword:getName($passage))"/>
-        <a href="?version={$baseVersion}&amp;reference={$passageKey}" title="{$passageKey}" class="linkRef" xref="{$passageKey}"><xsl:apply-templates/></a>
+        <xsl:variable name="passageKey" select="jsword:getName($passage)" />  
+        <xsl:variable name="encodedPassageKey" select="url:encode($passageKey)"/>
+        <a href="?version={$baseVersion}&amp;reference={$encodedPassageKey}" title="{$passageKey}" class="linkRef" xref="{$passageKey}"><xsl:apply-templates/></a>
   </xsl:template>
   
   <xsl:template match="reference" mode="jesus">
         <xsl:variable name="passage" select="jsword:getValidKey($keyf, $versification, @osisRef)"/>
-        <xsl:variable name="passageKey" select="jsword:getName($passage)"/>
-        <a href="?version={$baseVersion}&amp;reference={$passageKey}" title="{$passageKey}" xref="{$passageKey}" onclick="javascript:showPreviewOptions();"><xsl:apply-templates/></a>
+      <xsl:variable name="passageKey" select="jsword:getName($passage)" />
+      <xsl:variable name="encodedPassageKey" select="url:encode($passageKey)"/>
+        <a href="?version={$baseVersion}&amp;reference={$encodedPassageKey}" title="{$passageKey}" xref="{$passageKey}" onclick="javascript:showPreviewOptions();"><xsl:apply-templates/></a>
   </xsl:template>
   
   <!--=======================================================================-->

@@ -71,8 +71,14 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
      * @param options the set of options
      */
     private void addAncientOptions(final Book book, final List<LookupOption> options) {
-        if(JSwordUtils.isAncientBook(book)) {
+        boolean isGreek = JSwordUtils.isAncientGreekBook(book);
+        boolean isHebrew = JSwordUtils.isAncientHebrewBook(book);
+        
+        if(isGreek || isHebrew) {
             options.add(LookupOption.REMOVE_POINTING);
+        }
+        
+        if(isHebrew) { 
             options.add(LookupOption.REMOVE_HEBREW_VOWELS);
         }
     }

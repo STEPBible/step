@@ -1,11 +1,11 @@
 /*******************************************************************************
  * Copyright (c) 2012, Directors of the Tyndale STEP Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without 
  * modification, are permitted provided that the following conditions 
  * are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright 
  * notice, this list of conditions and the following disclaimer.
  * Redistributions in binary form must reproduce the above copyright 
@@ -16,7 +16,7 @@
  * nor the names of its contributors may be used to endorse or promote 
  * products derived from this software without specific prior written 
  * permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
@@ -39,25 +39,25 @@ import com.tyndalehouse.step.core.models.LookupOption;
 
 /**
  * The service providing access to JSword. All JSword calls should preferably be placed in this service
- * 
+ *
  * @author chrisburrell
- * 
  */
 public interface JSwordMetadataService {
     /**
      * Gets the features for a module
-     * 
+     *
      * @param version the initials of the book to look up
+     * @param extraVersions  the secondary versions that affect feature resolution 
+
      * @return the list of supported features
      */
-    List<LookupOption> getFeatures(String version);
+    List<LookupOption> getFeatures(String version, List<String> extraVersions);
 
     /**
      * returns a list of matching names or references in a particular book
-     * 
+     *
      * @param bookStart the name of the matching key to look across book names
-     * @param version the name of the version, defaults to ESV if not found
-     * 
+     * @param version   the name of the version, defaults to ESV if not found
      * @return a list of matching bible book names
      */
     List<BookName> getBibleBookNames(String bookStart, String version);
@@ -70,6 +70,7 @@ public interface JSwordMetadataService {
 
     /**
      * Returns the languages for a set of versions
+     *
      * @param versions
      * @return
      */

@@ -1061,7 +1061,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
                     // set parameters here
                     setOptions(tsep, options, bookData.getFirstBook());
                     setInterlinearOptions(tsep, masterVersification, getInterlinearVersion(interlinearVersion), bookData.getKey()
-                            .getOsisID(), displayMode, bookData.getKey());
+                            .getOsisID(), displayMode, bookData.getKey(), options);
                     setInterleavingOptions(tsep, displayMode, bookData);
                     return tsep;
                 } catch (final URISyntaxException e) {
@@ -1121,9 +1121,14 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
      * @param reference           the reference the user is interested in
      * @param displayMode         the mode to display the passage, i.e. interlinear, interleaved, etc.
      * @param key                 the key to the passage
+     * @param options             the list of options to be applied (used to determine accenting
      */
-    private void setInterlinearOptions(final TransformingSAXEventProvider tsep, final Versification masterVersification,
-                                       final String interlinearVersion, final String reference, final InterlinearMode displayMode, final Key key) {
+    private void setInterlinearOptions(final TransformingSAXEventProvider tsep,
+                                       final Versification masterVersification,
+                                       final String interlinearVersion,
+                                       final String reference,
+                                       final InterlinearMode displayMode,
+                                       final Key key, final List<LookupOption> options) {
         if (displayMode == InterlinearMode.INTERLINEAR) {
             tsep.setParameter("VLine", false);
 
@@ -1142,8 +1147,17 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
                 tsep.setParameter("interlinearVersion", interlinearVersion);
             }
 
+            boolean stripAccents, stripVowels = stripAccents = false;
+            for(LookupOption option : options) {
+                if(LookupOption.REMOVE_POINTING == option) {
+                    stripAccents = true;
+                } else if(LookupOption.REMOVE_HEBREW_VOWELS == option) {
+                    stripVowels = true;
+                }
+            }
+            
             final MultiInterlinearProviderImpl multiInterlinear = new MultiInterlinearProviderImpl(masterVersification,
-                    interlinearVersion, reference, this.versificationService, this.vocabProvider);
+                    interlinearVersion, reference, this.versificationService, this.vocabProvider, stripAccents, stripVowels);
             tsep.setParameter("interlinearProvider", multiInterlinear);
         }
     }

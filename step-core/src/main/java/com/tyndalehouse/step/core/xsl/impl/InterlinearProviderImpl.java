@@ -50,6 +50,8 @@ import java.util.Map;
 import java.util.Set;
 
 import com.tyndalehouse.step.core.service.VocabularyService;
+import com.tyndalehouse.step.core.utils.JSwordUtils;
+import com.tyndalehouse.step.core.utils.StringConversionUtils;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.BookData;
 import org.crosswire.jsword.book.BookException;
@@ -99,25 +101,14 @@ public class InterlinearProviderImpl implements InterlinearProvider {
     private Versification versification;
     // a temporary, non-thread-safe, transient, working variable, which keeps track of the verse we're in.
     private Verse currentVerse;
-    /**
-     * The current book.
-     */
     private Book currentBook;
-
-    /**
-     * The hebrew direct mapping.
-     */
     private Map<String, String> hebrewDirectMapping;
-
-    /**
-     * The hebrew indirect mappings.
-     */
     private Map<String, String> hebrewIndirectMappings;
-
-    /**
-     * The testament.
-     */
     private Testament testament;
+    private Versification masterVersification;
+    private VocabularyService vocabProvider;
+    private boolean stripAccents = false;
+    private boolean stripVowels = false;
 
     static {
         VALID_TEXT_ELEMENTS.add("divinename");
@@ -131,9 +122,6 @@ public class InterlinearProviderImpl implements InterlinearProvider {
         VALID_TEXT_ELEMENTS.add("transChange");
     }
 
-    private Versification masterVersification;
-    private VocabularyService vocabProvider;
-
     /**
      * sets up the interlinear provider with the correct version and text scope.
      *
@@ -145,7 +133,8 @@ public class InterlinearProviderImpl implements InterlinearProvider {
      */
     public InterlinearProviderImpl(Versification masterVersification, JSwordVersificationService versificationService,
                                    final String version, final Key versifiedKey, final Map<String, String> hebrewDirectMapping,
-                                   final Map<String, String> hebrewIndirectMappings, final VocabularyService vocabProvider) {
+                                   final Map<String, String> hebrewIndirectMappings, final VocabularyService vocabProvider,
+                                   boolean stripAccents, boolean stripVowels) {
         this.masterVersification = masterVersification;
         this.vocabProvider = vocabProvider;
 
@@ -164,7 +153,9 @@ public class InterlinearProviderImpl implements InterlinearProvider {
         }
 
         //mark the book as original language
-        this.originalLanguage = "grc".equals(currentBook.getLanguage().getCode()) || "he".equals(currentBook.getLanguage().getCode());
+        this.originalLanguage = JSwordUtils.isAncientBook(currentBook);
+        this.stripAccents = this.originalLanguage && stripAccents;
+        this.stripVowels = this.originalLanguage && stripVowels;
 
         BookData bookData;
         try {
@@ -205,7 +196,7 @@ public class InterlinearProviderImpl implements InterlinearProvider {
         //create the versified key, and convert to the bit we want
         final Key key;
         try {
-            if(verseNumber == null) {
+            if (verseNumber == null) {
                 throw new NoSuchVerseException("Unable to convert verse number to target versification: " + verseNumber);
             }
             final Verse inputVerse = VerseFactory.fromString(this.masterVersification, verseNumber);
@@ -248,7 +239,16 @@ public class InterlinearProviderImpl implements InterlinearProvider {
             sb.append(' ');
             sb.append(iterator.next());
         }
-        return sb.toString();
+        
+        String actualText =  sb.toString();
+        
+        if(stripVowels) {
+            return StringConversionUtils.unAccent(actualText);
+        } else if(stripAccents) {
+            return StringConversionUtils.unAccentLeavingVowels(actualText);
+        } else {
+            return actualText;
+        }
     }
 
     /**
@@ -345,7 +345,7 @@ public class InterlinearProviderImpl implements InterlinearProvider {
     /**
      * setups all the initial textual information for fast retrieval during XSL transformation.
      *
-     * @param element      element to start with.
+     * @param element element to start with.
      */
     @SuppressWarnings("unchecked")
     private void scanForTextualInformation(final Element element) {
@@ -391,7 +391,7 @@ public class InterlinearProviderImpl implements InterlinearProvider {
     /**
      * retrieves textual information and adds it to the provider.
      *
-     * @param element        the element to extract information from
+     * @param element the element to extract information from
      */
     private void extractTextualInfoFromNode(final Element element) {
         final String strong = element.getAttributeValue(OSISUtil.ATTRIBUTE_W_LEMMA);
@@ -482,7 +482,7 @@ public class InterlinearProviderImpl implements InterlinearProvider {
      *
      * @param currentStrong a strong number
      * @return true, if is a single H followed by only 0s, which indicates that the strong numbers go with
-     *         their next occurrence
+     * their next occurrence
      */
     private boolean isH00(final String currentStrong) {
         for (int ii = 0; ii < currentStrong.length(); ii++) {
@@ -500,7 +500,7 @@ public class InterlinearProviderImpl implements InterlinearProvider {
      * So, how do we store this? The most meaningful piece of data is a STRONG number, since it identifies the
      * word that we want to retrieve. Without the strong number, we don't have any information at all.
      * Therefore, the first level of lookup should be by Strong number.
-     * <p />
+     * <p/>
      * Made package private for testing purposes only.
      *
      * @param verseReference the verse reference that specifies locality (least important factor)

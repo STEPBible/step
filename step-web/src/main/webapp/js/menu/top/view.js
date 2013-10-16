@@ -37,7 +37,6 @@ $(step.menu).hear("MENU-VIEW", function(self, menuTrigger) {
         if(optionName == 'SINGLE_COLUMN_VIEW') {
             var previousSelection =  MenuModels.at(1).get("selectedSearch");
             MenuModels.at(1).save({ selectedSearch: 'SINGLE_COLUMN', previousSelection : previousSelection });
-//            MenuModels.at(1).trigger("change", MenuModels.at(1))
         } else {
             var previousSelection =  MenuModels.at(1).get("selectedSearch") || "SEARCH_PASSAGE";
             if(previousSelection == "SINGLE_COLUMN") {

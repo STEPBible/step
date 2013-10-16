@@ -136,10 +136,8 @@ public final class HebrewUtils {
             final char currentChar = sb.charAt(i);
             //ignore characters outside of the Hebrew character set
             if(currentChar < ETNAHTA || currentChar > ALEPH_LAMED) {
-                continue;
-            }
-            
-            if (currentChar < endChar) {
+                i++;
+            } else if (currentChar < endChar) {
                 sb.deleteCharAt(i);
             } else if (currentChar > TAV && currentChar < ALEPH_LAMED) {
                 sb.setCharAt(i, (char) (currentChar - DAGESH_GAP));

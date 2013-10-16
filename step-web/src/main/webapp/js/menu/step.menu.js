@@ -180,6 +180,11 @@ step.menu = {
         };
     },
 
+    /**
+     * @param optionName the option name
+     * @param passageId the passage id
+     * @returns {*|jQuery|HTMLElement}
+     */
     getMenuItem : function(optionName, passageId) {
         if (passageId != undefined) {
             return $(".passageContainer[passage-id = " + passageId + "] li[menu-name] a[name = '" + optionName + "']");

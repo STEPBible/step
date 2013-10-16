@@ -56,7 +56,7 @@ public final class HebrewUtils {
     private static final char GERESH = 0x059C;
     private static final char GERESH_MUQDAM = 0x059D;
     private static final int ZINOR = 0x05AE;
-
+    
     private static final int DAGESH_GAP = 0xFB44 - 0x05e3;
     private static final int ALEPH = 0x05D0;
     private static final char ALEPH_LAMED = 0xFB4F;
@@ -113,16 +113,33 @@ public final class HebrewUtils {
                 || (firstCharacter > 0xFB10 && firstCharacter < 0xFB50);
     }
 
+
     /**
      * @param word text with pointing
      * @return text without pointing
      */
     public static String unPoint(final String word) {
+        return unPoint(word, true);
+    }
+    
+    /**
+     * @param word text with pointing
+     * @param unpointVowels true to indicate we also want to exclude vowels
+     * @return text without pointing
+     */
+    public static String unPoint(final String word, boolean unpointVowels) {
+        char endChar = unpointVowels ? ALEPH : SHEVA;
+        
         final StringBuilder sb = new StringBuilder(word);
         int i = 0;
         while (i < sb.length()) {
             final char currentChar = sb.charAt(i);
-            if (currentChar < ALEPH && currentChar >= ETNAHTA) {
+            //ignore characters outside of the Hebrew character set
+            if(currentChar < ETNAHTA || currentChar > ALEPH_LAMED) {
+                continue;
+            }
+            
+            if (currentChar < endChar) {
                 sb.deleteCharAt(i);
             } else if (currentChar > TAV && currentChar < ALEPH_LAMED) {
                 sb.setCharAt(i, (char) (currentChar - DAGESH_GAP));

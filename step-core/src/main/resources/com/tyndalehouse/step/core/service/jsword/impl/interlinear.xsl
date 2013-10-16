@@ -98,6 +98,7 @@
   <!--  true to display color coding information -->
   <xsl:param name="ColorCoding" select="'false'" />
   <xsl:param name="DivideHebrew" select="'false'" />
+  <xsl:param name="RemovePointing" select="'false'" />
 
   <!-- Whether to show an interlinear and the provider helping with the lookup -->
   <xsl:param name="infoFunctionCall" select="'javascript:showInfo'" />

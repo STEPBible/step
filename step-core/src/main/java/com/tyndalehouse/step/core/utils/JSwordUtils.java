@@ -55,6 +55,8 @@ import com.tyndalehouse.step.core.service.helpers.VersionResolver;
  * 
  */
 public final class JSwordUtils {
+    private static final String ANCIENT_GREEK = "grc";
+    private static final String ANCIENT_HEBREW = "he";
 
     /**
      * hiding implementaiton
@@ -68,7 +70,7 @@ public final class JSwordUtils {
      * 
      * @param bibles a list of jsword bibles
      * @param userLocale the local for the user
-     * @param resolver TODO
+     * @param resolver resolves the version to the longer name known by JSword
      * @return the list of bibles
      */
     public static List<BibleVersion> getSortedSerialisableList(final Collection<Book> bibles,
@@ -127,5 +129,34 @@ public final class JSwordUtils {
     public static boolean isIntro(final BibleBook bb) {
         return BibleBook.INTRO_BIBLE.equals(bb) || BibleBook.INTRO_NT.equals(bb)
                 || BibleBook.INTRO_OT.equals(bb);
+    }
+
+    /**
+     * Ascertains if it is an ancient book, i.e. Greek or Hebrew
+     * @param book the book we are considering
+     * @return true to indicate Greek or Hebrew
+     */
+    public static boolean isAncientBook(Book book) {
+        return isAncientHebrewBook(book) || isAncientGreekBook(book);
+    }
+    
+    /**
+      * Ascertains whether the book is Hebrew
+     * @param book the book we are considering
+     * @return true if Hebrew book
+     */
+    public static boolean isAncientHebrewBook(Book book) {
+        final String languageCode = book.getLanguage().getCode();
+        //hard coding in the exception
+        return ANCIENT_HEBREW.equals(languageCode) && !"HebModern".equals(languageCode);
+    }
+
+    /**
+     * Ascertains whether the book is Hebrew
+     * @param book the book we are considering
+     * @return true if Hebrew book
+     */
+    public static  boolean isAncientGreekBook(Book book) {
+        return ANCIENT_GREEK.equals(book.getLanguage().getCode());
     }
 }

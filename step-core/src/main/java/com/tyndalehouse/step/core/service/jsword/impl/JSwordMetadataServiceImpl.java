@@ -11,6 +11,7 @@ import java.util.Locale;
 
 import javax.inject.Inject;
 
+import com.tyndalehouse.step.core.utils.JSwordUtils;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.FeatureType;
 import org.crosswire.jsword.versification.BibleBook;
@@ -59,9 +60,21 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
         addMorphologyOptions(book, options);
         addNotesOptions(book, options);
         addHebrewOptions(book, options);
+        addAncientOptions(book, options);
         addAllMatchingLookupOptions(book, options);
 
         return options;
+    }
+
+    /**
+     * Adds options that apply regardless of the conditions
+     * @param options the set of options
+     */
+    private void addAncientOptions(final Book book, final List<LookupOption> options) {
+        if(JSwordUtils.isAncientBook(book)) {
+            options.add(LookupOption.REMOVE_POINTING);
+            options.add(LookupOption.REMOVE_HEBREW_VOWELS);
+        }
     }
 
     /**

@@ -14,6 +14,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
+import com.tyndalehouse.step.core.utils.JSwordUtils;
 import org.crosswire.common.progress.JobManager;
 import org.crosswire.common.progress.Progress;
 import org.crosswire.common.progress.WorkEvent;
@@ -46,9 +47,6 @@ import com.tyndalehouse.step.core.utils.ValidateUtils;
 public class JSwordModuleServiceImpl implements JSwordModuleService {
     private static final int INDEX_WAITING = 1000;
     private static final Logger LOGGER = LoggerFactory.getLogger(JSwordModuleServiceImpl.class);
-    private static final String ANCIENT_GREEK = "grc";
-    private static final String ANCIENT_HEBREW = "hbo";
-    private static final String CURRENT_BIBLE_INSTALL_JOB = "Installing book: %s";
     private static final String CURRENT_BIBLE_INDEX_JOB = "Creating index. Processing %s";
 
     // BE CAREFUL about using these installers.
@@ -315,9 +313,7 @@ public class JSwordModuleServiceImpl implements JSwordModuleService {
      * @return true if we are to accept the book
      */
     private boolean isAcceptableVersions(final Book book, final String locale) {
-        return ANCIENT_GREEK.equals(book.getLanguage().getCode())
-                || ANCIENT_HEBREW.equals(book.getLanguage().getCode())
-                || locale.equals(book.getLanguage().getCode());
+        return JSwordUtils.isAncientBook(book) || locale.equals(book.getLanguage().getCode());
     }
 
     @Override

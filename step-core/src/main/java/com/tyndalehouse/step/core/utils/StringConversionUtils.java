@@ -293,6 +293,40 @@ public final class StringConversionUtils {
     }
 
     /**
+     * takes accents and other punctuation off the word
+     *
+     * @param word the word to be processed
+     * @param isGreek true for greek, false for hebrew
+     * @return the unaccented form
+     */
+    public static String unAccent(final String word, final boolean isGreek) {
+        if (isGreek) {
+            return GreekUtils.unAccent(word);
+        }
+        return HebrewUtils.unPoint(word);
+    }
+
+    /**
+     * Takes accents and other punctuation off the word - less performant
+     *
+     * @param word the word to be processed
+     * @return the unaccented form
+     */
+    public static String unAccentLeavingVowels(final String word) {
+        return unAccentHebrewLeavingVowels(unAccent(word, true));
+    }
+    
+    /**
+     * takes accents and other punctuation off the word
+     *
+     * @param word the word to be processed
+     * @return the unaccented form
+     */
+    public static String unAccentHebrewLeavingVowels(final String word) {
+        return HebrewUtils.unPoint(word, false);
+    }
+    
+    /**
      * Removes the starting H, if present (for greek transliterations only at present time)
      * 
      * @param stepTransliteration the transliteration
@@ -383,20 +417,6 @@ public final class StringConversionUtils {
         // then assume Greek
         return GreekUtils.transliterateGreek(Normalizer.normalize(rawForm.toLowerCase(Locale.ENGLISH),
                 Form.NFD));
-    }
-
-    /**
-     * takes accents and other punctuation off the word
-     * 
-     * @param word the word to be processed
-     * @param isGreek true for greek, false for hebrew
-     * @return the unaccented form
-     */
-    public static String unAccent(final String word, final boolean isGreek) {
-        if (isGreek) {
-            return GreekUtils.unAccent(word);
-        }
-        return HebrewUtils.unPoint(word);
     }
 
     /**

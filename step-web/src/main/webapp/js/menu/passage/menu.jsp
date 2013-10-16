@@ -20,8 +20,15 @@
 		<li><a href="javascript:void(0)" name="N"><fmt:message key="display_notes" /></a></li>
 		<li><a href="javascript:void(0)" name="E"><fmt:message key="display_englishVocab" /></a></li>
 		<li><a href="javascript:void(0)" name="A"><fmt:message key="display_greekVocab" /></a></li>
+        <li>
+            <a href="javascript:void(0)"><fmt:message key="display_language_options" /></a>
+            <ul>
+                <li><a href="javascript:void(0)" name="D" title="<fmt:message key="display_divide_hebrew_help" />" ><fmt:message key="display_divide_hebrew" /></a></li>
+                <li><a href="javascript:void(0)" name="P" title="<fmt:message key="display_remove_pointing_help" />" ><fmt:message key="display_remove_pointing" /></a></li>
+                <li><a href="javascript:void(0)" name="U" title="<fmt:message key="display_remove_pointing_include_hebrew_vowels_help" />" ><fmt:message key="display_remove_pointing_include_hebrew" /></a></li>
+            </ul>
+        </li>
  		<li><a href="javascript:void(0)" name="T"><fmt:message key="display_transliteration" /></a></li>
-        <li><a href="javascript:void(0)" name="D" title="<fmt:message key="display_divide_hebrew_help" />" ><fmt:message key="display_divide_hebrew" /></a></li>
 		<li><a href="javascript:void(0)" name="M"><fmt:message key="display_grammar" /></a></li>
 		<li><a href="javascript:void(0)" name="C" ><fmt:message key="display_grammarColor" /></a></li>
 	</ul>

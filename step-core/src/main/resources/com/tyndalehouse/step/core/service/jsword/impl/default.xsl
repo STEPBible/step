@@ -37,7 +37,7 @@
   xmlns:interleaving="xalan://com.tyndalehouse.step.core.xsl.impl.InterleavingProviderImpl"
   xmlns:conversion="xalan://com.tyndalehouse.step.core.utils.StringConversionUtils"
   xmlns:url="http://whatever/java/java.net.URLEncoder"
-  extension-element-prefixes="jsword interleaving conversion">
+  extension-element-prefixes="jsword interleaving conversion url">
 
   <!--  Version 3.0 is necessary to get br to work correctly. -->
   <xsl:output method="html" version="3.0" omit-xml-declaration="yes" indent="no"/>
@@ -102,6 +102,8 @@
 
   <!--  true to display color coding information -->
   <xsl:param name="ColorCoding" select="'false'" />
+  <xsl:param name="RemovePointing" select="'false'" />
+  <xsl:param name="RemoveVowels" select="'false'" />
 
   <xsl:param name="HideXGen" select="'false'" />
 
@@ -1727,6 +1729,8 @@
     <xsl:template match="text()">
         <xsl:choose>
             <xsl:when test="name(./preceding-sibling::node()) and name(./following-sibling::node()) = 'note' and normalize-space(.) = ','"></xsl:when>
+            <xsl:when test="$RemoveVowels = 'true'"><xsl:value-of select="conversion:unAccent(string(.))" /></xsl:when>
+            <xsl:when test="$RemovePointing = 'true'"><xsl:value-of select="conversion:unAccentLeavingVowels(string(.))" /></xsl:when>
             <xsl:otherwise><xsl:value-of select="." /></xsl:otherwise>
         </xsl:choose>
     </xsl:template>

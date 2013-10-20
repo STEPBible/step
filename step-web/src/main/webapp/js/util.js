@@ -279,9 +279,11 @@ step.util = {
     
     upgrade : function() {
         var storedVersion = $.localStore("step.version");
-        var appVersion = step.state.getCurrentVersion();
+        var appVersion = step.state.getCurrentVersion() || "";
         
-        if((storedVersion == appVersion || appVersion.indexOf("project.version") != -1 || storedVersion.indexOf("-SNAPSHOT") != -1) 
+        if((storedVersion == appVersion || 
+            appVersion.indexOf("project.version") != -1 || 
+            storedVersion.indexOf("-SNAPSHOT") != -1) 
             && $.getUrlVar("doUpgrade") != "true") {
             return false;
         }

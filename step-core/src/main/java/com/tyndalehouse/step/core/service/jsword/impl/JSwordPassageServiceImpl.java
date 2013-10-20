@@ -1204,8 +1204,9 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
      */
     protected void setOptions(final TransformingSAXEventProvider tsep, final List<LookupOption> options,
                               final Book book) {
-        boolean isHebrew = JSwordUtils.isAncientHebrewBook(book);
-        
+        final boolean isHebrew = JSwordUtils.isAncientHebrewBook(book);
+        final boolean isGreek = JSwordUtils.isAncientGreekBook(book);
+
         for (final LookupOption lookupOption : options) {
             if (lookupOption.getXsltParameterName() != null) {
                 tsep.setParameter(lookupOption.getXsltParameterName(), true);
@@ -1226,7 +1227,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
                         tsep.setParameter("colorCodingProvider", this.colorCoder);
                         break;
                     case GREEK_ACCENTS:
-                        if(JSwordUtils.isAncientGreekBook(book)) {
+                        if(isGreek) {
                             tsep.setParameter("RemovePointing", "false");
                             tsep.setParameter("RemoveVowels", "false");
                         }
@@ -1248,6 +1249,10 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
             }
         }
 
+        if(!isGreek && !isHebrew) {
+            tsep.setParameter("RemovePointing", false);
+            tsep.setParameter("RemoveVowels", false);
+        }
         tsep.setParameter("direction", book.getBookMetaData().isLeftToRight() ? "ltr" : "rtl");
         tsep.setParameter("baseVersion", book.getInitials());
     }

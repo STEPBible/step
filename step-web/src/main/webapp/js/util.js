@@ -278,7 +278,7 @@ step.util = {
     },
     
     upgrade : function() {
-        var storedVersion = $.localStore("step.version");
+        var storedVersion = $.localStore("step.version") || "";
         var appVersion = step.state.getCurrentVersion() || "";
         
         if((storedVersion == appVersion || 

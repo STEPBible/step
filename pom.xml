@@ -3,7 +3,7 @@
 
     <groupId>com.tyndalehouse.step</groupId>
     <artifactId>step-mvn</artifactId>
-    <version>1.2.1</version>
+    <version>1.3-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>STEP :: Scripture Tools for Every pastor</name>
 
@@ -71,7 +71,7 @@
     <scm>
         <url>scm:git:git@github.com:tyndale/step.git</url>
         <developerConnection>scm:git:git@github.com:tyndale/step.git</developerConnection>
-        <tag>step-mvn-1.2.1</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <licenses>

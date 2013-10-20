@@ -278,36 +278,35 @@ step.util = {
     },
     
     upgrade : function() {
-        return false;
+        var storedVersion = $.localStore("step.version") || "";
+        var appVersion = step.state.getCurrentVersion() || "";
         
-//        var storedVersion = $.localStore("step.version") || "";
-//        var appVersion = step.state.getCurrentVersion() || "";
-//        
-//        if((storedVersion == appVersion || 
-//            appVersion.indexOf("project.version") != -1 || 
-//            storedVersion.indexOf("-SNAPSHOT") != -1) 
-//            && $.getUrlVar("doUpgrade") != "true") {
-//            return false;
-//        }
-//        
-//        //else need to upgrade to 1.2.1 - currently only supporting 1 upgrade path
-//        if(storedVersion != '1.2.1') {
-//            //upgrade first - in case the below fails, we don't want an infinite loop
-//            $.localStore("step.version", "1.2.1");
-//            
-//            for(var i = 0; i < PassageModels.length; i++) {
-//                var model = PassageModels.at(i);
-//                var options = model.get("options");
-//                options.push('G');
-//                options.push('U');
-//                model.save({
-//                    options : options
-//                });
-//            }
-//        }
-//        
-//        window.location = "http://www.stepbible.org";
-//        return true;
+        console.log("models are at [", storedVersion, "], app is at: ", appVersion);
+        if(storedVersion != appVersion) {
+            //do upgrade options
+            var upgradeVersion = "upgrade.1.2.3";
+            var version1_2_3 = $.localStore(upgradeVersion);
+            if(version1_2_3 != 'upgraded') {
+                console.log("Upgrading to 1.2.3");
+                for(var i = 0; i < PassageModels.length; i++) {
+                    var model = PassageModels.at(i);
+                    var options = model.get("options");
+                    if(options.indexOf('G') == -1) {
+                        options.push('G');
+                    }
+
+                    if(options.indexOf('U') == -1) {
+                        options.push('U');
+                    }
+                    model.save({
+                        options : options
+                    });
+                    model.trigger("change", model);
+                }
+                $.localStore(upgradeVersion, "upgraded");
+            }
+        }
+        $.localStore("step.version", appVersion);
     },
 
     ui: {

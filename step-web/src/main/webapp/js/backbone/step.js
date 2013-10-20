@@ -279,10 +279,6 @@ function initApp() {
     createModelsIfRequired(WordSearchModels, WordSearchModel, "original");
     createModelsIfRequired(AdvancedSearchModels, AdvancedSearchModel, "advanced");
 
-    if(step.util.upgrade()) {
-        return;
-    }
-    
     //create new router
     stepRouter = new StepRouter();
 
@@ -340,4 +336,6 @@ function initApp() {
             }
         }
     }
+    
+    step.util.upgrade();
 }

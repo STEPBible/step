@@ -64,6 +64,12 @@ step.state = {
             this.local = $("meta[step-local]").attr("content") == "true";
         }
         return this.local;
-    }
+    },
     
+    getCurrentVersion : function() {
+        if(this.version == undefined) {
+            this.version = $("meta[name='step.version']").attr("content");
+        }
+        return this.version;
+    }
 };

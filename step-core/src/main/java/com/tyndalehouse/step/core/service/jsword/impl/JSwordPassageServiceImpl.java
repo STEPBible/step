@@ -54,6 +54,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.xml.transform.TransformerException;
 
+import com.tyndalehouse.step.core.utils.JSwordUtils;
 import org.crosswire.common.xml.Converter;
 import org.crosswire.common.xml.JDOMSAXEventProvider;
 import org.crosswire.common.xml.SAXEventProvider;
@@ -766,7 +767,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
     /**
      * Used to identify languages from the interleaving modes
      *
-     * @param htmlsep
+     * @param htmlsep the transformer
      * @return the list of language codes
      */
     private String[] getLanguagesForInterleaved(final Book mainBook, final TransformingSAXEventProvider htmlsep) {
@@ -834,10 +835,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
                 languages[ii] = books[ii].getLanguage().getCode();
             }
 
-            final OsisWrapper osisWrapper = new OsisWrapper(writeToString(transformer), data.getKey(), languages, v11n);
-
-
-            return osisWrapper;
+            return new OsisWrapper(writeToString(transformer), data.getKey(), languages, v11n);
         } catch (final TransformerException e) {
             throw new StepInternalException(e.getMessage(), e);
         } catch (final SAXException e) {
@@ -1048,7 +1046,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
         final XslConversionType requiredTransformation = identifyStyleSheet(bookData.getFirstBook()
                 .getBookCategory(), options, displayMode);
 
-        final TransformingSAXEventProvider htmlsep = (TransformingSAXEventProvider) new Converter() {
+        return (TransformingSAXEventProvider) new Converter() {
             @Override
             public SAXEventProvider convert(final SAXEventProvider provider) throws TransformerException {
                 try {
@@ -1069,7 +1067,6 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
                 }
             }
         }.convert(osissep);
-        return htmlsep;
     }
 
     /**
@@ -1147,17 +1144,19 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
                 tsep.setParameter("interlinearVersion", interlinearVersion);
             }
 
-            boolean stripAccents, stripVowels = stripAccents = false;
+            boolean stripGreekAccents, stripHebrewAccents, stripVowels = stripHebrewAccents = stripGreekAccents = true;
             for(LookupOption option : options) {
-                if(LookupOption.REMOVE_POINTING == option) {
-                    stripAccents = true;
-                } else if(LookupOption.REMOVE_HEBREW_VOWELS == option) {
-                    stripVowels = true;
+                if(LookupOption.GREEK_ACCENTS == option) {
+                    stripGreekAccents = false;    
+                } else if(LookupOption.HEBREW_ACCENTS == option) {
+                    stripHebrewAccents = false;
+                } else if(LookupOption.HEBREW_VOWELS == option) {
+                    stripVowels = false;
                 }
             }
             
             final MultiInterlinearProviderImpl multiInterlinear = new MultiInterlinearProviderImpl(masterVersification,
-                    interlinearVersion, reference, this.versificationService, this.vocabProvider, stripAccents, stripVowels);
+                    interlinearVersion, reference, this.versificationService, this.vocabProvider, stripGreekAccents, stripHebrewAccents, stripVowels);
             tsep.setParameter("interlinearProvider", multiInterlinear);
         }
     }
@@ -1205,7 +1204,8 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
      */
     protected void setOptions(final TransformingSAXEventProvider tsep, final List<LookupOption> options,
                               final Book book) {
-
+        boolean isHebrew = JSwordUtils.isAncientHebrewBook(book);
+        
         for (final LookupOption lookupOption : options) {
             if (lookupOption.getXsltParameterName() != null) {
                 tsep.setParameter(lookupOption.getXsltParameterName(), true);
@@ -1225,6 +1225,25 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
                     case COLOUR_CODE:
                         tsep.setParameter("colorCodingProvider", this.colorCoder);
                         break;
+                    case GREEK_ACCENTS:
+                        if(JSwordUtils.isAncientGreekBook(book)) {
+                            tsep.setParameter("RemovePointing", "false");
+                            tsep.setParameter("RemoveVowels", "false");
+                        }
+                        break;
+                    case HEBREW_VOWELS:
+                        if(isHebrew) {
+                            tsep.setParameter("RemoveVowels", "false");
+                        } 
+                        break;
+                    case HEBREW_ACCENTS:
+                        if(isHebrew) {
+                            tsep.setParameter("RemovePointing", "false");
+                            tsep.setParameter("RemoveVowels", "false");
+                        }
+                        break;
+                    
+
                 }
             }
         }

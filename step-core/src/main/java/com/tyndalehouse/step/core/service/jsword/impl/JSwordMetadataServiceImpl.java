@@ -73,25 +73,30 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
      * @param options        the set of options
      */
     private void addAncientOptions(final String currentVersion, final List<String> extraVersions, final List<LookupOption> options) {
-        boolean addedRemovePointing = false;
         final List<String> allVersions = new ArrayList<String>(extraVersions);
         allVersions.add(currentVersion);
 
+        boolean hasGreekVersion, hasHebrewVersion = hasGreekVersion = false;
         for (String version : allVersions) {
             Book book = this.versificationService.getBookFromVersion(version);
-            boolean isGreek = JSwordUtils.isAncientGreekBook(book);
-            boolean isHebrew = JSwordUtils.isAncientHebrewBook(book);
-            if (!addedRemovePointing && (isGreek || isHebrew)) {
-                options.add(LookupOption.REMOVE_POINTING);
-                addedRemovePointing = true;
+            if(JSwordUtils.isAncientGreekBook(book)) {
+                hasGreekVersion = true;
             }
 
-            if (isHebrew) {
-                options.add(LookupOption.REMOVE_HEBREW_VOWELS);
-                return;
+            if(JSwordUtils.isAncientHebrewBook(book)) {
+                hasHebrewVersion = true;
             }
         }
-
+        
+        //hebrew/greek options for interlinears
+        if(hasGreekVersion) {
+            options.add(LookupOption.GREEK_ACCENTS);
+        }
+        
+        if(hasHebrewVersion) {
+            options.add(LookupOption.HEBREW_ACCENTS);
+            options.add(LookupOption.HEBREW_VOWELS);
+        }
     }
 
     /**

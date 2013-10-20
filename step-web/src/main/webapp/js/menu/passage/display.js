@@ -34,10 +34,10 @@ $(step.menu).hear("MENU-DISPLAY", function(self, menuTrigger) {
     var isNowSelected = step.menu.toggleMenuItem(menuTrigger.menuItem.element);
     
     //if we're looking at the hebrew vowels, then also tick the cantillation option
-    if(menuTrigger.menuItem.name == 'U' && isNowSelected) {
-        step.menu.tickMenuItem(step.menu.getMenuItem('P', menuTrigger.passageId));
-    } else if(menuTrigger.menuItem.name == 'P' && !isNowSelected) {
-        step.menu.untickMenuItem(step.menu.getMenuItem('U', menuTrigger.passageId));   
+    if(menuTrigger.menuItem.name == 'U' && !isNowSelected) {
+        step.menu.untickMenuItem(step.menu.getMenuItem('P', menuTrigger.passageId));
+    } else if(menuTrigger.menuItem.name == 'P' && isNowSelected) {
+        step.menu.tickMenuItem(step.menu.getMenuItem('U', menuTrigger.passageId));   
     }
 });
     

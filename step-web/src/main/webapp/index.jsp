@@ -23,6 +23,7 @@
 	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 <%-- 	<meta name="description" content="<%= stepRequest.getTitle() %>..."> --%>
     <meta step-local content="<%= appManager.isLocal() %>" />
+    <meta name="step.version" content="${ project.version }" />
     <meta name="description" content="<%= stepRequest.getDescription() %>" />
     <meta name="keywords" content="<%= stepRequest.getKeywords() %>" />
 	<link rel="shortcut icon"  href="images/step-favicon.ico" />

@@ -102,8 +102,8 @@
 
   <!--  true to display color coding information -->
   <xsl:param name="ColorCoding" select="'false'" />
-  <xsl:param name="RemovePointing" select="'false'" />
-  <xsl:param name="RemoveVowels" select="'false'" />
+  <xsl:param name="RemovePointing" select="'true'" />
+  <xsl:param name="RemoveVowels" select="'true'" />
 
   <xsl:param name="HideXGen" select="'false'" />
 

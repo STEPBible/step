@@ -94,15 +94,18 @@ public enum LookupOption {
     DIVIDE_HEBREW('D', "DivideHebrew", XslConversionType.DEFAULT),
 
     /**
-     * Removes all pointing regardless of the type of pointing.
-     * U for un-point
+     * Adds Greek accents
      */
-    REMOVE_POINTING('P', "RemovePointing", XslConversionType.DEFAULT),
+    GREEK_ACCENTS('G', "GreekAccents", XslConversionType.DEFAULT),
+    /**
+     * Adds all Hebrew accents
+     */
+    HEBREW_ACCENTS('P', "HebrewAccents", XslConversionType.DEFAULT),
 
     /**
-     * Removes Hebrew vowels from the underlying source text
+     * Adds Hebrew vowels from the underlying source text
      */
-    REMOVE_HEBREW_VOWELS('U', "RemoveVowels", XslConversionType.DEFAULT),
+    HEBREW_VOWELS('U', "HebrewVowels", XslConversionType.DEFAULT),
     
     /**
      * Morphology

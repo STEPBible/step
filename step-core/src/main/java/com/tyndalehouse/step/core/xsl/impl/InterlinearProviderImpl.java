@@ -134,7 +134,7 @@ public class InterlinearProviderImpl implements InterlinearProvider {
     public InterlinearProviderImpl(Versification masterVersification, JSwordVersificationService versificationService,
                                    final String version, final Key versifiedKey, final Map<String, String> hebrewDirectMapping,
                                    final Map<String, String> hebrewIndirectMappings, final VocabularyService vocabProvider,
-                                   boolean stripAccents, boolean stripVowels) {
+                                   boolean stripGreekAccents, boolean stripHebrewAccents, boolean stripVowels) {
         this.masterVersification = masterVersification;
         this.vocabProvider = vocabProvider;
 
@@ -154,8 +154,10 @@ public class InterlinearProviderImpl implements InterlinearProvider {
 
         //mark the book as original language
         this.originalLanguage = JSwordUtils.isAncientBook(currentBook);
-        this.stripAccents = this.originalLanguage && stripAccents;
-        this.stripVowels = this.originalLanguage && stripVowels;
+        final boolean ancientHebrewBook = JSwordUtils.isAncientHebrewBook(currentBook);
+        this.stripAccents = stripGreekAccents && JSwordUtils.isAncientGreekBook(currentBook) ||
+                            stripHebrewAccents && ancientHebrewBook;
+        this.stripVowels = ancientHebrewBook && this.stripAccents && stripVowels;
 
         BookData bookData;
         try {

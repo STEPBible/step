@@ -141,22 +141,35 @@ public final class JSwordUtils {
     }
     
     /**
-      * Ascertains whether the book is Hebrew
-     * @param book the book we are considering
+      * Ascertains whether the book(s) is Hebrew. If several books, then returns true if any book matches
+     * @param books the book we are considering
      * @return true if Hebrew book
      */
-    public static boolean isAncientHebrewBook(Book book) {
-        final String languageCode = book.getLanguage().getCode();
-        //hard coding in the exception
-        return ANCIENT_HEBREW.equals(languageCode) && !"HebModern".equals(languageCode);
+    public static boolean isAncientHebrewBook(Book... books) {
+        boolean ancientHebrew = false;
+        for(Book b : books) {
+            //hard coding in the exception
+            boolean isHebrew = ANCIENT_HEBREW.equals(b.getLanguage().getCode()) && !"HebModern".equals(b.getInitials());
+            if(isHebrew) {
+                return true;
+            }
+        }
+        return ancientHebrew;        
     }
 
     /**
-     * Ascertains whether the book is Hebrew
-     * @param book the book we are considering
+     * Ascertains whether the book is Greek, returning true if any books match the said criteria
+     * @param books the book we are considering
      * @return true if Hebrew book
      */
-    public static  boolean isAncientGreekBook(Book book) {
-        return ANCIENT_GREEK.equals(book.getLanguage().getCode());
+    public static  boolean isAncientGreekBook(Book... books) {
+        boolean ancientGreek = false;
+        for(Book b : books) {
+            boolean isGreek = ANCIENT_GREEK.equals(b.getLanguage().getCode());
+            if(isGreek) {
+                return true;
+            }
+        }
+        return ancientGreek;
     }
 }

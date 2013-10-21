@@ -1057,7 +1057,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
                             osissep);
 
                     // set parameters here
-                    setOptions(tsep, options, bookData.getFirstBook());
+                    setOptions(tsep, options, bookData.getBooks());
                     setInterlinearOptions(tsep, masterVersification, getInterlinearVersion(interlinearVersion), bookData.getKey()
                             .getOsisID(), displayMode, bookData.getKey(), options);
                     setInterleavingOptions(tsep, displayMode, bookData);
@@ -1200,12 +1200,12 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
      *
      * @param tsep    the xslt transformer
      * @param options the options available
-     * @param book    the version to initialise a potential interlinear with
+     * @param books    the version to initialise a potential interlinear with
      */
     protected void setOptions(final TransformingSAXEventProvider tsep, final List<LookupOption> options,
-                              final Book book) {
-        final boolean isHebrew = JSwordUtils.isAncientHebrewBook(book);
-        final boolean isGreek = JSwordUtils.isAncientGreekBook(book);
+                              final Book[] books) {
+        final boolean isHebrew = JSwordUtils.isAncientHebrewBook(books);
+        final boolean isGreek = JSwordUtils.isAncientGreekBook(books);
 
         for (final LookupOption lookupOption : options) {
             if (lookupOption.getXsltParameterName() != null) {
@@ -1243,18 +1243,17 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
                             tsep.setParameter("RemoveVowels", "false");
                         }
                         break;
-                    
-
                 }
             }
         }
 
+        //if no greek or hebrew, then override to false
         if(!isGreek && !isHebrew) {
             tsep.setParameter("RemovePointing", false);
             tsep.setParameter("RemoveVowels", false);
         }
-        tsep.setParameter("direction", book.getBookMetaData().isLeftToRight() ? "ltr" : "rtl");
-        tsep.setParameter("baseVersion", book.getInitials());
+        tsep.setParameter("direction", books[0].getBookMetaData().isLeftToRight() ? "ltr" : "rtl");
+        tsep.setParameter("baseVersion", books[0].getInitials());
     }
 
     /**

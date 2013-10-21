@@ -1,5 +1,7 @@
 package com.tyndalehouse.step.core.data;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.File;
@@ -40,7 +42,7 @@ public class DirectoryInstallerTest {
     @Test
     public void testDirectoryInstallation() throws URISyntaxException, BookException, InterruptedException {
         final List<Installer> installers = new ArrayList<Installer>(1);
-        installers.add(new DirectoryInstaller(new File(getClass().getResource(
+        installers.add(new DirectoryInstaller("some name", new File(getClass().getResource(
                 "/com/tyndalehouse/step/core/data/").toURI()).getAbsolutePath()));
 
         final Book tempEsv = Books.installed().getBook("ESVTemp");
@@ -86,5 +88,25 @@ public class DirectoryInstallerTest {
         }
 
         fail("ESVTemp was not installed in time");
+    }
+
+    /**
+     * test simple directory installation
+     *
+     * @throws URISyntaxException an uncaught exception
+     * @throws BookException an uncaught exception
+     * @throws InterruptedException an interrupted exception
+     **/
+    @Test
+    public void testDirectoryListingInstallation() throws URISyntaxException, BookException, InterruptedException {
+        final List<Installer> installers = new ArrayList<Installer>(1);
+        DirectoryListingInstaller installer = new DirectoryListingInstaller("some name", new File(getClass().getResource(
+                "/com/tyndalehouse/step/core/data/").toURI()).getAbsolutePath());
+
+        List<Book> books = installer.getBooks();
+        for(Book b : books) {
+            LOGGER.debug("{} => {}", b.getInitials(), b.getName());
+        }
+        assertEquals(3, books.size());
     }
 }

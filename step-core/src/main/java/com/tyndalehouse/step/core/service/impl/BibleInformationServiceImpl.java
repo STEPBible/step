@@ -52,24 +52,18 @@ import javax.inject.Named;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 
+import com.tyndalehouse.step.core.data.DirectoryInstaller;
+import com.tyndalehouse.step.core.data.StepHttpSwordInstaller;
+import com.tyndalehouse.step.core.models.*;
 import com.tyndalehouse.step.core.service.jsword.*;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.BookCategory;
+import org.crosswire.jsword.book.install.Installer;
 import org.crosswire.jsword.passage.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.tyndalehouse.step.core.data.EntityManager;
-import com.tyndalehouse.step.core.models.AvailableFeatures;
-import com.tyndalehouse.step.core.models.BibleVersion;
-import com.tyndalehouse.step.core.models.BookName;
-import com.tyndalehouse.step.core.models.ClientSession;
-import com.tyndalehouse.step.core.models.EnrichedLookupOption;
-import com.tyndalehouse.step.core.models.InterlinearMode;
-import com.tyndalehouse.step.core.models.KeyWrapper;
-import com.tyndalehouse.step.core.models.LookupOption;
-import com.tyndalehouse.step.core.models.OsisWrapper;
-import com.tyndalehouse.step.core.models.TrimmedLookupOption;
 import com.tyndalehouse.step.core.models.search.SearchResult;
 import com.tyndalehouse.step.core.models.search.StrongCountsAndSubjects;
 import com.tyndalehouse.step.core.service.BibleInformationService;
@@ -544,16 +538,38 @@ public class BibleInformationServiceImpl implements BibleInformationService {
         }
     }
 
-    /**
-     * Install modules.
-     *
-     * @param reference the reference
-     */
     @Override
-    public void installModules(final String reference) {
-        this.jswordModule.installBook(reference);
+    public void installModules(final int installerIndex, final String reference) {
+        this.jswordModule.installBook(installerIndex, reference);
     }
 
+    @Override
+    public void addDirectoryInstaller(final String directoryPath) {
+        this.jswordModule.addDirectoryInstaller(directoryPath);
+    }
+
+    @Override
+    public List<BibleInstaller> getInstallers() {
+        List<BibleInstaller> bibleInstallers = new ArrayList<BibleInstaller>();
+        final List<Installer> installers = this.jswordModule.getInstallers();
+        for(int ii =0; ii < installers.size(); ii++) {
+            final Installer installer = installers.get(ii);
+            
+            String name = installer.getInstallerDefinition();
+            boolean accessesInternet = true;
+            if(installer instanceof StepHttpSwordInstaller) {
+                name = ((StepHttpSwordInstaller) installer).getInstallerName();
+                accessesInternet = true;
+            } else if(installer instanceof DirectoryInstaller) {
+                name = ((DirectoryInstaller) installer).getInstallerName();
+                accessesInternet = false;
+            }
+            
+            bibleInstallers.add(new BibleInstaller(ii, name, accessesInternet));
+        }
+        return bibleInstallers;
+    }
+    
     /**
      * Gets the bible book names.
      *

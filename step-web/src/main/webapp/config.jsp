@@ -43,9 +43,7 @@
 
     <div class="configOptions">
          <input type="button" value="<fmt:message key="installation_use_step_application" />" id="useStep" onclick='window.location.href="index.jsp";' />
-         <input type="button" value="<fmt:message key="installation_add_modules_from_internet" />" id="dismissWarning" />
-	</div>
-
+    </div>
 
     <p />
 
@@ -85,16 +83,17 @@
     <br /><br /><br /><br /><br /><br />
     <div id="content">
 		<div id="leftColumn" class='halfColumn'>
-			<h3><fmt:message key="installation_downloadable_modules" /></h3>
+			<h3>
+                <fmt:message key="installation_downloadable_modules" />
+                (<fmt:message key="installation_select_repository" /> <select id="repositories">
+                    <option id="selectRepository"><fmt:message key="select_repository" /></option>
+                    <option id="allRepositories" value="-1"><fmt:message key="installation_all_repositories" /></option>
+                    <option id="installFromDirectory" value="INSTALL_FROM_DIRECTORY"><fmt:message key="installation_add_local_repository" /></option>
+                </select>)
+            </h3>
+            <span id="loadingRepo" style="display: none"><fmt:message key="installation_loading_repository" /></span>
 			<p />
 			<div class='container'>
-				<div class='waitingLabel'>
-					<fmt:message key="installation_please_wait_while_step_retrieves_bibles" />
-					<p />
-					<span class='waiting'>
-						<img src="images/wait_big.gif" />
-					</span>
-				</div>
 			</div>
 		</div>
 		<div id="rightColumn" class='halfColumn'><h3><fmt:message key="installation_installed_modules" /></h3><p /><div class='container'></div></div>

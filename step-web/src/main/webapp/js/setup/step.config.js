@@ -34,6 +34,8 @@ if (!step) {
 step.config = {
     currentInstalls : [],
     currentIndexing : [],
+    confirmedInternet : false,
+    installers : [],
     
     init : function() {
         var self = this;
@@ -44,7 +46,6 @@ step.config = {
         $("#dismissWarning").click(function() {
             $(this).remove();
             self.populateInstallableModules();
-            $(".waitingLabel").show();
         });
 
         $("#leftColumn, #rightColumn").droppable({
@@ -74,7 +75,12 @@ step.config = {
             //index module
             //bible is about to be installed - add progress bar...
             self.currentInstalls.push(item.initials);
-            $.get(SETUP_INSTALL_BIBLE + item.initials, function() {
+            var installer = $.data(draggedItem, "installer");
+            if(installer == undefined) {
+                installer = -1;
+            }
+            
+            $.get(SETUP_INSTALL_BIBLE + installer + "/" + item.initials, function() {
             });
         } else {
             //remove item
@@ -85,14 +91,41 @@ step.config = {
     },
 
     /** modules that have yet to be installed */
-    populateInstallableModules : function() {
+    populateInstallableModules : function(index) {
         
         var installableColumn = $("#leftColumn");
         var self = this;
-        $.get(MODULE_GET_ALL_INSTALLABLE_MODULES + "BIBLES,COMMENTARIES", function(data) {
-            $(".waitingLabel").remove();
+        $("#loadingRepo").show();
+        
+        //look for installer with correct index
+        var isRepoInternet = true;
+        for(var i = 0; i < this.installers.length; i++) {
+            if(this.installers[i].index == index) {
+                //found
+                isRepoInternet = this.installers[i].accessesInternet;
+                break;
+            }
+        }
+        
+        if(!this.confirmedInternet && isRepoInternet) {
+            var confirmed = confirm(__s.installation_accesses_internet);
+            if(confirmed != true) {
+                return;
+            }
+            this.confirmedInternet = true;
+        }
+        
+        $.get(MODULE_GET_ALL_INSTALLABLE_MODULES + index + "/BIBLE,COMMENTARY", function(data) {
+            $("#loadingRepo").hide();
+            
+            var versionsContainer = $("#leftColumn .container");
+            versionsContainer.empty();
+            if(data.length == 0) {
+                versionsContainer.append(__s.installation_all_modules_installers);
+            }
+            
             $.each(data, function(i, item) {
-                self.renderVersion(item, installableColumn);
+                self.renderVersion(item, installableColumn, index);
             });
         });
     },
@@ -125,8 +158,18 @@ step.config = {
     },
     
     queryProgress : function(progressUrl, versions, offsetProgress, completeHandler) {
+        var self = this;
         if(versions != 0) {
             $.get(progressUrl + versions.join(), function(data) {
+                if(data.errorMessage) {
+                    for(var i = 0; i < versions.length; i++) {
+                        self.currentInstalls = [];
+                    }
+                    $("#installError").remove();
+                    $("body").prepend($("<div id='installError'>").append(__s.error_during_install));
+                }
+
+
                 for(var i = 0; i < versions.length; i++) {
                     var item = $("#" + versions[i]);
                     var currentWidth = item.width();
@@ -150,7 +193,7 @@ step.config = {
         }
     },
     
-    renderVersion : function(item, column) {
+    renderVersion : function(item, column, installer) {
         var self = this;
 
         var category = item.category == 'BIBLE' ? __s.bible : __s.commentary;
@@ -183,6 +226,8 @@ step.config = {
             containment : "document",
             cursor : "move"
         });
+        
+        $.data(module, "installer", installer);
 
         module.find(".installNow a").click(function() {
             self.receiveItem(module, $("#rightColumn"));
@@ -236,6 +281,41 @@ step.config = {
         $(".version").hide();
         var lc = $("#leftColumn ." + field + ":contains(\"" + value +"\")").closest(".version").show();
         var rc = $("#rightColumn ." + field + ":contains(\"" + value +"\")").closest(".version").show();
+    },
+
+    createOption : function(option) {
+        var repositories = $("#repositories");
+        var optionElement = $("<option></option>").html(option.name).val(option.index);
+        repositories.append(optionElement);
+        this.installers.push(option);
+        return optionElement;
+    },
+    
+    populateRepositories : function() {
+        var self = this;
+        var repositories = $("#repositories");
+        $.get(SETUP_GET_INSTALLERS, function(data) {
+            //the list of installers
+            for(var i = 0; i < data.length; i++) {
+                self.createOption(data[i]);
+            }
+        });
+        
+        repositories.change(function() {
+            $("#selectRepository").remove();
+            
+            var selectedOption = $(this).find(":selected");
+            var installerIndex = selectedOption.val() || "";
+            if(installerIndex == 'INSTALL_FROM_DIRECTORY') {
+                $.get(MODULE_ADD_DIRECTORY_INSTALLER, function(data) {
+                    var option = self.createOption(data);
+                    option.prop("selected", true);
+                    repositories.trigger('change');
+                });
+            } else if(installerIndex != "") {
+                step.config.populateInstallableModules(installerIndex);
+            }
+        });
     }
 }
 
@@ -244,4 +324,6 @@ $(document).ready(function() {
     $("#filterValue").keyup(function() {
         step.config.filterBy();
     });
+    
+    step.config.populateRepositories();
 });

@@ -142,3 +142,9 @@
     padding: 5px;
     border: 1px solid lightgrey
 }
+
+#installError { 
+    background-color: red;
+    color: white;
+    font-weight: bold;
+}

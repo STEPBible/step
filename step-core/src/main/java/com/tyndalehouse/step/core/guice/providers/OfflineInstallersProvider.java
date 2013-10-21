@@ -26,8 +26,8 @@ public class OfflineInstallersProvider extends DefaultInstallersProvider {
 
     @Override
     protected synchronized Installer getInstaller(final String[] splitParts) {
-        if (DirectoryInstaller.DIRECTORY_HOST.equals(splitParts[0])) {
-            return new DirectoryInstaller(getLocalDirectory(splitParts[1]));
+        if (DirectoryInstaller.DIRECTORY_HOST.equals(splitParts[1])) {
+            return new DirectoryInstaller(splitParts[0], getLocalDirectory(splitParts[2]));
         }
 
         // otherwise we ignore

@@ -40,6 +40,8 @@ import static com.tyndalehouse.step.core.utils.ValidateUtils.notNull;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.tyndalehouse.step.core.models.BibleInstaller;
+import com.tyndalehouse.step.core.service.SwingService;
 import org.crosswire.jsword.book.BookCategory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,6 +66,7 @@ public class ModuleController {
     private final ModuleService moduleService;
     private final MorphologyService morphology;
     private final VocabularyService vocab;
+    private final SwingService swingService;
 
     /**
      * sets up the controller to access module information
@@ -73,14 +76,20 @@ public class ModuleController {
      * @param vocabulary the vocabulary service
      */
     @Inject
-    public ModuleController(final ModuleService moduleService, final MorphologyService morphology,
-            final VocabularyService vocabulary) {
+    public ModuleController(final ModuleService moduleService, 
+                            final MorphologyService morphology,
+                            final VocabularyService vocabulary,
+                            final SwingService swingService) {
         notNull(moduleService,
                 "Intialising the module service in the module administration controller failed",
                 CONTROLLER_INITIALISATION_ERROR);
         notNull(morphology,
                 "Intialising the morphology service failed in the module administration controller",
                 CONTROLLER_INITIALISATION_ERROR);
+        notNull(swingService,
+                "Intialising the swing service failed in the module administration controller",
+                CONTROLLER_INITIALISATION_ERROR);
+        this.swingService = swingService;
         this.moduleService = moduleService;
         this.morphology = morphology;
         this.vocab = vocabulary;
@@ -97,29 +106,29 @@ public class ModuleController {
 
     /**
      * a REST method that returns version of the Bible that are not yet installed
-     * 
-     * @return all versions of modules that are considered to be modules and usable by STEP.
-     */
-    public List<BibleVersion> getAllInstallableModules() {
-        return this.moduleService.getAllInstallableModules();
-    }
-
-    /**
-     * a REST method that returns version of the Bible that are not yet installed
-     * 
+     * @param installerIndex the index of the installer to look up
      * @param types a comma-delimited list of categories of modules to include
      * @return all versions of modules that are considered to be modules and usable by STEP.
      */
-    public List<BibleVersion> getAllInstallableModules(final String types) {
+    public List<BibleVersion> getAllInstallableModules(final String installerIndex, final String types) {
         notNull(types, "No types of modules were provided", UserExceptionType.SERVICE_VALIDATION_ERROR);
+        notNull(installerIndex, "No index to installer", UserExceptionType.SERVICE_VALIDATION_ERROR);
         final String[] values = split(types, ",");
 
         final BookCategory[] categories = new BookCategory[values.length];
         for (int i = 0; i < values.length; i++) {
-            categories[i] = BookCategory.fromString(values[i]);
+            categories[i] = BookCategory.valueOf(values[i]);
         }
 
-        return this.moduleService.getAllInstallableModules();
+        return this.moduleService.getAllInstallableModules(Integer.parseInt(installerIndex), categories);
+    }
+
+    /**
+     * Creates and returns a bible installer
+     * @return the bible installer that was created
+     */
+    public BibleInstaller addDirectoryInstaller() {
+        return this.swingService.addDirectoryInstaller();
     }
 
     /**

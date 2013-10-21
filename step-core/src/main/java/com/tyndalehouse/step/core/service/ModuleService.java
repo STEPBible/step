@@ -1,11 +1,11 @@
 /*******************************************************************************
  * Copyright (c) 2012, Directors of the Tyndale STEP Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without 
  * modification, are permitted provided that the following conditions 
  * are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright 
  * notice, this list of conditions and the following disclaimer.
  * Redistributions in binary form must reproduce the above copyright 
@@ -16,7 +16,7 @@
  * nor the names of its contributors may be used to endorse or promote 
  * products derived from this software without specific prior written 
  * permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
@@ -41,9 +41,8 @@ import com.tyndalehouse.step.core.models.BibleVersion;
 /**
  * Interface to the service that gives information about the books of the bible, the different types of bible,
  * etc. This service will mainly use JSword but may also rely on other data sources to display text.
- * 
+ *
  * @author chrisburrell
- * 
  */
 public interface ModuleService {
     /**
@@ -52,9 +51,10 @@ public interface ModuleService {
     List<BibleVersion> getAvailableModules();
 
     /**
-     * @param categories the types of modules to include
+     * @param categories     the types of modules to include
+     * @param installerIndex installer index to look up modules from
      * @return a list of all modules that could be installed
      */
-    List<BibleVersion> getAllInstallableModules(BookCategory... categories);
+    List<BibleVersion> getAllInstallableModules(int installerIndex, BookCategory... categories);
 
 }

@@ -87,13 +87,13 @@ public class ModuleServiceImpl implements ModuleService {
     }
 
     @Override
-    public List<BibleVersion> getAllInstallableModules(final BookCategory... categories) {
+    public List<BibleVersion> getAllInstallableModules(int installerIndex, final BookCategory... categories) {
         final BookCategory[] selected = categories.length == 0 ? new BookCategory[] { BookCategory.BIBLE,
                 BookCategory.COMMENTARY } : categories;
 
         LOGGER.info("Returning all modules currently not installed");
         final List<Book> installedVersions = this.jswordModuleService.getInstalledModules(selected);
-        final List<Book> allModules = this.jswordModuleService.getAllModules(selected);
+        final List<Book> allModules = this.jswordModuleService.getAllModules(installerIndex, selected);
 
         return getSortedSerialisableList(subtract(allModules, installedVersions),
                 this.clientSession.get().getLocale(), this.resolver);
@@ -114,7 +114,6 @@ public class ModuleServiceImpl implements ModuleService {
         for(Book b : originalBooks) {
             books.put(b.getInitials(), b);
         }
-
 
         for(Book b : booksToRemove) {
             books.remove(b.getInitials());

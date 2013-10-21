@@ -35,12 +35,7 @@ package com.tyndalehouse.step.core.service;
 import java.util.List;
 import java.util.Locale;
 
-import com.tyndalehouse.step.core.models.AvailableFeatures;
-import com.tyndalehouse.step.core.models.BibleVersion;
-import com.tyndalehouse.step.core.models.BookName;
-import com.tyndalehouse.step.core.models.EnrichedLookupOption;
-import com.tyndalehouse.step.core.models.KeyWrapper;
-import com.tyndalehouse.step.core.models.OsisWrapper;
+import com.tyndalehouse.step.core.models.*;
 import com.tyndalehouse.step.core.models.search.StrongCountsAndSubjects;
 
 /**
@@ -134,10 +129,10 @@ public interface BibleInformationService {
 
     /**
      * installs separate modules
-     * 
+     * @param installerIndex the id/index of the installer in the loaded STEP application
      * @param reference the reference, initials or book name
      */
-    void installModules(String reference);
+    void installModules(int installerIndex, String reference);
 
     /**
      * Returns the previous or next chapter
@@ -236,4 +231,11 @@ public interface BibleInformationService {
      */
     KeyWrapper convertReferenceForBook(String reference, String sourceVersion, String targetVersion);
 
+    /**
+     * Installs all modules from a particular directory
+     * @param directoryPath the directory path
+     */
+    void addDirectoryInstaller(String directoryPath);
+    
+    List<BibleInstaller> getInstallers();
 }

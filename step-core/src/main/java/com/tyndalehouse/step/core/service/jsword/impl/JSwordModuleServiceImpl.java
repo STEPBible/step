@@ -14,6 +14,8 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
+import com.tyndalehouse.step.core.data.DirectoryListingInstaller;
+import com.tyndalehouse.step.core.models.BibleInstaller;
 import com.tyndalehouse.step.core.utils.JSwordUtils;
 import org.crosswire.common.progress.JobManager;
 import org.crosswire.common.progress.Progress;
@@ -21,11 +23,9 @@ import org.crosswire.common.progress.WorkEvent;
 import org.crosswire.common.progress.WorkListener;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.BookCategory;
-import org.crosswire.jsword.book.BookException;
 import org.crosswire.jsword.book.BookFilter;
 import org.crosswire.jsword.book.Books;
 import org.crosswire.jsword.book.install.InstallException;
-import org.crosswire.jsword.book.install.InstallManager;
 import org.crosswire.jsword.book.install.Installer;
 import org.crosswire.jsword.index.IndexManager;
 import org.crosswire.jsword.index.IndexManagerFactory;
@@ -55,15 +55,9 @@ public class JSwordModuleServiceImpl implements JSwordModuleService {
     private boolean offline = false;
     private final JSwordVersificationService versificationService;
 
-    /**
-     * This method is deliberately placed at the top of the file to raise awareness that sensitive countries
-     * may not wish to access the internet.
-     * <p/>
-     * If the installation is set to "offline", then only return the offline installers.
-     *
-     * @return a set of installers
-     */
-    private List<Installer> getInstallers() {
+
+    @Override
+    public List<Installer> getInstallers() {
         return this.offline ? this.offlineInstallers : this.bookInstallers;
     }
 
@@ -143,8 +137,26 @@ public class JSwordModuleServiceImpl implements JSwordModuleService {
         IndexManagerFactory.getIndexManager().scheduleIndexCreation(book);
     }
 
+
+    @Override
+    public void installBook(final int installerIndex, final String initials) {
+        if (installerIndex == -1) {
+            installBook(initials);
+            return;
+        }
+
+        final List<Installer> installers = getInstallers();
+        final List<Installer> reducedInstallers = new ArrayList<Installer>();
+        reducedInstallers.add(installers.get(installerIndex));
+        installFromInstallers(initials, reducedInstallers);
+    }
+
     @Override
     public void installBook(final String initials) {
+        installFromInstallers(initials, getInstallers());
+    }
+
+    private void installFromInstallers(final String initials, List<Installer> installers) {
         LOGGER.debug("Installing module [{}]", initials);
         notBlank(initials, "No version was found", SERVICE_VALIDATION_ERROR);
 
@@ -152,7 +164,6 @@ public class JSwordModuleServiceImpl implements JSwordModuleService {
         if (!isInstalled(initials)) {
             LOGGER.debug("Book was not already installed, so kicking off installation process for [{}]",
                     initials);
-            final List<Installer> installers = getInstallers();
             for (final Installer i : installers) {
                 final Book bookToBeInstalled = i.getBook(initials);
 
@@ -322,9 +333,17 @@ public class JSwordModuleServiceImpl implements JSwordModuleService {
     }
 
     @Override
-    public List<Book> getAllModules(final BookCategory... bibleCategory) {
+    public List<Book> getAllModules(int installerIndex, final BookCategory... bibleCategory) {
         final List<Book> books = new ArrayList<Book>();
-        final List<Installer> installers = getInstallers();
+        List<Installer> installers = getInstallers();
+
+        if (installerIndex != -1) {
+            //use a single installer
+            Installer installer = installers.get(installerIndex);
+            installers = new ArrayList<Installer>();
+            installers.add(installer);
+        }
+
         for (final Installer installer : installers) {
             try {
                 installer.reloadBookList();
@@ -354,9 +373,14 @@ public class JSwordModuleServiceImpl implements JSwordModuleService {
         final Book book = this.versificationService.getBookFromVersion(initials);
 
         if (book != null) {
+            Book deadBook = Books.installed().getBook(initials);
             try {
-                Book deadBook = Books.installed().getBook(initials);
                 IndexManagerFactory.getIndexManager().deleteIndex(deadBook);
+            } catch (Exception e) {
+                LOGGER.warn("Deleting search index failed: " + initials, e);
+            }
+
+            try {
                 deadBook.getDriver().delete(deadBook);
             } catch (final Exception e) {
                 // book wasn't found probably
@@ -376,5 +400,13 @@ public class JSwordModuleServiceImpl implements JSwordModuleService {
                 }
             }
         }
+    }
+
+    @Override
+    public BibleInstaller addDirectoryInstaller(final String directoryPath) {
+        final DirectoryListingInstaller installer = new DirectoryListingInstaller(directoryPath, directoryPath);
+        this.bookInstallers.add(installer);
+
+        return new BibleInstaller(this.bookInstallers.size() - 1, installer.getInstallerName(), false);
     }
 }

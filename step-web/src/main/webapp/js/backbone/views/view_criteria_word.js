@@ -74,10 +74,27 @@ var WordCriteria = SearchCriteria.extend({
         $(this.viewElementsByName.originalWord).lexicalcomplete({
             minLength: 2,
             select: function (event, ui) {
-                //manually change the text, so that the change() method can fire against the right version
-                $(this).val(ui.item.value);
+                var suggestionType = self.getSearchType();
+                if(suggestionType == 'meaning') {
+                    //remove the last word
+                    var currentValue = $(this).val();
+                    var lastSpace = currentValue.lastIndexOf(' ');
+                    if(lastSpace != -1) {
+                        //remove the last bit
+                        currentValue = currentValue.substr(0, lastSpace) + " ";
+                    } else {
+                        currentValue = "";
+                    }
+                    this.value = currentValue + ui.item.value;
+                    $(this).val(this.value);
+                    
+                } else {
+                    //manually change the text, so that the change() method can fire against the right version
+                    $(this).val(ui.item.value);
+                }
                 $(this).change();
                 $(this).trigger('keyup');
+                return false;
             },
             open: function (event, ui) {
                 //check we've got the right size
@@ -89,16 +106,7 @@ var WordCriteria = SearchCriteria.extend({
             source: function (request, response) {
                 var that = this;
 
-                var searchType = self.viewElementsByName.originalType.val();
-                var suggestionType = undefined;
-                if (searchType == HEBREW_WORDS[0]) {
-                    suggestionType = "hebrew";
-                } else if (searchType == GREEK_WORDS[0]) {
-                    suggestionType = "greek";
-                } else if (searchType == WORDS_MEANING[0]) {
-                    suggestionType = "meaning";
-                }
-
+                var suggestionType = self.getSearchType();
                 if (suggestionType == null) {
                     return response({});
                 }
@@ -110,13 +118,21 @@ var WordCriteria = SearchCriteria.extend({
                         that.options.allForms
                     ],
                     callback: function (text) {
-                        response($.map(text, function (item) {
-                            return { label: "<span>" +
-                                "<span class='" + (item.strongNumber[0] == 'H' ? 'hbFont ancientHbSearchSuggestion' : 'greekLanguage ancientSearchSuggestion') + " suggestionColumn'>" + item.matchingForm + "</span>" +
-                                "<span class='suggestionColumn stepTransliteration'>" + step.util.ui.markUpTransliteration(item.stepTransliteration) + "</span>" +
-                                "<span class='suggestionColumn'>" + item.gloss + "</span>" +
-                                "</span>", value: suggestionType == "meaning" ? item.gloss : item.matchingForm };
-                        }));
+                        if (suggestionType == 'meaning') {
+                            response($.map(text, function (item) {
+                                return { label: item.gloss  };
+                            }));
+
+                        } else {
+                            response($.map(text, function (item) {
+                                return { label: "<span>" +
+                                    "<span class='" + (item.strongNumber[0] == 'H' ? 'hbFont ancientHbSearchSuggestion' : 'greekLanguage ancientSearchSuggestion') + " suggestionColumn'>" + item.matchingForm + "</span>" +
+                                    "<span class='suggestionColumn stepTransliteration'>" + step.util.ui.markUpTransliteration(item.stepTransliteration) + "</span>" +
+                                    "<span class='suggestionColumn'>" + item.gloss + "</span>" +
+                                    "</span>", value: suggestionType == "meaning" ? item.gloss : item.matchingForm };
+                            }));
+                        }
+
                     },
                     passageId: self.model.get("passageId"),
                     level: 'error'
@@ -130,8 +146,21 @@ var WordCriteria = SearchCriteria.extend({
             $(this).lexicalcomplete("search");
         });
 
-        $(this).hear("lexical-filter-change-" + self.model.get("passageId") , function () {
+        $(this).hear("lexical-filter-change-" + self.model.get("passageId"), function () {
             self.viewElementsByName.originalWord.lexicalcomplete("search");
         });
+    },
+    
+    getSearchType : function() {
+        var searchType = this.viewElementsByName.originalType.val();
+        var suggestionType = undefined;
+        if (searchType == HEBREW_WORDS[0]) {
+            suggestionType = "hebrew";
+        } else if (searchType == GREEK_WORDS[0]) {
+            suggestionType = "greek";
+        } else if (searchType == WORDS_MEANING[0]) {
+            suggestionType = "meaning";
+        }
+        return suggestionType;
     }
 });

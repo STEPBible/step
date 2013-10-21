@@ -12,6 +12,7 @@ import static com.tyndalehouse.step.core.utils.language.HebrewUtils.isHebrewText
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -80,22 +81,15 @@ public class OriginalWordSuggestionServiceImpl implements OriginalWordSuggestion
      * @return the list of suggestions
      */
     private List<LexiconSuggestion> getMeaningSuggestions(final String form) {
-        // add leading wildcard to last word
-        final String[] split = split(form);
-        final StringBuilder sb = new StringBuilder(form.length() + 2);
-        for (int ii = 0; ii < split.length; ii++) {
-            if (ii == split.length - 1) {
-                sb.append('*');
-            }
-            sb.append(split[ii]);
-            if (ii == split.length - 1) {
-                sb.append('*');
-            }
+        final Set<String> meaningTerms = this.definitions.findSetOfTermsStartingWith(form, "stepGloss", "translations");
+        List<LexiconSuggestion> suggestions = new ArrayList<LexiconSuggestion>();
+        for(String term : meaningTerms) {
+            final LexiconSuggestion suggestion = new LexiconSuggestion();
+            suggestion.setGloss(term);
+            suggestions.add(suggestion);
         }
-
-        final EntityDoc[] results = this.definitions.searchSingleColumn("translations", sb.toString(),
-                Operator.AND, true);
-        return convertDefinitionDocsToSuggestion(results);
+        
+        return suggestions;
     }
 
     /**

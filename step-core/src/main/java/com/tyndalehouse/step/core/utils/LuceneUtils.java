@@ -3,6 +3,7 @@ package com.tyndalehouse.step.core.utils;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.service.SearchService;
 import org.apache.lucene.index.Term;
+import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.PrefixTermEnum;
 import org.crosswire.jsword.index.lucene.LuceneIndex;
@@ -40,10 +41,17 @@ public final class LuceneUtils {
     public static List<String> getAllTermsPrefixedWith(IndexSearcher searcher,
                                                        final String fieldName,
                                                        final String searchTerm) {
+
+
+        final String lastTerm = getLastTerm(searchTerm);
+        if (StringUtils.isBlank(lastTerm)) {
+            return new ArrayList<String>(0);
+        }
+
         List<String> results = new ArrayList<String>(SearchService.MAX_SUGGESTIONS);
         try {
             PrefixTermEnum tagsEnum = new PrefixTermEnum(searcher.getIndexReader(),
-                    new Term(fieldName, searchTerm));
+                    new Term(fieldName, QueryParser.escape(lastTerm.toLowerCase().trim())));
             int count = 0;
             if (tagsEnum.term() == null) {
                 return results;
@@ -55,7 +63,18 @@ public final class LuceneUtils {
         } catch (IOException ex) {
             throw new StepInternalException(ex.getMessage(), ex);
         }
-
         return results;
+    }
+
+    /**
+     * Obtains the last word in the list
+     *
+     * @param fullTerm the full term as entered by the user
+     * @return the last term in the input string
+     */
+    private static String getLastTerm(String fullTerm) {
+        final String trimmedUserEntry = fullTerm.toLowerCase();
+        int lastWordStart = trimmedUserEntry.indexOf(' ');
+        return lastWordStart != -1 ? trimmedUserEntry.substring(lastWordStart + 1) : trimmedUserEntry;
     }
 }

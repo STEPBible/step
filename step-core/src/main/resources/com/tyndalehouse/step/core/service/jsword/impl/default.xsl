@@ -1729,6 +1729,7 @@
     <xsl:template match="text()">
         <xsl:choose>
             <xsl:when test="name(./preceding-sibling::node()) and name(./following-sibling::node()) = 'note' and normalize-space(.) = ','"></xsl:when>
+            <xsl:when test="./ancestor::cell/@xml:lang != 'grc' and ./ancestor::cell/@xml:lang != 'he'"><xsl:value-of select="." /></xsl:when>
             <xsl:when test="$RemoveVowels = 'true'"><xsl:value-of select="conversion:unAccent(string(.))" /></xsl:when>
             <xsl:when test="$RemovePointing = 'true'"><xsl:value-of select="conversion:unAccentLeavingVowels(string(.))" /></xsl:when>
             <xsl:otherwise><xsl:value-of select="." /></xsl:otherwise>

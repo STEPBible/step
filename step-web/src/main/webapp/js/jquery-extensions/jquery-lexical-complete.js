@@ -1,6 +1,7 @@
 $.widget("custom.lexicalcomplete", $.ui.autocomplete, {
     options : {
-        allForms : false
+        allForms : false,
+        showHeader : true
     },
 
     _renderMenu : function(ul, items) {
@@ -10,7 +11,7 @@ $.widget("custom.lexicalcomplete", $.ui.autocomplete, {
         $(document).find(".lexicalOptions").parent().empty();
         
         $.each(items, function(index, item) {
-            if (index == 0) {
+            if (index == 0 && self.options.showHeader) {
                 var toolbar = "";
                 toolbar += '<div class="lexicalOptions">';
                 toolbar += __s.include_all_forms + ' <input type="checkbox" id="includeAllForms" class="includeAllForms" key="includeAllForms" />';

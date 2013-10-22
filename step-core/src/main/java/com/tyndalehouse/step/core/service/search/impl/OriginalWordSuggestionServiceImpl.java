@@ -81,7 +81,7 @@ public class OriginalWordSuggestionServiceImpl implements OriginalWordSuggestion
      * @return the list of suggestions
      */
     private List<LexiconSuggestion> getMeaningSuggestions(final String form) {
-        final Set<String> meaningTerms = this.definitions.findSetOfTermsStartingWith(form, "stepGloss", "translations");
+        final Set<String> meaningTerms = this.definitions.findSetOfTermsStartingWith(form, "translations");
         List<LexiconSuggestion> suggestions = new ArrayList<LexiconSuggestion>();
         for(String term : meaningTerms) {
             final LexiconSuggestion suggestion = new LexiconSuggestion();

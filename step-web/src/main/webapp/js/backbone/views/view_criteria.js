@@ -339,7 +339,7 @@ var SearchCriteria = Backbone.View.extend({
             //also add a qtip
             jqElement.qtip({
                 show: { event: 'focus' }, hide: { event: 'blur' },
-                position: { at: "right center", my: "left center", viewport: $(window) },
+                position: { at: "right top", my: "left bottom", viewport: $(window) },
                 style: { classes: "primaryLightBg primaryLightBorder" }
             });
         }

@@ -31,5 +31,6 @@ public class DefinitionAnalyzer extends PerFieldAnalyzerWrapper {
         addAnalyzer("otherTransliteration", transliteration);
         addAnalyzer("simplifiedStepTransliteration", transliteration);
         addAnalyzer("translations", standard);
+        addAnalyzer("translationsStem", new PorterStemmerAnalyzer());
     }
 }

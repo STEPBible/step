@@ -4,9 +4,9 @@ var WordCriteria = SearchCriteria.extend({
         SearchCriteria.prototype.initialize.call(this);
 
         this.originalAncient = this.$el.find(".originalAncient");
+        this.autocomplete();
         this._displayCorrectOptions();
         this._setTitleFromTargetChange();
-        this.autocomplete();
     },
 
     /**
@@ -17,13 +17,9 @@ var WordCriteria = SearchCriteria.extend({
         this._setTitleFromTargetChange();
     },
 
-    /**
-     * Invoked because it is set up as a drop function
-     */
     originalFormsChanged: function () {
         this._displayCorrectOptions();
     },
-
     /**
      * Updates the qtip title to display the correct message
      * @private
@@ -45,15 +41,21 @@ var WordCriteria = SearchCriteria.extend({
     },
 
 
+
     _displayCorrectOptions: function () {
         var currentType = this.viewElementsByName.originalType.val();
 
         var isMeaning = currentType == WORDS_MEANING[0];
         this.originalAncient.toggle(!isMeaning);
         this._displayCorrectGroupBy(currentType);
+        $(this.viewElementsByName.originalWord).lexicalcomplete("option", "showHeader", !isMeaning);
     },
 
+    
     _displayCorrectGroupBy: function (currentType) {
+        /**
+         * Invoked because it is set up as a drop function
+         */
         if (currentType == WORDS_MEANING[0]) {
             this.viewElementsByName.originalSorting.prop("disabled", false);
             return;

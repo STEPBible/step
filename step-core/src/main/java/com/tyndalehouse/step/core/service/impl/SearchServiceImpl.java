@@ -709,9 +709,9 @@ public class SearchServiceImpl implements SearchService {
     private Set<String> adaptQueryForMeaningSearch(final SearchQuery sq) {
         final String query = sq.getCurrentSearch().getQuery();
 
-        final QueryParser queryParser = new QueryParser(Version.LUCENE_30, "translations",
+        final QueryParser queryParser = new QueryParser(Version.LUCENE_30, "translationsStem",
                 this.definitions.getAnalyzer());
-        queryParser.setDefaultOperator(Operator.AND);
+        queryParser.setDefaultOperator(Operator.OR);
         try {
             final Query parsed = queryParser.parse("-stopWord:true " + query);
             final EntityDoc[] matchingMeanings = this.definitions.search(parsed);

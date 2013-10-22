@@ -41,8 +41,6 @@ public final class LuceneUtils {
     public static List<String> getAllTermsPrefixedWith(IndexSearcher searcher,
                                                        final String fieldName,
                                                        final String searchTerm) {
-
-
         final String lastTerm = getLastTerm(searchTerm);
         if (StringUtils.isBlank(lastTerm)) {
             return new ArrayList<String>(0);
@@ -74,7 +72,7 @@ public final class LuceneUtils {
      */
     private static String getLastTerm(String fullTerm) {
         final String trimmedUserEntry = fullTerm.toLowerCase();
-        int lastWordStart = trimmedUserEntry.indexOf(' ');
+        int lastWordStart = trimmedUserEntry.lastIndexOf(' ');
         return lastWordStart != -1 ? trimmedUserEntry.substring(lastWordStart + 1) : trimmedUserEntry;
     }
 }

@@ -33,6 +33,8 @@
 WORDS_MEANING = [__s.words_meaning, __s.words_meaning_explanation];
 GREEK_WORDS = [__s.greek_word, __s.greek_word_explanation];
 HEBREW_WORDS = [__s.hebrew_word, __s.hebrew_word_explanation];
+GREEK_WORDS_MEANING = [__s.greek_word_meaning, __s.greek_word_meaning_explanation];
+HEBREW_WORDS_MEANING = [__s.hebrew_word_meaning, __s.hebrew_word_meaning_explanation];
 
 SPECIFIC_FORM = __s.specific_form;
 ALL_FORMS = __s.all_forms;
@@ -112,9 +114,13 @@ step.defaults = {
         
         original : {
             originalTypes : [WORDS_MEANING[0],
-                             GREEK_WORDS[0], 
-                             HEBREW_WORDS[0]],
-            originalTypesReference : ["MEANING", "GREEK", "HEBREW"],
+                             GREEK_WORDS[0],
+                             GREEK_WORDS_MEANING[0],
+                             HEBREW_WORDS[0],
+                             HEBREW_WORDS_MEANING[0]
+            ],
+            //Need to match LexicalSuggestionType
+            originalTypesReference : ["MEANING", "GREEK", "GREEK_MEANING", "HEBREW", "HEBREW_MEANING"],
             originalForms: [ALL_RELATED, ALL_FORMS, SPECIFIC_FORM],
             originalFormsReference : ["RELATED", "ALL", "SPECIFIC"],
             originalSorting:        [SCRIPTURE, VOCABULARY, ORIGINAL_SPELLING],

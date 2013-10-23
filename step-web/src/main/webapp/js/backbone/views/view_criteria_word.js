@@ -26,7 +26,6 @@ var WordCriteria = SearchCriteria.extend({
      */
     _setTitleFromTargetChange: function () {
         var value = this.viewElementsByName.originalType.val();
-
         switch (value) {
             case WORDS_MEANING[0] :
                 this.viewElementsByName.originalWord.attr("title", WORDS_MEANING[1]);
@@ -34,13 +33,17 @@ var WordCriteria = SearchCriteria.extend({
             case GREEK_WORDS[0] :
                 this.viewElementsByName.originalWord.attr("title", GREEK_WORDS[1]);
                 break;
+            case GREEK_WORDS_MEANING[0]:
+                this.viewElementsByName.originalWord.attr("title", GREEK_WORDS_MEANING[1]);
+                break;
             case HEBREW_WORDS[0] :
                 this.viewElementsByName.originalWord.attr("title", HEBREW_WORDS[1]);
                 break;
+            case HEBREW_WORDS_MEANING[0]:
+                this.viewElementsByName.originalWord.attr("title", HEBREW_WORDS_MEANING[1]);
+                break;
         }
     },
-
-
 
     _displayCorrectOptions: function () {
         var currentType = this.viewElementsByName.originalType.val();
@@ -61,7 +64,9 @@ var WordCriteria = SearchCriteria.extend({
             return;
         }
 
-        if (currentType == GREEK_WORDS[0] || currentType == HEBREW_WORDS[0]) {
+        if (currentType == GREEK_WORDS[0] || currentType == HEBREW_WORDS[0] ||
+            currentType == GREEK_WORDS_MEANING[0] || currentType == HEBREW_WORDS_MEANING[0]
+            ) {
             var kindOfForms = this.viewElementsByName.originalForms.val();
             if (kindOfForms == ALL_RELATED) {
                 this.viewElementsByName.originalSorting.prop("disabled", false);
@@ -77,7 +82,7 @@ var WordCriteria = SearchCriteria.extend({
             minLength: 2,
             select: function (event, ui) {
                 var suggestionType = self.getSearchType();
-                if(suggestionType == 'meaning') {
+                if(suggestionType == 'MEANING') {
                     //remove the last word
                     var currentValue = $(this).val();
                     var lastSpace = currentValue.lastIndexOf(' ');
@@ -120,7 +125,7 @@ var WordCriteria = SearchCriteria.extend({
                         that.options.allForms
                     ],
                     callback: function (text) {
-                        if (suggestionType == 'meaning') {
+                        if (suggestionType == 'MEANING') {
                             response($.map(text, function (item) {
                                 return { label: item.gloss  };
                             }));
@@ -131,7 +136,7 @@ var WordCriteria = SearchCriteria.extend({
                                     "<span class='" + (item.strongNumber[0] == 'H' ? 'hbFont ancientHbSearchSuggestion' : 'greekLanguage ancientSearchSuggestion') + " suggestionColumn'>" + item.matchingForm + "</span>" +
                                     "<span class='suggestionColumn stepTransliteration'>" + step.util.ui.markUpTransliteration(item.stepTransliteration) + "</span>" +
                                     "<span class='suggestionColumn'>" + item.gloss + "</span>" +
-                                    "</span>", value: suggestionType == "meaning" ? item.gloss : item.matchingForm };
+                                    "</span>", value: suggestionType == "MEANING" ? item.gloss : item.matchingForm };
                             }));
                         }
 
@@ -154,15 +159,6 @@ var WordCriteria = SearchCriteria.extend({
     },
     
     getSearchType : function() {
-        var searchType = this.viewElementsByName.originalType.val();
-        var suggestionType = undefined;
-        if (searchType == HEBREW_WORDS[0]) {
-            suggestionType = "hebrew";
-        } else if (searchType == GREEK_WORDS[0]) {
-            suggestionType = "greek";
-        } else if (searchType == WORDS_MEANING[0]) {
-            suggestionType = "meaning";
-        }
-        return suggestionType;
+        return this.model.resolveToReference("originalType", this.viewElementsByName.originalType.val());
     }
 });

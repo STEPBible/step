@@ -64,9 +64,9 @@ var WordSearchModel = SearchModel.extend({
         if (originalType == WORDS_MEANING[0]) {
             query += "m";
         } else {
-            if (originalType == GREEK_WORDS[0]) {
+            if (originalType == GREEK_WORDS[0] || originalType == GREEK_WORDS_MEANING[0]) {
                 query += "g";
-            } else if (originalType == HEBREW_WORDS[0]) {
+            } else if (originalType == HEBREW_WORDS[0] || originalType == HEBREW_WORDS_MEANING[0]) {
                 query += "h";
             }
 

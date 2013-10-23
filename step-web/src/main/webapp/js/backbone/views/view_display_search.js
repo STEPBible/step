@@ -49,10 +49,10 @@ var SearchDisplayView = Backbone.View.extend({
         var passageId = this.model.get("passageId");
         step.fonts.redoTextSize(passageId, results);
 
-        var passageHtml = this._doSpecificSearchRequirements(query, results, resultsWrapper, resultsWrapper.masterVersion);
         if(append) {
-            this.passageContent.append(passageHtml);    
+            this.passageContent.append(results);
         } else {
+            var passageHtml = this._doSpecificSearchRequirements(query, results, resultsWrapper, resultsWrapper.masterVersion);
             step.util.ui.emptyOffDomAndPopulate(this.passageContent, passageHtml);
             this.passageContent.scroll(function () {
                 self.getMoreResults();

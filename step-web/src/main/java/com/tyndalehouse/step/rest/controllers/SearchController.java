@@ -111,21 +111,7 @@ public class SearchController {
             final String includeAllForms) {
         notBlank(form, "Blank lexical prefix passed.", APP_MISSING_FIELD);
 
-        LexicalSuggestionType suggestionType = null;
-        if ("greek".equals(greekOrHebrew)) {
-            suggestionType = LexicalSuggestionType.GREEK;
-        } else if ("hebrew".equals(greekOrHebrew)) {
-            suggestionType = LexicalSuggestionType.HEBREW;
-        } else if ("meaning".equals(greekOrHebrew)) {
-            suggestionType = LexicalSuggestionType.MEANING;
-        }
-
-        // still null then return
-        if (suggestionType == null) {
-            return new ArrayList<LexiconSuggestion>(0);
-        }
-
-        return this.originalWordSuggestions.getLexicalSuggestions(suggestionType, restoreSearchQuery(form),
+        return this.originalWordSuggestions.getLexicalSuggestions(LexicalSuggestionType.valueOf(greekOrHebrew), restoreSearchQuery(form),
                 Boolean.parseBoolean(includeAllForms));
     }
 

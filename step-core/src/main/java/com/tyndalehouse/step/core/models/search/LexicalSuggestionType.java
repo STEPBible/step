@@ -12,9 +12,17 @@ public enum LexicalSuggestionType {
      */
     HEBREW,
     /**
+     * Hebrew meaning searches
+     */
+    HEBREW_MEANING,
+    /**
      * only greek should be returned
      */
     GREEK,
+    /**
+     * Greek meaning searches
+     */
+    GREEK_MEANING,
     /**
      * meaning searches
      */

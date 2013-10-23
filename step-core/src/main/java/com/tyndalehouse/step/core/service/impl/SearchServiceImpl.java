@@ -62,6 +62,8 @@ import org.apache.lucene.queryParser.MultiFieldQueryParser;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.queryParser.QueryParser.Operator;
+import org.apache.lucene.search.BooleanClause;
+import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.util.Version;
 import org.crosswire.jsword.passage.Key;
@@ -709,11 +711,26 @@ public class SearchServiceImpl implements SearchService {
     private Set<String> adaptQueryForMeaningSearch(final SearchQuery sq) {
         final String query = sq.getCurrentSearch().getQuery();
 
+        
+        
         final QueryParser queryParser = new QueryParser(Version.LUCENE_30, "translationsStem",
                 this.definitions.getAnalyzer());
         queryParser.setDefaultOperator(Operator.OR);
+                
         try {
-            final Query parsed = queryParser.parse("-stopWord:true " + query);
+            //we need to also add the step gloss, but since we need the analyser for stems,
+            //we want to use the query parser that does the tokenization for us
+            //could probably do better if required
+            String[] terms = StringUtils.split(query);
+            StringBuilder finalQuery = new StringBuilder();
+            for(String term : terms) {
+                final String escapedTerm = QueryParser.escape(term);
+                finalQuery.append(escapedTerm);
+                finalQuery.append(" stepGlossStem:");
+                finalQuery.append(escapedTerm);
+            }
+            
+            final Query parsed = queryParser.parse("-stopWord:true " + finalQuery.toString());
             final EntityDoc[] matchingMeanings = this.definitions.search(parsed);
 
             final Set<String> strongs = new HashSet<String>(matchingMeanings.length);

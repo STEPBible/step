@@ -4,13 +4,17 @@ import static org.apache.lucene.util.Version.LUCENE_30;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.StringReader;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import com.tyndalehouse.step.core.utils.LuceneUtils;
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.TokenStream;
+import org.apache.lucene.analysis.tokenattributes.TermAttribute;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queryParser.MultiFieldQueryParser;
 import org.apache.lucene.queryParser.ParseException;
@@ -396,6 +400,37 @@ public class EntityIndexReaderImpl implements EntityIndexReader {
         }
     }
 
+    @Override
+    public List<String> getAnalyzedTokens(final String fieldName, final String input, boolean escapeToken) {
+        final TokenStream tokens = this.getAnalyzer().tokenStream(fieldName, new StringReader(input));
+
+        //construct query to search for both stepGloss and translations - the last word gets a trailing wildcard
+        //query will be in the form of +(gloss:a trans:a) +(gloss:b* trans:b*) +strong:H*
+        List<String> tokenItems = new ArrayList<String>(2);
+        try {
+            tokens.reset();
+            TermAttribute termAttribute = tokens.getAttribute(TermAttribute.class);
+            while (tokens.incrementToken()) {
+                String term = termAttribute.term();
+                if(escapeToken) {
+                    term = QueryParser.escape(term);
+                }
+                tokenItems.add(term);
+            }
+        } catch (IOException e) {
+            throw new StepInternalException("Unable to parse query", e);
+        } finally {
+            try {
+                tokens.end();
+                tokens.close();
+            } catch (IOException e) {
+                LOGGER.trace("Unable to properly close stream.");
+            }
+        }
+        return tokenItems;
+    }
+
+    
     /**
      * @param searcher the searcher to set
      */

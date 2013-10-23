@@ -272,4 +272,12 @@ public interface EntityIndexReader extends Closeable {
      */
     EntityDoc[] search(String defaultField, String querySyntax);
 
+    /**
+     * Runs the analyzer on the input query
+     * @param fieldName the field that is being analyzed
+     * @param input the input query
+     * @param escapeForQuery true to indicate we want to escape the sequence for use in a later query
+     * @return the list of tokens
+     */
+    List<String> getAnalyzedTokens(String fieldName, String input, boolean escapeForQuery);
 }

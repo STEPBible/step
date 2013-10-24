@@ -32,6 +32,9 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.models.stats;
 
+import com.tyndalehouse.step.core.models.KeyWrapper;
+import com.tyndalehouse.step.core.utils.StringUtils;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -41,6 +44,7 @@ import java.util.Map;
  */
 public class PassageStat {
     private Map<String, Integer> stats = new HashMap<String, Integer>(128);
+    private KeyWrapper reference;
 
     /**
      * Adds the word to the current stats
@@ -54,6 +58,42 @@ public class PassageStat {
         }
 
         this.stats.put(word, counts + 1);
+    }
+
+    /**
+     * Tries various cases before adding a word
+     * @param word the root word that we want to add
+     */
+    public void addWordTryCases(final String word) {
+        String key = word;
+        Integer counts = this.stats.get(word);
+        if(counts == null) {
+            //try upper case
+            key = word.toUpperCase();
+            counts = this.stats.get(key);
+            if(counts == null) {
+                //try lower case
+                key = word.toLowerCase();
+                counts = this.stats.get(key);
+                if(counts == null) {
+                    //try all title case
+                    key = StringUtils.toTitleCase(word, true);
+                    counts = this.stats.get(key);
+                    if(counts == null) {
+                        key = StringUtils.toTitleCase(word, false);
+                        counts = this.stats.get(key);
+                    }
+                }
+            }
+        }
+        
+        if(counts == null) {
+            //didn't find it anywhere in the list, so if the word is all upper case, we'll favour the title case version
+            counts = 0;
+        }
+        
+        //key ends up being one of the chain of ifs above in priority order. 
+        this.stats.put(key, counts + 1);
     }
 
     /**
@@ -96,4 +136,17 @@ public class PassageStat {
         this.stats = stats;
     }
 
+    /**
+     * @return the reference for this particular stat
+     */
+    public KeyWrapper getReference() {
+        return reference;
+    }
+
+    /**
+     * @param reference the reference for this particular stat
+     */
+    public void setReference(final KeyWrapper reference) {
+        this.reference = reference;
+    }
 }

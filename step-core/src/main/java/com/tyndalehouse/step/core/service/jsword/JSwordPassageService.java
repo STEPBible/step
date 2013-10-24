@@ -50,6 +50,8 @@ import com.tyndalehouse.step.core.models.OsisWrapper;
  * 
  */
 public interface JSwordPassageService {
+    String REFERENCE_BOOK = "ESV";
+
     /**
      * returns the Osis Text as a String
      * 
@@ -73,19 +75,9 @@ public interface JSwordPassageService {
     OsisWrapper getOsisText(String version, String reference);
 
     /**
-     * Returns the previous or next chapter
-     * 
-     * @param reference the reference
-     * @param version the version of the book we are interested in
-     * @param previousChapter true for previous chapter, false for next chapter
-     * @return the new reference to display on the user screen
-     */
-    KeyWrapper getSiblingChapter(String reference, String version, boolean previousChapter);
-
-    /**
      * Given a verse number, we lookup the verse in question and return it. The numberedVersion is assumed to
      * be KJV (i.e. KJV is used for the number lookup)
-     * 
+     *
      * @param version the version to use for the passage lookup
      * @param numberedVersion the version to be used to lookup the ordinal verse numbers
      * @param startVerseId the start of the verse number to look up
@@ -97,8 +89,18 @@ public interface JSwordPassageService {
      * @return the OsisWrapper containing the text
      */
     OsisWrapper getOsisTextByVerseNumbers(String version, String numberedVersion, int startVerseId,
-            int endVerseId, List<LookupOption> options, final String interlinearVersion,
-            Boolean roundReference, boolean ignoreVerse0);
+                                          int endVerseId, List<LookupOption> options, final String interlinearVersion,
+                                          Boolean roundReference, boolean ignoreVerse0);
+    /**
+     * Returns the previous or next chapter
+     * 
+     * @param reference the reference
+     * @param version the version of the book we are interested in
+     * @param previousChapter true for previous chapter, false for next chapter
+     * @return the new reference to display on the user screen
+     */
+    KeyWrapper getSiblingChapter(String reference, String version, boolean previousChapter);
+
 
     /**
      * Looks up a very short starter for ten

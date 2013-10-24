@@ -38,7 +38,7 @@
     }
     
 %>
-<HTML xmlns:fb="http://ogp.me/ns/fb#" itemscope itemtype="http://schema.org/Book">
+<HTML xmlns:fb="http://ogp.me/ns/fb#">
 <HEAD>
     <% if(isFirstPassage) { %>
         <TITLE><%= stepRequest.getTitle() %></TITLE>
@@ -55,10 +55,12 @@
 
 <%-- Do first passage --%>
 <% if(version0 != null && reference0 != null) { %>
-<h1><%= version0 %> - <%= reference0 %></h1>
-<div itemscope itemtype="http://schema.org/CreativeWork" itemprop="text">
-    <%=	bible.getBibleText(version0, reference0).getValue() %>
-</div>
+<span itemscope itemtype="http://schema.org/Book" >
+    <h1 itemprop="name"><%= version0 %> - <%= reference0 %></h1>
+    <div itemprop="text">
+        <%=	bible.getBibleText(version0, reference0).getValue() %>
+    </div>
+</span>
 <% } %>
 
 <%-- Then do first --%>

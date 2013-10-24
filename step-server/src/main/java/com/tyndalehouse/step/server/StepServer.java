@@ -66,6 +66,9 @@ public final class StepServer {
     public static final String ENGLISH_GENERIC_ERROR = "An error has occurred";
     public static final String ENGLISH_BROWSER_ERROR = "STEP was unable to launch the browser.";
     public static final String BACKGROUND_LAUNCH = "backgroundLaunch";
+    public static final String STEP_DESCRIPTION = "STEP :: Scripture Tools for Every Person\n\u00a9 Tyndale House "
+            + Calendar.getInstance().get(Calendar.YEAR);
+    public static final String STEP_TITLE = "STEP :: Scripture Tools for Every Person";
     private InetAddress listeningAddress;
     private final InetSocketAddress socket;
     private final URL warURL;
@@ -264,9 +267,8 @@ public final class StepServer {
             @Override
             public void actionPerformed(final ActionEvent e) {
                 final int showOptionDialog = JOptionPane.showOptionDialog(null,
-                        "STEP :: Scripture Tools for Every Person\n\u00a9 Tyndale House "
-                                + Calendar.getInstance().get(Calendar.YEAR),
-                        "STEP :: Scripture Tools for Every Person", JOptionPane.OK_CANCEL_OPTION,
+                        STEP_DESCRIPTION,
+                        STEP_TITLE, JOptionPane.OK_CANCEL_OPTION,
                         JOptionPane.INFORMATION_MESSAGE, null,
                         new Object[]{htmlMessages.getString("launch_browser"), htmlMessages.getString("close")},
                         htmlMessages.getString("launch_browser"));

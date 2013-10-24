@@ -1,11 +1,11 @@
 /*******************************************************************************
  * Copyright (c) 2012, Directors of the Tyndale STEP Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without 
  * modification, are permitted provided that the following conditions 
  * are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright 
  * notice, this list of conditions and the following disclaimer.
  * Redistributions in binary form must reproduce the above copyright 
@@ -16,7 +16,7 @@
  * nor the names of its contributors may be used to endorse or promote 
  * products derived from this software without specific prior written 
  * permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
@@ -62,7 +62,7 @@ import com.yammer.metrics.annotation.Timed;
 
 /**
  * The controller for retrieving information on the bible or texts from the bible.
- * 
+ *
  * @author chrisburrell
  */
 @RequestScoped
@@ -73,13 +73,13 @@ public class BibleController {
 
     /**
      * creates the controller giving access to bible information.
-     * 
+     *
      * @param bibleInformation the service allowing access to biblical material
-     * @param clientSession clientSession given on the request
+     * @param clientSession    clientSession given on the request
      */
     @Inject
     public BibleController(final BibleInformationService bibleInformation,
-            final Provider<ClientSession> clientSession) {
+                           final Provider<ClientSession> clientSession) {
         this.bibleInformation = bibleInformation;
         this.clientSession = clientSession;
         LOGGER.debug("Created Bible Controller");
@@ -87,7 +87,7 @@ public class BibleController {
 
     /**
      * a REST method that returns version of the Bible that are available.
-     * 
+     *
      * @param allVersions boolean to indicate whether all versions should be returned
      * @return all versions of modules that are considered to be Bibles.
      */
@@ -106,8 +106,8 @@ public class BibleController {
 
     /**
      * a REST method that returns text from the Bible.
-     * 
-     * @param version the initials identifying the version
+     *
+     * @param version   the initials identifying the version
      * @param reference the reference to lookup
      * @return the text to be displayed, formatted as HTML
      */
@@ -118,10 +118,10 @@ public class BibleController {
 
     /**
      * a REST method that returns text from the Bible.
-     * 
-     * @param version the initials identifying the version
+     *
+     * @param version   the initials identifying the version
      * @param reference the reference to lookup
-     * @param options the list of options to be passed through and affect the retrieval process
+     * @param options   the list of options to be passed through and affect the retrieval process
      * @return the text to be displayed, formatted as HTML
      */
 
@@ -132,9 +132,9 @@ public class BibleController {
     /**
      * a REST method that returns Bible Text
      *
-     * @param version the initials identifying the version
-     * @param reference the reference to lookup
-     * @param options a list of options to be passed in
+     * @param version            the initials identifying the version
+     * @param reference          the reference to lookup
+     * @param options            a list of options to be passed in
      * @param interlinearVersion the interlinear version if provided adds lines under the text
      * @return the text to be displayed, formatted as HTML
      */
@@ -147,11 +147,11 @@ public class BibleController {
     /**
      * a REST method that returns.
      *
-     * @param version the initials identifying the version
-     * @param reference the reference to lookup
-     * @param options a list of options to be passed in
+     * @param version            the initials identifying the version
+     * @param reference          the reference to lookup
+     * @param options            a list of options to be passed in
      * @param interlinearVersion the interlinear version if provided adds lines under the text
-     * @param interlinearMode the mode to use for displaying
+     * @param interlinearMode    the mode to use for displaying
      * @return the text to be displayed, formatted as HTML
      */
 
@@ -166,38 +166,37 @@ public class BibleController {
     }
 
 
-
     /**
      * Looks up the bible text by verse numbers, mostly used for continuous scrolling.
-     * 
-     * @param version the version initials
+     *
+     * @param version      the version initials
      * @param startVerseId the start verse ordinal
-     * @param endVerseId the end verse ordinal
-     * @param roundUp indicates that verse numbers will be rounded up
-     * @param options the comma-separated list of options (optional)
+     * @param endVerseId   the end verse ordinal
+     * @param roundUp      indicates that verse numbers will be rounded up
+     * @param options      the comma-separated list of options (optional)
      * @return the osis wrapper
      */
     public OsisWrapper getBibleByVerseNumber(final String version, final String startVerseId,
-            final String endVerseId, final String roundUp, final String options) {
+                                             final String endVerseId, final String roundUp, final String options) {
         return getBibleByVerseNumber(version, startVerseId, endVerseId, roundUp, options, null);
 
     }
 
     /**
      * Looks up the bible text by verse numbers, mostly used for continuous scrolling.
-     * 
-     * @param version the version initials
-     * @param startVerseId the start verse ordinal
-     * @param endVerseId the end verse ordinal
-     * @param roundUp true to indicate rounding up, false to indicate rounding down, anything else for no
-     *            rounding
-     * @param options the comma-separated list of options (optional)
+     *
+     * @param version            the version initials
+     * @param startVerseId       the start verse ordinal
+     * @param endVerseId         the end verse ordinal
+     * @param roundUp            true to indicate rounding up, false to indicate rounding down, anything else for no
+     *                           rounding
+     * @param options            the comma-separated list of options (optional)
      * @param interlinearVersion an interlinear versions if available (optional)
      * @return the osis wrapper
      */
     public OsisWrapper getBibleByVerseNumber(final String version, final String startVerseId,
-            final String endVerseId, final String roundUp, final String options,
-            final String interlinearVersion) {
+                                             final String endVerseId, final String roundUp, final String options,
+                                             final String interlinearVersion) {
         notEmpty(version, "bible_required", USER_MISSING_FIELD);
         notEmpty(startVerseId, "You need to provide a start verse id", APP_MISSING_FIELD);
         notEmpty(endVerseId, "You need to a provide a end verse id", APP_MISSING_FIELD);
@@ -216,7 +215,7 @@ public class BibleController {
 
     /**
      * Gets the strong numbers for a particular passage
-     * 
+     *
      * @param reference the reference the passage reference
      * @return the strong numbers attached to the passage
      */
@@ -229,18 +228,21 @@ public class BibleController {
 
     /**
      * a REST method that returns version of the Bible that are available.
-     * 
-     * @param version the version initials or full version name to retrieve the versions for
-     * @param displayMode the current displayMode
+     *
+     * @param version       the version initials or full version name to retrieve the versions for
+     * @param extraVersions other selected versions - for options such as interlinears/interleaved, this plays a role
+     * @param displayMode   the current displayMode
      * @return all versions of modules that are considered to be Bibles.
      */
-    public AvailableFeatures getFeatures(final String version, final String displayMode) {
-        return this.bibleInformation.getAvailableFeaturesForVersion(version, displayMode);
+    public AvailableFeatures getFeatures(final String version, final String extraVersions, final String displayMode) {
+        notEmpty(version, "bible_required", USER_MISSING_FIELD);
+
+        return this.bibleInformation.getAvailableFeaturesForVersion(version, extraVersions, displayMode);
     }
 
     /**
      * retrieves the list of features currently supported by the application.
-     * 
+     *
      * @return a list of features currently supported by the application
      */
     public List<EnrichedLookupOption> getAllFeatures() {
@@ -249,9 +251,9 @@ public class BibleController {
 
     /**
      * Gets the bible book names.
-     * 
+     *
      * @param bookStart the phrase input so far in a textbox to use for the lookup
-     * @param version the version to lookup upon
+     * @param version   the version to lookup upon
      * @return a list of items
      */
     public List<BookName> getBibleBookNames(final String bookStart, final String version) {
@@ -260,9 +262,9 @@ public class BibleController {
 
     /**
      * ascertains the next reference to lookup.
-     * 
+     *
      * @param reference the current ref
-     * @param version the current version
+     * @param version   the current version
      * @return the next reference
      */
     public KeyWrapper getNextChapter(final String reference, final String version) {
@@ -272,7 +274,7 @@ public class BibleController {
     /**
      * ascertains the next reference to lookup.
      *
-     * @param reference the current ref
+     * @param reference     the current ref
      * @param sourceVersion the current version
      * @param targetVersion the version in which we want the reference
      * @return the next reference
@@ -283,9 +285,9 @@ public class BibleController {
 
     /**
      * ascertains the previous reference to lookup.
-     * 
+     *
      * @param reference the current ref
-     * @param version the current version
+     * @param version   the current version
      * @return the previous reference
      */
     public KeyWrapper getPreviousChapter(final String reference, final String version) {
@@ -294,8 +296,8 @@ public class BibleController {
 
     /**
      * Takes a reference and returns the chapter it is part of.
-     * 
-     * @param version the version to lookup the key in
+     *
+     * @param version   the version to lookup the key in
      * @param reference the reference that we are interested in
      * @return the new reference with full chapter
      */
@@ -305,10 +307,10 @@ public class BibleController {
 
     /**
      * Retrieves key information.
-     * 
-     * @param reference the reference that we are interested in
+     *
+     * @param reference     the reference that we are interested in
      * @param sourceVersion the version attached to the reference text
-     * @param version the version to lookup the key in
+     * @param version       the version to lookup the key in
      * @return the information about that particular key, e.g. OSIS-ID
      */
     public KeyWrapper getKeyInfo(final String reference, final String sourceVersion, final String version) {

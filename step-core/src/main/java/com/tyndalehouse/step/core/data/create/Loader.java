@@ -136,7 +136,7 @@ public class Loader {
                 // that we need
                 this.jswordModule.reloadInstallers();
 
-                final List<Book> availableModules = this.jswordModule.getAllModules(BookCategory.BIBLE,
+                final List<Book> availableModules = this.jswordModule.getAllModules(-1, BookCategory.BIBLE,
                         BookCategory.COMMENTARY);
                 final String[] initials = new String[availableModules.size()];
 

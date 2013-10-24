@@ -276,6 +276,38 @@ step.util = {
         this.trackAnalytics("search", "version", versionArg.toUpperCase());
         this.trackAnalytics("search", "query", query);
     },
+    
+    upgrade : function() {
+        var storedVersion = $.localStore("step.version") || "";
+        var appVersion = step.state.getCurrentVersion() || "";
+        
+        console.log("models are at [", storedVersion, "], app is at: ", appVersion);
+        if(storedVersion != appVersion) {
+            //do upgrade options
+            var upgradeVersion = "upgrade.1.2.3";
+            var version1_2_3 = $.localStore(upgradeVersion);
+            if(version1_2_3 != 'upgraded') {
+                console.log("Upgrading to 1.2.3");
+                for(var i = 0; i < PassageModels.length; i++) {
+                    var model = PassageModels.at(i);
+                    var options = model.get("options");
+                    if(options.indexOf('G') == -1) {
+                        options.push('G');
+                    }
+
+                    if(options.indexOf('U') == -1) {
+                        options.push('U');
+                    }
+                    model.save({
+                        options : options
+                    });
+                    model.trigger("change", model);
+                }
+                $.localStore(upgradeVersion, "upgraded");
+            }
+        }
+        $.localStore("step.version", appVersion);
+    },
 
     ui: {
         appleKey: false,
@@ -475,7 +507,6 @@ step.util = {
                             morph: $(hoverContext).attr('morph'),
                             element: hoverContext
                         });
-
                     }, 500, 'show-quick-lexicon');
                 }, function () {
                     step.passage.removeStrongsHighlights(undefined, "primaryLightBg relatedWordEmphasisHover");
@@ -537,12 +568,167 @@ step.util = {
             $("fieldset:visible .pageNumber").val(1).trigger('change');
         },
 
-        testColor: function () {
-            var i = 0;
-            for (i = 0; i < 100; i++) {
-                $("fieldset:visible .resultEstimates").prev().css("background-color", "#" + this._calculateEstimateBackgroundColour(i));
+        enhanceVerseNumbers : function(passageId, passageContent, version) {
+            $(".verseNumber", passageContent).closest("a").mouseenter(function () {
+                step.util.ui._addSubjectAndRelatedWordsPopup(passageId, $(this), version);
+            });
+        },
+        
+        _addSubjectAndRelatedWordsPopup: function (passageId, element, version) {
+            var reference = element.attr("name");
+            var self = this;
+
+            var qtip = element.qtip({
+                show: { event: 'mouseenter', solo: true },
+                hide: { event: 'unfocus mouseleave', fixed: true, delay: 200 },
+                position: { my: "bottom center", at: "top center", of: element, viewport: $(window), effect: false },
+                style: { classes: "versePopup noQtipWidth" },
+                overwrite: false,
+                content: {
+                    text: function (event, api) {
+                        //otherwise, exciting new strong numbers to apply:
+                        $.getSafe(BIBLE_GET_STRONGS_AND_SUBJECTS, [version, reference], function (data) {
+                            for (var key in data.strongData) {
+                                var value = data.strongData[key];
+
+                                var strongTable = $("<table>").addClass("verseNumberStrongs");
+                                //there may be multiple values of this kind of format:
+                                var bookKey = key.substring(0, key.indexOf('.'));
+                                var internalVerseLink = element;
+
+                                if (internalVerseLink[0] == undefined) {
+                                    //no point in continuing here, since we have no verse to attach it to.
+                                    return;
+                                }
+
+                                var header = $("<tr>");
+                                header.append("<th>");
+                                header.append($("<th>").append(__s.bible_book));
+                                header.append($("<th>").append(data.ot ? __s.OT : __s.NT));
+                                strongTable.append(header);
+
+                                var row;
+                                $.each(value, function (i, item) {
+                                    var even = (i % 2) == 0;
+
+                                    if (even) {
+                                        row = $("<tr>");
+                                        strongTable.append(row);
+                                    }
+
+                                    var searchCell = $("<td>");
+                                    row.append(searchCell);
+
+                                    //add search icon
+                                    searchCell.append(self._addLinkToLexicalSearch(passageId, "ui-icon ui-icon-search verseStrongSearch", "sameWordSearch", item.strongNumber, null, __s.search_for_this_word, ""));
+                                    searchCell.append(self._addLinkToLexicalSearch(passageId, "ui-icon ui-icon-zoomin verseStrongSearch", "relatedWordSearch", item.strongNumber, null, __s.search_for_related_words, ""));
+
+                                    var nameLink = $("<a>");
+                                    nameLink.append(item.gloss);
+                                    nameLink.append(" (");
+                                    nameLink.append(item.stepTransliteration);
+                                    nameLink.append(", ")
+                                    nameLink.append($("<span>").addClass(self._getFontForStrong(item.strongNumber)).append(item.matchingForm));
+                                    nameLink.append(")");
+                                    nameLink.attr("href", "javascript:void(0)");
+                                    nameLink.click(function () {
+                                        showDef(item.strongNumber, passageId);
+                                    });
+                                    searchCell.append(nameLink);
+
+                                    var bookCount = $("<td>");
+                                    bookCount.append(self._addLinkToLexicalSearch(passageId, "strongCount", "sameWordSearch",
+                                        item.strongNumber, bookKey, "", sprintf(__s.times, data.counts[item.strongNumber].book)));
+                                    row.append(bookCount);
+
+                                    var testamentCount = $("<td>");
+                                    if (even) {
+                                        testamentCount.addClass("even");
+                                    }
+                                    testamentCount.append(self._addLinkToLexicalSearch(passageId, "strongCount", "sameWordSearch",
+                                        item.strongNumber, null, "", sprintf(__s.times, data.counts[item.strongNumber].bible)));
+                                    row.append(testamentCount);
+                                });
+
+                                var strongPopup = $("<span>");
+                                strongPopup.append(strongTable);
+                                strongPopup.append("<br />");
+
+                                if (data.significantlyRelatedVerses[key] && data.significantlyRelatedVerses[key].length != 0) {
+                                    var related = $("<a>").addClass("related").attr("href", "javascript:void(0)").append(__s.see_related_verses).click(function () {
+                                        getRelatedVerses(data.significantlyRelatedVerses[key].join('; '), passageId);
+                                    });
+                                    strongPopup.append(related);
+                                    strongPopup.append("&nbsp;&nbsp;");
+                                }
+
+                                if (data.relatedSubjects[key] && data.relatedSubjects[key].total != 0) {
+                                    //attach data to internal link (so that it goes when passage goes
+                                    var subjects = data.relatedSubjects[key];
+                                    $.data(internalVerseLink[0], "relatedSubjects", subjects);
+
+                                    var subjectOverview = "";
+                                    var i = 0;
+                                    for (i = 0; i < 5 && i < subjects.results.length; i++) {
+                                        subjectOverview += subjects.results[i].root;
+                                        subjectOverview += ", ";
+                                        subjectOverview += subjects.results[i].heading;
+                                        subjectOverview += " ; ";
+                                    }
+
+                                    if (i < subjects.results.length) {
+                                        subjectOverview += "...";
+                                    }
+
+                                    var related = $("<a>").addClass("related").attr("href", "javascript:void(0)")
+                                        .append(__s.see_related_subjects)
+                                        .attr("title", subjectOverview.replace(/'/g, "&apos;"))
+                                        .click(function () {
+                                            getRelatedSubjects(key, passageId);
+                                        });
+                                    strongPopup.append(related);
+                                    strongPopup.append("&nbsp;&nbsp;");
+                                }
+
+                                api.set('content.text', strongPopup);
+                                //only expect one entry back.
+                                break;
+                            }
+                        });
+                    }
+                }
+            });
+            qtip.qtip("show");
+        },
+
+        _addLinkToLexicalSearch: function (passageId, classes, functionName, strongNumber, bookKey, title, innerText) {
+            var text = $("<a>");
+            text.attr("href", "javascript:void(0)");
+            text.attr("title", title.replace(/'/g, "&apos;"));
+            text.addClass(classes);
+            text.append(innerText);
+            text.click(function () {
+                step.lexicon.setPassageIdInFocus(passageId);
+                step.lexicon[functionName](strongNumber, bookKey);
+            });
+
+            return text;
+        },
+
+        /**
+         * If the strong starts with an 'h' then we're looking at Hebrew.
+         * @param strong
+         * @returns {string}
+         * @private
+         */
+        _getFontForStrong: function (strong) {
+            if (strong[0] == 'H') {
+                return "hbFontSmall";
+            } else {
+                return "unicodeFont";
             }
         },
+
 
         _calculateEstimateBackgroundColour: function (numResults) {
             var red = 0x66;
@@ -753,7 +939,7 @@ function refreshWaitStatus() {
          * @param the
          *            userFunction to call on success of the query
          */
-        getSafe: function (url, args, userFunction, passageId, level) {
+        getSafe: function (url, args, userFunction, passageId, level, errorHandler) {
 
             //args is optional, so we test whether it is a function
             if ($.isFunction(args)) {
@@ -774,7 +960,11 @@ function refreshWaitStatus() {
 
             outstandingRequests++;
             refreshWaitStatus();
-            $.get(url, function (data, textStatus, jqXHR) {
+            
+            var lang = step.state.language();
+            var langParam = step.util.isBlank(lang) ? "" : "?lang=" + lang;
+            
+            $.get(url + langParam, function (data, textStatus, jqXHR) {
                 if (step.state.responseLanguage == undefined) {
                     //set the language
                     var lang = jqXHR.getResponseHeader("step-language");
@@ -788,8 +978,10 @@ function refreshWaitStatus() {
 
 //			    console.log("Received url ", url, " ", data);
                 if (data && data.errorMessage) {
+                    if(errorHandler) {
+                        errorHandler();
+                    }
                     // handle an error message here
-//					$.shout("caught-error-message", data);
                     if (data.operation) {
                         // so we now have an operation to perform before we
                         // continue with the user

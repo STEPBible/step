@@ -7,7 +7,7 @@ var PassageModel = Backbone.Model.extend({
                 extraVersions: [],
                 interlinearMode: "NONE",
                 detailLevel: 0,
-                options: ["N", "H", "V"],
+                options: ["N", "H", "V", "U", "G"],
                 synced : -1
             }
         },

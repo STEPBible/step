@@ -118,7 +118,7 @@ public class V1Controller {
      * @see http://step.tyndalehouse.com/external/v1/getFeatures
      */
     public AvailableFeatures getFeatures(final String version) {
-        return this.bibleController.getFeatures(version, null);
+        return this.bibleController.getFeatures(version, null, null);
     }
 
     /**
@@ -132,7 +132,7 @@ public class V1Controller {
      * @see http://step.tyndalehouse.com/external/v1/getFeatures
      */
     public AvailableFeatures getFeatures(final String version, final String displayMode) {
-        return this.bibleController.getFeatures(version, displayMode);
+        return this.bibleController.getFeatures(version, displayMode, null);
     }
 
     /**

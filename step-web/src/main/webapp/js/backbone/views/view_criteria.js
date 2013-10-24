@@ -260,14 +260,15 @@ var SearchCriteria = Backbone.View.extend({
         }, 500);
     },
 
-
     showHideCriteria: function () {
+        var self = this;
         $(".showSearchCriteria", this.$el).button({ text: false, icons: { primary: "ui-icon-circle-triangle-s" }})
             .click(function () {
                 $(this).parent().find(".hideSearchCriteria").show();
                 $(this).hide();
                 $(this).closest(".searchToolbar").closest("fieldset").children().not(".searchToolbar").show();
                 refreshLayout();
+                self.detailLevel.detailSlider("refresh");
             }).hide();
 
 
@@ -338,7 +339,7 @@ var SearchCriteria = Backbone.View.extend({
             //also add a qtip
             jqElement.qtip({
                 show: { event: 'focus' }, hide: { event: 'blur' },
-                position: { at: "right center", my: "left center", viewport: $(window) },
+                position: { at: "right top", my: "left bottom", viewport: $(window) },
                 style: { classes: "primaryLightBg primaryLightBorder" }
             });
         }

@@ -65,7 +65,6 @@ var SearchModel = Backbone.Model.extend({
             attributes.querySyntax = this.evaluateQuerySyntax(attributes);
         }
 
-        console.log("Saving search model", attributes);
         var saveReturn = Backbone.Model.prototype.save.call(this, attributes, options);
         this.trigger("resync", this.model);
         return saveReturn;
@@ -112,14 +111,14 @@ var SearchModel = Backbone.Model.extend({
      */
     getLocation: function () {
         var urlParts = [
-            this.get("passageId"),
-            this.get("searchType"),
-            this.get("pageNumber"),
-            this.getDefaultedValue("pageSize"),
-            this.get("querySyntax"),
-            this.getDefaultedValue("context"),
-            this.getDefaultedValue("searchVersions"),
-            this.getDefaultedValue("sortOrder")
+            encodeURIComponent(this.get("passageId")),
+            encodeURIComponent(this.get("searchType")),
+            encodeURIComponent(this.get("pageNumber")),
+            encodeURIComponent(this.getDefaultedValue("pageSize")),
+            encodeURIComponent(this.get("querySyntax")),
+            encodeURIComponent(this.getDefaultedValue("context")),
+            encodeURIComponent(this.getDefaultedValue("searchVersions")),
+            encodeURIComponent(this.getDefaultedValue("sortOrder"))
         ];
 
         //now calculate the field values...
@@ -130,7 +129,7 @@ var SearchModel = Backbone.Model.extend({
                 if (params != "") {
                     params += "|";
                 }
-                params += name + '=' + this.resolveToReference(name, this.attributes[name]);
+                params += name + '=' + encodeURIComponent(this.resolveToReference(name, this.attributes[name]));
             }
         }
         urlParts.push(params);

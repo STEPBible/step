@@ -38,6 +38,13 @@ $(function() {
     	},
 
         /**
+         * Refreshes the slider/form to the correct value.
+         */
+        refresh : function() {
+            this.handleSlide(this.value());
+        },
+        
+        /**
          * Handles a slide to a particular value
          * @param value the value to be set
          * @private

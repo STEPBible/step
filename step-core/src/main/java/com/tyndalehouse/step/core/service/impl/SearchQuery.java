@@ -50,7 +50,7 @@ public class SearchQuery {
     private final int pageNumber;
     private final int context;
     private final boolean ranked;
-    private final String originalQuery;
+    private String originalQuery;
 
     private int currentSearch = 0;
     private boolean allKeys = false;
@@ -162,6 +162,14 @@ public class SearchQuery {
      */
     public String getOriginalQuery() {
         return this.originalQuery;
+    }
+
+    /**
+     * Allow overrides to the original query, when, for example, some searches don't return any results
+     * @param originalQuery the original query
+     */
+    public void setOriginalQuery(final String originalQuery) {
+        this.originalQuery = originalQuery;
     }
 
     /**

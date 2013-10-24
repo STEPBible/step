@@ -38,6 +38,7 @@ var QuickLexicon = Backbone.View.extend({
 
     initialize: function () {
         this.listenTo(this.model, "change", this.render);
+        this.inProgress = false;
     },
 
     /**
@@ -45,8 +46,13 @@ var QuickLexicon = Backbone.View.extend({
      * @param strongNumbers
      */
     render: function (event) {
+        if(this.inProgress) {
+            return;
+        }
+        
+        this.inProgress = true;
+        
         var self = this;
-
         if(this.qtip != undefined) {
             this.qtip.qtip("destroy");
         }
@@ -61,11 +67,11 @@ var QuickLexicon = Backbone.View.extend({
                 }
             },
             content: {
-                text: function (event, api) {
+                text: function (event, api)  {
                     var strong = self.model.get("strongNumber");
                     var morph = self.model.get("morph");
 
-                    $.getSafe(MODULE_GET_QUICK_INFO + strong + "/" + morph + "/", function (data) {
+                    $.getSafe(MODULE_GET_QUICK_INFO, [strong, morph], function (data) {
                         var vocabInfo = "";
                         if (data.vocabInfos) {
                             $.each(data.vocabInfos, function (i, item) {
@@ -92,6 +98,9 @@ var QuickLexicon = Backbone.View.extend({
                             __s.more_info_on_click_of_word +
                             "</span>";
                         api.set('content.text', vocabInfo);
+                        self.inProgress = false;
+                    }, null, null, null, function() {
+                        self.inProgress = false;
                     });
                 }
             }

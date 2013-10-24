@@ -52,6 +52,7 @@ import javax.inject.Named;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 
+import com.tyndalehouse.step.core.data.StepHttpSwordInstaller;
 import org.crosswire.jsword.book.install.Installer;
 import org.crosswire.jsword.book.install.sword.HttpSwordInstaller;
 import org.slf4j.Logger;
@@ -116,14 +117,15 @@ public class DefaultInstallersProvider implements Provider<List<Installer>> {
      * @return an installer, properly configured with any relevant proxy
      */
     protected synchronized Installer getInstaller(final String[] splitParts) {
-        if (splitParts.length < 3) {
+        if (splitParts.length < 4) {
             return null;
         }
 
-        final HttpSwordInstaller installer = new HttpSwordInstaller();
-        installer.setHost(splitParts[0]);
-        installer.setPackageDirectory(splitParts[1]);
-        installer.setCatalogDirectory(splitParts[2]);
+        final StepHttpSwordInstaller installer = new StepHttpSwordInstaller();
+        installer.setInstallerName(splitParts[0]);
+        installer.setHost(splitParts[1]);
+        installer.setPackageDirectory(splitParts[2]);
+        installer.setCatalogDirectory(splitParts[3]);
 
         if (isNotBlank(this.proxyHost) || isNotBlank(this.proxyPort)) {
             setManualProxy(installer);

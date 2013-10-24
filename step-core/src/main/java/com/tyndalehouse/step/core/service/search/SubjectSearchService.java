@@ -32,9 +32,11 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.service.search;
 
-import com.tyndalehouse.step.core.models.ScopeType;
 import com.tyndalehouse.step.core.models.search.SearchResult;
 import com.tyndalehouse.step.core.service.impl.SearchQuery;
+import com.tyndalehouse.step.core.service.impl.SearchType;
+
+import java.util.List;
 
 /**
  * Searches for a specific subject
@@ -43,6 +45,13 @@ import com.tyndalehouse.step.core.service.impl.SearchQuery;
  * 
  */
 public interface SubjectSearchService {
+
+    /**
+     * Allows for autocompletion of the dropdowns in subject searches
+     * @param userEnteredTerm the user entered terms
+     * @return the list of terms that are in the dictionary at the moment.
+     */
+    List<String> autocomplete(String userEnteredTerm);
 
     /**
      * Runs a subject search

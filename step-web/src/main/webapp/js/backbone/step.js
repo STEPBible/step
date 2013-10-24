@@ -336,4 +336,6 @@ function initApp() {
             }
         }
     }
+    
+    step.util.upgrade();
 }

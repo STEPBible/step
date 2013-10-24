@@ -37,7 +37,8 @@ import static com.tyndalehouse.step.core.utils.StringUtils.split;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import com.tyndalehouse.step.core.models.ScopeType;
+import com.tyndalehouse.step.core.models.stats.ScopeType;
+import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
 import com.tyndalehouse.step.core.utils.StringConversionUtils;
 import com.tyndalehouse.step.core.utils.StringUtils;
@@ -60,8 +61,7 @@ import java.util.*;
  * @author chrisburrell
  */
 public class JSwordAnalysisServiceImpl implements JSwordAnalysisService {
-    static final String WORD_SPLIT = "[,./<>?!;:'\\[\\]\\{\\}!\"\\-\u2013 ]+";
-    private static final String STRONG_VERSION = "ESV";
+    static final String WORD_SPLIT = "[,./<>?!;:'\\[\\]\\{\\}!\"\\-\u2013 ()]+";
     private static final String LANGUAGE_STOP_LIST = "analysis.stopWords.%s";
     private final JSwordVersificationService versification;
     private final Map<String, Set<String>> stopWords = new HashMap<String, Set<String>>(32);
@@ -82,12 +82,12 @@ public class JSwordAnalysisServiceImpl implements JSwordAnalysisService {
         this.versification = versification;
         this.stopWordsProperties = stopWordsProperties;
         stopStrongs = StringUtils.createSet(configuredStopStrongs);
-        strongsBook = this.versification.getBookFromVersion(STRONG_VERSION);
+        strongsBook = this.versification.getBookFromVersion(JSwordPassageService.REFERENCE_BOOK);
         strongsV11n = this.versification.getVersificationForVersion(strongsBook);
     }
 
     @Override
-    public PassageStat getWordStats(final String reference, final ScopeType scopeType) {
+    public PassageStat getWordStats(final Key reference, final ScopeType scopeType) {
         try {
             //change the reference to match what we need
             final BookData expandedBook = getExpandedBookData(reference, scopeType, strongsV11n, strongsBook);
@@ -98,7 +98,7 @@ public class JSwordAnalysisServiceImpl implements JSwordAnalysisService {
     }
 
     @Override
-    public PassageStat getTextStats(final String version, final String reference, final ScopeType scopeType) {
+    public PassageStat getTextStats(final String version, final Key reference, final ScopeType scopeType) {
         try {
             final Book book = this.versification.getBookFromVersion(version);
             final Versification av11n = this.versification.getVersificationForVersion(book);
@@ -150,20 +150,12 @@ public class JSwordAnalysisServiceImpl implements JSwordAnalysisService {
      * Expands the key to the correct part, depending on whether we want the single chapter,
      * the surrounding chapters, or the whole book.
      *
-     * @param reference       the reference in question
      * @param scopeType       the scope type
      * @param v11n            the v11n for the book we are looking up
      * @param bookFromVersion the book containing the text/key
      * @return the correct key.
      */
-    BookData getExpandedBookData(final String reference, final ScopeType scopeType, final Versification v11n, final Book bookFromVersion) {
-        final Key key;
-        try {
-            key = bookFromVersion.getKey(reference);
-        } catch (final NoSuchKeyException e) {
-            throw new StepInternalException("Unable to read passage text", e);
-        }
-
+    BookData getExpandedBookData(final Key key, final ScopeType scopeType, final Versification v11n, final Book bookFromVersion) {
         if (scopeType == ScopeType.PASSAGE) {
             return new BookData(bookFromVersion, key);
         }

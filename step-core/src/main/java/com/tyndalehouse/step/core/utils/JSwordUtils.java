@@ -55,6 +55,8 @@ import com.tyndalehouse.step.core.service.helpers.VersionResolver;
  * 
  */
 public final class JSwordUtils {
+    private static final String ANCIENT_GREEK = "grc";
+    private static final String ANCIENT_HEBREW = "he";
 
     /**
      * hiding implementaiton
@@ -68,7 +70,7 @@ public final class JSwordUtils {
      * 
      * @param bibles a list of jsword bibles
      * @param userLocale the local for the user
-     * @param resolver TODO
+     * @param resolver resolves the version to the longer name known by JSword
      * @return the list of bibles
      */
     public static List<BibleVersion> getSortedSerialisableList(final Collection<Book> bibles,
@@ -127,5 +129,47 @@ public final class JSwordUtils {
     public static boolean isIntro(final BibleBook bb) {
         return BibleBook.INTRO_BIBLE.equals(bb) || BibleBook.INTRO_NT.equals(bb)
                 || BibleBook.INTRO_OT.equals(bb);
+    }
+
+    /**
+     * Ascertains if it is an ancient book, i.e. Greek or Hebrew
+     * @param book the book we are considering
+     * @return true to indicate Greek or Hebrew
+     */
+    public static boolean isAncientBook(Book book) {
+        return isAncientHebrewBook(book) || isAncientGreekBook(book);
+    }
+    
+    /**
+      * Ascertains whether the book(s) is Hebrew. If several books, then returns true if any book matches
+     * @param books the book we are considering
+     * @return true if Hebrew book
+     */
+    public static boolean isAncientHebrewBook(Book... books) {
+        boolean ancientHebrew = false;
+        for(Book b : books) {
+            //hard coding in the exception
+            boolean isHebrew = ANCIENT_HEBREW.equals(b.getLanguage().getCode()) && !"HebModern".equals(b.getInitials());
+            if(isHebrew) {
+                return true;
+            }
+        }
+        return ancientHebrew;        
+    }
+
+    /**
+     * Ascertains whether the book is Greek, returning true if any books match the said criteria
+     * @param books the book we are considering
+     * @return true if Hebrew book
+     */
+    public static  boolean isAncientGreekBook(Book... books) {
+        boolean ancientGreek = false;
+        for(Book b : books) {
+            boolean isGreek = ANCIENT_GREEK.equals(b.getLanguage().getCode());
+            if(isGreek) {
+                return true;
+            }
+        }
+        return ancientGreek;
     }
 }

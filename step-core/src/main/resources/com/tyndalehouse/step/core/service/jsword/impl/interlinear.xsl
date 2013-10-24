@@ -98,6 +98,8 @@
   <!--  true to display color coding information -->
   <xsl:param name="ColorCoding" select="'false'" />
   <xsl:param name="DivideHebrew" select="'false'" />
+  <xsl:param name="RemovePointing" select="'true'" />
+  <xsl:param name="RemoveVowels" select="'true'" />
 
   <!-- Whether to show an interlinear and the provider helping with the lookup -->
   <xsl:param name="infoFunctionCall" select="'javascript:showInfo'" />
@@ -1735,18 +1737,17 @@
       </xsl:attribute>
     </xsl:if>
   </xsl:template>
-
+    
   <!-- If the parent of the text is a verse then, we need to wrap in span. This applies
   to any punctuation really, since all other words should be contained in a W  -->
   <xsl:template match="text()" mode="jesus">
   	  <xsl:call-template name="matchSimpleText" />
   </xsl:template>
   
-  
   <!-- Matching simple text when not matched elsewhere? -->
   <xsl:template match="text()" name="matchSimpleText">
   		<xsl:choose>
-            <xsl:when test="name(..) = 'seg' and name(../..) = 'w'"><xsl:value-of select="."/></xsl:when>
+            <xsl:when test="name(..) = 'seg' and name(../..) = 'w'"><xsl:call-template name="outputPunctuatedText"><xsl:with-param name="text" select="." /></xsl:call-template></xsl:when>
 			<xsl:when test="not(jsword:com.tyndalehouse.step.core.utils.StringUtils.containsAlphaNumeric(normalize-space(.)))" />
 	  		<xsl:when test="normalize-space(.) != ''">
 	  			<span class="w">
@@ -1761,7 +1762,7 @@
                             </xsl:otherwise>
                         </xsl:choose>
                     </xsl:variable>
-                    <span class="text"><xsl:value-of select="."/><xsl:value-of select="$nextPartOfText"/></span>
+                    <span class="text"><xsl:call-template name="outputPunctuatedText"><xsl:with-param name="text" select="." /></xsl:call-template><xsl:value-of select="$nextPartOfText"/></span>
 	  				<!-- now we need to put the set of spans for strongs/morphs/interlinear versions -->
 
 					<!-- output a filling gap for strongs -->
@@ -1792,6 +1793,15 @@
   		</xsl:choose>
   </xsl:template>
 
+
+  <xsl:template name="outputPunctuatedText">
+    <xsl:param name="text" />
+    <xsl:choose>
+        <xsl:when test="$RemoveVowels = 'true'"><xsl:value-of select="conversion:unAccent(string($text))" /></xsl:when>
+        <xsl:when test="$RemovePointing = 'true'"><xsl:value-of select="conversion:unAccentLeavingVowels(string($text))" /></xsl:when>
+        <xsl:otherwise><xsl:value-of select="." /></xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
 
   <xsl:template match="text()" mode="small-caps">
   <xsl:value-of select="translate(., 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ')"/>

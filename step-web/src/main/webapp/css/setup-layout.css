@@ -11,6 +11,10 @@
 
 .optionContainer a, .optionContainer a:visited {
     color: #33339F;
+    font-weight: normal;
+}
+
+.optionContainer a.selected {
     font-weight: bold;
 }
 
@@ -68,6 +72,10 @@
 
 .initials {
     font-style: italic;
+}
+
+.languageName, .category {
+    margin-left: 4px;
 }
 
 .versionColumn {
@@ -133,4 +141,10 @@
 #progressLog {
     padding: 5px;
     border: 1px solid lightgrey
+}
+
+#installError { 
+    background-color: red;
+    color: white;
+    font-weight: bold;
 }

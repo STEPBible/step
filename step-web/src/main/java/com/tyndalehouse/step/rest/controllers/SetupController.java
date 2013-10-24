@@ -43,6 +43,7 @@ import java.util.List;
 
 import javax.inject.Provider;
 
+import com.tyndalehouse.step.core.models.BibleInstaller;
 import com.tyndalehouse.step.models.setup.InstallationProgress;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -147,14 +148,39 @@ public class SetupController {
      * 
      * @param initials the initials of the bible to install
      */
-    public void installBible(final String initials) {
+    public void installBible(final String installerIndex, final String initials) {
         validateSession(this.sessionProvider);
 
         notBlank(initials, "bible_for_install", USER_MISSING_FIELD);
         LOGGER.debug("Installing module {}", initials);
-        this.bibleInformation.installModules(initials);
+        
+        
+        this.bibleInformation.installModules(Integer.parseInt(installerIndex), initials);
     }
 
+
+    /**
+     * Installing default modules
+     *
+     */
+    public List<BibleInstaller> getInstallers() {
+        validateSession(this.sessionProvider);
+        return this.bibleInformation.getInstallers();
+    }
+    
+    /**
+     * Installing default modules
+     *
+     * @param directoryPath the directory path to install from.
+     */
+    public void addDirectoryInstaller(final String directoryPath) {
+        validateSession(this.sessionProvider);
+
+        notBlank(directoryPath, "bible_for_install", USER_MISSING_FIELD);
+        LOGGER.debug("Installing modules from directory {}", directoryPath);
+        this.bibleInformation.addDirectoryInstaller(directoryPath);
+    }
+    
     /**
      * Removes a module
      * 

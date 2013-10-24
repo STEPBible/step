@@ -40,9 +40,15 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import com.tyndalehouse.step.core.exceptions.LuceneSearchException;
+import org.apache.lucene.search.IndexSearcher;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.BookException;
+import org.crosswire.jsword.book.Books;
+import org.crosswire.jsword.index.Index;
+import org.crosswire.jsword.index.IndexManager;
+import org.crosswire.jsword.index.IndexManagerFactory;
 import org.crosswire.jsword.index.IndexStatus;
+import org.crosswire.jsword.index.lucene.LuceneIndex;
 import org.crosswire.jsword.index.search.DefaultSearchModifier;
 import org.crosswire.jsword.index.search.DefaultSearchRequest;
 import org.crosswire.jsword.passage.*;
@@ -223,9 +229,7 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
         // if context > 0, then we need to add verse numbers:
         final List<LookupOption> lookupOptions = new ArrayList<LookupOption>();
         Collections.addAll(lookupOptions, options);
-        if (sq.getContext() > 0) {
-            lookupOptions.add(LookupOption.VERSE_NUMBERS);
-        }
+        lookupOptions.add(LookupOption.VERSE_NUMBERS);
 
         final Book bible = this.av11nService.getBookFromVersion(version);
         final List<SearchEntry> resultPassages = getPassagesForResults(bible, newResults, sq.getContext(),
@@ -328,6 +332,30 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
         return results;
     }
 
+    /**
+     * Retrieves the index from JSword
+     * @param bookName the book name
+     * @return the index searcher responsible for carrying out operations on JSword data.
+     */
+    public IndexSearcher getIndexSearcher(String bookName) {
+        final IndexManager indexManager = IndexManagerFactory.getIndexManager();
+        Index index;
+        try {
+            index = indexManager.getIndex(this.av11nService.getBookFromVersion(bookName));
+        } catch (BookException e) {
+            throw new StepInternalException(e.getMessage(), e);
+        }
+
+        if (!(index instanceof LuceneIndex)) {
+            LOGGER.warn("Unsupport Lucene Index type [{}]", index.getClass());
+            throw new StepInternalException("Unable to obtain index");
+        }
+
+        @SuppressWarnings("resource")
+        final LuceneIndex li = (LuceneIndex) index;
+        return (IndexSearcher) li.getSearcher();
+    }
+    
     /**
      * Sets up the passage tally to rank the results
      *

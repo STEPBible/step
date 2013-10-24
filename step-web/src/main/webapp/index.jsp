@@ -23,6 +23,7 @@
 	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 <%-- 	<meta name="description" content="<%= stepRequest.getTitle() %>..."> --%>
     <meta step-local content="<%= appManager.isLocal() %>" />
+    <meta name="step.version" content="${project.version}" />
     <meta name="description" content="<%= stepRequest.getDescription() %>" />
     <meta name="keywords" content="<%= stepRequest.getKeywords() %>" />
 	<link rel="shortcut icon"  href="images/step-favicon.ico" />
@@ -67,11 +68,6 @@
     <% } else { %>
         <script src="international/interactive.js?lang=<%= request.getParameter("lang") %>" type="text/javascript"></script>
     <% } %>
-
-
-
-
-
     <%@include file="jsps/initLib.jsp" %>
 
     <%-- Now do javascript --%>
@@ -178,7 +174,7 @@
         <%
             } else {
         %>
-            <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js" type="text/javascript" ></script>
+            <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" type="text/javascript" ></script>
             <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js" type="text/javascript" ></script>
         <%
             }
@@ -299,7 +295,7 @@
 <!--  The about popup -->
 
 <div id="about" style="text-align: center;">
-	<img id="aboutLogo" src="images/step-logo.png" />
+	<img id="aboutLogo" src="images/step-logo.png" width="88" height="56" />
 	<h3 id="aboutTitle">STEP :: Scripture Tools for Every Person<br /></h3>
     <p><a style="color: #33339F" href='https://stepweb.atlassian.net/wiki/x/C4C_/' target="_new"><fmt:message key="copyright_info_link" /></a>
 	<br/>

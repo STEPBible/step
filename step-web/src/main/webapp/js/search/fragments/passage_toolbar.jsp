@@ -21,7 +21,7 @@
             if(!appManager.isLocal()) {
         %>
             <a class="facebookShare" href="javascript:void(0)" onclick="facebookShare(this)" title="<fmt:message key="share_on_facebook" />">
-                <img src="images/facebook.png" />
+                <img src="images/facebook.png" width="20" height="20" />
             </a>
         <% } %>
     </div>

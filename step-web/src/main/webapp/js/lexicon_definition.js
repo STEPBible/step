@@ -405,7 +405,6 @@ LexiconDefinition.prototype.getPopup = function () {
     });
     lexiconDefinitionSelector.tabs("option", "active", 0);
 
-
     $('#lexiconPopupClose').button({ icons: { primary: "ui-icon-closethick" }, text: false }).click(function () {
         $('#lexiconDefinition').hide();
     });
@@ -472,7 +471,10 @@ LexiconDefinition.prototype.reposition = function (tabNumber) {
     // if left position is negative, then we assume it's off screen and need
     // position
     var popup = this.getPopup();
+    
+    var wasDisplay = popup.css('display'); 
     popup.css('display', 'block');
+    
     if (!step.lexicon.positioned || popup.css("left")[0] == '-') {
         step.lexicon.positioned = true;
         var lexiconDefinition = $("#lexiconDefinition");
@@ -481,5 +483,13 @@ LexiconDefinition.prototype.reposition = function (tabNumber) {
             left: $(window).width() - lexiconDefinition.width() - 10
         });
     }
+    
+    var wasTab = this.popup.tabs("option", "active");
     this.popup.tabs({ active : tabNumber });
+    
+    //hack: because trigger('activate') and trigger('tabsactivate') don't seem to fire
+    //when 
+    if(wasTab == tabNumber && wasDisplay != 'block' && this.popup.tabs("option", "active") == 1) {
+        step.lexicon.wordleView.doStats();
+    }
 };

@@ -41,7 +41,7 @@ var PassageDisplayView = Backbone.View.extend({
                 this._doSideNotes(passageHtml, passageId, version);
                 this._doNonInlineNotes(passageHtml);
 
-                this._doVerseNumbers(passageId, passageHtml, options, interlinearMode, reference);
+                this._doVerseNumbers(passageId, passageHtml, options, interlinearMode, version);
 //        self.doStats(passageId, passageContent, lookupVersion, text.reference);
                 this._doHideEmptyNotesPane(passageHtml);
                 this._adjustTextAlignment(passageHtml);
@@ -218,20 +218,6 @@ var PassageDisplayView = Backbone.View.extend({
         },
 
         /**
-         * If the strong starts with an 'h' then we're looking at Hebrew.
-         * @param strong
-         * @returns {string}
-         * @private
-         */
-        _getFontForStrong: function (strong) {
-            if (strong[0] == 'H') {
-                return "hbFontSmall";
-            } else {
-                return "unicodeFont";
-            }
-        },
-
-        /**
          * Checks that the content returned by the server has stuff in it...
          * @param passageHtml
          * @returns {boolean}
@@ -334,43 +320,47 @@ var PassageDisplayView = Backbone.View.extend({
          */
         _makeSideNoteQtip: function (item, xref, myPosition, atPosition, version) {
             item.mouseover(function () {
-                item.qtip({
-                    position: { my: "top " + myPosition, at: "top " + atPosition, viewport: $(window) },
-                    style: { tip: false, classes: 'draggable-tooltip', width: { min: 800, max: 800} },
-                    show: { event: 'click' }, hide: { event: 'click' },
-                    content: {
-                        text: function (event, api) {
-                            $.getSafe(BIBLE_GET_BIBLE_TEXT + version + "/" + encodeURIComponent(xref), function (data) {
-                                api.set('content.title.text', data.longName);
-                                api.set('content.text', data.value);
-                            });
-                        },
-                        title: { text: xref, button: false }
-                    },
-                    events: {
-                        render: function (event, api) {
-                            $(this).draggable({
-                                containment: 'window',
-                                handle: api.elements.titlebar
-                            });
-
-                            $(api.elements.titlebar).css("padding-right", "0px");
-
-                            $(api.elements.titlebar).prepend(goToPassageArrowButton(true, version, xref, "leftPassagePreview"));
-                            $(api.elements.titlebar).prepend(goToPassageArrowButton(false, version, xref, "rightPassagePreview"));
-                            $(api.elements.titlebar).prepend($("<a>&nbsp;</a>").button({ icons: { primary: "ui-icon-close" }}).addClass("closePassagePreview").click(function () {
-                                api.hide();
-                            }));
-
-                            $(".leftPassagePreview, .rightPassagePreview", api.elements.titlebar)
-                                .first().button({ icons: { primary: "ui-icon-arrowthick-1-e" }})
-                                .next().button({ icons: { primary: "ui-icon-arrowthick-1-w" }}).end()
-                                .click(function () {
-                                    api.hide();
+                if(!$.data(item, "initialised")) {
+                    item.qtip({
+                        position: { my: "top " + myPosition, at: "top " + atPosition, viewport: $(window) },
+                        style: { tip: false, classes: 'draggable-tooltip', width: { min: 800, max: 800} },
+                        show: { event: 'click' }, hide: { event: 'click' },
+                        content: {
+                            text: function (event, api) {
+                                $.getSafe(BIBLE_GET_BIBLE_TEXT + version + "/" + encodeURIComponent(xref), function (data) {
+                                    api.set('content.title.text', data.longName);
+                                    api.set('content.text', data.value);
                                 });
+                            },
+                            title: { text: xref, button: false }
+                        },
+                        events: {
+                            render: function (event, api) {
+                                $(this).draggable({
+                                    containment: 'window',
+                                    handle: api.elements.titlebar
+                                });
+    
+                                $(api.elements.titlebar).css("padding-right", "0px");
+    
+                                $(api.elements.titlebar).prepend(goToPassageArrowButton(true, version, xref, "leftPassagePreview"));
+                                $(api.elements.titlebar).prepend(goToPassageArrowButton(false, version, xref, "rightPassagePreview"));
+                                $(api.elements.titlebar).prepend($("<a>&nbsp;</a>").button({ icons: { primary: "ui-icon-close" }}).addClass("closePassagePreview").click(function () {
+                                    api.hide();
+                                }));
+    
+                                $(".leftPassagePreview, .rightPassagePreview", api.elements.titlebar)
+                                    .first().button({ icons: { primary: "ui-icon-arrowthick-1-e" }})
+                                    .next().button({ icons: { primary: "ui-icon-arrowthick-1-w" }}).end()
+                                    .click(function () {
+                                        api.hide();
+                                    });
+                            }
                         }
-                    }
-                });
+                    });
+                    //set to initialized
+                    $.data(item, "initialised", true);
+                }
             });
         },
 
@@ -404,135 +394,6 @@ var PassageDisplayView = Backbone.View.extend({
             });
         },
 
-        _addSubjectAndRelatedWordsPopup: function (element) {
-            var reference = element.attr("name");
-            var version = this.model.get("version");
-            var self = this;
-            var passageId = self.model.get("passageId");
-
-            var qtip = element.qtip({
-                show: { event: 'mouseenter', solo: true },
-                hide: { event: 'unfocus mouseleave', fixed: true, delay: 200 },
-                position: { my: "bottom center", at: "top center", of: element, viewport: $(window), effect: false },
-                style: { classes: "versePopup noQtipWidth" },
-                overwrite: false,
-                content: {
-                    text: function (event, api) {
-                        //otherwise, exciting new strong numbers to apply:
-                        $.getSafe(BIBLE_GET_STRONGS_AND_SUBJECTS, [version, reference], function (data) {
-                            for (var key in data.strongData) {
-                                var value = data.strongData[key];
-
-                                var strongTable = $("<table>").addClass("verseNumberStrongs");
-                                //there may be multiple values of this kind of format:
-                                var bookKey = key.substring(0, key.indexOf('.'));
-                                var internalVerseLink = element;
-
-                                if (internalVerseLink[0] == undefined) {
-                                    //no point in continuing here, since we have no verse to attach it to.
-                                    return;
-                                }
-
-                                var header = $("<tr>");
-                                header.append("<th>");
-                                header.append($("<th>").append(__s.bible_book));
-                                header.append($("<th>").append(data.ot ? __s.OT : __s.NT));
-                                strongTable.append(header);
-
-                                var row;
-                                $.each(value, function (i, item) {
-                                    var even = (i % 2) == 0;
-
-                                    if (even) {
-                                        row = $("<tr>");
-                                        strongTable.append(row);
-                                    }
-
-                                    var searchCell = $("<td>");
-                                    row.append(searchCell);
-
-                                    //add search icon
-                                    searchCell.append(self._addLinkToLexicalSearch(passageId, "ui-icon ui-icon-search verseStrongSearch", "sameWordSearch", item.strongNumber, null, __s.search_for_this_word, ""));
-                                    searchCell.append(self._addLinkToLexicalSearch(passageId, "ui-icon ui-icon-zoomin verseStrongSearch", "relatedWordSearch", item.strongNumber, null, __s.search_for_related_words, ""));
-
-                                    var nameLink = $("<a>");
-                                    nameLink.append(item.gloss);
-                                    nameLink.append(" (");
-                                    nameLink.append(item.stepTransliteration);
-                                    nameLink.append(", ")
-                                    nameLink.append($("<span>").addClass(self._getFontForStrong(item.strongNumber)).append(item.matchingForm));
-                                    nameLink.append(")");
-                                    nameLink.attr("href", "javascript:void(0)");
-                                    nameLink.click(function () {
-                                        showDef(item.strongNumber, passageId);
-                                    });
-                                    searchCell.append(nameLink);
-
-                                    var bookCount = $("<td>");
-                                    bookCount.append(self._addLinkToLexicalSearch(passageId, "strongCount", "sameWordSearch",
-                                        item.strongNumber, bookKey, "", sprintf(__s.times, data.counts[item.strongNumber].book)));
-                                    row.append(bookCount);
-
-                                    var testamentCount = $("<td>");
-                                    if (even) {
-                                        testamentCount.addClass("even");
-                                    }
-                                    testamentCount.append(self._addLinkToLexicalSearch(passageId, "strongCount", "sameWordSearch",
-                                        item.strongNumber, null, "", sprintf(__s.times, data.counts[item.strongNumber].bible)));
-                                    row.append(testamentCount);
-                                });
-
-                                var strongPopup = $("<span>");
-                                strongPopup.append(strongTable);
-                                strongPopup.append("<br />");
-
-                                if (data.significantlyRelatedVerses[key] && data.significantlyRelatedVerses[key].length != 0) {
-                                    var related = $("<a>").addClass("related").attr("href", "javascript:void(0)").append(__s.see_related_verses).click(function () {
-                                        getRelatedVerses(data.significantlyRelatedVerses[key].join('; '), passageId);
-                                    });
-                                    strongPopup.append(related);
-                                    strongPopup.append("&nbsp;&nbsp;");
-                                }
-
-                                if (data.relatedSubjects[key] && data.relatedSubjects[key].total != 0) {
-                                    //attach data to internal link (so that it goes when passage goes
-                                    var subjects = data.relatedSubjects[key];
-                                    $.data(internalVerseLink[0], "relatedSubjects", subjects);
-
-                                    var subjectOverview = "";
-                                    var i = 0;
-                                    for (i = 0; i < 5 && i < subjects.results.length; i++) {
-                                        subjectOverview += subjects.results[i].root;
-                                        subjectOverview += ", ";
-                                        subjectOverview += subjects.results[i].heading;
-                                        subjectOverview += " ; ";
-                                    }
-
-                                    if (i < subjects.results.length) {
-                                        subjectOverview += "...";
-                                    }
-
-                                    var related = $("<a>").addClass("related").attr("href", "javascript:void(0)")
-                                        .append(__s.see_related_subjects)
-                                        .attr("title", subjectOverview.replace(/'/g, "&apos;"))
-                                        .click(function () {
-                                            getRelatedSubjects(key, passageId);
-                                        });
-                                    strongPopup.append(related);
-                                    strongPopup.append("&nbsp;&nbsp;");
-                                }
-
-                                api.set('content.text', strongPopup);
-                                //only expect one entry back.
-                                break;
-                            }
-                        });
-                    }
-                }
-            });
-            qtip.qtip("show");
-        },
-
         /**
          * Enhances verse numbers with their counts and related subjects popup
          * @param passageId
@@ -542,7 +403,7 @@ var PassageDisplayView = Backbone.View.extend({
          * @param reference
          * @private
          */
-        _doVerseNumbers: function (passageId, passageContent, options, interlinearMode, reference) {
+        _doVerseNumbers: function (passageId, passageContent, options, interlinearMode, version) {
             //if interleaved mode or column mode, then we want this to continue
             //if no options, or no verse numbers, then exit
             var hasVerseNumbersByDefault = interlinearMode != undefined && interlinearMode != "" && interlinearMode != 'INTERLINEAR';
@@ -553,31 +414,7 @@ var PassageDisplayView = Backbone.View.extend({
             }
 
             var self = this;
-            $(".verseNumber", passageContent).closest("a").mouseenter(function () {
-                self._addSubjectAndRelatedWordsPopup($(this));
-            });
-
-
-//        var book = reference;
-//        var firstSpace = reference.indexOf(' ');
-//        if (firstSpace != -1) {
-//            book = reference.substring(0, firstSpace);
-//        }
-
-        },
-
-        _addLinkToLexicalSearch: function (passageId, classes, functionName, strongNumber, bookKey, title, innerText) {
-            var text = $("<a>");
-            text.attr("href", "javascript:void(0)");
-            text.attr("title", title.replace(/'/g, "&apos;"));
-            text.addClass(classes);
-            text.append(innerText);
-            text.click(function () {
-                step.lexicon.setPassageIdInFocus(passageId);
-                step.lexicon[functionName](strongNumber, bookKey);
-            });
-
-            return text;
+            step.util.ui.enhanceVerseNumbers(passageId, passageContent, version);
         },
 
         _doHideEmptyNotesPane: function (passageContent) {

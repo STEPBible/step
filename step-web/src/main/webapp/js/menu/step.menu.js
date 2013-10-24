@@ -54,7 +54,7 @@ step.menu = {
             return false;
         }
 
-        $(selectedItem).not(":has(img)").append("<img class='selectingTick' src='images/selected.png' />");
+        $(selectedItem).not(":has(img)").append("<img class='selectingTick' src='images/selected.png' width='17' height='16' />");
         return true;
     },
 
@@ -180,6 +180,11 @@ step.menu = {
         };
     },
 
+    /**
+     * @param optionName the option name
+     * @param passageId the passage id
+     * @returns {*|jQuery|HTMLElement}
+     */
     getMenuItem : function(optionName, passageId) {
         if (passageId != undefined) {
             return $(".passageContainer[passage-id = " + passageId + "] li[menu-name] a[name = '" + optionName + "']");

@@ -1,5 +1,6 @@
 package com.tyndalehouse.step.tools.osis;
 
+import java.awt.image.LookupOp;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,17 +37,19 @@ public class InterleavedOsisReader {
      * @throws Exception any kind of exception
      */
     public static void main(final String[] args) throws Exception {
-        final String[] versions = new String[] { "SBLGNT", "TR" };
-        final String ref = "Mar 3:3";
-        final boolean unicodeBreakDown = true;
-        final Book currentBook = Books.installed().getBook(versions[0]);
+        final String[] versions = new String[] { "ESV", "OSMHB" };
+        final String ref = "Gen.1.1";
+        final boolean unicodeBreakDown = false;
+        final boolean compare = false;
+        final InterlinearMode interlinearMode = InterlinearMode.INTERLEAVED;
 
+        final Book currentBook = Books.installed().getBook(versions[0]);
         final Book[] books = new Book[versions.length];
         for (int ii = 0; ii < versions.length; ii++) {
             books[ii] = Books.installed().getBook(versions[ii]);
         }
 
-        final BookData bookData = new BookData(books, currentBook.getKey(ref), false);
+        final BookData bookData = new BookData(books, currentBook.getKey(ref), compare);
         final Element osisFragment = bookData.getOsisFragment();
 
         final XMLOutputter xmlOutputter = new XMLOutputter(Format.getPrettyFormat());
@@ -61,9 +64,10 @@ public class InterleavedOsisReader {
         final JSwordPassageServiceImpl jsi = new JSwordPassageServiceImpl(
                 TestUtils.mockVersificationService(), null, null, null, TestUtils.mockVersionResolver());
         final List<LookupOption> options = new ArrayList<LookupOption>();
-
+//        options.add(LookupOption.);
+        
         final String osisText = jsi.getInterleavedVersions(versions, ref, options,
-                InterlinearMode.INTERLEAVED_COMPARE).getValue();
+                interlinearMode).getValue();
         final SAXBuilder sb = new SAXBuilder();
         final Document d = sb.build(new StringReader(osisText));
 

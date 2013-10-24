@@ -30,8 +30,9 @@ var PassageMenuView = Backbone.View.extend({
         var self = this;
         var version = this.model.get("version");
         var interlinearMode = this.model.get("interlinearMode");
+        var extraVersions= this.model.get("extraVersions");
 
-        $.getSafe(BIBLE_GET_FEATURES, [version, interlinearMode], function (features) {
+        $.getSafe(BIBLE_GET_FEATURES, [version, extraVersions, interlinearMode], function (features) {
             //build up map of options
             $("a", self.$el).removeClass("disabled").removeAttr('title').qtip('destroy');
 

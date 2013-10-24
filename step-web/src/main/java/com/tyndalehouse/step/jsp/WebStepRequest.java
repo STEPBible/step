@@ -34,27 +34,21 @@ package com.tyndalehouse.step.jsp;
 
 import static com.tyndalehouse.step.core.utils.StringUtils.isEmpty;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.*;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 import com.tyndalehouse.step.core.models.KeyWrapper;
-import com.tyndalehouse.step.core.models.ScopeType;
-import com.tyndalehouse.step.core.models.StatType;
+import com.tyndalehouse.step.core.models.stats.ScopeType;
+import com.tyndalehouse.step.core.models.stats.StatType;
 import com.tyndalehouse.step.core.models.stats.CombinedPassageStats;
 import com.tyndalehouse.step.core.service.AnalysisService;
 import com.tyndalehouse.step.core.service.BibleInformationService;
-import com.tyndalehouse.step.core.service.impl.AnalysisServiceImpl;
-import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.inject.Injector;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
-import com.tyndalehouse.step.core.service.jsword.impl.JSwordPassageServiceImpl;
 import com.tyndalehouse.step.models.UiDefaults;
 import com.tyndalehouse.step.rest.controllers.BibleController;
 
@@ -112,7 +106,7 @@ public class WebStepRequest {
         try {
             this.referenceKey = bible.getKeyInfo(this.reference, this.version, this.version);
             this.description = bible.getPlainText(this.version, this.reference, true).replaceAll("[<>'\",.:;()]", "");
-            stats = this.analysis.getStatsForPassage(this.version, this.reference, StatType.TEXT, ScopeType.PASSAGE);
+            stats = this.analysis.getStatsForPassage(this.version, this.reference, StatType.TEXT, ScopeType.PASSAGE, false);
         } catch (Exception ex) {
             LOG.error(ex.getMessage(), ex);
             this.referenceKey = null;

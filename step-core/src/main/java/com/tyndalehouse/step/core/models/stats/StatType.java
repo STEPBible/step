@@ -1,4 +1,4 @@
-package com.tyndalehouse.step.core.models;
+package com.tyndalehouse.step.core.models.stats;
 
 /**
  * @author chrisburrell

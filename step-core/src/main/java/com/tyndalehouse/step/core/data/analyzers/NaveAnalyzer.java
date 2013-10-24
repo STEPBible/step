@@ -15,11 +15,11 @@ import javax.inject.Inject;
  * 
  */
 public class NaveAnalyzer extends PerFieldAnalyzerWrapper {
-    @Inject
 
     /**
      * nave analyzer
      */
+    @Inject
     public NaveAnalyzer() {
         super(new StandardAnalyzer(LUCENE_30));
         final PorterStemmerAnalyzer portStemmerAnalyzer = new PorterStemmerAnalyzer();
@@ -27,5 +27,6 @@ public class NaveAnalyzer extends PerFieldAnalyzerWrapper {
         addAnalyzer("fullHeaderAnalyzed", portStemmerAnalyzer);
         addAnalyzer("rootStem", portStemmerAnalyzer);
         addAnalyzer("expandedReferences", new ReferenceAnalyzer());
+        addAnalyzer("fullTerm", new WhitespaceAnalyzer());
     }
 }

@@ -44,7 +44,8 @@ import java.util.Map;
 
 /**
  * Outlines a list of options available in lookup
- *
+ * <p />
+ * Used letters at last update: ACDEHLMNPRTVU_
  * @author chrisburrell
  */
 public enum LookupOption {
@@ -92,6 +93,20 @@ public enum LookupOption {
      */
     DIVIDE_HEBREW('D', "DivideHebrew", XslConversionType.DEFAULT),
 
+    /**
+     * Adds Greek accents
+     */
+    GREEK_ACCENTS('G', "GreekAccents", XslConversionType.DEFAULT),
+    /**
+     * Adds all Hebrew accents
+     */
+    HEBREW_ACCENTS('P', "HebrewAccents", XslConversionType.DEFAULT),
+
+    /**
+     * Adds Hebrew vowels from the underlying source text
+     */
+    HEBREW_VOWELS('U', "HebrewVowels", XslConversionType.DEFAULT),
+    
     /**
      * Morphology
      */
@@ -165,7 +180,7 @@ public enum LookupOption {
      */
     public static LookupOption fromUiOption(char c) {
         if(c == '_') {
-            throw new StepInternalException("Underscore options is being looked up.");
+            throw new StepInternalException("Underscore option is being looked up.");
         }
 
         final LookupOption lookupOption = uiToOptions.get(Character.toUpperCase(c));

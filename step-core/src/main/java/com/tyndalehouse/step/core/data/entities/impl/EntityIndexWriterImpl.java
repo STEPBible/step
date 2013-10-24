@@ -4,10 +4,8 @@ import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
@@ -16,6 +14,7 @@ import org.apache.lucene.index.IndexWriter.MaxFieldLength;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.RAMDirectory;
+import org.crosswire.common.util.CollectionUtil;
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +35,7 @@ public class EntityIndexWriterImpl {
     private static final Logger LOGGER = LoggerFactory.getLogger(EntityIndexWriterImpl.class);
     private final Directory ramDirectory;
     private IndexWriter writer;
-    private final Map<String, FieldConfig> luceneFieldConfigurationByRaw;
+    private final Map<String, List<FieldConfig>> luceneFieldConfigurationByRaw;
     private final EntityConfiguration config;
 
     private Document doc;
@@ -55,14 +54,20 @@ public class EntityIndexWriterImpl {
         this.config = entityManager.getConfig(entityName);
 
         final Map<String, FieldConfig> luceneFieldConfiguration = this.config.getLuceneFieldConfiguration();
-        this.luceneFieldConfigurationByRaw = new HashMap<String, FieldConfig>(luceneFieldConfiguration.size());
+        this.luceneFieldConfigurationByRaw = new HashMap<String, List<FieldConfig>>(luceneFieldConfiguration.size());
 
         // key the map by its data fields
         final Set<Entry<String, FieldConfig>> entrySet = luceneFieldConfiguration.entrySet();
         for (final Entry<String, FieldConfig> entry : entrySet) {
             final String[] rawDataField = entry.getValue().getRawDataField();
             for (final String rawDString : rawDataField) {
-                this.luceneFieldConfigurationByRaw.put(rawDString, entry.getValue());
+                List<FieldConfig> configs = luceneFieldConfigurationByRaw.get(rawDString);
+                if(configs == null) {
+                    configs = new ArrayList<FieldConfig>(1);
+                    this.luceneFieldConfigurationByRaw.put(rawDString, configs);
+                }
+                
+                configs.add(entry.getValue());
             }
         }
 
@@ -138,14 +143,16 @@ public class EntityIndexWriterImpl {
         }
 
         ensureNewDocument();
-        final FieldConfig fieldConfig = this.luceneFieldConfigurationByRaw.get(fieldName);
+        final List<FieldConfig> fieldConfigs = this.luceneFieldConfigurationByRaw.get(fieldName);
 
-        if (fieldConfig == null) {
+        if (fieldConfigs == null || fieldConfigs.size() == 0) {
             LOGGER.trace("Skipping field: [{}]", fieldName);
             return;
         }
 
-        this.doc.add(fieldConfig.getField(fieldValue));
+        for(FieldConfig fieldConfig : fieldConfigs) {
+            this.doc.add(fieldConfig.getField(fieldValue));
+        }
     }
 
     /**
@@ -160,14 +167,16 @@ public class EntityIndexWriterImpl {
         }
 
         ensureNewDocument();
-        final FieldConfig fieldConfig = this.luceneFieldConfigurationByRaw.get(fieldName);
+        final List<FieldConfig> fieldConfigs = this.luceneFieldConfigurationByRaw.get(fieldName);
 
-        if (fieldConfig == null) {
+        if (fieldConfigs == null || fieldConfigs.size() == 0) {
             LOGGER.trace("Skipping field: [{}]", fieldName);
             return;
         }
 
-        this.doc.add(fieldConfig.getField(fieldValue));
+        for(FieldConfig fieldConfig : fieldConfigs) {
+            this.doc.add(fieldConfig.getField(fieldValue));
+        }
     }
 
     /**
@@ -185,23 +194,27 @@ public class EntityIndexWriterImpl {
 
 
 
-        final FieldConfig fieldConfig = this.luceneFieldConfigurationByRaw.get(fieldName);
-        if (fieldConfig == null) {
+        final List<FieldConfig> fieldConfigs = this.luceneFieldConfigurationByRaw.get(fieldName);
+        if (fieldConfigs == null || fieldConfigs.size() == 0) {
             LOGGER.trace("Skipping field: [{}]", fieldName);
             return;
         }
+        
 
         //check if we've got the field already...
         //if so, then we'll simply append to the existing data, as we don't want
         //to be storing stuff in different fields...
-        Field existingValue = this.doc.getField(fieldConfig.getName());
-        if(existingValue != null && fieldConfig.isAppend()) {
-            existingValue.setValue(existingValue.stringValue() + " " + fieldValue);
-            return;
-        }
 
-        //otherwise, either add for the first time, or add multiple times
-        this.doc.add(fieldConfig.getField(fieldValue));
+        for(FieldConfig fieldConfig : fieldConfigs) {
+            Field existingValue = this.doc.getField(fieldConfig.getName());
+            if(existingValue != null && fieldConfig.isAppend()) {
+                existingValue.setValue(existingValue.stringValue() + " " + fieldValue);
+                continue;
+            }
+    
+            //otherwise, either add for the first time, or add multiple times
+            this.doc.add(fieldConfig.getField(fieldValue));
+        }
     }
 
     /** Creates a document if it doesn't already exist */

@@ -79,9 +79,12 @@ public class MultiInterlinearProviderImpl implements MultiInterlinearProvider {
      *                             interlinear provider
      * @param versificationService the service for working with a book
      * @param vocabProvider        the provider of vocabulary
+     * @param stripAccents          true to ensure accents are stripped off Hebrew texts
+     * @param stripVowels           true to ensure accents are stripped off Greek texts
      */
     public MultiInterlinearProviderImpl(final Versification masterVersification, String versions, final String textScope,
-                                        final JSwordVersificationService versificationService, final VocabularyService vocabProvider) {
+                                        final JSwordVersificationService versificationService, final VocabularyService vocabProvider, 
+                                        final boolean stripGreekAccents, final boolean stripHebrewAccents, final boolean stripVowels) {
         this.versificationService = versificationService;
 
         // first check whether the values passed in are correct
@@ -102,7 +105,7 @@ public class MultiInterlinearProviderImpl implements MultiInterlinearProvider {
                     final String normalisedVersion = version.trim();
                     this.interlinearProviders.put(normalisedVersion, new InterlinearProviderImpl(masterVersification,
                             versificationService, normalisedVersion, versifiedKey, hebrewDirectMapping,
-                            hebrewIndirectMappings, vocabProvider));
+                            hebrewIndirectMappings, vocabProvider, stripGreekAccents, stripHebrewAccents, stripVowels));
                 }
             }
             // CHECKSTYLE:OFF

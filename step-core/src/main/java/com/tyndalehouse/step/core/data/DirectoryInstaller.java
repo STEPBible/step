@@ -30,13 +30,22 @@ public class DirectoryInstaller extends AbstractSwordInstaller {
      * temporary directory to stage the "downloads"
      */
     public static final String DIRECTORY_HOST = "localhost-directory";
+    private final String installerName;
+    
+    /**
+     * @param holdingDirectory the directory containing all packages
+     */
+    public DirectoryInstaller(final String installerName, final String holdingDirectory) {
+        this(installerName, holdingDirectory, DIRECTORY_HOST);
+    }
 
     /**
      * @param holdingDirectory the directory containing all packages
      */
-    public DirectoryInstaller(final String holdingDirectory) {
+    public DirectoryInstaller(final String installerName, final String holdingDirectory, final String directoryHost) {
         super.setPackageDirectory(holdingDirectory);
-        super.setHost(DIRECTORY_HOST);
+        super.setHost(directoryHost);
+        this.installerName = installerName;
     }
 
     @Override
@@ -88,5 +97,12 @@ public class DirectoryInstaller extends AbstractSwordInstaller {
             IOUtil.close(source);
             IOUtil.close(target);
         }
+    }
+
+    /**
+     * @return the installer
+     */
+    public String getInstallerName() {
+        return installerName;
     }
 }

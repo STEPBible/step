@@ -1,8 +1,8 @@
 package com.tyndalehouse.step.core.service.jsword;
 
-import com.tyndalehouse.step.core.models.ScopeType;
-import com.tyndalehouse.step.core.models.stats.CombinedPassageStats;
+import com.tyndalehouse.step.core.models.stats.ScopeType;
 import com.tyndalehouse.step.core.models.stats.PassageStat;
+import org.crosswire.jsword.passage.Key;
 
 /**
  * Defines an interface for obtaining various stats on a passage.
@@ -19,7 +19,7 @@ public interface JSwordAnalysisService {
      * @param scopeType the scope, whether chapter, near by chapters, or whole book
      * @return the passage stat
      */
-    PassageStat getWordStats(String reference, final ScopeType scopeType);
+    PassageStat getWordStats(Key reference, final ScopeType scopeType);
     /**
      * Gets the text stats.
      *
@@ -29,5 +29,5 @@ public interface JSwordAnalysisService {
      * @param scopeType the scope, whether chapter, near by chapters, or whole book
      * @return the word stats
      */
-    PassageStat getTextStats(String version, String reference, final ScopeType scopeType);
+    PassageStat getTextStats(String version, Key reference, final ScopeType scopeType);
 }

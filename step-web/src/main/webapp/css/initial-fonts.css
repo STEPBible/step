@@ -131,6 +131,23 @@ body {
 #wordStat .cloudContainer {
     overflow-y: auto;
     max-height: 375px;
+    clear: both;
+}
+
+#wordStat .scopeContainer {
+    float: right;
+}
+
+#wordStat .floatingStatSidebar {
+    text-align: right;
+    margin-bottom: 5px;
+}
+
+#animateCloud {
+    height: 16px;
+    margin-left: 5px;
+    clear: right;
+    margin-bottom: 3px;
 }
 
 #sortCloudLabel {

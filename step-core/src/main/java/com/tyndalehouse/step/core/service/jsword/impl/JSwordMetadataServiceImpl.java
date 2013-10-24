@@ -11,6 +11,7 @@ import java.util.Locale;
 
 import javax.inject.Inject;
 
+import com.tyndalehouse.step.core.utils.JSwordUtils;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.FeatureType;
 import org.crosswire.jsword.versification.BibleBook;
@@ -24,9 +25,8 @@ import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
 
 /**
  * Provides metadata for JSword modules
- * 
+ *
  * @author chrisburrell
- * 
  */
 public class JSwordMetadataServiceImpl implements JSwordMetadataService {
     private static final String BOOK_CHAPTER_FORMAT = "%s %d";
@@ -34,7 +34,7 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
 
     /**
      * Sets up the service for providing metadata information
-     * 
+     *
      * @param versificationService the versification service
      */
     @Inject
@@ -43,7 +43,7 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
     }
 
     @Override
-    public List<LookupOption> getFeatures(final String version) {
+    public List<LookupOption> getFeatures(final String version, List<String> extraVersions) {
         // obtain the book
         final Book book = this.versificationService.getBookFromVersion(version);
         final List<LookupOption> options = new ArrayList<LookupOption>(LookupOption.values().length + 1);
@@ -59,18 +59,54 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
         addMorphologyOptions(book, options);
         addNotesOptions(book, options);
         addHebrewOptions(book, options);
+        addAncientOptions(version, extraVersions, options);
         addAllMatchingLookupOptions(book, options);
 
         return options;
     }
 
     /**
+     * Adds options that apply regardless of the conditions
+     *
+     * @param currentVersion the current primary version
+     * @param extraVersions  the secondary versions that affect feature resolution 
+     * @param options        the set of options
+     */
+    private void addAncientOptions(final String currentVersion, final List<String> extraVersions, final List<LookupOption> options) {
+        final List<String> allVersions = new ArrayList<String>(extraVersions);
+        allVersions.add(currentVersion);
+
+        boolean hasGreekVersion, hasHebrewVersion = hasGreekVersion = false;
+        for (String version : allVersions) {
+            Book book = this.versificationService.getBookFromVersion(version);
+            if(JSwordUtils.isAncientGreekBook(book)) {
+                hasGreekVersion = true;
+            }
+
+            if(JSwordUtils.isAncientHebrewBook(book)) {
+                hasHebrewVersion = true;
+            }
+        }
+        
+        //hebrew/greek options for interlinears
+        if(hasGreekVersion) {
+            options.add(LookupOption.GREEK_ACCENTS);
+        }
+        
+        if(hasHebrewVersion) {
+            options.add(LookupOption.HEBREW_ACCENTS);
+            options.add(LookupOption.HEBREW_VOWELS);
+        }
+    }
+
+    /**
      * For Hebrew books, we hard code availability of seg divisions for OHB and WLC
-     * @param book the Book in question
+     *
+     * @param book    the Book in question
      * @param options the available options
      */
     private void addHebrewOptions(final Book book, final List<LookupOption> options) {
-        if("OSMHB".equals(book.getInitials()) || "OHB".equals(book.getInitials()) || "OSHB".equals(book.getInitials())
+        if ("OSMHB".equals(book.getInitials()) || "OHB".equals(book.getInitials()) || "OSHB".equals(book.getInitials())
                 || "WLC".equals(book.getInitials())) {
             options.add(LookupOption.DIVIDE_HEBREW);
         }
@@ -78,8 +114,8 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
 
     /**
      * Add all options when the options match by their XsltParameter Name
-     * 
-     * @param book the book
+     *
+     * @param book    the book
      * @param options the options to be added to
      */
     private void addAllMatchingLookupOptions(final Book book, final List<LookupOption> options) {
@@ -94,8 +130,8 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
 
     /**
      * Adds options for notes
-     * 
-     * @param book the book
+     *
+     * @param book    the book
      * @param options the options to be added to
      */
     private void addNotesOptions(final Book book, final List<LookupOption> options) {
@@ -107,8 +143,8 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
 
     /**
      * Adds options for morphology
-     * 
-     * @param book the book
+     *
+     * @param book    the book
      * @param options the options to be added to
      */
     private void addMorphologyOptions(final Book book, final List<LookupOption> options) {
@@ -119,8 +155,8 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
 
     /**
      * Adds options for strong numbers
-     * 
-     * @param book the book
+     *
+     * @param book    the book
      * @param options the options to be added to
      */
     private void addStrongNumberOptions(final Book book, final List<LookupOption> options) {
@@ -134,8 +170,8 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
 
     /**
      * Adds options for red letter Bible
-     * 
-     * @param book the book
+     *
+     * @param book    the book
      * @param options the options to be added to
      */
     private void addRedLetterOptions(final Book book, final List<LookupOption> options) {
@@ -146,8 +182,8 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
 
     /**
      * Adds options if module is a Bible
-     * 
-     * @param book the book
+     *
+     * @param book    the book
      * @param options the options to be added to
      */
     private void addBibleCategoryOptions(final Book book, final List<LookupOption> options) {
@@ -173,8 +209,8 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
 
     /**
      * Looks through a versification for a particular type of book
-     * 
-     * @param bookStart the string to match
+     *
+     * @param bookStart     the string to match
      * @param versification the versification we are interested in
      * @return the list of matching names
      */
@@ -208,13 +244,13 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
 
     /**
      * Adds all Bible books except for INTROs to NT, OT and Bible.
-     * 
+     *
      * @param matchingNames the list of current names
-     * @param bookName the book that we are examining
+     * @param bookName      the book that we are examining
      * @param versification the versification attached to the book.
      */
     private void addBookName(final List<BookName> matchingNames, final BibleBook bookName,
-            final Versification versification) {
+                             final Versification versification) {
         if (BibleBook.INTRO_BIBLE.equals(bookName) || BibleBook.INTRO_NT.equals(bookName)
                 || BibleBook.INTRO_OT.equals(bookName)) {
             return;
@@ -226,9 +262,9 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
 
     /**
      * Returns the list of chapters
-     * 
+     *
      * @param versification the versification
-     * @param book the book
+     * @param book          the book
      * @return a list of books
      */
     private List<BookName> getChapters(final Versification versification, final BibleBook book) {

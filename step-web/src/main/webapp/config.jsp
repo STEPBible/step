@@ -43,50 +43,57 @@
 
     <div class="configOptions">
          <input type="button" value="<fmt:message key="installation_use_step_application" />" id="useStep" onclick='window.location.href="index.jsp";' />
-         <input type="button" value="<fmt:message key="installation_add_modules_from_internet" />" id="dismissWarning" />
-	</div>
-
+    </div>
 
     <p />
 
-	<div class="halfColumn miniBox">
-		<h3><fmt:message key="installation_sort_by" /></h3>
+	<div class=" miniBox">
+		<h3><fmt:message key="installation_sort_and_filter" /></h3>
 		<div class='optionContainer'>
-			<%--<input type='text' style='visibility: hidden' /><br />--%>
-			<a href="#" onclick="step.config.sortBy('name');"><fmt:message key="installation_book_name" /></a>&nbsp;&nbsp;
-			<a href="#" onclick="step.config.sortBy('initials');"><fmt:message key="installation_book_initials" /></a>&nbsp;&nbsp;
-			<a href="#" onclick="step.config.sortBy('languageName');"><fmt:message key="installation_book_language" /></a>&nbsp;&nbsp;
-			<%--<a href="#" onclick="step.config.sortBy('languageCode');"><fmt:message key="installation_book_language_code" /></a>&nbsp;&nbsp;--%>
-			<a href="#" onclick="step.config.sortBy('category');"><fmt:message key="installation_book_category" /></a>
-			<br />
-		</div>
+            <table>
+                <tr>
+                    <td>            
+                        <fmt:message key="installation_filter_by_value">
+                            <fmt:param value="<input type='text' value='' size='6' id='filterValue' />" />
+                        </fmt:message>
+                    </td>
+                    <td id="filterLinks">
+                        <a href="#" id="nameFilter" filterType="name" class="selected" onclick="step.config.filterBy('name');"><fmt:message key="installation_book_name" /></a>&nbsp;&nbsp;
+                        <a href="#" id="initialsFilter" filterType="initials" onclick="step.config.filterBy('initials');"><fmt:message key="installation_book_initials" /></a>&nbsp;&nbsp;
+                        <a href="#" id="languageNameFilter" filterType="languageName" onclick="step.config.filterBy('languageName');"><fmt:message key="installation_book_language" /></a>&nbsp;&nbsp;
+                        <a href="#" id="categoryFilter" filterType="category" onclick="step.config.filterBy('category');"><fmt:message key="installation_book_category" /></a>&nbsp;&nbsp;                        
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <fmt:message key="installation_sort_by" />                        
+                    </td>
+                    <td id="sortLinks">
+                        <a href="#" id="nameSort" class="selected" onclick="step.config.sortBy('name');"><fmt:message key="installation_book_name" /></a>&nbsp;&nbsp;
+                        <a href="#" id="initialsSort" onclick="step.config.sortBy('initials');"><fmt:message key="installation_book_initials" /></a>&nbsp;&nbsp;
+                        <a href="#" id="languageNameSort" onclick="step.config.sortBy('languageName');"><fmt:message key="installation_book_language" /></a>&nbsp;&nbsp;
+                        <a href="#" id="categorySort" onclick="step.config.sortBy('category');"><fmt:message key="installation_book_category" /></a>
+                    </td>
+                </tr>
+            </table>
+        </div>
 
 	</div>
 
-	<div class="halfColumn miniBox">
-		<h3><fmt:message key="installation_filter_by" /></h3>
-		<div class='optionContainer'>
-			<fmt:message key="installation_filter_by_value" /> 		<input type='text' value="" size="6" id='filterValue' />
-			<fmt:message key="instlalation_filters" />
-			<a href="#" onclick="step.config.filterBy('name');"><fmt:message key="installation_book_name" /></a>&nbsp;&nbsp;
-			<a href="#" onclick="step.config.filterBy('initials');"><fmt:message key="installation_book_initials" /></a>&nbsp;&nbsp;
-			<a href="#" onclick="step.config.filterBy('language');"><fmt:message key="installation_book_language" /></a>&nbsp;&nbsp;
-			<a href="#" onclick="step.config.filterBy('category');"><fmt:message key="installation_book_category" /></a>&nbsp;&nbsp;
-		</div>
-	</div>
     <br /><br /><br /><br /><br /><br />
     <div id="content">
 		<div id="leftColumn" class='halfColumn'>
-			<h3><fmt:message key="installation_downloadable_modules" /></h3>
+			<h3>
+                <fmt:message key="installation_downloadable_modules" />
+                (<fmt:message key="installation_select_repository" /> <select id="repositories">
+                    <option id="selectRepository"><fmt:message key="select_repository" /></option>
+                    <option id="allRepositories" value="-1"><fmt:message key="installation_all_repositories" /></option>
+                    <option id="installFromDirectory" value="INSTALL_FROM_DIRECTORY"><fmt:message key="installation_add_local_repository" /></option>
+                </select>)
+            </h3>
+            <span id="loadingRepo" style="display: none"><fmt:message key="installation_loading_repository" /></span>
 			<p />
 			<div class='container'>
-				<div class='waitingLabel'>
-					<fmt:message key="installation_please_wait_while_step_retrieves_bibles" />
-					<p />
-					<span class='waiting'>
-						<img src="images/wait_big.gif" />
-					</span>
-				</div>
 			</div>
 		</div>
 		<div id="rightColumn" class='halfColumn'><h3><fmt:message key="installation_installed_modules" /></h3><p /><div class='container'></div></div>

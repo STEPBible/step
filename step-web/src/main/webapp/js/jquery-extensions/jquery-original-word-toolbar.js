@@ -67,7 +67,17 @@ $.widget("custom.originalWordToolbar",  {
         //now that it is attached to the dom, sort the elements
         var sortables = $(toolbar).find(".sortable");
         sortables.sortElements(function(a, b) { 
-            return $(a).find("label").text() < $(b).find("label").text() ? -1 : 1; 
+            //push hebrew first..
+            var aText = $(a).find("input").val() || " ";
+            var bText = $(b).find("input").val() || " ";
+            
+            if(bText[0] == 'H' && aText[0] == 'G') {
+                return 1;
+            } else if(bText[0] == 'G' && aText[0] == 'H') {
+                return -1;
+            }
+            
+            return aText < bText ? -1 : 1; 
         });
         
         //add hovers

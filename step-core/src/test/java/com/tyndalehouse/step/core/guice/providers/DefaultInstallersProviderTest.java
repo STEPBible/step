@@ -51,7 +51,7 @@ public class DefaultInstallersProviderTest {
     @Test
     public void testDefaultInstaller() {
         // DefaultInstallersProvider p = new DefaultInstallersProvider(
-        final String i = "www.crosswire.org,/ftpmirror/pub/sword/packages/rawzip,/ftpmirror/pub/sword/raw";
+        final String i = "some name,www.crosswire.org,/ftpmirror/pub/sword/packages/rawzip,/ftpmirror/pub/sword/raw";
         final Properties p = new Properties();
         p.put("installer.1", i);
 

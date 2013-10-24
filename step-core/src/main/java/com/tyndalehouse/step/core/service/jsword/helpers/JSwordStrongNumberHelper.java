@@ -44,6 +44,8 @@ import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
+import com.tyndalehouse.step.core.service.jsword.JSwordSearchService;
 import com.tyndalehouse.step.core.utils.SortingUtils;
 import com.tyndalehouse.step.core.utils.StringUtils;
 import org.apache.lucene.document.Document;
@@ -96,9 +98,9 @@ import com.tyndalehouse.step.core.utils.StringConversionUtils;
 public class JSwordStrongNumberHelper {
     private static final Logger LOG = org.slf4j.LoggerFactory.getLogger(JSwordStrongNumberHelper.class);
     private static final int SIGNIFICANT_CUT_OFF = 200;
-    private static final String STRONG_REF_VERSION = "ESV";
-    private static final Book STRONG_REF_VERSION_BOOK = Books.installed().getBook(STRONG_REF_VERSION);
+    private static final Book STRONG_REF_VERSION_BOOK = Books.installed().getBook(JSwordPassageService.REFERENCE_BOOK);
     private final JSwordVersificationService versification;
+    private final JSwordSearchService jSwordSearchService;
     private static volatile Versification v11n;
     private Map<String, SortedSet<LexiconSuggestion>> verseStrongs;
     private Map<String, BookAndBibleCount> allStrongs;
@@ -115,8 +117,9 @@ public class JSwordStrongNumberHelper {
      * @param versification the versification service to lookup the versification of the reference book
      */
     public JSwordStrongNumberHelper(final EntityManager manager, final Verse reference,
-                                    final JSwordVersificationService versification) {
+                                    final JSwordVersificationService versification, JSwordSearchService jSwordSearchService) {
         this.versification = versification;
+        this.jSwordSearchService = jSwordSearchService;
         this.definitions = manager.getReader("definition");
         this.reference = reference;
         initReferenceVersification();
@@ -190,7 +193,7 @@ public class JSwordStrongNumberHelper {
     private void applySearchCounts(final String bookName) {
 
         try {
-            final IndexSearcher is = getIndexSearcher();
+            final IndexSearcher is = jSwordSearchService.getIndexSearcher(JSwordPassageService.REFERENCE_BOOK);
             final TermDocs termDocs = is.getIndexReader().termDocs();
             for (final Entry<String, BookAndBibleCount> strong : this.allStrongs.entrySet()) {
                 termDocs.seek(new Term(LuceneIndex.FIELD_STRONG, strong.getKey()));
@@ -215,29 +218,6 @@ public class JSwordStrongNumberHelper {
             }
         } catch (final IOException e) {
             throw new StepInternalException(e.getMessage(), e);
-        }
-    }
-
-    /**
-     * Gets the index searcher.
-     *
-     * @return the index searcher, or null if it failed
-     */
-    private IndexSearcher getIndexSearcher() {
-        final IndexManager indexManager = IndexManagerFactory.getIndexManager();
-        Index index;
-        try {
-            index = indexManager.getIndex(STRONG_REF_VERSION_BOOK);
-            if (!(index instanceof LuceneIndex)) {
-                LOG.warn("Unsupport Lucene Index type [{}]", index.getClass());
-                throw new StepInternalException("Unable to obtain index");
-            }
-
-            @SuppressWarnings("resource")
-            final LuceneIndex li = (LuceneIndex) index;
-            return (IndexSearcher) li.getSearcher();
-        } catch (final BookException ex) {
-            throw new StepInternalException("Unable to obtain index", ex);
         }
     }
 
@@ -310,7 +290,7 @@ public class JSwordStrongNumberHelper {
      */
     private void findRelatedVerses() {
         this.relatedVerses = new HashMap<String, List<String>>(this.verseStrongs.size() * 2);
-        final IndexSearcher is = getIndexSearcher();
+        final IndexSearcher is = jSwordSearchService.getIndexSearcher(JSwordPassageService.REFERENCE_BOOK);
 
         // for each verse
         for (final Entry<String, SortedSet<LexiconSuggestion>> verseEntry : this.verseStrongs.entrySet()) {

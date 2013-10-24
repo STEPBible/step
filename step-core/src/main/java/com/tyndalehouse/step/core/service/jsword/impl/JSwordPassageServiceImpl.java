@@ -54,6 +54,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.xml.transform.TransformerException;
 
+import com.tyndalehouse.step.core.utils.JSwordUtils;
 import org.crosswire.common.xml.Converter;
 import org.crosswire.common.xml.JDOMSAXEventProvider;
 import org.crosswire.common.xml.SAXEventProvider;
@@ -134,7 +135,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
         this.resolver = resolver;
 
         kjvaBook = Books.installed().getBook("KJVA");
-        esvBook = Books.installed().getBook("ESV");
+        esvBook = Books.installed().getBook(JSwordPassageService.REFERENCE_BOOK);
     }
 
     @Override
@@ -181,7 +182,15 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
             }
 
             // now we've got our target verse, use it, trim off the verse number
-            return new KeyWrapper(currentBook.getKey(getChapter(targetVerse, v11n)));
+            final Key finalKey = currentBook.getKey(getChapter(targetVerse, v11n));
+            final KeyWrapper keyWrapper = new KeyWrapper(finalKey);
+
+            //check whether the target verse is in the last chapter
+            if (v11n.getLastChapter(targetVerse.getBook()) == targetVerse.getChapter()) {
+                keyWrapper.setLastChapter(true);
+            }
+
+            return keyWrapper;
         } catch (final NoSuchKeyException e) {
             throw new LocalisedException(e, e.getMessage());
         }
@@ -538,16 +547,17 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
 
     /**
      * Handles the NoSuchKey Exception when a passage lookup occurs
-     * @param reference the reference that cannot be found
+     *
+     * @param reference   the reference that cannot be found
      * @param currentBook the current book in question
-     * @param v11n the associated v11n
-     * @param e the exception that was the cause
+     * @param v11n        the associated v11n
+     * @param e           the exception that was the cause
      * @return the returned bookdata (of size 0) if we can
      */
     private BookData handlePassageLookupNSKException(final String reference, final Book currentBook, final Versification v11n, final NoSuchKeyException e) {
         //attempt to resolve the reference in the KJVA and if that isn't present then the ESV
         //and if that isn't present, throw the exception anyway.
-        if(kjvaBook != null) {
+        if (kjvaBook != null) {
             try {
                 //attempt the parse
                 kjvaBook.getKey(reference);
@@ -558,7 +568,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
         }
 
         //same thing for esv
-        if(esvBook != null) {
+        if (esvBook != null) {
             try {
                 //attempt the parse
                 esvBook.getKey(reference);
@@ -716,7 +726,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
                     }
                     if (end != null) {
                         osisWrapper.setEndRange(end.getOrdinal());
-                    } else if(start != null) {
+                    } else if (start != null) {
                         osisWrapper.setEndRange(start.getOrdinal());
                     }
                 }
@@ -757,13 +767,13 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
     /**
      * Used to identify languages from the interleaving modes
      *
-     * @param htmlsep
+     * @param htmlsep the transformer
      * @return the list of language codes
      */
     private String[] getLanguagesForInterleaved(final Book mainBook, final TransformingSAXEventProvider htmlsep) {
         final InterleavingProviderImpl interleavingProvider = (InterleavingProviderImpl) htmlsep.getParameter("interleavingProvider");
-        if(interleavingProvider == null) {
-            return new String[] { mainBook.getLanguage().getCode() };
+        if (interleavingProvider == null) {
+            return new String[]{mainBook.getLanguage().getCode()};
         }
 
         final String[] versions = interleavingProvider.getVersions();
@@ -810,7 +820,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
             key = normalize(key, v11n);
 
             data = new BookData(books, key, isComparingMode(displayMode));
-        } catch(NoSuchKeyException nske) {
+        } catch (NoSuchKeyException nske) {
             data = handlePassageLookupNSKException(reference, books[0], v11n, nske);
         }
 
@@ -825,10 +835,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
                 languages[ii] = books[ii].getLanguage().getCode();
             }
 
-            final OsisWrapper osisWrapper = new OsisWrapper(writeToString(transformer), data.getKey(), languages, v11n);
-
-
-            return osisWrapper;
+            return new OsisWrapper(writeToString(transformer), data.getKey(), languages, v11n);
         } catch (final TransformerException e) {
             throw new StepInternalException(e.getMessage(), e);
         } catch (final SAXException e) {
@@ -1039,7 +1046,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
         final XslConversionType requiredTransformation = identifyStyleSheet(bookData.getFirstBook()
                 .getBookCategory(), options, displayMode);
 
-        final TransformingSAXEventProvider htmlsep = (TransformingSAXEventProvider) new Converter() {
+        return (TransformingSAXEventProvider) new Converter() {
             @Override
             public SAXEventProvider convert(final SAXEventProvider provider) throws TransformerException {
                 try {
@@ -1050,9 +1057,9 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
                             osissep);
 
                     // set parameters here
-                    setOptions(tsep, options, bookData.getFirstBook());
+                    setOptions(tsep, options, bookData.getBooks());
                     setInterlinearOptions(tsep, masterVersification, getInterlinearVersion(interlinearVersion), bookData.getKey()
-                            .getOsisID(), displayMode, bookData.getKey());
+                            .getOsisID(), displayMode, bookData.getKey(), options);
                     setInterleavingOptions(tsep, displayMode, bookData);
                     return tsep;
                 } catch (final URISyntaxException e) {
@@ -1060,7 +1067,6 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
                 }
             }
         }.convert(osissep);
-        return htmlsep;
     }
 
     /**
@@ -1112,17 +1118,22 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
      * @param reference           the reference the user is interested in
      * @param displayMode         the mode to display the passage, i.e. interlinear, interleaved, etc.
      * @param key                 the key to the passage
+     * @param options             the list of options to be applied (used to determine accenting
      */
-    private void setInterlinearOptions(final TransformingSAXEventProvider tsep, final Versification masterVersification,
-                                       final String interlinearVersion, final String reference, final InterlinearMode displayMode, final Key key) {
+    private void setInterlinearOptions(final TransformingSAXEventProvider tsep,
+                                       final Versification masterVersification,
+                                       final String interlinearVersion,
+                                       final String reference,
+                                       final InterlinearMode displayMode,
+                                       final Key key, final List<LookupOption> options) {
         if (displayMode == InterlinearMode.INTERLINEAR) {
             tsep.setParameter("VLine", false);
 
             //TODO: work out OT or NT
             Iterator<Key> keys = key.iterator();
-            if(keys.hasNext()) {
+            if (keys.hasNext()) {
                 Key firstKey = keys.next();
-                if(firstKey instanceof Verse) {
+                if (firstKey instanceof Verse) {
                     final Verse verse = (Verse) firstKey;
                     Testament t = masterVersification.getTestament(verse.getOrdinal());
                     tsep.setParameter("isOT", t == Testament.OLD);
@@ -1133,8 +1144,19 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
                 tsep.setParameter("interlinearVersion", interlinearVersion);
             }
 
+            boolean stripGreekAccents, stripHebrewAccents, stripVowels = stripHebrewAccents = stripGreekAccents = true;
+            for(LookupOption option : options) {
+                if(LookupOption.GREEK_ACCENTS == option) {
+                    stripGreekAccents = false;    
+                } else if(LookupOption.HEBREW_ACCENTS == option) {
+                    stripHebrewAccents = false;
+                } else if(LookupOption.HEBREW_VOWELS == option) {
+                    stripVowels = false;
+                }
+            }
+            
             final MultiInterlinearProviderImpl multiInterlinear = new MultiInterlinearProviderImpl(masterVersification,
-                    interlinearVersion, reference, this.versificationService, this.vocabProvider);
+                    interlinearVersion, reference, this.versificationService, this.vocabProvider, stripGreekAccents, stripHebrewAccents, stripVowels);
             tsep.setParameter("interlinearProvider", multiInterlinear);
         }
     }
@@ -1178,38 +1200,60 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
      *
      * @param tsep    the xslt transformer
      * @param options the options available
-     * @param book    the version to initialise a potential interlinear with
+     * @param books    the version to initialise a potential interlinear with
      */
     protected void setOptions(final TransformingSAXEventProvider tsep, final List<LookupOption> options,
-                              final Book book) {
+                              final Book[] books) {
+        final boolean isHebrew = JSwordUtils.isAncientHebrewBook(books);
+        final boolean isGreek = JSwordUtils.isAncientGreekBook(books);
 
         for (final LookupOption lookupOption : options) {
             if (lookupOption.getXsltParameterName() != null) {
                 tsep.setParameter(lookupOption.getXsltParameterName(), true);
 
-                if (LookupOption.VERSE_NUMBERS == lookupOption) {
-                    tsep.setParameter(LookupOption.TINY_VERSE_NUMBERS.getXsltParameterName(), true);
-                }
-
-                if (LookupOption.MORPHOLOGY == lookupOption) {
-                    // tsep.setDevelopmentMode(true);
-                    tsep.setParameter("morphologyProvider", this.morphologyProvider);
-                }
-
-                if (LookupOption.ENGLISH_VOCAB == lookupOption
-                        || LookupOption.TRANSLITERATION == lookupOption
-                        || LookupOption.GREEK_VOCAB == lookupOption) {
-                    tsep.setParameter("vocabProvider", this.vocabProvider);
-                }
-
-                if (LookupOption.COLOUR_CODE == lookupOption) {
-                    tsep.setParameter("colorCodingProvider", this.colorCoder);
+                switch (lookupOption) {
+                    case VERSE_NUMBERS:
+                        tsep.setParameter(LookupOption.TINY_VERSE_NUMBERS.getXsltParameterName(), true);
+                        break;
+                    case MORPHOLOGY:
+                        tsep.setParameter("morphologyProvider", this.morphologyProvider);
+                        break;
+                    case ENGLISH_VOCAB:
+                    case TRANSLITERATION:
+                    case GREEK_VOCAB:
+                        tsep.setParameter("vocabProvider", this.vocabProvider);
+                        break;
+                    case COLOUR_CODE:
+                        tsep.setParameter("colorCodingProvider", this.colorCoder);
+                        break;
+                    case GREEK_ACCENTS:
+                        if(isGreek) {
+                            tsep.setParameter("RemovePointing", "false");
+                            tsep.setParameter("RemoveVowels", "false");
+                        }
+                        break;
+                    case HEBREW_VOWELS:
+                        if(isHebrew) {
+                            tsep.setParameter("RemoveVowels", "false");
+                        } 
+                        break;
+                    case HEBREW_ACCENTS:
+                        if(isHebrew) {
+                            tsep.setParameter("RemovePointing", "false");
+                            tsep.setParameter("RemoveVowels", "false");
+                        }
+                        break;
                 }
             }
         }
 
-        tsep.setParameter("direction", book.getBookMetaData().isLeftToRight() ? "ltr" : "rtl");
-        tsep.setParameter("baseVersion", book.getInitials());
+        //if no greek or hebrew, then override to false
+        if(!isGreek && !isHebrew) {
+            tsep.setParameter("RemovePointing", false);
+            tsep.setParameter("RemoveVowels", false);
+        }
+        tsep.setParameter("direction", books[0].getBookMetaData().isLeftToRight() ? "ltr" : "rtl");
+        tsep.setParameter("baseVersion", books[0].getInitials());
     }
 
     /**

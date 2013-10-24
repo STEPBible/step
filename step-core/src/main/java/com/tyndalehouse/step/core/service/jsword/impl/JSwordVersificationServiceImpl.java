@@ -37,6 +37,7 @@ import javax.inject.Singleton;
 
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.models.KeyWrapper;
+import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.BookMetaData;
 import org.crosswire.jsword.book.Books;
@@ -57,7 +58,6 @@ import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
  */
 @Singleton
 public class JSwordVersificationServiceImpl implements JSwordVersificationService {
-    private static final String DEFAULT_NUMBERED_VERSION = "ESV";
     private final VersionResolver versionResolver;
 
     /**
@@ -72,7 +72,7 @@ public class JSwordVersificationServiceImpl implements JSwordVersificationServic
 
     @Override
     public String getVerseRange(final int startVerseId, final int endVerseId) {
-        return getVerseRange(startVerseId, endVerseId, DEFAULT_NUMBERED_VERSION);
+        return getVerseRange(startVerseId, endVerseId, JSwordPassageService.REFERENCE_BOOK);
     }
 
     @Override

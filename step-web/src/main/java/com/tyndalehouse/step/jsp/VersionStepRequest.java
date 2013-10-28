@@ -189,7 +189,11 @@ public class VersionStepRequest {
     }
 
     public String getShortCopyright() {
-        return extractMetadata("ShortCopyright");
+        return extractMetadata("ShortCopyright") + " " + extractMetadata("Copyright");
+    }
+
+    public String getDistributionLicense() {
+        return extractMetadata("DistributionLicense");
     }
 
     /**
@@ -253,4 +257,5 @@ public class VersionStepRequest {
     public boolean isSuccess() {
         return this.success;
     }
+
 }

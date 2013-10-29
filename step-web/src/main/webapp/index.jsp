@@ -74,7 +74,20 @@
     <%
         if(request.getParameter("debug") != null) {
     %>
-        <%-- NOTE: do not include in prod web minifying and use minified versions otherwise --%>
+    <script>
+        var _prum = [['id', '52698a2cabe53d8c20000000'],
+            ['mark', 'firstbyte', (new Date()).getTime()]];
+        (function() {
+            var s = document.getElementsByTagName('script')[0]
+                    , p = document.createElement('script');
+            p.async = 'async';
+            p.src = '//rum-static.pingdom.net/prum.min.js';
+            s.parentNode.insertBefore(p, s);
+        })();
+    </script>
+
+
+<%-- NOTE: do not include in prod web minifying and use minified versions otherwise --%>
         <%@include file="jsps/offlineJqueryJs.jsp" %>
 
         <script src="libs/dohighlight-min.js" type="text/javascript"></script>

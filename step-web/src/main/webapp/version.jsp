@@ -57,11 +57,14 @@
 		<h3><fmt:message key="copyright_information" /></h3>
 		<span class="shortCopyright"><%= stepRequest.getShortCopyright() %></span>
 		<p></p>
+        <span class="shortCopyright"><%= stepRequest.getDistributionLicense() %></span>
+        <p></p>
 		<span class="shortPromo"><%= stepRequest.getShortPromo() %></span>
 		<p></p>
 		<span class="about"><%= ((String) stepRequest.getBook().getBookMetaData().getProperty("About")).replace("\\par", "<p />") %>
 		<p></p>
 		<%= stepRequest.getMiniPreface() %>
     	</span>
+        
     </span>
 </body>

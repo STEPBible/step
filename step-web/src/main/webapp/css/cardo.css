@@ -32,3 +32,10 @@
     font-weight: normal;
     font-style: normal;
 }
+
+@font-face {
+    font-family: 'KhmerBusra';
+    src: url('../fonts/Mo5V56Bu.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}

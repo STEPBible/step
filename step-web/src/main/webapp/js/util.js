@@ -446,6 +446,8 @@ step.util = {
                 return "arabicFont";
             } else if (language == "zh") {
                 return "chineseFont";
+            } else if (language == "khm" || language == "km") {
+                return "khmerFont";
             }
         },
 

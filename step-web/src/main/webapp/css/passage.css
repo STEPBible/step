@@ -70,6 +70,11 @@ span.interlinear span span { /* Make this stack on top of each other. */
     line-height: 1.4;
 }
 
+.khmerFont {
+    font-family: KhmerBusra;
+    font-size: 150%;
+}
+
 .hbFont {
 	font-family: SIL_EZRA;
 	font-size: 180%;

@@ -41,6 +41,7 @@ import java.util.List;
 import java.util.Locale;
 
 import org.crosswire.common.util.Language;
+import org.crosswire.common.util.Languages;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.FeatureType;
 import org.crosswire.jsword.versification.BibleBook;
@@ -92,7 +93,12 @@ public final class JSwordUtils {
                 final Locale versionLanguage = new Locale(language.getCode());
 
                 if (versionLanguage != null) {
-                    v.setLanguageName(versionLanguage.getDisplayLanguage(userLocale));
+                    final String displayLanguage = versionLanguage.getDisplayLanguage(userLocale);
+                    if(language.getCode() != null && language.getCode().equals(displayLanguage)) {
+                        v.setLanguageName(Languages.AllLanguages.getName(displayLanguage));   
+                    } else {
+                        v.setLanguageName(displayLanguage);
+                    }
                 }
             }
 

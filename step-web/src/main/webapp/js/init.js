@@ -56,7 +56,8 @@ function init() {
 
         initLocale();
         checkValidUser();
-
+        displayCookieWarning();
+        
         initMenu();
         $("li[menu-name] a[name]").bind("click", function () {
             step.menu.handleClickEvent(this);
@@ -155,6 +156,24 @@ function initJira() {
         $("#provideFeedback").hide();
     }
 
+}
+
+function displayCookieWarning() {
+    var isNotified = $.localStore("cookieNotified");
+    if(!isNotified) {
+        var cookieDialog = $("<div>")
+            .attr("title", __s.cookie_notification_title)
+            .append(__s.cookie_notification)
+            .dialog({
+                buttons : {
+                    "OK" : function() {
+                        $.localStore("cookieNotified", true);
+                        $(this).dialog("close");
+                    } 
+                },
+                dialogClass : "cookieNotification"
+            }).closest("");
+    }
 }
 
 function registerUser() {

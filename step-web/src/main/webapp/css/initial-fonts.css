@@ -283,3 +283,15 @@ body {
     background-color: #991c32;
     color: white;
 }
+
+.cookieNotification * {
+    color: black;
+}
+
+.cookieNotification .ui-dialog-title {
+    color: #991c32;
+}
+
+.cookieNotification a {
+    color: #33339F;
+}

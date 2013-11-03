@@ -609,9 +609,8 @@
   <!--=======================================================================-->
   <xsl:template match="note" mode="print-notes">
       <div class="margin">
-      <strong><xsl:call-template name="generateNoteXref"/></strong>
-      <a name="note-{generate-id(.)}">
-        <xsl:text> </xsl:text>
+      <a name="note-{generate-id(.)}" class="sideNote">
+          <strong><xsl:call-template name="generateNoteXref"/></strong>
       </a>
       <xsl:choose>
           <xsl:when test=".//rdg[@type='x-qere']">
@@ -634,9 +633,8 @@
   <xsl:template match="note" mode="print-cross-references">
 	<xsl:if test="@type = 'crossReference'">
 	    <div class="margin">
-	      <strong><xsl:call-template name="generateNoteXref"/></strong>
-	      <a name="note-{generate-id(.)}">
-	        <xsl:text> </xsl:text>
+	      <a name="note-{generate-id(.)}" class="sideNote">
+              <strong><xsl:call-template name="generateNoteXref"/></strong>
 	      </a>
 	      <xsl:apply-templates/>
 	    </div>

@@ -279,6 +279,10 @@ step.lexicon = {
             var relatedNosContainer = $("span[info-name='relatedNos']");
             relatedNosContainer.find("a").button().click(function () {
                 showDef($(this).prop("strongNumber"));
+            }).mouseover(function() {
+                step.passage.highlightStrong(undefined, $(this).prop("strongNumber"), "primaryLightBg");
+            }).mouseout(function() {
+                step.passage.removeStrongsHighlights(undefined, "primaryLightBg");
             });
             relatedNosContainer.buttonset();
         }

@@ -219,10 +219,29 @@ var PassageModel = Backbone.Model.extend({
                 return [];
             }
 
-            if (this._hasStronglessVersion(extraVersions)) {
-                return step.defaults.passage.interOptionsNoInterlinear;
+            var hasStronglessVersion = this._hasStronglessVersion(extraVersions);
+            var options = step.defaults.passage.interOptions.slice(0);
+            if(hasStronglessVersion) {
+                options.splice(step.defaults.passage.interNamedOptions.indexOf("INTERLINEAR"), 1);
             }
-            return step.defaults.passage.interOptions;
+            
+            //if we have separate languages, then remove the language comparison options
+            var currentLang = step.keyedVersions[(this.get("version") || "").toUpperCase()].languageCode;
+            for(var i = 0; i < extraVersions.length; i++) {
+                var otherVersion = (extraVersions[i] || "").trim().toUpperCase(); 
+                if(otherVersion == "") {
+                    continue;
+                }
+                
+                if(currentLang != step.keyedVersions[otherVersion.toUpperCase()].languageCode) {
+                    //different languages, so no comparison options and break
+                    options.splice(step.defaults.passage.interNamedOptions.indexOf("INTERLEAVED_COMPARE"), 1);
+                    options.splice(step.defaults.passage.interNamedOptions.indexOf("COLUMN_COMPARE"), 1);
+                    break;
+                }
+            }
+            
+            return options;
         },
 
         /**

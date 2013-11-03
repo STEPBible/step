@@ -226,14 +226,20 @@ var PassageModel = Backbone.Model.extend({
             }
             
             //if we have separate languages, then remove the language comparison options
-            var currentLang = step.keyedVersions[(this.get("version") || "").toUpperCase()].languageCode;
+            var currentVersion = step.keyedVersions[(this.get("version") || "").toUpperCase()];
+            if(!currentVersion) {
+                return false;
+            }
+            
+            var currentLang = currentVersion.languageCode;
             for(var i = 0; i < extraVersions.length; i++) {
                 var otherVersion = (extraVersions[i] || "").trim().toUpperCase(); 
                 if(otherVersion == "") {
                     continue;
                 }
                 
-                if(currentLang != step.keyedVersions[otherVersion.toUpperCase()].languageCode) {
+                var otherVersion = step.keyedVersions[otherVersion.toUpperCase()];
+                if(otherVersion && currentLang != otherVersion.languageCode) {
                     //different languages, so no comparison options and break
                     options.splice(step.defaults.passage.interNamedOptions.indexOf("INTERLEAVED_COMPARE"), 1);
                     options.splice(step.defaults.passage.interNamedOptions.indexOf("COLUMN_COMPARE"), 1);

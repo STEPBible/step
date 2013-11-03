@@ -42,7 +42,7 @@ var PassageMenuView = Backbone.View.extend({
                     .attr('title', features.removed[i].explanation)
                     .qtip({ position: {my: "center right", at: "left center", viewport: $(window) }});
             }
-        });
+        }, this.model.get("passageId"));
     },
 
     /**

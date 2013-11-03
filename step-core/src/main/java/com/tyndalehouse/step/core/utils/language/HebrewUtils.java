@@ -287,7 +287,7 @@ public final class HebrewUtils {
             thirdPass(letters, input);
 
 
-            String transliteration = transliterate(letters, stressedWord);
+            String transliteration = transliterate(input, letters, stressedWord);
             if (LOGGER.isTraceEnabled()) {
                 outputAnalysis(letters, inputString, transliteration);
             }
@@ -521,13 +521,13 @@ public final class HebrewUtils {
      * @param letters the list of letters
      * @param stressedWord true to indicate the word has at least one stress  @return the transliterated string
      */
-    private static String transliterate(final HebrewLetter[] letters,  final boolean stressedWord) {
+    private static String transliterate(char[] input, final HebrewLetter[] letters,  final boolean stressedWord) {
         final StringBuilder output = new StringBuilder(letters.length + 16);
         for (int ii = 0; ii < letters.length; ii++) {
             transliterate(letters, ii, output, stressedWord);
         }
 
-        doEndings(output);
+        doEndings(input, output);
         return output.toString();
     }
 
@@ -920,10 +920,21 @@ public final class HebrewUtils {
      *  (a => a(,
      * </pre>
      *
+     * @param letters
      * @param output the output which may need letters swapped
      */
-    private static void doEndings(final StringBuilder output) {
-
+    private static void doEndings(final char[] letters, final StringBuilder output) {
+        //find last consonant
+        int lastConsonant = getLastConsonantPosition(letters);
+        if(lastConsonant == -1 || (letters[lastConsonant] != HET && letters[lastConsonant] != HE)) {
+            return;
+        }
+        
+        //we've got a he or a het
+        if(!hasAnyPointing(letters, lastConsonant, true, PATAH)) {
+            return;
+        }
+        
         // check last character if a
         final int last = output.length() - 1;
         final int secondLast = last - 1;
@@ -953,6 +964,20 @@ public final class HebrewUtils {
             }
         }
 
+    }
+
+    /**
+     * Gets the last consonant in the Hebrew word
+     * @param letters the letters in the word
+     * @return the index of the last consonant
+     */
+    private static int getLastConsonantPosition(final char[] letters) {
+        for(int ii = letters.length - 1; ii >= 0; ii--) {
+            if(isHebrewConsonant(letters[ii])) {
+                return ii;
+            }
+        }
+        return -1;
     }
 
     /**
@@ -1100,12 +1125,12 @@ public final class HebrewUtils {
         }
 
         final char consonant = input[currentPosition];
-        if (isAny(consonant, BET, GIMEL, DALET, KAF, PE, TAV)
-                && hasAnyPointing(input, currentPosition, false, SHEVA, HATAF_SEGOL, HATAF_PATAH, HATAF_QAMATS)) {
-            // not dagesh forte if any of those letters
-            letters[currentPosition].setConsonantType(ConsonantType.SINGLE);
-            return;
-        }
+//        if (isAny(consonant, BET, GIMEL, DALET, KAF, PE, TAV)
+//                && hasAnyPointing(input, currentPosition, false, SHEVA, HATAF_SEGOL, HATAF_PATAH, HATAF_QAMATS)) {
+//            // not dagesh forte if any of those letters
+//            letters[currentPosition].setConsonantType(ConsonantType.SINGLE);
+//            return;
+//        }
         letters[currentPosition].setConsonantType(ConsonantType.DOUBLE);
     }
 

@@ -440,8 +440,8 @@ function initGlobalHandlers() {
         },
         text: false
     }).click(function () {
-            $("#error").slideUp(250);
-        });
+        $("#error").slideUp(250);
+    });
 
     $("#error").hear("caught-error-message", function (selfElement, data) {
         step.util.raiseError(data);

@@ -43,6 +43,7 @@ import com.tyndalehouse.step.core.models.ClientSession;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -101,6 +102,8 @@ public class FrontController extends HttpServlet {
 
         this.errorResolver = errorResolver;
         this.clientSessionProvider = clientSessionProvider;
+
+        this.jsonMapper.setSerializationInclusion(JsonSerialize.Inclusion.NON_NULL);
     }
 
     @Override

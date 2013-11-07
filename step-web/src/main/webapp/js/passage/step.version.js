@@ -102,9 +102,9 @@ step.version = {
 
         var self = this;
         var keyedVersion = step.keyedVersions[version.toUpperCase()];
-        if (keyedVersion && keyedVersion.category == 'BIBLE' && !keyedVersion.hasStrongs && !step.version.warned[keyedVersion.initials]) {
+        if (keyedVersion && keyedVersion.category == 'BIBLE' && !keyedVersion.hasStrongs && !$.localStore("warned-" + version.toUpperCase())) {
             step.util.raiseInfo(passageId, NO_STRONGS);
-            step.version.warned[keyedVersion.initials] = true;
+            $.localStore("warned-" + version.toUpperCase(), true);
         }
     }
 };

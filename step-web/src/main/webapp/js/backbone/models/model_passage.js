@@ -219,10 +219,35 @@ var PassageModel = Backbone.Model.extend({
                 return [];
             }
 
-            if (this._hasStronglessVersion(extraVersions)) {
-                return step.defaults.passage.interOptionsNoInterlinear;
+            var hasStronglessVersion = this._hasStronglessVersion(extraVersions);
+            var options = step.defaults.passage.interOptions.slice(0);
+            if(hasStronglessVersion) {
+                options.splice(step.defaults.passage.interNamedOptions.indexOf("INTERLINEAR"), 1);
             }
-            return step.defaults.passage.interOptions;
+            
+            //if we have separate languages, then remove the language comparison options
+            var currentVersion = step.keyedVersions[(this.get("version") || "").toUpperCase()];
+            if(!currentVersion) {
+                return false;
+            }
+            
+            var currentLang = currentVersion.languageCode;
+            for(var i = 0; i < extraVersions.length; i++) {
+                var otherVersion = (extraVersions[i] || "").trim().toUpperCase(); 
+                if(otherVersion == "") {
+                    continue;
+                }
+                
+                var otherVersion = step.keyedVersions[otherVersion.toUpperCase()];
+                if(otherVersion && currentLang != otherVersion.languageCode) {
+                    //different languages, so no comparison options and break
+                    options.splice(step.defaults.passage.interNamedOptions.indexOf("INTERLEAVED_COMPARE"), 1);
+                    options.splice(step.defaults.passage.interNamedOptions.indexOf("COLUMN_COMPARE"), 1);
+                    break;
+                }
+            }
+            
+            return options;
         },
 
         /**
@@ -344,15 +369,18 @@ var PassageModel = Backbone.Model.extend({
         },
 
         /**
-         * Returns true if any of the versions passed in does not contain strong numbers
+         * Returns true if any of the versions passed in does not contain strong numbers, or if the versions don't 
+         * all have the same kind of interlinear
          * @param comparisonVersions the list of comparison versions
          * @return true if at least one version does not contain strong numbers
          * @private
          */
         _hasStronglessVersion: function (comparisonVersions) {
-            var allVersions = [this.get("version")];
+            var allVersions = [this.get("version") || ""];
             allVersions = allVersions.concat(comparisonVersions.slice(0));
-
+            
+            //true indicates septuagint and false indicates normal
+            var interlinearType = null;
             for (var i = 0; i < allVersions.length; i++) {
                 //check that each version contains strongs
                 var features = this._getSelectedVersion(allVersions[i]);
@@ -360,6 +388,16 @@ var PassageModel = Backbone.Model.extend({
                 //if at least one of the versions doesn't have Strongs, then we can't do interlinears.
                 if (features && !features.hasStrongs) {
                     return true;
+                }
+                
+                var isSeptuagint = step.util.isSeptuagintVersion(allVersions[i]);
+                if(interlinearType != null && interlinearType != isSeptuagint) {
+                    //two different interlinear types, therefore, need to behave as if mixed strong/strongless versions
+                    return true;
+                }
+                
+                if(interlinearType == null) {
+                    interlinearType = isSeptuagint;
                 }
             }
             return false;

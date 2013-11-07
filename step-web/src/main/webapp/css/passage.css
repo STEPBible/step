@@ -129,6 +129,10 @@ span.interlinear span span span {
 	display: none;
 }
 
+.sideNote {
+    padding-right: 5px;
+}
+
 .visibleInlineNote {
 	font-size: 12px;
 }
@@ -207,6 +211,12 @@ span[strong]:hover {
 .cmpUnderline {
 	color: #33339F; 
 	font-weight: bold;
+}
+
+.inlineNoteHighlight {
+    background-color: #F3E5B4;
+    color: #991C32;
+    font-weight: bold;
 }
 
 .verseNumber {

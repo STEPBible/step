@@ -82,6 +82,7 @@
             if(!appManager.isLocal()) {
         %>
             <li><a href="javascript:void(0)" id="provideFeedback"><fmt:message key="help_feedback" /></a></li>
+            <li><a href="http://www.tyndale.cam.ac.uk/index.php?page=cookie-policy" target="_blank"><fmt:message key="help_privacy_policy" /></a></li>
         <%  } %>
 		<li><a href="javascript:void(0)" name="ABOUT"><fmt:message key="help_about" /></a></li>
 	</ul>

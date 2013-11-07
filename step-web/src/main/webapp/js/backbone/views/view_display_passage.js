@@ -383,14 +383,20 @@ var PassageDisplayView = Backbone.View.extend({
          * @private
          */
         _doHighlightNoteInPane: function (passageContent, link) {
+            var inlineLink = $(".notesPane strong", passageContent).filter(function () {
+                return $(this).text() == link.text();
+            }).closest(".margin"); 
+            
             $(link).hover(function () {
-                $(".notesPane strong", passageContent).filter(function () {
-                    return $(this).text() == link.text();
-                }).closest(".margin").addClass("ui-state-highlight");
+                inlineLink.addClass("ui-state-highlight");
             }, function () {
-                $(".notesPane strong", passageContent).filter(function () {
-                    return $(this).text() == link.text();
-                }).closest(".margin").removeClass("ui-state-highlight");
+                inlineLink.removeClass("ui-state-highlight");
+            });
+
+            $(inlineLink).hover(function () {
+                link.addClass("inlineNoteHighlight");
+            }, function () {
+                link.removeClass("inlineNoteHighlight");
             });
         },
 

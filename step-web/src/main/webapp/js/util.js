@@ -308,7 +308,15 @@ step.util = {
         }
         $.localStore("step.version", appVersion);
     },
-
+    
+    /**
+     * @param item the item we are testing
+     * @returns {boolean} true to indicate it is a septuagint version
+     */
+    isSeptuagintVersion: function (item) {
+        return $.inArray(item.initials || item, step.util.septuagintVersions) != -1;
+    },
+    
     ui: {
         appleKey: false,
 
@@ -451,7 +459,6 @@ step.util = {
             }
         },
 
-
         getFeaturesLabel: function (item) {
             var features = "";
 
@@ -473,7 +480,7 @@ step.util = {
             if (item.hasStrongs) {
                 features += " " + "<span class='versionFeature' title='" + __s.vocabulary_available + "'>" + __s.vocabulary_available_initial + "</span>";
 
-                if ($.inArray(item.initials, step.util.septuagintVersions) != -1) {
+                if (step.util.isSeptuagintVersion(item)) {
                     features += " " + "<span class='versionFeature' title='" + __s.septuagint_interlinear_available + "'>" + __s.septuagint_interlinear_available_initial + "</span>";
                 } else {
                     features += " " + "<span class='versionFeature' title='" + __s.interlinear_available + "'>" + __s.interlinear_available_initial + "</span>";

@@ -74,18 +74,6 @@
     <%
         if(request.getParameter("debug") != null) {
     %>
-    <script>
-        var _prum = [['id', '52698a2cabe53d8c20000000'],
-            ['mark', 'firstbyte', (new Date()).getTime()]];
-        (function() {
-            var s = document.getElementsByTagName('script')[0]
-                    , p = document.createElement('script');
-            p.async = 'async';
-            p.src = '//rum-static.pingdom.net/prum.min.js';
-            s.parentNode.insertBefore(p, s);
-        })();
-    </script>
-
 
 <%-- NOTE: do not include in prod web minifying and use minified versions otherwise --%>
         <%@include file="jsps/offlineJqueryJs.jsp" %>
@@ -207,6 +195,17 @@
                 var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
               })();
             </script>
+            <script>
+                var _prum = [['id', '52698a2cabe53d8c20000000'],
+                    ['mark', 'firstbyte', (new Date()).getTime()]];
+                (function() {
+                    var s = document.getElementsByTagName('script')[0]
+                            , p = document.createElement('script');
+                    p.async = 'async';
+                    p.src = '//rum-static.pingdom.net/prum.min.js';
+                    s.parentNode.insertBefore(p, s);
+                })();
+            </script>
         <% } %>
 	<%
 	}
@@ -247,13 +246,14 @@
 
 			<table>
 				<tr>
-					<td><a target="_new" href="https://stepweb.atlassian.net/wiki/display/SUG/STEP+User+Guide" title="<fmt:message key="quick_tutorial" />"><fmt:message key="help_manual" /></a></td>
-					<td><a target="_new" href="versions.jsp" title="<fmt:message key="detailed_help_manual" />"><fmt:message key="available_versions" /></a></td>
+					<td colspan="3"><a target="_new" href="https://stepweb.atlassian.net/wiki/display/SUG/STEP+User+Guide" title="<fmt:message key="quick_tutorial" />"><fmt:message key="help_manual" /></a></td>
+					<td colspan="3"><a target="_new" href="versions.jsp" title="<fmt:message key="detailed_help_manual" />"><fmt:message key="available_versions" /></a></td>
 				</tr>
 				<tr>
-					<td><a target="_new" href="http://www.tyndale.cam.ac.uk/index.php?mact=News,cntnt01,detail,0&cntnt01articleid=28&cntnt01returnid=15" title="<fmt:message key="find_out_more_about_step" />"><fmt:message key="about_step_project" /></a></td>
-					<td><a target="_new" href="https://stepweb.atlassian.net/wiki/x/iICV" title="<fmt:message key="support_the_project"/>"><fmt:message key="volunteers_required" /></a></td>
-				</tr>
+					<td colspan="2"><a target="_new" href="http://www.tyndale.cam.ac.uk/index.php?mact=News,cntnt01,detail,0&cntnt01articleid=28&cntnt01returnid=15" title="<fmt:message key="find_out_more_about_step" />"><fmt:message key="about_step_project" /></a></td>
+					<td colspan="2"><a target="_new" href="https://stepweb.atlassian.net/wiki/x/iICV" title="<fmt:message key="support_the_project"/>"><fmt:message key="volunteers_required" /></a></td>
+                    <td colspan="2"><a href="http://www.tyndale.cam.ac.uk/index.php?page=cookie-policy" target="_blank"><fmt:message key="help_privacy_policy" /></a></td>
+                </tr>
 			</table>
 			<br />
 			<a target="_new" href="http://www.tyndale.cam.ac.uk" style="color: #991c32">Tyndale House<br />Cambridge</a>

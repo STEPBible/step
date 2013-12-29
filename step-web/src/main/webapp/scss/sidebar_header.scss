@@ -1,0 +1,16 @@
+@import 'template_variables';
+
+#sidebar {
+  li {
+    &.active {
+      a {
+        color: $headingColour;
+      }
+    }
+    a {
+      color: $inactiveTabColor;
+      padding: 2 20 2 5;
+    }
+  }
+}
+

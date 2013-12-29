@@ -1,0 +1,23 @@
+@import 'template_variables';
+ 
+.select2-search-choice.selectBibleRow, .selectBibleRow{
+  background-image: -webkit-linear-gradient(top, lighten($bibleRow, $optionStartGradient), lighten($bibleRow, $optionEndGradient))  !important;
+}
+.select2-search-choice.subjects, .subjects {
+  background-image: -webkit-linear-gradient(top, lighten($subjectRow, $optionStartGradient), lighten($subjectRow, $optionEndGradient))  !important;
+}
+.select2-search-choice.greek, .greek {
+  background-image: -webkit-linear-gradient(top, lighten($greekRow, $optionStartGradient), lighten($greekRow, $optionEndGradient))  !important;
+}
+.select2-search-choice.greekMeanings, .greekMeanings {
+  background-image: -webkit-linear-gradient(top, lighten($greekMeaningsRow, $optionStartGradient), lighten($greekMeaningsRow, $optionEndGradient))  !important;
+}
+.select2-search-choice.hebrew, .hebrew {
+  background-image: -webkit-linear-gradient(top, lighten($hebrewRow, $optionStartGradient), lighten($hebrewRow, $optionEndGradient))  !important;
+}
+.select2-search-choice.hebrewMeanings, .hebrewMeanings {
+  background-image: -webkit-linear-gradient(top, lighten($hebrewMeaningsRow, $optionStartGradient), lighten($hebrewMeaningsRow, $optionEndGradient))  !important;
+}
+.select2-search-choice.selectReferenceRow, .selectReferenceRow {
+  background-image: -webkit-linear-gradient(top, lighten($referenceRow, $optionStartGradient), lighten($referenceRow, $optionEndGradient))  !important;
+}

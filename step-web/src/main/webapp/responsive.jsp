@@ -52,7 +52,7 @@
     <link href="css/bootstrap-theme.min.css" rel="stylesheet" media="screen" />
     <link href="css/select2.css" rel="stylesheet" media="screen" />
     <link href="css/select2-bootstrap.css" rel="stylesheet" media="screen" />
-    <link href="css/step-template.css" rel="stylesheet" media="screen" />
+    <link href="scss/step-template.css" rel="stylesheet" media="screen" />
     <%--<link href="css/magicsuggest-1.3.1-min.css" rel="stylesheet" media="screen" />--%>
     <%--<link href="css/typeahead.js-bootstrap.css" rel="stylesheet" media="screen" />--%>
     <%--<link href="css/prettyCheckable.css" rel="stylesheet" media="screen" />--%>
@@ -121,7 +121,6 @@
                             </a>
                         </div>
                     </form>
-                    <br />
                 </div>
                 <div class="col-xs-1 col-sm-4 col-md-3 help">
                     <jsp:include page="js/menu/top/menu.jsp" />
@@ -130,19 +129,19 @@
         </div>
     </div>
 
-    <div class="mainPanel row row-offcanvas row-offcanvas-right">
-        <div class="col-xs-12 columnHolder ">
+    <div class="mainPanel row row-offcanvas">
+        <div class="" id='columnHolder'>
             <div class="col-sm-6 col-xs-12 column active">
             <span class="activeMarker"></span>
             <div class="passageContainer" passage-id=0>
                 <div class="passageText ui-widget">
                     <div class="btn-group pull-right passageOptionsGroup">
-                        <button class="btn btn-default btn-sm" type="button">
-                            <span class="glyphicon glyphicon glyphicon-share"></span>
+                        <button class="btn btn-default btn-sm" type="button" title="<fmt:message key="share" />">
+                            <span class="glyphicon glyphicon-comment"></span>
                         </button>
-                        <button class="btn btn-default btn-sm showStats" type="button">
+                        <button class="btn btn-default btn-sm showStats" type="button" title="<fmt:message key="passage_stats" />">
                             <span class="glyphicon glyphicon-stats"></span></button>
-                        <button class="btn btn-default btn-sm dropdown-toggle showSettings" type="button" data-toggle="dropdown">
+                        <button class="btn btn-default btn-sm dropdown-toggle showSettings" title="<fmt:message key="view" />" type="button" data-toggle="dropdown">
                             <span class="glyphicon glyphicon-cog"></span>
                         </button>
                     </div>
@@ -151,7 +150,7 @@
             </div>
         </div>
         </div>
-        <div class="col-xs-6 col-xs-3 sidebar-offcanvas" id="sidebar" role="navigation"></div>
+        <div class="sidebar-offcanvas" id="sidebar" role="navigation"></div>
     </div>
     
 

@@ -1,0 +1,11 @@
+@import 'template_variables';
+
+@mixin divider-left {
+  border-left: 1px solid $dividerColor;
+  padding-left: 5px;
+  height: 100%;
+}
+
+@mixin padding-from-header {
+  padding: $paddingFromHeader;
+}

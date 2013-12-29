@@ -18,9 +18,9 @@ var SidebarView = Backbone.View.extend({
         
         var sidebarContainer = $("<div>");
         var tabContainer = $("<ul>").addClass("nav nav-tabs")
-            .append("<li>").addClass("active").append("<li>").children().first()
-            .append($("<a>").append(__s.original_word).attr("data-toggle","tab").attr("data-target", "#lexicon")).end().next()
-            .append($("<a>").append(__s.passage_stats).attr("data-toggle","tab").attr("data-target", "#analysis")).end().end();
+            .append("<li>").append("<li>").children().first().addClass("active")
+            .append($("<a>").addClass("glyphicon glyphicon-info-sign").attr("title", __s.original_word).attr("data-toggle","tab").attr("data-target", "#lexicon")).end().next()
+            .append($("<a>").addClass("glyphicon glyphicon-stats").attr("title", __s.passage_stats).attr("data-toggle","tab").attr("data-target", "#analysis")).end().end();
         
         
         var vocabContainer = $("<div id='lexicon'>");
@@ -47,15 +47,21 @@ var SidebarView = Backbone.View.extend({
             );
             
             // append the meanings
-            vocabContainer.append($("<h2>").append(__s.lexicon_meaning));
-            vocabContainer.append(mainWord.mediumDef);
+            if(mainWord.mediumDef) {
+                vocabContainer.append($("<h2>").append(__s.lexicon_meaning));
+                vocabContainer.append(mainWord.mediumDef);
+            }
             
             //longer definitions
-            vocabContainer.append($("<h2>").append(mainWord.strongNumber[0].toLowerCase() == 'g' ? __s.lexicon_lsj_definition : __s.lexicon_bdb_definition));
-            vocabContainer.append(mainWord.lsjDefs);
+            if(mainWord.lsjDefs) {
+                vocabContainer.append($("<h2>").append(mainWord.strongNumber[0].toLowerCase() == 'g' ? __s.lexicon_lsj_definition : __s.lexicon_bdb_definition));
+                vocabContainer.append(mainWord.lsjDefs);
+            }
             
-            vocabContainer.append($("<h2>").append(__s.lexicon_related_words));
-            vocabContainer.append(mainWord.relatedNos);
+            if(mainWord.relatedNos) {
+                vocabContainer.append($("<h2>").append(__s.lexicon_related_words));
+                vocabContainer.append(mainWord.relatedNos);
+            }
         }
 
 

@@ -14,8 +14,10 @@ $(document).on("ready", function() {
     step.datasources.refresh();
     
     //setup views
-    new MainSearchView({
-        model: { data: step.datasources }
+    require(["select2"], function (module) {
+        new MainSearchView({
+            model: { data: step.datasources }
+        });
     });
 
     step.passages = new PassageModelList();

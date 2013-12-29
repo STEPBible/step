@@ -174,7 +174,7 @@
 							<cssFinalFile>step.${project.version}.css</cssFinalFile>
 							<jsSourceDir>.</jsSourceDir>
 							<jsSourceFiles>
-                                <jsSourceFile>libs/select2.min.js</jsSourceFile>
+                                <!--<jsSourceFile>libs/select2.min.js</jsSourceFile>-->
                                 <!--<jsSourceFile>libs/dohighlight-min.js</jsSourceFile>-->
                                 <jsSourceFile>libs/sprintf-0.7-beta1.js</jsSourceFile>
                                 <jsSourceFile>libs/underscore-min.js</jsSourceFile>

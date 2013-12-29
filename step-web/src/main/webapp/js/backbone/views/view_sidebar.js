@@ -10,20 +10,25 @@ var SidebarView = Backbone.View.extend({
         //load content
         $.getSafe(MODULE_GET_INFO, [this.model.get("strong"), this.model.get("morph")], function(data) {
             self.createDefinition(data, 0);
-            console.log("Got info for: ", data.vocabInfos[0].accentedUnicode);
         });        
     },
     createDefinition : function(data, activeWord) {
-        this.$el.empty();
+        //get definition tab
+        var sidebarContainer = this.$el.find("> div");
+        if(sidebarContainer.length == 0) {
+            sidebarContainer = $("<div>");
+            sidebarContainer.append(this._createTabContainer());    
+        }
         
-        var sidebarContainer = $("<div>");
-        var tabContainer = $("<ul>").addClass("nav nav-tabs")
-            .append("<li>").append("<li>").children().first().addClass("active")
-            .append($("<a>").addClass("glyphicon glyphicon-info-sign").attr("title", __s.original_word).attr("data-toggle","tab").attr("data-target", "#lexicon")).end().next()
-            .append($("<a>").addClass("glyphicon glyphicon-stats").attr("title", __s.passage_stats).attr("data-toggle","tab").attr("data-target", "#analysis")).end().end();
-        
-        
-        var vocabContainer = $("<div id='lexicon'>");
+        var lexiconId = "lexicon";
+        var vocabContainer = $("#" + lexiconId);
+        if(vocabContainer.length == 0) {
+            vocabContainer = $("<div>").attr("id", lexiconId);
+        } else {
+            vocabContainer.detach();
+            vocabContainer.empty();
+        }
+
         var alternativeEntries = $("<div id='vocabEntries'>");
         vocabContainer.append(alternativeEntries);
         vocabContainer.append($("<h1>").append(__s.lexicon_vocab));
@@ -64,9 +69,14 @@ var SidebarView = Backbone.View.extend({
             }
         }
 
-
-        sidebarContainer.append(tabContainer);
         sidebarContainer.append(vocabContainer);
         this.$el.append(sidebarContainer);
+    },
+    _createTabContainer: function() {
+        var tabContainer = $("<ul>").addClass("nav nav-tabs")
+            .append("<li>").append("<li>").children().first().addClass("active")
+            .append($("<a>").addClass("glyphicon glyphicon-info-sign").attr("title", __s.original_word).attr("data-toggle","tab").attr("data-target", "#lexicon")).end().next()
+            .append($("<a>").addClass("glyphicon glyphicon-stats").attr("title", __s.passage_stats).attr("data-toggle","tab").attr("data-target", "#analysis")).end().end();
+        return tabContainer;
     }
 });

@@ -8,9 +8,11 @@ var MainSearchView = Backbone.View.extend({
 
         _.bindAll(this);
         var view = this;
-        this.masterSearch.select2({
+
+
+        view.masterSearch.select2({
             minimumInputLength: 3,
-//            data : this._getData,
+            //            data : this._getData,
             id: function (entry) {
                 if (entry.itemType == REFERENCE) {
                     return entry.item.fullName;
@@ -34,7 +36,7 @@ var MainSearchView = Backbone.View.extend({
                             text = data[ii].suggestion.matchingForm + " (" + data[ii].suggestion.stepTransliteration + " - " + data[ii].suggestion.gloss + ")";
                         } else if (data[ii].itemType == 'greekMeanings' || data[ii].itemType == 'hebrewMeanings') {
                             text = data[ii].suggestion.gloss + " (" + data[ii].suggestion.stepTransliteration + " - " + data[ii].suggestion.matchingForm + ")";
-                        } else if(data[ii].itemType == REFERENCE) {
+                        } else if (data[ii].itemType == REFERENCE) {
                             text = data[ii].suggestion.fullName;
                             item = data[ii].suggestion;
                         }
@@ -45,8 +47,8 @@ var MainSearchView = Backbone.View.extend({
             },
 
             multiple: true,
-            formatResult: this.formatResults,
-            matcher: this.matchDropdownEntry,
+            formatResult: view.formatResults,
+            matcher: view.matchDropdownEntry,
             formatSelection: function (entry) {
                 if (entry.itemType == REFERENCE) {
                     return entry.item.shortName;
@@ -56,8 +58,8 @@ var MainSearchView = Backbone.View.extend({
             escapeMarkup: function (m) {
                 return m;
             },
-            formatResultCssClass: this.formatResultCssClass,
-            formatSelectionCssClass: this.formatResultCssClass
+            formatResultCssClass: view.formatResultCssClass,
+            formatSelectionCssClass: view.formatResultCssClass
         }).on("select2-selecting", function (event) {
                 if (event.object && event.object.itemType == REFERENCE && event.object.item.wholeBook) {
                     event.preventDefault();
@@ -72,18 +74,23 @@ var MainSearchView = Backbone.View.extend({
         var options = this.masterSearch.select2("data");
         var args = "";
         for (var ii = 0; ii < options.length; ii++) {
-            if(args.length != 0) {
+            if (args.length != 0) {
                 args += "|";
             }
             args += options[ii].itemType + "=";
-            
-            switch(options[ii].itemType) {
-                case VERSION: args += encodeURIComponent(options[ii].item.initials); break;
-                case REFERENCE: args += encodeURIComponent(options[ii].item.shortName); break;
-                default: break;
+
+            switch (options[ii].itemType) {
+                case VERSION:
+                    args += encodeURIComponent(options[ii].item.initials);
+                    break;
+                case REFERENCE:
+                    args += encodeURIComponent(options[ii].item.shortName);
+                    break;
+                default:
+                    break;
             }
         }
-        
+
         console.log("Arguments are: ", args);
         step.router.navigateSearch(args);
     },
@@ -127,7 +134,8 @@ var MainSearchView = Backbone.View.extend({
     formatResultCssClass: function (item) {
         if (item.itemType == VERSION) {
             return "selectBibleRow";
-        }if (item.itemType == "subjects") {
+        }
+        if (item.itemType == "subjects") {
             return "subjects";
         } else if (item.itemType == "greek") {
             return "greek";
@@ -137,7 +145,7 @@ var MainSearchView = Backbone.View.extend({
             return "hebrew";
         } else if (item.itemType == "hebrewMeanings") {
             return "hebrewMeanings";
-        } else if(item.itemType == REFERENCE) {
+        } else if (item.itemType == REFERENCE) {
             return "selectReferenceRow";
         }
     },
@@ -162,7 +170,7 @@ var MainSearchView = Backbone.View.extend({
             row = v.text + '<span class="source">[' + "Hebrew" + ']</span>';
         } else if (v.itemType == "hebrewMeanings") {
             row = v.text + '<span class="source">[' + "Hebrew meaning" + ']</span>';
-        } else if(v.itemType == REFERENCE) {
+        } else if (v.itemType == REFERENCE) {
             row = [
                 v.item.fullName,
                 '<span class="source">[' + __s.bible_text + ']</span>'

@@ -189,13 +189,13 @@
         <c:when test="${ param.debug eq '' }">
             <script src="libs/backbone.js" type="text/javascript"></script>
             <script src="libs/backbone.localStorage.js" type="text/javascript"></script>
-            <script src="libs/select2.js" type="text/javascript"></script>
+            <%--<script src="libs/select2.js" type="text/javascript"></script>--%>
             <script src="libs/require-2.1.9.js" type="text/javascript"></script>
     </c:when>
     <c:otherwise>
             <script src="libs/backbone-min.js" type="text/javascript"></script>
             <script src="libs/backbone.localStorage-min.js" type="text/javascript"></script>
-            <script src="libs/select2.min.js" type="text/javascript"></script>
+            <%--<script src="libs/select2.min.js" type="text/javascript"></script>--%>
             <script src="libs/require-2.1.9.min.js" type="text/javascript"></script>
             <%--<script src="libs/prettyCheckable.min.js" type="text/javascript"></script>--%>
     </c:otherwise>

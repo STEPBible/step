@@ -6,13 +6,20 @@ import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
 import static com.tyndalehouse.step.core.utils.ValidateUtils.notBlank;
 import static com.tyndalehouse.step.core.utils.ValidateUtils.notNull;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import com.tyndalehouse.step.core.exceptions.UserExceptionType;
+import com.tyndalehouse.step.core.exceptions.ValidationException;
+import com.tyndalehouse.step.core.models.BookName;
+import com.tyndalehouse.step.core.models.SearchToken;
+import com.tyndalehouse.step.core.models.search.AutoSuggestion;
+import com.tyndalehouse.step.core.service.BibleInformationService;
+import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import com.tyndalehouse.step.core.service.search.SubjectSearchService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,45 +36,154 @@ import com.yammer.metrics.annotation.Timed;
 
 /**
  * Caters for searching across the data base
- * 
+ *
  * @author chrisburrell
- * 
  */
 @Singleton
 public class SearchController {
+    private static final Pattern SPLIT_TOKENS = Pattern.compile("\\|");
     private static final Logger LOGGER = LoggerFactory.getLogger(SearchController.class);
     private final SearchService searchService;
     private final OriginalWordSuggestionService originalWordSuggestions;
     private final SubjectEntrySearchService subjectEntries;
+    private final BibleInformationService bibleInformationService;
     private SubjectSearchService subjectSearchService;
 
     /**
-     * @param search the search service
+     * @param search                  the search service
      * @param originalWordSuggestions the original word suggestions
-     * @param subjectEntries is able to retrieve the search entries
+     * @param subjectEntries          is able to retrieve the search entries
      */
     @Inject
     public SearchController(final SearchService search,
-            final OriginalWordSuggestionService originalWordSuggestions,
-            final SubjectEntrySearchService subjectEntries,
-            final SubjectSearchService subjectSearchService) {
+                            final OriginalWordSuggestionService originalWordSuggestions,
+                            final SubjectEntrySearchService subjectEntries,
+                            final SubjectSearchService subjectSearchService,
+                            final BibleInformationService bibleInformationService) {
         this.searchService = search;
         this.originalWordSuggestions = originalWordSuggestions;
         this.subjectEntries = subjectEntries;
         this.subjectSearchService = subjectSearchService;
+        this.bibleInformationService = bibleInformationService;
+    }
+
+    public List<AutoSuggestion> suggest(String input) {
+        final List<AutoSuggestion> autoSuggestions = new ArrayList<AutoSuggestion>(128);
+        addAutoSuggestions(SearchToken.REFERENCE, autoSuggestions, bibleInformationService.getBibleBookNames(input, "ESV"));
+        addAutoSuggestions("subjects", autoSuggestions, this.autocompleteSubject(input));
+
+        addAutoSuggestions("greek", autoSuggestions, this.originalWordSuggestions.getLexicalSuggestions(LexicalSuggestionType.GREEK, restoreSearchQuery(input),
+                false));
+        addAutoSuggestions("greekMeanings", autoSuggestions, this.originalWordSuggestions.getLexicalSuggestions(LexicalSuggestionType.GREEK_MEANING, restoreSearchQuery(input),
+                false));
+        addAutoSuggestions("hebrew", autoSuggestions, this.originalWordSuggestions.getLexicalSuggestions(LexicalSuggestionType.HEBREW, restoreSearchQuery(input),
+                false));
+        addAutoSuggestions("hebrewMeanings", autoSuggestions, this.originalWordSuggestions.getLexicalSuggestions(LexicalSuggestionType.HEBREW_MEANING, restoreSearchQuery(input),
+                false));
+        addAutoSuggestions("meanings", autoSuggestions, this.originalWordSuggestions.getLexicalSuggestions(LexicalSuggestionType.MEANING, restoreSearchQuery(input),
+                false));
+        return autoSuggestions;
+    }
+    /**
+     * @param items     the list of all items
+     * @param options   current display options
+     */
+    public OsisWrapper masterSearch(String items) {
+        return masterSearch(items, "{}");
+    }
+    
+    /**
+     * @param items     the list of all items
+     * @param options   current display options
+     */
+    public OsisWrapper masterSearch(String items, String options) {
+        notBlank(items, "Items field is blank", UserExceptionType.APP_MISSING_FIELD);
+        notBlank(items, "Options field is blank", UserExceptionType.APP_MISSING_FIELD);
+        String[] tokens = SPLIT_TOKENS.split(items);
+        List<SearchToken> searchTokens = new ArrayList<SearchToken>();
+
+        for (String t : tokens) {
+            int indexOfPrefix = t.indexOf('=');
+            if (indexOfPrefix == -1) {
+                throw new ValidationException("Term was not prefixed with type.", UserExceptionType.APP_MISSING_FIELD);
+            }
+
+            String text = t.substring(indexOfPrefix + 1);
+            searchTokens.add(new SearchToken(text, t.substring(0, indexOfPrefix)));
+        }
+
+        return runQuery(searchTokens);
+    }
+
+    /**
+     * @param searchTokens
+     */
+    private OsisWrapper runQuery(final List<SearchToken> searchTokens) {
+        final List<String> versions = new ArrayList<String>(4);
+        final StringBuilder references = new StringBuilder();
+        String options = "";
+        
+        for (SearchToken token : searchTokens) {
+            if (SearchToken.VERSION.equals(token.getTokenType())) {
+                versions.add(token.getToken());
+            } else if (SearchToken.REFERENCE.equals(token.getTokenType())) {
+                if (references.length() > 0) {
+                    references.append(';');
+                }
+                references.append(token.getToken());
+            } else if(SearchToken.OPTIONS.equals(token.getTokenType())) {
+                options = token.getToken();
+            }
+        }
+
+        if (versions.size() == 0) {
+            versions.add(JSwordPassageService.REFERENCE_BOOK);
+        }
+
+        return this.bibleInformationService.getPassageText(
+                versions.get(0), references.toString(), options,
+                getExtraVersions(versions), "");
+    }
+
+    /**
+     * Concatenates all but the last versions
+     *
+     * @param versions version
+     * @return the concatenated versions
+     */
+    private String getExtraVersions(final List<String> versions) {
+        StringBuilder sb = new StringBuilder(128);
+        for (int i = 1; i < versions.size(); i++) {
+            sb.append(versions.get(i));
+        }
+        return sb.toString();
+    }
+
+    /**
+     * @param autoSuggestions the current suggestions
+     * @param suggestions     the list of all suggestions to add
+     * @param type            the type of the items
+     */
+    private void addAutoSuggestions(final String type, final List<AutoSuggestion> autoSuggestions, final List<?> suggestions) {
+        for (Object o : suggestions) {
+            AutoSuggestion au = new AutoSuggestion();
+            au.setItemType(type);
+            au.setSuggestion(o);
+            autoSuggestions.add(au);
+        }
     }
 
     /**
      * @param searchQuery the query to search for
-     * @param ranked true to indicate results should ranked in order of priority
-     * @param context the amount of context to add to the verses hit by a search
-     * @param pageNumber the number of the page that is desired
-     * @param pageSize the size of the page that is desired
+     * @param ranked      true to indicate results should ranked in order of priority
+     * @param context     the amount of context to add to the verses hit by a search
+     * @param pageNumber  the number of the page that is desired
+     * @param pageSize    the size of the page that is desired
      * @return the search result(s)
      */
     @Timed(name = "search-main", group = "search", rateUnit = TimeUnit.SECONDS, durationUnit = TimeUnit.MILLISECONDS)
     public SearchResult search(final String searchQuery, final String ranked, final String context,
-            final String pageNumber, final String pageSize) {
+                               final String pageNumber, final String pageSize) {
         notNull(searchQuery, "blank_search_provided", USER_MISSING_FIELD);
         notNull(pageNumber, "Page number is required", APP_MISSING_FIELD);
         notNull(ranked, "The ranking field is required", APP_MISSING_FIELD);
@@ -78,7 +194,7 @@ public class SearchController {
 
         final SearchResult results = this.searchService.search(new SearchQuery(
                 restoreSearchQuery(searchQuery), ranked, Integer.parseInt(context), Integer
-                        .parseInt(pageNumber), Integer.parseInt(pageSize)));
+                .parseInt(pageNumber), Integer.parseInt(pageSize)));
 
         results.setQuery(undoRestoreSearchQuery(results.getQuery()));
 
@@ -87,7 +203,7 @@ public class SearchController {
 
     /**
      * Estimates the number of hits for a particular search query
-     * 
+     *
      * @param searchQuery the search query.
      * @return the number of results
      */
@@ -100,15 +216,15 @@ public class SearchController {
 
     /**
      * Obtains a list of suggestions to display to the user
-     * 
-     * @param greekOrHebrew "greek" if greek is desired, otherwise "hebrew", if null, then returns immediately
-     * @param form the form input so far
+     *
+     * @param greekOrHebrew   "greek" if greek is desired, otherwise "hebrew", if null, then returns immediately
+     * @param form            the form input so far
      * @param includeAllForms whether to include all known forms
      * @return a list of suggestions
      */
     @Timed(name = "lexical-suggestions", group = "languages", rateUnit = TimeUnit.SECONDS, durationUnit = TimeUnit.MILLISECONDS)
     public List<LexiconSuggestion> getLexicalSuggestions(final String greekOrHebrew, final String form,
-            final String includeAllForms) {
+                                                         final String includeAllForms) {
         notBlank(form, "Blank lexical prefix passed.", APP_MISSING_FIELD);
 
         return this.originalWordSuggestions.getLexicalSuggestions(LexicalSuggestionType.valueOf(greekOrHebrew), restoreSearchQuery(form),
@@ -125,7 +241,7 @@ public class SearchController {
 
     /**
      * opposite of @link {@link SearchController#restoreSearchQuery}
-     * 
+     *
      * @param searchQuery a query
      * @return the undone version
      */
@@ -139,7 +255,7 @@ public class SearchController {
 
     /**
      * Replaces #plus# and #slash#
-     * 
+     *
      * @param searchQuery the search query
      * @return the string that has replaced
      */
@@ -152,9 +268,9 @@ public class SearchController {
     }
 
     /**
-     * @param root the root word
+     * @param root       the root word
      * @param fullHeader the header
-     * @param version to be looked up
+     * @param version    to be looked up
      * @return the list of verses for this subject
      */
     public List<OsisWrapper> getSubjectVerses(final String root, final String fullHeader, final String version) {

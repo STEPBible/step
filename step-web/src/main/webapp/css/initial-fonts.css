@@ -1,6 +1,10 @@
 body {
-    font-size: 70%;
+    /*font-size: 70%;*/
     font-family: Verdana;
+}
+
+fieldset table td {
+    font-size: 10pt;
 }
 
 .notYetImplemented {
@@ -242,32 +246,6 @@ body {
 
 #stepInDevelopmentWarning:hover {
     opacity: 0;
-}
-
-.primaryDark {
-    color: #991C32;
-}
-
-.primaryDarkBold {
-    color: #991C32;
-    font-weight: bold;
-}
-
-.primaryDarkBg {
-    background-color: #991C32;
-    color: #F3E5B4;
-}
-
-.primaryLightBg {
-    background-color: rgb(235, 235, 241);
-}
-
-.primaryLightBorder {
-    border-color: #F3E5B4;
-}
-
-.secondaryBackground {
-    background-color: #F3E5B4;
 }
 
 /* seg divisions */

@@ -1,11 +1,11 @@
 /*******************************************************************************
  * Copyright (c) 2012, Directors of the Tyndale STEP Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without 
  * modification, are permitted provided that the following conditions 
  * are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright 
  * notice, this list of conditions and the following disclaimer.
  * Redistributions in binary form must reproduce the above copyright 
@@ -16,7 +16,7 @@
  * nor the names of its contributors may be used to endorse or promote 
  * products derived from this software without specific prior written 
  * permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
@@ -32,10 +32,7 @@
  ******************************************************************************/
 package com.tyndalehouse.step.rest.framework;
 
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
 
 import org.codehaus.jackson.annotate.JsonAnyGetter;
 
@@ -43,32 +40,33 @@ import org.codehaus.jackson.annotate.JsonAnyGetter;
  * This wraps around a ResourceBundle, to be able to serialize as JSON
  */
 public class JsonResourceBundle {
-    private final ResourceBundle bundle;
+    private final List<ResourceBundle> bundle;
 
     /**
      * Instantiates a new json resource bundle.
-     * 
+     *
      * @param bundle the bundle
      */
-    public JsonResourceBundle(final ResourceBundle bundle) {
+    public JsonResourceBundle(final List<ResourceBundle> bundle) {
         this.bundle = bundle;
     }
 
     /**
      * Gets the messages.
-     * 
+     *
      * @return the messages
      */
     @JsonAnyGetter
     public Map<String, String> getMessages() {
         final Map<String, String> messages = new HashMap<String, String>();
 
-        final Enumeration<String> keys = this.bundle.getKeys();
-        while (keys.hasMoreElements()) {
-            final String key = keys.nextElement();
-            messages.put(key, this.bundle.getString(key));
+        for (ResourceBundle rb : this.bundle) {
+            final Enumeration<String> keys = rb.getKeys();
+            while (keys.hasMoreElements()) {
+                final String key = keys.nextElement();
+                messages.put(key, rb.getString(key));
+            }
         }
-
         return messages;
     }
 }

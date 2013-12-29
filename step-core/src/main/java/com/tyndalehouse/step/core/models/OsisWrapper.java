@@ -58,7 +58,11 @@ public class OsisWrapper implements Serializable {
     private int endRange;
     private final String[] languageCode;
     private final String longName;
+    private final InterlinearMode interlinearMode;
+    private final String extraVersions;
+    private final String masterVersion;
     private Map<String, List<LexiconSuggestion>> strongNumbers;
+    private String options;
 
     /**
      * the value to be wrapped
@@ -68,12 +72,28 @@ public class OsisWrapper implements Serializable {
      * @param languageCode the ISO language code
      * @param v11n the versification system used
      */
-    public OsisWrapper(final String value, final Key key, final String[] languageCode, final Versification v11n) {
+    public OsisWrapper(final String value, final Key key, final String[] languageCode, final Versification v11n,
+                       final String masterVersion, final InterlinearMode interlinearMode, final String extraVersions) {
         this.value = value;
+        this.masterVersion = masterVersion;
+        this.interlinearMode = interlinearMode;
+        this.extraVersions = extraVersions;
         this.reference = key.getName();
         this.longName = HeadingsUtil.getLongHeader(v11n, key);
         this.osisId = key.getOsisID();
         this.languageCode = languageCode;
+    }
+
+    public InterlinearMode getInterlinearMode() {
+        return interlinearMode;
+    }
+
+    public String getExtraVersions() {
+        return extraVersions;
+    }
+
+    public String getMasterVersion() {
+        return masterVersion;
     }
 
     /**
@@ -202,5 +222,19 @@ public class OsisWrapper implements Serializable {
      */
     public Map<String, List<LexiconSuggestion>> getStrongNumbers() {
         return this.strongNumbers;
+    }
+
+    /**
+     * @return the options available to this particular passage
+     */
+    public String getOptions() {
+        return options;
+    }
+
+    /**
+     * @param options options available for this passage.
+     */
+    public void setOptions(final String options) {
+        this.options = options;
     }
 }

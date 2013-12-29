@@ -1,9 +1,9 @@
 .passageText {
-	margin-top: 1px;
+	/*margin-top: 1px;*/
 /*	overflow: auto;*/
-	padding: 0px 5px;
-/*	position: relative;*/
-	text-align: left;
+	/*padding: 0px 5px;*/
+	/*position: relative;*/
+	/*text-align: left;*/
 }
 
 /** Some interlinear rules */
@@ -249,26 +249,18 @@ a.smallHeaders {
 }
 
 .notesPane {
-	padding: 2px !important;
-	display: block;
+    padding-right: 3px;
+    margin-right: 8px;
 	max-width: 100px;
-	height: 100%;
 	color: #33339F !important;
-	
+    /*overflow: hidden;	*/
 }
 
-.leftColumn .notesPane {
+.column .notesPane {
 	margin-left: 5px;
-	float: right;
-	border-left: 1px solid #EAEAEA
-}
-
-.rightColumn .notesPane {
-	margin-right: 5px;
 	float: left;
 	border-right: 1px solid #EAEAEA
 }
-
 
 .notesPane a {
 	color: #991C32;
@@ -457,7 +449,7 @@ H4.heading  {
 
 .headingContainer {
 /* 	height: 30px; */
-	padding-bottom: 5px;
+	/*padding-bottom: 5px;*/
 }
 
 H2.xgen {
@@ -467,6 +459,9 @@ H2.xgen {
 	font-style: italic;
 }
 
+H2.xgen ul {
+    font-variant: normal;
+}
 
 H2.heading, input.heading {
 	color: #991C32;

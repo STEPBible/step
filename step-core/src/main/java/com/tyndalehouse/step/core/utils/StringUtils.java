@@ -223,4 +223,22 @@ public final class StringUtils {
 
         return titleCase.toString();
     }
+
+    /**
+     * Joins strings together, separated by a comma
+     *
+     * @param strings   the strings in question
+     * @param startFrom whether to ignore some
+     * @return the concatenated version of the array
+     */
+    public static String join(final String[] strings, final int startFrom) {
+        StringBuilder sb = new StringBuilder();
+        for (int ii = startFrom; ii < strings.length; ii++) {
+            if(ii > startFrom) {
+                sb.append(',');
+            }
+            sb.append(strings[ii]);
+        }
+        return sb.toString();
+    }
 }

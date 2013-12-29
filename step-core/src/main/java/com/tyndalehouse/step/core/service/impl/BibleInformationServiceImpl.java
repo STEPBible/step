@@ -171,6 +171,8 @@ public class BibleInformationServiceImpl implements BibleInformationService {
      * @param interlinearMode    the interlinear mode
      * @return the passage text
      */
+    //TODO: this could be optimized. last call to get options is very  similar to 'getLookupOptions'
+    // as they share some of the same stuff.
     @Override
     public OsisWrapper getPassageText(final String version, final String reference, final String options,
                                       final String interlinearVersion, final String interlinearMode) {
@@ -181,6 +183,7 @@ public class BibleInformationServiceImpl implements BibleInformationService {
         OsisWrapper passageText;
         final List<LookupOption> lookupOptions = trim(getLookupOptions(options), version, extraVersions,
                 desiredModeOfDisplay, null);
+        
         if (INTERLINEAR != desiredModeOfDisplay && NONE != desiredModeOfDisplay) {
             // split the versions
             final String[] versions = getInterleavedVersions(version, interlinearVersion);
@@ -191,7 +194,21 @@ public class BibleInformationServiceImpl implements BibleInformationService {
             passageText = this.jswordPassage.getOsisText(version, reference, lookupOptions,
                     interlinearVersion, desiredModeOfDisplay);
         }
+        
+        passageText.setOptions(optionsToString(getAvailableFeaturesForVersion(version, interlinearVersion, interlinearMode).getOptions()));
         return passageText;
+    }
+
+    /**
+     * @param options the available features to this version
+     * @return the options in coded form
+     */
+    private String optionsToString(final List<LookupOption> options) {
+        StringBuilder codedOptions = new StringBuilder();
+        for(LookupOption o : options) {
+            codedOptions.append(o.getUiName());
+        }
+        return codedOptions.toString();
     }
 
     @Override

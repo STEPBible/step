@@ -52,20 +52,7 @@ step.util = {
         }
     },
 
-    getPassageContainer: function (passageIdOrElement) {
-        //check if we have a number
-        if (isNaN(parseInt(passageIdOrElement))) {
-            //assume jquery selector or element
-            return $(passageIdOrElement).closest(".passageContainer");
-        }
 
-        //check if we're storing it
-        if (this.passageContainers[passageIdOrElement] == null) {
-            var container = $(".passageContainer[passage-id = " + passageIdOrElement + "]");
-            this.passageContainers[passageIdOrElement] = container;
-        }
-        return this.passageContainers[passageIdOrElement];
-    },
 
     getAllPassageIds: function () {
         return $(".passageContainer").map(function () {
@@ -329,14 +316,14 @@ step.util = {
         },
 
         doMenu: function (id) {
-            ddsmoothmenu.init({
-                mainmenuid: id,        //menu DIV id
-                zIndexStart: 100,
-                orientation: 'h',               //Horizontal or vertical menu: Set to "h" or "v"
-                classname: 'ddsmoothmenu innerMenu', //class added to menu's outer DIV
-                //customtheme: ["#1c5a80", "#18374a"],
-                contentsource: "markup"
-            });
+//            ddsmoothmenu.init({
+//                mainmenuid: id,        //menu DIV id
+//                zIndexStart: 100,
+//                orientation: 'h',               //Horizontal or vertical menu: Set to "h" or "v"
+//                classname: 'ddsmoothmenu innerMenu', //class added to menu's outer DIV
+//                //customtheme: ["#1c5a80", "#18374a"],
+//                contentsource: "markup"
+//            });
         },
 
         doSocialButtons: function (element) {
@@ -495,33 +482,7 @@ step.util = {
             return $("fieldset:visible", step.util.getPassageContainer(passageId)).find(".searchVersions, .passageVersion, .extraVersions");
         },
 
-        addStrongHandlers: function (passageId, passageContent) {
-            var that = this;
-            var allStrongElements = $("[strong]", passageContent);
-
-            allStrongElements.click(function () {
-                showDef(this);
-            }).hover(function () {
-                    step.passage.higlightStrongs({
-                        passageId: undefined,
-                        strong: $(this).attr('strong'),
-                        morph: $(this).attr('morph'),
-                        classes: "primaryLightBg"
-                    });
-
-                    var hoverContext = this;
-                    delay(function () {
-                        QuickLexiconModels.at(0).save({
-                            strongNumber: $(hoverContext).attr('strong'),
-                            morph: $(hoverContext).attr('morph'),
-                            element: hoverContext
-                        });
-                    }, 500, 'show-quick-lexicon');
-                }, function () {
-                    step.passage.removeStrongsHighlights(undefined, "primaryLightBg relatedWordEmphasisHover");
-                    delay(undefined, 0, 'show-quick-lexicon');
-                });
-        },
+        
         autocompleteSearch: function (selector, data, readonly, preChangeHandler) {
             var jqSelector = $(selector);
             var changed = false;
@@ -821,27 +782,7 @@ step.util = {
     }
 };
 
-var delay = (function () {
-    var timer = 0;
-    var timers = {};
-
-    return function (callback, ms, timerName) {
-        if (timerName) {
-            var tn = timers[timerName];
-            if (tn == undefined) {
-                timers[timerName] = tn = 0;
-            }
-            clearTimeout(tn);
-
-            if (callback) {
-                timers[timerName] = setTimeout(callback, ms);
-            }
-        } else {
-            clearTimeout(timer);
-            timer = setTimeout(callback, ms);
-        }
-    };
-})();
+//var delay = ()();
 
 /**
  * array comparison
@@ -930,10 +871,10 @@ function shortenName(longName, minLength) {
 
 var outstandingRequests = 0;
 function refreshWaitStatus() {
-    var coords = $("#topLogo").position();
-    $("#waiting").css('top', coords.top + 300);
-    $("#waiting").css('left', coords.left + $("#topLogo").width() / 2 - $("#waiting").width() / 2);
-    $("#waiting").css("display", outstandingRequests > 0 ? "block" : "none");
+//    var coords = $("#topLogo").position();
+//    $("#waiting").css('top', coords.top + 300);
+//    $("#waiting").css('left', coords.left + $("#topLogo").width() / 2 - $("#waiting").width() / 2);
+//    $("#waiting").css("display", outstandingRequests > 0 ? "block" : "none");
 };
 
 // some jquery extensions

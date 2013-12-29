@@ -1,8 +1,8 @@
 body {
-	min-width: 500px;
-	min-height: 300px;
-	margin: 0px;
-	overflow: hidden;
+	/*min-width: 500px;*/
+	/*min-height: 300px;*/
+	/*margin: 0px;*/
+	/*overflow: hidden;*/
 }
 
 /**********************************/
@@ -176,16 +176,16 @@ body {
 }
 
 #holdingPage a {
-	color: #33339f;;
+	color: #33339f;
 	font-weight: bold;
 }
 
 /**************************/
 /* PASSAGE CONTAINERS     */
 /**************************/
-.passageContainer {
-	
-}
+/*.passageContainer {*/
+	/**/
+/*}*/
 
 .passageButtons {
 	float: right;
@@ -234,9 +234,9 @@ body {
     border-left: solid #808080;
 }
 
-.headingContainer {
-	width: 99%;
-}
+/*.headingContainer {*/
+	/*width: 99%;*/
+/*}*/
 
 .passageContent {
 	overflow-x: hidden;
@@ -262,13 +262,13 @@ body {
 	width: 45ex;
 	overflow: hidden;
 	display: inline-block;
-	min-width: none;
+	/*min-width: none;*/
 }
 
 .versionKey {
 	width: 15ex;
 	display: inline-block;
-	min-width: none;
+	/*min-width: none;*/
 }
 
 /*********************************************/
@@ -304,11 +304,11 @@ body {
 	border: none;
 }
 
-.column {
-	border: 0 !important;
-	padding-top: 0px;
-	padding-bottom: 0px;
-}
+/*.column {*/
+	/*border: 0 !important;*/
+	/*padding-top: 0px;*/
+	/*padding-bottom: 0px;*/
+/*}*/
 
 .ui-autocomplete {
 	max-height: 500px;
@@ -325,10 +325,10 @@ body {
 	height: 500px;
 }
 
-.passageContainer {
-	text-align: center;
-	padding-bottom: 5px;
-}
+/*.passageContainer {*/
+	/*text-align: center;*/
+	/*padding-bottom: 5px;*/
+/*}*/
 
 .toolbarContainer { /*	display: none; */
 	margin-top: 3px;
@@ -519,8 +519,8 @@ body {
     border: none;
 }
 
-#languageMenu {
-    overflow-y: scroll;
-    overflow-x: hidden;
-    height: 300px;
-}
+/*#languageMenu {*/
+    /*overflow-y: scroll;*/
+    /*overflow-x: hidden;*/
+    /*height: 300px;*/
+/*}*/

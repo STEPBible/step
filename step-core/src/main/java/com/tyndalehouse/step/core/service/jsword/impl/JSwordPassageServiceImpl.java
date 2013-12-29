@@ -697,7 +697,9 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
             final TransformingSAXEventProvider htmlsep = executeStyleSheet(versification, options, interlinearVersion,
                     bookData, osissep, displayMode);
 
-            final OsisWrapper osisWrapper = new OsisWrapper(writeToString(htmlsep), key, getLanguages(book, displayMode, htmlsep, options), versification);
+            final OsisWrapper osisWrapper = new OsisWrapper(writeToString(htmlsep), key, 
+                    getLanguages(book, displayMode, htmlsep, options), versification,
+                    bookData.getFirstBook().getInitials(), displayMode, interlinearVersion);
 
 
             if (key instanceof Passage) {
@@ -835,7 +837,9 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
                 languages[ii] = books[ii].getLanguage().getCode();
             }
 
-            return new OsisWrapper(writeToString(transformer), data.getKey(), languages, v11n);
+            return new OsisWrapper(writeToString(transformer), data.getKey(), 
+                    languages, v11n, versions[0], displayMode, StringUtils.join(versions, 1)
+                    );
         } catch (final TransformerException e) {
             throw new StepInternalException(e.getMessage(), e);
         } catch (final SAXException e) {

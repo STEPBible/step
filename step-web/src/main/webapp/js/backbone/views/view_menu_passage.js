@@ -1,116 +1,119 @@
 var PassageMenuView = Backbone.View.extend({
-    el : function() { return $(".innerMenu li[menu-name='DISPLAY']").eq(this.model.get("passageId")); },
-    events : {
-        "click a[name]" : "updateModel"
+    events: {
+        "click a[name]": "updateModel",
+        "click .showStats": "showAnalysis"
+    },
+    el: function () {
+        return $(".passageOptionsGroup").eq(this.model.get("passageId"))
+    },
+    items: [
+        { initial: "H", key: "display_headings" },
+        { initial: "V", key: "display_verseNumbers" },
+        { initial: "L", key: "display_separateLines" },
+        { initial: "R", key: "display_redLetter" },
+        { initial: "N", key: "display_notes" },
+        { initial: "E", key: "display_englishVocab" },
+        { initial: "A", key: "display_greekVocab" },
+        { initial: "D", key: "display_divide_hebrew", help: "display_divide_hebrew_help" },
+        { initial: "G", key: "display_greek_pointing", help: "display_greek_accents_help" },
+        { initial: "U", key: "display_hebrew_vowels", help: "display_hebrew_vowels_help" },
+        { initial: "P", key: "display_pointing_include_hebrew", help: "display_pointing_include_hebrew_vowels_help" },
+        { initial: "T", key: "display_transliteration" },
+        { initial: "M", key: "display_grammar" },
+        { initial: "C", key: "display_grammarColor" }
+    ],
+
+    initialize: function () {
+        var self = this;
+        _.bindAll(this);
+
+//        Backbone.Events.listenTo(this.model, "change", this._updateAvailableOptions);
+
+        //get the versions data sources
+        for (var i = 0; i < step.datasources.length; i++) {
+            if (step.datasources.at(i).get("name") == DS_VERSIONS) {
+                this.versions = step.datasources[i];
+            }
+        }
+        this._initUI();
     },
 
-    initialize : function() {
-        var self = this;
-        this.menuOptions = this.$el.find("[name]");
+    showAnalysis: function () {
+        step.lexicon.wordleView.passageId = passageId;
+        lexiconDefinition.reposition(step.defaults.infoPopup.wordleTab);
+    },
 
-        //set up menu options correctly
-        var selectedOptions = this.model.get("options");
-        $.each(this.menuOptions, function(i, element) {
-            var item = $(element);
-            if(selectedOptions.indexOf(item.attr("name")) != -1) {
-                //option is present, so update it
-                self._selectOption(item);
-            } else {
-                self._unselectMenuOption(item);
-            }
+    _initUI: function () {
+        var dropdown = $("<ul>").addClass("dropdown-menu miniKolumny passageOptions").attr("role", "menu");
+        var selectedOptions = this.model.get("passage").display || "";
+
+        for (var i = 0; i < this.items.length; i++) {
+            var link = $('<a></a>')
+                .attr("href", "javascript:void(0)")
+                .attr("data-value", this.items[i].initial)
+                .attr("title", __s[this.items[i].help])
+                .append('<span class="glyphicon glyphicon-ok"></span>')
+                .append("<span>" + __s[this.items[i].key] + "</span>");
+
+            this._setVisible(link, selectedOptions.indexOf(this.items[i].initial) != -1);
+            dropdown.append($("<li>").append(link)).attr("role", "presentation");
+        }
+        this.$el.append(dropdown);
+        var self = this;
+        dropdown.find('a').click(function (e) {
+            e.stopPropagation();
+            self._setVisible($(this), $(this).find('.glyphicon').css("visibility") == 'hidden');
+            self._updateOptions();
         });
-
-        //set up listeners, one in particular, which is to render the available menu options depending on the model versions
-        this.listenTo(this.model, "change:version change:interlinearMode change:extraVersions change:detailLevel", this.refreshMenuOptions);
-
-        this.refreshMenuOptions();
     },
-
-    refreshMenuOptions : function() {
-        var self = this;
-        var version = this.model.get("version");
-        var interlinearMode = this.model.get("interlinearMode");
-        var extraVersions= this.model.get("extraVersions");
-
-        $.getSafe(BIBLE_GET_FEATURES, [version, extraVersions, interlinearMode], function (features) {
-            //build up map of options
-            $("a", self.$el).removeClass("disabled").removeAttr('title').qtip('destroy');
-
-            for(var i = 0; i < features.removed.length; i++) {
-                $("a[name='" + features.removed[i].option + "']", self.$el)
-                    .addClass("disabled")
-                    .attr('title', features.removed[i].explanation)
-                    .qtip({ position: {my: "center right", at: "left center", viewport: $(window) }});
-            }
-        }, this.model.get("passageId"));
+    _updateAvailableOptions: function () {
+        console.log("updating options");
     },
+    _updateOptions: function () {
+        //update the model
+        var selectedOptions = this.$el.find("[data-selected='true']");
+        var selectedCode = "";
+        for (var i = 0; i < selectedOptions.length; i++) {
+            selectedCode += selectedOptions.eq(i).data('value');
+        }
 
-    /**
-     * Selects a menu option
-     * @param element
-     * @private
-     */
-    _selectOption : function(element) {
-        step.menu.tickMenuItem(element);
-    },
+        var passageOptions = this.model.get("passage");
+        var clonedPassageOptions = _.clone(passageOptions);
+        clonedPassageOptions.display = selectedCode;
 
-    /**
-     * Unticks the menu option
-     * @param element the menu element
-     * @private
-     */
-    _unselectMenuOption : function(element) {
-        $("img", element).remove();
-    },
-
-    /**
-     * Gets the currently selected options in the view
-     */
-    getOptionString: function () {
-        var self = this;
-        var selectedOptions = $.map(this.menuOptions, function(anchorLink) {
-            if(self.isSelected(anchorLink)) {
-                return $(anchorLink).attr("name");
-            }
-            return undefined;
-        });
-
-        return selectedOptions;
-    },
-
-    /**
-     * True, if it is selectable and has a tick
-     * @param element the menu item
-     * @returns {boolean}
-     */
-    isSelected : function(element) {
-        return this.isSelectable(element) && this.isTicked(element);
-    },
-
-    /**
-     * True if the option is ticked, regardless of whether it has been disabled or not
-     * @param element
-     */
-    isTicked: function (element) {
-        return $(element).has("img.selectingTick").size() != 0;
-    },
-
-    /**
-     * True if the selector is not disabled
-     * @param selector
-     * @returns {boolean}
-     */
-    isSelectable : function(selector) {
-        return !$(selector).hasClass("disabled");
-    },
-
-    /**
-     * Updates the model
-     */
-    updateModel : function() {
-        //get list of options
         this.model.save({
-            options : this.getOptionString()
+            passage: clonedPassageOptions
         });
+        return selectedCode;
+    },
+
+    _setVisible: function (link, visible) {
+        link.find(".glyphicon").css("visibility", visible ? "visible" : "hidden");
+        link.attr("data-selected", visible);
+    },
+
+    appendMenuButtons: function (groupOfButtons) {
+        var interlinearMode = "NONE";
+        switch (interlinearMode) {
+            case "NONE":
+                this.$el.find("h2:first").append(groupOfButtons);
+                break;
+            case "INTERLINEAR":
+                groupOfButtons.insertBefore(this.$el.find(".interlinear:first"));
+                break;
+            case "INTERLEAVED":
+            case "INTERLEAVED_COMPARE":
+                groupOfButtons.insertBefore(this.$el.find(".verseGrouping:first"));
+                break;
+            case "COLUMN":
+            case "COLUMN_COMPARE":
+                groupOfButtons.insertBefore(this.$el.find("table:first"));
+                break;
+            default:
+                console.log("Unable to ascertain where to put Analysis button - omitting");
+                return;
+        }
+
+        this.$el = groupOfButtons;
     }
 });

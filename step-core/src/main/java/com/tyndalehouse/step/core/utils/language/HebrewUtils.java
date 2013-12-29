@@ -500,7 +500,7 @@ public final class HebrewUtils {
             } else if (letters[ii].getC() == SHEVA) {
                 if (!isLastHebrewConsonantInWordWithoutVowel(letters, ii)
                         && (isStartOfWord(letters, previousConsonantPosition) ||
-                        !letters[previousConsonantPosition].hasNoDagesh() ||
+                        hasDagesh(letters[previousConsonantPosition]) ||
                         isAfterLongUnstressedVowel(letters, previousConsonantPosition) ||
                         hasAnyPointing(input, previousConsonantPosition, true, SHEVA))
                         && !isAfterShortUnstressedVowel(letters, previousConsonantPosition)) {
@@ -511,6 +511,14 @@ public final class HebrewUtils {
                 }
             }
         }
+    }
+
+    /**
+     * @param letter the hebrew letter
+     * @return true if the letter has a dagesh
+     */
+    private static boolean hasDagesh(final HebrewLetter letter) {
+        return !letter.hasNoDagesh();
     }
 
     /**
@@ -1125,12 +1133,12 @@ public final class HebrewUtils {
         }
 
         final char consonant = input[currentPosition];
-//        if (isAny(consonant, BET, GIMEL, DALET, KAF, PE, TAV)
-//                && hasAnyPointing(input, currentPosition, false, SHEVA, HATAF_SEGOL, HATAF_PATAH, HATAF_QAMATS)) {
-//            // not dagesh forte if any of those letters
-//            letters[currentPosition].setConsonantType(ConsonantType.SINGLE);
-//            return;
-//        }
+        if (isAny(consonant, BET, GIMEL, DALET, KAF, PE, TAV)
+                && hasAnyPointing(input, currentPosition, false, SHEVA, HATAF_SEGOL, HATAF_PATAH, HATAF_QAMATS)) {
+            // not dagesh forte if any of those letters
+            letters[currentPosition].setConsonantType(ConsonantType.SINGLE);
+            return;
+        }
         letters[currentPosition].setConsonantType(ConsonantType.DOUBLE);
     }
 

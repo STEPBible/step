@@ -150,98 +150,129 @@
 						<configuration>
 							<cssSourceDir>.</cssSourceDir>
 							<cssSourceFiles>
-                                <!-- JQuery UI css is not on a CDN due to customizations/ui styles/etc. -->
-                                <cssSourceFile>css/jquery-ui-1.10.2.custom.min.css</cssSourceFile>
-								<cssSourceFile>css/qtip.css</cssSourceFile>
-								<cssSourceFile>css/ddsmoothmenu.css</cssSourceFile>
-								<cssSourceFile>css/ddsmoothmenu-v.css</cssSourceFile>
-								<cssSourceFile>css/initial-layout.css</cssSourceFile>
-								<cssSourceFile>css/initial-fonts.css</cssSourceFile>
-								<cssSourceFile>css/passage.css</cssSourceFile>
-								<!-- <cssSourceFile>css/timeline.css</cssSourceFile> -->
-								<cssSourceFile>css/search.css</cssSourceFile>
-								<cssSourceFile>css/cardo.css</cssSourceFile>
+                                <cssSourceFile>css/bootstrap.css</cssSourceFile>
+                                <cssSourceFile>css/bootstrap-theme.min.css</cssSourceFile>
+                                <cssSourceFile>css/select2.css</cssSourceFile>
+                                <cssSourceFile>css/select2-bootstrap.css</cssSourceFile>
+                                <!--<cssSourceFile>css/prettyCheckable.css</cssSourceFile>-->
+                                <cssSourceFile>css/step-template.css</cssSourceFile>
+                                <cssSourceFile>css/passage.css</cssSourceFile>
+
+
+                                 <!--JQuery UI css is not on a CDN due to customizations/ui styles/etc. -->
+                                <!--<cssSourceFile>css/jquery-ui-1.10.2.custom.min.css</cssSourceFile>-->
+								<!--<cssSourceFile>css/qtip.css</cssSourceFile>-->
+								<!--<cssSourceFile>css/ddsmoothmenu.css</cssSourceFile>-->
+								<!--<cssSourceFile>css/ddsmoothmenu-v.css</cssSourceFile>-->
+								<!--<cssSourceFile>css/initial-layout.css</cssSourceFile>-->
+								<!--<cssSourceFile>css/initial-fonts.css</cssSourceFile>-->
+								<!--<cssSourceFile>css/passage.css</cssSourceFile>-->
+								 <!--<cssSourceFile>css/timeline.css</cssSourceFile> -->
+								<!--<cssSourceFile>css/search.css</cssSourceFile>-->
+								<!--<cssSourceFile>css/cardo.css</cssSourceFile>-->
 							</cssSourceFiles>
 							<cssFinalFile>step.${project.version}.css</cssFinalFile>
 							<jsSourceDir>.</jsSourceDir>
 							<jsSourceFiles>
-                                <jsSourceFile>libs/dohighlight-min.js</jsSourceFile>
+                                <jsSourceFile>libs/select2.min.js</jsSourceFile>
+                                <!--<jsSourceFile>libs/dohighlight-min.js</jsSourceFile>-->
                                 <jsSourceFile>libs/sprintf-0.7-beta1.js</jsSourceFile>
-                                <jsSourceFile>libs/jquery.tagcloud.js</jsSourceFile>
-                                <jsSourceFile>libs/tinymce/jquery.tinymce.min.js</jsSourceFile>
                                 <jsSourceFile>libs/underscore-min.js</jsSourceFile>
                                 <jsSourceFile>libs/json2.js</jsSourceFile>
                                 <jsSourceFile>libs/backbone-min.js</jsSourceFile>
                                 <jsSourceFile>libs/backbone.localStorage-min.js</jsSourceFile>
-                                <jsSourceFile>js/jquery-extensions/jquery-qtip.js</jsSourceFile>
-                                <jsSourceFile>js/jquery-extensions/jquery-hover-intent.js</jsSourceFile>
-                                <jsSourceFile>js/jquery-extensions/jquery-cookie.js</jsSourceFile>
-                                <jsSourceFile>js/jquery-extensions/jquery-local-store.js</jsSourceFile>
-                                <jsSourceFile>js/jquery-extensions/jquery-shout.js</jsSourceFile>
-                                <jsSourceFile>js/jquery-extensions/jquery-versions-complete.js</jsSourceFile>
-                                <jsSourceFile>js/jquery-extensions/jquery-lexical-complete.js</jsSourceFile>
-                                <jsSourceFile>js/jquery-extensions/jquery-detail-slider.js</jsSourceFile>
-                                <jsSourceFile>js/jquery-extensions/jquery-sort.js</jsSourceFile>
-                                <jsSourceFile>js/jquery-extensions/jquery-passage-buttons.js</jsSourceFile>
-                                <jsSourceFile>js/jquery-extensions/jquery-original-word-toolbar.js</jsSourceFile>
-                                <jsSourceFile>js/jquery-extensions/jquery-search-result.js</jsSourceFile>
-                                <jsSourceFile>js/jquery-extensions/jquery-bible-books.js</jsSourceFile>
-                                <jsSourceFile>js/ddsmoothmenu.js</jsSourceFile>
-                                <jsSourceFile>js/util.js</jsSourceFile>
-                                <jsSourceFile>js/lexicon_definition.js</jsSourceFile>
-                                <jsSourceFile>js/ui_hooks.js</jsSourceFile>
-                                <jsSourceFile>js/toolbar_menu.js</jsSourceFile>
-                                <jsSourceFile>js/defaults/step.defaults.js</jsSourceFile>
-                                <jsSourceFile>js/navigation/step.navigation.js</jsSourceFile>
-                                <jsSourceFile>js/state/step.state.js</jsSourceFile>
-                                <jsSourceFile>js/state/step.state.view.js</jsSourceFile>
-                                <jsSourceFile>js/menu/step.menu.js</jsSourceFile>
-                                <jsSourceFile>js/menu/top/help.js</jsSourceFile>
-                                <jsSourceFile>js/menu/top/view.js</jsSourceFile>
-                                <jsSourceFile>js/menu/top/top.menu.ui.js</jsSourceFile>
-                                <jsSourceFile>js/menu/passage/context.js</jsSourceFile>
-                                <jsSourceFile>js/menu/passage/display.js</jsSourceFile>
-                                <jsSourceFile>js/menu/passage/passageTools.js</jsSourceFile>
-                                <jsSourceFile>js/menu/passage/search.js</jsSourceFile>
-                                <jsSourceFile>js/passage/step.version.js</jsSourceFile>
-                                <jsSourceFile>js/passage/step.alternatives.js</jsSourceFile>
-                                <jsSourceFile>js/passage/step.passage.js</jsSourceFile>
-                                <jsSourceFile>js/passage/step.fonts.js</jsSourceFile>
-                                <jsSourceFile>js/passage/step.passage.navigation.js</jsSourceFile>
-                                <jsSourceFile>js/passage/step.passage.navigation.ui.js</jsSourceFile>
-                                <jsSourceFile>js/bookmark/step.bookmark.ui.js</jsSourceFile>
-                                <jsSourceFile>js/backbone/models/model_passage.js</jsSourceFile>
+                                <jsSourceFile>libs/select2.js</jsSourceFile>
+                                
+                                <jsSourceFile>js/step_constants.js</jsSourceFile>
+                                <jsSourceFile>js/step.util.js</jsSourceFile>
+                                <jsSourceFile>js/backbone/models/model_data.js</jsSourceFile>
+                                <jsSourceFile>js/backbone/views/view_main_search.js</jsSourceFile>
+                                <jsSourceFile>js/step_ready.js</jsSourceFile>
+                                <jsSourceFile>js/backbone/step_router.js</jsSourceFile>
                                 <jsSourceFile>js/backbone/views/view_display_passage.js</jsSourceFile>
-                                <jsSourceFile>js/backbone/router.js</jsSourceFile>
-                                <jsSourceFile>js/backbone/views/view_menu_passage.js</jsSourceFile>
-                                <jsSourceFile>js/backbone/views/view_criteria_passage.js</jsSourceFile>
-                                <jsSourceFile>js/backbone/models/model_lookup_menu.js</jsSourceFile>
-                                <jsSourceFile>js/backbone/views/view_menu_search.js</jsSourceFile>
-                                <jsSourceFile>js/backbone/views/view_control_criteria.js</jsSourceFile>
-                                <jsSourceFile>js/backbone/models/model_search.js</jsSourceFile>
-                                <jsSourceFile>js/backbone/models/model_search_subject.js</jsSourceFile>
-                                <jsSourceFile>js/backbone/models/model_search_original.js</jsSourceFile>
-                                <jsSourceFile>js/backbone/models/model_search_advanced.js</jsSourceFile>
-                                <jsSourceFile>js/backbone/models/model_search_simple.js</jsSourceFile>
-                                <jsSourceFile>js/backbone/models/model_notes.js</jsSourceFile>
-                                <jsSourceFile>js/backbone/views/view_criteria.js</jsSourceFile>
-                                <jsSourceFile>js/backbone/views/view_criteria_subject.js</jsSourceFile>
-                                <jsSourceFile>js/backbone/views/view_criteria_word.js</jsSourceFile>
-                                <jsSourceFile>js/backbone/views/view_criteria_advanced.js</jsSourceFile>
-                                <jsSourceFile>js/backbone/views/view_criteria_text.js</jsSourceFile>
-                                <jsSourceFile>js/backbone/views/view_criteria_notes.js</jsSourceFile>
-                                <jsSourceFile>js/backbone/views/view_display_search.js</jsSourceFile>
-                                <jsSourceFile>js/backbone/views/view_display_subject.js</jsSourceFile>
-                                <jsSourceFile>js/backbone/views/view_display_text.js</jsSourceFile>
-                                <jsSourceFile>js/backbone/views/view_display_word.js</jsSourceFile>
-                                <jsSourceFile>js/backbone/views/view_display_notes.js</jsSourceFile>
-                                <jsSourceFile>js/backbone/models/model_quick_lexicon.js</jsSourceFile>
-                                <jsSourceFile>js/backbone/views/view_quick_lexicon.js</jsSourceFile>
-                                <jsSourceFile>js/backbone/models/model_bookmark.js</jsSourceFile>
-                                <jsSourceFile>js/backbone/views/view_bookmarks_history.js</jsSourceFile>
-                                <jsSourceFile>js/backbone/views/view_wordle_stat.js</jsSourceFile>
-                                <jsSourceFile>js/init.js</jsSourceFile>
-                                <jsSourceFile>js/backbone/step.js</jsSourceFile>
+                                <jsSourceFile>js/backbone/models/passage_model.js</jsSourceFile>
+
+
+
+
+
+                                <!--<jsSourceFile>libs/dohighlight-min.js</jsSourceFile>-->
+                                <!--<jsSourceFile>libs/sprintf-0.7-beta1.js</jsSourceFile>-->
+                                <!--<jsSourceFile>libs/jquery.tagcloud.js</jsSourceFile>-->
+                                <!--<jsSourceFile>libs/tinymce/jquery.tinymce.min.js</jsSourceFile>-->
+                                <!--<jsSourceFile>libs/underscore-min.js</jsSourceFile>-->
+                                <!--<jsSourceFile>libs/json2.js</jsSourceFile>-->
+                                <!--<jsSourceFile>libs/backbone-min.js</jsSourceFile>-->
+                                <!--<jsSourceFile>libs/backbone.localStorage-min.js</jsSourceFile>-->
+                                <!--<jsSourceFile>js/jquery-extensions/jquery-qtip.js</jsSourceFile>-->
+                                <!--<jsSourceFile>js/jquery-extensions/jquery-hover-intent.js</jsSourceFile>-->
+                                <!--<jsSourceFile>js/jquery-extensions/jquery-cookie.js</jsSourceFile>-->
+                                <!--<jsSourceFile>js/jquery-extensions/jquery-local-store.js</jsSourceFile>-->
+                                <!--<jsSourceFile>js/jquery-extensions/jquery-shout.js</jsSourceFile>-->
+                                <!--<jsSourceFile>js/jquery-extensions/jquery-versions-complete.js</jsSourceFile>-->
+                                <!--<jsSourceFile>js/jquery-extensions/jquery-lexical-complete.js</jsSourceFile>-->
+                                <!--<jsSourceFile>js/jquery-extensions/jquery-detail-slider.js</jsSourceFile>-->
+                                <!--<jsSourceFile>js/jquery-extensions/jquery-sort.js</jsSourceFile>-->
+                                <!--<jsSourceFile>js/jquery-extensions/jquery-passage-buttons.js</jsSourceFile>-->
+                                <!--<jsSourceFile>js/jquery-extensions/jquery-original-word-toolbar.js</jsSourceFile>-->
+                                <!--<jsSourceFile>js/jquery-extensions/jquery-search-result.js</jsSourceFile>-->
+                                <!--<jsSourceFile>js/jquery-extensions/jquery-bible-books.js</jsSourceFile>-->
+                                <!--<jsSourceFile>js/ddsmoothmenu.js</jsSourceFile>-->
+                                <!--<jsSourceFile>js/util.js</jsSourceFile>-->
+                                <!--<jsSourceFile>js/lexicon_definition.js</jsSourceFile>-->
+                                <!--<jsSourceFile>js/ui_hooks.js</jsSourceFile>-->
+                                <!--<jsSourceFile>js/toolbar_menu.js</jsSourceFile>-->
+                                <!--<jsSourceFile>js/defaults/step.defaults.js</jsSourceFile>-->
+                                <!--<jsSourceFile>js/navigation/step.navigation.js</jsSourceFile>-->
+                                <!--<jsSourceFile>js/state/step.state.js</jsSourceFile>-->
+                                <!--<jsSourceFile>js/state/step.state.view.js</jsSourceFile>-->
+                                <!--<jsSourceFile>js/menu/step.menu.js</jsSourceFile>-->
+                                <!--<jsSourceFile>js/menu/top/help.js</jsSourceFile>-->
+                                <!--<jsSourceFile>js/menu/top/view.js</jsSourceFile>-->
+                                <!--<jsSourceFile>js/menu/top/top.menu.ui.js</jsSourceFile>-->
+                                <!--<jsSourceFile>js/menu/passage/context.js</jsSourceFile>-->
+                                <!--<jsSourceFile>js/menu/passage/display.js</jsSourceFile>-->
+                                <!--<jsSourceFile>js/menu/passage/passageTools.js</jsSourceFile>-->
+                                <!--<jsSourceFile>js/menu/passage/search.js</jsSourceFile>-->
+                                <!--<jsSourceFile>js/passage/step.version.js</jsSourceFile>-->
+                                <!--<jsSourceFile>js/passage/step.alternatives.js</jsSourceFile>-->
+                                <!--<jsSourceFile>js/passage/step.passage.js</jsSourceFile>-->
+                                <!--<jsSourceFile>js/passage/step.fonts.js</jsSourceFile>-->
+                                <!--<jsSourceFile>js/passage/step.passage.navigation.js</jsSourceFile>-->
+                                <!--<jsSourceFile>js/passage/step.passage.navigation.ui.js</jsSourceFile>-->
+                                <!--<jsSourceFile>js/bookmark/step.bookmark.ui.js</jsSourceFile>-->
+                                <!--<jsSourceFile>js/backbone/models/model_passage.js</jsSourceFile>-->
+                                <!--<jsSourceFile>js/backbone/views/view_display_passage.js</jsSourceFile>-->
+                                <!--<jsSourceFile>js/backbone/router.js</jsSourceFile>-->
+                                <!--<jsSourceFile>js/backbone/views/view_menu_passage.js</jsSourceFile>-->
+                                <!--<jsSourceFile>js/backbone/views/view_criteria_passage.js</jsSourceFile>-->
+                                <!--<jsSourceFile>js/backbone/models/model_lookup_menu.js</jsSourceFile>-->
+                                <!--<jsSourceFile>js/backbone/views/view_menu_search.js</jsSourceFile>-->
+                                <!--<jsSourceFile>js/backbone/views/view_control_criteria.js</jsSourceFile>-->
+                                <!--<jsSourceFile>js/backbone/models/model_search.js</jsSourceFile>-->
+                                <!--<jsSourceFile>js/backbone/models/model_search_subject.js</jsSourceFile>-->
+                                <!--<jsSourceFile>js/backbone/models/model_search_original.js</jsSourceFile>-->
+                                <!--<jsSourceFile>js/backbone/models/model_search_advanced.js</jsSourceFile>-->
+                                <!--<jsSourceFile>js/backbone/models/model_search_simple.js</jsSourceFile>-->
+                                <!--<jsSourceFile>js/backbone/models/model_notes.js</jsSourceFile>-->
+                                <!--<jsSourceFile>js/backbone/views/view_criteria.js</jsSourceFile>-->
+                                <!--<jsSourceFile>js/backbone/views/view_criteria_subject.js</jsSourceFile>-->
+                                <!--<jsSourceFile>js/backbone/views/view_criteria_word.js</jsSourceFile>-->
+                                <!--<jsSourceFile>js/backbone/views/view_criteria_advanced.js</jsSourceFile>-->
+                                <!--<jsSourceFile>js/backbone/views/view_criteria_text.js</jsSourceFile>-->
+                                <!--<jsSourceFile>js/backbone/views/view_criteria_notes.js</jsSourceFile>-->
+                                <!--<jsSourceFile>js/backbone/views/view_display_search.js</jsSourceFile>-->
+                                <!--<jsSourceFile>js/backbone/views/view_display_subject.js</jsSourceFile>-->
+                                <!--<jsSourceFile>js/backbone/views/view_display_text.js</jsSourceFile>-->
+                                <!--<jsSourceFile>js/backbone/views/view_display_word.js</jsSourceFile>-->
+                                <!--<jsSourceFile>js/backbone/views/view_display_notes.js</jsSourceFile>-->
+                                <!--<jsSourceFile>js/backbone/models/model_quick_lexicon.js</jsSourceFile>-->
+                                <!--<jsSourceFile>js/backbone/views/view_quick_lexicon.js</jsSourceFile>-->
+                                <!--<jsSourceFile>js/backbone/models/model_bookmark.js</jsSourceFile>-->
+                                <!--<jsSourceFile>js/backbone/views/view_bookmarks_history.js</jsSourceFile>-->
+                                <!--<jsSourceFile>js/backbone/views/view_wordle_stat.js</jsSourceFile>-->
+                                <!--<jsSourceFile>js/init.js</jsSourceFile>-->
+                                <!--<jsSourceFile>js/backbone/step.js</jsSourceFile>-->
 							</jsSourceFiles>
 							<jsFinalFile>step.${project.version}.js</jsFinalFile>
 						</configuration>

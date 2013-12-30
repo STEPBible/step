@@ -3,17 +3,17 @@
 .navbar {
   height: $header_height;
   margin-bottom: 0px;
-  div {
+
+  .navbar-header {
+    font-size: x-small;
     background: black;
   }
+  
   a, .subtitle, .subtitle:hover {
     color: $header_title;
   }
 }
 
-.navbar-header {
-  font-size: x-small;
-}
 
 .navbar-brand {
   padding-left: 50px;

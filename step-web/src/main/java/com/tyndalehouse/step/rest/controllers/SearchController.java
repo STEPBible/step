@@ -112,51 +112,7 @@ public class SearchController {
             searchTokens.add(new SearchToken(text, t.substring(0, indexOfPrefix)));
         }
 
-        return runQuery(searchTokens);
-    }
-
-    /**
-     * @param searchTokens
-     */
-    private OsisWrapper runQuery(final List<SearchToken> searchTokens) {
-        final List<String> versions = new ArrayList<String>(4);
-        final StringBuilder references = new StringBuilder();
-        String options = "";
-        
-        for (SearchToken token : searchTokens) {
-            if (SearchToken.VERSION.equals(token.getTokenType())) {
-                versions.add(token.getToken());
-            } else if (SearchToken.REFERENCE.equals(token.getTokenType())) {
-                if (references.length() > 0) {
-                    references.append(';');
-                }
-                references.append(token.getToken());
-            } else if(SearchToken.OPTIONS.equals(token.getTokenType())) {
-                options = token.getToken();
-            }
-        }
-
-        if (versions.size() == 0) {
-            versions.add(JSwordPassageService.REFERENCE_BOOK);
-        }
-
-        return this.bibleInformationService.getPassageText(
-                versions.get(0), references.toString(), options,
-                getExtraVersions(versions), "");
-    }
-
-    /**
-     * Concatenates all but the last versions
-     *
-     * @param versions version
-     * @return the concatenated versions
-     */
-    private String getExtraVersions(final List<String> versions) {
-        StringBuilder sb = new StringBuilder(128);
-        for (int i = 1; i < versions.size(); i++) {
-            sb.append(versions.get(i));
-        }
-        return sb.toString();
+        return this.searchService.runQuery(searchTokens);
     }
 
     /**

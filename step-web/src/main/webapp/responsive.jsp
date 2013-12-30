@@ -195,7 +195,7 @@
     <c:otherwise>
             <script src="libs/backbone-min.js" type="text/javascript"></script>
             <script src="libs/backbone.localStorage-min.js" type="text/javascript"></script>
-            <%--<script src="libs/select2.min.js" type="text/javascript"></script>--%>
+            <%--<script src="libs/select2-3.4.5.min.js" type="text/javascript"></script>--%>
             <script src="libs/require-2.1.9.min.js" type="text/javascript"></script>
             <%--<script src="libs/prettyCheckable.min.js" type="text/javascript"></script>--%>
     </c:otherwise>

@@ -22,31 +22,7 @@
 
 
 
-.initials {
-    font-weight: bold;
-}
-.source {
-    float: right;
-    font-style: italic;
-}
-.features {
-    float: right;
-    margin-right: 5px;
-}
 
-.passageOptionsGroup {
-    position: absolute;
-    right: 5px;
-}
-
-.passageOptions {
-    direction: ltr;
-    text-align: left;
-}
-
-.passageOptions .glyphicon {
-    float: right;
-}
 
 /*.selectReferenceRow { */
     /*background-color: pink !important;*/

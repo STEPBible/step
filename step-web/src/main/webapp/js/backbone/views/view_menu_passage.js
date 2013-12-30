@@ -27,15 +27,21 @@ var PassageMenuView = Backbone.View.extend({
         var self = this;
         _.bindAll(this);
 
-//        Backbone.Events.listenTo(this.model, "change", this._updateAvailableOptions);
-
         //get the versions data sources
         for (var i = 0; i < step.datasources.length; i++) {
             if (step.datasources.at(i).get("name") == DS_VERSIONS) {
                 this.versions = step.datasources[i];
             }
         }
-        this._initUI();
+
+        $(this.$el).on('show.bs.dropdown', function() {
+            if(!self.rendered) {
+                require(["defaults"], function() {
+                    self._initUI(); 
+                    self.rendered = true;
+                });
+            }
+        });
     },
 
     showAnalysis: function () {
@@ -44,27 +50,54 @@ var PassageMenuView = Backbone.View.extend({
     },
 
     _initUI: function () {
-        var dropdown = $("<ul>").addClass("dropdown-menu miniKolumny passageOptions").attr("role", "menu");
+        
+        var dropdownContainer = $("<div>").addClass("dropdown-menu").attr("role", "menu");
+        var displayMode = $("<h1>").append(__s.display_mode);
+        dropdownContainer.append(displayMode);
+        dropdownContainer.append(this._createDisplayModes());
+
+        var displayOptions = $("<h1>").append(__s.display_options);
+        dropdownContainer.append(displayOptions);
+        dropdownContainer.append(this._createPassageOptions());
+        this.$el.append(dropdownContainer);
+    },
+    _createDisplayModes : function() {
+        var interOptions = step.defaults.passage.interOptions;
+        var interNamesOptions = step.defaults.passage.interNamedOptions;
+        
+        var displayModes = $("<ul>").addClass("miniKolumny displayModes");
+        for(var i = 0; i < interOptions.length; i++) {
+            var link = this._createLink(interNamesOptions[i], interOptions[i]);
+            displayModes.append($("<li>").append(link).attr("role", "presentation"));
+        }
+        return displayModes;
+    },
+    _createPassageOptions: function() {
+        var dropdown = $("<ul>").addClass("miniKolumny passageOptions");
         var selectedOptions = this.model.get("passage").display || "";
 
         for (var i = 0; i < this.items.length; i++) {
-            var link = $('<a></a>')
-                .attr("href", "javascript:void(0)")
-                .attr("data-value", this.items[i].initial)
-                .attr("title", __s[this.items[i].help])
-                .append('<span class="glyphicon glyphicon-ok"></span>')
-                .append("<span>" + __s[this.items[i].key] + "</span>");
+            var link = this._createLink(this.items[i].initial, __s[this.items[i].key], __s[this.items[i].help]);
 
             this._setVisible(link, selectedOptions.indexOf(this.items[i].initial) != -1);
             dropdown.append($("<li>").append(link)).attr("role", "presentation");
         }
-        this.$el.append(dropdown);
+        
         var self = this;
         dropdown.find('a').click(function (e) {
             e.stopPropagation();
             self._setVisible($(this), $(this).find('.glyphicon').css("visibility") == 'hidden');
             self._updateOptions();
         });
+        return dropdown;
+    },
+    _createLink : function(value, text, title)  {
+        return $('<a></a>')
+            .attr("href", "javascript:void(0)")
+            .attr("data-value", value)
+            .attr("title", title)
+            .append('<span class="glyphicon glyphicon-ok"></span>')
+            .append("<span>" + text + "</span>");
     },
     _updateAvailableOptions: function () {
         console.log("updating options");

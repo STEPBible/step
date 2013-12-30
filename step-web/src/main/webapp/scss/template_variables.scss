@@ -12,6 +12,7 @@ $stepLG: 1120px;
 //active colour of panel
 $activeColor: #D74F4B;
 $dividerColor: lightgrey;
+$hoverColor: rgb(235, 235, 241);
 
 // scrollbar colours
 $scrollColor: rgb(220,172,0);
@@ -45,3 +46,4 @@ $defaultColumnsSize: 100% - $defaultSidebarSize;
 
 //various paddings
 $paddingFromHeader: 4px;
+$defaultFontSize: 12px;

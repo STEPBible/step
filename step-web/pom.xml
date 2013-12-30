@@ -137,6 +137,28 @@
                 </configuration>
             </plugin>
 
+            <plugin>
+                <groupId>org.jasig.maven</groupId>
+                <artifactId>sass-maven-plugin</artifactId>
+                <version>1.1.1</version>
+                <executions>
+                    <execution>
+                        <id>scss-compile</id>
+                        <goals>
+                            <goal>update-stylesheets</goal>
+                        </goals>
+                        <configuration>
+                            <sassSourceDirectory>${basedir}/src/main/webapp/scss</sassSourceDirectory>
+                            <destination>${project.build.directory}/${project.build.finalName}/scss</destination>
+                            <includes>
+                                <include>step-template.scss</include>
+                            </includes>
+                        </configuration>
+                            
+                    </execution>
+                </executions>
+            </plugin>
+            
 			<plugin>
 				<groupId>com.samaxes.maven</groupId>
 				<artifactId>minify-maven-plugin</artifactId>
@@ -155,7 +177,7 @@
                                 <cssSourceFile>css/select2.css</cssSourceFile>
                                 <cssSourceFile>css/select2-bootstrap.css</cssSourceFile>
                                 <!--<cssSourceFile>css/prettyCheckable.css</cssSourceFile>-->
-                                <cssSourceFile>css/step-template.css</cssSourceFile>
+                                <cssSourceFile>scss/step-template.css</cssSourceFile>
                                 <cssSourceFile>css/passage.css</cssSourceFile>
 
 
@@ -174,15 +196,15 @@
 							<cssFinalFile>step.${project.version}.css</cssFinalFile>
 							<jsSourceDir>.</jsSourceDir>
 							<jsSourceFiles>
-                                <!--<jsSourceFile>libs/select2.min.js</jsSourceFile>-->
+                                <!--<jsSourceFile>libs/select2-3.4.5.min.js</jsSourceFile>-->
                                 <!--<jsSourceFile>libs/dohighlight-min.js</jsSourceFile>-->
                                 <jsSourceFile>libs/sprintf-0.7-beta1.js</jsSourceFile>
                                 <jsSourceFile>libs/underscore-min.js</jsSourceFile>
                                 <jsSourceFile>libs/json2.js</jsSourceFile>
                                 <jsSourceFile>libs/backbone-min.js</jsSourceFile>
                                 <jsSourceFile>libs/backbone.localStorage-min.js</jsSourceFile>
-                                <jsSourceFile>libs/select2.js</jsSourceFile>
-                                
+                                <jsSourceFile>libs/require-2.1.9.min.js</jsSourceFile>
+                                <jsSourceFile>js/require_config.js</jsSourceFile>
                                 <jsSourceFile>js/step_constants.js</jsSourceFile>
                                 <jsSourceFile>js/step.util.js</jsSourceFile>
                                 <jsSourceFile>js/backbone/models/model_data.js</jsSourceFile>
@@ -191,8 +213,9 @@
                                 <jsSourceFile>js/backbone/step_router.js</jsSourceFile>
                                 <jsSourceFile>js/backbone/views/view_display_passage.js</jsSourceFile>
                                 <jsSourceFile>js/backbone/models/passage_model.js</jsSourceFile>
-
-
+                                <jsSourceFile>js/backbone/views/view_menu_passage.js</jsSourceFile>
+                                <jsSourceFile>js/state/step.state.js</jsSourceFile>
+                                <jsSourceFile>js/passage/step.passage.js</jsSourceFile>
 
 
 
@@ -277,9 +300,52 @@
 							<jsFinalFile>step.${project.version}.js</jsFinalFile>
 						</configuration>
 					</execution>
+                    <execution>
+                        <id>minify-sidebar</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>minify</goal>
+                        </goals>
+                        <configuration>
+                            <jsSourceDir>.</jsSourceDir>
+                            <jsSourceFiles>
+                                <jsSourceFile>js/backbone/models/model_sidebar.js</jsSourceFile>
+                                <jsSourceFile>js/backbone/views/view_sidebar.js</jsSourceFile>
+                            </jsSourceFiles>
+                            <jsFinalFile>sidebar-${project.version}.js</jsFinalFile>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>minify-qtip</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>minify</goal>
+                        </goals>
+                        <configuration>
+                            <jsSourceDir>.</jsSourceDir>
+                            <jsSourceFiles>
+                                <jsSourceFile>js/jquery-extensions/jquery-qtip.js</jsSourceFile>
+                            </jsSourceFiles>
+                            <jsFinalFile>qtip-${project.version}.js</jsFinalFile>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>minify-defaults</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>minify</goal>
+                        </goals>
+                        <configuration>
+                            <jsSourceDir>.</jsSourceDir>
+                            <jsSourceFiles>
+                                <jsSourceFile>js/defaults/step.defaults.js</jsSourceFile>
+                            </jsSourceFiles>
+                            <jsFinalFile>js/step.defaults-${project.version}.js</jsFinalFile>
+                        </configuration>
+                    </execution>
 				</executions>
 			</plugin>
-
+            
             <plugin>
                 <groupId>com.google.code.maven-replacer-plugin</groupId>
                 <artifactId>replacer</artifactId>

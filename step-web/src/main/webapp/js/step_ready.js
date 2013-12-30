@@ -1,5 +1,5 @@
 
-$(document).on("ready", function() {
+$(window).on("load", function() {
     window.step = window.step || {};
     step.datasources = new DataSourceList;
     step.datasources.fetch();

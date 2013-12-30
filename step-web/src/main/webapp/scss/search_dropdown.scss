@@ -1,5 +1,19 @@
 @import 'template_variables';
- 
+
+.select2-results {
+  .initials {
+    font-weight: bold;
+  }
+  .source {
+    float: right;
+    font-style: italic;
+  }
+  .features {
+    float: right;
+    margin-right: 5px;
+  }
+}
+
 .select2-search-choice.selectBibleRow, .selectBibleRow{
   background-image: -webkit-linear-gradient(top, lighten($bibleRow, $optionStartGradient), lighten($bibleRow, $optionEndGradient))  !important;
 }

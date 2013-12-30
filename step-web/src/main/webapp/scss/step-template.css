@@ -1,19 +1,18 @@
 h1, h2, h3, h4, h5, h6 {
-  color: #991c32; }
+  color: #991c32;
+  font-weight: bold; }
 
-body {
+body, .dropdown-menu {
   font-size: 12px; }
 
 .navbar {
   height: 56px;
   margin-bottom: 0px; }
-  .navbar div {
+  .navbar .navbar-header {
+    font-size: x-small;
     background: black; }
   .navbar a, .navbar .subtitle, .navbar .subtitle:hover {
     color: lightgrey; }
-
-.navbar-header {
-  font-size: x-small; }
 
 .navbar-brand {
   padding-left: 50px;
@@ -105,6 +104,15 @@ body {
 .select2-container {
   border: 0px !important; }
 
+.select2-results .initials {
+  font-weight: bold; }
+.select2-results .source {
+  float: right;
+  font-style: italic; }
+.select2-results .features {
+  float: right;
+  margin-right: 5px; }
+
 .select2-search-choice.selectBibleRow, .selectBibleRow {
   background-image: -webkit-linear-gradient(top, #cd8c8e, #dcb0b1) !important; }
 
@@ -125,6 +133,28 @@ body {
 
 .select2-search-choice.selectReferenceRow, .selectReferenceRow {
   background-image: -webkit-linear-gradient(top, #e8fce8, white) !important; }
+
+.passageOptionsGroup {
+  float: right; }
+  .passageOptionsGroup .dropdown-menu {
+    padding-left: 5px; }
+  .passageOptionsGroup ul {
+    padding-left: 5px; }
+  .passageOptionsGroup li:hover {
+    background-color: #ebebf1; }
+  .passageOptionsGroup a {
+    color: black; }
+    .passageOptionsGroup a:hover {
+      text-decoration: none; }
+  .passageOptionsGroup h1 {
+    font-size: 14px;
+    margin-top: 0px; }
+  .passageOptionsGroup .passageOptions, .passageOptionsGroup .displayModes {
+    direction: ltr;
+    text-align: left; }
+    .passageOptionsGroup .passageOptions .glyphicon, .passageOptionsGroup .displayModes .glyphicon {
+      margin-right: 10px;
+      color: #991c32; }
 
 .mainPanel {
   min-height: 100%;

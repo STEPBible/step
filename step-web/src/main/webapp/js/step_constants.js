@@ -2,8 +2,6 @@
 // The following section defines method names and controller names
 // These are used as part of the rest-like calls
 // ///////////////////////////////////////////////////////////////////////
-TTL_DAY = 86400000;
-TTL_DAY = 10000;
 VERSION = "version";
 REFERENCE = "reference";
 SUBJECT_SEARCH = "subject";

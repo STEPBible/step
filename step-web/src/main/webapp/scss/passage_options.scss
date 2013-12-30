@@ -1,0 +1,35 @@
+@import 'template_variables';
+
+.passageOptionsGroup {
+  float: right;
+  .dropdown-menu {
+    padding-left: 5px;
+  }
+
+  ul {
+    padding-left: 5px;
+  }
+  li:hover {
+    background-color: $hoverColor;
+  }
+  a {
+    color: black;
+    &:hover {
+      text-decoration: none;
+    }
+  }
+  h1 {
+    font-size: 14px;
+    margin-top: 0px;
+  }
+  .passageOptions, .displayModes {
+    direction: ltr;
+    text-align: left;
+
+    .glyphicon {
+      margin-right: 10px;
+      color: $headingColour;
+    }
+
+  }
+}

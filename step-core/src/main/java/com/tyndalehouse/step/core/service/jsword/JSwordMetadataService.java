@@ -35,6 +35,7 @@ package com.tyndalehouse.step.core.service.jsword;
 import java.util.List;
 
 import com.tyndalehouse.step.core.models.BookName;
+import com.tyndalehouse.step.core.models.InterlinearMode;
 import com.tyndalehouse.step.core.models.LookupOption;
 
 /**
@@ -46,9 +47,8 @@ public interface JSwordMetadataService {
     /**
      * Gets the features for a module
      *
-     * @param version the initials of the book to look up
-     * @param extraVersions  the secondary versions that affect feature resolution 
-
+     * @param version       the initials of the book to look up
+     * @param extraVersions the secondary versions that affect feature resolution
      * @return the list of supported features
      */
     List<LookupOption> getFeatures(String version, List<String> extraVersions);
@@ -75,4 +75,17 @@ public interface JSwordMetadataService {
      * @return
      */
     String[] getLanguages(String... versions);
+
+    /**
+     * Determines the best interlinear mode available for the given versions. The order of preference is
+     * <p/>
+     * INTERLINEAR
+     * INTERLEAVED_COMPARE
+     * INTERLEAVED
+     *
+     * @param mainBook      the main book
+     * @param extraVersions the extra versions
+     * @return the best interlinear mode.
+     */
+    InterlinearMode getBestInterlinearMode(String mainBook, List<String> extraVersions);
 }

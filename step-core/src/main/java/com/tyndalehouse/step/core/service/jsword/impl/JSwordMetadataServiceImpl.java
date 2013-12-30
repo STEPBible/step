@@ -11,6 +11,7 @@ import java.util.Locale;
 
 import javax.inject.Inject;
 
+import com.tyndalehouse.step.core.models.InterlinearMode;
 import com.tyndalehouse.step.core.utils.JSwordUtils;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.FeatureType;
@@ -287,7 +288,16 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
 
     @Override
     public boolean hasVocab(final String version) {
-        return this.versificationService.getBookFromVersion(version).hasFeature(FeatureType.STRONGS_NUMBERS);
+        return supportsStrongs(this.versificationService.getBookFromVersion(version));
+    }
+
+    /**
+     * Returns true if the book supports strong numbers
+     * @param book the book
+     * @return true if strongs are available
+     */
+    private boolean supportsStrongs(Book book) {
+        return book.hasFeature(FeatureType.STRONGS_NUMBERS);
     }
 
     @Override
@@ -299,5 +309,42 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
             languages[i] = b.getLanguage().getCode();
         }
         return languages;
+    }
+
+    @Override
+    public InterlinearMode getBestInterlinearMode(String version, List<String> extraVersions) {
+        if(extraVersions == null || extraVersions.size() == 0) {
+            return InterlinearMode.NONE;
+        }
+        
+        Book main = this.versificationService.getBookFromVersion(version);
+        String firstLanguage = main.getLanguage().getCode();
+        boolean supportsStrongs = true;
+        boolean sameLanguage = true;
+        
+        for(String extraVersion : extraVersions) {
+            Book b = this.versificationService.getBookFromVersion(extraVersion);
+            if(supportsStrongs && !this.supportsStrongs(b)) {
+                supportsStrongs = false;
+            }
+            if(!firstLanguage.equalsIgnoreCase(b.getLanguage().getCode())) {
+                sameLanguage = false;
+            }
+            
+            //small optimization
+            if(!supportsStrongs && !sameLanguage) {
+                break;
+            }
+        }
+        
+        if(supportsStrongs) {
+            return InterlinearMode.INTERLINEAR;
+        }
+        
+        if(sameLanguage) {
+            return InterlinearMode.INTERLEAVED_COMPARE;
+        }
+        
+        return InterlinearMode.INTERLEAVED;
     }
 }

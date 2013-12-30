@@ -154,7 +154,7 @@ public class BibleInformationServiceImpl implements BibleInformationService {
     public OsisWrapper getPassageText(final String version, final int startVerseId, final int endVerseId,
                                       final String options, final String interlinearVersion, final Boolean roundUp) {
         final List<String> extraVersions = getExtraVersionsFromString(interlinearVersion);
-        final List<LookupOption> lookupOptions = trim(getLookupOptions(options), version, 
+        final List<LookupOption> lookupOptions = trim(getLookupOptions(options), version,
                 extraVersions, InterlinearMode.NONE, null);
         final OsisWrapper passage = this.jswordPassage.getOsisTextByVerseNumbers(version, version,
                 startVerseId, endVerseId, lookupOptions, interlinearVersion, roundUp, false);
@@ -177,13 +177,13 @@ public class BibleInformationServiceImpl implements BibleInformationService {
     public OsisWrapper getPassageText(final String version, final String reference, final String options,
                                       final String interlinearVersion, final String interlinearMode) {
 
-        final InterlinearMode desiredModeOfDisplay = getDisplayMode(interlinearMode);
         final List<String> extraVersions = getExtraVersionsFromString(interlinearVersion);
+        final InterlinearMode desiredModeOfDisplay = getDisplayMode(interlinearMode, version, extraVersions);
 
         OsisWrapper passageText;
         final List<LookupOption> lookupOptions = trim(getLookupOptions(options), version, extraVersions,
                 desiredModeOfDisplay, null);
-        
+
         if (INTERLINEAR != desiredModeOfDisplay && NONE != desiredModeOfDisplay) {
             // split the versions
             final String[] versions = getInterleavedVersions(version, interlinearVersion);
@@ -194,7 +194,7 @@ public class BibleInformationServiceImpl implements BibleInformationService {
             passageText = this.jswordPassage.getOsisText(version, reference, lookupOptions,
                     interlinearVersion, desiredModeOfDisplay);
         }
-        
+
         passageText.setOptions(optionsToString(getAvailableFeaturesForVersion(version, interlinearVersion, interlinearMode).getOptions()));
         return passageText;
     }
@@ -205,7 +205,7 @@ public class BibleInformationServiceImpl implements BibleInformationService {
      */
     private String optionsToString(final List<LookupOption> options) {
         StringBuilder codedOptions = new StringBuilder();
-        for(LookupOption o : options) {
+        for (LookupOption o : options) {
             codedOptions.append(o.getUiName());
         }
         return codedOptions.toString();
@@ -252,8 +252,13 @@ public class BibleInformationServiceImpl implements BibleInformationService {
      * @param interlinearMode a selected interlinear mode
      * @return returns NONE if null, or the value of String as a InterlinearMode enumeration.
      */
-    private InterlinearMode getDisplayMode(final String interlinearMode) {
-        return isBlank(interlinearMode) ? NONE : InterlinearMode.valueOf(interlinearMode);
+    private InterlinearMode getDisplayMode(final String interlinearMode, final String mainBook, final List<String> extraVersions) {
+        if (isBlank(interlinearMode)) {
+            //if we're still here, do we have multiple versions? If so, we're going for compare
+            //and if going for compare we default to interleaved
+            return this.jswordMetadata.getBestInterlinearMode(mainBook, extraVersions);
+        }
+        return InterlinearMode.valueOf(interlinearMode);
     }
 
     /**
@@ -350,13 +355,16 @@ public class BibleInformationServiceImpl implements BibleInformationService {
      * @param mode                 the mode
      * @param trimmingExplanations the trimming explanations
      * @return the interlinear mode
+     * @
      */
     private InterlinearMode determineDisplayMode(final List<LookupOption> options,
-                                                 final InterlinearMode mode, final List<TrimmedLookupOption> trimmingExplanations) {
+                                                 final InterlinearMode mode,
+                                                 final List<TrimmedLookupOption> trimmingExplanations) {
         InterlinearMode displayMode = mode;
         if (mode == NONE && trimmingExplanations == null && hasInterlinearOption(options)) {
-            displayMode = INTERLINEAR;
+            return INTERLINEAR;
         }
+
         return displayMode;
     }
 
@@ -502,8 +510,9 @@ public class BibleInformationServiceImpl implements BibleInformationService {
     public AvailableFeatures getAvailableFeaturesForVersion(final String version, final String extraVersions, final String displayMode) {
         final List<LookupOption> allLookupOptions = Arrays.asList(LookupOption.values());
         final List<TrimmedLookupOption> trimmed = new ArrayList<TrimmedLookupOption>();
-        final List<LookupOption> outcome = trim(allLookupOptions, version, 
-                getExtraVersionsFromString(extraVersions), getDisplayMode(displayMode),
+        final List<String> extraModules = getExtraVersionsFromString(extraVersions);
+        final List<LookupOption> outcome = trim(allLookupOptions, version,
+                extraModules, getDisplayMode(displayMode, version, extraModules),
                 trimmed);
 
         return new AvailableFeatures(outcome, trimmed);
@@ -514,7 +523,7 @@ public class BibleInformationServiceImpl implements BibleInformationService {
      * @return the equivalent list
      */
     private List<String> getExtraVersionsFromString(final String extraVersions) {
-        if(extraVersions == null) {
+        if (extraVersions == null) {
             return new ArrayList<String>(0);
         }
         return Arrays.asList(StringUtils.split(extraVersions, ","));
@@ -569,24 +578,24 @@ public class BibleInformationServiceImpl implements BibleInformationService {
     public List<BibleInstaller> getInstallers() {
         List<BibleInstaller> bibleInstallers = new ArrayList<BibleInstaller>();
         final List<Installer> installers = this.jswordModule.getInstallers();
-        for(int ii =0; ii < installers.size(); ii++) {
+        for (int ii = 0; ii < installers.size(); ii++) {
             final Installer installer = installers.get(ii);
-            
+
             String name = installer.getInstallerDefinition();
             boolean accessesInternet = true;
-            if(installer instanceof StepHttpSwordInstaller) {
+            if (installer instanceof StepHttpSwordInstaller) {
                 name = ((StepHttpSwordInstaller) installer).getInstallerName();
                 accessesInternet = true;
-            } else if(installer instanceof DirectoryInstaller) {
+            } else if (installer instanceof DirectoryInstaller) {
                 name = ((DirectoryInstaller) installer).getInstallerName();
                 accessesInternet = false;
             }
-            
+
             bibleInstallers.add(new BibleInstaller(ii, name, accessesInternet));
         }
         return bibleInstallers;
     }
-    
+
     /**
      * Gets the bible book names.
      *

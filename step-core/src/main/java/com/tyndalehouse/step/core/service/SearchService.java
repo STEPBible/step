@@ -32,8 +32,12 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.service;
 
+import com.tyndalehouse.step.core.models.OsisWrapper;
+import com.tyndalehouse.step.core.models.SearchToken;
 import com.tyndalehouse.step.core.models.search.SearchResult;
 import com.tyndalehouse.step.core.service.impl.SearchQuery;
+
+import java.util.List;
 
 /**
  * Runs various searches across the underlying database
@@ -61,4 +65,10 @@ public interface SearchService {
      */
     long estimateSearch(SearchQuery sq);
 
+    /**
+     * Runs the appropriate search for the given list of search tokens
+     * @param searchTokens the tokens
+     * @return the results from the search/passage lookup
+     */
+    OsisWrapper runQuery(List<SearchToken> searchTokens);
 }

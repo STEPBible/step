@@ -56,7 +56,9 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import com.tyndalehouse.step.core.exceptions.LuceneSearchException;
+import com.tyndalehouse.step.core.models.SearchToken;
 import com.tyndalehouse.step.core.models.search.*;
+import com.tyndalehouse.step.core.service.BibleInformationService;
 import com.tyndalehouse.step.core.service.jsword.JSwordMetadataService;
 import org.apache.lucene.queryParser.MultiFieldQueryParser;
 import org.apache.lucene.queryParser.ParseException;
@@ -115,24 +117,27 @@ public class SearchServiceImpl implements SearchService {
     private final EntityIndexReader timelineEvents;
     private final JSwordMetadataService jswordMetadata;
     private final SubjectSearchService subjects;
+    private final BibleInformationService bibleInfoService;
 
     /**
-     * @param jsword        used to convert references to numerals, etc.
-     * @param timeline      the timeline service
      * @param jswordSearch  the search service
-     * @param entityManager the manager for all entities stored in lucene
+     * @param jsword        used to convert references to numerals, etc.
      * @param subjects      the service that executes Subject searches
+     * @param timeline      the timeline service
+     * @param bibleInfoService the service to get information about various bibles/commentaries
+     * @param entityManager the manager for all entities stored in lucene
      */
     @Inject
     public SearchServiceImpl(final JSwordSearchService jswordSearch, final JSwordPassageService jsword,
                              final JSwordMetadataService jswordMetadata,
                              final SubjectSearchService subjects, final TimelineService timeline,
-                             final EntityManager entityManager) {
+                             final BibleInformationService bibleInfoService, final EntityManager entityManager) {
         this.jswordSearch = jswordSearch;
         this.jsword = jsword;
         this.jswordMetadata = jswordMetadata;
         this.subjects = subjects;
         this.timeline = timeline;
+        this.bibleInfoService = bibleInfoService;
         this.definitions = entityManager.getReader("definition");
         this.specificForms = entityManager.getReader("specificForm");
         this.timelineEvents = entityManager.getReader("timelineEvent");
@@ -154,6 +159,48 @@ public class SearchServiceImpl implements SearchService {
         }
     }
 
+    @Override
+    public OsisWrapper runQuery(final List<SearchToken> searchTokens) {
+            final List<String> versions = new ArrayList<String>(4);
+            final StringBuilder references = new StringBuilder();
+            String options = "";
+
+            for (SearchToken token : searchTokens) {
+                if (SearchToken.VERSION.equals(token.getTokenType())) {
+                    versions.add(token.getToken());
+                } else if (SearchToken.REFERENCE.equals(token.getTokenType())) {
+                    if (references.length() > 0) {
+                        references.append(';');
+                    }
+                    references.append(token.getToken());
+                } else if(SearchToken.OPTIONS.equals(token.getTokenType())) {
+                    options = token.getToken();
+                }
+            }
+
+            if (versions.size() == 0) {
+                versions.add(JSwordPassageService.REFERENCE_BOOK);
+            }
+
+            return this.bibleInfoService.getPassageText(
+                    versions.get(0), references.toString(), options,
+                    getExtraVersions(versions), "");
+    }
+
+    /**
+     * Concatenates all but the last versions
+     *
+     * @param versions version
+     * @return the concatenated versions
+     */
+    private String getExtraVersions(final List<String> versions) {
+        StringBuilder sb = new StringBuilder(128);
+        for (int i = 1; i < versions.size(); i++) {
+            sb.append(versions.get(i));
+        }
+        return sb.toString();
+    }
+    
     @Override
     public SearchResult search(final SearchQuery sq) {
         try {

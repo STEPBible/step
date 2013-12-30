@@ -14,6 +14,7 @@
   }
   a {
     color: black;
+    display: block;
     &:hover {
       text-decoration: none;
     }
@@ -29,7 +30,10 @@
     .glyphicon {
       margin-right: 10px;
       color: $headingColour;
+      visibility: hidden;
+      &.active {
+        visibility: visible;
+      }
     }
-
   }
 }

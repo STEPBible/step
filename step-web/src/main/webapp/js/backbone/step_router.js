@@ -7,15 +7,28 @@ var StepRouter = Backbone.Router.extend({
     
     navigateSearch : function(args) {
         var activePassageId = 0;
-        var options = step.passages.at(activePassageId).get("passage").display
-        
+        var passageOptions = step.passages.at(activePassageId).get("passage");
+        var options = passageOptions.display
+        var interlinearMode =  passageOptions.interlinearMode;
+            
+        var urlStub = "";
         if(step.util.isBlank(args)) {
             var previousUrl = Backbone.history.getFragment() || "";
-            previousUrl = previousUrl.replace(/options=[a-zA-Z]*/ig, "").replace(/\|+$/ig, "");
-            this.navigate(previousUrl + "|options=" + options, { trigger: true });
+            previousUrl = previousUrl
+                .replace(/options=[a-zA-Z]*/ig, "")
+                .replace(/display=[a-zA-Z]*/ig, "")
+                .replace(/\|+$/ig, "");
+
+            urlStub += previousUrl;
         } else {
-            this.navigate("!search/" + args + "|options=" + options, { trigger: true});
+            urlStub += "!search/" + args;
         }
+        urlStub += "|options=" + options;
+        if(interlinearMode != undefined && interlinearMode != "NONE") {
+            urlStub += "|display=" + interlinearMode;
+        }
+        
+        this.navigate(urlStub, { trigger: true});
     },
     
     doMasterSearch : function(query) {

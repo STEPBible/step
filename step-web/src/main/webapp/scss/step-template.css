@@ -143,7 +143,8 @@ body, .dropdown-menu {
   .passageOptionsGroup li:hover {
     background-color: #ebebf1; }
   .passageOptionsGroup a {
-    color: black; }
+    color: black;
+    display: block; }
     .passageOptionsGroup a:hover {
       text-decoration: none; }
   .passageOptionsGroup h1 {
@@ -154,7 +155,10 @@ body, .dropdown-menu {
     text-align: left; }
     .passageOptionsGroup .passageOptions .glyphicon, .passageOptionsGroup .displayModes .glyphicon {
       margin-right: 10px;
-      color: #991c32; }
+      color: #991c32;
+      visibility: hidden; }
+      .passageOptionsGroup .passageOptions .glyphicon.active, .passageOptionsGroup .displayModes .glyphicon.active {
+        visibility: visible; }
 
 .mainPanel {
   min-height: 100%;

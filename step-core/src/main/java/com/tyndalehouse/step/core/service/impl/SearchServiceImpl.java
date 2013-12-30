@@ -56,6 +56,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import com.tyndalehouse.step.core.exceptions.LuceneSearchException;
+import com.tyndalehouse.step.core.models.InterlinearMode;
 import com.tyndalehouse.step.core.models.SearchToken;
 import com.tyndalehouse.step.core.models.search.*;
 import com.tyndalehouse.step.core.service.BibleInformationService;
@@ -164,6 +165,7 @@ public class SearchServiceImpl implements SearchService {
             final List<String> versions = new ArrayList<String>(4);
             final StringBuilder references = new StringBuilder();
             String options = "";
+            String displayMode = InterlinearMode.NONE.name();
 
             for (SearchToken token : searchTokens) {
                 if (SearchToken.VERSION.equals(token.getTokenType())) {
@@ -175,6 +177,8 @@ public class SearchServiceImpl implements SearchService {
                     references.append(token.getToken());
                 } else if(SearchToken.OPTIONS.equals(token.getTokenType())) {
                     options = token.getToken();
+                } else if(SearchToken.DISPLAY_MODE.equals(token.getTokenType())) {
+                    displayMode = token.getToken();
                 }
             }
 
@@ -184,7 +188,7 @@ public class SearchServiceImpl implements SearchService {
 
             return this.bibleInfoService.getPassageText(
                     versions.get(0), references.toString(), options,
-                    getExtraVersions(versions), "");
+                    getExtraVersions(versions), displayMode);
     }
 
     /**
@@ -196,6 +200,9 @@ public class SearchServiceImpl implements SearchService {
     private String getExtraVersions(final List<String> versions) {
         StringBuilder sb = new StringBuilder(128);
         for (int i = 1; i < versions.size(); i++) {
+            if(sb.length() > 0) {
+                sb.append(',');
+            }
             sb.append(versions.get(i));
         }
         return sb.toString();

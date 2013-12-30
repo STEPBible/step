@@ -34,14 +34,63 @@ var PassageMenuView = Backbone.View.extend({
             }
         }
 
-        $(this.$el).on('show.bs.dropdown', function() {
-            if(!self.rendered) {
-                require(["defaults"], function() {
-                    self._initUI(); 
+        $(this.$el).on('show.bs.dropdown', function () {
+            if (!self.rendered) {
+                require(["defaults"], function () {
+                    self._initUI();
                     self.rendered = true;
+                    self._updateDisplayOptions();
                 });
+            } else {
+                self._updateDisplayOptions();
             }
         });
+    },
+
+    _updateDisplayOptions: function () {
+        var passage = this.model.get("data");
+        if (passage == undefined || step.keyedVersions == undefined) {
+            console.log("Unable to find a passage");
+            return;
+        }
+
+        //set the correct version
+        this.displayModeContainer.find(".glyphicon").removeClass("active");
+        this.displayModeContainer
+            .find("[data-value='" + passage.interlinearMode + "']")
+            .find(".glyphicon").addClass("active");
+
+
+        //depending on the version selected, we show the various options
+        var masterVersion = step.keyedVersions[passage.masterVersion];
+        var extraVersions = passage.extraVersions
+
+        //remove any empty string...
+        if (extraVersions == undefined || extraVersions == "") {
+            extraVersions = [];
+        } else {
+            extraVersions = extraVersions.split(",");
+        }
+
+        if (extraVersions.length == 0) {
+            this.displayModeContainer.hide();
+            return;
+        } else {
+            this.displayModeContainer.show();
+        }
+
+        var allHaveStrong = masterVersion.hasStrongs;
+        var sameLanguage = true;
+        var masterLanguage = masterVersion.languageCode;
+        for (var ii = 0; ii < extraVersions.length; ii++) {
+            var extraResource = step.keyedVersions[extraVersions[ii]];
+            allHaveStrong = allHaveStrong && extraResource.hasStrongs;
+            sameLanguage = sameLanguage && extraResource.languageCode == masterLanguage;
+        }
+
+        this.displayModeContainer.find("a[data-value='INTERLINEAR']").closest("li").toggle(allHaveStrong);
+        this.displayModeContainer.find("a[data-value='INTERLEAVED_COMPARE']").closest("li").toggle(sameLanguage);
+        this.displayModeContainer.find("a[data-value='COLUMN_COMPARE']").closest("li").toggle(sameLanguage);
     },
 
     showAnalysis: function () {
@@ -50,29 +99,40 @@ var PassageMenuView = Backbone.View.extend({
     },
 
     _initUI: function () {
-        
         var dropdownContainer = $("<div>").addClass("dropdown-menu").attr("role", "menu");
+        this.displayModeContainer = $("<div>");
         var displayMode = $("<h1>").append(__s.display_mode);
-        dropdownContainer.append(displayMode);
-        dropdownContainer.append(this._createDisplayModes());
+        this.displayModeContainer.append(displayMode);
+        this.displayModeContainer.append(this._createDisplayModes());
+        dropdownContainer.append(this.displayModeContainer);
 
         var displayOptions = $("<h1>").append(__s.display_options);
         dropdownContainer.append(displayOptions);
         dropdownContainer.append(this._createPassageOptions());
         this.$el.append(dropdownContainer);
     },
-    _createDisplayModes : function() {
+    _createDisplayModes: function () {
         var interOptions = step.defaults.passage.interOptions;
         var interNamesOptions = step.defaults.passage.interNamedOptions;
-        
+
         var displayModes = $("<ul>").addClass("miniKolumny displayModes");
-        for(var i = 0; i < interOptions.length; i++) {
+        for (var i = 0; i < interOptions.length; i++) {
             var link = this._createLink(interNamesOptions[i], interOptions[i]);
             displayModes.append($("<li>").append(link).attr("role", "presentation"));
         }
+
+
+        var self = this;
+        displayModes.find('a').click(function (e) {
+            e.stopPropagation();
+            displayModes.find('a').not(this).find(".glyphicon").removeClass("active");
+            $(this).find('.glyphicon').addClass("active");
+            self._updateOptions();
+        });
+
         return displayModes;
     },
-    _createPassageOptions: function() {
+    _createPassageOptions: function () {
         var dropdown = $("<ul>").addClass("miniKolumny passageOptions");
         var selectedOptions = this.model.get("passage").display || "";
 
@@ -82,7 +142,7 @@ var PassageMenuView = Backbone.View.extend({
             this._setVisible(link, selectedOptions.indexOf(this.items[i].initial) != -1);
             dropdown.append($("<li>").append(link)).attr("role", "presentation");
         }
-        
+
         var self = this;
         dropdown.find('a').click(function (e) {
             e.stopPropagation();
@@ -91,7 +151,7 @@ var PassageMenuView = Backbone.View.extend({
         });
         return dropdown;
     },
-    _createLink : function(value, text, title)  {
+    _createLink: function (value, text, title) {
         return $('<a></a>')
             .attr("href", "javascript:void(0)")
             .attr("data-value", value)
@@ -113,6 +173,7 @@ var PassageMenuView = Backbone.View.extend({
         var passageOptions = this.model.get("passage");
         var clonedPassageOptions = _.clone(passageOptions);
         clonedPassageOptions.display = selectedCode;
+        clonedPassageOptions.interlinearMode = this.displayModeContainer.find("a:has(.glyphicon.active)").attr("data-value");
 
         this.model.save({
             passage: clonedPassageOptions

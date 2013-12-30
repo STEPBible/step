@@ -43,11 +43,13 @@ var DataModel = Backbone.Model.extend({
 
     allVersionsPostProcess: function(data) {
         var myVersions = [];
+        step.keyedVersions = {};
         for(var ii = 0; ii < data.length; ii++) {
             myVersions.push({
                 item: data[ii],
                 itemType : 'version'
             });
+            step.keyedVersions[data[ii].initials] = data[ii]; 
         }
         return myVersions;
     }

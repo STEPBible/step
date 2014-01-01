@@ -137,7 +137,7 @@
                 <div class="passageText ui-widget">
                     <div class="btn-group pull-right passageOptionsGroup">
                         <button class="btn btn-default btn-sm" type="button" title="<fmt:message key="share" />">
-                            <span class="glyphicon glyphicon-comment"></span>
+                            <span class="glyphicon glyphicon-thumbs-up  "></span>
                         </button>
                         <button class="btn btn-default btn-sm showStats" type="button" title="<fmt:message key="passage_stats" />">
                             <span class="glyphicon glyphicon-stats"></span></button>

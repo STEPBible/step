@@ -27,6 +27,9 @@ var PassageMenuView = Backbone.View.extend({
         var self = this;
         _.bindAll(this);
 
+        //listen for model changes
+        this.model.on("sync-update", this._updateVisiblePassageOptions);
+
         //get the versions data sources
         for (var i = 0; i < step.datasources.length; i++) {
             if (step.datasources.at(i).get("name") == DS_VERSIONS) {
@@ -39,22 +42,55 @@ var PassageMenuView = Backbone.View.extend({
                 require(["defaults"], function () {
                     self._initUI();
                     self.rendered = true;
-                    self._updateDisplayOptions();
+                    self._updatePassageOptions();
                 });
             } else {
-                self._updateDisplayOptions();
+                self._updatePassageOptions();
             }
         });
     },
 
-    _updateDisplayOptions: function () {
+    /**
+     *  Only updates if the options are visible
+     */
+    _updateVisiblePassageOptions: function () {
+        if (this.$el.hasClass("open")) {
+            return this._updatePassageOptions();
+        }
+    },
+
+    _updatePassageOptions: function () {
         var passage = this.model.get("data");
         if (passage == undefined || step.keyedVersions == undefined) {
             console.log("Unable to find a passage");
             return;
         }
 
-        //set the correct version
+        var masterVersion = step.keyedVersions[passage.masterVersion];
+        this._updateDisplayModeOptions(passage, masterVersion);
+        this._updateDisplayOptions(passage, masterVersion);
+    },
+    /**
+     * Obtains the options available in the masterVersion.
+     * Then only makes those available. If we're in an interlinear mode, then
+     * we need to further disable those options that are not available...
+     * @param passage the passage model data
+     * @private
+     */
+    _updateDisplayOptions: function (passage) {
+        //first set the available options to be visible, and non-available options to be invisible...
+        var availableOptions = passage.options || "";
+
+
+        //make invisible all options except for 'available ones'
+        var displayOptions = this.displayOptions.find("li");
+        for (var i = 0; i < displayOptions.length; i++) {
+            var displayOption = displayOptions.eq(i);
+            displayOption.toggle(availableOptions.indexOf(displayOption.find("[data-value]").attr("data-value")) != -1);
+        }
+    },
+    _updateDisplayModeOptions: function (passage, masterVersion) {
+        //set the current display mode.
         this.displayModeContainer.find(".glyphicon").removeClass("active");
         this.displayModeContainer
             .find("[data-value='" + passage.interlinearMode + "']")
@@ -62,7 +98,6 @@ var PassageMenuView = Backbone.View.extend({
 
 
         //depending on the version selected, we show the various options
-        var masterVersion = step.keyedVersions[passage.masterVersion];
         var extraVersions = passage.extraVersions
 
         //remove any empty string...
@@ -92,7 +127,6 @@ var PassageMenuView = Backbone.View.extend({
         this.displayModeContainer.find("a[data-value='INTERLEAVED_COMPARE']").closest("li").toggle(sameLanguage);
         this.displayModeContainer.find("a[data-value='COLUMN_COMPARE']").closest("li").toggle(sameLanguage);
     },
-
     showAnalysis: function () {
         step.lexicon.wordleView.passageId = passageId;
         lexiconDefinition.reposition(step.defaults.infoPopup.wordleTab);
@@ -106,9 +140,11 @@ var PassageMenuView = Backbone.View.extend({
         this.displayModeContainer.append(this._createDisplayModes());
         dropdownContainer.append(this.displayModeContainer);
 
-        var displayOptions = $("<h1>").append(__s.display_options);
-        dropdownContainer.append(displayOptions);
-        dropdownContainer.append(this._createPassageOptions());
+        var displayOptionsHeading = $("<h1>").append(__s.display_options);
+        dropdownContainer.append(displayOptionsHeading);
+
+        this.displayOptions = this._createPassageOptions();
+        dropdownContainer.append(this.displayOptions);
         this.$el.append(dropdownContainer);
     },
     _createDisplayModes: function () {
@@ -134,7 +170,7 @@ var PassageMenuView = Backbone.View.extend({
     },
     _createPassageOptions: function () {
         var dropdown = $("<ul>").addClass("miniKolumny passageOptions");
-        var selectedOptions = this.model.get("passage").display || "";
+        var selectedOptions = this.model.get("data").selectedOptions || "";
 
         for (var i = 0; i < this.items.length; i++) {
             var link = this._createLink(this.items[i].initial, __s[this.items[i].key], __s[this.items[i].help]);
@@ -170,13 +206,13 @@ var PassageMenuView = Backbone.View.extend({
             selectedCode += selectedOptions.eq(i).data('value');
         }
 
-        var passageOptions = this.model.get("passage");
-        var clonedPassageOptions = _.clone(passageOptions);
-        clonedPassageOptions.display = selectedCode;
+        var passageOptions = this.model.get("data") || {};
+        var clonedPassageOptions = _.clone(passageOptions) || {};
+        clonedPassageOptions.selectedOptions = selectedCode;
         clonedPassageOptions.interlinearMode = this.displayModeContainer.find("a:has(.glyphicon.active)").attr("data-value");
 
         this.model.save({
-            passage: clonedPassageOptions
+            data: clonedPassageOptions
         });
         return selectedCode;
     },

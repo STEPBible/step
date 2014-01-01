@@ -5,7 +5,8 @@ var SidebarView = Backbone.View.extend({
     },
     activate : function() {
         var self = this;
-        this.$el.closest('.row-offcanvas').toggleClass('active');
+        _.bindAll(this);
+        this.$el.closest('.row-offcanvas').addClass('active');
 
         //load content
         $.getSafe(MODULE_GET_INFO, [this.model.get("strong"), this.model.get("morph")], function(data) {
@@ -75,8 +76,18 @@ var SidebarView = Backbone.View.extend({
     _createTabContainer: function() {
         var tabContainer = $("<ul>").addClass("nav nav-tabs")
             .append("<li>").append("<li>").children().first().addClass("active")
-            .append($("<a>").addClass("glyphicon glyphicon-info-sign").attr("title", __s.original_word).attr("data-toggle","tab").attr("data-target", "#lexicon")).end().next()
-            .append($("<a>").addClass("glyphicon glyphicon-stats").attr("title", __s.passage_stats).attr("data-toggle","tab").attr("data-target", "#analysis")).end().end();
+            .append($("<a>").addClass("glyphicon glyphicon-info-sign")
+                .attr("title", __s.original_word).attr("data-toggle","tab").attr("data-target", "#lexicon")).end().next()
+                .append($("<a>").addClass("glyphicon glyphicon-stats").attr("title", __s.passage_stats).attr("data-toggle","tab").attr("data-target", "#analysis")).end().end();
+        
+        //add close button
+        tabContainer.append(
+            $("<li class='closeSidebar'><a class='glyphicon glyphicon-remove' /></li>")
+                .click(this.closeSidebar));
+        
         return tabContainer;
+    },
+    closeSidebar: function() {
+        this.$el.closest('.row-offcanvas').removeClass('active');   
     }
 });

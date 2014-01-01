@@ -24,6 +24,7 @@
  
     .sidebar-offcanvas {
       right: -$smallSidebarSize;
+      top: $header_height;
     }
 
     &.active {

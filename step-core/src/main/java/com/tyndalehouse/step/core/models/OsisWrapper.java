@@ -63,6 +63,7 @@ public class OsisWrapper implements Serializable {
     private final String masterVersion;
     private Map<String, List<LexiconSuggestion>> strongNumbers;
     private String options;
+    private String selectedOptions;
 
     /**
      * the value to be wrapped
@@ -236,5 +237,19 @@ public class OsisWrapper implements Serializable {
      */
     public void setOptions(final String options) {
         this.options = options;
+    }
+
+    /**
+     * @param selectedOptions the options used for this passage
+     */
+    public void setSelectedOptions(final String selectedOptions) {
+        this.selectedOptions = selectedOptions;
+    }
+
+    /**
+     * @return the selected options that were used for the passage
+     */
+    public String getSelectedOptions() {
+        return selectedOptions;
     }
 }

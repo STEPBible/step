@@ -2,16 +2,11 @@ var PassageModel = Backbone.Model.extend({
     defaults: function () {
         return {
             passageId: 0,
-            passage: {
-                display: "NHVUG"
+            data: {
+                options: "NHVUG",
+                interlinearMode: ""
+                
             }
-//                version: "ESV",
-//                reference: "Mat 1",
-//                extraVersions: [],
-//                interlinearMode: "NONE",
-//                detailLevel: 0,
-//                options: ["N", "H", "V", "U", "G"],
-//                synced : -1
         }
     }
 });
@@ -22,7 +17,7 @@ var PassageModelList = Backbone.Collection.extend({
     initialize: function () {
         this.on("change", this.changePassage, this);
     },
-    changePassage : function() {
+    changePassage : function(a,b,c) {
         step.router.navigateSearch();
     }
 });

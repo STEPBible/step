@@ -33,6 +33,7 @@
 package com.tyndalehouse.step.core.service.jsword;
 
 import java.util.List;
+import java.util.Set;
 
 import com.tyndalehouse.step.core.models.BookName;
 import com.tyndalehouse.step.core.models.InterlinearMode;
@@ -51,7 +52,7 @@ public interface JSwordMetadataService {
      * @param extraVersions the secondary versions that affect feature resolution
      * @return the list of supported features
      */
-    List<LookupOption> getFeatures(String version, List<String> extraVersions);
+    Set<LookupOption> getFeatures(String version, List<String> extraVersions);
 
     /**
      * returns a list of matching names or references in a particular book
@@ -83,9 +84,11 @@ public interface JSwordMetadataService {
      * INTERLEAVED_COMPARE
      * INTERLEAVED
      *
+     *
      * @param mainBook      the main book
      * @param extraVersions the extra versions
+     * @param interlinearMode
      * @return the best interlinear mode.
      */
-    InterlinearMode getBestInterlinearMode(String mainBook, List<String> extraVersions);
+    InterlinearMode getBestInterlinearMode(String mainBook, List<String> extraVersions, final InterlinearMode interlinearMode);
 }

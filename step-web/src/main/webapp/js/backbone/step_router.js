@@ -5,18 +5,18 @@ var StepRouter = Backbone.Router.extend({
     initialize: function() {
     },
     
-    navigateSearch : function(args) {
+    navigateSearch : function(args, historyOptions) {
         var activePassageId = 0;
-        var passageOptions = step.passages.at(activePassageId).get("passage");
-        var options = passageOptions.display
-        var interlinearMode =  passageOptions.interlinearMode;
+        var passageOptions = step.passages.at(activePassageId).get("data");
+        var options = passageOptions.selectedOptions || "";
+        var interlinearMode =  passageOptions.interlinearMode || "";
             
         var urlStub = "";
         if(step.util.isBlank(args)) {
             var previousUrl = Backbone.history.getFragment() || "";
             previousUrl = previousUrl
-                .replace(/options=[a-zA-Z]*/ig, "")
-                .replace(/display=[a-zA-Z]*/ig, "")
+                .replace(/options=[_a-zA-Z]*/ig, "")
+                .replace(/display=[_a-zA-Z]*/ig, "")
                 .replace(/\|+$/ig, "");
 
             urlStub += previousUrl;
@@ -28,7 +28,10 @@ var StepRouter = Backbone.Router.extend({
             urlStub += "|display=" + interlinearMode;
         }
         
-        this.navigate(urlStub, { trigger: true});
+        if(!historyOptions) {
+            historyOptions = { trigger: true};
+        }
+        this.navigate(urlStub, historyOptions);
     },
     
     doMasterSearch : function(query) {
@@ -56,10 +59,19 @@ var StepRouter = Backbone.Router.extend({
                     if(passageModel == null) {
                         passageModel = new PassageModel({ passageId: activePassageId, data: text});
                         step.passages.add(passageModel);
-                    } else {
-                        passageModel.set("data", text);
                     }
-                   
+                    
+                    passageModel.save({
+                        data: text
+                    }, { silent: true });
+                    
+                    //don't trigger a full search, but replace the URL with the one that makes sense
+                    step.router.navigateSearch(null, { trigger: false, replace: true});
+                    
+                    //then trigger the refresh of menu options and such like
+                    passageModel.trigger("sync-update", {});
+                    
+                    
                     //TODO: revisit, using same views?
                     new PassageDisplayView({
                         model: passageModel

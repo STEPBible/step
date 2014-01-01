@@ -13,6 +13,12 @@ var DataModel = Backbone.Model.extend({
     },
     initialize: function() {
         _.bindAll(this);
+        
+        var dsName = this.get("name");
+        var postLoadMethod = this[dsName + "PostLoad"];
+        if(postLoadMethod != undefined) {
+            Backbone.Events.once("data:" + dsName + ":loaded", postLoadMethod, this);
+        }
     },
     fetch: function () {
         //the only time we don't fetch data is if the data is not stale and we have a ttl...
@@ -43,15 +49,24 @@ var DataModel = Backbone.Model.extend({
 
     allVersionsPostProcess: function(data) {
         var myVersions = [];
-        step.keyedVersions = {};
         for(var ii = 0; ii < data.length; ii++) {
             myVersions.push({
                 item: data[ii],
                 itemType : 'version'
             });
-            step.keyedVersions[data[ii].initials] = data[ii]; 
         }
         return myVersions;
+    },
+    /**
+     * Exposes all versions and their features to the application
+     */
+    allVersionsPostLoad : function() {
+        var allVersions = this.get("data");
+        step.keyedVersions = {};
+        for(var ii = 0; ii < allVersions.length; ii++) {
+            var item = allVersions[ii].item;
+            step.keyedVersions[item.initials] = item;
+        }
     }
 });
 

@@ -2,6 +2,9 @@
 
 #sidebar {
   li {
+    &.closeSidebar {
+      float: right;
+    }
     &.active {
       a {
         color: $headingColour;
@@ -11,6 +14,7 @@
       color: $inactiveTabColor;
       padding: 2 20 2 5;
     }
+    
   }
 }
 

@@ -6,7 +6,7 @@
 
   .navbar-header {
     font-size: x-small;
-    background: black;
+    background: $headerBackgroundColor no-repeat fixed url(../images/step-top-left-logo.png);
   }
   
   a, .subtitle, .subtitle:hover {

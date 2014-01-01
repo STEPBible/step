@@ -46,7 +46,8 @@ import com.tyndalehouse.step.core.models.search.StrongCountsAndSubjects;
  * 
  */
 public interface BibleInformationService {
-
+    public static final char UNAVAILABLE_TO_UI = '_';
+    
     /**
      * Queries Jsword to return all the installed versions of the bible
      * 

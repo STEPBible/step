@@ -10,7 +10,7 @@ body, .dropdown-menu {
   margin-bottom: 0px; }
   .navbar .navbar-header {
     font-size: x-small;
-    background: black; }
+    background: black no-repeat fixed url(../images/step-top-left-logo.png); }
   .navbar a, .navbar .subtitle, .navbar .subtitle:hover {
     color: lightgrey; }
 
@@ -93,13 +93,17 @@ body, .dropdown-menu {
 .select2-container-multi .select2-choices {
   border-radius: 3 0 0 3 !important; }
   .select2-container-multi .select2-choices .select2-search-choice {
-    margin: 2px 0 2px 5px;
+    margin: 5px 0 2px 5px;
     padding-left: 5px;
     padding-right: 18px; }
   .select2-container-multi .select2-choices .select2-search-field input {
     font-family: inherit;
     padding: 6px 12px;
-    margin: 0px; }
+    margin: 0px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    -webkit-transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+    transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s; }
 
 .select2-container {
   border: 0px !important; }
@@ -309,7 +313,8 @@ body::-webkit-scrollbar-corner {
     -moz-transition: all 0.25s ease-out;
     transition: all 0.25s ease-out; }
     .row-offcanvas .sidebar-offcanvas {
-      right: -75%; }
+      right: -75%;
+      top: 56px; }
     .row-offcanvas.active {
       right: 75%; }
 
@@ -333,6 +338,8 @@ body::-webkit-scrollbar-corner {
     width: 16.66667%;
     overflow-y: scroll;
     height: 100%; } }
+#sidebar li.closeSidebar {
+  float: right; }
 #sidebar li.active a {
   color: #991c32; }
 #sidebar li a {

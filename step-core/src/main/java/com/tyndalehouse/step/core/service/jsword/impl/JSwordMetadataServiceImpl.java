@@ -4,10 +4,7 @@ import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
 import static com.tyndalehouse.step.core.utils.StringUtils.isNotEmpty;
 import static org.crosswire.jsword.book.BookCategory.BIBLE;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 import javax.inject.Inject;
 
@@ -44,10 +41,10 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
     }
 
     @Override
-    public List<LookupOption> getFeatures(final String version, List<String> extraVersions) {
+    public Set<LookupOption> getFeatures(final String version, List<String> extraVersions) {
         // obtain the book
         final Book book = this.versificationService.getBookFromVersion(version);
-        final List<LookupOption> options = new ArrayList<LookupOption>(LookupOption.values().length + 1);
+        final Set<LookupOption> options = new HashSet<LookupOption>(LookupOption.values().length *2);
 
         if (book == null) {
             return options;
@@ -73,7 +70,7 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
      * @param extraVersions  the secondary versions that affect feature resolution 
      * @param options        the set of options
      */
-    private void addAncientOptions(final String currentVersion, final List<String> extraVersions, final List<LookupOption> options) {
+    private void addAncientOptions(final String currentVersion, final List<String> extraVersions, final Set<LookupOption> options) {
         final List<String> allVersions = new ArrayList<String>(extraVersions);
         allVersions.add(currentVersion);
 
@@ -106,7 +103,7 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
      * @param book    the Book in question
      * @param options the available options
      */
-    private void addHebrewOptions(final Book book, final List<LookupOption> options) {
+    private void addHebrewOptions(final Book book, final Set<LookupOption> options) {
         if ("OSMHB".equals(book.getInitials()) || "OHB".equals(book.getInitials()) || "OSHB".equals(book.getInitials())
                 || "WLC".equals(book.getInitials())) {
             options.add(LookupOption.DIVIDE_HEBREW);
@@ -119,7 +116,7 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
      * @param book    the book
      * @param options the options to be added to
      */
-    private void addAllMatchingLookupOptions(final Book book, final List<LookupOption> options) {
+    private void addAllMatchingLookupOptions(final Book book, final Set<LookupOption> options) {
         // cycle through each option
         for (final LookupOption lo : LookupOption.values()) {
             final FeatureType ft = FeatureType.fromString(lo.getXsltParameterName());
@@ -135,7 +132,7 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
      * @param book    the book
      * @param options the options to be added to
      */
-    private void addNotesOptions(final Book book, final List<LookupOption> options) {
+    private void addNotesOptions(final Book book, final Set<LookupOption> options) {
         if (book.getBookMetaData().hasFeature(FeatureType.FOOTNOTES)
                 || book.getBookMetaData().hasFeature(FeatureType.SCRIPTURE_REFERENCES)) {
             options.add(LookupOption.NOTES);
@@ -148,7 +145,7 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
      * @param book    the book
      * @param options the options to be added to
      */
-    private void addMorphologyOptions(final Book book, final List<LookupOption> options) {
+    private void addMorphologyOptions(final Book book, final Set<LookupOption> options) {
         if (book.hasFeature(FeatureType.MORPHOLOGY)) {
             options.add(LookupOption.COLOUR_CODE);
         }
@@ -160,7 +157,7 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
      * @param book    the book
      * @param options the options to be added to
      */
-    private void addStrongNumberOptions(final Book book, final List<LookupOption> options) {
+    private void addStrongNumberOptions(final Book book, final Set<LookupOption> options) {
         if (book.getBookMetaData().hasFeature(FeatureType.STRONGS_NUMBERS)) {
             options.add(LookupOption.ENGLISH_VOCAB);
             options.add(LookupOption.GREEK_VOCAB);
@@ -175,7 +172,7 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
      * @param book    the book
      * @param options the options to be added to
      */
-    private void addRedLetterOptions(final Book book, final List<LookupOption> options) {
+    private void addRedLetterOptions(final Book book, final Set<LookupOption> options) {
         if (book.getBookMetaData().hasFeature(FeatureType.WORDS_OF_CHRIST)) {
             options.add(LookupOption.RED_LETTER);
         }
@@ -187,7 +184,7 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
      * @param book    the book
      * @param options the options to be added to
      */
-    private void addBibleCategoryOptions(final Book book, final List<LookupOption> options) {
+    private void addBibleCategoryOptions(final Book book, final Set<LookupOption> options) {
         if (BIBLE.equals(book.getBookCategory())) {
             options.add(LookupOption.VERSE_NUMBERS);
             options.add(LookupOption.VERSE_NEW_LINE);
@@ -312,14 +309,21 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
     }
 
     @Override
-    public InterlinearMode getBestInterlinearMode(String version, List<String> extraVersions) {
+    public InterlinearMode getBestInterlinearMode(String version, List<String> extraVersions, final InterlinearMode interlinearMode) {
         if(extraVersions == null || extraVersions.size() == 0) {
             return InterlinearMode.NONE;
         }
         
+        //we've at least got several versions here, so, we prefer the option given to defaults
+        if(interlinearMode == InterlinearMode.INTERLEAVED || interlinearMode == InterlinearMode.COLUMN) {
+            return interlinearMode;
+        }
+        
+        //so we've either asked for nothing, or asked for something that we need to check is appropriate
+        
         Book main = this.versificationService.getBookFromVersion(version);
         String firstLanguage = main.getLanguage().getCode();
-        boolean supportsStrongs = true;
+        boolean supportsStrongs = this.supportsStrongs(main);
         boolean sameLanguage = true;
         
         for(String extraVersion : extraVersions) {
@@ -337,6 +341,11 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
             }
         }
         
+        //if compare options were given and are available, we return these.
+        if(interlinearMode == InterlinearMode.INTERLEAVED_COMPARE || interlinearMode == InterlinearMode.COLUMN_COMPARE) {
+            return getSameOrDowngradedInterlinearMode(interlinearMode, sameLanguage);
+        }
+        
         if(supportsStrongs) {
             return InterlinearMode.INTERLINEAR;
         }
@@ -346,5 +355,23 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
         }
         
         return InterlinearMode.INTERLEAVED;
+    }
+
+    /**
+     * if all versions are of the same language, then we return the interlinear mode. 
+     * Otherwise we return INTERLEAVED if INTERLEAVED_COMPARE was given, and COLUMN if COLUMN_COMPARED was given
+     * 
+     * @param interlinearMode the original interlinear mode
+     * @param sameLanguage true to indicate all versions are of the same language
+     * @return the final interlinear mode to be used going forward.
+     */
+    private InterlinearMode getSameOrDowngradedInterlinearMode(final InterlinearMode interlinearMode, final boolean sameLanguage) {
+        if(sameLanguage) {
+            return interlinearMode;
+        } else if(interlinearMode == InterlinearMode.INTERLEAVED_COMPARE) {
+            return InterlinearMode.INTERLEAVED;
+        } else {
+            return InterlinearMode.COLUMN;
+        }
     }
 }

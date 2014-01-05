@@ -28,7 +28,7 @@ var PassageMenuView = Backbone.View.extend({
         _.bindAll(this);
 
         //listen for model changes
-        this.model.on("sync-update", this._updateVisiblePassageOptions);
+        this.model.on("sync-update", this._updateVisibleDropdown);
 
         //get the versions data sources
         for (var i = 0; i < step.datasources.length; i++) {
@@ -37,31 +37,40 @@ var PassageMenuView = Backbone.View.extend({
             }
         }
 
-        $(this.$el).on('show.bs.dropdown', function () {
+        this.$el.on('show.bs.dropdown', function (ev) {
             if (!self.rendered) {
                 require(["defaults"], function () {
                     self._initUI();
                     self.rendered = true;
-                    self._updatePassageOptions();
+                    self._updateDropdownContents(ev.target);
                 });
             } else {
-                self._updatePassageOptions();
+                self._updateDropdownContents(ev.target);
             }
         });
     },
-
-    /**
-     *  Only updates if the options are visible
-     */
-    _updateVisiblePassageOptions: function () {
-        if (this.$el.hasClass("open")) {
-            return this._updatePassageOptions();
+    _updateVisibleDropdown: function () {
+        var openDropdown = this.$el.find(".dropdown.open");
+        if (this._isDisplayOptionsDropdown(openDropdown)) {
+            this._updatePassageOptions();
         }
     },
-
+    _updateDropdownContents: function (targetTrigger) {
+        if (this._isDisplayOptionsDropdown(targetTrigger)) {
+            this._updatePassageOptions();
+        } else if (this._isShareDropdown(targetTrigger)) {
+            this._doSocialButtons();
+        }
+    },
+    _isDisplayOptionsDropdown: function (target) {
+        return $(target).has(">.showSettings").length > 0;
+    },
+    _isShareDropdown: function (target) {
+        return $(target).has(">.dropdown-share").length > 0;
+    },
     _updatePassageOptions: function () {
         var passage = this.model.get("data");
-        if (passage == undefined || step.keyedVersions == undefined) {
+        if (passage == undefined || step.keyedVersions == undefined || !this.rendered) {
             console.log("Unable to find a passage");
             return;
         }
@@ -69,6 +78,7 @@ var PassageMenuView = Backbone.View.extend({
         var masterVersion = step.keyedVersions[passage.masterVersion];
         this._updateDisplayModeOptions(passage, masterVersion);
         this._updateDisplayOptions(passage, masterVersion);
+
     },
     /**
      * Obtains the options available in the masterVersion.
@@ -128,12 +138,18 @@ var PassageMenuView = Backbone.View.extend({
         this.displayModeContainer.find("a[data-value='COLUMN_COMPARE']").closest("li").toggle(sameLanguage);
     },
     showAnalysis: function () {
-        step.lexicon.wordleView.passageId = passageId;
-        lexiconDefinition.reposition(step.defaults.infoPopup.wordleTab);
+        //trigger side bar
+        require(["sidebar"], function(module) {
+            //TODO TODO TODO
+            //read up on requirejs to see if init can form part of download call
+            step.util.ui.initSidebar('analysis');
+            //TODO TODO TODO
+        });
     },
 
     _initUI: function () {
-        var dropdownContainer = $("<div>").addClass("dropdown-menu").attr("role", "menu");
+        //create settings dropdown
+        var dropdownContainer = $("<div>").addClass("dropdown-menu pull-right").attr("role", "menu");
         this.displayModeContainer = $("<div>");
         var displayMode = $("<h1>").append(__s.display_mode);
         this.displayModeContainer.append(displayMode);
@@ -145,7 +161,11 @@ var PassageMenuView = Backbone.View.extend({
 
         this.displayOptions = this._createPassageOptions();
         dropdownContainer.append(this.displayOptions);
-        this.$el.append(dropdownContainer);
+
+        var shareDropdownMenu = $("<div>").addClass("dropdown-menu pull-right").attr("role", "menu");
+
+        this.$el.find(".dropdown:has(.dropdown-share)").append(shareDropdownMenu);
+        this.$el.find(".dropdown:has(.showSettings)").append(dropdownContainer);
     },
     _createDisplayModes: function () {
         var interOptions = step.defaults.passage.interOptions;
@@ -245,5 +265,44 @@ var PassageMenuView = Backbone.View.extend({
         }
 
         this.$el = groupOfButtons;
+    },
+    _doSocialButtons: function () {
+        if (step.state.isLocal()) {
+            return;
+        }
+
+        var element = this.$el.find(".dropdown-share").closest(".dropdown").find(".dropdown-menu");
+        if (!this.sharingBar) {
+            this.sharingBar = $("<ul>");
+            element.append(this.sharingBar);
+        } else {
+            this.sharingBar.empty();
+        }
+
+        var url = step.router.getShareableColumnUrl(element, true);
+
+        //do google plus
+        if (window.gapi != undefined) {
+            var gPlusOne = $('<g:plusone size="medium"></g:plusone>');
+            gPlusOne.attr("href", url);
+            this.sharingBar.append($("<li>").append(gPlusOne));
+            window.gapi.plusone.go(this.sharingBar.get(0));
+        }
+
+        //do twitter
+        if (window.twttr != undefined) {
+            var twitter = $('<a href="https://twitter.com/share" class="twitter-share-button" data-via="Tyndale_House">Tweet</a>')
+            twitter.attr("data-url", url);
+            twitter.attr("data-text", $("title").text());
+            this.sharingBar.append($("<li>").append(twitter));
+            window.twttr.widgets.load();
+        }
+
+        //do facebook share
+        if(window.FB && window.FB.XFBML) {
+            var facebook = $('<fb:share-button type="button_count"></fb:share-button>').attr("href", url);
+            this.sharingBar.append($("<li>").append(facebook));
+            window.FB.XFBML.parse(facebook.parent().get(0));
+        }
     }
 });

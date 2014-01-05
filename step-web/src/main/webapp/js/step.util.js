@@ -295,23 +295,40 @@ step.util = {
             }
 
             require(["sidebar"], function(module) {
-                if (!step.sidebar) {
-                    step.sidebar = {};
-                    step.sidebar = new SidebarModel({
-                        strong: strong,
-                        morph: morph
-                    });
-                    new SidebarList().add(step.sidebar);
-                    new SidebarView({
-                        model: step.sidebar,
-                        el: $("#sidebar")
-                    });
-                }
-                step.sidebar.save({
-                    strong: strong,
-                    morph: morph
-                });
+                step.util.ui.initSidebar('definition', { strong: strong, morph: morph});
+                step.util.ui.openStrongNumber(strong, morph)
             });
+        },
+        initSidebar: function(mode, data) {
+            if(!data) {
+                data = {};
+            }
+            if (!step.sidebar) {
+                step.sidebar = {};
+                step.sidebar = new SidebarModel({
+                    strong: data.strong,
+                    morph: data.morph,
+                    mode: 'definition'
+                });
+                new SidebarList().add(step.sidebar);
+                new SidebarView({
+                    model: step.sidebar,
+                    el: $("#sidebar")
+                });
+            }
+        },
+        openStrongNumber: function(strong, morph) {
+            step.sidebar.save({
+                strong: strong,
+                morph: morph,
+                mode: 'definition'
+            });
+        },
+        openStats: function(focusedPassage) {
+            step.sidebar.save({
+                mode: 'stats',
+                focusedPassage: focusedPassage
+            })  
         },
         addStrongHandlers: function (passageId, passageContent) {
             var that = this;

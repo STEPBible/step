@@ -86,10 +86,33 @@
     <![endif]-->
 
 
-   
+    <% if (!appManager.isLocal()) { %>
+    <script type="text/javascript">
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-36285759-1']);
+        _gaq.push(['_trackPageview']);
+
+        (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
+    <script>
+        var _prum = [['id', '52698a2cabe53d8c20000000'],
+            ['mark', 'firstbyte', (new Date()).getTime()]];
+        (function() {
+            var s = document.getElementsByTagName('script')[0]
+                    , p = document.createElement('script');
+            p.async = 'async';
+            p.src = '//rum-static.pingdom.net/prum.min.js';
+            s.parentNode.insertBefore(p, s);
+        })();
+    </script>
+    <% } %>   
 
 </head>
-<body>
+<body xmlns:fb="http://ogp.me/ns/fb#">
 <!-- Wrap all page content here -->
 <div id="wrap">
 
@@ -136,14 +159,18 @@
             <div class="passageContainer" passage-id=0>
                 <div class="passageText ui-widget">
                     <div class="btn-group pull-right passageOptionsGroup">
-                        <button class="btn btn-default btn-sm" type="button" title="<fmt:message key="share" />">
-                            <span class="glyphicon glyphicon-thumbs-up  "></span>
-                        </button>
+                        <div class="dropdown btn-group">
+                            <button class="btn btn-default btn-sm dropdown-share" data-toggle="dropdown" type="button" title="<fmt:message key="share" />">
+                                <span class="glyphicon glyphicon-thumbs-up"></span>
+                            </button>
+                        </div>
                         <button class="btn btn-default btn-sm showStats" type="button" title="<fmt:message key="passage_stats" />">
                             <span class="glyphicon glyphicon-stats"></span></button>
-                        <button class="btn btn-default btn-sm dropdown-toggle showSettings" title="<fmt:message key="view" />" type="button" data-toggle="dropdown">
-                            <span class="glyphicon glyphicon-cog"></span>
-                        </button>
+                        <div class="dropdown btn-group settingsDropdown">
+                            <button class="btn btn-default btn-sm dropdown-toggle showSettings" title="<fmt:message key="view" />" type="button" data-toggle="dropdown">
+                                <span class="glyphicon glyphicon-cog"></span>
+                            </button>
+                        </div>
                     </div>
                     <div class="passageContent" itemprop="text">&nbsp;<%= stepRequest.getPassage(0) %></div>
                 </div>
@@ -342,6 +369,24 @@
 	%>
     
     <%--<img src="images/wait_big.gif" id="waiting" />--%>
-    
+
+    <% if(!appManager.isLocal()) { %>
+    <script>
+        (function(w, d, s) {
+            function go(){
+                var js, fjs = d.getElementsByTagName(s)[0], load = function(url, id) {
+                    if (d.getElementById(id)) {return;}
+                    js = d.createElement(s); js.src = url; js.id = id;
+                    fjs.parentNode.insertBefore(js, fjs);
+                };
+                load('//connect.facebook.net/en_GB/all.js#xfbml=1', 'fbjssdk');
+                load('https://apis.google.com/js/plusone.js', 'gplus1js');
+                load('//platform.twitter.com/widgets.js', 'tweetjs');
+            }
+            if (w.addEventListener) { w.addEventListener("load", go, false); }
+            else if (w.attachEvent) { w.attachEvent("onload",go); }
+        }(window, document, 'script'));
+    </script>
+    <% } %>
 </body>
 </html>

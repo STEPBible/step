@@ -33,7 +33,9 @@ var StepRouter = Backbone.Router.extend({
         }
         this.navigate(urlStub, historyOptions);
     },
-    
+    getShareableColumnUrl : function(element, encodeFragment) {
+        return "http://www.stepbible.org/#" + encodeURI(Backbone.history.getFragment());
+    },
     doMasterSearch : function(query) {
             var startTime = new Date().getTime();
             var activePassageId = 0;

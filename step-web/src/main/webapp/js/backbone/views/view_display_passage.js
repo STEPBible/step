@@ -51,7 +51,6 @@ var PassageDisplayView = Backbone.View.extend({
 TODO:                this._addStrongHandlers(passageId, passageHtml);
 //TODO:                this._doDuplicateNotice(passageId, passageHtml);
                 this._updatePageTitle(passageId, passageHtml, version, reference);
-                this._doTransliterations(passageHtml);
                 this._doInterlinearDividers(passageHtml);
 //TODO:                this._doVersions(passageId, passageHtml, version, reference);
                 
@@ -448,17 +447,7 @@ TODO:                this._addStrongHandlers(passageId, passageHtml);
             step.util.ui.addStrongHandlers(passageId, passageContent)
         },
 
-        /**
-         * Change the transliterations and format them
-         * @param passageContent
-         * @private
-         */
-        _doTransliterations: function (passageContent) {
-            var transliterations = $(".stepTransliteration", passageContent);
-            for (var i = 0; i < transliterations.length; i++) {
-                step.util.ui.markUpTransliteration(transliterations.eq(i));
-            }
-        },
+        
 
         /**
          * Estimates the height of each block in an interlinear like way

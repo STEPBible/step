@@ -84,7 +84,7 @@ var QuickLexicon = Backbone.View.extend({
                                     "<span class='" + fontClass + "'>" +
                                     item.accentedUnicode +
                                     "</span> (<span class='stepTransliteration'>" +
-                                    step.util.ui.markUpTransliteration(item.stepTransliteration) +
+                                    item.stepTransliteration +
                                     "): " +
                                     item.stepGloss +
                                     "</h1>" +

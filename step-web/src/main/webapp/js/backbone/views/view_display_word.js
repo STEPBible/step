@@ -39,12 +39,12 @@ var WordDisplayView = TextDisplayView.extend({
 
             if (sortOrder == VOCABULARY) {
                 header.append(item.stepGloss == undefined ? "-" : item.stepGloss);
-                header.append($("<em>").addClass("stepTransliteration").append(step.util.ui.markUpTransliteration(item.stepTransliteration)));
+                header.append($("<em>").addClass("stepTransliteration").append(item.stepTransliteration));
                 header.append($("<span>").addClass("ancientSearch").append(item.accentedUnicode));
             } else {
                 header.append($("<span>").addClass("ancientSearch").append(item.accentedUnicode));
                 header.append("(");
-                header.append($("<em>").addClass("stepTransliteration").append(step.util.ui.markUpTransliteration(item.stepTransliteration)));
+                header.append($("<em>").addClass("stepTransliteration").append(item.stepTransliteration));
                 header.append("): ");
                 header.append(item.stepGloss == undefined ? "-" : item.stepGloss);
             }

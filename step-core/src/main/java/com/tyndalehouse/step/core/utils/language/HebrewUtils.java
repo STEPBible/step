@@ -494,16 +494,19 @@ public final class HebrewUtils {
      */
     private static void secondPass(final HebrewLetter[] letters, final char[] input) {
         int previousConsonantPosition = -1;
+        int currentConsonantPosition = -1;
         for (int ii = 0; ii < letters.length; ii++) {
             if (letters[ii].isConsonant()) {
-                previousConsonantPosition = ii;
+                previousConsonantPosition = currentConsonantPosition;
+                currentConsonantPosition = ii;
             } else if (letters[ii].getC() == SHEVA) {
                 if (!isLastHebrewConsonantInWordWithoutVowel(letters, ii)
-                        && (isStartOfWord(letters, previousConsonantPosition) ||
-                        !letters[previousConsonantPosition].hasNoDagesh() ||
-                        isAfterLongUnstressedVowel(letters, previousConsonantPosition) ||
+                        && (isStartOfWord(letters, currentConsonantPosition) ||
+                        !letters[currentConsonantPosition].hasNoDagesh() ||
+                        isAfterLongUnstressedVowel(letters, currentConsonantPosition) ||
                         hasAnyPointing(input, previousConsonantPosition, true, SHEVA))
-                        && !isAfterShortUnstressedVowel(letters, previousConsonantPosition)) {
+                        && !(isAfterShortUnstressedVowel(letters, currentConsonantPosition)
+                        && letters[ii].hasNoDagesh())) {
                     letters[ii].setSoundingType(SoundingType.SOUNDING);
 
                 } else {
@@ -1125,12 +1128,12 @@ public final class HebrewUtils {
         }
 
         final char consonant = input[currentPosition];
-//        if (isAny(consonant, BET, GIMEL, DALET, KAF, PE, TAV)
-//                && hasAnyPointing(input, currentPosition, false, SHEVA, HATAF_SEGOL, HATAF_PATAH, HATAF_QAMATS)) {
-//            // not dagesh forte if any of those letters
-//            letters[currentPosition].setConsonantType(ConsonantType.SINGLE);
-//            return;
-//        }
+        if (isAny(consonant, BET, GIMEL, DALET, KAF, PE, TAV)
+                && hasAnyPointing(input, currentPosition, false, SHEVA, HATAF_SEGOL, HATAF_PATAH, HATAF_QAMATS)) {
+            // not dagesh forte if any of those letters
+            letters[currentPosition].setConsonantType(ConsonantType.SINGLE);
+            return;
+        }
         letters[currentPosition].setConsonantType(ConsonantType.DOUBLE);
     }
 

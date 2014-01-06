@@ -183,7 +183,10 @@ body, .dropdown-menu {
     padding: 5px;
     border: 1px solid lightgrey; }
     #columnHolder .column.active {
-      border-color: #d74f4b; }
+      border-color: #d74f4b;
+      border-width: 2px;
+      -webkit-box-shadow: 0 3px 12px rgba(0, 0, 0, 0.175);
+      box-shadow: 0 3px 12px rgba(0, 0, 0, 0.175); }
       #columnHolder .column.active .activeMarker {
         position: absolute;
         top: 0px;

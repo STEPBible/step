@@ -21,7 +21,10 @@
 
     &.active {
       border-color: $activeColor;
-
+      border-width: 2px;
+      -webkit-box-shadow: 0 3px 12px rgba(0, 0, 0, 0.175);
+      box-shadow: 0 3px 12px rgba(0, 0, 0, 0.175);
+      
       .activeMarker {
         position: absolute;
         top: 0px;

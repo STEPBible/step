@@ -9,3 +9,11 @@ body, .dropdown-menu {
   font-size: $defaultFontSize;
 }
 
+ul .glyphicon-ok {
+  margin-right: 10px;
+  color: $headingColour;
+  visibility: hidden;
+  &.active {
+    visibility: visible;
+  }
+}

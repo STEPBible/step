@@ -6,6 +6,10 @@ VERSION = "version";
 REFERENCE = "reference";
 SUBJECT_SEARCH = "subject";
 TEXT_SEARCH = "text";
+GREEK_MEANINGS = "greekMeanings";
+GREEK = "greek";
+HEBREW_MEANINGS = "hebrewMeanings";
+HEBREW = "hebrew";
 STRONG_NUMBER = "strong";
 
 DS_VERSIONS = "allVersions";

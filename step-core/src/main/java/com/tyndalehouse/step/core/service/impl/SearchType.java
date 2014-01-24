@@ -38,6 +38,7 @@ package com.tyndalehouse.step.core.service.impl;
  * @author chrisburrell
  */
 public enum SearchType {
+    PASSAGE(""),
     /**
      * a text search that is delegated to JSword
      */

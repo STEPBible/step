@@ -5,6 +5,13 @@ h1, h2, h3, h4, h5, h6 {
 body, .dropdown-menu {
   font-size: 12px; }
 
+ul .glyphicon-ok {
+  margin-right: 10px;
+  color: #991c32;
+  visibility: hidden; }
+  ul .glyphicon-ok.active {
+    visibility: visible; }
+
 .navbar {
   height: 56px;
   margin-bottom: 0px; }
@@ -161,12 +168,9 @@ body, .dropdown-menu {
   .passageOptionsGroup .passageOptions, .passageOptionsGroup .displayModes {
     direction: ltr;
     text-align: left; }
-    .passageOptionsGroup .passageOptions .glyphicon, .passageOptionsGroup .displayModes .glyphicon {
-      margin-right: 10px;
-      color: #991c32;
-      visibility: hidden; }
-      .passageOptionsGroup .passageOptions .glyphicon.active, .passageOptionsGroup .displayModes .glyphicon.active {
-        visibility: visible; }
+
+.passageContentHolder h2 {
+  margin-top: 0px; }
 
 .mainPanel {
   min-height: 100%;
@@ -339,10 +343,10 @@ body::-webkit-scrollbar-corner {
     float: left; }
 
   .active #columnHolder {
-    width: 83.33333%; }
+    width: 79.16667%; }
 
   .active #sidebar {
-    width: 16.66667%;
+    width: 20.83333%;
     overflow-y: scroll;
     height: 100%; } }
 #sidebar li.closeSidebar {
@@ -359,3 +363,20 @@ body::-webkit-scrollbar-corner {
 #lexicon h2 {
   font-size: 12px;
   margin-bottom: 0px; }
+
+#animateWordle {
+  font-size: 70%;
+  padding-bottom: 4px; }
+
+.scopeContainer {
+  margin-top: 5px;
+  border-bottom: lightgrey solid 1px;
+  padding: 5px; }
+
+#statsContainer {
+  line-height: 1; }
+
+#wordScope input {
+  width: 75%; }
+#wordScope a {
+  cursor: pointer; }

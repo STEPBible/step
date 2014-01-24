@@ -212,7 +212,7 @@ var PassageMenuView = Backbone.View.extend({
             .attr("href", "javascript:void(0)")
             .attr("data-value", value)
             .attr("title", title)
-            .append('<span class="glyphicon glyphicon-ok"></span>')
+            .append(step.util.ui.selectMark())
             .append("<span>" + text + "</span>");
     },
     _updateAvailableOptions: function () {

@@ -36,6 +36,8 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
+import com.tyndalehouse.step.core.service.impl.SearchType;
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.crosswire.jsword.passage.Key;
 import org.crosswire.jsword.versification.Versification;
 
@@ -49,6 +51,8 @@ import com.tyndalehouse.step.core.utils.HeadingsUtil;
  */
 public class OsisWrapper implements Serializable {
     private static final long serialVersionUID = -5651330317995494895L;
+    @JsonIgnore
+    private final Key key;
     private String value;
     private String reference;
     private String osisId;
@@ -64,6 +68,7 @@ public class OsisWrapper implements Serializable {
     private Map<String, List<LexiconSuggestion>> strongNumbers;
     private String options;
     private String selectedOptions;
+    private SearchType searchType = SearchType.PASSAGE;
 
     /**
      * the value to be wrapped
@@ -76,6 +81,7 @@ public class OsisWrapper implements Serializable {
     public OsisWrapper(final String value, final Key key, final String[] languageCode, final Versification v11n,
                        final String masterVersion, final InterlinearMode interlinearMode, final String extraVersions) {
         this.value = value;
+        this.key = key;
         this.masterVersion = masterVersion;
         this.interlinearMode = interlinearMode;
         this.extraVersions = extraVersions;
@@ -252,4 +258,18 @@ public class OsisWrapper implements Serializable {
     public String getSelectedOptions() {
         return selectedOptions;
     }
+
+    /**
+     * @return a JSword key
+     */
+    public Key getKey(){ 
+        return this.key;
+    }
+
+    /**
+     * @return the search type
+     */
+    public SearchType getSearchType() {
+        return this.searchType;
+    }    
 }

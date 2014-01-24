@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.tyndalehouse.step.core.models.LexiconSuggestion;
+import com.tyndalehouse.step.core.service.impl.SearchType;
 
 /**
  * 
@@ -21,6 +22,7 @@ public class SearchResult implements Serializable {
     private String order;
     private List<LexiconSuggestion> definitions;
     private String[] languages;
+    private SearchType searchType;
 
     /**
      * @return the query
@@ -159,5 +161,16 @@ public class SearchResult implements Serializable {
      */
     public String[] getLanguages() {
         return languages;
+    }
+
+    public void setSearchType(final SearchType searchType) {
+        this.searchType = searchType;
+    }
+
+    /**
+     * @return the type of search
+     */
+    public SearchType getSearchType() {
+        return searchType;
     }
 }

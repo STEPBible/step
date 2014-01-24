@@ -571,7 +571,7 @@ step.util = {
                                     nameLink.append(" (");
                                     nameLink.append(item.stepTransliteration);
                                     nameLink.append(", ")
-                                    nameLink.append($("<span>").addClass(self._getFontForStrong(item.strongNumber)).append(item.matchingForm));
+                                    nameLink.append($("<span>").addClass(self.getFontForStrong(item.strongNumber)).append(item.matchingForm));
                                     nameLink.append(")");
                                     nameLink.attr("href", "javascript:void(0)");
                                     nameLink.click(function () {
@@ -664,7 +664,7 @@ step.util = {
          * @returns {string}
          * @private
          */
-        _getFontForStrong: function (strong) {
+        getFontForStrong: function (strong) {
             if (strong[0] == 'H') {
                 return "hbFontSmall";
             } else {

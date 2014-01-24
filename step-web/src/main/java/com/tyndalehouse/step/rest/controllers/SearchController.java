@@ -86,9 +86,8 @@ public class SearchController {
     }
     /**
      * @param items     the list of all items
-     * @param options   current display options
      */
-    public OsisWrapper masterSearch(String items) {
+    public Object masterSearch(String items) {
         return masterSearch(items, "{}");
     }
     
@@ -96,12 +95,11 @@ public class SearchController {
      * @param items     the list of all items
      * @param options   current display options
      */
-    public OsisWrapper masterSearch(String items, String options) {
+    public Object masterSearch(String items, String options) {
         notBlank(items, "Items field is blank", UserExceptionType.APP_MISSING_FIELD);
-        notBlank(items, "Options field is blank", UserExceptionType.APP_MISSING_FIELD);
         String[] tokens = SPLIT_TOKENS.split(items);
         List<SearchToken> searchTokens = new ArrayList<SearchToken>();
-
+        
         for (String t : tokens) {
             int indexOfPrefix = t.indexOf('=');
             if (indexOfPrefix == -1) {

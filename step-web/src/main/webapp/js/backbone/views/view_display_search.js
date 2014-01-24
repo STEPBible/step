@@ -11,12 +11,19 @@ var SearchDisplayView = Backbone.View.extend({
         this.passageContent = this.$el.find(".passageContent");
         this.resultsLabel = step.util.getPassageContainer(this.$el).find("fieldset:visible .resultsLabel");
         this.hasPages = true;
+        this.render({
+            searchQueryResults: this.model.get("data"),
+            pageNumber: 1,
+            masterVersion : undefined,
+            searchArgs : undefined,
+            versionArg : undefined
+        } ,false);
     },
 
     render: function (resultsWrapper, append) {
         var self = this;
         var searchResults = resultsWrapper.searchQueryResults;
-        var query = step.util.undoReplaceSpecialChars(searchResults.query);
+        var query = searchResults.query;
 
         this.args = resultsWrapper.searchArgs;
         this.versionArg = resultsWrapper.versionArg;
@@ -47,7 +54,7 @@ var SearchDisplayView = Backbone.View.extend({
         }
 
         var passageId = this.model.get("passageId");
-        step.fonts.redoTextSize(passageId, results);
+//        step.fonts.redoTextSize(passageId, results);
 
         if(append) {
             this.passageContent.append(results);
@@ -58,8 +65,8 @@ var SearchDisplayView = Backbone.View.extend({
                 self.getMoreResults();
             });
         }
-        step.util.closeInfoErrors(passageId);
-        step.util.ui.doSocialButtons(this.$el.find(".searchToolbar"));
+//        step.util.closeInfoErrors(passageId);
+//        step.util.ui.doSocialButtons(this.$el.find(".searchToolbar"));
 
         this.doTitle();
         step.util.ui.addStrongHandlers(passageId, this.passageContent);
@@ -159,7 +166,7 @@ var SearchDisplayView = Backbone.View.extend({
         this.currentTotal = total;
         this.resultsLabel.html(sprintf(__s.paging_showing_x_to_y_out_of_z_results, start, end, total));
 
-        stepRouter.totalResults[this.model.get("passageId")] = total;
+//        stepRouter.totalResults[this.model.get("passageId")] = total;
     },
 
     _highlightResults: function (results, query) {

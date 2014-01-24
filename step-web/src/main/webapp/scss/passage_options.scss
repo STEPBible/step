@@ -32,14 +32,5 @@
   .passageOptions, .displayModes {
     direction: ltr;
     text-align: left;
-  
-    .glyphicon {
-      margin-right: 10px;
-      color: $headingColour;
-      visibility: hidden;
-      &.active {
-        visibility: visible;
-      }
-    }
   }
 }

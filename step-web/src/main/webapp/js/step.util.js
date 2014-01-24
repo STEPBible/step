@@ -177,6 +177,20 @@ step.util = {
 
         return s.match(/^\s*$/g) != null;
     },
+    activePassageId: function (val) {
+        if (val) {
+            step.activePassageId = val;
+        }
+
+        if (!step.activePassageId) {
+            step.activePassageId = 0;
+        }
+
+        return step.activePassageId;
+    },
+    activePassage: function () {
+        return step.passages.at(this.activePassageId());
+    },
     isSeptuagintVersion: function (item) {
         return $.inArray(item.initials || item, step.util.septuagintVersions) != -1;
     },
@@ -221,6 +235,9 @@ step.util = {
         };
     },
     ui: {
+        selectMark: function () {
+            return '<span class="glyphicon glyphicon-ok"></span>';
+        },
 //        createButton: function (options) {
 //            var button = $("<button></button>").addClass("btn btn-default btn-sm").attr("type", "button");
 //            if(options.icon) {
@@ -294,41 +311,48 @@ step.util = {
                 passageId = step.passage.getPassageId(s);
             }
 
-            require(["sidebar"], function(module) {
-                step.util.ui.initSidebar('definition', { strong: strong, morph: morph});
-                step.util.ui.openStrongNumber(strong, morph)
+
+            step.util.ui.initSidebar('lexicon', { strong: strong, morph: morph});
+            require(["sidebar", "defaults"], function (module) {
+                step.util.ui.openStrongNumber(strong, morph);
             });
         },
-        initSidebar: function(mode, data) {
-            if(!data) {
-                data = {};
-            }
-            if (!step.sidebar) {
-                step.sidebar = {};
-                step.sidebar = new SidebarModel({
-                    strong: data.strong,
-                    morph: data.morph,
-                    mode: 'definition'
-                });
-                new SidebarList().add(step.sidebar);
-                new SidebarView({
-                    model: step.sidebar,
-                    el: $("#sidebar")
-                });
-            }
+        initSidebar: function (mode, data) {
+            require(["sidebar", "defaults"], function (module) {
+                if (!data) {
+                    data = {};
+                }
+                if (!step.sidebar) {
+                    step.sidebar = {};
+                    step.sidebar = new SidebarModel({
+                        strong: data.strong,
+                        morph: data.morph,
+                        mode: mode
+                    });
+                    new SidebarList().add(step.sidebar);
+                    new SidebarView({
+                        model: step.sidebar,
+                        el: $("#sidebar")
+                    });
+                }
+
+                if (step.sidebar.get("mode") != mode) {
+                    step.sidebar.save({ mode: mode });
+                }
+            });
         },
-        openStrongNumber: function(strong, morph) {
+        openStrongNumber: function (strong, morph) {
             step.sidebar.save({
                 strong: strong,
                 morph: morph,
-                mode: 'definition'
+                mode: 'lexicon'
             });
         },
-        openStats: function(focusedPassage) {
+        openStats: function (focusedPassage) {
             step.sidebar.save({
                 mode: 'stats',
                 focusedPassage: focusedPassage
-            })  
+            })
         },
         addStrongHandlers: function (passageId, passageContent) {
             var that = this;
@@ -337,25 +361,25 @@ step.util = {
             allStrongElements.click(function () {
                 step.util.ui.showDef(this);
             }).hover(function () {
-                    step.passage.higlightStrongs({
-                        passageId: undefined,
-                        strong: $(this).attr('strong'),
-                        morph: $(this).attr('morph'),
-                        classes: "primaryLightBg"
-                    });
-
-                    var hoverContext = this;
-                    step.util.delay(function () {
-                        QuickLexiconModels.at(0).save({
-                            strongNumber: $(hoverContext).attr('strong'),
-                            morph: $(hoverContext).attr('morph'),
-                            element: hoverContext
-                        });
-                    }, 500, 'show-quick-lexicon');
-                }, function () {
-                    step.passage.removeStrongsHighlights(undefined, "primaryLightBg relatedWordEmphasisHover");
-                    step.util.delay(undefined, 0, 'show-quick-lexicon');
+                step.passage.higlightStrongs({
+                    passageId: undefined,
+                    strong: $(this).attr('strong'),
+                    morph: $(this).attr('morph'),
+                    classes: "primaryLightBg"
                 });
+
+                var hoverContext = this;
+                step.util.delay(function () {
+                    QuickLexiconModels.at(0).save({
+                        strongNumber: $(hoverContext).attr('strong'),
+                        morph: $(hoverContext).attr('morph'),
+                        element: hoverContext
+                    });
+                }, 500, 'show-quick-lexicon');
+            }, function () {
+                step.passage.removeStrongsHighlights(undefined, "primaryLightBg relatedWordEmphasisHover");
+                step.util.delay(undefined, 0, 'show-quick-lexicon');
+            });
         },
         /**
          * Sets the HTML onto the passageContent holder which contains the passage
@@ -441,127 +465,129 @@ step.util = {
             var reference = element.attr("name");
             var self = this;
 
-            var qtip = element.qtip({
-                show: { event: 'mouseenter', solo: true },
-                hide: { event: 'unfocus mouseleave', fixed: true, delay: 200 },
-                position: { my: "bottom center", at: "top center", of: element, viewport: $(window), effect: false },
-                style: { classes: "versePopup noQtipWidth" },
-                overwrite: false,
-                content: {
-                    text: function (event, api) {
-                        //otherwise, exciting new strong numbers to apply:
-                        $.getSafe(BIBLE_GET_STRONGS_AND_SUBJECTS, [version, reference], function (data) {
-                            for (var key in data.strongData) {
-                                var value = data.strongData[key];
+            require(["qtip"], function () {
+                var qtip = element.qtip({
+                    show: { event: 'mouseenter', solo: true },
+                    hide: { event: 'unfocus mouseleave', fixed: true, delay: 200 },
+                    position: { my: "bottom center", at: "top center", of: element, viewport: $(window), effect: false },
+                    style: { classes: "versePopup noQtipWidth" },
+                    overwrite: false,
+                    content: {
+                        text: function (event, api) {
+                            //otherwise, exciting new strong numbers to apply:
+                            $.getSafe(BIBLE_GET_STRONGS_AND_SUBJECTS, [version, reference], function (data) {
+                                for (var key in data.strongData) {
+                                    var value = data.strongData[key];
 
-                                var strongTable = $("<table>").addClass("verseNumberStrongs");
-                                //there may be multiple values of this kind of format:
-                                var bookKey = key.substring(0, key.indexOf('.'));
-                                var internalVerseLink = element;
+                                    var strongTable = $("<table>").addClass("verseNumberStrongs");
+                                    //there may be multiple values of this kind of format:
+                                    var bookKey = key.substring(0, key.indexOf('.'));
+                                    var internalVerseLink = element;
 
-                                if (internalVerseLink[0] == undefined) {
-                                    //no point in continuing here, since we have no verse to attach it to.
-                                    return;
-                                }
-
-                                var header = $("<tr>");
-                                header.append("<th>");
-                                header.append($("<th>").append(__s.bible_book));
-                                header.append($("<th>").append(data.ot ? __s.OT : __s.NT));
-                                strongTable.append(header);
-
-                                var row;
-                                $.each(value, function (i, item) {
-                                    var even = (i % 2) == 0;
-
-                                    if (even) {
-                                        row = $("<tr>");
-                                        strongTable.append(row);
+                                    if (internalVerseLink[0] == undefined) {
+                                        //no point in continuing here, since we have no verse to attach it to.
+                                        return;
                                     }
 
-                                    var searchCell = $("<td>");
-                                    row.append(searchCell);
+                                    var header = $("<tr>");
+                                    header.append("<th>");
+                                    header.append($("<th>").append(__s.bible_book));
+                                    header.append($("<th>").append(data.ot ? __s.OT : __s.NT));
+                                    strongTable.append(header);
 
-                                    //add search icon
-                                    searchCell.append(self._addLinkToLexicalSearch(passageId, "ui-icon ui-icon-search verseStrongSearch", "sameWordSearch", item.strongNumber, null, __s.search_for_this_word, ""));
-                                    searchCell.append(self._addLinkToLexicalSearch(passageId, "ui-icon ui-icon-zoomin verseStrongSearch", "relatedWordSearch", item.strongNumber, null, __s.search_for_related_words, ""));
+                                    var row;
+                                    $.each(value, function (i, item) {
+                                        var even = (i % 2) == 0;
 
-                                    var nameLink = $("<a>");
-                                    nameLink.append(item.gloss);
-                                    nameLink.append(" (");
-                                    nameLink.append(item.stepTransliteration);
-                                    nameLink.append(", ")
-                                    nameLink.append($("<span>").addClass(self._getFontForStrong(item.strongNumber)).append(item.matchingForm));
-                                    nameLink.append(")");
-                                    nameLink.attr("href", "javascript:void(0)");
-                                    nameLink.click(function () {
-                                        showDef(item.strongNumber, passageId);
-                                    });
-                                    searchCell.append(nameLink);
+                                        if (even) {
+                                            row = $("<tr>");
+                                            strongTable.append(row);
+                                        }
 
-                                    var bookCount = $("<td>");
-                                    bookCount.append(self._addLinkToLexicalSearch(passageId, "strongCount", "sameWordSearch",
-                                        item.strongNumber, bookKey, "", sprintf(__s.times, data.counts[item.strongNumber].book)));
-                                    row.append(bookCount);
+                                        var searchCell = $("<td>");
+                                        row.append(searchCell);
 
-                                    var testamentCount = $("<td>");
-                                    if (even) {
-                                        testamentCount.addClass("even");
-                                    }
-                                    testamentCount.append(self._addLinkToLexicalSearch(passageId, "strongCount", "sameWordSearch",
-                                        item.strongNumber, null, "", sprintf(__s.times, data.counts[item.strongNumber].bible)));
-                                    row.append(testamentCount);
-                                });
+                                        //add search icon
+                                        searchCell.append(self._addLinkToLexicalSearch(passageId, "ui-icon ui-icon-search verseStrongSearch", "sameWordSearch", item.strongNumber, null, __s.search_for_this_word, ""));
+                                        searchCell.append(self._addLinkToLexicalSearch(passageId, "ui-icon ui-icon-zoomin verseStrongSearch", "relatedWordSearch", item.strongNumber, null, __s.search_for_related_words, ""));
 
-                                var strongPopup = $("<span>");
-                                strongPopup.append(strongTable);
-                                strongPopup.append("<br />");
-
-                                if (data.significantlyRelatedVerses[key] && data.significantlyRelatedVerses[key].length != 0) {
-                                    var related = $("<a>").addClass("related").attr("href", "javascript:void(0)").append(__s.see_related_verses).click(function () {
-                                        getRelatedVerses(data.significantlyRelatedVerses[key].join('; '), passageId);
-                                    });
-                                    strongPopup.append(related);
-                                    strongPopup.append("&nbsp;&nbsp;");
-                                }
-
-                                if (data.relatedSubjects[key] && data.relatedSubjects[key].total != 0) {
-                                    //attach data to internal link (so that it goes when passage goes
-                                    var subjects = data.relatedSubjects[key];
-                                    $.data(internalVerseLink[0], "relatedSubjects", subjects);
-
-                                    var subjectOverview = "";
-                                    var i = 0;
-                                    for (i = 0; i < 5 && i < subjects.results.length; i++) {
-                                        subjectOverview += subjects.results[i].root;
-                                        subjectOverview += ", ";
-                                        subjectOverview += subjects.results[i].heading;
-                                        subjectOverview += " ; ";
-                                    }
-
-                                    if (i < subjects.results.length) {
-                                        subjectOverview += "...";
-                                    }
-
-                                    var related = $("<a>").addClass("related").attr("href", "javascript:void(0)")
-                                        .append(__s.see_related_subjects)
-                                        .attr("title", subjectOverview.replace(/'/g, "&apos;"))
-                                        .click(function () {
-                                            getRelatedSubjects(key, passageId);
+                                        var nameLink = $("<a>");
+                                        nameLink.append(item.gloss);
+                                        nameLink.append(" (");
+                                        nameLink.append(item.stepTransliteration);
+                                        nameLink.append(", ")
+                                        nameLink.append($("<span>").addClass(self.getFontForStrong(item.strongNumber)).append(item.matchingForm));
+                                        nameLink.append(")");
+                                        nameLink.attr("href", "javascript:void(0)");
+                                        nameLink.click(function () {
+                                            showDef(item.strongNumber, passageId);
                                         });
-                                    strongPopup.append(related);
-                                    strongPopup.append("&nbsp;&nbsp;");
-                                }
+                                        searchCell.append(nameLink);
 
-                                api.set('content.text', strongPopup);
-                                //only expect one entry back.
-                                break;
-                            }
-                        });
+                                        var bookCount = $("<td>");
+                                        bookCount.append(self._addLinkToLexicalSearch(passageId, "strongCount", "sameWordSearch",
+                                            item.strongNumber, bookKey, "", sprintf(__s.times, data.counts[item.strongNumber].book)));
+                                        row.append(bookCount);
+
+                                        var testamentCount = $("<td>");
+                                        if (even) {
+                                            testamentCount.addClass("even");
+                                        }
+                                        testamentCount.append(self._addLinkToLexicalSearch(passageId, "strongCount", "sameWordSearch",
+                                            item.strongNumber, null, "", sprintf(__s.times, data.counts[item.strongNumber].bible)));
+                                        row.append(testamentCount);
+                                    });
+
+                                    var strongPopup = $("<span>");
+                                    strongPopup.append(strongTable);
+                                    strongPopup.append("<br />");
+
+                                    if (data.significantlyRelatedVerses[key] && data.significantlyRelatedVerses[key].length != 0) {
+                                        var related = $("<a>").addClass("related").attr("href", "javascript:void(0)").append(__s.see_related_verses).click(function () {
+                                            getRelatedVerses(data.significantlyRelatedVerses[key].join('; '), passageId);
+                                        });
+                                        strongPopup.append(related);
+                                        strongPopup.append("&nbsp;&nbsp;");
+                                    }
+
+                                    if (data.relatedSubjects[key] && data.relatedSubjects[key].total != 0) {
+                                        //attach data to internal link (so that it goes when passage goes
+                                        var subjects = data.relatedSubjects[key];
+                                        $.data(internalVerseLink[0], "relatedSubjects", subjects);
+
+                                        var subjectOverview = "";
+                                        var i = 0;
+                                        for (i = 0; i < 5 && i < subjects.results.length; i++) {
+                                            subjectOverview += subjects.results[i].root;
+                                            subjectOverview += ", ";
+                                            subjectOverview += subjects.results[i].heading;
+                                            subjectOverview += " ; ";
+                                        }
+
+                                        if (i < subjects.results.length) {
+                                            subjectOverview += "...";
+                                        }
+
+                                        var related = $("<a>").addClass("related").attr("href", "javascript:void(0)")
+                                            .append(__s.see_related_subjects)
+                                            .attr("title", subjectOverview.replace(/'/g, "&apos;"))
+                                            .click(function () {
+                                                getRelatedSubjects(key, passageId);
+                                            });
+                                        strongPopup.append(related);
+                                        strongPopup.append("&nbsp;&nbsp;");
+                                    }
+
+                                    api.set('content.text', strongPopup);
+                                    //only expect one entry back.
+                                    break;
+                                }
+                            });
+                        }
                     }
-                }
+                });
+                qtip.qtip("show");
             });
-            qtip.qtip("show");
         },
 
         _addLinkToLexicalSearch: function (passageId, classes, functionName, strongNumber, bookKey, title, innerText) {
@@ -583,7 +609,7 @@ step.util = {
          * @returns {string}
          * @private
          */
-        _getFontForStrong: function (strong) {
+        getFontForStrong: function (strong) {
             if (strong[0] == 'H') {
                 return "hbFontSmall";
             } else {

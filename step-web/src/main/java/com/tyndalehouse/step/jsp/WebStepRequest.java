@@ -39,6 +39,7 @@ import java.util.*;
 import javax.servlet.http.HttpServletRequest;
 
 import com.tyndalehouse.step.core.models.KeyWrapper;
+import com.tyndalehouse.step.core.models.OsisWrapper;
 import com.tyndalehouse.step.core.models.stats.ScopeType;
 import com.tyndalehouse.step.core.models.stats.StatType;
 import com.tyndalehouse.step.core.models.stats.CombinedPassageStats;
@@ -68,12 +69,12 @@ public class WebStepRequest {
     private final AnalysisService analysis;
     private final Injector injector;
     private final String reference;
-    private KeyWrapper referenceKey;
     private final String version;
-    private final BibleInformationService bible;
+    private final OsisWrapper osisWrapper;
     private KeyWrapper nextChapter;
     private KeyWrapper previousChapter;
     private CombinedPassageStats stats;
+    private final BibleInformationService bible;
     private String description;
 
     /**
@@ -83,33 +84,31 @@ public class WebStepRequest {
      * @param injector the injector for the application
      */
     public WebStepRequest(final Injector injector, final HttpServletRequest request) {
-        this(injector, request,
-                init(request, VERSION_0_PARAM, getDefaults(injector).getDefaultVersion1()),
-                init(request, REF_0_PARAM, getDefaults(injector).getDefaultReference1())
-                );
-    }
-
-    /**
-     * Constructs the web request, with a properly formed key
-     * @param injector the injector
-     * @param request the servlet request
-     * @param version the version of the bible to look up
-     * @param reference the reference
-     */
-    public WebStepRequest(final Injector injector, final HttpServletRequest request, final String version, final String reference) {
+        final Object passage = request.getAttribute("passage");
+        if(passage instanceof OsisWrapper) {
+            this.osisWrapper = (OsisWrapper) passage;
+        } else {
+            this.osisWrapper = null;
+        }
+    
+        if(osisWrapper == null) {
+            final UiDefaults defaults = getDefaults(injector);
+            this.reference = defaults.getDefaultReference1();
+            this.version = defaults.getDefaultVersion1();
+        } else {
+            this.reference = osisWrapper.getReference();
+            this.version = osisWrapper.getMasterVersion();
+        }
+        
+        this.bible = injector.getInstance(BibleInformationService.class);
         this.injector = injector;
         this.request = request;
         this.analysis = injector.getInstance(AnalysisService.class);
-        this.bible = injector.getInstance(BibleInformationService.class);
-        this.reference = reference;
-        this.version = version;
         try {
-            this.referenceKey = bible.getKeyInfo(this.reference, this.version, this.version);
-            this.description = bible.getPlainText(this.version, this.reference, true).replaceAll("[<>'\",.:;()]", "");
+            this.description =  ""; 
             stats = this.analysis.getStatsForPassage(this.version, this.reference, StatType.TEXT, ScopeType.PASSAGE, false);
         } catch (Exception ex) {
             LOG.error(ex.getMessage(), ex);
-            this.referenceKey = null;
             this.description = "";
         }
     }
@@ -281,7 +280,7 @@ public class WebStepRequest {
                 return "STEP | Scripture Tools for Every Person";
             }
 
-            String keyName = this.referenceKey != null ? this.referenceKey.getName() + " | " : "";
+            String keyName = this.osisWrapper != null ? this.osisWrapper.getReference() + " | " : "";
 
             final String currentTitle = keyName + this.getThisVersion() + " | STEP | ";
             int currentLength = currentTitle.length();

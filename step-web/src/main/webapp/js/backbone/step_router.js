@@ -1,31 +1,36 @@
 var StepRouter = Backbone.Router.extend({
     routes : {
-        "!search/:query": "doMasterSearch"
+        "search?q=:query": "doMasterSearch"
     },
     initialize: function() {
     },
     
     navigateSearch : function(args, historyOptions) {
-        var activePassageId = 0;
+        var activePassageId = step.util.activePassageId();
         var passageOptions = step.passages.at(activePassageId).get("data");
         var options = passageOptions.selectedOptions || "";
         var interlinearMode =  passageOptions.interlinearMode || "";
             
         var urlStub = "";
         if(step.util.isBlank(args)) {
-            var previousUrl = Backbone.history.getFragment() || "";
+            var previousUrl = Backbone.history.fragment || "";
             previousUrl = previousUrl
                 .replace(/options=[_a-zA-Z]*/ig, "")
                 .replace(/display=[_a-zA-Z]*/ig, "")
+                .replace(/&debug/ig, "")
                 .replace(/\|+$/ig, "");
 
             urlStub += previousUrl;
         } else {
-            urlStub += "!search/" + args;
+            urlStub += "search?q=" + args;
         }
         urlStub += "|options=" + options;
         if(interlinearMode != undefined && interlinearMode != "NONE") {
             urlStub += "|display=" + interlinearMode;
+        }
+        
+        if($.getUrlVars().indexOf("debug") != -1) {
+            urlStub += "&debug"
         }
         
         if(!historyOptions) {
@@ -34,12 +39,15 @@ var StepRouter = Backbone.Router.extend({
         this.navigate(urlStub, historyOptions);
     },
     getShareableColumnUrl : function(element, encodeFragment) {
-        return "http://www.stepbible.org/#" + encodeURI(Backbone.history.getFragment());
+        return "http://www.stepbible.org/" + encodeURI(Backbone.history.fragment);
     },
     doMasterSearch : function(query) {
             var startTime = new Date().getTime();
-            var activePassageId = 0;
+            var activePassageId = step.util.activePassageId();
             
+            //remove debug if present
+            query = query.replace(/&debug/ig, "");
+        
             $.getPassageSafe({
                 url: SEARCH_MASTER,
                 args: [query],
@@ -48,14 +56,7 @@ var StepRouter = Backbone.Router.extend({
                     
                     var passageModel;
                     if(activePassageId < step.passages.length) {
-                        for(var i = 0; i < step.passages.length; i++) {
-                            passageModel = step.passages.at(activePassageId);
-                            if(passageModel.get("passageId") == activePassageId) {
-                                break;
-                            } else {
-                                passageModel = undefined;
-                            }
-                        }
+                        passageModel = step.passages.at(activePassageId);
                     }
                     
                     if(passageModel == null) {
@@ -75,9 +76,40 @@ var StepRouter = Backbone.Router.extend({
                     
                     
                     //TODO: revisit, using same views?
-                    new PassageDisplayView({
-                        model: passageModel
-                    });
+                    if(!text.searchType) {
+                        new PassageDisplayView({
+                            model: passageModel
+                        });
+                    } else {
+                        require(["search", "defaults"], function(module) {
+                            switch(text.searchType) {
+                                case "TEXT":
+                                    new TextDisplayView({
+                                        model: passageModel
+                                    });
+                                    break;
+                                case "SUBJECT_SIMPLE" : 
+                                case "SUBJECT_EXTENDED" :
+                                case "SUBJECT_FULL" : 
+                                case "SUBJECT_RELATED" : 
+                                    new SubjectDisplayView({
+                                        model: passageModel
+                                    });
+                                    break;
+                                case "ORIGINAL_MEANING" : 
+                                case "ORIGINAL_GREEK_EXACT" : 
+                                case "ORIGINAL_GREEK_FORMS" : 
+                                case "ORIGINAL_GREEK_RELATED" : 
+                                case "ORIGINAL_HEBREW_EXACT" : 
+                                case "ORIGINAL_HEBREW_FORMS" : 
+                                case "ORIGINAL_HEBREW_RELATED": 
+                                    new WordDisplayView({
+                                        model: passageModel 
+                                    });
+                                    break;
+                            }
+                        });
+                    }
                 },
                 passageId: 0,
                 level: 'error'

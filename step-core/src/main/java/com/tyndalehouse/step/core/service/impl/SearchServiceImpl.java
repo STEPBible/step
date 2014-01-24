@@ -32,13 +32,46 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.service.impl;
 
-import static com.tyndalehouse.step.core.service.helpers.OriginalWordUtils.STRONG_NUMBER_FIELD;
-import static com.tyndalehouse.step.core.service.helpers.OriginalWordUtils.convertToSuggestion;
-import static com.tyndalehouse.step.core.service.helpers.OriginalWordUtils.getFilter;
-import static com.tyndalehouse.step.core.service.impl.VocabularyServiceImpl.padStrongNumber;
-import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
-import static java.lang.Character.isDigit;
+import com.tyndalehouse.step.core.data.EntityDoc;
+import com.tyndalehouse.step.core.data.EntityIndexReader;
+import com.tyndalehouse.step.core.data.EntityManager;
+import com.tyndalehouse.step.core.exceptions.LuceneSearchException;
+import com.tyndalehouse.step.core.exceptions.TranslatedException;
+import com.tyndalehouse.step.core.models.InterlinearMode;
+import com.tyndalehouse.step.core.models.LexiconSuggestion;
+import com.tyndalehouse.step.core.models.OsisWrapper;
+import com.tyndalehouse.step.core.models.SearchToken;
+import com.tyndalehouse.step.core.models.search.KeyedSearchResultSearchEntry;
+import com.tyndalehouse.step.core.models.search.KeyedVerseContent;
+import com.tyndalehouse.step.core.models.search.LexicalSearchEntry;
+import com.tyndalehouse.step.core.models.search.SearchEntry;
+import com.tyndalehouse.step.core.models.search.SearchResult;
+import com.tyndalehouse.step.core.models.search.TimelineEventSearchEntry;
+import com.tyndalehouse.step.core.models.search.VerseSearchEntry;
+import com.tyndalehouse.step.core.service.BibleInformationService;
+import com.tyndalehouse.step.core.service.SearchService;
+import com.tyndalehouse.step.core.service.TimelineService;
+import com.tyndalehouse.step.core.service.helpers.GlossComparator;
+import com.tyndalehouse.step.core.service.helpers.OriginalSpellingComparator;
+import com.tyndalehouse.step.core.service.jsword.JSwordMetadataService;
+import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
+import com.tyndalehouse.step.core.service.jsword.JSwordSearchService;
+import com.tyndalehouse.step.core.service.search.SubjectSearchService;
+import com.tyndalehouse.step.core.service.search.impl.OriginalWordSuggestionServiceImpl;
+import com.tyndalehouse.step.core.utils.StringConversionUtils;
+import com.tyndalehouse.step.core.utils.StringUtils;
+import org.apache.lucene.queryParser.MultiFieldQueryParser;
+import org.apache.lucene.queryParser.ParseException;
+import org.apache.lucene.queryParser.QueryParser;
+import org.apache.lucene.queryParser.QueryParser.Operator;
+import org.apache.lucene.search.Query;
+import org.apache.lucene.util.Version;
+import org.crosswire.jsword.passage.Key;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -52,43 +85,12 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
-import com.tyndalehouse.step.core.exceptions.LuceneSearchException;
-import com.tyndalehouse.step.core.models.InterlinearMode;
-import com.tyndalehouse.step.core.models.SearchToken;
-import com.tyndalehouse.step.core.models.search.*;
-import com.tyndalehouse.step.core.service.BibleInformationService;
-import com.tyndalehouse.step.core.service.jsword.JSwordMetadataService;
-import org.apache.lucene.queryParser.MultiFieldQueryParser;
-import org.apache.lucene.queryParser.ParseException;
-import org.apache.lucene.queryParser.QueryParser;
-import org.apache.lucene.queryParser.QueryParser.Operator;
-import org.apache.lucene.search.BooleanClause;
-import org.apache.lucene.search.BooleanQuery;
-import org.apache.lucene.search.Query;
-import org.apache.lucene.util.Version;
-import org.crosswire.jsword.passage.Key;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.tyndalehouse.step.core.data.EntityDoc;
-import com.tyndalehouse.step.core.data.EntityIndexReader;
-import com.tyndalehouse.step.core.data.EntityManager;
-import com.tyndalehouse.step.core.exceptions.TranslatedException;
-import com.tyndalehouse.step.core.models.LexiconSuggestion;
-import com.tyndalehouse.step.core.models.OsisWrapper;
-import com.tyndalehouse.step.core.service.SearchService;
-import com.tyndalehouse.step.core.service.TimelineService;
-import com.tyndalehouse.step.core.service.helpers.GlossComparator;
-import com.tyndalehouse.step.core.service.helpers.OriginalSpellingComparator;
-import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
-import com.tyndalehouse.step.core.service.jsword.JSwordSearchService;
-import com.tyndalehouse.step.core.service.search.SubjectSearchService;
-import com.tyndalehouse.step.core.service.search.impl.OriginalWordSuggestionServiceImpl;
-import com.tyndalehouse.step.core.utils.StringConversionUtils;
-import com.tyndalehouse.step.core.utils.StringUtils;
+import static com.tyndalehouse.step.core.service.helpers.OriginalWordUtils.STRONG_NUMBER_FIELD;
+import static com.tyndalehouse.step.core.service.helpers.OriginalWordUtils.convertToSuggestion;
+import static com.tyndalehouse.step.core.service.helpers.OriginalWordUtils.getFilter;
+import static com.tyndalehouse.step.core.service.impl.VocabularyServiceImpl.padStrongNumber;
+import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
+import static java.lang.Character.isDigit;
 
 /**
  * A federated search service implementation. see {@link SearchService}
@@ -121,12 +123,12 @@ public class SearchServiceImpl implements SearchService {
     private final BibleInformationService bibleInfoService;
 
     /**
-     * @param jswordSearch  the search service
-     * @param jsword        used to convert references to numerals, etc.
-     * @param subjects      the service that executes Subject searches
-     * @param timeline      the timeline service
+     * @param jswordSearch     the search service
+     * @param jsword           used to convert references to numerals, etc.
+     * @param subjects         the service that executes Subject searches
+     * @param timeline         the timeline service
      * @param bibleInfoService the service to get information about various bibles/commentaries
-     * @param entityManager the manager for all entities stored in lucene
+     * @param entityManager    the manager for all entities stored in lucene
      */
     @Inject
     public SearchServiceImpl(final JSwordSearchService jswordSearch, final JSwordPassageService jsword,
@@ -161,34 +163,64 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
-    public OsisWrapper runQuery(final List<SearchToken> searchTokens) {
-            final List<String> versions = new ArrayList<String>(4);
-            final StringBuilder references = new StringBuilder();
-            String options = "";
-            String displayMode = InterlinearMode.NONE.name();
+    public Object runQuery(final List<SearchToken> searchTokens) {
+        final List<String> versions = new ArrayList<String>(4);
+        final StringBuilder references = new StringBuilder();
+        String options = "";
+        String displayMode = InterlinearMode.NONE.name();
+        final List<String> strongs = new ArrayList<String>();
 
-            for (SearchToken token : searchTokens) {
-                if (SearchToken.VERSION.equals(token.getTokenType())) {
-                    versions.add(token.getToken());
-                } else if (SearchToken.REFERENCE.equals(token.getTokenType())) {
-                    if (references.length() > 0) {
-                        references.append(';');
-                    }
-                    references.append(token.getToken());
-                } else if(SearchToken.OPTIONS.equals(token.getTokenType())) {
-                    options = token.getToken();
-                } else if(SearchToken.DISPLAY_MODE.equals(token.getTokenType())) {
-                    displayMode = token.getToken();
+        for (SearchToken token : searchTokens) {
+            if (SearchToken.VERSION.equals(token.getTokenType())) {
+                versions.add(token.getToken());
+            } else if (SearchToken.REFERENCE.equals(token.getTokenType())) {
+                if (references.length() > 0) {
+                    references.append(';');
                 }
+                references.append(token.getToken());
+            } else if (SearchToken.OPTIONS.equals(token.getTokenType())) {
+                options = token.getToken();
+            } else if (SearchToken.DISPLAY_MODE.equals(token.getTokenType())) {
+                displayMode = token.getToken();
+            } else if (SearchToken.STRONG_NUMBER.equals(token.getTokenType())) {
+                strongs.add(token.getToken());
             }
+        }
 
-            if (versions.size() == 0) {
-                versions.add(JSwordPassageService.REFERENCE_BOOK);
+        if (versions.size() == 0) {
+            versions.add(JSwordPassageService.REFERENCE_BOOK);
+        }
+
+        return runCorrectSearch(versions, references.toString(), options, displayMode, strongs);
+    }
+
+    /**
+     * Establishes what the correct search should be and kicks off the right type of search
+     *
+     * @param versions    the list of versions
+     * @param references  the list of references
+     * @param options     the options
+     * @param displayMode the display mode
+     * @return the results
+     */
+    private Object runCorrectSearch(final List<String> versions, final String references, final String options, final String displayMode, final List<String> strongs) {
+
+        if (strongs.size() != 0) {
+            //we will prefer a word search to anything else...
+            final List<IndividualSearch> individualSearches = new ArrayList<IndividualSearch>(2);
+            for (final String strong : strongs) {
+                boolean isGreek = strong.charAt(0) == 'G';
+                individualSearches.add(new IndividualSearch(
+                        isGreek ? SearchType.ORIGINAL_GREEK_FORMS : SearchType.ORIGINAL_HEBREW_FORMS, versions, strong, references));
             }
+            SearchQuery sq = new SearchQuery(individualSearches.toArray(new IndividualSearch[individualSearches.size()]));
+            return this.search(sq);
+        }
 
-            return this.bibleInfoService.getPassageText(
-                    versions.get(0), references.toString(), options,
-                    getExtraVersions(versions), displayMode);
+        return this.bibleInfoService.getPassageText(
+                versions.get(0), references, options,
+                getExtraVersions(versions), displayMode);
+
     }
 
     /**
@@ -200,14 +232,14 @@ public class SearchServiceImpl implements SearchService {
     private String getExtraVersions(final List<String> versions) {
         StringBuilder sb = new StringBuilder(128);
         for (int i = 1; i < versions.size(); i++) {
-            if(sb.length() > 0) {
+            if (sb.length() > 0) {
                 sb.append(',');
             }
             sb.append(versions.get(i));
         }
         return sb.toString();
     }
-    
+
     @Override
     public SearchResult search(final SearchQuery sq) {
         try {
@@ -248,6 +280,7 @@ public class SearchServiceImpl implements SearchService {
         // join the keys
         // return the results
 
+        result.setSearchType(sq.getSearches()[0].getType());
         result.setTimeTookTotal(System.currentTimeMillis() - start);
         result.setQuery(sq.getOriginalQuery());
         specialSort(sq, result);
@@ -257,7 +290,8 @@ public class SearchServiceImpl implements SearchService {
 
     /**
      * Puts the languages of each module into the result returned to the UI.
-     * @param sq the search query
+     *
+     * @param sq     the search query
      * @param result the result
      */
     private void enrichWithLanguages(final SearchQuery sq, final SearchResult result) {
@@ -336,7 +370,7 @@ public class SearchServiceImpl implements SearchService {
      * @return a new list of results, now ordered
      */
     private List<LexicalSearchEntry> rebuildSearchResults(final List<EntityDoc> lexiconDefinitions,
-                                                   final Map<String, List<LexicalSearchEntry>> keyedOrder) {
+                                                          final Map<String, List<LexicalSearchEntry>> keyedOrder) {
         final List<LexicalSearchEntry> newOrder = new ArrayList<LexicalSearchEntry>();
         for (final EntityDoc def : lexiconDefinitions) {
             final List<LexicalSearchEntry> list = keyedOrder.get(def.get(STRONG_NUMBER_FIELD));
@@ -380,7 +414,7 @@ public class SearchServiceImpl implements SearchService {
 
             // should never happen
             if (!added) {
-                if(entry instanceof LexicalSearchEntry) {
+                if (entry instanceof LexicalSearchEntry) {
                     noOrder.add((LexicalSearchEntry) entry);
                 } else {
                     LOGGER.error("Attempting to sort non LexicalSearchEntry.");
@@ -765,25 +799,24 @@ public class SearchServiceImpl implements SearchService {
     private Set<String> adaptQueryForMeaningSearch(final SearchQuery sq) {
         final String query = sq.getCurrentSearch().getQuery();
 
-        
-        
+
         final QueryParser queryParser = new QueryParser(Version.LUCENE_30, "translationsStem",
                 this.definitions.getAnalyzer());
         queryParser.setDefaultOperator(Operator.OR);
-                
+
         try {
             //we need to also add the step gloss, but since we need the analyser for stems,
             //we want to use the query parser that does the tokenization for us
             //could probably do better if required
             String[] terms = StringUtils.split(query);
             StringBuilder finalQuery = new StringBuilder();
-            for(String term : terms) {
+            for (String term : terms) {
                 final String escapedTerm = QueryParser.escape(term);
                 finalQuery.append(escapedTerm);
                 finalQuery.append(" stepGlossStem:");
                 finalQuery.append(escapedTerm);
             }
-            
+
             final Query parsed = queryParser.parse("-stopWord:true " + finalQuery.toString());
             final EntityDoc[] matchingMeanings = this.definitions.search(parsed);
 

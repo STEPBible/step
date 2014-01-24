@@ -5,9 +5,16 @@ requirejs.config({
         sidebar: ["js/backbone/views/view_sidebar"],
         qtip : ["js/jquery-extensions/jquery-qtip"],
         select2 : ["libs/select2"],
-        defaults: ["js/defaults/step.defaults"]
+        defaults: ["js/defaults/step.defaults"],
+        search: ["js/backbone/views/view_display_word"],
+        _search_display_view: ["js/backbone/views/view_display_search"],
+        _other_search: ["js/backbone/views/view_display_subject"]
+        
     },
     shim : {
-        "sidebar" : ["js/backbone/models/model_sidebar"]
+        "sidebar" : ["js/backbone/models/model_sidebar", "js/backbone/views/view_wordle_stat.js",
+                     "libs/jquery.tagcloud.js"],
+        "search" : ["_search_display_view", "_other_search"],
+        _other_search: ["_search_display_view", "js/backbone/views/view_display_text", "libs/dohighlight-min.js"]
     }
 });

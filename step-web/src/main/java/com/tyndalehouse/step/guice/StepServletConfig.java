@@ -37,6 +37,7 @@ import java.util.Locale;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 
+import com.tyndalehouse.step.rest.controllers.SearchPageController;
 import org.crosswire.common.util.Reporter;
 import org.crosswire.common.util.ReporterEvent;
 import org.crosswire.common.util.ReporterListener;
@@ -83,6 +84,7 @@ public class StepServletConfig extends GuiceServletContextListener {
                     protected void configureServlets() {
                         serve("/" + ExternalPoweredByFilter.EXTERNAL_PREFIX + "*")
                                 .with(FrontController.class);
+                        serve("/search*").with(SearchPageController.class);
                         serve("/rest/*").with(FrontController.class);
                         serve("/commentary_images/*").with(ImageController.class);
                         serve("/index.jsp");

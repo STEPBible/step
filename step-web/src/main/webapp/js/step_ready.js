@@ -31,5 +31,5 @@ $(window).on("load", function() {
     });
     
     step.router = new StepRouter();
-    Backbone.history.start();
+    Backbone.history.start({pushState: true});
 });

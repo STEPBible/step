@@ -206,7 +206,9 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
 
         LOGGER.debug("Total of [{}] results.", total);
         final Key newResults = rankAndTrimResults(sq, results);
-        LOGGER.debug("Trimmed down to [{}].", newResults.getCardinality());
+        if(LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Trimmed down to [{}].", newResults.getCardinality());
+        }
         return getResultsFromTrimmedKeys(sq, version, total, newResults, options);
 
 

@@ -98,14 +98,19 @@ public class SearchQuery {
      * 
      * @param search the search that should be carried out
      */
-    public SearchQuery(final IndividualSearch search) {
-        this.searches = new IndividualSearch[] { search };
-        this.pageSize = 0;
-        this.pageNumber = 0;
-        this.context = 1;
+    public SearchQuery(final IndividualSearch... search) {
+        this.searches = search;
+        this.pageSize = 20;
+        this.pageNumber = 1;
+        this.context = 0;
         this.ranked = false;
         this.sortOrder = "false";
-        this.originalQuery = search.getQuery();
+        
+        StringBuilder sb = new StringBuilder();
+        for(IndividualSearch individualSearch : this.searches) {
+            sb.append(individualSearch.getQuery());
+        }
+        this.originalQuery = sb.toString();
     }
 
     /**

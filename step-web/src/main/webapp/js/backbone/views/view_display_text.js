@@ -60,13 +60,13 @@ var TextDisplayView = SearchDisplayView.extend({
 
     getVerseRow: function getVerseRow(masterVersion, table, contentGenerator, item) {
         var newRow = $("<tr>").addClass("searchResultRow");
-        var buttons = $("<td>").passageButtons({
-            passageId: this.model.get("passageId"),
-            ref: item.key,
-            showChapter: true,
-            version : masterVersion
-        });
-        newRow.append(buttons);
+//        var buttons = $("<td>").passageButtons({
+//            passageId: this.model.get("passageId"),
+//            ref: item.key,
+//            showChapter: true,
+//            version : masterVersion
+//        });
+//        newRow.append(buttons);
         var contentCell = $("<td>").addClass("searchResultRow");
         newRow.append(contentCell);
 

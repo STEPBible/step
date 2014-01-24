@@ -70,5 +70,5 @@ public interface SearchService {
      * @param searchTokens the tokens
      * @return the results from the search/passage lookup
      */
-    OsisWrapper runQuery(List<SearchToken> searchTokens);
+    Object runQuery(List<SearchToken> searchTokens);
 }

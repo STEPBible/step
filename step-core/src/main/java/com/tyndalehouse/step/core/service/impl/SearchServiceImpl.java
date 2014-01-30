@@ -163,12 +163,14 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
-    public Object runQuery(final List<SearchToken> searchTokens) {
+    public Object runQuery(final List<SearchToken> searchTokens, final String options,
+                           final String display, final int page, final String filter, int context) {
         final List<String> versions = new ArrayList<String>(4);
         final StringBuilder references = new StringBuilder();
-        String options = "";
-        String displayMode = InterlinearMode.NONE.name();
-        final List<String> strongs = new ArrayList<String>();
+        final List<String> strongSearches = new ArrayList<String>(1);
+        final List<String> textSearches = new ArrayList<String>(1);
+        final List<String> meaningSearches = new ArrayList<String>(1);
+
 
         for (SearchToken token : searchTokens) {
             if (SearchToken.VERSION.equals(token.getTokenType())) {
@@ -178,12 +180,12 @@ public class SearchServiceImpl implements SearchService {
                     references.append(';');
                 }
                 references.append(token.getToken());
-            } else if (SearchToken.OPTIONS.equals(token.getTokenType())) {
-                options = token.getToken();
-            } else if (SearchToken.DISPLAY_MODE.equals(token.getTokenType())) {
-                displayMode = token.getToken();
             } else if (SearchToken.STRONG_NUMBER.equals(token.getTokenType())) {
-                strongs.add(token.getToken());
+                strongSearches.add(token.getToken());
+            } else if (SearchToken.TEXT_SEARCH.equals(token.getTokenType())) {
+                textSearches.add(token.getToken());
+            } else if (SearchToken.MEANINGS.equals(token.getTokenType())) {
+                meaningSearches.add(token.getToken());
             }
         }
 
@@ -191,36 +193,83 @@ public class SearchServiceImpl implements SearchService {
             versions.add(JSwordPassageService.REFERENCE_BOOK);
         }
 
-        return runCorrectSearch(versions, references.toString(), options, displayMode, strongs);
+        return runCorrectSearch(
+                versions, references.toString(),
+                options, StringUtils.isBlank(display) ? InterlinearMode.NONE.name() : display,
+                strongSearches, textSearches, meaningSearches, page, filter, context);
     }
 
     /**
      * Establishes what the correct search should be and kicks off the right type of search
      *
-     * @param versions    the list of versions
-     * @param references  the list of references
-     * @param options     the options
-     * @param displayMode the display mode
+     *
+     * @param versions       the list of versions
+     * @param references     the list of references
+     * @param options        the options
+     * @param displayMode    the display mode
+     * @param strongSearches the strong searches
+     * @param textSearches   a list of text searches
+     * @param context amount of context to be used in searhc
      * @return the results
      */
-    private Object runCorrectSearch(final List<String> versions, final String references, final String options, final String displayMode, final List<String> strongs) {
-
-        if (strongs.size() != 0) {
-            //we will prefer a word search to anything else...
-            final List<IndividualSearch> individualSearches = new ArrayList<IndividualSearch>(2);
-            for (final String strong : strongs) {
-                boolean isGreek = strong.charAt(0) == 'G';
-                individualSearches.add(new IndividualSearch(
-                        isGreek ? SearchType.ORIGINAL_GREEK_FORMS : SearchType.ORIGINAL_HEBREW_FORMS, versions, strong, references));
-            }
-            SearchQuery sq = new SearchQuery(individualSearches.toArray(new IndividualSearch[individualSearches.size()]));
-            return this.search(sq);
+    private Object runCorrectSearch(final List<String> versions, final String references,
+                                    final String options, final String displayMode,
+                                    final List<String> strongSearches,
+                                    final List<String> textSearches,
+                                    final List<String> meaningSearches,
+                                    final int pageNumber,
+                                    final String filter, 
+                                    final int context) {
+        final List<IndividualSearch> individualSearches = new ArrayList<IndividualSearch>(2);
+        String[] filters = null;
+        if(StringUtils.isNotBlank(filter)) {
+            filters = StringUtils.split(filter);
         }
 
+        //we will prefer a word search to anything else...
+        addWordSearches(versions, references, strongSearches, filters, individualSearches);
+        addSearch(SearchType.ORIGINAL_MEANING, versions, references, meaningSearches, filters, individualSearches);
+        addSearch(SearchType.TEXT, versions, references, textSearches, null, individualSearches);
+
+        if (individualSearches.size() != 0) {
+            return this.search(new SearchQuery(pageNumber, context, individualSearches.toArray(new IndividualSearch[individualSearches.size()])));
+        }
         return this.bibleInfoService.getPassageText(
                 versions.get(0), references, options,
                 getExtraVersions(versions), displayMode);
+    }
 
+    /**
+     * @param searchType         the type of search
+     * @param versions           the list of versions
+     * @param references         the list of references
+     * @param searches           the searches that we want to perform
+     * @param individualSearches the searches to perform
+     */
+    private void addSearch(final SearchType searchType, final List<String> versions, final String references, final List<String> searches, final String[] filter, final List<IndividualSearch> individualSearches) {
+        for (final String search : searches) {
+            individualSearches.add(new IndividualSearch(searchType, versions, search, references, filter));
+        }
+    }
+
+    /**
+     * Adds a word search to the list of searches we will perform
+     *
+     * @param versions           the list of versions
+     * @param references         the list of references
+     * @param strongSearches     the strong searches
+     * @param individualSearches the searches to perform
+     */
+    private void addWordSearches(final List<String> versions, final String references, 
+                                 final List<String> strongSearches, final String[] filters, 
+                                 final List<IndividualSearch> individualSearches) {
+        
+        for (final String strong : strongSearches) {
+            boolean isGreek = strong.charAt(0) == 'G';
+            individualSearches.add(new IndividualSearch(
+                    isGreek ? SearchType.ORIGINAL_GREEK_FORMS : SearchType.ORIGINAL_HEBREW_FORMS, 
+                    versions, strong, references, filters));
+        }
     }
 
     /**
@@ -281,6 +330,8 @@ public class SearchServiceImpl implements SearchService {
         // return the results
 
         result.setSearchType(sq.getSearches()[0].getType());
+        result.setPageSize(sq.getPageSize());
+        result.setPageNumber(sq.getPageNumber());
         result.setTimeTookTotal(System.currentTimeMillis() - start);
         result.setQuery(sq.getOriginalQuery());
         specialSort(sq, result);
@@ -296,7 +347,7 @@ public class SearchServiceImpl implements SearchService {
      */
     private void enrichWithLanguages(final SearchQuery sq, final SearchResult result) {
         IndividualSearch lastSearch = sq.getCurrentSearch();
-        result.setLanguages(jswordMetadata.getLanguages(lastSearch.getVersions()));
+        result.setLanguageCode(jswordMetadata.getLanguages(lastSearch.getVersions()));
     }
 
     /**

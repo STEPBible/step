@@ -147,21 +147,20 @@ var ViewLexiconWordle = Backbone.View.extend({
 
     listenToModels: function () {
         //update the model, in case we're not looking at the right one.
-        this.listenTo(Backbone.Events, "passage:rendered:0", function () {
-            this.doStats(PassageModels.at(0));
-        });
-        this.listenTo(Backbone.Events, "passage:rendered:1", function () {
-            this.doStats(PassageModels.at(1));
-        });
+//        this.listenTo(Backbone.Events, "passage:rendered:0", function () {
+//            this.doStats(PassageModels.at(0));
+//        });
+//        this.listenTo(Backbone.Events, "passage:rendered:1", function () {
+//            this.doStats(PassageModels.at(1));
+//        });
     },
 
     _getStats: function (statType, scope, title, callback, animate) {
         var self = this;
         var model = step.util.activePassage();
 
-        var modelData = model.get("data") || {};
-        var modelReference = modelData.reference;
-        var modelVersion = modelData.masterVersion;
+        var modelReference = model.get("reference");
+        var modelVersion = model.get("masterVersion");
         var reference = this.isAnimating ? this.transientReference || modelReference : modelReference;
 
         var scopeTypes = step.defaults.analysis.scopeType;
@@ -174,7 +173,9 @@ var ViewLexiconWordle = Backbone.View.extend({
             this.statsContainer.empty();
         }
 
+        var lastTime = new Date().getTime();
         $.getSafe(ANALYSIS_STATS, [modelVersion, reference, statType, scope, animate == true], function (data) {
+            step.util.trackAnalytics('wordle', 'loaded', new Date().getTime() - new Date().getTime());
             step.util.trackAnalytics('wordle', 'type', statType);
             step.util.trackAnalytics('wordle', 'scope', scope);
             self.transientReference = data.passageStat.reference.name;

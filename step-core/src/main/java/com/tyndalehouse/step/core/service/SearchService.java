@@ -70,5 +70,6 @@ public interface SearchService {
      * @param searchTokens the tokens
      * @return the results from the search/passage lookup
      */
-    Object runQuery(List<SearchToken> searchTokens);
+    Object runQuery(List<SearchToken> searchTokens, final String options, final String display, 
+                    final int pageNumber, final String filter, int context);
 }

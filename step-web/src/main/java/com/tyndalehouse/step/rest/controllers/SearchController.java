@@ -21,6 +21,7 @@ import com.tyndalehouse.step.core.models.search.AutoSuggestion;
 import com.tyndalehouse.step.core.service.BibleInformationService;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import com.tyndalehouse.step.core.service.search.SubjectSearchService;
+import com.tyndalehouse.step.core.utils.ConversionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,36 +71,80 @@ public class SearchController {
     public List<AutoSuggestion> suggest(String input) {
         final List<AutoSuggestion> autoSuggestions = new ArrayList<AutoSuggestion>(128);
         addAutoSuggestions(SearchToken.REFERENCE, autoSuggestions, bibleInformationService.getBibleBookNames(input, "ESV"));
-        addAutoSuggestions("subjects", autoSuggestions, this.autocompleteSubject(input));
+        addAutoSuggestions(SearchToken.SUBJECT_SEARCH, autoSuggestions, this.autocompleteSubject(input));
 
-        addAutoSuggestions("greek", autoSuggestions, this.originalWordSuggestions.getLexicalSuggestions(LexicalSuggestionType.GREEK, restoreSearchQuery(input),
+        addAutoSuggestions(SearchToken.GREEK, autoSuggestions, this.originalWordSuggestions.getLexicalSuggestions(LexicalSuggestionType.GREEK, restoreSearchQuery(input),
                 false));
-        addAutoSuggestions("greekMeanings", autoSuggestions, this.originalWordSuggestions.getLexicalSuggestions(LexicalSuggestionType.GREEK_MEANING, restoreSearchQuery(input),
+        addAutoSuggestions(SearchToken.GREEK_MEANINGS, autoSuggestions, this.originalWordSuggestions.getLexicalSuggestions(LexicalSuggestionType.GREEK_MEANING, restoreSearchQuery(input),
                 false));
-        addAutoSuggestions("hebrew", autoSuggestions, this.originalWordSuggestions.getLexicalSuggestions(LexicalSuggestionType.HEBREW, restoreSearchQuery(input),
+        addAutoSuggestions(SearchToken.HEBREW, autoSuggestions, this.originalWordSuggestions.getLexicalSuggestions(LexicalSuggestionType.HEBREW, restoreSearchQuery(input),
                 false));
-        addAutoSuggestions("hebrewMeanings", autoSuggestions, this.originalWordSuggestions.getLexicalSuggestions(LexicalSuggestionType.HEBREW_MEANING, restoreSearchQuery(input),
+        addAutoSuggestions(SearchToken.HEBREW_MEANINGS, autoSuggestions, this.originalWordSuggestions.getLexicalSuggestions(LexicalSuggestionType.HEBREW_MEANING, restoreSearchQuery(input),
                 false));
-        addAutoSuggestions("meanings", autoSuggestions, this.originalWordSuggestions.getLexicalSuggestions(LexicalSuggestionType.MEANING, restoreSearchQuery(input),
+        addAutoSuggestions(SearchToken.MEANINGS, autoSuggestions, this.originalWordSuggestions.getLexicalSuggestions(LexicalSuggestionType.MEANING, restoreSearchQuery(input),
                 false));
         return autoSuggestions;
     }
+
     /**
-     * @param items     the list of all items
+     * @param items the list of all items
      */
-    public Object masterSearch(String items) {
-        return masterSearch(items, "{}");
+    public Object masterSearch(final String items) {
+        return this.masterSearch(items, null, null, null, null, null);
     }
-    
+
     /**
-     * @param items     the list of all items
-     * @param options   current display options
+     * @param items   the list of all items
+     * @param options current display options
      */
-    public Object masterSearch(String items, String options) {
+    public Object masterSearch(final String items, final String options) {
+        return this.masterSearch(items, options, null, null, null, null);
+    }
+
+    /**
+     * @param items   the list of all items
+     * @param options current display options
+     * @param display the display options
+     */
+    public Object masterSearch(final String items, final String options, final String display) {
+        return this.masterSearch(items, options, display, null, null, null);
+    }
+
+    /**
+     * @param items      the list of all items
+     * @param options    current display options
+     * @param display    the display options
+     * @param pageNumber the number of the page that is desired
+     */
+    public Object masterSearch(final String items, final String options, final String display, final String pageNumber) {
+        return this.masterSearch(items, options, display, pageNumber, null, null);
+    }
+
+    /**
+     * @param items      the list of all items
+     * @param options    current display options
+     * @param display    the display options
+     * @param pageNumber the number of the page that is desired
+     * @param filter     the type of filter required on an original word search
+     */
+    public Object masterSearch(final String items, final String options, final String display, final String pageNumber, final String filter) {
+        return this.masterSearch(items, options, display, pageNumber, filter, null);
+    }
+
+    /**
+     * @param items      the list of all items
+     * @param options    current display options
+     * @param display    the display options
+     * @param pageNumber the number of the page that is desired
+     * @param filter     the type of filter required on an original word search
+     * @param context    the amount of context to add to the verses hit by a search
+     */
+    public Object masterSearch(final String items, final String options, final String display, 
+                               final String pageNumber, final String filter, final String context) {
         notBlank(items, "Items field is blank", UserExceptionType.APP_MISSING_FIELD);
         String[] tokens = SPLIT_TOKENS.split(items);
         List<SearchToken> searchTokens = new ArrayList<SearchToken>();
-        
+
         for (String t : tokens) {
             int indexOfPrefix = t.indexOf('=');
             if (indexOfPrefix == -1) {
@@ -110,7 +155,10 @@ public class SearchController {
             searchTokens.add(new SearchToken(text, t.substring(0, indexOfPrefix)));
         }
 
-        return this.searchService.runQuery(searchTokens);
+        int page = ConversionUtils.getValidInt(pageNumber, 1);
+        int searchContext = ConversionUtils.getValidInt(context, 0);
+        
+        return this.searchService.runQuery(searchTokens, options, display, page, filter, searchContext);
     }
 
     /**

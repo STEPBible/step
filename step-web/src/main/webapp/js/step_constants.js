@@ -11,6 +11,7 @@ GREEK = "greek";
 HEBREW_MEANINGS = "hebrewMeanings";
 HEBREW = "hebrew";
 STRONG_NUMBER = "strong";
+MEANINGS = "meanings";
 
 DS_VERSIONS = "allVersions";
 BOOKMARKS_GET =                     STEP_SERVER_BASE_URL + "favourites/getBookmarks";

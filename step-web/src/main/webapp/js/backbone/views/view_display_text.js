@@ -1,13 +1,13 @@
 var TextDisplayView = SearchDisplayView.extend({
     titleFragment : __s.search_text,
-    renderSearch: function (serverResults, query, masterVersion) {
+    renderSearch: function (query, masterVersion) {
         console.log("Rendering text search results");
 
         var results = $("<span>");
-        var searchResults = serverResults.results;
-        var sortOrder = serverResults.order;
+        var searchResults = this.model.get("results");
+        var sortOrder = this.model.get("order");
 
-        var table = $("<table>").addClass("searchResults");
+        var table = $("<div>").addClass("searchResults");
         results.append(table);
 
         //multiple vs singular version
@@ -59,15 +59,8 @@ var TextDisplayView = SearchDisplayView.extend({
     },
 
     getVerseRow: function getVerseRow(masterVersion, table, contentGenerator, item) {
-        var newRow = $("<tr>").addClass("searchResultRow");
-//        var buttons = $("<td>").passageButtons({
-//            passageId: this.model.get("passageId"),
-//            ref: item.key,
-//            showChapter: true,
-//            version : masterVersion
-//        });
-//        newRow.append(buttons);
-        var contentCell = $("<td>").addClass("searchResultRow");
+        var newRow = $("<div>").addClass("searchResultRow");
+        var contentCell = $("<div>").addClass("searchResultRow");
         newRow.append(contentCell);
 
         if (contentGenerator != undefined) {

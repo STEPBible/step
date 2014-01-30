@@ -12,9 +12,10 @@ requirejs.config({
         
     },
     shim : {
-        "sidebar" : ["js/backbone/models/model_sidebar", "js/backbone/views/view_wordle_stat.js",
-                     "libs/jquery.tagcloud.js"],
+        "sidebar" : ["js/backbone/models/model_sidebar", "js/backbone/views/view_wordle_stat",
+                     "libs/jquery.tagcloud"],
         "search" : ["_search_display_view", "_other_search"],
-        _other_search: ["_search_display_view", "js/backbone/views/view_display_text", "libs/dohighlight-min.js"]
+        _other_search: ["_search_display_view", "js/backbone/views/view_display_text", "libs/dohighlight-min",
+         "js/jquery-extensions/jquery-sort"]
     }
 });

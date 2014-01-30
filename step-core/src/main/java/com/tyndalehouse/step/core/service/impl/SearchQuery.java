@@ -98,11 +98,11 @@ public class SearchQuery {
      * 
      * @param search the search that should be carried out
      */
-    public SearchQuery(final IndividualSearch... search) {
+    public SearchQuery(final int pageNumber, int context, final IndividualSearch... search) {
         this.searches = search;
-        this.pageSize = 20;
-        this.pageNumber = 1;
-        this.context = 0;
+        this.pageSize = 60;
+        this.pageNumber = pageNumber;
+        this.context = context;
         this.ranked = false;
         this.sortOrder = "false";
         

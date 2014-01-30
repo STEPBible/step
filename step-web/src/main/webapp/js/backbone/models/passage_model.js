@@ -2,11 +2,9 @@ var PassageModel = Backbone.Model.extend({
     defaults: function () {
         return {
             passageId: 0,
-            data: {
-                options: "NHVUG",
-                interlinearMode: ""
-                
-            }
+            pageNumber: 1,
+            options: "NHVUG",
+            interlinearMode: ""
         }
     }
 });

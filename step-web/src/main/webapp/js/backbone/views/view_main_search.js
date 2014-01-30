@@ -9,20 +9,34 @@ var MainSearchView = Backbone.View.extend({
         _.bindAll(this);
         var view = this;
 
-
         view.masterSearch.select2({
             minimumInputLength: 3,
-            //            data : this._getData,
             id: function (entry) {
-                if (entry.itemType == REFERENCE) {
-                    return entry.item.fullName;
-                } else if(entry.itemType == VERSION) {
-                    return entry.item.initials;
-                } else if(entry.itemType == GREEK || entry.itemType == GREEK_MEANINGS || 
-                    entry.itemType == HEBREW_MEANINGS || entry.itemType == HEBREW) {
-                    return entry.item.strongNumber;
+                var id = entry.itemType + "-";
+                switch (entry.itemType) {
+                    case REFERENCE:
+                        id += entry.item.fullName;
+                        break;
+                    case VERSION:
+                        id += entry.item.initials;
+                        break;
+                    case GREEK:
+                    case GREEK_MEANINGS:
+                    case HEBREW_MEANINGS:
+                    case HEBREW:
+                        //for these searches, we prevent multiple searches for the same strong number
+                        //and therefore share an id.
+                        id += entry.item.strongNumber;
+                        break;
+                    //some searches default to their item
+                    case TEXT_SEARCH:
+                    case SUBJECT_SEARCH:
+                    case MEANINGS:
+                    default:
+                        id += entry.item;
+                        break;
                 }
-                return entry.item;
+                return id;
             },
             ajax: {
                 url: function (term, page) {
@@ -34,16 +48,26 @@ var MainSearchView = Backbone.View.extend({
                 results: function (data, page) {
                     var datum = [];
                     for (var ii = 0; ii < data.length; ii++) {
+                        //will never be a TEXT search, so not in the list below
+                        //SUBJECT searches behave with defaults
                         var item = data[ii].suggestion;
                         var text = data[ii].suggestion;
-                        if (data[ii].itemType == 'hebrew' || data[ii].itemType == 'greek') {
-                            text = data[ii].suggestion.matchingForm + " (" + data[ii].suggestion.stepTransliteration + " - " + data[ii].suggestion.gloss + ")";
-                        } else if (data[ii].itemType == GREEK_MEANINGS || data[ii].itemType == HEBREW_MEANINGS) {
-                            text = data[ii].suggestion.gloss + " (" + data[ii].suggestion.stepTransliteration + " - " + data[ii].suggestion.matchingForm + ")";
-                        } else if (data[ii].itemType == REFERENCE) {
-                            text = data[ii].suggestion.fullName;
-                            item = data[ii].suggestion;
+
+                        switch (data[ii].itemType) {
+                            case HEBREW:
+                            case GREEK:
+                                text = data[ii].suggestion.matchingForm + " (" + data[ii].suggestion.stepTransliteration + " - " + data[ii].suggestion.gloss + ")";
+                                break;
+                            case GREEK_MEANINGS:
+                            case HEBREW_MEANINGS:
+                                text = data[ii].suggestion.gloss + " (" + data[ii].suggestion.stepTransliteration + " - " + data[ii].suggestion.matchingForm + ")";
+                                break;
+                            case REFERENCE:
+                                text = data[ii].suggestion.fullName;
+                                item = data[ii].suggestion;
+                                break;
                         }
+
                         datum.push({ text: text, item: item, itemType: data[ii].itemType });
                     }
                     return { results: view.patch(datum) };
@@ -53,18 +77,31 @@ var MainSearchView = Backbone.View.extend({
             multiple: true,
             formatResult: view.formatResults,
             matcher: view.matchDropdownEntry,
+            /**
+             * Formats the entry in the multi-select text input, once selected from the dropdown.
+             * @param entry
+             * @returns {*}
+             */
             formatSelection: function (entry) {
-                if (entry.itemType == REFERENCE) {
-                    return entry.item.shortName;
-                } else if(entry.itemType == VERSION) {
-                    return "<div class='versionItem'>" + entry.item.initials + "</div>"
-                } else if(entry.itemType == GREEK || entry.itemType == HEBREW) {
-                    var className = entry.itemType == GREEK ? "unicodeFont" : "hbFontSmall";
-                    return "<div class='" + className + "'>" + entry.item.matchingForm + "</div>";
-                } else if (entry.itemType == GREEK_MEANINGS || entry.itemType == HEBREW_MEANINGS) {
-                    return entry.item.stepTransliteration;
-                } else {
-                    return entry.item.text;
+                switch (entry.itemType) {
+                    case REFERENCE:
+                        return entry.item.shortName;
+                    case VERSION:
+                        return "<div class='versionItem'>" + entry.item.initials + "</div>"
+                    case GREEK:
+                    case HEBREW:
+                        var className = entry.itemType == GREEK ? "unicodeFont" : "hbFontSmall";
+                        return "<div class='" + className + "'>" + entry.item.matchingForm + "</div>";
+                    case GREEK_MEANINGS:
+                    case HEBREW_MEANINGS:
+                        return entry.item.stepTransliteration;
+                    case MEANINGS:
+                        return entry.item.gloss;
+                    case TEXT_SEARCH:
+                    case SUBJECT_SEARCH:
+                        return entry.item;
+                    default:
+                        return entry.item.text;
                 }
             },
             escapeMarkup: function (m) {
@@ -73,13 +110,13 @@ var MainSearchView = Backbone.View.extend({
             formatResultCssClass: view.formatResultCssClass,
             formatSelectionCssClass: view.formatResultCssClass
         }).on("select2-selecting", function (event) {
-                if (event.object && event.object.itemType == REFERENCE && event.object.item.wholeBook) {
-                    event.preventDefault();
-                    var select2Input = $(this);
-                    select2Input.select2("search", event.object.item.shortName);
-                }
-                return;
-            });
+            if (event.object && event.object.itemType == REFERENCE && event.object.item.wholeBook) {
+                event.preventDefault();
+                var select2Input = $(this);
+                select2Input.select2("search", event.object.item.shortName);
+            }
+            return;
+        });
     },
     search: function () {
         console.log("Searching...");
@@ -89,7 +126,7 @@ var MainSearchView = Backbone.View.extend({
             if (args.length != 0) {
                 args += "|";
             }
-            
+
             switch (options[ii].itemType) {
                 case VERSION:
                     args += options[ii].itemType + "=";
@@ -101,14 +138,24 @@ var MainSearchView = Backbone.View.extend({
                     break;
                 case GREEK:
                 case GREEK_MEANINGS:
-                case GREEK_WORDS:
-                case GREEK_WORDS_MEANING:
-                    args += STRONG_NUMBER + "=" + options[ii].item.strongNumber;
+                case HEBREW:
+                case HEBREW_MEANINGS:
+                    args += STRONG_NUMBER + "=" + encodeURIComponent(options[ii].item.strongNumber);
+                    break;
+                case MEANINGS:
+                    args += MEANINGS + "=" + encodeURIComponent(options[ii].item.gloss);
+                    break;
+                //SUBJECT and TEXT and others share common funcitonality
+                case SUBJECT_SEARCH:
+                case TEXT_SEARCH:
                 default:
+                    args += options[ii].itemType + "=" + encodeURIComponent(options[ii].item);
                     break;
             }
         }
 
+        //reset defaults:
+        step.util.activePassage().save({ pageNumber: 1, filter: undefined }, { silent: true});
         console.log("Arguments are: ", args);
         step.router.navigateSearch(args);
     },
@@ -117,6 +164,9 @@ var MainSearchView = Backbone.View.extend({
     },
     patch: function (results) {
         var staticResources = this._getData();
+
+        //push some of the options that are also always present:
+        staticResources.push({ item: this.getCurrentInput(), itemType: TEXT_SEARCH});
 
         return staticResources.concat(results);
     },
@@ -132,21 +182,22 @@ var MainSearchView = Backbone.View.extend({
             return textOrObject != null && textOrObject != "" && textOrObject.toLowerCase().match(regex);
         }
 
-        if (textOrObject.itemType == VERSION) {
-            return this.matchDropdownEntry(term, textOrObject.item.initials) ||
-                this.matchDropdownEntry(term, textOrObject.item.name);
+        switch (textOrObject.itemType) {
+            case VERSION:
+                return this.matchDropdownEntry(term, textOrObject.item.initials) ||
+                    this.matchDropdownEntry(term, textOrObject.item.name);
+            case GREEK_MEANINGS:
+            case HEBREW_MEANINGS:
+                return this.matchDropdownEntry(term, textOrObject.item.gloss);
+            case GREEK:
+            case HEBREW:
+                return this.matchDropdownEntry(term, textOrObject.item.stepTransliteration) ||
+                    this.matchDropdownEntry(term, textOrObject.item.matchingForm) ||
+                    this.matchDropdownEntry(term, textOrObject.item.strongNumber);
+            case TEXT_SEARCH:
+            case SUBJECT_SEARCH:
+                return this.matchDropdownEntry(term, textOrObject.item);
         }
-        
-        if(textOrObject.itemType == GREEK_MEANINGS || textOrObject.itemType == HEBREW_MEANINGS) {
-            return this.matchDropdownEntry(term, textOrObject.item.gloss);
-        }
-        
-        if(textOrObject.itemType == GREEK || textOrObject.itemType == HEBREW) {
-            return this.matchDropdownEntry(term, textOrObject.item.stepTransliteration) ||
-                this.matchDropdownEntry(term, textOrObject.item.matchingForm) ||
-                this.matchDropdownEntry(term, textOrObject.item.strongNumber);
-        }
-        
         return false;
     },
     filterLocalData: function (data) {
@@ -161,55 +212,64 @@ var MainSearchView = Backbone.View.extend({
         return options;
     },
     formatResultCssClass: function (item) {
-        if (item.itemType == VERSION) {
-            return "selectBibleRow";
-        }
-        if (item.itemType == "subjects") {
-            return "subjects";
-        } else if (item.itemType == GREEK) {
-            return GREEK;
-        } else if (item.itemType == GREEK_MEANINGS) {
-            return GREEK_MEANINGS;
-        } else if (item.itemType == HEBREW) {
-            return HEBREW;
-        } else if (item.itemType == HEBREW_MEANINGS) {
-            return HEBREW_MEANINGS;
-        } else if (item.itemType == REFERENCE) {
-            return "selectReferenceRow";
-        }
+        return "select-" + item.itemType;
     },
+    /**
+     * Renders the view when shown in the dropdown list
+     *
+     * @param v the item we are rendering
+     * @param container
+     * @param query
+     * @param escapeMarkup
+     * @returns {string}
+     */
     formatResults: function (v, container, query, escapeMarkup) {
         var row;
-        if (v.itemType == VERSION) {
-            row = [
-                '<div class="versionItem">',
-                '<span class="initials">' + v.item.initials + '</span> - ',
-                '<span class="name">' + v.item.name + '</span>',
-                '<span class="source">[' + __s.translation_commentary + ']</span>',
-                '<span class="features">' + step.util.ui.getFeaturesLabel(v.item) + '</span>',
-                '</div>'
-            ].join('');
-        } else if (v.itemType == "subjects") {
-            row = v.text + '<span class="source">[' + __s.search_topic + ']</span>';
-        } else if (v.itemType == GREEK) {
-            row = v.text + '<span class="source">[' + __s.search_greek + ']</span>';
-        } else if (v.itemType == GREEK_MEANINGS) {
-            row = v.text + '<span class="source">[' + __s.search_greek_meaning + ']</span>';
-        } else if (v.itemType == HEBREW) {
-            row = v.text + '<span class="source">[' + __s.search_hebrew + ']</span>';
-        } else if (v.itemType == HEBREW_MEANINGS) {
-            row = v.text + '<span class="source">[' + __s.search_hebrew_meaning + ']</span>';
-        } else if (v.itemType == REFERENCE) {
-            row = [
-                v.item.fullName,
-                '<span class="source">[' + __s.bible_text + ']</span>'
-            ].join('');
-        } else if (v.itemType == "meanings") {
-            row =  v.text.gloss + '<span class="source">[' + __s.search_meaning + ']</span>';
+
+        switch (v.itemType) {
+            case VERSION:
+                row = [
+                    '<div class="versionItem">',
+                    '<span class="initials">' + v.item.initials + '</span> - ',
+                    '<span class="name">' + v.item.name + '</span>',
+                    '<span class="source">[' + __s.translation_commentary + ']</span>',
+                    '<span class="features">' + step.util.ui.getFeaturesLabel(v.item) + '</span>',
+                    '</div>'
+                ].join('');
+                break;
+            case GREEK:
+                row = v.text + '<span class="source">[' + __s.search_greek + ']</span>';
+                break;
+            case GREEK_MEANINGS:
+                row = v.text + '<span class="source">[' + __s.search_greek_meaning + ']</span>';
+                break;
+            case HEBREW:
+                row = v.text + '<span class="source">[' + __s.search_hebrew + ']</span>';
+                break;
+            case HEBREW_MEANINGS:
+                row = v.text + '<span class="source">[' + __s.search_hebrew_meaning + ']</span>';
+                break;
+            case REFERENCE:
+                row = [
+                    v.item.fullName,
+                    '<span class="source">[' + __s.bible_text + ']</span>'
+                ].join('');
+                break;
+            case TEXT_SEARCH:
+                row = [
+                    v.item,
+                    '<span class="source">[' + __s.search_text + ']</span>'
+                ].join('');
+                break;
+            case SUBJECT_SEARCH:
+                row = v.text + '<span class="source">[' + __s.search_topic + ']</span>';
+                break;
+            case MEANINGS:
+                row = v.text.gloss + '<span class="source">[' + __s.search_meaning + ']</span>';
+                break;
         }
         var markup = [];
         window.Select2.util.markMatch(row, query.term, markup, escapeMarkup);
         return markup.join("");
     }
 });
-

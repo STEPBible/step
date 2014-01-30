@@ -24,7 +24,13 @@ public class SearchPageController extends HttpServlet {
     
     @Override
     protected void doGet(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
-        final Object text = this.search.masterSearch(req.getParameter("q"));
+        final Object text = this.search.masterSearch(
+                req.getParameter("q"), 
+                req.getParameter("options"), 
+                req.getParameter("display"), 
+                req.getParameter("page"),
+                req.getParameter("filter"),
+                req.getParameter("context"));
         req.setAttribute("passage", text);
         resp.setCharacterEncoding("UTF-8");
         req.getRequestDispatcher("/responsive.jsp").include(req, resp);

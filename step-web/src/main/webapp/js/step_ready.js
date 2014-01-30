@@ -23,8 +23,12 @@ $(window).on("load", function() {
     step.passages = new PassageModelList();
     step.passages.fetch();
 
+    
+    //TODO: need to make sure we reset various properties
+    //such as filter and pageNumber
+    
     //create passage if not present
-    step.passages.add(new PassageModel({ passageId: 0, data: undefined }));
+    step.passages.add(new PassageModel({ passageId: 0 }));
     
     new PassageMenuView({
         model: step.passages.at(0)

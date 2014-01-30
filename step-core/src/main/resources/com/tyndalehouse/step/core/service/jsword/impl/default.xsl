@@ -490,7 +490,7 @@
 		          <xsl:text> </xsl:text>
 		        </xsl:when>
 		        <xsl:otherwise>
-		          (<xsl:value-of select="$versenum"/>)
+                    <a name="{@osisID}"><span class="verseNumber"><xsl:value-of select="$versenum"/></span></a>
 		          <xsl:text> </xsl:text>
 		        </xsl:otherwise>
 		      </xsl:choose>

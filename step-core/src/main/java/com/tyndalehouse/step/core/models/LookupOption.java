@@ -59,6 +59,10 @@ public enum LookupOption {
      */
     VERSE_NUMBERS('V', "VNum", XslConversionType.DEFAULT, true),
     /**
+     * Full verse numbers including book and verse numbers
+     */
+    CHAPTER_BOOK_VERSE_NUMBER(BibleInformationService.UNAVAILABLE_TO_UI, "BCVNum", XslConversionType.DEFAULT, true),
+    /**
      * verses to be displayed on new line
      */
     VERSE_NEW_LINE('L', "VLine", XslConversionType.DEFAULT),

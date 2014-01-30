@@ -1,12 +1,20 @@
 var PassageDisplayView = Backbone.View.extend({
         el: function () {
-            return $(".passageContainer").eq(this.model.get("passageId"));
+            var passageContainer = $(".passageContainer").eq(this.model.get("passageId"));
+            var passageContent = passageContainer.find(".passageContent");
+            if(passageContent.length == 0) {
+                passageContent = $('<div class="passageContent"></div>');
+                passageContainer.find(".passageText").append(passageContent);
+            }
+            return passageContent;
         },
         initialize: function (options) {
-            Backbone.Events.on("passage:new:" + this.model.get("passageId"), this.render, this);
-            Backbone.Events.on("font:change:" + this.model.get("passageId"), this.handleFontSizeChange, this);
+            this.listenTo(this.model, "destroyViews", this.remove);
+            
+//            Backbone.Events.on("passage:new:" + this.model.get("passageId"), this.render, this);
+//            Backbone.Events.on("font:change:" + this.model.get("passageId"), this.handleFontSizeChange, this);
 
-            this.passageContent = this.$el.find(".passageContent");
+            
 //            step.fonts.fontButtons(this.$el, true);
 
 //            $(".passageSizeButtons").buttonset();
@@ -17,26 +25,24 @@ var PassageDisplayView = Backbone.View.extend({
         },
 
         render: function () {
-            var newPassage = this.model.get("data");
-            
-            step.util.trackAnalytics("passage", "loaded", "time", new Date().getTime() - newPassage.startTime);
+            step.util.trackAnalytics("passage", "loaded", "time", new Date().getTime() - this.model.get("startTime"));
             step.util.trackAnalytics("passage", "version", this.model.get("version"));
-            step.util.trackAnalytics("passage", "reference", newPassage.reference);
+            step.util.trackAnalytics("passage", "reference", this.model.get("reference"));
 
             //set the range attributes, silently, so as not to cause events
-            this.model.set("startRange", newPassage.startRange, {silent: true });
-            this.model.set("endRange", newPassage.endRange, {silent: true });
-            this.model.set("multipleRanges", newPassage.multipleRanges, {silent: true });
+            this.model.set("startRange", this.model.get("startRange"), {silent: true });
+            this.model.set("endRange", this.model.get("endRange"), {silent: true });
+            this.model.set("multipleRanges", this.model.get("multipleRanges"), {silent: true });
 
 
-            var passageHtml = $(newPassage.value);
+            var passageHtml = $(this.model.get("value"));
             var passageId = this.model.get("passageId");
-            var interlinearMode = newPassage.interlinearMode;
-            var extraVersions = newPassage.extraVersions;
-            var reference = newPassage.osisId;
+            var interlinearMode = this.model.get("interlinearMode");
+            var extraVersions = this.model.get("extraVersions");
+            var reference = this.model.get("osisId");
             var options = this.model.get("options") || [];
-            var version = newPassage.masterVersion;
-            var languages = newPassage.languageCode;
+            var version = this.model.get("masterVersion");
+            var languages = this.model.get("languageCode");
 
             if (this._isPassageValid(passageHtml, reference)) {
                 this._doFonts(passageHtml, options, interlinearMode, languages);
@@ -54,14 +60,13 @@ TODO:                this._addStrongHandlers(passageId, passageHtml);
                 this._doInterlinearDividers(passageHtml);
 //TODO:                this._doVersions(passageId, passageHtml, version, reference);
                 
-//TODO:                this._doSocial();
 //TODO:                step.util.closeInfoErrors(passageId);
-                step.util.ui.emptyOffDomAndPopulate(this.passageContent, passageHtml);
+                step.util.ui.emptyOffDomAndPopulate(this.$el, passageHtml);
 
                 //needs to happen after appending to DOM
                 this._doChromeHack(undefined, passageHtml, interlinearMode, options);
                 this.doInterlinearVerseNumbers(passageHtml, interlinearMode, options);
-                Backbone.Events.trigger("passage:rendered:" + passageId);
+//                Backbone.Events.trigger("passage:rendered:" + passageId);
             }
         },
 
@@ -73,7 +78,7 @@ TODO:                this._addStrongHandlers(passageId, passageHtml);
             }
 
             if (!passageHtml) {
-                passageHtml = this.passageContent;
+                passageHtml = this.$el;
             }
 
             if (!interlinearMode) {
@@ -124,10 +129,6 @@ TODO:                this._addStrongHandlers(passageId, passageHtml);
                     notice.css("float", "left");
                 }
             }
-        },
-
-        _doSocial: function () {
-            step.util.ui.doSocialButtons(this.$el.find(".passageToolbarContainer"));
         },
 
         _doInterlinearDividers: function (passageContent) {
@@ -196,7 +197,7 @@ TODO:                this._addStrongHandlers(passageId, passageHtml);
             if (passageHtml.find(":not(.xgen):first").length == 0) {
                 var message = sprintf(__s.error_bible_doesn_t_have_passage, reference);
                 var errorMessage = $("<span>").addClass("notApplicable").html(message);
-                this.passageContent.html(errorMessage);
+                this.$el.html(errorMessage);
                 return false;
             }
             return true;
@@ -493,7 +494,7 @@ TODO:                this._addStrongHandlers(passageId, passageHtml);
 
         handleFontSizeChange: function () {
             this.doInterlinearVerseNumbers(
-                this.$el.find(".passageContent"),
+                this.$el,
                 this.model.get("interlinearMode"),
                 this.model.get("options"));
         },

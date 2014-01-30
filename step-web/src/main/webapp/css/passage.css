@@ -219,15 +219,7 @@ span[strong]:hover {
     font-weight: bold;
 }
 
-.verseNumber {
-	vertical-align: top;
-	font-size: 6pt;
-	margin-right: 2px;
-    cursor: hand;
-    background-color: #F3E5B4;
-    color: #991C32;
-	font-weight: bold;
-}
+
 
 .interlinear .verseNumber {
 	clear: left;

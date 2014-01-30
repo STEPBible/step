@@ -155,6 +155,7 @@
                             </button>
                         </div>
                     </div>
+                    <div class="pull-right resultsLabel"></div>
                     <div class="passageContent" itemprop="text">${ passage.searchType eq SearchType.PASSAGE ? passage.value : "" }</div>
                     <%--<div class="passageContent" itemprop="text">&nbsp;<%= stepRequest.getPassage(0) %></div>--%>
                 </div>
@@ -171,13 +172,13 @@
 <%--<script src="https://code.jquery.com/jquery.js"></script>--%>
 <!-- Include all compiled plugins (below), or include individual files as needed -->
 
-        <%
+    <%
         if(request.getParameter("lang") == null) {
     %>
     <script src="international/interactive.js" type="text/javascript"></script>
-        <% } else { %>
+    <% } else { %>
     <script src="international/interactive.js?lang=<%= request.getParameter("lang") %>" type="text/javascript"></script>
-        <% } %>
+    <% } %>
     <%@include file="jsps/initLib.jsp" %>
 
     <%-- Now do javascript --%>
@@ -189,7 +190,7 @@
     <%@include file="jsps/offlineJqueryJs.jsp" %>
     <script src="libs/bootstrap.min.js"></script>
     <%--<script src="libs/magicsuggest-1.3.1-min.js"></script>--%>
-    
+
     <script src="libs/sprintf-0.7-beta1.js" type="text/javascript"></script>
     <%--<script src="libs/jquery.tagcloud.js" type="text/javascript"></script>--%>
     <%--<script src="libs/tinymce/jquery.tinymce.min.js" type="text/javascript"></script>--%>
@@ -197,17 +198,17 @@
     <script src="libs/json2.js" type="text/javascript"></script>
 
     <c:choose>
-        <c:when test="${ param.debug eq '' }">
-            <script src="libs/backbone.js" type="text/javascript"></script>
-            <script src="libs/backbone.localStorage.js" type="text/javascript"></script>
-            <%--<script src="libs/select2.js" type="text/javascript"></script>--%>
-            <script src="libs/require-2.1.9.js" type="text/javascript"></script>
+    <c:when test="${ param.debug eq '' }">
+    <script src="libs/backbone.js" type="text/javascript"></script>
+    <script src="libs/backbone.localStorage.js" type="text/javascript"></script>
+    <%--<script src="libs/select2.js" type="text/javascript"></script>--%>
+    <script src="libs/require-2.1.9.js" type="text/javascript"></script>
     </c:when>
     <c:otherwise>
-            <script src="libs/backbone-min.js" type="text/javascript"></script>
-            <script src="libs/backbone.localStorage-min.js" type="text/javascript"></script>
-            <%--<script src="libs/select2-3.4.5.min.js" type="text/javascript"></script>--%>
-            <script src="libs/require-2.1.9.min.js" type="text/javascript"></script>
+    <script src="libs/backbone-min.js" type="text/javascript"></script>
+    <script src="libs/backbone.localStorage-min.js" type="text/javascript"></script>
+    <%--<script src="libs/select2-3.4.5.min.js" type="text/javascript"></script>--%>
+    <script src="libs/require-2.1.9.min.js" type="text/javascript"></script>
             <%--<script src="libs/prettyCheckable.min.js" type="text/javascript"></script>--%>
     </c:otherwise>
     </c:choose>
@@ -223,6 +224,7 @@
     <script src="js/backbone/views/view_display_passage.js" type="text/javascript"></script>
     <script src="js/backbone/models/passage_model.js" type="text/javascript"></script>
     <script src="js/backbone/views/view_menu_passage.js" type="text/javascript"></script>
+    
     <%--<script src="js/backbone/models/model_options.js" type="text/javascript"></script>--%>
     
     

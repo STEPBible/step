@@ -2,7 +2,7 @@ h1, h2, h3, h4, h5, h6 {
   color: #991c32;
   font-weight: bold; }
 
-body, .dropdown-menu {
+body, .dropdown-menu, .searchResultRow {
   font-size: 12px; }
 
 ul .glyphicon-ok {
@@ -124,28 +124,35 @@ ul .glyphicon-ok {
   float: right;
   margin-right: 5px; }
 
-.select2-search-choice.selectBibleRow, .selectBibleRow {
+.select2-search-choice.meanings, .select-meanings {
+  background-image: -webkit-linear-gradient(top, #ffff66, #ffff99) !important; }
+
+.select2-search-choice.version, .select-version {
   background-image: -webkit-linear-gradient(top, #cd8c8e, #dcb0b1) !important; }
 
-.select2-search-choice.subjects, .subjects {
-  background-image: -webkit-linear-gradient(top, #e2b9bd, #f1dddf) !important; }
-
-.select2-search-choice.greek, .greek {
-  background-image: -webkit-linear-gradient(top, #faf7f7, white) !important; }
-
-.select2-search-choice.greekMeanings, .greekMeanings {
-  background-image: -webkit-linear-gradient(top, #a8a7a9, #c2c1c2) !important; }
-
-.select2-search-choice.hebrew, .hebrew {
-  background-image: -webkit-linear-gradient(top, #8e9dbc, #aeb9cf) !important; }
-
-.select2-search-choice.hebrewMeanings, .hebrewMeanings {
-  background-image: -webkit-linear-gradient(top, #9f798b, #b596a4) !important; }
-
-.select2-search-choice.selectReferenceRow, .selectReferenceRow {
+.select2-search-choice.reference, .select-reference {
   background-image: -webkit-linear-gradient(top, #e8fce8, white) !important; }
 
+.select2-search-choice.subject, .select-subject {
+  background-image: -webkit-linear-gradient(top, #e2b9bd, #f1dddf) !important; }
+
+.select2-search-choice.text, .text {
+  background-image: -webkit-linear-gradient(top, #66ffff, #99ffff) !important; }
+
+.select2-search-choice.greek, .select-greek {
+  background-image: -webkit-linear-gradient(top, #faf7f7, white) !important; }
+
+.select2-search-choice.greekMeanings, .select-greekMeanings {
+  background-image: -webkit-linear-gradient(top, #a8a7a9, #c2c1c2) !important; }
+
+.select2-search-choice.hebrew, .select-hebrew {
+  background-image: -webkit-linear-gradient(top, #8e9dbc, #aeb9cf) !important; }
+
+.select2-search-choice.hebrewMeanings, .select-hebrewMeanings {
+  background-image: -webkit-linear-gradient(top, #9f798b, #b596a4) !important; }
+
 .passageOptionsGroup {
+  margin-left: 10px;
   float: right; }
   .passageOptionsGroup .dropdown-menu {
     padding-left: 5px; }
@@ -171,6 +178,33 @@ ul .glyphicon-ok {
 
 .passageContentHolder h2 {
   margin-top: 0px; }
+
+.verseNumber {
+  vertical-align: top;
+  font-size: 6pt;
+  margin-right: 2px;
+  cursor: hand;
+  background-color: #f3e5b4;
+  color: #991c32;
+  font-weight: bold; }
+
+.searchResultRow .verse {
+  vertical-align: middle; }
+.searchResultRow p {
+  display: inline;
+  font-style: italic;
+  margin: 0px 5px 0px 5px; }
+  .searchResultRow p:before {
+    content: "/"; }
+.searchResultRow .verseNumber {
+  vertical-align: middle; }
+
+h4.lexicalGrouping {
+  font-size: 12px; }
+
+.resultsLabel {
+  font-style: italic;
+  clear: right; }
 
 .mainPanel {
   min-height: 100%;

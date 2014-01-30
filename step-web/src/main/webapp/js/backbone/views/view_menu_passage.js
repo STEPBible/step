@@ -52,12 +52,12 @@ var PassageMenuView = Backbone.View.extend({
     _updateVisibleDropdown: function () {
         var openDropdown = this.$el.find(".dropdown.open");
         if (this._isDisplayOptionsDropdown(openDropdown)) {
-            this._updatePassageOptions();
+            this._updateColumnOptions();
         }
     },
     _updateDropdownContents: function (targetTrigger) {
         if (this._isDisplayOptionsDropdown(targetTrigger)) {
-            this._updatePassageOptions();
+            this._updateColumnOptions();
         } else if (this._isShareDropdown(targetTrigger)) {
             this._doSocialButtons();
         }
@@ -68,17 +68,15 @@ var PassageMenuView = Backbone.View.extend({
     _isShareDropdown: function (target) {
         return $(target).has(">.dropdown-share").length > 0;
     },
-    _updatePassageOptions: function () {
-        var passage = this.model.get("data");
-        if (passage == undefined || step.keyedVersions == undefined || !this.rendered) {
+    _updateColumnOptions: function () {
+        if (this.model == undefined || step.keyedVersions == undefined || !this.rendered) {
             console.log("Unable to find a passage");
             return;
         }
 
-        var masterVersion = step.keyedVersions[passage.masterVersion];
-        this._updateDisplayModeOptions(passage, masterVersion);
-        this._updateDisplayOptions(passage, masterVersion);
-
+        var masterVersion = step.keyedVersions[this.model.get("masterVersion")];
+        this._updateDisplayModeOptions(masterVersion);
+        this._updateDisplayOptions();
     },
     /**
      * Obtains the options available in the masterVersion.
@@ -87,28 +85,31 @@ var PassageMenuView = Backbone.View.extend({
      * @param passage the passage model data
      * @private
      */
-    _updateDisplayOptions: function (passage) {
+    _updateDisplayOptions: function () {
         //first set the available options to be visible, and non-available options to be invisible...
-        var availableOptions = passage.options || "";
-
-
+        var availableOptions = this.model.get("options") || "";
+        var isPassage = this.model.get("searchType") == "PASSAGE";
+        
         //make invisible all options except for 'available ones'
-        var displayOptions = this.displayOptions.find("li");
+        var displayOptions = this.displayOptions.find("li.passage");
         for (var i = 0; i < displayOptions.length; i++) {
             var displayOption = displayOptions.eq(i);
-            displayOption.toggle(availableOptions.indexOf(displayOption.find("[data-value]").attr("data-value")) != -1);
+            displayOption.toggle(isPassage && availableOptions.indexOf(displayOption.find("[data-value]").attr("data-value")) != -1);
         }
     },
-    _updateDisplayModeOptions: function (passage, masterVersion) {
+    _updateSearchOptions: function() {
+        
+    },
+    _updateDisplayModeOptions: function (masterVersion) {
         //set the current display mode.
         this.displayModeContainer.find(".glyphicon").removeClass("active");
         this.displayModeContainer
-            .find("[data-value='" + passage.interlinearMode + "']")
+            .find("[data-value='" + this.model.get("interlinearMode") + "']")
             .find(".glyphicon").addClass("active");
 
 
         //depending on the version selected, we show the various options
-        var extraVersions = passage.extraVersions
+        var extraVersions = this.model.get("extraVersions");
 
         //remove any empty string...
         if (extraVersions == undefined || extraVersions == "") {
@@ -159,7 +160,7 @@ var PassageMenuView = Backbone.View.extend({
         var displayOptionsHeading = $("<h1>").append(__s.display_options);
         dropdownContainer.append(displayOptionsHeading);
 
-        this.displayOptions = this._createPassageOptions();
+        this.displayOptions = this._createDisplayOptions();
         dropdownContainer.append(this.displayOptions);
 
         var shareDropdownMenu = $("<div>").addClass("dropdown-menu pull-right").attr("role", "menu");
@@ -188,15 +189,43 @@ var PassageMenuView = Backbone.View.extend({
 
         return displayModes;
     },
-    _createPassageOptions: function () {
+    _createDisplayOptions: function() {
         var dropdown = $("<ul>").addClass("miniKolumny passageOptions");
+        dropdown.append(this._createPassageOptions(dropdown)).append(this._createSearchOptions(dropdown));
+        return dropdown;
+    },
+    _createSearchOptions: function(dropdown) {
+        var self = this;
+        var context = this.model.get("context") || 0;
+        
+        var li = $('<li>').append(sprintf(__s.search_context, '<input type="text" value="1" class="searchContext" />'));
+        li.find("input").click(function(ev) {
+            ev.stopPropagation();
+        }).on('keypress', function() {
+            
+        }).on('change', function() {
+            //need to trigger new search after setting value of model 
+            var contextVal = $(this).val();
+            if(step.util.isBlank(contextVal)) {
+                contextVal = 0;
+            } else if(isNaN(contextVal)) {
+                contextVal = 0;  
+            } 
+            self.model.save({ context:  contextVal});
+        }).val(context);
+        //create context link
+        dropdown.append(li);
+        return dropdown;
+        
+    },
+    _createPassageOptions: function (dropdown) {
         var selectedOptions = this.model.get("data").selectedOptions || "";
 
         for (var i = 0; i < this.items.length; i++) {
             var link = this._createLink(this.items[i].initial, __s[this.items[i].key], __s[this.items[i].help]);
 
             this._setVisible(link, selectedOptions.indexOf(this.items[i].initial) != -1);
-            dropdown.append($("<li>").append(link)).attr("role", "presentation");
+            dropdown.append($("<li>").addClass("passage").append(link)).attr("role", "presentation");
         }
 
         var self = this;
@@ -207,6 +236,7 @@ var PassageMenuView = Backbone.View.extend({
         });
         return dropdown;
     },
+    
     _createLink: function (value, text, title) {
         return $('<a></a>')
             .attr("href", "javascript:void(0)")

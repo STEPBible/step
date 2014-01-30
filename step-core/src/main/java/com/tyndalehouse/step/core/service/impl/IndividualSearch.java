@@ -84,14 +84,28 @@ public class IndividualSearch {
      *
      * @param type    the type of the search
      * @param versions the versions to be used to carry out the search
+     */
+    public IndividualSearch(final SearchType type, final List<String> versions, 
+                            final String query, final String range) {
+        this(type, versions, query, range, null);
+    }
+    
+    /**
+     * Instantiates a single search to be executed.
+     *
+     * @param type    the type of the search
+     * @param versions the versions to be used to carry out the search
      * @param query   the query to be run
      */
-    public IndividualSearch(final SearchType type, final List<String> versions, final String query, final String range) {
+    public IndividualSearch(final SearchType type, final List<String> versions,
+                            final String query, final String range, final String[] filter) {
         this.type = type;
         this.query = query;
         this.mainRange = range;
         this.versions = versions.toArray(new String[versions.size()]);
+        this.originalFilter = filter;
     }
+    
     /**
      * Initialises the search from the query string.
      *

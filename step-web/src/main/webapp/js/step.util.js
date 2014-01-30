@@ -58,7 +58,9 @@
                     args = [];
                 } else {
                     for (var i = 0; i < args.length; i++) {
-                        url += args[i];
+                        if(args[i] != undefined) {
+                            url += args[i];
+                        }
 
                         if (i < args.length - 1) {
                             url += "/";
@@ -200,6 +202,10 @@ step.util = {
         }
     },
     getPassageContainer: function (passageIdOrElement) {
+        if(!this._passageContainers) {
+            this._passageContainers = {};
+        }
+    
         //check if we have a number
         if (isNaN(parseInt(passageIdOrElement))) {
             //assume jquery selector or element
@@ -207,11 +213,11 @@ step.util = {
         }
 
         //check if we're storing it
-        if (this.passageContainers[passageIdOrElement] == null) {
+        if (this._passageContainers[passageIdOrElement] == null) {
             var container = $(".passageContainer[passage-id = " + passageIdOrElement + "]");
-            this.passageContainers[passageIdOrElement] = container;
+            this._passageContainers[passageIdOrElement] = container;
         }
-        return this.passageContainers[passageIdOrElement];
+        return this._passageContainers[passageIdOrElement];
     },
     delay: function () {
         var timer = 0;
@@ -389,13 +395,12 @@ step.util = {
 
         emptyOffDomAndPopulate: function (passageContent, passageHtml) {
             var parent = passageContent.parent();
-            passageContent.detach();
+//            passageContent.detach();
             passageContent.off("scroll");
+            passageContent.closest(".column").off("scroll");
 
             //we garbage collect in the background after the passage has loaded
-            var children = passageContent.children().detach();
-            children.remove();
-
+            passageContent.empty();
             passageContent.append(passageHtml);
             parent.append(passageContent);
         },

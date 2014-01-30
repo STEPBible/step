@@ -1219,6 +1219,9 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
                     case VERSE_NUMBERS:
                         tsep.setParameter(LookupOption.TINY_VERSE_NUMBERS.getXsltParameterName(), true);
                         break;
+                    case CHAPTER_BOOK_VERSE_NUMBER:
+                        tsep.setParameter(LookupOption.VERSE_NUMBERS.getXsltParameterName(), true);
+                        break;
                     case MORPHOLOGY:
                         tsep.setParameter("morphologyProvider", this.morphologyProvider);
                         break;

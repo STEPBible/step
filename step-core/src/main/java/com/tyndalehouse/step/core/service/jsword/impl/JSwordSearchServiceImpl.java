@@ -43,7 +43,6 @@ import com.tyndalehouse.step.core.exceptions.LuceneSearchException;
 import org.apache.lucene.search.IndexSearcher;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.BookException;
-import org.crosswire.jsword.book.Books;
 import org.crosswire.jsword.index.Index;
 import org.crosswire.jsword.index.IndexManager;
 import org.crosswire.jsword.index.IndexManagerFactory;
@@ -231,7 +230,7 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
         // if context > 0, then we need to add verse numbers:
         final List<LookupOption> lookupOptions = new ArrayList<LookupOption>();
         Collections.addAll(lookupOptions, options);
-        lookupOptions.add(LookupOption.VERSE_NUMBERS);
+        lookupOptions.add(LookupOption.CHAPTER_BOOK_VERSE_NUMBER);
 
         final Book bible = this.av11nService.getBookFromVersion(version);
         final List<SearchEntry> resultPassages = getPassagesForResults(bible, newResults, sq.getContext(),

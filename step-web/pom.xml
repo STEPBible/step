@@ -264,11 +264,11 @@
                             <jsSourceFiles>
                                 <jsSourceFile>js/defaults/step.defaults.js</jsSourceFile>
                             </jsSourceFiles>
-                            <jsFinalFile>js/step.defaults-${project.version}.js</jsFinalFile>
+                            <jsFinalFile>step.defaults-${project.version}.js</jsFinalFile>
                         </configuration>
                     </execution>
                     <execution>
-                        <id>minify-defaults</id>
+                        <id>minify-searches</id>
                         <phase>process-resources</phase>
                         <goals>
                             <goal>minify</goal>
@@ -282,7 +282,7 @@
                                 <jsSourceFile>js/backbone/views/view_display_word</jsSourceFile>
                                 <jsSourceFile>libs/dohighlight-min.js</jsSourceFile>
                             </jsSourceFiles>
-                            <jsFinalFile>js/step.search-${project.version}.js</jsFinalFile>
+                            <jsFinalFile>step.search-${project.version}.js</jsFinalFile>
                         </configuration>
                     </execution>
                 </executions>

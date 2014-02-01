@@ -230,7 +230,7 @@
                         <configuration>
                             <jsSourceDir>.</jsSourceDir>
                             <jsSourceFiles>
-                                <jsSourceFile>libs/jquery-tagcloud.js</jsSourceFile>
+                                <jsSourceFile>libs/jquery.tagcloud.js</jsSourceFile>
                                 <jsSourceFile>js/backbone/models/model_sidebar.js</jsSourceFile>
                                 <jsSourceFile>js/backbone/views/view_wordle_stat.js</jsSourceFile>
                                 <jsSourceFile>js/backbone/views/view_sidebar.js</jsSourceFile>
@@ -277,9 +277,9 @@
                             <jsSourceDir>.</jsSourceDir>
                             <jsSourceFiles>
                                 <jsSourceFile>js/backbone/views/view_display_search.js</jsSourceFile>
-                                <jsSourceFile>js/backbone/views/view_display_subject</jsSourceFile>
-                                <jsSourceFile>js/backbone/views/view_display_text/</jsSourceFile>
-                                <jsSourceFile>js/backbone/views/view_display_word</jsSourceFile>
+                                <jsSourceFile>js/backbone/views/view_display_text.js</jsSourceFile>
+                                <jsSourceFile>js/backbone/views/view_display_subject.js</jsSourceFile>
+                                <jsSourceFile>js/backbone/views/view_display_word.js</jsSourceFile>
                                 <jsSourceFile>libs/dohighlight-min.js</jsSourceFile>
                             </jsSourceFiles>
                             <jsFinalFile>step.search-${project.version}.js</jsFinalFile>

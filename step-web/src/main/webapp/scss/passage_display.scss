@@ -1,0 +1,17 @@
+@import 'template_variables';
+
+.passageContentHolder {
+  h2 {
+    margin-top: 0px;
+  } 
+}
+
+.verseNumber {
+  vertical-align: top;
+  font-size: 6pt;
+  margin-right: 2px;
+  cursor: hand;
+  background-color: $verseNumberBackground;
+  color: $headingColour;
+  font-weight: bold;
+}

@@ -1,11 +1,11 @@
 /*******************************************************************************
  * Copyright (c) 2012, Directors of the Tyndale STEP Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without 
  * modification, are permitted provided that the following conditions 
  * are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright 
  * notice, this list of conditions and the following disclaimer.
  * Redistributions in binary form must reproduce the above copyright 
@@ -16,7 +16,7 @@
  * nor the names of its contributors may be used to endorse or promote 
  * products derived from this software without specific prior written 
  * permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
@@ -35,42 +35,32 @@ package com.tyndalehouse.step.rest.framework;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
-import com.tyndalehouse.step.core.exceptions.LocalisedException;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
-import com.tyndalehouse.step.core.exceptions.TranslatedException;
-import com.tyndalehouse.step.core.exceptions.ValidationException;
 import com.tyndalehouse.step.core.models.ClientSession;
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.map.JsonMappingException;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Provider;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
-import java.util.ResourceBundle;
 
 import static java.lang.String.format;
 
 /**
  * The FrontController acts like a minimal REST server. The paths are resolved as follows:
- * 
+ * <p/>
  * /step-web/rest/controllerName/methodName/arg1/arg2/arg3
- * 
+ *
  * @author chrisburrell
- * 
  */
 @Singleton
-public class FrontController extends HttpServlet {
-    /** The Constant UTF_8_ENCODING. */
+public class FrontController extends AbstractAjaxController {
+    /**
+     * The Constant UTF_8_ENCODING.
+     */
     public static final String UTF_8_ENCODING = "UTF-8";
     private static final String EXTERNAL_CONTROLLER_SUB_PACKAGE = "external";
     private static final Logger LOGGER = LoggerFactory.getLogger(FrontController.class);
@@ -79,59 +69,45 @@ public class FrontController extends HttpServlet {
     private static final long serialVersionUID = 7898656504631346047L;
     private static final String CONTROLLER_SUFFIX = "Controller";
     private final transient Injector guiceInjector;
-    private final transient ObjectMapper jsonMapper = new ObjectMapper();
 
     private final transient Map<String, Method> methodNames = new HashMap<String, Method>();
     private final transient Map<String, Object> controllers = new HashMap<String, Object>();
-    private final transient ClientErrorResolver errorResolver;
-    private final Provider<ClientSession> clientSessionProvider;
 
     /**
      * creates the front controller which will dispatch all the requests
-     * <p />
+     * <p/>
      *
-     * @param guiceInjector the injector used to call the relevant controllers
-     * @param errorResolver the error resolver is the object that helps us translate errors for the client
+     * @param guiceInjector         the injector used to call the relevant controllers
+     * @param errorResolver         the error resolver is the object that helps us translate errors for the client
      * @param clientSessionProvider the client session provider
      */
     @Inject
     public FrontController(final Injector guiceInjector,
-            final ClientErrorResolver errorResolver,
-            final Provider<ClientSession> clientSessionProvider) {
+                           final ClientErrorResolver errorResolver,
+                           final Provider<ClientSession> clientSessionProvider) {
+        super(clientSessionProvider, errorResolver);
         this.guiceInjector = guiceInjector;
-
-        this.errorResolver = errorResolver;
-        this.clientSessionProvider = clientSessionProvider;
-
-        this.jsonMapper.setSerializationInclusion(JsonSerialize.Inclusion.NON_NULL);
-    }
-
-    @Override
-    protected void doGet(final HttpServletRequest request, final HttpServletResponse response) {
-        byte[] jsonEncoded;
-
-        StepRequest sr = null;
-        try {
-                sr = new StepRequest(request, UTF_8_ENCODING);
-                    LOGGER.debug("The cache was missed so invoking method now...");
-                    jsonEncoded = invokeMethod(sr);
-
-            setupHeaders(response, jsonEncoded.length);
-            response.getOutputStream().write(jsonEncoded);
-            // CHECKSTYLE:OFF We allow catching errors here, since we are at the top of the structure
-        } catch (final Exception e) {
-            // CHECKSTYLE:ON
-            handleError(response, e, sr);
-        }
     }
 
     /**
      * Invokes the method on the controller instance and returns JSON-ed results
-     * 
-     * @param sr the STEP Request containing all pertinent information
+     *
      * @return byte array representation of the return value
      */
-    byte[] invokeMethod(final StepRequest sr) {
+    @Override
+    protected Object invokeMethod(HttpServletRequest servletRequest) throws Exception {
+        StepRequest sr = new StepRequest(servletRequest, UTF_8_ENCODING);
+        return invokeMethodWithStepRequest(sr);
+    }
+
+    /**
+     * @param sr allows to pass a StepRequest instead of the normal HttpServletRequest
+     * @return the object as a result of the call
+     * @throws IllegalAccessException
+     * @throws InvocationTargetException
+     */
+    Object invokeMethodWithStepRequest(final StepRequest sr) throws IllegalAccessException, InvocationTargetException {
+        LOGGER.debug("The cache was missed so invoking method now...");
 
         // controller instance on which to call a method
         final Object controllerInstance = getController(sr.getControllerName(), sr.isExternal());
@@ -141,166 +117,15 @@ public class FrontController extends HttpServlet {
                 sr.getArgs(), sr.getCacheKey().getMethodKey());
 
         // invoke the three together
-        Object returnVal;
-        try {
-            returnVal = controllerMethod.invoke(controllerInstance, (Object[]) sr.getArgs());
-
-            // CHECKSTYLE:OFF
-        } catch (final Exception e) {
-            // LOGGER.warn(e.getMessage(), e);
-            returnVal = convertExceptionToJson(e);
-        }
-        return getEncodedJsonResponse(returnVal);
-        // CHECKSTYLE:ON
+        return controllerMethod.invoke(controllerInstance, (Object[]) sr.getArgs());
     }
 
-    /**
-     * We attempt here to rethrow the exception that caused the invocation target exception, so that we can
-     * handle it nicely for the user
-     * 
-     * @param e the wrapped exception that happened during the reflective call
-     * @return a client handled issue which wraps the exception that was raised
-     */
-    private ClientHandledIssue convertExceptionToJson(final Exception e) {
-        // first we check to see if it's a step exception, or an illegal argument exception
-
-        final Throwable cause = e.getCause();
-        return new ClientHandledIssue(getExceptionMessageAndLog(cause), this.errorResolver.resolve(cause
-                .getClass()));
-    }
-
-    /**
-     * Returns a json response that is encoded
-     * 
-     * @param responseValue the value that should be encoded
-     * @return the encoded form of the JSON response
-     */
-    byte[] getEncodedJsonResponse(final Object responseValue) {
-        LOGGER.debug("Encoding the following response [{}]", responseValue);
-
-        try {
-            String response;
-            if (responseValue == null) {
-                return new byte[0];
-            } else {
-                response = this.jsonMapper.writeValueAsString(responseValue);
-            }
-
-            return response.getBytes(UTF_8_ENCODING);
-        } catch (final JsonGenerationException e) {
-            throw new StepInternalException(e.getMessage(), e);
-        } catch (final JsonMappingException e) {
-            throw new StepInternalException(e.getMessage(), e);
-        } catch (final IOException e) {
-            throw new StepInternalException(e.getMessage(), e);
-        }
-    }
-
-
-    /**
-     * sets up the headers and the length of the message
-     * 
-     * @param response the response
-     * @param length the length of the message
-     */
-    void setupHeaders(final HttpServletResponse response, final int length) {
-        // we ensure that headers are set up appropriately
-        response.addDateHeader("Date", System.currentTimeMillis());
-        response.setCharacterEncoding(UTF_8_ENCODING);
-        response.setContentType("application/json");
-        response.setContentLength(length);
-        response.setHeader("step-language", this.clientSessionProvider.get().getLocale().getLanguage());
-    }
-
-    /**
-     * deals with an error whilst executing the request
-     * 
-     * @param response the response
-     * 
-     * @param e the exception
-     * @param sr the step request
-     */
-    void handleError(final HttpServletResponse response, final Throwable e, final StepRequest sr) {
-        String requestId = null;
-        LOGGER.debug("Handling error...");
-        try {
-            requestId = sr == null ? "Failed to parse request?" : sr.getCacheKey().getResultsKey();
-            if (e != null) {
-                final ClientHandledIssue issue = new ClientHandledIssue(getExceptionMessageAndLog(e));
-                final byte[] errorMessage = this.getEncodedJsonResponse(issue);
-                response.getOutputStream().write(errorMessage);
-                setupHeaders(response, errorMessage.length);
-            }
-            // CHECKSTYLE:OFF We allow catching errors here, since we are at the top of the structure
-        } catch (final Exception unableToSendError) {
-            // CHECKSTYLE:ON
-            LOGGER.error("Unable to output error for request" + requestId, unableToSendError);
-            LOGGER.error("Due to original Throwable", e);
-        }
-    }
-
-    /**
-     * Gets the exception message.
-     * 
-     * @param e the e
-     * @return the exception message
-     */
-    private String getExceptionMessageAndLog(final Throwable e) {
-        LOGGER.trace("Tracing exception: ", e);
-
-        final Locale locale = this.clientSessionProvider.get().getLocale();
-        final ResourceBundle bundle = ResourceBundle.getBundle("ErrorBundle", locale);
-
-        if (!(e instanceof StepInternalException)) {
-            return returnInternalError(e, bundle);
-        }
-
-        // else we're looking at a STEP caught exception
-        if (e instanceof LocalisedException) {
-            return e.getMessage();
-        }
-
-        if (e instanceof TranslatedException) {
-            final TranslatedException translatedException = (TranslatedException) e;
-            return format(bundle.getString(translatedException.getMessage()), translatedException.getArgs());
-        }
-
-        if (e instanceof ValidationException) {
-            final ValidationException validationException = (ValidationException) e;
-            switch (validationException.getExceptionType()) {
-                case LOGIN_REQUIRED:
-                    return bundle.getString("error_login");
-                case USER_MISSING_FIELD:
-                    return bundle.getString("error_missing_field");
-                case USER_VALIDATION_ERROR:
-                    return bundle.getString("error_validation");
-                case APP_MISSING_FIELD:
-                case CONTROLLER_INITIALISATION_ERROR:
-                case SERVICE_VALIDATION_ERROR:
-                default:
-                    return returnInternalError(e, bundle);
-            }
-        }
-        return returnInternalError(e, bundle);
-    }
-
-    /**
-     * Return internal error.
-     * 
-     * @param e the e
-     * @param bundle the bundle
-     * @return the string
-     */
-    private String returnInternalError(final Throwable e, final ResourceBundle bundle) {
-        LOGGER.error(e.getMessage(), e);
-        return bundle.getString("error_internal");
-    }
 
     /**
      * Retrieves a controller, either from the cache, or from Guice.
-     * 
+     *
      * @param controllerName the name of the controller (used as the key for the cache)
-     * @param isExternal indicates whether the request should be found in the external controllers
+     * @param isExternal     indicates whether the request should be found in the external controllers
      * @return the controller object
      */
     Object getController(final String controllerName, final boolean isExternal) {
@@ -339,15 +164,15 @@ public class FrontController extends HttpServlet {
 
     /**
      * Returns the method to be invoked upon the controller
-     * 
-     * @param methodName the method name
+     *
+     * @param methodName         the method name
      * @param controllerInstance the instance of the controller
-     * @param args the list of arguments, required to resolve the correct method if they have arguments
-     * @param cacheKey the key to retrieve in the cache
+     * @param args               the list of arguments, required to resolve the correct method if they have arguments
+     * @param cacheKey           the key to retrieve in the cache
      * @return the method to be invoked
      */
     Method getControllerMethod(final String methodName, final Object controllerInstance, final Object[] args,
-            final String cacheKey) {
+                               final String cacheKey) {
         final Class<?> controllerClass = controllerInstance.getClass();
 
         // retrieve method from cache, or put in cache if not there

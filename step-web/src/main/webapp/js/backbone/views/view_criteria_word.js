@@ -134,7 +134,7 @@ var WordCriteria = SearchCriteria.extend({
                             response($.map(text, function (item) {
                                 return { label: "<span>" +
                                     "<span class='" + (item.strongNumber[0] == 'H' ? 'hbFont ancientHbSearchSuggestion' : 'greekLanguage ancientSearchSuggestion') + " suggestionColumn'>" + item.matchingForm + "</span>" +
-                                    "<span class='suggestionColumn stepTransliteration'>" + step.util.ui.markUpTransliteration(item.stepTransliteration) + "</span>" +
+                                    "<span class='suggestionColumn stepTransliteration'>" + item.stepTransliteration + "</span>" +
                                     "<span class='suggestionColumn'>" + item.gloss + "</span>" +
                                     "</span>", value: suggestionType == "MEANING" ? item.gloss : item.matchingForm };
                             }));

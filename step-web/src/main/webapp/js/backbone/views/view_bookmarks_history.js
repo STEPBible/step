@@ -144,7 +144,7 @@ var BookmarkHistory = Backbone.View.extend({
     },
 
     _getContainer: function (type) {
-        return type == 'bookmarks' ? this.$el.find("#bookmarkDisplayPane") : this.$el.find("#historyDisplayPane");
+        return type == 'bookmarks' ? this.$el.find("#bookmarks .panel-body") : this.$el.find("#recent_texts .panel-body");
     },
 
     _getAscending: function (type) {

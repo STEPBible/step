@@ -35,6 +35,7 @@ package com.tyndalehouse.step.core.models;
 import static com.tyndalehouse.step.core.xsl.XslConversionType.DEFAULT;
 
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
+import com.tyndalehouse.step.core.service.BibleInformationService;
 import com.tyndalehouse.step.core.xsl.XslConversionType;
 import org.codehaus.jackson.annotate.JsonValue;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
@@ -58,6 +59,10 @@ public enum LookupOption {
      */
     VERSE_NUMBERS('V', "VNum", XslConversionType.DEFAULT, true),
     /**
+     * Full verse numbers including book and verse numbers
+     */
+    CHAPTER_BOOK_VERSE_NUMBER(BibleInformationService.UNAVAILABLE_TO_UI, "BCVNum", XslConversionType.DEFAULT, true),
+    /**
      * verses to be displayed on new line
      */
     VERSE_NEW_LINE('L', "VLine", XslConversionType.DEFAULT),
@@ -73,7 +78,7 @@ public enum LookupOption {
     /**
      * The cross refs.
      */
-    EXTENDED_XREFS('_', "ExtendsXRefs", XslConversionType.DEFAULT, true),
+    EXTENDED_XREFS(BibleInformationService.UNAVAILABLE_TO_UI, "ExtendsXRefs", XslConversionType.DEFAULT, true),
 
     /**
      * English vocabulary interlinear
@@ -114,11 +119,11 @@ public enum LookupOption {
     /**
      * Interlinears are available when Strongs are available.
      */
-    INTERLINEAR('_', "Interlinear", XslConversionType.INTERLINEAR),
+    INTERLINEAR(BibleInformationService.UNAVAILABLE_TO_UI, "Interlinear", XslConversionType.INTERLINEAR),
     /**
      * Showing tiny verse numbers
      */
-    TINY_VERSE_NUMBERS('_', "TinyVNum", XslConversionType.DEFAULT),
+    TINY_VERSE_NUMBERS(BibleInformationService.UNAVAILABLE_TO_UI, "TinyVNum", XslConversionType.DEFAULT),
     /**
      * colour codes the grammar
      */
@@ -127,17 +132,18 @@ public enum LookupOption {
     /**
      * not available to the UI
      */
-    CHAPTER_VERSE('_', "CVNum", null),
+    CHAPTER_VERSE(BibleInformationService.UNAVAILABLE_TO_UI, "CVNum", null),
     /**
      * displays the headings only for a selected XML fragment, e.g. first level subject search
      */
-    HEADINGS_ONLY('_', "HeadingsOnly", XslConversionType.HEADINGS_ONLY),
+    HEADINGS_ONLY(BibleInformationService.UNAVAILABLE_TO_UI, "HeadingsOnly", XslConversionType.HEADINGS_ONLY),
 
     /**
      * Whether to hide the XGen OSIS elements
      */
-    HIDE_XGEN('_', "HideXGen", XslConversionType.DEFAULT);
+    HIDE_XGEN(BibleInformationService.UNAVAILABLE_TO_UI, "HideXGen", XslConversionType.DEFAULT);
 
+    
     private static final Map<Character, LookupOption> uiToOptions = new HashMap<Character, LookupOption>(16);
     private final char uiName;
     private final String xsltParameterName;
@@ -179,7 +185,7 @@ public enum LookupOption {
      * @return
      */
     public static LookupOption fromUiOption(char c) {
-        if(c == '_') {
+        if(c == BibleInformationService.UNAVAILABLE_TO_UI) {
             throw new StepInternalException("Underscore option is being looked up.");
         }
 
@@ -218,4 +224,5 @@ public enum LookupOption {
     public char getUiName() {
         return uiName;
     }
+
 }

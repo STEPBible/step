@@ -46,7 +46,8 @@ import com.tyndalehouse.step.core.models.search.StrongCountsAndSubjects;
  * 
  */
 public interface BibleInformationService {
-
+    public static final char UNAVAILABLE_TO_UI = '_';
+    
     /**
      * Queries Jsword to return all the installed versions of the bible
      * 
@@ -87,16 +88,6 @@ public interface BibleInformationService {
      */
     OsisWrapper getPassageText(String version, int startVerseId, int endVerseId, String lookupOptions,
             String interlinearVersion, Boolean round);
-
-    /**
-     * gets any available features, but for this type of view only
-     * 
-     * @param version the version to lookup
-     *                @param extraVersions the other version that are currently selected
-     * @param displayMode the intended display mode
-     * @return the features available for a Bible (for e.g. Strong numbers)
-     */
-    AvailableFeatures getAvailableFeaturesForVersion(String version, String extraVersions, String displayMode);
 
     /**
      * Gets a list of all supported features so far

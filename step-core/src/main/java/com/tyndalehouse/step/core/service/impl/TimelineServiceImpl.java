@@ -218,8 +218,8 @@ public class TimelineServiceImpl implements TimelineService {
         final String references = ete.getEvent().get("storedReferences");
         final String[] refs = StringUtils.split(references);
         for (final String r : refs) {
-            final OsisWrapper osisText = this.jsword.peakOsisText(version, KEYED_REFERENCE_VERSION, r);
-            ete.add(osisText);
+//            final OsisWrapper osisText = this.jsword.peakOsisText(version, KEYED_REFERENCE_VERSION, r);
+//            ete.add(osisText);
         }
         return ete;
     }

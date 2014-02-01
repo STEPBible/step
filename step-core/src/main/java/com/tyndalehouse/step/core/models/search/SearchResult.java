@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.tyndalehouse.step.core.models.LexiconSuggestion;
+import com.tyndalehouse.step.core.service.impl.SearchType;
 
 /**
  * 
@@ -20,7 +21,12 @@ public class SearchResult implements Serializable {
     private List<String> strongHighlights;
     private String order;
     private List<LexiconSuggestion> definitions;
-    private String[] languages;
+    private String[] languageCode;
+    private SearchType searchType;
+    private int pageSize;
+    private int pageNumber;
+    private String masterVersion;
+    private String extraVersions;
 
     /**
      * @return the query
@@ -150,14 +156,75 @@ public class SearchResult implements Serializable {
     /**
      * @param languages The languages that were searched across
      */
-    public void setLanguages(final String[] languages) {
-        this.languages = languages;
+    public void setLanguageCode(final String[] languages) {
+        this.languageCode = languages;
     }
 
     /**
      * @return the languages that were searched across
      */
-    public String[] getLanguages() {
-        return languages;
+    public String[] getLanguageCode() {
+        return languageCode;
+    }
+
+    public void setSearchType(final SearchType searchType) {
+        this.searchType = searchType;
+    }
+
+    /**
+     * @return the type of search
+     */
+    public SearchType getSearchType() {
+        return searchType;
+    }
+
+    /**
+     * @param pageSize the page size used in the search
+     */
+    public void setPageSize(final int pageSize) {
+        this.pageSize = pageSize;
+    }
+
+    /**
+     * @return the page size
+     */
+    public int getPageSize() {
+        return pageSize;
+    }
+
+    /**
+     * @param pageNumber sets the current page number
+     */
+    public void setPageNumber(final int pageNumber) {
+        this.pageNumber = pageNumber;
+    }
+
+    /**
+     * @return the page number
+     */
+    public int getPageNumber() {
+        return pageNumber;
+    }
+
+    /**
+     * @param masterVersion the master version
+     */
+    public void setMasterVersion(final String masterVersion) {
+        this.masterVersion = masterVersion;
+    }
+
+    /**
+     * @param extraVersions any other versions
+     */
+    public void setExtraVersions(final String extraVersions) {
+        this.extraVersions = extraVersions;
+    }
+
+    public String getMasterVersion() {
+        return masterVersion;
+    }
+
+    public String getExtraVersions() {
+        return extraVersions;
     }
 }

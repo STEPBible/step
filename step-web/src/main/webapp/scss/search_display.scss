@@ -1,0 +1,27 @@
+@import 'template_variables';
+
+.searchResultRow {
+  .verse {
+    vertical-align: middle;
+  }
+  p {
+    &:before {
+      content: "/";
+    }
+    display: inline;
+    font-style: italic;
+    margin: 0px 5px 0px 5px;
+  }
+  .verseNumber {
+    vertical-align: middle;
+  }
+}
+
+h4.lexicalGrouping {
+  font-size: $defaultFontSize;
+}
+
+.resultsLabel {
+  font-style: italic;
+  clear: right;
+}

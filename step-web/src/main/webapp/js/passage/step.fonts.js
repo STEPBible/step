@@ -67,22 +67,5 @@ step.fonts = {
         }
     },
 
-    changeFontSize: function (source, increment, triggerChange) {
-        var elements = $(".passageContentHolder, .passageButtonsWidget", step.util.getPassageContainer(source));
-        var passageId = step.passage.getPassageId(source);
-
-        var key = this.getFontKey(elements);
-        $.each(elements, function (i, item) {
-            var fontSize = parseInt($(this).css("font-size"));
-            var newFontSize = fontSize + increment;
-
-            //key it to be the default font, unicodeFont or Hebrew font
-            step.fonts.fontSizes[passageId][key] = newFontSize;
-            $(this).css("font-size", newFontSize);
-        });
-
-        if (triggerChange) {
-            Backbone.Events.trigger("font:change:" + passageId);
-        }
-    }
+    
 };

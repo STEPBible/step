@@ -1,0 +1,30 @@
+@import "template_variables";
+
+.kolumny {
+  @media screen and (max-width: $stepMD) {
+    max-height: 500px;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+  @media screen and (min-width: $stepMD + 1px) {
+    -moz-column-count: 2; /* Firefox */
+    -webkit-column-count: 2; /* Safari and Chrome */
+    column-count: 2;
+    max-width: 600px;
+  }
+}
+
+.miniKolumny {
+  @media screen and (max-width: $stepLG) {
+    max-height: 500px;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+  @media screen and (min-width: $stepLG + 1px) {
+    -moz-column-count: 2; /* Firefox */
+    -webkit-column-count: 2; /* Safari and Chrome */
+    column-count: 2;
+    max-width: 800px;
+    min-width: 500px;
+  }
+}

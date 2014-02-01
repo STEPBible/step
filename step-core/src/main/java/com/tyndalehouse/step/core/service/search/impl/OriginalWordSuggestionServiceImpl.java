@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.service.SearchService;
@@ -44,6 +45,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author chrisburrell
  */
+@Singleton
 public class OriginalWordSuggestionServiceImpl implements OriginalWordSuggestionService {
     private static final Logger LOGGER = LoggerFactory.getLogger(OriginalWordSuggestionServiceImpl.class);
     private static final String SIMPLIFIED_TRANSLITERATION = "simplifiedStepTransliteration:";

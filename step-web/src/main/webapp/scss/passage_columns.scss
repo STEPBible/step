@@ -1,0 +1,42 @@
+@import 'template_variables';
+@import 'mixins';
+@import 'passage_options';
+@import 'passage_display';
+@import 'search_display';
+
+.mainPanel {
+  min-height: 100%;
+  height: 100%;
+  margin: 0 auto;
+}
+
+#columnHolder {
+  overflow-y: hidden;
+  @include padding-from-header;
+
+  .column {
+    border-radius: 3;
+    height: 100%;
+    overflow-y: scroll;
+    padding: 5px;
+    border: 1px solid lightgrey;
+
+    &.active {
+      border-color: $activeColor;
+      border-width: 2px;
+      -webkit-box-shadow: 0 3px 12px rgba(0, 0, 0, 0.175);
+      box-shadow: 0 3px 12px rgba(0, 0, 0, 0.175);
+      
+      .activeMarker {
+        position: absolute;
+        top: 0px;
+        left: 50%;
+        border-color: red;
+        border-top: 4px solid $activeColor;
+        border-right: 4px solid transparent;
+        border-bottom: 0 dotted;
+        border-left: 4px solid transparent;
+      }
+    }
+  }
+}

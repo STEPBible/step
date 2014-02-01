@@ -6,12 +6,12 @@ var SubjectDisplayView = SearchDisplayView.extend({
         this.hasPages = false;
     },
 
-    renderSearch: function (searchResults, query, masterVersion) {
+    renderSearch: function (query, masterVersion) {
         console.log("Rendering subject search results");
-        var query = step.util.undoReplaceSpecialChars(searchResults.query);
+        var query = step.util.undoReplaceSpecialChars(this.model.get("query"));
 
         if (query.startsWith("s=")) {
-            return this._doSimpleSubjectSearchResults(masterVersion, query, searchResults.results);
+            return this._doSimpleSubjectSearchResults(masterVersion, query, this.model.get("results"));
         } else {
             //if we're looking at a search that was override, then let's overwrite the various variables of interest
             var subjectType = this.model.get("subjectSearchType");
@@ -22,7 +22,7 @@ var SubjectDisplayView = SearchDisplayView.extend({
             }
             
             //caters for s+=, s++= and sr=
-            return this._doNaveSearchResults(query, searchResults.results);
+            return this._doNaveSearchResults(query, this.model.get("results"));
         }
     },
 
@@ -105,7 +105,7 @@ var SubjectDisplayView = SearchDisplayView.extend({
      * @param query the query syntax that was used to search
      * @private
      */
-    _doSpecificSearchRequirements: function (query, results, resultsWrapper, masterVersion) {
+    _doSpecificSearchRequirements: function (query, results, masterVersion) {
         var undoneQuery = step.util.undoReplaceSpecialChars(query);
 
         if (undoneQuery.startsWith("s=")) {

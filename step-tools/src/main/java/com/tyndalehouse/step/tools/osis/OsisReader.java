@@ -7,7 +7,6 @@ import java.util.List;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.BookData;
 import org.crosswire.jsword.book.Books;
-import org.crosswire.jsword.book.OSISUtil;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.input.JDOMParseException;
@@ -53,7 +52,7 @@ public class OsisReader {
 
         // do the test
         final JSwordPassageServiceImpl jsi = new JSwordPassageServiceImpl(
-                TestUtils.mockVersificationService(), null, null, null, TestUtils.mockVersionResolver());
+                TestUtils.mockVersificationService(), null, null, null, TestUtils.mockVersionResolver(), null);
         final List<LookupOption> options = new ArrayList<LookupOption>();
 
 //        options.add(LookupOption.DIVIDE_HEBREW);

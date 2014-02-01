@@ -133,17 +133,26 @@ public class ModuleController {
 
     /**
      * a method that returns all the definitions for a particular key
-     * 
+     *
      * @param vocabIdentifiers the strong number
-     * @param morphIdentifiers the morphology code to lookup
-     * @param osisId the id of the verse that we are looking up
      * @return the definition(s) that can be resolved from the reference provided
      */
 
-    public Info getInfo(final String vocabIdentifiers, final String morphIdentifiers, final String osisId) {
+    public Info getInfo(final String vocabIdentifiers) {
+       return this.getInfo(vocabIdentifiers, null);
+    }
+    
+    /**
+     * a method that returns all the definitions for a particular key
+     * 
+     * @param vocabIdentifiers the strong number
+     * @param morphIdentifiers the morphology code to lookup
+     * @return the definition(s) that can be resolved from the reference provided
+     */
+
+    public Info getInfo(final String vocabIdentifiers, final String morphIdentifiers) {
         // notEmpty(strong, "A reference must be provided to obtain a definition", USER_MISSING_FIELD);
-        LOGGER.debug("Getting information for [{}], [{}], [{}]", new Object[] { this.vocab, morphIdentifiers,
-                osisId });
+        LOGGER.debug("Getting information for [{}], [{}], [{}]", new Object[] { this.vocab, morphIdentifiers });
 
         final Info i = new Info();
         i.setMorphInfos(translateToInfo(this.morphology.getMorphology(morphIdentifiers), true));

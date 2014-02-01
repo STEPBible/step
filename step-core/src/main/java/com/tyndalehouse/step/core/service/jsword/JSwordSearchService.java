@@ -33,17 +33,19 @@ public interface JSwordSearchService {
     /**
      * A simple search that runs end to end, supports mutliple versions, runs on currentSearch only
      *
-     * @param sq      the search query
-     * @param version the version desired
-     * @param options the options to be used to retrieve the text
+     * @param sq                 the search query
+     * @param version            the version to lookup the results from
+     * @param options            the options to be used to retrieve the text
      * @return the results
      */
-    SearchResult search(SearchQuery sq, String version, LookupOption... options);
+    SearchResult search(SearchQuery sq, String version,
+                        LookupOption... options);
+
 
     /**
      * Searches uniquely for the keys, in order to do the passage lookup at a later stage
      *
-     * @param sq the search query
+     * @param sq                 the search query
      * @return the key to all the results
      */
     Key searchKeys(SearchQuery sq);
@@ -72,13 +74,13 @@ public interface JSwordSearchService {
      * Can be called if we have already trimmed down the key - used in multi-version searches
      *
      * @param sq         the search criteria
-     * @param version    the version
+     * @param versions   the list of versions
      * @param total      the total number of results
      * @param newResults the paged key
      * @param options    the options to set when generating the HTML
      * @return the passages
      */
-    SearchResult getResultsFromTrimmedKeys(SearchQuery sq, String version, int total, Key newResults, LookupOption... options);
+    SearchResult getResultsFromTrimmedKeys(SearchQuery sq, String[] versions, int total, Key newResults, LookupOption... options);
 
     /**
      * Gets an lucene index searcher. NOTE: it is the responsibility of the

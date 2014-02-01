@@ -32,6 +32,8 @@
  ******************************************************************************/
 package com.tyndalehouse.step.rest.controllers;
 
+import static org.junit.Assert.fail;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -41,6 +43,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import com.tyndalehouse.step.core.service.PassageOptionsValidationService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -64,8 +67,10 @@ public class BibleControllerTest {
     private final BibleInformationService bibleInformation = mock(BibleInformationService.class);
 
     @Mock
-    private ClientSessionProvider clientSessionProvider;
+    private PassageOptionsValidationService optionsValidationService;
 
+    @Mock
+    private ClientSessionProvider clientSessionProvider;
     private BibleController testController;
 
     /**
@@ -73,7 +78,7 @@ public class BibleControllerTest {
      */
     @Before
     public void setUp() {
-        this.testController = new BibleController(this.bibleInformation, this.clientSessionProvider);
+        this.testController = new BibleController(this.bibleInformation, this.clientSessionProvider, optionsValidationService);
     }
 
     /**
@@ -165,7 +170,7 @@ public class BibleControllerTest {
     public void testGetFeatures() {
         final String version = "abp";
         this.testController.getFeatures(version, null, "NONE");
-        verify(this.bibleInformation).getAvailableFeaturesForVersion(version, null, "NONE");
+        verify(this.optionsValidationService).getAvailableFeaturesForVersion(eq(version), any(List.class), eq("NONE"));
     }
 
     /**

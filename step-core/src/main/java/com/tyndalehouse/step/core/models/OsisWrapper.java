@@ -36,6 +36,8 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
+import com.tyndalehouse.step.core.service.impl.SearchType;
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.crosswire.jsword.passage.Key;
 import org.crosswire.jsword.versification.Versification;
 
@@ -49,6 +51,8 @@ import com.tyndalehouse.step.core.utils.HeadingsUtil;
  */
 public class OsisWrapper implements Serializable {
     private static final long serialVersionUID = -5651330317995494895L;
+    @JsonIgnore
+    private final Key key;
     private String value;
     private String reference;
     private String osisId;
@@ -58,7 +62,13 @@ public class OsisWrapper implements Serializable {
     private int endRange;
     private final String[] languageCode;
     private final String longName;
+    private final InterlinearMode interlinearMode;
+    private final String extraVersions;
+    private final String masterVersion;
     private Map<String, List<LexiconSuggestion>> strongNumbers;
+    private String options;
+    private String selectedOptions;
+    private SearchType searchType = SearchType.PASSAGE;
 
     /**
      * the value to be wrapped
@@ -68,12 +78,29 @@ public class OsisWrapper implements Serializable {
      * @param languageCode the ISO language code
      * @param v11n the versification system used
      */
-    public OsisWrapper(final String value, final Key key, final String[] languageCode, final Versification v11n) {
+    public OsisWrapper(final String value, final Key key, final String[] languageCode, final Versification v11n,
+                       final String masterVersion, final InterlinearMode interlinearMode, final String extraVersions) {
         this.value = value;
+        this.key = key;
+        this.masterVersion = masterVersion;
+        this.interlinearMode = interlinearMode;
+        this.extraVersions = extraVersions;
         this.reference = key.getName();
         this.longName = HeadingsUtil.getLongHeader(v11n, key);
         this.osisId = key.getOsisID();
         this.languageCode = languageCode;
+    }
+
+    public InterlinearMode getInterlinearMode() {
+        return interlinearMode;
+    }
+
+    public String getExtraVersions() {
+        return extraVersions;
+    }
+
+    public String getMasterVersion() {
+        return masterVersion;
     }
 
     /**
@@ -203,4 +230,46 @@ public class OsisWrapper implements Serializable {
     public Map<String, List<LexiconSuggestion>> getStrongNumbers() {
         return this.strongNumbers;
     }
+
+    /**
+     * @return the options available to this particular passage
+     */
+    public String getOptions() {
+        return options;
+    }
+
+    /**
+     * @param options options available for this passage.
+     */
+    public void setOptions(final String options) {
+        this.options = options;
+    }
+
+    /**
+     * @param selectedOptions the options used for this passage
+     */
+    public void setSelectedOptions(final String selectedOptions) {
+        this.selectedOptions = selectedOptions;
+    }
+
+    /**
+     * @return the selected options that were used for the passage
+     */
+    public String getSelectedOptions() {
+        return selectedOptions;
+    }
+
+    /**
+     * @return a JSword key
+     */
+    public Key getKey(){ 
+        return this.key;
+    }
+
+    /**
+     * @return the search type
+     */
+    public SearchType getSearchType() {
+        return this.searchType;
+    }    
 }

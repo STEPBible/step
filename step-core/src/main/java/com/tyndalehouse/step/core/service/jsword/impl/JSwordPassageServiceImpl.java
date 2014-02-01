@@ -54,6 +54,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.xml.transform.TransformerException;
 
+import com.tyndalehouse.step.core.service.PassageOptionsValidationService;
 import com.tyndalehouse.step.core.utils.JSwordUtils;
 import org.crosswire.common.xml.Converter;
 import org.crosswire.common.xml.JDOMSAXEventProvider;
@@ -112,27 +113,31 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
     private final VocabularyService vocabProvider;
     private final ColorCoderProviderImpl colorCoder;
     private final VersionResolver resolver;
+    private final PassageOptionsValidationService optionsValidationService;
     private final Book kjvaBook;
     private final Book esvBook;
 
     /**
      * constructs the jsword service.
      *
-     * @param versificationService jsword versification service
-     * @param morphologyProvider   provides morphological information
-     * @param vocabProvider        the service providing lexicon and vocabulary information
-     * @param colorCoder           the service to color code a passage
-     * @param resolver             the resolver
+     * @param versificationService     jsword versification service
+     * @param morphologyProvider       provides morphological information
+     * @param vocabProvider            the service providing lexicon and vocabulary information
+     * @param colorCoder               the service to color code a passage
+     * @param resolver                 the resolver
+     * @param optionsValidationService
      */
     @Inject
     public JSwordPassageServiceImpl(final JSwordVersificationService versificationService,
                                     final MorphologyServiceImpl morphologyProvider, final VocabularyService vocabProvider,
-                                    final ColorCoderProviderImpl colorCoder, final VersionResolver resolver) {
+                                    final ColorCoderProviderImpl colorCoder, final VersionResolver resolver,
+                                    final PassageOptionsValidationService optionsValidationService) {
         this.versificationService = versificationService;
         this.morphologyProvider = morphologyProvider;
         this.vocabProvider = vocabProvider;
         this.colorCoder = colorCoder;
         this.resolver = resolver;
+        this.optionsValidationService = optionsValidationService;
 
         kjvaBook = Books.installed().getBook("KJVA");
         esvBook = Books.installed().getBook(JSwordPassageService.REFERENCE_BOOK);
@@ -468,21 +473,65 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
     }
 
     @Override
-    public OsisWrapper peakOsisText(final String version, final String keyedVersion, final String r) {
+    public OsisWrapper peakOsisText(String[] versions, Key lookupKey, List<LookupOption> options, String interlinearMode) {
         // obtain first verse of each reference for display and add "..." on them...
-        final List<LookupOption> lookupOptions = new ArrayList<LookupOption>();
+        final List<LookupOption> lookupOptions = new ArrayList<LookupOption>(options);
         lookupOptions.add(LookupOption.HIDE_XGEN);
 
-        final Book currentBook = this.versificationService.getBookFromVersion(keyedVersion);
-        Key keyToPassage;
-        try {
-            keyToPassage = currentBook.getKey(r);
-        } catch (final NoSuchKeyException e) {
-            throw new LocalisedException(e, e.getMessage());
+
+        return this.getPassageByDisplayMode(Arrays.asList(versions), lookupKey, lookupOptions, interlinearMode);
+    }
+
+    public OsisWrapper getPassageByDisplayMode(List<String> versionsInput, Key reference, List<LookupOption> options, final String interlinearMode) {
+        if (versionsInput.size() == 0) {
+            throw new StepInternalException("No versions specified - app error?");
         }
 
-        final Key firstVerse = this.getFirstVerseExcludingZero(keyToPassage, currentBook);
-        return this.getOsisText(version, firstVerse.getOsisID(), lookupOptions, null, InterlinearMode.NONE);
+        final String masterVersion = versionsInput.get(0);
+        final List<String> extraVersions = this.getExtras(versionsInput);
+
+        final InterlinearMode desiredModeOfDisplay = this.optionsValidationService.getDisplayMode(interlinearMode, masterVersion, extraVersions);
+
+        OsisWrapper passageText;
+        final Set<LookupOption> lookupOptions = this.optionsValidationService.trim(
+                options, masterVersion, extraVersions,
+                desiredModeOfDisplay, null);
+
+        if (INTERLINEAR != desiredModeOfDisplay && NONE != desiredModeOfDisplay) {
+            // split the versions
+            passageText = this.getInterleavedVersions(versionsInput.toArray(new String[versionsInput.size()]), reference, new ArrayList<LookupOption>(lookupOptions),
+                    desiredModeOfDisplay);
+        } else {
+            final String extraVersionsAsString = this.getVersionsAsStrings(extraVersions);
+            passageText = this.getOsisText(masterVersion, reference, new ArrayList<LookupOption>(lookupOptions),
+                    extraVersionsAsString, desiredModeOfDisplay);
+        }
+
+        passageText.setOptions(this.optionsValidationService.optionsToString(
+                this.optionsValidationService.getAvailableFeaturesForVersion(masterVersion, extraVersions, interlinearMode).getOptions()));
+        passageText.setSelectedOptions(this.optionsValidationService.optionsToString(lookupOptions));
+        return passageText;
+    }
+
+    private String getVersionsAsStrings(final List<String> extraVersions) {
+        StringBuilder versions = new StringBuilder(9);
+        for (String s : extraVersions) {
+            versions.append(s);
+            if (versions.length() > 0) {
+                versions.append(',');
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Copies all but first into a new array
+     *
+     * @param versionsInput the versions input
+     * @return the list of all versions
+     */
+    private List<String> getExtras(final List<String> versionsInput) {
+        return versionsInput.subList(1, versionsInput.size());
     }
 
     @Override
@@ -512,7 +561,15 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
         return getTextForBookData(lookupOptions, interlinearVersion, lookupBookData, NONE);
     }
 
-    // TODO: can we make this more performant by not re-compiling stylesheet - or is already cached
+    private OsisWrapper getOsisText(final String version, final Key reference,
+                                    final List<LookupOption> options, final String interlinearVersion,
+                                    final InterlinearMode displayMode) {
+        LOGGER.debug("Retrieving text for ({}, {})", version, reference);
+
+        final BookData bookData = getBookDataByKey(version, reference);
+        return getTextForBookData(options, interlinearVersion, bookData, displayMode);
+    }
+
     @Override
     public OsisWrapper getOsisText(final String version, final String reference,
                                    final List<LookupOption> options, final String interlinearVersion,
@@ -541,6 +598,26 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
             return new BookData(currentBook, key);
         } catch (final NoSuchKeyException e) {
             return handlePassageLookupNSKException(reference, currentBook, v11n, e);
+
+        }
+    }
+
+    /**
+     * Gets the BookData set up for verse retrieval
+     *
+     * @param version the version to be used
+     * @param key     the reference
+     * @return the BookData object
+     */
+    BookData getBookDataByKey(final String version, final Key key) {
+        final Book currentBook = this.versificationService.getBookFromVersion(version);
+        final Versification v11n = this.versificationService.getVersificationForVersion(currentBook);
+        try {
+            Key copyOfKey = normalize(key, v11n);
+
+            return new BookData(currentBook, copyOfKey);
+        } catch (final NoSuchKeyException e) {
+            return handlePassageLookupNSKException(key.getName(), currentBook, v11n, e);
 
         }
     }
@@ -697,7 +774,9 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
             final TransformingSAXEventProvider htmlsep = executeStyleSheet(versification, options, interlinearVersion,
                     bookData, osissep, displayMode);
 
-            final OsisWrapper osisWrapper = new OsisWrapper(writeToString(htmlsep), key, getLanguages(book, displayMode, htmlsep, options), versification);
+            final OsisWrapper osisWrapper = new OsisWrapper(writeToString(htmlsep), key,
+                    getLanguages(book, displayMode, htmlsep, options), versification,
+                    bookData.getFirstBook().getInitials(), displayMode, interlinearVersion);
 
 
             if (key instanceof Passage) {
@@ -807,23 +886,40 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
     @Override
     public OsisWrapper getInterleavedVersions(final String[] versions, final String reference,
                                               final List<LookupOption> options, final InterlinearMode displayMode) {
+        final Book[] books = getValidInterleavedBooks(versions, displayMode);
+        final Versification v11n = this.versificationService.getVersificationForVersion(books[0]);
+
+        try {
+            Key key = normalize(books[0].getKey(reference), v11n);
+            return this.getInterleavedVersions(versions, key, options, displayMode);
+        } catch (NoSuchKeyException nske) {
+            return doInterleavedVersionsLookup(versions, handlePassageLookupNSKException(reference, books[0], v11n, nske),
+                    v11n, options, displayMode);
+        }
+    }
+
+    private OsisWrapper getInterleavedVersions(final String[] versions, final Key key,
+                                               final List<LookupOption> options, final InterlinearMode displayMode) {
         notNull(versions, "No versions were passed in", UserExceptionType.SERVICE_VALIDATION_ERROR);
-        notNull(reference, "No reference was passed in", UserExceptionType.SERVICE_VALIDATION_ERROR);
+        notNull(key, "No reference was passed in", UserExceptionType.SERVICE_VALIDATION_ERROR);
 
         options.add(LookupOption.VERSE_NEW_LINE);
 
-        final Book[] books = getValidInterleavedBooks(versions, displayMode);
-        final Versification v11n = this.versificationService.getVersificationForVersion(books[0]);
-        BookData data = null;
-        try {
-            Key key = books[0].getKey(reference);
-            key = normalize(key, v11n);
-
-            data = new BookData(books, key, isComparingMode(displayMode));
-        } catch (NoSuchKeyException nske) {
-            data = handlePassageLookupNSKException(reference, books[0], v11n, nske);
+        Book[] books = new Book[versions.length];
+        for (int i = 0; i < versions.length; i++) {
+            books[i] = this.versificationService.getBookFromVersion(versions[i]);
         }
 
+        BookData data = new BookData(books, key, isComparingMode(displayMode));
+        return doInterleavedVersionsLookup(versions, data, this.versificationService.getVersificationForVersion(books[0]), options, displayMode);
+
+    }
+
+    private OsisWrapper doInterleavedVersionsLookup(String[] versions, final BookData data,
+                                                    final Versification v11n,
+                                                    final List<LookupOption> options,
+                                                    final InterlinearMode displayMode) {
+        Book[] books = data.getBooks();
         try {
             setUnaccenter(data, displayMode);
 
@@ -835,7 +931,8 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
                 languages[ii] = books[ii].getLanguage().getCode();
             }
 
-            return new OsisWrapper(writeToString(transformer), data.getKey(), languages, v11n);
+            return new OsisWrapper(writeToString(transformer), data.getKey(),
+                    languages, v11n, versions[0], displayMode, StringUtils.join(versions, 1));
         } catch (final TransformerException e) {
             throw new StepInternalException(e.getMessage(), e);
         } catch (final SAXException e) {
@@ -844,6 +941,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
             throw new LocalisedException(e, e.getMessage());
         }
     }
+
 
     /**
      * Validates the books given and trims down by removing any following duplicates
@@ -1145,16 +1243,16 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
             }
 
             boolean stripGreekAccents, stripHebrewAccents, stripVowels = stripHebrewAccents = stripGreekAccents = true;
-            for(LookupOption option : options) {
-                if(LookupOption.GREEK_ACCENTS == option) {
-                    stripGreekAccents = false;    
-                } else if(LookupOption.HEBREW_ACCENTS == option) {
+            for (LookupOption option : options) {
+                if (LookupOption.GREEK_ACCENTS == option) {
+                    stripGreekAccents = false;
+                } else if (LookupOption.HEBREW_ACCENTS == option) {
                     stripHebrewAccents = false;
-                } else if(LookupOption.HEBREW_VOWELS == option) {
+                } else if (LookupOption.HEBREW_VOWELS == option) {
                     stripVowels = false;
                 }
             }
-            
+
             final MultiInterlinearProviderImpl multiInterlinear = new MultiInterlinearProviderImpl(masterVersification,
                     interlinearVersion, reference, this.versificationService, this.vocabProvider, stripGreekAccents, stripHebrewAccents, stripVowels);
             tsep.setParameter("interlinearProvider", multiInterlinear);
@@ -1200,7 +1298,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
      *
      * @param tsep    the xslt transformer
      * @param options the options available
-     * @param books    the version to initialise a potential interlinear with
+     * @param books   the version to initialise a potential interlinear with
      */
     protected void setOptions(final TransformingSAXEventProvider tsep, final List<LookupOption> options,
                               final Book[] books) {
@@ -1215,6 +1313,9 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
                     case VERSE_NUMBERS:
                         tsep.setParameter(LookupOption.TINY_VERSE_NUMBERS.getXsltParameterName(), true);
                         break;
+                    case CHAPTER_BOOK_VERSE_NUMBER:
+                        tsep.setParameter(LookupOption.VERSE_NUMBERS.getXsltParameterName(), true);
+                        break;
                     case MORPHOLOGY:
                         tsep.setParameter("morphologyProvider", this.morphologyProvider);
                         break;
@@ -1227,18 +1328,18 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
                         tsep.setParameter("colorCodingProvider", this.colorCoder);
                         break;
                     case GREEK_ACCENTS:
-                        if(isGreek) {
+                        if (isGreek) {
                             tsep.setParameter("RemovePointing", "false");
                             tsep.setParameter("RemoveVowels", "false");
                         }
                         break;
                     case HEBREW_VOWELS:
-                        if(isHebrew) {
+                        if (isHebrew) {
                             tsep.setParameter("RemoveVowels", "false");
-                        } 
+                        }
                         break;
                     case HEBREW_ACCENTS:
-                        if(isHebrew) {
+                        if (isHebrew) {
                             tsep.setParameter("RemovePointing", "false");
                             tsep.setParameter("RemoveVowels", "false");
                         }
@@ -1248,7 +1349,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
         }
 
         //if no greek or hebrew, then override to false
-        if(!isGreek && !isHebrew) {
+        if (!isGreek && !isHebrew) {
             tsep.setParameter("RemovePointing", false);
             tsep.setParameter("RemoveVowels", false);
         }

@@ -82,7 +82,7 @@ public class JSwordPassageServiceImplTest {
     @Before
     public void setUp() {
         this.jsi = new JSwordPassageServiceImpl(TestUtils.mockVersificationService(), null, mock(VocabularyService.class),
-                mock(ColorCoderProviderImpl.class), TestUtils.mockVersionResolver());
+                mock(ColorCoderProviderImpl.class), TestUtils.mockVersionResolver(), null);
     }
 
     /**
@@ -570,5 +570,4 @@ public class JSwordPassageServiceImplTest {
             throws NoSuchKeyException {
         return this.jsi.reduceKeySize(b.getKey(keyString), v);
     }
-
 }

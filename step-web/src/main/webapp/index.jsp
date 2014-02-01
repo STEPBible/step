@@ -14,7 +14,7 @@
 	WebStepRequest stepRequest = new WebStepRequest(injector, request);
     AppManagerService appManager = injector.getInstance(AppManagerService.class);    
 %>
-<fmt:setBundle basename="HtmlBundle" />
+<fmt:setBundle basename="HtmlBundle" scope="request" />
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <HTML xmlns:fb="http://ogp.me/ns/fb#">
 <HEAD>
@@ -261,7 +261,7 @@
 			&copy; <%= java.util.Calendar.getInstance().get(java.util.Calendar.YEAR)  %>
 		</div>
 
-		<jsp:include page="js/bookmark/bookmark.jsp"></jsp:include>
+		<jsp:include page="WEB-INF/tags/bookmarks/bookmark.tag"></jsp:include>
 
 		<div class="column rightColumn">
 			<div class="passageContainer" passage-id=1>

@@ -1,0 +1,69 @@
+@import 'template_variables';
+
+.navbar {
+  height: $header_height;
+  margin-bottom: 0px;
+
+  .navbar-header {
+    font-size: x-small;
+    background: $headerBackgroundColor no-repeat fixed url(../images/step-top-left-logo.png);
+  }
+  
+  a, .subtitle, .subtitle:hover {
+    color: $header_title;
+  }
+}
+
+
+.navbar-brand {
+  padding-left: 50px;
+  padding-bottom: 0px;
+  .title > a {
+    color: white !important;
+    font-weight: bold;
+    text-decoration: none;
+  }
+
+  .subtitle {
+    margin-top: 5px;
+    white-space: nowrap;
+    font-size: x-small;
+    line-height: 1;
+  }
+}
+
+.navbar-brand, .search-form, .help {
+  padding-top: 10px;
+}
+
+// Search form
+.search-form {
+  font-size: x-small;
+  a {
+    color: lightgrey;
+  }
+
+  button {
+    text-shadow: none;
+  }
+}
+
+.advancedSearch {
+  float: right;
+}
+
+// Help menu
+.help {
+  color: lightgrey;
+  ul {
+    float: right;
+  }
+  @media screen and (max-width: 524px) {
+    display: none;
+  }
+}
+
+// offset the main panel
+.mainPanel, #sidebar {
+  padding: $header_height 0 10px 0px;
+}

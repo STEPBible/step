@@ -79,8 +79,6 @@ public class FrontControllerTest {
     @Mock
     private Injector guiceInjector;
 
-    private final Boolean isCacheEnabled = Boolean.FALSE;
-
     @Mock
     private ClientErrorResolver errorResolver;
     @Mock
@@ -108,7 +106,7 @@ public class FrontControllerTest {
      * @throws IOException uncaught exception
      */
     @Test
-    public void testDoGet() throws IOException {
+    public void testDoGet() throws Exception {
         final HttpServletRequest req = mock(HttpServletRequest.class);
         final HttpServletResponse response = mock(HttpServletResponse.class);
         final String sampleRequest = "step-web/rest/bible/get/1K2/2K2/";
@@ -123,11 +121,10 @@ public class FrontControllerTest {
 
         doReturn(mockOutputStream).when(response).getOutputStream();
         final byte[] sampleResponse = new byte[]{1, 2, 3};
-        doReturn(sampleResponse).when(fc).invokeMethod(any(StepRequest.class));
+        doReturn(sampleResponse).when(fc).invokeMethodWithStepRequest(any(StepRequest.class));
 
         // do the test
-        fc.doGet(req, response);
-        verify(mockOutputStream).write(sampleResponse);
+        assertEquals(sampleResponse, fc.invokeMethod(req));
     }
 
     /**
@@ -144,8 +141,7 @@ public class FrontControllerTest {
                 new String[]{"arg1", "arg2"});
 
         // TODO remove this/
-        // doThrow(testException).when(fc).parseRequest(request);
-        doNothing().when(fc).handleError(response, testException, parsedRequest);
+        doNothing().when(fc).handleError(response, testException, mock(HttpServletRequest.class));
 
         // do the test
         fc.doGet(request, response);
@@ -178,7 +174,7 @@ public class FrontControllerTest {
     @Test
     public void testGetControllerMethod() throws IllegalAccessException, InvocationTargetException {
         final BibleInformationService bibleInfo = mock(BibleInformationService.class);
-        final BibleController controllerInstance = new BibleController(bibleInfo, this.clientSessionProvider);
+        final BibleController controllerInstance = new BibleController(bibleInfo, this.clientSessionProvider, null);
 
         // when
         final Method controllerMethod = this.fcUnderTest.getControllerMethod("getAllFeatures",
@@ -245,7 +241,7 @@ public class FrontControllerTest {
         when(this.stepRequest.getCacheKey()).thenReturn(new ControllerCacheKey("method", "results"));
 
         // do test
-        this.fcUnderTest.handleError(response, exception, this.stepRequest);
+        this.fcUnderTest.handleError(response, exception, mock(HttpServletRequest.class));
 
         // check
         verify(outputStream).write(any(byte[].class));
@@ -255,7 +251,7 @@ public class FrontControllerTest {
      * We check that invoke method calls the correct controller and method with the right arguments
      */
     @Test
-    public void testInvokeMethod() {
+    public void testInvokeMethod() throws Exception {
         final StepRequest sr = new StepRequest("blah", "bible", "getAllFeatures", new String[]{});
         final BibleController testController = mock(BibleController.class);
 
@@ -263,7 +259,7 @@ public class FrontControllerTest {
         doReturn(testController).when(fc).getController("bible", false);
 
         // do test
-        fc.invokeMethod(sr);
+        fc.invokeMethodWithStepRequest(sr);
 
         // verify
         verify(testController).getAllFeatures();

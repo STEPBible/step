@@ -36,6 +36,7 @@ import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
 import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
 import static com.tyndalehouse.step.core.utils.StringUtils.split;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -82,15 +83,29 @@ public class IndividualSearch {
      * Instantiates a single search to be executed.
      *
      * @param type    the type of the search
-     * @param version the version to be used to carry out the search
+     * @param versions the versions to be used to carry out the search
+     */
+    public IndividualSearch(final SearchType type, final List<String> versions, 
+                            final String query, final String range) {
+        this(type, versions, query, range, null);
+    }
+    
+    /**
+     * Instantiates a single search to be executed.
+     *
+     * @param type    the type of the search
+     * @param versions the versions to be used to carry out the search
      * @param query   the query to be run
      */
-    public IndividualSearch(final SearchType type, final String version, final String query) {
+    public IndividualSearch(final SearchType type, final List<String> versions,
+                            final String query, final String range, final String[] filter) {
         this.type = type;
         this.query = query;
-        this.versions = new String[]{version};
+        this.mainRange = range;
+        this.versions = versions.toArray(new String[versions.size()]);
+        this.originalFilter = filter;
     }
-
+    
     /**
      * Initialises the search from the query string.
      *

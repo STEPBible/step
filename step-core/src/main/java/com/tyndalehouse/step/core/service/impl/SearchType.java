@@ -38,6 +38,7 @@ package com.tyndalehouse.step.core.service.impl;
  * @author chrisburrell
  */
 public enum SearchType {
+    PASSAGE(""),
     /**
      * a text search that is delegated to JSword
      */
@@ -120,6 +121,13 @@ public enum SearchType {
         this.greek = isGreek;
     }
 
+    /**
+     * @return true if greek or hebrew search
+     */
+    public boolean isOriginalSearch() {
+        return this.greek != null || this == ORIGINAL_MEANING;
+    }
+    
     /**
      * Checks if is greek.
      * 

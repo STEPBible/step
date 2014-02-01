@@ -26,12 +26,12 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
-$(document).ready(function() {
-    ddsmoothmenu.init({
-        mainmenuid : "topMenu-ajax", // menu DIV id
-        zIndexStart : 1000,
-        orientation : 'h', // Horizontal or vertical menu: Set to "h" or "v"
-        classname : 'ddsmoothmenu topMenu', // class added to menu's outer DIV
-        contentsource : "markup"
-    });
-});
+//$(document).ready(function() {
+//    ddsmoothmenu.init({
+//        mainmenuid : "topMenu-ajax", // menu DIV id
+//        zIndexStart : 1000,
+//        orientation : 'h', // Horizontal or vertical menu: Set to "h" or "v"
+//        classname : 'ddsmoothmenu topMenu', // class added to menu's outer DIV
+//        contentsource : "markup"
+//    });
+//});

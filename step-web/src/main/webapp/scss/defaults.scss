@@ -1,0 +1,19 @@
+@import 'template_variables';
+
+h1,h2,h3,h4,h5,h6 {
+  color: $headingColour;
+  font-weight: bold;
+}
+
+body, .dropdown-menu, .searchResultRow {
+  font-size: $defaultFontSize;
+}
+
+ul .glyphicon-ok {
+  margin-right: 10px;
+  color: $headingColour;
+  visibility: hidden;
+  &.active {
+    visibility: visible;
+  }
+}

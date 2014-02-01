@@ -231,7 +231,7 @@ public class LoaderTest {
         coreProperties.put(key, file);
         final JSwordVersificationService versificationService = TestUtils.mockVersificationService();
         return new Loader(new JSwordPassageServiceImpl(versificationService, null, null, null,
-                mock(VersionResolver.class)), null, coreProperties, this.entityManager,
+                mock(VersionResolver.class), null), null, coreProperties, this.entityManager,
                 this.clientSessionProvider, mock(AppManagerService.class));
     }
 

@@ -26,7 +26,7 @@ public class SearchResult implements Serializable {
     private int pageSize;
     private int pageNumber;
     private String masterVersion;
-    private String[] extraVersions;
+    private String extraVersions;
 
     /**
      * @return the query
@@ -204,5 +204,27 @@ public class SearchResult implements Serializable {
      */
     public int getPageNumber() {
         return pageNumber;
+    }
+
+    /**
+     * @param masterVersion the master version
+     */
+    public void setMasterVersion(final String masterVersion) {
+        this.masterVersion = masterVersion;
+    }
+
+    /**
+     * @param extraVersions any other versions
+     */
+    public void setExtraVersions(final String extraVersions) {
+        this.extraVersions = extraVersions;
+    }
+
+    public String getMasterVersion() {
+        return masterVersion;
+    }
+
+    public String getExtraVersions() {
+        return extraVersions;
     }
 }

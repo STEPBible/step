@@ -174,7 +174,7 @@ public class FrontControllerTest {
     @Test
     public void testGetControllerMethod() throws IllegalAccessException, InvocationTargetException {
         final BibleInformationService bibleInfo = mock(BibleInformationService.class);
-        final BibleController controllerInstance = new BibleController(bibleInfo, this.clientSessionProvider);
+        final BibleController controllerInstance = new BibleController(bibleInfo, this.clientSessionProvider, null);
 
         // when
         final Method controllerMethod = this.fcUnderTest.getControllerMethod("getAllFeatures",

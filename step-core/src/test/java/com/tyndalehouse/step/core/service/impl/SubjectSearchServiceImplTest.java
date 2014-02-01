@@ -41,7 +41,7 @@ public class SubjectSearchServiceImplTest {
         when(entityManager.getReader(any(String.class))).thenReturn(mock(EntityIndexReader.class));
         this.subjectSearchService = new SubjectSearchServiceImpl(
                 entityManager, 
-                new JSwordSearchServiceImpl(mockVersificationService(), null), null);
+                new JSwordSearchServiceImpl(mockVersificationService(),null, null), null);
         
     }
     

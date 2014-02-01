@@ -1,11 +1,11 @@
 /*******************************************************************************
  * Copyright (c) 2012, Directors of the Tyndale STEP Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without 
  * modification, are permitted provided that the following conditions 
  * are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright 
  * notice, this list of conditions and the following disclaimer.
  * Redistributions in binary form must reproduce the above copyright 
@@ -16,7 +16,7 @@
  * nor the names of its contributors may be used to endorse or promote 
  * products derived from this software without specific prior written 
  * permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
@@ -39,9 +39,8 @@ import com.tyndalehouse.step.core.data.EntityDoc;
 
 /**
  * Search query object. Defines all parameters required to execute a search
- * 
+ *
  * @author chrisburrell
- * 
  */
 public class SearchQuery {
     private static final String JOINING_SEARCH = "=>";
@@ -56,17 +55,18 @@ public class SearchQuery {
     private boolean allKeys = false;
     private final String sortOrder;
     private List<EntityDoc> definitions;
+    private String interlinearMode;
 
     /**
      * @param searchQuery the query to be run
-     * @param sortOrder "true" to indicate the search results should be ranked, also can used text to be used
-     *            in special sorts
-     * @param context how many verses either side to include
-     * @param pageNumber the page number required
-     * @param pageSize the size of the page to be returned
+     * @param sortOrder   "true" to indicate the search results should be ranked, also can used text to be used
+     *                    in special sorts
+     * @param context     how many verses either side to include
+     * @param pageNumber  the page number required
+     * @param pageSize    the size of the page to be returned
      */
     public SearchQuery(final String searchQuery, final String sortOrder, final int context,
-            final int pageNumber, final int pageSize) {
+                       final int pageNumber, final int pageSize) {
 
         this.originalQuery = searchQuery;
 
@@ -95,19 +95,22 @@ public class SearchQuery {
 
     /**
      * Constructs a query from a single search.
-     * 
-     * @param search the search that should be carried out
+     *
+     * @param search          the search that should be carried out
+     * @param context         the number of verses to include either side
+     * @param interlinearMode the display mode used on multi version searches
      */
-    public SearchQuery(final int pageNumber, int context, final IndividualSearch... search) {
+    public SearchQuery(final int pageNumber, int context, String interlinearMode, final IndividualSearch... search) {
         this.searches = search;
         this.pageSize = 60;
         this.pageNumber = pageNumber;
         this.context = context;
         this.ranked = false;
         this.sortOrder = "false";
-        
+        this.interlinearMode = interlinearMode;
+
         StringBuilder sb = new StringBuilder();
-        for(IndividualSearch individualSearch : this.searches) {
+        for (IndividualSearch individualSearch : this.searches) {
             sb.append(individualSearch.getQuery());
         }
         this.originalQuery = sb.toString();
@@ -171,6 +174,7 @@ public class SearchQuery {
 
     /**
      * Allow overrides to the original query, when, for example, some searches don't return any results
+     *
      * @param originalQuery the original query
      */
     public void setOriginalQuery(final String originalQuery) {
@@ -179,7 +183,7 @@ public class SearchQuery {
 
     /**
      * Increments and moves on if we have more searches
-     * 
+     *
      * @return true if the current search is not null
      */
     public boolean hasMoreSearches() {
@@ -243,7 +247,7 @@ public class SearchQuery {
 
     /**
      * Gives the search query a bunch of definitions that have been found, using it in a "session" fashion.
-     * 
+     *
      * @param definitions the list of definitions.
      */
     public void setDefinitions(final EntityDoc[] definitions) {
@@ -252,5 +256,13 @@ public class SearchQuery {
             list.add(d);
         }
         this.definitions = list;
+    }
+
+    public String getInterlinearMode() {
+        return interlinearMode;
+    }
+
+    public void setInterlinearMode(final String interlinearMode) {
+        this.interlinearMode = interlinearMode;
     }
 }

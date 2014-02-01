@@ -11,7 +11,7 @@ var PassageModel = Backbone.Model.extend({
 
 var PassageModelList = Backbone.Collection.extend({
     model: PassageModel,
-    localStorage: new Backbone.LocalStorage("passages"),
+    localStorage: new Backbone.LocalStorage("passage-searches"),
     initialize: function () {
         this.on("change", this.changePassage, this);
     },

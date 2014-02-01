@@ -59,8 +59,14 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
         addHebrewOptions(book, options);
         addAncientOptions(version, extraVersions, options);
         addAllMatchingLookupOptions(book, options);
-
+        addHiddenOptions(options);
+        
         return options;
+    }
+
+    private void addHiddenOptions(final Set<LookupOption> options) {
+        options.add(LookupOption.HIDE_XGEN);
+        options.add(LookupOption.CHAPTER_BOOK_VERSE_NUMBER);
     }
 
     /**
@@ -288,12 +294,8 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
         return supportsStrongs(this.versificationService.getBookFromVersion(version));
     }
 
-    /**
-     * Returns true if the book supports strong numbers
-     * @param book the book
-     * @return true if strongs are available
-     */
-    private boolean supportsStrongs(Book book) {
+    @Override
+    public boolean supportsStrongs(Book book) {
         return book.hasFeature(FeatureType.STRONGS_NUMBERS);
     }
 

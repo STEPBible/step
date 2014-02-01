@@ -1,7 +1,9 @@
 var PassageMenuView = Backbone.View.extend({
     events: {
         "click a[name]": "updateModel",
-        "click .showStats": "showAnalysis"
+        "click .showStats": "showAnalysis",
+        "click .smallerFontSize": "decreaseFontSize",
+        "click .largerFontSize": "increaseFontSize"
     },
     el: function () {
         return $(".passageOptionsGroup").eq(this.model.get("passageId"))
@@ -194,32 +196,45 @@ var PassageMenuView = Backbone.View.extend({
         dropdown.append(this._createPassageOptions(dropdown)).append(this._createSearchOptions(dropdown));
         return dropdown;
     },
-    _createSearchOptions: function(dropdown) {
+    getContextLabel: function (context) {
+        return sprintf(__s.search_context, context);
+    }, _createSearchOptions: function(dropdown) {
         var self = this;
         var context = this.model.get("context") || 0;
         
-        var li = $('<li>').append(sprintf(__s.search_context, '<input type="text" value="1" class="searchContext" />'));
-        li.find("input").click(function(ev) {
+        var li = $('<li class="contextContainer">').append($('<span class="contextLabel"></span>').append(this.getContextLabel(context)));
+        li.append($('<span class="btn-group"></span>')
+            .append('<button class="btn btn-default btn-xs"><span class="glyphicon glyphicon-minus"></span></button>')
+            .append('<button class="btn btn-default btn-xs"><span class="glyphicon glyphicon-plus"></span></button>'));
+        
+        
+        li.find("button").click(function(ev) {
             ev.stopPropagation();
-        }).on('keypress', function() {
-            
-        }).on('change', function() {
             //need to trigger new search after setting value of model 
-            var contextVal = $(this).val();
+            var contextVal = self.model.get("context");
+            var increment = $(this).find(".glyphicon-minus").length ? -1 : 1;
             if(step.util.isBlank(contextVal)) {
                 contextVal = 0;
             } else if(isNaN(contextVal)) {
-                contextVal = 0;  
-            } 
+                contextVal = 0;
+            } else {
+                contextVal = parseInt(contextVal);
+            }
+            contextVal += increment;
+            if(contextVal < 0) {
+                contextVal = 0;
+            }
+            $(this).closest("li").find(".contextLabel").html(self.getContextLabel(contextVal));
             self.model.save({ context:  contextVal});
-        }).val(context);
+
+        });
         //create context link
         dropdown.append(li);
         return dropdown;
         
     },
     _createPassageOptions: function (dropdown) {
-        var selectedOptions = this.model.get("data").selectedOptions || "";
+        var selectedOptions = this.model.get("selectedOptions") || "";
 
         for (var i = 0; i < this.items.length; i++) {
             var link = this._createLink(this.items[i].initial, __s[this.items[i].key], __s[this.items[i].help]);
@@ -272,30 +287,6 @@ var PassageMenuView = Backbone.View.extend({
         link.attr("data-selected", visible);
     },
 
-    appendMenuButtons: function (groupOfButtons) {
-        var interlinearMode = "NONE";
-        switch (interlinearMode) {
-            case "NONE":
-                this.$el.find("h2:first").append(groupOfButtons);
-                break;
-            case "INTERLINEAR":
-                groupOfButtons.insertBefore(this.$el.find(".interlinear:first"));
-                break;
-            case "INTERLEAVED":
-            case "INTERLEAVED_COMPARE":
-                groupOfButtons.insertBefore(this.$el.find(".verseGrouping:first"));
-                break;
-            case "COLUMN":
-            case "COLUMN_COMPARE":
-                groupOfButtons.insertBefore(this.$el.find("table:first"));
-                break;
-            default:
-                console.log("Unable to ascertain where to put Analysis button - omitting");
-                return;
-        }
-
-        this.$el = groupOfButtons;
-    },
     _doSocialButtons: function () {
         if (step.state.isLocal()) {
             return;
@@ -334,5 +325,11 @@ var PassageMenuView = Backbone.View.extend({
             this.sharingBar.append($("<li>").append(facebook));
             window.FB.XFBML.parse(facebook.parent().get(0));
         }
+    },
+    decreaseFontSize: function() {
+        step.util.changeFontSize(this.$el, -1);
+    },
+    increaseFontSize: function() {
+        step.util.changeFontSize(this.$el, 1);
     }
 });

@@ -63,7 +63,6 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.SynchronousQueue;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
@@ -83,7 +82,7 @@ public class JSwordPassageServiceImplTest {
     @Before
     public void setUp() {
         this.jsi = new JSwordPassageServiceImpl(TestUtils.mockVersificationService(), null, mock(VocabularyService.class),
-                mock(ColorCoderProviderImpl.class), TestUtils.mockVersionResolver());
+                mock(ColorCoderProviderImpl.class), TestUtils.mockVersionResolver(), null);
     }
 
     /**

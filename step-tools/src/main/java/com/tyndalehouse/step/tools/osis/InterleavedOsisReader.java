@@ -1,6 +1,5 @@
 package com.tyndalehouse.step.tools.osis;
 
-import java.awt.image.LookupOp;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -62,7 +61,7 @@ public class InterleavedOsisReader {
 
         // do the test
         final JSwordPassageServiceImpl jsi = new JSwordPassageServiceImpl(
-                TestUtils.mockVersificationService(), null, null, null, TestUtils.mockVersionResolver());
+                TestUtils.mockVersificationService(), null, null, null, TestUtils.mockVersionResolver(), null);
         final List<LookupOption> options = new ArrayList<LookupOption>();
 //        options.add(LookupOption.);
         

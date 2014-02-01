@@ -3,6 +3,16 @@
 .passageOptionsGroup {
   margin-left: 10px;
   float: right;
+  button span {
+    line-height: 1;
+    &.smallerFont {
+      font-size: 8px;
+      line-height: $defaultFontSize;
+    }
+    &.largerFont {
+      font-weight: bold;
+    }
+  }
   .dropdown-menu {
     padding-left: 5px;
   }
@@ -11,9 +21,19 @@
     padding-left: 5px;
     margin-bottom: 0px;
   }
-  
-  .settingsDropdown li:hover {
-      background-color: $hoverColor;
+
+  .settingsDropdown {
+    li {
+      &:hover {
+        background-color: $hoverColor;
+      }
+      &.searchContext:hover {
+        background-color: inherit;
+        .btn-group {
+          margin-left: 10px;
+        }
+      }
+    }
   }
   a {
     color: black;

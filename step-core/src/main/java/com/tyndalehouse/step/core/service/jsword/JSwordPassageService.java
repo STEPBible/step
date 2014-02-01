@@ -101,17 +101,14 @@ public interface JSwordPassageService {
      */
     KeyWrapper getSiblingChapter(String reference, String version, boolean previousChapter);
 
-
     /**
-     * Looks up a very short starter for ten
-     * 
-     * @param version the version to lookup the text from
-     * @param keyedVersion the version with which the passage is keyed
-     * @param reference the reference
-     * @return an osis wrapper
+     * @param versions the list of versions to retrieve
+     * @param lookupKey the key(s)
+     * @param options the options to use
+     * @return the right passage
      */
-    OsisWrapper peakOsisText(String version, String keyedVersion, String reference);
-
+    OsisWrapper peakOsisText(String[] versions, Key lookupKey, List<LookupOption> options, String interlinearMode);
+    
     /**
      * Looks up a very short starter for ten
      * 
@@ -192,4 +189,6 @@ public interface JSwordPassageService {
      * @return the first verse, or verse 1 if verse 0 (only applies if verse 1 is actually in the range!)
      */
     Key getFirstVerseFromRange(Key range);
+
+
 }

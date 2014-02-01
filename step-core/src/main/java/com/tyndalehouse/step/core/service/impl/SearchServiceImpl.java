@@ -39,7 +39,6 @@ import com.tyndalehouse.step.core.exceptions.LuceneSearchException;
 import com.tyndalehouse.step.core.exceptions.TranslatedException;
 import com.tyndalehouse.step.core.models.InterlinearMode;
 import com.tyndalehouse.step.core.models.LexiconSuggestion;
-import com.tyndalehouse.step.core.models.OsisWrapper;
 import com.tyndalehouse.step.core.models.SearchToken;
 import com.tyndalehouse.step.core.models.search.KeyedSearchResultSearchEntry;
 import com.tyndalehouse.step.core.models.search.KeyedVerseContent;
@@ -78,11 +77,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import static com.tyndalehouse.step.core.service.helpers.OriginalWordUtils.STRONG_NUMBER_FIELD;
@@ -202,14 +199,13 @@ public class SearchServiceImpl implements SearchService {
     /**
      * Establishes what the correct search should be and kicks off the right type of search
      *
-     *
      * @param versions       the list of versions
      * @param references     the list of references
      * @param options        the options
      * @param displayMode    the display mode
      * @param strongSearches the strong searches
      * @param textSearches   a list of text searches
-     * @param context amount of context to be used in searhc
+     * @param context        amount of context to be used in searhc
      * @return the results
      */
     private Object runCorrectSearch(final List<String> versions, final String references,
@@ -218,11 +214,11 @@ public class SearchServiceImpl implements SearchService {
                                     final List<String> textSearches,
                                     final List<String> meaningSearches,
                                     final int pageNumber,
-                                    final String filter, 
+                                    final String filter,
                                     final int context) {
         final List<IndividualSearch> individualSearches = new ArrayList<IndividualSearch>(2);
         String[] filters = null;
-        if(StringUtils.isNotBlank(filter)) {
+        if (StringUtils.isNotBlank(filter)) {
             filters = StringUtils.split(filter);
         }
 
@@ -232,7 +228,7 @@ public class SearchServiceImpl implements SearchService {
         addSearch(SearchType.TEXT, versions, references, textSearches, null, individualSearches);
 
         if (individualSearches.size() != 0) {
-            return this.search(new SearchQuery(pageNumber, context, individualSearches.toArray(new IndividualSearch[individualSearches.size()])));
+            return this.search(new SearchQuery(pageNumber, context, displayMode, individualSearches.toArray(new IndividualSearch[individualSearches.size()])));
         }
         return this.bibleInfoService.getPassageText(
                 versions.get(0), references, options,
@@ -260,14 +256,14 @@ public class SearchServiceImpl implements SearchService {
      * @param strongSearches     the strong searches
      * @param individualSearches the searches to perform
      */
-    private void addWordSearches(final List<String> versions, final String references, 
-                                 final List<String> strongSearches, final String[] filters, 
+    private void addWordSearches(final List<String> versions, final String references,
+                                 final List<String> strongSearches, final String[] filters,
                                  final List<IndividualSearch> individualSearches) {
-        
+
         for (final String strong : strongSearches) {
             boolean isGreek = strong.charAt(0) == 'G';
             individualSearches.add(new IndividualSearch(
-                    isGreek ? SearchType.ORIGINAL_GREEK_FORMS : SearchType.ORIGINAL_HEBREW_FORMS, 
+                    isGreek ? SearchType.ORIGINAL_GREEK_FORMS : SearchType.ORIGINAL_HEBREW_FORMS,
                     versions, strong, references, filters));
         }
     }
@@ -334,6 +330,10 @@ public class SearchServiceImpl implements SearchService {
         result.setPageNumber(sq.getPageNumber());
         result.setTimeTookTotal(System.currentTimeMillis() - start);
         result.setQuery(sq.getOriginalQuery());
+
+        final String[] allVersions = sq.getCurrentSearch().getVersions();
+        result.setMasterVersion(allVersions[0]);
+        result.setExtraVersions(StringUtils.join(allVersions, 1));
         specialSort(sq, result);
         enrichWithLanguages(sq, result);
         return result;
@@ -683,7 +683,6 @@ public class SearchServiceImpl implements SearchService {
                 throw new TranslatedException("search_unknown");
         }
     }
-
     /**
      * Runs a query against the JSword modules backends
      *
@@ -691,6 +690,16 @@ public class SearchServiceImpl implements SearchService {
      * @return the search to be run
      */
     private SearchResult runTextSearch(final SearchQuery sq) {
+        return runTextSearch(sq, false);
+    }
+    
+    /**
+     * Runs a query against the JSword modules backends
+     *
+     * @param sq the search query contained
+     * @return the search to be run
+     */
+    private SearchResult runTextSearch(final SearchQuery sq, boolean searchOnTaggedText) {
         final IndividualSearch is = sq.getCurrentSearch();
 
         // for text searches, we may have a prefix of t=
@@ -729,7 +738,6 @@ public class SearchServiceImpl implements SearchService {
     private SearchResult runAllFormsStrongSearch(final SearchQuery sq) {
         final Set<String> strongs = adaptQueryForStrongSearch(sq);
 
-        // TODO jsword bug - email 09-Jul-2012 - 19:11 GMT
         // and then run the search
         return runStrongTextSearch(sq, strongs);
     }
@@ -1224,12 +1232,12 @@ public class SearchServiceImpl implements SearchService {
             // TODO FIXME: REFACTOR to only make 1 jsword call?
             for (final String ref : references) {
                 // TODO: REFACTOR only supports one version lookup
-                final OsisWrapper peakOsisText = this.jsword.peakOsisText(
-                        sq.getCurrentSearch().getVersions()[0], TimelineService.KEYED_REFERENCE_VERSION, ref);
+//                final OsisWrapper peakOsisText = this.jsword.peakOsisText(
+//                        sq.getCurrentSearch().getVersions()[0], TimelineService.KEYED_REFERENCE_VERSION, ref);
 
                 final VerseSearchEntry verseEntry = new VerseSearchEntry();
-                verseEntry.setKey(peakOsisText.getReference());
-                verseEntry.setPreview(peakOsisText.getValue());
+//                verseEntry.setKey(peakOsisText.getReference());
+//                verseEntry.setPreview(peakOsisText.getValue());
                 verses.add(verseEntry);
             }
 
@@ -1329,63 +1337,18 @@ public class SearchServiceImpl implements SearchService {
      * @return the set of results
      */
     private SearchResult buildCombinedVerseBasedResults(final SearchQuery sq, final Key results) {
-        final SearchResult sr = new SearchResult();
-
-        sr.setTotal(this.jswordSearch.getTotal(results));
-
-        // double-indirection map, verse -> version -> content
-        final Map<String, Map<String, VerseSearchEntry>> verseToVersionToContent = new LinkedHashMap<String, Map<String, VerseSearchEntry>>();
 
         // combine the results into 1 giant keyed map
         final IndividualSearch currentSearch = sq.getCurrentSearch();
 
+        int total = results.getCardinality();
         final Key pagedKeys = this.jswordSearch.rankAndTrimResults(sq, results);
-
-        // iterate through the versions, first, to obtain all the results
-        for (final String v : currentSearch.getVersions()) {
-            // retrieve scripture content and set up basics
-            final SearchResult s = this.jswordSearch.getResultsFromTrimmedKeys(sq, v, sr.getTotal(), pagedKeys);
-
-            // key in to aggregating map
-            for (final SearchEntry e : s.getResults()) {
-                final VerseSearchEntry verseEntry = (VerseSearchEntry) e;
-
-                // retrieve Verse to Version map
-                Map<String, VerseSearchEntry> versionToContent = verseToVersionToContent.get(verseEntry
-                        .getOsisId());
-                if (versionToContent == null) {
-                    // using a tree map to maintain the natural ordering
-                    versionToContent = new LinkedHashMap<String, VerseSearchEntry>();
-                    verseToVersionToContent.put(verseEntry.getOsisId(), versionToContent);
-                }
-                versionToContent.put(v, verseEntry);
-            }
-        }
-
-        for (final Entry<String, Map<String, VerseSearchEntry>> verseToVersionToContentEntry : verseToVersionToContent
-                .entrySet()) {
-            // key= osisId, value=version+content
-            final KeyedSearchResultSearchEntry aggregateVerse = new KeyedSearchResultSearchEntry();
-
-            for (final Entry<String, VerseSearchEntry> versionToContentEntry : verseToVersionToContentEntry
-                    .getValue().entrySet()) {
-                final KeyedVerseContent keyedVerseContent = new KeyedVerseContent();
-                keyedVerseContent.setContentKey(versionToContentEntry.getKey());
-                final VerseSearchEntry verseSearchEntry = versionToContentEntry.getValue();
-                keyedVerseContent.setPreview(verseSearchEntry.getPreview());
-
-                // add to aggregation verse
-                aggregateVerse.addEntry(keyedVerseContent);
-                if (aggregateVerse.getKey() == null) {
-                    aggregateVerse.setKey(verseSearchEntry.getKey());
-                }
-            }
-
-            sr.addEntry(aggregateVerse);
-        }
-
-        sr.setQuery(sq.getOriginalQuery());
-        return sr;
+        
+        // retrieve scripture content and set up basics
+        final SearchResult resultsForKeys = this.jswordSearch.getResultsFromTrimmedKeys(sq, currentSearch.getVersions(), total, pagedKeys);
+        resultsForKeys.setTotal(this.jswordSearch.getTotal(results));
+        resultsForKeys.setQuery(sq.getOriginalQuery());
+        return resultsForKeys;
     }
 
     /**

@@ -60,10 +60,11 @@ var SearchDisplayView = Backbone.View.extend({
             } else {
                 this._highlightResults(results, query);
             }
-            this._doFonts(results, this.model.get("languages"));
+            this._doFonts(results, this.model.get("languageCode"));
         }
 
         var passageId = this.model.get("passageId");
+        step.util.restoreFontSize(this.model, results);
 //        step.fonts.redoTextSize(passageId, results);
 
         if(append) {

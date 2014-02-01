@@ -32,7 +32,7 @@ public class PerformancePassageRetrieval {
         final ThreadMXBean thbean = ManagementFactory.getThreadMXBean();
         thbean.setThreadContentionMonitoringEnabled(true);
         final JSwordPassageServiceImpl jsi = new JSwordPassageServiceImpl(
-                TestUtils.mockVersificationService(), null, null, null, TestUtils.mockVersionResolver());
+                TestUtils.mockVersificationService(), null, null, null, TestUtils.mockVersionResolver(), null);
 
         final Queue<Long> times = new ConcurrentLinkedQueue<Long>();
         final AtomicLong iterations = new AtomicLong();

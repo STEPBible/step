@@ -10,6 +10,7 @@ var PassageDisplayView = Backbone.View.extend({
         },
         initialize: function (options) {
             this.listenTo(this.model, "destroyViews", this.remove);
+            this.listenTo(this.model, "font:change", this.handleFontSizeChange, this);
             
 //            Backbone.Events.on("passage:new:" + this.model.get("passageId"), this.render, this);
 //            Backbone.Events.on("font:change:" + this.model.get("passageId"), this.handleFontSizeChange, this);
@@ -40,7 +41,7 @@ var PassageDisplayView = Backbone.View.extend({
             var interlinearMode = this.model.get("interlinearMode");
             var extraVersions = this.model.get("extraVersions");
             var reference = this.model.get("osisId");
-            var options = this.model.get("options") || [];
+            var options = this.model.get("selectedOptions") || [];
             var version = this.model.get("masterVersion");
             var languages = this.model.get("languageCode");
 
@@ -50,9 +51,9 @@ var PassageDisplayView = Backbone.View.extend({
                 this._doSideNotes(passageHtml, passageId, version);
                 this._doNonInlineNotes(passageHtml);
                 this._doVerseNumbers(passageId, passageHtml, options, interlinearMode, version);
-//        self.doStats(passageId, passageContent, lookupVersion, text.reference);
                 this._doHideEmptyNotesPane(passageHtml);
                 this._adjustTextAlignment(passageHtml);
+                step.util.restoreFontSize(this.model, passageHtml);
 //TODO:                step.fonts.redoTextSize(passageId, passageHtml);
 TODO:                this._addStrongHandlers(passageId, passageHtml);
 //TODO:                this._doDuplicateNotice(passageId, passageHtml);

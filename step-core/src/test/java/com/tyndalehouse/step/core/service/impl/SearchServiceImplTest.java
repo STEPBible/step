@@ -80,10 +80,10 @@ public class SearchServiceImplTest {
         final JSwordMetadataService meta = mock(JSwordMetadataService.class);
         final JSwordVersificationService versificationService = TestUtils.mockVersificationService();
         final JSwordPassageServiceImpl jsword = new JSwordPassageServiceImpl(versificationService, null,
-                null, null, mock(VersionResolver.class));
+                null, null, mock(VersionResolver.class), null);
         final TestEntityManager entityManager = new TestEntityManager();
 
-        final JSwordSearchServiceImpl jswordSearch = new JSwordSearchServiceImpl(versificationService, jsword);
+        final JSwordSearchServiceImpl jswordSearch = new JSwordSearchServiceImpl(versificationService, null, jsword);
         return new SearchServiceImpl(jswordSearch, jsword, meta, new SubjectSearchServiceImpl(entityManager,
                 jswordSearch, jsword), new TimelineServiceImpl(entityManager, jsword), null, entityManager);
     }

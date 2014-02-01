@@ -3,7 +3,13 @@ $(window).on("load", function() {
     window.step = window.step || {};
     step.datasources = new DataSourceList;
     step.datasources.fetch();
-
+    step.settings = new SettingsModelList;
+    step.settings.fetch();
+    
+    if(step.settings.length == 0) {
+        step.settings.add(new SettingsModel);
+    }
+    
 //    step.options = new OptionsList;
 //    step.options.fetch();
     
@@ -29,6 +35,8 @@ $(window).on("load", function() {
     
     //create passage if not present
     step.passages.add(new PassageModel({ passageId: 0 }));
+    
+    
     
     new PassageMenuView({
         model: step.passages.at(0)

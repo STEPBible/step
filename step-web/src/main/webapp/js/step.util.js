@@ -58,7 +58,7 @@
                     args = [];
                 } else {
                     for (var i = 0; i < args.length; i++) {
-                        if(args[i] != undefined) {
+                        if (args[i] != undefined) {
                             url += args[i];
                         }
 
@@ -202,10 +202,10 @@ step.util = {
         }
     },
     getPassageContainer: function (passageIdOrElement) {
-        if(!this._passageContainers) {
+        if (!this._passageContainers) {
             this._passageContainers = {};
         }
-    
+
         //check if we have a number
         if (isNaN(parseInt(passageIdOrElement))) {
             //assume jquery selector or element
@@ -240,25 +240,40 @@ step.util = {
             }
         };
     },
+    getMainLanguage: function(passageModel) {
+        return (passageModel.get("languageCode") || ["en"])[0];
+    },
+    restoreFontSize: function(passageModel, element) {
+        var passageId = passageModel.get("passageId");
+        var key = passageId + "-" + this.getMainLanguage(passageModel);
+        var fontSize = step.settings.at(0).get(key);
+        if(fontSize && fontSize != 0) {
+            element.css("font-size", fontSize);
+        }
+    },
+    changeFontSize: function (source, increment) {
+        var elements = $(".passageContentHolder", step.util.getPassageContainer(source));
+        var passageId = step.passage.getPassageId(source);
+        var passageModel = step.passages.at(passageId);
+
+        var key = this.getMainLanguage(passageModel);
+        for(var i = 0; i < elements.length; i++) {
+            var fontSize = parseInt($(elements[i]).css("font-size"));
+            var newFontSize = fontSize + increment;
+
+            //key it to be the default font, unicodeFont or Hebrew font
+            var key = passageId + "-" + key;
+            var diff = {};
+            diff[key] = newFontSize;
+            step.settings.at(0).save(diff);
+            $(elements[i]).css("font-size", newFontSize);
+        }
+        passageModel.trigger("font:change");
+    },
     ui: {
         selectMark: function () {
             return '<span class="glyphicon glyphicon-ok"></span>';
         },
-//        createButton: function (options) {
-//            var button = $("<button></button>").addClass("btn btn-default btn-sm").attr("type", "button");
-//            if(options.icon) {
-//                var icon = $("<span>").addClass("glyphicon " + options.icon);
-//                button.append(icon)
-//            }
-//            
-//            if(options.addCaret) {
-//                button.append('<span class="caret"></span>');
-//            }
-//            
-//            button.on('click', options.handler);
-//            return button;
-//        },
-
         /**
          * Given an array of languages, returns an array of fonts
          * @param languages the array of languages

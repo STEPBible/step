@@ -199,7 +199,7 @@ public class SearchController {
                 .parseInt(pageNumber), Integer.parseInt(pageSize)));
 
         results.setQuery(undoRestoreSearchQuery(results.getQuery()));
-
+        
         return results;
     }
 

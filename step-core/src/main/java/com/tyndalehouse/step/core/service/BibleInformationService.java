@@ -90,16 +90,6 @@ public interface BibleInformationService {
             String interlinearVersion, Boolean round);
 
     /**
-     * gets any available features, but for this type of view only
-     * 
-     * @param version the version to lookup
-     *                @param extraVersions the other version that are currently selected
-     * @param displayMode the intended display mode
-     * @return the features available for a Bible (for e.g. Strong numbers)
-     */
-    AvailableFeatures getAvailableFeaturesForVersion(String version, String extraVersions, String displayMode);
-
-    /**
      * Gets a list of all supported features so far
      * 
      * @return the list of lookup options available to the user

@@ -32,6 +32,7 @@
  ******************************************************************************/
 package com.tyndalehouse.step.rest.controllers;
 
+import static org.junit.Assert.fail;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -73,7 +74,7 @@ public class BibleControllerTest {
      */
     @Before
     public void setUp() {
-        this.testController = new BibleController(this.bibleInformation, this.clientSessionProvider);
+        this.testController = new BibleController(this.bibleInformation, this.clientSessionProvider, null);
     }
 
     /**
@@ -165,7 +166,8 @@ public class BibleControllerTest {
     public void testGetFeatures() {
         final String version = "abp";
         this.testController.getFeatures(version, null, "NONE");
-        verify(this.bibleInformation).getAvailableFeaturesForVersion(version, null, "NONE");
+//        verify(this.bibleInformation).getAvailableFeaturesForVersion(version, null, "NONE");
+        fail();
     }
 
     /**

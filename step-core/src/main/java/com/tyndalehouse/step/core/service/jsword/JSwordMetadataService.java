@@ -38,6 +38,7 @@ import java.util.Set;
 import com.tyndalehouse.step.core.models.BookName;
 import com.tyndalehouse.step.core.models.InterlinearMode;
 import com.tyndalehouse.step.core.models.LookupOption;
+import org.crosswire.jsword.book.Book;
 
 /**
  * The service providing access to JSword. All JSword calls should preferably be placed in this service
@@ -68,6 +69,13 @@ public interface JSwordMetadataService {
      * @return true if the version in question contains Strongs
      */
     boolean hasVocab(String version);
+
+    /**
+     * Returns true if the book supports strong numbers
+     * @param book the book
+     * @return true if strongs are available
+     */
+    boolean supportsStrongs(Book book);
 
     /**
      * Returns the languages for a set of versions

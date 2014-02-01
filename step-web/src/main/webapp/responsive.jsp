@@ -136,6 +136,11 @@
             <div class="passageContainer" passage-id=0>
                 <div class="passageText ui-widget">
                     <div class="btn-group pull-right passageOptionsGroup">
+                        <button class="btn btn-default btn-sm smallerFontSize" type="button" title="<fmt:message key="passage_smaller_fonts" />">
+                            <span class="smallerFont"><fmt:message key="passage_font_size_symbol" /></span></button>
+                        <button class="btn btn-default btn-sm largerFontSize" type="button" title='<fmt:message key="passage_larger_fonts" />'>
+                            <span class="largerFont"><fmt:message key="passage_font_size_symbol" /></span>
+                        </button>
                         <%
                             if(!appManager.isLocal()) {
                         %>
@@ -224,6 +229,7 @@
     <script src="js/backbone/views/view_display_passage.js" type="text/javascript"></script>
     <script src="js/backbone/models/passage_model.js" type="text/javascript"></script>
     <script src="js/backbone/views/view_menu_passage.js" type="text/javascript"></script>
+    <script src="js/backbone/models/model_settings.js" type="text/javascript"></script>
     
     <%--<script src="js/backbone/models/model_options.js" type="text/javascript"></script>--%>
     

@@ -33,8 +33,8 @@ public class JSwordSearchServiceImplTest {
     @Before
     public void setUp() {
         final JSwordVersificationService mockVersificationService = TestUtils.mockVersificationService();
-        this.search = new JSwordSearchServiceImpl(mockVersificationService, new JSwordPassageServiceImpl(
-                mockVersificationService, null, null, null, mock(VersionResolver.class)));
+        this.search = new JSwordSearchServiceImpl(mockVersificationService, null, new JSwordPassageServiceImpl(
+                mockVersificationService, null, null, null, mock(VersionResolver.class), null));
     }
 
     /**

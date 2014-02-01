@@ -122,6 +122,13 @@ public enum SearchType {
     }
 
     /**
+     * @return true if greek or hebrew search
+     */
+    public boolean isOriginalSearch() {
+        return this.greek != null || this == ORIGINAL_MEANING;
+    }
+    
+    /**
      * Checks if is greek.
      * 
      * @return true if greek

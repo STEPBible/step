@@ -154,6 +154,13 @@ ul .glyphicon-ok {
 .passageOptionsGroup {
   margin-left: 10px;
   float: right; }
+  .passageOptionsGroup button span {
+    line-height: 1; }
+    .passageOptionsGroup button span.smallerFont {
+      font-size: 8px;
+      line-height: 12px; }
+    .passageOptionsGroup button span.largerFont {
+      font-weight: bold; }
   .passageOptionsGroup .dropdown-menu {
     padding-left: 5px; }
   .passageOptionsGroup ul {
@@ -161,6 +168,10 @@ ul .glyphicon-ok {
     margin-bottom: 0px; }
   .passageOptionsGroup .settingsDropdown li:hover {
     background-color: #ebebf1; }
+  .passageOptionsGroup .settingsDropdown li.searchContext:hover {
+    background-color: inherit; }
+    .passageOptionsGroup .settingsDropdown li.searchContext:hover .btn-group {
+      margin-left: 10px; }
   .passageOptionsGroup a {
     color: black;
     display: block; }

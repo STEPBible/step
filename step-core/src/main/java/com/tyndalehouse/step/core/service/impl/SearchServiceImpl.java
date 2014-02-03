@@ -109,8 +109,8 @@ public class SearchServiceImpl implements SearchService {
     private static final String BASE_HEBREW_VERSION = "OSMHB";
     private static final Logger LOGGER = LoggerFactory.getLogger(SearchServiceImpl.class);
     private static final String STRONG_QUERY = "strong:";
+    private static final String DEFAULT_REFERENCE = "Mat.1";
     private final JSwordSearchService jswordSearch;
-    private final JSwordPassageService jsword;
     private final TimelineService timeline;
     private final EntityIndexReader definitions;
     private final EntityIndexReader specificForms;
@@ -121,19 +121,17 @@ public class SearchServiceImpl implements SearchService {
 
     /**
      * @param jswordSearch     the search service
-     * @param jsword           used to convert references to numerals, etc.
      * @param subjects         the service that executes Subject searches
      * @param timeline         the timeline service
      * @param bibleInfoService the service to get information about various bibles/commentaries
      * @param entityManager    the manager for all entities stored in lucene
      */
     @Inject
-    public SearchServiceImpl(final JSwordSearchService jswordSearch, final JSwordPassageService jsword,
+    public SearchServiceImpl(final JSwordSearchService jswordSearch,
                              final JSwordMetadataService jswordMetadata,
                              final SubjectSearchService subjects, final TimelineService timeline,
                              final BibleInformationService bibleInfoService, final EntityManager entityManager) {
         this.jswordSearch = jswordSearch;
-        this.jsword = jsword;
         this.jswordMetadata = jswordMetadata;
         this.subjects = subjects;
         this.timeline = timeline;
@@ -188,6 +186,14 @@ public class SearchServiceImpl implements SearchService {
 
         if (versions.size() == 0) {
             versions.add(JSwordPassageService.REFERENCE_BOOK);
+        }
+        
+        //if we have no searches, then we need to default the reference
+        if(strongSearches.size() == 0 && 
+                textSearches.size() == 0 && 
+                meaningSearches.size() == 0 &&
+                references.length() == 0) {
+            references.append(DEFAULT_REFERENCE);
         }
 
         return runCorrectSearch(
@@ -683,15 +689,6 @@ public class SearchServiceImpl implements SearchService {
                 throw new TranslatedException("search_unknown");
         }
     }
-    /**
-     * Runs a query against the JSword modules backends
-     *
-     * @param sq the search query contained
-     * @return the search to be run
-     */
-    private SearchResult runTextSearch(final SearchQuery sq) {
-        return runTextSearch(sq, false);
-    }
     
     /**
      * Runs a query against the JSword modules backends
@@ -699,7 +696,7 @@ public class SearchServiceImpl implements SearchService {
      * @param sq the search query contained
      * @return the search to be run
      */
-    private SearchResult runTextSearch(final SearchQuery sq, boolean searchOnTaggedText) {
+    private SearchResult runTextSearch(final SearchQuery sq) {
         final IndividualSearch is = sq.getCurrentSearch();
 
         // for text searches, we may have a prefix of t=
@@ -1232,12 +1229,7 @@ public class SearchServiceImpl implements SearchService {
             // TODO FIXME: REFACTOR to only make 1 jsword call?
             for (final String ref : references) {
                 // TODO: REFACTOR only supports one version lookup
-//                final OsisWrapper peakOsisText = this.jsword.peakOsisText(
-//                        sq.getCurrentSearch().getVersions()[0], TimelineService.KEYED_REFERENCE_VERSION, ref);
-
                 final VerseSearchEntry verseEntry = new VerseSearchEntry();
-//                verseEntry.setKey(peakOsisText.getReference());
-//                verseEntry.setPreview(peakOsisText.getValue());
                 verses.add(verseEntry);
             }
 

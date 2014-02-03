@@ -186,7 +186,8 @@ public class BibleInformationServiceImpl implements BibleInformationService {
             passageText = this.jswordPassage.getOsisText(version, reference, new ArrayList<LookupOption>(lookupOptions),
                     interlinearVersion, desiredModeOfDisplay);
         }
-
+        passageText.setPreviousChapter(this.jswordPassage.getSiblingChapter(reference, version, true));
+        passageText.setNextChapter(this.jswordPassage.getSiblingChapter(reference, version, false));
         passageText.setOptions(this.optionsValidationService.optionsToString(
                 this.optionsValidationService.getAvailableFeaturesForVersion(version, extraVersions, interlinearMode).getOptions()));
         passageText.setSelectedOptions(this.optionsValidationService.optionsToString(lookupOptions));

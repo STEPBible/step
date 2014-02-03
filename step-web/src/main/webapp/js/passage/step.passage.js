@@ -32,7 +32,7 @@ var CONTINUOUS_SCROLLING_VERSE_GAP = 50;
 step.passage = {
     lastUrls : [undefined, undefined],
     getPassageId : function(element) {
-        return $(element).closest(".passageContainer").attr("passage-id");
+        return parseInt($(element).closest(".passageContainer").attr("passage-id"));
     },
     blacklistedStrongs : [ "G3588" ],
 

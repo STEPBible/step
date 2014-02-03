@@ -7,7 +7,7 @@ var StepRouter = Backbone.Router.extend({
 
     navigateSearch: function (args, historyOptions) {
         var activePassageId = step.util.activePassageId();
-        var activePassageModel = step.passages.at(activePassageId);
+        var activePassageModel = step.passages.findWhere({ passageId: activePassageId});
         var options = activePassageModel.get("selectedOptions") || "";
         var interlinearMode = activePassageModel.get("interlinearMode") || "";
         var pageNumber = activePassageModel.get("pageNumber");
@@ -59,7 +59,7 @@ var StepRouter = Backbone.Router.extend({
         //call back from after the routing call to rest backend call. So need
         //to avoid writing over 'args'
         if (args != null) {
-            activePassageModel.save({ args: args }, { silent: true });
+            activePassageModel.save({ args: decodeURIComponent(args) }, { silent: true });
         }
         this.navigate(urlStub, historyOptions);
     },
@@ -148,14 +148,9 @@ var StepRouter = Backbone.Router.extend({
             callback: function (text) {
                 text.startTime = startTime;
 
-                var passageModel;
-                if (activePassageId < step.passages.length) {
-                    passageModel = step.passages.at(activePassageId);
-                }
-
-                if (passageModel == null) {
-                    passageModel = new PassageModel(_.extend({ passageId: activePassageId}, text));
-                    step.passages.add(passageModel);
+                var passageModel = step.passages.findWhere({ passageId: activePassageId});
+                if(passageModel == null) {
+                    console.error("No passages defined for ", activePassageId);
                 }
 
                 passageModel.save(text, { silent: true });

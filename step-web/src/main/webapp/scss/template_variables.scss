@@ -1,9 +1,10 @@
-$header_height: 56px;
+$header_height: 63px;
 $header_title: lightgrey;
 
 //grid points
 $gridPoints: 12;
 $stepXS: 767px;
+$stepXSBootstrap: $stepXS + 1;
 $stepMD: 991px;
 $stepLG: 1120px;
 
@@ -11,7 +12,8 @@ $stepLG: 1120px;
 // colours
 //active colour of panel
 $activeColor: #D74F4B;
-$dividerColor: lightgrey;
+$topHeaderLinkColour: lightgrey;
+$dividerColor: $topHeaderLinkColour;
 $hoverColor: rgb(235, 235, 241);
 
 // scrollbar colours

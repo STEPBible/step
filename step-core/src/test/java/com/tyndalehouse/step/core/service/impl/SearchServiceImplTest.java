@@ -92,7 +92,7 @@ public class SearchServiceImplTest {
                 .thenReturn(new AvailableFeatures());
         
         final JSwordSearchServiceImpl jswordSearch = new JSwordSearchServiceImpl(versificationService, null, jsword);
-        return new SearchServiceImpl(jswordSearch, jsword, meta, new SubjectSearchServiceImpl(entityManager,
+        return new SearchServiceImpl(jswordSearch, meta, new SubjectSearchServiceImpl(entityManager,
                 jswordSearch, jsword), new TimelineServiceImpl(entityManager, jsword), null, entityManager);
     }
 }

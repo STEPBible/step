@@ -142,7 +142,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
         kjvaBook = Books.installed().getBook("KJVA");
         esvBook = Books.installed().getBook(JSwordPassageService.REFERENCE_BOOK);
     }
-
+    
     @Override
     public KeyWrapper getSiblingChapter(final String reference, final String version,
                                         final boolean previousChapter) {
@@ -155,50 +155,54 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
         try {
             final Key key = currentBook.getKey(reference);
 
-            final Verse verse = KeyUtil.getVerse(previousChapter ? key : key.get(key.getCardinality() - 1));
-            final int chapter = verse.getChapter();
-            final BibleBook bibleBook = verse.getBook();
-
-            Verse targetVerse;
-
-            if (previousChapter) {
-                if (chapter > 1) {
-                    targetVerse = new Verse(v11n, verse.getBook(), chapter - 1, 1);
-                } else {
-                    // we go down a book
-                    final BibleBook previousBook = getNonIntroPreviousBook(bibleBook, v11n);
-
-                    targetVerse = previousBook == null ? new Verse(v11n, BibleBook.GEN, 1, 1) : new Verse(
-                            v11n, previousBook, v11n.getLastChapter(previousBook), 1);
-                }
-            } else {
-                final int lastChapterInBook = v11n.getLastChapter(verse.getBook());
-                if (chapter < lastChapterInBook) {
-                    targetVerse = new Verse(v11n, verse.getBook(), chapter + 1, 1);
-                } else {
-                    // we go up a book
-                    final BibleBook nextBook = getNonIntroNextBook(bibleBook, v11n);
-
-                    final int lastChapter = v11n.getLastChapter(BibleBook.REV);
-                    final int lastVerse = v11n.getLastVerse(BibleBook.REV, lastChapter);
-                    targetVerse = nextBook == null ? new Verse(v11n, BibleBook.REV, lastChapter, lastVerse)
-                            : new Verse(v11n, nextBook, 1, 1);
-                }
-            }
-
-            // now we've got our target verse, use it, trim off the verse number
-            final Key finalKey = currentBook.getKey(getChapter(targetVerse, v11n));
-            final KeyWrapper keyWrapper = new KeyWrapper(finalKey);
-
-            //check whether the target verse is in the last chapter
-            if (v11n.getLastChapter(targetVerse.getBook()) == targetVerse.getChapter()) {
-                keyWrapper.setLastChapter(true);
-            }
-
-            return keyWrapper;
+            return getSiblingChapter(previousChapter, currentBook, v11n, key);
         } catch (final NoSuchKeyException e) {
             throw new LocalisedException(e, e.getMessage());
         }
+    }
+
+    private KeyWrapper getSiblingChapter(final boolean previousChapter, final Book currentBook, final Versification v11n, final Key key) throws NoSuchKeyException {
+        final Verse verse = KeyUtil.getVerse(previousChapter ? key : key.get(key.getCardinality() - 1));
+        final int chapter = verse.getChapter();
+        final BibleBook bibleBook = verse.getBook();
+
+        Verse targetVerse;
+
+        if (previousChapter) {
+            if (chapter > 1) {
+                targetVerse = new Verse(v11n, verse.getBook(), chapter - 1, 1);
+            } else {
+                // we go down a book
+                final BibleBook previousBook = getNonIntroPreviousBook(bibleBook, v11n);
+
+                targetVerse = previousBook == null ? new Verse(v11n, BibleBook.GEN, 1, 1) : new Verse(
+                        v11n, previousBook, v11n.getLastChapter(previousBook), 1);
+            }
+        } else {
+            final int lastChapterInBook = v11n.getLastChapter(verse.getBook());
+            if (chapter < lastChapterInBook) {
+                targetVerse = new Verse(v11n, verse.getBook(), chapter + 1, 1);
+            } else {
+                // we go up a book
+                final BibleBook nextBook = getNonIntroNextBook(bibleBook, v11n);
+
+                final int lastChapter = v11n.getLastChapter(BibleBook.REV);
+                final int lastVerse = v11n.getLastVerse(BibleBook.REV, lastChapter);
+                targetVerse = nextBook == null ? new Verse(v11n, BibleBook.REV, lastChapter, lastVerse)
+                        : new Verse(v11n, nextBook, 1, 1);
+            }
+        }
+
+        // now we've got our target verse, use it, trim off the verse number
+        final Key finalKey = currentBook.getKey(getChapter(targetVerse, v11n));
+        final KeyWrapper keyWrapper = new KeyWrapper(finalKey);
+
+        //check whether the target verse is in the last chapter
+        if (v11n.getLastChapter(targetVerse.getBook()) == targetVerse.getChapter()) {
+            keyWrapper.setLastChapter(true);
+        }
+
+        return keyWrapper;
     }
 
     /**
@@ -776,7 +780,8 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
 
             final OsisWrapper osisWrapper = new OsisWrapper(writeToString(htmlsep), key,
                     getLanguages(book, displayMode, htmlsep, options), versification,
-                    bookData.getFirstBook().getInitials(), displayMode, interlinearVersion);
+                    bookData.getFirstBook().getInitials(), displayMode, 
+                    interlinearVersion);
 
 
             if (key instanceof Passage) {
@@ -931,8 +936,11 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
                 languages[ii] = books[ii].getLanguage().getCode();
             }
 
-            return new OsisWrapper(writeToString(transformer), data.getKey(),
-                    languages, v11n, versions[0], displayMode, StringUtils.join(versions, 1));
+            final Key key = data.getKey();
+            return new OsisWrapper(writeToString(transformer), key,
+                    languages, v11n, versions[0], displayMode, 
+                    StringUtils.join(versions, 1)
+                    );
         } catch (final TransformerException e) {
             throw new StepInternalException(e.getMessage(), e);
         } catch (final SAXException e) {

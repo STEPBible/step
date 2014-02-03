@@ -28,18 +28,22 @@ $(window).on("load", function() {
 
     step.passages = new PassageModelList();
     step.passages.fetch();
-
+    
+    //need to clean up passages... Ideally, by changing the values of passageIds to be 0,1,2,3,4,...
+    for(var ii = 0; ii < step.passages.length; ii++) {
+        step.passages.at(ii).save({ passageId: ii }, {silent: true });
+    }
     
     //TODO: need to make sure we reset various properties
     //such as filter and pageNumber
     
     //create passage if not present
-    step.passages.add(new PassageModel({ passageId: 0 }));
-    
-    
-    
+    if(step.passages.length == 0) {
+        step.passages.add(new PassageModel({ passageId: 0 }));
+        
+    }
     new PassageMenuView({
-        model: step.passages.at(0)
+        model: step.passages.findWhere({ passageId: 0})
     });
     
     step.router = new StepRouter();

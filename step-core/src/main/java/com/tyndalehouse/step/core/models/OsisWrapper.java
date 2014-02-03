@@ -53,6 +53,8 @@ public class OsisWrapper implements Serializable {
     private static final long serialVersionUID = -5651330317995494895L;
     @JsonIgnore
     private final Key key;
+    private KeyWrapper previousChapter;
+    private KeyWrapper nextChapter;
     private String value;
     private String reference;
     private String osisId;
@@ -78,8 +80,12 @@ public class OsisWrapper implements Serializable {
      * @param languageCode the ISO language code
      * @param v11n the versification system used
      */
-    public OsisWrapper(final String value, final Key key, final String[] languageCode, final Versification v11n,
-                       final String masterVersion, final InterlinearMode interlinearMode, final String extraVersions) {
+    public OsisWrapper(final String value, 
+                       final Key key, final String[] languageCode, 
+                       final Versification v11n,
+                       final String masterVersion, 
+                       final InterlinearMode interlinearMode, 
+                       final String extraVersions) {
         this.value = value;
         this.key = key;
         this.masterVersion = masterVersion;
@@ -271,5 +277,34 @@ public class OsisWrapper implements Serializable {
      */
     public SearchType getSearchType() {
         return this.searchType;
-    }    
+    }
+
+    /**
+     * @return the previous chapter
+     */
+    public KeyWrapper getPreviousChapter() {
+        return previousChapter;
+    }
+
+    /**
+     * @return the next chapter
+     */
+    public KeyWrapper getNextChapter() {
+        return nextChapter;
+    }
+
+    /**
+     * 
+     * @param previousChapter previous  chapter for this passage
+     */
+    public void setPreviousChapter(final KeyWrapper previousChapter) {
+        this.previousChapter = previousChapter;
+    }
+
+    /**
+     * @param nextChapter next chapter for this passage
+     */
+    public void setNextChapter(final KeyWrapper nextChapter) {
+        this.nextChapter = nextChapter;
+    }
 }

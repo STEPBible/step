@@ -1,6 +1,6 @@
 var SearchDisplayView = Backbone.View.extend({
     el: function () {
-        var passageContainer = $(".passageContainer").eq(this.model.get("passageId"));
+        var passageContainer = step.util.getPassageContainer(this.model.get("passageId"));
         var passageContent = passageContainer.find(".passageContent");
         if(passageContent.length == 0) {
             passageContent = $('<div class="passageContent"></div>');
@@ -16,6 +16,7 @@ var SearchDisplayView = Backbone.View.extend({
         _.bindAll(this);
         
         this.listenTo(this.model, "destroyViews", this.remove);
+        this.listenTo(this.model, "destroy-columns", this.remove);
         
 //        Backbone.Events.on(this.options.searchType + ":new:" + this.model.get("passageId"), this.render, this);
         this.resultsLabel = step.util.getPassageContainer(this.$el).find(".resultsLabel");

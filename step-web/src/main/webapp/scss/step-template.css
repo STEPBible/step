@@ -13,7 +13,7 @@ ul .glyphicon-ok {
     visibility: visible; }
 
 .navbar {
-  height: 56px;
+  height: 63px;
   margin-bottom: 0px; }
   .navbar .navbar-header {
     font-size: x-small;
@@ -44,8 +44,15 @@ ul .glyphicon-ok {
   .search-form button {
     text-shadow: none; }
 
-.advancedSearch {
-  float: right; }
+.searchLinks {
+  float: right;
+  margin-top: 4px;
+  color: lightgrey; }
+  .searchLinks a, .searchLinks label {
+    vertical-align: top;
+    margin-left: 20px; }
+  .searchLinks input {
+    margin: 2px 0 0 0; }
 
 .help {
   color: lightgrey; }
@@ -56,7 +63,7 @@ ul .glyphicon-ok {
       display: none; } }
 
 .mainPanel, #sidebar {
-  padding: 56px 0 10px 0px; }
+  padding: 63px 0 10px 0px; }
 
 @media screen and (max-width: 991px) {
   .kolumny {
@@ -246,6 +253,31 @@ h4.lexicalGrouping {
         border-bottom: 0 dotted;
         border-left: 4px solid transparent; }
 
+@media (min-width: 768px) {
+  .col-sm-5columns, .col-sm-7columns, .col-sm-8columns, .col-sm-9columns, .col-sm-10columns, .col-sm-11columns {
+    position: relative;
+    min-height: 1px;
+    padding-right: 15px;
+    padding-left: 15px;
+    float: left; }
+
+  .col-sm-5columns {
+    width: 19.75%; }
+
+  .col-sm-7columns {
+    width: 14.03571%; }
+
+  .col-sm-8columns {
+    width: 12.25%; }
+
+  .col-sm-9columns {
+    width: 10.86111%; }
+
+  .col-sm-10columns {
+    width: 9.75%; }
+
+  .col-sm-11columns {
+    width: 8.84091%; } }
 ::-webkit-scrollbar {
   width: 12px; }
 
@@ -370,7 +402,7 @@ body::-webkit-scrollbar-corner {
     transition: all 0.25s ease-out; }
     .row-offcanvas .sidebar-offcanvas {
       right: -75%;
-      top: 56px; }
+      top: 63px; }
     .row-offcanvas.active {
       right: 75%; }
 

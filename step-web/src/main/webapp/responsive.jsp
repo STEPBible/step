@@ -116,9 +116,15 @@
                                   <button class="btn btn-default btn-danger btn-sm" type="button">Search</button>
                                 </span>
                             </div>
-                            <a href="javascript:void(0)" class="advancedSearch">
-                                Advanced search
-                            </a>
+                            <span class="searchLinks">
+                                <a href="javascript:void(0)" class="advancedSearch">
+                                    Advanced search
+                                </a>
+                                <label for="openInNewPanel">
+                                    Open in new panel
+                                </label>
+                                <input type="checkbox" id="openInNewPanel" />
+                            </span>
                         </div>
                     </form>
                 </div>
@@ -136,6 +142,11 @@
             <div class="passageContainer" passage-id=0>
                 <div class="passageText ui-widget">
                     <div class="btn-group pull-right passageOptionsGroup">
+                        <a class="btn btn-default btn-sm previousChapter" type="button" title="<fmt:message key="passage_previous_chapter" />">
+                            <span class="glyphicon glyphicon-arrow-left"></span></a>
+                        <a class="btn btn-default btn-sm nextChapter" type="button" title='<fmt:message key="passage_next_chapter" />'>
+                            <span class="glyphicon glyphicon-arrow-right"></span>
+                        </a>
                         <button class="btn btn-default btn-sm smallerFontSize" type="button" title="<fmt:message key="passage_smaller_fonts" />">
                             <span class="smallerFont"><fmt:message key="passage_font_size_symbol" /></span></button>
                         <button class="btn btn-default btn-sm largerFontSize" type="button" title='<fmt:message key="passage_larger_fonts" />'>
@@ -159,6 +170,10 @@
                                 <span class="glyphicon glyphicon-cog"></span>
                             </button>
                         </div>
+                        <button class="btn btn-default btn-sm dropdown-toggle closeColumn" title="<fmt:message key="close" />" type="button">
+                            <span class="glyphicon glyphicon-remove"></span>
+                        </button>
+                        
                     </div>
                     <div class="pull-right resultsLabel"></div>
                     <div class="passageContent" itemprop="text">${ passage.searchType eq SearchType.PASSAGE ? passage.value : "" }</div>

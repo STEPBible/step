@@ -5,7 +5,9 @@ var MainSearchView = Backbone.View.extend({
     },
     initialize: function () {
         this.masterSearch = this.$el.find("#masterSearch");
-
+        this.columnHolder = $("#columnHolder");
+        this.openNewColumn = this.$el.find("#openInNewPanel");
+        
         _.bindAll(this);
         var view = this;
 
@@ -157,6 +159,12 @@ var MainSearchView = Backbone.View.extend({
         //reset defaults:
         step.util.activePassage().save({ pageNumber: 1, filter: undefined }, { silent: true});
         console.log("Arguments are: ", args);
+        
+        //if we're wanting a new column, then create it right now
+        if(this.openNewColumn.prop("checked")) {
+            this._createNewColumn();
+        }
+        
         step.router.navigateSearch(args);
     },
     getCurrentInput: function () {
@@ -271,5 +279,43 @@ var MainSearchView = Backbone.View.extend({
         var markup = [];
         window.Select2.util.markMatch(row, query.term, markup, escapeMarkup);
         return markup.join("");
+    },
+    _createNewColumn: function() {
+        var columns = this.columnHolder.children(".column");
+        var columnsCount = columns.length;
+        var activeColumn = columns.filter(".active");
+        var newColumn = activeColumn.clone();
+        var newPassageId = parseInt(step.passages.max(function(p) { return parseInt(p.get("passageId")) }).get("passageId")) + 1;
+        newColumn
+            .find(".passageContainer").attr("passage-id", newPassageId)
+            .find(".passageContent").remove();
+
+        //change the width all columns
+        var classesToRemove = "col-sm-12 col-sm-6 col-sm-4 col-sm-3 col-sm-5columns col-sm-2 col-sm-7columns col-sm-8columns col-sm-9columns col-sm-10columns col-sm-11columns col-sm-1"; 
+        columns.removeClass(classesToRemove);
+        newColumn.removeClass(classesToRemove);
+        var columnClass;
+        switch(columnsCount + 1) {
+            case 1: columnClass = "col-sm-12"; break;
+            case 2: columnClass = "col-sm-6"; break;
+            case 3: columnClass = "col-sm-4"; break;
+            case 4: columnClass = "col-sm-3"; break;
+            case 5: columnClass = "col-sm-5columns"; break;
+            case 6: columnClass = "col-sm-2"; break;
+            case 7: columnClass = "col-sm-7columns"; break;
+            case 8: columnClass = "col-sm-8columns"; break;
+            case 9: columnClass = "col-sm-9columns"; break;
+            case 10: columnClass = "col-sm-10columns"; break;
+            case 11: columnClass = "col-sm-11columns"; break;
+            case 12: columnClass = "col-sm-1"; break;
+            default:
+                columnClass = "col-sm-1";
+                alert("Not sure what to do here...");
+                break;
+        }
+        columns.addClass(columnClass);
+        newColumn.addClass(columnClass);
+        this.columnHolder.append(newColumn);
+        step.util.activePassageId(newPassageId);
     }
 });

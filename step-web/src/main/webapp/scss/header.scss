@@ -40,21 +40,29 @@
 .search-form {
   font-size: x-small;
   a {
-    color: lightgrey;
+    color: $topHeaderLinkColour;
   }
 
   button {
     text-shadow: none;
   }
 }
-
-.advancedSearch {
+.searchLinks {
   float: right;
+  margin-top: 4px;
+  color: $topHeaderLinkColour;
+  a, label {
+    vertical-align: top;
+    margin-left: 20px;
+  }
+  input {
+    margin: 2px 0 0 0;
+  }
 }
 
 // Help menu
 .help {
-  color: lightgrey;
+  color: $topHeaderLinkColour;
   ul {
     float: right;
   }

@@ -73,8 +73,8 @@ var ViewLexiconWordle = Backbone.View.extend({
         var menu = $('<ul class="dropdown-menu" role="menu"></ul>');
 
         if (includeText) {
-            var activePassageData = step.util.activePassage().get("data");
-            var activeReference = activePassageData.reference;
+            var activePassageData = step.util.activePassage();
+            var activeReference = activePassageData.get("reference");
             var textReference = $('<input type="text" />')
                 .attr("placeholder", __s.analyse_book_ref)
                 .val(activeReference);

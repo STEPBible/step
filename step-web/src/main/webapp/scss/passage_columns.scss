@@ -26,7 +26,7 @@
       border-width: 2px;
       -webkit-box-shadow: 0 3px 12px rgba(0, 0, 0, 0.175);
       box-shadow: 0 3px 12px rgba(0, 0, 0, 0.175);
-      
+
       .activeMarker {
         position: absolute;
         top: 0px;
@@ -38,5 +38,33 @@
         border-left: 4px solid transparent;
       }
     }
+  }
+}
+
+@media (min-width: 768px) {
+  .col-sm-5columns, .col-sm-7columns, .col-sm-8columns, .col-sm-9columns, .col-sm-10columns, .col-sm-11columns {
+    position: relative;
+    min-height: 1px;
+    padding-right: 15px;
+    padding-left: 15px;
+    float: left;
+  }
+  .col-sm-5columns {
+    width: (100% / 5) - 0.25%;
+  }
+  .col-sm-7columns {
+    width: (100% / 7) - 0.25%;
+  }
+  .col-sm-8columns {
+    width: (100% / 8) - 0.25%;
+  }
+  .col-sm-9columns {
+    width: (100% / 9) - 0.25%;
+  }
+  .col-sm-10columns {
+    width: (100% / 10) - 0.25%;
+  }
+  .col-sm-11columns {
+    width: (100% / 11) - 0.25%;
   }
 }

@@ -3,10 +3,13 @@ var PassageMenuView = Backbone.View.extend({
         "click a[name]": "updateModel",
         "click .showStats": "showAnalysis",
         "click .smallerFontSize": "decreaseFontSize",
-        "click .largerFontSize": "increaseFontSize"
+        "click .largerFontSize": "increaseFontSize",
+        "click .previousChapter": "goToPreviousChapter",
+        "click .nextChapter": "goToNextChapter",
+        "click .closeColumn" : "closeColumn"
     },
     el: function () {
-        return $(".passageOptionsGroup").eq(this.model.get("passageId"))
+        return step.util.getPassageContainer(this.model.get("passageId")).find(".passageOptionsGroup");
     },
     items: [
         { initial: "H", key: "display_headings" },
@@ -30,8 +33,9 @@ var PassageMenuView = Backbone.View.extend({
         _.bindAll(this);
 
         //listen for model changes
-        this.model.on("sync-update", this._updateVisibleDropdown);
-
+        this.listenTo(this.model, "sync-update", this._updateVisibleDropdown);
+        this.listenTo(this.model, "destroy-columns", this.remove);
+        
         //get the versions data sources
         for (var i = 0; i < step.datasources.length; i++) {
             if (step.datasources.at(i).get("name") == DS_VERSIONS) {
@@ -39,7 +43,7 @@ var PassageMenuView = Backbone.View.extend({
             }
         }
 
-        this.$el.on('show.bs.dropdown', function (ev) {
+        this.listenTo(this.$el, 'show.bs.dropdown', function (ev) {
             if (!self.rendered) {
                 require(["defaults"], function () {
                     self._initUI();
@@ -288,6 +292,7 @@ var PassageMenuView = Backbone.View.extend({
     },
 
     _doSocialButtons: function () {
+        step.util.activePassageId(this.model.get("passageId"));
         if (step.state.isLocal()) {
             return;
         }
@@ -327,9 +332,40 @@ var PassageMenuView = Backbone.View.extend({
         }
     },
     decreaseFontSize: function() {
+        step.util.activePassageId(this.model.get("passageId"));
         step.util.changeFontSize(this.$el, -1);
     },
     increaseFontSize: function() {
+        step.util.activePassageId(this.model.get("passageId"));
         step.util.changeFontSize(this.$el, 1);
+    },
+    goToPreviousChapter: function() {
+        this.goToSiblingChapter(this.model.get("previousChapter"));
+    },
+    goToNextChapter: function() {
+        this.goToSiblingChapter(this.model.get("nextChapter"));
+    },
+    goToSiblingChapter: function(key) {
+        step.util.activePassageId(this.model.get("passageId"));
+        
+        var args = this.model.get("args");
+        
+        //remove all references from the args
+        args = args
+            .replace(/reference=[0-9a-zA-Z :.;-]+/ig, "")
+            .replace(/&&/ig, "")
+            .replace(/&$/ig, "");
+        
+        if(args.length >0) {
+            args += "&";
+        }
+        args += "reference=" + key.osisKeyId;
+        step.router.navigateSearch(args);
+    },
+    /**
+     * Closes the whole column by removing it from the DOM
+     */
+    closeColumn : function() {
+        this.model.trigger("destroy-column");
     }
 });

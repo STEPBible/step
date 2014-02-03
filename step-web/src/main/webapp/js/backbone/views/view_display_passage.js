@@ -1,6 +1,6 @@
 var PassageDisplayView = Backbone.View.extend({
         el: function () {
-            var passageContainer = $(".passageContainer").eq(this.model.get("passageId"));
+            var passageContainer = step.util.getPassageContainer(this.model.get("passageId"));
             var passageContent = passageContainer.find(".passageContent");
             if(passageContent.length == 0) {
                 passageContent = $('<div class="passageContent"></div>');
@@ -10,6 +10,7 @@ var PassageDisplayView = Backbone.View.extend({
         },
         initialize: function (options) {
             this.listenTo(this.model, "destroyViews", this.remove);
+            this.listenTo(this.model, "destroy-columns", this.remove);
             this.listenTo(this.model, "font:change", this.handleFontSizeChange, this);
             
 //            Backbone.Events.on("passage:new:" + this.model.get("passageId"), this.render, this);

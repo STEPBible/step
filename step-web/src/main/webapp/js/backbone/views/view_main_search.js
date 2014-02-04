@@ -281,9 +281,9 @@ var MainSearchView = Backbone.View.extend({
         return markup.join("");
     },
     _createNewColumn: function() {
-        var columns = this.columnHolder.children(".column");
+        var columns = this.columnHolder.find(".column");
         var columnsCount = columns.length;
-        var activeColumn = columns.filter(".active");
+        var activeColumn = columns.has(".passageContainer.active");
         var newColumn = activeColumn.clone();
         var newPassageId = parseInt(step.passages.max(function(p) { return parseInt(p.get("passageId")) }).get("passageId")) + 1;
         newColumn

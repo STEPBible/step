@@ -16,7 +16,7 @@ var SearchDisplayView = Backbone.View.extend({
         _.bindAll(this);
         
         this.listenTo(this.model, "destroyViews", this.remove);
-        this.listenTo(this.model, "destroy-columns", this.remove);
+        this.listenTo(this.model, "destroy-column", this.remove);
         
 //        Backbone.Events.on(this.options.searchType + ":new:" + this.model.get("passageId"), this.render, this);
         this.resultsLabel = step.util.getPassageContainer(this.$el).find(".resultsLabel");

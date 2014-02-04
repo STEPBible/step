@@ -180,26 +180,30 @@ step.util = {
         return s.match(/^\s*$/g) != null;
     },
     activePassageId: function (val) {
-        var currentActivePassageId = parseInt($(".column.active").find(".passageContainer").attr("passage-id"));
-        if (val !== null && val !== undefined) {
-            var columns = $(".column");
+        var currentActivePassageId = parseInt($(".passageContainer.active").attr("passage-id"));
+        if (val !== null && val !== undefined && val != currentActivePassageId) {
+            var columns = $(".passageContainer");
             columns.filter(".active").removeClass("active").find(".activeMarker").remove();
             
-            //create the passage model
-            //we're changing the active passageId, so remove all active markers and classes 
-            //and change value
-            var newPassageModel = step.passages.findWhere({ passageId: currentActivePassageId }).clone();
-            
-            //override id to make sure it looks like it's new and gets persisted in local storage
-            newPassageModel.id = null;
-            step.passages.add(newPassageModel);
-            newPassageModel.save({ passageId: val }, { silent: true });
-            step.util.getPassageContainer(val).closest(".column").addClass("active").append('<span class="activeMarker"></span>');
-            
-            //create the click handlers for the passage menu
-            new PassageMenuView({
-                model: newPassageModel
-            });
+            //do we need to create a new passage model? only if no others exists with the same passageId.
+            var existingModel = step.passages.findWhere({ passageId: val });
+            if(existingModel == null) {
+                //create brand new model and view to manage it.
+                var newPassageModel = step.passages.findWhere({ passageId: currentActivePassageId }).clone();
+                
+                //override id to make sure it looks like it's new and gets persisted in local storage
+                newPassageModel.id = null;
+                step.passages.add(newPassageModel);
+                newPassageModel.save({ passageId: val }, { silent: true });
+                
+                //create the click handlers for the passage menu
+                new PassageMenuView({
+                    model: newPassageModel
+                });
+            }
+
+            //make the new panel active
+            step.util.getPassageContainer(val).addClass("active").append('<span class="activeMarker"></span>');
         }
 
         return currentActivePassageId;

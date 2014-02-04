@@ -34,7 +34,9 @@ var PassageMenuView = Backbone.View.extend({
 
         //listen for model changes
         this.listenTo(this.model, "sync-update", this._updateVisibleDropdown);
-        this.listenTo(this.model, "destroy-columns", this.remove);
+        this.listenTo(this.model, "destroy-column", this.remove);
+        this.column = this.$el.closest(".column");
+        this.column.click(this.activateColumn);
         
         //get the versions data sources
         for (var i = 0; i < step.datasources.length; i++) {
@@ -367,5 +369,10 @@ var PassageMenuView = Backbone.View.extend({
      */
     closeColumn : function() {
         this.model.trigger("destroy-column");
+        this.column.remove();
+    },
+    activateColumn : function() {
+        var passageId = this.column.find("[passage-id]").attr("passage-id");
+        step.util.activePassageId(passageId);
     }
 });

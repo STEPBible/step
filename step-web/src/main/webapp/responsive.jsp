@@ -137,9 +137,9 @@
 
     <div class="mainPanel row row-offcanvas">
         <div class="" id='columnHolder'>
-            <div class="col-sm-6 col-xs-12 column active">
-            <span class="activeMarker"></span>
-            <div class="passageContainer" passage-id=0>
+            <div class="col-sm-6 col-xs-12 column">
+            <div class="passageContainer active" passage-id=0>
+                <span class="activeMarker"></span>
                 <div class="passageText ui-widget">
                     <div class="btn-group pull-right passageOptionsGroup">
                         <a class="btn btn-default btn-sm previousChapter" type="button" title="<fmt:message key="passage_previous_chapter" />">

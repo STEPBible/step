@@ -15,21 +15,27 @@
   @include padding-from-header;
 
   .column {
-    border-radius: 3;
     height: 100%;
-    overflow-y: scroll;
-    padding: 5px;
-    border: 1px solid lightgrey;
-
-    &.active {
-      border-color: $activeColor;
-      border-width: 2px;
+    padding: 0;
+    padding: 0px 2px;
+    
+    .passageContainer {
+      border: 1px solid lightgrey;
+      padding: 5px;
+      border-radius: 3;
+      height: 100%;
+      overflow-y: scroll;
+      border-width: $activeBorderWidth;
       -webkit-box-shadow: 0 3px 12px rgba(0, 0, 0, 0.175);
       box-shadow: 0 3px 12px rgba(0, 0, 0, 0.175);
+      
+      &.active {
+        border-color: $activeColor;
+      }
 
       .activeMarker {
         position: absolute;
-        top: 0px;
+        top: $activeBorderWidth;
         left: 50%;
         border-color: red;
         border-top: 4px solid $activeColor;

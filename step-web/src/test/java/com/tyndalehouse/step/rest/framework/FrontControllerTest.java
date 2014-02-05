@@ -54,6 +54,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
@@ -96,11 +97,13 @@ public class FrontControllerTest {
      * Simply setting up the FrontController under test
      */
     @Before
-    public void setUp() {
+    public void setUp() throws IOException {
         final ClientSession clientSession = mock(ClientSession.class);
         when(clientSession.getLocale()).thenReturn(Locale.ENGLISH);
         when(this.clientSessionProvider.get()).thenReturn(clientSession);
-        when(this.objectMapper.get()).thenReturn(mock(ObjectMapper.class));
+        final ObjectMapper mockMapper = mock(ObjectMapper.class);
+        when(mockMapper.writeValueAsString(any(Object.class))).thenReturn("Test");
+        when(this.objectMapper.get()).thenReturn(mockMapper);
         
         this.fcUnderTest = new FrontController(this.guiceInjector, this.errorResolver,
                 this.clientSessionProvider, objectMapper);
@@ -217,19 +220,6 @@ public class FrontControllerTest {
         assertArrayEquals(new Class<?>[]{String.class, Integer.class},
                 this.fcUnderTest.getClasses(new Object[]{"hello", Integer.valueOf(1)}));
 
-    }
-
-    /**
-     * tests that we encode using json mapper and set to UTF 8
-     */
-    @Test
-    public void testJsonEncoding() {
-        final byte[] encodedJsonResponse = this.fcUnderTest.getEncodedJsonResponse("abc");
-
-        // this reprensents the string "{abc}"
-        final byte[] expectedValues = new byte[]{34, 97, 98, 99, 34};
-
-        assertArrayEquals(expectedValues, encodedJsonResponse);
     }
 
     /**

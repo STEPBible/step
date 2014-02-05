@@ -176,8 +176,7 @@
                         
                     </div>
                     <div class="pull-right resultsLabel"></div>
-                    <div class="passageContent" itemprop="text">${ passage.searchType eq SearchType.PASSAGE ? passage.value : "" }</div>
-                    <%--<div class="passageContent" itemprop="text">&nbsp;<%= stepRequest.getPassage(0) %></div>--%>
+                    <div class="passageContent" itemprop="text">${ 'PASSAGE' eq searchType ? passageText : "" }</div>
                 </div>
             </div>
         </div>
@@ -202,6 +201,11 @@
     <%@include file="jsps/initLib.jsp" %>
 
     <%-- Now do javascript --%>
+    <script type="text/javascript">
+        window.tempModel = ${ passageModel }
+    </script>
+    
+    
     <%
         if(request.getParameter("debug") != null) {
     %>

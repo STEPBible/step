@@ -37,6 +37,7 @@ import com.google.inject.Injector;
 import com.google.inject.Singleton;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.models.ClientSession;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,9 +59,6 @@ import static java.lang.String.format;
  */
 @Singleton
 public class FrontController extends AbstractAjaxController {
-    /**
-     * The Constant UTF_8_ENCODING.
-     */
     public static final String UTF_8_ENCODING = "UTF-8";
     private static final String EXTERNAL_CONTROLLER_SUB_PACKAGE = "external";
     private static final Logger LOGGER = LoggerFactory.getLogger(FrontController.class);
@@ -84,8 +82,9 @@ public class FrontController extends AbstractAjaxController {
     @Inject
     public FrontController(final Injector guiceInjector,
                            final ClientErrorResolver errorResolver,
-                           final Provider<ClientSession> clientSessionProvider) {
-        super(clientSessionProvider, errorResolver);
+                           final Provider<ClientSession> clientSessionProvider,
+                           final Provider<ObjectMapper> objectMapperProvider) {
+        super(clientSessionProvider, errorResolver, objectMapperProvider);
         this.guiceInjector = guiceInjector;
     }
 

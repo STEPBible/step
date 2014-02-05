@@ -27,14 +27,16 @@ import static java.lang.String.format;
  */
 public abstract class AbstractAjaxController extends HttpServlet {
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractAjaxController.class);
-    private final transient ObjectMapper jsonMapper = new ObjectMapper();
+    private final ObjectMapper jsonMapper;
     private final transient ClientErrorResolver errorResolver;
     private final Provider<ClientSession> clientSessionProvider;
 
-    public AbstractAjaxController(final Provider<ClientSession> clientSessionProvider, final ClientErrorResolver errorResolver) {
+    public AbstractAjaxController(final Provider<ClientSession> clientSessionProvider, 
+                                  final ClientErrorResolver errorResolver,
+                                  final Provider<ObjectMapper> objectMapperProvider) {
         this.clientSessionProvider = clientSessionProvider;
         this.errorResolver = errorResolver;
-        this.jsonMapper.setSerializationInclusion(JsonSerialize.Inclusion.NON_NULL);
+        this.jsonMapper = objectMapperProvider.get();
     }
 
     @Override

@@ -37,6 +37,8 @@ import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
 import java.io.IOException;
 import java.util.*;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -56,18 +58,23 @@ import com.tyndalehouse.step.rest.framework.JsonResourceBundle;
  */
 @Singleton
 public class InternationalJsonController extends HttpServlet {
-    /**
-     * The Constant serialVersionUID.
-     */
     private static final long serialVersionUID = 1721159652548642069L;
     private static final Map<Locale, String> BUNDLES = new HashMap<Locale, String>();
-
+    private final ObjectMapper objectMapper;
+    
+    @Inject
+    public InternationalJsonController(final Provider<ObjectMapper> objectMapperProvider) {
+        this.objectMapper = objectMapperProvider.get();
+    }
+    
+    
     @Override
-    protected void doGet(final HttpServletRequest req, final HttpServletResponse response)
+    protected void doGet(final HttpServletRequest req, 
+                         final HttpServletResponse response)
             throws ServletException, IOException {
 
         final Locale locale;
-
+        
         final String langParameter = req.getParameter("lang");
         if (isNotBlank(langParameter)) {
             locale = new Locale(langParameter);
@@ -101,11 +108,10 @@ public class InternationalJsonController extends HttpServlet {
         }
 
         final JsonResourceBundle jsonResourceBundle = new JsonResourceBundle(bundles);
-        final ObjectMapper mapper = new ObjectMapper();
         String jsonResponse;
 
         try {
-            jsonResponse = mapper.writeValueAsString(jsonResourceBundle);
+            jsonResponse = objectMapper.writeValueAsString(jsonResourceBundle);
         } catch (final IOException e) {
             throw new StepInternalException("Unable to read messages", e);
         }

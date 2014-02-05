@@ -1,8 +1,10 @@
 package com.tyndalehouse.step.rest.controllers;
 
 import com.tyndalehouse.step.core.models.OsisWrapper;
+import org.codehaus.jackson.map.ObjectMapper;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -16,10 +18,12 @@ import java.io.IOException;
 @Singleton
 public class SearchPageController extends HttpServlet {
     private final SearchController search;
+    private final Provider<ObjectMapper> objectMapper;
 
     @Inject
-    public SearchPageController(final SearchController search) {
+    public SearchPageController(final SearchController search, Provider<ObjectMapper> objectMapper) {
         this.search = search;
+        this.objectMapper = objectMapper;
     }
     
     @Override
@@ -31,7 +35,15 @@ public class SearchPageController extends HttpServlet {
                 req.getParameter("page"),
                 req.getParameter("filter"),
                 req.getParameter("context"));
-        req.setAttribute("passage", text);
+        
+        if(text instanceof OsisWrapper) {
+            final OsisWrapper osisWrapper = (OsisWrapper) text;
+            req.setAttribute("passageText", osisWrapper.getValue());
+            req.setAttribute("searchType", osisWrapper.getSearchType().name());
+            osisWrapper.setValue(null);
+            req.setAttribute("passageModel", objectMapper.get().writeValueAsString(text));
+        }
+        
         resp.setCharacterEncoding("UTF-8");
         req.getRequestDispatcher("/responsive.jsp").include(req, resp);
     }

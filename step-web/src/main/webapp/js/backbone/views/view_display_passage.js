@@ -12,17 +12,7 @@ var PassageDisplayView = Backbone.View.extend({
             this.listenTo(this.model, "destroyViews", this.remove);
             this.listenTo(this.model, "destroy-column", this.remove);
             this.listenTo(this.model, "font:change", this.handleFontSizeChange, this);
-            
-//            Backbone.Events.on("passage:new:" + this.model.get("passageId"), this.render, this);
-//            Backbone.Events.on("font:change:" + this.model.get("passageId"), this.handleFontSizeChange, this);
-
-            
-//            step.fonts.fontButtons(this.$el, true);
-
-//            $(".passageSizeButtons").buttonset();
-//            $(".passageLookupButtons").buttonset();
-
-//            Backbone.Events.on("window-resize", this._doChromeHack, this);
+            this.partRendered = options.partRendered;
             this.render();
         },
 
@@ -36,8 +26,12 @@ var PassageDisplayView = Backbone.View.extend({
             this.model.set("endRange", this.model.get("endRange"), {silent: true });
             this.model.set("multipleRanges", this.model.get("multipleRanges"), {silent: true });
 
-
-            var passageHtml = $(this.model.get("value"));
+            var passageHtml;
+            if(this.partRendered) {
+                passageHtml = this.$el.find(".passageContentHolder");
+            } else {
+                 passageHtml = $(this.model.get("value"));
+            }
             var passageId = this.model.get("passageId");
             var interlinearMode = this.model.get("interlinearMode");
             var extraVersions = this.model.get("extraVersions");
@@ -63,7 +57,9 @@ TODO:                this._addStrongHandlers(passageId, passageHtml);
 //TODO:                this._doVersions(passageId, passageHtml, version, reference);
                 
 //TODO:                step.util.closeInfoErrors(passageId);
-                step.util.ui.emptyOffDomAndPopulate(this.$el, passageHtml);
+                if(!this.partRendered) {
+                    step.util.ui.emptyOffDomAndPopulate(this.$el, passageHtml);
+                }
 
                 //needs to happen after appending to DOM
                 this._doChromeHack(undefined, passageHtml, interlinearMode, options);

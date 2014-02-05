@@ -49,10 +49,12 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Locale;
 
+import javax.inject.Provider;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -86,6 +88,9 @@ public class FrontControllerTest {
 
     @Mock
     private ClientSessionProvider clientSessionProvider;
+    
+    @Mock
+    private Provider<ObjectMapper> objectMapper;
 
     /**
      * Simply setting up the FrontController under test
@@ -95,9 +100,10 @@ public class FrontControllerTest {
         final ClientSession clientSession = mock(ClientSession.class);
         when(clientSession.getLocale()).thenReturn(Locale.ENGLISH);
         when(this.clientSessionProvider.get()).thenReturn(clientSession);
-
+        when(this.objectMapper.get()).thenReturn(mock(ObjectMapper.class));
+        
         this.fcUnderTest = new FrontController(this.guiceInjector, this.errorResolver,
-                this.clientSessionProvider);
+                this.clientSessionProvider, objectMapper);
     }
 
     /**

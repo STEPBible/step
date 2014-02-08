@@ -18,13 +18,13 @@ $hoverColor: rgb(235, 235, 241);
 
 // scrollbar colours
 $headerBackgroundColor: black;
-$scrollColor: rgb(220,172,0);
-$scrollTrack: rgba(220,172,0,.05);
-$scrollTrackHover: rgba(220,172,0,.25);
-$scrollTrackActive: rgba(220,172,0,0.35);
-$scrollTrackBox: rgba(220,172,0,.1);
-$scrollTrackBoxActive: rgba(220,172,0,.14);
-$scrollTrackThumbShadow: rgba(220,172,0,.07);
+$scrollColor: #991C32;
+$scrollTrack: lighten($scrollColor, 0.05);
+$scrollTrackHover: lighten($scrollColor, 0.25);
+$scrollTrackActive: lighten($scrollColor, 0.35);
+$scrollTrackBox: lighten($scrollColor, 0.1);
+$scrollTrackBoxActive: lighten($scrollColor, 0.14);
+$scrollTrackThumbShadow: lighten($scrollColor, 0.07);
 
 // colours in dropdown
 $headingColour: #991C32;

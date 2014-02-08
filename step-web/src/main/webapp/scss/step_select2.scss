@@ -1,9 +1,13 @@
+@import 'mixins';
+
 /***
 *  auto suggests
 */
 .search-form .select2-arrow {
   display: none !important;
 }
+
+@include verticalHeight(".select2-results");
 
 .select2-search-choice-close {
   left: auto !important;

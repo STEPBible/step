@@ -240,6 +240,20 @@
                         </configuration>
                     </execution>
                     <execution>
+                        <id>minify-select2</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>minify</goal>
+                        </goals>
+                        <configuration>
+                            <jsSourceDir>.</jsSourceDir>
+                            <jsSourceFiles>
+                                <jsSourceFile>libs/select2.js</jsSourceFile>
+                            </jsSourceFiles>
+                            <jsFinalFile>select2-${project.version}.js</jsFinalFile>
+                        </configuration>
+                    </execution>
+                    <execution>
                         <id>minify-qtip</id>
                         <phase>process-resources</phase>
                         <goals>
@@ -283,6 +297,20 @@
                                 <jsSourceFile>libs/dohighlight-min.js</jsSourceFile>
                             </jsSourceFiles>
                             <jsFinalFile>step.search-${project.version}.js</jsFinalFile>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>minify-dropdown-options</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>minify</goal>
+                        </goals>
+                        <configuration>
+                            <jsSourceDir>.</jsSourceDir>
+                            <jsSourceFiles>
+                                <jsSourceFile>js/backbone/view_pick_bible.js</jsSourceFile>
+                            </jsSourceFiles>
+                            <jsFinalFile>menu_extras-${project.version}.js</jsFinalFile>
                         </configuration>
                     </execution>
                 </executions>

@@ -40,6 +40,10 @@ $(window).on("load", function () {
     if (window.tempModel) {
         //now we can create the correct views
         var modelZero = step.passages.findWhere({ passageId: 0});
+        if(modelZero == undefined) {
+            modelZero = new PassageModel({ passageId: 0 });
+            step.passages.add(modelZero);
+        }
         modelZero.save(window.tempModel);
         new PassageMenuView({
             model: modelZero
@@ -55,9 +59,8 @@ $(window).on("load", function () {
 
     //create passage if not present
 
-
+    
     if (step.passages.length == 0) {
-
         step.passages.add(new PassageModel({ passageId: 0 }));
     }
 

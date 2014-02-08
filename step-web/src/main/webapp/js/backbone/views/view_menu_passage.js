@@ -350,7 +350,7 @@ var PassageMenuView = Backbone.View.extend({
     goToSiblingChapter: function(key) {
         step.util.activePassageId(this.model.get("passageId"));
         
-        var args = this.model.get("args");
+        var args = this.model.get("args") || "";
         
         //remove all references from the args
         args = args

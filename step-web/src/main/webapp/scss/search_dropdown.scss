@@ -1,5 +1,6 @@
 @import 'template_variables';
 
+
 .select2-results {
   .initials {
     font-weight: bold;
@@ -40,4 +41,11 @@
 }
 .select2-search-choice.hebrewMeanings, .select-hebrewMeanings {
   background-image: -webkit-linear-gradient(top, lighten($hebrewMeaningsRow, $optionStartGradient), lighten($hebrewMeaningsRow, $optionEndGradient))  !important;
+}
+
+.searchLabel a {
+  font-size: 90%;
+  padding: 2px;
+  border-radius: 3 3 3 3 !important;
+  cursor: hand;
 }

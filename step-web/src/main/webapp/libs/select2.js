@@ -1577,7 +1577,11 @@ the specific language governing permissions and limitations under the Apache Lic
             }
 
             function render(html) {
-                results.html(html);
+                if(typeof html == 'string') {
+                    results.html(html);    
+                } else {
+                    results.append(html);
+                }
                 postRender();
             }
 
@@ -1594,7 +1598,12 @@ the specific language governing permissions and limitations under the Apache Lic
 
             if (search.val().length < opts.minimumInputLength) {
                 if (checkFormatter(opts.formatInputTooShort, "formatInputTooShort")) {
-                    render("<li class='select2-no-results'>" + opts.formatInputTooShort(search.val(), opts.minimumInputLength) + "</li>");
+                    var message = opts.formatInputTooShort(search.val(), opts.minimumInputLength);
+                    if(typeof message == 'string') {
+                        render("<li class='select2-no-results'>" + message + "</li>");
+                    } else {
+                        render($("<li class='select2-no-results'>").append(message));
+                    }
                 } else {
                     render("");
                 }

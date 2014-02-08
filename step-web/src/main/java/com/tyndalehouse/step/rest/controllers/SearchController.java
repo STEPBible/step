@@ -139,16 +139,21 @@ public class SearchController {
      * @param filter     the type of filter required on an original word search
      * @param context    the amount of context to add to the verses hit by a search
      */
-    public Object masterSearch(final String items, final String options, final String display, 
+    public Object masterSearch(final String items, final String options, final String display,
                                final String pageNumber, final String filter, final String context) {
-        notBlank(items, "Items field is blank", UserExceptionType.APP_MISSING_FIELD);
-        String[] tokens = SPLIT_TOKENS.split(items);
-        List<SearchToken> searchTokens = new ArrayList<SearchToken>();
+        String[] tokens;
+        if (items != null) {
+            tokens = SPLIT_TOKENS.split(items);
+        } else {
+            tokens = new String[0];
+        }
 
+        List<SearchToken> searchTokens = new ArrayList<SearchToken>();
         for (String t : tokens) {
             int indexOfPrefix = t.indexOf('=');
             if (indexOfPrefix == -1) {
-                throw new ValidationException("Term was not prefixed with type.", UserExceptionType.APP_MISSING_FIELD);
+                LOGGER.warn("Ignoring item: [{}]", t);
+                continue;
             }
 
             String text = t.substring(indexOfPrefix + 1);
@@ -157,7 +162,7 @@ public class SearchController {
 
         int page = ConversionUtils.getValidInt(pageNumber, 1);
         int searchContext = ConversionUtils.getValidInt(context, 0);
-        
+
         return this.searchService.runQuery(searchTokens, options, display, page, filter, searchContext);
     }
 
@@ -199,7 +204,7 @@ public class SearchController {
                 .parseInt(pageNumber), Integer.parseInt(pageSize)));
 
         results.setQuery(undoRestoreSearchQuery(results.getQuery()));
-        
+
         return results;
     }
 

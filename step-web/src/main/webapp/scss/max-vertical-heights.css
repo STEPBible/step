@@ -1,0 +1,9 @@
+@media screen and (min-height: 400px) {
+  .select2-results {
+    max-height: 300px; } }
+@media screen and (min-height: 600px) {
+  .select2-results {
+    max-height: 500px; } }
+@media screen and (min-height: 900px) {
+  .select2-results {
+    max-height: 800px; } }

@@ -8,7 +8,8 @@ requirejs.config({
         defaults: ["js/defaults/step.defaults"],
         search: ["js/backbone/views/view_display_word"],
         _search_display_view: ["js/backbone/views/view_display_search"],
-        _other_search: ["js/backbone/views/view_display_subject"]
+        _other_search: ["js/backbone/views/view_display_subject"],
+        menu_extras: ["js/backbone/views/view_pick_bible"]
         
     },
     shim : {

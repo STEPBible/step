@@ -85,10 +85,11 @@ public class StepServletConfig extends GuiceServletContextListener {
                     protected void configureServlets() {
                         serve("/" + ExternalPoweredByFilter.EXTERNAL_PREFIX + "*")
                                 .with(FrontController.class);
-                        serve("/search*").with(SearchPageController.class);
                         serve("/rest/*").with(FrontController.class);
                         serve("/commentary_images/*").with(ImageController.class);
-                        serve("/index.jsp");
+                        serve("/search*").with(SearchPageController.class);
+//                        serve("/index.jsp").with(SearchPageController.class);
+                        serve("/").with(SearchPageController.class);
                         serve("/international/interactive.js").with(InternationalJsonController.class);
 
                         if (Boolean.getBoolean("metrics.enabled")) {

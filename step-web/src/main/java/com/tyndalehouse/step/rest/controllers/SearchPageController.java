@@ -59,6 +59,7 @@ public class SearchPageController extends HttpServlet {
                 .getDisplayLanguage(userLocale)).replace("\"", ""));
         
         
+        resp.setContentType("text/html");
         resp.setCharacterEncoding("UTF-8");
 //        if (!req.getRequestURI().endsWith("index.jsp") && !"/".equals(req.getRequestURI())) {
             req.getRequestDispatcher("/index.jsp").include(req, resp);

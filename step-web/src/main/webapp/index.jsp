@@ -22,7 +22,7 @@
 <head>
     <TITLE><%= stepRequest.getTitle() %></TITLE>
     <META http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta step-local content="<%= appManager.isLocal() %>" />
     <meta name="step.version" content="${project.version}" />
     <meta name="description" content="<%= stepRequest.getDescription() %>" />
@@ -144,11 +144,6 @@
                         <a class="btn btn-default btn-sm nextChapter" type="button" title='<fmt:message key="passage_next_chapter" />'>
                             <span class="glyphicon glyphicon-arrow-right"></span>
                         </a>
-                        <button class="btn btn-default btn-sm smallerFontSize" type="button" title="<fmt:message key="passage_smaller_fonts" />">
-                            <span class="smallerFont"><fmt:message key="passage_font_size_symbol" /></span></button>
-                        <button class="btn btn-default btn-sm largerFontSize" type="button" title='<fmt:message key="passage_larger_fonts" />'>
-                            <span class="largerFont"><fmt:message key="passage_font_size_symbol" /></span>
-                        </button>
                         <%
                             if(!appManager.isLocal()) {
                         %>
@@ -167,13 +162,32 @@
                                 <span class="glyphicon glyphicon-cog"></span>
                             </button>
                         </div>
-                        <button class="btn btn-default btn-sm dropdown-toggle closeColumn" title="<fmt:message key="close" />" type="button">
+                        <button class="btn btn-default btn-sm closeColumn" title="<fmt:message key="close" />" type="button">
                             <span class="glyphicon glyphicon-remove"></span>
                         </button>
                         
                     </div>
                     <div class="pull-right resultsLabel"></div>
-                    <div class="passageContent" itemprop="text">${ 'PASSAGE' eq searchType ? passageText : "" }</div>
+                    <div class="passageContent" itemprop="text">
+                        <c:choose>
+                            <c:when test="${ 'PASSAGE' eq searchType }">
+                                ${ passageText }
+                            </c:when>
+                            <c:otherwise>
+                                <span>
+                                    <div class="searchResults">
+                                        <c:forEach var="result" items="${ searchResults }">
+                                            <div class="searchResultRow">
+                                                <div class="searchResultRow">
+                                                    ${ result.preview }
+                                                </div>
+                                            </div>
+                                        </c:forEach>
+                                    </div>
+                                </span>
+                            </c:otherwise>
+                        </c:choose>
+                    </div>
                 </div>
             </div>
         </div>

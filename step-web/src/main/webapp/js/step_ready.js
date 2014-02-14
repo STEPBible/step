@@ -27,6 +27,24 @@ $(window).on("load", function () {
         });
     });
 
+
+    //override history in backbone
+    Backbone.history = _.extend(Backbone.history, {
+        getFragment: function (fragment) {
+            if (fragment == null) {
+                var path = window.location.pathname;
+                if (path && path[0] == '/') {
+                    path = path.slice(1);
+                }
+                var query = window.location.search;
+                if (query) {
+                    path += query;
+                }
+                return path;
+            }
+            return fragment.replace(/^[#\/]|\s+$/g, '');
+        }});
+
     step.router = new StepRouter();
     step.passages = new PassageModelList();
     step.passages.fetch();
@@ -40,11 +58,12 @@ $(window).on("load", function () {
     if (window.tempModel) {
         //now we can create the correct views
         var modelZero = step.passages.findWhere({ passageId: 0});
-        if(modelZero == undefined) {
+        if (modelZero == undefined) {
             modelZero = new PassageModel({ passageId: 0 });
             step.passages.add(modelZero);
         }
         modelZero.save(window.tempModel);
+        
         new PassageMenuView({
             model: modelZero
         });
@@ -59,7 +78,7 @@ $(window).on("load", function () {
 
     //create passage if not present
 
-    
+
     if (step.passages.length == 0) {
         step.passages.add(new PassageModel({ passageId: 0 }));
     }

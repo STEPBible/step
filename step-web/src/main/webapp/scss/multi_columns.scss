@@ -17,6 +17,7 @@
 .miniKolumny {
   @media screen and (max-width: $stepLG) {
     max-height: 500px;
+    width: 200px;
     overflow-y: auto;
     overflow-x: hidden;
   }

@@ -1,7 +1,6 @@
 @import 'template_variables';
 
 .passageOptionsGroup {
-  margin-left: 10px;
   float: right;
   button span {
     line-height: 1;
@@ -24,13 +23,25 @@
 
   .settingsDropdown {
     li {
+      padding-right: 5px;
       &:hover {
         background-color: $hoverColor;
       }
-      &.searchContext:hover {
-        background-color: inherit;
-        .btn-group {
-          margin-left: 10px;
+      &.contextContainer{
+        button {
+          padding: 5px 7px;
+        }
+        &:hover {
+          background-color: inherit;
+        }
+      }
+      &.noHighlight {
+        padding-bottom: 10px;
+        &:hover {
+          background-color: inherit;
+          .btn-group {
+            margin-left: 10px;
+          }
         }
       }
     }
@@ -44,7 +55,8 @@
   }
   h1 {
     font-size: 14px;
-    margin-top: 0px;
+    margin-top: 10px;
+    margin-bottom: 3px
   }
   .nested-btn-group {
     float: left;

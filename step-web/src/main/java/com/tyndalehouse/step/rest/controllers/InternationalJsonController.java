@@ -67,7 +67,6 @@ public class InternationalJsonController extends HttpServlet {
         this.objectMapper = objectMapperProvider.get();
     }
     
-    
     @Override
     protected void doGet(final HttpServletRequest req, 
                          final HttpServletResponse response)

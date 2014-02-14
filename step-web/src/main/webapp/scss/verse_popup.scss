@@ -1,0 +1,14 @@
+@import 'template_variables';
+
+.versePopup {
+  max-width: 600px !important;
+  a {
+    font-size: $defaultFontSize;
+    white-space: nowrap;
+  }
+  h1 {
+    font-size: 12px;
+    white-space: nowrap;
+    margin: 0px;
+  }
+}

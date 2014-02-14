@@ -221,31 +221,15 @@ var ViewLexiconWordle = Backbone.View.extend({
         console.log("Doing stats");
 
         this._getStats(this.wordType.find(".selected").data("value"), this.wordScope.find(".selected").data("value"), __s.word_cloud, function (key, statType) {
-            var otherPassage = step.util.getOtherPassageId(step.lexicon.passageId);
             if (statType == 'WORD') {
-                step.lexicon.sameWordSearch(key);
+                var args = "strong=" + encodeURIComponent(key);
+                step.router.navigatePreserveVersions(args);
             } else if (statType == 'TEXT') {
-                var textModel = SimpleTextModels.at(otherPassage);
-                textModel.save({
-                    detail: 0,
-                    //exact words
-                    simpleTextTypePrimary: step.defaults.search.textual.simpleTextTypesReference[2],
-                    simpleTextCriteria: key
-                });
-                textModel.trigger("search", textModel, {});
-                step.state.view.ensureTwoColumnView();
+                var args = "text=" + encodeURIComponent(key);
+                step.router.navigatePreserveVersions(args);
             } else if (statType == 'SUBJECT') {
-                //first change the fieldset:
-                var subjectModel = SubjectModels.at(otherPassage);
-                subjectModel.save({
-                    subjectText: key,
-                    subjectSearchType: step.defaults.search.subject.subjectTypes[1],
-                    subjectRelated: "",
-                    detail: 0
-                });
-
-                subjectModel.trigger("search", subjectModel, {});
-                step.state.view.ensureTwoColumnView();
+                var args = "subject=" + encodeURIComponent(key);
+                step.router.navigatePreserveVersions(args);
             }
         }, this.isAnimating);
     },

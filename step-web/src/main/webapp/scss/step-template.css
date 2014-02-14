@@ -82,6 +82,7 @@ ul .glyphicon-ok {
 @media screen and (max-width: 1120px) {
   .miniKolumny {
     max-height: 500px;
+    width: 200px;
     overflow-y: auto;
     overflow-x: hidden; } }
 @media screen and (min-width: 1121px) {
@@ -174,7 +175,6 @@ ul .glyphicon-ok {
   cursor: hand; }
 
 .passageOptionsGroup {
-  margin-left: 10px;
   float: right; }
   .passageOptionsGroup button span {
     line-height: 1; }
@@ -188,12 +188,20 @@ ul .glyphicon-ok {
   .passageOptionsGroup ul {
     padding-left: 5px;
     margin-bottom: 0px; }
-  .passageOptionsGroup .settingsDropdown li:hover {
-    background-color: #ebebf1; }
-  .passageOptionsGroup .settingsDropdown li.searchContext:hover {
-    background-color: inherit; }
-    .passageOptionsGroup .settingsDropdown li.searchContext:hover .btn-group {
-      margin-left: 10px; }
+  .passageOptionsGroup .settingsDropdown li {
+    padding-right: 5px; }
+    .passageOptionsGroup .settingsDropdown li:hover {
+      background-color: #ebebf1; }
+    .passageOptionsGroup .settingsDropdown li.contextContainer button {
+      padding: 5px 7px; }
+    .passageOptionsGroup .settingsDropdown li.contextContainer:hover {
+      background-color: inherit; }
+    .passageOptionsGroup .settingsDropdown li.noHighlight {
+      padding-bottom: 10px; }
+      .passageOptionsGroup .settingsDropdown li.noHighlight:hover {
+        background-color: inherit; }
+        .passageOptionsGroup .settingsDropdown li.noHighlight:hover .btn-group {
+          margin-left: 10px; }
   .passageOptionsGroup a {
     color: black;
     display: block; }
@@ -201,7 +209,8 @@ ul .glyphicon-ok {
       text-decoration: none; }
   .passageOptionsGroup h1 {
     font-size: 14px;
-    margin-top: 0px; }
+    margin-top: 10px;
+    margin-bottom: 3px; }
   .passageOptionsGroup .nested-btn-group {
     float: left;
     margin-left: -1px; }
@@ -514,3 +523,13 @@ body::-webkit-scrollbar-corner {
   width: 75%; }
 #wordScope a {
   cursor: pointer; }
+
+.versePopup {
+  max-width: 600px !important; }
+  .versePopup a {
+    font-size: 12px;
+    white-space: nowrap; }
+  .versePopup h1 {
+    font-size: 12px;
+    white-space: nowrap;
+    margin: 0px; }

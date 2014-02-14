@@ -250,7 +250,7 @@ public class SearchServiceImpl implements SearchService {
      */
     private void addSearch(final SearchType searchType, final List<String> versions, final String references, final List<String> searches, final String[] filter, final List<IndividualSearch> individualSearches) {
         for (final String search : searches) {
-            individualSearches.add(new IndividualSearch(searchType, versions, search, references, filter));
+            individualSearches.add(new IndividualSearch(searchType, versions, search, getInclusion(references), filter));
         }
     }
 
@@ -270,8 +270,23 @@ public class SearchServiceImpl implements SearchService {
             boolean isGreek = strong.charAt(0) == 'G';
             individualSearches.add(new IndividualSearch(
                     isGreek ? SearchType.ORIGINAL_GREEK_FORMS : SearchType.ORIGINAL_HEBREW_FORMS,
-                    versions, strong, references, filters));
+                    versions, strong, getInclusion(references), filters));
         }
+    }
+
+    /**
+     * @param references wraps the references in a jsword-lucene query syntax
+     * @return the string of references
+     */
+    private String getInclusion(final String references) {
+        if(references == null) {
+            return null;
+        }
+        
+        if("".equals(references.trim())) {
+            return "";
+        }
+        return String.format("+[%s]", references);
     }
 
     /**

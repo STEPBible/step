@@ -137,7 +137,7 @@
                 hash = hashes[i].split('=');
                 vars.push(hash[0]);
                 if (hash[1]) {
-                    vars[hash[0]] = hash[1].split('#')[0];
+                    vars[hash[0]] = hash.slice(1).join("=").split('#')[0];
                 }
 
             }
@@ -184,18 +184,18 @@ step.util = {
         if (val !== null && val !== undefined && val != currentActivePassageId) {
             var columns = $(".passageContainer");
             columns.filter(".active").removeClass("active").find(".activeMarker").remove();
-            
+
             //do we need to create a new passage model? only if no others exists with the same passageId.
             var existingModel = step.passages.findWhere({ passageId: val });
-            if(existingModel == null) {
+            if (existingModel == null) {
                 //create brand new model and view to manage it.
                 var newPassageModel = step.passages.findWhere({ passageId: currentActivePassageId }).clone();
-                
+
                 //override id to make sure it looks like it's new and gets persisted in local storage
                 newPassageModel.id = null;
                 step.passages.add(newPassageModel);
                 newPassageModel.save({ passageId: val }, { silent: true });
-                
+
                 //create the click handlers for the passage menu
                 new PassageMenuView({
                     model: newPassageModel
@@ -258,14 +258,14 @@ step.util = {
             }
         };
     },
-    getMainLanguage: function(passageModel) {
+    getMainLanguage: function (passageModel) {
         return (passageModel.get("languageCode") || ["en"])[0];
     },
-    restoreFontSize: function(passageModel, element) {
+    restoreFontSize: function (passageModel, element) {
         var passageId = passageModel.get("passageId");
         var key = passageId + "-" + this.getMainLanguage(passageModel);
         var fontSize = step.settings.at(0).get(key);
-        if(fontSize && fontSize != 0) {
+        if (fontSize && fontSize != 0) {
             element.css("font-size", fontSize);
         }
     },
@@ -275,22 +275,23 @@ step.util = {
         var passageModel = step.passages.findWhere({ passageId: passageId});
 
         var key = this.getMainLanguage(passageModel);
-        for(var i = 0; i < elements.length; i++) {
+        var fontClass = this.ui._getFontClassForLanguage(key);
+        for (var i = 0; i < elements.length; i++) {
             var fontSize = parseInt($(elements[i]).css("font-size"));
             var newFontSize = fontSize + increment;
 
             //key it to be the default font, unicodeFont or Hebrew font
-            var key = passageId + "-" + key;
+            var fontKey = passageId + "-" + fontClass;
             var diff = {};
-            diff[key] = newFontSize;
+            diff[fontKey] = newFontSize;
             step.settings.at(0).save(diff);
             $(elements[i]).css("font-size", newFontSize);
         }
         passageModel.trigger("font:change");
     },
     ui: {
-        selectMark: function () {
-            return '<span class="glyphicon glyphicon-ok"></span>';
+        selectMark: function (classes) {
+            return '<span class="glyphicon glyphicon-ok ' +  classes + '"></span>';
         },
         /**
          * Given an array of languages, returns an array of fonts
@@ -335,21 +336,17 @@ step.util = {
         /**
          * called when click on a piece of text.
          */
-        showDef: function (source, passage) {
+        showDef: function (source) {
             var strong;
             var morph;
-            var passageId;
 
             if (typeof source == "string") {
                 strong = source;
-                passageId = passage;
             } else {
                 var s = $(source);
                 strong = s.attr("strong");
                 morph = s.attr("morph");
-                passageId = step.passage.getPassageId(s);
             }
-
 
             step.util.ui.initSidebar('lexicon', { strong: strong, morph: morph});
             require(["sidebar", "defaults"], function (module) {
@@ -498,7 +495,7 @@ step.util = {
                 step.util.ui._addSubjectAndRelatedWordsPopup(passageId, $(this), version);
             });
         },
-
+        
         _addSubjectAndRelatedWordsPopup: function (passageId, element, version) {
             var reference = element.attr("name");
             var self = this;
@@ -508,118 +505,151 @@ step.util = {
                     show: { event: 'mouseenter', solo: true },
                     hide: { event: 'unfocus mouseleave', fixed: true, delay: 200 },
                     position: { my: "bottom center", at: "top center", of: element, viewport: $(window), effect: false },
-                    style: { classes: "versePopup noQtipWidth" },
+                    style: { classes: "versePopup" },
                     overwrite: false,
                     content: {
                         text: function (event, api) {
                             //otherwise, exciting new strong numbers to apply:
                             $.getSafe(BIBLE_GET_STRONGS_AND_SUBJECTS, [version, reference], function (data) {
+                                var template = '<div>' +
+                                    '<div class="col-xs-10 col-sm-4"></div>' +
+                                    '<div class="col-xs-1 col-sm-1"><h1><%= __s.bible_book %></h1></div>' +
+                                    '<div class="col-xs-1 col-sm-1"><h1><%= ot ? __s.OT : __s.NT %></h1></div>' +
+                                    '<div class="hidden-xs col-sm-4"></div>' +
+                                    '<div class="hidden-xs col-sm-1"><h1><%= __s.bible_book %></h1></div>' +
+                                    '<div class="hidden-xs col-sm-1"><h1><%= ot ? __s.OT : __s.NT %></h1></div>' +
+                                    '<% _.each(rows, function(row) { %>' +
+                                    '<span data-strong="<%= row.strongData.strongNumber %>">' +
+                                    '<a href="javascript:void(0)" class="definition col-xs-10 col-sm-4"><%= row.strongData.gloss %> ' +
+                                    '(<%= row.strongData.stepTransliteration %> - <%= row.strongData.matchingForm %>)</a>' +
+                                    '<a href="javascript:void(0)" class="bookCount col-xs-1 col-sm-1"><%= sprintf(__s.times, row.counts.book) %></a>' +
+                                    '<a href="javascript:void(0)" class="bibleCount col-xs-1 col-sm-1"><%= sprintf(__s.times, row.counts.bible) %></a>' +
+                                    '</span><% }); %></div>';
+
+                                var rows = [];
                                 for (var key in data.strongData) {
-                                    var value = data.strongData[key];
-
-                                    var strongTable = $("<table>").addClass("verseNumberStrongs");
-                                    //there may be multiple values of this kind of format:
-                                    var bookKey = key.substring(0, key.indexOf('.'));
-                                    var internalVerseLink = element;
-
-                                    if (internalVerseLink[0] == undefined) {
-                                        //no point in continuing here, since we have no verse to attach it to.
-                                        return;
-                                    }
-
-                                    var header = $("<tr>");
-                                    header.append("<th>");
-                                    header.append($("<th>").append(__s.bible_book));
-                                    header.append($("<th>").append(data.ot ? __s.OT : __s.NT));
-                                    strongTable.append(header);
-
-                                    var row;
-                                    $.each(value, function (i, item) {
-                                        var even = (i % 2) == 0;
-
-                                        if (even) {
-                                            row = $("<tr>");
-                                            strongTable.append(row);
-                                        }
-
-                                        var searchCell = $("<td>");
-                                        row.append(searchCell);
-
-                                        //add search icon
-                                        searchCell.append(self._addLinkToLexicalSearch(passageId, "ui-icon ui-icon-search verseStrongSearch", "sameWordSearch", item.strongNumber, null, __s.search_for_this_word, ""));
-                                        searchCell.append(self._addLinkToLexicalSearch(passageId, "ui-icon ui-icon-zoomin verseStrongSearch", "relatedWordSearch", item.strongNumber, null, __s.search_for_related_words, ""));
-
-                                        var nameLink = $("<a>");
-                                        nameLink.append(item.gloss);
-                                        nameLink.append(" (");
-                                        nameLink.append(item.stepTransliteration);
-                                        nameLink.append(", ")
-                                        nameLink.append($("<span>").addClass(self.getFontForStrong(item.strongNumber)).append(item.matchingForm));
-                                        nameLink.append(")");
-                                        nameLink.attr("href", "javascript:void(0)");
-                                        nameLink.click(function () {
-                                            showDef(item.strongNumber, passageId);
+                                    var verseData = data.strongData[key];
+                                    for (var strong in verseData) {
+                                        var strongData = verseData[strong];
+                                        var counts = data.counts[strongData.strongNumber];
+                                        rows.push({
+                                            strongData: strongData,
+                                            counts: counts
                                         });
-                                        searchCell.append(nameLink);
-
-                                        var bookCount = $("<td>");
-                                        bookCount.append(self._addLinkToLexicalSearch(passageId, "strongCount", "sameWordSearch",
-                                            item.strongNumber, bookKey, "", sprintf(__s.times, data.counts[item.strongNumber].book)));
-                                        row.append(bookCount);
-
-                                        var testamentCount = $("<td>");
-                                        if (even) {
-                                            testamentCount.addClass("even");
-                                        }
-                                        testamentCount.append(self._addLinkToLexicalSearch(passageId, "strongCount", "sameWordSearch",
-                                            item.strongNumber, null, "", sprintf(__s.times, data.counts[item.strongNumber].bible)));
-                                        row.append(testamentCount);
-                                    });
-
-                                    var strongPopup = $("<span>");
-                                    strongPopup.append(strongTable);
-                                    strongPopup.append("<br />");
-
-                                    if (data.significantlyRelatedVerses[key] && data.significantlyRelatedVerses[key].length != 0) {
-                                        var related = $("<a>").addClass("related").attr("href", "javascript:void(0)").append(__s.see_related_verses).click(function () {
-                                            getRelatedVerses(data.significantlyRelatedVerses[key].join('; '), passageId);
-                                        });
-                                        strongPopup.append(related);
-                                        strongPopup.append("&nbsp;&nbsp;");
                                     }
-
-                                    if (data.relatedSubjects[key] && data.relatedSubjects[key].total != 0) {
-                                        //attach data to internal link (so that it goes when passage goes
-                                        var subjects = data.relatedSubjects[key];
-                                        $.data(internalVerseLink[0], "relatedSubjects", subjects);
-
-                                        var subjectOverview = "";
-                                        var i = 0;
-                                        for (i = 0; i < 5 && i < subjects.results.length; i++) {
-                                            subjectOverview += subjects.results[i].root;
-                                            subjectOverview += ", ";
-                                            subjectOverview += subjects.results[i].heading;
-                                            subjectOverview += " ; ";
-                                        }
-
-                                        if (i < subjects.results.length) {
-                                            subjectOverview += "...";
-                                        }
-
-                                        var related = $("<a>").addClass("related").attr("href", "javascript:void(0)")
-                                            .append(__s.see_related_subjects)
-                                            .attr("title", subjectOverview.replace(/'/g, "&apos;"))
-                                            .click(function () {
-                                                getRelatedSubjects(key, passageId);
-                                            });
-                                        strongPopup.append(related);
-                                        strongPopup.append("&nbsp;&nbsp;");
-                                    }
-
-                                    api.set('content.text', strongPopup);
-                                    //only expect one entry back.
-                                    break;
                                 }
+
+                                var templatedTable = $(_.template(template)({ 
+                                    rows: rows, 
+                                    ot: data.ot 
+                                }));
+                                
+                                templatedTable.find(".definition").click(function() { 
+                                    self.showDef($(this).parent().data("strong"));
+                                });
+                                
+                                templatedTable.find(".bookCount").click(function() {
+                                    var bookKey = key.substring(0, key.indexOf('.'));
+                                    var args = "reference=" + encodeURIComponent(bookKey) + "|strong=" + encodeURIComponent($(this).parent().data("strong"));
+                                    //make this the active passage
+                                    step.router.navigatePreserveVersions(args);
+                                });
+                                templatedTable.find(".bibleCount").click(function() {
+                                    var args = "strong=" + encodeURIComponent($(this).parent().data("strong"));
+                                    //make this the active passage
+                                    step.router.navigatePreserveVersions(args);
+                                });
+                                api.set('content.text', templatedTable);
+                                
+                                
+
+//                                    var strongTable = $("<div>").addClass("verseNumberStrongs");
+//                                    there may be multiple values of this kind of format:
+//                                    var internalVerseLink = element;
+
+//                                    if (internalVerseLink[0] == undefined) {
+                                //no point in continuing here, since we have no verse to attach it to.
+//                                        return;
+//                                    }
+
+
+//                                    var row = $("<div></div>");
+//                                    $.each(value, function (i, item) {
+//
+//                                        var searchCell = $("<div>");
+//                                        row.append(searchCell);
+//
+//                                        add search icon
+//                                        searchCell.append(self._addLinkToLexicalSearch(rightColumnClasses, passageId, "ui-icon ui-icon-search verseStrongSearch", "sameWordSearch", item.strongNumber, null, __s.search_for_this_word, ""));
+//                                        searchCell.append(self._addLinkToLexicalSearch(rightColumnClasses, passageId, "ui-icon ui-icon-zoomin verseStrongSearch", "relatedWordSearch", item.strongNumber, null, __s.search_for_related_words, ""));
+//
+//                                        var nameLink = $("<a>").addClass(leftColumnClasses);
+//                                        nameLink.append(item.gloss);
+//                                        nameLink.append(" (");
+//                                        nameLink.append(item.stepTransliteration);
+//                                        nameLink.append(", ")
+//                                        nameLink.append($("<span>").addClass(self.getFontForStrong(item.strongNumber)).append(item.matchingForm));
+//                                        nameLink.append(")");
+//                                        nameLink.attr("href", "javascript:void(0)");
+//                                        nameLink.click(function () {
+//                                            showDef(item.strongNumber, passageId);
+//                                        });
+//                                        searchCell.append(nameLink);
+//
+//                                        var bookCount = $("<div>");
+//                                        bookCount.append(self._addLinkToLexicalSearch(passageId, "strongCount", "sameWordSearch",
+//                                            item.strongNumber, bookKey, "", sprintf(__s.times, data.counts[item.strongNumber].book)));
+//                                        row.append(bookCount);
+//
+//                                        var testamentCount = $("<div>");
+//                                        testamentCount.append(self._addLinkToLexicalSearch(passageId, "strongCount", "sameWordSearch",
+//                                            item.strongNumber, null, "", sprintf(__s.times, data.counts[item.strongNumber].bible)));
+//                                        row.append(testamentCount);
+//                                    });
+
+//                                    var strongPopup = $("<span>");
+//                                    strongPopup.append(strongTable);
+//                                    strongPopup.append("<br />");
+
+//                                    if (data.significantlyRelatedVerses[key] && data.significantlyRelatedVerses[key].length != 0) {
+//                                        var related = $("<a>").addClass("related").attr("href", "javascript:void(0)").append(__s.see_related_verses).click(function () {
+//                                            getRelatedVerses(data.significantlyRelatedVerses[key].join('; '), passageId);
+//                                        });
+//                                        strongPopup.append(related);
+//                                        strongPopup.append("&nbsp;&nbsp;");
+//                                    }
+//
+//                                    if (data.relatedSubjects[key] && data.relatedSubjects[key].total != 0) {
+//                                        attach data to internal link (so that it goes when passage goes
+//                                        var subjects = data.relatedSubjects[key];
+//                                        $.data(internalVerseLink[0], "relatedSubjects", subjects);
+//
+//                                        var subjectOverview = "";
+//                                        var i = 0;
+//                                        for (i = 0; i < 5 && i < subjects.results.length; i++) {
+//                                            subjectOverview += subjects.results[i].root;
+//                                            subjectOverview += ", ";
+//                                            subjectOverview += subjects.results[i].heading;
+//                                            subjectOverview += " ; ";
+//                                        }
+//
+//                                        if (i < subjects.results.length) {
+//                                            subjectOverview += "...";
+//                                        }
+
+//                                        var related = $("<a>").addClass("related").attr("href", "javascript:void(0)")
+//                                            .append(__s.see_related_subjects)
+//                                            .attr("title", subjectOverview.replace(/'/g, "&apos;"))
+//                                            .click(function () {
+//                                                getRelatedSubjects(key, passageId);
+//                                            });
+//                                        strongPopup.append(related);
+//                                        strongPopup.append("&nbsp;&nbsp;");
+//                                    }
+//
+                                //only expect one entry back.
+//                                    break;
+//                                }
                             });
                         }
                     }
@@ -628,8 +658,8 @@ step.util = {
             });
         },
 
-        _addLinkToLexicalSearch: function (passageId, classes, functionName, strongNumber, bookKey, title, innerText) {
-            var text = $("<a>");
+        _addLinkToLexicalSearch: function (classes, passageId, classes, functionName, strongNumber, bookKey, title, innerText) {
+            var text = $("<a>").addClass(classes);
             text.attr("href", "javascript:void(0)");
             text.attr("title", title.replace(/'/g, "&apos;"));
             text.addClass(classes);

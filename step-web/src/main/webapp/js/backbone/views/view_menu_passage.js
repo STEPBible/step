@@ -2,11 +2,10 @@ var PassageMenuView = Backbone.View.extend({
     events: {
         "click a[name]": "updateModel",
         "click .showStats": "showAnalysis",
-        "click .smallerFontSize": "decreaseFontSize",
-        "click .largerFontSize": "increaseFontSize",
         "click .previousChapter": "goToPreviousChapter",
         "click .nextChapter": "goToNextChapter",
-        "click .closeColumn" : "closeColumn"
+        "click .closeColumn" : "closeColumn",
+        "show.bs.dropdown *" : "handleDropdownMenu"
     },
     el: function () {
         return step.util.getPassageContainer(this.model.get("passageId")).find(".passageOptionsGroup");
@@ -44,24 +43,38 @@ var PassageMenuView = Backbone.View.extend({
                 this.versions = step.datasources[i];
             }
         }
-
-        this.listenTo(this.$el, 'show.bs.dropdown', function (ev) {
-            if (!self.rendered) {
-                require(["defaults"], function () {
-                    self._initUI();
-                    self.rendered = true;
-                    self._updateDropdownContents(ev.target);
-                });
-            } else {
+        this._updateVisibleDropdown();
+    },
+    handleDropdownMenu : function(ev) {
+        var self = this;
+        if (!self.rendered) {
+            require(["defaults"], function () {
+                self._initUI();
+                self.rendered = true;
                 self._updateDropdownContents(ev.target);
-            }
-        });
+            });
+        } else {
+            self._updateDropdownContents(ev.target);
+        }
     },
     _updateVisibleDropdown: function () {
         var openDropdown = this.$el.find(".dropdown.open");
         if (this._isDisplayOptionsDropdown(openDropdown)) {
             this._updateColumnOptions();
         }
+        
+        var isPassage = this.model.get("searchType") == 'PASSAGE';
+        var previousNext = this.$el.find(".previousChapter, .nextChapter");
+        previousNext.toggle(isPassage);
+        this.$el.find(".contextContainer").toggle(!isPassage);
+        
+        //css workaround - need to move next/previous from their first position to the next one
+        if(isPassage) {
+            previousNext.insertBefore(this.$el.find(".showStats"));
+        } else {
+            previousNext.insertBefore(this.$el.find(".closeColumn"));
+        }
+        
     },
     _updateDropdownContents: function (targetTrigger) {
         if (this._isDisplayOptionsDropdown(targetTrigger)) {
@@ -69,6 +82,7 @@ var PassageMenuView = Backbone.View.extend({
         } else if (this._isShareDropdown(targetTrigger)) {
             this._doSocialButtons();
         }
+        this._updateVisibleDropdown();
     },
     _isDisplayOptionsDropdown: function (target) {
         return $(target).has(">.showSettings").length > 0;
@@ -169,7 +183,11 @@ var PassageMenuView = Backbone.View.extend({
         dropdownContainer.append(displayOptionsHeading);
 
         this.displayOptions = this._createDisplayOptions();
-        dropdownContainer.append(this.displayOptions);
+        this.otherOptions = this._createSearchOptions();
+        dropdownContainer
+            .append(this.displayOptions)
+            .append(_.template("<h1><%= __s.general_options %></h1>")())
+            .append(this.otherOptions);
 
         var shareDropdownMenu = $("<div>").addClass("dropdown-menu pull-right").attr("role", "menu");
 
@@ -199,20 +217,21 @@ var PassageMenuView = Backbone.View.extend({
     },
     _createDisplayOptions: function() {
         var dropdown = $("<ul>").addClass("miniKolumny passageOptions");
-        dropdown.append(this._createPassageOptions(dropdown)).append(this._createSearchOptions(dropdown));
+        dropdown.append(this._createPassageOptions(dropdown));
         return dropdown;
     },
     getContextLabel: function (context) {
         return sprintf(__s.search_context, context);
-    }, _createSearchOptions: function(dropdown) {
+    }, 
+    _createSearchOptions: function() {
+        var dropdown = $("<ul></ul>").addClass("col-sm-6");
         var self = this;
         var context = this.model.get("context") || 0;
         
-        var li = $('<li class="contextContainer">').append($('<span class="contextLabel"></span>').append(this.getContextLabel(context)));
-        li.append($('<span class="btn-group"></span>')
+        var li = $('<li class="noHighlight contextContainer">').append($('<span class="contextLabel"></span>').append(this.getContextLabel(context)));
+        li.append($('<span class="btn-group pull-right"></span>')
             .append('<button class="btn btn-default btn-xs"><span class="glyphicon glyphicon-minus"></span></button>')
             .append('<button class="btn btn-default btn-xs"><span class="glyphicon glyphicon-plus"></span></button>'));
-        
         
         li.find("button").click(function(ev) {
             ev.stopPropagation();
@@ -236,6 +255,9 @@ var PassageMenuView = Backbone.View.extend({
         });
         //create context link
         dropdown.append(li);
+        dropdown.append(_.template(this.fontButtons)())
+            .find(".smallerFontSize").click(this.decreaseFontSize).end()
+            .find(".largerFontSize").click(this.increaseFontSize);
         return dropdown;
         
     },
@@ -263,8 +285,8 @@ var PassageMenuView = Backbone.View.extend({
             .attr("href", "javascript:void(0)")
             .attr("data-value", value)
             .attr("title", title)
-            .append(step.util.ui.selectMark())
-            .append("<span>" + text + "</span>");
+            .append("<span>" + text + "</span>")
+            .append(step.util.ui.selectMark("pull-right"));
     },
     _updateAvailableOptions: function () {
         console.log("updating options");
@@ -277,13 +299,9 @@ var PassageMenuView = Backbone.View.extend({
             selectedCode += selectedOptions.eq(i).data('value');
         }
 
-        var passageOptions = this.model.get("data") || {};
-        var clonedPassageOptions = _.clone(passageOptions) || {};
-        clonedPassageOptions.selectedOptions = selectedCode;
-        clonedPassageOptions.interlinearMode = this.displayModeContainer.find("a:has(.glyphicon.active)").attr("data-value");
-
         this.model.save({
-            data: clonedPassageOptions
+            selectedOptions: selectedCode,
+            interlinearMode: this.displayModeContainer.find("a:has(.glyphicon.active)").attr("data-value")
         });
         return selectedCode;
     },
@@ -333,13 +351,17 @@ var PassageMenuView = Backbone.View.extend({
             window.FB.XFBML.parse(facebook.parent().get(0));
         }
     },
-    decreaseFontSize: function() {
+    decreaseFontSize: function(ev) {
+        ev.stopPropagation();
         step.util.activePassageId(this.model.get("passageId"));
         step.util.changeFontSize(this.$el, -1);
+        return false;
     },
-    increaseFontSize: function() {
+    increaseFontSize: function(ev) {
+        ev.stopPropagation();
         step.util.activePassageId(this.model.get("passageId"));
         step.util.changeFontSize(this.$el, 1);
+        return false;
     },
     goToPreviousChapter: function() {
         this.goToSiblingChapter(this.model.get("previousChapter"));
@@ -358,8 +380,8 @@ var PassageMenuView = Backbone.View.extend({
             .replace(/&&/ig, "")
             .replace(/&$/ig, "");
         
-        if(args.length >0) {
-            args += "&";
+        if(args.length > 0 && args[args.length -1] != '|') {
+            args += "|";
         }
         args += "reference=" + key.osisKeyId;
         step.router.navigateSearch(args);
@@ -374,5 +396,9 @@ var PassageMenuView = Backbone.View.extend({
     activateColumn : function() {
         var passageId = this.column.find("[passage-id]").attr("passage-id");
         step.util.activePassageId(passageId);
-    }
+    },
+    fontButtons: '<li class="noHighlight fontSizeContainer"><%= __s.font_sizes %><span class="pull-right btn-group"><button class="btn btn-default btn-sm smallerFontSize" type="button" title="<%= __s.passage_smaller_fonts %>">' +
+        '<span class="smallerFont"><%= __s.passage_font_size_symbol %></span></button>' +
+        '<button class="btn btn-default btn-sm largerFontSize" type="button" title="<%= __s.passage_larger_fonts %>">' +
+        '<span class="largerFont"><%= __s.passage_font_size_symbol %></span></button></span></li>'
 });

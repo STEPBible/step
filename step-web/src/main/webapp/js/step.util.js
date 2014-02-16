@@ -169,8 +169,12 @@ step.util = {
 
     },
 
-    raiseError: function () {
-
+    raiseError: function (message) {
+        var errorPopup = $(_.template('<div class="popover bottom alert alert-warning fade in">' +
+            '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>' +
+            '<%= message %></div>')({ message: message}));
+        errorPopup.alert().popover('show');
+        $("body").append(errorPopup);
     },
     isBlank: function (s) {
         if (s == null) {

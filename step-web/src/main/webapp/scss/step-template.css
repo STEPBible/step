@@ -578,6 +578,9 @@ body::-webkit-scrollbar-corner {
   #history .glyphicon:hover {
     color: #991c32;
     cursor: hand; }
+  #history .glyphicon.glyphicon-star {
+    margin-left: 5px;
+    color: #991c32; }
   #history .glyphicon.glyphicon-star-empty {
     margin-left: 5px; }
     #history .glyphicon.glyphicon-star-empty:hover:before {

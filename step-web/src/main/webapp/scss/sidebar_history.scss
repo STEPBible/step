@@ -20,7 +20,10 @@
       color: $headingColour;
       cursor: hand;
     }
-
+    &.glyphicon-star {
+      margin-left: 5px;
+      color: $headingColour;
+    }
     &.glyphicon-star-empty {
       margin-left: 5px;
       &:hover:before {

@@ -1,9 +1,56 @@
 @import 'template_variables';
 
+.passageContainer.waiting {
+  background-position: 1 1;
+}
+
 .passageContentHolder {
+  text-align: justify;
   h2 {
-    margin-top: 0px;
+    margin-bottom: 5px;
+    &.xgen {
+      margin-top: 0px;
+    }
+  }
+  .paragraph {
+      margin-top: 8px;
+      content: ' ';
+      display: block;
+  }
+  .endLineGroup, .startLineGroup {
+    content: ' ';
+    display: block;
+  }
+  .startLineGroup {
+    padding-top: 8px;
   } 
+  a + br, h2+br {
+    display: none;
+  }
+  a+br+.level1 {
+    margin-right: -10px;
+  }
+  span.level1 {
+    margin-top: 8px;
+    display: inline-block;
+    vertical-align: top;
+    padding-left: 10px;
+  }
+  span.level2 {
+    padding-left: 30px;
+  }
+  span.level3 {
+    padding-left: 50px;
+  }
+  span.level4 {
+    padding-left: 70px;
+  }
+  span.level1, span.level2, span.level3, span.level4 {
+    content: ' ';
+  }
+  br+br {
+    display: none;
+  }
 }
 
 .verseNumber {

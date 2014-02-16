@@ -248,7 +248,10 @@
     <xsl:template match="div[@type='introduction'][@eID]">
         &lt;/span&gt;
     </xsl:template>
-
+    <xsl:template match="div[@type='paragraph'][@sID]">
+        <xsl:value-of select="'&lt;br /&gt;'" /><span class="paragraph"></span>
+    </xsl:template>
+    
     <xsl:template match="div[@subType='x-duplicate']">
         <span class="duplicate">
             <span class="versification-notice duplicate-notice" international="duplicate_notice">*</span>
@@ -1079,21 +1082,29 @@
     <div class="lg"><xsl:apply-templates mode="jesus"/></div>
   </xsl:template>
   
-  <xsl:template match="lg[@sID or @eID]"/>
-  <xsl:template match="lg[@sID or @eID]" mode="jesus"/>
+  <xsl:template match="lg[@sID]">
+        <xsl:value-of select="'&lt;br /&gt;'" /><span class="startLineGroup"></span>
+  </xsl:template>
+  <xsl:template match="lg[@sID]" mode="jesus"><xsl:value-of select="'&lt;br /&gt;'" />
+        <xsl:value-of select="'&lt;br /&gt;'" /><span class="startLineGroup"></span>
+  </xsl:template>
+  <xsl:template match="lg[@eID]">
+      <span class="endLineGroup"></span>
+  </xsl:template>
+  <xsl:template match="lg[@eID]" mode="jesus"><span class="endLineGroup"></span></xsl:template>
 
-  <xsl:template match="l[@sID]"/>
-  <xsl:template match="l[@sID]" mode="jesus"/>
+  <xsl:template match="l[@sID]"><xsl:value-of select="'&lt;br /&gt;'" /><span class='level{@level}'></span></xsl:template>
+  <xsl:template match="l[@sID]" mode="jesus"><xsl:value-of select="'&lt;br /&gt;'" /><span class='level{@level}'></span></xsl:template>
 
-  <xsl:template match="l[@eID]"><p /></xsl:template>
-  <xsl:template match="l[@eID]" mode="jesus"><p /></xsl:template>
+  <xsl:template match="l[@eID]"><xsl:value-of select="'&lt;br /&gt;'" /></xsl:template>
+  <xsl:template match="l[@eID]" mode="jesus"><xsl:value-of select="'&lt;br /&gt;'" /></xsl:template>
 
   <xsl:template match="l">
-    <xsl:apply-templates/><br/>
+      <xsl:value-of select="'&lt;br /&gt;'" /><span class='level{@level}'></span><xsl:apply-templates/><xsl:value-of select="'&lt;br /&gt;'" />
   </xsl:template>
   
   <xsl:template match="l" mode="jesus">
-    <xsl:apply-templates mode="jesus"/><p />
+      <xsl:value-of select="'&lt;br /&gt;'" /><span class='level{@level}'></span><xsl:apply-templates mode="jesus"/><xsl:value-of select="'&lt;br /&gt;'" />
   </xsl:template>
 
   <!-- While a BR is a break, if it is immediately followed by punctuation,

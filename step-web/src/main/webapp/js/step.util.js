@@ -157,7 +157,12 @@ window.step = window.step || {};
 step.util = {
     outstandingRequests: 0,
     refreshWaitStatus: function () {
-        //TODO
+        var passageContainer = step.util.getPassageContainer(step.util.activePassageId());
+        if(this.outstandingRequests > 0) {
+            passageContainer.addClass("waiting");
+        } else {
+            $(".passageContainer").removeClass("waiting");
+        }
     },
 
     raiseInfo: function () {

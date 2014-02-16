@@ -48,7 +48,9 @@ $(window).on("load", function () {
     step.router = new StepRouter();
     step.passages = new PassageModelList();
     step.passages.fetch();
-
+    step.bookmarks = new HistoryModelList();
+    step.bookmarks.fetch();
+    
     //need to clean up passages... Ideally, by changing the values of passageIds to be 0,1,2,3,4,...
     for (var ii = 0; ii < step.passages.length; ii++) {
         step.passages.at(ii).save({ passageId: ii }, {silent: true });

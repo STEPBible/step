@@ -209,6 +209,7 @@ var StepRouter = Backbone.Router.extend({
                 }
 
                 passageModel.save(text, { silent: true });
+                self._addBookmark(query);
 
                 //don't trigger a full search, but replace the URL with the one that makes sense
                 if (!quiet) {
@@ -217,8 +218,48 @@ var StepRouter = Backbone.Router.extend({
 
                 self.handleRenderModel(text, passageModel, false);
             },
-            passageId: 0,
+            passageId: activePassageId,
             level: 'error'
         });
+    },
+    _addBookmark: function (query) {
+        var normalizedArgs = this._normalizeArgs(query);
+        var existingModel = step.bookmarks.findWhere({ args: normalizedArgs });
+        if (existingModel) {
+            existingModel.save({ lastAccessed: new Date().getTime() });
+            return;
+        }
+
+        var historyModel = new HistoryModel({ args: normalizedArgs, lastAccessed: new Date().getTime() });
+        step.bookmarks.add(historyModel);
+        historyModel.save();
+    },
+    _normalizeArgs: function (args) {
+        var tokens = (args || "").split("|") || [];
+        tokens.sort(function (a, b) {
+            var aTokens = a.split("=");
+            var bTokens = b.split("=");
+            var aKey = aTokens[0];
+            var bKey = bTokens[0];
+            
+            if(aKey == bKey) {
+                if(aKey == VERSION) {
+                    return aTokens[1] < bTokens[1] ? -1 : 1;
+                }
+                return 0;
+            } else if(aKey == VERSION) {
+                return -1;
+            } else if(bKey == VERSION) {
+                return 1;
+            } else if(aKey == REFERENCE) {
+                return -1;    
+            } else if(bKey == REFERENCE) {
+                return 1
+            } else {
+                //preserve the order so equal
+                return 0;
+            }
+        });
+        return tokens.join("|");
     }
 });

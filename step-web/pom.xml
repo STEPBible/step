@@ -212,6 +212,7 @@
                                 <jsSourceFile>js/step_ready.js</jsSourceFile>
                                 <jsSourceFile>js/backbone/step_router.js</jsSourceFile>
                                 <jsSourceFile>js/backbone/views/view_display_passage.js</jsSourceFile>
+                                <jsSourceFile>js/backbone/models/model_history.js</jsSourceFile>
                                 <jsSourceFile>js/backbone/models/passage_model.js</jsSourceFile>
                                 <jsSourceFile>js/backbone/models/model_settings.js</jsSourceFile>
                                 <jsSourceFile>js/backbone/views/view_menu_passage.js</jsSourceFile>
@@ -233,6 +234,7 @@
                                 <jsSourceFile>libs/jquery.tagcloud.js</jsSourceFile>
                                 <jsSourceFile>js/backbone/models/model_sidebar.js</jsSourceFile>
                                 <jsSourceFile>js/backbone/views/view_wordle_stat.js</jsSourceFile>
+                                <jsSourceFile>js/backbone/views/view_history.js</jsSourceFile>
                                 <jsSourceFile>js/backbone/views/view_sidebar.js</jsSourceFile>
                                 
                             </jsSourceFiles>

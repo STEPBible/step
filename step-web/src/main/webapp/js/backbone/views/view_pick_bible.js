@@ -1,5 +1,5 @@
 var PickBibleView = Backbone.View.extend({
-    versionTemplate: '' +
+    versionTemplate: _.template('' +
         '<% _.each(versions, function(languageBibles, key) { %>' +
         '<h1><%= key %></h1>' +
         '<ul class="list-group">' +
@@ -11,8 +11,8 @@ var PickBibleView = Backbone.View.extend({
         '<% }) %>' +
         '</li>' +
         '</ul>' +
-        '<% }) %>',
-    filtersTemplate: '<form role="form" class="form-inline">' +
+        '<% }) %>'),
+    filtersTemplate: _.template('<form role="form" class="form-inline">' +
         '<span class="form-group btn-group" data-toggle="buttons">' +
         '<label class="btn btn-default btn-sm"><input type="radio" name="languageFilter" data-lang="_all" /><%= __s.all  %></label>' +
         '<label class="btn btn-default btn-sm"><input type="radio" name="languageFilter" data-lang="en"  checked="checked" />English</label>' +
@@ -21,12 +21,12 @@ var PickBibleView = Backbone.View.extend({
         '<% } %>' +
         '<label class="btn btn-default btn-sm"><input type="radio" name="languageFilter" data-lang="_ancient" /><%= __s.ancient %></label>' +
         '</span>' +
-        '</form>',
-    modalPopupTemplate: '<div class="modal" id="bibleVersions" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
+        '</form>'),
+    modalPopupTemplate: _.template('<div class="modal" id="bibleVersions" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
         '<div class="modal-dialog">' +
         '<div class="modal-content">' +
         '<div class="modal-body">' +
-        '<span class="pull-right"><%= _.template(view.filtersTemplate)({myLanguage: myLanguage}) %></span>' +
+        '<span class="pull-right"><%= view.filtersTemplate({myLanguage: myLanguage}) %></span>' +
         '<ul class="nav nav-tabs">' +
         '<li><a href="#bibleList" data-toggle="tab"><%= __s.bibles %></a></li>' +
         '<li><a href="#commentaryList" data-toggle="tab"><%= __s.commentaries %></a></li>' +
@@ -41,7 +41,7 @@ var PickBibleView = Backbone.View.extend({
         '</div>' + //end content
         '</div>' + //end dialog
         '</div>' +
-        '</div>',
+        '</div>'),
     events: {
 //        "click a[name]" : "changeView"
     },
@@ -61,7 +61,7 @@ var PickBibleView = Backbone.View.extend({
         var self = this;
         this.searchView = opts.searchView;
 
-        this.$el.append(_.template(this.modalPopupTemplate)({
+        this.$el.append(this.modalPopupTemplate({
             view: this,
             myLanguage: "en"
         }));
@@ -135,7 +135,7 @@ var PickBibleView = Backbone.View.extend({
         }
 
         this.$el.find(".tab-pane").empty();
-        this.$el.find(selectedTab).append(_.template(this.versionTemplate)({
+        this.$el.find(selectedTab).append(this.versionTemplate({
             versions: bibleList
         }));
 

@@ -207,6 +207,12 @@ step.util = {
     },
     activePassageId: function (val) {
         var currentActivePassageId = parseInt($(".passageContainer.active").attr("passage-id"));
+        
+        if(typeof val == 'string') {
+            val = parseInt(val);
+        }
+        
+        //are we going to set a different passage
         if (val !== null && val !== undefined && val != currentActivePassageId) {
             var columns = $(".passageContainer");
             columns.filter(".active").removeClass("active").find(".activeMarker").remove();
@@ -226,8 +232,12 @@ step.util = {
                 new PassageMenuView({
                     model: newPassageModel
                 });
+            } else {
+                //swapping to an existing active passage id already, so sync straight away
+                existingModel.trigger("sync-update", existingModel);
             }
 
+            
             //make the new panel active
             step.util.getPassageContainer(val).addClass("active").append('<span class="activeMarker"></span>');
         }

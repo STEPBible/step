@@ -1,0 +1,56 @@
+@import 'template_variables';
+
+.unicodeFont {
+  font-family: Cardo;
+  font-size: 140%;
+}
+
+.unicodeFontMini {
+  font-family: Cardo;
+  font-size: 110%;
+}
+
+.copticFont {
+  font-family: Conv_newathu405;
+  font-size: 130%;
+}
+
+.syriacFont {
+  font-family: SyrCOMEdessa;
+  font-size: 170%;
+}
+
+.burmeseFont {
+  font-family: Padauk;
+  font-size: 150%;
+}
+
+.arabicFont {
+  font-size: 130%;
+  line-height: 1.5;
+}
+
+.chineseFont {
+  font-size: 120%;
+  line-height: 1.4;
+}
+
+.khmerFont {
+  font-family: KhmerBusra;
+  font-size: 150%;
+}
+
+.hbFont {
+  font-family: SIL_EZRA;
+  font-size: 180%;
+}
+
+.hbFontSmall {
+  @extend .hbFont;
+  font-weight: normal;
+}
+
+.hbFontMini {
+  @extend .hbFontSmall;
+  font-size: 130%;
+}

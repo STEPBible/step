@@ -39,46 +39,7 @@ span.interlinear span span { /* Make this stack on top of each other. */
 }
 
 
-.unicodeFont {
-	font-family: Cardo;
-	font-size: 140%;
-/* 	font-size: 14px; */
-}
 
-.copticFont {
-    font-family: Conv_newathu405;
-    font-size: 130%;
-}
-
-.syriacFont {
-    font-family: SyrCOMEdessa;
-    font-size: 170%;
-}
-
-.burmeseFont {
-    font-family: Padauk;
-    font-size: 150%;
-}
-
-.arabicFont {
-    font-size: 130%;
-    line-height: 1.5;
-}
-
-.chineseFont {
-    font-size: 120%;
-    line-height: 1.4;
-}
-
-.khmerFont {
-    font-family: KhmerBusra;
-    font-size: 150%;
-}
-
-.hbFont {
-	font-family: SIL_EZRA;
-	font-size: 180%;
-}
 
 .ancientVocab a {
     font-style: italic;
@@ -97,13 +58,6 @@ span.interlinear span span { /* Make this stack on top of each other. */
 .qereDisplay div, .accentDisplay div {
     padding: 8px 0px;
 }
-
-.hbFontSmall {
-    font-family: SIL_EZRA;
-    font-size: 180%;
-    font-weight: normal;
-}
-
 
 
 .hbFont h2, .unicodeFont h2 {

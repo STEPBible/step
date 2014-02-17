@@ -716,3 +716,45 @@ body::-webkit-scrollbar-corner {
     padding: 5px; }
     .aboutModal .footer button label {
       margin-bottom: 0px; }
+
+.unicodeFont {
+  font-family: Cardo;
+  font-size: 140%; }
+
+.unicodeFontMini {
+  font-family: Cardo;
+  font-size: 110%; }
+
+.copticFont {
+  font-family: Conv_newathu405;
+  font-size: 130%; }
+
+.syriacFont {
+  font-family: SyrCOMEdessa;
+  font-size: 170%; }
+
+.burmeseFont {
+  font-family: Padauk;
+  font-size: 150%; }
+
+.arabicFont {
+  font-size: 130%;
+  line-height: 1.5; }
+
+.chineseFont {
+  font-size: 120%;
+  line-height: 1.4; }
+
+.khmerFont {
+  font-family: KhmerBusra;
+  font-size: 150%; }
+
+.hbFont, .hbFontSmall, .hbFontMini {
+  font-family: SIL_EZRA;
+  font-size: 180%; }
+
+.hbFontSmall, .hbFontMini {
+  font-weight: normal; }
+
+.hbFontMini {
+  font-size: 130%; }

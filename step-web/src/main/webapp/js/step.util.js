@@ -165,16 +165,31 @@ step.util = {
         }
     },
 
-    raiseInfo: function () {
+    raiseInfo: function (passageId, message, level) {
+        //no parsing for info and warning
+        if(level == 'error') {
+            level = 'danger';
+        } else if(level == undefined) {
+            level = 'info';
+        }
+        
+        var errorContainer = $("#errorContainer");
+        if(errorContainer.length > 0) {
+            //will recreate
+            errorContainer.remove();
+        }
 
+        var errorPopup = $(_.template('<div class="alert alert-error fade in alert-<%= level %>" id="errorContainer">' +
+            '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
+            '<%= message %></div>')({ message: message, level: level}));
+        $("body").append(errorPopup);
+        errorPopup.click(function() {
+            $(this).remove(); 
+        });
     },
 
     raiseError: function (message) {
-        var errorPopup = $(_.template('<div class="popover bottom alert alert-warning fade in">' +
-            '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>' +
-            '<%= message %></div>')({ message: message}));
-        errorPopup.alert().popover('show');
-        $("body").append(errorPopup);
+        this.raiseInfo(null, message, 'danger');
     },
     isBlank: function (s) {
         if (s == null) {

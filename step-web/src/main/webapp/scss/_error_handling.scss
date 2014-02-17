@@ -1,0 +1,12 @@
+@import 'template_variables';
+
+#errorContainer {
+  position:absolute;
+  top: 0;
+  right: 0;
+  padding: 10px;
+  z-index: 10000; //position above everything else
+  button {
+    margin-left: 10px;
+  }
+}

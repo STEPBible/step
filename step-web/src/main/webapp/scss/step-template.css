@@ -616,3 +616,12 @@ body::-webkit-scrollbar-corner {
     font-size: 12px;
     white-space: nowrap;
     margin: 0px; }
+
+#errorContainer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 10px;
+  z-index: 10000; }
+  #errorContainer button {
+    margin-left: 10px; }

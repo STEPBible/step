@@ -921,7 +921,7 @@ function refreshWaitStatus() {
                         });
                     } else {
                         if (passageId != undefined) {
-                            step.util.raiseInfo(passageId, data.errorMessage, level, url.startsWith(BIBLE_GET_BIBLE_TEXT));
+                            step.util.raiseInfo(data.errorMessage, level, passageId, url.startsWith(BIBLE_GET_BIBLE_TEXT));
                         } else {
                             step.util.raiseError(data.errorMessage);
                         }
@@ -1148,7 +1148,7 @@ function passageArrowTrigger(passageId, sourceVersion, ref, goToChapter, followS
 
         $.getSafe(BIBLE_EXPAND_TO_CHAPTER, [sourceVersion, version, ref], function (newChapterRef) {
             if (step.util.isBlank(newChapterRef.name)) {
-                step.util.raiseInfo(passageId, sprintf(__s.error_bible_doesn_t_have_passage, ref), 'error', true);
+                step.util.raiseInfo(sprintf(__s.error_bible_doesn_t_have_passage, ref), 'error', passageId, true);
                 Backbone.Events.trigger("passage:rendered:" + passageId);
                 return;
             }
@@ -1159,7 +1159,7 @@ function passageArrowTrigger(passageId, sourceVersion, ref, goToChapter, followS
     } else {
         $.getSafe(BIBLE_CONVERT_VERSIFICATION, [ref, sourceVersion, version], function (newChapterRef) {
             if (step.util.isBlank(newChapterRef.name)) {
-                step.util.raiseInfo(passageId, sprintf(__s.error_bible_doesn_t_have_passage, ref), 'error', true);
+                step.util.raiseInfo(sprintf(__s.error_bible_doesn_t_have_passage, ref), 'error', passageId, true);
                 Backbone.Events.trigger("passage:rendered:" + passageId);
                 return;
             }

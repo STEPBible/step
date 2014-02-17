@@ -109,7 +109,7 @@
                         });
                     } else {
                         if (passageId != undefined) {
-                            step.util.raiseInfo(passageId, data.errorMessage, level, url.startsWith(BIBLE_GET_BIBLE_TEXT));
+                            step.util.raiseInfo(data.errorMessage, level, passageId);
                         } else {
                             step.util.raiseError(data.errorMessage);
                         }
@@ -164,8 +164,10 @@ step.util = {
             $(".passageContainer").removeClass("waiting");
         }
     },
-
-    raiseInfo: function (passageId, message, level) {
+    squashErrors: function() {
+        $("#errorContainer").remove();
+    },
+    raiseInfo: function (message, level, passageId) {
         //no parsing for info and warning
         if(level == 'error') {
             level = 'danger';
@@ -189,7 +191,7 @@ step.util = {
     },
 
     raiseError: function (message) {
-        this.raiseInfo(null, message, 'danger');
+        this.raiseInfo(message, 'danger');
     },
     isBlank: function (s) {
         if (s == null) {

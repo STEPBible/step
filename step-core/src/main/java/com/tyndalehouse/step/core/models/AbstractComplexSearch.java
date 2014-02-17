@@ -1,0 +1,63 @@
+package com.tyndalehouse.step.core.models;
+
+import com.tyndalehouse.step.core.service.impl.SearchType;
+
+import java.util.List;
+
+/**
+ * Parent class sharing to share some common properties between lookups for passages and searches
+ * @author chrisburrell
+ */
+public abstract class AbstractComplexSearch {
+    private SearchType searchType;
+    private String masterVersion;
+    private String extraVersions;
+    private List<SearchToken> searchTokens;
+    
+    public void setSearchType(final SearchType searchType) {
+        this.searchType = searchType;
+    }
+
+    /**
+     * @return the type of search
+     */
+    public SearchType getSearchType() {
+        return searchType;
+    }
+    
+    /**
+     * @param masterVersion the master version
+     */
+    public void setMasterVersion(final String masterVersion) {
+        this.masterVersion = masterVersion;
+    }
+
+    /**
+     * @param extraVersions any other versions
+     */
+    public void setExtraVersions(final String extraVersions) {
+        this.extraVersions = extraVersions;
+    }
+
+    public String getMasterVersion() {
+        return masterVersion;
+    }
+
+    public String getExtraVersions() {
+        return extraVersions;
+    }
+
+    /**
+     * @return the searchTokens used to carry out the search (may be more than the user entered)
+     */
+    public List<SearchToken> getSearchTokens() {
+        return this.searchTokens;
+    }
+
+    /**
+     * @param searchTokens the arguments used to carry out the search, pipe delimited, to match the input
+     */
+    public void setSearchTokens(final List<SearchToken> searchTokens) {
+        this.searchTokens = searchTokens;
+    }
+}

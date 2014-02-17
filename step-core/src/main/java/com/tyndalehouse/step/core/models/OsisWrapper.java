@@ -49,7 +49,7 @@ import com.tyndalehouse.step.core.utils.HeadingsUtil;
  * @author chrisburrell
  * 
  */
-public class OsisWrapper implements Serializable {
+public class OsisWrapper extends AbstractComplexSearch implements Serializable {
     private static final long serialVersionUID = -5651330317995494895L;
     @JsonIgnore
     private final Key key;
@@ -65,12 +65,10 @@ public class OsisWrapper implements Serializable {
     private final String[] languageCode;
     private final String longName;
     private final InterlinearMode interlinearMode;
-    private final String extraVersions;
-    private final String masterVersion;
     private Map<String, List<LexiconSuggestion>> strongNumbers;
     private String options;
     private String selectedOptions;
-    private SearchType searchType = SearchType.PASSAGE;
+    private List<TrimmedLookupOption> removedOptions;
 
     /**
      * the value to be wrapped
@@ -88,25 +86,18 @@ public class OsisWrapper implements Serializable {
                        final String extraVersions) {
         this.value = value;
         this.key = key;
-        this.masterVersion = masterVersion;
         this.interlinearMode = interlinearMode;
-        this.extraVersions = extraVersions;
         this.reference = key.getName();
         this.longName = HeadingsUtil.getLongHeader(v11n, key);
         this.osisId = key.getOsisID();
         this.languageCode = languageCode;
+        super.setMasterVersion(masterVersion);
+        super.setExtraVersions(extraVersions);
+        super.setSearchType(SearchType.PASSAGE);
     }
 
     public InterlinearMode getInterlinearMode() {
         return interlinearMode;
-    }
-
-    public String getExtraVersions() {
-        return extraVersions;
-    }
-
-    public String getMasterVersion() {
-        return masterVersion;
     }
 
     /**
@@ -273,13 +264,6 @@ public class OsisWrapper implements Serializable {
     }
 
     /**
-     * @return the search type
-     */
-    public SearchType getSearchType() {
-        return this.searchType;
-    }
-
-    /**
      * @return the previous chapter
      */
     public KeyWrapper getPreviousChapter() {
@@ -306,5 +290,16 @@ public class OsisWrapper implements Serializable {
      */
     public void setNextChapter(final KeyWrapper nextChapter) {
         this.nextChapter = nextChapter;
+    }
+
+    public void setRemovedOptions(final List<TrimmedLookupOption> removedOptions) {
+        this.removedOptions = removedOptions;
+    }
+
+    /**
+     * @return a list of all trimmed options
+     */
+    public List<TrimmedLookupOption> getRemovedOptions() {
+        return removedOptions;
     }
 }

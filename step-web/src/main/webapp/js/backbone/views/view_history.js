@@ -1,6 +1,4 @@
 var ViewHistory = Backbone.View.extend({
-    events: {
-    },
     itemTemplate: _.template('<li class="list-group-item" data-item="<%= item.get("id") %>">' +
         '<a class="openBookmark"><span class="glyphicon glyphicon-folder-open"></span></a>' +
         '<a class="starBookmark"><span class="glyphicon <%= item.get("favourite") ? "glyphicon-star" : "glyphicon-star-empty" %>"></span></a>' +

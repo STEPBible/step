@@ -1,90 +1,103 @@
-$(window).on("load", function () {
-    window.step = window.step || {};
-    step.datasources = new DataSourceList;
-    step.datasources.fetch();
-    step.settings = new SettingsModelList;
-    step.settings.fetch();
-
-    if (step.settings.length == 0) {
-        step.settings.add(new SettingsModel);
-    }
-
-//    step.options = new OptionsList;
-//    step.options.fetch();
-
-    if (step.datasources.length == 0) {
-        var ds = [
-            { name: DS_VERSIONS, remoteUrl: MODULE_GET_ALL_MODULES, remoteParams: ["true"], ttl: TTL_DAY }
-        ];
-        step.datasources.add(ds);
-    }
-    step.datasources.refresh();
-
-    //setup views
-    require(["select2"], function (module) {
-        new MainSearchView({
-            model: { data: step.datasources }
-        });
-    });
-
-
-    //override history in backbone
-    Backbone.history = _.extend(Backbone.history, {
-        getFragment: function (fragment) {
-            if (fragment == null) {
-                var path = window.location.pathname;
-                if (path && path[0] == '/') {
-                    path = path.slice(1);
-                }
-                var query = window.location.search;
-                if (query) {
-                    path += query;
-                }
-                return path;
-            }
-            return fragment.replace(/^[#\/]|\s+$/g, '');
-        }});
-
-    step.router = new StepRouter();
-    step.passages = new PassageModelList();
-    step.passages.fetch();
-    step.bookmarks = new HistoryModelList();
-    step.bookmarks.fetch();
-    
-    //need to clean up passages... Ideally, by changing the values of passageIds to be 0,1,2,3,4,...
-    for (var ii = 0; ii < step.passages.length; ii++) {
-        step.passages.at(ii).save({ passageId: ii }, {silent: true });
-    }
-
-    //now passage 0 is the one from the URL
-    if (window.tempModel) {
-        //now we can create the correct views
-        var modelZero = step.passages.findWhere({ passageId: 0});
-        if (modelZero == undefined) {
-            modelZero = new PassageModel({ passageId: 0 });
-            step.passages.add(modelZero);
+(function () {
+    function initDataSources() {
+        //format the versions correctly
+        step.keyedVersions = {};
+        step.itemisedVersions = [];
+        for(var ii = 0; ii < window.tempVersions.length; ii++) {
+            var tempVersion = window.tempVersions[ii];
+            var item = { item: tempVersion, itemType : 'version' };
+            step.itemisedVersions.push(item);
+            step.keyedVersions[tempVersion.initials] = tempVersion;
         }
-        modelZero.save(window.tempModel);
-        
-        new PassageMenuView({
-            model: modelZero
-        });
+        //save 100k of space
+        window.tempVersions = null;
+    };
 
-        new PassageDisplayView({
-            model: modelZero,
-            partRendered: true
-        });
+    function initSettings() {
+        step.settings = new SettingsModelList;
+        step.settings.fetch();
+        if (step.settings.length == 0) {
+            step.settings.add(new SettingsModel);
+        }
+    };
+
+    function initSearchDropdown() {
+        //setup search view
+        var searchView = new MainSearchView();
+        //we will sync the URL on load, if and only if there are arguments, i.e. not the home page...
+        //to be firmed up
+        searchView.syncWithUrl(step.util.activePassage());
     }
-    //TODO: need to make sure we reset various properties
-    //such as filter and pageNumber
 
-    //create passage if not present
-
-
-    if (step.passages.length == 0) {
-        step.passages.add(new PassageModel({ passageId: 0 }));
+    function patchBackboneHistory() {
+        //override history in backbone
+        Backbone.history = _.extend(Backbone.history, {
+            getFragment: function (fragment) {
+                if (fragment == null) {
+                    var path = window.location.pathname;
+                    if (path && path[0] == '/') {
+                        path = path.slice(1);
+                    }
+                    var query = window.location.search;
+                    if (query) {
+                        path += query;
+                    }
+                    return path;
+                }
+                return fragment.replace(/^[#\/]|\s+$/g, '');
+            }});
     }
 
+    function initCoreModelsAndRouter() {
+        step.router = new StepRouter();
+        step.passages = new PassageModelList();
+        step.passages.fetch();
+        step.bookmarks = new HistoryModelList();
+        step.bookmarks.fetch();
 
-    Backbone.history.start({pushState: true});
-});
+        //need to clean up passages... Ideally, by changing the values of passageIds to be 0,1,2,3,4,...
+        for (var ii = 0; ii < step.passages.length; ii++) {
+            step.passages.at(ii).save({ passageId: ii }, {silent: true });
+        }
+
+        //now passage 0 is the one from the URL
+        if (window.tempModel) {
+            //now we can create the correct views
+            var modelZero = step.passages.findWhere({ passageId: 0});
+            if (modelZero == undefined) {
+                modelZero = new PassageModel({ passageId: 0 });
+                step.passages.add(modelZero);
+            }
+            modelZero.save(window.tempModel);
+
+            new PassageMenuView({
+                model: modelZero
+            });
+
+            new PassageDisplayView({
+                model: modelZero,
+                partRendered: true
+            });
+
+            $(".helpMenuTrigger").one('click', function () {
+                require(["view_help_menu"], function () {
+                    new ViewHelpMenuOptions({});
+                });
+            });
+        }
+        if (step.passages.length == 0) {
+            step.passages.add(new PassageModel({ passageId: 0 }));
+        }
+    }
+
+    //can this be done before load? self executing function
+    $(window).on("load", function () {
+        window.step = window.step || {};
+        initSettings();
+        initDataSources();
+        patchBackboneHistory();
+        initCoreModelsAndRouter();
+        initSearchDropdown();
+        Backbone.history.start({pushState: true, silent: true });
+    });
+})();

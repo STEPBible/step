@@ -1,6 +1,7 @@
 package com.tyndalehouse.step.core.service.search.impl;
 
 import static com.tyndalehouse.step.core.models.search.LexicalSuggestionType.GREEK;
+import static com.tyndalehouse.step.core.models.search.LexicalSuggestionType.HEBREW;
 import static com.tyndalehouse.step.core.service.helpers.OriginalWordUtils.STRONG_NUMBER_FIELD;
 import static com.tyndalehouse.step.core.service.helpers.OriginalWordUtils.convertToSuggestion;
 import static com.tyndalehouse.step.core.service.helpers.OriginalWordUtils.getFilter;
@@ -11,16 +12,19 @@ import static com.tyndalehouse.step.core.utils.StringUtils.split;
 import static com.tyndalehouse.step.core.utils.language.HebrewUtils.isHebrewText;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.service.SearchService;
+import com.tyndalehouse.step.core.service.helpers.OriginalWordUtils;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.TermAttribute;
 import org.apache.lucene.index.Term;
@@ -51,6 +55,7 @@ public class OriginalWordSuggestionServiceImpl implements OriginalWordSuggestion
     private static final String SIMPLIFIED_TRANSLITERATION = "simplifiedStepTransliteration:";
     private static final Sort TRANSLITERATION_SORT = new Sort(new SortField("stepTransliteration",
             SortField.STRING_VAL));
+    private static final Pattern PART_STRONG = Pattern.compile("(g|h)\\d\\d+");
     private final EntityIndexReader definitions;
     private final EntityIndexReader specificForms;
 
@@ -150,9 +155,12 @@ public class OriginalWordSuggestionServiceImpl implements OriginalWordSuggestion
 
         final EntityDoc[] results;
         if (isHebrewText(form) || GreekUtils.isGreekText(form)) {
-            results = this.definitions.search(new String[]{"accentedUnicode"},
+            results = this.definitions.search(new String[]{"accentedUnicode", "strongNumber"},
                     QueryParser.escape(form) + '*', getStrongFilter(suggestionType), TRANSLITERATION_SORT,
                     true, SearchService.MAX_SUGGESTIONS);
+        } else if (isGreekOrHebrewStrong(suggestionType, form)) {
+            results = this.definitions.search(new PrefixQuery(new Term(OriginalWordUtils.STRONG_NUMBER_FIELD, QueryParser.escape(form.toUpperCase()))),
+                    SearchService.MAX_SUGGESTIONS, TRANSLITERATION_SORT, getStrongFilter(suggestionType));
         } else {
             // assume transliteration - at this point suggestionType is not going to be MEANING
             final String simplifiedTransliteration = getSimplifiedTransliterationClause(
@@ -166,6 +174,17 @@ public class OriginalWordSuggestionServiceImpl implements OriginalWordSuggestion
                     SearchService.MAX_SUGGESTIONS);
         }
         return convertDefinitionDocsToSuggestion(results);
+    }
+
+    private boolean isGreekOrHebrewStrong(final LexicalSuggestionType suggestionType, final String form) {
+        if (form.length() < 3) {
+            return false;
+        }
+
+        //check we're running the right kind of lookup, and then match the pattern
+        return (suggestionType == GREEK && form.charAt(0) == 'g' ||
+                suggestionType == HEBREW && form.charAt(0) == 'h') &&
+                PART_STRONG.matcher(form).matches();
     }
 
     /**

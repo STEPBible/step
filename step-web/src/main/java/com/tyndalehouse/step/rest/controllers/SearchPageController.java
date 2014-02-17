@@ -26,14 +26,17 @@ import java.util.Locale;
 public class SearchPageController extends HttpServlet {
     private static Logger LOGGER = LoggerFactory.getLogger(SearchPageController.class);
     private final SearchController search;
+    private final ModuleController modules;
     private final Provider<ObjectMapper> objectMapper;
     private final Provider<ClientSession> clientSessionProvider;
 
     @Inject
     public SearchPageController(final SearchController search,
+                                final ModuleController modules,
                                 Provider<ObjectMapper> objectMapper,
                                 Provider<ClientSession> clientSessionProvider) {
         this.search = search;
+        this.modules = modules;
         this.objectMapper = objectMapper;
         this.clientSessionProvider = clientSessionProvider;
     }
@@ -54,6 +57,7 @@ public class SearchPageController extends HttpServlet {
 
     /**
      * Sets up default attributes on response
+     *
      * @param resp the response
      */
     private void setupResponseContext(final HttpServletResponse resp) {
@@ -63,7 +67,8 @@ public class SearchPageController extends HttpServlet {
 
     /**
      * Sets up the request context for use in the JSTL parsing
-     * @param req the request
+     *
+     * @param req  the request
      * @param data the osisWrapper
      * @throws IOException
      */
@@ -74,6 +79,7 @@ public class SearchPageController extends HttpServlet {
         req.setAttribute("languageCode", userLocale.getLanguage());
         req.setAttribute("languageName", ContemporaryLanguageUtils.capitaliseFirstLetter(userLocale
                 .getDisplayLanguage(userLocale)).replace("\"", ""));
+        req.setAttribute("versions", objectMapper.get().writeValueAsString(modules.getAllModules()));
 
         //specific to passages
         if (data instanceof OsisWrapper) {
@@ -82,7 +88,7 @@ public class SearchPageController extends HttpServlet {
             req.setAttribute("searchType", osisWrapper.getSearchType().name());
             osisWrapper.setValue(null);
             req.setAttribute("passageModel", objectMapper.get().writeValueAsString(osisWrapper));
-        } else if(data instanceof SearchResult) {
+        } else if (data instanceof SearchResult) {
             final SearchResult results = (SearchResult) data;
             req.setAttribute("searchResults", results.getResults());
             results.setResults(null);
@@ -109,6 +115,7 @@ public class SearchPageController extends HttpServlet {
 
     /**
      * Defaults to Matt.1 if can't do anything else
+     *
      * @return Matt 1 or something else
      */
     private Object getDefaultPassage() {

@@ -15,6 +15,12 @@
   .verseNumber {
     vertical-align: middle;
   }
+  br:first-child + .paragraph {
+    display: none;
+  }
+  br:first-child {
+    display: none;
+  }
 }
 
 h4.lexicalGrouping {

@@ -55,4 +55,5 @@ public interface PassageOptionsValidationService {
      * @return the options in coded form
      */
     String optionsToString(Collection<LookupOption> options);
+
 }

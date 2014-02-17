@@ -72,7 +72,7 @@
     } else {
     %>
     <%-- Contains the jquery ui css --%>
-    <link rel="stylesheet" type="text/css" href="css/step.${project.version}.min.css" />
+    <link rel="stylesheet" type="text/css" href="css/step.${project.version}.min.css"  />
     <%
         }
     %>
@@ -208,6 +208,7 @@
     <%-- Now do javascript --%>
     <script type="text/javascript">
         window.tempModel = ${ not empty passageModel ? passageModel : 'undefined' };
+        window.tempVersions = ${ versions };
         if(!window.step) { window.step = {} };
         step.userLanguage = "${ languageName }";
         step.userLanguageCode = "${ languageCode }";
@@ -230,26 +231,25 @@
     <script src="libs/json2.js" type="text/javascript"></script>
 
     <c:choose>
-    <c:when test="${ param.debug eq '' }">
-    <script src="libs/backbone.js" type="text/javascript"></script>
-    <script src="libs/backbone.localStorage.js" type="text/javascript"></script>
-    <%--<script src="libs/select2.js" type="text/javascript"></script>--%>
-    <script src="libs/require-2.1.9.js" type="text/javascript"></script>
-    </c:when>
-    <c:otherwise>
-    <script src="libs/backbone-min.js" type="text/javascript"></script>
-    <script src="libs/backbone.localStorage-min.js" type="text/javascript"></script>
-    <%--<script src="libs/select2-3.4.5.min.js" type="text/javascript"></script>--%>
-    <script src="libs/require-2.1.9.min.js" type="text/javascript"></script>
-            <%--<script src="libs/prettyCheckable.min.js" type="text/javascript"></script>--%>
-    </c:otherwise>
+        <c:when test="${ param.debug eq '' }">
+            <script src="libs/backbone.js" type="text/javascript"></script>
+            <script src="libs/backbone.localStorage.js" type="text/javascript"></script>
+            <script src="libs/select2.js" type="text/javascript"></script>
+            <script src="libs/require-2.1.9.js" type="text/javascript"></script>
+        </c:when>
+        <c:otherwise>
+            <script src="libs/backbone-min.js" type="text/javascript"></script>
+            <script src="libs/backbone.localStorage-min.js" type="text/javascript"></script>
+            <script src="libs/select2-3.4.5.min.js" type="text/javascript"></script>
+            <script src="libs/require-2.1.9.min.js" type="text/javascript"></script>
+                    <%--<script src="libs/prettyCheckable.min.js" type="text/javascript"></script>--%>
+        </c:otherwise>
     </c:choose>
     
     <%-- Do these need to use $.ready? --%>
     <script src="js/require_config_dev.js" type="text/javascript"></script>
     <script src="js/step_constants.js" type="text/javascript"></script>
     <script src="js/step.util.js" type="text/javascript"></script>
-    <script src="js/backbone/models/model_data.js" type="text/javascript"></script>
     <script src="js/backbone/views/view_main_search.js" type="text/javascript"></script>
     <script src="js/step_ready.js" type="text/javascript"></script>
     <script src="js/backbone/step_router.js" type="text/javascript"></script>

@@ -37,6 +37,7 @@ import com.tyndalehouse.step.core.data.EntityIndexReader;
 import com.tyndalehouse.step.core.data.EntityManager;
 import com.tyndalehouse.step.core.exceptions.LuceneSearchException;
 import com.tyndalehouse.step.core.exceptions.TranslatedException;
+import com.tyndalehouse.step.core.models.AbstractComplexSearch;
 import com.tyndalehouse.step.core.models.InterlinearMode;
 import com.tyndalehouse.step.core.models.LexiconSuggestion;
 import com.tyndalehouse.step.core.models.SearchToken;
@@ -158,14 +159,13 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
-    public Object runQuery(final List<SearchToken> searchTokens, final String options,
+    public AbstractComplexSearch runQuery(final List<SearchToken> searchTokens, final String options,
                            final String display, final int page, final String filter, int context) {
         final List<String> versions = new ArrayList<String>(4);
         final StringBuilder references = new StringBuilder();
         final List<String> strongSearches = new ArrayList<String>(1);
         final List<String> textSearches = new ArrayList<String>(1);
         final List<String> meaningSearches = new ArrayList<String>(1);
-
 
         for (SearchToken token : searchTokens) {
             if (SearchToken.VERSION.equals(token.getTokenType())) {
@@ -186,6 +186,7 @@ public class SearchServiceImpl implements SearchService {
 
         if (versions.size() == 0) {
             versions.add(JSwordPassageService.REFERENCE_BOOK);
+            searchTokens.add(new SearchToken(JSwordPassageService.REFERENCE_BOOK, "version"));
         }
         
         //if we have no searches, then we need to default the reference
@@ -194,12 +195,15 @@ public class SearchServiceImpl implements SearchService {
                 meaningSearches.size() == 0 &&
                 references.length() == 0) {
             references.append(DEFAULT_REFERENCE);
+            searchTokens.add(new SearchToken(DEFAULT_REFERENCE, "reference"));
         }
 
-        return runCorrectSearch(
+        final AbstractComplexSearch complexSearch = runCorrectSearch(
                 versions, references.toString(),
                 options, StringUtils.isBlank(display) ? InterlinearMode.NONE.name() : display,
                 strongSearches, textSearches, meaningSearches, page, filter, context);
+        complexSearch.setSearchTokens(searchTokens);
+        return complexSearch;
     }
 
     /**
@@ -214,7 +218,7 @@ public class SearchServiceImpl implements SearchService {
      * @param context        amount of context to be used in searhc
      * @return the results
      */
-    private Object runCorrectSearch(final List<String> versions, final String references,
+    private AbstractComplexSearch runCorrectSearch(final List<String> versions, final String references,
                                     final String options, final String displayMode,
                                     final List<String> strongSearches,
                                     final List<String> textSearches,
@@ -1025,6 +1029,7 @@ public class SearchServiceImpl implements SearchService {
         final StringBuilder relatedQuery = new StringBuilder(results.length * 7);
         relatedQuery.append("-stopWord:true ");
         for (final EntityDoc doc : results) {
+            //NPE?
             relatedQuery.append(doc.get("relatedNumbers").replace(',', ' '));
         }
         return relatedQuery.toString();

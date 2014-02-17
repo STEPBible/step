@@ -510,7 +510,7 @@ var SearchCriteria = Backbone.View.extend({
         var versions = this.searchVersions.val();
 
         if (!this.validate()) {
-            step.util.raiseInfo(this.model.get("passageId"), __s.error_search, "error", true);
+            step.util.raiseInfo(__s.error_search, "error", this.model.get("passageId"), true);
             return;
         }
 

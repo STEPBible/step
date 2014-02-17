@@ -88,14 +88,14 @@ public class BibleInformationServiceImpl implements BibleInformationService {
     /**
      * The bible information service, retrieving content and meta data.
      *
-     * @param defaultVersions       a list of the default versions that should be installed
-     * @param jswordPassage         the jsword service
-     * @param jswordModule          provides information and handles information relating to module installation, etc.
-     * @param jswordMetadata        provides metadata on jsword modules
+     * @param defaultVersions      a list of the default versions that should be installed
+     * @param jswordPassage        the jsword service
+     * @param jswordModule         provides information and handles information relating to module installation, etc.
+     * @param jswordMetadata       provides metadata on jsword modules
      * @param jswordSearch
-     * @param entityManager         the entity manager
-     * @param jswordVersification   the jsword versification
-     * @param subjectSearchService  the subject search service
+     * @param entityManager        the entity manager
+     * @param jswordVersification  the jsword versification
+     * @param subjectSearchService the subject search service
      */
     @Inject
     public BibleInformationServiceImpl(@Named("defaultVersions") final List<String> defaultVersions,
@@ -174,8 +174,9 @@ public class BibleInformationServiceImpl implements BibleInformationService {
         final InterlinearMode desiredModeOfDisplay = this.optionsValidationService.getDisplayMode(interlinearMode, version, extraVersions);
 
         OsisWrapper passageText;
+        final List<TrimmedLookupOption> removedOptions = new ArrayList<TrimmedLookupOption>(4);
         final Set<LookupOption> lookupOptions = this.optionsValidationService.trim(this.optionsValidationService.getLookupOptions(options), version, extraVersions,
-                desiredModeOfDisplay, null);
+                desiredModeOfDisplay, removedOptions);
 
         if (INTERLINEAR != desiredModeOfDisplay && NONE != desiredModeOfDisplay) {
             // split the versions
@@ -186,15 +187,31 @@ public class BibleInformationServiceImpl implements BibleInformationService {
             passageText = this.jswordPassage.getOsisText(version, reference, new ArrayList<LookupOption>(lookupOptions),
                     interlinearVersion, desiredModeOfDisplay);
         }
+        passageText.setRemovedOptions(removedOptions);
         passageText.setPreviousChapter(this.jswordPassage.getSiblingChapter(reference, version, true));
         passageText.setNextChapter(this.jswordPassage.getSiblingChapter(reference, version, false));
         passageText.setOptions(this.optionsValidationService.optionsToString(
                 this.optionsValidationService.getAvailableFeaturesForVersion(version, extraVersions, interlinearMode).getOptions()));
-        passageText.setSelectedOptions(this.optionsValidationService.optionsToString(lookupOptions));
+        
+        //the passage lookup wasn't made with the removed options, however, the client needs to think these were selected.
+        passageText.setSelectedOptions(this.optionsValidationService.optionsToString(lookupOptions) + getRemovedOptions(removedOptions));
         return passageText;
     }
 
-    
+    /**
+     * Gets the removed option lookup options and returns their representation.
+     *
+     * @param removedOptions a set of options that were removed
+     * @return
+     */
+    private String getRemovedOptions(final List<TrimmedLookupOption> removedOptions) {
+        List<LookupOption> options = new ArrayList<LookupOption>(removedOptions.size());
+        for (TrimmedLookupOption o : removedOptions) {
+            options.add(o.getOption());
+        }
+        return this.optionsValidationService.optionsToString(options);
+    }
+
 
     @Override
     public String getPlainText(final String version, final String reference, final boolean firstVerseOnly) {
@@ -233,7 +250,7 @@ public class BibleInformationServiceImpl implements BibleInformationService {
         return jswordVersification.convertReference(reference, sourceVersion, targetVersion);
     }
 
-   
+
     /**
      * Joins version with interlinear version and returns an upper case array
      *
@@ -252,11 +269,7 @@ public class BibleInformationServiceImpl implements BibleInformationService {
         return versions;
     }
 
-    
 
-   
-
-    
     /**
      * Gets the all features.
      *
@@ -277,7 +290,6 @@ public class BibleInformationServiceImpl implements BibleInformationService {
         return elo;
     }
 
-    
 
     /**
      * @param extraVersions the string of extra versions
@@ -290,7 +302,7 @@ public class BibleInformationServiceImpl implements BibleInformationService {
         return Arrays.asList(StringUtils.split(extraVersions, ","));
     }
 
-    
+
     /**
      * Checks for core modules.
      *

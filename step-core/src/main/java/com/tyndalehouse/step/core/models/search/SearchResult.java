@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.tyndalehouse.step.core.models.AbstractComplexSearch;
 import com.tyndalehouse.step.core.models.LexiconSuggestion;
 import com.tyndalehouse.step.core.service.impl.SearchType;
 
@@ -11,7 +12,7 @@ import com.tyndalehouse.step.core.service.impl.SearchType;
  * 
  * @author chrisburrell
  */
-public class SearchResult implements Serializable {
+public class SearchResult extends AbstractComplexSearch implements Serializable {
     private static final long serialVersionUID = 5408141957094432935L;
     private String query;
     private int total;
@@ -22,11 +23,8 @@ public class SearchResult implements Serializable {
     private String order;
     private List<LexiconSuggestion> definitions;
     private String[] languageCode;
-    private SearchType searchType;
     private int pageSize;
     private int pageNumber;
-    private String masterVersion;
-    private String extraVersions;
 
     /**
      * @return the query
@@ -167,17 +165,6 @@ public class SearchResult implements Serializable {
         return languageCode;
     }
 
-    public void setSearchType(final SearchType searchType) {
-        this.searchType = searchType;
-    }
-
-    /**
-     * @return the type of search
-     */
-    public SearchType getSearchType() {
-        return searchType;
-    }
-
     /**
      * @param pageSize the page size used in the search
      */
@@ -206,25 +193,4 @@ public class SearchResult implements Serializable {
         return pageNumber;
     }
 
-    /**
-     * @param masterVersion the master version
-     */
-    public void setMasterVersion(final String masterVersion) {
-        this.masterVersion = masterVersion;
-    }
-
-    /**
-     * @param extraVersions any other versions
-     */
-    public void setExtraVersions(final String extraVersions) {
-        this.extraVersions = extraVersions;
-    }
-
-    public String getMasterVersion() {
-        return masterVersion;
-    }
-
-    public String getExtraVersions() {
-        return extraVersions;
-    }
 }

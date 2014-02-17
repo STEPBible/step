@@ -1,5 +1,5 @@
 @import 'template_variables';
-
+@import 'mixins';
 
 .select2-results {
   .initials {
@@ -12,35 +12,60 @@
   .features {
     float: right;
     margin-right: 5px;
+    padding: 0 2;
+    clear: right;
+    font-weight: bold;
   }
 }
-.select2-search-choice.meanings, .select-meanings{
-  background-image: -webkit-linear-gradient(top, lighten($meaningsRow, $optionStartGradient), lighten($meaningsRow, $optionEndGradient))  !important;
+
+.select2-search-choice.meanings, .select-meanings {
+  @include gradient($meaningsRow, $optionStartGradient, $optionEndGradient);
 }
 
-.select2-search-choice.version, .select-version{
-  background-image: -webkit-linear-gradient(top, lighten($bibleRow, $optionStartGradient), lighten($bibleRow, $optionEndGradient))  !important;
+.select2-search-choice.version, .select-version {
+  @include gradient($bibleRow, $optionStartGradient, $optionEndGradient);
 }
+
 .select2-search-choice.reference, .select-reference {
-  background-image: -webkit-linear-gradient(top, lighten($referenceRow, $optionStartGradient), lighten($referenceRow, $optionEndGradient))  !important;
+  @include gradient($referenceRow, $optionStartGradient, $optionEndGradient);
 }
+
 .select2-search-choice.subject, .select-subject {
-  background-image: -webkit-linear-gradient(top, lighten($subjectRow, $optionStartGradient), lighten($subjectRow, $optionEndGradient))  !important;
+  @include gradient($subjectRow, $optionStartGradient, $optionEndGradient);
 }
+
 .select2-search-choice.text, .text {
-  background-image: -webkit-linear-gradient(top, lighten($textRow, $optionStartGradient), lighten($textRow, $optionEndGradient))  !important;
+  @include gradient($textRow, $optionStartGradient, $optionEndGradient);
 }
+
 .select2-search-choice.greek, .select-greek {
-  background-image: -webkit-linear-gradient(top, lighten($greekRow, $optionStartGradient), lighten($greekRow, $optionEndGradient))  !important;
+  @include gradient($greekRow, $optionStartGradient, $optionEndGradient);
 }
+
 .select2-search-choice.greekMeanings, .select-greekMeanings {
-  background-image: -webkit-linear-gradient(top, lighten($greekMeaningsRow, $optionStartGradient), lighten($greekMeaningsRow, $optionEndGradient))  !important;
+  @include gradient($greekMeaningsRow, $optionStartGradient, $optionEndGradient);
 }
+
 .select2-search-choice.hebrew, .select-hebrew {
-  background-image: -webkit-linear-gradient(top, lighten($hebrewRow, $optionStartGradient), lighten($hebrewRow, $optionEndGradient))  !important;
+  @include gradient($hebrewRow, $optionStartGradient, $optionEndGradient);
 }
+
 .select2-search-choice.hebrewMeanings, .select-hebrewMeanings {
-  background-image: -webkit-linear-gradient(top, lighten($hebrewMeaningsRow, $optionStartGradient), lighten($hebrewMeaningsRow, $optionEndGradient))  !important;
+  @include gradient($hebrewMeaningsRow, $optionStartGradient, $optionEndGradient);
+}
+
+@media screen and (min-width: $stepXSBootstrap) {
+  .select2-drop-multi ul {
+    margin: 0px;
+    -moz-column-count: 2; /* Firefox */
+    -webkit-column-count: 2; /* Safari and Chrome */
+    column-count: 2;
+    li {
+      display: inline-block;
+      border-bottom: solid 1 lightgrey;
+      width: 100%;
+    }
+  }
 }
 
 .searchLabel a {

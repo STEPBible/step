@@ -16,58 +16,58 @@ ul .glyphicon-ok {
   background-image: url(/images/wait16.gif);
   background-repeat: no-repeat; }
 
-.navbar {
-  height: 63px;
-  margin-bottom: 0px; }
-  .navbar .navbar-header {
-    font-size: x-small;
-    background: black no-repeat fixed url(../images/step-top-left-logo.png); }
-  .navbar a, .navbar .subtitle, .navbar .subtitle:hover {
+@media screen {
+  .navbar {
+    height: 63px;
+    margin-bottom: 0px; }
+    .navbar .navbar-header {
+      font-size: x-small;
+      background: black no-repeat fixed url(../images/step-top-left-logo.png); }
+    .navbar a, .navbar .subtitle, .navbar .subtitle:hover {
+      color: lightgrey; }
+
+  .navbar-brand {
+    padding-left: 50px;
+    padding-bottom: 0px; }
+    .navbar-brand .title > a {
+      color: white !important;
+      font-weight: bold;
+      text-decoration: none; }
+    .navbar-brand .subtitle {
+      margin-top: 5px;
+      white-space: nowrap;
+      font-size: x-small;
+      line-height: 1; }
+
+  .navbar-brand, .search-form, .help {
+    padding-top: 10px; }
+
+  .search-form {
+    font-size: x-small; }
+    .search-form a {
+      color: lightgrey; }
+    .search-form button {
+      text-shadow: none; }
+
+  .searchLinks {
+    float: right;
+    margin-top: 4px;
     color: lightgrey; }
+    .searchLinks a, .searchLinks label {
+      vertical-align: top;
+      margin-left: 20px; }
+    .searchLinks input {
+      margin: 2px 0 0 0; }
 
-.navbar-brand {
-  padding-left: 50px;
-  padding-bottom: 0px; }
-  .navbar-brand .title > a {
-    color: white !important;
-    font-weight: bold;
-    text-decoration: none; }
-  .navbar-brand .subtitle {
-    margin-top: 5px;
-    white-space: nowrap;
-    font-size: x-small;
-    line-height: 1; }
-
-.navbar-brand, .search-form, .help {
-  padding-top: 10px; }
-
-.search-form {
-  font-size: x-small; }
-  .search-form a {
+  .help {
     color: lightgrey; }
-  .search-form button {
-    text-shadow: none; }
-
-.searchLinks {
-  float: right;
-  margin-top: 4px;
-  color: lightgrey; }
-  .searchLinks a, .searchLinks label {
-    vertical-align: top;
-    margin-left: 20px; }
-  .searchLinks input {
-    margin: 2px 0 0 0; }
-
-.help {
-  color: lightgrey; }
-  .help ul {
-    float: right; }
+    .help ul {
+      float: right; }
+  .mainPanel, #sidebar {
+    padding: 63px 0 10px 0px; } }
   @media screen and (max-width: 524px) {
     .help {
       display: none; } }
-
-.mainPanel, #sidebar {
-  padding: 63px 0 10px 0px; }
 
 @media screen and (max-width: 991px) {
   .kolumny {
@@ -143,35 +143,104 @@ ul .glyphicon-ok {
   font-style: italic; }
 .select2-results .features {
   float: right;
-  margin-right: 5px; }
+  margin-right: 5px;
+  padding: 0 2;
+  clear: right;
+  font-weight: bold; }
 
 .select2-search-choice.meanings, .select-meanings {
-  background-image: -webkit-linear-gradient(top, #ffff66, #ffff99) !important; }
+  background: #ffff66;
+  /* for non-css3 browsers */
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=lighten($color, $optionStartGradient), endColorstr=lighten($color, $optionEndGradient));
+  /* for IE */
+  background-image: -webkit-linear-gradient(left, #ffff66, #ffff99) !important;
+  background: -moz-linear-gradient(left, #ffff66, #ffff99);
+  /* for firefox 3.6+ */ }
 
 .select2-search-choice.version, .select-version {
-  background-image: -webkit-linear-gradient(top, #cd8c8e, #dcb0b1) !important; }
+  background: #cd8c8e;
+  /* for non-css3 browsers */
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=lighten($color, $optionStartGradient), endColorstr=lighten($color, $optionEndGradient));
+  /* for IE */
+  background-image: -webkit-linear-gradient(left, #cd8c8e, #dcb0b1) !important;
+  background: -moz-linear-gradient(left, #cd8c8e, #dcb0b1);
+  /* for firefox 3.6+ */ }
 
 .select2-search-choice.reference, .select-reference {
-  background-image: -webkit-linear-gradient(top, #e8fce8, white) !important; }
+  background: #e8fce8;
+  /* for non-css3 browsers */
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=lighten($color, $optionStartGradient), endColorstr=lighten($color, $optionEndGradient));
+  /* for IE */
+  background-image: -webkit-linear-gradient(left, #e8fce8, white) !important;
+  background: -moz-linear-gradient(left, #e8fce8, white);
+  /* for firefox 3.6+ */ }
 
 .select2-search-choice.subject, .select-subject {
-  background-image: -webkit-linear-gradient(top, #e2b9bd, #f1dddf) !important; }
+  background: #e2b9bd;
+  /* for non-css3 browsers */
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=lighten($color, $optionStartGradient), endColorstr=lighten($color, $optionEndGradient));
+  /* for IE */
+  background-image: -webkit-linear-gradient(left, #e2b9bd, #f1dddf) !important;
+  background: -moz-linear-gradient(left, #e2b9bd, #f1dddf);
+  /* for firefox 3.6+ */ }
 
 .select2-search-choice.text, .text {
-  background-image: -webkit-linear-gradient(top, #66ffff, #99ffff) !important; }
+  background: #66ffff;
+  /* for non-css3 browsers */
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=lighten($color, $optionStartGradient), endColorstr=lighten($color, $optionEndGradient));
+  /* for IE */
+  background-image: -webkit-linear-gradient(left, #66ffff, #99ffff) !important;
+  background: -moz-linear-gradient(left, #66ffff, #99ffff);
+  /* for firefox 3.6+ */ }
 
 .select2-search-choice.greek, .select-greek {
-  background-image: -webkit-linear-gradient(top, #faf7f7, white) !important; }
+  background: #faf7f7;
+  /* for non-css3 browsers */
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=lighten($color, $optionStartGradient), endColorstr=lighten($color, $optionEndGradient));
+  /* for IE */
+  background-image: -webkit-linear-gradient(left, #faf7f7, white) !important;
+  background: -moz-linear-gradient(left, #faf7f7, white);
+  /* for firefox 3.6+ */ }
 
 .select2-search-choice.greekMeanings, .select-greekMeanings {
-  background-image: -webkit-linear-gradient(top, #a8a7a9, #c2c1c2) !important; }
+  background: #a8a7a9;
+  /* for non-css3 browsers */
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=lighten($color, $optionStartGradient), endColorstr=lighten($color, $optionEndGradient));
+  /* for IE */
+  background-image: -webkit-linear-gradient(left, #a8a7a9, #c2c1c2) !important;
+  background: -moz-linear-gradient(left, #a8a7a9, #c2c1c2);
+  /* for firefox 3.6+ */ }
 
 .select2-search-choice.hebrew, .select-hebrew {
-  background-image: -webkit-linear-gradient(top, #8e9dbc, #aeb9cf) !important; }
+  background: #8e9dbc;
+  /* for non-css3 browsers */
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=lighten($color, $optionStartGradient), endColorstr=lighten($color, $optionEndGradient));
+  /* for IE */
+  background-image: -webkit-linear-gradient(left, #8e9dbc, #aeb9cf) !important;
+  background: -moz-linear-gradient(left, #8e9dbc, #aeb9cf);
+  /* for firefox 3.6+ */ }
 
 .select2-search-choice.hebrewMeanings, .select-hebrewMeanings {
-  background-image: -webkit-linear-gradient(top, #9f798b, #b596a4) !important; }
+  background: #9f798b;
+  /* for non-css3 browsers */
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=lighten($color, $optionStartGradient), endColorstr=lighten($color, $optionEndGradient));
+  /* for IE */
+  background-image: -webkit-linear-gradient(left, #9f798b, #b596a4) !important;
+  background: -moz-linear-gradient(left, #9f798b, #b596a4);
+  /* for firefox 3.6+ */ }
 
+@media screen and (min-width: 768px) {
+  .select2-drop-multi ul {
+    margin: 0px;
+    -moz-column-count: 2;
+    /* Firefox */
+    -webkit-column-count: 2;
+    /* Safari and Chrome */
+    column-count: 2; }
+    .select2-drop-multi ul li {
+      display: inline-block;
+      border-bottom: solid 1 lightgrey;
+      width: 100%; } }
 .searchLabel a {
   font-size: 90%;
   padding: 2px;
@@ -230,7 +299,8 @@ ul .glyphicon-ok {
   .passageContentHolder h2 {
     margin-bottom: 5px; }
     .passageContentHolder h2.xgen {
-      margin-top: 0px; }
+      margin-top: 0px;
+      text-align: left; }
   .passageContentHolder .paragraph {
     margin-top: 8px;
     content: ' ';
@@ -279,6 +349,10 @@ ul .glyphicon-ok {
     content: "/"; }
 .searchResultRow .verseNumber {
   vertical-align: middle; }
+.searchResultRow br:first-child + .paragraph {
+  display: none; }
+.searchResultRow br:first-child {
+  display: none; }
 
 h4.lexicalGrouping {
   font-size: 12px; }
@@ -622,6 +696,23 @@ body::-webkit-scrollbar-corner {
   top: 0;
   right: 0;
   padding: 10px;
+  max-width: 500px;
   z-index: 10000; }
   #errorContainer button {
     margin-left: 10px; }
+
+#aboutLogo {
+  float: left;
+  margin-right: 20px; }
+
+.aboutModal .modal-header {
+  padding: 5 5; }
+.aboutModal .modal-body {
+  clear: left;
+  margin-top: 15px; }
+.aboutModal .footer {
+  text-align: right; }
+  .aboutModal .footer button {
+    padding: 5px; }
+    .aboutModal .footer button label {
+      margin-bottom: 0px; }

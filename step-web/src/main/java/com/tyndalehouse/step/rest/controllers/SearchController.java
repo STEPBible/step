@@ -13,8 +13,10 @@ import java.util.regex.Pattern;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.exceptions.UserExceptionType;
 import com.tyndalehouse.step.core.exceptions.ValidationException;
+import com.tyndalehouse.step.core.models.AbstractComplexSearch;
 import com.tyndalehouse.step.core.models.BookName;
 import com.tyndalehouse.step.core.models.SearchToken;
 import com.tyndalehouse.step.core.models.search.AutoSuggestion;
@@ -44,6 +46,7 @@ import com.yammer.metrics.annotation.Timed;
 public class SearchController {
     private static final Pattern SPLIT_TOKENS = Pattern.compile("\\|");
     private static final Logger LOGGER = LoggerFactory.getLogger(SearchController.class);
+    private static final String DEFAULT_OPTIONS = "NHVUG";
     private final SearchService searchService;
     private final OriginalWordSuggestionService originalWordSuggestions;
     private final SubjectEntrySearchService subjectEntries;
@@ -73,15 +76,16 @@ public class SearchController {
         addAutoSuggestions(SearchToken.REFERENCE, autoSuggestions, bibleInformationService.getBibleBookNames(input, "ESV"));
         addAutoSuggestions(SearchToken.SUBJECT_SEARCH, autoSuggestions, this.autocompleteSubject(input));
 
-        addAutoSuggestions(SearchToken.GREEK, autoSuggestions, this.originalWordSuggestions.getLexicalSuggestions(LexicalSuggestionType.GREEK, restoreSearchQuery(input),
+        final String restored = restoreSearchQuery(input);
+        addAutoSuggestions(SearchToken.GREEK, autoSuggestions, this.originalWordSuggestions.getLexicalSuggestions(LexicalSuggestionType.GREEK, restored,
                 false));
-        addAutoSuggestions(SearchToken.GREEK_MEANINGS, autoSuggestions, this.originalWordSuggestions.getLexicalSuggestions(LexicalSuggestionType.GREEK_MEANING, restoreSearchQuery(input),
+        addAutoSuggestions(SearchToken.GREEK_MEANINGS, autoSuggestions, this.originalWordSuggestions.getLexicalSuggestions(LexicalSuggestionType.GREEK_MEANING, restored,
                 false));
-        addAutoSuggestions(SearchToken.HEBREW, autoSuggestions, this.originalWordSuggestions.getLexicalSuggestions(LexicalSuggestionType.HEBREW, restoreSearchQuery(input),
+        addAutoSuggestions(SearchToken.HEBREW, autoSuggestions, this.originalWordSuggestions.getLexicalSuggestions(LexicalSuggestionType.HEBREW, restored,
                 false));
-        addAutoSuggestions(SearchToken.HEBREW_MEANINGS, autoSuggestions, this.originalWordSuggestions.getLexicalSuggestions(LexicalSuggestionType.HEBREW_MEANING, restoreSearchQuery(input),
+        addAutoSuggestions(SearchToken.HEBREW_MEANINGS, autoSuggestions, this.originalWordSuggestions.getLexicalSuggestions(LexicalSuggestionType.HEBREW_MEANING, restored,
                 false));
-        addAutoSuggestions(SearchToken.MEANINGS, autoSuggestions, this.originalWordSuggestions.getLexicalSuggestions(LexicalSuggestionType.MEANING, restoreSearchQuery(input),
+        addAutoSuggestions(SearchToken.MEANINGS, autoSuggestions, this.originalWordSuggestions.getLexicalSuggestions(LexicalSuggestionType.MEANING, restored,
                 false));
         return autoSuggestions;
     }
@@ -89,7 +93,7 @@ public class SearchController {
     /**
      * @param items the list of all items
      */
-    public Object masterSearch(final String items) {
+    public AbstractComplexSearch masterSearch(final String items) {
         return this.masterSearch(items, null, null, null, null, null);
     }
 
@@ -97,7 +101,7 @@ public class SearchController {
      * @param items   the list of all items
      * @param options current display options
      */
-    public Object masterSearch(final String items, final String options) {
+    public AbstractComplexSearch masterSearch(final String items, final String options) {
         return this.masterSearch(items, options, null, null, null, null);
     }
 
@@ -106,7 +110,7 @@ public class SearchController {
      * @param options current display options
      * @param display the display options
      */
-    public Object masterSearch(final String items, final String options, final String display) {
+    public AbstractComplexSearch masterSearch(final String items, final String options, final String display) {
         return this.masterSearch(items, options, display, null, null, null);
     }
 
@@ -116,7 +120,7 @@ public class SearchController {
      * @param display    the display options
      * @param pageNumber the number of the page that is desired
      */
-    public Object masterSearch(final String items, final String options, final String display, final String pageNumber) {
+    public AbstractComplexSearch masterSearch(final String items, final String options, final String display, final String pageNumber) {
         return this.masterSearch(items, options, display, pageNumber, null, null);
     }
 
@@ -127,7 +131,7 @@ public class SearchController {
      * @param pageNumber the number of the page that is desired
      * @param filter     the type of filter required on an original word search
      */
-    public Object masterSearch(final String items, final String options, final String display, final String pageNumber, final String filter) {
+    public AbstractComplexSearch masterSearch(final String items, final String options, final String display, final String pageNumber, final String filter) {
         return this.masterSearch(items, options, display, pageNumber, filter, null);
     }
 
@@ -139,7 +143,7 @@ public class SearchController {
      * @param filter     the type of filter required on an original word search
      * @param context    the amount of context to add to the verses hit by a search
      */
-    public Object masterSearch(final String items, final String options, final String display,
+    public AbstractComplexSearch masterSearch(final String items, final String options, final String display,
                                final String pageNumber, final String filter, final String context) {
         String[] tokens;
         if (items != null) {
@@ -163,7 +167,15 @@ public class SearchController {
         int page = ConversionUtils.getValidInt(pageNumber, 1);
         int searchContext = ConversionUtils.getValidInt(context, 0);
 
-        return this.searchService.runQuery(searchTokens, options, display, page, filter, searchContext);
+        return this.searchService.runQuery(searchTokens, getDefaultedOptions(options), display, page, filter, searchContext);
+    }
+
+    /**
+     * @param options if null, returns the default options
+     * @return the default options for any passage
+     */
+    private String getDefaultedOptions(final String options) {
+        return options == null ? DEFAULT_OPTIONS : options;
     }
 
     /**

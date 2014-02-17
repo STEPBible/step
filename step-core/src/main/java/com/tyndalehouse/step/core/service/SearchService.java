@@ -32,6 +32,7 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.service;
 
+import com.tyndalehouse.step.core.models.AbstractComplexSearch;
 import com.tyndalehouse.step.core.models.OsisWrapper;
 import com.tyndalehouse.step.core.models.SearchToken;
 import com.tyndalehouse.step.core.models.search.SearchResult;
@@ -70,6 +71,6 @@ public interface SearchService {
      * @param searchTokens the tokens
      * @return the results from the search/passage lookup
      */
-    Object runQuery(List<SearchToken> searchTokens, final String options, final String display, 
+    AbstractComplexSearch runQuery(List<SearchToken> searchTokens, final String options, final String display, 
                     final int pageNumber, final String filter, int context);
 }

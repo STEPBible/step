@@ -38,11 +38,6 @@ var PassageMenuView = Backbone.View.extend({
         this.column.click(this.activateColumn);
         
         //get the versions data sources
-        for (var i = 0; i < step.datasources.length; i++) {
-            if (step.datasources.at(i).get("name") == DS_VERSIONS) {
-                this.versions = step.datasources[i];
-            }
-        }
         this._updateVisibleDropdown();
     },
     handleDropdownMenu : function(ev) {

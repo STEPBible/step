@@ -133,7 +133,7 @@ var StepRouter = Backbone.Router.extend({
     },
     handleRenderModel: function (text, passageModel, partRendered) {
         //then trigger the refresh of menu options and such like
-        passageModel.trigger("sync-update", {});
+        passageModel.trigger("sync-update", passageModel);
 
         if (text.searchType == 'PASSAGE') {
             //destroy all views for this column
@@ -210,7 +210,8 @@ var StepRouter = Backbone.Router.extend({
 
                 passageModel.save(text, { silent: true });
                 self._addBookmark(query);
-
+                step.util.squashErrors();
+                
                 //don't trigger a full search, but replace the URL with the one that makes sense
                 if (!quiet) {
                     step.router.overwriteUrl();

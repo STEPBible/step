@@ -1,77 +1,79 @@
 @import 'template_variables';
 
-.navbar {
-  height: $header_height;
-  margin-bottom: 0px;
-
-  .navbar-header {
-    font-size: x-small;
-    background: $headerBackgroundColor no-repeat fixed url(../images/step-top-left-logo.png);
+@media screen {
+  .navbar {
+    height: $header_height;
+    margin-bottom: 0px;
+  
+    .navbar-header {
+      font-size: x-small;
+      background: $headerBackgroundColor no-repeat fixed url(../images/step-top-left-logo.png);
+    }
+    
+    a, .subtitle, .subtitle:hover {
+      color: $header_title;
+    }
   }
   
-  a, .subtitle, .subtitle:hover {
-    color: $header_title;
+  
+  .navbar-brand {
+    padding-left: 50px;
+    padding-bottom: 0px;
+    .title > a {
+      color: white !important;
+      font-weight: bold;
+      text-decoration: none;
+    }
+  
+    .subtitle {
+      margin-top: 5px;
+      white-space: nowrap;
+      font-size: x-small;
+      line-height: 1;
+    }
   }
-}
-
-
-.navbar-brand {
-  padding-left: 50px;
-  padding-bottom: 0px;
-  .title > a {
-    color: white !important;
-    font-weight: bold;
-    text-decoration: none;
+  
+  .navbar-brand, .search-form, .help {
+    padding-top: 10px;
   }
-
-  .subtitle {
-    margin-top: 5px;
-    white-space: nowrap;
+  
+  // Search form
+  .search-form {
     font-size: x-small;
-    line-height: 1;
+    a {
+      color: $topHeaderLinkColour;
+    }
+  
+    button {
+      text-shadow: none;
+    }
   }
-}
-
-.navbar-brand, .search-form, .help {
-  padding-top: 10px;
-}
-
-// Search form
-.search-form {
-  font-size: x-small;
-  a {
-    color: $topHeaderLinkColour;
-  }
-
-  button {
-    text-shadow: none;
-  }
-}
-.searchLinks {
-  float: right;
-  margin-top: 4px;
-  color: $topHeaderLinkColour;
-  a, label {
-    vertical-align: top;
-    margin-left: 20px;
-  }
-  input {
-    margin: 2px 0 0 0;
-  }
-}
-
-// Help menu
-.help {
-  color: $topHeaderLinkColour;
-  ul {
+  .searchLinks {
     float: right;
+    margin-top: 4px;
+    color: $topHeaderLinkColour;
+    a, label {
+      vertical-align: top;
+      margin-left: 20px;
+    }
+    input {
+      margin: 2px 0 0 0;
+    }
   }
-  @media screen and (max-width: 524px) {
-    display: none;
+  
+  // Help menu
+  .help {
+    color: $topHeaderLinkColour;
+    ul {
+      float: right;
+    }
+    @media screen and (max-width: 524px) {
+      display: none;
+    }
   }
-}
-
-// offset the main panel
-.mainPanel, #sidebar {
-  padding: $header_height 0 10px 0px;
+  
+  // offset the main panel
+  .mainPanel, #sidebar {
+    padding: $header_height 0 10px 0px;
+  }
 }

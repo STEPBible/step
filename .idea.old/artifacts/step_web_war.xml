@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="war" name="step-web:war">
-    <output-path>$PROJECT_DIR$/step-web/target</output-path>
-    <root id="archive" name="step-web.war">
-      <element id="artifact" artifact-name="step-web:war exploded" />
-    </root>
-  </artifact>
-</component>

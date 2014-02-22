@@ -41,6 +41,7 @@ var PassageDisplayView = Backbone.View.extend({
             var languages = this.model.get("languageCode");
 
             if (this._isPassageValid(passageHtml, reference)) {
+                this._warnIfNoStrongs(version);
                 this._doFonts(passageHtml, options, interlinearMode, languages);
                 this._doInlineNotes(passageHtml, passageId);
                 this._doSideNotes(passageHtml, passageId, version);
@@ -67,7 +68,26 @@ TODO:                this._addStrongHandlers(passageId, passageHtml);
 //                Backbone.Events.trigger("passage:rendered:" + passageId);
             }
         },
-
+        _warnIfNoStrongs: function(masterVersion) {
+            if(!step.keyedVersions) {
+                //for some reason we have no versions
+                console.warn("No versions have been loaded.")
+                return;
+            }
+            
+            if(step.keyedVersions[masterVersion].hasStrongs) {
+                return false;
+            }
+            
+            var warnings = step.settings.get("noStrongWarnings") || {};
+            if(!warnings[masterVersion]) {
+                step.util.raiseInfo(__s.error_warn_if_no_strongs);
+                warnings[masterVersion] = true;
+                step.settings.save({
+                    noStrongWarnings : warnings
+                });
+            }
+        },
         //Can be removed when/if Chrome fixes this
         _doChromeHack: function (eventName, passageHtml, interlinearMode, options) {
             //only applies to Chrome

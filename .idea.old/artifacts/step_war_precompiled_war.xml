@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="step-war-precompiled:war">
+    <output-path>$PROJECT_DIR$/step-war-precompiled/target</output-path>
+    <root id="archive" name="step-war-precompiled-1.0.2-SNAPSHOT.war">
+      <element id="artifact" artifact-name="step-war-precompiled:war exploded" />
+    </root>
+  </artifact>
+</component>

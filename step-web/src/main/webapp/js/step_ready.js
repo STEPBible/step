@@ -14,11 +14,14 @@
     };
 
     function initSettings() {
-        step.settings = new SettingsModelList;
-        step.settings.fetch();
-        if (step.settings.length == 0) {
-            step.settings.add(new SettingsModel);
+        var settings = new SettingsModelList;
+        settings.fetch();
+        if (settings.length == 0) {
+            var setting = new SettingsModel;
+            settings.add(setting);
+            setting.save();
         }
+        step.settings = settings.at(0);
     };
 
     function initSearchDropdown() {

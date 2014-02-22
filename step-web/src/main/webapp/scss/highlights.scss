@@ -1,0 +1,31 @@
+@import 'template_variables';
+
+//highlights in text
+.emphasisePassagePhrase {
+  background-color: #F3E5B4;
+}
+
+.relatedWordEmphasis {
+  text-decoration: underline;
+}
+
+.relatedWordEmphasisHover {
+  text-decoration: underline;
+}
+
+.primaryLightBg {
+  background-color: rgb(235, 235, 241) !important;
+}
+
+.secondaryBackground {
+  background-color: #F3E5B4;
+}
+
+// hebrew highlights
+.segC0 {
+  color: #33339F;
+}
+
+.segC1 {
+  color: black;
+}

@@ -38,6 +38,7 @@ import com.tyndalehouse.step.core.data.EntityManager;
 import com.tyndalehouse.step.core.exceptions.LuceneSearchException;
 import com.tyndalehouse.step.core.exceptions.TranslatedException;
 import com.tyndalehouse.step.core.models.AbstractComplexSearch;
+import com.tyndalehouse.step.core.models.BibleVersion;
 import com.tyndalehouse.step.core.models.InterlinearMode;
 import com.tyndalehouse.step.core.models.LexiconSuggestion;
 import com.tyndalehouse.step.core.models.SearchToken;
@@ -49,10 +50,12 @@ import com.tyndalehouse.step.core.models.search.SearchResult;
 import com.tyndalehouse.step.core.models.search.TimelineEventSearchEntry;
 import com.tyndalehouse.step.core.models.search.VerseSearchEntry;
 import com.tyndalehouse.step.core.service.BibleInformationService;
+import com.tyndalehouse.step.core.service.LexiconDefinitionService;
 import com.tyndalehouse.step.core.service.SearchService;
 import com.tyndalehouse.step.core.service.TimelineService;
 import com.tyndalehouse.step.core.service.helpers.GlossComparator;
 import com.tyndalehouse.step.core.service.helpers.OriginalSpellingComparator;
+import com.tyndalehouse.step.core.service.helpers.VersionResolver;
 import com.tyndalehouse.step.core.service.jsword.JSwordMetadataService;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import com.tyndalehouse.step.core.service.jsword.JSwordSearchService;
@@ -111,6 +114,7 @@ public class SearchServiceImpl implements SearchService {
     private static final Logger LOGGER = LoggerFactory.getLogger(SearchServiceImpl.class);
     private static final String STRONG_QUERY = "strong:";
     private static final String DEFAULT_REFERENCE = "Mat.1";
+    private static final String NO_FILTER = "all";
     private final JSwordSearchService jswordSearch;
     private final TimelineService timeline;
     private final EntityIndexReader definitions;
@@ -119,6 +123,8 @@ public class SearchServiceImpl implements SearchService {
     private final JSwordMetadataService jswordMetadata;
     private final SubjectSearchService subjects;
     private final BibleInformationService bibleInfoService;
+    private VersionResolver versionResolver;
+    private LexiconDefinitionService lexiconDefinitionService;
 
     /**
      * @param jswordSearch     the search service
@@ -131,12 +137,17 @@ public class SearchServiceImpl implements SearchService {
     public SearchServiceImpl(final JSwordSearchService jswordSearch,
                              final JSwordMetadataService jswordMetadata,
                              final SubjectSearchService subjects, final TimelineService timeline,
-                             final BibleInformationService bibleInfoService, final EntityManager entityManager) {
+                             final BibleInformationService bibleInfoService, 
+                             final EntityManager entityManager,
+                             final VersionResolver versionResolver,
+                             final LexiconDefinitionService lexiconDefinitionService) {
         this.jswordSearch = jswordSearch;
         this.jswordMetadata = jswordMetadata;
         this.subjects = subjects;
         this.timeline = timeline;
         this.bibleInfoService = bibleInfoService;
+        this.versionResolver = versionResolver;
+        this.lexiconDefinitionService = lexiconDefinitionService;
         this.definitions = entityManager.getReader("definition");
         this.specificForms = entityManager.getReader("specificForm");
         this.timelineEvents = entityManager.getReader("timelineEvent");
@@ -186,7 +197,7 @@ public class SearchServiceImpl implements SearchService {
 
         if (versions.size() == 0) {
             versions.add(JSwordPassageService.REFERENCE_BOOK);
-            searchTokens.add(new SearchToken(JSwordPassageService.REFERENCE_BOOK, "version"));
+            searchTokens.add(new SearchToken("version", JSwordPassageService.REFERENCE_BOOK));
         }
         
         //if we have no searches, then we need to default the reference
@@ -195,15 +206,49 @@ public class SearchServiceImpl implements SearchService {
                 meaningSearches.size() == 0 &&
                 references.length() == 0) {
             references.append(DEFAULT_REFERENCE);
-            searchTokens.add(new SearchToken(DEFAULT_REFERENCE, "reference"));
+            searchTokens.add(new SearchToken("reference", DEFAULT_REFERENCE));
         }
 
         final AbstractComplexSearch complexSearch = runCorrectSearch(
                 versions, references.toString(),
                 options, StringUtils.isBlank(display) ? InterlinearMode.NONE.name() : display,
                 strongSearches, textSearches, meaningSearches, page, filter, context);
+        enhanceSearchTokens(versions.get(0), searchTokens);
         complexSearch.setSearchTokens(searchTokens);
         return complexSearch;
+    }
+
+    /**
+     * Enhances search tokens, meaning that <p />
+     * for versions, we return the short initials and long initials in the form of a 'BibleVersion' <p />
+     * for references, we return the keywraper <p />
+     * for strong numbers, we return the lexicon suggestion <p />
+     * for everything else, null.
+     * @param masterVersion the master version to use looking up references and so on.
+     * @param searchTokens a list of search tokens
+     * @return with enhanced meta data if any
+     */
+    private void enhanceSearchTokens(final String masterVersion, final List<SearchToken> searchTokens) {
+        for(SearchToken st : searchTokens) {
+            final String tokenType = st.getTokenType();
+            if(SearchToken.VERSION.equals(tokenType)) {
+                //probably need to show the short initials
+                BibleVersion version = new BibleVersion();
+                version.setInitials(this.versionResolver.getLongName(tokenType));
+                version.setShortInitials(this.versionResolver.getShortName(tokenType));
+                st.setEnhancedTokenInfo(version);
+            } else if(SearchToken.REFERENCE.equals(tokenType)) {
+                //could take the key but that has all parts combined
+                st.setEnhancedTokenInfo(this.bibleInfoService.getKeyInfo(st.getToken(), masterVersion, masterVersion));
+            } else if(SearchToken.STRONG_NUMBER.equals(tokenType)) {
+                //hit the index and look up that strong number...
+                st.setEnhancedTokenInfo(this.lexiconDefinitionService.lookup(st.getToken()));
+            } 
+            //nothing to do 
+            // for subject searches or 
+            // for text searches or 
+            // for meaning searches
+        }
     }
 
     /**
@@ -229,7 +274,7 @@ public class SearchServiceImpl implements SearchService {
         final List<IndividualSearch> individualSearches = new ArrayList<IndividualSearch>(2);
         String[] filters = null;
         if (StringUtils.isNotBlank(filter)) {
-            filters = StringUtils.split(filter);
+            filters = StringUtils.split(filter, "[ ,]+");
         }
 
         //we will prefer a word search to anything else...
@@ -269,12 +314,18 @@ public class SearchServiceImpl implements SearchService {
     private void addWordSearches(final List<String> versions, final String references,
                                  final List<String> strongSearches, final String[] filters,
                                  final List<IndividualSearch> individualSearches) {
-
         for (final String strong : strongSearches) {
+            String[] filtersForSearch = filters;
+            if(filters == null || filters.length == 0) {
+                filtersForSearch = new String[] { strong };
+            } else if(filters.length == 1 && NO_FILTER.equals(filters[0])) {
+                filtersForSearch = new String[0];
+            }
+            
             boolean isGreek = strong.charAt(0) == 'G';
             individualSearches.add(new IndividualSearch(
-                    isGreek ? SearchType.ORIGINAL_GREEK_FORMS : SearchType.ORIGINAL_HEBREW_FORMS,
-                    versions, strong, getInclusion(references), filters));
+                    isGreek ? SearchType.ORIGINAL_GREEK_RELATED : SearchType.ORIGINAL_HEBREW_RELATED,
+                    versions, strong, getInclusion(references), filtersForSearch));
         }
     }
 
@@ -1029,8 +1080,10 @@ public class SearchServiceImpl implements SearchService {
         final StringBuilder relatedQuery = new StringBuilder(results.length * 7);
         relatedQuery.append("-stopWord:true ");
         for (final EntityDoc doc : results) {
-            //NPE?
-            relatedQuery.append(doc.get("relatedNumbers").replace(',', ' '));
+            String relatedNumbers = doc.get("relatedNumbers");
+            if(StringUtils.isNotBlank(relatedNumbers)) {
+                relatedQuery.append(relatedNumbers.replace(',', ' '));
+            }
         }
         return relatedQuery.toString();
     }

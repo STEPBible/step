@@ -12,6 +12,16 @@ ul .glyphicon-ok {
   ul .glyphicon-ok.active {
     visibility: visible; }
 
+.panel-heading {
+  padding: 2px 5px; }
+  .panel-heading h4 {
+    cursor: hand;
+    margin: 0px;
+    font-size: 12px; }
+
+.panel-group .panel + .panel {
+  margin-top: 3px; }
+
 .waiting {
   background-image: url(/images/wait16.gif);
   background-repeat: no-repeat; }
@@ -356,6 +366,23 @@ ul .glyphicon-ok {
 
 h4.lexicalGrouping {
   font-size: 12px; }
+  h4.lexicalGrouping .glyphicon {
+    margin-right: 10px; }
+
+.originalWordSearchToolbar {
+  clear: both;
+  padding-top: 5px; }
+  .originalWordSearchToolbar .panel-body {
+    padding: 5px; }
+  .originalWordSearchToolbar ul {
+    padding: 0px;
+    list-style: none;
+    margin-bottom: 0px; }
+  .originalWordSearchToolbar li {
+    padding: 0px; }
+  .originalWordSearchToolbar label {
+    margin: 0px;
+    font-weight: normal; }
 
 .resultsLabel {
   font-style: italic;
@@ -604,12 +631,13 @@ body::-webkit-scrollbar-corner {
   .active #sidebar {
     width: 20.83333%;
     overflow-y: scroll;
-    height: 100%; } }
-#sidebar li.closeSidebar {
+    height: 100%;
+    padding-right: 0px; } }
+#sidebar > ul > li.closeSidebar {
   float: right; }
-#sidebar li.active a {
+#sidebar > ul > li.active a {
   color: #991c32; }
-#sidebar li a {
+#sidebar > ul > li a {
   color: black;
   padding: 2 20 2 5; }
 
@@ -619,6 +647,8 @@ body::-webkit-scrollbar-corner {
 #lexicon h2 {
   font-size: 12px;
   margin-bottom: 0px; }
+#lexicon ul {
+  padding-left: 20px; }
 
 #animateWordle {
   font-size: 70%;
@@ -758,3 +788,24 @@ body::-webkit-scrollbar-corner {
 
 .hbFontMini {
   font-size: 130%; }
+
+.emphasisePassagePhrase {
+  background-color: #F3E5B4; }
+
+.relatedWordEmphasis {
+  text-decoration: underline; }
+
+.relatedWordEmphasisHover {
+  text-decoration: underline; }
+
+.primaryLightBg {
+  background-color: #ebebf1 !important; }
+
+.secondaryBackground {
+  background-color: #F3E5B4; }
+
+.segC0 {
+  color: #33339F; }
+
+.segC1 {
+  color: black; }

@@ -48,15 +48,35 @@ public class LexiconDefinitionServiceImpl implements LexiconDefinitionService {
         for (final EntityDoc lexiconDefinition : lexiconDefitions) {
             final String strongNumber = lexiconDefinition.get("strongNumber");
 
-            final LexiconSuggestion suggestion = new LexiconSuggestion();
-            suggestion.setGloss(lexiconDefinition.get("stepGloss"));
-            suggestion.setMatchingForm(lexiconDefinition.get("accentedUnicode"));
-            suggestion.setStepTransliteration(lexiconDefinition.get("stepTransliteration"));
-            suggestion.setStrongNumber(strongNumber);
-
+            final LexiconSuggestion suggestion = getLexiconSuggestion(lexiconDefinition, strongNumber);
             results.put(strongNumber, suggestion);
         }
 
         return results;
+    }
+
+    @Override
+    public LexiconSuggestion lookup(final String strongNumber) {
+        final EntityDoc[] lexiconDefinitions = this.definitions.searchSingleColumn("strongNumber",
+                strongNumber.toString());
+        if(lexiconDefinitions == null || lexiconDefinitions.length == 0) {
+            return null;
+        }
+        return getLexiconSuggestion(lexiconDefinitions[0], strongNumber);
+    }
+    
+    /**
+     * Converts the entity documents to its lexicon suggestion 
+     * @param lexiconDefinition the lexicon definition
+     * @param strongNumber the strong number
+     * @return the lexicon suggestion with transliteration, gloss, etc.
+     */
+    private LexiconSuggestion getLexiconSuggestion(final EntityDoc lexiconDefinition, final String strongNumber) {
+        final LexiconSuggestion suggestion = new LexiconSuggestion();
+        suggestion.setGloss(lexiconDefinition.get("stepGloss"));
+        suggestion.setMatchingForm(lexiconDefinition.get("accentedUnicode"));
+        suggestion.setStepTransliteration(lexiconDefinition.get("stepTransliteration"));
+        suggestion.setStrongNumber(strongNumber);
+        return suggestion;
     }
 }

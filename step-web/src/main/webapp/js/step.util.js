@@ -300,7 +300,7 @@ step.util = {
     restoreFontSize: function (passageModel, element) {
         var passageId = passageModel.get("passageId");
         var key = passageId + "-" + this.getMainLanguage(passageModel);
-        var fontSize = step.settings.at(0).get(key);
+        var fontSize = step.settings.get(key);
         if (fontSize && fontSize != 0) {
             element.css("font-size", fontSize);
         }
@@ -320,7 +320,7 @@ step.util = {
             var fontKey = passageId + "-" + fontClass;
             var diff = {};
             diff[fontKey] = newFontSize;
-            step.settings.at(0).save(diff);
+            step.settings.save(diff);
             $(elements[i]).css("font-size", newFontSize);
         }
         passageModel.trigger("font:change");

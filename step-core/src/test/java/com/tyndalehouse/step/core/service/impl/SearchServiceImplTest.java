@@ -93,6 +93,7 @@ public class SearchServiceImplTest {
         
         final JSwordSearchServiceImpl jswordSearch = new JSwordSearchServiceImpl(versificationService, null, jsword);
         return new SearchServiceImpl(jswordSearch, meta, new SubjectSearchServiceImpl(entityManager,
-                jswordSearch, jsword), new TimelineServiceImpl(entityManager, jsword), null, entityManager);
+                jswordSearch, jsword), new TimelineServiceImpl(entityManager, jsword), null, entityManager, TestUtils.mockVersionResolver(),
+                mock(LexiconDefinitionServiceImpl.class));
     }
 }

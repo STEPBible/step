@@ -46,7 +46,8 @@ var StepRouter = Backbone.Router.extend({
         var interlinearMode = activePassageModel.get("interlinearMode") || "";
         var pageNumber = activePassageModel.get("pageNumber");
         var context = activePassageModel.get("context");
-
+        var filter = activePassageModel.get("filter");
+        
         if (step.util.isBlank(context)) {
             activePassageModel.set({context: 0 }, { silent: true });
             context = 0;
@@ -73,6 +74,9 @@ var StepRouter = Backbone.Router.extend({
         }
         if (context != 0) {
             urlStub = this._addArg(urlStub, "context", context);
+        }
+        if (!step.util.isBlank(filter)) {
+            urlStub = this._addArg(urlStub, "qFilter", filter);
         }
         if ($.getUrlVars().indexOf("debug") != -1) {
             urlStub = this._addArg(urlStub, "debug");
@@ -153,7 +157,7 @@ var StepRouter = Backbone.Router.extend({
             query = $.getUrlVar("q") || "";
             options = $.getUrlVar("options");
             display = $.getUrlVar("display");
-            filter = $.getUrlVar("filter");
+            filter = $.getUrlVar("qFilter");
             context = $.getUrlVar("context");
         }
 
@@ -187,6 +191,8 @@ var StepRouter = Backbone.Router.extend({
                 case 'context':
                     context = value;
                     break;
+                case 'qFilter':
+                    filter = value;
             }
         }
 
@@ -196,13 +202,13 @@ var StepRouter = Backbone.Router.extend({
 
         //remove debug if present
         query = query.replace(/&debug/ig, "");
-
+        console.log(query, options, display, pageNumber, filter, context);
         $.getPassageSafe({
             url: SEARCH_MASTER,
             args: [query, options, display, pageNumber, filter, context],
             callback: function (text) {
                 text.startTime = startTime;
-
+                text.filter = text.strongHighlights;
                 var passageModel = step.passages.findWhere({ passageId: activePassageId});
                 if (passageModel == null) {
                     console.error("No passages defined for ", activePassageId);

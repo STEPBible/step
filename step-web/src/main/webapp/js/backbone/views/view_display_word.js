@@ -10,7 +10,7 @@ var WordDisplayView = TextDisplayView.extend({
      * @private
      */
     _doSpecificSearchRequirements: function (query, results, masterVersion) {
-        if (this.model.get("definitions")) {
+        if ((this.model.get("definitions") || []).length > 1) {
             //add a toolbar in there for each word
             results.prepend(this._createToolbar($("<div>").addClass("originalWordSearchToolbar")));
             return results;
@@ -50,83 +50,87 @@ var WordDisplayView = TextDisplayView.extend({
     /**
      * Creates the passageButtons
      */
-    _createToolbar : function(element) {
+    _createToolbar: function (element) {
         //render bar
-        var header = $("<h4>").addClass("lexicalGrouping").html(__s.search_lexical_forms);
-        var wrapper = $("<div>").append(header).append(this._renderToolbar()).append("<hr>");
-        element.append(wrapper);
-        
+        var header = $("<h4 data-toggle='collapse' href='#relatedWords'>")
+            .addClass("panel-title lexicalGrouping")
+            .append('<span class="glyphicon glyphicon-plus"></span>')
+            .append(__s.lexicon_related_words);
+
+        var panel = $("<div class='panel panel-default'>").append(header);
+        var wrapper = $("<div class='panel-heading'>").append(header);
+        panel.append(wrapper).append(this._renderToolbar())
+        element.append(panel);
         //allow for chaining
         return element;
     },
-
-    _renderToolbar : function() {
+    _renderToolbar: function () {
         var definitions = this.model.get("definitions");
         var values = this.options.model.get("filter") || [];
-        var toolbar = $("<div>").addClass("btn-group").attr("data-toggle", "buttons");
+        var toolbarContainer = $("<ul id='relatedWords'>").addClass("panel-collapse collapse");
+        var toolbar = $("<div class='panel-body'></div>");
 
         var self = this;
-        $.each(definitions, function(i, item) {
+        $.each(definitions, function (i, item) {
             var id = "ows_" + self.model.get("passageId") + "_" + i;
 
-            var span = $("<button>").addClass("sortable btn btn-xs btn-primary")
-                .attr("strong", item.strongNumber == undefined ? "" : item.strongNumber)
+            var span = $("<a class='' href='javascript:void(0)'>")
                 .attr("id", id)
-                .click(function() {
+                .click(function () {
+                    var thisEl = $(this).closest("li");
+                    var okIcon = thisEl.find(".glyphicon-ok");
+                    if (okIcon.hasClass("active")) {
+                        okIcon.removeClass("active");
+                    } else {
+                        okIcon.addClass("active");
+                    }
+
                     //get all selected checkboxes
-                    var options = $(this).closest(".originalWordSearchToolbar").find("button.active");
+                    var options = thisEl.closest("ul").find("li");
                     var filter = [];
-                    var thisEl = $(this);
-                    var activated = thisEl.hasClass("active");
-                    var thisStrong = thisEl.attr("strong");
-                    $.each(options, function(i, item) {
-                        var chosenStrong = $(this).attr("strong");
-                        if(chosenStrong != thisStrong || !activated) {
-                            filter.push(chosenStrong);
+                    $.each(options, function (i, item) {
+                        if($(this).find(".glyphicon").hasClass("active")) {
+                            filter.push($(this).attr("strongNumber"));
                         }
                     });
-                    
-                    //also put the current button which hasn't yet been made active
-                    if(!activated) {
-                        filter.push(thisStrong);
-                    }
-                    
-                    //bypass URL
+
                     self.model.save({filter: filter, pageNumber: 1}, { silent: true });
-                    step.router.doMasterSearch(self.model.get("args"), null, null, 1, filter.join(" "), 
-                        this.model.get("context"),true);
+                    step.router.navigateSearch();
                 });
 
-            var label = span.append("<label>").find(":last-child").attr("for", id);
-            label.append(item.stepTransliteration)
-                 .append($('<span>')
-                 .append("<br />")
-                 .append(item.matchingForm).addClass("ancientSearchButton"))
-                 .append("<br />");
+            span.append('<span class="glyphicon glyphicon-ok"></span>');
+            span.append(item.stepTransliteration).append(" (")
+                .append($('<span>')
+                    .append(item.matchingForm).addClass(item.strongNumber[0] == 'H' ? 'hbFontSmallMini' : "unicodeFontMini"));
 
-            if(item.gloss) {
-                label.append(item.gloss);
+            if (item.gloss) {
+                span.append(" - " + item.gloss);
             }
 
-            toolbar.append(span);
+            span.append(")");
+            var safeStrongNumber = item.strongNumber == undefined ? "" : item.strongNumber;
+            span.attr("strong", safeStrongNumber);
+            toolbar.append($("<li></li>")
+                .addClass("sortable")
+                .attr("strongNumber", safeStrongNumber).append(span));
         });
 
         //set up all the right filters
         var filterValues = self.model.get("filter") || [];
-        for(var i = 0; i < filterValues.length; i++) {
-            toolbar.find("[strong='" + filterValues[i] + "']").button('toggle');
+        for (var i = 0; i < filterValues.length; i++) {
+            toolbar.find("[strong='" + filterValues[i] + "']").find(".glyphicon-ok").addClass("active");
         }
         
         //now that it is attached to the dom, sort the elements
         var sortables = $(toolbar).find(".sortable");
-        sortables.sortElements(function(a, b) {
+        sortables.sortElements(function (a, b) {
             //push hebrew first..
-            var aText = $(a).find("input").val() || " ";
-            var bText = $(b).find("input").val() || " ";
+            var aText = $(a).attr("strongNumber") || " ";
+            var bText = $(b).attr("strongNumber") || " ";
 
-            if(bText[0] == 'H' && aText[0] == 'G') {
+            if (bText[0] == 'H' && aText[0] == 'G') {
                 return 1;
-            } else if(bText[0] == 'G' && aText[0] == 'H') {
+            } else if (bText[0] == 'G' && aText[0] == 'H') {
                 return -1;
             }
 
@@ -134,16 +138,28 @@ var WordDisplayView = TextDisplayView.extend({
         });
 
         //add hovers
-        sortables.hover(
-            function() {
+        sortables.find("a").hover(
+            function () {
                 step.passage.higlightStrongs({
                     passageId: step.passage.getPassageId(this),
-                    strong: $(this).find("input[type='checkbox']").val()
+                    strong: $(this).attr("strong"),
+                    classes: 'primaryLightBg'
                 });
-            }, function() {
-                step.passage.removeStrongsHighlights(step.passage.getPassageId(this));
+            }, function () {
+                step.passage.removeStrongsHighlights(step.passage.getPassageId(this), 'primaryLightBg');
             });
-
-        return toolbar;
+        toolbarContainer.append(toolbar);
+        
+        toolbarContainer.on("show.bs.collapse", function() {
+            step.settings.save({ relatedWordsOpen: true});
+        }).on("hide.bs.collapse", function() {
+            step.settings.save({ relatedWordsOpen: false});
+        });
+        
+        if(step.settings.get("relatedWordsOpen")) {
+            toolbarContainer.addClass("in");
+        }
+        
+        return toolbarContainer;
     }
 });

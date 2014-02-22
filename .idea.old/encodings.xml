@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding" useUTFGuessing="true" native2AsciiForPropertiesFiles="false">
+    <file url="file://$PROJECT_DIR$/../crosswire/jsword" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/step-assembly" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/step-build" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/step-core" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/step-packages" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/step-server" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/step-tools" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/step-war-precompiled" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/step-web" charset="UTF-8" />
+  </component>
+</project>
+

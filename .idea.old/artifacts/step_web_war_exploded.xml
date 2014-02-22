@@ -1,0 +1,55 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="step-web:war exploded">
+    <output-path>$PROJECT_DIR$/step-web/target/step-web</output-path>
+    <root id="root">
+      <element id="javaee-facet-resources" facet="step-web/web/Web" />
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="step-web" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="archive" name="step-core-1.4-SNAPSHOT.jar">
+            <element id="module-output" name="step-core" />
+          </element>
+          <element id="library" level="project" name="Maven: org.slf4j:slf4j-api:1.7.2" />
+          <element id="library" level="project" name="Maven: org.slf4j:slf4j-log4j12:1.7.2" />
+          <element id="library" level="project" name="Maven: log4j:log4j:1.2.17" />
+          <element id="archive" name="jsword-1.6.1-SNAPSHOT.jar">
+            <element id="module-output" name="jsword" />
+          </element>
+          <element id="library" level="project" name="Maven: org.slf4j:jcl-over-slf4j:1.7.2" />
+          <element id="library" level="project" name="Maven: org.apache.lucene:lucene-core:3.0.3" />
+          <element id="library" level="project" name="Maven: org.apache.lucene:lucene-snowball:3.0.3" />
+          <element id="library" level="project" name="Maven: org.apache.lucene:lucene-smartcn:3.0.3" />
+          <element id="library" level="project" name="Maven: org.apache.lucene:lucene-analyzers:3.0.3" />
+          <element id="library" level="project" name="Maven: javatar:javatar:2.5" />
+          <element id="library" level="project" name="Maven: org.jdom:jdom2:2.0.4" />
+          <element id="library" level="project" name="Maven: org.apache.httpcomponents:httpcore:4.2.3" />
+          <element id="library" level="project" name="Maven: org.apache.httpcomponents:httpclient:4.2.3" />
+          <element id="library" level="project" name="Maven: commons-codec:commons-codec:1.6" />
+          <element id="library" level="project" name="Maven: xalan:xalan:2.7.1" />
+          <element id="library" level="project" name="Maven: xalan:serializer:2.7.1" />
+          <element id="library" level="project" name="Maven: xml-apis:xml-apis:1.3.04" />
+          <element id="library" level="project" name="Maven: org.codehaus.jackson:jackson-mapper-asl:1.9.11" />
+          <element id="library" level="project" name="Maven: org.codehaus.jackson:jackson-core-asl:1.9.11" />
+          <element id="library" level="project" name="Maven: org.sonatype.sisu:sisu-guice:3.1.3" />
+          <element id="library" level="project" name="Maven: javax.inject:javax.inject:1" />
+          <element id="library" level="project" name="Maven: aopalliance:aopalliance:1.0" />
+          <element id="library" level="project" name="Maven: com.google.guava:guava:13.0.1" />
+          <element id="library" level="project" name="Maven: com.yammer.metrics:metrics-core:2.2.0" />
+          <element id="library" level="project" name="Maven: net.sf.opencsv:opencsv:2.3" />
+          <element id="library" level="project" name="Maven: joda-time:joda-time:2.1" />
+          <element id="library" level="project" name="Maven: org.slf4j:jul-to-slf4j:1.6.6" />
+          <element id="library" level="project" name="Maven: org.sonatype.sisu.inject:guice-servlet:3.1.3" />
+          <element id="library" level="project" name="Maven: com.yammer.metrics:metrics-guice:2.2.0" />
+          <element id="library" level="project" name="Maven: com.yammer.metrics:metrics-annotation:2.2.0" />
+          <element id="library" level="project" name="Maven: javax.servlet:jstl:1.2" />
+          <element id="library" level="project" name="Maven: com.yammer.metrics:metrics-servlet:2.2.0" />
+          <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.1.1" />
+          <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.1.1" />
+          <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-core:2.1.1" />
+        </element>
+      </element>
+    </root>
+  </artifact>
+</component>

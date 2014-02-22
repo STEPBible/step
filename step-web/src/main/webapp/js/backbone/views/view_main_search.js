@@ -51,7 +51,7 @@ var MainSearchView = Backbone.View.extend({
                     .append($("<a>").attr("data-toggle", "modal").attr("data-target", "#bibleVersions").append(__s.all_versions).attr("title", __s.all_versions)
                         .on("click", function () {
                             require(["menu_extras"], function () {
-                                new PickBibleView({ model: step.settings.at(0), searchView: view });
+                                new PickBibleView({ model: step.settings, searchView: view });
                             });
                         })).append($("<a>").append(__s.pick_passage).click(function () {
                         alert('hello2');
@@ -79,11 +79,11 @@ var MainSearchView = Backbone.View.extend({
                         switch (data[ii].itemType) {
                             case HEBREW:
                             case GREEK:
-                                text = data[ii].suggestion.matchingForm + " (" + data[ii].suggestion.stepTransliteration + " - " + data[ii].suggestion.gloss + ")";
+                                text = view._getAncientFirstRepresentation(data[ii].suggestion, data[ii].itemType == HEBREW);
                                 break;
                             case GREEK_MEANINGS:
                             case HEBREW_MEANINGS:
-                                text = data[ii].suggestion.gloss + " (" + data[ii].suggestion.stepTransliteration + " - " + data[ii].suggestion.matchingForm + ")";
+                                text = view._getEnglishFirstRepresentation(data[ii].suggestion, data[ii].itemType == HEBREW_MEANINGS);
                                 break;
                             case REFERENCE:
                                 text = data[ii].suggestion.fullName;
@@ -140,6 +140,12 @@ var MainSearchView = Backbone.View.extend({
             }
             return;
         });
+    },
+    _getAncientFirstRepresentation: function (item, hebrew) {
+        return '<span class="' + (hebrew ? 'hbFontMini' : 'unicodeFontMini') + '">' + item.matchingForm + "</span> (" + item.stepTransliteration + " - " + item.gloss + ")";
+    },
+    _getEnglishFirstRepresentation: function (item, hebrew) {
+        return item.gloss + " (" + item.stepTransliteration + " - " + '<span class="' + (hebrew ? 'hbFontMini' : 'unicodeFontMini') + '">' + item.matchingForm + "</span>)";
     },
     _getCurrentInitials: function () {
         var data = this.masterSearch.select2("data");
@@ -288,16 +294,16 @@ var MainSearchView = Backbone.View.extend({
                 ].join('');
                 break;
             case GREEK:
-                row = '<span class="source">[' + __s.search_greek + ']</span><span class="unicodeFontMini">' + v.text + '</span>';
+                row = '<span class="source">[' + __s.search_greek + ']</span>' + this._getAncientFirstRepresentation(v.item, false);
                 break;
             case GREEK_MEANINGS:
-                row = '<span class="source">[' + __s.search_greek_meaning + ']</span>' + v.text;
+                row = '<span class="source">[' + __s.search_greek_meaning + ']</span>' + this._getEnglishFirstRepresentation(v.item, false);
                 break;
             case HEBREW:
-                row = '<span class="source">[' + __s.search_hebrew + ']</span>' + '<span class="hbFontMini">' + v.text + '</span>';
+                row = '<span class="source">[' + __s.search_hebrew + ']</span>' + this._getAncientFirstRepresentation(v.item, true);
                 break;
             case HEBREW_MEANINGS:
-                row = '<span class="source">[' + __s.search_hebrew_meaning + ']</span>' + v.text;
+                row = '<span class="source">[' + __s.search_hebrew_meaning + ']</span>' + this._getEnglishFirstRepresentation(v.item, true);
                 break;
             case REFERENCE:
                 row = [
@@ -386,24 +392,38 @@ var MainSearchView = Backbone.View.extend({
         this.columnHolder.append(newColumn);
         step.util.activePassageId(newPassageId);
     },
-    _getPartialToken: function (tokenType, tokenValue) {
+    _getPartialToken: function (initialData, tokenItem) {
+        var tokenType = tokenItem.tokenType;
+        var token = tokenItem.token || "";
+        var enhancedInfo = tokenItem.enhancedTokenInfo;
+        
         switch (tokenType) {
             case VERSION:
-                return step.keyedVersions[tokenValue];
+                return step.keyedVersions[token];
             case REFERENCE:
-                return { fullName: tokenValue, shortName: tokenValue };
-            case GREEK:
-            case GREEK_MEANINGS:
-            case HEBREW:
-            case HEBREW_MEANINGS:
-                break;
+                return { fullName: enhancedInfo.name, shortName: enhancedInfo.osisKeyId };
+            case STRONG_NUMBER:
+                //we need to work out what kind of type this was before
+                for(var ii = 0; ii < initialData.length; ii++) {
+                    var previousType;
+                    if(initialData[ii].item && initialData[ii].item.strongNumber == token) {
+                        //we're a winner
+                        tokenItem.tokenType = initialData[ii].itemType;
+                    }
+                }
+                
+                //else default to something (in the future, we may change the URLs
+                if(token.length > 0 && token[0] == 'G') {
+                    tokenItem.tokenType = GREEK_MEANINGS;
+                } else {
+                    tokenItem.tokenType = HEBREW_MEANINGS;
+                }
+                
+                return enhancedInfo;
             case MEANINGS:
-                break;
-            //SUBJECT and TEXT and others share common funcitonality
             case SUBJECT_SEARCH:
             case TEXT_SEARCH:
-                break;
-                return null;
+                return token;
         }
     },
     syncWithUrl: function (model) {
@@ -411,12 +431,14 @@ var MainSearchView = Backbone.View.extend({
             model = step.util.activePassage();
         }
         
+        var initialData = this.masterSearch.select2("data");
+        
         //overwrite all the data
         var data = [];
         var tokens = model.get("searchTokens") || [];
         for (var i = 0; i < tokens.length; i++) {
             //check if the tokens are in the search box already... if so, then don't add them
-            data.push({ item: this._getPartialToken(tokens[i].tokenType, tokens[i].token), itemType: tokens[i].tokenType });
+            data.push({ item: this._getPartialToken(initialData, tokens[i]), itemType: tokens[i].tokenType });
         }
         this.masterSearch.select2("data", data);
     }

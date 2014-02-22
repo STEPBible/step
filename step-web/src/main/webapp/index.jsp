@@ -90,112 +90,111 @@
     </script>
 </head>
 <body xmlns:fb="http://ogp.me/ns/fb#">
-<!-- Wrap all page content here -->
-<div id="wrap">
-
-    <!-- Fixed navbar -->
-    <div class="navbar navbar-default navbar-fixed-top " >
-        <div>
-            <div class="navbar-header">
-                <div class="navbar-brand col-xs-1 col-sm-2 col-md-3">
-                    <span class="hidden-xs title">
-                        <a href="#">STEP</a>
-                        <br />
-                        <span class="subtitle">
-                            <span class="hidden-xs">Created by <br/></span>
-                            <a href="http://www.tyndale.cam.ac.uk" target="_blank">Tyndale House</a>
+    <!-- Wrap all page content here -->
+    <div id="wrap">
+    
+        <!-- Fixed navbar -->
+        <div class="navbar navbar-default navbar-fixed-top " >
+            <div>
+                <div class="navbar-header">
+                    <div class="navbar-brand col-xs-1 col-sm-2 col-md-3">
+                        <span class="hidden-xs title">
+                            <a href="#">STEP</a>
+                            <br />
+                            <span class="subtitle">
+                                <span class="hidden-xs">Created by <br/></span>
+                                <a href="http://www.tyndale.cam.ac.uk" target="_blank">Tyndale House</a>
+                            </span>
                         </span>
-                    </span>
-                </div>
-                <div class="col-xs-6 col-sm-6 col-md-6 search-form">
-                    <form role="form">
-                        <div class="form-group">
-                            <div class="input-group">
-                                <input id="masterSearch" type="text" class="form-control input-sm" placeholder="<fmt:message key="search_placeholder" />">
-                                <span class="input-group-btn">
-                                  <button class="btn btn-default btn-danger btn-sm" type="button">Search</button>
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-6 search-form">
+                        <form role="form">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <input id="masterSearch" type="text" class="form-control input-sm" placeholder="<fmt:message key="search_placeholder" />">
+                                    <span class="input-group-btn">
+                                      <button class="btn btn-default btn-danger btn-sm" type="button"><fmt:message key="find" /></button>
+                                    </span>
+                                </div>
+                                <span class="searchLinks">
+                                    <label for="openInNewPanel">
+                                        <fmt:message key="open_in_new_panel" />
+                                    </label>
+                                    <input type="checkbox" id="openInNewPanel" />
                                 </span>
                             </div>
-                            <span class="searchLinks">
-                                <label for="openInNewPanel">
-                                    <fmt:message key="open_in_new_panel" />
-                                </label>
-                                <input type="checkbox" id="openInNewPanel" />
-                            </span>
-                        </div>
-                    </form>
-                </div>
-                <div class="col-xs-1 col-sm-4 col-md-3 help">
-                    <jsp:include page="js/menu/top/menu.jsp" />
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="mainPanel row row-offcanvas">
-        <div class="" id='columnHolder'>
-            <div class="col-sm-6 col-xs-12 column">
-            <div class="passageContainer active" passage-id=0>
-                <span class="activeMarker"></span>
-                <div class="passageText ui-widget">
-                    <div class="btn-group pull-right passageOptionsGroup">
-                        <a class="btn btn-default btn-sm previousChapter" type="button" title="<fmt:message key="passage_previous_chapter" />">
-                            <span class="glyphicon glyphicon-arrow-left"></span></a>
-                        <a class="btn btn-default btn-sm nextChapter" type="button" title='<fmt:message key="passage_next_chapter" />'>
-                            <span class="glyphicon glyphicon-arrow-right"></span>
-                        </a>
-                        <%
-                            if(!appManager.isLocal()) {
-                        %>
-                        <div class="dropdown btn-group">
-                            <button class="btn btn-default btn-sm dropdown-share" data-toggle="dropdown" type="button" title="<fmt:message key="share" />">
-                                <span class="glyphicon glyphicon-thumbs-up"></span>
-                            </button>
-                        </div>
-                        <%
-                            }
-                        %>
-                        <button class="btn btn-default btn-sm showStats" type="button" title="<fmt:message key="passage_stats" />">
-                            <span class="glyphicon glyphicon-stats"></span></button>
-                        <div class="dropdown btn-group settingsDropdown">
-                            <button class="btn btn-default btn-sm dropdown-toggle showSettings" title="<fmt:message key="view" />" type="button" data-toggle="dropdown">
-                                <span class="glyphicon glyphicon-cog"></span>
-                            </button>
-                        </div>
-                        <button class="btn btn-default btn-sm closeColumn" title="<fmt:message key="close" />" type="button">
-                            <span class="glyphicon glyphicon-remove"></span>
-                        </button>
-                        
+                        </form>
                     </div>
-                    <div class="pull-right resultsLabel"></div>
-                    <div class="passageContent" itemprop="text">
-                        <c:choose>
-                            <c:when test="${ 'PASSAGE' eq searchType }">
-                                ${ passageText }
-                            </c:when>
-                            <c:otherwise>
-                                <span>
-                                    <div class="searchResults">
-                                        <c:forEach var="result" items="${ searchResults }">
-                                            <div class="searchResultRow">
-                                                <div class="searchResultRow">
-                                                    ${ result.preview }
-                                                </div>
-                                            </div>
-                                        </c:forEach>
-                                    </div>
-                                </span>
-                            </c:otherwise>
-                        </c:choose>
+                    <div class="col-xs-1 col-sm-4 col-md-3 help">
+                        <jsp:include page="js/menu/top/menu.jsp" />
                     </div>
                 </div>
             </div>
         </div>
-        </div>
-        <div class="sidebar-offcanvas" id="sidebar" role="navigation"></div>
-    </div>
     
-
+        <div class="mainPanel row row-offcanvas">
+            <div class="" id='columnHolder'>
+                <div class="col-sm-6 col-xs-12 column">
+                <div class="passageContainer active" passage-id=0>
+                    <span class="activeMarker"></span>
+                    <div class="passageText ui-widget">
+                        <div class="btn-group pull-right passageOptionsGroup">
+                            <a class="btn btn-default btn-sm previousChapter" type="button" title="<fmt:message key="passage_previous_chapter" />">
+                                <span class="glyphicon glyphicon-arrow-left"></span></a>
+                            <a class="btn btn-default btn-sm nextChapter" type="button" title='<fmt:message key="passage_next_chapter" />'>
+                                <span class="glyphicon glyphicon-arrow-right"></span>
+                            </a>
+                            <%
+                                if(!appManager.isLocal()) {
+                            %>
+                            <div class="dropdown btn-group">
+                                <button class="btn btn-default btn-sm dropdown-share" data-toggle="dropdown" type="button" title="<fmt:message key="share" />">
+                                    <span class="glyphicon glyphicon-thumbs-up"></span>
+                                </button>
+                            </div>
+                            <%
+                                }
+                            %>
+                            <button class="btn btn-default btn-sm showStats" type="button" title="<fmt:message key="passage_stats" />">
+                                <span class="glyphicon glyphicon-stats"></span></button>
+                            <div class="dropdown btn-group settingsDropdown">
+                                <button class="btn btn-default btn-sm dropdown-toggle showSettings" title="<fmt:message key="view" />" type="button" data-toggle="dropdown">
+                                    <span class="glyphicon glyphicon-cog"></span>
+                                </button>
+                            </div>
+                            <button class="btn btn-default btn-sm closeColumn" title="<fmt:message key="close" />" type="button">
+                                <span class="glyphicon glyphicon-remove"></span>
+                            </button>
+                            
+                        </div>
+                        <div class="pull-right resultsLabel"></div>
+                        <div class="passageContent" itemprop="text">
+                            <c:choose>
+                                <c:when test="${ 'PASSAGE' eq searchType }">
+                                    ${ passageText }
+                                </c:when>
+                                <c:otherwise>
+                                    <span>
+                                        <div class="searchResults">
+                                            <c:forEach var="result" items="${ searchResults }">
+                                                <div class="searchResultRow">
+                                                    <div class="searchResultRow">
+                                                        ${ result.preview }
+                                                    </div>
+                                                </div>
+                                            </c:forEach>
+                                        </div>
+                                    </span>
+                                </c:otherwise>
+                            </c:choose>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+            <div class="sidebar-offcanvas" id="sidebar" role="navigation"></div>
+        </div>
+    </div>
     <%
         if(request.getParameter("lang") == null) {
     %>

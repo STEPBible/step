@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/../biblica/biblica.iml" filepath="$PROJECT_DIR$/../biblica/biblica.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../crosswire/jsword/jsword.iml" filepath="$PROJECT_DIR$/../crosswire/jsword/jsword.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../crosswire/jsword/jsword.iml" filepath="$PROJECT_DIR$/../crosswire/jsword/jsword.iml" />
+      <module fileurl="file://$PROJECT_DIR$/step.iml" filepath="$PROJECT_DIR$/step.iml" />
+      <module fileurl="file://$PROJECT_DIR$/step-build/step-build.iml" filepath="$PROJECT_DIR$/step-build/step-build.iml" />
+      <module fileurl="file://$PROJECT_DIR$/step-core/step-core.iml" filepath="$PROJECT_DIR$/step-core/step-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/step-server/step-server.iml" filepath="$PROJECT_DIR$/step-server/step-server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/step-tools/step-tools.iml" filepath="$PROJECT_DIR$/step-tools/step-tools.iml" />
+      <module fileurl="file://$PROJECT_DIR$/step-web/step-web.iml" filepath="$PROJECT_DIR$/step-web/step-web.iml" />
+    </modules>
+  </component>
+</project>
+

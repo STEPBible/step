@@ -104,7 +104,7 @@ public class SearchPageController extends HttpServlet {
                     req.getParameter("options"),
                     req.getParameter("display"),
                     req.getParameter("page"),
-                    req.getParameter("filter"),
+                    req.getParameter("qFilter"),
                     req.getParameter("context"));
         } catch (Exception ex) {
             LOGGER.warn(ex.getMessage(), ex);
@@ -123,6 +123,7 @@ public class SearchPageController extends HttpServlet {
         try {
             text = this.search.masterSearch("reference=Mat.1|version=ESV", "HNV");
         } catch (Exception e) {
+            LOGGER.error("Default search failed", e);
             text = new OsisWrapper("", null, new String[]{"en"}, null, "ESV", InterlinearMode.NONE, "");
         }
         return text;

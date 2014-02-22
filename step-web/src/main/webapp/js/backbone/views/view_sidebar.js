@@ -44,7 +44,7 @@ var SidebarView = Backbone.View.extend({
             $.getSafe(MODULE_GET_INFO, [this.model.get("strong"), this.model.get("morph")], function (data) {
                 step.util.trackAnalytics("lexicon", "loaded", "time", new Date().getTime() - requestTime);
                 step.util.trackAnalytics("passage", "strong", self.model.get("strong"));
-                self.createDefinition(data, 0);
+                self.createDefinition(data);
             });
         } else if (this.model.get("mode") == 'analysis') {
             self.createAnalysis();
@@ -82,7 +82,7 @@ var SidebarView = Backbone.View.extend({
             this.analysisView.refresh();
         }
     },
-    createDefinition: function (data, activeWord) {
+    createDefinition: function (data) {
         //get definition tab
         this.lexicon.detach();
         this.lexicon.empty();
@@ -91,50 +91,102 @@ var SidebarView = Backbone.View.extend({
         this.lexicon.append(alternativeEntries);
         this.lexicon.append($("<h1>").append(__s.lexicon_vocab));
 
-        if (data.vocabInfos.length > 1) {
-            //multiple entries
-            this.lexicon.append($("<div>").append("### Multiple entries go here ###"));
+        if (data.vocabInfos.length == 0) {
+            return;
         }
 
-        if (data.vocabInfos.length > 0) {
-            var mainWord = data.vocabInfos[activeWord];
-            this.lexicon.append(
-                $("<div>").append($("<span>").addClass(mainWord.strongNumber[0] == 'H' ? "hbFontSmall" : "unicodeFont")
-                        .append(mainWord.accentedUnicode))
-                    .append(" (")
-                    .append(mainWord.stepTransliteration)
-                    .append("): ")
-                    .append(mainWord.shortDef || "")
-                    .append(" ")
-                    .append(mainWord.stepGloss)
-            );
+        if (data.vocabInfos.length > 1) {
+            //multiple entries
+            var panelGroup = $('<div class="panel-group" id="collapsedLexicon"></div>');
+            for (var i = 0; i < data.vocabInfos.length; i++) {
+                var item = data.vocabInfos[i];
+                var hebrew = data.vocabInfos[i].strongNumber == 'H';
+                var panelId = "lexicon-" + data.vocabInfos[i].strongNumber;
+                var panelTitle = item.stepGloss + " (" + item.stepTransliteration + " - " + '<span class="' + (hebrew ? 'hbFontSmall' : 'unicodeFont') + '">' + item.accentedUnicode + "</span>)";
+                var panelContentContainer = $('<div class="panel-collapse collapse">').attr("id", panelId);
+                var panelBody = panelContentContainer.append($('<div class="panel-body"></div>'));
+                panelContentContainer.append(panelBody);
+                if (i == data.vocabInfos.length - 1) {
+                    panelContentContainer.addClass("in");
+                }
 
-            // append the meanings
-            if (mainWord.mediumDef) {
-                this.lexicon.append($("<h2>").append(__s.lexicon_meaning));
-                this.lexicon.append(mainWord.mediumDef);
-            }
+                this._createWordPanel(panelBody, item);
+                var panelHeading = '<div class="panel-heading"><h4 class="panel-title" data-toggle="collapse" data-parent="#collapsedLexicon" data-target="#' + panelId + '"><a>' +
+                    panelTitle + '</a></h4></div>';
 
-            //longer definitions
-            if (mainWord.lsjDefs) {
-                this.lexicon.append($("<h2>").append(mainWord.strongNumber[0].toLowerCase() == 'g' ? __s.lexicon_lsj_definition : __s.lexicon_bdb_definition));
-                this.lexicon.append(mainWord.lsjDefs);
+                var panel = $('<div class="panel panel-default"></div>').append(panelHeading).append(panelContentContainer);
+                panelGroup.append(panel);
             }
+            this.lexicon.append(panelGroup);
 
-            if (mainWord.relatedNos) {
-                this.lexicon.append($("<h2>").append(__s.lexicon_related_words));
-                this.lexicon.append(mainWord.relatedNos);
-            }
+        } else {
+            this._createWordPanel(this.lexicon, data.vocabInfos[0]);
         }
         this.tabContainer.append(this.lexicon);
     },
+    _createWordPanel: function (panel, mainWord) {
+        panel.append(
+            $("<div>").append($("<span>").addClass(mainWord.strongNumber[0] == 'H' ? "hbFontSmall" : "unicodeFont")
+                .append(mainWord.accentedUnicode))
+                .append(" (")
+                .append(mainWord.stepTransliteration)
+                .append("): ")
+                .append(mainWord.shortDef || "")
+                .append(" ")
+                .append(mainWord.stepGloss)
+        );
+
+        panel
+            .append($("<a></a>").attr("href", "javascript:void(0)").data("strongNumber", mainWord.strongNumber).append(__s.lexicon_search_for_this_word).click(function () {
+                var args = "strong=" + encodeURIComponent($(this).data("strongNumber"));
+                step.util.activePassage().save({ filter: ""});
+                step.router.navigatePreserveVersions(args);
+            })).append('<br />')
+            .append($("<a></a>").attr("href", "javascript:void(0)").data("strongNumber", mainWord.strongNumber).append(__s.lexicon_search_for_all_related_words).click(function () {
+                var args = "strong=" + encodeURIComponent($(this).data("strongNumber"));
+                step.util.activePassage().save({ filter: "all"});
+                step.router.navigatePreserveVersions(args);
+            }));
+
+        // append the meanings
+        if (mainWord.mediumDef) {
+            panel.append($("<h2>").append(__s.lexicon_meaning));
+            panel.append(mainWord.mediumDef);
+        }
+
+        //longer definitions
+        if (mainWord.lsjDefs) {
+            panel.append($("<h2>").append(mainWord.strongNumber[0].toLowerCase() == 'g' ? __s.lexicon_lsj_definition : __s.lexicon_bdb_definition));
+            panel.append(mainWord.lsjDefs);
+        }
+
+        if (mainWord.relatedNos) {
+            panel.append($("<h2>").append(__s.lexicon_related_words));
+            var ul = $('<ul>');
+            for (var i = 0; i < mainWord.relatedNos.length; i++) {
+                var li = $("<li></li>").append($('<a href="javascript:void(0)">')
+                    .append(mainWord.relatedNos[i].stepTransliteration)
+                    .append(" (")
+                    .append(mainWord.relatedNos[i].matchingForm)
+                    .append(" - ")
+                    .append(mainWord.relatedNos[i].gloss)
+                    .append(")")
+                    .data("strongNumber", mainWord.relatedNos[i].strongNumber));
+                ul.append(li);
+            }
+            panel.append(ul);
+            panel.find("a").click(function () {
+                step.util.ui.showDef($(this).data("strongNumber"));
+            });
+        }
+    },
     _createTabHeadersContainer: function () {
-        var template = '<ul class="nav nav-tabs">' + 
+        var template = '<ul class="nav nav-tabs">' +
             '<li class="active"><a href="javascript:void(0)" class="glyphicon glyphicon-info-sign" title="<%= __s.original_word %>" data-toggle="tab" data-target="#lexicon"></li>' +
             '<li><a href="javascript:void(0)" class="glyphicon glyphicon-stats" title="<%= __s.passage_stats %>" data-toggle="tab" data-target="#analysis"></li>' +
             '<li><a href="javascript:void(0)" class="glyphicon glyphicon-bookmark" title="<%= __s.bookmarks_and_recent_texts %>" data-toggle="tab" data-target="#history"></li>' +
             '</ul>';
-        
+
         var tabContainer = $(_.template(template)());
 
         //add close button

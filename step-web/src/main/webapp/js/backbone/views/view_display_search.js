@@ -80,7 +80,7 @@ var SearchDisplayView = Backbone.View.extend({
 //        step.util.ui.doSocialButtons(this.$el.find(".searchToolbar"));
 
         this.doTitle();
-        step.util.ui.addStrongHandlers(passageId, this.$el);
+        step.util.ui.addStrongHandlers(passageId, this.$el.find(".searchResults"));
         step.util.ui.enhanceVerseNumbers(passageId, this.$el, this.model.get("masterVersion"));
 //        Backbone.Events.trigger("search:rendered:" + passageId);
     },

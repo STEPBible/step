@@ -17,3 +17,16 @@ ul .glyphicon-ok {
     visibility: visible;
   }
 }
+
+.panel-heading {
+  padding: 2px 5px;
+  h4 {
+    cursor: hand;
+    margin: 0px;
+    font-size: 12px;
+  }
+}
+
+.panel-group .panel + .panel {
+  margin-top: 3px;
+}

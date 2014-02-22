@@ -25,6 +25,30 @@
 
 h4.lexicalGrouping {
   font-size: $defaultFontSize;
+  .glyphicon {
+    margin-right: 10px;
+  }
+}
+
+.originalWordSearchToolbar {
+  clear: both;
+  padding-top: 5px;
+  
+  .panel-body {
+    padding: 5px;
+  }
+  ul {
+    padding: 0px;
+    list-style: none;
+    margin-bottom: 0px;
+  }
+  li {
+    padding: 0px;
+  }
+  label {
+    margin: 0px;
+    font-weight: normal;
+  }
 }
 
 .resultsLabel {

@@ -13,15 +13,10 @@ import java.util.regex.Pattern;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import com.tyndalehouse.step.core.exceptions.StepInternalException;
-import com.tyndalehouse.step.core.exceptions.UserExceptionType;
-import com.tyndalehouse.step.core.exceptions.ValidationException;
 import com.tyndalehouse.step.core.models.AbstractComplexSearch;
-import com.tyndalehouse.step.core.models.BookName;
 import com.tyndalehouse.step.core.models.SearchToken;
 import com.tyndalehouse.step.core.models.search.AutoSuggestion;
 import com.tyndalehouse.step.core.service.BibleInformationService;
-import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import com.tyndalehouse.step.core.service.search.SubjectSearchService;
 import com.tyndalehouse.step.core.utils.ConversionUtils;
 import org.slf4j.Logger;
@@ -161,7 +156,7 @@ public class SearchController {
             }
 
             String text = t.substring(indexOfPrefix + 1);
-            searchTokens.add(new SearchToken(text, t.substring(0, indexOfPrefix)));
+            searchTokens.add(new SearchToken(t.substring(0, indexOfPrefix), text));
         }
 
         int page = ConversionUtils.getValidInt(pageNumber, 1);

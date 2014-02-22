@@ -17,7 +17,7 @@
 
     StringBuilder sb = new StringBuilder(1024);
     for (Language l : languages) {
-        sb.append("<li><a lang='");
+        sb.append("<li><a onclick='window.localStorage.clear();' lang='");
         sb.append(l.getCode());
         sb.append("' href='./?lang=");
         sb.append(l.getCode());

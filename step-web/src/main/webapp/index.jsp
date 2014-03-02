@@ -3,6 +3,7 @@
 <%@page import="javax.servlet.jsp.jstl.core.Config"%>
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="bookmarks" tagdir="/WEB-INF/tags/bookmarks" %>
 <%@ page import="com.tyndalehouse.step.jsp.WebStepRequest" %>
@@ -167,7 +168,12 @@
                             </button>
                             
                         </div>
-                        <div class="pull-right resultsLabel"></div>
+                        <div class="pull-right resultsLabel">
+                            <c:if test="${'PASSAGE' ne searchType}">
+                                <c:set var="pageMessage" scope="request"><fmt:message key="paging_showing" /></c:set>
+                                <%= String.format((String) request.getAttribute("pageMessage"), (Integer) request.getAttribute("numResults")) %>
+                            </c:if>
+                        </div>
                         <div class="passageContent" itemprop="text">
                             <c:choose>
                                 <c:when test="${ 'PASSAGE' eq searchType }">
@@ -175,15 +181,60 @@
                                 </c:when>
                                 <c:otherwise>
                                     <span>
-                                        <div class="searchResults">
-                                            <c:forEach var="result" items="${ searchResults }">
-                                                <div class="searchResultRow">
-                                                    <div class="searchResultRow">
-                                                        ${ result.preview }
+                                        <%-- Do toolbar for original word search --%>
+                                        <c:if test="${ ('ORIGINAL_GREEK_RELATED' eq searchType or 'ORIGINAL_HEBREW_RELATED' eq searchType) and fn:length(definitions) gt 0  }">
+                                            <div class="originalWordSearchToolbar">
+                                                <div class="panel panel-default">
+                                                    <div class="panel-heading">
+                                                        <h4 data-toggle="collapse" href="#relatedWords" class="panel-title lexicalGrouping">
+                                                            <span class="glyphicon glyphicon-plus"></span>
+                                                            <fmt:message key="lexicon_related_words" />
+                                                        </h4>
                                                     </div>
+                                                        <div id="relatedWords" class="panel-body panel-collapse collapse">
+                                                            <ul class="panel-collapse"style="height: auto;">
+                                                                <c:forEach items="${definitions}" var="definition">
+                                                                    <%-- need to work out if the item is active --%>
+                                                                    <c:set var="isActive" value="false" />
+                                                                    <c:forEach var="item" items="${filter}">
+                                                                        <c:if test="${item eq definition.strongNumber}">
+                                                                            <c:set var="isActive" value="true" />
+                                                                        </c:if>
+                                                                    </c:forEach>
+                                                                    
+                                                                    <li class="sortable" strongnumber="${ definition.strongNumber}">
+                                                                        <a href="javascript:void(0)"strong="G0015">
+                                                                            <span class="glyphicon glyphicon-ok ${isActive ? 'active' : '' }"></span>
+                                                                            ${ definition.stepTransliteration }
+                                                                            (<span class="${fn:substring(definition.strongNumber, 0,1) == 'H' ?'hbFontMini' : 'unicodeFontMini'}">
+                                                                                ${ definition.matchingForm }
+                                                                            </span> - ${ definition.gloss} )
+                                                                        </a>
+                                                                    </li>
+                                                                </c:forEach>
+                                                            </ul>
+                                                        </div>
                                                 </div>
-                                            </c:forEach>
-                                        </div>
+                                            </div>
+                                        </c:if>   
+                                        
+                                        <c:choose>
+                                        <c:when test="${ 'SUBJECT_SIMPLE' eq searchType or 'SUBJECT_EXTENDED' eq searchType or 'SUBJECT_FULL' eq searchType }">
+                                        
+                                        </c:when>
+                                        <c:otherwise>
+                                            <div class="searchResults">
+                                                <c:forEach var="result" items="${ searchResults }">
+                                                    <div class="searchResultRow">
+                                                        <div class="searchResultRow">
+                                                                ${ result.preview }
+                                                        </div>
+                                                    </div>
+                                                </c:forEach>
+                                            </div>
+                                        </c:otherwise>
+                                        </c:choose>
+                                        
                                     </span>
                                 </c:otherwise>
                             </c:choose>

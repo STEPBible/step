@@ -24,6 +24,9 @@ var SearchDisplayView = Backbone.View.extend({
         
         this.render(false);
         this.listenTo(this.model, "newPage", this.renderAppend);
+        
+        //finished rendering, so reset the partial rendering flag
+        this.options.partRendered = false;
     },
     renderAppend: function() {
         this.render(true);
@@ -45,14 +48,16 @@ var SearchDisplayView = Backbone.View.extend({
         if(append) {
             this._updateTotalAppend(numReturned);
         } else {
-            this._updateTotal(this.model.get("total"), this.model.get("pageNumber"), numReturned);
+            this._updateTotal(this.model.get("total"));
         }
 
         var results;
-        if (total == 0 || results.length == 0) {
+        if (total == 0) {
             results = $("<div>").append(__s.search_no_search_results_found).addClass("notApplicable");
         } else {
-            results = this.renderSearch(results, query, this.masterVersion);
+            results = this.options.partRendered ? this.$el.find("> span") : this.renderSearch(results, query, this.masterVersion);
+            
+            this._addVerseClickHandlers(results);
             
             var strongHighlights = this.model.get("strongHighlights");
             if (strongHighlights) {
@@ -65,31 +70,48 @@ var SearchDisplayView = Backbone.View.extend({
 
         var passageId = this.model.get("passageId");
         step.util.restoreFontSize(this.model, results);
-//        step.fonts.redoTextSize(passageId, results);
 
         if(append) {
             this.$el.append(results);
         } else {
             var passageHtml = this._doSpecificSearchRequirements(query, results, this.model.get("masterVersion"));
-            step.util.ui.emptyOffDomAndPopulate(this.$el, passageHtml);
+            if(!this.options.partRendered) {
+                step.util.ui.emptyOffDomAndPopulate(this.$el, passageHtml);
+            } 
             this.getScrollableArea().scroll(function () {
                 self.getMoreResults();
             });
         }
-//        step.util.closeInfoErrors(passageId);
-//        step.util.ui.doSocialButtons(this.$el.find(".searchToolbar"));
 
         this.doTitle();
         step.util.ui.addStrongHandlers(passageId, this.$el.find(".searchResults"));
         step.util.ui.enhanceVerseNumbers(passageId, this.$el, this.model.get("masterVersion"));
-//        Backbone.Events.trigger("search:rendered:" + passageId);
+    },
+    //adds verse click handlers to open up the verse in a separate linked passage
+    _addVerseClickHandlers : function(results) {
+        results.find(".verseNumber").parent().click(function(ev) {
+            //make the active column the one that is being clicked on just in case
+            step.util.activePassageId(step.passage.getPassageId(this));
+            
+            //get linked passage, and if not exist, we need to create a new one...
+            //creates a new column, or sets the right column as active
+            step.util.createNewColumn(true);
+            
+            //now go to a new place. Let's be crazy about it as well, and simply chop off the last part
+            var verseRef =  $(this).attr("name");
+            var chapterRef = verseRef.substr(0, verseRef.lastIndexOf("."));
+            step.router.navigatePreserveVersions("reference=" + chapterRef);
+            
+            ev.stopPropagation();
+        });
+        
     },
     /**
      * returns the area on which we have attached the scroll event
      * @returns {*}
      */
     getScrollableArea: function () {
-        return this.$el.closest(".column");
+        return this.$el.closest(".passageContainer");
     }, getMoreResults: function () {
         var self = this;
         
@@ -124,7 +146,7 @@ var SearchDisplayView = Backbone.View.extend({
             
             //we don't want to update the page URL here
             this.model.save({pageNumber: newPageNumber}, { silent: true });
-            step.router.doMasterSearch(this.model.get("args"), null, null, newPageNumber, null, this.model.get("context"), true);
+            step.router.doMasterSearch(this.model.get("args"), null, null, newPageNumber, this.model.get("strongHighlights"), this.model.get("context"), true);
         }
     },
 
@@ -158,15 +180,9 @@ var SearchDisplayView = Backbone.View.extend({
         this.resultsLabel.html(sprintf(__s.paging_showing, this.currentTotal));
     },
     
-     _updateTotal: function (total, pageNumber, totalResultsReturned) {
-        //1 = 1 + (pg1 - 1) * 50, 51 = 1 + (pg2 -1) * 50
-        var pageSize = totalResultsReturned;
-        var start = total == 0 ? 0 : 1 + ((pageNumber - 1) * (this.options.paged ? pageSize : 1000000));
-        var end = pageNumber * pageSize;
-        end = end < total ? end : total;
-
+     _updateTotal: function (total) {
         this.currentTotal = total;
-        this.resultsLabel.html(sprintf(__s.paging_showing_x_to_y_out_of_z_results, start, end, total));
+        this.resultsLabel.html(sprintf(__s.paging_showing, total));
     },
 
     _highlightResults: function (results, query) {
@@ -261,5 +277,18 @@ var SearchDisplayView = Backbone.View.extend({
     _notApplicableMessage: function (results, message) {
         var notApplicable = $("<span>").addClass("notApplicable").html(message);
         results.append(notApplicable);
+    },
+    getVerseRow: function (masterVersion, table, contentGenerator, item) {
+        var newRow = $("<div>").addClass("searchResultRow");
+        var contentCell = $("<div>").addClass("searchResultRow");
+        newRow.append(contentCell);
+
+        if (contentGenerator != undefined) {
+            contentCell.append(contentGenerator(contentCell, item));
+        } else {
+            contentCell.append(item.preview);
+        }
+
+        table.append(newRow);
     }
 });

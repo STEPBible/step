@@ -56,21 +56,6 @@ var TextDisplayView = SearchDisplayView.extend({
      */
     doGroupHeader : function(table, result, sortOrder, lastHeader) {
         //by default, we don't group items
-    },
-
-    getVerseRow: function getVerseRow(masterVersion, table, contentGenerator, item) {
-        var newRow = $("<div>").addClass("searchResultRow");
-        var contentCell = $("<div>").addClass("searchResultRow");
-        newRow.append(contentCell);
-
-        if (contentGenerator != undefined) {
-            contentCell.append(contentGenerator(contentCell, item));
-        } else {
-            contentCell.append(item.preview);
-        }
-
-        table.append(newRow);
     }
-
 });
 

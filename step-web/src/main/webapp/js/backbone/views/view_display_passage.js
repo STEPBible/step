@@ -41,6 +41,7 @@ var PassageDisplayView = Backbone.View.extend({
             var languages = this.model.get("languageCode");
 
             if (this._isPassageValid(passageHtml, reference)) {
+                this.$el.closest(".passageContainer").find(".resultsLabel").html("");
                 this._warnIfNoStrongs(version);
                 this._doFonts(passageHtml, options, interlinearMode, languages);
                 this._doInlineNotes(passageHtml, passageId);
@@ -57,7 +58,6 @@ TODO:                this._addStrongHandlers(passageId, passageHtml);
                 this._doInterlinearDividers(passageHtml);
 //TODO:                this._doVersions(passageId, passageHtml, version, reference);
                 
-//TODO:                step.util.closeInfoErrors(passageId);
                 if(!this.partRendered) {
                     step.util.ui.emptyOffDomAndPopulate(this.$el, passageHtml);
                 }
@@ -65,7 +65,6 @@ TODO:                this._addStrongHandlers(passageId, passageHtml);
                 //needs to happen after appending to DOM
                 this._doChromeHack(undefined, passageHtml, interlinearMode, options);
                 this.doInterlinearVerseNumbers(passageHtml, interlinearMode, options);
-//                Backbone.Events.trigger("passage:rendered:" + passageId);
             }
         },
         _warnIfNoStrongs: function(masterVersion) {

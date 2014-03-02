@@ -5,11 +5,11 @@ var MainSearchView = Backbone.View.extend({
     },
     initialize: function () {
         this.masterSearch = this.$el.find("#masterSearch");
-        this.columnHolder = $("#columnHolder");
         this.openNewColumn = this.$el.find("#openInNewPanel");
 
-        _.bindAll(this);
         var view = this;
+        _.bindAll(this);
+        _.bindAll(view);
         this.listenTo(step.passages, "sync-update", this.syncWithUrl);
         this.listenTo(Backbone.Events, "search:add", this._appendVersions);
         this.listenTo(Backbone.Events, "search:remove", this._removeVersion);
@@ -23,7 +23,7 @@ var MainSearchView = Backbone.View.extend({
                         id += entry.item.fullName;
                         break;
                     case VERSION:
-                        id += entry.item.initials;
+                        id += entry.item.shortInitials;
                         break;
                     case GREEK:
                     case GREEK_MEANINGS:
@@ -110,7 +110,7 @@ var MainSearchView = Backbone.View.extend({
                     case REFERENCE:
                         return entry.item.shortName;
                     case VERSION:
-                        return "<div class='versionItem'>" + entry.item.initials + "</div>"
+                        return "<div class='versionItem'>" + entry.item.shortInitials + "</div>"
                     case GREEK:
                     case HEBREW:
                         var className = entry.itemType == GREEK ? "unicodeFont" : "hbFontMini";
@@ -140,6 +140,8 @@ var MainSearchView = Backbone.View.extend({
             }
             return;
         });
+        
+        this.masterSearch.select2("container").find("input[type='text']").on("keyup", this._handleKeyPressInSearch);
     },
     _getAncientFirstRepresentation: function (item, hebrew) {
         return '<span class="' + (hebrew ? 'hbFontMini' : 'unicodeFontMini') + '">' + item.matchingForm + "</span> (" + item.stepTransliteration + " - " + item.gloss + ")";
@@ -151,7 +153,7 @@ var MainSearchView = Backbone.View.extend({
         var data = this.masterSearch.select2("data");
         var initials = [];
         for (var i = 0; i < data.length; i++) {
-            initials.push(data[i].item.initials);
+            initials.push(data[i].item.shortInitials);
         }
         return initials;
     },
@@ -183,7 +185,7 @@ var MainSearchView = Backbone.View.extend({
             switch (options[ii].itemType) {
                 case VERSION:
                     args += options[ii].itemType + "=";
-                    args += encodeURIComponent(options[ii].item.initials);
+                    args += encodeURIComponent(options[ii].item.shortInitials);
                     break;
                 case REFERENCE:
                     args += options[ii].itemType + "=";
@@ -198,8 +200,14 @@ var MainSearchView = Backbone.View.extend({
                 case MEANINGS:
                     args += MEANINGS + "=" + encodeURIComponent(options[ii].item.gloss);
                     break;
-                //SUBJECT and TEXT and others share common funcitonality
                 case SUBJECT_SEARCH:
+                    switch(step.util.activePassage().get("subjectSearchType")) {
+                        case "SUBJECT_SIMPLE": args += SUBJECT_SEARCH + "=" + encodeURIComponent(options[ii].item);break;   
+                        case "SUBJECT_EXTENDED": args += NAVE_SEARCH + "=" + encodeURIComponent(options[ii].item);break;   
+                        case "SUBJECT_FULL":args += NAVE_SEARCH_EXTENDED + "=" + encodeURIComponent(options[ii].item); break;
+                        default: args += options[ii].itemType + "=" + encodeURIComponent(options[ii].item);
+                    }
+                    break;
                 case TEXT_SEARCH:
                 default:
                     args += options[ii].itemType + "=" + encodeURIComponent(options[ii].item);
@@ -213,7 +221,7 @@ var MainSearchView = Backbone.View.extend({
 
         //if we're wanting a new column, then create it right now
         if (this.openNewColumn.prop("checked")) {
-            this._createNewColumn();
+            step.util.createNewColumn();
         }
 
         step.router.navigateSearch(args);
@@ -235,13 +243,17 @@ var MainSearchView = Backbone.View.extend({
     matchDropdownEntry: function (term, textOrObject) {
         var regex = new RegExp("\\b" + term, "ig");
         if ($.type(textOrObject) === "string") {
+//            console.log("TERM TERM TERM", term, "TEXT", textOrObject);
             return textOrObject != null && textOrObject != "" && textOrObject.toLowerCase().match(regex);
         }
 
         switch (textOrObject.itemType) {
             case VERSION:
-                return this.matchDropdownEntry(term, textOrObject.item.initials) ||
+//                console.log("Term: ", term, "Text or Object:", textOrObject.item.initials, textOrObject.item.shortInitials, textOrObject.item.name)
+                var matches = this.matchDropdownEntry(term, textOrObject.item.initials) ||                 
+                    this.matchDropdownEntry(term, textOrObject.item.shortInitials) ||
                     this.matchDropdownEntry(term, textOrObject.item.name);
+                return matches;
             case GREEK_MEANINGS:
             case HEBREW_MEANINGS:
                 return this.matchDropdownEntry(term, textOrObject.item.gloss);
@@ -288,7 +300,7 @@ var MainSearchView = Backbone.View.extend({
                     '<div class="versionItem">',
                     '<span class="source">[' + __s.translation_commentary + ']</span>',
                     '<span class="features">' + step.util.ui.getFeaturesLabel(v.item) + '</span>',
-                    '<span class="initials">' + v.item.initials + '</span> - ',
+                    '<span class="initials">' + v.item.shortInitials + '</span> - ',
                     '<span class="name">' + v.item.name + '</span>',
                     '</div>'
                 ].join('');
@@ -328,70 +340,7 @@ var MainSearchView = Backbone.View.extend({
         window.Select2.util.markMatch(row, query.term, markup, escapeMarkup);
         return markup.join("");
     },
-    _createNewColumn: function () {
-        var columns = this.columnHolder.find(".column");
-        var columnsCount = columns.length;
-        var activeColumn = columns.has(".passageContainer.active");
-        var newColumn = activeColumn.clone();
-        var newPassageId = parseInt(step.passages.max(function (p) {
-            return parseInt(p.get("passageId"))
-        }).get("passageId")) + 1;
-        newColumn
-            .find(".passageContainer").attr("passage-id", newPassageId)
-            .find(".passageContent").remove();
-
-        //change the width all columns
-        var classesToRemove = "col-sm-12 col-sm-6 col-sm-4 col-sm-3 col-sm-5columns col-sm-2 col-sm-7columns col-sm-8columns col-sm-9columns col-sm-10columns col-sm-11columns col-sm-1";
-        columns.removeClass(classesToRemove);
-        newColumn.removeClass(classesToRemove);
-        var columnClass;
-        switch (columnsCount + 1) {
-            case 1:
-                columnClass = "col-sm-12";
-                break;
-            case 2:
-                columnClass = "col-sm-6";
-                break;
-            case 3:
-                columnClass = "col-sm-4";
-                break;
-            case 4:
-                columnClass = "col-sm-3";
-                break;
-            case 5:
-                columnClass = "col-sm-5columns";
-                break;
-            case 6:
-                columnClass = "col-sm-2";
-                break;
-            case 7:
-                columnClass = "col-sm-7columns";
-                break;
-            case 8:
-                columnClass = "col-sm-8columns";
-                break;
-            case 9:
-                columnClass = "col-sm-9columns";
-                break;
-            case 10:
-                columnClass = "col-sm-10columns";
-                break;
-            case 11:
-                columnClass = "col-sm-11columns";
-                break;
-            case 12:
-                columnClass = "col-sm-1";
-                break;
-            default:
-                columnClass = "col-sm-1";
-                alert("Not sure what to do here...");
-                break;
-        }
-        columns.addClass(columnClass);
-        newColumn.addClass(columnClass);
-        this.columnHolder.append(newColumn);
-        step.util.activePassageId(newPassageId);
-    },
+    
     _getPartialToken: function (initialData, tokenItem) {
         var tokenType = tokenItem.tokenType;
         var token = tokenItem.token || "";
@@ -402,6 +351,10 @@ var MainSearchView = Backbone.View.extend({
                 return step.keyedVersions[token];
             case REFERENCE:
                 return { fullName: enhancedInfo.name, shortName: enhancedInfo.osisKeyId };
+            case GREEK_MEANINGS:
+            case GREEK:
+            case HEBREW_MEANINGS:
+            case HEBREW:
             case STRONG_NUMBER:
                 //we need to work out what kind of type this was before
                 for(var ii = 0; ii < initialData.length; ii++) {
@@ -441,5 +394,14 @@ var MainSearchView = Backbone.View.extend({
             data.push({ item: this._getPartialToken(initialData, tokens[i]), itemType: tokens[i].tokenType });
         }
         this.masterSearch.select2("data", data);
+    },
+    _handleKeyPressInSearch : function(ev) {
+        if(ev.keyCode == 13) {
+            //check whether the container is open
+            if($(".select2-result-selectable").length == 0) {
+                // trigger search
+                this.search();
+            }
+        }
     }
 });

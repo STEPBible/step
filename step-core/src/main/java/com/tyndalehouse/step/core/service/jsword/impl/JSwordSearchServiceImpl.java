@@ -234,7 +234,7 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
         if(LOGGER.isDebugEnabled()) {
             LOGGER.debug("Trimmed down to [{}].", newResults.getCardinality());
         }
-        return getResultsFromTrimmedKeys(sq, new String[] { version }, total, newResults, options);
+        return getResultsFromTrimmedKeys(sq, new String[]{version}, total, newResults, options);
     }
 
     /**
@@ -338,21 +338,37 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
     @Override
     public Key rankAndTrimResults(final SearchQuery sq, final Key results) {
         rankResults(sq.isRanked(), results);
-
         final Passage passage = (Passage) results;
-
         if (!sq.isAllKeys()) {
-
             // we need the first pageNumber*PAGE_SIZE results, so remove anything beyond that.
-            passage.trimVerses(sq.getPageNumber() * sq.getPageSize());
-            Passage newResults = passage;
-
-            while (newResults.getCardinality() > sq.getPageSize()) {
-                newResults = newResults.trimVerses(sq.getPageSize());
-            }
-
-            return newResults;
+            return getPage(sq.getPageNumber(), sq.getPageSize(), passage);
         }
+        return results;
+    }
+
+    /**
+     * @param pageNumber the page number, 1 indexed
+     * @param pageSize the size of the page
+     * @param passage the passage we want to trim down
+     * @return the new results
+     */
+    private Passage getPage(final int pageNumber, final int pageSize, final Passage passage) {
+        Passage results = (Passage) PassageKeyFactory.instance().createEmptyKeyList(passage.getVersification());
+        Iterator<Key> verses = passage.iterator();
+        
+        //page 1 = 1-60
+        //page 2 = 61-120
+        int from = (pageNumber-1) * pageSize + 1;
+        int to = from + pageSize - 1;
+        int currentCount = 1;
+        while(verses.hasNext()) {
+            final Key verse = verses.next();
+            if(currentCount >= from && currentCount <= to) {
+                results.addAll(verse);
+            }
+            currentCount++;
+        }
+        
         return results;
     }
 

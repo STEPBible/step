@@ -46,7 +46,7 @@ var StepRouter = Backbone.Router.extend({
         var interlinearMode = activePassageModel.get("interlinearMode") || "";
         var pageNumber = activePassageModel.get("pageNumber");
         var context = activePassageModel.get("context");
-        var filter = activePassageModel.get("filter");
+        var filter = activePassageModel.get("strongHighlights");
         
         if (step.util.isBlank(context)) {
             activePassageModel.set({context: 0 }, { silent: true });
@@ -97,13 +97,13 @@ var StepRouter = Backbone.Router.extend({
     getShareableColumnUrl: function (element, encodeFragment) {
         return "http://www.stepbible.org/" + encodeURI(Backbone.history.fragment);
     },
-    handleSearchResults: function (text, passageModel, partRendered) {
+    handleSearchResults: function (passageModel, partRendered) {
         require(["search", "defaults"], function (module) {
-            if (text.pageNumber > 1) {
+            if (passageModel.get("pageNumber") > 1) {
                 passageModel.trigger("newPage");
             } else {
                 passageModel.trigger("destroyViews");
-                switch (text.searchType) {
+                switch (passageModel.get("searchType")) {
                     case "TEXT":
                         new TextDisplayView({
                             model: passageModel,
@@ -135,11 +135,11 @@ var StepRouter = Backbone.Router.extend({
             }
         });
     },
-    handleRenderModel: function (text, passageModel, partRendered) {
+    handleRenderModel: function (passageModel, partRendered) {
         //then trigger the refresh of menu options and such like
         passageModel.trigger("sync-update", passageModel);
 
-        if (text.searchType == 'PASSAGE') {
+        if (passageModel.get("searchType") == 'PASSAGE') {
             //destroy all views for this column
             passageModel.trigger("destroyViews");
             new PassageDisplayView({
@@ -147,7 +147,7 @@ var StepRouter = Backbone.Router.extend({
                 partRendered: partRendered
             });
         } else {
-            this.handleSearchResults(text, passageModel, partRendered);
+            this.handleSearchResults(passageModel, partRendered);
         }
     },
     doMasterSearch: function (query, options, display, pageNumber, filter, context, quiet) {
@@ -208,7 +208,7 @@ var StepRouter = Backbone.Router.extend({
             args: [query, options, display, pageNumber, filter, context],
             callback: function (text) {
                 text.startTime = startTime;
-                text.filter = text.strongHighlights;
+                text.linked = null;
                 var passageModel = step.passages.findWhere({ passageId: activePassageId});
                 if (passageModel == null) {
                     console.error("No passages defined for ", activePassageId);
@@ -223,7 +223,7 @@ var StepRouter = Backbone.Router.extend({
                     step.router.overwriteUrl();
                 }
 
-                self.handleRenderModel(text, passageModel, false);
+                self.handleRenderModel(passageModel, false);
             },
             passageId: activePassageId,
             level: 'error'

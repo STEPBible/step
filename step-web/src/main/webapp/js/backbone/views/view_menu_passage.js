@@ -387,6 +387,31 @@ var PassageMenuView = Backbone.View.extend({
     closeColumn : function() {
         this.model.trigger("destroy-column");
         this.column.remove();
+        
+        //make sure any model that was linked to it is undone
+        var passageId = parseInt(this.column.find("[passage-id]").attr("passage-id"));
+        
+        //remove any links to this passage
+        var linkedPassageIds = step.util.unlink(passageId);
+        
+        //also remove any links from this passage to another passage...
+        var linkTarget = this.model.get("linked");
+        if(linkTarget!= null) {
+            var linkTargetModel = step.passages.findWhere({ passageId: linkTarget });
+            if(linkTargetModel) {
+                //not much to do, except remove the icon
+                step.util.getPassageContainer(linkTargetModel.get("passageId")).find(".glyphicon-link").remove();
+            }
+        }
+        
+        if(linkedPassageIds.length > 0) {
+            step.util.activePassageId(linkedPassageIds[0]);
+        } else {
+            //let it reset on its on terms
+            step.util.activePassageId();
+        }
+        
+        this.model.destroy();
     },
     activateColumn : function() {
         var passageId = this.column.find("[passage-id]").attr("passage-id");

@@ -9,6 +9,8 @@ public class SearchToken implements Serializable {
     public static final String VERSION = "version";
     public static final String REFERENCE = "reference";
     public static final String SUBJECT_SEARCH = "subject";
+    public static final String NAVE_SEARCH = "nave";
+    public static final String NAVE_SEARCH_EXTENDED = "xnave";
     public static final String TEXT_SEARCH = "text";
     public static final String STRONG_NUMBER = "strong";
     public static final String GREEK_MEANINGS = "greekMeanings";

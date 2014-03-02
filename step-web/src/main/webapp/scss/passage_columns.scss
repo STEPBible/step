@@ -37,11 +37,26 @@
         position: absolute;
         top: $activeBorderWidth;
         left: 50%;
-        border-color: red;
+        border-color: $activeColor;
         border-top: 4px solid $activeColor;
         border-right: 4px solid transparent;
         border-bottom: 0 dotted;
         border-left: 4px solid transparent;
+      }
+      .glyphicon-link {
+          margin-left: -10px;
+          top: 50%;
+          left: 0;
+          font-size: 150%;
+          position: absolute;
+          -webkit-transform: rotate(-135deg);
+          -moz-transform: rotate(-135deg);
+          -ms-transform: rotate(-135deg);
+          -o-transform: rotate(-135deg);
+        
+        &:hover {
+          color: gray;
+        }
       }
     }
   }

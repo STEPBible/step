@@ -15,11 +15,17 @@
   .verseNumber {
     vertical-align: middle;
   }
-  br:first-child + .paragraph {
+  br, .startLineGroup {
     display: none;
   }
-  br:first-child {
-    display: none;
+  span {
+    &.level1, &.level2, &.level3, &.level4 {
+      padding: 0px;
+      margin: 0px;
+      &:before {
+        content: ' / ';
+      }
+    }
   }
 }
 
@@ -48,6 +54,16 @@ h4.lexicalGrouping {
   label {
     margin: 0px;
     font-weight: normal;
+  }
+}
+
+.subjectToolbar {
+  input[type='radio'] {
+    vertical-align: text-bottom;
+  }
+  label {
+    padding-right: 20px;
+    padding-left: 5px;
   }
 }
 

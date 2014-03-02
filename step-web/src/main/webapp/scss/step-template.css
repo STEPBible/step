@@ -359,10 +359,13 @@ ul .glyphicon-ok {
     content: "/"; }
 .searchResultRow .verseNumber {
   vertical-align: middle; }
-.searchResultRow br:first-child + .paragraph {
+.searchResultRow br, .searchResultRow .startLineGroup {
   display: none; }
-.searchResultRow br:first-child {
-  display: none; }
+.searchResultRow span.level1, .searchResultRow span.level2, .searchResultRow span.level3, .searchResultRow span.level4 {
+  padding: 0px;
+  margin: 0px; }
+  .searchResultRow span.level1:before, .searchResultRow span.level2:before, .searchResultRow span.level3:before, .searchResultRow span.level4:before {
+    content: ' / '; }
 
 h4.lexicalGrouping {
   font-size: 12px; }
@@ -383,6 +386,12 @@ h4.lexicalGrouping {
   .originalWordSearchToolbar label {
     margin: 0px;
     font-weight: normal; }
+
+.subjectToolbar input[type='radio'] {
+  vertical-align: text-bottom; }
+.subjectToolbar label {
+  padding-right: 20px;
+  padding-left: 5px; }
 
 .resultsLabel {
   font-style: italic;
@@ -415,11 +424,23 @@ h4.lexicalGrouping {
         position: absolute;
         top: 2px;
         left: 50%;
-        border-color: red;
+        border-color: #d74f4b;
         border-top: 4px solid #d74f4b;
         border-right: 4px solid transparent;
         border-bottom: 0 dotted;
         border-left: 4px solid transparent; }
+      #columnHolder .column .passageContainer .glyphicon-link {
+        margin-left: -10px;
+        top: 50%;
+        left: 0;
+        font-size: 150%;
+        position: absolute;
+        -webkit-transform: rotate(-135deg);
+        -moz-transform: rotate(-135deg);
+        -ms-transform: rotate(-135deg);
+        -o-transform: rotate(-135deg); }
+        #columnHolder .column .passageContainer .glyphicon-link:hover {
+          color: gray; }
 
 @media (min-width: 768px) {
   .col-sm-5columns, .col-sm-7columns, .col-sm-8columns, .col-sm-9columns, .col-sm-10columns, .col-sm-11columns {

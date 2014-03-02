@@ -1,5 +1,6 @@
 package com.tyndalehouse.step.rest.controllers;
 
+import com.tyndalehouse.step.core.models.AbstractComplexSearch;
 import com.tyndalehouse.step.core.models.ClientSession;
 import com.tyndalehouse.step.core.models.InterlinearMode;
 import com.tyndalehouse.step.core.models.OsisWrapper;
@@ -43,7 +44,7 @@ public class SearchPageController extends HttpServlet {
 
     @Override
     protected void doGet(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
-        Object text;
+        AbstractComplexSearch text;
         try {
             text = doSearch(req);
             setupRequestContext(req, text);
@@ -72,7 +73,7 @@ public class SearchPageController extends HttpServlet {
      * @param data the osisWrapper
      * @throws IOException
      */
-    private void setupRequestContext(final HttpServletRequest req, final Object data) throws IOException {
+    private void setupRequestContext(final HttpServletRequest req, final AbstractComplexSearch data) throws IOException {
         //global settings
         //set the language attributes once
         final Locale userLocale = this.clientSessionProvider.get().getLocale();
@@ -80,24 +81,27 @@ public class SearchPageController extends HttpServlet {
         req.setAttribute("languageName", ContemporaryLanguageUtils.capitaliseFirstLetter(userLocale
                 .getDisplayLanguage(userLocale)).replace("\"", ""));
         req.setAttribute("versions", objectMapper.get().writeValueAsString(modules.getAllModules()));
+        req.setAttribute("searchType", data.getSearchType().name());
 
         //specific to passages
         if (data instanceof OsisWrapper) {
             final OsisWrapper osisWrapper = (OsisWrapper) data;
             req.setAttribute("passageText", osisWrapper.getValue());
-            req.setAttribute("searchType", osisWrapper.getSearchType().name());
             osisWrapper.setValue(null);
             req.setAttribute("passageModel", objectMapper.get().writeValueAsString(osisWrapper));
         } else if (data instanceof SearchResult) {
             final SearchResult results = (SearchResult) data;
             req.setAttribute("searchResults", results.getResults());
+            req.setAttribute("definitions", results.getDefinitions());
+            req.setAttribute("filter", results.getStrongHighlights());
+            req.setAttribute("numResults", results.getTotal());
             results.setResults(null);
             req.setAttribute("passageModel", objectMapper.get().writeValueAsString(results));
         }
     }
 
-    private Object doSearch(final HttpServletRequest req) {
-        Object text;
+    private AbstractComplexSearch doSearch(final HttpServletRequest req) {
+        AbstractComplexSearch text;
         try {
             text = this.search.masterSearch(
                     req.getParameter("q"),
@@ -118,8 +122,8 @@ public class SearchPageController extends HttpServlet {
      *
      * @return Matt 1 or something else
      */
-    private Object getDefaultPassage() {
-        Object text;
+    private AbstractComplexSearch getDefaultPassage() {
+        AbstractComplexSearch text;
         try {
             text = this.search.masterSearch("reference=Mat.1|version=ESV", "HNV");
         } catch (Exception e) {

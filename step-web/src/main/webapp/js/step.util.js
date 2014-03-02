@@ -206,7 +206,16 @@ step.util = {
         return s.match(/^\s*$/g) != null;
     },
     activePassageId: function (val) {
-        var currentActivePassageId = parseInt($(".passageContainer.active").attr("passage-id"));
+        var activePassageEl = $(".passageContainer.active");
+        var currentActivePassageId;
+        if(activePassageEl.length == 0) {
+            //default to the first passage that is visible on the screen
+            activePassageEl = $(".passageContainer:first");
+            //force the setter to trigger 
+            currentActivePassageId = val = parseInt(activePassageEl.attr("passage-id"));
+        } else {
+            currentActivePassageId = parseInt(activePassageEl.attr("passage-id"));
+        }
         
         if(typeof val == 'string') {
             val = parseInt(val);
@@ -225,8 +234,9 @@ step.util = {
 
                 //override id to make sure it looks like it's new and gets persisted in local storage
                 newPassageModel.id = null;
+                
                 step.passages.add(newPassageModel);
-                newPassageModel.save({ passageId: val }, { silent: true });
+                newPassageModel.save({ passageId: val, createSilently: true }, { silent: true });
 
                 //create the click handlers for the passage menu
                 new PassageMenuView({
@@ -240,12 +250,117 @@ step.util = {
             
             //make the new panel active
             step.util.getPassageContainer(val).addClass("active").append('<span class="activeMarker"></span>');
+            return val;
         }
 
         return currentActivePassageId;
     },
     activePassage: function () {
         return step.passages.findWhere({ passageId: this.activePassageId() });
+    },
+    /**
+     * @param linked true to indicate we want to link this column with the current active column
+     * @private
+     */
+    createNewColumn: function (linked) {
+        
+        //if linked, then make sure we don't already have a linked column - if so, we'll simply use that.
+        var activePassageModel = this.activePassage();
+        if(linked) {
+            if(activePassageModel.get("linked") !== null) {
+                step.util.activePassageId(activePassageModel.get("linked"));
+                return;
+            }
+        }
+        
+        var columnHolder = $("#columnHolder");
+        var columns = columnHolder.find(".column");
+        var columnsCount = columns.length;
+        var activeColumn = columns.has(".passageContainer.active");
+        var newColumn = activeColumn.clone();
+        var newPassageId = parseInt(step.passages.max(function (p) {
+            return parseInt(p.get("passageId"))
+        }).get("passageId")) + 1;
+        newColumn
+            .find(".passageContainer").attr("passage-id", newPassageId)
+            .find(".passageContent").remove();
+
+        //change the width all columns
+        var classesToRemove = "col-sm-12 col-sm-6 col-sm-4 col-sm-3 col-sm-5columns col-sm-2 col-sm-7columns col-sm-8columns col-sm-9columns col-sm-10columns col-sm-11columns col-sm-1";
+        columns.removeClass(classesToRemove);
+        newColumn.removeClass(classesToRemove);
+        var columnClass;
+        switch (columnsCount + 1) {
+            case 1:
+                columnClass = "col-sm-12";
+                break;
+            case 2:
+                columnClass = "col-sm-6";
+                break;
+            case 3:
+                columnClass = "col-sm-4";
+                break;
+            case 4:
+                columnClass = "col-sm-3";
+                break;
+            case 5:
+                columnClass = "col-sm-5columns";
+                break;
+            case 6:
+                columnClass = "col-sm-2";
+                break;
+            case 7:
+                columnClass = "col-sm-7columns";
+                break;
+            case 8:
+                columnClass = "col-sm-8columns";
+                break;
+            case 9:
+                columnClass = "col-sm-9columns";
+                break;
+            case 10:
+                columnClass = "col-sm-10columns";
+                break;
+            case 11:
+                columnClass = "col-sm-11columns";
+                break;
+            case 12:
+                columnClass = "col-sm-1";
+                break;
+            default:
+                columnClass = "col-sm-1";
+                alert("Not sure what to do here...");
+                break;
+        }
+        columns.addClass(columnClass);
+        newColumn.addClass(columnClass);
+        
+        
+        if(linked) {
+            //passed in 'true', so we need to append at the right location  
+            newColumn.insertAfter(activeColumn);
+            var link = $("<span class='glyphicon glyphicon-link'></span>").click(function() {
+                //unlink all passages
+                step.util.unlink(newPassageId);
+            });
+            newColumn.find(".passageContainer").append(link);
+            activePassageModel.save({ linked: newPassageId }, { silent: true });
+        } else {
+            columnHolder.append(newColumn);
+        }
+        
+        step.util.activePassageId(newPassageId);
+        return newPassageId; 
+    },
+    unlink: function(newPassageId) {
+        var models = step.passages.where({ linked: newPassageId });
+        var linkedPassageIds = [];
+        for(var i = 0; i < models.length; i++) {
+            linkedPassageIds.push(models[i].get("passageId"));
+            models[i].save({ linked: null });
+        }
+        step.util.getPassageContainer(newPassageId).find(".glyphicon-link").remove();
+        return linkedPassageIds;
     },
     isSeptuagintVersion: function (item) {
         return $.inArray(item.initials || item, step.util.septuagintVersions) != -1;

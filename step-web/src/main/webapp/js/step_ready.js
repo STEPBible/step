@@ -8,6 +8,7 @@
             var item = { item: tempVersion, itemType : 'version' };
             step.itemisedVersions.push(item);
             step.keyedVersions[tempVersion.initials] = tempVersion;
+            step.keyedVersions[tempVersion.shortInitials] = tempVersion;
         }
         //save 100k of space
         window.tempVersions = null;
@@ -22,6 +23,10 @@
             setting.save();
         }
         step.settings = settings.at(0);
+        
+        //override some particular settings to avoid UI shifting on load:
+        //we never open up a related words section
+        step.settings.save({ relatedWordsOpen: false });
     };
 
     function initSearchDropdown() {
@@ -72,15 +77,14 @@
                 step.passages.add(modelZero);
             }
             modelZero.save(window.tempModel);
-
+            
+            //reset some attributes that weren't on the model to start with (because of space reasons)
+            modelZero.save({ results: null, value: "", linked: null}, {silent: true});
             new PassageMenuView({
                 model: modelZero
             });
 
-            new PassageDisplayView({
-                model: modelZero,
-                partRendered: true
-            });
+            step.router.handleRenderModel(modelZero, true);
 
             $(".helpMenuTrigger").one('click', function () {
                 require(["view_help_menu"], function () {

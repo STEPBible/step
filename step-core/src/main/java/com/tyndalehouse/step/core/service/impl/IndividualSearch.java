@@ -100,10 +100,15 @@ public class IndividualSearch {
     public IndividualSearch(final SearchType type, final List<String> versions,
                             final String query, final String range, final String[] filter) {
         this.type = type;
-        this.query = query;
         this.mainRange = range;
         this.versions = versions.toArray(new String[versions.size()]);
         this.originalFilter = filter;
+        
+        if(this.type == SearchType.SUBJECT_SIMPLE) {
+            this.query = LuceneIndex.FIELD_HEADING + ":" + QueryParser.escape(query);
+        } else {
+            this.query = query;
+        }
     }
     
     /**

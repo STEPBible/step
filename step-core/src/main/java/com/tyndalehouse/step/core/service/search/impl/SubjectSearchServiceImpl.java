@@ -56,6 +56,8 @@ import javax.inject.Inject;
 import java.util.*;
 
 import static com.tyndalehouse.step.core.models.LookupOption.HEADINGS_ONLY;
+import static com.tyndalehouse.step.core.models.LookupOption.TINY_VERSE_NUMBERS;
+import static com.tyndalehouse.step.core.models.LookupOption.VERSE_NUMBERS;
 import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
 
 /**
@@ -213,10 +215,10 @@ public class SubjectSearchServiceImpl implements SubjectSearchService {
      * @return the results
      */
     private SearchResult searchSimple(final SearchQuery sq) {
-        sq.setAllKeys(true);
+//        sq.setAllKeys(true);
 
         final SearchResult headingsSearch = this.jswordSearch.search(sq,
-                sq.getCurrentSearch().getVersions()[0], HEADINGS_ONLY);
+                sq.getCurrentSearch().getVersions()[0], HEADINGS_ONLY, VERSE_NUMBERS);
 
         // build the results and then return
         final SubjectHeadingSearchEntry headings = new SubjectHeadingSearchEntry();

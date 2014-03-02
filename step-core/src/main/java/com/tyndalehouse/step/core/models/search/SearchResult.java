@@ -3,6 +3,7 @@ package com.tyndalehouse.step.core.models.search;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.SortedSet;
 
 import com.tyndalehouse.step.core.models.AbstractComplexSearch;
 import com.tyndalehouse.step.core.models.LexiconSuggestion;
@@ -21,7 +22,7 @@ public class SearchResult extends AbstractComplexSearch implements Serializable 
     private List<SearchEntry> results;
     private List<String> strongHighlights;
     private String order;
-    private List<LexiconSuggestion> definitions;
+    private SortedSet<LexiconSuggestion> definitions;
     private String[] languageCode;
     private int pageSize;
     private int pageNumber;
@@ -140,14 +141,14 @@ public class SearchResult extends AbstractComplexSearch implements Serializable 
     /**
      * @return the definitions
      */
-    public List<LexiconSuggestion> getDefinitions() {
+    public SortedSet<LexiconSuggestion> getDefinitions() {
         return this.definitions;
     }
 
     /**
      * @param definitions the definitions to set
      */
-    public void setDefinitions(final List<LexiconSuggestion> definitions) {
+    public void setDefinitions(final SortedSet<LexiconSuggestion> definitions) {
         this.definitions = definitions;
     }
 

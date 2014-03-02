@@ -85,6 +85,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import static com.tyndalehouse.step.core.service.helpers.OriginalWordUtils.STRONG_NUMBER_FIELD;
 import static com.tyndalehouse.step.core.service.helpers.OriginalWordUtils.convertToSuggestion;
@@ -137,7 +139,7 @@ public class SearchServiceImpl implements SearchService {
     public SearchServiceImpl(final JSwordSearchService jswordSearch,
                              final JSwordMetadataService jswordMetadata,
                              final SubjectSearchService subjects, final TimelineService timeline,
-                             final BibleInformationService bibleInfoService, 
+                             final BibleInformationService bibleInfoService,
                              final EntityManager entityManager,
                              final VersionResolver versionResolver,
                              final LexiconDefinitionService lexiconDefinitionService) {
@@ -171,13 +173,12 @@ public class SearchServiceImpl implements SearchService {
 
     @Override
     public AbstractComplexSearch runQuery(final List<SearchToken> searchTokens, final String options,
-                           final String display, final int page, final String filter, int context) {
+                                          final String display, final int page, final String filter, int context) {
+        boolean hasSearches = false;
         final List<String> versions = new ArrayList<String>(4);
         final StringBuilder references = new StringBuilder();
-        final List<String> strongSearches = new ArrayList<String>(1);
-        final List<String> textSearches = new ArrayList<String>(1);
-        final List<String> meaningSearches = new ArrayList<String>(1);
 
+        //first pass - get the set of versions and references
         for (SearchToken token : searchTokens) {
             if (SearchToken.VERSION.equals(token.getTokenType())) {
                 versions.add(token.getToken());
@@ -186,33 +187,29 @@ public class SearchServiceImpl implements SearchService {
                     references.append(';');
                 }
                 references.append(token.getToken());
-            } else if (SearchToken.STRONG_NUMBER.equals(token.getTokenType())) {
-                strongSearches.add(token.getToken());
-            } else if (SearchToken.TEXT_SEARCH.equals(token.getTokenType())) {
-                textSearches.add(token.getToken());
-            } else if (SearchToken.MEANINGS.equals(token.getTokenType())) {
-                meaningSearches.add(token.getToken());
+            } else {
+                //any other token means at least 1 search
+                hasSearches = true;
             }
         }
 
+        //now default the version and references
         if (versions.size() == 0) {
             versions.add(JSwordPassageService.REFERENCE_BOOK);
             searchTokens.add(new SearchToken("version", JSwordPassageService.REFERENCE_BOOK));
         }
-        
-        //if we have no searches, then we need to default the reference
-        if(strongSearches.size() == 0 && 
-                textSearches.size() == 0 && 
-                meaningSearches.size() == 0 &&
-                references.length() == 0) {
+
+        if (!hasSearches && references.length() == 0) {
             references.append(DEFAULT_REFERENCE);
             searchTokens.add(new SearchToken("reference", DEFAULT_REFERENCE));
         }
 
+        //second pass add all 
+
         final AbstractComplexSearch complexSearch = runCorrectSearch(
                 versions, references.toString(),
                 options, StringUtils.isBlank(display) ? InterlinearMode.NONE.name() : display,
-                strongSearches, textSearches, meaningSearches, page, filter, context);
+                searchTokens, page, filter, context);
         enhanceSearchTokens(versions.get(0), searchTokens);
         complexSearch.setSearchTokens(searchTokens);
         return complexSearch;
@@ -224,26 +221,28 @@ public class SearchServiceImpl implements SearchService {
      * for references, we return the keywraper <p />
      * for strong numbers, we return the lexicon suggestion <p />
      * for everything else, null.
+     *
      * @param masterVersion the master version to use looking up references and so on.
-     * @param searchTokens a list of search tokens
+     * @param searchTokens  a list of search tokens
      * @return with enhanced meta data if any
      */
+
     private void enhanceSearchTokens(final String masterVersion, final List<SearchToken> searchTokens) {
-        for(SearchToken st : searchTokens) {
+        for (SearchToken st : searchTokens) {
             final String tokenType = st.getTokenType();
-            if(SearchToken.VERSION.equals(tokenType)) {
+            if (SearchToken.VERSION.equals(tokenType)) {
                 //probably need to show the short initials
                 BibleVersion version = new BibleVersion();
                 version.setInitials(this.versionResolver.getLongName(tokenType));
                 version.setShortInitials(this.versionResolver.getShortName(tokenType));
                 st.setEnhancedTokenInfo(version);
-            } else if(SearchToken.REFERENCE.equals(tokenType)) {
+            } else if (SearchToken.REFERENCE.equals(tokenType)) {
                 //could take the key but that has all parts combined
                 st.setEnhancedTokenInfo(this.bibleInfoService.getKeyInfo(st.getToken(), masterVersion, masterVersion));
-            } else if(SearchToken.STRONG_NUMBER.equals(tokenType)) {
+            } else if (SearchToken.STRONG_NUMBER.equals(tokenType)) {
                 //hit the index and look up that strong number...
                 st.setEnhancedTokenInfo(this.lexiconDefinitionService.lookup(st.getToken()));
-            } 
+            }
             //nothing to do 
             // for subject searches or 
             // for text searches or 
@@ -258,29 +257,39 @@ public class SearchServiceImpl implements SearchService {
      * @param references     the list of references
      * @param options        the options
      * @param displayMode    the display mode
-     * @param strongSearches the strong searches
-     * @param textSearches   a list of text searches
      * @param context        amount of context to be used in searhc
      * @return the results
      */
     private AbstractComplexSearch runCorrectSearch(final List<String> versions, final String references,
-                                    final String options, final String displayMode,
-                                    final List<String> strongSearches,
-                                    final List<String> textSearches,
-                                    final List<String> meaningSearches,
-                                    final int pageNumber,
-                                    final String filter,
-                                    final int context) {
+                                                   final String options, final String displayMode,
+                                                   final List<SearchToken> searchTokens,
+                                                   final int pageNumber,
+                                                   final String filter,
+                                                   final int context) {
         final List<IndividualSearch> individualSearches = new ArrayList<IndividualSearch>(2);
         String[] filters = null;
         if (StringUtils.isNotBlank(filter)) {
             filters = StringUtils.split(filter, "[ ,]+");
         }
 
+        for (SearchToken st : searchTokens) {
+            if (SearchToken.STRONG_NUMBER.equals(st.getTokenType())) {
+                addWordSearches(versions, references, st.getToken(), filters, individualSearches);
+            } else if (SearchToken.MEANINGS.equals(st.getTokenType())) {
+                addSearch(SearchType.ORIGINAL_MEANING, versions, references, st.getToken(), filters, individualSearches);
+            } else if (SearchToken.TEXT_SEARCH.equals(st.getTokenType())) {
+                addSearch(SearchType.TEXT, versions, references, st.getToken(), null, individualSearches);
+            } else if (SearchToken.SUBJECT_SEARCH.equals(st.getTokenType())) {
+                addSearch(SearchType.SUBJECT_SIMPLE, versions, references, st.getToken(), null, individualSearches);
+            }  else if (SearchToken.NAVE_SEARCH.equals(st.getTokenType())) {
+                addSearch(SearchType.SUBJECT_EXTENDED, versions, references, st.getToken(), null, individualSearches);
+            }  else if (SearchToken.NAVE_SEARCH_EXTENDED.equals(st.getTokenType())) {
+                addSearch(SearchType.SUBJECT_FULL, versions, references, st.getToken(), null, individualSearches);
+            } else {
+                //ignore and do nothing - generally references and versions which have been parsed already
+            }
+        }
         //we will prefer a word search to anything else...
-        addWordSearches(versions, references, strongSearches, filters, individualSearches);
-        addSearch(SearchType.ORIGINAL_MEANING, versions, references, meaningSearches, filters, individualSearches);
-        addSearch(SearchType.TEXT, versions, references, textSearches, null, individualSearches);
 
         if (individualSearches.size() != 0) {
             return this.search(new SearchQuery(pageNumber, context, displayMode, individualSearches.toArray(new IndividualSearch[individualSearches.size()])));
@@ -294,13 +303,11 @@ public class SearchServiceImpl implements SearchService {
      * @param searchType         the type of search
      * @param versions           the list of versions
      * @param references         the list of references
-     * @param searches           the searches that we want to perform
+     * @param searchTerm         the search term
      * @param individualSearches the searches to perform
      */
-    private void addSearch(final SearchType searchType, final List<String> versions, final String references, final List<String> searches, final String[] filter, final List<IndividualSearch> individualSearches) {
-        for (final String search : searches) {
-            individualSearches.add(new IndividualSearch(searchType, versions, search, getInclusion(references), filter));
-        }
+    private void addSearch(final SearchType searchType, final List<String> versions, final String references, final String searchTerm, final String[] filter, final List<IndividualSearch> individualSearches) {
+        individualSearches.add(new IndividualSearch(searchType, versions, searchTerm, getInclusion(references), filter));
     }
 
     /**
@@ -308,37 +315,37 @@ public class SearchServiceImpl implements SearchService {
      *
      * @param versions           the list of versions
      * @param references         the list of references
-     * @param strongSearches     the strong searches
+     * @param strong             the strong number/criteria
      * @param individualSearches the searches to perform
      */
     private void addWordSearches(final List<String> versions, final String references,
-                                 final List<String> strongSearches, final String[] filters,
+                                 String strong, final String[] filters,
                                  final List<IndividualSearch> individualSearches) {
-        for (final String strong : strongSearches) {
-            String[] filtersForSearch = filters;
-            if(filters == null || filters.length == 0) {
-                filtersForSearch = new String[] { strong };
-            } else if(filters.length == 1 && NO_FILTER.equals(filters[0])) {
-                filtersForSearch = new String[0];
-            }
-            
-            boolean isGreek = strong.charAt(0) == 'G';
-            individualSearches.add(new IndividualSearch(
-                    isGreek ? SearchType.ORIGINAL_GREEK_RELATED : SearchType.ORIGINAL_HEBREW_RELATED,
-                    versions, strong, getInclusion(references), filtersForSearch));
+        String[] filtersForSearch = filters;
+        if (filters == null || filters.length == 0) {
+            filtersForSearch = new String[]{strong};
+        } else if (filters.length == 1 && NO_FILTER.equals(filters[0])) {
+            filtersForSearch = new String[0];
         }
+
+        boolean isGreek = strong.charAt(0) == 'G';
+        individualSearches.add(new IndividualSearch(
+                isGreek ? SearchType.ORIGINAL_GREEK_RELATED : SearchType.ORIGINAL_HEBREW_RELATED,
+                versions, strong, getInclusion(references), filtersForSearch));
     }
+
+
 
     /**
      * @param references wraps the references in a jsword-lucene query syntax
      * @return the string of references
      */
     private String getInclusion(final String references) {
-        if(references == null) {
+        if (references == null) {
             return null;
         }
-        
-        if("".equals(references.trim())) {
+
+        if ("".equals(references.trim())) {
             return "";
         }
         return String.format("+[%s]", references);
@@ -585,7 +592,33 @@ public class SearchServiceImpl implements SearchService {
      * @param lexiconDefinitions the definitions that have been included in the search
      */
     private void setDefinitionForResults(final SearchResult result, final List<EntityDoc> lexiconDefinitions) {
-        final List<LexiconSuggestion> suggestions = new ArrayList<LexiconSuggestion>();
+        final SortedSet<LexiconSuggestion> suggestions = new TreeSet<LexiconSuggestion>(new Comparator<LexiconSuggestion>() {
+
+            @Override
+            public int compare(final LexiconSuggestion a, final LexiconSuggestion b) {
+                //push hebrew first..
+                String aText = a.getStrongNumber();
+                String bText = b.getStrongNumber();
+
+                if (aText == null && bText == null) {
+                    return 0;
+                } else if (StringUtils.isBlank(aText)) {
+                    return 1;
+                } else if (StringUtils.isBlank(bText)) {
+                    return 1;
+                }
+
+                final char aFirst = aText.charAt(0);
+                final char bFirst = bText.charAt(0);
+                if (bFirst == 'H' && aFirst == 'G') {
+                    return 1;
+                } else if (bFirst == 'G' && aFirst == 'H') {
+                    return -1;
+                }
+
+                return aText.compareTo(bText);
+            }
+        });
         for (final EntityDoc def : lexiconDefinitions) {
             suggestions.add(convertToSuggestion(def));
         }
@@ -759,7 +792,7 @@ public class SearchServiceImpl implements SearchService {
                 throw new TranslatedException("search_unknown");
         }
     }
-    
+
     /**
      * Runs a query against the JSword modules backends
      *
@@ -1081,7 +1114,7 @@ public class SearchServiceImpl implements SearchService {
         relatedQuery.append("-stopWord:true ");
         for (final EntityDoc doc : results) {
             String relatedNumbers = doc.get("relatedNumbers");
-            if(StringUtils.isNotBlank(relatedNumbers)) {
+            if (StringUtils.isNotBlank(relatedNumbers)) {
                 relatedQuery.append(relatedNumbers.replace(',', ' '));
             }
         }
@@ -1224,7 +1257,8 @@ public class SearchServiceImpl implements SearchService {
 
         final MultiFieldQueryParser queryParser = new MultiFieldQueryParser(Version.LUCENE_30, new String[]{
                 "simplifiedTransliteration", "stepTransliteration", "otherTransliteration"},
-                this.definitions.getAnalyzer());
+                this.definitions.getAnalyzer()
+        );
 
         try {
             final Query luceneQuery = queryParser.parse("-stopWord:true " + lowerQuery);
@@ -1408,7 +1442,7 @@ public class SearchServiceImpl implements SearchService {
 
         int total = results.getCardinality();
         final Key pagedKeys = this.jswordSearch.rankAndTrimResults(sq, results);
-        
+
         // retrieve scripture content and set up basics
         final SearchResult resultsForKeys = this.jswordSearch.getResultsFromTrimmedKeys(sq, currentSearch.getVersions(), total, pagedKeys);
         resultsForKeys.setTotal(this.jswordSearch.getTotal(results));

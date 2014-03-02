@@ -1,55 +1,51 @@
 var SubjectDisplayView = SearchDisplayView.extend({
     titleFragment: __s.search_subject,
+    searchTypeToolbar: '<div class="subjectToolbar">' +
+        '<input <%= selected[0] %> type="radio" name="subjectSearchType" value="" id="<%= passageId %>_esvHeadings" />' +
+        '<label for="<%= passageId %>_esvHeadings"><%= __s.search_subject_esv_headings %></label>' +
+        '<input <%= selected[1] %> type="radio" name="subjectSearchType" value="" id="<%= passageId %>_nave" />' +
+        '<label for="<%= passageId %>_nave"><%= __s.search_subject_nave %></label>' +
+        '<input <%= selected[2] %> type="radio" name="subjectSearchType" value="" id="<%= passageId %>_extendedNave" />' +
+        '<label for="<%= passageId %>_extendedNave"><%= __s.search_subject_nave_extended %></label>' +
+        '</div>',
 
-    initialize: function () {
+initialize: function () {
         SearchDisplayView.prototype.initialize.call(this);
         this.hasPages = false;
     },
 
-    renderSearch: function (query, masterVersion) {
+    renderSearch: function (results, masterVersion) {
         console.log("Rendering subject search results");
-        var query = step.util.undoReplaceSpecialChars(this.model.get("query"));
-
-        if (query.startsWith("s=")) {
-            return this._doSimpleSubjectSearchResults(masterVersion, query, this.model.get("results"));
+        var searchType = this.model.get("searchType");
+        
+        if (searchType == 'SUBJECT_SIMPLE') {
+            return this._doSimpleSubjectSearchResults(masterVersion, this.model.get("results"));
         } else {
             //if we're looking at a search that was override, then let's overwrite the various variables of interest
-            var subjectType = this.model.get("subjectSearchType");
-            var returnedSearchType = this.model.getReverseSearchTypePrefix(query.substring(0, query.indexOf('=') + 1));
+//            var returnedSearchType = this.model.getReverseSearchTypePrefix(query.substring(0, query.indexOf('=') + 1));
             
-            if(subjectType != returnedSearchType) {
-                this.model.save({ subjectSearchType : returnedSearchType });
-            }
+//            if(subjectType != returnedSearchType) {
+//                this.model.save({ subjectSearchType : returnedSearchType });
+//            }
             
             //caters for s+=, s++= and sr=
-            return this._doNaveSearchResults(query, this.model.get("results"));
+            return this._doNaveSearchResults(this.model.get("results"));
         }
     },
 
     /**
      * Displays the first level of search
-     * @param query the query syntax that was sent
      * @param searchResults the results
      * @returns {*|jQuery}
      * @private
      */
-    _doSimpleSubjectSearchResults: function (masterVersion, query, searchResults) {
-        var results = $("<table>").addClass("subjectSection searchResults simpleSubjectSearch");
+    _doSimpleSubjectSearchResults: function (masterVersion, searchResults) {
+        var results = $("<div>").addClass("subjectSection searchResults simpleSubjectSearch");
         var headingsSearch = searchResults[0].headingsSearch;
         var headingsResults = headingsSearch.results;
 
         for (var i = 0; i < headingsResults.length; i++) {
-            var item = $("<tr>");
-            var button = $("<td>").addClass("subjectHeading").passageButtons({
-                passageId: this.model.get("passageId"),
-                ref: headingsResults[i].key,
-                showChapter: true,
-                version: masterVersion
-            });
-
-            item.append(button);
-            item.append($("<td>").append(headingsResults[i].preview));
-            results.append(item);
+            this.getVerseRow(masterVersion, results, null, headingsResults[i]);
         }
         return results;
     },
@@ -73,6 +69,7 @@ var SubjectDisplayView = SearchDisplayView.extend({
 
             //find the current model type
             var currentSubjectType = model.get("subjectSearchType");
+            
             var i = 0;
             for (var i = 0; i < step.defaults.search.subject.subjectTypes.length; i++) {
                 if (currentSubjectType == step.defaults.search.subject.subjectTypes[i]) {
@@ -81,9 +78,9 @@ var SubjectDisplayView = SearchDisplayView.extend({
             }
 
             model.save({
-                subjectSearchType: step.defaults.search.subject.subjectTypes[(i + 1) % step.defaults.search.subject.subjectTypes.length]
+                subjectSearchType: currentSubjectType
             });
-            model.trigger("search", model);
+//            model.trigger("search", model);
         });
 
         //add the buttons and results
@@ -105,23 +102,16 @@ var SubjectDisplayView = SearchDisplayView.extend({
      * @param query the query syntax that was used to search
      * @private
      */
-    _doSpecificSearchRequirements: function (query, results, masterVersion) {
-        var undoneQuery = step.util.undoReplaceSpecialChars(query);
+    _doSpecificSearchRequirements: function (query, results) {
+        var passageId = this.model.get("passageId");
+        var searchType = this.model.get("searchType");
+        var checked = [searchType == 'SUBJECT_SIMPLE' ? 'checked' : "",
+                searchType == 'SUBJECT_EXTENDED' ? 'checked' : "", 
+                searchType == 'SUBJECT_FULL' ? 'checked' : ""];
 
-        if (undoneQuery.startsWith("s=")) {
-            return this._addMoreSubjectButton(query, results, __s.subject_search_first);
-        } else if (undoneQuery.startsWith("s+=")) {
-            var wrappedSearchResults = this._addMoreSubjectButton(query, results, __s.subject_search_second);
-            this._addSubjectExpandHandlers(masterVersion, query, results);
-            return wrappedSearchResults;
-        } else if (undoneQuery.startsWith("s++=")) {
-            var wrappedSearchResults = this._addMoreSubjectButton(query, results, __s.subject_search_third);
-            this._addSubjectExpandHandlers(masterVersion, query, results);
-            return wrappedSearchResults;
-        } else if (undoneQuery.startsWith("sr=")) {
-            this._addSubjectExpandHandlers(masterVersion, query, results);
-            return results;
-        }
+        var searchTypes = $(_.template(this.searchTypeToolbar)({ passageId: passageId, selected: checked }));
+        results.prepend(searchTypes);
+        return results;
     },
 
     resetExpandableItems: function (results) {
@@ -228,7 +218,7 @@ var SubjectDisplayView = SearchDisplayView.extend({
         });
     },
 
-    _doNaveSearchResults: function (query, searchResults) {
+    _doNaveSearchResults: function (searchResults) {
         var results = $("<span>").addClass("searchResults");
 
         var lastHeader = "";

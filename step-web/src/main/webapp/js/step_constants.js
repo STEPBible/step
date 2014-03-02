@@ -12,6 +12,8 @@ HEBREW_MEANINGS = "hebrewMeanings";
 HEBREW = "hebrew";
 STRONG_NUMBER = "strong";
 MEANINGS = "meanings";
+NAVE_SEARCH = "nave";
+NAVE_SEARCH_EXTENDED = "xnave";
 
 DS_VERSIONS = "allVersions";
 BOOKMARKS_GET =                     STEP_SERVER_BASE_URL + "favourites/getBookmarks";

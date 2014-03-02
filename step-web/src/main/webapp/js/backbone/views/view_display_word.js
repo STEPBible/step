@@ -66,9 +66,9 @@ var WordDisplayView = TextDisplayView.extend({
     },
     _renderToolbar: function () {
         var definitions = this.model.get("definitions");
-        var values = this.options.model.get("filter") || [];
-        var toolbarContainer = $("<ul id='relatedWords'>").addClass("panel-collapse collapse");
-        var toolbar = $("<div class='panel-body'></div>");
+        var values = this.options.model.get("strongHighlights") || [];
+        var toolbar = $("<ul>");
+        var toolbarContainer = $("<div id='relatedWords' class='panel-body panel-collapse collapse'></div>");
 
         var self = this;
         $.each(definitions, function (i, item) {
@@ -94,7 +94,7 @@ var WordDisplayView = TextDisplayView.extend({
                         }
                     });
 
-                    self.model.save({filter: filter, pageNumber: 1}, { silent: true });
+                    self.model.save({strongHighlights: filter, pageNumber: 1}, { silent: true });
                     step.router.navigateSearch();
                 });
 
@@ -116,27 +116,12 @@ var WordDisplayView = TextDisplayView.extend({
         });
 
         //set up all the right filters
-        var filterValues = self.model.get("filter") || [];
-        for (var i = 0; i < filterValues.length; i++) {
-            toolbar.find("[strong='" + filterValues[i] + "']").find(".glyphicon-ok").addClass("active");
+        for (var i = 0; i < values.length; i++) {
+            toolbar.find("[strong='" + values[i] + "']").find(".glyphicon-ok").addClass("active");
         }
         
         //now that it is attached to the dom, sort the elements
         var sortables = $(toolbar).find(".sortable");
-        sortables.sortElements(function (a, b) {
-            //push hebrew first..
-            var aText = $(a).attr("strongNumber") || " ";
-            var bText = $(b).attr("strongNumber") || " ";
-
-            if (bText[0] == 'H' && aText[0] == 'G') {
-                return 1;
-            } else if (bText[0] == 'G' && aText[0] == 'H') {
-                return -1;
-            }
-
-            return aText < bText ? -1 : 1;
-        });
-
         //add hovers
         sortables.find("a").hover(
             function () {

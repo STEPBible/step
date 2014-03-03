@@ -217,16 +217,21 @@
                                         </c:if>   
                                         
                                         <c:choose>
-                                        <c:when test="${ 'SUBJECT_SIMPLE' eq searchType or 'SUBJECT_EXTENDED' eq searchType or 'SUBJECT_FULL' eq searchType }">
-                                            <%-- Do search toolbar --%>
-                                            <div class="subjectToolbar">
-                                                <input <c:if test="${ 'SUBJECT_SIMPLE' eq searchType }">checked="checked"</c:if> type="radio" name="subjectSearchType" 
-                                                       value="subject" id="0_esvHeadings"><label for="0_esvHeadings"><fmt:message key="search_subject_esv_headings" /></label>
-                                                <input type="radio" <c:if test="${ 'SUBJECT_EXTENDED' eq searchType }">checked="checked"</c:if> name="subjectSearchType" 
-                                                       value="nave" id="0_nave"><label for="0_nave"><fmt:message key="search_subject_nave" /></label>
-                                                <input type="radio" <c:if test="${ 'SUBJECT_FULL' eq searchType }">checked="checked"</c:if> name="subjectSearchType" 
-                                                       value="xnave" id="0_extendedNave"><label for="0_extendedNave"><fmt:message key="search_subject_nave_extended" /></label>
-                                            </div>
+                                        <c:when test="${ 'SUBJECT_SIMPLE' eq searchType or 
+                                            'SUBJECT_EXTENDED' eq searchType or 
+                                            'SUBJECT_FULL' eq searchType or 
+                                            'SUBJECT_RELATED' eq searchType }">
+                                            <c:if test="${ 'SUBJECT_RELATED' ne searchType }">
+                                                <%-- Do search toolbar --%>
+                                                <div class="subjectToolbar">
+                                                    <input <c:if test="${ 'SUBJECT_SIMPLE' eq searchType }">checked="checked"</c:if> type="radio" name="subjectSearchType" 
+                                                           value="subject" id="0_esvHeadings"><label for="0_esvHeadings"><fmt:message key="search_subject_esv_headings" /></label>
+                                                    <input type="radio" <c:if test="${ 'SUBJECT_EXTENDED' eq searchType }">checked="checked"</c:if> name="subjectSearchType" 
+                                                           value="nave" id="0_nave"><label for="0_nave"><fmt:message key="search_subject_nave" /></label>
+                                                    <input type="radio" <c:if test="${ 'SUBJECT_FULL' eq searchType }">checked="checked"</c:if> name="subjectSearchType" 
+                                                           value="xnave" id="0_extendedNave"><label for="0_extendedNave"><fmt:message key="search_subject_nave_extended" /></label>
+                                                </div>
+                                            </c:if>
                                             <c:choose>
                                                 <c:when test="${ 'SUBJECT_SIMPLE' eq searchType }">
                                                     <search:display_results results="${searchResults[0].headingsSearch.results }" />
@@ -234,7 +239,7 @@
                                                 <c:otherwise>
                                                     <div class="panel-group subjectSection searchResults">
                                                         <c:set var="previousHeading" value="not-set" />
-                                                        <c:forEach var="result" items="${ searchResults }">
+                                                        <c:forEach var="result" items="${ searchResults }" varStatus="count">
                                                             
                                                             <c:if test="${ previousHeading ne result.root }">
                                                                 <h4 class="subjectHeading">${ result.root }</h4>
@@ -246,10 +251,10 @@
                                                                       <c:if test="${ not empty result.seeAlso }">seeAlso="${result.seeAlso}"</c:if>  
                                                                 >
                                                                     <div class="panel-heading">
-                                                                        <h4 data-toggle="collapse" href="#subject-results-3" class="panel-title expandableSearchHeading">
+                                                                        <h4 data-toggle="collapse" href="#subject-results-${ count.index }" class="panel-title expandableSearchHeading">
                                                                         <span class="glyphicon glyphicon-plus"></span>${ result.heading }</h4></div>
                                                                     <div class="results panel-collapse collapse"
-                                                                         id="subject-results-3"><fmt:message key="results_loading" /></div>
+                                                                         id="subject-results-${ count.index }"><fmt:message key="results_loading" /></div>
                                                                 </div>
                                                         </c:forEach>
                                                     </div>

@@ -43,6 +43,7 @@ var MainSearchView = Backbone.View.extend({
                         id += (entry.item.searchTypes || []).join("-") + ":" + entry.item.value;
                         break;
                     case MEANINGS:
+                    case TOPIC_BY_REF:
                     default:
                         id += entry.item;
                         break;
@@ -59,10 +60,14 @@ var MainSearchView = Backbone.View.extend({
                             require(["menu_extras"], function () {
                                 new PickBibleView({ model: step.settings, searchView: view });
                             });
-                        })).append($("<a>").append(__s.pick_passage).click(function () {
-                        alert('hello2');
-                    })).append($("<a>").append(__s.search_advanced).click(function () {
-                        alert("'advanced searched'");
+                        })).append($("<a>").append(__s.pick_passage).on('click', function () {
+                            require(["menu_extras"], function () {
+                                console.log("hi - pick passage");
+                            });
+                    })).append($("<a>").append(__s.search_advanced).on('click', function () {
+                        require(["menu_extras"], function () {
+                            new AdvancedSearchView({ searchView: view });
+                        });
                     }));
                 var container = $("<span>").append(labels).append(message);
                 return  container;
@@ -106,6 +111,7 @@ var MainSearchView = Backbone.View.extend({
                                 item = data[ii].suggestion;
                                 
                                 if(data[ii].suggestion.wholeBook) {
+                                    //allow selection of whole book
                                     datum.push({ text: data[ii].suggestion.fullName, item: data[ii].suggestion, itemType: data[ii].itemType, 
                                         itemSubType: 'bookSelection' });
                                 }
@@ -160,7 +166,7 @@ var MainSearchView = Backbone.View.extend({
             formatSelectionCssClass: view.formatResultCssClass
         }).on("select2-selecting", function (event) {
             if (event.object && event.object.itemType == REFERENCE && event.object.item.wholeBook && 
-                event.object.itemSubType == 'bookSelection') {
+                !event.object.itemSubType) {
                 event.preventDefault();
                 var select2Input = $(this);
                 self._addSpecificContext(REFERENCE, event.object.item.shortName );
@@ -193,7 +199,7 @@ var MainSearchView = Backbone.View.extend({
     },
     _appendVersions: function (data) {
         var originalData = this.masterSearch.select2("data");
-        originalData.push({ item: data.version, itemType: 'version'});
+        originalData.push({ item: data.value, itemType: data.itemType});
         this.masterSearch.select2("data", originalData);
     },
     _removeVersion: function (data) {
@@ -260,6 +266,9 @@ var MainSearchView = Backbone.View.extend({
                             args += options[ii].itemType + "=" + encodeURIComponent(options[ii].item);
                     }
                     args += "=" + encodeURIComponent(options[ii].item.value);
+                    break;
+                case TOPIC_BY_REF:
+                    args += options[ii].itemType + "=" + encodeURIComponent(options[ii].item.text);
                     break;
                 case TEXT_SEARCH:
                 default:
@@ -478,8 +487,11 @@ var MainSearchView = Backbone.View.extend({
                 return { value: token, searchTypes: ["SUBJECT_EXTENDED"] };
             case NAVE_SEARCH_EXTENDED:
                 return { value: token, searchTypes: ["SUBJECT_FULL"] };
+            case TOPIC_BY_REF:
+                return { text: token };
             case MEANINGS:
             case TEXT_SEARCH:
+            default:
                 return token;
         }
     },

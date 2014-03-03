@@ -18,6 +18,7 @@ public class SearchToken implements Serializable {
     public static final String GREEK = "greek";
     public static final String HEBREW = "hebrew";
     public static final String MEANINGS = "meanings";
+    public static final String TOPIC_BY_REF = "topicref";
 
     private Object enhancedTokenInfo;
     private final String token;

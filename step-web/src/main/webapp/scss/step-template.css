@@ -238,6 +238,15 @@ ul .glyphicon-ok {
   background: -moz-linear-gradient(left, #9f798b, #b596a4);
   /* for firefox 3.6+ */ }
 
+.select2-search-choice.topicref, .select-topicref {
+  background: #ef7ad0;
+  /* for non-css3 browsers */
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=lighten($color, $optionStartGradient), endColorstr=lighten($color, $optionEndGradient));
+  /* for IE */
+  background-image: -webkit-linear-gradient(left, #ef7ad0, #f4a8e0) !important;
+  background: -moz-linear-gradient(left, #ef7ad0, #f4a8e0);
+  /* for firefox 3.6+ */ }
+
 @media screen and (min-width: 768px) {
   .select2-drop-multi ul {
     margin: 0px;
@@ -466,43 +475,44 @@ h4.lexicalGrouping {
 
   .col-sm-11columns {
     width: 8.84091%; } }
-#bibleVersions {
+.selectModal {
   z-index: 10000; }
-  #bibleVersions .modal-body {
-    padding: 5px; }
-  #bibleVersions span.form-group {
-    margin-left: 3px; }
-  #bibleVersions .list-group-item {
-    padding: 2px; }
-  #bibleVersions .list-group {
-    margin-bottom: 5px; }
-  #bibleVersions .tab-pane {
-    overflow-y: scroll;
-    padding: 2px; }
-  #bibleVersions h1 {
-    font-size: 10pt;
-    margin: 0px 0px 4px; }
-  #bibleVersions .closeModal label {
-    margin-bottom: 0px; }
-  #bibleVersions li.list-group-item {
-    cursor: hand; }
-    #bibleVersions li.list-group-item a.glyphicon-info-sign {
-      margin-right: 5px; }
-      #bibleVersions li.list-group-item a.glyphicon-info-sign:hover {
-        text-decoration: none; }
-    #bibleVersions li.list-group-item.active {
+
+#bibleVersions .modal-body {
+  padding: 5px; }
+#bibleVersions span.form-group {
+  margin-left: 3px; }
+#bibleVersions .list-group-item {
+  padding: 2px; }
+#bibleVersions .list-group {
+  margin-bottom: 5px; }
+#bibleVersions .tab-pane {
+  overflow-y: scroll;
+  padding: 2px; }
+#bibleVersions h1 {
+  font-size: 10pt;
+  margin: 0px 0px 4px; }
+#bibleVersions .closeModal label {
+  margin-bottom: 0px; }
+#bibleVersions li.list-group-item {
+  cursor: hand; }
+  #bibleVersions li.list-group-item a.glyphicon-info-sign {
+    margin-right: 5px; }
+    #bibleVersions li.list-group-item a.glyphicon-info-sign:hover {
+      text-decoration: none; }
+  #bibleVersions li.list-group-item.active {
+    color: white; }
+    #bibleVersions li.list-group-item.active a {
       color: white; }
-      #bibleVersions li.list-group-item.active a {
-        color: white; }
-  @media screen and (min-height: 400px) {
-    #bibleVersions .tab-pane {
-      max-height: 200px; } }
-  @media screen and (min-height: 600px) {
-    #bibleVersions .tab-pane {
-      max-height: 400px; } }
-  @media screen and (min-height: 900px) {
-    #bibleVersions .tab-pane {
-      max-height: 700px; } }
+@media screen and (min-height: 400px) {
+  #bibleVersions .tab-pane {
+    max-height: 200px; } }
+@media screen and (min-height: 600px) {
+  #bibleVersions .tab-pane {
+    max-height: 400px; } }
+@media screen and (min-height: 900px) {
+  #bibleVersions .tab-pane {
+    max-height: 700px; } }
 
 ::-webkit-scrollbar {
   width: 12px; }

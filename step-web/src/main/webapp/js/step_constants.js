@@ -14,6 +14,7 @@ MEANINGS = "meanings";
 SUBJECT_SEARCH = "subject";
 NAVE_SEARCH = "nave";
 NAVE_SEARCH_EXTENDED = "xnave";
+TOPIC_BY_REF = "topicref";
 
 DS_VERSIONS = "allVersions";
 BOOKMARKS_GET =                     STEP_SERVER_BASE_URL + "favourites/getBookmarks";

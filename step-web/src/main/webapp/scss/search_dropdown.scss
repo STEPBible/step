@@ -59,6 +59,10 @@
   @include gradient($hebrewMeaningsRow, $optionStartGradient, $optionEndGradient);
 }
 
+.select2-search-choice.topicref, .select-topicref {
+  @include gradient($topicByRefRow, $optionStartGradient, $optionEndGradient);
+}
+
 @media screen and (min-width: $stepXSBootstrap) {
   .select2-drop-multi ul {
     margin: 0px;

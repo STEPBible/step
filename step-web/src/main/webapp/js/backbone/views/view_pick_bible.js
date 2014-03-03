@@ -22,7 +22,7 @@ var PickBibleView = Backbone.View.extend({
         '<label class="btn btn-default btn-sm"><input type="radio" name="languageFilter" data-lang="_ancient" /><%= __s.ancient %></label>' +
         '</span>' +
         '</form>'),
-    modalPopupTemplate: _.template('<div class="modal" id="bibleVersions" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
+    modalPopupTemplate: _.template('<div class="modal selectModal" id="bibleVersions" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
         '<div class="modal-dialog">' +
         '<div class="modal-content">' +
         '<div class="modal-body">' +
@@ -149,9 +149,9 @@ var PickBibleView = Backbone.View.extend({
             var added = target.hasClass("active");
             var version = step.keyedVersions[target.data("initials")];
             if(added) {
-                Backbone.Events.trigger("search:add", { version: version });
+                Backbone.Events.trigger("search:add", { value: version, itemType: VERSION });
             } else {
-                Backbone.Events.trigger("search:remove", { version: version} );
+                Backbone.Events.trigger("search:remove", { value: version, itemType: VERSION} );
             }
         }).each(function(i, item) {
             var el = $(this);

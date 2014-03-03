@@ -324,6 +324,7 @@
                             <jsSourceDir>.</jsSourceDir>
                             <jsSourceFiles>
                                 <jsSourceFile>js/backbone/view_pick_bible.js</jsSourceFile>
+                                <jsSourceFile>js/backbone/view_advanced_search.js</jsSourceFile>
                             </jsSourceFiles>
                             <jsFinalFile>menu_extras-${project.version}.js</jsFinalFile>
                         </configuration>

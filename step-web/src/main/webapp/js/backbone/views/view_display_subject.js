@@ -53,24 +53,27 @@ var SubjectDisplayView = SearchDisplayView.extend({
         var self = this;
         var passageId = this.model.get("passageId");
         var searchType = this.model.get("searchType");
-        var checked = [searchType == 'SUBJECT_SIMPLE' ? 'checked' : "",
-                searchType == 'SUBJECT_EXTENDED' ? 'checked' : "",
-                searchType == 'SUBJECT_FULL' ? 'checked' : ""];
 
-        var searchTypes = $(_.template(this.searchTypeToolbar)({ passageId: passageId, selected: checked }));
-        results.prepend(searchTypes);
+        if (searchType != 'SUBJECT_RELATED') {
+            var checked = [searchType == 'SUBJECT_SIMPLE' ? 'checked' : "",
+                    searchType == 'SUBJECT_EXTENDED' ? 'checked' : "",
+                    searchType == 'SUBJECT_FULL' ? 'checked' : ""];
 
-        //add handlers
-        searchTypes.find("input[type='radio']").on('change', function () {
-            //make sure the active passage is this one
-            step.util.activePassageId(step.passage.getPassageId(this));
-            var value = $(this).val();
-            var activePassage = step.util.activePassage();
-            var args = activePassage.get("args") || "";
-            args = args.replace(self.prefixMatcher, value);
-            step.router.navigateSearch(args);
-        });
-        
+            var searchTypes = $(_.template(this.searchTypeToolbar)({ passageId: passageId, selected: checked }));
+            results.prepend(searchTypes);
+
+            //add handlers
+            searchTypes.find("input[type='radio']").on('change', function () {
+                //make sure the active passage is this one
+                step.util.activePassageId(step.passage.getPassageId(this));
+                var value = $(this).val();
+                var activePassage = step.util.activePassage();
+                var args = activePassage.get("args") || "";
+                args = args.replace(self.prefixMatcher, value);
+                step.router.navigateSearch(args);
+            });
+        }
+
         //now iterate through all subject searches and set the the last subject search to be of this particular type
         return results;
     },
@@ -98,10 +101,10 @@ var SubjectDisplayView = SearchDisplayView.extend({
         for (var i = 0; i < searchResults.length; i++) {
             if (searchResults[i].root != lastHeader) {
                 //append a new header
-                
+
                 heading = $("<h4>").addClass("subjectHeading").append(searchResults[i].root);
                 results.append(heading);
-                
+
                 list = $('<div class="panel-group">').addClass("subjectSection searchResults");
                 results.append(list);
                 lastHeader = searchResults[i].root;
@@ -111,22 +114,22 @@ var SubjectDisplayView = SearchDisplayView.extend({
             var panel = step.util.ui.addCollapsiblePanel(searchResults[i].heading, "expandableSearchHeading", "#" + expandingPanelId);
             panel.append($('<div class="results">').attr("id", expandingPanelId).addClass("panel-collapse collapse").append(__s.results_loading))
             list.append(panel);
-            
+
             //add some data
             panel.attr("root", searchResults[i].root).attr("fullHeader", searchResults[i].heading);
             if (searchResults[i].seeAlso) {
                 panel.prop("seeAlso", searchResults[i].seeAlso);
             }
         }
-        
-        results.find(".panel-default").on("show.bs.collapse", function() {
+
+        results.find(".panel-default").on("show.bs.collapse", function () {
             //load more results
             self.handleExpandingContainer($(this));
         });
-        
+
         return results;
     },
-    handleExpandingContainer: function(el) {
+    handleExpandingContainer: function (el) {
         var root = el.attr("root");
         var fullHeader = el.attr("fullHeader");
         var seeAlso = el.attr("seeAlso");
@@ -137,10 +140,10 @@ var SubjectDisplayView = SearchDisplayView.extend({
         var passage = step.util.activePassage();
         var versions = passage.get("masterVersion");
         var extraVersions = passage.get("extraVersions") || "";
-        if(extraVersions != "") {
+        if (extraVersions != "") {
             versions += "," + extraVersions;
         }
-        
+
         $.getSafe(SUBJECT_VERSES, [root, fullHeader, versions], function (results) {
             var verses = $("<div>").addClass("expandedHeadingItem ");
             if (results) {

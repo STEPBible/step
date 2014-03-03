@@ -12,6 +12,7 @@ requirejs.config({
         view_help_menu: ["js/backbone/views/view_help_menu"]
     },
     shim : {
+        "menu_extras" : ["js/backbone/views/view_advanced_search"],
         "sidebar" : ["js/backbone/models/model_sidebar", "js/backbone/views/view_wordle_stat",
                      "js/backbone/views/view_history", "libs/jquery.tagcloud"],
         "search" : ["_search_display_view", "_other_search"],

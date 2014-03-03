@@ -273,18 +273,21 @@ public class SearchServiceImpl implements SearchService {
         }
 
         for (SearchToken st : searchTokens) {
-            if (SearchToken.STRONG_NUMBER.equals(st.getTokenType())) {
+            final String tokenType = st.getTokenType();
+            if (SearchToken.STRONG_NUMBER.equals(tokenType)) {
                 addWordSearches(versions, references, st.getToken(), filters, individualSearches);
-            } else if (SearchToken.MEANINGS.equals(st.getTokenType())) {
+            } else if (SearchToken.MEANINGS.equals(tokenType)) {
                 addSearch(SearchType.ORIGINAL_MEANING, versions, references, st.getToken(), filters, individualSearches);
-            } else if (SearchToken.TEXT_SEARCH.equals(st.getTokenType())) {
+            } else if (SearchToken.TEXT_SEARCH.equals(tokenType)) {
                 addSearch(SearchType.TEXT, versions, references, st.getToken(), null, individualSearches);
-            } else if (SearchToken.SUBJECT_SEARCH.equals(st.getTokenType())) {
+            } else if (SearchToken.SUBJECT_SEARCH.equals(tokenType)) {
                 addSearch(SearchType.SUBJECT_SIMPLE, versions, references, st.getToken(), null, individualSearches);
-            }  else if (SearchToken.NAVE_SEARCH.equals(st.getTokenType())) {
+            }  else if (SearchToken.NAVE_SEARCH.equals(tokenType)) {
                 addSearch(SearchType.SUBJECT_EXTENDED, versions, references, st.getToken(), null, individualSearches);
-            }  else if (SearchToken.NAVE_SEARCH_EXTENDED.equals(st.getTokenType())) {
+            }  else if (SearchToken.NAVE_SEARCH_EXTENDED.equals(tokenType)) {
                 addSearch(SearchType.SUBJECT_FULL, versions, references, st.getToken(), null, individualSearches);
+            } else if(SearchToken.TOPIC_BY_REF.equals(tokenType)) {
+                addSearch(SearchType.SUBJECT_RELATED, versions, references, st.getToken(), null, individualSearches);
             } else {
                 //ignore and do nothing - generally references and versions which have been parsed already
             }

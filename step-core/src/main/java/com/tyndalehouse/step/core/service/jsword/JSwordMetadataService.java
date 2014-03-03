@@ -60,9 +60,10 @@ public interface JSwordMetadataService {
      *
      * @param bookStart the name of the matching key to look across book names
      * @param version   the name of the version, defaults to ESV if not found
+     * @param bookScope
      * @return a list of matching bible book names
      */
-    List<BookName> getBibleBookNames(String bookStart, String version);
+    List<BookName> getBibleBookNames(String bookStart, String version, final String bookScope);
 
     /**
      * @param version version of interest

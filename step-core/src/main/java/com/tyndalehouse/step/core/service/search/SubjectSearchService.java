@@ -33,6 +33,7 @@
 package com.tyndalehouse.step.core.service.search;
 
 import com.tyndalehouse.step.core.models.search.SearchResult;
+import com.tyndalehouse.step.core.models.search.SubjectSuggestion;
 import com.tyndalehouse.step.core.service.impl.SearchQuery;
 import com.tyndalehouse.step.core.service.impl.SearchType;
 
@@ -51,7 +52,7 @@ public interface SubjectSearchService {
      * @param userEnteredTerm the user entered terms
      * @return the list of terms that are in the dictionary at the moment.
      */
-    List<String> autocomplete(String userEnteredTerm);
+    List<SubjectSuggestion> autocomplete(String userEnteredTerm);
 
     /**
      * Runs a subject search

@@ -47,19 +47,14 @@ var WordDisplayView = TextDisplayView.extend({
             return item.accentedUnicode;
         }
     },
+    
     /**
      * Creates the passageButtons
      */
     _createToolbar: function (element) {
         //render bar
-        var header = $("<h4 data-toggle='collapse' href='#relatedWords'>")
-            .addClass("panel-title lexicalGrouping")
-            .append('<span class="glyphicon glyphicon-plus"></span>')
-            .append(__s.lexicon_related_words);
-
-        var panel = $("<div class='panel panel-default'>").append(header);
-        var wrapper = $("<div class='panel-heading'>").append(header);
-        panel.append(wrapper).append(this._renderToolbar())
+        var panel = step.util.ui.addCollapsiblePanel(__s.lexicon_related_words, "lexicalGrouping", "#relatedWords");
+        panel.append(this._renderToolbar())
         element.append(panel);
         //allow for chaining
         return element;

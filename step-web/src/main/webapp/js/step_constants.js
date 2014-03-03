@@ -4,7 +4,6 @@
 // ///////////////////////////////////////////////////////////////////////
 VERSION = "version";
 REFERENCE = "reference";
-SUBJECT_SEARCH = "subject";
 TEXT_SEARCH = "text";
 GREEK_MEANINGS = "greekMeanings";
 GREEK = "greek";
@@ -12,6 +11,7 @@ HEBREW_MEANINGS = "hebrewMeanings";
 HEBREW = "hebrew";
 STRONG_NUMBER = "strong";
 MEANINGS = "meanings";
+SUBJECT_SEARCH = "subject";
 NAVE_SEARCH = "nave";
 NAVE_SEARCH_EXTENDED = "xnave";
 

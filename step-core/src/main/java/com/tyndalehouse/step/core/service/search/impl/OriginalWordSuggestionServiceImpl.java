@@ -25,6 +25,7 @@ import javax.inject.Singleton;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.service.SearchService;
 import com.tyndalehouse.step.core.service.helpers.OriginalWordUtils;
+import com.tyndalehouse.step.core.utils.LuceneUtils;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.TermAttribute;
 import org.apache.lucene.index.Term;
@@ -147,11 +148,12 @@ public class OriginalWordSuggestionServiceImpl implements OriginalWordSuggestion
      * retrieves forms from the lexicon
      *
      * @param suggestionType indicates greek/hebrew look ups
-     * @param form           the form
+     * @param inputForm           the input from the user
      * @return the list of suggestions
      */
     private List<LexiconSuggestion> getMatchingFormsFromLexicon(final LexicalSuggestionType suggestionType,
-                                                                final String form) {
+                                                                final String inputForm) {
+        final String form = LuceneUtils.safeEscape(inputForm.trim());
 
         final EntityDoc[] results;
         if (isHebrewText(form) || GreekUtils.isGreekText(form)) {

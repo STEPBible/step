@@ -258,7 +258,7 @@ public class JSwordPassageServiceImplTest {
         final JSwordMetadataServiceImpl jsi = new JSwordMetadataServiceImpl(
                 TestUtils.mockVersificationService());
 
-        final List<BookName> bibleBookNames = jsi.getBibleBookNames("Ma", "ESV");
+        final List<BookName> bibleBookNames = jsi.getBibleBookNames("Ma", "ESV", null);
         final String[] containedAbbrevations = new String[]{"Mal", "Mat", "Mar"};
 
         for (final String s : containedAbbrevations) {

@@ -35,7 +35,6 @@ package com.tyndalehouse.step.core.service.impl;
 import static com.tyndalehouse.step.core.models.InterlinearMode.INTERLINEAR;
 import static com.tyndalehouse.step.core.models.InterlinearMode.NONE;
 import static com.tyndalehouse.step.core.utils.JSwordUtils.getSortedSerialisableList;
-import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
 import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
 
 import java.util.*;
@@ -366,11 +365,12 @@ public class BibleInformationServiceImpl implements BibleInformationService {
      *
      * @param bookStart the book start
      * @param version   the version
+     * @param bookScope
      * @return the bible book names
      */
     @Override
-    public List<BookName> getBibleBookNames(final String bookStart, final String version) {
-        return this.jswordMetadata.getBibleBookNames(bookStart, version);
+    public List<BookName> getBibleBookNames(final String bookStart, final String version, final String bookScope) {
+        return this.jswordMetadata.getBibleBookNames(bookStart, version, bookScope);
     }
 
     /**

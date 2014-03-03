@@ -10,6 +10,7 @@ import javax.inject.Inject;
 
 import com.tyndalehouse.step.core.models.InterlinearMode;
 import com.tyndalehouse.step.core.utils.JSwordUtils;
+import com.tyndalehouse.step.core.utils.StringUtils;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.FeatureType;
 import org.crosswire.jsword.versification.BibleBook;
@@ -44,7 +45,7 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
     public Set<LookupOption> getFeatures(final String version, List<String> extraVersions) {
         // obtain the book
         final Book book = this.versificationService.getBookFromVersion(version);
-        final Set<LookupOption> options = new HashSet<LookupOption>(LookupOption.values().length *2);
+        final Set<LookupOption> options = new HashSet<LookupOption>(LookupOption.values().length * 2);
 
         if (book == null) {
             return options;
@@ -60,7 +61,7 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
         addAncientOptions(version, extraVersions, options);
         addAllMatchingLookupOptions(book, options);
         addHiddenOptions(options);
-        
+
         return options;
     }
 
@@ -74,7 +75,7 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
      * Adds options that apply regardless of the conditions
      *
      * @param currentVersion the current primary version
-     * @param extraVersions  the secondary versions that affect feature resolution 
+     * @param extraVersions  the secondary versions that affect feature resolution
      * @param options        the set of options
      */
     private void addAncientOptions(final String currentVersion, final List<String> extraVersions, final Set<LookupOption> options) {
@@ -84,21 +85,21 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
         boolean hasGreekVersion, hasHebrewVersion = hasGreekVersion = false;
         for (String version : allVersions) {
             Book book = this.versificationService.getBookFromVersion(version);
-            if(JSwordUtils.isAncientGreekBook(book)) {
+            if (JSwordUtils.isAncientGreekBook(book)) {
                 hasGreekVersion = true;
             }
 
-            if(JSwordUtils.isAncientHebrewBook(book)) {
+            if (JSwordUtils.isAncientHebrewBook(book)) {
                 hasHebrewVersion = true;
             }
         }
-        
+
         //hebrew/greek options for interlinears
-        if(hasGreekVersion) {
+        if (hasGreekVersion) {
             options.add(LookupOption.GREEK_ACCENTS);
         }
-        
-        if(hasHebrewVersion) {
+
+        if (hasHebrewVersion) {
             options.add(LookupOption.HEBREW_ACCENTS);
             options.add(LookupOption.HEBREW_VOWELS);
         }
@@ -199,16 +200,13 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
     }
 
     @Override
-    public List<BookName> getBibleBookNames(final String bookStart, final String version) {
+    public List<BookName> getBibleBookNames(final String bookStart, final String version, final String bookScope) {
         final String lookup = isBlank(bookStart) ? "" : bookStart;
-
         final Versification versification = this.versificationService.getVersificationForVersion(version);
-
-        final List<BookName> books = getBooks(lookup, versification);
+        final List<BookName> books = getBooks(lookup, versification, bookScope);
         if (books.isEmpty()) {
-            return getBooks(lookup, Versifications.instance().getVersification(Versifications.DEFAULT_V11N));
+            return getBooks(lookup, Versifications.instance().getVersification(Versifications.DEFAULT_V11N), bookScope);
         }
-
         return books;
     }
 
@@ -217,14 +215,20 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
      *
      * @param bookStart     the string to match
      * @param versification the versification we are interested in
+     * @param bookScope     the actual book required, usually to get chapters
      * @return the list of matching names
      */
-    private List<BookName> getBooks(final String bookStart, final Versification versification) {
+    private List<BookName> getBooks(final String bookStart, final Versification versification, final String bookScope) {
         final String searchPattern = bookStart.toLowerCase(Locale.getDefault()).trim();
 
         final List<BookName> matchingNames = new ArrayList<BookName>();
 
         final Iterator<BibleBook> bookIterator = versification.getBookIterator();
+
+        if (StringUtils.isNotBlank(bookScope)) {
+            final List<BookName> optionsInBook = getChapters(versification, versification.getBook(bookScope));
+            return optionsInBook;
+        }
 
         BibleBook b = null;
         while (bookIterator.hasNext()) {
@@ -234,13 +238,6 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
                     || versification.getShortName(book).toLowerCase().startsWith(searchPattern)) {
                 b = book;
                 addBookName(matchingNames, book, versification);
-            }
-        }
-
-        if (matchingNames.size() == 1) {
-            final List<BookName> optionsInBook = getChapters(versification, b);
-            if (!optionsInBook.isEmpty()) {
-                return optionsInBook;
             }
         }
 
@@ -313,65 +310,65 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
 
     @Override
     public InterlinearMode getBestInterlinearMode(String version, List<String> extraVersions, final InterlinearMode interlinearMode) {
-        if(extraVersions == null || extraVersions.size() == 0) {
+        if (extraVersions == null || extraVersions.size() == 0) {
             return InterlinearMode.NONE;
         }
-        
+
         //we've at least got several versions here, so, we prefer the option given to defaults
-        if(interlinearMode == InterlinearMode.INTERLEAVED || interlinearMode == InterlinearMode.COLUMN) {
+        if (interlinearMode == InterlinearMode.INTERLEAVED || interlinearMode == InterlinearMode.COLUMN) {
             return interlinearMode;
         }
-        
+
         //so we've either asked for nothing, or asked for something that we need to check is appropriate
-        
+
         Book main = this.versificationService.getBookFromVersion(version);
         String firstLanguage = main.getLanguage().getCode();
         boolean supportsStrongs = this.supportsStrongs(main);
         boolean sameLanguage = true;
-        
-        for(String extraVersion : extraVersions) {
+
+        for (String extraVersion : extraVersions) {
             Book b = this.versificationService.getBookFromVersion(extraVersion);
-            if(supportsStrongs && !this.supportsStrongs(b)) {
+            if (supportsStrongs && !this.supportsStrongs(b)) {
                 supportsStrongs = false;
             }
-            if(!firstLanguage.equalsIgnoreCase(b.getLanguage().getCode())) {
+            if (!firstLanguage.equalsIgnoreCase(b.getLanguage().getCode())) {
                 sameLanguage = false;
             }
-            
+
             //small optimization
-            if(!supportsStrongs && !sameLanguage) {
+            if (!supportsStrongs && !sameLanguage) {
                 break;
             }
         }
-        
+
         //if compare options were given and are available, we return these.
-        if(interlinearMode == InterlinearMode.INTERLEAVED_COMPARE || interlinearMode == InterlinearMode.COLUMN_COMPARE) {
+        if (interlinearMode == InterlinearMode.INTERLEAVED_COMPARE || interlinearMode == InterlinearMode.COLUMN_COMPARE) {
             return getSameOrDowngradedInterlinearMode(interlinearMode, sameLanguage);
         }
-        
-        if(supportsStrongs) {
+
+        if (supportsStrongs) {
             return InterlinearMode.INTERLINEAR;
         }
-        
-        if(sameLanguage) {
+
+        if (sameLanguage) {
             return InterlinearMode.INTERLEAVED_COMPARE;
         }
-        
+
         return InterlinearMode.INTERLEAVED;
     }
 
     /**
-     * if all versions are of the same language, then we return the interlinear mode. 
+     * if all versions are of the same language, then we return the interlinear mode.
      * Otherwise we return INTERLEAVED if INTERLEAVED_COMPARE was given, and COLUMN if COLUMN_COMPARED was given
-     * 
+     *
      * @param interlinearMode the original interlinear mode
-     * @param sameLanguage true to indicate all versions are of the same language
+     * @param sameLanguage    true to indicate all versions are of the same language
      * @return the final interlinear mode to be used going forward.
      */
     private InterlinearMode getSameOrDowngradedInterlinearMode(final InterlinearMode interlinearMode, final boolean sameLanguage) {
-        if(sameLanguage) {
+        if (sameLanguage) {
             return interlinearMode;
-        } else if(interlinearMode == InterlinearMode.INTERLEAVED_COMPARE) {
+        } else if (interlinearMode == InterlinearMode.INTERLEAVED_COMPARE) {
             return InterlinearMode.INTERLEAVED;
         } else {
             return InterlinearMode.COLUMN;

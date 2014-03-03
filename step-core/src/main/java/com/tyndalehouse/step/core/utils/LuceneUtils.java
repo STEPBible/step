@@ -31,6 +31,18 @@ public final class LuceneUtils {
         // no op
     }
 
+    public static String safeEscape(final String userTerm) {
+        if(userTerm == null) {
+            return null;
+        }
+        
+        final String term = QueryParser.escape(userTerm);
+        if(term.indexOf(' ') != -1) {
+            return "\"" + term.replace("\"", "\\\"") + "\"";
+        } 
+        return term;
+    }
+    
     /**
      * Returns all terms starting with a particular prefix
      *

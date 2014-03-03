@@ -4,8 +4,8 @@ package com.tyndalehouse.step.core.models.search;
  * @author chrisburrell
  */
 public class AutoSuggestion {
-    String itemType;
-    Object suggestion;
+    private String itemType;
+    private Object suggestion;
 
     public String getItemType() {
         return itemType;

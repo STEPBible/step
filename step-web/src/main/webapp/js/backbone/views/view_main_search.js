@@ -3,10 +3,14 @@ var MainSearchView = Backbone.View.extend({
     events: {
         "click .btn": "search"
     },
+    //context items are of the form { itemType: x, value: y }
+    specificContext: [],
     initialize: function () {
+        var self = this;
         this.masterSearch = this.$el.find("#masterSearch");
         this.openNewColumn = this.$el.find("#openInNewPanel");
-
+        this.specificContext = [];
+        
         var view = this;
         _.bindAll(this);
         _.bindAll(view);
@@ -36,6 +40,8 @@ var MainSearchView = Backbone.View.extend({
                     //some searches default to their item
                     case TEXT_SEARCH:
                     case SUBJECT_SEARCH:
+                        id += (entry.item.searchTypes || []).join("-") + ":" + entry.item.value;
+                        break;
                     case MEANINGS:
                     default:
                         id += entry.item;
@@ -63,7 +69,17 @@ var MainSearchView = Backbone.View.extend({
             },
             ajax: {
                 url: function (term, page) {
-                    return SEARCH_AUTO_SUGGESTIONS + term;
+                    var url = SEARCH_AUTO_SUGGESTIONS + term;
+                    if(self.specificContext.length != 0) {
+                        var contextArgs = "";
+                        for(var i = 0 ; i < self.specificContext.length; i++) {
+                            contextArgs += self.specificContext[i].itemType + "=" + self.specificContext[i].value;
+                            if(i < self.specificContext.length) {
+                                contextArgs += '|';
+                            }
+                        }
+                    }
+                    return url + "/" + encodeURIComponent(contextArgs);
                 },
                 dataType: "json",
                 quietMillis: 200,
@@ -72,7 +88,6 @@ var MainSearchView = Backbone.View.extend({
                     var datum = [];
                     for (var ii = 0; ii < data.length; ii++) {
                         //will never be a TEXT search, so not in the list below
-                        //SUBJECT searches behave with defaults
                         var item = data[ii].suggestion;
                         var text = data[ii].suggestion;
 
@@ -86,8 +101,18 @@ var MainSearchView = Backbone.View.extend({
                                 text = view._getEnglishFirstRepresentation(data[ii].suggestion, data[ii].itemType == HEBREW_MEANINGS);
                                 break;
                             case REFERENCE:
+                                //for a reference that is a whole book, we push an extra one in
                                 text = data[ii].suggestion.fullName;
                                 item = data[ii].suggestion;
+                                
+                                if(data[ii].suggestion.wholeBook) {
+                                    datum.push({ text: data[ii].suggestion.fullName, item: data[ii].suggestion, itemType: data[ii].itemType, 
+                                        itemSubType: 'bookSelection' });
+                                }
+                                
+                                break;
+                            case SUBJECT_SEARCH:
+                                text = data[ii].suggestion.value;
                                 break;
                         }
 
@@ -120,8 +145,9 @@ var MainSearchView = Backbone.View.extend({
                         return "<div title='" + entry.item.gloss + ", " + entry.item.matchingForm + "'>" + entry.item.stepTransliteration + "</div>";
                     case MEANINGS:
                         return entry.item.gloss;
-                    case TEXT_SEARCH:
                     case SUBJECT_SEARCH:
+                        return entry.item.value;
+                    case TEXT_SEARCH:
                         return entry.item;
                     default:
                         return entry.item.text;
@@ -133,14 +159,22 @@ var MainSearchView = Backbone.View.extend({
             formatResultCssClass: view.formatResultCssClass,
             formatSelectionCssClass: view.formatResultCssClass
         }).on("select2-selecting", function (event) {
-            if (event.object && event.object.itemType == REFERENCE && event.object.item.wholeBook) {
+            if (event.object && event.object.itemType == REFERENCE && event.object.item.wholeBook && 
+                event.object.itemSubType == 'bookSelection') {
                 event.preventDefault();
                 var select2Input = $(this);
+                self._addSpecificContext(REFERENCE, event.object.item.shortName );
+                
+                //wipe the last term to force a re-select
+                $.data(self.masterSearch.select2("container"), "select2-last-term", null);
                 select2Input.select2("search", event.object.item.shortName);
             }
             return;
+        }).on("select2-opening", function(event) {
+            //remove any context that has references
+            self._removeSpecificContext(REFERENCE);
         });
-        
+
         this.masterSearch.select2("container").find("input[type='text']").on("keyup", this._handleKeyPressInSearch);
     },
     _getAncientFirstRepresentation: function (item, hebrew) {
@@ -201,12 +235,31 @@ var MainSearchView = Backbone.View.extend({
                     args += MEANINGS + "=" + encodeURIComponent(options[ii].item.gloss);
                     break;
                 case SUBJECT_SEARCH:
-                    switch(step.util.activePassage().get("subjectSearchType")) {
-                        case "SUBJECT_SIMPLE": args += SUBJECT_SEARCH + "=" + encodeURIComponent(options[ii].item);break;   
-                        case "SUBJECT_EXTENDED": args += NAVE_SEARCH + "=" + encodeURIComponent(options[ii].item);break;   
-                        case "SUBJECT_FULL":args += NAVE_SEARCH_EXTENDED + "=" + encodeURIComponent(options[ii].item); break;
-                        default: args += options[ii].itemType + "=" + encodeURIComponent(options[ii].item);
+                    var lastSelection = step.util.activePassage().get("subjectSearchType");
+                    var selectedSubjectSearchType = "";
+                    var previouslySelectedIndex = options[ii].item.searchTypes.indexOf(lastSelection);
+                    if (previouslySelectedIndex != -1) {
+                        //use the last selection
+                        selectedSubjectSearchType = options[ii].item.searchTypes[previouslySelectedIndex];
+                    } else {
+                        //use the first item
+                        selectedSubjectSearchType = options[ii].item.searchTypes[0];
                     }
+
+                    switch (selectedSubjectSearchType) {
+                        case "SUBJECT_SIMPLE":
+                            args += SUBJECT_SEARCH;
+                            break;
+                        case "SUBJECT_EXTENDED":
+                            args += NAVE_SEARCH;
+                            break;
+                        case "SUBJECT_FULL":
+                            args += NAVE_SEARCH_EXTENDED;
+                            break;
+                        default:
+                            args += options[ii].itemType + "=" + encodeURIComponent(options[ii].item);
+                    }
+                    args += "=" + encodeURIComponent(options[ii].item.value);
                     break;
                 case TEXT_SEARCH:
                 default:
@@ -233,6 +286,7 @@ var MainSearchView = Backbone.View.extend({
         var staticResources = this._getData();
 
         //push some of the options that are also always present:
+        staticResources.push({ item: {"shortName": this.getCurrentInput(), "fullName":this.getCurrentInput(), "wholeBook":false }, itemType: REFERENCE, itemSubType: 'freeInput' });
         staticResources.push({ item: this.getCurrentInput(), itemType: TEXT_SEARCH});
 
         return staticResources.concat(results);
@@ -250,7 +304,7 @@ var MainSearchView = Backbone.View.extend({
         switch (textOrObject.itemType) {
             case VERSION:
 //                console.log("Term: ", term, "Text or Object:", textOrObject.item.initials, textOrObject.item.shortInitials, textOrObject.item.name)
-                var matches = this.matchDropdownEntry(term, textOrObject.item.initials) ||                 
+                var matches = this.matchDropdownEntry(term, textOrObject.item.initials) ||
                     this.matchDropdownEntry(term, textOrObject.item.shortInitials) ||
                     this.matchDropdownEntry(term, textOrObject.item.name);
                 return matches;
@@ -262,15 +316,36 @@ var MainSearchView = Backbone.View.extend({
                 return this.matchDropdownEntry(term, textOrObject.item.stepTransliteration) ||
                     this.matchDropdownEntry(term, textOrObject.item.matchingForm) ||
                     this.matchDropdownEntry(term, textOrObject.item.strongNumber);
-            case TEXT_SEARCH:
             case SUBJECT_SEARCH:
+                return this.matchDropdownEntry(term, textOrObject.item.value);
+            case TEXT_SEARCH:
                 return this.matchDropdownEntry(term, textOrObject.item);
         }
         return false;
     },
+    _addSpecificContext: function(itemType, value) {
+        this._removeSpecificContext (itemType);
+        this.specificContext.push({ itemType: itemType, value: value });
+    },
+    _removeSpecificContext : function(itemType) {
+        for(var i = 0; i < this.specificContext.length; i++) {
+            if(this.specificContext[i].itemType == itemType) {
+                this.specificContext.splice(i, 1);
+                //i will be incremented, so keep it in sync with for loop increment
+                i--;
+            }
+        }
+    },
     filterLocalData: function () {
         var options = [];
 
+        //we will only add stuff if there is no specific context around references
+        for(var i = 0; i < this.specificContext.length; i++) {
+            if(this.specificContext[i].itemType == REFERENCE) {
+                return options;
+            }
+        }
+        
         var currentInput = this.getCurrentInput();
         for (var ii = 0; ii < step.itemisedVersions.length; ii++) {
             if (this.matchDropdownEntry(currentInput, step.itemisedVersions[ii])) {
@@ -298,10 +373,10 @@ var MainSearchView = Backbone.View.extend({
             case VERSION:
                 row = [
                     '<div class="versionItem">',
-                    '<span class="source">[' + __s.translation_commentary + ']</span>',
-                    '<span class="features">' + step.util.ui.getFeaturesLabel(v.item) + '</span>',
-                    '<span class="initials">' + v.item.shortInitials + '</span> - ',
-                    '<span class="name">' + v.item.name + '</span>',
+                        '<span class="source">[' + __s.translation_commentary + ']</span>',
+                        '<span class="features">' + step.util.ui.getFeaturesLabel(v.item) + '</span>',
+                        '<span class="initials">' + v.item.shortInitials + '</span> - ',
+                        '<span class="name">' + v.item.name + '</span>',
                     '</div>'
                 ].join('');
                 break;
@@ -318,19 +393,43 @@ var MainSearchView = Backbone.View.extend({
                 row = '<span class="source">[' + __s.search_hebrew_meaning + ']</span>' + this._getEnglishFirstRepresentation(v.item, true);
                 break;
             case REFERENCE:
+                var source = __s.bible_text;
+                if(v.itemSubType == 'bookSelection') {
+                    source = __s.bible_text;
+                } else if(v.itemSubType == 'freeInput') {
+                    source = __s.bible_text_free_entry;
+                } else if(!v.itemSubType && v.item.wholeBook) {
+                    source = __s.bible_text_chapters;   
+                }
+                
                 row = [
-                    '<span class="source">[' + __s.bible_text + ']</span>',
+                        '<span class="source">[' + source + ']</span>',
                     v.item.fullName
                 ].join('');
                 break;
             case TEXT_SEARCH:
                 row = [
-                    '<span class="source">[' + __s.search_text + ']</span>',
+                        '<span class="source">[' + __s.search_text + ']</span>',
                     v.item
                 ].join('');
                 break;
             case SUBJECT_SEARCH:
-                row = '<span class="source">[' + __s.search_topic + ']</span>' + v.text;
+                var features = "";
+
+                for (var i = 0; i < v.item.searchTypes.length; i++) {
+                    switch (v.item.searchTypes[i]) {
+                        case 'SUBJECT_SIMPLE':
+                            features += '<span title="' + __s.search_subject_esv_headings + '">' + __s.search_subject_esv_headings_initials + '</span> ';
+                            break;
+                        case 'SUBJECT_EXTENDED':
+                            features += '<span title="' + __s.search_subject_nave + '">' + __s.search_subject_nave_initials + '</span> ';
+                            break;
+                        case 'SUBJECT_FULL':
+                            features += '<span title="' + __s.search_subject_nave_extended + '">' + __s.search_subject_nave_extended_initials + '</span> ';
+                            break;
+                    }
+                }
+                row = '<div><span class="source">[' + __s.search_topic + ']</span><span class="features">' + features + '</span>' + v.item.value + '</div>';
                 break;
             case MEANINGS:
                 row = '<span class="source">[' + __s.search_meaning + ']</span>' + v.text.gloss;
@@ -340,65 +439,83 @@ var MainSearchView = Backbone.View.extend({
         window.Select2.util.markMatch(row, query.term, markup, escapeMarkup);
         return markup.join("");
     },
-    
+
     _getPartialToken: function (initialData, tokenItem) {
         var tokenType = tokenItem.tokenType;
         var token = tokenItem.token || "";
         var enhancedInfo = tokenItem.enhancedTokenInfo;
-        
+
         switch (tokenType) {
             case VERSION:
                 return step.keyedVersions[token];
             case REFERENCE:
-                return { fullName: enhancedInfo.name, shortName: enhancedInfo.osisKeyId };
+                return { fullName: enhancedInfo.name, shortName: enhancedInfo.name };
             case GREEK_MEANINGS:
             case GREEK:
             case HEBREW_MEANINGS:
             case HEBREW:
             case STRONG_NUMBER:
                 //we need to work out what kind of type this was before
-                for(var ii = 0; ii < initialData.length; ii++) {
+                for (var ii = 0; ii < initialData.length; ii++) {
                     var previousType;
-                    if(initialData[ii].item && initialData[ii].item.strongNumber == token) {
+                    if (initialData[ii].item && initialData[ii].item.strongNumber == token) {
                         //we're a winner
                         tokenItem.tokenType = initialData[ii].itemType;
                     }
                 }
-                
+
                 //else default to something (in the future, we may change the URLs
-                if(token.length > 0 && token[0] == 'G') {
+                if (token.length > 0 && token[0] == 'G') {
                     tokenItem.tokenType = GREEK_MEANINGS;
                 } else {
                     tokenItem.tokenType = HEBREW_MEANINGS;
                 }
-                
+
                 return enhancedInfo;
-            case MEANINGS:
             case SUBJECT_SEARCH:
+                return { value: token, searchTypes: ["SUBJECT_SIMPLE"] };
+            case NAVE_SEARCH:
+                return { value: token, searchTypes: ["SUBJECT_EXTENDED"] };
+            case NAVE_SEARCH_EXTENDED:
+                return { value: token, searchTypes: ["SUBJECT_FULL"] };
+            case MEANINGS:
             case TEXT_SEARCH:
                 return token;
         }
     },
+    _reconstructToken: function (initialData, tokens, i) {
+        var item = this._getPartialToken(initialData, tokens[i]);
+        var tokenType = tokens[i].tokenType;
+        switch (tokenType) {
+            case SUBJECT_SEARCH:
+            case NAVE_SEARCH:
+            case NAVE_SEARCH_EXTENDED:
+                tokenType = SUBJECT_SEARCH;
+                break;
+        }
+
+        return { item: item, itemType: tokenType };
+    },
     syncWithUrl: function (model) {
-        if(model == null) {
+        if (model == null) {
             model = step.util.activePassage();
         }
-        
+
         var initialData = this.masterSearch.select2("data");
-        
+
         //overwrite all the data
         var data = [];
         var tokens = model.get("searchTokens") || [];
         for (var i = 0; i < tokens.length; i++) {
             //check if the tokens are in the search box already... if so, then don't add them
-            data.push({ item: this._getPartialToken(initialData, tokens[i]), itemType: tokens[i].tokenType });
+            data.push(this._reconstructToken(initialData, tokens, i));
         }
         this.masterSearch.select2("data", data);
     },
-    _handleKeyPressInSearch : function(ev) {
-        if(ev.keyCode == 13) {
+    _handleKeyPressInSearch: function (ev) {
+        if (ev.keyCode == 13) {
             //check whether the container is open
-            if($(".select2-result-selectable").length == 0) {
+            if ($(".select2-result-selectable").length == 0) {
                 // trigger search
                 this.search();
             }

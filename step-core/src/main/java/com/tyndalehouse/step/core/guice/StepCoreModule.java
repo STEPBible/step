@@ -87,6 +87,7 @@ public class StepCoreModule extends AbstractStepGuiceModule {
         bind(JSwordMetadataService.class).to(JSwordMetadataServiceImpl.class).asEagerSingleton();
         bind(JSwordVersificationService.class).to(JSwordVersificationServiceImpl.class).asEagerSingleton();
         bind(BibleInformationService.class).to(BibleInformationServiceImpl.class).asEagerSingleton();
+        bind(InternationalRangeService.class).to(InternationalRangeServiceImpl.class).asEagerSingleton();
         bind(ModuleService.class).to(ModuleServiceImpl.class).asEagerSingleton();
 
         bind(VersionResolver.class).asEagerSingleton();

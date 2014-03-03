@@ -834,6 +834,16 @@ step.util = {
             } else {
                 return "unicodeFont";
             }
+        },
+        addCollapsiblePanel: function(text, classes, href) {
+            var wrapper = $("<div class='panel-heading'>");
+            var panel = $("<div class='panel panel-default'>").append(wrapper);
+            wrapper.append($("<h4 data-toggle='collapse'>").attr("href", href)
+                .addClass("panel-title").addClass(classes)
+                .append('<span class="glyphicon glyphicon-plus"></span>')
+                .append(text));
+            
+            return panel;
         }
     }
 }

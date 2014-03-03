@@ -1,6 +1,7 @@
 <%@page import="com.tyndalehouse.step.core.models.ClientSession"%>
 <%@page import="java.util.Locale"%>
 <%@page import="javax.servlet.jsp.jstl.core.Config"%>
+<%@ taglib prefix="search" tagdir="/WEB-INF/tags/search" %>
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
@@ -186,10 +187,7 @@
                                             <div class="originalWordSearchToolbar">
                                                 <div class="panel panel-default">
                                                     <div class="panel-heading">
-                                                        <h4 data-toggle="collapse" href="#relatedWords" class="panel-title lexicalGrouping">
-                                                            <span class="glyphicon glyphicon-plus"></span>
-                                                            <fmt:message key="lexicon_related_words" />
-                                                        </h4>
+                                                        <h4 data-toggle="collapse" href="#relatedWords" class="panel-title lexicalGrouping"><span class="glyphicon glyphicon-plus"></span><fmt:message key="lexicon_related_words" /></h4>
                                                     </div>
                                                         <div id="relatedWords" class="panel-body panel-collapse collapse">
                                                             <ul class="panel-collapse"style="height: auto;">
@@ -220,17 +218,48 @@
                                         
                                         <c:choose>
                                         <c:when test="${ 'SUBJECT_SIMPLE' eq searchType or 'SUBJECT_EXTENDED' eq searchType or 'SUBJECT_FULL' eq searchType }">
-                                        
+                                            <%-- Do search toolbar --%>
+                                            <div class="subjectToolbar">
+                                                <input <c:if test="${ 'SUBJECT_SIMPLE' eq searchType }">checked="checked"</c:if> type="radio" name="subjectSearchType" 
+                                                       value="subject" id="0_esvHeadings"><label for="0_esvHeadings"><fmt:message key="search_subject_esv_headings" /></label>
+                                                <input type="radio" <c:if test="${ 'SUBJECT_EXTENDED' eq searchType }">checked="checked"</c:if> name="subjectSearchType" 
+                                                       value="nave" id="0_nave"><label for="0_nave"><fmt:message key="search_subject_nave" /></label>
+                                                <input type="radio" <c:if test="${ 'SUBJECT_FULL' eq searchType }">checked="checked"</c:if> name="subjectSearchType" 
+                                                       value="xnave" id="0_extendedNave"><label for="0_extendedNave"><fmt:message key="search_subject_nave_extended" /></label>
+                                            </div>
+                                            <c:choose>
+                                                <c:when test="${ 'SUBJECT_SIMPLE' eq searchType }">
+                                                    <search:display_results results="${searchResults[0].headingsSearch.results }" />
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <div class="panel-group subjectSection searchResults">
+                                                        <c:set var="previousHeading" value="not-set" />
+                                                        <c:forEach var="result" items="${ searchResults }">
+                                                            
+                                                            <c:if test="${ previousHeading ne result.root }">
+                                                                <h4 class="subjectHeading">${ result.root }</h4>
+                                                            </c:if>
+                                                            <c:set var="previousHeading" value="${result.root}" />
+                                                                <div class="panel panel-default" 
+                                                                     root="${ result.root }"
+                                                                     fullheader="${ result.heading }"
+                                                                      <c:if test="${ not empty result.seeAlso }">seeAlso="${result.seeAlso}"</c:if>  
+                                                                >
+                                                                    <div class="panel-heading">
+                                                                        <h4 data-toggle="collapse" href="#subject-results-3" class="panel-title expandableSearchHeading">
+                                                                        <span class="glyphicon glyphicon-plus"></span>${ result.heading }</h4></div>
+                                                                    <div class="results panel-collapse collapse"
+                                                                         id="subject-results-3"><fmt:message key="results_loading" /></div>
+                                                                </div>
+                                                        </c:forEach>
+                                                    </div>
+                                                </c:otherwise>
+                                            </c:choose>
+                                            
                                         </c:when>
                                         <c:otherwise>
                                             <div class="searchResults">
-                                                <c:forEach var="result" items="${ searchResults }">
-                                                    <div class="searchResultRow">
-                                                        <div class="searchResultRow">
-                                                                ${ result.preview }
-                                                        </div>
-                                                    </div>
-                                                </c:forEach>
+                                                <search:display_results results="${searchResults}" />
                                             </div>
                                         </c:otherwise>
                                         </c:choose>

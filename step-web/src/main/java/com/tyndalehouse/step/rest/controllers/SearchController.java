@@ -16,9 +16,13 @@ import javax.inject.Singleton;
 import com.tyndalehouse.step.core.models.AbstractComplexSearch;
 import com.tyndalehouse.step.core.models.SearchToken;
 import com.tyndalehouse.step.core.models.search.AutoSuggestion;
+import com.tyndalehouse.step.core.models.search.SubjectSuggestion;
 import com.tyndalehouse.step.core.service.BibleInformationService;
+import com.tyndalehouse.step.core.service.impl.InternationalRangeServiceImpl;
+import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import com.tyndalehouse.step.core.service.search.SubjectSearchService;
 import com.tyndalehouse.step.core.utils.ConversionUtils;
+import com.tyndalehouse.step.core.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,6 +50,7 @@ public class SearchController {
     private final OriginalWordSuggestionService originalWordSuggestions;
     private final SubjectEntrySearchService subjectEntries;
     private final BibleInformationService bibleInformationService;
+    private final InternationalRangeServiceImpl rangeService;
     private SubjectSearchService subjectSearchService;
 
     /**
@@ -58,17 +63,50 @@ public class SearchController {
                             final OriginalWordSuggestionService originalWordSuggestions,
                             final SubjectEntrySearchService subjectEntries,
                             final SubjectSearchService subjectSearchService,
-                            final BibleInformationService bibleInformationService) {
+                            final BibleInformationService bibleInformationService,
+                            final InternationalRangeServiceImpl rangeService) {
         this.searchService = search;
         this.originalWordSuggestions = originalWordSuggestions;
         this.subjectEntries = subjectEntries;
         this.subjectSearchService = subjectSearchService;
         this.bibleInformationService = bibleInformationService;
+        this.rangeService = rangeService;
     }
 
-    public List<AutoSuggestion> suggest(String input) {
+    public List<AutoSuggestion> suggest(final String input) {
+        return this.suggest(input, null);
+    }
+
+    public List<AutoSuggestion> suggest(final String input, final String context) {
         final List<AutoSuggestion> autoSuggestions = new ArrayList<AutoSuggestion>(128);
-        addAutoSuggestions(SearchToken.REFERENCE, autoSuggestions, bibleInformationService.getBibleBookNames(input, "ESV"));
+        String bookContext = JSwordPassageService.REFERENCE_BOOK;
+        String referenceContext = null;
+
+        if (StringUtils.isNotBlank(context)) {
+            //there are some context items... Parse them
+            //if there is a reference= restriction, then we will only return references, otherwise, we default
+            final List<SearchToken> searchTokens = parseTokens(context);
+            for (SearchToken st : searchTokens) {
+                if (SearchToken.VERSION.equals(st.getTokenType())) {
+                    bookContext = st.getToken();
+                } else if (SearchToken.REFERENCE.equals(st.getTokenType())) {
+                    referenceContext = st.getToken();
+                }
+            }
+        }
+
+        if (referenceContext != null) {
+            addReferenceSuggestions(input, autoSuggestions, bookContext, referenceContext);
+        } else {
+            addDefaultSuggestions(input, autoSuggestions, bookContext);
+        }
+        return autoSuggestions;
+    }
+
+    private void addDefaultSuggestions(final String input, final List<AutoSuggestion> autoSuggestions, final String referenceBookContext) {
+        addReferenceSuggestions(input, autoSuggestions, referenceBookContext, null);
+        addAutoSuggestions(SearchToken.REFERENCE, autoSuggestions, this.rangeService.getRanges(input));
+        
         addAutoSuggestions(SearchToken.SUBJECT_SEARCH, autoSuggestions, this.autocompleteSubject(input));
 
         final String restored = restoreSearchQuery(input);
@@ -82,7 +120,19 @@ public class SearchController {
                 false));
         addAutoSuggestions(SearchToken.MEANINGS, autoSuggestions, this.originalWordSuggestions.getLexicalSuggestions(LexicalSuggestionType.MEANING, restored,
                 false));
-        return autoSuggestions;
+    }
+
+    /**
+     * Adds the references that match the input
+     *
+     * @param input           input from the user
+     * @param autoSuggestions the list of suggestions
+     * @param version         the version to use in our lookup
+     * @param bookScope       the book for which we are looking up chapters
+     */
+    private void addReferenceSuggestions(final String input, final List<AutoSuggestion> autoSuggestions,
+                                         final String version, final String bookScope) {
+        addAutoSuggestions(SearchToken.REFERENCE, autoSuggestions, bibleInformationService.getBibleBookNames(input, version, bookScope));
     }
 
     /**
@@ -139,9 +189,24 @@ public class SearchController {
      * @param context    the amount of context to add to the verses hit by a search
      */
     public AbstractComplexSearch masterSearch(final String items, final String options, final String display,
-                               final String pageNumber, final String filter, final String context) {
+                                              final String pageNumber, final String filter, final String context) {
+        List<SearchToken> searchTokens = parseTokens(items);
+
+        int page = ConversionUtils.getValidInt(pageNumber, 1);
+        int searchContext = ConversionUtils.getValidInt(context, 0);
+
+        return this.searchService.runQuery(searchTokens, getDefaultedOptions(options), display, page, filter, searchContext);
+    }
+
+    /**
+     * Parses a string in the form of a=2|c=1 into a list of search tokens
+     *
+     * @param items
+     * @return
+     */
+    private List<SearchToken> parseTokens(final String items) {
         String[] tokens;
-        if (items != null) {
+        if (!StringUtils.isBlank(items)) {
             tokens = SPLIT_TOKENS.split(items);
         } else {
             tokens = new String[0];
@@ -158,11 +223,7 @@ public class SearchController {
             String text = t.substring(indexOfPrefix + 1);
             searchTokens.add(new SearchToken(t.substring(0, indexOfPrefix), text));
         }
-
-        int page = ConversionUtils.getValidInt(pageNumber, 1);
-        int searchContext = ConversionUtils.getValidInt(context, 0);
-
-        return this.searchService.runQuery(searchTokens, getDefaultedOptions(options), display, page, filter, searchContext);
+        return searchTokens;
     }
 
     /**
@@ -208,7 +269,8 @@ public class SearchController {
 
         final SearchResult results = this.searchService.search(new SearchQuery(
                 restoreSearchQuery(searchQuery), ranked, Integer.parseInt(context), Integer
-                .parseInt(pageNumber), Integer.parseInt(pageSize)));
+                .parseInt(pageNumber), Integer.parseInt(pageSize)
+        ));
 
         results.setQuery(undoRestoreSearchQuery(results.getQuery()));
 
@@ -249,7 +311,7 @@ public class SearchController {
      * @param term the term entered by the user
      * @return the list of terms matching the entered text
      */
-    public List<String> autocompleteSubject(String term) {
+    public List<SubjectSuggestion> autocompleteSubject(String term) {
         return this.subjectSearchService.autocomplete(term);
     }
 

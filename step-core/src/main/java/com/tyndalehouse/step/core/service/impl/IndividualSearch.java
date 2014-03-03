@@ -46,6 +46,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.tyndalehouse.step.core.exceptions.TranslatedException;
+import org.tartarus.snowball.ext.PorterStemmer;
 
 /**
  * Represents an individual search
@@ -105,12 +106,19 @@ public class IndividualSearch {
         this.originalFilter = filter;
         
         if(this.type == SearchType.SUBJECT_SIMPLE) {
-            this.query = LuceneIndex.FIELD_HEADING + ":" + QueryParser.escape(query);
+            this.query = LuceneIndex.FIELD_HEADING + ":" + QueryParser.escape(stem(query));
         } else {
             this.query = query;
         }
     }
-    
+
+    private String stem(final String query) {
+        PorterStemmer stemmer = new PorterStemmer();
+        stemmer.setCurrent(query);
+        stemmer.stem();
+        return stemmer.getCurrent();
+    }
+
     /**
      * Initialises the search from the query string.
      *

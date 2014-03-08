@@ -662,13 +662,6 @@ FONT.usg {
 	font-weight: bold;
 }
 
-.infoTagLine {
-	font-size: xx-small;
-	text-align: right;
-	width: 70%;
-	float: right;
-}
-
 .versionBreakMenuItem {
 	border-bottom: 1px dashed #33339F;
 }

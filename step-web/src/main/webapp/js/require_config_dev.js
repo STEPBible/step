@@ -9,7 +9,9 @@ requirejs.config({
         _search_display_view: ["js/backbone/views/view_display_search"],
         _other_search: ["js/backbone/views/view_display_subject"],
         menu_extras: ["js/backbone/views/view_pick_bible"],
-        view_help_menu: ["js/backbone/views/view_help_menu"]
+        view_help_menu: ["js/backbone/views/view_help_menu"],
+        quick_lexicon: ["js/backbone/views/view_quick_lexicon"],
+        drag: ["libs/draggabilly"]
     },
     shim : {
         "menu_extras" : ["js/backbone/views/view_advanced_search"],
@@ -17,6 +19,6 @@ requirejs.config({
                      "js/backbone/views/view_history", "libs/jquery.tagcloud"],
         "search" : ["_search_display_view", "_other_search"],
         _other_search: ["_search_display_view", "js/backbone/views/view_display_text", "libs/dohighlight-min",
-         "js/jquery-extensions/jquery-sort"]
+         "js/jquery-extensions/jquery-sort"],
     }
 });

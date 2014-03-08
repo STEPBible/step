@@ -329,6 +329,34 @@
                             <jsFinalFile>menu_extras-${project.version}.js</jsFinalFile>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>minify-dropdown-options</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>minify</goal>
+                        </goals>
+                        <configuration>
+                            <jsSourceDir>.</jsSourceDir>
+                            <jsSourceFiles>
+                                <jsSourceFile>js/backbone/views/view_quick_lexicon.js</jsSourceFile>
+                            </jsSourceFiles>
+                            <jsFinalFile>quick-lexicon-${project.version}.js</jsFinalFile>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>minify-dropdown-options</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>minify</goal>
+                        </goals>
+                        <configuration>
+                            <jsSourceDir>.</jsSourceDir>
+                            <jsSourceFiles>
+                                <jsSourceFile>libs/draggabilly.js</jsSourceFile>
+                            </jsSourceFiles>
+                            <jsFinalFile>draggabilly-${project.version}.js</jsFinalFile>
+                        </configuration>
+                    </execution>
                 </executions>
 			</plugin>
             

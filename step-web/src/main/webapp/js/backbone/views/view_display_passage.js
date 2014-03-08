@@ -237,7 +237,7 @@ TODO:                this._addStrongHandlers(passageId, passageHtml);
                 var note = $(".inlineNote", item);
 
                 link.attr("title", note.html());
-                require(["qtip"], function() {
+                require(["qtip", "drag"], function() {
                     link.qtip({
                         position: {
                             my: "center " + myPosition,
@@ -332,45 +332,50 @@ TODO:                this._addStrongHandlers(passageId, passageHtml);
         _makeSideNoteQtip: function (item, xref, myPosition, atPosition, version) {
             item.mouseover(function () {
                 if (!$.data(item, "initialised")) {
-                    item.qtip({
-                        position: { my: "top " + myPosition, at: "top " + atPosition, viewport: $(window) },
-                        style: { tip: false, classes: 'draggable-tooltip', width: { min: 800, max: 800} },
-                        show: { event: 'click' }, hide: { event: 'click' },
-                        content: {
-                            text: function (event, api) {
-                                $.getSafe(BIBLE_GET_BIBLE_TEXT + version + "/" + encodeURIComponent(xref), function (data) {
-                                    api.set('content.title.text', data.longName);
-                                    api.set('content.text', data.value);
-                                });
-                            },
-                            title: { text: xref, button: false }
-                        },
-                        events: {
-                            render: function (event, api) {
-                                $(this).draggable({
-                                    containment: 'window',
-                                    handle: api.elements.titlebar
-                                });
-
-                                $(api.elements.titlebar).css("padding-right", "0px");
-
-                                $(api.elements.titlebar).prepend(goToPassageArrowButton(true, version, xref, "leftPassagePreview"));
-                                $(api.elements.titlebar).prepend(goToPassageArrowButton(false, version, xref, "rightPassagePreview"));
-                                $(api.elements.titlebar).prepend($("<a>&nbsp;</a>").button({ icons: { primary: "ui-icon-close" }}).addClass("closePassagePreview").click(function () {
-                                    api.hide();
-                                }));
-
-                                $(".leftPassagePreview, .rightPassagePreview", api.elements.titlebar)
-                                    .first().button({ icons: { primary: "ui-icon-arrowthick-1-e" }})
-                                    .next().button({ icons: { primary: "ui-icon-arrowthick-1-w" }}).end()
-                                    .click(function () {
-                                        api.hide();
+                    require(["qtip", "drag"], function() {
+                        item.qtip({
+                            position: { my: "top " + myPosition, at: "top " + atPosition, viewport: $(window) },
+                            style: { tip: false, classes: 'draggable-tooltip', width: { min: 800, max: 800} },
+                            show: { event: 'click' }, hide: { event: 'click' },
+                            content: {
+                                text: function (event, api) {
+                                    $.getSafe(BIBLE_GET_BIBLE_TEXT + version + "/" + encodeURIComponent(xref), function (data) {
+                                        api.set('content.title.text', data.longName);
+                                        api.set('content.text', data.value);
                                     });
+                                },
+                                title: { text: xref, button: false }
+                            },
+                            events: {
+                                render: function (event, api) {
+                                    $(api.elements.titlebar).css("padding-right", "0px");
+    
+//                                    $(api.elements.titlebar).prepend(goToPassageArrowButton(true, version, xref, "leftPassagePreview"));
+//                                    $(api.elements.titlebar).prepend(goToPassageArrowButton(false, version, xref, "rightPassagePreview"));
+                                    $(api.elements.titlebar).prepend($('<button type="button" class="close" aria-hidden="true">&times;</button>').click(function () {
+                                        api.hide();
+                                    }));
+    
+//                                    $(".leftPassagePreview, .rightPassagePreview", api.elements.titlebar)
+//                                        .first().button({ icons: { primary: "ui-icon-arrowthick-1-e" }})
+//                                        .next().button({ icons: { primary: "ui-icon-arrowthick-1-w" }}).end()
+//                                        .click(function () {
+//                                            api.hide();
+//                                        });
+                                },
+                                visible: function(event, api) {
+                                    var tooltip = api.elements.tooltip;
+                                    new Draggabilly($(tooltip).get(0), {
+                                        containment: 'body',
+                                        handle: ".qtip-titlebar"
+                                    });
+                                }
                             }
-                        }
+                        });
+                        //set to initialized
+                        $.data(item, "initialised", true);
+                        
                     });
-                    //set to initialized
-                    $.data(item, "initialised", true);
                 }
             });
         },

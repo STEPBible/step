@@ -265,7 +265,7 @@ public class BibleController {
      * @return a list of items
      */
     public List<BookName> getBibleBookNames(final String bookStart, final String version) {
-        return this.bibleInformation.getBibleBookNames(bookStart, version, null);
+        return this.bibleInformation.getBibleBookNames(bookStart, version, true);
     }
 
     /**

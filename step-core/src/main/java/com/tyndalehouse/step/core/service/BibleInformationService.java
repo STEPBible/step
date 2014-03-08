@@ -102,11 +102,22 @@ public interface BibleInformationService {
      * @param bookStart the name of the matching key to look across book names
      * @param version the name of the version, defaults to ESV if not found
      * 
-     * @param bookScope
+     * @param bookScope a restriction on an OSIS reference book
      * @return a list of matching bible book names
      */
     List<BookName> getBibleBookNames(String bookStart, String version, final String bookScope);
 
+    /**
+     * returns a list of matching names or references in a particular book
+     *
+     * @param bookStart the name of the matching key to look across book names
+     * @param version the name of the version, defaults to ESV if not found
+     *
+     * @param autoLookupSingleBooks true to indicate we want to lookup chapters if we only get 1 book back
+     * @return a list of matching bible book names
+     */
+    List<BookName> getBibleBookNames(final String bookStart, final String version,  boolean autoLookupSingleBooks);
+    
     /**
      * Checks a set of core versions to see if they have been installed
      * 

@@ -1,31 +1,63 @@
 @import "template_variables";
 
+@mixin multi-column($numColumns) {
+  -moz-column-count: $numColumns; // Firefox 
+  -webkit-column-count: $numColumns; // Safari and Chrome
+  column-count: $numColumns;  
+}
+
+@mixin overflow() {
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+@mixin max-height($height) {
+  max-height: $height;
+  @include overflow();
+}
+
+
 .kolumny {
   @media screen and (max-width: $stepMD) {
-    max-height: 500px;
-    overflow-y: auto;
-    overflow-x: hidden;
+    @include max-height(500);
   }
   @media screen and (min-width: $stepMD + 1px) {
-    -moz-column-count: 2; /* Firefox */
-    -webkit-column-count: 2; /* Safari and Chrome */
-    column-count: 2;
     max-width: 600px;
+    @include multi-column(2);
+    @include overflow();
   }
 }
 
 .miniKolumny {
   @media screen and (max-width: $stepLG) {
-    max-height: 500px;
     width: 200px;
-    overflow-y: auto;
-    overflow-x: hidden;
+    @include max-height(500px);
   }
   @media screen and (min-width: $stepLG + 1px) {
-    -moz-column-count: 2; /* Firefox */
-    -webkit-column-count: 2; /* Safari and Chrome */
-    column-count: 2;
+    @include multi-column(2);
+    @include overflow();
     max-width: 800px;
     min-width: 500px;
   }
 }
+
+//.kolumnyRefs {
+//  @media screen and (min-width: 860px) {
+//    max-width: 700px;
+//    @include multi-column(4);
+//    @include overflow();
+//  }
+//  @media screen and (min-width: 650px) and (max-width: 859px){
+//    max-width: 600px;
+//    @include multi-column(3);
+//    @include overflow();
+//  }
+//  @media screen and (min-width: 430px) and (max-width: 649px){
+//    max-width: 500px;
+//    @include multi-column(2);
+//    @include overflow();
+//  }
+//  @media screen and (max-width: 429) {
+//    @include max-height(500);
+//  }  
+//}

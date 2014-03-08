@@ -10,6 +10,8 @@
   padding: $paddingFromHeader;
 }
 
+// Vertical height creates a class called .className where maxHeight is set to 400, 600, 900 depending on screen size
+// gap identifies how much space is lost on the screen already
 @mixin verticalHeight($className, $gap: 100px) {
   @media screen and (min-height: 400px) {
   #{$className} {

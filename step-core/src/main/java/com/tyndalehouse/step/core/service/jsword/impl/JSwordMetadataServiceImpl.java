@@ -201,11 +201,30 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
 
     @Override
     public List<BookName> getBibleBookNames(final String bookStart, final String version, final String bookScope) {
+        return this.getBibleBookNames(bookStart, version, bookScope, false);
+    }
+
+    @Override
+    public List<BookName> getBibleBookNames(final String bookStart, final String version, boolean autoLookupSingleBooks) {
+        return this.getBibleBookNames(bookStart, version, null, autoLookupSingleBooks);
+    }
+
+    /**
+     * returns a list of matching names or references in a particular book
+     *
+     * @param bookStart             the name of the matching key to look across book names
+     * @param version               the name of the version, defaults to ESV if not found
+     * @param bookScope             a scope that reduces the search
+     * @param autoLookupSingleBooks true to indicate a single book should resolve to chapters
+     * @return a list of matching bible book names
+     */
+    private List<BookName> getBibleBookNames(final String bookStart, final String version, final String bookScope,
+                                             boolean autoLookupSingleBooks) {
         final String lookup = isBlank(bookStart) ? "" : bookStart;
         final Versification versification = this.versificationService.getVersificationForVersion(version);
-        final List<BookName> books = getBooks(lookup, versification, bookScope);
+        final List<BookName> books = getBooks(lookup, versification, bookScope, autoLookupSingleBooks);
         if (books.isEmpty()) {
-            return getBooks(lookup, Versifications.instance().getVersification(Versifications.DEFAULT_V11N), bookScope);
+            return getBooks(lookup, Versifications.instance().getVersification(Versifications.DEFAULT_V11N), bookScope, autoLookupSingleBooks);
         }
         return books;
     }
@@ -213,12 +232,15 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
     /**
      * Looks through a versification for a particular type of book
      *
-     * @param bookStart     the string to match
-     * @param versification the versification we are interested in
-     * @param bookScope     the actual book required, usually to get chapters
+     * @param bookStart             the string to match
+     * @param versification         the versification we are interested in
+     * @param bookScope             the actual book required, usually to get chapters
+     * @param autoLookupSingleBooks autoLookupSingleBooks true to indicate that for a single book, we should lookup
+     *                              the chapters inside
      * @return the list of matching names
      */
-    private List<BookName> getBooks(final String bookStart, final Versification versification, final String bookScope) {
+    private List<BookName> getBooks(final String bookStart, final Versification versification, final String bookScope,
+                                    final boolean autoLookupSingleBooks) {
         final String searchPattern = bookStart.toLowerCase(Locale.getDefault()).trim();
 
         final List<BookName> matchingNames = new ArrayList<BookName>();
@@ -238,6 +260,13 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
                     || versification.getShortName(book).toLowerCase().startsWith(searchPattern)) {
                 b = book;
                 addBookName(matchingNames, book, versification);
+            }
+        }
+
+        if (autoLookupSingleBooks && matchingNames.size() == 1) {
+            final List<BookName> optionsInBook = getChapters(versification, b);
+            if (!optionsInBook.isEmpty()) {
+                return optionsInBook;
             }
         }
 

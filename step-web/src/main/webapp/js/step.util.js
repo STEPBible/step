@@ -156,6 +156,7 @@
 window.step = window.step || {};
 step.util = {
     outstandingRequests: 0,
+    timers: {},
     refreshWaitStatus: function () {
         var passageContainer = step.util.getPassageContainer(step.util.activePassageId());
         if(this.outstandingRequests > 0) {
@@ -388,26 +389,22 @@ step.util = {
         }
         return this._passageContainers[passageIdOrElement];
     },
-    delay: function () {
+    delay: function (callback, ms, timerName) {
         var timer = 0;
-        var timers = {};
-
-        return function (callback, ms, timerName) {
-            if (timerName) {
-                var tn = timers[timerName];
-                if (tn == undefined) {
-                    timers[timerName] = tn = 0;
-                }
-                clearTimeout(tn);
-
-                if (callback) {
-                    timers[timerName] = setTimeout(callback, ms);
-                }
-            } else {
-                clearTimeout(timer);
-                timer = setTimeout(callback, ms);
+        if (timerName) {
+            var tn = this.timers[timerName];
+            if (tn == undefined) {
+                this.timers[timerName] = tn = 0;
             }
-        };
+            clearTimeout(tn);
+
+            if (callback) {
+                this.timers[timerName] = setTimeout(callback, ms);
+            }
+        } else {
+            clearTimeout(timer);
+            timer = setTimeout(callback, ms);
+        }
     },
     getMainLanguage: function (passageModel) {
         return (passageModel.get("languageCode") || ["en"])[0];
@@ -493,6 +490,9 @@ step.util = {
 
             if (typeof source == "string") {
                 strong = source;
+            } else if(source.strong) {
+                strong = source.strong;
+                morph = source.morph;
             } else {
                 var s = $(source);
                 strong = s.attr("strong");
@@ -541,13 +541,47 @@ step.util = {
                 focusedPassage: focusedPassage
             })
         },
+        doQuickLexicon: function(target) {
+            
+        },
         addStrongHandlers: function (passageId, passageContent) {
             var that = this;
             var allStrongElements = $("[strong]", passageContent);
 
             allStrongElements.click(function () {
-                step.util.ui.showDef(this);
-            }).hover(function () {
+                if(!that.touchTriggered) {
+                    step.util.ui.showDef(this);
+                }
+            }).on("touchstart", function(ev) {
+                that.touchstart = new Date().getTime();
+                that.touchTriggered = true;
+                step.passage.higlightStrongs({
+                    passageId: undefined,
+                    strong: $(this).attr('strong'),
+                    morph: $(this).attr('morph'),
+                    classes: "primaryLightBg"
+                });
+                
+                var hoverContext = this;
+                require(['quick_lexicon'], function() {
+                    var strong  = $(hoverContext).attr('strong');
+                    var morph = $(hoverContext).attr('morph');
+                    new QuickLexicon({
+                        strong: strong, morph: morph, target: hoverContext, 
+                        position: ev.pageY / $(window).height(), touchEvent: true
+                    });
+                });
+            }).on("touchend", function() {
+                if(that.touchstart) {
+                    var diff = new Date().getTime() - that.touchstart;
+                    that.touchstart = null;
+                    if(diff < 1000) {
+                        //do nothing - event has already triggered.
+                    } else {
+                        step.util.ui.showDef(this);
+                    }
+                }
+            }).hover(function (ev) {
                 step.passage.higlightStrongs({
                     passageId: undefined,
                     strong: $(this).attr('strong'),
@@ -556,16 +590,21 @@ step.util = {
                 });
 
                 var hoverContext = this;
-                step.util.delay(function () {
-                    QuickLexiconModels.at(0).save({
-                        strongNumber: $(hoverContext).attr('strong'),
-                        morph: $(hoverContext).attr('morph'),
-                        element: hoverContext
-                    });
-                }, 500, 'show-quick-lexicon');
+                require(['quick_lexicon'], function() {
+                    var strong  = $(hoverContext).attr('strong');
+                    var morph = $(hoverContext).attr('morph');
+                    step.util.delay(function () {
+                        //do the quick lexicon
+                        new QuickLexicon({
+                            strong: strong, morph: morph, 
+                            target: hoverContext, position: ev.pageY / $(window).height(), touchEvent: false
+                        });
+                    }, MOUSE_PAUSE, 'show-quick-lexicon');
+                });
             }, function () {
                 step.passage.removeStrongsHighlights(undefined, "primaryLightBg relatedWordEmphasisHover");
                 step.util.delay(undefined, 0, 'show-quick-lexicon');
+                $("#quickLexicon").remove();
             });
         },
         /**

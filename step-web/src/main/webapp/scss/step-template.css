@@ -2,7 +2,7 @@ h1, h2, h3, h4, h5, h6 {
   color: #991c32;
   font-weight: bold; }
 
-body, .dropdown-menu, .searchResultRow {
+body, .dropdown-menu, .searchResultRow, #quickLexicon h1 {
   font-size: 12px; }
 
 ul .glyphicon-ok {
@@ -81,31 +81,31 @@ ul .glyphicon-ok {
 
 @media screen and (max-width: 991px) {
   .kolumny {
-    max-height: 500px;
+    max-height: 500;
     overflow-y: auto;
     overflow-x: hidden; } }
 @media screen and (min-width: 992px) {
   .kolumny {
+    max-width: 600px;
     -moz-column-count: 2;
-    /* Firefox */
     -webkit-column-count: 2;
-    /* Safari and Chrome */
     column-count: 2;
-    max-width: 600px; } }
+    overflow-y: auto;
+    overflow-x: hidden; } }
 
 @media screen and (max-width: 1120px) {
   .miniKolumny {
-    max-height: 500px;
     width: 200px;
+    max-height: 500px;
     overflow-y: auto;
     overflow-x: hidden; } }
 @media screen and (min-width: 1121px) {
   .miniKolumny {
     -moz-column-count: 2;
-    /* Firefox */
     -webkit-column-count: 2;
-    /* Safari and Chrome */
     column-count: 2;
+    overflow-y: auto;
+    overflow-x: hidden;
     max-width: 800px;
     min-width: 500px; } }
 
@@ -347,6 +347,8 @@ ul .glyphicon-ok {
     content: ' '; }
   .passageContentHolder br + br {
     display: none; }
+  .passageContentHolder .notesPane {
+    text-align: left; }
 
 .verseNumber {
   vertical-align: top;
@@ -478,6 +480,13 @@ h4.lexicalGrouping {
 .selectModal {
   z-index: 10000; }
 
+.qtip-titlebar {
+  margin-top: -1px; }
+  .qtip-titlebar .close {
+    line-height: 12px;
+    margin: 2 5 -2 0;
+    font-size: 18px; }
+
 #bibleVersions .modal-body {
   padding: 5px; }
 #bibleVersions span.form-group {
@@ -513,6 +522,46 @@ h4.lexicalGrouping {
 @media screen and (min-height: 900px) {
   #bibleVersions .tab-pane {
     max-height: 700px; } }
+
+#advancedSearch .close {
+  margin: 5px 10px; }
+#advancedSearch form {
+  padding: 5px; }
+  #advancedSearch form label {
+    margin-right: 5px; }
+#advancedSearch .closeModal {
+  float: right;
+  font-size: 100%; }
+  #advancedSearch .closeModal label {
+    margin-bottom: 0px; }
+@media screen and (min-height: 400px) {
+  #advancedSearch .tab-pane {
+    max-height: 200px; } }
+@media screen and (min-height: 600px) {
+  #advancedSearch .tab-pane {
+    max-height: 400px; } }
+@media screen and (min-height: 900px) {
+  #advancedSearch .tab-pane {
+    max-height: 700px; } }
+
+.modalVerseComplete {
+  z-index: 99999999; }
+
+#subjectByRef .dropdown-menu {
+  margin-top: -3px; }
+@media screen and (min-height: 400px) {
+  #subjectByRef .kolumnyRefs {
+    max-height: 100px; } }
+@media screen and (min-height: 600px) {
+  #subjectByRef .kolumnyRefs {
+    max-height: 300px; } }
+@media screen and (min-height: 900px) {
+  #subjectByRef .kolumnyRefs {
+    max-height: 600px; } }
+#subjectByRef .kolumnyRefs {
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0; }
 
 ::-webkit-scrollbar {
   width: 12px; }
@@ -839,3 +888,21 @@ body::-webkit-scrollbar-corner {
 
 .segC1 {
   color: black; }
+
+#quickLexicon {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  margin: 0 0 0 0;
+  padding: 0 4 2 4;
+  width: 100%; }
+  #quickLexicon > div {
+    background-color: #ebebf1;
+    padding: 5 5 5 5; }
+  #quickLexicon h1 {
+    display: inline;
+    clear: left; }
+  #quickLexicon .infoTagLine {
+    font-size: xx-small;
+    text-align: right;
+    display: block; }

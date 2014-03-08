@@ -360,17 +360,14 @@ public class BibleInformationServiceImpl implements BibleInformationService {
         return bibleInstallers;
     }
 
-    /**
-     * Gets the bible book names.
-     *
-     * @param bookStart the book start
-     * @param version   the version
-     * @param bookScope
-     * @return the bible book names
-     */
     @Override
     public List<BookName> getBibleBookNames(final String bookStart, final String version, final String bookScope) {
         return this.jswordMetadata.getBibleBookNames(bookStart, version, bookScope);
+    }
+
+    @Override
+    public List<BookName> getBibleBookNames(final String bookStart, final String version, final boolean autoLookup) {
+        return this.jswordMetadata.getBibleBookNames(bookStart, version, autoLookup);
     }
 
     /**

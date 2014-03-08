@@ -15,6 +15,9 @@ SUBJECT_SEARCH = "subject";
 NAVE_SEARCH = "nave";
 NAVE_SEARCH_EXTENDED = "xnave";
 TOPIC_BY_REF = "topicref";
+REF_VERSION = "ESV";
+KEY_PAUSE=200;
+MOUSE_PAUSE=300;
 
 DS_VERSIONS = "allVersions";
 BOOKMARKS_GET =                     STEP_SERVER_BASE_URL + "favourites/getBookmarks";

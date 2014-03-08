@@ -1,0 +1,39 @@
+@import 'template_variables';
+@import 'mixins';
+
+#advancedSearch {
+  .close {
+    margin: 5px 10px;
+  }
+  form {
+    padding: 5px;
+    
+    label {
+      margin-right: 5px;
+    }
+  }
+  .closeModal {
+    float: right;
+    font-size: 100%;
+    label {
+      margin-bottom: 0px;
+    }
+  }
+  @include verticalHeight(".tab-pane", 200px);
+}
+
+.modalVerseComplete {
+  z-index: 99999999;
+}
+
+#subjectByRef {
+  .dropdown-menu {
+    margin-top: -3px;
+  }
+  @include verticalHeight(".kolumnyRefs", 300px);
+  .kolumnyRefs {
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 0;
+  }
+}

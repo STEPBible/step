@@ -66,7 +66,17 @@ var MainSearchView = Backbone.View.extend({
                             });
                     })).append($("<a>").append(__s.search_advanced).on('click', function () {
                         require(["menu_extras"], function () {
-                            new AdvancedSearchView({ searchView: view });
+                            //find master version
+                            var dataItems = self.masterSearch.select2("data");
+                            var masterVersion = REF_VERSION;
+                            for(var i = 0; i < dataItems; i++) {
+                                if(dataItems[i].itemType == VERSION) {
+                                    masterVersion = dataItems[i].item.initials;
+                                    break;
+                                }
+                            }
+                            
+                            new AdvancedSearchView({ searchView: view, masterVersion: masterVersion });
                         });
                     }));
                 var container = $("<span>").append(labels).append(message);
@@ -75,8 +85,8 @@ var MainSearchView = Backbone.View.extend({
             ajax: {
                 url: function (term, page) {
                     var url = SEARCH_AUTO_SUGGESTIONS + term;
+                    var contextArgs = "";
                     if(self.specificContext.length != 0) {
-                        var contextArgs = "";
                         for(var i = 0 ; i < self.specificContext.length; i++) {
                             contextArgs += self.specificContext[i].itemType + "=" + self.specificContext[i].value;
                             if(i < self.specificContext.length) {
@@ -87,7 +97,7 @@ var MainSearchView = Backbone.View.extend({
                     return url + "/" + encodeURIComponent(contextArgs);
                 },
                 dataType: "json",
-                quietMillis: 200,
+                quietMillis: KEY_PAUSE,
                 cache: true,
                 results: function (data, page) {
                     var datum = [];
@@ -178,7 +188,16 @@ var MainSearchView = Backbone.View.extend({
             return;
         }).on("select2-opening", function(event) {
             //remove any context that has references
-            self._removeSpecificContext(REFERENCE);
+            self._removeSpecificContext([REFERENCE, VERSION]);
+            
+            //add the first version selected to the context
+            var data = self.masterSearch.select2("data") || [];
+            for(var i = 0; i < data.length; i++) {
+                if(data[i].itemType == VERSION) {
+                    self._addSpecificContext(VERSION, data[i].item.initials);     
+                    break;
+                }
+            }
         });
 
         this.masterSearch.select2("container").find("input[type='text']").on("keyup", this._handleKeyPressInSearch);
@@ -336,9 +355,20 @@ var MainSearchView = Backbone.View.extend({
         this._removeSpecificContext (itemType);
         this.specificContext.push({ itemType: itemType, value: value });
     },
+    /**
+     * Removes all contexts of a particular type
+     * @param itemType the item type, or array of item types
+     * @private
+     */
     _removeSpecificContext : function(itemType) {
+        if(itemType == null) {
+            itemType = [];
+        } else if(!$.isArray(itemType)) {
+            itemType = [itemType];
+        }
+        
         for(var i = 0; i < this.specificContext.length; i++) {
-            if(this.specificContext[i].itemType == itemType) {
+            if(itemType.indexOf(this.specificContext[i].itemType) != -1) {
                 this.specificContext.splice(i, 1);
                 //i will be incremented, so keep it in sync with for loop increment
                 i--;

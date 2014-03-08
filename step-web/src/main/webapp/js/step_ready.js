@@ -99,6 +99,9 @@
 
     //can this be done before load? self executing function
     $(window).on("load", function () {
+        //disable amd
+        define.amd = null;
+        
         window.step = window.step || {};
         initSettings();
         initDataSources();

@@ -1,11 +1,6 @@
 @import 'template_variables';
 @import 'mixins';
 
-.selectModal {
-  // just above the multi-select
-  z-index: 10000;
-}
-
 #bibleVersions {
 
   .modal-body {

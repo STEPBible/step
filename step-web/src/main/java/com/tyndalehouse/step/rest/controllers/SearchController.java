@@ -73,11 +73,41 @@ public class SearchController {
         this.rangeService = rangeService;
     }
 
+    /**
+     * Suggests options to the user.
+     *
+     * @param input the input from the user
+     */
     public List<AutoSuggestion> suggest(final String input) {
         return this.suggest(input, null);
     }
 
+    /**
+     * Suggests options to the user.
+     *
+     * @param input   the user input
+     * @param context any specific user context, such as the selection of a book, or a particular master version
+     *                already in the box
+     * @return
+     */
     public List<AutoSuggestion> suggest(final String input, final String context) {
+        return suggest(input, context, null);
+    }
+
+    /**
+     * Suggests options to the user.
+     *
+     * @param input          the input from the user
+     * @param context        any specific user context, such as the selection of a book, or a particular master version
+     *                       already in the box
+     * @param referencesOnly true to indicate we only want references back
+     */
+    public List<AutoSuggestion> suggest(final String input, final String context, final String referencesOnly) {
+        boolean onlyReferences = false;
+        if(StringUtils.isNotBlank(referencesOnly)) {
+            onlyReferences = Boolean.parseBoolean(referencesOnly);
+        }
+        
         final List<AutoSuggestion> autoSuggestions = new ArrayList<AutoSuggestion>(128);
         String bookContext = JSwordPassageService.REFERENCE_BOOK;
         String referenceContext = null;
@@ -95,7 +125,7 @@ public class SearchController {
             }
         }
 
-        if (referenceContext != null) {
+        if (onlyReferences || referenceContext != null) {
             addReferenceSuggestions(input, autoSuggestions, bookContext, referenceContext);
         } else {
             addDefaultSuggestions(input, autoSuggestions, bookContext);
@@ -106,7 +136,7 @@ public class SearchController {
     private void addDefaultSuggestions(final String input, final List<AutoSuggestion> autoSuggestions, final String referenceBookContext) {
         addReferenceSuggestions(input, autoSuggestions, referenceBookContext, null);
         addAutoSuggestions(SearchToken.REFERENCE, autoSuggestions, this.rangeService.getRanges(input));
-        
+
         addAutoSuggestions(SearchToken.SUBJECT_SEARCH, autoSuggestions, this.autocompleteSubject(input));
 
         final String restored = restoreSearchQuery(input);

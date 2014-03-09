@@ -241,4 +241,11 @@ public final class StringUtils {
         }
         return sb.toString();
     }
+    
+    public static String getNonNullString(final String value, final String defaultValue) {
+        if(StringUtils.isBlank(value)) {
+            return defaultValue;
+        }
+        return value;
+    }
 }

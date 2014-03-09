@@ -32,6 +32,8 @@
  ******************************************************************************/
 package com.tyndalehouse.step.models;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Locale;
 
 import com.tyndalehouse.step.core.models.ClientSession;
@@ -119,7 +121,12 @@ public class WebSessionImpl implements ClientSession {
     public String getParam(String name) {
         return this.request.getParameter(name);
     }
-    
+
+    @Override
+    public InputStream getAttachment() throws IOException {
+        return this.request.getInputStream();
+    }
+
     /**
      * @param locale the locale to set
      */

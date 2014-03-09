@@ -108,7 +108,8 @@ public class StepCoreModule extends AbstractStepGuiceModule {
         bind(SwingService.class).to(SwingServiceImpl.class);
         bind(OriginalWordSuggestionService.class).to(OriginalWordSuggestionServiceImpl.class);
         bind(PassageOptionsValidationService.class).to(PassageOptionsValidationServiceImpl.class).asEagerSingleton();
-
+        bind(SupportRequestService.class).to(SupportRequestServiceImpl.class);
+        
         bind(new TypeLiteral<List<String>>() {
         }).annotatedWith(Names.named("defaultVersions")).toProvider(DefaultVersionsProvider.class);
 

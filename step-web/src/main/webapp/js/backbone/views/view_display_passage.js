@@ -235,41 +235,30 @@ TODO:                this._addStrongHandlers(passageId, passageHtml);
                 var item = notes.get(i);
                 var link = $("a", item);
                 var note = $(".inlineNote", item);
-
-                link.attr("title", note.html());
-                require(["qtip", "drag"], function() {
-                    link.qtip({
-                        position: {
-                            my: "center " + myPosition,
-                            at: "center " + atPosition
-                        },
-                        style: { classes: "visibleInlineNote" },
-                        events: {
-                            show: function () {
-                                var qtipApi = $(this).qtip("api");
-                                var qtipOffset = qtipApi.elements.target.offset();
-                                var yPosition = qtipOffset.top;
-                                var centerPane = $("#centerPane");
-                                var xPosition = centerPane.offset().left;
-    
-                                if (xPosition == 0) {
-                                    //most likely in 2 column view, so attempt to place on the same axis as
-                                    //where we currently are...
-                                    xPosition = $(".leftColumn").width();
-                                }
-    
-                                if (passageId == 1) {
-                                    xPosition += centerPane.width();
-                                }
-    
-                                var currentPosition = $(this).qtip("option", "position");
-                                currentPosition.target = [xPosition, yPosition];
-                            }
-                        }
-                    });
-                });
+                this._doInlineNoteQtip(link, note);
             }
         },
+        _doInlineNoteQtip: function(link, note) {
+            link.attr("title", note.html());
+            require(["qtip"], function() {
+                link.qtip({
+                    position: {
+                        my: "top left",
+                        at: "top left"
+                    },
+                    style: { classes: "visibleInlineNote", tip: false },
+                    events: {
+                        show: function () {
+                            var qtipApi = $(this).qtip("api");
+                            var qtipOffset = qtipApi.elements.target.offset();
+                            var currentPosition = $(this).qtip("option", "position");
+                            currentPosition.target = [0, 0];
+                        }
+                    }
+                });
+            });
+        },
+        
 
         /**
          * Sets up qtip on all side notes
@@ -330,54 +319,64 @@ TODO:                this._addStrongHandlers(passageId, passageHtml);
          * @private
          */
         _makeSideNoteQtip: function (item, xref, myPosition, atPosition, version) {
-            item.mouseover(function () {
-                if (!$.data(item, "initialised")) {
-                    require(["qtip", "drag"], function() {
-                        item.qtip({
-                            position: { my: "top " + myPosition, at: "top " + atPosition, viewport: $(window) },
-                            style: { tip: false, classes: 'draggable-tooltip', width: { min: 800, max: 800} },
-                            show: { event: 'click' }, hide: { event: 'click' },
-                            content: {
-                                text: function (event, api) {
-                                    $.getSafe(BIBLE_GET_BIBLE_TEXT + version + "/" + encodeURIComponent(xref), function (data) {
-                                        api.set('content.title.text', data.longName);
-                                        api.set('content.text', data.value);
-                                    });
-                                },
-                                title: { text: xref, button: false }
+            var self = this;
+            item.on("mouseover", function () {
+                self._makeSideNoteQtipHandler(item, xref, myPosition, atPosition, version, false);
+            }).on("touchstart", function() {
+                self._makeSideNoteQtipHandler(item, xref, myPosition, atPosition, version, true);
+            });
+        },
+        _makeSideNoteQtipHandler: function(item, xref, myPosition, atPosition, version, touch) {
+            if (!$.data(item, "initialised")) {
+                require(["qtip", "drag"], function() {
+                    item.qtip({
+                        position: { my: "top " + myPosition, at: "top " + atPosition, viewport: $(window) },
+                        style: { tip: false, classes: 'draggable-tooltip', width: { min: 800, max: 800} },
+                        show: { event: 'click' }, hide: { event: 'click' },
+                        content: {
+                            text: function (event, api) {
+                                $.getSafe(BIBLE_GET_BIBLE_TEXT + version + "/" + encodeURIComponent(xref), function (data) {
+                                    api.set('content.title.text', data.longName);
+                                    api.set('content.text', data.value);
+                                });
                             },
-                            events: {
-                                render: function (event, api) {
-                                    $(api.elements.titlebar).css("padding-right", "0px");
-    
+                            title: { text: xref, button: false }
+                        },
+                        events: {
+                            render: function (event, api) {
+                                $(api.elements.titlebar).css("padding-right", "0px");
+                                $(api.elements.titlebar).prepend($('<button type="button" class="close" aria-hidden="true">&times;</button>').click(function () {
+                                    api.hide();
+                                }));
+                                
 //                                    $(api.elements.titlebar).prepend(goToPassageArrowButton(true, version, xref, "leftPassagePreview"));
 //                                    $(api.elements.titlebar).prepend(goToPassageArrowButton(false, version, xref, "rightPassagePreview"));
-                                    $(api.elements.titlebar).prepend($('<button type="button" class="close" aria-hidden="true">&times;</button>').click(function () {
-                                        api.hide();
-                                    }));
-    
+
 //                                    $(".leftPassagePreview, .rightPassagePreview", api.elements.titlebar)
 //                                        .first().button({ icons: { primary: "ui-icon-arrowthick-1-e" }})
 //                                        .next().button({ icons: { primary: "ui-icon-arrowthick-1-w" }}).end()
 //                                        .click(function () {
 //                                            api.hide();
 //                                        });
-                                },
-                                visible: function(event, api) {
-                                    var tooltip = api.elements.tooltip;
-                                    new Draggabilly($(tooltip).get(0), {
-                                        containment: 'body',
-                                        handle: ".qtip-titlebar"
-                                    });
+                            },
+                            visible: function(event, api) {
+                                var tooltip = api.elements.tooltip;
+                                var selector = touch ? ".qtip-title" : ".qtip-titlebar"; 
+                                if(touch) {
+                                    tooltip.find(".qtip-title").css("width", "90%");
                                 }
+                                new Draggabilly($(tooltip).get(0), {
+                                    containment: 'body',
+                                    handle: selector
+                                });
                             }
-                        });
-                        //set to initialized
-                        $.data(item, "initialised", true);
-                        
+                        }
                     });
-                }
-            });
+                    //set to initialized
+                    $.data(item, "initialised", true);
+
+                });
+            }
         },
 
         /**
@@ -399,21 +398,23 @@ TODO:                this._addStrongHandlers(passageId, passageHtml);
          * @private
          */
         _doHighlightNoteInPane: function (passageContent, link) {
+            var self = this;
             var inlineLink = $(".notesPane strong", passageContent).filter(function () {
                 return $(this).text() == link.text();
             }).closest(".margin");
-
-            $(link).hover(function () {
-                inlineLink.addClass("ui-state-highlight");
-            }, function () {
-                inlineLink.removeClass("ui-state-highlight");
-            });
-
-            $(inlineLink).hover(function () {
-                link.addClass("inlineNoteHighlight");
-            }, function () {
-                link.removeClass("inlineNoteHighlight");
-            });
+            
+            var links = $(inlineLink).add(link);
+            
+            $(links).hover(function () { self._highlightBothLinks(links); }, 
+                function () { self._unhighlighBothLinks(links); });
+            $(links).on("touchstart", function() { self._highlightBothLinks(links); });
+            $(links).on("touchend", function() { self._unhighlighBothLinks(links)});
+        },
+        _highlightBothLinks: function(links) {
+            links.addClass("secondaryBackground");
+        },
+        _unhighlighBothLinks: function(links) {
+            links.removeClass("secondaryBackground");
         },
 
         /**

@@ -11,7 +11,8 @@ requirejs.config({
         menu_extras: ["js/backbone/views/view_pick_bible"],
         view_help_menu: ["js/backbone/views/view_help_menu"],
         quick_lexicon: ["js/backbone/views/view_quick_lexicon"],
-        drag: ["libs/draggabilly"]
+        drag: ["libs/draggabilly"],
+        html2canvas: ["libs/html2canvas"]
     },
     shim : {
         "menu_extras" : ["js/backbone/views/view_advanced_search"],

@@ -259,6 +259,32 @@ step.util = {
     activePassage: function () {
         return step.passages.findWhere({ passageId: this.activePassageId() });
     },
+    /*
+     * @description        Uploads a file via multipart/form-data, via a Canvas elt
+     * @param url  String: Url to post the data
+     * @param name String: name of form element
+     * @param fn   String: Name of file
+     * @param canvas HTMLCanvasElement: The canvas element.
+     * @param type String: Content-Type, eg image/png
+     ***/
+    postCanvasToURL: function(url, name, fn, canvas, type) {
+        var data = canvas.toDataURL(type);
+        data = data.replace('data:' + type + ';base64,', '');
+    
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', url, true);
+        var boundary = 'ohaiimaboundary';
+        xhr.setRequestHeader(
+            'Content-Type', 'multipart/form-data; boundary=' + boundary);
+        xhr.sendAsBinary([
+                '--' + boundary,
+                'Content-Disposition: form-data; name="' + name + '"; filename="' + fn + '"',
+                'Content-Type: ' + type,
+            '',
+            atob(data),
+                '--' + boundary + '--'
+        ].join('\n'));
+    },
     /**
      * @param linked true to indicate we want to link this column with the current active column
      * @private

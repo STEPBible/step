@@ -325,10 +325,11 @@ ul .glyphicon-ok {
     display: block; }
   .passageContentHolder .endLineGroup, .passageContentHolder .startLineGroup {
     content: ' ';
-    display: block; }
+    display: block;
+    margin-bottom: 4px; }
   .passageContentHolder .startLineGroup {
     padding-top: 8px; }
-  .passageContentHolder a + br, .passageContentHolder h2 + br {
+  .passageContentHolder h2 + br, .passageContentHolder .startLineGroup + br, .passageContentHolder .startLineGroup + br + .level1 {
     display: none; }
   .passageContentHolder a + br + .level1 {
     margin-right: -10px; }
@@ -358,6 +359,10 @@ ul .glyphicon-ok {
   background-color: #f3e5b4;
   color: #991c32;
   font-weight: bold; }
+
+h3.psalmHeading {
+  font-size: 14px;
+  margin: 0px; }
 
 .searchResultRow .verse {
   vertical-align: middle; }

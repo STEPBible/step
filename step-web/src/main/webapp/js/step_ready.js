@@ -109,5 +109,7 @@
         initCoreModelsAndRouter();
         initSearchDropdown();
         Backbone.history.start({pushState: true, silent: true });
+        
+        
     });
 })();

@@ -179,19 +179,6 @@
                                 <!--<cssSourceFile>css/prettyCheckable.css</cssSourceFile>-->
                                 <cssSourceFile>scss/step-template.css</cssSourceFile>
                                 <cssSourceFile>css/passage.css</cssSourceFile>
-
-
-                                 <!--JQuery UI css is not on a CDN due to customizations/ui styles/etc. -->
-                                <!--<cssSourceFile>css/jquery-ui-1.10.2.custom.min.css</cssSourceFile>-->
-								<!--<cssSourceFile>css/qtip.css</cssSourceFile>-->
-								<!--<cssSourceFile>css/ddsmoothmenu.css</cssSourceFile>-->
-								<!--<cssSourceFile>css/ddsmoothmenu-v.css</cssSourceFile>-->
-								<!--<cssSourceFile>css/initial-layout.css</cssSourceFile>-->
-								<!--<cssSourceFile>css/initial-fonts.css</cssSourceFile>-->
-								<!--<cssSourceFile>css/passage.css</cssSourceFile>-->
-								 <!--<cssSourceFile>css/timeline.css</cssSourceFile> -->
-								<!--<cssSourceFile>css/search.css</cssSourceFile>-->
-								<!--<cssSourceFile>css/cardo.css</cssSourceFile>-->
 							</cssSourceFiles>
 							<cssFinalFile>step.${project.version}.css</cssFinalFile>
 							<jsSourceDir>.</jsSourceDir>
@@ -330,7 +317,7 @@
                         </configuration>
                     </execution>
                     <execution>
-                        <id>minify-dropdown-options</id>
+                        <id>minify-quick-lexicon</id>
                         <phase>process-resources</phase>
                         <goals>
                             <goal>minify</goal>
@@ -344,7 +331,7 @@
                         </configuration>
                     </execution>
                     <execution>
-                        <id>minify-dropdown-options</id>
+                        <id>minify-draggabbilly</id>
                         <phase>process-resources</phase>
                         <goals>
                             <goal>minify</goal>
@@ -355,6 +342,20 @@
                                 <jsSourceFile>libs/draggabilly.js</jsSourceFile>
                             </jsSourceFiles>
                             <jsFinalFile>draggabilly-${project.version}.js</jsFinalFile>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>minify-html2canvas</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>minify</goal>
+                        </goals>
+                        <configuration>
+                            <jsSourceDir>.</jsSourceDir>
+                            <jsSourceFiles>
+                                <jsSourceFile>libs/html2canvas.js</jsSourceFile>
+                            </jsSourceFiles>
+                            <jsFinalFile>html2canvas-${project.version}.js</jsFinalFile>
                         </configuration>
                     </execution>
                 </executions>

@@ -18,14 +18,16 @@
       content: ' ';
       display: block;
   }
+  
   .endLineGroup, .startLineGroup {
     content: ' ';
     display: block;
+    margin-bottom: 4px;
   }
   .startLineGroup {
     padding-top: 8px;
   } 
-  a + br, h2+br {
+  h2+br, .startLineGroup + br, .startLineGroup + br + .level1 {
     display: none;
   }
   a+br+.level1 {
@@ -66,4 +68,9 @@
   background-color: $verseNumberBackground;
   color: $headingColour;
   font-weight: bold;
+}
+
+h3.psalmHeading {
+  font-size: $defaultFontSize+2;
+  margin: 0px;
 }

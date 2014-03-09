@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.models.ClientSession;
+import com.tyndalehouse.step.core.service.AppManagerService;
 import com.tyndalehouse.step.core.service.SupportRequestService;
 import com.tyndalehouse.step.core.utils.IOUtils;
 import org.apache.http.HttpEntity;
@@ -22,6 +23,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.protocol.ClientContext;
 import org.apache.http.entity.BasicHttpEntity;
 import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.ByteArrayBody;
 import org.apache.http.entity.mime.content.InputStreamBody;
 import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -30,10 +32,15 @@ import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.ExecutionContext;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
+import org.crosswire.common.util.IOUtil;
 
 import javax.inject.Named;
+import javax.inject.Provider;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -54,14 +61,17 @@ public class SupportRequestServiceImpl implements SupportRequestService {
     private final String createTemplate;
     private String jiraEndpoint;
     private final javax.inject.Provider<ClientSession> clientSessionProvider;
+    private final AppManagerService appManager;
 
     @Inject
     public SupportRequestServiceImpl(@Named("app.jira.create.issue") final String createTemplate,
                                      @Named("app.jira.create.endpoint") final String jiraEndpoint,
-                                     javax.inject.Provider<ClientSession> clientSessionProvider) {
+                                     final Provider<ClientSession> clientSessionProvider,
+                                     final AppManagerService appManager) {
         this.createTemplate = createTemplate;
         this.jiraEndpoint = jiraEndpoint;
         this.clientSessionProvider = clientSessionProvider;
+        this.appManager = appManager;
     }
 
     @Override
@@ -84,12 +94,14 @@ public class SupportRequestServiceImpl implements SupportRequestService {
         HttpResponse response = null;
         try {
             imageData = clientSessionProvider.get().getAttachment();
-            if (imageData == null || imageData.available() <= 0) {
+            byte[] imageAsBytes = readImage(imageData);
+            if (imageAsBytes == null || imageAsBytes.length == 0) {
                 return;
             }
-            attachmentRequest = getJiraHttpPost(String.format(ATTACH_API, id));
+            attachmentRequest = getJiraHttpPost(String.format(ATTACH_API, id), null);
             entity = new MultipartEntity();
-            entity.addPart("file", new InputStreamBody(imageData, "file"));
+            entity.addPart("file", new ByteArrayBody(imageAsBytes, "screenshot.png"));
+            
             attachmentRequest.setEntity(entity);
             DefaultHttpClient httpClient = getDefaultHttpClient(attachmentRequest);
             response = httpClient.execute(attachmentRequest, getHttpContext(httpClient));
@@ -104,6 +116,30 @@ public class SupportRequestServiceImpl implements SupportRequestService {
             if (attachmentRequest != null) {
                 attachmentRequest.releaseConnection();
             }
+        }
+    }
+
+    private byte[] readImage(final InputStream imageData) {
+        ByteArrayOutputStream outputStream = null;
+        BufferedOutputStream bos = null;
+        BufferedInputStream bis = null;
+        try {
+            outputStream = new ByteArrayOutputStream();
+            bos = new BufferedOutputStream(outputStream);
+            bis = new BufferedInputStream(imageData);
+            int b;
+            while ((b = bis.read()) != -1) {
+                bos.write(b);
+            }
+            bos.flush();
+            return outputStream.toByteArray();
+        } catch (IOException ex) {
+            throw new StepInternalException("Unable to read image data");
+        } finally {
+            IOUtils.closeQuietly(bos);
+            IOUtils.closeQuietly(bis);
+            IOUtils.closeQuietly(outputStream);
+            IOUtils.closeQuietly(imageData);
         }
     }
 
@@ -126,13 +162,13 @@ public class SupportRequestServiceImpl implements SupportRequestService {
         HttpPost post = null;
         HttpResponse response = null;
         try {
-            post = getJiraHttpPost(ISSUE_API);
+            post = getJiraHttpPost(ISSUE_API, "application/json");
             entity = new BasicHttpEntity();
             final byte[] body = String.format(createTemplate, summary, description, url, userName, userEmail).getBytes();
             createRequest = new ByteArrayInputStream(body);
             entity.setContent(createRequest);
             entity.setContentLength(body.length);
-            
+
             post.setEntity(entity);
 
             final DefaultHttpClient defaultHttpClient = getDefaultHttpClient(post);
@@ -155,6 +191,7 @@ public class SupportRequestServiceImpl implements SupportRequestService {
 
     /**
      * Set pre-emptive authentication on
+     *
      * @param httpClient the http client
      * @return the context
      */
@@ -165,20 +202,21 @@ public class SupportRequestServiceImpl implements SupportRequestService {
         httpClient.addRequestInterceptor(new PreemptiveAuthInterceptor(), 0);
         return localContext;
     }
-    
+
     private DefaultHttpClient getDefaultHttpClient(HttpPost post) {
         final DefaultHttpClient defaultHttpClient = new DefaultHttpClient();
-        final Credentials credentials = new UsernamePasswordCredentials(System.getProperty("jira.user"), System.getProperty("jira.password")); 
+        final Credentials credentials = new UsernamePasswordCredentials(System.getProperty("jira.user"), System.getProperty("jira.password"));
         defaultHttpClient.getCredentialsProvider().setCredentials(AuthScope.ANY, credentials);
 //        post.addHeader( BasicScheme.authenticate(credentials,"US-ASCII",false) );
-        
+
         return defaultHttpClient;
     }
 
     /**
      * Handles the http response by reading the entity if not null
+     *
      * @param response the HTTP response
-     * @param ex the exception that caused the issue (or null)
+     * @param ex       the exception that caused the issue (or null)
      * @return no string - always returns null
      */
     private String handleHttpResponseFailure(final HttpResponse response, final IOException ex) {
@@ -196,9 +234,11 @@ public class SupportRequestServiceImpl implements SupportRequestService {
         return nonNullString.replaceAll("\"", "\\\"");
     }
 
-    private HttpPost getJiraHttpPost(final String operation) {
+    private HttpPost getJiraHttpPost(final String operation, final String contentType) {
         final HttpPost post = new HttpPost(this.jiraEndpoint + operation);
-        post.addHeader(new BasicHeader("Content-Type", "application/json"));
+        if(contentType != null) {
+            post.addHeader(new BasicHeader("Content-Type", contentType));
+        }
         post.addHeader(new BasicHeader("X-Atlassian-Token", "no-check"));
         return post;
     }
@@ -210,19 +250,19 @@ public class SupportRequestServiceImpl implements SupportRequestService {
     }
 
     private String readResponse(final HttpEntity entity) {
-        if(entity == null) {
+        if (entity == null) {
             return "";
         }
-        
+
         InputStream content = null;
         BufferedReader reader = null;
         InputStreamReader inputStreamReader = null;
         try {
             content = entity.getContent();
-            if(content == null) {
+            if (content == null) {
                 return "";
             }
-            
+
             inputStreamReader = new InputStreamReader(content);
             reader = new BufferedReader(inputStreamReader);
             final StringBuilder response = new StringBuilder(256);

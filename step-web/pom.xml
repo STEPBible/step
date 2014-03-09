@@ -204,6 +204,7 @@
                                 <jsSourceFile>js/backbone/views/view_menu_passage.js</jsSourceFile>
                                 <jsSourceFile>js/state/step.state.js</jsSourceFile>
                                 <jsSourceFile>js/passage/step.passage.js</jsSourceFile>
+                                <jsSourceFile>js/backbone/view_feedback.js</jsSourceFile>
 							</jsSourceFiles>
 							<jsFinalFile>step.${project.version}.js</jsFinalFile>
 						</configuration>

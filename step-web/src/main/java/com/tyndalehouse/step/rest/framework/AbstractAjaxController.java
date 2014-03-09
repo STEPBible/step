@@ -53,6 +53,11 @@ public abstract class AbstractAjaxController extends HttpServlet {
             handleError(response, e, request);
         }
     }
+    
+    @Override
+    protected void doPost(final HttpServletRequest request, final HttpServletResponse response) {
+        this.doGet(request, response);
+    }
 
     private Object executeRestMethod(final HttpServletRequest request) {
         Object returnVal;

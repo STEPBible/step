@@ -911,3 +911,8 @@ body::-webkit-scrollbar-corner {
     font-size: xx-small;
     text-align: right;
     display: block; }
+
+#raiseSupportTrigger {
+  position: absolute;
+  bottom: 0px;
+  right: 0px; }

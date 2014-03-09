@@ -267,22 +267,19 @@ step.util = {
      * @param canvas HTMLCanvasElement: The canvas element.
      * @param type String: Content-Type, eg image/png
      ***/
-    postCanvasToURL: function(url, name, fn, canvas, type) {
+    postCanvasToURL: function(url, name, fn, canvas, type, formData) {
         var data = canvas.toDataURL(type);
         data = data.replace('data:' + type + ';base64,', '');
     
         var xhr = new XMLHttpRequest();
         xhr.open('POST', url, true);
-        var boundary = 'ohaiimaboundary';
-        xhr.setRequestHeader(
-            'Content-Type', 'multipart/form-data; boundary=' + boundary);
+        var boundary = '---step-form-data---';
+        xhr.setRequestHeader('Content-Type', 'multipart/form-data; boundary=' + boundary);
+        xhr.setRequestHeader('X-step-boundary', boundary);
         xhr.sendAsBinary([
-                '--' + boundary,
-                'Content-Disposition: form-data; name="' + name + '"; filename="' + fn + '"',
-                'Content-Type: ' + type,
-            '',
-            atob(data),
-                '--' + boundary + '--'
+                formData,
+                boundary,
+                atob(data)
         ].join('\n'));
     },
     /**

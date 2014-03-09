@@ -342,6 +342,7 @@
     <script src="js/backbone/models/passage_model.js" type="text/javascript"></script>
     <script src="js/backbone/views/view_menu_passage.js" type="text/javascript"></script>
     <script src="js/backbone/models/model_settings.js" type="text/javascript"></script>
+    <script src="js/backbone/views/view_feedback.js" type="text/javascript"></script>
     
     <%--<script src="js/backbone/models/model_options.js" type="text/javascript"></script>--%>
     

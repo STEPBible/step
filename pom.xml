@@ -463,8 +463,8 @@
             </dependency>
 
             <dependency>
-                <groupId>commons-collections</groupId>
-                <artifactId>commons-collections</artifactId>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
                 <version>${commons-io.version}</version>
             </dependency>
 

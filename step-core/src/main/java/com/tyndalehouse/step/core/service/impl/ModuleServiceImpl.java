@@ -80,7 +80,7 @@ public class ModuleServiceImpl implements ModuleService {
 
     @Override
     public List<BibleVersion> getAvailableModules() {
-        LOGGER.info("Getting bible versions");
+        LOGGER.debug("Getting bible versions");
         return getSortedSerialisableList(this.jswordModuleService.getInstalledModules(BookCategory.BIBLE,
                 BookCategory.DICTIONARY, BookCategory.COMMENTARY), this.clientSession.get().getLocale(),
                 this.resolver);

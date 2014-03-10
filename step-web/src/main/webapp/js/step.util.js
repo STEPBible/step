@@ -168,7 +168,7 @@ step.util = {
     squashErrors: function() {
         $("#errorContainer").remove();
     },
-    raiseInfo: function (message, level, passageId) {
+    raiseInfo: function (message, level, passageId, progress) {
         //no parsing for info and warning
         if(level == 'error') {
             level = 'danger';
@@ -185,6 +185,11 @@ step.util = {
         var errorPopup = $(_.template('<div class="alert alert-error fade in alert-<%= level %>" id="errorContainer">' +
             '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
             '<%= message %></div>')({ message: message, level: level}));
+        
+        if(progress != null) {
+            errorPopup.append('<div class="progress progress-striped active"><div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="' + progress + '" aria-valuemin="0" aria-valuemax="100" style="width: ' + progress + '%"></div></div>');
+        }
+        
         $("body").append(errorPopup);
         errorPopup.click(function() {
             $(this).remove(); 
@@ -267,20 +272,38 @@ step.util = {
      * @param canvas HTMLCanvasElement: The canvas element.
      * @param type String: Content-Type, eg image/png
      ***/
-    postCanvasToURL: function(url, name, fn, canvas, type, formData) {
+    postCanvasToURL: function(url, name, fn, canvas, type, formData, callback) {
         var data = canvas.toDataURL(type);
         data = data.replace('data:' + type + ';base64,', '');
     
         var xhr = new XMLHttpRequest();
         xhr.open('POST', url, true);
-        var boundary = '---step-form-data---';
+        var boundary = '--step-form-data123456';
+        var startTokenBoundary = '--' + boundary;
         xhr.setRequestHeader('Content-Type', 'multipart/form-data; boundary=' + boundary);
-        xhr.setRequestHeader('X-step-boundary', boundary);
-        xhr.sendAsBinary([
-                formData,
-                boundary,
-                atob(data)
-        ].join('\n'));
+        var dataToBeSent = [];
+        for(var i = 0; i < formData.length; i++) {
+            dataToBeSent.push(startTokenBoundary);
+            dataToBeSent.push('Content-Disposition: form-data; name="' + formData[i].key + '"');
+            dataToBeSent.push('');
+            dataToBeSent.push(formData[i].value);
+        }
+
+        dataToBeSent.push(startTokenBoundary);
+        dataToBeSent.push('Content-Disposition: form-data; name="' + name + '"; filename="' + fn + '"');
+        dataToBeSent.push('');
+        dataToBeSent.push(atob(data));
+        dataToBeSent.push(startTokenBoundary + '--');
+        dataToBeSent.push('');
+        
+        xhr.onreadystatechange = function() { 
+            if(xhr.readyState==4 && xhr.status==200) { 
+                callback(true); 
+            } else {
+                callback(false);
+            }
+        };
+        xhr.sendAsBinary(dataToBeSent.join('\r\n'));
     },
     /**
      * @param linked true to indicate we want to link this column with the current active column

@@ -51,7 +51,7 @@ public class SubjectSearchServiceImplTest {
      */
     @Test
     public void testSimpleSubjectAutoComplete() {
-        final List<SubjectSuggestion> prefixedTerms = subjectSearchService.autocomplete("he Lov");
+        final List<SubjectSuggestion> prefixedTerms = subjectSearchService.autocomplete("Lov");
         assertTrue(prefixedTerms.size() > 0);
         for(SubjectSuggestion prefixedTerm : prefixedTerms) {
             assertTrue(prefixedTerm.getValue().startsWith(prefix) );       

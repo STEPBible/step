@@ -74,7 +74,8 @@ public interface ClientSession {
 
     /**
      * Gets a multi-part attachment
+     * @param filePartName the name of the file part from which we can get the file out
      * @return an attachment
      */
-    InputStream getAttachment() throws IOException;
+    InputStream getAttachment(String filePartName) throws IOException;
 }

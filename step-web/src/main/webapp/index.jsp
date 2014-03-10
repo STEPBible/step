@@ -280,6 +280,9 @@
             <div class="sidebar-offcanvas" id="sidebar" role="navigation"></div>
         </div>
     </div>
+    
+    <%-- Feedback form button--%>
+    <button class="btn btn-primary btn-xs" id="raiseSupportTrigger" data-toggle="modal" data-target="#raiseSupport"><fmt:message key="help_feedback" /></button>
     <%
         if(request.getParameter("lang") == null) {
     %>

@@ -32,23 +32,6 @@
  ******************************************************************************/
 package com.tyndalehouse.step.guice;
 
-import java.util.Locale;
-
-import javax.servlet.ServletContext;
-import javax.servlet.ServletContextEvent;
-
-import com.tyndalehouse.step.rest.controllers.SearchPageController;
-import org.crosswire.common.util.Reporter;
-import org.crosswire.common.util.ReporterEvent;
-import org.crosswire.common.util.ReporterListener;
-import org.crosswire.jsword.book.sword.state.OpenFileStateManager;
-import org.crosswire.jsword.index.IndexManagerFactory;
-import org.crosswire.jsword.internationalisation.LocaleProvider;
-import org.crosswire.jsword.internationalisation.LocaleProviderManager;
-import org.crosswire.jsword.versification.BookName;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Provider;
@@ -61,10 +44,25 @@ import com.tyndalehouse.step.core.guice.StepCoreModule;
 import com.tyndalehouse.step.core.models.ClientSession;
 import com.tyndalehouse.step.rest.controllers.ImageController;
 import com.tyndalehouse.step.rest.controllers.InternationalJsonController;
+import com.tyndalehouse.step.rest.controllers.SearchPageController;
 import com.tyndalehouse.step.rest.controllers.SiteMapController;
 import com.tyndalehouse.step.rest.framework.FrontController;
 import com.yammer.metrics.guice.InstrumentationModule;
 import com.yammer.metrics.reporting.AdminServlet;
+import org.crosswire.common.util.Reporter;
+import org.crosswire.common.util.ReporterEvent;
+import org.crosswire.common.util.ReporterListener;
+import org.crosswire.jsword.book.sword.state.OpenFileStateManager;
+import org.crosswire.jsword.index.IndexManagerFactory;
+import org.crosswire.jsword.internationalisation.LocaleProvider;
+import org.crosswire.jsword.internationalisation.LocaleProviderManager;
+import org.crosswire.jsword.versification.BookName;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.servlet.ServletContext;
+import javax.servlet.ServletContextEvent;
+import java.util.Locale;
 
 /**
  * Configures the listener for the web app to return the injector used to configure the whole of the
@@ -105,11 +103,11 @@ public class StepServletConfig extends GuiceServletContextListener {
                 };
 
                 if (Boolean.getBoolean("metrics.enabled")) {
-                    this.injector = Guice.createInjector(new StepCoreModule(), new StepWebModule(), 
+                    this.injector = Guice.createInjector(new StepCoreModule(), new StepWebModule(),
                             new InstrumentationModule(), servletModule);
                 } else {
                     this.injector = Guice.createInjector(new StepCoreModule(), new StepWebModule(),
-                        servletModule);
+                            servletModule);
                 }
             }
         }

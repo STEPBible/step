@@ -30,10 +30,7 @@
  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
-NO_STRONGS = "The selected Bible will not be clickable as it does not support the Vocabulary feature.";
-
 step.version = {
-    warned: {},
     names: {
         asv: {name: "American Standard Version "},
         bbe: {name: "Bible in Basic English "},
@@ -49,15 +46,12 @@ step.version = {
         rotherham: {name: "Emphasized Bible "},
         ab: {name: "Translation of Greek Septuagint (OT)"},
         ylt: {name: "Young's very literal translation"},
-
         aleppo: {name: "Heb.OT: Aleppo Codex"},
         osmhb: {name: "Heb.OT: Leningrad Codex based on BHS"},
         wlc: {name: "Heb.OT: Leningrad Codex based on BHS"},
-
         lxx: {name: "Grk.OT: Septuagint (Rahlf+Goettingen)"},
         abpgrk: {name: "Grk.OT: Septuagint (Orthodox trad.)"},
         abp: {name: "Grk.OT: Eng.trans. (Brenton rev.)"},
-
         antoniades: {name: "Grk.NT: Orthodox Patriarchal Edition"},
         byz: {name: "Grk.NT: Majority or Byzantine text"},
         elzevir: {name: "Grk.NT: Elzevir 'Textus Receptus'"},
@@ -66,7 +60,6 @@ step.version = {
         tnt: {name: "Grk.NT: Tregelles ed. with corrections"},
         tr: {name: "Grk.NT: 'Textus Receptus' of the KJV"},
         whnu: {name: "Grk.NT: W+Hort with NA+UBS variants"},
-
         vulgate: {name: "Latin Bible, Vulgate by Jerome"},
         vulgsistine: {name: "Latin Bible, Vulgate Sixti"},
         vulghetzenauer: { name: "Latin Bible, Vulgate Clem. ed., Hetzenauer" },
@@ -77,7 +70,6 @@ step.version = {
         spvar : {  name: "Samaritan Pentateuch with MT & DSS" },
         spdss : {  name: "Samaritan Pentateuch v Dead Sea Scrolls" },
         spe : {  name: "Samaritan Pentateuch in KJV English" },
-
         peshitta: {name: "Syriac NT Peshitta" },
         etheridge: {name: "Syriac NT Peshitta English transl." },
         murdock: {name: "Syriac NT Peshitta English transl." },
@@ -85,26 +77,5 @@ step.version = {
         chiuns: {name: "和合本圣经 （简体版）" },
         chincvs: {name: "新译本 （简体版）" },
         chincvt: {name: "新譯本 (繁體版)"}
-    },
-
-    updateInfoLink: function (passageId) {
-        var version = step.state.passage.version(passageId);
-        $(".infoAboutVersion",
-            step.util.getPassageContainer(passageId))
-            .attr("href", "version.jsp?version=" + version)
-            .attr("title", sprintf(__s.info_about_bible, version));
-    },
-
-    warnIfNoStrongs: function (passageId, version) {
-        if (!step.keyedVersions || !version) {
-            return;
-        }
-
-        var self = this;
-        var keyedVersion = step.keyedVersions[version.toUpperCase()];
-        if (keyedVersion && keyedVersion.category == 'BIBLE' && !keyedVersion.hasStrongs && !$.localStore("warned-" + version.toUpperCase())) {
-            step.util.raiseInfo(NO_STRONGS, null, passageId);
-            $.localStore("warned-" + version.toUpperCase(), true);
-        }
     }
 };

@@ -27,7 +27,7 @@
 
         <jackson-mapper-asl.version>1.9.11</jackson-mapper-asl.version>
         <org.slf4j.version>1.7.2</org.slf4j.version>
-        <servlet-api.version>2.5</servlet-api.version>
+        <servlet-api.version>3.0.1</servlet-api.version>
         <jsp-api.version>2.2</jsp-api.version>
         <jstl.version>1.2</jstl.version>
         <pjl-comp-filter.version>1.7</pjl-comp-filter.version>
@@ -397,7 +397,7 @@
             <!-- Servlet -->
             <dependency>
                 <groupId>javax.servlet</groupId>
-                <artifactId>servlet-api</artifactId>
+                <artifactId>javax.servlet-api</artifactId>
                 <version>${servlet-api.version}</version>
                 <scope>provided</scope>
             </dependency>
@@ -429,8 +429,6 @@
                 <artifactId>guice-servlet</artifactId>
                 <version>${guice.version}</version>
             </dependency>
-
-
             <dependency>
                 <groupId>com.yammer.metrics</groupId>
                 <artifactId>metrics-core</artifactId>

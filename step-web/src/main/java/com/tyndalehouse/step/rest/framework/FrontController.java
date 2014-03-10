@@ -42,6 +42,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Provider;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -57,6 +58,7 @@ import static java.lang.String.format;
  *
  * @author chrisburrell
  */
+@MultipartConfig
 @Singleton
 public class FrontController extends AbstractAjaxController {
     public static final String UTF_8_ENCODING = "UTF-8";

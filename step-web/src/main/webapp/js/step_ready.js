@@ -1,4 +1,5 @@
 (function () {
+    
     function initDataSources() {
         //format the versions correctly
         step.keyedVersions = {};

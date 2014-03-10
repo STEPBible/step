@@ -1,11 +1,11 @@
 /*******************************************************************************
  * Copyright (c) 2012, Directors of the Tyndale STEP Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without 
  * modification, are permitted provided that the following conditions 
  * are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright 
  * notice, this list of conditions and the following disclaimer.
  * Redistributions in binary form must reproduce the above copyright 
@@ -16,7 +16,7 @@
  * nor the names of its contributors may be used to endorse or promote 
  * products derived from this software without specific prior written 
  * permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
@@ -43,6 +43,7 @@ import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.Books;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,14 +54,16 @@ import com.tyndalehouse.step.core.utils.StringUtils;
  * The Version resolver resolved from a short initial version to the proper crosswire initials
  */
 public class VersionResolver {
-    static final String APP_VERSIONS_PREFIX = "app.versions.";
+    static final String APP_VERSIONS_PREFIX = "app.versions.stepPrefix.";
+    static final String APP_SHORT_NAMES_PREFIX = "app.versions.shortName.";
+
     private static final Logger LOGGER = LoggerFactory.getLogger(VersionResolver.class);
     private final Map<String, String> longToShort = new HashMap<String, String>(64);
     private final Map<String, String> shortToLong = new HashMap<String, String>(64);
 
     /**
      * Instantiates a new version resolver, which helps with shortening abbreviations used on the server
-     * 
+     *
      * @param stepProperties the step properties which contain the mappings
      */
     @Inject
@@ -72,19 +75,20 @@ public class VersionResolver {
                 final String key = (String) property.getKey();
                 final String value = (String) property.getValue();
 
-                if (StringUtils.isNotBlank(key) && key.startsWith(APP_VERSIONS_PREFIX)) {
-                    addMapping(key.substring(APP_VERSIONS_PREFIX.length()), value);
+                if (StringUtils.isNotBlank(key)) {
+                    if (key.startsWith(APP_VERSIONS_PREFIX)) {
+                        addMapping(key.substring(APP_VERSIONS_PREFIX.length()), value);
+                    } else if (key.startsWith(APP_SHORT_NAMES_PREFIX)) {
+                        Book b = Books.installed().getBook(key.substring(APP_SHORT_NAMES_PREFIX.length()));
+                        if(b != null) {       
+                            b.putProperty("shortName", value);
+                        }
+                    }
                 }
             }
         }
     }
 
-    /**
-     * Adds the mapping to both internal maps, short names to long names and long names to short names.
-     * 
-     * @param longName the long abbreviation
-     * @param shortName the shorter abbreviation
-     */
     private void addMapping(final String longName, final String shortName) {
         // check we do not have a clash of versions
         if (Books.installed().getBook(shortName) != null) {
@@ -100,7 +104,7 @@ public class VersionResolver {
 
     /**
      * Gets the short name for a CrossWire module.
-     * 
+     *
      * @param longName the long name of the module
      * @return the short name
      */
@@ -114,7 +118,7 @@ public class VersionResolver {
 
     /**
      * Gets the long name.
-     * 
+     *
      * @param shortName the short name
      * @return the long name
      */

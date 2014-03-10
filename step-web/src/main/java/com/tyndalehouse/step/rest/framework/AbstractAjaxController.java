@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Provider;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -25,6 +26,7 @@ import static java.lang.String.format;
 /**
  * @author chrisburrell
  */
+@MultipartConfig
 public abstract class AbstractAjaxController extends HttpServlet {
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractAjaxController.class);
     private final ObjectMapper jsonMapper;

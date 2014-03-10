@@ -81,7 +81,8 @@ public final class JSwordUtils {
         // we only send back what we need
         for (final Book b : bibles) {
             final BibleVersion v = new BibleVersion();
-            v.setName(b.getName());
+            final String shortName = (String) b.getProperty("shortName");
+            v.setName(shortName != null ? shortName : b.getName());
             v.setInitials(b.getInitials());
             v.setShortInitials(resolver.getShortName(b.getInitials()));
             v.setQuestionable(b.isQuestionable());

@@ -55,9 +55,11 @@ import static com.tyndalehouse.step.core.utils.StringUtils.getNonNullString;
  */
 @Singleton
 public class SupportRequestServiceImpl implements SupportRequestService {
+    public static final int ERROR_START = 400;
+    public static final String JIRA_USER = "jira.user";
+    public static final String JIRA_PASSWORD = "jira.password";
     private static final String ISSUE_API = "/issue/";
     private static final String ATTACH_API = ISSUE_API + "%s/attachments";
-    public static final int ERROR_START = 400;
     private final String createTemplate;
     private String jiraEndpoint;
     private final javax.inject.Provider<ClientSession> clientSessionProvider;
@@ -76,8 +78,8 @@ public class SupportRequestServiceImpl implements SupportRequestService {
 
     @Override
     public void createRequest(final String summary, final String description, final String url,
-                              final String user, final String email) {
-        final String id = createJiraRequest(summary, description, url, user, email);
+                              final String issueType, final String email) {
+        final String id = createJiraRequest(summary, description, url, issueType, email);
         attachImage(id);
     }
 
@@ -93,7 +95,7 @@ public class SupportRequestServiceImpl implements SupportRequestService {
         MultipartEntity entity = null;
         HttpResponse response = null;
         try {
-            imageData = clientSessionProvider.get().getAttachment();
+            imageData = clientSessionProvider.get().getAttachment("screenshot-part");
             byte[] imageAsBytes = readImage(imageData);
             if (imageAsBytes == null || imageAsBytes.length == 0) {
                 return;
@@ -148,14 +150,19 @@ public class SupportRequestServiceImpl implements SupportRequestService {
      *
      * @param summary     the summary of the ticket
      * @param description the description of the ticket
-     * @param user        the user attached to the issue
+     * @param issueType        the user attached to the issue
      * @param email       the email
      * @return the id of the issue that was created
      */
-    private String createJiraRequest(final String summary, final String description, final String url,
-                                     final String user, final String email) {
-        String userName = escapeQuotes(getNonNullString(user, ""));
-        String userEmail = getNonNullString(email, "");
+    private String createJiraRequest(final String summary, final String description, 
+                                     final String url,
+                                     final String issueType, final String email) {
+        final String escapedIssueType = escapeQuotes(getNonNullString(issueType, ""));
+        final String escapedEmail = getNonNullString(email, "");
+        final String escapedSummary = getNonNullString(summary, "");
+        final String escapedDescription = getNonNullString(description, "");
+        final String escapedUrl = getNonNullString(url, "");
+        final String escapedType = getNonNullString(issueType, "");
 
         ByteArrayInputStream createRequest = null;
         BasicHttpEntity entity = null;
@@ -164,7 +171,13 @@ public class SupportRequestServiceImpl implements SupportRequestService {
         try {
             post = getJiraHttpPost(ISSUE_API, "application/json");
             entity = new BasicHttpEntity();
-            final byte[] body = String.format(createTemplate, summary, description, url, userName, userEmail).getBytes();
+            
+            //app.jira.create.issue={ "fields": { "project": { "key": "FST" }, "summary": "%s", "description": "%s", "customfield_10923":"%s", "customfield_10922":"%s", "customfield_10921": "%s", "issuetype": { "name": "%s" }}}
+            
+            final byte[] body = String.format(createTemplate, 
+                    escapedSummary, escapedDescription, 
+                    this.appManager.getAppVersion(), escapedUrl, 
+                    escapedEmail, escapedType).getBytes();
             createRequest = new ByteArrayInputStream(body);
             entity.setContent(createRequest);
             entity.setContentLength(body.length);
@@ -205,10 +218,8 @@ public class SupportRequestServiceImpl implements SupportRequestService {
 
     private DefaultHttpClient getDefaultHttpClient(HttpPost post) {
         final DefaultHttpClient defaultHttpClient = new DefaultHttpClient();
-        final Credentials credentials = new UsernamePasswordCredentials(System.getProperty("jira.user"), System.getProperty("jira.password"));
+        final Credentials credentials = new UsernamePasswordCredentials(System.getProperty(JIRA_USER), System.getProperty(JIRA_PASSWORD));
         defaultHttpClient.getCredentialsProvider().setCredentials(AuthScope.ANY, credentials);
-//        post.addHeader( BasicScheme.authenticate(credentials,"US-ASCII",false) );
-
         return defaultHttpClient;
     }
 

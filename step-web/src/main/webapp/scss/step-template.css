@@ -915,4 +915,12 @@ body::-webkit-scrollbar-corner {
 #raiseSupportTrigger {
   position: absolute;
   bottom: 0px;
-  right: 0px; }
+  right: 0px;
+  border-radius: 3 0 0 0; }
+
+#raiseSupport .modal-body {
+  padding: 20 20 0 20; }
+
+.mandatory {
+  color: #991c32;
+  font-weight: bold; }

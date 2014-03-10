@@ -323,6 +323,10 @@ var MainSearchView = Backbone.View.extend({
         return this.filterLocalData();
     },
     matchDropdownEntry: function (term, textOrObject) {
+        if(step.util.isBlank(textOrObject)) {
+            return false;
+        }
+        
         var regex = new RegExp("\\b" + term, "ig");
         if ($.type(textOrObject) === "string") {
 //            console.log("TERM TERM TERM", term, "TEXT", textOrObject);
@@ -332,9 +336,9 @@ var MainSearchView = Backbone.View.extend({
         switch (textOrObject.itemType) {
             case VERSION:
 //                console.log("Term: ", term, "Text or Object:", textOrObject.item.initials, textOrObject.item.shortInitials, textOrObject.item.name)
-                var matches = this.matchDropdownEntry(term, textOrObject.item.initials) ||
-                    this.matchDropdownEntry(term, textOrObject.item.shortInitials) ||
-                    this.matchDropdownEntry(term, textOrObject.item.name);
+                var matches = this.matchDropdownEntry(term, textOrObject.item.initials || "") ||
+                    this.matchDropdownEntry(term, textOrObject.item.shortInitials || "") ||
+                    this.matchDropdownEntry(term, textOrObject.item.name || "");
                 return matches;
             case GREEK_MEANINGS:
             case HEBREW_MEANINGS:

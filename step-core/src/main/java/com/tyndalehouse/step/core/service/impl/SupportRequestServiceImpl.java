@@ -157,7 +157,6 @@ public class SupportRequestServiceImpl implements SupportRequestService {
     private String createJiraRequest(final String summary, final String description, 
                                      final String url,
                                      final String issueType, final String email) {
-        final String escapedIssueType = escapeQuotes(getNonNullString(issueType, ""));
         final String escapedEmail = getNonNullString(email, "");
         final String escapedSummary = getNonNullString(summary, "");
         final String escapedDescription = getNonNullString(description, "");
@@ -174,8 +173,8 @@ public class SupportRequestServiceImpl implements SupportRequestService {
             
             //app.jira.create.issue={ "fields": { "project": { "key": "FST" }, "summary": "%s", "description": "%s", "customfield_10923":"%s", "customfield_10922":"%s", "customfield_10921": "%s", "issuetype": { "name": "%s" }}}
             
-            final byte[] body = String.format(createTemplate, 
-                    escapedSummary, escapedDescription, 
+            final byte[] body = String.format(createTemplate,
+                    escapedType + " - " + escapedSummary, escapedDescription, 
                     this.appManager.getAppVersion(), escapedUrl, 
                     escapedEmail, escapedType).getBytes();
             createRequest = new ByteArrayInputStream(body);

@@ -158,10 +158,8 @@ var PassageMenuView = Backbone.View.extend({
     showAnalysis: function () {
         //trigger side bar
         require(["sidebar"], function(module) {
-            //TODO TODO TODO
             //read up on requirejs to see if init can form part of download call
             step.util.ui.initSidebar('analysis');
-            //TODO TODO TODO
         });
     },
 

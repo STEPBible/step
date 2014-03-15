@@ -89,7 +89,7 @@ public class StepCoreModule extends AbstractStepGuiceModule {
         bind(BibleInformationService.class).to(BibleInformationServiceImpl.class).asEagerSingleton();
         bind(InternationalRangeService.class).to(InternationalRangeServiceImpl.class).asEagerSingleton();
         bind(ModuleService.class).to(ModuleServiceImpl.class).asEagerSingleton();
-
+        bind(PassageOptionsValidationService.class).to(PassageOptionsValidationServiceImpl.class).asEagerSingleton();
         bind(VersionResolver.class).asEagerSingleton();
 
         // others that can wait
@@ -107,9 +107,9 @@ public class StepCoreModule extends AbstractStepGuiceModule {
         bind(SubjectEntrySearchService.class).to(SubjectEntryServiceImpl.class);
         bind(SwingService.class).to(SwingServiceImpl.class);
         bind(OriginalWordSuggestionService.class).to(OriginalWordSuggestionServiceImpl.class);
-        bind(PassageOptionsValidationService.class).to(PassageOptionsValidationServiceImpl.class).asEagerSingleton();
         bind(SupportRequestService.class).to(SupportRequestServiceImpl.class);
-        
+        bind(JSwordRelatedVersesService.class).to(JSwordRelatedVersesServiceImpl.class);
+                
         bind(new TypeLiteral<List<String>>() {
         }).annotatedWith(Names.named("defaultVersions")).toProvider(DefaultVersionsProvider.class);
 

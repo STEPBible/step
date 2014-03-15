@@ -50,6 +50,7 @@ import com.tyndalehouse.step.core.models.search.SearchResult;
 import com.tyndalehouse.step.core.models.search.TimelineEventSearchEntry;
 import com.tyndalehouse.step.core.models.search.VerseSearchEntry;
 import com.tyndalehouse.step.core.service.BibleInformationService;
+import com.tyndalehouse.step.core.service.JSwordRelatedVersesService;
 import com.tyndalehouse.step.core.service.LexiconDefinitionService;
 import com.tyndalehouse.step.core.service.SearchService;
 import com.tyndalehouse.step.core.service.TimelineService;
@@ -127,6 +128,7 @@ public class SearchServiceImpl implements SearchService {
     private final BibleInformationService bibleInfoService;
     private VersionResolver versionResolver;
     private LexiconDefinitionService lexiconDefinitionService;
+    private JSwordRelatedVersesService relatedVerseService;
 
     /**
      * @param jswordSearch     the search service
@@ -134,6 +136,7 @@ public class SearchServiceImpl implements SearchService {
      * @param timeline         the timeline service
      * @param bibleInfoService the service to get information about various bibles/commentaries
      * @param entityManager    the manager for all entities stored in lucene
+     * @param relatedVerseService
      */
     @Inject
     public SearchServiceImpl(final JSwordSearchService jswordSearch,
@@ -142,7 +145,7 @@ public class SearchServiceImpl implements SearchService {
                              final BibleInformationService bibleInfoService,
                              final EntityManager entityManager,
                              final VersionResolver versionResolver,
-                             final LexiconDefinitionService lexiconDefinitionService) {
+                             final LexiconDefinitionService lexiconDefinitionService, final JSwordRelatedVersesService relatedVerseService) {
         this.jswordSearch = jswordSearch;
         this.jswordMetadata = jswordMetadata;
         this.subjects = subjects;
@@ -150,6 +153,7 @@ public class SearchServiceImpl implements SearchService {
         this.bibleInfoService = bibleInfoService;
         this.versionResolver = versionResolver;
         this.lexiconDefinitionService = lexiconDefinitionService;
+        this.relatedVerseService = relatedVerseService;
         this.definitions = entityManager.getReader("definition");
         this.specificForms = entityManager.getReader("specificForm");
         this.timelineEvents = entityManager.getReader("timelineEvent");
@@ -288,6 +292,8 @@ public class SearchServiceImpl implements SearchService {
                 addSearch(SearchType.SUBJECT_FULL, versions, references, st.getToken(), null, individualSearches);
             } else if(SearchToken.TOPIC_BY_REF.equals(tokenType)) {
                 addSearch(SearchType.SUBJECT_RELATED, versions, references, st.getToken(), null, individualSearches);
+            } else if(SearchToken.RELATED_VERSES.equals(tokenType)) {
+                addSearch(SearchType.RELATED_VERSES, versions, references, st.getToken(), null, individualSearches);
             } else {
                 //ignore and do nothing - generally references and versions which have been parsed already
             }
@@ -791,9 +797,21 @@ public class SearchServiceImpl implements SearchService {
                 return runExactOriginalTextSearch(sq);
             case ORIGINAL_MEANING:
                 return runMeaningSearch(sq);
+            case RELATED_VERSES:
+                return runRelatedVerses(sq);
             default:
                 throw new TranslatedException("search_unknown");
         }
+    }
+
+    /**
+     * Runs a verse related search
+     * @param sq the search query
+     * @return the search result, as per other searches, of related verses
+     */
+    private SearchResult runRelatedVerses(final SearchQuery sq) {
+        return this.buildCombinedVerseBasedResults(sq,
+                this.relatedVerseService.getRelatedVerses(sq.getCurrentSearch().getVersions()[0], sq.getCurrentSearch().getQuery()));
     }
 
     /**

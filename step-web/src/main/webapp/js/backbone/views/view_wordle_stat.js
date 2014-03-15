@@ -18,7 +18,6 @@ var ViewLexiconWordle = Backbone.View.extend({
         this.animateCloud = $('<button class="btn btn-default btn-xs pull-right" id="animateWordle"><span type="button" class="glyphicon glyphicon-play" /></button>');
         this.statsContainer = $('<div id="statsContainer"></div>');
 
-        this.addRefreshStats(this.animateCloud);
         this.addRefreshStats(this.sortCloud);
         
         scopeContainer.append(this.wordType);
@@ -64,7 +63,7 @@ var ViewLexiconWordle = Backbone.View.extend({
 
         //create a button menu
         var buttonGroup = $('<div class="btn-group pull-right"></div>').attr("id", id);
-        var value = $('<span></span>');
+        var value = $('<span class="currentRef"></span>');
         var button = $('<button type="button" data-toggle="dropdown" class="btn btn-default btn-xs dropdown-toggle"></div>')
             .append(value).append('<span class="caret"></span>');
 
@@ -75,7 +74,7 @@ var ViewLexiconWordle = Backbone.View.extend({
         if (includeText) {
             var activePassageData = step.util.activePassage();
             var activeReference = activePassageData.get("reference");
-            var textReference = $('<input type="text" />')
+            var textReference = $('<input type="text" class="refInput" />')
                 .attr("placeholder", __s.analyse_book_ref)
                 .val(activeReference);
             textReference.data(data[0]);
@@ -125,6 +124,7 @@ var ViewLexiconWordle = Backbone.View.extend({
 
         menu.find("input").click(function (e) {
             e.stopPropagation();
+            e.preventDefault();
         }).on("keydown", function (event) {
             event.stopPropagation();
             var code = (event.keyCode ? event.keyCode : event.which);
@@ -165,7 +165,6 @@ var ViewLexiconWordle = Backbone.View.extend({
 
         var scopeTypes = step.defaults.analysis.scopeType;
         if(scopeTypes.indexOf(scope) == -1) {
-            this.transientReference = reference = scope;
             scope = scopeTypes[0];
         }
         
@@ -174,12 +173,18 @@ var ViewLexiconWordle = Backbone.View.extend({
         }
 
         var lastTime = new Date().getTime();
+        console.log(new Date().getTime(), reference, "Wordle server call");
         $.getSafe(ANALYSIS_STATS, [modelVersion, reference, statType, scope, animate == true], function (data) {
+            console.log(new Date().getTime(), "Wordle server data received");
             step.util.trackAnalytics('wordle', 'loaded', new Date().getTime() - new Date().getTime());
             step.util.trackAnalytics('wordle', 'type', statType);
             step.util.trackAnalytics('wordle', 'scope', scope);
             self.transientReference = data.passageStat.reference.name;
 
+            //set the current ref
+            self.wordScope.find(".currentRef").html(self.transientReference);
+            self.wordScope.find(".refInput").val(self.transientReference);
+            
             //we're going to animate this, but we're going to finish and not keep going if the flag is set
             if (data.passageStat.reference.lastChapter) {
                 self.animateWordleHandler();
@@ -190,27 +195,22 @@ var ViewLexiconWordle = Backbone.View.extend({
     },
 
     animateWordleHandler: function () {
+        console.log(new Date().getTime(), "Animate word handler");
+
         this.isAnimating = !this.isAnimating;
         if (this.isAnimating) {
             this.previousSortValue = this.sortCloud.prop('checked');
-            this.sortCloud.prop("checked", true).button("disable");
-
-            this.previousScopeValue = this.wordScope.html();
-            
-            //TODO : some refactoring here to centralise the 'selecting' service.
-            
-            this.wordScope.data(step.defaults.analysis.scope[1]).prop("disabled", true);
-            
+            this.sortCloud.prop("checked", true).prop("disabled", true);
             this.animateCloud.find(".glyphicon").removeClass("glyphicon-play").addClass("glyphicon-pause");
             
             this.doStats();
         } else {
-            this.sortCloud.prop("checked", this.previousSortValue || false).button("enable");
-
-            this.wordScope.html(this.previousScopeValue).prop("disabled", false);
+            this.stopping = true;
+            //don't trigger again
+            //don't reset reference
+            this.sortCloud.prop("checked", this.previousSortValue || false).prop("disabled", false);            
             this.animateCloud.find(".glyphicon").addClass("glyphicon-play").removeClass("glyphicon-pause");
         }
-        this.animateCloud.button("refresh").blur();
     },
 
     /**
@@ -218,7 +218,7 @@ var ViewLexiconWordle = Backbone.View.extend({
      * @private
      */
     doStats: function () {
-        console.log("Doing stats");
+        console.log(new Date().getTime(), "Doing stats");
 
         this._getStats(this.wordType.find(".selected").data("value"), this.wordScope.find(".selected").data("value"), __s.word_cloud, function (key, statType) {
             if (statType == 'WORD') {
@@ -361,8 +361,14 @@ var ViewLexiconWordle = Backbone.View.extend({
 
         //base it on the isAnimating rather than passed in value
         if (this.isAnimating) {
-            delay(function () {
-                self.doStats();
+            console.log(new Date().getTime(), "trigger delay");
+            step.util.delay(function () {
+                console.log(new Date().getTime(), "delay triggered");
+                if(!self.stopping) {
+                    self.doStats();
+                } else {
+                    self.stopping = false;
+                }
             }, 3500);
         }
     }

@@ -2,13 +2,26 @@
 
 .versePopup {
   max-width: 600px !important;
+  .heading {
+    padding: 0px;
+  }
   a {
     font-size: $defaultFontSize;
     white-space: nowrap;
+    padding: 0px;
   }
   h1 {
     font-size: 12px;
     white-space: nowrap;
     margin: 0px;
   }
+  .verseVocabLinks {
+    display: block;
+    clear: both;
+    padding-top: 15px;
+    a {
+      margin-right: 15px;
+    }
+  }
+
 }

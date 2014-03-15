@@ -15,6 +15,7 @@ SUBJECT_SEARCH = "subject";
 NAVE_SEARCH = "nave";
 NAVE_SEARCH_EXTENDED = "xnave";
 TOPIC_BY_REF = "topicref";
+RELATED_VERSES = "relatedrefs";
 REF_VERSION = "ESV";
 KEY_PAUSE=200;
 MOUSE_PAUSE=300;

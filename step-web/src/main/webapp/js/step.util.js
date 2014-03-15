@@ -159,25 +159,25 @@ step.util = {
     timers: {},
     refreshWaitStatus: function () {
         var passageContainer = step.util.getPassageContainer(step.util.activePassageId());
-        if(this.outstandingRequests > 0) {
+        if (this.outstandingRequests > 0) {
             passageContainer.addClass("waiting");
         } else {
             $(".passageContainer").removeClass("waiting");
         }
     },
-    squashErrors: function() {
+    squashErrors: function () {
         $("#errorContainer").remove();
     },
     raiseInfo: function (message, level, passageId, progress) {
         //no parsing for info and warning
-        if(level == 'error') {
+        if (level == 'error') {
             level = 'danger';
-        } else if(level == undefined) {
+        } else if (level == undefined) {
             level = 'info';
         }
-        
+
         var errorContainer = $("#errorContainer");
-        if(errorContainer.length > 0) {
+        if (errorContainer.length > 0) {
             //will recreate
             errorContainer.remove();
         }
@@ -185,14 +185,14 @@ step.util = {
         var errorPopup = $(_.template('<div class="alert alert-error fade in alert-<%= level %>" id="errorContainer">' +
             '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
             '<%= message %></div>')({ message: message, level: level}));
-        
-        if(progress != null) {
+
+        if (progress != null) {
             errorPopup.append('<div class="progress progress-striped active"><div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="' + progress + '" aria-valuemin="0" aria-valuemax="100" style="width: ' + progress + '%"></div></div>');
         }
-        
+
         $("body").append(errorPopup);
-        errorPopup.click(function() {
-            $(this).remove(); 
+        errorPopup.click(function () {
+            $(this).remove();
         });
     },
 
@@ -214,7 +214,7 @@ step.util = {
     activePassageId: function (val) {
         var activePassageEl = $(".passageContainer.active");
         var currentActivePassageId;
-        if(activePassageEl.length == 0) {
+        if (activePassageEl.length == 0) {
             //default to the first passage that is visible on the screen
             activePassageEl = $(".passageContainer:first");
             //force the setter to trigger 
@@ -222,11 +222,11 @@ step.util = {
         } else {
             currentActivePassageId = parseInt(activePassageEl.attr("passage-id"));
         }
-        
-        if(typeof val == 'string') {
+
+        if (typeof val == 'string') {
             val = parseInt(val);
         }
-        
+
         //are we going to set a different passage
         if (val !== null && val !== undefined && val != currentActivePassageId) {
             var columns = $(".passageContainer");
@@ -240,7 +240,7 @@ step.util = {
 
                 //override id to make sure it looks like it's new and gets persisted in local storage
                 newPassageModel.id = null;
-                
+
                 step.passages.add(newPassageModel);
                 newPassageModel.save({ passageId: val, createSilently: true }, { silent: true });
 
@@ -253,7 +253,7 @@ step.util = {
                 existingModel.trigger("sync-update", existingModel);
             }
 
-            
+
             //make the new panel active
             step.util.getPassageContainer(val).addClass("active").append('<span class="activeMarker"></span>');
             return val;
@@ -272,17 +272,17 @@ step.util = {
      * @param canvas HTMLCanvasElement: The canvas element.
      * @param type String: Content-Type, eg image/png
      ***/
-    postCanvasToURL: function(url, name, fn, canvas, type, formData, callback) {
+    postCanvasToURL: function (url, name, fn, canvas, type, formData, callback) {
         var data = canvas.toDataURL(type);
         data = data.replace('data:' + type + ';base64,', '');
-    
+
         var xhr = new XMLHttpRequest();
         xhr.open('POST', url, true);
         var boundary = '--step-form-data123456';
         var startTokenBoundary = '--' + boundary;
         xhr.setRequestHeader('Content-Type', 'multipart/form-data; boundary=' + boundary);
         var dataToBeSent = [];
-        for(var i = 0; i < formData.length; i++) {
+        for (var i = 0; i < formData.length; i++) {
             dataToBeSent.push(startTokenBoundary);
             dataToBeSent.push('Content-Disposition: form-data; name="' + formData[i].key + '"');
             dataToBeSent.push('');
@@ -295,10 +295,10 @@ step.util = {
         dataToBeSent.push(atob(data));
         dataToBeSent.push(startTokenBoundary + '--');
         dataToBeSent.push('');
-        
-        xhr.onreadystatechange = function() { 
-            if(xhr.readyState==4 && xhr.status==200) { 
-                callback(true); 
+
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                callback(true);
             } else {
                 callback(false);
             }
@@ -310,16 +310,16 @@ step.util = {
      * @private
      */
     createNewColumn: function (linked) {
-        
+
         //if linked, then make sure we don't already have a linked column - if so, we'll simply use that.
         var activePassageModel = this.activePassage();
-        if(linked) {
-            if(activePassageModel.get("linked") !== null) {
+        if (linked) {
+            if (activePassageModel.get("linked") !== null) {
                 step.util.activePassageId(activePassageModel.get("linked"));
                 return;
             }
         }
-        
+
         var columnHolder = $("#columnHolder");
         var columns = columnHolder.find(".column");
         var columnsCount = columns.length;
@@ -381,12 +381,12 @@ step.util = {
         }
         columns.addClass(columnClass);
         newColumn.addClass(columnClass);
-        
-        
-        if(linked) {
+
+
+        if (linked) {
             //passed in 'true', so we need to append at the right location  
             newColumn.insertAfter(activeColumn);
-            var link = $("<span class='glyphicon glyphicon-link'></span>").click(function() {
+            var link = $("<span class='glyphicon glyphicon-link'></span>").click(function () {
                 //unlink all passages
                 step.util.unlink(newPassageId);
             });
@@ -395,14 +395,14 @@ step.util = {
         } else {
             columnHolder.append(newColumn);
         }
-        
+
         step.util.activePassageId(newPassageId);
-        return newPassageId; 
+        return newPassageId;
     },
-    unlink: function(newPassageId) {
+    unlink: function (newPassageId) {
         var models = step.passages.where({ linked: newPassageId });
         var linkedPassageIds = [];
-        for(var i = 0; i < models.length; i++) {
+        for (var i = 0; i < models.length; i++) {
             linkedPassageIds.push(models[i].get("passageId"));
             models[i].save({ linked: null });
         }
@@ -485,7 +485,7 @@ step.util = {
     },
     ui: {
         selectMark: function (classes) {
-            return '<span class="glyphicon glyphicon-ok ' +  classes + '"></span>';
+            return '<span class="glyphicon glyphicon-ok ' + classes + '"></span>';
         },
         /**
          * Given an array of languages, returns an array of fonts
@@ -536,7 +536,7 @@ step.util = {
 
             if (typeof source == "string") {
                 strong = source;
-            } else if(source.strong) {
+            } else if (source.strong) {
                 strong = source.strong;
                 morph = source.morph;
             } else {
@@ -560,6 +560,7 @@ step.util = {
                     step.sidebar = new SidebarModel({
                         strong: data.strong,
                         morph: data.morph,
+                        ref: data.ref,
                         mode: mode
                     });
                     new SidebarList().add(step.sidebar);
@@ -582,23 +583,26 @@ step.util = {
             });
         },
         openStats: function (focusedPassage) {
-            step.sidebar.save({
-                mode: 'stats',
-                focusedPassage: focusedPassage
-            })
+            this.initSidebar("analysis", { ref: focusedPassage });
+            require(["sidebar", "defaults"], function (module) {
+                step.sidebar.save({
+                    mode: 'analysis',
+                    focusedPassage: focusedPassage
+                });
+            });
         },
-        doQuickLexicon: function(target) {
-            
+        doQuickLexicon: function (target) {
+
         },
         addStrongHandlers: function (passageId, passageContent) {
             var that = this;
             var allStrongElements = $("[strong]", passageContent);
 
             allStrongElements.click(function () {
-                if(!that.touchTriggered) {
+                if (!that.touchTriggered) {
                     step.util.ui.showDef(this);
                 }
-            }).on("touchstart", function(ev) {
+            }).on("touchstart", function (ev) {
                 that.touchstart = new Date().getTime();
                 that.touchTriggered = true;
                 step.passage.higlightStrongs({
@@ -607,21 +611,21 @@ step.util = {
                     morph: $(this).attr('morph'),
                     classes: "primaryLightBg"
                 });
-                
+
                 var hoverContext = this;
-                require(['quick_lexicon'], function() {
-                    var strong  = $(hoverContext).attr('strong');
+                require(['quick_lexicon'], function () {
+                    var strong = $(hoverContext).attr('strong');
                     var morph = $(hoverContext).attr('morph');
                     new QuickLexicon({
-                        strong: strong, morph: morph, target: hoverContext, 
+                        strong: strong, morph: morph, target: hoverContext,
                         position: ev.pageY / $(window).height(), touchEvent: true
                     });
                 });
-            }).on("touchend", function() {
-                if(that.touchstart) {
+            }).on("touchend", function () {
+                if (that.touchstart) {
                     var diff = new Date().getTime() - that.touchstart;
                     that.touchstart = null;
-                    if(diff < 1000) {
+                    if (diff < 1000) {
                         //do nothing - event has already triggered.
                     } else {
                         step.util.ui.showDef(this);
@@ -636,13 +640,13 @@ step.util = {
                 });
 
                 var hoverContext = this;
-                require(['quick_lexicon'], function() {
-                    var strong  = $(hoverContext).attr('strong');
+                require(['quick_lexicon'], function () {
+                    var strong = $(hoverContext).attr('strong');
                     var morph = $(hoverContext).attr('morph');
                     step.util.delay(function () {
                         //do the quick lexicon
                         new QuickLexicon({
-                            strong: strong, morph: morph, 
+                            strong: strong, morph: morph,
                             target: hoverContext, position: ev.pageY / $(window).height(), touchEvent: false
                         });
                     }, MOUSE_PAUSE, 'show-quick-lexicon');
@@ -748,19 +752,22 @@ step.util = {
                             //otherwise, exciting new strong numbers to apply:
                             $.getSafe(BIBLE_GET_STRONGS_AND_SUBJECTS, [version, reference], function (data) {
                                 var template = '<div>' +
-                                    '<div class="col-xs-10 col-sm-4"></div>' +
-                                    '<div class="col-xs-1 col-sm-1"><h1><%= __s.bible_book %></h1></div>' +
-                                    '<div class="col-xs-1 col-sm-1"><h1><%= ot ? __s.OT : __s.NT %></h1></div>' +
-                                    '<div class="hidden-xs col-sm-4"></div>' +
-                                    '<div class="hidden-xs col-sm-1"><h1><%= __s.bible_book %></h1></div>' +
-                                    '<div class="hidden-xs col-sm-1"><h1><%= ot ? __s.OT : __s.NT %></h1></div>' +
+                                    '<div class="col-xs-10 col-sm-4 heading"></div>' +
+                                    '<div class="col-xs-1 col-sm-1 heading"><h1><%= __s.bible_book %></h1></div>' +
+                                    '<div class="col-xs-1 col-sm-1 heading"><h1><%= ot ? __s.OT : __s.NT %></h1></div>' +
+                                    '<div class="hidden-xs col-sm-4 heading"></div>' +
+                                    '<div class="hidden-xs col-sm-1 heading"><h1><%= __s.bible_book %></h1></div>' +
+                                    '<div class="hidden-xs col-sm-1 heading"><h1><%= ot ? __s.OT : __s.NT %></h1></div>' +
                                     '<% _.each(rows, function(row) { %>' +
                                     '<span data-strong="<%= row.strongData.strongNumber %>">' +
                                     '<a href="javascript:void(0)" class="definition col-xs-10 col-sm-4"><%= row.strongData.gloss %> ' +
                                     '(<%= row.strongData.stepTransliteration %> - <%= row.strongData.matchingForm %>)</a>' +
                                     '<a href="javascript:void(0)" class="bookCount col-xs-1 col-sm-1"><%= sprintf(__s.times, row.counts.book) %></a>' +
                                     '<a href="javascript:void(0)" class="bibleCount col-xs-1 col-sm-1"><%= sprintf(__s.times, row.counts.bible) %></a>' +
-                                    '</span><% }); %></div>';
+                                    '</span><% }); %></div>' +
+                                    '<div class="verseVocabLinks"><a href="javascript:void(0)" class="relatedVerses"><%= __s.see_related_verses %></a> ' +
+                                    '<a href="javascript:void(0)" class="relatedSubjects"><%= __s.see_related_subjects%></a> ' +
+                                    '<a href="javascript:void(0)" class="wordCloud"><%= __s.word_cloud %></a></div>';
 
                                 var rows = [];
                                 for (var key in data.strongData) {
@@ -775,77 +782,47 @@ step.util = {
                                     }
                                 }
 
-                                var templatedTable = $(_.template(template)({ 
-                                    rows: rows, 
-                                    ot: data.ot 
+                                var templatedTable = $(_.template(template)({
+                                    rows: rows,
+                                    ot: data.ot,
                                 }));
-                                
-                                templatedTable.find(".definition").click(function() { 
+
+                                templatedTable.find(".definition").click(function () {
                                     self.showDef($(this).parent().data("strong"));
                                 });
-                                
-                                templatedTable.find(".bookCount").click(function() {
+
+                                templatedTable.find(".bookCount").click(function () {
                                     var bookKey = key.substring(0, key.indexOf('.'));
                                     var args = "reference=" + encodeURIComponent(bookKey) + "|strong=" + encodeURIComponent($(this).parent().data("strong"));
                                     //make this the active passage
                                     step.router.navigatePreserveVersions(args);
                                 });
-                                templatedTable.find(".bibleCount").click(function() {
+                                templatedTable.find(".bibleCount").click(function () {
                                     var args = "strong=" + encodeURIComponent($(this).parent().data("strong"));
                                     //make this the active passage
                                     step.router.navigatePreserveVersions(args);
                                 });
+
+                                templatedTable.find(".relatedVerses").click(function () {
+                                    step.router.navigatePreserveVersions(RELATED_VERSES + "=" + encodeURIComponent(key));
+                                });
+
+                                templatedTable.find(".relatedSubjects").click(function () {
+                                    step.router.navigatePreserveVersions(TOPIC_BY_REF + "=" + encodeURIComponent(key));
+                                });
+
+                                templatedTable.find(".wordCloud").click(function () {
+                                    //get chapter key... 
+                                    var lastDot = key.lastIndexOf("."); 
+                                    if(lastDot != -1) {
+                                        step.util.ui.openStats(key.substring(0, lastDot));
+                                    } else {
+                                        step.util.ui.openStats(key);
+                                    }
+                                    
+                                });
+
                                 api.set('content.text', templatedTable);
-                                
-                                
-
-//                                    var strongTable = $("<div>").addClass("verseNumberStrongs");
-//                                    there may be multiple values of this kind of format:
-//                                    var internalVerseLink = element;
-
-//                                    if (internalVerseLink[0] == undefined) {
-                                //no point in continuing here, since we have no verse to attach it to.
-//                                        return;
-//                                    }
-
-
-//                                    var row = $("<div></div>");
-//                                    $.each(value, function (i, item) {
-//
-//                                        var searchCell = $("<div>");
-//                                        row.append(searchCell);
-//
-//                                        add search icon
-//                                        searchCell.append(self._addLinkToLexicalSearch(rightColumnClasses, passageId, "ui-icon ui-icon-search verseStrongSearch", "sameWordSearch", item.strongNumber, null, __s.search_for_this_word, ""));
-//                                        searchCell.append(self._addLinkToLexicalSearch(rightColumnClasses, passageId, "ui-icon ui-icon-zoomin verseStrongSearch", "relatedWordSearch", item.strongNumber, null, __s.search_for_related_words, ""));
-//
-//                                        var nameLink = $("<a>").addClass(leftColumnClasses);
-//                                        nameLink.append(item.gloss);
-//                                        nameLink.append(" (");
-//                                        nameLink.append(item.stepTransliteration);
-//                                        nameLink.append(", ")
-//                                        nameLink.append($("<span>").addClass(self.getFontForStrong(item.strongNumber)).append(item.matchingForm));
-//                                        nameLink.append(")");
-//                                        nameLink.attr("href", "javascript:void(0)");
-//                                        nameLink.click(function () {
-//                                            showDef(item.strongNumber, passageId);
-//                                        });
-//                                        searchCell.append(nameLink);
-//
-//                                        var bookCount = $("<div>");
-//                                        bookCount.append(self._addLinkToLexicalSearch(passageId, "strongCount", "sameWordSearch",
-//                                            item.strongNumber, bookKey, "", sprintf(__s.times, data.counts[item.strongNumber].book)));
-//                                        row.append(bookCount);
-//
-//                                        var testamentCount = $("<div>");
-//                                        testamentCount.append(self._addLinkToLexicalSearch(passageId, "strongCount", "sameWordSearch",
-//                                            item.strongNumber, null, "", sprintf(__s.times, data.counts[item.strongNumber].bible)));
-//                                        row.append(testamentCount);
-//                                    });
-
-//                                    var strongPopup = $("<span>");
-//                                    strongPopup.append(strongTable);
-//                                    strongPopup.append("<br />");
 
 //                                    if (data.significantlyRelatedVerses[key] && data.significantlyRelatedVerses[key].length != 0) {
 //                                        var related = $("<a>").addClass("related").attr("href", "javascript:void(0)").append(__s.see_related_verses).click(function () {
@@ -920,14 +897,14 @@ step.util = {
                 return "unicodeFont";
             }
         },
-        addCollapsiblePanel: function(text, classes, href) {
+        addCollapsiblePanel: function (text, classes, href) {
             var wrapper = $("<div class='panel-heading'>");
             var panel = $("<div class='panel panel-default'>").append(wrapper);
             wrapper.append($("<h4 data-toggle='collapse'>").attr("href", href)
                 .addClass("panel-title").addClass(classes)
                 .append('<span class="glyphicon glyphicon-plus"></span>')
                 .append(text));
-            
+
             return panel;
         }
     }

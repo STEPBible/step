@@ -44,6 +44,7 @@ var MainSearchView = Backbone.View.extend({
                         break;
                     case MEANINGS:
                     case TOPIC_BY_REF:
+                    case RELATED_VERSES:
                     default:
                         id += entry.item;
                         break;
@@ -287,6 +288,7 @@ var MainSearchView = Backbone.View.extend({
                     args += "=" + encodeURIComponent(options[ii].item.value);
                     break;
                 case TOPIC_BY_REF:
+                case RELATED_VERSES:
                     args += options[ii].itemType + "=" + encodeURIComponent(options[ii].item.text);
                     break;
                 case TEXT_SEARCH:
@@ -329,13 +331,11 @@ var MainSearchView = Backbone.View.extend({
         
         var regex = new RegExp("\\b" + term, "ig");
         if ($.type(textOrObject) === "string") {
-//            console.log("TERM TERM TERM", term, "TEXT", textOrObject);
             return textOrObject != null && textOrObject != "" && textOrObject.toLowerCase().match(regex);
         }
 
         switch (textOrObject.itemType) {
             case VERSION:
-//                console.log("Term: ", term, "Text or Object:", textOrObject.item.initials, textOrObject.item.shortInitials, textOrObject.item.name)
                 var matches = this.matchDropdownEntry(term, textOrObject.item.initials || "") ||
                     this.matchDropdownEntry(term, textOrObject.item.shortInitials || "") ||
                     this.matchDropdownEntry(term, textOrObject.item.name || "");
@@ -522,6 +522,7 @@ var MainSearchView = Backbone.View.extend({
             case NAVE_SEARCH_EXTENDED:
                 return { value: token, searchTypes: ["SUBJECT_FULL"] };
             case TOPIC_BY_REF:
+            case RELATED_VERSES:
                 return { text: token };
             case MEANINGS:
             case TEXT_SEARCH:

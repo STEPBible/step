@@ -109,7 +109,7 @@ public class SearchQuery {
         this.sortOrder = "false";
         this.interlinearMode = interlinearMode;
 
-        StringBuilder sb = new StringBuilder();
+        final StringBuilder sb = new StringBuilder();
         for (IndividualSearch individualSearch : this.searches) {
             sb.append(individualSearch.getQuery());
         }

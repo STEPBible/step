@@ -228,20 +228,8 @@ public class BibleInformationServiceImpl implements BibleInformationService {
             return new StrongCountsAndSubjects();
         }
 
-        final StrongCountsAndSubjects verseStrongs = new JSwordStrongNumberHelper(this.entityManager,
+        return new JSwordStrongNumberHelper(this.entityManager,
                 key, this.jswordVersification, this.jswordSearch).getVerseStrongs();
-
-        final Set<String> osisIds = verseStrongs.getStrongData().keySet();
-        final Map<String, SearchResult> versesToSubjects = new HashMap<String, SearchResult>(osisIds.size());
-        for (final String ref : osisIds) {
-            final SearchResult subjects = this.subjectSearchService.searchByReference(ref);
-            if (subjects.getTotal() != 0) {
-                versesToSubjects.put(ref, subjects);
-            }
-        }
-
-        verseStrongs.setRelatedSubjects(versesToSubjects);
-        return verseStrongs;
     }
 
     @Override

@@ -105,6 +105,7 @@ var StepRouter = Backbone.Router.extend({
                 passageModel.trigger("destroyViews");
                 switch (passageModel.get("searchType")) {
                     case "TEXT":
+                    case "RELATED_VERSES":
                         new TextDisplayView({
                             model: passageModel,
                             partRendered: partRendered

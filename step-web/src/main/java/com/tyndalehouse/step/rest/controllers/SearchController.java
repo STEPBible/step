@@ -220,11 +220,9 @@ public class SearchController {
      */
     public AbstractComplexSearch masterSearch(final String items, final String options, final String display,
                                               final String pageNumber, final String filter, final String context) {
-        List<SearchToken> searchTokens = parseTokens(items);
-
-        int page = ConversionUtils.getValidInt(pageNumber, 1);
-        int searchContext = ConversionUtils.getValidInt(context, 0);
-
+        final List<SearchToken> searchTokens = parseTokens(items);
+        final int page = ConversionUtils.getValidInt(pageNumber, 1);
+        final int searchContext = ConversionUtils.getValidInt(context, 0);
         return this.searchService.runQuery(searchTokens, getDefaultedOptions(options), display, page, filter, searchContext);
     }
 

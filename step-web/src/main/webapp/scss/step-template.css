@@ -747,8 +747,9 @@ body::-webkit-scrollbar-corner {
   line-height: 1; }
 
 #wordScope input {
-  width: 75%; }
+  width: 90%; }
 #wordScope a {
+  padding-left: 5px;
   cursor: pointer; }
 
 #history .list-group-item {
@@ -797,13 +798,22 @@ body::-webkit-scrollbar-corner {
 
 .versePopup {
   max-width: 600px !important; }
+  .versePopup .heading {
+    padding: 0px; }
   .versePopup a {
     font-size: 12px;
-    white-space: nowrap; }
+    white-space: nowrap;
+    padding: 0px; }
   .versePopup h1 {
     font-size: 12px;
     white-space: nowrap;
     margin: 0px; }
+  .versePopup .verseVocabLinks {
+    display: block;
+    clear: both;
+    padding-top: 15px; }
+    .versePopup .verseVocabLinks a {
+      margin-right: 15px; }
 
 #errorContainer {
   position: absolute;

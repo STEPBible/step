@@ -1091,24 +1091,27 @@
   </xsl:template>
   <xsl:template match="lg[@eID]" mode="jesus"><span class="endLineGroup"></span></xsl:template>
 
-  <xsl:template match="l[@sID]"><xsl:value-of select="'&lt;br /&gt;'" /><span class='level{@level}'></span></xsl:template>
-  <xsl:template match="l[@sID]" mode="jesus"><xsl:value-of select="'&lt;br /&gt;'" /><span class='level{@level}'></span></xsl:template>
+  <xsl:template match="l[@sID]"><xsl:if test="@type != 'x-no-break'"><xsl:value-of select="'&lt;br /&gt;'" /></xsl:if><span class='level{@level}'></span></xsl:template>
+  <xsl:template match="l[@sID]" mode="jesus"><xsl:if test="@type != 'x-no-break'"><xsl:value-of select="'&lt;br /&gt;'" /></xsl:if><span class='level{@level}'></span></xsl:template>
 
   <xsl:template match="l[@eID]"><xsl:value-of select="'&lt;br /&gt;'" /></xsl:template>
   <xsl:template match="l[@eID]" mode="jesus"><xsl:value-of select="'&lt;br /&gt;'" /></xsl:template>
 
   <xsl:template match="l">
-      <xsl:value-of select="'&lt;br /&gt;'" /><span class='level{@level}'></span><xsl:apply-templates/><xsl:value-of select="'&lt;br /&gt;'" />
+      <xsl:if test="@type != 'x-no-break'"><xsl:value-of select="'&lt;br /&gt;'" /></xsl:if>
+      <span class='level{@level}'></span><xsl:apply-templates/><xsl:value-of select="'&lt;br /&gt;'" />
   </xsl:template>
   
   <xsl:template match="l" mode="jesus">
-      <xsl:value-of select="'&lt;br /&gt;'" /><span class='level{@level}'></span><xsl:apply-templates mode="jesus"/><xsl:value-of select="'&lt;br /&gt;'" />
+      <xsl:if test="@type != 'x-no-break'"><xsl:value-of select="'&lt;br /&gt;'" /></xsl:if>
+      <span class='level{@level}'></span><xsl:apply-templates mode="jesus"/><xsl:value-of select="'&lt;br /&gt;'" />
   </xsl:template>
 
   <!-- While a BR is a break, if it is immediately followed by punctuation,
        indenting this rule can introduce whitespace.
     -->
   <xsl:template match="lb[@type = 'x-end-paragraph']" ><p /></xsl:template>
+  <xsl:template match="lb"><p /></xsl:template>
   <xsl:template match="lb" mode="jesus"><p /></xsl:template>
 
   <xsl:template match="list">

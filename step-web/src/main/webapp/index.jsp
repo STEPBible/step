@@ -157,8 +157,8 @@
                             <%
                                 }
                             %>
-                            <button class="btn btn-default btn-sm showStats" type="button" title="<fmt:message key="passage_stats" />">
-                                <span class="glyphicon glyphicon-stats"></span></button>
+                            <button class="btn btn-default btn-sm showStats" type="button" title="<fmt:message key="passage_open_sidebar" />">
+                                <span class="glyphicon glyphicon-save"></span></button>
                             <div class="dropdown btn-group settingsDropdown">
                                 <button class="btn btn-default btn-sm dropdown-toggle showSettings" title="<fmt:message key="view" />" type="button" data-toggle="dropdown">
                                     <span class="glyphicon glyphicon-cog"></span>

@@ -46,11 +46,11 @@ var FeedbackView = Backbone.View.extend({
         '<form role="form">' +
         '<div class="form-group">' +
         '<label for="feedbackEmail"><%= __s.register_email %><span class="mandatory">*</span></label>' +
-        '<input type="email" class="form-control" id="feedbackEmail">' +
+        '<input type="email" class="form-control" id="feedbackEmail" maxlength="200">' +
         '</div>' +
         '<div class="form-group">' +
         '<label for="feedbackSummary"><%= __s.feedback_summary %><span class="mandatory">*</span></label> ' +
-        '<input type="text" class="form-control" id="feedbackSummary">' +
+        '<input type="text" class="form-control" id="feedbackSummary" maxlength="150">' +
         '</div>' +
         '<div class="form-group">' +
         '<label for="feedbackType"><%= __s.register_type %></label>' +

@@ -926,7 +926,7 @@
       		</xsl:if>
       	</xsl:when>
       	<xsl:otherwise>
-      		<h2 class="heading"><xsl:apply-templates/></h2>
+      		<h2 class="heading {@type}"><xsl:apply-templates/></h2>
       	</xsl:otherwise>
       </xsl:choose>
     </xsl:if>

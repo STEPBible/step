@@ -1,4 +1,4 @@
-h1, h2, h3, h4, h5, h6 {
+h1, h2, h3, h4, h5, h6, .panel-title {
   color: #991c32;
   font-weight: bold; }
 
@@ -276,6 +276,11 @@ ul .glyphicon-ok {
       font-weight: bold; }
   .passageOptionsGroup .dropdown-menu {
     padding-left: 5px; }
+  .passageOptionsGroup .glyphicon.glyphicon-save {
+    -webkit-transform: rotate(-90deg);
+    -moz-transform: rotate(-90deg);
+    -ms-transform: rotate(-90deg);
+    -o-transform: rotate(-90deg); }
   .passageOptionsGroup ul {
     padding-left: 5px;
     margin-bottom: 0px; }
@@ -319,6 +324,8 @@ ul .glyphicon-ok {
     .passageContentHolder h2.xgen {
       margin-top: 0px;
       text-align: left; }
+    .passageContentHolder h2.sub {
+      font-size: 90%; }
   .passageContentHolder .paragraph {
     margin-top: 8px;
     content: ' ';
@@ -329,7 +336,7 @@ ul .glyphicon-ok {
     margin-bottom: 4px; }
   .passageContentHolder .startLineGroup {
     padding-top: 8px; }
-  .passageContentHolder h2 + br, .passageContentHolder .startLineGroup + br, .passageContentHolder .startLineGroup + br + .level1 {
+  .passageContentHolder h2 + br, .passageContentHolder .startLineGroup + br, .passageContentHolder .startLineGroup + br + .level1, .passageContentHolder h2 + br + span + br, .passageContentHolder br + .paragraph + br {
     display: none; }
   .passageContentHolder a + br + .level1 {
     margin-right: -10px; }
@@ -494,6 +501,13 @@ h4.lexicalGrouping {
 
 #bibleVersions .modal-body {
   padding: 5px; }
+#bibleVersions .modal-footer {
+  padding: 10px 20px 10px 0px; }
+  #bibleVersions .modal-footer .tagLine {
+    float: left;
+    padding-top: 10px;
+    color: lightgrey;
+    font-style: italic; }
 #bibleVersions span.form-group {
   margin-left: 3px; }
 #bibleVersions .list-group-item {
@@ -767,13 +781,21 @@ body::-webkit-scrollbar-corner {
   #history .glyphicon:hover {
     color: #991c32;
     cursor: hand; }
-  #history .glyphicon.glyphicon-star {
+  #history .glyphicon.glyphicon-open {
+    -webkit-transform: rotate(-90deg);
+    -moz-transform: rotate(-90deg);
+    -ms-transform: rotate(-90deg);
+    -o-transform: rotate(-90deg);
+    filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3); }
+  #history .glyphicon.glyphicon-floppy-saved {
     margin-left: 5px;
     color: #991c32; }
-  #history .glyphicon.glyphicon-star-empty {
+    #history .glyphicon.glyphicon-floppy-saved:hover:before {
+      content: "\e174"; }
+  #history .glyphicon.glyphicon-floppy-disk {
     margin-left: 5px; }
-    #history .glyphicon.glyphicon-star-empty:hover:before {
-      content: "\e006"; }
+    #history .glyphicon.glyphicon-floppy-disk:hover:before {
+      content: "\e176"; }
 
 .argSelect {
   white-space: nowrap;

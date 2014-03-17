@@ -386,6 +386,9 @@ var PassageMenuView = Backbone.View.extend({
         this.model.trigger("destroy-column");
         this.column.remove();
         
+        //resize the columns
+        step.util.refreshColumnSize();
+        
         //make sure any model that was linked to it is undone
         var passageId = parseInt(this.column.find("[passage-id]").attr("passage-id"));
         

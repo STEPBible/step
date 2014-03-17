@@ -305,39 +305,16 @@ step.util = {
         };
         xhr.sendAsBinary(dataToBeSent.join('\r\n'));
     },
-    /**
-     * @param linked true to indicate we want to link this column with the current active column
-     * @private
-     */
-    createNewColumn: function (linked) {
-
-        //if linked, then make sure we don't already have a linked column - if so, we'll simply use that.
-        var activePassageModel = this.activePassage();
-        if (linked) {
-            if (activePassageModel.get("linked") !== null) {
-                step.util.activePassageId(activePassageModel.get("linked"));
-                return;
-            }
+    refreshColumnSize: function(columns) {
+        if(!columns){
+            columns = $(".column");
         }
-
-        var columnHolder = $("#columnHolder");
-        var columns = columnHolder.find(".column");
-        var columnsCount = columns.length;
-        var activeColumn = columns.has(".passageContainer.active");
-        var newColumn = activeColumn.clone();
-        var newPassageId = parseInt(step.passages.max(function (p) {
-            return parseInt(p.get("passageId"))
-        }).get("passageId")) + 1;
-        newColumn
-            .find(".passageContainer").attr("passage-id", newPassageId)
-            .find(".passageContent").remove();
-
+        
         //change the width all columns
         var classesToRemove = "col-sm-12 col-sm-6 col-sm-4 col-sm-3 col-sm-5columns col-sm-2 col-sm-7columns col-sm-8columns col-sm-9columns col-sm-10columns col-sm-11columns col-sm-1";
         columns.removeClass(classesToRemove);
-        newColumn.removeClass(classesToRemove);
         var columnClass;
-        switch (columnsCount + 1) {
+        switch (columns.size()) {
             case 1:
                 columnClass = "col-sm-12";
                 break;
@@ -380,9 +357,37 @@ step.util = {
                 break;
         }
         columns.addClass(columnClass);
-        newColumn.addClass(columnClass);
+    },
 
+    /**
+     * @param linked true to indicate we want to link this column with the current active column
+     * @private
+     */
+    createNewColumn: function (linked) {
 
+        //if linked, then make sure we don't already have a linked column - if so, we'll simply use that.
+        var activePassageModel = this.activePassage();
+        if (linked) {
+            if (activePassageModel.get("linked") !== null) {
+                step.util.activePassageId(activePassageModel.get("linked"));
+                return;
+            }
+        }
+
+        var columnHolder = $("#columnHolder");
+        var columns = columnHolder.find(".column");
+        var activeColumn = columns.has(".passageContainer.active");
+        var newColumn = activeColumn.clone();
+        var newPassageId = parseInt(step.passages.max(function (p) {
+            return parseInt(p.get("passageId"))
+        }).get("passageId")) + 1;
+        newColumn
+            .find(".passageContainer").attr("passage-id", newPassageId)
+            .find(".passageContent").remove();
+
+        var allColumns = columns.add(newColumn);
+        this.refreshColumnSize(allColumns);
+       
         if (linked) {
             //passed in 'true', so we need to append at the right location  
             newColumn.insertAfter(activeColumn);
@@ -784,7 +789,7 @@ step.util = {
 
                                 var templatedTable = $(_.template(template)({
                                     rows: rows,
-                                    ot: data.ot,
+                                    ot: data.ot
                                 }));
 
                                 templatedTable.find(".definition").click(function () {
@@ -823,66 +828,12 @@ step.util = {
                                 });
 
                                 api.set('content.text', templatedTable);
-
-//                                    if (data.significantlyRelatedVerses[key] && data.significantlyRelatedVerses[key].length != 0) {
-//                                        var related = $("<a>").addClass("related").attr("href", "javascript:void(0)").append(__s.see_related_verses).click(function () {
-//                                            getRelatedVerses(data.significantlyRelatedVerses[key].join('; '), passageId);
-//                                        });
-//                                        strongPopup.append(related);
-//                                        strongPopup.append("&nbsp;&nbsp;");
-//                                    }
-//
-//                                    if (data.relatedSubjects[key] && data.relatedSubjects[key].total != 0) {
-//                                        attach data to internal link (so that it goes when passage goes
-//                                        var subjects = data.relatedSubjects[key];
-//                                        $.data(internalVerseLink[0], "relatedSubjects", subjects);
-//
-//                                        var subjectOverview = "";
-//                                        var i = 0;
-//                                        for (i = 0; i < 5 && i < subjects.results.length; i++) {
-//                                            subjectOverview += subjects.results[i].root;
-//                                            subjectOverview += ", ";
-//                                            subjectOverview += subjects.results[i].heading;
-//                                            subjectOverview += " ; ";
-//                                        }
-//
-//                                        if (i < subjects.results.length) {
-//                                            subjectOverview += "...";
-//                                        }
-
-//                                        var related = $("<a>").addClass("related").attr("href", "javascript:void(0)")
-//                                            .append(__s.see_related_subjects)
-//                                            .attr("title", subjectOverview.replace(/'/g, "&apos;"))
-//                                            .click(function () {
-//                                                getRelatedSubjects(key, passageId);
-//                                            });
-//                                        strongPopup.append(related);
-//                                        strongPopup.append("&nbsp;&nbsp;");
-//                                    }
-//
-                                //only expect one entry back.
-//                                    break;
-//                                }
                             });
                         }
                     }
                 });
                 qtip.qtip("show");
             });
-        },
-
-        _addLinkToLexicalSearch: function (classes, passageId, classes, functionName, strongNumber, bookKey, title, innerText) {
-            var text = $("<a>").addClass(classes);
-            text.attr("href", "javascript:void(0)");
-            text.attr("title", title.replace(/'/g, "&apos;"));
-            text.addClass(classes);
-            text.append(innerText);
-            text.click(function () {
-                step.lexicon.setPassageIdInFocus(passageId);
-                step.lexicon[functionName](strongNumber, bookKey);
-            });
-
-            return text;
         },
         /**
          * If the strong starts with an 'h' then we're looking at Hebrew.

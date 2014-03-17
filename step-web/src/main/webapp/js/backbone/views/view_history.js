@@ -1,8 +1,9 @@
 var ViewHistory = Backbone.View.extend({
     itemTemplate: _.template('<li class="list-group-item" data-item="<%= item.get("id") %>">' +
-        '<a class="openBookmark"><span class="glyphicon glyphicon-folder-open"></span></a>' +
-        '<a class="starBookmark"><span class="glyphicon <%= item.get("favourite") ? "glyphicon-star" : "glyphicon-star-empty" %>"></span></a>' +
-        '<a class="removeBookmark"><span class="glyphicon glyphicon-remove"></span></a>' +
+        '<a class="openBookmark" title="<%= __s.bookmarks_open %>"><span class="glyphicon glyphicon-open"></span></a>' +
+        '<a class="starBookmark" data-favourite="<%= item.get("favourite")%>" title="<%= item.get("favourite") ? __s.passage_tools_delete_bookmark : __s.passage_tools_bookmark %>">' +
+        '<span class="glyphicon <%= item.get("favourite") ? "glyphicon-floppy-saved" : "glyphicon-floppy-disk" %>"></span></a>' +
+        '<a class="removeBookmark" title="<%= __s.bookmark_remove %>"><span class="glyphicon glyphicon-remove"></span></a>' +
         '<% _.each(view.getKeyValues(item.get("args")), function(a) { %><span class="argSelect select-<%= a.key %>"><%= a.value %></span> <% }); %>' +
         '</li>'),
     fullList: _.template('<ul class="list-group"><% bookmarks.each(function(bookmark) { %><%= view.itemTemplate({ item: bookmark, view: view }) %> <% }) %></ul>'),
@@ -73,7 +74,7 @@ var ViewHistory = Backbone.View.extend({
         this._insertBookmark(model, this._findByModel(model));
     },
     _insertBookmark: function(model, item) {
-        var lastStarred = this.list.find("li:has(.glyphicon-star):last");
+        var lastStarred = this.list.find("li:has([data-favourite='true']):last");
         if(model.get("favourite") || lastStarred.length == 0) {
             this.list.prepend(item);
         } else {

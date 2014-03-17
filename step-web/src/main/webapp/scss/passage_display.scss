@@ -12,6 +12,9 @@
       margin-top: 0px;
       text-align: left;
     }
+    &.sub {
+      font-size: 90%;
+    }
   }
   .paragraph {
       margin-top: 8px;
@@ -27,7 +30,7 @@
   .startLineGroup {
     padding-top: 8px;
   } 
-  h2+br, .startLineGroup + br, .startLineGroup + br + .level1 {
+  h2+br, .startLineGroup + br, .startLineGroup + br + .level1, h2 + br + span + br, br +.paragraph + br {
     display: none;
   }
   a+br+.level1 {

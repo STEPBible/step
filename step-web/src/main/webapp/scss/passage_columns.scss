@@ -49,10 +49,7 @@
           left: 0;
           font-size: 150%;
           position: absolute;
-          -webkit-transform: rotate(-135deg);
-          -moz-transform: rotate(-135deg);
-          -ms-transform: rotate(-135deg);
-          -o-transform: rotate(-135deg);
+        @include rotate(-135deg);
         
         &:hover {
           color: gray;

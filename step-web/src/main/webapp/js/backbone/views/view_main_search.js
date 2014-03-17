@@ -226,7 +226,7 @@ var MainSearchView = Backbone.View.extend({
         //find the element
         var versions = this.masterSearch.select2("data");
         for (var i = 0; i < versions.length; i++) {
-            if (versions[i].item.initials == data.version.initials || versions.shortInitials == data.version.initials) {
+            if (versions[i].item.initials == data.value.initials || versions.shortInitials == data.value.initials) {
                 versions.splice(i, 1);
                 i--;
             }

@@ -2,7 +2,7 @@ var PassageDisplayView = Backbone.View.extend({
         el: function () {
             var passageContainer = step.util.getPassageContainer(this.model.get("passageId"));
             var passageContent = passageContainer.find(".passageContent");
-            if(passageContent.length == 0) {
+            if (passageContent.length == 0) {
                 passageContent = $('<div class="passageContent"></div>');
                 passageContainer.find(".passageText").append(passageContent);
             }
@@ -27,10 +27,10 @@ var PassageDisplayView = Backbone.View.extend({
             this.model.set("multipleRanges", this.model.get("multipleRanges"), {silent: true });
 
             var passageHtml;
-            if(this.partRendered) {
+            if (this.partRendered) {
                 passageHtml = this.$el.find(".passageContentHolder");
             } else {
-                 passageHtml = $(this.model.get("value"));
+                passageHtml = $(this.model.get("value"));
             }
             var passageId = this.model.get("passageId");
             var interlinearMode = this.model.get("interlinearMode");
@@ -39,9 +39,9 @@ var PassageDisplayView = Backbone.View.extend({
             var options = this.model.get("selectedOptions") || [];
             var version = this.model.get("masterVersion");
             var languages = this.model.get("languageCode");
-
+            var passageContainer = this.$el.closest(".passageContainer");
             if (this._isPassageValid(passageHtml, reference)) {
-                this.$el.closest(".passageContainer").find(".resultsLabel").html("");
+                passageContainer.find(".resultsLabel").html("");
                 this._warnIfNoStrongs(version);
                 this._doFonts(passageHtml, options, interlinearMode, languages);
                 this._doInlineNotes(passageHtml, passageId);
@@ -52,38 +52,63 @@ var PassageDisplayView = Backbone.View.extend({
                 this._adjustTextAlignment(passageHtml);
                 step.util.restoreFontSize(this.model, passageHtml);
 //TODO:                step.fonts.redoTextSize(passageId, passageHtml);
-TODO:                this._addStrongHandlers(passageId, passageHtml);
+                TODO:                this._addStrongHandlers(passageId, passageHtml);
 //TODO:                this._doDuplicateNotice(passageId, passageHtml);
                 this._updatePageTitle(passageId, passageHtml, version, reference);
                 this._doInterlinearDividers(passageHtml);
 //TODO:                this._doVersions(passageId, passageHtml, version, reference);
-                
-                if(!this.partRendered) {
+
+                if (!this.partRendered) {
                     step.util.ui.emptyOffDomAndPopulate(this.$el, passageHtml);
                 }
 
                 //needs to happen after appending to DOM
                 this._doChromeHack(undefined, passageHtml, interlinearMode, options);
                 this.doInterlinearVerseNumbers(passageHtml, interlinearMode, options);
+                this.scrollToTargetLocation(passageContainer);
             }
         },
-        _warnIfNoStrongs: function(masterVersion) {
-            if(!step.keyedVersions) {
+        scrollToTargetLocation: function (passageContainer) {
+            //get current column target data
+            var column = passageContainer.closest(".column");
+//            var passageContent = passageContainer.find(".passageContent");
+            var currentTarget = this.model.get("targetLocation");
+            if (currentTarget) {
+                var link = passageContainer.find("[name='" + currentTarget + "']");
+                var linkOffset = link.offset();
+                var scroll = linkOffset == undefined ? 0 : linkOffset.top + passageContainer.scrollTop();
+
+                var originalScrollTop = -100;
+                passageContainer.animate({
+                    scrollTop: originalScrollTop + scroll
+                }, 500);
+                
+                $(link).closest(".verse").addClass("secondaryBackground");
+
+                //also do so if we are looking at an interlinear-ed version
+                $(link).closest(".interlinear").find("*").addClass("secondaryBackground");
+
+                //reset the data attribute
+                this.model.save({ targetLocation: null }, { silent: true });
+            }
+        },
+        _warnIfNoStrongs: function (masterVersion) {
+            if (!step.keyedVersions) {
                 //for some reason we have no versions
                 console.warn("No versions have been loaded.")
                 return;
             }
-            
-            if(step.keyedVersions[masterVersion].hasStrongs) {
+
+            if (step.keyedVersions[masterVersion].hasStrongs) {
                 return false;
             }
-            
+
             var warnings = step.settings.get("noStrongWarnings") || {};
-            if(!warnings[masterVersion]) {
+            if (!warnings[masterVersion]) {
                 step.util.raiseInfo(__s.error_warn_if_no_strongs);
                 warnings[masterVersion] = true;
                 step.settings.save({
-                    noStrongWarnings : warnings
+                    noStrongWarnings: warnings
                 });
             }
         },
@@ -238,9 +263,9 @@ TODO:                this._addStrongHandlers(passageId, passageHtml);
                 this._doInlineNoteQtip(link, note);
             }
         },
-        _doInlineNoteQtip: function(link, note) {
+        _doInlineNoteQtip: function (link, note) {
             link.attr("title", note.html());
-            require(["qtip"], function() {
+            require(["qtip"], function () {
                 link.qtip({
                     position: {
                         my: "top left",
@@ -258,7 +283,7 @@ TODO:                this._addStrongHandlers(passageId, passageHtml);
                 });
             });
         },
-        
+
 
         /**
          * Sets up qtip on all side notes
@@ -322,13 +347,13 @@ TODO:                this._addStrongHandlers(passageId, passageHtml);
             var self = this;
             item.on("mouseover", function () {
                 self._makeSideNoteQtipHandler(item, xref, myPosition, atPosition, version, false);
-            }).on("touchstart", function() {
+            }).on("touchstart", function () {
                 self._makeSideNoteQtipHandler(item, xref, myPosition, atPosition, version, true);
             });
         },
-        _makeSideNoteQtipHandler: function(item, xref, myPosition, atPosition, version, touch) {
+        _makeSideNoteQtipHandler: function (item, xref, myPosition, atPosition, version, touch) {
             if (!$.data(item, "initialised")) {
-                require(["qtip", "drag"], function() {
+                require(["qtip", "drag"], function () {
                     item.qtip({
                         position: { my: "top " + myPosition, at: "top " + atPosition, viewport: $(window) },
                         style: { tip: false, classes: 'draggable-tooltip', width: { min: 800, max: 800} },
@@ -348,7 +373,7 @@ TODO:                this._addStrongHandlers(passageId, passageHtml);
                                 $(api.elements.titlebar).prepend($('<button type="button" class="close" aria-hidden="true">&times;</button>').click(function () {
                                     api.hide();
                                 }));
-                                
+
 //                                    $(api.elements.titlebar).prepend(goToPassageArrowButton(true, version, xref, "leftPassagePreview"));
 //                                    $(api.elements.titlebar).prepend(goToPassageArrowButton(false, version, xref, "rightPassagePreview"));
 
@@ -359,10 +384,10 @@ TODO:                this._addStrongHandlers(passageId, passageHtml);
 //                                            api.hide();
 //                                        });
                             },
-                            visible: function(event, api) {
+                            visible: function (event, api) {
                                 var tooltip = api.elements.tooltip;
-                                var selector = touch ? ".qtip-title" : ".qtip-titlebar"; 
-                                if(touch) {
+                                var selector = touch ? ".qtip-title" : ".qtip-titlebar";
+                                if (touch) {
                                     tooltip.find(".qtip-title").css("width", "90%");
                                 }
                                 new Draggabilly($(tooltip).get(0), {
@@ -402,18 +427,26 @@ TODO:                this._addStrongHandlers(passageId, passageHtml);
             var inlineLink = $(".notesPane strong", passageContent).filter(function () {
                 return $(this).text() == link.text();
             }).closest(".margin");
-            
+
             var links = $(inlineLink).add(link);
-            
-            $(links).hover(function () { self._highlightBothLinks(links); }, 
-                function () { self._unhighlighBothLinks(links); });
-            $(links).on("touchstart", function() { self._highlightBothLinks(links); });
-            $(links).on("touchend", function() { self._unhighlighBothLinks(links)});
+
+            $(links).hover(function () {
+                    self._highlightBothLinks(links);
+                },
+                function () {
+                    self._unhighlighBothLinks(links);
+                });
+            $(links).on("touchstart", function () {
+                self._highlightBothLinks(links);
+            });
+            $(links).on("touchend", function () {
+                self._unhighlighBothLinks(links)
+            });
         },
-        _highlightBothLinks: function(links) {
+        _highlightBothLinks: function (links) {
             links.addClass("secondaryBackground");
         },
-        _unhighlighBothLinks: function(links) {
+        _unhighlighBothLinks: function (links) {
             links.removeClass("secondaryBackground");
         },
 
@@ -439,7 +472,7 @@ TODO:                this._addStrongHandlers(passageId, passageHtml);
             var self = this;
             step.util.ui.enhanceVerseNumbers(passageId, passageContent, version);
         },
-        
+
         _doHideEmptyNotesPane: function (passageContent) {
             var notes = $(".notesPane", passageContent);
 
@@ -470,8 +503,6 @@ TODO:                this._addStrongHandlers(passageId, passageHtml);
         _addStrongHandlers: function (passageId, passageContent) {
             step.util.ui.addStrongHandlers(passageId, passageContent)
         },
-
-        
 
         /**
          * Estimates the height of each block in an interlinear like way

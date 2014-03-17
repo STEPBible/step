@@ -1,4 +1,5 @@
 @import 'template_variables';
+@import 'mixins';
 
 #history {
   .list-group-item {
@@ -20,14 +21,21 @@
       color: $headingColour;
       cursor: hand;
     }
-    &.glyphicon-star {
+    &.glyphicon-open {
+      @include rotate(-90deg);
+      filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+    }
+    &.glyphicon-floppy-saved {
       margin-left: 5px;
       color: $headingColour;
+      &:hover:before {
+        content: "\e174";
+      }
     }
-    &.glyphicon-star-empty {
+    &.glyphicon-floppy-disk {
       margin-left: 5px;
       &:hover:before {
-        content: "\e006";
+        content: "\e176";
       }
     }
   }

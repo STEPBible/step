@@ -371,6 +371,13 @@ h3.psalmHeading {
   font-size: 14px;
   margin: 0px; }
 
+h3.canonicalHeading {
+  font-size: 12px; }
+
+h2.heading.x-proverbs {
+  font-size: 120%;
+  text-align: center; }
+
 .searchResultRow .verse {
   vertical-align: middle; }
 .searchResultRow p {
@@ -884,8 +891,8 @@ body::-webkit-scrollbar-corner {
   font-size: 150%; }
 
 .arabicFont {
-  font-size: 130%;
-  line-height: 1.5; }
+  font-family: DroidKufi;
+  line-height: 1.7; }
 
 .chineseFont {
   font-size: 120%;

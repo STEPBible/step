@@ -247,7 +247,8 @@
         &lt;/span&gt;
     </xsl:template>
     <xsl:template match="div[@type='paragraph'][@sID]">
-        <xsl:value-of select="'&lt;br /&gt;'" /><span class="paragraph"></span>
+        <!--<xsl:value-of select="'&lt;br /&gt;'" />-->
+        <span class="paragraph"></span>
     </xsl:template>
     
     <xsl:template match="div[@subType='x-duplicate']">
@@ -280,7 +281,7 @@
         <xsl:when test="local-name() = 'title'">
           <!-- Always show canonical titles or if headings is turned on -->
           <xsl:if test="@canonical = 'true' or $Headings = 'true'">
-            <h3 class="heading"><xsl:apply-templates /></h3>
+            <h3 class="heading {@type}"><xsl:apply-templates /></h3>
           </xsl:if>
         </xsl:when>
         <xsl:otherwise>
@@ -341,7 +342,7 @@
     </xsl:if>
     <xsl:variable name="title" select=".//title"/>
     <xsl:if test="string-length($title) > 0">
-      <h3 class="heading"><xsl:value-of select="$title"/></h3>
+      <h3 class="heading {@type}"><xsl:value-of select="$title"/></h3>
     </xsl:if>
     <!-- Handle the KJV paragraph marker. -->
     <xsl:if test="milestone[@type = 'x-p']"><p /></xsl:if>
@@ -836,7 +837,7 @@
                     <h3 class="canonicalHeading"><xsl:apply-templates/></h3>
                 </xsl:when>
                 <xsl:otherwise>
-                    <h3 class="heading">
+                    <h3 class="heading {@type}">
                         <xsl:apply-templates/>
                     </h3>
                 </xsl:otherwise>
@@ -926,7 +927,12 @@
       		</xsl:if>
       	</xsl:when>
       	<xsl:otherwise>
-      		<h2 class="heading {@type}"><xsl:apply-templates/></h2>
+            <xsl:value-of select="@type" />
+            <xsl:choose>
+                <xsl:when test="@type='psalm'"><h3 class="psalmHeading {@type}"><xsl:apply-templates/></h3></xsl:when>
+                <xsl:when test="@canonical = 'true'"><h3 class="canonicalHeading {@type}"><xsl:apply-templates/></h3></xsl:when>
+                <xsl:otherwise><h2 class="heading {@type}"><xsl:apply-templates/></h2></xsl:otherwise>
+            </xsl:choose>
       	</xsl:otherwise>
       </xsl:choose>
     </xsl:if>
@@ -1081,10 +1087,12 @@
   </xsl:template>
   
   <xsl:template match="lg[@sID]">
-        <xsl:value-of select="'&lt;br /&gt;'" /><span class="startLineGroup"></span>
+      <!--<xsl:value-of select="'&lt;br /&gt;'" />-->
+      <span class="startLineGroup"></span>
   </xsl:template>
   <xsl:template match="lg[@sID]" mode="jesus"><xsl:value-of select="'&lt;br /&gt;'" />
-        <xsl:value-of select="'&lt;br /&gt;'" /><span class="startLineGroup"></span>
+        <!--<xsl:value-of select="'&lt;br /&gt;'" />-->
+      <span class="startLineGroup"></span>
   </xsl:template>
   <xsl:template match="lg[@eID]">
       <span class="endLineGroup"></span>

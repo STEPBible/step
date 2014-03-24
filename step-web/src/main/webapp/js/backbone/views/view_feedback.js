@@ -100,7 +100,15 @@ var FeedbackView = Backbone.View.extend({
         var self = this;
         this.feedbackForm = $(_.template(this.template)());
         this.$el.append(this.feedbackForm);
-
+    
+        this.feedbackForm.on("show.bs.modal", function(){
+            //blank out all fields 
+            self.feedbackForm.find("#feedbackType").val("Bug");
+            self.feedbackForm.find("#feedbackEmail").val("");
+            self.feedbackForm.find("#feedbackDescription").val("");
+            self.feedbackForm.find("#feedbackSummary").val("");
+        });
+        
         $(".sendFeedback").click(function (ev) {
             ev.preventDefault();
             if(!self.validate()) {
@@ -115,7 +123,7 @@ var FeedbackView = Backbone.View.extend({
                 formData.push({ key: "summary", value: self.feedbackForm.find("#feedbackSummary").val()});
                 formData.push({ key: "url", value: document.URL});
                 self.feedbackForm.modal("hide");
-                self.feedbackForm.remove();
+//                self.feedbackForm.remove();
                 $('body').removeClass('modal-open');
                 $('.modal-backdrop').remove();
                 step.util.raiseInfo(__s.feedback_please_wait, "warning", null, 25);

@@ -65,7 +65,7 @@ var PassageMenuView = Backbone.View.extend({
         
         //css workaround - need to move next/previous from their first position to the next one
         if(isPassage) {
-            previousNext.insertBefore(this.$el.find(".showStats"));
+            previousNext.insertBefore(this.$el.find(".showSettings"));
         } else {
             previousNext.insertBefore(this.$el.find(".closeColumn"));
         }

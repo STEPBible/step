@@ -69,7 +69,7 @@
     <link rel="stylesheet" type="text/css" href="css/passage.css" />
     <!-- 	    <link rel="stylesheet" type="text/css" href="css/timeline.css" /> -->
     <%--<link rel="stylesheet" type="text/css" href="css/search.css" />--%>
-    <%--<link rel="stylesheet" type="text/css" href="css/cardo.css" />--%>
+    <link rel="stylesheet" type="text/css" href="css/cardo.css" />
     <%
     } else {
     %>
@@ -157,13 +157,13 @@
                             <%
                                 }
                             %>
-                            <button class="btn btn-default btn-sm showStats" type="button" title="<fmt:message key="passage_open_sidebar" />">
-                                <span class="glyphicon glyphicon-save"></span></button>
                             <div class="dropdown btn-group settingsDropdown">
                                 <button class="btn btn-default btn-sm dropdown-toggle showSettings" title="<fmt:message key="view" />" type="button" data-toggle="dropdown">
                                     <span class="glyphicon glyphicon-cog"></span>
                                 </button>
                             </div>
+                            <button class="btn btn-default btn-sm showStats" type="button" title="<fmt:message key="passage_open_sidebar" />">
+                                <span class="glyphicon glyphicon-save"></span></button>
                             <button class="btn btn-default btn-sm closeColumn" title="<fmt:message key="close" />" type="button">
                                 <span class="glyphicon glyphicon-remove"></span>
                             </button>

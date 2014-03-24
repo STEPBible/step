@@ -179,6 +179,7 @@
                                 <!--<cssSourceFile>css/prettyCheckable.css</cssSourceFile>-->
                                 <cssSourceFile>scss/step-template.css</cssSourceFile>
                                 <cssSourceFile>css/passage.css</cssSourceFile>
+                                <cssSourceFile>css/cardo.css</cssSourceFile>
 							</cssSourceFiles>
 							<cssFinalFile>step.${project.version}.css</cssFinalFile>
 							<jsSourceDir>.</jsSourceDir>

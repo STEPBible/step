@@ -1,26 +1,27 @@
 package com.tyndalehouse.step.core.data;
 
-import com.ice.tar.TarEntry;
-import com.ice.tar.TarInputStream;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import org.crosswire.common.progress.JobManager;
 import org.crosswire.common.progress.Progress;
 import org.crosswire.common.util.IOUtil;
 import org.crosswire.common.util.NetUtil;
 import org.crosswire.jsword.JSMsg;
-import org.crosswire.jsword.JSOtherMsg;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.BookDriver;
 import org.crosswire.jsword.book.install.InstallException;
-import org.crosswire.jsword.book.sword.*;
+import org.crosswire.jsword.book.sword.ConfigEntry;
+import org.crosswire.jsword.book.sword.SwordBook;
+import org.crosswire.jsword.book.sword.SwordBookDriver;
+import org.crosswire.jsword.book.sword.SwordBookMetaData;
+import org.crosswire.jsword.book.sword.SwordConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.zip.GZIPInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -59,7 +60,7 @@ public class DirectoryListingInstaller extends DirectoryInstaller {
             job.done();
         }
     }
-    
+
     /* (non-Javadoc)
     * @see org.crosswire.jsword.book.install.Installer#reloadBookList()
     */
@@ -81,7 +82,7 @@ public class DirectoryListingInstaller extends DirectoryInstaller {
         for (File bookZipFile : fileList) {
             try {
                 extraConfFile(fake, bookZipFile);
-            } catch(Exception ex) {
+            } catch (Exception ex) {
                 LOGGER.error("Failed to read: [{}]", bookZipFile.getAbsoluteFile());
                 LOGGER.trace(ex.getMessage(), ex);
             }
@@ -118,10 +119,10 @@ public class DirectoryListingInstaller extends DirectoryInstaller {
                         ByteArrayOutputStream os = new ByteArrayOutputStream();
                         byte[] bytes = new byte[1024];
                         int read;
-                        while((read = zin.read(bytes)) > 0) {
+                        while ((read = zin.read(bytes)) > 0) {
                             os.write(bytes, 0, read);
                         }
-                        
+
                         internal = internal.substring(0, internal.length() - 5);
                         if (internal.startsWith(SwordConstants.DIR_CONF + '/')) {
                             internal = internal.substring(7);

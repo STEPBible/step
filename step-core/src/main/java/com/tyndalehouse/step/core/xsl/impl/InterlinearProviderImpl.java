@@ -511,7 +511,7 @@ public class InterlinearProviderImpl implements InterlinearProvider {
      * @return the word that has been added
      */
     Word addTextualInfo(final Verse verseReference, final String strongKey, final String word) {
-        final DualKey<String, String> strongVerseKey = new DualKey<String, String>(strongKey, verseReference == null ? NO_VERSE : verseReference.getOsisID());
+        final DualKey<String, String> strongVerseKey = new DualKey<String, String>(strongKey, verseReference == null ? NO_VERSE : verseReference.getOsisIDNoSubIdentifier());
         Deque<Word> verseKeyedStrongs = this.limitedAccuracy.get(strongVerseKey);
         if (verseKeyedStrongs == null) {
             verseKeyedStrongs = new LinkedList<Word>();

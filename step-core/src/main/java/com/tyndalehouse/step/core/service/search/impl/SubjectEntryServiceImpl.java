@@ -131,7 +131,7 @@ public class SubjectEntryServiceImpl implements SubjectEntrySearchService {
     private void collectVersesFromReferences(final List<OsisWrapper> verses, final String version,
             final String references) {
         final Passage verseRanges = this.jsword.getVerseRanges(references, version);
-        final Iterator<Key> rangeIterator = verseRanges.rangeIterator(RestrictionType.NONE);
+        final Iterator<VerseRange> rangeIterator = verseRanges.rangeIterator(RestrictionType.NONE);
         final List<LookupOption> options = new ArrayList<LookupOption>();
         options.add(LookupOption.HIDE_XGEN);
 

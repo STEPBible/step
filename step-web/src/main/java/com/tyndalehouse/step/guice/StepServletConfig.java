@@ -158,8 +158,6 @@ public class StepServletConfig extends GuiceServletContextListener {
                 }
             }
         });
-
-        org.crosswire.common.util.Logger.setShowLocationForInfoDebugTrace(false);
     }
 
     /**

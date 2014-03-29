@@ -1600,8 +1600,10 @@ the specific language governing permissions and limitations under the Apache Lic
                 if (checkFormatter(opts.formatInputTooShort, "formatInputTooShort")) {
                     var message = opts.formatInputTooShort(search.val(), opts.minimumInputLength);
                     if(typeof message == 'string') {
+                        results.empty();
                         render("<li class='select2-no-results'>" + message + "</li>");
                     } else {
+                        results.empty();
                         render($("<li class='select2-no-results'>").append(message));
                     }
                 } else {

@@ -98,37 +98,27 @@
         <!-- Fixed navbar -->
         <div class="navbar navbar-default navbar-fixed-top " >
             <div>
-                <div class="navbar-header">
-                    <div class="navbar-brand col-xs-1 col-sm-2 col-md-3">
+                <div class="navbar-header search-form">
+                    <div class="navbar-brand col-xs-12">
                         <span class="hidden-xs title">
-                            <a href="#">STEP</a>
+                            <a href="/"><img id="logo" src="images/step-top-left-logo.png" width="31" height="40" /></a>
+                            <a href="/">STEP</a>
                             <br />
                             <span class="subtitle">
-                                <span class="hidden-xs">Created by <br/></span>
                                 <a href="http://www.tyndale.cam.ac.uk" target="_blank">Tyndale House</a>
                             </span>
                         </span>
-                    </div>
-                    <div class="col-xs-6 col-sm-6 col-md-6 search-form">
+                        <span class="help"><jsp:include page="js/menu/top/menu.jsp" /></span>
                         <form role="form">
                             <div class="form-group">
                                 <div class="input-group">
                                     <input id="masterSearch" type="text" class="form-control input-sm" placeholder="<fmt:message key="search_placeholder" />">
                                     <span class="input-group-btn">
-                                      <button class="btn btn-default btn-danger btn-sm" type="button"><fmt:message key="find" /></button>
+                                      <button class="find btn btn-default btn-danger btn-sm" type="button"><fmt:message key="find" /></button>
                                     </span>
                                 </div>
-                                <span class="searchLinks">
-                                    <label for="openInNewPanel">
-                                        <fmt:message key="open_in_new_panel" />
-                                    </label>
-                                    <input type="checkbox" id="openInNewPanel" />
-                                </span>
                             </div>
                         </form>
-                    </div>
-                    <div class="col-xs-1 col-sm-4 col-md-3 help">
-                        <jsp:include page="js/menu/top/menu.jsp" />
                     </div>
                 </div>
             </div>
@@ -137,145 +127,159 @@
         <div class="mainPanel row row-offcanvas">
             <div class="" id='columnHolder'>
                 <div class="col-sm-6 col-xs-12 column">
-                <div class="passageContainer active" passage-id=0>
-                    <span class="activeMarker"></span>
-                    <div class="passageText ui-widget">
-                        <div class="btn-group pull-right passageOptionsGroup">
-                            <a class="btn btn-default btn-sm previousChapter" type="button" title="<fmt:message key="passage_previous_chapter" />">
-                                <span class="glyphicon glyphicon-arrow-left"></span></a>
-                            <a class="btn btn-default btn-sm nextChapter" type="button" title='<fmt:message key="passage_next_chapter" />'>
-                                <span class="glyphicon glyphicon-arrow-right"></span>
-                            </a>
-                            <%
-                                if(!appManager.isLocal()) {
-                            %>
-                            <div class="dropdown btn-group">
-                                <button class="btn btn-default btn-sm dropdown-share" data-toggle="dropdown" type="button" title="<fmt:message key="share" />">
-                                    <span class="glyphicon glyphicon-thumbs-up"></span>
+                    <div class="passageContainer active" passage-id=0>
+                        <span class="activeMarker"></span>
+                        <div class="passageText ui-widget">
+                            <div class="btn-group pull-right passageOptionsGroup">
+                                <a class="btn btn-default btn-sm previousChapter" type="button" title="<fmt:message key="passage_previous_chapter" />">
+                                    <span class="glyphicon glyphicon-arrow-left"></span></a>
+                                <a class="btn btn-default btn-sm nextChapter" type="button" title='<fmt:message key="passage_next_chapter" />'>
+                                    <span class="glyphicon glyphicon-arrow-right"></span>
+                                </a>
+                                <%
+                                    if(!appManager.isLocal()) {
+                                %>
+                                <div class="dropdown btn-group">
+                                    <button class="btn btn-default btn-sm dropdown-share" data-toggle="dropdown" type="button" title="<fmt:message key="share" />">
+                                        <span class="glyphicon glyphicon-thumbs-up"></span>
+                                    </button>
+                                </div>
+                                <%
+                                    }
+                                %>
+                                <div class="dropdown btn-group settingsDropdown">
+                                    <button class="btn btn-default btn-sm dropdown-toggle showSettings" title="<fmt:message key="view" />" type="button" data-toggle="dropdown">
+                                        <span class="glyphicon glyphicon-cog"></span>
+                                    </button>
+                                </div>
+                                <button class="btn btn-default btn-sm showStats" type="button" title="<fmt:message key="passage_open_sidebar" />">
+                                    <span class="glyphicon glyphicon-save"></span></button>
+                                <button class="btn btn-default btn-sm closeColumn" title="<fmt:message key="close" />" type="button">
+                                    <span class="glyphicon glyphicon-remove"></span>
                                 </button>
+                                
                             </div>
-                            <%
-                                }
-                            %>
-                            <div class="dropdown btn-group settingsDropdown">
-                                <button class="btn btn-default btn-sm dropdown-toggle showSettings" title="<fmt:message key="view" />" type="button" data-toggle="dropdown">
-                                    <span class="glyphicon glyphicon-cog"></span>
-                                </button>
+                            <div class="pull-right resultsLabel">
+                                <c:if test="${'PASSAGE' ne searchType}">
+                                    <c:set var="pageMessage" scope="request"><fmt:message key="paging_showing" /></c:set>
+                                    <%= String.format((String) request.getAttribute("pageMessage"), (Integer) request.getAttribute("numResults")) %>
+                                </c:if>
                             </div>
-                            <button class="btn btn-default btn-sm showStats" type="button" title="<fmt:message key="passage_open_sidebar" />">
-                                <span class="glyphicon glyphicon-save"></span></button>
-                            <button class="btn btn-default btn-sm closeColumn" title="<fmt:message key="close" />" type="button">
-                                <span class="glyphicon glyphicon-remove"></span>
-                            </button>
-                            
-                        </div>
-                        <div class="pull-right resultsLabel">
-                            <c:if test="${'PASSAGE' ne searchType}">
-                                <c:set var="pageMessage" scope="request"><fmt:message key="paging_showing" /></c:set>
-                                <%= String.format((String) request.getAttribute("pageMessage"), (Integer) request.getAttribute("numResults")) %>
-                            </c:if>
-                        </div>
-                        <div class="passageContent" itemprop="text">
-                            <c:choose>
-                                <c:when test="${ 'PASSAGE' eq searchType }">
-                                    ${ passageText }
-                                </c:when>
-                                <c:otherwise>
-                                    <span>
-                                        <%-- Do toolbar for original word search --%>
-                                        <c:if test="${ ('ORIGINAL_GREEK_RELATED' eq searchType or 'ORIGINAL_HEBREW_RELATED' eq searchType) and fn:length(definitions) gt 0  }">
-                                            <div class="originalWordSearchToolbar">
-                                                <div class="panel panel-default">
-                                                    <div class="panel-heading">
-                                                        <h4 data-toggle="collapse" href="#relatedWords" class="panel-title lexicalGrouping"><span class="glyphicon glyphicon-plus"></span><fmt:message key="lexicon_related_words" /></h4>
-                                                    </div>
-                                                        <div id="relatedWords" class="panel-body panel-collapse collapse">
-                                                            <ul class="panel-collapse"style="height: auto;">
-                                                                <c:forEach items="${definitions}" var="definition">
-                                                                    <%-- need to work out if the item is active --%>
-                                                                    <c:set var="isActive" value="false" />
-                                                                    <c:forEach var="item" items="${filter}">
-                                                                        <c:if test="${item eq definition.strongNumber}">
-                                                                            <c:set var="isActive" value="true" />
-                                                                        </c:if>
-                                                                    </c:forEach>
-                                                                    
-                                                                    <li class="sortable" strongnumber="${ definition.strongNumber}">
-                                                                        <a href="javascript:void(0)"strong="G0015">
-                                                                            <span class="glyphicon glyphicon-ok ${isActive ? 'active' : '' }"></span>
-                                                                            ${ definition.stepTransliteration }
-                                                                            (<span class="${fn:substring(definition.strongNumber, 0,1) == 'H' ?'hbFontMini' : 'unicodeFontMini'}">
-                                                                                ${ definition.matchingForm }
-                                                                            </span> - ${ definition.gloss} )
-                                                                        </a>
-                                                                    </li>
-                                                                </c:forEach>
-                                                            </ul>
+                            <div class="passageContent" itemprop="text">
+                                <c:choose>
+                                    <c:when test="${ 'PASSAGE' eq searchType }">
+                                        ${ passageText }
+                                    </c:when>
+                                    <c:otherwise>
+                                        <span>
+                                            <%-- Do toolbar for original word search --%>
+                                            <c:if test="${ ('ORIGINAL_GREEK_RELATED' eq searchType or 'ORIGINAL_HEBREW_RELATED' eq searchType) and fn:length(definitions) gt 0  }">
+                                                <div class="originalWordSearchToolbar">
+                                                    <div class="panel panel-default">
+                                                        <div class="panel-heading">
+                                                            <h4 data-toggle="collapse" href="#relatedWords" class="panel-title lexicalGrouping"><span class="glyphicon glyphicon-plus"></span><fmt:message key="lexicon_related_words" /></h4>
                                                         </div>
-                                                </div>
-                                            </div>
-                                        </c:if>   
-                                        
-                                        <c:choose>
-                                        <c:when test="${ 'SUBJECT_SIMPLE' eq searchType or 
-                                            'SUBJECT_EXTENDED' eq searchType or 
-                                            'SUBJECT_FULL' eq searchType or 
-                                            'SUBJECT_RELATED' eq searchType }">
-                                            <c:if test="${ 'SUBJECT_RELATED' ne searchType }">
-                                                <%-- Do search toolbar --%>
-                                                <div class="subjectToolbar">
-                                                    <input <c:if test="${ 'SUBJECT_SIMPLE' eq searchType }">checked="checked"</c:if> type="radio" name="subjectSearchType" 
-                                                           value="subject" id="0_esvHeadings"><label for="0_esvHeadings"><fmt:message key="search_subject_esv_headings" /></label>
-                                                    <input type="radio" <c:if test="${ 'SUBJECT_EXTENDED' eq searchType }">checked="checked"</c:if> name="subjectSearchType" 
-                                                           value="nave" id="0_nave"><label for="0_nave"><fmt:message key="search_subject_nave" /></label>
-                                                    <input type="radio" <c:if test="${ 'SUBJECT_FULL' eq searchType }">checked="checked"</c:if> name="subjectSearchType" 
-                                                           value="xnave" id="0_extendedNave"><label for="0_extendedNave"><fmt:message key="search_subject_nave_extended" /></label>
-                                                </div>
-                                            </c:if>
-                                            <c:choose>
-                                                <c:when test="${ 'SUBJECT_SIMPLE' eq searchType }">
-                                                    <search:display_results results="${searchResults[0].headingsSearch.results }" />
-                                                </c:when>
-                                                <c:otherwise>
-                                                    <div class="panel-group subjectSection searchResults">
-                                                        <c:set var="previousHeading" value="not-set" />
-                                                        <c:forEach var="result" items="${ searchResults }" varStatus="count">
-                                                            
-                                                            <c:if test="${ previousHeading ne result.root }">
-                                                                <h4 class="subjectHeading">${ result.root }</h4>
-                                                            </c:if>
-                                                            <c:set var="previousHeading" value="${result.root}" />
-                                                                <div class="panel panel-default" 
-                                                                     root="${ result.root }"
-                                                                     fullheader="${ result.heading }"
-                                                                      <c:if test="${ not empty result.seeAlso }">seeAlso="${result.seeAlso}"</c:if>  
-                                                                >
-                                                                    <div class="panel-heading">
-                                                                        <h4 data-toggle="collapse" href="#subject-results-${ count.index }" class="panel-title expandableSearchHeading">
-                                                                        <span class="glyphicon glyphicon-plus"></span>${ result.heading }</h4></div>
-                                                                    <div class="results panel-collapse collapse"
-                                                                         id="subject-results-${ count.index }"><fmt:message key="results_loading" /></div>
-                                                                </div>
-                                                        </c:forEach>
+                                                            <div id="relatedWords" class="panel-body panel-collapse collapse">
+                                                                <ul class="panel-collapse"style="height: auto;">
+                                                                    <c:forEach items="${definitions}" var="definition">
+                                                                        <%-- need to work out if the item is active --%>
+                                                                        <c:set var="isActive" value="false" />
+                                                                        <c:forEach var="item" items="${filter}">
+                                                                            <c:if test="${item eq definition.strongNumber}">
+                                                                                <c:set var="isActive" value="true" />
+                                                                            </c:if>
+                                                                        </c:forEach>
+                                                                        
+                                                                        <li class="sortable" strongnumber="${ definition.strongNumber}">
+                                                                            <a href="javascript:void(0)"strong="G0015">
+                                                                                <span class="glyphicon glyphicon-ok ${isActive ? 'active' : '' }"></span>
+                                                                                ${ definition.stepTransliteration }
+                                                                                (<span class="${fn:substring(definition.strongNumber, 0,1) == 'H' ?'hbFontMini' : 'unicodeFontMini'}">
+                                                                                    ${ definition.matchingForm }
+                                                                                </span> - ${ definition.gloss} )
+                                                                            </a>
+                                                                        </li>
+                                                                    </c:forEach>
+                                                                </ul>
+                                                            </div>
                                                     </div>
-                                                </c:otherwise>
+                                                </div>
+                                            </c:if>   
+                                            
+                                            <c:choose>
+                                            <c:when test="${ 'SUBJECT_SIMPLE' eq searchType or 
+                                                'SUBJECT_EXTENDED' eq searchType or 
+                                                'SUBJECT_FULL' eq searchType or 
+                                                'SUBJECT_RELATED' eq searchType }">
+                                                <c:if test="${ 'SUBJECT_RELATED' ne searchType }">
+                                                    <%-- Do search toolbar --%>
+                                                    <div class="subjectToolbar">
+                                                        <input <c:if test="${ 'SUBJECT_SIMPLE' eq searchType }">checked="checked"</c:if> type="radio" name="subjectSearchType" 
+                                                               value="subject" id="0_esvHeadings"><label for="0_esvHeadings"><fmt:message key="search_subject_esv_headings" /></label>
+                                                        <input type="radio" <c:if test="${ 'SUBJECT_EXTENDED' eq searchType }">checked="checked"</c:if> name="subjectSearchType" 
+                                                               value="nave" id="0_nave"><label for="0_nave"><fmt:message key="search_subject_nave" /></label>
+                                                        <input type="radio" <c:if test="${ 'SUBJECT_FULL' eq searchType }">checked="checked"</c:if> name="subjectSearchType" 
+                                                               value="xnave" id="0_extendedNave"><label for="0_extendedNave"><fmt:message key="search_subject_nave_extended" /></label>
+                                                    </div>
+                                                </c:if>
+                                                <c:choose>
+                                                    <c:when test="${ 'SUBJECT_SIMPLE' eq searchType }">
+                                                        <search:display_results results="${searchResults[0].headingsSearch.results }" />
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <div class="panel-group subjectSection searchResults">
+                                                            <c:set var="previousHeading" value="not-set" />
+                                                            <c:forEach var="result" items="${ searchResults }" varStatus="count">
+                                                                
+                                                                <c:if test="${ previousHeading ne result.root }">
+                                                                    <h4 class="subjectHeading">${ result.root }</h4>
+                                                                </c:if>
+                                                                <c:set var="previousHeading" value="${result.root}" />
+                                                                    <div class="panel panel-default" 
+                                                                         root="${ result.root }"
+                                                                         fullheader="${ result.heading }"
+                                                                          <c:if test="${ not empty result.seeAlso }">seeAlso="${result.seeAlso}"</c:if>  
+                                                                    >
+                                                                        <div class="panel-heading">
+                                                                            <h4 data-toggle="collapse" href="#subject-results-${ count.index }" class="panel-title expandableSearchHeading">
+                                                                            <span class="glyphicon glyphicon-plus"></span>${ result.heading }</h4></div>
+                                                                        <div class="results panel-collapse collapse"
+                                                                             id="subject-results-${ count.index }"><fmt:message key="results_loading" /></div>
+                                                                    </div>
+                                                            </c:forEach>
+                                                        </div>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                                
+                                            </c:when>
+                                            <c:otherwise>
+                                                <div class="searchResults">
+                                                    <search:display_results results="${searchResults}" />
+                                                </div>
+                                            </c:otherwise>
                                             </c:choose>
                                             
-                                        </c:when>
-                                        <c:otherwise>
-                                            <div class="searchResults">
-                                                <search:display_results results="${searchResults}" />
-                                            </div>
-                                        </c:otherwise>
-                                        </c:choose>
-                                        
-                                    </span>
-                                </c:otherwise>
-                            </c:choose>
+                                        </span>
+                                    </c:otherwise>
+                                </c:choose>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+                <div class="xs-hidden col-sm-2 col-md-offset-4 column examplesColumn">
+                    <div class="passageContainer examplesContainer">
+                        <h1><fmt:message key="simple_intro_welcome" /></h1>
+                        <h1><fmt:message key="simple_intro_tyndale_house_project" /></h1>
+                        <br />
+                        
+                        <fmt:message key="simple_intro" />
+                        <br /><br />
+                        <search:sample_search explanation="simple_passage_explanation" option1="Gen 1" option1type="reference" option2="ESV" option2type="version" />
+                        <search:sample_search explanation="simple_search_explanation" option1="NIV" option1type="version" option2="brother" option2type="greekMeanings" />
+                        <search:sample_search explanation="simple_search_restricted_explanation" option1="The Pentateuch" option1type="reference" option2="ESV" option2type="version" option3="he.sed" option3type="hebrew" />
+                        <search:sample_search explanation="simple_passage_explanation" option1="NIV" option1type="version" option2="ESV" option2type="version" option3="brother" option3type="greekMeanings" option4="he.sed" option4type="hebrew" />
+                    </div>
+                </div>
             </div>
             <div class="sidebar-offcanvas" id="sidebar" role="navigation"></div>
         </div>

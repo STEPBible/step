@@ -2,11 +2,16 @@ var ViewHistory = Backbone.View.extend({
     itemTemplate: _.template('<li class="list-group-item" data-item="<%= item.get("id") %>">' +
         '<a class="openBookmark" title="<%= __s.bookmarks_open %>"><span class="glyphicon glyphicon-open"></span></a>' +
         '<a class="starBookmark" data-favourite="<%= item.get("favourite")%>" title="<%= item.get("favourite") ? __s.passage_tools_delete_bookmark : __s.passage_tools_bookmark %>">' +
-        '<span class="glyphicon <%= item.get("favourite") ? "glyphicon-floppy-saved" : "glyphicon-floppy-disk" %>"></span></a>' +
+        '<span class="glyphicon <%= item.get("favourite") ? "glyphicon-pushpin-pinned" : "glyphicon-pushpin" %>"></span></a>' +
         '<a class="removeBookmark" title="<%= __s.bookmark_remove %>"><span class="glyphicon glyphicon-remove"></span></a>' +
         '<% _.each(view.getKeyValues(item.get("args")), function(a) { %><span class="argSelect select-<%= a.key %>"><%= a.value %></span> <% }); %>' +
         '</li>'),
-    fullList: _.template('<ul class="list-group"><% bookmarks.each(function(bookmark) { %><%= view.itemTemplate({ item: bookmark, view: view }) %> <% }) %></ul>'),
+    fullList: _.template(
+        '<h3><%= __s.bookmarks_pinned %></h3><ul class="list-group">' +
+        '<% var bks = bookmarks.where({favourite: true }); for(var i = 0; i < bks.length; i++) { %><%= view.itemTemplate({ item: bks[i], view: view }) %> <% } %>' +
+        '</ul><h3><%= __s.bookmarks_recent %></h3><ul class="list-group">' +
+        '<% var bks = bookmarks.where({favourite: false }); for(var i = 0; i < bks.length; i++) { %><%= view.itemTemplate({ item: bks[i], view: view }) %> <% } %>' +
+        '</ul>'),
     initialize: function () {
         var self = this;
 
@@ -15,7 +20,24 @@ var ViewHistory = Backbone.View.extend({
         this.listenTo(step.bookmarks, 'remove', this.removeItem);
         this.render();
     },
-    render: function () {
+    removeBookmarkHandler: function (self) {
+        var item = $(self).closest("li");
+        var bookmarkId = item.data("item");
+        step.bookmarks.findWhere({id: bookmarkId }).destroy();
+        item.remove();
+    }, starBookmarkHandler: function (self) {
+        var item = $(self).closest("li");
+        var bookmarkId = item.data("item");
+        var model = step.bookmarks.findWhere({id: bookmarkId });
+        model.save({ favourite: !model.get("favourite") });
+        step.bookmarks.sort();
+        this.render();
+    }, openBookmarkHandler: function (self) {
+        var item = $(self).closest("li");
+        var bookmarkId = item.data("item");
+        var model = step.bookmarks.findWhere({id: bookmarkId });
+        step.router.navigateSearch(model.get("args"));
+    }, render: function () {
         var self = this;
         if(this.list) {
             this.list.remove();
@@ -24,24 +46,13 @@ var ViewHistory = Backbone.View.extend({
         this.list = $(this.fullList({ bookmarks: step.bookmarks, view: this }));
         this.$el.append(this.list);
         this.$el.find(".removeBookmark").click(function () {
-            var item = $(this).closest("li");
-            var bookmarkId = item.data("item");
-            step.bookmarks.findWhere({id: bookmarkId }).destroy();
-            item.remove();
+            self.removeBookmarkHandler(this);
         });
         this.$el.find(".starBookmark").click(function() {
-            var item = $(this).closest("li");
-            var bookmarkId = item.data("item");
-            var model = step.bookmarks.findWhere({id: bookmarkId });
-            model.save({ favourite: !model.get("favourite") });
-            step.bookmarks.sort();
-            self.render();
+            self.starBookmarkHandler(this);
         });
         this.$el.find(".openBookmark").click(function() {
-            var item = $(this).closest("li");
-            var bookmarkId = item.data("item");
-            var model = step.bookmarks.findWhere({id: bookmarkId });
-            step.router.navigateSearch(model.get("args"));
+            self.openBookmarkHandler(this);
         });
     },
     getKeyValues: function (args) {
@@ -64,7 +75,18 @@ var ViewHistory = Backbone.View.extend({
     },
     addItem: function (model) {
         var newItem = $(this.itemTemplate({ item: model, view: this }));
+        var self = this;
         this._insertBookmark(model, newItem);
+
+        newItem.find(".removeBookmark").click(function () {
+            self.removeBookmarkHandler(this);
+        });
+        newItem.find(".starBookmark").click(function() {
+            self.starBookmarkHandler(this);
+        });
+        newItem.find(".openBookmark").click(function() {
+            self.openBookmarkHandler(this);
+        });
     },
     removeItem: function (model) {
         this._findByModel(model).remove();
@@ -74,11 +96,12 @@ var ViewHistory = Backbone.View.extend({
         this._insertBookmark(model, this._findByModel(model));
     },
     _insertBookmark: function(model, item) {
-        var lastStarred = this.list.find("li:has([data-favourite='true']):last");
-        if(model.get("favourite") || lastStarred.length == 0) {
-            this.list.prepend(item);
+        if(model.get("favourite")) {
+            this.list.find("li:has([data-favourite='true']):last");
+            this.list.append(item);
         } else {
-            item.insertAfter(lastStarred);
+            var firstRecent = this.list.find("li:has([data-favourite='false']):first");
+            item.insertBefore(firstRecent);
         }    
     },
     _findByModel: function(model) {

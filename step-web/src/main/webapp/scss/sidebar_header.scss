@@ -2,6 +2,7 @@
 
 #sidebar {
   &> ul > li {
+    text-align: center;
     &.closeSidebar {
       float: right;
     }
@@ -12,9 +13,11 @@
     }
     a {
       color: $inactiveTabColor;
-      padding: 2 20 2 5;
+      padding: 2 5 2 5;
+      &.stepglyph-help {
+        font-weight: bold;
+      }
     }
-    
   }
 }
 

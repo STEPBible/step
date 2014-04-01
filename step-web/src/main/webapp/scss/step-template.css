@@ -28,29 +28,43 @@ ul .glyphicon-ok {
 
 @media screen {
   .navbar {
-    height: 63px;
-    margin-bottom: 0px; }
+    height: 40px;
+    margin-bottom: 0px;
+    min-height: initial; }
     .navbar .navbar-header {
       font-size: x-small;
-      background: black no-repeat fixed url(../images/step-top-left-logo.png); }
+      background: black; }
+    .navbar #logo {
+      top: 0;
+      left: 0;
+      position: absolute; }
     .navbar a, .navbar .subtitle, .navbar .subtitle:hover {
       color: lightgrey; }
+    .navbar.form-group, .navbar form {
+      margin-bottom: 0px; }
+      .navbar.form-group button, .navbar form button {
+        min-width: 80px;
+        text-shadow: none; }
 
   .navbar-brand {
     padding-left: 50px;
-    padding-bottom: 0px; }
-    .navbar-brand .title > a {
-      color: white !important;
-      font-weight: bold;
-      text-decoration: none; }
+    padding-bottom: 0px;
+    height: 40px; }
+    .navbar-brand .title {
+      margin-right: 10px;
+      float: left; }
+      .navbar-brand .title > a {
+        color: white !important;
+        font-weight: bold;
+        text-decoration: none; }
     .navbar-brand .subtitle {
       margin-top: 5px;
       white-space: nowrap;
       font-size: x-small;
       line-height: 1; }
 
-  .navbar-brand, .search-form, .help {
-    padding-top: 10px; }
+  .navbar-brand {
+    padding-top: 5px; }
 
   .search-form {
     font-size: x-small; }
@@ -70,15 +84,25 @@ ul .glyphicon-ok {
       margin: 2px 0 0 0; }
 
   .help {
+    padding-top: 3px;
+    font-size: 12px;
+    margin-left: 10px;
+    float: right;
     color: lightgrey; }
     .help ul {
       float: right; }
+    .help button {
+      padding: 3 5 5 6;
+      margin-left: 10px;
+      margin-right: 20px;
+      font-size: 11px;
+      font-family: Arial; }
+
   .mainPanel, #sidebar {
-    padding: 63px 0 10px 0px; } }
+    padding: 40px 0 10px 0px; } }
   @media screen and (max-width: 524px) {
     .help {
       display: none; } }
-
 @media screen and (max-width: 991px) {
   .kolumny {
     max-height: 500;
@@ -163,7 +187,7 @@ ul .glyphicon-ok {
   padding: 0 2;
   font-weight: bold; }
 
-.select2-search-choice.select-meanings, .select2-results .select-meanings {
+.select-meanings {
   background: #ffff66;
   /* for non-css3 browsers */
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=lighten($color, $optionStartGradient), endColorstr=lighten($color, $optionEndGradient));
@@ -172,7 +196,7 @@ ul .glyphicon-ok {
   background: -moz-linear-gradient(left, #ffff66, #ffff99);
   /* for firefox 3.6+ */ }
 
-.select2-search-choice.select-version, .select2-results .select-version {
+.select-version {
   background: #cd8c8e;
   /* for non-css3 browsers */
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=lighten($color, $optionStartGradient), endColorstr=lighten($color, $optionEndGradient));
@@ -181,7 +205,7 @@ ul .glyphicon-ok {
   background: -moz-linear-gradient(left, #cd8c8e, #dcb0b1);
   /* for firefox 3.6+ */ }
 
-.select2-search-choice.select-reference, .select2-results .select-reference {
+.select-reference {
   background: #e8fce8;
   /* for non-css3 browsers */
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=lighten($color, $optionStartGradient), endColorstr=lighten($color, $optionEndGradient));
@@ -190,7 +214,7 @@ ul .glyphicon-ok {
   background: -moz-linear-gradient(left, #e8fce8, white);
   /* for firefox 3.6+ */ }
 
-.select2-search-choice.select-subject, .select2-results .select-subject {
+.select-subject {
   background: #e2b9bd;
   /* for non-css3 browsers */
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=lighten($color, $optionStartGradient), endColorstr=lighten($color, $optionEndGradient));
@@ -199,7 +223,7 @@ ul .glyphicon-ok {
   background: -moz-linear-gradient(left, #e2b9bd, #f1dddf);
   /* for firefox 3.6+ */ }
 
-.select2-search-choice.select-text, .select2-results .text {
+.select-text {
   background: #66ffff;
   /* for non-css3 browsers */
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=lighten($color, $optionStartGradient), endColorstr=lighten($color, $optionEndGradient));
@@ -208,7 +232,7 @@ ul .glyphicon-ok {
   background: -moz-linear-gradient(left, #66ffff, #99ffff);
   /* for firefox 3.6+ */ }
 
-.select2-search-choice.select-greek, .select2-results .select-greek {
+.select-greek {
   background: #faf7f7;
   /* for non-css3 browsers */
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=lighten($color, $optionStartGradient), endColorstr=lighten($color, $optionEndGradient));
@@ -217,7 +241,7 @@ ul .glyphicon-ok {
   background: -moz-linear-gradient(left, #faf7f7, white);
   /* for firefox 3.6+ */ }
 
-.select2-search-choice.select-greekMeanings, .select2-results .select-greekMeanings {
+.select-greekMeanings {
   background: #a8a7a9;
   /* for non-css3 browsers */
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=lighten($color, $optionStartGradient), endColorstr=lighten($color, $optionEndGradient));
@@ -226,7 +250,7 @@ ul .glyphicon-ok {
   background: -moz-linear-gradient(left, #a8a7a9, #c2c1c2);
   /* for firefox 3.6+ */ }
 
-.select2-search-choice.select-hebrew, .select2-results .select-hebrew {
+.select-hebrew {
   background: #8e9dbc;
   /* for non-css3 browsers */
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=lighten($color, $optionStartGradient), endColorstr=lighten($color, $optionEndGradient));
@@ -235,7 +259,7 @@ ul .glyphicon-ok {
   background: -moz-linear-gradient(left, #8e9dbc, #aeb9cf);
   /* for firefox 3.6+ */ }
 
-.select2-search-choice.select-hebrewMeanings, .select2-results .select-hebrewMeanings {
+.select-hebrewMeanings {
   background: #9f798b;
   /* for non-css3 browsers */
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=lighten($color, $optionStartGradient), endColorstr=lighten($color, $optionEndGradient));
@@ -244,7 +268,7 @@ ul .glyphicon-ok {
   background: -moz-linear-gradient(left, #9f798b, #b596a4);
   /* for firefox 3.6+ */ }
 
-.select2-search-choice.select-topicref, .select2-results .select-topicref {
+.select-topicref {
   background: #ef7ad0;
   /* for non-css3 browsers */
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=lighten($color, $optionStartGradient), endColorstr=lighten($color, $optionEndGradient));
@@ -483,6 +507,25 @@ h4.lexicalGrouping {
 .resultsLabel {
   font-style: italic;
   clear: right; }
+
+.examplesContainer h1 {
+  font-size: 13px;
+  text-align: center;
+  margin: 0px; }
+.examplesContainer h2 {
+  font-size: 12px;
+  text-align: center;
+  margin: 0px; }
+.examplesContainer h4 {
+  margin-top: 15px;
+  font-size: 12px;
+  display: inline; }
+
+.examples {
+  display: block; }
+
+.find {
+  text-shadow: none; }
 
 .mainPanel {
   min-height: 100%;
@@ -824,7 +867,7 @@ body::-webkit-scrollbar-corner {
     transition: all 0.25s ease-out; }
     .row-offcanvas .sidebar-offcanvas {
       right: -75%;
-      top: 63px; }
+      top: 40px; }
     .row-offcanvas.active {
       right: 75%; }
 
@@ -849,13 +892,17 @@ body::-webkit-scrollbar-corner {
     overflow-y: scroll;
     height: 100%;
     padding-right: 0px; } }
-#sidebar > ul > li.closeSidebar {
-  float: right; }
-#sidebar > ul > li.active a {
-  color: #991c32; }
-#sidebar > ul > li a {
-  color: black;
-  padding: 2 20 2 5; }
+#sidebar > ul > li {
+  text-align: center; }
+  #sidebar > ul > li.closeSidebar {
+    float: right; }
+  #sidebar > ul > li.active a {
+    color: #991c32; }
+  #sidebar > ul > li a {
+    color: black;
+    padding: 2 5 2 5; }
+    #sidebar > ul > li a.stepglyph-help {
+      font-weight: bold; }
 
 #lexicon h1 {
   font-size: 16px;
@@ -905,15 +952,27 @@ body::-webkit-scrollbar-corner {
     -ms-transform: rotate(-90deg);
     -o-transform: rotate(-90deg);
     filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3); }
-  #history .glyphicon.glyphicon-floppy-saved {
-    margin-left: 5px;
-    color: #991c32; }
-    #history .glyphicon.glyphicon-floppy-saved:hover:before {
-      content: "\e174"; }
-  #history .glyphicon.glyphicon-floppy-disk {
-    margin-left: 5px; }
-    #history .glyphicon.glyphicon-floppy-disk:hover:before {
-      content: "\e176"; }
+  #history .glyphicon.glyphicon-pushpin:hover {
+    -webkit-transform: rotate(-45deg);
+    -moz-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    -o-transform: rotate(-45deg); }
+  #history .glyphicon.glyphicon-pushpin-pinned {
+    -webkit-transform: rotate(-45deg);
+    -moz-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    -o-transform: rotate(-45deg); }
+    #history .glyphicon.glyphicon-pushpin-pinned:before {
+      content: "\e146"; }
+    #history .glyphicon.glyphicon-pushpin-pinned:hover {
+      -webkit-transform: rotate(0deg);
+      -moz-transform: rotate(0deg);
+      -ms-transform: rotate(0deg);
+      -o-transform: rotate(0deg); }
+#history h3 {
+  font-size: 13px;
+  margin: 0 0 5 0;
+  padding: 5 0 0 0; }
 
 .argSelect {
   white-space: nowrap;
@@ -935,6 +994,9 @@ body::-webkit-scrollbar-corner {
   background-image: -webkit-linear-gradient(top, #f4f4f4 20%, #f0f0f0 50%, #e8e8e8 52%, #eeeeee 100%);
   background-image: -moz-linear-gradient(top, #f4f4f4 20%, #f0f0f0 50%, #e8e8e8 52%, #eeeeee 100%);
   background-image: linear-gradient(top, #f4f4f4 20%, #f0f0f0 50%, #e8e8e8 52%, #eeeeee 100%); }
+
+#help {
+  margin-top: 5px; }
 
 .versePopup {
   max-width: 600px !important; }

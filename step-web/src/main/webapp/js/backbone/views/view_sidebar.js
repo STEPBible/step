@@ -23,11 +23,18 @@ var SidebarView = Backbone.View.extend({
             mode = 'analysis';
         } else if (data == '#history') {
             mode = 'history';
+        } else if (data == '#help') {
+            mode = 'help';
         }
 
         this.model.save({
             mode: mode
         });
+    },
+    createHelp: function () {
+        var examplesContainer = $(".examplesContainer");
+        examplesContainer.attr("id", "help");
+        $(".tab-content").append(examplesContainer);
     },
     activate: function () {
         var self = this;
@@ -48,8 +55,10 @@ var SidebarView = Backbone.View.extend({
             });
         } else if (this.model.get("mode") == 'analysis') {
             self.createAnalysis();
-        } else {
+        } else if(this.model.get("mode") == 'history') {
             self.createHistory();
+        } else {
+            self.createHelp();
         }
     },
     _createBaseTabs: function () {
@@ -185,6 +194,7 @@ var SidebarView = Backbone.View.extend({
             '<li class="active"><a href="javascript:void(0)" class="glyphicon glyphicon-info-sign" title="<%= __s.original_word %>" data-toggle="tab" data-target="#lexicon"></li>' +
             '<li><a href="javascript:void(0)" class="glyphicon glyphicon-stats" title="<%= __s.passage_stats %>" data-toggle="tab" data-target="#analysis"></li>' +
             '<li><a href="javascript:void(0)" class="glyphicon glyphicon-bookmark" title="<%= __s.bookmarks_and_recent_texts %>" data-toggle="tab" data-target="#history"></li>' +
+            '<li><a href="javascript:void(0)" class="stepglyph-help" title="<%= __s.quick_tutorial %>" data-toggle="tab" data-target="#help">?</li>' +
             '</ul>';
 
         var tabContainer = $(_.template(template)());

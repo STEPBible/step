@@ -212,6 +212,7 @@ step.util = {
         return s.match(/^\s*$/g) != null;
     },
     activePassageId: function (val) {
+        var force = false;
         var activePassageEl = $(".passageContainer.active");
         var currentActivePassageId;
         if (activePassageEl.length == 0) {
@@ -219,6 +220,7 @@ step.util = {
             activePassageEl = $(".passageContainer:first");
             //force the setter to trigger 
             currentActivePassageId = val = parseInt(activePassageEl.attr("passage-id"));
+            force = true;
         } else {
             currentActivePassageId = parseInt(activePassageEl.attr("passage-id"));
         }
@@ -228,7 +230,7 @@ step.util = {
         }
 
         //are we going to set a different passage
-        if (val !== null && val !== undefined && val != currentActivePassageId) {
+        if ((val !== null && val !== undefined && val != currentActivePassageId) || force) {
             var columns = $(".passageContainer");
             columns.filter(".active").removeClass("active").find(".activeMarker").remove();
 
@@ -353,18 +355,31 @@ step.util = {
                 break;
             default:
                 columnClass = "col-sm-1";
-                alert("Not sure what to do here...");
+                if(!step.settings.get("tooManyPanelsWarning")) {
+                    step.util.raiseInfo(__s.too_many_panels_notice);
+                    step.settings.save({ tooManyPanelsWarning: true }, { silent: true });
+                }
                 break;
         }
         columns.addClass(columnClass);
     },
 
     /**
+     * show or hide tutorial, when there is more than 1 column
+     */
+    showOrHideTutorial: function () {
+        var allRealColumns = $(".column").not(".examplesColumn");
+        var exampleContainer = $(".examplesContainer");
+        if (exampleContainer.parent().hasClass("column")) {
+            if (allRealColumns.length > 1) {
+                exampleContainer.parent().hide();
+            }
+        }
+    }, /**
      * @param linked true to indicate we want to link this column with the current active column
      * @private
      */
     createNewColumn: function (linked) {
-
         //if linked, then make sure we don't already have a linked column - if so, we'll simply use that.
         var activePassageModel = this.activePassage();
         if (linked) {
@@ -375,7 +390,7 @@ step.util = {
         }
 
         var columnHolder = $("#columnHolder");
-        var columns = columnHolder.find(".column");
+        var columns = columnHolder.find(".column").not(".examplesColumn");
         var activeColumn = columns.has(".passageContainer.active");
         var newColumn = activeColumn.clone();
         var newPassageId = parseInt(step.passages.max(function (p) {
@@ -400,7 +415,8 @@ step.util = {
         } else {
             columnHolder.append(newColumn);
         }
-
+        
+        this.showOrHideTutorial();
         step.util.activePassageId(newPassageId);
         return newPassageId;
     },
@@ -531,6 +547,17 @@ step.util = {
             } else if (language == "khm" || language == "km") {
                 return "khmerFont";
             }
+        },
+        /**
+         * called when click on a piece of text.
+         */
+        showTutorial: function () {
+            step.util.ui.initSidebar('help', { });
+            require(["sidebar", "defaults"], function (module) {
+                step.sidebar.save({
+                    mode: 'help'
+                });
+            });
         },
         /**
          * called when click on a piece of text.

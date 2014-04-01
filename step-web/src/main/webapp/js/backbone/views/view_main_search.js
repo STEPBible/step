@@ -1,16 +1,17 @@
 var MainSearchView = Backbone.View.extend({
     el: ".search-form",
     events: {
-        "click .btn": "search"
+        "click .find ": "search",
+        "click #openNewPanel": "openNewPanel"
     },
     //context items are of the form { itemType: x, value: y }
     specificContext: [],
     initialize: function () {
         var self = this;
         this.masterSearch = this.$el.find("#masterSearch");
-        this.openNewColumn = this.$el.find("#openInNewPanel");
+        this.openNewColumn = this.$el.find("#openNewPanel");
         this.specificContext = [];
-        
+
         var view = this;
         _.bindAll(this);
         _.bindAll(view);
@@ -42,8 +43,8 @@ var MainSearchView = Backbone.View.extend({
                     case SUBJECT_SEARCH:
                         id += (entry.item.searchTypes || []).join("-") + ":" + entry.item.value;
                         break;
-                    case SYNTAX: 
-                        id+= entry.value;
+                    case SYNTAX:
+                        id += entry.value;
                         break;
                     case MEANINGS:
                     case TOPIC_BY_REF:
@@ -65,21 +66,21 @@ var MainSearchView = Backbone.View.extend({
                                 new PickBibleView({ model: step.settings, searchView: view });
                             });
                         })).append($("<a>").append(__s.pick_passage).on('click', function () {
-                            require(["menu_extras"], function () {
-                                console.log("hi - pick passage");
-                            });
+                        require(["menu_extras"], function () {
+                            console.log("hi - pick passage");
+                        });
                     })).append($("<a>").append(__s.search_advanced).on('click', function () {
                         require(["menu_extras", "defaults"], function () {
                             //find master version
                             var dataItems = self.masterSearch.select2("data");
                             var masterVersion = REF_VERSION;
-                            for(var i = 0; i < dataItems; i++) {
-                                if(dataItems[i].itemType == VERSION) {
+                            for (var i = 0; i < dataItems; i++) {
+                                if (dataItems[i].itemType == VERSION) {
                                     masterVersion = dataItems[i].item.initials;
                                     break;
                                 }
                             }
-                            
+
                             new AdvancedSearchView({ searchView: view, masterVersion: masterVersion });
                         });
                     }));
@@ -90,10 +91,10 @@ var MainSearchView = Backbone.View.extend({
                 url: function (term, page) {
                     var url = SEARCH_AUTO_SUGGESTIONS + term;
                     var contextArgs = "";
-                    if(self.specificContext.length != 0) {
-                        for(var i = 0 ; i < self.specificContext.length; i++) {
+                    if (self.specificContext.length != 0) {
+                        for (var i = 0; i < self.specificContext.length; i++) {
                             contextArgs += self.specificContext[i].itemType + "=" + self.specificContext[i].value;
-                            if(i < self.specificContext.length) {
+                            if (i < self.specificContext.length) {
                                 contextArgs += '|';
                             }
                         }
@@ -123,10 +124,10 @@ var MainSearchView = Backbone.View.extend({
                                 //for a reference that is a whole book, we push an extra one in
                                 text = data[ii].suggestion.fullName;
                                 item = data[ii].suggestion;
-                                
-                                if(data[ii].suggestion.wholeBook) {
+
+                                if (data[ii].suggestion.wholeBook) {
                                     //allow selection of whole book
-                                    datum.push({ text: data[ii].suggestion.fullName, item: data[ii].suggestion, itemType: data[ii].itemType, 
+                                    datum.push({ text: data[ii].suggestion.fullName, item: data[ii].suggestion, itemType: data[ii].itemType,
                                         itemSubType: 'bookSelection' });
                                 }
                                 break;
@@ -180,32 +181,35 @@ var MainSearchView = Backbone.View.extend({
             formatResultCssClass: view.formatResultCssClass,
             formatSelectionCssClass: view.formatResultCssClass
         }).on("select2-selecting", function (event) {
-            if (event.object && event.object.itemType == REFERENCE && event.object.item.wholeBook && 
-                !event.object.itemSubType) {
+            if (event.object && event.object.itemType == REFERENCE && event.object.item.wholeBook && !event.object.itemSubType) {
                 event.preventDefault();
                 var select2Input = $(this);
-                self._addSpecificContext(REFERENCE, event.object.item.shortName );
-                
+                self._addSpecificContext(REFERENCE, event.object.item.shortName);
+
                 //wipe the last term to force a re-select
                 $.data(self.masterSearch.select2("container"), "select2-last-term", null);
                 select2Input.select2("search", event.object.item.shortName);
             }
             return;
-        }).on("select2-opening", function(event) {
+        }).on("select2-opening", function (event) {
             //remove any context that has references
             self._removeSpecificContext([REFERENCE, VERSION]);
-            
+
             //add the first version selected to the context
             var data = self.masterSearch.select2("data") || [];
-            for(var i = 0; i < data.length; i++) {
-                if(data[i].itemType == VERSION) {
-                    self._addSpecificContext(VERSION, data[i].item.initials);     
+            for (var i = 0; i < data.length; i++) {
+                if (data[i].itemType == VERSION) {
+                    self._addSpecificContext(VERSION, data[i].item.initials);
                     break;
                 }
             }
         });
 
         this.masterSearch.select2("container").find("input[type='text']").on("keyup", this._handleKeyPressInSearch);
+    },
+    openNewPanel: function () {
+        //if we're wanting a new column, then create it right now
+        step.util.createNewColumn();
     },
     _getAncientFirstRepresentation: function (item, hebrew) {
         return '<span class="' + (hebrew ? 'hbFontMini' : 'unicodeFontMini') + '">' + item.matchingForm + "</span> (" + item.stepTransliteration + " - " + item.gloss + ")";
@@ -308,12 +312,6 @@ var MainSearchView = Backbone.View.extend({
         //reset defaults:
         step.util.activePassage().save({ pageNumber: 1, filter: undefined }, { silent: true});
         console.log("Arguments are: ", args);
-
-        //if we're wanting a new column, then create it right now
-        if (this.openNewColumn.prop("checked")) {
-            step.util.createNewColumn();
-        }
-
         step.router.navigateSearch(args);
     },
     getCurrentInput: function () {
@@ -323,7 +321,7 @@ var MainSearchView = Backbone.View.extend({
         var staticResources = this._getData();
 
         //push some of the options that are also always present:
-        staticResources.push({ item: {"shortName": this.getCurrentInput(), "fullName":this.getCurrentInput(), "wholeBook":false }, itemType: REFERENCE, itemSubType: 'freeInput' });
+        staticResources.push({ item: {"shortName": this.getCurrentInput(), "fullName": this.getCurrentInput(), "wholeBook": false }, itemType: REFERENCE, itemSubType: 'freeInput' });
         staticResources.push({ item: this.getCurrentInput(), itemType: TEXT_SEARCH});
         staticResources.push({ item: this.getCurrentInput(), itemType: SYNTAX });
         return staticResources.concat(results);
@@ -332,10 +330,10 @@ var MainSearchView = Backbone.View.extend({
         return this.filterLocalData();
     },
     matchDropdownEntry: function (term, textOrObject) {
-        if(step.util.isBlank(textOrObject)) {
+        if (step.util.isBlank(textOrObject)) {
             return false;
         }
-        
+
         var regex = new RegExp("\\b" + term, "ig");
         if ($.type(textOrObject) === "string") {
             return textOrObject != null && textOrObject != "" && textOrObject.toLowerCase().match(regex);
@@ -362,8 +360,8 @@ var MainSearchView = Backbone.View.extend({
         }
         return false;
     },
-    _addSpecificContext: function(itemType, value) {
-        this._removeSpecificContext (itemType);
+    _addSpecificContext: function (itemType, value) {
+        this._removeSpecificContext(itemType);
         this.specificContext.push({ itemType: itemType, value: value });
     },
     /**
@@ -371,15 +369,15 @@ var MainSearchView = Backbone.View.extend({
      * @param itemType the item type, or array of item types
      * @private
      */
-    _removeSpecificContext : function(itemType) {
-        if(itemType == null) {
+    _removeSpecificContext: function (itemType) {
+        if (itemType == null) {
             itemType = [];
-        } else if(!$.isArray(itemType)) {
+        } else if (!$.isArray(itemType)) {
             itemType = [itemType];
         }
-        
-        for(var i = 0; i < this.specificContext.length; i++) {
-            if(itemType.indexOf(this.specificContext[i].itemType) != -1) {
+
+        for (var i = 0; i < this.specificContext.length; i++) {
+            if (itemType.indexOf(this.specificContext[i].itemType) != -1) {
                 this.specificContext.splice(i, 1);
                 //i will be incremented, so keep it in sync with for loop increment
                 i--;
@@ -390,12 +388,12 @@ var MainSearchView = Backbone.View.extend({
         var options = [];
 
         //we will only add stuff if there is no specific context around references
-        for(var i = 0; i < this.specificContext.length; i++) {
-            if(this.specificContext[i].itemType == REFERENCE) {
+        for (var i = 0; i < this.specificContext.length; i++) {
+            if (this.specificContext[i].itemType == REFERENCE) {
                 return options;
             }
         }
-        
+
         var currentInput = this.getCurrentInput();
         for (var ii = 0; ii < step.itemisedVersions.length; ii++) {
             if (this.matchDropdownEntry(currentInput, step.itemisedVersions[ii])) {
@@ -444,14 +442,14 @@ var MainSearchView = Backbone.View.extend({
                 break;
             case REFERENCE:
                 var source = __s.bible_text;
-                if(v.itemSubType == 'bookSelection') {
+                if (v.itemSubType == 'bookSelection') {
                     source = __s.bible_text;
-                } else if(v.itemSubType == 'freeInput') {
+                } else if (v.itemSubType == 'freeInput') {
                     source = __s.bible_text_free_entry;
-                } else if(!v.itemSubType && v.item.wholeBook) {
-                    source = __s.bible_text_chapters;   
+                } else if (!v.itemSubType && v.item.wholeBook) {
+                    source = __s.bible_text_chapters;
                 }
-                
+
                 row = [
                         '<span class="source">[' + source + ']</span>',
                     v.item.fullName

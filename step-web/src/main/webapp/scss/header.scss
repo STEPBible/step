@@ -4,27 +4,47 @@
   .navbar {
     height: $header_height;
     margin-bottom: 0px;
-  
+    min-height: initial;
+    
     .navbar-header {
       font-size: x-small;
-      background: $headerBackgroundColor no-repeat fixed url(../images/step-top-left-logo.png);
+      background: $headerBackgroundColor;
     }
-    
+
+    #logo {
+      top: 0;
+      left: 0;
+      position: absolute;
+    }
+
     a, .subtitle, .subtitle:hover {
       color: $header_title;
     }
+
+    &.form-group, form {
+      margin-bottom: 0px;
+      button {
+        min-width: 80px;
+        text-shadow: none;
+      }
+    }
   }
-  
-  
+
   .navbar-brand {
     padding-left: 50px;
     padding-bottom: 0px;
-    .title > a {
-      color: white !important;
-      font-weight: bold;
-      text-decoration: none;
+    height: $header_height;
+    
+    .title {
+      margin-right: 10px;
+      float: left;
+      & > a {
+        color: white !important;
+        font-weight: bold;
+        text-decoration: none;
+      }
     }
-  
+
     .subtitle {
       margin-top: 5px;
       white-space: nowrap;
@@ -32,18 +52,18 @@
       line-height: 1;
     }
   }
-  
-  .navbar-brand, .search-form, .help {
-    padding-top: 10px;
+
+  .navbar-brand {
+    padding-top: 5px;
   }
-  
+
   // Search form
   .search-form {
     font-size: x-small;
     a {
       color: $topHeaderLinkColour;
     }
-  
+
     button {
       text-shadow: none;
     }
@@ -60,9 +80,13 @@
       margin: 2px 0 0 0;
     }
   }
-  
+
   // Help menu
   .help {
+    padding-top: 3px;
+    font-size: 12px;
+    margin-left: 10px;
+    float: right;
     color: $topHeaderLinkColour;
     ul {
       float: right;
@@ -70,8 +94,15 @@
     @media screen and (max-width: 524px) {
       display: none;
     }
+    button {
+      padding: 3 5 5 6;
+      margin-left: 10px;
+      margin-right: 20px;
+      font-size: 11px;
+      font-family: Arial;
+    }
   }
-  
+
   // offset the main panel
   .mainPanel, #sidebar {
     padding: $header_height 0 10px 0px;

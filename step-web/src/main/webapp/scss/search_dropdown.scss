@@ -23,43 +23,43 @@
   }
 }
 
-.select2-search-choice.select-meanings, .select2-results .select-meanings {
+.select-meanings {
   @include gradient($meaningsRow, $optionStartGradient, $optionEndGradient);
 }
 
-.select2-search-choice.select-version, .select2-results .select-version {
+.select-version {
   @include gradient($bibleRow, $optionStartGradient, $optionEndGradient);
 }
 
-.select2-search-choice.select-reference, .select2-results .select-reference {
+.select-reference {
   @include gradient($referenceRow, $optionStartGradient, $optionEndGradient);
 }
 
-.select2-search-choice.select-subject, .select2-results .select-subject {
+.select-subject {
   @include gradient($subjectRow, $optionStartGradient, $optionEndGradient);
 }
 
-.select2-search-choice.select-text, .select2-results .text {
+.select-text {
   @include gradient($textRow, $optionStartGradient, $optionEndGradient);
 }
 
-.select2-search-choice.select-greek, .select2-results .select-greek {
+.select-greek {
   @include gradient($greekRow, $optionStartGradient, $optionEndGradient);
 }
 
-.select2-search-choice.select-greekMeanings, .select2-results .select-greekMeanings {
+.select-greekMeanings {
   @include gradient($greekMeaningsRow, $optionStartGradient, $optionEndGradient);
 }
 
-.select2-search-choice.select-hebrew, .select2-results .select-hebrew {
+.select-hebrew {
   @include gradient($hebrewRow, $optionStartGradient, $optionEndGradient);
 }
 
-.select2-search-choice.select-hebrewMeanings, .select2-results .select-hebrewMeanings {
+.select-hebrewMeanings {
   @include gradient($hebrewMeaningsRow, $optionStartGradient, $optionEndGradient);
 }
 
-.select2-search-choice.select-topicref, .select2-results .select-topicref {
+.select-topicref {
   @include gradient($topicByRefRow, $optionStartGradient, $optionEndGradient);
 }
 

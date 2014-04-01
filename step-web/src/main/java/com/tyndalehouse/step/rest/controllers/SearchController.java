@@ -276,47 +276,47 @@ public class SearchController {
         }
     }
 
-    /**
-     * @param searchQuery the query to search for
-     * @param ranked      true to indicate results should ranked in order of priority
-     * @param context     the amount of context to add to the verses hit by a search
-     * @param pageNumber  the number of the page that is desired
-     * @param pageSize    the size of the page that is desired
-     * @return the search result(s)
-     */
-    @Timed(name = "search-main", group = "search", rateUnit = TimeUnit.SECONDS, durationUnit = TimeUnit.MILLISECONDS)
-    public SearchResult search(final String searchQuery, final String ranked, final String context,
-                               final String pageNumber, final String pageSize) {
-        notNull(searchQuery, "blank_search_provided", USER_MISSING_FIELD);
-        notNull(pageNumber, "Page number is required", APP_MISSING_FIELD);
-        notNull(ranked, "The ranking field is required", APP_MISSING_FIELD);
-        notNull(context, "The context field is required", APP_MISSING_FIELD);
-        notNull(pageSize, "Page size is required", APP_MISSING_FIELD);
-
-        LOGGER.debug("Search query is [{}]", searchQuery);
-
-        final SearchResult results = this.searchService.search(new SearchQuery(
-                restoreSearchQuery(searchQuery), ranked, Integer.parseInt(context), Integer
-                .parseInt(pageNumber), Integer.parseInt(pageSize)
-        ));
-
-        results.setQuery(undoRestoreSearchQuery(results.getQuery()));
-
-        return results;
-    }
-
-    /**
-     * Estimates the number of hits for a particular search query
-     *
-     * @param searchQuery the search query.
-     * @return the number of results
-     */
-    @Timed(name = "estimate", group = "search", rateUnit = TimeUnit.SECONDS, durationUnit = TimeUnit.MILLISECONDS)
-    public long estimateSearch(final String searchQuery) {
-        // JSword currently only allows estimates as ranked searches
-        return this.searchService.estimateSearch(new SearchQuery(restoreSearchQuery(searchQuery), "false", 0,
-                0, 0));
-    }
+//    /**
+//     * @param searchQuery the query to search for
+//     * @param ranked      true to indicate results should ranked in order of priority
+//     * @param context     the amount of context to add to the verses hit by a search
+//     * @param pageNumber  the number of the page that is desired
+//     * @param pageSize    the size of the page that is desired
+//     * @return the search result(s)
+//     */
+//    @Timed(name = "search-main", group = "search", rateUnit = TimeUnit.SECONDS, durationUnit = TimeUnit.MILLISECONDS)
+//    public SearchResult search(final String searchQuery, final String ranked, final String context,
+//                               final String pageNumber, final String pageSize) {
+//        notNull(searchQuery, "blank_search_provided", USER_MISSING_FIELD);
+//        notNull(pageNumber, "Page number is required", APP_MISSING_FIELD);
+//        notNull(ranked, "The ranking field is required", APP_MISSING_FIELD);
+//        notNull(context, "The context field is required", APP_MISSING_FIELD);
+//        notNull(pageSize, "Page size is required", APP_MISSING_FIELD);
+//
+//        LOGGER.debug("Search query is [{}]", searchQuery);
+//
+//        final SearchResult results = this.searchService.search(new SearchQuery(
+//                restoreSearchQuery(searchQuery), ranked, Integer.parseInt(context), Integer
+//                .parseInt(pageNumber), Integer.parseInt(pageSize)
+//        ));
+//
+//        results.setQuery(undoRestoreSearchQuery(results.getQuery()));
+//
+//        return results;
+//    }
+//
+//    /**
+//     * Estimates the number of hits for a particular search query
+//     *
+//     * @param searchQuery the search query.
+//     * @return the number of results
+//     */
+//    @Timed(name = "estimate", group = "search", rateUnit = TimeUnit.SECONDS, durationUnit = TimeUnit.MILLISECONDS)
+//    public long estimateSearch(final String searchQuery) {
+//        // JSword currently only allows estimates as ranked searches
+//        return this.searchService.estimateSearch(new SearchQuery(restoreSearchQuery(searchQuery), "false", 0,
+//                0, 0));
+//    }
 
     /**
      * Obtains a list of suggestions to display to the user

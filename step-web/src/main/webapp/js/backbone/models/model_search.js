@@ -228,7 +228,7 @@ var SearchModel = Backbone.Model.extend({
      * @private
      */
     _getFinalQuerySyntax: function (querySyntax) {
-        var newSyntax = $.trim(querySyntax).replace(/ +/g, " ");
+//        var newSyntax = 
         if(newSyntax != "") {
             newSyntax += " in (" + this.getDefaultedValue("searchVersions") + ")"
         }

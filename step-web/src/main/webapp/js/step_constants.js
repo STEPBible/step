@@ -5,6 +5,7 @@
 VERSION = "version";
 REFERENCE = "reference";
 TEXT_SEARCH = "text";
+SYNTAX = "syntax";
 GREEK_MEANINGS = "greekMeanings";
 GREEK = "greek";
 HEBREW_MEANINGS = "hebrewMeanings";

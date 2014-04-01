@@ -19,7 +19,7 @@ var MainSearchView = Backbone.View.extend({
         this.listenTo(Backbone.Events, "search:remove", this._removeVersion);
 
         this.masterSearch.select2({
-            minimumInputLength: 3,
+            minimumInputLength: 2,
             id: function (entry) {
                 var id = entry.itemType + "-";
                 switch (entry.itemType) {
@@ -41,6 +41,9 @@ var MainSearchView = Backbone.View.extend({
                     case TEXT_SEARCH:
                     case SUBJECT_SEARCH:
                         id += (entry.item.searchTypes || []).join("-") + ":" + entry.item.value;
+                        break;
+                    case SYNTAX: 
+                        id+= entry.value;
                         break;
                     case MEANINGS:
                     case TOPIC_BY_REF:
@@ -66,7 +69,7 @@ var MainSearchView = Backbone.View.extend({
                                 console.log("hi - pick passage");
                             });
                     })).append($("<a>").append(__s.search_advanced).on('click', function () {
-                        require(["menu_extras"], function () {
+                        require(["menu_extras", "defaults"], function () {
                             //find master version
                             var dataItems = self.masterSearch.select2("data");
                             var masterVersion = REF_VERSION;
@@ -80,7 +83,7 @@ var MainSearchView = Backbone.View.extend({
                             new AdvancedSearchView({ searchView: view, masterVersion: masterVersion });
                         });
                     }));
-                var container = $("<span>").append(labels).append(message);
+                var container = $("<span>").append(labels).append($('<span class="message">').append(message));
                 return  container;
             },
             ajax: {
@@ -103,7 +106,7 @@ var MainSearchView = Backbone.View.extend({
                 results: function (data, page) {
                     var datum = [];
                     for (var ii = 0; ii < data.length; ii++) {
-                        //will never be a TEXT search, so not in the list below
+                        //will never be a TEXT or a SYNTAX autocompletion? search, so not in the list below
                         var item = data[ii].suggestion;
                         var text = data[ii].suggestion;
 
@@ -126,7 +129,6 @@ var MainSearchView = Backbone.View.extend({
                                     datum.push({ text: data[ii].suggestion.fullName, item: data[ii].suggestion, itemType: data[ii].itemType, 
                                         itemSubType: 'bookSelection' });
                                 }
-                                
                                 break;
                             case SUBJECT_SEARCH:
                                 text = data[ii].suggestion.value;
@@ -166,6 +168,8 @@ var MainSearchView = Backbone.View.extend({
                         return entry.item.value;
                     case TEXT_SEARCH:
                         return entry.item;
+                    case SYNTAX:
+                        return '<div title="' + entry.item.value + '">' + entry.item.text + "</div>";
                     default:
                         return entry.item.text;
                 }
@@ -291,6 +295,9 @@ var MainSearchView = Backbone.View.extend({
                 case RELATED_VERSES:
                     args += options[ii].itemType + "=" + encodeURIComponent(options[ii].item.text);
                     break;
+                case SYNTAX:
+                    args += options[ii].itemType + "=" + encodeURIComponent(options[ii].item.value);
+                    break;
                 case TEXT_SEARCH:
                 default:
                     args += options[ii].itemType + "=" + encodeURIComponent(options[ii].item);
@@ -318,7 +325,7 @@ var MainSearchView = Backbone.View.extend({
         //push some of the options that are also always present:
         staticResources.push({ item: {"shortName": this.getCurrentInput(), "fullName":this.getCurrentInput(), "wholeBook":false }, itemType: REFERENCE, itemSubType: 'freeInput' });
         staticResources.push({ item: this.getCurrentInput(), itemType: TEXT_SEARCH});
-
+        staticResources.push({ item: this.getCurrentInput(), itemType: SYNTAX });
         return staticResources.concat(results);
     },
     _getData: function () {
@@ -477,6 +484,9 @@ var MainSearchView = Backbone.View.extend({
             case MEANINGS:
                 row = '<span class="source">[' + __s.search_meaning + ']</span>' + v.text.gloss;
                 break;
+            case SYNTAX:
+                row = '<span class="source">[' + __s.query_syntax + ']</span>' + v.item.value;
+                break;
         }
         var markup = [];
         window.Select2.util.markMatch(row, query.term, markup, escapeMarkup);
@@ -526,6 +536,8 @@ var MainSearchView = Backbone.View.extend({
                 return { text: token };
             case MEANINGS:
             case TEXT_SEARCH:
+            case SYNTAX:
+                return enhancedInfo == null ? {text: "&lt;...&gt;", value: token} : {text: enhancedInfo, value: "&lt;" + enhancedInfo + "...&gt;"};
             default:
                 return token;
         }

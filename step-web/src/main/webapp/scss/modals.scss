@@ -3,7 +3,12 @@
 
 .selectModal {
   // just above the multi-select
-  z-index: 10000;
+  z-index: 10002;
+}
+
+//all modals should be above the select modal
+.modal-backdrop.in {
+  z-index: 10001;
 }
 
 //qtip "modals"

@@ -99,9 +99,13 @@ public class OriginalWordSuggestionServiceImpl implements OriginalWordSuggestion
      * @return the list of suggestions
      */
     private List<LexiconSuggestion> getMeaningSuggestionsForAncientLanguage(final String form, boolean isGreek) {
-        List<String> tokenItems = this.definitions.getAnalyzedTokens("stepGloss", form, true);
+        final List<String> tokenItems = this.definitions.getAnalyzedTokens("stepGloss", form, true);
 
-        BooleanQuery masterQuery = new BooleanQuery();
+        if(tokenItems.size() == 0) {
+            return new ArrayList<LexiconSuggestion>(0);
+        }
+        
+        final BooleanQuery masterQuery = new BooleanQuery();
         for (int ii = 0; ii < tokenItems.size(); ii++) {
             final Term stepGlossTerm = new Term("stepGloss", tokenItems.get(ii));
             final Term translationTerm = new Term("translations", tokenItems.get(ii));
@@ -115,11 +119,12 @@ public class OriginalWordSuggestionServiceImpl implements OriginalWordSuggestion
                 stepGloss = new PrefixQuery(stepGlossTerm);
                 translations = new PrefixQuery(translationTerm);
             }
-            BooleanQuery subQuery = new BooleanQuery();
+            final BooleanQuery subQuery = new BooleanQuery();
             subQuery.add(new BooleanClause(stepGloss, BooleanClause.Occur.SHOULD));
             subQuery.add(new BooleanClause(translations, BooleanClause.Occur.SHOULD));
             masterQuery.add(new BooleanClause(subQuery, BooleanClause.Occur.MUST));
         }
+        
         masterQuery.add(new BooleanClause(new PrefixQuery(new Term("strongNumber", isGreek ? "G" : "H")), BooleanClause.Occur.MUST));
 
         final EntityDoc[] results = this.definitions.search(masterQuery);
@@ -158,10 +163,10 @@ public class OriginalWordSuggestionServiceImpl implements OriginalWordSuggestion
         final EntityDoc[] results;
         if (isHebrewText(form) || GreekUtils.isGreekText(form)) {
             results = this.definitions.search(new String[]{"accentedUnicode", "strongNumber"},
-                    QueryParser.escape(form) + '*', getStrongFilter(suggestionType), TRANSLITERATION_SORT,
+                    getSafePrefixTerm(QueryParser.escape(form)), getStrongFilter(suggestionType), TRANSLITERATION_SORT,
                     true, SearchService.MAX_SUGGESTIONS);
         } else if (isGreekOrHebrewStrong(suggestionType, form)) {
-            results = this.definitions.search(new PrefixQuery(new Term(OriginalWordUtils.STRONG_NUMBER_FIELD, QueryParser.escape(form.toUpperCase()))),
+            results = this.definitions.search(getSafePrefixQuery(form),
                     SearchService.MAX_SUGGESTIONS, TRANSLITERATION_SORT, getStrongFilter(suggestionType));
         } else {
             // assume transliteration - at this point suggestionType is not going to be MEANING
@@ -171,13 +176,28 @@ public class OriginalWordSuggestionServiceImpl implements OriginalWordSuggestion
                     suggestionType == GREEK);
 
             results = this.definitions.search(new String[]{"betaAccented", "stepTransliteration",
-                    "twoLetter", "otherTransliteration"}, QueryParser.escape(unmarkedUpTranslit) + '*',
+                    "twoLetter", "otherTransliteration"}, getSafePrefixTerm(QueryParser.escape(unmarkedUpTranslit)),
                     getStrongFilter(suggestionType), TRANSLITERATION_SORT, true, simplifiedTransliteration,
                     SearchService.MAX_SUGGESTIONS);
         }
         return convertDefinitionDocsToSuggestion(results);
     }
 
+    /**
+     * If too short, then we will only look for a particular instance,
+     * otherwise we will look for all instances
+     * @param form the form that we are looking for
+     * @return the query, whether prefix query or not
+     */
+    private Query getSafePrefixQuery(final String form) {
+        final Term term = new Term(OriginalWordUtils.STRONG_NUMBER_FIELD, QueryParser.escape(form.toUpperCase()));
+        return form.length() > 2 ? new PrefixQuery(term) : new TermQuery(term);
+    }
+
+    private String getSafePrefixTerm(String query) {
+        return query.length() > 2 ? query + '*' : query;
+    }
+    
     private boolean isGreekOrHebrewStrong(final LexicalSuggestionType suggestionType, final String form) {
         if (form.length() < 3) {
             return false;
@@ -205,7 +225,7 @@ public class OriginalWordSuggestionServiceImpl implements OriginalWordSuggestion
         for (final TransliterationOption option : translits) {
             simplifiedTransliteration.append(SIMPLIFIED_TRANSLITERATION);
             simplifiedTransliteration.append(QueryParser.escape(option.getOption().toString()));
-            if (prefix) {
+            if (prefix && form.length() > 2) {
                 simplifiedTransliteration.append('*');
             }
             simplifiedTransliteration.append(' ');

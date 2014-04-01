@@ -431,6 +431,10 @@ public final class StringConversionUtils {
         }
 
         final char c = s.charAt(0);
+        return isPunctuation(c);
+    }
+
+    private static boolean isPunctuation(final char c) {
         switch (c) {
             case ',':
             case '.':
@@ -445,4 +449,5 @@ public final class StringConversionUtils {
                 return false;
         }
     }
+
 }

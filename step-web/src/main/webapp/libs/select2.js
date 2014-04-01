@@ -1561,6 +1561,9 @@ the specific language governing permissions and limitations under the Apache Lic
                 // sequence number used to drop out-of-order responses
                 queryNumber;
 
+            //remove any STEP class
+            results.removeClass("select2-parent-no-results");
+            
             // prevent duplicate queries against the same term
             if (initial !== true && lastTerm && equal(term, lastTerm)) return;
 
@@ -1599,13 +1602,10 @@ the specific language governing permissions and limitations under the Apache Lic
             if (search.val().length < opts.minimumInputLength) {
                 if (checkFormatter(opts.formatInputTooShort, "formatInputTooShort")) {
                     var message = opts.formatInputTooShort(search.val(), opts.minimumInputLength);
-                    if(typeof message == 'string') {
-                        results.empty();
-                        render("<li class='select2-no-results'>" + message + "</li>");
-                    } else {
-                        results.empty();
-                        render($("<li class='select2-no-results'>").append(message));
-                    }
+                    var messageContainer = $("<span>").append(message);
+                    results.empty();
+                    results.addClass("select2-parent-no-results");
+                    render($("<li class='select2-no-results'>").append(messageContainer));
                 } else {
                     render("");
                 }

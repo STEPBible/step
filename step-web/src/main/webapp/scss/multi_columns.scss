@@ -3,7 +3,11 @@
 @mixin multi-column($numColumns) {
   -moz-column-count: $numColumns; // Firefox 
   -webkit-column-count: $numColumns; // Safari and Chrome
-  column-count: $numColumns;  
+  column-count: $numColumns;
+
+  column-gap: 2px;
+  -moz-column-gap: 2px;
+  -webkit-column-gap: 2px;
 }
 
 @mixin overflow() {
@@ -15,7 +19,6 @@
   max-height: $height;
   @include overflow();
 }
-
 
 .kolumny {
   @media screen and (max-width: $stepMD) {

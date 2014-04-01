@@ -436,6 +436,6 @@ public class EntityIndexReaderImpl implements EntityIndexReader {
      */
     void setSearcher(final IndexSearcher searcher) {
         this.searcher = searcher;
-    }
+        }
 
-}
+        }

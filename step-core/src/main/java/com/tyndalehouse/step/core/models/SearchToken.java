@@ -20,6 +20,7 @@ public class SearchToken implements Serializable {
     public static final String MEANINGS = "meanings";
     public static final String TOPIC_BY_REF = "topicref";
     public static final String RELATED_VERSES = "relatedrefs";
+    public static final String SYNTAX = "syntax";
 
     private Object enhancedTokenInfo;
     private final String token;

@@ -68,7 +68,8 @@ public abstract class AbstractAjaxController extends HttpServlet {
 
             // CHECKSTYLE:OFF
         } catch (final Exception e) {
-            // LOGGER.warn(e.getMessage(), e);
+            LOGGER.warn(e.getMessage());
+            LOGGER.trace(e.getMessage(), e);
             returnVal = convertExceptionToJson(e);
         }
         return returnVal;

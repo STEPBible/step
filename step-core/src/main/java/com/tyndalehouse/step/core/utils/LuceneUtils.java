@@ -3,9 +3,12 @@ package com.tyndalehouse.step.core.utils;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.service.SearchService;
 import org.apache.lucene.index.Term;
+import org.apache.lucene.index.TermEnum;
 import org.apache.lucene.queryParser.QueryParser;
+import org.apache.lucene.search.FilteredTermEnum;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.PrefixTermEnum;
+import org.apache.lucene.search.SingleTermEnum;
 import org.crosswire.jsword.index.lucene.LuceneIndex;
 import org.joda.time.LocalDateTime;
 
@@ -60,16 +63,17 @@ public final class LuceneUtils {
 
         List<String> results = new ArrayList<String>(SearchService.MAX_SUGGESTIONS);
         try {
-            PrefixTermEnum tagsEnum = new PrefixTermEnum(searcher.getIndexReader(),
-                    new Term(fieldName, QueryParser.escape(lastTerm.toLowerCase().trim())));
+            final Term term = new Term(fieldName, QueryParser.escape(lastTerm.toLowerCase().trim()));
+            TermEnum termEnum = searchTerm.length() > 2 ? new PrefixTermEnum(searcher.getIndexReader(),
+                    term) : new SingleTermEnum(searcher.getIndexReader(), term);
             int count = 0;
-            if (tagsEnum.term() == null) {
+            if (termEnum.term() == null) {
                 return results;
             }
 
             do {
-                results.add(tagsEnum.term().text());
-            } while (tagsEnum.next() && ++count < SearchService.MAX_SUGGESTIONS);
+                results.add(termEnum.term().text());
+            } while (termEnum.next() && ++count < SearchService.MAX_SUGGESTIONS);
         } catch (IOException ex) {
             throw new StepInternalException(ex.getMessage(), ex);
         }

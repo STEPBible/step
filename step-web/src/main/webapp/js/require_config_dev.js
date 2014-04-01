@@ -20,6 +20,6 @@ requirejs.config({
                      "js/backbone/views/view_history", "libs/jquery.tagcloud"],
         "search" : ["_search_display_view", "_other_search"],
         _other_search: ["_search_display_view", "js/backbone/views/view_display_text", "libs/dohighlight-min",
-         "js/jquery-extensions/jquery-sort"],
+         "js/jquery-extensions/jquery-sort"]
     }
 });

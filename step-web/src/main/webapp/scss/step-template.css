@@ -90,6 +90,9 @@ ul .glyphicon-ok {
     -moz-column-count: 2;
     -webkit-column-count: 2;
     column-count: 2;
+    column-gap: 2px;
+    -moz-column-gap: 2px;
+    -webkit-column-gap: 2px;
     overflow-y: auto;
     overflow-x: hidden; } }
 
@@ -104,6 +107,9 @@ ul .glyphicon-ok {
     -moz-column-count: 2;
     -webkit-column-count: 2;
     column-count: 2;
+    column-gap: 2px;
+    -moz-column-gap: 2px;
+    -webkit-column-gap: 2px;
     overflow-y: auto;
     overflow-x: hidden;
     max-width: 800px;
@@ -157,7 +163,7 @@ ul .glyphicon-ok {
   padding: 0 2;
   font-weight: bold; }
 
-.select2-search-choice.meanings, .select-meanings {
+.select2-search-choice.select-meanings, .select2-results .select-meanings {
   background: #ffff66;
   /* for non-css3 browsers */
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=lighten($color, $optionStartGradient), endColorstr=lighten($color, $optionEndGradient));
@@ -166,7 +172,7 @@ ul .glyphicon-ok {
   background: -moz-linear-gradient(left, #ffff66, #ffff99);
   /* for firefox 3.6+ */ }
 
-.select2-search-choice.version, .select-version {
+.select2-search-choice.select-version, .select2-results .select-version {
   background: #cd8c8e;
   /* for non-css3 browsers */
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=lighten($color, $optionStartGradient), endColorstr=lighten($color, $optionEndGradient));
@@ -175,7 +181,7 @@ ul .glyphicon-ok {
   background: -moz-linear-gradient(left, #cd8c8e, #dcb0b1);
   /* for firefox 3.6+ */ }
 
-.select2-search-choice.reference, .select-reference {
+.select2-search-choice.select-reference, .select2-results .select-reference {
   background: #e8fce8;
   /* for non-css3 browsers */
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=lighten($color, $optionStartGradient), endColorstr=lighten($color, $optionEndGradient));
@@ -184,7 +190,7 @@ ul .glyphicon-ok {
   background: -moz-linear-gradient(left, #e8fce8, white);
   /* for firefox 3.6+ */ }
 
-.select2-search-choice.subject, .select-subject {
+.select2-search-choice.select-subject, .select2-results .select-subject {
   background: #e2b9bd;
   /* for non-css3 browsers */
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=lighten($color, $optionStartGradient), endColorstr=lighten($color, $optionEndGradient));
@@ -193,7 +199,7 @@ ul .glyphicon-ok {
   background: -moz-linear-gradient(left, #e2b9bd, #f1dddf);
   /* for firefox 3.6+ */ }
 
-.select2-search-choice.text, .text {
+.select2-search-choice.select-text, .select2-results .text {
   background: #66ffff;
   /* for non-css3 browsers */
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=lighten($color, $optionStartGradient), endColorstr=lighten($color, $optionEndGradient));
@@ -202,7 +208,7 @@ ul .glyphicon-ok {
   background: -moz-linear-gradient(left, #66ffff, #99ffff);
   /* for firefox 3.6+ */ }
 
-.select2-search-choice.greek, .select-greek {
+.select2-search-choice.select-greek, .select2-results .select-greek {
   background: #faf7f7;
   /* for non-css3 browsers */
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=lighten($color, $optionStartGradient), endColorstr=lighten($color, $optionEndGradient));
@@ -211,7 +217,7 @@ ul .glyphicon-ok {
   background: -moz-linear-gradient(left, #faf7f7, white);
   /* for firefox 3.6+ */ }
 
-.select2-search-choice.greekMeanings, .select-greekMeanings {
+.select2-search-choice.select-greekMeanings, .select2-results .select-greekMeanings {
   background: #a8a7a9;
   /* for non-css3 browsers */
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=lighten($color, $optionStartGradient), endColorstr=lighten($color, $optionEndGradient));
@@ -220,7 +226,7 @@ ul .glyphicon-ok {
   background: -moz-linear-gradient(left, #a8a7a9, #c2c1c2);
   /* for firefox 3.6+ */ }
 
-.select2-search-choice.hebrew, .select-hebrew {
+.select2-search-choice.select-hebrew, .select2-results .select-hebrew {
   background: #8e9dbc;
   /* for non-css3 browsers */
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=lighten($color, $optionStartGradient), endColorstr=lighten($color, $optionEndGradient));
@@ -229,7 +235,7 @@ ul .glyphicon-ok {
   background: -moz-linear-gradient(left, #8e9dbc, #aeb9cf);
   /* for firefox 3.6+ */ }
 
-.select2-search-choice.hebrewMeanings, .select-hebrewMeanings {
+.select2-search-choice.select-hebrewMeanings, .select2-results .select-hebrewMeanings {
   background: #9f798b;
   /* for non-css3 browsers */
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=lighten($color, $optionStartGradient), endColorstr=lighten($color, $optionEndGradient));
@@ -238,7 +244,7 @@ ul .glyphicon-ok {
   background: -moz-linear-gradient(left, #9f798b, #b596a4);
   /* for firefox 3.6+ */ }
 
-.select2-search-choice.topicref, .select-topicref {
+.select2-search-choice.select-topicref, .select2-results .select-topicref {
   background: #ef7ad0;
   /* for non-css3 browsers */
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=lighten($color, $optionStartGradient), endColorstr=lighten($color, $optionEndGradient));
@@ -255,10 +261,21 @@ ul .glyphicon-ok {
     -webkit-column-count: 2;
     /* Safari and Chrome */
     column-count: 2; }
+    .select2-drop-multi ul.select2-parent-no-results {
+      -moz-column-count: 1;
+      -webkit-column-count: 1;
+      column-count: 1;
+      column-gap: 2px;
+      -moz-column-gap: 2px;
+      -webkit-column-gap: 2px; }
     .select2-drop-multi ul li {
       display: inline-block;
       border-bottom: solid 1 lightgrey;
-      width: 100%; } }
+      width: 100%; }
+    .select2-drop-multi ul .message {
+      float: right;
+      margin: 2px 3px 0 0;
+      font-size: 90%; } }
 .searchLabel a {
   font-size: 90%;
   padding: 2px;
@@ -319,6 +336,14 @@ ul .glyphicon-ok {
 
 .passageContentHolder {
   text-align: justify; }
+  .passageContentHolder table {
+    width: 85%;
+    display: inline; }
+  .passageContentHolder td {
+    font-size: 12px; }
+    .passageContentHolder td.x-end-row {
+      vertical-align: bottom;
+      text-align: right; }
   .passageContentHolder h2 {
     margin-bottom: 5px; }
     .passageContentHolder h2.xgen {
@@ -357,15 +382,42 @@ ul .glyphicon-ok {
     display: none; }
   .passageContentHolder .notesPane {
     text-align: left; }
+  .passageContentHolder .verse.containsTable {
+    text-align: left; }
+  .passageContentHolder p.x-continued {
+    margin-bottom: 0px; }
+  .passageContentHolder .verseLink + .x-min-width {
+    margin-left: 2px; }
+  .passageContentHolder div.x-min-width {
+    width: 60%;
+    display: inline-block;
+    margin-left: 15px; }
+  .passageContentHolder .small-caps {
+    font-size: 110%; }
+    .passageContentHolder .small-caps > em.foreign, .passageContentHolder .small-caps > .x-inscription {
+      text-align: center;
+      display: block;
+      margin-bottom: -20px; }
+  .passageContentHolder .x-p-inscription {
+    font-size: 110%;
+    text-align: center;
+    display: block;
+    font-variant: small-caps; }
+  .passageContentHolder .x-doxology {
+    display: block;
+    text-align: center; }
 
 .verseNumber {
+  min-width: 10px;
   vertical-align: top;
   font-size: 6pt;
-  margin-right: 2px;
   cursor: hand;
   background-color: #f3e5b4;
   color: #991c32;
-  font-weight: bold; }
+  font-weight: bold;
+  text-align: center;
+  display: inline-block;
+  margin-right: 2px; }
 
 h3.psalmHeading {
   font-size: 14px;
@@ -374,9 +426,15 @@ h3.psalmHeading {
 h3.canonicalHeading {
   font-size: 12px; }
 
+h2.heading + .startLineGroup {
+  padding-top: 0px; }
 h2.heading.x-proverbs {
   font-size: 120%;
   text-align: center; }
+h2.heading.x-speaker {
+  margin-bottom: 0; }
+h2.heading.x-acrostic {
+  margin-left: 10px; }
 
 .searchResultRow .verse {
   vertical-align: middle; }
@@ -497,7 +555,10 @@ h4.lexicalGrouping {
   .col-sm-11columns {
     width: 8.84091%; } }
 .selectModal {
-  z-index: 10000; }
+  z-index: 10002; }
+
+.modal-backdrop.in {
+  z-index: 10001; }
 
 .qtip-titlebar {
   margin-top: -1px; }
@@ -549,17 +610,27 @@ h4.lexicalGrouping {
   #bibleVersions .tab-pane {
     max-height: 700px; } }
 
-#advancedSearch .close {
-  margin: 5px 10px; }
+#advancedSearch button.closeModal, #advancedSearch button.closeAndAdd {
+  margin-left: 10px;
+  margin-top: 20px;
+  font-size: 100%; }
+  #advancedSearch button.closeModal label, #advancedSearch button.closeAndAdd label {
+    margin-bottom: 0px;
+    margin-right: 0; }
 #advancedSearch form {
   padding: 5px; }
   #advancedSearch form label {
     margin-right: 5px; }
-#advancedSearch .closeModal {
-  float: right;
-  font-size: 100%; }
-  #advancedSearch .closeModal label {
-    margin-bottom: 0px; }
+  #advancedSearch form .col-sm-1, #advancedSearch form .col-sm-2, #advancedSearch form .col-sm-3, #advancedSearch form .col-sm-4, #advancedSearch form .col-sm-5, #advancedSearch form .col-sm-6 {
+    margin-top: 5px; }
+  #advancedSearch form input, #advancedSearch form select {
+    padding: 2px;
+    width: 100% !important; }
+    #advancedSearch form input.join, #advancedSearch form select.join {
+      max-width: 100px;
+      float: right; }
+#advancedSearch .footerContainer {
+  text-align: right; }
 @media screen and (min-height: 400px) {
   #advancedSearch .tab-pane {
     max-height: 200px; } }
@@ -569,6 +640,30 @@ h4.lexicalGrouping {
 @media screen and (min-height: 900px) {
   #advancedSearch .tab-pane {
     max-height: 700px; } }
+#advancedSearch .modal-dialog {
+  width: 90%; }
+#advancedSearch .nav-tabs {
+  border-bottom: none; }
+  #advancedSearch .nav-tabs > li > a {
+    background-color: #e6e6e6; }
+    #advancedSearch .nav-tabs > li > a:hover {
+      background-color: f4f4f4; }
+  #advancedSearch .nav-tabs > li.active > a {
+    background-color: #fff; }
+#advancedSearch .modal-content {
+  background-color: transparent;
+  border: none;
+  -webkit-box-shadow: none;
+  box-shadow: none; }
+  #advancedSearch .modal-content .tab-content {
+    border-radius: 0 6 6 6;
+    background-color: white;
+    padding: 0px;
+    border: 1px solid #999;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    outline: none;
+    -webkit-box-shadow: 0 3px 9px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 3px 9px rgba(0, 0, 0, 0.5); }
 
 .modalVerseComplete {
   z-index: 99999999; }
@@ -588,6 +683,22 @@ h4.lexicalGrouping {
   overflow-y: auto;
   overflow-x: hidden;
   padding: 0; }
+
+#querySyntax textarea {
+  width: 100%;
+  min-height: 100px;
+  margin-bottom: 5px; }
+
+#advancedTextSearch button.addRow {
+  margin: 0 0 15 25;
+  padding: 2 3 4 4; }
+  #advancedTextSearch button.addRow.label {
+    margin: 0 0 2 2; }
+#advancedTextSearch textarea {
+  cursor: auto;
+  float: left;
+  margin-left: 10px;
+  width: 50%; }
 
 ::-webkit-scrollbar {
   width: 12px; }

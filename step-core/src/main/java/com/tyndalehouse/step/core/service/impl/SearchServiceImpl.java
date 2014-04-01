@@ -131,11 +131,11 @@ public class SearchServiceImpl implements SearchService {
     private JSwordRelatedVersesService relatedVerseService;
 
     /**
-     * @param jswordSearch     the search service
-     * @param subjects         the service that executes Subject searches
-     * @param timeline         the timeline service
-     * @param bibleInfoService the service to get information about various bibles/commentaries
-     * @param entityManager    the manager for all entities stored in lucene
+     * @param jswordSearch        the search service
+     * @param subjects            the service that executes Subject searches
+     * @param timeline            the timeline service
+     * @param bibleInfoService    the service to get information about various bibles/commentaries
+     * @param entityManager       the manager for all entities stored in lucene
      * @param relatedVerseService
      */
     @Inject
@@ -257,11 +257,11 @@ public class SearchServiceImpl implements SearchService {
     /**
      * Establishes what the correct search should be and kicks off the right type of search
      *
-     * @param versions       the list of versions
-     * @param references     the list of references
-     * @param options        the options
-     * @param displayMode    the display mode
-     * @param context        amount of context to be used in searhc
+     * @param versions    the list of versions
+     * @param references  the list of references
+     * @param options     the options
+     * @param displayMode the display mode
+     * @param context     amount of context to be used in searhc
      * @return the results
      */
     private AbstractComplexSearch runCorrectSearch(final List<String> versions, final String references,
@@ -286,20 +286,25 @@ public class SearchServiceImpl implements SearchService {
                 addSearch(SearchType.TEXT, versions, references, st.getToken(), null, individualSearches);
             } else if (SearchToken.SUBJECT_SEARCH.equals(tokenType)) {
                 addSearch(SearchType.SUBJECT_SIMPLE, versions, references, st.getToken(), null, individualSearches);
-            }  else if (SearchToken.NAVE_SEARCH.equals(tokenType)) {
+            } else if (SearchToken.NAVE_SEARCH.equals(tokenType)) {
                 addSearch(SearchType.SUBJECT_EXTENDED, versions, references, st.getToken(), null, individualSearches);
-            }  else if (SearchToken.NAVE_SEARCH_EXTENDED.equals(tokenType)) {
+            } else if (SearchToken.NAVE_SEARCH_EXTENDED.equals(tokenType)) {
                 addSearch(SearchType.SUBJECT_FULL, versions, references, st.getToken(), null, individualSearches);
-            } else if(SearchToken.TOPIC_BY_REF.equals(tokenType)) {
+            } else if (SearchToken.TOPIC_BY_REF.equals(tokenType)) {
                 addSearch(SearchType.SUBJECT_RELATED, versions, references, st.getToken(), null, individualSearches);
-            } else if(SearchToken.RELATED_VERSES.equals(tokenType)) {
+            } else if (SearchToken.RELATED_VERSES.equals(tokenType)) {
                 addSearch(SearchType.RELATED_VERSES, versions, references, st.getToken(), null, individualSearches);
+            } else if (SearchToken.SYNTAX.equals(tokenType)) {
+                //add a number of searches from the query syntax given...
+                final IndividualSearch[] searches = new SearchQuery(st.getToken(), versions.toArray(new String[versions.size()]), null, context, pageNumber).getSearches();
+                for (IndividualSearch is : searches) {
+                    individualSearches.add(is);
+                }
             } else {
                 //ignore and do nothing - generally references and versions which have been parsed already
             }
         }
         //we will prefer a word search to anything else...
-
         if (individualSearches.size() != 0) {
             return this.search(new SearchQuery(pageNumber, context, displayMode, individualSearches.toArray(new IndividualSearch[individualSearches.size()])));
         }
@@ -342,7 +347,6 @@ public class SearchServiceImpl implements SearchService {
                 isGreek ? SearchType.ORIGINAL_GREEK_RELATED : SearchType.ORIGINAL_HEBREW_RELATED,
                 versions, strong, getInclusion(references), filtersForSearch));
     }
-
 
 
     /**
@@ -806,6 +810,7 @@ public class SearchServiceImpl implements SearchService {
 
     /**
      * Runs a verse related search
+     *
      * @param sq the search query
      * @return the search result, as per other searches, of related verses
      */

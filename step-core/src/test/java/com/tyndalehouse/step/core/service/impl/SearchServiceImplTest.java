@@ -44,7 +44,7 @@ public class SearchServiceImplTest {
     @Test
     public void testMultiVersionSearch() {
         final List<SearchEntry> results = getSearchServiceUnderTest().search(
-                new SearchQuery("t=elijah in(ESV,KJV,ASV)", "false", 0, 1, 1)).getResults();
+                new SearchQuery("t=elijah", new String[] {"ESV", "KJV","ASV"}, "false", 0, 1, 1)).getResults();
         assertFalse(results.isEmpty());
     }
 
@@ -52,7 +52,7 @@ public class SearchServiceImplTest {
     @Test
     public void testSubjectSearch() {
         final SearchResult searchSubject = getSearchServiceUnderTest().search(
-                new SearchQuery("s=elijah in (ESV)", "false", 0, 1, 1));
+                new SearchQuery("s=elijah", new String[] {"ESV"}, "false", 0, 1, 1));
 
         final List<SearchEntry> entries = ((SubjectHeadingSearchEntry) searchSubject.getResults().get(0))
                 .getHeadingsSearch().getResults();
@@ -70,7 +70,7 @@ public class SearchServiceImplTest {
 
         // write test event to db
         final SearchResult result = getSearchServiceUnderTest().search(
-                new SearchQuery("d=calf in (ESV)", "false", 0, 1, 10));
+                new SearchQuery("d=calf",new String[] {"ESV"}, "false", 0, 1, 10));
         final TimelineEventSearchEntry timelineEventSearchEntry = (TimelineEventSearchEntry) result
                 .getResults().get(0);
         assertEquals("Golden Calf episode", timelineEventSearchEntry.getDescription());

@@ -44,6 +44,7 @@ import com.tyndalehouse.step.core.data.EntityDoc;
  */
 public class SearchQuery {
     private static final String JOINING_SEARCH = "=>";
+    public static final int PAGE_SIZE = 60;
     private final IndividualSearch[] searches;
     private final int pageSize;
     private final int pageNumber;
@@ -63,9 +64,22 @@ public class SearchQuery {
      *                    in special sorts
      * @param context     how many verses either side to include
      * @param pageNumber  the page number required
+     */
+    public SearchQuery(final String searchQuery, final String[] versions, 
+                       final String sortOrder, final int context,
+                       final int pageNumber) {
+        this(searchQuery, versions, sortOrder, context, pageNumber, PAGE_SIZE);
+    }
+
+    /**
+     * @param searchQuery the query to be run
+     * @param sortOrder   "true" to indicate the search results should be ranked, also can used text to be used
+     *                    in special sorts
+     * @param context     how many verses either side to include
+     * @param pageNumber  the page number required
      * @param pageSize    the size of the page to be returned
      */
-    public SearchQuery(final String searchQuery, final String sortOrder, final int context,
+    public SearchQuery(final String searchQuery, final String[] versions, final String sortOrder, final int context,
                        final int pageNumber, final int pageSize) {
 
         this.originalQuery = searchQuery;
@@ -74,7 +88,7 @@ public class SearchQuery {
         final String[] individualSearches = searchQuery.split(JOINING_SEARCH);
         this.searches = new IndividualSearch[individualSearches.length];
         for (int ii = 0; ii < individualSearches.length; ii++) {
-            this.searches[ii] = new IndividualSearch(individualSearches[ii]);
+            this.searches[ii] = new IndividualSearch(individualSearches[ii], versions);
 
         }
 
@@ -102,7 +116,7 @@ public class SearchQuery {
      */
     public SearchQuery(final int pageNumber, int context, String interlinearMode, final IndividualSearch... search) {
         this.searches = search;
-        this.pageSize = 60;
+        this.pageSize = PAGE_SIZE;
         this.pageNumber = pageNumber;
         this.context = context;
         this.ranked = false;

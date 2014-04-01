@@ -23,43 +23,43 @@
   }
 }
 
-.select2-search-choice.meanings, .select-meanings {
+.select2-search-choice.select-meanings, .select2-results .select-meanings {
   @include gradient($meaningsRow, $optionStartGradient, $optionEndGradient);
 }
 
-.select2-search-choice.version, .select-version {
+.select2-search-choice.select-version, .select2-results .select-version {
   @include gradient($bibleRow, $optionStartGradient, $optionEndGradient);
 }
 
-.select2-search-choice.reference, .select-reference {
+.select2-search-choice.select-reference, .select2-results .select-reference {
   @include gradient($referenceRow, $optionStartGradient, $optionEndGradient);
 }
 
-.select2-search-choice.subject, .select-subject {
+.select2-search-choice.select-subject, .select2-results .select-subject {
   @include gradient($subjectRow, $optionStartGradient, $optionEndGradient);
 }
 
-.select2-search-choice.text, .text {
+.select2-search-choice.select-text, .select2-results .text {
   @include gradient($textRow, $optionStartGradient, $optionEndGradient);
 }
 
-.select2-search-choice.greek, .select-greek {
+.select2-search-choice.select-greek, .select2-results .select-greek {
   @include gradient($greekRow, $optionStartGradient, $optionEndGradient);
 }
 
-.select2-search-choice.greekMeanings, .select-greekMeanings {
+.select2-search-choice.select-greekMeanings, .select2-results .select-greekMeanings {
   @include gradient($greekMeaningsRow, $optionStartGradient, $optionEndGradient);
 }
 
-.select2-search-choice.hebrew, .select-hebrew {
+.select2-search-choice.select-hebrew, .select2-results .select-hebrew {
   @include gradient($hebrewRow, $optionStartGradient, $optionEndGradient);
 }
 
-.select2-search-choice.hebrewMeanings, .select-hebrewMeanings {
+.select2-search-choice.select-hebrewMeanings, .select2-results .select-hebrewMeanings {
   @include gradient($hebrewMeaningsRow, $optionStartGradient, $optionEndGradient);
 }
 
-.select2-search-choice.topicref, .select-topicref {
+.select2-search-choice.select-topicref, .select2-results .select-topicref {
   @include gradient($topicByRefRow, $optionStartGradient, $optionEndGradient);
 }
 
@@ -69,10 +69,20 @@
     -moz-column-count: 2; /* Firefox */
     -webkit-column-count: 2; /* Safari and Chrome */
     column-count: 2;
+    
+    //except for no results, where we display only 1 column:
+    &.select2-parent-no-results {
+      @include multi-column(1);
+    }
     li {
       display: inline-block;
       border-bottom: solid 1 lightgrey;
       width: 100%;
+    }
+    .message {
+      float: right;
+      margin: 2px 3px 0 0;
+      font-size: 90%;
     }
   }
 }

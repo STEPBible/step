@@ -462,6 +462,8 @@ h2.heading.x-speaker {
 h2.heading.x-acrostic {
   margin-left: 10px; }
 
+.searchResultRow .passageContentHolder {
+  height: initial !important; }
 .searchResultRow .verse {
   vertical-align: middle; }
 .searchResultRow p {
@@ -508,7 +510,8 @@ h4.lexicalGrouping {
 
 .resultsLabel {
   font-style: italic;
-  clear: right; }
+  margin-right: 15px;
+  margin-top: 3; }
 
 .examplesContainer h1 {
   font-size: 13px;
@@ -548,6 +551,11 @@ h4.lexicalGrouping {
     #columnHolder .column .passageContent {
       height: 100%;
       padding-bottom: 35px; }
+      #columnHolder .column .passageContent > span {
+        height: 100%;
+        padding-bottom: 35px;
+        display: block;
+        overflow-y: scroll; }
     #columnHolder .column .passageContentHolder {
       overflow-y: scroll;
       height: 100%; }

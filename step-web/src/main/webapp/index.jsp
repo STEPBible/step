@@ -130,41 +130,43 @@
                     <div class="passageContainer active" passage-id=0>
                         <span class="activeMarker"></span>
                         <div class="passageText ui-widget">
-                            <div class="btn-group pull-right passageOptionsGroup">
-                                <a class="btn btn-default btn-sm previousChapter" type="button" title="<fmt:message key="passage_previous_chapter" />">
-                                    <span class="glyphicon glyphicon-arrow-left"></span></a>
-                                <a class="btn btn-default btn-sm nextChapter" type="button" title='<fmt:message key="passage_next_chapter" />'>
-                                    <span class="glyphicon glyphicon-arrow-right"></span>
-                                </a>
-                                <%
-                                    if(!appManager.isLocal()) {
-                                %>
-                                <div class="dropdown btn-group">
-                                    <button class="btn btn-default btn-sm dropdown-share" data-toggle="dropdown" type="button" title="<fmt:message key="share" />">
-                                        <span class="glyphicon glyphicon-thumbs-up"></span>
+                            <div class="passageOptionsGroup">
+                                <div class="btn-group pull-right">
+                                    <a class="btn btn-default btn-sm previousChapter" type="button" title="<fmt:message key="passage_previous_chapter" />">
+                                        <span class="glyphicon glyphicon-arrow-left"></span></a>
+                                    <a class="btn btn-default btn-sm nextChapter" type="button" title='<fmt:message key="passage_next_chapter" />'>
+                                        <span class="glyphicon glyphicon-arrow-right"></span>
+                                    </a>
+                                    <%
+                                        if(!appManager.isLocal()) {
+                                    %>
+                                    <div class="dropdown btn-group">
+                                        <button class="btn btn-default btn-sm dropdown-share" data-toggle="dropdown" type="button" title="<fmt:message key="share" />">
+                                            <span class="glyphicon glyphicon-thumbs-up"></span>
+                                        </button>
+                                    </div>
+                                    <%
+                                        }
+                                    %>
+                                    <div class="dropdown btn-group settingsDropdown">
+                                        <button class="btn btn-default btn-sm dropdown-toggle showSettings" title="<fmt:message key="view" />" type="button" data-toggle="dropdown">
+                                            <span class="glyphicon glyphicon-cog"></span>
+                                        </button>
+                                    </div>
+                                    <button class="btn btn-default btn-sm showStats" type="button" title="<fmt:message key="passage_open_sidebar" />">
+                                        <span class="glyphicon glyphicon-save"></span></button>
+                                    <button class="btn btn-default btn-sm closeColumn" title="<fmt:message key="close" />" type="button">
+                                        <span class="glyphicon glyphicon-remove"></span>
                                     </button>
                                 </div>
-                                <%
-                                    }
-                                %>
-                                <div class="dropdown btn-group settingsDropdown">
-                                    <button class="btn btn-default btn-sm dropdown-toggle showSettings" title="<fmt:message key="view" />" type="button" data-toggle="dropdown">
-                                        <span class="glyphicon glyphicon-cog"></span>
-                                    </button>
+                                <div class="resultsLabel pull-right">
+                                    <c:if test="${'PASSAGE' ne searchType}">
+                                        <c:set var="pageMessage" scope="request"><fmt:message key="paging_showing" /></c:set>
+                                        <%= String.format((String) request.getAttribute("pageMessage"), (Integer) request.getAttribute("numResults")) %>
+                                    </c:if>
                                 </div>
-                                <button class="btn btn-default btn-sm showStats" type="button" title="<fmt:message key="passage_open_sidebar" />">
-                                    <span class="glyphicon glyphicon-save"></span></button>
-                                <button class="btn btn-default btn-sm closeColumn" title="<fmt:message key="close" />" type="button">
-                                    <span class="glyphicon glyphicon-remove"></span>
-                                </button>
-                                
                             </div>
-                            <div class="pull-right resultsLabel">
-                                <c:if test="${'PASSAGE' ne searchType}">
-                                    <c:set var="pageMessage" scope="request"><fmt:message key="paging_showing" /></c:set>
-                                    <%= String.format((String) request.getAttribute("pageMessage"), (Integer) request.getAttribute("numResults")) %>
-                                </c:if>
-                            </div>
+                            
                             <hr />
                             <div class="passageContent" itemprop="text">
                                 <c:choose>

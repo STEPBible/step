@@ -5,8 +5,6 @@
 @import 'search_display';
 @import 'help_examples';
 
-
-
 .mainPanel {
   min-height: 100%;
   height: 100%;
@@ -31,6 +29,12 @@
     .passageContent {
       height: 100%;
       padding-bottom: $topSectionHeight;
+      &> span {
+        height: 100%;
+        padding-bottom: $topSectionHeight;
+        display: block;
+        overflow-y: scroll;
+      }
     }
     
     .passageContentHolder {

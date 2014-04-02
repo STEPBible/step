@@ -1,6 +1,10 @@
 @import 'template_variables';
 
 .searchResultRow {
+
+  .passageContentHolder {
+    height: initial !important;
+  }
   .verse {
     vertical-align: middle;
   }
@@ -69,5 +73,6 @@ h4.lexicalGrouping {
 
 .resultsLabel {
   font-style: italic;
-  clear: right;
+  margin-right: 15px;
+  margin-top: 3;
 }

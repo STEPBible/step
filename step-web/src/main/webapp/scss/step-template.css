@@ -307,7 +307,9 @@ ul .glyphicon-ok {
   cursor: hand; }
 
 .passageOptionsGroup {
-  float: right; }
+  height: 20px;
+  position: absolute;
+  right: 20; }
   .passageOptionsGroup button span {
     line-height: 1; }
     .passageOptionsGroup button span.smallerFont {
@@ -535,18 +537,25 @@ h4.lexicalGrouping {
 #columnHolder {
   overflow-y: hidden;
   padding: 4px; }
+  #columnHolder hr {
+    border: 0;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 30px;
+    margin: 0px 20px 5px; }
   #columnHolder .column {
     height: 100%;
-    padding: 0;
     padding: 0px 2px; }
     #columnHolder .column .passageContent {
-      padding-top: 40px; }
+      height: 100%;
+      padding-bottom: 35px; }
+    #columnHolder .column .passageContentHolder {
+      overflow-y: scroll;
+      height: 100%; }
     #columnHolder .column .passageContainer {
       border: 1px solid lightgrey;
       padding: 5px;
       border-radius: 3;
       height: 100%;
-      overflow-y: scroll;
       border-width: 2px;
       -webkit-box-shadow: 0 3px 12px rgba(0, 0, 0, 0.175);
       box-shadow: 0 3px 12px rgba(0, 0, 0, 0.175); }

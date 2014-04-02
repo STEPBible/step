@@ -165,6 +165,7 @@
                                     <%= String.format((String) request.getAttribute("pageMessage"), (Integer) request.getAttribute("numResults")) %>
                                 </c:if>
                             </div>
+                            <hr />
                             <div class="passageContent" itemprop="text">
                                 <c:choose>
                                     <c:when test="${ 'PASSAGE' eq searchType }">

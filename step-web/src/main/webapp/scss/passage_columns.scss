@@ -5,6 +5,8 @@
 @import 'search_display';
 @import 'help_examples';
 
+
+
 .mainPanel {
   min-height: 100%;
   height: 100%;
@@ -15,13 +17,25 @@
   overflow-y: hidden;
   @include padding-from-header;
 
+  // divider between passage options and passage
+  hr {
+    border: 0; 
+    border-bottom: 1px solid #eee;
+    padding-bottom: $topSectionPadding;
+    margin: 0px 20px $topSectionMarginBottom;
+  }
   .column {
     height: 100%;
-    padding: 0;
     padding: 0px 2px;
     
     .passageContent {
-      padding-top: 40px;
+      height: 100%;
+      padding-bottom: $topSectionHeight;
+    }
+    
+    .passageContentHolder {
+      overflow-y: scroll;
+      height: 100%;
     }
     
     .passageContainer {
@@ -29,7 +43,6 @@
       padding: 5px;
       border-radius: 3;
       height: 100%;
-      overflow-y: scroll;
       border-width: $activeBorderWidth;
       -webkit-box-shadow: 0 3px 12px rgba(0, 0, 0, 0.175);
       box-shadow: 0 3px 12px rgba(0, 0, 0, 0.175);

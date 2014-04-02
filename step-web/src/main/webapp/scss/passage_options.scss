@@ -2,7 +2,10 @@
 @import 'mixins';
 
 .passageOptionsGroup {
-  float: right;
+  height: 20px;
+  position: absolute;
+  right: 20;
+  
   button span {
     line-height: 1;
     &.smallerFont {

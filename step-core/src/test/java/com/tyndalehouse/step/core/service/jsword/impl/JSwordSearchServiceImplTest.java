@@ -84,7 +84,7 @@ public class JSwordSearchServiceImplTest {
     @Test
     public void testMorphology() {
         final List<SearchEntry> results = this.search.search(
-                new SearchQuery("+[Mat-Rev] +morph:G2570*A-NSM*", new String[] {"ESV"}, "true", 0, 1, 1000000), "ESV")
+                new SearchQuery("+[Mat-Rev] +morph:G2570*A-NSM*", new String[] {"KJV"}, "true", 0, 1, 1000000), "ESV")
                 .getResults();
         for (int i = 0; i < results.size(); i++) {
             LOGGER.info(((VerseSearchEntry) results.get(i)).getKey());

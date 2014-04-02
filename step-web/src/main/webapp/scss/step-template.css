@@ -539,6 +539,8 @@ h4.lexicalGrouping {
     height: 100%;
     padding: 0;
     padding: 0px 2px; }
+    #columnHolder .column .passageContent {
+      padding-top: 40px; }
     #columnHolder .column .passageContainer {
       border: 1px solid lightgrey;
       padding: 5px;

@@ -177,6 +177,7 @@ public class IndividualSearch {
             this.query = query.substring(TIMELINE_REFERENCE.length());
         } else {
             // default to JSword and hope for the best, but warn
+            this.query = query;
             this.type = SearchType.TEXT;
         }
         if (isBlank(this.query)) {

@@ -1177,6 +1177,7 @@ body::-webkit-scrollbar-corner {
     display: block; }
 
 #raiseSupportTrigger {
+  z-index: 10;
   position: absolute;
   bottom: 0px;
   right: 0px;

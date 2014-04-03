@@ -1,6 +1,7 @@
 @import 'template_variables';
 
 #raiseSupportTrigger {
+  z-index: 10;
   position: absolute;
   bottom: 0px;
   right: 0px;

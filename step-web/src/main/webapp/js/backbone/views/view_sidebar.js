@@ -36,7 +36,7 @@ var SidebarView = Backbone.View.extend({
     },
     createHelp: function () {
         var examplesContainer = $(".examplesContainer");
-        examplesContainer.attr("id", "help");
+        examplesContainer.attr("id", "help").addClass("tab-pane");
         $(".tab-content").append(examplesContainer);
     },
     activate: function () {

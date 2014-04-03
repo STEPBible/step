@@ -6,7 +6,10 @@ package com.tyndalehouse.step.core.models.search;
 public class AutoSuggestion {
     private String itemType;
     private Object suggestion;
-
+    private boolean grouped = false;
+    private boolean maxReached = false;
+    private int count;
+    
     public String getItemType() {
         return itemType;
     }
@@ -21,5 +24,29 @@ public class AutoSuggestion {
 
     public void setSuggestion(final Object suggestion) {
         this.suggestion = suggestion;
+    }
+
+    public boolean isGrouped() {
+        return grouped;
+    }
+
+    public void setGrouped(final boolean grouped) {
+        this.grouped = grouped;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(final int count) {
+        this.count = count;
+    }
+
+    public boolean isMaxReached() {
+        return maxReached;
+    }
+
+    public void setMaxReached(final boolean maxReached) {
+        this.maxReached = maxReached;
     }
 }

@@ -107,36 +107,12 @@ var MainSearchView = Backbone.View.extend({
                 results: function (data, page) {
                     var datum = [];
                     for (var ii = 0; ii < data.length; ii++) {
-                        //will never be a TEXT or a SYNTAX autocompletion? search, so not in the list below
-                        var item = data[ii].suggestion;
-                        var text = data[ii].suggestion;
+                        var itemAndText = view.convertResultTermToTypedOptions(data[ii], datum);
 
-                        switch (data[ii].itemType) {
-                            case HEBREW:
-                            case GREEK:
-                                text = view._getAncientFirstRepresentation(data[ii].suggestion, data[ii].itemType == HEBREW);
-                                break;
-                            case GREEK_MEANINGS:
-                            case HEBREW_MEANINGS:
-                                text = view._getEnglishFirstRepresentation(data[ii].suggestion, data[ii].itemType == HEBREW_MEANINGS);
-                                break;
-                            case REFERENCE:
-                                //for a reference that is a whole book, we push an extra one in
-                                text = data[ii].suggestion.fullName;
-                                item = data[ii].suggestion;
-
-                                if (data[ii].suggestion.wholeBook) {
-                                    //allow selection of whole book
-                                    datum.push({ text: data[ii].suggestion.fullName, item: data[ii].suggestion, itemType: data[ii].itemType,
-                                        itemSubType: 'bookSelection' });
-                                }
-                                break;
-                            case SUBJECT_SEARCH:
-                                text = data[ii].suggestion.value;
-                                break;
-                        }
-
-                        datum.push({ text: text, item: item, itemType: data[ii].itemType });
+                        datum.push({
+                            text: itemAndText.text,
+                            item: itemAndText.item,
+                            itemType: data[ii].itemType });
                     }
                     return { results: view.patch(datum) };
                 }
@@ -189,11 +165,18 @@ var MainSearchView = Backbone.View.extend({
                 //wipe the last term to force a re-select
                 $.data(self.masterSearch.select2("container"), "select2-last-term", null);
                 select2Input.select2("search", event.object.item.shortName);
+            } else if (event.object.item.grouped) {
+                event.preventDefault();
+                var select2Input = $(this);
+                $.data(self.masterSearch.select2("container"), "select2-last-term", null);
+                self._addSpecificContext(LIMIT, event.object.itemType);
+                select2Input.select2("search", self.getCurrentInput());
+                select2Input.select2("container").find("input").focus();
             }
             return;
         }).on("select2-opening", function (event) {
             //remove any context that has references
-            self._removeSpecificContext([REFERENCE, VERSION]);
+            self._removeSpecificContext([REFERENCE, VERSION, LIMIT]);
 
             //add the first version selected to the context
             var data = self.masterSearch.select2("data") || [];
@@ -206,6 +189,56 @@ var MainSearchView = Backbone.View.extend({
         });
 
         this.masterSearch.select2("container").find("input[type='text']").on("keyup", this._handleKeyPressInSearch);
+    },
+    convertResultTermToNormalOption: function (termSuggestion, datum) {
+        var text = termSuggestion;
+        var item = termSuggestion;
+
+
+        //will never be a TEXT or a SYNTAX autocompletion? search, so not in the list below
+        switch (termSuggestion.itemType) {
+            case HEBREW:
+            case GREEK:
+                text = this._getAncientFirstRepresentation(termSuggestion.suggestion, termSuggestion.itemType == HEBREW);
+                break;
+            case GREEK_MEANINGS:
+            case HEBREW_MEANINGS:
+                text = this._getEnglishFirstRepresentation(termSuggestion.suggestion, termSuggestion.itemType == HEBREW_MEANINGS);
+                break;
+            case REFERENCE:
+                //for a reference that is a whole book, we push an extra one in
+                text = termSuggestion.suggestion.fullName;
+                item = termSuggestion;
+
+                if (termSuggestion.suggestion.wholeBook) {
+                    //allow selection of whole book
+                    datum.push({ text: termSuggestion.suggestion.fullName, item: termSuggestion.suggestion, itemType: termSuggestion.itemType,
+                        itemSubType: 'bookSelection' });
+                }
+                break;
+            case SUBJECT_SEARCH:
+                text = termSuggestion.suggestion.value;
+                break;
+        }
+
+//        console.log(termSuggestion.itemType, termSuggestion, text, item.suggestion);
+        return {text: text, item: item.suggestion };
+    },
+    convertResultToGroup: function (item) {
+        var returnedItem = item;
+        this.setGroupText(returnedItem);
+
+        return { text: returnedItem.text, item: returnedItem };
+    },
+    convertResultTermToTypedOptions: function (termSuggestion, datum) {
+        if (termSuggestion.grouped) {
+            return this.convertResultToGroup(termSuggestion);
+        }
+
+        return this.convertResultTermToNormalOption(termSuggestion, datum);
+    },
+    setGroupText: function (item) {
+        item.text = item.maxReached ? sprintf(__s.options_number_of_terms_max, 50, item.count) : sprintf(__s.options_number_of_terms, item.count);
     },
     openNewPanel: function () {
         //if we're wanting a new column, then create it right now
@@ -318,16 +351,30 @@ var MainSearchView = Backbone.View.extend({
         return this.masterSearch.select2("container").find(".select2-input").val();
     },
     patch: function (results) {
-        var staticResources = this._getData();
+        //check we don't have a limit:
+        var includeEverything = true;
+        var limit = null;
+        for (var i = 0; i < this.specificContext.length; i++) {
+            if (this.specificContext[i].itemType == LIMIT) {
+                includeEverything = false;
+                limit = this.specificContext[i].value;
+            }
+        }
 
-        //push some of the options that are also always present:
-        staticResources.push({ item: {"shortName": this.getCurrentInput(), "fullName": this.getCurrentInput(), "wholeBook": false }, itemType: REFERENCE, itemSubType: 'freeInput' });
-        staticResources.push({ item: this.getCurrentInput(), itemType: TEXT_SEARCH});
-        staticResources.push({ item: this.getCurrentInput(), itemType: SYNTAX });
+        var staticResources = [];
+        if (includeEverything) {
+            staticResources = this._getData();
+            //push some of the options that are also always present:
+            staticResources.push({ item: this.getCurrentInput(), itemType: TEXT_SEARCH});
+            staticResources.push({ item: {"shortName": this.getCurrentInput(), "fullName": this.getCurrentInput(), "wholeBook": false }, itemType: REFERENCE, itemSubType: 'freeInput' });
+//            staticResources.push({ item: this.getCurrentInput(), itemType: SYNTAX });
+        } else if(limit == VERSION) {
+            staticResources = this._getData(limit);
+        }
         return staticResources.concat(results);
     },
-    _getData: function () {
-        return this.filterLocalData();
+    _getData: function (limit) {
+        return this.filterLocalData(limit);
     },
     matchDropdownEntry: function (term, textOrObject) {
         if (step.util.isBlank(textOrObject)) {
@@ -341,9 +388,7 @@ var MainSearchView = Backbone.View.extend({
 
         switch (textOrObject.itemType) {
             case VERSION:
-                var matches = this.matchDropdownEntry(term, textOrObject.item.initials || "") ||
-                    this.matchDropdownEntry(term, textOrObject.item.shortInitials || "") ||
-                    this.matchDropdownEntry(term, textOrObject.item.name || "");
+                var matches = this.matchDropdownEntry(term, textOrObject.item.name || "");
                 return matches;
             case GREEK_MEANINGS:
             case HEBREW_MEANINGS:
@@ -384,7 +429,7 @@ var MainSearchView = Backbone.View.extend({
             }
         }
     },
-    filterLocalData: function () {
+    filterLocalData: function (limit) {
         var options = [];
 
         //we will only add stuff if there is no specific context around references
@@ -394,16 +439,81 @@ var MainSearchView = Backbone.View.extend({
             }
         }
 
-        var currentInput = this.getCurrentInput();
+        var currentInput = (this.getCurrentInput() || "").toLowerCase();
+        var exactInitials = [];
+        var prefixInitials = [];
+        var others = [];
+
+        var totalNotDisplayed = 0;
         for (var ii = 0; ii < step.itemisedVersions.length; ii++) {
-            if (this.matchDropdownEntry(currentInput, step.itemisedVersions[ii])) {
-                options.push(step.itemisedVersions[ii]);
+            var currentVersion = step.itemisedVersions[ii];
+            var short = (currentVersion.item.shortInitials || "").toLowerCase();
+            var initials = (currentVersion.item.initials || "").toLowerCase();
+
+            if ((initials != "" && initials == currentInput) || (short != "" && short == currentInput)) {
+                exactInitials.push(currentVersion);
+            } else if (short.startsWith(currentInput) || initials.startsWith(currentInput)) {
+                prefixInitials.push(currentVersion);
+            } else if (this.matchDropdownEntry(currentInput, currentVersion)) {
+                if (limit == VERSION || exactInitials.length + prefixInitials.length < 3) {
+                    others.push(step.itemisedVersions[ii]);
+                } else {
+                    totalNotDisplayed++;
+                }
             }
         }
+
+
+        options = options.concat(exactInitials);
+        options = options.concat(prefixInitials);
+
+        if (options.length < 3) {
+            options = options.concat(others.splice(0, 3 - options.length));
+        }
+
+        if (totalNotDisplayed > 0) {
+            var groupedItem = { item: {}, grouped: true, count: totalNotDisplayed, maxReached: false };
+            this.setGroupText(groupedItem);
+            options.push( { text: groupedItem.text, item: groupedItem, itemType: VERSION });
+        }
+
         return options;
     },
     formatResultCssClass: function (item) {
         return "select-" + item.itemType;
+    },
+    getSource: function (itemType) {
+        var source;
+        switch (itemType) {
+            case VERSION:
+                source = __s.translation_commentary;
+                break;
+            case GREEK:
+                source = __s.search_greek;
+                break;
+            case GREEK_MEANINGS:
+                source = row = __s.search_greek_meaning;
+                break;
+            case HEBREW:
+                source = __s.search_hebrew;
+                break;
+            case HEBREW_MEANINGS:
+                source = __s.search_hebrew_meaning;
+                break;
+            case REFERENCE:
+                source = __s.bible_text;
+                break;
+            case SUBJECT_SEARCH:
+                source = __s.search_topic;
+                break;
+            case MEANINGS:
+                source = __s.search_meaning;
+                break;
+            case SYNTAX:
+                source = __s.query_syntax;
+                break;
+        }
+        return '<span class="source">[' + source + ']</span>';
     },
     /**
      * Renders the view when shown in the dropdown list
@@ -415,13 +525,18 @@ var MainSearchView = Backbone.View.extend({
      * @returns {string}
      */
     formatResults: function (v, container, query, escapeMarkup) {
+        var source = this.getSource(v.itemType);
         var row;
+
+        if (v.item.grouped) {
+            return "<span class='glyphicon glyphicon-chevron-right'></span> " + source + v.item.text;
+        }
 
         switch (v.itemType) {
             case VERSION:
                 row = [
                     '<div class="versionItem">',
-                        '<span class="source">[' + __s.translation_commentary + ']</span>',
+                    source,
                         '<span class="features">' + step.util.ui.getFeaturesLabel(v.item) + '</span>',
                         '<span class="initials">' + v.item.shortInitials + '</span> - ',
                         '<span class="name">' + v.item.name + '</span>',
@@ -429,35 +544,33 @@ var MainSearchView = Backbone.View.extend({
                 ].join('');
                 break;
             case GREEK:
-                row = '<span class="source">[' + __s.search_greek + ']</span>' + this._getAncientFirstRepresentation(v.item, false);
+                row = source + this._getAncientFirstRepresentation(v.item, false);
                 break;
             case GREEK_MEANINGS:
-                row = '<span class="source">[' + __s.search_greek_meaning + ']</span>' + this._getEnglishFirstRepresentation(v.item, false);
+                row = source + this._getEnglishFirstRepresentation(v.item, false);
                 break;
             case HEBREW:
-                row = '<span class="source">[' + __s.search_hebrew + ']</span>' + this._getAncientFirstRepresentation(v.item, true);
+                row = source + this._getAncientFirstRepresentation(v.item, true);
                 break;
             case HEBREW_MEANINGS:
-                row = '<span class="source">[' + __s.search_hebrew_meaning + ']</span>' + this._getEnglishFirstRepresentation(v.item, true);
+                row = source + this._getEnglishFirstRepresentation(v.item, true);
                 break;
             case REFERENCE:
-                var source = __s.bible_text;
+                var refSource = __s.bible_text;
                 if (v.itemSubType == 'bookSelection') {
-                    source = __s.bible_text;
+                    refSource = __s.bible_text;
                 } else if (v.itemSubType == 'freeInput') {
-                    source = __s.bible_text_free_entry;
+                    refSource = __s.bible_text_free_entry;
                 } else if (!v.itemSubType && v.item.wholeBook) {
-                    source = __s.bible_text_chapters;
+                    refSource = __s.bible_text_chapters;
                 }
 
-                row = [
-                        '<span class="source">[' + source + ']</span>',
+                row = ['<span class="source">[' + refSource + ']</span>',
                     v.item.fullName
                 ].join('');
                 break;
             case TEXT_SEARCH:
-                row = [
-                        '<span class="source">[' + __s.search_text + ']</span>',
+                row = [source,
                     v.item
                 ].join('');
                 break;
@@ -477,17 +590,17 @@ var MainSearchView = Backbone.View.extend({
                             break;
                     }
                 }
-                row = '<div><span class="source">[' + __s.search_topic + ']</span><span class="features">' + features + '</span>' + v.item.value + '</div>';
+                row = source + '<span class="features">' + features + '</span>' + v.item.value + '</div>';
                 break;
             case MEANINGS:
-                row = '<span class="source">[' + __s.search_meaning + ']</span>' + v.text.gloss;
+                row = source + v.item.gloss;
                 break;
             case SYNTAX:
-                row = '<span class="source">[' + __s.query_syntax + ']</span>' + v.item.value;
+                row = source + v.item.value;
                 break;
         }
         var markup = [];
-        window.Select2.util.markMatch(row, query.term, markup, escapeMarkup);
+        window.Select2.util.markMatch(row, "unlikelytomatch" + query.term, markup, escapeMarkup);
         return markup.join("");
     },
 

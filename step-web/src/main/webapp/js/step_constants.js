@@ -4,6 +4,7 @@
 // ///////////////////////////////////////////////////////////////////////
 VERSION = "version";
 REFERENCE = "reference";
+LIMIT="limit";
 TEXT_SEARCH = "text";
 SYNTAX = "syntax";
 GREEK_MEANINGS = "greekMeanings";

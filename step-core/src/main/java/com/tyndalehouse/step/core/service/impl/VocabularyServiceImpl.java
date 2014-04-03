@@ -47,6 +47,7 @@ import java.util.TreeSet;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import com.tyndalehouse.step.core.models.search.SuggestionType;
 import com.tyndalehouse.step.core.utils.SortingUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,5 +1,7 @@
 package com.tyndalehouse.step.core.models;
 
+import com.tyndalehouse.step.core.models.search.PopularSuggestion;
+
 import java.io.Serializable;
 
 /**
@@ -8,7 +10,7 @@ import java.io.Serializable;
  * @author chrisburrell
  * 
  */
-public class BookName implements Serializable {
+public class BookName implements Serializable, PopularSuggestion {
     private static final long serialVersionUID = 2406197083965523605L;
     private String shortName;
     private String fullName;
@@ -69,5 +71,15 @@ public class BookName implements Serializable {
      */
     public void setWholeBook(final boolean isWholeBook) {
         this.wholeBook = isWholeBook;
+    }
+
+    @Override
+    public int getPopularity() {
+        return 0;
+    }
+
+    @Override
+    public boolean isExactMatch(final String term) {
+        return term != null && (term.equalsIgnoreCase(this.fullName) || term.equalsIgnoreCase(this.getShortName()));
     }
 }

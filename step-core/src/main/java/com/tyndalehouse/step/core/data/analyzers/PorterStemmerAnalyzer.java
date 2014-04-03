@@ -25,8 +25,8 @@ public class PorterStemmerAnalyzer extends Analyzer {
     public final TokenStream tokenStream(final String fieldName, final Reader reader) {
         TokenStream result = new LowerCaseTokenizer(reader);
 
-        result = new StopFilter(StopFilter.getEnablePositionIncrementsVersionDefault(Version.LUCENE_30),
-                result, ENGLISH_STOP_WORDS_SET);
+//        result = new StopFilter(StopFilter.getEnablePositionIncrementsVersionDefault(Version.LUCENE_30),
+//                result, ENGLISH_STOP_WORDS_SET);
         result = new LowerCaseFilter(result);
         result = new PorterStemFilter(result);
         return result;

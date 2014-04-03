@@ -10,6 +10,7 @@ import com.tyndalehouse.step.core.data.EntityDoc;
 import com.tyndalehouse.step.core.data.EntityIndexReader;
 import com.tyndalehouse.step.core.data.EntityManager;
 import com.tyndalehouse.step.core.models.LexiconSuggestion;
+import com.tyndalehouse.step.core.models.search.SuggestionType;
 import com.tyndalehouse.step.core.service.LexiconDefinitionService;
 
 /**

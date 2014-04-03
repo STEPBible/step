@@ -1,13 +1,13 @@
 package com.tyndalehouse.step.core.models;
 
+import com.tyndalehouse.step.core.models.search.PopularSuggestion;
+
 import java.io.Serializable;
 
 /**
- * 
  * @author chrisburrell
- * 
  */
-public class LexiconSuggestion implements Serializable {
+public class LexiconSuggestion implements Serializable, PopularSuggestion {
     private static final long serialVersionUID = 2330563074130087347L;
     private String strongNumber;
     private String matchingForm;
@@ -68,5 +68,15 @@ public class LexiconSuggestion implements Serializable {
      */
     public void setStrongNumber(final String strongNumber) {
         this.strongNumber = strongNumber;
+    }
+
+    @Override
+    public int getPopularity() {
+        return 0;
+    }
+
+    @Override
+    public boolean isExactMatch(final String term) {
+        return false;
     }
 }

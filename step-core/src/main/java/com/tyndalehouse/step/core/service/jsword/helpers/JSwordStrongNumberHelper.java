@@ -38,6 +38,7 @@ import com.tyndalehouse.step.core.data.EntityManager;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.models.LexiconSuggestion;
 import com.tyndalehouse.step.core.models.search.BookAndBibleCount;
+import com.tyndalehouse.step.core.models.search.SuggestionType;
 import com.tyndalehouse.step.core.models.search.StrongCountsAndSubjects;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import com.tyndalehouse.step.core.service.jsword.JSwordSearchService;

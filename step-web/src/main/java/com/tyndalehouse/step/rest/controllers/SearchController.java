@@ -1,10 +1,8 @@
 package com.tyndalehouse.step.rest.controllers;
 
 import static com.tyndalehouse.step.core.exceptions.UserExceptionType.APP_MISSING_FIELD;
-import static com.tyndalehouse.step.core.exceptions.UserExceptionType.USER_MISSING_FIELD;
 import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
 import static com.tyndalehouse.step.core.utils.ValidateUtils.notBlank;
-import static com.tyndalehouse.step.core.utils.ValidateUtils.notNull;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -15,9 +13,15 @@ import javax.inject.Singleton;
 
 import com.tyndalehouse.step.core.models.AbstractComplexSearch;
 import com.tyndalehouse.step.core.models.SearchToken;
+import com.tyndalehouse.step.core.models.SingleSuggestionsSummary;
+import com.tyndalehouse.step.core.models.SuggestionsSummary;
 import com.tyndalehouse.step.core.models.search.AutoSuggestion;
+import com.tyndalehouse.step.core.models.search.PopularSuggestion;
 import com.tyndalehouse.step.core.models.search.SubjectSuggestion;
+import com.tyndalehouse.step.core.models.search.SuggestionType;
 import com.tyndalehouse.step.core.service.BibleInformationService;
+import com.tyndalehouse.step.core.service.SingleTypeSuggestionService;
+import com.tyndalehouse.step.core.service.SuggestionService;
 import com.tyndalehouse.step.core.service.impl.InternationalRangeServiceImpl;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import com.tyndalehouse.step.core.service.search.SubjectSearchService;
@@ -28,10 +32,7 @@ import org.slf4j.LoggerFactory;
 
 import com.tyndalehouse.step.core.models.LexiconSuggestion;
 import com.tyndalehouse.step.core.models.OsisWrapper;
-import com.tyndalehouse.step.core.models.search.LexicalSuggestionType;
-import com.tyndalehouse.step.core.models.search.SearchResult;
 import com.tyndalehouse.step.core.service.SearchService;
-import com.tyndalehouse.step.core.service.impl.SearchQuery;
 import com.tyndalehouse.step.core.service.search.OriginalWordSuggestionService;
 import com.tyndalehouse.step.core.service.search.SubjectEntrySearchService;
 import com.yammer.metrics.annotation.Timed;
@@ -46,7 +47,9 @@ public class SearchController {
     private static final Pattern SPLIT_TOKENS = Pattern.compile("\\|");
     private static final Logger LOGGER = LoggerFactory.getLogger(SearchController.class);
     private static final String DEFAULT_OPTIONS = "NHVUG";
+    private static int MAX_PER_GROUP = 3;
     private final SearchService searchService;
+    private final SuggestionService suggestionService;
     private final OriginalWordSuggestionService originalWordSuggestions;
     private final SubjectEntrySearchService subjectEntries;
     private final BibleInformationService bibleInformationService;
@@ -60,12 +63,14 @@ public class SearchController {
      */
     @Inject
     public SearchController(final SearchService search,
+                            final SuggestionService suggestionService,
                             final OriginalWordSuggestionService originalWordSuggestions,
                             final SubjectEntrySearchService subjectEntries,
                             final SubjectSearchService subjectSearchService,
                             final BibleInformationService bibleInformationService,
                             final InternationalRangeServiceImpl rangeService) {
         this.searchService = search;
+        this.suggestionService = suggestionService;
         this.originalWordSuggestions = originalWordSuggestions;
         this.subjectEntries = subjectEntries;
         this.subjectSearchService = subjectSearchService;
@@ -104,13 +109,14 @@ public class SearchController {
      */
     public List<AutoSuggestion> suggest(final String input, final String context, final String referencesOnly) {
         boolean onlyReferences = false;
-        if(StringUtils.isNotBlank(referencesOnly)) {
+        if (StringUtils.isNotBlank(referencesOnly)) {
             onlyReferences = Boolean.parseBoolean(referencesOnly);
         }
-        
+
         final List<AutoSuggestion> autoSuggestions = new ArrayList<AutoSuggestion>(128);
         String bookContext = JSwordPassageService.REFERENCE_BOOK;
         String referenceContext = null;
+        String limitType = null;
 
         if (StringUtils.isNotBlank(context)) {
             //there are some context items... Parse them
@@ -121,48 +127,66 @@ public class SearchController {
                     bookContext = st.getToken();
                 } else if (SearchToken.REFERENCE.equals(st.getTokenType())) {
                     referenceContext = st.getToken();
+                } else if (SearchToken.LIMIT.equals(st.getTokenType())) {
+                    limitType = st.getToken();
                 }
             }
         }
 
         if (onlyReferences || referenceContext != null) {
-            addReferenceSuggestions(input, autoSuggestions, bookContext, referenceContext);
+            addReferenceSuggestions(limitType, input, autoSuggestions, bookContext, referenceContext);
         } else {
-            addDefaultSuggestions(input, autoSuggestions, bookContext);
+            addDefaultSuggestions(input, autoSuggestions, limitType, bookContext);
         }
         return autoSuggestions;
     }
 
-    private void addDefaultSuggestions(final String input, final List<AutoSuggestion> autoSuggestions, final String referenceBookContext) {
-        addReferenceSuggestions(input, autoSuggestions, referenceBookContext, null);
-        addAutoSuggestions(SearchToken.REFERENCE, autoSuggestions, this.rangeService.getRanges(input));
+    private void addDefaultSuggestions(final String input, final List<AutoSuggestion> autoSuggestions, final String limitType, final String referenceBookContext) {
+        addReferenceSuggestions(limitType, input, autoSuggestions, referenceBookContext, null);
+        addAutoSuggestions(limitType, SearchToken.REFERENCE, autoSuggestions, this.rangeService.getRanges(input));
 
-        addAutoSuggestions(SearchToken.SUBJECT_SEARCH, autoSuggestions, this.autocompleteSubject(input));
+        if (StringUtils.isBlank(limitType)) {
+            // we only return the right set of suggestions if there is a limit type
+            convert(autoSuggestions, this.suggestionService.getTopSuggestions(input));
+        } else {
+            convert(autoSuggestions, this.suggestionService.getFirstNSuggestions(limitType, input));
+        }
+    }
 
-        final String restored = restoreSearchQuery(input);
-        addAutoSuggestions(SearchToken.GREEK, autoSuggestions, this.originalWordSuggestions.getLexicalSuggestions(LexicalSuggestionType.GREEK, restored,
-                false));
-        addAutoSuggestions(SearchToken.GREEK_MEANINGS, autoSuggestions, this.originalWordSuggestions.getLexicalSuggestions(LexicalSuggestionType.GREEK_MEANING, restored,
-                false));
-        addAutoSuggestions(SearchToken.HEBREW, autoSuggestions, this.originalWordSuggestions.getLexicalSuggestions(LexicalSuggestionType.HEBREW, restored,
-                false));
-        addAutoSuggestions(SearchToken.HEBREW_MEANINGS, autoSuggestions, this.originalWordSuggestions.getLexicalSuggestions(LexicalSuggestionType.HEBREW_MEANING, restored,
-                false));
-        addAutoSuggestions(SearchToken.MEANINGS, autoSuggestions, this.originalWordSuggestions.getLexicalSuggestions(LexicalSuggestionType.MEANING, restored,
-                false));
+    private void convert(final List<AutoSuggestion> autoSuggestions, final SuggestionsSummary topSuggestions) {
+        for(SingleSuggestionsSummary summary : topSuggestions.getSuggestionsSummaries()) {
+            //we render each option
+            final List<? extends PopularSuggestion> popularSuggestions = summary.getPopularSuggestions();
+            for (PopularSuggestion p : popularSuggestions) {
+                AutoSuggestion au = new AutoSuggestion();
+                au.setItemType(summary.getSearchType().toString());
+                au.setSuggestion(p);
+                autoSuggestions.add(au);
+            }
+
+            if(summary.getMoreResults() > 0) {
+                AutoSuggestion au = new AutoSuggestion();
+                au.setItemType(summary.getSearchType().toString());
+                au.setGrouped(true);
+                au.setCount(summary.getMoreResults());
+                au.setMaxReached(SuggestionService.MAX_RESULTS_NON_GROUPED <= summary.getMoreResults());
+                autoSuggestions.add(au);
+            }
+        }        
     }
 
     /**
      * Adds the references that match the input
      *
+     * @param limitType       limits the types of suggestions to just 1 kind
      * @param input           input from the user
      * @param autoSuggestions the list of suggestions
      * @param version         the version to use in our lookup
      * @param bookScope       the book for which we are looking up chapters
      */
-    private void addReferenceSuggestions(final String input, final List<AutoSuggestion> autoSuggestions,
+    private void addReferenceSuggestions(final String limitType, final String input, final List<AutoSuggestion> autoSuggestions,
                                          final String version, final String bookScope) {
-        addAutoSuggestions(SearchToken.REFERENCE, autoSuggestions, bibleInformationService.getBibleBookNames(input, version, bookScope));
+        addAutoSuggestions(limitType, SearchToken.REFERENCE, autoSuggestions, bibleInformationService.getBibleBookNames(input, version, bookScope));
     }
 
     /**
@@ -267,7 +291,23 @@ public class SearchController {
      * @param suggestions     the list of all suggestions to add
      * @param type            the type of the items
      */
-    private void addAutoSuggestions(final String type, final List<AutoSuggestion> autoSuggestions, final List<?> suggestions) {
+    private void addAutoSuggestions(final String limitType, final String type, final List<AutoSuggestion> autoSuggestions, final List<? extends PopularSuggestion> suggestions) {
+        if (StringUtils.isNotBlank(limitType) && !limitType.equals(type)) {
+            // we only return the right set of suggestions if there is a limit type
+            return;
+        }
+
+        if (suggestions.size() > MAX_PER_GROUP && StringUtils.isBlank(limitType)) {
+            AutoSuggestion au = new AutoSuggestion();
+            au.setItemType(type);
+            au.setGrouped(true);
+            au.setCount(suggestions.size());
+            au.setMaxReached(SearchService.MAX_SUGGESTIONS == suggestions.size());
+            autoSuggestions.add(au);
+            return;
+        }
+
+        //else, we render each option
         for (Object o : suggestions) {
             AutoSuggestion au = new AutoSuggestion();
             au.setItemType(type);
@@ -275,48 +315,6 @@ public class SearchController {
             autoSuggestions.add(au);
         }
     }
-
-//    /**
-//     * @param searchQuery the query to search for
-//     * @param ranked      true to indicate results should ranked in order of priority
-//     * @param context     the amount of context to add to the verses hit by a search
-//     * @param pageNumber  the number of the page that is desired
-//     * @param pageSize    the size of the page that is desired
-//     * @return the search result(s)
-//     */
-//    @Timed(name = "search-main", group = "search", rateUnit = TimeUnit.SECONDS, durationUnit = TimeUnit.MILLISECONDS)
-//    public SearchResult search(final String searchQuery, final String ranked, final String context,
-//                               final String pageNumber, final String pageSize) {
-//        notNull(searchQuery, "blank_search_provided", USER_MISSING_FIELD);
-//        notNull(pageNumber, "Page number is required", APP_MISSING_FIELD);
-//        notNull(ranked, "The ranking field is required", APP_MISSING_FIELD);
-//        notNull(context, "The context field is required", APP_MISSING_FIELD);
-//        notNull(pageSize, "Page size is required", APP_MISSING_FIELD);
-//
-//        LOGGER.debug("Search query is [{}]", searchQuery);
-//
-//        final SearchResult results = this.searchService.search(new SearchQuery(
-//                restoreSearchQuery(searchQuery), ranked, Integer.parseInt(context), Integer
-//                .parseInt(pageNumber), Integer.parseInt(pageSize)
-//        ));
-//
-//        results.setQuery(undoRestoreSearchQuery(results.getQuery()));
-//
-//        return results;
-//    }
-//
-//    /**
-//     * Estimates the number of hits for a particular search query
-//     *
-//     * @param searchQuery the search query.
-//     * @return the number of results
-//     */
-//    @Timed(name = "estimate", group = "search", rateUnit = TimeUnit.SECONDS, durationUnit = TimeUnit.MILLISECONDS)
-//    public long estimateSearch(final String searchQuery) {
-//        // JSword currently only allows estimates as ranked searches
-//        return this.searchService.estimateSearch(new SearchQuery(restoreSearchQuery(searchQuery), "false", 0,
-//                0, 0));
-//    }
 
     /**
      * Obtains a list of suggestions to display to the user
@@ -331,7 +329,7 @@ public class SearchController {
                                                          final String includeAllForms) {
         notBlank(form, "Blank lexical prefix passed.", APP_MISSING_FIELD);
 
-        return this.originalWordSuggestions.getLexicalSuggestions(LexicalSuggestionType.valueOf(greekOrHebrew), restoreSearchQuery(form),
+        return this.originalWordSuggestions.getLexicalSuggestions(SuggestionType.valueOf(greekOrHebrew), restoreSearchQuery(form),
                 Boolean.parseBoolean(includeAllForms));
     }
 

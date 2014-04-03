@@ -97,9 +97,9 @@ public class EsvStrongNumberReport {
 
     private void buildStats() throws Exception {
         BookName.setFullBookName(false);
-        statsByVersion("ESVEx", this.esvStrongsInVerses);
+        statsByVersion("ESV", this.esvStrongsInVerses);
         statsByVersion(OT, this.originalsStrongsInVerses);
-        statsByVersion(NT, this.originalsStrongsInVerses);
+//        statsByVersion(NT, this.originalsStrongsInVerses);
 
         checkAndReport();
     }
@@ -168,7 +168,7 @@ public class EsvStrongNumberReport {
         LOGGER.info("Loading {} stats", version);
 
         final Book book = Books.installed().getBook(version);
-        final Key key = book.getKey("Gen.1-Rev.22");
+        final Key key = book.getKey("Gen.1-Mal");
 
         final Iterator<Key> iterator = key.iterator();
         while (iterator.hasNext()) {

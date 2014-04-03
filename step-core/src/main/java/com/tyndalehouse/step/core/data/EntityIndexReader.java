@@ -5,11 +5,16 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.tyndalehouse.step.core.data.common.TermsAndMaxCount;
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.queryParser.QueryParser.Operator;
+import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.Filter;
+import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Sort;
+import org.apache.lucene.search.TopFieldCollector;
 
 /**
  * Interface to read an index
@@ -134,6 +139,8 @@ public interface EntityIndexReader extends Closeable {
     EntityDoc[] search(String[] fieldNames, String value, Filter filter, Sort sort, boolean analyzePrefix,
                        String queryRemainder, Integer maxResults, boolean useOrOperatorBetweenValues);
 
+    QueryParser getQueryParser(String defaultField);
+
     /**
      * Searches for all documents given by a query
      *
@@ -253,11 +260,23 @@ public interface EntityIndexReader extends Closeable {
     /**
      * Returns all terms starting with a particular prefix
      *
+     * @param exact      indicates we want an exact match
      * @param searchTerm the search term
      * @param fieldNames names of the fields
      * @return the list of terms matching searchTerm as a prefix
      */
-    Set<String> findSetOfTermsStartingWith(String searchTerm, String... fieldNames);
+    Set<String> findSetOfTerms(final boolean exact, String searchTerm, int max, String... fieldNames);
+
+    /**
+     * Returns all terms starting with a particular prefix
+     *
+     * @param exact indicates we want an exact match
+     * @param searchTerm the search term
+     * @param fieldNames names of the fields
+     * @return the list of terms matching searchTerm as a prefix
+     * @param trackMax indicates we want a count of how many terms are actually matching the index.
+     */
+    TermsAndMaxCount findSetOfTermsWithCounts(boolean exact, boolean trackMax, String searchTerm, int maxReturned, String... fieldNames);
 
     /**
      * Give a querySyntax and get results back
@@ -277,4 +296,11 @@ public interface EntityIndexReader extends Closeable {
      * @return the list of tokens
      */
     List<String> getAnalyzedTokens(String fieldName, String input, boolean escapeForQuery);
+
+    /**
+     * @param query     the query to be run
+     * @param collector the collector that collects the data
+     * @param filter    the filter to search with
+     */
+    EntityDoc[] search(BooleanQuery query, Filter filter, TopFieldCollector collector);
 }

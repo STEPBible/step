@@ -1,5 +1,6 @@
 package com.tyndalehouse.step.core.service.helpers;
 
+import com.tyndalehouse.step.core.models.search.SuggestionType;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.CachingWrapperFilter;
 import org.apache.lucene.search.Filter;

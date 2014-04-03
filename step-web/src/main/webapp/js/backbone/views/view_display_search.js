@@ -72,7 +72,7 @@ var SearchDisplayView = Backbone.View.extend({
         step.util.restoreFontSize(this.model, results);
 
         if(append) {
-            this.$el.append(results);
+            this.getScrollableArea().append(results);
         } else {
             var passageHtml = this._doSpecificSearchRequirements(query, results, this.model.get("masterVersion"));
             if(!this.options.partRendered) {
@@ -114,7 +114,7 @@ var SearchDisplayView = Backbone.View.extend({
      * @returns {*}
      */
     getScrollableArea: function () {
-        return this.$el.closest(".passageContainer");
+        return this.$el.closest(".passageContent").find("> span");
     }, getMoreResults: function () {
         var self = this;
         

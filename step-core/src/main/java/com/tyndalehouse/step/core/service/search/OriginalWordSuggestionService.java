@@ -3,7 +3,7 @@ package com.tyndalehouse.step.core.service.search;
 import java.util.List;
 
 import com.tyndalehouse.step.core.models.LexiconSuggestion;
-import com.tyndalehouse.step.core.models.search.LexicalSuggestionType;
+import com.tyndalehouse.step.core.models.search.SuggestionType;
 
 /**
  * Interface to search for relevant suggestions for a given input, whether unicode or transliterations
@@ -21,7 +21,7 @@ public interface OriginalWordSuggestionService {
      * 
      * @return a list of lexicon suggestions
      */
-    List<LexiconSuggestion> getLexicalSuggestions(LexicalSuggestionType suggestionType, String form,
+    List<LexiconSuggestion> getLexicalSuggestions(SuggestionType suggestionType, String form,
             boolean includeAllForms);
 
 }

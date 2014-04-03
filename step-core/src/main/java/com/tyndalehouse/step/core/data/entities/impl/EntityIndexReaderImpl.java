@@ -11,6 +11,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.tyndalehouse.step.core.data.common.TermsAndMaxCount;
 import com.tyndalehouse.step.core.utils.LuceneUtils;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
@@ -211,6 +212,7 @@ public class EntityIndexReaderImpl implements EntityIndexReader {
             if (sort != null) {
                 final TopFieldDocs search = this.searcher.search(parsed, filter,
                         maxResults == null ? Integer.MAX_VALUE : maxResults, sort);
+
                 return extractDocIds(search);
 
             } else {
@@ -226,20 +228,32 @@ public class EntityIndexReaderImpl implements EntityIndexReader {
     }
 
     @Override
-    public Set<String> findSetOfTermsStartingWith(String searchTerm, final String... fieldNames) {
-        if(fieldNames.length == 0) {
-            return new HashSet<String>(0);
-        }
-        
-        if (fieldNames.length == 1) {
-            return new HashSet<String>(LuceneUtils.getAllTermsPrefixedWith(this.searcher, fieldNames[0], searchTerm));
+    public Set<String> findSetOfTerms(final boolean exact, String searchTerm, int maxReturned, final String... fieldNames) {
+        return findSetOfTermsWithCounts(exact, false, searchTerm, maxReturned, fieldNames).getTerms();
+    }
+
+    @Override
+    public TermsAndMaxCount findSetOfTermsWithCounts(final boolean exact, final boolean trackMax, String searchTerm, int maxReturned, final String... fieldNames) {
+        TermsAndMaxCount hits = new TermsAndMaxCount();
+        if (fieldNames.length == 0) {
+            hits.setTerms(new HashSet<String>(0));
+            return hits;
         }
 
-        Set<String> suggestions = new HashSet<String>(256);
-        for (int ii = 0; ii < fieldNames.length; ii++) {
-            suggestions.addAll(LuceneUtils.getAllTermsPrefixedWith(this.searcher, fieldNames[ii], searchTerm));
+        if (fieldNames.length == 1) {
+            return LuceneUtils.getAllTermsPrefixedWith(exact, trackMax, this.searcher, fieldNames[0], searchTerm, maxReturned);
         }
-        return suggestions;
+
+        hits.setTerms(new HashSet<String>(32));
+        for (int ii = 0; ii < fieldNames.length; ii++) {
+            final TermsAndMaxCount termsByField = LuceneUtils.getAllTermsPrefixedWith(exact, trackMax, this.searcher, fieldNames[ii], searchTerm, maxReturned);
+            hits.getTerms().addAll(termsByField.getTerms());
+            hits.setTotalCount(hits.getTotalCount() + termsByField.getTotalCount());
+        }
+        
+        //total count, is count - the existing ters
+        hits.setTotalCount(hits.getTotalCount() - hits.getTerms().size());
+        return hits;
     }
 
     /**
@@ -248,7 +262,7 @@ public class EntityIndexReaderImpl implements EntityIndexReader {
      * @param results the results that have been collected
      * @return the results
      */
-    private EntityDoc[] extractDocIds(final TopFieldDocs results) {
+    private EntityDoc[] extractDocIds(final TopDocs results) {
         try {
             final ScoreDoc[] scoreDocs = results.scoreDocs;
             final EntityDoc[] docs = new EntityDoc[scoreDocs.length];
@@ -264,14 +278,19 @@ public class EntityIndexReaderImpl implements EntityIndexReader {
 
     @Override
     public EntityDoc[] search(final String defaultField, final String querySyntax) {
-        final QueryParser parser = new QueryParser(LUCENE_30, defaultField, getAnalyzer());
+        final QueryParser parser = getQueryParser(defaultField);
         try {
             return this.search(parser.parse(querySyntax));
         } catch (final ParseException e) {
             throw new StepInternalException("Unable to parse query " + querySyntax, e);
         }
     }
-    
+
+    @Override
+    public QueryParser getQueryParser(final String defaultField) {
+        return new QueryParser(LUCENE_30, defaultField, getAnalyzer());
+    }
+
     @Override
     public EntityDoc[] search(final Query query) {
         final AllResultsCollector collector = new AllResultsCollector();
@@ -412,7 +431,7 @@ public class EntityIndexReaderImpl implements EntityIndexReader {
             TermAttribute termAttribute = tokens.getAttribute(TermAttribute.class);
             while (tokens.incrementToken()) {
                 String term = termAttribute.term();
-                if(escapeToken) {
+                if (escapeToken) {
                     term = QueryParser.escape(term);
                 }
                 tokenItems.add(term);
@@ -430,12 +449,20 @@ public class EntityIndexReaderImpl implements EntityIndexReader {
         return tokenItems;
     }
 
-    
+    @Override
+    public EntityDoc[] search(BooleanQuery query, Filter filter, TopFieldCollector collector) {
+        try {
+            this.searcher.search(query, filter, collector);
+            return extractDocIds(collector.topDocs());
+        } catch (IOException e) {
+            throw new StepInternalException(e.getMessage(), e);
+        }
+    }
+
     /**
      * @param searcher the searcher to set
      */
     void setSearcher(final IndexSearcher searcher) {
         this.searcher = searcher;
-        }
-
-        }
+    }
+}

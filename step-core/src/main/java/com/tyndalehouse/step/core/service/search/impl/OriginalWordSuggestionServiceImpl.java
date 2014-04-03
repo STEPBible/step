@@ -1,7 +1,7 @@
 package com.tyndalehouse.step.core.service.search.impl;
 
-import static com.tyndalehouse.step.core.models.search.LexicalSuggestionType.GREEK;
-import static com.tyndalehouse.step.core.models.search.LexicalSuggestionType.HEBREW;
+import static com.tyndalehouse.step.core.models.search.SuggestionType.GREEK;
+import static com.tyndalehouse.step.core.models.search.SuggestionType.HEBREW;
 import static com.tyndalehouse.step.core.service.helpers.OriginalWordUtils.STRONG_NUMBER_FIELD;
 import static com.tyndalehouse.step.core.service.helpers.OriginalWordUtils.convertToSuggestion;
 import static com.tyndalehouse.step.core.service.helpers.OriginalWordUtils.getFilter;
@@ -11,9 +11,6 @@ import static com.tyndalehouse.step.core.utils.StringUtils.isEmpty;
 import static com.tyndalehouse.step.core.utils.StringUtils.split;
 import static com.tyndalehouse.step.core.utils.language.HebrewUtils.isHebrewText;
 
-import java.io.IOException;
-import java.io.Serializable;
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -22,22 +19,18 @@ import java.util.regex.Pattern;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import com.tyndalehouse.step.core.exceptions.StepInternalException;
+import com.tyndalehouse.step.core.models.search.SuggestionType;
 import com.tyndalehouse.step.core.service.SearchService;
 import com.tyndalehouse.step.core.service.helpers.OriginalWordUtils;
 import com.tyndalehouse.step.core.utils.LuceneUtils;
-import org.apache.lucene.analysis.TokenStream;
-import org.apache.lucene.analysis.tokenattributes.TermAttribute;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queryParser.QueryParser;
-import org.apache.lucene.queryParser.QueryParser.Operator;
 import org.apache.lucene.search.*;
 
 import com.tyndalehouse.step.core.data.EntityDoc;
 import com.tyndalehouse.step.core.data.EntityIndexReader;
 import com.tyndalehouse.step.core.data.EntityManager;
 import com.tyndalehouse.step.core.models.LexiconSuggestion;
-import com.tyndalehouse.step.core.models.search.LexicalSuggestionType;
 import com.tyndalehouse.step.core.service.search.OriginalWordSuggestionService;
 import com.tyndalehouse.step.core.utils.StringConversionUtils;
 import com.tyndalehouse.step.core.utils.language.GreekUtils;
@@ -70,7 +63,7 @@ public class OriginalWordSuggestionServiceImpl implements OriginalWordSuggestion
     }
 
     @Override
-    public List<LexiconSuggestion> getLexicalSuggestions(final LexicalSuggestionType suggestionType,
+    public List<LexiconSuggestion> getLexicalSuggestions(final SuggestionType suggestionType,
                                                          final String form, final boolean includeAllForms) {
         if (isEmpty(form)) {
             return new ArrayList<LexiconSuggestion>();
@@ -81,9 +74,9 @@ public class OriginalWordSuggestionServiceImpl implements OriginalWordSuggestion
             case MEANING:
                 return getMeaningSuggestions(searchableForm);
             case HEBREW_MEANING:
-                return getMeaningSuggestionsForAncientLanguage(searchableForm, false);
+                return getMeaningSuggestionsForAncientLanguage(searchableForm, false, SuggestionType.HEBREW_MEANING);
             case GREEK_MEANING:
-                return getMeaningSuggestionsForAncientLanguage(searchableForm, true);
+                return getMeaningSuggestionsForAncientLanguage(searchableForm, true, SuggestionType.GREEK_MEANING);
             default:
                 if (includeAllForms) {
                     return getMatchingAllForms(suggestionType, searchableForm);
@@ -96,9 +89,10 @@ public class OriginalWordSuggestionServiceImpl implements OriginalWordSuggestion
      * Autocompletes the meaning search
      *
      * @param form the form that we are looking for
+     * @param suggestionType the type of suggestion that originates this request
      * @return the list of suggestions
      */
-    private List<LexiconSuggestion> getMeaningSuggestionsForAncientLanguage(final String form, boolean isGreek) {
+    private List<LexiconSuggestion> getMeaningSuggestionsForAncientLanguage(final String form, boolean isGreek, final SuggestionType suggestionType) {
         final List<String> tokenItems = this.definitions.getAnalyzedTokens("stepGloss", form, true);
 
         if(tokenItems.size() == 0) {
@@ -138,13 +132,13 @@ public class OriginalWordSuggestionServiceImpl implements OriginalWordSuggestion
      * @return the list of suggestions
      */
     private List<LexiconSuggestion> getMeaningSuggestions(final String form) {
-        final Set<String> meaningTerms = this.definitions.findSetOfTermsStartingWith(form, "stepGloss", "translations");
+//        final Set<String> meaningTerms = this.definitions.findSetOfTerms(false, form, "stepGloss", "translations");
         List<LexiconSuggestion> suggestions = new ArrayList<LexiconSuggestion>();
-        for (String term : meaningTerms) {
-            final LexiconSuggestion suggestion = new LexiconSuggestion();
-            suggestion.setGloss(term);
-            suggestions.add(suggestion);
-        }
+//        for (String term : meaningTerms) {
+//            final LexiconSuggestion suggestion = new LexiconSuggestion(SuggestionType.MEANING);
+//            suggestion.setGloss(term);
+//            suggestions.add(suggestion);
+//        }
 
         return suggestions;
     }
@@ -156,13 +150,13 @@ public class OriginalWordSuggestionServiceImpl implements OriginalWordSuggestion
      * @param inputForm           the input from the user
      * @return the list of suggestions
      */
-    private List<LexiconSuggestion> getMatchingFormsFromLexicon(final LexicalSuggestionType suggestionType,
+    private List<LexiconSuggestion> getMatchingFormsFromLexicon(final SuggestionType suggestionType,
                                                                 final String inputForm) {
         final String form = LuceneUtils.safeEscape(inputForm.trim());
 
         final EntityDoc[] results;
         if (isHebrewText(form) || GreekUtils.isGreekText(form)) {
-            results = this.definitions.search(new String[]{"accentedUnicode", "strongNumber"},
+            results = this.definitions.search(new String[]{"accentedUnicode"},
                     getSafePrefixTerm(QueryParser.escape(form)), getStrongFilter(suggestionType), TRANSLITERATION_SORT,
                     true, SearchService.MAX_SUGGESTIONS);
         } else if (isGreekOrHebrewStrong(suggestionType, form)) {
@@ -198,7 +192,7 @@ public class OriginalWordSuggestionServiceImpl implements OriginalWordSuggestion
         return query.length() > 2 ? query + '*' : query;
     }
     
-    private boolean isGreekOrHebrewStrong(final LexicalSuggestionType suggestionType, final String form) {
+    private boolean isGreekOrHebrewStrong(final SuggestionType suggestionType, final String form) {
         if (form.length() < 3) {
             return false;
         }
@@ -225,7 +219,7 @@ public class OriginalWordSuggestionServiceImpl implements OriginalWordSuggestion
         for (final TransliterationOption option : translits) {
             simplifiedTransliteration.append(SIMPLIFIED_TRANSLITERATION);
             simplifiedTransliteration.append(QueryParser.escape(option.getOption().toString()));
-            if (prefix && form.length() > 2) {
+            if (prefix) {
                 simplifiedTransliteration.append('*');
             }
             simplifiedTransliteration.append(' ');
@@ -255,7 +249,7 @@ public class OriginalWordSuggestionServiceImpl implements OriginalWordSuggestion
      * @param form           form in lower case, containing a % if appropriate
      * @return the list of suggestions
      */
-    private List<LexiconSuggestion> getMatchingAllForms(final LexicalSuggestionType suggestionType,
+    private List<LexiconSuggestion> getMatchingAllForms(final SuggestionType suggestionType,
                                                         final String form) {
         final List<LexiconSuggestion> suggestions = new ArrayList<LexiconSuggestion>();
         final EntityDoc[] results;
@@ -291,8 +285,8 @@ public class OriginalWordSuggestionServiceImpl implements OriginalWordSuggestion
      * @param suggestionType the type of suggestion
      * @return a greek or hebrew filter
      */
-    private Filter getStrongFilter(final LexicalSuggestionType suggestionType) {
-        return getFilter(suggestionType == LexicalSuggestionType.GREEK);
+    private Filter getStrongFilter(final SuggestionType suggestionType) {
+        return getFilter(suggestionType == SuggestionType.GREEK);
     }
 
     /**

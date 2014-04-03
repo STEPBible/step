@@ -43,6 +43,12 @@ import com.tyndalehouse.step.core.guice.providers.OfflineInstallersProvider;
 import com.tyndalehouse.step.core.service.*;
 import com.tyndalehouse.step.core.service.helpers.VersionResolver;
 import com.tyndalehouse.step.core.service.impl.*;
+import com.tyndalehouse.step.core.service.impl.suggestion.GreekAncientLanguageServiceImpl;
+import com.tyndalehouse.step.core.service.impl.suggestion.GreekAncientMeaningServiceImpl;
+import com.tyndalehouse.step.core.service.impl.suggestion.HebrewAncientLanguageServiceImpl;
+import com.tyndalehouse.step.core.service.impl.suggestion.HebrewAncientMeaningServiceImpl;
+import com.tyndalehouse.step.core.service.impl.suggestion.MeaningSuggestionServiceImpl;
+import com.tyndalehouse.step.core.service.impl.suggestion.SuggestionServiceImpl;
 import com.tyndalehouse.step.core.service.jsword.*;
 import com.tyndalehouse.step.core.service.jsword.impl.*;
 import com.tyndalehouse.step.core.service.search.OriginalWordSuggestionService;
@@ -91,7 +97,13 @@ public class StepCoreModule extends AbstractStepGuiceModule {
         bind(ModuleService.class).to(ModuleServiceImpl.class).asEagerSingleton();
         bind(PassageOptionsValidationService.class).to(PassageOptionsValidationServiceImpl.class).asEagerSingleton();
         bind(VersionResolver.class).asEagerSingleton();
-
+        bind(SuggestionService.class).to(SuggestionServiceImpl.class).asEagerSingleton();
+        bind(HebrewAncientMeaningServiceImpl.class).asEagerSingleton();
+        bind(GreekAncientMeaningServiceImpl.class).asEagerSingleton();
+        bind(HebrewAncientLanguageServiceImpl.class).asEagerSingleton();
+        bind(GreekAncientLanguageServiceImpl.class).asEagerSingleton();
+        bind(MeaningSuggestionServiceImpl.class).asEagerSingleton();
+        
         // others that can wait
         bind(JSwordAnalysisService.class).to(JSwordAnalysisServiceImpl.class);
         bind(AnalysisService.class).to(AnalysisServiceImpl.class);

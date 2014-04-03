@@ -1,5 +1,8 @@
 var SidebarView = Backbone.View.extend({
     initialize: function () {
+        //hide the help
+        step.util.showOrHideTutorial(true);
+            
         _.bindAll(this);
 
         //create tab container

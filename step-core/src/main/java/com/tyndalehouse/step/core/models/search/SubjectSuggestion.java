@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * @author chrisburrell
  */
-public class SubjectSuggestion {
+public class SubjectSuggestion implements PopularSuggestion {
     private String value;
     private List<SearchType> searchTypes;
 
@@ -36,5 +36,15 @@ public class SubjectSuggestion {
             searchTypes = new ArrayList<SearchType>(4);
         }
         searchTypes.add(searchType);
+    }
+
+    @Override
+    public int getPopularity() {
+        return 0;
+    }
+
+    @Override
+    public boolean isExactMatch(final String term) {
+        return term != null && term.equalsIgnoreCase(value);
     }
 }

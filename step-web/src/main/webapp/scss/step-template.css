@@ -92,7 +92,7 @@ ul .glyphicon-ok {
     .help ul {
       float: right; }
     .help button {
-      padding: 3 5 5 6;
+      padding: 3 5 3 6;
       margin-left: 10px;
       margin-right: 20px;
       font-size: 11px;
@@ -176,24 +176,33 @@ ul .glyphicon-ok {
 .select2-container {
   border: 0px !important; }
 
-.select2-results .initials {
-  font-weight: bold; }
-.select2-results .source {
-  float: right;
-  font-style: italic; }
-.select2-results .features {
-  float: right;
-  margin-right: 5px;
-  padding: 0 2;
-  font-weight: bold; }
+.select2-results {
+  -moz-column-count: 2;
+  -webkit-column-count: 2;
+  column-count: 2;
+  column-gap: 2px;
+  -moz-column-gap: 2px;
+  -webkit-column-gap: 2px; }
+  .select2-results .initials {
+    font-weight: bold; }
+  .select2-results .source {
+    float: right;
+    font-style: italic; }
+  .select2-results .features {
+    float: right;
+    margin-right: 5px;
+    padding: 0 2;
+    font-weight: bold; }
+  .select2-results .glyphicon-plus {
+    font-size: 90%; }
 
 .select-meanings {
-  background: #ffff66;
+  background: #dc9543;
   /* for non-css3 browsers */
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=lighten($color, $optionStartGradient), endColorstr=lighten($color, $optionEndGradient));
   /* for IE */
-  background-image: -webkit-linear-gradient(left, #ffff66, #ffff99) !important;
-  background: -moz-linear-gradient(left, #ffff66, #ffff99);
+  background-image: -webkit-linear-gradient(left, #dc9543, #e4ad6e) !important;
+  background: -moz-linear-gradient(left, #dc9543, #e4ad6e);
   /* for firefox 3.6+ */ }
 
 .select-version {
@@ -206,12 +215,12 @@ ul .glyphicon-ok {
   /* for firefox 3.6+ */ }
 
 .select-reference {
-  background: #e8fce8;
+  background: #a4cba4;
   /* for non-css3 browsers */
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=lighten($color, $optionStartGradient), endColorstr=lighten($color, $optionEndGradient));
   /* for IE */
-  background-image: -webkit-linear-gradient(left, #e8fce8, white) !important;
-  background: -moz-linear-gradient(left, #e8fce8, white);
+  background-image: -webkit-linear-gradient(left, #a4cba4, #c4dec4) !important;
+  background: -moz-linear-gradient(left, #a4cba4, #c4dec4);
   /* for firefox 3.6+ */ }
 
 .select-subject {
@@ -224,21 +233,21 @@ ul .glyphicon-ok {
   /* for firefox 3.6+ */ }
 
 .select-text {
-  background: #66ffff;
+  background: #bfdeff;
   /* for non-css3 browsers */
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=lighten($color, $optionStartGradient), endColorstr=lighten($color, $optionEndGradient));
   /* for IE */
-  background-image: -webkit-linear-gradient(left, #66ffff, #99ffff) !important;
-  background: -moz-linear-gradient(left, #66ffff, #99ffff);
+  background-image: -webkit-linear-gradient(left, #bfdeff, #f2f8ff) !important;
+  background: -moz-linear-gradient(left, #bfdeff, #f2f8ff);
   /* for firefox 3.6+ */ }
 
 .select-greek {
-  background: #faf7f7;
+  background: #b6aba8;
   /* for non-css3 browsers */
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=lighten($color, $optionStartGradient), endColorstr=lighten($color, $optionEndGradient));
   /* for IE */
-  background-image: -webkit-linear-gradient(left, #faf7f7, white) !important;
-  background: -moz-linear-gradient(left, #faf7f7, white);
+  background-image: -webkit-linear-gradient(left, #b6aba8, #cdc6c4) !important;
+  background: -moz-linear-gradient(left, #b6aba8, #cdc6c4);
   /* for firefox 3.6+ */ }
 
 .select-greekMeanings {
@@ -279,19 +288,7 @@ ul .glyphicon-ok {
 
 @media screen and (min-width: 768px) {
   .select2-drop-multi ul {
-    margin: 0px;
-    -moz-column-count: 2;
-    /* Firefox */
-    -webkit-column-count: 2;
-    /* Safari and Chrome */
-    column-count: 2; }
-    .select2-drop-multi ul.select2-parent-no-results {
-      -moz-column-count: 1;
-      -webkit-column-count: 1;
-      column-count: 1;
-      column-gap: 2px;
-      -moz-column-gap: 2px;
-      -webkit-column-gap: 2px; }
+    margin: 0px; }
     .select2-drop-multi ul li {
       display: inline-block;
       border-bottom: solid 1 lightgrey;
@@ -358,7 +355,7 @@ ul .glyphicon-ok {
     text-align: left; }
 
 .passageContainer.waiting {
-  background-position: 1 1; }
+  background-position: 50.5% 5; }
 
 .passageContentHolder {
   text-align: justify; }

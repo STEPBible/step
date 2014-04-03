@@ -45,6 +45,7 @@ import com.tyndalehouse.step.core.models.SearchToken;
 import com.tyndalehouse.step.core.models.search.KeyedSearchResultSearchEntry;
 import com.tyndalehouse.step.core.models.search.KeyedVerseContent;
 import com.tyndalehouse.step.core.models.search.LexicalSearchEntry;
+import com.tyndalehouse.step.core.models.search.SuggestionType;
 import com.tyndalehouse.step.core.models.search.SearchEntry;
 import com.tyndalehouse.step.core.models.search.SearchResult;
 import com.tyndalehouse.step.core.models.search.TimelineEventSearchEntry;
@@ -604,7 +605,7 @@ public class SearchServiceImpl implements SearchService {
      * @param result             the result object
      * @param lexiconDefinitions the definitions that have been included in the search
      */
-    private void setDefinitionForResults(final SearchResult result, final List<EntityDoc> lexiconDefinitions) {
+    private void setDefinitionForResults(final SearchResult result, final List<EntityDoc> lexiconDefinitions, SuggestionType suggestionType) {
         final SortedSet<LexiconSuggestion> suggestions = new TreeSet<LexiconSuggestion>(new Comparator<LexiconSuggestion>() {
 
             @Override
@@ -794,8 +795,9 @@ public class SearchServiceImpl implements SearchService {
             case ORIGINAL_HEBREW_FORMS:
                 return runAllFormsStrongSearch(sq);
             case ORIGINAL_GREEK_RELATED:
+                return runRelatedStrongSearch(sq, SuggestionType.GREEK);
             case ORIGINAL_HEBREW_RELATED:
-                return runRelatedStrongSearch(sq);
+                return runRelatedStrongSearch(sq, SuggestionType.HEBREW);
             case ORIGINAL_GREEK_EXACT:
             case ORIGINAL_HEBREW_EXACT:
                 return runExactOriginalTextSearch(sq);
@@ -849,7 +851,7 @@ public class SearchServiceImpl implements SearchService {
         final Set<String> strongs = adaptQueryForMeaningSearch(sq);
 
         final SearchResult result = runStrongTextSearch(sq, strongs);
-        setDefinitionForResults(result, sq.getDefinitions());
+        setDefinitionForResults(result, sq.getDefinitions(), SuggestionType.MEANING);
 
         // we can now use the filter and save ourselves some effort
         return result;
@@ -874,12 +876,12 @@ public class SearchServiceImpl implements SearchService {
      * @param sq the search query
      * @return the results
      */
-    private SearchResult runRelatedStrongSearch(final SearchQuery sq) {
+    private SearchResult runRelatedStrongSearch(final SearchQuery sq, SuggestionType suggestionType) {
         final Set<String> strongs = adaptQueryForRelatedStrongSearch(sq);
 
         // and then run the search
         final SearchResult result = runStrongTextSearch(sq, strongs);
-        setDefinitionForResults(result, sq.getDefinitions());
+        setDefinitionForResults(result, sq.getDefinitions(), suggestionType);
         return result;
     }
 

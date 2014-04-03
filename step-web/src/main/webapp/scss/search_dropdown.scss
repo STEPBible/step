@@ -1,5 +1,6 @@
 @import 'template_variables';
 @import 'mixins';
+@import 'multi_columns';
 
 .select2-results {
   @include multi-column(2);

@@ -176,6 +176,42 @@ ul .glyphicon-ok {
 .select2-container {
   border: 0px !important; }
 
+@media screen and (max-width: 991px) {
+  .kolumny {
+    max-height: 500;
+    overflow-y: auto;
+    overflow-x: hidden; } }
+@media screen and (min-width: 992px) {
+  .kolumny {
+    max-width: 600px;
+    -moz-column-count: 2;
+    -webkit-column-count: 2;
+    column-count: 2;
+    column-gap: 2px;
+    -moz-column-gap: 2px;
+    -webkit-column-gap: 2px;
+    overflow-y: auto;
+    overflow-x: hidden; } }
+
+@media screen and (max-width: 1120px) {
+  .miniKolumny {
+    width: 200px;
+    max-height: 500px;
+    overflow-y: auto;
+    overflow-x: hidden; } }
+@media screen and (min-width: 1121px) {
+  .miniKolumny {
+    -moz-column-count: 2;
+    -webkit-column-count: 2;
+    column-count: 2;
+    column-gap: 2px;
+    -moz-column-gap: 2px;
+    -webkit-column-gap: 2px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    max-width: 800px;
+    min-width: 500px; } }
+
 .select2-results {
   -moz-column-count: 2;
   -webkit-column-count: 2;

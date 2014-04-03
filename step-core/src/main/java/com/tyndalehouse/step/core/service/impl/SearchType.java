@@ -38,6 +38,7 @@ package com.tyndalehouse.step.core.service.impl;
  * @author chrisburrell
  */
 public enum SearchType {
+    PASSAGE(""),
     /**
      * a text search that is delegated to JSword
      */
@@ -59,6 +60,10 @@ public enum SearchType {
      * A subject related search allows one to get all subjects relating to a particular verse/book.
      */
     SUBJECT_RELATED("subject_related"),
+    /**
+     * Finds all verses that are related to another verse
+     */
+    RELATED_VERSES("verse_related"),
 
     /** A timeline description search */
     TIMELINE_DESCRIPTION("search_timeline"),
@@ -120,6 +125,13 @@ public enum SearchType {
         this.greek = isGreek;
     }
 
+    /**
+     * @return true if greek or hebrew search
+     */
+    public boolean isOriginalSearch() {
+        return this.greek != null || this == ORIGINAL_MEANING;
+    }
+    
     /**
      * Checks if is greek.
      * 

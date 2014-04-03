@@ -291,7 +291,6 @@ step.lexicon = {
 
         this.updateWordLinks(data.vocabInfos, index);
         var translit = $("[info-name='stepTransliteration']");
-        step.util.ui.markUpTransliteration(translit);
     },
 
     /**

@@ -1,0 +1,57 @@
+$header_height: 40px;
+$header_title: lightgrey;
+
+//grid points
+$gridPoints: 12;
+$stepXS: 767px;
+$stepXSBootstrap: $stepXS + 1;
+$stepMD: 991px;
+$stepLG: 1120px;
+
+
+// colours
+//active colour of panel
+$activeColor: #D74F4B;
+$topHeaderLinkColour: lightgrey;
+$dividerColor: $topHeaderLinkColour;
+$hoverColor: rgb(235, 235, 241);
+
+// scrollbar colours
+$headerBackgroundColor: black;
+$scrollColor: #991C32;
+$scrollTrack: lighten($scrollColor, 0.05);
+$scrollTrackHover: lighten($scrollColor, 0.25);
+$scrollTrackActive: lighten($scrollColor, 0.35);
+$scrollTrackBox: lighten($scrollColor, 0.1);
+$scrollTrackBoxActive: lighten($scrollColor, 0.14);
+$scrollTrackThumbShadow: lighten($scrollColor, 0.07);
+
+// colours in dropdown
+$headingColour: #991C32;
+$verseNumberBackground: #F3E5B4;
+$inactiveTabColor: black;
+
+$bibleRow: #A94A4C;
+$subjectRow: #C5707A;
+$textRow: aqua;
+$meaningsRow: yellow;
+$greekRow: #D6BAB5;
+$greekMeaningsRow: #757476;
+$hebrewRow: #55688F;
+$hebrewMeaningsRow: #684A58;
+$topicByRefRow: #e41faf;
+$referenceRow: lightgreen;
+$optionStartGradient: 20%;
+$optionEndGradient: 30%; 
+
+// Sizes and grid break points
+$smallSidebarSize: 75%;
+$sidebarOverlayMax: $stepXS;
+$sidebarWidth: 2.5;
+$defaultSidebarSize: 100% / $gridPoints * $sidebarWidth;
+$defaultColumnsSize: 100% - $defaultSidebarSize;
+
+//various paddings
+$paddingFromHeader: 4px;
+$defaultFontSize: 12px;
+$activeBorderWidth: 2px;

@@ -1,0 +1,26 @@
+@import 'template_variables';
+
+#quickLexicon {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  margin: 0 0 0 0;
+  padding: 0 4 2 4;
+  width: 100%;
+  
+  &>div {
+    background-color: $hoverColor;
+    padding: 5 5 5 5;
+  }
+  
+  h1 {
+    display: inline;
+    clear: left;
+  }
+  
+  .infoTagLine {
+    font-size: xx-small;
+    text-align: right;
+    display: block;
+  }
+}

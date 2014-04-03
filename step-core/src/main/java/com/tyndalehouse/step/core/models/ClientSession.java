@@ -32,6 +32,8 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.models;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Locale;
 
 /**
@@ -69,4 +71,11 @@ public interface ClientSession {
      * @return the servlet request parameter value
      */
     String getParam(String name);
+
+    /**
+     * Gets a multi-part attachment
+     * @param filePartName the name of the file part from which we can get the file out
+     * @return an attachment
+     */
+    InputStream getAttachment(String filePartName) throws IOException;
 }

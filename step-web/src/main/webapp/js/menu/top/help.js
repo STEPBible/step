@@ -34,5 +34,7 @@ $(step.menu).hear("MENU-HELP", function(self, menuTrigger) {
 			width: DEFAULT_POPUP_WIDTH,
 			title: "STEP :: Scripture Tools for Every Person"
 		}).dialog("widget").find(".ui-dialog-title").addClass("primaryDark");
-	}
+	} else if(menuTrigger.menuItem.name == "DISPLAY_TOOLTIPS") {
+        step.help = step.menu.toggleMenuItem(menuTrigger.menuItem);
+    }
 });

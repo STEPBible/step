@@ -1,69 +1,117 @@
 var PassageDisplayView = Backbone.View.extend({
         el: function () {
-            return $(".passageContainer").eq(this.model.get("passageId"));
+            var passageContainer = step.util.getPassageContainer(this.model.get("passageId"));
+            var passageContent = passageContainer.find(".passageContent");
+            if (passageContent.length == 0) {
+                passageContent = $('<div class="passageContent"></div>');
+                passageContainer.find(".passageText").append(passageContent);
+            }
+            return passageContent;
         },
-        initialize: function () {
-            Backbone.Events.on("passage:new:" + this.model.get("passageId"), this.render, this);
-            Backbone.Events.on("font:change:" + this.model.get("passageId"), this.handleFontSizeChange, this);
-
-            this.passageContent = this.$el.find(".passageContent");
-            step.fonts.fontButtons(this.$el, true);
-
-            $(".passageSizeButtons").buttonset();
-            $(".passageLookupButtons").buttonset();
-
-            Backbone.Events.on("window-resize", this._doChromeHack, this);
+        initialize: function (options) {
+            this.listenTo(this.model, "destroyViews", this.remove);
+            this.listenTo(this.model, "destroy-column", this.remove);
+            this.listenTo(this.model, "font:change", this.handleFontSizeChange, this);
+            this.partRendered = options.partRendered;
+            this.render();
         },
 
-        render: function (newPassage) {
-            step.util.trackAnalytics("passage", "loaded", "time", new Date().getTime() - newPassage.startTime);
+        render: function () {
+            step.util.trackAnalytics("passage", "loaded", "time", new Date().getTime() - this.model.get("startTime"));
             step.util.trackAnalytics("passage", "version", this.model.get("version"));
-            step.util.trackAnalytics("passage", "reference", newPassage.reference);
+            step.util.trackAnalytics("passage", "reference", this.model.get("reference"));
 
             //set the range attributes, silently, so as not to cause events
-            this.model.set("startRange", newPassage.startRange, {silent: true });
-            this.model.set("endRange", newPassage.endRange, {silent: true });
-            this.model.set("multipleRanges", newPassage.multipleRanges, {silent: true });
+            this.model.set("startRange", this.model.get("startRange"), {silent: true });
+            this.model.set("endRange", this.model.get("endRange"), {silent: true });
+            this.model.set("multipleRanges", this.model.get("multipleRanges"), {silent: true });
 
-
-            var passageHtml = $(newPassage.value);
+            var passageHtml;
+            if (this.partRendered) {
+                passageHtml = this.$el.find(".passageContentHolder");
+            } else {
+                passageHtml = $(this.model.get("value"));
+            }
             var passageId = this.model.get("passageId");
             var interlinearMode = this.model.get("interlinearMode");
             var extraVersions = this.model.get("extraVersions");
-            var reference = this.model.get("reference");
-            var options = this.model.get("options");
-            var version = this.model.get("version");
-            var languages = newPassage.languageCode;
-
+            var reference = this.model.get("osisId");
+            var options = this.model.get("selectedOptions") || [];
+            var version = this.model.get("masterVersion");
+            var languages = this.model.get("languageCode");
+            var passageContainer = this.$el.closest(".passageContainer");
             if (this._isPassageValid(passageHtml, reference)) {
+                passageContainer.find(".resultsLabel").html("");
+                this._warnIfNoStrongs(version);
                 this._doFonts(passageHtml, options, interlinearMode, languages);
                 this._doInlineNotes(passageHtml, passageId);
                 this._doSideNotes(passageHtml, passageId, version);
                 this._doNonInlineNotes(passageHtml);
-
                 this._doVerseNumbers(passageId, passageHtml, options, interlinearMode, version);
-//        self.doStats(passageId, passageContent, lookupVersion, text.reference);
                 this._doHideEmptyNotesPane(passageHtml);
                 this._adjustTextAlignment(passageHtml);
-                step.fonts.redoTextSize(passageId, passageHtml);
-                this._addStrongHandlers(passageId, passageHtml);
-                this._doDuplicateNotice(passageId, passageHtml);
+                step.util.restoreFontSize(this.model, passageHtml);
+//TODO:                step.fonts.redoTextSize(passageId, passageHtml);
+                TODO:                this._addStrongHandlers(passageId, passageHtml);
+//TODO:                this._doDuplicateNotice(passageId, passageHtml);
                 this._updatePageTitle(passageId, passageHtml, version, reference);
-                this._doTransliterations(passageHtml);
                 this._doInterlinearDividers(passageHtml);
-                this._doVersions(passageId, passageHtml, version, reference);
-                this._doAnalysisButton(passageId, passageHtml, interlinearMode);
-                this._doSocial();
-                step.util.closeInfoErrors(passageId);
-                step.util.ui.emptyOffDomAndPopulate(this.passageContent, passageHtml);
+//TODO:                this._doVersions(passageId, passageHtml, version, reference);
+
+                if (!this.partRendered) {
+                    step.util.ui.emptyOffDomAndPopulate(this.$el, passageHtml);
+                }
 
                 //needs to happen after appending to DOM
                 this._doChromeHack(undefined, passageHtml, interlinearMode, options);
                 this.doInterlinearVerseNumbers(passageHtml, interlinearMode, options);
-                Backbone.Events.trigger("passage:rendered:" + passageId);
+                this.scrollToTargetLocation(passageContainer);
             }
         },
+        scrollToTargetLocation: function (passageContainer) {
+            //get current column target data
+            var column = passageContainer.closest(".column");
+//            var passageContent = passageContainer.find(".passageContent");
+            var currentTarget = this.model.get("targetLocation");
+            if (currentTarget) {
+                var link = passageContainer.find("[name='" + currentTarget + "']");
+                var linkOffset = link.offset();
+                var scroll = linkOffset == undefined ? 0 : linkOffset.top + passageContainer.scrollTop();
 
+                var originalScrollTop = -100;
+                passageContainer.animate({
+                    scrollTop: originalScrollTop + scroll
+                }, 500);
+                
+                $(link).closest(".verse").addClass("secondaryBackground");
+
+                //also do so if we are looking at an interlinear-ed version
+                $(link).closest(".interlinear").find("*").addClass("secondaryBackground");
+
+                //reset the data attribute
+                this.model.save({ targetLocation: null }, { silent: true });
+            }
+        },
+        _warnIfNoStrongs: function (masterVersion) {
+            if (!step.keyedVersions) {
+                //for some reason we have no versions
+                console.warn("No versions have been loaded.")
+                return;
+            }
+
+            if (step.keyedVersions[masterVersion].hasStrongs) {
+                return false;
+            }
+
+            var warnings = step.settings.get("noStrongWarnings") || {};
+            if (!warnings[masterVersion]) {
+                step.util.raiseInfo(__s.error_warn_if_no_strongs);
+                warnings[masterVersion] = true;
+                step.settings.save({
+                    noStrongWarnings: warnings
+                });
+            }
+        },
         //Can be removed when/if Chrome fixes this
         _doChromeHack: function (eventName, passageHtml, interlinearMode, options) {
             //only applies to Chrome
@@ -72,7 +120,7 @@ var PassageDisplayView = Backbone.View.extend({
             }
 
             if (!passageHtml) {
-                passageHtml = this.passageContent;
+                passageHtml = this.$el;
             }
 
             if (!interlinearMode) {
@@ -113,38 +161,6 @@ var PassageDisplayView = Backbone.View.extend({
                 previousElementOffset = elementOffset;
             }
         },
-
-        _doAnalysisButton: function (passageId, passageHtml, interlinearMode) {
-            var analysisButton = $("<span></span>");
-            analysisButton.prepend(__s.stats_analysis_button).addClass("analysisButton");
-
-            analysisButton.button({ text: true });
-
-            switch (interlinearMode) {
-                case "NONE":
-                    passageHtml.find("h2:first").append(analysisButton);
-                    break;
-                case "INTERLINEAR":
-                    analysisButton.insertBefore(passageHtml.find(".interlinear:first"));
-                    break;
-                case "INTERLEAVED":
-                case "INTERLEAVED_COMPARE":
-                    analysisButton.insertBefore(passageHtml.find(".verseGrouping:first"));
-                    break;
-                case "COLUMN":
-                case "COLUMN_COMPARE":
-                    analysisButton.insertBefore(passageHtml.find("table:first"));
-                    break;
-                default:
-                    console.log("Unable to ascertain where to put Analysis button - omitting");
-                    return;
-            }
-            analysisButton.click(function () {
-                step.lexicon.wordleView.passageId = passageId;
-                lexiconDefinition.reposition(step.defaults.infoPopup.wordleTab);
-            });
-        },
-
         _doDuplicateNotice: function (passageId, passageHtml) {
             var notices = $(".versification-notice", passageHtml);
             for (var ii = 0; ii < notices.length; ii++) {
@@ -155,10 +171,6 @@ var PassageDisplayView = Backbone.View.extend({
                     notice.css("float", "left");
                 }
             }
-        },
-
-        _doSocial: function () {
-            step.util.ui.doSocialButtons(this.$el.find(".passageToolbarContainer"));
         },
 
         _doInterlinearDividers: function (passageContent) {
@@ -227,7 +239,7 @@ var PassageDisplayView = Backbone.View.extend({
             if (passageHtml.find(":not(.xgen):first").length == 0) {
                 var message = sprintf(__s.error_bible_doesn_t_have_passage, reference);
                 var errorMessage = $("<span>").addClass("notApplicable").html(message);
-                this.passageContent.html(errorMessage);
+                this.$el.html(errorMessage);
                 return false;
             }
             return true;
@@ -248,40 +260,30 @@ var PassageDisplayView = Backbone.View.extend({
                 var item = notes.get(i);
                 var link = $("a", item);
                 var note = $(".inlineNote", item);
-
-                link.attr("title", note.html());
+                this._doInlineNoteQtip(link, note);
+            }
+        },
+        _doInlineNoteQtip: function (link, note) {
+            link.attr("title", note.html());
+            require(["qtip"], function () {
                 link.qtip({
                     position: {
-                        my: "center " + myPosition,
-                        at: "center " + atPosition
+                        my: "top left",
+                        at: "top left"
                     },
-                    style: { classes: "visibleInlineNote" },
+                    style: { classes: "visibleInlineNote", tip: false },
                     events: {
                         show: function () {
                             var qtipApi = $(this).qtip("api");
                             var qtipOffset = qtipApi.elements.target.offset();
-                            var yPosition = qtipOffset.top;
-                            var centerPane = $("#centerPane");
-                            var xPosition = centerPane.offset().left;
-
-                            if (xPosition == 0) {
-                                //most likely in 2 column view, so attempt to place on the same axis as
-                                //where we currently are...
-                                xPosition = $(".leftColumn").width();
-                            }
-
-
-                            if (passageId == 1) {
-                                xPosition += centerPane.width();
-                            }
-
                             var currentPosition = $(this).qtip("option", "position");
-                            currentPosition.target = [xPosition, yPosition];
+                            currentPosition.target = [0, 0];
                         }
                     }
                 });
-            }
+            });
         },
+
 
         /**
          * Sets up qtip on all side notes
@@ -308,6 +310,29 @@ var PassageDisplayView = Backbone.View.extend({
             }
         },
 
+        keepNotesInSync: function (passageContent) {
+            var currentHeight = passageContent.height();
+            passageContent.find(".notesPane").height(currentHeight);
+            $(passageContent).on('scroll', function () {
+                //find top verse - 1.
+                var allVerses = $(".verse", passageContent);
+                var lastVerse = undefined;
+                for (var ii = 0; ii < allVerses.length; ii++) {
+                    var currentVerse = $(allVerses[ii]);
+                    var versePosition = currentVerse.position().top;
+                    if (top >= 0) {
+                        break;
+                    }
+                    lastVerse = currentVerse;
+                }
+
+                if (lastVerse == undefined) {
+                    passageContent.find(".notesPane").scrollTop(0);
+                } else {
+
+                }
+            });
+        },
 
         /**
          * Creates a QTIP for a particular xref
@@ -319,8 +344,16 @@ var PassageDisplayView = Backbone.View.extend({
          * @private
          */
         _makeSideNoteQtip: function (item, xref, myPosition, atPosition, version) {
-            item.mouseover(function () {
-                if(!$.data(item, "initialised")) {
+            var self = this;
+            item.on("mouseover", function () {
+                self._makeSideNoteQtipHandler(item, xref, myPosition, atPosition, version, false);
+            }).on("touchstart", function () {
+                self._makeSideNoteQtipHandler(item, xref, myPosition, atPosition, version, true);
+            });
+        },
+        _makeSideNoteQtipHandler: function (item, xref, myPosition, atPosition, version, touch) {
+            if (!$.data(item, "initialised")) {
+                require(["qtip", "drag"], function () {
                     item.qtip({
                         position: { my: "top " + myPosition, at: "top " + atPosition, viewport: $(window) },
                         style: { tip: false, classes: 'draggable-tooltip', width: { min: 800, max: 800} },
@@ -336,32 +369,39 @@ var PassageDisplayView = Backbone.View.extend({
                         },
                         events: {
                             render: function (event, api) {
-                                $(this).draggable({
-                                    containment: 'window',
-                                    handle: api.elements.titlebar
-                                });
-    
                                 $(api.elements.titlebar).css("padding-right", "0px");
-    
-                                $(api.elements.titlebar).prepend(goToPassageArrowButton(true, version, xref, "leftPassagePreview"));
-                                $(api.elements.titlebar).prepend(goToPassageArrowButton(false, version, xref, "rightPassagePreview"));
-                                $(api.elements.titlebar).prepend($("<a>&nbsp;</a>").button({ icons: { primary: "ui-icon-close" }}).addClass("closePassagePreview").click(function () {
+                                $(api.elements.titlebar).prepend($('<button type="button" class="close" aria-hidden="true">&times;</button>').click(function () {
                                     api.hide();
                                 }));
-    
-                                $(".leftPassagePreview, .rightPassagePreview", api.elements.titlebar)
-                                    .first().button({ icons: { primary: "ui-icon-arrowthick-1-e" }})
-                                    .next().button({ icons: { primary: "ui-icon-arrowthick-1-w" }}).end()
-                                    .click(function () {
-                                        api.hide();
-                                    });
+
+//                                    $(api.elements.titlebar).prepend(goToPassageArrowButton(true, version, xref, "leftPassagePreview"));
+//                                    $(api.elements.titlebar).prepend(goToPassageArrowButton(false, version, xref, "rightPassagePreview"));
+
+//                                    $(".leftPassagePreview, .rightPassagePreview", api.elements.titlebar)
+//                                        .first().button({ icons: { primary: "ui-icon-arrowthick-1-e" }})
+//                                        .next().button({ icons: { primary: "ui-icon-arrowthick-1-w" }}).end()
+//                                        .click(function () {
+//                                            api.hide();
+//                                        });
+                            },
+                            visible: function (event, api) {
+                                var tooltip = api.elements.tooltip;
+                                var selector = touch ? ".qtip-title" : ".qtip-titlebar";
+                                if (touch) {
+                                    tooltip.find(".qtip-title").css("width", "90%");
+                                }
+                                new Draggabilly($(tooltip).get(0), {
+                                    containment: 'body',
+                                    handle: selector
+                                });
                             }
                         }
                     });
                     //set to initialized
                     $.data(item, "initialised", true);
-                }
-            });
+
+                });
+            }
         },
 
         /**
@@ -383,21 +423,31 @@ var PassageDisplayView = Backbone.View.extend({
          * @private
          */
         _doHighlightNoteInPane: function (passageContent, link) {
+            var self = this;
             var inlineLink = $(".notesPane strong", passageContent).filter(function () {
                 return $(this).text() == link.text();
-            }).closest(".margin"); 
-            
-            $(link).hover(function () {
-                inlineLink.addClass("ui-state-highlight");
-            }, function () {
-                inlineLink.removeClass("ui-state-highlight");
-            });
+            }).closest(".margin");
 
-            $(inlineLink).hover(function () {
-                link.addClass("inlineNoteHighlight");
-            }, function () {
-                link.removeClass("inlineNoteHighlight");
+            var links = $(inlineLink).add(link);
+
+            $(links).hover(function () {
+                    self._highlightBothLinks(links);
+                },
+                function () {
+                    self._unhighlighBothLinks(links);
+                });
+            $(links).on("touchstart", function () {
+                self._highlightBothLinks(links);
             });
+            $(links).on("touchend", function () {
+                self._unhighlighBothLinks(links)
+            });
+        },
+        _highlightBothLinks: function (links) {
+            links.addClass("secondaryBackground");
+        },
+        _unhighlighBothLinks: function (links) {
+            links.removeClass("secondaryBackground");
         },
 
         /**
@@ -455,18 +505,6 @@ var PassageDisplayView = Backbone.View.extend({
         },
 
         /**
-         * Change the transliterations and format them
-         * @param passageContent
-         * @private
-         */
-        _doTransliterations: function (passageContent) {
-            var transliterations = $(".stepTransliteration", passageContent);
-            for (var i = 0; i < transliterations.length; i++) {
-                step.util.ui.markUpTransliteration(transliterations.eq(i));
-            }
-        },
-
-        /**
          * Estimates the height of each block in an interlinear like way
          * @param individualBlocks each individual block in an interlinear.
          * @returns {Array}
@@ -510,7 +548,7 @@ var PassageDisplayView = Backbone.View.extend({
 
         handleFontSizeChange: function () {
             this.doInterlinearVerseNumbers(
-                this.$el.find(".passageContent"),
+                this.$el,
                 this.model.get("interlinearMode"),
                 this.model.get("options"));
         },

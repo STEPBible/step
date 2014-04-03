@@ -32,40 +32,29 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.service.jsword.helpers;
 
-import static org.crosswire.jsword.book.OSISUtil.OSIS_ELEMENT_VERSE;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.SortedSet;
-import java.util.TreeMap;
-import java.util.TreeSet;
-
+import com.tyndalehouse.step.core.data.EntityDoc;
+import com.tyndalehouse.step.core.data.EntityIndexReader;
+import com.tyndalehouse.step.core.data.EntityManager;
+import com.tyndalehouse.step.core.exceptions.StepInternalException;
+import com.tyndalehouse.step.core.models.LexiconSuggestion;
+import com.tyndalehouse.step.core.models.search.BookAndBibleCount;
+import com.tyndalehouse.step.core.models.search.StrongCountsAndSubjects;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import com.tyndalehouse.step.core.service.jsword.JSwordSearchService;
+import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
+import com.tyndalehouse.step.core.utils.JSwordUtils;
 import com.tyndalehouse.step.core.utils.SortingUtils;
+import com.tyndalehouse.step.core.utils.StringConversionUtils;
 import com.tyndalehouse.step.core.utils.StringUtils;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.index.TermDocs;
-import org.apache.lucene.search.BooleanClause.Occur;
-import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.ScoreDoc;
-import org.apache.lucene.search.TermQuery;
-import org.apache.lucene.search.TopDocs;
-import org.apache.lucene.search.TopScoreDocCollector;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.BookData;
 import org.crosswire.jsword.book.BookException;
 import org.crosswire.jsword.book.Books;
 import org.crosswire.jsword.book.OSISUtil;
-import org.crosswire.jsword.index.Index;
-import org.crosswire.jsword.index.IndexManager;
-import org.crosswire.jsword.index.IndexManagerFactory;
 import org.crosswire.jsword.index.lucene.LuceneIndex;
 import org.crosswire.jsword.passage.Key;
 import org.crosswire.jsword.passage.NoSuchKeyException;
@@ -74,18 +63,16 @@ import org.crosswire.jsword.versification.Testament;
 import org.crosswire.jsword.versification.Versification;
 import org.crosswire.jsword.versification.VersificationsMapper;
 import org.jdom2.Element;
-import org.jdom2.filter.ElementFilter;
 import org.slf4j.Logger;
 
-import com.tyndalehouse.step.core.data.EntityDoc;
-import com.tyndalehouse.step.core.data.EntityIndexReader;
-import com.tyndalehouse.step.core.data.EntityManager;
-import com.tyndalehouse.step.core.exceptions.StepInternalException;
-import com.tyndalehouse.step.core.models.LexiconSuggestion;
-import com.tyndalehouse.step.core.models.search.BookAndBibleCount;
-import com.tyndalehouse.step.core.models.search.StrongCountsAndSubjects;
-import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
-import com.tyndalehouse.step.core.utils.StringConversionUtils;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.SortedSet;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 /**
  * Provides each strong number given a verse.
@@ -97,14 +84,12 @@ import com.tyndalehouse.step.core.utils.StringConversionUtils;
  */
 public class JSwordStrongNumberHelper {
     private static final Logger LOG = org.slf4j.LoggerFactory.getLogger(JSwordStrongNumberHelper.class);
-    private static final int SIGNIFICANT_CUT_OFF = 200;
     private static final Book STRONG_REF_VERSION_BOOK = Books.installed().getBook(JSwordPassageService.REFERENCE_BOOK);
     private final JSwordVersificationService versification;
     private final JSwordSearchService jSwordSearchService;
     private static volatile Versification v11n;
     private Map<String, SortedSet<LexiconSuggestion>> verseStrongs;
     private Map<String, BookAndBibleCount> allStrongs;
-    private Map<String, List<String>> relatedVerses;
     private boolean isOT;
     private final EntityIndexReader definitions;
     private final Verse reference;
@@ -147,7 +132,7 @@ public class JSwordStrongNumberHelper {
             this.verseStrongs = new TreeMap<String, SortedSet<LexiconSuggestion>>();
             this.allStrongs = new HashMap<String, BookAndBibleCount>(256);
 
-            final List<Element> elements = getOsisElements(key);
+            final List<Element> elements = JSwordUtils.getOsisElements(new BookData(STRONG_REF_VERSION_BOOK, key));
 
             for (final Element e : elements) {
 
@@ -255,77 +240,18 @@ public class JSwordStrongNumberHelper {
         this.verseStrongs.put(verseRef, verseSuggestions);
     }
 
-    /**
-     * Gets the osis elements.
-     *
-     * @param key the key
-     * @return the osis elements
-     * @throws NoSuchKeyException the no such key exception
-     * @throws BookException      the book exception
-     */
-    @SuppressWarnings({"unchecked", "serial"})
-    private List<Element> getOsisElements(final Key key) throws NoSuchKeyException, BookException {
-        final BookData data = new BookData(STRONG_REF_VERSION_BOOK, key);
-        return data.getOsisFragment().getContent(
-                new ElementFilter(OSIS_ELEMENT_VERSE));
-    }
+
 
     /**
      * @return the verseStrongs
      */
     public StrongCountsAndSubjects getVerseStrongs() {
         calculateCounts();
-        findRelatedVerses();
 
         final StrongCountsAndSubjects sac = new StrongCountsAndSubjects();
         sac.setCounts(this.allStrongs);
         sac.setStrongData(this.verseStrongs);
         sac.setOT(this.isOT);
-        sac.setSignificantlyRelatedVerses(this.relatedVerses);
         return sac;
-    }
-
-    /**
-     * Gets the related verses.
-     */
-    private void findRelatedVerses() {
-        this.relatedVerses = new HashMap<String, List<String>>(this.verseStrongs.size() * 2);
-        final IndexSearcher is = jSwordSearchService.getIndexSearcher(JSwordPassageService.REFERENCE_BOOK);
-
-        // for each verse
-        for (final Entry<String, SortedSet<LexiconSuggestion>> verseEntry : this.verseStrongs.entrySet()) {
-            // we're going to make a Lucene query to look for at least 2 of the strong numbers
-            final BooleanQuery bq = new BooleanQuery();
-            bq.setMinimumNumberShouldMatch(2);
-
-            final SortedSet<LexiconSuggestion> strongs = verseEntry.getValue();
-            for (final LexiconSuggestion sugg : strongs) {
-                final String strongNumber = sugg.getStrongNumber();
-                if (this.allStrongs.get(strongNumber).getBible() < SIGNIFICANT_CUT_OFF) {
-                    bq.add(new TermQuery(new Term(LuceneIndex.FIELD_STRONG, strongNumber)), Occur.SHOULD);
-                }
-            }
-
-            try {
-                final TopScoreDocCollector collector = TopScoreDocCollector.create(30, true);
-                is.search(bq, collector);
-
-                final TopDocs topDocs = collector.topDocs();
-                final ScoreDoc[] scoreDocs = topDocs.scoreDocs;
-                final List<String> verses = new ArrayList<String>(16);
-                for (int ii = 0; ii < scoreDocs.length; ii++) {
-                    final String potentialVerse = is.doc(scoreDocs[ii].doc).get(LuceneIndex.FIELD_KEY);
-                    if (!potentialVerse.equals(verseEntry.getKey())) {
-                        verses.add(potentialVerse);
-                    }
-                }
-
-                if (verses.size() != 0) {
-                    this.relatedVerses.put(verseEntry.getKey(), verses);
-                }
-            } catch (final IOException e) {
-                LOG.error("Unable to carry out search", e);
-            }
-        }
     }
 }

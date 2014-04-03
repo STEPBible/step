@@ -45,8 +45,6 @@ public class StrongCountsAndSubjects {
     private Map<String, SortedSet<LexiconSuggestion>> strongData;
     private Map<String, BookAndBibleCount> counts;
     private boolean ot;
-    private Map<String, List<String>> significantlyRelatedVerses;
-    private Map<String, SearchResult> relatedSubjects;
 
     /**
      * Sets the counts.
@@ -81,13 +79,6 @@ public class StrongCountsAndSubjects {
     }
 
     /**
-     * @param significantlyRelatedVerses the significantlyRelatedVerses to set
-     */
-    public void setSignificantlyRelatedVerses(final Map<String, List<String>> significantlyRelatedVerses) {
-        this.significantlyRelatedVerses = significantlyRelatedVerses;
-    }
-
-    /**
      * @return the ot
      */
     public boolean isOt() {
@@ -99,28 +90,5 @@ public class StrongCountsAndSubjects {
      */
     public void setOT(final boolean otValue) {
         this.ot = otValue;
-    }
-
-    /**
-     * @return the significantlyRelatedVerses
-     */
-    public Map<String, List<String>> getSignificantlyRelatedVerses() {
-        return this.significantlyRelatedVerses;
-    }
-
-    /**
-     * Sets the related subjects.
-     * 
-     * @param versesToSubjects the verses to subjects
-     */
-    public void setRelatedSubjects(final Map<String, SearchResult> versesToSubjects) {
-        this.relatedSubjects = versesToSubjects;
-    }
-
-    /**
-     * @return the relatedSubjects
-     */
-    public Map<String, SearchResult> getRelatedSubjects() {
-        return this.relatedSubjects;
     }
 }

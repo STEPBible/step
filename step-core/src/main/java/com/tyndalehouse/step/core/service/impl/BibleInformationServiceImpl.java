@@ -34,27 +34,19 @@ package com.tyndalehouse.step.core.service.impl;
 
 import static com.tyndalehouse.step.core.models.InterlinearMode.INTERLINEAR;
 import static com.tyndalehouse.step.core.models.InterlinearMode.NONE;
-import static com.tyndalehouse.step.core.models.LookupOption.ENGLISH_VOCAB;
-import static com.tyndalehouse.step.core.models.LookupOption.GREEK_VOCAB;
-import static com.tyndalehouse.step.core.models.LookupOption.HEADINGS;
-import static com.tyndalehouse.step.core.models.LookupOption.MORPHOLOGY;
-import static com.tyndalehouse.step.core.models.LookupOption.NOTES;
-import static com.tyndalehouse.step.core.models.LookupOption.TRANSLITERATION;
-import static com.tyndalehouse.step.core.models.LookupOption.VERSE_NUMBERS;
 import static com.tyndalehouse.step.core.utils.JSwordUtils.getSortedSerialisableList;
-import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
 import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
 
 import java.util.*;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.inject.Provider;
 import javax.inject.Singleton;
 
 import com.tyndalehouse.step.core.data.DirectoryInstaller;
 import com.tyndalehouse.step.core.data.StepHttpSwordInstaller;
 import com.tyndalehouse.step.core.models.*;
+import com.tyndalehouse.step.core.service.PassageOptionsValidationService;
 import com.tyndalehouse.step.core.service.jsword.*;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.BookCategory;
@@ -82,11 +74,11 @@ public class BibleInformationServiceImpl implements BibleInformationService {
     private static final String VERSION_SEPARATOR = ",";
     private static final Logger LOGGER = LoggerFactory.getLogger(BibleInformationServiceImpl.class);
     private final List<String> defaultVersions;
+    private final PassageOptionsValidationService optionsValidationService;
     private final JSwordPassageService jswordPassage;
     private final JSwordModuleService jswordModule;
     private final JSwordMetadataService jswordMetadata;
     private final JSwordSearchService jswordSearch;
-    private final Provider<ClientSession> clientSessionProvider;
     private final EntityManager entityManager;
     private final JSwordVersificationService jswordVersification;
     private final SubjectSearchService subjectSearchService;
@@ -95,28 +87,28 @@ public class BibleInformationServiceImpl implements BibleInformationService {
     /**
      * The bible information service, retrieving content and meta data.
      *
-     * @param defaultVersions       a list of the default versions that should be installed
-     * @param jswordPassage         the jsword service
-     * @param jswordModule          provides information and handles information relating to module installation, etc.
-     * @param jswordMetadata        provides metadata on jsword modules
+     * @param defaultVersions      a list of the default versions that should be installed
+     * @param jswordPassage        the jsword service
+     * @param jswordModule         provides information and handles information relating to module installation, etc.
+     * @param jswordMetadata       provides metadata on jsword modules
      * @param jswordSearch
-     * @param clientSessionProvider the client session provider
-     * @param entityManager         the entity manager
-     * @param jswordVersification   the jsword versification
-     * @param subjectSearchService  the subject search service
+     * @param entityManager        the entity manager
+     * @param jswordVersification  the jsword versification
+     * @param subjectSearchService the subject search service
      */
     @Inject
     public BibleInformationServiceImpl(@Named("defaultVersions") final List<String> defaultVersions,
+                                       final PassageOptionsValidationService optionsValidationService,
                                        final JSwordPassageService jswordPassage, final JSwordModuleService jswordModule,
-                                       final JSwordMetadataService jswordMetadata, final JSwordSearchService jswordSearch, final Provider<ClientSession> clientSessionProvider,
+                                       final JSwordMetadataService jswordMetadata, final JSwordSearchService jswordSearch,
                                        final EntityManager entityManager, final JSwordVersificationService jswordVersification,
                                        final SubjectSearchService subjectSearchService, final VersionResolver resolver) {
+        this.optionsValidationService = optionsValidationService;
         this.jswordPassage = jswordPassage;
         this.defaultVersions = defaultVersions;
         this.jswordModule = jswordModule;
         this.jswordMetadata = jswordMetadata;
         this.jswordSearch = jswordSearch;
-        this.clientSessionProvider = clientSessionProvider;
         this.entityManager = entityManager;
         this.jswordVersification = jswordVersification;
         this.subjectSearchService = subjectSearchService;
@@ -154,10 +146,10 @@ public class BibleInformationServiceImpl implements BibleInformationService {
     public OsisWrapper getPassageText(final String version, final int startVerseId, final int endVerseId,
                                       final String options, final String interlinearVersion, final Boolean roundUp) {
         final List<String> extraVersions = getExtraVersionsFromString(interlinearVersion);
-        final List<LookupOption> lookupOptions = trim(getLookupOptions(options), version, 
+        final Set<LookupOption> lookupOptions = this.optionsValidationService.trim(this.optionsValidationService.getLookupOptions(options), version,
                 extraVersions, InterlinearMode.NONE, null);
         final OsisWrapper passage = this.jswordPassage.getOsisTextByVerseNumbers(version, version,
-                startVerseId, endVerseId, lookupOptions, interlinearVersion, roundUp, false);
+                startVerseId, endVerseId, new ArrayList<LookupOption>(lookupOptions), interlinearVersion, roundUp, false);
         return passage;
     }
 
@@ -171,28 +163,54 @@ public class BibleInformationServiceImpl implements BibleInformationService {
      * @param interlinearMode    the interlinear mode
      * @return the passage text
      */
+    //TODO: this could be optimized. last call to get options is very  similar to 'getLookupOptions'
+    // as they share some of the same stuff.
     @Override
     public OsisWrapper getPassageText(final String version, final String reference, final String options,
                                       final String interlinearVersion, final String interlinearMode) {
 
-        final InterlinearMode desiredModeOfDisplay = getDisplayMode(interlinearMode);
         final List<String> extraVersions = getExtraVersionsFromString(interlinearVersion);
+        final InterlinearMode desiredModeOfDisplay = this.optionsValidationService.getDisplayMode(interlinearMode, version, extraVersions);
 
         OsisWrapper passageText;
-        final List<LookupOption> lookupOptions = trim(getLookupOptions(options), version, extraVersions,
-                desiredModeOfDisplay, null);
+        final List<TrimmedLookupOption> removedOptions = new ArrayList<TrimmedLookupOption>(4);
+        final Set<LookupOption> lookupOptions = this.optionsValidationService.trim(this.optionsValidationService.getLookupOptions(options), version, extraVersions,
+                desiredModeOfDisplay, removedOptions);
+
         if (INTERLINEAR != desiredModeOfDisplay && NONE != desiredModeOfDisplay) {
             // split the versions
             final String[] versions = getInterleavedVersions(version, interlinearVersion);
-            passageText = this.jswordPassage.getInterleavedVersions(versions, reference, lookupOptions,
+            passageText = this.jswordPassage.getInterleavedVersions(versions, reference, new ArrayList<LookupOption>(lookupOptions),
                     desiredModeOfDisplay);
-            return passageText;
         } else {
-            passageText = this.jswordPassage.getOsisText(version, reference, lookupOptions,
+            passageText = this.jswordPassage.getOsisText(version, reference, new ArrayList<LookupOption>(lookupOptions),
                     interlinearVersion, desiredModeOfDisplay);
         }
+        passageText.setRemovedOptions(removedOptions);
+        passageText.setPreviousChapter(this.jswordPassage.getSiblingChapter(reference, version, true));
+        passageText.setNextChapter(this.jswordPassage.getSiblingChapter(reference, version, false));
+        passageText.setOptions(this.optionsValidationService.optionsToString(
+                this.optionsValidationService.getAvailableFeaturesForVersion(version, extraVersions, interlinearMode).getOptions()));
+        
+        //the passage lookup wasn't made with the removed options, however, the client needs to think these were selected.
+        passageText.setSelectedOptions(this.optionsValidationService.optionsToString(lookupOptions) + getRemovedOptions(removedOptions));
         return passageText;
     }
+
+    /**
+     * Gets the removed option lookup options and returns their representation.
+     *
+     * @param removedOptions a set of options that were removed
+     * @return
+     */
+    private String getRemovedOptions(final List<TrimmedLookupOption> removedOptions) {
+        List<LookupOption> options = new ArrayList<LookupOption>(removedOptions.size());
+        for (TrimmedLookupOption o : removedOptions) {
+            options.add(o.getOption());
+        }
+        return this.optionsValidationService.optionsToString(options);
+    }
+
 
     @Override
     public String getPlainText(final String version, final String reference, final boolean firstVerseOnly) {
@@ -206,24 +224,12 @@ public class BibleInformationServiceImpl implements BibleInformationService {
         try {
             key = VerseFactory.fromString(this.jswordVersification.getVersificationForVersion(version), reference);
         } catch (NoSuchKeyException e) {
-            LOGGER.error("Unable to look up strongs for [{}]", key.getOsisID(), e);
+            LOGGER.error("Unable to look up strongs for [{}]", reference, e);
             return new StrongCountsAndSubjects();
         }
 
-        final StrongCountsAndSubjects verseStrongs = new JSwordStrongNumberHelper(this.entityManager,
+        return new JSwordStrongNumberHelper(this.entityManager,
                 key, this.jswordVersification, this.jswordSearch).getVerseStrongs();
-
-        final Set<String> osisIds = verseStrongs.getStrongData().keySet();
-        final Map<String, SearchResult> versesToSubjects = new HashMap<String, SearchResult>(osisIds.size());
-        for (final String ref : osisIds) {
-            final SearchResult subjects = this.subjectSearchService.searchByReference(ref);
-            if (subjects.getTotal() != 0) {
-                versesToSubjects.put(ref, subjects);
-            }
-        }
-
-        verseStrongs.setRelatedSubjects(versesToSubjects);
-        return verseStrongs;
     }
 
     @Override
@@ -231,13 +237,6 @@ public class BibleInformationServiceImpl implements BibleInformationService {
         return jswordVersification.convertReference(reference, sourceVersion, targetVersion);
     }
 
-    /**
-     * @param interlinearMode a selected interlinear mode
-     * @return returns NONE if null, or the value of String as a InterlinearMode enumeration.
-     */
-    private InterlinearMode getDisplayMode(final String interlinearMode) {
-        return isBlank(interlinearMode) ? NONE : InterlinearMode.valueOf(interlinearMode);
-    }
 
     /**
      * Joins version with interlinear version and returns an upper case array
@@ -257,202 +256,6 @@ public class BibleInformationServiceImpl implements BibleInformationService {
         return versions;
     }
 
-    /**
-     * Translates the options provided over the HTTP interface to something palatable by the service layer
-     *
-     * @param options the list of options, comma-separated.
-     * @return a list of {@link LookupOption}
-     */
-    private List<LookupOption> getLookupOptions(final String options) {
-        final List<LookupOption> lookupOptions = new ArrayList<LookupOption>();
-
-        if (isBlank(options)) {
-            return lookupOptions;
-        }
-
-        for (int ii = 0; ii < options.length(); ii++) {
-            lookupOptions.add(LookupOption.fromUiOption(options.charAt(ii)));
-        }
-        return lookupOptions;
-    }
-
-    /**
-     * Trims the options down to what is supported by the version.
-     *
-     * @param options              the options
-     * @param version              the version that is being selected
-     * @param extraVersions        the secondary selected versions
-     * @param mode                 the display mode, because we remove some options depending on what is selected
-     * @param trimmingExplanations can be null, if provided then it is populated with the reasons why an
-     *                             option has been removed. If trimmingExplanations is not null, then it is assume that we do
-     *                             not want to rewrite the displayMode
-     * @return a new list of options where both list have been intersected.
-     */
-    private List<LookupOption> trim(final List<LookupOption> options, final String version, List<String> extraVersions,
-                                    final InterlinearMode mode, final List<TrimmedLookupOption> trimmingExplanations) {
-        // obtain error messages
-        final ResourceBundle errors = ResourceBundle.getBundle("ErrorBundle", this.clientSessionProvider
-                .get().getLocale());
-
-        if (options.isEmpty()) {
-            return options;
-        }
-
-        final List<LookupOption> result = getUserOptionsForVersion(errors, options, version, extraVersions, trimmingExplanations);
-
-        // if we're not explaining why features aren't available, we don't overwrite the display mode
-        final InterlinearMode displayMode = determineDisplayMode(options, mode, trimmingExplanations);
-
-        // now trim further depending on modes required:
-        switch (displayMode) {
-            case COLUMN:
-            case COLUMN_COMPARE:
-            case INTERLEAVED:
-            case INTERLEAVED_COMPARE:
-                removeInterleavingOptions(errors, trimmingExplanations, result, !mode.equals(displayMode));
-                break;
-            case INTERLINEAR:
-                explainRemove(errors, NOTES, result, trimmingExplanations, !mode.equals(displayMode),
-                        errors.getString("option_not_available_interlinear"));
-                result.add(LookupOption.VERSE_NEW_LINE);
-                break;
-            case NONE:
-                break;
-            default:
-                break;
-        }
-
-        return result;
-    }
-
-    /**
-     * Determine display mode, if there are no explanations, display mode is NONE and there are interlinear
-     * options, then mode gets override to INTERLINEAR
-     *
-     * @param options              the options
-     * @param mode                 the mode
-     * @param trimmingExplanations the trimming explanations
-     * @return the interlinear mode
-     */
-    private InterlinearMode determineDisplayMode(final List<LookupOption> options,
-                                                 final InterlinearMode mode, final List<TrimmedLookupOption> trimmingExplanations) {
-        InterlinearMode displayMode = mode;
-        if (mode == NONE && trimmingExplanations == null && hasInterlinearOption(options)) {
-            displayMode = INTERLINEAR;
-        }
-        return displayMode;
-    }
-
-    /**
-     * Given a set of options selected by the user and a verson, retrieves the options that are actually
-     * available
-     *
-     * @param errors               the error messages
-     * @param options              the options given by the user
-     * @param version              the version of interest
-     * @param extraVersions        the secondary versions that affect feature resolution
-     * @param trimmingExplanations the explanations of why options are being removed
-     * @return a potentially smaller set of options that are actually possible
-     */
-    private List<LookupOption> getUserOptionsForVersion(final ResourceBundle errors,
-                                                        final List<LookupOption> options, final String version,
-                                                        final List<String> extraVersions,
-                                                        final List<TrimmedLookupOption> trimmingExplanations) {
-        final List<LookupOption> available = getFeaturesForVersion(version, extraVersions);
-        final List<LookupOption> result = new ArrayList<LookupOption>(options.size());
-        // do a crazy bubble intersect, but it's tiny so that's fine
-        for (final LookupOption loOption : options) {
-            boolean added = false;
-            for (final LookupOption avOption : available) {
-                if (loOption.equals(avOption)) {
-                    result.add(loOption);
-                    added = true;
-                    break;
-                }
-            }
-
-            // option not available in that particular version
-            if (trimmingExplanations != null && !added) {
-                trimmingExplanations.add(new TrimmedLookupOption(errors
-                        .getString("option_not_supported_by_version"), loOption));
-            }
-        }
-        return result;
-    }
-
-    /**
-     * @param options the options that have been selected
-     * @return true if one of the options requires an interlinear
-     */
-    private boolean hasInterlinearOption(final List<LookupOption> options) {
-        return options.contains(LookupOption.GREEK_VOCAB) || options.contains(LookupOption.MORPHOLOGY)
-                || options.contains(LookupOption.ENGLISH_VOCAB)
-                || options.contains(LookupOption.TRANSLITERATION);
-    }
-
-    /**
-     * Removes the interleaving options.
-     *
-     * @param errors                 the error mesages
-     * @param trimmingExplanations   explanations on why something was removed
-     * @param result                 result
-     * @param originalModeHasChanged true to indicate that the chosen display mode has been forced upon the
-     *                               user
-     */
-    private void removeInterleavingOptions(final ResourceBundle errors,
-                                           final List<TrimmedLookupOption> trimmingExplanations, final List<LookupOption> result,
-                                           final boolean originalModeHasChanged) {
-        final String interleavedMessage = errors.getString("option_not_available_interleaved");
-        explainRemove(errors, VERSE_NUMBERS, result, trimmingExplanations, originalModeHasChanged,
-                interleavedMessage);
-
-        explainRemove(errors, NOTES, result, trimmingExplanations, originalModeHasChanged, interleavedMessage);
-
-        explainRemove(errors, ENGLISH_VOCAB, result, trimmingExplanations, originalModeHasChanged,
-                interleavedMessage);
-
-        explainRemove(errors, GREEK_VOCAB, result, trimmingExplanations, originalModeHasChanged,
-                interleavedMessage);
-
-        explainRemove(errors, TRANSLITERATION, result, trimmingExplanations, originalModeHasChanged,
-                interleavedMessage);
-
-        explainRemove(errors, MORPHOLOGY, result, trimmingExplanations, originalModeHasChanged,
-                interleavedMessage);
-
-        explainRemove(errors, HEADINGS, result, trimmingExplanations, originalModeHasChanged,
-                interleavedMessage);
-
-    }
-
-    /**
-     * explains why an option has been removed.
-     *
-     * @param errors              the errors
-     * @param option              the option we want to remove
-     * @param result              the resulting options
-     * @param trimmingOptions     the list of options
-     * @param originalModeChanged tru if the original mode has changed
-     * @param explanation         the explanation
-     */
-    private void explainRemove(final ResourceBundle errors, final LookupOption option,
-                               final List<LookupOption> result, final List<TrimmedLookupOption> trimmingOptions,
-                               final boolean originalModeChanged, final String explanation) {
-        if (result.remove(option) && trimmingOptions != null) {
-
-            final TrimmedLookupOption trimmedOption;
-            if (originalModeChanged) {
-                final StringBuilder stringBuilder = new StringBuilder();
-                stringBuilder.append(explanation);
-                stringBuilder.append(" ");
-                stringBuilder.append(errors.getString("option_not_available_other"));
-                trimmedOption = new TrimmedLookupOption(stringBuilder.toString(), option);
-            } else {
-                trimmedOption = new TrimmedLookupOption(explanation, option);
-            }
-            trimmingOptions.add(trimmedOption);
-        }
-    }
 
     /**
      * Gets the all features.
@@ -464,53 +267,28 @@ public class BibleInformationServiceImpl implements BibleInformationService {
         final LookupOption[] lo = LookupOption.values();
         final List<EnrichedLookupOption> elo = new ArrayList<EnrichedLookupOption>(lo.length + 1);
 
-        for (int ii = 0; ii < lo.length; ii++) {
-            final String displayName = lo[ii].name();
+        for (final LookupOption lookupOption : lo) {
+            final String displayName = lookupOption.name();
             if (isNotBlank(displayName)) {
-                elo.add(new EnrichedLookupOption(displayName, lo[ii].toString(), lo[ii].isEnabledByDefault()));
+                elo.add(new EnrichedLookupOption(displayName, lookupOption.toString(), lookupOption.isEnabledByDefault()));
             }
         }
 
         return elo;
     }
 
-    /**
-     * Gets the available features for version.
-     *
-     * @param version     the version
-     * @param displayMode the display mode
-     * @return the available features for version
-     */
-    @Override
-    public AvailableFeatures getAvailableFeaturesForVersion(final String version, final String extraVersions, final String displayMode) {
-        final List<LookupOption> allLookupOptions = Arrays.asList(LookupOption.values());
-        final List<TrimmedLookupOption> trimmed = new ArrayList<TrimmedLookupOption>();
-        final List<LookupOption> outcome = trim(allLookupOptions, version, 
-                getExtraVersionsFromString(extraVersions), getDisplayMode(displayMode),
-                trimmed);
-
-        return new AvailableFeatures(outcome, trimmed);
-    }
 
     /**
      * @param extraVersions the string of extra versions
      * @return the equivalent list
      */
     private List<String> getExtraVersionsFromString(final String extraVersions) {
-        if(extraVersions == null) {
+        if (extraVersions == null) {
             return new ArrayList<String>(0);
         }
         return Arrays.asList(StringUtils.split(extraVersions, ","));
     }
 
-    /**
-     * @param version       version in question
-     * @param extraVersions the secondary versions that affect feature resolution
-     * @return all available features on this module
-     */
-    private List<LookupOption> getFeaturesForVersion(final String version, List<String> extraVersions) {
-        return this.jswordMetadata.getFeatures(version, extraVersions);
-    }
 
     /**
      * Checks for core modules.
@@ -552,34 +330,32 @@ public class BibleInformationServiceImpl implements BibleInformationService {
     public List<BibleInstaller> getInstallers() {
         List<BibleInstaller> bibleInstallers = new ArrayList<BibleInstaller>();
         final List<Installer> installers = this.jswordModule.getInstallers();
-        for(int ii =0; ii < installers.size(); ii++) {
+        for (int ii = 0; ii < installers.size(); ii++) {
             final Installer installer = installers.get(ii);
-            
+
             String name = installer.getInstallerDefinition();
             boolean accessesInternet = true;
-            if(installer instanceof StepHttpSwordInstaller) {
+            if (installer instanceof StepHttpSwordInstaller) {
                 name = ((StepHttpSwordInstaller) installer).getInstallerName();
                 accessesInternet = true;
-            } else if(installer instanceof DirectoryInstaller) {
+            } else if (installer instanceof DirectoryInstaller) {
                 name = ((DirectoryInstaller) installer).getInstallerName();
                 accessesInternet = false;
             }
-            
+
             bibleInstallers.add(new BibleInstaller(ii, name, accessesInternet));
         }
         return bibleInstallers;
     }
-    
-    /**
-     * Gets the bible book names.
-     *
-     * @param bookStart the book start
-     * @param version   the version
-     * @return the bible book names
-     */
+
     @Override
-    public List<BookName> getBibleBookNames(final String bookStart, final String version) {
-        return this.jswordMetadata.getBibleBookNames(bookStart, version);
+    public List<BookName> getBibleBookNames(final String bookStart, final String version, final String bookScope) {
+        return this.jswordMetadata.getBibleBookNames(bookStart, version, bookScope);
+    }
+
+    @Override
+    public List<BookName> getBibleBookNames(final String bookStart, final String version, final boolean autoLookup) {
+        return this.jswordMetadata.getBibleBookNames(bookStart, version, autoLookup);
     }
 
     /**

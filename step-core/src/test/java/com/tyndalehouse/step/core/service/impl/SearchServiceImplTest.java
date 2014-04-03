@@ -3,10 +3,14 @@ package com.tyndalehouse.step.core.service.impl;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.util.List;
 
+import com.tyndalehouse.step.core.models.AvailableFeatures;
+import com.tyndalehouse.step.core.service.PassageOptionsValidationService;
 import com.tyndalehouse.step.core.service.jsword.JSwordMetadataService;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -40,7 +44,7 @@ public class SearchServiceImplTest {
     @Test
     public void testMultiVersionSearch() {
         final List<SearchEntry> results = getSearchServiceUnderTest().search(
-                new SearchQuery("t=elijah in(ESV,KJV,ASV)", "false", 0, 1, 1)).getResults();
+                new SearchQuery("t=elijah", new String[] {"ESV", "KJV","ASV"}, "false", 0, 1, 1)).getResults();
         assertFalse(results.isEmpty());
     }
 
@@ -48,7 +52,7 @@ public class SearchServiceImplTest {
     @Test
     public void testSubjectSearch() {
         final SearchResult searchSubject = getSearchServiceUnderTest().search(
-                new SearchQuery("s=elijah in (ESV)", "false", 0, 1, 1));
+                new SearchQuery("s=elijah", new String[] {"ESV"}, "false", 0, 1, 1));
 
         final List<SearchEntry> entries = ((SubjectHeadingSearchEntry) searchSubject.getResults().get(0))
                 .getHeadingsSearch().getResults();
@@ -66,7 +70,7 @@ public class SearchServiceImplTest {
 
         // write test event to db
         final SearchResult result = getSearchServiceUnderTest().search(
-                new SearchQuery("d=calf in (ESV)", "false", 0, 1, 10));
+                new SearchQuery("d=calf",new String[] {"ESV"}, "false", 0, 1, 10));
         final TimelineEventSearchEntry timelineEventSearchEntry = (TimelineEventSearchEntry) result
                 .getResults().get(0);
         assertEquals("Golden Calf episode", timelineEventSearchEntry.getDescription());
@@ -79,12 +83,18 @@ public class SearchServiceImplTest {
     private SearchServiceImpl getSearchServiceUnderTest() {
         final JSwordMetadataService meta = mock(JSwordMetadataService.class);
         final JSwordVersificationService versificationService = TestUtils.mockVersificationService();
+        final PassageOptionsValidationService optionsValidationService = mock(PassageOptionsValidationService.class);
         final JSwordPassageServiceImpl jsword = new JSwordPassageServiceImpl(versificationService, null,
-                null, null, mock(VersionResolver.class));
+                null, null, mock(VersionResolver.class), optionsValidationService);
         final TestEntityManager entityManager = new TestEntityManager();
 
-        final JSwordSearchServiceImpl jswordSearch = new JSwordSearchServiceImpl(versificationService, jsword);
-        return new SearchServiceImpl(jswordSearch, jsword, meta, new SubjectSearchServiceImpl(entityManager,
-                jswordSearch, jsword), new TimelineServiceImpl(entityManager, jsword), entityManager);
+        when(optionsValidationService.getAvailableFeaturesForVersion(any(String.class), any(List.class), any(String.class)))
+                .thenReturn(new AvailableFeatures());
+        
+        final JSwordSearchServiceImpl jswordSearch = new JSwordSearchServiceImpl(versificationService, null, jsword);
+        return new SearchServiceImpl(jswordSearch, meta, new SubjectSearchServiceImpl(entityManager,
+                jswordSearch, jsword), new TimelineServiceImpl(entityManager, jsword), null, entityManager, TestUtils.mockVersionResolver(),
+                mock(LexiconDefinitionServiceImpl.class), null
+        );
     }
 }

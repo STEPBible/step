@@ -7,7 +7,6 @@ import java.util.List;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.BookData;
 import org.crosswire.jsword.book.Books;
-import org.crosswire.jsword.book.OSISUtil;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.input.JDOMParseException;
@@ -38,8 +37,8 @@ public class OsisReader {
      * @throws Exception any kind of exception
      */
     public static void main(final String[] args) throws Exception {
-        final String version = "ESV";
-        final String ref = "Gen.3.15-17";
+        final String version = "NIV";
+        final String ref = "Psalm.88";
         boolean format = false;
 
         final Book currentBook = Books.installed().getBook(version);
@@ -53,11 +52,12 @@ public class OsisReader {
 
         // do the test
         final JSwordPassageServiceImpl jsi = new JSwordPassageServiceImpl(
-                TestUtils.mockVersificationService(), null, null, null, TestUtils.mockVersionResolver());
+                TestUtils.mockVersificationService(), null, null, null, TestUtils.mockVersionResolver(), null);
         final List<LookupOption> options = new ArrayList<LookupOption>();
 
 //        options.add(LookupOption.DIVIDE_HEBREW);
         options.add(LookupOption.NOTES);
+        options.add(LookupOption.HEADINGS);
 
         final String osisText = jsi.getOsisText(version, ref, options, "ESV", InterlinearMode.NONE).getValue();
         final SAXBuilder sb = new SAXBuilder();

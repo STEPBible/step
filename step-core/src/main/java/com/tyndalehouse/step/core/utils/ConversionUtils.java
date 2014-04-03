@@ -46,4 +46,19 @@ public final class ConversionUtils {
         }
         return new LocalDateTime(parseLong(value) * MILLISECONDS_IN_MINUTE);
     }
+
+    /**
+     * Attempts to parse an integer, and return that value if successful, otherwise returns
+     * the fallback value
+     * @param integer the integer value
+     * @param fallback the fallback value
+     * @return the integer, whether parsed or fallback.
+     */
+    public static int getValidInt(String integer, int fallback) {
+        try {
+            return Integer.parseInt(integer);
+        } catch(NumberFormatException ex) {
+            return fallback;
+        }
+    }
 }

@@ -36,6 +36,8 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
+import com.tyndalehouse.step.core.service.impl.SearchType;
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.crosswire.jsword.passage.Key;
 import org.crosswire.jsword.versification.Versification;
 
@@ -47,8 +49,12 @@ import com.tyndalehouse.step.core.utils.HeadingsUtil;
  * @author chrisburrell
  * 
  */
-public class OsisWrapper implements Serializable {
+public class OsisWrapper extends AbstractComplexSearch implements Serializable {
     private static final long serialVersionUID = -5651330317995494895L;
+    @JsonIgnore
+    private final Key key;
+    private KeyWrapper previousChapter;
+    private KeyWrapper nextChapter;
     private String value;
     private String reference;
     private String osisId;
@@ -58,7 +64,11 @@ public class OsisWrapper implements Serializable {
     private int endRange;
     private final String[] languageCode;
     private final String longName;
+    private final InterlinearMode interlinearMode;
     private Map<String, List<LexiconSuggestion>> strongNumbers;
+    private String options;
+    private String selectedOptions;
+    private List<TrimmedLookupOption> removedOptions;
 
     /**
      * the value to be wrapped
@@ -68,12 +78,26 @@ public class OsisWrapper implements Serializable {
      * @param languageCode the ISO language code
      * @param v11n the versification system used
      */
-    public OsisWrapper(final String value, final Key key, final String[] languageCode, final Versification v11n) {
+    public OsisWrapper(final String value, 
+                       final Key key, final String[] languageCode, 
+                       final Versification v11n,
+                       final String masterVersion, 
+                       final InterlinearMode interlinearMode, 
+                       final String extraVersions) {
         this.value = value;
+        this.key = key;
+        this.interlinearMode = interlinearMode;
         this.reference = key.getName();
         this.longName = HeadingsUtil.getLongHeader(v11n, key);
         this.osisId = key.getOsisID();
         this.languageCode = languageCode;
+        super.setMasterVersion(masterVersion);
+        super.setExtraVersions(extraVersions);
+        super.setSearchType(SearchType.PASSAGE);
+    }
+
+    public InterlinearMode getInterlinearMode() {
+        return interlinearMode;
     }
 
     /**
@@ -202,5 +226,80 @@ public class OsisWrapper implements Serializable {
      */
     public Map<String, List<LexiconSuggestion>> getStrongNumbers() {
         return this.strongNumbers;
+    }
+
+    /**
+     * @return the options available to this particular passage
+     */
+    public String getOptions() {
+        return options;
+    }
+
+    /**
+     * @param options options available for this passage.
+     */
+    public void setOptions(final String options) {
+        this.options = options;
+    }
+
+    /**
+     * @param selectedOptions the options used for this passage
+     */
+    public void setSelectedOptions(final String selectedOptions) {
+        this.selectedOptions = selectedOptions;
+    }
+
+    /**
+     * @return the selected options that were used for the passage
+     */
+    public String getSelectedOptions() {
+        return selectedOptions;
+    }
+
+    /**
+     * @return a JSword key
+     */
+    public Key getKey(){ 
+        return this.key;
+    }
+
+    /**
+     * @return the previous chapter
+     */
+    public KeyWrapper getPreviousChapter() {
+        return previousChapter;
+    }
+
+    /**
+     * @return the next chapter
+     */
+    public KeyWrapper getNextChapter() {
+        return nextChapter;
+    }
+
+    /**
+     * 
+     * @param previousChapter previous  chapter for this passage
+     */
+    public void setPreviousChapter(final KeyWrapper previousChapter) {
+        this.previousChapter = previousChapter;
+    }
+
+    /**
+     * @param nextChapter next chapter for this passage
+     */
+    public void setNextChapter(final KeyWrapper nextChapter) {
+        this.nextChapter = nextChapter;
+    }
+
+    public void setRemovedOptions(final List<TrimmedLookupOption> removedOptions) {
+        this.removedOptions = removedOptions;
+    }
+
+    /**
+     * @return a list of all trimmed options
+     */
+    public List<TrimmedLookupOption> getRemovedOptions() {
+        return removedOptions;
     }
 }

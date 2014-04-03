@@ -289,14 +289,15 @@ public class StringConversionUtilsTest {
         assertEquals("ben", outputAndTestTransliterate("בֵּ֥ין"));
         assertEquals("hay.yom", outputAndTestTransliterate("הַיּ֖וֹם"));
         assertEquals("u.ven", outputAndTestTransliterate("וּבֵ֣ין"));
-        assertEquals("hal.la.ye.lah", outputAndTestTransliterate("הַלָּ֑יְלָה"));
+        assertEquals("hal.lay.lah", outputAndTestTransliterate("הַלָּ֑יְלָה"));
+        assertEquals("hal.la.ye.lah", outputAndTestTransliterate("הַלָּיְלָה"));
         assertEquals("cha.va.ah", outputAndTestTransliterate("חַבַהַ"));
         assertEquals("a.va.a", outputAndTestTransliterate("עַבַעַ"));
         assertEquals("ha.va.ah", outputAndTestTransliterate("הַבַהַ"));
         assertEquals("ha.ha.ah", outputAndTestTransliterate("הַהַהַ"));
         assertEquals("shv.va.ah", outputAndTestTransliterate("שׁוַּהַ"));
         assertEquals("sv.va.ah", outputAndTestTransliterate("שׂוָּהַ"));
-        assertEquals("shav.v.teh", outputAndTestTransliterate("שַּׁוְּטֶה"));
+        assertEquals("shav.ve.teh", outputAndTestTransliterate("שַּׁוְּטֶה"));
         assertEquals("bev.ve", outputAndTestTransliterate("בֵוֶּי"));
         assertEquals("dov.vet", outputAndTestTransliterate("דֹוֵּת"));
         assertEquals("dov.vi", outputAndTestTransliterate("דֹוִּע"));

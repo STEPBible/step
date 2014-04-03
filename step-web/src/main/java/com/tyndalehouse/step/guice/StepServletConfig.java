@@ -1,11 +1,11 @@
 /*******************************************************************************
  * Copyright (c) 2012, Directors of the Tyndale STEP Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without 
  * modification, are permitted provided that the following conditions 
  * are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright 
  * notice, this list of conditions and the following disclaimer.
  * Redistributions in binary form must reproduce the above copyright 
@@ -16,7 +16,7 @@
  * nor the names of its contributors may be used to endorse or promote 
  * products derived from this software without specific prior written 
  * permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
@@ -32,22 +32,6 @@
  ******************************************************************************/
 package com.tyndalehouse.step.guice;
 
-import java.util.Locale;
-
-import javax.servlet.ServletContext;
-import javax.servlet.ServletContextEvent;
-
-import org.crosswire.common.util.Reporter;
-import org.crosswire.common.util.ReporterEvent;
-import org.crosswire.common.util.ReporterListener;
-import org.crosswire.jsword.book.sword.state.OpenFileStateManager;
-import org.crosswire.jsword.index.IndexManagerFactory;
-import org.crosswire.jsword.internationalisation.LocaleProvider;
-import org.crosswire.jsword.internationalisation.LocaleProviderManager;
-import org.crosswire.jsword.versification.BookName;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Provider;
@@ -60,34 +44,55 @@ import com.tyndalehouse.step.core.guice.StepCoreModule;
 import com.tyndalehouse.step.core.models.ClientSession;
 import com.tyndalehouse.step.rest.controllers.ImageController;
 import com.tyndalehouse.step.rest.controllers.InternationalJsonController;
+import com.tyndalehouse.step.rest.controllers.SearchPageController;
 import com.tyndalehouse.step.rest.controllers.SiteMapController;
 import com.tyndalehouse.step.rest.framework.FrontController;
 import com.yammer.metrics.guice.InstrumentationModule;
 import com.yammer.metrics.reporting.AdminServlet;
+import org.crosswire.common.util.Reporter;
+import org.crosswire.common.util.ReporterEvent;
+import org.crosswire.common.util.ReporterListener;
+import org.crosswire.jsword.book.sword.state.OpenFileStateManager;
+import org.crosswire.jsword.index.IndexManagerFactory;
+import org.crosswire.jsword.internationalisation.LocaleProvider;
+import org.crosswire.jsword.internationalisation.LocaleProviderManager;
+import org.crosswire.jsword.versification.BookName;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.servlet.ServletContext;
+import javax.servlet.ServletContextEvent;
+import java.util.Locale;
 
 /**
  * Configures the listener for the web app to return the injector used to configure the whole of the
  * application.
- * 
+ *
  * @author chrisburrell
  */
 public class StepServletConfig extends GuiceServletContextListener {
     private static final Logger LOGGER = LoggerFactory.getLogger(StepServletConfig.class);
-    private Injector injector;
+    private Injector injector = null;
 
     @Override
     protected Injector getInjector() {
-        this.injector = Guice.createInjector(new StepCoreModule(), new StepWebModule(),
-                new InstrumentationModule(), new ServletModule() {
+        if (injector == null) {
+            synchronized (this) {
+                ServletModule servletModule = new ServletModule() {
                     @Override
                     protected void configureServlets() {
                         serve("/" + ExternalPoweredByFilter.EXTERNAL_PREFIX + "*")
                                 .with(FrontController.class);
                         serve("/rest/*").with(FrontController.class);
                         serve("/commentary_images/*").with(ImageController.class);
-                        serve("/index.jsp");
+                        serve("/search*").with(SearchPageController.class);
+//                        serve("/index.jsp").with(SearchPageController.class);
+                        serve("/").with(SearchPageController.class);
                         serve("/international/interactive.js").with(InternationalJsonController.class);
-                        serve("/metrics/*").with(AdminServlet.class);
+
+                        if (Boolean.getBoolean("metrics.enabled")) {
+                            serve("/metrics/*").with(AdminServlet.class);
+                        }
                         serve("/sitemap*").with(SiteMapController.class);
                         serve("/SITEMAP*").with(SiteMapController.class);
                         // filters
@@ -95,13 +100,23 @@ public class StepServletConfig extends GuiceServletContextListener {
                         filter("*_escaped_fragment_*", "/").through(HashBangFragmentFilter.class);
                         filter("/external/*").through(ExternalPoweredByFilter.class);
                     }
-                });
+                };
+
+                if (Boolean.getBoolean("metrics.enabled")) {
+                    this.injector = Guice.createInjector(new StepCoreModule(), new StepWebModule(),
+                            new InstrumentationModule(), servletModule);
+                } else {
+                    this.injector = Guice.createInjector(new StepCoreModule(), new StepWebModule(),
+                            servletModule);
+                }
+            }
+        }
         return this.injector;
     }
 
     /**
      * Context initialized.
-     * 
+     *
      * @param servletContextEvent the servlet context event
      */
     @Override
@@ -158,13 +173,11 @@ public class StepServletConfig extends GuiceServletContextListener {
                 }
             }
         });
-
-        org.crosswire.common.util.Logger.setShowLocationForInfoDebugTrace(false);
     }
 
     /**
      * Context destroyed.
-     * 
+     *
      * @param servletContextEvent the servlet context event
      */
     @Override

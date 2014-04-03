@@ -3,14 +3,17 @@ package com.tyndalehouse.step.core.models.search;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.SortedSet;
 
+import com.tyndalehouse.step.core.models.AbstractComplexSearch;
 import com.tyndalehouse.step.core.models.LexiconSuggestion;
+import com.tyndalehouse.step.core.service.impl.SearchType;
 
 /**
  * 
  * @author chrisburrell
  */
-public class SearchResult implements Serializable {
+public class SearchResult extends AbstractComplexSearch implements Serializable {
     private static final long serialVersionUID = 5408141957094432935L;
     private String query;
     private int total;
@@ -19,8 +22,10 @@ public class SearchResult implements Serializable {
     private List<SearchEntry> results;
     private List<String> strongHighlights;
     private String order;
-    private List<LexiconSuggestion> definitions;
-    private String[] languages;
+    private SortedSet<LexiconSuggestion> definitions;
+    private String[] languageCode;
+    private int pageSize;
+    private int pageNumber;
 
     /**
      * @return the query
@@ -136,28 +141,57 @@ public class SearchResult implements Serializable {
     /**
      * @return the definitions
      */
-    public List<LexiconSuggestion> getDefinitions() {
+    public SortedSet<LexiconSuggestion> getDefinitions() {
         return this.definitions;
     }
 
     /**
      * @param definitions the definitions to set
      */
-    public void setDefinitions(final List<LexiconSuggestion> definitions) {
+    public void setDefinitions(final SortedSet<LexiconSuggestion> definitions) {
         this.definitions = definitions;
     }
 
     /**
      * @param languages The languages that were searched across
      */
-    public void setLanguages(final String[] languages) {
-        this.languages = languages;
+    public void setLanguageCode(final String[] languages) {
+        this.languageCode = languages;
     }
 
     /**
      * @return the languages that were searched across
      */
-    public String[] getLanguages() {
-        return languages;
+    public String[] getLanguageCode() {
+        return languageCode;
     }
+
+    /**
+     * @param pageSize the page size used in the search
+     */
+    public void setPageSize(final int pageSize) {
+        this.pageSize = pageSize;
+    }
+
+    /**
+     * @return the page size
+     */
+    public int getPageSize() {
+        return pageSize;
+    }
+
+    /**
+     * @param pageNumber sets the current page number
+     */
+    public void setPageNumber(final int pageNumber) {
+        this.pageNumber = pageNumber;
+    }
+
+    /**
+     * @return the page number
+     */
+    public int getPageNumber() {
+        return pageNumber;
+    }
+
 }

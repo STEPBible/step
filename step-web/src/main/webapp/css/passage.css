@@ -1,9 +1,9 @@
 .passageText {
-	margin-top: 1px;
+	/*margin-top: 1px;*/
 /*	overflow: auto;*/
-	padding: 0px 5px;
-/*	position: relative;*/
-	text-align: left;
+	/*padding: 0px 5px;*/
+	/*position: relative;*/
+	/*text-align: left;*/
 }
 
 /** Some interlinear rules */
@@ -39,46 +39,7 @@ span.interlinear span span { /* Make this stack on top of each other. */
 }
 
 
-.unicodeFont {
-	font-family: Cardo;
-	font-size: 140%;
-/* 	font-size: 14px; */
-}
 
-.copticFont {
-    font-family: Conv_newathu405;
-    font-size: 130%;
-}
-
-.syriacFont {
-    font-family: SyrCOMEdessa;
-    font-size: 170%;
-}
-
-.burmeseFont {
-    font-family: Padauk;
-    font-size: 150%;
-}
-
-.arabicFont {
-    font-size: 130%;
-    line-height: 1.5;
-}
-
-.chineseFont {
-    font-size: 120%;
-    line-height: 1.4;
-}
-
-.khmerFont {
-    font-family: KhmerBusra;
-    font-size: 150%;
-}
-
-.hbFont {
-	font-family: SIL_EZRA;
-	font-size: 180%;
-}
 
 .ancientVocab a {
     font-style: italic;
@@ -97,13 +58,6 @@ span.interlinear span span { /* Make this stack on top of each other. */
 .qereDisplay div, .accentDisplay div {
     padding: 8px 0px;
 }
-
-.hbFontSmall {
-    font-family: SIL_EZRA;
-    font-size: 180%;
-    font-weight: normal;
-}
-
 
 
 .hbFont h2, .unicodeFont h2 {
@@ -219,15 +173,7 @@ span[strong]:hover {
     font-weight: bold;
 }
 
-.verseNumber {
-	vertical-align: top;
-	font-size: 6pt;
-	margin-right: 2px;
-    cursor: hand;
-    background-color: #F3E5B4;
-    color: #991C32;
-	font-weight: bold;
-}
+
 
 .interlinear .verseNumber {
 	clear: left;
@@ -249,26 +195,18 @@ a.smallHeaders {
 }
 
 .notesPane {
-	padding: 2px !important;
-	display: block;
+    padding-right: 3px;
+    margin-right: 8px;
 	max-width: 100px;
-	height: 100%;
 	color: #33339F !important;
-	
+    /*overflow: hidden;	*/
 }
 
-.leftColumn .notesPane {
+.column .notesPane {
 	margin-left: 5px;
-	float: right;
-	border-left: 1px solid #EAEAEA
-}
-
-.rightColumn .notesPane {
-	margin-right: 5px;
 	float: left;
 	border-right: 1px solid #EAEAEA
 }
-
 
 .notesPane a {
 	color: #991C32;
@@ -457,7 +395,7 @@ H4.heading  {
 
 .headingContainer {
 /* 	height: 30px; */
-	padding-bottom: 5px;
+	/*padding-bottom: 5px;*/
 }
 
 H2.xgen {
@@ -467,6 +405,9 @@ H2.xgen {
 	font-style: italic;
 }
 
+H2.xgen ul {
+    font-variant: normal;
+}
 
 H2.heading, input.heading {
 	color: #991C32;
@@ -719,13 +660,6 @@ FONT.usg {
 .quickLexiconDefinition h1 {
 	font-size: 1em;
 	font-weight: bold;
-}
-
-.infoTagLine {
-	font-size: xx-small;
-	text-align: right;
-	width: 70%;
-	float: right;
 }
 
 .versionBreakMenuItem {

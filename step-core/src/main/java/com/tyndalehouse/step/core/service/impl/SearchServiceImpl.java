@@ -32,60 +32,69 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.service.impl;
 
-import static com.tyndalehouse.step.core.service.helpers.OriginalWordUtils.STRONG_NUMBER_FIELD;
-import static com.tyndalehouse.step.core.service.helpers.OriginalWordUtils.convertToSuggestion;
-import static com.tyndalehouse.step.core.service.helpers.OriginalWordUtils.getFilter;
-import static com.tyndalehouse.step.core.service.impl.VocabularyServiceImpl.padStrongNumber;
-import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
-import static java.lang.Character.isDigit;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
-import com.tyndalehouse.step.core.exceptions.LuceneSearchException;
-import com.tyndalehouse.step.core.models.search.*;
-import com.tyndalehouse.step.core.service.jsword.JSwordMetadataService;
-import org.apache.lucene.queryParser.MultiFieldQueryParser;
-import org.apache.lucene.queryParser.ParseException;
-import org.apache.lucene.queryParser.QueryParser;
-import org.apache.lucene.queryParser.QueryParser.Operator;
-import org.apache.lucene.search.BooleanClause;
-import org.apache.lucene.search.BooleanQuery;
-import org.apache.lucene.search.Query;
-import org.apache.lucene.util.Version;
-import org.crosswire.jsword.passage.Key;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.tyndalehouse.step.core.data.EntityDoc;
 import com.tyndalehouse.step.core.data.EntityIndexReader;
 import com.tyndalehouse.step.core.data.EntityManager;
+import com.tyndalehouse.step.core.exceptions.LuceneSearchException;
 import com.tyndalehouse.step.core.exceptions.TranslatedException;
+import com.tyndalehouse.step.core.models.AbstractComplexSearch;
+import com.tyndalehouse.step.core.models.BibleVersion;
+import com.tyndalehouse.step.core.models.InterlinearMode;
 import com.tyndalehouse.step.core.models.LexiconSuggestion;
-import com.tyndalehouse.step.core.models.OsisWrapper;
+import com.tyndalehouse.step.core.models.SearchToken;
+import com.tyndalehouse.step.core.models.search.KeyedSearchResultSearchEntry;
+import com.tyndalehouse.step.core.models.search.KeyedVerseContent;
+import com.tyndalehouse.step.core.models.search.LexicalSearchEntry;
+import com.tyndalehouse.step.core.models.search.SearchEntry;
+import com.tyndalehouse.step.core.models.search.SearchResult;
+import com.tyndalehouse.step.core.models.search.TimelineEventSearchEntry;
+import com.tyndalehouse.step.core.models.search.VerseSearchEntry;
+import com.tyndalehouse.step.core.service.BibleInformationService;
+import com.tyndalehouse.step.core.service.JSwordRelatedVersesService;
+import com.tyndalehouse.step.core.service.LexiconDefinitionService;
 import com.tyndalehouse.step.core.service.SearchService;
 import com.tyndalehouse.step.core.service.TimelineService;
 import com.tyndalehouse.step.core.service.helpers.GlossComparator;
 import com.tyndalehouse.step.core.service.helpers.OriginalSpellingComparator;
+import com.tyndalehouse.step.core.service.helpers.VersionResolver;
+import com.tyndalehouse.step.core.service.jsword.JSwordMetadataService;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import com.tyndalehouse.step.core.service.jsword.JSwordSearchService;
 import com.tyndalehouse.step.core.service.search.SubjectSearchService;
 import com.tyndalehouse.step.core.service.search.impl.OriginalWordSuggestionServiceImpl;
 import com.tyndalehouse.step.core.utils.StringConversionUtils;
 import com.tyndalehouse.step.core.utils.StringUtils;
+import org.apache.lucene.queryParser.MultiFieldQueryParser;
+import org.apache.lucene.queryParser.ParseException;
+import org.apache.lucene.queryParser.QueryParser;
+import org.apache.lucene.queryParser.QueryParser.Operator;
+import org.apache.lucene.search.Query;
+import org.apache.lucene.util.Version;
+import org.crosswire.jsword.passage.Key;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
+
+import static com.tyndalehouse.step.core.service.helpers.OriginalWordUtils.STRONG_NUMBER_FIELD;
+import static com.tyndalehouse.step.core.service.helpers.OriginalWordUtils.convertToSuggestion;
+import static com.tyndalehouse.step.core.service.helpers.OriginalWordUtils.getFilter;
+import static com.tyndalehouse.step.core.service.impl.VocabularyServiceImpl.padStrongNumber;
+import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
+import static java.lang.Character.isDigit;
 
 /**
  * A federated search service implementation. see {@link SearchService}
@@ -107,32 +116,44 @@ public class SearchServiceImpl implements SearchService {
     private static final String BASE_HEBREW_VERSION = "OSMHB";
     private static final Logger LOGGER = LoggerFactory.getLogger(SearchServiceImpl.class);
     private static final String STRONG_QUERY = "strong:";
+    private static final String DEFAULT_REFERENCE = "Mat.1";
+    private static final String NO_FILTER = "all";
     private final JSwordSearchService jswordSearch;
-    private final JSwordPassageService jsword;
     private final TimelineService timeline;
     private final EntityIndexReader definitions;
     private final EntityIndexReader specificForms;
     private final EntityIndexReader timelineEvents;
     private final JSwordMetadataService jswordMetadata;
     private final SubjectSearchService subjects;
+    private final BibleInformationService bibleInfoService;
+    private VersionResolver versionResolver;
+    private LexiconDefinitionService lexiconDefinitionService;
+    private JSwordRelatedVersesService relatedVerseService;
 
     /**
-     * @param jsword        used to convert references to numerals, etc.
-     * @param timeline      the timeline service
-     * @param jswordSearch  the search service
-     * @param entityManager the manager for all entities stored in lucene
-     * @param subjects      the service that executes Subject searches
+     * @param jswordSearch        the search service
+     * @param subjects            the service that executes Subject searches
+     * @param timeline            the timeline service
+     * @param bibleInfoService    the service to get information about various bibles/commentaries
+     * @param entityManager       the manager for all entities stored in lucene
+     * @param relatedVerseService
      */
     @Inject
-    public SearchServiceImpl(final JSwordSearchService jswordSearch, final JSwordPassageService jsword,
+    public SearchServiceImpl(final JSwordSearchService jswordSearch,
                              final JSwordMetadataService jswordMetadata,
                              final SubjectSearchService subjects, final TimelineService timeline,
-                             final EntityManager entityManager) {
+                             final BibleInformationService bibleInfoService,
+                             final EntityManager entityManager,
+                             final VersionResolver versionResolver,
+                             final LexiconDefinitionService lexiconDefinitionService, final JSwordRelatedVersesService relatedVerseService) {
         this.jswordSearch = jswordSearch;
-        this.jsword = jsword;
         this.jswordMetadata = jswordMetadata;
         this.subjects = subjects;
         this.timeline = timeline;
+        this.bibleInfoService = bibleInfoService;
+        this.versionResolver = versionResolver;
+        this.lexiconDefinitionService = lexiconDefinitionService;
+        this.relatedVerseService = relatedVerseService;
         this.definitions = entityManager.getReader("definition");
         this.specificForms = entityManager.getReader("specificForm");
         this.timelineEvents = entityManager.getReader("timelineEvent");
@@ -152,6 +173,212 @@ public class SearchServiceImpl implements SearchService {
             return -1;
             // CHECKSTYLE:ON
         }
+    }
+
+    @Override
+    public AbstractComplexSearch runQuery(final List<SearchToken> searchTokens, final String options,
+                                          final String display, final int page, final String filter, int context) {
+        boolean hasSearches = false;
+        final List<String> versions = new ArrayList<String>(4);
+        final StringBuilder references = new StringBuilder();
+
+        //first pass - get the set of versions and references
+        for (SearchToken token : searchTokens) {
+            if (SearchToken.VERSION.equals(token.getTokenType())) {
+                versions.add(token.getToken());
+            } else if (SearchToken.REFERENCE.equals(token.getTokenType())) {
+                if (references.length() > 0) {
+                    references.append(';');
+                }
+                references.append(token.getToken());
+            } else {
+                //any other token means at least 1 search
+                hasSearches = true;
+            }
+        }
+
+        //now default the version and references
+        if (versions.size() == 0) {
+            versions.add(JSwordPassageService.REFERENCE_BOOK);
+            searchTokens.add(new SearchToken("version", JSwordPassageService.REFERENCE_BOOK));
+        }
+
+        if (!hasSearches && references.length() == 0) {
+            references.append(DEFAULT_REFERENCE);
+            searchTokens.add(new SearchToken("reference", DEFAULT_REFERENCE));
+        }
+
+        //second pass add all 
+
+        final AbstractComplexSearch complexSearch = runCorrectSearch(
+                versions, references.toString(),
+                options, StringUtils.isBlank(display) ? InterlinearMode.NONE.name() : display,
+                searchTokens, page, filter, context);
+        enhanceSearchTokens(versions.get(0), searchTokens);
+        complexSearch.setSearchTokens(searchTokens);
+        return complexSearch;
+    }
+
+    /**
+     * Enhances search tokens, meaning that <p />
+     * for versions, we return the short initials and long initials in the form of a 'BibleVersion' <p />
+     * for references, we return the keywraper <p />
+     * for strong numbers, we return the lexicon suggestion <p />
+     * for everything else, null.
+     *
+     * @param masterVersion the master version to use looking up references and so on.
+     * @param searchTokens  a list of search tokens
+     * @return with enhanced meta data if any
+     */
+
+    private void enhanceSearchTokens(final String masterVersion, final List<SearchToken> searchTokens) {
+        for (SearchToken st : searchTokens) {
+            final String tokenType = st.getTokenType();
+            if (SearchToken.VERSION.equals(tokenType)) {
+                //probably need to show the short initials
+                BibleVersion version = new BibleVersion();
+                version.setInitials(this.versionResolver.getLongName(tokenType));
+                version.setShortInitials(this.versionResolver.getShortName(tokenType));
+                st.setEnhancedTokenInfo(version);
+            } else if (SearchToken.REFERENCE.equals(tokenType)) {
+                //could take the key but that has all parts combined
+                st.setEnhancedTokenInfo(this.bibleInfoService.getKeyInfo(st.getToken(), masterVersion, masterVersion));
+            } else if (SearchToken.STRONG_NUMBER.equals(tokenType)) {
+                //hit the index and look up that strong number...
+                st.setEnhancedTokenInfo(this.lexiconDefinitionService.lookup(st.getToken()));
+            }
+            //nothing to do 
+            // for subject searches or 
+            // for text searches or 
+            // for meaning searches
+        }
+    }
+
+    /**
+     * Establishes what the correct search should be and kicks off the right type of search
+     *
+     * @param versions    the list of versions
+     * @param references  the list of references
+     * @param options     the options
+     * @param displayMode the display mode
+     * @param context     amount of context to be used in searhc
+     * @return the results
+     */
+    private AbstractComplexSearch runCorrectSearch(final List<String> versions, final String references,
+                                                   final String options, final String displayMode,
+                                                   final List<SearchToken> searchTokens,
+                                                   final int pageNumber,
+                                                   final String filter,
+                                                   final int context) {
+        final List<IndividualSearch> individualSearches = new ArrayList<IndividualSearch>(2);
+        String[] filters = null;
+        if (StringUtils.isNotBlank(filter)) {
+            filters = StringUtils.split(filter, "[ ,]+");
+        }
+
+        for (SearchToken st : searchTokens) {
+            final String tokenType = st.getTokenType();
+            if (SearchToken.STRONG_NUMBER.equals(tokenType)) {
+                addWordSearches(versions, references, st.getToken(), filters, individualSearches);
+            } else if (SearchToken.MEANINGS.equals(tokenType)) {
+                addSearch(SearchType.ORIGINAL_MEANING, versions, references, st.getToken(), filters, individualSearches);
+            } else if (SearchToken.TEXT_SEARCH.equals(tokenType)) {
+                addSearch(SearchType.TEXT, versions, references, st.getToken(), null, individualSearches);
+            } else if (SearchToken.SUBJECT_SEARCH.equals(tokenType)) {
+                addSearch(SearchType.SUBJECT_SIMPLE, versions, references, st.getToken(), null, individualSearches);
+            } else if (SearchToken.NAVE_SEARCH.equals(tokenType)) {
+                addSearch(SearchType.SUBJECT_EXTENDED, versions, references, st.getToken(), null, individualSearches);
+            } else if (SearchToken.NAVE_SEARCH_EXTENDED.equals(tokenType)) {
+                addSearch(SearchType.SUBJECT_FULL, versions, references, st.getToken(), null, individualSearches);
+            } else if (SearchToken.TOPIC_BY_REF.equals(tokenType)) {
+                addSearch(SearchType.SUBJECT_RELATED, versions, references, st.getToken(), null, individualSearches);
+            } else if (SearchToken.RELATED_VERSES.equals(tokenType)) {
+                addSearch(SearchType.RELATED_VERSES, versions, references, st.getToken(), null, individualSearches);
+            } else if (SearchToken.SYNTAX.equals(tokenType)) {
+                //add a number of searches from the query syntax given...
+                final IndividualSearch[] searches = new SearchQuery(st.getToken(), versions.toArray(new String[versions.size()]), null, context, pageNumber).getSearches();
+                for (IndividualSearch is : searches) {
+                    individualSearches.add(is);
+                }
+            } else {
+                //ignore and do nothing - generally references and versions which have been parsed already
+            }
+        }
+        //we will prefer a word search to anything else...
+        if (individualSearches.size() != 0) {
+            return this.search(new SearchQuery(pageNumber, context, displayMode, individualSearches.toArray(new IndividualSearch[individualSearches.size()])));
+        }
+        return this.bibleInfoService.getPassageText(
+                versions.get(0), references, options,
+                getExtraVersions(versions), displayMode);
+    }
+
+    /**
+     * @param searchType         the type of search
+     * @param versions           the list of versions
+     * @param references         the list of references
+     * @param searchTerm         the search term
+     * @param individualSearches the searches to perform
+     */
+    private void addSearch(final SearchType searchType, final List<String> versions, final String references, final String searchTerm, final String[] filter, final List<IndividualSearch> individualSearches) {
+        individualSearches.add(new IndividualSearch(searchType, versions, searchTerm, getInclusion(references), filter));
+    }
+
+    /**
+     * Adds a word search to the list of searches we will perform
+     *
+     * @param versions           the list of versions
+     * @param references         the list of references
+     * @param strong             the strong number/criteria
+     * @param individualSearches the searches to perform
+     */
+    private void addWordSearches(final List<String> versions, final String references,
+                                 String strong, final String[] filters,
+                                 final List<IndividualSearch> individualSearches) {
+        String[] filtersForSearch = filters;
+        if (filters == null || filters.length == 0) {
+            filtersForSearch = new String[]{strong};
+        } else if (filters.length == 1 && NO_FILTER.equals(filters[0])) {
+            filtersForSearch = new String[0];
+        }
+
+        boolean isGreek = strong.charAt(0) == 'G';
+        individualSearches.add(new IndividualSearch(
+                isGreek ? SearchType.ORIGINAL_GREEK_RELATED : SearchType.ORIGINAL_HEBREW_RELATED,
+                versions, strong, getInclusion(references), filtersForSearch));
+    }
+
+
+    /**
+     * @param references wraps the references in a jsword-lucene query syntax
+     * @return the string of references
+     */
+    private String getInclusion(final String references) {
+        if (references == null) {
+            return null;
+        }
+
+        if ("".equals(references.trim())) {
+            return "";
+        }
+        return String.format("+[%s]", references);
+    }
+
+    /**
+     * Concatenates all but the last versions
+     *
+     * @param versions version
+     * @return the concatenated versions
+     */
+    private String getExtraVersions(final List<String> versions) {
+        StringBuilder sb = new StringBuilder(128);
+        for (int i = 1; i < versions.size(); i++) {
+            if (sb.length() > 0) {
+                sb.append(',');
+            }
+            sb.append(versions.get(i));
+        }
+        return sb.toString();
     }
 
     @Override
@@ -194,8 +421,15 @@ public class SearchServiceImpl implements SearchService {
         // join the keys
         // return the results
 
+        result.setSearchType(sq.getSearches()[0].getType());
+        result.setPageSize(sq.getPageSize());
+        result.setPageNumber(sq.getPageNumber());
         result.setTimeTookTotal(System.currentTimeMillis() - start);
         result.setQuery(sq.getOriginalQuery());
+
+        final String[] allVersions = sq.getCurrentSearch().getVersions();
+        result.setMasterVersion(allVersions[0]);
+        result.setExtraVersions(StringUtils.join(allVersions, 1));
         specialSort(sq, result);
         enrichWithLanguages(sq, result);
         return result;
@@ -203,12 +437,13 @@ public class SearchServiceImpl implements SearchService {
 
     /**
      * Puts the languages of each module into the result returned to the UI.
-     * @param sq the search query
+     *
+     * @param sq     the search query
      * @param result the result
      */
     private void enrichWithLanguages(final SearchQuery sq, final SearchResult result) {
         IndividualSearch lastSearch = sq.getCurrentSearch();
-        result.setLanguages(jswordMetadata.getLanguages(lastSearch.getVersions()));
+        result.setLanguageCode(jswordMetadata.getLanguages(lastSearch.getVersions()));
     }
 
     /**
@@ -282,7 +517,7 @@ public class SearchServiceImpl implements SearchService {
      * @return a new list of results, now ordered
      */
     private List<LexicalSearchEntry> rebuildSearchResults(final List<EntityDoc> lexiconDefinitions,
-                                                   final Map<String, List<LexicalSearchEntry>> keyedOrder) {
+                                                          final Map<String, List<LexicalSearchEntry>> keyedOrder) {
         final List<LexicalSearchEntry> newOrder = new ArrayList<LexicalSearchEntry>();
         for (final EntityDoc def : lexiconDefinitions) {
             final List<LexicalSearchEntry> list = keyedOrder.get(def.get(STRONG_NUMBER_FIELD));
@@ -326,7 +561,7 @@ public class SearchServiceImpl implements SearchService {
 
             // should never happen
             if (!added) {
-                if(entry instanceof LexicalSearchEntry) {
+                if (entry instanceof LexicalSearchEntry) {
                     noOrder.add((LexicalSearchEntry) entry);
                 } else {
                     LOGGER.error("Attempting to sort non LexicalSearchEntry.");
@@ -370,7 +605,33 @@ public class SearchServiceImpl implements SearchService {
      * @param lexiconDefinitions the definitions that have been included in the search
      */
     private void setDefinitionForResults(final SearchResult result, final List<EntityDoc> lexiconDefinitions) {
-        final List<LexiconSuggestion> suggestions = new ArrayList<LexiconSuggestion>();
+        final SortedSet<LexiconSuggestion> suggestions = new TreeSet<LexiconSuggestion>(new Comparator<LexiconSuggestion>() {
+
+            @Override
+            public int compare(final LexiconSuggestion a, final LexiconSuggestion b) {
+                //push hebrew first..
+                String aText = a.getStrongNumber();
+                String bText = b.getStrongNumber();
+
+                if (aText == null && bText == null) {
+                    return 0;
+                } else if (StringUtils.isBlank(aText)) {
+                    return 1;
+                } else if (StringUtils.isBlank(bText)) {
+                    return 1;
+                }
+
+                final char aFirst = aText.charAt(0);
+                final char bFirst = bText.charAt(0);
+                if (bFirst == 'H' && aFirst == 'G') {
+                    return 1;
+                } else if (bFirst == 'G' && aFirst == 'H') {
+                    return -1;
+                }
+
+                return aText.compareTo(bText);
+            }
+        });
         for (final EntityDoc def : lexiconDefinitions) {
             suggestions.add(convertToSuggestion(def));
         }
@@ -540,9 +801,22 @@ public class SearchServiceImpl implements SearchService {
                 return runExactOriginalTextSearch(sq);
             case ORIGINAL_MEANING:
                 return runMeaningSearch(sq);
+            case RELATED_VERSES:
+                return runRelatedVerses(sq);
             default:
                 throw new TranslatedException("search_unknown");
         }
+    }
+
+    /**
+     * Runs a verse related search
+     *
+     * @param sq the search query
+     * @return the search result, as per other searches, of related verses
+     */
+    private SearchResult runRelatedVerses(final SearchQuery sq) {
+        return this.buildCombinedVerseBasedResults(sq,
+                this.relatedVerseService.getRelatedVerses(sq.getCurrentSearch().getVersions()[0], sq.getCurrentSearch().getQuery()));
     }
 
     /**
@@ -590,7 +864,6 @@ public class SearchServiceImpl implements SearchService {
     private SearchResult runAllFormsStrongSearch(final SearchQuery sq) {
         final Set<String> strongs = adaptQueryForStrongSearch(sq);
 
-        // TODO jsword bug - email 09-Jul-2012 - 19:11 GMT
         // and then run the search
         return runStrongTextSearch(sq, strongs);
     }
@@ -711,25 +984,24 @@ public class SearchServiceImpl implements SearchService {
     private Set<String> adaptQueryForMeaningSearch(final SearchQuery sq) {
         final String query = sq.getCurrentSearch().getQuery();
 
-        
-        
+
         final QueryParser queryParser = new QueryParser(Version.LUCENE_30, "translationsStem",
                 this.definitions.getAnalyzer());
         queryParser.setDefaultOperator(Operator.OR);
-                
+
         try {
             //we need to also add the step gloss, but since we need the analyser for stems,
             //we want to use the query parser that does the tokenization for us
             //could probably do better if required
             String[] terms = StringUtils.split(query);
             StringBuilder finalQuery = new StringBuilder();
-            for(String term : terms) {
+            for (String term : terms) {
                 final String escapedTerm = QueryParser.escape(term);
                 finalQuery.append(escapedTerm);
                 finalQuery.append(" stepGlossStem:");
                 finalQuery.append(escapedTerm);
             }
-            
+
             final Query parsed = queryParser.parse("-stopWord:true " + finalQuery.toString());
             final EntityDoc[] matchingMeanings = this.definitions.search(parsed);
 
@@ -867,7 +1139,10 @@ public class SearchServiceImpl implements SearchService {
         final StringBuilder relatedQuery = new StringBuilder(results.length * 7);
         relatedQuery.append("-stopWord:true ");
         for (final EntityDoc doc : results) {
-            relatedQuery.append(doc.get("relatedNumbers").replace(',', ' '));
+            String relatedNumbers = doc.get("relatedNumbers");
+            if (StringUtils.isNotBlank(relatedNumbers)) {
+                relatedQuery.append(relatedNumbers.replace(',', ' '));
+            }
         }
         return relatedQuery.toString();
     }
@@ -1008,7 +1283,8 @@ public class SearchServiceImpl implements SearchService {
 
         final MultiFieldQueryParser queryParser = new MultiFieldQueryParser(Version.LUCENE_30, new String[]{
                 "simplifiedTransliteration", "stepTransliteration", "otherTransliteration"},
-                this.definitions.getAnalyzer());
+                this.definitions.getAnalyzer()
+        );
 
         try {
             final Query luceneQuery = queryParser.parse("-stopWord:true " + lowerQuery);
@@ -1086,12 +1362,7 @@ public class SearchServiceImpl implements SearchService {
             // TODO FIXME: REFACTOR to only make 1 jsword call?
             for (final String ref : references) {
                 // TODO: REFACTOR only supports one version lookup
-                final OsisWrapper peakOsisText = this.jsword.peakOsisText(
-                        sq.getCurrentSearch().getVersions()[0], TimelineService.KEYED_REFERENCE_VERSION, ref);
-
                 final VerseSearchEntry verseEntry = new VerseSearchEntry();
-                verseEntry.setKey(peakOsisText.getReference());
-                verseEntry.setPreview(peakOsisText.getValue());
                 verses.add(verseEntry);
             }
 
@@ -1191,63 +1462,18 @@ public class SearchServiceImpl implements SearchService {
      * @return the set of results
      */
     private SearchResult buildCombinedVerseBasedResults(final SearchQuery sq, final Key results) {
-        final SearchResult sr = new SearchResult();
-
-        sr.setTotal(this.jswordSearch.getTotal(results));
-
-        // double-indirection map, verse -> version -> content
-        final Map<String, Map<String, VerseSearchEntry>> verseToVersionToContent = new LinkedHashMap<String, Map<String, VerseSearchEntry>>();
 
         // combine the results into 1 giant keyed map
         final IndividualSearch currentSearch = sq.getCurrentSearch();
 
+        int total = results.getCardinality();
         final Key pagedKeys = this.jswordSearch.rankAndTrimResults(sq, results);
 
-        // iterate through the versions, first, to obtain all the results
-        for (final String v : currentSearch.getVersions()) {
-            // retrieve scripture content and set up basics
-            final SearchResult s = this.jswordSearch.getResultsFromTrimmedKeys(sq, v, sr.getTotal(), pagedKeys);
-
-            // key in to aggregating map
-            for (final SearchEntry e : s.getResults()) {
-                final VerseSearchEntry verseEntry = (VerseSearchEntry) e;
-
-                // retrieve Verse to Version map
-                Map<String, VerseSearchEntry> versionToContent = verseToVersionToContent.get(verseEntry
-                        .getOsisId());
-                if (versionToContent == null) {
-                    // using a tree map to maintain the natural ordering
-                    versionToContent = new LinkedHashMap<String, VerseSearchEntry>();
-                    verseToVersionToContent.put(verseEntry.getOsisId(), versionToContent);
-                }
-                versionToContent.put(v, verseEntry);
-            }
-        }
-
-        for (final Entry<String, Map<String, VerseSearchEntry>> verseToVersionToContentEntry : verseToVersionToContent
-                .entrySet()) {
-            // key= osisId, value=version+content
-            final KeyedSearchResultSearchEntry aggregateVerse = new KeyedSearchResultSearchEntry();
-
-            for (final Entry<String, VerseSearchEntry> versionToContentEntry : verseToVersionToContentEntry
-                    .getValue().entrySet()) {
-                final KeyedVerseContent keyedVerseContent = new KeyedVerseContent();
-                keyedVerseContent.setContentKey(versionToContentEntry.getKey());
-                final VerseSearchEntry verseSearchEntry = versionToContentEntry.getValue();
-                keyedVerseContent.setPreview(verseSearchEntry.getPreview());
-
-                // add to aggregation verse
-                aggregateVerse.addEntry(keyedVerseContent);
-                if (aggregateVerse.getKey() == null) {
-                    aggregateVerse.setKey(verseSearchEntry.getKey());
-                }
-            }
-
-            sr.addEntry(aggregateVerse);
-        }
-
-        sr.setQuery(sq.getOriginalQuery());
-        return sr;
+        // retrieve scripture content and set up basics
+        final SearchResult resultsForKeys = this.jswordSearch.getResultsFromTrimmedKeys(sq, currentSearch.getVersions(), total, pagedKeys);
+        resultsForKeys.setTotal(this.jswordSearch.getTotal(results));
+        resultsForKeys.setQuery(sq.getOriginalQuery());
+        return resultsForKeys;
     }
 
     /**

@@ -1,0 +1,28 @@
+@media screen and (max-width: 991px) {
+  .kolumny {
+    max-height: 500px;
+    overflow-y: auto;
+    overflow-x: hidden; } }
+@media screen and (min-width: 992px) {
+  .kolumny {
+    -moz-column-count: 2;
+    /* Firefox */
+    -webkit-column-count: 2;
+    /* Safari and Chrome */
+    column-count: 2;
+    max-width: 600px; } }
+
+@media screen and (max-width: 1120px) {
+  .miniKolumny {
+    max-height: 500px;
+    overflow-y: auto;
+    overflow-x: hidden; } }
+@media screen and (min-width: 1121px) {
+  .miniKolumny {
+    -moz-column-count: 2;
+    /* Firefox */
+    -webkit-column-count: 2;
+    /* Safari and Chrome */
+    column-count: 2;
+    max-width: 800px;
+    min-width: 500px; } }

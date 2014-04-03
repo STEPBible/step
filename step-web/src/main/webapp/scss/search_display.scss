@@ -1,0 +1,73 @@
+@import 'template_variables';
+
+.searchResultRow {
+  .verse {
+    vertical-align: middle;
+  }
+  p {
+    &:before {
+      content: "/";
+    }
+    display: inline;
+    font-style: italic;
+    margin: 0px 5px 0px 5px;
+  }
+  .verseNumber {
+    vertical-align: middle;
+  }
+  br, .startLineGroup {
+    display: none;
+  }
+  span {
+    &.level1, &.level2, &.level3, &.level4 {
+      padding: 0px;
+      margin: 0px;
+      &:before {
+        content: ' / ';
+      }
+    }
+  }
+}
+
+h4.lexicalGrouping {
+  font-size: $defaultFontSize;
+  .glyphicon {
+    margin-right: 10px;
+  }
+}
+
+.originalWordSearchToolbar {
+  clear: both;
+  padding-top: 5px;
+  
+  .panel-body {
+    padding: 5px;
+  }
+  ul {
+    padding: 0px;
+    list-style: none;
+    margin-bottom: 0px;
+  }
+  li {
+    padding: 0px;
+  }
+  label {
+    margin: 0px;
+    font-weight: normal;
+  }
+}
+
+.subjectToolbar {
+  input[type='radio'] {
+    vertical-align: text-bottom;
+  }
+  label {
+    padding-right: 20px;
+    padding-left: 5px;
+  }
+}
+
+.resultsLabel {
+  font-style: italic;
+  clear: right;
+}

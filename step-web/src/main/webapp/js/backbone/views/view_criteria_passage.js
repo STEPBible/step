@@ -13,12 +13,12 @@ PassageCriteriaView = Backbone.View.extend({
         this.reference = this.$el.find(".passageReference");
         this.extraVersions = this.$el.find(".extraVersions");
         this.interlinearMode = this.$el.find(".extraVersionsDisplayOptions");
-        this.detailLevel = this.$el.detailSlider({
-            changed : function(newValue) {
-                self.model.save({ detailLevel : newValue });
-            },
-            value : this.model.get("detailLevel")
-        });
+//        this.detailLevel = this.$el.detailSlider({
+//            changed : function(newValue) {
+//                self.model.save({ detailLevel : newValue });
+//            },
+//            value : this.model.get("detailLevel")
+//        });
 
         this.versionInfo = this.$el.find(".infoAboutVersion").button({ icons: { primary: "ui-icon-info" }, text: false});
         this.$el.find(".searchPassage").button({ icons: { primary: "ui-icon-search" }, text: false });
@@ -26,9 +26,22 @@ PassageCriteriaView = Backbone.View.extend({
         this.$el.find(".interlinearHelp").button({ icons: { primary: "ui-icon-help" }, text: false});
         step.util.ui.autocompleteSearch(this.interlinearMode, step.defaults.passage.interOptions);
 
-        this.version.versions();
-        this.extraVersions.versions({ multi: true });
-        this.reference.biblebooks({ version : this.model.get("version") });
+//        this.version.versions();
+        var dropdown = this.$el.find(".versionsList");
+        for(var ii = 0; ii < step.versions.length; ii++) {
+            var checkbox = $("<option  />").attr("value", step.versions[ii].initials).append(step.versions[ii].name);
+            dropdown.append(checkbox);
+        }
+//        dropdown.multiselect({
+//            enableFiltering: 1,
+//            buttonClass: 'btn btn-default btn-sm'
+//        });
+//        dropdown.popover("show");
+        
+//        this.versions.attr().attr("", "").attr("", "");
+        
+//        this.extraVersions.versions({ multi: true });
+//        this.reference.biblebooks({ version : this.model.get("version") });
 
         //listen to model changes on version to update the version dropdown
         this.listenTo(this.model, 'change:version', this._updateViewWithVersionChange);
@@ -98,9 +111,10 @@ PassageCriteriaView = Backbone.View.extend({
      */
     _resyncModelValues: function () {
         var modelDetailValue = this.model.get("detailLevel");
-        var detailValue = this.detailLevel.detailSlider("value");
+//        var detailValue = this.detailLevel.detailSlider("value");
+        var detailValue = null;
         if(detailValue != modelDetailValue) {
-            this.detailLevel.detailSlider("handleSlide", modelDetailValue);
+//            this.detailLevel.detailSlider("handleSlide", modelDetailValue);
         }
 
         var changed = false;

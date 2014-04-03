@@ -19,7 +19,7 @@
 <!-- 		omit-xml-declaration="yes" indent="no" /> -->
 
 	<xsl:template match="/">
-		<div>
+		<div class="passageContentHolder">
 			<xsl:choose>
 				<xsl:when test="count(//verse) != 0">
 					<xsl:apply-templates select="//verse" />

@@ -39,7 +39,9 @@ import com.tyndalehouse.step.guice.providers.ClientSessionProvider;
 import com.tyndalehouse.step.models.TimelineTranslator;
 import com.tyndalehouse.step.models.UiDefaults;
 import com.tyndalehouse.step.models.timeline.simile.SimileTimelineTranslatorImpl;
+import com.tyndalehouse.step.rest.framework.ObjectMapperProvider;
 import com.yammer.metrics.reporting.AdminServlet;
+import org.codehaus.jackson.map.ObjectMapper;
 
 /**
  * This module serves to inject data that is specific to the servlet layer. The purpose of it is therefore to
@@ -56,16 +58,15 @@ public class StepWebModule extends AbstractStepGuiceModule {
      */
     public StepWebModule() {
         super(GUICE_PROPERTIES);
-        // TODO Auto-generated constructor stub
     }
 
     @Override
     protected void doConfigure() {
         // this provider is helpful for getting the request at runtime
+        bind(ObjectMapper.class).toProvider(ObjectMapperProvider.class);
         bind(ClientSession.class).toProvider(ClientSessionProvider.class).in(ServletScopes.REQUEST);
         bind(UiDefaults.class).asEagerSingleton();
-        bind(AdminServlet.class).asEagerSingleton();
         bind(TimelineTranslator.class).to(SimileTimelineTranslatorImpl.class);
-
+        bind(AdminServlet.class);
     }
 }

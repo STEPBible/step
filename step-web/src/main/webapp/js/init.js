@@ -35,47 +35,124 @@
 
 init();
 
-//some extensions (perhaps should go in another file)
-String.prototype.startsWith = function (nonEscapedString) {
-    var str = nonEscapedString.replace('+', '\\+');
-    return (this.match("^" + str) == nonEscapedString);
-};
 
 
 var topMenu;
 var timeline;
 var lexiconDefinition;
 
+function format(v) {
+    return [        '<div class="versionItem">',
+                    '<span class="initials">' + v.version.initials + '</span>',
+                    '<span class="name">' + v.version.name + '</span>',
+                    '<span class="source">[' + __s.bible + ' / ' + __s.commentary + ']</span>',
+                    '<span class="features">' + step.util.ui.getFeaturesLabel(v) + '</span>',
+                    '</div>'
+                ].join(' - ');
+}
+
 function init() {
     $(document).ready(function () {
-        //fix to IE10 menus:
-        $("li[menu-name] ul li").css("list-style", "none");
-        $.cookie("step", "true");
-        $.fn.qtip.defaults.style.classes = "primaryLightBg primaryLightBorder";
-
-
-        initLocale();
-        checkValidUser();
-        displayCookieWarning();
-        
-        initMenu();
-        $("li[menu-name] a[name]").bind("click", function () {
-            step.menu.handleClickEvent(this);
+        $.getSafe(BIBLE_GET_MODULES, [true], function(data) {
+            var myVersions = [];
+            for(var ii = 0; ii < data.versions.length; ii++) {
+                myVersions.push({ 
+                    //TODO add extra version name
+                    text: data.versions[ii].initials + " " + data.versions[ii].shortInitials + " " + data.versions[ii].name, 
+                    version: data.versions[ii] 
+                });
+            }
+            window.myVersions = myVersions;
         });
+        
+//        $('#masterSearch').magicSuggest({
+//            data : BIBLE_GET_MODULES + "true",
+//            resultsField : "versions",
+//            hideTrigger: true,
+//            method: "GET",
+//            renderer: function(v){
+//                return [
+//                    '<span class="initials">' + v.initials + '</span>',
+//                    '<span class="name">' + v.name + '</span>',
+//                    '<span class="source">[' + __s.bible + ' / ' + __s.commentary + ']</span>',
+//                    '<span class="features">' + step.util.ui.getFeaturesLabel(v) + '</span>'
+//                ].join(' - ');
+//            },
+//            valueField: "initials",
+//            displayField: "initials",
+//        });
 
-        initGlobalHandlers();
-        initLayout();
-        initRefineSearch();
-
-        initData();
+        $('#masterSearch').select2({
+            minimumInputLength: 2,
+//            width: "element",
+//            dropdownAutoWidth: true,
+//            allowClear: true,
+//            dropdownCssClass: "masterSearchSelect",
+            data : function() {
+                if(window.myVersions) {
+                    return { results : window.myVersions };      
+                }
+                return { results: [] };
+            },
+//            ajax: { // instead of writing the function to execute the request we use Select2's convenient helper
+//                url: BIBLE_GET_MODULES + "true",
+//                dataType: 'json',
+//                data: function (term, page) {
+//                    return {
+//                        q: term, // search term
+//                        page_limit: 10,
+//                        apikey: "ju6z9mjyajq2djue3gbvv26t" // please do not use so this example keeps working
+//                    };
+//                },
+//                results: function (data, page) { // parse the results into the format expected by Select2.
+//                    since we are using custom formatting functions we do not need to alter remote JSON data
+//                    return {results: data.versions};
+//                }
+//            },
+            id : function(entry) {
+                return entry.version.initials;
+            },
+            allowClear: true,
+            multiple: true,
+            formatResult: format,
+            matcher : function(term, text) {
+                var regex = new RegExp("\\b" + term, "ig");
+                return text != null && text != "" && text.toLowerCase().match(regex);
+            },
+            formatSelection: function(entry) { return "<div class='versionItem'>" + entry.version.initials + "</div>" },
+            escapeMarkup: function(m) { return m; }
+            
+        });
+        
+        
+        //fix to IE10 menus:
+//        $("li[menu-name] ul li").css("list-style", "none");
+//        $.cookie("step", "true");
+//        $.fn.qtip.defaults.style.classes = "primaryLightBg primaryLightBorder";
+//
+//
+//        initLocale();
+//        checkValidUser();
+//        displayCookieWarning();
+//        
+//        initMenu();
+//        $("li[menu-name] a[name]").bind("click", function () {
+//            step.menu.handleClickEvent(this);
+//        });
+//
+//        initGlobalHandlers();
+//        initLayout();
+//        initRefineSearch();
+//
+//        initData();
 
         // read state from the cookie
-        step.state.restore();
+//        step.state.restore();
 
-        hearViewChanges();
-        $.shout("view-change");
-
-        initJira();
+//        hearViewChanges();
+//        $.shout("view-change");
+//
+//        initJira();
     });
 }
 
@@ -274,88 +351,88 @@ function checkValidUser() {
 
 function refreshLayout() {
     //we resize the heights:
-    var windowHeight = $(window).height();
-    var topMenuHeight = $("#topMenu").height();
-    var imageAndFooterHeight = $(".northBookmark").height() + $(".logo").height();
-    var bottomSectionHeight = $("#bottomSection").height();
-    var windowWithoutMenuNorModule = windowHeight - topMenuHeight - bottomSectionHeight;
-    var bookmarkHeight = windowWithoutMenuNorModule - imageAndFooterHeight;
+//    var windowHeight = $(window).height();
+//    var topMenuHeight = $("#topMenu").height();
+//    var imageAndFooterHeight = $(".northBookmark").height() + $(".logo").height();
+//    var bottomSectionHeight = $("#bottomSection").height();
+//    var windowWithoutMenuNorModule = windowHeight - topMenuHeight - bottomSectionHeight;
+//    var bookmarkHeight = windowWithoutMenuNorModule - imageAndFooterHeight;
 
-    $("body").height($(window).height() - 10);
-    $(".bookmarkPane").height(bookmarkHeight - 5);
+//    $("body").height($(window).height() - 10);
+//    $(".bookmarkPane").height(bookmarkHeight - 5);
 
-    var passageContents = $(".passageContent");
-    for (var i = 0; i < passageContents.length; i++) {
-        var pc = passageContents.get(i);
-        var warningHeight = $("#stepInDevelopmentWarning").height();
-        var height = windowHeight - $(pc).position().top - warningHeight - 8;
-        $(pc).height(height);
-    }
+//    var passageContents = $(".passageContent");
+//    for (var i = 0; i < passageContents.length; i++) {
+//        var pc = passageContents.get(i);
+//        var warningHeight = $("#stepInDevelopmentWarning").height();
+//        var height = windowHeight - $(pc).position().top - warningHeight - 8;
+//        $(pc).height(height);
+//    }
 
-    $(".leftColumn, .rightColumn, #holdingPage, .passageContainer").height(windowHeight - $(".topMenu").height() - 10);
+//    $(".leftColumn, .rightColumn, #holdingPage, .passageContainer").height(windowHeight - $(".topMenu").height() - 10);
     delay(function() {
         Backbone.Events.trigger("window-resize", {});
     }, 250, "window-resize-chrome-fix");
 
 }
 
-function hearViewChanges() {
+//function hearViewChanges() {
+//
+//    $(window).hear("view-change", function (self, data) {
+//        var view = data == undefined || data.viewName == undefined ? step.state.view.getView() : data.viewName;
+//        step.state.view.storeView(view);
+//
+//        step.menu.untickMenuItem($("[name='" + (view == 'SINGLE_COLUMN_VIEW' ? 'TWO_COLUMN_VIEW' : 'SINGLE_COLUMN_VIEW') + "']"));
+//        step.menu.tickMenuItem($("[name='" + view + "']"));
+//        if (view == 'SINGLE_COLUMN_VIEW') {
+//            if (isSmallScreen()) {
+//                doSmallScreenView();
+//            } else {
+//                $(".leftColumn").removeClass("column").addClass("singleColumn");
+//                $(".column").toggle(false);
+//                $("#centerPane").toggle(false);
+//
+//                add the holding page
+//                $("#holdingPage").toggle(true);
+//                $(".leftColumn").resizable({ handles: 'e', resize: function (e, ui) {
+//                    called when the left column is resized
+//                    adjustColumns();
+//                }});
+//
+//                adjustColumns();
+//            }
+//        } else {
+//            $(".column").toggle(true);
+//            $(".leftColumn").removeClass("singleColumn").addClass("column");
+//            $("#centerPane").toggle(true);
+//            $("#holdingPage").toggle(false);
+//
+//            var leftColumn = $(".leftColumn");
+//
+//            if (leftColumn.hasClass("ui-resizable")) {
+//                leftColumn.resizable("destroy");
+//            }
+//            step.util.ui.doMenu('rightPaneMenu');
+//        }
 
-    $(window).hear("view-change", function (self, data) {
-        var view = data == undefined || data.viewName == undefined ? step.state.view.getView() : data.viewName;
-        step.state.view.storeView(view);
+//        $.shout("view-change-done");
+//    });
+//}
 
-        step.menu.untickMenuItem($("[name='" + (view == 'SINGLE_COLUMN_VIEW' ? 'TWO_COLUMN_VIEW' : 'SINGLE_COLUMN_VIEW') + "']"));
-        step.menu.tickMenuItem($("[name='" + view + "']"));
-        if (view == 'SINGLE_COLUMN_VIEW') {
-            if (isSmallScreen()) {
-                doSmallScreenView();
-            } else {
-                $(".leftColumn").removeClass("column").addClass("singleColumn");
-                $(".column").toggle(false);
-                $("#centerPane").toggle(false);
+//function isSmallScreen() {
+//    return window.screen.availWidth < 1030;
+//}
 
-                //add the holding page
-                $("#holdingPage").toggle(true);
-                $(".leftColumn").resizable({ handles: 'e', resize: function (e, ui) {
-                    //called when the left column is resized
-                    adjustColumns();
-                }});
-
-                adjustColumns();
-            }
-        } else {
-            $(".column").toggle(true);
-            $(".leftColumn").removeClass("singleColumn").addClass("column");
-            $("#centerPane").toggle(true);
-            $("#holdingPage").toggle(false);
-
-            var leftColumn = $(".leftColumn");
-
-            if (leftColumn.hasClass("ui-resizable")) {
-                leftColumn.resizable("destroy");
-            }
-            step.util.ui.doMenu('rightPaneMenu');
-        }
-
-        $.shout("view-change-done");
-    });
-}
-
-function isSmallScreen() {
-    return window.screen.availWidth < 1030;
-}
-
-function doSmallScreenView() {
-    $(".rightColumn, #holdingPage,#centerPane").css("display", "none");
-    $(".leftColumn").css("width", "100%");
-}
-
-function adjustColumns() {
-    var windowWidth = $(window).width();
-    var firstColumnWidth = $(".singleColumn").width();
-    $("#holdingPage").width(windowWidth - firstColumnWidth - 5);
-}
+//function doSmallScreenView() {
+//    $(".rightColumn, #holdingPage,#centerPane").css("display", "none");
+//    $(".leftColumn").css("width", "100%");
+//}
+//
+//function adjustColumns() {
+//    var windowWidth = $(window).width();
+//    var firstColumnWidth = $(".singleColumn").width();
+//    $("#holdingPage").width(windowWidth - firstColumnWidth - 5);
+//}
 
 /**
  * initialises layout
@@ -412,8 +489,8 @@ function initData() {
         }
 
         $.shout("versions-initialisation-completed");
-        initApp();
-        initModules();
+//        initApp();
+//        initModules();
 
     });
 }

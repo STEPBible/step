@@ -36,6 +36,7 @@ import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
 import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
 import static com.tyndalehouse.step.core.utils.StringUtils.split;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -45,6 +46,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.tyndalehouse.step.core.exceptions.TranslatedException;
+import org.tartarus.snowball.ext.PorterStemmer;
 
 /**
  * Represents an individual search
@@ -82,39 +84,100 @@ public class IndividualSearch {
      * Instantiates a single search to be executed.
      *
      * @param type    the type of the search
-     * @param version the version to be used to carry out the search
+     * @param versions the versions to be used to carry out the search
+     */
+    public IndividualSearch(final SearchType type, final List<String> versions, 
+                            final String query, final String range) {
+        this(type, versions, query, range, null);
+    }
+    
+    /**
+     * Instantiates a single search to be executed.
+     *
+     * @param type    the type of the search
+     * @param versions the versions to be used to carry out the search
      * @param query   the query to be run
      */
-    public IndividualSearch(final SearchType type, final String version, final String query) {
+    public IndividualSearch(final SearchType type, final List<String> versions,
+                            final String query, final String range, final String[] filter) {
         this.type = type;
-        this.query = query;
-        this.versions = new String[]{version};
+        this.mainRange = range;
+        this.versions = versions.toArray(new String[versions.size()]);
+        this.originalFilter = filter;
+        
+        if(this.type == SearchType.SUBJECT_SIMPLE) {
+            this.query = LuceneIndex.FIELD_HEADING + ":" + QueryParser.escape(stem(query));
+        } else {
+            this.query = query;
+        }
     }
+
+    private String stem(final String query) {
+        PorterStemmer stemmer = new PorterStemmer();
+        stemmer.setCurrent(query);
+        stemmer.stem();
+        return stemmer.getCurrent();
+    }
+
+//    /**
+//     * Initialises the search from the query string.
+//     *
+//     * @param query the query that is being sent to the app to search for
+//     */
+//    public IndividualSearch(final String query) {
+//        if (query.startsWith(TEXT)) {
+//            this.type = SearchType.TEXT;
+//            this.query = (query.substring(TEXT.length()));
+//        } else if (query.startsWith(SUBJECT)) {
+//            parseSubjectSearch(query.substring(SUBJECT.length()));
+//        } else if (query.startsWith(ORIGINAL)) {
+//            parseOriginalSearch(query.substring(ORIGINAL.length()));
+//        } else if (query.startsWith(TIMELINE_DESCRIPTION)) {
+//            this.type = SearchType.TIMELINE_DESCRIPTION;
+//            matchVersions(query.substring(TIMELINE_DESCRIPTION.length()));
+//        } else if (query.startsWith(TIMELINE_REFERENCE)) {
+//            this.type = SearchType.TIMELINE_REFERENCE;
+//            matchVersions(query.substring(TIMELINE_REFERENCE.length()));
+//        } else {
+//            LOGGER.warn("Unknown search type for query [{}]", query);
+//
+//            default to JSword and hope for the best, but warn
+//            matchVersions(query);
+//            this.type = SearchType.TEXT;
+//        }
+//        if (isBlank(this.query)) {
+//            return straight away
+//            throw new TranslatedException("blank_search_provided");
+//        }
+//
+//        LOGGER.debug(
+//                "The following search has been constructed: type [{}]\nquery [{}]\n subRange [{}], mainRange [{}]",
+//                new Object[]{this.type, query, this.subRange, this.mainRange});
+//    }
 
     /**
      * Initialises the search from the query string.
      *
      * @param query the query that is being sent to the app to search for
      */
-    public IndividualSearch(final String query) {
+    public IndividualSearch(final String query, final String[] versions) {
+        this.versions = versions;
         if (query.startsWith(TEXT)) {
             this.type = SearchType.TEXT;
-            matchVersions(query.substring(TEXT.length()));
+            this.query = query.substring(TEXT.length());
         } else if (query.startsWith(SUBJECT)) {
             parseSubjectSearch(query.substring(SUBJECT.length()));
         } else if (query.startsWith(ORIGINAL)) {
             parseOriginalSearch(query.substring(ORIGINAL.length()));
         } else if (query.startsWith(TIMELINE_DESCRIPTION)) {
             this.type = SearchType.TIMELINE_DESCRIPTION;
-            matchVersions(query.substring(TIMELINE_DESCRIPTION.length()));
+            this.query = query.substring(TIMELINE_DESCRIPTION.length());
         } else if (query.startsWith(TIMELINE_REFERENCE)) {
             this.type = SearchType.TIMELINE_REFERENCE;
-            matchVersions(query.substring(TIMELINE_REFERENCE.length()));
+            this.query = query.substring(TIMELINE_REFERENCE.length());
         } else {
-            // LOGGER.warn("Unknown search type for query [{}]", query);
-
             // default to JSword and hope for the best, but warn
-            matchVersions(query);
+            this.query = query;
             this.type = SearchType.TEXT;
         }
         if (isBlank(this.query)) {
@@ -126,6 +189,7 @@ public class IndividualSearch {
                 "The following search has been constructed: type [{}]\nquery [{}]\n subRange [{}], mainRange [{}]",
                 new Object[]{this.type, query, this.subRange, this.mainRange});
     }
+
 
     /**
      * Parses the query to be the correct original search
@@ -169,11 +233,9 @@ public class IndividualSearch {
         }
 
         matchOriginalFilter(parseableQuery.substring(length + 1));
-        matchVersions(this.query);
 
         // finally we can try and match our sub-range for the original word
         matchSubRange();
-
         matchMainRange();
     }
 
@@ -221,27 +283,6 @@ public class IndividualSearch {
     }
 
     /**
-     * matches a version in the query of type "xyz in (KJV)"
-     *
-     * @param textQuery the query without the prefix
-     */
-    private void matchVersions(final String textQuery) {
-        final Matcher capturedVersions = IN_VERSIONS.matcher(textQuery);
-
-        if (!capturedVersions.find()) {
-            throw new TranslatedException("no_search_version", textQuery);
-        }
-
-        final String versionGroup = capturedVersions.group(1);
-        this.versions = versionGroup.split("[, ]+");
-        for (int i = 0; i < this.versions.length; i++) {
-            this.versions[i] = this.versions[i].trim();
-        }
-
-        this.query = textQuery.substring(0, capturedVersions.start() - 1).trim();
-    }
-
-    /**
      * Constructs the syntax for the subject search
      *
      * @param parsedSubject the parsed and well-formed search query, containing prefix, etc.
@@ -276,7 +317,7 @@ public class IndividualSearch {
         final String trimmedQuery = parsedSubject.substring(nextIndex + 1);
 
         // fill in the query and versions
-        matchVersions(trimmedQuery);
+        this.query = trimmedQuery;
 
         if (this.type == SearchType.SUBJECT_SIMPLE) {
             // amend the query

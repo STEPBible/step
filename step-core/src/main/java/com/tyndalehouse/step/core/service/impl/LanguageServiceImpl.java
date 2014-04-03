@@ -121,9 +121,16 @@ public class LanguageServiceImpl implements LanguageService {
      */
     private String getLanguageName(final Locale currentLocale, final Locale locale) {
         String extra = "";
+        
+        if("bfo".equalsIgnoreCase(currentLocale.getLanguage())) {
+            return "Birifor";
+        }
+
         if (!"".equals(locale.getCountry())) {
             if ("TW".equals(locale.getCountry())) {
                 extra = "Traditional";
+            } else if("bfo".equalsIgnoreCase(locale.getISO3Language())) {
+                
             } else {
                 extra = locale.getDisplayCountry(currentLocale);
             }

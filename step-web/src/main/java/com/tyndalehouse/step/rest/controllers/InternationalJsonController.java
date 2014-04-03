@@ -1,11 +1,11 @@
 /*******************************************************************************
  * Copyright (c) 2012, Directors of the Tyndale STEP Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without 
  * modification, are permitted provided that the following conditions 
  * are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright 
  * notice, this list of conditions and the following disclaimer.
  * Redistributions in binary form must reproduce the above copyright 
@@ -16,7 +16,7 @@
  * nor the names of its contributors may be used to endorse or promote 
  * products derived from this software without specific prior written 
  * permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
@@ -35,11 +35,10 @@ package com.tyndalehouse.step.rest.controllers;
 import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -54,22 +53,27 @@ import com.tyndalehouse.step.rest.framework.JsonResourceBundle;
 
 /**
  * Serves the images by downloading them from a remote source if they do not already exist.
- * 
+ *
  * @author chrisburrell
- * 
  */
 @Singleton
 public class InternationalJsonController extends HttpServlet {
-    /** The Constant serialVersionUID. */
     private static final long serialVersionUID = 1721159652548642069L;
     private static final Map<Locale, String> BUNDLES = new HashMap<Locale, String>();
-
+    private final ObjectMapper objectMapper;
+    
+    @Inject
+    public InternationalJsonController(final Provider<ObjectMapper> objectMapperProvider) {
+        this.objectMapper = objectMapperProvider.get();
+    }
+    
     @Override
-    protected void doGet(final HttpServletRequest req, final HttpServletResponse response)
+    protected void doGet(final HttpServletRequest req, 
+                         final HttpServletResponse response)
             throws ServletException, IOException {
 
         final Locale locale;
-
+        
         final String langParameter = req.getParameter("lang");
         if (isNotBlank(langParameter)) {
             locale = new Locale(langParameter);
@@ -78,7 +82,7 @@ public class InternationalJsonController extends HttpServlet {
         }
         String qualifiedResponse = BUNDLES.get(locale);
         if (qualifiedResponse == null) {
-            qualifiedResponse = readBundle(locale);
+            qualifiedResponse = readBundle(locale, "HtmlBundle", "InteractiveBundle");
             BUNDLES.put(locale, qualifiedResponse);
         }
 
@@ -92,19 +96,21 @@ public class InternationalJsonController extends HttpServlet {
 
     /**
      * Read bundle.
-     * 
+     *
      * @param locale the locale
      * @return the string
      */
-    private String readBundle(final Locale locale) {
-        final ResourceBundle bundle = ResourceBundle.getBundle("InteractiveBundle", locale);
+    private String readBundle(final Locale locale, final String... bundleNames) {
+        List<ResourceBundle> bundles = new ArrayList<ResourceBundle>(2);
+        for (String b : bundleNames) {
+            bundles.add(ResourceBundle.getBundle(b, locale));
+        }
 
-        final JsonResourceBundle jsonResourceBundle = new JsonResourceBundle(bundle);
-        final ObjectMapper mapper = new ObjectMapper();
+        final JsonResourceBundle jsonResourceBundle = new JsonResourceBundle(bundles);
         String jsonResponse;
 
         try {
-            jsonResponse = mapper.writeValueAsString(jsonResourceBundle);
+            jsonResponse = objectMapper.writeValueAsString(jsonResourceBundle);
         } catch (final IOException e) {
             throw new StepInternalException("Unable to read messages", e);
         }

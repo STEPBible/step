@@ -52,20 +52,7 @@ step.util = {
         }
     },
 
-    getPassageContainer: function (passageIdOrElement) {
-        //check if we have a number
-        if (isNaN(parseInt(passageIdOrElement))) {
-            //assume jquery selector or element
-            return $(passageIdOrElement).closest(".passageContainer");
-        }
 
-        //check if we're storing it
-        if (this.passageContainers[passageIdOrElement] == null) {
-            var container = $(".passageContainer[passage-id = " + passageIdOrElement + "]");
-            this.passageContainers[passageIdOrElement] = container;
-        }
-        return this.passageContainers[passageIdOrElement];
-    },
 
     getAllPassageIds: function () {
         return $(".passageContainer").map(function () {
@@ -329,14 +316,14 @@ step.util = {
         },
 
         doMenu: function (id) {
-            ddsmoothmenu.init({
-                mainmenuid: id,        //menu DIV id
-                zIndexStart: 100,
-                orientation: 'h',               //Horizontal or vertical menu: Set to "h" or "v"
-                classname: 'ddsmoothmenu innerMenu', //class added to menu's outer DIV
-                //customtheme: ["#1c5a80", "#18374a"],
-                contentsource: "markup"
-            });
+//            ddsmoothmenu.init({
+//                mainmenuid: id,        //menu DIV id
+//                zIndexStart: 100,
+//                orientation: 'h',               //Horizontal or vertical menu: Set to "h" or "v"
+//                classname: 'ddsmoothmenu innerMenu', //class added to menu's outer DIV
+//                //customtheme: ["#1c5a80", "#18374a"],
+//                contentsource: "markup"
+//            });
         },
 
         doSocialButtons: function (element) {
@@ -389,34 +376,7 @@ step.util = {
             parent.append(passageContent);
         },
 
-        /**
-         * Takes in the selector for identifying each group element. Then selects children(), and iterates
-         * through each child apply the right CSS class from the array.
-         *
-         * @param passageContent the html jquery object
-         * @param groupSelector the group selector, a w, or a row, each containing a number of children
-         * @param cssClasses the set of css classes to use
-         * @param exclude the exclude function if we want to skip over some items
-         * @param offset the offset, which gets added to be able to ignore say the first item always.
-         * @private
-         */
-        _applyCssClassesRepeatByGroup: function (passageContent, groupSelector, cssClasses, exclude, offset) {
-            if (offset == undefined) {
-                offset = 0;
-            }
-
-            var words = $(groupSelector, passageContent);
-            for (var j = 0; j < words.length; j++) {
-                var jqItem = words.eq(j);
-                var children = jqItem.children();
-                for (var i = offset; i < children.length; i++) {
-                    var child = children.eq(i);
-                    if (exclude == undefined || !exclude(child)) {
-                        child.addClass(cssClasses[i - offset]);
-                    }
-                }
-            }
-        },
+        
 
         /**
          * Given an array of languages, returns an array of fonts
@@ -495,33 +455,7 @@ step.util = {
             return $("fieldset:visible", step.util.getPassageContainer(passageId)).find(".searchVersions, .passageVersion, .extraVersions");
         },
 
-        addStrongHandlers: function (passageId, passageContent) {
-            var that = this;
-            var allStrongElements = $("[strong]", passageContent);
-
-            allStrongElements.click(function () {
-                showDef(this);
-            }).hover(function () {
-                    step.passage.higlightStrongs({
-                        passageId: undefined,
-                        strong: $(this).attr('strong'),
-                        morph: $(this).attr('morph'),
-                        classes: "primaryLightBg"
-                    });
-
-                    var hoverContext = this;
-                    delay(function () {
-                        QuickLexiconModels.at(0).save({
-                            strongNumber: $(hoverContext).attr('strong'),
-                            morph: $(hoverContext).attr('morph'),
-                            element: hoverContext
-                        });
-                    }, 500, 'show-quick-lexicon');
-                }, function () {
-                    step.passage.removeStrongsHighlights(undefined, "primaryLightBg relatedWordEmphasisHover");
-                    delay(undefined, 0, 'show-quick-lexicon');
-                });
-        },
+        
         autocompleteSearch: function (selector, data, readonly, preChangeHandler) {
             var jqSelector = $(selector);
             var changed = false;
@@ -637,7 +571,7 @@ step.util = {
                                     nameLink.append(" (");
                                     nameLink.append(item.stepTransliteration);
                                     nameLink.append(", ")
-                                    nameLink.append($("<span>").addClass(self._getFontForStrong(item.strongNumber)).append(item.matchingForm));
+                                    nameLink.append($("<span>").addClass(self.getFontForStrong(item.strongNumber)).append(item.matchingForm));
                                     nameLink.append(")");
                                     nameLink.attr("href", "javascript:void(0)");
                                     nameLink.click(function () {
@@ -730,7 +664,7 @@ step.util = {
          * @returns {string}
          * @private
          */
-        _getFontForStrong: function (strong) {
+        getFontForStrong: function (strong) {
             if (strong[0] == 'H') {
                 return "hbFontSmall";
             } else {
@@ -821,27 +755,7 @@ step.util = {
     }
 };
 
-var delay = (function () {
-    var timer = 0;
-    var timers = {};
-
-    return function (callback, ms, timerName) {
-        if (timerName) {
-            var tn = timers[timerName];
-            if (tn == undefined) {
-                timers[timerName] = tn = 0;
-            }
-            clearTimeout(tn);
-
-            if (callback) {
-                timers[timerName] = setTimeout(callback, ms);
-            }
-        } else {
-            clearTimeout(timer);
-            timer = setTimeout(callback, ms);
-        }
-    };
-})();
+//var delay = ()();
 
 /**
  * array comparison
@@ -930,10 +844,10 @@ function shortenName(longName, minLength) {
 
 var outstandingRequests = 0;
 function refreshWaitStatus() {
-    var coords = $("#topLogo").position();
-    $("#waiting").css('top', coords.top + 300);
-    $("#waiting").css('left', coords.left + $("#topLogo").width() / 2 - $("#waiting").width() / 2);
-    $("#waiting").css("display", outstandingRequests > 0 ? "block" : "none");
+//    var coords = $("#topLogo").position();
+//    $("#waiting").css('top', coords.top + 300);
+//    $("#waiting").css('left', coords.left + $("#topLogo").width() / 2 - $("#waiting").width() / 2);
+//    $("#waiting").css("display", outstandingRequests > 0 ? "block" : "none");
 };
 
 // some jquery extensions
@@ -1007,7 +921,7 @@ function refreshWaitStatus() {
                         });
                     } else {
                         if (passageId != undefined) {
-                            step.util.raiseInfo(passageId, data.errorMessage, level, url.startsWith(BIBLE_GET_BIBLE_TEXT));
+                            step.util.raiseInfo(data.errorMessage, level, passageId, url.startsWith(BIBLE_GET_BIBLE_TEXT));
                         } else {
                             step.util.raiseError(data.errorMessage);
                         }
@@ -1234,7 +1148,7 @@ function passageArrowTrigger(passageId, sourceVersion, ref, goToChapter, followS
 
         $.getSafe(BIBLE_EXPAND_TO_CHAPTER, [sourceVersion, version, ref], function (newChapterRef) {
             if (step.util.isBlank(newChapterRef.name)) {
-                step.util.raiseInfo(passageId, sprintf(__s.error_bible_doesn_t_have_passage, ref), 'error', true);
+                step.util.raiseInfo(sprintf(__s.error_bible_doesn_t_have_passage, ref), 'error', passageId, true);
                 Backbone.Events.trigger("passage:rendered:" + passageId);
                 return;
             }
@@ -1245,7 +1159,7 @@ function passageArrowTrigger(passageId, sourceVersion, ref, goToChapter, followS
     } else {
         $.getSafe(BIBLE_CONVERT_VERSIFICATION, [ref, sourceVersion, version], function (newChapterRef) {
             if (step.util.isBlank(newChapterRef.name)) {
-                step.util.raiseInfo(passageId, sprintf(__s.error_bible_doesn_t_have_passage, ref), 'error', true);
+                step.util.raiseInfo(sprintf(__s.error_bible_doesn_t_have_passage, ref), 'error', passageId, true);
                 Backbone.Events.trigger("passage:rendered:" + passageId);
                 return;
             }

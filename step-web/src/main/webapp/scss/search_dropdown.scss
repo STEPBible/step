@@ -1,0 +1,95 @@
+@import 'template_variables';
+@import 'mixins';
+
+.select2-results {
+  .initials {
+    font-weight: bold;
+  }
+  .source {
+    float: right;
+    font-style: italic;
+  }
+  .features {
+    float: right;
+    margin-right: 5px;
+    padding: 0 2;
+    
+    font-weight: bold;
+  }
+  .versionItem {
+    .features {
+      
+    }
+  }
+}
+
+.select-meanings {
+  @include gradient($meaningsRow, $optionStartGradient, $optionEndGradient);
+}
+
+.select-version {
+  @include gradient($bibleRow, $optionStartGradient, $optionEndGradient);
+}
+
+.select-reference {
+  @include gradient($referenceRow, $optionStartGradient, $optionEndGradient);
+}
+
+.select-subject {
+  @include gradient($subjectRow, $optionStartGradient, $optionEndGradient);
+}
+
+.select-text {
+  @include gradient($textRow, $optionStartGradient, $optionEndGradient);
+}
+
+.select-greek {
+  @include gradient($greekRow, $optionStartGradient, $optionEndGradient);
+}
+
+.select-greekMeanings {
+  @include gradient($greekMeaningsRow, $optionStartGradient, $optionEndGradient);
+}
+
+.select-hebrew {
+  @include gradient($hebrewRow, $optionStartGradient, $optionEndGradient);
+}
+
+.select-hebrewMeanings {
+  @include gradient($hebrewMeaningsRow, $optionStartGradient, $optionEndGradient);
+}
+
+.select-topicref {
+  @include gradient($topicByRefRow, $optionStartGradient, $optionEndGradient);
+}
+
+@media screen and (min-width: $stepXSBootstrap) {
+  .select2-drop-multi ul {
+    margin: 0px;
+    -moz-column-count: 2; /* Firefox */
+    -webkit-column-count: 2; /* Safari and Chrome */
+    column-count: 2;
+    
+    //except for no results, where we display only 1 column:
+    &.select2-parent-no-results {
+      @include multi-column(1);
+    }
+    li {
+      display: inline-block;
+      border-bottom: solid 1 lightgrey;
+      width: 100%;
+    }
+    .message {
+      float: right;
+      margin: 2px 3px 0 0;
+      font-size: 90%;
+    }
+  }
+}
+
+.searchLabel a {
+  font-size: 90%;
+  padding: 2px;
+  border-radius: 3 3 3 3 !important;
+  cursor: hand;
+}

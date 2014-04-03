@@ -1,0 +1,48 @@
+@import 'template_variables';
+
+@mixin divider-left {
+  border-left: 1px solid $dividerColor;
+  padding-left: 5px;
+  height: 100%;
+}
+
+@mixin padding-from-header {
+  padding: $paddingFromHeader;
+}
+
+// Vertical height creates a class called .className where maxHeight is set to 400, 600, 900 depending on screen size
+// gap identifies how much space is lost on the screen already
+@mixin verticalHeight($className, $gap: 100px) {
+  @media screen and (min-height: 400px) {
+  #{$className} {
+      max-height: 400px - $gap;
+    }
+  }
+
+  @media screen and (min-height: 600px) {
+    #{$className} {
+      max-height: 600px - $gap;
+    }
+  }
+
+  @media screen and (min-height: 900px) {
+    #{$className} {
+      max-height: 900px - $gap;
+    }
+  }
+}
+
+@mixin gradient($color, $start, $end) {
+  background: lighten($color, $optionStartGradient); /* for non-css3 browsers */
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=lighten($color, $optionStartGradient), endColorstr=lighten($color, $optionEndGradient)); /* for IE */
+  background-image: -webkit-linear-gradient(left, lighten($color, $optionStartGradient), lighten($color, $optionEndGradient)) !important;
+//  background: -webkit-linear-gradient(linear, left, lighten($color, $optionStartGradient), to(lighten($color, $optionEndGradient))); /* for webkit browsers */
+  background: -moz-linear-gradient(left,  lighten($color, $optionStartGradient),  lighten($color, $optionEndGradient)); /* for firefox 3.6+ */
+}
+
+@mixin rotate($degrees) {
+  -webkit-transform: rotate($degrees);
+  -moz-transform: rotate($degrees);
+  -ms-transform: rotate($degrees);
+  -o-transform: rotate($degrees);
+}

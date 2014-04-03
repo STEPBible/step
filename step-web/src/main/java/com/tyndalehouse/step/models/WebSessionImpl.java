@@ -32,11 +32,16 @@
  ******************************************************************************/
 package com.tyndalehouse.step.models;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Locale;
 
+import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.models.ClientSession;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.Part;
 
 /**
  * A web session which wraps around the jsession id...
@@ -119,7 +124,19 @@ public class WebSessionImpl implements ClientSession {
     public String getParam(String name) {
         return this.request.getParameter(name);
     }
-    
+
+    @Override
+    public InputStream getAttachment(final String filePart) {
+        try {
+            final Part part = this.request.getPart(filePart);
+            return part.getInputStream();
+        } catch (ServletException e) {
+            throw new StepInternalException("Unable to obtain part", e);
+        } catch (IOException e) {
+            throw new StepInternalException("Unable to obtain part", e);
+        }
+    }
+
     /**
      * @param locale the locale to set
      */

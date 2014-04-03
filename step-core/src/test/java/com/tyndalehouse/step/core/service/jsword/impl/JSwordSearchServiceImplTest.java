@@ -2,10 +2,14 @@ package com.tyndalehouse.step.core.service.jsword.impl;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.util.List;
 
+import com.tyndalehouse.step.core.models.AvailableFeatures;
+import com.tyndalehouse.step.core.service.PassageOptionsValidationService;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -33,8 +37,11 @@ public class JSwordSearchServiceImplTest {
     @Before
     public void setUp() {
         final JSwordVersificationService mockVersificationService = TestUtils.mockVersificationService();
-        this.search = new JSwordSearchServiceImpl(mockVersificationService, new JSwordPassageServiceImpl(
-                mockVersificationService, null, null, null, mock(VersionResolver.class)));
+        final PassageOptionsValidationService mockOptionsService = mock(PassageOptionsValidationService.class);
+        when(mockOptionsService.getAvailableFeaturesForVersion(any(String.class), any(List.class), any(String.class)))
+                .thenReturn(new AvailableFeatures());
+        this.search = new JSwordSearchServiceImpl(mockVersificationService, null, new JSwordPassageServiceImpl(
+                mockVersificationService, null, null, null, mock(VersionResolver.class), mockOptionsService));
     }
 
     /**
@@ -42,7 +49,7 @@ public class JSwordSearchServiceImplTest {
      */
     @Test
     public void testEstimation() {
-        assertTrue(this.search.estimateSearchResults(new SearchQuery("John in (ESV)", "false", 0, 0, 0)) > 100);
+        assertTrue(this.search.estimateSearchResults(new SearchQuery("John", new String[] {"ESV"}, "false", 0, 0, 0)) > 100);
     }
 
     /**
@@ -51,7 +58,7 @@ public class JSwordSearchServiceImplTest {
     @Test
     public void testApproximateSingleSearch() {
         final List<SearchEntry> results = this.search.search(
-                new SearchQuery("Melchizedc~ in (ESV)", "false", 0, 1, 10), "ESV").getResults();
+                new SearchQuery("Melchizedc~", new String[] {"ESV"}, "false", 0, 1, 10), "ESV").getResults();
         for (int i = 0; i < 10 || i < results.size(); i++) {
             LOGGER.debug(((VerseSearchEntry) results.get(i)).getKey());
         }
@@ -64,7 +71,7 @@ public class JSwordSearchServiceImplTest {
     @Test
     public void testGood() {
         final List<SearchEntry> results = this.search.search(
-                new SearchQuery("+[Mat-Rev] good~ in (KJV)", "true", 0, 1, 1000000), "ESV").getResults();
+                new SearchQuery("+[Mat-Rev] good~", new String[] {"ESV"}, "true", 0, 1, 1000000), "ESV").getResults();
         for (int i = 0; i < results.size(); i++) {
             LOGGER.trace(((VerseSearchEntry) results.get(i)).getKey());
         }
@@ -77,7 +84,7 @@ public class JSwordSearchServiceImplTest {
     @Test
     public void testMorphology() {
         final List<SearchEntry> results = this.search.search(
-                new SearchQuery("+[Mat-Rev] +morph:G2570*A-NSM* in (KJV)", "true", 0, 1, 1000000), "ESV")
+                new SearchQuery("+[Mat-Rev] +morph:G2570*A-NSM*", new String[] {"KJV"}, "true", 0, 1, 1000000), "ESV")
                 .getResults();
         for (int i = 0; i < results.size(); i++) {
             LOGGER.info(((VerseSearchEntry) results.get(i)).getKey());

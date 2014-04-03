@@ -313,7 +313,6 @@ public class JSwordModuleServiceImpl implements JSwordModuleService {
                 return categories.contains(b.getBookCategory())
                         && (allVersions || isAcceptableVersions(b, tempLang));
             }
-
         };
         return Books.installed().getBooks(bf);
     }

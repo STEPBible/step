@@ -173,7 +173,7 @@ public class AnalysisServiceImpl implements AnalysisService {
                 
                 final String root = subjectEntry.getRoot();
                 if (root != null && !stopSubjects.contains(root.toUpperCase())) {
-                    stat.addWordTryCases(CLEAN_UP_DIGITS.matcher(subjectHeading).replaceAll(root));
+                    stat.addWordTryCases(CLEAN_UP_DIGITS.matcher(root).replaceAll(root));
                 }
                 
             }

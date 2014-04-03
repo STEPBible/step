@@ -49,10 +49,13 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Locale;
 
+import javax.inject.Provider;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -79,8 +82,6 @@ public class FrontControllerTest {
     @Mock
     private Injector guiceInjector;
 
-    private final Boolean isCacheEnabled = Boolean.FALSE;
-
     @Mock
     private ClientErrorResolver errorResolver;
     @Mock
@@ -88,18 +89,24 @@ public class FrontControllerTest {
 
     @Mock
     private ClientSessionProvider clientSessionProvider;
+    
+    @Mock
+    private Provider<ObjectMapper> objectMapper;
 
     /**
      * Simply setting up the FrontController under test
      */
     @Before
-    public void setUp() {
+    public void setUp() throws IOException {
         final ClientSession clientSession = mock(ClientSession.class);
         when(clientSession.getLocale()).thenReturn(Locale.ENGLISH);
         when(this.clientSessionProvider.get()).thenReturn(clientSession);
-
+        final ObjectMapper mockMapper = mock(ObjectMapper.class);
+        when(mockMapper.writeValueAsString(any(Object.class))).thenReturn("Test");
+        when(this.objectMapper.get()).thenReturn(mockMapper);
+        
         this.fcUnderTest = new FrontController(this.guiceInjector, this.errorResolver,
-                this.clientSessionProvider);
+                this.clientSessionProvider, objectMapper);
     }
 
     /**
@@ -108,7 +115,7 @@ public class FrontControllerTest {
      * @throws IOException uncaught exception
      */
     @Test
-    public void testDoGet() throws IOException {
+    public void testDoGet() throws Exception {
         final HttpServletRequest req = mock(HttpServletRequest.class);
         final HttpServletResponse response = mock(HttpServletResponse.class);
         final String sampleRequest = "step-web/rest/bible/get/1K2/2K2/";
@@ -123,11 +130,10 @@ public class FrontControllerTest {
 
         doReturn(mockOutputStream).when(response).getOutputStream();
         final byte[] sampleResponse = new byte[]{1, 2, 3};
-        doReturn(sampleResponse).when(fc).invokeMethod(any(StepRequest.class));
+        doReturn(sampleResponse).when(fc).invokeMethodWithStepRequest(any(StepRequest.class));
 
         // do the test
-        fc.doGet(req, response);
-        verify(mockOutputStream).write(sampleResponse);
+        assertEquals(sampleResponse, fc.invokeMethod(req));
     }
 
     /**
@@ -144,8 +150,7 @@ public class FrontControllerTest {
                 new String[]{"arg1", "arg2"});
 
         // TODO remove this/
-        // doThrow(testException).when(fc).parseRequest(request);
-        doNothing().when(fc).handleError(response, testException, parsedRequest);
+        doNothing().when(fc).handleError(response, testException, mock(HttpServletRequest.class));
 
         // do the test
         fc.doGet(request, response);
@@ -178,7 +183,7 @@ public class FrontControllerTest {
     @Test
     public void testGetControllerMethod() throws IllegalAccessException, InvocationTargetException {
         final BibleInformationService bibleInfo = mock(BibleInformationService.class);
-        final BibleController controllerInstance = new BibleController(bibleInfo, this.clientSessionProvider);
+        final BibleController controllerInstance = new BibleController(bibleInfo, this.clientSessionProvider, null);
 
         // when
         final Method controllerMethod = this.fcUnderTest.getControllerMethod("getAllFeatures",
@@ -218,19 +223,6 @@ public class FrontControllerTest {
     }
 
     /**
-     * tests that we encode using json mapper and set to UTF 8
-     */
-    @Test
-    public void testJsonEncoding() {
-        final byte[] encodedJsonResponse = this.fcUnderTest.getEncodedJsonResponse("abc");
-
-        // this reprensents the string "{abc}"
-        final byte[] expectedValues = new byte[]{34, 97, 98, 99, 34};
-
-        assertArrayEquals(expectedValues, encodedJsonResponse);
-    }
-
-    /**
      * If an error was thrown, we should map it and output
      *
      * @throws IOException uncaught exception
@@ -245,7 +237,7 @@ public class FrontControllerTest {
         when(this.stepRequest.getCacheKey()).thenReturn(new ControllerCacheKey("method", "results"));
 
         // do test
-        this.fcUnderTest.handleError(response, exception, this.stepRequest);
+        this.fcUnderTest.handleError(response, exception, mock(HttpServletRequest.class));
 
         // check
         verify(outputStream).write(any(byte[].class));
@@ -255,7 +247,7 @@ public class FrontControllerTest {
      * We check that invoke method calls the correct controller and method with the right arguments
      */
     @Test
-    public void testInvokeMethod() {
+    public void testInvokeMethod() throws Exception {
         final StepRequest sr = new StepRequest("blah", "bible", "getAllFeatures", new String[]{});
         final BibleController testController = mock(BibleController.class);
 
@@ -263,7 +255,7 @@ public class FrontControllerTest {
         doReturn(testController).when(fc).getController("bible", false);
 
         // do test
-        fc.invokeMethod(sr);
+        fc.invokeMethodWithStepRequest(sr);
 
         // verify
         verify(testController).getAllFeatures();

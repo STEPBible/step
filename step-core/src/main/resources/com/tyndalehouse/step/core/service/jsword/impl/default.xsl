@@ -117,8 +117,6 @@
 
   <!-- Create a global key factory from which OSIS ids will be generated -->
   <xsl:variable name="keyf" select="jsword:org.crosswire.jsword.passage.PassageKeyFactory.instance()"/>
-  
-  <!--  TODO: support alternate versification -->
   <xsl:variable name="v11nf" select="jsword:org.crosswire.jsword.versification.system.Versifications.instance()"/>
   <xsl:variable name="versification" select="jsword:getVersification($v11nf, $v11n)"/>
 
@@ -235,6 +233,7 @@
     </div>
   </xsl:template>
 
+    
   <xsl:template match="div[@type='colophon']">
   	<span class='colophon'>
     	<xsl:apply-templates/>
@@ -248,7 +247,13 @@
     <xsl:template match="div[@type='introduction'][@eID]">
         &lt;/span&gt;
     </xsl:template>
-
+    <xsl:template match="div[@type='paragraph'][@sID]">
+        <!--<xsl:value-of select="'&lt;br /&gt;'" />-->
+        <span class="paragraph"></span>
+    </xsl:template>
+    <xsl:template match="div[@type='paragraph'][@eID]">
+        <br />
+    </xsl:template>    
     <xsl:template match="div[@subType='x-duplicate']">
         <span class="duplicate">
             <span class="versification-notice duplicate-notice" international="duplicate_notice">*</span>
@@ -279,7 +284,7 @@
         <xsl:when test="local-name() = 'title'">
           <!-- Always show canonical titles or if headings is turned on -->
           <xsl:if test="@canonical = 'true' or $Headings = 'true'">
-            <h3 class="heading"><xsl:apply-templates /></h3>
+            <h3 class="heading {@type}"><xsl:apply-templates /></h3>
           </xsl:if>
         </xsl:when>
         <xsl:otherwise>
@@ -319,7 +324,10 @@
    	    	
     <!-- Always output the verse number -->
     <xsl:choose>
-      <xsl:when test="$VLine = 'true'">
+      <xsl:when test=".//cell">
+          <div class="verse l {$languageDirection}Direction containsTable" dir="{$languageDirection}"><a name="{@osisID}"><xsl:call-template name="versenum"/></a><xsl:apply-templates/></div>
+      </xsl:when>
+      <xsl:when test="$VLine = 'true' or .//cell">
         <div class="verse l {$languageDirection}Direction" dir="{$languageDirection}"><a name="{@osisID}"><xsl:call-template name="versenum"/></a><xsl:apply-templates/></div>
       </xsl:when>
       <xsl:otherwise>
@@ -340,14 +348,14 @@
     </xsl:if>
     <xsl:variable name="title" select=".//title"/>
     <xsl:if test="string-length($title) > 0">
-      <h3 class="heading"><xsl:value-of select="$title"/></h3>
+      <h3 class="heading {@type}"><xsl:value-of select="$title"/></h3>
     </xsl:if>
     <!-- Handle the KJV paragraph marker. -->
     <xsl:if test="milestone[@type = 'x-p']"><p /></xsl:if>
     <!-- Always output the verse -->
     <xsl:choose>
       <xsl:when test="$VLine = 'true'">
-        <div class="l"><a name="{@osisID}"><xsl:call-template name="versenum"/></a><xsl:apply-templates mode="jesus"/></div>
+        <div class="l"><a class="verseLink" name="{@osisID}"><xsl:call-template name="versenum"/></a><xsl:apply-templates mode="jesus"/></div>
       </xsl:when>
       <xsl:otherwise>
         <xsl:call-template name="versenum"/><xsl:apply-templates mode="jesus"/>
@@ -409,7 +417,7 @@
   		<xsl:param name="includeBook" />
   		
 		<xsl:variable name="firstOsisID" select="substring-before(concat($verse/@osisID, ' '), ' ')"/>
-        <a name="{$firstOsisID}">
+        <a class="verseLink" name="{$firstOsisID}">
 	        <xsl:if test="normalize-space($firstOsisID) != ''" >
 		        <xsl:variable name="book" select="substring-before($firstOsisID, '.')"/>
 				<xsl:variable name="chapter" select="jsword:shape($shaper, substring-before(substring-after($firstOsisID, '.'), '.'))"/>
@@ -480,23 +488,23 @@
 		        -->
 		      <xsl:choose>
 		        <xsl:when test="$TinyVNum = 'true' and $Notes = 'true'">
-		          <a name="{@osisID}"><span class="verseNumber"><xsl:value-of select="$versenum"/>&#160;</span></a>
+		          <a class="verseLink" name="{@osisID}"><span class="verseNumber"><xsl:value-of select="$versenum"/>&#160;</span></a>
 		        </xsl:when>
 		        <xsl:when test="$TinyVNum = 'true' and $Notes = 'false'">
-		          <a name="{@osisID}"><span class="verseNumber"><xsl:value-of select="$versenum"/>&#160;</span></a>
+		          <a class="verseLink" name="{@osisID}"><span class="verseNumber"><xsl:value-of select="$versenum"/>&#160;</span></a>
 		        </xsl:when>
 		        <xsl:when test="$TinyVNum = 'false' and $Notes = 'true'">
-		          <a name="{@osisID}">(<xsl:value-of select="$versenum"/>)</a>
+		          <a class="verseLink" name="{@osisID}">(<xsl:value-of select="$versenum"/>)</a>
 		          <xsl:text> </xsl:text>
 		        </xsl:when>
 		        <xsl:otherwise>
-		          (<xsl:value-of select="$versenum"/>)
+                    <a class="verseLink" name="{@osisID}"><span class="verseNumber"><xsl:value-of select="$versenum"/></span></a>
 		          <xsl:text> </xsl:text>
 		        </xsl:otherwise>
 		      </xsl:choose>
 		    </xsl:if>
 		    <xsl:if test="$VNum = 'false' and $Notes = 'true'">
-		      <a name="{@osisID}"></a>
+		      <a class="verseLink" name="{@osisID}"></a>
 		    </xsl:if>
   </xsl:template>
 
@@ -693,23 +701,35 @@
 			<xsl:apply-templates/>
 		</xsl:otherwise>
     </xsl:choose>
-    <!--
-        except when followed by a text node or non-printing node.
-        This is true whether the href is output or not.
-    -->
-    <xsl:variable name="siblings" select="../child::node()"/>
-    <xsl:variable name="next-position" select="position() + 1"/>
-    <xsl:if test="$siblings[$next-position] and (name($siblings[$next-position]) != '' and (name($siblings[$next-position]) != 'seg' or $siblings[$next-position]/@type != 'x-punct'))">
-      <xsl:if test="$siblings[$next-position]/@type != 'x-maqqef'">
-      	<xsl:if test="$siblings[$next-position]/@type != 'x-sof-pasuq'">
-	      <xsl:if test="conversion:startsWithPunctuation($siblings[$next-position]/text()) =  false()">
-		      <xsl:text> </xsl:text>
-		  </xsl:if>
-	    </xsl:if>
+      <!--
+              except when followed by a text node or non-printing node.
+              This is true whether the href is output or not.
+          -->
+      <xsl:variable name="siblings" select="../child::node()"/>
+      <xsl:variable name="next-position" select="position() + 1"/>
+      <xsl:if test="$siblings[$next-position] and (name($siblings[$next-position]) != '' and (name($siblings[$next-position]) != 'seg' or $siblings[$next-position]/@type != 'x-punct'))">
+          <xsl:if test="$siblings[$next-position]/@type != 'x-maqqef'">
+              <xsl:if test="$siblings[$next-position]/@type != 'x-sof-pasuq'">
+                  <xsl:if test="conversion:startsWithPunctuation($siblings[$next-position]/text()) =  false()">
+                      <xsl:text> </xsl:text>
+                  </xsl:if>
+              </xsl:if>
+          </xsl:if>
       </xsl:if>
-    </xsl:if>
   </xsl:template>
-  
+
+    <xsl:template name="addExtraSpaceBeforeNonPunctuation">
+        <xsl:variable name="siblings" select="../child::node()"/>
+        <xsl:variable name="next-position" select="position() + 1"/>
+        <xsl:variable name="text"><xsl:value-of select="$siblings[$next-position]" /></xsl:variable>
+        
+        <xsl:if test="$siblings[$next-position]">
+            <xsl:if test="conversion:startsWithPunctuation($text) =  false()">
+                <xsl:text> </xsl:text>
+            </xsl:if>
+        </xsl:if>
+    </xsl:template>
+    
   <xsl:template match="w" mode="jesus">
     <!-- Output the content followed by all the lemmas and then all the morphs. -->
     <xsl:apply-templates mode="jesus"/>
@@ -811,7 +831,7 @@
   <xsl:template match="speaker[@who = 'Jesus']">
   	<xsl:choose>
 	  	<xsl:when test="$RedLetterText = 'true'">
-	    	<span class="jesus"><xsl:apply-templates mode="jesus"/></span>
+	    	<span class="jesus">&#160;<xsl:apply-templates mode="jesus"/></span>
 	    </xsl:when>
 	    <xsl:otherwise>
 	    	<span class="speech"><xsl:apply-templates /></span>
@@ -835,7 +855,7 @@
                     <h3 class="canonicalHeading"><xsl:apply-templates/></h3>
                 </xsl:when>
                 <xsl:otherwise>
-                    <h3 class="heading">
+                    <h3 class="heading {@type}">
                         <xsl:apply-templates/>
                     </h3>
                 </xsl:otherwise>
@@ -925,7 +945,11 @@
       		</xsl:if>
       	</xsl:when>
       	<xsl:otherwise>
-      		<h2 class="heading"><xsl:apply-templates/></h2>
+            <xsl:choose>
+                <xsl:when test="@type='psalm'"><h3 class="psalmHeading {@type}"><xsl:apply-templates/></h3></xsl:when>
+                <xsl:when test="@canonical = 'true'"><h3 class="canonicalHeading {@type}"><xsl:apply-templates/></h3></xsl:when>
+                <xsl:otherwise><h2 class="heading {@type}"><xsl:apply-templates/></h2></xsl:otherwise>
+            </xsl:choose>
       	</xsl:otherwise>
       </xsl:choose>
     </xsl:if>
@@ -994,11 +1018,11 @@
   </xsl:template>
   
   <xsl:template match="divineName">
-  <span class="small-caps"><xsl:apply-templates /></span>
+  <span class="small-caps">&#160;<xsl:apply-templates /></span>
   </xsl:template>
   
   <xsl:template match="divineName" mode="jesus">
-  <span class="small-caps"><xsl:apply-templates /></span>
+  <span class="small-caps">&#160;<xsl:apply-templates /></span>
   </xsl:template>
   
   <xsl:template match="figure">
@@ -1029,12 +1053,10 @@
     </div>
   </xsl:template>
   
-  <xsl:template match="foreign">
-    <em class="foreign"><xsl:apply-templates/></em>
-  </xsl:template>
+  <xsl:template match="foreign"><em class="foreign">&#160;<xsl:apply-templates/></em><xsl:call-template name="addExtraSpaceBeforeNonPunctuation" /></xsl:template>
   
   <xsl:template match="foreign" mode="jesus">
-    <em class="foreign"><xsl:apply-templates mode="jesus"/></em>
+    <em class="foreign">&#160;<xsl:apply-templates mode="jesus"/></em><xsl:call-template name="addExtraSpaceBeforeNonPunctuation" />
   </xsl:template>
   
   <!-- This is a subheading. -->
@@ -1052,11 +1074,14 @@
   </xsl:template>
 
   <xsl:template match="inscription">
-    <xsl:apply-templates mode="small-caps"/>
+      <xsl:choose>
+          <xsl:when test="@type = 'x-p-inscription'"><span class="x-p-inscription">&#160;<xsl:apply-templates /></span><xsl:call-template name="addExtraSpaceBeforeNonPunctuation" /></xsl:when>
+          <xsl:otherwise><span class="small-caps">&#160;<xsl:apply-templates /></span><xsl:call-template name="addExtraSpaceBeforeNonPunctuation" /></xsl:otherwise>
+      </xsl:choose>
   </xsl:template>
 
   <xsl:template match="inscription" mode="jesus">
-    <xsl:apply-templates mode="small-caps"/>
+      <span class="small-caps">&#160;<xsl:apply-templates /></span><xsl:call-template name="addExtraSpaceBeforeNonPunctuation" />
   </xsl:template>
 
   <xsl:template match="item">
@@ -1079,27 +1104,51 @@
     <div class="lg"><xsl:apply-templates mode="jesus"/></div>
   </xsl:template>
   
-  <xsl:template match="lg[@sID or @eID]"/>
-  <xsl:template match="lg[@sID or @eID]" mode="jesus"/>
+  <xsl:template match="lg[@sID]">
+      <!--<xsl:value-of select="'&lt;br /&gt;'" />-->
+      <span class="startLineGroup"></span>
+  </xsl:template>
+  <xsl:template match="lg[@sID]" mode="jesus"><xsl:value-of select="'&lt;br /&gt;'" />
+        <!--<xsl:value-of select="'&lt;br /&gt;'" />-->
+      <span class="startLineGroup"></span>
+  </xsl:template>
+  <xsl:template match="lg[@eID]">
+      <span class="endLineGroup"></span>
+  </xsl:template>
+  <xsl:template match="lg[@eID]" mode="jesus"><span class="endLineGroup"></span></xsl:template>
 
-  <xsl:template match="l[@sID]"/>
-  <xsl:template match="l[@sID]" mode="jesus"/>
+  <xsl:template match="l[@sID]"><xsl:if test="@type != 'x-no-break'"><xsl:value-of select="'&lt;br /&gt;'" /></xsl:if><span class='level{@level}'></span></xsl:template>
+  <xsl:template match="l[@sID]" mode="jesus"><xsl:if test="@type != 'x-no-break'"><xsl:value-of select="'&lt;br /&gt;'" /></xsl:if><span class='level{@level}'></span></xsl:template>
 
-  <xsl:template match="l[@eID]"><p /></xsl:template>
-  <xsl:template match="l[@eID]" mode="jesus"><p /></xsl:template>
+  <xsl:template match="l[@eID]"><xsl:value-of select="'&lt;br /&gt;'" /></xsl:template>
+  <xsl:template match="l[@eID]" mode="jesus"><xsl:value-of select="'&lt;br /&gt;'" /></xsl:template>
 
+
+
+    <xsl:template match="l[@type='doxology' and @sID]">
+        &lt;span class='x-doxology'&gt;
+    </xsl:template>
+
+    <xsl:template match="l[@type='doxology' and @eID]">
+        &lt;/span&gt;
+    </xsl:template>
+    
   <xsl:template match="l">
-    <xsl:apply-templates/><br/>
+      <xsl:if test="@type != 'x-no-break'"><xsl:value-of select="'&lt;br /&gt;'" /></xsl:if>
+      <span class='level{@level}'></span><xsl:apply-templates/><xsl:value-of select="'&lt;br /&gt;'" />
   </xsl:template>
   
   <xsl:template match="l" mode="jesus">
-    <xsl:apply-templates mode="jesus"/><p />
+      <xsl:if test="@type != 'x-no-break'"><xsl:value-of select="'&lt;br /&gt;'" /></xsl:if>
+      <span class='level{@level}'></span><xsl:apply-templates mode="jesus"/><xsl:value-of select="'&lt;br /&gt;'" />
   </xsl:template>
 
   <!-- While a BR is a break, if it is immediately followed by punctuation,
        indenting this rule can introduce whitespace.
     -->
+  <xsl:template match="lb[@type = 'x-continued']" ><p class="x-continued" /></xsl:template>
   <xsl:template match="lb[@type = 'x-end-paragraph']" ><p /></xsl:template>
+  <xsl:template match="lb"><p /></xsl:template>
   <xsl:template match="lb" mode="jesus"><p /></xsl:template>
 
   <xsl:template match="list">
@@ -1246,6 +1295,7 @@
     <xsl:apply-templates mode="jesus"/>
   </xsl:template>
 
+    
   <!-- If there is a milestoned q then just output a quotation mark -->
   <xsl:template match="q[@sID or @eID]">
     <xsl:choose>
@@ -1266,7 +1316,7 @@
   <xsl:template match="q[@who = 'Jesus']">
   	<xsl:choose>
 	  	<xsl:when test="$RedLetterText = 'true'">
-	    	<span class="jesus"><xsl:value-of select="@marker"/><xsl:apply-templates mode="jesus"/><xsl:value-of select="@marker"/></span>
+	    	<span class="jesus">&#160;<xsl:value-of select="@marker"/><xsl:apply-templates mode="jesus"/><xsl:value-of select="@marker"/></span>
 	    </xsl:when>
 	    <xsl:otherwise>
 	    	<span class="q"><xsl:value-of select="@marker"/><xsl:apply-templates /><xsl:value-of select="@marker"/></span>
@@ -1487,7 +1537,15 @@
         </xsl:choose>
     </xsl:element>
   </xsl:template>
-  
+
+
+  <xsl:template match="cell[@type]">
+      <xsl:variable name="extraClasses"><xsl:if test="contains(@type, 'x-indented')">x-indented</xsl:if></xsl:variable>
+        <div class="x-min-width {$extraClasses}">
+            <xsl:apply-templates/>
+        </div>
+  </xsl:template>
+
   <xsl:template match="cell">
 		<xsl:variable name="cell-direction">
 		

@@ -2,6 +2,7 @@ package com.tyndalehouse.step.core.service.impl;
 
 import com.tyndalehouse.step.core.data.EntityIndexReader;
 import com.tyndalehouse.step.core.data.EntityManager;
+import com.tyndalehouse.step.core.models.search.SubjectSuggestion;
 import com.tyndalehouse.step.core.service.jsword.impl.JSwordSearchServiceImpl;
 import com.tyndalehouse.step.core.service.jsword.impl.JSwordVersificationServiceImpl;
 import com.tyndalehouse.step.core.service.search.impl.SubjectSearchServiceImpl;
@@ -41,7 +42,7 @@ public class SubjectSearchServiceImplTest {
         when(entityManager.getReader(any(String.class))).thenReturn(mock(EntityIndexReader.class));
         this.subjectSearchService = new SubjectSearchServiceImpl(
                 entityManager, 
-                new JSwordSearchServiceImpl(mockVersificationService(), null), null);
+                new JSwordSearchServiceImpl(mockVersificationService(),null, null), null);
         
     }
     
@@ -50,10 +51,10 @@ public class SubjectSearchServiceImplTest {
      */
     @Test
     public void testSimpleSubjectAutoComplete() {
-        final List<String> prefixedTerms = subjectSearchService.autocomplete("he Lov");
+        final List<SubjectSuggestion> prefixedTerms = subjectSearchService.autocomplete("Lov");
         assertTrue(prefixedTerms.size() > 0);
-        for(String prefixedTerm : prefixedTerms) {
-            assertTrue(prefixedTerm.startsWith(prefix) );       
+        for(SubjectSuggestion prefixedTerm : prefixedTerms) {
+            assertTrue(prefixedTerm.getValue().startsWith(prefix) );       
         }
     }
 }

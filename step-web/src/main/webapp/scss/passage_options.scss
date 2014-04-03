@@ -1,0 +1,72 @@
+@import 'template_variables';
+@import 'mixins';
+
+.passageOptionsGroup {
+  float: right;
+  button span {
+    line-height: 1;
+    &.smallerFont {
+      font-size: 8px;
+      line-height: $defaultFontSize;
+    }
+    &.largerFont {
+      font-weight: bold;
+    }
+  }
+  .dropdown-menu {
+    padding-left: 5px;
+  }
+  .glyphicon.glyphicon-save{
+    @include rotate(-90deg);
+  }
+  ul {
+    padding-left: 5px;
+    margin-bottom: 0px;
+  }
+
+  .settingsDropdown {
+    li {
+      padding-right: 5px;
+      &:hover {
+        background-color: $hoverColor;
+      }
+      &.contextContainer{
+        button {
+          padding: 5px 7px;
+        }
+        &:hover {
+          background-color: inherit;
+        }
+      }
+      &.noHighlight {
+        padding-bottom: 10px;
+        &:hover {
+          background-color: inherit;
+          .btn-group {
+            margin-left: 10px;
+          }
+        }
+      }
+    }
+  }
+  a {
+    color: black;
+    display: block;
+    &:hover {
+      text-decoration: none;
+    }
+  }
+  h1 {
+    font-size: 14px;
+    margin-top: 10px;
+    margin-bottom: 3px
+  }
+  .nested-btn-group {
+    float: left;
+    margin-left: -1px;
+  }
+  .passageOptions, .displayModes {
+    direction: ltr;
+    text-align: left;
+  }
+}

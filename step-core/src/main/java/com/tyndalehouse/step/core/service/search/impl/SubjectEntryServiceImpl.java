@@ -41,6 +41,8 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import com.tyndalehouse.step.core.models.InterlinearMode;
+import com.tyndalehouse.step.core.utils.StringUtils;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.passage.Key;
 import org.crosswire.jsword.passage.NoSuchKeyException;
@@ -91,7 +93,7 @@ public class SubjectEntryServiceImpl implements SubjectEntrySearchService {
     }
 
     @Override
-    public List<OsisWrapper> getSubjectVerses(final String root, final String fullHeader, final String version) {
+    public List<OsisWrapper> getSubjectVerses(final String root, final String fullHeader, final String versions) {
         final StringBuilder sb = new StringBuilder(root.length() + fullHeader.length() + 64);
 
         sb.append("+root:\"");
@@ -102,21 +104,21 @@ public class SubjectEntryServiceImpl implements SubjectEntrySearchService {
         sb.append(escape(fullHeader));
         sb.append("\"");
 
-        return getVersesForResults(this.naves.search("root", sb.toString()), version);
+        return getVersesForResults(this.naves.search("root", sb.toString()), versions);
     }
 
     /**
      * obtains the verses for all results
      * 
      * @param results the results
-     * @param version the version in which to look it up
+     * @param versions the version in which to look it up
      * @return the verses
      */
-    private List<OsisWrapper> getVersesForResults(final EntityDoc[] results, final String version) {
+    private List<OsisWrapper> getVersesForResults(final EntityDoc[] results, final String versions) {
         final List<OsisWrapper> verses = new ArrayList<OsisWrapper>(32);
         for (final EntityDoc doc : results) {
             final String references = doc.get("references");
-            collectVersesFromReferences(verses, version, references);
+            collectVersesFromReferences(verses, versions, references);
         }
         return verses;
     }
@@ -125,17 +127,19 @@ public class SubjectEntryServiceImpl implements SubjectEntrySearchService {
      * Collects individual ranges
      * 
      * @param verses the verses
-     * @param version the version
+     * @param versionList the versions
      * @param references the list of references
      */
-    private void collectVersesFromReferences(final List<OsisWrapper> verses, final String version,
+    private void collectVersesFromReferences(final List<OsisWrapper> verses, final String versionList,
             final String references) {
-        final Passage verseRanges = this.jsword.getVerseRanges(references, version);
-        final Iterator<Key> rangeIterator = verseRanges.rangeIterator(RestrictionType.NONE);
+        
+        final String[] versions = StringUtils.split(versionList, ",");
+        final Passage verseRanges = this.jsword.getVerseRanges(references, versions[0]);
+        final Iterator<VerseRange> rangeIterator = verseRanges.rangeIterator(RestrictionType.NONE);
         final List<LookupOption> options = new ArrayList<LookupOption>();
         options.add(LookupOption.HIDE_XGEN);
 
-        final Book book = this.versificationService.getBookFromVersion(version);
+        final Book book = this.versificationService.getBookFromVersion(versions[0]);
         final Versification av11n = this.versificationService.getVersificationForVersion(book);
 
         Verse lastVerse = null;
@@ -161,7 +165,7 @@ public class SubjectEntryServiceImpl implements SubjectEntrySearchService {
 
                 final Key firstVerse = this.jsword.getFirstVerseFromRange(range);
 
-                final OsisWrapper passage = this.jsword.peakOsisText(book, firstVerse, options);
+                final OsisWrapper passage = this.jsword.peakOsisText(versions, firstVerse, options, InterlinearMode.INTERLEAVED_COMPARE.name());
                 passage.setReference(range.getName());
 
                 if (range.getCardinality() > 1) {

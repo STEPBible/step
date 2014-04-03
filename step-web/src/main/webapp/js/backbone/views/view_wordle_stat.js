@@ -2,208 +2,234 @@ var ViewLexiconWordle = Backbone.View.extend({
     events: {
     },
     minFont: 9,
-    minSubjectFont : 12,
-    maxFont: 32,
+    minSubjectFont: 12,
+    maxFont: 24,
     passageId: 0,
 
     initialize: function () {
         var self = this;
         this.isAnimating = false;
-        this.wordStatsTab = $("#wordStat");
-        this.wordStats = this.getCloudContainer(this.wordStatsTab);
-        this.wordScope = this.wordStatsTab.find(".scope");
-        this.wordType = this.wordStatsTab.find(".statKind");
-        this.passageButtons = this.wordStatsTab.find(".passageSelector");
-        this.sortCloud = this.wordStatsTab.find("#sortCloud");
-        this.animateCloud = this.wordStatsTab.find("#animateCloud");
-        this.reference = this.wordStatsTab.find("#currentReference");
+
+        var scopeContainer = $("<form class='scopeContainer '>");
+
+        this.wordType = this.populateMenu(step.defaults.analysis.kind,  step.defaults.analysis.kindTypes, __s.analyse_label, "wordType");
+        this.wordScope = this.populateMenu(step.defaults.analysis.scope, step.defaults.analysis.scopeType, __s.bible_text, "wordScope", true);
+        this.sortCloud = $('<input type="checkbox" id="sortByFrequency" checked="checked" class="pull-right" />');
+        this.animateCloud = $('<button class="btn btn-default btn-xs pull-right" id="animateWordle"><span type="button" class="glyphicon glyphicon-play" /></button>');
+        this.statsContainer = $('<div id="statsContainer"></div>');
+
+        this.addRefreshStats(this.sortCloud);
         
-        this.wordScope.prop("title", __s.stat_scope_explanation).qtip({
-            position: { my: "bottom center", at: "top center", effect: false },
-            hide: { event: 'blur' },
-            show: { event: 'focus' }
+        scopeContainer.append(this.wordType);
+        scopeContainer.append(this.wordScope);
+        scopeContainer.append(this.scope);
+        scopeContainer.append(
+            $('<div class="formGroup"><label for="sortByFrequency">' + __s.analyse_sort_label + '</label></div>').append(this.sortCloud));
+
+        scopeContainer.append(
+            $('<div class="formGroup"><label for="animateWordle">' + __s.analyse_animate_label + '</label></div>').append(this.animateCloud));
+
+        this.$el.append(scopeContainer);
+        this.$el.append(this.statsContainer);
+
+        this.animateCloud.click(function(ev) {
+            event.preventDefault();
+            self.animateWordleHandler(); 
         });
-
-        this.populateMenu(step.defaults.analysis.scope, this.wordScope, false);
-        this.populateMenu(step.defaults.analysis.kind, this.wordType, true);
-
-        this.sortCloud.button({ label: __s.stat_sort_off }).click(function () {
-            self.sortCloudHandler();
-            self.doStats();
-        });
-
-        this.animateCloud.button({ icons: { primary: "ui-icon-play" }, text : false }).click(function () {
-            self.animateWordleHandler();
-        });
-
-        this.passageButtons.passageButtons({
-            showReference: false,
-            selectable: true,
-            passageId: this.passageId,
-            clickHandler: function () {
-                self.passageId = $(this).prop("passageId");
-                MenuModels.at(self.passageId).save({ selectedSearch: "SEARCH_PASSAGE" });
-                self.doStats();
-            }
-        });
-
 
         this.listenToModels();
     },
+    refresh: function() {
+        if(this.$el.hasClass("active")) {
+            this.doStats();
+        }
+    },
 
+    addRefreshStats: function(el) {
+        var self = this;
+        el.click(function() { self.doStats() });
+    },
+    
     getCloudContainer: function (statsTab) {
         return statsTab.find(".cloudContainer");
     },
 
-    populateMenu: function (data, inputBox, readOnly) {
-        //get max length
+    populateMenu: function (data, values, label, id, includeText) {
         var self = this;
-        var max = 0;
-        for (var i = 0; i < data.length; i++) {
-            if (data[i].length > max) {
-                max = data[i].length;
-            }
+        
+        //create form group
+        var formGroup = $('<div class="form-group">');
+        var label = $('<label></label>').append(label).attr("for", id);
+
+        //create a button menu
+        var buttonGroup = $('<div class="btn-group pull-right"></div>').attr("id", id);
+        var value = $('<span class="currentRef"></span>');
+        var button = $('<button type="button" data-toggle="dropdown" class="btn btn-default btn-xs dropdown-toggle"></div>')
+            .append(value).append('<span class="caret"></span>');
+
+
+        //get max length
+        var menu = $('<ul class="dropdown-menu" role="menu"></ul>');
+
+        if (includeText) {
+            var activePassageData = step.util.activePassage();
+            var activeReference = activePassageData.get("reference");
+            var textReference = $('<input type="text" class="refInput" />')
+                .attr("placeholder", __s.analyse_book_ref)
+                .val(activeReference);
+            textReference.data(data[0]);
+            var li = $('<li role="presentation"></li>');
+            var link = $("<a></a>");
+            link.append(step.util.ui.selectMark()).append(textReference);
+            li.append(link);
+            menu.append(li);
+            li.addClass("selected").find(".glyphicon").addClass("active");
+            li.data("value", activeReference);
         }
 
-        step.util.ui.autocompleteSearch(
-            inputBox,
-            data,
-            readOnly,
-            undefined);
-        inputBox.attr("size", max);
-        inputBox.change(function () {
+        for (var i = includeText ? 1 : 0; i < data.length; i++) {
+            var link = $('<a role="menuitem" tabIndex="-1" href="javascript:void(0)">' + data[i] + '</a>');
+            var li = $('<li role="presentation"></li>');
+            li.append(link.prepend(step.util.ui.selectMark()));
+
+            if (!includeText && i == 0) {
+                li.addClass("selected").find(".glyphicon").addClass("active");
+            } 
+            li.data("value",values[i]);
+            menu.append(li);
+        }
+
+        var firstLi = menu.find("li:first");
+        if(firstLi.text() == "") {
+            value.html(firstLi.find("input").val());
+        } else {
+            value.html(firstLi.text());
+        }
+
+        menu.find("a").click(function () {
+            var link = $(this)
+            var linkText = link.text();
+            if(linkText == "") {
+                var newRef = link.find("input").val();
+                value.html(newRef);
+                link.closest("li").data("value", newRef);
+            } else {
+                value.html(linkText);
+            }
+            
+            link.closest("ul").find("li").removeClass("selected").find(".active").removeClass("active");
+            link.parent().addClass("selected").find(".glyphicon").addClass("active");
             self.doStats();
         });
+
+        menu.find("input").click(function (e) {
+            e.stopPropagation();
+            e.preventDefault();
+        }).on("keydown", function (event) {
+            event.stopPropagation();
+            var code = (event.keyCode ? event.keyCode : event.which);
+            if (code == 13) {
+                event.preventDefault();
+                var input = $(this);
+                value.html(input.val());
+                input.closest("ul").removeClass("selected");
+                input.closest("li").addClass("selected").data("value", input.val());
+                self.doStats();
+            }
+        });
+
+        formGroup.append(label);
+        buttonGroup.append(button);
+        buttonGroup.append(menu);
+        formGroup.append(buttonGroup);
+        return formGroup;
     },
 
     listenToModels: function () {
         //update the model, in case we're not looking at the right one.
-        this.listenTo(Backbone.Events, "passage:rendered:0", function () {
-            this.doStats(PassageModels.at(0));
-        });
-        this.listenTo(Backbone.Events, "passage:rendered:1", function () {
-            this.doStats(PassageModels.at(1));
-        });
+//        this.listenTo(Backbone.Events, "passage:rendered:0", function () {
+//            this.doStats(PassageModels.at(0));
+//        });
+//        this.listenTo(Backbone.Events, "passage:rendered:1", function () {
+//            this.doStats(PassageModels.at(1));
+//        });
     },
 
-    _getStats: function (statsContainer, statType, scope, title, callback, animate) {
+    _getStats: function (statType, scope, title, callback, animate) {
         var self = this;
-        var model = PassageModels.at(this.passageId);
+        var model = step.util.activePassage();
 
         var modelReference = model.get("reference");
+        var modelVersion = model.get("masterVersion");
         var reference = this.isAnimating ? this.transientReference || modelReference : modelReference;
 
-        if (!this.wordStats.is(":visible")) {
-            return;
+        var scopeTypes = step.defaults.analysis.scopeType;
+        if(scopeTypes.indexOf(scope) == -1) {
+            scope = scopeTypes[0];
         }
-
+        
         if (!animate) {
-            statsContainer.empty();
+            this.statsContainer.empty();
         }
 
-        //internationalized scopes:
-        var index = step.defaults.analysis.scope.indexOf(scope);
-        var scopeKey = step.defaults.analysis.scopeType[index];
-
-        //internationalized type
-        var typeIndex = step.defaults.analysis.kind.indexOf(statType);
-        var typeKey = step.defaults.analysis.kindTypes[typeIndex];
-
-        if (scopeKey == undefined) {
-            reference = scope;
-            scopeKey = step.defaults.analysis.kindTypes[step.defaults.analysis.kindTypes.length - 1];
-        }
-
-        $.getSafe(ANALYSIS_STATS, [model.get("version"), reference, typeKey, scopeKey, animate == true], function (data) {
-            step.util.trackAnalytics('wordle', 'type', typeKey);
-            step.util.trackAnalytics('wordle', 'scope', scopeKey);
+        var lastTime = new Date().getTime();
+        console.log(new Date().getTime(), reference, "Wordle server call");
+        $.getSafe(ANALYSIS_STATS, [modelVersion, reference, statType, scope, animate == true], function (data) {
+            console.log(new Date().getTime(), "Wordle server data received");
+            step.util.trackAnalytics('wordle', 'loaded', new Date().getTime() - new Date().getTime());
+            step.util.trackAnalytics('wordle', 'type', statType);
+            step.util.trackAnalytics('wordle', 'scope', scope);
             self.transientReference = data.passageStat.reference.name;
-            self.reference.html(self.transientReference);
+
+            //set the current ref
+            self.wordScope.find(".currentRef").html(self.transientReference);
+            self.wordScope.find(".refInput").val(self.transientReference);
             
             //we're going to animate this, but we're going to finish and not keep going if the flag is set
-            if(data.passageStat.reference.lastChapter) {
+            if (data.passageStat.reference.lastChapter) {
                 self.animateWordleHandler();
             }
-            
-            self._createWordleTab(statsContainer, scope, title, data.passageStat, typeKey, callback, data.lexiconWords, animate);
+
+            self._createWordleTab(self.statsContainer, scope, title, data.passageStat, statType, callback, data.lexiconWords, animate);
         });
     },
 
-    /**
-     * Handles the sort button, but does not trigger a refresh - this is done in the caller method
-     */
-    sortCloudHandler : function() {
-        if (this.sortCloud.prop('checked')) {
-            this.sortCloud.button("option", "label", __s.stat_sort_on);
-        } else {
-            this.sortCloud.button("option", "label", __s.stat_sort_off);
-        }
-    },
-    
-    animateWordleHandler : function () {
+    animateWordleHandler: function () {
+        console.log(new Date().getTime(), "Animate word handler");
+
         this.isAnimating = !this.isAnimating;
         if (this.isAnimating) {
             this.previousSortValue = this.sortCloud.prop('checked');
-            this.sortCloud.prop("checked", true).button("disable");
-            this.sortCloudHandler();
-            this.sortCloud.button("refresh");
+            this.sortCloud.prop("checked", true).prop("disabled", true);
+            this.animateCloud.find(".glyphicon").removeClass("glyphicon-play").addClass("glyphicon-pause");
             
-            this.previousScopeValue = this.wordScope.val();
-            this.wordScope.val(step.defaults.analysis.scope[1]).prop("disabled", true);
-            this.animateCloud.button("option", { icons: { primary: "ui-icon-pause"}});
             this.doStats();
         } else {
-            this.sortCloud.prop("checked", this.previousSortValue || false).button("enable");
-            this.sortCloudHandler();
-            this.sortCloud.button("refresh");
-            
-            this.wordScope.val(this.previousScopeValue).prop("disabled", false);
-            this.animateCloud.button("option", { icons: { primary: "ui-icon-play"}});
+            this.stopping = true;
+            //don't trigger again
+            //don't reset reference
+            this.sortCloud.prop("checked", this.previousSortValue || false).prop("disabled", false);            
+            this.animateCloud.find(".glyphicon").addClass("glyphicon-play").removeClass("glyphicon-pause");
         }
-        this.animateCloud.button("refresh").blur();
     },
 
     /**
      * Gets the stats for a passage and shows a wordle
-     * @param passageId the passage ID
-     * @param passageContent the passage Content
-     * @param version the version
-     * @param reference the reference
      * @private
      */
-    doStats: function (model) {
-        if (model) {
-            //update passage id inline with the model, reflect changes on passage buttons
-            this.passageId = model.get("passageId");
-        }
-        this.passageButtons.passageButtons("select", this.passageId);
+    doStats: function () {
+        console.log(new Date().getTime(), "Doing stats");
 
-        this._getStats(this.wordStats, this.wordType.val(), this.wordScope.val(), __s.word_cloud, function (key, statType) {
-            var otherPassage = step.util.getOtherPassageId(step.lexicon.passageId);
+        this._getStats(this.wordType.find(".selected").data("value"), this.wordScope.find(".selected").data("value"), __s.word_cloud, function (key, statType) {
             if (statType == 'WORD') {
-                step.lexicon.sameWordSearch(key);
+                var args = "strong=" + encodeURIComponent(key);
+                step.router.navigatePreserveVersions(args);
             } else if (statType == 'TEXT') {
-                var textModel = SimpleTextModels.at(otherPassage);
-                textModel.save({
-                    detail: 0,
-                    //exact words
-                    simpleTextTypePrimary: step.defaults.search.textual.simpleTextTypesReference[2],
-                    simpleTextCriteria: key
-                });
-                textModel.trigger("search", textModel, {});
-                step.state.view.ensureTwoColumnView();
+                var args = "text=" + encodeURIComponent(key);
+                step.router.navigatePreserveVersions(args);
             } else if (statType == 'SUBJECT') {
-                //first change the fieldset:
-                var subjectModel = SubjectModels.at(otherPassage);
-                subjectModel.save({
-                    subjectText: key,
-                    subjectSearchType: step.defaults.search.subject.subjectTypes[1],
-                    subjectRelated: "",
-                    detail: 0
-                });
-
-                subjectModel.trigger("search", subjectModel, {});
-                step.state.view.ensureTwoColumnView();
+                var args = "subject=" + encodeURIComponent(key);
+                step.router.navigatePreserveVersions(args);
             }
         }, this.isAnimating);
     },
@@ -217,10 +243,13 @@ var ViewLexiconWordle = Backbone.View.extend({
      * @returns {*|jQuery}
      */
     createWordleLink: function (key, value, scope, statType, lexiconWords, callback) {
+        var analysisConstants = step.defaults.analysis;
+        var scopeText = analysisConstants.scope[analysisConstants.scopeType.indexOf(scope)];
+         
         var wordLink = $("<a></a>")
             .attr('href', 'javascript:void(0)')
             .attr('rel', value)
-            .attr('title', sprintf(__s.stats_occurs_times, value, scope));
+            .attr('title', sprintf(__s.stats_occurs_times, value, scopeText));
 
         if (lexiconWords && lexiconWords[key]) {
             //assume key is a strong number
@@ -274,7 +303,7 @@ var ViewLexiconWordle = Backbone.View.extend({
                 return wordleData.stats[b] - wordleData.stats[a];
             });
         } else {
-            strongs.sort(function(a, b) {
+            strongs.sort(function (a, b) {
                 return a.toLowerCase() < b.toLowerCase() ? -1 : 1;
             });
         }
@@ -332,8 +361,14 @@ var ViewLexiconWordle = Backbone.View.extend({
 
         //base it on the isAnimating rather than passed in value
         if (this.isAnimating) {
-            delay(function () {
-                self.doStats();
+            console.log(new Date().getTime(), "trigger delay");
+            step.util.delay(function () {
+                console.log(new Date().getTime(), "delay triggered");
+                if(!self.stopping) {
+                    self.doStats();
+                } else {
+                    self.stopping = false;
+                }
             }, 3500);
         }
     }

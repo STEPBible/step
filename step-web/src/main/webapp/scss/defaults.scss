@@ -1,0 +1,32 @@
+@import 'template_variables';
+
+h1,h2,h3,h4,h5,h6,.panel-title {
+  color: $headingColour;
+  font-weight: bold;
+}
+
+body, .dropdown-menu, .searchResultRow, #quickLexicon h1 {
+  font-size: $defaultFontSize;
+}
+
+ul .glyphicon-ok {
+  margin-right: 10px;
+  color: $headingColour;
+  visibility: hidden;
+  &.active {
+    visibility: visible;
+  }
+}
+
+.panel-heading {
+  padding: 2px 5px;
+  h4 {
+    cursor: hand;
+    margin: 0px;
+    font-size: 12px;
+  }
+}
+
+.panel-group .panel + .panel {
+  margin-top: 3px;
+}

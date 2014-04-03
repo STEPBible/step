@@ -46,7 +46,8 @@ import com.tyndalehouse.step.core.models.search.StrongCountsAndSubjects;
  * 
  */
 public interface BibleInformationService {
-
+    public static final char UNAVAILABLE_TO_UI = '_';
+    
     /**
      * Queries Jsword to return all the installed versions of the bible
      * 
@@ -89,16 +90,6 @@ public interface BibleInformationService {
             String interlinearVersion, Boolean round);
 
     /**
-     * gets any available features, but for this type of view only
-     * 
-     * @param version the version to lookup
-     *                @param extraVersions the other version that are currently selected
-     * @param displayMode the intended display mode
-     * @return the features available for a Bible (for e.g. Strong numbers)
-     */
-    AvailableFeatures getAvailableFeaturesForVersion(String version, String extraVersions, String displayMode);
-
-    /**
      * Gets a list of all supported features so far
      * 
      * @return the list of lookup options available to the user
@@ -111,10 +102,22 @@ public interface BibleInformationService {
      * @param bookStart the name of the matching key to look across book names
      * @param version the name of the version, defaults to ESV if not found
      * 
+     * @param bookScope a restriction on an OSIS reference book
      * @return a list of matching bible book names
      */
-    List<BookName> getBibleBookNames(String bookStart, String version);
+    List<BookName> getBibleBookNames(String bookStart, String version, final String bookScope);
 
+    /**
+     * returns a list of matching names or references in a particular book
+     *
+     * @param bookStart the name of the matching key to look across book names
+     * @param version the name of the version, defaults to ESV if not found
+     *
+     * @param autoLookupSingleBooks true to indicate we want to lookup chapters if we only get 1 book back
+     * @return a list of matching bible book names
+     */
+    List<BookName> getBibleBookNames(final String bookStart, final String version,  boolean autoLookupSingleBooks);
+    
     /**
      * Checks a set of core versions to see if they have been installed
      * 

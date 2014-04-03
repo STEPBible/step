@@ -20,11 +20,11 @@ public class PassageSearchRequest {
 
     public String getOutput(String querySyntax, String context, String pageNumber, String pageSize) {
         StringBuilder output = new StringBuilder(32000);
-        final SearchResult results = search.search(querySyntax, "false", context, pageNumber, pageSize);
-        final List<SearchEntry> searchEntries = results.getResults();
-        for (SearchEntry entry : searchEntries) {
-            appendSearchEntry(output, entry);
-        }
+//        final SearchResult results = search.search(querySyntax, "false", context, pageNumber, pageSize);
+//        final List<SearchEntry> searchEntries = results.getResults();
+//        for (SearchEntry entry : searchEntries) {
+//            appendSearchEntry(output, entry);
+//        }
         return output.toString();
     }
 

@@ -82,7 +82,7 @@ public class JSwordPassageServiceImplTest {
     @Before
     public void setUp() {
         this.jsi = new JSwordPassageServiceImpl(TestUtils.mockVersificationService(), null, mock(VocabularyService.class),
-                mock(ColorCoderProviderImpl.class), TestUtils.mockVersionResolver());
+                mock(ColorCoderProviderImpl.class), TestUtils.mockVersionResolver(), null);
     }
 
     /**
@@ -258,7 +258,7 @@ public class JSwordPassageServiceImplTest {
         final JSwordMetadataServiceImpl jsi = new JSwordMetadataServiceImpl(
                 TestUtils.mockVersificationService());
 
-        final List<BookName> bibleBookNames = jsi.getBibleBookNames("Ma", "ESV");
+        final List<BookName> bibleBookNames = jsi.getBibleBookNames("Ma", "ESV", null);
         final String[] containedAbbrevations = new String[]{"Mal", "Mat", "Mar"};
 
         for (final String s : containedAbbrevations) {
@@ -570,5 +570,4 @@ public class JSwordPassageServiceImplTest {
             throws NoSuchKeyException {
         return this.jsi.reduceKeySize(b.getKey(keyString), v);
     }
-
 }

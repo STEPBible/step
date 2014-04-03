@@ -1,0 +1,75 @@
+/* Sticky footer styles
+-------------------------------------------------- */
+
+/*html,*/
+/*body {*/
+    /*height: 100%;*/
+    /* The html and body elements cannot have any padding or margin. */
+/*}*/
+    
+.mainPanel > div {
+    height: 100%;
+    overflow-y: auto;
+}
+
+
+
+
+.infoBar {
+    display: none;
+}
+
+
+
+
+
+
+/*.selectReferenceRow { */
+    /*background-color: pink !important;*/
+/*}*/
+
+/*.select2-search-choice.selectReferenceRow {*/
+    /*background-image: -webkit-linear-gradient(top, pink 20%,  #eee 100%) !important;*/
+/*}*/
+/*.selectBibleRow {*/
+    /*background-color: palegreen;*/
+/*}*/
+
+
+
+
+
+/**
+Strongs handlers
+**/
+
+.primaryDark {
+    color: #991C32;
+}
+
+.primaryDarkBold {
+    color: #991C32;
+    font-weight: bold;
+}
+
+.primaryDarkBg {
+    background-color: #991C32;
+    color: #F3E5B4;
+}
+
+.primaryLightBg {
+    background-color: rgb(235, 235, 241);
+}
+
+.primaryLightBorder {
+    border-color: #F3E5B4;
+}
+
+.secondaryBackground {
+    background-color: #F3E5B4;
+}
+
+
+
+
+

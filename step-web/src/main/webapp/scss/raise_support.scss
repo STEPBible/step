@@ -1,0 +1,17 @@
+@import 'template_variables';
+
+#raiseSupportTrigger {
+  position: absolute;
+  bottom: 0px;
+  right: 0px;
+  border-radius: 3 0 0 0;
+}
+
+#raiseSupport .modal-body {
+  padding: 20 20 0 20;
+}
+
+.mandatory {
+  color: $headingColour;
+  font-weight: bold;
+}

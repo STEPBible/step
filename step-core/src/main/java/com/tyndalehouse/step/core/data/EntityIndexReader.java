@@ -148,7 +148,7 @@ public interface EntityIndexReader extends Closeable {
      * @param query     the query
      * @param max       the max number of results
      * @param sortField the field to sort by
-     * @param filter    TODO
+     * @param filter    the filter to search with
      * @return the entity documents that have been found
      */
     EntityDoc[] search(Query query, int max, Sort sortField, Filter filter);
@@ -253,12 +253,8 @@ public interface EntityIndexReader extends Closeable {
     /**
      * Returns all terms starting with a particular prefix
      *
-     *
-     *
-     *
-     *
      * @param searchTerm the search term
-     * @param fieldNames  names of the fields
+     * @param fieldNames names of the fields
      * @return the list of terms matching searchTerm as a prefix
      */
     Set<String> findSetOfTermsStartingWith(String searchTerm, String... fieldNames);
@@ -274,8 +270,9 @@ public interface EntityIndexReader extends Closeable {
 
     /**
      * Runs the analyzer on the input query
-     * @param fieldName the field that is being analyzed
-     * @param input the input query
+     *
+     * @param fieldName      the field that is being analyzed
+     * @param input          the input query
      * @param escapeForQuery true to indicate we want to escape the sequence for use in a later query
      * @return the list of tokens
      */

@@ -40,22 +40,27 @@ import com.tyndalehouse.step.core.models.search.ExpandableSubjectHeadingEntry;
 import com.tyndalehouse.step.core.models.search.SearchEntry;
 import com.tyndalehouse.step.core.models.search.SearchResult;
 import com.tyndalehouse.step.core.models.search.SubjectHeadingSearchEntry;
+import com.tyndalehouse.step.core.models.search.SubjectSuggestion;
 import com.tyndalehouse.step.core.service.impl.IndividualSearch;
 import com.tyndalehouse.step.core.service.impl.SearchQuery;
+import com.tyndalehouse.step.core.service.impl.SearchType;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import com.tyndalehouse.step.core.service.jsword.JSwordSearchService;
 import com.tyndalehouse.step.core.service.search.SubjectSearchService;
 import com.tyndalehouse.step.core.utils.LuceneUtils;
 import com.tyndalehouse.step.core.utils.StringUtils;
+import org.apache.lucene.analysis.PorterStemFilter;
 import org.apache.lucene.queryParser.QueryParser;
 import org.crosswire.jsword.index.lucene.LuceneIndex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.tartarus.snowball.ext.PorterStemmer;
 
 import javax.inject.Inject;
 import java.util.*;
 
 import static com.tyndalehouse.step.core.models.LookupOption.HEADINGS_ONLY;
+import static com.tyndalehouse.step.core.models.LookupOption.VERSE_NUMBERS;
 import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
 
 /**
@@ -86,27 +91,43 @@ public class SubjectSearchServiceImpl implements SubjectSearchService {
     }
 
     @Override
-    public List<String> autocomplete(String userEnteredTerm) {
+    public List<SubjectSuggestion> autocomplete(String userEnteredTerm) {
         if (StringUtils.isBlank(userEnteredTerm)) {
-            return new ArrayList<String>(0);
+            return new ArrayList<SubjectSuggestion>(0);
         }
 
-        //take the last word
-        final String trimmedUserEntry = userEnteredTerm.toLowerCase().trim();
-        int lastWordStart = trimmedUserEntry.indexOf(' ');
-        String searchTerm = lastWordStart != -1 ? trimmedUserEntry.substring(lastWordStart + 1) : trimmedUserEntry;
+        final String searchTerm = LuceneUtils.safeEscape(userEnteredTerm);
+        final Map<String, SubjectSuggestion> suggestions = new TreeMap<String, SubjectSuggestion>();
+        final PorterStemmer stemmer = new PorterStemmer();
 
         //add the full term
-        Set<String> naveTerms = this.naves.findSetOfTermsStartingWith(searchTerm, "fullTerm");
-        
-        //also read the JSword book
-        naveTerms.addAll(LuceneUtils.getAllTermsPrefixedWith(this.jswordSearch.getIndexSearcher(JSwordPassageService.REFERENCE_BOOK),
-                LuceneIndex.FIELD_HEADING,
-                searchTerm));
+        addSubjectTerms(suggestions, stemmer, LuceneUtils.getAllTermsPrefixedWith(this.jswordSearch.getIndexSearcher(JSwordPassageService.REFERENCE_BOOK),
+                LuceneIndex.FIELD_HEADING, searchTerm), SearchType.SUBJECT_SIMPLE);
+        addSubjectTerms(suggestions, stemmer, this.naves.findSetOfTermsStartingWith(searchTerm, "root"), SearchType.SUBJECT_EXTENDED);
+        addSubjectTerms(suggestions, stemmer, this.naves.findSetOfTermsStartingWith(searchTerm, "fullTerm"), SearchType.SUBJECT_FULL);
 
-        final ArrayList<String> results = new ArrayList<String>(naveTerms);
-        Collections.sort(results);
-        return results;
+        return new ArrayList<SubjectSuggestion>(suggestions.values());
+    }
+
+    private void addSubjectTerms(final Map<String, SubjectSuggestion> suggestions,
+                                 final PorterStemmer stemmer,
+                                 final Collection<String> naveTerms,
+                                 final SearchType searchType) {
+        for (String s : naveTerms) {
+            stemmer.setCurrent(s);
+            stemmer.stem();
+            String stem = stemmer.getCurrent();
+
+            SubjectSuggestion suggestion = suggestions.get(stem);
+            if (suggestion == null) {
+                suggestion = new SubjectSuggestion();
+                suggestion.setValue(s);
+                suggestion.addSearchType(searchType);
+                suggestions.put(stem, suggestion);
+            } else if (!suggestion.getSearchTypes().contains(searchType)) {
+                suggestion.addSearchType(searchType);
+            }
+        }
     }
 
     @Override
@@ -144,19 +165,11 @@ public class SubjectSearchServiceImpl implements SubjectSearchService {
         switch (currentSearch.getType()) {
             case SUBJECT_SIMPLE:
                 final SearchResult simpleSearchResults = searchSimple(currentQuery);
-                if (haveSearchResults(simpleSearchResults)) {
-                    return simpleSearchResults;
-                }
-                //otherwise fall-through, and convert search to a nave search
-                currentQuery = convertToNewSubjectSearchQuery(currentQuery, "s=", "s+=");
+                return simpleSearchResults;
             case SUBJECT_EXTENDED:
                 final SearchResult searchResult = searchExtended(currentQuery);
-                if (haveSearchResults(searchResult)) {
-                    searchResult.setQuery(currentSearch.getQuery());
-                    return searchResult;
-                }
-                //otherwise fall-through
-                currentQuery = convertToNewSubjectSearchQuery(currentQuery, "s+=", "s++=");
+                searchResult.setQuery(currentSearch.getQuery());
+                return searchResult;
             case SUBJECT_FULL:
                 return searchFull(currentQuery);
             case SUBJECT_RELATED:
@@ -166,24 +179,6 @@ public class SubjectSearchServiceImpl implements SubjectSearchService {
 
         }
         return searchSimple(currentQuery);
-    }
-
-    /**
-     * Promotes or demotes a query by recreating the search query
-     * @param expectedPrefix the expected prefix
-     * @param newSearchPrefix the new search prefix
-     * @param sq the search query
-     * @return the new search query
-     */
-    private SearchQuery convertToNewSubjectSearchQuery(final SearchQuery sq, final String expectedPrefix, final String newSearchPrefix) {
-        
-        final SearchQuery newSearchQuery = new SearchQuery(sq.getOriginalQuery().replaceFirst(expectedPrefix, newSearchPrefix),
-                sq.getSortOrder(),
-                sq.getContext(),
-                sq.getPageNumber(),
-                sq.getPageSize());
-        sq.setOriginalQuery(newSearchQuery.getOriginalQuery());
-        return newSearchQuery;
     }
 
     /**
@@ -213,10 +208,10 @@ public class SubjectSearchServiceImpl implements SubjectSearchService {
      * @return the results
      */
     private SearchResult searchSimple(final SearchQuery sq) {
-        sq.setAllKeys(true);
+//        sq.setAllKeys(true);
 
         final SearchResult headingsSearch = this.jswordSearch.search(sq,
-                sq.getCurrentSearch().getVersions()[0], HEADINGS_ONLY);
+                sq.getCurrentSearch().getVersions()[0], HEADINGS_ONLY, VERSE_NUMBERS);
 
         // build the results and then return
         final SubjectHeadingSearchEntry headings = new SubjectHeadingSearchEntry();

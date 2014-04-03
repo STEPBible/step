@@ -95,6 +95,11 @@ public class MockJSwordPassageServiceImpl implements JSwordPassageService {
         return null;
     }
 
+    @Override
+    public OsisWrapper peakOsisText(final String[] versions, final Key lookupKey, final List<LookupOption> options, final String interlinearMode) {
+        return null;
+    }
+
     /**
      * Gets the osis text by verse numbers.
      * 
@@ -112,20 +117,6 @@ public class MockJSwordPassageServiceImpl implements JSwordPassageService {
     public OsisWrapper getOsisTextByVerseNumbers(final String version, final String numberedVersion,
             final int startVerseId, final int endVerseId, final List<LookupOption> options,
             final String interlinearVersion, final Boolean roundReference, final boolean ignoreVerse0) {
-
-        return null;
-    }
-
-    /**
-     * Peak osis text.
-     * 
-     * @param version the version
-     * @param keyedVersion the keyed version
-     * @param reference the reference
-     * @return the osis wrapper
-     */
-    @Override
-    public OsisWrapper peakOsisText(final String version, final String keyedVersion, final String reference) {
 
         return null;
     }

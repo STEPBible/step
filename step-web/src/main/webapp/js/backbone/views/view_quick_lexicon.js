@@ -32,13 +32,23 @@
  **************************************************************************************************/
 
 var QuickLexicon = Backbone.View.extend({
-    el: function () {
-        return $("<span>").position({ my: "right top", at: "right top", of: $(window) }).hide();
-    },
-
-    initialize: function () {
-        this.listenTo(this.model, "change", this.render);
-        this.inProgress = false;
+    template: '<div id="quickLexicon"><div>' +
+        '<div>' +
+        '<button type="button" class="close" aria-hidden="true">&times;</button>' +
+        '<% _.each(data, function(item) { %>' +
+        '<div><h1>' +
+        '<span class="<%= fontClass %>"><%= item.accentedUnicode %></span> (' +
+        '<span class="stepTransliteration"><%= item.stepTransliteration %>): <%= item.stepGloss %>, ' +
+        '</h1><span><%= item.shortDef == undefined ? "" : item.shortDef %></span>' +
+        '<% }); %>' +
+        '</div><span class="infoTagLine"><%= __s.more_info_on_click_of_word %></span></div></div></div>',
+    initialize: function (opts) {
+        this.strong = opts.strong;
+        this.morph = opts.morph;
+        this.position = opts.position;
+        this.touchEvent = opts.touchEvent || false;
+        this.passageContainer = step.util.getPassageContainer(opts.target);
+        this.render();
     },
 
     /**
@@ -46,74 +56,45 @@ var QuickLexicon = Backbone.View.extend({
      * @param strongNumbers
      */
     render: function (event) {
-        if(this.inProgress) {
-            return;
-        }
-        
-        this.inProgress = true;
-        
         var self = this;
-        if(this.qtip != undefined) {
-            this.qtip.qtip("destroy");
-        }
 
-        this.qtip = $(this.model.get("element")).qtip({
-            style: { tip: false, classes: "quickLexiconDefinition primaryLightBg" },
-            position: { my: "top center", at: "top center", viewport: $(window), target: $("body"), effect: false },
-            hide: { event: 'unfocus mouseleave' },
-            events : {
-                show: function(event, api) {
-                    self.showRelatedNumbers($.data(self.qtip, "relatedNumbers"));
+        //remove all quick lexicons
+
+//                    self.showRelatedNumbers($.data(self.qtip, "relatedNumbers"));
+        //make request to server
+        $.getSafe(MODULE_GET_QUICK_INFO, [this.strong, this.morph], function (data) {
+            $("#quickLexicon").remove();
+            if (data.vocabInfos) {
+                var lexicon = $(_.template(self.template)({ data: data.vocabInfos, fontClass: step.util.ui.getFontForStrong(self.strong) }));
+                if (self.position > 0.66) {
+                    lexicon.css("padding-top", "2px");
+                    lexicon.css("height", "1px");
+                    lexicon.css("top", "0");
                 }
-            },
-            content: {
-                text: function (event, api)  {
-                    var strong = self.model.get("strongNumber");
-                    var morph = self.model.get("morph");
-
-                    $.getSafe(MODULE_GET_QUICK_INFO, [strong, morph], function (data) {
-                        var vocabInfo = "";
-                        if (data.vocabInfos) {
-                            $.each(data.vocabInfos, function (i, item) {
-                                $.data(self.qtip, "relatedNumbers", item.rawRelatedNumbers);
-                                self.showRelatedNumbers($.data(self.qtip, "relatedNumbers"));
-
-                                var fontClass = strong.length > 0 && strong[0] == 'H' ? "hbFontSmall" : 'unicodeFont';
-
-                                vocabInfo += "<h1>" +
-                                    "<span class='" + fontClass + "'>" +
-                                    item.accentedUnicode +
-                                    "</span> (<span class='stepTransliteration'>" +
-                                    step.util.ui.markUpTransliteration(item.stepTransliteration) +
-                                    "): " +
-                                    item.stepGloss +
-                                    "</h1>" +
-                                    "<span>" +
-                                    (item.shortDef == undefined ? "" : item.shortDef) +
-                                    "</span></p>";
-                            });
-                        }
-
-                        vocabInfo += "<span class='infoTagLine'>" +
-                            __s.more_info_on_click_of_word +
-                            "</span>";
-                        api.set('content.text', vocabInfo);
-                        self.inProgress = false;
-                    }, null, null, null, function() {
-                        self.inProgress = false;
+                self.passageContainer.append(lexicon);
+                if (self.touchEvent) {
+                    lexicon.click(function () {
+                        step.util.ui.showDef({ strong: self.strong, morph: self.morph });
+                        lexicon.remove();
                     });
                 }
+
+                lexicon.find(".close").click(function () {
+                    lexicon.remove();
+                });
+            }
+            
+            for(var i = 0; i < (data.vocabInfos || []).length; i++) {
+                self.showRelatedNumbers(data.vocabInfos[i].rawRelatedNumbers);
             }
         });
 
-        this.qtip.qtip("show");
     },
-
     /**
      * @param rawRelatedNumbers the related raw numbers
      */
-    showRelatedNumbers : function(rawRelatedNumbers) {
-        if(rawRelatedNumbers) {
+    showRelatedNumbers: function (rawRelatedNumbers) {
+        if (rawRelatedNumbers) {
             step.passage.highlightStrong(null, rawRelatedNumbers.replace(/,/ig, ""), "relatedWordEmphasisHover");
         }
     }

@@ -37,6 +37,7 @@ import static com.tyndalehouse.step.core.exceptions.UserExceptionType.USER_MISSI
 import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
 import static com.tyndalehouse.step.core.utils.ValidateUtils.notEmpty;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
@@ -44,6 +45,8 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
+import com.tyndalehouse.step.core.service.PassageOptionsValidationService;
+import com.tyndalehouse.step.core.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,6 +73,7 @@ public class BibleController {
     private static final Logger LOGGER = LoggerFactory.getLogger(BibleController.class);
     private final BibleInformationService bibleInformation;
     private final Provider<ClientSession> clientSession;
+    private final PassageOptionsValidationService optionsValidationService;
 
     /**
      * creates the controller giving access to bible information.
@@ -79,9 +83,11 @@ public class BibleController {
      */
     @Inject
     public BibleController(final BibleInformationService bibleInformation,
-                           final Provider<ClientSession> clientSession) {
+                           final Provider<ClientSession> clientSession,
+                           PassageOptionsValidationService optionsValidationService) {
         this.bibleInformation = bibleInformation;
         this.clientSession = clientSession;
+        this.optionsValidationService = optionsValidationService;
         LOGGER.debug("Created Bible Controller");
     }
 
@@ -236,8 +242,10 @@ public class BibleController {
      */
     public AvailableFeatures getFeatures(final String version, final String extraVersions, final String displayMode) {
         notEmpty(version, "bible_required", USER_MISSING_FIELD);
-
-        return this.bibleInformation.getAvailableFeaturesForVersion(version, extraVersions, displayMode);
+           
+        String[] extraVersionsAsString = StringUtils.split(extraVersions, ",");
+        return this.optionsValidationService.getAvailableFeaturesForVersion(version, 
+                Arrays.asList(extraVersionsAsString), displayMode);
     }
 
     /**
@@ -257,7 +265,7 @@ public class BibleController {
      * @return a list of items
      */
     public List<BookName> getBibleBookNames(final String bookStart, final String version) {
-        return this.bibleInformation.getBibleBookNames(bookStart, version);
+        return this.bibleInformation.getBibleBookNames(bookStart, version, true);
     }
 
     /**

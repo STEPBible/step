@@ -33,6 +33,7 @@
 package com.tyndalehouse.step.core.utils;
 
 import static java.util.Collections.sort;
+import static org.crosswire.jsword.book.OSISUtil.OSIS_ELEMENT_VERSE;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -43,11 +44,17 @@ import java.util.Locale;
 import org.crosswire.common.util.Language;
 import org.crosswire.common.util.Languages;
 import org.crosswire.jsword.book.Book;
+import org.crosswire.jsword.book.BookData;
+import org.crosswire.jsword.book.BookException;
 import org.crosswire.jsword.book.FeatureType;
+import org.crosswire.jsword.passage.Key;
+import org.crosswire.jsword.passage.NoSuchKeyException;
 import org.crosswire.jsword.versification.BibleBook;
 
 import com.tyndalehouse.step.core.models.BibleVersion;
 import com.tyndalehouse.step.core.service.helpers.VersionResolver;
+import org.jdom2.Element;
+import org.jdom2.filter.ElementFilter;
 
 /**
  * a set of utility methods to manipulate the JSword objects coming out
@@ -81,7 +88,8 @@ public final class JSwordUtils {
         // we only send back what we need
         for (final Book b : bibles) {
             final BibleVersion v = new BibleVersion();
-            v.setName(b.getName());
+            final String shortName = (String) b.getProperty("shortName");
+            v.setName(shortName != null ? shortName : b.getName());
             v.setInitials(b.getInitials());
             v.setShortInitials(resolver.getShortName(b.getInitials()));
             v.setQuestionable(b.isQuestionable());
@@ -110,6 +118,7 @@ public final class JSwordUtils {
             v.setHasStrongs(b.hasFeature(FeatureType.STRONGS_NUMBERS));
             v.setHasMorphology(b.hasFeature(FeatureType.MORPHOLOGY));
             v.setHasRedLetter(b.hasFeature(FeatureType.WORDS_OF_CHRIST));
+            v.setHasHeadings(b.hasFeature(FeatureType.HEADINGS));
             v.setHasNotes(b.hasFeature(FeatureType.FOOTNOTES) || b.hasFeature(FeatureType.SCRIPTURE_REFERENCES));
             versions.add(v);
         }
@@ -177,5 +186,18 @@ public final class JSwordUtils {
             }
         }
         return ancientGreek;
+    }
+
+    /**
+     * Gets the osis elements.
+     *
+     * @return the osis elements
+     * @throws org.crosswire.jsword.passage.NoSuchKeyException the no such key exception
+     * @throws org.crosswire.jsword.book.BookException      the book exception
+     */
+    @SuppressWarnings({"unchecked", "serial"})
+    public static List<Element> getOsisElements(BookData data) throws NoSuchKeyException, BookException {
+        return data.getOsisFragment().getContent(
+                new ElementFilter(OSIS_ELEMENT_VERSE));
     }
 }

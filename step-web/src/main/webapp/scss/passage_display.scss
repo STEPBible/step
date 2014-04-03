@@ -1,0 +1,147 @@
+@import 'template_variables';
+
+.passageContainer.waiting {
+  background-position: 1 1;
+}
+
+.passageContentHolder {
+  table {
+    width: 85%;
+    display: inline;
+  }
+  td {
+    font-size: $defaultFontSize;
+    &.x-end-row {
+      vertical-align: bottom;
+      text-align: right;
+    }
+  }
+
+  text-align: justify;
+  h2 {
+    margin-bottom: 5px;
+    &.xgen {
+      margin-top: 0px;
+      text-align: left;
+    }
+    &.sub {
+      font-size: 90%;
+    }
+  }
+  .paragraph {
+    margin-top: 8px;
+    content: ' ';
+    display: block;
+  }
+
+  .endLineGroup, .startLineGroup {
+    content: ' ';
+    display: block;
+    margin-bottom: 4px;
+  }
+  .startLineGroup {
+    padding-top: 8px;
+  }
+  h2 + br, .startLineGroup + br, .startLineGroup + br + .level1, h2 + br + span + br, br + .paragraph + br {
+    display: none;
+  }
+  a + br + .level1 {
+    margin-right: -10px;
+  }
+  span.level1 {
+    margin-top: 8px;
+    display: inline-block;
+    vertical-align: top;
+    padding-left: 10px;
+  }
+  span.level2 {
+    padding-left: 30px;
+  }
+  span.level3 {
+    padding-left: 50px;
+  }
+  span.level4 {
+    padding-left: 70px;
+  }
+  span.level1, span.level2, span.level3, span.level4 {
+    content: ' ';
+  }
+  br + br {
+    display: none;
+  }
+
+  .notesPane {
+    text-align: left;
+  }
+  .verse.containsTable {
+    text-align: left;
+  }
+  p.x-continued {
+    margin-bottom: 0px;
+  }
+  .verseLink + .x-min-width {
+    margin-left: 2px;
+  }
+  div.x-min-width {
+    width: 60%;
+    display: inline-block;
+    margin-left: 15px;
+  }
+  .small-caps {
+    font-size: 110%;
+    &> em.foreign, &> .x-inscription {
+      text-align: center;
+      display: block;
+      margin-bottom: -20px;
+    }
+  }
+  .x-p-inscription {
+    font-size: 110%;
+    text-align: center;
+    display: block;
+    font-variant: small-caps;
+  }
+  .x-doxology {
+    display: block;
+    text-align: center;
+  } 
+}
+
+.verseNumber {
+  min-width: 10px;
+  vertical-align: top;
+  font-size: 6pt;
+  cursor: hand;
+  background-color: $verseNumberBackground;
+  color: $headingColour;
+  font-weight: bold;
+  text-align: center;
+  display: inline-block;
+  margin-right: 2px;
+ 
+}
+
+h3.psalmHeading {
+  font-size: $defaultFontSize+2;
+  margin: 0px;
+}
+
+h3.canonicalHeading {
+  font-size: $defaultFontSize;
+}
+
+h2.heading {
+  & + .startLineGroup {
+    padding-top: 0px;
+  }
+  &.x-proverbs {
+    font-size: 120%;
+    text-align: center;
+  }
+  &.x-speaker {
+    margin-bottom: 0;
+  }
+  &.x-acrostic {
+    margin-left: 10px;
+  }
+}

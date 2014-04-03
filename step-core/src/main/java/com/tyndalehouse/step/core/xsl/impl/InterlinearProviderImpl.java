@@ -156,18 +156,46 @@ public class InterlinearProviderImpl implements InterlinearProvider {
         this.originalLanguage = JSwordUtils.isAncientBook(currentBook);
         final boolean ancientHebrewBook = JSwordUtils.isAncientHebrewBook(currentBook);
         this.stripAccents = stripGreekAccents && JSwordUtils.isAncientGreekBook(currentBook) ||
-                            stripHebrewAccents && ancientHebrewBook;
+                stripHebrewAccents && ancientHebrewBook;
         this.stripVowels = ancientHebrewBook && this.stripAccents && stripVowels;
 
         BookData bookData;
         try {
             setTestamentType(versifiedKey);
 
-            bookData = new BookData(this.currentBook, versifiedKey);
+            bookData = getBookDataWithVerse0(versifiedKey);
             scanForTextualInformation(bookData.getOsisFragment());
         } catch (final BookException e) {
             throw new StepInternalException(e.getMessage(), e);
         }
+    }
+
+    /**
+     * For verse 0, we can't simply lookup verse 0, because that doesn't return the pre-verse content which sits in verse 1
+     * so instead we need to replace the key to have verse 1 instead. For all purposes, such as verses 0-1, or verse 1, etc.
+     * then we continue as normal.
+     *
+     * @param versifiedKey the key from the original versification
+     * @return a bookdata with the correct verse
+     */
+    private BookData getBookDataWithVerse0(final Key versifiedKey) {
+        final Iterator<Key> iterator = versifiedKey.iterator();
+        Verse v = (Verse) iterator.next();
+        if (v != null && !iterator.hasNext()) {
+            //then we're basically looking at a single verse... in this special case
+            // we need to check it doesn't not map to verse 0.
+            //if it did, we will need to return verse with 1.
+            final VerseKey mappedVerse = VersificationsMapper.instance().mapVerse(v, this.versification);
+            if (mappedVerse.getCardinality() == 1) {
+                final Verse next = (Verse) mappedVerse.iterator().next();
+                if (next.getVerse() == 0) {
+                    return new BookData(this.currentBook,
+                            new Verse(this.versification, next.getBook(), next.getChapter(), next.getVerse() + 1));
+                }
+            }
+        }
+
+        return new BookData(this.currentBook, versifiedKey);
     }
 
     /**
@@ -241,12 +269,12 @@ public class InterlinearProviderImpl implements InterlinearProvider {
             sb.append(' ');
             sb.append(iterator.next());
         }
-        
-        String actualText =  sb.toString();
-        
-        if(stripVowels) {
+
+        String actualText = sb.toString();
+
+        if (stripVowels) {
             return StringConversionUtils.unAccent(actualText);
-        } else if(stripAccents) {
+        } else if (stripAccents) {
             return StringConversionUtils.unAccentLeavingVowels(actualText);
         } else {
             return actualText;
@@ -266,7 +294,10 @@ public class InterlinearProviderImpl implements InterlinearProvider {
             //Key may be made up of several keys
             Iterator<Key> keyIterator = equivalentVerses.iterator();
             while (keyIterator.hasNext()) {
-                final DualKey<String, String> key = new DualKey<String, String>(strong, keyIterator.next().getOsisID());
+                Verse v = (Verse) keyIterator.next();
+                String osisID = v.getVerse() == 0 ? NO_VERSE : v.getOsisID();
+                
+                final DualKey<String, String> key = new DualKey<String, String>(strong, osisID);
 
                 final Deque<Word> list = this.limitedAccuracy.get(key);
                 if (list != null && !list.isEmpty()) {
@@ -379,14 +410,15 @@ public class InterlinearProviderImpl implements InterlinearProvider {
      * @param element the osis element
      */
     private void updateVerseRef(final Element element) {
-        final String osisId = element.getAttributeValue(OSISUtil.OSIS_ATTR_OSISID);
-        Verse result = currentVerse;
-        if (osisId != null) {
-            try {
-                currentVerse = VerseFactory.fromString(this.versification, osisId);
-            } catch (NoSuchVerseException ex) {
-                LOGGER.trace("Unable to convert ref - probably not a verse reference.", ex);
-            }
+        final boolean isVerseMarker = OSISUtil.OSIS_ELEMENT_VERSE.equals(element.getName());
+        if (isVerseMarker) {
+            final String osisId = element.getAttributeValue(OSISUtil.OSIS_ATTR_OSISID);
+            if (osisId != null)
+                try {
+                    currentVerse = VerseFactory.fromString(this.versification, osisId);
+                } catch (NoSuchVerseException ex) {
+                    LOGGER.trace("Unable to convert ref - probably not a verse reference.", ex);
+                }
         }
     }
 
@@ -511,7 +543,7 @@ public class InterlinearProviderImpl implements InterlinearProvider {
      * @return the word that has been added
      */
     Word addTextualInfo(final Verse verseReference, final String strongKey, final String word) {
-        final DualKey<String, String> strongVerseKey = new DualKey<String, String>(strongKey, verseReference == null ? NO_VERSE : verseReference.getOsisID());
+        final DualKey<String, String> strongVerseKey = new DualKey<String, String>(strongKey, verseReference == null ? NO_VERSE : verseReference.getOsisIDNoSubIdentifier());
         Deque<Word> verseKeyedStrongs = this.limitedAccuracy.get(strongVerseKey);
         if (verseKeyedStrongs == null) {
             verseKeyedStrongs = new LinkedList<Word>();

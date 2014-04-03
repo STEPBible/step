@@ -48,6 +48,7 @@ public class BibleVersion implements Serializable {
     private boolean hasMorphology;
     private boolean hasRedLetter;
     private boolean hasNotes;
+    private boolean hasHeadings;
     private boolean questionable;
     private String languageCode;
     private String category;
@@ -206,5 +207,19 @@ public class BibleVersion implements Serializable {
      */
     public boolean isHasNotes() {
         return hasNotes;
+    }
+
+    /**
+     * @return true to indicate whether a Bible has headings
+     */
+    public boolean isHasHeadings() {
+        return hasHeadings;
+    }
+
+    /**
+     * @param hasHeadings true to indicate whether a Bible has headings
+     */
+    public void setHasHeadings(final boolean hasHeadings) {
+        this.hasHeadings = hasHeadings;
     }
 }

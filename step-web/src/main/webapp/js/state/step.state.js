@@ -34,7 +34,7 @@ step.state = {
         }
 
         //first take from URL var
-        var lang = $.getUrlVar("lang") || $.cookie("lang");
+        var lang = $.getUrlVar("lang");
         if(lang == null) {
             lang = window.navigator.userLanguage || window.navigator.language;
         }

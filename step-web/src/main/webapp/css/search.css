@@ -284,9 +284,9 @@ h4.lexicalGrouping {
 /*******************************************/
 /* Advanced search box                     */
 /*******************************************/
-.advancedSearch {
-	font-size: smaller;
-}
+/*.advancedSearch {*/
+	/*font-size: smaller;*/
+/*}*/
 
 .advancedSearch h4 {
 	color: #33339F;

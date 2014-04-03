@@ -271,12 +271,12 @@ public class EntityIndexReaderImpl implements EntityIndexReader {
             throw new StepInternalException("Unable to parse query " + querySyntax, e);
         }
     }
-
+    
     @Override
     public EntityDoc[] search(final Query query) {
         final AllResultsCollector collector = new AllResultsCollector();
         try {
-            LOGGER.debug("Search query is [{}]", query);
+            LOGGER.debug("Search query is [{}], with filter [{}]", query);
             this.searcher.search(query, collector);
             return extractDocIds(collector);
         } catch (final IOException e) {
@@ -436,6 +436,6 @@ public class EntityIndexReaderImpl implements EntityIndexReader {
      */
     void setSearcher(final IndexSearcher searcher) {
         this.searcher = searcher;
-    }
+        }
 
-}
+        }

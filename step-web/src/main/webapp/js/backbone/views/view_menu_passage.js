@@ -4,8 +4,8 @@ var PassageMenuView = Backbone.View.extend({
         "click .showStats": "showAnalysis",
         "click .previousChapter": "goToPreviousChapter",
         "click .nextChapter": "goToNextChapter",
-        "click .closeColumn" : "closeColumn",
-        "show.bs.dropdown *" : "handleDropdownMenu"
+        "click .closeColumn": "closeColumn",
+        "show.bs.dropdown *": "handleDropdownMenu"
     },
     el: function () {
         return step.util.getPassageContainer(this.model.get("passageId")).find(".passageOptionsGroup");
@@ -36,17 +36,19 @@ var PassageMenuView = Backbone.View.extend({
         this.listenTo(this.model, "destroy-column", this.remove);
         this.column = this.$el.closest(".column");
         this.column.click(this.activateColumn);
-        
+
         //get the versions data sources
         this._updateVisibleDropdown();
     },
-    handleDropdownMenu : function(ev) {
+    handleDropdownMenu: function (ev) {
         var self = this;
         if (!self.rendered) {
             require(["defaults"], function () {
-                self._initUI();
-                self.rendered = true;
-                self._updateDropdownContents(ev.target);
+                if (!self.rendered) {
+                    self._initUI();
+                    self.rendered = true;
+                    self._updateDropdownContents(ev.target);
+                }
             });
         } else {
             self._updateDropdownContents(ev.target);
@@ -57,19 +59,19 @@ var PassageMenuView = Backbone.View.extend({
         if (this._isDisplayOptionsDropdown(openDropdown)) {
             this._updateColumnOptions();
         }
-        
+
         var isPassage = this.model.get("searchType") == 'PASSAGE';
         var previousNext = this.$el.find(".previousChapter, .nextChapter");
         previousNext.toggle(isPassage);
         this.$el.find(".contextContainer").toggle(!isPassage);
-        
+
         //css workaround - need to move next/previous from their first position to the next one
-        if(isPassage) {
+        if (isPassage) {
             previousNext.insertBefore(this.$el.find(".showSettings"));
         } else {
             previousNext.insertBefore(this.$el.find(".closeColumn"));
         }
-        
+
     },
     _updateDropdownContents: function (targetTrigger) {
         if (this._isDisplayOptionsDropdown(targetTrigger)) {
@@ -106,7 +108,7 @@ var PassageMenuView = Backbone.View.extend({
         //first set the available options to be visible, and non-available options to be invisible...
         var availableOptions = this.model.get("options") || "";
         var isPassage = this.model.get("searchType") == "PASSAGE";
-        
+
         //make invisible all options except for 'available ones'
         var displayOptions = this.displayOptions.find("li.passage");
         for (var i = 0; i < displayOptions.length; i++) {
@@ -114,8 +116,8 @@ var PassageMenuView = Backbone.View.extend({
             displayOption.toggle(isPassage && availableOptions.indexOf(displayOption.find("[data-value]").attr("data-value")) != -1);
         }
     },
-    _updateSearchOptions: function() {
-        
+    _updateSearchOptions: function () {
+
     },
     _updateDisplayModeOptions: function (masterVersion) {
         //set the current display mode.
@@ -157,7 +159,7 @@ var PassageMenuView = Backbone.View.extend({
     },
     showAnalysis: function () {
         //trigger side bar
-        require(["sidebar"], function(module) {
+        require(["sidebar"], function (module) {
             //read up on requirejs to see if init can form part of download call
             step.util.ui.initSidebar('analysis');
         });
@@ -208,42 +210,42 @@ var PassageMenuView = Backbone.View.extend({
 
         return displayModes;
     },
-    _createDisplayOptions: function() {
+    _createDisplayOptions: function () {
         var dropdown = $("<ul>").addClass("miniKolumny passageOptions");
         dropdown.append(this._createPassageOptions(dropdown));
         return dropdown;
     },
     getContextLabel: function (context) {
         return sprintf(__s.search_context, context);
-    }, 
-    _createSearchOptions: function() {
+    },
+    _createSearchOptions: function () {
         var dropdown = $("<ul></ul>").addClass("col-sm-6");
         var self = this;
         var context = this.model.get("context") || 0;
-        
+
         var li = $('<li class="noHighlight contextContainer">').append($('<span class="contextLabel"></span>').append(this.getContextLabel(context)));
         li.append($('<span class="btn-group pull-right"></span>')
             .append('<button class="btn btn-default btn-xs"><span class="glyphicon glyphicon-minus"></span></button>')
             .append('<button class="btn btn-default btn-xs"><span class="glyphicon glyphicon-plus"></span></button>'));
-        
-        li.find("button").click(function(ev) {
+
+        li.find("button").click(function (ev) {
             ev.stopPropagation();
             //need to trigger new search after setting value of model 
             var contextVal = self.model.get("context");
             var increment = $(this).find(".glyphicon-minus").length ? -1 : 1;
-            if(step.util.isBlank(contextVal)) {
+            if (step.util.isBlank(contextVal)) {
                 contextVal = 0;
-            } else if(isNaN(contextVal)) {
+            } else if (isNaN(contextVal)) {
                 contextVal = 0;
             } else {
                 contextVal = parseInt(contextVal);
             }
             contextVal += increment;
-            if(contextVal < 0) {
+            if (contextVal < 0) {
                 contextVal = 0;
             }
             $(this).closest("li").find(".contextLabel").html(self.getContextLabel(contextVal));
-            self.model.save({ context:  contextVal});
+            self.model.save({ context: contextVal});
 
         });
         //create context link
@@ -252,7 +254,7 @@ var PassageMenuView = Backbone.View.extend({
             .find(".smallerFontSize").click(this.decreaseFontSize).end()
             .find(".largerFontSize").click(this.increaseFontSize);
         return dropdown;
-        
+
     },
     _createPassageOptions: function (dropdown) {
         var selectedOptions = this.model.get("selectedOptions") || "";
@@ -272,7 +274,7 @@ var PassageMenuView = Backbone.View.extend({
         });
         return dropdown;
     },
-    
+
     _createLink: function (value, text, title) {
         return $('<a></a>')
             .attr("href", "javascript:void(0)")
@@ -338,42 +340,42 @@ var PassageMenuView = Backbone.View.extend({
         }
 
         //do facebook share
-        if(window.FB && window.FB.XFBML) {
+        if (window.FB && window.FB.XFBML) {
             var facebook = $('<fb:share-button type="button_count"></fb:share-button>').attr("href", url);
             this.sharingBar.append($("<li>").append(facebook));
             window.FB.XFBML.parse(facebook.parent().get(0));
         }
     },
-    decreaseFontSize: function(ev) {
+    decreaseFontSize: function (ev) {
         ev.stopPropagation();
         step.util.activePassageId(this.model.get("passageId"));
         step.util.changeFontSize(this.$el, -1);
         return false;
     },
-    increaseFontSize: function(ev) {
+    increaseFontSize: function (ev) {
         ev.stopPropagation();
         step.util.activePassageId(this.model.get("passageId"));
         step.util.changeFontSize(this.$el, 1);
         return false;
     },
-    goToPreviousChapter: function() {
+    goToPreviousChapter: function () {
         this.goToSiblingChapter(this.model.get("previousChapter"));
     },
-    goToNextChapter: function() {
+    goToNextChapter: function () {
         this.goToSiblingChapter(this.model.get("nextChapter"));
     },
-    goToSiblingChapter: function(key) {
+    goToSiblingChapter: function (key) {
         step.util.activePassageId(this.model.get("passageId"));
-        
+
         var args = this.model.get("args") || "";
-        
+
         //remove all references from the args
         args = args
             .replace(/reference=[0-9a-zA-Z :.;-]+/ig, "")
             .replace(/&&/ig, "")
             .replace(/&$/ig, "");
-        
-        if(args.length > 0 && args[args.length -1] != '|') {
+
+        if (args.length > 0 && args[args.length - 1] != '|') {
             args += "|";
         }
         args += "reference=" + key.osisKeyId;
@@ -382,40 +384,40 @@ var PassageMenuView = Backbone.View.extend({
     /**
      * Closes the whole column by removing it from the DOM
      */
-    closeColumn : function() {
+    closeColumn: function () {
         this.model.trigger("destroy-column");
         this.column.remove();
-        
+
         //resize the columns
         step.util.refreshColumnSize();
         step.util.showOrHideTutorial();
-        
+
         //make sure any model that was linked to it is undone
         var passageId = parseInt(this.column.find("[passage-id]").attr("passage-id"));
-        
+
         //remove any links to this passage
         var linkedPassageIds = step.util.unlink(passageId);
-        
+
         //also remove any links from this passage to another passage...
         var linkTarget = this.model.get("linked");
-        if(linkTarget!= null) {
+        if (linkTarget != null) {
             var linkTargetModel = step.passages.findWhere({ passageId: linkTarget });
-            if(linkTargetModel) {
+            if (linkTargetModel) {
                 //not much to do, except remove the icon
                 step.util.getPassageContainer(linkTargetModel.get("passageId")).find(".glyphicon-link").remove();
             }
         }
-        
-        if(linkedPassageIds.length > 0) {
+
+        if (linkedPassageIds.length > 0) {
             step.util.activePassageId(linkedPassageIds[0]);
         } else {
             //let it reset on its on terms
             step.util.activePassageId();
         }
-        
+
         this.model.destroy();
     },
-    activateColumn : function() {
+    activateColumn: function () {
         var passageId = this.column.find("[passage-id]").attr("passage-id");
         step.util.activePassageId(passageId);
     },

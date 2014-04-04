@@ -343,7 +343,7 @@ var MainSearchView = Backbone.View.extend({
         }
 
         //reset defaults:
-        step.util.activePassage().save({ pageNumber: 1, filter: undefined }, { silent: true});
+        step.util.activePassage().save({ pageNumber: 1, filter: null, strongHighlights: null }, { silent: true});
         console.log("Arguments are: ", args);
         step.router.navigateSearch(args);
     },

@@ -33,7 +33,8 @@ ul .glyphicon-ok {
     min-height: initial; }
     .navbar .navbar-header {
       font-size: x-small;
-      background: black; }
+      background: black;
+      width: 100%; }
     .navbar #logo {
       top: 0;
       left: 0;

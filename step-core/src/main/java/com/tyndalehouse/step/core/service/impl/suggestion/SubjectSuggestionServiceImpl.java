@@ -143,6 +143,11 @@ public class SubjectSuggestionServiceImpl implements SingleTypeSuggestionService
                 suggestions.put(stem, suggestion);
             } else if (!suggestion.getSearchTypes().contains(searchType)) {
                 suggestion.addSearchType(searchType);
+                
+                //if the suggestion's value is longer, then replace with the short value
+                if(suggestion.getValue().length() > s.length()) {
+                    suggestion.setValue(s);
+                }
             }
         }
         return added;

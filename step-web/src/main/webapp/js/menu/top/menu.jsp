@@ -48,7 +48,7 @@
         
         <span class="dropdown">
         <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)"><fmt:message
-                key="installation_book_language"/></a>&nbsp;&nbsp;|&nbsp;&nbsp; 
+                key="installation_book_language"/></a> &nbsp;&nbsp;|&nbsp;&nbsp; 
         <ul id="languageMenu" class="kolumny pull-right dropdown-menu">
             <li><a href="http://crowdin.net/project/step" target="_new"><fmt:message key="translate_step"/></a></li>
             <%= sb.toString() %>

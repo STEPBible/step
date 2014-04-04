@@ -138,6 +138,7 @@ public class SubjectEntryServiceImpl implements SubjectEntrySearchService {
         final Iterator<VerseRange> rangeIterator = verseRanges.rangeIterator(RestrictionType.NONE);
         final List<LookupOption> options = new ArrayList<LookupOption>();
         options.add(LookupOption.HIDE_XGEN);
+        options.add(LookupOption.CHAPTER_BOOK_VERSE_NUMBER);
 
         final Book book = this.versificationService.getBookFromVersion(versions[0]);
         final Versification av11n = this.versificationService.getVersificationForVersion(book);

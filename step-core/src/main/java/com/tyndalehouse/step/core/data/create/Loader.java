@@ -246,10 +246,10 @@ public class Loader {
         this.totalProgress += 1;
         loadAlternativeTranslations();
         this.totalProgress += 1;
-        // loadOpenBibleGeography();
+        loadOpenBibleGeography();
 
-        // loadHotSpots();
-        // loadTimeline();
+        loadHotSpots();
+        loadTimeline();
         LOGGER.info("Finished loading...");
     }
 

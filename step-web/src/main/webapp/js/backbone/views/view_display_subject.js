@@ -110,7 +110,8 @@ var SubjectDisplayView = SearchDisplayView.extend({
                 lastHeader = searchResults[i].root;
             }
 
-            var expandingPanelId = "subject-results-" + i;
+            var passageId = this.model.get("passageId");
+            var expandingPanelId = "subject-results-" + i + "-" + passageId;
             var panel = step.util.ui.addCollapsiblePanel(searchResults[i].heading, "expandableSearchHeading", "#" + expandingPanelId);
             panel.append($('<div class="results">').attr("id", expandingPanelId).addClass("panel-collapse collapse").append(__s.results_loading))
             list.append(panel);

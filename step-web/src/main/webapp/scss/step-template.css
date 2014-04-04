@@ -592,9 +592,9 @@ h4.lexicalGrouping {
         height: 100%;
         padding-bottom: 35px;
         display: block;
-        overflow-y: scroll; }
+        overflow-y: auto; }
     #columnHolder .column .passageContentHolder {
-      overflow-y: scroll;
+      overflow-y: auto;
       height: 100%; }
     #columnHolder .column .passageContainer {
       border: 1px solid lightgrey;

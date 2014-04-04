@@ -33,12 +33,12 @@
         height: 100%;
         padding-bottom: $topSectionHeight;
         display: block;
-        overflow-y: scroll;
+        overflow-y: auto;
       }
     }
     
     .passageContentHolder {
-      overflow-y: scroll;
+      overflow-y: auto;
       height: 100%;
     }
     

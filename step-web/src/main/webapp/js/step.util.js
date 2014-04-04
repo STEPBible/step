@@ -245,11 +245,6 @@ step.util = {
 
                 step.passages.add(newPassageModel);
                 newPassageModel.save({ passageId: val, createSilently: true }, { silent: true });
-
-                //create the click handlers for the passage menu
-                new PassageMenuView({
-                    model: newPassageModel
-                });
             } else {
                 //swapping to an existing active passage id already, so sync straight away
                 existingModel.trigger("sync-update", existingModel);
@@ -307,11 +302,11 @@ step.util = {
         };
         xhr.sendAsBinary(dataToBeSent.join('\r\n'));
     },
-    refreshColumnSize: function(columns) {
-        if(!columns){
+    refreshColumnSize: function (columns) {
+        if (!columns) {
             columns = $(".column");
         }
-        
+
         //change the width all columns
         var classesToRemove = "col-sm-12 col-sm-6 col-sm-4 col-sm-3 col-sm-5columns col-sm-2 col-sm-7columns col-sm-8columns col-sm-9columns col-sm-10columns col-sm-11columns col-sm-1";
         columns.removeClass(classesToRemove);
@@ -355,7 +350,7 @@ step.util = {
                 break;
             default:
                 columnClass = "col-sm-1";
-                if(!step.settings.get("tooManyPanelsWarning")) {
+                if (!step.settings.get("tooManyPanelsWarning")) {
                     step.util.raiseInfo(__s.too_many_panels_notice);
                     step.settings.save({ tooManyPanelsWarning: true }, { silent: true });
                 }
@@ -371,7 +366,7 @@ step.util = {
         var allRealColumns = $(".column").not(".examplesColumn");
         var exampleContainer = $(".examplesContainer");
         if (exampleContainer.parent().hasClass("column")) {
-            if (allRealColumns.length > 1  || hide) {
+            if (allRealColumns.length > 1 || hide) {
                 exampleContainer.parent().hide();
             }
         }
@@ -401,8 +396,9 @@ step.util = {
             .find(".passageContent").remove();
 
         var allColumns = columns.add(newColumn);
+
         this.refreshColumnSize(allColumns);
-       
+
         if (linked) {
             //passed in 'true', so we need to append at the right location  
             newColumn.insertAfter(activeColumn);
@@ -415,9 +411,16 @@ step.util = {
         } else {
             columnHolder.append(newColumn);
         }
-        
+
         this.showOrHideTutorial();
         step.util.activePassageId(newPassageId);
+
+        //create the click handlers for the passage menu
+        new PassageMenuView({
+            model: step.util.activePassage()
+        });
+
+
         return newPassageId;
     },
     unlink: function (newPassageId) {
@@ -450,11 +453,8 @@ step.util = {
         }
 
         //check if we're storing it
-        if (this._passageContainers[passageIdOrElement] == null) {
-            var container = $(".passageContainer[passage-id = " + passageIdOrElement + "]");
-            this._passageContainers[passageIdOrElement] = container;
-        }
-        return this._passageContainers[passageIdOrElement];
+        var container = $(".passageContainer[passage-id = " + passageIdOrElement + "]");
+        return container;
     },
     delay: function (callback, ms, timerName) {
         var timer = 0;
@@ -767,7 +767,7 @@ step.util = {
                 step.util.ui._addSubjectAndRelatedWordsPopup(passageId, $(this), version);
             });
         },
-        
+
         _addSubjectAndRelatedWordsPopup: function (passageId, element, version) {
             var reference = element.attr("name");
             var self = this;
@@ -845,13 +845,13 @@ step.util = {
 
                                 templatedTable.find(".wordCloud").click(function () {
                                     //get chapter key... 
-                                    var lastDot = key.lastIndexOf("."); 
-                                    if(lastDot != -1) {
+                                    var lastDot = key.lastIndexOf(".");
+                                    if (lastDot != -1) {
                                         step.util.ui.openStats(key.substring(0, lastDot));
                                     } else {
                                         step.util.ui.openStats(key);
                                     }
-                                    
+
                                 });
 
                                 api.set('content.text', templatedTable);

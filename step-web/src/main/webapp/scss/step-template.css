@@ -342,7 +342,7 @@ ul .glyphicon-ok {
 .passageOptionsGroup {
   height: 20px;
   position: absolute;
-  right: 20; }
+  right: 10; }
   .passageOptionsGroup button span {
     line-height: 1; }
     .passageOptionsGroup button span.smallerFont {

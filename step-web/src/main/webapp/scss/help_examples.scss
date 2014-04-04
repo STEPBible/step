@@ -1,4 +1,7 @@
-.examplesContainer,  {
+.examplesContainer {
+  overflow-y: scroll;
+  overflow-x: hidden;
+  
   h1 {
     font-size: 13px;
     text-align: center;

@@ -546,18 +546,21 @@ h4.lexicalGrouping {
   margin-right: 15px;
   margin-top: 3; }
 
-.examplesContainer h1 {
-  font-size: 13px;
-  text-align: center;
-  margin: 0px; }
-.examplesContainer h2 {
-  font-size: 12px;
-  text-align: center;
-  margin: 0px; }
-.examplesContainer h4 {
-  margin-top: 15px;
-  font-size: 12px;
-  display: inline; }
+.examplesContainer {
+  overflow-y: scroll;
+  overflow-x: hidden; }
+  .examplesContainer h1 {
+    font-size: 13px;
+    text-align: center;
+    margin: 0px; }
+  .examplesContainer h2 {
+    font-size: 12px;
+    text-align: center;
+    margin: 0px; }
+  .examplesContainer h4 {
+    margin-top: 15px;
+    font-size: 12px;
+    display: inline; }
 
 .examples {
   display: block; }

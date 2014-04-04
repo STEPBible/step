@@ -367,7 +367,6 @@ var MainSearchView = Backbone.View.extend({
             //push some of the options that are also always present:
             staticResources.push({ item: this.getCurrentInput(), itemType: TEXT_SEARCH});
             staticResources.push({ item: {"shortName": this.getCurrentInput(), "fullName": this.getCurrentInput(), "wholeBook": false }, itemType: REFERENCE, itemSubType: 'freeInput' });
-//            staticResources.push({ item: this.getCurrentInput(), itemType: SYNTAX });
         } else if(limit == VERSION) {
             staticResources = this._getData(limit);
         }
@@ -512,6 +511,8 @@ var MainSearchView = Backbone.View.extend({
             case SYNTAX:
                 source = __s.query_syntax;
                 break;
+            case TEXT_SEARCH:
+                source = __s.search_text;
         }
         return '<span class="source">[' + source + ']</span>';
     },
@@ -646,6 +647,7 @@ var MainSearchView = Backbone.View.extend({
             case RELATED_VERSES:
                 return { text: token };
             case MEANINGS:
+                return { gloss: token };
             case TEXT_SEARCH:
             case SYNTAX:
                 return enhancedInfo == null ? {text: "&lt;...&gt;", value: token} : {text: enhancedInfo, value: "&lt;" + enhancedInfo + "...&gt;"};

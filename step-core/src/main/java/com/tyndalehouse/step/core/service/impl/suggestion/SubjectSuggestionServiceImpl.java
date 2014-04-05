@@ -5,7 +5,6 @@ import com.tyndalehouse.step.core.data.EntityManager;
 import com.tyndalehouse.step.core.data.common.TermsAndMaxCount;
 import com.tyndalehouse.step.core.models.search.PopularSuggestion;
 import com.tyndalehouse.step.core.models.search.SubjectSuggestion;
-import com.tyndalehouse.step.core.models.search.SuggestionType;
 import com.tyndalehouse.step.core.service.SingleTypeSuggestionService;
 import com.tyndalehouse.step.core.service.impl.SearchType;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
@@ -38,7 +37,7 @@ public class SubjectSuggestionServiceImpl implements SingleTypeSuggestionService
     }
 
     @Override
-    public SubjectSuggestion[] getExactTerms(final String form, final int max) {
+    public SubjectSuggestion[] getExactTerms(final String form, final int max, final boolean popularSort) {
         final Map<String, SubjectSuggestion> suggestions = new TreeMap<String, SubjectSuggestion>();
         final PorterStemmer stemmer = new PorterStemmer();
 
@@ -51,7 +50,9 @@ public class SubjectSuggestionServiceImpl implements SingleTypeSuggestionService
     }
 
     @Override
-    public SubjectSuggestion[] collectNonExactMatches(final TermsAndMaxCount<SubjectSuggestion> collector, final String form, final SubjectSuggestion[] alreadyRetrieved, final int leftToCollect) {
+    public SubjectSuggestion[] collectNonExactMatches(final TermsAndMaxCount<SubjectSuggestion> collector, final String form,
+                                                      final SubjectSuggestion[] alreadyRetrieved,
+                                                      final int leftToCollect) {
         final Map<String, SubjectSuggestion> suggestions = new TreeMap<String, SubjectSuggestion>();
         final PorterStemmer stemmer = new PorterStemmer();
         addExistingMappings(suggestions, stemmer, alreadyRetrieved);
@@ -86,13 +87,7 @@ public class SubjectSuggestionServiceImpl implements SingleTypeSuggestionService
     }
 
     @Override
-    public Sort getSort() {
-        //no sort on this one!
-        return null;
-    }
-
-    @Override
-    public TermsAndMaxCount getNewCollector(final int leftToCollect) {
+    public TermsAndMaxCount getNewCollector(final int leftToCollect, boolean popular) {
         final TermsAndMaxCount<SubjectSuggestion> termsAndMaxCount = new TermsAndMaxCount<SubjectSuggestion>();
         termsAndMaxCount.setTotalCount(leftToCollect);
         return termsAndMaxCount;

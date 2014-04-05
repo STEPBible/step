@@ -13,6 +13,7 @@ public class LexiconSuggestion implements Serializable, PopularSuggestion {
     private String matchingForm;
     private String stepTransliteration;
     private String gloss;
+    private int popularity;
 
     /**
      * @return the stepTransliteration
@@ -72,11 +73,16 @@ public class LexiconSuggestion implements Serializable, PopularSuggestion {
 
     @Override
     public int getPopularity() {
-        return 0;
+        return this.popularity;
     }
 
     @Override
     public boolean isExactMatch(final String term) {
         return false;
     }
+
+    public void setPopularity(final int popularity) {
+        this.popularity = popularity;
+    }
+    
 }

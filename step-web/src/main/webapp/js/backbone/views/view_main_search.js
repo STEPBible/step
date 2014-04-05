@@ -238,7 +238,32 @@ var MainSearchView = Backbone.View.extend({
         return this.convertResultTermToNormalOption(termSuggestion, datum);
     },
     setGroupText: function (item) {
-        item.text = item.maxReached ? sprintf(__s.options_number_of_terms_max, 50, item.count) : sprintf(__s.options_number_of_terms, item.count);
+        var exampleTokens = [];
+        var examples = item.extraExamples || [];
+        for(var i = 0; i < examples.length; i++) {
+            switch(item.itemType) {
+                case HEBREW: 
+                case GREEK: 
+                    exampleTokens.push(examples[i].stepTransliteration);
+                    break;
+                case HEBREW_MEANINGS: 
+                case GREEK_MEANINGS: 
+                case MEANINGS: 
+                    exampleTokens.push(examples[i].gloss);
+                    break;
+                case SUBJECT_SEARCH:
+                    exampleTokens.push(examples[i].value);
+                    break;
+            }
+            
+            if(exampleTokens.length >= 2) {
+                break;
+            }
+        }
+        
+        var exampleText = exampleTokens.join(", ");
+        
+        item.text = sprintf(__s.options_number_of_terms, exampleText);
     },
     openNewPanel: function () {
         //if we're wanting a new column, then create it right now
@@ -530,7 +555,7 @@ var MainSearchView = Backbone.View.extend({
         var row;
 
         if (v.item.grouped) {
-            return "<span class='glyphicon glyphicon-chevron-right'></span> " + source + v.item.text;
+            return "<span class='glyphicon glyphicon-chevron-down'></span> " + source + v.item.text;
         }
 
         switch (v.itemType) {

@@ -23,13 +23,14 @@ import static com.tyndalehouse.step.core.utils.language.HebrewUtils.isHebrewText
  */
 public abstract class AncientLanguageSuggestionServiceImpl extends AbstractAncientSuggestionServiceImpl {
     private static final Pattern PART_STRONG = Pattern.compile("(g|h)\\d\\d+");
-    private static final Sort TRANSLITERATION_SORT = new Sort(new SortField("stepTransliteration",
-            SortField.STRING_VAL));
-    public static final Sort GLOSS_SORT = new Sort(new SortField("stepGloss", SortField.STRING_VAL));
+    private static final SortField TRANSLIT_SORT_FIELD = new SortField("stepTransliteration", SortField.STRING_VAL);
+    private static final Sort TRANSLITERATION_SORT = new Sort(TRANSLIT_SORT_FIELD);
+    private static final Sort POPULAR_TRANSLITERATION_SORT = new Sort(new SortField("popularity", SortField.INT, true), TRANSLIT_SORT_FIELD);
     private final boolean greek;
 
     public AncientLanguageSuggestionServiceImpl(final boolean isGreek, final EntityManager entityManager) {
-        super(entityManager.getReader("definition"), OriginalWordUtils.getFilter(isGreek), TRANSLITERATION_SORT);
+        super(entityManager.getReader("definition"), OriginalWordUtils.getFilter(isGreek), 
+                TRANSLITERATION_SORT, POPULAR_TRANSLITERATION_SORT);
         this.greek = isGreek;
     }
 
@@ -79,8 +80,7 @@ public abstract class AncientLanguageSuggestionServiceImpl extends AbstractAncie
                 PART_STRONG.matcher(form).matches();
     }
 
-    @Override
-    public Sort getSort() {
-        return GLOSS_SORT;
+    protected Sort getSort(boolean popular) {
+        return popular ? POPULAR_TRANSLITERATION_SORT : TRANSLITERATION_SORT;
     }
 }

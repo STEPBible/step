@@ -68,9 +68,10 @@ public final class LuceneUtils {
             return getBlankTermsAndMaxCount();
         }
 
+        TermEnum termEnum = null;
         try {
             final Term term = new Term(fieldName, QueryParser.escape(lastTerm.toLowerCase().trim()));
-            TermEnum termEnum = exact ? new SingleTermEnum(searcher.getIndexReader(), term) : new PrefixTermEnum(searcher.getIndexReader(),
+            termEnum = exact ? new SingleTermEnum(searcher.getIndexReader(), term) : new PrefixTermEnum(searcher.getIndexReader(),
                     term);
             int count = 0;
             if (termEnum.term() == null) {
@@ -82,7 +83,7 @@ public final class LuceneUtils {
                 if (count < max) {
                     //when inexact, don't include exact terms
                     final String termValue = termEnum.term().text();
-                    if(!exact && termValue.equalsIgnoreCase(searchTerm)) {
+                    if (!exact && termValue.equalsIgnoreCase(searchTerm)) {
                         // we didn't really find a term after all, since it's the exact same term
                         count--;
                     } else {
@@ -92,7 +93,7 @@ public final class LuceneUtils {
                 count++;
                 //we continue round the loop until we've got enough, or in case we're wanting to keep track of the total number
             } while (termEnum.next() && ((count < max) || trackMax));
-            
+
             //finalise and return
             TermsAndMaxCount termsAndMaxCount = new TermsAndMaxCount();
             termsAndMaxCount.setTotalCount(count);
@@ -100,6 +101,8 @@ public final class LuceneUtils {
             return termsAndMaxCount;
         } catch (IOException ex) {
             throw new StepInternalException(ex.getMessage(), ex);
+        } finally {
+            IOUtils.closeQuietly(termEnum);
         }
     }
 

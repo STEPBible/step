@@ -508,7 +508,7 @@ h2.heading.x-acrostic {
     content: "/"; }
 .searchResultRow .verseNumber {
   vertical-align: middle; }
-.searchResultRow br, .searchResultRow .startLineGroup {
+.searchResultRow br, .searchResultRow .startLineGroup, .searchResultRow .paragraph {
   display: none; }
 .searchResultRow span.level1, .searchResultRow span.level2, .searchResultRow span.level3, .searchResultRow span.level4 {
   padding: 0px;

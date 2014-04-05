@@ -170,6 +170,7 @@ public class SearchController {
                 au.setGrouped(true);
                 au.setCount(summary.getMoreResults());
                 au.setMaxReached(SuggestionService.MAX_RESULTS_NON_GROUPED <= summary.getMoreResults());
+                au.setExtraExamples(summary.getExtraExamples());
                 autoSuggestions.add(au);
             }
         }        

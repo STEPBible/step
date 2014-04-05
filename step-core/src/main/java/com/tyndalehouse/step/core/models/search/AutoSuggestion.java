@@ -1,5 +1,7 @@
 package com.tyndalehouse.step.core.models.search;
 
+import java.util.List;
+
 /**
  * @author chrisburrell
  */
@@ -9,7 +11,8 @@ public class AutoSuggestion {
     private boolean grouped = false;
     private boolean maxReached = false;
     private int count;
-    
+    private List<PopularSuggestion> extraExamples;
+
     public String getItemType() {
         return itemType;
     }
@@ -48,5 +51,13 @@ public class AutoSuggestion {
 
     public void setMaxReached(final boolean maxReached) {
         this.maxReached = maxReached;
+    }
+
+    public List<PopularSuggestion> getExtraExamples() {
+        return extraExamples;
+    }
+
+    public void setExtraExamples(final List<PopularSuggestion> extraExamples) {
+        this.extraExamples = extraExamples;
     }
 }

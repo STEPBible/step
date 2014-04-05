@@ -12,6 +12,7 @@ public class SingleSuggestionsSummary {
     private String searchType;
     private List<? extends PopularSuggestion> popularSuggestions;
     private int moreResults;
+    private List<PopularSuggestion> extraExamples;
 
     public String getSearchType() {
         return searchType;
@@ -35,5 +36,13 @@ public class SingleSuggestionsSummary {
 
     public void setMoreResults(final int moreResults) {
         this.moreResults = moreResults;
+    }
+
+    public List<PopularSuggestion> getExtraExamples() {
+        return extraExamples;
+    }
+
+    public void setExtraExamples(final List<PopularSuggestion> extraExamples) {
+        this.extraExamples = extraExamples;
     }
 }

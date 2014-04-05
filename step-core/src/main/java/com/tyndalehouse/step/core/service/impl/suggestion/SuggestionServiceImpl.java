@@ -9,24 +9,31 @@ import com.tyndalehouse.step.core.models.search.PopularSuggestion;
 import com.tyndalehouse.step.core.service.SingleTypeSuggestionService;
 import com.tyndalehouse.step.core.service.SuggestionService;
 import org.apache.lucene.search.TopFieldCollector;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
- * Suggestion server, helping the auto suggestion search dropdown.
+ * Suggestion service, helping the auto suggestion search dropdown.
  *
  * @author chrisburrell
  */
 public class SuggestionServiceImpl implements SuggestionService {
-    //subjects (1)
-    //original word searches (5)
-    //references (1)
+    private static final Logger LOGGER = LoggerFactory.getLogger(SuggestionServiceImpl.class);
+
+    //show the total number of ungrouped results at any one time.
     private static final int MAX_RESULTS = 3;
-    private final Map<String, SingleTypeSuggestionService> queryProviders;
+    //determines how many values are shown on expanding line 'see 7 more, e.g. abc def'
+    private static final int PREVIEW_GROUP = 2;
+    private final Map<String, SingleTypeSuggestionService> queryProviders = new LinkedHashMap<String, SingleTypeSuggestionService>();
+    private final Map<String, String[]> dependencies = new HashMap<String, String[]>(8);
+    private final Map<String, Integer> extraSlots = new HashMap<String, Integer>(4);
 
     @Inject
     public SuggestionServiceImpl(final HebrewAncientMeaningServiceImpl hebrewAncientMeaningService,
@@ -36,45 +43,100 @@ public class SuggestionServiceImpl implements SuggestionService {
                                  final MeaningSuggestionServiceImpl meaningSuggestionService,
                                  final SubjectSuggestionServiceImpl subjectSuggestionService
     ) {
-        queryProviders = new LinkedHashMap<String, SingleTypeSuggestionService>();
-        queryProviders.put(SearchToken.HEBREW_MEANINGS, hebrewAncientMeaningService);
         queryProviders.put(SearchToken.GREEK_MEANINGS, greekAncientMeaningService);
+        queryProviders.put(SearchToken.HEBREW_MEANINGS, hebrewAncientMeaningService);
         queryProviders.put(SearchToken.GREEK, greekAncientLanguageService);
         queryProviders.put(SearchToken.HEBREW, hebrewAncientLanguageService);
         queryProviders.put(SearchToken.MEANINGS, meaningSuggestionService);
         queryProviders.put(SearchToken.SUBJECT_SEARCH, subjectSuggestionService);
+
+        //the following lines mean we won't pull extra words for all data sources.
+        //e.g. if we have 2 greek meanings, we will only pull 1 one more hebrew meaning 
+        //this is not a full map, as processing is dependent on the order set out above
+        dependencies.put(SearchToken.HEBREW_MEANINGS, new String[]{SearchToken.GREEK_MEANINGS});
+        dependencies.put(SearchToken.GREEK, new String[]{SearchToken.GREEK_MEANINGS, SearchToken.HEBREW_MEANINGS});
+        dependencies.put(SearchToken.HEBREW, new String[]{SearchToken.GREEK, SearchToken.GREEK_MEANINGS, SearchToken.HEBREW_MEANINGS});
+        
+        //spare capcacity, will fudge the group total. -1 means we will attempt to retrieve 1 less than we could
+        //+1 means we will attempt to retrieve 1 more than we should. 
+        //for GREEK and HEBREW, we will attempt to retrieve 2+2, rather than 3 and 0
+        extraSlots.put(SearchToken.GREEK_MEANINGS, -1);
+        extraSlots.put(SearchToken.HEBREW_MEANINGS, 1);
+
+        // for GREEK and Hebrew, we can attempt to retrieve one more, but these won't show if the slots have been taken above
+        extraSlots.put(SearchToken.GREEK, 1);
+        extraSlots.put(SearchToken.HEBREW, 1);        
     }
 
     @Override
     public SuggestionsSummary getTopSuggestions(final String term) {
         final SuggestionsSummary summary = new SuggestionsSummary();
-        final List<SingleSuggestionsSummary> results = new ArrayList<SingleSuggestionsSummary>();
-        summary.setSuggestionsSummaries(results);
+        final Map<String, SingleSuggestionsSummary> results = new LinkedHashMap<String, SingleSuggestionsSummary>();
 
         //go through each search type
         for (Map.Entry<String, SingleTypeSuggestionService> query : queryProviders.entrySet()) {
             final SingleTypeSuggestionService searchService = query.getValue();
 
             //run exact query against index
-            Object[] docs = searchService.getExactTerms(term, MAX_RESULTS);
+            final int groupTotal = this.getGroupTotal(query.getKey(), results);
+            final int totalGroupLeftToRetrieve = MAX_RESULTS - groupTotal + PREVIEW_GROUP;
+            Object[] docs = totalGroupLeftToRetrieve > 0 ? searchService.getExactTerms(term, totalGroupLeftToRetrieve, true) : null;
+            int docLength = docs != null ? docs.length : 0;
 
             //how many do we need to collect
-            int leftToCollect = docs.length < MAX_RESULTS ? MAX_RESULTS - docs.length : 0;
+            int leftToCollect = docLength < totalGroupLeftToRetrieve ? totalGroupLeftToRetrieve - docLength : 0;
 
             //create collector to collect some more results, if required, but also the total hit count
-            Object o = searchService.getNewCollector(leftToCollect);
+            Object o = searchService.getNewCollector(leftToCollect, true);
             final Object[] extraDocs = searchService.collectNonExactMatches(o, term, docs, leftToCollect);
             final List<? extends PopularSuggestion> suggestions = searchService.convertToSuggestions(docs, extraDocs);
 
             final SingleSuggestionsSummary singleTypeSummary = new SingleSuggestionsSummary();
             fillInTotalHits(o, extraDocs.length, singleTypeSummary);
-            singleTypeSummary.setPopularSuggestions(suggestions);
+
+            setSuggestionsAndExamples(singleTypeSummary, suggestions, groupTotal);
             singleTypeSummary.setSearchType(query.getKey());
-            results.add(singleTypeSummary);
+            results.put(query.getKey(), singleTypeSummary);
         }
 
         //return results
+        summary.setSuggestionsSummaries(new ArrayList<SingleSuggestionsSummary>(results.values()));
         return summary;
+    }
+
+    /**
+     * Total number of results retrieved so far in a particular grouping of providers
+     *
+     * @param searchType   the current type of search
+     * @param resultsSoFar the results retrieved so far
+     * @return the total number of elements retrieved
+     */
+    private int getGroupTotal(final String searchType, Map<String, SingleSuggestionsSummary> resultsSoFar) {
+        final String[] dependents = this.dependencies.get(searchType);
+        if (dependents == null) {
+            //no dependencies
+            return 0 - getSpareSlotCapacity(searchType);
+        }
+
+        int totalDocsRetrieved = 0;
+        for (String d : dependents) {
+            final SingleSuggestionsSummary singleSuggestionsSummary = resultsSoFar.get(d);
+            if (singleSuggestionsSummary == null) {
+                LOGGER.warn("Dependencies setup is incorrect");
+                continue;
+            }
+
+
+            final int totalMinusGroupExamples = singleSuggestionsSummary.getPopularSuggestions().size();
+            totalDocsRetrieved += (totalMinusGroupExamples > 0 ? totalMinusGroupExamples : 0);
+        }
+
+        return totalDocsRetrieved - getSpareSlotCapacity(searchType);
+    }
+
+    private int getSpareSlotCapacity(final String searchType) {
+        final Integer spareCapacity = extraSlots.get(searchType);
+        return spareCapacity == null ? 0 : spareCapacity.intValue();
     }
 
     private void fillInTotalHits(final Object collector, int alreadyCollected, final SingleSuggestionsSummary singleTypeSummary) {
@@ -95,10 +157,10 @@ public class SuggestionServiceImpl implements SuggestionService {
         summary.setSuggestionsSummaries(results);
 
         final SingleTypeSuggestionService searchService = queryProviders.get(searchType);
-        Object[] docs = searchService.getExactTerms(term, MAX_RESULTS);
+        Object[] docs = searchService.getExactTerms(term, MAX_RESULTS, false);
 
         //create collector to collect some more results, if required, but also the total hit count
-        Object o = searchService.getNewCollector(MAX_RESULTS_NON_GROUPED - docs.length);
+        Object o = searchService.getNewCollector(MAX_RESULTS_NON_GROUPED - docs.length, false);
         final Object[] extraDocs = searchService.collectNonExactMatches(o, term, docs, MAX_RESULTS_NON_GROUPED);
         final List<? extends PopularSuggestion> suggestions = searchService.convertToSuggestions(docs, extraDocs);
 
@@ -110,5 +172,27 @@ public class SuggestionServiceImpl implements SuggestionService {
 
         //return results
         return summary;
+    }
+
+    private void setSuggestionsAndExamples(final SingleSuggestionsSummary singleTypeSummary,
+                                           final List<? extends PopularSuggestion> suggestions,
+                                           final int groupTotal) {
+        //total number of suggestions to keep as suggestions
+        final int keep = MAX_RESULTS - groupTotal;
+
+        //set popular suggestions
+        List<PopularSuggestion> keepSuggestions = new ArrayList<PopularSuggestion>(3);
+        int ii;
+        for (ii = 0; ii < keep && ii < suggestions.size(); ii++) {
+            keepSuggestions.add(suggestions.get(ii));
+        }
+        singleTypeSummary.setPopularSuggestions(keepSuggestions);
+
+        //set example suggestions
+        List<PopularSuggestion> examples = new ArrayList<PopularSuggestion>(2);
+        for (; ii < suggestions.size(); ii++) {
+            examples.add(suggestions.get(ii));
+        }
+        singleTypeSummary.setExtraExamples(examples);
     }
 }

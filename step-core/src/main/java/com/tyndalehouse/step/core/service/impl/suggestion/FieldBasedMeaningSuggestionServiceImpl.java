@@ -14,8 +14,9 @@ import java.util.List;
  * @author chrisburrell
  */
 public abstract class FieldBasedMeaningSuggestionServiceImpl extends AbstractAncientSuggestionServiceImpl {
-    public FieldBasedMeaningSuggestionServiceImpl(final EntityIndexReader reader, final Filter filter, final Sort sort) {
-        super(reader, filter, sort);
+    public FieldBasedMeaningSuggestionServiceImpl(final EntityIndexReader reader, final Filter filter, 
+                                                  final Sort sort, final Sort popularSort) {
+        super(reader, filter, sort, popularSort);
     }
 
     @Override

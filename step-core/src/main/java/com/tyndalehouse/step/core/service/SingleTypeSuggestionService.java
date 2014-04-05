@@ -17,14 +17,27 @@ import java.util.List;
  * @author chrisburrell
  */
 public interface SingleTypeSuggestionService<T, S> {
-    T[] getExactTerms(String form, int max);
+    T[] getExactTerms(String form, int max, final boolean popularSort);
 
-    Sort getSort();
+//    Sort getSort();
 
     T[] collectNonExactMatches(S collector, String form, final T[] alreadyRetrieved, final int leftToCollect);
 
+    /**
+     * Converts a number of documents, strings, etc. to their PopularSuggestion equivalents. 
+     * @param docs the array of documents that were retrieved as part of a first call (e.g. exact matches)
+     * @param extraDocs the array of documents that were retrieved as part of the second call (non-exact matches)
+     * @return the list of converted suggestions
+     */
     List<? extends PopularSuggestion> convertToSuggestions(T[] docs,
                                                            T[] extraDocs);
 
-    S getNewCollector(int leftToCollect);
+    /**
+     * Creates a 'collector', whose job is to collect entities (e.g. Strings, EntityDoc, etc.) as well as the counts
+     * associated with the search, such as the maximum number of hits.)
+     * @param leftToCollect how many items we really want to collect
+     * @param popularSort the sort which we will use to collect these
+     * @return the collector
+     */
+    S getNewCollector(int leftToCollect, boolean popularSort);
 }

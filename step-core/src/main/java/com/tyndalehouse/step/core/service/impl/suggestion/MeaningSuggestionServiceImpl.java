@@ -5,7 +5,6 @@ import com.tyndalehouse.step.core.data.EntityManager;
 import com.tyndalehouse.step.core.data.common.TermsAndMaxCount;
 import com.tyndalehouse.step.core.models.LexiconSuggestion;
 import com.tyndalehouse.step.core.models.search.PopularSuggestion;
-import com.tyndalehouse.step.core.models.search.SuggestionType;
 import com.tyndalehouse.step.core.service.SingleTypeSuggestionService;
 import org.apache.lucene.search.Sort;
 
@@ -27,7 +26,7 @@ public class MeaningSuggestionServiceImpl implements SingleTypeSuggestionService
     }
 
     @Override
-    public String[] getExactTerms(final String form, final int max) {
+    public String[] getExactTerms(final String form, final int max, final boolean popularSort) {
         final Set<String> meaningTerms = this.definitions.findSetOfTerms(true, form, max, ANCIENT_MEANING_FIELDS);
         return meaningTerms.toArray(new String[meaningTerms.size()]);
     }
@@ -61,13 +60,7 @@ public class MeaningSuggestionServiceImpl implements SingleTypeSuggestionService
     }
 
     @Override
-    public Sort getSort() {
-        //no sort on this one!
-        return null;
-    }
-
-    @Override
-    public TermsAndMaxCount getNewCollector(final int leftToCollect) {
+    public TermsAndMaxCount getNewCollector(final int leftToCollect, boolean popular) {
         final TermsAndMaxCount<String> termsAndMaxCount = new TermsAndMaxCount<String>();
         termsAndMaxCount.setTotalCount(leftToCollect);
         return termsAndMaxCount;

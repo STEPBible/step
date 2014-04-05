@@ -269,7 +269,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="xs-hidden col-sm-2 col-sm-offset-4 column examplesColumn">
+                <div class="hidden-xs col-sm-2 col-sm-offset-4 column examplesColumn">
                     <div class="passageContainer examplesContainer">
                         <h1><fmt:message key="simple_intro_welcome" /></h1>
                         <h1><fmt:message key="simple_intro_tyndale_house_project" /></h1>

@@ -5,7 +5,6 @@ import com.tyndalehouse.step.core.data.EntityIndexReader;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.models.LexiconSuggestion;
 import com.tyndalehouse.step.core.models.search.PopularSuggestion;
-import com.tyndalehouse.step.core.models.search.SuggestionType;
 import com.tyndalehouse.step.core.service.SingleTypeSuggestionService;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.BooleanClause;
@@ -28,22 +27,25 @@ import static com.tyndalehouse.step.core.service.helpers.OriginalWordUtils.conve
  */
 public abstract class AbstractAncientSuggestionServiceImpl implements SingleTypeSuggestionService<EntityDoc, TopFieldCollector> {
     private final EntityIndexReader reader;
+    private Sort popularSort;
     private Sort sort;
     private Filter filter;
 
-    protected AbstractAncientSuggestionServiceImpl(EntityIndexReader reader, final Filter filter, final Sort sort) {
+    protected AbstractAncientSuggestionServiceImpl(EntityIndexReader reader, final Filter filter, final Sort sort, final Sort popularSort) {
         this.reader = reader;
         this.filter = filter;
         this.sort = sort;
+        this.popularSort = popularSort;
     }
 
     @Override
-    public EntityDoc[] getExactTerms(final String form, final int max) {
-        return getTerms(form, max, true);
+    public EntityDoc[] getExactTerms(final String form, final int max, final boolean popularSort) {
+        return getTerms(form, max, true, popularSort);
     }
 
     @Override
-    public EntityDoc[] collectNonExactMatches(final TopFieldCollector collector, final String form, final EntityDoc[] alreadyRetrieved, final int leftToCollect) {
+    public EntityDoc[] collectNonExactMatches(final TopFieldCollector collector, final String form, final EntityDoc[] alreadyRetrieved,
+                                              final int leftToCollect) {
         final List<String> tokenItems = this.reader.getAnalyzedTokens("stepGloss", form, true);
         final BooleanQuery query = this.getQuery(tokenItems, false);
 
@@ -73,7 +75,7 @@ public abstract class AbstractAncientSuggestionServiceImpl implements SingleType
         return suggestions;
     }
 
-    private EntityDoc[] getTerms(final String form, final int max, boolean exact) {
+    private EntityDoc[] getTerms(final String form, final int max, boolean exact, final boolean popularSort) {
         final List<String> tokenItems = this.reader.getAnalyzedTokens("stepGloss", form, true);
 
         if (tokenItems.size() == 0) {
@@ -81,7 +83,7 @@ public abstract class AbstractAncientSuggestionServiceImpl implements SingleType
         }
 
         final BooleanQuery masterQuery = getQuery(tokenItems, exact);
-        return this.reader.search(masterQuery, max, getSort(), this.filter);
+        return this.reader.search(masterQuery, max, getSort(popularSort), this.filter);
     }
 
     protected Query getExactOrPrefixQuery(final boolean exact, final Term stepGlossTerm) {
@@ -104,17 +106,16 @@ public abstract class AbstractAncientSuggestionServiceImpl implements SingleType
         return suggestions;
     }
 
-    protected abstract BooleanQuery getQuery(final List<String> tokenItems, final boolean b);
+    protected abstract BooleanQuery getQuery(final List<String> tokenItems, final boolean exact);
 
-    @Override
-    public Sort getSort() {
-        return this.sort;
+    protected Sort getSort(boolean popular) {
+        return popular ? this.popularSort : this.sort;
     }
 
     @Override
-    public TopFieldCollector getNewCollector(int leftToCollect) {
+    public TopFieldCollector getNewCollector(final int leftToCollect, final boolean popularSort) {
         try {
-            return TopFieldCollector.create(getSort(), leftToCollect > 0 ? leftToCollect : 1, false, false, false, false);
+            return TopFieldCollector.create(getSort(popularSort), leftToCollect > 0 ? leftToCollect : 1, false, false, false, false);
         } catch (IOException ex) {
             throw new StepInternalException(ex.getMessage(), ex);
         }

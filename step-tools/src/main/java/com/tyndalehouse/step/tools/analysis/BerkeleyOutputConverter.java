@@ -33,6 +33,7 @@
 
 package com.tyndalehouse.step.tools.analysis;
 
+import com.tyndalehouse.step.core.utils.StringConversionUtils;
 import com.tyndalehouse.step.core.utils.StringUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.lucene.index.Term;
@@ -44,6 +45,9 @@ import org.apache.lucene.store.FSDirectory;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -80,7 +84,7 @@ public class BerkeleyOutputConverter {
         StringBuilder resultingTagging = new StringBuilder(8000000);
 
         for (int i = 0; i < resultSentences.size(); i++) {
-            final String[] sentence = resultSentences.get(i);
+            String[] sentence = resultSentences.get(i);
 
             String ref = keyList.get(i)[0];
             if (i % 200 == 0) {
@@ -89,7 +93,10 @@ public class BerkeleyOutputConverter {
             resultingTagging.append(ref);
             resultingTagging.append(' ');
 
+            sentence = reOrder(sentence);
             for (String word : sentence) {
+                
+                
                 String[] stringIndexes = word.split("-");
                 try {
                     int[] indexes = new int[]{Integer.parseInt(stringIndexes[0]), Integer.parseInt(stringIndexes[1])};
@@ -98,8 +105,8 @@ public class BerkeleyOutputConverter {
                     }
 
                     //find word in sentence in each bible.
-                    String strong = strongSentences.get(i)[indexes[1]];
-                    String other = otherSentences.get(i)[indexes[0]];
+                    String strong = strongSentences.get(i)[indexes[0]];
+                    String other = otherSentences.get(i)[indexes[1]];
 
                     resultingTagging.append(other);
                     resultingTagging.append(" (");
@@ -124,6 +131,28 @@ public class BerkeleyOutputConverter {
         return resultingTagging.toString();
     }
 
+    private static String[] reOrder(final String[] sentence) {
+        List<String> words = Arrays.asList(sentence);
+        
+        Collections.sort(words, new Comparator<String>() {
+            @Override
+            public int compare(final String o1, final String o2) {
+                if(o1 == null || o1.length() == 0) {
+                    return 1;
+                }
+                
+                if(o2 == null || o2.length() == 0) {
+                    return -1;
+                }
+                
+                
+                return ((Integer)Integer.parseInt(o1.split("-")[1])).compareTo(Integer.parseInt(o2.split("-")[1]));
+            }
+        });
+        
+        return words.toArray(new String[words.size()]);
+    }
+
     private static void appendLexicalEntry(final IndexSearcher indexSearcher, final StringBuilder resultingTagging, String strong) throws IOException {
         if (strong.length() > 5 && strong.charAt(1) == '0') {
             strong = strong.substring(0, 1) + strong.substring(2);
@@ -132,7 +161,7 @@ public class BerkeleyOutputConverter {
         String gloss = entries.get(strong);
         if (gloss == null) {
 
-            final TopDocs lexicalEntries = indexSearcher.search(new TermQuery(new Term("strongNumber", strong)), Integer.MAX_VALUE);
+            final TopDocs lexicalEntries = indexSearcher.search(new TermQuery(new Term("strongNumber", StringConversionUtils.getStrongPaddedKey(strong))), Integer.MAX_VALUE);
             if (lexicalEntries.scoreDocs.length > 0) {
                 gloss = indexSearcher.doc(lexicalEntries.scoreDocs[0].doc).get("stepGloss");
             } else {

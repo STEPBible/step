@@ -49,8 +49,8 @@ public class ModuleToStrong {
     private static final Pattern PUNCTUATION = Pattern.compile("[—,.;*:'\\[\\]!\"`?’‘()-]+");
 
     public static void main(String[] args) throws BookException, IOException {
-        Book kjv = Books.installed().getBook("KJV");
-        Book other = Books.installed().getBook("ASV");
+        Book kjv = Books.installed().getBook("ESV");
+        Book other = Books.installed().getBook("Swahili");
 
         Key k = kjv.getGlobalKeyList();
         Iterator<Key> keys = k.iterator();
@@ -81,7 +81,7 @@ public class ModuleToStrong {
     private static Object clean(final BookData bookData) throws BookException {
         String s = OSISUtil.getCanonicalText(bookData.getOsisFragment()).toLowerCase();
         s = PUNCTUATION.matcher(s).replaceAll(" ");
-        s = s.replaceAll("  ", " ");
+        s = s.replaceAll("&quot", " ").replaceAll("  ", " ").replaceAll("  ", " ").replaceAll("  ", " ").replaceAll("  ", " ");
         return s;
     }
 }

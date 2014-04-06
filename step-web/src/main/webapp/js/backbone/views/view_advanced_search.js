@@ -249,10 +249,10 @@ var AdvancedSearchView = Backbone.View.extend({
         }
 
         //finalise query, then join them
-        var final = $.trim(querySyntax).replace(/ +/g, " ");
+        var finalQuery = $.trim(querySyntax).replace(/ +/g, " ");
 
-        this.$el.find(".textQuerySyntax").val(final);
-        return final;
+        this.$el.find(".textQuerySyntax").val(finalQuery);
+        return finalQuery;
     },
     _evaluateQuerySyntaxInternal: function () {
         var query = "";

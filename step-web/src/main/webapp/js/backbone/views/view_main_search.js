@@ -471,12 +471,12 @@ var MainSearchView = Backbone.View.extend({
         var totalNotDisplayed = 0;
         for (var ii = 0; ii < step.itemisedVersions.length; ii++) {
             var currentVersion = step.itemisedVersions[ii];
-            var short = (currentVersion.item.shortInitials || "").toLowerCase();
+            var shortName = (currentVersion.item.shortInitials || "").toLowerCase();
             var initials = (currentVersion.item.initials || "").toLowerCase();
 
-            if ((initials != "" && initials == currentInput) || (short != "" && short == currentInput)) {
+            if ((initials != "" && initials == currentInput) || (shortName != "" && shortName == currentInput)) {
                 exactInitials.push(currentVersion);
-            } else if (short.startsWith(currentInput) || initials.startsWith(currentInput)) {
+            } else if (shortName.startsWith(currentInput) || initials.startsWith(currentInput)) {
                 prefixInitials.push(currentVersion);
             } else if (this.matchDropdownEntry(currentInput, currentVersion)) {
                 if (limit == VERSION || exactInitials.length + prefixInitials.length < 3) {

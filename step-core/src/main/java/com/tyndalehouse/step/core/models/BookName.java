@@ -73,13 +73,4 @@ public class BookName implements Serializable, PopularSuggestion {
         this.wholeBook = isWholeBook;
     }
 
-    @Override
-    public int getPopularity() {
-        return 0;
-    }
-
-    @Override
-    public boolean isExactMatch(final String term) {
-        return term != null && (term.equalsIgnoreCase(this.fullName) || term.equalsIgnoreCase(this.getShortName()));
-    }
 }

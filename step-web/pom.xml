@@ -205,7 +205,7 @@
                                 <jsSourceFile>js/backbone/views/view_menu_passage.js</jsSourceFile>
                                 <jsSourceFile>js/state/step.state.js</jsSourceFile>
                                 <jsSourceFile>js/passage/step.passage.js</jsSourceFile>
-                                <jsSourceFile>js/backbone/view_feedback.js</jsSourceFile>
+                                <jsSourceFile>js/backbone/views/view_feedback.js</jsSourceFile>
 							</jsSourceFiles>
 							<jsFinalFile>step.${project.version}.js</jsFinalFile>
 						</configuration>
@@ -312,8 +312,8 @@
                         <configuration>
                             <jsSourceDir>.</jsSourceDir>
                             <jsSourceFiles>
-                                <jsSourceFile>js/backbone/view_pick_bible.js</jsSourceFile>
-                                <jsSourceFile>js/backbone/view_advanced_search.js</jsSourceFile>
+                                <jsSourceFile>js/backbone/views/view_pick_bible.js</jsSourceFile>
+                                <jsSourceFile>js/backbone/views/view_advanced_search.js</jsSourceFile>
                             </jsSourceFiles>
                             <jsFinalFile>menu_extras-${project.version}.js</jsFinalFile>
                         </configuration>

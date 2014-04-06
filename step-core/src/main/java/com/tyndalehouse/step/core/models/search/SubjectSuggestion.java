@@ -37,14 +37,4 @@ public class SubjectSuggestion implements PopularSuggestion {
         }
         searchTypes.add(searchType);
     }
-
-    @Override
-    public int getPopularity() {
-        return 0;
-    }
-
-    @Override
-    public boolean isExactMatch(final String term) {
-        return term != null && term.equalsIgnoreCase(value);
-    }
 }

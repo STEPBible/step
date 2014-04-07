@@ -66,20 +66,8 @@ var MainSearchView = Backbone.View.extend({
                         .on("click", function () {
                             view.pickBible();
                         })).append("&nbsp;|&nbsp;").append($("<a>").append(__s.search_advanced).on('click', function () {
-                        require(["menu_extras", "defaults"], function () {
-                            //find master version
-                            var dataItems = self.masterSearch.select2("data");
-                            var masterVersion = REF_VERSION;
-                            for (var i = 0; i < dataItems; i++) {
-                                if (dataItems[i].itemType == VERSION) {
-                                    masterVersion = dataItems[i].item.initials;
-                                    break;
-                                }
-                            }
-
-                            new AdvancedSearchView({ searchView: view, masterVersion: masterVersion });
-                        });
-                    }));
+                            view.openAdvancedSearch();
+                        }));
                 var container = $("<span>").append(labels).append($('<span class="message">').append(message));
                 return  container;
             },
@@ -166,12 +154,12 @@ var MainSearchView = Backbone.View.extend({
                             'data-select-id="' + view.safeEscapeQuote(entry.item.value) +  '" ' +
                             'title="' + source + view.safeEscapeQuote(entry.item.value) + '">' + entry.item.value + "<div>";
                     case TEXT_SEARCH:
-                        return '<div class="textItem" data-select-id="' + view.safeEscapeQuote(entry.item) + '"' +
+                        return '<div class="textItem" data-select-id="' + view.safeEscapeQuote(entry.item.text) + '"' +
                             'data-item-type="' + entry.itemType + '" ' +
-                            'title="' + source + view.safeEscapeQuote(entry.item) + '">' + entry.item + "</div>";
+                            'title="' + source + view.safeEscapeQuote(entry.item.text) + '">' + entry.item.text + "</div>";
                         
                     case SYNTAX:
-                        return '<div class="queryItem"' +
+                        return '<div class="syntaxItem"' +
                             'data-item-type="' + entry.itemType + '" ' +
                             'data-select-id="' + view.safeEscapeQuote(entry.item.value) + '" ' +
                             'title="' + source + view.safeEscapeQuote(entry.item.value) + '">' + entry.item.text + "</div>";
@@ -245,11 +233,18 @@ var MainSearchView = Backbone.View.extend({
         this._addVersionHandlers(tokens);
         this._addReferenceHandlers(tokens);
         this._addDefaultExampleHandlers(tokens);
+        this._addTextHandlers(tokens);
     },
     _addVersionHandlers: function(tokens) {
         var self = this;
         $(tokens).filter(".versionItem").click(function() {
             self.pickBible();
+        });
+    },
+    _addTextHandlers: function(tokens) {
+        var self = this;
+        $(tokens).filter(".textItem, syntaxItem").click(function() {
+            self.openAdvancedSearch($(this).hasClass("textItem") ? TEXT_SEARCH : SYNTAX);
         });
     },
     _addReferenceHandlers: function(tokens) {
@@ -282,6 +277,22 @@ var MainSearchView = Backbone.View.extend({
         this.masterSearch.select2("search", term);
         this.ignoreOpeningEvent = false;
     },
+    openAdvancedSearch: function(initialView) {
+        var self = this;
+        require(["menu_extras", "defaults"], function () {
+            //find master version
+            var dataItems = self.masterSearch.select2("data");
+            var masterVersion = REF_VERSION;
+            for (var i = 0; i < dataItems; i++) {
+                if (dataItems[i].itemType == VERSION) {
+                    masterVersion = dataItems[i].item.initials;
+                    break;
+                }
+            }
+
+            new AdvancedSearchView({ searchView: self, masterVersion: masterVersion, intialView: initialView });
+        });  
+    },
     pickBible: function() {
         var self = this;
         require(["menu_extras", "defaults"], function () {
@@ -293,7 +304,7 @@ var MainSearchView = Backbone.View.extend({
         var item = termSuggestion;
 
 
-        //will never be a TEXT or a SYNTAX autocompletion? search, so not in the list below
+        //will never be a SYNTAX autocompletion? search, so not in the list below
         switch (termSuggestion.itemType) {
             case HEBREW:
             case GREEK:
@@ -316,6 +327,9 @@ var MainSearchView = Backbone.View.extend({
                 break;
             case SUBJECT_SEARCH:
                 text = termSuggestion.suggestion.value;
+                break;
+            case TEXT_SEARCH:
+                text = termSuggestion.suggestion.text;
                 break;
         }
 
@@ -462,6 +476,8 @@ var MainSearchView = Backbone.View.extend({
                     args += options[ii].itemType + "=" + encodeURIComponent(options[ii].item.value);
                     break;
                 case TEXT_SEARCH:
+                    args += options[ii].itemType + "=" + encodeURIComponent(options[ii].item.text);
+                    break;
                 default:
                     args += options[ii].itemType + "=" + encodeURIComponent(options[ii].item);
                     break;
@@ -536,7 +552,7 @@ var MainSearchView = Backbone.View.extend({
             case SUBJECT_SEARCH:
                 return this.matchDropdownEntry(term, textOrObject.item.value);
             case TEXT_SEARCH:
-                return this.matchDropdownEntry(term, textOrObject.item);
+                return this.matchDropdownEntry(term, textOrObject.item.text);
         }
         return false;
     },
@@ -722,7 +738,7 @@ var MainSearchView = Backbone.View.extend({
                 break;
             case TEXT_SEARCH:
                 row = [source,
-                    v.item
+                    v.item.text
                 ].join('');
                 break;
             case SUBJECT_SEARCH:

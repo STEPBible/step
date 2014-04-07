@@ -263,6 +263,7 @@ ul .glyphicon-ok {
   /* for firefox 3.6+ */ }
 
 .select-subject {
+  cursor: hand !important;
   background: #e2b9bd;
   /* for non-css3 browsers */
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=lighten($color, $optionStartGradient), endColorstr=lighten($color, $optionEndGradient));
@@ -272,6 +273,7 @@ ul .glyphicon-ok {
   /* for firefox 3.6+ */ }
 
 .select-text {
+  cursor: hand !important;
   background: #bfdeff;
   /* for non-css3 browsers */
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=lighten($color, $optionStartGradient), endColorstr=lighten($color, $optionEndGradient));
@@ -281,6 +283,7 @@ ul .glyphicon-ok {
   /* for firefox 3.6+ */ }
 
 .select-greek {
+  cursor: hand !important;
   background: #b6aba8;
   /* for non-css3 browsers */
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=lighten($color, $optionStartGradient), endColorstr=lighten($color, $optionEndGradient));
@@ -290,6 +293,7 @@ ul .glyphicon-ok {
   /* for firefox 3.6+ */ }
 
 .select-greekMeanings {
+  cursor: hand !important;
   background: #a8a7a9;
   /* for non-css3 browsers */
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=lighten($color, $optionStartGradient), endColorstr=lighten($color, $optionEndGradient));
@@ -299,6 +303,7 @@ ul .glyphicon-ok {
   /* for firefox 3.6+ */ }
 
 .select-hebrew {
+  cursor: hand !important;
   background: #8e9dbc;
   /* for non-css3 browsers */
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=lighten($color, $optionStartGradient), endColorstr=lighten($color, $optionEndGradient));
@@ -308,6 +313,7 @@ ul .glyphicon-ok {
   /* for firefox 3.6+ */ }
 
 .select-hebrewMeanings {
+  cursor: hand !important;
   background: #9f798b;
   /* for non-css3 browsers */
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=lighten($color, $optionStartGradient), endColorstr=lighten($color, $optionEndGradient));

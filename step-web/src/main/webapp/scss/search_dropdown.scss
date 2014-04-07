@@ -44,26 +44,32 @@
 }
 
 .select-subject {
+  cursor: hand !important;
   @include gradient($subjectRow, $optionStartGradient, $optionEndGradient);
 }
 
 .select-text {
+  cursor: hand !important;
   @include gradient($textRow, $optionStartGradient, $optionEndGradient);
 }
 
 .select-greek {
+  cursor: hand !important;
   @include gradient($greekRow, $optionStartGradient, $optionEndGradient);
 }
 
 .select-greekMeanings {
+  cursor: hand !important;
   @include gradient($greekMeaningsRow, $optionStartGradient, $optionEndGradient);
 }
 
 .select-hebrew {
+  cursor: hand !important;
   @include gradient($hebrewRow, $optionStartGradient, $optionEndGradient);
 }
 
 .select-hebrewMeanings {
+  cursor: hand !important;
   @include gradient($hebrewMeaningsRow, $optionStartGradient, $optionEndGradient);
 }
 

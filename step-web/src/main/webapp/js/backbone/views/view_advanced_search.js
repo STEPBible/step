@@ -91,7 +91,7 @@ var AdvancedSearchView = Backbone.View.extend({
                 });
                 self.detail = 1;
                 self.maxReached = true;
-                if(self.maxReached) {
+                if (self.maxReached) {
                     $(this).remove();
                 }
             }
@@ -120,9 +120,10 @@ var AdvancedSearchView = Backbone.View.extend({
                 case self.text:
                     Backbone.Events.trigger("search:add", { itemType: SYNTAX, value: { text: "&lt;" + self.$el.find(".criteria").val() + "...&gt;", value: self.$el.find(".textQuerySyntax").val() } });
                     break;
-                case SYNTAX: {
+                case SYNTAX:
+                {
                     Backbone.Events.trigger("search:add", { itemType: SYNTAX, value: { text: "" + "&lt;...&gt;", value: $(".advancedQuerySyntax").val() } });
-                    break;                    
+                    break;
                 }
             }
             self.closeModal(ev);
@@ -133,6 +134,20 @@ var AdvancedSearchView = Backbone.View.extend({
         this.subjectRefs = this.searchForms.find("#subjectByRef .dropdown-menu");
         this.subjectRefs.css("left", this.subjectRelated.position().left);
         this._autoCompleteRef(this.subjectRelated, this.subjectRefs);
+
+        //amend the initial view
+        if (opts.initialView) {
+            this.$el.find(".active").removeClass("active");
+            var href = "";
+            if (initialView == SYNTAX) {
+                href = "#querySyntax";
+            } else if (opts.initialView == TOPIC_BY_REF) {
+                href = "#subjectByRef";
+            } else if (opts.initialView == TEXT_SEARCH) {
+                href = "#advancedTextSearch";
+            }
+            this.$el.find("[href='#'" + href + "]").trigger("click");
+        }
     },
     refreshRefDropdown: function (ref, dropdown, target) {
         var self = this;

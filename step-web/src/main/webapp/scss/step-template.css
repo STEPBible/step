@@ -234,6 +234,7 @@ ul .glyphicon-ok {
     font-size: 90%; }
 
 .select-meanings {
+  cursor: hand !important;
   background: #dc9543;
   /* for non-css3 browsers */
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=lighten($color, $optionStartGradient), endColorstr=lighten($color, $optionEndGradient));
@@ -323,6 +324,7 @@ ul .glyphicon-ok {
   /* for firefox 3.6+ */ }
 
 .select-topicref {
+  cursor: hand !important;
   background: #ef7ad0;
   /* for non-css3 browsers */
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=lighten($color, $optionStartGradient), endColorstr=lighten($color, $optionEndGradient));

@@ -30,6 +30,7 @@
 }
 
 .select-meanings {
+  cursor: hand !important;
   @include gradient($meaningsRow, $optionStartGradient, $optionEndGradient);
 }
 
@@ -74,6 +75,7 @@
 }
 
 .select-topicref {
+  cursor: hand !important;
   @include gradient($topicByRefRow, $optionStartGradient, $optionEndGradient);
 }
 

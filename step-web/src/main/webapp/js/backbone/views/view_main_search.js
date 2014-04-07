@@ -416,7 +416,8 @@ var MainSearchView = Backbone.View.extend({
 
         switch (textOrObject.itemType) {
             case VERSION:
-                var matches = this.matchDropdownEntry(term, textOrObject.item.name || "");
+                var matches = this.matchDropdownEntry(term, textOrObject.item.name || "") ||
+                    this.matchDropdownEntry(term, textOrObject.item.languageName || "");
                 return matches;
             case GREEK_MEANINGS:
             case HEBREW_MEANINGS:
@@ -470,6 +471,7 @@ var MainSearchView = Backbone.View.extend({
         var currentInput = (this.getCurrentInput() || "").toLowerCase();
         var exactInitials = [];
         var prefixInitials = [];
+        var languageMatches = [];
         var others = [];
 
         var totalNotDisplayed = 0;
@@ -477,11 +479,14 @@ var MainSearchView = Backbone.View.extend({
             var currentVersion = step.itemisedVersions[ii];
             var shortName = (currentVersion.item.shortInitials || "").toLowerCase();
             var initials = (currentVersion.item.initials || "").toLowerCase();
-
+            var languageName = (currentVersion.item.languageName || "").toLowerCase();
+            
             if ((initials != "" && initials == currentInput) || (shortName != "" && shortName == currentInput)) {
                 exactInitials.push(currentVersion);
             } else if (shortName.startsWith(currentInput) || initials.startsWith(currentInput)) {
                 prefixInitials.push(currentVersion);
+            } else if(languageName.startsWith(currentInput)) {
+                languageMatches.push(currentVersion);
             } else if (this.matchDropdownEntry(currentInput, currentVersion)) {
                 if (limit == VERSION || exactInitials.length + prefixInitials.length < 3) {
                     others.push(step.itemisedVersions[ii]);
@@ -491,13 +496,15 @@ var MainSearchView = Backbone.View.extend({
             }
         }
 
-
         options = options.concat(exactInitials);
         options = options.concat(prefixInitials);
+        //make sure language matches are before other matches on description and such like
+        others = languageMatches.concat(others);
 
         if(limit == VERSION) {
             options = options.concat(others);
         } else if (options.length < 3) {
+            totalNotDisplayed = others.length - 3;
             options = options.concat(others.splice(0, 3 - options.length));
         }
 

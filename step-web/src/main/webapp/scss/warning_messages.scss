@@ -1,0 +1,14 @@
+@import 'template_variables';
+@import 'mixins';
+
+.infoIcon {
+  position: absolute;
+  left: 50%;
+  text-align: center;
+  color: $warningColour;
+  top: 10px;
+  margin-left: -3px;
+  font-size: 120%;
+  display: none;
+}
+

@@ -340,6 +340,16 @@ ul .glyphicon-ok {
   border-radius: 3 3 3 3 !important;
   cursor: hand; }
 
+.infoIcon {
+  position: absolute;
+  left: 50%;
+  text-align: center;
+  color: orange;
+  top: 10px;
+  margin-left: -3px;
+  font-size: 120%;
+  display: none; }
+
 .passageOptionsGroup {
   height: 20px;
   position: absolute;

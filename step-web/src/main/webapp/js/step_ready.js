@@ -11,9 +11,23 @@
             step.keyedVersions[tempVersion.initials] = tempVersion;
             step.keyedVersions[tempVersion.shortInitials] = tempVersion;
         }
+        
+        //now mark some versions as recommended
+        markAsRecommended('OHB');
+        markAsRecommended('WHNU');
+        markAsRecommended('LXX');
+        markAsRecommended('SBLG');
+        
         //save 100k of space
         window.tempVersions = null;
     };
+    
+    function markAsRecommended(version) {
+        var v = step.keyedVersions[version];
+        if(v) {
+            v.recommended = true;
+        }
+    }
 
     function initSettings() {
         var settings = new SettingsModelList;

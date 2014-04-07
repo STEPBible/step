@@ -61,7 +61,9 @@ step.defaults = {
     ],
     passage : {
         interOptions : [ __s.passage_interleaved, __s.passage_interleaved_with_comparison, __s.passage_interlinear, __s.passage_column_view, __s.passage_column_view_with_compare],
+        interOptionsExplanations : [ __s.passage_interleaved_explanation, __s.passage_interleaved_with_comparison_explanation, __s.passage_interlinear_explanation, __s.passage_column_view_explanation, __s.passage_column_view_with_compare_explanation],
         interNamedOptions : ["INTERLEAVED", "INTERLEAVED_COMPARE", "INTERLINEAR", "COLUMN", "COLUMN_COMPARE"]
+        
     },
     analysis : {
         scope : [__s.stats_scope_chapter, __s.stats_scope_nearby_chapters, __s.stats_scope_book],

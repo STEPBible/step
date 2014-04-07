@@ -249,6 +249,9 @@ var MainSearchView = Backbone.View.extend({
                 case SUBJECT_SEARCH:
                     exampleTokens.push(examples[i].value);
                     break;
+                case VERSION: 
+                    exampleTokens.push(examples[i].item.initials);
+                    break;
             }
             
             if(exampleTokens.length >= 2) {
@@ -472,6 +475,7 @@ var MainSearchView = Backbone.View.extend({
         var exactInitials = [];
         var prefixInitials = [];
         var languageMatches = [];
+        var recommendedByLanguage = [];
         var others = [];
 
         var totalNotDisplayed = 0;
@@ -486,7 +490,11 @@ var MainSearchView = Backbone.View.extend({
             } else if (shortName.startsWith(currentInput) || initials.startsWith(currentInput)) {
                 prefixInitials.push(currentVersion);
             } else if(languageName.startsWith(currentInput)) {
-                languageMatches.push(currentVersion);
+                if(currentVersion.item.recommended) {
+                    recommendedByLanguage.push(currentVersion);
+                } else {
+                    languageMatches.push(currentVersion);
+                }
             } else if (this.matchDropdownEntry(currentInput, currentVersion)) {
                 if (limit == VERSION || exactInitials.length + prefixInitials.length < 3) {
                     others.push(step.itemisedVersions[ii]);
@@ -499,7 +507,7 @@ var MainSearchView = Backbone.View.extend({
         options = options.concat(exactInitials);
         options = options.concat(prefixInitials);
         //make sure language matches are before other matches on description and such like
-        others = languageMatches.concat(others);
+        others = recommendedByLanguage.concat(languageMatches).concat(others);
 
         if(limit == VERSION) {
             options = options.concat(others);
@@ -509,7 +517,8 @@ var MainSearchView = Backbone.View.extend({
         }
 
         if (totalNotDisplayed > 0) {
-            var groupedItem = { item: {}, grouped: true, count: totalNotDisplayed, maxReached: false };
+            var groupedItem = {  itemType: VERSION, item: {}, grouped: true, 
+                count: totalNotDisplayed, maxReached: false, extraExamples: others.splice(0,2) };
             this.setGroupText(groupedItem);
             options.push( { text: groupedItem.text, item: groupedItem, itemType: VERSION });
         }

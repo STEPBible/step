@@ -217,7 +217,7 @@ var StepRouter = Backbone.Router.extend({
 
                 passageModel.save(text, { silent: true });
                 self._addBookmark(query);
-                step.util.squashErrors();
+                step.util.squashErrors(passageModel);
                 
                 //don't trigger a full search, but replace the URL with the one that makes sense
                 if (!quiet) {

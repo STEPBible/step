@@ -1,4 +1,5 @@
 var PassageMenuView = Backbone.View.extend({
+    infoIcon: '<span class="infoIcon"><span class="glyphicon glyphicon-exclamation-sign"></span></span>',
     events: {
         "click a[name]": "updateModel",
         "click .showStats": "showAnalysis",
@@ -39,6 +40,28 @@ var PassageMenuView = Backbone.View.extend({
 
         //get the versions data sources
         this._updateVisibleDropdown();
+        
+        this.warnings = step.util.getPassageContainer($(".infoIcon"));
+        if(this.warnings.length == 0) {
+            this.warnings = $(_.template(this.infoIcon)());
+            this.$el.parent().append(this.warnings);
+        }
+        
+        this.listenTo(this.model, "raiseMessage", this.raiseMessage);
+        this.listenTo(this.model, "squashErrors", this.squashError);
+    },
+    raiseMessage: function(opts) {
+        var titleSoFar = this.warnings.attr("title") || "";
+        if(titleSoFar != "") {
+            titleSoFar += "\n";
+        }
+        titleSoFar += opts.message;
+        this.warnings.attr("title", titleSoFar);
+        this.warnings.show();
+    },
+    squashError: function() {
+        this.warnings.attr("title", "");
+        this.warnings.hide();
     },
     handleDropdownMenu: function (ev) {
         var self = this;
@@ -192,10 +215,11 @@ var PassageMenuView = Backbone.View.extend({
     _createDisplayModes: function () {
         var interOptions = step.defaults.passage.interOptions;
         var interNamesOptions = step.defaults.passage.interNamedOptions;
-
+        var explanations = step.defaults.passage.interOptionsExplanations;
+        
         var displayModes = $("<ul>").addClass("miniKolumny displayModes");
         for (var i = 0; i < interOptions.length; i++) {
-            var link = this._createLink(interNamesOptions[i], interOptions[i]);
+            var link = this._createLink(interNamesOptions[i], interOptions[i], explanations[i]);
             displayModes.append($("<li>").append(link).attr("role", "presentation"));
         }
 

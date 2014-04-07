@@ -165,26 +165,39 @@ step.util = {
             $(".passageContainer").removeClass("waiting");
         }
     },
-    squashErrors: function () {
+    squashErrors: function (model) {
         $("#errorContainer").remove();
+        if(model) {
+            model.trigger("squashErrors");
+        }
     },
-    raiseInfo: function (message, level, passageId, progress) {
+    getErrorPopup: function (message, level) {
+        var errorPopup = $(_.template('<div class="alert alert-error fade in alert-<%= level %>" id="errorContainer">' +
+            '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
+            '<%= message %></div>')({ message: message, level: level}));
+        return errorPopup;
+    }, raiseInfo: function (message, level, passageId, progress, silent) {
         //no parsing for info and warning
         if (level == 'error') {
             level = 'danger';
         } else if (level == undefined) {
             level = 'info';
         }
+        
+        if(passageId != null) {
+            step.util.activePassage().trigger("raiseMessage", { message: message, level: level });
+        }
 
+        if(silent) {
+            return;
+        }
         var errorContainer = $("#errorContainer");
         if (errorContainer.length > 0) {
             //will recreate
             errorContainer.remove();
         }
 
-        var errorPopup = $(_.template('<div class="alert alert-error fade in alert-<%= level %>" id="errorContainer">' +
-            '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
-            '<%= message %></div>')({ message: message, level: level}));
+        var errorPopup = this.getErrorPopup(message, level);
 
         if (progress != null) {
             errorPopup.append('<div class="progress progress-striped active"><div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="' + progress + '" aria-valuemin="0" aria-valuemax="100" style="width: ' + progress + '%"></div></div>');

@@ -43,6 +43,7 @@ var PassageDisplayView = Backbone.View.extend({
             if (this._isPassageValid(passageHtml, reference)) {
                 passageContainer.find(".resultsLabel").html("");
                 this._warnIfNoStrongs(version);
+                this._warnIfFirstTimeCompare(interlinearMode);
                 this._doFonts(passageHtml, options, interlinearMode, languages);
                 this._doInlineNotes(passageHtml, passageId);
                 this._doSideNotes(passageHtml, passageId, version);
@@ -82,7 +83,7 @@ var PassageDisplayView = Backbone.View.extend({
                 passageContainer.animate({
                     scrollTop: originalScrollTop + scroll
                 }, 500);
-                
+
                 $(link).closest(".verse").addClass("secondaryBackground");
 
                 //also do so if we are looking at an interlinear-ed version
@@ -90,6 +91,17 @@ var PassageDisplayView = Backbone.View.extend({
 
                 //reset the data attribute
                 this.model.save({ targetLocation: null }, { silent: true });
+            }
+        },
+        _warnIfFirstTimeCompare: function (interlinearMode) {
+            if (interlinearMode != "INTERLEAVED" && interlinearMode != "COLUMN" &&
+                interlinearMode != "NONE" && interlinearMode != "INTERLINEAR") {
+                var warnings = step.settings.get("noStrongCompareWarning") || {};
+                step.util.raiseInfo(__s.error_warn_no_strongs_when_compare, null, this.model.get("passageId"), null, warnings[interlinearMode]);
+                warnings[interlinearMode] = true;
+                step.settings.save({
+                    noStrongCompareWarning: warnings
+                });
             }
         },
         _warnIfNoStrongs: function (masterVersion) {
@@ -104,13 +116,11 @@ var PassageDisplayView = Backbone.View.extend({
             }
 
             var warnings = step.settings.get("noStrongWarnings") || {};
-            if (!warnings[masterVersion]) {
-                step.util.raiseInfo(__s.error_warn_if_no_strongs);
-                warnings[masterVersion] = true;
-                step.settings.save({
-                    noStrongWarnings: warnings
-                });
-            }
+            step.util.raiseInfo(__s.error_warn_if_no_strongs, null, this.model.get("passageId"), null, warnings[masterVersion]);
+            warnings[masterVersion] = true;
+            step.settings.save({
+                noStrongWarnings: warnings
+            });
         },
         //Can be removed when/if Chrome fixes this
         _doChromeHack: function (eventName, passageHtml, interlinearMode, options) {

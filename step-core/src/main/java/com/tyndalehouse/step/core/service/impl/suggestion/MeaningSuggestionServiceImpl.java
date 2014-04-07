@@ -6,6 +6,7 @@ import com.tyndalehouse.step.core.data.common.TermsAndMaxCount;
 import com.tyndalehouse.step.core.models.LexiconSuggestion;
 import com.tyndalehouse.step.core.models.search.PopularSuggestion;
 import com.tyndalehouse.step.core.service.SingleTypeSuggestionService;
+import com.tyndalehouse.step.core.service.helpers.SuggestionContext;
 import org.apache.lucene.search.Sort;
 
 import javax.inject.Inject;
@@ -26,14 +27,16 @@ public class MeaningSuggestionServiceImpl implements SingleTypeSuggestionService
     }
 
     @Override
-    public String[] getExactTerms(final String form, final int max, final boolean popularSort) {
-        final Set<String> meaningTerms = this.definitions.findSetOfTerms(true, form, max, ANCIENT_MEANING_FIELDS);
+    public String[] getExactTerms(final SuggestionContext context, final int max, final boolean popularSort) {
+        final Set<String> meaningTerms = this.definitions.findSetOfTerms(true, context.getInput(), max, ANCIENT_MEANING_FIELDS);
         return meaningTerms.toArray(new String[meaningTerms.size()]);
     }
 
     @Override
-    public String[] collectNonExactMatches(final TermsAndMaxCount<String> collector, final String form, final String[] alreadyRetrieved, final int leftToCollect) {
-        TermsAndMaxCount countsAndResults = this.definitions.findSetOfTermsWithCounts(false, true, form, collector.getTotalCount(), ANCIENT_MEANING_FIELDS);
+    public String[] collectNonExactMatches(final TermsAndMaxCount<String> collector, 
+                                           final SuggestionContext context, 
+                                           final String[] alreadyRetrieved, final int leftToCollect) {
+        TermsAndMaxCount countsAndResults = this.definitions.findSetOfTermsWithCounts(false, true, context.getInput(), collector.getTotalCount(), ANCIENT_MEANING_FIELDS);
         final Set<String> resultTerms = countsAndResults.getTerms();
 
         collector.setTotalCount(countsAndResults.getTotalCount());

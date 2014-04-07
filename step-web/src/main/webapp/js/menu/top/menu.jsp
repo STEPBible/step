@@ -17,7 +17,9 @@
 
     StringBuilder sb = new StringBuilder(1024);
     for (Language l : languages) {
-        sb.append("<li><a onclick='window.localStorage.clear();' lang='");
+        sb.append("<li><a onclick='window.localStorage.clear(); $.cookie(\"lang\", \""); 
+        sb.append(l.getCode());
+        sb.append("\")' lang='");
         sb.append(l.getCode());
         sb.append("' href='./?lang=");
         sb.append(l.getCode());

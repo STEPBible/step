@@ -104,7 +104,7 @@ import com.tyndalehouse.step.core.xsl.impl.MultiInterlinearProviderImpl;
 public class JSwordPassageServiceImpl implements JSwordPassageService {
     private static final int MAX_SMALL_BOOK_CHAPTER_COUNT = 5;
     private static final String OSIS_ID_BOOK_CHAPTER = "%s.%s";
-    private static final int MAX_VERSES_RETRIEVED = 300;
+    private static final int MAX_VERSES_RETRIEVED = 200;
     private static final String OSIS_CHAPTER_FORMAT = "%s.%d";
     private static final String OSIS_CHAPTER_VERSE_FORMAT = "%s.%s.%d";
     private static final Logger LOGGER = LoggerFactory.getLogger(JSwordPassageServiceImpl.class);

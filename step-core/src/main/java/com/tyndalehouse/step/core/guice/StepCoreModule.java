@@ -48,7 +48,9 @@ import com.tyndalehouse.step.core.service.impl.suggestion.GreekAncientMeaningSer
 import com.tyndalehouse.step.core.service.impl.suggestion.HebrewAncientLanguageServiceImpl;
 import com.tyndalehouse.step.core.service.impl.suggestion.HebrewAncientMeaningServiceImpl;
 import com.tyndalehouse.step.core.service.impl.suggestion.MeaningSuggestionServiceImpl;
+import com.tyndalehouse.step.core.service.impl.suggestion.ReferenceSuggestionServiceImpl;
 import com.tyndalehouse.step.core.service.impl.suggestion.SuggestionServiceImpl;
+import com.tyndalehouse.step.core.service.impl.suggestion.TextSuggestionServiceImpl;
 import com.tyndalehouse.step.core.service.jsword.*;
 import com.tyndalehouse.step.core.service.jsword.impl.*;
 import com.tyndalehouse.step.core.service.search.OriginalWordSuggestionService;
@@ -103,6 +105,8 @@ public class StepCoreModule extends AbstractStepGuiceModule {
         bind(HebrewAncientLanguageServiceImpl.class).asEagerSingleton();
         bind(GreekAncientLanguageServiceImpl.class).asEagerSingleton();
         bind(MeaningSuggestionServiceImpl.class).asEagerSingleton();
+        bind(ReferenceSuggestionServiceImpl.class).asEagerSingleton();
+        bind(TextSuggestionServiceImpl.class).asEagerSingleton();
         
         // others that can wait
         bind(JSwordAnalysisService.class).to(JSwordAnalysisServiceImpl.class);

@@ -6,6 +6,7 @@ import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.models.LexiconSuggestion;
 import com.tyndalehouse.step.core.models.search.PopularSuggestion;
 import com.tyndalehouse.step.core.service.SingleTypeSuggestionService;
+import com.tyndalehouse.step.core.service.helpers.SuggestionContext;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
@@ -39,14 +40,14 @@ public abstract class AbstractAncientSuggestionServiceImpl implements SingleType
     }
 
     @Override
-    public EntityDoc[] getExactTerms(final String form, final int max, final boolean popularSort) {
-        return getTerms(form, max, true, popularSort);
+    public EntityDoc[] getExactTerms(SuggestionContext context, final int max, final boolean popularSort) {
+        return getTerms(context.getInput(), max, true, popularSort);
     }
 
     @Override
-    public EntityDoc[] collectNonExactMatches(final TopFieldCollector collector, final String form, final EntityDoc[] alreadyRetrieved,
+    public EntityDoc[] collectNonExactMatches(final TopFieldCollector collector, final SuggestionContext context, final EntityDoc[] alreadyRetrieved,
                                               final int leftToCollect) {
-        final List<String> tokenItems = this.reader.getAnalyzedTokens("stepGloss", form, true);
+        final List<String> tokenItems = this.reader.getAnalyzedTokens("stepGloss", context.getInput(), true);
         final BooleanQuery query = this.getQuery(tokenItems, false);
 
         if (alreadyRetrieved != null) {

@@ -2,6 +2,7 @@ package com.tyndalehouse.step.core.service;
 
 import com.tyndalehouse.step.core.models.SingleSuggestionsSummary;
 import com.tyndalehouse.step.core.models.SuggestionsSummary;
+import com.tyndalehouse.step.core.service.helpers.SuggestionContext;
 import com.tyndalehouse.step.core.service.impl.SearchType;
 
 /**
@@ -33,15 +34,15 @@ public interface SuggestionService {
      *     d
      * </pre>
      *
-     * @param term
+     * @param context the context including the term we are searching for, the master book selected, etc.
      */
-    SuggestionsSummary getTopSuggestions(String term);
+    SuggestionsSummary getTopSuggestions(SuggestionContext context);
 
     /**
      * Returns the first set of results that are available to the user
      *
-     * @param searchType the type of search we want results from
-     * @param term       the term that is being looked for.
+     * @param context the context object in which all suggestion request information is
+     *                stored (input, search type, etc.)
      */
-    SuggestionsSummary getFirstNSuggestions(String searchType, String term);
+    SuggestionsSummary getFirstNSuggestions(SuggestionContext context);
 }

@@ -3,6 +3,7 @@ package com.tyndalehouse.step.core.service;
 import com.tyndalehouse.step.core.data.EntityDoc;
 import com.tyndalehouse.step.core.models.search.PopularSuggestion;
 import com.tyndalehouse.step.core.models.search.SuggestionType;
+import com.tyndalehouse.step.core.service.helpers.SuggestionContext;
 import org.apache.lucene.search.Filter;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
@@ -17,11 +18,11 @@ import java.util.List;
  * @author chrisburrell
  */
 public interface SingleTypeSuggestionService<T, S> {
-    T[] getExactTerms(String form, int max, final boolean popularSort);
+    T[] getExactTerms(SuggestionContext context, int max, final boolean popularSort);
 
 //    Sort getSort();
 
-    T[] collectNonExactMatches(S collector, String form, final T[] alreadyRetrieved, final int leftToCollect);
+    T[] collectNonExactMatches(S collector, SuggestionContext context, final T[] alreadyRetrieved, final int leftToCollect);
 
     /**
      * Converts a number of documents, strings, etc. to their PopularSuggestion equivalents. 

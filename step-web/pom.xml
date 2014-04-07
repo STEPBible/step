@@ -193,6 +193,7 @@
                                 <jsSourceFile>libs/select2.js</jsSourceFile>
                                 <jsSourceFile>libs/require-2.1.9.min.js</jsSourceFile>
                                 <jsSourceFile>js/require_config.js</jsSourceFile>
+                                <jsSourceFile>js/jquery-extensions/jquery-cookie.js</jsSourceFile>
                                 <jsSourceFile>js/step_constants.js</jsSourceFile>
                                 <jsSourceFile>js/step.util.js</jsSourceFile>
                                 <jsSourceFile>js/backbone/views/view_main_search.js</jsSourceFile>

@@ -22,6 +22,7 @@ import com.tyndalehouse.step.core.models.search.SuggestionType;
 import com.tyndalehouse.step.core.service.BibleInformationService;
 import com.tyndalehouse.step.core.service.SingleTypeSuggestionService;
 import com.tyndalehouse.step.core.service.SuggestionService;
+import com.tyndalehouse.step.core.service.helpers.SuggestionContext;
 import com.tyndalehouse.step.core.service.impl.InternationalRangeServiceImpl;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import com.tyndalehouse.step.core.service.search.SubjectSearchService;
@@ -142,14 +143,16 @@ public class SearchController {
     }
 
     private void addDefaultSuggestions(final String input, final List<AutoSuggestion> autoSuggestions, final String limitType, final String referenceBookContext) {
-        addReferenceSuggestions(limitType, input, autoSuggestions, referenceBookContext, null);
-        addAutoSuggestions(limitType, SearchToken.REFERENCE, autoSuggestions, this.rangeService.getRanges(input));
-
+        SuggestionContext context = new SuggestionContext();
+        context.setMasterBook(referenceBookContext);
+        context.setInput(input);
+        context.setSearchType(limitType);
+        
         if (StringUtils.isBlank(limitType)) {
             // we only return the right set of suggestions if there is a limit type
-            convert(autoSuggestions, this.suggestionService.getTopSuggestions(input));
+            convert(autoSuggestions, this.suggestionService.getTopSuggestions(context));
         } else {
-            convert(autoSuggestions, this.suggestionService.getFirstNSuggestions(limitType, input));
+            convert(autoSuggestions, this.suggestionService.getFirstNSuggestions(context));
         }
     }
 
@@ -164,7 +167,7 @@ public class SearchController {
                 autoSuggestions.add(au);
             }
 
-            if(summary.getMoreResults() > 0) {
+            if(summary.getMoreResults() > 0 && !SearchToken.REFERENCE.equals(summary.getSearchType())) {
                 AutoSuggestion au = new AutoSuggestion();
                 au.setItemType(summary.getSearchType().toString());
                 au.setGrouped(true);
@@ -295,16 +298,6 @@ public class SearchController {
     private void addAutoSuggestions(final String limitType, final String type, final List<AutoSuggestion> autoSuggestions, final List<? extends PopularSuggestion> suggestions) {
         if (StringUtils.isNotBlank(limitType) && !limitType.equals(type)) {
             // we only return the right set of suggestions if there is a limit type
-            return;
-        }
-
-        if (suggestions.size() > MAX_PER_GROUP && StringUtils.isBlank(limitType)) {
-            AutoSuggestion au = new AutoSuggestion();
-            au.setItemType(type);
-            au.setGrouped(true);
-            au.setCount(suggestions.size());
-            au.setMaxReached(SearchService.MAX_SUGGESTIONS == suggestions.size());
-            autoSuggestions.add(au);
             return;
         }
 

@@ -6,8 +6,10 @@ import com.tyndalehouse.step.core.models.SearchToken;
 import com.tyndalehouse.step.core.models.SingleSuggestionsSummary;
 import com.tyndalehouse.step.core.models.SuggestionsSummary;
 import com.tyndalehouse.step.core.models.search.PopularSuggestion;
+import com.tyndalehouse.step.core.models.search.SubjectSuggestion;
 import com.tyndalehouse.step.core.service.SingleTypeSuggestionService;
 import com.tyndalehouse.step.core.service.SuggestionService;
+import com.tyndalehouse.step.core.service.helpers.SuggestionContext;
 import org.apache.lucene.search.TopFieldCollector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,14 +43,18 @@ public class SuggestionServiceImpl implements SuggestionService {
                                  final HebrewAncientLanguageServiceImpl hebrewAncientLanguageService,
                                  final GreekAncientLanguageServiceImpl greekAncientLanguageService,
                                  final MeaningSuggestionServiceImpl meaningSuggestionService,
-                                 final SubjectSuggestionServiceImpl subjectSuggestionService
+                                 final SubjectSuggestionServiceImpl subjectSuggestionService,
+                                 final ReferenceSuggestionServiceImpl referenceSuggestionService,
+                                 final TextSuggestionServiceImpl textSuggestionService
     ) {
+        queryProviders.put(SearchToken.REFERENCE, referenceSuggestionService);
         queryProviders.put(SearchToken.GREEK_MEANINGS, greekAncientMeaningService);
         queryProviders.put(SearchToken.HEBREW_MEANINGS, hebrewAncientMeaningService);
         queryProviders.put(SearchToken.GREEK, greekAncientLanguageService);
         queryProviders.put(SearchToken.HEBREW, hebrewAncientLanguageService);
         queryProviders.put(SearchToken.MEANINGS, meaningSuggestionService);
         queryProviders.put(SearchToken.SUBJECT_SEARCH, subjectSuggestionService);
+        queryProviders.put(SearchToken.TEXT_SEARCH, textSuggestionService);
 
         //the following lines mean we won't pull extra words for all data sources.
         //e.g. if we have 2 greek meanings, we will only pull 1 one more hebrew meaning 
@@ -69,7 +75,8 @@ public class SuggestionServiceImpl implements SuggestionService {
     }
 
     @Override
-    public SuggestionsSummary getTopSuggestions(final String term) {
+    public SuggestionsSummary getTopSuggestions(final SuggestionContext context) {
+//        final String term = context.getInput();
         final SuggestionsSummary summary = new SuggestionsSummary();
         final Map<String, SingleSuggestionsSummary> results = new LinkedHashMap<String, SingleSuggestionsSummary>();
 
@@ -80,7 +87,7 @@ public class SuggestionServiceImpl implements SuggestionService {
             //run exact query against index
             final int groupTotal = this.getGroupTotal(query.getKey(), results);
             final int totalGroupLeftToRetrieve = MAX_RESULTS - groupTotal + PREVIEW_GROUP;
-            Object[] docs = totalGroupLeftToRetrieve > 0 ? searchService.getExactTerms(term, totalGroupLeftToRetrieve, true) : null;
+            Object[] docs = totalGroupLeftToRetrieve > 0 ? searchService.getExactTerms(context, totalGroupLeftToRetrieve, true) : null;
             int docLength = docs != null ? docs.length : 0;
 
             //how many do we need to collect
@@ -88,7 +95,7 @@ public class SuggestionServiceImpl implements SuggestionService {
 
             //create collector to collect some more results, if required, but also the total hit count
             Object o = searchService.getNewCollector(leftToCollect, true);
-            final Object[] extraDocs = searchService.collectNonExactMatches(o, term, docs, leftToCollect);
+            final Object[] extraDocs = searchService.collectNonExactMatches(o, context, docs, leftToCollect);
             final List<? extends PopularSuggestion> suggestions = searchService.convertToSuggestions(docs, extraDocs);
 
             final SingleSuggestionsSummary singleTypeSummary = new SingleSuggestionsSummary();
@@ -151,17 +158,18 @@ public class SuggestionServiceImpl implements SuggestionService {
 
 
     @Override
-    public SuggestionsSummary getFirstNSuggestions(final String searchType, final String term) {
+    public SuggestionsSummary getFirstNSuggestions(SuggestionContext context) {
         final SuggestionsSummary summary = new SuggestionsSummary();
         final List<SingleSuggestionsSummary> results = new ArrayList<SingleSuggestionsSummary>();
         summary.setSuggestionsSummaries(results);
 
+        final String searchType = context.getSearchType();
         final SingleTypeSuggestionService searchService = queryProviders.get(searchType);
-        Object[] docs = searchService.getExactTerms(term, MAX_RESULTS, false);
+        Object[] docs = searchService.getExactTerms(context, MAX_RESULTS, false);
 
         //create collector to collect some more results, if required, but also the total hit count
         Object o = searchService.getNewCollector(MAX_RESULTS_NON_GROUPED - docs.length, false);
-        final Object[] extraDocs = searchService.collectNonExactMatches(o, term, docs, MAX_RESULTS_NON_GROUPED);
+        final Object[] extraDocs = searchService.collectNonExactMatches(o, context, docs, MAX_RESULTS_NON_GROUPED);
         final List<? extends PopularSuggestion> suggestions = searchService.convertToSuggestions(docs, extraDocs);
 
         final SingleSuggestionsSummary singleTypeSummary = new SingleSuggestionsSummary();

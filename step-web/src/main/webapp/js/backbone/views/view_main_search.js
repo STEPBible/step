@@ -9,7 +9,6 @@ var MainSearchView = Backbone.View.extend({
     initialize: function () {
         var self = this;
         this.masterSearch = this.$el.find("#masterSearch");
-        this.openNewColumn = this.$el.find("#openNewPanel");
         this.specificContext = [];
 
         var view = this;
@@ -65,11 +64,7 @@ var MainSearchView = Backbone.View.extend({
                             require(["menu_extras"], function () {
                                 new PickBibleView({ model: step.settings, searchView: view });
                             });
-                        })).append($("<a>").append(__s.pick_passage).on('click', function () {
-                        require(["menu_extras"], function () {
-                            console.log("hi - pick passage");
-                        });
-                    })).append($("<a>").append(__s.search_advanced).on('click', function () {
+                        })).append("&nbsp;|&nbsp;").append($("<a>").append(__s.search_advanced).on('click', function () {
                         require(["menu_extras", "defaults"], function () {
                             //find master version
                             var dataItems = self.masterSearch.select2("data");
@@ -390,12 +385,21 @@ var MainSearchView = Backbone.View.extend({
         if (includeEverything) {
             staticResources = this._getData();
             //push some of the options that are also always present:
-            staticResources.push({ item: this.getCurrentInput(), itemType: TEXT_SEARCH});
-            staticResources.push({ item: {"shortName": this.getCurrentInput(), "fullName": this.getCurrentInput(), "wholeBook": false }, itemType: REFERENCE, itemSubType: 'freeInput' });
         } else if(limit == VERSION) {
             staticResources = this._getData(limit);
         }
-        return staticResources.concat(results);
+        
+        //find last version
+        var i = 0;
+        for(i = 0; i < results.length; i++) {
+            if(results[i].itemType != REFERENCE) {
+                break;
+            }
+        }
+        
+        var firstPart = results.slice(0, i);
+        var secondPart = results.slice(i+1);
+        return firstPart.concat(staticResources).concat(secondPart);
     },
     _getData: function (limit) {
         return this.filterLocalData(limit);
@@ -491,7 +495,9 @@ var MainSearchView = Backbone.View.extend({
         options = options.concat(exactInitials);
         options = options.concat(prefixInitials);
 
-        if (options.length < 3) {
+        if(limit == VERSION) {
+            options = options.concat(others);
+        } else if (options.length < 3) {
             options = options.concat(others.splice(0, 3 - options.length));
         }
 
@@ -585,10 +591,10 @@ var MainSearchView = Backbone.View.extend({
                 var refSource = __s.bible_text;
                 if (v.itemSubType == 'bookSelection') {
                     refSource = __s.bible_text;
-                } else if (v.itemSubType == 'freeInput') {
-                    refSource = __s.bible_text_free_entry;
-                } else if (!v.itemSubType && v.item.wholeBook) {
+                } else if (!v.itemSubType && v.item.wholeBook && !v.item.passage) {
                     refSource = __s.bible_text_chapters;
+                } else if(v.item.passage) {
+                    refSource = __s.bible_reference;
                 }
 
                 row = ['<span class="source">[' + refSource + ']</span>',

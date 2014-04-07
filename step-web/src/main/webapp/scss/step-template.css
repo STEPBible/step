@@ -169,8 +169,8 @@ ul .glyphicon-ok {
     font-family: inherit;
     padding: 6px 12px;
     margin: 0px;
-    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    -webkit-box-shadow: none;
+    box-shadow: none;
     -webkit-transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
     transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s; }
 
@@ -243,6 +243,7 @@ ul .glyphicon-ok {
   /* for firefox 3.6+ */ }
 
 .select-version {
+  cursor: hand !important;
   background: #cd8c8e;
   /* for non-css3 browsers */
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=lighten($color, $optionStartGradient), endColorstr=lighten($color, $optionEndGradient));
@@ -252,6 +253,7 @@ ul .glyphicon-ok {
   /* for firefox 3.6+ */ }
 
 .select-reference {
+  cursor: hand !important;
   background: #a4cba4;
   /* for non-css3 browsers */
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=lighten($color, $optionStartGradient), endColorstr=lighten($color, $optionEndGradient));
@@ -344,11 +346,15 @@ ul .glyphicon-ok {
   position: absolute;
   left: 50%;
   text-align: center;
-  color: orange;
   top: 10px;
   margin-left: -3px;
   font-size: 120%;
-  display: none; }
+  display: none;
+  color: #a9d3ff; }
+  .infoIcon .warning {
+    color: orange; }
+  .infoIcon .danger {
+    color: red; }
 
 .passageOptionsGroup {
   height: 20px;

@@ -104,6 +104,18 @@ var PassageDisplayView = Backbone.View.extend({
                 });
             }
         },
+        _warnIfFirstTimeCompare: function (interlinearMode) {
+            if (interlinearMode != "INTERLINEAR") {
+                return;
+            }
+            
+            var warning = step.settings.get("warnInterlinearFirstTime") || false;
+            step.util.raiseInfo(__s.warn_interlinear_view_selected, null, this.model.get("passageId"), null, warning);
+            step.settings.save({
+                warnInterlinearFirstTime: true
+            });
+            
+        },
         _warnIfNoStrongs: function (masterVersion) {
             if (!step.keyedVersions) {
                 //for some reason we have no versions

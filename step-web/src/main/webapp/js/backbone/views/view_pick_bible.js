@@ -209,7 +209,6 @@ var PickBibleView = Backbone.View.extend({
                 }
             }
         }
-        this._addTagLine();
         this.$el.find(".tab-pane").empty();
         this.$el.find(selectedTab).append(this.versionTemplate({
             versions: bibleList
@@ -238,6 +237,7 @@ var PickBibleView = Backbone.View.extend({
                 el.addClass("active");
             }
         });
+        this._addTagLine();
     },
     _addTagLine: function(){
         var bibleVersions = $("#bibleVersions");

@@ -6,6 +6,7 @@ VERSION = "version";
 REFERENCE = "reference";
 LIMIT="limit";
 TEXT_SEARCH = "text";
+EXAMPLE_DATA = "examples";
 SYNTAX = "syntax";
 GREEK_MEANINGS = "greekMeanings";
 GREEK = "greek";

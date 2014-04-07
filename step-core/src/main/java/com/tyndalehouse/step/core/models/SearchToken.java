@@ -22,6 +22,7 @@ public class SearchToken implements Serializable {
     public static final String RELATED_VERSES = "relatedrefs";
     public static final String SYNTAX = "syntax";
     public static final String LIMIT = "limit";
+    public static final String EXAMPLE_DATA = "examples";
 
     private Object enhancedTokenInfo;
     private final String token;

@@ -20,7 +20,6 @@ import com.tyndalehouse.step.core.models.search.PopularSuggestion;
 import com.tyndalehouse.step.core.models.search.SubjectSuggestion;
 import com.tyndalehouse.step.core.models.search.SuggestionType;
 import com.tyndalehouse.step.core.service.BibleInformationService;
-import com.tyndalehouse.step.core.service.SingleTypeSuggestionService;
 import com.tyndalehouse.step.core.service.SuggestionService;
 import com.tyndalehouse.step.core.service.helpers.SuggestionContext;
 import com.tyndalehouse.step.core.service.impl.InternationalRangeServiceImpl;
@@ -118,7 +117,8 @@ public class SearchController {
         String bookContext = JSwordPassageService.REFERENCE_BOOK;
         String referenceContext = null;
         String limitType = null;
-
+        boolean exampleData = false;
+        
         if (StringUtils.isNotBlank(context)) {
             //there are some context items... Parse them
             //if there is a reference= restriction, then we will only return references, otherwise, we default
@@ -130,6 +130,8 @@ public class SearchController {
                     referenceContext = st.getToken();
                 } else if (SearchToken.LIMIT.equals(st.getTokenType())) {
                     limitType = st.getToken();
+                } else if(SearchToken.EXAMPLE_DATA.equals(st.getTokenType())) {
+                    exampleData = true;
                 }
             }
         }
@@ -137,18 +139,29 @@ public class SearchController {
         if (onlyReferences || referenceContext != null) {
             addReferenceSuggestions(limitType, input, autoSuggestions, bookContext, referenceContext);
         } else {
-            addDefaultSuggestions(input, autoSuggestions, limitType, bookContext);
+            addDefaultSuggestions(input, autoSuggestions, limitType, bookContext, exampleData);
         }
         return autoSuggestions;
     }
 
-    private void addDefaultSuggestions(final String input, final List<AutoSuggestion> autoSuggestions, final String limitType, final String referenceBookContext) {
+    /**
+     * 
+     * @param input the input entered by the user so far
+     * @param autoSuggestions the list of suggestions
+     * @param limitType only one type of data is requested
+     * @param referenceBookContext the reference book (i..e master book) that has already been selected by the user.
+     * @param exampleData example data is requested
+     */
+    private void addDefaultSuggestions(final String input, final List<AutoSuggestion> autoSuggestions, final String limitType, final String referenceBookContext, final boolean exampleData) {
         SuggestionContext context = new SuggestionContext();
         context.setMasterBook(referenceBookContext);
         context.setInput(input);
         context.setSearchType(limitType);
+        context.setExampleData(exampleData);
         
-        if (StringUtils.isBlank(limitType)) {
+        if(exampleData) {
+            convert(autoSuggestions, this.suggestionService.getFirstNSuggestions(context));
+        } else if (StringUtils.isBlank(limitType)) {
             // we only return the right set of suggestions if there is a limit type
             convert(autoSuggestions, this.suggestionService.getTopSuggestions(context));
         } else {

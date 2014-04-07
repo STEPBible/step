@@ -8,8 +8,11 @@ var MainSearchView = Backbone.View.extend({
     specificContext: [],
     initialize: function () {
         var self = this;
+        this.ignoreOpeningEvent = false;
+        this.clearContextAfterSearch = false;
         this.masterSearch = this.$el.find("#masterSearch");
         this.specificContext = [];
+        this.allContexts = [REFERENCE, VERSION, LIMIT, EXAMPLE_DATA];
 
         var view = this;
         _.bindAll(this);
@@ -61,9 +64,7 @@ var MainSearchView = Backbone.View.extend({
                 var labels = $("<span>").addClass("searchLabel")
                     .append($("<a>").attr("data-toggle", "modal").attr("data-target", "#bibleVersions").append(__s.all_versions).attr("title", __s.all_versions)
                         .on("click", function () {
-                            require(["menu_extras"], function () {
-                                new PickBibleView({ model: step.settings, searchView: view });
-                            });
+                            view.pickBible();
                         })).append("&nbsp;|&nbsp;").append($("<a>").append(__s.search_advanced).on('click', function () {
                         require(["menu_extras", "defaults"], function () {
                             //find master version
@@ -94,6 +95,11 @@ var MainSearchView = Backbone.View.extend({
                             }
                         }
                     }
+                    
+                    if(self.clearContextAfterSearch) {
+                        self._removeSpecificContext(self.allContexts);
+                    }
+                    
                     return url + "/" + encodeURIComponent(contextArgs);
                 },
                 dataType: "json",
@@ -122,26 +128,53 @@ var MainSearchView = Backbone.View.extend({
              * @returns {*}
              */
             formatSelection: function (entry) {
+                var source = self.getSource(entry.itemType, true) + " ";
+                
                 switch (entry.itemType) {
                     case REFERENCE:
-                        return entry.item.shortName;
+                        return '<div class="referenceItem" title="' + source + view.safeEscapeQuote(entry.item.fullName) + '" ' +
+                            'data-item-type="' + entry.itemType + '" ' +
+                            'data-select-id="' + view.safeEscapeQuote(entry.item.shortName) + '">' + 
+                            entry.item.shortName + '</div>';
                     case VERSION:
-                        return "<div class='versionItem'>" + entry.item.shortInitials + "</div>"
+                        return '<div class="versionItem" title="' + source + view.safeEscapeQuote(entry.item.shortInitials + ' - ' + entry.item.name) + '" ' +
+                            'data-item-type="' + entry.itemType + '" ' +
+                            'data-select-id="' + view.safeEscapeQuote(entry.item.shortInitials) + '">' + entry.item.shortInitials + "</div>";
                     case GREEK:
                     case HEBREW:
                         var className = entry.itemType == GREEK ? "unicodeFont" : "hbFontMini";
-                        return "<div class='" + className + "' title='" + entry.item.gloss + ", " + entry.item.stepTransliteration + "'>" + entry.item.matchingForm + "</div>";
+                        return "<div class=' " + entry.itemType + 'Item ' + className + "' " +
+                            'data-item-type="' + entry.itemType + '" ' +
+                            'data-select-id="'  + view.safeEscapeQuote(entry.item.stepTransliteration) + '" ' +
+                            'title="' + source + view.safeEscapeQuote(entry.item.gloss + ", " + entry.item.stepTransliteration) + '">' + 
+                            entry.item.matchingForm + "</div>";
                     case GREEK_MEANINGS:
                     case HEBREW_MEANINGS:
-                        return "<div title='" + entry.item.gloss + ", " + entry.item.matchingForm + "'>" + entry.item.stepTransliteration + "</div>";
+                        return "<div class='" + entry.itemType + "Item' " +
+                            'data-item-type="' + entry.itemType + '" ' +
+                            'data-select-id="' + view.safeEscapeQuote(entry.item.gloss) + '" ' +
+                            'title="' + source + view.safeEscapeQuote(entry.item.gloss + ", " + entry.item.matchingForm) + '">' +
+                            entry.item.stepTransliteration + "</div>";
                     case MEANINGS:
-                        return entry.item.gloss;
+                        return '<div class="meaningsItem" ' +
+                            'title="' + source + view.safeEscapeQuote(entry.item.gloss) + '" ' +
+                            'data-item-type="' + entry.itemType + '" ' +
+                            'data-select-id="' + view.safeEscapeQuote(entry.item.gloss) +  '">' + entry.item.gloss + "<div>";
                     case SUBJECT_SEARCH:
-                        return entry.item.value;
+                        return '<div class="subjectItem" ' +
+                            'data-item-type="' + entry.itemType + '" ' +
+                            'data-select-id="' + view.safeEscapeQuote(entry.item.value) +  '" ' +
+                            'title="' + source + view.safeEscapeQuote(entry.item.value) + '">' + entry.item.value + "<div>";
                     case TEXT_SEARCH:
-                        return entry.item;
+                        return '<div class="textItem" data-select-id="' + view.safeEscapeQuote(entry.item) + '"' +
+                            'data-item-type="' + entry.itemType + '" ' +
+                            'title="' + source + view.safeEscapeQuote(entry.item) + '">' + entry.item + "</div>";
+                        
                     case SYNTAX:
-                        return '<div title="' + entry.item.value + '">' + entry.item.text + "</div>";
+                        return '<div class="queryItem"' +
+                            'data-item-type="' + entry.itemType + '" ' +
+                            'data-select-id="' + view.safeEscapeQuote(entry.item.value) + '" ' +
+                            'title="' + source + view.safeEscapeQuote(entry.item.value) + '">' + entry.item.text + "</div>";
                     default:
                         return entry.item.text;
                 }
@@ -169,9 +202,22 @@ var MainSearchView = Backbone.View.extend({
                 select2Input.select2("container").find("input").focus();
             }
             return;
+        }).on("selected", function(event) {
+            //get last item in list
+            var select2Input = $(this);
+            var values = select2Input.select2("data") || [];
+            if(values.length == 0) {
+                return;
+            }
+            
+            var lastVal = values[values.length - 1];
+                //find the corresponding item
+            view._addTokenHandlers(true);
         }).on("select2-opening", function (event) {
             //remove any context that has references
-            self._removeSpecificContext([REFERENCE, VERSION, LIMIT]);
+            if (!self.ignoreOpeningEvent) {
+                self._removeSpecificContext(self.allContexts);
+            }
 
             //add the first version selected to the context
             var data = self.masterSearch.select2("data") || [];
@@ -184,6 +230,63 @@ var MainSearchView = Backbone.View.extend({
         });
 
         this.masterSearch.select2("container").find("input[type='text']").on("keyup", this._handleKeyPressInSearch);
+    },
+    safeEscapeQuote: function(term) {
+        return term.replace(/"/g, '\\\"');
+    },
+    _addTokenHandlers: function(lastTokenOnly) {
+        var tokens;
+        if(lastTokenOnly) {
+            tokens = $(".select2-search-choice:last").find("[data-select-id]")    
+        } else {
+            tokens = $("[data-select-id]");
+        }
+        
+        this._addVersionHandlers(tokens);
+        this._addReferenceHandlers(tokens);
+        this._addDefaultExampleHandlers(tokens);
+    },
+    _addVersionHandlers: function(tokens) {
+        var self = this;
+        $(tokens).filter(".versionItem").click(function() {
+            self.pickBible();
+        });
+    },
+    _addReferenceHandlers: function(tokens) {
+        var self = this;
+        $(tokens).filter(".referenceItem").click(function(ev) {
+            self._searchExampleData(ev, REFERENCE, null);
+        });
+    },
+    _addDefaultExampleHandlers: function(tokens) {
+        var self = this;
+        $(tokens).filter(".greekMeaningsItem, .hebrewMeaningsItem, .hebrewItem, .greekItem, .meaningsItem, .subjectItem").click(function(ev) {
+            self._searchExampleData(ev, $(this).attr("data-item-type"), $(this).attr("data-select-id"));
+        });
+    },
+    _searchExampleData: function(ev, itemType, term) {
+        ev.stopPropagation();
+
+        //fudge the search
+        if(term == null) {
+            term = "  ";
+        }
+        
+        this.ignoreOpeningEvent = true;
+        this.clearContextAfterSearch = true;
+
+        this._addSpecificContext(EXAMPLE_DATA, itemType);
+        this._addSpecificContext(LIMIT, itemType);
+        $.data(this.masterSearch.select2("container"), "select2-last-term", null);
+        this.masterSearch.select2("open");
+        this.masterSearch.select2("search", term);
+        this.ignoreOpeningEvent = false;
+    },
+    pickBible: function() {
+        var self = this;
+        require(["menu_extras", "defaults"], function () {
+            new PickBibleView({ model: step.settings, searchView: self });
+        });
     },
     convertResultTermToNormalOption: function (termSuggestion, datum) {
         var text = termSuggestion;
@@ -528,7 +631,7 @@ var MainSearchView = Backbone.View.extend({
     formatResultCssClass: function (item) {
         return "select-" + item.itemType;
     },
-    getSource: function (itemType) {
+    getSource: function (itemType, nowrap) {
         var source;
         switch (itemType) {
             case VERSION:
@@ -561,7 +664,7 @@ var MainSearchView = Backbone.View.extend({
             case TEXT_SEARCH:
                 source = __s.search_text;
         }
-        return '<span class="source">[' + source + ']</span>';
+        return nowrap ? '[' + source + ']' : '<span class="source">[' + source + ']</span>';
     },
     /**
      * Renders the view when shown in the dropdown list
@@ -730,6 +833,7 @@ var MainSearchView = Backbone.View.extend({
             data.push(this._reconstructToken(initialData, tokens, i));
         }
         this.masterSearch.select2("data", data);
+        this._addTokenHandlers();
     },
     _handleKeyPressInSearch: function (ev) {
         if (ev.keyCode == 13) {

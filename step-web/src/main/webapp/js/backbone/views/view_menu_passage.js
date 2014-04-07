@@ -56,11 +56,21 @@ var PassageMenuView = Backbone.View.extend({
             titleSoFar += "\n";
         }
         titleSoFar += opts.message;
+        if(opts.level == "warning" && !this.warnings.hasClass("danger")) {
+            this.warnings.addClass("warnings");
+        }
+        if(opts.level == "danger" || opts.level == "error") {
+            this.warnings.removeClass("warnings");
+            this.warnings.addClass("danger");
+        }
+        
         this.warnings.attr("title", titleSoFar);
         this.warnings.show();
     },
     squashError: function() {
         this.warnings.attr("title", "");
+        this.warnings.removeClass("warning");
+        this.warnings.removeClass("danger");
         this.warnings.hide();
     },
     handleDropdownMenu: function (ev) {

@@ -77,6 +77,10 @@ public class ReferenceSuggestionServiceImpl extends AbstractIgnoreMergedListSugg
     public BookName[] collectNonExactMatches(final TermsAndMaxCount<BookName> collector,
                                              final SuggestionContext context, final BookName[] alreadyRetrieved,
                                              final int leftToCollect) {
+        if(context.isExampleData()) {
+            return this.getSampleData(context);
+        }
+        
         //we've already attempted to parse the whole key, so left to do here, is to iterate through the books
         //and match against those names that make sense.
         final List<BookName> books = new ArrayList<BookName>();
@@ -117,6 +121,25 @@ public class ReferenceSuggestionServiceImpl extends AbstractIgnoreMergedListSugg
             bookNames.addAll(extras);
         }
         return bookNames.toArray(new BookName[bookNames.size()]);
+    }
+
+    /**
+     * Returns all 66 books (or more) of the Bible.
+     * @param context the context
+     * @return the list of all book names
+     */
+    private BookName[] getSampleData(final SuggestionContext context) {
+        final List<BookName> books = new ArrayList<BookName>();
+        final String masterBook = getDefaultedVersion(context);
+        final Versification masterV11n = this.versificationService.getVersificationForVersion(masterBook);
+        final Iterator<BibleBook> bookIterator = masterV11n.getBookIterator();
+
+        while (bookIterator.hasNext()) {
+            final BibleBook book = bookIterator.next();
+                addBookName(books, book, masterV11n);
+        }
+        
+        return books.toArray(new BookName[books.size()]);
     }
 
     /**

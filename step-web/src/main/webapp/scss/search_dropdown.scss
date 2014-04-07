@@ -34,10 +34,12 @@
 }
 
 .select-version {
+  cursor: hand !important;
   @include gradient($bibleRow, $optionStartGradient, $optionEndGradient);
 }
 
 .select-reference {
+  cursor: hand !important;
   @include gradient($referenceRow, $optionStartGradient, $optionEndGradient);
 }
 
@@ -91,3 +93,4 @@
   border-radius: 3 3 3 3 !important;
   cursor: hand;
 }
+

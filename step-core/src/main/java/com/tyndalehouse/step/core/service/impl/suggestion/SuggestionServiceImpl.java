@@ -159,21 +159,21 @@ public class SuggestionServiceImpl implements SuggestionService {
 
     @Override
     public SuggestionsSummary getFirstNSuggestions(SuggestionContext context) {
-        final SuggestionsSummary summary = new SuggestionsSummary();
-        final List<SingleSuggestionsSummary> results = new ArrayList<SingleSuggestionsSummary>();
-        summary.setSuggestionsSummaries(results);
 
         final String searchType = context.getSearchType();
         final SingleTypeSuggestionService searchService = queryProviders.get(searchType);
-        Object[] docs = searchService.getExactTerms(context, MAX_RESULTS, false);
+        final Object[] docs = searchService.getExactTerms(context, MAX_RESULTS, false);
 
         //create collector to collect some more results, if required, but also the total hit count
-        Object o = searchService.getNewCollector(MAX_RESULTS_NON_GROUPED - docs.length, false);
-        final Object[] extraDocs = searchService.collectNonExactMatches(o, context, docs, MAX_RESULTS_NON_GROUPED);
+        final Object collector = searchService.getNewCollector(MAX_RESULTS_NON_GROUPED - docs.length, false);
+        final Object[] extraDocs = searchService.collectNonExactMatches(collector, context, docs, MAX_RESULTS_NON_GROUPED);
         final List<? extends PopularSuggestion> suggestions = searchService.convertToSuggestions(docs, extraDocs);
 
+        final SuggestionsSummary summary = new SuggestionsSummary();
+        final List<SingleSuggestionsSummary> results = new ArrayList<SingleSuggestionsSummary>();
+        summary.setSuggestionsSummaries(results);
         final SingleSuggestionsSummary singleTypeSummary = new SingleSuggestionsSummary();
-        fillInTotalHits(o, extraDocs.length, singleTypeSummary);
+        fillInTotalHits(collector, extraDocs.length, singleTypeSummary);
         singleTypeSummary.setPopularSuggestions(suggestions);
         singleTypeSummary.setSearchType(searchType);
         results.add(singleTypeSummary);

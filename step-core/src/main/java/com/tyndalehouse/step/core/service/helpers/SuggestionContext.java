@@ -10,6 +10,7 @@ public class SuggestionContext {
     private String masterBook;
     private String input;
     private String searchType;
+    boolean exampleData;
 
     public String getMasterBook() {
         return masterBook;
@@ -33,5 +34,13 @@ public class SuggestionContext {
 
     public void setSearchType(final String searchType) {
         this.searchType = searchType;
+    }
+
+    public boolean isExampleData() {
+        return exampleData;
+    }
+
+    public void setExampleData(final boolean exampleData) {
+        this.exampleData = exampleData;
     }
 }

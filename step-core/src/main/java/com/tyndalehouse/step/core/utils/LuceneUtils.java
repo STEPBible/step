@@ -2,27 +2,16 @@ package com.tyndalehouse.step.core.utils;
 
 import com.tyndalehouse.step.core.data.common.TermsAndMaxCount;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
-import com.tyndalehouse.step.core.service.SearchService;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.index.TermEnum;
 import org.apache.lucene.queryParser.QueryParser;
-import org.apache.lucene.search.FilteredTermEnum;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.PrefixTermEnum;
 import org.apache.lucene.search.SingleTermEnum;
-import org.crosswire.jsword.index.lucene.LuceneIndex;
-import org.joda.time.LocalDateTime;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-
-import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
-import static java.lang.Long.parseLong;
-import static org.joda.time.DateTime.parse;
-import static org.joda.time.DateTimeUtils.getInstantMillis;
 
 /**
  * Utilities to help with index reading

@@ -514,7 +514,7 @@ public class JSwordPassageServiceImplTest {
         assertEquals("Gen.1", this.jsi.getBookData("ESV", "Gen 1").getKey().getOsisRef());
         assertEquals("Gen.1", this.jsi.getBookData("ESV", "Gen").getKey().getOsisRef());
         assertEquals("Gen.1", this.jsi.getBookData("ESV", "Gen 1-50").getKey().getOsisRef());
-        assertEquals("Gen.1-Gen.11.22", this.jsi.getBookData("ESV", "Gen 1-12").getKey().getOsisRef());
+        assertEquals("Gen.1-Gen.8.8", this.jsi.getBookData("ESV", "Gen 1-12").getKey().getOsisRef());
         assertEquals("Gen.1", this.jsi.getBookData("ESV", " Gen").getKey().getOsisRef());
         assertEquals("Gen.1", this.jsi.getBookData("ESV", "Gen ").getKey().getOsisRef());
     }
@@ -546,7 +546,7 @@ public class JSwordPassageServiceImplTest {
         final Versification v = Versifications.instance().getVersification("KJV");
         final Book b = Books.installed().getBook("ESV");
 
-        assertEquals("Gen.2-Gen.13.0", reduceKeySize(v, b, "Gen.2-Rev.1").getOsisRef());
+        assertEquals("Gen.2-Gen.9.17", reduceKeySize(v, b, "Gen.2-Rev.1").getOsisRef());
         assertEquals("Gen.2", reduceKeySize(v, b, "Gen.2").getOsisRef());
         assertEquals("Gen.0", reduceKeySize(v, b, "Gen.0").getOsisRef());
         assertEquals("Gen.0", reduceKeySize(v, b, "Gen.0").getOsisRef());

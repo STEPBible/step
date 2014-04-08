@@ -85,7 +85,7 @@ var MainSearchView = Backbone.View.extend({
                     }
                     
                     if(self.clearContextAfterSearch) {
-                        self._removeSpecificContext(self.allContexts);
+                        self._removeSpecificContext(EXAMPLE_DATA);
                     }
                     
                     return url + "/" + encodeURIComponent(contextArgs);
@@ -191,6 +191,26 @@ var MainSearchView = Backbone.View.extend({
             }
             return;
         }).on("selected", function(event) {
+            //if we're replacing an item, then remove it
+            var container = self.masterSearch.select2("container");
+            var replaceItem = container.find(".replaceItem");
+            var replaceItemParent = replaceItem.parent().parent().first();
+            var newItem;
+            if(replaceItemParent.length > 0) {
+                var replaceItemIndex = replaceItemParent.index();
+                var data = self.masterSearch.select2("data"); 
+                data.splice(replaceItemIndex, 1, data[data.length -1]);
+                self._setData(data);
+                
+                //if we resort to the 'data' method, we lose all our handlers
+                newItem = container.find("[data-select-id]");
+            } else {
+                newItem = container.find("[data-select-id]").last();
+            }
+            
+            //now get rid of all .replaceItems
+            self._resetReplaceItems();
+            
             //get last item in list
             var select2Input = $(this);
             var values = select2Input.select2("data") || [];
@@ -198,13 +218,12 @@ var MainSearchView = Backbone.View.extend({
                 return;
             }
             
-            var lastVal = values[values.length - 1];
-                //find the corresponding item
-            view._addTokenHandlers(true);
+            view._addTokenHandlers(newItem);
         }).on("select2-opening", function (event) {
             //remove any context that has references
             if (!self.ignoreOpeningEvent) {
                 self._removeSpecificContext(self.allContexts);
+                self._resetReplaceItems();
             }
 
             //add the first version selected to the context
@@ -219,13 +238,19 @@ var MainSearchView = Backbone.View.extend({
 
         this.masterSearch.select2("container").find("input[type='text']").on("keyup", this._handleKeyPressInSearch);
     },
+    _setData: function(values) {
+        this.masterSearch.select2("data", values, this._addTokenHandlers);  
+    },
+    _resetReplaceItems: function() {
+        this.masterSearch.select2("container").find(".replaceItem").removeClass("replaceItem"); 
+    },
     safeEscapeQuote: function(term) {
         return term.replace(/"/g, '\\\"');
     },
-    _addTokenHandlers: function(lastTokenOnly) {
+    _addTokenHandlers: function(tokenElement) {
         var tokens;
-        if(lastTokenOnly) {
-            tokens = $(".select2-search-choice:last").find("[data-select-id]")    
+        if(tokenElement) {
+            tokens = tokenElement;   
         } else {
             tokens = $("[data-select-id]");
         }
@@ -237,25 +262,31 @@ var MainSearchView = Backbone.View.extend({
     },
     _addVersionHandlers: function(tokens) {
         var self = this;
-        $(tokens).filter(".versionItem").click(function() {
+        $(tokens).filter(".versionItem").click(function(ev) {
+            self._markItemForReplacing(ev, $(this));
             self.pickBible();
         });
     },
     _addTextHandlers: function(tokens) {
         var self = this;
-        $(tokens).filter(".textItem, syntaxItem").click(function() {
+        $(tokens).filter(".textItem, syntaxItem").click(function(ev) {
+            self._markItemForReplacing(ev, $(this));
             self.openAdvancedSearch($(this).hasClass("textItem") ? TEXT_SEARCH : SYNTAX);
         });
     },
     _addReferenceHandlers: function(tokens) {
         var self = this;
-        $(tokens).filter(".referenceItem").click(function(ev) {
+        $(tokens).filter(".referenceItem").each(function() {
+            $(this).click(function(ev) {
+            self._markItemForReplacing(ev, $(this));
             self._searchExampleData(ev, REFERENCE, null);
+            })
         });
     },
     _addDefaultExampleHandlers: function(tokens) {
         var self = this;
         $(tokens).filter(".greekMeaningsItem, .hebrewMeaningsItem, .hebrewItem, .greekItem, .meaningsItem, .subjectItem").click(function(ev) {
+            self._markItemForReplacing(ev, $(this));
             self._searchExampleData(ev, $(this).attr("data-item-type"), $(this).attr("data-select-id"));
         });
     },
@@ -292,6 +323,17 @@ var MainSearchView = Backbone.View.extend({
 
             new AdvancedSearchView({ searchView: self, masterVersion: masterVersion, intialView: initialView });
         });  
+    },
+    /**
+     * marks the item for deletion when a new item is selected
+     * @param el the item to be marked
+     * @private
+     */
+    _markItemForReplacing: function(ev, el) {
+        if(!ev.shiftKey) {
+            el.closest("ul").find(".replaceItem").removeClass("replaceItem");
+            el.addClass("replaceItem");
+        }
     },
     pickBible: function() {
         var self = this;
@@ -401,7 +443,7 @@ var MainSearchView = Backbone.View.extend({
     _appendVersions: function (data) {
         var originalData = this.masterSearch.select2("data");
         originalData.push({ item: data.value, itemType: data.itemType});
-        this.masterSearch.select2("data", originalData);
+        this._setData(originalData);
     },
     _removeVersion: function (data) {
         //find the element
@@ -412,7 +454,7 @@ var MainSearchView = Backbone.View.extend({
                 i--;
             }
         }
-        this.masterSearch.select2("data", versions);
+        this._setData(versions);
     },
     search: function () {
         console.log("Searching...");
@@ -848,7 +890,7 @@ var MainSearchView = Backbone.View.extend({
             //check if the tokens are in the search box already... if so, then don't add them
             data.push(this._reconstructToken(initialData, tokens, i));
         }
-        this.masterSearch.select2("data", data);
+        this._setData(data);
         this._addTokenHandlers();
     },
     _handleKeyPressInSearch: function (ev) {

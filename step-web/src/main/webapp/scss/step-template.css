@@ -539,6 +539,8 @@ h2.heading.x-acrostic {
   margin: 0px; }
   .searchResultRow span.level1:before, .searchResultRow span.level2:before, .searchResultRow span.level3:before, .searchResultRow span.level4:before {
     content: ' / '; }
+.searchResultRow table tr.row:before, .searchResultRow table tr.row:after {
+  display: none; }
 
 h4.lexicalGrouping {
   font-size: 12px; }

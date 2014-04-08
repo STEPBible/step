@@ -32,6 +32,11 @@
       }
     }
   }
+  table tr.row {
+    &:before, &:after {
+      display: none;
+    }
+  }
 }
 
 h4.lexicalGrouping {

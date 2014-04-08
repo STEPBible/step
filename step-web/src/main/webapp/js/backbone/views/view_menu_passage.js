@@ -329,6 +329,7 @@ var PassageMenuView = Backbone.View.extend({
         }
 
         this.model.save({
+            pageNumber: 1,
             selectedOptions: selectedCode,
             interlinearMode: this.displayModeContainer.find("a:has(.glyphicon.active)").attr("data-value")
         });

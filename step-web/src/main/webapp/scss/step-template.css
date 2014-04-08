@@ -591,6 +591,9 @@ h4.lexicalGrouping {
     margin-top: 15px;
     font-size: 12px;
     display: inline; }
+  .examplesContainer .step-copyright {
+    font-size: smaller;
+    text-align: center; }
 
 .examples {
   display: block; }

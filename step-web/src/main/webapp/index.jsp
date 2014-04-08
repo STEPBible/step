@@ -10,6 +10,8 @@
 <%@ page import="com.tyndalehouse.step.jsp.WebStepRequest" %>
 <%@ page import="com.google.inject.Injector"%>
 <%@ page import="com.tyndalehouse.step.core.service.AppManagerService" %>
+<%@ page import="java.util.Date" %>
+<%@ page import="java.util.Calendar" %>
 
 <%
     Injector injector = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
@@ -281,6 +283,8 @@
                         <search:sample_search explanation="simple_search_explanation" option1="NIV" option1type="version" option2="brother" option2type="greekMeanings" />
                         <search:sample_search explanation="simple_search_restricted_explanation" option1="The Pentateuch" option1type="reference" option2="ESV" option2type="version" option3="he.sed" option3type="hebrew" />
                         <search:sample_search explanation="simple_passage_explanation" option1="NIV" option1type="version" option2="ESV" option2type="version" option3="brother" option3type="greekMeanings" option4="he.sed" option4type="hebrew" />
+
+                        <div class="text-muted step-copyright">&copy; Tyndale House, Cambridge, UK - <%= Calendar.getInstance().get(Calendar.YEAR) %></div>
                     </div>
                 </div>
             </div>

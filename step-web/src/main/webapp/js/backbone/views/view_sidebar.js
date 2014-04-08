@@ -153,12 +153,8 @@ var SidebarView = Backbone.View.extend({
                 var args = "strong=" + encodeURIComponent($(this).data("strongNumber"));
                 step.util.activePassage().save({ filter: ""});
                 step.router.navigatePreserveVersions(args);
-            })).append('<br />')
-            .append($("<a></a>").attr("href", "javascript:void(0)").data("strongNumber", mainWord.strongNumber).append(__s.lexicon_search_for_all_related_words).click(function () {
-                var args = "strong=" + encodeURIComponent($(this).data("strongNumber"));
-                step.util.activePassage().save({ filter: "all"});
-                step.router.navigatePreserveVersions(args);
-            }));
+            })).append('<br />');
+            
 
         // append the meanings
         if (mainWord.mediumDef) {

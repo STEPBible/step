@@ -434,10 +434,10 @@
 				
 				<xsl:choose>
 					<xsl:when test="$includeBook = true()">
-		  				<xsl:value-of select="concat($book, ' ', $chapter, ':', $verse)"/>
+		  				<span class="verseNumber"><xsl:value-of select="concat($book, ' ', $chapter, ':', $verse)"/></span>
 					</xsl:when>
 					<xsl:otherwise>
-		  				<xsl:value-of select="concat($chapter, ':', $verse)"/>
+		  				<span class="verseNumber"><xsl:value-of select="concat($chapter, ':', $verse)"/></span>
 					</xsl:otherwise>
 				</xsl:choose>
 	        </xsl:if>

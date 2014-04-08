@@ -491,7 +491,6 @@ var PassageDisplayView = Backbone.View.extend({
                 return;
             }
 
-            var self = this;
             step.util.ui.enhanceVerseNumbers(passageId, passageContent, version);
         },
 

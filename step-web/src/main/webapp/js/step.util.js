@@ -168,7 +168,7 @@ step.util = {
     squashErrors: function (model) {
         $("#errorContainer").remove();
         if(model) {
-            model.trigger("squashErrors");
+            model.trigger("squashErrors")
         }
     },
     getErrorPopup: function (message, level) {
@@ -383,7 +383,16 @@ step.util = {
                 exampleContainer.parent().hide();
             }
         }
-    }, /**
+    },
+    /**
+     * Creates a linked column to the current column
+     * @param el
+     */
+    createNewLinkedColumn : function(passageId) {
+        this.activePassageId(passageId);
+        this.createNewColumn(true);
+    },
+    /**
      * @param linked true to indicate we want to link this column with the current active column
      * @private
      */
@@ -840,24 +849,29 @@ step.util = {
                                     var bookKey = key.substring(0, key.indexOf('.'));
                                     var args = "reference=" + encodeURIComponent(bookKey) + "|strong=" + encodeURIComponent($(this).parent().data("strong"));
                                     //make this the active passage
+                                    step.util.createNewLinkedColumn(passageId);
                                     step.router.navigatePreserveVersions(args);
                                 });
                                 templatedTable.find(".bibleCount").click(function () {
                                     var args = "strong=" + encodeURIComponent($(this).parent().data("strong"));
                                     //make this the active passage
+                                    step.util.createNewLinkedColumn(passageId);
                                     step.router.navigatePreserveVersions(args);
                                 });
 
                                 templatedTable.find(".relatedVerses").click(function () {
+                                    step.util.createNewLinkedColumn(passageId);
                                     step.router.navigatePreserveVersions(RELATED_VERSES + "=" + encodeURIComponent(key));
                                 });
 
                                 templatedTable.find(".relatedSubjects").click(function () {
+                                    step.util.createNewLinkedColumn(passageId);
                                     step.router.navigatePreserveVersions(TOPIC_BY_REF + "=" + encodeURIComponent(key));
                                 });
 
                                 templatedTable.find(".wordCloud").click(function () {
                                     //get chapter key... 
+                                    step.util.createNewLinkedColumn(passageId);
                                     var lastDot = key.lastIndexOf(".");
                                     if (lastDot != -1) {
                                         step.util.ui.openStats(key.substring(0, lastDot));

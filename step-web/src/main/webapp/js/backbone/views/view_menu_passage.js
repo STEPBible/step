@@ -41,7 +41,7 @@ var PassageMenuView = Backbone.View.extend({
         //get the versions data sources
         this._updateVisibleDropdown();
         
-        this.warnings = step.util.getPassageContainer($(".infoIcon"));
+        this.warnings = $(step.util.getPassageContainer(this.model.get("passageId"))).find(".infoIcon");
         if(this.warnings.length == 0) {
             this.warnings = $(_.template(this.infoIcon)());
             this.$el.parent().append(this.warnings);

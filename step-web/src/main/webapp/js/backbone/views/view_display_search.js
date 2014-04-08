@@ -98,7 +98,7 @@ var SearchDisplayView = Backbone.View.extend({
 
             //get linked passage, and if not exist, we need to create a new one...
             //creates a new column, or sets the right column as active
-            step.util.createNewColumn(true, verseRef);
+            step.util.createNewColumn(true);
             
             //next target can be set on the active model
             step.util.activePassage().save({ targetLocation: verseRef }, { silent: true });

@@ -423,6 +423,10 @@ ul .glyphicon-ok {
   .passageContentHolder table {
     width: 85%;
     display: inline; }
+    .passageContentHolder table tr.row:before, .passageContentHolder table tr.row:after {
+      display: none; }
+    .passageContentHolder table th {
+      border: none !important; }
   .passageContentHolder td {
     font-size: 12px; }
     .passageContentHolder td.x-end-row {
@@ -519,6 +523,18 @@ h2.heading.x-speaker {
   margin-bottom: 0; }
 h2.heading.x-acrostic {
   margin-left: 10px; }
+
+.verseGrouping {
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 5px;
+  padding-bottom: 5px; }
+  .verseGrouping * .smallResultKey {
+    margin-right: 10px;
+    font-size: 12px;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }
+  .verseGrouping * p {
+    margin-left: 5px;
+    display: inline; }
 
 .searchResultRow .passageContentHolder {
   height: initial !important; }
@@ -629,11 +645,10 @@ h4.lexicalGrouping {
       overflow-y: auto;
       height: 100%; }
     #columnHolder .column .passageContainer {
-      border: 1px solid lightgrey;
+      border: 2px solid lightgrey;
       padding: 5px;
       border-radius: 3;
       height: 100%;
-      border-width: 2px;
       -webkit-box-shadow: 0 3px 12px rgba(0, 0, 0, 0.175);
       box-shadow: 0 3px 12px rgba(0, 0, 0, 0.175); }
       #columnHolder .column .passageContainer.active {
@@ -685,7 +700,7 @@ h4.lexicalGrouping {
 
   .col-sm-11columns {
     width: 8.84091%; } }
-.selectModal {
+.modal {
   z-index: 10002; }
 
 .modal-backdrop.in {
@@ -1135,6 +1150,9 @@ body::-webkit-scrollbar-corner {
   font-family: Cardo;
   font-size: 140%; }
 
+td.unicodeFont {
+  font-size: 100%; }
+
 .unicodeFontMini {
   font-family: Cardo;
   font-size: 110%; }
@@ -1167,11 +1185,17 @@ body::-webkit-scrollbar-corner {
   font-family: SIL_EZRA;
   font-size: 180%; }
 
+td.hbFont, td.hbFontSmall, td.hbFontMini {
+  font-size: 120%; }
+
 .hbFontSmall, .hbFontMini {
   font-weight: normal; }
 
 .hbFontMini {
   font-size: 130%; }
+
+td.copticFont, td.syriacFont, td.burmeseFont, td.arabicFont, td.chineseFont, td.khmerFont {
+  font-size: 100%; }
 
 .emphasisePassagePhrase {
   background-color: #F3E5B4; }

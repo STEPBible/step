@@ -1,0 +1,661 @@
+<html>
+<head>
+
+    <style type="text/css">
+    
+        .code {
+            background-color: #f0f0f0;
+            padding: 10px 10px 10px 10px;
+            font-family: courier;
+            font-size: medium;
+            /*
+            font-weight: bold;
+            */
+        }    
+    
+    
+    </style>
+
+
+
+</head>
+
+
+<body>
+
+<h1> JRebel plugins</h1>
+
+<h2>1. Why and when</h2>
+    
+    
+    <p>
+       What JRebel does is the reloading of classes. When you change something in your code, your changes get picked up
+       automatically and are instantly reflected in your application's behavior. But sometimes, merely reloading the
+       classes falls short of what really needs to be done to fully update the application &ndash; without restarting it. 
+    </p>
+    
+    <p>   
+       That's because all the objects in the memory remain the same &ndash; they are not recreated. For most cases, this is a
+       desired thing (avoiding the system re-initialization penalty is what JRebel is all about!). But when you alter something
+       in your code that has to do with the way the application initializes (and that would results in memory objects being in
+       a different state after a normal application restart), those changes will of course not be reflected in your application
+       state, as the initialization code is not re-run.
+    </p>
+    
+    <p>          
+       This is exactly when creating a custom JRebel plugin could help you. With a plugin, you can monitor the reloading of
+       resources, and execute any desired custom code in reaction. Basically you'll use a JRebel integration plugin to say:
+       <i>"After this certain kind of a reloading event occurs, go through these-and-these initialization steps to update my
+       application's state."</i>   
+    </p>
+    
+    <p>
+       A typical scenario would be the following: your application is using a neat third-party framework. When the application
+       starts up, the framework initializes by loading its configuration from various resources (external XML files,
+       Java annotations, etc). Some of these resources change as you continue developing the application (e.g. you add a new
+       bean in your spring <code>applicationContext.xml</code> and wire it with others). 
+       
+       Without an integration plugin explicitly telling what to do, these changes won't reflect in your application's
+       running state without a restart. But using an integration plugin, you could for example say: <i>"Hey, if you see that
+       I've changed something in <code>applicationContext.xml</code>, please be kind and perform a full reloading of all
+       my beans!"</i>.
+    </p>
+    
+    <p>   
+       As that kind of scenarios are common for all applications using some given framework, the plugins should usually be
+       created <em>per framework</em>, not <em>per application</em>!  
+    </p>
+
+
+
+
+
+
+
+<h2>2. Implementing a plugin</h2>
+
+    <p>
+        A JRebel plugin is nothing more than a small <code>.jar</code>-file containing at least a class that implements
+        the <code>Plugin</code> interface of the JRebel SDK, and a special manifest entry telling JRebel the name of that
+        class. It is highly recommended to start creating any plugin project from the provided
+        <a href="jr-plugin-template.zip">template</a>.
+    </p>
+
+    <p>
+        The key API in plugin development is the JRebel SDK which provides means to communicate with the JRebel private APIs. Your
+        plugin code can also make use of whatever else available on the JVM you are running in. For example, if you are developing
+        a plugin for Struts2 framework (that will get activated only if Struts2 really <em>is</em> available in the JVM), you can
+        safely import and use classes from Struts2 in your plugin (without providing them yourself). 
+    </p>
+
+    
+    
+    <center>
+    <img src="plugin-architecture-small.png" />
+    </center>
+
+    <p>
+        The Plugin interface you need to implement looks like that:
+    </p>
+
+			<div align="left" class="code">
+			<table border="0" cellpadding="3" cellspacing="0">
+				<tr>
+					<td nowrap="nowrap" valign="top" align="left"><code> <font
+						color="#7f0055"><b>public&nbsp;interface&nbsp;</b></font><font
+						color="#000000">Plugin&nbsp;</font><font color="#000000">{</font><br />
+					<font color="#ffffff">&nbsp;&nbsp;</font><font color="#7f0055"><b>void&nbsp;</b></font><font
+						color="#000000">preinit</font><font color="#000000">()</font><font
+						color="#000000">;</font><br />
+					<font color="#ffffff">&nbsp;&nbsp;</font><font color="#7f0055"><b>boolean&nbsp;</b></font><font
+						color="#000000">checkDependencies</font><font color="#000000">(</font><font
+						color="#000000">ClassLoader&nbsp;cl,&nbsp;ClassResourceSource&nbsp;crs</font><font
+						color="#000000">)</font><font color="#000000">;</font><br />
+					<font color="#ffffff">&nbsp;&nbsp;</font><font color="#000000">String&nbsp;getId</font><font
+						color="#000000">()</font><font color="#000000">;</font><br />
+					<font color="#ffffff">&nbsp;&nbsp;</font><font color="#000000">String&nbsp;getName</font><font
+						color="#000000">()</font><font color="#000000">;</font><br />
+					<font color="#ffffff">&nbsp;&nbsp;</font><font color="#000000">String&nbsp;getDescription</font><font
+						color="#000000">()</font><font color="#000000">;</font><br />
+					<font color="#ffffff">&nbsp;&nbsp;</font><font color="#000000">String&nbsp;getAuthor</font><font
+						color="#000000">()</font><font color="#000000">;</font><br />
+					<font color="#ffffff">&nbsp;&nbsp;</font><font color="#000000">String&nbsp;getWebsite</font><font
+						color="#000000">()</font><font color="#000000">;</font><br />
+					<font color="#000000">}</font></code></td>
+				</tr>
+			</table>
+			</div>
+
+
+
+	<p>The most important methods here are:
+	
+		<ul>
+			<li>
+			     <code>preinit()</code> &ndash; The main method. Here, set up the CBPs, listeners and everything else.</li>
+			<li>
+			     <code>checkDependencies(ClassLoader cl, ClassResourceSource crs)</code> &ndash;
+			     Checks if this plugin should be loaded for this particular classloader. The safest way to do it is like it's
+			     been done in the example plugin (by just checking whether a framework class that you rely on is available in
+			     that classloader):
+			 </li>
+		</ul>
+    </p>
+
+		
+		<div align="left" class="code">
+		<table border="0" cellpadding="3" cellspacing="0">
+			<tr>
+				<td nowrap="nowrap" valign="top" align="left"><code> <font
+					color="#ffffff">&nbsp;&nbsp;</font><font color="#7f0055"><b>public&nbsp;</b></font><font
+					color="#7f0055"><b>boolean&nbsp;</b></font><font color="#000000">checkDependencies</font><font
+					color="#000000">(</font><font color="#000000">ClassLoader&nbsp;classLoader,&nbsp;ClassResourceSource&nbsp;classResourceSource</font><font
+					color="#000000">)&nbsp;{</font><br />
+				<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font
+					color="#7f0055"><b>return&nbsp;</b></font><font color="#000000">classResourceSource.getClassResource</font><font
+					color="#000000">(</font><font color="#2a00ff">&#34;org.zeroturnaround.jrebel.flagDemo.AbstractCanvas&#34;</font><font
+					color="#000000">)&nbsp;</font><font color="#000000">!=&nbsp;</font><font
+					color="#7f0055"><b>null</b></font><font color="#000000">;</font><br />
+				<font color="#ffffff">&nbsp;&nbsp;</font><font color="#000000">}</font></code>
+		
+				</td>
+			</tr>
+		</table>
+		</div>
+
+        
+	<p>
+        Refer to JRebel SDK API reference for additional details.
+    </p>
+			
+			
+
+<h3>2.1. The demo application</h3>
+
+
+    <p>
+        To demonstrate working with JRebel plugins, we have created a very simple Swing desktop application (<a href="jr-sdk-demo.zip">get the source</a>).
+        It just draws three <code>Image</code> objects on a <code>Canvas</code> object, which is in turn placed inside
+        a <code>JFrame</code> object and displayed. It looks like that:
+    </p>
+
+    <center>
+    <img src="demo-app1.png" />
+    </center>
+
+    <p>
+        .. and its class hierarchy looks like this:
+    </p> 
+
+    <center>
+    <img src="demo-app-class-diagram.png" />
+    </center>
+
+    <p>
+        As discussed above, a typical situation for writing a JRebel plugin is when you want to provide JRebel integration for a framework
+        maintained by a third party. Let's imagine that the class <code>AbstractCanvas</code> is our third-party "framework" that we want
+        to provide better JRebel integration for. Therefore, we have a restriction that we can't directly edit its code (if we had full
+        control over the code in <code>AbstractCanvas</code>, we could just add our modifications directly into it and problem solved).
+        Let's further imagine that <code>FlagsCanvas</code> is our "application" that we are developing. Our goal is to build a plugin that
+        provides better JRebel support for hotloading any client code of the AbstractCanvas "framework" (i.e. while modifying
+        the <code>FlagsCanvas</code> class, in our case).
+    
+    </p>
+
+    
+    <p>
+    </p>
+    
+
+    <p>
+        Start off by download the demo app and making yourself familiar with it. To run it with JRebel, you need to edit the file
+        <code>build.properties</code> and make <code>jrebel.jar.path</code> point to <code>jrebel.jar</code> on your local machine. There
+        are three Ant targets that execute the application:
+
+
+        
+        <ul>
+	        <li>
+	           <code>ant run</code> &ndash; runs the app without JRebel
+	        </li>
+	        
+            <li>
+               <code>ant run-with-jrebel</code> &ndash; runs the app with JRebel, but without the JRebel plugin
+            </li>
+            
+            <li>
+               <code>ant run-with-jrebel-and-plugin</code> &ndash; runs the app with JRebel, <em>and</em> with our ready-made JRebel
+               integration plugin from <code>lib/jr-plugin-template.jar</code>
+            </li>
+        </ul>
+        
+
+        
+    </p>
+
+    <p>
+        The code that controls where the flags get painted to is in these two methods of <code>FlagsCanvas.java</code>:  
+
+		<div align="left" class="code">
+		    <table border="0" cellpadding="3" cellspacing="0">
+		       <tr>
+		         <td nowrap="nowrap" valign="top" align="left">
+		           <code>
+		            <font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#7f0055"><b>private&nbsp;</b></font><font color="#7f0055"><b>void&nbsp;</b></font><font color="#000000">init</font><font color="#000000">()&nbsp;{</font><br />
+		            <font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">estoniaX&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;&nbsp;</font><font color="#990000">65</font><font color="#000000">;&nbsp;</font><br />
+		            <font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">estoniaY&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;&nbsp;</font><font color="#990000">50</font><font color="#000000">;</font><br />
+		            <font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">switzerlandX&nbsp;&nbsp;=&nbsp;</font><font color="#990000">400</font><font color="#000000">;</font><br />
+		            <font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">switzerlandY&nbsp;&nbsp;=&nbsp;&nbsp;</font><font color="#990000">50</font><font color="#000000">;</font><br />
+		            <font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">}</font><br />
+		            <font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><br />
+		            <font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><br />
+		            <font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#7f0055"><b>public&nbsp;</b></font><font color="#7f0055"><b>void&nbsp;</b></font><font color="#000000">paint</font><font color="#000000">(</font><font color="#000000">Graphics&nbsp;g</font><font color="#000000">)&nbsp;{</font><br />
+		            <font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">System.out.println</font><font color="#000000">(</font><font color="#2a00ff">&#34;&nbsp;Painting&nbsp;the&nbsp;canvas&nbsp;..&#34;</font><font color="#000000">)</font><font color="#000000">;</font><br />
+		            <font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><br />
+		            <font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">g.drawImage</font><font color="#000000">(</font><font color="#000000">switzerlandImg,&nbsp;switzerlandX,&nbsp;switzerlandY,&nbsp;</font><font color="#7f0055"><b>this</b></font><font color="#000000">)</font><font color="#000000">;</font><br />
+		            <font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">g.drawImage</font><font color="#000000">(</font><font color="#000000">estoniaImg,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;estoniaX,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;estoniaY,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#7f0055"><b>this</b></font><font color="#000000">)</font><font color="#000000">;</font><br />
+		            <font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">g.drawImage</font><font color="#000000">(</font><font color="#000000">iranImg,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#990000">650</font><font color="#000000">,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#990000">50</font><font color="#000000">,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#7f0055"><b>this</b></font><font color="#000000">)</font><font color="#000000">;</font><br />
+		            <font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">}</font>
+		           </code>
+		         </td>
+		       </tr>
+		    </table>
+		</div>
+         
+         
+	    <!-- 
+		    private void init() {
+		        estoniaX      =  65; 
+		        estoniaY      =  50;
+		        switzerlandX  = 400;
+		        switzerlandY  =  50;
+		    }
+		    
+		    
+		    public void paint(Graphics g) {
+		        System.out.println(" Painting the canvas ..");
+		        
+		        g.drawImage(switzerlandImg, switzerlandX, switzerlandY, this);
+		        g.drawImage(estoniaImg,     estoniaX,     estoniaY,     this);
+		        g.drawImage(iranImg,        650,          50,        this);
+		    }
+	     -->
+    
+    </p>
+    
+        
+    
+    <p>
+        Execute the app with JRebel but <em>without</em> the plugin. The <code>paint()</code> method gets called by Swing every
+        now-and-then when some event happen with the frame (it gains or looses focus, etc). Try modifying the coordinates of the
+        flags and see what happens (of course, something needs to re-build your <code>.class</code> files after editing them..
+        it's best to configure your IDE to do that automatically whenever you save your source files). When you re-focus
+        to the demo-application, <code>paint()</code> gets called and the Iranian flag should indeed move if you changed its
+        coordinates in the Java code. The other flags demonstrate now reaction whatsoever. That's because their locations are controlled
+        by the instance variables of the <code>FlagsCanvas</code> class that get initialized by the <code>init()</code> method when
+        a new instance of the class is created. So, although you might have changed their values in the <code>init()</code> method,
+        the values in the memory remain the same as nobody is calling that method after the instance is already created. 
+    </p>
+    
+    
+    <h3>2.2. Class bytecode processors (CBPs)</h3>
+    
+    <p>
+        So the class reloading works, but this doesn't do the whole job here as the in-memory state of the application doesn't get
+        updated. Notice that all that we would need to do to fix that is make an additional call to <code>init()</code> whenever
+        we call <code>paint()</code>. The JRebel SDK fortunately provides suitable tools for the job. Whenever you need to modify the
+        behavior of third-party code before it runs in your JVM, you'll use the so-called <b>class bytecode processors</b> (<b>CBP</b>s),
+        extending the <code>JavassistClassBytecodeProcessor</code> class. When set up properly, the CBPs intercept the initial class
+        loading in the JVM and load the third-party classes with our modifications already in place. Let's see what a CBP looks like:
+    </p>
+
+
+		<!-- 
+		
+		public class ReloadAbstractCanvasStateCBP extends JavassistClassBytecodeProcessor {
+		
+		  public void process(ClassPool cp, ClassLoader cl, CtClass ctClass) throws Exception {
+		    
+		    LoggerFactory.getInstance().echo("Patching the AbstactCanvas class ..");
+		    try {
+		      CtMethod paintMethod = ctClass.getDeclaredMethod("repaint");
+		      paintMethod.insertBefore("org.zeroturnaround.javarebel.integration.pluginTemplate.DemoAppConfigReloader.reinitialize($0);");
+		      
+		    } catch (NotFoundException e) {
+		      LoggerFactory.getInstance().error(e);
+		    }
+		  }
+		}
+		
+		-->
+
+
+
+			<div align="left" class="code">
+				<table border="0" cellpadding="3" cellspacing="0">
+					<tr>
+						<td nowrap="nowrap" valign="top" align="left"><code> <font
+							color="#7f0055"><b>public&nbsp;class&nbsp;</b></font><font
+							color="#000000">ReloadAbstractCanvasStateCBP&nbsp;</font><font
+							color="#7f0055"><b>extends&nbsp;</b></font><font color="#000000">JavassistClassBytecodeProcessor&nbsp;</font><font
+							color="#000000">{</font><br />
+						<font color="#ffffff"></font><br />
+						<font color="#ffffff">&nbsp;&nbsp;</font><font color="#7f0055"><b>public&nbsp;</b></font><font
+							color="#7f0055"><b>void&nbsp;</b></font><font color="#000000">process</font><font
+							color="#000000">(</font><font color="#000000">ClassPool&nbsp;cp,&nbsp;ClassLoader&nbsp;cl,&nbsp;CtClass&nbsp;ctClass</font><font
+							color="#000000">)&nbsp;</font><font color="#7f0055"><b>throws&nbsp;</b></font><font
+							color="#000000">Exception&nbsp;</font><font color="#000000">{</font><br />
+						<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><br />
+						<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font
+							color="#000000">LoggerFactory.getInstance</font><font color="#000000">()</font><font
+							color="#000000">.echo</font><font color="#000000">(</font><font
+							color="#2a00ff">&#34;Patching&nbsp;the&nbsp;AbstactCanvas&nbsp;class&nbsp;..&#34;</font><font
+							color="#000000">)</font><font color="#000000">;</font><br />
+						<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font
+							color="#7f0055"><b>try&nbsp;</b></font><font color="#000000">{</font><br />
+						<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font
+							color="#000000">CtMethod&nbsp;paintMethod&nbsp;=&nbsp;ctClass.getDeclaredMethod</font><font
+							color="#000000">(</font><font color="#2a00ff">&#34;repaint&#34;</font><font
+							color="#000000">)</font><font color="#000000">;</font><br />
+						<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font
+							color="#000000">paintMethod.insertBefore</font><font color="#000000">(</font><font
+							color="#2a00ff">&#34;org.zeroturnaround.javarebel.integration.pluginTemplate.DemoAppConfigReloader.reinitialize($0);&#34;</font><font
+							color="#000000">)</font><font color="#000000">;</font><br />
+						<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><br />
+						<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font
+							color="#000000">}&nbsp;</font><font color="#7f0055"><b>catch&nbsp;</b></font><font
+							color="#000000">(</font><font color="#000000">NotFoundException&nbsp;e</font><font
+							color="#000000">)&nbsp;{</font><br />
+						<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font
+							color="#000000">LoggerFactory.getInstance</font><font color="#000000">()</font><font
+							color="#000000">.error</font><font color="#000000">(</font><font
+							color="#000000">e</font><font color="#000000">)</font><font
+							color="#000000">;</font><br />
+						<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font
+							color="#000000">}</font><br />
+						<font color="#ffffff">&nbsp;&nbsp;</font><font color="#000000">}</font><br />
+						<font color="#000000">}</font></code></td>
+					</tr>
+				</table>
+			</div>
+
+
+    <p>
+        What this CBP does is it inserts an extra statement into the top of the <code>repaint()</code> method
+        of the <code>AbstractCanvas</code> class, transforming the control flow to a public static method implemented in our plugin. The current
+        instance is passed as an argument (<code>$0</code> stands for <code>this</code> in Javassist code-strings). 
+        The method <code>reinitialize()</code> implemented in our plugin can now make arbitrary customizations and then hand the control back to
+        <code>AbstractCanvas#paint()</code>. Currently, it all it does is just calling the <code>init()</code> method with Reflection API.
+        
+    </p>
+    
+    
+    <p>
+        Notice that here it would actually made more sense to call the <code>init()</code> method right away: 
+    
+    </p>    
+		
+		<div align="left" class="code">
+		<table border="0" cellpadding="3" cellspacing="0">
+			<tr>
+				<!-- start source code -->
+				<td nowrap="nowrap" valign="top" align="left"><code> <font
+					color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font
+					color="#000000">paintMethod.insertBefore</font><font color="#000000">(</font><font
+					color="#2a00ff">&#34;init()&#34;</font><font color="#000000">)</font><font
+					color="#000000">;</font></code></td>
+				<!-- end source code -->
+			</tr>
+		</table>
+		</div>
+		
+    
+    <p>
+		That approach might be reasonable when the customization you need to do is trivial. Anyhow, as things get any more complicated, forwarding the call
+		might be more comfortable than maintaining larger chunks of code inside Java strings.
+    </p>
+
+
+    <p>
+        The CBP also has to be registered in the plugin class for things to work:     
+    </p>
+        
+
+
+
+
+        <!-- 
+			public class PluginTemplate implements Plugin {
+			
+			  public void preinit() {
+			
+			    // Register the CBP
+			    Integration i = IntegrationFactory.getInstance();
+			    ClassLoader cl = PluginTemplate.class.getClassLoader();
+			    i.addIntegrationProcessor(cl, "org.zeroturnaround.jrebel.flagDemo.AbstractCanvas", new ReloadAbstractCanvasStateCBP());
+			    
+			    // ..
+			  }
+			  
+			  // ..
+			}
+         -->
+         
+
+
+			<div align="left" class="code">
+			<table border="0" cellpadding="3" cellspacing="0">
+				<tr>
+					<!-- start source code -->
+					<td nowrap="nowrap" valign="top" align="left"><code> <font
+						color="#7f0055"><b>public&nbsp;class&nbsp;</b></font><font
+						color="#000000">PluginTemplate&nbsp;</font><font color="#7f0055"><b>implements&nbsp;</b></font><font
+						color="#000000">Plugin&nbsp;</font><font color="#000000">{</font><br />
+					<font color="#ffffff"></font><br />
+					<font color="#ffffff">&nbsp;&nbsp;</font><font color="#7f0055"><b>public&nbsp;</b></font><font
+						color="#7f0055"><b>void&nbsp;</b></font><font color="#000000">preinit</font><font
+						color="#000000">()&nbsp;{</font><br />
+					<font color="#ffffff"></font><br />
+					<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font
+						color="#3f7f5f">//&nbsp;Register&nbsp;the&nbsp;CBP</font><br />
+					<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font
+						color="#000000">Integration&nbsp;i&nbsp;=&nbsp;IntegrationFactory.getInstance</font><font
+						color="#000000">()</font><font color="#000000">;</font><br />
+					<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font
+						color="#000000">ClassLoader&nbsp;cl&nbsp;=&nbsp;PluginTemplate.</font><font
+						color="#7f0055"><b>class</b></font><font color="#000000">.getClassLoader</font><font
+						color="#000000">()</font><font color="#000000">;</font><br />
+					<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font
+						color="#000000">i.addIntegrationProcessor</font><font color="#000000">(</font><font
+						color="#000000">cl,&nbsp;</font><font color="#2a00ff">&#34;org.zeroturnaround.jrebel.flagDemo.AbstractCanvas&#34;</font><font
+						color="#000000">,&nbsp;</font><font color="#7f0055"><b>new&nbsp;</b></font><font
+						color="#000000">ReloadAbstractCanvasStateCBP</font><font
+						color="#000000">())</font><font color="#000000">;</font><br />
+					<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><br />
+					<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font
+						color="#3f7f5f">//&nbsp;..</font><br />
+					<font color="#ffffff">&nbsp;&nbsp;</font><font color="#000000">}</font><br />
+					<font color="#ffffff"></font><br />
+					<font color="#ffffff">&nbsp;&nbsp;</font><font color="#3f7f5f">//&nbsp;..</font><br />
+					<font color="#000000">}</font></code></td>
+					<!-- end source code -->
+				</tr>
+			</table>
+			</div>
+
+
+
+    <p>    
+        <code>Integration</code> is the class through which CBPs can be set up; instance of it is acquired through <code>IntegrationFactory</code> ..
+        sounds simple enough.
+    </p>
+
+
+    <p>    
+        <b>A word of warning:</b> be very careful with referencing the classes you are about to patch in the CBP code itself (or other code
+        that is called by the CBP). Remember: the CBP is all about intercepting a class <em>before</em> it gets loaded. If your CBP
+        now tries to do something with the very same class, JVM would have to load it to do it. This would create a cyclic dependency, blowing
+        the thing! 
+    </p>    
+    
+    
+    <h3>2.3. Class reload listeners</h3>
+    
+    <p>
+        If you are prepared to spend some time, I recommend you take the demo application and the plugin template, reduce the plugin to
+        what we have done so far (basically just cutting the rest of the <code>preinit()</code> method), re-build the plugin jar and
+        replace the old plugin with the new one in demo application's <code>./lib</code> directory. If you are not, you'll just have to
+        believe me for now. Our AbstractCanvas-to-JRebel integration still has a small flaw. Namely, if you change the coordinates of
+        flags and recompile the code, repainting of the canvas happens when <em>Swing wants it</em> to be repainted, not when <em>you</em>
+        actually changed anything. (Try splitting your desktop between Eclipse and the application frame and editing the code in Eclipse
+        while you application is inactive. Whatever you do with the code, Swing won't repaint until you focus back to the demo app.)
+        It is obviously not a very big problem, as Swing wants to repaint things almost always when you actually do anything with the app,
+        but let's still try to fix that &ndash; at least for the educational purpose.
+    </p>
+
+
+
+    <p>
+        This is an ideal moment for introducing reload listeners. The JRebel SDK provides an API to register listeners that get notified
+        when JRebel reloads anything. By creating an implementor of the <code>ClassEventListener</code> interface and registering it through
+        <code>Reloader</code>, we can implement custom reactions to class reload events. This is exactly what we'll do:
+    </p>
+
+
+		<div align="left" class="code">
+		<table border="0" cellpadding="3" cellspacing="0">
+			<tr>
+				<td nowrap="nowrap" valign="top" align="left"><code> <font
+					color="#ffffff">&nbsp;&nbsp;</font><font color="#7f0055"><b>public&nbsp;</b></font><font
+					color="#7f0055"><b>void&nbsp;</b></font><font color="#000000">preinit</font><font
+					color="#000000">()&nbsp;{</font><br />
+                <font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font
+                    color="#3f7f5f">//&nbsp;..</font><br />
+				<font color="#ffffff"></font><br />
+				
+				<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font
+					color="#3f7f5f">//&nbsp;Set&nbsp;up&nbsp;the&nbsp;reload&nbsp;listener</font><br />
+				<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font
+					color="#000000">ReloaderFactory.getInstance</font><font
+					color="#000000">()</font><font color="#000000">.addClassReloadListener</font><font
+					color="#000000">(</font><br />
+				<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font
+					color="#7f0055"><b>new&nbsp;</b></font><font color="#000000">ClassEventListener</font><font
+					color="#000000">()&nbsp;{</font><br />
+				<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font
+					color="#7f0055"><b>public&nbsp;</b></font><font color="#7f0055"><b>void&nbsp;</b></font><font
+					color="#000000">onClassEvent</font><font color="#000000">(</font><font
+					color="#7f0055"><b>int&nbsp;</b></font><font color="#000000">eventType,&nbsp;Class&nbsp;klass</font><font
+					color="#000000">)&nbsp;{</font><br />
+				<font color="#ffffff"></font><br />
+				<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font
+					color="#7f0055"><b>try&nbsp;</b></font><font color="#000000">{</font><br />
+				<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font
+					color="#000000">Class&nbsp;abstractCanvasClass&nbsp;=&nbsp;Class.forName</font><font
+					color="#000000">(</font><font color="#2a00ff">&#34;org.zeroturnaround.jrebel.flagDemo.AbstractCanvas&#34;</font><font
+					color="#000000">)</font><font color="#000000">;</font><br />
+				<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><br />
+				<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font
+					color="#3f7f5f">//&nbsp;Check&nbsp;if&nbsp;it&nbsp;is&nbsp;child&nbsp;of&nbsp;AbstractCanvas</font><br />
+				<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font
+					color="#7f0055"><b>if&nbsp;</b></font><font color="#000000">(</font><font
+					color="#000000">abstractCanvasClass.isAssignableFrom</font><font
+					color="#000000">(</font><font color="#000000">klass</font><font
+					color="#000000">))&nbsp;{</font><br />
+				<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font
+					color="#000000">DemoAppConfigReloader.repaint</font><font
+					color="#000000">()</font><font color="#000000">;</font><br />
+				<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font
+					color="#000000">LoggerFactory.getInstance</font><font color="#000000">()</font><font
+					color="#000000">.echo</font><font color="#000000">(</font><font
+					color="#2a00ff">&#34;Repainted&nbsp;the&nbsp;canvas&#34;</font><font
+					color="#000000">)</font><font color="#000000">;</font><br />
+				<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font
+					color="#000000">}</font><br />
+				<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><br />
+				<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font
+					color="#000000">}&nbsp;</font><font color="#7f0055"><b>catch&nbsp;</b></font><font
+					color="#000000">(</font><font color="#000000">Exception&nbsp;e</font><font
+					color="#000000">)&nbsp;{</font><br />
+				<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font
+					color="#000000">LoggerFactory.getInstance</font><font color="#000000">()</font><font
+					color="#000000">.error</font><font color="#000000">(</font><font
+					color="#000000">e</font><font color="#000000">)</font><font
+					color="#000000">;</font><br />
+				<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font
+					color="#000000">}</font><br />
+				<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font
+					color="#000000">}</font><br />
+				<font color="#ffffff"></font><br />
+                <font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font
+                    color="#3f7f5f">//&nbsp;..</font><br />
+				<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font
+					color="#000000">}</font><br />
+				<font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font
+					color="#000000">)</font><font color="#000000">;</font><br />
+				<font color="#ffffff"></font><br />
+				<font color="#ffffff">&nbsp;&nbsp;</font><font color="#000000">}</font></code>
+		
+				</td>
+			</tr>
+		</table>
+		</div>
+		
+    <p>
+        What this chunk of code does is actually simple: if we see that a class has been reloaded, and it happens to be a subclass of
+        <code>AbstractCanvas</code>, we force the repainting of the canvas (without waiting for Swing to do it at some later time).
+        The repainting itself is implemented in method <code>DemoAppConfigReloader.repaint()</code>.
+    </p>
+
+    <p>
+        Now our AbsractCanvas JRebel integration is starting to look much better. Our plugin added the following functionality:  
+     
+        <ul>
+            <li>If any subclass of <code>AbstractCanvas</code> gets reloaded, we'll repaint the canvas.</li>
+            <li>At any time we repaint, we'll also call the <code>init()</code> method to update the application state.</li>
+        </ul>
+        
+        
+        We demonstrated some cornerstones of the JRebel SDK API:
+        
+        <ul>
+            <li>class bytecode processors (CBPs)</li>
+            <li>class reload listeners</li>
+        </ul>
+        
+        Some basic things can already be done with this knowledge, and you are of course encouraged to browse the rest of the API to
+        make yourself familiar with the rest of its possibilites &ndash; to create better JRebel integration plugins!   
+    </p>
+
+    
+     
+
+
+<h2>3. Enabling a plugin</h2>
+
+    <p>
+        While playing around with the demo application, we used the ready-made Ant targets to enable the plugin. Anyhow, it would be nice to know
+        how to enable your plugins yourself.
+    </p>
+        
+       
+    <p> 
+        All that the Ant target <code>run-with-jrebel-and-plugin</code> actually does is it passes some additional JVM arguments to <code>java</code> through
+        the command line. The full command to do the same thing directly from command line would be:<br /><br />
+        
+        <div class="code">
+            java -classpath ./bin -noverify -javaagent:/path/to/jrebel.jar -Drebel.plugins=./lib/jr-plugin-template.jar org.zeroturnaround.jrebel.flagDemo.SDKDemoApp
+        </div>
+    </p>
+    
+    
+    <p>
+        Everything else is as always, except for the last parameter <code>-Drebel.plugins</code>, which is a comma-separated
+        list of paths to plugin jar-files you want JRebel to load. 
+    </p>
+    
+    <br /><br /><br />
+    
+</body>
+
+</html>

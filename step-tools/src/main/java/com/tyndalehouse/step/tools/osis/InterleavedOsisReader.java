@@ -36,12 +36,14 @@ public class InterleavedOsisReader {
      * @throws Exception any kind of exception
      */
     public static void main(final String[] args) throws Exception {
-        final String[] versions = new String[] { "ESV", "OSMHB" };
-        final String ref = "Gen.1.1";
+        final String[] versions = new String[] { "ESV", "KJV" };
+        final String ref = "Mat.1";
         final boolean unicodeBreakDown = false;
-        final boolean compare = false;
+        final boolean compare = true;
         final InterlinearMode interlinearMode = InterlinearMode.INTERLEAVED;
-
+        boolean format = false;
+        
+        final Format prettyFormat = format ? Format.getPrettyFormat() : Format.getRawFormat();
         final Book currentBook = Books.installed().getBook(versions[0]);
         final Book[] books = new Book[versions.length];
         for (int ii = 0; ii < versions.length; ii++) {
@@ -51,7 +53,7 @@ public class InterleavedOsisReader {
         final BookData bookData = new BookData(books, currentBook.getKey(ref), compare);
         final Element osisFragment = bookData.getOsisFragment();
 
-        final XMLOutputter xmlOutputter = new XMLOutputter(Format.getPrettyFormat());
+        final XMLOutputter xmlOutputter = new XMLOutputter(prettyFormat);
         final String inputString = xmlOutputter.outputString(osisFragment);
         LOGGER.debug(inputString);
 

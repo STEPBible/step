@@ -796,7 +796,7 @@ step.util = {
 
             require(["qtip"], function () {
                 var qtip = element.qtip({
-                    show: { event: 'mouseenter', solo: true },
+                    show: { event: 'mouseenter' },
                     hide: { event: 'unfocus mouseleave', fixed: true, delay: 200 },
                     position: { my: "bottom center", at: "top center", of: element, viewport: $(window), effect: false },
                     style: { classes: "versePopup" },

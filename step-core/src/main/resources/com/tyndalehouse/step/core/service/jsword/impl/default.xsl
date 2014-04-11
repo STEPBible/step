@@ -37,7 +37,8 @@
   xmlns:interleaving="xalan://com.tyndalehouse.step.core.xsl.impl.InterleavingProviderImpl"
   xmlns:conversion="xalan://com.tyndalehouse.step.core.utils.StringConversionUtils"
   xmlns:url="http://whatever/java/java.net.URLEncoder"
-  extension-element-prefixes="jsword interleaving conversion url">
+  xmlns:stringUtils="xalan://com.tyndalehouse.step.core.utils.StringUtils"
+  extension-element-prefixes="jsword interleaving conversion url stringUtils">
 
   <!--  Version 3.0 is necessary to get br to work correctly. -->
   <xsl:output method="html" version="3.0" omit-xml-declaration="yes" indent="no"/>
@@ -1433,38 +1434,41 @@
   </xsl:template>
 
   <xsl:template match="row">
-    <xsl:choose>
-    	<xsl:when test="$Interleave = 'true'">
-    		<xsl:choose>
-    			<xsl:when test="cell[@role = 'label']"></xsl:when>
-    			<xsl:otherwise>
-    				<div class="verseGrouping">
-    					<xsl:variable name="verse" select="cell/verse" />
-    				    <xsl:call-template name="interleavedVerseNum">
-    				    	<xsl:with-param name="verse" select="$verse" />
-    				    </xsl:call-template>	
-    					<xsl:apply-templates/>
-    				</div>
-    			</xsl:otherwise>
-    		</xsl:choose>
-    	</xsl:when>
-    	<xsl:otherwise>
-    		<xsl:choose>
-    			<xsl:when test="cell[@role = 'label']">
-    					<tr><td></td><xsl:call-template name="outputComparingTableHeader"></xsl:call-template></tr>
-    			</xsl:when>
-    			<xsl:otherwise>
-    				<tr class="row">
-    					<xsl:variable name="verse" select="cell/verse" />
-    				    <xsl:call-template name="columnVerseNumber">
-    				    	<xsl:with-param name="verse" select="$verse" />
-    				    </xsl:call-template>	
-    					<xsl:apply-templates/>
-    				</tr>
-    			</xsl:otherwise>
-    		</xsl:choose>
-    	</xsl:otherwise>
-    </xsl:choose>
+    <xsl:variable name="hasWorthyText"><xsl:value-of select=".//verse or .//title[@type='canonical']" /></xsl:variable>
+    <xsl:if test="$hasWorthyText = 'true' or cell[@role='label']">
+        <xsl:choose>
+            <xsl:when test="$Interleave = 'true'">
+                <xsl:choose>
+                    <xsl:when test="cell[@role = 'label']"></xsl:when>
+                    <xsl:otherwise>
+                        <div class="verseGrouping">
+                            <xsl:variable name="verse" select="cell/verse" />
+                            <xsl:call-template name="interleavedVerseNum">
+                                <xsl:with-param name="verse" select="$verse" />
+                            </xsl:call-template>	
+                            <xsl:apply-templates/>
+                        </div>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:choose>
+                    <xsl:when test="cell[@role = 'label']">
+                            <tr><th class="headingVerseNumber"></th><xsl:call-template name="outputComparingTableHeader"></xsl:call-template></tr>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <tr class="row">
+                            <xsl:variable name="verse" select="cell/verse" />
+                            <xsl:call-template name="columnVerseNumber">
+                                <xsl:with-param name="verse" select="$verse" />
+                            </xsl:call-template>	
+                            <xsl:apply-templates/>
+                        </tr>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:if>
   </xsl:template>
   
   <xsl:template name="outputComparingTableHeader">
@@ -1482,7 +1486,8 @@
 		<xsl:element name="span">
 			<xsl:attribute name="class">singleVerse <xsl:value-of select="$classes" /><xsl:value-of select="$cell-direction" /></xsl:attribute>
 			<xsl:call-template name="interleavedVersion" />
-			<xsl:apply-templates />
+			<xsl:apply-templates />&#160;
+            <!-- for the space with #160, to ensure that float rights have something to float right against -->
 		</xsl:element>
   </xsl:template>
   

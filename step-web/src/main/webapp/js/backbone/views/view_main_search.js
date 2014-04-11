@@ -49,6 +49,8 @@ var MainSearchView = Backbone.View.extend({
                         id += entry.value;
                         break;
                     case MEANINGS:
+                        id += entry.item.gloss;
+                        break;
                     case TOPIC_BY_REF:
                     case RELATED_VERSES:
                     default:

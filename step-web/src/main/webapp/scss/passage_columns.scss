@@ -43,11 +43,10 @@
     }
     
     .passageContainer {
-      border: 1px solid lightgrey;
+      border: $activeBorderWidth solid lightgrey;
       padding: 5px;
       border-radius: 3;
       height: 100%;
-      border-width: $activeBorderWidth;
       -webkit-box-shadow: 0 3px 12px rgba(0, 0, 0, 0.175);
       box-shadow: 0 3px 12px rgba(0, 0, 0, 0.175);
       

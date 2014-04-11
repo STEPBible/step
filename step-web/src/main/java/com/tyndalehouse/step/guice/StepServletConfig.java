@@ -52,6 +52,7 @@ import com.yammer.metrics.reporting.AdminServlet;
 import org.crosswire.common.util.Reporter;
 import org.crosswire.common.util.ReporterEvent;
 import org.crosswire.common.util.ReporterListener;
+import org.crosswire.common.xml.TransformingSAXEventProvider;
 import org.crosswire.jsword.book.sword.state.OpenFileStateManager;
 import org.crosswire.jsword.index.IndexManagerFactory;
 import org.crosswire.jsword.internationalisation.LocaleProvider;
@@ -173,6 +174,10 @@ public class StepServletConfig extends GuiceServletContextListener {
                 }
             }
         });
+        
+        if(Boolean.TRUE.equals(Boolean.getBoolean("step.development"))) {
+            TransformingSAXEventProvider.setDevelopmentMode(true);
+        }
     }
 
     /**

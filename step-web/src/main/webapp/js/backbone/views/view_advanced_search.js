@@ -129,7 +129,7 @@ var AdvancedSearchView = Backbone.View.extend({
             self.closeModal(ev);
         });
 
-        this.$el.find(".close").on('click', this.closeModal);
+        this.$el.find(".closeModal").on('click', this.closeModal);
         this.subjectRelated = this.$el.find("#subjectRelated");
         this.subjectRefs = this.searchForms.find("#subjectByRef .dropdown-menu");
         this.subjectRefs.css("left", this.subjectRelated.position().left);

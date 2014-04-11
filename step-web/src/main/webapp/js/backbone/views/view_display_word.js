@@ -53,17 +53,19 @@ var WordDisplayView = TextDisplayView.extend({
      */
     _createToolbar: function (element) {
         //render bar
-        var panel = step.util.ui.addCollapsiblePanel(__s.lexicon_related_words, "lexicalGrouping", "#relatedWords");
+        var passageId = this.model.get("passageId");
+        var panel = step.util.ui.addCollapsiblePanel(__s.lexicon_related_words, "lexicalGrouping", "#relatedWords-" + passageId);
         panel.append(this._renderToolbar())
         element.append(panel);
         //allow for chaining
         return element;
     },
     _renderToolbar: function () {
+        var passageId = this.model.get("passageId");
         var definitions = this.model.get("definitions");
         var values = this.options.model.get("strongHighlights") || [];
         var toolbar = $("<ul>");
-        var toolbarContainer = $("<div id='relatedWords' class='panel-body panel-collapse collapse'></div>");
+        var toolbarContainer = $("<div class='panel-body panel-collapse collapse'></div>").attr("id", "relatedWords-" + passageId);
 
         var self = this;
         $.each(definitions, function (i, item) {

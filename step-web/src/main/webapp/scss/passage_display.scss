@@ -8,7 +8,16 @@
   table {
     width: 85%;
     display: inline;
+    tr.row {
+      &:before, &:after {
+        display: none;
+      }
+    }
+    th {
+      border: none !important;
+    }
   }
+
   td {
     font-size: $defaultFontSize;
     &.x-end-row {
@@ -89,7 +98,7 @@
   }
   .small-caps {
     font-size: 110%;
-    &> em.foreign, &> .x-inscription {
+    & > em.foreign, & > .x-inscription {
       text-align: center;
       display: block;
       margin-bottom: -20px;
@@ -104,7 +113,7 @@
   .x-doxology {
     display: block;
     text-align: center;
-  } 
+  }
 }
 
 .verseNumber {
@@ -118,7 +127,7 @@
   text-align: center;
   display: inline-block;
   margin-right: 2px;
- 
+
 }
 
 h3.psalmHeading {
@@ -143,5 +152,22 @@ h2.heading {
   }
   &.x-acrostic {
     margin-left: 10px;
+  }
+}
+
+.verseGrouping {
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 5px;
+  padding-bottom: 5px;
+
+  * .smallResultKey {
+    margin-right: 10px;
+    font-size: 12px;
+    font-family: $defaultFontFamily;
+  }
+
+  * p {
+    margin-left: 5px;
+    display: inline;
   }
 }

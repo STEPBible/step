@@ -5,10 +5,15 @@
   font-size: 140%;
 }
 
+td.unicodeFont {
+  font-size: 100%;
+}
+
 .unicodeFontMini {
   font-family: Cardo;
   font-size: 110%;
 }
+
 
 .copticFont {
   font-family: Conv_newathu405;
@@ -45,6 +50,10 @@
   font-size: 180%;
 }
 
+td.hbFont {
+  font-size: 120%;
+}
+
 .hbFontSmall {
   @extend .hbFont;
   font-weight: normal;
@@ -53,4 +62,10 @@
 .hbFontMini {
   @extend .hbFontSmall;
   font-size: 130%;
+}
+
+td {
+  &.copticFont, &.syriacFont, &.burmeseFont, &.arabicFont, &.chineseFont, &.khmerFont {
+    font-size: 100%;
+  }
 }

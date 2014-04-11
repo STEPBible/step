@@ -91,23 +91,14 @@ span.interlinear span span span {
 	font-size: 12px;
 }
 
-.verseGrouping {
-	border-bottom: thin dotted gray;
-	margin-bottom: 5px;
-	padding-bottom: 5px;
-}
 
-.verseGrouping * .smallResultKey {
-	margin-right: 10px;	
-}
-
-.verseGrouping * p {
-	margin-left: 5px;
-	display: inline;
-}
 
 td.primary {
-	border-left: thin dotted;
+    border-left: 1px solid #ddd;
+}
+
+.comparingTable {
+    table-layout: fixed;    
 }
 
 .comparingTable tr {
@@ -122,6 +113,7 @@ td.primary {
 .headingVerseNumber {
 	color: #33339F;
 	vertical-align: top;
+    width: 30px;
 }
 
 .comparingVersionName {
@@ -225,9 +217,10 @@ A {
 
 span.w {
 	margin-top: 20px;
-	border-left: dotted darkgrey 1px;
+	border-left: 1px solid #ddd;
 	text-align: center;
-	padding-left: 2px !important;
+	padding-left: 3px !important;
+	padding-right: 3px !important;
 }
 
 span.verseStart {

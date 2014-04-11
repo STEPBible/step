@@ -1,6 +1,5 @@
 package com.tyndalehouse.step.core.service.impl;
 
-import com.tyndalehouse.step.core.data.EntityManager;
 import com.tyndalehouse.step.core.models.AvailableFeatures;
 import com.tyndalehouse.step.core.models.ClientSession;
 import com.tyndalehouse.step.core.models.InterlinearMode;
@@ -8,17 +7,9 @@ import com.tyndalehouse.step.core.models.LookupOption;
 import com.tyndalehouse.step.core.models.TrimmedLookupOption;
 import com.tyndalehouse.step.core.service.BibleInformationService;
 import com.tyndalehouse.step.core.service.PassageOptionsValidationService;
-import com.tyndalehouse.step.core.service.helpers.VersionResolver;
 import com.tyndalehouse.step.core.service.jsword.JSwordMetadataService;
-import com.tyndalehouse.step.core.service.jsword.JSwordModuleService;
-import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
-import com.tyndalehouse.step.core.service.jsword.JSwordSearchService;
-import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
-import com.tyndalehouse.step.core.service.search.SubjectSearchService;
-import com.tyndalehouse.step.core.utils.StringUtils;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.util.ArrayList;
@@ -239,7 +230,7 @@ public class PassageOptionsValidationServiceImpl implements PassageOptionsValida
         return result;
     }
 
-    
+
     @Override
     public AvailableFeatures getAvailableFeaturesForVersion(final String version, final List<String> extraVersions, final String displayMode) {
         final List<LookupOption> allLookupOptions = Arrays.asList(LookupOption.values());
@@ -256,7 +247,7 @@ public class PassageOptionsValidationServiceImpl implements PassageOptionsValida
         InterlinearMode userDesiredMode = isBlank(interlinearMode) ? NONE : InterlinearMode.valueOf(interlinearMode);
         return this.jswordMetadata.getBestInterlinearMode(mainBook, extraVersions, userDesiredMode);
     }
-    
+
 
     @Override
     public String optionsToString(final Collection<LookupOption> options) {

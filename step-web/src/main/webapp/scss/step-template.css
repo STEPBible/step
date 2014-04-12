@@ -177,6 +177,11 @@ ul .glyphicon-ok {
 .select2-container {
   border: 0px !important; }
 
+ul.select2-parent-no-results {
+  -moz-column-count: 1;
+  -webkit-column-count: 1;
+  column-count: 1; }
+
 @media screen and (max-width: 991px) {
   .kolumny {
     max-height: 500;
@@ -421,8 +426,9 @@ ul .glyphicon-ok {
 .passageContentHolder {
   text-align: justify; }
   .passageContentHolder table {
-    width: 85%;
-    display: inline; }
+    width: 95%;
+    display: inline;
+    margin-bottom: 0px; }
     .passageContentHolder table tr.row:before, .passageContentHolder table tr.row:after {
       display: none; }
     .passageContentHolder table th {
@@ -524,6 +530,9 @@ h2.heading.x-speaker {
 h2.heading.x-acrostic {
   margin-left: 10px; }
 
+.headingVerseNumber + .cell.primary {
+  border-left: none; }
+
 .verseGrouping {
   border-bottom: 1px solid #ddd;
   margin-bottom: 5px;
@@ -557,6 +566,8 @@ h2.heading.x-acrostic {
     content: ' / '; }
 .searchResultRow table tr.row:before, .searchResultRow table tr.row:after {
   display: none; }
+.searchResultRow table tr.row td, .searchResultRow table tr.row th {
+  border-top: none; }
 
 h4.lexicalGrouping {
   font-size: 12px; }
@@ -627,7 +638,7 @@ h4.lexicalGrouping {
   padding: 4px; }
   #columnHolder hr {
     border: 0;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid #ddd;
     padding-bottom: 30px;
     margin: 0px 20px 5px; }
   #columnHolder .column {
@@ -657,11 +668,10 @@ h4.lexicalGrouping {
         position: absolute;
         top: 2px;
         left: 50%;
-        border-color: #d74f4b;
-        border-top: 4px solid #d74f4b;
-        border-right: 4px solid transparent;
+        border: 4px solid #d74f4b;
+        border-right-color: transparent;
         border-bottom: 0 dotted;
-        border-left: 4px solid transparent; }
+        border-left-color: transparent; }
       #columnHolder .column .passageContainer .glyphicon-link {
         margin-left: -10px;
         top: 50%;

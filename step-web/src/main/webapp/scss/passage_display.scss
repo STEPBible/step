@@ -6,8 +6,9 @@
 
 .passageContentHolder {
   table {
-    width: 85%;
+    width: 95%;
     display: inline;
+    margin-bottom: 0px;
     tr.row {
       &:before, &:after {
         display: none;
@@ -153,6 +154,10 @@ h2.heading {
   &.x-acrostic {
     margin-left: 10px;
   }
+}
+
+.headingVerseNumber + .cell.primary {
+  border-left: none;
 }
 
 .verseGrouping {

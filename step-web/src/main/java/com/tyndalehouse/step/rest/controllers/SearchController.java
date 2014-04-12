@@ -341,14 +341,6 @@ public class SearchController {
     }
 
     /**
-     * @param term the term entered by the user
-     * @return the list of terms matching the entered text
-     */
-    public List<SubjectSuggestion> autocompleteSubject(String term) {
-        return this.subjectSearchService.autocomplete(term);
-    }
-
-    /**
      * opposite of @link {@link SearchController#restoreSearchQuery}
      *
      * @param searchQuery a query

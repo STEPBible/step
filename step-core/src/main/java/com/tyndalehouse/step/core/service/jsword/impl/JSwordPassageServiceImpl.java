@@ -525,7 +525,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
                 versions.append(',');
             }
         }
-        return null;
+        return versions.toString();
     }
 
     /**

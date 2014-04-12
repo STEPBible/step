@@ -50,6 +50,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.rest.framework.FrontController;
 import com.tyndalehouse.step.rest.framework.JsonResourceBundle;
+import org.crosswire.common.xml.TransformingSAXEventProvider;
 
 /**
  * Serves the images by downloading them from a remote source if they do not already exist.
@@ -101,7 +102,7 @@ public class InternationalJsonController extends HttpServlet {
      * @return the string
      */
     private String readBundle(final Locale locale, final String... bundleNames) {
-        List<ResourceBundle> bundles = new ArrayList<ResourceBundle>(2);
+        List<ResourceBundle> bundles = new ArrayList<ResourceBundle>(bundleNames.length);
         for (String b : bundleNames) {
             bundles.add(ResourceBundle.getBundle(b, locale));
         }
@@ -116,5 +117,15 @@ public class InternationalJsonController extends HttpServlet {
         }
 
         return "var __s = " + jsonResponse;
+    }
+
+    /**
+     * Used for debugging, to reset the international JSON
+     */
+    public void resetCache() {
+        //double check that we are actually in dev mode as well
+        if(Boolean.TRUE.equals(Boolean.getBoolean("step.development"))) {
+            BUNDLES.clear();
+        }
     }
 }

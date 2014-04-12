@@ -5,9 +5,11 @@
   -webkit-column-count: $numColumns; // Safari and Chrome
   column-count: $numColumns;
 
-  column-gap: 2px;
-  -moz-column-gap: 2px;
-  -webkit-column-gap: 2px;
+  @if ($numColumns > 1) {
+    column-gap: 2px;
+    -moz-column-gap: 2px;
+    -webkit-column-gap: 2px;
+  }
 }
 
 @mixin overflow() {

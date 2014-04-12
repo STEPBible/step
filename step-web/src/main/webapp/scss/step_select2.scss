@@ -37,4 +37,6 @@
   border: 0px !important;
 }
 
-
+ul.select2-parent-no-results {
+  @include multi-column(1);
+}

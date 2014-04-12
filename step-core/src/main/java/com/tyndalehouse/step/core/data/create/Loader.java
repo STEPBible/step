@@ -70,7 +70,6 @@ import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
  * @author chrisburrell
  */
 public class Loader {
-    private static final int INSTALL_WAITING = 1000;
     private static final Logger LOGGER = LoggerFactory.getLogger(Loader.class);
     private final JSwordPassageService jsword;
     private final Properties coreProperties;

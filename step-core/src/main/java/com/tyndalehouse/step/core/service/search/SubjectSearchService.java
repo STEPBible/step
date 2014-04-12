@@ -46,14 +46,6 @@ import java.util.List;
  * 
  */
 public interface SubjectSearchService {
-
-    /**
-     * Allows for autocompletion of the dropdowns in subject searches
-     * @param userEnteredTerm the user entered terms
-     * @return the list of terms that are in the dictionary at the moment.
-     */
-    List<SubjectSuggestion> autocomplete(String userEnteredTerm);
-
     /**
      * Runs a subject search
      * 

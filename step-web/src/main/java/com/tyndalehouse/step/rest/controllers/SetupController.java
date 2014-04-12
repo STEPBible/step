@@ -67,6 +67,7 @@ public class SetupController {
     private final BibleInformationService bibleInformation;
     private final Loader loader;
     private final Provider<ClientSession> sessionProvider;
+    private final InternationalJsonController internationalJsonController;
 
     /**
      * creates the controller
@@ -76,8 +77,11 @@ public class SetupController {
      * @param sessionProvider the provider of the user session
      */
     @Inject
-    public SetupController(final BibleInformationService bibleInformationService, final Loader loader,
-            final Provider<ClientSession> sessionProvider) {
+    public SetupController(final BibleInformationService bibleInformationService, 
+                            final Loader loader,
+                            final InternationalJsonController internationalJsonController,
+                            final Provider<ClientSession> sessionProvider) {
+        this.internationalJsonController = internationalJsonController;
         notNull(bibleInformationService, "No bible information service was provided",
                 CONTROLLER_INITIALISATION_ERROR);
         notNull(loader, "No loader module was provided", CONTROLLER_INITIALISATION_ERROR);
@@ -225,4 +229,14 @@ public class SetupController {
         validateSession(this.sessionProvider);
         this.bibleInformation.indexAll();
     }
+
+    /**
+     * Reloads the international JSON files
+     *
+     */
+    public void invalidateCache() {
+        validateSession(this.sessionProvider);
+        internationalJsonController.resetCache();
+    }
+
 }

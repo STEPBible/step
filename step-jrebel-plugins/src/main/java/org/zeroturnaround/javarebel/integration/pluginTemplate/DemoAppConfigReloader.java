@@ -45,6 +45,7 @@ public class DemoAppConfigReloader {
  
 
   private static Class getAbstractCanvasClass() throws Exception {
+    
     return Class.forName("org.zeroturnaround.jrebel.flagDemo.AbstractCanvas");    
   }
   

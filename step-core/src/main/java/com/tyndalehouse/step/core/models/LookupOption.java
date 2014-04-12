@@ -141,7 +141,9 @@ public enum LookupOption {
     /**
      * Whether to hide the XGen OSIS elements
      */
-    HIDE_XGEN(BibleInformationService.UNAVAILABLE_TO_UI, "HideXGen", XslConversionType.DEFAULT);
+    HIDE_XGEN(BibleInformationService.UNAVAILABLE_TO_UI, "HideXGen", XslConversionType.DEFAULT),
+    
+    HIDE_COMPARE_HEADERS(BibleInformationService.UNAVAILABLE_TO_UI, "HideCompareHeaders", XslConversionType.DEFAULT);
 
     
     private static final Map<Character, LookupOption> uiToOptions = new HashMap<Character, LookupOption>(16);

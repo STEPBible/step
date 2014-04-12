@@ -149,7 +149,7 @@ var SearchDisplayView = Backbone.View.extend({
             
             //we don't want to update the page URL here
             this.model.save({pageNumber: newPageNumber}, { silent: true });
-            step.router.doMasterSearch(this.model.get("args"), null, null, newPageNumber, this.model.get("strongHighlights"), this.model.get("context"), true);
+            step.router.doMasterSearch(this.model.get("args"), null, this.model.get("interlinearMode"), newPageNumber, this.model.get("strongHighlights"), this.model.get("context"), true);
         }
     },
 

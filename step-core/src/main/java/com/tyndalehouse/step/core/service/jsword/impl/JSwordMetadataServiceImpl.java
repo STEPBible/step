@@ -69,6 +69,7 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
         options.add(LookupOption.HIDE_XGEN);
         options.add(LookupOption.CHAPTER_BOOK_VERSE_NUMBER);
         options.add(LookupOption.HEADINGS_ONLY);
+        options.add(LookupOption.HIDE_COMPARE_HEADERS);
     }
 
     /**

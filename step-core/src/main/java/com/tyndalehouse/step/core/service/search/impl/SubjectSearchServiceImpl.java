@@ -40,24 +40,25 @@ import com.tyndalehouse.step.core.models.search.ExpandableSubjectHeadingEntry;
 import com.tyndalehouse.step.core.models.search.SearchEntry;
 import com.tyndalehouse.step.core.models.search.SearchResult;
 import com.tyndalehouse.step.core.models.search.SubjectHeadingSearchEntry;
-import com.tyndalehouse.step.core.models.search.SubjectSuggestion;
-import com.tyndalehouse.step.core.service.SearchService;
 import com.tyndalehouse.step.core.service.impl.IndividualSearch;
 import com.tyndalehouse.step.core.service.impl.SearchQuery;
-import com.tyndalehouse.step.core.service.impl.SearchType;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import com.tyndalehouse.step.core.service.jsword.JSwordSearchService;
 import com.tyndalehouse.step.core.service.search.SubjectSearchService;
-import com.tyndalehouse.step.core.utils.LuceneUtils;
 import com.tyndalehouse.step.core.utils.StringUtils;
 import org.apache.lucene.queryParser.QueryParser;
-import org.crosswire.jsword.index.lucene.LuceneIndex;
+import org.crosswire.jsword.passage.Key;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.tartarus.snowball.ext.PorterStemmer;
 
 import javax.inject.Inject;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import static com.tyndalehouse.step.core.models.LookupOption.HEADINGS_ONLY;
 import static com.tyndalehouse.step.core.models.LookupOption.VERSE_NUMBERS;
@@ -70,6 +71,7 @@ import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
  */
 @Singleton
 public class SubjectSearchServiceImpl implements SubjectSearchService {
+    private static final String[] REF_VERSIONS = new String[]{JSwordPassageService.REFERENCE_BOOK, JSwordPassageService.SECONDARY_REFERENCE_BOOK};
     private static final Logger LOGGER = LoggerFactory.getLogger(SubjectSearchServiceImpl.class);
     private final EntityIndexReader naves;
     private final JSwordSearchService jswordSearch;
@@ -90,26 +92,6 @@ public class SubjectSearchServiceImpl implements SubjectSearchService {
         this.naves = entityManager.getReader("nave");
     }
 
-    @Override
-    public List<SubjectSuggestion> autocomplete(String userEnteredTerm) {
-        if (StringUtils.isBlank(userEnteredTerm)) {
-            return new ArrayList<SubjectSuggestion>(0);
-        }
-
-        final String searchTerm = LuceneUtils.safeEscape(userEnteredTerm);
-        final Map<String, SubjectSuggestion> suggestions = new TreeMap<String, SubjectSuggestion>();
-        final PorterStemmer stemmer = new PorterStemmer();
-
-        //add the full term
-//        addSubjectTerms(suggestions, stemmer, LuceneUtils.getAllTermsPrefixedWith(false, this.jswordSearch.getIndexSearcher(JSwordPassageService.REFERENCE_BOOK),
-//                LuceneIndex.FIELD_HEADING, searchTerm, SearchService.MAX_SUGGESTIONS), SearchType.SUBJECT_SIMPLE);
-//        addSubjectTerms(suggestions, stemmer, this.naves.findSetOfTerms(false, searchTerm, "root"), SearchType.SUBJECT_EXTENDED);
-//        addSubjectTerms(suggestions, stemmer, this.naves.findSetOfTerms(false, searchTerm, "fullTerm"), SearchType.SUBJECT_FULL);
-
-        return new ArrayList<SubjectSuggestion>(suggestions.values());
-    }
-
-    
 
     @Override
     public SearchResult searchByMultipleReferences(final String version, final String references) {
@@ -163,16 +145,6 @@ public class SubjectSearchServiceImpl implements SubjectSearchService {
     }
 
     /**
-     * Returns true if we have search results.
-     *
-     * @param searchResult the search results themselves
-     * @return true if more than 1 result is found
-     */
-    private boolean haveSearchResults(final SearchResult searchResult) {
-        return searchResult.getTotal() != 0;
-    }
-
-    /**
      * Related subject returns subjects, not verses...
      *
      * @param sq the search query.
@@ -189,10 +161,21 @@ public class SubjectSearchServiceImpl implements SubjectSearchService {
      * @return the results
      */
     private SearchResult searchSimple(final SearchQuery sq) {
-//        sq.setAllKeys(true);
+        //versions are - the ones selected + the ESV & NIV
+        Set<String> versions = new HashSet<String>(Arrays.asList(sq.getCurrentSearch().getVersions()));
+        for (String s : REF_VERSIONS) {
+            versions.add(s);
+        }
 
-        final SearchResult headingsSearch = this.jswordSearch.search(sq,
-                sq.getCurrentSearch().getVersions()[0], HEADINGS_ONLY, VERSE_NUMBERS);
+        trimToVersionsWithHeadingsOnly(versions);
+
+        //search for the keys first...
+        final String[] searchableVersions = versions.toArray(new String[versions.size()]);
+        sq.getCurrentSearch().setVersions(searchableVersions);
+        final Key allTopics = this.jswordSearch.searchKeys(sq);
+
+        final SearchResult headingsSearch = this.jswordSearch.getResultsFromTrimmedKeys(sq,
+                searchableVersions, allTopics.getCardinality(), allTopics, HEADINGS_ONLY, VERSE_NUMBERS);
 
         // build the results and then return
         final SubjectHeadingSearchEntry headings = new SubjectHeadingSearchEntry();
@@ -204,6 +187,15 @@ public class SubjectSearchServiceImpl implements SubjectSearchService {
         sr.setTotal(headingsSearch.getTotal());
         sr.setTimeTookToRetrieveScripture(headingsSearch.getTimeTookToRetrieveScripture());
         return sr;
+    }
+
+    /**
+     * Removes any version that does not support headings
+     *
+     * @param versions the list of versions
+     */
+    private void trimToVersionsWithHeadingsOnly(final Set<String> versions) {
+
     }
 
     /**

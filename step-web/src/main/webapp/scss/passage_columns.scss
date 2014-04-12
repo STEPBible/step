@@ -18,7 +18,7 @@
   // divider between passage options and passage
   hr {
     border: 0; 
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid #ddd;
     padding-bottom: $topSectionPadding;
     margin: 0px 20px $topSectionMarginBottom;
   }
@@ -58,11 +58,10 @@
         position: absolute;
         top: $activeBorderWidth;
         left: 50%;
-        border-color: $activeColor;
-        border-top: 4px solid $activeColor;
-        border-right: 4px solid transparent;
+        border: 4px solid $activeColor;
+        border-right-color: transparent;
         border-bottom: 0 dotted;
-        border-left: 4px solid transparent;
+        border-left-color: transparent;
       }
       .glyphicon-link {
           margin-left: -10px;

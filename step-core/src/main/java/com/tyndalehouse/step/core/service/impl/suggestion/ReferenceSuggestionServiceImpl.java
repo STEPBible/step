@@ -89,14 +89,7 @@ public class ReferenceSuggestionServiceImpl extends AbstractIgnoreMergedListSugg
         final String input = context.getInput().toLowerCase();
         final Iterator<BibleBook> bookIterator = masterV11n.getBookIterator();
 
-        while (bookIterator.hasNext()) {
-            final BibleBook book = bookIterator.next();
-            if (masterV11n.getLongName(book).toLowerCase().startsWith(input)
-                    || masterV11n.getPreferredName(book).toLowerCase().startsWith(input)
-                    || masterV11n.getShortName(book).toLowerCase().startsWith(input)) {
-                addBookName(books, book, masterV11n);
-            }
-        }
+        addMatchingBooks(books, masterV11n, input, bookIterator);
 
         //de-duplicate by adding to a set
         final Set<BookName> bookNames = new LinkedHashSet<BookName>();
@@ -121,6 +114,17 @@ public class ReferenceSuggestionServiceImpl extends AbstractIgnoreMergedListSugg
             bookNames.addAll(extras);
         }
         return bookNames.toArray(new BookName[bookNames.size()]);
+    }
+
+    private void addMatchingBooks(final List<BookName> books, final Versification masterV11n, final String input, final Iterator<BibleBook> bookIterator) {
+        while (bookIterator.hasNext()) {
+            final BibleBook book = bookIterator.next();
+            if (masterV11n.getLongName(book).toLowerCase().startsWith(input)
+                    || masterV11n.getPreferredName(book).toLowerCase().startsWith(input)
+                    || masterV11n.getShortName(book).toLowerCase().startsWith(input)) {
+                addBookName(books, book, masterV11n);
+            }
+        }
     }
 
     /**

@@ -105,6 +105,7 @@
   <xsl:param name="ColorCoding" select="'false'" />
   <xsl:param name="RemovePointing" select="'true'" />
   <xsl:param name="RemoveVowels" select="'true'" />
+  <xsl:param name="HideCompareHeaders" select="'false'" />
 
   <xsl:param name="HideXGen" select="'false'" />
 
@@ -407,7 +408,7 @@
 		<th class='headingVerseNumber'>
 			<xsl:call-template name="intertwinedVerseNum">
 				<xsl:with-param name="verse" select="$verse" />
-				<xsl:with-param name="includeBook" select="false()" />
+				<xsl:with-param name="includeBook" select="true()" />
 			</xsl:call-template>
 		</th>
 	</xsl:template>
@@ -452,6 +453,7 @@
   </xsl:template>
   
   <xsl:template name="versenum">
+      <xsl:if test="not(./ancestor::row)">
   	<!-- we output version names not verse numbers for interleaved translations -->
   		    <!-- Are verse numbers wanted? -->
 		    <xsl:if test="$VNum = 'true'">
@@ -507,6 +509,7 @@
 		    <xsl:if test="$VNum = 'false' and $Notes = 'true'">
 		      <a class="verseLink" name="{@osisID}"></a>
 		    </xsl:if>
+      </xsl:if>
   </xsl:template>
 
   <!--=======================================================================-->
@@ -1454,7 +1457,9 @@
             <xsl:otherwise>
                 <xsl:choose>
                     <xsl:when test="cell[@role = 'label']">
+                        <xsl:if test="$HideCompareHeaders != 'true'">
                             <tr><th class="headingVerseNumber"></th><xsl:call-template name="outputComparingTableHeader"></xsl:call-template></tr>
+                        </xsl:if>
                     </xsl:when>
                     <xsl:otherwise>
                         <tr class="row">

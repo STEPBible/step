@@ -1,8 +1,7 @@
 @import 'template_variables';
 
-
 .searchResultRow {
-  
+
   .passageContentHolder {
     height: initial !important;
   }
@@ -32,10 +31,17 @@
       }
     }
   }
-  table tr.row {
-    &:before, &:after {
-      display: none;
+  table {
+    tr.row {
+      &:before, &:after {
+        display: none;
+      }
+
+      td, th {
+        border-top: none;
+      }
     }
+    border-bottom: solid 1px #ddd;
   }
 }
 
@@ -49,7 +55,7 @@ h4.lexicalGrouping {
 .originalWordSearchToolbar {
   clear: both;
   padding-top: 5px;
-  
+
   .panel-body {
     padding: 5px;
   }

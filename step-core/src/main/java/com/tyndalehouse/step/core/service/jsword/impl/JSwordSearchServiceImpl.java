@@ -32,6 +32,7 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.service.jsword.impl;
 
+import java.awt.image.LookupOp;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
@@ -306,6 +307,7 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
         final List<SearchEntry> resultPassages = new ArrayList<SearchEntry>();
         final Iterator<Key> iterator = ((Passage) results).iterator();
 
+        int count = 0;
         while (iterator.hasNext()) {
             final Key verse = iterator.next();
             final Key lookupKey;
@@ -322,10 +324,16 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
                 lookupKey = verse;
             }
 
+            if(count == 1) {
+                options.add(LookupOption.HIDE_COMPARE_HEADERS);
+            }
+            
             // TODO this is not very efficient so requires refactoring
             final OsisWrapper peakOsisText = this.jsword.peakOsisText(versions, lookupKey, options, interlinearMode);
             resultPassages.add(new VerseSearchEntry(peakOsisText.getReference(), peakOsisText.getValue(),
                     peakOsisText.getOsisId()));
+            
+            count++;
         }
         return resultPassages;
     }

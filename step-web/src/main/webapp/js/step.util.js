@@ -317,7 +317,7 @@ step.util = {
     },
     refreshColumnSize: function (columns) {
         if (!columns) {
-            columns = $(".column");
+            columns = $(".column").not(".examplesColumn");
         }
 
         //change the width all columns
@@ -416,22 +416,21 @@ step.util = {
         newColumn
             .find(".passageContainer").attr("passage-id", newPassageId)
             .find(".passageContent").remove();
+        newColumn.find(".argSummary").remove();
 
         var allColumns = columns.add(newColumn);
 
         this.refreshColumnSize(allColumns);
 
+        newColumn.insertAfter(activeColumn);
         if (linked) {
-            //passed in 'true', so we need to append at the right location  
-            newColumn.insertAfter(activeColumn);
+            //add a link  
             var link = $("<span class='glyphicon glyphicon-link'></span>").click(function () {
                 //unlink all passages
                 step.util.unlink(newPassageId);
             });
             newColumn.find(".passageContainer").append(link);
             activePassageModel.save({ linked: newPassageId }, { silent: true });
-        } else {
-            columnHolder.append(newColumn);
         }
 
         this.showOrHideTutorial();
@@ -441,7 +440,6 @@ step.util = {
         new PassageMenuView({
             model: step.util.activePassage()
         });
-
 
         return newPassageId;
     },
@@ -526,9 +524,25 @@ step.util = {
         }
         passageModel.trigger("font:change");
     },
+    getKeyValues: function (args) {
+        var tokens = (args || "").split("|");
+        var data = [];
+        for (var i = 0; i < tokens.length; i++) {
+            var tokenParts = tokens[i].split("=");
+            if (tokenParts.length > 1) {
+                var key = tokenParts[0];
+                var value = tokenParts.slice(1).join("=");
+                data.push({ key: key, value: value });
+            }
+        }
+        return data;
+    },
     ui: {
         selectMark: function (classes) {
             return '<span class="glyphicon glyphicon-ok ' + classes + '"></span>';
+        },
+        renderArg: function(keyValue) {
+            return '<span class="argSelect select-' + keyValue.key + '">' + keyValue.value + '</span>';
         },
         /**
          * Given an array of languages, returns an array of fonts
@@ -609,22 +623,25 @@ step.util = {
                 if (!data) {
                     data = {};
                 }
+                
+                //need to initialise sidebar, which will open it.
                 if (!step.sidebar) {
                     step.sidebar = {};
                     step.sidebar = new SidebarModel({
                         strong: data.strong,
                         morph: data.morph,
                         ref: data.ref,
-                        mode: mode
+                        mode: mode == null ? 'analysis' : mode
                     });
                     new SidebarList().add(step.sidebar);
                     new SidebarView({
                         model: step.sidebar,
                         el: $("#sidebar")
                     });
-                }
-
-                if (step.sidebar.get("mode") != mode) {
+                } else if(mode == null) {
+                    //simply toggle it
+                    step.sidebar.trigger("toggleOpen");
+                } else if (step.sidebar.get("mode") != mode) {
                     step.sidebar.save({ mode: mode });
                 }
             });

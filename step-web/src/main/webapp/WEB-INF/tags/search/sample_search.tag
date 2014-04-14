@@ -12,14 +12,14 @@
 
 <fmt:message key="${ explanation }" />
 <span class="input-group">
-    <span class="form-control input-sm">
+    <span class="form-control input-sm argSummary">
         <c:if test="${ not empty option1 }"><span class="argSelect select-${ option1type }">${ option1 }</span></c:if>
         <c:if test="${ not empty option2 }"><span class="argSelect select-${ option2type }">${ option2 }</span></c:if>
         <c:if test="${ not empty option3 }"><span class="argSelect select-${ option3type }">${ option3 }</span></c:if>
         <c:if test="${ not empty option4 }"><span class="argSelect select-${ option4type }">${ option4 }</span></c:if>
     </span>
-    <span class="input-group-btn">
-        <span class="find btn btn-default btn-danger btn-sm">
+    <span  class="input-group-btn">
+        <span disabled class="find btn btn-default btn-danger btn-sm">
             <fmt:message key="find" />
         </span>
     </span>

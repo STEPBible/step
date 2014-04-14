@@ -2,12 +2,16 @@ var PassageMenuView = Backbone.View.extend({
     infoIcon: '<span class="infoIcon"><span class="glyphicon glyphicon-exclamation-sign"></span></span>',
     events: {
         "click a[name]": "updateModel",
-        "click .showStats": "showAnalysis",
         "click .previousChapter": "goToPreviousChapter",
         "click .nextChapter": "goToNextChapter",
         "click .closeColumn": "closeColumn",
+        "click .openNewPanel": "openNewPanel",
         "show.bs.dropdown *": "handleDropdownMenu"
     },
+    fontButtons: '<li class="noHighlight fontSizeContainer"><%= __s.font_sizes %><span class="pull-right btn-group"><button class="btn btn-default btn-sm smallerFontSize" type="button" title="<%= __s.passage_smaller_fonts %>">' +
+        '<span class="smallerFont"><%= __s.passage_font_size_symbol %></span></button>' +
+        '<button class="btn btn-default btn-sm largerFontSize" type="button" title="<%= __s.passage_larger_fonts %>">' +
+        '<span class="largerFont"><%= __s.passage_font_size_symbol %></span></button></span></li>',
     el: function () {
         return step.util.getPassageContainer(this.model.get("passageId")).find(".passageOptionsGroup");
     },
@@ -189,13 +193,6 @@ var PassageMenuView = Backbone.View.extend({
         this.displayModeContainer.find("a[data-value='INTERLINEAR']").closest("li").toggle(allHaveStrong);
         this.displayModeContainer.find("a[data-value='INTERLEAVED_COMPARE']").closest("li").toggle(sameLanguage);
         this.displayModeContainer.find("a[data-value='COLUMN_COMPARE']").closest("li").toggle(sameLanguage);
-    },
-    showAnalysis: function () {
-        //trigger side bar
-        require(["sidebar"], function (module) {
-            //read up on requirejs to see if init can form part of download call
-            step.util.ui.initSidebar('analysis');
-        });
     },
 
     _initUI: function () {
@@ -456,8 +453,9 @@ var PassageMenuView = Backbone.View.extend({
         var passageId = this.column.find("[passage-id]").attr("passage-id");
         step.util.activePassageId(passageId);
     },
-    fontButtons: '<li class="noHighlight fontSizeContainer"><%= __s.font_sizes %><span class="pull-right btn-group"><button class="btn btn-default btn-sm smallerFontSize" type="button" title="<%= __s.passage_smaller_fonts %>">' +
-        '<span class="smallerFont"><%= __s.passage_font_size_symbol %></span></button>' +
-        '<button class="btn btn-default btn-sm largerFontSize" type="button" title="<%= __s.passage_larger_fonts %>">' +
-        '<span class="largerFont"><%= __s.passage_font_size_symbol %></span></button></span></li>'
+    openNewPanel: function (ev) {
+        //if we're wanting a new column, then create it right now
+        step.util.createNewColumn();
+        ev.stopPropagation();
+    }
 });

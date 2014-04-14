@@ -150,6 +150,18 @@ var StepRouter = Backbone.Router.extend({
         } else {
             this.handleSearchResults(passageModel, partRendered);
         }
+        
+        this._renderSummary(passageModel);
+    },
+    _renderSummary: function(passageModel) {
+        var kvs = step.util.getKeyValues(passageModel.get("args"));
+        var container = $("<span></span>").addClass("argSummary");
+        for(var i = 0; i < kvs.length; i++) {
+            container.append(step.util.ui.renderArg(kvs[i]) + ' ');
+        }
+        var passageOptions = step.util.getPassageContainer(passageModel.get("passageId")).find(".passageOptionsGroup");
+        passageOptions.find(".argSummary").remove();
+        passageOptions.append(container);
     },
     doMasterSearch: function (query, options, display, pageNumber, filter, context, quiet) {
         var self = this;

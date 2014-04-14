@@ -1,7 +1,8 @@
 $header_height: 40px;
-$topSectionPadding: 30px;
+$summaryHeight: 25px;
+$topSectionPadding: 5px;
 $topSectionMarginBottom: 5px;
-$topSectionHeight: $topSectionPadding + $topSectionMarginBottom;
+$topSectionHeight: $topSectionPadding + $topSectionMarginBottom + $summaryHeight;
 $header_title: lightgrey;
 
 //grid points
@@ -10,7 +11,6 @@ $stepXS: 767px;
 $stepXSBootstrap: $stepXS + 1;
 $stepMD: 991px;
 $stepLG: 1120px;
-
 
 // colours
 //active colour of panel

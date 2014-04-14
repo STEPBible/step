@@ -44,9 +44,8 @@
     <%--<li><a href="/shutdown"><fmt:message key="tools_exit" /></a></li>--%>
     <%--}--%>
 
-        <button class="btn btn-default" id="openNewPanel" title="<fmt:message key="open_in_new_panel" />">
-            <span class="glyphicon glyphicon-plus"></span> <fmt:message key="panel" />
-        </button>
+        <button  class="btn btn-default btn-sm showStats" type="button" title="<fmt:message key="passage_open_sidebar" />">
+            <span class="glyphicon glyphicon-save"></span></button>
         
         <span class="dropdown">
         <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)"><fmt:message

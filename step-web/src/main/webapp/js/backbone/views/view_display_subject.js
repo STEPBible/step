@@ -2,7 +2,7 @@ var SubjectDisplayView = SearchDisplayView.extend({
     titleFragment: __s.search_subject,
     searchTypeToolbar: '<div class="subjectToolbar">' +
         '<input <%= selected[0] %> type="radio" name="subjectSearchType" value="<%= SUBJECT_SEARCH %>" id="<%= passageId %>_esvHeadings" />' +
-        '<label for="<%= passageId %>_esvHeadings"><%= __s.search_subject_esv_headings %></label>' +
+        '<label for="<%= passageId %>_esvHeadings"><%= __s.search_subject_book_headings %></label>' +
         '<input <%= selected[1] %> type="radio" name="subjectSearchType" value="<%= NAVE_SEARCH %>" id="<%= passageId %>_nave" />' +
         '<label for="<%= passageId %>_nave"><%= __s.search_subject_nave %></label>' +
         '<input <%= selected[2] %> type="radio" name="subjectSearchType" value="<%= NAVE_SEARCH_EXTENDED %>" id="<%= passageId %>_extendedNave" />' +

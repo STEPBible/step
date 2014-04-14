@@ -1,10 +1,12 @@
 var ViewHistory = Backbone.View.extend({
-    itemTemplate: _.template('<li class="list-group-item" data-item="<%= item.get("id") %>">' +
+    itemTemplate: _.template('<li class="list-group-item historyItem" data-item="<%= item.get("id") %>">' +
         '<a class="openBookmark" title="<%= __s.bookmarks_open %>"><span class="glyphicon glyphicon-open"></span></a>' +
         '<a class="starBookmark" data-favourite="<%= item.get("favourite")%>" title="<%= item.get("favourite") ? __s.passage_tools_delete_bookmark : __s.passage_tools_bookmark %>">' +
         '<span class="glyphicon <%= item.get("favourite") ? "glyphicon-pushpin-pinned" : "glyphicon-pushpin" %>"></span></a>' +
         '<a class="removeBookmark" title="<%= __s.bookmark_remove %>"><span class="glyphicon glyphicon-remove"></span></a>' +
-        '<% _.each(view.getKeyValues(item.get("args")), function(a) { %><span class="argSelect select-<%= a.key %>"><%= a.value %></span> <% }); %>' +
+        '<span class="argSummary">' +
+        '<% _.each(step.util.getKeyValues(item.get("args")), function(a) { %><%= step.util.ui.renderArg(a) %> <% }); %>' +
+        '</span>' +
         '</li>'),
     fullList: _.template(
         '<h3><%= __s.bookmarks_pinned %></h3><ul class="list-group">' +
@@ -55,19 +57,7 @@ var ViewHistory = Backbone.View.extend({
             self.openBookmarkHandler(this);
         });
     },
-    getKeyValues: function (args) {
-        var tokens = (args || "").split("|");
-        var data = [];
-        for (var i = 0; i < tokens.length; i++) {
-            var tokenParts = tokens[i].split("=");
-            if (tokenParts.length > 1) {
-                var key = tokenParts[0];
-                var value = tokenParts.slice(1).join("=");
-                data.push({ key: key, value: value });
-            }
-        }
-        return data;
-    },
+    
     refresh: function () {
         if (this.$el.hasClass("active")) {
             this.render();

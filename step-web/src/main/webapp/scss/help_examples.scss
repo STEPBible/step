@@ -20,6 +20,17 @@
   .step-copyright {
     font-size: smaller;
     text-align: center;
+    bottom: 10px;
+    position: absolute;
+    left: 40%;
+    text-align: center;
+  }
+  .input-group {
+    width: 100%;
+  }
+  .find {
+    margin-top: 5px;
+    margin-left: 5px;
   }
 }
 .examples {

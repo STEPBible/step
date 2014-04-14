@@ -1,4 +1,5 @@
 @import 'template_variables';
+@import 'mixins';
 
 @media screen {
   .navbar {
@@ -34,6 +35,7 @@
   .navbar-brand {
     padding-left: 50px;
     padding-bottom: 0px;
+    padding-top: 5px;
     height: $header_height;
     
     .title {
@@ -52,10 +54,16 @@
       font-size: x-small;
       line-height: 1;
     }
-  }
 
-  .navbar-brand {
-    padding-top: 5px;
+    .showStats {
+      width: 24px;
+      span {
+        margin-bottom: 2px;
+      }
+    }
+    .glyphicon.glyphicon-save{
+      @include rotate(90deg);
+    }
   }
 
   // Search form

@@ -1,10 +1,11 @@
 @import 'template_variables';
 @import 'mixins';
 @import 'passage_options';
+@import 'arg_summary';
 @import 'passage_display';
 @import 'search_display';
 @import 'help_examples';
-
+ 
 .mainPanel {
   min-height: 100%;
   height: 100%;
@@ -20,7 +21,7 @@
     border: 0; 
     border-bottom: 1px solid #ddd;
     padding-bottom: $topSectionPadding;
-    margin: 0px 20px $topSectionMarginBottom;
+    margin: 0px 20px $topSectionMarginBottom 5px;
   }
   .column {
     height: 100%;

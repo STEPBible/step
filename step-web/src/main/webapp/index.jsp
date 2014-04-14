@@ -155,8 +155,10 @@
                                             <span class="glyphicon glyphicon-cog"></span>
                                         </button>
                                     </div>
-                                    <button class="btn btn-default btn-sm showStats" type="button" title="<fmt:message key="passage_open_sidebar" />">
-                                        <span class="glyphicon glyphicon-save"></span></button>
+                                    
+                                    <button class="btn btn-default btn-sm openNewPanel" title="<fmt:message key="open_in_new_panel" />">
+                                        <span class="glyphicon glyphicon-plus"></span>
+                                    </button>
                                     <button class="btn btn-default btn-sm closeColumn" title="<fmt:message key="close" />" type="button">
                                         <span class="glyphicon glyphicon-remove"></span>
                                     </button>
@@ -220,7 +222,7 @@
                                                     <%-- Do search toolbar --%>
                                                     <div class="subjectToolbar">
                                                         <input <c:if test="${ 'SUBJECT_SIMPLE' eq searchType }">checked="checked"</c:if> type="radio" name="subjectSearchType" 
-                                                               value="subject" id="0_esvHeadings"><label for="0_esvHeadings"><fmt:message key="search_subject_esv_headings" /></label>
+                                                               value="subject" id="0_esvHeadings"><label for="0_esvHeadings"><fmt:message key="search_subject_book_headings" /></label>
                                                         <input type="radio" <c:if test="${ 'SUBJECT_EXTENDED' eq searchType }">checked="checked"</c:if> name="subjectSearchType" 
                                                                value="nave" id="0_nave"><label for="0_nave"><fmt:message key="search_subject_nave" /></label>
                                                         <input type="radio" <c:if test="${ 'SUBJECT_FULL' eq searchType }">checked="checked"</c:if> name="subjectSearchType" 
@@ -271,7 +273,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="hidden-xs col-sm-2 col-sm-offset-4 column examplesColumn">
+                <div class="hidden-xs col-sm-6 column examplesColumn">
                     <div class="passageContainer examplesContainer">
                         <h1><fmt:message key="simple_intro_welcome" /></h1>
                         <h1><fmt:message key="simple_intro_tyndale_house_project" /></h1>
@@ -280,9 +282,10 @@
                         <fmt:message key="simple_intro" />
                         <br /><br />
                         <search:sample_search explanation="simple_passage_explanation" option1="Gen 1" option1type="reference" option2="ESV" option2type="version" />
+                        <search:sample_search explanation="multiple_versions_explanation" option1="Gen 1" option1type="reference" option2="ESV" option2type="version" option3="NIV" option3type="version" option4="KJV" option4type="version" />
                         <search:sample_search explanation="simple_search_explanation" option1="NIV" option1type="version" option2="brother" option2type="greekMeanings" />
                         <search:sample_search explanation="simple_search_restricted_explanation" option1="The Pentateuch" option1type="reference" option2="ESV" option2type="version" option3="he.sed" option3type="hebrew" />
-                        <search:sample_search explanation="simple_passage_explanation" option1="NIV" option1type="version" option2="ESV" option2type="version" option3="brother" option3type="greekMeanings" option4="he.sed" option4type="hebrew" />
+                        <search:sample_search explanation="chained_searches_explanation" option1="NIV" option1type="version" option2="ESV" option2type="version" option3="brother" option3type="greekMeanings" option4="he.sed" option4type="hebrew" />
 
                         <div class="text-muted step-copyright">&copy; Tyndale House, Cambridge, UK - <%= Calendar.getInstance().get(Calendar.YEAR) %></div>
                     </div>

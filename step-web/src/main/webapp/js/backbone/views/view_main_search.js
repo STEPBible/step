@@ -2,7 +2,7 @@ var MainSearchView = Backbone.View.extend({
     el: ".search-form",
     events: {
         "click .find ": "search",
-        "click #openNewPanel": "openNewPanel"
+        "click .showStats": "showAnalysis"
     },
     //context items are of the form { itemType: x, value: y }
     specificContext: [],
@@ -420,10 +420,7 @@ var MainSearchView = Backbone.View.extend({
         
         item.text = sprintf(__s.options_number_of_terms, exampleText);
     },
-    openNewPanel: function () {
-        //if we're wanting a new column, then create it right now
-        step.util.createNewColumn();
-    },
+
     _getAncientFirstRepresentation: function (item, hebrew, term) {
         return '<span class="' + (hebrew ? 'hbFontMini' : 'unicodeFontMini') + '">' + 
             item.matchingForm + "</span> (" + this._markMatch(item.stepTransliteration, term) + " - " + this._markMatch(item.gloss, term) + ")";
@@ -794,7 +791,7 @@ var MainSearchView = Backbone.View.extend({
                 for (var i = 0; i < v.item.searchTypes.length; i++) {
                     switch (v.item.searchTypes[i]) {
                         case 'SUBJECT_SIMPLE':
-                            features += '<span title="' + __s.search_subject_esv_headings + '">' + __s.search_subject_esv_headings_initials + '</span> ';
+                            features += '<span title="' + __s.search_subject_book_headings + '">' + __s.search_subject_book_headings_initials + '</span> ';
                             break;
                         case 'SUBJECT_EXTENDED':
                             features += '<span title="' + __s.search_subject_nave + '">' + __s.search_subject_nave_initials + '</span> ';
@@ -919,5 +916,12 @@ var MainSearchView = Backbone.View.extend({
                 this.search();
             }
         }
+    },
+    showAnalysis: function () {
+        //trigger side bar
+        require(["sidebar"], function (module) {
+            //read up on requirejs to see if init can form part of download call
+            step.util.ui.initSidebar();
+        });
     }
 });

@@ -50,6 +50,7 @@ ul .glyphicon-ok {
   .navbar-brand {
     padding-left: 50px;
     padding-bottom: 0px;
+    padding-top: 5px;
     height: 40px; }
     .navbar-brand .title {
       margin-right: 10px;
@@ -63,9 +64,15 @@ ul .glyphicon-ok {
       white-space: nowrap;
       font-size: x-small;
       line-height: 1; }
-
-  .navbar-brand {
-    padding-top: 5px; }
+    .navbar-brand .showStats {
+      width: 24px; }
+      .navbar-brand .showStats span {
+        margin-bottom: 2px; }
+    .navbar-brand .glyphicon.glyphicon-save {
+      -webkit-transform: rotate(90deg);
+      -moz-transform: rotate(90deg);
+      -ms-transform: rotate(90deg);
+      -o-transform: rotate(90deg); }
 
   .search-form {
     font-size: x-small; }
@@ -370,9 +377,8 @@ ul.select2-parent-no-results {
     color: red; }
 
 .passageOptionsGroup {
-  height: 20px;
-  position: absolute;
-  right: 10; }
+  height: 25px;
+  overflow: hidden; }
   .passageOptionsGroup button span {
     line-height: 1; }
     .passageOptionsGroup button span.smallerFont {
@@ -382,11 +388,6 @@ ul.select2-parent-no-results {
       font-weight: bold; }
   .passageOptionsGroup .dropdown-menu {
     padding-left: 5px; }
-  .passageOptionsGroup .glyphicon.glyphicon-save {
-    -webkit-transform: rotate(-90deg);
-    -moz-transform: rotate(-90deg);
-    -ms-transform: rotate(-90deg);
-    -o-transform: rotate(-90deg); }
   .passageOptionsGroup ul {
     padding-left: 5px;
     margin-bottom: 0px; }
@@ -419,6 +420,32 @@ ul.select2-parent-no-results {
   .passageOptionsGroup .passageOptions, .passageOptionsGroup .displayModes {
     direction: ltr;
     text-align: left; }
+
+.argSummary {
+  margin-top: 5px;
+  margin-left: 5;
+  display: block; }
+  .argSummary span.argSelect {
+    cursor: default !important;
+    white-space: nowrap;
+    padding: 3px 5px 3px 3px;
+    cursor: default;
+    border: 1px solid #aaaaaa;
+    border-radius: 3px;
+    -webkit-box-shadow: 0 0 2px white inset, 0 1px 0 rgba(0, 0, 0, 0.05);
+    box-shadow: 0 0 2px white inset, 0 1px 0 rgba(0, 0, 0, 0.05);
+    background-clip: padding-box;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-color: #e4e4e4;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#eeeeee', endColorstr='#f4f4f4', GradientType=0);
+    background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(20%, #f4f4f4), color-stop(50%, #f0f0f0), color-stop(52%, #e8e8e8), color-stop(100%, #eeeeee));
+    background-image: -webkit-linear-gradient(top, #f4f4f4 20%, #f0f0f0 50%, #e8e8e8 52%, #eeeeee 100%);
+    background-image: -moz-linear-gradient(top, #f4f4f4 20%, #f0f0f0 50%, #e8e8e8 52%, #eeeeee 100%);
+    background-image: linear-gradient(top, #f4f4f4 20%, #f0f0f0 50%, #e8e8e8 52%, #eeeeee 100%); }
 
 .passageContainer.waiting {
   background-position: 50.5% 5; }
@@ -622,7 +649,16 @@ h4.lexicalGrouping {
     display: inline; }
   .examplesContainer .step-copyright {
     font-size: smaller;
+    text-align: center;
+    bottom: 10px;
+    position: absolute;
+    left: 40%;
     text-align: center; }
+  .examplesContainer .input-group {
+    width: 100%; }
+  .examplesContainer .find {
+    margin-top: 5px;
+    margin-left: 5px; }
 
 .examples {
   display: block; }
@@ -641,8 +677,8 @@ h4.lexicalGrouping {
   #columnHolder hr {
     border: 0;
     border-bottom: 1px solid #ddd;
-    padding-bottom: 30px;
-    margin: 0px 20px 5px; }
+    padding-bottom: 5px;
+    margin: 0px 20px 5px 5px; }
   #columnHolder .column {
     height: 100%;
     padding: 0px 2px; }
@@ -1088,27 +1124,8 @@ body::-webkit-scrollbar-corner {
   font-size: 13px;
   margin: 0 0 5 0;
   padding: 5 0 0 0; }
-
-.argSelect {
-  white-space: nowrap;
-  padding: 3px 5px 3px 3px;
-  cursor: default;
-  border: 1px solid #aaaaaa;
-  border-radius: 3px;
-  -webkit-box-shadow: 0 0 2px white inset, 0 1px 0 rgba(0, 0, 0, 0.05);
-  box-shadow: 0 0 2px white inset, 0 1px 0 rgba(0, 0, 0, 0.05);
-  background-clip: padding-box;
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  background-color: #e4e4e4;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#eeeeee', endColorstr='#f4f4f4', GradientType=0);
-  background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, color-stop(20%, #f4f4f4), color-stop(50%, #f0f0f0), color-stop(52%, #e8e8e8), color-stop(100%, #eeeeee));
-  background-image: -webkit-linear-gradient(top, #f4f4f4 20%, #f0f0f0 50%, #e8e8e8 52%, #eeeeee 100%);
-  background-image: -moz-linear-gradient(top, #f4f4f4 20%, #f0f0f0 50%, #e8e8e8 52%, #eeeeee 100%);
-  background-image: linear-gradient(top, #f4f4f4 20%, #f0f0f0 50%, #e8e8e8 52%, #eeeeee 100%); }
+#history .historyItem .argSummary {
+  display: inline; }
 
 #help {
   margin-top: 5px; }

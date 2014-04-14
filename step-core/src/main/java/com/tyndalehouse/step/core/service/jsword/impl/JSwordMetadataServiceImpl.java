@@ -14,6 +14,7 @@ import com.tyndalehouse.step.core.utils.StringUtils;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.FeatureType;
 import org.crosswire.jsword.versification.BibleBook;
+import org.crosswire.jsword.versification.DivisionName;
 import org.crosswire.jsword.versification.Versification;
 import org.crosswire.jsword.versification.system.Versifications;
 
@@ -289,7 +290,9 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
         }
 
         matchingNames.add(new BookName(versification.getShortName(bookName), versification
-                .getLongName(bookName), versification.getLastChapter(bookName) != 1));
+                .getLongName(bookName), 
+                DivisionName.BIBLE.contains(bookName) ? BookName.Section.BIBLE_BOOK : BookName.Section.APOCRYPHA, 
+                versification.getLastChapter(bookName) != 1));
     }
 
     /**
@@ -302,6 +305,12 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
     private List<BookName> getChapters(final Versification versification, final BibleBook book) {
         final int lastChapter = versification.getLastChapter(book);
         final List<BookName> chapters = new ArrayList<BookName>();
+        
+        //we add the whole book + all the chapters
+        BookName.Section section = DivisionName.BIBLE.contains(book) ? BookName.Section.BIBLE_BOOK : BookName.Section.APOCRYPHA;
+        chapters.add(new BookName(versification.getShortName(book), versification
+                .getLongName(book), section, versification.getLastChapter(book) != 1, book, false));
+        
         for (int ii = 1; ii <= lastChapter; ii++) {
             // final char f = Character.toUpperCase(searchSoFar.charAt(0));
 
@@ -311,7 +320,7 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
             final String longChapNumber = String.format(BOOK_CHAPTER_FORMAT, versification.getLongName(book),
                     ii);
 
-            chapters.add(new BookName(chapNumber, longChapNumber, false));
+            chapters.add(new BookName(chapNumber, longChapNumber, BookName.Section.PASSAGE, false));
         }
 
         return chapters;

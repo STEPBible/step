@@ -471,7 +471,7 @@ var PassageDisplayView = Backbone.View.extend({
         _unhighlighBothLinks: function (links) {
             links.removeClass("secondaryBackground");
         },
-
+        
         /**
          * Enhances verse numbers with their counts and related subjects popup
          * @param passageId

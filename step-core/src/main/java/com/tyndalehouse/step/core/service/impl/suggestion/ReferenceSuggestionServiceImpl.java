@@ -12,6 +12,7 @@ import org.crosswire.jsword.passage.NoSuchKeyException;
 import org.crosswire.jsword.passage.Verse;
 import org.crosswire.jsword.passage.VerseKey;
 import org.crosswire.jsword.versification.BibleBook;
+import org.crosswire.jsword.versification.DivisionName;
 import org.crosswire.jsword.versification.Versification;
 
 import javax.inject.Inject;
@@ -58,11 +59,11 @@ public class ReferenceSuggestionServiceImpl extends AbstractIgnoreMergedListSugg
                         final BibleBook book = ((Verse) verseKey.iterator().next()).getBook();
                         bk = getBookFromBibleBook(book, masterV11n);
                     } else {
-                        bk = new BookName(verseKey.getName(), verseKey.getName(), wholeBook);
+                        bk = new BookName(verseKey.getName(), verseKey.getName(), BookName.Section.PASSAGE, wholeBook);
                     }
                     return new BookName[]{bk};
                 } else {
-                    return new BookName[]{new BookName(k.getName(), k.getName(), false)};
+                    return new BookName[]{new BookName(k.getName(), k.getName(), BookName.Section.OTHER_NON_BIBLICAL, false)};
                 }
             }
         } catch (NoSuchKeyException ex) {
@@ -160,7 +161,7 @@ public class ReferenceSuggestionServiceImpl extends AbstractIgnoreMergedListSugg
         final String longChapNumber = String.format(BOOK_CHAPTER_FORMAT, versification.getLongName(bibleBook),
                 chapterNumber);
 
-        return new BookName(chapNumber, longChapNumber, false, null, true);
+        return new BookName(chapNumber, longChapNumber, BookName.Section.PASSAGE,false, null, true);
     }
 
     /**
@@ -219,7 +220,9 @@ public class ReferenceSuggestionServiceImpl extends AbstractIgnoreMergedListSugg
      * @return the book name suggestion that we return to the user
      */
     private BookName getBookFromBibleBook(final BibleBook bookName, final Versification versification) {
+        BookName.Section section = DivisionName.BIBLE.contains(bookName) ? BookName.Section.BIBLE_BOOK : BookName.Section.APOCRYPHA;
+        
         return new BookName(versification.getShortName(bookName), versification
-                .getLongName(bookName), versification.getLastChapter(bookName) != 1, bookName, false);
+                .getLongName(bookName), section, versification.getLastChapter(bookName) != 1, bookName, false);
     }
 }

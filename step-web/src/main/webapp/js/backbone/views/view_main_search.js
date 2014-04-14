@@ -176,7 +176,7 @@ var MainSearchView = Backbone.View.extend({
             formatResultCssClass: view.formatResultCssClass,
             formatSelectionCssClass: view.formatResultCssClass
         }).on("select2-selecting", function (event) {
-            if (event.object && event.object.itemType == REFERENCE && event.object.item.wholeBook && !event.object.itemSubType) {
+            if (event.object && event.object.itemType == REFERENCE && self._getSpecificContext(REFERENCE) == null) {
                 event.preventDefault();
                 var select2Input = $(this);
                 self._addSpecificContext(REFERENCE, event.object.item.shortName);
@@ -364,12 +364,6 @@ var MainSearchView = Backbone.View.extend({
                 //for a reference that is a whole book, we push an extra one in
                 text = termSuggestion.suggestion.fullName;
                 item = termSuggestion;
-
-                if (termSuggestion.suggestion.wholeBook) {
-                    //allow selection of whole book
-                    datum.push({ text: termSuggestion.suggestion.fullName, item: termSuggestion.suggestion, itemType: termSuggestion.itemType,
-                        itemSubType: 'bookSelection' });
-                }
                 break;
             case SUBJECT_SEARCH:
                 text = termSuggestion.suggestion.value;
@@ -607,6 +601,14 @@ var MainSearchView = Backbone.View.extend({
         this._removeSpecificContext(itemType);
         this.specificContext.push({ itemType: itemType, value: value });
     },
+    _getSpecificContext: function(itemType) {
+        for(var i = 0; i < this.specificContext.length; i++) {
+            if(this.specificContext[i].itemType == itemType) {
+                return this.specificContext[i].value;
+            }
+        }  
+        return null;
+    },
     /**
      * Removes all contexts of a particular type
      * @param itemType the item type, or array of item types
@@ -770,16 +772,14 @@ var MainSearchView = Backbone.View.extend({
                 row = source + this._getEnglishFirstRepresentation(v.item, true, query.term);
                 break;
             case REFERENCE:
-                var refSource = __s.bible_text;
-                if (v.itemSubType == 'bookSelection') {
-                    refSource = __s.bible_text;
-                } else if (!v.itemSubType && v.item.wholeBook && !v.item.passage) {
-                    refSource = __s.bible_text_chapters;
-                } else if(v.item.passage) {
-                    refSource = __s.bible_reference;
+                var internationalisedSectionName;
+                if(v.item.sectionType == 'BIBLE_BOOK' && this._getSpecificContext(REFERENCE) != null) {
+                    //then we are listing all chapters, and should display 'Whole book' instead
+                    internationalisedSectionName = __s.bible_whole_book_section;
+                } else {
+                    internationalisedSectionName = __s[v.item.sectionType.toLowerCase() + "_section"];
                 }
-
-                row = ['<span class="source">[' + refSource + ']</span>',
+                row = ['<span class="source">[' + internationalisedSectionName + ']</span>',
                     this._markMatch(v.item.fullName, query.term)
                 ].join('');
                 break;

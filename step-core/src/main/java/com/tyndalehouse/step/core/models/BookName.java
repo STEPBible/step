@@ -12,6 +12,14 @@ import java.io.Serializable;
  * @author chrisburrell
  */
 public class BookName implements Serializable, PopularSuggestion {
+    public enum Section {
+        BIBLE_BOOK,
+        APOCRYPHA,
+        PASSAGE,
+        OTHER_NON_BIBLICAL,
+        BIBLE_SECTION;
+    }
+    
     private static final long serialVersionUID = 2406197083965523605L;
     private String shortName;
     private String fullName;
@@ -19,6 +27,7 @@ public class BookName implements Serializable, PopularSuggestion {
     @JsonIgnore
     private BibleBook bibleBook;
 
+    private final Section sectionType;
     /* indicates a whole book, OR a book that should be treated like a chapter */
     private boolean wholeBook;
     private boolean isPassage;
@@ -30,8 +39,10 @@ public class BookName implements Serializable, PopularSuggestion {
      * @param fullName    the full name
      * @param isWholeBook true to indicate the option refers to a whole book
      */
-    public BookName(final String shortName, final String fullName, final boolean isWholeBook) {
-        this(shortName, fullName, isWholeBook, null);
+    public BookName(final String shortName, final String fullName, 
+                    final Section sectionType,
+                    final boolean isWholeBook) {
+        this(shortName, fullName, sectionType, isWholeBook, null);
     }
 
     /**
@@ -43,10 +54,14 @@ public class BookName implements Serializable, PopularSuggestion {
      * @param bibleBook   the bible book that originates this model
      * @param isPassage   true to indicate we're looking at a passage/chapter
      */
-    public BookName(final String shortName, final String fullName, final boolean isWholeBook, final BibleBook bibleBook,
+    public BookName(final String shortName, 
+                    final String fullName, 
+                    final Section sectionType,
+                    final boolean isWholeBook, final BibleBook bibleBook,
                     boolean isPassage) {
         this.shortName = shortName;
         this.fullName = fullName;
+        this.sectionType = sectionType;
         this.wholeBook = isWholeBook;
         this.bibleBook = bibleBook;
         this.isPassage = isPassage;
@@ -60,8 +75,10 @@ public class BookName implements Serializable, PopularSuggestion {
      * @param isWholeBook true to indicate the option refers to a whole book
      * @param bibleBook   the bible book that originates this model
      */
-    public BookName(final String shortName, final String fullName, final boolean isWholeBook, final BibleBook bibleBook) {
-        this(shortName, fullName, isWholeBook, bibleBook, false);
+    public BookName(final String shortName, final String fullName,
+                    final Section sectionType,
+                    final boolean isWholeBook, final BibleBook bibleBook) {
+        this(shortName, fullName, sectionType, isWholeBook, bibleBook, false);
     }
 
     /**
@@ -121,6 +138,10 @@ public class BookName implements Serializable, PopularSuggestion {
 
     public void setPassage(final boolean isPassage) {
         this.isPassage = isPassage;
+    }
+
+    public Section getSectionType() {
+        return sectionType;
     }
 
     @Override

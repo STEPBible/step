@@ -133,12 +133,14 @@
                         <span class="activeMarker"></span>
                         <div class="passageText ui-widget">
                             <div class="passageOptionsGroup">
-                                <div class="btn-group pull-right">
+                                <div class="btn-group pull-left nextPreviouwChapterGroup">
                                     <a class="btn btn-default btn-sm previousChapter" type="button" title="<fmt:message key="passage_previous_chapter" />">
                                         <span class="glyphicon glyphicon-arrow-left"></span></a>
                                     <a class="btn btn-default btn-sm nextChapter" type="button" title='<fmt:message key="passage_next_chapter" />'>
                                         <span class="glyphicon glyphicon-arrow-right"></span>
                                     </a>
+                                </div>
+                                <div class="btn-group pull-right">
                                     <%
                                         if(!appManager.isLocal()) {
                                     %>

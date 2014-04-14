@@ -24,14 +24,15 @@
             <xsl:for-each select="./cell">
                 <xsl:if test="jsword:get($tracker) = false()">
                     <xsl:variable name="previousTitle"
-                                  select="./preceding-sibling::title[not(starts-with(@type, 'x-'))]"/>
+                                  select="(./preceding-sibling::title[not(starts-with(@type, 'x-'))])[1]"/>
                     <xsl:choose>
                         <xsl:when test="$previousTitle">
                             <span>
                                 <xsl:apply-templates select=".//verse[1]"/>
                             </span>
-                            <xsl:value-of select="$previousTitle"/>
-                            <xsl:value-of select="jsword:set($tracker, true)"/>
+                            <span class="subjectHeading">
+                                <xsl:apply-templates select="$previousTitle"/>
+                            </span>
                         </xsl:when>
                         <xsl:otherwise>
                             <!-- we look for the previous cell and check whether it's got a pre-verse marker -->
@@ -43,9 +44,8 @@
                                         <xsl:apply-templates select=".//verse[1]"/>
                                     </span>
                                     <span class="subjectHeading">
-                                        <xsl:apply-templates select="//title[not(starts-with(@type, 'x-'))][last()]"/>
+                                        <xsl:apply-templates select="($previousCell//title[not(starts-with(@type, 'x-'))])[1]"/>
                                     </span>
-                                    <xsl:value-of select="jsword:set($tracker, true())"/>
                                 </xsl:when>
                                 <xsl:otherwise></xsl:otherwise>
                             </xsl:choose>
@@ -57,6 +57,7 @@
     </xsl:template>
 
     <xsl:template match="note"><!-- Do not output notes --></xsl:template>
+    <xsl:template match="title"><xsl:apply-templates /><xsl:value-of select="jsword:set($tracker, true())"/></xsl:template>
     <xsl:template match="divineName">
         <span class="small-caps">
             <xsl:apply-templates/>
@@ -98,4 +99,45 @@
             </a>
         </xsl:if>
     </xsl:template>
+
+
+
+    <xsl:template match="q[@sID or @eID]">
+        <xsl:choose>
+            <xsl:when test="@marker"><xsl:value-of select="@marker"/></xsl:when>
+            <!-- The chosen mark should be based on the work's author's locale. -->
+            <xsl:otherwise>"</xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+
+    <xsl:template match="q[@type = 'blockquote']">
+        <span class="q"><xsl:value-of select="@marker"/><xsl:apply-templates/><xsl:value-of select="@marker"/></span>
+    </xsl:template>
+
+    <xsl:template match="q[@type = 'citation']">
+        <span class="q"><xsl:value-of select="@marker"/><xsl:apply-templates/><xsl:value-of select="@marker"/></span>
+    </xsl:template>
+
+    <xsl:template match="q[@type = 'embedded']">
+        <xsl:choose>
+            <xsl:when test="@marker">
+                <xsl:value-of select="@marker"/><xsl:apply-templates/><xsl:value-of select="@marker"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <quote class="q"><xsl:apply-templates/></quote>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+
+    <xsl:template match="q[@type = 'embedded']" mode="jesus">
+        <xsl:choose>
+            <xsl:when test="@marker">
+                <xsl:value-of select="@marker"/><xsl:apply-templates mode="jesus"/><xsl:value-of select="@marker"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <quote class="q"><xsl:apply-templates/></quote>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+    
 </xsl:stylesheet>

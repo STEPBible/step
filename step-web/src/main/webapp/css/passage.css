@@ -593,12 +593,6 @@ FONT.usg {
 	font-style: italic;			
 }
 
-.commentaryVerseNumber {
-	color: #33339F;
-	font-weight: bold;
-	padding-right: 5px;
-}
-
 .commentaryVerse {
 	display: block;
 	padding-bottom: 5px;	

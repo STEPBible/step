@@ -123,7 +123,7 @@ var PassageDisplayView = Backbone.View.extend({
                 return;
             }
 
-            if (step.keyedVersions[masterVersion].hasStrongs) {
+            if (step.keyedVersions[masterVersion].hasStrongs || step.keyedVersions[masterVersion].category != 'BIBLE') {
                 return false;
             }
 
@@ -505,7 +505,10 @@ var PassageDisplayView = Backbone.View.extend({
         _adjustTextAlignment: function (passageContent) {
             //if we have only rtl, we right-align, so
             //A- if any ltr, then return immediately
-            if ($(".ltr:first", passageContent).size() > 0 || $("[dir='ltr']:first", passageContent).size() > 0 || $(".ltrDirection:first", passageContent).size() > 0) {
+            if (passageContent.attr("dir") == 'ltr' || 
+                $(".ltr:first", passageContent).size() > 0 || 
+                $("[dir='ltr']:first", passageContent).size() > 0 || 
+                $(".ltrDirection:first", passageContent).size() > 0) {
                 return;
             }
 

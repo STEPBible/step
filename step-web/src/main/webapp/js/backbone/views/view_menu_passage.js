@@ -102,13 +102,6 @@ var PassageMenuView = Backbone.View.extend({
         previousNext.toggle(isPassage);
         this.$el.find(".contextContainer").toggle(!isPassage);
 
-        //css workaround - need to move next/previous from their first position to the next one
-        if (isPassage) {
-            previousNext.insertBefore(this.$el.find(".showSettings"));
-        } else {
-            previousNext.insertBefore(this.$el.find(".closeColumn"));
-        }
-
     },
     _updateDropdownContents: function (targetTrigger) {
         if (this._isDisplayOptionsDropdown(targetTrigger)) {
@@ -455,6 +448,7 @@ var PassageMenuView = Backbone.View.extend({
     },
     openNewPanel: function (ev) {
         //if we're wanting a new column, then create it right now
+        step.util.activePassageId(this.get("passageId"));
         step.util.createNewColumn();
         ev.stopPropagation();
     }

@@ -379,6 +379,8 @@ ul.select2-parent-no-results {
 .passageOptionsGroup {
   height: 25px;
   overflow: hidden; }
+  .passageOptionsGroup .nextPreviouwChapterGroup {
+    margin-right: 10px; }
   .passageOptionsGroup button span {
     line-height: 1; }
     .passageOptionsGroup button span.smallerFont {
@@ -422,7 +424,7 @@ ul.select2-parent-no-results {
     text-align: left; }
 
 .argSummary {
-  margin-top: 5px;
+  margin-top: 4px;
   margin-left: 5;
   display: block; }
   .argSummary span.argSelect {

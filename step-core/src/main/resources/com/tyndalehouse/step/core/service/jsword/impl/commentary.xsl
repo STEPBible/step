@@ -19,7 +19,7 @@
 <!-- 		omit-xml-declaration="yes" indent="no" /> -->
 
 	<xsl:template match="/">
-		<div class="passageContentHolder">
+		<div class="passageContentHolder" dir="ltr">
 			<xsl:choose>
 				<xsl:when test="count(//verse) != 0">
 					<xsl:apply-templates select="//verse" />
@@ -43,19 +43,13 @@
 	<xsl:template name="versenum">
       <!-- An osisID can be a space separated list of them -->
       <xsl:variable name="firstOsisID" select="substring-before(concat(@osisID, ' '), ' ')"/>
-      <xsl:variable name="book" select="substring-before($firstOsisID, '.')"/>
-      <xsl:variable name="chapter" select="jsword:shape($shaper, substring-before(substring-after($firstOsisID, '.'), '.'))"/>
-
-      <!-- If n is present use it for the number -->
-      <xsl:variable name="verse" select="jsword:shape($shaper, substring-after(substring-after($firstOsisID, '.'), '.'))" />
-
       <xsl:variable name="versenum">
 		      <xsl:variable name="versification" select="jsword:getVersification($v11nf, $v11n)"/>
 		      <xsl:variable name="passage" select="jsword:getValidKey($keyf, $versification, @osisID)"/>
               <xsl:value-of select="jsword:getName($passage)"/>
       </xsl:variable>
 
-       <a name="{@osisID}"><span class="commentaryVerseNumber"><xsl:value-of select="$versenum"/></span></a>
+       <a name="{@osisID}"><span class="commentaryVerseNumber verseNumber"><xsl:value-of select="$versenum"/></span></a>
   </xsl:template>
 
   <xsl:template match="reference">

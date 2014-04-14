@@ -123,6 +123,11 @@ public class ExtractHeaderInformationSax extends DefaultHandler {
         }
     }
 
+    
+    private String sanitizeDescription(StringBuilder sb) {
+        return sanitize(sb).replaceAll("New Testament", "NT").replaceAll("Old Testament", "OT");
+    }
+    
     private String sanitize(StringBuilder sb) {
         return sb.toString().replaceAll("[\r\n\t]+", " ").replaceAll("  ", " ");
     }
@@ -132,7 +137,7 @@ public class ExtractHeaderInformationSax extends DefaultHandler {
     }
 
     public String getDescription() {
-        return sanitize(description);
+        return sanitizeDescription(description);
     }
 
     public String getCopyright() {

@@ -6,7 +6,6 @@ import com.tyndalehouse.step.core.models.SearchToken;
 import com.tyndalehouse.step.core.models.SingleSuggestionsSummary;
 import com.tyndalehouse.step.core.models.SuggestionsSummary;
 import com.tyndalehouse.step.core.models.search.PopularSuggestion;
-import com.tyndalehouse.step.core.models.search.SubjectSuggestion;
 import com.tyndalehouse.step.core.service.SingleTypeSuggestionService;
 import com.tyndalehouse.step.core.service.SuggestionService;
 import com.tyndalehouse.step.core.service.helpers.SuggestionContext;

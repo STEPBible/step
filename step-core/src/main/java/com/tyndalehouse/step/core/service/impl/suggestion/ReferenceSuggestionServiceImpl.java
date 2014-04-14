@@ -2,7 +2,6 @@ package com.tyndalehouse.step.core.service.impl.suggestion;
 
 import com.tyndalehouse.step.core.data.common.TermsAndMaxCount;
 import com.tyndalehouse.step.core.models.BookName;
-import com.tyndalehouse.step.core.models.search.PopularSuggestion;
 import com.tyndalehouse.step.core.service.helpers.SuggestionContext;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;

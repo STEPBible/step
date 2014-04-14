@@ -32,28 +32,27 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.models;
 
-import static com.tyndalehouse.step.core.xsl.XslConversionType.DEFAULT;
-
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.service.BibleInformationService;
 import com.tyndalehouse.step.core.xsl.XslConversionType;
 import org.codehaus.jackson.annotate.JsonValue;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.crosswire.jsword.book.FeatureType;
 
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Outlines a list of options available in lookup
- * <p />
+ * <p/>
  * Used letters at last update: ACDEHLMNPRTVU_
+ *
  * @author chrisburrell
  */
 public enum LookupOption {
     /**
      * Showing headings
      */
-    HEADINGS('H', "Headings", XslConversionType.DEFAULT, true),
+    HEADINGS('H', "Headings", XslConversionType.DEFAULT, true, FeatureType.HEADINGS),
     /**
      * Showing verse numbers
      */
@@ -69,11 +68,11 @@ public enum LookupOption {
     /**
      * enabling red letter for the Words of Jesus
      */
-    RED_LETTER('R', "RedLetterText", XslConversionType.DEFAULT),
+    RED_LETTER('R', "RedLetterText", XslConversionType.DEFAULT, FeatureType.WORDS_OF_CHRIST),
     /**
      * Showing cross references
      */
-    NOTES('N', "Notes", XslConversionType.DEFAULT, true),
+    NOTES('N', "Notes", XslConversionType.DEFAULT, true, FeatureType.FOOTNOTES),
 
     /**
      * The cross refs.
@@ -83,7 +82,7 @@ public enum LookupOption {
     /**
      * English vocabulary interlinear
      */
-    ENGLISH_VOCAB('E', "EnglishVocab", XslConversionType.INTERLINEAR),
+    ENGLISH_VOCAB('E', "EnglishVocab", XslConversionType.INTERLINEAR, FeatureType.STRONGS_NUMBERS),
     /**
      * Transliteration interlinear
      */
@@ -91,7 +90,7 @@ public enum LookupOption {
     /**
      * Greek vocabulary
      */
-    GREEK_VOCAB('A', "GreekVocab", XslConversionType.INTERLINEAR),
+    GREEK_VOCAB('A', "GreekVocab", XslConversionType.INTERLINEAR, FeatureType.STRONGS_NUMBERS),
 
     /**
      * Helps the division of the Hebrew words
@@ -111,15 +110,15 @@ public enum LookupOption {
      * Adds Hebrew vowels from the underlying source text
      */
     HEBREW_VOWELS('U', "HebrewVowels", XslConversionType.DEFAULT),
-    
+
     /**
      * Morphology
      */
-    MORPHOLOGY('M', "Morph", XslConversionType.INTERLINEAR),
+    MORPHOLOGY('M', "Morph", XslConversionType.INTERLINEAR, FeatureType.MORPHOLOGY),
     /**
      * Interlinears are available when Strongs are available.
      */
-    INTERLINEAR(BibleInformationService.UNAVAILABLE_TO_UI, "Interlinear", XslConversionType.INTERLINEAR),
+    INTERLINEAR(BibleInformationService.UNAVAILABLE_TO_UI, "Interlinear", XslConversionType.INTERLINEAR, FeatureType.STRONGS_NUMBERS),
     /**
      * Showing tiny verse numbers
      */
@@ -142,15 +141,16 @@ public enum LookupOption {
      * Whether to hide the XGen OSIS elements
      */
     HIDE_XGEN(BibleInformationService.UNAVAILABLE_TO_UI, "HideXGen", XslConversionType.DEFAULT),
-    
+
     HIDE_COMPARE_HEADERS(BibleInformationService.UNAVAILABLE_TO_UI, "HideCompareHeaders", XslConversionType.DEFAULT);
 
-    
+
     private static final Map<Character, LookupOption> uiToOptions = new HashMap<Character, LookupOption>(16);
     private final char uiName;
     private final String xsltParameterName;
     private final XslConversionType stylesheet;
     private final boolean enabledByDefault;
+    private final FeatureType feature;
 
     static {
         //cache the lookups for each option letter
@@ -159,12 +159,22 @@ public enum LookupOption {
         }
     }
 
+
     /**
      * @param xsltParameterName the name of the parameter in the stylesheet
      * @param stylesheet        the stylesheet to use
      */
     private LookupOption(final char uiName, final String xsltParameterName, final XslConversionType stylesheet) {
-        this(uiName, xsltParameterName, stylesheet, false);
+        this(uiName, xsltParameterName, stylesheet, null);
+    }
+
+    /**
+     * @param xsltParameterName the name of the parameter in the stylesheet
+     * @param stylesheet        the stylesheet to use
+     * @param feature           the JSword feature associated with this display option
+     */
+    private LookupOption(final char uiName, final String xsltParameterName, final XslConversionType stylesheet, final FeatureType feature) {
+        this(uiName, xsltParameterName, stylesheet, false, feature);
     }
 
     /**
@@ -174,10 +184,22 @@ public enum LookupOption {
      */
     private LookupOption(final char uiName, final String xsltParameterName, final XslConversionType stylesheet,
                          final boolean enabledByDefault) {
+        this(uiName, xsltParameterName, stylesheet, enabledByDefault, null);
+    }
+
+    /**
+     * @param xsltParameterName the name of the parameter in the stylesheet
+     * @param stylesheet        the stylesheet to use
+     * @param enabledByDefault  true to have the UI display the option by default
+     *                          @param feature the JSword feature associated with this display option
+     */
+    private LookupOption(final char uiName, final String xsltParameterName, final XslConversionType stylesheet,
+                         final boolean enabledByDefault, final FeatureType feature) {
         this.uiName = uiName;
         this.xsltParameterName = xsltParameterName;
         this.stylesheet = stylesheet;
         this.enabledByDefault = enabledByDefault;
+        this.feature = feature;
     }
 
     /**
@@ -187,12 +209,12 @@ public enum LookupOption {
      * @return
      */
     public static LookupOption fromUiOption(char c) {
-        if(c == BibleInformationService.UNAVAILABLE_TO_UI) {
+        if (c == BibleInformationService.UNAVAILABLE_TO_UI) {
             throw new StepInternalException("Underscore option is being looked up.");
         }
 
         final LookupOption lookupOption = uiToOptions.get(Character.toUpperCase(c));
-        if(lookupOption == null) {
+        if (lookupOption == null) {
             throw new StepInternalException("Unable to ascertain option: " + c);
         }
         return lookupOption;
@@ -227,4 +249,7 @@ public enum LookupOption {
         return uiName;
     }
 
+    public FeatureType getFeature() {
+        return feature;
+    }
 }

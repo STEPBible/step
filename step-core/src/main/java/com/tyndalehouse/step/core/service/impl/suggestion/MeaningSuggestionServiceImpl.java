@@ -7,7 +7,6 @@ import com.tyndalehouse.step.core.models.LexiconSuggestion;
 import com.tyndalehouse.step.core.models.search.PopularSuggestion;
 import com.tyndalehouse.step.core.service.SingleTypeSuggestionService;
 import com.tyndalehouse.step.core.service.helpers.SuggestionContext;
-import org.apache.lucene.search.Sort;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -33,8 +32,8 @@ public class MeaningSuggestionServiceImpl implements SingleTypeSuggestionService
     }
 
     @Override
-    public String[] collectNonExactMatches(final TermsAndMaxCount<String> collector, 
-                                           final SuggestionContext context, 
+    public String[] collectNonExactMatches(final TermsAndMaxCount<String> collector,
+                                           final SuggestionContext context,
                                            final String[] alreadyRetrieved, final int leftToCollect) {
         TermsAndMaxCount countsAndResults = this.definitions.findSetOfTermsWithCounts(false, true, context.getInput(), collector.getTotalCount(), ANCIENT_MEANING_FIELDS);
         final Set<String> resultTerms = countsAndResults.getTerms();

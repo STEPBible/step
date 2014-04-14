@@ -20,8 +20,14 @@ import java.util.List;
 public interface SingleTypeSuggestionService<T, S> {
     T[] getExactTerms(SuggestionContext context, int max, final boolean popularSort);
 
-//    Sort getSort();
-
+    /**
+     * Gets non-exact matches, based on the context, and limited to the total number the collector allows for
+     * @param collector the collector containing max numbers
+     * @param context the context containing the input from the user, and other information
+     * @param alreadyRetrieved the entities that have already been retrieved
+     * @param leftToCollect the left to collect
+     * @return the list of entities
+     */
     T[] collectNonExactMatches(S collector, SuggestionContext context, final T[] alreadyRetrieved, final int leftToCollect);
 
     /**

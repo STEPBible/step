@@ -149,9 +149,11 @@ public class PassageOptionsValidationServiceImpl implements PassageOptionsValida
         explainRemove(errors, MORPHOLOGY, result, trimmingExplanations, originalModeHasChanged,
                 interleavedMessage);
 
-        explainRemove(errors, HEADINGS, result, trimmingExplanations, originalModeHasChanged,
-                interleavedMessage);
-
+        //if we're going for a headings only, then we need to leave headings on
+        if (!result.contains(LookupOption.HEADINGS_ONLY)) {
+            explainRemove(errors, HEADINGS, result, trimmingExplanations, originalModeHasChanged,
+                    interleavedMessage);
+        }
     }
 
     /**

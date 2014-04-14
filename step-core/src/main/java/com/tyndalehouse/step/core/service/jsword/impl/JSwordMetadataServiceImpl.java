@@ -387,6 +387,21 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
         return InterlinearMode.INTERLEAVED;
     }
 
+
+    @Override
+    public boolean supportsFeature(final String version, LookupOption... options) {
+        Book b = this.versificationService.getBookFromVersion(version);
+        for(LookupOption lo : options) {
+            FeatureType ft = lo.getFeature();
+            if(ft != null) {
+                if(!b.getBookMetaData().hasFeature(ft)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    
     /**
      * if all versions are of the same language, then we return the interlinear mode.
      * Otherwise we return INTERLEAVED if INTERLEAVED_COMPARE was given, and COLUMN if COLUMN_COMPARED was given

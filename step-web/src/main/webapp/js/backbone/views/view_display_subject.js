@@ -33,7 +33,7 @@ var SubjectDisplayView = SearchDisplayView.extend({
      * @private
      */
     _doSimpleSubjectSearchResults: function (masterVersion, searchResults) {
-        var results = $("<div>").addClass("subjectSection searchResults simpleSubjectSearch");
+        var results = $("<span>").addClass("subjectSection searchResults simpleSubjectSearch");
         var headingsSearch = searchResults[0].headingsSearch;
         var headingsResults = headingsSearch.results;
 

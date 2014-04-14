@@ -46,7 +46,7 @@ public class SubjectSuggestionServiceImpl extends AbstractIgnoreMergedListSugges
     }
 
     @Override
-    public SubjectSuggestion[] collectNonExactMatches(final TermsAndMaxCount<SubjectSuggestion> collector, 
+    public SubjectSuggestion[] collectNonExactMatches(final TermsAndMaxCount<SubjectSuggestion> collector,
                                                       final SuggestionContext context,
                                                       final SubjectSuggestion[] alreadyRetrieved,
                                                       final int leftToCollect) {

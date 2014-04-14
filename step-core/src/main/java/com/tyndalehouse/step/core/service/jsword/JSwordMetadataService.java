@@ -110,4 +110,12 @@ public interface JSwordMetadataService {
      * @return the best interlinear mode.
      */
     InterlinearMode getBestInterlinearMode(String mainBook, List<String> extraVersions, final InterlinearMode interlinearMode);
+
+    /**
+     *
+     * @param version the version/book we are querying
+     * @param options the options that we want to assess
+     * @return true if the book supports all options provided
+     */
+    boolean supportsFeature(String version, LookupOption... options);
 }

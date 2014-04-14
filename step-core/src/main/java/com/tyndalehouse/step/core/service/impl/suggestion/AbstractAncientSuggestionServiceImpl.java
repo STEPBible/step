@@ -17,8 +17,10 @@ import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopFieldCollector;
 
+import javax.swing.text.Highlighter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Formatter;
 import java.util.List;
 
 import static com.tyndalehouse.step.core.service.helpers.OriginalWordUtils.convertToSuggestion;
@@ -58,6 +60,7 @@ public abstract class AbstractAncientSuggestionServiceImpl implements SingleType
         }
 
         final EntityDoc[] search = this.reader.search(query, this.filter, collector);
+        
         //we're interested in the results if we wanted more, or if we're retrieving a single result (cos we don't want to display grouping)
         if (leftToCollect > 0 || collector.getTotalHits() == 1) {
             return search;

@@ -564,10 +564,12 @@ h2.heading.x-acrostic {
   margin: 0px; }
   .searchResultRow span.level1:before, .searchResultRow span.level2:before, .searchResultRow span.level3:before, .searchResultRow span.level4:before {
     content: ' / '; }
-.searchResultRow table tr.row:before, .searchResultRow table tr.row:after {
-  display: none; }
-.searchResultRow table tr.row td, .searchResultRow table tr.row th {
-  border-top: none; }
+.searchResultRow table {
+  border-bottom: solid 1px #ddd; }
+  .searchResultRow table tr.row:before, .searchResultRow table tr.row:after {
+    display: none; }
+  .searchResultRow table tr.row td, .searchResultRow table tr.row th {
+    border-top: none; }
 
 h4.lexicalGrouping {
   font-size: 12px; }

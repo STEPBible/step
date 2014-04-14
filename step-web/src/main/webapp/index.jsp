@@ -340,7 +340,6 @@
             <script src="libs/backbone.localStorage-min.js" type="text/javascript"></script>
             <script src="libs/select2-3.4.5.min.js" type="text/javascript"></script>
             <script src="libs/require-2.1.9.min.js" type="text/javascript"></script>
-                    <%--<script src="libs/prettyCheckable.min.js" type="text/javascript"></script>--%>
         </c:otherwise>
     </c:choose>
     
@@ -358,88 +357,9 @@
     <script src="js/backbone/views/view_menu_passage.js" type="text/javascript"></script>
     <script src="js/backbone/models/model_settings.js" type="text/javascript"></script>
     <script src="js/backbone/views/view_feedback.js" type="text/javascript"></script>
-    
-    <%--<script src="js/backbone/models/model_options.js" type="text/javascript"></script>--%>
-    
-    
-    <%-- can be loaded with requires? --%>
-    <%--<script src="libs/dohighlight-min.js" type="text/javascript"></script>--%>
-    <%--<script src="js/jquery-extensions/jquery-qtip.js" type="text/javascript"></script>--%>
-    <%--<script src="js/backbone/models/model_sidebar.js" type="text/javascript"></script>--%>
-    <%--<script src="js/backbone/views/view_sidebar.js"  type="text/javascript"></script>--%>
-    
-    
-    <%--<script src="js/jquery-extensions/jquery-hover-intent.js" type="text/javascript"></script>--%>
-    
-    <%--<script src="js/jquery-extensions/jquery-local-store.js" type="text/javascript"></script>--%>
-    <%--<script src="js/jquery-extensions/jquery-shout.js" type="text/javascript"></script>--%>
-    <%--<script src="js/jquery-extensions/jquery-versions-complete.js" type="text/javascript"></script>--%>
-    <%--<script src="js/jquery-extensions/jquery-lexical-complete.js" type="text/javascript"></script>--%>
-    <%--<script src="js/jquery-extensions/jquery-detail-slider.js" type="text/javascript"></script>--%>
-    <%--<script src="js/jquery-extensions/jquery-sort.js" type="text/javascript"></script>--%>
-    <%--<script src="js/jquery-extensions/jquery-passage-buttons.js" type="text/javascript"></script>--%>
-    <%--<script src="js/jquery-extensions/jquery-original-word-toolbar.js" type="text/javascript"></script>--%>
-    <%--<script src="js/jquery-extensions/jquery-search-result.js" type="text/javascript"></script>--%>
-    <%--<script src="js/jquery-extensions/jquery-bible-books.js" type="text/javascript"></script>--%>
-    <%--<script src="js/ddsmoothmenu.js" type="text/javascript"></script>--%>
-    <%--<script src="js/util.js" type="text/javascript"></script>--%>
-    <%--<script src="js/ui_hooks.js" type="text/javascript"></script>--%>
-    
-    <%--<script src="js/lexicon_definition.js" type="text/javascript"></script>--%>
-    <%-- 	    <script src="js/timeline.js" type="text/javascript"></script> --%>
-    <%-- 	    <script src="js/geography.js" type="text/javascript"></script> --%>
-    <%--<script src="js/toolbar_menu.js" type="text/javascript"></script>--%>
-    <%--<script src="js/defaults/step.defaults.js" type="text/javascript"></script>--%>
-    <%--<script src="js/navigation/step.navigation.js" type="text/javascript"></script>--%>
     <script src="js/state/step.state.js" type="text/javascript"></script>
-    <%--<script src="js/state/step.state.view.js" type="text/javascript"></script>--%>
-    <%--<script src="js/menu/step.menu.js" type="text/javascript"></script>--%>
-    <%--<script src="js/menu/top/help.js" type="text/javascript"></script>--%>
-    <%--<script src="js/menu/top/view.js" type="text/javascript"></script>--%>
-    <%--<script src="js/menu/top/top.menu.ui.js" type="text/javascript"></script>--%>
-    <%--<script src="js/menu/passage/context.js" type="text/javascript"></script>--%>
-    <%--<script src="js/menu/passage/display.js" type="text/javascript"></script>--%>
-    <%--<script src="js/menu/passage/passageTools.js" type="text/javascript"></script>--%>
-    <%--<script src="js/menu/passage/search.js" type="text/javascript"></script>--%>
-    <%--<script src="js/passage/step.version.js" type="text/javascript"></script>--%>
-    <%--<script src="js/passage/step.alternatives.js" type="text/javascript"></script>--%>
     <script src="js/passage/step.passage.js" type="text/javascript"></script>
-    <%--<script src="js/passage/step.fonts.js" type="text/javascript"></script>--%>
-    <%--<script src="js/passage/step.passage.navigation.js" type="text/javascript"></script>--%>
-    <%--<script src="js/passage/step.passage.navigation.ui.js" type="text/javascript"></script>--%>
-    <%--<script src="js/bookmark/step.bookmark.ui.js" type="text/javascript"></script>--%>
-    <%--<script src="js/backbone/models/model_passage.js" type="text/javascript"></script>--%>
-    <%--<script src="js/backbone/views/view_display_passage.js" type="text/javascript"></script>--%>
-    <%--<script src="js/backbone/router.js" type="text/javascript"></script>--%>
-    <%--<script src="js/backbone/views/view_criteria_passage.js" type="text/javascript"></script>--%>
-    <%--<script src="js/backbone/models/model_lookup_menu.js" type="text/javascript"></script>--%>
-    <%--<script src="js/backbone/views/view_menu_search.js" type="text/javascript"></script>--%>
-    <%--<script src="js/backbone/views/view_control_criteria.js" type="text/javascript"></script>--%>
-    <%--<script src="js/backbone/models/model_search.js" type="text/javascript"></script>--%>
-    <%--<script src="js/backbone/models/model_search_subject.js" type="text/javascript"></script>--%>
-    <%--<script src="js/backbone/models/model_search_original.js" type="text/javascript"></script>--%>
-    <%--<script src="js/backbone/models/model_search_advanced.js" type="text/javascript"></script>--%>
-    <%--<script src="js/backbone/models/model_search_simple.js" type="text/javascript"></script>--%>
-    <%--<script src="js/backbone/models/model_notes.js" type="text/javascript"></script>--%>
-    <%--<script src="js/backbone/views/view_criteria.js" type="text/javascript"></script>--%>
-    <%--<script src="js/backbone/views/view_criteria_subject.js" type="text/javascript"></script>--%>
-    <%--<script src="js/backbone/views/view_criteria_word.js" type="text/javascript"></script>--%>
-    <%--<script src="js/backbone/views/view_criteria_advanced.js" type="text/javascript"></script>--%>
-    <%--<script src="js/backbone/views/view_criteria_text.js" type="text/javascript"></script>--%>
-    <%--<script src="js/backbone/views/view_criteria_notes.js" type="text/javascript"></script>--%>
-    <%--<script src="js/backbone/views/view_display_search.js" type="text/javascript"></script>--%>
-    <%--<script src="js/backbone/views/view_display_subject.js" type="text/javascript"></script>--%>
-    <%--<script src="js/backbone/views/view_display_text.js" type="text/javascript"></script>--%>
-    <%--<script src="js/backbone/views/view_display_word.js" type="text/javascript"></script>--%>
-    <%--<script src="js/backbone/views/view_display_notes.js" type="text/javascript"></script>--%>
-    <%--<script src="js/backbone/models/model_quick_lexicon.js" type="text/javascript"></script>--%>
-    <%--<script src="js/backbone/views/view_quick_lexicon.js" type="text/javascript"></script>--%>
-    <%--<script src="js/backbone/models/model_bookmark.js" type="text/javascript"></script>--%>
-    <%--<script src="js/backbone/views/view_bookmarks_history.js" type="text/javascript"></script>--%>
-    <%--<script src="js/backbone/views/view_wordle_stat.js" type="text/javascript"></script>--%>
 
-    <%--<script src="js/init.js" type="text/javascript"></script>--%>
-    <%--<script src="js/backbone/step.js" type="text/javascript"></script>--%>
         <%
 		} else {
 	%>

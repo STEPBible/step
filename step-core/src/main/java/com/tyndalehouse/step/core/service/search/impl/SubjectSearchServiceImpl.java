@@ -36,12 +36,15 @@ import com.google.inject.Singleton;
 import com.tyndalehouse.step.core.data.EntityDoc;
 import com.tyndalehouse.step.core.data.EntityIndexReader;
 import com.tyndalehouse.step.core.data.EntityManager;
+import com.tyndalehouse.step.core.models.InterlinearMode;
+import com.tyndalehouse.step.core.models.LookupOption;
 import com.tyndalehouse.step.core.models.search.ExpandableSubjectHeadingEntry;
 import com.tyndalehouse.step.core.models.search.SearchEntry;
 import com.tyndalehouse.step.core.models.search.SearchResult;
 import com.tyndalehouse.step.core.models.search.SubjectHeadingSearchEntry;
 import com.tyndalehouse.step.core.service.impl.IndividualSearch;
 import com.tyndalehouse.step.core.service.impl.SearchQuery;
+import com.tyndalehouse.step.core.service.jsword.JSwordMetadataService;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import com.tyndalehouse.step.core.service.jsword.JSwordSearchService;
 import com.tyndalehouse.step.core.service.search.SubjectSearchService;
@@ -56,10 +59,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import static com.tyndalehouse.step.core.models.LookupOption.HEADINGS;
 import static com.tyndalehouse.step.core.models.LookupOption.HEADINGS_ONLY;
 import static com.tyndalehouse.step.core.models.LookupOption.VERSE_NUMBERS;
 import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
@@ -76,6 +81,7 @@ public class SubjectSearchServiceImpl implements SubjectSearchService {
     private final EntityIndexReader naves;
     private final JSwordSearchService jswordSearch;
     private final JSwordPassageService jswordPassage;
+    private final JSwordMetadataService jSwordMetadataService;
 
     /**
      * Instantiates a new subject search service impl.
@@ -86,9 +92,12 @@ public class SubjectSearchServiceImpl implements SubjectSearchService {
      */
     @Inject
     public SubjectSearchServiceImpl(final EntityManager entityManager,
-                                    final JSwordSearchService jswordSearch, final JSwordPassageService jswordPassage) {
+                                    final JSwordSearchService jswordSearch,
+                                    final JSwordPassageService jswordPassage,
+                                    final JSwordMetadataService jSwordMetadataService) {
         this.jswordSearch = jswordSearch;
         this.jswordPassage = jswordPassage;
+        this.jSwordMetadataService = jSwordMetadataService;
         this.naves = entityManager.getReader("nave");
     }
 
@@ -162,20 +171,23 @@ public class SubjectSearchServiceImpl implements SubjectSearchService {
      */
     private SearchResult searchSimple(final SearchQuery sq) {
         //versions are - the ones selected + the ESV & NIV
-        Set<String> versions = new HashSet<String>(Arrays.asList(sq.getCurrentSearch().getVersions()));
+        Set<String> versions = new LinkedHashSet<String>(Arrays.asList(sq.getCurrentSearch().getVersions()));
         for (String s : REF_VERSIONS) {
             versions.add(s);
         }
 
         trimToVersionsWithHeadingsOnly(versions);
-
+        if(versions.size() > 1) {
+            sq.setInterlinearMode(InterlinearMode.INTERLEAVED.name());
+        }
+        
         //search for the keys first...
         final String[] searchableVersions = versions.toArray(new String[versions.size()]);
         sq.getCurrentSearch().setVersions(searchableVersions);
         final Key allTopics = this.jswordSearch.searchKeys(sq);
 
         final SearchResult headingsSearch = this.jswordSearch.getResultsFromTrimmedKeys(sq,
-                searchableVersions, allTopics.getCardinality(), allTopics, HEADINGS_ONLY, VERSE_NUMBERS);
+                searchableVersions, allTopics.getCardinality(), allTopics, HEADINGS_ONLY);
 
         // build the results and then return
         final SubjectHeadingSearchEntry headings = new SubjectHeadingSearchEntry();
@@ -195,7 +207,13 @@ public class SubjectSearchServiceImpl implements SubjectSearchService {
      * @param versions the list of versions
      */
     private void trimToVersionsWithHeadingsOnly(final Set<String> versions) {
-
+        final Iterator<String> iterator = versions.iterator();
+        while (iterator.hasNext()) {
+            final String version = iterator.next();
+            if(!this.jSwordMetadataService.supportsFeature(version, LookupOption.HEADINGS)) {
+                iterator.remove();
+            }
+        }
     }
 
     /**

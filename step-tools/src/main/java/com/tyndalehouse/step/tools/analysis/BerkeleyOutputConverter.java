@@ -60,28 +60,39 @@ public class BerkeleyOutputConverter {
 
     public static void main(String[] args) throws IOException {
 
+        // David'
+        final String root = "C:\\temp\\autoTag\\Bibles\\";
+        final String strongs = FileUtils.readFileToString(new File(root + "bible.s"));        // strongs # only
+        final String other = FileUtils.readFileToString(new File(root + "bible.u"));          // unstemmed original
+        final String results = FileUtils.readFileToString(new File(root + "training.align")); // alignment from Berkeley
+        final String keyFile = FileUtils.readFileToString(new File(root + "keyList.txt"));    // refs only
+/**
+ * Chris'
         final String strongs = FileUtils.readFileToString(new File("c:\\temp\\bible.s"));
         final String other = FileUtils.readFileToString(new File("c:\\temp\\bible.o"));
         final String results = FileUtils.readFileToString(new File("c:\\temp\\training.align"));
         final String keyFile = FileUtils.readFileToString(new File("c:\\temp\\keyList.txt"));
+ */
 
-
-        List<String[]> strongSentences = splitByWord(strongs);
+         List<String[]> strongSentences = splitByWord(strongs);
         List<String[]> otherSentences = splitByWord(other);
         List<String[]> resultSentences = splitByWord(results);
         List<String[]> keyList = splitByWord(keyFile);
 
-        final File path = new File("C:\\Users\\Chris\\AppData\\Roaming\\JSword\\step\\entities\\definition");
+        final File path = new File("C:\\Users\\David IB\\AppData\\Roaming\\JSword\\step\\entities\\definition");
+//        final File path = new File("C:\\Users\\Chris\\AppData\\Roaming\\JSword\\step\\entities\\definition");
         FSDirectory directory = FSDirectory.open(path);
         final IndexSearcher indexSearcher = new IndexSearcher(directory);
 
 
         String resultTagging = parseResults(resultSentences, strongSentences, otherSentences, indexSearcher, keyList);
-        FileUtils.writeStringToFile(new File("c:\\temp\\positionalTagging.txt"), resultTagging);
+        FileUtils.writeStringToFile(new File(root + "Bible.tagging.txt"), resultTagging);
     }
 
     private static String parseResults(final List<String[]> resultSentences, final List<String[]> strongSentences, final List<String[]> otherSentences, final IndexSearcher indexSearcher, final List<String[]> keyList) throws IOException {
         StringBuilder resultingTagging = new StringBuilder(8000000);
+        int prev;
+        prev = -1;
 
         for (int i = 0; i < resultSentences.size(); i++) {
             String[] sentence = resultSentences.get(i);
@@ -90,34 +101,50 @@ public class BerkeleyOutputConverter {
             if (i % 200 == 0) {
                 System.out.println(ref);
             }
-            resultingTagging.append(ref);
-            resultingTagging.append(' ');
+            resultingTagging.append('\n');
+            resultingTagging.append("$");
 
+            prev =-1;
             sentence = reOrder(sentence);
             for (String word : sentence) {
-                
-                
+
                 String[] stringIndexes = word.split("-");
                 try {
                     int[] indexes = new int[]{Integer.parseInt(stringIndexes[0]), Integer.parseInt(stringIndexes[1])};
-                    if (indexes[0] == 0 && indexes[1] == 0) {
-                        continue;
+                    if (indexes[0] == 0 && indexes[1] == 0) {      // not sure what this used to be for
+            //            continue;
                     }
 
                     //find word in sentence in each bible.
                     String strong = strongSentences.get(i)[indexes[0]];
                     String other = otherSentences.get(i)[indexes[1]];
 
-                    resultingTagging.append(other);
-                    resultingTagging.append(" (");
-                    appendLexicalEntry(indexSearcher, resultingTagging, strong);
+                    if (indexes[1] != prev) {   // append extra Greek
+//                        resultingTagging.append(", ");
+//                    } else {
+                        resultingTagging.append("\n");
+                        resultingTagging.append(ref);
+                        resultingTagging.append("-");
+                        resultingTagging.append(String.format("%03d", indexes[1]+1));
+                        resultingTagging.append("\t");
+                    }
+                    if (indexes[1]-1 != prev) {   // add words not aligned
+                        for (int j = prev+1; j < indexes[1]; j++) {
+                            resultingTagging.append(otherSentences.get(i)[j]);
+                            resultingTagging.append(" ");
+                        }
+                    }
+                    if (indexes[1] != prev) {   // add extra Greek
+                        resultingTagging.append("\t");
+                        resultingTagging.append(other);
+                        resultingTagging.append("\t");
+                    }
+                    prev = indexes[1];
 
-                    resultingTagging.append(", ");
                     resultingTagging.append(strong);
-
-                    resultingTagging.append(", ");
-                    resultingTagging.append(word);
-                    resultingTagging.append(") ");
+                    resultingTagging.append("{");
+                    appendLexicalEntry(indexSearcher, resultingTagging, strong);
+                    resultingTagging.append("} ");
 
                 } catch (Exception e) {
                     System.out.println("Error in verse " + ref + " for word: " + word);
@@ -125,8 +152,23 @@ public class BerkeleyOutputConverter {
                 }
             }
 
-            resultingTagging.append('\n');
-            resultingTagging.append('\n');
+
+            // get unaligned end of sentence
+            int otherLength = otherSentences.get(i).length;
+            if (prev < otherLength) {
+                resultingTagging.append("\n");
+                resultingTagging.append(ref);
+                resultingTagging.append("-999");
+                resultingTagging.append("\t");
+                for (int j = prev+1; j <  otherLength; j++) {
+                    resultingTagging.append(otherSentences.get(i)[j]);
+                    resultingTagging.append(" ");
+                }
+                resultingTagging.append("\t\t~");
+            }
+
+         //
+         //   resultingTagging.append('\n');
         }
         return resultingTagging.toString();
     }

@@ -113,47 +113,13 @@ public class IndividualSearch {
     }
 
     private String stem(final String query) {
-        PorterStemmer stemmer = new PorterStemmer();
-        stemmer.setCurrent(query);
-        stemmer.stem();
-        return stemmer.getCurrent();
+//TODO:
+//        PorterStemmer stemmer = new PorterStemmer();
+//        stemmer.setCurrent(query);
+//        stemmer.stem();
+//        return stemmer.getCurrent();
+        return query;
     }
-
-//    /**
-//     * Initialises the search from the query string.
-//     *
-//     * @param query the query that is being sent to the app to search for
-//     */
-//    public IndividualSearch(final String query) {
-//        if (query.startsWith(TEXT)) {
-//            this.type = SearchType.TEXT;
-//            this.query = (query.substring(TEXT.length()));
-//        } else if (query.startsWith(SUBJECT)) {
-//            parseSubjectSearch(query.substring(SUBJECT.length()));
-//        } else if (query.startsWith(ORIGINAL)) {
-//            parseOriginalSearch(query.substring(ORIGINAL.length()));
-//        } else if (query.startsWith(TIMELINE_DESCRIPTION)) {
-//            this.type = SearchType.TIMELINE_DESCRIPTION;
-//            matchVersions(query.substring(TIMELINE_DESCRIPTION.length()));
-//        } else if (query.startsWith(TIMELINE_REFERENCE)) {
-//            this.type = SearchType.TIMELINE_REFERENCE;
-//            matchVersions(query.substring(TIMELINE_REFERENCE.length()));
-//        } else {
-//            LOGGER.warn("Unknown search type for query [{}]", query);
-//
-//            default to JSword and hope for the best, but warn
-//            matchVersions(query);
-//            this.type = SearchType.TEXT;
-//        }
-//        if (isBlank(this.query)) {
-//            return straight away
-//            throw new TranslatedException("blank_search_provided");
-//        }
-//
-//        LOGGER.debug(
-//                "The following search has been constructed: type [{}]\nquery [{}]\n subRange [{}], mainRange [{}]",
-//                new Object[]{this.type, query, this.subRange, this.mainRange});
-//    }
 
     /**
      * Initialises the search from the query string.

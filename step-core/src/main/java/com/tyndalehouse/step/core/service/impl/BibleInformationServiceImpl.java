@@ -250,7 +250,7 @@ public class BibleInformationServiceImpl implements BibleInformationService {
         final String[] versions = StringUtils
                 .split(version + VERSION_SEPARATOR + interlinearVersion, "[, ]+");
         for (int i = 0; i < versions.length; i++) {
-            versions[i] = versions[i].toUpperCase(Locale.ENGLISH);
+            versions[i] = versions[i];
         }
 
         return versions;

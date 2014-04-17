@@ -15,4 +15,5 @@ bin
 .idea
 *.orig
 *.versionsBackup
+*-SNAPSHOT*.min.js
 

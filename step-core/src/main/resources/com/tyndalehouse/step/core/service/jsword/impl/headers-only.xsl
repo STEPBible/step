@@ -23,10 +23,19 @@
         <xsl:if test=".//verse">
             <xsl:for-each select="./cell">
                 <xsl:if test="jsword:get($tracker) = false()">
+                    <xsl:variable name="titleInCell"
+                                  select="(.//title[not(starts-with(@type, 'x-'))])[1]"/>
                     <xsl:variable name="previousTitle"
                                   select="(./preceding-sibling::title[not(starts-with(@type, 'x-'))])[1]"/>
                     <xsl:choose>
-                        <xsl:when test="$previousTitle">
+                        <xsl:when test="$titleInCell">
+                            <span>
+                                <xsl:apply-templates select=".//verse[1]"/>
+                            </span>
+                            <span class="subjectHeading">
+                                <xsl:apply-templates select="$titleInCell"/>
+                            </span>
+                        </xsl:when><xsl:when test="$previousTitle">
                             <span>
                                 <xsl:apply-templates select=".//verse[1]"/>
                             </span>

@@ -128,7 +128,11 @@ var MainSearchView = Backbone.View.extend({
                             'data-select-id="' + view.safeEscapeQuote(entry.item.shortName) + '">' + 
                             entry.item.shortName + '</div>';
                     case VERSION:
-                        return '<div class="versionItem" title="' + source + view.safeEscapeQuote(entry.item.shortInitials + ' - ' + entry.item.name) + '" ' +
+                        var isMasterVersion =_.findWhere($("#masterSearch").select2("data"), { itemType: "version" }) == null;
+                        
+                        return '<div class="versionItem ' + (isMasterVersion ? "masterVersion" : "") 
+                            +'" title="' + source + view.safeEscapeQuote(entry.item.shortInitials + ' - ' + entry.item.name) + '' +
+                            (isMasterVersion ? "\n" + __s.master_version_info : "") + '" ' +
                             'data-item-type="' + entry.itemType + '" ' +
                             'data-select-id="' + view.safeEscapeQuote(entry.item.shortInitials) + '">' + entry.item.shortInitials + "</div>";
                     case GREEK:
@@ -176,9 +180,11 @@ var MainSearchView = Backbone.View.extend({
             formatResultCssClass: view.formatResultCssClass,
             formatSelectionCssClass: view.formatResultCssClass
         }).on("select2-selecting", function (event) {
-            if (event.object && event.object.itemType == REFERENCE && self._getSpecificContext(REFERENCE) == null) {
+            var select2Input = $(this);
+            if (event.object && event.object.itemType == REFERENCE && self._getSpecificContext(REFERENCE) == null &&
+                (event.object.item.sectionType == 'BIBLE_BOOK' || event.object.item.sectionType == 'APOCRYPHA')
+                ) {
                 event.preventDefault();
-                var select2Input = $(this);
                 self._addSpecificContext(REFERENCE, event.object.item.shortName);
 
                 //wipe the last term to force a re-select
@@ -186,11 +192,16 @@ var MainSearchView = Backbone.View.extend({
                 select2Input.select2("search", event.object.item.shortName);
             } else if (event.object.item.grouped) {
                 event.preventDefault();
-                var select2Input = $(this);
                 $.data(self.masterSearch.select2("container"), "select2-last-term", null);
                 self._addSpecificContext(LIMIT, event.object.itemType);
                 select2Input.select2("search", self.getCurrentInput());
                 select2Input.select2("container").find("input").focus();
+            } else if(event.object.item.exit) {
+                //exiting, so clear limit context
+                event.preventDefault();
+                self._removeSpecificContext(LIMIT);
+                $.data(self.masterSearch.select2("container"), "select2-last-term", null);
+                select2Input.select2("search", self.getCurrentInput());
             }
             return;
         }).on("selected", function(event) {
@@ -237,6 +248,9 @@ var MainSearchView = Backbone.View.extend({
                     break;
                 }
             }
+        }).on("select2-removed", function() {
+            //re-evaluate master version
+            self._reEvaluateMasterVersion();
         });
 
         this.masterSearch.select2("container")
@@ -533,23 +547,24 @@ var MainSearchView = Backbone.View.extend({
     patch: function (results, term) {
         //check we don't have a limit:
         var includeEverything = true;
-        var limit = null;
-        for (var i = 0; i < this.specificContext.length; i++) {
-            if (this.specificContext[i].itemType == LIMIT) {
-                includeEverything = false;
-                limit = this.specificContext[i].value;
-            }
-        }
+        var limit = (_.findWhere(this.specificContext, { itemType: LIMIT }) || {}).value;
 
+        //splice in the 'exit' item
+        if(limit) {
+            var item = { itemType: limit, item: { exit: true  }};
+            results.splice(0,0, item);
+        }
+        
+        //then patch in the versions and other data if need be.
         var staticResources = [];
-        if (includeEverything) {
+        if (limit == null) {
             staticResources = this._getData(null, term);
             //push some of the options that are also always present:
         } else if(limit == VERSION) {
             staticResources = this._getData(limit, term);
         }
         
-        //find last version
+        //find last version and re-order that section
         var i = 0;
         for(i = 0; i < results.length; i++) {
             if(results[i].itemType != REFERENCE) {
@@ -599,12 +614,7 @@ var MainSearchView = Backbone.View.extend({
         this.specificContext.push({ itemType: itemType, value: value });
     },
     _getSpecificContext: function(itemType) {
-        for(var i = 0; i < this.specificContext.length; i++) {
-            if(this.specificContext[i].itemType == itemType) {
-                return this.specificContext[i].value;
-            }
-        }  
-        return null;
+        return (_.findWhere(this.specificContext, { itemType: itemType }) || {}).value;
     },
     /**
      * Removes all contexts of a particular type
@@ -743,6 +753,11 @@ var MainSearchView = Backbone.View.extend({
 
         if (v.item.grouped) {
             return "<span class='glyphicon glyphicon-chevron-down'></span> " + source + v.item.text;
+        }
+        
+        if(v.item.exit) {
+            //this is an exit instruction, so simply add something with the right icon
+            return "<span class='glyphicon glyphicon-chevron-up'></span> " + __s.exit_dropdown;
         }
 
         switch (v.itemType) {
@@ -923,5 +938,12 @@ var MainSearchView = Backbone.View.extend({
             //read up on requirejs to see if init can form part of download call
             step.util.ui.initSidebar();
         });
+    },
+    _reEvaluateMasterVersion: function() {
+        var masterVersion = this.$el.find(".versionItem").eq(0);
+        if(masterVersion.length > 0 && !masterVersion.hasClass("masterVersion")) {
+            masterVersion.addClass("masterVersion");
+            masterVersion.attr("title", masterVersion.attr("title") + "\n" + __s.master_version_info);
+        }
     }
 });

@@ -53,6 +53,7 @@ var PassageMenuView = Backbone.View.extend({
         
         this.listenTo(this.model, "raiseMessage", this.raiseMessage);
         this.listenTo(this.model, "squashErrors", this.squashError);
+        this.listenTo(Backbone.Events, "columnsChanged", this.updateVisibleCloseButton)
     },
     raiseMessage: function(opts) {
         var titleSoFar = this.warnings.attr("title") || "";
@@ -441,6 +442,7 @@ var PassageMenuView = Backbone.View.extend({
         }
 
         this.model.destroy();
+        Backbone.Events.trigger("columnsChanged", {});
     },
     activateColumn: function () {
         var passageId = this.column.find("[passage-id]").attr("passage-id");
@@ -448,8 +450,19 @@ var PassageMenuView = Backbone.View.extend({
     },
     openNewPanel: function (ev) {
         //if we're wanting a new column, then create it right now
-        step.util.activePassageId(this.get("passageId"));
+        step.util.activePassageId(this.model.get("passageId"));
         step.util.createNewColumn();
         ev.stopPropagation();
+    },
+    updateVisibleCloseButton: function() {
+        var shouldShow = $(".column").not(".examplesColumn").length > 1;
+        this.$el.find(".closeColumn").toggle(shouldShow);
+        if(!shouldShow) {
+            //make sure it's not the last button
+            this.$el.find(".closeColumn").insertBefore(this.$el.find(".openNewPanel"));
+        } else {
+            //ensure last element
+            this.$el.find(".openNewPanel").insertBefore(this.$el.find(".closeColumn"));
+        }
     }
 });

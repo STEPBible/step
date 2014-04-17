@@ -19,6 +19,7 @@ import java.util.Set;
  * @author chrisburrell
  */
 public final class LuceneUtils {
+    private static final int MAX_TRACK = 55;
     /**
      * no op
      */
@@ -81,7 +82,7 @@ public final class LuceneUtils {
                 }
                 count++;
                 //we continue round the loop until we've got enough, or in case we're wanting to keep track of the total number
-            } while (termEnum.next() && ((count < max) || trackMax));
+            } while (termEnum.next() && ((count < max) || trackMax || count < MAX_TRACK));
 
             //finalise and return
             TermsAndMaxCount termsAndMaxCount = new TermsAndMaxCount();

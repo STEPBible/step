@@ -56,7 +56,7 @@
         <xsl:variable name="versification" select="jsword:getVersification($v11nf, $v11n)"/>
         <xsl:variable name="passage" select="jsword:getValidKey($keyf, $versification, @osisRef)"/>
         <xsl:variable name="passageKey" select="jsword:getName($passage)"/>
-        <a href="javascript:void(0)" title="Click for more options" class="linkRef" xref="{$passageKey}" onclick="javascript:showPreviewOptions();"><xsl:apply-templates/></a>
+        <a href="javascript:void(0)" class="linkRef" xref="{$passageKey}" ><xsl:apply-templates/></a>
   </xsl:template>
 
   <xsl:template match="lb">

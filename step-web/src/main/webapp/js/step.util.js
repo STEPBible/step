@@ -161,8 +161,10 @@ step.util = {
         var passageContainer = step.util.getPassageContainer(step.util.activePassageId());
         if (this.outstandingRequests > 0) {
             passageContainer.addClass("waiting");
+            passageContainer.find(".infoIcon").toggle(false)
         } else {
             $(".passageContainer").removeClass("waiting");
+            passageContainer.find(".infoIcon").toggle(true);
         }
     },
     squashErrors: function (model) {
@@ -417,6 +419,7 @@ step.util = {
             .find(".passageContainer").attr("passage-id", newPassageId)
             .find(".passageContent").remove();
         newColumn.find(".argSummary").remove();
+        newColumn.find(".resultsLabel").html("");
 
         var allColumns = columns.add(newColumn);
 
@@ -441,6 +444,7 @@ step.util = {
             model: step.util.activePassage()
         });
 
+        Backbone.Events.trigger("columnsChanged", {});
         return newPassageId;
     },
     unlink: function (newPassageId) {

@@ -975,7 +975,7 @@
         <xsl:variable name="passage" select="jsword:getValidKey($keyf, $versification, @osisRef)"/>
       <xsl:variable name="passageKey" select="jsword:getName($passage)" />
       <xsl:variable name="encodedPassageKey" select="url:encode($passageKey)"/>
-        <a href="?version={$baseVersion}&amp;reference={$encodedPassageKey}" title="{$passageKey}" xref="{$passageKey}" onclick="javascript:showPreviewOptions();"><xsl:apply-templates/></a>
+        <a href="?version={$baseVersion}&amp;reference={$encodedPassageKey}" title="{$passageKey}" xref="{$passageKey}"><xsl:apply-templates/></a>
   </xsl:template>
   
   <!--=======================================================================-->
@@ -1437,7 +1437,7 @@
   </xsl:template>
 
   <xsl:template match="row">
-    <xsl:variable name="hasWorthyText"><xsl:value-of select=".//verse or .//title[@type='canonical']" /></xsl:variable>
+    <xsl:variable name="hasWorthyText"><xsl:value-of select=".//verse or .//title[@canonical='true']" /></xsl:variable>
     <xsl:if test="$hasWorthyText = 'true' or cell[@role='label']">
         <xsl:choose>
             <xsl:when test="$Interleave = 'true'">
@@ -1572,7 +1572,7 @@
 	    <xsl:choose>
     	<!-- interleaving or tabular column form -->
     	<xsl:when test="$Interleave = 'true'">
-    			<xsl:if test="$comparing = false()">
+    		<xsl:if test="$comparing = false()">
 				<xsl:call-template name="interleaveVerse">
 					<xsl:with-param name="cell-direction" select="$cell-direction" />
 				</xsl:call-template>

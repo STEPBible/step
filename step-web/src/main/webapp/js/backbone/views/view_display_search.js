@@ -74,10 +74,14 @@ var SearchDisplayView = Backbone.View.extend({
         if(append) {
             this.getScrollableArea().append(results);
         } else {
-            var passageHtml = this._doSpecificSearchRequirements(query, results, this.model.get("masterVersion"));
+            var passageHtml = results;
             if(!this.options.partRendered) {
+                passageHtml = this._doSpecificSearchRequirements(query, results, this.model.get("masterVersion"));
                 step.util.ui.emptyOffDomAndPopulate(this.$el, passageHtml);
             } 
+            
+            //everything is now attached, so we can add handlers
+            this._doSpecificSearchHandlers();
             this.getScrollableArea().scroll(function () {
                 self.getMoreResults();
             });
@@ -178,7 +182,12 @@ var SearchDisplayView = Backbone.View.extend({
         //do nothing
         return results;
     },
-
+    /**
+     * add the handling that is required for using the toolbars
+     */
+    _doSpecificSearchHandlers: function() {
+        //do nothing by default
+    },
     _updateTotalAppend: function(newResults) {
         this.resultsLabel.html(sprintf(__s.paging_showing, this.currentTotal));
     },

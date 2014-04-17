@@ -1,12 +1,16 @@
 var SubjectDisplayView = SearchDisplayView.extend({
     titleFragment: __s.search_subject,
     searchTypeToolbar: '<div class="subjectToolbar">' +
+        '<span class="radioGroup">' +
         '<input <%= selected[0] %> type="radio" name="subjectSearchType" value="<%= SUBJECT_SEARCH %>" id="<%= passageId %>_esvHeadings" />' +
         '<label for="<%= passageId %>_esvHeadings"><%= __s.search_subject_book_headings %></label>' +
+        '</span><span class="radioGroup">' +
         '<input <%= selected[1] %> type="radio" name="subjectSearchType" value="<%= NAVE_SEARCH %>" id="<%= passageId %>_nave" />' +
         '<label for="<%= passageId %>_nave"><%= __s.search_subject_nave %></label>' +
+        '</span><span class="radioGroup">' +
         '<input <%= selected[2] %> type="radio" name="subjectSearchType" value="<%= NAVE_SEARCH_EXTENDED %>" id="<%= passageId %>_extendedNave" />' +
         '<label for="<%= passageId %>_extendedNave"><%= __s.search_subject_nave_extended %></label>' +
+        '</span>' +
         '</div>',
     prefixMatcher: new RegExp("(" + SUBJECT_SEARCH + "|" + NAVE_SEARCH + "|" + NAVE_SEARCH_EXTENDED + ")" + "(?!.*?" + "(" + SUBJECT_SEARCH + "|" + NAVE_SEARCH + "|" + NAVE_SEARCH_EXTENDED + ")" + ")"),
 
@@ -61,23 +65,30 @@ var SubjectDisplayView = SearchDisplayView.extend({
 
             var searchTypes = $(_.template(this.searchTypeToolbar)({ passageId: passageId, selected: checked }));
             results.prepend(searchTypes);
-
-            //add handlers
-            searchTypes.find("input[type='radio']").on('change', function () {
-                //make sure the active passage is this one
-                step.util.activePassageId(step.passage.getPassageId(this));
-                var value = $(this).val();
-                var activePassage = step.util.activePassage();
-                var args = activePassage.get("args") || "";
-                args = args.replace(self.prefixMatcher, value);
-                step.router.navigateSearch(args);
-            });
         }
 
         //now iterate through all subject searches and set the the last subject search to be of this particular type
         return results;
     },
+    _doSpecificSearchHandlers: function () {
+        var self = this;
+        var subjectToolbar = this.$el.find(".subjectToolbar");
+        subjectToolbar.find("input[type='radio']").on('change', function () {
+            //make sure the active passage is this one
+            step.util.activePassageId(step.passage.getPassageId(this));
+            var value = $(this).val();
+            var activePassage = step.util.activePassage();
+            var args = activePassage.get("args") || "";
+            args = args.replace(self.prefixMatcher, value);
+            step.router.navigateSearch(args);
+        });
 
+        this.$el.find(".searchResults .panel-default").on("show.bs.collapse", function () {
+            //load more results
+            self.handleExpandingContainer($(this));
+        });
+
+    },
     _doNaveSearchResults: function (searchResults) {
         var self = this;
         var results = $("<span>").addClass("searchResults");
@@ -122,11 +133,6 @@ var SubjectDisplayView = SearchDisplayView.extend({
                 panel.prop("seeAlso", searchResults[i].seeAlso);
             }
         }
-
-        results.find(".panel-default").on("show.bs.collapse", function () {
-            //load more results
-            self.handleExpandingContainer($(this));
-        });
 
         return results;
     },

@@ -19,11 +19,7 @@
     
     font-weight: bold;
   }
-  .versionItem {
-    .features {
-      
-    }
-  }
+
   .glyphicon-plus {
     font-size: 90%; 
   }
@@ -102,3 +98,9 @@
   cursor: hand;
 }
 
+.versionItem {
+  &.masterVersion {
+    font-weight: bold;
+    font-style: italic;
+  }
+}

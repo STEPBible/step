@@ -4,9 +4,9 @@
 
 .passageOptionsGroup {
   height: $summaryHeight;
-  overflow: hidden;
   
-  .nextPreviouwChapterGroup {
+  .nextPreviousChapterGroup {
+    margin-left: 3px;
     margin-right: 10px;
   }
   
@@ -74,4 +74,7 @@
     direction: ltr;
     text-align: left;
   }
+  .argSummary {
+    float: left;
+  }  
 }

@@ -74,6 +74,10 @@ h4.lexicalGrouping {
 }
 
 .subjectToolbar {
+  display: inline-block;
+  float: initial;
+  width: initial;
+  
   input[type='radio'] {
     vertical-align: text-bottom;
   }
@@ -81,6 +85,12 @@ h4.lexicalGrouping {
     padding-right: 20px;
     padding-left: 5px;
   }
+  
+  .radioGroup {
+    display: inline-block;
+    width: initial;
+  }
+
 }
 
 .verseContent .passageContentHolder {

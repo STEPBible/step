@@ -17,7 +17,53 @@ var WordDisplayView = TextDisplayView.extend({
         }
         return results;
     },
+    _doSpecificSearchHandlers: function () {
+        var self = this;
+        var toolbarContainer = this.$el.find(".originalWordSearchToolbar");
+        
+        toolbarContainer.find("a").click(function () {
+            var thisEl = $(this).closest("li");
+            var okIcon = thisEl.find(".glyphicon-ok");
+            if (okIcon.hasClass("active")) {
+                okIcon.removeClass("active");
+            } else {
+                okIcon.addClass("active");
+            }
 
+            //get all selected checkboxes
+            var options = thisEl.closest("ul").find("li");
+            var filter = [];
+            $.each(options, function (i, item) {
+                if ($(this).find(".glyphicon").hasClass("active")) {
+                    filter.push($(this).attr("strongNumber"));
+                }
+            });
+
+            self.model.save({strongHighlights: filter, pageNumber: 1}, { silent: true });
+            step.router.navigateSearch();
+        });
+        
+        var expandableToolbar = toolbarContainer.find(".panel-body");
+        expandableToolbar.on("show.bs.collapse", function () {
+            step.settings.save({ relatedWordsOpen: true});
+        }).on("hide.bs.collapse", function () {
+            step.settings.save({ relatedWordsOpen: false});
+        });
+
+        //now that it is attached to the dom, sort the elements
+        var sortables = $(expandableToolbar).find(".sortable");
+        //add hovers
+        sortables.find("a").hover(
+            function () {
+                step.passage.higlightStrongs({
+                    passageId: step.passage.getPassageId(this),
+                    strong: $(this).attr("strong"),
+                    classes: 'primaryLightBg'
+                });
+            }, function () {
+                step.passage.removeStrongsHighlights(step.passage.getPassageId(this), 'primaryLightBg');
+            });
+    },
     /**
      * Adds a header for groups of verses, in this case a header indicating the various
      * different words
@@ -47,7 +93,7 @@ var WordDisplayView = TextDisplayView.extend({
             return item.accentedUnicode;
         }
     },
-    
+
     /**
      * Creates the passageButtons
      */
@@ -72,28 +118,7 @@ var WordDisplayView = TextDisplayView.extend({
             var id = "ows_" + self.model.get("passageId") + "_" + i;
 
             var span = $("<a class='' href='javascript:void(0)'>")
-                .attr("id", id)
-                .click(function () {
-                    var thisEl = $(this).closest("li");
-                    var okIcon = thisEl.find(".glyphicon-ok");
-                    if (okIcon.hasClass("active")) {
-                        okIcon.removeClass("active");
-                    } else {
-                        okIcon.addClass("active");
-                    }
-
-                    //get all selected checkboxes
-                    var options = thisEl.closest("ul").find("li");
-                    var filter = [];
-                    $.each(options, function (i, item) {
-                        if($(this).find(".glyphicon").hasClass("active")) {
-                            filter.push($(this).attr("strongNumber"));
-                        }
-                    });
-
-                    self.model.save({strongHighlights: filter, pageNumber: 1}, { silent: true });
-                    step.router.navigateSearch();
-                });
+                .attr("id", id);
 
             span.append('<span class="glyphicon glyphicon-ok"></span>');
             span.append(item.stepTransliteration).append(" (")
@@ -116,32 +141,13 @@ var WordDisplayView = TextDisplayView.extend({
         for (var i = 0; i < values.length; i++) {
             toolbar.find("[strong='" + values[i] + "']").find(".glyphicon-ok").addClass("active");
         }
-        
-        //now that it is attached to the dom, sort the elements
-        var sortables = $(toolbar).find(".sortable");
-        //add hovers
-        sortables.find("a").hover(
-            function () {
-                step.passage.higlightStrongs({
-                    passageId: step.passage.getPassageId(this),
-                    strong: $(this).attr("strong"),
-                    classes: 'primaryLightBg'
-                });
-            }, function () {
-                step.passage.removeStrongsHighlights(step.passage.getPassageId(this), 'primaryLightBg');
-            });
+
         toolbarContainer.append(toolbar);
-        
-        toolbarContainer.on("show.bs.collapse", function() {
-            step.settings.save({ relatedWordsOpen: true});
-        }).on("hide.bs.collapse", function() {
-            step.settings.save({ relatedWordsOpen: false});
-        });
-        
-        if(step.settings.get("relatedWordsOpen")) {
+
+        if (step.settings.get("relatedWordsOpen")) {
             toolbarContainer.addClass("in");
         }
-        
+
         return toolbarContainer;
     }
 });

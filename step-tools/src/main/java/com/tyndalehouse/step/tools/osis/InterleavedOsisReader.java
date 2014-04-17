@@ -37,10 +37,10 @@ public class InterleavedOsisReader {
      */
     public static void main(final String[] args) throws Exception {
         final String[] versions = new String[] { "ESV", "NIV" };
-        final String ref = "Lev.19.9";
+        final String ref = "Psalm.3";
         final boolean unicodeBreakDown = false;
         final boolean compare = true;
-        final InterlinearMode interlinearMode = InterlinearMode.INTERLEAVED;
+        final InterlinearMode interlinearMode = InterlinearMode.INTERLEAVED_COMPARE;
         boolean format = false;
         
         final Format prettyFormat = format ? Format.getPrettyFormat() : Format.getRawFormat();
@@ -66,21 +66,22 @@ public class InterleavedOsisReader {
                 TestUtils.mockVersificationService(), null, null, null, TestUtils.mockVersionResolver(), null);
         final List<LookupOption> options = new ArrayList<LookupOption>();
         options.add(LookupOption.CHAPTER_BOOK_VERSE_NUMBER);
-        options.add(LookupOption.HEADINGS_ONLY);
+//        options.add(LookupOption.HEADINGS_ONLY);
 //        options.add(LookupOption.HEADINGS);
 //        options.add(LookupOption.CHAPTER_BOOK_VERSE_NUMBER);
         
         final String osisText = jsi.getInterleavedVersions(versions, ref, options,
                 interlinearMode).getValue();
+        LOGGER.debug(osisText);
         final SAXBuilder sb = new SAXBuilder();
-        final Document d = sb.build(new StringReader(osisText));
+//        final Document d = sb.build(new StringReader(osisText));
 
-        final String output = xmlOutputter.outputString(d);
-        LOGGER.debug("Transformed is:\n {}", output);
+//        final String output = xmlOutputter.outputString(d);
+//        LOGGER.debug("Transformed is:\n {}", output);
 
-        if (unicodeBreakDown) {
-            outputUnicode(output);
-        }
+//        if (unicodeBreakDown) {
+//            outputUnicode(output);
+//        }
     }
 
     public static void outputUnicode(final String s) {

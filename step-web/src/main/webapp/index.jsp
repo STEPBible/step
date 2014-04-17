@@ -133,7 +133,7 @@
                         <span class="activeMarker"></span>
                         <div class="passageText ui-widget">
                             <div class="passageOptionsGroup">
-                                <div class="btn-group pull-left nextPreviouwChapterGroup">
+                                <div class="btn-group pull-left nextPreviousChapterGroup">
                                     <a class="btn btn-default btn-sm previousChapter" type="button" title="<fmt:message key="passage_previous_chapter" />">
                                         <span class="glyphicon glyphicon-arrow-left"></span></a>
                                     <a class="btn btn-default btn-sm nextChapter" type="button" title='<fmt:message key="passage_next_chapter" />'>
@@ -158,11 +158,12 @@
                                         </button>
                                     </div>
                                     
+                                    <%--  this button starts hidden as there is only 1 column showing --%>
+                                    <button class="btn btn-default btn-sm closeColumn" title="<fmt:message key="close" />" type="button" style="display: none">
+                                        <span class="glyphicon glyphicon-remove"></span>
+                                    </button>
                                     <button class="btn btn-default btn-sm openNewPanel" title="<fmt:message key="open_in_new_panel" />">
                                         <span class="glyphicon glyphicon-plus"></span>
-                                    </button>
-                                    <button class="btn btn-default btn-sm closeColumn" title="<fmt:message key="close" />" type="button">
-                                        <span class="glyphicon glyphicon-remove"></span>
                                     </button>
                                 </div>
                                 <div class="resultsLabel pull-right">
@@ -223,12 +224,12 @@
                                                 <c:if test="${ 'SUBJECT_RELATED' ne searchType }">
                                                     <%-- Do search toolbar --%>
                                                     <div class="subjectToolbar">
-                                                        <input <c:if test="${ 'SUBJECT_SIMPLE' eq searchType }">checked="checked"</c:if> type="radio" name="subjectSearchType" 
-                                                               value="subject" id="0_esvHeadings"><label for="0_esvHeadings"><fmt:message key="search_subject_book_headings" /></label>
-                                                        <input type="radio" <c:if test="${ 'SUBJECT_EXTENDED' eq searchType }">checked="checked"</c:if> name="subjectSearchType" 
-                                                               value="nave" id="0_nave"><label for="0_nave"><fmt:message key="search_subject_nave" /></label>
-                                                        <input type="radio" <c:if test="${ 'SUBJECT_FULL' eq searchType }">checked="checked"</c:if> name="subjectSearchType" 
-                                                               value="xnave" id="0_extendedNave"><label for="0_extendedNave"><fmt:message key="search_subject_nave_extended" /></label>
+                                                        <span class="radioGroup"><input <c:if test="${ 'SUBJECT_SIMPLE' eq searchType }">checked="checked"</c:if> type="radio" name="subjectSearchType" 
+                                                               value="subject" id="0_esvHeadings"><label for="0_esvHeadings"><fmt:message key="search_subject_book_headings" /></label></span>
+                                                        <span class="radioGroup"><input type="radio" <c:if test="${ 'SUBJECT_EXTENDED' eq searchType }">checked="checked"</c:if> name="subjectSearchType" 
+                                                               value="nave" id="0_nave"><label for="0_nave"><fmt:message key="search_subject_nave" /></label></span>
+                                                        <span class="radioGroup"><input type="radio" <c:if test="${ 'SUBJECT_FULL' eq searchType }">checked="checked"</c:if> name="subjectSearchType" 
+                                                               value="xnave" id="0_extendedNave"><label for="0_extendedNave"><fmt:message key="search_subject_nave_extended" /></label></span>
                                                     </div>
                                                 </c:if>
                                                 <c:choose>

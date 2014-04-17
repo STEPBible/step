@@ -319,7 +319,7 @@ var PassageDisplayView = Backbone.View.extend({
             var myPosition = passageId == 0 ? "left" : "right";
             var atPosition = passageId == 0 ? "right" : "left";
 
-            var xrefs = $(".notesPane [xref]", passageContent);
+            var xrefs = $("[xref]", passageContent);
             for (var i = 0; i < xrefs.length; i++) {
                 var item = xrefs.eq(i);
                 var xref = item.attr("xref");
@@ -382,7 +382,12 @@ var PassageDisplayView = Backbone.View.extend({
                         show: { event: 'click' }, hide: { event: 'click' },
                         content: {
                             text: function (event, api) {
-                                $.getSafe(BIBLE_GET_BIBLE_TEXT + version + "/" + encodeURIComponent(xref), function (data) {
+                                var chosenVersion = version;
+                                if(step.keyedVersions[version] && step.keyedVersions[version].category != 'BIBLE') {
+                                    chosenVersion = 'ESV';
+                                }
+                                
+                                $.getSafe(BIBLE_GET_BIBLE_TEXT + chosenVersion + "/" + encodeURIComponent(xref), function (data) {
                                     api.set('content.title.text', data.longName);
                                     api.set('content.text', data.value);
                                 });

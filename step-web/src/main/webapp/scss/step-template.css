@@ -393,6 +393,7 @@ ul.select2-parent-no-results {
     .passageOptionsGroup button span.largerFont {
       font-weight: bold; }
   .passageOptionsGroup .dropdown-menu {
+    min-width: 220px;
     padding-left: 5px; }
   .passageOptionsGroup ul {
     padding-left: 5px;

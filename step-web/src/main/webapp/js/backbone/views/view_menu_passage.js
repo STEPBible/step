@@ -127,6 +127,8 @@ var PassageMenuView = Backbone.View.extend({
         var masterVersion = step.keyedVersions[this.model.get("masterVersion")];
         this._updateDisplayModeOptions(masterVersion);
         this._updateDisplayOptions();
+        this._updateSearchOptions();
+        this._updateSortOptions();
     },
     /**
      * Obtains the options available in the masterVersion.
@@ -140,15 +142,36 @@ var PassageMenuView = Backbone.View.extend({
         var availableOptions = this.model.get("options") || "";
         var isPassage = this.model.get("searchType") == "PASSAGE";
 
+        //don't show the section at all if we're not a passage
+        this.displayOptions.toggle(isPassage);
+        
+        // quit straight away if not a passage
+        if(!isPassage) {
+            return;
+        }
+        
         //make invisible all options except for 'available ones'
         var displayOptions = this.displayOptions.find("li.passage");
         for (var i = 0; i < displayOptions.length; i++) {
             var displayOption = displayOptions.eq(i);
-            displayOption.toggle(isPassage && availableOptions.indexOf(displayOption.find("[data-value]").attr("data-value")) != -1);
+            displayOption.toggle(availableOptions.indexOf(displayOption.find("[data-value]").attr("data-value")) != -1);
         }
     },
     _updateSearchOptions: function () {
 
+    },
+    _updateSortOptions: function() {
+        var sortOptions = this.$el.find(".sortOptions");
+        //we will only ever show the sort options, if multiple strong numbers are searched for,
+        //as well as being a word search
+        var searchType = this.model.get("searchType");
+        if((searchType == "ORIGINAL_MEANING" ||
+            searchType == "ORIGINAL_GREEK_RELATED" ||
+            searchType == "ORIGINAL_HEBREW_RELATED") && (this.model.get("strongHighlights") || []).length > 1) {
+            sortOptions.toggle(true);   
+        } else {
+            sortOptions.toggle(false);
+        }
     },
     _updateDisplayModeOptions: function (masterVersion) {
         //set the current display mode.
@@ -198,9 +221,6 @@ var PassageMenuView = Backbone.View.extend({
         this.displayModeContainer.append(this._createDisplayModes());
         dropdownContainer.append(this.displayModeContainer);
 
-        var displayOptionsHeading = $("<h1>").append(__s.display_options);
-        dropdownContainer.append(displayOptionsHeading);
-
         this.displayOptions = this._createDisplayOptions();
         this.otherOptions = this._createSearchOptions();
         this.wordSearchOptions = this._createWordSortOptions();
@@ -208,7 +228,6 @@ var PassageMenuView = Backbone.View.extend({
             .append(this.displayOptions)
             .append(_.template("<h1><%= __s.general_options %></h1>")())
             .append(this.otherOptions)
-            .append($("<h1>").append(__s.word_search_sort_options))
             .append(this.wordSearchOptions);
 
         var shareDropdownMenu = $("<div>").addClass("dropdown-menu pull-right").attr("role", "menu");
@@ -227,7 +246,6 @@ var PassageMenuView = Backbone.View.extend({
             displayModes.append($("<li>").append(link).attr("role", "presentation"));
         }
 
-
         var self = this;
         displayModes.find('a').click(function (e) {
             e.stopPropagation();
@@ -239,14 +257,21 @@ var PassageMenuView = Backbone.View.extend({
         return displayModes;
     },
     _createDisplayOptions: function () {
+        var dropdownContainer = $('<span class="displayOptionsContainer">"');
+        var displayOptionsHeading = $("<h1>").append(__s.display_options);
+
         var dropdown = $("<ul>").addClass("passageOptions");
         dropdown.append(this._createPassageOptions(dropdown));
-        return dropdown;
+        
+        dropdownContainer.append(displayOptionsHeading);
+        dropdownContainer.append(dropdown);
+        return dropdownContainer;
     },
     getContextLabel: function (context) {
         return sprintf(__s.search_context, context);
     },
     _createWordSortOptions: function () {
+        var container = $('<span class="sortOptions"></span>').append($("<h1>").append(__s.word_search_sort_options));
         var dropdown = $("<ul></ul>");
         dropdown.append($("<li>").append(this._createLink('false', __s.scripture, __s.scripture_help)));
         dropdown.append($("<li>").append(this._createLink(ORIGINAL_SPELLING_SORT, __s.original_spelling, __s.original_spelling_help)));
@@ -261,7 +286,8 @@ var PassageMenuView = Backbone.View.extend({
             var orderCode = el.attr("data-value");
             self.model.save({ order: orderCode, pageNumber: 1 });
         });
-        return dropdown;
+        container.append(dropdown);
+        return container;
     },
     _createSearchOptions: function () {
         var dropdown = $("<ul></ul>")

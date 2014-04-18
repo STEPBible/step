@@ -2,6 +2,10 @@
   overflow-y: scroll;
   overflow-x: hidden;
   
+  .argSummary {
+    padding: 3 0 0 5;
+  }
+  
   h1 {
     font-size: 13px;
     text-align: center;
@@ -29,9 +33,9 @@
     width: 100%;
   }
   .find {
-    margin-top: 4px;
     margin-left: 5px;
   }
+  
 }
 .examples {
   display: block;

@@ -429,16 +429,21 @@ ul.select2-parent-no-results {
     direction: ltr;
     text-align: left; }
   .passageOptionsGroup .argSummary {
+    margin: 0;
     float: left; }
 
 .argSummary {
-  margin-top: 4px;
   margin-left: 5;
-  display: block; }
+  display: block;
+  padding: 1; }
   .argSummary span.argSelect {
+    display: inline-block;
     cursor: default !important;
     white-space: nowrap;
-    padding: 3px 5px 3px 3px;
+    font-size: 12px;
+    line-height: 12px;
+    padding: 4px 6px 4px 6px;
+    margin: 0 0 0 0;
     cursor: default;
     border: 1px solid #aaaaaa;
     border-radius: 3px;
@@ -659,6 +664,8 @@ h4.lexicalGrouping {
 .examplesContainer {
   overflow-y: scroll;
   overflow-x: hidden; }
+  .examplesContainer .argSummary {
+    padding: 3 0 0 5; }
   .examplesContainer h1 {
     font-size: 13px;
     text-align: center;
@@ -681,7 +688,6 @@ h4.lexicalGrouping {
   .examplesContainer .input-group {
     width: 100%; }
   .examplesContainer .find {
-    margin-top: 4px;
     margin-left: 5px; }
 
 .examples {
@@ -1149,6 +1155,7 @@ body::-webkit-scrollbar-corner {
   margin: 0 0 5 0;
   padding: 5 0 0 0; }
 #history .historyItem .argSummary {
+  margin-left: 0;
   display: inline; }
 
 #help {

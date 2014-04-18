@@ -541,12 +541,129 @@ step.util = {
         }
         return data;
     },
+    safeEscapeQuote: function(term) {
+        if(term == null) {
+            return "";
+        }
+        return term.replace(/"/g, '\\\"');
+    },
     ui: {
         selectMark: function (classes) {
             return '<span class="glyphicon glyphicon-ok ' + classes + '"></span>';
         },
-        renderArg: function(keyValue) {
-            return '<span class="argSelect select-' + keyValue.key + '">' + keyValue.value + '</span>';
+        renderArgs: function (searchTokens, container) {
+            var isMasterVersion = true;
+            for (var i = 0; i < searchTokens.length; i++) {
+                container.append(step.util.ui.renderArg(searchTokens[i], isMasterVersion) + ' ');
+                if(searchTokens[i].itemType == VERSION) {
+                    isMasterVersion = false;
+                }
+            }
+        },
+        renderArg: function(searchToken, isMasterVersion) {
+            //a search token isn't quite a item, so we need to fudge a few things
+            searchToken.itemType = searchToken.tokenType;
+            searchToken.item = searchToken.enhancedTokenInfo;
+
+            //rewrite the item type in case it's a strong number
+            if(searchToken.itemType == STRONG_NUMBER) {
+                //pretend it's a Greek meaning, or a Hebrew meaning
+                searchToken.itemType = (searchToken.item.strongNumber || " ")[0] == 'G' ? GREEK_MEANINGS : HEBREW_MEANINGS;
+            }
+            
+            return '<span class="argSelect select-' + searchToken.itemType + '">' + 
+                this.renderEnhancedToken(searchToken, isMasterVersion) + 
+                '</span>';
+        },
+        getSource: function (itemType, nowrap) {
+            var source;
+            switch (itemType) {
+                case VERSION:
+                    source = __s.translation_commentary;
+                    break;
+                case GREEK:
+                    source = __s.search_greek;
+                    break;
+                case GREEK_MEANINGS:
+                    source = row = __s.search_greek_meaning;
+                    break;
+                case HEBREW:
+                    source = __s.search_hebrew;
+                    break;
+                case HEBREW_MEANINGS:
+                    source = __s.search_hebrew_meaning;
+                    break;
+                case REFERENCE:
+                    source = __s.bible_reference;
+                    break;
+                case SUBJECT_SEARCH:
+                    source = __s.search_topic;
+                    break;
+                case MEANINGS:
+                    source = __s.search_meaning;
+                    break;
+                case SYNTAX:
+                    source = __s.query_syntax;
+                    break;
+                case TEXT_SEARCH:
+                    source = __s.search_text;
+            }
+            return nowrap ? '[' + source + ']' : '<span class="source">[' + source + ']</span>';
+        },
+        renderEnhancedToken: function(entry, isMasterVersion) {
+            var util = step.util;
+            var source = this.getSource(entry.itemType, true) + " ";
+            switch (entry.itemType) {
+                case REFERENCE:
+                    return '<div class="referenceItem" title="' + source + util.safeEscapeQuote(entry.item.fullName) + '" ' +
+                        'data-item-type="' + entry.itemType + '" ' +
+                        'data-select-id="' + util.safeEscapeQuote(entry.item.shortName) + '">' +
+                        entry.item.shortName + '</div>';
+                case VERSION:
+                    return '<div class="versionItem ' + (isMasterVersion ? "masterVersion" : "")
+                        +'" title="' + source + util.safeEscapeQuote(entry.item.shortInitials + ' - ' + entry.item.name) + '' +
+                        (isMasterVersion ? "\n" + __s.master_version_info : "") + '" ' +
+                        'data-item-type="' + entry.itemType + '" ' +
+                        'data-select-id="' + util.safeEscapeQuote(entry.item.shortInitials) + '">' + entry.item.shortInitials + "</div>";
+                case GREEK:
+                case HEBREW:
+                    var className = entry.itemType == GREEK ? "unicodeFont" : "hbFontMini";
+                    return "<div class=' " + entry.itemType + 'Item ' + className + "' " +
+                        'data-item-type="' + entry.itemType + '" ' +
+                        'data-select-id="'  + util.safeEscapeQuote(entry.item.stepTransliteration) + '" ' +
+                        'title="' + source + util.safeEscapeQuote(entry.item.gloss + ", " + entry.item.stepTransliteration) + '">' +
+                        entry.item.matchingForm + "</div>";
+                
+                case GREEK_MEANINGS:
+                case HEBREW_MEANINGS:
+                    return "<div class='" + entry.itemType + "Item' " +
+                        'data-item-type="' + entry.itemType + '" ' +
+                        'data-select-id="' + util.safeEscapeQuote(entry.item.gloss) + '" ' +
+                        'title="' + source + util.safeEscapeQuote(entry.item.gloss + ", " + entry.item.matchingForm) + '">' +
+                        entry.item.stepTransliteration + "</div>";
+                case MEANINGS:
+                    return '<div class="meaningsItem" ' +
+                        'title="' + source + util.safeEscapeQuote(entry.item.gloss) + '" ' +
+                        'data-item-type="' + entry.itemType + '" ' +
+                        'data-select-id="' + util.safeEscapeQuote(entry.item.gloss) +  '">' + entry.item.gloss + "<div>";
+                case SUBJECT_SEARCH:
+                    return '<div class="subjectItem" ' +
+                        'data-item-type="' + entry.itemType + '" ' +
+                        'data-select-id="' + util.safeEscapeQuote(entry.item.value) +  '" ' +
+                        'title="' + source + util.safeEscapeQuote(entry.item.value) + '">' + entry.item.value + "<div>";
+                case TEXT_SEARCH:
+                    return '<div class="textItem" data-select-id="' + util.safeEscapeQuote(entry.item.text) + '"' +
+                        'data-item-type="' + entry.itemType + '" ' +
+                        'title="' + source + util.safeEscapeQuote(entry.item.text) + '">' + entry.item.text + "</div>";
+
+                case SYNTAX:
+                    return '<div class="syntaxItem"' +
+                        'data-item-type="' + entry.itemType + '" ' +
+                        'data-select-id="' + util.safeEscapeQuote(entry.item.value) + '" ' +
+                        'title="' + source + util.safeEscapeQuote(entry.item.value) + '">' + entry.item.text + "</div>";
+                default:
+                    return entry.item.text;
+            }    
         },
         /**
          * Given an array of languages, returns an array of fonts

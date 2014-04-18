@@ -158,12 +158,11 @@ var StepRouter = Backbone.Router.extend({
         
         this._renderSummary(passageModel);
     },
+
     _renderSummary: function(passageModel) {
-        var kvs = step.util.getKeyValues(passageModel.get("args"));
+        var searchTokens = passageModel.get("searchTokens");
         var container = $("<span></span>").addClass("argSummary");
-        for(var i = 0; i < kvs.length; i++) {
-            container.append(step.util.ui.renderArg(kvs[i]) + ' ');
-        }
+        step.util.ui.renderArgs(searchTokens, container);
         var passageOptions = step.util.getPassageContainer(passageModel.get("passageId")).find(".passageOptionsGroup");
         passageOptions.find(".argSummary").remove();
         passageOptions.append(container);
@@ -238,7 +237,7 @@ var StepRouter = Backbone.Router.extend({
                 }
 
                 passageModel.save(text, { silent: true });
-                self._addBookmark(query);
+                self._addBookmark({ args: query, searchTokens: text.searchTokens });
                 step.util.squashErrors(passageModel);
                 
                 //don't trigger a full search, but replace the URL with the one that makes sense
@@ -253,14 +252,18 @@ var StepRouter = Backbone.Router.extend({
         });
     },
     _addBookmark: function (query) {
-        var normalizedArgs = this._normalizeArgs(query);
+        var normalizedArgs = this._normalizeArgs(query.args);
         var existingModel = step.bookmarks.findWhere({ args: normalizedArgs });
         if (existingModel) {
             existingModel.save({ lastAccessed: new Date().getTime() });
             return;
         }
 
-        var historyModel = new HistoryModel({ args: normalizedArgs, lastAccessed: new Date().getTime() });
+        var historyModel = new HistoryModel({ 
+            args: normalizedArgs, 
+            lastAccessed: new Date().getTime(),
+            searchTokens: query.searchTokens
+        });
         step.bookmarks.add(historyModel);
         historyModel.save();
     },

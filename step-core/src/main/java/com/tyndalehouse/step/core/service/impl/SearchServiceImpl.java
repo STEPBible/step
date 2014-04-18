@@ -39,7 +39,9 @@ import com.tyndalehouse.step.core.exceptions.LuceneSearchException;
 import com.tyndalehouse.step.core.exceptions.TranslatedException;
 import com.tyndalehouse.step.core.models.AbstractComplexSearch;
 import com.tyndalehouse.step.core.models.BibleVersion;
+import com.tyndalehouse.step.core.models.BookName;
 import com.tyndalehouse.step.core.models.InterlinearMode;
+import com.tyndalehouse.step.core.models.KeyWrapper;
 import com.tyndalehouse.step.core.models.LexiconSuggestion;
 import com.tyndalehouse.step.core.models.SearchToken;
 import com.tyndalehouse.step.core.models.search.KeyedSearchResultSearchEntry;
@@ -61,6 +63,7 @@ import com.tyndalehouse.step.core.service.helpers.VersionResolver;
 import com.tyndalehouse.step.core.service.jsword.JSwordMetadataService;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import com.tyndalehouse.step.core.service.jsword.JSwordSearchService;
+import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
 import com.tyndalehouse.step.core.service.search.SubjectSearchService;
 import com.tyndalehouse.step.core.service.search.impl.OriginalWordSuggestionServiceImpl;
 import com.tyndalehouse.step.core.utils.StringConversionUtils;
@@ -125,6 +128,7 @@ public class SearchServiceImpl implements SearchService {
     private final EntityIndexReader specificForms;
     private final EntityIndexReader timelineEvents;
     private final JSwordMetadataService jswordMetadata;
+    private final JSwordVersificationService versificationService;
     private final SubjectSearchService subjects;
     private final BibleInformationService bibleInfoService;
     private VersionResolver versionResolver;
@@ -142,13 +146,16 @@ public class SearchServiceImpl implements SearchService {
     @Inject
     public SearchServiceImpl(final JSwordSearchService jswordSearch,
                              final JSwordMetadataService jswordMetadata,
+                             final JSwordVersificationService versificationService,
                              final SubjectSearchService subjects, final TimelineService timeline,
                              final BibleInformationService bibleInfoService,
                              final EntityManager entityManager,
                              final VersionResolver versionResolver,
-                             final LexiconDefinitionService lexiconDefinitionService, final JSwordRelatedVersesService relatedVerseService) {
+                             final LexiconDefinitionService lexiconDefinitionService, 
+                             final JSwordRelatedVersesService relatedVerseService) {
         this.jswordSearch = jswordSearch;
         this.jswordMetadata = jswordMetadata;
+        this.versificationService = versificationService;
         this.subjects = subjects;
         this.timeline = timeline;
         this.bibleInfoService = bibleInfoService;
@@ -232,19 +239,20 @@ public class SearchServiceImpl implements SearchService {
      * @param searchTokens  a list of search tokens
      * @return with enhanced meta data if any
      */
-
     private void enhanceSearchTokens(final String masterVersion, final List<SearchToken> searchTokens) {
         for (SearchToken st : searchTokens) {
             final String tokenType = st.getTokenType();
             if (SearchToken.VERSION.equals(tokenType)) {
                 //probably need to show the short initials
                 BibleVersion version = new BibleVersion();
-                version.setInitials(this.versionResolver.getLongName(tokenType));
-                version.setShortInitials(this.versionResolver.getShortName(tokenType));
+                version.setInitials(this.versionResolver.getLongName(st.getToken()));
+                version.setShortInitials(this.versionResolver.getShortName(st.getToken()));
                 st.setEnhancedTokenInfo(version);
             } else if (SearchToken.REFERENCE.equals(tokenType)) {
                 //could take the key but that has all parts combined
-                st.setEnhancedTokenInfo(this.bibleInfoService.getKeyInfo(st.getToken(), masterVersion, masterVersion));
+                final KeyWrapper kw = this.bibleInfoService.getKeyInfo(st.getToken(), masterVersion, masterVersion);
+                final BookName bookName = new BookName(kw.getName(), kw.getName(), BookName.Section.PASSAGE, false);
+                st.setEnhancedTokenInfo(bookName);
             } else if (SearchToken.STRONG_NUMBER.equals(tokenType)) {
                 //hit the index and look up that strong number...
                 st.setEnhancedTokenInfo(this.lexiconDefinitionService.lookup(st.getToken()));

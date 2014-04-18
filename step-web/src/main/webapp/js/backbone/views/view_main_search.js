@@ -119,60 +119,10 @@ var MainSearchView = Backbone.View.extend({
              * @returns {*}
              */
             formatSelection: function (entry) {
-                var source = self.getSource(entry.itemType, true) + " ";
-                
-                switch (entry.itemType) {
-                    case REFERENCE:
-                        return '<div class="referenceItem" title="' + source + view.safeEscapeQuote(entry.item.fullName) + '" ' +
-                            'data-item-type="' + entry.itemType + '" ' +
-                            'data-select-id="' + view.safeEscapeQuote(entry.item.shortName) + '">' + 
-                            entry.item.shortName + '</div>';
-                    case VERSION:
-                        var isMasterVersion =_.findWhere($("#masterSearch").select2("data"), { itemType: "version" }) == null;
-                        
-                        return '<div class="versionItem ' + (isMasterVersion ? "masterVersion" : "") 
-                            +'" title="' + source + view.safeEscapeQuote(entry.item.shortInitials + ' - ' + entry.item.name) + '' +
-                            (isMasterVersion ? "\n" + __s.master_version_info : "") + '" ' +
-                            'data-item-type="' + entry.itemType + '" ' +
-                            'data-select-id="' + view.safeEscapeQuote(entry.item.shortInitials) + '">' + entry.item.shortInitials + "</div>";
-                    case GREEK:
-                    case HEBREW:
-                        var className = entry.itemType == GREEK ? "unicodeFont" : "hbFontMini";
-                        return "<div class=' " + entry.itemType + 'Item ' + className + "' " +
-                            'data-item-type="' + entry.itemType + '" ' +
-                            'data-select-id="'  + view.safeEscapeQuote(entry.item.stepTransliteration) + '" ' +
-                            'title="' + source + view.safeEscapeQuote(entry.item.gloss + ", " + entry.item.stepTransliteration) + '">' + 
-                            entry.item.matchingForm + "</div>";
-                    case GREEK_MEANINGS:
-                    case HEBREW_MEANINGS:
-                        return "<div class='" + entry.itemType + "Item' " +
-                            'data-item-type="' + entry.itemType + '" ' +
-                            'data-select-id="' + view.safeEscapeQuote(entry.item.gloss) + '" ' +
-                            'title="' + source + view.safeEscapeQuote(entry.item.gloss + ", " + entry.item.matchingForm) + '">' +
-                            entry.item.stepTransliteration + "</div>";
-                    case MEANINGS:
-                        return '<div class="meaningsItem" ' +
-                            'title="' + source + view.safeEscapeQuote(entry.item.gloss) + '" ' +
-                            'data-item-type="' + entry.itemType + '" ' +
-                            'data-select-id="' + view.safeEscapeQuote(entry.item.gloss) +  '">' + entry.item.gloss + "<div>";
-                    case SUBJECT_SEARCH:
-                        return '<div class="subjectItem" ' +
-                            'data-item-type="' + entry.itemType + '" ' +
-                            'data-select-id="' + view.safeEscapeQuote(entry.item.value) +  '" ' +
-                            'title="' + source + view.safeEscapeQuote(entry.item.value) + '">' + entry.item.value + "<div>";
-                    case TEXT_SEARCH:
-                        return '<div class="textItem" data-select-id="' + view.safeEscapeQuote(entry.item.text) + '"' +
-                            'data-item-type="' + entry.itemType + '" ' +
-                            'title="' + source + view.safeEscapeQuote(entry.item.text) + '">' + entry.item.text + "</div>";
-                        
-                    case SYNTAX:
-                        return '<div class="syntaxItem"' +
-                            'data-item-type="' + entry.itemType + '" ' +
-                            'data-select-id="' + view.safeEscapeQuote(entry.item.value) + '" ' +
-                            'title="' + source + view.safeEscapeQuote(entry.item.value) + '">' + entry.item.text + "</div>";
-                    default:
-                        return entry.item.text;
-                }
+                return step.util.ui.renderEnhancedToken(
+                    entry, 
+                    _.findWhere($("#masterSearch").select2("data"), { itemType: "version" }) == null
+                );
             },
             escapeMarkup: function (m) {
                 return m;
@@ -261,9 +211,6 @@ var MainSearchView = Backbone.View.extend({
     },
     _resetReplaceItems: function() {
         this.masterSearch.select2("container").find(".replaceItem").removeClass("replaceItem"); 
-    },
-    safeEscapeQuote: function(term) {
-        return term.replace(/"/g, '\\\"');
     },
     _addTokenHandlers: function(tokenElement) {
         var tokens;
@@ -703,41 +650,7 @@ var MainSearchView = Backbone.View.extend({
     formatResultCssClass: function (item) {
         return "select-" + item.itemType;
     },
-    getSource: function (itemType, nowrap) {
-        var source;
-        switch (itemType) {
-            case VERSION:
-                source = __s.translation_commentary;
-                break;
-            case GREEK:
-                source = __s.search_greek;
-                break;
-            case GREEK_MEANINGS:
-                source = row = __s.search_greek_meaning;
-                break;
-            case HEBREW:
-                source = __s.search_hebrew;
-                break;
-            case HEBREW_MEANINGS:
-                source = __s.search_hebrew_meaning;
-                break;
-            case REFERENCE:
-                source = __s.bible_text;
-                break;
-            case SUBJECT_SEARCH:
-                source = __s.search_topic;
-                break;
-            case MEANINGS:
-                source = __s.search_meaning;
-                break;
-            case SYNTAX:
-                source = __s.query_syntax;
-                break;
-            case TEXT_SEARCH:
-                source = __s.search_text;
-        }
-        return nowrap ? '[' + source + ']' : '<span class="source">[' + source + ']</span>';
-    },
+    
     /**
      * Renders the view when shown in the dropdown list
      *
@@ -748,7 +661,7 @@ var MainSearchView = Backbone.View.extend({
      * @returns {string}
      */
     formatResults: function (v, container, query, escapeMarkup) {
-        var source = this.getSource(v.itemType);
+        var source = step.util.ui.getSource(v.itemType);
         var row;
 
         if (v.item.grouped) {
@@ -852,7 +765,7 @@ var MainSearchView = Backbone.View.extend({
             case VERSION:
                 return step.keyedVersions[token];
             case REFERENCE:
-                return { fullName: enhancedInfo.name, shortName: enhancedInfo.name };
+                return { fullName: enhancedInfo.fullName, shortName: enhancedInfo.shortName };
             case GREEK_MEANINGS:
             case GREEK:
             case HEBREW_MEANINGS:

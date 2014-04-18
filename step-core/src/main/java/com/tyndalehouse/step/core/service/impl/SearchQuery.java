@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.tyndalehouse.step.core.data.EntityDoc;
+import com.tyndalehouse.step.core.utils.StringUtils;
 
 /**
  * Search query object. Defines all parameters required to execute a search
@@ -92,19 +93,23 @@ public class SearchQuery {
 
         }
 
+
+        // set the other variables
+        this.ranked = Boolean.parseBoolean(sortOrder);
+        this.sortOrder = sortOrder;
+        prepareAllKeys(sortOrder);
+
+        this.context = context;
+        this.pageNumber = pageNumber;
+        this.pageSize = pageSize;
+    }
+
+    private void prepareAllKeys(final String sortOrder) {
         // by default we set all Keys to true if we have several searches to run
         if (this.searches.length > 1 || SearchServiceImpl.VOCABULARY_SORT.equals(sortOrder)
                 || SearchServiceImpl.ORIGINAL_SPELLING_SORT.equals(sortOrder)) {
             this.allKeys = true;
         }
-
-        // set the other variables
-        this.ranked = Boolean.parseBoolean(sortOrder);
-        this.sortOrder = sortOrder;
-
-        this.context = context;
-        this.pageNumber = pageNumber;
-        this.pageSize = pageSize;
     }
 
     /**
@@ -114,13 +119,14 @@ public class SearchQuery {
      * @param context         the number of verses to include either side
      * @param interlinearMode the display mode used on multi version searches
      */
-    public SearchQuery(final int pageNumber, int context, String interlinearMode, final IndividualSearch... search) {
+    public SearchQuery(final int pageNumber, int context, String interlinearMode, final String sort, final IndividualSearch... search) {
         this.searches = search;
         this.pageSize = PAGE_SIZE;
         this.pageNumber = pageNumber;
         this.context = context;
         this.ranked = false;
-        this.sortOrder = "false";
+        this.sortOrder = StringUtils.isBlank(sort) ? "false" : sort;
+        prepareAllKeys(sortOrder);
         this.interlinearMode = interlinearMode;
 
         final StringBuilder sb = new StringBuilder();

@@ -31,6 +31,9 @@ var SearchDisplayView = Backbone.View.extend({
     renderAppend: function() {
         this.render(true);
         this.fetching = false;
+        
+        //remove icon
+        this.$el.find(".searchResults .waiting").remove();
     },
     render: function (append) {
         var self = this;
@@ -38,7 +41,6 @@ var SearchDisplayView = Backbone.View.extend({
 
         this.args = this.model.get("searchArgs");
         this.versionArg = this.model.get("versionArg");
-        this.masterVersion = this.model.get("masterVersion");
         this.lastSearch = query;
         
         var results = this.model.get("results");
@@ -55,7 +57,7 @@ var SearchDisplayView = Backbone.View.extend({
         if (total == 0) {
             results = $("<div>").append(__s.search_no_search_results_found).addClass("notApplicable");
         } else {
-            results = this.options.partRendered ? this.$el.find("> span") : this.renderSearch(results, query, this.masterVersion);
+            results = this.options.partRendered ? this.$el.find("> span") : this.renderSearch(append, this.$el.find(".searchResults"));
             
             this._addVerseClickHandlers(results);
             
@@ -153,7 +155,14 @@ var SearchDisplayView = Backbone.View.extend({
             
             //we don't want to update the page URL here
             this.model.save({pageNumber: newPageNumber}, { silent: true });
-            step.router.doMasterSearch(this.model.get("args"), null, this.model.get("interlinearMode"), newPageNumber, this.model.get("strongHighlights"), this.model.get("context"), true);
+            
+            //add a full width container for the waiting icon
+            this.$el.find(".searchResults").append("<div class='waiting'>&nbsp;</div>");
+            
+            step.router.doMasterSearch(this.model.get("args"), null, this.model.get("interlinearMode"), 
+                newPageNumber, this.model.get("strongHighlights"), 
+                this.model.get("order"),
+                this.model.get("context"), true);
         }
     },
 
@@ -175,10 +184,9 @@ var SearchDisplayView = Backbone.View.extend({
      * An ability to post-process the results at the very end
      * @param query the query syntax
      * @param results the all-emcompassing results object
-     * @param resultsWrapper the wrapper containing all meta information about this current search
      * @private
      */
-    _doSpecificSearchRequirements: function (query, results, masterVersion) {
+    _doSpecificSearchRequirements: function (query, results) {
         //do nothing
         return results;
     },
@@ -290,7 +298,7 @@ var SearchDisplayView = Backbone.View.extend({
         var notApplicable = $("<span>").addClass("notApplicable").html(message);
         results.append(notApplicable);
     },
-    getVerseRow: function (masterVersion, table, contentGenerator, item) {
+    getVerseRow: function (table, contentGenerator, item) {
         var newRow = $("<div>").addClass("searchResultRow");
         var contentCell = $("<div>").addClass("searchResultRow");
         newRow.append(contentCell);

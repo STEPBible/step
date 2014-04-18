@@ -95,6 +95,7 @@ public class SearchPageController extends HttpServlet {
             req.setAttribute("definitions", results.getDefinitions());
             req.setAttribute("filter", results.getStrongHighlights());
             req.setAttribute("numResults", results.getTotal());
+            req.setAttribute("sort", results.getOrder());
             results.setResults(null);
             req.setAttribute("passageModel", objectMapper.get().writeValueAsString(results));
         }
@@ -109,6 +110,7 @@ public class SearchPageController extends HttpServlet {
                     req.getParameter("display"),
                     req.getParameter("page"),
                     req.getParameter("qFilter"),
+                    req.getParameter("sort"),
                     req.getParameter("context"));
         } catch (Exception ex) {
             LOGGER.warn(ex.getMessage(), ex);

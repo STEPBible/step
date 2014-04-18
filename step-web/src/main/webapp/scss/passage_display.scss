@@ -1,6 +1,6 @@
 @import 'template_variables';
 
-.passageContainer.waiting {
+.passageContainer.waiting, .searchResults .waiting {
   background-position: 50% 5;
 }
 

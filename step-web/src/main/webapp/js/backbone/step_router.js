@@ -47,6 +47,7 @@ var StepRouter = Backbone.Router.extend({
         var pageNumber = activePassageModel.get("pageNumber");
         var context = activePassageModel.get("context");
         var filter = activePassageModel.get("strongHighlights");
+        var sort = activePassageModel.get("order");
         
         if (step.util.isBlank(context)) {
             activePassageModel.set({context: 0 }, { silent: true });
@@ -78,6 +79,10 @@ var StepRouter = Backbone.Router.extend({
         if (!step.util.isBlank(filter)) {
             urlStub = this._addArg(urlStub, "qFilter", filter);
         }
+        if (!step.util.isBlank(sort)) {
+            urlStub = this._addArg(urlStub, "sort", sort);
+        }
+        
         if ($.getUrlVars().indexOf("debug") != -1) {
             urlStub = this._addArg(urlStub, "debug");
         }
@@ -163,7 +168,7 @@ var StepRouter = Backbone.Router.extend({
         passageOptions.find(".argSummary").remove();
         passageOptions.append(container);
     },
-    doMasterSearch: function (query, options, display, pageNumber, filter, context, quiet) {
+    doMasterSearch: function (query, options, display, pageNumber, filter, sort, context, quiet) {
         var self = this;
         if (step.util.isBlank(query)) {
             //assume URL parameters
@@ -172,6 +177,7 @@ var StepRouter = Backbone.Router.extend({
             display = $.getUrlVar("display");
             filter = $.getUrlVar("qFilter");
             context = $.getUrlVar("context");
+            sort = $.getUrlVar("sort");
         }
 
         var args = query.split("&");
@@ -206,6 +212,10 @@ var StepRouter = Backbone.Router.extend({
                     break;
                 case 'qFilter':
                     filter = value;
+                    break;
+                case 'sort':
+                    sort = value;
+                    break;
             }
         }
 
@@ -215,10 +225,10 @@ var StepRouter = Backbone.Router.extend({
 
         //remove debug if present
         query = query.replace(/&debug/ig, "");
-        console.log(query, options, display, pageNumber, filter, context);
+        console.log(query, options, display, pageNumber, filter, sort, context);
         $.getPassageSafe({
             url: SEARCH_MASTER,
-            args: [query, options, display, pageNumber, filter, context],
+            args: [query, options, display, pageNumber, filter, sort, context],
             callback: function (text) {
                 text.startTime = startTime;
                 text.linked = null;

@@ -1,21 +1,26 @@
 var TextDisplayView = SearchDisplayView.extend({
     titleFragment : __s.search_text,
-    renderSearch: function (query, masterVersion) {
+    renderSearch: function (append, existingResults) {
         console.log("Rendering text search results");
 
         var results = $("<span>");
         var searchResults = this.model.get("results");
         var sortOrder = this.model.get("order");
 
-        var table = $("<div>").addClass("searchResults");
-        results.append(table);
+        var table;
+        if(append) {
+            table = this.$el.find(".searchResults");
+        } else {
+            table = $("<div>").addClass("searchResults");
+            results.append(table);
+        }
 
         //multiple vs singular version
         if (searchResults[0].preview) {
-            this._displayPassageResults(masterVersion, table, searchResults, sortOrder);
+            this._displayPassageResults(table, searchResults, sortOrder, existingResults);
         } else {
             //we customize the generation of the actual verse content to add the version
-            this._displayPassageResults(masterVersion, table, searchResults, sortOrder, function (cell, item) {
+            this._displayPassageResults(table, searchResults, sortOrder, existingResults, function (cell, item) {
                 var surrounding = $("<span>");
                 for (var i = 0; i < item.verseContent.length; i++) {
                     var verseContent = item.verseContent[i];
@@ -34,15 +39,16 @@ var TextDisplayView = SearchDisplayView.extend({
      * Displays a verse list
      * qualifiedSearchResults = {result: , key: }
      */
-    _displayPassageResults: function (masterVersion, table, searchResults, sortOrder, contentGenerator) {
+    _displayPassageResults: function (table, searchResults, sortOrder, existingResults, contentGenerator) {
         var lastHeader = undefined;
+        
         for (var i = 0; i < searchResults.length; i++) {
-            var newHeader = this.doGroupHeader(table, searchResults[i], sortOrder, lastHeader);
+            var newHeader = this.doGroupHeader(table, searchResults[i], sortOrder, lastHeader, existingResults);
             if(newHeader != null) {
                 lastHeader = newHeader;
             }
 
-            this.getVerseRow(masterVersion, table, contentGenerator, searchResults[i]);
+            this.getVerseRow(table, contentGenerator, searchResults[i]);
         }
     },
 

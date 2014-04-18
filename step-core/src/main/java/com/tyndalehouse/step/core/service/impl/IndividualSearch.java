@@ -106,19 +106,10 @@ public class IndividualSearch {
         this.originalFilter = filter;
         
         if(this.type == SearchType.SUBJECT_SIMPLE) {
-            this.query = LuceneIndex.FIELD_HEADING + ":" + QueryParser.escape(stem(query));
+            this.query = LuceneIndex.FIELD_HEADING_STEM + ":" + QueryParser.escape(query);
         } else {
             this.query = query;
         }
-    }
-
-    private String stem(final String query) {
-//TODO:
-//        PorterStemmer stemmer = new PorterStemmer();
-//        stemmer.setCurrent(query);
-//        stemmer.stem();
-//        return stemmer.getCurrent();
-        return query;
     }
 
     /**

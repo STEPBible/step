@@ -44,35 +44,35 @@ var PassageMenuView = Backbone.View.extend({
 
         //get the versions data sources
         this._updateVisibleDropdown();
-        
+
         this.warnings = $(step.util.getPassageContainer(this.model.get("passageId"))).find(".infoIcon");
-        if(this.warnings.length == 0) {
+        if (this.warnings.length == 0) {
             this.warnings = $(_.template(this.infoIcon)());
             this.$el.parent().append(this.warnings);
         }
-        
+
         this.listenTo(this.model, "raiseMessage", this.raiseMessage);
         this.listenTo(this.model, "squashErrors", this.squashError);
         this.listenTo(Backbone.Events, "columnsChanged", this.updateVisibleCloseButton)
     },
-    raiseMessage: function(opts) {
+    raiseMessage: function (opts) {
         var titleSoFar = this.warnings.attr("title") || "";
-        if(titleSoFar != "") {
+        if (titleSoFar != "") {
             titleSoFar += "\n";
         }
         titleSoFar += opts.message;
-        if(opts.level == "warning" && !this.warnings.hasClass("danger")) {
+        if (opts.level == "warning" && !this.warnings.hasClass("danger")) {
             this.warnings.addClass("warnings");
         }
-        if(opts.level == "danger" || opts.level == "error") {
+        if (opts.level == "danger" || opts.level == "error") {
             this.warnings.removeClass("warnings");
             this.warnings.addClass("danger");
         }
-        
+
         this.warnings.attr("title", titleSoFar);
         this.warnings.show();
     },
-    squashError: function() {
+    squashError: function () {
         this.warnings.attr("title", "");
         this.warnings.removeClass("warning");
         this.warnings.removeClass("danger");
@@ -203,10 +203,13 @@ var PassageMenuView = Backbone.View.extend({
 
         this.displayOptions = this._createDisplayOptions();
         this.otherOptions = this._createSearchOptions();
+        this.wordSearchOptions = this._createWordSortOptions();
         dropdownContainer
             .append(this.displayOptions)
             .append(_.template("<h1><%= __s.general_options %></h1>")())
-            .append(this.otherOptions);
+            .append(this.otherOptions)
+            .append($("<h1>").append(__s.word_search_sort_options))
+            .append(this.wordSearchOptions);
 
         var shareDropdownMenu = $("<div>").addClass("dropdown-menu pull-right").attr("role", "menu");
 
@@ -217,8 +220,8 @@ var PassageMenuView = Backbone.View.extend({
         var interOptions = step.defaults.passage.interOptions;
         var interNamesOptions = step.defaults.passage.interNamedOptions;
         var explanations = step.defaults.passage.interOptionsExplanations;
-        
-        var displayModes = $("<ul>").addClass("miniKolumny displayModes");
+
+        var displayModes = $("<ul>").addClass("displayModes");
         for (var i = 0; i < interOptions.length; i++) {
             var link = this._createLink(interNamesOptions[i], interOptions[i], explanations[i]);
             displayModes.append($("<li>").append(link).attr("role", "presentation"));
@@ -236,15 +239,32 @@ var PassageMenuView = Backbone.View.extend({
         return displayModes;
     },
     _createDisplayOptions: function () {
-        var dropdown = $("<ul>").addClass("miniKolumny passageOptions");
+        var dropdown = $("<ul>").addClass("passageOptions");
         dropdown.append(this._createPassageOptions(dropdown));
         return dropdown;
     },
     getContextLabel: function (context) {
         return sprintf(__s.search_context, context);
     },
+    _createWordSortOptions: function () {
+        var dropdown = $("<ul></ul>");
+        dropdown.append($("<li>").append(this._createLink('false', __s.scripture, __s.scripture_help)));
+        dropdown.append($("<li>").append(this._createLink(ORIGINAL_SPELLING_SORT, __s.original_spelling, __s.original_spelling_help)));
+        dropdown.append($("<li>").append(this._createLink(VOCAB_SORT, __s.vocabulary, __s.vocabulary_help)));
+
+        var currentOrder = this.model.get("order") || "";
+        this._setVisible(dropdown.find("[data-value='" + currentOrder + "']"), true);
+        
+        var self = this;
+        this._addTickHandlers(dropdown.find("a"), true, function (el) {
+            //need to trigger new search after setting value of model 
+            var orderCode = el.attr("data-value");
+            self.model.save({ order: orderCode, pageNumber: 1 });
+        });
+        return dropdown;
+    },
     _createSearchOptions: function () {
-        var dropdown = $("<ul></ul>").addClass("col-sm-6");
+        var dropdown = $("<ul></ul>")
         var self = this;
         var context = this.model.get("context") || 0;
 
@@ -278,6 +298,8 @@ var PassageMenuView = Backbone.View.extend({
         dropdown.append(_.template(this.fontButtons)())
             .find(".smallerFontSize").click(this.decreaseFontSize).end()
             .find(".largerFontSize").click(this.increaseFontSize);
+
+
         return dropdown;
 
     },
@@ -292,14 +314,33 @@ var PassageMenuView = Backbone.View.extend({
         }
 
         var self = this;
-        dropdown.find('a').click(function (e) {
-            e.stopPropagation();
-            self._setVisible($(this), $(this).find('.glyphicon').css("visibility") == 'hidden');
+        var links = dropdown.find('a');
+        this._addTickHandlers(links, false, function () {
             self._updateOptions();
         });
+
         return dropdown;
     },
-
+    _addTickHandlers: function (target, grouped,handler) {
+        var self = this;
+        target.click(function (e) {
+            e.stopPropagation();
+            var el = $(this);
+            if(grouped) {
+                //then untick all others
+                $.each(el.closest("ul").find("a"), function() { 
+                    self._setVisible($(this), false);
+                });
+                self._setVisible(el, true);
+            } else {
+                self._setVisible(el, el.find('.glyphicon').css("visibility") == 'hidden');    
+            }
+            
+            if (handler) {
+                handler(el);
+            }
+        });
+    },
     _createLink: function (value, text, title) {
         return $('<a></a>')
             .attr("href", "javascript:void(0)")
@@ -454,10 +495,10 @@ var PassageMenuView = Backbone.View.extend({
         step.util.createNewColumn();
         ev.stopPropagation();
     },
-    updateVisibleCloseButton: function() {
+    updateVisibleCloseButton: function () {
         var shouldShow = $(".column").not(".examplesColumn").length > 1;
         this.$el.find(".closeColumn").toggle(shouldShow);
-        if(!shouldShow) {
+        if (!shouldShow) {
             //make sure it's not the last button
             this.$el.find(".closeColumn").insertBefore(this.$el.find(".openNewPanel"));
         } else {

@@ -93,6 +93,18 @@ h4.lexicalGrouping {
 
 }
 
+// other sections that don't go anywhere in particular
+.subjectSection {
+  h4.expandedHeadingItem {
+    font-size: $defaultFontSize;
+    color: black;
+  }
+}
+
+.searchResultStrongHeader {
+  font-size: $defaultFontSize + 2;
+}
+
 .verseContent .passageContentHolder {
   height: initial !important;
 }

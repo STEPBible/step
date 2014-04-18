@@ -178,7 +178,8 @@ public class SearchServiceImpl implements SearchService {
 
     @Override
     public AbstractComplexSearch runQuery(final List<SearchToken> searchTokens, final String options,
-                                          final String display, final int page, final String filter, int context) {
+                                          final String display, final int page, final String filter,
+                                          final String sort, int context) {
         boolean hasSearches = false;
         final List<String> versions = new ArrayList<String>(4);
         final StringBuilder references = new StringBuilder();
@@ -214,7 +215,7 @@ public class SearchServiceImpl implements SearchService {
         final AbstractComplexSearch complexSearch = runCorrectSearch(
                 versions, references.toString(),
                 options, StringUtils.isBlank(display) ? InterlinearMode.NONE.name() : display,
-                searchTokens, page, filter, context);
+                searchTokens, page, filter, sort, context);
         enhanceSearchTokens(versions.get(0), searchTokens);
         complexSearch.setSearchTokens(searchTokens);
         return complexSearch;
@@ -262,6 +263,10 @@ public class SearchServiceImpl implements SearchService {
      * @param references  the list of references
      * @param options     the options
      * @param displayMode the display mode
+     * @param filter      the filter to apply to the searhc. Blank retrieves just the current search term,
+     *                    non-blank returns all non-blank (usually strong) matches as well
+     * @param sort        the sort to apply to the search
+     * @param pageNumber  the page number of interest
      * @param context     amount of context to be used in searhc
      * @return the results
      */
@@ -270,6 +275,7 @@ public class SearchServiceImpl implements SearchService {
                                                    final List<SearchToken> searchTokens,
                                                    final int pageNumber,
                                                    final String filter,
+                                                   final String sort,
                                                    final int context) {
         final List<IndividualSearch> individualSearches = new ArrayList<IndividualSearch>(2);
         String[] filters = null;
@@ -307,7 +313,7 @@ public class SearchServiceImpl implements SearchService {
         }
         //we will prefer a word search to anything else...
         if (individualSearches.size() != 0) {
-            return this.search(new SearchQuery(pageNumber, context, displayMode, individualSearches.toArray(new IndividualSearch[individualSearches.size()])));
+            return this.search(new SearchQuery(pageNumber, context, displayMode, sort, individualSearches.toArray(new IndividualSearch[individualSearches.size()])));
         }
         return this.bibleInfoService.getPassageText(
                 versions.get(0), references, options,
@@ -528,6 +534,7 @@ public class SearchServiceImpl implements SearchService {
                     e.setStepGloss(def.get("stepGloss"));
                     e.setStepTransliteration(def.get("stepTransliteration"));
                     e.setAccentedUnicode(def.get("accentedUnicode"));
+                    e.setStrongNumber(def.get("strongNumber"));
                 }
             }
         }
@@ -657,7 +664,7 @@ public class SearchServiceImpl implements SearchService {
 
         for (final EntityDoc def : lexiconDefinitions) {
             for (final String filteredValue : originalFilter) {
-                if (def.get("accentedUnicode").equals(filteredValue)) {
+                if (def.get("strongNumber").equals(filteredValue)) {
                     keep.add(def);
 
                     // break out of filterValues loop, and proceed with next definition

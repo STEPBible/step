@@ -383,7 +383,7 @@ ul.select2-parent-no-results {
 .passageOptionsGroup {
   height: 25px; }
   .passageOptionsGroup .nextPreviousChapterGroup {
-    margin-left: 3;
+    margin-left: 3px;
     margin-right: 10px; }
   .passageOptionsGroup button span {
     line-height: 1; }
@@ -396,7 +396,8 @@ ul.select2-parent-no-results {
     padding-left: 5px; }
   .passageOptionsGroup ul {
     padding-left: 5px;
-    margin-bottom: 0px; }
+    margin-bottom: 0px;
+    list-style: none; }
   .passageOptionsGroup .settingsDropdown li {
     padding-right: 5px; }
     .passageOptionsGroup .settingsDropdown li:hover {
@@ -455,7 +456,7 @@ ul.select2-parent-no-results {
     background-image: -moz-linear-gradient(top, #f4f4f4 20%, #f0f0f0 50%, #e8e8e8 52%, #eeeeee 100%);
     background-image: linear-gradient(top, #f4f4f4 20%, #f0f0f0 50%, #e8e8e8 52%, #eeeeee 100%); }
 
-.passageContainer.waiting {
+.passageContainer.waiting, .searchResults .waiting {
   background-position: 50% 5; }
 
 .passageContentHolder {
@@ -638,6 +639,13 @@ h4.lexicalGrouping {
   .subjectToolbar .radioGroup {
     display: inline-block;
     width: initial; }
+
+.subjectSection h4.expandedHeadingItem {
+  font-size: 12px;
+  color: black; }
+
+.searchResultStrongHeader {
+  font-size: 14px; }
 
 .verseContent .passageContentHolder {
   height: initial !important; }

@@ -70,27 +70,35 @@ var WordDisplayView = TextDisplayView.extend({
      * @param item
      * @param sortOrder the type of sort
      * @param lastHeader the last seen header that was output
+     * @param existingResults the existing results, if we're part through appending something, this represents the previous pages
      */
-    doGroupHeader: function (table, item, sortOrder, lastHeader) {
-        if (item.accentedUnicode && item.accentedUnicode != lastHeader) {
-            var header = $("<th>").addClass("searchResultStrongHeader").prop("colspan", "2");
+    doGroupHeader: function (table, item, sortOrder, lastHeader, existingResults) {
+        if(lastHeader == null && existingResults != null) {
+            //then let's take it from the last set of results
+            lastHeader = existingResults.find(".searchResultStrongHeader:last").attr("strongNumber");
+        }
+        
+        if (item.strongNumber && item.strongNumber != lastHeader) {
+            var header = $("<h4>").addClass("searchResultStrongHeader").attr("strongNumber", item.strongNumber);
 
             //add a new row
-            table.append($("<tr>").append(header));
+            table.append(header);
 
-            if (sortOrder == VOCABULARY) {
-                header.append(item.stepGloss == undefined ? "-" : item.stepGloss);
+            if (sortOrder == VOCAB_SORT) {
+                header.append(item.stepGloss == undefined ? " - " : item.stepGloss);
+                header.append(" (");
                 header.append($("<em>").addClass("stepTransliteration").append(item.stepTransliteration));
+                header.append("): ");
                 header.append($("<span>").addClass("ancientSearch").append(item.accentedUnicode));
             } else {
                 header.append($("<span>").addClass("ancientSearch").append(item.accentedUnicode));
-                header.append("(");
+                header.append(" (");
                 header.append($("<em>").addClass("stepTransliteration").append(item.stepTransliteration));
                 header.append("): ");
-                header.append(item.stepGloss == undefined ? "-" : item.stepGloss);
+                header.append(item.stepGloss == undefined ? " - " : item.stepGloss);
             }
 
-            return item.accentedUnicode;
+            return item.strongNumber;
         }
     },
 

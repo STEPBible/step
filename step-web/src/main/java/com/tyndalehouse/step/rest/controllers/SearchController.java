@@ -1,41 +1,39 @@
 package com.tyndalehouse.step.rest.controllers;
 
-import static com.tyndalehouse.step.core.exceptions.UserExceptionType.APP_MISSING_FIELD;
-import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
-import static com.tyndalehouse.step.core.utils.ValidateUtils.notBlank;
-
-import java.util.*;
-import java.util.concurrent.TimeUnit;
-import java.util.regex.Pattern;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
 import com.tyndalehouse.step.core.models.AbstractComplexSearch;
+import com.tyndalehouse.step.core.models.LexiconSuggestion;
+import com.tyndalehouse.step.core.models.OsisWrapper;
 import com.tyndalehouse.step.core.models.SearchToken;
 import com.tyndalehouse.step.core.models.SingleSuggestionsSummary;
 import com.tyndalehouse.step.core.models.SuggestionsSummary;
 import com.tyndalehouse.step.core.models.search.AutoSuggestion;
 import com.tyndalehouse.step.core.models.search.PopularSuggestion;
-import com.tyndalehouse.step.core.models.search.SubjectSuggestion;
 import com.tyndalehouse.step.core.models.search.SuggestionType;
 import com.tyndalehouse.step.core.service.BibleInformationService;
+import com.tyndalehouse.step.core.service.SearchService;
 import com.tyndalehouse.step.core.service.SuggestionService;
 import com.tyndalehouse.step.core.service.helpers.SuggestionContext;
 import com.tyndalehouse.step.core.service.impl.InternationalRangeServiceImpl;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
+import com.tyndalehouse.step.core.service.search.OriginalWordSuggestionService;
+import com.tyndalehouse.step.core.service.search.SubjectEntrySearchService;
 import com.tyndalehouse.step.core.service.search.SubjectSearchService;
 import com.tyndalehouse.step.core.utils.ConversionUtils;
 import com.tyndalehouse.step.core.utils.StringUtils;
+import com.yammer.metrics.annotation.Timed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.tyndalehouse.step.core.models.LexiconSuggestion;
-import com.tyndalehouse.step.core.models.OsisWrapper;
-import com.tyndalehouse.step.core.service.SearchService;
-import com.tyndalehouse.step.core.service.search.OriginalWordSuggestionService;
-import com.tyndalehouse.step.core.service.search.SubjectEntrySearchService;
-import com.yammer.metrics.annotation.Timed;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
+
+import static com.tyndalehouse.step.core.exceptions.UserExceptionType.APP_MISSING_FIELD;
+import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
+import static com.tyndalehouse.step.core.utils.ValidateUtils.notBlank;
 
 /**
  * Caters for searching across the data base
@@ -118,7 +116,7 @@ public class SearchController {
         String referenceContext = null;
         String limitType = null;
         boolean exampleData = false;
-        
+
         if (StringUtils.isNotBlank(context)) {
             //there are some context items... Parse them
             //if there is a reference= restriction, then we will only return references, otherwise, we default
@@ -130,7 +128,7 @@ public class SearchController {
                     referenceContext = st.getToken();
                 } else if (SearchToken.LIMIT.equals(st.getTokenType())) {
                     limitType = st.getToken();
-                } else if(SearchToken.EXAMPLE_DATA.equals(st.getTokenType())) {
+                } else if (SearchToken.EXAMPLE_DATA.equals(st.getTokenType())) {
                     exampleData = true;
                 }
             }
@@ -145,12 +143,11 @@ public class SearchController {
     }
 
     /**
-     * 
-     * @param input the input entered by the user so far
-     * @param autoSuggestions the list of suggestions
-     * @param limitType only one type of data is requested
+     * @param input                the input entered by the user so far
+     * @param autoSuggestions      the list of suggestions
+     * @param limitType            only one type of data is requested
      * @param referenceBookContext the reference book (i..e master book) that has already been selected by the user.
-     * @param exampleData example data is requested
+     * @param exampleData          example data is requested
      */
     private void addDefaultSuggestions(final String input, final List<AutoSuggestion> autoSuggestions, final String limitType, final String referenceBookContext, final boolean exampleData) {
         SuggestionContext context = new SuggestionContext();
@@ -158,8 +155,8 @@ public class SearchController {
         context.setInput(input);
         context.setSearchType(limitType);
         context.setExampleData(exampleData);
-        
-        if(exampleData) {
+
+        if (exampleData) {
             convert(autoSuggestions, this.suggestionService.getFirstNSuggestions(context));
         } else if (StringUtils.isBlank(limitType)) {
             // we only return the right set of suggestions if there is a limit type
@@ -170,7 +167,7 @@ public class SearchController {
     }
 
     private void convert(final List<AutoSuggestion> autoSuggestions, final SuggestionsSummary topSuggestions) {
-        for(SingleSuggestionsSummary summary : topSuggestions.getSuggestionsSummaries()) {
+        for (SingleSuggestionsSummary summary : topSuggestions.getSuggestionsSummaries()) {
             //we render each option
             final List<? extends PopularSuggestion> popularSuggestions = summary.getPopularSuggestions();
             for (PopularSuggestion p : popularSuggestions) {
@@ -180,7 +177,7 @@ public class SearchController {
                 autoSuggestions.add(au);
             }
 
-            if(summary.getMoreResults() > 0 && !SearchToken.REFERENCE.equals(summary.getSearchType())) {
+            if (summary.getMoreResults() > 0 && !SearchToken.REFERENCE.equals(summary.getSearchType())) {
                 AutoSuggestion au = new AutoSuggestion();
                 au.setItemType(summary.getSearchType().toString());
                 au.setGrouped(true);
@@ -189,7 +186,7 @@ public class SearchController {
                 au.setExtraExamples(summary.getExtraExamples());
                 autoSuggestions.add(au);
             }
-        }        
+        }
     }
 
     /**
@@ -248,9 +245,20 @@ public class SearchController {
      * @param filter     the type of filter required on an original word search
      */
     public AbstractComplexSearch masterSearch(final String items, final String options, final String display, final String pageNumber, final String filter) {
-        return this.masterSearch(items, options, display, pageNumber, filter, null);
+        return this.masterSearch(items, options, display, pageNumber, filter, null, null);
     }
 
+    /**
+     * @param items      the list of all items
+     * @param options    current display options
+     * @param display    the display options
+     * @param pageNumber the number of the page that is desired
+     * @param filter     the type of filter required on an original word search
+     */
+    public AbstractComplexSearch masterSearch(final String items, final String options, final String display, final String pageNumber, final String filter, final String sort) {
+        return this.masterSearch(items, options, display, pageNumber, filter, sort, null);
+    }
+    
     /**
      * @param items      the list of all items
      * @param options    current display options
@@ -260,11 +268,11 @@ public class SearchController {
      * @param context    the amount of context to add to the verses hit by a search
      */
     public AbstractComplexSearch masterSearch(final String items, final String options, final String display,
-                                              final String pageNumber, final String filter, final String context) {
+                                              final String pageNumber, final String filter, final String sortOrder, final String context) {
         final List<SearchToken> searchTokens = parseTokens(items);
         final int page = ConversionUtils.getValidInt(pageNumber, 1);
         final int searchContext = ConversionUtils.getValidInt(context, 0);
-        return this.searchService.runQuery(searchTokens, getDefaultedOptions(options), display, page, filter, searchContext);
+        return this.searchService.runQuery(searchTokens, getDefaultedOptions(options), display, page, filter, sortOrder, searchContext);
     }
 
     /**

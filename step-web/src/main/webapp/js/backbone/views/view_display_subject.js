@@ -19,12 +19,12 @@ var SubjectDisplayView = SearchDisplayView.extend({
         this.hasPages = false;
     },
 
-    renderSearch: function (results, masterVersion) {
+    renderSearch: function () {
         console.log("Rendering subject search results");
         var searchType = this.model.get("searchType");
 
         if (searchType == 'SUBJECT_SIMPLE') {
-            return this._doSimpleSubjectSearchResults(masterVersion, this.model.get("results"));
+            return this._doSimpleSubjectSearchResults(this.model.get("results"));
         } else {
             return this._doNaveSearchResults(this.model.get("results"));
         }
@@ -36,13 +36,13 @@ var SubjectDisplayView = SearchDisplayView.extend({
      * @returns {*|jQuery}
      * @private
      */
-    _doSimpleSubjectSearchResults: function (masterVersion, searchResults) {
+    _doSimpleSubjectSearchResults: function (searchResults) {
         var results = $("<span>").addClass("subjectSection searchResults simpleSubjectSearch");
         var headingsSearch = searchResults[0].headingsSearch;
         var headingsResults = headingsSearch.results;
 
         for (var i = 0; i < headingsResults.length; i++) {
-            this.getVerseRow(masterVersion, results, null, headingsResults[i]);
+            this.getVerseRow(results, null, headingsResults[i]);
         }
         return results;
     },
@@ -130,13 +130,14 @@ var SubjectDisplayView = SearchDisplayView.extend({
             //add some data
             panel.attr("root", searchResults[i].root).attr("fullHeader", searchResults[i].heading);
             if (searchResults[i].seeAlso) {
-                panel.prop("seeAlso", searchResults[i].seeAlso);
+                panel.attr("seeAlso", searchResults[i].seeAlso);
             }
         }
 
         return results;
     },
     handleExpandingContainer: function (el) {
+        var self = this;
         var root = el.attr("root");
         var fullHeader = el.attr("fullHeader");
         var seeAlso = el.attr("seeAlso");
@@ -181,7 +182,6 @@ var SubjectDisplayView = SearchDisplayView.extend({
                     var link = $("<a>").attr("href", "javascript:void(0)").html(refs[i].trim());
                     var refLink = refs[i];
                     $(link).click({value: { refLink: refLink, seeAlso: seeAlso } }, function (event) {
-                        var splitByComma = event.data.value.refLink.split(",");
                         var query;
                         var text = "";
                         text += event.data.value.refLink;
@@ -192,14 +192,12 @@ var SubjectDisplayView = SearchDisplayView.extend({
                             text += " " + root;
                         }
 
-                        self.model.save({
-                            subjectText: text
-                        })
-                        self.model.trigger("search", self.model);
+                        step.router.navigatePreserveVersions(NAVE_SEARCH + "=" + text);
                     });
 
-                    seeAlsoRefs.append($("<br />"));
+                    seeAlsoRefs.append(" ");
                     otherLinks.append(link);
+                    otherLinks.append(" ");
                 }
 
 

@@ -40,6 +40,7 @@ public class LexicalSearchEntry implements SearchEntry {
     private String stepGloss;
     private String stepTransliteration;
     private String accentedUnicode;
+    private String strongNumber;
 
     /**
      * @param stepGloss the stepGloss to set
@@ -81,5 +82,13 @@ public class LexicalSearchEntry implements SearchEntry {
      */
     public void setAccentedUnicode(final String accentedUnicode) {
         this.accentedUnicode = accentedUnicode;
+    }
+
+    public String getStrongNumber() {
+        return strongNumber;
+    }
+
+    public void setStrongNumber(final String strongNumber) {
+        this.strongNumber = strongNumber;
     }
 }

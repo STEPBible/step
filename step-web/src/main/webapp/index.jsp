@@ -10,7 +10,6 @@
 <%@ page import="com.tyndalehouse.step.jsp.WebStepRequest" %>
 <%@ page import="com.google.inject.Injector"%>
 <%@ page import="com.tyndalehouse.step.core.service.AppManagerService" %>
-<%@ page import="java.util.Date" %>
 <%@ page import="java.util.Calendar" %>
 
 <%
@@ -57,20 +56,10 @@
     <link href="css/select2.css" rel="stylesheet" media="screen" />
     <link href="css/select2-bootstrap.css" rel="stylesheet" media="screen" />
     <link href="scss/step-template.css" rel="stylesheet" media="screen" />
-    <%--<link href="css/magicsuggest-1.3.1-min.css" rel="stylesheet" media="screen" />--%>
-    <%--<link href="css/typeahead.js-bootstrap.css" rel="stylesheet" media="screen" />--%>
-    <%--<link href="css/prettyCheckable.css" rel="stylesheet" media="screen" />--%>
-
 
     <%@include file="jsps/offlineJqueryCss.jsp" %>
     <link rel="stylesheet" type="text/css" href="css/qtip.css" />
-    <%--<link rel="stylesheet" type="text/css" href="css/ddsmoothmenu.css" />--%>
-    <%--<link rel="stylesheet" type="text/css" href="css/ddsmoothmenu-v.css" />--%>
-    <%--<link rel="stylesheet" type="text/css" href="css/initial-layout.css" />--%>
-    <%--<link rel="stylesheet" type="text/css" href="css/initial-fonts.css" />--%>
     <link rel="stylesheet" type="text/css" href="css/passage.css" />
-    <!-- 	    <link rel="stylesheet" type="text/css" href="css/timeline.css" /> -->
-    <%--<link rel="stylesheet" type="text/css" href="css/search.css" />--%>
     <link rel="stylesheet" type="text/css" href="css/cardo.css" />
     <%
     } else {
@@ -133,7 +122,7 @@
                         <span class="activeMarker"></span>
                         <div class="passageText ui-widget">
                             <div class="passageOptionsGroup">
-                                <div class="btn-group pull-left nextPreviousChapterGroup">
+                                <div class="btn-group pull-left nextPreviousChapterGroup" style="${ 'PASSAGE' ne searchType ? 'display: none' : '' }">
                                     <a class="btn btn-default btn-sm previousChapter" type="button" title="<fmt:message key="passage_previous_chapter" />">
                                         <span class="glyphicon glyphicon-arrow-left"></span></a>
                                     <a class="btn btn-default btn-sm nextChapter" type="button" title='<fmt:message key="passage_next_chapter" />'>

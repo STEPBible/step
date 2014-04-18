@@ -5,7 +5,7 @@ var ViewHistory = Backbone.View.extend({
         '<span class="glyphicon <%= item.get("favourite") ? "glyphicon-pushpin-pinned" : "glyphicon-pushpin" %>"></span></a>' +
         '<a class="removeBookmark" title="<%= __s.bookmark_remove %>"><span class="glyphicon glyphicon-remove"></span></a>' +
         '<span class="argSummary">' +
-        '<% _.each(item.get("searchTokens"), function(a) { %><%= step.util.ui.renderArg(a) %> <% }); %>' +
+        '<%= step.util.ui.renderArgs(item.get("searchTokens")) %>' +
         '</span>' +
         '</li>'),
     fullList: _.template(

@@ -99,7 +99,7 @@ var PassageMenuView = Backbone.View.extend({
         }
 
         var isPassage = this.model.get("searchType") == 'PASSAGE';
-        var previousNext = this.$el.find(".previousChapter, .nextChapter");
+        var previousNext = this.$el.find(".nextPreviousChapterGroup");
         previousNext.toggle(isPassage);
         this.$el.find(".contextContainer").toggle(!isPassage);
 
@@ -199,17 +199,20 @@ var PassageMenuView = Backbone.View.extend({
         }
 
         var allHaveStrong = masterVersion.hasStrongs;
-        var sameLanguage = true;
+        var sameLanguaguageAndBible = masterVersion.category == 'BIBLE';
         var masterLanguage = masterVersion.languageCode;
         for (var ii = 0; ii < extraVersions.length; ii++) {
             var extraResource = step.keyedVersions[extraVersions[ii]];
             allHaveStrong = allHaveStrong && extraResource.hasStrongs;
-            sameLanguage = sameLanguage && extraResource.languageCode == masterLanguage;
+            
+            //js: &= gives us a 0 return value
+            sameLanguaguageAndBible = sameLanguaguageAndBible && extraResource.languageCode == masterLanguage;
+            sameLanguaguageAndBible = sameLanguaguageAndBible && extraResource.category == 'BIBLE';
         }
 
         this.displayModeContainer.find("a[data-value='INTERLINEAR']").closest("li").toggle(allHaveStrong);
-        this.displayModeContainer.find("a[data-value='INTERLEAVED_COMPARE']").closest("li").toggle(sameLanguage);
-        this.displayModeContainer.find("a[data-value='COLUMN_COMPARE']").closest("li").toggle(sameLanguage);
+        this.displayModeContainer.find("a[data-value='INTERLEAVED_COMPARE']").closest("li").toggle(sameLanguaguageAndBible);
+        this.displayModeContainer.find("a[data-value='COLUMN_COMPARE']").closest("li").toggle(sameLanguaguageAndBible);
     },
 
     _initUI: function () {

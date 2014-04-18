@@ -363,33 +363,33 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
         Book main = this.versificationService.getBookFromVersion(version);
         String firstLanguage = main.getLanguage().getCode();
         boolean supportsStrongs = this.supportsStrongs(main);
-        boolean sameLanguage = true;
+        boolean sameLanguageAndBible = main.getBookCategory() == BIBLE;
 
         for (String extraVersion : extraVersions) {
             Book b = this.versificationService.getBookFromVersion(extraVersion);
             if (supportsStrongs && !this.supportsStrongs(b)) {
                 supportsStrongs = false;
             }
-            if (!firstLanguage.equalsIgnoreCase(b.getLanguage().getCode())) {
-                sameLanguage = false;
+            if (!firstLanguage.equalsIgnoreCase(b.getLanguage().getCode()) || b.getBookCategory() != BIBLE) {
+                sameLanguageAndBible = false;
             }
-
+            
             //small optimization
-            if (!supportsStrongs && !sameLanguage) {
+            if (!supportsStrongs && !sameLanguageAndBible) {
                 break;
             }
         }
 
         //if compare options were given and are available, we return these.
         if (interlinearMode == InterlinearMode.INTERLEAVED_COMPARE || interlinearMode == InterlinearMode.COLUMN_COMPARE) {
-            return getSameOrDowngradedInterlinearMode(interlinearMode, sameLanguage);
+            return getSameOrDowngradedInterlinearMode(interlinearMode, sameLanguageAndBible);
         }
 
         if (supportsStrongs) {
             return InterlinearMode.INTERLINEAR;
         }
 
-        if (sameLanguage) {
+        if (sameLanguageAndBible) {
             return InterlinearMode.INTERLEAVED_COMPARE;
         }
 

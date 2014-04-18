@@ -169,7 +169,7 @@ step.util = {
     },
     squashErrors: function (model) {
         $("#errorContainer").remove();
-        if(model) {
+        if (model) {
             model.trigger("squashErrors")
         }
     },
@@ -185,12 +185,12 @@ step.util = {
         } else if (level == undefined) {
             level = 'info';
         }
-        
-        if(passageId != null) {
+
+        if (passageId != null) {
             step.util.activePassage().trigger("raiseMessage", { message: message, level: level });
         }
 
-        if(silent) {
+        if (silent) {
             return;
         }
         var errorContainer = $("#errorContainer");
@@ -390,7 +390,7 @@ step.util = {
      * Creates a linked column to the current column
      * @param el
      */
-    createNewLinkedColumn : function(passageId) {
+    createNewLinkedColumn: function (passageId) {
         this.activePassageId(passageId);
         this.createNewColumn(true);
     },
@@ -541,8 +541,8 @@ step.util = {
         }
         return data;
     },
-    safeEscapeQuote: function(term) {
-        if(term == null) {
+    safeEscapeQuote: function (term) {
+        if (term == null) {
             return "";
         }
         return term.replace(/"/g, '\\\"');
@@ -552,27 +552,32 @@ step.util = {
             return '<span class="glyphicon glyphicon-ok ' + classes + '"></span>';
         },
         renderArgs: function (searchTokens, container) {
+            if (!container) {
+                container = $("<span>");
+            }
             var isMasterVersion = true;
             for (var i = 0; i < searchTokens.length; i++) {
                 container.append(step.util.ui.renderArg(searchTokens[i], isMasterVersion) + ' ');
-                if(searchTokens[i].itemType == VERSION) {
+                if (searchTokens[i].itemType == VERSION) {
                     isMasterVersion = false;
                 }
             }
+            
+            return container.html();
         },
-        renderArg: function(searchToken, isMasterVersion) {
+        renderArg: function (searchToken, isMasterVersion) {
             //a search token isn't quite a item, so we need to fudge a few things
             searchToken.itemType = searchToken.tokenType;
             searchToken.item = searchToken.enhancedTokenInfo;
 
             //rewrite the item type in case it's a strong number
-            if(searchToken.itemType == STRONG_NUMBER) {
+            if (searchToken.itemType == STRONG_NUMBER) {
                 //pretend it's a Greek meaning, or a Hebrew meaning
                 searchToken.itemType = (searchToken.item.strongNumber || " ")[0] == 'G' ? GREEK_MEANINGS : HEBREW_MEANINGS;
             }
-            
-            return '<span class="argSelect select-' + searchToken.itemType + '">' + 
-                this.renderEnhancedToken(searchToken, isMasterVersion) + 
+
+            return '<span class="argSelect select-' + searchToken.itemType + '">' +
+                this.renderEnhancedToken(searchToken, isMasterVersion) +
                 '</span>';
         },
         getSource: function (itemType, nowrap) {
@@ -610,7 +615,7 @@ step.util = {
             }
             return nowrap ? '[' + source + ']' : '<span class="source">[' + source + ']</span>';
         },
-        renderEnhancedToken: function(entry, isMasterVersion) {
+        renderEnhancedToken: function (entry, isMasterVersion) {
             var util = step.util;
             var source = this.getSource(entry.itemType, true) + " ";
             switch (entry.itemType) {
@@ -621,7 +626,7 @@ step.util = {
                         entry.item.shortName + '</div>';
                 case VERSION:
                     return '<div class="versionItem ' + (isMasterVersion ? "masterVersion" : "")
-                        +'" title="' + source + util.safeEscapeQuote(entry.item.shortInitials + ' - ' + entry.item.name) + '' +
+                        + '" title="' + source + util.safeEscapeQuote(entry.item.shortInitials + ' - ' + entry.item.name) + '' +
                         (isMasterVersion ? "\n" + __s.master_version_info : "") + '" ' +
                         'data-item-type="' + entry.itemType + '" ' +
                         'data-select-id="' + util.safeEscapeQuote(entry.item.shortInitials) + '">' + entry.item.shortInitials + "</div>";
@@ -630,10 +635,10 @@ step.util = {
                     var className = entry.itemType == GREEK ? "unicodeFont" : "hbFontMini";
                     return "<div class=' " + entry.itemType + 'Item ' + className + "' " +
                         'data-item-type="' + entry.itemType + '" ' +
-                        'data-select-id="'  + util.safeEscapeQuote(entry.item.stepTransliteration) + '" ' +
+                        'data-select-id="' + util.safeEscapeQuote(entry.item.stepTransliteration) + '" ' +
                         'title="' + source + util.safeEscapeQuote(entry.item.gloss + ", " + entry.item.stepTransliteration) + '">' +
                         entry.item.matchingForm + "</div>";
-                
+
                 case GREEK_MEANINGS:
                 case HEBREW_MEANINGS:
                     return "<div class='" + entry.itemType + "Item' " +
@@ -645,11 +650,11 @@ step.util = {
                     return '<div class="meaningsItem" ' +
                         'title="' + source + util.safeEscapeQuote(entry.item.gloss) + '" ' +
                         'data-item-type="' + entry.itemType + '" ' +
-                        'data-select-id="' + util.safeEscapeQuote(entry.item.gloss) +  '">' + entry.item.gloss + "<div>";
+                        'data-select-id="' + util.safeEscapeQuote(entry.item.gloss) + '">' + entry.item.gloss + "<div>";
                 case SUBJECT_SEARCH:
                     return '<div class="subjectItem" ' +
                         'data-item-type="' + entry.itemType + '" ' +
-                        'data-select-id="' + util.safeEscapeQuote(entry.item.value) +  '" ' +
+                        'data-select-id="' + util.safeEscapeQuote(entry.item.value) + '" ' +
                         'title="' + source + util.safeEscapeQuote(entry.item.value) + '">' + entry.item.value + "<div>";
                 case TEXT_SEARCH:
                     return '<div class="textItem" data-select-id="' + util.safeEscapeQuote(entry.item.text) + '"' +
@@ -663,7 +668,7 @@ step.util = {
                         'title="' + source + util.safeEscapeQuote(entry.item.value) + '">' + entry.item.text + "</div>";
                 default:
                     return entry.item.text;
-            }    
+            }
         },
         /**
          * Given an array of languages, returns an array of fonts
@@ -744,7 +749,7 @@ step.util = {
                 if (!data) {
                     data = {};
                 }
-                
+
                 //need to initialise sidebar, which will open it.
                 if (!step.sidebar) {
                     step.sidebar = {};
@@ -759,7 +764,7 @@ step.util = {
                         model: step.sidebar,
                         el: $("#sidebar")
                     });
-                } else if(mode == null) {
+                } else if (mode == null) {
                     //simply toggle it
                     step.sidebar.trigger("toggleOpen");
                 } else if (step.sidebar.get("mode") != mode) {

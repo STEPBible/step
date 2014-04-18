@@ -81,7 +81,6 @@ public class BibleInformationServiceImpl implements BibleInformationService {
     private final JSwordSearchService jswordSearch;
     private final EntityManager entityManager;
     private final JSwordVersificationService jswordVersification;
-    private final SubjectSearchService subjectSearchService;
     private final VersionResolver resolver;
 
     /**
@@ -94,15 +93,14 @@ public class BibleInformationServiceImpl implements BibleInformationService {
      * @param jswordSearch
      * @param entityManager        the entity manager
      * @param jswordVersification  the jsword versification
-     * @param subjectSearchService the subject search service
      */
     @Inject
     public BibleInformationServiceImpl(@Named("defaultVersions") final List<String> defaultVersions,
                                        final PassageOptionsValidationService optionsValidationService,
                                        final JSwordPassageService jswordPassage, final JSwordModuleService jswordModule,
                                        final JSwordMetadataService jswordMetadata, final JSwordSearchService jswordSearch,
-                                       final EntityManager entityManager, final JSwordVersificationService jswordVersification,
-                                       final SubjectSearchService subjectSearchService, final VersionResolver resolver) {
+                                       final EntityManager entityManager, final JSwordVersificationService jswordVersification, 
+                                       final VersionResolver resolver) {
         this.optionsValidationService = optionsValidationService;
         this.jswordPassage = jswordPassage;
         this.defaultVersions = defaultVersions;
@@ -111,7 +109,6 @@ public class BibleInformationServiceImpl implements BibleInformationService {
         this.jswordSearch = jswordSearch;
         this.entityManager = entityManager;
         this.jswordVersification = jswordVersification;
-        this.subjectSearchService = subjectSearchService;
         this.resolver = resolver;
     }
 

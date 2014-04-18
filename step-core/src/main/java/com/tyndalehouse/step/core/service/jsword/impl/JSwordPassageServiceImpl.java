@@ -1188,10 +1188,6 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
      */
     private XslConversionType identifyStyleSheet(final BookCategory bookCategory,
                                                  final List<LookupOption> options, final InterlinearMode displayMode) {
-        if (BookCategory.COMMENTARY.equals(bookCategory)) {
-            return XslConversionType.COMMENTARY;
-        }
-
         // for interlinears, we automatically add that option
         if (displayMode == InterlinearMode.INTERLINEAR) {
             options.add(LookupOption.INTERLINEAR);

@@ -43,6 +43,7 @@ import com.tyndalehouse.step.core.models.BookName;
 import com.tyndalehouse.step.core.models.InterlinearMode;
 import com.tyndalehouse.step.core.models.KeyWrapper;
 import com.tyndalehouse.step.core.models.LexiconSuggestion;
+import com.tyndalehouse.step.core.models.OsisWrapper;
 import com.tyndalehouse.step.core.models.SearchToken;
 import com.tyndalehouse.step.core.models.search.KeyedSearchResultSearchEntry;
 import com.tyndalehouse.step.core.models.search.KeyedVerseContent;
@@ -190,7 +191,8 @@ public class SearchServiceImpl implements SearchService {
         boolean hasSearches = false;
         final List<String> versions = new ArrayList<String>(4);
         final StringBuilder references = new StringBuilder();
-
+        final List<SearchToken> referenceTokens = new ArrayList<SearchToken>(2);
+        
         //first pass - get the set of versions and references
         for (SearchToken token : searchTokens) {
             if (SearchToken.VERSION.equals(token.getTokenType())) {
@@ -199,6 +201,9 @@ public class SearchServiceImpl implements SearchService {
                 if (references.length() > 0) {
                     references.append(';');
                 }
+                
+                //add to list, so that we can replace all tokens later
+                referenceTokens.add(token);
                 references.append(token.getToken());
             } else {
                 //any other token means at least 1 search
@@ -218,14 +223,29 @@ public class SearchServiceImpl implements SearchService {
         }
 
         //second pass add all 
-
+        final String aggregatedReferences = references.toString();
         final AbstractComplexSearch complexSearch = runCorrectSearch(
-                versions, references.toString(),
+                versions, aggregatedReferences,
                 options, StringUtils.isBlank(display) ? InterlinearMode.NONE.name() : display,
                 searchTokens, page, filter, sort, context);
+
+        aggregateTokenForPassageLookups(searchTokens, referenceTokens, complexSearch);
         enhanceSearchTokens(versions.get(0), searchTokens);
         complexSearch.setSearchTokens(searchTokens);
         return complexSearch;
+    }
+
+    /**
+     * For passage lookups, we have a restriction on how many verses we can show
+     * @param searchTokens the original list of search tokens
+     * @param referenceTokens the reference tokens that formed what we passed down to the service layer
+     * @param complexSearch the results of the complex search
+     */
+    private void aggregateTokenForPassageLookups(final List<SearchToken> searchTokens, final List<SearchToken> referenceTokens, final AbstractComplexSearch complexSearch) {
+        if(complexSearch instanceof OsisWrapper) {
+            searchTokens.removeAll(referenceTokens);
+            searchTokens.add(new SearchToken(SearchToken.REFERENCE, ((OsisWrapper)complexSearch).getOsisId()));
+        }
     }
 
     /**

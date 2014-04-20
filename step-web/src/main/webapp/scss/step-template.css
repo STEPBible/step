@@ -661,6 +661,13 @@ h4.lexicalGrouping {
   margin-right: 15px;
   margin-top: 3; }
 
+.qtip-titlebar .openRefInColumn {
+  float: right;
+  margin-right: 5px; }
+.qtip-titlebar .close {
+  color: #991c32;
+  opacity: 1; }
+
 .examplesContainer {
   overflow-y: scroll;
   overflow-x: hidden; }
@@ -788,7 +795,7 @@ h4.lexicalGrouping {
   margin-top: -1px; }
   .qtip-titlebar .close {
     line-height: 12px;
-    margin: 2 5 -2 0;
+    margin: 1 5 -2 0;
     font-size: 18px; }
 
 #bibleVersions .modal-body {

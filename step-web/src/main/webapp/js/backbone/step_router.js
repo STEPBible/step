@@ -21,7 +21,7 @@ var StepRouter = Backbone.Router.extend({
         var url = Backbone.history.fragment || "";
         this.navigate(url, { trigger: false, replace: true});
     },
-    navigatePreserveVersions: function (partial) {
+    navigatePreserveVersions: function (partial, stripCommentaries) {
         //get versions of current active passage
         //add versions from current active passage
         var activePassage = step.util.activePassage();
@@ -29,11 +29,16 @@ var StepRouter = Backbone.Router.extend({
         var extra = partial;
         var mainVersion = activePassage.get("masterVersion");
         if (mainVersion != "") {
-            extra += "|version=" + mainVersion;
+            if(!stripCommentaries || step.keyedVersions[mainVersion].category == 'BIBLE') {
+                extra += "|version=" + mainVersion;    
+            }
+            
             var extraVersions = (activePassage.get("extraVersions") || "").split(",");
             for (var i = 0; i < extraVersions.length; i++) {
                 if ((extraVersions[i] || "") != "") {
-                    extra += "|version=" + extraVersions[i];
+                    if(!stripCommentaries || step.keyedVersions[extraVersions[i]].category == 'BIBLE') {
+                        extra += "|version=" + extraVersions[i];
+                    }
                 }
             }
         }

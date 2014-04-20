@@ -44,6 +44,7 @@ var PassageDisplayView = Backbone.View.extend({
                 passageContainer.find(".resultsLabel").html("");
                 this._warnIfNoStrongs(version);
                 this._warnIfFirstTimeCompare(interlinearMode);
+                this._warnCommentaryLookupVersion(version, extraVersions);
                 this._doFonts(passageHtml, options, interlinearMode, languages);
                 this._doInlineNotes(passageHtml, passageId);
                 this._doSideNotes(passageHtml, passageId, version);
@@ -93,6 +94,27 @@ var PassageDisplayView = Backbone.View.extend({
                 this.model.save({ targetLocation: null }, { silent: true });
             }
         },
+        _warnCommentaryLookupVersion: function (version, extraVersions) {
+            //if any of the versions are commentaries, then warn about reference lookups...
+            var vs = [];
+            vs.push(version);
+            if (extraVersions) {
+                vs = vs.concat(extraVersions.split(','));
+            }
+            var keyed = _.map(vs, function (v) {
+                return step.keyedVersions[v];
+            });
+            var hasCommentaries = _.findWhere(keyed, { category: 'COMMENTARY' }) != null;
+            if (hasCommentaries) {
+                //find out which Bible should be used
+                var firstBible = _.findWhere(keyed, {category: 'BIBLE' });
+                if (firstBible == null) {
+                    step.util.raiseInfo(sprintf(__s.commentary_version_default), 'info', this.model.get("passageId"), null, true);
+                    return;
+                }
+                step.util.raiseInfo(sprintf(__s.commentary_version, firstBible.initials), 'info', this.model.get("passageId"), null, true);
+            }
+        },
         _warnIfFirstTimeCompare: function (interlinearMode) {
             if (interlinearMode != "INTERLEAVED" && interlinearMode != "COLUMN" &&
                 interlinearMode != "NONE" && interlinearMode != "INTERLINEAR") {
@@ -108,13 +130,13 @@ var PassageDisplayView = Backbone.View.extend({
             if (interlinearMode != "INTERLINEAR") {
                 return;
             }
-            
+
             var warning = step.settings.get("warnInterlinearFirstTime") || false;
             step.util.raiseInfo(__s.warn_interlinear_view_selected, null, this.model.get("passageId"), null, warning);
             step.settings.save({
                 warnInterlinearFirstTime: true
             });
-            
+
         },
         _warnIfNoStrongs: function (masterVersion) {
             if (!step.keyedVersions) {
@@ -374,6 +396,7 @@ var PassageDisplayView = Backbone.View.extend({
             });
         },
         _makeSideNoteQtipHandler: function (item, xref, myPosition, atPosition, version, touch) {
+            var self = this;
             if (!$.data(item, "initialised")) {
                 require(["qtip", "drag"], function () {
                     item.qtip({
@@ -383,13 +406,22 @@ var PassageDisplayView = Backbone.View.extend({
                         content: {
                             text: function (event, api) {
                                 var chosenVersion = version;
-                                if(step.keyedVersions[version] && step.keyedVersions[version].category != 'BIBLE') {
+                                if (step.keyedVersions[version] && step.keyedVersions[version].category != 'BIBLE') {
+                                    //get the first version in the current search that is non-commentary
+                                    var allVersions = _.where(self.model.get("searchTokens"), {itemType: VERSION });
                                     chosenVersion = 'ESV';
+                                    for (var i = 0; i < allVersions.length; i++) {
+                                        var keyedVersion = step.keyedVersions[(allVersions[i].item || {}).initials];
+                                        if (keyedVersion != null && keyedVersion.category == 'BIBLE') {
+                                            chosenVersion = keyedVersion.initials;
+                                        }
+                                    }
                                 }
-                                
+
                                 $.getSafe(BIBLE_GET_BIBLE_TEXT + chosenVersion + "/" + encodeURIComponent(xref), function (data) {
                                     api.set('content.title.text', data.longName);
                                     api.set('content.text', data.value);
+                                    api.set('content.osisId', data.osisId)
                                 });
                             },
                             title: { text: xref, button: false }
@@ -397,19 +429,13 @@ var PassageDisplayView = Backbone.View.extend({
                         events: {
                             render: function (event, api) {
                                 $(api.elements.titlebar).css("padding-right", "0px");
-                                $(api.elements.titlebar).prepend($('<button type="button" class="close" aria-hidden="true">&times;</button>').click(function () {
-                                    api.hide();
-                                }));
-
-//                                    $(api.elements.titlebar).prepend(goToPassageArrowButton(true, version, xref, "leftPassagePreview"));
-//                                    $(api.elements.titlebar).prepend(goToPassageArrowButton(false, version, xref, "rightPassagePreview"));
-
-//                                    $(".leftPassagePreview, .rightPassagePreview", api.elements.titlebar)
-//                                        .first().button({ icons: { primary: "ui-icon-arrowthick-1-e" }})
-//                                        .next().button({ icons: { primary: "ui-icon-arrowthick-1-w" }}).end()
-//                                        .click(function () {
-//                                            api.hide();
-//                                        });
+                                $(api.elements.titlebar)
+                                    .prepend($('<span class="glyphicon glyphicon-new-window openRefInColumn"></span>')
+                                        .click(function () {
+                                            step.util.createNewLinkedColumnWithScroll(self.model.get("passageId"), api.get("content.osisId"), true);
+                                        })).prepend($('<button type="button" class="close" aria-hidden="true">&times;</button>').click(function () {
+                                        api.hide();
+                                    }));
                             },
                             visible: function (event, api) {
                                 var tooltip = api.elements.tooltip;
@@ -476,7 +502,7 @@ var PassageDisplayView = Backbone.View.extend({
         _unhighlighBothLinks: function (links) {
             links.removeClass("secondaryBackground");
         },
-        
+
         /**
          * Enhances verse numbers with their counts and related subjects popup
          * @param passageId
@@ -510,9 +536,9 @@ var PassageDisplayView = Backbone.View.extend({
         _adjustTextAlignment: function (passageContent) {
             //if we have only rtl, we right-align, so
             //A- if any ltr, then return immediately
-            if (passageContent.attr("dir") == 'ltr' || 
-                $(".ltr:first", passageContent).size() > 0 || 
-                $("[dir='ltr']:first", passageContent).size() > 0 || 
+            if (passageContent.attr("dir") == 'ltr' ||
+                $(".ltr:first", passageContent).size() > 0 ||
+                $("[dir='ltr']:first", passageContent).size() > 0 ||
                 $(".ltrDirection:first", passageContent).size() > 0) {
                 return;
             }

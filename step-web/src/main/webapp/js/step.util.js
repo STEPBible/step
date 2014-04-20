@@ -394,6 +394,20 @@ step.util = {
         this.activePassageId(passageId);
         this.createNewColumn(true);
     },
+    createNewLinkedColumnWithScroll: function(passageId, verseRef, stripCommentaries) {
+        this.createNewLinkedColumn(passageId);
+
+        //next target can be set on the active model
+        step.util.activePassage().save({ targetLocation: verseRef }, { silent: true });
+
+        var chapterRef = verseRef.substr(0, verseRef.lastIndexOf("."));
+        if(step.util.isBlank(chapterRef)) {
+            chapterRef = verseRef;
+        }
+        
+        step.router.navigatePreserveVersions("reference=" + chapterRef, stripCommentaries);
+    },
+    
     /**
      * @param linked true to indicate we want to link this column with the current active column
      * @private

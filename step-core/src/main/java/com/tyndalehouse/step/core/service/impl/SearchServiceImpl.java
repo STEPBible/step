@@ -219,7 +219,9 @@ public class SearchServiceImpl implements SearchService {
 
         if (!hasSearches && references.length() == 0) {
             references.append(DEFAULT_REFERENCE);
-            searchTokens.add(new SearchToken("reference", DEFAULT_REFERENCE));
+            final SearchToken token = new SearchToken("reference", DEFAULT_REFERENCE);
+            searchTokens.add(token);
+            referenceTokens.add(token);
         }
 
         //second pass add all 

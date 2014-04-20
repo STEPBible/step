@@ -38,7 +38,6 @@ import com.tyndalehouse.step.core.data.EntityManager;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.models.LexiconSuggestion;
 import com.tyndalehouse.step.core.models.search.BookAndBibleCount;
-import com.tyndalehouse.step.core.models.search.SuggestionType;
 import com.tyndalehouse.step.core.models.search.StrongCountsAndSubjects;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import com.tyndalehouse.step.core.service.jsword.JSwordSearchService;
@@ -60,6 +59,8 @@ import org.crosswire.jsword.index.lucene.LuceneIndex;
 import org.crosswire.jsword.passage.Key;
 import org.crosswire.jsword.passage.NoSuchKeyException;
 import org.crosswire.jsword.passage.Verse;
+import org.crosswire.jsword.versification.BibleBook;
+import org.crosswire.jsword.versification.DivisionName;
 import org.crosswire.jsword.versification.Testament;
 import org.crosswire.jsword.versification.Versification;
 import org.crosswire.jsword.versification.VersificationsMapper;
@@ -78,17 +79,18 @@ import java.util.TreeSet;
 /**
  * Provides each strong number given a verse.
  * <p/>
- * TODO: is it worth introducing a cache here for all verses? Raise JIRA to work that one out at some point //
  * <p/>
  * <p/>
  * Note, this object is not thread-safe. The intention is for it to be a use-once, throw-away type of object.
  */
 public class JSwordStrongNumberHelper {
     private static final Logger LOG = org.slf4j.LoggerFactory.getLogger(JSwordStrongNumberHelper.class);
-    private static final Book STRONG_REF_VERSION_BOOK = Books.installed().getBook(JSwordPassageService.REFERENCE_BOOK);
+    private static final Book STRONG_NT_VERSION_BOOK = Books.installed().getBook(JSwordPassageService.REFERENCE_BOOK);
+    private static final Book STRONG_OT_VERSION_BOOK = Books.installed().getBook(JSwordPassageService.OT_BOOK);
     private final JSwordVersificationService versification;
     private final JSwordSearchService jSwordSearchService;
-    private static volatile Versification v11n;
+    private static volatile Versification ntV11n;
+    private static volatile Versification otV11n;
     private Map<String, SortedSet<LexiconSuggestion>> verseStrongs;
     private Map<String, BookAndBibleCount> allStrongs;
     private boolean isOT;
@@ -115,10 +117,11 @@ public class JSwordStrongNumberHelper {
      * Inits the reference versification system so that we don't ever need to do this again
      */
     private void initReferenceVersification() {
-        if (v11n == null) {
+        if (ntV11n == null) {
             synchronized (JSwordStrongNumberHelper.class) {
-                if (v11n == null) {
-                    v11n = this.versification.getVersificationForVersion(STRONG_REF_VERSION_BOOK);
+                if (ntV11n == null) {
+                    ntV11n = this.versification.getVersificationForVersion(STRONG_NT_VERSION_BOOK);
+                    otV11n = this.versification.getVersificationForVersion(STRONG_OT_VERSION_BOOK);
                 }
             }
         }
@@ -129,24 +132,23 @@ public class JSwordStrongNumberHelper {
      */
     private void calculateCounts() {
         try {
-            final Key key = VersificationsMapper.instance().mapVerse(this.reference, v11n);
+            //is key OT or NT
+            final BibleBook book = this.reference.getBook();
+            this.isOT = DivisionName.OLD_TESTAMENT.contains(book);
+
+            final Versification targetVersification = isOT ? otV11n : ntV11n;
+            final Key key = VersificationsMapper.instance().mapVerse(this.reference, targetVersification);
             this.verseStrongs = new TreeMap<String, SortedSet<LexiconSuggestion>>();
             this.allStrongs = new HashMap<String, BookAndBibleCount>(256);
 
-            final List<Element> elements = JSwordUtils.getOsisElements(new BookData(STRONG_REF_VERSION_BOOK, key));
-
+            final List<Element> elements = JSwordUtils.getOsisElements(new BookData(isOT ? STRONG_OT_VERSION_BOOK : STRONG_NT_VERSION_BOOK, key));
             for (final Element e : elements) {
-
                 readDataFromLexicon(this.definitions, e.getAttributeValue(OSISUtil.OSIS_ATTR_OSISID),
                         OSISUtil.getStrongsNumbers(e));
             }
 
             // now get counts in the relevant portion of text
             applySearchCounts(getBookFromKey(key));
-
-            // is it OT or NT
-            this.isOT = v11n.getTestament(v11n.getOrdinal((Verse) key.get(0))) == Testament.OLD;
-
         } catch (final NoSuchKeyException ex) {
             LOG.warn("Unable to enhance verse numbers.", ex);
         } catch (final BookException ex) {
@@ -179,7 +181,8 @@ public class JSwordStrongNumberHelper {
     private void applySearchCounts(final String bookName) {
 
         try {
-            final IndexSearcher is = jSwordSearchService.getIndexSearcher(JSwordPassageService.REFERENCE_BOOK);
+            final IndexSearcher is = jSwordSearchService.getIndexSearcher(
+                    this.isOT ? STRONG_OT_VERSION_BOOK.getInitials() : STRONG_NT_VERSION_BOOK.getInitials());
             final TermDocs termDocs = is.getIndexReader().termDocs();
             for (final Entry<String, BookAndBibleCount> strong : this.allStrongs.entrySet()) {
                 termDocs.seek(new Term(LuceneIndex.FIELD_STRONG, strong.getKey()));

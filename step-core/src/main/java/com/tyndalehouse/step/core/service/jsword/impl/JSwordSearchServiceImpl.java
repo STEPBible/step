@@ -41,6 +41,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import com.tyndalehouse.step.core.exceptions.LuceneSearchException;
+import com.tyndalehouse.step.core.models.InterlinearMode;
 import com.tyndalehouse.step.core.service.jsword.JSwordMetadataService;
 import org.apache.lucene.search.IndexSearcher;
 import org.crosswire.jsword.book.Book;
@@ -257,6 +258,10 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
         Collections.addAll(lookupOptions, options);
         lookupOptions.add(LookupOption.CHAPTER_BOOK_VERSE_NUMBER);
 
+        if(InterlinearMode.INTERLINEAR.name().equalsIgnoreCase(sq.getInterlinearMode())) {
+            lookupOptions.add(LookupOption.VERSE_NUMBERS);
+        }
+        
         final List<SearchEntry> resultPassages = getPassagesForResults(versions, newResults, sq.getContext(),
                 lookupOptions, sq.getInterlinearMode());
 

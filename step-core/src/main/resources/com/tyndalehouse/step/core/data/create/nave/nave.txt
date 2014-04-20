@@ -896,7 +896,7 @@
 @EntryRoot=	ABSTEMIOUSNESS
 @FullHeader=	John the Baptist
 @References=	Mat.11:19
-@SeeAlternate=	TEETOTLISM TEMPERANCE; 
+@SeeAlternate=	TEETOTLISM; TEMPERANCE; 
 ===============
 @EntryRoot=	TEETOTLISM [TOTAL ABSTINENCE]
 @FullHeader=	From Intoxicating Beverages

@@ -1,0 +1,12 @@
+@import 'template_variables';
+
+.qtip-titlebar {
+  .openRefInColumn {
+    float: right;
+    margin-right: 5px;
+  }
+  .close {
+    color: $headingColour;
+    opacity: 1;
+  }
+}

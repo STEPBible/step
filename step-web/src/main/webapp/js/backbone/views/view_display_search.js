@@ -95,23 +95,11 @@ var SearchDisplayView = Backbone.View.extend({
     },
     //adds verse click handlers to open up the verse in a separate linked passage
     _addVerseClickHandlers : function(results) {
+        var self = this;
         results.find(".verseNumber").parent().click(function(ev) {
             //now go to a new place. Let's be crazy about it as well, and simply chop off the last part
             var verseRef =  $(this).attr("name");
-            
-            //make the active column the one that is being clicked on just in case
-            step.util.activePassageId(step.passage.getPassageId(this));
-
-            //get linked passage, and if not exist, we need to create a new one...
-            //creates a new column, or sets the right column as active
-            step.util.createNewColumn(true);
-            
-            //next target can be set on the active model
-            step.util.activePassage().save({ targetLocation: verseRef }, { silent: true });
-            
-            var chapterRef = verseRef.substr(0, verseRef.lastIndexOf("."));
-            step.router.navigatePreserveVersions("reference=" + chapterRef);
-            ev.stopPropagation();
+            step.util.createNewLinkedColumnWithScroll(self.model.get("passageId"), verseRef);
         });
         
     },

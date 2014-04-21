@@ -15,13 +15,11 @@ public interface OriginalWordSuggestionService {
     /**
      * Retrieves all matching lexical entries for the word typed in
      * 
-     * @param suggestionType indicates greek or hebrew
      * @param form the word that has been typed in so far
-     * @param includeAllForms true to indicate results should come lexical_form table.
      * 
+     * @param greek true to indicate greek, false to indicate hebrew
      * @return a list of lexicon suggestions
      */
-    List<LexiconSuggestion> getLexicalSuggestions(SuggestionType suggestionType, String form,
-            boolean includeAllForms);
+    List<LexiconSuggestion> getExactForms(String form, boolean greek);
 
 }

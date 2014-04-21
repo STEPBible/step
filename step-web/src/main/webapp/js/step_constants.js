@@ -19,6 +19,7 @@ NAVE_SEARCH = "nave";
 NAVE_SEARCH_EXTENDED = "xnave";
 TOPIC_BY_REF = "topicref";
 RELATED_VERSES = "relatedrefs";
+EXACT_FORM = "exactForm";
 REF_VERSION = "ESV";
 VOCAB_SORT = "VOCABULARY";
 ORIGINAL_SPELLING_SORT = "ORIGINAL_SPELLING";
@@ -71,7 +72,7 @@ SEARCH_MASTER =                     STEP_SERVER_BASE_URL + "search/masterSearch/
 SEARCH_AUTO_SUGGESTIONS =           STEP_SERVER_BASE_URL + "search/suggest/";
 SEARCH_DEFAULT =                    STEP_SERVER_BASE_URL + "search/search/";
 SEARCH_ESTIMATES =                  STEP_SERVER_BASE_URL + "search/estimateSearch/";
-SEARCH_SUGGESTIONS =                STEP_SERVER_BASE_URL + "search/getLexicalSuggestions/";
+SEARCH_SUGGESTIONS =                STEP_SERVER_BASE_URL + "search/getExactForms/";
 SUBJECT_SUGGESTION =                STEP_SERVER_BASE_URL + "search/autocompleteSubject/"
 SUBJECT_VERSES =                    STEP_SERVER_BASE_URL + "search/getSubjectVerses/";
 

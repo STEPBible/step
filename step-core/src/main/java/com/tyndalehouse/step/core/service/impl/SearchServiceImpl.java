@@ -40,6 +40,7 @@ import com.tyndalehouse.step.core.exceptions.TranslatedException;
 import com.tyndalehouse.step.core.models.AbstractComplexSearch;
 import com.tyndalehouse.step.core.models.BibleVersion;
 import com.tyndalehouse.step.core.models.BookName;
+import com.tyndalehouse.step.core.models.ExactForm;
 import com.tyndalehouse.step.core.models.InterlinearMode;
 import com.tyndalehouse.step.core.models.KeyWrapper;
 import com.tyndalehouse.step.core.models.LexiconSuggestion;
@@ -69,6 +70,7 @@ import com.tyndalehouse.step.core.service.search.SubjectSearchService;
 import com.tyndalehouse.step.core.service.search.impl.OriginalWordSuggestionServiceImpl;
 import com.tyndalehouse.step.core.utils.StringConversionUtils;
 import com.tyndalehouse.step.core.utils.StringUtils;
+import com.tyndalehouse.step.core.utils.language.GreekUtils;
 import org.apache.lucene.queryParser.MultiFieldQueryParser;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.queryParser.QueryParser;
@@ -117,7 +119,7 @@ public class SearchServiceImpl implements SearchService {
      */
     public static final Object ORIGINAL_SPELLING_SORT = "ORIGINAL_SPELLING";
 
-    private static final String BASE_GREEK_VERSION = "WHNU";
+    private static final String[] BASE_GREEK_VERSIONS = new String[]{"WHNU", "Byz"};
     private static final String BASE_HEBREW_VERSION = "OSMHB";
     private static final Logger LOGGER = LoggerFactory.getLogger(SearchServiceImpl.class);
     private static final String STRONG_QUERY = "strong:";
@@ -152,7 +154,7 @@ public class SearchServiceImpl implements SearchService {
                              final BibleInformationService bibleInfoService,
                              final EntityManager entityManager,
                              final VersionResolver versionResolver,
-                             final LexiconDefinitionService lexiconDefinitionService, 
+                             final LexiconDefinitionService lexiconDefinitionService,
                              final JSwordRelatedVersesService relatedVerseService) {
         this.jswordSearch = jswordSearch;
         this.jswordMetadata = jswordMetadata;
@@ -187,12 +189,12 @@ public class SearchServiceImpl implements SearchService {
     @Override
     public AbstractComplexSearch runQuery(final List<SearchToken> searchTokens, final String options,
                                           final String display, final int page, final String filter,
-                                          final String sort, int context) {
+                                          final String sort, int context, final String originalItems) {
         boolean hasSearches = false;
         final List<String> versions = new ArrayList<String>(4);
         final StringBuilder references = new StringBuilder();
         final List<SearchToken> referenceTokens = new ArrayList<SearchToken>(2);
-        
+
         //first pass - get the set of versions and references
         for (SearchToken token : searchTokens) {
             if (SearchToken.VERSION.equals(token.getTokenType())) {
@@ -201,7 +203,7 @@ public class SearchServiceImpl implements SearchService {
                 if (references.length() > 0) {
                     references.append(';');
                 }
-                
+
                 //add to list, so that we can replace all tokens later
                 referenceTokens.add(token);
                 references.append(token.getToken());
@@ -233,20 +235,56 @@ public class SearchServiceImpl implements SearchService {
 
         aggregateTokenForPassageLookups(searchTokens, referenceTokens, complexSearch);
         enhanceSearchTokens(versions.get(0), searchTokens);
+        signRequest(complexSearch, options, display, filter, sort, context, originalItems);
         complexSearch.setSearchTokens(searchTokens);
         return complexSearch;
     }
 
     /**
+     * This method allows us to sign and uniquely identify a request.
+     * Most parameters should make it into this list. Page numbers don't, as we always restore the first page!
+     *
+     * @param sort          the type of sort
+     * @param context       the number of extra verses to lookup for each verse
+     * @param display       the type of display mode, e.g. interlinear, interleaved, etc.
+     * @param filter        the filter to apply (or blank to retrieve just the particular search query.
+     * @param options       the options ticked by the user
+     * @param originalItems the original query as given by the user
+     * @return the results from the search/passage lookup
+     */
+    private void signRequest(final AbstractComplexSearch result,
+                             final String options,
+                             final String display,
+                             final String filter,
+                             final String sort,
+                             int context,
+                             final String originalItems) {
+        StringBuilder key = new StringBuilder();
+        key.append(StringUtils.getNonNullString(originalItems, ""));
+        key.append('-');
+        key.append(StringUtils.getNonNullString(display, ""));
+        key.append('-');
+        key.append(StringUtils.getNonNullString(options, ""));
+        key.append('-');
+        key.append(StringUtils.getNonNullString(filter, ""));
+        key.append('-');
+        key.append(StringUtils.getNonNullString(sort, ""));
+        key.append('-');
+        key.append(context);
+        result.setSignature(key.toString());
+    }
+
+    /**
      * For passage lookups, we have a restriction on how many verses we can show
-     * @param searchTokens the original list of search tokens
+     *
+     * @param searchTokens    the original list of search tokens
      * @param referenceTokens the reference tokens that formed what we passed down to the service layer
-     * @param complexSearch the results of the complex search
+     * @param complexSearch   the results of the complex search
      */
     private void aggregateTokenForPassageLookups(final List<SearchToken> searchTokens, final List<SearchToken> referenceTokens, final AbstractComplexSearch complexSearch) {
-        if(complexSearch instanceof OsisWrapper) {
+        if (complexSearch instanceof OsisWrapper) {
             searchTokens.removeAll(referenceTokens);
-            searchTokens.add(new SearchToken(SearchToken.REFERENCE, ((OsisWrapper)complexSearch).getOsisId()));
+            searchTokens.add(new SearchToken(SearchToken.REFERENCE, ((OsisWrapper) complexSearch).getOsisId()));
         }
     }
 
@@ -278,6 +316,11 @@ public class SearchServiceImpl implements SearchService {
             } else if (SearchToken.STRONG_NUMBER.equals(tokenType)) {
                 //hit the index and look up that strong number...
                 st.setEnhancedTokenInfo(this.lexiconDefinitionService.lookup(st.getToken()));
+            } else if (SearchToken.EXACT_FORM.equals(tokenType)) {
+                ExactForm ef = new ExactForm();
+                ef.setText(st.getToken());
+                ef.setGreek(GreekUtils.isGreekText(st.getToken()));
+                st.setEnhancedTokenInfo(ef);
             }
             //nothing to do 
             // for subject searches or 
@@ -319,6 +362,8 @@ public class SearchServiceImpl implements SearchService {
                 addWordSearches(versions, references, st.getToken(), filters, individualSearches);
             } else if (SearchToken.MEANINGS.equals(tokenType)) {
                 addSearch(SearchType.ORIGINAL_MEANING, versions, references, st.getToken(), filters, individualSearches);
+            } else if (SearchToken.EXACT_FORM.equals(tokenType)) {
+                addSearch(SearchType.EXACT_FORM, versions, references, st.getToken(), filters, individualSearches);
             } else if (SearchToken.TEXT_SEARCH.equals(tokenType)) {
                 addSearch(SearchType.TEXT, versions, references, st.getToken(), null, individualSearches);
             } else if (SearchToken.SUBJECT_SEARCH.equals(tokenType)) {
@@ -770,8 +815,7 @@ public class SearchServiceImpl implements SearchService {
                     adaptQueryForMeaningSearch(sq);
                     results = intersect(results, this.jswordSearch.searchKeys(sq));
                     break;
-                case ORIGINAL_GREEK_EXACT:
-                case ORIGINAL_HEBREW_EXACT:
+                case EXACT_FORM:
                     results = intersect(results, getKeysFromOriginalText(sq));
                     break;
                 default:
@@ -794,10 +838,9 @@ public class SearchServiceImpl implements SearchService {
         switch (lastSearch.getType()) {
             case TEXT:
             case ORIGINAL_MEANING:
-            case ORIGINAL_GREEK_EXACT:
+            case EXACT_FORM:
             case ORIGINAL_GREEK_FORMS:
             case ORIGINAL_GREEK_RELATED:
-            case ORIGINAL_HEBREW_EXACT:
             case ORIGINAL_HEBREW_RELATED:
             case ORIGINAL_HEBREW_FORMS:
                 return buildCombinedVerseBasedResults(sq, results);
@@ -835,8 +878,7 @@ public class SearchServiceImpl implements SearchService {
                 return runRelatedStrongSearch(sq, SuggestionType.GREEK);
             case ORIGINAL_HEBREW_RELATED:
                 return runRelatedStrongSearch(sq, SuggestionType.HEBREW);
-            case ORIGINAL_GREEK_EXACT:
-            case ORIGINAL_HEBREW_EXACT:
+            case EXACT_FORM:
                 return runExactOriginalTextSearch(sq);
             case ORIGINAL_MEANING:
                 return runMeaningSearch(sq);
@@ -959,9 +1001,9 @@ public class SearchServiceImpl implements SearchService {
         final IndividualSearch currentSearch = sq.getCurrentSearch();
         final String[] soughtAfterVersions = currentSearch.getVersions();
 
-        // overwrite version with Tisch to do the search
-        if (currentSearch.getType() == SearchType.ORIGINAL_GREEK_EXACT) {
-            currentSearch.setVersions(new String[]{BASE_GREEK_VERSION});
+        // overwrite version with WHNU to do the search
+        if (currentSearch.getType() == SearchType.EXACT_FORM) {
+            currentSearch.setVersions(BASE_GREEK_VERSIONS);
             currentSearch.setQuery(unaccent(currentSearch.getQuery(), sq));
         } else {
             currentSearch.setVersions(new String[]{BASE_HEBREW_VERSION});
@@ -1279,11 +1321,11 @@ public class SearchServiceImpl implements SearchService {
     private String unaccent(final String query, final SearchQuery sq) {
         final SearchType currentSearchType = sq.getCurrentSearch().getType();
         switch (currentSearchType) {
-            case ORIGINAL_GREEK_EXACT:
+            case EXACT_FORM:
+                return StringConversionUtils.unAccent(query);
             case ORIGINAL_GREEK_FORMS:
             case ORIGINAL_GREEK_RELATED:
                 return StringConversionUtils.unAccent(query, true);
-            case ORIGINAL_HEBREW_EXACT:
             case ORIGINAL_HEBREW_FORMS:
             case ORIGINAL_HEBREW_RELATED:
                 return StringConversionUtils.unAccent(query, false);
@@ -1479,11 +1521,9 @@ public class SearchServiceImpl implements SearchService {
      */
     private String getPrefixed(final String s, final SearchType searchType) {
         switch (searchType) {
-            case ORIGINAL_GREEK_EXACT:
             case ORIGINAL_GREEK_FORMS:
             case ORIGINAL_GREEK_RELATED:
                 return 'G' + s;
-            case ORIGINAL_HEBREW_EXACT:
             case ORIGINAL_HEBREW_FORMS:
             case ORIGINAL_HEBREW_RELATED:
                 return 'H' + s;

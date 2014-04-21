@@ -78,23 +78,30 @@
         step.bookmarks = new HistoryModelList();
         step.bookmarks.fetch();
 
-        //need to clean up passages... Ideally, by changing the values of passageIds to be 0,1,2,3,4,...
+        //need to clean up passages... Ideally, by changing the values of passageIds to be 1,2,3,4,...
+        //we reserve 0 for the first column
         for (var ii = 0; ii < step.passages.length; ii++) {
-            step.passages.at(ii).save({ passageId: ii }, {silent: true });
+            //start at 1, and go onwards from then
+            var p = step.passages.at(ii);
+                p.save({ 
+                passageId: ii + 1, 
+                pageNumber: 1, 
+                results: p.get("firstPageResults") 
+            }, {silent: true });
         }
 
         //now passage 0 is the one from the URL
         if (window.tempModel) {
+            //because of page size, the 'value' is empty, so we'll need to put this back into the model after everything is over
+            var pageValue = $(".passageContainer").find(".passageContent").html().trim();
+            
             //now we can create the correct views
-            var modelZero = step.passages.findWhere({ passageId: 0});
-            if (modelZero == undefined) {
-                modelZero = new PassageModel({ passageId: 0 });
-                step.passages.add(modelZero);
-            }
-            modelZero.save(window.tempModel);
+            var modelZero = new PassageModel({ passageId: 0 });
+            step.passages.add(modelZero);
             
             //reset some attributes that weren't on the model to start with (because of space reasons)
-            modelZero.save({ results: null, value: "", linked: null}, {silent: true});
+            modelZero.save(window.tempModel);
+            modelZero.save({ results: null, linked: null, value: pageValue}, {silent: true});
             new PassageMenuView({
                 model: modelZero
             });
@@ -126,5 +133,9 @@
         Backbone.history.start({pushState: true, silent: true });
         
         new FeedbackView();
+        if(step.passages.length > 1) {
+            //we restore previous passages
+            new RestorePassageView();
+        }
     });
 })();

@@ -412,7 +412,7 @@ step.util = {
      * @param linked true to indicate we want to link this column with the current active column
      * @private
      */
-    createNewColumn: function (linked) {
+    createNewColumn: function (linked, model) {
         //if linked, then make sure we don't already have a linked column - if so, we'll simply use that.
         var activePassageModel = this.activePassage();
         if (linked) {
@@ -426,9 +426,18 @@ step.util = {
         var columns = columnHolder.find(".column").not(".examplesColumn");
         var activeColumn = columns.has(".passageContainer.active");
         var newColumn = activeColumn.clone();
-        var newPassageId = parseInt(step.passages.max(function (p) {
-            return parseInt(p.get("passageId"))
-        }).get("passageId")) + 1;
+
+        var passageId;
+        if(!model) {
+            //create new
+            newPassageId = parseInt(step.passages.max(function (p) {
+                return parseInt(p.get("passageId"))
+            }).get("passageId")) + 1;
+        } else {
+            //use existing
+            newPassageId = model.get("passageId");
+        }
+        
         newColumn
             .find(".passageContainer").attr("passage-id", newPassageId)
             .find(".passageContent").remove();
@@ -436,9 +445,7 @@ step.util = {
         newColumn.find(".resultsLabel").html("");
 
         var allColumns = columns.add(newColumn);
-
         this.refreshColumnSize(allColumns);
-
         newColumn.insertAfter(activeColumn);
         if (linked) {
             //add a link  
@@ -624,6 +631,9 @@ step.util = {
                 case SYNTAX:
                     source = __s.query_syntax;
                     break;
+                case EXACT_FORM:
+                    source = __s.exact_form;
+                    break;
                 case TEXT_SEARCH:
                     source = __s.search_text;
             }
@@ -674,7 +684,10 @@ step.util = {
                     return '<div class="textItem" data-select-id="' + util.safeEscapeQuote(entry.item.text) + '"' +
                         'data-item-type="' + entry.itemType + '" ' +
                         'title="' + source + util.safeEscapeQuote(entry.item.text) + '">' + entry.item.text + "</div>";
-
+                case EXACT_FORM:
+                    return '<div class="exactFormItem" data-select-id="' + util.safeEscapeQuote(entry.item.text) + '"' +
+                        'data-item-type="' + entry.itemType + '" ' +
+                        'title="' + source + util.safeEscapeQuote(entry.item.text) + '">' + entry.item.text + "</div>";
                 case SYNTAX:
                     return '<div class="syntaxItem"' +
                         'data-item-type="' + entry.itemType + '" ' +

@@ -51,6 +51,9 @@ var MainSearchView = Backbone.View.extend({
                     case MEANINGS:
                         id += entry.item.gloss;
                         break;
+                    case EXACT_FORM:
+                        id += entry.item.text;
+                        break;
                     case TOPIC_BY_REF:
                     case RELATED_VERSES:
                     default:
@@ -224,6 +227,7 @@ var MainSearchView = Backbone.View.extend({
         this._addReferenceHandlers(tokens);
         this._addDefaultExampleHandlers(tokens);
         this._addTextHandlers(tokens);
+        this._addExactFormHandlers(tokens);
     },
     _addVersionHandlers: function(tokens) {
         var self = this;
@@ -234,9 +238,16 @@ var MainSearchView = Backbone.View.extend({
     },
     _addTextHandlers: function(tokens) {
         var self = this;
-        $(tokens).filter(".textItem, syntaxItem").click(function(ev) {
+        $(tokens).filter(".textItem, .syntaxItem").click(function(ev) {
             self._markItemForReplacing(ev, $(this));
             self.openAdvancedSearch($(this).hasClass("textItem") ? TEXT_SEARCH : SYNTAX);
+        });
+    },
+    _addExactFormHandlers: function(tokens) {
+        var self = this;
+        $(tokens).filter(".exactFormItem").click(function(ev) {
+            self._markItemForReplacing(ev, $(this));
+            self.openAdvancedSearch(EXACT_FORM);
         });
     },
     _addReferenceHandlers: function(tokens) {
@@ -286,7 +297,7 @@ var MainSearchView = Backbone.View.extend({
                 }
             }
 
-            new AdvancedSearchView({ searchView: self, masterVersion: masterVersion, intialView: initialView });
+            new AdvancedSearchView({ searchView: self, masterVersion: masterVersion, initialView: initialView });
         });  
     },
     /**
@@ -329,12 +340,14 @@ var MainSearchView = Backbone.View.extend({
             case SUBJECT_SEARCH:
                 text = termSuggestion.suggestion.value;
                 break;
+            case EXACT_FORM:
+                text = termSuggestion.suggestion.text;
+                break;
             case TEXT_SEARCH:
                 text = termSuggestion.suggestion.text;
                 break;
         }
 
-//        console.log(termSuggestion.itemType, termSuggestion, text, item.suggestion);
         return {text: text, item: item.suggestion };
     },
     convertResultToGroup: function (item, term) {
@@ -475,6 +488,9 @@ var MainSearchView = Backbone.View.extend({
                     args += options[ii].itemType + "=" + encodeURIComponent(options[ii].item.value);
                     break;
                 case TEXT_SEARCH:
+                    args += options[ii].itemType + "=" + encodeURIComponent(options[ii].item.text);
+                    break;
+                case EXACT_FORM:
                     args += options[ii].itemType + "=" + encodeURIComponent(options[ii].item.text);
                     break;
                 default:
@@ -794,6 +810,8 @@ var MainSearchView = Backbone.View.extend({
                 return { value: token, searchTypes: ["SUBJECT_EXTENDED"] };
             case NAVE_SEARCH_EXTENDED:
                 return { value: token, searchTypes: ["SUBJECT_FULL"] };
+            case EXACT_FORM:
+                return { text: token, greek: enhancedInfo.greek};
             case TOPIC_BY_REF:
             case RELATED_VERSES:
                 return { text: token };

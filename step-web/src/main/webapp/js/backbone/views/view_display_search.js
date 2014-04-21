@@ -27,6 +27,9 @@ var SearchDisplayView = Backbone.View.extend({
         
         //finished rendering, so reset the partial rendering flag
         this.options.partRendered = false;
+        
+        //we always save the results in the firstPageResults field, so that we can restore quickly at a later date
+        this.model.save({ firstPageResults: this.model.get("results"), results: null }, { silent: true })
     },
     renderAppend: function() {
         this.render(true);
@@ -34,6 +37,8 @@ var SearchDisplayView = Backbone.View.extend({
         
         //remove icon
         this.$el.find(".searchResults .waiting").remove();
+
+        this.model.save({ results: null }, { silent: true })
     },
     render: function (append) {
         var self = this;

@@ -4,18 +4,13 @@ var AdvancedSearchView = Backbone.View.extend({
     sizes: [2, 2, 5, 1, 2],
     textDefaults: step.defaults.search.textual,
     rowToCellTemplate: _.template('<% _.each(row.split("|"), function(cell, i) { %> <span class="col-sm-<%= view.sizes[i] %>"><%= cell %></span> <% }) %><span class="col-sm-2"></span>'),
-    extraRow: _.template('<span class="row">' +
-        '<%= view.rowToCellTemplate({ row: sprintf(__s.simple_text_search_level_intermediate, ' +
-        '  view.getSelect("join", view.textDefaults.simpleTextIncludes, view.textDefaults.simpleTextIncludesReference), ' +
-        '  view.getSelect("secondaryType", view.textDefaults.simpleTextSecondaryTypes, view.textDefaults.simpleTextSecondaryTypesReference), view.getInput("secondaryCriteria"), ' +
-        'view.getSelect("joinType", view.textDefaults.simpleTextProximities, view.textDefaults.simpleTextProximitiesReference)), view: view }) %>' +
-        '</span>'),
     modalPopupTemplate: _.template('<div class="modal selectModal" id="advancedSearch" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
         '<div class="modal-dialog">' +
         '<div class="modal-content">' +
         '<div class="modal-body">' +
         '<ul class="nav nav-tabs">' +
         '<li class="active"><a href="#advancedTextSearch" data-toggle="tab"><%= __s.search_advanced_text %></a></li>' +
+        '<li><a href="#exactForm" data-toggle="tab"><%= __s.exact_form %></a></li>' +
         '<li><a href="#subjectByRef" data-toggle="tab"><%= __s.search_subject_by_reference %></a></li>' +
         '<li><a href="#querySyntax" data-toggle="tab"><%= __s.free_search %></a></li>' +
         '</ul>' +
@@ -50,6 +45,29 @@ var AdvancedSearchView = Backbone.View.extend({
         '<button type="submit" class="btn btn-primary closeAndAdd" data-dismiss="modal" ><label><%= __s.add_to_search %></label></button>' +
         '</div>' +
         '</form></div>' +
+        // exact lexical form
+        '<div class="tab-pane" id="exactForm">' +
+        '<form role="form" data-search-type="<%= EXACT_FORM %>" class="form-inline container-fluid">' +
+        '<div class="dropdown">' +
+        '<div class="form-group">' +
+        '<label for="exactFormLanguage"><%= __s.exact_form_language %></label>' +
+        '<select id="exactFormLanguage" data-toggle="dropdown">' +
+        '<option value="true"><%= __s.search_greek %></option>' +
+        '<option value="false"><%= __s.search_hebrew %></option>' +
+        '</select>' +
+        '</div>' +
+        '<div class="form-group">' +
+        '<label for="exactFormQuery"><%= __s.exact_form %></label>' +
+        '<input id="exactFormQuery" type="text" data-toggle="dropdown" placeholder="<%= __s.exact_form %>" />' +
+        '<ul class="dropdown-menu formsDropdown" role="menu" aria-labelledby="dropdownMenu-exactForm">' +
+        '</ul>' +
+        '</div>' +
+        '</div>' +
+        '<div class="footerContainer">' +
+        '<button type="button" class="btn btn-default closeModal" aria-hidden="true"><label><%= __s.close %></label></button>' +
+        '<button type="submit" class="btn btn-primary closeAndAdd" data-dismiss="modal" ><label><%= __s.add_to_search %></label></button>' +
+        '</div>' +
+        '</form></div>' +
         //advanced query syntax search
         '<div class="tab-pane" id="querySyntax">' +
         '<form role="form" data-search-type="<%= SYNTAX %>">' +
@@ -61,11 +79,16 @@ var AdvancedSearchView = Backbone.View.extend({
         '</form>' +
         '</div>' +
         '</div>' + //end body
-//        '<div class="modal-footer"><button class="btn btn-default btn-sm closeAndAdd" data-dismiss="modal" ><label><%= __s.ok %></label></button></div>' +
         '</div>' + //end content
         '</div>' + //end dialog
         '</div>' +
         '</div>'),
+    extraRow: _.template('<span class="row">' +
+        '<%= view.rowToCellTemplate({ row: sprintf(__s.simple_text_search_level_intermediate, ' +
+        '  view.getSelect("join", view.textDefaults.simpleTextIncludes, view.textDefaults.simpleTextIncludesReference), ' +
+        '  view.getSelect("secondaryType", view.textDefaults.simpleTextSecondaryTypes, view.textDefaults.simpleTextSecondaryTypesReference), view.getInput("secondaryCriteria"), ' +
+        'view.getSelect("joinType", view.textDefaults.simpleTextProximities, view.textDefaults.simpleTextProximitiesReference)), view: view }) %>' +
+        '</span>'),
     el: function () {
         var el = $("<div>");
         $("body").append(el);
@@ -82,7 +105,7 @@ var AdvancedSearchView = Backbone.View.extend({
         this.searchView = opts.searchView;
 
         this.$el.append(this.modalPopupTemplate({ view: this }));
-
+        
         this.$el.find(".addRow").click(function (ev) {
             ev.preventDefault();
             if (!self.maxReached) {
@@ -120,34 +143,71 @@ var AdvancedSearchView = Backbone.View.extend({
                 case self.text:
                     Backbone.Events.trigger("search:add", { itemType: SYNTAX, value: { text: "&lt;" + self.$el.find(".criteria").val() + "...&gt;", value: self.$el.find(".textQuerySyntax").val() } });
                     break;
+                case EXACT_FORM:
+                    var text = self.$el.find("#exactFormQuery").val();
+                    Backbone.Events.trigger("search:add", { itemType: EXACT_FORM, value: { text: text, greek: self.$el.find("#exactFormLanguage").val() } });
+                    break;
                 case SYNTAX:
-                {
                     Backbone.Events.trigger("search:add", { itemType: SYNTAX, value: { text: "" + "&lt;...&gt;", value: $(".advancedQuerySyntax").val() } });
                     break;
-                }
             }
             self.closeModal(ev);
         });
 
         this.$el.find(".closeModal").on('click', this.closeModal);
         this.subjectRelated = this.$el.find("#subjectRelated");
+        this.exactForm = this.$el.find("#exactFormQuery");
         this.subjectRefs = this.searchForms.find("#subjectByRef .dropdown-menu");
-        this.subjectRefs.css("left", this.subjectRelated.position().left);
-        this._autoCompleteRef(this.subjectRelated, this.subjectRefs);
+        this.exactFormDropdown = this.searchForms.find("#exactForm .dropdown-menu");
+        this._autoCompleteDropdown(this.subjectRelated, this.subjectRefs, this.refreshRefDropdown);
+        this._autoCompleteDropdown(this.exactForm, this.exactFormDropdown, this.refreshExactDropdown);
 
         //amend the initial view
         if (opts.initialView) {
             this.$el.find(".active").removeClass("active");
             var href = "";
-            if (initialView == SYNTAX) {
+            if (opts.initialView == SYNTAX) {
                 href = "#querySyntax";
             } else if (opts.initialView == TOPIC_BY_REF) {
                 href = "#subjectByRef";
             } else if (opts.initialView == TEXT_SEARCH) {
                 href = "#advancedTextSearch";
+            } else if(opts.initialView == EXACT_FORM) {
+                href = "#exactForm";
             }
-            this.$el.find("[href='#'" + href + "]").trigger("click");
+            this.$el.find("[href='" + href + "']").trigger("click");
         }
+    },
+    refreshExactDropdown: function(input, dropdown, target) {
+        var self = this;
+        if(input == null || input.length < 2) {
+            //please keep typing
+            dropdown.empty();
+            dropdown.append($("<label></label>").append(__s.exact_form_help));
+            return;
+        }
+        
+        var language = this.$el.find("#exactFormLanguage").val();
+        $.getSafe(SEARCH_SUGGESTIONS, [input, this.$el.find("#exactFormLanguage").val()], function (data) {
+            dropdown.empty();
+            var returnedData = data || [];
+            for (var i = 0; i < returnedData.length; i++) {
+                dropdown.append($('<li role="presentation">' +
+                    '<a role="menuitem" href="javascript:void(0)" data-ref="' + returnedData[i].matchingForm + '">' + 
+                    "<span class='col-xs-4 " + (language == "true" ? 'unicodeFontMini' : 'hbFontMini') +"'>" + returnedData[i].matchingForm + "</span>" + 
+                    "<span class='col-xs-4'>" + returnedData[i].stepTransliteration + "</span>" +
+                    "<span class='col-xs-4'>" + returnedData[i].gloss + "</span>&nbsp;" +
+                    '&nbsp;</a>' +
+                    '</li>'));
+            }
+            dropdown.find("a").on('click', function () {
+                var link = $(this);
+                target.val(link.data("ref"));
+            });
+            if (!target.closest(".form-group").hasClass("open")) {
+                target.trigger("click");
+            }
+        });
     },
     refreshRefDropdown: function (ref, dropdown, target) {
         var self = this;
@@ -175,7 +235,7 @@ var AdvancedSearchView = Backbone.View.extend({
             }
         });
     },
-    _autoCompleteRef: function (target, dropdown) {
+    _autoCompleteDropdown: function (target, dropdown, callback) {
         var self = this;
         target.on("keyup", function (ev) {
             var key = ev.keyCode || ev.which;
@@ -185,19 +245,18 @@ var AdvancedSearchView = Backbone.View.extend({
             }
 
             step.util.delay(function () {
-                self._doKeyLookup(target, dropdown);
+                self._doKeyLookup(target, dropdown, callback);
             }, KEY_PAUSE, 'show-ref-dropdown');
         }).on('focus', function () {
-            self.refreshRefDropdown($(this).val(), dropdown, target);
+            callback($(this).val(), dropdown, target);
         });
     },
-    _doKeyLookup: function (target, dropdown) {
-        var self = this;
+    _doKeyLookup: function (target, dropdown, callback) {
         var ref = target.val();
         if (step.util.isBlank(ref)) {
             ref = "";
         }
-        self.refreshRefDropdown(ref, dropdown, target);
+        callback(ref, dropdown, target);
     },
     closeModal: function (ev) {
         ev.preventDefault();

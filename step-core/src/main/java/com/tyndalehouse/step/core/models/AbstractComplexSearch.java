@@ -9,6 +9,7 @@ import java.util.List;
  * @author chrisburrell
  */
 public abstract class AbstractComplexSearch {
+    private String signature;
     private SearchType searchType;
     private String masterVersion;
     private String extraVersions;
@@ -59,5 +60,13 @@ public abstract class AbstractComplexSearch {
      */
     public void setSearchTokens(final List<SearchToken> searchTokens) {
         this.searchTokens = searchTokens;
+    }
+
+    public String getSignature() {
+        return signature;
+    }
+
+    public void setSignature(final String signature) {
+        this.signature = signature;
     }
 }

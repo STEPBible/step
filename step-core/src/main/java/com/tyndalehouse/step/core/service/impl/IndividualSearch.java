@@ -46,7 +46,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.tyndalehouse.step.core.exceptions.TranslatedException;
-import org.tartarus.snowball.ext.PorterStemmer;
 
 /**
  * Represents an individual search
@@ -168,8 +167,6 @@ public class IndividualSearch {
                 } else if (specifier == SIMILAR_FORMS) {
                     this.type = SearchType.ORIGINAL_GREEK_FORMS;
                     length++;
-                } else {
-                    this.type = SearchType.ORIGINAL_GREEK_EXACT;
                 }
                 break;
             case 'h':
@@ -179,9 +176,7 @@ public class IndividualSearch {
                 } else if (specifier == SIMILAR_FORMS) {
                     this.type = SearchType.ORIGINAL_HEBREW_FORMS;
                     length++;
-                } else {
-                    this.type = SearchType.ORIGINAL_HEBREW_EXACT;
-                }
+                } 
                 break;
             case 'f':
                 break;

@@ -79,11 +79,29 @@
   z-index: 99999999;
 }
 
+
+#exactForm {
+  position: relative;
+  .dropdown-menu {
+    margin-top: -3px;
+    left: initial;
+    .col-xs-4 {
+      overflow-x: hidden;
+    }
+  }
+  @include verticalHeight(".formsDropdown", $searchDropdownHeight);
+  .formsDropdown {
+    overflow-y: auto;
+    overflow-x: hidden;
+  } 
+}
+
+
 #subjectByRef {
   .dropdown-menu {
     margin-top: -3px;
   }
-  @include verticalHeight(".kolumnyRefs", 300px);
+  @include verticalHeight(".kolumnyRefs", $searchDropdownHeight);
   .kolumnyRefs {
     overflow-y: auto;
     overflow-x: hidden;

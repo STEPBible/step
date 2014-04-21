@@ -70,14 +70,17 @@ public interface SearchService {
     /**
      * Runs the appropriate search for the given list of search tokens
      *
-     * @param searchTokens the tokens
-     * @param sort         the type of sort
-     * @param context      the number of extra verses to lookup for each verse
-     * @param display      the type of display mode, e.g. interlinear, interleaved, etc.
-     * @param pageNumber   the page number to retrieve
-     * @param filter       the filter to apply (or blank to retrieve just the particular search query.
+     * @param searchTokens  the tokens
+     * @param sort          the type of sort
+     * @param context       the number of extra verses to lookup for each verse
+     * @param display       the type of display mode, e.g. interlinear, interleaved, etc.
+     * @param pageNumber    the page number to retrieve
+     * @param filter        the filter to apply (or blank to retrieve just the particular search query.
+     * @param options       the options ticked by the user
+     * @param originalItems the original query as given by the user
      * @return the results from the search/passage lookup
      */
     AbstractComplexSearch runQuery(List<SearchToken> searchTokens, final String options, final String display,
-                                   final int pageNumber, final String filter, final String sort, int context);
+                                   final int pageNumber, final String filter, final String sort, int context,
+                                   final String originalItems);
 }

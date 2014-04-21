@@ -70,6 +70,11 @@
   @include gradient($hebrewMeaningsRow, $optionStartGradient, $optionEndGradient);
 }
 
+.select-exactForm {
+  cursor: hand !important;
+  @include gradient($exactForm, $optionStartGradient, $optionEndGradient);
+}
+
 .select-topicref {
   cursor: hand !important;
   @include gradient($topicByRefRow, $optionStartGradient, $optionEndGradient);

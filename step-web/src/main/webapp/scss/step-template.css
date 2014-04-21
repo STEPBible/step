@@ -335,6 +335,16 @@ ul.select2-parent-no-results {
   background: -moz-linear-gradient(left, #9f798b, #b596a4);
   /* for firefox 3.6+ */ }
 
+.select-exactForm {
+  cursor: hand !important;
+  background: #ffff22;
+  /* for non-css3 browsers */
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=lighten($color, $optionStartGradient), endColorstr=lighten($color, $optionEndGradient));
+  /* for IE */
+  background-image: -webkit-linear-gradient(left, #ffff22, #ffff55) !important;
+  background: -moz-linear-gradient(left, #ffff22, #ffff55);
+  /* for firefox 3.6+ */ }
+
 .select-topicref {
   cursor: hand !important;
   background: #ef7ad0;
@@ -898,6 +908,26 @@ h4.lexicalGrouping {
 
 .modalVerseComplete {
   z-index: 99999999; }
+
+#exactForm {
+  position: relative; }
+  #exactForm .dropdown-menu {
+    margin-top: -3px;
+    left: initial; }
+    #exactForm .dropdown-menu .col-xs-4 {
+      overflow-x: hidden; }
+  @media screen and (min-height: 400px) {
+    #exactForm .formsDropdown {
+      max-height: 100px; } }
+  @media screen and (min-height: 600px) {
+    #exactForm .formsDropdown {
+      max-height: 300px; } }
+  @media screen and (min-height: 900px) {
+    #exactForm .formsDropdown {
+      max-height: 600px; } }
+  #exactForm .formsDropdown {
+    overflow-y: auto;
+    overflow-x: hidden; }
 
 #subjectByRef .dropdown-menu {
   margin-top: -3px; }

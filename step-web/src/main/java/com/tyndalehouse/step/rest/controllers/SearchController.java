@@ -8,7 +8,6 @@ import com.tyndalehouse.step.core.models.SingleSuggestionsSummary;
 import com.tyndalehouse.step.core.models.SuggestionsSummary;
 import com.tyndalehouse.step.core.models.search.AutoSuggestion;
 import com.tyndalehouse.step.core.models.search.PopularSuggestion;
-import com.tyndalehouse.step.core.models.search.SuggestionType;
 import com.tyndalehouse.step.core.service.BibleInformationService;
 import com.tyndalehouse.step.core.service.SearchService;
 import com.tyndalehouse.step.core.service.SuggestionService;
@@ -272,7 +271,7 @@ public class SearchController {
         final List<SearchToken> searchTokens = parseTokens(items);
         final int page = ConversionUtils.getValidInt(pageNumber, 1);
         final int searchContext = ConversionUtils.getValidInt(context, 0);
-        return this.searchService.runQuery(searchTokens, getDefaultedOptions(options), display, page, filter, sortOrder, searchContext);
+        return this.searchService.runQuery(searchTokens, getDefaultedOptions(options), display, page, filter, sortOrder, searchContext, items);
     }
 
     /**
@@ -331,37 +330,20 @@ public class SearchController {
         }
     }
 
+
     /**
      * Obtains a list of suggestions to display to the user
      *
-     * @param greekOrHebrew   "greek" if greek is desired, otherwise "hebrew", if null, then returns immediately
+     * @param greek   true, to indicate Greek
      * @param form            the form input so far
-     * @param includeAllForms whether to include all known forms
      * @return a list of suggestions
      */
-    @Timed(name = "lexical-suggestions", group = "languages", rateUnit = TimeUnit.SECONDS, durationUnit = TimeUnit.MILLISECONDS)
-    public List<LexiconSuggestion> getLexicalSuggestions(final String greekOrHebrew, final String form,
-                                                         final String includeAllForms) {
+    @Timed(name = "exact-form-lookup", group = "languages", rateUnit = TimeUnit.SECONDS, durationUnit = TimeUnit.MILLISECONDS)
+    public List<LexiconSuggestion> getExactForms(final String form, final String greek) {
         notBlank(form, "Blank lexical prefix passed.", APP_MISSING_FIELD);
-
-        return this.originalWordSuggestions.getLexicalSuggestions(SuggestionType.valueOf(greekOrHebrew), restoreSearchQuery(form),
-                Boolean.parseBoolean(includeAllForms));
+        return this.originalWordSuggestions.getExactForms(form, Boolean.parseBoolean(greek));
     }
-
-    /**
-     * opposite of @link {@link SearchController#restoreSearchQuery}
-     *
-     * @param searchQuery a query
-     * @return the undone version
-     */
-    private String undoRestoreSearchQuery(final String searchQuery) {
-        if (isBlank(searchQuery)) {
-            return searchQuery;
-        }
-
-        return searchQuery.replace("/", "~slash~").replace("+", "~plus~");
-    }
-
+   
     /**
      * Replaces #plus# and #slash#
      *

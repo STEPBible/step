@@ -78,7 +78,7 @@ public enum SearchType {
     /**
      * Exact Greek original word search
      */
-    ORIGINAL_GREEK_EXACT("search_word", true),
+    EXACT_FORM("search_word", true),
     /**
      * Exact Greek original word and its forms
      */
@@ -87,10 +87,6 @@ public enum SearchType {
      * Search for an original Greek word and its related Greek words
      */
     ORIGINAL_GREEK_RELATED("search_word", true),
-    /**
-     * Exact Hebrew original word search
-     */
-    ORIGINAL_HEBREW_EXACT("search_word", false),
     /**
      * Search for exact word and its related forms
      */

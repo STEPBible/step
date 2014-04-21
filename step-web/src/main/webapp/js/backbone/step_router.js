@@ -131,7 +131,7 @@ var StepRouter = Backbone.Router.extend({
                         });
                         break;
                     case "ORIGINAL_MEANING" :
-                    case "ORIGINAL_GREEK_EXACT" :
+                    case "EXACT_FORM" :
                     case "ORIGINAL_GREEK_FORMS" :
                     case "ORIGINAL_GREEK_RELATED" :
                     case "ORIGINAL_HEBREW_EXACT" :

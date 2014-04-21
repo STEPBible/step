@@ -1,42 +1,31 @@
 package com.tyndalehouse.step.core.service.search.impl;
 
-import static com.tyndalehouse.step.core.models.search.SuggestionType.GREEK;
-import static com.tyndalehouse.step.core.models.search.SuggestionType.HEBREW;
-import static com.tyndalehouse.step.core.service.helpers.OriginalWordUtils.STRONG_NUMBER_FIELD;
-import static com.tyndalehouse.step.core.service.helpers.OriginalWordUtils.convertToSuggestion;
-import static com.tyndalehouse.step.core.service.helpers.OriginalWordUtils.getFilter;
-import static com.tyndalehouse.step.core.service.helpers.OriginalWordUtils.markUpFrequentSuggestions;
-import static com.tyndalehouse.step.core.utils.StringConversionUtils.adaptTransliterationForQuerying;
-import static com.tyndalehouse.step.core.utils.StringUtils.isEmpty;
-import static com.tyndalehouse.step.core.utils.StringUtils.split;
-import static com.tyndalehouse.step.core.utils.language.HebrewUtils.isHebrewText;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.regex.Pattern;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
-import com.tyndalehouse.step.core.models.search.SuggestionType;
-import com.tyndalehouse.step.core.service.SearchService;
-import com.tyndalehouse.step.core.service.helpers.OriginalWordUtils;
-import com.tyndalehouse.step.core.utils.LuceneUtils;
-import org.apache.lucene.index.Term;
-import org.apache.lucene.queryParser.QueryParser;
-import org.apache.lucene.search.*;
-
 import com.tyndalehouse.step.core.data.EntityDoc;
 import com.tyndalehouse.step.core.data.EntityIndexReader;
 import com.tyndalehouse.step.core.data.EntityManager;
 import com.tyndalehouse.step.core.models.LexiconSuggestion;
+import com.tyndalehouse.step.core.service.SearchService;
 import com.tyndalehouse.step.core.service.search.OriginalWordSuggestionService;
-import com.tyndalehouse.step.core.utils.StringConversionUtils;
 import com.tyndalehouse.step.core.utils.language.GreekUtils;
 import com.tyndalehouse.step.core.utils.language.transliteration.TransliterationOption;
+import org.apache.lucene.queryParser.QueryParser;
+import org.apache.lucene.search.Sort;
+import org.apache.lucene.search.SortField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Pattern;
+
+import static com.tyndalehouse.step.core.service.helpers.OriginalWordUtils.STRONG_NUMBER_FIELD;
+import static com.tyndalehouse.step.core.service.helpers.OriginalWordUtils.getFilter;
+import static com.tyndalehouse.step.core.service.helpers.OriginalWordUtils.markUpFrequentSuggestions;
+import static com.tyndalehouse.step.core.utils.StringConversionUtils.adaptTransliterationForQuerying;
+import static com.tyndalehouse.step.core.utils.StringUtils.isEmpty;
+import static com.tyndalehouse.step.core.utils.language.HebrewUtils.isHebrewText;
 
 /**
  * Runs all original word searches
@@ -63,144 +52,11 @@ public class OriginalWordSuggestionServiceImpl implements OriginalWordSuggestion
     }
 
     @Override
-    public List<LexiconSuggestion> getLexicalSuggestions(final SuggestionType suggestionType,
-                                                         final String form, final boolean includeAllForms) {
+    public List<LexiconSuggestion> getExactForms(final String form, final boolean greek) {
         if (isEmpty(form)) {
             return new ArrayList<LexiconSuggestion>();
         }
-
-        String searchableForm = form.toLowerCase();
-        switch (suggestionType) {
-            case MEANING:
-                return getMeaningSuggestions(searchableForm);
-            case HEBREW_MEANING:
-                return getMeaningSuggestionsForAncientLanguage(searchableForm, false, SuggestionType.HEBREW_MEANING);
-            case GREEK_MEANING:
-                return getMeaningSuggestionsForAncientLanguage(searchableForm, true, SuggestionType.GREEK_MEANING);
-            default:
-                if (includeAllForms) {
-                    return getMatchingAllForms(suggestionType, searchableForm);
-                }
-                return getMatchingFormsFromLexicon(suggestionType, searchableForm);
-        }
-    }
-
-    /**
-     * Autocompletes the meaning search
-     *
-     * @param form the form that we are looking for
-     * @param suggestionType the type of suggestion that originates this request
-     * @return the list of suggestions
-     */
-    private List<LexiconSuggestion> getMeaningSuggestionsForAncientLanguage(final String form, boolean isGreek, final SuggestionType suggestionType) {
-        final List<String> tokenItems = this.definitions.getAnalyzedTokens("stepGloss", form, true);
-
-        if(tokenItems.size() == 0) {
-            return new ArrayList<LexiconSuggestion>(0);
-        }
-        
-        final BooleanQuery masterQuery = new BooleanQuery();
-        for (int ii = 0; ii < tokenItems.size(); ii++) {
-            final Term stepGlossTerm = new Term("stepGloss", tokenItems.get(ii));
-            final Term translationTerm = new Term("translations", tokenItems.get(ii));
-
-            Query stepGloss;
-            Query translations;
-            if (ii != tokenItems.size() - 1) {
-                stepGloss = new TermQuery(stepGlossTerm);
-                translations = new TermQuery(translationTerm);
-            } else {
-                stepGloss = new PrefixQuery(stepGlossTerm);
-                translations = new PrefixQuery(translationTerm);
-            }
-            final BooleanQuery subQuery = new BooleanQuery();
-            subQuery.add(new BooleanClause(stepGloss, BooleanClause.Occur.SHOULD));
-            subQuery.add(new BooleanClause(translations, BooleanClause.Occur.SHOULD));
-            masterQuery.add(new BooleanClause(subQuery, BooleanClause.Occur.MUST));
-        }
-        
-        masterQuery.add(new BooleanClause(new PrefixQuery(new Term("strongNumber", isGreek ? "G" : "H")), BooleanClause.Occur.MUST));
-
-        final EntityDoc[] results = this.definitions.search(masterQuery);
-        return convertDefinitionDocsToSuggestion(results);
-    }
-
-    /**
-     * Autocompletes the meaning search
-     *
-     * @param form the form that we are looking for
-     * @return the list of suggestions
-     */
-    private List<LexiconSuggestion> getMeaningSuggestions(final String form) {
-//        final Set<String> meaningTerms = this.definitions.findSetOfTerms(false, form, "stepGloss", "translations");
-        List<LexiconSuggestion> suggestions = new ArrayList<LexiconSuggestion>();
-//        for (String term : meaningTerms) {
-//            final LexiconSuggestion suggestion = new LexiconSuggestion(SuggestionType.MEANING);
-//            suggestion.setGloss(term);
-//            suggestions.add(suggestion);
-//        }
-
-        return suggestions;
-    }
-
-    /**
-     * retrieves forms from the lexicon
-     *
-     * @param suggestionType indicates greek/hebrew look ups
-     * @param inputForm           the input from the user
-     * @return the list of suggestions
-     */
-    private List<LexiconSuggestion> getMatchingFormsFromLexicon(final SuggestionType suggestionType,
-                                                                final String inputForm) {
-        final String form = LuceneUtils.safeEscape(inputForm.trim());
-
-        final EntityDoc[] results;
-        if (isHebrewText(form) || GreekUtils.isGreekText(form)) {
-            results = this.definitions.search(new String[]{"accentedUnicode"},
-                    getSafePrefixTerm(QueryParser.escape(form)), getStrongFilter(suggestionType), TRANSLITERATION_SORT,
-                    true, SearchService.MAX_SUGGESTIONS);
-        } else if (isGreekOrHebrewStrong(suggestionType, form)) {
-            results = this.definitions.search(getSafePrefixQuery(form),
-                    SearchService.MAX_SUGGESTIONS, TRANSLITERATION_SORT, getStrongFilter(suggestionType));
-        } else {
-            // assume transliteration - at this point suggestionType is not going to be MEANING
-            final String simplifiedTransliteration = getSimplifiedTransliterationClause(
-                    suggestionType == GREEK, form, true);
-            final String unmarkedUpTranslit = StringConversionUtils.adaptForTransliterationForIndexing(form,
-                    suggestionType == GREEK);
-
-            results = this.definitions.search(new String[]{"betaAccented", "stepTransliteration",
-                    "twoLetter", "otherTransliteration"}, getSafePrefixTerm(QueryParser.escape(unmarkedUpTranslit)),
-                    getStrongFilter(suggestionType), TRANSLITERATION_SORT, true, simplifiedTransliteration,
-                    SearchService.MAX_SUGGESTIONS);
-        }
-        return convertDefinitionDocsToSuggestion(results);
-    }
-
-    /**
-     * If too short, then we will only look for a particular instance,
-     * otherwise we will look for all instances
-     * @param form the form that we are looking for
-     * @return the query, whether prefix query or not
-     */
-    private Query getSafePrefixQuery(final String form) {
-        final Term term = new Term(OriginalWordUtils.STRONG_NUMBER_FIELD, QueryParser.escape(form.toUpperCase()));
-        return form.length() > 2 ? new PrefixQuery(term) : new TermQuery(term);
-    }
-
-    private String getSafePrefixTerm(String query) {
-        return query.length() > 2 ? query + '*' : query;
-    }
-    
-    private boolean isGreekOrHebrewStrong(final SuggestionType suggestionType, final String form) {
-        if (form.length() < 3) {
-            return false;
-        }
-
-        //check we're running the right kind of lookup, and then match the pattern
-        return (suggestionType == GREEK && form.charAt(0) == 'g' ||
-                suggestionType == HEBREW && form.charAt(0) == 'h') &&
-                PART_STRONG.matcher(form).matches();
+        return getMatchingAllForms(greek, form);
     }
 
     /**
@@ -228,28 +84,15 @@ public class OriginalWordSuggestionServiceImpl implements OriginalWordSuggestion
         return simplifiedTransliteration.toString();
     }
 
-    /**
-     * Takes EntityDocs representing Definition entities and converts them to a suggestion
-     *
-     * @param results the results
-     * @return true
-     */
-    private List<LexiconSuggestion> convertDefinitionDocsToSuggestion(final EntityDoc[] results) {
-        final List<LexiconSuggestion> suggestions = new ArrayList<LexiconSuggestion>();
-        for (final EntityDoc def : results) {
-            suggestions.add(convertToSuggestion(def));
-        }
-        return suggestions;
-    }
 
     /**
      * retrieves forms from the lexicon
      *
-     * @param suggestionType indicates greek/hebrew look ups
-     * @param form           form in lower case, containing a % if appropriate
+     * @param greek true to indicate greek, false to indicate hebrew
+     * @param form  form in lower case, containing a % if appropriate
      * @return the list of suggestions
      */
-    private List<LexiconSuggestion> getMatchingAllForms(final SuggestionType suggestionType,
+    private List<LexiconSuggestion> getMatchingAllForms(final boolean greek,
                                                         final String form) {
         final List<LexiconSuggestion> suggestions = new ArrayList<LexiconSuggestion>();
         final EntityDoc[] results;
@@ -257,15 +100,15 @@ public class OriginalWordSuggestionServiceImpl implements OriginalWordSuggestion
         // search by unicode or translit?
         if (isHebrewText(form) || GreekUtils.isGreekText(form)) {
             results = this.specificForms.search(new String[]{"accentedUnicode"},
-                    QueryParser.escape(form) + '*', getStrongFilter(suggestionType), TRANSLITERATION_SORT,
+                    QueryParser.escape(form) + '*', getFilter(greek), TRANSLITERATION_SORT,
                     true, SearchService.MAX_SUGGESTIONS);
         } else {
             // assume transliteration - at this point suggestionType is not going to be MEANING
             final String simplifiedTransliteration = getSimplifiedTransliterationClause(
-                    suggestionType == GREEK, form, true);
+                    greek, form, true);
 
             results = this.specificForms.search(new String[]{"simplifiedStepTransliteration"},
-                    simplifiedTransliteration, getStrongFilter(suggestionType), TRANSLITERATION_SORT, true,
+                    simplifiedTransliteration, getFilter(greek), TRANSLITERATION_SORT, true,
                     simplifiedTransliteration, SearchService.MAX_SUGGESTIONS);
         }
 
@@ -277,16 +120,6 @@ public class OriginalWordSuggestionServiceImpl implements OriginalWordSuggestion
         }
 
         return suggestions;
-    }
-
-    /**
-     * Filters the query by strong number
-     *
-     * @param suggestionType the type of suggestion
-     * @return a greek or hebrew filter
-     */
-    private Filter getStrongFilter(final SuggestionType suggestionType) {
-        return getFilter(suggestionType == SuggestionType.GREEK);
     }
 
     /**

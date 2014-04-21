@@ -55,7 +55,7 @@ var RestorePassageView = Backbone.View.extend({
             '<p><%= __s.previous_passages_warning %></p>' +
             '</div>' + //end body
             '<div class="modal-footer">' +
-            '<button type="button" class="btn btn-default" data-dismiss="modal"><%= __s.close %></button>' +
+            '<button type="button" class="btn btn-default closeModal" ><%= __s.close %></button>' +
             '<button type="button" class="btn btn-primary restoreModels"><%= __s.restore %></button>' +
             '</div>' + //end footer
             '</div>' + //end content
@@ -66,6 +66,7 @@ var RestorePassageView = Backbone.View.extend({
         },
 
         initialize: function () {
+            _.bindAll(this);
             this.render();
         },
 
@@ -98,6 +99,7 @@ var RestorePassageView = Backbone.View.extend({
             this.restoreForm = $(_.template(this.template)({ passages: allRestorablePassages }));
             this.$el.append(this.restoreForm);
 
+            $(".closeModal").click(this.closeModalHandler);
             $(".restoreModels").click(function (ev) {
                 ev.preventDefault();
 
@@ -115,11 +117,29 @@ var RestorePassageView = Backbone.View.extend({
                     }
                 });
 
-                self.restoreForm.modal("hide");
-                $('body').removeClass('modal-open');
-                $('.modal-backdrop').remove();
+                self.closeModal();
             });
             this.restoreForm.modal("show");
+        },
+        closeModalHandler: function () {
+            //we delete all non-zero passage-ids
+            var corePassage = step.passages.findWhere({ passageId: 0 });
+
+            //create collection of all passages, except for 0 id passage
+            var firstMatchDeleted = false;
+            var allRestorablePassages = [];
+            for (var i = 0; i < step.passages.length; i++) {
+                var p = step.passages.at(i);
+                if (p.get("passageId") != 0) {
+                    p.destroy();
+                }
+            }
+            this.closeModal();
+        },
+        closeModal: function () {
+            this.restoreForm.modal("hide");
+            $('body').removeClass('modal-open');
+            $('.modal-backdrop').remove();
         }
     })
     ;

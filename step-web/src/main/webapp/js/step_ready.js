@@ -1,30 +1,30 @@
 (function () {
-    
+
     function initDataSources() {
         //format the versions correctly
         step.keyedVersions = {};
         step.itemisedVersions = [];
-        for(var ii = 0; ii < window.tempVersions.length; ii++) {
+        for (var ii = 0; ii < window.tempVersions.length; ii++) {
             var tempVersion = window.tempVersions[ii];
-            var item = { item: tempVersion, itemType : 'version' };
+            var item = { item: tempVersion, itemType: 'version' };
             step.itemisedVersions.push(item);
             step.keyedVersions[tempVersion.initials] = tempVersion;
             step.keyedVersions[tempVersion.shortInitials] = tempVersion;
         }
-        
+
         //now mark some versions as recommended
         markAsRecommended('OHB');
         markAsRecommended('WHNU');
         markAsRecommended('LXX');
         markAsRecommended('SBLG');
-        
+
         //save 100k of space
         window.tempVersions = null;
     };
-    
+
     function markAsRecommended(version) {
         var v = step.keyedVersions[version];
-        if(v) {
+        if (v) {
             v.recommended = true;
         }
     }
@@ -38,7 +38,7 @@
             setting.save();
         }
         step.settings = settings.at(0);
-        
+
         //override some particular settings to avoid UI shifting on load:
         //we never open up a related words section
         step.settings.save({ relatedWordsOpen: false });
@@ -83,22 +83,25 @@
         for (var ii = 0; ii < step.passages.length; ii++) {
             //start at 1, and go onwards from then
             var p = step.passages.at(ii);
-                p.save({ 
-                passageId: ii + 1, 
-                pageNumber: 1, 
-                results: p.get("firstPageResults") 
-            }, {silent: true });
+            p.save({
+                passageId: ii + 1,
+                pageNumber: 1,
+                results: p.get("firstPageResults"),
+                linked: null
+            }, {
+                silent: true 
+            });
         }
 
         //now passage 0 is the one from the URL
         if (window.tempModel) {
             //because of page size, the 'value' is empty, so we'll need to put this back into the model after everything is over
             var pageValue = $(".passageContainer").find(".passageContent").html().trim();
-            
+
             //now we can create the correct views
             var modelZero = new PassageModel({ passageId: 0 });
             step.passages.add(modelZero);
-            
+
             //reset some attributes that weren't on the model to start with (because of space reasons)
             modelZero.save(window.tempModel);
             modelZero.save({ results: null, linked: null, value: pageValue}, {silent: true});
@@ -123,7 +126,7 @@
     $(window).on("load", function () {
         //disable amd
         define.amd = null;
-        
+
         window.step = window.step || {};
         initSettings();
         initDataSources();
@@ -131,9 +134,9 @@
         initCoreModelsAndRouter();
         initSearchDropdown();
         Backbone.history.start({pushState: true, silent: true });
-        
+
         new FeedbackView();
-        if(step.passages.length > 1) {
+        if (step.passages.length > 1) {
             //we restore previous passages
             new RestorePassageView();
         }

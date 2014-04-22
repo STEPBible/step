@@ -71,8 +71,8 @@ var MainSearchView = Backbone.View.extend({
                         .on("click", function () {
                             view.pickBible();
                         })).append("&nbsp;|&nbsp;").append($("<a>").append(__s.search_advanced).on('click', function () {
-                            view.openAdvancedSearch();
-                        }));
+                        view.openAdvancedSearch();
+                    }));
                 var container = $("<span>").append(labels).append($('<span class="message">').append(message));
                 return  container;
             },
@@ -88,11 +88,11 @@ var MainSearchView = Backbone.View.extend({
                             }
                         }
                     }
-                    
-                    if(self.clearContextAfterSearch) {
+
+                    if (self.clearContextAfterSearch) {
                         self._removeSpecificContext(EXAMPLE_DATA);
                     }
-                    
+
                     return url + "/" + encodeURIComponent(contextArgs);
                 },
                 dataType: "json",
@@ -123,8 +123,8 @@ var MainSearchView = Backbone.View.extend({
              */
             formatSelection: function (entry) {
                 return step.util.ui.renderEnhancedToken(
-                    entry, 
-                    _.findWhere($("#masterSearch").select2("data"), { itemType: "version" }) == null
+                    entry,
+                        _.findWhere($("#masterSearch").select2("data"), { itemType: "version" }) == null
                 );
             },
             escapeMarkup: function (m) {
@@ -134,8 +134,10 @@ var MainSearchView = Backbone.View.extend({
             formatSelectionCssClass: view.formatResultCssClass
         }).on("select2-selecting", function (event) {
             var select2Input = $(this);
-            if (event.object && event.object.itemType == REFERENCE && self._getSpecificContext(REFERENCE) == null &&
+            if (event.object && event.object.itemType == REFERENCE &&
+                self._getSpecificContext(REFERENCE) == null &&
                 (event.object.item.sectionType == 'BIBLE_BOOK' || event.object.item.sectionType == 'APOCRYPHA')
+                && event.object.item.wholeBook
                 ) {
                 event.preventDefault();
                 self._addSpecificContext(REFERENCE, event.object.item.shortName);
@@ -149,7 +151,7 @@ var MainSearchView = Backbone.View.extend({
                 self._addSpecificContext(LIMIT, event.object.itemType);
                 select2Input.select2("search", self.getCurrentInput());
                 select2Input.select2("container").find("input").focus();
-            } else if(event.object.item.exit) {
+            } else if (event.object.item.exit) {
                 //exiting, so clear limit context
                 event.preventDefault();
                 self._removeSpecificContext(LIMIT);
@@ -157,34 +159,34 @@ var MainSearchView = Backbone.View.extend({
                 select2Input.select2("search", self.getCurrentInput());
             }
             return;
-        }).on("selected", function(event) {
+        }).on("selected", function (event) {
             //if we're replacing an item, then remove it
             var container = self.masterSearch.select2("container");
             var replaceItem = container.find(".replaceItem");
             var replaceItemParent = replaceItem.parent().parent().first();
             var newItem;
-            if(replaceItemParent.length > 0) {
+            if (replaceItemParent.length > 0) {
                 var replaceItemIndex = replaceItemParent.index();
-                var data = self.masterSearch.select2("data"); 
-                data.splice(replaceItemIndex, 1, data[data.length -1]);
+                var data = self.masterSearch.select2("data");
+                data.splice(replaceItemIndex, 1, data[data.length - 1]);
                 self._setData(data);
-                
+
                 //if we resort to the 'data' method, we lose all our handlers
                 newItem = container.find("[data-select-id]");
             } else {
                 newItem = container.find("[data-select-id]").last();
             }
-            
+
             //now get rid of all .replaceItems
             self._resetReplaceItems();
-            
+
             //get last item in list
             var select2Input = $(this);
             var values = select2Input.select2("data") || [];
-            if(values.length == 0) {
+            if (values.length == 0) {
                 return;
             }
-            
+
             view._addTokenHandlers(newItem);
         }).on("select2-opening", function (event) {
             //remove any context that has references
@@ -201,7 +203,7 @@ var MainSearchView = Backbone.View.extend({
                     break;
                 }
             }
-        }).on("select2-removed", function() {
+        }).on("select2-removed", function () {
             //re-evaluate master version
             self._reEvaluateMasterVersion();
         });
@@ -209,71 +211,71 @@ var MainSearchView = Backbone.View.extend({
         this.masterSearch.select2("container")
             .find("input[type='text']").on("keyup", this._handleKeyPressInSearch);
     },
-    _setData: function(values) {
-        this.masterSearch.select2("data", values, this._addTokenHandlers);  
+    _setData: function (values) {
+        this.masterSearch.select2("data", values, this._addTokenHandlers);
     },
-    _resetReplaceItems: function() {
-        this.masterSearch.select2("container").find(".replaceItem").removeClass("replaceItem"); 
+    _resetReplaceItems: function () {
+        this.masterSearch.select2("container").find(".replaceItem").removeClass("replaceItem");
     },
-    _addTokenHandlers: function(tokenElement) {
+    _addTokenHandlers: function (tokenElement) {
         var tokens;
-        if(tokenElement) {
-            tokens = tokenElement;   
+        if (tokenElement) {
+            tokens = tokenElement;
         } else {
             tokens = $("[data-select-id]");
         }
-        
+
         this._addVersionHandlers(tokens);
         this._addReferenceHandlers(tokens);
         this._addDefaultExampleHandlers(tokens);
         this._addTextHandlers(tokens);
         this._addExactFormHandlers(tokens);
     },
-    _addVersionHandlers: function(tokens) {
+    _addVersionHandlers: function (tokens) {
         var self = this;
-        $(tokens).filter(".versionItem").click(function(ev) {
+        $(tokens).filter(".versionItem").click(function (ev) {
             self._markItemForReplacing(ev, $(this));
             self.pickBible();
         });
     },
-    _addTextHandlers: function(tokens) {
+    _addTextHandlers: function (tokens) {
         var self = this;
-        $(tokens).filter(".textItem, .syntaxItem").click(function(ev) {
+        $(tokens).filter(".textItem, .syntaxItem").click(function (ev) {
             self._markItemForReplacing(ev, $(this));
             self.openAdvancedSearch($(this).hasClass("textItem") ? TEXT_SEARCH : SYNTAX);
         });
     },
-    _addExactFormHandlers: function(tokens) {
+    _addExactFormHandlers: function (tokens) {
         var self = this;
-        $(tokens).filter(".exactFormItem").click(function(ev) {
+        $(tokens).filter(".exactFormItem").click(function (ev) {
             self._markItemForReplacing(ev, $(this));
             self.openAdvancedSearch(EXACT_FORM);
         });
     },
-    _addReferenceHandlers: function(tokens) {
+    _addReferenceHandlers: function (tokens) {
         var self = this;
-        $(tokens).filter(".referenceItem").each(function() {
-            $(this).click(function(ev) {
-            self._markItemForReplacing(ev, $(this));
-            self._searchExampleData(ev, REFERENCE, null);
+        $(tokens).filter(".referenceItem").each(function () {
+            $(this).click(function (ev) {
+                self._markItemForReplacing(ev, $(this));
+                self._searchExampleData(ev, REFERENCE, null);
             })
         });
     },
-    _addDefaultExampleHandlers: function(tokens) {
+    _addDefaultExampleHandlers: function (tokens) {
         var self = this;
-        $(tokens).filter(".greekMeaningsItem, .hebrewMeaningsItem, .hebrewItem, .greekItem, .meaningsItem, .subjectItem").click(function(ev) {
+        $(tokens).filter(".greekMeaningsItem, .hebrewMeaningsItem, .hebrewItem, .greekItem, .meaningsItem, .subjectItem").click(function (ev) {
             self._markItemForReplacing(ev, $(this));
             self._searchExampleData(ev, $(this).attr("data-item-type"), $(this).attr("data-select-id"));
         });
     },
-    _searchExampleData: function(ev, itemType, term) {
+    _searchExampleData: function (ev, itemType, term) {
         ev.stopPropagation();
 
         //fudge the search
-        if(term == null) {
+        if (term == null) {
             term = "  ";
         }
-        
+
         this.ignoreOpeningEvent = true;
         this.clearContextAfterSearch = true;
 
@@ -284,7 +286,7 @@ var MainSearchView = Backbone.View.extend({
         this.masterSearch.select2("search", term);
         this.ignoreOpeningEvent = false;
     },
-    openAdvancedSearch: function(initialView) {
+    openAdvancedSearch: function (initialView) {
         var self = this;
         require(["menu_extras", "defaults"], function () {
             //find master version
@@ -298,20 +300,20 @@ var MainSearchView = Backbone.View.extend({
             }
 
             new AdvancedSearchView({ searchView: self, masterVersion: masterVersion, initialView: initialView });
-        });  
+        });
     },
     /**
      * marks the item for deletion when a new item is selected
      * @param el the item to be marked
      * @private
      */
-    _markItemForReplacing: function(ev, el) {
-        if(!ev.shiftKey) {
+    _markItemForReplacing: function (ev, el) {
+        if (!ev.shiftKey) {
             el.closest("ul").find(".replaceItem").removeClass("replaceItem");
             el.addClass("replaceItem");
         }
     },
-    pickBible: function() {
+    pickBible: function () {
         var self = this;
         require(["menu_extras", "defaults"], function () {
             new PickBibleView({ model: step.settings, searchView: self });
@@ -366,37 +368,37 @@ var MainSearchView = Backbone.View.extend({
     setGroupText: function (item, term) {
         var exampleTokens = [];
         var examples = item.extraExamples || [];
-        for(var i = 0; i < examples.length; i++) {
-            switch(item.itemType) {
-                case HEBREW: 
-                case GREEK: 
+        for (var i = 0; i < examples.length; i++) {
+            switch (item.itemType) {
+                case HEBREW:
+                case GREEK:
                     exampleTokens.push(this._markMatch(examples[i].stepTransliteration, term));
                     break;
-                case HEBREW_MEANINGS: 
-                case GREEK_MEANINGS: 
-                case MEANINGS: 
+                case HEBREW_MEANINGS:
+                case GREEK_MEANINGS:
+                case MEANINGS:
                     exampleTokens.push(this._markMatch(examples[i].gloss, term));
                     break;
                 case SUBJECT_SEARCH:
                     exampleTokens.push(this._markMatch(examples[i].value, term));
                     break;
-                case VERSION: 
+                case VERSION:
                     exampleTokens.push(this._markMatch(examples[i].item.initials, term));
                     break;
             }
-            
-            if(exampleTokens.length >= 2) {
+
+            if (exampleTokens.length >= 2) {
                 break;
             }
         }
-        
+
         var exampleText = exampleTokens.join(", ");
-        
+
         item.text = sprintf(__s.options_number_of_terms, exampleText);
     },
 
     _getAncientFirstRepresentation: function (item, hebrew, term) {
-        return '<span class="' + (hebrew ? 'hbFontMini' : 'unicodeFontMini') + '">' + 
+        return '<span class="' + (hebrew ? 'hbFontMini' : 'unicodeFontMini') + '">' +
             item.matchingForm + "</span> (" + this._markMatch(item.stepTransliteration, term) + " - " + this._markMatch(item.gloss, term) + ")";
     },
     _getEnglishFirstRepresentation: function (item, hebrew, term) {
@@ -513,28 +515,28 @@ var MainSearchView = Backbone.View.extend({
         var limit = (_.findWhere(this.specificContext, { itemType: LIMIT }) || {}).value;
 
         //splice in the 'exit' item
-        if(limit) {
+        if (limit) {
             var item = { itemType: limit, item: { exit: true  }};
-            results.splice(0,0, item);
+            results.splice(0, 0, item);
         }
-        
+
         //then patch in the versions and other data if need be.
         var staticResources = [];
         if (limit == null) {
             staticResources = this._getData(null, term);
             //push some of the options that are also always present:
-        } else if(limit == VERSION) {
+        } else if (limit == VERSION) {
             staticResources = this._getData(limit, term);
         }
-        
+
         //find last version and re-order that section
         var i = 0;
-        for(i = 0; i < results.length; i++) {
-            if(results[i].itemType != REFERENCE) {
+        for (i = 0; i < results.length; i++) {
+            if (results[i].itemType != REFERENCE) {
                 break;
             }
         }
-        
+
         var firstPart = results.slice(0, i);
         var secondPart = results.slice(i);
         return firstPart.concat(staticResources).concat(secondPart);
@@ -576,7 +578,7 @@ var MainSearchView = Backbone.View.extend({
         this._removeSpecificContext(itemType);
         this.specificContext.push({ itemType: itemType, value: value });
     },
-    _getSpecificContext: function(itemType) {
+    _getSpecificContext: function (itemType) {
         return (_.findWhere(this.specificContext, { itemType: itemType }) || {}).value;
     },
     /**
@@ -622,13 +624,13 @@ var MainSearchView = Backbone.View.extend({
             var shortName = (currentVersion.item.shortInitials || "").toLowerCase();
             var initials = (currentVersion.item.initials || "").toLowerCase();
             var languageName = (currentVersion.item.languageName || "").toLowerCase();
-            
+
             if ((initials != "" && initials == currentInput) || (shortName != "" && shortName == currentInput)) {
                 exactInitials.push(currentVersion);
             } else if (shortName.startsWith(currentInput) || initials.startsWith(currentInput)) {
                 prefixInitials.push(currentVersion);
-            } else if(languageName.startsWith(currentInput)) {
-                if(currentVersion.item.recommended) {
+            } else if (languageName.startsWith(currentInput)) {
+                if (currentVersion.item.recommended) {
                     recommendedByLanguage.push(currentVersion);
                 } else {
                     languageMatches.push(currentVersion);
@@ -647,7 +649,7 @@ var MainSearchView = Backbone.View.extend({
         //make sure language matches are before other matches on description and such like
         others = recommendedByLanguage.concat(languageMatches).concat(others);
 
-        if(limit == VERSION) {
+        if (limit == VERSION) {
             options = options.concat(others);
         } else if (options.length < 3) {
             totalNotDisplayed = others.length - 3;
@@ -655,10 +657,10 @@ var MainSearchView = Backbone.View.extend({
         }
 
         if (totalNotDisplayed > 0) {
-            var groupedItem = {  itemType: VERSION, item: {}, grouped: true, 
-                count: totalNotDisplayed, maxReached: false, extraExamples: others.splice(0,2) };
+            var groupedItem = {  itemType: VERSION, item: {}, grouped: true,
+                count: totalNotDisplayed, maxReached: false, extraExamples: others.splice(0, 2) };
             this.setGroupText(groupedItem, term);
-            options.push( { text: groupedItem.text, item: groupedItem, itemType: VERSION });
+            options.push({ text: groupedItem.text, item: groupedItem, itemType: VERSION });
         }
 
         return options;
@@ -666,7 +668,7 @@ var MainSearchView = Backbone.View.extend({
     formatResultCssClass: function (item) {
         return "select-" + item.itemType;
     },
-    
+
     /**
      * Renders the view when shown in the dropdown list
      *
@@ -683,8 +685,8 @@ var MainSearchView = Backbone.View.extend({
         if (v.item.grouped) {
             return "<span class='glyphicon glyphicon-chevron-down'></span> " + source + v.item.text;
         }
-        
-        if(v.item.exit) {
+
+        if (v.item.exit) {
             //this is an exit instruction, so simply add something with the right icon
             return "<span class='glyphicon glyphicon-chevron-up'></span> " + __s.exit_dropdown;
         }
@@ -714,7 +716,8 @@ var MainSearchView = Backbone.View.extend({
                 break;
             case REFERENCE:
                 var internationalisedSectionName;
-                if(v.item.sectionType == 'BIBLE_BOOK' && this._getSpecificContext(REFERENCE) != null) {
+                if ((v.item.sectionType == 'BIBLE_BOOK' && this._getSpecificContext(REFERENCE) != null) || 
+                    !v.item.wholeBook) {
                     //then we are listing all chapters, and should display 'Whole book' instead
                     internationalisedSectionName = __s.bible_whole_book_section;
                 } else {
@@ -756,18 +759,18 @@ var MainSearchView = Backbone.View.extend({
         }
         return row;
     },
-    _markMatch: function(text, term) {
-        if(text == null || term == null || text.length == 0 || term.length == 0) {
+    _markMatch: function (text, term) {
+        if (text == null || term == null || text.length == 0 || term.length == 0) {
             return text;
         }
-        
+
         var cleansedText = window.Select2.util.stripDiacritics(text.toLowerCase());
         var cleansedTerm = window.Select2.util.stripDiacritics(term.toLowerCase());
-        
+
         var start = cleansedText.indexOf(cleansedTerm);
-        if(start != -1) {
-            return text.substring(0, start) + 
-                '<span class="select2-match">' + text.substring(start, start + term.length ) + '</span>' + 
+        if (start != -1) {
+            return text.substring(0, start) +
+                '<span class="select2-match">' + text.substring(start, start + term.length) + '</span>' +
                 text.substring(start + term.length);
         }
         return text;
@@ -870,9 +873,9 @@ var MainSearchView = Backbone.View.extend({
             step.util.ui.initSidebar();
         });
     },
-    _reEvaluateMasterVersion: function() {
+    _reEvaluateMasterVersion: function () {
         var masterVersion = this.$el.find(".versionItem").eq(0);
-        if(masterVersion.length > 0 && !masterVersion.hasClass("masterVersion")) {
+        if (masterVersion.length > 0 && !masterVersion.hasClass("masterVersion")) {
             masterVersion.addClass("masterVersion");
             masterVersion.attr("title", masterVersion.attr("title") + "\n" + __s.master_version_info);
         }

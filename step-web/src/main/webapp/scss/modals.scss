@@ -24,5 +24,12 @@
   }
 }
 
+#restorePassages {
+  form {
+    max-height: 200px;
+    overflow-y: scroll;
+  }
+}
+
 @import 'bible_versions';
 @import 'advanced_search';

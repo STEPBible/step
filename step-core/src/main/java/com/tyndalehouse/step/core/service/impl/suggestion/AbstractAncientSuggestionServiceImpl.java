@@ -49,8 +49,7 @@ public abstract class AbstractAncientSuggestionServiceImpl implements SingleType
     @Override
     public EntityDoc[] collectNonExactMatches(final TopFieldCollector collector, final SuggestionContext context, final EntityDoc[] alreadyRetrieved,
                                               final int leftToCollect) {
-        final List<String> tokenItems = this.reader.getAnalyzedTokens("stepGloss", context.getInput(), true);
-        final BooleanQuery query = this.getQuery(tokenItems, false);
+        final BooleanQuery query = this.getQuery(context.getInput(), false);
 
         if (alreadyRetrieved != null) {
             for (EntityDoc doc : alreadyRetrieved) {
@@ -80,13 +79,8 @@ public abstract class AbstractAncientSuggestionServiceImpl implements SingleType
     }
 
     private EntityDoc[] getTerms(final String form, final int max, boolean exact, final boolean popularSort) {
-        final List<String> tokenItems = this.reader.getAnalyzedTokens("stepGloss", form, true);
 
-        if (tokenItems.size() == 0) {
-            return new EntityDoc[0];
-        }
-
-        final BooleanQuery masterQuery = getQuery(tokenItems, exact);
+        final BooleanQuery masterQuery = getQuery(form, exact);
         return this.reader.search(masterQuery, max, getSort(popularSort), this.filter);
     }
 
@@ -110,7 +104,7 @@ public abstract class AbstractAncientSuggestionServiceImpl implements SingleType
         return suggestions;
     }
 
-    protected abstract BooleanQuery getQuery(final List<String> tokenItems, final boolean exact);
+    protected abstract BooleanQuery getQuery(String form, boolean exact);
 
     protected Sort getSort(boolean popular) {
         return popular ? this.popularSort : this.sort;

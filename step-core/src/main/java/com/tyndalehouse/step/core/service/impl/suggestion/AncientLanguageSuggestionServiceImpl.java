@@ -29,45 +29,49 @@ public abstract class AncientLanguageSuggestionServiceImpl extends AbstractAncie
     private final boolean greek;
 
     public AncientLanguageSuggestionServiceImpl(final boolean isGreek, final EntityManager entityManager) {
-        super(entityManager.getReader("definition"), OriginalWordUtils.getFilter(isGreek), 
+        super(entityManager.getReader("definition"), OriginalWordUtils.getFilter(isGreek),
                 TRANSLITERATION_SORT, POPULAR_TRANSLITERATION_SORT);
         this.greek = isGreek;
     }
 
     @Override
-    protected BooleanQuery getQuery(final List<String> tokenItems, final boolean exact) {
+    protected BooleanQuery getQuery(final String form, final boolean exact) {
         final BooleanQuery masterQuery = new BooleanQuery();
-        for (String form : tokenItems) {
-            if (isHebrewText(form) || GreekUtils.isGreekText(form)) {
-                masterQuery.add(getExactOrPrefixQuery(exact, new Term("accentedUnicode", form)), BooleanClause.Occur.SHOULD);
-            } else if (isGreekOrHebrewStrong(form)) {
-                masterQuery.add(getExactOrPrefixQuery(exact, new Term(OriginalWordUtils.STRONG_NUMBER_FIELD, form.toUpperCase())), BooleanClause.Occur.SHOULD);
-            } else {
-                
-                final String unmarkedUpTranslit = StringConversionUtils.adaptForTransliterationForIndexing(form,
-                        greek);
-                addAncientMatchClauses(exact, masterQuery, unmarkedUpTranslit);
-                
-                try {
+
+        if (isHebrewText(form) || GreekUtils.isGreekText(form)) {
+            addSearchClause("accentedUnicode", exact, masterQuery, form);
+        } else if (isGreekOrHebrewStrong(form)) {
+            addSearchClause(OriginalWordUtils.STRONG_NUMBER_FIELD, exact, masterQuery, form.toUpperCase());
+        } else {
+            final String unmarkedUpTranslit = StringConversionUtils.adaptForTransliterationForIndexing(form,
+                    greek);
+            addAncientMatchClauses(exact, masterQuery, unmarkedUpTranslit);
+
+            try {
                 // assume transliteration - at this point suggestionType is not going to be MEANING
                 final String simplifiedTransliterationClause = OriginalWordSuggestionServiceImpl.getSimplifiedTransliterationClause(
                         greek, form, !exact);
-                    masterQuery.add(getReader().getQueryParser("strongNumber").parse(simplifiedTransliterationClause), BooleanClause.Occur.SHOULD);
-                } catch(ParseException ex) {
-                    throw new StepInternalException(ex.getMessage(), ex);
-                }
+                masterQuery.add(getReader().getQueryParser("strongNumber").parse(simplifiedTransliterationClause), BooleanClause.Occur.SHOULD);
+            } catch (ParseException ex) {
+                throw new StepInternalException(ex.getMessage(), ex);
             }
         }
         return masterQuery;
     }
 
     private void addAncientMatchClauses(final boolean exact, final BooleanQuery masterQuery, final String form) {
-        masterQuery.add(getExactOrPrefixQuery(exact, new Term("betaAccented", form)), BooleanClause.Occur.SHOULD);
-        masterQuery.add(getExactOrPrefixQuery(exact, new Term("stepTransliteration", form)), BooleanClause.Occur.SHOULD);
-        masterQuery.add(getExactOrPrefixQuery(exact, new Term("twoLetter", form)), BooleanClause.Occur.SHOULD);
-        masterQuery.add(getExactOrPrefixQuery(exact, new Term("otherTransliteration", form)), BooleanClause.Occur.SHOULD);
+        addSearchClause("betaAccented", exact, masterQuery, form);
+        addSearchClause("stepTransliteration", exact, masterQuery, form);
+        addSearchClause("twoLetter", exact, masterQuery, form);
+        addSearchClause("otherTransliteration", exact, masterQuery, form);
     }
 
+    private void addSearchClause(final String fieldName, final boolean exact, final BooleanQuery masterQuery, final String form) {
+        List<String> forms = this.getReader().getAnalyzedTokens(fieldName, form, true);
+        for (String input : forms) {
+            masterQuery.add(getExactOrPrefixQuery(exact, new Term(fieldName, input)), BooleanClause.Occur.SHOULD);
+        }
+    }
 
     private boolean isGreekOrHebrewStrong(final String form) {
         if (form.length() < 2) {

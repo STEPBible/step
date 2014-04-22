@@ -235,7 +235,7 @@ public class SearchServiceImpl implements SearchService {
 
         aggregateTokenForPassageLookups(searchTokens, referenceTokens, complexSearch);
         enhanceSearchTokens(versions.get(0), searchTokens);
-        signRequest(complexSearch, options, display, filter, sort, context, originalItems);
+        signRequest(complexSearch, display, filter, sort, context, originalItems);
         complexSearch.setSearchTokens(searchTokens);
         return complexSearch;
     }
@@ -248,12 +248,10 @@ public class SearchServiceImpl implements SearchService {
      * @param context       the number of extra verses to lookup for each verse
      * @param display       the type of display mode, e.g. interlinear, interleaved, etc.
      * @param filter        the filter to apply (or blank to retrieve just the particular search query.
-     * @param options       the options ticked by the user
      * @param originalItems the original query as given by the user
      * @return the results from the search/passage lookup
      */
     private void signRequest(final AbstractComplexSearch result,
-                             final String options,
                              final String display,
                              final String filter,
                              final String sort,
@@ -262,15 +260,16 @@ public class SearchServiceImpl implements SearchService {
         StringBuilder key = new StringBuilder();
         key.append(StringUtils.getNonNullString(originalItems, ""));
         key.append('-');
-        key.append(StringUtils.getNonNullString(display, ""));
+        key.append(StringUtils.getNonNullString(display, "NONE"));
         key.append('-');
-        key.append(StringUtils.getNonNullString(options, ""));
-        key.append('-');
-        key.append(StringUtils.getNonNullString(filter, ""));
-        key.append('-');
-        key.append(StringUtils.getNonNullString(sort, ""));
-        key.append('-');
-        key.append(context);
+        
+        if(result.getSearchType() != SearchType.PASSAGE) {
+            key.append(StringUtils.getNonNullString(filter, ""));
+            key.append('-');
+            key.append(StringUtils.getNonNullString(sort, ""));
+            key.append('-');
+            key.append(context);
+        }
         result.setSignature(key.toString());
     }
 
@@ -1270,7 +1269,7 @@ public class SearchServiceImpl implements SearchService {
     private Set<String> searchTextFieldsForDefinition(final String searchQuery) {
         // first look through the text forms
         final EntityDoc[] results = this.specificForms.search(new String[]{"accentedUnicode"},
-                searchQuery, null, null, false, "-stopWord:false");
+                searchQuery, null, null, false);
         if (results.length == 0) {
             return lookupFromLexicon(searchQuery);
         }

@@ -29,14 +29,14 @@ var StepRouter = Backbone.Router.extend({
         var extra = partial;
         var mainVersion = activePassage.get("masterVersion");
         if (mainVersion != "") {
-            if(!stripCommentaries || step.keyedVersions[mainVersion].category == 'BIBLE') {
-                extra += "|version=" + mainVersion;    
+            if (!stripCommentaries || step.keyedVersions[mainVersion].category == 'BIBLE') {
+                extra += "|version=" + mainVersion;
             }
-            
+
             var extraVersions = (activePassage.get("extraVersions") || "").split(",");
             for (var i = 0; i < extraVersions.length; i++) {
                 if ((extraVersions[i] || "") != "") {
-                    if(!stripCommentaries || step.keyedVersions[extraVersions[i]].category == 'BIBLE') {
+                    if (!stripCommentaries || step.keyedVersions[extraVersions[i]].category == 'BIBLE') {
                         extra += "|version=" + extraVersions[i];
                     }
                 }
@@ -53,18 +53,16 @@ var StepRouter = Backbone.Router.extend({
         var context = activePassageModel.get("context");
         var filter = activePassageModel.get("strongHighlights");
         var sort = activePassageModel.get("order");
-        
+
         if (step.util.isBlank(context)) {
             activePassageModel.set({context: 0 }, { silent: true });
             context = 0;
         }
-
         var urlStub = "";
+
         if (step.util.isBlank(args) && (!historyOptions || !historyOptions.replace)) {
-            //default to query
-            var queryFragment = Backbone.history.getFragment().match(/q=[^&]+/ig);
-            urlStub = queryFragment != null && queryFragment.length > 0 ?
-                this._addArg(urlStub, "q", queryFragment[0].slice(2)) : ""
+            var modelArgs = activePassageModel.get("args") || "";
+            urlStub = this._addArg(urlStub, "q", modelArgs);
         } else {
             urlStub = this._addArg(urlStub, "q", args);
         }
@@ -87,7 +85,7 @@ var StepRouter = Backbone.Router.extend({
         if (!step.util.isBlank(sort)) {
             urlStub = this._addArg(urlStub, "sort", sort);
         }
-        
+
         if ($.getUrlVars().indexOf("debug") != -1) {
             urlStub = this._addArg(urlStub, "debug");
         }
@@ -160,11 +158,11 @@ var StepRouter = Backbone.Router.extend({
         } else {
             this.handleSearchResults(passageModel, partRendered);
         }
-        
+
         this._renderSummary(passageModel);
     },
 
-    _renderSummary: function(passageModel) {
+    _renderSummary: function (passageModel) {
         var searchTokens = passageModel.get("searchTokens");
         var container = $("<span></span>").addClass("argSummary");
         step.util.ui.renderArgs(searchTokens, container);
@@ -244,7 +242,7 @@ var StepRouter = Backbone.Router.extend({
                 passageModel.save(text, { silent: true });
                 self._addBookmark({ args: query, searchTokens: text.searchTokens });
                 step.util.squashErrors(passageModel);
-                
+
                 //don't trigger a full search, but replace the URL with the one that makes sense
                 if (!quiet) {
                     step.router.overwriteUrl();
@@ -264,8 +262,8 @@ var StepRouter = Backbone.Router.extend({
             return;
         }
 
-        var historyModel = new HistoryModel({ 
-            args: normalizedArgs, 
+        var historyModel = new HistoryModel({
+            args: normalizedArgs,
             lastAccessed: new Date().getTime(),
             searchTokens: query.searchTokens
         });
@@ -279,19 +277,19 @@ var StepRouter = Backbone.Router.extend({
             var bTokens = b.split("=");
             var aKey = aTokens[0];
             var bKey = bTokens[0];
-            
-            if(aKey == bKey) {
-                if(aKey == VERSION) {
+
+            if (aKey == bKey) {
+                if (aKey == VERSION) {
                     return aTokens[1] < bTokens[1] ? -1 : 1;
                 }
                 return 0;
-            } else if(aKey == VERSION) {
+            } else if (aKey == VERSION) {
                 return -1;
-            } else if(bKey == VERSION) {
+            } else if (bKey == VERSION) {
                 return 1;
-            } else if(aKey == REFERENCE) {
-                return -1;    
-            } else if(bKey == REFERENCE) {
+            } else if (aKey == REFERENCE) {
+                return -1;
+            } else if (bKey == REFERENCE) {
                 return 1
             } else {
                 //preserve the order so equal

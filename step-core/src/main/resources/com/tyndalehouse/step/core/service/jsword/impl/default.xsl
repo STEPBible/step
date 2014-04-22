@@ -693,11 +693,25 @@
 	    		<xsl:when test="$ColorCoding = 'true'" >
 					<xsl:variable name="colorClass" select="jsword:getColorClass($colorCodingProvider, @morph)" />
 			    	<xsl:variable name="lemma" select="conversion:getStrongPaddedKey(@lemma)" />
-			    	<span class="{$colorClass}" strong="{$lemma}" morph="{@morph}"><xsl:apply-templates/></span>
+			    	<xsl:choose>
+                        <xsl:when test="@morph">
+                            <span class="{$colorClass}" strong="{$lemma}" morph="{@morph}"><xsl:apply-templates/></span>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <span class="{$colorClass}" strong="{$lemma}"><xsl:apply-templates/></span>        
+                        </xsl:otherwise>
+                    </xsl:choose>
 			    </xsl:when>
 			    <xsl:otherwise>
 			    	<xsl:variable name="lemma" select="conversion:getStrongPaddedKey(@lemma)" />
-	    	    	<span strong="{$lemma}" morph="{@morph}"><xsl:apply-templates/></span>
+                    <xsl:choose>
+                        <xsl:when test="@morph">
+                            <span strong="{$lemma}" morph="{@morph}"><xsl:apply-templates/></span>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <span strong="{$lemma}"><xsl:apply-templates/></span>
+                        </xsl:otherwise>
+                    </xsl:choose>
 			    </xsl:otherwise>
 		    </xsl:choose>
 	    </xsl:when>

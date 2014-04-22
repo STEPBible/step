@@ -16,7 +16,6 @@ public class DefinitionAnalyzer extends PerFieldAnalyzerWrapper {
     /**
      * Initialises the analyzer.
      * It is an assumption of the code that stepGloss and translations use the same type of analyzer
-     * @see com.tyndalehouse.step.core.service.search.impl.OriginalWordSuggestionServiceImpl#getMeaningSuggestionsForGreek(String) 
      * relies on sharing the same analyzer for both stepGloss and translations
      */
     public DefinitionAnalyzer() {

@@ -22,7 +22,6 @@ import java.util.regex.Pattern;
 
 import static com.tyndalehouse.step.core.service.helpers.OriginalWordUtils.STRONG_NUMBER_FIELD;
 import static com.tyndalehouse.step.core.service.helpers.OriginalWordUtils.getFilter;
-import static com.tyndalehouse.step.core.service.helpers.OriginalWordUtils.markUpFrequentSuggestions;
 import static com.tyndalehouse.step.core.utils.StringConversionUtils.adaptTransliterationForQuerying;
 import static com.tyndalehouse.step.core.utils.StringUtils.isEmpty;
 import static com.tyndalehouse.step.core.utils.language.HebrewUtils.isHebrewText;
@@ -137,7 +136,6 @@ public class OriginalWordSuggestionServiceImpl implements OriginalWordSuggestion
             suggestion.setGloss(results[0].get("stepGloss"));
             suggestion.setMatchingForm(specificForm.get("accentedUnicode"));
             suggestion.setStepTransliteration(specificForm.get("stepTransliteration"));
-            markUpFrequentSuggestions(results[0], suggestion);
             return suggestion;
         }
 

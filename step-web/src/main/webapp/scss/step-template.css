@@ -808,6 +808,10 @@ h4.lexicalGrouping {
     margin: 1 5 -2 0;
     font-size: 18px; }
 
+#restorePassages form {
+  max-height: 200px;
+  overflow-y: scroll; }
+
 #bibleVersions .modal-body {
   padding: 5px; }
 #bibleVersions .modal-footer {

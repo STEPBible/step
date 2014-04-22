@@ -38,7 +38,7 @@ var RestorePassageView = Backbone.View.extend({
             '<div class="modal-content">' +
             '<div class="modal-header">' +
             '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' +
-            '<h4 class="modal-title" id="raiseSupportLabel"><%= __s.restore_previous_session %></h4>' +
+            '<h4 class="modal-title" id="restoreSessionTitle"><%= __s.restore_previous_session %></h4>' +
             '</div>' + //end header
             '<div class="modal-body">' +
             '<p><%= __s.previous_passages %>' +
@@ -84,7 +84,7 @@ var RestorePassageView = Backbone.View.extend({
                     if (!firstMatchDeleted && p.get("signature") == corePassage.get("signature")) {
                         //we simply delete p, as it's highly likely we're already restored it.
                         p.destroy();
-
+                        i--;
                         firstMatchDeleted = true;
                     } else {
                         //copy the original page of results back into 'results'
@@ -122,16 +122,11 @@ var RestorePassageView = Backbone.View.extend({
             this.restoreForm.modal("show");
         },
         closeModalHandler: function () {
-            //we delete all non-zero passage-ids
-            var corePassage = step.passages.findWhere({ passageId: 0 });
-
-            //create collection of all passages, except for 0 id passage
-            var firstMatchDeleted = false;
-            var allRestorablePassages = [];
             for (var i = 0; i < step.passages.length; i++) {
                 var p = step.passages.at(i);
                 if (p.get("passageId") != 0) {
                     p.destroy();
+                    i--;
                 }
             }
             this.closeModal();

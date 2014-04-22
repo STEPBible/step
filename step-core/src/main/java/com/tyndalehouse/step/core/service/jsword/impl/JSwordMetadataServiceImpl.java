@@ -320,7 +320,7 @@ public class JSwordMetadataServiceImpl implements JSwordMetadataService {
             final String longChapNumber = String.format(BOOK_CHAPTER_FORMAT, versification.getLongName(book),
                     ii);
 
-            chapters.add(new BookName(chapNumber, longChapNumber, BookName.Section.PASSAGE, false));
+            chapters.add(new BookName(chapNumber, longChapNumber, BookName.Section.PASSAGE, false, book, true));
         }
 
         return chapters;

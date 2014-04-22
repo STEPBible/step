@@ -99,7 +99,7 @@
             var pageValue = $(".passageContainer").find(".passageContent").html().trim();
 
             //now we can create the correct views
-            var modelZero = new PassageModel({ passageId: 0 });
+            var modelZero = new PassageModel({ passageId: 0, position: -1 });
             step.passages.add(modelZero);
 
             //reset some attributes that weren't on the model to start with (because of space reasons)

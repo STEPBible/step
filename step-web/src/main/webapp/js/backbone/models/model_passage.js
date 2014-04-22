@@ -8,7 +8,8 @@ var PassageModel = Backbone.Model.extend({
                 interlinearMode: "NONE",
                 detailLevel: 0,
                 options: ["N", "H", "V", "U", "G"],
-                synced : -1
+                synced : -1,
+                position: 0
             }
         },
 

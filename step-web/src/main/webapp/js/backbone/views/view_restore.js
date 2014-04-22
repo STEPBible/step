@@ -82,6 +82,9 @@ var RestorePassageView = Backbone.View.extend({
                 var p = step.passages.at(i);
                 if (p.get("passageId") != 0) {
                     if (!firstMatchDeleted && p.get("signature") == corePassage.get("signature")) {
+                        //copy over the position
+                        corePassage.save({ position: p.get("position") });
+                        
                         //we simply delete p, as it's highly likely we're already restored it.
                         p.destroy();
                         i--;

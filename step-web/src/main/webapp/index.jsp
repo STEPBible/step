@@ -266,6 +266,10 @@
                 </div>
                 <div class="hidden-xs col-sm-6 column examplesColumn">
                     <div class="passageContainer examplesContainer">
+                        <button class="btn btn-default btn-sm closeColumn" title="<fmt:message key="close" />" type="button" >
+                            <span class="glyphicon glyphicon-remove"></span>
+                        </button>
+                        
                         <h1><fmt:message key="simple_intro_welcome" /></h1>
                         <h1><fmt:message key="simple_intro_tyndale_house_project" /></h1>
                         <br />

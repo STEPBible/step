@@ -178,7 +178,17 @@ step.util = {
             '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
             '<%= message %></div>')({ message: message, level: level}));
         return errorPopup;
-    }, raiseInfo: function (message, level, passageId, progress, silent) {
+    },
+    raiseOneTimeOnly: function(key, level) {
+        var k = step.settings.get(key);
+        if(!k) {
+            var obj = {};
+            obj[key] = true;
+            step.settings.save(obj);
+            this.raiseInfo(__s[key], level);
+        }
+    },
+    raiseInfo: function (message, level, passageId, progress, silent) {
         //no parsing for info and warning
         if (level == 'error') {
             level = 'danger';
@@ -383,6 +393,7 @@ step.util = {
         if (exampleContainer.parent().hasClass("column")) {
             if (allRealColumns.length > 1 || hide) {
                 exampleContainer.parent().hide();
+                exampleContainer.find(".closeColumn").remove();
             }
         }
     },
@@ -595,6 +606,8 @@ step.util = {
             if (searchToken.itemType == STRONG_NUMBER) {
                 //pretend it's a Greek meaning, or a Hebrew meaning
                 searchToken.itemType = (searchToken.item.strongNumber || " ")[0] == 'G' ? GREEK_MEANINGS : HEBREW_MEANINGS;
+            } else if(searchToken.itemType == NAVE_SEARCH_EXTENDED || searchToken.itemType == NAVE_SEARCH) {
+                searchToken.itemType = SUBJECT_SEARCH;
             }
 
             return '<span class="argSelect select-' + searchToken.itemType + '">' +
@@ -636,6 +649,7 @@ step.util = {
                     break;
                 case TEXT_SEARCH:
                     source = __s.search_text;
+                    break;
             }
             return nowrap ? '[' + source + ']' : '<span class="source">[' + source + ']</span>';
         },

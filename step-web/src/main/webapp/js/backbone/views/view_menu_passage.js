@@ -53,7 +53,7 @@ var PassageMenuView = Backbone.View.extend({
 
         this.listenTo(this.model, "raiseMessage", this.raiseMessage);
         this.listenTo(this.model, "squashErrors", this.squashError);
-        this.listenTo(Backbone.Events, "columnsChanged", this.updateVisibleCloseButton)
+        this.listenTo(Backbone.Events, "columnsChanged", this.updateVisibleCloseButton);
     },
     raiseMessage: function (opts) {
         var titleSoFar = this.warnings.attr("title") || "";

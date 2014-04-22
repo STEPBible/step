@@ -109,13 +109,20 @@
                 model: modelZero
             });
 
-            step.router.handleRenderModel(modelZero, true);
+            step.router.handleRenderModel(modelZero, true, $.getUrlVar('q'));
 
             $(".helpMenuTrigger").one('click', function () {
                 require(["view_help_menu"], function () {
                     new ViewHelpMenuOptions({});
                 });
             });
+            
+            //bind to the examples close button
+            $(".examplesContainer .closeColumn").on('click', function() {
+                step.util.showOrHideTutorial(true);
+                //resize the columns
+                step.util.refreshColumnSize();
+            })
         }
         if (step.passages.length == 0) {
             step.passages.add(new PassageModel({ passageId: 0 }));
@@ -140,5 +147,8 @@
             //we restore previous passages
             new RestorePassageView();
         }
+        
+        //do cookie notification
+        step.util.raiseOneTimeOnly("cookie_notification", 'info');
     });
 })();

@@ -49,9 +49,12 @@ import com.tyndalehouse.step.core.models.SearchToken;
 import com.tyndalehouse.step.core.models.search.KeyedSearchResultSearchEntry;
 import com.tyndalehouse.step.core.models.search.KeyedVerseContent;
 import com.tyndalehouse.step.core.models.search.LexicalSearchEntry;
+import com.tyndalehouse.step.core.models.search.SubjectSuggestion;
 import com.tyndalehouse.step.core.models.search.SuggestionType;
 import com.tyndalehouse.step.core.models.search.SearchEntry;
 import com.tyndalehouse.step.core.models.search.SearchResult;
+import com.tyndalehouse.step.core.models.search.SyntaxSuggestion;
+import com.tyndalehouse.step.core.models.search.TextSuggestion;
 import com.tyndalehouse.step.core.models.search.TimelineEventSearchEntry;
 import com.tyndalehouse.step.core.models.search.VerseSearchEntry;
 import com.tyndalehouse.step.core.service.BibleInformationService;
@@ -320,6 +323,42 @@ public class SearchServiceImpl implements SearchService {
                 ef.setText(st.getToken());
                 ef.setGreek(GreekUtils.isGreekText(st.getToken()));
                 st.setEnhancedTokenInfo(ef);
+            } else if(SearchToken.SUBJECT_SEARCH.equals(tokenType) || 
+                    SearchToken.NAVE_SEARCH.equals(tokenType) || 
+                    SearchToken.NAVE_SEARCH_EXTENDED.equals(tokenType)) {
+                SubjectSuggestion ss = new SubjectSuggestion();
+                ss.setValue(st.getToken());
+                st.setEnhancedTokenInfo(ss);
+            } else if (SearchToken.TEXT_SEARCH.equals(tokenType)) {
+                final TextSuggestion textSuggestion = new TextSuggestion();
+                textSuggestion.setText(st.getToken());
+                st.setEnhancedTokenInfo(textSuggestion);
+            } else if(SearchToken.MEANINGS.equals(tokenType)) {
+                final LexiconSuggestion meaningSuggestion = new LexiconSuggestion();
+                meaningSuggestion.setGloss(st.getToken());
+                st.setEnhancedTokenInfo(meaningSuggestion);
+            } else if(SearchToken.SYNTAX.equals(tokenType)) {
+                SyntaxSuggestion ss = new SyntaxSuggestion();
+                
+                //take the first word, after stripping off any reference, etc.
+                String syntax = st.getToken();
+                syntax = IndividualSearch.MAIN_RANGE.matcher(syntax).replaceAll("").replaceAll("[()]+", "");
+                if(StringUtils.isBlank(syntax)) {
+                    ss.setText("...");
+                } else {
+                    int i = syntax.indexOf(' ');
+                    if(i != -1) {
+                        ss.setText(syntax.substring(i+1) + "...");
+                    } else {
+                        ss.setText(syntax + "...");
+                    }
+                }
+                ss.setValue(st.getToken());
+                st.setEnhancedTokenInfo(ss);
+            } else if(SearchToken.TOPIC_BY_REF.equals(st.getTokenType())) {
+                final TextSuggestion enhancedTokenInfo = new TextSuggestion();
+                enhancedTokenInfo.setText(st.getToken());
+                st.setEnhancedTokenInfo(enhancedTokenInfo);
             }
             //nothing to do 
             // for subject searches or 

@@ -681,6 +681,9 @@ h4.lexicalGrouping {
 .examplesContainer {
   overflow-y: scroll;
   overflow-x: hidden; }
+  .examplesContainer .closeColumn {
+    position: absolute;
+    right: 10; }
   .examplesContainer .argSummary {
     padding: 3 0 0 5; }
   .examplesContainer h1 {

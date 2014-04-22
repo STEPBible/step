@@ -1,6 +1,11 @@
 .examplesContainer {
   overflow-y: scroll;
   overflow-x: hidden;
+ 
+  .closeColumn {
+    position: absolute;
+    right: 10;
+  }
   
   .argSummary {
     padding: 3 0 0 5;

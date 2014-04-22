@@ -821,8 +821,10 @@ var MainSearchView = Backbone.View.extend({
             case MEANINGS:
                 return { gloss: token };
             case TEXT_SEARCH:
+                return { text: enhancedInfo.text, value: enhancedInfo.text };
             case SYNTAX:
-                return enhancedInfo == null ? {text: "&lt;...&gt;", value: token} : {text: enhancedInfo, value: "&lt;" + enhancedInfo + "...&gt;"};
+                return enhancedInfo == null ? {text: "&lt;...&gt;", value: token} : 
+                    {text: enhancedInfo.text, value: enhancedInfo.value };
             default:
                 return token;
         }

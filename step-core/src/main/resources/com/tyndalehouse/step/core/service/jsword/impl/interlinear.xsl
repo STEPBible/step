@@ -653,8 +653,9 @@
   	<xsl:param name="versions" />  	
 
 	<xsl:variable name="nextVersion" select="normalize-space(substring-before($versions, ','))" />
-    <xsl:variable name="verseNumber" select="concat(../@osisID , ../../@osisID)" />
-
+    <!-- <xsl:variable name="verseNumber" select="concat(../@osisID , ../../@osisID)" /> -->
+    <xsl:variable name="verseNumber" select="./ancestor::*[@osisID]/@osisID" />
+      
       <!--  if next version is not empty, then there was a comma, so we output this version and call template again -->
 	<xsl:choose>
 		<xsl:when test="normalize-space($nextVersion) != ''">

@@ -495,7 +495,11 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
         final List<String> extraVersions = this.getExtras(versionsInput);
 
         final InterlinearMode desiredModeOfDisplay = this.optionsValidationService.getDisplayMode(interlinearMode, masterVersion, extraVersions);
-
+        if(InterlinearMode.INTERLINEAR.equals(desiredModeOfDisplay) && options.contains(LookupOption.CHAPTER_BOOK_VERSE_NUMBER)) {
+            //then we're in a search kind of lookup, so add proper verse numbers
+            options.add(LookupOption.VERSE_NUMBERS);
+        }
+        
         OsisWrapper passageText;
         final Set<LookupOption> lookupOptions = this.optionsValidationService.trim(
                 options, masterVersion, extraVersions,

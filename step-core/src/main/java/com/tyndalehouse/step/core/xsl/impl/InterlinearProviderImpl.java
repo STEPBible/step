@@ -224,13 +224,12 @@ public class InterlinearProviderImpl implements InterlinearProvider {
         final String[] strongs = StringUtils.split(strong);
 
         //create the versified key, and convert to the bit we want
-        final Key key;
+        Key key = null;
         try {
-            if (verseNumber == null) {
-                throw new NoSuchVerseException("Unable to convert verse number to target versification: " + verseNumber);
+            if (verseNumber != null) {
+                final Verse inputVerse = VerseFactory.fromString(this.masterVersification, verseNumber);
+                key = VersificationsMapper.instance().mapVerse(inputVerse, this.versification);
             }
-            final Verse inputVerse = VerseFactory.fromString(this.masterVersification, verseNumber);
-            key = VersificationsMapper.instance().mapVerse(inputVerse, this.versification);
         } catch (NoSuchVerseException e) {
             LOGGER.error(e.getMessage(), e);
             return "";
@@ -298,13 +297,19 @@ public class InterlinearProviderImpl implements InterlinearProvider {
                 String osisID = v.getVerse() == 0 ? NO_VERSE : v.getOsisID();
                 
                 final DualKey<String, String> key = new DualKey<String, String>(strong, osisID);
-
                 final Deque<Word> list = this.limitedAccuracy.get(key);
                 if (list != null && !list.isEmpty()) {
                     return retrieveWord(list);
                 }
             }
             return lookupMappings(strong);
+        } else if(strong != null) {
+            //then we know we have a null verse, so assume we're in pre-verse mode...
+            final DualKey<String, String> key = new DualKey<String, String>(strong, NO_VERSE);
+            final Deque<Word> list = this.limitedAccuracy.get(key);
+            if (list != null && !list.isEmpty()) {
+                return retrieveWord(list);
+            }            
         }
 
         // it is important to return an empty string here

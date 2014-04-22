@@ -257,10 +257,6 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
         final List<LookupOption> lookupOptions = new ArrayList<LookupOption>();
         Collections.addAll(lookupOptions, options);
         lookupOptions.add(LookupOption.CHAPTER_BOOK_VERSE_NUMBER);
-
-        if(InterlinearMode.INTERLINEAR.name().equalsIgnoreCase(sq.getInterlinearMode())) {
-            lookupOptions.add(LookupOption.VERSE_NUMBERS);
-        }
         
         final List<SearchEntry> resultPassages = getPassagesForResults(versions, newResults, sq.getContext(),
                 lookupOptions, sq.getInterlinearMode());

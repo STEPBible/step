@@ -165,6 +165,12 @@ public class JSwordAnalysisServiceImpl implements JSwordAnalysisService {
             throw new StepInternalException("Unable to identify verses in this passage");
         }
 
+        //if we have no data, then no point in continuing
+        if (!key.iterator().hasNext()) {
+            //there is no data
+            return new BookData(bookFromVersion, new RangedPassage(v11n));
+        }
+
         Verse firstVerse = KeyUtil.getVerse(key);
         Verse lastVerse;
         if (key instanceof AbstractPassage) {

@@ -37,7 +37,7 @@
 
 .select-reference {
   cursor: hand !important;
-  @include gradient($referenceRow, $optionStartGradient, $optionEndGradient);
+  @include gradient($referenceRow, $optionStartGradient, $optionEndGradient);  
 }
 
 .select-subject {

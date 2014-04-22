@@ -651,7 +651,7 @@ step.util = {
                     source = __s.search_hebrew_meaning;
                     break;
                 case REFERENCE:
-                    source = __s.bible_reference;
+                        source = __s.bible_reference;
                     break;
                 case SUBJECT_SEARCH:
                     source = __s.search_topic;

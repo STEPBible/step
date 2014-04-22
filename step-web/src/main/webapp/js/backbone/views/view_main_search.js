@@ -122,10 +122,12 @@ var MainSearchView = Backbone.View.extend({
              * @returns {*}
              */
             formatSelection: function (entry) {
-                return step.util.ui.renderEnhancedToken(
-                    entry,
-                        _.findWhere($("#masterSearch").select2("data"), { itemType: "version" }) == null
-                );
+                view.masterVersion = _.findWhere($("#masterSearch").select2("data"), { itemType: "version" });
+                if(view.masterVersion == null && entry != null && entry.itemType == VERSION) {
+                    view.masterVersion = entry;
+                }
+                
+                return step.util.ui.renderEnhancedToken(entry, view.masterVersion == null);
             },
             escapeMarkup: function (m) {
                 return m;
@@ -723,6 +725,11 @@ var MainSearchView = Backbone.View.extend({
                 } else {
                     internationalisedSectionName = __s[v.item.sectionType.toLowerCase() + "_section"];
                 }
+                
+                if(this.masterVersion != null) {
+                    internationalisedSectionName += ", " + this.masterVersion.item.initials;   
+                }
+                
                 row = ['<span class="source">[' + internationalisedSectionName + ']</span>',
                     this._markMatch(v.item.fullName, query.term)
                 ].join('');
@@ -880,6 +887,9 @@ var MainSearchView = Backbone.View.extend({
         if (masterVersion.length > 0 && !masterVersion.hasClass("masterVersion")) {
             masterVersion.addClass("masterVersion");
             masterVersion.attr("title", masterVersion.attr("title") + "\n" + __s.master_version_info);
+            this.masterVersion = _.findWhere(this.masterSearch.select2("data"), { itemType: "version" });  
+        } else {
+            this.masterVersion = null;
         }
     }
 });

@@ -24,4 +24,5 @@ public class AncientLanguageAnalyzer extends Analyzer {
         stream = new NormalizerFilter(stream);
         return stream;
     }
+    
 }

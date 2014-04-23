@@ -1437,5 +1437,5 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
             throw new LocalisedException(e, e.getMessage());
         }
     }
-    
+
 }

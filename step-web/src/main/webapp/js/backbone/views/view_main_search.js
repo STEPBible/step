@@ -41,12 +41,12 @@ var MainSearchView = Backbone.View.extend({
                         id += entry.item.strongNumber;
                         break;
                     //some searches default to their item
+                    case SYNTAX:
                     case TEXT_SEARCH:
+                        id += entry.item.value;
+                        break;
                     case SUBJECT_SEARCH:
                         id += (entry.item.searchTypes || []).join("-") + ":" + entry.item.value;
-                        break;
-                    case SYNTAX:
-                        id += entry.value;
                         break;
                     case MEANINGS:
                         id += entry.item.gloss;
@@ -126,7 +126,7 @@ var MainSearchView = Backbone.View.extend({
                 if(view.masterVersion == null && entry != null && entry.itemType == VERSION) {
                     view.masterVersion = entry;
                 }
-                
+
                 return step.util.ui.renderEnhancedToken(entry, view.masterVersion == null);
             },
             escapeMarkup: function (m) {
@@ -188,8 +188,6 @@ var MainSearchView = Backbone.View.extend({
             if (values.length == 0) {
                 return;
             }
-
-            view._addTokenHandlers(newItem);
         }).on("select2-opening", function (event) {
             //remove any context that has references
             if (!self.ignoreOpeningEvent) {
@@ -214,7 +212,8 @@ var MainSearchView = Backbone.View.extend({
             .find("input[type='text']").on("keyup", this._handleKeyPressInSearch);
     },
     _setData: function (values) {
-        this.masterSearch.select2("data", values, this._addTokenHandlers);
+        this.masterSearch.select2("data", values, true);
+        this._addTokenHandlers();
     },
     _resetReplaceItems: function () {
         this.masterSearch.select2("container").find(".replaceItem").removeClass("replaceItem");
@@ -222,9 +221,9 @@ var MainSearchView = Backbone.View.extend({
     _addTokenHandlers: function (tokenElement) {
         var tokens;
         if (tokenElement) {
-            tokens = tokenElement;
+            tokens = $(tokenElement).not('[data-handler]');
         } else {
-            tokens = $("[data-select-id]");
+            tokens = this.$el.find("[data-select-id]").not('[data-handler]');
         }
 
         this._addVersionHandlers(tokens);
@@ -232,6 +231,8 @@ var MainSearchView = Backbone.View.extend({
         this._addDefaultExampleHandlers(tokens);
         this._addTextHandlers(tokens);
         this._addExactFormHandlers(tokens);
+
+        tokens.attr('data-handler', true);
     },
     _addVersionHandlers: function (tokens) {
         var self = this;
@@ -242,9 +243,12 @@ var MainSearchView = Backbone.View.extend({
     },
     _addTextHandlers: function (tokens) {
         var self = this;
-        $(tokens).filter(".textItem, .syntaxItem").click(function (ev) {
-            self._markItemForReplacing(ev, $(this));
-            self.openAdvancedSearch($(this).hasClass("textItem") ? TEXT_SEARCH : SYNTAX);
+        $(tokens).filter(".textItem, .syntaxItem, .topicByRefItem").click(function (ev) {
+            var el = $(this);
+            self._markItemForReplacing(ev, el);
+            var view = el.data("item-type");
+            var value = el.data('select-id');
+            self.openAdvancedSearch(view, value);
         });
     },
     _addExactFormHandlers: function (tokens) {
@@ -288,7 +292,7 @@ var MainSearchView = Backbone.View.extend({
         this.masterSearch.select2("search", term);
         this.ignoreOpeningEvent = false;
     },
-    openAdvancedSearch: function (initialView) {
+    openAdvancedSearch: function (initialView, value) {
         var self = this;
         require(["menu_extras", "defaults"], function () {
             //find master version
@@ -301,7 +305,7 @@ var MainSearchView = Backbone.View.extend({
                 }
             }
 
-            new AdvancedSearchView({ searchView: self, masterVersion: masterVersion, initialView: initialView });
+            new AdvancedSearchView({ searchView: self, masterVersion: masterVersion, initialView: initialView, value: value || "" });
         });
     },
     /**
@@ -418,6 +422,7 @@ var MainSearchView = Backbone.View.extend({
         var originalData = this.masterSearch.select2("data");
         originalData.push({ item: data.value, itemType: data.itemType});
         this._setData(originalData);
+        this.masterSearch.select2("close");
     },
     _removeVersion: function (data) {
         //find the element
@@ -718,18 +723,18 @@ var MainSearchView = Backbone.View.extend({
                 break;
             case REFERENCE:
                 var internationalisedSectionName;
-                if ((v.item.sectionType == 'BIBLE_BOOK' && this._getSpecificContext(REFERENCE) != null) || 
+                if ((v.item.sectionType == 'BIBLE_BOOK' && this._getSpecificContext(REFERENCE) != null) ||
                     (!v.item.wholeBook && !v.item.passage )) {
                     //then we are listing all chapters, and should display 'Whole book' instead
                     internationalisedSectionName = __s.bible_whole_book_section;
                 } else {
                     internationalisedSectionName = __s[v.item.sectionType.toLowerCase() + "_section"];
                 }
-                
+
                 if(this.masterVersion != null) {
-                    internationalisedSectionName += ", " + this.masterVersion.item.initials;   
+                    internationalisedSectionName += ", " + this.masterVersion.item.initials;
                 }
-                
+
                 row = ['<span class="source">[' + internationalisedSectionName + ']</span>',
                     this._markMatch(v.item.fullName, query.term)
                 ].join('');
@@ -830,7 +835,7 @@ var MainSearchView = Backbone.View.extend({
             case TEXT_SEARCH:
                 return { text: enhancedInfo.text, value: enhancedInfo.text };
             case SYNTAX:
-                return enhancedInfo == null ? {text: "&lt;...&gt;", value: token} : 
+                return enhancedInfo == null ? {text: "&lt;...&gt;", value: token} :
                     {text: enhancedInfo.text, value: enhancedInfo.value };
             default:
                 return token;
@@ -887,7 +892,7 @@ var MainSearchView = Backbone.View.extend({
         if (masterVersion.length > 0 && !masterVersion.hasClass("masterVersion")) {
             masterVersion.addClass("masterVersion");
             masterVersion.attr("title", masterVersion.attr("title") + "\n" + __s.master_version_info);
-            this.masterVersion = _.findWhere(this.masterSearch.select2("data"), { itemType: "version" });  
+            this.masterVersion = _.findWhere(this.masterSearch.select2("data"), { itemType: "version" });
         } else {
             this.masterVersion = null;
         }

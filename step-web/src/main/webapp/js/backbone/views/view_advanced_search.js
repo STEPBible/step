@@ -171,12 +171,16 @@ var AdvancedSearchView = Backbone.View.extend({
             var href = "";
             if (opts.initialView == SYNTAX) {
                 href = "#querySyntax";
+                this.$el.find(".advancedQuerySyntax").val(opts.value);
             } else if (opts.initialView == TOPIC_BY_REF) {
                 href = "#subjectByRef";
+                this.$el.find("#subjectRelated").val(opts.value);
             } else if (opts.initialView == TEXT_SEARCH) {
                 href = "#advancedTextSearch";
+                this.$el.find(".criteria").val(opts.value);
             } else if(opts.initialView == EXACT_FORM) {
                 href = "#exactForm";
+                this.$el.find("#exactFormQuery").val(opts.value);
             }
             this.$el.find("[href='" + href + "']").trigger("click");
         }

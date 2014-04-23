@@ -720,6 +720,12 @@ step.util = {
                         'data-item-type="' + entry.itemType + '" ' +
                         'data-select-id="' + util.safeEscapeQuote(entry.item.value) + '" ' +
                         'title="' + source + util.safeEscapeQuote(entry.item.value) + '">' + entry.item.text + "</div>";
+                case TOPIC_BY_REF:
+                    return '<div class="topicByRefItem" ' +
+                        'data-item-type="' + entry.itemType + '" ' +
+                        'data-select-id="' + util.safeEscapeQuote(entry.item.text) + '" ' +
+                        '>' +
+                        entry.item.text + '</div>';
                 default:
                     return entry.item.text;
             }

@@ -64,7 +64,7 @@ public class OsisWrapper extends AbstractComplexSearch implements Serializable {
     private int endRange;
     private final String[] languageCode;
     private final String longName;
-    private final InterlinearMode interlinearMode;
+
     private Map<String, List<LexiconSuggestion>> strongNumbers;
     private String options;
     private String selectedOptions;
@@ -86,7 +86,7 @@ public class OsisWrapper extends AbstractComplexSearch implements Serializable {
                        final String extraVersions) {
         this.value = value;
         this.key = key;
-        this.interlinearMode = interlinearMode;
+        super.setInterlinearMode(interlinearMode);
         this.reference = key.getName();
         this.longName = HeadingsUtil.getLongHeader(v11n, key);
         this.osisId = key.getOsisID();
@@ -94,10 +94,6 @@ public class OsisWrapper extends AbstractComplexSearch implements Serializable {
         super.setMasterVersion(masterVersion);
         super.setExtraVersions(extraVersions);
         super.setSearchType(SearchType.PASSAGE);
-    }
-
-    public InterlinearMode getInterlinearMode() {
-        return interlinearMode;
     }
 
     /**

@@ -13,6 +13,7 @@ public abstract class AbstractComplexSearch {
     private SearchType searchType;
     private String masterVersion;
     private String extraVersions;
+    private InterlinearMode interlinearMode;
     private List<SearchToken> searchTokens;
     
     public void setSearchType(final SearchType searchType) {
@@ -68,5 +69,19 @@ public abstract class AbstractComplexSearch {
 
     public void setSignature(final String signature) {
         this.signature = signature;
+    }
+
+    /**
+     * @return the interlinear mode used for this search
+     */
+    public InterlinearMode getInterlinearMode() {
+        return interlinearMode;
+    }
+
+    /**
+     * @param interlinearMode the interlinear mode used for this search
+     */
+    public void setInterlinearMode(InterlinearMode interlinearMode) {
+        this.interlinearMode = interlinearMode;
     }
 }

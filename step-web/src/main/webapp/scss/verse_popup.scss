@@ -1,13 +1,12 @@
 @import 'template_variables';
 
 .versePopup {
-  max-width: 600px !important;
+  max-width: 650px !important;
   .heading {
     padding: 0px;
   }
   a {
     font-size: $defaultFontSize;
-    white-space: nowrap;
     padding: 0px;
   }
   h1 {

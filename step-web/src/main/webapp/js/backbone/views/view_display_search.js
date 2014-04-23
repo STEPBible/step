@@ -1,4 +1,4 @@
-var SearchDisplayView = Backbone.View.extend({
+var SearchDisplayView = DisplayView.extend({
     el: function () {
         var passageContainer = step.util.getPassageContainer(this.model.get("passageId"));
         var passageContent = passageContainer.find(".passageContent");
@@ -72,7 +72,8 @@ var SearchDisplayView = Backbone.View.extend({
             } else {
                 this._highlightResults(results, query);
             }
-            this._doFonts(results, this.model.get("languageCode"));
+
+            this.doFonts(append ? this.getScrollableArea() : results, "", this.model.get("interlinearMode"), this.model.get("languageCode"));
         }
 
         var passageId = this.model.get("passageId");
@@ -182,16 +183,6 @@ var SearchDisplayView = Backbone.View.extend({
 
     doTitle: function () {
         $("title").html(this.titleFragment + " | STEP");
-    },
-
-    _doFonts: function (results, languages) {
-        var fonts = step.util.ui._getFontClasses(languages);
-        if (languages.length == 1) {
-            //apply to whole passage
-            results.find(".searchResults .passageContentHolder").addClass(fonts[0]);
-        } else {
-            step.util.ui._applyCssClassesRepeatByGroup(results, "td.searchResultRow > span", fonts, undefined, 0);
-        }
     },
 
     /**

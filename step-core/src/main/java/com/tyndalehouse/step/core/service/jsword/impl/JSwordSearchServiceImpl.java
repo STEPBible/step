@@ -257,11 +257,14 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
         final List<LookupOption> lookupOptions = new ArrayList<LookupOption>();
         Collections.addAll(lookupOptions, options);
         lookupOptions.add(LookupOption.CHAPTER_BOOK_VERSE_NUMBER);
-        
-        final List<SearchEntry> resultPassages = getPassagesForResults(versions, newResults, sq.getContext(),
-                lookupOptions, sq.getInterlinearMode());
+        lookupOptions.add(LookupOption.HEBREW_VOWELS);
+        lookupOptions.add(LookupOption.GREEK_ACCENTS);
+        lookupOptions.add(LookupOption.HEBREW_ACCENTS);
 
-        return getSearchResult(resultPassages, total, System.currentTimeMillis() - startRefRetrieval);
+        final SearchResult r = new SearchResult();
+        getPassagesForResults(r, versions, newResults, sq.getContext(), lookupOptions, sq.getInterlinearMode());
+
+        return getSearchResult(r, total, System.currentTimeMillis() - startRefRetrieval);
     }
 
     /**
@@ -278,16 +281,12 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
     /**
      * Constructs the search result object
      *
-     * @param resultPassages the resulting passages
      * @param total          the total number of hits
      * @param retrievalTime  the time taken to retrieve the references attached to the search results
      * @return the search result to be returned to the service caller
      */
-    private SearchResult getSearchResult(final List<SearchEntry> resultPassages, final int total,
+    private SearchResult getSearchResult(SearchResult r, final int total,
                                          final long retrievalTime) {
-        final SearchResult r = new SearchResult();
-        r.setResults(resultPassages);
-
         // set stats:
         r.setTimeTookToRetrieveScripture(retrievalTime);
         r.setTotal(total);
@@ -297,17 +296,19 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
     /**
      * Looks up all passages represented by the key
      *
+     *
+     * @param result the results that we will be returning
      * @param versions   the bibles under examination
      * @param results the list of results
      * @param context amount of context to add
      * @param options to use to lookup the right parameterization of the text
      * @return the list of entries found
      */
-    private List<SearchEntry> getPassagesForResults(String[] versions, final Key results, final int context,
+    private void getPassagesForResults(SearchResult result, String[] versions, final Key results, final int context,
                                                     final List<LookupOption> options, String interlinearMode) {
         final List<SearchEntry> resultPassages = new ArrayList<SearchEntry>();
         final Iterator<Key> iterator = ((Passage) results).iterator();
-
+        boolean interlinearModeCaptured = false;
         int count = 0;
         while (iterator.hasNext()) {
             final Key verse = iterator.next();
@@ -333,10 +334,15 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
             final OsisWrapper peakOsisText = this.jsword.peakOsisText(versions, lookupKey, options, interlinearMode);
             resultPassages.add(new VerseSearchEntry(peakOsisText.getReference(), peakOsisText.getValue(),
                     peakOsisText.getOsisId()));
-            
+
+            if(!interlinearModeCaptured) {
+                result.setInterlinearMode(peakOsisText.getInterlinearMode());
+                interlinearModeCaptured = true;
+            }
             count++;
         }
-        return resultPassages;
+
+        result.setResults(resultPassages);
     }
 
     /**

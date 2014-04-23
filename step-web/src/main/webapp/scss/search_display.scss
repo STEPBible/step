@@ -1,5 +1,15 @@
 @import 'template_variables';
 
+.passageContent {
+  .notApplicable {
+    color: grey !important;
+    font-weight: normal;
+    em {
+      font-weight: bold;
+    }
+  }
+}
+
 .searchResultRow {
 
   .passageContentHolder {
@@ -46,7 +56,7 @@
       }
     }
     border-bottom: solid 1px #ddd;
-  } 
+  }
 }
 
 h4.lexicalGrouping {
@@ -81,7 +91,7 @@ h4.lexicalGrouping {
   display: inline-block;
   float: initial;
   width: initial;
-  
+
   input[type='radio'] {
     vertical-align: text-bottom;
   }
@@ -89,7 +99,7 @@ h4.lexicalGrouping {
     padding-right: 20px;
     padding-left: 5px;
   }
-  
+
   .radioGroup {
     display: inline-block;
     width: initial;

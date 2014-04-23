@@ -122,7 +122,7 @@ public class SearchServiceImpl implements SearchService {
      */
     public static final Object ORIGINAL_SPELLING_SORT = "ORIGINAL_SPELLING";
 
-    private static final String[] BASE_GREEK_VERSIONS = new String[]{"WHNU", "Byz"};
+    private static final String[] BASE_GREEK_VERSIONS = new String[]{"WHNU", "Byz", "LXX"};
     private static final String BASE_HEBREW_VERSION = "OSMHB";
     private static final Logger LOGGER = LoggerFactory.getLogger(SearchServiceImpl.class);
     private static final String STRONG_QUERY = "strong:";
@@ -546,7 +546,7 @@ public class SearchServiceImpl implements SearchService {
         result.setPageNumber(sq.getPageNumber());
         result.setTimeTookTotal(System.currentTimeMillis() - start);
         result.setQuery(sq.getOriginalQuery());
-
+        result.setSearchRestriction(StringUtils.cleanJSwordRestriction(sq.getLastSearch().getMainRange()));
         final String[] allVersions = sq.getCurrentSearch().getVersions();
         result.setMasterVersion(allVersions[0]);
         result.setExtraVersions(StringUtils.join(allVersions, 1));

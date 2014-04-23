@@ -55,7 +55,7 @@ var PassageDisplayView = Backbone.View.extend({
                 step.util.restoreFontSize(this.model, passageHtml);
 //TODO:                step.fonts.redoTextSize(passageId, passageHtml);
                 TODO:                this._addStrongHandlers(passageId, passageHtml);
-//TODO:                this._doDuplicateNotice(passageId, passageHtml);
+                this._doDuplicateNotice(passageId, passageHtml);
                 this._updatePageTitle(passageId, passageHtml, version, reference);
                 this._doInterlinearDividers(passageHtml);
 //TODO:                this._doVersions(passageId, passageHtml, version, reference);

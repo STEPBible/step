@@ -26,6 +26,7 @@ public class SearchResult extends AbstractComplexSearch implements Serializable 
     private String[] languageCode;
     private int pageSize;
     private int pageNumber;
+    private String searchRestriction;
 
     /**
      * @return the query
@@ -194,4 +195,17 @@ public class SearchResult extends AbstractComplexSearch implements Serializable 
         return pageNumber;
     }
 
+    /**
+     * @return the search restriction
+     */
+    public String getSearchRestriction() {
+        return searchRestriction;
+    }
+
+    /**
+     * @param searchRestriction the name for the search restriction
+     */
+    public void setSearchRestriction(String searchRestriction) {
+        this.searchRestriction = searchRestriction;
+    }
 }

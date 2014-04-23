@@ -212,7 +212,7 @@ ul .glyphicon-ok {
   .select2-container-multi .select2-choices .select2-search-field input {
     font-family: inherit;
     padding: 6px 12px;
-    margin: 0px;
+    margin: 0px -5px 0px 0px;
     -webkit-box-shadow: none;
     box-shadow: none;
     -webkit-transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
@@ -589,6 +589,18 @@ ul.select2-parent-no-results {
   .passageContentHolder .x-doxology {
     display: block;
     text-align: center; }
+  .passageContentHolder .duplicate {
+    color: grey !important;
+    font-weight: normal;
+    font-style: italic; }
+  .passageContentHolder .duplicate .heading {
+    color: grey; }
+  .passageContentHolder .duplicate-notice {
+    float: left; }
+  .passageContentHolder .versification-notice {
+    font-size: 75%;
+    float: left;
+    color: #991c32; }
 
 .verseNumber {
   min-width: 10px;
@@ -633,6 +645,12 @@ h2.heading.x-acrostic {
   .verseGrouping * p {
     margin-left: 5px;
     display: inline; }
+
+.passageContent .notApplicable {
+  color: grey !important;
+  font-weight: normal; }
+  .passageContent .notApplicable em {
+    font-weight: bold; }
 
 .searchResultRow .passageContentHolder {
   height: initial !important; }

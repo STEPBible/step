@@ -46,6 +46,7 @@ import java.util.regex.Pattern;
  */
 public final class StringUtils {
     private static final Map<String, Pattern> PATTERNS = new HashMap<String, Pattern>();
+    private static final Pattern CLEAN_RESTRICTION = Pattern.compile("[\\[\\]+]");
 
     /**
      * no op
@@ -247,5 +248,12 @@ public final class StringUtils {
             return defaultValue;
         }
         return value;
+    }
+
+    public static String cleanJSwordRestriction(String mainRange) {
+        if(StringUtils.isBlank(mainRange)) {
+            return "";
+        }
+        return CLEAN_RESTRICTION.matcher(mainRange).replaceAll("");
     }
 }

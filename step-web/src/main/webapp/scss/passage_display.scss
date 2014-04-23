@@ -115,6 +115,25 @@
     display: block;
     text-align: center;
   }
+  .duplicate {
+    color: grey !important;
+    font-weight: normal;
+    font-style: italic;
+  }
+
+  .duplicate .heading {
+    color: grey;
+  }
+
+  .duplicate-notice {
+    float: left;
+  }
+
+  .versification-notice {
+    font-size: 75%;
+    float: left;
+    color: $headingColour;
+  }
 }
 
 .verseNumber {

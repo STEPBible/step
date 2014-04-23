@@ -2,7 +2,7 @@ var SearchDisplayView = Backbone.View.extend({
     el: function () {
         var passageContainer = step.util.getPassageContainer(this.model.get("passageId"));
         var passageContent = passageContainer.find(".passageContent");
-        if(passageContent.length == 0) {
+        if (passageContent.length == 0) {
             passageContent = $('<div class="passageContent"></div>');
             passageContainer.find(".passageText").append(passageContent);
         }
@@ -14,27 +14,27 @@ var SearchDisplayView = Backbone.View.extend({
      */
     initialize: function () {
         _.bindAll(this);
-        
+
         this.listenTo(this.model, "destroyViews", this.remove);
         this.listenTo(this.model, "destroy-column", this.remove);
-        
+
         this.resultsLabel = step.util.getPassageContainer(this.$el).find(".resultsLabel");
         this.hasPages = true;
         this.pageNumber = 1;
-        
+
         this.render(false);
         this.listenTo(this.model, "newPage", this.renderAppend);
-        
+
         //finished rendering, so reset the partial rendering flag
         this.options.partRendered = false;
-        
+
         //we always save the results in the firstPageResults field, so that we can restore quickly at a later date
         this.model.save({ firstPageResults: this.model.get("results"), results: null }, { silent: true })
     },
-    renderAppend: function() {
+    renderAppend: function () {
         this.render(true);
         this.fetching = false;
-        
+
         //remove icon
         this.$el.find(".searchResults .waiting").remove();
 
@@ -47,12 +47,12 @@ var SearchDisplayView = Backbone.View.extend({
         this.args = this.model.get("searchArgs");
         this.versionArg = this.model.get("versionArg");
         this.lastSearch = query;
-        
+
         var results = this.model.get("results");
         var total = this.model.get("total");
-        
+
         var numReturned = results != undefined ? results.length : 0;
-        if(append) {
+        if (append) {
             this._updateTotalAppend(numReturned);
         } else {
             this._updateTotal(this.model.get("total"));
@@ -60,12 +60,12 @@ var SearchDisplayView = Backbone.View.extend({
 
         var results;
         if (total == 0) {
-            results = $("<div>").append(__s.search_no_search_results_found).addClass("notApplicable");
+            results = (this.options.partRendered ? this.$el.find("> span") : $("<div>")).append(this._getErrorMessage());
         } else {
             results = this.options.partRendered ? this.$el.find("> span") : this.renderSearch(append, this.$el.find(".searchResults"));
-            
+
             this._addVerseClickHandlers(results);
-            
+
             var strongHighlights = this.model.get("strongHighlights");
             if (strongHighlights) {
                 this._highlightStrongs(results, strongHighlights);
@@ -78,15 +78,15 @@ var SearchDisplayView = Backbone.View.extend({
         var passageId = this.model.get("passageId");
         step.util.restoreFontSize(this.model, results);
 
-        if(append) {
+        if (append) {
             this.getScrollableArea().append(results);
         } else {
             var passageHtml = results;
-            if(!this.options.partRendered) {
+            if (!this.options.partRendered) {
                 passageHtml = this._doSpecificSearchRequirements(query, results, this.model.get("masterVersion"));
                 step.util.ui.emptyOffDomAndPopulate(this.$el, passageHtml);
-            } 
-            
+            }
+
             //everything is now attached, so we can add handlers
             this._doSpecificSearchHandlers();
             this.getScrollableArea().scroll(function () {
@@ -98,15 +98,36 @@ var SearchDisplayView = Backbone.View.extend({
         step.util.ui.addStrongHandlers(passageId, this.$el.find(".searchResults"));
         step.util.ui.enhanceVerseNumbers(passageId, this.$el, this.model.get("masterVersion"));
     },
+    _getErrorMessage: function () {
+        var errorMessage = $("<span>");
+
+        var reference = this.model.get("searchRestriction");
+        if (step.util.isBlank(reference)) {
+            reference = __s.whole_bible_range;
+        }
+
+        //get list of versions
+        var versions = [this.model.get("masterVersion")];
+        var extraVersions = this.model.get("extraVersions");
+        if (!step.util.isBlank(extraVersions)) {
+            versions = versions.concat(extraVersions.split(","));
+        }
+
+        var message = sprintf(__s.search_no_search_results_found_in_version_reference,
+                "<em>" + reference + "</em>",
+                "<em>" + versions.join(", ") + "</em>");
+        errorMessage.append(message).addClass("notApplicable");
+        return errorMessage;
+    },
     //adds verse click handlers to open up the verse in a separate linked passage
-    _addVerseClickHandlers : function(results) {
+    _addVerseClickHandlers: function (results) {
         var self = this;
-        results.find(".verseNumber").parent().click(function(ev) {
+        results.find(".verseNumber").parent().click(function (ev) {
             //now go to a new place. Let's be crazy about it as well, and simply chop off the last part
-            var verseRef =  $(this).attr("name");
+            var verseRef = $(this).attr("name");
             step.util.createNewLinkedColumnWithScroll(self.model.get("passageId"), verseRef);
         });
-        
+
     },
     /**
      * returns the area on which we have attached the scroll event
@@ -116,44 +137,44 @@ var SearchDisplayView = Backbone.View.extend({
         return this.$el.closest(".passageContent").find("> span");
     }, getMoreResults: function () {
         var self = this;
-        
+
         //never load new pages
-        if(!this.hasPages) {
+        if (!this.hasPages) {
             return;
         }
-        
-        if(this.fetching == true) {
+
+        if (this.fetching == true) {
             return;
         }
-        
+
         var scrollableArea = this.getScrollableArea();
-        
+
         var scrollDownProportion = scrollableArea.scrollTop() / scrollableArea.prop("scrollHeight");
         var scrollDownLeftOver = scrollableArea.prop("scrollHeight") - scrollableArea.scrollTop();
         if (scrollDownProportion > 0.7 || scrollDownProportion == scrollableArea.height() || scrollDownLeftOver < 800) {
             var currentPageNumber = this.pageNumber;
             var newPageNumber = parseInt(currentPageNumber) + 1;
             var pageSize = this.model.get("pageSize");
-            
+
             //check page size
-            if(currentPageNumber * pageSize > this.currentTotal) {
+            if (currentPageNumber * pageSize > this.currentTotal) {
                 return;
             }
             this.fetching = true;
-            
+
             //append results
             //change page number to be one more...
             var startTime = new Date().getTime();
             this.pageNumber = newPageNumber;
-            
+
             //we don't want to update the page URL here
             this.model.save({pageNumber: newPageNumber}, { silent: true });
-            
+
             //add a full width container for the waiting icon
             this.$el.find(".searchResults").append("<div class='waiting'>&nbsp;</div>");
-            
-            step.router.doMasterSearch(this.model.get("args"), null, this.model.get("interlinearMode"), 
-                newPageNumber, this.model.get("strongHighlights"), 
+
+            step.router.doMasterSearch(this.model.get("args"), null, this.model.get("interlinearMode"),
+                newPageNumber, this.model.get("strongHighlights"),
                 this.model.get("order"),
                 this.model.get("context"), true);
         }
@@ -186,14 +207,14 @@ var SearchDisplayView = Backbone.View.extend({
     /**
      * add the handling that is required for using the toolbars
      */
-    _doSpecificSearchHandlers: function() {
+    _doSpecificSearchHandlers: function () {
         //do nothing by default
     },
-    _updateTotalAppend: function(newResults) {
+    _updateTotalAppend: function (newResults) {
         this.resultsLabel.html(sprintf(__s.paging_showing, this.currentTotal));
     },
-    
-     _updateTotal: function (total) {
+
+    _updateTotal: function (total) {
         this.currentTotal = total;
         this.resultsLabel.html(sprintf(__s.paging_showing, total));
     },
@@ -250,7 +271,7 @@ var SearchDisplayView = Backbone.View.extend({
         var matches = termBase.match(/"[^"]*"/);
         if (matches) {
             for (var i = 0; i < matches.length; i++) {
-                
+
                 terms.push(this.cleanup(matches[i].substring(1, matches[i].length - 1)));
             }
         }
@@ -274,14 +295,14 @@ var SearchDisplayView = Backbone.View.extend({
      * @param str the string
      * @returns {*} the string, after removal of speech marks
      */
-    cleanup : function(str) {
+    cleanup: function (str) {
         //remove leading/trailing speech marks
-        if(str.length > 0 && (str[0] == "'" || str[0] == '"')) {
+        if (str.length > 0 && (str[0] == "'" || str[0] == '"')) {
             str = str.substring(1);
         }
 
-        if(str.length > 0 && (str[str.length - 1] == "'" || str[str.length - 1] == '"')) {
-            str = str.substring(0, str.length -1);
+        if (str.length > 0 && (str[str.length - 1] == "'" || str[str.length - 1] == '"')) {
+            str = str.substring(0, str.length - 1);
         }
 
         return str;

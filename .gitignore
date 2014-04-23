@@ -16,5 +16,4 @@ bin
 *.orig
 *.versionsBackup
 *-SNAPSHOT*.min.js
-scss/*.css
 

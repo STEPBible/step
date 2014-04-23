@@ -87,6 +87,7 @@ public final class HebrewUtils {
     private static final int SIN = 0x5E9;
     private static final char TAV = 0x5EA;
     private static final char MAQAF = 0x05BE;
+    private static final char HEBREW_COMBINED_RANGE_START = 0xFB1D;
 
     /**
      * prevent instantiation
@@ -139,7 +140,7 @@ public final class HebrewUtils {
                 i++;
             } else if (currentChar < endChar) {
                 sb.deleteCharAt(i);
-            } else if (currentChar > TAV && currentChar < ALEPH_LAMED) {
+            } else if (currentChar >= HEBREW_COMBINED_RANGE_START && currentChar < ALEPH_LAMED) {
                 sb.setCharAt(i, (char) (currentChar - DAGESH_GAP));
                 i++;
             } else {

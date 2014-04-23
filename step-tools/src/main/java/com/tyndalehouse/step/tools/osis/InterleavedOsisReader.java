@@ -37,8 +37,8 @@ public class InterleavedOsisReader {
      */
     public static void main(final String[] args) throws Exception {
         final String[] versions = new String[] { "ESV", "NIV" };
-        final String ref = "Psalm.3";
-        final boolean unicodeBreakDown = false;
+        final String ref = "Luke.6.8";
+        final boolean unicodeBreakDown = true;
         final boolean compare = true;
         final InterlinearMode interlinearMode = InterlinearMode.INTERLEAVED_COMPARE;
         boolean format = false;
@@ -79,9 +79,9 @@ public class InterleavedOsisReader {
 //        final String output = xmlOutputter.outputString(d);
 //        LOGGER.debug("Transformed is:\n {}", output);
 
-//        if (unicodeBreakDown) {
-//            outputUnicode(output);
-//        }
+        if (unicodeBreakDown) {
+            outputUnicode(osisText);
+        }
     }
 
     public static void outputUnicode(final String s) {

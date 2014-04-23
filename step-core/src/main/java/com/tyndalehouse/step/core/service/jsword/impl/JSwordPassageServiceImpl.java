@@ -1389,6 +1389,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
         } catch (final NoSuchKeyException e) {
             throw new LocalisedException(e, e.getMessage());
         }
+        
     }
 
     /**

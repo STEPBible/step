@@ -65,9 +65,10 @@ var RestorePassageView = Backbone.View.extend({
             return $("body")
         },
 
-        initialize: function () {
+        initialize: function (opts) {
             _.bindAll(this);
             this.render();
+            this.closeCallback = opts.callback;
         },
 
         render: function () {
@@ -120,6 +121,21 @@ var RestorePassageView = Backbone.View.extend({
                     }
                 });
 
+                
+                //now let's restore the correct order
+                var comparator = function(a, b) { return $.data(a, "item")[field] < $.data(b, "item")[field] ? -1 : 1; };
+                $(".column").not(".examplesColumn").sortElements(function(a,b) {
+                    //we compare the respective positions of the various models
+                    var aEl = $(a);
+                    var bEl = $(b);
+                    var aPassageId = aEl.find(".passageContainer").attr("passage-id");
+                    var bPassageId = bEl.find(".passageContainer").attr("passage-id");
+                    var aModel = step.passages.findWhere({passageId: parseInt(aPassageId) });
+                    var bModel = step.passages.findWhere({passageId: parseInt(bPassageId) });
+                    return aModel.get("position") < bModel.get("position") ? -1 : 1;
+                });
+                
+                
                 self.closeModal();
             });
             this.restoreForm.modal("show");
@@ -138,6 +154,8 @@ var RestorePassageView = Backbone.View.extend({
             this.restoreForm.modal("hide");
             $('body').removeClass('modal-open');
             $('.modal-backdrop').remove();
+            
+            this.closeCallback();
         }
     })
     ;

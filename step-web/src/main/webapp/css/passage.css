@@ -64,7 +64,10 @@ span.interlinear span span { /* Make this stack on top of each other. */
 	font-size: large;
 }
 
-.hbFont .verseNumber, .unicodeFont .verseNumber {
+.hbFont .verseNumber {
+    font-size: x-small;
+} 
+.unicodeFont .verseNumber {
 	font-size: small;
 }
 

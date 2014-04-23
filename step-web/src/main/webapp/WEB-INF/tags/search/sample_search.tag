@@ -19,9 +19,7 @@
         <c:if test="${ not empty option4 }"><span class="argSelect select-${ option4type }">${ option4 }</span></c:if>
     </span>
     <span  class="input-group-btn">
-        <span disabled class="find btn btn-default btn-danger btn-sm">
-            <fmt:message key="find" />
-        </span>
+        &nbsp;
     </span>
 </span>
 <br />

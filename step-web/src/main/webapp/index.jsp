@@ -344,6 +344,7 @@
     <%-- Do these need to use $.ready? --%>
     <script src="js/require_config_dev.js" type="text/javascript"></script>
     <script src="js/jquery-extensions/jquery-cookie.js" type="text/javascript"></script>
+    <script src="js/jquery-extensions/jquery-sort.js" type="text/javascript"></script>
     <script src="js/step_constants.js" type="text/javascript"></script>
     <script src="js/step.util.js" type="text/javascript"></script>
     <script src="js/backbone/views/view_main_search.js" type="text/javascript"></script>

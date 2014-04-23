@@ -635,6 +635,8 @@ h2.heading.x-acrostic {
 
 .searchResultRow .passageContentHolder {
   height: initial !important; }
+  .searchResultRow .passageContentHolder.hbFont, .searchResultRow .passageContentHolder.hbFontSmall, .searchResultRow .passageContentHolder.hbFontMini {
+    text-align: right; }
 .searchResultRow .verse {
   vertical-align: middle; }
 .searchResultRow p {
@@ -644,7 +646,8 @@ h2.heading.x-acrostic {
   .searchResultRow p:before {
     content: "/"; }
 .searchResultRow .verseNumber {
-  vertical-align: middle; }
+  vertical-align: middle;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }
 .searchResultRow br, .searchResultRow .startLineGroup, .searchResultRow .paragraph {
   display: none; }
 .searchResultRow span.level1, .searchResultRow span.level2, .searchResultRow span.level3, .searchResultRow span.level4 {
@@ -721,7 +724,8 @@ h4.lexicalGrouping {
     position: absolute;
     right: 10; }
   .examplesContainer .argSummary {
-    padding: 3 0 0 5; }
+    padding: 3 0 0 5;
+    border-right: none; }
   .examplesContainer h1 {
     font-size: 13px;
     text-align: center;
@@ -742,7 +746,12 @@ h4.lexicalGrouping {
     left: 40%;
     text-align: center; }
   .examplesContainer .input-group {
-    width: 100%; }
+    display: inline-table;
+    vertical-align: top; }
+    .examplesContainer .input-group .input-group-btn {
+      width: 25px;
+      border-top: dashed 1 lightgrey;
+      border-bottom: dashed 1 lightgrey; }
   .examplesContainer .find {
     margin-left: 5px; }
 
@@ -1173,6 +1182,8 @@ body::-webkit-scrollbar-corner {
   margin-bottom: 0px; }
 #lexicon ul {
   padding-left: 20px; }
+#lexicon .strongNumberTagLine {
+  color: darkgrey; }
 
 #animateWordle {
   font-size: 70%;

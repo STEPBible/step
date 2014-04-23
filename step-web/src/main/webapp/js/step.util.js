@@ -327,7 +327,7 @@ step.util = {
         };
         xhr.sendAsBinary(dataToBeSent.join('\r\n'));
     },
-    refreshColumnSize: function (columns, ignoreReNumber) {
+    refreshColumnSize: function (columns) {
         if (!columns) {
             columns = $(".column").not(".examplesColumn");
         }
@@ -382,17 +382,12 @@ step.util = {
                 break;
         }
         columns.addClass(columnClass);
-        
-        //number all columns from 0 through to infinity
-        if(!ignoreReNumber) {
-            this._reNumberModels();
-        }
     },
     /**
      * Renumbers the models from 0, so that we can track where things are.
      * @private
      */
-    _reNumberModels: function() {
+    reNumberModels: function() {
         $(".passageContainer[passage-id]").each(function() {
             var passageModel = step.passages.findWhere({ passageId: parseInt($(this).attr('passage-id'))});
             
@@ -474,7 +469,7 @@ step.util = {
         newColumn.find(".resultsLabel").html("");
 
         var allColumns = columns.add(newColumn);
-        this.refreshColumnSize(allColumns, model != null);
+        this.refreshColumnSize(allColumns);
         newColumn.insertAfter(activeColumn);
         if (linked) {
             //add a link  

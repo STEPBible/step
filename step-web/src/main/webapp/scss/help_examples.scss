@@ -9,6 +9,7 @@
   
   .argSummary {
     padding: 3 0 0 5;
+    border-right: none;
   }
   
   h1 {
@@ -35,7 +36,15 @@
     text-align: center;
   }
   .input-group {
-    width: 100%;
+    display: inline-table;
+    vertical-align: top;
+    
+    .input-group-btn {
+      width: 25px;
+      border-top: dashed 1 lightgrey;
+      border-bottom: dashed 1 lightgrey;
+    }
+    
   }
   .find {
     margin-left: 5px;

@@ -147,6 +147,7 @@ var SidebarView = Backbone.View.extend({
                 .append(mainWord.shortDef || "")
                 .append(" ")
                 .append(mainWord.stepGloss)
+                .append($(" <span>").append(" (" + mainWord.strongNumber + ")").addClass("strongNumberTagLine"))
         );
 
         panel

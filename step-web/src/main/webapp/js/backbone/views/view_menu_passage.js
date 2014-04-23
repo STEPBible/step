@@ -280,7 +280,7 @@ var PassageMenuView = Backbone.View.extend({
         dropdown.append($("<li>").append(this._createLink(ORIGINAL_SPELLING_SORT, __s.original_spelling, __s.original_spelling_help)));
         dropdown.append($("<li>").append(this._createLink(VOCAB_SORT, __s.vocabulary, __s.vocabulary_help)));
 
-        var currentOrder = this.model.get("order") || "";
+        var currentOrder = this.model.get("order") || "false";
         this._setVisible(dropdown.find("[data-value='" + currentOrder + "']"), true);
         
         var self = this;
@@ -383,7 +383,7 @@ var PassageMenuView = Backbone.View.extend({
     },
     _updateOptions: function () {
         //update the model
-        var selectedOptions = this.$el.find("[data-selected='true']");
+        var selectedOptions = this.displayOptions.find("[data-selected='true']");
         var selectedCode = "";
         for (var i = 0; i < selectedOptions.length; i++) {
             selectedCode += selectedOptions.eq(i).data('value');

@@ -130,6 +130,12 @@
     }
 
     //can this be done before load? self executing function
+    function registerColumnChangeEvents() {
+        Backbone.Events.listenTo(Backbone.Events, "columnsChanged", function() {
+            step.util.reNumberModels();
+        });
+    }
+
     $(window).on("load", function () {
         //disable amd
         define.amd = null;
@@ -140,12 +146,17 @@
         patchBackboneHistory();
         initCoreModelsAndRouter();
         initSearchDropdown();
+        
         Backbone.history.start({pushState: true, silent: true });
 
         new FeedbackView();
         if (step.passages.length > 1) {
             //we restore previous passages
-            new RestorePassageView();
+            new RestorePassageView({ callback: function() {
+                registerColumnChangeEvents();
+            }});
+        } else {
+            registerColumnChangeEvents();
         }
         
         //do cookie notification

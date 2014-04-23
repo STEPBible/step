@@ -1393,6 +1393,32 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
     }
 
     /**
+     * @param references a list of references to be parsed
+     * @param version    the version against which the refs are parsed
+     * @return a String representing all the references
+     */
+    @Override
+    public String getAllReferences(final String references, final String version) {
+        //TODO - can be refactored to optimize the reference query when used in subject searches...
+        final PassageKeyFactory keyFactory = PassageKeyFactory.instance();
+        final Versification av11n = this.versificationService.getVersificationForVersion(version);
+        final StringBuilder referenceString = new StringBuilder(1024);
+        try {
+            final Key k = keyFactory.getKey(av11n, references);
+            final Iterator<Key> iterator = k.iterator();
+            while (iterator.hasNext()) {
+                referenceString.append(iterator.next().getOsisID());
+                if (iterator.hasNext()) {
+                    referenceString.append(' ');
+                }
+            }
+            return referenceString.toString();
+        } catch (final NoSuchKeyException e) {
+            throw new LocalisedException(e, e.getMessage());
+        }
+    }
+
+    /**
      * sanitizes the strings, removing leading commas and spaces
      *
      * @param interlinearVersion the input string

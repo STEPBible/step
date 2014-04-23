@@ -53,6 +53,7 @@ var StepRouter = Backbone.Router.extend({
         var context = activePassageModel.get("context");
         var filter = activePassageModel.get("strongHighlights");
         var sort = activePassageModel.get("order");
+        var position = activePassageModel.get("position");
 
         if (step.util.isBlank(context)) {
             activePassageModel.set({context: 0 }, { silent: true });
@@ -84,6 +85,10 @@ var StepRouter = Backbone.Router.extend({
         }
         if (!step.util.isBlank(sort)) {
             urlStub = this._addArg(urlStub, "sort", sort);
+        }
+
+        if(position != 0) {
+            urlStub = this._addArg(urlStub, "pos", position);
         }
 
         if ($.getUrlVars().indexOf("debug") != -1) {

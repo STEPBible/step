@@ -84,7 +84,7 @@ var RestorePassageView = Backbone.View.extend({
                 if (p.get("passageId") != 0) {
                     if (!firstMatchDeleted && p.get("signature") == corePassage.get("signature")) {
                         //copy over the position
-                        corePassage.save({ position: p.get("position") });
+                        corePassage.save({ position: p.get("position") }, { silent: true }, { silent: true });
                         
                         //we simply delete p, as it's highly likely we're already restored it.
                         p.destroy();

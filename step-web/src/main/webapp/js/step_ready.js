@@ -103,7 +103,8 @@
             step.passages.add(modelZero);
 
             //reset some attributes that weren't on the model to start with (because of space reasons)
-            modelZero.save(window.tempModel);
+            window.tempModel.createSilently = true;
+            modelZero.save(window.tempModel, { silent: true });
             modelZero.save({ results: null, linked: null, value: pageValue}, {silent: true});
             new PassageMenuView({
                 model: modelZero
@@ -134,6 +135,7 @@
         Backbone.Events.listenTo(Backbone.Events, "columnsChanged", function() {
             step.util.reNumberModels();
         });
+        step.util.reNumberModels();
     }
 
     $(window).on("load", function () {

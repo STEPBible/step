@@ -12,6 +12,7 @@ import java.util.List;
 import com.tyndalehouse.step.core.models.AvailableFeatures;
 import com.tyndalehouse.step.core.service.PassageOptionsValidationService;
 import com.tyndalehouse.step.core.service.jsword.JSwordMetadataService;
+import com.tyndalehouse.step.core.service.jsword.JSwordModuleService;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -82,6 +83,7 @@ public class SearchServiceImplTest {
      */
     private SearchServiceImpl getSearchServiceUnderTest() {
         final JSwordMetadataService meta = mock(JSwordMetadataService.class);
+        final JSwordModuleService module = mock(JSwordModuleService.class);
         final JSwordVersificationService versificationService = TestUtils.mockVersificationService();
         final PassageOptionsValidationService optionsValidationService = mock(PassageOptionsValidationService.class);
         final JSwordPassageServiceImpl jsword = new JSwordPassageServiceImpl(versificationService, null,
@@ -93,7 +95,7 @@ public class SearchServiceImplTest {
         
         final JSwordSearchServiceImpl jswordSearch = new JSwordSearchServiceImpl(versificationService, null, jsword);
         return new SearchServiceImpl(jswordSearch, meta, versificationService, new SubjectSearchServiceImpl(entityManager,
-                jswordSearch, jsword, meta), new TimelineServiceImpl(entityManager, jsword), null, entityManager, TestUtils.mockVersionResolver(),
+                jswordSearch, jsword, meta, module), new TimelineServiceImpl(entityManager, jsword), null, entityManager, TestUtils.mockVersionResolver(),
                 mock(LexiconDefinitionServiceImpl.class), null
         );
     }

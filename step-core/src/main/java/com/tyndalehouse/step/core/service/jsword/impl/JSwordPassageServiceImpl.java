@@ -54,6 +54,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.xml.transform.TransformerException;
 
+import com.tyndalehouse.step.core.models.*;
 import com.tyndalehouse.step.core.service.PassageOptionsValidationService;
 import com.tyndalehouse.step.core.utils.JSwordUtils;
 import org.crosswire.common.xml.Converter;
@@ -79,10 +80,6 @@ import com.tyndalehouse.step.core.exceptions.LocalisedException;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.exceptions.TranslatedException;
 import com.tyndalehouse.step.core.exceptions.UserExceptionType;
-import com.tyndalehouse.step.core.models.InterlinearMode;
-import com.tyndalehouse.step.core.models.KeyWrapper;
-import com.tyndalehouse.step.core.models.LookupOption;
-import com.tyndalehouse.step.core.models.OsisWrapper;
 import com.tyndalehouse.step.core.service.VocabularyService;
 import com.tyndalehouse.step.core.service.helpers.VersionResolver;
 import com.tyndalehouse.step.core.service.impl.MorphologyServiceImpl;
@@ -104,7 +101,6 @@ import com.tyndalehouse.step.core.xsl.impl.MultiInterlinearProviderImpl;
 public class JSwordPassageServiceImpl implements JSwordPassageService {
     private static final int MAX_SMALL_BOOK_CHAPTER_COUNT = 5;
     private static final String OSIS_ID_BOOK_CHAPTER = "%s.%s";
-    private static final int MAX_VERSES_RETRIEVED = 200;
     private static final String OSIS_CHAPTER_FORMAT = "%s.%d";
     private static final String OSIS_CHAPTER_VERSE_FORMAT = "%s.%s.%d";
     private static final Logger LOGGER = LoggerFactory.getLogger(JSwordPassageServiceImpl.class);
@@ -1372,6 +1368,17 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
      */
     @Override
     public String getAllReferences(final String references, final String version) {
+       return this.getAllReferencesAndCounts(references, version).getValue();
+    }
+
+    /**
+     * @param references a list of references to be parsed
+     * @param version    the version against which the refs are parsed
+     * @return a String representing all the references
+     */
+    @Override
+    public StringAndCount getAllReferencesAndCounts(final String references, final String version) {
+        int count = 0;
         //TODO - can be refactored to optimize the reference query when used in subject searches...
         final PassageKeyFactory keyFactory = PassageKeyFactory.instance();
         final Versification av11n = this.versificationService.getVersificationForVersion(version);
@@ -1381,15 +1388,17 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
             final Iterator<Key> iterator = k.iterator();
             while (iterator.hasNext()) {
                 referenceString.append(iterator.next().getOsisID());
+                count++;
                 if (iterator.hasNext()) {
                     referenceString.append(' ');
                 }
             }
-            return referenceString.toString();
+            return new StringAndCount(referenceString.toString(), count);
         } catch (final NoSuchKeyException e) {
             throw new LocalisedException(e, e.getMessage());
         }
     }
+
 
     /**
      * sanitizes the strings, removing leading commas and spaces

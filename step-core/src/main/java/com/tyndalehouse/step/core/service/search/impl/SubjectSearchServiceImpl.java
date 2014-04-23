@@ -36,8 +36,10 @@ import com.google.inject.Singleton;
 import com.tyndalehouse.step.core.data.EntityDoc;
 import com.tyndalehouse.step.core.data.EntityIndexReader;
 import com.tyndalehouse.step.core.data.EntityManager;
+import com.tyndalehouse.step.core.exceptions.TranslatedException;
 import com.tyndalehouse.step.core.models.InterlinearMode;
 import com.tyndalehouse.step.core.models.LookupOption;
+import com.tyndalehouse.step.core.models.StringAndCount;
 import com.tyndalehouse.step.core.models.search.ExpandableSubjectHeadingEntry;
 import com.tyndalehouse.step.core.models.search.SearchEntry;
 import com.tyndalehouse.step.core.models.search.SearchResult;
@@ -45,6 +47,7 @@ import com.tyndalehouse.step.core.models.search.SubjectHeadingSearchEntry;
 import com.tyndalehouse.step.core.service.impl.IndividualSearch;
 import com.tyndalehouse.step.core.service.impl.SearchQuery;
 import com.tyndalehouse.step.core.service.jsword.JSwordMetadataService;
+import com.tyndalehouse.step.core.service.jsword.JSwordModuleService;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import com.tyndalehouse.step.core.service.jsword.JSwordSearchService;
 import com.tyndalehouse.step.core.service.search.SubjectSearchService;
@@ -82,6 +85,7 @@ public class SubjectSearchServiceImpl implements SubjectSearchService {
     private final JSwordSearchService jswordSearch;
     private final JSwordPassageService jswordPassage;
     private final JSwordMetadataService jSwordMetadataService;
+    private final JSwordModuleService jSwordModuleService;
 
     /**
      * Instantiates a new subject search service impl.
@@ -94,19 +98,26 @@ public class SubjectSearchServiceImpl implements SubjectSearchService {
     public SubjectSearchServiceImpl(final EntityManager entityManager,
                                     final JSwordSearchService jswordSearch,
                                     final JSwordPassageService jswordPassage,
-                                    final JSwordMetadataService jSwordMetadataService) {
+                                    final JSwordMetadataService jSwordMetadataService,
+                                    final JSwordModuleService jSwordModuleService) {
         this.jswordSearch = jswordSearch;
         this.jswordPassage = jswordPassage;
         this.jSwordMetadataService = jSwordMetadataService;
+        this.jSwordModuleService = jSwordModuleService;
         this.naves = entityManager.getReader("nave");
     }
 
 
     @Override
     public SearchResult searchByMultipleReferences(final String version, final String references) {
-        final String allReferences = this.jswordPassage.getAllReferences(references, version);
-        return searchByReference(allReferences);
-
+        final StringAndCount allReferencesAndCounts = this.jswordPassage.getAllReferencesAndCounts(references, version);
+        int count = allReferencesAndCounts.getCount();
+        if(count > JSwordPassageService.MAX_VERSES_RETRIEVED) {
+            throw new TranslatedException("subject_reference_search_too_big",
+                    Integer.valueOf(count).toString(),
+                    Integer.valueOf(JSwordPassageService.MAX_VERSES_RETRIEVED).toString());
+        }
+        return searchByReference(allReferencesAndCounts.getValue());
     }
 
     @Override
@@ -173,7 +184,10 @@ public class SubjectSearchServiceImpl implements SubjectSearchService {
         //versions are - the ones selected + the ESV & NIV
         Set<String> versions = new LinkedHashSet<String>(Arrays.asList(sq.getCurrentSearch().getVersions()));
         for (String s : REF_VERSIONS) {
-            versions.add(s);
+            //only add if available
+            if(this.jSwordModuleService.isInstalled(s)) {
+                versions.add(s);
+            }
         }
 
         trimToVersionsWithHeadingsOnly(versions);

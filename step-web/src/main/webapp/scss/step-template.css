@@ -40,7 +40,7 @@ ul .glyphicon-ok {
       left: 0;
       position: absolute; }
     .navbar a, .navbar .subtitle, .navbar .subtitle:hover {
-      color: lightgrey; }
+      color: lightgray; }
     .navbar.form-group, .navbar form {
       margin-bottom: 0px; }
       .navbar.form-group button, .navbar form button {
@@ -77,14 +77,14 @@ ul .glyphicon-ok {
   .search-form {
     font-size: x-small; }
     .search-form a {
-      color: lightgrey; }
+      color: lightgray; }
     .search-form button {
       text-shadow: none; }
 
   .searchLinks {
     float: right;
     margin-top: 4px;
-    color: lightgrey; }
+    color: lightgray; }
     .searchLinks a, .searchLinks label {
       vertical-align: top;
       margin-left: 20px; }
@@ -96,9 +96,13 @@ ul .glyphicon-ok {
     font-size: 12px;
     margin-left: 10px;
     float: right;
-    color: lightgrey; }
+    color: lightgray; }
     .help ul {
-      float: right; }
+      float: right; } }
+  @media screen and (max-width: 524px) {
+    .help {
+      display: none; } }
+@media screen {
     .help button {
       padding: 3 5 3 6;
       margin-left: 10px;
@@ -108,9 +112,6 @@ ul .glyphicon-ok {
 
   .mainPanel, #sidebar {
     padding: 40px 0 10px 0px; } }
-  @media screen and (max-width: 524px) {
-    .help {
-      display: none; } }
 @media screen and (max-width: 991px) {
   .kolumny {
     max-height: 500;
@@ -789,7 +790,7 @@ h4.lexicalGrouping {
       overflow-y: auto;
       height: 100%; }
     #columnHolder .column .passageContainer {
-      border: 2px solid lightgrey;
+      border: 2px solid lightgray;
       padding: 5px;
       border-radius: 3;
       height: 100%;
@@ -1122,7 +1123,7 @@ body::-webkit-scrollbar-corner {
   display: none;
   padding: 4px; }
   #sidebar > div {
-    border-left: 1px solid lightgrey;
+    border-left: 1px solid lightgray;
     padding-left: 5px;
     height: 100%; }
 

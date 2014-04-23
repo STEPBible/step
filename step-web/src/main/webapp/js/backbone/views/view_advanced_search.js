@@ -20,7 +20,7 @@ var AdvancedSearchView = Backbone.View.extend({
         '<form role="form" data-search-type="<%= view.text %>"  class="form-inline container-fluid">' +
         '<span class="row">' +
         '<%= view.rowToCellTemplate({ row: sprintf(__s.simple_text_search_level_basic, ' +
-        '  view.getSelect("type", view.textDefaults.simpleTextTypes, view.textDefaults.simpleTextTypesReference), view.getInput("criteria"), view.getInput("scope")), view: view }) %>' +
+        '  view.getSelect("type", view.textDefaults.simpleTextTypes, view.textDefaults.simpleTextTypesReference), view.getInput("criteria"), view.getInput("scope", "whole_bible_range", true)), view: view }) %>' +
         '</span>' +
         '<span><button id="addRow" class="btn btn-default addRow"><span class="glyphicon glyphicon-plus"></span></button><label for="addRow"><%= __s.add_search_row %></label></span>' +
         '<div class="footerContainer">' +
@@ -159,8 +159,11 @@ var AdvancedSearchView = Backbone.View.extend({
         this.exactForm = this.$el.find("#exactFormQuery");
         this.subjectRefs = this.searchForms.find("#subjectByRef .dropdown-menu");
         this.exactFormDropdown = this.searchForms.find("#exactForm .dropdown-menu");
+        this.scopeForm = this.searchForms.find("#advancedTextSearch .scope");
+        this.scopeFormDropdown = this.searchForms.find("#advancedTextSearch .scopeDropdown");
         this._autoCompleteDropdown(this.subjectRelated, this.subjectRefs, this.refreshRefDropdown);
         this._autoCompleteDropdown(this.exactForm, this.exactFormDropdown, this.refreshExactDropdown);
+        this._autoCompleteDropdown(this.scopeForm, this.scopeFormDropdown, this.refreshRefDropdown);
 
         //amend the initial view
         if (opts.initialView) {
@@ -276,8 +279,21 @@ var AdvancedSearchView = Backbone.View.extend({
             }
         }
     },
-    getInput: function (clazz) {
-        return '<input type="text" class="' + clazz + ' form-control input-sm" />';
+    _getDropdown: function(clazz) {
+        return '<ul class="dropdown-menu ' + clazz + 'Dropdown" role="menu" aria-labelledby="dropdownMenu-' + clazz + '"></ul>';
+    },
+    getInput: function (clazz, placeholder, addDropdownContainer) {
+        var input = '<input type="text" class="' +
+            clazz + ' form-control input-sm" '
+            + (placeholder ? 'placeholder="' + __s[placeholder] + '" ' : "")
+            + (addDropdownContainer ? 'data-toggle="dropdown"' : '') + ' />' +
+            (addDropdownContainer ? this._getDropdown(clazz) : "");
+
+        if(addDropdownContainer) {
+            return '<span class="form-group">' + input + '</span>';
+        }
+
+        return input;
     },
     getSelect: function (clazz, texts, values) {
         var select = '<select class="' + clazz + ' form-control input-sm" >';

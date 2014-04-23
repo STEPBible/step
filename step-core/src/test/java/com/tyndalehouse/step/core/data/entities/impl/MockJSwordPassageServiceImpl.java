@@ -34,14 +34,11 @@ package com.tyndalehouse.step.core.data.entities.impl;
 
 import java.util.List;
 
+import com.tyndalehouse.step.core.models.*;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.passage.Key;
 import org.crosswire.jsword.passage.Passage;
 
-import com.tyndalehouse.step.core.models.InterlinearMode;
-import com.tyndalehouse.step.core.models.KeyWrapper;
-import com.tyndalehouse.step.core.models.LookupOption;
-import com.tyndalehouse.step.core.models.OsisWrapper;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 
 /**
@@ -202,6 +199,11 @@ public class MockJSwordPassageServiceImpl implements JSwordPassageService {
     @Override
     public String getAllReferences(final String references, final String version) {
         return "a ref";
+    }
+
+    @Override
+    public StringAndCount getAllReferencesAndCounts(String references, String version) {
+        return null;
     }
 
     /**

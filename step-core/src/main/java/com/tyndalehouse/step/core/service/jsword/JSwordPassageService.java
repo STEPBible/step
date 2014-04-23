@@ -34,14 +34,10 @@ package com.tyndalehouse.step.core.service.jsword;
 
 import java.util.List;
 
+import com.tyndalehouse.step.core.models.*;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.passage.Key;
 import org.crosswire.jsword.passage.Passage;
-
-import com.tyndalehouse.step.core.models.InterlinearMode;
-import com.tyndalehouse.step.core.models.KeyWrapper;
-import com.tyndalehouse.step.core.models.LookupOption;
-import com.tyndalehouse.step.core.models.OsisWrapper;
 
 /**
  * The service providing access to JSword. All JSword calls should preferably be placed in this service
@@ -53,6 +49,7 @@ public interface JSwordPassageService {
     String REFERENCE_BOOK = "ESV";
     String SECONDARY_REFERENCE_BOOK = "NIV";
     String OT_BOOK = "OSMHB";
+    int MAX_VERSES_RETRIEVED = 200;
 
     /**
      * returns the Osis Text as a String
@@ -169,6 +166,15 @@ public interface JSwordPassageService {
      * @return the actual representation of all references
      */
     String getAllReferences(String references, String version);
+
+    /**
+     * Gets a String representation of all references, separated by a space.
+     *
+     * @param references the list of references
+     * @param version the version
+     * @return the actual representation of all references
+     */
+    StringAndCount getAllReferencesAndCounts(String references, String version);
 
     /**
      * Obtains a list of verse ranges from the references provided

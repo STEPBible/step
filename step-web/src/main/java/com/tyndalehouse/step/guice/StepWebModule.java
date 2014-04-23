@@ -43,6 +43,8 @@ import com.tyndalehouse.step.rest.framework.ObjectMapperProvider;
 import com.yammer.metrics.reporting.AdminServlet;
 import org.codehaus.jackson.map.ObjectMapper;
 
+import javax.inject.Singleton;
+
 /**
  * This module serves to inject data that is specific to the servlet layer. The purpose of it is therefore to
  * abstract away the identity of it being a java web servlet serving the page.
@@ -67,6 +69,6 @@ public class StepWebModule extends AbstractStepGuiceModule {
         bind(ClientSession.class).toProvider(ClientSessionProvider.class).in(ServletScopes.REQUEST);
         bind(UiDefaults.class).asEagerSingleton();
         bind(TimelineTranslator.class).to(SimileTimelineTranslatorImpl.class);
-        bind(AdminServlet.class);
+        bind(AdminServlet.class).in(Singleton.class);
     }
 }

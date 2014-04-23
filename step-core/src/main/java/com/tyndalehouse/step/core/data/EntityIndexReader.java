@@ -125,6 +125,17 @@ public interface EntityIndexReader extends Closeable {
     /**
      * Searches for a particular value across multiple fields
      *
+     * @param fields        the names of all fields to be searched
+     * @param query         the value to be searched for
+     * @param useOrOperator true to OR terms, otherwise ANDs
+     * @param sort      the sort field
+     * @return the expected results
+     */
+    EntityDoc[] search(String[] fields, String query, boolean useOrOperator, Sort sort);
+
+    /**
+     * Searches for a particular value across multiple fields
+     *
      * @param fieldNames                 the names of all fields to be searched
      * @param value                      the value to be searched for
      * @param filter                     the filter, possibly null
@@ -216,9 +227,10 @@ public interface EntityIndexReader extends Closeable {
      * @param fieldName     the name of the field to search for
      * @param query         the query syntax, can contain wildcards...
      * @param useOrOperator boolean true to use OR operator, otherwise uses AND
+     * @param sort      the sort field
      * @return a list of matching entity documents
      */
-    EntityDoc[] searchSingleColumn(String fieldName, String query, boolean useOrOperator);
+    EntityDoc[] searchSingleColumn(String fieldName, String query, boolean useOrOperator, Sort sort);
 
     /**
      * Give a querySyntax and get results back
@@ -270,11 +282,11 @@ public interface EntityIndexReader extends Closeable {
     /**
      * Returns all terms starting with a particular prefix
      *
-     * @param exact indicates we want an exact match
+     * @param exact      indicates we want an exact match
      * @param searchTerm the search term
      * @param fieldNames names of the fields
+     * @param trackMax   indicates we want a count of how many terms are actually matching the index.
      * @return the list of terms matching searchTerm as a prefix
-     * @param trackMax indicates we want a count of how many terms are actually matching the index.
      */
     TermsAndMaxCount findSetOfTermsWithCounts(boolean exact, boolean trackMax, String searchTerm, int maxReturned, String... fieldNames);
 

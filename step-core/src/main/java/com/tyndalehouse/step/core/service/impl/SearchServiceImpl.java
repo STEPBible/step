@@ -80,6 +80,7 @@ import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.queryParser.QueryParser.Operator;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.util.Version;
+import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.passage.Key;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -126,7 +127,8 @@ public class SearchServiceImpl implements SearchService {
     private static final String BASE_HEBREW_VERSION = "OSMHB";
     private static final Logger LOGGER = LoggerFactory.getLogger(SearchServiceImpl.class);
     private static final String STRONG_QUERY = "strong:";
-    private static final String DEFAULT_REFERENCE = "Mat.1";
+    private static final String DEFAULT_NT_REFERENCE = "Mat.1";
+    private static final String DEFAULT_OT_REFERENCE = "Gen.1";
     private static final String NO_FILTER = "all";
     private final JSwordSearchService jswordSearch;
     private final TimelineService timeline;
@@ -223,8 +225,9 @@ public class SearchServiceImpl implements SearchService {
         }
 
         if (!hasSearches && references.length() == 0) {
-            references.append(DEFAULT_REFERENCE);
-            final SearchToken token = new SearchToken("reference", DEFAULT_REFERENCE);
+            String bestReference = getBestReference(versions);
+            references.append(bestReference);
+            final SearchToken token = new SearchToken("reference", bestReference);
             searchTokens.add(token);
             referenceTokens.add(token);
         }
@@ -241,6 +244,36 @@ public class SearchServiceImpl implements SearchService {
         signRequest(complexSearch, display, filter, sort, context, originalItems);
         complexSearch.setSearchTokens(searchTokens);
         return complexSearch;
+    }
+
+    /**
+     * The best reference will always be the NT reference, unless there's a hebrew text (and not a greek). The only exception
+     * to this rule is when hebrew appears first in the list, then we will show the hebrew.
+     *
+     * @param versions the list of versions
+     * @return the best reference
+     */
+    private String getBestReference(List<String> versions) {
+        boolean hasGreek = false;
+        boolean hasHebrew = false;
+        for (int i = 0; i < versions.size(); i++) {
+            String v = versions.get(i);
+            Book b = this.versificationService.getBookFromVersion(v);
+            String languageCode = b.getLanguage().getCode();
+            if ("grc".equals(languageCode)) {
+                return DEFAULT_NT_REFERENCE;
+            }
+            hasHebrew |= "he".equals(languageCode);
+            if(i == 0 && hasHebrew) {
+                return DEFAULT_OT_REFERENCE;
+            }
+        }
+
+        if (hasHebrew && !hasGreek) {
+            return DEFAULT_OT_REFERENCE;
+        }
+
+        return DEFAULT_NT_REFERENCE;
     }
 
     /**
@@ -265,8 +298,8 @@ public class SearchServiceImpl implements SearchService {
         key.append('-');
         key.append(StringUtils.getNonNullString(display, "NONE"));
         key.append('-');
-        
-        if(result.getSearchType() != SearchType.PASSAGE) {
+
+        if (result.getSearchType() != SearchType.PASSAGE) {
             key.append(StringUtils.getNonNullString(filter, ""));
             key.append('-');
             key.append(StringUtils.getNonNullString(sort, ""));
@@ -323,8 +356,8 @@ public class SearchServiceImpl implements SearchService {
                 ef.setText(st.getToken());
                 ef.setGreek(GreekUtils.isGreekText(st.getToken()));
                 st.setEnhancedTokenInfo(ef);
-            } else if(SearchToken.SUBJECT_SEARCH.equals(tokenType) || 
-                    SearchToken.NAVE_SEARCH.equals(tokenType) || 
+            } else if (SearchToken.SUBJECT_SEARCH.equals(tokenType) ||
+                    SearchToken.NAVE_SEARCH.equals(tokenType) ||
                     SearchToken.NAVE_SEARCH_EXTENDED.equals(tokenType)) {
                 SubjectSuggestion ss = new SubjectSuggestion();
                 ss.setValue(st.getToken());
@@ -333,29 +366,29 @@ public class SearchServiceImpl implements SearchService {
                 final TextSuggestion textSuggestion = new TextSuggestion();
                 textSuggestion.setText(st.getToken());
                 st.setEnhancedTokenInfo(textSuggestion);
-            } else if(SearchToken.MEANINGS.equals(tokenType)) {
+            } else if (SearchToken.MEANINGS.equals(tokenType)) {
                 final LexiconSuggestion meaningSuggestion = new LexiconSuggestion();
                 meaningSuggestion.setGloss(st.getToken());
                 st.setEnhancedTokenInfo(meaningSuggestion);
-            } else if(SearchToken.SYNTAX.equals(tokenType)) {
+            } else if (SearchToken.SYNTAX.equals(tokenType)) {
                 SyntaxSuggestion ss = new SyntaxSuggestion();
-                
+
                 //take the first word, after stripping off any reference, etc.
                 String syntax = st.getToken();
                 syntax = IndividualSearch.MAIN_RANGE.matcher(syntax).replaceAll("").replaceAll("[()]+", "");
-                if(StringUtils.isBlank(syntax)) {
+                if (StringUtils.isBlank(syntax)) {
                     ss.setText("...");
                 } else {
                     int i = syntax.indexOf(' ');
-                    if(i != -1) {
-                        ss.setText(syntax.substring(i+1) + "...");
+                    if (i != -1) {
+                        ss.setText(syntax.substring(i + 1) + "...");
                     } else {
                         ss.setText(syntax + "...");
                     }
                 }
                 ss.setValue(st.getToken());
                 st.setEnhancedTokenInfo(ss);
-            } else if(SearchToken.TOPIC_BY_REF.equals(st.getTokenType())) {
+            } else if (SearchToken.TOPIC_BY_REF.equals(st.getTokenType())) {
                 final TextSuggestion enhancedTokenInfo = new TextSuggestion();
                 enhancedTokenInfo.setText(st.getToken());
                 st.setEnhancedTokenInfo(enhancedTokenInfo);

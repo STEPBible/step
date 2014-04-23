@@ -103,8 +103,8 @@ var AdvancedSearchView = Backbone.View.extend({
         }
 
         this.searchView = opts.searchView;
-
-        this.$el.append(this.modalPopupTemplate({ view: this }));
+        this.modalContainer = $(this.modalPopupTemplate({ view: this }));
+        this.$el.append(this.modalContainer);
         
         this.$el.find(".addRow").click(function (ev) {
             ev.preventDefault();
@@ -164,6 +164,9 @@ var AdvancedSearchView = Backbone.View.extend({
         this._autoCompleteDropdown(this.subjectRelated, this.subjectRefs, this.refreshRefDropdown);
         this._autoCompleteDropdown(this.exactForm, this.exactFormDropdown, this.refreshExactDropdown);
         this._autoCompleteDropdown(this.scopeForm, this.scopeFormDropdown, this.refreshRefDropdown);
+
+        //add hidden modal
+        this.modalContainer.on('hidden.bs.modal', this.closeModal);
 
         //amend the initial view
         if (opts.initialView) {

@@ -53,6 +53,8 @@ import com.tyndalehouse.step.core.service.jsword.JSwordSearchService;
 import com.tyndalehouse.step.core.service.search.SubjectSearchService;
 import com.tyndalehouse.step.core.utils.StringUtils;
 import org.apache.lucene.queryParser.QueryParser;
+import org.apache.lucene.search.Sort;
+import org.apache.lucene.search.SortField;
 import org.crosswire.jsword.passage.Key;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -79,6 +81,7 @@ import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
  */
 @Singleton
 public class SubjectSearchServiceImpl implements SubjectSearchService {
+    private static final Sort NAVE_SORT = new Sort(new SortField("root", SortField.STRING_VAL), new SortField("fullHeader", SortField.STRING_VAL));
     private static final String[] REF_VERSIONS = new String[]{JSwordPassageService.REFERENCE_BOOK, JSwordPassageService.SECONDARY_REFERENCE_BOOK};
     private static final Logger LOGGER = LoggerFactory.getLogger(SubjectSearchServiceImpl.class);
     private final EntityIndexReader naves;
@@ -126,7 +129,7 @@ public class SubjectSearchServiceImpl implements SubjectSearchService {
         sr.setQuery("sr=" + referenceQuerySyntax);
 
         //referenceQuerySyntax could be a full referenceQuerySyntax, or could be the start of a referenceQuerySyntax here
-        final EntityDoc[] results = this.naves.searchSingleColumn("expandedReferences", referenceQuerySyntax);
+        final EntityDoc[] results = this.naves.searchSingleColumn("expandedReferences", referenceQuerySyntax, NAVE_SORT);
         final List<SearchEntry> resultList = new ArrayList<SearchEntry>(results.length);
         for (final EntityDoc d : results) {
             final ExpandableSubjectHeadingEntry entry = new ExpandableSubjectHeadingEntry(d.get("root"),
@@ -248,7 +251,7 @@ public class SubjectSearchServiceImpl implements SubjectSearchService {
             sb.append(QueryParser.escape(s.trim()));
         }
 
-        final EntityDoc[] results = this.naves.searchSingleColumn("rootStem", sb.toString(), false);
+        final EntityDoc[] results = this.naves.searchSingleColumn("rootStem", sb.toString(), false, NAVE_SORT);
         return getHeadingsSearchEntries(start, results);
     }
 
@@ -261,7 +264,7 @@ public class SubjectSearchServiceImpl implements SubjectSearchService {
     private SearchResult searchFull(final SearchQuery sq) {
         final long start = System.currentTimeMillis();
         final EntityDoc[] results = this.naves.search(new String[]{"rootStem", "fullHeaderAnalyzed"},
-                QueryParser.escape(sq.getCurrentSearch().getQuery()), false);
+                QueryParser.escape(sq.getCurrentSearch().getQuery()), false, NAVE_SORT);
         return getHeadingsSearchEntries(start, results);
     }
 

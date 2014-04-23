@@ -177,6 +177,10 @@ public class EntityIndexReaderImpl implements EntityIndexReader {
     public EntityDoc[] search(final String[] fields, final String query, final boolean useOrOperator) {
         return search(fields, query, null, null, false, null, null, useOrOperator);
     }
+    @Override
+    public EntityDoc[] search(String[] fields, String query, boolean useOrOperator, Sort sort) {
+        return search(fields, query, null, sort, false, null, null, useOrOperator);
+    }
 
     // CHECKSTYLE:OFF
     @Override
@@ -388,8 +392,8 @@ public class EntityIndexReaderImpl implements EntityIndexReader {
 
     @Override
     public EntityDoc[] searchSingleColumn(final String fieldName, final String query,
-                                          final boolean useOrOperator) {
-        return searchSingleColumn(fieldName, query, useOrOperator ? Operator.OR : Operator.AND, false);
+                                          final boolean useOrOperator, Sort sort) {
+        return searchSingleColumn(fieldName, query, useOrOperator ? Operator.OR : Operator.AND, false, sort);
     }
 
     @Override

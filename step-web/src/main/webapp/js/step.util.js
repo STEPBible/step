@@ -547,8 +547,10 @@ step.util = {
     },
     restoreFontSize: function (passageModel, element) {
         var passageId = passageModel.get("passageId");
-        var key = passageId + "-" + this.getMainLanguage(passageModel);
-        var fontSize = step.settings.get(key);
+        var key = this.getMainLanguage(passageModel);
+        var fontClass = this.ui._getFontClassForLanguage(key) || 'defaultfont';
+
+        var fontSize = step.settings.get(fontClass);
         if (fontSize && fontSize != 0) {
             element.css("font-size", fontSize);
         }
@@ -565,7 +567,7 @@ step.util = {
             var newFontSize = fontSize + increment;
 
             //key it to be the default font, unicodeFont or Hebrew font
-            var fontKey = passageId + "-" + fontClass;
+            var fontKey = fontClass || 'defaultfont';
             var diff = {};
             diff[fontKey] = newFontSize;
             step.settings.save(diff);

@@ -116,6 +116,7 @@ var AdvancedSearchView = Backbone.View.extend({
                 self.maxReached = true;
                 if (self.maxReached) {
                     $(this).remove();
+                    self.$el.find("[for='addRow']").remove();
                 }
             }
             return false;

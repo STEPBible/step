@@ -1,4 +1,19 @@
 var DisplayView = Backbone.View.extend({
+    doSwapInterlinearLink: function(passageContent) {
+        var self = this;
+        var versionLinks = passageContent.find("[data-version]");
+
+        versionLinks.click(function() {
+            var el = $(this);
+            var newMasterVersion = el.attr("data-version");
+            var replacePattern = new RegExp("version=" + newMasterVersion, "ig");
+            var originalArgs = self.model.get("args");
+            var newArgs = originalArgs.replace(replacePattern, "");
+            newArgs = "version=" + newMasterVersion + "|" + newArgs;
+            newArgs = newArgs.replace(/\|\|/ig, "|").replace(/\|$/ig, "");
+            self.model.save({ args: newArgs });
+        }).attr("title", __s.interlinear_swap_master_version);
+    },
     /**
      *
      * Checks whether something is unicode, and if so, then sets up the unicode fonts.

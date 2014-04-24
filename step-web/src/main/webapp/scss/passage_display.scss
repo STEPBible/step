@@ -134,6 +134,10 @@
     float: left;
     color: $headingColour;
   }
+
+  [data-version] {
+    cursor: hand;
+  }
 }
 
 .verseNumber {

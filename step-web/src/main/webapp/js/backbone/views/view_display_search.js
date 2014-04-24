@@ -96,6 +96,7 @@ var SearchDisplayView = DisplayView.extend({
         }
 
         this.doTitle();
+        this.doSwapInterlinearLink(this.$el);
         step.util.ui.addStrongHandlers(passageId, this.$el.find(".searchResults"));
         step.util.ui.enhanceVerseNumbers(passageId, this.$el, this.model.get("masterVersion"));
     },

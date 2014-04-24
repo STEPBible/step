@@ -233,7 +233,7 @@ var StepRouter = Backbone.Router.extend({
         var activePassageId = step.util.activePassageId();
 
         //remove debug if present
-        query = query.replace(/&debug/ig, "");
+        query = encodeURIComponent(query.replace(/&debug/ig, ""));
         console.log(query, options, display, pageNumber, filter, sort, context);
         $.getPassageSafe({
             url: SEARCH_MASTER,

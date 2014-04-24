@@ -105,7 +105,7 @@ var AdvancedSearchView = Backbone.View.extend({
         this.searchView = opts.searchView;
         this.modalContainer = $(this.modalPopupTemplate({ view: this }));
         this.$el.append(this.modalContainer);
-        
+
         this.$el.find(".addRow").click(function (ev) {
             ev.preventDefault();
             if (!self.maxReached) {
@@ -181,30 +181,30 @@ var AdvancedSearchView = Backbone.View.extend({
             } else if (opts.initialView == TEXT_SEARCH) {
                 href = "#advancedTextSearch";
                 this.$el.find(".criteria").val(opts.value);
-            } else if(opts.initialView == EXACT_FORM) {
+            } else if (opts.initialView == EXACT_FORM) {
                 href = "#exactForm";
                 this.$el.find("#exactFormQuery").val(opts.value);
             }
             this.$el.find("[href='" + href + "']").trigger("click");
         }
     },
-    refreshExactDropdown: function(input, dropdown, target) {
+    refreshExactDropdown: function (input, dropdown, target) {
         var self = this;
-        if(input == null || input.length < 2) {
+        if (input == null || input.length < 2) {
             //please keep typing
             dropdown.empty();
             dropdown.append($("<label></label>").append(__s.exact_form_help));
             return;
         }
-        
+
         var language = this.$el.find("#exactFormLanguage").val();
         $.getSafe(SEARCH_SUGGESTIONS, [input, this.$el.find("#exactFormLanguage").val()], function (data) {
             dropdown.empty();
             var returnedData = data || [];
             for (var i = 0; i < returnedData.length; i++) {
                 dropdown.append($('<li role="presentation">' +
-                    '<a role="menuitem" href="javascript:void(0)" data-ref="' + returnedData[i].matchingForm + '">' + 
-                    "<span class='col-xs-4 " + (language == "true" ? 'unicodeFontMini' : 'hbFontMini') +"'>" + returnedData[i].matchingForm + "</span>" + 
+                    '<a role="menuitem" href="javascript:void(0)" data-ref="' + returnedData[i].matchingForm + '">' +
+                    "<span class='col-xs-4 " + (language == "true" ? 'unicodeFontMini' : 'hbFontMini') + "'>" + returnedData[i].matchingForm + "</span>" +
                     "<span class='col-xs-4'>" + returnedData[i].stepTransliteration + "</span>" +
                     "<span class='col-xs-4'>" + returnedData[i].gloss + "</span>&nbsp;" +
                     '&nbsp;</a>' +
@@ -286,7 +286,7 @@ var AdvancedSearchView = Backbone.View.extend({
             }
         }
     },
-    _getDropdown: function(clazz) {
+    _getDropdown: function (clazz) {
         return '<ul class="dropdown-menu ' + clazz + 'Dropdown" role="menu" aria-labelledby="dropdownMenu-' + clazz + '"></ul>';
     },
     getInput: function (clazz, placeholder, addDropdownContainer) {
@@ -296,7 +296,7 @@ var AdvancedSearchView = Backbone.View.extend({
             + (addDropdownContainer ? 'data-toggle="dropdown"' : '') + ' />' +
             (addDropdownContainer ? this._getDropdown(clazz) : "");
 
-        if(addDropdownContainer) {
+        if (addDropdownContainer) {
             return '<span class="form-group">' + input + '</span>';
         }
 
@@ -311,17 +311,17 @@ var AdvancedSearchView = Backbone.View.extend({
         return select;
     },
 
-    includeProximityChange: function (currentElement, value) {
-        var proximity = this.viewElementsByName.simpleTextProximity;
-        if (value == 'include') {
-            if (proximity.val() == 'the same verse') {
-                //reset
-                proximity.val(step.defaults.search.textual.simpleTextProximities[0]);
-                proximity.attr('disabled', false);
-            }
-        } else if (value == 'exclude') {
-            proximity.val(step.defaults.search.textual.simpleTextProximities[0]);
-            proximity.attr('disabled', true);
+    includeProximityChange: function () {
+        var joinType = this.$el.find(".joinType");
+        var join = this.$el.find(".join").val();
+
+        if (join == 'INCLUDE') {
+            //reset
+            joinType.attr('disabled', false);
+
+        } else if (join == 'EXCLUDE') {
+            joinType.val(step.defaults.search.textual.simpleTextProximitiesReference[0]);
+            joinType.attr('disabled', true);
         }
     },
     /**
@@ -339,6 +339,7 @@ var AdvancedSearchView = Backbone.View.extend({
      * @private
      */
     evaluateQuerySyntax: function () {
+        this.includeProximityChange();
         var querySyntax = this._evaluateQuerySyntaxInternal();
 
         if (step.util.isBlank(querySyntax)) {
@@ -392,72 +393,79 @@ var AdvancedSearchView = Backbone.View.extend({
 
             query = this._evalCriteria(secondaryType, secondaryCriteria, query);
         } else if (includeExclude == this.textDefaults.simpleTextIncludesReference[1]) {
-            if (secondaryType == this.textDefaults.simpleTextSecondaryTypesReference[0]) {
-                //excluding separate words
-                query += this._evalExcludeWord(secondaryCriteria);
-            } else {
-                //excluding a phrase
-                query += this._evalExcludePhrase(secondaryCriteria);
-            }
+            //exclude
+            query = this._evalCriteria(secondaryType, secondaryCriteria, query, true);
         }
 
         return prefix + restrictionQuery + query;
     },
 
-    _evalCriteria: function (searchType, criteria, query) {
+    _evalCriteria: function (searchType, criteria, query, negative) {
         switch ($.trim(searchType)) {
             case this.textDefaults.simpleTextTypesReference[0] :
-                query += this._evalAnyWord(criteria);
+                query += this._evalAnyWord(criteria, negative);
                 break;
             case this.textDefaults.simpleTextTypesReference[1] :
-                query += this._evalAllWords(criteria);
+                query += this._evalAllWords(criteria, negative);
                 break;
             case this.textDefaults.simpleTextTypesReference[2] :
-                query += this._evalExactPhrase(criteria);
+                query += this._evalExactPhrase(criteria, negative);
                 break;
             case this.textDefaults.simpleTextTypesReference[3] :
-                query += this._evalSpellings(criteria);
+                query += this._evalSpellings(criteria, negative);
                 break;
             case this.textDefaults.simpleTextTypesReference[4] :
-                query += this._evalStarting(criteria);
+                query += this._evalStarting(criteria, negative);
                 break;
         }
         return query;
     },
-    _evalExactPhrase: function (text) {
+    _evalExactPhrase: function (text, negative) {
         if (!step.util.isBlank(text)) {
-            return ' "' + text + '" ';
+            return ' ' + (negative ? "-" : "") +'"' + text + '" ';
         }
         return "";
     },
 
-    _evalAllWords: function (text) {
+    _evalAllWords: function (text, negative) {
         if (!step.util.isBlank(text)) {
-            var words = "+" + $.trim(text).split(" ").join(" +");
+            var words = " " + (negative ? '-' : '+') + $.trim(text).split(" ").join(" " + (negative ? '-' : '+'));
             return words;
         }
         return "";
     },
 
-    _evalAnyWord: function (text) {
+    _evalAnyWord: function (text, negative) {
         if (!step.util.isBlank(text)) {
-            return " +(" + text + ")";
+            var trimmed = $.trim(text);
+            var multipleTerms = trimmed.indexOf(' ') != -1;
+            var op = negative ? '-' : '+';
+            return " " + op +
+                (multipleTerms ? "(" : "") +
+                trimmed +
+                (multipleTerms ? ")" : "");
         }
         return "";
     },
 
-    _evalSpellings: function (text) {
+    _evalSpellings: function (text, negative) {
+        return this._evalSuffix(text, negative, '~');
+    },
+    _evalSuffix: function (text, negative, suffix) {
         if (!step.util.isBlank(text)) {
-            return " " + $.trim(text).split(" ").join("~ ") + "~ ";
+            var terms = $.trim(text).split(" ");
+            var op = negative ? "-" : "";
+            var query = " ";
+            for(var i = 0 ; i < terms.length; i++) {
+                query += op + terms[i] + suffix + " ";
+            }
+            return query;
         }
         return "";
     },
 
-    _evalStarting: function (text) {
-        if (!step.util.isBlank(text)) {
-            return " " + $.trim(text).split(' ').join('* ') + '* ';
-        }
-        return "";
+    _evalStarting: function (text, negative) {
+        return this._evalSuffix(text, negative, '*');
     },
 
     _evalExcludeWord: function (text) {

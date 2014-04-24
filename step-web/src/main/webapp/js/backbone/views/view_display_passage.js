@@ -46,6 +46,7 @@ var PassageDisplayView = DisplayView.extend({
                 this._warnIfFirstTimeCompare(interlinearMode);
                 this._warnCommentaryLookupVersion(version, extraVersions);
                 this.doFonts(passageHtml, options, interlinearMode, languages);
+                this.doSwapInterlinearLink(passageHtml);
                 this._doInlineNotes(passageHtml, passageId);
                 this._doSideNotes(passageHtml, passageId, version);
                 this._doNonInlineNotes(passageHtml);

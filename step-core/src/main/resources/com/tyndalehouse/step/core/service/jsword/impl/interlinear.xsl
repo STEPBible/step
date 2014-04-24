@@ -1533,7 +1533,7 @@
 				<span class="interlinear">
 					<xsl:choose>
 						<xsl:when test="$printVersions != 'no-print'">
-							<a class='smallHeaders' href='javascript:void(0)' onclick='javascript:makeMasterInterlinear(this, &quot;{$nextVersion}&quot;)' title='Let this text define the word ordering' >
+							<a class='smallHeaders' href='javascript:void(0)' data-version='{$nextVersion}' >
 							<xsl:call-template name="outputNonBlank">
 								<xsl:with-param name="string">
 									<xsl:value-of select="$nextVersion" />
@@ -1555,7 +1555,7 @@
 					<span class="interlinear">
 						<xsl:choose>
 							<xsl:when test="$printVersions != 'no-print'">
-							<a class='smallHeaders' href="javascript:void(0)" onclick='javascript:makeMasterInterlinear(this, &quot;{$versions}&quot;)' title='Let this text define the word ordering'>
+							<a class='smallHeaders' href="javascript:void(0)" data-version="{$versions}">
 								<xsl:call-template name="outputNonBlank">
 									<xsl:with-param name="string">
 										<xsl:value-of select="$versions" />

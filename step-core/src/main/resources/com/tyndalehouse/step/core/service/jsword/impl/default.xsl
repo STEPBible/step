@@ -448,7 +448,8 @@
   
   <xsl:template name="interleavedVersion">
  		<xsl:if test="$Interleave = 'true'">
- 			<span class="smallResultKey">(<xsl:value-of select="interleaving:getNextVersion($interleavingProvider)" />)</span>
+            <xsl:variable name="version" select="interleaving:getNextVersion($interleavingProvider)" />
+ 			<span class="smallResultKey" data-version="{$version}">(<xsl:value-of select="$version" />)</span>
  		</xsl:if>
   </xsl:template>
   
@@ -1491,7 +1492,8 @@
   </xsl:template>
   
   <xsl:template name="outputComparingTableHeader">
-  		<th class="comparingVersionName"><xsl:value-of select="interleaving:getNextVersion($interleavingProvider)" /></th>
+        <xsl:variable name="version" select="interleaving:getNextVersion($interleavingProvider)" />
+  		<th class="comparingVersionName" data-version="{$version}"><xsl:value-of select="$version" /></th>
   		
   		<xsl:if test="not(interleaving:isFirstVersion($interleavingProvider))">
   			<xsl:call-template name="outputComparingTableHeader" />

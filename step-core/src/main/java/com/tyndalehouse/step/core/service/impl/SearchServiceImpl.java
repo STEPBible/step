@@ -381,7 +381,7 @@ public class SearchServiceImpl implements SearchService {
                 } else {
                     int i = syntax.indexOf(' ');
                     if (i != -1) {
-                        ss.setText(syntax.substring(i + 1) + "...");
+                        ss.setText(syntax.substring(0, i + 1) + "...");
                     } else {
                         ss.setText(syntax + "...");
                     }

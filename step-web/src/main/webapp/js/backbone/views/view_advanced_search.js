@@ -142,14 +142,26 @@ var AdvancedSearchView = Backbone.View.extend({
                     Backbone.Events.trigger("search:add", { itemType: TOPIC_BY_REF, value: { text: searchByRefVal } });
                     break;
                 case self.text:
-                    Backbone.Events.trigger("search:add", { itemType: SYNTAX, value: { text: "&lt;" + self.$el.find(".criteria").val() + "...&gt;", value: self.$el.find(".textQuerySyntax").val() } });
+                    var textSyntax = self.$el.find(".textQuerySyntax").val();
+                    Backbone.Events.trigger("search:add", {
+                        itemType: SYNTAX,
+                        value: {
+                            text: self._getTokenText(textSyntax),
+                            value: textSyntax
+                        } });
                     break;
                 case EXACT_FORM:
                     var text = self.$el.find("#exactFormQuery").val();
                     Backbone.Events.trigger("search:add", { itemType: EXACT_FORM, value: { text: text, greek: self.$el.find("#exactFormLanguage").val() } });
                     break;
                 case SYNTAX:
-                    Backbone.Events.trigger("search:add", { itemType: SYNTAX, value: { text: "" + "&lt;...&gt;", value: $(".advancedQuerySyntax").val() } });
+                    var syntax = $(".advancedQuerySyntax").val();
+                    Backbone.Events.trigger("search:add", {
+                        itemType: SYNTAX,
+                        value: {
+                            text: self._getTokenText(syntax),
+                            value: syntax
+                        } });
                     break;
             }
             self.closeModal(ev);
@@ -188,6 +200,18 @@ var AdvancedSearchView = Backbone.View.extend({
             }
             this.$el.find("[href='" + href + "']").trigger("click");
         }
+    },
+    _getTokenText: function (syntax) {
+        syntax = syntax.replace(/\+\[[^\]]+\]/ig, "").replace(/[()]/ig, "");
+        if (step.util.isBlank(syntax)) {
+            return "...";
+        }
+
+        var i = syntax.indexOf(' ');
+        if (i != -1) {
+            return syntax.substring(0, i + 1) + "...";
+        }
+        return syntax + "...";
     },
     refreshExactDropdown: function (input, dropdown, target) {
         var self = this;
@@ -423,7 +447,7 @@ var AdvancedSearchView = Backbone.View.extend({
     },
     _evalExactPhrase: function (text, negative) {
         if (!step.util.isBlank(text)) {
-            return ' ' + (negative ? "-" : "") +'"' + text + '" ';
+            return ' ' + (negative ? "-" : "") + '"' + text + '" ';
         }
         return "";
     },
@@ -457,7 +481,7 @@ var AdvancedSearchView = Backbone.View.extend({
             var terms = $.trim(text).split(" ");
             var op = negative ? "-" : "";
             var query = " ";
-            for(var i = 0 ; i < terms.length; i++) {
+            for (var i = 0; i < terms.length; i++) {
                 query += op + terms[i] + suffix + " ";
             }
             return query;

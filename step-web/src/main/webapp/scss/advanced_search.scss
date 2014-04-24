@@ -121,9 +121,11 @@
   button.addRow {
     margin: 0 0 15 25;
     padding: 2 3 4 4;
-    &.label {
-      margin: 0 0 2 2;
-    }
+  }
+
+  label[for='addRow'] {
+    margin: 3 0 2 10px;
+    vertical-align: top;
   }
 
   textarea {

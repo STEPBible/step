@@ -125,6 +125,7 @@ public class JSwordVersificationServiceImpl implements JSwordVersificationServic
         final Book currentBook = getBookSilently(version);
 
         if (currentBook == null) {
+            System.out.println(version);
             throw new TranslatedException("book_not_found", version);
         }
         return currentBook;

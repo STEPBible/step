@@ -3,14 +3,12 @@ package com.tyndalehouse.step.core.service.impl;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
 
-import com.tyndalehouse.step.core.exceptions.TranslatedException;
 import com.tyndalehouse.step.core.models.AvailableFeatures;
 import com.tyndalehouse.step.core.models.LookupOption;
 import com.tyndalehouse.step.core.service.PassageOptionsValidationService;
@@ -62,21 +60,17 @@ public class SearchServiceImplTest {
     /** test exact strong match */
     @Test
     public void testSubjectSearch() {
-        try {
-            final SearchResult searchSubject = getSearchServiceUnderTest().search(
-                    new SearchQuery("s=elijah", new String[]{"ESV"}, "false", 0, 1, 1));
 
-            final List<SearchEntry> entries = ((SubjectHeadingSearchEntry) searchSubject.getResults().get(0))
-                    .getHeadingsSearch().getResults();
-            for (final SearchEntry e : entries) {
-                LOGGER.debug(((VerseSearchEntry) e).getPreview());
+        final SearchResult searchSubject = getSearchServiceUnderTest().search(
+                new SearchQuery("s=elijah", new String[] {"ESV"}, "false", 0, 1, 1));
 
-            }
-            assertTrue(searchSubject.getResults().size() > 0);
-        } catch(TranslatedException ex) {
-            ex.getCause().printStackTrace();
-            fail();
+        final List<SearchEntry> entries = ((SubjectHeadingSearchEntry) searchSubject.getResults().get(0))
+                .getHeadingsSearch().getResults();
+        for (final SearchEntry e : entries) {
+            LOGGER.debug(((VerseSearchEntry) e).getPreview());
+
         }
+        assertTrue(searchSubject.getResults().size() > 0);
     }
 
     /** test exact strong match */

@@ -38,8 +38,10 @@ import static org.crosswire.jsword.book.OSISUtil.OSIS_ELEMENT_VERSE;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 import org.crosswire.common.util.Language;
 import org.crosswire.common.util.Languages;
@@ -47,8 +49,11 @@ import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.BookData;
 import org.crosswire.jsword.book.BookException;
 import org.crosswire.jsword.book.FeatureType;
+import org.crosswire.jsword.book.basic.AbstractPassageBook;
 import org.crosswire.jsword.passage.Key;
+import org.crosswire.jsword.passage.KeyUtil;
 import org.crosswire.jsword.passage.NoSuchKeyException;
+import org.crosswire.jsword.passage.Verse;
 import org.crosswire.jsword.versification.BibleBook;
 
 import com.tyndalehouse.step.core.models.BibleVersion;
@@ -199,5 +204,40 @@ public final class JSwordUtils {
     public static List<Element> getOsisElements(BookData data) throws NoSuchKeyException, BookException {
         return data.getOsisFragment().getContent(
                 new ElementFilter(OSIS_ELEMENT_VERSE));
+    }
+
+    /**
+     * Checks for the presence of the book first. If the book is present, then continues to check that at least 1 verse
+     * in the scope is present. If it is, then returns true immediately.
+     * <p/>
+     * If it isn't, the continues through all the keys in the key( this could be a lot, but the assumption is that if the book
+     * exists, then it's unlikely to have just the last chapter?
+     *
+     * @param master the master book
+     * @param k      the key to be tested
+     * @return true if the key is present in the master book
+     */
+    public static boolean containsAny(Book master, Key k) {
+        if(!(master instanceof AbstractPassageBook)) {
+            return master.contains(k);
+        }
+
+        final Set<BibleBook> books = ((AbstractPassageBook) master).getBibleBooks();
+        final Verse firstVerse = KeyUtil.getVerse(k);
+        if(!books.contains(firstVerse.getBook())) {
+            //the books of the module do not contain the book referred to by the verse
+            return false;
+        }
+
+        //we're still here, so the books do exist
+        //so let's now examine the keys one by one
+        Iterator<Key> keys = k.iterator();
+        while(keys.hasNext()) {
+            if(master.contains(keys.next())) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

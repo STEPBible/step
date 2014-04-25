@@ -5,11 +5,11 @@ import com.tyndalehouse.step.core.models.BookName;
 import com.tyndalehouse.step.core.service.helpers.SuggestionContext;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
+import com.tyndalehouse.step.core.utils.JSwordUtils;
 import com.tyndalehouse.step.core.utils.StringUtils;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.basic.AbstractPassageBook;
 import org.crosswire.jsword.passage.Key;
-import org.crosswire.jsword.passage.KeyUtil;
 import org.crosswire.jsword.passage.NoSuchKeyException;
 import org.crosswire.jsword.passage.Verse;
 import org.crosswire.jsword.passage.VerseKey;
@@ -54,7 +54,7 @@ public class ReferenceSuggestionServiceImpl extends AbstractIgnoreMergedListSugg
             Key k = master.getKey(context.getInput());
             if (k != null) {
                 // check this book actually contains this key, based on the scope...
-                if (!containsAny(master, k)) {
+                if (!JSwordUtils.containsAny(master, k)) {
                     return new BookName[0];
                 }
 
@@ -77,41 +77,6 @@ public class ReferenceSuggestionServiceImpl extends AbstractIgnoreMergedListSugg
             //silently fail
         }
         return new BookName[0];
-    }
-
-    /**
-     * Checks for the presence of the book first. If the book is present, then continues to check that at least 1 verse
-     * in the scope is present. If it is, then returns true immediately.
-     * <p/>
-     * If it isn't, the continues through all the keys in the key( this could be a lot, but the assumption is that if the book
-     * exists, then it's unlikely to have just the last chapter?
-     *
-     * @param master the master book
-     * @param k      the key to be tested
-     * @return true if the key is present in the master book
-     */
-    private boolean containsAny(Book master, Key k) {
-        if(!(master instanceof AbstractPassageBook)) {
-            return master.contains(k);
-        }
-
-        final Set<BibleBook> books = ((AbstractPassageBook) master).getBibleBooks();
-        final Verse firstVerse = KeyUtil.getVerse(k);
-        if(!books.contains(firstVerse.getBook())) {
-            //the books of the module do not contain the book referred to by the verse
-            return false;
-        }
-
-        //we're still here, so the books do exist
-        //so let's now examine the keys one by one
-        Iterator<Key> keys = k.iterator();
-        while(keys.hasNext()) {
-            if(master.contains(keys.next())) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
 

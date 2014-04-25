@@ -41,6 +41,7 @@ import static com.tyndalehouse.step.core.utils.language.HebrewUtils.removeHebrew
 import java.text.Normalizer;
 import java.text.Normalizer.Form;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
@@ -393,6 +394,14 @@ public final class StringConversionUtils {
                     leftBehind.getOption().append(baseChars[ii]);
                     leftBehind.setNextValidPosition(ii + 1);
                 }
+            }
+        }
+
+        //trim the empty options off
+        for (Iterator<TransliterationOption> iterator = options.iterator(); iterator.hasNext(); ) {
+            TransliterationOption option = iterator.next();
+            if (option.getOption().length() == 0) {
+                iterator.remove();
             }
         }
 

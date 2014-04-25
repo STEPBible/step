@@ -78,6 +78,7 @@ public class StringConversionUtilsTest {
         assertListIs(new String[]{"achab", "ahab"}, adaptTransliterationForQuerying("achab", false));
         assertListIs(new String[]{"a+a", "ata"}, adaptTransliterationForQuerying("a+a", false));
         assertListIs(new String[]{"atsad", "atzad"}, adaptTransliterationForQuerying("atzad", false));
+        assertListIs(new String[]{"a"}, adaptTransliterationForQuerying("a", false));
     }
 
     /**
@@ -90,6 +91,9 @@ public class StringConversionUtilsTest {
 
         assertListIs(new String[]{"aggphab", "angphab", "angfab", "aggfab"},
                 adaptTransliterationForQuerying("aggphab", true));
+
+        assertListIs(new String[]{"a" },
+                adaptTransliterationForQuerying("aa", true));
 
     }
 

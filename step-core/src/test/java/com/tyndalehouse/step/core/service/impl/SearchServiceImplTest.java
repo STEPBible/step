@@ -10,9 +10,11 @@ import static org.mockito.Mockito.when;
 import java.util.List;
 
 import com.tyndalehouse.step.core.models.AvailableFeatures;
+import com.tyndalehouse.step.core.models.LookupOption;
 import com.tyndalehouse.step.core.service.PassageOptionsValidationService;
 import com.tyndalehouse.step.core.service.jsword.JSwordMetadataService;
 import com.tyndalehouse.step.core.service.jsword.JSwordModuleService;
+import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +40,12 @@ import com.tyndalehouse.step.core.utils.TestUtils;
  */
 public class SearchServiceImplTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(SearchServiceImplTest.class);
+    private TestEntityManager entityManager;
+
+    @Before
+    public void setUp() {
+        entityManager = new TestEntityManager();
+    }
 
     /**
      * Random tests
@@ -88,11 +96,14 @@ public class SearchServiceImplTest {
         final PassageOptionsValidationService optionsValidationService = mock(PassageOptionsValidationService.class);
         final JSwordPassageServiceImpl jsword = new JSwordPassageServiceImpl(versificationService, null,
                 null, null, mock(VersionResolver.class), optionsValidationService);
-        final TestEntityManager entityManager = new TestEntityManager();
 
         when(optionsValidationService.getAvailableFeaturesForVersion(any(String.class), any(List.class), any(String.class)))
                 .thenReturn(new AvailableFeatures());
-        
+
+        when(module.isInstalled(any(String.class))).thenReturn(true);
+        when(module.isIndexed(any(String.class))).thenReturn(true);
+        when(meta.supportsFeature(any(String.class), any(LookupOption.class))).thenReturn(true);
+
         final JSwordSearchServiceImpl jswordSearch = new JSwordSearchServiceImpl(versificationService, null, jsword);
         return new SearchServiceImpl(jswordSearch, meta, versificationService, new SubjectSearchServiceImpl(entityManager,
                 jswordSearch, jsword, meta, module), new TimelineServiceImpl(entityManager, jsword), null, entityManager, TestUtils.mockVersionResolver(),

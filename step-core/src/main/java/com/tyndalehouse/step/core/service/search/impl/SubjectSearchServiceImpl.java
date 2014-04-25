@@ -36,6 +36,7 @@ import com.google.inject.Singleton;
 import com.tyndalehouse.step.core.data.EntityDoc;
 import com.tyndalehouse.step.core.data.EntityIndexReader;
 import com.tyndalehouse.step.core.data.EntityManager;
+import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.exceptions.TranslatedException;
 import com.tyndalehouse.step.core.models.InterlinearMode;
 import com.tyndalehouse.step.core.models.LookupOption;
@@ -188,12 +189,19 @@ public class SubjectSearchServiceImpl implements SubjectSearchService {
         Set<String> versions = new LinkedHashSet<String>(Arrays.asList(sq.getCurrentSearch().getVersions()));
         for (String s : REF_VERSIONS) {
             //only add if available
-            if(this.jSwordModuleService.isInstalled(s)) {
+            if(this.jSwordModuleService.isInstalled(s) && this.jSwordModuleService.isIndexed(s)) {
                 versions.add(s);
+            } else {
+                LOGGER.error("Unable to search across [{}]", s);
             }
         }
 
         trimToVersionsWithHeadingsOnly(versions);
+        if(versions.size() == 0) {
+            //unable to search versions
+            throw new StepInternalException("Unable to carry out normal search. ESV and NIV are both absent.");
+        }
+
         if(versions.size() > 1) {
             sq.setInterlinearMode(InterlinearMode.INTERLEAVED.name());
         }

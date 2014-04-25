@@ -1,5 +1,6 @@
 package com.tyndalehouse.step.core.data.entities.impl;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 

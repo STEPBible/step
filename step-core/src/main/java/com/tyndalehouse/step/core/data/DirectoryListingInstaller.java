@@ -10,6 +10,7 @@ import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.BookDriver;
 import org.crosswire.jsword.book.install.InstallException;
 import org.crosswire.jsword.book.sword.ConfigEntry;
+import org.crosswire.jsword.book.sword.NullBackend;
 import org.crosswire.jsword.book.sword.SwordBook;
 import org.crosswire.jsword.book.sword.SwordBookDriver;
 import org.crosswire.jsword.book.sword.SwordBookMetaData;
@@ -130,7 +131,7 @@ public class DirectoryListingInstaller extends DirectoryInstaller {
 
                         SwordBookMetaData sbmd = new SwordBookMetaData(os.toByteArray(), internal);
                         sbmd.setDriver(fakeDriver);
-                        Book book = new SwordBook(sbmd, null);
+                        Book book = new SwordBook(sbmd, new NullBackend());
                         entries.put(book.getName(), book);
 
                         //assume 1 conf file per zip file

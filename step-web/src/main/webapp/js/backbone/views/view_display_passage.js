@@ -55,7 +55,7 @@ var PassageDisplayView = DisplayView.extend({
                 this._adjustTextAlignment(passageHtml);
                 step.util.restoreFontSize(this.model, passageHtml);
 //TODO:                step.fonts.redoTextSize(passageId, passageHtml);
-                TODO:                this._addStrongHandlers(passageId, passageHtml);
+//                TODO:                this._addStrongHandlers(passageId, passageHtml);
                 this._doDuplicateNotice(passageId, passageHtml);
                 this._updatePageTitle(passageId, passageHtml, version, reference);
                 this._doInterlinearDividers(passageHtml);
@@ -249,32 +249,29 @@ var PassageDisplayView = DisplayView.extend({
          * @private
          */
         _doInlineNotes: function (passageContent, passageId) {
-            var myPosition = passageId == 0 ? "left" : "right";
-            var atPosition = passageId == 0 ? "right" : "left";
 
             var notes = $(".verse .note", passageContent).has(".inlineNote");
             for (var i = 0; i < notes.length; i++) {
                 var item = notes.get(i);
                 var link = $("a", item);
                 var note = $(".inlineNote", item);
-                this._doInlineNoteQtip(link, note);
+                this._doInlineNoteQtip(link, note, passageContent);
             }
         },
-        _doInlineNoteQtip: function (link, note) {
+        _doInlineNoteQtip: function (link, note, viewport) {
             link.attr("title", note.html());
+            var self = this;
             require(["qtip"], function () {
                 link.qtip({
                     position: {
                         my: "top left",
-                        at: "top left"
+                        at: "top left",
                     },
                     style: { classes: "visibleInlineNote", tip: false },
                     events: {
                         show: function () {
-                            var qtipApi = $(this).qtip("api");
-                            var qtipOffset = qtipApi.elements.target.offset();
                             var currentPosition = $(this).qtip("option", "position");
-                            currentPosition.target = [0, 0];
+                            currentPosition.target = [viewport.position().left + 5, viewport.position().top + 5];
                         }
                     }
                 });
@@ -294,7 +291,7 @@ var PassageDisplayView = DisplayView.extend({
             var myPosition = passageId == 0 ? "left" : "right";
             var atPosition = passageId == 0 ? "right" : "left";
 
-            var xrefs = $("[xref]", passageContent);
+            var xrefs = $(".notesPane [xref]", passageContent);
             for (var i = 0; i < xrefs.length; i++) {
                 var item = xrefs.eq(i);
                 var xref = item.attr("xref");

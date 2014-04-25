@@ -23,6 +23,7 @@ var MainSearchView = Backbone.View.extend({
 
         this.masterSearch.select2({
             minimumInputLength: 2,
+
             id: function (entry) {
                 var id = entry.itemType + "-";
                 switch (entry.itemType) {

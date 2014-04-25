@@ -67,8 +67,8 @@ var RestorePassageView = Backbone.View.extend({
 
         initialize: function (opts) {
             _.bindAll(this);
-            this.render();
             this.closeCallback = opts.callback;
+            this.render();
         },
 
         render: function () {
@@ -98,7 +98,10 @@ var RestorePassageView = Backbone.View.extend({
             }
 
             //if we have no passages, then simply return now
-            if (allRestorablePassages.length == 0) return;
+            if (allRestorablePassages.length == 0) {
+                this.closeModal();
+                return;
+            }
 
             this.restoreForm = $(_.template(this.template)({ passages: allRestorablePassages }));
             this.$el.append(this.restoreForm);
@@ -151,7 +154,10 @@ var RestorePassageView = Backbone.View.extend({
             this.closeModal();
         },
         closeModal: function () {
-            this.restoreForm.modal("hide");
+            if(this.restoreForm) {
+                this.restoreForm.modal("hide");
+            }
+
             $('body').removeClass('modal-open');
             $('.modal-backdrop').remove();
             

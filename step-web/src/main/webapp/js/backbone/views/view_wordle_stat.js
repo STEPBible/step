@@ -36,8 +36,6 @@ var ViewLexiconWordle = Backbone.View.extend({
             event.preventDefault();
             self.animateWordleHandler(); 
         });
-
-        this.listenToModels();
     },
     refresh: function() {
         if(this.$el.hasClass("active")) {
@@ -49,11 +47,6 @@ var ViewLexiconWordle = Backbone.View.extend({
         var self = this;
         el.click(function() { self.doStats() });
     },
-    
-    getCloudContainer: function (statsTab) {
-        return statsTab.find(".cloudContainer");
-    },
-
     populateMenu: function (data, values, label, id, includeText) {
         var self = this;
         
@@ -73,7 +66,7 @@ var ViewLexiconWordle = Backbone.View.extend({
 
         if (includeText) {
             var activePassageData = step.util.activePassage();
-            var activeReference = activePassageData.get("reference");
+            var activeReference = activePassageData.get("reference") || this._getBestReference(activePassageData);
             var textReference = $('<input type="text" class="refInput" />')
                 .attr("placeholder", __s.analyse_book_ref)
                 .val(activeReference);
@@ -145,21 +138,15 @@ var ViewLexiconWordle = Backbone.View.extend({
         return formGroup;
     },
 
-    listenToModels: function () {
-        //update the model, in case we're not looking at the right one.
-//        this.listenTo(Backbone.Events, "passage:rendered:0", function () {
-//            this.doStats(PassageModels.at(0));
-//        });
-//        this.listenTo(Backbone.Events, "passage:rendered:1", function () {
-//            this.doStats(PassageModels.at(1));
-//        });
+    _getBestReference: function(model) {
+        return step.util.getPassageContainer(model.get("passageId")).find(".verseNumber").closest("a[name]").attr("name")
     },
 
     _getStats: function (statType, scope, title, callback, animate) {
         var self = this;
         var model = step.util.activePassage();
 
-        var modelReference = model.get("reference");
+        var modelReference = model.get("reference") || this._getBestReference(model);
         var modelVersion = model.get("masterVersion");
         var reference = this.isAnimating ? this.transientReference || modelReference : modelReference;
 
@@ -181,9 +168,11 @@ var ViewLexiconWordle = Backbone.View.extend({
             step.util.trackAnalytics('wordle', 'scope', scope);
             self.transientReference = data.passageStat.reference.name;
 
-            //set the current ref
-            self.wordScope.find(".currentRef").html(self.transientReference);
-            self.wordScope.find(".refInput").val(self.transientReference);
+            //set the current ref if we're in animation mode...
+            if(animate) {
+                self.wordScope.find(".currentRef").html(self.transientReference);
+                self.wordScope.find(".refInput").val(self.transientReference);
+            }
             
             //we're going to animate this, but we're going to finish and not keep going if the flag is set
             if (data.passageStat.reference.lastChapter) {

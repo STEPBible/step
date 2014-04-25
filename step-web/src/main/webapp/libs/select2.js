@@ -1357,8 +1357,9 @@ the specific language governing permissions and limitations under the Apache Lic
             this.container.removeClass("select2-dropdown-open").removeClass("select2-container-active");
             this.results.empty();
 
-
-            this.clearSearch();
+//STEP Modification
+//            this.clearSearch();
+// end STEP modification
             this.search.removeClass("select2-active");
             this.opts.element.trigger($.Event("select2-close"));
         },
@@ -2608,6 +2609,10 @@ the specific language governing permissions and limitations under the Apache Lic
             this.search.on("keyup", this.bind(function (e) {
                 this.keydowns = 0;
                 this.resizeSearch();
+
+                if(e.keyCode == KEY.ESC && !this.opened()) {
+                    this.clearSearch();
+                }
             })
             );
 

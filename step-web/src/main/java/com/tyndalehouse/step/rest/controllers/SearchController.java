@@ -151,7 +151,7 @@ public class SearchController {
     private void addDefaultSuggestions(final String input, final List<AutoSuggestion> autoSuggestions, final String limitType, final String referenceBookContext, final boolean exampleData) {
         SuggestionContext context = new SuggestionContext();
         context.setMasterBook(referenceBookContext);
-        context.setInput(input);
+        context.setInput(StringUtils.trim(input));
         context.setSearchType(limitType);
         context.setExampleData(exampleData);
 

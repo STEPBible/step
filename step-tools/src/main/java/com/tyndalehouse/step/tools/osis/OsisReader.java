@@ -7,6 +7,11 @@ import java.util.List;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.BookData;
 import org.crosswire.jsword.book.Books;
+import org.crosswire.jsword.book.basic.AbstractPassageBook;
+import org.crosswire.jsword.book.sword.ConfigEntryType;
+import org.crosswire.jsword.book.sword.SwordBookMetaData;
+import org.crosswire.jsword.passage.Passage;
+import org.crosswire.jsword.passage.VerseKey;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.input.JDOMParseException;
@@ -38,10 +43,12 @@ public class OsisReader {
      */
     public static void main(final String[] args) throws Exception {
         final String version = "ESV";
-        final String ref = "Song.4.16";
+        final String ref = "Gen.1";
         boolean format = false;
 
         final Book currentBook = Books.installed().getBook(version);
+        LOGGER.debug("{}", currentBook.getBookMetaData().getScope());
+
 
         final BookData bookData = new BookData(currentBook, currentBook.getKey(ref));
         final Element osisFragment = bookData.getOsisFragment();
@@ -72,6 +79,12 @@ public class OsisReader {
         }
         
         LOGGER.debug("Double whitespace: {}", osisText.contains("  "));
+
+
+        LOGGER.debug("AAI name is: {}", Books.installed().getBook("AAI").getName());
+
+
+
     }
 
 }

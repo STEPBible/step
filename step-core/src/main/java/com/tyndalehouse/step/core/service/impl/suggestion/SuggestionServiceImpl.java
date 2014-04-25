@@ -75,7 +75,6 @@ public class SuggestionServiceImpl implements SuggestionService {
 
     @Override
     public SuggestionsSummary getTopSuggestions(final SuggestionContext context) {
-//        final String term = context.getInput();
         final SuggestionsSummary summary = new SuggestionsSummary();
         final Map<String, SingleSuggestionsSummary> results = new LinkedHashMap<String, SingleSuggestionsSummary>();
 

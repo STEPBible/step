@@ -7,7 +7,9 @@ import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
 import com.tyndalehouse.step.core.utils.StringUtils;
 import org.crosswire.jsword.book.Book;
+import org.crosswire.jsword.book.basic.AbstractPassageBook;
 import org.crosswire.jsword.passage.Key;
+import org.crosswire.jsword.passage.KeyUtil;
 import org.crosswire.jsword.passage.NoSuchKeyException;
 import org.crosswire.jsword.passage.Verse;
 import org.crosswire.jsword.passage.VerseKey;
@@ -51,6 +53,11 @@ public class ReferenceSuggestionServiceImpl extends AbstractIgnoreMergedListSugg
         try {
             Key k = master.getKey(context.getInput());
             if (k != null) {
+                // check this book actually contains this key, based on the scope...
+                if (!containsAny(master, k)) {
+                    return new BookName[0];
+                }
+
                 BookName bk;
                 if (k instanceof VerseKey) {
                     final VerseKey verseKey = (VerseKey) k;
@@ -72,22 +79,58 @@ public class ReferenceSuggestionServiceImpl extends AbstractIgnoreMergedListSugg
         return new BookName[0];
     }
 
+    /**
+     * Checks for the presence of the book first. If the book is present, then continues to check that at least 1 verse
+     * in the scope is present. If it is, then returns true immediately.
+     * <p/>
+     * If it isn't, the continues through all the keys in the key( this could be a lot, but the assumption is that if the book
+     * exists, then it's unlikely to have just the last chapter?
+     *
+     * @param master the master book
+     * @param k      the key to be tested
+     * @return true if the key is present in the master book
+     */
+    private boolean containsAny(Book master, Key k) {
+        if(!(master instanceof AbstractPassageBook)) {
+            return master.contains(k);
+        }
+
+        final Set<BibleBook> books = ((AbstractPassageBook) master).getBibleBooks();
+        final Verse firstVerse = KeyUtil.getVerse(k);
+        if(!books.contains(firstVerse.getBook())) {
+            //the books of the module do not contain the book referred to by the verse
+            return false;
+        }
+
+        //we're still here, so the books do exist
+        //so let's now examine the keys one by one
+        Iterator<Key> keys = k.iterator();
+        while(keys.hasNext()) {
+            if(master.contains(keys.next())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
 
     @Override
     public BookName[] collectNonExactMatches(final TermsAndMaxCount<BookName> collector,
                                              final SuggestionContext context, final BookName[] alreadyRetrieved,
                                              final int leftToCollect) {
-        if(context.isExampleData()) {
+        if (context.isExampleData()) {
             return this.getSampleData(context);
         }
-        
+
         //we've already attempted to parse the whole key, so left to do here, is to iterate through the books
         //and match against those names that make sense.
         final List<BookName> books = new ArrayList<BookName>();
         final String masterBook = getDefaultedVersion(context);
-        final Versification masterV11n = this.versificationService.getVersificationForVersion(masterBook);
+        final Book master = this.versificationService.getBookFromVersion(masterBook);
+        final Versification masterV11n = this.versificationService.getVersificationForVersion(master);
         final String input = context.getInput().toLowerCase();
-        final Iterator<BibleBook> bookIterator = masterV11n.getBookIterator();
+        final Iterator<BibleBook> bookIterator = getBestIterator(master, masterV11n);
 
         addMatchingBooks(books, masterV11n, input, bookIterator);
 
@@ -116,6 +159,19 @@ public class ReferenceSuggestionServiceImpl extends AbstractIgnoreMergedListSugg
         return bookNames.toArray(new BookName[bookNames.size()]);
     }
 
+    /**
+     * @param master     the master book
+     * @param masterV11n the v11n of the book
+     * @return
+     */
+    private Iterator<BibleBook> getBestIterator(Book master, Versification masterV11n) {
+        if (master instanceof AbstractPassageBook) {
+            return ((AbstractPassageBook) master).getBibleBooks().iterator();
+        }
+
+        return masterV11n.getBookIterator();
+    }
+
     private void addMatchingBooks(final List<BookName> books, final Versification masterV11n, final String input, final Iterator<BibleBook> bookIterator) {
         while (bookIterator.hasNext()) {
             final BibleBook book = bookIterator.next();
@@ -129,6 +185,7 @@ public class ReferenceSuggestionServiceImpl extends AbstractIgnoreMergedListSugg
 
     /**
      * Returns all 66 books (or more) of the Bible.
+     *
      * @param context the context
      * @return the list of all book names
      */
@@ -140,9 +197,9 @@ public class ReferenceSuggestionServiceImpl extends AbstractIgnoreMergedListSugg
 
         while (bookIterator.hasNext()) {
             final BibleBook book = bookIterator.next();
-                addBookName(books, book, masterV11n);
+            addBookName(books, book, masterV11n);
         }
-        
+
         return books.toArray(new BookName[books.size()]);
     }
 
@@ -161,7 +218,7 @@ public class ReferenceSuggestionServiceImpl extends AbstractIgnoreMergedListSugg
         final String longChapNumber = String.format(BOOK_CHAPTER_FORMAT, versification.getLongName(bibleBook),
                 chapterNumber);
 
-        return new BookName(chapNumber, longChapNumber, BookName.Section.PASSAGE,false, null, true);
+        return new BookName(chapNumber, longChapNumber, BookName.Section.PASSAGE, false, null, true);
     }
 
     /**
@@ -221,7 +278,7 @@ public class ReferenceSuggestionServiceImpl extends AbstractIgnoreMergedListSugg
      */
     private BookName getBookFromBibleBook(final BibleBook bookName, final Versification versification) {
         BookName.Section section = DivisionName.BIBLE.contains(bookName) ? BookName.Section.BIBLE_BOOK : BookName.Section.APOCRYPHA;
-        
+
         return new BookName(versification.getShortName(bookName), versification
                 .getLongName(bookName), section, versification.getLastChapter(bookName) != 1, bookName, false);
     }

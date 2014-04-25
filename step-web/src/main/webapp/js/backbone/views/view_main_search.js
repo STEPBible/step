@@ -870,6 +870,7 @@ var MainSearchView = Backbone.View.extend({
         }
         this._setData(data);
         this._addTokenHandlers();
+        this._reEvaluateMasterVersion();
     },
     _handleKeyPressInSearch: function (ev) {
         if (ev.keyCode == 13) {

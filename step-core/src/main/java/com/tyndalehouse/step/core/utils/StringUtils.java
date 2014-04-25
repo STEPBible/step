@@ -256,4 +256,11 @@ public final class StringUtils {
         }
         return CLEAN_RESTRICTION.matcher(mainRange).replaceAll("");
     }
+
+    public static String trim(String input) {
+        if(StringUtils.isBlank(input)) {
+            return "";
+        }
+        return input.trim();
+    }
 }

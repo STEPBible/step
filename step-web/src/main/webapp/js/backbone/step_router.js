@@ -150,7 +150,7 @@ var StepRouter = Backbone.Router.extend({
         });
     },
     handleRenderModel: function (passageModel, partRendered, queryArgs) {
-        passageModel.save({ args: queryArgs }, {silent: true });
+        passageModel.save({ args: decodeURIComponent(queryArgs) }, {silent: true });
         
         //then trigger the refresh of menu options and such like
         passageModel.trigger("sync-update", passageModel);

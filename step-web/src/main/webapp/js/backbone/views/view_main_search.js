@@ -100,10 +100,11 @@ var MainSearchView = Backbone.View.extend({
                 quietMillis: KEY_PAUSE,
                 cache: true,
                 results: function (data, page) {
+                    var isExpanded = self._getSpecificContext(LIMIT) != null;
                     var term = $.data(view.masterSearch.select2("container"), "select2-last-term");
                     var datum = [];
                     for (var ii = 0; ii < data.length; ii++) {
-                        var itemAndText = view.convertResultTermToTypedOptions(data[ii], datum, term);
+                        var itemAndText = view.convertResultTermToTypedOptions(data[ii], datum, term, isExpanded);
 
                         datum.push({
                             text: itemAndText.text,
@@ -359,15 +360,22 @@ var MainSearchView = Backbone.View.extend({
 
         return {text: text, item: item.suggestion };
     },
-    convertResultToGroup: function (item, term) {
+    convertResultToGroup: function (item, term, isExpanded) {
         var returnedItem = item;
-        this.setGroupText(returnedItem, term);
 
-        return { text: returnedItem.text, item: returnedItem };
+        if(isExpanded) {
+            //we have reached the maximum allowed
+            item.text = sprintf(__s.too_many_options_to_show, item.count);
+            item.maxGroupReached = true;
+        } else {
+            this.setGroupText(returnedItem, term);
+        }
+
+        return { text: returnedItem.text, item: returnedItem } ;
     },
-    convertResultTermToTypedOptions: function (termSuggestion, datum, term) {
+    convertResultTermToTypedOptions: function (termSuggestion, datum, term, isExpanded) {
         if (termSuggestion.grouped) {
-            return this.convertResultToGroup(termSuggestion, term);
+            return this.convertResultToGroup(termSuggestion, term, isExpanded);
         }
 
         return this.convertResultTermToNormalOption(termSuggestion, datum);
@@ -690,14 +698,21 @@ var MainSearchView = Backbone.View.extend({
         var source = step.util.ui.getSource(v.itemType);
         var row;
 
+        if(v.item.maxGroupReached) {
+            return "<span class='maxSelected'>" + source + v.item.text + "</span>";
+        }
+
+
         if (v.item.grouped) {
             return "<span class='glyphicon glyphicon-chevron-down'></span> " + source + v.item.text;
         }
+
 
         if (v.item.exit) {
             //this is an exit instruction, so simply add something with the right icon
             return "<span class='glyphicon glyphicon-chevron-up'></span> " + __s.exit_dropdown;
         }
+
 
         switch (v.itemType) {
             case VERSION:

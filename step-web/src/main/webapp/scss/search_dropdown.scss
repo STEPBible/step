@@ -4,7 +4,11 @@
 
 .select2-results {
   @include multi-column(2);
-  
+
+  .maxSelected {
+    cursor: not-allowed;
+  }
+
   .initials {
     font-weight: bold;
   }

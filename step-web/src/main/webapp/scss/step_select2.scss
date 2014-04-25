@@ -6,7 +6,14 @@
   display: none !important;
 }
 
-@include verticalHeight(".select2-results");
+@include verticalHeight(".select2-drop-multi");
+.select2-drop-multi {
+  overflow-y: auto;
+}
+
+.select2-results {
+  max-height: none;
+}
 
 .select2-search-choice-close {
   left: auto !important;

@@ -1,4 +1,5 @@
 var ViewHistory = Backbone.View.extend({
+    MAX_HISTORY: 250,
     itemTemplate: _.template('<li class="list-group-item historyItem" data-item="<%= item.get("id") %>">' +
         '<a class="openBookmark" title="<%= __s.bookmarks_open %>"><span class="glyphicon glyphicon-open"></span></a>' +
         '<a class="starBookmark" data-favourite="<%= item.get("favourite")%>" title="<%= item.get("favourite") ? __s.passage_tools_delete_bookmark : __s.passage_tools_bookmark %>">' +
@@ -77,6 +78,17 @@ var ViewHistory = Backbone.View.extend({
         newItem.find(".openBookmark").click(function() {
             self.openBookmarkHandler(this);
         });
+
+        //count the number of bookmark items, and if too large, then get rid of them.
+        var bookmarks = this.$el.find(".historyItem").not(":has([data-favourite='true'])");
+        if(bookmarks.length > this.MAX_HISTORY) {
+            //only delete if they are not marked as favourite
+            var lastBookmark = bookmarks.last().data("item");
+            var bookmark = step.bookmarks.findWhere({ id: lastBookmark });
+            if(bookmark) {
+                this.removeItem(bookmark);
+            }
+        }
     },
     removeItem: function (model) {
         this._findByModel(model).remove();

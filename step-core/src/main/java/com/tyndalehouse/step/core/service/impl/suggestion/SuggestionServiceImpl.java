@@ -130,8 +130,6 @@ public class SuggestionServiceImpl implements SuggestionService {
                 LOGGER.warn("Dependencies setup is incorrect");
                 continue;
             }
-
-
             final int totalMinusGroupExamples = singleSuggestionsSummary.getPopularSuggestions().size();
             totalDocsRetrieved += (totalMinusGroupExamples > 0 ? totalMinusGroupExamples : 0);
         }

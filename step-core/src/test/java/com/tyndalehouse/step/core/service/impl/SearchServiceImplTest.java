@@ -101,7 +101,7 @@ public class SearchServiceImplTest {
         when(optionsValidationService.getAvailableFeaturesForVersion(any(String.class), any(List.class), any(String.class)))
                 .thenReturn(new AvailableFeatures());
 
-        when(module.isInstalled(any(String.class))).thenReturn(true);
+        when(module.isInstalled("ESV")).thenReturn(true);
         when(module.isIndexed(any(String.class))).thenReturn(true);
         when(meta.supportsFeature(any(String.class), any(LookupOption.class))).thenReturn(true);
 

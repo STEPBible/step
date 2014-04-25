@@ -36,6 +36,7 @@ import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
 import static com.tyndalehouse.step.core.utils.StringUtils.split;
 import static com.tyndalehouse.step.core.utils.ValidateUtils.notBlank;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -47,8 +48,15 @@ import java.util.TreeSet;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import com.tyndalehouse.step.core.models.search.SuggestionType;
+import com.tyndalehouse.step.core.service.jsword.JSwordSearchService;
+import com.tyndalehouse.step.core.service.jsword.helpers.JSwordStrongNumberHelper;
 import com.tyndalehouse.step.core.utils.SortingUtils;
+import com.tyndalehouse.step.core.utils.StringConversionUtils;
+import com.tyndalehouse.step.core.utils.StringUtils;
+import org.apache.lucene.index.Term;
+import org.apache.lucene.index.TermDocs;
+import org.apache.lucene.search.IndexSearcher;
+import org.crosswire.jsword.index.lucene.LuceneIndex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,7 +73,6 @@ import com.tyndalehouse.step.core.service.helpers.OriginalWordUtils;
  * defines all vocab related queries
  *
  * @author chrisburrell
- *
  */
 @Singleton
 public class VocabularyServiceImpl implements VocabularyService {
@@ -96,12 +103,14 @@ public class VocabularyServiceImpl implements VocabularyService {
             return l.get("accentedUnicode");
         }
     };
+    private final JSwordSearchService jSwordSearchService;
 
     /**
      * @param manager the entity manager
      */
     @Inject
-    public VocabularyServiceImpl(final EntityManager manager) {
+    public VocabularyServiceImpl(final EntityManager manager, final JSwordSearchService jSwordSearchService) {
+        this.jSwordSearchService = jSwordSearchService;
         this.definitions = manager.getReader("definition");
     }
 
@@ -114,12 +123,61 @@ public class VocabularyServiceImpl implements VocabularyService {
             final EntityDoc[] strongDefs = this.definitions.searchUniqueBySingleField("strongNumber",
                     strongList);
 
+
             final EntityDoc[] definitions = reOrder(strongList, strongDefs);
+            int[] counts = getTermCounts(definitions);
             final Map<String, List<LexiconSuggestion>> relatedWords = readRelatedWords(definitions);
-            return new VocabResponse(definitions, relatedWords);
+            return new VocabResponse(definitions, relatedWords, counts);
         }
 
         return new VocabResponse();
+    }
+
+    /**
+     * Gets term counts for each strong number
+     * @param definitions the definitions
+     * @return the counts, array indices match the input array.
+     */
+    private int[] getTermCounts(EntityDoc[] definitions) {
+        IndexSearcher ot = null;
+        IndexSearcher nt = null;
+        int[] counts = new int[definitions.length];
+
+        for (int i = 0; i < definitions.length; i++) {
+            EntityDoc doc = definitions[i];
+            String strongNumber = doc.get("strongNumber");
+
+            if (StringUtils.isNotBlank(strongNumber)) {
+                boolean isOT = strongNumber.startsWith("H");
+                final IndexSearcher is;
+                if (isOT) {
+                    if (ot == null) {
+                        ot = jSwordSearchService.getIndexSearcher(JSwordStrongNumberHelper.getPreferredCountBook(isOT).getInitials());
+                    }
+                    is = ot;
+                } else {
+                    if (nt == null) {
+                        nt = jSwordSearchService.getIndexSearcher(JSwordStrongNumberHelper.getPreferredCountBook(isOT).getInitials());
+                    }
+                    is = nt;
+                }
+
+                final TermDocs termDocs;
+                try {
+                    termDocs = is.getIndexReader().termDocs();
+                    termDocs.seek(new Term(LuceneIndex.FIELD_STRONG, strongNumber));
+
+                    while(termDocs.next()) {
+                        counts[i] += termDocs.freq();
+                    }
+
+                } catch (IOException e) {
+                    LOGGER.error("Unable to obtain counts.", e);
+                    //we continue, it's not the end of the world!
+                }
+            }
+        }
+        return counts;
     }
 
     /**
@@ -217,7 +275,8 @@ public class VocabularyServiceImpl implements VocabularyService {
         final String[] strongList = getKeys(vocabIdentifiers);
 
         if (strongList.length != 0) {
-            return new VocabResponse(this.definitions.searchUniqueBySingleField("strongNumber", strongList));
+            EntityDoc[] strongNumbers = this.definitions.searchUniqueBySingleField("strongNumber", strongList);
+            return new VocabResponse(strongNumbers, getTermCounts(strongNumbers));
         }
         return new VocabResponse();
     }
@@ -241,11 +300,11 @@ public class VocabularyServiceImpl implements VocabularyService {
      * gets data from the matched lexicon definitions
      *
      * @param vocabIdentifiers the identifiers
-     * @param provider the provider used to get data from it
+     * @param provider         the provider used to get data from it
      * @return the data in String form
      */
     private String getDataFromLexiconDefinition(final String vocabIdentifiers,
-            final LexiconDataProvider provider) {
+                                                final LexiconDataProvider provider) {
         final String[] keys = getKeys(vocabIdentifiers);
         if (keys.length == 0) {
             return "";
@@ -316,7 +375,7 @@ public class VocabularyServiceImpl implements VocabularyService {
      * Pads a strong number with the correct number of 0s
      *
      * @param strongNumber the strong number
-     * @param prefix true to indicate the strongNumber is preceded with strong:
+     * @param prefix       true to indicate the strongNumber is preceded with strong:
      * @return the padded strong number
      */
     public static String padStrongNumber(final String strongNumber, final boolean prefix) {

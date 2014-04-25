@@ -92,7 +92,7 @@ public class StringConversionUtilsTest {
         assertListIs(new String[]{"aggphab", "angphab", "angfab", "aggfab"},
                 adaptTransliterationForQuerying("aggphab", true));
 
-        assertListIs(new String[]{"a" },
+        assertListIs(new String[]{"aa" },
                 adaptTransliterationForQuerying("aa", true));
 
     }

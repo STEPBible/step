@@ -215,9 +215,9 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
 
                 all.addAll(convertedKey);
             }
+            LOGGER.debug("Combined result-set has [{}] entries", all.getCardinality());
         }
 
-        LOGGER.debug("Combined result-set has [{}] entries", all.getCardinality());
         return all;
     }
     @Override
@@ -402,7 +402,7 @@ public class JSwordSearchServiceImpl implements JSwordSearchService {
         }
 
         if (!(index instanceof LuceneIndex)) {
-            LOGGER.warn("Unsupport Lucene Index type [{}]", index.getClass());
+            LOGGER.warn("Unsupported Lucene Index type [{}]", index.getClass());
             throw new StepInternalException("Unable to obtain index");
         }
 

@@ -207,8 +207,11 @@ public class ModuleController {
             final boolean includeAllInfo) {
         final List<VocabInfo> morphologyInfos = new ArrayList<VocabInfo>(
                 vocabResponse.getDefinitions().length);
-        for (final EntityDoc d : vocabResponse.getDefinitions()) {
-            morphologyInfos.add(new VocabInfo(d, vocabResponse.getRelatedWords(), includeAllInfo));
+        EntityDoc[] definitions = vocabResponse.getDefinitions();
+        int[] counts = vocabResponse.getCounts();
+        for (int i = 0; i < definitions.length; i++) {
+            EntityDoc d = definitions[i];
+            morphologyInfos.add(new VocabInfo(d, vocabResponse.getRelatedWords(), counts[i], includeAllInfo));
         }
         return morphologyInfos;
     }

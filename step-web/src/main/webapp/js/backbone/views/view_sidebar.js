@@ -111,15 +111,17 @@ var SidebarView = Backbone.View.extend({
         if (data.vocabInfos.length > 1) {
             //multiple entries
             var panelGroup = $('<div class="panel-group" id="collapsedLexicon"></div>');
+            var openDef = _.min(data.vocabInfos, function(def){ return def.count;  });
             for (var i = 0; i < data.vocabInfos.length; i++) {
                 var item = data.vocabInfos[i];
                 var hebrew = data.vocabInfos[i].strongNumber == 'H';
                 var panelId = "lexicon-" + data.vocabInfos[i].strongNumber;
                 var panelTitle = item.stepGloss + " (" + item.stepTransliteration + " - " + '<span class="' + (hebrew ? 'hbFontSmall' : 'unicodeFont') + '">' + item.accentedUnicode + "</span>)";
                 var panelContentContainer = $('<div class="panel-collapse collapse">').attr("id", panelId);
-                var panelBody = panelContentContainer.append($('<div class="panel-body"></div>'));
+                var panelBody = $('<div class="panel-body"></div>');
                 panelContentContainer.append(panelBody);
-                if (i == data.vocabInfos.length - 1) {
+
+                if (openDef == data.vocabInfos[i]) {
                     panelContentContainer.addClass("in");
                 }
 
@@ -150,12 +152,12 @@ var SidebarView = Backbone.View.extend({
                 .append($(" <span>").append(" (" + mainWord.strongNumber + ")").addClass("strongNumberTagLine"))
         );
 
-        panel
+        panel.append("<br />")
             .append($("<a></a>").attr("href", "javascript:void(0)").data("strongNumber", mainWord.strongNumber).append(__s.lexicon_search_for_this_word).click(function () {
                 var args = "strong=" + encodeURIComponent($(this).data("strongNumber"));
                 step.util.activePassage().save({ filter: ""});
                 step.router.navigatePreserveVersions(args);
-            })).append('<br />');
+            })).append('<span class="strongCount"> (' + sprintf(__s.stats_occurs, mainWord.count) + ')</span>').append('<br />');
             
 
         // append the meanings

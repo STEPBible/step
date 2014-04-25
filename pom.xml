@@ -50,8 +50,8 @@
         <commons-collections.version>3.2.1</commons-collections.version>
         <commons-io.version>2.5</commons-io.version>
         <commons-configuration.version>1.8</commons-configuration.version>
-        <commons-httpclient.version>3.1</commons-httpclient.version>
-        <httpcomponents-httpclient.version>4.2.3</httpcomponents-httpclient.version>
+        <commons-httpclient.version>4.3.2</commons-httpclient.version>
+        <httpcomponents-httpclient.version>4.3.2</httpcomponents-httpclient.version>
 
         <!-- testing dependencies -->
         <mockito.version>1.9.5</mockito.version>

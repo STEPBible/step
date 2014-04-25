@@ -141,7 +141,7 @@ public class JSwordStrongNumberHelper {
             this.verseStrongs = new TreeMap<String, SortedSet<LexiconSuggestion>>();
             this.allStrongs = new HashMap<String, BookAndBibleCount>(256);
 
-            final List<Element> elements = JSwordUtils.getOsisElements(new BookData(isOT ? STRONG_OT_VERSION_BOOK : STRONG_NT_VERSION_BOOK, key));
+            final List<Element> elements = JSwordUtils.getOsisElements(new BookData(getPreferredCountBook(this.isOT), key));
             for (final Element e : elements) {
                 readDataFromLexicon(this.definitions, e.getAttributeValue(OSISUtil.OSIS_ATTR_OSISID),
                         OSISUtil.getStrongsNumbers(e));
@@ -154,6 +154,14 @@ public class JSwordStrongNumberHelper {
         } catch (final BookException ex) {
             LOG.warn("Unable to enhance verse number", ex);
         }
+    }
+
+    /**
+     * @param isOT true to indicate OT
+     * @return the book that shoudd be read for obtaining strong number counts
+     */
+    public static Book getPreferredCountBook(boolean isOT) {
+        return isOT ? STRONG_OT_VERSION_BOOK : STRONG_NT_VERSION_BOOK;
     }
 
     /**

@@ -63,6 +63,7 @@ public class VocabInfo implements Serializable {
     private String unaccentedStepTransliteration;
     private String twoLetterLookup;
     private String rawRelatedNumbers;
+    private Integer count;
 
     /**
      * for serialisation
@@ -79,11 +80,16 @@ public class VocabInfo implements Serializable {
      * @param includeAllInfo true to include all information
      */
     public VocabInfo(final EntityDoc d, final Map<String, List<LexiconSuggestion>> relatedVocabs,
+                     int count,
             final boolean includeAllInfo) {
         this.accentedUnicode = d.get("accentedUnicode");
         this.shortDef = d.get("shortDefinition");
         this.stepGloss = d.get("stepGloss");
         this.stepTransliteration = d.get("stepTransliteration");
+
+        if(count >= 0) {
+            this.count = count;
+        }
 
         if (includeAllInfo) {
             this.lsjDefs = d.get("lsjDefinition");
@@ -321,5 +327,12 @@ public class VocabInfo implements Serializable {
      */
     public void setRawRelatedNumbers(final String rawRelatedNumbers) {
         this.rawRelatedNumbers = rawRelatedNumbers;
+    }
+
+    /**
+     * @return The number of occurences of a particular strong number
+     */
+    public Integer getCount() {
+        return count;
     }
 }

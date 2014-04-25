@@ -44,24 +44,27 @@ import com.tyndalehouse.step.core.data.EntityDoc;
 public class VocabResponse {
     private EntityDoc[] definitions;
     private Map<String, List<LexiconSuggestion>> relatedWords;
+    private int[] counts;
 
     /**
      * Instantiates a new vocab response.
-     * 
-     * @param definitions the definitions
+     *  @param definitions the definitions
      * @param relatedWords the related words
+     * @param counts the counts for each definition
      */
     public VocabResponse(final EntityDoc[] definitions,
-            final Map<String, List<LexiconSuggestion>> relatedWords) {
+                         final Map<String, List<LexiconSuggestion>> relatedWords,
+                         int[] counts) {
         this.definitions = definitions;
         this.relatedWords = relatedWords;
+        this.counts = counts;
     }
 
     /**
      * Instantiates a new vocab response, all empty
      */
     public VocabResponse() {
-        this(new EntityDoc[0]);
+        this(new EntityDoc[0], new int[0]);
     }
 
     /**
@@ -69,8 +72,8 @@ public class VocabResponse {
      * 
      * @param definitions the definitions
      */
-    public VocabResponse(final EntityDoc[] definitions) {
-        this(definitions, new HashMap<String, List<LexiconSuggestion>>());
+    public VocabResponse(final EntityDoc[] definitions, final int[] counts) {
+        this(definitions, new HashMap<String, List<LexiconSuggestion>>(), counts);
     }
 
     /**
@@ -99,5 +102,13 @@ public class VocabResponse {
      */
     public void setRelatedWords(final Map<String, List<LexiconSuggestion>> relatedWords) {
         this.relatedWords = relatedWords;
+    }
+
+    /**
+     * The counts associated with each definition
+     * @return the counts
+     */
+    public int[] getCounts() {
+        return counts;
     }
 }

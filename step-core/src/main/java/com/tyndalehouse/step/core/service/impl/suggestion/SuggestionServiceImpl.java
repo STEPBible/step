@@ -2,6 +2,7 @@ package com.tyndalehouse.step.core.service.impl.suggestion;
 
 import com.tyndalehouse.step.core.data.common.TermsAndMaxCount;
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
+import com.tyndalehouse.step.core.models.BookName;
 import com.tyndalehouse.step.core.models.SearchToken;
 import com.tyndalehouse.step.core.models.SingleSuggestionsSummary;
 import com.tyndalehouse.step.core.models.SuggestionsSummary;
@@ -10,6 +11,7 @@ import com.tyndalehouse.step.core.service.SingleTypeSuggestionService;
 import com.tyndalehouse.step.core.service.SuggestionService;
 import com.tyndalehouse.step.core.service.helpers.SuggestionContext;
 import org.apache.lucene.search.TopFieldCollector;
+import org.crosswire.jsword.versification.BibleBook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -187,7 +189,8 @@ public class SuggestionServiceImpl implements SuggestionService {
         //set popular suggestions
         List<PopularSuggestion> keepSuggestions = new ArrayList<PopularSuggestion>(3);
         int ii;
-        for (ii = 0; ii < keep && ii < suggestions.size(); ii++) {
+        final boolean isReferenceSuggestion = suggestions.size() > 0 && suggestions.get(0) instanceof BookName;
+        for (ii = 0; (ii < keep || isReferenceSuggestion) && ii < suggestions.size(); ii++) {
             keepSuggestions.add(suggestions.get(ii));
         }
         singleTypeSummary.setPopularSuggestions(keepSuggestions);

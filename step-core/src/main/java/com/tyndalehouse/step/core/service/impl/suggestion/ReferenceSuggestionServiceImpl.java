@@ -66,7 +66,7 @@ public class ReferenceSuggestionServiceImpl extends AbstractIgnoreMergedListSugg
                         final BibleBook book = ((Verse) verseKey.iterator().next()).getBook();
                         bk = getBookFromBibleBook(book, masterV11n);
                     } else {
-                        bk = new BookName(verseKey.getName(), verseKey.getName(), BookName.Section.PASSAGE, wholeBook);
+                        bk = new BookName(verseKey.getName(), verseKey.getName(), BookName.Section.PASSAGE, wholeBook, ((Verse) verseKey.iterator().next()).getBook());
                     }
                     return new BookName[]{bk};
                 } else {
@@ -117,6 +117,21 @@ public class ReferenceSuggestionServiceImpl extends AbstractIgnoreMergedListSugg
                         spaceLeft--;
                     }
                     collector.setTotalCount(lastChapter);
+                } else if(Character.isDigit(bn.getShortName().charAt(bn.getShortName().length() -1))) {
+                    String shortName = bn.getShortName();
+                    int lastPart = shortName.lastIndexOf(' ');
+                    if(lastPart != -1) {
+                        int chapter = Integer.parseInt(shortName.substring(lastPart + 1));
+                        //we'll add all the chapters that exist.
+                        int lastChapter = masterV11n.getLastChapter(bn.getBibleBook());
+                        for (int ii = chapter * 10; ii < lastChapter && ii < chapter * 10 + 10; ii++) {
+                            extras.add(addChapter(masterV11n, bn.getBibleBook(), ii));
+                        }
+
+                        for (int ii = chapter * 100; ii < lastChapter && chapter < chapter * 100 + 100 ; ii++) {
+                            extras.add(addChapter(masterV11n, bn.getBibleBook(), ii));
+                        }
+                    }
                 }
             }
             bookNames.addAll(extras);

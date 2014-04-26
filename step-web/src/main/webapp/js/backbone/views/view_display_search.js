@@ -214,11 +214,6 @@ var SearchDisplayView = DisplayView.extend({
     _highlightResults: function (results, query) {
         var highlightTerms = this._highlightingTerms(query);
 
-        if (highlightTerms == undefined || results == undefined) {
-            step.search.highlightTerms = [];
-            return;
-        }
-
         for (var i = 0; i < highlightTerms.length; i++) {
             if (!step.util.isBlank(highlightTerms[i])) {
                 var regex = new RegExp("\\b" + highlightTerms[i] + "\\b", "ig");
@@ -259,6 +254,7 @@ var SearchDisplayView = DisplayView.extend({
         termBase = termBase.replace(/ AND /g, " ");
         termBase = termBase.replace(/\+/g, " ");
         termBase = termBase.replace("+", "");
+        termBase = termBase.replace(/\*/ig, "[0-9a-zA-Z]*");
 
         var matches = termBase.match(/"[^"]*"/);
         if (matches) {
@@ -279,6 +275,7 @@ var SearchDisplayView = DisplayView.extend({
                 }
             }
         }
+
         return terms;
     },
 

@@ -80,6 +80,7 @@ public class IndividualSearch {
     private String mainRange;
     private String[] originalFilter;
     private SearchType searchType;
+    private String originalQuery;
 
     /**
      * Instantiates a single search to be executed.
@@ -96,9 +97,10 @@ public class IndividualSearch {
         this.originalFilter = filter;
         
         if(this.type == SearchType.SUBJECT_SIMPLE) {
+            this.originalQuery = query;
             this.query = (StringUtils.isNotBlank(this.mainRange) ? this.mainRange + " ": "") + LuceneIndex.FIELD_HEADING_STEM + ":" + QueryParser.escape(query);
         } else {
-            this.query = query;
+            this.originalQuery = this.query = query;
         }
     }
 
@@ -379,5 +381,12 @@ public class IndividualSearch {
      */
     public void setSearchType(SearchType searchType) {
         this.searchType = searchType;
+    }
+
+    /**
+     * @return The untampered query
+     */
+    public String getOriginalQuery() {
+        return originalQuery;
     }
 }

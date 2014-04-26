@@ -215,6 +215,7 @@ var SubjectDisplayView = SearchDisplayView.extend({
             var results = $(el).find(".results");
             results.empty().append(verses);
             self._addVerseClickHandlers(results);
+            self._highlightResults(results, self.model.get("query"));
             step.util.ui.addStrongHandlers(passageId, verses);
             step.util.ui.enhanceVerseNumbers(passageId, self.$el, self.model.get("masterVersion"));
         });

@@ -72,6 +72,7 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import static com.tyndalehouse.step.core.models.LookupOption.HEADINGS_ONLY;
 import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
@@ -87,6 +88,7 @@ public class SubjectSearchServiceImpl extends AbstractSubjectSearchServiceImpl i
     private static final String[] REF_VERSIONS = new String[]{JSwordPassageService.REFERENCE_BOOK, JSwordPassageService.SECONDARY_REFERENCE_BOOK};
     private static final Logger LOGGER = LoggerFactory.getLogger(SubjectSearchServiceImpl.class);
     public static final String NAVE_STORED_REFERENCES = "references";
+    public static final Pattern CLEAN_UP_HEADING_SEARCH = Pattern.compile("[a-zA-Z0-9]+:");
     private final EntityIndexReader naves;
     private final JSwordSearchService jswordSearch;
     private final JSwordMetadataService jSwordMetadataService;

@@ -132,7 +132,7 @@ public class SearchQuery {
 
         final StringBuilder sb = new StringBuilder();
         for (IndividualSearch individualSearch : this.searches) {
-            sb.append(individualSearch.getQuery());
+            sb.append(individualSearch.getOriginalQuery());
         }
         this.originalQuery = sb.toString();
     }

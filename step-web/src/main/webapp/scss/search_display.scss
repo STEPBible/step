@@ -4,6 +4,9 @@
   .notApplicable {
     color: grey !important;
     font-weight: normal;
+    clear: left;
+    display: block;
+
     em {
       font-weight: bold;
     }

@@ -30,7 +30,7 @@
  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
  * THE POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
-package com.tyndalehouse.step.core.service.impl;
+package com.tyndalehouse.step.core.service.search.impl;
 
 import com.tyndalehouse.step.core.data.EntityDoc;
 import com.tyndalehouse.step.core.data.EntityIndexReader;
@@ -65,12 +65,15 @@ import com.tyndalehouse.step.core.service.TimelineService;
 import com.tyndalehouse.step.core.service.helpers.GlossComparator;
 import com.tyndalehouse.step.core.service.helpers.OriginalSpellingComparator;
 import com.tyndalehouse.step.core.service.helpers.VersionResolver;
+import com.tyndalehouse.step.core.service.impl.AbortQueryException;
+import com.tyndalehouse.step.core.service.impl.IndividualSearch;
+import com.tyndalehouse.step.core.service.impl.SearchQuery;
+import com.tyndalehouse.step.core.service.impl.SearchType;
 import com.tyndalehouse.step.core.service.jsword.JSwordMetadataService;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import com.tyndalehouse.step.core.service.jsword.JSwordSearchService;
 import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
 import com.tyndalehouse.step.core.service.search.SubjectSearchService;
-import com.tyndalehouse.step.core.service.search.impl.OriginalWordSuggestionServiceImpl;
 import com.tyndalehouse.step.core.utils.StringConversionUtils;
 import com.tyndalehouse.step.core.utils.StringUtils;
 import com.tyndalehouse.step.core.utils.language.GreekUtils;
@@ -264,7 +267,7 @@ public class SearchServiceImpl implements SearchService {
                 return DEFAULT_NT_REFERENCE;
             }
             hasHebrew |= "he".equals(languageCode);
-            if(i == 0 && hasHebrew) {
+            if (i == 0 && hasHebrew) {
                 return DEFAULT_OT_REFERENCE;
             }
         }
@@ -852,11 +855,32 @@ public class SearchServiceImpl implements SearchService {
 
         final Key results = runJoiningSearches(sq);
 
-        // now retrieve the results, we need to retrieve results as per the last type of search run
-        // so first of all, we set the allKeys flag to false
-        sq.setAllKeys(false);
+        //if no results, then return immediates
+        if (results.isEmpty()) {
+            sq.setAllKeys(false);
+            return extractSearchResults(sq, results);
+        }
 
-        return extractSearchResults(sq, results);
+        //now if a subject search was first in the list, then we didn't run it.
+        //as a result, we run it now with the 'results' as the restriction
+        final IndividualSearch firstSearch = sq.getFirstSearch();
+        sq.setCurrentSearchAsFirstSearch();
+        switch (firstSearch.getType()) {
+            case SUBJECT_FULL:
+            case SUBJECT_RELATED:
+            case SUBJECT_EXTENDED:
+            case SUBJECT_SIMPLE:
+                String originalRange = firstSearch.getMainRange();
+                firstSearch.setMainRange(String.format("+[%s]", results.getOsisRef()));
+                final SearchResult search = this.subjects.search(sq);
+                firstSearch.setMainRange(originalRange);
+                return search;
+            default:
+                // now retrieve the results, we need to retrieve results as per the last type of search run
+                // so first of all, we set the allKeys flag to false
+                sq.setAllKeys(false);
+                return extractSearchResults(sq, results);
+        }
     }
 
     /**
@@ -889,37 +913,23 @@ public class SearchServiceImpl implements SearchService {
                 case EXACT_FORM:
                     results = intersect(results, getKeysFromOriginalText(sq));
                     break;
+                case SUBJECT_SIMPLE:
+                case SUBJECT_EXTENDED:
+                case SUBJECT_FULL:
+                case SUBJECT_RELATED:
+                    //the first subject search is always ignored, as we will favour the subject
+                    //display to the keys display.
+                    if (!sq.isFirstSearch()) {
+                        results = intersect(results, this.subjects.getKeys(sq));
+                    }
+                    break;
+
                 default:
                     throw new TranslatedException("refinement_not_supported", sq.getOriginalQuery(), sq
                             .getCurrentSearch().getType().getLanguageKey());
             }
         } while (sq.hasMoreSearches());
         return results;
-    }
-
-    /**
-     * Extracts the search results from a multi-joined search query
-     *
-     * @param sq      the search query
-     * @param results the results
-     * @return the search results ready to send back
-     */
-    private SearchResult extractSearchResults(final SearchQuery sq, final Key results) {
-        final IndividualSearch lastSearch = sq.getLastSearch();
-        switch (lastSearch.getType()) {
-            case TEXT:
-            case ORIGINAL_MEANING:
-            case EXACT_FORM:
-            case ORIGINAL_GREEK_FORMS:
-            case ORIGINAL_GREEK_RELATED:
-            case ORIGINAL_HEBREW_RELATED:
-            case ORIGINAL_HEBREW_FORMS:
-                return buildCombinedVerseBasedResults(sq, results);
-            default:
-                throw new TranslatedException("refinement_not_supported", sq.getOriginalQuery(), lastSearch
-                        .getType().getLanguageKey());
-
-        }
     }
 
     /**
@@ -957,6 +967,35 @@ public class SearchServiceImpl implements SearchService {
                 return runRelatedVerses(sq);
             default:
                 throw new TranslatedException("search_unknown");
+        }
+    }
+
+    /**
+     * Extracts the search results from a multi-joined search query
+     *
+     * @param sq      the search query
+     * @param results the results
+     * @return the search results ready to send back
+     */
+    private SearchResult extractSearchResults(final SearchQuery sq, final Key results) {
+        final IndividualSearch lastSearch = sq.getLastSearch();
+        switch (lastSearch.getType()) {
+            case TEXT:
+            case ORIGINAL_MEANING:
+            case EXACT_FORM:
+            case ORIGINAL_GREEK_FORMS:
+            case ORIGINAL_GREEK_RELATED:
+            case ORIGINAL_HEBREW_RELATED:
+            case ORIGINAL_HEBREW_FORMS:
+            case SUBJECT_EXTENDED:
+            case SUBJECT_RELATED:
+            case SUBJECT_SIMPLE:
+            case SUBJECT_FULL:
+                return buildCombinedVerseBasedResults(sq, results);
+            default:
+                throw new TranslatedException("refinement_not_supported", sq.getOriginalQuery(), lastSearch
+                        .getType().getLanguageKey());
+
         }
     }
 
@@ -1075,7 +1114,7 @@ public class SearchServiceImpl implements SearchService {
         // overwrite version with WHNU to do the search
         if (currentSearch.getType() == SearchType.EXACT_FORM) {
             currentSearch.setVersions(BASE_GREEK_VERSIONS);
-            currentSearch.setQuery(unaccent(currentSearch.getQuery(), sq));
+            currentSearch.setQuery(unaccent(currentSearch.getQuery(), sq), true);
         } else {
             currentSearch.setVersions(new String[]{BASE_HEBREW_VERSION});
         }
@@ -1166,7 +1205,7 @@ public class SearchServiceImpl implements SearchService {
             }
 
             final String textQuery = getQuerySyntaxForStrongs(strongs, sq);
-            sq.getCurrentSearch().setQuery(textQuery);
+            sq.getCurrentSearch().setQuery(textQuery, true);
             sq.setDefinitions(matchingMeanings);
 
             // return the strongs that the search will match
@@ -1208,7 +1247,7 @@ public class SearchServiceImpl implements SearchService {
         final String textQuery = getQuerySyntaxForStrongs(strongs, sq);
 
         // we can now change the individual search query, to the real text search
-        sq.getCurrentSearch().setQuery(textQuery);
+        sq.getCurrentSearch().setQuery(textQuery, true);
 
         // return the strongs that the search will match
         return strongs;
@@ -1241,12 +1280,7 @@ public class SearchServiceImpl implements SearchService {
         setUniqueConsideredDefinitions(sq, results, relatedResults);
 
         // append range to query
-        final String mainRange = sq.getCurrentSearch().getMainRange();
-        if (isNotBlank(mainRange)) {
-            fullQuery.insert(0, mainRange);
-        }
-
-        sq.getCurrentSearch().setQuery(fullQuery.toString().toLowerCase());
+        sq.getCurrentSearch().setQuery(fullQuery.toString().toLowerCase(), true);
         return filteredStrongs;
     }
 

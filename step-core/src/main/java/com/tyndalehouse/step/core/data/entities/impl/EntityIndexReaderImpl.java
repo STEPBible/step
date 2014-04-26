@@ -177,6 +177,7 @@ public class EntityIndexReaderImpl implements EntityIndexReader {
     public EntityDoc[] search(final String[] fields, final String query, final boolean useOrOperator) {
         return search(fields, query, null, null, false, null, null, useOrOperator);
     }
+
     @Override
     public EntityDoc[] search(String[] fields, String query, boolean useOrOperator, Sort sort) {
         return search(fields, query, null, sort, false, null, null, useOrOperator);
@@ -254,7 +255,7 @@ public class EntityIndexReaderImpl implements EntityIndexReader {
             hits.getTerms().addAll(termsByField.getTerms());
             hits.setTotalCount(hits.getTotalCount() + termsByField.getTotalCount());
         }
-        
+
         //total count, is count - the existing ters
         hits.setTotalCount(hits.getTotalCount() - hits.getTerms().size());
         return hits;
@@ -461,6 +462,21 @@ public class EntityIndexReaderImpl implements EntityIndexReader {
         } catch (IOException e) {
             throw new StepInternalException(e.getMessage(), e);
         }
+    }
+
+    @Override
+    public QueryParser getQueryParser(final boolean analyzePrefix, final boolean useOrOperatorBetweenValues, final String... defaultFields) {
+        QueryParser parser;
+        if (analyzePrefix) {
+            parser = new AnalyzedPrefixSearchQueryParser(LUCENE_30, defaultFields,
+                    this.config.getAnalyzerInstance());
+        } else if (defaultFields.length == 1) {
+            parser = new QueryParser(LUCENE_30, defaultFields[0], this.config.getAnalyzerInstance());
+        } else {
+            parser = new MultiFieldQueryParser(LUCENE_30, defaultFields, this.config.getAnalyzerInstance());
+        }
+        parser.setDefaultOperator(useOrOperatorBetweenValues ? Operator.OR : Operator.AND);
+        return parser;
     }
 
     /**

@@ -1,4 +1,4 @@
-package com.tyndalehouse.step.core.service.impl;
+package com.tyndalehouse.step.core.service.search.impl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -12,6 +12,9 @@ import java.util.List;
 import com.tyndalehouse.step.core.models.AvailableFeatures;
 import com.tyndalehouse.step.core.models.LookupOption;
 import com.tyndalehouse.step.core.service.PassageOptionsValidationService;
+import com.tyndalehouse.step.core.service.impl.LexiconDefinitionServiceImpl;
+import com.tyndalehouse.step.core.service.impl.SearchQuery;
+import com.tyndalehouse.step.core.service.impl.TimelineServiceImpl;
 import com.tyndalehouse.step.core.service.jsword.JSwordMetadataService;
 import com.tyndalehouse.step.core.service.jsword.JSwordModuleService;
 import org.junit.Before;
@@ -29,7 +32,6 @@ import com.tyndalehouse.step.core.service.helpers.VersionResolver;
 import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
 import com.tyndalehouse.step.core.service.jsword.impl.JSwordPassageServiceImpl;
 import com.tyndalehouse.step.core.service.jsword.impl.JSwordSearchServiceImpl;
-import com.tyndalehouse.step.core.service.search.impl.SubjectSearchServiceImpl;
 import com.tyndalehouse.step.core.utils.TestUtils;
 
 /**
@@ -41,10 +43,13 @@ import com.tyndalehouse.step.core.utils.TestUtils;
 public class SearchServiceImplTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(SearchServiceImplTest.class);
     private TestEntityManager entityManager;
+    private SubjectSearchServiceImpl subjects;
+    private SearchServiceImpl searchServiceUnderTest;
 
     @Before
     public void setUp() {
         entityManager = new TestEntityManager();
+        searchServiceUnderTest = getSearchServiceUnderTest();
     }
 
     /**
@@ -52,7 +57,7 @@ public class SearchServiceImplTest {
      */
     @Test
     public void testMultiVersionSearch() {
-        final List<SearchEntry> results = getSearchServiceUnderTest().search(
+        final List<SearchEntry> results = this.searchServiceUnderTest.search(
                 new SearchQuery("t=elijah", new String[] {"ESV", "KJV","ASV"}, "false", 0, 1, 1)).getResults();
         assertFalse(results.isEmpty());
     }
@@ -61,8 +66,8 @@ public class SearchServiceImplTest {
     @Test
     public void testSubjectSearch() {
 
-        final SearchResult searchSubject = getSearchServiceUnderTest().search(
-                new SearchQuery("s=elijah", new String[] {"ESV"}, "false", 0, 1, 1));
+        final SearchResult searchSubject = this.searchServiceUnderTest.search(
+                new SearchQuery("s=elijah", new String[]{"ESV"}, "false", 0, 1, 1));
 
         final List<SearchEntry> entries = ((SubjectHeadingSearchEntry) searchSubject.getResults().get(0))
                 .getHeadingsSearch().getResults();
@@ -73,13 +78,23 @@ public class SearchServiceImplTest {
         assertTrue(searchSubject.getResults().size() > 0);
     }
 
+    @Test
+    public void testExpandingToLucene() {
+        assertEquals("+(expandedReferences:Matt.*)", this.subjects.getInputReferenceForNaveSearch("ESV", "Mat"));
+        assertEquals("+(expandedReferences:Matt.1.*)", this.subjects.getInputReferenceForNaveSearch("ESV", "Mat 1"));
+        assertEquals("+(expandedReferences:Matt.1.1)", this.subjects.getInputReferenceForNaveSearch("ESV", "Mat 1:1"));
+        assertEquals("+(expandedReferences:Matt.1.2 expandedReferences:Matt.1.3)", this.subjects.getInputReferenceForNaveSearch("ESV", "Mat 1:2-3"));
+        assertEquals("+(expandedReferences:Obad.*)", this.subjects.getInputReferenceForNaveSearch("ESV", "Obadiah"));
+        assertEquals("+(expandedReferences:Obad.1.2)", this.subjects.getInputReferenceForNaveSearch("ESV", "Obadiah 2"));
+    }
+
     /** test exact strong match */
     @Test
     public void testSearchTimelineDescription() {
         TestUtils.createEntities("timelineEvent", "name", "Golden Calf episode");
 
         // write test event to db
-        final SearchResult result = getSearchServiceUnderTest().search(
+        final SearchResult result = this.searchServiceUnderTest.search(
                 new SearchQuery("d=calf",new String[] {"ESV"}, "false", 0, 1, 10));
         final TimelineEventSearchEntry timelineEventSearchEntry = (TimelineEventSearchEntry) result
                 .getResults().get(0);
@@ -106,8 +121,9 @@ public class SearchServiceImplTest {
         when(meta.supportsFeature(any(String.class), any(LookupOption.class))).thenReturn(true);
 
         final JSwordSearchServiceImpl jswordSearch = new JSwordSearchServiceImpl(versificationService, null, jsword);
-        return new SearchServiceImpl(jswordSearch, meta, versificationService, new SubjectSearchServiceImpl(entityManager,
-                jswordSearch, jsword, meta, module), new TimelineServiceImpl(entityManager, jsword), null, entityManager, TestUtils.mockVersionResolver(),
+        subjects = new SubjectSearchServiceImpl(entityManager,
+                jswordSearch, jsword, meta, module, versificationService);
+        return new SearchServiceImpl(jswordSearch, meta, versificationService, subjects, new TimelineServiceImpl(entityManager, jsword), null, entityManager, TestUtils.mockVersionResolver(),
                 mock(LexiconDefinitionServiceImpl.class), null
         );
     }

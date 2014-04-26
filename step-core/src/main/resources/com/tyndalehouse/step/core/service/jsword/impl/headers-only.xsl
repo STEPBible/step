@@ -14,7 +14,37 @@
     <xsl:variable name="tracker" select="jsword:java.util.concurrent.atomic.AtomicBoolean.new()"/>
 
     <xsl:template match="/">
-        <xsl:apply-templates select="//row"/>
+        <xsl:choose>
+            <xsl:when test="//row"><xsl:apply-templates select="//row"/></xsl:when>
+            <xsl:otherwise>
+                <xsl:for-each select="//verse">
+                    <xsl:variable name="titleInCell"
+                                  select="(.//title[not(starts-with(@type, 'x-'))])[1]"/>
+                    <xsl:variable name="previousTitle"
+                                  select="(./preceding-sibling::title[not(starts-with(@type, 'x-'))])[1]"/>
+
+                    <xsl:choose>
+                        <xsl:when test="$titleInCell">
+                            <span>
+                                <xsl:apply-templates select="."/>
+                            </span>
+                            <span class="subjectHeading">
+                                <xsl:apply-templates select="$titleInCell"/>
+                            </span>
+                    </xsl:when>
+                        <xsl:otherwise>
+                            <span>
+                                <xsl:apply-templates select="."/>
+                            </span>
+                            <span class="subjectHeading">
+                                <xsl:apply-templates select="$previousTitle"/>
+                            </span>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </xsl:for-each>
+            </xsl:otherwise>
+        </xsl:choose>
+
     </xsl:template>
 
 

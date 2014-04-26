@@ -1149,8 +1149,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
                                                            final List<LookupOption> options,
                                                            final String interlinearVersion, final BookData bookData, final SAXEventProvider osissep,
                                                            final InterlinearMode displayMode) throws TransformerException {
-        final XslConversionType requiredTransformation = identifyStyleSheet(bookData.getFirstBook()
-                .getBookCategory(), options, displayMode);
+        final XslConversionType requiredTransformation = identifyStyleSheet(options, displayMode);
 
         return (TransformingSAXEventProvider) new Converter() {
             @Override
@@ -1181,13 +1180,11 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
      * triggers anything but the default, then we return that. returns the stylesheet that should be used to
      * generate the text
      *
-     * @param bookCategory the category of the book
      * @param options      the list of options that are currently applied to the passage
      * @param displayMode  the display mode with wich to display the style sheet
      * @return the stylesheet (of stylesheets)
      */
-    private XslConversionType identifyStyleSheet(final BookCategory bookCategory,
-                                                 final List<LookupOption> options, final InterlinearMode displayMode) {
+    private XslConversionType identifyStyleSheet(final List<LookupOption> options, final InterlinearMode displayMode) {
         // for interlinears, we automatically add that option
         if (displayMode == InterlinearMode.INTERLINEAR) {
             options.add(LookupOption.INTERLINEAR);

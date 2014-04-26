@@ -190,6 +190,8 @@ var MainSearchView = Backbone.View.extend({
             if (values.length == 0) {
                 return;
             }
+
+            self.masterSearch.select2("container").find("input").val("");
         }).on("select2-opening", function (event) {
             //remove any context that has references
             if (!self.ignoreOpeningEvent) {

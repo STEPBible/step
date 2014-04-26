@@ -315,4 +315,14 @@ public interface EntityIndexReader extends Closeable {
      * @param filter    the filter to search with
      */
     EntityDoc[] search(BooleanQuery query, Filter filter, TopFieldCollector collector);
+
+    /**
+     * Returns a query parser using the right analyzer.
+     *
+     * @param analyzePrefix              the prefix analyser
+     * @param useOrOperatorBetweenValues uses the OR operator
+     * @param defaultFields              the default fields
+     * @return the query parser
+     */
+    QueryParser getQueryParser(boolean analyzePrefix, boolean useOrOperatorBetweenValues, String... defaultFields);
 }

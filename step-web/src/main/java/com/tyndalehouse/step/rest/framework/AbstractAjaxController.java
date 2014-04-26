@@ -180,6 +180,7 @@ public abstract class AbstractAjaxController extends HttpServlet {
 
         if (e instanceof TranslatedException) {
             final TranslatedException translatedException = (TranslatedException) e;
+            LOGGER.debug(e.getMessage(), e);
             return format(bundle.getString(translatedException.getMessage()), translatedException.getArgs());
         }
 

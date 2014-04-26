@@ -36,6 +36,7 @@ import com.tyndalehouse.step.core.models.search.SearchResult;
 import com.tyndalehouse.step.core.models.search.SubjectSuggestion;
 import com.tyndalehouse.step.core.service.impl.SearchQuery;
 import com.tyndalehouse.step.core.service.impl.SearchType;
+import org.crosswire.jsword.passage.Key;
 
 import java.util.List;
 
@@ -55,6 +56,13 @@ public interface SubjectSearchService {
     SearchResult search(SearchQuery sq);
 
     /**
+     * Returns the search keys for this search, i.e. not the topical/headings
+     * @param sq the search query to run
+     * @return the key
+     */
+    Key getKeys(SearchQuery sq);
+
+    /**
      * Search by a referenceQuerySyntax, or references if separated by a space.
      * 
      * @param referenceQuerySyntax the referenceQuerySyntax or a Lucene query syntax to be looked up in the expanded references fields
@@ -72,4 +80,6 @@ public interface SubjectSearchService {
      * @return the search result
      */
     SearchResult searchByMultipleReferences(String version, String references);
+
+
 }

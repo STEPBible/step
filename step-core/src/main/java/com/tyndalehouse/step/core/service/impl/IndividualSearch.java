@@ -40,6 +40,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.tyndalehouse.step.core.utils.StringUtils;
 import org.apache.lucene.queryParser.QueryParser;
 import org.crosswire.jsword.index.lucene.LuceneIndex;
 import org.slf4j.Logger;
@@ -53,7 +54,7 @@ import com.tyndalehouse.step.core.exceptions.TranslatedException;
  * @author chrisburrell
  */
 public class IndividualSearch {
-    public static final Pattern MAIN_RANGE = Pattern.compile("(\\+\\[[^\\]]+\\])");
+    public static final Pattern MAIN_RANGE = Pattern.compile("(\\+\\[([^\\]]+)\\])");
     private static final char RELATED_WORDS = '~';
     private static final char SIMILAR_FORMS = '*';
 
@@ -94,7 +95,7 @@ public class IndividualSearch {
         this.originalFilter = filter;
         
         if(this.type == SearchType.SUBJECT_SIMPLE) {
-            this.query = LuceneIndex.FIELD_HEADING_STEM + ":" + QueryParser.escape(query);
+            this.query = (StringUtils.isNotBlank(this.mainRange) ? this.mainRange + " ": "") + LuceneIndex.FIELD_HEADING_STEM + ":" + QueryParser.escape(query);
         } else {
             this.query = query;
         }
@@ -276,6 +277,11 @@ public class IndividualSearch {
                 if (i + 1 < keys.length) {
                     subjectQuery.append(" AND ");
                 }
+
+            }
+            if(StringUtils.isNotBlank(this.mainRange)) {
+                subjectQuery.append(' ');
+                subjectQuery.append(this.mainRange);
             }
 
             this.query = subjectQuery.toString();
@@ -312,6 +318,17 @@ public class IndividualSearch {
         this.query = query;
     }
 
+    public void setQuery(final String inputQuery, final boolean addRange) {
+        String query = inputQuery;
+        if(addRange) {
+            //remove the current range from the query first...
+            query = MAIN_RANGE.matcher(inputQuery).replaceAll("");
+        }
+
+        this.setQuery((addRange && StringUtils.isNotBlank(this.mainRange) ? this.mainRange + " " : "")  + query);
+    }
+
+
     /**
      * @return the amendedQuery
      */
@@ -331,6 +348,14 @@ public class IndividualSearch {
      */
     public String getMainRange() {
         return this.mainRange;
+    }
+
+    /**
+     * allows to set the main range
+     * @param mainRange the main range
+     */
+    public void setMainRange(String mainRange) {
+        this.mainRange = mainRange;
     }
 
     /**

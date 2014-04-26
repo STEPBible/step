@@ -32,11 +32,12 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.service.impl;
 
+import com.tyndalehouse.step.core.data.EntityDoc;
+import com.tyndalehouse.step.core.service.search.impl.SearchServiceImpl;
+import com.tyndalehouse.step.core.utils.StringUtils;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import com.tyndalehouse.step.core.data.EntityDoc;
-import com.tyndalehouse.step.core.utils.StringUtils;
 
 /**
  * Search query object. Defines all parameters required to execute a search
@@ -66,7 +67,7 @@ public class SearchQuery {
      * @param context     how many verses either side to include
      * @param pageNumber  the page number required
      */
-    public SearchQuery(final String searchQuery, final String[] versions, 
+    public SearchQuery(final String searchQuery, final String[] versions,
                        final String sortOrder, final int context,
                        final int pageNumber) {
         this(searchQuery, versions, sortOrder, context, pageNumber, PAGE_SIZE);
@@ -224,6 +225,20 @@ public class SearchQuery {
     }
 
     /**
+     * @return true if the current search is the last search
+     */
+    public IndividualSearch getFirstSearch() {
+        return this.searches[0];
+    }
+
+    /**
+     * @return true if the current search is the first search
+     */
+    public boolean isFirstSearch() {
+        return this.currentSearch == 0;
+    }
+
+    /**
      * @return the last search to be executed
      */
     public IndividualSearch getLastSearch() {
@@ -284,5 +299,9 @@ public class SearchQuery {
 
     public void setInterlinearMode(final String interlinearMode) {
         this.interlinearMode = interlinearMode;
+    }
+
+    public void setCurrentSearchAsFirstSearch() {
+        this.currentSearch = 0;
     }
 }

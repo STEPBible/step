@@ -57,6 +57,7 @@ import com.tyndalehouse.step.core.service.search.OriginalWordSuggestionService;
 import com.tyndalehouse.step.core.service.search.SubjectEntrySearchService;
 import com.tyndalehouse.step.core.service.search.SubjectSearchService;
 import com.tyndalehouse.step.core.service.search.impl.OriginalWordSuggestionServiceImpl;
+import com.tyndalehouse.step.core.service.search.impl.SearchServiceImpl;
 import com.tyndalehouse.step.core.service.search.impl.SubjectEntryServiceImpl;
 import com.tyndalehouse.step.core.service.search.impl.SubjectSearchServiceImpl;
 import com.tyndalehouse.step.core.utils.AbstractStepGuiceModule;

@@ -235,30 +235,65 @@ public final class StringUtils {
     public static String join(final String[] strings, final int startFrom) {
         StringBuilder sb = new StringBuilder();
         for (int ii = startFrom; ii < strings.length; ii++) {
-            if(ii > startFrom) {
+            if (ii > startFrom) {
                 sb.append(',');
             }
             sb.append(strings[ii]);
         }
         return sb.toString();
     }
-    
+
+    // Count matches - taken from commons-lang
+    //-----------------------------------------------------------------------
+
+    /**
+     * <p>Counts how many times the substring appears in the larger String.</p>
+     * <p/>
+     * <p>A <code>null</code> or empty ("") String input returns <code>0</code>.</p>
+     * <p/>
+     * <pre>
+     * StringUtils.countMatches(null, *)       = 0
+     * StringUtils.countMatches("", *)         = 0
+     * StringUtils.countMatches("abba", null)  = 0
+     * StringUtils.countMatches("abba", "")    = 0
+     * StringUtils.countMatches("abba", "a")   = 2
+     * StringUtils.countMatches("abba", "ab")  = 1
+     * StringUtils.countMatches("abba", "xxx") = 0
+     * </pre>
+     *
+     * @param str the String to check, may be null
+     * @param sub the substring to count, may be null
+     * @return the number of occurrences, 0 if either String is <code>null</code>
+     */
+    public static int countMatches(String str, String sub) {
+        if (isEmpty(str) || isEmpty(sub)) {
+            return 0;
+        }
+        int count = 0;
+        int idx = 0;
+        while ((idx = str.indexOf(sub, idx)) != -1) {
+            count++;
+            idx += sub.length();
+        }
+        return count;
+    }
+
     public static String getNonNullString(final String value, final String defaultValue) {
-        if(StringUtils.isBlank(value)) {
+        if (StringUtils.isBlank(value)) {
             return defaultValue;
         }
         return value;
     }
 
     public static String cleanJSwordRestriction(String mainRange) {
-        if(StringUtils.isBlank(mainRange)) {
+        if (StringUtils.isBlank(mainRange)) {
             return "";
         }
         return CLEAN_RESTRICTION.matcher(mainRange).replaceAll("");
     }
 
     public static String trim(String input) {
-        if(StringUtils.isBlank(input)) {
+        if (StringUtils.isBlank(input)) {
             return "";
         }
         return input.trim();

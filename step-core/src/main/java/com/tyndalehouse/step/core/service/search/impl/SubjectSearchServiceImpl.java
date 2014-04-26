@@ -56,14 +56,10 @@ import com.tyndalehouse.step.core.service.search.SubjectSearchService;
 import com.tyndalehouse.step.core.utils.StringUtils;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.queryParser.QueryParser;
-import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.SortField;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.passage.Key;
-import org.crosswire.jsword.passage.NoSuchKeyException;
-import org.crosswire.jsword.passage.Passage;
-import org.crosswire.jsword.versification.BibleBook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -76,7 +72,6 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.regex.Matcher;
 
 import static com.tyndalehouse.step.core.models.LookupOption.HEADINGS_ONLY;
 import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
@@ -87,38 +82,32 @@ import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
  * @author chrisburrell
  */
 @Singleton
-public class SubjectSearchServiceImpl implements SubjectSearchService {
-    private static final String NAVE_EXPANDED_REFS = "expandedReferences:";
+public class SubjectSearchServiceImpl extends AbstractSubjectSearchServiceImpl implements SubjectSearchService {
     private static final Sort NAVE_SORT = new Sort(new SortField("root", SortField.STRING_VAL), new SortField("fullHeader", SortField.STRING_VAL));
     private static final String[] REF_VERSIONS = new String[]{JSwordPassageService.REFERENCE_BOOK, JSwordPassageService.SECONDARY_REFERENCE_BOOK};
     private static final Logger LOGGER = LoggerFactory.getLogger(SubjectSearchServiceImpl.class);
     public static final String NAVE_STORED_REFERENCES = "references";
     private final EntityIndexReader naves;
     private final JSwordSearchService jswordSearch;
-    private final JSwordPassageService jswordPassage;
     private final JSwordMetadataService jSwordMetadataService;
     private final JSwordModuleService jSwordModuleService;
-    private final JSwordVersificationService jSwordVersificationService;
 
     /**
      * Instantiates a new subject search service impl.
      *
      * @param entityManager an entity manager providing access to all the different entities.
      * @param jswordSearch  the search service for text searching in jsword
-     * @param jswordPassage the jsword passage
      */
     @Inject
     public SubjectSearchServiceImpl(final EntityManager entityManager,
                                     final JSwordSearchService jswordSearch,
-                                    final JSwordPassageService jswordPassage,
                                     final JSwordMetadataService jSwordMetadataService,
                                     final JSwordModuleService jSwordModuleService,
                                     final JSwordVersificationService jSwordVersificationService) {
+        super(jSwordVersificationService);
         this.jswordSearch = jswordSearch;
-        this.jswordPassage = jswordPassage;
         this.jSwordMetadataService = jSwordMetadataService;
         this.jSwordModuleService = jSwordModuleService;
-        this.jSwordVersificationService = jSwordVersificationService;
         this.naves = entityManager.getReader("nave");
     }
 
@@ -160,119 +149,6 @@ public class SubjectSearchServiceImpl implements SubjectSearchService {
      */
     private EntityDoc[] getDocsByExpandedReferences(String referenceQuerySyntax) {
         return this.naves.searchSingleColumn("expandedReferences", referenceQuerySyntax, NAVE_SORT);
-    }
-
-
-    /**
-     * For searching against an index, it is not often the case that we want to expand the whole reference. This method
-     * gives us the shortest viable prefix useful for searching.
-     * <pre>
-     *     For whole books, we can search for Matt.
-     *     For chapters, we can search for Matt.1.
-     *     For everything else, we expand the reference to its full OSIS Id
-     * </pre>
-     *
-     * @param version   the master version
-     * @param mainRange the key we want to restrict by, in the form +[a-z]
-     * @return the shortest viable prefix in the form expandedReferences:Matt.11.1 expandedReferences:Mat.12.2
-     */
-    StringAndCount getInputReferenceForNaveSearch(final String version, final String mainRange) {
-        if (StringUtils.isBlank(mainRange)) {
-            return new StringAndCount("", 0);
-        }
-
-        //strip out any + and square brackets
-        Matcher matcher = IndividualSearch.MAIN_RANGE.matcher(mainRange);
-        final boolean hasReference = matcher.find();
-        if (!hasReference || matcher.groupCount() < 2) {
-            return new StringAndCount("", 0);
-        }
-
-        String key = matcher.group(2);
-        final Book master = this.jSwordVersificationService.getBookFromVersion(version);
-
-        final Key k;
-        try {
-            k = master.getKey(key);
-        } catch (NoSuchKeyException e) {
-            throw new TranslatedException(e, "invalid_reference", key);
-        }
-
-        //now work out what we're looking at
-        String keyOsisID = k.getOsisID();
-
-        boolean hasSpaces = keyOsisID.indexOf(' ') != -1;
-        int firstDot = keyOsisID.indexOf('.');
-        boolean hasDots = firstDot != -1;
-        if (!hasSpaces && !hasDots) {
-            //no spaces and no ., so has to be a whole book
-            return wrapRefForLucene(keyOsisID, true);
-        }
-
-        if (hasSpaces) {
-            //then we're looking at a list of things, so
-            return prefixWithNaveRefTerm(keyOsisID);
-        }
-
-        //so no spaces, but does have dots
-        //then we're looking at a single chapter - has to be. Because OSIS IDs for ranges gets expanded.
-        // Or at a single verse
-        int numDots = StringUtils.countMatches(keyOsisID, ".");
-        if (numDots > 1) {
-            //then definitely a verse, so return the exact osis id with no *
-            return wrapRefForLucene(keyOsisID, false);
-        }
-
-        //only 1 dot, so we're either looking at a chapter (Matt.1, or a verse Obad.1)
-        //otherwise, either looking at a chapter or a short book
-        String bookName = keyOsisID.substring(0, firstDot);
-        BibleBook bibleBook = BibleBook.fromExactOSIS(bookName);
-        if (bibleBook.isShortBook()) {
-            //then we're definitely looking at a verse
-            return wrapRefForLucene(keyOsisID, false);
-        }
-
-        //long book, so chapter ref
-        return wrapRefForLucene(keyOsisID, true);
-
-    }
-
-    /**
-     * Wraps around making this argument mandatory and prefixing the correct field
-     *
-     * @param keyOsisID the fragment to be wrapped
-     * @return the fragment in the form +(arg*)
-     */
-    private StringAndCount wrapRefForLucene(String keyOsisID, boolean prefix) {
-        return new StringAndCount(new StringBuilder().append("+(")
-                .append(NAVE_EXPANDED_REFS).append(keyOsisID)
-                .append(prefix ? ".*" : "")
-                .append(")").toString(), 1);
-    }
-
-    /**
-     * Splits the string and prefixes the nave expanded refs field
-     *
-     * @param keyOsisID the key to transform, in the form Matt.11.1 Matt.12.2
-     * @return the prefix in the form expandedReferences:Matt.11.1 expandedReferences:Mat.12.2
-     */
-    private StringAndCount prefixWithNaveRefTerm(String keyOsisID) {
-        final String[] parts = StringUtils.split(keyOsisID);
-        final StringBuilder sb = new StringBuilder(2 * keyOsisID.length());
-
-        int count = 0;
-        sb.append("+(");
-        for (int i = 0; i < parts.length; i++) {
-            count++;
-            String p = parts[i];
-            sb.append(NAVE_EXPANDED_REFS);
-            sb.append(p);
-            if (i + 1 < parts.length) {
-                sb.append(' ');
-            }
-        }
-        sb.append(")");
-        return new StringAndCount(sb.toString(), count);
     }
 
 
@@ -348,7 +224,7 @@ public class SubjectSearchServiceImpl implements SubjectSearchService {
             final Key key;
             try {
                 key = bookFromVersion.getKey(storedReferences);
-            } catch(Exception ex) {
+            } catch (Exception ex) {
                 throw new StepInternalException("Stored references are unparseable in nave module: " + storedReferences);
             }
 
@@ -515,7 +391,7 @@ public class SubjectSearchServiceImpl implements SubjectSearchService {
 
         try {
             return this.naves.search(this.naves.getQueryParser(false, true, "rootStem").parse(sb.toString()), Integer.MAX_VALUE, NAVE_SORT, null);
-        }catch(ParseException ex) {
+        } catch (ParseException ex) {
             throw new StepInternalException("Unable to parse generated query.");
         }
     }
@@ -526,7 +402,7 @@ public class SubjectSearchServiceImpl implements SubjectSearchService {
      * @param sq the search query
      * @return entity docs matching the extended nave search
      */
-    private EntityDoc[] getExtendedNaveDocs(SearchQuery sq)  {
+    private EntityDoc[] getExtendedNaveDocs(SearchQuery sq) {
         String queryBody = QueryParser.escape(sq.getCurrentSearch().getQuery());
 
 
@@ -542,7 +418,7 @@ public class SubjectSearchServiceImpl implements SubjectSearchService {
 
         try {
             return this.naves.search(this.naves.getQueryParser(false, true, "rootStem").parse(query.toString()), Integer.MAX_VALUE, NAVE_SORT, null);
-        }catch(ParseException ex) {
+        } catch (ParseException ex) {
             throw new StepInternalException("Unable to parse generated query.");
         }
     }

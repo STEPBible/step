@@ -257,7 +257,7 @@ public class SearchController {
     public AbstractComplexSearch masterSearch(final String items, final String options, final String display, final String pageNumber, final String filter, final String sort) {
         return this.masterSearch(items, options, display, pageNumber, filter, sort, null);
     }
-    
+
     /**
      * @param items      the list of all items
      * @param options    current display options
@@ -334,8 +334,8 @@ public class SearchController {
     /**
      * Obtains a list of suggestions to display to the user
      *
-     * @param greek   true, to indicate Greek
-     * @param form            the form input so far
+     * @param greek true, to indicate Greek
+     * @param form  the form input so far
      * @return a list of suggestions
      */
     @Timed(name = "exact-form-lookup", group = "languages", rateUnit = TimeUnit.SECONDS, durationUnit = TimeUnit.MILLISECONDS)
@@ -343,7 +343,7 @@ public class SearchController {
         notBlank(form, "Blank lexical prefix passed.", APP_MISSING_FIELD);
         return this.originalWordSuggestions.getExactForms(form, Boolean.parseBoolean(greek));
     }
-   
+
     /**
      * Replaces #plus# and #slash#
      *
@@ -364,7 +364,21 @@ public class SearchController {
      * @param version    to be looked up
      * @return the list of verses for this subject
      */
-    public List<OsisWrapper> getSubjectVerses(final String root, final String fullHeader, final String version) {
-        return this.subjectEntries.getSubjectVerses(root, fullHeader, version);
+    public List<OsisWrapper> getSubjectVerses(final String root, final String fullHeader,
+                                              final String version) {
+        return this.subjectEntries.getSubjectVerses(root, fullHeader, version, null);
+    }
+
+
+    /**
+     * @param root       the root word
+     * @param fullHeader the header
+     * @param version    to be looked up
+     * @param reference  the limiting reference
+     * @return the list of verses for this subject
+     */
+    public List<OsisWrapper> getSubjectVerses(final String root, final String fullHeader,
+                                              final String version, final String reference) {
+        return this.subjectEntries.getSubjectVerses(root, fullHeader, version, reference);
     }
 }

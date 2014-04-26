@@ -80,12 +80,14 @@ public class SearchServiceImplTest {
 
     @Test
     public void testExpandingToLucene() {
-        assertEquals("+(expandedReferences:Matt.*)", this.subjects.getInputReferenceForNaveSearch("ESV", "Mat"));
-        assertEquals("+(expandedReferences:Matt.1.*)", this.subjects.getInputReferenceForNaveSearch("ESV", "Mat 1"));
-        assertEquals("+(expandedReferences:Matt.1.1)", this.subjects.getInputReferenceForNaveSearch("ESV", "Mat 1:1"));
-        assertEquals("+(expandedReferences:Matt.1.2 expandedReferences:Matt.1.3)", this.subjects.getInputReferenceForNaveSearch("ESV", "Mat 1:2-3"));
-        assertEquals("+(expandedReferences:Obad.*)", this.subjects.getInputReferenceForNaveSearch("ESV", "Obadiah"));
-        assertEquals("+(expandedReferences:Obad.1.2)", this.subjects.getInputReferenceForNaveSearch("ESV", "Obadiah 2"));
+        assertEquals("+(expandedReferences:Matt.*)", this.subjects.getInputReferenceForNaveSearch("ESV", "Mat").getValue());
+        assertEquals("+(expandedReferences:Matt.1.*)", this.subjects.getInputReferenceForNaveSearch("ESV", "Mat 1").getValue());
+        assertEquals("+(expandedReferences:Matt.1.1)", this.subjects.getInputReferenceForNaveSearch("ESV", "Mat 1:1").getValue());
+        assertEquals("+(expandedReferences:Matt.1.2 expandedReferences:Matt.1.3)", this.subjects.getInputReferenceForNaveSearch("ESV", "Mat 1:2-3").getValue());
+        assertEquals("+(expandedReferences:Obad.*)", this.subjects.getInputReferenceForNaveSearch("ESV", "Obadiah").getValue());
+        assertEquals("+(expandedReferences:Obad.1.2)", this.subjects.getInputReferenceForNaveSearch("ESV", "Obadiah 2").getValue());
+        assertEquals("+(expandedReferences:Gen.* expandedReferences:Exod.* )", this.subjects.getInputReferenceForNaveSearch("ESV", "Gen-Exo").getValue());
+        assertEquals("+(expandedReferences:Gen.* expandedReferences:Exod.* expandedReferences:Lev.* expandedReferences:Mark.* )", this.subjects.getInputReferenceForNaveSearch("ESV", "Gen-Lev ; Mark").getValue());
     }
 
     /** test exact strong match */
@@ -122,7 +124,7 @@ public class SearchServiceImplTest {
 
         final JSwordSearchServiceImpl jswordSearch = new JSwordSearchServiceImpl(versificationService, null, jsword);
         subjects = new SubjectSearchServiceImpl(entityManager,
-                jswordSearch, jsword, meta, module, versificationService);
+                jswordSearch, meta, module, versificationService);
         return new SearchServiceImpl(jswordSearch, meta, versificationService, subjects, new TimelineServiceImpl(entityManager, jsword), null, entityManager, TestUtils.mockVersionResolver(),
                 mock(LexiconDefinitionServiceImpl.class), null
         );

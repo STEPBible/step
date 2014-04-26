@@ -659,7 +659,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
             }
         }
 
-        throw new TranslatedException(e, "invalid_reference", reference);
+        throw new TranslatedException(e, "invalid_reference_in_book", reference, currentBook.getInitials());
     }
 
     /**
@@ -1426,22 +1426,4 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
 
         return sb.toString();
     }
-
-    @Override
-    public Passage getVerseRanges(final String references, final String version) {
-        final Versification av11n = this.versificationService.getVersificationForVersion(version);
-        final PassageKeyFactory keyFactory = PassageKeyFactory.instance();
-
-        try {
-            final Key key = keyFactory.getKey(av11n, references);
-            if (key instanceof Passage) {
-                return (Passage) key;
-            }
-            throw new StepInternalException("Was not given a passage back - why?");
-
-        } catch (final NoSuchKeyException e) {
-            throw new LocalisedException(e, e.getMessage());
-        }
-    }
-
 }

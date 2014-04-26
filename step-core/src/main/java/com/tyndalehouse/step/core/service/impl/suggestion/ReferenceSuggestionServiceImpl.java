@@ -197,9 +197,16 @@ public class ReferenceSuggestionServiceImpl extends AbstractIgnoreMergedListSugg
             return false;
         }
 
-        Key firstKey = k.get(0);
-        Key lastKey = k.get(cardinality - 1);
-        return masterV11n.isStartOfBook(((Verse) firstKey)) && masterV11n.isEndOfBook(((Verse) lastKey));
+        Verse firstKey = (Verse) k.get(0);
+        final boolean startOfBook = masterV11n.isStartOfBook(((Verse) firstKey));
+        if(!startOfBook) {
+            return false;
+        }
+
+        final Verse lastKey = (Verse) k.get(cardinality - 1);
+
+
+        return firstKey.getBook() == lastKey.getBook() && masterV11n.isEndOfBook(lastKey);
     }
 
 

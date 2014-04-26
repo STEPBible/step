@@ -152,7 +152,8 @@ var SubjectDisplayView = SearchDisplayView.extend({
             versions += "," + extraVersions;
         }
 
-        $.getSafe(SUBJECT_VERSES, [root, fullHeader, versions], function (results) {
+        var reference = passage.get("searchRestriction");
+        $.getSafe(SUBJECT_VERSES, [root, fullHeader, versions, reference], function (results) {
             var verses = $("<div>").addClass("expandedHeadingItem ");
             if (results) {
                 for (var i = 0; i < results.length; i++) {
@@ -164,7 +165,9 @@ var SubjectDisplayView = SearchDisplayView.extend({
                     var row = $('<div class="verseContent">');
                     var elVerse = $(verseContent);
                     var ref = results[i].reference;
-                    elVerse.find(".verse:first").prepend($('<a name="' + ref + '"><span class="verseNumber">' + ref + '</span></a>'));
+                    var verseLink = $('<a name="' + ref + '"><span class="verseNumber">' + ref + '</span></a>');
+
+                    elVerse.find(".verse:first").prepend(verseLink);
 
                     row.append(elVerse);
                     verses.append(row);
@@ -209,7 +212,9 @@ var SubjectDisplayView = SearchDisplayView.extend({
             }
 
             verses = $(verses || "<span>").append(seeAlsoRefs);
-            $(el).find(".results").empty().append(verses);
+            var results = $(el).find(".results");
+            results.empty().append(verses);
+            self._addVerseClickHandlers(results);
             step.util.ui.addStrongHandlers(passageId, verses);
             step.util.ui.enhanceVerseNumbers(passageId, self.$el, self.model.get("masterVersion"));
         });

@@ -16,8 +16,9 @@ public interface SubjectEntrySearchService {
      * @param root the root word
      * @param fullHeader the full header
      * @param version the version to be used for the lookups
+     * @param reference
      * @return the first verse of each range
      */
-    List<OsisWrapper> getSubjectVerses(String root, String fullHeader, String version);
+    List<OsisWrapper> getSubjectVerses(String root, String fullHeader, String version, String reference);
 
 }

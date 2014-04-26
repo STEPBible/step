@@ -206,20 +206,7 @@ public class MockJSwordPassageServiceImpl implements JSwordPassageService {
         return null;
     }
 
-    /**
-     * Gets the verse ranges.
-     * 
-     * @param references the references
-     * @param version the version
-     * @return the verse ranges
-     */
-    @Override
-    public Passage getVerseRanges(final String references, final String version) {
-
-        return null;
-    }
-
-    /**
+     /**
      * Gets the first verse excluding zero.
      * 
      * @param key the key

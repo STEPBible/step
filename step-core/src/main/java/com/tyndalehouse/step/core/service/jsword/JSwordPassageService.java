@@ -177,15 +177,6 @@ public interface JSwordPassageService {
     StringAndCount getAllReferencesAndCounts(String references, String version);
 
     /**
-     * Obtains a list of verse ranges from the references provided
-     * 
-     * @param references the refs
-     * @param version the version
-     * @return the passage object
-     */
-    Passage getVerseRanges(String references, String version);
-
-    /**
      * @param key the big key
      * @param book the book
      * @return the new smaller key

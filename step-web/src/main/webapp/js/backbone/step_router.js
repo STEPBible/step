@@ -240,7 +240,8 @@ var StepRouter = Backbone.Router.extend({
             args: [query, options, display, pageNumber, filter, sort, context],
             callback: function (text) {
                 text.startTime = startTime;
-                text.linked = null;
+
+                step.util.unlinkThis(activePassageId);
                 var passageModel = step.passages.findWhere({ passageId: activePassageId});
                 if (passageModel == null) {
                     console.error("No passages defined for ", activePassageId);

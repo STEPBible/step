@@ -741,8 +741,8 @@ var MainSearchView = Backbone.View.extend({
                 break;
             case REFERENCE:
                 var internationalisedSectionName;
-                if ((v.item.sectionType == 'BIBLE_BOOK' && this._getSpecificContext(REFERENCE) != null) ||
-                    (!v.item.wholeBook && !v.item.passage )) {
+                if (this._getSpecificContext(REFERENCE) != null &&
+                        (v.item.sectionType == 'BIBLE_BOOK' || (!v.item.wholeBook && !v.item.passage ))) {
                     //then we are listing all chapters, and should display 'Whole book' instead
                     internationalisedSectionName = __s.bible_whole_book_section;
                 } else {

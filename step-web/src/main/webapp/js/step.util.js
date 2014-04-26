@@ -269,7 +269,7 @@ step.util = {
                 newPassageModel.id = null;
 
                 step.passages.add(newPassageModel);
-                newPassageModel.save({ passageId: val, createSilently: true }, { silent: true });
+                newPassageModel.save({ passageId: val, createSilently: true, linked : null }, { silent: true });
             } else {
                 //swapping to an existing active passage id already, so sync straight away
                 existingModel.trigger("sync-update", existingModel);
@@ -491,6 +491,18 @@ step.util = {
 
         Backbone.Events.trigger("columnsChanged", {});
         return newPassageId;
+    },
+    unlinkThis: function(newPassageId) {
+        var model = step.passages.findWhere({ passageId: newPassageId });
+        var linked = model.get("linked");
+        model.save({ linked: null }, { silent: true });
+
+        if(linked != null) {
+            var linkContainer = step.passages.findWhere({ passageId: linked });
+            if (linkContainer != null) {
+                step.util.getPassageContainer(linkContainer.get("passageId")).find(".glyphicon-link").remove();
+            }
+        }
     },
     unlink: function (newPassageId) {
         var models = step.passages.where({ linked: newPassageId });

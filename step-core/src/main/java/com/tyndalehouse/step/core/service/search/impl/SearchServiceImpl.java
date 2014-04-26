@@ -920,6 +920,7 @@ public class SearchServiceImpl implements SearchService {
                     //the first subject search is always ignored, as we will favour the subject
                     //display to the keys display.
                     if (!sq.isFirstSearch()) {
+                        sq.getCurrentSearch().setSearchType(SearchType.SUBJECT_FULL);
                         results = intersect(results, this.subjects.getKeys(sq));
                     }
                     break;

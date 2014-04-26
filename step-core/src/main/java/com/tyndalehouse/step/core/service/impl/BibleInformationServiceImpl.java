@@ -52,6 +52,7 @@ import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.BookCategory;
 import org.crosswire.jsword.book.install.Installer;
 import org.crosswire.jsword.passage.*;
+import org.crosswire.jsword.versification.Versification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -216,17 +217,28 @@ public class BibleInformationServiceImpl implements BibleInformationService {
 
     @Override
     public StrongCountsAndSubjects getStrongNumbersAndSubjects(final String version, final String reference) {
-
+        boolean isMultipleVerses = false;
         Verse key = null;
+        final Versification versificationForVersion = this.jswordVersification.getVersificationForVersion(version);
+
         try {
-            key = VerseFactory.fromString(this.jswordVersification.getVersificationForVersion(version), reference);
+            key = VerseFactory.fromString(versificationForVersion, reference);
         } catch (NoSuchKeyException e) {
-            LOGGER.error("Unable to look up strongs for [{}]", reference, e);
-            return new StrongCountsAndSubjects();
+            //perhaps we're looking at multiple verses....
+            try {
+                //currently not supporting multiple verses
+                key = KeyUtil.getVerse(this.jswordVersification.getBookFromVersion(version).getKey(reference));
+            } catch (NoSuchKeyException e1) {
+                LOGGER.error("Unable to look up strongs for [{}]", reference, e);
+                return new StrongCountsAndSubjects();
+            }
         }
 
-        return new JSwordStrongNumberHelper(this.entityManager,
+        final StrongCountsAndSubjects verseStrongs = new JSwordStrongNumberHelper(this.entityManager,
                 key, this.jswordVersification, this.jswordSearch).getVerseStrongs();
+        verseStrongs.setVerse(key.getName());
+        verseStrongs.setMultipleVerses(true);
+        return verseStrongs;
     }
 
     @Override

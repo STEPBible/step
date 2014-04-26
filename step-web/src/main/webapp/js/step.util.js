@@ -1011,6 +1011,7 @@ step.util = {
                             //otherwise, exciting new strong numbers to apply:
                             $.getSafe(BIBLE_GET_STRONGS_AND_SUBJECTS, [version, reference], function (data) {
                                 var template = '<div>' +
+                                    '<h1 class="vocabHeader"><%= (data.multipleVerses ? sprintf(__s.vocab_for_verse, data.verse) : "") %></h1>' +
                                     '<div class="col-xs-10 col-sm-4 heading"></div>' +
                                     '<div class="col-xs-1 col-sm-1 heading"><h1><%= __s.bible_book %></h1></div>' +
                                     '<div class="col-xs-1 col-sm-1 heading"><h1><%= ot ? __s.OT : __s.NT %></h1></div>' +
@@ -1043,7 +1044,8 @@ step.util = {
 
                                 var templatedTable = $(_.template(template)({
                                     rows: rows,
-                                    ot: data.ot
+                                    ot: data.ot,
+                                    data: data
                                 }));
 
                                 templatedTable.find(".definition").click(function () {

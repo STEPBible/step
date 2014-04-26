@@ -79,6 +79,7 @@ public class IndividualSearch {
     private String subRange;
     private String mainRange;
     private String[] originalFilter;
+    private SearchType searchType;
 
     /**
      * Instantiates a single search to be executed.
@@ -371,5 +372,12 @@ public class IndividualSearch {
      */
     public String[] getOriginalFilter() {
         return this.originalFilter;
+    }
+
+    /**
+     * @param searchType overrides the search type
+     */
+    public void setSearchType(SearchType searchType) {
+        this.searchType = searchType;
     }
 }

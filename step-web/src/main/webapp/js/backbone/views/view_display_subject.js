@@ -162,7 +162,11 @@ var SubjectDisplayView = SearchDisplayView.extend({
                     }
 
                     var row = $('<div class="verseContent">');
-                    row.append(verseContent);
+                    var elVerse = $(verseContent);
+                    var ref = results[i].reference;
+                    elVerse.find(".verse:first").prepend($('<a name="' + ref + '"><span class="verseNumber">' + ref + '</span></a>'));
+
+                    row.append(elVerse);
                     verses.append(row);
                 }
             }
@@ -206,6 +210,8 @@ var SubjectDisplayView = SearchDisplayView.extend({
 
             verses = $(verses || "<span>").append(seeAlsoRefs);
             $(el).find(".results").empty().append(verses);
+            step.util.ui.addStrongHandlers(passageId, verses);
+            step.util.ui.enhanceVerseNumbers(passageId, self.$el, self.model.get("masterVersion"));
         });
     }
 });

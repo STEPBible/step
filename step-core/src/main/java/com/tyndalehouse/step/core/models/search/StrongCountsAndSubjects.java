@@ -45,6 +45,8 @@ public class StrongCountsAndSubjects {
     private Map<String, SortedSet<LexiconSuggestion>> strongData;
     private Map<String, BookAndBibleCount> counts;
     private boolean ot;
+    private String verse;
+    private boolean multipleVerses;
 
     /**
      * Sets the counts.
@@ -90,5 +92,21 @@ public class StrongCountsAndSubjects {
      */
     public void setOT(final boolean otValue) {
         this.ot = otValue;
+    }
+
+    public void setVerse(String verse) {
+        this.verse = verse;
+    }
+
+    public String getVerse() {
+        return verse;
+    }
+
+    public void setMultipleVerses(boolean multipleVerses) {
+        this.multipleVerses = multipleVerses;
+    }
+
+    public boolean isMultipleVerses() {
+        return multipleVerses;
     }
 }

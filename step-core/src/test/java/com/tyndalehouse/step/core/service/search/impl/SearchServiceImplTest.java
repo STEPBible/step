@@ -36,9 +36,8 @@ import com.tyndalehouse.step.core.utils.TestUtils;
 
 /**
  * Search service testing
- * 
+ *
  * @author chrisburrell
- * 
  */
 public class SearchServiceImplTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(SearchServiceImplTest.class);
@@ -58,11 +57,13 @@ public class SearchServiceImplTest {
     @Test
     public void testMultiVersionSearch() {
         final List<SearchEntry> results = this.searchServiceUnderTest.search(
-                new SearchQuery("t=elijah", new String[] {"ESV", "KJV","ASV"}, "false", 0, 1, 1)).getResults();
+                new SearchQuery("t=elijah", new String[]{"ESV", "KJV", "ASV"}, "false", 0, 1, 1)).getResults();
         assertFalse(results.isEmpty());
     }
 
-    /** test exact strong match */
+    /**
+     * test exact strong match
+     */
     @Test
     public void testSubjectSearch() {
 
@@ -88,20 +89,6 @@ public class SearchServiceImplTest {
         assertEquals("+(expandedReferences:Obad.1.2)", this.subjects.getInputReferenceForNaveSearch("ESV", "Obadiah 2").getValue());
         assertEquals("+(expandedReferences:Gen.* expandedReferences:Exod.* )", this.subjects.getInputReferenceForNaveSearch("ESV", "Gen-Exo").getValue());
         assertEquals("+(expandedReferences:Gen.* expandedReferences:Exod.* expandedReferences:Lev.* expandedReferences:Mark.* )", this.subjects.getInputReferenceForNaveSearch("ESV", "Gen-Lev ; Mark").getValue());
-    }
-
-    /** test exact strong match */
-    @Test
-    public void testSearchTimelineDescription() {
-        TestUtils.createEntities("timelineEvent", "name", "Golden Calf episode");
-
-        // write test event to db
-        final SearchResult result = this.searchServiceUnderTest.search(
-                new SearchQuery("d=calf",new String[] {"ESV"}, "false", 0, 1, 10));
-        final TimelineEventSearchEntry timelineEventSearchEntry = (TimelineEventSearchEntry) result
-                .getResults().get(0);
-        assertEquals("Golden Calf episode", timelineEventSearchEntry.getDescription());
-
     }
 
     /**

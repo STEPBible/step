@@ -1,5 +1,5 @@
 var PassageMenuView = Backbone.View.extend({
-    infoIcon: '<span class="infoIcon"><span class="glyphicon glyphicon-exclamation-sign"></span></span>',
+    infoIcon: '<a href="javascript:void(0)" class="infoIcon" data-toggle="popover" data-placement="bottom"><span class="glyphicon glyphicon-info-sign" href="javascript:void(0)"></span></span>',
     events: {
         "click a[name]": "updateModel",
         "click .previousChapter": "goToPreviousChapter",
@@ -55,28 +55,49 @@ var PassageMenuView = Backbone.View.extend({
         this.listenTo(this.model, "squashErrors", this.squashError);
         this.listenTo(Backbone.Events, "columnsChanged", this.updateVisibleCloseButton);
     },
-    raiseMessage: function (opts) {
-        var titleSoFar = this.warnings.attr("title") || "";
+    _updateIcon: function () {
+        var errorMessages = (this.warnings.attr('data-content') || "").indexOf("glyphicon-exclamation-sign") != -1;
+        var warningMessages = (this.warnings.attr('data-content') || "").indexOf("glyphicon-warning-sign") != -1;
+        if (errorMessages) {
+            this.warnings
+                .removeClass("text-info text-warning text-warning").addClass("text-danger")
+                .find(".glyphicon").removeClass('glyphicon-exclamation-sign glyphicon-warning-sign glyphicon-info-sign').addClass("glyphicon-exclamation-sign");
+        } else if (warningMessages) {
+            this.warnings
+                .removeClass("text-info text-danger text-warning").addClass("text-warning")
+                .find(".glyphicon").removeClass('glyphicon-exclamation-sign glyphicon-warning-sign glyphicon-info-sign').addClass("glyphicon-warning-sign");
+        } else {
+            this.warnings
+                .removeClass("text-info text-danger text-warning").addClass("text-info")
+                .find(".glyphicon").removeClass('glyphicon-exclamation-sign glyphicon-warning-sign glyphicon-info-sign').addClass("glyphicon-info-sign");
+        }
+    }, raiseMessage: function (opts) {
+        var titleSoFar = this.warnings.attr("data-content") || "";
         if (titleSoFar != "") {
-            titleSoFar += "\n";
-        }
-        titleSoFar += opts.message;
-        if (opts.level == "warning" && !this.warnings.hasClass("danger")) {
-            this.warnings.addClass("warnings");
-        }
-        if (opts.level == "danger" || opts.level == "error") {
-            this.warnings.removeClass("warnings");
-            this.warnings.addClass("danger");
+            titleSoFar += "<p />";
         }
 
-        this.warnings.attr("title", titleSoFar);
+        if(opts.level == 'warning') {
+            titleSoFar += '<span class="text-warning glyphicon glyphicon-warning-sign"></span> ';
+        } else if(opts.level == 'danger' || opts.level == 'error') {
+            titleSoFar += '<span class="text-danger glyphicon glyphicon-exclamation-sign"></span> ';
+        } else if(opts.level == 'info') {
+            titleSoFar += '<span class="text-info glyphicon glyphicon-info-sign"></span> ';
+        }
+        titleSoFar += opts.message;
+        this.warnings.attr("data-content", titleSoFar);
+        this._updateIcon();
+        this.warnings.popover({ html : true });
         this.warnings.show();
+        if(opts.silent != true) {
+            this.warnings.popover('show');
+        }
     },
     squashError: function () {
-        this.warnings.attr("title", "");
-        this.warnings.removeClass("warning");
-        this.warnings.removeClass("danger");
+        this.warnings.attr("data-content", "");
         this.warnings.hide();
+        this.warnings.popover('hide');
+        this._updateIcon();
     },
     handleDropdownMenu: function (ev) {
         var self = this;

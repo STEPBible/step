@@ -195,29 +195,10 @@ step.util = {
             level = 'info';
         }
 
-        if (passageId != null) {
-            step.util.activePassage().trigger("raiseMessage", { message: message, level: level });
+        if (passageId == null) {
+            passageId = step.passages.at(0).get("passageId");
         }
-
-        if (silent) {
-            return;
-        }
-        var errorContainer = $("#errorContainer");
-        if (errorContainer.length > 0) {
-            //will recreate
-            errorContainer.remove();
-        }
-
-        var errorPopup = this.getErrorPopup(message, level);
-
-        if (progress != null) {
-            errorPopup.append('<div class="progress progress-striped active"><div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="' + progress + '" aria-valuemin="0" aria-valuemax="100" style="width: ' + progress + '%"></div></div>');
-        }
-
-        $("body").append(errorPopup);
-        errorPopup.click(function () {
-            $(this).remove();
-        });
+        step.passages.findWhere({ passageId: passageId }).trigger("raiseMessage", { message: message, level: level, silent: silent });
     },
 
     raiseError: function (message) {

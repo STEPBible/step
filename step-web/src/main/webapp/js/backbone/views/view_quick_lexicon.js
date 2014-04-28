@@ -32,17 +32,22 @@
  **************************************************************************************************/
 
 var QuickLexicon = Backbone.View.extend({
-    template: '<div id="quickLexicon"><div>' +
+    templateHeader: '<div id="quickLexicon"><div>' +
         '<div>' +
-        '<button type="button" class="close" aria-hidden="true">&times;</button>' +
+        '<button type="button" class="close" aria-hidden="true">&times;</button>',
+    templateFooter: '</div>',
+    templateDef: '<%= view.templateHeader %>' +
         '<% _.each(data, function(item) { %>' +
         '<div><h1>' +
-        '<span class="<%= fontClass %>"><%= item.accentedUnicode %></span> (' +
-        '<span class="stepTransliteration"><%= item.stepTransliteration %>): <%= item.stepGloss %>, ' +
+        '<%= item.stepGloss %> (<span class="transliteration"><%= item.stepTransliteration %> - ' +
+        '<span class="<%= fontClass %>"><%= item.accentedUnicode %></span>) ' +
         '</h1><span><%= item.shortDef == undefined ? "" : item.shortDef %></span><span class="strongCount"> (<%= sprintf(__s.stats_occurs, item.count) %>)</span>' +
+        '</div>' +
         '<% }); %>' +
-        '</div><span class="infoTagLine"><%= __s.more_info_on_click_of_word %></span></div></div></div>',
+        '<span class="infoTagLine"><%= __s.more_info_on_click_of_word %></span>' +
+        '<%= view.templatedFooter %>',
     initialize: function (opts) {
+        this.text = opts.text;
         this.strong = opts.strong;
         this.morph = opts.morph;
         this.position = opts.position;
@@ -58,38 +63,44 @@ var QuickLexicon = Backbone.View.extend({
     render: function (event) {
         var self = this;
 
-        //remove all quick lexicons
-
-//                    self.showRelatedNumbers($.data(self.qtip, "relatedNumbers"));
-        //make request to server
-        $.getSafe(MODULE_GET_QUICK_INFO, [this.strong, this.morph], function (data) {
-            $("#quickLexicon").remove();
-            if (data.vocabInfos) {
-                var lexicon = $(_.template(self.template)({ data: data.vocabInfos, fontClass: step.util.ui.getFontForStrong(self.strong) }));
-                if (self.position > 0.66) {
-                    lexicon.css("padding-top", "2px");
-                    lexicon.css("height", "1px");
-                    lexicon.css("top", "0");
-                }
-                self.passageContainer.append(lexicon);
-                if (self.touchEvent) {
-                    lexicon.click(function () {
-                        step.util.ui.showDef({ strong: self.strong, morph: self.morph });
-                        lexicon.remove();
-                    });
+        if(this.text) {
+            var note = $(this.templateHeader + this.text.html() + this.templateFooter);
+            this.displayQuickDef(note);
+        } else {
+            //remove all quick lexicons
+            //make request to server
+            $.getSafe(MODULE_GET_QUICK_INFO, [this.strong, this.morph], function (data) {
+                $("#quickLexicon").remove();
+                if (data.vocabInfos) {
+                    var lexicon = $(_.template(self.templateDef)({ data: data.vocabInfos, fontClass: step.util.ui.getFontForStrong(self.strong), view: self }));
+                    if (self.position > 0.66) {
+                        lexicon.css("padding-top", "2px");
+                        lexicon.css("height", "1px");
+                        lexicon.css("top", "0");
+                    }
+                    self.displayQuickDef(lexicon);
                 }
 
-                lexicon.find(".close").click(function () {
-                    lexicon.remove();
-                });
-            }
-            
-            for(var i = 0; i < (data.vocabInfos || []).length; i++) {
-                self.showRelatedNumbers(data.vocabInfos[i].rawRelatedNumbers);
-            }
-        });
-
+                for (var i = 0; i < (data.vocabInfos || []).length; i++) {
+                    self.showRelatedNumbers(data.vocabInfos[i].rawRelatedNumbers);
+                }
+            });
+        }
     },
+    displayQuickDef: function(lexicon) {
+        this.passageContainer.append(lexicon);
+        if (this.touchEvent) {
+            lexicon.click(function () {
+                step.util.ui.showDef({ strong: this.strong, this: self.morph });
+                lexicon.remove();
+            });
+        }
+
+        lexicon.find(".close").click(function () {
+            lexicon.remove();
+        });
+    },
+
     /**
      * @param rawRelatedNumbers the related raw numbers
      */

@@ -111,5 +111,8 @@
   &.masterVersion {
     font-weight: bold;
     font-style: italic;
+    &:before {
+      content: '*';
+    }
   }
 }

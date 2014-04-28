@@ -84,18 +84,13 @@ var WordDisplayView = TextDisplayView.extend({
             //add a new row
             table.append(header);
 
-            if (sortOrder == VOCAB_SORT) {
+            if (sortOrder != SCRIPTURE_SORT) {
                 header.append(item.stepGloss == undefined ? " - " : item.stepGloss);
                 header.append(" (");
-                header.append($("<em>").addClass("stepTransliteration").append(item.stepTransliteration));
-                header.append("): ");
+                header.append($("<em>").addClass("transliteration").append(item.stepTransliteration));
+                header.append(" - ");
                 header.append($("<span>").addClass("ancientSearch").append(item.accentedUnicode));
-            } else {
-                header.append($("<span>").addClass("ancientSearch").append(item.accentedUnicode));
-                header.append(" (");
-                header.append($("<em>").addClass("stepTransliteration").append(item.stepTransliteration));
-                header.append("): ");
-                header.append(item.stepGloss == undefined ? " - " : item.stepGloss);
+                header.append(")");
             }
 
             return item.strongNumber;
@@ -129,13 +124,13 @@ var WordDisplayView = TextDisplayView.extend({
                 .attr("id", id);
 
             span.append('<span class="glyphicon glyphicon-ok"></span>');
-            span.append(item.stepTransliteration).append(" (")
+            if (item.gloss) {
+                span.append(item.gloss + " ");
+            }
+
+            span.append(" (<span class='transliteration'>" + item.stepTransliteration + "</span>").append(" - ")
                 .append($('<span>')
                     .append(item.matchingForm).addClass(item.strongNumber[0] == 'H' ? 'hbFontSmallMini' : "unicodeFontMini"));
-
-            if (item.gloss) {
-                span.append(" - " + item.gloss);
-            }
 
             span.append(")");
             var safeStrongNumber = item.strongNumber == undefined ? "" : item.strongNumber;

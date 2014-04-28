@@ -254,7 +254,7 @@ var SearchDisplayView = DisplayView.extend({
         termBase = termBase.replace(/ AND /g, " ");
         termBase = termBase.replace(/\+/g, " ");
         termBase = termBase.replace("+", "");
-        termBase = termBase.replace(/\*/ig, "[0-9a-A-Z]*");
+        termBase = termBase.replace(/\*/ig, "[0-9a-zA-Z]*");
 
         var matches = termBase.match(/"[^"]*"/);
         if (matches) {

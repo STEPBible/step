@@ -277,7 +277,6 @@ var PassageMenuView = Backbone.View.extend({
         var container = $('<span class="sortOptions"></span>').append($("<h1>").append(__s.word_search_sort_options));
         var dropdown = $("<ul></ul>");
         dropdown.append($("<li>").append(this._createLink('false', __s.scripture, __s.scripture_help)));
-        dropdown.append($("<li>").append(this._createLink(ORIGINAL_SPELLING_SORT, __s.original_spelling, __s.original_spelling_help)));
         dropdown.append($("<li>").append(this._createLink(VOCAB_SORT, __s.vocabulary, __s.vocabulary_help)));
 
         var currentOrder = this.model.get("order") || "false";

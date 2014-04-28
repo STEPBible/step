@@ -192,10 +192,11 @@
                                                                         <li class="sortable" strongnumber="${ definition.strongNumber}">
                                                                             <a href="javascript:void(0)"strong="G0015">
                                                                                 <span class="glyphicon glyphicon-ok ${isActive ? 'active' : '' }"></span>
-                                                                                ${ definition.stepTransliteration }
-                                                                                (<span class="${fn:substring(definition.strongNumber, 0,1) == 'H' ?'hbFontMini' : 'unicodeFontMini'}">
-                                                                                    ${ definition.matchingForm }
-                                                                                </span> - ${ definition.gloss} )
+                                                                                ${ definition.gloss}
+                                                                                (<span class="transliteration">${ definition.stepTransliteration }</span>
+                                                                                - <span class="${fn:substring(definition.strongNumber, 0,1) == 'H' ?'hbFontMini' : 'unicodeFontMini'}">
+                                                                                    ${ definition.matchingForm })
+                                                                                </span>
                                                                             </a>
                                                                         </li>
                                                                     </c:forEach>

@@ -249,37 +249,37 @@ var PassageDisplayView = DisplayView.extend({
          * @param passageId
          * @private
          */
-        _doInlineNotes: function (passageContent, passageId) {
-
+        _doInlineNotes: function (passageContent) {
+            var self = this;
             var notes = $(".verse .note", passageContent).has(".inlineNote");
             for (var i = 0; i < notes.length; i++) {
                 var item = notes.get(i);
                 var link = $("a", item);
                 var note = $(".inlineNote", item);
-                this._doInlineNoteQtip(link, note, passageContent);
+
+                link.on("touchstart", function () {
+                    self.doInlineNoteQuickLexicon(passageContent, $(this), ev);
+                }).hover(function (ev) {
+                    self.doInlineNoteQuickLexicon(passageContent, $(this), ev)
+                }, function () {
+                    $("#quickLexicon").remove();
+                });
             }
         },
-        _doInlineNoteQtip: function (link, note, viewport) {
-            link.attr("title", note.html());
-            var self = this;
-            require(["qtip"], function () {
-                link.qtip({
-                    position: {
-                        my: "top left",
-                        at: "top left",
-                    },
-                    style: { classes: "visibleInlineNote", tip: false },
-                    events: {
-                        show: function () {
-                            var currentPosition = $(this).qtip("option", "position");
-                            currentPosition.target = [viewport.position().left + 5, viewport.position().top + 5];
-                        }
-                    }
+        doInlineNoteQuickLexicon: function(target, link, ev) {
+            require(['quick_lexicon'], function () {
+                var text = link.closest(".note").find(".inlineNote");
+                //do the quick note
+                new QuickLexicon({
+                    text: text,
+                    strong: null,
+                    morph: null,
+                    target: target,
+                    position: ev.pageY / $(window).height(),
+                    touchEvent: false
                 });
             });
         },
-
-
         /**
          * Sets up qtip on all side notes
          * @param passageId the passage id

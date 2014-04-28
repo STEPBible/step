@@ -116,7 +116,7 @@ var SidebarView = Backbone.View.extend({
                 var item = data.vocabInfos[i];
                 var hebrew = data.vocabInfos[i].strongNumber == 'H';
                 var panelId = "lexicon-" + data.vocabInfos[i].strongNumber;
-                var panelTitle = item.stepGloss + " (" + item.stepTransliteration + " - " + '<span class="' + (hebrew ? 'hbFontSmall' : 'unicodeFont') + '">' + item.accentedUnicode + "</span>)";
+                var panelTitle = item.stepGloss + " (<span class='transliteration'>" + item.stepTransliteration + "</span> - " + '<span class="' + (hebrew ? 'hbFontSmall' : 'unicodeFont') + '">' + item.accentedUnicode + "</span>)";
                 var panelContentContainer = $('<div class="panel-collapse collapse">').attr("id", panelId);
                 var panelBody = $('<div class="panel-body"></div>');
                 panelContentContainer.append(panelBody);
@@ -149,7 +149,7 @@ var SidebarView = Backbone.View.extend({
                 .append(mainWord.shortDef || "")
                 .append(" ")
                 .append(mainWord.stepGloss)
-                .append($(" <span>").append(" (" + mainWord.strongNumber + ")").addClass("strongNumberTagLine"))
+                .append($(" <span title='" + __s.strong_number +"'>").append(" (" + mainWord.strongNumber + ")").addClass("strongNumberTagLine"))
         );
 
         panel.append("<br />")
@@ -177,11 +177,11 @@ var SidebarView = Backbone.View.extend({
             var ul = $('<ul>');
             for (var i = 0; i < mainWord.relatedNos.length; i++) {
                 var li = $("<li></li>").append($('<a href="javascript:void(0)">')
-                    .append(mainWord.relatedNos[i].stepTransliteration)
-                    .append(" (")
-                    .append(mainWord.relatedNos[i].matchingForm)
-                    .append(" - ")
                     .append(mainWord.relatedNos[i].gloss)
+                    .append(" (")
+                    .append("<span class='transliteration'>" + mainWord.relatedNos[i].stepTransliteration + "</span>")
+                    .append(" - ")
+                    .append(mainWord.relatedNos[i].matchingForm)
                     .append(")")
                     .data("strongNumber", mainWord.relatedNos[i].strongNumber));
                 ul.append(li);

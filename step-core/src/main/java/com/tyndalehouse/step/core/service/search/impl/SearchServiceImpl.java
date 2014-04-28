@@ -36,7 +36,6 @@ import com.tyndalehouse.step.core.data.EntityDoc;
 import com.tyndalehouse.step.core.data.EntityIndexReader;
 import com.tyndalehouse.step.core.data.EntityManager;
 import com.tyndalehouse.step.core.exceptions.LuceneSearchException;
-import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.exceptions.TranslatedException;
 import com.tyndalehouse.step.core.models.AbstractComplexSearch;
 import com.tyndalehouse.step.core.models.BibleVersion;
@@ -50,10 +49,10 @@ import com.tyndalehouse.step.core.models.SearchToken;
 import com.tyndalehouse.step.core.models.search.KeyedSearchResultSearchEntry;
 import com.tyndalehouse.step.core.models.search.KeyedVerseContent;
 import com.tyndalehouse.step.core.models.search.LexicalSearchEntry;
-import com.tyndalehouse.step.core.models.search.SubjectSuggestion;
-import com.tyndalehouse.step.core.models.search.SuggestionType;
 import com.tyndalehouse.step.core.models.search.SearchEntry;
 import com.tyndalehouse.step.core.models.search.SearchResult;
+import com.tyndalehouse.step.core.models.search.SubjectSuggestion;
+import com.tyndalehouse.step.core.models.search.SuggestionType;
 import com.tyndalehouse.step.core.models.search.SyntaxSuggestion;
 import com.tyndalehouse.step.core.models.search.TextSuggestion;
 import com.tyndalehouse.step.core.models.search.TimelineEventSearchEntry;
@@ -64,7 +63,6 @@ import com.tyndalehouse.step.core.service.LexiconDefinitionService;
 import com.tyndalehouse.step.core.service.SearchService;
 import com.tyndalehouse.step.core.service.TimelineService;
 import com.tyndalehouse.step.core.service.helpers.GlossComparator;
-import com.tyndalehouse.step.core.service.helpers.OriginalSpellingComparator;
 import com.tyndalehouse.step.core.service.helpers.VersionResolver;
 import com.tyndalehouse.step.core.service.impl.AbortQueryException;
 import com.tyndalehouse.step.core.service.impl.IndividualSearch;
@@ -596,14 +594,16 @@ public class SearchServiceImpl implements SearchService {
 
     /**
      * Prefers the secondary restriction, if available, over the main range from the text/query syntax
-     * @param sq the search query
+     *
+     * @param sq     the search query
      * @param result the result
      */
     private void setBestRestriction(SearchQuery sq, SearchResult result) {
         final String secondaryRange = sq.getLastSearch().getSecondaryRange();
         result.setSearchRestriction(
                 StringUtils.isNotBlank(secondaryRange) ? secondaryRange :
-                StringUtils.cleanJSwordRestriction(sq.getLastSearch().getMainRange()));
+                        StringUtils.cleanJSwordRestriction(sq.getLastSearch().getMainRange())
+        );
     }
 
     /**
@@ -630,8 +630,6 @@ public class SearchServiceImpl implements SearchService {
             result.setOrder(sq.getSortOrder());
             if (VOCABULARY_SORT.equals(sq.getSortOrder())) {
                 sortByStrongNumber(sq, result, new GlossComparator());
-            } else if (ORIGINAL_SPELLING_SORT.equals(sq.getSortOrder())) {
-                sortByStrongNumber(sq, result, new OriginalSpellingComparator());
             }
         }
     }
@@ -777,33 +775,8 @@ public class SearchServiceImpl implements SearchService {
      * @param lexiconDefinitions the definitions that have been included in the search
      */
     private void setDefinitionForResults(final SearchResult result, final List<EntityDoc> lexiconDefinitions, SuggestionType suggestionType) {
-        final SortedSet<LexiconSuggestion> suggestions = new TreeSet<LexiconSuggestion>(new Comparator<LexiconSuggestion>() {
-
-            @Override
-            public int compare(final LexiconSuggestion a, final LexiconSuggestion b) {
-                //push hebrew first..
-                String aText = a.getStrongNumber();
-                String bText = b.getStrongNumber();
-
-                if (aText == null && bText == null) {
-                    return 0;
-                } else if (StringUtils.isBlank(aText)) {
-                    return 1;
-                } else if (StringUtils.isBlank(bText)) {
-                    return 1;
-                }
-
-                final char aFirst = aText.charAt(0);
-                final char bFirst = bText.charAt(0);
-                if (bFirst == 'H' && aFirst == 'G') {
-                    return 1;
-                } else if (bFirst == 'G' && aFirst == 'H') {
-                    return -1;
-                }
-
-                return aText.compareTo(bText);
-            }
-        });
+        Collections.sort(lexiconDefinitions, new GlossComparator());
+        List<LexiconSuggestion> suggestions = new ArrayList(lexiconDefinitions.size());
         for (final EntityDoc def : lexiconDefinitions) {
             suggestions.add(convertToSuggestion(def));
         }
@@ -874,7 +847,8 @@ public class SearchServiceImpl implements SearchService {
 
     /**
      * From a specific key, gets the search results
-     * @param sq the search query
+     *
+     * @param sq      the search query
      * @param results the key to the results
      * @return the search result
      */
@@ -1044,7 +1018,7 @@ public class SearchServiceImpl implements SearchService {
     private SearchResult runTextSearch(final SearchQuery sq) {
         final IndividualSearch currentSearch = sq.getCurrentSearch();
         final String secondaryRange = currentSearch.getSecondaryRange();
-        if(StringUtils.isBlank(secondaryRange)) {
+        if (StringUtils.isBlank(secondaryRange)) {
             return runJSwordTextSearch(sq);
         }
 

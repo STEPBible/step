@@ -407,10 +407,12 @@
 	<xsl:template name="columnVerseNumber">
 		<xsl:param name="verse" />
 		<th class='headingVerseNumber'>
-			<xsl:call-template name="intertwinedVerseNum">
-				<xsl:with-param name="verse" select="$verse" />
-				<xsl:with-param name="includeBook" select="true()" />
-			</xsl:call-template>
+            <xsl:if test="$VNum = 'true'">
+                <xsl:call-template name="intertwinedVerseNum">
+                    <xsl:with-param name="verse" select="$verse" />
+                    <xsl:with-param name="includeBook" select="true()" />
+                </xsl:call-template>
+            </xsl:if>
 		</th>
 	</xsl:template>
   

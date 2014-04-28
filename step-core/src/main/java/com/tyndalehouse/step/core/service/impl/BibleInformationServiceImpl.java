@@ -177,6 +177,7 @@ public class BibleInformationServiceImpl implements BibleInformationService {
 
         if (INTERLINEAR != desiredModeOfDisplay && NONE != desiredModeOfDisplay) {
             // split the versions
+            lookupOptions.add(LookupOption.VERSE_NUMBERS);
             final String[] versions = getInterleavedVersions(version, interlinearVersion);
             passageText = this.jswordPassage.getInterleavedVersions(versions, reference, new ArrayList<LookupOption>(lookupOptions),
                     desiredModeOfDisplay);

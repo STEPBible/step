@@ -7,11 +7,8 @@
 <c:forEach var="result" items="${ results }">
     <c:set var="fontName" value="${ fn:startsWith(result.strongNumber, 'H') ? 'hbFontMini' : 'unicodeFontMini' }" />
     <c:choose>
-        <c:when test="${ sortType eq 'ORIGINAL_SPELLING' and result.strongNumber != lastStrong }">
-            <h4 class="searchResultStrongHeader" strongNumber="${ result.strongNumber }"><span class="${fontName}">${ result.accentedUnicode }</span> (<em class="stepTransliteration">${ result.stepTransliteration}</em>): ${ result.stepGloss }</h4>
-        </c:when>
         <c:when test="${ sortType eq 'VOCABULARY' and result.strongNumber != lastStrong }">
-            <h4 class="searchResultStrongHeader" strongNumber="${ result.strongNumber }">${ result.stepGloss } (<em class="stepTransliteration">${ result.stepTransliteration}</em>): <span class="${fontName}">${ result.accentedUnicode }</span></h4>
+            <h4 class="searchResultStrongHeader" strongNumber="${ result.strongNumber }">${ result.stepGloss } (<em class="stepTransliteration">${ result.stepTransliteration}</em> - <span class="${fontName}">${ result.accentedUnicode }</span>)</h4>
         </c:when>
     </c:choose>
     <c:set var="lastStrong" value="${ result.strongNumber }" />

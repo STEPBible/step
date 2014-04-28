@@ -50,7 +50,7 @@ var DisplayView = Backbone.View.extend({
                 return child.parent().hasClass("verseStart");
             });
         } else if (interlinearMode.indexOf("INTERLEAVED") != -1) {
-            step.util.ui._applyCssClassesRepeatByGroup(passageContent, ".verseGrouping", fonts, undefined, 0);
+            step.util.ui._applyCssClassesRepeatByGroup(passageContent, ".verseGrouping", fonts, undefined, 0, '.singleVerse');
         } else if (interlinearMode.indexOf("COLUMN") != -1) {
             step.util.ui._applyCssClassesRepeatByGroup(passageContent, "tr.row", fonts, undefined, 1);
         } else if(this.model.get("searchType") == 'PASSAGE') {

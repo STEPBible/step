@@ -159,19 +159,17 @@ step.util = {
         var passageContainer = step.util.getPassageContainer(step.util.activePassageId());
         if (this.outstandingRequests > 0) {
             passageContainer.addClass("waiting");
-            passageContainer.find(".infoIcon").toggle(false)
         } else {
             $(".passageContainer").removeClass("waiting");
-            passageContainer.find(".infoIcon").toggle(true);
         }
     },
-    escapeRegExp: function(str) {
+    escapeRegExp: function (str) {
         return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
     },
     squashErrors: function (model) {
         $("#errorContainer").remove();
         if (model) {
-            model.trigger("squashErrors")
+            model.trigger("squashErrors");
         }
     },
     getErrorPopup: function (message, level) {
@@ -180,9 +178,9 @@ step.util = {
             '<%= message %></div>')({ message: message, level: level}));
         return errorPopup;
     },
-    raiseOneTimeOnly: function(key, level) {
+    raiseOneTimeOnly: function (key, level) {
         var k = step.settings.get(key);
-        if(!k) {
+        if (!k) {
             var obj = {};
             obj[key] = true;
             step.settings.save(obj);
@@ -270,7 +268,7 @@ step.util = {
                 newPassageModel.id = null;
 
                 step.passages.add(newPassageModel);
-                newPassageModel.save({ passageId: val, createSilently: true, linked : null }, { silent: true });
+                newPassageModel.save({ passageId: val, createSilently: true, linked: null }, { silent: true });
             } else {
                 //swapping to an existing active passage id already, so sync straight away
                 existingModel.trigger("sync-update", existingModel);
@@ -388,11 +386,11 @@ step.util = {
      * Renumbers the models from 0, so that we can track where things are.
      * @private
      */
-    reNumberModels: function() {
-        $(".passageContainer[passage-id]").each(function() {
+    reNumberModels: function () {
+        $(".passageContainer[passage-id]").each(function () {
             var passageModel = step.passages.findWhere({ passageId: parseInt($(this).attr('passage-id'))});
-            
-            if(passageModel) {
+
+            if (passageModel) {
                 passageModel.save({ position: $(this).parent().index() }, {silent: true });
             }
         });
@@ -419,20 +417,20 @@ step.util = {
         this.activePassageId(passageId);
         this.createNewColumn(true);
     },
-    createNewLinkedColumnWithScroll: function(passageId, verseRef, stripCommentaries) {
+    createNewLinkedColumnWithScroll: function (passageId, verseRef, stripCommentaries) {
         this.createNewLinkedColumn(passageId);
 
         //next target can be set on the active model
         step.util.activePassage().save({ targetLocation: verseRef }, { silent: true });
 
         var chapterRef = verseRef.substr(0, verseRef.lastIndexOf("."));
-        if(step.util.isBlank(chapterRef)) {
+        if (step.util.isBlank(chapterRef)) {
             chapterRef = verseRef;
         }
-        
+
         step.router.navigatePreserveVersions("reference=" + chapterRef, stripCommentaries);
     },
-    
+
     /**
      * @param linked true to indicate we want to link this column with the current active column
      * @private
@@ -453,7 +451,7 @@ step.util = {
         var newColumn = activeColumn.clone();
 
         var passageId;
-        if(!model) {
+        if (!model) {
             //create new
             newPassageId = parseInt(step.passages.max(function (p) {
                 return parseInt(p.get("passageId"))
@@ -462,7 +460,7 @@ step.util = {
             //use existing
             newPassageId = model.get("passageId");
         }
-        
+
         newColumn
             .find(".passageContainer").attr("passage-id", newPassageId)
             .find(".passageContent").remove();
@@ -493,12 +491,12 @@ step.util = {
         Backbone.Events.trigger("columnsChanged", {});
         return newPassageId;
     },
-    unlinkThis: function(newPassageId) {
+    unlinkThis: function (newPassageId) {
         var model = step.passages.findWhere({ passageId: newPassageId });
         var linked = model.get("linked");
         model.save({ linked: null }, { silent: true });
 
-        if(linked != null) {
+        if (linked != null) {
             var linkContainer = step.passages.findWhere({ passageId: linked });
             if (linkContainer != null) {
                 step.util.getPassageContainer(linkContainer.get("passageId")).find(".glyphicon-link").remove();
@@ -538,15 +536,17 @@ step.util = {
         var container = $(".passageContainer[passage-id = " + passageIdOrElement + "]");
         return container;
     },
+    clearTimeout: function(timerName) {
+        var tn = this.timers[timerName];
+        if (tn == undefined) {
+            this.timers[timerName] = tn = 0;
+        }
+        clearTimeout(tn);
+    },
     delay: function (callback, ms, timerName) {
         var timer = 0;
         if (timerName) {
-            var tn = this.timers[timerName];
-            if (tn == undefined) {
-                this.timers[timerName] = tn = 0;
-            }
-            clearTimeout(tn);
-
+            this.clearTimeout(timerName);
             if (callback) {
                 this.timers[timerName] = setTimeout(callback, ms);
             }
@@ -622,7 +622,7 @@ step.util = {
                     isMasterVersion = false;
                 }
             }
-            
+
             return container.html();
         },
         renderArg: function (searchToken, isMasterVersion) {
@@ -634,7 +634,7 @@ step.util = {
             if (searchToken.itemType == STRONG_NUMBER) {
                 //pretend it's a Greek meaning, or a Hebrew meaning
                 searchToken.itemType = (searchToken.item.strongNumber || " ")[0] == 'G' ? GREEK_MEANINGS : HEBREW_MEANINGS;
-            } else if(searchToken.itemType == NAVE_SEARCH_EXTENDED || searchToken.itemType == NAVE_SEARCH) {
+            } else if (searchToken.itemType == NAVE_SEARCH_EXTENDED || searchToken.itemType == NAVE_SEARCH) {
                 searchToken.itemType = SUBJECT_SEARCH;
             }
 
@@ -661,7 +661,7 @@ step.util = {
                     source = __s.search_hebrew_meaning;
                     break;
                 case REFERENCE:
-                        source = __s.bible_reference;
+                    source = __s.bible_reference;
                     break;
                 case SUBJECT_SEARCH:
                     source = __s.search_topic;
@@ -711,7 +711,7 @@ step.util = {
                         'data-item-type="' + entry.itemType + '" ' +
                         'data-select-id="' + util.safeEscapeQuote(entry.item.gloss) + '" ' +
                         'title="' + source + util.safeEscapeQuote(entry.item.gloss + ", " + entry.item.matchingForm) + '">' +
-                        entry.item.stepTransliteration + "</div>";
+                        '<span class="transliteration">' + entry.item.stepTransliteration + "</span></div>";
                 case MEANINGS:
                     return '<div class="meaningsItem" ' +
                         'title="' + source + util.safeEscapeQuote(entry.item.gloss) + '" ' +
@@ -955,9 +955,10 @@ step.util = {
          * @param cssClasses the set of css classes to use
          * @param exclude the exclude function if we want to skip over some items
          * @param offset the offset, which gets added to be able to ignore say the first item always.
+         * @param subFilter the filter to use on the children
          * @private
          */
-        _applyCssClassesRepeatByGroup: function (passageContent, groupSelector, cssClasses, exclude, offset) {
+        _applyCssClassesRepeatByGroup: function (passageContent, groupSelector, cssClasses, exclude, offset, subFilter) {
             if (offset == undefined) {
                 offset = 0;
             }
@@ -965,7 +966,7 @@ step.util = {
             var words = $(groupSelector, passageContent);
             for (var j = 0; j < words.length; j++) {
                 var jqItem = words.eq(j);
-                var children = jqItem.children();
+                var children = jqItem.children(subFilter);
                 for (var i = offset; i < children.length; i++) {
                     var child = children.eq(i);
                     if (exclude == undefined || !exclude(child)) {
@@ -1013,100 +1014,106 @@ step.util = {
             var self = this;
 
             require(["qtip"], function () {
-                var qtip = element.qtip({
-                    show: { event: 'mouseenter' },
-                    hide: { event: 'unfocus mouseleave', fixed: true, delay: 200 },
-                    position: { my: "bottom center", at: "top center", of: element, viewport: $(window), effect: false },
-                    style: { classes: "versePopup" },
-                    overwrite: false,
-                    content: {
-                        text: function (event, api) {
-                            //otherwise, exciting new strong numbers to apply:
-                            $.getSafe(BIBLE_GET_STRONGS_AND_SUBJECTS, [version, reference], function (data) {
-                                var template = '<div>' +
-                                    '<h1 class="vocabHeader"><%= (data.multipleVerses ? sprintf(__s.vocab_for_verse, data.verse) : "") %></h1>' +
-                                    '<div class="col-xs-10 col-sm-4 heading"></div>' +
-                                    '<div class="col-xs-1 col-sm-1 heading"><h1><%= __s.bible_book %></h1></div>' +
-                                    '<div class="col-xs-1 col-sm-1 heading"><h1><%= ot ? __s.OT : __s.NT %></h1></div>' +
-                                    '<div class="hidden-xs col-sm-4 heading"></div>' +
-                                    '<div class="hidden-xs col-sm-1 heading"><h1><%= __s.bible_book %></h1></div>' +
-                                    '<div class="hidden-xs col-sm-1 heading"><h1><%= ot ? __s.OT : __s.NT %></h1></div>' +
-                                    '<% _.each(rows, function(row) { %>' +
-                                    '<span data-strong="<%= row.strongData.strongNumber %>">' +
-                                    '<a href="javascript:void(0)" class="definition col-xs-10 col-sm-4"><%= row.strongData.gloss %> ' +
-                                    '(<%= row.strongData.stepTransliteration %> - <%= row.strongData.matchingForm %>)</a>' +
-                                    '<a href="javascript:void(0)" class="bookCount col-xs-1 col-sm-1"><%= sprintf(__s.times, row.counts.book) %></a>' +
-                                    '<a href="javascript:void(0)" class="bibleCount col-xs-1 col-sm-1"><%= sprintf(__s.times, row.counts.bible) %></a>' +
-                                    '</span><% }); %></div>' +
-                                    '<div class="verseVocabLinks"><a href="javascript:void(0)" class="relatedVerses"><%= __s.see_related_verses %></a> ' +
-                                    '<a href="javascript:void(0)" class="relatedSubjects"><%= __s.see_related_subjects%></a> ' +
-                                    '<a href="javascript:void(0)" class="wordCloud"><%= __s.word_cloud %></a></div>';
+                var delay = step.passages.at(passageId).get("interlinearMode") == 'INTERLINEAR' ? 650 : 50;
+                step.util.delay(function() {
+                    var qtip = element.qtip({
+                        show: { event: 'mouseenter' },
+                        hide: { event: 'unfocus mouseleave', fixed: true, delay: 200 },
+                        position: { my: "bottom center", at: "top center", of: element, viewport: $(window), effect: false },
+                        style: { classes: "versePopup" },
+                        overwrite: false,
+                        content: {
+                            text: function (event, api) {
+                                //otherwise, exciting new strong numbers to apply:
+                                $.getSafe(BIBLE_GET_STRONGS_AND_SUBJECTS, [version, reference], function (data) {
+                                    var template = '<div>' +
+                                        '<h1 class="vocabHeader"><%= (data.multipleVerses ? sprintf(__s.vocab_for_verse, data.verse) : "") %></h1>' +
+                                        '<div class="col-xs-10 col-sm-4 heading"></div>' +
+                                        '<div class="col-xs-1 col-sm-1 heading"><h1><%= __s.bible_book %></h1></div>' +
+                                        '<div class="col-xs-1 col-sm-1 heading"><h1><%= ot ? __s.OT : __s.NT %></h1></div>' +
+                                        '<div class="hidden-xs col-sm-4 heading"></div>' +
+                                        '<div class="hidden-xs col-sm-1 heading"><h1><%= __s.bible_book %></h1></div>' +
+                                        '<div class="hidden-xs col-sm-1 heading"><h1><%= ot ? __s.OT : __s.NT %></h1></div>' +
+                                        '<% _.each(rows, function(row) { %>' +
+                                        '<span data-strong="<%= row.strongData.strongNumber %>">' +
+                                        '<a href="javascript:void(0)" class="definition col-xs-10 col-sm-4"><%= row.strongData.gloss %> ' +
+                                        '(<span class="transliteration"><%= row.strongData.stepTransliteration %></span> - <%= row.strongData.matchingForm %>)</a>' +
+                                        '<a href="javascript:void(0)" class="bookCount col-xs-1 col-sm-1"><%= sprintf(__s.times, row.counts.book) %></a>' +
+                                        '<a href="javascript:void(0)" class="bibleCount col-xs-1 col-sm-1"><%= sprintf(__s.times, row.counts.bible) %></a>' +
+                                        '</span><% }); %></div>' +
+                                        '<div class="verseVocabLinks"><a href="javascript:void(0)" class="relatedVerses"><%= __s.see_related_verses %></a> ' +
+                                        '<a href="javascript:void(0)" class="relatedSubjects"><%= __s.see_related_subjects%></a> ' +
+                                        '<a href="javascript:void(0)" class="wordCloud"><%= __s.word_cloud %></a></div>';
 
-                                var rows = [];
-                                for (var key in data.strongData) {
-                                    var verseData = data.strongData[key];
-                                    for (var strong in verseData) {
-                                        var strongData = verseData[strong];
-                                        var counts = data.counts[strongData.strongNumber];
-                                        rows.push({
-                                            strongData: strongData,
-                                            counts: counts
-                                        });
-                                    }
-                                }
-
-                                var templatedTable = $(_.template(template)({
-                                    rows: rows,
-                                    ot: data.ot,
-                                    data: data
-                                }));
-
-                                templatedTable.find(".definition").click(function () {
-                                    self.showDef($(this).parent().data("strong"));
-                                });
-
-                                templatedTable.find(".bookCount").click(function () {
-                                    var bookKey = key.substring(0, key.indexOf('.'));
-                                    var args = "reference=" + encodeURIComponent(bookKey) + "|strong=" + encodeURIComponent($(this).parent().data("strong"));
-                                    //make this the active passage
-                                    step.util.createNewLinkedColumn(passageId);
-                                    step.router.navigatePreserveVersions(args);
-                                });
-                                templatedTable.find(".bibleCount").click(function () {
-                                    var args = "strong=" + encodeURIComponent($(this).parent().data("strong"));
-                                    //make this the active passage
-                                    step.util.createNewLinkedColumn(passageId);
-                                    step.router.navigatePreserveVersions(args);
-                                });
-
-                                templatedTable.find(".relatedVerses").click(function () {
-                                    step.util.createNewLinkedColumn(passageId);
-                                    step.router.navigatePreserveVersions(RELATED_VERSES + "=" + encodeURIComponent(key));
-                                });
-
-                                templatedTable.find(".relatedSubjects").click(function () {
-                                    step.util.createNewLinkedColumn(passageId);
-                                    step.router.navigatePreserveVersions(TOPIC_BY_REF + "=" + encodeURIComponent(key));
-                                });
-
-                                templatedTable.find(".wordCloud").click(function () {
-                                    //get chapter key... 
-                                    step.util.createNewLinkedColumn(passageId);
-                                    var lastDot = key.lastIndexOf(".");
-                                    if (lastDot != -1) {
-                                        step.util.ui.openStats(key.substring(0, lastDot));
-                                    } else {
-                                        step.util.ui.openStats(key);
+                                    var rows = [];
+                                    for (var key in data.strongData) {
+                                        var verseData = data.strongData[key];
+                                        for (var strong in verseData) {
+                                            var strongData = verseData[strong];
+                                            var counts = data.counts[strongData.strongNumber];
+                                            rows.push({
+                                                strongData: strongData,
+                                                counts: counts
+                                            });
+                                        }
                                     }
 
-                                });
+                                    var templatedTable = $(_.template(template)({
+                                        rows: rows,
+                                        ot: data.ot,
+                                        data: data
+                                    }));
 
-                                api.set('content.text', templatedTable);
-                            });
+                                    templatedTable.find(".definition").click(function () {
+                                        self.showDef($(this).parent().data("strong"));
+                                    });
+
+                                    templatedTable.find(".bookCount").click(function () {
+                                        var bookKey = key.substring(0, key.indexOf('.'));
+                                        var args = "reference=" + encodeURIComponent(bookKey) + "|strong=" + encodeURIComponent($(this).parent().data("strong"));
+                                        //make this the active passage
+                                        step.util.createNewLinkedColumn(passageId);
+                                        step.router.navigatePreserveVersions(args);
+                                    });
+                                    templatedTable.find(".bibleCount").click(function () {
+                                        var args = "strong=" + encodeURIComponent($(this).parent().data("strong"));
+                                        //make this the active passage
+                                        step.util.createNewLinkedColumn(passageId);
+                                        step.router.navigatePreserveVersions(args);
+                                    });
+
+                                    templatedTable.find(".relatedVerses").click(function () {
+                                        step.util.createNewLinkedColumn(passageId);
+                                        step.router.navigatePreserveVersions(RELATED_VERSES + "=" + encodeURIComponent(key));
+                                    });
+
+                                    templatedTable.find(".relatedSubjects").click(function () {
+                                        step.util.createNewLinkedColumn(passageId);
+                                        step.router.navigatePreserveVersions(TOPIC_BY_REF + "=" + encodeURIComponent(key));
+                                    });
+
+                                    templatedTable.find(".wordCloud").click(function () {
+                                        //get chapter key...
+                                        step.util.createNewLinkedColumn(passageId);
+                                        var lastDot = key.lastIndexOf(".");
+                                        if (lastDot != -1) {
+                                            step.util.ui.openStats(key.substring(0, lastDot));
+                                        } else {
+                                            step.util.ui.openStats(key);
+                                        }
+
+                                    });
+
+                                    api.set('content.text', templatedTable);
+                                });
+                            }
                         }
-                    }
+                    });
+                    qtip.qtip("show");
+                }, delay, 'delay-strong-popup');
+                element.one('mouseleave', function() {
+                    step.util.clearTimeout('delay-strong-popup');
                 });
-                qtip.qtip("show");
             });
         },
         /**

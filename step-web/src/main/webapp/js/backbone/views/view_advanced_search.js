@@ -230,7 +230,7 @@ var AdvancedSearchView = Backbone.View.extend({
                 dropdown.append($('<li role="presentation">' +
                     '<a role="menuitem" href="javascript:void(0)" data-ref="' + returnedData[i].matchingForm + '">' +
                     "<span class='col-xs-4 " + (language == "true" ? 'unicodeFontMini' : 'hbFontMini') + "'>" + returnedData[i].matchingForm + "</span>" +
-                    "<span class='col-xs-4'>" + returnedData[i].stepTransliteration + "</span>" +
+                    "<span class='col-xs-4'><span class='transliteration'>" + returnedData[i].stepTransliteration + "</span></span>" +
                     "<span class='col-xs-4'>" + returnedData[i].gloss + "</span>&nbsp;" +
                     '&nbsp;</a>' +
                     '</li>'));

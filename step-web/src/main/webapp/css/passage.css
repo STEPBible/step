@@ -559,7 +559,8 @@ FONT.usg {
 .neut { color: black; }   
 
 .draggable-tooltip {
-	border-color: #F3E5B4;
+	border-color: darkgrey;
+    border-top: solid 2 darkgrey;
 }
 
 .draggable-tooltip .ui-tooltip-titlebar {
@@ -571,7 +572,8 @@ FONT.usg {
 
 .draggable-tooltip .qtip-titlebar {
 	padding: 4px 26px 5px 10px;
-	border: 1px solid #aaa;
+
+
 	background: #F3E5B4 url(images/ui-bg_highlight-soft_75_F3E5B4_1x100.png) 50% 50% repeat-x;
 	color: #991C32;
 	font-weight: bold;

@@ -22,7 +22,7 @@ public class SearchResult extends AbstractComplexSearch implements Serializable 
     private List<SearchEntry> results;
     private List<String> strongHighlights;
     private String order;
-    private SortedSet<LexiconSuggestion> definitions;
+    private List<LexiconSuggestion> definitions;
     private String[] languageCode;
     private int pageSize;
     private int pageNumber;
@@ -142,14 +142,14 @@ public class SearchResult extends AbstractComplexSearch implements Serializable 
     /**
      * @return the definitions
      */
-    public SortedSet<LexiconSuggestion> getDefinitions() {
+    public List<LexiconSuggestion> getDefinitions() {
         return this.definitions;
     }
 
     /**
      * @param definitions the definitions to set
      */
-    public void setDefinitions(final SortedSet<LexiconSuggestion> definitions) {
+    public void setDefinitions(final List<LexiconSuggestion> definitions) {
         this.definitions = definitions;
     }
 

@@ -23,7 +23,7 @@ var MainSearchView = Backbone.View.extend({
 
         this.masterSearch.select2({
             minimumInputLength: 2,
-
+            openOnEnter: false,
             id: function (entry) {
                 var id = entry.itemType + "-";
                 switch (entry.itemType) {
@@ -213,7 +213,7 @@ var MainSearchView = Backbone.View.extend({
         });
 
         this.masterSearch.select2("container")
-            .find("input[type='text']").on("keyup", this._handleKeyPressInSearch);
+            .find("input[type='text']").on("keydown", this._handleKeyPressInSearch);
     },
     _setData: function (values) {
         this.masterSearch.select2("data", values, true);
@@ -416,10 +416,10 @@ var MainSearchView = Backbone.View.extend({
 
     _getAncientFirstRepresentation: function (item, hebrew, term) {
         return '<span class="' + (hebrew ? 'hbFontMini' : 'unicodeFontMini') + '">' +
-            item.matchingForm + "</span> (" + this._markMatch(item.stepTransliteration, term) + " - " + this._markMatch(item.gloss, term) + ")";
+            item.matchingForm + "</span> (<span class='transliteration'>" + this._markMatch(item.stepTransliteration, term) + "</span> - " + this._markMatch(item.gloss, term) + ")";
     },
     _getEnglishFirstRepresentation: function (item, hebrew, term) {
-        return this._markMatch(item.gloss, term) + " (" + this._markMatch(item.stepTransliteration, term) + " - " + '<span class="' + (hebrew ? 'hbFontMini' : 'unicodeFontMini') + '">' + item.matchingForm + "</span>)";
+        return this._markMatch(item.gloss, term) + " (<span class='transliteration'>" + this._markMatch(item.stepTransliteration, term) + "</span> - " + '<span class="' + (hebrew ? 'hbFontMini' : 'unicodeFontMini') + '">' + item.matchingForm + "</span>)";
     },
     _getCurrentInitials: function () {
         var data = this.masterSearch.select2("data");
@@ -753,10 +753,6 @@ var MainSearchView = Backbone.View.extend({
                     internationalisedSectionName = __s[v.item.sectionType.toLowerCase() + "_section"];
                 }
 
-                if(this.masterVersion != null) {
-                    internationalisedSectionName += ", " + this.masterVersion.item.initials;
-                }
-
                 row = ['<span class="source">[' + internationalisedSectionName + ']</span>',
                     this._markMatch(v.item.fullName, query.term)
                 ].join('');
@@ -895,12 +891,9 @@ var MainSearchView = Backbone.View.extend({
         this._reEvaluateMasterVersion();
     },
     _handleKeyPressInSearch: function (ev) {
-        if (ev.keyCode == 13) {
-            //check whether the container is open
-            if ($(".select2-result-selectable").length == 0) {
-                // trigger search
-                this.search();
-            }
+        if (ev.keyCode == 13 && !ev.isPropagationStopped()) {
+            // trigger search
+            this.search();
         }
     },
     showAnalysis: function () {

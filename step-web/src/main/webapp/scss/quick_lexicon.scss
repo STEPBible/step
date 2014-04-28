@@ -9,6 +9,8 @@
   width: 100%;
   
   &>div {
+    // Need a min height because Chrome has a hover bar that tells you where the link will go if you click it.
+    min-height: 50px;
     background-color: $hoverColor;
     padding: 5 5 5 5;
   }

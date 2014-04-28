@@ -31,13 +31,11 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
 (function ($) {
-
     //some extensions (perhaps should go in another file)
     String.prototype.startsWith = function (nonEscapedString) {
         var str = nonEscapedString.replace('+', '\\+');
-        return (this.match("^" + str) == nonEscapedString);
+        return (this.match("^" + step.util.escapeRegExp(str)) == nonEscapedString);
     };
-
     $.extend({
         /**
          * an extension to jquery to do Ajax calls safely, with error
@@ -166,6 +164,9 @@ step.util = {
             $(".passageContainer").removeClass("waiting");
             passageContainer.find(".infoIcon").toggle(true);
         }
+    },
+    escapeRegExp: function(str) {
+        return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
     },
     squashErrors: function (model) {
         $("#errorContainer").remove();

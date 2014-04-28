@@ -49,7 +49,7 @@ public class JSwordSearchServiceImplTest {
      */
     @Test
     public void testEstimation() {
-        assertTrue(this.search.estimateSearchResults(new SearchQuery("John", new String[] {"ESV"}, "false", 0, 0, 0)) > 100);
+        assertTrue(this.search.estimateSearchResults(new SearchQuery("John", new String[] {"ESV"}, "false", 0, 0, 0, null)) > 100);
     }
 
     /**
@@ -58,7 +58,7 @@ public class JSwordSearchServiceImplTest {
     @Test
     public void testApproximateSingleSearch() {
         final List<SearchEntry> results = this.search.search(
-                new SearchQuery("Melchizedc~", new String[] {"ESV"}, "false", 0, 1, 10), "ESV").getResults();
+                new SearchQuery("Melchizedc~", new String[] {"ESV"}, "false", 0, 1, 10, null), "ESV").getResults();
         for (int i = 0; i < 10 || i < results.size(); i++) {
             LOGGER.debug(((VerseSearchEntry) results.get(i)).getKey());
         }
@@ -71,7 +71,7 @@ public class JSwordSearchServiceImplTest {
     @Test
     public void testGood() {
         final List<SearchEntry> results = this.search.search(
-                new SearchQuery("+[Mat-Rev] good~", new String[] {"ESV"}, "true", 0, 1, 1000000), "ESV").getResults();
+                new SearchQuery("+[Mat-Rev] good~", new String[] {"ESV"}, "true", 0, 1, 1000000, null), "ESV").getResults();
         for (int i = 0; i < results.size(); i++) {
             LOGGER.trace(((VerseSearchEntry) results.get(i)).getKey());
         }
@@ -84,7 +84,7 @@ public class JSwordSearchServiceImplTest {
     @Test
     public void testMorphology() {
         final List<SearchEntry> results = this.search.search(
-                new SearchQuery("+[Mat-Rev] +morph:G2570*A-NSM*", new String[] {"KJV"}, "true", 0, 1, 1000000), "ESV")
+                new SearchQuery("+[Mat-Rev] +morph:G2570*A-NSM*", new String[] {"KJV"}, "true", 0, 1, 1000000, null), "ESV")
                 .getResults();
         for (int i = 0; i < results.size(); i++) {
             LOGGER.info(((VerseSearchEntry) results.get(i)).getKey());

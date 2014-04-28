@@ -16,7 +16,7 @@ public class IndividualSearchTest {
      */
     @Test
     public void testMultiVersion() {
-        final IndividualSearch s = new IndividualSearch("t=blah", new String[] {"ESV", "KJV","ASV"});
+        final IndividualSearch s = new IndividualSearch("t=blah", new String[] {"ESV", "KJV","ASV"}, null);
 
         final String[] versions = s.getVersions();
         assertEquals(3, versions.length);
@@ -32,7 +32,7 @@ public class IndividualSearchTest {
      */
     @Test
     public void testIndividualVersion() {
-        final IndividualSearch s = new IndividualSearch("t=blah", new String[] {"ESV"});
+        final IndividualSearch s = new IndividualSearch("t=blah", new String[] {"ESV"}, null);
 
         final String[] versions = s.getVersions();
         assertEquals("ESV", versions[0]);
@@ -46,7 +46,7 @@ public class IndividualSearchTest {
      */
     @Test
     public void testSubRangeText() {
-        final IndividualSearch s = new IndividualSearch("om=+[Gen-Rev] {John} good", new String[] {"ESV"});
+        final IndividualSearch s = new IndividualSearch("om=+[Gen-Rev] {John} good", new String[] {"ESV"}, null);
 
         assertEquals(SearchType.ORIGINAL_MEANING, s.getType());
         assertEquals("good", s.getQuery());

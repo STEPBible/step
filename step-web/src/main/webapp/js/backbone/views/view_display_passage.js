@@ -44,6 +44,7 @@ var PassageDisplayView = DisplayView.extend({
                 passageContainer.find(".resultsLabel").html("");
                 this._warnIfNoStrongs(version);
                 this._warnIfFirstTimeCompare(interlinearMode);
+                this._warnIfInterinearFirstTime(interlinearMode);
                 this._warnCommentaryLookupVersion(version, extraVersions);
                 this.doFonts(passageHtml, options, interlinearMode, languages);
                 this.doSwapInterlinearLink(passageHtml);
@@ -127,7 +128,7 @@ var PassageDisplayView = DisplayView.extend({
                 });
             }
         },
-        _warnIfFirstTimeCompare: function (interlinearMode) {
+        _warnIfInterinearFirstTime: function (interlinearMode) {
             if (interlinearMode != "INTERLINEAR") {
                 return;
             }

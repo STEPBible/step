@@ -71,6 +71,7 @@ public class IndividualSearch {
 
     private static final String TIMELINE_DESCRIPTION = "d=";
     private static final String TIMELINE_REFERENCE = "dr=";
+    private String secondaryRange = null;
 
     private SearchType type;
     private String query;
@@ -108,8 +109,10 @@ public class IndividualSearch {
      * Initialises the search from the query string.
      *
      * @param query the query that is being sent to the app to search for
+     * @param restriction a restriction, other than the one specified in the syntax
      */
-    public IndividualSearch(final String query, final String[] versions) {
+    public IndividualSearch(final String query, final String[] versions, final String restriction) {
+        this.secondaryRange = restriction;
         this.versions = versions;
         if (query.startsWith(TEXT)) {
             this.type = SearchType.TEXT;
@@ -388,5 +391,13 @@ public class IndividualSearch {
      */
     public String getOriginalQuery() {
         return originalQuery;
+    }
+
+    /**
+     * A secondary range, usually submitted outside of the actual query
+     * @return the secondary range
+     */
+    public String getSecondaryRange() {
+        return secondaryRange;
     }
 }

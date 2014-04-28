@@ -41,6 +41,7 @@ import com.tyndalehouse.step.core.models.LookupOption;
 import com.tyndalehouse.step.core.models.OsisWrapper;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
+import com.tyndalehouse.step.core.service.jsword.impl.JSwordPassageServiceImpl;
 import com.tyndalehouse.step.core.service.search.SubjectEntrySearchService;
 import com.tyndalehouse.step.core.utils.StringUtils;
 import org.apache.lucene.queryParser.QueryParser;
@@ -59,10 +60,9 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-
-import static org.apache.lucene.queryParser.QueryParser.escape;
 
 /**
  * Retrieves the entries from a subject search
@@ -116,11 +116,13 @@ public class SubjectEntryServiceImpl extends AbstractSubjectSearchServiceImpl im
         String[] parts = StringUtils.split(value, "[, -=:]+");
 
         for (final String part : parts) {
-            query.append('+');
-            query.append(fieldName);
-            query.append(':');
-            query.append(QueryParser.escape(part));
-            query.append(' ');
+            if(StringUtils.isNotBlank(part)) {
+                query.append('+');
+                query.append(fieldName);
+                query.append(':');
+                query.append(QueryParser.escape(part));
+                query.append(' ');
+            }
         }
     }
 
@@ -145,28 +147,24 @@ public class SubjectEntryServiceImpl extends AbstractSubjectSearchServiceImpl im
      * Collects individual ranges
      *
      * @param verses                 the verses
-     * @param versions               the versions
+     * @param inputVersions               the versions
      * @param references             the list of references
      * @param limitingScopeReference the limiting scope for the reference
      */
-    private void collectVersesFromReferences(final List<OsisWrapper> verses, final String[] versions,
+    private void collectVersesFromReferences(final List<OsisWrapper> verses, final String[] inputVersions,
                                              final String references, final String limitingScopeReference) {
 
-        final Book book = this.versificationService.getBookFromVersion(versions[0]);
-        final Passage verseRanges;
-        try {
-            verseRanges = KeyUtil.getPassage(book.getKey(references));
-            if(StringUtils.isNotBlank(limitingScopeReference)) {
-                verseRanges.retainAll(book.getKey(limitingScopeReference));
-            }
-        } catch (NoSuchKeyException ex) {
-            throw new StepInternalException("Unable to obtain reference from master book", ex);
-        }
+        GetBestVersionOrderAndKey getBestVersionOrderAndKey = new GetBestVersionOrderAndKey(inputVersions, references, limitingScopeReference).invoke();
+        Passage verseRanges = getBestVersionOrderAndKey.getVerseRanges();
+        Book book = getBestVersionOrderAndKey.getBook();
+        String[] versions = getBestVersionOrderAndKey.getVersions();
 
 
         final Iterator<VerseRange> rangeIterator = verseRanges.rangeIterator(RestrictionType.NONE);
         final List<LookupOption> options = new ArrayList<LookupOption>();
         options.add(LookupOption.HIDE_XGEN);
+        options.add(LookupOption.GREEK_ACCENTS);
+        options.add(LookupOption.HEBREW_VOWELS);
 
         final Versification av11n = this.versificationService.getVersificationForVersion(book);
 
@@ -238,5 +236,77 @@ public class SubjectEntryServiceImpl extends AbstractSubjectSearchServiceImpl im
         }
 
         return false;
+    }
+
+    private class GetBestVersionOrderAndKey {
+        private String[] versions;
+        private String references;
+        private String limitingScopeReference;
+        private Book book;
+        private Passage verseRanges;
+
+        public GetBestVersionOrderAndKey(String[] versions, String references, String limitingScopeReference) {
+            this.versions = versions;
+            this.references = references;
+            this.limitingScopeReference = limitingScopeReference;
+        }
+
+        public Book getBook() {
+            return book;
+        }
+
+        public Passage getVerseRanges() {
+            return verseRanges;
+        }
+
+        public GetBestVersionOrderAndKey invoke() {
+            int ii = 0;
+            boolean success = false;
+            for(ii = 0; ii < versions.length && !success; ii++) {
+                book = SubjectEntryServiceImpl.this.versificationService.getBookFromVersion(this.versions[ii]);
+                success = tryBookKey();
+            }
+
+            if(!success) {
+                book = SubjectEntryServiceImpl.this.versificationService.getBookFromVersion(JSwordPassageServiceImpl.REFERENCE_BOOK);
+                success |= tryBookKey();
+                if(!success) {
+                    //failed to parse book reference
+                    throw new StepInternalException("Unable to parse reference given with any books: " + references + " scope: " + limitingScopeReference);
+                } else {
+                    //copy ESV in as first book
+                    String[] newVersions = new String[versions.length + 1];
+                    System.arraycopy(versions, 0, newVersions, 1, versions.length);
+                    newVersions[0] = "ESV";
+                    versions = newVersions;
+                }
+            } else {
+                String[] newVersions = new String[versions.length];
+                //need to turn the modules around and cycle them...
+                for(int jj = 0; jj < versions.length; jj++) {
+                    newVersions[jj] = versions[(ii+jj-1) % versions.length];
+                }
+                versions = newVersions;
+            }
+
+            return this;
+        }
+
+        private boolean tryBookKey() {
+            try {
+                verseRanges = KeyUtil.getPassage(book.getKey(references));
+                if (StringUtils.isNotBlank(limitingScopeReference)) {
+                    verseRanges.retainAll(book.getKey(limitingScopeReference));
+                }
+                return true;
+            } catch (NoSuchKeyException ex) {
+                //swallow this.
+                return false;
+            }
+        }
+
+        public String[] getVersions() {
+            return versions;
+        }
     }
 }

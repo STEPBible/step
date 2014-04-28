@@ -117,19 +117,23 @@ public class ReferenceSuggestionServiceImpl extends AbstractIgnoreMergedListSugg
                         spaceLeft--;
                     }
                     collector.setTotalCount(lastChapter);
-                } else if(Character.isDigit(bn.getShortName().charAt(bn.getShortName().length() -1))) {
+                } else if (Character.isDigit(bn.getShortName().charAt(bn.getShortName().length() - 1))) {
                     String shortName = bn.getShortName();
                     int lastPart = shortName.lastIndexOf(' ');
-                    if(lastPart != -1) {
-                        int chapter = Integer.parseInt(shortName.substring(lastPart + 1));
-                        //we'll add all the chapters that exist.
-                        int lastChapter = masterV11n.getLastChapter(bn.getBibleBook());
-                        for (int ii = chapter * 10; ii < lastChapter && ii < chapter * 10 + 10; ii++) {
-                            extras.add(addChapter(masterV11n, bn.getBibleBook(), ii));
-                        }
+                    if (lastPart != -1) {
+                        try {
+                            int chapter = Integer.parseInt(shortName.substring(lastPart + 1));
+                            //we'll add all the chapters that exist.
+                            int lastChapter = masterV11n.getLastChapter(bn.getBibleBook());
+                            for (int ii = chapter * 10; ii < lastChapter && ii < chapter * 10 + 10; ii++) {
+                                extras.add(addChapter(masterV11n, bn.getBibleBook(), ii));
+                            }
 
-                        for (int ii = chapter * 100; ii < lastChapter && chapter < chapter * 100 + 100 ; ii++) {
-                            extras.add(addChapter(masterV11n, bn.getBibleBook(), ii));
+                            for (int ii = chapter * 100; ii < lastChapter && chapter < chapter * 100 + 100; ii++) {
+                                extras.add(addChapter(masterV11n, bn.getBibleBook(), ii));
+                            }
+                        } catch (NumberFormatException ex) {
+                            //ignore
                         }
                     }
                 }
@@ -214,7 +218,7 @@ public class ReferenceSuggestionServiceImpl extends AbstractIgnoreMergedListSugg
 
         Verse firstKey = (Verse) k.get(0);
         final boolean startOfBook = masterV11n.isStartOfBook(((Verse) firstKey));
-        if(!startOfBook) {
+        if (!startOfBook) {
             return false;
         }
 

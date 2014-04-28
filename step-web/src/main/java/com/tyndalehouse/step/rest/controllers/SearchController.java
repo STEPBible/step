@@ -12,11 +12,9 @@ import com.tyndalehouse.step.core.service.BibleInformationService;
 import com.tyndalehouse.step.core.service.SearchService;
 import com.tyndalehouse.step.core.service.SuggestionService;
 import com.tyndalehouse.step.core.service.helpers.SuggestionContext;
-import com.tyndalehouse.step.core.service.impl.InternationalRangeServiceImpl;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import com.tyndalehouse.step.core.service.search.OriginalWordSuggestionService;
 import com.tyndalehouse.step.core.service.search.SubjectEntrySearchService;
-import com.tyndalehouse.step.core.service.search.SubjectSearchService;
 import com.tyndalehouse.step.core.utils.ConversionUtils;
 import com.tyndalehouse.step.core.utils.StringUtils;
 import com.yammer.metrics.annotation.Timed;
@@ -44,14 +42,11 @@ public class SearchController {
     private static final Pattern SPLIT_TOKENS = Pattern.compile("\\|");
     private static final Logger LOGGER = LoggerFactory.getLogger(SearchController.class);
     private static final String DEFAULT_OPTIONS = "NHVUG";
-    private static int MAX_PER_GROUP = 3;
     private final SearchService searchService;
     private final SuggestionService suggestionService;
     private final OriginalWordSuggestionService originalWordSuggestions;
     private final SubjectEntrySearchService subjectEntries;
     private final BibleInformationService bibleInformationService;
-    private final InternationalRangeServiceImpl rangeService;
-    private SubjectSearchService subjectSearchService;
 
     /**
      * @param search                  the search service
@@ -63,16 +58,12 @@ public class SearchController {
                             final SuggestionService suggestionService,
                             final OriginalWordSuggestionService originalWordSuggestions,
                             final SubjectEntrySearchService subjectEntries,
-                            final SubjectSearchService subjectSearchService,
-                            final BibleInformationService bibleInformationService,
-                            final InternationalRangeServiceImpl rangeService) {
+                            final BibleInformationService bibleInformationService) {
         this.searchService = search;
         this.suggestionService = suggestionService;
         this.originalWordSuggestions = originalWordSuggestions;
         this.subjectEntries = subjectEntries;
-        this.subjectSearchService = subjectSearchService;
         this.bibleInformationService = bibleInformationService;
-        this.rangeService = rangeService;
     }
 
     /**
@@ -108,6 +99,10 @@ public class SearchController {
         boolean onlyReferences = false;
         if (StringUtils.isNotBlank(referencesOnly)) {
             onlyReferences = Boolean.parseBoolean(referencesOnly);
+        }
+
+        if (input.indexOf('=') != -1) {
+            return new ArrayList<AutoSuggestion>();
         }
 
         final List<AutoSuggestion> autoSuggestions = new ArrayList<AutoSuggestion>(128);
@@ -307,7 +302,7 @@ public class SearchController {
      * @return the default options for any passage
      */
     private String getDefaultedOptions(final String options) {
-        return options == null ? DEFAULT_OPTIONS : options;
+        return StringUtils.isBlank(options) ? DEFAULT_OPTIONS : options;
     }
 
     /**

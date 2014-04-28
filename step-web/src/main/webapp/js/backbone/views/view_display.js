@@ -50,7 +50,7 @@ var DisplayView = Backbone.View.extend({
                 return child.parent().hasClass("verseStart");
             });
         } else if (interlinearMode.indexOf("INTERLEAVED") != -1) {
-            step.util.ui._applyCssClassesRepeatByGroup(passageContent, ".verseGrouping", fonts, undefined, 1);
+            step.util.ui._applyCssClassesRepeatByGroup(passageContent, ".verseGrouping", fonts, undefined, 0);
         } else if (interlinearMode.indexOf("COLUMN") != -1) {
             step.util.ui._applyCssClassesRepeatByGroup(passageContent, "tr.row", fonts, undefined, 1);
         } else if(this.model.get("searchType") == 'PASSAGE') {
@@ -59,7 +59,7 @@ var DisplayView = Backbone.View.extend({
                 passageContent.addClass(fonts[0]);
             }
         } else {
-            passageContent.find(".searchResults .passageContentHolder").addClass(fonts[0]);
+            passageContent.find(".searchResults .passageContentHolder, .expandedHeadingItem .passageContentHolder").addClass(fonts[0]);
         }
     }
 });

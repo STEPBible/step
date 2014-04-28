@@ -212,12 +212,15 @@ var SubjectDisplayView = SearchDisplayView.extend({
             }
 
             verses = $(verses || "<span>").append(seeAlsoRefs);
-            var results = $(el).find(".results");
-            results.empty().append(verses);
-            self._addVerseClickHandlers(results);
-            self._highlightResults(results, self.model.get("query"));
+            var resultsEl = $(el).find(".results");
+            resultsEl.empty().append(verses);
+            self._addVerseClickHandlers(resultsEl);
+            self._highlightResults(resultsEl, self.model.get("query"));
             step.util.ui.addStrongHandlers(passageId, verses);
             step.util.ui.enhanceVerseNumbers(passageId, self.$el, self.model.get("masterVersion"));
+            if(results.length > 0) {
+                self.doFonts(resultsEl, [], results[0].interlinearMode, results[0].languageCode);
+            }
         });
     }
 });

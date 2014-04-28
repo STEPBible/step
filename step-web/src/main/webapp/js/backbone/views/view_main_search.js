@@ -529,7 +529,6 @@ var MainSearchView = Backbone.View.extend({
     },
     patch: function (results, term) {
         //check we don't have a limit:
-        var includeEverything = true;
         var limit = (_.findWhere(this.specificContext, { itemType: LIMIT }) || {}).value;
 
         //splice in the 'exit' item
@@ -567,7 +566,7 @@ var MainSearchView = Backbone.View.extend({
             return false;
         }
 
-        var regex = new RegExp("\\b" + term, "ig");
+        var regex = new RegExp("\\b" + step.util.escapeRegExp(term), "ig");
         if ($.type(textOrObject) === "string") {
             return textOrObject != null && textOrObject != "" && textOrObject.toLowerCase().match(regex);
         }
@@ -642,12 +641,13 @@ var MainSearchView = Backbone.View.extend({
             var shortName = (currentVersion.item.shortInitials || "").toLowerCase();
             var initials = (currentVersion.item.initials || "").toLowerCase();
             var languageName = (currentVersion.item.languageName || "").toLowerCase();
+            var originalLanguage = (currentVersion.item.originalLanguage || "").toLowerCase();
 
             if ((initials != "" && initials == currentInput) || (shortName != "" && shortName == currentInput)) {
                 exactInitials.push(currentVersion);
             } else if (shortName.startsWith(currentInput) || initials.startsWith(currentInput)) {
                 prefixInitials.push(currentVersion);
-            } else if (languageName.startsWith(currentInput)) {
+            } else if (languageName.startsWith(currentInput) || originalLanguage.startsWith(currentInput)) {
                 if (currentVersion.item.recommended) {
                     recommendedByLanguage.push(currentVersion);
                 } else {
@@ -679,6 +679,10 @@ var MainSearchView = Backbone.View.extend({
                 count: totalNotDisplayed, maxReached: false, extraExamples: others.splice(0, 2) };
             this.setGroupText(groupedItem, term);
             options.push({ text: groupedItem.text, item: groupedItem, itemType: VERSION });
+        }
+
+        if(term.indexOf('=') != -1) {
+            options.push({ item: { value: term, text: term}, itemType: SYNTAX });
         }
 
         return options;

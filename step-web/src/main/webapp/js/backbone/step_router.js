@@ -53,7 +53,7 @@ var StepRouter = Backbone.Router.extend({
         var context = activePassageModel.get("context");
         var filter = activePassageModel.get("strongHighlights");
         var sort = activePassageModel.get("order");
-        var position = activePassageModel.get("position");
+        var position = activePassageModel.get("passageId");
 
         if (step.util.isBlank(context)) {
             activePassageModel.set({context: 0 }, { silent: true });

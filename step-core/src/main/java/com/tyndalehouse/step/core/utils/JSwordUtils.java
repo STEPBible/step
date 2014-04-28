@@ -113,7 +113,10 @@ public final class JSwordUtils {
                         v.setLanguageName(displayLanguage);
                     }
                 }
+                //also get the original language name
+                v.setOriginalLanguage(versionLanguage.getDisplayLanguage(versionLanguage));
             }
+
 
             if (v.getLanguageCode() == null || v.getLanguageName() == null) {
                 v.setLanguageCode(userLocale.getLanguage());

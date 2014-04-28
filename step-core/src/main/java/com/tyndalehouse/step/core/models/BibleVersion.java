@@ -50,6 +50,7 @@ public class BibleVersion implements Serializable {
     private boolean hasNotes;
     private boolean hasHeadings;
     private boolean questionable;
+    private String originalLanguage;
     private String languageCode;
     private String category;
     private String languageName;
@@ -221,5 +222,13 @@ public class BibleVersion implements Serializable {
      */
     public void setHasHeadings(final boolean hasHeadings) {
         this.hasHeadings = hasHeadings;
+    }
+
+    public String getOriginalLanguage() {
+        return originalLanguage;
+    }
+
+    public void setOriginalLanguage(String originalLanguage) {
+        this.originalLanguage = originalLanguage;
     }
 }

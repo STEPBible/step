@@ -394,13 +394,14 @@
 
   <xsl:template name="interleavedVerseNum">
 	<xsl:param name="verse" />
-  	
-  	<h4 class='heading'>
-	  	<xsl:call-template name="intertwinedVerseNum">
-	  		<xsl:with-param name="verse" select="$verse" />
-	  		<xsl:with-param name="includeBook" select="true()" />
-	  	</xsl:call-template>
-  	</h4>
+      <xsl:if test="$VNum = 'true'">
+        <h4 class='heading'>
+            <xsl:call-template name="intertwinedVerseNum">
+                <xsl:with-param name="verse" select="$verse" />
+                <xsl:with-param name="includeBook" select="true()" />
+            </xsl:call-template>
+        </h4>
+      </xsl:if>
   </xsl:template>
   
 	<xsl:template name="columnVerseNumber">

@@ -36,6 +36,7 @@ import com.tyndalehouse.step.core.data.EntityDoc;
 import com.tyndalehouse.step.core.data.EntityIndexReader;
 import com.tyndalehouse.step.core.data.EntityManager;
 import com.tyndalehouse.step.core.exceptions.LuceneSearchException;
+import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.exceptions.TranslatedException;
 import com.tyndalehouse.step.core.models.AbstractComplexSearch;
 import com.tyndalehouse.step.core.models.BibleVersion;
@@ -85,6 +86,7 @@ import org.apache.lucene.search.Query;
 import org.apache.lucene.util.Version;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.passage.Key;
+import org.crosswire.jsword.passage.NoSuchKeyException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -452,7 +454,8 @@ public class SearchServiceImpl implements SearchService {
                 addSearch(SearchType.RELATED_VERSES, versions, references, st.getToken(), null, individualSearches);
             } else if (SearchToken.SYNTAX.equals(tokenType)) {
                 //add a number of searches from the query syntax given...
-                final IndividualSearch[] searches = new SearchQuery(st.getToken(), versions.toArray(new String[versions.size()]), null, context, pageNumber).getSearches();
+                final IndividualSearch[] searches = new SearchQuery(st.getToken(), versions.toArray(new String[versions.size()]), null,
+                        context, pageNumber, references).getSearches();
                 for (IndividualSearch is : searches) {
                     individualSearches.add(is);
                 }
@@ -582,13 +585,25 @@ public class SearchServiceImpl implements SearchService {
         result.setPageNumber(sq.getPageNumber());
         result.setTimeTookTotal(System.currentTimeMillis() - start);
         result.setQuery(sq.getOriginalQuery());
-        result.setSearchRestriction(StringUtils.cleanJSwordRestriction(sq.getLastSearch().getMainRange()));
+        setBestRestriction(sq, result);
         final String[] allVersions = sq.getCurrentSearch().getVersions();
         result.setMasterVersion(allVersions[0]);
         result.setExtraVersions(StringUtils.join(allVersions, 1));
         specialSort(sq, result);
         enrichWithLanguages(sq, result);
         return result;
+    }
+
+    /**
+     * Prefers the secondary restriction, if available, over the main range from the text/query syntax
+     * @param sq the search query
+     * @param result the result
+     */
+    private void setBestRestriction(SearchQuery sq, SearchResult result) {
+        final String secondaryRange = sq.getLastSearch().getSecondaryRange();
+        result.setSearchRestriction(
+                StringUtils.isNotBlank(secondaryRange) ? secondaryRange :
+                StringUtils.cleanJSwordRestriction(sq.getLastSearch().getMainRange()));
     }
 
     /**
@@ -854,8 +869,17 @@ public class SearchServiceImpl implements SearchService {
         // we run each individual search, and get all the keys out of each
 
         final Key results = runJoiningSearches(sq);
+        return getSearchResultFromKey(sq, results);
+    }
 
-        //if no results, then return immediates
+    /**
+     * From a specific key, gets the search results
+     * @param sq the search query
+     * @param results the key to the results
+     * @return the search result
+     */
+    private SearchResult getSearchResultFromKey(SearchQuery sq, Key results) {
+        //if no results, then return immediately
         if (results.isEmpty()) {
             sq.setAllKeys(false);
             return extractSearchResults(sq, results);
@@ -1012,12 +1036,39 @@ public class SearchServiceImpl implements SearchService {
     }
 
     /**
-     * Runs a query against the JSword modules backends
+     * Runs a text search, collapsing the restrictions if need be
      *
      * @param sq the search query contained
      * @return the search to be run
      */
     private SearchResult runTextSearch(final SearchQuery sq) {
+        final IndividualSearch currentSearch = sq.getCurrentSearch();
+        final String secondaryRange = currentSearch.getSecondaryRange();
+        if(StringUtils.isBlank(secondaryRange)) {
+            return runJSwordTextSearch(sq);
+        }
+
+        final String[] versions = currentSearch.getVersions();
+        final String masterVersion = versions[0];
+        final Book bookFromVersion = this.versificationService.getBookFromVersion(masterVersion);
+        Key k;
+        try {
+            k = bookFromVersion.getKey(secondaryRange);
+        } catch (NoSuchKeyException e) {
+            throw new TranslatedException(e, "invalid_reference_in_book", secondaryRange, bookFromVersion.getInitials());
+        }
+
+        k = intersect(k, this.jswordSearch.searchKeys(sq));
+        return this.getSearchResultFromKey(sq, k);
+    }
+
+    /**
+     * Runs a query against the JSword modules backends
+     *
+     * @param sq the search query contained
+     * @return the search to be run
+     */
+    private SearchResult runJSwordTextSearch(SearchQuery sq) {
         final IndividualSearch is = sq.getCurrentSearch();
 
         // for text searches, we may have a prefix of t=
@@ -1097,7 +1148,7 @@ public class SearchServiceImpl implements SearchService {
      * @return the search results
      */
     private SearchResult runStrongTextSearch(final SearchQuery sq, final Set<String> strongs) {
-        final SearchResult textResults = runTextSearch(sq);
+        final SearchResult textResults = runJSwordTextSearch(sq);
         textResults.setStrongHighlights(new ArrayList<String>(strongs));
         return textResults;
     }

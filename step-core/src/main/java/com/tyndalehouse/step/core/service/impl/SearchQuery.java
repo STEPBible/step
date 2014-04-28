@@ -70,7 +70,7 @@ public class SearchQuery {
     public SearchQuery(final String searchQuery, final String[] versions,
                        final String sortOrder, final int context,
                        final int pageNumber) {
-        this(searchQuery, versions, sortOrder, context, pageNumber, PAGE_SIZE);
+        this(searchQuery, versions, sortOrder, context, pageNumber, PAGE_SIZE, null);
     }
 
     /**
@@ -82,7 +82,7 @@ public class SearchQuery {
      * @param pageSize    the size of the page to be returned
      */
     public SearchQuery(final String searchQuery, final String[] versions, final String sortOrder, final int context,
-                       final int pageNumber, final int pageSize) {
+                       final int pageNumber, final int pageSize, final String restriction) {
 
         this.originalQuery = searchQuery;
 
@@ -90,7 +90,7 @@ public class SearchQuery {
         final String[] individualSearches = searchQuery.split(JOINING_SEARCH);
         this.searches = new IndividualSearch[individualSearches.length];
         for (int ii = 0; ii < individualSearches.length; ii++) {
-            this.searches[ii] = new IndividualSearch(individualSearches[ii], versions);
+            this.searches[ii] = new IndividualSearch(individualSearches[ii], versions, restriction);
 
         }
 
@@ -103,6 +103,17 @@ public class SearchQuery {
         this.context = context;
         this.pageNumber = pageNumber;
         this.pageSize = pageSize;
+    }
+
+    /**
+     * @param searchQuery the query to be run
+     * @param sortOrder   "true" to indicate the search results should be ranked, also can used text to be used
+     *                    in special sorts
+     * @param context     how many verses either side to include
+     * @param pageNumber  the page number required
+     */
+    public SearchQuery(String searchQuery, String[] versions, String sortOrder, int context, int pageNumber, String references) {
+        this(searchQuery, versions, sortOrder, context, pageNumber, PAGE_SIZE, references);
     }
 
     private void prepareAllKeys(final String sortOrder) {

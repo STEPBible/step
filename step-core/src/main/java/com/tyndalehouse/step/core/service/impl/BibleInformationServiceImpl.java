@@ -229,8 +229,13 @@ public class BibleInformationServiceImpl implements BibleInformationService {
                 //currently not supporting multiple verses
                 key = KeyUtil.getVerse(this.jswordVersification.getBookFromVersion(version).getKey(reference));
             } catch (NoSuchKeyException e1) {
-                LOGGER.error("Unable to look up strongs for [{}]", reference, e);
-                return new StrongCountsAndSubjects();
+                //try reversifying essentially
+                try {
+                    key = KeyUtil.getVerse(this.jswordVersification.getBookFromVersion(JSwordPassageService.REFERENCE_BOOK).getKey(reference));
+                } catch(NoSuchKeyException ex) {
+                    LOGGER.error("Unable to look up strongs for [{}]", reference, e);
+                    return new StrongCountsAndSubjects();
+                }
             }
         }
 

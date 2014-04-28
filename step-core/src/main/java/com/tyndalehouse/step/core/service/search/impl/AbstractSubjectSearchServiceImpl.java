@@ -6,11 +6,15 @@ import com.tyndalehouse.step.core.service.impl.IndividualSearch;
 import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
 import com.tyndalehouse.step.core.utils.StringUtils;
 import org.crosswire.jsword.book.Book;
+import org.crosswire.jsword.book.basic.AbstractPassageBook;
 import org.crosswire.jsword.passage.Key;
 import org.crosswire.jsword.passage.NoSuchKeyException;
 import org.crosswire.jsword.versification.BibleBook;
 import org.crosswire.jsword.versification.Versification;
 
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 import java.util.regex.Matcher;
 
 /**
@@ -18,7 +22,7 @@ import java.util.regex.Matcher;
  */
 public class AbstractSubjectSearchServiceImpl {
     private static final String NAVE_EXPANDED_REFS = "expandedReferences:";
-    protected final JSwordVersificationService jSwordVersificationService;
+    private final JSwordVersificationService jSwordVersificationService;
 
     /**
      * @param jSwordVersificationService versification service
@@ -36,11 +40,23 @@ public class AbstractSubjectSearchServiceImpl {
      *     For everything else, we expand the reference to its full OSIS Id
      * </pre>
      *
-     * @param version   the master version
+     * @param versions   the master version
      * @param mainRange the key we want to restrict by, in the form +[a-z]
      * @return the shortest viable prefix in the form expandedReferences:Matt.11.1 expandedReferences:Mat.12.2
      */
-    StringAndCount getInputReferenceForNaveSearch(final String version, final String mainRange) {
+    StringAndCount getInputReferenceForNaveSearch(final String[] versions, final String mainRange) {
+        final StringAndCount restrictionByInput = getLuceneInputReferenceRestriction(versions[0], mainRange);
+        return new StringAndCount(getLuceneScopeFragment(versions) + " " +
+                restrictionByInput.getValue(), restrictionByInput.getCount());
+    }
+
+    /**
+     * This is part 1 of 2 that gives us a retriction on a book reference, as input by the user.
+     * @param version the master version
+     * @param mainRange the main range input by the user
+     * @return the shortest viable prefix
+     */
+    StringAndCount getLuceneInputReferenceRestriction(String version, String mainRange) {
         if (StringUtils.isBlank(mainRange)) {
             return new StringAndCount("", 0);
         }
@@ -107,7 +123,6 @@ public class AbstractSubjectSearchServiceImpl {
 
         //long book, so chapter ref
         return wrapRefForLucene(keyOsisID, true);
-
     }
 
     private StringAndCount getBooksFromRefs(final Versification v11n, final String osisRef) {
@@ -184,5 +199,48 @@ public class AbstractSubjectSearchServiceImpl {
         }
         sb.append(")");
         return new StringAndCount(sb.toString(), count);
+    }
+
+    /**
+     * A lucene fragment which will limit the return results based on the total scope of all books
+     * @param originalVersions the original versions
+     * @return the fragment to limit the query
+     */
+    String getLuceneScopeFragment(final String[] originalVersions) {
+        final Set<BibleBook> bookScopeForVersions = this.getBookListForVersions(originalVersions);
+        //this is a gross assumption that the 66 books are canonical, but it's probably worth it for the effort
+        //spared in the query.
+        if(bookScopeForVersions.size() >= 66) {
+            //don't restrict, there's no point
+            return "";
+        }
+
+
+        final StringBuilder fragment = new StringBuilder(bookScopeForVersions.size() * 5);
+        fragment.append("+(");
+        for (Iterator<BibleBook> iterator = bookScopeForVersions.iterator(); iterator.hasNext(); ) {
+            BibleBook b = iterator.next();
+            fragment.append(NAVE_EXPANDED_REFS);
+            fragment.append(b.getOSIS());
+            fragment.append(".*");
+
+            if(iterator.hasNext()) {
+                fragment.append(' ');
+            }
+        }
+        fragment.append(") ");
+        return fragment.toString();
+    }
+
+    /**
+     * @param originalVersions versions of interest
+     * @return A set of books from a list of version
+     */
+    protected Set<BibleBook> getBookListForVersions(final String[] originalVersions) {
+        final Set<BibleBook> bibleBooks = new HashSet<BibleBook>();
+        for(final String version : originalVersions) {
+            bibleBooks.addAll(((AbstractPassageBook) this.jSwordVersificationService.getBookFromVersion(version)).getBibleBooks());
+        }
+        return bibleBooks;
     }
 }

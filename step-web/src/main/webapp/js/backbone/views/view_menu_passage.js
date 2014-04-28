@@ -85,9 +85,9 @@ var PassageMenuView = Backbone.View.extend({
             titleSoFar += '<span class="text-info glyphicon glyphicon-info-sign"></span> ';
         }
         titleSoFar += opts.message;
+        this.warnings.popover({ html : true });
         this.warnings.attr("data-content", titleSoFar);
         this._updateIcon();
-        this.warnings.popover({ html : true });
         this.warnings.show();
         if(opts.silent != true) {
             this.warnings.popover('show');

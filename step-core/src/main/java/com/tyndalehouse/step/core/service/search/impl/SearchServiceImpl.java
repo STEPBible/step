@@ -859,26 +859,11 @@ public class SearchServiceImpl implements SearchService {
             return extractSearchResults(sq, results);
         }
 
-        //now if a subject search was first in the list, then we didn't run it.
-        //as a result, we run it now with the 'results' as the restriction
-        final IndividualSearch firstSearch = sq.getFirstSearch();
-        sq.setCurrentSearchAsFirstSearch();
-        switch (firstSearch.getType()) {
-            case SUBJECT_FULL:
-            case SUBJECT_RELATED:
-            case SUBJECT_EXTENDED:
-            case SUBJECT_SIMPLE:
-                String originalRange = firstSearch.getMainRange();
-                firstSearch.setMainRange(String.format("+[%s]", results.getOsisRef()));
-                final SearchResult search = this.subjects.search(sq);
-                firstSearch.setMainRange(originalRange);
-                return search;
-            default:
-                // now retrieve the results, we need to retrieve results as per the last type of search run
-                // so first of all, we set the allKeys flag to false
-                sq.setAllKeys(false);
-                return extractSearchResults(sq, results);
-        }
+        // now retrieve the results, we need to retrieve results as per the last type of search run
+        // so first of all, we set the allKeys flag to false
+        sq.setAllKeys(false);
+        return extractSearchResults(sq, results);
+
     }
 
     /**
@@ -917,10 +902,8 @@ public class SearchServiceImpl implements SearchService {
                 case SUBJECT_RELATED:
                     //the first subject search is always ignored, as we will favour the subject
                     //display to the keys display.
-                    if (!sq.isFirstSearch()) {
-                        sq.getCurrentSearch().setSearchType(SearchType.SUBJECT_FULL);
-                        results = intersect(results, this.subjects.getKeys(sq));
-                    }
+                    sq.getCurrentSearch().setSearchType(SearchType.SUBJECT_FULL);
+                    results = intersect(results, this.subjects.getKeys(sq));
                     break;
 
                 default:

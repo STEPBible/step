@@ -52,6 +52,7 @@ import com.tyndalehouse.step.core.service.jsword.JSwordModuleService;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import com.tyndalehouse.step.core.service.jsword.JSwordSearchService;
 import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
+import com.tyndalehouse.step.core.service.jsword.impl.JSwordPassageServiceImpl;
 import com.tyndalehouse.step.core.service.search.SubjectSearchService;
 import com.tyndalehouse.step.core.utils.StringUtils;
 import org.apache.lucene.queryParser.ParseException;
@@ -60,6 +61,13 @@ import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.SortField;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.passage.Key;
+import org.crosswire.jsword.passage.KeyUtil;
+import org.crosswire.jsword.passage.Passage;
+import org.crosswire.jsword.passage.RangedPassage;
+import org.crosswire.jsword.passage.VerseKey;
+import org.crosswire.jsword.versification.Versification;
+import org.crosswire.jsword.versification.VersificationsMapper;
+import org.crosswire.jsword.versification.system.Versifications;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -88,11 +96,11 @@ public class SubjectSearchServiceImpl extends AbstractSubjectSearchServiceImpl i
     private static final String[] REF_VERSIONS = new String[]{JSwordPassageService.REFERENCE_BOOK, JSwordPassageService.SECONDARY_REFERENCE_BOOK};
     private static final Logger LOGGER = LoggerFactory.getLogger(SubjectSearchServiceImpl.class);
     public static final String NAVE_STORED_REFERENCES = "references";
-    public static final Pattern CLEAN_UP_HEADING_SEARCH = Pattern.compile("[a-zA-Z0-9]+:");
     private final EntityIndexReader naves;
     private final JSwordSearchService jswordSearch;
     private final JSwordMetadataService jSwordMetadataService;
     private final JSwordModuleService jSwordModuleService;
+    private final JSwordVersificationService jSwordVersificationService;
 
     /**
      * Instantiates a new subject search service impl.
@@ -110,13 +118,14 @@ public class SubjectSearchServiceImpl extends AbstractSubjectSearchServiceImpl i
         this.jswordSearch = jswordSearch;
         this.jSwordMetadataService = jSwordMetadataService;
         this.jSwordModuleService = jSwordModuleService;
+        this.jSwordVersificationService = jSwordVersificationService;
         this.naves = entityManager.getReader("nave");
     }
 
 
     @Override
-    public SearchResult searchByMultipleReferences(final String version, final String references) {
-        final StringAndCount allReferencesAndCounts = this.getInputReferenceForNaveSearch(references, version);
+    public SearchResult searchByMultipleReferences(final String[] versions, final String references) {
+        final StringAndCount allReferencesAndCounts = this.getInputReferenceForNaveSearch(versions, references);
         int count = allReferencesAndCounts.getCount();
         if (count > JSwordPassageService.MAX_VERSES_RETRIEVED) {
             throw new TranslatedException("subject_reference_search_too_big",
@@ -186,7 +195,7 @@ public class SubjectSearchServiceImpl extends AbstractSubjectSearchServiceImpl i
      * @return the subjects
      */
     private SearchResult relatedSubjects(final SearchQuery sq) {
-        return searchByMultipleReferences(sq.getCurrentSearch().getVersions()[0], sq.getCurrentSearch().getQuery());
+        return searchByMultipleReferences(sq.getCurrentSearch().getVersions(), sq.getCurrentSearch().getQuery());
     }
 
     @Override
@@ -204,7 +213,7 @@ public class SubjectSearchServiceImpl extends AbstractSubjectSearchServiceImpl i
                 return naveDocsToReference(sq, this.getNaveDocs(sq));
             case SUBJECT_RELATED:
                 return naveDocsToReference(sq, getDocsByExpandedReferences(this.getInputReferenceForNaveSearch(
-                        sq.getCurrentSearch().getVersions()[0],
+                        sq.getCurrentSearch().getVersions(),
                         sq.getCurrentSearch().getQuery()).getValue()));
             default:
                 throw new StepInternalException("Unrecognized subject search");
@@ -251,13 +260,35 @@ public class SubjectSearchServiceImpl extends AbstractSubjectSearchServiceImpl i
         final IndividualSearch currentSearch = sq.getCurrentSearch();
         currentSearch.setQuery(currentSearch.getQuery(), true);
 
+
         final String[] originalVersions = currentSearch.getVersions();
         final String[] searchableVersions = prepareSearchForHeadings(sq);
         final Key allTopics = this.jswordSearch.searchKeys(sq);
 
+        //we will need to restrict the results by the scope of the versions, in the ESV v11n
+        final Passage maxScope = getScopeForVersions(originalVersions);
+        allTopics.retainAll(VersificationsMapper.instance().map(maxScope, ((VerseKey) allTopics).getVersification()));
+
         SearchResult resultsAsHeadings = getResultsAsHeadings(sq, searchableVersions, allTopics);
         cleanUpSearchFromHeadingsSearch(sq, originalVersions);
         return resultsAsHeadings;
+    }
+
+    /**
+     * Iterates through the versions, obtaining the maximum allowed scope for this query
+     *
+     * @param originalVersions the original versions prior to the query being run.
+     * @return the scope for all versions combined
+     */
+    private Passage getScopeForVersions(String[] originalVersions) {
+        final Versification v11n = this.jSwordVersificationService.getVersificationForVersion(JSwordPassageService.BEST_VERSIFICATION);
+
+        Passage total = new RangedPassage(v11n);
+        for (String version : originalVersions) {
+            Passage scope = KeyUtil.getPassage(this.jSwordVersificationService.getBookFromVersion(version).getBookMetaData().getScope());
+            total.addAll(VersificationsMapper.instance().map(scope, v11n));
+        }
+        return total;
     }
 
     /**
@@ -389,7 +420,7 @@ public class SubjectSearchServiceImpl extends AbstractSubjectSearchServiceImpl i
         sb.append(") ");
 
         //construct query
-        sb.append(this.getInputReferenceForNaveSearch(sq.getCurrentSearch().getVersions()[0], sq.getCurrentSearch().getMainRange()).getValue());
+        sb.append(this.getInputReferenceForNaveSearch(sq.getCurrentSearch().getVersions(), sq.getCurrentSearch().getMainRange()).getValue());
 
         try {
             return this.naves.search(this.naves.getQueryParser(false, true, "rootStem").parse(sb.toString()), Integer.MAX_VALUE, NAVE_SORT, null);
@@ -416,7 +447,7 @@ public class SubjectSearchServiceImpl extends AbstractSubjectSearchServiceImpl i
         query.append(" fullHeaderAnalyzed:");
         query.append(queryBody);
         query.append(") ");
-        query.append(this.getInputReferenceForNaveSearch(sq.getCurrentSearch().getVersions()[0], sq.getCurrentSearch().getMainRange()).getValue());
+        query.append(this.getInputReferenceForNaveSearch(sq.getCurrentSearch().getVersions(), sq.getCurrentSearch().getMainRange()).getValue());
 
         try {
             return this.naves.search(this.naves.getQueryParser(false, true, "rootStem").parse(query.toString()), Integer.MAX_VALUE, NAVE_SORT, null);

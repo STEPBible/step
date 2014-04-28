@@ -80,15 +80,25 @@ public class SearchServiceImplTest {
     }
 
     @Test
+    public void testLuceneScope() {
+        System.out.println(this.subjects.getLuceneScopeFragment(new String[]{"OSMHB"}));
+        System.out.println(this.subjects.getLuceneScopeFragment(new String[]{"OSMHB", "ESV"}));
+        assertEquals("+(expandedReferences:Amos.* expandedReferences:Neh.* expandedReferences:Hab.* expandedReferences:Ezek.* expandedReferences:Ps.* expandedReferences:Joel.* expandedReferences:Hag.* expandedReferences:2Kgs.* expandedReferences:Judg.* expandedReferences:Obad.* expandedReferences:Num.* expandedReferences:Mic.* expandedReferences:Lam.* expandedReferences:Job.* expandedReferences:2Sam.* expandedReferences:Jonah.* expandedReferences:Prov.* expandedReferences:Hos.* expandedReferences:Lev.* expandedReferences:Ezra.* expandedReferences:Nah.* expandedReferences:Mal.* expandedReferences:Gen.* expandedReferences:Exod.* expandedReferences:2Chr.* expandedReferences:Josh.* expandedReferences:Ruth.* expandedReferences:Zech.* expandedReferences:Isa.* expandedReferences:Dan.* expandedReferences:Song.* expandedReferences:Eccl.* expandedReferences:Deut.* expandedReferences:Jer.* expandedReferences:Esth.* expandedReferences:Zeph.* expandedReferences:1Chr.* expandedReferences:1Sam.* expandedReferences:1Kgs.*) ", this.subjects.getLuceneScopeFragment(new String[]{"OSMHB"}));
+
+        //we should have 66 books here, so we're not restricting anything
+        assertEquals("", this.subjects.getLuceneScopeFragment(new String[]{"OSMHB", "ESV"}));
+    }
+
+    @Test
     public void testExpandingToLucene() {
-        assertEquals("+(expandedReferences:Matt.*)", this.subjects.getInputReferenceForNaveSearch("ESV", "Mat").getValue());
-        assertEquals("+(expandedReferences:Matt.1.*)", this.subjects.getInputReferenceForNaveSearch("ESV", "Mat 1").getValue());
-        assertEquals("+(expandedReferences:Matt.1.1)", this.subjects.getInputReferenceForNaveSearch("ESV", "Mat 1:1").getValue());
-        assertEquals("+(expandedReferences:Matt.1.2 expandedReferences:Matt.1.3)", this.subjects.getInputReferenceForNaveSearch("ESV", "Mat 1:2-3").getValue());
-        assertEquals("+(expandedReferences:Obad.*)", this.subjects.getInputReferenceForNaveSearch("ESV", "Obadiah").getValue());
-        assertEquals("+(expandedReferences:Obad.1.2)", this.subjects.getInputReferenceForNaveSearch("ESV", "Obadiah 2").getValue());
-        assertEquals("+(expandedReferences:Gen.* expandedReferences:Exod.* )", this.subjects.getInputReferenceForNaveSearch("ESV", "Gen-Exo").getValue());
-        assertEquals("+(expandedReferences:Gen.* expandedReferences:Exod.* expandedReferences:Lev.* expandedReferences:Mark.* )", this.subjects.getInputReferenceForNaveSearch("ESV", "Gen-Lev ; Mark").getValue());
+        assertEquals("+(expandedReferences:Matt.*)", this.subjects.getLuceneInputReferenceRestriction("ESV", "Mat").getValue());
+        assertEquals("+(expandedReferences:Matt.1.*)", this.subjects.getLuceneInputReferenceRestriction("ESV", "Mat 1").getValue());
+        assertEquals("+(expandedReferences:Matt.1.1)", this.subjects.getLuceneInputReferenceRestriction("ESV", "Mat 1:1").getValue());
+        assertEquals("+(expandedReferences:Matt.1.2 expandedReferences:Matt.1.3)", this.subjects.getLuceneInputReferenceRestriction("ESV", "Mat 1:2-3").getValue());
+        assertEquals("+(expandedReferences:Obad.*)", this.subjects.getLuceneInputReferenceRestriction("ESV", "Obadiah").getValue());
+        assertEquals("+(expandedReferences:Obad.1.2)", this.subjects.getLuceneInputReferenceRestriction("ESV", "Obadiah 2").getValue());
+        assertEquals("+(expandedReferences:Gen.* expandedReferences:Exod.* )", this.subjects.getLuceneInputReferenceRestriction("ESV", "Gen-Exo").getValue());
+        assertEquals("+(expandedReferences:Gen.* expandedReferences:Exod.* expandedReferences:Lev.* expandedReferences:Mark.* )", this.subjects.getLuceneInputReferenceRestriction("ESV", "Gen-Lev ; Mark").getValue());
     }
 
     /**

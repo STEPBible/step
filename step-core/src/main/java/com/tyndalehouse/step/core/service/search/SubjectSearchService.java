@@ -79,7 +79,7 @@ public interface SubjectSearchService {
      * @param references the references
      * @return the search result
      */
-    SearchResult searchByMultipleReferences(String version, String references);
+    SearchResult searchByMultipleReferences(String[] version, String references);
 
 
 }

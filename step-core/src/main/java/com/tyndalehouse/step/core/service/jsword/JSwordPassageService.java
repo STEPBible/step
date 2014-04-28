@@ -49,6 +49,7 @@ public interface JSwordPassageService {
     String REFERENCE_BOOK = "ESV";
     String SECONDARY_REFERENCE_BOOK = "NIV";
     String OT_BOOK = "OSMHB";
+    String BEST_VERSIFICATION = "KJV";
     int MAX_VERSES_RETRIEVED = 200;
 
     /**

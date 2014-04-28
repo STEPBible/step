@@ -43,7 +43,12 @@
       overflow-y: auto;
       height: 100%;
     }
-    
+
+    .passageText .popover {
+      max-height: 60%;
+      overflow-y: auto;
+    }
+
     .passageContainer {
       border: $activeBorderWidth solid lightgrey;
       padding: 5px;

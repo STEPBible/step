@@ -137,6 +137,10 @@ var SubjectDisplayView = SearchDisplayView.extend({
         return results;
     },
     handleExpandingContainer: function (el) {
+        if(el.attr("loaded") == "true") {
+            return;
+        }
+
         var self = this;
         var root = el.attr("root");
         var fullHeader = el.attr("fullHeader");
@@ -154,6 +158,7 @@ var SubjectDisplayView = SearchDisplayView.extend({
 
         var reference = passage.get("searchRestriction");
         $.getSafe(SUBJECT_VERSES, [root, fullHeader, versions, reference], function (results) {
+            el.attr("loaded", "true");
             var verses = $("<div>").addClass("expandedHeadingItem ");
             if (results) {
                 for (var i = 0; i < results.length; i++) {

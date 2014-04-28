@@ -234,6 +234,16 @@ public class SubjectSearchServiceImpl extends AbstractSubjectSearchServiceImpl i
             String storedReferences = d.get(NAVE_STORED_REFERENCES);
             final Key key;
             try {
+                //NEEDS TO BE KJV
+                //NEEDS TO BE KJV
+                //NEEDS TO BE KJV
+                //NEEDS TO BE KJV
+                //NEEDS TO BE KJV
+                //NEEDS TO BE KJV
+                //NEEDS TO BE KJV
+                //NEEDS TO BE KJV
+
+
                 key = bookFromVersion.getKey(storedReferences);
             } catch (Exception ex) {
                 throw new StepInternalException("Stored references are unparseable in nave module: " + storedReferences);

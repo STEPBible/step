@@ -39,9 +39,9 @@ var QuickLexicon = Backbone.View.extend({
     templateDef: '<%= view.templateHeader %>' +
         '<% _.each(data, function(item) { %>' +
         '<div><h1>' +
-        '<%= item.stepGloss %> (<span class="transliteration"><%= item.stepTransliteration %> - ' +
+        '<%= item.stepGloss %> (<span class="transliteration"><%= item.stepTransliteration %></span> - ' +
         '<span class="<%= fontClass %>"><%= item.accentedUnicode %></span>) ' +
-        '</h1><span><%= item.shortDef == undefined ? "" : item.shortDef %></span><span class="strongCount"> (<%= sprintf(__s.stats_occurs, item.count) %>)</span>' +
+        '</h1><span><%= item.shortDef == undefined ? "" : item.shortDef %></span><span class="strongCount"> (<%= sprintf(__s.stats_occurs_times_in_bible, item.count) %>)</span>' +
         '</div>' +
         '<% }); %>' +
         '<span class="infoTagLine"><%= __s.more_info_on_click_of_word %></span>' +

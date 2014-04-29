@@ -14,6 +14,7 @@ var SidebarView = Backbone.View.extend({
         this.$el.on("show.bs.tab", this.changeMode);
         this.listenTo(this.model, "change", this.activate);
         this.listenTo(this.model, "toggleOpen", this.toggleOpen);
+        this.listenTo(this.model, "forceOpen", this.openSidebar);
 
         this.activate();
     },
@@ -211,10 +212,13 @@ var SidebarView = Backbone.View.extend({
     },
     toggleOpen: function() {
         if(!this.$el.closest('.row-offcanvas').hasClass("active")) {
-            this.$el.closest('.row-offcanvas').addClass("active");
+            this.openSidebar();
         } else {
             this.closeSidebar();
         }
+    },
+    openSidebar: function() {
+        this.$el.closest('.row-offcanvas').addClass("active");
     },
     closeSidebar: function () {
         this.$el.closest('.row-offcanvas').removeClass('active');

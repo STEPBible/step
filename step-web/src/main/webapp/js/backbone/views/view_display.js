@@ -6,12 +6,7 @@ var DisplayView = Backbone.View.extend({
         versionLinks.click(function() {
             var el = $(this);
             var newMasterVersion = el.attr("data-version");
-            var replacePattern = new RegExp("version=" + newMasterVersion, "ig");
-            var originalArgs = self.model.get("args");
-            var newArgs = originalArgs.replace(replacePattern, "");
-            newArgs = "version=" + newMasterVersion + "|" + newArgs;
-            newArgs = newArgs.replace(/\|\|/ig, "|").replace(/\|$/ig, "");
-            self.model.save({ args: newArgs });
+            var newArgs = step.util.swapMasterVersion(newMasterVersion, self.model, false);
         }).attr("title", __s.interlinear_swap_master_version);
     },
     /**

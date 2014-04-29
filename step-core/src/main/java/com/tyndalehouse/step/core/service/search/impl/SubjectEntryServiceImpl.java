@@ -40,26 +40,24 @@ import com.tyndalehouse.step.core.exceptions.TranslatedException;
 import com.tyndalehouse.step.core.models.InterlinearMode;
 import com.tyndalehouse.step.core.models.LookupOption;
 import com.tyndalehouse.step.core.models.OsisWrapper;
+import com.tyndalehouse.step.core.models.search.SubjectEntries;
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
 import com.tyndalehouse.step.core.service.search.SubjectEntrySearchService;
 import com.tyndalehouse.step.core.utils.StringUtils;
 import org.apache.lucene.queryParser.QueryParser;
 import org.crosswire.jsword.book.Book;
-import org.crosswire.jsword.passage.BitwisePassage;
 import org.crosswire.jsword.passage.Key;
 import org.crosswire.jsword.passage.KeyUtil;
 import org.crosswire.jsword.passage.NoSuchKeyException;
 import org.crosswire.jsword.passage.Passage;
 import org.crosswire.jsword.passage.RangedPassage;
 import org.crosswire.jsword.passage.RestrictionType;
-import org.crosswire.jsword.passage.RocketPassage;
 import org.crosswire.jsword.passage.Verse;
 import org.crosswire.jsword.passage.VerseKey;
 import org.crosswire.jsword.passage.VerseRange;
 import org.crosswire.jsword.versification.Versification;
 import org.crosswire.jsword.versification.VersificationsMapper;
-import org.crosswire.jsword.versification.system.Versifications;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -101,8 +99,8 @@ public class SubjectEntryServiceImpl extends AbstractSubjectSearchServiceImpl im
     }
 
     @Override
-    public List<OsisWrapper> getSubjectVerses(final String root, final String fullHeader, final String versionList,
-                                              final String reference) {
+    public SubjectEntries getSubjectVerses(final String root, final String fullHeader, final String versionList,
+                                           final String reference) {
         final StringBuilder sb = new StringBuilder(root.length() + fullHeader.length() + 64);
 
         appendMandatoryField(sb, "root", root);
@@ -142,14 +140,15 @@ public class SubjectEntryServiceImpl extends AbstractSubjectSearchServiceImpl im
      * @param versions the version in which to look it up
      * @return the verses
      */
-    private List<OsisWrapper> getVersesForResults(final EntityDoc[] results, final String[] versions,
+    private SubjectEntries getVersesForResults(final EntityDoc[] results, final String[] versions,
                                                   final String limitingScopeReference) {
         final List<OsisWrapper> verses = new ArrayList<OsisWrapper>(32);
+        boolean masterVersionSwapped = false;
         for (final EntityDoc doc : results) {
             final String references = doc.get("references");
-            collectVersesFromReferences(verses, versions, references, limitingScopeReference);
+            masterVersionSwapped |= collectVersesFromReferences(verses, versions, references, limitingScopeReference);
         }
-        return verses;
+        return new SubjectEntries(verses, masterVersionSwapped);
     }
 
     /**
@@ -160,9 +159,10 @@ public class SubjectEntryServiceImpl extends AbstractSubjectSearchServiceImpl im
      * @param references             the list of resultsInKJV that form the results
      * @param limitingScopeReference the limiting scope for the reference
      */
-    private void collectVersesFromReferences(final List<OsisWrapper> verses, final String[] inputVersions,
+    private boolean collectVersesFromReferences(final List<OsisWrapper> verses, final String[] inputVersions,
                                              final String references, final String limitingScopeReference) {
 
+        final String originalMaster = inputVersions[0];
         Passage combinedScopeInKJVv11n = this.getCombinedBookScope(inputVersions);
 
         //now let's retain the verses that are of interest in the selected books
@@ -232,6 +232,8 @@ public class SubjectEntryServiceImpl extends AbstractSubjectSearchServiceImpl im
             }
 
         }
+
+        return !getBestVersionOrderAndKey.versions[0].equals(originalMaster);
     }
 
     /**
@@ -329,7 +331,7 @@ public class SubjectEntryServiceImpl extends AbstractSubjectSearchServiceImpl im
         public GetBestVersionOrderAndKey invoke() {
             int maxCardinality = -1;
             int bestVersion = 0;
-            Book bestBook = this.book;
+            Book bestBook = null;
             Key bestKey = this.resultsInKJV;
             Set<String> triedV11ns = new HashSet<String>();
             for (int i = 0; i < versions.length; i++) {
@@ -344,7 +346,7 @@ public class SubjectEntryServiceImpl extends AbstractSubjectSearchServiceImpl im
 
                     if (cardinality > maxCardinality) {
                         bestVersion = i;
-                        maxCardinality = 0;
+                        maxCardinality = cardinality;
                         bestKey = potentialKey;
                         bestBook = b;
                     }

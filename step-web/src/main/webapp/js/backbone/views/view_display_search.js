@@ -122,12 +122,20 @@ var SearchDisplayView = DisplayView.extend({
         return errorMessage;
     },
     //adds verse click handlers to open up the verse in a separate linked passage
-    _addVerseClickHandlers: function (results) {
+    _addVerseClickHandlers: function (results, masterVersion) {
         var self = this;
         results.find(".verseNumber").parent().click(function (ev) {
             //now go to a new place. Let's be crazy about it as well, and simply chop off the last part
             var verseRef = $(this).attr("name");
-            step.util.createNewLinkedColumnWithScroll(self.model.get("passageId"), verseRef);
+
+            var callback = null;
+            if(masterVersion) {
+                callback = function(model) {
+                    step.util.swapMasterVersion(masterVersion, model, true);
+                }
+            }
+
+            step.util.createNewLinkedColumnWithScroll(self.model.get("passageId"), verseRef, false, callback);
         });
 
     },
@@ -202,7 +210,7 @@ var SearchDisplayView = DisplayView.extend({
     _doSpecificSearchHandlers: function () {
         //do nothing by default
     },
-    _updateTotalAppend: function (newResults) {
+    _updateTotalAppend: function () {
         this.resultsLabel.html(sprintf(__s.paging_showing, this.currentTotal));
     },
 

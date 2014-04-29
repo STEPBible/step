@@ -94,7 +94,7 @@ var SubjectDisplayView = SearchDisplayView.extend({
         var results = $("<span>").addClass("searchResults");
 
         var lastHeader = "";
-        if (searchResults.length == 0) {
+        if (!searchResults || searchResults.length == 0) {
             return;
         }
 
@@ -157,9 +157,15 @@ var SubjectDisplayView = SearchDisplayView.extend({
         }
 
         var reference = passage.get("searchRestriction");
-        $.getSafe(SUBJECT_VERSES, [root, fullHeader, versions, reference], function (results) {
+        $.getSafe(SUBJECT_VERSES, [root, fullHeader, versions, reference], function (data) {
+            var results = data.subjectEntries;
             el.attr("loaded", "true");
             var verses = $("<div>").addClass("expandedHeadingItem ");
+
+            if(data.masterVersionSwapped == true) {
+                verses.append($("<span class='subjectNotice'></span>").append(__s.error_subject_entries_versification_issue));
+            }
+
             if (results) {
                 for (var i = 0; i < results.length; i++) {
                     var verseContent = results[i].value;
@@ -219,11 +225,11 @@ var SubjectDisplayView = SearchDisplayView.extend({
             verses = $(verses || "<span>").append(seeAlsoRefs);
             var resultsEl = $(el).find(".results");
             resultsEl.empty().append(verses);
-            self._addVerseClickHandlers(resultsEl);
+            self._addVerseClickHandlers(resultsEl, resultsEl.find("[data-version]:first").data("version"));
             self._highlightResults(resultsEl, self.model.get("query"));
             step.util.ui.addStrongHandlers(passageId, verses);
             step.util.ui.enhanceVerseNumbers(passageId, self.$el, self.model.get("masterVersion"));
-            if(results.length > 0) {
+            if(results && results.length > 0) {
                 self.doFonts(resultsEl, [], results[0].interlinearMode, results[0].languageCode);
             }
         });

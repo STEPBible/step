@@ -398,11 +398,17 @@ step.util = {
         this.activePassageId(passageId);
         this.createNewColumn(true);
     },
-    createNewLinkedColumnWithScroll: function (passageId, verseRef, stripCommentaries) {
+    createNewLinkedColumnWithScroll: function (passageId, verseRef, stripCommentaries, postProcessModelCallback) {
         this.createNewLinkedColumn(passageId);
 
+        //call the post processor
+        var activePassage = step.util.activePassage();
+        if(postProcessModelCallback) {
+            postProcessModelCallback(activePassage);
+        }
+
         //next target can be set on the active model
-        step.util.activePassage().save({ targetLocation: verseRef }, { silent: true });
+        activePassage.save({ targetLocation: verseRef }, { silent: true });
 
         var chapterRef = verseRef.substr(0, verseRef.lastIndexOf("."));
         if (step.util.isBlank(chapterRef)) {
@@ -587,6 +593,26 @@ step.util = {
             return "";
         }
         return term.replace(/"/g, '\\\"');
+    },
+    swapMasterVersion: function (newMasterVersion, passageModel, silent) {
+        var replacePattern = new RegExp("version=" + newMasterVersion, "ig");
+        var originalArgs = passageModel.get("args");
+        var newArgs = originalArgs.replace(replacePattern, "");
+        newArgs = "version=" + newMasterVersion + "|" + newArgs;
+        newArgs = newArgs.replace(/\|\|/ig, "|").replace(/\|$/ig, "");
+
+        //now get the versions in the right order and overwrite the stored master version and extraVersions
+        var versions = (newArgs || "").match(/version=[a-zA-Z0-9]+/ig) || [];
+        var allVersions = [];
+        for(var i = 0; i < versions.length; i++) {
+            var versionName = versions[i].substring("version=".length);
+            allVersions.push(versionName);
+        }
+
+        var masterVersion = allVersions[0];
+        var otherVersions = allVersions.slice(1).join(",");
+
+        passageModel.save({ args: newArgs, masterVersion: masterVersion, otherVersions: otherVersions }, { silent: silent });
     },
     ui: {
         selectMark: function (classes) {
@@ -995,7 +1021,7 @@ step.util = {
             var self = this;
 
             require(["qtip"], function () {
-                var delay = step.passages.at(passageId).get("interlinearMode") == 'INTERLINEAR' ? 650 : 50;
+                var delay = step.passages.findWhere({ passageId: passageId }).get("interlinearMode") == 'INTERLINEAR' ? 650 : 50;
                 step.util.delay(function() {
                     var qtip = element.qtip({
                         show: { event: 'mouseenter' },

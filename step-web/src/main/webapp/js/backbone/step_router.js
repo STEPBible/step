@@ -21,6 +21,7 @@ var StepRouter = Backbone.Router.extend({
         var url = Backbone.history.fragment || "";
         this.navigate(url, { trigger: false, replace: true});
     },
+
     navigatePreserveVersions: function (partial, stripCommentaries) {
         //get versions of current active passage
         //add versions from current active passage

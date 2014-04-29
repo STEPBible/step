@@ -8,6 +8,7 @@ import com.tyndalehouse.step.core.models.SingleSuggestionsSummary;
 import com.tyndalehouse.step.core.models.SuggestionsSummary;
 import com.tyndalehouse.step.core.models.search.AutoSuggestion;
 import com.tyndalehouse.step.core.models.search.PopularSuggestion;
+import com.tyndalehouse.step.core.models.search.SubjectEntries;
 import com.tyndalehouse.step.core.service.BibleInformationService;
 import com.tyndalehouse.step.core.service.SearchService;
 import com.tyndalehouse.step.core.service.SuggestionService;
@@ -359,9 +360,9 @@ public class SearchController {
      * @param version    to be looked up
      * @return the list of verses for this subject
      */
-    public List<OsisWrapper> getSubjectVerses(final String root, final String fullHeader,
+    public SubjectEntries getSubjectVerses(final String root, final String fullHeader,
                                               final String version) {
-        return this.subjectEntries.getSubjectVerses(root, fullHeader, version, null);
+        return this.getSubjectVerses(root, fullHeader, version, null);
     }
 
 
@@ -372,7 +373,7 @@ public class SearchController {
      * @param reference  the limiting reference
      * @return the list of verses for this subject
      */
-    public List<OsisWrapper> getSubjectVerses(final String root, final String fullHeader,
+    public SubjectEntries getSubjectVerses(final String root, final String fullHeader,
                                               final String version, final String reference) {
         return this.subjectEntries.getSubjectVerses(root, fullHeader, version, reference);
     }

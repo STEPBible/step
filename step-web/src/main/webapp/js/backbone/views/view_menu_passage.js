@@ -1,5 +1,5 @@
 var PassageMenuView = Backbone.View.extend({
-    infoIcon: '<a href="javascript:void(0)" class="infoIcon" data-toggle="popover" data-placement="bottom"><span class="glyphicon glyphicon-info-sign" href="javascript:void(0)"></span></span>',
+    infoIcon: '<a href="javascript:void(0)" class="infoIcon" data-html="true" data-toggle="popover" data-placement="bottom"><span class="glyphicon glyphicon-info-sign" href="javascript:void(0)"></span></span>',
     events: {
         "click a[name]": "updateModel",
         "click .previousChapter": "goToPreviousChapter",

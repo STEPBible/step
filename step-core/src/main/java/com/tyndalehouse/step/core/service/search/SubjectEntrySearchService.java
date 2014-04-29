@@ -19,6 +19,6 @@ public interface SubjectEntrySearchService {
      * @param reference
      * @return the first verse of each range
      */
-    List<OsisWrapper> getSubjectVerses(String root, String fullHeader, String version, String reference);
+    com.tyndalehouse.step.core.models.search.SubjectEntries getSubjectVerses(String root, String fullHeader, String version, String reference);
 
 }

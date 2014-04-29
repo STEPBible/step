@@ -299,10 +299,12 @@ step.util = {
         dataToBeSent.push('');
 
         xhr.onreadystatechange = function () {
-            if (xhr.readyState == 4 && xhr.status == 200) {
-                callback(true);
-            } else {
-                callback(false);
+            if (xhr.readyState == 4) {
+                if (xhr.status == 200 && xhr.response == "") {
+                    callback(true);
+                } else {
+                    callback(false);
+                }
             }
         };
         xhr.sendAsBinary(dataToBeSent.join('\r\n'));

@@ -32,7 +32,7 @@
  **************************************************************************************************/
 
 var RestorePassageView = Backbone.View.extend({
-        template: '<div class="modal fade" id="restorePassages" tabindex="-1" role="dialog" aria-labelledby="restorePassagesLabel" ' +
+        template: '<div class="modal" id="restorePassages" tabindex="-1" role="dialog" aria-labelledby="restorePassagesLabel" ' +
             'aria-hidden="true">' +
             '<div class="modal-dialog">' +
             '<div class="modal-content">' +

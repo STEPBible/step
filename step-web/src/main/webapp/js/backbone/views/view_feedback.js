@@ -35,7 +35,7 @@ var FeedbackView = Backbone.View.extend({
     el: function () {
         return $("body")
     },
-    template: '<div class="modal fade" id="raiseSupport" tabindex="-1" role="dialog" aria-labelledby="raiseSupportLabel" aria-hidden="true">' +
+    template: '<div class="modal" id="raiseSupport" tabindex="-1" role="dialog" aria-labelledby="raiseSupportLabel" aria-hidden="true">' +
         '<div class="modal-dialog">' +
         '<div class="modal-content">' +
         '<div class="modal-header">' +

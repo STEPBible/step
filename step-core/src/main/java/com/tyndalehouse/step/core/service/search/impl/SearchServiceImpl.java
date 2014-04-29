@@ -853,17 +853,10 @@ public class SearchServiceImpl implements SearchService {
      * @return the search result
      */
     private SearchResult getSearchResultFromKey(SearchQuery sq, Key results) {
-        //if no results, then return immediately
-        if (results.isEmpty()) {
-            sq.setAllKeys(false);
-            return extractSearchResults(sq, results);
-        }
-
         // now retrieve the results, we need to retrieve results as per the last type of search run
         // so first of all, we set the allKeys flag to false
         sq.setAllKeys(false);
         return extractSearchResults(sq, results);
-
     }
 
     /**

@@ -228,6 +228,7 @@ public class SubjectSearchServiceImpl extends AbstractSubjectSearchServiceImpl i
      */
     private Key naveDocsToReference(SearchQuery sq, EntityDoc[] extendedDocs) {
         String mainVersion = sq.getCurrentSearch().getVersions()[0];
+        Book naveVersion = this.jSwordVersificationService.getBookFromVersion(JSwordPassageService.BEST_VERSIFICATION);
         Book bookFromVersion = this.jSwordVersificationService.getBookFromVersion(mainVersion);
         Key passageKey = null;
         for (EntityDoc d : extendedDocs) {
@@ -244,7 +245,7 @@ public class SubjectSearchServiceImpl extends AbstractSubjectSearchServiceImpl i
                 //NEEDS TO BE KJV
 
 
-                key = bookFromVersion.getKey(storedReferences);
+                key = naveVersion.getKey(storedReferences);
             } catch (Exception ex) {
                 throw new StepInternalException("Stored references are unparseable in nave module: " + storedReferences);
             }

@@ -84,7 +84,12 @@ import org.apache.lucene.search.Query;
 import org.apache.lucene.util.Version;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.passage.Key;
+import org.crosswire.jsword.passage.KeyUtil;
 import org.crosswire.jsword.passage.NoSuchKeyException;
+import org.crosswire.jsword.passage.VerseKey;
+import org.crosswire.jsword.versification.Versification;
+import org.crosswire.jsword.versification.VersificationsMapper;
+import org.crosswire.jsword.versification.system.Versifications;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -1675,8 +1680,18 @@ public class SearchServiceImpl implements SearchService {
             return searchKeys;
         }
 
+        Key versifiedSearchKeys = searchKeys;
+        if(results instanceof VerseKey && searchKeys instanceof VerseKey) {
+            //get the results v11n
+            Versification v11nResults = ((VerseKey) results).getVersification();
+            Versification v11nSearchKeys = ((VerseKey) searchKeys).getVersification();
+            if(!!v11nResults.equals(v11nSearchKeys)) {
+                versifiedSearchKeys = VersificationsMapper.instance().map(KeyUtil.getPassage(searchKeys), v11nResults);
+            }
+        }
+
         // otherwise we interesect and adjust the "total"
-        results.retainAll(searchKeys);
+        results.retainAll(versifiedSearchKeys);
         return results;
     }
 }

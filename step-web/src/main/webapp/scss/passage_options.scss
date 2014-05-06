@@ -75,7 +75,30 @@
   .passageOptions, .displayModes {
     direction: ltr;
     text-align: left;
+
+    //sub groups in the dropdown
+    .panel {
+      border: none;
+
+      a {
+        cursor: hand;
+        &:hover {
+          background-color: $hoverColor;
+        }
+      }
+
+      .caret {
+        float: right;
+        margin-right: 15px;
+        margin-top: 5px;
+      }
+
+      .panel-body {
+        padding: 0 0 0 15;
+      }
+    }
   }
+
   .argSummary {
     margin: 0;
     float: left;

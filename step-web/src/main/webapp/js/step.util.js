@@ -391,6 +391,7 @@ step.util = {
                 exampleContainer.find(".closeColumn").remove();
             }
         }
+        this.refreshColumnSize();
     },
     /**
      * Creates a linked column to the current column
@@ -624,6 +625,11 @@ step.util = {
             if (!container) {
                 container = $("<span>");
             }
+
+            if(!searchTokens) {
+                return container.html();
+            }
+
             var isMasterVersion = true;
             for (var i = 0; i < searchTokens.length; i++) {
                 container.append(step.util.ui.renderArg(searchTokens[i], isMasterVersion) + ' ');

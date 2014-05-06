@@ -33,7 +33,9 @@
   }
 
   .navbar-brand {
-    padding-left: 50px;
+    @media screen and (min-width: $stepXSBootstrap) {
+      padding-left: 50px;
+    }
     padding-bottom: 0px;
     padding-top: 5px;
     height: $header_height;

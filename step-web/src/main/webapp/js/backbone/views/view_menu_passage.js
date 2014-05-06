@@ -21,13 +21,17 @@ var PassageMenuView = Backbone.View.extend({
         { initial: "L", key: "display_separateLines" },
         { initial: "R", key: "display_redLetter" },
         { initial: "N", key: "display_notes" },
-        { initial: "E", key: "display_englishVocab" },
-        { initial: "A", key: "display_greekVocab" },
-        { initial: "D", key: "display_divide_hebrew", help: "display_divide_hebrew_help" },
-        { initial: "G", key: "display_greek_pointing", help: "display_greek_accents_help" },
-        { initial: "U", key: "display_hebrew_vowels", help: "display_hebrew_vowels_help" },
-        { initial: "P", key: "display_pointing_include_hebrew", help: "display_pointing_include_hebrew_vowels_help" },
-        { initial: "T", key: "display_transliteration" },
+        { group: "display_vocab_options", items: [
+            { initial: "E", key: "display_englishVocab" },
+            { initial: "A", key: "display_greekVocab" },
+            { initial: "T", key: "display_transliteration" }]
+        },
+        { group: "original_language_options", items: [
+            { initial: "D", key: "display_divide_hebrew", help: "display_divide_hebrew_help" },
+            { initial: "G", key: "display_greek_pointing", help: "display_greek_accents_help" },
+            { initial: "U", key: "display_hebrew_vowels", help: "display_hebrew_vowels_help" },
+            { initial: "P", key: "display_pointing_include_hebrew", help: "display_pointing_include_hebrew_vowels_help" }
+        ]},
         { initial: "M", key: "display_grammar" },
         { initial: "C", key: "display_grammarColor" }
     ],
@@ -177,6 +181,20 @@ var PassageMenuView = Backbone.View.extend({
             var displayOption = displayOptions.eq(i);
             displayOption.toggle(availableOptions.indexOf(displayOption.find("[data-value]").attr("data-value")) != -1);
         }
+
+        //do we need to show the group headings...
+        this.displayOptions.find(".menuGroup").each(function(i, item) {
+            var heading = $(item);
+            var subOptions = $(heading.data("target")).find("li");
+            var visible = false;
+            for(var i = 0 ; i < subOptions.length; i++) {
+                // if we don't have 'display: ...' then we'll assume visible
+                visible = visible || ((subOptions.eq(i).css("display") || "") != "none");
+            }
+
+            heading.toggle(visible);
+        });
+
     },
     _updateSearchOptions: function () {
 
@@ -281,7 +299,7 @@ var PassageMenuView = Backbone.View.extend({
         return displayModes;
     },
     _createDisplayOptions: function () {
-        var dropdownContainer = $('<span class="displayOptionsContainer">"');
+        var dropdownContainer = $('<span class="displayOptionsContainer panel-group">').attr("id", "displayOptions-" + this.model.get("passageId"));
         var displayOptionsHeading = $("<h1>").append(__s.display_options);
 
         var dropdown = $("<ul>").addClass("passageOptions");
@@ -352,20 +370,55 @@ var PassageMenuView = Backbone.View.extend({
         return dropdown;
 
     },
-    _createPassageOptions: function (dropdown) {
+    /**
+     * creates items into the provided container,
+     * @param dropdown the container
+     * @param items the items to iterate over
+     * @private
+     */
+    _createItemsInDropdown: function(dropdown, items) {
+//        <div class="panel-group" id="accordion">
+
+
         var selectedOptions = this.model.get("selectedOptions") || "";
+        for (var i = 0; i < items.length; i++) {
+            if(items[i].group) {
+                var panel = $('<div class="panel panel-default">');
 
-        for (var i = 0; i < this.items.length; i++) {
-            var link = this._createLink(this.items[i].initial, __s[this.items[i].key], __s[this.items[i].help]);
+                var collapseHeader =
+                    '<a data-toggle="collapse" class="menuGroup" data-parent="#displayOptions-' + this.model.get("passageId") + '" ' +
+                    'data-target="#displayOptions-' + items[i].group + this.model.get("passageId") + '">'
+                    + __s[items[i].group] +
+                    '<span class="caret"></span></a>';
+                var collapseBody = $('<div class="panel-collapse collapse"></div>').attr("id", 'displayOptions-' + items[i].group + this.model.get("passageId") );
+                var panelBody = $("<div class='panel-body'>");
+                collapseBody.append(panelBody);
+                this._createItemsInDropdown(panelBody, items[i].items || []);
 
-            this._setVisible(link, selectedOptions.indexOf(this.items[i].initial) != -1);
+                panel.append(collapseHeader).append(collapseBody);
+                dropdown.append(panel);
+            } else {
+                var link = this._createLink(items[i].initial, __s[items[i].key], __s[items[i].help]);
+                this._setVisible(link, selectedOptions.indexOf(items[i].initial) != -1);
+            }
             dropdown.append($("<li>").addClass("passage").append(link)).attr("role", "presentation");
         }
+    },
+    _createPassageOptions: function (dropdown) {
+//        var selectedOptions = this.model.get("selectedOptions") || "";
+        this._createItemsInDropdown(dropdown, this.items);
 
         var self = this;
         var links = dropdown.find('a');
-        this._addTickHandlers(links, false, function () {
+        this._addTickHandlers(links.not("[data-toggle]"), false, function () {
             self._updateOptions();
+        });
+
+        links.filter("[data-toggle]").on('click', function(ev) {
+            ev.stopPropagation();
+
+            var target = $($(this).closest("[data-target]").data("target"));
+            target.collapse("toggle", !target.hasClass("in"));
         });
 
         return dropdown;

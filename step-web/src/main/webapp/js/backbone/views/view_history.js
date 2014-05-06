@@ -1,5 +1,5 @@
 var ViewHistory = Backbone.View.extend({
-    MAX_HISTORY: 300git ,
+    MAX_HISTORY: 300,
     itemTemplate: _.template('<li class="list-group-item historyItem" data-item="<%= item.get("id") %>">' +
         '<a class="openBookmark" title="<%= __s.bookmarks_open %>"><span class="glyphicon glyphicon-open"></span></a>' +
         '<a class="starBookmark" data-favourite="<%= item.get("favourite")%>" title="<%= item.get("favourite") ? __s.passage_tools_delete_bookmark : __s.passage_tools_bookmark %>">' +

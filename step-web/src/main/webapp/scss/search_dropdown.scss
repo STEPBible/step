@@ -3,7 +3,9 @@
 @import 'multi_columns';
 
 .select2-results {
-  @include multi-column(2);
+  @media screen and (min-width: $stepXSBootstrap) {
+    @include multi-column(2);
+  }
 
   .maxSelected {
     cursor: not-allowed;

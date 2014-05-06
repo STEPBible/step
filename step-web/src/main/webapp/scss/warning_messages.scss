@@ -12,3 +12,28 @@
   display: none;
 }
 
+.passageContainer {
+  .popover {
+    border: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    background-color: transparent;
+    margin-top: 0px;
+    
+    &.arrow {
+      top: 0px;
+    }
+  }
+
+  .popover-content {
+    background-color: white;
+    margin-top: 11px;
+    background-clip: padding-box;
+    border: 1px solid #ccc;
+    border: 1px solid rgba(0, 0, 0, .2);
+    border-radius: 6px;
+    -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
+  }
+}
+

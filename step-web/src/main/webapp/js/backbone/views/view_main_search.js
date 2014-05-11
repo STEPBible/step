@@ -12,6 +12,7 @@ var MainSearchView = Backbone.View.extend({
         this.clearContextAfterSearch = false;
         this.masterSearch = this.$el.find("#masterSearch");
         this.specificContext = [];
+        this.startTimes = {};
         this.allContexts = [REFERENCE, VERSION, LIMIT, EXAMPLE_DATA];
 
         var view = this;
@@ -167,14 +168,20 @@ var MainSearchView = Backbone.View.extend({
         }).on("selected", function (event) {
             //if we're replacing an item, then remove it
             var container = self.masterSearch.select2("container");
+            var term = container.find("input").val() || "";
+
+            step.util.trackAnalytics("suggest", "termPrefix", term);
+            step.util.trackAnalytics("suggest", "termPrefixLength", term.length);
+            step.util.trackAnalytics("suggest", "termType", ((event.choice) || {}).itemType);
+            step.util.trackAnalytics("suggest", "termText", ((event.choice) || {}).text);
+
             var replaceItem = container.find(".replaceItem");
             var replaceItemParent = replaceItem.parent().parent().first();
             var newItem;
+            var data = self.masterSearch.select2("data");
             if (replaceItemParent.length > 0) {
                 var replaceItemIndex = replaceItemParent.index();
-                var data = self.masterSearch.select2("data");
                 data.splice(replaceItemIndex, 1, data[data.length - 1]);
-                self._setData(data);
 
                 //if we resort to the 'data' method, we lose all our handlers
                 newItem = container.find("[data-select-id]");
@@ -182,9 +189,11 @@ var MainSearchView = Backbone.View.extend({
                 newItem = container.find("[data-select-id]").last();
             }
 
+            //needs to be outside if statement to ensure we recreate token handlers
+            self._setData(data);
+
             //now get rid of all .replaceItems
             self._resetReplaceItems();
-
             //get last item in list
             var select2Input = $(this);
             var values = select2Input.select2("data") || [];
@@ -192,7 +201,7 @@ var MainSearchView = Backbone.View.extend({
                 return;
             }
 
-            self.masterSearch.select2("container").find("input").val("");
+            container.find("input").val("");
         }).on("select2-opening", function (event) {
             //remove any context that has references
             if (!self.ignoreOpeningEvent) {
@@ -433,7 +442,18 @@ var MainSearchView = Backbone.View.extend({
     _appendVersions: function (data) {
         var originalData = this.masterSearch.select2("data");
         originalData.push({ item: data.value, itemType: data.itemType});
+
+        var replaceItem = this.masterSearch.select2("container").find(".replaceItem");
+        var replaceItemParent = replaceItem.parent().parent().first();
+        var newItem = { item: data.value, itemType: data.itemType};
+        if (replaceItemParent.length > 0) {
+            var replaceItemIndex = replaceItemParent.index();
+            originalData.splice(replaceItemIndex, 1, newItem);
+        } else {
+            originalData.push(newItem);
+        }
         this._setData(originalData);
+        this._resetReplaceItems();
         this.masterSearch.select2("close");
     },
     _removeVersion: function (data) {

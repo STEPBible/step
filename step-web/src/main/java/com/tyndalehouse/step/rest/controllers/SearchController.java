@@ -71,6 +71,7 @@ public class SearchController {
      *
      * @param input the input from the user
      */
+    @Timed(name = "suggest", group = "search", rateUnit = TimeUnit.SECONDS, durationUnit = TimeUnit.MILLISECONDS)
     public List<AutoSuggestion> suggest(final String input) {
         return this.suggest(input, null);
     }
@@ -95,6 +96,7 @@ public class SearchController {
      *                       already in the box
      * @param referencesOnly true to indicate we only want references back
      */
+    @Timed(name = "suggest", group = "search", rateUnit = TimeUnit.SECONDS, durationUnit = TimeUnit.MILLISECONDS)
     public List<AutoSuggestion> suggest(final String input, final String context, final String referencesOnly) {
         boolean onlyReferences = false;
         if (StringUtils.isNotBlank(referencesOnly)) {
@@ -261,6 +263,7 @@ public class SearchController {
      * @param filter     the type of filter required on an original word search
      * @param context    the amount of context to add to the verses hit by a search
      */
+    @Timed(name = "master-search", group = "search", rateUnit = TimeUnit.SECONDS, durationUnit = TimeUnit.MILLISECONDS)
     public AbstractComplexSearch masterSearch(final String items, final String options, final String display,
                                               final String pageNumber, final String filter, final String sortOrder, final String context) {
         final List<SearchToken> searchTokens = parseTokens(items);
@@ -340,20 +343,6 @@ public class SearchController {
     }
 
     /**
-     * Replaces #plus# and #slash#
-     *
-     * @param searchQuery the search query
-     * @return the string that has replaced
-     */
-    private String restoreSearchQuery(final String searchQuery) {
-        if (isBlank(searchQuery)) {
-            return searchQuery;
-        }
-
-        return searchQuery.replace("#slash#", "/").replace("#plus#", "+");
-    }
-
-    /**
      * @param root       the root word
      * @param fullHeader the header
      * @param version    to be looked up
@@ -384,6 +373,7 @@ public class SearchController {
      * @param context    the context to use to expand the references
      * @return the list of verses for this subject
      */
+    @Timed(name = "subject-search-verses", group = "search", rateUnit = TimeUnit.SECONDS, durationUnit = TimeUnit.MILLISECONDS)
     public SubjectEntries getSubjectVerses(final String root, final String fullHeader,
                                            final String version, final String reference, final String context) {
         return this.subjectEntries.getSubjectVerses(root, fullHeader, version, reference, ConversionUtils.getValidInt(context, 0));

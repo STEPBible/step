@@ -9,13 +9,15 @@ import java.util.List;
  * @author chrisburrell
  */
 public abstract class AbstractComplexSearch {
+    private long time;
     private String signature;
     private SearchType searchType;
     private String masterVersion;
     private String extraVersions;
     private InterlinearMode interlinearMode;
     private List<SearchToken> searchTokens;
-    
+    private long timeTookTotal;
+
     public void setSearchType(final SearchType searchType) {
         this.searchType = searchType;
     }
@@ -83,5 +85,27 @@ public abstract class AbstractComplexSearch {
      */
     public void setInterlinearMode(InterlinearMode interlinearMode) {
         this.interlinearMode = interlinearMode;
+    }
+
+    public long getTime() {
+        return time;
+    }
+
+    public void setTime(final long time) {
+        this.time = time;
+    }
+
+    /**
+     * @return the timeTookTotal
+     */
+    public long getTimeTookTotal() {
+        return this.timeTookTotal;
+    }
+
+    /**
+     * @param timeTookTotal the timeTookTotal to set
+     */
+    public void setTimeTookTotal(final long timeTookTotal) {
+        this.timeTookTotal = timeTookTotal;
     }
 }

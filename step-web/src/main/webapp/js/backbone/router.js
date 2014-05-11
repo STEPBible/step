@@ -325,6 +325,7 @@ var StepRouter = Backbone.Router.extend({
 
         $.getSafe(SEARCH_DEFAULT, args, function (searchQueryResults) {
             step.util.trackAnalyticsSearch(startTime, searchQueryResults, versionArg, args[0]);
+            step.util.trackAnalytics();
             Backbone.Events.trigger(searchType + ":new:" + passageId,
                 {
                     searchQueryResults: searchQueryResults,

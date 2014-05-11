@@ -18,7 +18,6 @@ public class SearchResult extends AbstractComplexSearch implements Serializable 
     private String query;
     private int total;
     private long timeTookToRetrieveScripture;
-    private long timeTookTotal;
     private List<SearchEntry> results;
     private List<String> strongHighlights;
     private String order;
@@ -68,20 +67,6 @@ public class SearchResult extends AbstractComplexSearch implements Serializable 
      */
     public void setTimeTookToRetrieveScripture(final long timeTookToRetrieveScripture) {
         this.timeTookToRetrieveScripture = timeTookToRetrieveScripture;
-    }
-
-    /**
-     * @return the timeTookTotal
-     */
-    public long getTimeTookTotal() {
-        return this.timeTookTotal;
-    }
-
-    /**
-     * @param timeTookTotal the timeTookTotal to set
-     */
-    public void setTimeTookTotal(final long timeTookTotal) {
-        this.timeTookTotal = timeTookTotal;
     }
 
     /**

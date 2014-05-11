@@ -88,7 +88,7 @@ var StepRouter = Backbone.Router.extend({
             urlStub = this._addArg(urlStub, "sort", sort);
         }
 
-        if(position != 0) {
+        if (position != 0) {
             urlStub = this._addArg(urlStub, "pos", position);
         }
 
@@ -150,13 +150,15 @@ var StepRouter = Backbone.Router.extend({
             }
         });
     },
-    handleRenderModel: function (passageModel, partRendered, queryArgs) {
+    handleRenderModel: function (passageModel, partRendered, queryArgs, totalTime) {
+        var startRender = new Date().getTime();
         passageModel.save({ args: decodeURIComponent(queryArgs) }, {silent: true });
-        
+
         //then trigger the refresh of menu options and such like
         passageModel.trigger("sync-update", passageModel);
 
-        if (passageModel.get("searchType") == 'PASSAGE') {
+        var searchType = passageModel.get("searchType");
+        if (searchType == 'PASSAGE') {
             //destroy all views for this column
             passageModel.trigger("destroyViews");
             new PassageDisplayView({
@@ -168,6 +170,29 @@ var StepRouter = Backbone.Router.extend({
         }
 
         this._renderSummary(passageModel);
+
+        var endRender = new Date().getTime();
+        var totalRender = endRender - startRender;
+        if (totalTime != -1) {
+            step.util.trackAnalytics("search", "renderTime", totalRender);
+            step.util.trackAnalytics(searchType, "renderTime", totalRender);
+            step.util.trackAnalytics("search", "totalTime", totalTime + endRender - startRender);
+            step.util.trackAnalytics(searchType, "totalTime", totalTime + endRender - startRender);
+            step.util.trackAnalytics("search", "searchType", searchType);
+            step.util.trackAnalytics("search", "masterVersion", passageModel.get("masterVersion"));
+
+            if (passageModel.get("interlinearMode") != null) {
+                step.util.trackAnalytics("search", "interlinearMode", passageModel.get("interlinearMode"));
+            }
+
+            if (searchType == 'PASSAGE') {
+                step.util.trackAnalytics("search", "reference", passageModel.get("osisId"));
+            } else {
+                if (passageModel.get("query") != null) {
+                    step.util.trackAnalytics("search", "query", passageModel.get("query"));
+                }
+            }
+        }
     },
 
     _renderSummary: function (passageModel) {
@@ -236,11 +261,28 @@ var StepRouter = Backbone.Router.extend({
         //remove debug if present
         query = encodeURIComponent(query.replace(/&debug/ig, ""));
         console.log(query, options, display, pageNumber, filter, sort, context);
+
         $.getPassageSafe({
             url: SEARCH_MASTER,
             args: [query, options, display, pageNumber, filter, sort, context],
             callback: function (text) {
                 text.startTime = startTime;
+                var searchType = text.searchType;
+                var endTime = new Date().getTime();
+                var serverTime = text.timeTookTotal;
+                if (serverTime == null) {
+                    serverTime = 0;
+                }
+                var totalSoFar = endTime - startTime;
+                step.util.trackAnalytics("search", "serverTime", serverTime);
+                step.util.trackAnalytics("search", "latency", totalSoFar - serverTime);
+                step.util.trackAnalytics("search", "roundTrip", totalSoFar);
+
+                if(searchType) {
+                    step.util.trackAnalytics(searchType, "serverTime", serverTime);
+                    step.util.trackAnalytics(searchType, "latency", totalSoFar - serverTime);
+                    step.util.trackAnalytics(searchType, "roundTrip", totalSoFar);
+                }
 
                 step.util.unlinkThis(activePassageId);
                 var passageModel = step.passages.findWhere({ passageId: activePassageId});
@@ -257,7 +299,7 @@ var StepRouter = Backbone.Router.extend({
                     step.router.overwriteUrl();
                 }
 
-                self.handleRenderModel(passageModel, false, query);
+                self.handleRenderModel(passageModel, false, query, totalSoFar);
             },
             passageId: activePassageId,
             level: 'error'

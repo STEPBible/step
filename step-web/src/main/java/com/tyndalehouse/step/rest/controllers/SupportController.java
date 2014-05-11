@@ -3,12 +3,14 @@ package com.tyndalehouse.step.rest.controllers;
 
 import com.tyndalehouse.step.core.models.ClientSession;
 import com.tyndalehouse.step.core.service.SupportRequestService;
+import com.yammer.metrics.annotation.Timed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author chrisburrell
@@ -28,6 +30,7 @@ public class SupportController {
      * Creates a support request in JIRA - this is a POST, so we need to get the parameters in manually ourselves
      * rather than rely on reflection
      */
+    @Timed(name = "support-request", group = "analysis", rateUnit = TimeUnit.SECONDS, durationUnit = TimeUnit.MILLISECONDS)
     public void createRequest() {
         final ClientSession session = clientSession.get();
         this.supportRequestService.createRequest(

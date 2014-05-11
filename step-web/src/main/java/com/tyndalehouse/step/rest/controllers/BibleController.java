@@ -226,7 +226,7 @@ public class BibleController {
      * @param reference the reference the passage reference
      * @return the strong numbers attached to the passage
      */
-    @Timed(name = "strong-subject-counts", rateUnit = TimeUnit.SECONDS, durationUnit = TimeUnit.MILLISECONDS)
+    @Timed(name = "vocab-popup", group = "analysis", rateUnit = TimeUnit.SECONDS, durationUnit = TimeUnit.MILLISECONDS)
     public StrongCountsAndSubjects getStrongNumbersAndSubjects(final String version, final String reference) {
         notEmpty(reference, "A verse must be provided", APP_MISSING_FIELD);
         notEmpty(reference, "A version must be provided", APP_MISSING_FIELD);

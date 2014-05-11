@@ -38,6 +38,9 @@ import com.tyndalehouse.step.core.models.stats.ScopeType;
 import com.tyndalehouse.step.core.models.stats.StatType;
 import com.tyndalehouse.step.core.models.stats.CombinedPassageStats;
 import com.tyndalehouse.step.core.service.AnalysisService;
+import com.yammer.metrics.annotation.Timed;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * Exposes various analytical tools
@@ -66,6 +69,7 @@ public class AnalysisController {
      * @param considerNextChapter true to indicate we're interested in the next chapter
      * @return the combined passage stats
      */
+    @Timed(name = "word-cloud", group = "analysis", rateUnit = TimeUnit.SECONDS, durationUnit = TimeUnit.MILLISECONDS)
     public CombinedPassageStats analyseStats(final String version, final String reference, final String statType, final String scope, String considerNextChapter) {
         return this.analysis.getStatsForPassage(version, reference, StatType.valueOf(statType), ScopeType.valueOf(scope), Boolean.parseBoolean(considerNextChapter));
     }

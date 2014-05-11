@@ -110,7 +110,7 @@
                 model: modelZero
             });
 
-            step.router.handleRenderModel(modelZero, true, $.getUrlVar('q'));
+            step.router.handleRenderModel(modelZero, true, $.getUrlVar('q'), -1);
 
             $(".helpMenuTrigger").one('click', function () {
                 require(["view_help_menu"], function () {

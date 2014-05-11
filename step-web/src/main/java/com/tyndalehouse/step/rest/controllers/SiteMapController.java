@@ -36,6 +36,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -44,6 +45,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.yammer.metrics.annotation.Timed;
 import org.apache.lucene.search.MatchAllDocsQuery;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.BookCategory;
@@ -92,6 +94,7 @@ public class SiteMapController extends HttpServlet {
     }
 
     @Override
+    @Timed(name = "sitemap", group = "analysis", rateUnit = TimeUnit.SECONDS, durationUnit = TimeUnit.MILLISECONDS)
     protected void doGet(final HttpServletRequest req, final HttpServletResponse response)
             throws ServletException, IOException {
         if (this.stepBase == null) {

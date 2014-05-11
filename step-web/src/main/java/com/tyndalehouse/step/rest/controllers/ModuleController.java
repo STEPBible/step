@@ -39,9 +39,11 @@ import static com.tyndalehouse.step.core.utils.ValidateUtils.notNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import com.tyndalehouse.step.core.models.BibleInstaller;
 import com.tyndalehouse.step.core.service.SwingService;
+import com.yammer.metrics.annotation.Timed;
 import org.crosswire.jsword.book.BookCategory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -149,7 +151,7 @@ public class ModuleController {
      * @param morphIdentifiers the morphology code to lookup
      * @return the definition(s) that can be resolved from the reference provided
      */
-
+    @Timed(name = "full-vocab", group = "analysis", rateUnit = TimeUnit.SECONDS, durationUnit = TimeUnit.MILLISECONDS)
     public Info getInfo(final String vocabIdentifiers, final String morphIdentifiers) {
         // notEmpty(strong, "A reference must be provided to obtain a definition", USER_MISSING_FIELD);
         LOGGER.debug("Getting information for [{}], [{}], [{}]", new Object[] { this.vocab, morphIdentifiers });
@@ -181,6 +183,7 @@ public class ModuleController {
      * @param morphIdentifiers the morphology code to lookup
      * @return the definition(s) that can be resolved from the reference provided
      */
+    @Timed(name = "quick-vocab", group = "analysis", rateUnit = TimeUnit.SECONDS, durationUnit = TimeUnit.MILLISECONDS)
     public Info getQuickInfo(final String vocabIdentifiers, final String morphIdentifiers) {
         // notEmpty(strong, "A reference must be provided to obtain a definition", USER_MISSING_FIELD);
         LOGGER.debug("Getting quick information for [{}], [{}]",

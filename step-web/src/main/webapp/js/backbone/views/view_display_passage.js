@@ -17,10 +17,6 @@ var PassageDisplayView = DisplayView.extend({
         },
 
         render: function () {
-            step.util.trackAnalytics("passage", "loaded", "time", new Date().getTime() - this.model.get("startTime"));
-            step.util.trackAnalytics("passage", "version", this.model.get("version"));
-            step.util.trackAnalytics("passage", "reference", this.model.get("reference"));
-
             //set the range attributes, silently, so as not to cause events
             this.model.set("startRange", this.model.get("startRange"), {silent: true });
             this.model.set("endRange", this.model.get("endRange"), {silent: true });

@@ -117,7 +117,7 @@ var RestorePassageView = Backbone.View.extend({
                     if (el.prop('checked')) {
                         //restore column
                         step.util.createNewColumn(false, model);
-                        step.router.handleRenderModel(model);
+                        step.router.handleRenderModel(model, null, null, -1);
                     } else {
                         //never notify, no point
                         step.passages.remove(model, {silent: true});

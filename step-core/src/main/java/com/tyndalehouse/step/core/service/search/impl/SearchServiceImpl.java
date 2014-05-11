@@ -200,6 +200,7 @@ public class SearchServiceImpl implements SearchService {
     public AbstractComplexSearch runQuery(final List<SearchToken> searchTokens, final String options,
                                           final String display, final int page, final String filter,
                                           final String sort, int context, final String originalItems) {
+        final long timeStart = System.currentTimeMillis();
         boolean hasSearches = false;
         final List<String> versions = new ArrayList<String>(4);
         final StringBuilder references = new StringBuilder();
@@ -248,6 +249,7 @@ public class SearchServiceImpl implements SearchService {
         enhanceSearchTokens(versions.get(0), searchTokens);
         signRequest(complexSearch, display, filter, sort, context, originalItems);
         complexSearch.setSearchTokens(searchTokens);
+        complexSearch.setTimeTookTotal(System.currentTimeMillis() - timeStart);
         return complexSearch;
     }
 

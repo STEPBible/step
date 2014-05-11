@@ -6,6 +6,7 @@ import com.tyndalehouse.step.core.models.InterlinearMode;
 import com.tyndalehouse.step.core.models.OsisWrapper;
 import com.tyndalehouse.step.core.models.search.SearchResult;
 import com.tyndalehouse.step.core.utils.language.ContemporaryLanguageUtils;
+import com.yammer.metrics.annotation.Timed;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author chrisburrell
@@ -43,6 +45,7 @@ public class SearchPageController extends HttpServlet {
     }
 
     @Override
+    @Timed(name = "home-page", group = "pages", rateUnit = TimeUnit.SECONDS, durationUnit = TimeUnit.MILLISECONDS)
     protected void doGet(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
         AbstractComplexSearch text;
         try {

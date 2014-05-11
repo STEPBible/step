@@ -2569,6 +2569,9 @@ the specific language governing permissions and limitations under the Apache Lic
                         killEvent(e);
                         return;
                     case KEY.TAB:
+                        //STEP MODIFICATION
+                        if (this.opened()) { killEvent(e) }
+                        //END STEP MODIFICATION
                         this.selectHighlighted({noFocus:true});
                         this.close();
                         return;

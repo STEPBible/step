@@ -630,7 +630,7 @@ step.util = {
                 return container.html();
             }
 
-            var isMasterVersion = true;
+            var isMasterVersion = _.where(searchTokens, {tokenType: VERSION } ) > 1;
             for (var i = 0; i < searchTokens.length; i++) {
                 container.append(step.util.ui.renderArg(searchTokens[i], isMasterVersion));
                 if (searchTokens[i].itemType == VERSION) {

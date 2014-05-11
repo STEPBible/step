@@ -42,8 +42,8 @@ public class OsisReader {
      * @throws Exception any kind of exception
      */
     public static void main(final String[] args) throws Exception {
-        final String version = "ESV";
-        final String ref = "Gen.1";
+        final String version = "SBLGNT";
+        final String ref = "Matt.1.5";
         boolean format = false;
 
         final Book currentBook = Books.installed().getBook(version);
@@ -55,7 +55,8 @@ public class OsisReader {
 
         final XMLOutputter xmlOutputter = new XMLOutputter(format ? Format.getPrettyFormat() : Format.getRawFormat());
         LOGGER.debug(xmlOutputter.outputString(osisFragment));
-        xmlOutputter.outputString(osisFragment);
+
+        InterleavedOsisReader.outputUnicode(xmlOutputter.outputString(osisFragment));
 
         // do the test
         final JSwordPassageServiceImpl jsi = new JSwordPassageServiceImpl(
@@ -65,6 +66,7 @@ public class OsisReader {
 //        options.add(LookupOption.DIVIDE_HEBREW);
         options.add(LookupOption.NOTES);
         options.add(LookupOption.HEADINGS);
+        options.add(LookupOption.GREEK_ACCENTS);
 
         final String osisText = jsi.getOsisText(version, ref, options, "ESV", InterlinearMode.NONE).getValue();
         final SAXBuilder sb = new SAXBuilder();
@@ -77,14 +79,7 @@ public class OsisReader {
         } catch (final JDOMParseException e) {
             LOGGER.debug("Transformed is:\n [{}]", osisText);
         }
-        
+InterleavedOsisReader.outputUnicode(osisText);
         LOGGER.debug("Double whitespace: {}", osisText.contains("  "));
-
-
-        LOGGER.debug("AAI name is: {}", Books.installed().getBook("AAI").getName());
-
-
-
     }
-
 }

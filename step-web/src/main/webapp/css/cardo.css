@@ -4,7 +4,8 @@
   font-style: normal;
   font-weight: 400;
   font-size: 18px;
-  src: local('GentiumPlus-R'), local('GentiumPlus-R'), src: url('../fonts/GenBasR.woff'); format('woff');
+  src: url('../fonts/GentiumPlus-R.woff');
+  format('woff');
 }
 
 @font-face {

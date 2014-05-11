@@ -124,12 +124,13 @@ var MainSearchView = Backbone.View.extend({
              * @returns {*}
              */
             formatSelection: function (entry) {
-                view.masterVersion = _.findWhere($("#masterSearch").select2("data"), { itemType: "version" });
+                var versions = _.where($("#masterSearch").select2("data"), { itemType: "version" }) || [];
+                view.masterVersion = versions.length > 0 ? versions[0] : null;
                 if(view.masterVersion == null && entry != null && entry.itemType == VERSION) {
                     view.masterVersion = entry;
                 }
 
-                return step.util.ui.renderEnhancedToken(entry, view.masterVersion == null);
+                return step.util.ui.renderEnhancedToken(entry, versions.length > 1);
             },
             escapeMarkup: function (m) {
                 return m;
@@ -904,8 +905,9 @@ var MainSearchView = Backbone.View.extend({
         });
     },
     _reEvaluateMasterVersion: function () {
-        var masterVersion = this.$el.find(".versionItem").eq(0);
-        if (masterVersion.length > 0 && !masterVersion.hasClass("masterVersion")) {
+        var versions = this.$el.find(".versionItem");
+        var masterVersion = versions.eq(0);
+        if (versions.length > 1 && masterVersion.length > 0 && !masterVersion.hasClass("masterVersion")) {
             masterVersion.addClass("masterVersion");
             masterVersion.attr("title", masterVersion.attr("title") + "\n" + __s.master_version_info);
             this.masterVersion = _.findWhere(this.masterSearch.select2("data"), { itemType: "version" });

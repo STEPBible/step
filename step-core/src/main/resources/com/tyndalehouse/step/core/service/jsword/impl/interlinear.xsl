@@ -101,9 +101,7 @@
   <xsl:param name="RemovePointing" select="'true'" />
   <xsl:param name="RemoveVowels" select="'true'" />
 
-  <!-- Whether to show an interlinear and the provider helping with the lookup -->
-  <xsl:param name="infoFunctionCall" select="'javascript:showInfo'" />
-  
+
   <xsl:param name="baseVersion" select="''" />
   <!--  a comma separated list of versions to display, if provided, then we display the interlinear -->
   <xsl:param name="interlinearVersion" select="''" />
@@ -597,18 +595,14 @@
 						-->
 					<xsl:if test="$EnglishVocab = 'true'">
 						<span class="strongs">
-							<a href="javascript:showInfo('@lemma', this);">
 								<xsl:value-of
 									select="vocab:getEnglishVocab($vocabProvider, @lemma)" />
-							</a>						
 						</span>
 					</xsl:if>
 					<xsl:if test="$Transliteration = 'true'">
 						<span class="strongs stepTransliteration">
-							<a href="javascript:showInfo('@lemma', this);">
 								<xsl:value-of
 									select="vocab:getDefaultTransliteration($vocabProvider, @lemma)" />
-							</a>						
 						</span>
 					</xsl:if>
 					<xsl:if test="$GreekVocab = 'true'">
@@ -619,10 +613,8 @@
                             </xsl:choose>
                         </xsl:variable>
 						<span class="{$ancientClass}">
-							<a href="javascript:showInfo('@lemma', this);">
 								<xsl:value-of
 									select="vocab:getGreekVocab($vocabProvider, @lemma)" />
-							</a>						
 						</span>
 					</xsl:if>
 		

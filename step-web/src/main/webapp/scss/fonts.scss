@@ -46,7 +46,8 @@ td.unicodeFont {
 }
 
 .hbFont {
-  font-family: SIL_EZRA;
+  // override in case of ancient vocab
+  font-family: SIL_EZRA !important;
   font-size: 180%;
 }
 

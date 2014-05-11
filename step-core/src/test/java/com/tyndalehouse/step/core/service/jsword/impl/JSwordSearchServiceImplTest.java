@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 import java.util.List;
 
 import com.tyndalehouse.step.core.models.AvailableFeatures;
+import com.tyndalehouse.step.core.models.InterlinearMode;
 import com.tyndalehouse.step.core.service.PassageOptionsValidationService;
 import org.junit.Before;
 import org.junit.Test;
@@ -38,7 +39,7 @@ public class JSwordSearchServiceImplTest {
     public void setUp() {
         final JSwordVersificationService mockVersificationService = TestUtils.mockVersificationService();
         final PassageOptionsValidationService mockOptionsService = mock(PassageOptionsValidationService.class);
-        when(mockOptionsService.getAvailableFeaturesForVersion(any(String.class), any(List.class), any(String.class)))
+        when(mockOptionsService.getAvailableFeaturesForVersion(any(String.class), any(List.class), any(String.class), any(InterlinearMode.class)))
                 .thenReturn(new AvailableFeatures());
         this.search = new JSwordSearchServiceImpl(mockVersificationService, null, new JSwordPassageServiceImpl(
                 mockVersificationService, null, null, null, mock(VersionResolver.class), mockOptionsService));

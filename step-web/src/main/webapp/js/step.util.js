@@ -632,7 +632,7 @@ step.util = {
 
             var isMasterVersion = true;
             for (var i = 0; i < searchTokens.length; i++) {
-                container.append(step.util.ui.renderArg(searchTokens[i], isMasterVersion) + ' ');
+                container.append(step.util.ui.renderArg(searchTokens[i], isMasterVersion));
                 if (searchTokens[i].itemType == VERSION) {
                     isMasterVersion = false;
                 }
@@ -707,7 +707,7 @@ step.util = {
                         entry.item.shortName + '</div>';
                 case VERSION:
                     return '<div class="versionItem ' + (isMasterVersion ? "masterVersion" : "")
-                        + '" title="' + source + util.safeEscapeQuote(entry.item.shortInitials + ' - ' + entry.item.name) + '' +
+                        + '" title="' + source + util.safeEscapeQuote(entry.item.shortInitials + ' - ' + step.keyedVersions[entry.item.shortInitials].name) + '' +
                         (isMasterVersion ? "\n" + __s.master_version_info : "") + '" ' +
                         'data-item-type="' + entry.itemType + '" ' +
                         'data-select-id="' + util.safeEscapeQuote(entry.item.shortInitials) + '">' + entry.item.shortInitials + "</div>";

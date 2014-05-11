@@ -10,6 +10,7 @@ import static org.mockito.Mockito.when;
 import java.util.List;
 
 import com.tyndalehouse.step.core.models.AvailableFeatures;
+import com.tyndalehouse.step.core.models.InterlinearMode;
 import com.tyndalehouse.step.core.models.LookupOption;
 import com.tyndalehouse.step.core.service.PassageOptionsValidationService;
 import com.tyndalehouse.step.core.service.impl.LexiconDefinitionServiceImpl;
@@ -115,7 +116,7 @@ public class SearchServiceImplTest {
         final JSwordPassageServiceImpl jsword = new JSwordPassageServiceImpl(versificationService, null,
                 null, null, mock(VersionResolver.class), optionsValidationService);
 
-        when(optionsValidationService.getAvailableFeaturesForVersion(any(String.class), any(List.class), any(String.class)))
+        when(optionsValidationService.getAvailableFeaturesForVersion(any(String.class), any(List.class), any(String.class), any(InterlinearMode.class)))
                 .thenReturn(new AvailableFeatures());
 
         when(module.isInstalled("ESV")).thenReturn(true);

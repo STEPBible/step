@@ -2,7 +2,6 @@ package com.tyndalehouse.step.rest.controllers;
 
 import com.tyndalehouse.step.core.models.AbstractComplexSearch;
 import com.tyndalehouse.step.core.models.LexiconSuggestion;
-import com.tyndalehouse.step.core.models.OsisWrapper;
 import com.tyndalehouse.step.core.models.SearchToken;
 import com.tyndalehouse.step.core.models.SingleSuggestionsSummary;
 import com.tyndalehouse.step.core.models.SuggestionsSummary;
@@ -80,8 +79,8 @@ public class SearchController {
      * Suggests options to the user.
      *
      * @param input   the user input
-     * @param context any specific user context, such as the selection of a book, or a particular master version
-     *                already in the box
+     * @param context any specific user context, such as the selection of a book, or a particular master version already
+     *                in the box
      * @return
      */
     public List<AutoSuggestion> suggest(final String input, final String context) {
@@ -361,8 +360,19 @@ public class SearchController {
      * @return the list of verses for this subject
      */
     public SubjectEntries getSubjectVerses(final String root, final String fullHeader,
-                                              final String version) {
-        return this.getSubjectVerses(root, fullHeader, version, null);
+                                           final String version) {
+        return this.getSubjectVerses(root, fullHeader, version, null, "0");
+    }
+
+    /**
+     * @param root       the root word
+     * @param fullHeader the header
+     * @param version    to be looked up
+     * @return the list of verses for this subject
+     */
+    public SubjectEntries getSubjectVerses(final String root, final String fullHeader,
+                                           final String version, final String limitingReference) {
+        return this.getSubjectVerses(root, fullHeader, version, limitingReference, "0");
     }
 
 
@@ -371,10 +381,11 @@ public class SearchController {
      * @param fullHeader the header
      * @param version    to be looked up
      * @param reference  the limiting reference
+     * @param context    the context to use to expand the references
      * @return the list of verses for this subject
      */
     public SubjectEntries getSubjectVerses(final String root, final String fullHeader,
-                                              final String version, final String reference) {
-        return this.subjectEntries.getSubjectVerses(root, fullHeader, version, reference);
+                                           final String version, final String reference, final String context) {
+        return this.subjectEntries.getSubjectVerses(root, fullHeader, version, reference, ConversionUtils.getValidInt(context, 0));
     }
 }

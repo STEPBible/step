@@ -172,8 +172,10 @@ public class BibleInformationServiceImpl implements BibleInformationService {
 
         OsisWrapper passageText;
         final List<TrimmedLookupOption> removedOptions = new ArrayList<TrimmedLookupOption>(4);
-        final Set<LookupOption> lookupOptions = this.optionsValidationService.trim(this.optionsValidationService.getLookupOptions(options), version, extraVersions,
-                desiredModeOfDisplay, removedOptions);
+        final List<LookupOption> inputLookupOptions = this.optionsValidationService.getLookupOptions(options);
+        final InterlinearMode realModeOfDisplay = this.optionsValidationService.determineDisplayMode(inputLookupOptions, desiredModeOfDisplay, true);
+        final Set<LookupOption> lookupOptions = this.optionsValidationService.trim(inputLookupOptions, version, extraVersions,
+                desiredModeOfDisplay, realModeOfDisplay, removedOptions);
 
         if (INTERLINEAR != desiredModeOfDisplay && NONE != desiredModeOfDisplay) {
             // split the versions
@@ -189,7 +191,7 @@ public class BibleInformationServiceImpl implements BibleInformationService {
         passageText.setPreviousChapter(this.jswordPassage.getSiblingChapter(reference, version, true));
         passageText.setNextChapter(this.jswordPassage.getSiblingChapter(reference, version, false));
         passageText.setOptions(this.optionsValidationService.optionsToString(
-                this.optionsValidationService.getAvailableFeaturesForVersion(version, extraVersions, interlinearMode).getOptions()));
+                this.optionsValidationService.getAvailableFeaturesForVersion(version, extraVersions, interlinearMode, realModeOfDisplay).getOptions()));
         
         //the passage lookup wasn't made with the removed options, however, the client needs to think these were selected.
         passageText.setSelectedOptions(this.optionsValidationService.optionsToString(lookupOptions) + getRemovedOptions(removedOptions));

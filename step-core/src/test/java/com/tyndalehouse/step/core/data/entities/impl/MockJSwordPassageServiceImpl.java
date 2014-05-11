@@ -37,7 +37,6 @@ import java.util.List;
 import com.tyndalehouse.step.core.models.*;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.passage.Key;
-import org.crosswire.jsword.passage.Passage;
 
 import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
 
@@ -223,10 +222,11 @@ public class MockJSwordPassageServiceImpl implements JSwordPassageService {
      * Gets the first verse from range.
      * 
      * @param range the range
+     * @param context
      * @return the first verse from range
      */
     @Override
-    public Key getFirstVerseFromRange(final Key range) {
+    public Key getFirstVersesFromRange(final Key range, final int context) {
 
         return null;
     }

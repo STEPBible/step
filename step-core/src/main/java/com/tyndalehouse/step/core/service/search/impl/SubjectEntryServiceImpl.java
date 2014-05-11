@@ -100,7 +100,7 @@ public class SubjectEntryServiceImpl extends AbstractSubjectSearchServiceImpl im
 
     @Override
     public SubjectEntries getSubjectVerses(final String root, final String fullHeader, final String versionList,
-                                           final String reference) {
+                                           final String reference, final int context) {
         final StringBuilder sb = new StringBuilder(root.length() + fullHeader.length() + 64);
 
         appendMandatoryField(sb, "root", root);
@@ -109,7 +109,7 @@ public class SubjectEntryServiceImpl extends AbstractSubjectSearchServiceImpl im
         sb.append("\"");
 
         final String[] versions = StringUtils.split(versionList, ",");
-        return getVersesForResults(this.naves.search("root", sb.toString()), versions, reference);
+        return getVersesForResults(this.naves.search("root", sb.toString()), versions, reference, context);
     }
 
     /**
@@ -138,15 +138,16 @@ public class SubjectEntryServiceImpl extends AbstractSubjectSearchServiceImpl im
      *
      * @param results  the results
      * @param versions the version in which to look it up
+     * @param context  the context to expand with the reference
      * @return the verses
      */
     private SubjectEntries getVersesForResults(final EntityDoc[] results, final String[] versions,
-                                                  final String limitingScopeReference) {
+                                               final String limitingScopeReference, final int context) {
         final List<OsisWrapper> verses = new ArrayList<OsisWrapper>(32);
         boolean masterVersionSwapped = false;
         for (final EntityDoc doc : results) {
             final String references = doc.get("references");
-            masterVersionSwapped |= collectVersesFromReferences(verses, versions, references, limitingScopeReference);
+            masterVersionSwapped |= collectVersesFromReferences(verses, versions, references, limitingScopeReference, context);
         }
         return new SubjectEntries(verses, masterVersionSwapped);
     }
@@ -158,9 +159,11 @@ public class SubjectEntryServiceImpl extends AbstractSubjectSearchServiceImpl im
      * @param inputVersions          the versions
      * @param references             the list of resultsInKJV that form the results
      * @param limitingScopeReference the limiting scope for the reference
+     * @param context                the context to expand with the reference
      */
     private boolean collectVersesFromReferences(final List<OsisWrapper> verses, final String[] inputVersions,
-                                             final String references, final String limitingScopeReference) {
+                                                final String references, final String limitingScopeReference,
+                                                final int context) {
 
         final String originalMaster = inputVersions[0];
         Passage combinedScopeInKJVv11n = this.getCombinedBookScope(inputVersions);
@@ -189,6 +192,12 @@ public class SubjectEntryServiceImpl extends AbstractSubjectSearchServiceImpl im
         options.add(LookupOption.GREEK_ACCENTS);
         options.add(LookupOption.HEBREW_VOWELS);
 
+        if(context > 0) {
+            //add verse numbers
+//            options.add(LookupOption.TINY_VERSE_NUMBERS);
+            options.add(LookupOption.VERSE_NUMBERS);
+        }
+
         final Versification av11n = this.versificationService.getVersificationForVersion(book);
 
         Verse lastVerse = null;
@@ -212,7 +221,7 @@ public class SubjectEntryServiceImpl extends AbstractSubjectSearchServiceImpl im
                 }
             } else {
 
-                final Key firstVerse = this.jsword.getFirstVerseFromRange(range);
+                final Key firstVerse = this.jsword.getFirstVersesFromRange(range, context);
 
                 final OsisWrapper passage = this.jsword.peakOsisText(versions, firstVerse, options, InterlinearMode.INTERLEAVED_COMPARE.name());
                 passage.setReference(range.getName());

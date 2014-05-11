@@ -17,8 +17,10 @@ public interface SubjectEntrySearchService {
      * @param fullHeader the full header
      * @param version the version to be used for the lookups
      * @param reference
+     * @param context the context to use to expand the verse references
      * @return the first verse of each range
      */
-    com.tyndalehouse.step.core.models.search.SubjectEntries getSubjectVerses(String root, String fullHeader, String version, String reference);
+    com.tyndalehouse.step.core.models.search.SubjectEntries getSubjectVerses(String root, String fullHeader,
+                                                                             String version, String reference, int context);
 
 }

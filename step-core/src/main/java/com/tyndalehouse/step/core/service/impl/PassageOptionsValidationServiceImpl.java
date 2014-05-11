@@ -62,7 +62,19 @@ public class PassageOptionsValidationServiceImpl implements PassageOptionsValida
 
     @Override
     public Set<LookupOption> trim(final List<LookupOption> options, final String version, List<String> extraVersions,
-                                  final InterlinearMode mode, final List<TrimmedLookupOption> trimmingExplanations) {
+                                  final InterlinearMode mode,
+                                  final List<TrimmedLookupOption> trimmingExplanations) {
+        // if we're not explaining why features aren't available, we don't overwrite the display mode
+        final InterlinearMode displayMode = determineDisplayMode(options, mode, trimmingExplanations != null);
+        return trim(options, version, extraVersions, mode, displayMode, trimmingExplanations);
+    }
+
+    @Override
+    public Set<LookupOption> trim(final List<LookupOption> options, final String version,
+                                  List<String> extraVersions,
+                                  final InterlinearMode mode,
+                                  final InterlinearMode displayMode,
+                                  final List<TrimmedLookupOption> trimmingExplanations) {
         // obtain error messages
         final ResourceBundle errors = ResourceBundle.getBundle("ErrorBundle", this.clientSessionProvider
                 .get().getLocale());
@@ -73,8 +85,6 @@ public class PassageOptionsValidationServiceImpl implements PassageOptionsValida
 
         final Set<LookupOption> result = getUserOptionsForVersion(errors, options, version, extraVersions, trimmingExplanations);
 
-        // if we're not explaining why features aren't available, we don't overwrite the display mode
-        final InterlinearMode displayMode = determineDisplayMode(options, mode, trimmingExplanations);
 
         // now trim further depending on modes required:
         switch (displayMode) {
@@ -98,20 +108,11 @@ public class PassageOptionsValidationServiceImpl implements PassageOptionsValida
         return result;
     }
 
-    /**
-     * Determine display mode, if there are no explanations, display mode is NONE and there are interlinear
-     * options, then mode gets override to INTERLINEAR
-     *
-     * @param options              the options
-     * @param mode                 the mode
-     * @param trimmingExplanations the trimming explanations
-     * @return the interlinear mode
-     * @
-     */
-    private InterlinearMode determineDisplayMode(final List<LookupOption> options,
-                                                 final InterlinearMode mode,
-                                                 final List<TrimmedLookupOption> trimmingExplanations) {
-        if (mode == NONE && trimmingExplanations == null && hasInterlinearOption(options)) {
+    @Override
+    public InterlinearMode determineDisplayMode(final List<LookupOption> options,
+                                                final InterlinearMode mode,
+                                                final boolean realMode) {
+        if (realMode && mode == NONE && hasInterlinearOption(options)) {
             return INTERLINEAR;
         }
 
@@ -124,8 +125,7 @@ public class PassageOptionsValidationServiceImpl implements PassageOptionsValida
      * @param errors                 the error mesages
      * @param trimmingExplanations   explanations on why something was removed
      * @param result                 result
-     * @param originalModeHasChanged true to indicate that the chosen display mode has been forced upon the
-     *                               user
+     * @param originalModeHasChanged true to indicate that the chosen display mode has been forced upon the user
      */
     private void removeInterleavingOptions(final ResourceBundle errors,
                                            final List<TrimmedLookupOption> trimmingExplanations,
@@ -196,8 +196,7 @@ public class PassageOptionsValidationServiceImpl implements PassageOptionsValida
     }
 
     /**
-     * Given a set of options selected by the user and a verson, retrieves the options that are actually
-     * available
+     * Given a set of options selected by the user and a verson, retrieves the options that are actually available
      *
      * @param errors               the error messages
      * @param options              the options given by the user
@@ -234,14 +233,14 @@ public class PassageOptionsValidationServiceImpl implements PassageOptionsValida
 
 
     @Override
-    public AvailableFeatures getAvailableFeaturesForVersion(final String version, final List<String> extraVersions, final String displayMode) {
+    public AvailableFeatures getAvailableFeaturesForVersion(final String version, final List<String> extraVersions,
+                                                            final String inputDisplayMode, final InterlinearMode finalDisplayMode) {
         final List<LookupOption> allLookupOptions = Arrays.asList(LookupOption.values());
-        final List<TrimmedLookupOption> trimmed = new ArrayList<TrimmedLookupOption>();
         final Set<LookupOption> outcome = trim(allLookupOptions, version,
-                extraVersions, getDisplayMode(displayMode, version, extraVersions),
-                trimmed);
+                extraVersions, getDisplayMode(inputDisplayMode, version, extraVersions),
+                finalDisplayMode, null);
 
-        return new AvailableFeatures(new ArrayList<LookupOption>(outcome), trimmed);
+        return new AvailableFeatures(new ArrayList<LookupOption>(outcome), null);
     }
 
     @Override

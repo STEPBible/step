@@ -157,7 +157,8 @@ var SubjectDisplayView = SearchDisplayView.extend({
         }
 
         var reference = passage.get("searchRestriction");
-        $.getSafe(SUBJECT_VERSES, [root, fullHeader, versions, reference], function (data) {
+        var context = passage.get("context");
+        $.getSafe(SUBJECT_VERSES, [root, fullHeader, versions, reference, context], function (data) {
             var results = data.subjectEntries;
             el.attr("loaded", "true");
             var verses = $("<div>").addClass("expandedHeadingItem ");

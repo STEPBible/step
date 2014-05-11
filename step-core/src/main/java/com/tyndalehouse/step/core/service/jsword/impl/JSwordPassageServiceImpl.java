@@ -39,6 +39,7 @@ import static com.tyndalehouse.step.core.models.InterlinearMode.INTERLINEAR;
 import static com.tyndalehouse.step.core.models.InterlinearMode.NONE;
 import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
 import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
+import static com.tyndalehouse.step.core.utils.StringUtils.trim;
 import static com.tyndalehouse.step.core.utils.ValidateUtils.notNull;
 import static java.lang.Integer.parseInt;
 import static java.lang.String.format;
@@ -429,7 +430,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
     }
 
     @Override
-    public Key getFirstVerseFromRange(final Key range) {
+    public Key getFirstVersesFromRange(final Key range, final int context) {
         if (range instanceof VerseRange) {
             final VerseRange verseRange = (VerseRange) range;
 
@@ -439,26 +440,23 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
                 return range;
             }
 
-            final Key next = iterator.next();
-            if (!(next instanceof Verse)) {
-                throw new StepInternalException(
-                        "Iterating through verse range does not give me a verse! Key was: "
-                                + range.toString());
+            Passage p = KeyUtil.getPassage(range);
+
+            final int totalWantedVerses = context + 1;
+            final int currentBefore = range.getCardinality();
+            p.trimVerses(totalWantedVerses);
+
+            final int currentNow = p.getCardinality();
+            final int totalAdded = currentNow - currentBefore;
+            final int leftToCollect = totalWantedVerses - currentNow;
+            if(leftToCollect > 0) {
+                p.blur(context, RestrictionType.NONE, true, false);
+                if(totalAdded < context) {
+                    p.blur(context - totalAdded, RestrictionType.NONE, true, false);
+                }
             }
 
-            final Verse firstElement = (Verse) next;
-            if (firstElement.getVerse() != 0) {
-                return firstElement;
-            }
-
-            // otherwise, we were at verse 0, so try the next one
-            if (!iterator.hasNext()) {
-                // empty range, except for verse 0
-                return range;
-            }
-
-            return iterator.next();
-
+            return p;
         }
 
         return range;
@@ -491,6 +489,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
         final List<String> extraVersions = this.getExtras(versionsInput);
 
         final InterlinearMode desiredModeOfDisplay = this.optionsValidationService.getDisplayMode(interlinearMode, masterVersion, extraVersions);
+        final InterlinearMode realModeOfDisplay = this.optionsValidationService.determineDisplayMode(options, desiredModeOfDisplay, true);
         if(InterlinearMode.INTERLINEAR.equals(desiredModeOfDisplay) && options.contains(LookupOption.CHAPTER_BOOK_VERSE_NUMBER)) {
             //then we're in a search kind of lookup, so add proper verse numbers
             options.add(LookupOption.VERSE_NUMBERS);
@@ -512,7 +511,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
         }
 
         passageText.setOptions(this.optionsValidationService.optionsToString(
-                this.optionsValidationService.getAvailableFeaturesForVersion(masterVersion, extraVersions, interlinearMode).getOptions()));
+                this.optionsValidationService.getAvailableFeaturesForVersion(masterVersion, extraVersions, interlinearMode, realModeOfDisplay).getOptions()));
         passageText.setSelectedOptions(this.optionsValidationService.optionsToString(lookupOptions));
         return passageText;
     }

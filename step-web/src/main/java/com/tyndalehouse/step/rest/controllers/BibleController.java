@@ -45,6 +45,7 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
+import com.tyndalehouse.step.core.models.InterlinearMode;
 import com.tyndalehouse.step.core.service.PassageOptionsValidationService;
 import com.tyndalehouse.step.core.utils.StringUtils;
 import org.slf4j.Logger;
@@ -245,7 +246,7 @@ public class BibleController {
            
         String[] extraVersionsAsString = StringUtils.split(extraVersions, ",");
         return this.optionsValidationService.getAvailableFeaturesForVersion(version, 
-                Arrays.asList(extraVersionsAsString), displayMode);
+                Arrays.asList(extraVersionsAsString), displayMode, InterlinearMode.valueOf(displayMode));
     }
 
     /**

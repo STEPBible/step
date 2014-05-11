@@ -186,9 +186,10 @@ public interface JSwordPassageService {
 
     /**
      * @param range a particular range of verses
+     * @param context
      * @return the first verse, or verse 1 if verse 0 (only applies if verse 1 is actually in the range!)
      */
-    Key getFirstVerseFromRange(Key range);
+    Key getFirstVersesFromRange(Key range, final int context);
 
 
 }

@@ -43,6 +43,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import com.tyndalehouse.step.core.models.InterlinearMode;
 import com.tyndalehouse.step.core.service.PassageOptionsValidationService;
 import org.junit.Before;
 import org.junit.Test;
@@ -170,7 +171,7 @@ public class BibleControllerTest {
     public void testGetFeatures() {
         final String version = "abp";
         this.testController.getFeatures(version, null, "NONE");
-        verify(this.optionsValidationService).getAvailableFeaturesForVersion(eq(version), any(List.class), eq("NONE"));
+        verify(this.optionsValidationService).getAvailableFeaturesForVersion(eq(version), any(List.class), eq("NONE"), any(InterlinearMode.class));
     }
 
     /**

@@ -142,8 +142,13 @@ public class SearchQuery {
         this.interlinearMode = interlinearMode;
 
         final StringBuilder sb = new StringBuilder();
-        for (IndividualSearch individualSearch : this.searches) {
+        final IndividualSearch[] individualSearches = this.searches;
+        for (int i = 0; i < individualSearches.length; i++) {
+            final IndividualSearch individualSearch = individualSearches[i];
             sb.append(individualSearch.getOriginalQuery());
+            if(i < individualSearches.length - 1) {
+                sb.append(' ');
+            }
         }
         this.originalQuery = sb.toString();
     }

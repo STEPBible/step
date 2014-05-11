@@ -89,7 +89,6 @@ import org.crosswire.jsword.passage.NoSuchKeyException;
 import org.crosswire.jsword.passage.VerseKey;
 import org.crosswire.jsword.versification.Versification;
 import org.crosswire.jsword.versification.VersificationsMapper;
-import org.crosswire.jsword.versification.system.Versifications;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -105,8 +104,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 import static com.tyndalehouse.step.core.service.helpers.OriginalWordUtils.STRONG_NUMBER_FIELD;
 import static com.tyndalehouse.step.core.service.helpers.OriginalWordUtils.convertToSuggestion;
@@ -255,8 +252,8 @@ public class SearchServiceImpl implements SearchService {
     }
 
     /**
-     * The best reference will always be the NT reference, unless there's a hebrew text (and not a greek). The only exception
-     * to this rule is when hebrew appears first in the list, then we will show the hebrew.
+     * The best reference will always be the NT reference, unless there's a hebrew text (and not a greek). The only
+     * exception to this rule is when hebrew appears first in the list, then we will show the hebrew.
      *
      * @param versions the list of versions
      * @return the best reference
@@ -285,8 +282,8 @@ public class SearchServiceImpl implements SearchService {
     }
 
     /**
-     * This method allows us to sign and uniquely identify a request.
-     * Most parameters should make it into this list. Page numbers don't, as we always restore the first page!
+     * This method allows us to sign and uniquely identify a request. Most parameters should make it into this list.
+     * Page numbers don't, as we always restore the first page!
      *
      * @param sort          the type of sort
      * @param context       the number of extra verses to lookup for each verse
@@ -332,11 +329,9 @@ public class SearchServiceImpl implements SearchService {
     }
 
     /**
-     * Enhances search tokens, meaning that <p />
-     * for versions, we return the short initials and long initials in the form of a 'BibleVersion' <p />
-     * for references, we return the keywraper <p />
-     * for strong numbers, we return the lexicon suggestion <p />
-     * for everything else, null.
+     * Enhances search tokens, meaning that <p /> for versions, we return the short initials and long initials in the
+     * form of a 'BibleVersion' <p /> for references, we return the keywraper <p /> for strong numbers, we return the
+     * lexicon suggestion <p /> for everything else, null.
      *
      * @param masterVersion the master version to use looking up references and so on.
      * @param searchTokens  a list of search tokens
@@ -415,8 +410,8 @@ public class SearchServiceImpl implements SearchService {
      * @param references  the list of references
      * @param options     the options
      * @param displayMode the display mode
-     * @param filter      the filter to apply to the searhc. Blank retrieves just the current search term,
-     *                    non-blank returns all non-blank (usually strong) matches as well
+     * @param filter      the filter to apply to the searhc. Blank retrieves just the current search term, non-blank
+     *                    returns all non-blank (usually strong) matches as well
      * @param sort        the sort to apply to the search
      * @param pageNumber  the page number of interest
      * @param context     amount of context to be used in searhc
@@ -583,7 +578,7 @@ public class SearchServiceImpl implements SearchService {
         // join the keys
         // return the results
 
-        result.setSearchType(sq.getSearches()[0].getType());
+        result.setSearchType(getBestSearchType(sq));
         result.setPageSize(sq.getPageSize());
         result.setPageNumber(sq.getPageNumber());
         result.setTimeTookTotal(System.currentTimeMillis() - start);
@@ -595,6 +590,23 @@ public class SearchServiceImpl implements SearchService {
         specialSort(sq, result);
         enrichWithLanguages(sq, result);
         return result;
+    }
+
+    private SearchType getBestSearchType(final SearchQuery sq) {
+        IndividualSearch[] searches = sq.getSearches();
+        for (IndividualSearch s : searches) {
+            //we never return subject searches if we can avoid it
+            final SearchType searchType = s.getType();
+            if (    SearchType.SUBJECT_RELATED != searchType &&
+                    SearchType.SUBJECT_EXTENDED != searchType &&
+                    SearchType.SUBJECT_FULL != searchType &&
+                    SearchType.SUBJECT_SIMPLE != searchType) {
+                return searchType;
+            }
+        }
+
+        //then we only have subject searches
+        return searches.length == 1 ? searches[0].getType() : SearchType.TEXT;
     }
 
     /**
@@ -640,8 +652,8 @@ public class SearchServiceImpl implements SearchService {
     }
 
     /**
-     * For this kind of sort, we find out which strong number is present in a verse, then run a comparator on
-     * the strong numbers sorts results by strong number
+     * For this kind of sort, we find out which strong number is present in a verse, then run a comparator on the strong
+     * numbers sorts results by strong number
      *
      * @param sq         the search criteria
      * @param result     results
@@ -711,12 +723,12 @@ public class SearchServiceImpl implements SearchService {
     /**
      * Extracts all strong numbers from verses
      *
-     * @param strongs    a place to store the strong numbers found so far in the search results, identified from
-     *                   the search itself
+     * @param strongs    a place to store the strong numbers found so far in the search results, identified from the
+     *                   search itself
      * @param entries    the verse entries that have been found
      * @param noOrder    the "noOrder" list which will contain all verse entries that cannot be matched
-     * @param keyedOrder the new order, to be built up. In this method, we simply store the verses, which are
-     *                   sorted later.
+     * @param keyedOrder the new order, to be built up. In this method, we simply store the verses, which are sorted
+     *                   later.
      */
     private void extractAllStrongNumbers(final Set<String> strongs, final List<SearchEntry> entries,
                                          final List<LexicalSearchEntry> noOrder, final Map<String, List<LexicalSearchEntry>> keyedOrder) {
@@ -897,13 +909,14 @@ public class SearchServiceImpl implements SearchService {
                 case SUBJECT_SIMPLE:
                 case SUBJECT_EXTENDED:
                 case SUBJECT_FULL:
-                case SUBJECT_RELATED:
-                    //the first subject search is always ignored, as we will favour the subject
-                    //display to the keys display.
-                    sq.getCurrentSearch().setSearchType(SearchType.SUBJECT_FULL);
+                    sq.getCurrentSearch().setType(SearchType.SUBJECT_FULL);
+                    sq.getCurrentSearch().setQuery(sq.getCurrentSearch().getOriginalQuery());
                     results = intersect(results, this.subjects.getKeys(sq));
                     break;
-
+                case SUBJECT_RELATED:
+                    //no override for related topic searches
+                    results = intersect(results, this.subjects.getKeys(sq));
+                    break;
                 default:
                     throw new TranslatedException("refinement_not_supported", sq.getOriginalQuery(), sq
                             .getCurrentSearch().getType().getLanguageKey());
@@ -1082,8 +1095,7 @@ public class SearchServiceImpl implements SearchService {
     }
 
     /**
-     * Runs a search using the exact form, i.e. without any lookups, a straight text search on the original
-     * text
+     * Runs a search using the exact form, i.e. without any lookups, a straight text search on the original text
      *
      * @param sq the search criteria
      * @return the results to be shown
@@ -1134,8 +1146,7 @@ public class SearchServiceImpl implements SearchService {
     }
 
     /**
-     * Attempts to recognise the input, whether it is a strong number, a transliteration or a hebrew/greek
-     * word
+     * Attempts to recognise the input, whether it is a strong number, a transliteration or a hebrew/greek word
      *
      * @param sq the search criteria
      * @return a list of match strong numbers
@@ -1173,8 +1184,7 @@ public class SearchServiceImpl implements SearchService {
     }
 
     /**
-     * Looks up all the glosses for a particular word, and then adapts to strong search and continues as
-     * before
+     * Looks up all the glosses for a particular word, and then adapts to strong search and continues as before
      *
      * @param sq search criteria
      * @return a list of matching strongs
@@ -1242,8 +1252,8 @@ public class SearchServiceImpl implements SearchService {
     }
 
     /**
-     * Takes in a normal search query, and adapts the current search by rewriting the query syntax so that it
-     * can be parsed by JSword
+     * Takes in a normal search query, and adapts the current search by rewriting the query syntax so that it can be
+     * parsed by JSword
      *
      * @param sq the search query
      * @return a list of all matching strongs
@@ -1292,8 +1302,8 @@ public class SearchServiceImpl implements SearchService {
     }
 
     /**
-     * Sets up all definitions that are related, regardless of whether they have been filtered out. Makes a
-     * unique set of these
+     * Sets up all definitions that are related, regardless of whether they have been filtered out. Makes a unique set
+     * of these
      *
      * @param sq             the search query that is being
      * @param results        the results from the direct strong search
@@ -1593,8 +1603,8 @@ public class SearchServiceImpl implements SearchService {
     }
 
     /**
-     * Gets a query that retrieves a list of strong numbers. This query is used agains the lexicon definitions
-     * lucene index, not the JSword-managed Bibles
+     * Gets a query that retrieves a list of strong numbers. This query is used agains the lexicon definitions lucene
+     * index, not the JSword-managed Bibles
      *
      * @param strongsFromQuery the strong numbers to select
      * @return a query looking up all the Strong numbers
@@ -1670,8 +1680,7 @@ public class SearchServiceImpl implements SearchService {
     /**
      * Keeps keys of "results" where they are also in searchKeys
      *
-     * @param results    the existing results that have already been obtained. If null, then searchKeys is
-     *                   returned
+     * @param results    the existing results that have already been obtained. If null, then searchKeys is returned
      * @param searchKeys the search keys of the current search
      * @return the intersection of both Keys, or searchKeys if results is null
      */
@@ -1681,17 +1690,30 @@ public class SearchServiceImpl implements SearchService {
         }
 
         Key versifiedSearchKeys = searchKeys;
-        if(results instanceof VerseKey && searchKeys instanceof VerseKey) {
+        if (results instanceof VerseKey && searchKeys instanceof VerseKey) {
             //get the results v11n
-            Versification v11nResults = ((VerseKey) results).getVersification();
-            Versification v11nSearchKeys = ((VerseKey) searchKeys).getVersification();
-            if(!!v11nResults.equals(v11nSearchKeys)) {
+            final VerseKey resultVerses = (VerseKey) results;
+            final VerseKey searchVerses = (VerseKey) searchKeys;
+
+            if(LOGGER.isTraceEnabled()) {
+                LOGGER.trace("Full results: [{}], secondary search [{}]", resultVerses.getOsisRef(), searchVerses.getOsisRef());
+            }
+
+            Versification v11nResults = resultVerses.getVersification();
+            Versification v11nSearchKeys = searchVerses.getVersification();
+            if (!!v11nResults.equals(v11nSearchKeys)) {
                 versifiedSearchKeys = VersificationsMapper.instance().map(KeyUtil.getPassage(searchKeys), v11nResults);
             }
         }
 
+
+
         // otherwise we interesect and adjust the "total"
         results.retainAll(versifiedSearchKeys);
+
+        if(LOGGER.isTraceEnabled()) {
+            LOGGER.trace("Results after retain: ", results.getOsisRef());
+        }
         return results;
     }
 }

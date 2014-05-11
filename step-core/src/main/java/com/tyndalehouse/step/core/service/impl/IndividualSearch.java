@@ -80,7 +80,6 @@ public class IndividualSearch {
     private String subRange;
     private String mainRange;
     private String[] originalFilter;
-    private SearchType searchType;
     private String originalQuery;
 
     /**
@@ -316,6 +315,14 @@ public class IndividualSearch {
     }
 
     /**
+     * sets the type of the search
+     * @param type the new type to override
+     */
+    public void setType(final SearchType type) {
+        this.type = type;
+    }
+
+    /**
      * @param query the query to set
      */
     public void setQuery(final String query) {
@@ -379,12 +386,6 @@ public class IndividualSearch {
         return this.originalFilter;
     }
 
-    /**
-     * @param searchType overrides the search type
-     */
-    public void setSearchType(SearchType searchType) {
-        this.searchType = searchType;
-    }
 
     /**
      * @return The untampered query

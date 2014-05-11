@@ -154,7 +154,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
 
             return getSiblingChapter(previousChapter, currentBook, v11n, key);
         } catch (final NoSuchKeyException e) {
-            throw new LocalisedException(e, e.getMessage());
+            throw new TranslatedException(e, "invalid_reference_in_book", reference, version);
         }
     }
 
@@ -396,7 +396,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
         } catch (final BookException e) {
             throw new LocalisedException(e, e.getMessage());
         } catch (final NoSuchKeyException e) {
-            throw new LocalisedException(e, e.getMessage());
+            throw new TranslatedException(e, "invalid_reference_in_book", reference, version);
         }
     }
 
@@ -790,7 +790,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
 
                 if (hasMultipleRanges) {
                     // get the first "range" and set up the start and ends
-                    final VerseRange r = (VerseRange) p.rangeIterator(RestrictionType.NONE).next();
+                    final VerseRange r = p.rangeIterator(RestrictionType.NONE).next();
                     osisWrapper.setStartRange(versification.getOrdinal(r.getStart()));
                     osisWrapper.setEndRange(versification.getOrdinal(r.getEnd()));
                 } else {
@@ -828,7 +828,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
         } catch (final TransformerException e) {
             throw new StepInternalException(e.getMessage(), e);
         } catch (final NoSuchKeyException e) {
-            throw new LocalisedException(e, e.getMessage());
+            throw new TranslatedException(e, "invalid_reference_in_book", bookData.getKey().getName(), book.getInitials());
         }
     }
 
@@ -1391,7 +1391,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
             }
             return new StringAndCount(referenceString.toString(), count);
         } catch (final NoSuchKeyException e) {
-            throw new LocalisedException(e, e.getMessage());
+            throw new TranslatedException(e, "invalid_reference_in_book", references, version);
         }
     }
 

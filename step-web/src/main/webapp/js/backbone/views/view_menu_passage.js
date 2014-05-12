@@ -489,7 +489,7 @@ var PassageMenuView = Backbone.View.extend({
             this.sharingBar.empty();
         }
 
-        var url = step.router.getShareableColumnUrl(element, true);
+        var url = step.router.getShareableColumnUrl(this.model.get("passageId"), true);
 
         //do google plus
         if (window.gapi != undefined) {

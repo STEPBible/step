@@ -26,6 +26,10 @@ var MainSearchView = Backbone.View.extend({
             minimumInputLength: 2,
             openOnEnter: false,
             id: function (entry) {
+                if(entry == null) {
+                    return null;
+                }
+
                 var id = entry.itemType + "-";
                 switch (entry.itemType) {
                     case REFERENCE:

@@ -253,6 +253,9 @@ step.util = {
             } else {
                 //swapping to an existing active passage id already, so sync straight away
                 existingModel.trigger("sync-update", existingModel);
+
+                //overwrite the URL with the correct URL fragment
+                step.router.overwriteUrl(existingModel.get("urlFragment"));
             }
 
 

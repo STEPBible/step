@@ -17,8 +17,8 @@ var StepRouter = Backbone.Router.extend({
         }
         return url;
     },
-    overwriteUrl: function () {
-        var url = Backbone.history.fragment || "";
+    overwriteUrl: function (inputUrl) {
+        var url = inputUrl || Backbone.history.fragment || "";
         this.navigate(url, { trigger: false, replace: true});
     },
 
@@ -108,8 +108,19 @@ var StepRouter = Backbone.Router.extend({
         }
         this.navigate(urlStub, historyOptions);
     },
-    getShareableColumnUrl: function (element, encodeFragment) {
-        return "http://www.stepbible.org/" + encodeURI(Backbone.history.fragment);
+    getShareableColumnUrl: function (passageId) {
+        var shareableUrl = "http://www.stepbible.org/";
+        if (passageId == null) {
+            return shareableUrl;
+        }
+
+        var passageModel = step.passages.findWhere({passageId: passageId});
+        if (!passageModel) {
+            return shareableUrl;
+        }
+
+        var fragment = passageModel.get("urlFragment");
+        return shareableUrl + fragment;
     },
     handleSearchResults: function (passageModel, partRendered) {
         require(["search", "defaults"], function (module) {
@@ -152,7 +163,14 @@ var StepRouter = Backbone.Router.extend({
     },
     handleRenderModel: function (passageModel, partRendered, queryArgs, totalTime) {
         var startRender = new Date().getTime();
-        passageModel.save({ args: decodeURIComponent(queryArgs) }, {silent: true });
+        passageModel.save({
+                args: decodeURIComponent(queryArgs),
+                urlFragment: Backbone.history.getFragment()
+            },
+            {
+                silent: true
+            }
+        );
 
         //then trigger the refresh of menu options and such like
         passageModel.trigger("sync-update", passageModel);
@@ -267,6 +285,7 @@ var StepRouter = Backbone.Router.extend({
             args: [query, options, display, pageNumber, filter, sort, context],
             callback: function (text) {
                 text.startTime = startTime;
+
                 var searchType = text.searchType;
                 var endTime = new Date().getTime();
                 var serverTime = text.timeTookTotal;
@@ -278,7 +297,7 @@ var StepRouter = Backbone.Router.extend({
                 step.util.trackAnalytics("search", "latency", totalSoFar - serverTime);
                 step.util.trackAnalytics("search", "roundTrip", totalSoFar);
 
-                if(searchType) {
+                if (searchType) {
                     step.util.trackAnalytics(searchType, "serverTime", serverTime);
                     step.util.trackAnalytics(searchType, "latency", totalSoFar - serverTime);
                     step.util.trackAnalytics(searchType, "roundTrip", totalSoFar);

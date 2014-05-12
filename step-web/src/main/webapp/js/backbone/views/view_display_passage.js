@@ -213,9 +213,9 @@ var PassageDisplayView = DisplayView.extend({
                 if (notice.hasClass("duplicate")) {
                     notice.css("float", "left");
                 }
+                step.util.raiseInfo(noticeText, 'info', passageId);
             }
 
-            step.util.raiseInfo(noticeText, 'info', passageId);
         },
 
         _doInterlinearDividers: function (passageContent) {

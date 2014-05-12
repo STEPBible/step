@@ -176,7 +176,7 @@
                                 <cssSourceFile>css/bootstrap-theme.min.css</cssSourceFile>
                                 <cssSourceFile>css/select2.css</cssSourceFile>
                                 <cssSourceFile>css/select2-bootstrap.css</cssSourceFile>
-                                <cssSourceFile>scss/step-template.css</cssSourceFile>
+                                <cssSourceFile>${project.build.directory}//${project.build.finalName}/scss/step-template.css</cssSourceFile>
                                 <cssSourceFile>css/qtip.css</cssSourceFile>
                                 <cssSourceFile>css/passage.css</cssSourceFile>
                                 <cssSourceFile>css/cardo.css</cssSourceFile>

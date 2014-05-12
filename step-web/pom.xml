@@ -178,6 +178,7 @@
                                 <cssSourceFile>css/select2-bootstrap.css</cssSourceFile>
                                 <!--<cssSourceFile>css/prettyCheckable.css</cssSourceFile>-->
                                 <cssSourceFile>scss/step-template.css</cssSourceFile>
+                                <cssSourceFile>css/qtip.css</cssSourceFile>
                                 <cssSourceFile>css/passage.css</cssSourceFile>
                                 <cssSourceFile>css/cardo.css</cssSourceFile>
 							</cssSourceFiles>

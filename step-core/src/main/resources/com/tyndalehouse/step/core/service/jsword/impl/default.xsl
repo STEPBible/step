@@ -1481,7 +1481,7 @@
                     </xsl:when>
                     <xsl:otherwise>
                         <tr class="row">
-                            <xsl:variable name="verse" select="cell/verse" />
+                            <xsl:variable name="verse" select="(cell/div[@osisID] | cell/verse)[1]" />
                             <xsl:call-template name="columnVerseNumber">
                                 <xsl:with-param name="verse" select="$verse" />
                             </xsl:call-template>	

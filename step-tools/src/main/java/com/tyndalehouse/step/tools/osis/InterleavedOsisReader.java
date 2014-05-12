@@ -36,11 +36,11 @@ public class InterleavedOsisReader {
      * @throws Exception any kind of exception
      */
     public static void main(final String[] args) throws Exception {
-        final String[] versions = new String[] { "ESV", "NIV" };
-        final String ref = "Luke.6.8";
-        final boolean unicodeBreakDown = true;
+        final String[] versions = new String[] { "OSMHB", "ESV" };
+        final String ref = "Mic.5";
+        final boolean unicodeBreakDown = false;
         final boolean compare = true;
-        final InterlinearMode interlinearMode = InterlinearMode.INTERLEAVED_COMPARE;
+        final InterlinearMode interlinearMode = InterlinearMode.INTERLEAVED;
         boolean format = false;
         
         final Format prettyFormat = format ? Format.getPrettyFormat() : Format.getRawFormat();

@@ -208,11 +208,14 @@ var PassageDisplayView = DisplayView.extend({
             for (var ii = 0; ii < notices.length; ii++) {
                 var notice = notices.eq(ii);
                 var noticeType = notice.attr("international");
-                notice.attr("title", __s[noticeType]);
+                var noticeText = __s[noticeType];
+                notice.attr("title", noticeText);
                 if (notice.hasClass("duplicate")) {
                     notice.css("float", "left");
                 }
             }
+
+            step.util.raiseInfo(noticeText, 'info', passageId);
         },
 
         _doInterlinearDividers: function (passageContent) {

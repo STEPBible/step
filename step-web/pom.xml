@@ -165,7 +165,7 @@
 				<executions>
 					<execution>
 						<id>minify-all-step-resources</id>
-						<phase>process-resources</phase>
+						<phase>generate-resources</phase>
 						<goals>
 							<goal>minify</goal>
 						</goals>
@@ -216,7 +216,7 @@
 					</execution>
                     <execution>
                         <id>minify-sidebar</id>
-                        <phase>process-resources</phase>
+                        <phase>generate-resources</phase>
                         <goals>
                             <goal>minify</goal>
                         </goals>
@@ -235,7 +235,7 @@
                     </execution>
                     <execution>
                         <id>minify-help-menu</id>
-                        <phase>process-resources</phase>
+                        <phase>generate-resources</phase>
                         <goals>
                             <goal>minify</goal>
                         </goals>
@@ -249,7 +249,7 @@
                     </execution>
                     <execution>
                         <id>minify-qtip</id>
-                        <phase>process-resources</phase>
+                        <phase>generate-resources</phase>
                         <goals>
                             <goal>minify</goal>
                         </goals>
@@ -263,7 +263,7 @@
                     </execution>
                     <execution>
                         <id>minify-defaults</id>
-                        <phase>process-resources</phase>
+                        <phase>generate-resources</phase>
                         <goals>
                             <goal>minify</goal>
                         </goals>
@@ -277,7 +277,7 @@
                     </execution>
                     <execution>
                         <id>minify-searches</id>
-                        <phase>process-resources</phase>
+                        <phase>generate-resources</phase>
                         <goals>
                             <goal>minify</goal>
                         </goals>
@@ -295,7 +295,7 @@
                     </execution>
                     <execution>
                         <id>minify-dropdown-options</id>
-                        <phase>process-resources</phase>
+                        <phase>generate-resources</phase>
                         <goals>
                             <goal>minify</goal>
                         </goals>
@@ -310,7 +310,7 @@
                     </execution>
                     <execution>
                         <id>minify-quick-lexicon</id>
-                        <phase>process-resources</phase>
+                        <phase>generate-resources</phase>
                         <goals>
                             <goal>minify</goal>
                         </goals>
@@ -324,7 +324,7 @@
                     </execution>
                     <execution>
                         <id>minify-draggabbilly</id>
-                        <phase>process-resources</phase>
+                        <phase>generate-resources</phase>
                         <goals>
                             <goal>minify</goal>
                         </goals>
@@ -338,7 +338,7 @@
                     </execution>
                     <execution>
                         <id>minify-html2canvas</id>
-                        <phase>process-resources</phase>
+                        <phase>generate-resources</phase>
                         <goals>
                             <goal>minify</goal>
                         </goals>

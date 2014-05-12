@@ -465,7 +465,7 @@ step.util = {
         newColumn.insertAfter(activeColumn);
         if (linked) {
             //add a link  
-            var link = $("<span class='glyphicon glyphicon-link'></span>").click(function () {
+            var link = $("<span class='glyphicon glyphicon-arrow-right linkPanel'></span>").click(function () {
                 //unlink all passages
                 step.util.unlink(newPassageId);
             });
@@ -492,7 +492,7 @@ step.util = {
         if (linked != null) {
             var linkContainer = step.passages.findWhere({ passageId: linked });
             if (linkContainer != null) {
-                step.util.getPassageContainer(linkContainer.get("passageId")).find(".glyphicon-link").remove();
+                step.util.getPassageContainer(linkContainer.get("passageId")).find(".linkPanel").remove();
             }
         }
     },
@@ -503,7 +503,7 @@ step.util = {
             linkedPassageIds.push(models[i].get("passageId"));
             models[i].save({ linked: null });
         }
-        step.util.getPassageContainer(newPassageId).find(".glyphicon-link").remove();
+        step.util.getPassageContainer(newPassageId).find(".linkPanel").remove();
         return linkedPassageIds;
     },
     isSeptuagintVersion: function (item) {

@@ -577,7 +577,7 @@ var PassageMenuView = Backbone.View.extend({
             var linkTargetModel = step.passages.findWhere({ passageId: linkTarget });
             if (linkTargetModel) {
                 //not much to do, except remove the icon
-                step.util.getPassageContainer(linkTargetModel.get("passageId")).find(".glyphicon-link").remove();
+                step.util.getPassageContainer(linkTargetModel.get("passageId")).find(".linkPanel").remove();
             }
         }
 

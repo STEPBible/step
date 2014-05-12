@@ -70,17 +70,16 @@
         border-bottom: 0 dotted;
         border-left-color: transparent;
       }
-      .glyphicon-link {
+      .linkPanel {
           margin-left: -10px;
           top: 50%;
           left: 0;
           font-size: 150%;
           position: absolute;
-        @include rotate(-135deg);
-        
-        &:hover {
-          color: gray;
-        }
+
+          &:hover {
+            color: gray;
+          }
       }
     }
   }

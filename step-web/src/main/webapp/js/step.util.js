@@ -465,7 +465,7 @@ step.util = {
         newColumn.insertAfter(activeColumn);
         if (linked) {
             //add a link  
-            var link = $("<span class='glyphicon glyphicon-arrow-right linkPanel'></span>").click(function () {
+            var link = $("<span class='glyphicon glyphicon-arrow-right linkPanel'></span>").attr("title", __s.panels_linked).click(function () {
                 //unlink all passages
                 step.util.unlink(newPassageId);
             });

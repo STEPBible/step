@@ -1572,9 +1572,11 @@ the specific language governing permissions and limitations under the Apache Lic
                 // sequence number used to drop out-of-order responses
                 queryNumber;
 
+            //STEP MODIFICATION
             //remove any STEP class
             results.removeClass("select2-parent-no-results");
-            
+            //END STEP MODIFICATION
+
             // prevent duplicate queries against the same term
             if (initial !== true && lastTerm && equal(term, lastTerm)) return;
 
@@ -2575,8 +2577,14 @@ the specific language governing permissions and limitations under the Apache Lic
                         killEvent(e);
                         return;
                     case KEY.ENTER:
-                        this.selectHighlighted();
-                        killEvent(e);
+                         this.selectHighlighted();
+
+                        //STEP MOFICATION
+                        //only kill event if we're showing results
+                        if($(".select2-parent-no-results").length == 0) {
+                            killEvent(e);
+                        }
+                        //END STEP MODIFICATION
                         return;
                     case KEY.TAB:
                         //STEP MODIFICATION

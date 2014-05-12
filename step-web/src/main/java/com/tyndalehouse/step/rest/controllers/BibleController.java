@@ -45,6 +45,7 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
+import com.google.inject.Singleton;
 import com.tyndalehouse.step.core.models.InterlinearMode;
 import com.tyndalehouse.step.core.service.PassageOptionsValidationService;
 import com.tyndalehouse.step.core.utils.StringUtils;
@@ -69,7 +70,7 @@ import com.yammer.metrics.annotation.Timed;
  *
  * @author chrisburrell
  */
-@RequestScoped
+@Singleton
 public class BibleController {
     private static final Logger LOGGER = LoggerFactory.getLogger(BibleController.class);
     private final BibleInformationService bibleInformation;

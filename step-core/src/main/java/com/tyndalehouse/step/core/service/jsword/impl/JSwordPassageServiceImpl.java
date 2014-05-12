@@ -779,7 +779,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
 
             final OsisWrapper osisWrapper = new OsisWrapper(writeToString(htmlsep), key,
                     getLanguages(book, displayMode, htmlsep, options), versification,
-                    bookData.getFirstBook().getInitials(), displayMode, 
+                    resolver.getShortName(bookData.getFirstBook().getInitials()), displayMode,
                     interlinearVersion);
 
 
@@ -937,7 +937,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
 
             final Key key = data.getKey();
             return new OsisWrapper(writeToString(transformer), key,
-                    languages, v11n, versions[0], displayMode, 
+                    languages, v11n, resolver.getShortName(versions[0]), displayMode,
                     StringUtils.join(versions, 1)
                     );
         } catch (final TransformerException e) {

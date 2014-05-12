@@ -38,6 +38,7 @@ import static com.tyndalehouse.step.core.utils.JSwordUtils.getSortedSerialisable
 import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -48,6 +49,7 @@ import com.tyndalehouse.step.core.data.StepHttpSwordInstaller;
 import com.tyndalehouse.step.core.models.*;
 import com.tyndalehouse.step.core.service.PassageOptionsValidationService;
 import com.tyndalehouse.step.core.service.jsword.*;
+import com.yammer.metrics.annotation.Timed;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.book.BookCategory;
 import org.crosswire.jsword.book.install.Installer;
@@ -164,6 +166,7 @@ public class BibleInformationServiceImpl implements BibleInformationService {
     //TODO: this could be optimized. last call to get options is very  similar to 'getLookupOptions'
     // as they share some of the same stuff.
     @Override
+    @Timed(name = "passage-lookup", group = "service", rateUnit = TimeUnit.SECONDS, durationUnit = TimeUnit.MILLISECONDS)
     public OsisWrapper getPassageText(final String version, final String reference, final String options,
                                       final String interlinearVersion, final String interlinearMode) {
 

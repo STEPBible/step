@@ -591,7 +591,7 @@ public class SearchServiceImpl implements SearchService {
         result.setQuery(sq.getOriginalQuery());
         setBestRestriction(sq, result);
         final String[] allVersions = sq.getCurrentSearch().getVersions();
-        result.setMasterVersion(allVersions[0]);
+        result.setMasterVersion(this.versionResolver.getShortName(allVersions[0]));
         result.setExtraVersions(StringUtils.join(allVersions, 1));
         specialSort(sq, result);
         enrichWithLanguages(sq, result);

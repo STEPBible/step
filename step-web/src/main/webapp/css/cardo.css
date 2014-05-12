@@ -1,11 +1,9 @@
-/* Refactor font names to be abstracted away, since Cardo isn't really cardo!  */
+/* TODO: Refactor font names to be abstracted away, since Cardo isn't really cardo!  */
 @font-face {
   font-family: 'Cardo';
   font-style: normal;
-  font-weight: 400;
   font-size: 18px;
-  src: url('../fonts/GenBkBasR.woff');
-  format('woff');
+  src: url('../fonts/cardo-regular.woff') format('woff');
 }
 
 @font-face {

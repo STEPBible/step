@@ -498,7 +498,7 @@ var PassageDisplayView = DisplayView.extend({
             var clonedVerse = $(".verse:first", passageContent).clone();
             clonedVerse.find(".verseNumber, .note, sup").remove();
 
-            var title = reference + " | " + version + " | STEP | " + clonedVerse.text();
+            var title = reference + " | " + step.keyedVersions[version].shortInitials + " | STEP | " + clonedVerse.text();
             $("title").html(title);
         },
 

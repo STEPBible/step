@@ -367,7 +367,7 @@
                 </executions>
                 <configuration>
                     <includes>
-                        <include>target/**/step.*.js</include>
+                        <include>${basedir}/target/**/step.*.js</include>
                     </includes>
                     <replacements>
                         <replacement>

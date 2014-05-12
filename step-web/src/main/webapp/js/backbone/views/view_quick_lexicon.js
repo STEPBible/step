@@ -100,6 +100,10 @@ var QuickLexicon = Backbone.View.extend({
         lexicon.find(".close").click(function () {
             lexicon.remove();
         });
+
+        this.passageContainer.find(".passageContent > .passageContentHolder, .passageContent > span").one('scroll', function() {
+            lexicon.remove();
+        })
     },
 
     /**

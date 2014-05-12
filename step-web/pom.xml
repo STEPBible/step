@@ -176,7 +176,7 @@
                                 <cssSourceFile>css/bootstrap-theme.min.css</cssSourceFile>
                                 <cssSourceFile>css/select2.css</cssSourceFile>
                                 <cssSourceFile>css/select2-bootstrap.css</cssSourceFile>
-                                <cssSourceFile>${project.build.directory}//${project.build.finalName}/scss/step-template.css</cssSourceFile>
+                                <cssSourceFile>${project.build.directory}/${project.build.finalName}/scss/step-template.css</cssSourceFile>
                                 <cssSourceFile>css/qtip.css</cssSourceFile>
                                 <cssSourceFile>css/passage.css</cssSourceFile>
                                 <cssSourceFile>css/cardo.css</cssSourceFile>
@@ -333,7 +333,7 @@
                             <jsSourceFiles>
                                 <jsSourceFile>js/backbone/views/view_quick_lexicon.js</jsSourceFile>
                             </jsSourceFiles>
-                            <jsFinalFile>quick-lexicon-${project.version}.js</jsFinalFile>
+                            <jsFinalFile>step.quick-lexicon-${project.version}.js</jsFinalFile>
                         </configuration>
                     </execution>
                     <execution>

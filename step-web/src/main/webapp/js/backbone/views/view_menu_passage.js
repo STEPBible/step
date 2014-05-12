@@ -527,13 +527,17 @@ var PassageMenuView = Backbone.View.extend({
         step.util.changeFontSize(this.$el, 1);
         return false;
     },
-    goToPreviousChapter: function () {
-        this.goToSiblingChapter(this.model.get("previousChapter"));
+    goToPreviousChapter: function (ev) {
+        this.goToSiblingChapter(this.model.get("previousChapter"), ev);
     },
-    goToNextChapter: function () {
-        this.goToSiblingChapter(this.model.get("nextChapter"));
+    goToNextChapter: function (ev) {
+        this.goToSiblingChapter(this.model.get("nextChapter"), ev);
     },
-    goToSiblingChapter: function (key) {
+    goToSiblingChapter: function (key, ev) {
+        if(ev) {
+            ev.preventDefault();
+        }
+
         step.util.activePassageId(this.model.get("passageId"));
 
         var args = this.model.get("args") || "";

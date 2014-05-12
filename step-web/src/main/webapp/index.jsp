@@ -16,35 +16,30 @@
     Injector injector = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
     Locale locale = injector.getInstance(ClientSession.class).getLocale();
     Config.set(session, Config.FMT_LOCALE, locale.getLanguage());
-    WebStepRequest stepRequest = new WebStepRequest(injector, request);
     AppManagerService appManager = injector.getInstance(AppManagerService.class);
 %>
 <fmt:setBundle basename="HtmlBundle" scope="request" />
 <!DOCTYPE html  xmlns:fb="http://ogp.me/ns/fb#">
 <html>
 <head>
-    <TITLE><%= stepRequest.getTitle() %></TITLE>
+    <TITLE>${ title }</TITLE>
     <META http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta step-local content="<%= appManager.isLocal() %>" />
     <meta name="step.version" content="${project.version}" />
-    <meta name="description" content="<%= stepRequest.getDescription() %>" />
-    <meta name="keywords" content="<%= stepRequest.getKeywords() %>" />
+    <meta name="description" content="${ description }" />
     <link rel="shortcut icon"  href="images/step-favicon.ico" />
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <%
-        if (stepRequest.getThisVersion().length() > 0 || stepRequest.getThisReference().length() > 0) {
-    %>
-    <link rel="canonical" href="http://www.stepbible.org/?version=<%= stepRequest.getThisVersion() %>&amp;reference=<%= stepRequest.getThisReference() %>" />
-    <%
-    } else {
-    %>
-    <link rel="canonical" href="http://www.stepbible.org" />
-    <%
-        }
-    %>
+    <c:choose>
+        <c:when test="${ empty canonicalUrl }">
+            <link rel="canonical" href="http://www.stepbible.org/" />
+        </c:when>
+        <c:otherwise>
+            <link rel="canonical" href="http://www.stepbible.org/?q=${canonicalUrl}" />
+        </c:otherwise>
+    </c:choose>
 
 
     <%
@@ -123,9 +118,9 @@
                         <div class="passageText ui-widget">
                             <div class="passageOptionsGroup">
                                 <div class="btn-group pull-left nextPreviousChapterGroup" style="${ 'PASSAGE' ne searchType ? 'display: none' : '' }">
-                                    <a class="btn btn-default btn-sm previousChapter" type="button" title="<fmt:message key="passage_previous_chapter" />">
+                                    <a class="btn btn-default btn-sm previousChapter" type="button" href="/?q=${previousChapter}" title="<fmt:message key="passage_previous_chapter" />">
                                         <span class="glyphicon glyphicon-arrow-left"></span></a>
-                                    <a class="btn btn-default btn-sm nextChapter" type="button" title='<fmt:message key="passage_next_chapter" />'>
+                                    <a class="btn btn-default btn-sm nextChapter" type="button" href="/?q=${nextChapter}" title='<fmt:message key="passage_next_chapter" />'>
                                         <span class="glyphicon glyphicon-arrow-right"></span>
                                     </a>
                                 </div>

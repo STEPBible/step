@@ -124,6 +124,16 @@ public class BibleController {
     }
 
     /**
+     * Returns the plain text for version and reference
+     * @param version the version of interest
+     * @param reference the reference that we are interested in
+     * @return the plain text data
+     */
+    public String getPlainTextPreview(final String version, final String reference) {
+        return this.bibleInformation.getPlainText(version, reference, true);
+    }
+
+    /**
      * a REST method that returns text from the Bible.
      *
      * @param version   the initials identifying the version

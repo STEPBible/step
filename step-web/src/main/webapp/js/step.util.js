@@ -759,6 +759,14 @@ step.util = {
                         'data-select-id="' + util.safeEscapeQuote(entry.item.text) + '" ' +
                         '>' +
                         entry.item.text + '</div>';
+                case RELATED_VERSES:
+                    return '<div class="relatedVersesItem" ' +
+                        'data-item-type="' + entry.itemType + '" ' +
+                        'data-select-id="' + util.safeEscapeQuote(entry.item.text) + '" ' +
+                        '>' +
+                        entry.item.text + '</div>';
+
+                    break;
                 default:
                     return entry.item.text;
             }

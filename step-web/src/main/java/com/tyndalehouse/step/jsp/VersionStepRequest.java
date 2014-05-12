@@ -37,6 +37,7 @@ import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.tyndalehouse.step.core.models.SearchToken;
 import org.crosswire.jsword.book.Book;
 import org.crosswire.jsword.passage.Key;
 import org.crosswire.jsword.versification.BibleBook;
@@ -229,11 +230,15 @@ public class VersionStepRequest {
         final int lastChapter = this.versificationForVersion.getLastChapter(bb);
 
         for (int ii = 1; ii <= lastChapter; ii++) {
-            bookList.append("<a href='index.jsp?version=");
+            bookList.append("<a href='/?q=");
+            bookList.append(SearchToken.VERSION);
+            bookList.append('=');
             bookList.append(this.book.getInitials());
-            bookList.append("&reference=");
+            bookList.append("|");
+            bookList.append(SearchToken.REFERENCE);
+            bookList.append('=');
             bookList.append(v11n.getShortName(bb));
-            bookList.append("%20");
+            bookList.append(".");
             bookList.append(ii);
             bookList.append("'>");
             bookList.append(ii);

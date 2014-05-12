@@ -7,7 +7,7 @@ var StepRouter = Backbone.Router.extend({
     },
     _addArg: function (url, argName, argValue) {
         if (url == "") {
-            url += 'search?';
+            url += '?';
         } else if (url[url.length - 1] != '?') {
             url += '&';
         }
@@ -164,7 +164,7 @@ var StepRouter = Backbone.Router.extend({
     handleRenderModel: function (passageModel, partRendered, queryArgs, totalTime) {
         var startRender = new Date().getTime();
         passageModel.save({
-                args: decodeURIComponent(queryArgs),
+                args: queryArgs != null ? decodeURIComponent(queryArgs) : "",
                 urlFragment: Backbone.history.getFragment()
             },
             {

@@ -397,6 +397,10 @@ public class SearchServiceImpl implements SearchService {
                 final TextSuggestion enhancedTokenInfo = new TextSuggestion();
                 enhancedTokenInfo.setText(st.getToken());
                 st.setEnhancedTokenInfo(enhancedTokenInfo);
+            } else if (SearchToken.RELATED_VERSES.equals(st.getTokenType())) {
+                final TextSuggestion enhancedTokenInfo = new TextSuggestion();
+                enhancedTokenInfo.setText(st.getToken());
+                st.setEnhancedTokenInfo(enhancedTokenInfo);
             }
             //nothing to do 
             // for subject searches or 
@@ -918,6 +922,9 @@ public class SearchServiceImpl implements SearchService {
                 case SUBJECT_RELATED:
                     //no override for related topic searches
                     results = intersect(results, this.subjects.getKeys(sq));
+                    break;
+                case RELATED_VERSES:
+                    results = intersect(results, this.relatedVerseService.getRelatedVerses(sq.getCurrentSearch().getVersions()[0], sq.getCurrentSearch().getQuery()));
                     break;
                 default:
                     throw new TranslatedException("refinement_not_supported", sq.getOriginalQuery(), sq

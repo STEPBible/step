@@ -154,4 +154,13 @@ public enum SearchType {
     public String getLanguageKey() {
         return this.languageKey;
     }
+
+    /**
+     * Gets the language key.
+     *
+     * @return the language key
+     */
+    public String getLanguageSearchKey() {
+        return this.languageKey + "_search";
+    }
 }

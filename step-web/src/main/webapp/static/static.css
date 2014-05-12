@@ -35,13 +35,14 @@ h3 {
 }
 
 .header {
-	background-image: url('../images/background-header.png');
-	background-repeat: repeat-y;
+	background-image: url('../images/step-top-left-logo.png');
+	background-repeat: no-repeat;
 	background-position: left;
-	background-color: #F3E5B4;
+	background-color: black;
 	border-bottom: 1px solid white;
-	color: #F3E5B4;
-	height: 39px;
+	color: white;
+	height: 40px;
+    padding-left: 40px;
 }
 
 .listingTable tr.even {

@@ -716,13 +716,6 @@ step.util = {
                         'data-select-id="' + util.safeEscapeQuote(entry.item.shortInitials) + '">' + entry.item.shortInitials + "</div>";
                 case GREEK:
                 case HEBREW:
-                    var className = entry.itemType == GREEK ? "unicodeFont" : "hbFontMini";
-                    return "<div class=' " + entry.itemType + 'Item ' + className + "' " +
-                        'data-item-type="' + entry.itemType + '" ' +
-                        'data-select-id="' + util.safeEscapeQuote(entry.item.stepTransliteration) + '" ' +
-                        'title="' + source + util.safeEscapeQuote(entry.item.gloss + ", " + entry.item.stepTransliteration) + '">' +
-                        entry.item.matchingForm + "</div>";
-
                 case GREEK_MEANINGS:
                 case HEBREW_MEANINGS:
                     return "<div class='" + entry.itemType + "Item' " +

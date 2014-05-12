@@ -88,10 +88,11 @@ var QuickLexicon = Backbone.View.extend({
         }
     },
     displayQuickDef: function(lexicon) {
+        var self = this;
         this.passageContainer.append(lexicon);
         if (this.touchEvent) {
             lexicon.click(function () {
-                step.util.ui.showDef({ strong: this.strong, this: self.morph });
+                step.util.ui.showDef({ strong: self.strong, morph: self.morph });
                 lexicon.remove();
             });
         }

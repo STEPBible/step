@@ -149,7 +149,7 @@
                         </goals>
                         <configuration>
                             <sassSourceDirectory>${basedir}/src/main/webapp/scss</sassSourceDirectory>
-                            <destination>${project.build.directory}/${project.build.finalName}/scss</destination>
+                            <destination>${basedir}/src/main/webapp/scss</destination>
                             <includes>
                                 <include>step-template.scss</include>
                             </includes>
@@ -176,7 +176,7 @@
                                 <cssSourceFile>css/bootstrap-theme.min.css</cssSourceFile>
                                 <cssSourceFile>css/select2.css</cssSourceFile>
                                 <cssSourceFile>css/select2-bootstrap.css</cssSourceFile>
-                                <cssSourceFile>${project.build.directory}/${project.build.finalName}/scss/step-template.css</cssSourceFile>
+                                <cssSourceFile>scss/step-template.css</cssSourceFile>
                                 <cssSourceFile>css/qtip.css</cssSourceFile>
                                 <cssSourceFile>css/passage.css</cssSourceFile>
                                 <cssSourceFile>css/cardo.css</cssSourceFile>
@@ -230,21 +230,7 @@
                                 <jsSourceFile>js/backbone/views/view_sidebar.js</jsSourceFile>
                                 
                             </jsSourceFiles>
-                            <jsFinalFile>sidebar-${project.version}.js</jsFinalFile>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>minify-select2</id>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>minify</goal>
-                        </goals>
-                        <configuration>
-                            <jsSourceDir>.</jsSourceDir>
-                            <jsSourceFiles>
-                                <jsSourceFile>libs/select2.js</jsSourceFile>
-                            </jsSourceFiles>
-                            <jsFinalFile>select2-${project.version}.js</jsFinalFile>
+                            <jsFinalFile>step.sidebar-${project.version}.js</jsFinalFile>
                         </configuration>
                     </execution>
                     <execution>
@@ -258,7 +244,7 @@
                             <jsSourceFiles>
                                 <jsSourceFile>js/backbone/views/view_help_menu.js</jsSourceFile>
                             </jsSourceFiles>
-                            <jsFinalFile>help-menu-${project.version}.js</jsFinalFile>
+                            <jsFinalFile>step.help-menu-${project.version}.js</jsFinalFile>
                         </configuration>
                     </execution>
                     <execution>
@@ -272,7 +258,7 @@
                             <jsSourceFiles>
                                 <jsSourceFile>js/jquery-extensions/jquery-qtip.js</jsSourceFile>
                             </jsSourceFiles>
-                            <jsFinalFile>qtip-${project.version}.js</jsFinalFile>
+                            <jsFinalFile>step.qtip-${project.version}.js</jsFinalFile>
                         </configuration>
                     </execution>
                     <execution>
@@ -298,11 +284,11 @@
                         <configuration>
                             <jsSourceDir>.</jsSourceDir>
                             <jsSourceFiles>
+                                <jsSourceFile>libs/dohighlight-min.js</jsSourceFile>
                                 <jsSourceFile>js/backbone/views/view_display_search.js</jsSourceFile>
                                 <jsSourceFile>js/backbone/views/view_display_text.js</jsSourceFile>
                                 <jsSourceFile>js/backbone/views/view_display_subject.js</jsSourceFile>
                                 <jsSourceFile>js/backbone/views/view_display_word.js</jsSourceFile>
-                                <jsSourceFile>libs/dohighlight-min.js</jsSourceFile>
                             </jsSourceFiles>
                             <jsFinalFile>step.search-${project.version}.js</jsFinalFile>
                         </configuration>
@@ -319,7 +305,7 @@
                                 <jsSourceFile>js/backbone/views/view_pick_bible.js</jsSourceFile>
                                 <jsSourceFile>js/backbone/views/view_advanced_search.js</jsSourceFile>
                             </jsSourceFiles>
-                            <jsFinalFile>menu_extras-${project.version}.js</jsFinalFile>
+                            <jsFinalFile>step.menu_extras-${project.version}.js</jsFinalFile>
                         </configuration>
                     </execution>
                     <execution>
@@ -347,7 +333,7 @@
                             <jsSourceFiles>
                                 <jsSourceFile>libs/draggabilly.js</jsSourceFile>
                             </jsSourceFiles>
-                            <jsFinalFile>draggabilly-${project.version}.js</jsFinalFile>
+                            <jsFinalFile>step.draggabilly-${project.version}.js</jsFinalFile>
                         </configuration>
                     </execution>
                     <execution>
@@ -361,7 +347,7 @@
                             <jsSourceFiles>
                                 <jsSourceFile>libs/html2canvas.js</jsSourceFile>
                             </jsSourceFiles>
-                            <jsFinalFile>html2canvas-${project.version}.js</jsFinalFile>
+                            <jsFinalFile>step.html2canvas-${project.version}.js</jsFinalFile>
                         </configuration>
                     </execution>
                 </executions>

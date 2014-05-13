@@ -989,7 +989,7 @@
         <xsl:variable name="encodedPassageKey" select="url:encode($passageKey)"/>
 
       <xsl:choose>
-          <xsl:when test="string-length(encodedPassageKey) = 0"><xsl:apply-templates/></xsl:when>
+          <xsl:when test="string-length($encodedPassageKey) = 0"><xsl:apply-templates/></xsl:when>
           <xsl:otherwise><a href="?version={$baseVersion}&amp;reference={$encodedPassageKey}" title="{$passageKey}" class="linkRef" xref="{$passageKey}"><xsl:apply-templates/></a></xsl:otherwise>
       </xsl:choose>
 
@@ -1001,7 +1001,7 @@
       <xsl:variable name="encodedPassageKey" select="url:encode($passageKey)"/>
 
       <xsl:choose>
-          <xsl:when test="string-length(encodedPassageKey) = 0"><xsl:apply-templates/></xsl:when>
+          <xsl:when test="string-length($encodedPassageKey) = 0"><xsl:apply-templates/></xsl:when>
           <xsl:otherwise><a href="?version={$baseVersion}&amp;reference={$encodedPassageKey}" title="{$passageKey}" xref="{$passageKey}"><xsl:apply-templates/></a></xsl:otherwise>
       </xsl:choose>
 

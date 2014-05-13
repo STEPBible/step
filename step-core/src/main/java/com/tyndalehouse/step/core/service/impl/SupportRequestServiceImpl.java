@@ -157,11 +157,11 @@ public class SupportRequestServiceImpl implements SupportRequestService {
     private String createJiraRequest(final String summary, final String description, 
                                      final String url,
                                      final String issueType, final String email) {
-        final String escapedEmail = getNonNullString(email, "");
-        final String escapedSummary = getNonNullString(summary, "");
-        final String escapedDescription = getNonNullString(description, "");
-        final String escapedUrl = getNonNullString(url, "");
-        final String escapedType = getNonNullString(issueType, "");
+        final String escapedEmail = escapeQuotes(getNonNullString(email, ""));
+        final String escapedSummary = escapeQuotes(getNonNullString(summary, ""));
+        final String escapedDescription = escapeQuotes(getNonNullString(description, ""));
+        final String escapedUrl = escapeQuotes(getNonNullString(url, ""));
+        final String escapedType = escapeQuotes(getNonNullString(issueType, ""));
 
         ByteArrayInputStream createRequest = null;
         BasicHttpEntity entity = null;
@@ -241,7 +241,7 @@ public class SupportRequestServiceImpl implements SupportRequestService {
      * @return the escaped string
      */
     private String escapeQuotes(final String nonNullString) {
-        return nonNullString.replaceAll("\"", "\\\"");
+        return nonNullString.replaceAll("\"", "\\\\\"").replaceAll("\n", "\\n").replaceAll("\t", "\\t").replaceAll("\r", "\\r");
     }
 
     private HttpPost getJiraHttpPost(final String operation, final String contentType) {

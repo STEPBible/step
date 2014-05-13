@@ -99,6 +99,10 @@ public class IndividualSearch {
         if(this.type == SearchType.SUBJECT_SIMPLE) {
             this.originalQuery = query;
             this.query = (StringUtils.isNotBlank(this.mainRange) ? this.mainRange + " ": "") + LuceneIndex.FIELD_HEADING_STEM + ":" + QueryParser.escape(query);
+        } else if(type == SearchType.TEXT) {
+            //TODO: this is a hack because we need to revisit the parsing of searches
+            this.secondaryRange = mainRange;
+            this.originalQuery = this.query = query;
         } else {
             this.originalQuery = this.query = query;
         }

@@ -13,6 +13,8 @@
         }
 
         //now mark some versions as recommended
+        markAsRecommended('ESV');
+        markAsRecommended('NIV');
         markAsRecommended('OHB');
         markAsRecommended('WHNU');
         markAsRecommended('LXX');

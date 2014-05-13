@@ -82,7 +82,7 @@ public class ModuleServiceImpl implements ModuleService {
     public List<BibleVersion> getAvailableModules() {
         LOGGER.debug("Getting bible versions");
         return getSortedSerialisableList(this.jswordModuleService.getInstalledModules(BookCategory.BIBLE,
-                BookCategory.DICTIONARY, BookCategory.COMMENTARY), this.clientSession.get().getLocale(),
+                BookCategory.COMMENTARY), this.clientSession.get().getLocale(),
                 this.resolver);
     }
 

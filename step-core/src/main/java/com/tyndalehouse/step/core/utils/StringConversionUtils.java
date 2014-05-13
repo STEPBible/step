@@ -2,11 +2,11 @@
 
  * Copyright (c) 2012, Directors of the Tyndale STEP Project
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without 
  * modification, are permitted provided that the following conditions 
  * are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright 
  * notice, this list of conditions and the following disclaimer.
  * Redistributions in binary form must reproduce the above copyright 
@@ -17,7 +17,7 @@
  * nor the names of its contributors may be used to endorse or promote 
  * products derived from this software without specific prior written 
  * permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
@@ -33,10 +33,12 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.utils;
 
-import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
-import static com.tyndalehouse.step.core.utils.StringUtils.isEmpty;
-import static com.tyndalehouse.step.core.utils.language.GreekUtils.removeGreekTranslitMarkUpForIndexing;
-import static com.tyndalehouse.step.core.utils.language.HebrewUtils.removeHebrewTranslitMarkUpForIndexing;
+import com.tyndalehouse.step.core.utils.language.GreekUtils;
+import com.tyndalehouse.step.core.utils.language.HebrewUtils;
+import com.tyndalehouse.step.core.utils.language.transliteration.TransliterationOption;
+import com.tyndalehouse.step.core.utils.language.transliteration.TransliterationRule;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.text.Normalizer;
 import java.text.Normalizer.Form;
@@ -45,17 +47,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.tyndalehouse.step.core.utils.language.GreekUtils;
-import com.tyndalehouse.step.core.utils.language.HebrewUtils;
-import com.tyndalehouse.step.core.utils.language.transliteration.TransliterationOption;
-import com.tyndalehouse.step.core.utils.language.transliteration.TransliterationRule;
+import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
+import static com.tyndalehouse.step.core.utils.StringUtils.isEmpty;
+import static com.tyndalehouse.step.core.utils.language.GreekUtils.removeGreekTranslitMarkUpForIndexing;
+import static com.tyndalehouse.step.core.utils.language.HebrewUtils.removeHebrewTranslitMarkUpForIndexing;
 
 /**
  * A collection of utility methods enabling us to convert Strings, references one way or another.
- * 
+ *
  * @author chrisburrell
  */
 public final class StringConversionUtils {
@@ -86,12 +85,12 @@ public final class StringConversionUtils {
     }
 
     /**
-     * Not all bibles encode strong numbers as strong:[HG]\d+ unfortunately, so instead we cope for strong:
-     * and strong:H.
-     * 
-     * In essence we chop off any of the following prefixes: strong:G, strong:H, strong:, H, G. We don't use a
-     * regular expression, since this will be much quicker
-     * 
+     * Not all bibles encode strong numbers as strong:[HG]\d+ unfortunately, so instead we cope for strong: and
+     * strong:H.
+     * <p/>
+     * In essence we chop off any of the following prefixes: strong:G, strong:H, strong:, H, G. We don't use a regular
+     * expression, since this will be much quicker
+     *
      * @param strong strong key
      * @return the key containing just the digits
      */
@@ -115,7 +114,7 @@ public final class StringConversionUtils {
 
     /**
      * in this case, we assume that a key starts shortly after the last ':' with a number
-     * 
+     *
      * @param potentialKey a key that can potentially be shortened
      * @return the shortened key
      */
@@ -125,7 +124,7 @@ public final class StringConversionUtils {
 
     /**
      * Strips off strong: if present, to yield Gxxxx - Assumes strong prefix is upperCase, i.e. STRONG:
-     * 
+     *
      * @param key key to change
      * @return the key without the prefix
      */
@@ -138,7 +137,7 @@ public final class StringConversionUtils {
 
     /**
      * pads the strong number according to its size, to an optional letter followed by 4 digits
-     * 
+     *
      * @param key the key to the strong number
      * @return the strong number, padded
      */
@@ -175,13 +174,13 @@ public final class StringConversionUtils {
 
     /**
      * Pads any strong number that is not prefixed by a letter such as G or H
-     * 
-     * @param sb the output buffer
+     *
+     * @param sb           the output buffer
      * @param strongNumber the strong number itself
-     * @param length the length of the strong number
+     * @param length       the length of the strong number
      */
     private static void padNonPrefixedStrongNumber(final StringBuilder sb, final String strongNumber,
-            final int length) {
+                                                   final int length) {
         // we only have the numbers so do our best
         for (int ii = length; ii < 4; ii++) {
             sb.append('0');
@@ -201,14 +200,14 @@ public final class StringConversionUtils {
 
     /**
      * Pads the given prefixed number, from say G12 to G0012
-     * 
-     * @param sb the string to build up
+     *
+     * @param sb           the string to build up
      * @param strongNumber the strong number
-     * @param length the length of the string
-     * @param firstChar the first character, i.e. either G or H
+     * @param length       the length of the string
+     * @param firstChar    the first character, i.e. either G or H
      */
     private static void padPrefixedStrongNumber(final StringBuilder sb, final String strongNumber,
-            final int length, final char firstChar) {
+                                                final int length, final char firstChar) {
         switch (length) {
             case 1:
                 sb.append(strongNumber);
@@ -254,9 +253,9 @@ public final class StringConversionUtils {
 
     /**
      * in this case, we assume that a key starts shortly after the last ':' with a number
-     * 
+     *
      * @param potentialKey a key that can potentially be shortened
-     * @param trimInitial trim initial character after ':'
+     * @param trimInitial  trim initial character after ':'
      * @return the shortened key
      */
     public static String getAnyKey(final String potentialKey, final boolean trimInitial) {
@@ -285,7 +284,7 @@ public final class StringConversionUtils {
 
     /**
      * Takes accents and other punctuation off the word - less performant
-     * 
+     *
      * @param word the word to be processed
      * @return the unaccented form
      */
@@ -296,15 +295,28 @@ public final class StringConversionUtils {
     /**
      * takes accents and other punctuation off the word
      *
-     * @param word the word to be processed
+     * @param word    the word to be processed
      * @param isGreek true for greek, false for hebrew
      * @return the unaccented form
      */
     public static String unAccent(final String word, final boolean isGreek) {
+      return unAccent(word, isGreek, true);
+    }
+
+
+    /**
+     * takes accents and other punctuation off the word
+     *
+     * @param word                the word to be processed
+     * @param isGreek             true for greek, false for hebrew
+     * @param unpointHebrewVowels true to remove Hebrew vowels
+     * @return the unaccented form
+     */
+    public static String unAccent(final String word, final boolean isGreek, boolean unpointHebrewVowels) {
         if (isGreek) {
             return GreekUtils.unAccent(word);
         }
-        return HebrewUtils.unPoint(word);
+        return HebrewUtils.unPoint(word, unpointHebrewVowels);
     }
 
     /**
@@ -316,7 +328,7 @@ public final class StringConversionUtils {
     public static String unAccentLeavingVowels(final String word) {
         return unAccentHebrewLeavingVowels(unAccent(word, true));
     }
-    
+
     /**
      * takes accents and other punctuation off the word
      *
@@ -326,16 +338,16 @@ public final class StringConversionUtils {
     public static String unAccentHebrewLeavingVowels(final String word) {
         return HebrewUtils.unPoint(word, false);
     }
-    
+
     /**
      * Removes the starting H, if present (for greek transliterations only at present time)
-     * 
+     *
      * @param stepTransliteration the transliteration
-     * @param isGreek true if greek
+     * @param isGreek             true if greek
      * @return the transliteration adapted for unaccented texts)
      */
     public static String adaptForTransliterationForIndexing(final String stepTransliteration,
-            final boolean isGreek) {
+                                                            final boolean isGreek) {
         if (isGreek) {
             return GreekUtils.removeGreekTranslitMarkUpForIndexing(stepTransliteration);
         }
@@ -345,12 +357,12 @@ public final class StringConversionUtils {
     }
 
     /**
-     * Removes the starting H, if present (for greek transliterations only at present time), removes other
-     * symbols such as letters with lines or dots, etc. Then runs a set of rules on both transliterations. See
-     * TYNSTEP-374 for the rule definitions.
-     * 
+     * Removes the starting H, if present (for greek transliterations only at present time), removes other symbols such
+     * as letters with lines or dots, etc. Then runs a set of rules on both transliterations. See TYNSTEP-374 for the
+     * rule definitions.
+     *
      * @param stepTransliteration the transliteration
-     * @param isGreek true if greek
+     * @param isGreek             true if greek
      * @return the transliteration adapted for unaccented texts)
      */
     public static List<TransliterationOption> adaptTransliterationForQuerying(
@@ -366,12 +378,12 @@ public final class StringConversionUtils {
     }
 
     /**
-     * @param baseString a transliteration without any mark-up
+     * @param baseString           a transliteration without any mark-up
      * @param transliterationRules the rules to apply
      * @return all possible transliterations
      */
     public static List<TransliterationOption> multiplyTranslitOptions(final String baseString,
-            final List<TransliterationRule> transliterationRules) {
+                                                                      final List<TransliterationRule> transliterationRules) {
         // it is important to remember that we strip out special characters here, so ensure that the rules
         // below do not conflict with the stripping of the mark-up
 
@@ -430,7 +442,7 @@ public final class StringConversionUtils {
 
     /**
      * Starts with punctuation.
-     * 
+     *
      * @param s the s
      * @return true, if the first character is a punctuation character
      */

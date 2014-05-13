@@ -1140,11 +1140,12 @@ public class SearchServiceImpl implements SearchService {
         final String[] soughtAfterVersions = currentSearch.getVersions();
 
         // overwrite version with WHNU to do the search
-        if (currentSearch.getType() == SearchType.EXACT_FORM) {
+        if (GreekUtils.isGreekText(sq.getCurrentSearch().getQuery()) ){
             currentSearch.setVersions(BASE_GREEK_VERSIONS);
             currentSearch.setQuery(unaccent(currentSearch.getQuery(), sq), true);
         } else {
             currentSearch.setVersions(new String[]{BASE_HEBREW_VERSION});
+            currentSearch.setQuery(unaccent(currentSearch.getQuery(), sq), true);
         }
 
         final Key resultKeys = this.jswordSearch.searchKeys(sq);
@@ -1453,7 +1454,7 @@ public class SearchServiceImpl implements SearchService {
         final SearchType currentSearchType = sq.getCurrentSearch().getType();
         switch (currentSearchType) {
             case EXACT_FORM:
-                return StringConversionUtils.unAccent(query);
+                return StringConversionUtils.unAccent(StringConversionUtils.unAccent(query, true), false, false);
             case ORIGINAL_GREEK_FORMS:
             case ORIGINAL_GREEK_RELATED:
                 return StringConversionUtils.unAccent(query, true);

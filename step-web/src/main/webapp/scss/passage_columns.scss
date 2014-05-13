@@ -29,6 +29,7 @@
     padding: 0px 2px;
     
     .passageContent {
+      clear: left;
       height: 100%;
       padding-bottom: $topSectionHeight;
       &> span {

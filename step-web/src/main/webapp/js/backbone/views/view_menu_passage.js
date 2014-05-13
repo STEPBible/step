@@ -76,6 +76,7 @@ var PassageMenuView = Backbone.View.extend({
                 .find(".glyphicon").removeClass('glyphicon-exclamation-sign glyphicon-warning-sign glyphicon-info-sign').addClass("glyphicon-info-sign");
         }
     }, raiseMessage: function (opts) {
+        var self = this;
         var titleSoFar = this.warnings.attr("data-content") || "";
         if (titleSoFar != "") {
             titleSoFar += "<p />";
@@ -96,6 +97,9 @@ var PassageMenuView = Backbone.View.extend({
         if(opts.silent != true) {
             this.warnings.popover('show');
         }
+        this.warnings.next(".popover").on('click', function() {
+            self.warnings.popover("hide");
+        })
     },
     squashError: function () {
         this.warnings.attr("data-content", "");

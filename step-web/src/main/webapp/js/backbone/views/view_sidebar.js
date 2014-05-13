@@ -55,7 +55,7 @@ var SidebarView = Backbone.View.extend({
             var requestTime = new Date().getTime();
             $.getSafe(MODULE_GET_INFO, [this.model.get("strong"), this.model.get("morph")], function (data) {
                 step.util.trackAnalyticsTime("lexicon", "loaded", new Date().getTime() - requestTime);
-                step.util.trackAnalytics("passage", "strong", self.model.get("strong"));
+                step.util.trackAnalytics("lexicon", "strong", self.model.get("strong"));
                 self.createDefinition(data);
             });
         } else if (this.model.get("mode") == 'analysis') {

@@ -46,7 +46,7 @@ var FeedbackView = Backbone.View.extend({
         '<form role="form">' +
         '<div class="form-group">' +
         '<label for="feedbackEmail"><%= __s.register_email %><span class="mandatory">*</span></label>' +
-        '<input type="email" class="form-control" id="feedbackEmail" maxlength="200" placeholder="email@email.com">' +
+        '<input type="email" class="form-control" value="<%= email %>" id="feedbackEmail" maxlength="200" placeholder="email@email.com">' +
         '</div>' +
         '<div class="form-group">' +
         '<label for="feedbackSummary"><%= __s.feedback_summary %><span class="mandatory">*</span></label> ' +
@@ -98,13 +98,13 @@ var FeedbackView = Backbone.View.extend({
     },
     render: function () {
         var self = this;
-        this.feedbackForm = $(_.template(this.template)());
+        this.feedbackForm = $(_.template(this.template)({ email: step.settings.get("userFeedbackEmail") || "" }));
         this.$el.append(this.feedbackForm);
     
         this.feedbackForm.on("show.bs.modal", function(){
             //blank out all fields 
             self.feedbackForm.find("#feedbackType").val("Bug");
-            self.feedbackForm.find("#feedbackEmail").val("");
+            self.feedbackForm.find("#feedbackEmail").val(step.settings.get("userFeedbackEmail") || "" );
             self.feedbackForm.find("#feedbackDescription").val("");
             self.feedbackForm.find("#feedbackSummary").val("");
         });
@@ -117,8 +117,13 @@ var FeedbackView = Backbone.View.extend({
             
             require(["html2canvas"], function () {
                 var formData = [];
+                var email = self.feedbackForm.find("#feedbackEmail").val();
+
+                //store email locally
+                step.settings.save({ userFeedbackEmail: email }, {silent: true});
+
                 formData.push({ key: "type", value: self.feedbackForm.find("#feedbackType").val()});
-                formData.push({ key: "email", value: self.feedbackForm.find("#feedbackEmail").val()});
+                formData.push({ key: "email", value: email});
                 formData.push({ key: "description", value: self.feedbackForm.find("#feedbackDescription").val()});
                 formData.push({ key: "summary", value: self.feedbackForm.find("#feedbackSummary").val()});
                 formData.push({ key: "url", value: document.URL});

@@ -42,8 +42,8 @@ public class OsisReader {
      * @throws Exception any kind of exception
      */
     public static void main(final String[] args) throws Exception {
-        final String version = "SBLGNT";
-        final String ref = "Matt.1.5";
+        final String version = "NRT";
+        final String ref = "Matt.1";
         boolean format = false;
 
         final Book currentBook = Books.installed().getBook(version);
@@ -56,7 +56,7 @@ public class OsisReader {
         final XMLOutputter xmlOutputter = new XMLOutputter(format ? Format.getPrettyFormat() : Format.getRawFormat());
         LOGGER.debug(xmlOutputter.outputString(osisFragment));
 
-        InterleavedOsisReader.outputUnicode(xmlOutputter.outputString(osisFragment));
+//        InterleavedOsisReader.outputUnicode(xmlOutputter.outputString(osisFragment));
 
         // do the test
         final JSwordPassageServiceImpl jsi = new JSwordPassageServiceImpl(
@@ -79,7 +79,7 @@ public class OsisReader {
         } catch (final JDOMParseException e) {
             LOGGER.debug("Transformed is:\n [{}]", osisText);
         }
-InterleavedOsisReader.outputUnicode(osisText);
+//        InterleavedOsisReader.outputUnicode(osisText);
         LOGGER.debug("Double whitespace: {}", osisText.contains("  "));
     }
 }

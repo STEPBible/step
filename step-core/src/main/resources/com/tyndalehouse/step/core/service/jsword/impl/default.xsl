@@ -968,6 +968,7 @@
       	</xsl:when>
       	<xsl:otherwise>
             <xsl:choose>
+                <!-- most parallel references only have the localised key, so can't use it -->
                 <xsl:when test="@type='psalm'"><h3 class="psalmHeading {@type}"><xsl:apply-templates/></h3></xsl:when>
                 <xsl:when test="@canonical = 'true'"><h3 class="canonicalHeading {@type}"><xsl:apply-templates/></h3></xsl:when>
                 <xsl:otherwise><h2 class="heading {@type}"><xsl:apply-templates/></h2></xsl:otherwise>
@@ -986,14 +987,25 @@
         <xsl:variable name="passage" select="jsword:getValidKey($keyf, $versification, @osisRef)"/>
         <xsl:variable name="passageKey" select="jsword:getName($passage)" />  
         <xsl:variable name="encodedPassageKey" select="url:encode($passageKey)"/>
-        <a href="?version={$baseVersion}&amp;reference={$encodedPassageKey}" title="{$passageKey}" class="linkRef" xref="{$passageKey}"><xsl:apply-templates/></a>
+
+      <xsl:choose>
+          <xsl:when test="string-length(encodedPassageKey) = 0"><xsl:apply-templates/></xsl:when>
+          <xsl:otherwise><a href="?version={$baseVersion}&amp;reference={$encodedPassageKey}" title="{$passageKey}" class="linkRef" xref="{$passageKey}"><xsl:apply-templates/></a></xsl:otherwise>
+      </xsl:choose>
+
   </xsl:template>
   
   <xsl:template match="reference" mode="jesus">
         <xsl:variable name="passage" select="jsword:getValidKey($keyf, $versification, @osisRef)"/>
       <xsl:variable name="passageKey" select="jsword:getName($passage)" />
       <xsl:variable name="encodedPassageKey" select="url:encode($passageKey)"/>
-        <a href="?version={$baseVersion}&amp;reference={$encodedPassageKey}" title="{$passageKey}" xref="{$passageKey}"><xsl:apply-templates/></a>
+
+      <xsl:choose>
+          <xsl:when test="string-length(encodedPassageKey) = 0"><xsl:apply-templates/></xsl:when>
+          <xsl:otherwise><a href="?version={$baseVersion}&amp;reference={$encodedPassageKey}" title="{$passageKey}" xref="{$passageKey}"><xsl:apply-templates/></a></xsl:otherwise>
+      </xsl:choose>
+
+
   </xsl:template>
   
   <!--=======================================================================-->

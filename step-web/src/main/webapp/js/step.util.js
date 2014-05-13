@@ -510,8 +510,13 @@ step.util = {
         return $.inArray(item.initials || item, step.util.septuagintVersions) != -1;
     },
     trackAnalytics: function (eventType, eventName, eventValue, numValue) {
-        if (window["_gaq"]) {
-            _gaq.push(['_trackEvent', eventType, eventName, eventValue, numValue]);
+        if (window["ga"]) {
+            ga('send', 'event', eventType, eventName, eventValue, numValue);
+        }
+    },
+    trackAnalyticsTime: function(eventType, eventName, timeTaken) {
+        if(window["ga"]) {
+            ga('send', 'timing', eventType, eventName, timeTaken);
         }
     },
     getPassageContainer: function (passageIdOrElement) {

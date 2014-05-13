@@ -56,7 +56,27 @@ var QuickLexicon = Backbone.View.extend({
         this.render();
     },
 
-    /**
+    loadDefinition: function (time) {
+        var self = this;
+        $.getSafe(MODULE_GET_QUICK_INFO, [this.strong, this.morph], function (data) {
+            step.util.trackAnalyticsTime("quickLexicon", "loaded", new Date().getTime() - time);
+            step.util.trackAnalytics("quickLexicon", "strong", self.strong);
+            $("#quickLexicon").remove();
+            if (data.vocabInfos) {
+                var lexicon = $(_.template(self.templateDef)({ data: data.vocabInfos, fontClass: step.util.ui.getFontForStrong(self.strong), view: self }));
+                if (self.position > 0.66) {
+                    lexicon.css("padding-top", "2px");
+                    lexicon.css("height", "1px");
+                    lexicon.css("top", "0");
+                }
+                self.displayQuickDef(lexicon);
+            }
+
+            for (var i = 0; i < (data.vocabInfos || []).length; i++) {
+                self.showRelatedNumbers(data.vocabInfos[i].rawRelatedNumbers);
+            }
+        });
+    }, /**
      * Updates the text and shows it
      * @param strongNumbers
      */
@@ -69,22 +89,8 @@ var QuickLexicon = Backbone.View.extend({
         } else {
             //remove all quick lexicons
             //make request to server
-            $.getSafe(MODULE_GET_QUICK_INFO, [this.strong, this.morph], function (data) {
-                $("#quickLexicon").remove();
-                if (data.vocabInfos) {
-                    var lexicon = $(_.template(self.templateDef)({ data: data.vocabInfos, fontClass: step.util.ui.getFontForStrong(self.strong), view: self }));
-                    if (self.position > 0.66) {
-                        lexicon.css("padding-top", "2px");
-                        lexicon.css("height", "1px");
-                        lexicon.css("top", "0");
-                    }
-                    self.displayQuickDef(lexicon);
-                }
-
-                for (var i = 0; i < (data.vocabInfos || []).length; i++) {
-                    self.showRelatedNumbers(data.vocabInfos[i].rawRelatedNumbers);
-                }
-            });
+            var time = new Date().getTime();
+            this.loadDefinition(time);
         }
     },
     displayQuickDef: function(lexicon) {

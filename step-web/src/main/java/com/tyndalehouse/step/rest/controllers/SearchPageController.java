@@ -33,6 +33,8 @@ import java.util.concurrent.TimeUnit;
  */
 @Singleton
 public class SearchPageController extends HttpServlet {
+    private static String DEV_TOKEN = "UA-36285759-2";
+    private static String LIVE_TOKEN = "UA-36285759-1";
     private static Logger LOGGER = LoggerFactory.getLogger(SearchPageController.class);
     private final SearchController search;
     private final ModuleController modules;
@@ -133,6 +135,9 @@ public class SearchPageController extends HttpServlet {
             req.setAttribute("passageModel", objectMapper.get().writeValueAsString(results));
             populateMetaSearch(req, results);
         }
+
+        //set the analytics token
+        req.setAttribute("analyticsToken", Boolean.TRUE.equals(Boolean.getBoolean("step.development")) ? DEV_TOKEN : LIVE_TOKEN);
     }
 
     /**

@@ -192,10 +192,10 @@ var StepRouter = Backbone.Router.extend({
         var endRender = new Date().getTime();
         var totalRender = endRender - startRender;
         if (totalTime != -1) {
-            step.util.trackAnalytics("search", "renderTime", totalRender);
-            step.util.trackAnalytics(searchType, "renderTime", totalRender);
-            step.util.trackAnalytics("search", "totalTime", totalTime + endRender - startRender);
-            step.util.trackAnalytics(searchType, "totalTime", totalTime + endRender - startRender);
+            step.util.trackAnalyticsTime("search", "renderTime", totalRender);
+            step.util.trackAnalyticsTime(searchType, "renderTime", totalRender);
+            step.util.trackAnalyticsTime("search", "totalTime", totalTime + endRender - startRender);
+            step.util.trackAnalyticsTime(searchType, "totalTime", totalTime + endRender - startRender);
             step.util.trackAnalytics("search", "searchType", searchType);
             step.util.trackAnalytics("search", "masterVersion", passageModel.get("masterVersion"));
 
@@ -293,14 +293,14 @@ var StepRouter = Backbone.Router.extend({
                     serverTime = 0;
                 }
                 var totalSoFar = endTime - startTime;
-                step.util.trackAnalytics("search", "serverTime", serverTime);
-                step.util.trackAnalytics("search", "latency", totalSoFar - serverTime);
-                step.util.trackAnalytics("search", "roundTrip", totalSoFar);
+                step.util.trackAnalyticsTime("search", "serverTime", serverTime);
+                step.util.trackAnalyticsTime("search", "latency", totalSoFar - serverTime);
+                step.util.trackAnalyticsTime("search", "roundTrip", totalSoFar);
 
                 if (searchType) {
-                    step.util.trackAnalytics(searchType, "serverTime", serverTime);
-                    step.util.trackAnalytics(searchType, "latency", totalSoFar - serverTime);
-                    step.util.trackAnalytics(searchType, "roundTrip", totalSoFar);
+                    step.util.trackAnalyticsTime(searchType, "serverTime", serverTime);
+                    step.util.trackAnalyticsTime(searchType, "latency", totalSoFar - serverTime);
+                    step.util.trackAnalyticsTime(searchType, "roundTrip", totalSoFar);
                 }
 
                 step.util.unlinkThis(activePassageId);

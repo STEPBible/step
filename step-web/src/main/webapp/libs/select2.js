@@ -451,7 +451,7 @@ the specific language governing permissions and limitations under the Apache Lic
                     success: function (data) {
                         //get end time
                         if(startTime != null) {
-                            step.util.trackAnalytics('suggest', 'time', new Date().getTime() - startTime);
+                            step.util.trackAnalyticsTime('suggest', 'time', new Date().getTime() - startTime);
                         }
 
                         // TODO - replace query.page with query so users have access to term, page, etc.

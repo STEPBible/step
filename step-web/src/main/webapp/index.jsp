@@ -380,15 +380,13 @@
 
         <% if (!appManager.isLocal()) { %>
     <script type="text/javascript">
-        var _gaq = _gaq || [];
-        _gaq.push(['_setAccount', 'UA-36285759-1']);
-        _gaq.push(['_trackPageview']);
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-        (function() {
-            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-        })();
+        ga('create', '${analyticsToken}', 'stepbible.org');
+        ga('send', 'pageview');
     </script>
     <script>
         var _prum = [['id', '52698a2cabe53d8c20000000'],
@@ -423,10 +421,15 @@
                 load('https://apis.google.com/js/plusone.js', 'gplus1js');
                 load('//platform.twitter.com/widgets.js', 'tweetjs');
                 load('//rum-static.pingdom.net/prum.min.js','pingdom');
-                var _gaq = _gaq || [];
-                _gaq.push(['_setAccount', 'UA-36285759-1']);
-                _gaq.push(['_trackPageview']);
-                load(('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js', 'ga');
+
+
+                (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+                ga('create', 'UA-36285759-2', 'stepbible.org');
+                ga('send', 'pageview');
             }
             if (w.addEventListener) { w.addEventListener("load", go, false); }
             else if (w.attachEvent) { w.attachEvent("onload",go); }

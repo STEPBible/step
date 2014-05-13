@@ -184,9 +184,13 @@ public class VersionStepRequest {
     private String extractMetadata(final String key) {
         final String property = (String) getBook().getBookMetaData().getProperty(key);
         if (property != null) {
-            return property;
+            return property.replace("\\par", "<p />");
         }
         return "";
+    }
+
+    public String getAbout() {
+        return extractMetadata("About");
     }
 
     public String getShortCopyright() {

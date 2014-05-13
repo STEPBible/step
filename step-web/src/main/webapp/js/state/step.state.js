@@ -35,6 +35,12 @@ step.state = {
 
         //first take from URL var
         var lang = $.getUrlVar("lang");
+
+        if(lang == null) {
+            //take from cookie
+            lang = $.cookie("lang");
+        }
+
         if(lang == null) {
             lang = window.navigator.userLanguage || window.navigator.language;
         }

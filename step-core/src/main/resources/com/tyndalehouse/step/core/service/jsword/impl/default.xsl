@@ -664,7 +664,7 @@
     -->
   <xsl:template name="generateNoteXref">
     <xsl:choose>
-      <xsl:when test="@n">
+      <xsl:when test="@n and @n != ''">
         <xsl:value-of select="@n"/>
       </xsl:when>
       <xsl:otherwise>

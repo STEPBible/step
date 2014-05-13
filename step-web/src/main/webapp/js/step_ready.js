@@ -17,6 +17,7 @@
         markAsRecommended('WHNU');
         markAsRecommended('LXX');
         markAsRecommended('SBLG');
+        markAsRecommended('Neno');
 
         //save 100k of space
         window.tempVersions = null;
@@ -163,5 +164,6 @@
         
         //do cookie notification
         step.util.raiseOneTimeOnly("cookie_notification", 'info');
+        step.util.trackAnalytics('interface', 'language', step.state.language(1));
     });
 })();

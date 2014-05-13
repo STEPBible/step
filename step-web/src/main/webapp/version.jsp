@@ -61,7 +61,7 @@
         <p></p>
 		<span class="shortPromo"><%= stepRequest.getShortPromo() %></span>
 		<p></p>
-		<span class="about"><%= ((String) stepRequest.getBook().getBookMetaData().getProperty("About")).replace("\\par", "<p />") %>
+		<span class="about"><%= stepRequest.getAbout() %>
 		<p></p>
 		<%= stepRequest.getMiniPreface() %>
     	</span>

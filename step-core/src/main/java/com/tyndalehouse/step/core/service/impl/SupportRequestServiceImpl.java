@@ -241,7 +241,7 @@ public class SupportRequestServiceImpl implements SupportRequestService {
      * @return the escaped string
      */
     private String escapeQuotes(final String nonNullString) {
-        return nonNullString.replaceAll("\"", "\\\\\"").replaceAll("\n", "\\n").replaceAll("\t", "\\t").replaceAll("\r", "\\r");
+        return nonNullString.replaceAll("\"", "\\\\\"").replaceAll("\n", "\\\\n").replaceAll("\t", "\\\\t").replaceAll("\r", "\\\\r");
     }
 
     private HttpPost getJiraHttpPost(final String operation, final String contentType) {

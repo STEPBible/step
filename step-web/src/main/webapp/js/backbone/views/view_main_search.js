@@ -289,7 +289,7 @@ var MainSearchView = Backbone.View.extend({
         var self = this;
         $(tokens).filter(".greekMeaningsItem, .hebrewMeaningsItem, .hebrewItem, .greekItem, .meaningsItem, .subjectItem").click(function (ev) {
             self._markItemForReplacing(ev, $(this));
-            self._searchExampleData(ev, $(this).attr("data-item-type"), $(this).attr("data-select-id"));
+            self._searchExampleData(ev, $(this).attr("data-item-type"), ($(this).attr("data-select-id") || "").substring(0,2));
         });
     },
     _searchExampleData: function (ev, itemType, term) {

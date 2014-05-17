@@ -8,6 +8,7 @@
   table {
     width: 95%;
     display: inline;
+    font-size: inherit;
     margin-bottom: 0px;
     tr.row {
       &:before, &:after {
@@ -20,7 +21,7 @@
   }
 
   td {
-    font-size: $defaultFontSize;
+//    font-size: $defaultFontSize;
     &.x-end-row {
       vertical-align: bottom;
       text-align: right;

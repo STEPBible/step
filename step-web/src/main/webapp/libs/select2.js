@@ -2582,7 +2582,7 @@ the specific language governing permissions and limitations under the Apache Lic
 
                         //STEP MOFICATION
                         //only kill event if we're showing results
-                        if($(".select2-parent-no-results").length == 0 && !selectedData.isControl) {
+                        if($(".select2-parent-no-results").length == 0 && selectedData.isControl == true) {
                             killEvent(e);
                         }
                         //END STEP MODIFICATION

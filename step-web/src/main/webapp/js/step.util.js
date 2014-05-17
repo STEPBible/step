@@ -404,7 +404,7 @@ step.util = {
         this.activePassageId(passageId);
         this.createNewColumn(true);
     },
-    createNewLinkedColumnWithScroll: function (passageId, verseRef, stripCommentaries, postProcessModelCallback) {
+    createNewLinkedColumnWithScroll: function (passageId, verseRef, stripCommentaries, postProcessModelCallback, ev) {
         this.createNewLinkedColumn(passageId);
 
         //call the post processor
@@ -422,6 +422,9 @@ step.util = {
         }
 
         step.router.navigatePreserveVersions("reference=" + chapterRef, stripCommentaries);
+
+        //we prevent the event from bubbling up to set the passage id, as we expect a new passage to take focus
+        ev.stopPropagation();
     },
 
     /**

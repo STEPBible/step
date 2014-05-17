@@ -135,7 +135,7 @@ var SearchDisplayView = DisplayView.extend({
                 }
             }
 
-            step.util.createNewLinkedColumnWithScroll(self.model.get("passageId"), verseRef, false, callback);
+            step.util.createNewLinkedColumnWithScroll(self.model.get("passageId"), verseRef, false, callback, ev);
         });
 
     },

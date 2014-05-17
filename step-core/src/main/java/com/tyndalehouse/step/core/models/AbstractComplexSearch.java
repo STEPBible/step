@@ -9,6 +9,7 @@ import java.util.List;
  * @author chrisburrell
  */
 public abstract class AbstractComplexSearch {
+    private String title;
     private long time;
     private String signature;
     private SearchType searchType;
@@ -107,5 +108,19 @@ public abstract class AbstractComplexSearch {
      */
     public void setTimeTookTotal(final long timeTookTotal) {
         this.timeTookTotal = timeTookTotal;
+    }
+
+    /**
+     * @return the title of the page
+     */
+    public String getTitle() {
+        return title;
+    }
+
+    /**
+     * @param title the title of the page
+     */
+    public void setTitle(final String title) {
+        this.title = title;
     }
 }

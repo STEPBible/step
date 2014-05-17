@@ -204,7 +204,7 @@ var MainSearchView = Backbone.View.extend({
             if (values.length == 0) {
                 return;
             }
-
+            self._reEvaluateMasterVersion();
             container.find("input").val("");
         }).on("select2-opening", function (event) {
             //remove any context that has references
@@ -933,6 +933,7 @@ var MainSearchView = Backbone.View.extend({
         var versions = this.$el.find(".versionItem");
         var masterVersion = versions.eq(0);
         if (versions.length > 1 && masterVersion.length > 0 && !masterVersion.hasClass("masterVersion")) {
+            versions.removeClass("masterVersion");
             masterVersion.addClass("masterVersion");
             masterVersion.attr("title", masterVersion.attr("title") + "\n" + __s.master_version_info);
             this.masterVersion = _.findWhere(this.masterSearch.select2("data"), { itemType: "version" });

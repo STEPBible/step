@@ -1740,6 +1740,7 @@ the specific language governing permissions and limitations under the Apache Lic
             if (data) {
                 this.highlight(index);
                 this.onSelect(data, options);
+                return data;
             } else if (options && options.noFocus) {
                 this.close();
             }
@@ -2577,11 +2578,11 @@ the specific language governing permissions and limitations under the Apache Lic
                         killEvent(e);
                         return;
                     case KEY.ENTER:
-                         this.selectHighlighted();
+                         var selectedData = this.selectHighlighted();
 
                         //STEP MOFICATION
                         //only kill event if we're showing results
-                        if($(".select2-parent-no-results").length == 0) {
+                        if($(".select2-parent-no-results").length == 0 && !selectedData.isControl) {
                             killEvent(e);
                         }
                         //END STEP MODIFICATION

@@ -379,6 +379,7 @@ var MainSearchView = Backbone.View.extend({
     convertResultToGroup: function (item, term, isExpanded) {
         var returnedItem = item;
 
+        item.isControl = true;
         if(isExpanded) {
             //we have reached the maximum allowed
             item.text = sprintf(__s.too_many_options_to_show, item.count);

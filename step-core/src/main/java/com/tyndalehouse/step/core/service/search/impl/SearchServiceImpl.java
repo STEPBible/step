@@ -1112,8 +1112,23 @@ public class SearchServiceImpl implements SearchService {
     private SearchResult runExactOriginalTextSearch(final SearchQuery sq) {
         final Key resultKeys = getKeysFromOriginalText(sq);
 
+        final SearchResult searchResult = extractSearchResults(sq, resultKeys);
+        searchResult.setStrongHighlights(getStrongs(this.specificForms.search("accentedUnicode", sq.getCurrentSearch().getQuery())));
+
         // return results from appropriate versions
-        return extractSearchResults(sq, resultKeys);
+        return searchResult;
+    }
+
+    /**
+     * @param forms a set of docs representing specific forms
+     * @return a list of strong numbers
+     */
+    private List<String> getStrongs(final EntityDoc[] forms) {
+        List<String> strongs = new ArrayList<String>(forms.length);
+        for(EntityDoc f : forms) {
+            strongs.add(f.get("strongNumber"));
+        }
+        return strongs;
     }
 
     /**

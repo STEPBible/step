@@ -51,10 +51,6 @@ td.unicodeFont {
   font-size: 180%;
 }
 
-td.hbFont {
-  font-size: 120%;
-}
-
 .hbFontSmall {
   @extend .hbFont;
   font-weight: normal;

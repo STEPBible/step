@@ -186,11 +186,6 @@ var MainSearchView = Backbone.View.extend({
             if (replaceItemParent.length > 0) {
                 var replaceItemIndex = replaceItemParent.index();
                 data.splice(replaceItemIndex, 1, data[data.length - 1]);
-
-                //if we resort to the 'data' method, we lose all our handlers
-                newItem = container.find("[data-select-id]");
-            } else {
-                newItem = container.find("[data-select-id]").last();
             }
 
             //needs to be outside if statement to ensure we recreate token handlers
@@ -204,7 +199,7 @@ var MainSearchView = Backbone.View.extend({
             if (values.length == 0) {
                 return;
             }
-
+            self._reEvaluateMasterVersion();
             container.find("input").val("");
         }).on("select2-opening", function (event) {
             //remove any context that has references
@@ -289,7 +284,7 @@ var MainSearchView = Backbone.View.extend({
         var self = this;
         $(tokens).filter(".greekMeaningsItem, .hebrewMeaningsItem, .hebrewItem, .greekItem, .meaningsItem, .subjectItem").click(function (ev) {
             self._markItemForReplacing(ev, $(this));
-            self._searchExampleData(ev, $(this).attr("data-item-type"), $(this).attr("data-select-id"));
+            self._searchExampleData(ev, $(this).attr("data-item-type"), ($(this).attr("data-select-id") || "").replace(/\./g, "").substring(0,2));
         });
     },
     _searchExampleData: function (ev, itemType, term) {
@@ -379,6 +374,7 @@ var MainSearchView = Backbone.View.extend({
     convertResultToGroup: function (item, term, isExpanded) {
         var returnedItem = item;
 
+        item.isControl = true;
         if(isExpanded) {
             //we have reached the maximum allowed
             item.text = sprintf(__s.too_many_options_to_show, item.count);
@@ -403,7 +399,7 @@ var MainSearchView = Backbone.View.extend({
             switch (item.itemType) {
                 case HEBREW:
                 case GREEK:
-                    exampleTokens.push(this._markMatch(examples[i].stepTransliteration, term));
+                    exampleTokens.push('<span class="transliteration">' + this._markMatch(examples[i].stepTransliteration, term) + '</em>');
                     break;
                 case HEBREW_MEANINGS:
                 case GREEK_MEANINGS:
@@ -459,6 +455,7 @@ var MainSearchView = Backbone.View.extend({
         this._setData(originalData);
         this._resetReplaceItems();
         this.masterSearch.select2("close");
+        this._reEvaluateMasterVersion();
     },
     _removeVersion: function (data) {
         //find the element
@@ -932,6 +929,7 @@ var MainSearchView = Backbone.View.extend({
         var versions = this.$el.find(".versionItem");
         var masterVersion = versions.eq(0);
         if (versions.length > 1 && masterVersion.length > 0 && !masterVersion.hasClass("masterVersion")) {
+            versions.removeClass("masterVersion");
             masterVersion.addClass("masterVersion");
             masterVersion.attr("title", masterVersion.attr("title") + "\n" + __s.master_version_info);
             this.masterVersion = _.findWhere(this.masterSearch.select2("data"), { itemType: "version" });

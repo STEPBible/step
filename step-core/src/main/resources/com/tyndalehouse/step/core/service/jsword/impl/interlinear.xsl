@@ -1518,14 +1518,21 @@
 		<xsl:param name="printVersions" />
 	
 		<xsl:variable name="nextVersion" select="normalize-space(substring-before($versions, ','))" />
-	
+
 		<!--  if next version is not empty, then there was a comma, so we output this version and call template again -->
 		<xsl:choose>
 			<xsl:when test="normalize-space($nextVersion) != ''">
+                <xsl:variable name="disabled" select="jsword:isDisabled($interlinearProvider, $nextVersion)" />
+                <xsl:variable name="disabledStatus">
+                    <xsl:choose>
+                        <xsl:when test="$disabled = true()">true</xsl:when>
+                        <xsl:otherwise>false</xsl:otherwise>
+                    </xsl:choose>
+                </xsl:variable>
 				<span class="interlinear">
 					<xsl:choose>
 						<xsl:when test="$printVersions != 'no-print'">
-							<a class='smallHeaders' href='javascript:void(0)' data-version='{$nextVersion}' >
+							<a class='smallHeaders' href='javascript:void(0)' data-version='{$nextVersion}' data-version-disabled="{$disabledStatus}">
 							<xsl:call-template name="outputNonBlank">
 								<xsl:with-param name="string">
 									<xsl:value-of select="$nextVersion" />
@@ -1543,11 +1550,18 @@
 			</xsl:when>
 			<!-- otherwise, then we can use the remainder as the version, as long as version not empty (for e.g. a trailing comma) -->
 			<xsl:otherwise>
+                <xsl:variable name="disabled" select="jsword:isDisabled($interlinearProvider, $versions)" />
+                <xsl:variable name="disabledStatus">
+                    <xsl:choose>
+                        <xsl:when test="$disabled = true()">true</xsl:when>
+                        <xsl:otherwise>false</xsl:otherwise>
+                    </xsl:choose>
+                </xsl:variable>
 			    <xsl:if test="normalize-space($versions) != ''" >
 					<span class="interlinear">
 						<xsl:choose>
 							<xsl:when test="$printVersions != 'no-print'">
-							<a class='smallHeaders' href="javascript:void(0)" data-version="{$versions}">
+							<a class='smallHeaders' href="javascript:void(0)" data-version="{$versions}"  data-version-disabled="{$disabledStatus}">
 								<xsl:call-template name="outputNonBlank">
 									<xsl:with-param name="string">
 										<xsl:value-of select="$versions" />

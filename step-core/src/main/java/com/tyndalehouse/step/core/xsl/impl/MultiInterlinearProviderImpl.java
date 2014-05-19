@@ -32,23 +32,25 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.xsl.impl;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.tyndalehouse.step.core.exceptions.StepInternalException;
 import com.tyndalehouse.step.core.service.VocabularyService;
+import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
 import com.tyndalehouse.step.core.utils.StringUtils;
+import com.tyndalehouse.step.core.xsl.InterlinearProvider;
+import com.tyndalehouse.step.core.xsl.MultiInterlinearProvider;
 import org.crosswire.jsword.passage.Key;
 import org.crosswire.jsword.passage.PassageKeyFactory;
 import org.crosswire.jsword.versification.Versification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
-import com.tyndalehouse.step.core.xsl.InterlinearProvider;
-import com.tyndalehouse.step.core.xsl.MultiInterlinearProvider;
+import java.util.HashMap;
+import java.util.Map;
 
-import static com.tyndalehouse.step.core.utils.StringUtils.*;
+import static com.tyndalehouse.step.core.utils.StringUtils.areAnyBlank;
+import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
+import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
+import static com.tyndalehouse.step.core.utils.StringUtils.split;
 
 /**
  * This implementation will support multiple versions, so each of the methods is keyed by version requested.
@@ -79,11 +81,12 @@ public class MultiInterlinearProviderImpl implements MultiInterlinearProvider {
      *                             interlinear provider
      * @param versificationService the service for working with a book
      * @param vocabProvider        the provider of vocabulary
-     * @param stripAccents          true to ensure accents are stripped off Hebrew texts
-     * @param stripVowels           true to ensure accents are stripped off Greek texts
+     * @param stripGreekAccents    true to ensure Greek accents are stripped off Hebrew texts
+     * @param stripHebrewAccents   true to ensure Hebrew accents are stripped off Hebrew texts
+     * @param stripVowels          true to ensure accents are stripped off Greek texts
      */
     public MultiInterlinearProviderImpl(final Versification masterVersification, String versions, final String textScope,
-                                        final JSwordVersificationService versificationService, final VocabularyService vocabProvider, 
+                                        final JSwordVersificationService versificationService, final VocabularyService vocabProvider,
                                         final boolean stripGreekAccents, final boolean stripHebrewAccents, final boolean stripVowels) {
         this.versificationService = versificationService;
 
@@ -139,8 +142,7 @@ public class MultiInterlinearProviderImpl implements MultiInterlinearProvider {
     }
 
     /**
-     * Inits the hebrew direct mapping. The override, regardless of whether the interlineared text contains a
-     * mapping
+     * Inits the hebrew direct mapping. The override, regardless of whether the interlineared text contains a mapping
      *
      * @return the mappings between strong numbers and the words that should appear
      */
@@ -156,11 +158,20 @@ public class MultiInterlinearProviderImpl implements MultiInterlinearProvider {
                           final String morph) {
         try {
             return this.interlinearProviders.get(version).getWord(isBlank(verseNumber) ? lastSeenOsisId : verseNumber, strong, morph);
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             //we catch and deal with all exceptions here:
             LOGGER.error(ex.getMessage(), ex);
             return "";
         }
+    }
+
+    @Override
+    public boolean isDisabled(final String version) {
+        final InterlinearProvider interlinearProvider = this.interlinearProviders.get(StringUtils.trim(version));
+        if(interlinearProvider != null) {
+            return interlinearProvider.isDisabled();
+        }
+        return false;
     }
 
     /**

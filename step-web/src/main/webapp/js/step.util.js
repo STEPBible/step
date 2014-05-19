@@ -404,7 +404,7 @@ step.util = {
         this.activePassageId(passageId);
         this.createNewColumn(true);
     },
-    createNewLinkedColumnWithScroll: function (passageId, verseRef, stripCommentaries, postProcessModelCallback) {
+    createNewLinkedColumnWithScroll: function (passageId, verseRef, stripCommentaries, postProcessModelCallback, ev) {
         this.createNewLinkedColumn(passageId);
 
         //call the post processor
@@ -422,6 +422,9 @@ step.util = {
         }
 
         step.router.navigatePreserveVersions("reference=" + chapterRef, stripCommentaries);
+
+        //we prevent the event from bubbling up to set the passage id, as we expect a new passage to take focus
+        ev.stopPropagation();
     },
 
     /**
@@ -725,7 +728,7 @@ step.util = {
                 case HEBREW_MEANINGS:
                     return "<div class='" + entry.itemType + "Item' " +
                         'data-item-type="' + entry.itemType + '" ' +
-                        'data-select-id="' + util.safeEscapeQuote(entry.item.gloss) + '" ' +
+                        'data-select-id="' + util.safeEscapeQuote(entry.item.stepTransliteration) + '" ' +
                         'title="' + source + util.safeEscapeQuote(entry.item.gloss + ", " + entry.item.matchingForm) + '">' +
                         '<span class="transliteration">' + entry.item.stepTransliteration + "</span></div>";
                 case MEANINGS:

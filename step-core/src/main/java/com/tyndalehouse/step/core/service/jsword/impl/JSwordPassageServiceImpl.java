@@ -32,38 +32,48 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.service.jsword.impl;
 
-import static com.tyndalehouse.step.core.models.InterlinearMode.COLUMN_COMPARE;
-import static com.tyndalehouse.step.core.models.InterlinearMode.INTERLEAVED;
-import static com.tyndalehouse.step.core.models.InterlinearMode.INTERLEAVED_COMPARE;
-import static com.tyndalehouse.step.core.models.InterlinearMode.INTERLINEAR;
-import static com.tyndalehouse.step.core.models.InterlinearMode.NONE;
-import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
-import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
-import static com.tyndalehouse.step.core.utils.StringUtils.trim;
-import static com.tyndalehouse.step.core.utils.ValidateUtils.notNull;
-import static java.lang.Integer.parseInt;
-import static java.lang.String.format;
-import static org.crosswire.common.xml.XMLUtil.writeToString;
-import static org.crosswire.jsword.book.OSISUtil.OSIS_ATTR_OSISID;
-import static org.crosswire.jsword.book.OSISUtil.OSIS_ELEMENT_VERSE;
-
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.*;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import javax.xml.transform.TransformerException;
-
-import com.tyndalehouse.step.core.models.*;
+import com.tyndalehouse.step.core.exceptions.LocalisedException;
+import com.tyndalehouse.step.core.exceptions.StepInternalException;
+import com.tyndalehouse.step.core.exceptions.TranslatedException;
+import com.tyndalehouse.step.core.exceptions.UserExceptionType;
+import com.tyndalehouse.step.core.models.InterlinearMode;
+import com.tyndalehouse.step.core.models.KeyWrapper;
+import com.tyndalehouse.step.core.models.LookupOption;
+import com.tyndalehouse.step.core.models.OsisWrapper;
+import com.tyndalehouse.step.core.models.StringAndCount;
 import com.tyndalehouse.step.core.service.PassageOptionsValidationService;
+import com.tyndalehouse.step.core.service.VocabularyService;
+import com.tyndalehouse.step.core.service.helpers.VersionResolver;
+import com.tyndalehouse.step.core.service.impl.MorphologyServiceImpl;
+import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
+import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
 import com.tyndalehouse.step.core.utils.JSwordUtils;
+import com.tyndalehouse.step.core.utils.StringConversionUtils;
+import com.tyndalehouse.step.core.utils.StringUtils;
+import com.tyndalehouse.step.core.xsl.MultiInterlinearProvider;
+import com.tyndalehouse.step.core.xsl.XslConversionType;
+import com.tyndalehouse.step.core.xsl.impl.ColorCoderProviderImpl;
+import com.tyndalehouse.step.core.xsl.impl.InterleavingProviderImpl;
+import com.tyndalehouse.step.core.xsl.impl.MultiInterlinearProviderImpl;
 import org.crosswire.common.xml.Converter;
 import org.crosswire.common.xml.JDOMSAXEventProvider;
 import org.crosswire.common.xml.SAXEventProvider;
 import org.crosswire.common.xml.TransformingSAXEventProvider;
-import org.crosswire.jsword.book.*;
-import org.crosswire.jsword.passage.*;
+import org.crosswire.jsword.book.Book;
+import org.crosswire.jsword.book.BookData;
+import org.crosswire.jsword.book.BookException;
+import org.crosswire.jsword.book.Books;
+import org.crosswire.jsword.book.OSISUtil;
+import org.crosswire.jsword.book.UnAccenter;
+import org.crosswire.jsword.passage.Key;
+import org.crosswire.jsword.passage.KeyUtil;
+import org.crosswire.jsword.passage.NoSuchKeyException;
+import org.crosswire.jsword.passage.Passage;
+import org.crosswire.jsword.passage.PassageKeyFactory;
+import org.crosswire.jsword.passage.RestrictionType;
+import org.crosswire.jsword.passage.RocketPassage;
+import org.crosswire.jsword.passage.Verse;
+import org.crosswire.jsword.passage.VerseRange;
 import org.crosswire.jsword.versification.BibleBook;
 import org.crosswire.jsword.versification.Testament;
 import org.crosswire.jsword.versification.Versification;
@@ -77,21 +87,32 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
-import com.tyndalehouse.step.core.exceptions.LocalisedException;
-import com.tyndalehouse.step.core.exceptions.StepInternalException;
-import com.tyndalehouse.step.core.exceptions.TranslatedException;
-import com.tyndalehouse.step.core.exceptions.UserExceptionType;
-import com.tyndalehouse.step.core.service.VocabularyService;
-import com.tyndalehouse.step.core.service.helpers.VersionResolver;
-import com.tyndalehouse.step.core.service.impl.MorphologyServiceImpl;
-import com.tyndalehouse.step.core.service.jsword.JSwordPassageService;
-import com.tyndalehouse.step.core.service.jsword.JSwordVersificationService;
-import com.tyndalehouse.step.core.utils.StringConversionUtils;
-import com.tyndalehouse.step.core.utils.StringUtils;
-import com.tyndalehouse.step.core.xsl.XslConversionType;
-import com.tyndalehouse.step.core.xsl.impl.ColorCoderProviderImpl;
-import com.tyndalehouse.step.core.xsl.impl.InterleavingProviderImpl;
-import com.tyndalehouse.step.core.xsl.impl.MultiInterlinearProviderImpl;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import javax.xml.transform.TransformerException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import static com.tyndalehouse.step.core.models.InterlinearMode.COLUMN_COMPARE;
+import static com.tyndalehouse.step.core.models.InterlinearMode.INTERLEAVED;
+import static com.tyndalehouse.step.core.models.InterlinearMode.INTERLEAVED_COMPARE;
+import static com.tyndalehouse.step.core.models.InterlinearMode.INTERLINEAR;
+import static com.tyndalehouse.step.core.models.InterlinearMode.NONE;
+import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
+import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
+import static com.tyndalehouse.step.core.utils.ValidateUtils.notNull;
+import static java.lang.Integer.parseInt;
+import static java.lang.String.format;
+import static org.crosswire.common.xml.XMLUtil.writeToString;
+import static org.crosswire.jsword.book.OSISUtil.OSIS_ATTR_OSISID;
+import static org.crosswire.jsword.book.OSISUtil.OSIS_ELEMENT_VERSE;
 
 /**
  * a service providing a wrapper around JSword
@@ -139,7 +160,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
         kjvaBook = Books.installed().getBook("KJVA");
         esvBook = Books.installed().getBook(JSwordPassageService.REFERENCE_BOOK);
     }
-    
+
     @Override
     public KeyWrapper getSiblingChapter(final String reference, final String version,
                                         final boolean previousChapter) {
@@ -314,8 +335,8 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
     }
 
     /**
-     * attemps to expand to the next chapter if exists, other returns the same key as currently if no new
-     * chapter is found
+     * attemps to expand to the next chapter if exists, other returns the same key as currently if no new chapter is
+     * found
      *
      * @param bookName      the name of book, e.g. Gen
      * @param chapterNumber the chapter number
@@ -332,8 +353,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
     }
 
     /**
-     * Expands the key to full chapter, or if it is the last verse in the chapter, then it expands to the next
-     * chapter
+     * Expands the key to full chapter, or if it is the last verse in the chapter, then it expands to the next chapter
      *
      * @param bookName      the name of book, e.g. Gen
      * @param chapterNumber the chapter number
@@ -449,9 +469,9 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
             final int currentNow = p.getCardinality();
             final int totalAdded = currentNow - currentBefore;
             final int leftToCollect = totalWantedVerses - currentNow;
-            if(leftToCollect > 0) {
+            if (leftToCollect > 0) {
                 p.blur(context, RestrictionType.NONE, true, false);
-                if(totalAdded < context) {
+                if (totalAdded < context) {
                     p.blur(context - totalAdded, RestrictionType.NONE, true, false);
                 }
             }
@@ -490,11 +510,11 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
 
         final InterlinearMode desiredModeOfDisplay = this.optionsValidationService.getDisplayMode(interlinearMode, masterVersion, extraVersions);
         final InterlinearMode realModeOfDisplay = this.optionsValidationService.determineDisplayMode(options, desiredModeOfDisplay, true);
-        if(InterlinearMode.INTERLINEAR.equals(desiredModeOfDisplay) && options.contains(LookupOption.CHAPTER_BOOK_VERSE_NUMBER)) {
+        if (InterlinearMode.INTERLINEAR.equals(desiredModeOfDisplay) && options.contains(LookupOption.CHAPTER_BOOK_VERSE_NUMBER)) {
             //then we're in a search kind of lookup, so add proper verse numbers
             options.add(LookupOption.VERSE_NUMBERS);
         }
-        
+
         OsisWrapper passageText;
         final Set<LookupOption> lookupOptions = this.optionsValidationService.trim(
                 options, masterVersion, extraVersions,
@@ -662,8 +682,8 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
     }
 
     /**
-     * We have a whole book reference. If the book is less than 5 chapters, we display the whole book.
-     * Otherwise we display the first chapter only.
+     * We have a whole book reference. If the book is less than 5 chapters, we display the whole book. Otherwise we
+     * display the first chapter only.
      *
      * @param v11n             the alternative versification
      * @param requestedPassage the passage
@@ -939,7 +959,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
             return new OsisWrapper(writeToString(transformer), key,
                     languages, v11n, resolver.getShortName(versions[0]), displayMode,
                     StringUtils.join(versions, 1)
-                    );
+            );
         } catch (final TransformerException e) {
             throw new StepInternalException(e.getMessage(), e);
         } catch (final SAXException e) {
@@ -1144,10 +1164,11 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
      * @return a Transforming SAX event provider, from which can be transformed into HTML
      * @throws TransformerException an exception in the stylesheet that is being executed
      */
-    private TransformingSAXEventProvider executeStyleSheet(final Versification masterVersification,
-                                                           final List<LookupOption> options,
-                                                           final String interlinearVersion, final BookData bookData, final SAXEventProvider osissep,
-                                                           final InterlinearMode displayMode) throws TransformerException {
+    private TransformingSAXEventProvider executeStyleSheet(
+            final Versification masterVersification,
+            final List<LookupOption> options,
+            final String interlinearVersion, final BookData bookData, final SAXEventProvider osissep,
+            final InterlinearMode displayMode) throws TransformerException {
         final XslConversionType requiredTransformation = identifyStyleSheet(options, displayMode);
 
         return (TransformingSAXEventProvider) new Converter() {
@@ -1171,16 +1192,16 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
                 }
             }
         }.convert(osissep);
+
     }
 
     /**
-     * At the moment, we only support one stylesheet at the moment, so we only need to return one This may
-     * change, but at that point we'll have a cleared view on requirements. For now, if one of the options
-     * triggers anything but the default, then we return that. returns the stylesheet that should be used to
-     * generate the text
+     * At the moment, we only support one stylesheet at the moment, so we only need to return one This may change, but
+     * at that point we'll have a cleared view on requirements. For now, if one of the options triggers anything but the
+     * default, then we return that. returns the stylesheet that should be used to generate the text
      *
-     * @param options      the list of options that are currently applied to the passage
-     * @param displayMode  the display mode with wich to display the style sheet
+     * @param options     the list of options that are currently applied to the passage
+     * @param displayMode the display mode with wich to display the style sheet
      * @return the stylesheet (of stylesheets)
      */
     private XslConversionType identifyStyleSheet(final List<LookupOption> options, final InterlinearMode displayMode) {
@@ -1218,12 +1239,12 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
      * @param key                 the key to the passage
      * @param options             the list of options to be applied (used to determine accenting
      */
-    private void setInterlinearOptions(final TransformingSAXEventProvider tsep,
-                                       final Versification masterVersification,
-                                       final String interlinearVersion,
-                                       final String reference,
-                                       final InterlinearMode displayMode,
-                                       final Key key, final List<LookupOption> options) {
+    private MultiInterlinearProvider setInterlinearOptions(final TransformingSAXEventProvider tsep,
+                                                           final Versification masterVersification,
+                                                           final String interlinearVersion,
+                                                           final String reference,
+                                                           final InterlinearMode displayMode,
+                                                           final Key key, final List<LookupOption> options) {
         if (displayMode == InterlinearMode.INTERLINEAR) {
             tsep.setParameter("VLine", false);
 
@@ -1256,7 +1277,9 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
             final MultiInterlinearProviderImpl multiInterlinear = new MultiInterlinearProviderImpl(masterVersification,
                     interlinearVersion, reference, this.versificationService, this.vocabProvider, stripGreekAccents, stripHebrewAccents, stripVowels);
             tsep.setParameter("interlinearProvider", multiInterlinear);
+            return multiInterlinear;
         }
+        return null;
     }
 
     /**
@@ -1293,8 +1316,8 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
     }
 
     /**
-     * This method sets up the options for the XSLT transformation. Note: the set of options is trimmed to
-     * those actually available
+     * This method sets up the options for the XSLT transformation. Note: the set of options is trimmed to those
+     * actually available
      *
      * @param tsep    the xslt transformer
      * @param options the options available
@@ -1364,7 +1387,7 @@ public class JSwordPassageServiceImpl implements JSwordPassageService {
      */
     @Override
     public String getAllReferences(final String references, final String version) {
-       return this.getAllReferencesAndCounts(references, version).getValue();
+        return this.getAllReferencesAndCounts(references, version).getValue();
     }
 
     /**

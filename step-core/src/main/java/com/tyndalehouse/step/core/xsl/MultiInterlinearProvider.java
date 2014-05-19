@@ -49,4 +49,9 @@ public interface MultiInterlinearProvider {
      * @return the word in the original language (Greek, Hebrew, etc.)
      */
     String getWord(String version, String verseNumber, String strong, String morph);
+
+    /**
+     * Returns a boolean indicating whether the version is disabled
+     */
+    boolean isDisabled(String version);
 }

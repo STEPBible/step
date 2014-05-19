@@ -99,6 +99,8 @@ var SearchDisplayView = DisplayView.extend({
         this.doSwapInterlinearLink(this.$el);
         step.util.ui.addStrongHandlers(passageId, this.$el.find(".searchResults"));
         step.util.ui.enhanceVerseNumbers(passageId, this.$el, this.model.get("masterVersion"));
+        this.doInterlinearVerseNumbers(this.$el, this.model.get("interlinearMode"), this.model.get("options"));
+        this._doChromeHack(this.$el, this.model.get("interlinearMode"), this.model.get("options"));
     },
     _getErrorMessage: function () {
         var errorMessage = $("<span>");
@@ -135,7 +137,7 @@ var SearchDisplayView = DisplayView.extend({
                 }
             }
 
-            step.util.createNewLinkedColumnWithScroll(self.model.get("passageId"), verseRef, false, callback);
+            step.util.createNewLinkedColumnWithScroll(self.model.get("passageId"), verseRef, false, callback, ev);
         });
 
     },

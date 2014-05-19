@@ -49,4 +49,10 @@ public interface InterlinearProvider {
      * @return the word in the original language (Greek, Hebrew, etc.)
      */
     String getWord(String verseNumber, String strong, String morph);
+
+    /**
+     * A disabled interlinear is an interlinear for which no words were resolved.
+     * @return true if disabled
+     */
+    boolean isDisabled();
 }

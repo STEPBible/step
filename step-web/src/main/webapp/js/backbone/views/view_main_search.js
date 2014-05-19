@@ -221,8 +221,13 @@ var MainSearchView = Backbone.View.extend({
             self._reEvaluateMasterVersion();
         });
 
-        this.masterSearch.select2("container")
-            .find("input[type='text']").on("keydown", this._handleKeyPressInSearch);
+        var container = this.masterSearch.select2("container");
+        container.find("input[type='text']").on("keydown", this._handleKeyPressInSearch);
+//        container.find("ul.select2-choices").sortable({
+//            containment: 'parent',
+//            start: function() { $("#e15").select2("onSortStart"); },
+//            update: function() { $("#e15").select2("onSortEnd"); }
+//        });
     },
     _setData: function (values) {
         this.masterSearch.select2("data", values, true);

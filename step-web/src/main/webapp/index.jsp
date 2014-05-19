@@ -337,7 +337,8 @@
             <script src="libs/require-2.1.9.min.js" type="text/javascript"></script>
         </c:otherwise>
     </c:choose>
-    
+    <%--<script src="libs/jquery-sortable.js" type="text/javascript"></script>--%>
+
     <%-- Do these need to use $.ready? --%>
     <script src="js/require_config_dev.js" type="text/javascript"></script>
     <script src="js/jquery-extensions/jquery-cookie.js" type="text/javascript"></script>

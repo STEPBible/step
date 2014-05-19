@@ -191,6 +191,7 @@
                                 <jsSourceFile>libs/backbone-min.js</jsSourceFile>
                                 <jsSourceFile>libs/backbone.localStorage-min.js</jsSourceFile>
                                 <jsSourceFile>libs/select2.js</jsSourceFile>
+                                <jsSourceFile>libs/jquery-sortable.js</jsSourceFile>
                                 <jsSourceFile>libs/require-2.1.9.min.js</jsSourceFile>
                                 <jsSourceFile>js/require_config.js</jsSourceFile>
                                 <jsSourceFile>js/jquery-extensions/jquery-cookie.js</jsSourceFile>

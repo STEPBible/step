@@ -67,7 +67,7 @@ public class SpecificFormsLoader extends AbstractClasspathBasedModuleLoader {
      */
     private void parseLine(final String line) {
         final String[] split = line.split("[,]");
-        if (split[0].contains("|")) {
+        if (split.length < 2 || split[0].contains("|")) {
             return;
         }
 

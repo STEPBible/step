@@ -223,15 +223,23 @@ var MainSearchView = Backbone.View.extend({
 
         var container = this.masterSearch.select2("container");
         container.find("input[type='text']").on("keydown", this._handleKeyPressInSearch);
-//        container.find("ul.select2-choices").sortable({
-//            containment: 'parent',
-//            start: function() { $("#e15").select2("onSortStart"); },
-//            update: function() { $("#e15").select2("onSortEnd"); }
-//        });
+        container.find("ul.select2-choices")
+            .sortable({})
+            .on('dragstart.h5s', function() {
+                self.masterSearch.select2("onSortStart");
+            }).bind('sortupdate', function() {
+            //Triggered when the user stopped sorting and the DOM position has changed.
+                self.masterSearch.select2("onSortEnd");
+        });
+        this.masterSearch.on('change', function() {
+            self.masterSearch.html(self.masterSearch.val());
+        });
+
     },
     _setData: function (values) {
         this.masterSearch.select2("data", values, true);
         this._addTokenHandlers();
+        this.masterSearch.select2("container").find("ul.select2-choices").sortable({});
     },
     _resetReplaceItems: function () {
         this.masterSearch.select2("container").find(".replaceItem").removeClass("replaceItem");

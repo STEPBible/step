@@ -47,3 +47,10 @@
 ul.select2-parent-no-results {
   @include multi-column(1);
 }
+
+.sortable-placeholder {
+  min-width: 50px;
+  margin: 5 0 0 5;
+  height: 19px;
+  border: dashed 1 darkgrey;
+}

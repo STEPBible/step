@@ -56,11 +56,20 @@ public class BerkeleyOutputToTaggingFormat {
     public static void main(String[] args) throws IOException {
 
 
-        final String root = "c:\\temp\\berkeley\\asv-nt-20-iterations\\";
+        // David'
+        final String root = "C:\\Users\\David IB\\Dropbox\\STEP-Tagging\\autoTag\\Bibles\\";
         final String strongs = FileUtils.readFileToString(new File(root + "bible.s"));
         final String other = FileUtils.readFileToString(new File(root + "bible.o"));
         final String results = FileUtils.readFileToString(new File(root + "training.align"));
-        final String keyFile = FileUtils.readFileToString(new File("c:\\temp\\berkeley\\keyList-nt.txt"));
+        final String keyFile = FileUtils.readFileToString(new File(root + "keyList.txt"));
+/**
+ * Chris'
+        final String root = "C:\\temp\\berkeley\\berkeleyBibles\\output\\";
+        final String strongs = FileUtils.readFileToString(new File(root + "bible.s"));
+        final String other = FileUtils.readFileToString(new File(root + "bible.o"));
+        final String results = FileUtils.readFileToString(new File(root + "training.align"));
+        final String keyFile = FileUtils.readFileToString(new File(root + "keyList-nt.txt"));
+ */
 
 
         List<String[]> strongSentences = splitByWord(strongs);
@@ -68,7 +77,8 @@ public class BerkeleyOutputToTaggingFormat {
         List<String[]> resultSentences = splitByWord(results);
         List<String[]> keyList = splitByWord(keyFile);
 
-        final File path = new File("C:\\Users\\Chris\\AppData\\Roaming\\JSword\\step\\entities\\definition");
+        final File path = new File("C:\\Users\\David IB\\AppData\\Roaming\\JSword\\step\\entities\\definition");
+//      final File path = new File("C:\\Users\\Chris\\AppData\\Roaming\\JSword\\step\\entities\\definition");
         FSDirectory directory = FSDirectory.open(path);
         final IndexSearcher indexSearcher = new IndexSearcher(directory);
 
@@ -112,18 +122,21 @@ public class BerkeleyOutputToTaggingFormat {
         for (int ii = 0; ii < otherSentences.size(); ii++) {
             //output every word
             String[] words = otherSentences.get(ii);
+            int wordNumber = 0;
             final String verseRef = keyList.get(ii)[0];
-            resultingTagging.append("$");
-            outputVerseRef(resultingTagging, verseRef);
+//            resultingTagging.append("$");
+            outputVerseRef(resultingTagging, verseRef, wordNumber);
 
             final Map<Integer, String> sentenceStrongs = verseToResults.get(verseRef);
             boolean wasStrongNumber = false;
             String lastStrongNumber = null;
             for (int jj = 0; jj < words.length; jj++) {
+                wordNumber = jj;
                 String strongNumber = sentenceStrongs.get(jj);
-                if (lastStrongNumber != null && !lastStrongNumber.equals(strongNumber)) {
-                    outputStrongNumber(resultingTagging, verseRef, lastStrongNumber);
-                    outputVerseRef(resultingTagging, verseRef);
+//                if (lastStrongNumber != null && !lastStrongNumber.equals(strongNumber)) {    // to avoid repeating same Strongs number twice. But sometimes supposed to repeat! eg Matt.1.2
+                if (lastStrongNumber != null) {
+                    outputStrongNumber(resultingTagging, verseRef, lastStrongNumber, indexSearcher);
+                    outputVerseRef(resultingTagging, verseRef, wordNumber);
                 }
 
                 if (strongNumber == null) {
@@ -136,11 +149,13 @@ public class BerkeleyOutputToTaggingFormat {
                     wasStrongNumber = false;
                     lastStrongNumber = null;
                 } else {
+/*
                     if (wasStrongNumber && lastStrongNumber.equals(strongNumber)) {
                         resultingTagging.append(' ');
                     } else {
+*/
                         resultingTagging.append('\t');
-                    }
+//                    }
                     resultingTagging.append(words[jj]);
 //                    resultingTagging.append('\t');
                     wasStrongNumber = true;
@@ -149,7 +164,7 @@ public class BerkeleyOutputToTaggingFormat {
             }
 
             if (lastStrongNumber != null) {
-                outputStrongNumber(resultingTagging, verseRef, lastStrongNumber);
+                outputStrongNumber(resultingTagging, verseRef, lastStrongNumber, indexSearcher);
             }
             if(resultingTagging.charAt(resultingTagging.length() -1) != '\n') {
                 resultingTagging.append('\n');
@@ -159,18 +174,26 @@ public class BerkeleyOutputToTaggingFormat {
         return resultingTagging.toString();
     }
 
-    private static void outputVerseRef(final StringBuilder resultingTagging, final String verseRef) {
-        resultingTagging.append("¦");
+    private static void outputVerseRef(final StringBuilder resultingTagging, final String verseRef, final int wordNumber) {
+//        resultingTagging.append("¦");
         resultingTagging.append(verseRef);
+        resultingTagging.append('-');
+        resultingTagging.append(String.format("%03d", wordNumber));
         resultingTagging.append('\t');
     }
 
-    private static void outputStrongNumber(final StringBuilder resultingTagging, final String verseRef, final String lastStrongNumber) {
+    private static void outputStrongNumber(final StringBuilder resultingTagging, final String verseRef, final String lastStrongNumber, final IndexSearcher indexSearcher) {
         //output the strong number and a new line
         resultingTagging.append('\t');
         resultingTagging.append("<");
         resultingTagging.append(lastStrongNumber);
-        resultingTagging.append(">¬");
+        resultingTagging.append("> = ");
+        try {
+            appendLexicalEntry(indexSearcher, resultingTagging, lastStrongNumber);
+        } catch (IOException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+        resultingTagging.append(" ¬");
         resultingTagging.append('\n');
     }
 

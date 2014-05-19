@@ -728,7 +728,7 @@ step.util = {
                 case HEBREW_MEANINGS:
                     return "<div class='" + entry.itemType + "Item' " +
                         'data-item-type="' + entry.itemType + '" ' +
-                        'data-select-id="' + util.safeEscapeQuote(entry.item.gloss) + '" ' +
+                        'data-select-id="' + util.safeEscapeQuote(entry.item.stepTransliteration) + '" ' +
                         'title="' + source + util.safeEscapeQuote(entry.item.gloss + ", " + entry.item.matchingForm) + '">' +
                         '<span class="transliteration">' + entry.item.stepTransliteration + "</span></div>";
                 case MEANINGS:

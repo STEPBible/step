@@ -98,6 +98,7 @@ public class InterlinearProviderImpl implements InterlinearProvider {
      */
     private final Map<DualKey<String, String>, Deque<Word>> limitedAccuracy = new HashMap<DualKey<String, String>, Deque<Word>>();
     private final boolean originalLanguage;
+    private boolean disabled = false;
     private Versification versification;
     // a temporary, non-thread-safe, transient, working variable, which keeps track of the verse we're in.
     private Verse currentVerse;
@@ -168,6 +169,8 @@ public class InterlinearProviderImpl implements InterlinearProvider {
         } catch (final BookException e) {
             throw new StepInternalException(e.getMessage(), e);
         }
+
+        this.disabled = this.limitedAccuracy.size() == 0;
     }
 
     /**
@@ -584,5 +587,10 @@ public class InterlinearProviderImpl implements InterlinearProvider {
      */
     void setVocabProvider(final VocabularyService vocabService) {
         this.vocabProvider = vocabService;
+    }
+
+    @Override
+    public boolean isDisabled() {
+        return disabled;
     }
 }

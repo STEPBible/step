@@ -186,11 +186,6 @@ var MainSearchView = Backbone.View.extend({
             if (replaceItemParent.length > 0) {
                 var replaceItemIndex = replaceItemParent.index();
                 data.splice(replaceItemIndex, 1, data[data.length - 1]);
-
-                //if we resort to the 'data' method, we lose all our handlers
-                newItem = container.find("[data-select-id]");
-            } else {
-                newItem = container.find("[data-select-id]").last();
             }
 
             //needs to be outside if statement to ensure we recreate token handlers
@@ -289,7 +284,7 @@ var MainSearchView = Backbone.View.extend({
         var self = this;
         $(tokens).filter(".greekMeaningsItem, .hebrewMeaningsItem, .hebrewItem, .greekItem, .meaningsItem, .subjectItem").click(function (ev) {
             self._markItemForReplacing(ev, $(this));
-            self._searchExampleData(ev, $(this).attr("data-item-type"), ($(this).attr("data-select-id") || "").substring(0,2));
+            self._searchExampleData(ev, $(this).attr("data-item-type"), ($(this).attr("data-select-id") || "").replace(/\./g, "").substring(0,2));
         });
     },
     _searchExampleData: function (ev, itemType, term) {
@@ -404,7 +399,7 @@ var MainSearchView = Backbone.View.extend({
             switch (item.itemType) {
                 case HEBREW:
                 case GREEK:
-                    exampleTokens.push(this._markMatch(examples[i].stepTransliteration, term));
+                    exampleTokens.push('<span class="transliteration">' + this._markMatch(examples[i].stepTransliteration, term) + '</em>');
                     break;
                 case HEBREW_MEANINGS:
                 case GREEK_MEANINGS:
@@ -460,6 +455,7 @@ var MainSearchView = Backbone.View.extend({
         this._setData(originalData);
         this._resetReplaceItems();
         this.masterSearch.select2("close");
+        this._reEvaluateMasterVersion();
     },
     _removeVersion: function (data) {
         //find the element

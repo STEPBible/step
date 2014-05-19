@@ -3,7 +3,10 @@ var DisplayView = Backbone.View.extend({
         var self = this;
         var versionLinks = passageContent.find("[data-version]");
 
-        versionLinks.click(function() {
+        var disabled = versionLinks.filter("[data-version-disabled='true']");
+        disabled.attr("title", __s.interlinear_no_text_for_version);
+
+        versionLinks.not(disabled).click(function() {
             var el = $(this);
             var newMasterVersion = el.attr("data-version");
             var newArgs = step.util.swapMasterVersion(newMasterVersion, self.model, false);
@@ -56,6 +59,152 @@ var DisplayView = Backbone.View.extend({
             }
         } else {
             passageContent.find(".searchResults .passageContentHolder, .expandedHeadingItem .passageContentHolder").addClass(fonts[0]);
+        }
+    },
+    //Can be removed when/if Chrome fixes this
+    _doChromeHack: function (passageHtml, interlinearMode, options) {
+        //only applies to Chrome
+        if (!$.isChrome) {
+            return;
+        }
+
+        if (!passageHtml) {
+            passageHtml = this.$el;
+        }
+
+        if (!interlinearMode) {
+            if (this.model == undefined) {
+                //no point in continuing if no model, since there can't be much on the page.
+                return;
+            }
+            interlinearMode = this.model.get("interlinearMode");
+        }
+
+        if (!options) {
+            options = this.model.get("options");
+        }
+
+
+        if (!this._isInterlinearMode(interlinearMode, options)) {
+            return;
+        }
+        var interlinearBlocks = passageHtml.find(".interlinear span.w");
+
+        //reset the 'clear' values
+        interlinearBlocks.not(".verseStart").css("clear", "none");
+        var previousElementOffset = undefined;
+
+        for (var i = 0; i < interlinearBlocks.length; i++) {
+            var element = interlinearBlocks.eq(i);
+            var elementOffset = element.offset();
+
+            //skip the first element
+            if (previousElementOffset) {
+                //check that previous element is either left or higher up
+                var currentPadding = 0;
+                if (previousElementOffset.top < elementOffset.top) {
+                    element.css("clear", "left");
+                }
+                elementOffset = element.offset();
+            }
+            previousElementOffset = elementOffset;
+        }
+    },
+    /**
+     * Estimates the height of each block in an interlinear like way
+     * @param individualBlocks each individual block in an interlinear.
+     * @returns {Array}
+     * @private
+     */
+    _getBlockSizes: function (individualBlocks) {
+        //get sizes
+        var sizes = [];
+        var obtainedSizes = 0;
+        for (var i = 0; i < individualBlocks.length; i++) {
+            var block = individualBlocks.eq(i);
+            var blockChildren = block.children();
+
+            //initialise if not already done
+            if (sizes.length == 0) {
+                for (var j = 0; j < blockChildren.length; j++) {
+                    sizes.push(-1);
+                }
+            }
+
+            if (block.hasClass("verseStart")) {
+                continue;
+            }
+
+            for (var j = 0; j < blockChildren.length; j++) {
+                var blockChild = blockChildren.eq(j);
+                if (sizes[j] == -1) {
+                    sizes[j] = blockChild.height();
+                    obtainedSizes++;
+                }
+            }
+            if (obtainedSizes == sizes.length) {
+                break;
+            }
+        }
+        return sizes;
+    },
+    _isInterlinearMode: function (interlinearMode, options) {
+        return options.indexOf("E") != -1 ||
+            options.indexOf("T") != -1 ||
+            options.indexOf("A") != -1 ||
+            options.indexOf("M") != -1 ||
+            interlinearMode == "INTERLINEAR"
+    },
+
+    /**
+     * Resizes the interlinear verse numbers to line them up properly against their counter-part text nodes.
+     * @param interlinearMode
+     */
+    doInterlinearVerseNumbers: function (passageContent, interlinearMode, options) {
+        if (this._isInterlinearMode(interlinearMode, options)) {
+
+            var targetParentElement = passageContent;
+            if (!targetParentElement.hasClass("passageContentHolder")) {
+                targetParentElement = targetParentElement.find(".passageContentHolder");
+            }
+
+            //obtain heights first...
+            var individualBlocks = targetParentElement.children().children();
+            if (individualBlocks.length == 0) {
+                return;
+            }
+
+            var sizes = this._getBlockSizes(individualBlocks);
+
+            //do verse numbers
+            var verseNumbers = $(".verseStart", targetParentElement);
+            for (var k = 0; k < verseNumbers.length; k++) {
+                var verseBlocks = verseNumbers.eq(k).children();
+                for (var i = 0; i < verseBlocks.length; i++) {
+                    if (i < sizes.length && sizes[i] != 0) {
+                        verseBlocks.eq(i).height(sizes[i]).css('line-height', sizes[i] + "px");
+                    }
+                }
+            }
+
+            //do all empty nodes as well.
+            var allTextNodes = individualBlocks.not(".verseStart").children();
+            for (var index = 0; index < allTextNodes.length; index++) {
+                var potentialNode = allTextNodes.eq(index);
+                if (potentialNode.hasClass("w")) {
+                    //we're looking at a parent element, so do the same for the children
+                    var wChildren = potentialNode.children();
+                    for (var j = 0; j < wChildren.length; j++) {
+                        wChildren.eq(j).height(sizes[j]).css('line-height', sizes[j] + "px")
+                    }
+                } else if (step.util.isBlank(potentialNode.text())) {
+                    //work out index
+                    var indexInParent = potentialNode.index();
+                    if (indexInParent < sizes.length && sizes[indexInParent] != 0) {
+                        potentialNode.height(sizes[indexInParent]).css('line-height', sizes[indexInParent] + "px");
+                    }
+                }
+            }
         }
     }
 });

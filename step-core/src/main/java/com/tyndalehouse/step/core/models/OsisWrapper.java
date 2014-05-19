@@ -298,4 +298,5 @@ public class OsisWrapper extends AbstractComplexSearch implements Serializable {
     public List<TrimmedLookupOption> getRemovedOptions() {
         return removedOptions;
     }
+
 }

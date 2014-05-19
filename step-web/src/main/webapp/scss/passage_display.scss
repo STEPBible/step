@@ -83,6 +83,7 @@
 
   .notesPane {
     text-align: left;
+    min-height: 100%;
   }
   .verse.containsTable {
     text-align: left;
@@ -138,6 +139,12 @@
 
   [data-version] {
     cursor: hand;
+  }
+
+  [data-version-disabled="true"] {
+    cursor: not-allowed;
+    text-decoration: none;
+    color: $disabledColour;
   }
 }
 

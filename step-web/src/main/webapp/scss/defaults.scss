@@ -1,8 +1,14 @@
 @import 'template_variables';
 
+a {
+  color: $linkColour;
+}
+
+
 h1,h2,h3,h4,h5,h6,.panel-title {
   color: $headingColour;
   font-weight: bold;
+  margin:20px 0 10px 0;
 }
 
 body, .dropdown-menu, .searchResultRow, #quickLexicon h1 {
@@ -33,4 +39,12 @@ ul .glyphicon-ok {
 
 .transliteration {
     font-style: italic;
+}
+
+.btn-danger {
+  background-image: linear-gradient(to bottom,#D14A4A 0,#9E2B2B 100%); /* Just changed the two colors */
+}
+
+.text-info {
+  color: #26539e;
 }

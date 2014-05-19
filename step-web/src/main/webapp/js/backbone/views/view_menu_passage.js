@@ -55,6 +55,7 @@ var PassageMenuView = Backbone.View.extend({
             this.$el.parent().append(this.warnings);
         }
 
+
         this.listenTo(this.model, "raiseMessage", this.raiseMessage);
         this.listenTo(this.model, "squashErrors", this.squashError);
         this.listenTo(Backbone.Events, "columnsChanged", this.updateVisibleCloseButton);
@@ -64,15 +65,15 @@ var PassageMenuView = Backbone.View.extend({
         var warningMessages = (this.warnings.attr('data-content') || "").indexOf("glyphicon-warning-sign") != -1;
         if (errorMessages) {
             this.warnings
-                .removeClass("text-info text-warning text-warning").addClass("text-danger")
+                .removeClass("text-muted text-info text-warning text-warning").addClass("text-danger")
                 .find(".glyphicon").removeClass('glyphicon-exclamation-sign glyphicon-warning-sign glyphicon-info-sign').addClass("glyphicon-exclamation-sign");
         } else if (warningMessages) {
             this.warnings
-                .removeClass("text-info text-danger text-warning").addClass("text-warning")
+                .removeClass("text-muted text-info text-danger text-warning").addClass("text-warning")
                 .find(".glyphicon").removeClass('glyphicon-exclamation-sign glyphicon-warning-sign glyphicon-info-sign').addClass("glyphicon-warning-sign");
         } else {
             this.warnings
-                .removeClass("text-info text-danger text-warning").addClass("text-info")
+                .removeClass("text-muted text-info text-danger text-warning").addClass("text-info")
                 .find(".glyphicon").removeClass('glyphicon-exclamation-sign glyphicon-warning-sign glyphicon-info-sign').addClass("glyphicon-info-sign");
         }
     }, raiseMessage: function (opts) {
@@ -90,16 +91,31 @@ var PassageMenuView = Backbone.View.extend({
             titleSoFar += '<span class="text-info glyphicon glyphicon-info-sign"></span> ';
         }
         titleSoFar += opts.message;
-        this.warnings.popover({ html : true });
+        this.warnings.popover({ html : true }).on("hide.bs.popover", function() {
+            self.handleInfoHide();
+        });
         this.warnings.attr("data-content", titleSoFar);
         this._updateIcon();
         this.warnings.show();
         if(opts.silent != true) {
             this.warnings.popover('show');
+            this.warnings.next(".popover").on('click', function() {
+                self.warnings.popover("hide");
+                self.handleInfoHide();
+            })
+        } else {
+            this.warnings.on("shown.bs.popover", function() {
+                self.warnings.next(".popover").on('click', function() {
+                    self.warnings.popover("hide");
+                    self.handleInfoHide();
+                })
+            });
         }
-        this.warnings.next(".popover").on('click', function() {
-            self.warnings.popover("hide");
-        })
+
+    },
+    handleInfoHide: function() {
+        this.warnings.removeClass("text-info text-warning text-danger");
+        this.warnings.addClass("text-muted");
     },
     squashError: function () {
         this.warnings.attr("data-content", "");

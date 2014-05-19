@@ -1057,23 +1057,41 @@ step.util = {
                                 //otherwise, exciting new strong numbers to apply:
                                 $.getSafe(BIBLE_GET_STRONGS_AND_SUBJECTS, [version, reference], function (data) {
                                     var template = '<div>' +
-                                        '<h1 class="vocabHeader"><%= (data.multipleVerses ? sprintf(__s.vocab_for_verse, data.verse) : "") %></h1>' +
-                                        '<div class="col-xs-10 col-sm-4 heading"></div>' +
+
+                                        '<div class="col-xs-10 col-sm-4 heading"><h1><%= (data.multipleVerses ? sprintf(__s.vocab_for_verse, data.verse) : "") %></h1></div>' +
                                         '<div class="col-xs-1 col-sm-1 heading"><h1><%= __s.bible_book %></h1></div>' +
                                         '<div class="col-xs-1 col-sm-1 heading"><h1><%= ot ? __s.OT : __s.NT %></h1></div>' +
-                                        '<div class="hidden-xs col-sm-4 heading"></div>' +
+                                        '<div class="hidden-xs col-sm-4 heading"><h1><%= __s.vocab_for_verse_continued %></h1></div>' +
                                         '<div class="hidden-xs col-sm-1 heading"><h1><%= __s.bible_book %></h1></div>' +
                                         '<div class="hidden-xs col-sm-1 heading"><h1><%= ot ? __s.OT : __s.NT %></h1></div>' +
                                         '<% _.each(rows, function(row) { %>' +
                                         '<span data-strong="<%= row.strongData.strongNumber %>">' +
                                         '<a href="javascript:void(0)" class="definition col-xs-10 col-sm-4"><%= row.strongData.gloss %> ' +
                                         '(<span class="transliteration"><%= row.strongData.stepTransliteration %></span> - <%= row.strongData.matchingForm %>)</a>' +
-                                        '<a href="javascript:void(0)" class="bookCount col-xs-1 col-sm-1"><%= sprintf(__s.times, row.counts.book) %></a>' +
-                                        '<a href="javascript:void(0)" class="bibleCount col-xs-1 col-sm-1"><%= sprintf(__s.times, row.counts.bible) %></a>' +
+                                        '<a href="javascript:void(0)" class="bookCount col-xs-1 col-sm-1"><%= sprintf("%d&times;", row.counts.book) %></a>' +
+                                        '<a href="javascript:void(0)" class="bibleCount col-xs-1 col-sm-1"><%= sprintf("%d&times;", row.counts.bible) %></a>' +
                                         '</span><% }); %></div>' +
                                         '<div class="verseVocabLinks"><a href="javascript:void(0)" class="relatedVerses"><%= __s.see_related_verses %></a> ' +
                                         '<a href="javascript:void(0)" class="relatedSubjects"><%= __s.see_related_subjects%></a> ' +
                                         '<a href="javascript:void(0)" class="wordCloud"><%= __s.word_cloud %></a></div>';
+
+//
+//                                    '<div class="col-xs-10 col-sm-4 heading"><h1><%= (data.multipleVerses ? sprintf(__s.vocab_for_verse, data.verse) : "") %></h1></div>' +
+//                                        '<div class="col-xs-1 col-sm-1 heading"><h1><%= __s.bible_book %></h1></div>' +
+//                                        '<div class="col-xs-1 col-sm-1 heading"><h1><%= ot ? __s.OT : __s.NT %></h1></div>' +
+//                                        '<div class="hidden-xs col-sm-4 heading"><h1><%= __s.vocab_for_verse_continued %></h1></div>' +
+//                                        '<div class="hidden-xs col-sm-1 heading"><h1><%= __s.bible_book %></h1></div>' +
+//                                        '<div class="hidden-xs col-sm-1 heading"><h1><%= ot ? __s.OT : __s.NT %></h1></div>' +
+//                                        '<% _.each(rows, function(row) { %>' +
+//                                        '<span data-strong="<%= row.strongData.strongNumber %>">' +
+//                                        '<a href="javascript:void(0)" class="definition col-xs-10 col-sm-4"><%= row.strongData.gloss %> ' +
+//                                        '(<span class="transliteration"><%= row.strongData.stepTransliteration %></span> - <%= row.strongData.matchingForm %>)</a>' +
+//                                        '<a href="javascript:void(0)" class="bookCount col-xs-1 col-sm-1"><%= sprintf("%d&times;", row.counts.book) %></a>' +
+//                                        '<a href="javascript:void(0)" class="bibleCount col-xs-1 col-sm-1"><%= sprintf("%d&times;", row.counts.bible) %></a>' +
+//                                        '</span><% }); %></div>' +
+//                                        '<div class="verseVocabLinks"><a href="javascript:void(0)" class="relatedVerses"><%= __s.see_related_verses %></a> ' +
+//                                        '<a href="javascript:void(0)" class="relatedSubjects"><%= __s.see_related_subjects%></a> ' +
+//                                        '<a href="javascript:void(0)" class="wordCloud"><%= __s.word_cloud %></a></div>';
 
                                     var rows = [];
                                     for (var key in data.strongData) {

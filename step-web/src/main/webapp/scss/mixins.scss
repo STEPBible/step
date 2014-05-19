@@ -2,7 +2,7 @@
 
 @mixin divider-left {
   border-left: 1px solid $dividerColor;
-  padding-left: 5px;
+  padding:0 15px 0;
   height: 100%;
 }
 

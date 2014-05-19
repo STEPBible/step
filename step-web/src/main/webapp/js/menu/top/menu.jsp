@@ -49,14 +49,14 @@
         
         <span class="dropdown">
         <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)"><fmt:message
-                key="installation_book_language"/></a> &nbsp;&nbsp;|&nbsp;&nbsp; 
+                key="installation_book_language"/><span class="caret"/></a> &nbsp;&nbsp;|&nbsp;&nbsp;
         <ul id="languageMenu" class="kolumny pull-right dropdown-menu">
             <li><a href="http://crowdin.net/project/step" target="_new"><fmt:message key="translate_step"/></a></li>
             <%= sb.toString() %>
         </ul>
     </span>
 	<span class="dropdown">
-        <a class="dropdown-toggle helpMenuTrigger" data-toggle="dropdown" href="javascript:void(0)"><fmt:message key="help"/></a>
+        <a class="dropdown-toggle helpMenuTrigger" data-toggle="dropdown" href="javascript:void(0)"><fmt:message key="help"/><span class="caret"/></a>
         <ul class="dropdown-menu pull-right helpMenu">
             <li class="quick_tutorial"><a href="javascript:void(0)" name="TUTORIAL"><fmt:message key="quick_tutorial_link"/></a></li>
             <li class="available_bibles_and_commentaries"><a href="/versions.jsp" target="_blank" name="AVAILABLE_BIBLES_AND_COMMENTARIES"><fmt:message key="available_versions"/></a></li>

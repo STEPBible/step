@@ -11,7 +11,14 @@
   overflow-y: auto;
 }
 
+.select2-drop-active {
+  border:none;
+  border-bottom:1px solid #cd4848;
+}
+
 .select2-results {
+  font-family:tahoma;
+  padding:0;
   max-height: none;
 }
 

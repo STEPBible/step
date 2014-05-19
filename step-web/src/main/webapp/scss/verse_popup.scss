@@ -17,9 +17,16 @@
   .verseVocabLinks {
     display: block;
     clear: both;
-    padding-top: 15px;
+    margin-top:10px;
+    padding-top:10px;
+    border-top:1px dotted #ccc;
     a {
-      margin-right: 15px;
+      margin-right: 10px;
+      border-right: 1px dotted #ccc;
+      padding-right: 10px;
+      &:last-child {
+        border-right: none
+      }
     }
   }
 

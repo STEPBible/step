@@ -15,13 +15,14 @@ $stepLG: 1120px;
 
 // colours
 //active colour of panel
-$activeColor: #D74F4B;
+$activeColor: #D14A4A;
 $topHeaderLinkColour: lightgrey;
 $dividerColor: $topHeaderLinkColour;
 $hoverColor: rgb(235, 235, 241);
 $warningColour: orange;
 $infoColour: #a9d3ff;
 $disabledColour: darkgrey;
+$linkColour: #26539e;
 
 // scrollbar colours
 $headerBackgroundColor: black;
@@ -34,8 +35,8 @@ $scrollTrackBoxActive: lighten($scrollColor, 0.14);
 $scrollTrackThumbShadow: lighten($scrollColor, 0.07);
 
 // colours in dropdown
-$headingColour: #991C32;
-$verseNumberBackground: #F3E5B4;
+$headingColour: #111;
+$verseNumberBackground: #eee;
 $inactiveTabColor: black;
 
 $bibleRow: #A94A4C;

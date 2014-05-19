@@ -3,9 +3,7 @@
 ::-webkit-scrollbar {
   width: 12px
 }
-::-webkit-scrollbar-thumb {
-  border-width: 1px 1px 1px 2px
-}
+
 ::-webkit-scrollbar-track {
   border-width: 0
 }
@@ -40,8 +38,17 @@
 ::-webkit-scrollbar-track:horizontal:active {
   box-shadow: inset 0 1px 0 transparentize($scrollColor, .86),inset 0 -1px 0 rgba(220,172,0,.07)
 }
+
+
 ::-webkit-scrollbar-thumb {
-  background-color: transparentize($scrollColor,.8);
+}
+
+
+
+::-webkit-scrollbar-thumb {
+  border-width: 1px 1px 1px 2px;
+  background-color:rgba(175, 175, 175, 0.2);
+  box-shadow: inset 1px 1px 0 rgba(152, 152, 152, 0.2), inset 0 -1px 0 rgba(153, 28, 50, 0.07);
   background-clip: padding-box;
   border: solid transparent;
   border-width: 1px 1px 1px 6px;
@@ -49,6 +56,13 @@
   padding: 100px 0 0;
   box-shadow: inset 1px 1px 0 transparentize($scrollColor, .8),inset 0 -1px 0 transparentize($scrollColor, .93);
 }
+
+// this should add some extra color to the active panel
+div.passageContainer.active ::-webkit-scrollbar-thumb {
+  background-color:rgba(175, 175, 175, 0.2);
+  box-shadow: inset 1px 1px 0 rgba(153, 28, 28, 0.2), inset 0 -1px 0 rgba(153, 28, 50, 0.07);
+}
+
 ::-webkit-scrollbar-thumb:horizontal {
   border-width: 6px 1px 1px;
   padding: 0 0 0 100px;

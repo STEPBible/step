@@ -204,7 +204,8 @@ a.smallHeaders {
 }
 
 .notesPane a {
-	color: #991C32;
+	color: #333;
+    font-family:tahoma;
 	font-weight: bold;
 	font-size: x-small;
 }
@@ -238,7 +239,9 @@ span.strongs, span.morphs, span.interVerseNumbers {
 	text-decoration: none;
 	font-size: 90% !important;
 	text-align: center;
-	font-style: italic;
+	font-style: normal;
+    color: #26539e;
+    border: none;
 }
 
 .ancientVocab a {
@@ -267,14 +270,14 @@ sup.variant.note {
 
 SUP.note a {
 	font-size: 100%;
-	font-weight: bold;
-	color: #33339F;
+    font-weight:normal;
+	color: #26539e;
 }
 
 SUP.note a:visited {
 	font-size: 100%;
-	font-weight: bold;
-	color: #33339F;
+    font-weight:normal;
+	color: #26539e;
 }
 
 FONT.lex {
@@ -282,7 +285,7 @@ FONT.lex {
 }
 
 span.jesus {
-	color: red;
+    color:#cc4848;
 }
 
 span.speech {
@@ -397,8 +400,6 @@ H4.heading  {
 H2.xgen {
 	font-family: Verdana;
 	color: #991C32;
-	font-variant:small-caps;
-	font-style: italic;
 }
 
 H2.xgen ul {
@@ -406,8 +407,11 @@ H2.xgen ul {
 }
 
 H2.heading, input.heading {
-	color: #991C32;
-	font-weight: bold;
+	color: #111;
+	font-weight: normal;
+    margin: 15px 0 10px 0;
+    text-align: left;
+    line-height: 23px;
 }
 
 input.heading {
@@ -460,7 +464,7 @@ h3.psalmHeading .note {
 
 
 a.linkRef {
-	color: #33339F;
+	color: #26539e;
 	font-weight: normal;
 	front-size: smaller;
 }
@@ -587,6 +591,10 @@ FONT.usg {
 
 .draggable-tooltip .qtip-content {
 	background-color: white;
+}
+
+.qtip-content {
+    padding:15px;
 }
 
 .draggable-tooltip * .xgen {
@@ -790,7 +798,8 @@ Analysis tabs
 }
 
 .versePopup {
-    border-width: 2px;
-    border-color: lightgrey;
+    border:1px solid #666;
+    border-radius:5px;
+    box-shadow:2px 2px 4px rgba(0,0,0,0.2);
     background-color: white;
 }

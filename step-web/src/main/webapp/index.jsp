@@ -20,6 +20,19 @@
 <!DOCTYPE html  xmlns:fb="http://ogp.me/ns/fb#">
 <html>
 <head>
+    <%
+        if(request.getParameter("translate") != null) {
+    %>
+
+    <script type="text/javascript">
+        var _jipt = [];
+        _jipt.push(['project', 'step']);
+    </script>
+    <script type="text/javascript" src="//cdn.crowdin.net/jipt/jipt.js"></script>
+    <%
+        }
+    %>
+
     <TITLE>${ title }</TITLE>
     <META http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -407,5 +420,7 @@
         }(window, document, 'script'));
     </script>
     <% } %>
+
+
 </body>
 </html>

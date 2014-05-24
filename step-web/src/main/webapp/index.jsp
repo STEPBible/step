@@ -6,8 +6,6 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="bookmarks" tagdir="/WEB-INF/tags/bookmarks" %>
-<%@ page import="com.tyndalehouse.step.jsp.WebStepRequest" %>
 <%@ page import="com.google.inject.Injector"%>
 <%@ page import="com.tyndalehouse.step.core.service.AppManagerService" %>
 <%@ page import="java.util.Calendar" %>
@@ -315,11 +313,8 @@
     <%-- NOTE: do not include in prod web minifying and use minified versions otherwise --%>
     <%@include file="jsps/offlineJqueryJs.jsp" %>
     <script src="libs/bootstrap.min.js"></script>
-    <%--<script src="libs/magicsuggest-1.3.1-min.js"></script>--%>
 
     <script src="libs/sprintf-0.7-beta1.js" type="text/javascript"></script>
-    <%--<script src="libs/jquery.tagcloud.js" type="text/javascript"></script>--%>
-    <%--<script src="libs/tinymce/jquery.tinymce.min.js" type="text/javascript"></script>--%>
     <script src="libs/underscore-min.js" type="text/javascript"></script>
     <script src="libs/json2.js" type="text/javascript"></script>
 
@@ -372,7 +367,6 @@
         %>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" type="text/javascript" ></script>
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js" type="text/javascript"></script>
-    <%--<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js" type="text/javascript" ></script>--%>
         <%
             }
         %>

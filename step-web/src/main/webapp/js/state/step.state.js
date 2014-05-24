@@ -56,14 +56,6 @@ step.state = {
         this._restoreLanguage();
      },
 
-    _restoreLanguage : function() {
-        var language = $.cookie("lang");
-        if(step.util.isBlank(language)) {
-            language = "en";
-        }
-        
-        step.menu.tickMenuItem($("a[lang='" + language + "']"));
-    },
 
     isLocal : function() {
         if(this.local == undefined) {

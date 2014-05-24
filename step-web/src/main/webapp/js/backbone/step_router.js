@@ -106,7 +106,15 @@ var StepRouter = Backbone.Router.extend({
         if (args != null) {
             activePassageModel.save({ args: decodeURIComponent(args) }, { silent: true });
         }
-        this.navigate(urlStub, historyOptions);
+
+        //code copied from bootstraps navigate - bringing up to work out if anything will be triggered.
+        var currentFragment = Backbone.history.fragment;
+        var targetFragment = Backbone.history.getFragment(urlStub);
+        if(currentFragment === targetFragment) {
+            activePassageModel.trigger("afterRender");
+        } else {
+            this.navigate(urlStub, historyOptions);
+        }
     },
     getShareableColumnUrl: function (passageId) {
         var shareableUrl = "http://www.stepbible.org/";

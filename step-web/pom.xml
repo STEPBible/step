@@ -130,7 +130,6 @@
                             <filtering>true</filtering>
                             <includes>
                                 <include>index.jsp</include>
-                                <include>js/menu/top/view.js</include>
                             </includes>
                         </resource>
                     </webResources>

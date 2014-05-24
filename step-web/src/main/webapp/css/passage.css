@@ -1,10 +1,3 @@
-.passageText {
-	/*margin-top: 1px;*/
-/*	overflow: auto;*/
-	/*padding: 0px 5px;*/
-	/*position: relative;*/
-	/*text-align: left;*/
-}
 
 /** Some interlinear rules */
 /* Define the nature of a "word" */
@@ -578,7 +571,7 @@ FONT.usg {
 	padding: 4px 26px 5px 10px;
 
 
-	background: #F3E5B4 url(images/ui-bg_highlight-soft_75_F3E5B4_1x100.png) 50% 50% repeat-x;
+	background: #F3E5B4;
 	color: #991C32;
 	font-weight: bold;
     cursor: pointer;
@@ -745,10 +738,6 @@ FONT.usg {
 	padding-right: 25px;
 }
 
-.verseStrongSearch {
-	float: left;
-	background-image: url('images/ui-icons_991C32_256x240.png');
-}
 
 .strongCount {
 	width: 5ex;

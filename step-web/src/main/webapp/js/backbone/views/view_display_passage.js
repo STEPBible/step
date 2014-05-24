@@ -12,6 +12,7 @@ var PassageDisplayView = DisplayView.extend({
             this.listenTo(this.model, "destroyViews", this.remove);
             this.listenTo(this.model, "destroy-column", this.remove);
             this.listenTo(this.model, "font:change", this.handleFontSizeChange, this);
+            this.listenTo(this.model, "afterRender", this.scrollToTargetLocation, this);
             this.partRendered = options.partRendered;
             this.render();
         },
@@ -65,12 +66,20 @@ var PassageDisplayView = DisplayView.extend({
                 this._doChromeHack(passageHtml, interlinearMode, options);
                 this.doInterlinearVerseNumbers(passageHtml, interlinearMode, options);
                 this.scrollToTargetLocation(passageContainer);
+
+
             }
         },
         scrollToTargetLocation: function (passageContainer) {
+            if(!passageContainer) {
+                passageContainer = step.util.getPassageContainer(this.model.get("passageId"));
+            }
+
+
             //get current column target data
             var column = passageContainer.closest(".column");
-//            var passageContent = passageContainer.find(".passageContent");
+            passageContainer.find(".secondaryBackground").removeClass("secondaryBackground");
+
             var currentTarget = this.model.get("targetLocation");
             if (currentTarget) {
                 var link = passageContainer.find("[name='" + currentTarget + "']");

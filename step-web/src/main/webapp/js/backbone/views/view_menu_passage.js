@@ -357,8 +357,8 @@ var PassageMenuView = Backbone.View.extend({
 
         var li = $('<li class="noHighlight contextContainer">').append($('<span class="contextLabel"></span>').append(this.getContextLabel(context)));
         li.append($('<span class="btn-group pull-right"></span>')
-            .append('<button class="btn btn-default btn-xs"><span class="glyphicon glyphicon-minus"></span></button>')
-            .append('<button class="btn btn-default btn-xs"><span class="glyphicon glyphicon-plus"></span></button>'));
+            .append('<button class="btn btn-default btn-xs"><span class="glyphicon glyphicon-minus" title="' + __s.search_less_context + '"></span></button>')
+            .append('<button class="btn btn-default btn-xs"><span class="glyphicon glyphicon-plus" title="' + __s.search_more_context + '"></span></button>'));
 
         li.find("button").click(function (ev) {
             ev.stopPropagation();

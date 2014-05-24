@@ -55,7 +55,7 @@ var PassageDisplayView = DisplayView.extend({
                 this._doDuplicateNotice(passageId, passageHtml);
                 this._updatePageTitle(passageId, passageHtml, version, reference);
                 this._doInterlinearDividers(passageHtml);
-//TODO:                this._doVersions(passageId, passageHtml, version, reference);
+                this._doAlternatives(passageId, passageHtml, version, reference);
 
                 if (!this.partRendered) {
                     step.util.ui.emptyOffDomAndPopulate(this.$el, passageHtml);
@@ -173,8 +173,15 @@ var PassageDisplayView = DisplayView.extend({
             $(".w:not([strong]):not(.verseStart)", passageContent).next().css("border-left", "none");
         },
 
-        _doVersions: function (passageId, passageContent, version, reference) {
-            step.alternatives.enrichPassage(passageId, passageContent, version, reference);
+        _doAlternatives: function (passageId, passageContent, version, reference) {
+            // only do this if we've got a particular parameter set in the URL
+            if($.getUrlVar("altMeanings") != "true") {
+                return;
+            }
+
+            require(['search', 'qtip'], function () {
+                step.alternatives.enrichPassage(passageId, passageContent, version, reference);
+            });
         },
 
         /**

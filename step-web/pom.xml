@@ -290,6 +290,7 @@
                                 <jsSourceFile>js/backbone/views/view_display_text.js</jsSourceFile>
                                 <jsSourceFile>js/backbone/views/view_display_subject.js</jsSourceFile>
                                 <jsSourceFile>js/backbone/views/view_display_word.js</jsSourceFile>
+                                <jsSourceFile>js/passages/step.alternatives.js</jsSourceFile>
                             </jsSourceFiles>
                             <jsFinalFile>step.search-${project.version}.js</jsFinalFile>
                         </configuration>

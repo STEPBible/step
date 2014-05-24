@@ -1186,6 +1186,11 @@ step.util = {
                 .append(text));
 
             return panel;
+        },
+        highlightPhrase: function (nonJqElement, cssClasses, phrase) {
+            var regexPattern = phrase.replace(/ /g, ' +').replace(/"/g, '["\u201d]');
+            var regex = new RegExp(regexPattern, "ig");
+            doHighlight(nonJqElement, cssClasses, regex);
         }
     }
 }

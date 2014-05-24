@@ -7,8 +7,10 @@ var TextDisplayView = SearchDisplayView.extend({
         var searchResults = this.model.get("results");
         var sortOrder = this.model.get("order");
 
+        var originalResults = null;
         var table;
         if(append) {
+            originalResults = $(".searchResultRow");
             table = this.$el.find(".searchResults");
         } else {
             table = $("<div>").addClass("searchResults");
@@ -31,6 +33,10 @@ var TextDisplayView = SearchDisplayView.extend({
                 }
                 return surrounding;
             });
+        }
+
+        if(append) {
+            return table.find(".searchResultRow").not(originalResults);
         }
         return results;
     },

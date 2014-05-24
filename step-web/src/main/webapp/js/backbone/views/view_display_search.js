@@ -77,7 +77,7 @@ var SearchDisplayView = DisplayView.extend({
         }
 
         var passageId = this.model.get("passageId");
-        step.util.restoreFontSize(this.model, results);
+        step.util.restoreFontSize(this.model, results.find(".passageContentHolder"));
 
         if (append) {
             this.getScrollableArea().append(results);

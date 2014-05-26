@@ -17,6 +17,12 @@ var TextDisplayView = SearchDisplayView.extend({
             results.append(table);
         }
 
+        //perhaps we're restoring the first page of results?
+        if(searchResults == null && this.model.get("firstPageResults") != null) {
+            this.model.save({ results: this.model.get("firstPageResults") }, { silent: true });
+            searchResults = this.model.get("results");
+        }
+
         //multiple vs singular version
         if (searchResults[0].preview) {
             this._displayPassageResults(table, searchResults, sortOrder, existingResults);

@@ -102,5 +102,8 @@
   .argSummary {
     margin: 0;
     float: left;
-  }  
+      max-width: 40%;
+      overflow: hidden;
+      white-space: nowrap;
+  }
 }

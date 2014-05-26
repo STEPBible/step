@@ -27,7 +27,7 @@
   .column {
     height: 100%;
     padding: 0px 2px;
-    
+
     .passageContent {
       clear: left;
       height: 100%;
@@ -38,12 +38,6 @@
         display: block;
         overflow-y: auto;
       }
-    }
-
-    .passageText .argSummary {
-      max-width: 40%;
-      overflow: hidden;
-      white-space: nowrap;
     }
 
     .passageContentHolder {

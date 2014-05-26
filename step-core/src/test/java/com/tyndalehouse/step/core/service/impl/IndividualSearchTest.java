@@ -46,7 +46,7 @@ public class IndividualSearchTest {
      */
     @Test
     public void testSubRangeText() {
-        final IndividualSearch s = new IndividualSearch("om=+[Gen-Rev] {John} good", new String[] {"ESV"}, null);
+        final IndividualSearch s = new IndividualSearch("ot=+[Gen-Rev] {John} good", new String[] {"ESV"}, null);
 
         assertEquals(SearchType.ORIGINAL_MEANING, s.getType());
         assertEquals("good", s.getQuery());

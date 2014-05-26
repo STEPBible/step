@@ -69,7 +69,7 @@ public class SearchServiceImplTest {
     public void testSubjectSearch() {
 
         final SearchResult searchSubject = this.searchServiceUnderTest.search(
-                new SearchQuery("s=elijah", new String[]{"ESV"}, "false", 0, 1, 1, null));
+                new SearchQuery("sh=elijah", new String[]{"ESV"}, "false", 0, 1, 1, null));
 
         final List<SearchEntry> entries = ((SubjectHeadingSearchEntry) searchSubject.getResults().get(0))
                 .getHeadingsSearch().getResults();

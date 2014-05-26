@@ -30,6 +30,18 @@
         float: right;
       }
     }
+
+    #infoAboutQuerySyntax {
+      padding: 3;
+      font-size: 14px;
+      text-decoration: none;
+      .infoAboutQuerySyntaxText {
+        font-size: 12px;
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
   }
   .footerContainer {
     text-align: right;

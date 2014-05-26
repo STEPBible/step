@@ -11,10 +11,18 @@
 
 .relatedWordEmphasisHover {
   text-decoration: underline;
+  background-color: rgba($hoverColor, 0.2);
 }
+span[strong]:hover {
+  cursor: pointer;
+  background-color: $hoverColor;
+  color: white;
+}
+
 
 .primaryLightBg {
   background-color: $hoverColor !important;
+  color: $hoverColorText;
 }
 
 .secondaryBackground {

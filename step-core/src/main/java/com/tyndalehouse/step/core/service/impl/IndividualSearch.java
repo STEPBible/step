@@ -32,21 +32,20 @@
  ******************************************************************************/
 package com.tyndalehouse.step.core.service.impl;
 
-import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
-import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
-import static com.tyndalehouse.step.core.utils.StringUtils.split;
-
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
+import com.tyndalehouse.step.core.exceptions.TranslatedException;
 import com.tyndalehouse.step.core.utils.StringUtils;
 import org.apache.lucene.queryParser.QueryParser;
 import org.crosswire.jsword.index.lucene.LuceneIndex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.tyndalehouse.step.core.exceptions.TranslatedException;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static com.tyndalehouse.step.core.utils.StringUtils.isBlank;
+import static com.tyndalehouse.step.core.utils.StringUtils.isNotBlank;
+import static com.tyndalehouse.step.core.utils.StringUtils.split;
 
 /**
  * Represents an individual search
@@ -56,7 +55,6 @@ import com.tyndalehouse.step.core.exceptions.TranslatedException;
 public class IndividualSearch {
     public static final Pattern MAIN_RANGE = Pattern.compile("(\\+\\[([^\\]]+)\\])");
     private static final char RELATED_WORDS = '~';
-    private static final char SIMILAR_FORMS = '*';
 
     private static final Pattern IN_VERSIONS = Pattern
             .compile("in ?\\(([^)]+)\\)$", Pattern.CASE_INSENSITIVE);
@@ -85,9 +83,9 @@ public class IndividualSearch {
     /**
      * Instantiates a single search to be executed.
      *
-     * @param type    the type of the search
+     * @param type     the type of the search
      * @param versions the versions to be used to carry out the search
-     * @param query   the query to be run
+     * @param query    the query to be run
      */
     public IndividualSearch(final SearchType type, final List<String> versions,
                             final String query, final String range, final String[] filter) {
@@ -95,11 +93,11 @@ public class IndividualSearch {
         this.mainRange = range;
         this.versions = versions.toArray(new String[versions.size()]);
         this.originalFilter = filter;
-        
-        if(this.type == SearchType.SUBJECT_SIMPLE) {
+
+        if (this.type == SearchType.SUBJECT_SIMPLE) {
             this.originalQuery = query;
-            this.query = (StringUtils.isNotBlank(this.mainRange) ? this.mainRange + " ": "") + LuceneIndex.FIELD_HEADING_STEM + ":" + QueryParser.escape(query);
-        } else if(type == SearchType.TEXT) {
+            this.query = (StringUtils.isNotBlank(this.mainRange) ? this.mainRange + " " : "") + LuceneIndex.FIELD_HEADING_STEM + ":" + QueryParser.escape(query);
+        } else if (type == SearchType.TEXT) {
             //TODO: this is a hack because we need to revisit the parsing of searches
             this.secondaryRange = mainRange;
             this.originalQuery = this.query = query;
@@ -111,7 +109,7 @@ public class IndividualSearch {
     /**
      * Initialises the search from the query string.
      *
-     * @param query the query that is being sent to the app to search for
+     * @param query       the query that is being sent to the app to search for
      * @param restriction a restriction, other than the one specified in the syntax
      */
     public IndividualSearch(final String query, final String[] versions, final String restriction) {
@@ -156,26 +154,24 @@ public class IndividualSearch {
 
         final char specifier = parseableQuery.charAt(length);
         switch (parseableQuery.charAt(0)) {
-            case 'm':
+            case 't':
                 this.type = SearchType.ORIGINAL_MEANING;
                 break;
             case 'g':
                 if (specifier == RELATED_WORDS) {
                     this.type = SearchType.ORIGINAL_GREEK_RELATED;
                     length++;
-                } else if (specifier == SIMILAR_FORMS) {
+                } else {
                     this.type = SearchType.ORIGINAL_GREEK_FORMS;
-                    length++;
                 }
                 break;
             case 'h':
                 if (parseableQuery.charAt(length) == '~') {
                     this.type = SearchType.ORIGINAL_HEBREW_RELATED;
                     length++;
-                } else if (specifier == SIMILAR_FORMS) {
+                } else {
                     this.type = SearchType.ORIGINAL_HEBREW_FORMS;
-                    length++;
-                } 
+                }
                 break;
             case 'f':
                 break;
@@ -239,33 +235,29 @@ public class IndividualSearch {
      * @param parsedSubject the parsed and well-formed search query, containing prefix, etc.
      */
     private void parseSubjectSearch(final String parsedSubject) {
-        int nextIndex = 0;
-        if (parsedSubject.charAt(0) == 'r') {
-            //subject related search.
-            this.type = SearchType.SUBJECT_RELATED;
-            nextIndex = 1;
-        } else {
-            // how many pluses do we have
-            while (parsedSubject.charAt(nextIndex) == '+') {
-                nextIndex++;
-            }
+        int index = 2;
 
-            switch (nextIndex) {
-                case 0:
-                    this.type = SearchType.SUBJECT_SIMPLE;
-                    break;
-                case 1:
-                    this.type = SearchType.SUBJECT_EXTENDED;
-                    break;
-                case 2:
-                default:
-                    this.type = SearchType.SUBJECT_FULL;
-                    break;
-
-            }
+        // how many pluses do we have
+        switch (parsedSubject.charAt(0)) {
+            case 'r':
+                this.type = SearchType.SUBJECT_RELATED;
+                break;
+            case 'h':
+                this.type = SearchType.SUBJECT_SIMPLE;
+                break;
+            case 'n':
+                this.type = SearchType.SUBJECT_EXTENDED;
+                break;
+            case 'x':
+                this.type = SearchType.SUBJECT_FULL;
+                break;
+            default:
+                index--;
+                this.type = SearchType.SUBJECT_FULL;
+                break;
         }
 
-        final String trimmedQuery = parsedSubject.substring(nextIndex + 1);
+        final String trimmedQuery = parsedSubject.substring(index);
 
         // fill in the query and versions
         this.query = trimmedQuery;
@@ -288,7 +280,7 @@ public class IndividualSearch {
                 }
 
             }
-            if(StringUtils.isNotBlank(this.mainRange)) {
+            if (StringUtils.isNotBlank(this.mainRange)) {
                 subjectQuery.append(' ');
                 subjectQuery.append(this.mainRange);
             }
@@ -305,25 +297,19 @@ public class IndividualSearch {
     }
 
     /**
-     * @return the query
-     */
-    public String getQuery() {
-        return this.query;
-    }
-
-    /**
-     * @return the versions
-     */
-    public String[] getVersions() {
-        return this.versions;
-    }
-
-    /**
      * sets the type of the search
+     *
      * @param type the new type to override
      */
     public void setType(final SearchType type) {
         this.type = type;
+    }
+
+    /**
+     * @return the query
+     */
+    public String getQuery() {
+        return this.query;
     }
 
     /**
@@ -335,16 +321,30 @@ public class IndividualSearch {
         this.query = query;
     }
 
+    /**
+     * @return the versions
+     */
+    public String[] getVersions() {
+        return this.versions;
+    }
+
+    /**
+     * @param versions overwrites the versions
+     */
+    public void setVersions(final String[] versions) {
+        this.versions = versions.clone();
+
+    }
+
     public void setQuery(final String inputQuery, final boolean addRange) {
         String query = inputQuery;
-        if(addRange) {
+        if (addRange) {
             //remove the current range from the query first...
             query = MAIN_RANGE.matcher(inputQuery).replaceAll("");
         }
 
-        this.setQuery((addRange && StringUtils.isNotBlank(this.mainRange) ? this.mainRange + " " : "")  + query);
+        this.setQuery((addRange && StringUtils.isNotBlank(this.mainRange) ? this.mainRange + " " : "") + query);
     }
-
 
     /**
      * @return the amendedQuery
@@ -369,18 +369,11 @@ public class IndividualSearch {
 
     /**
      * allows to set the main range
+     *
      * @param mainRange the main range
      */
     public void setMainRange(String mainRange) {
         this.mainRange = mainRange;
-    }
-
-    /**
-     * @param versions overwrites the versions
-     */
-    public void setVersions(final String[] versions) {
-        this.versions = versions.clone();
-
     }
 
     /**
@@ -400,6 +393,7 @@ public class IndividualSearch {
 
     /**
      * A secondary range, usually submitted outside of the actual query
+     *
      * @return the secondary range
      */
     public String getSecondaryRange() {

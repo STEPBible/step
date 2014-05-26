@@ -18,7 +18,6 @@ $stepLG: 1120px;
 $activeColor: #D14A4A;
 $topHeaderLinkColour: lightgrey;
 $dividerColor: $topHeaderLinkColour;
-$hoverColor: rgb(235, 235, 241);
 $warningColour: orange;
 $infoColour: #a9d3ff;
 $disabledColour: darkgrey;
@@ -36,6 +35,9 @@ $scrollTrackThumbShadow: lighten($scrollColor, 0.07);
 
 // colours in dropdown
 $headingColour: #111;
+$quickLexiconColour: #cd4848;
+$hoverColor: $quickLexiconColour;
+$hoverColorText: white;
 $verseNumberBackground: #eee;
 $inactiveTabColor: black;
 

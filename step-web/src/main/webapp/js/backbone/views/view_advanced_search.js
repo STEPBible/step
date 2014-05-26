@@ -72,6 +72,8 @@ var AdvancedSearchView = Backbone.View.extend({
         '<div class="tab-pane" id="querySyntax">' +
         '<form role="form" data-search-type="<%= SYNTAX %>">' +
         '<textarea class="advancedQuerySyntax" placeholder="<%= __s.search_query_syntax %>" />' +
+        '<a id="infoAboutQuerySyntax" target="_blank" href="https://stepweb.atlassian.net/wiki/x/CYDE">' +
+        '<span class="glyphicon glyphicon-question-sign"></span> <span class="infoAboutQuerySyntaxText"><%= __s.query_syntax_help %></span></a>' +
         '<div class="footerContainer">' +
         '<button type="button" class="btn btn-default closeModal" aria-hidden="true"><label><%= __s.close %></label></button>' +
         '<button type="submit" class="btn btn-primary closeAndAdd" data-dismiss="modal" ><label><%= __s.add_to_search %></label></button>' +

@@ -36,6 +36,7 @@
       text-align: left;
       font-family: arial;
       font-weight: bold;
+      font-size: 30px;
     }
     &.sub {
       font-size: 90%;
@@ -86,6 +87,9 @@
   .notesPane {
     text-align: left;
     min-height: 100%;
+    &:empty {
+        display: none;
+    }
   }
   .verse.containsTable {
     text-align: left;

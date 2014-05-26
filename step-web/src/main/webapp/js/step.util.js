@@ -810,6 +810,8 @@ step.util = {
                 return "chineseFont";
             } else if (language == "khm" || language == "km") {
                 return "khmerFont";
+            } else if (language == "far" || language == "fa" || language == "per")  {
+                return "farsiFont";
             }
         },
         /**

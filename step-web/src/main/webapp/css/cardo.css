@@ -53,3 +53,9 @@
     font-weight: normal;
     font-style: normal; 
 }
+
+@font-face {
+    font-family: 'Nazli';
+    src: url('../fonts/nazli.woff') format('woff');
+    font-style: normal;
+}

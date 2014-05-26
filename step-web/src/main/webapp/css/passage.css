@@ -396,12 +396,12 @@ H2.heading, input.heading {
 	color: #111;
 	font-weight: normal;
     margin: 15px 0 10px 0;
-    text-align: left;
     line-height: 23px;
 }
 
 input.heading {
 	font-size: 130%;
+    text-align: left;
 }
 
 H2.heading {

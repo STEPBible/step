@@ -2,7 +2,7 @@ var SidebarView = Backbone.View.extend({
     initialize: function () {
         //hide the help
         step.util.showOrHideTutorial(true);
-            
+
         _.bindAll(this);
 
         //create tab container
@@ -60,7 +60,7 @@ var SidebarView = Backbone.View.extend({
             });
         } else if (this.model.get("mode") == 'analysis') {
             self.createAnalysis();
-        } else if(this.model.get("mode") == 'history') {
+        } else if (this.model.get("mode") == 'history') {
             self.createHistory();
         } else {
             self.createHelp();
@@ -112,7 +112,9 @@ var SidebarView = Backbone.View.extend({
         if (data.vocabInfos.length > 1) {
             //multiple entries
             var panelGroup = $('<div class="panel-group" id="collapsedLexicon"></div>');
-            var openDef = _.min(data.vocabInfos, function(def){ return def.count;  });
+            var openDef = _.min(data.vocabInfos, function (def) {
+                return def.count;
+            });
             for (var i = 0; i < data.vocabInfos.length; i++) {
                 var item = data.vocabInfos[i];
                 var hebrew = data.vocabInfos[i].strongNumber == 'H';
@@ -127,6 +129,10 @@ var SidebarView = Backbone.View.extend({
                 }
 
                 this._createWordPanel(panelBody, item);
+                if(i < data.morphInfos.length) {
+                    this._createMorphInfo(panelBody, data.morphInfos[i]);
+                }
+
                 var panelHeading = '<div class="panel-heading"><h4 class="panel-title" data-toggle="collapse" data-parent="#collapsedLexicon" data-target="#' + panelId + '"><a>' +
                     panelTitle + '</a></h4></div>';
 
@@ -137,6 +143,9 @@ var SidebarView = Backbone.View.extend({
 
         } else {
             this._createWordPanel(this.lexicon, data.vocabInfos[0]);
+            if (data.morphInfos.length > 0) {
+                this._createMorphInfo(this.lexicon, data.morphInfos[0]);
+            }
         }
         this.tabContainer.append(this.lexicon);
     },
@@ -150,7 +159,7 @@ var SidebarView = Backbone.View.extend({
                 .append(mainWord.shortDef || "")
                 .append(" ")
                 .append(mainWord.stepGloss)
-                .append($(" <span title='" + __s.strong_number +"'>").append(" (" + mainWord.strongNumber + ")").addClass("strongNumberTagLine"))
+                .append($(" <span title='" + __s.strong_number + "'>").append(" (" + mainWord.strongNumber + ")").addClass("strongNumberTagLine"))
         );
 
         panel.append("<br />")
@@ -159,7 +168,7 @@ var SidebarView = Backbone.View.extend({
                 step.util.activePassage().save({ filter: ""});
                 step.router.navigatePreserveVersions(args);
             })).append('<span class="strongCount"> (' + sprintf(__s.stats_occurs, mainWord.count) + ')</span>').append('<br />');
-            
+
 
         // append the meanings
         if (mainWord.mediumDef) {
@@ -193,6 +202,41 @@ var SidebarView = Backbone.View.extend({
             });
         }
     },
+    _createMorphInfo: function (panel, info) {
+        panel.append($("<h2>").append(__s.display_grammar));
+        this.renderMorphItem(panel, info, "function");
+        this.renderMorphItem(panel, info, __s.lexicon_grammar_function, "function");
+        this.renderMorphItem(panel, info, __s.lexicon_grammar_person, "person");
+        this.renderMorphItem(panel, info, __s.lexicon_grammar_gender, "gender");
+        this.renderMorphItem(panel, info, __s.lexicon_grammar_number, "number");
+        this.renderMorphItem(panel, info, __s.lexicon_grammar_case, "wordCase");
+        this.renderMorphItem(panel, info, __s.lexicon_grammar_tense, "tense");
+        this.renderMorphItem(panel, info, __s.lexicon_grammar_mood, "mood");
+        this.renderMorphItem(panel, info, __s.lexicon_grammar_voice, "voice");
+        this.renderMorphItem(panel, info, __s.lexicon_grammar_suffix, "suffix");
+        panel.append("<br />");
+
+
+        panel.append($("<h3>").append(__s.lexicon_ie)).append(this.replaceEmphasis(info["explanation"]));
+        panel.append("<br />");
+        panel.append($("<h3>").append(__s.lexicon_eg)).append(this.replaceEmphasis(info["description"]));
+    },
+    renderMorphItem: function (panel, info, title, param) {
+        if(info && param && info[param]) {
+            panel.append();
+            panel.append($("<h3>").append(title)).append(this.replaceEmphasis(info[param]));
+
+            if(info[param + "Explained"] || param == 'wordCase' && info["caseExplained"]) {
+                var explanation = info[param + "Explained"] || param == 'wordCase' && info["caseExplained"];
+                panel.append(" ");
+                panel.append($("<span class='grammarExplained'>").append("(" + this.replaceEmphasis(explanation) + ")"));
+            }
+            panel.append("<br />");
+        }
+    },
+    replaceEmphasis: function(str) {
+        return (str || "").replace(/_([^_]*)_/g, "<em>$1</em>")
+    },
     _createTabHeadersContainer: function () {
         var template = '<ul class="nav nav-tabs">' +
             '<li class="active"><a href="javascript:void(0)" class="glyphicon glyphicon-info-sign" title="<%= __s.original_word %>" data-toggle="tab" data-target="#lexicon"></li>' +
@@ -210,14 +254,14 @@ var SidebarView = Backbone.View.extend({
 
         return tabContainer;
     },
-    toggleOpen: function() {
-        if(!this.$el.closest('.row-offcanvas').hasClass("active")) {
+    toggleOpen: function () {
+        if (!this.$el.closest('.row-offcanvas').hasClass("active")) {
             this.openSidebar();
         } else {
             this.closeSidebar();
         }
     },
-    openSidebar: function() {
+    openSidebar: function () {
         this.$el.closest('.row-offcanvas').addClass("active");
     },
     closeSidebar: function () {

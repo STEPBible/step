@@ -71,7 +71,7 @@ var MainSearchView = Backbone.View.extend({
             formatInputTooShort: function (input, min) {
 
                 var n = min - input.length;
-                var message = sprintf(__s.x_more_characters, n, (n == 1 ? "" : __s.characters_plural));
+                var message = sprintf(__s.x_more_characters, n);
                 var labels = $("<span>").addClass("searchLabel")
                     .append($("<a>").attr("data-toggle", "modal").attr("data-target", "#bibleVersions").append(__s.all_versions).attr("title", __s.all_versions)
                         .on("click", function () {

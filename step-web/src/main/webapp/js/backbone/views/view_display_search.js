@@ -97,7 +97,7 @@ var SearchDisplayView = DisplayView.extend({
 
         this.doTitle();
         this.doSwapInterlinearLink(this.$el);
-        step.util.ui.addStrongHandlers(passageId, this.$el.find(".searchResults"));
+        step.util.ui.addStrongHandlers(passageId, this.$el);
         step.util.ui.enhanceVerseNumbers(passageId, this.$el, this.model.get("masterVersion"));
         this.doInterlinearVerseNumbers(this.$el, this.model.get("interlinearMode"), this.model.get("options"));
         this._doChromeHack(this.$el, this.model.get("interlinearMode"), this.model.get("options"));

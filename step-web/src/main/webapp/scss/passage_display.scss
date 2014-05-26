@@ -200,6 +200,12 @@ h2.heading {
   }
 }
 
+.comparingTable, .interlinear, .verseGrouping {
+  .verseNumber {
+    padding: 3 7 3 7;
+  }
+}
+
 .headingVerseNumber + .cell.primary {
   border-left: none;
 }
@@ -211,6 +217,7 @@ h2.heading {
 
   * .smallResultKey {
     margin-right: 10px;
+    margin-left: 3px;
     font-size: 12px;
     font-family: $defaultFontFamily;
   }

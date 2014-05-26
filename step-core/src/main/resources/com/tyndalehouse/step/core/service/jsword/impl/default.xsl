@@ -137,7 +137,7 @@
             <xsl:choose>
               <xsl:when test="$direction != 'rtl'">
                 <div class="notesPane">
-                      <xsl:apply-templates select="//verse" mode="print-cross-references"/>
+                      <xsl:apply-templates select="//verse|//title" mode="print-cross-references"/>
                 </div>
               </xsl:when>
               <xsl:otherwise>
@@ -981,6 +981,19 @@
   <xsl:template match="title" mode="jesus">
 	<xsl:call-template name="normalTile" />
   </xsl:template>
+
+    <xsl:template match="title" mode="print-cross-references">
+        <xsl:variable name="crossRef" select=".//note" />
+        <xsl:if test="$crossRef">
+            <xsl:variable name="osisID" select="concat(substring-before(.//note[@type = 'crossReference'][1]/@osisID, '.'), '.', substring-before(substring-after($crossRef[1]/@osisID, '.'), '.'))" />
+            <xsl:variable name="passage" select="jsword:getValidKey($keyf, $versification, $osisID)"/>
+            <a href="#{substring-before(concat($osisID, ' '), ' ')}">
+                <xsl:value-of select="jsword:getName($passage)"/>
+            </a>
+            <xsl:apply-templates select=".//note[@type = 'crossReference']" mode="print-cross-references" />
+            <div><xsl:text>&#160;</xsl:text></div>
+        </xsl:if>
+    </xsl:template>
 
   <!--=======================================================================-->
   <xsl:template match="reference">

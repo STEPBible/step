@@ -380,7 +380,7 @@ var PassageDisplayView = DisplayView.extend({
          * @private
          */
         _doNonInlineNotes: function (passageContent) {
-            var verseNotes = $(".verse .note", passageContent);
+            var verseNotes = $(".verse .note, h3 .note", passageContent);
             var nonInlineNotes = verseNotes.not(verseNotes.has(".inlineNote"));
 
             for (var i = 0; i < nonInlineNotes.length; i++) {

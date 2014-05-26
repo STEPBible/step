@@ -328,7 +328,7 @@ public class SearchPageController extends HttpServlet {
     private AbstractComplexSearch getDefaultPassage() {
         AbstractComplexSearch text;
         try {
-            text = this.search.masterSearch("reference=Mat.1|version=ESV", "HNV");
+            text = this.search.masterSearch("reference=Gen.1|version=ESV", "HNV");
         } catch (Exception e) {
             LOGGER.error("Default search failed", e);
             text = new OsisWrapper("", null, new String[]{"en"}, null, "ESV", InterlinearMode.NONE, "");

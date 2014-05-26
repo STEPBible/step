@@ -132,7 +132,7 @@ public class SearchServiceImpl implements SearchService {
     private static final String BASE_HEBREW_VERSION = "OSMHB";
     private static final Logger LOGGER = LoggerFactory.getLogger(SearchServiceImpl.class);
     private static final String STRONG_QUERY = "strong:";
-    private static final String DEFAULT_NT_REFERENCE = "Mat.1";
+    private static final String DEFAULT_NT_REFERENCE = "Gen.1";
     private static final String DEFAULT_OT_REFERENCE = "Gen.1";
     private static final String NO_FILTER = "all";
     private final JSwordSearchService jswordSearch;

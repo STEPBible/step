@@ -4,12 +4,12 @@
 
 .passageOptionsGroup {
   height: $summaryHeight;
-  
+
   .nextPreviousChapterGroup {
     margin-left: 3px;
     margin-right: 10px;
   }
-  
+
   button span {
     line-height: 1;
     &.smallerFont {
@@ -24,7 +24,7 @@
     min-width: 240px;
     padding-left: 5px;
   }
-  
+
   ul {
     padding-left: 5px;
     margin-bottom: 0px;
@@ -37,7 +37,7 @@
       &:hover {
         background-color: $hoverColor;
       }
-      &.contextContainer{
+      &.contextContainer {
         button {
           padding: 5px 7px;
         }
@@ -102,8 +102,21 @@
   .argSummary {
     margin: 0;
     float: left;
-      max-width: 40%;
-      overflow: hidden;
-      white-space: nowrap;
+    max-width: 40%;
+    overflow: hidden;
+    white-space: nowrap;
+
+    .argOverflow {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      right: 0;
+      margin-right: -1;
+      opacity: 0.9;
+      width: 20px;
+      z-index: 9999999999999;
+      background-image: -webkit-gradient(linear, right top, left top, from(rgba(255, 255, 255, 1)), to(rgba(255, 255, 255, 0)));
+      border: none;
+    }
   }
 }

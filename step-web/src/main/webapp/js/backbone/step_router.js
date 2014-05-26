@@ -225,6 +225,7 @@ var StepRouter = Backbone.Router.extend({
         var searchTokens = passageModel.get("searchTokens");
         var container = $("<span></span>").addClass("argSummary");
         step.util.ui.renderArgs(searchTokens, container);
+        container.prepend($("<span class='argOverflow pull-right'></span>'"));
         var passageOptions = step.util.getPassageContainer(passageModel.get("passageId")).find(".passageOptionsGroup");
         passageOptions.find(".argSummary").remove();
         passageOptions.append(container);

@@ -39,7 +39,13 @@
         overflow-y: auto;
       }
     }
-    
+
+    .argSummary {
+      max-width: 40%;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
     .passageContentHolder {
       overflow-y: auto;
       height: 100%;

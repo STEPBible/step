@@ -4,9 +4,12 @@
 @media screen {
   .navbar {
     height: $header_height;
+    min-height: $header_height;
     margin-bottom: 0px;
     min-height: initial;
-    
+    background-image: none;
+
+
     .navbar-header {
       font-size: x-small;
       background: $headerBackgroundColor;

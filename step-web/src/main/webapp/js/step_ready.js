@@ -145,6 +145,11 @@
         //disable amd
         define.amd = null;
 
+        //first of all, if we have a fragment, let's get rid of it
+        if((window.location.hash||"").indexOf("#") != -1) {
+            window.location.hash = "";
+        }
+
         window.step = window.step || {};
         initSettings();
         initDataSources();

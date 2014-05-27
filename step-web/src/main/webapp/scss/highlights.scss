@@ -19,6 +19,9 @@ span[strong]:hover {
   color: white;
 }
 
+.lexiconFocus {
+  background-color: $lexiconFocusColour;
+}
 
 .primaryLightBg {
   background-color: $hoverColor !important;

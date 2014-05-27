@@ -906,7 +906,15 @@ step.util = {
 
             allStrongElements.click(function () {
                 if (!that.touchTriggered) {
+                    $(".lexiconFocus").removeClass("lexiconFocus");
+                    $(this).addClass("lexiconFocus");
                     step.util.ui.showDef(this);
+                    step.passage.higlightStrongs({
+                        passageId: undefined,
+                        strong: $(this).attr('strong'),
+                        morph: $(this).attr('morph'),
+                        classes: "lexiconFocus"
+                    });
                 }
             }).on("touchstart", function (ev) {
                 that.touchstart = new Date().getTime();

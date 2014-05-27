@@ -60,10 +60,6 @@ public class SubjectSuggestionServiceImpl extends AbstractIgnoreMergedListSugges
         final TermsAndMaxCount termsFromSimpleNave = this.naves.findSetOfTermsWithCounts(false, true, input, leftToCollect, "root");
         final TermsAndMaxCount termsFromFullNave = this.naves.findSetOfTermsWithCounts(false, true, input, leftToCollect, "fullTerm");
 
-        addSubjectTerms(suggestions, stemmer, termsFromHeadings.getTerms(), SearchType.SUBJECT_SIMPLE);
-        addSubjectTerms(suggestions, stemmer, termsFromSimpleNave.getTerms(), SearchType.SUBJECT_EXTENDED);
-        addSubjectTerms(suggestions, stemmer, termsFromFullNave.getTerms(), SearchType.SUBJECT_FULL);
-
         termsFromHeadings.setTotalCount(termsFromHeadings.getTotalCount() - addSubjectTerms(suggestions, stemmer, termsFromHeadings.getTerms(), SearchType.SUBJECT_SIMPLE));
         termsFromSimpleNave.setTotalCount(termsFromSimpleNave.getTotalCount() - addSubjectTerms(suggestions, stemmer, termsFromSimpleNave.getTerms(), SearchType.SUBJECT_EXTENDED));
         termsFromFullNave.setTotalCount(termsFromFullNave.getTotalCount() - addSubjectTerms(suggestions, stemmer, termsFromFullNave.getTerms(), SearchType.SUBJECT_FULL));

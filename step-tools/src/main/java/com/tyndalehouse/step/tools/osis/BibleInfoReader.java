@@ -36,11 +36,11 @@ public class BibleInfoReader {
      * @throws Exception any kind of exception
      */
     public static void main(final String[] args) throws Exception {
-        final String version = "ChiNCVs";
+        final String version = "Chiuns";
 
         final Book currentBook = Books.installed().getBook(version);
 
         LOGGER.debug("{}", currentBook.getName());
-        LOGGER.debug("{}", currentBook);
+        LOGGER.debug("{}", currentBook.getProperties().get("shortName"));
     }
 }

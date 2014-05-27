@@ -43,12 +43,17 @@ public abstract class AbstractAncientSuggestionServiceImpl implements SingleType
 
     @Override
     public EntityDoc[] getExactTerms(SuggestionContext context, final int max, final boolean popularSort) {
-        return getTerms(context.getInput(), max, true, popularSort);
+        return context.getInput().indexOf(' ') != -1 ? new EntityDoc[0] : getTerms(context.getInput(), max, true, popularSort);
     }
 
     @Override
     public EntityDoc[] collectNonExactMatches(final TopFieldCollector collector, final SuggestionContext context, final EntityDoc[] alreadyRetrieved,
                                               final int leftToCollect) {
+        if(context.getInput().indexOf(' ') != -1) {
+            return new EntityDoc[0];
+        }
+
+
         final BooleanQuery query = this.getQuery(context.getInput(), false);
 
         if (alreadyRetrieved != null) {

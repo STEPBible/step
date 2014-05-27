@@ -86,7 +86,7 @@ var PassageDisplayView = DisplayView.extend({
                 var linkOffset = link.offset();
                 var scroll = linkOffset == undefined ? 0 : linkOffset.top + passageContainer.scrollTop();
 
-                var originalScrollTop = -100;
+                var originalScrollTop = -200;
                 passageContainer.find(".passageContentHolder").animate({
                     scrollTop: originalScrollTop + scroll
                 }, 500);

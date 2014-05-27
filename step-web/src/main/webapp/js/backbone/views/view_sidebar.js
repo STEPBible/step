@@ -8,7 +8,8 @@ var SidebarView = Backbone.View.extend({
         //create tab container
         var container = this.$el.find(">div");
         this.tabContainer = this._createBaseTabs();
-        this.$el.append(this._createTabHeadersContainer());
+        this.tabHeaders = this._createTabHeadersContainer();
+        this.$el.append(this.tabHeaders);
         this.$el.append(this.tabContainer);
 
         this.$el.on("show.bs.tab", this.changeMode);
@@ -17,6 +18,11 @@ var SidebarView = Backbone.View.extend({
         this.listenTo(this.model, "forceOpen", this.openSidebar);
 
         this.activate();
+        this.$el.find('a[data-toggle="tab"]').on("shown.bs.tab", this._notifyTabPanes);
+    },
+    _notifyTabPanes: function(ev) {
+        ev.stopPropagation();
+        this.$el.find(".tab-pane").trigger("tab-change", { newTab: ev.target });
     },
     changeMode: function (e) {
         var mode = null;
@@ -46,7 +52,7 @@ var SidebarView = Backbone.View.extend({
         //make sidebar visible
         this.$el.closest('.row-offcanvas').addClass('active');
 
-        //show the right tab
+        //show the correct tab
         this.$el.find("[data-target='#" + this.model.get("mode") + "']").tab("show");
 
         if (this.model.get("mode") == 'lexicon') {

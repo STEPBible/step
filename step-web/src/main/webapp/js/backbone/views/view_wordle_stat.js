@@ -36,6 +36,14 @@ var ViewLexiconWordle = Backbone.View.extend({
             event.preventDefault();
             self.animateWordleHandler(); 
         });
+
+        this.$el.closest(".tab-content").on("tab-change", function(ev) { self._stopAnimationOnTabChange(ev); });
+    },
+    _stopAnimationOnTabChange: function(ev) {
+        ev.stopPropagation();
+        if(ev.target != this.$el.get(0)) {
+            this._stopAnimation();
+        }
     },
     refresh: function() {
         if(this.$el.hasClass("active")) {
@@ -194,14 +202,17 @@ var ViewLexiconWordle = Backbone.View.extend({
             
             this.doStats();
         } else {
-            this.stopping = true;
-            //don't trigger again
-            //don't reset reference
-            this.sortCloud.prop("checked", this.previousSortValue || false).prop("disabled", false);            
-            this.animateCloud.find(".glyphicon").addClass("glyphicon-play").removeClass("glyphicon-pause");
+            this._stopAnimation();
         }
     },
-
+    _stopAnimation: function() {
+        this.isAnimating = false;
+        this.stopping = true;
+        //don't trigger again
+        //don't reset reference
+        this.sortCloud.prop("checked", this.previousSortValue || false).prop("disabled", false);
+        this.animateCloud.find(".glyphicon").addClass("glyphicon-play").removeClass("glyphicon-pause");
+    },
     /**
      * Gets the stats for a passage and shows a wordle
      * @private

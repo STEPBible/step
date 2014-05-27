@@ -164,8 +164,9 @@ var SidebarView = Backbone.View.extend({
 
         panel.append("<br />")
             .append($("<a></a>").attr("href", "javascript:void(0)").data("strongNumber", mainWord.strongNumber).append(__s.lexicon_search_for_this_word).click(function () {
-                var args = "strong=" + encodeURIComponent($(this).data("strongNumber"));
-                step.util.activePassage().save({ filter: ""});
+                var strongNumber = $(this).data("strongNumber");
+                var args = "strong=" + encodeURIComponent(strongNumber);
+                step.util.activePassage().save({ strongHighlights: strongNumber }, {silent: true});
                 step.router.navigatePreserveVersions(args);
             })).append('<span class="strongCount"> (' + sprintf(__s.stats_occurs, mainWord.count) + ')</span>').append('<br />');
 

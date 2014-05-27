@@ -74,7 +74,7 @@ public class SearchPageController extends HttpServlet {
         } catch (Exception exc) {
             LOGGER.warn(exc.getMessage(), exc);
         } finally {
-            request.getRequestDispatcher("/index.jsp").include(request, response);
+            request.getRequestDispatcher("/start.jsp").include(request, response);
         }
     }
 

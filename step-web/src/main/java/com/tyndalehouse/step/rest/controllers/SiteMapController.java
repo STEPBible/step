@@ -76,7 +76,6 @@ public class SiteMapController extends HttpServlet {
     private enum SiteMapType {
         SITEMAP_BIBLE,
         SITEMAP_COMMENTARY,
-        SITEMAP_LEXICON
     }
 
     /**
@@ -112,14 +111,12 @@ public class SiteMapController extends HttpServlet {
             final String siteNameWithExtension = filePath.substring(filePath.lastIndexOf('/') + 1);
             final String indexName = siteNameWithExtension.replace(".xml", "");
 
-            SiteMapType mapType;
+            SiteMapType mapType = SiteMapType.SITEMAP_BIBLE;
             final char specifier = indexName.charAt(indexName.length() - 1);
             if (indexName.contains("SITEMAP_BIBLE")) {
                 mapType = SiteMapType.SITEMAP_BIBLE;
             } else if (indexName.contains("SITEMAP_COMMENTARY")) {
                 mapType = SiteMapType.SITEMAP_COMMENTARY;
-            } else {
-                mapType = SiteMapType.SITEMAP_LEXICON;
             }
 
             response.setHeader("Content-Disposition", "attachment; filename=" + siteNameWithExtension);
@@ -147,10 +144,6 @@ public class SiteMapController extends HttpServlet {
      */
     private void addSubMaps(final StringBuilder siteMap) {
         for (final SiteMapType smt : SiteMapType.values()) {
-            if (smt == SiteMapType.SITEMAP_LEXICON) {
-                continue;
-            }
-
             for (int ii = 0; ii < 26; ii++) {
                 siteMap.append("<sitemap><loc>");
                 siteMap.append(this.stepBase);
@@ -206,9 +199,6 @@ public class SiteMapController extends HttpServlet {
                 addUrl(siteMap, null, null, null, "versions.jsp");
                 addVersions(siteMap, BookCategory.BIBLE, specifier);
                 break;
-            case SITEMAP_LEXICON:
-                addLexicon(siteMap);
-                break;
             default:
                 break;
         }
@@ -218,21 +208,6 @@ public class SiteMapController extends HttpServlet {
             return siteMap.toString().getBytes("UTF-8");
         } catch (final UnsupportedEncodingException e) {
             throw new StepInternalException("Unable to convert to UTF-8", e);
-        }
-    }
-
-    /**
-     * Adds the lexicon to the sitemap.
-     * 
-     * @param siteMap the site map
-     */
-    private void addLexicon(final StringBuilder siteMap) {
-        final EntityDoc[] allDefinitions = this.definitions.search(new MatchAllDocsQuery());
-        for (final EntityDoc doc : allDefinitions) {
-            final String strong = doc.get("strongNumber");
-            if (strong != null) {
-                addUrl(siteMap, null, null, null, "#!lexicon=strong=", strong);
-            }
         }
     }
 
@@ -336,8 +311,8 @@ public class SiteMapController extends HttpServlet {
             final int lastChapter = versificationForVersion.getLastChapter(bb);
 
             for (int ii = 1; ii <= lastChapter; ii++) {
-                addUrl(siteMap, null, null, null, "index.jsp?version=", book.getInitials(),
-                        "&amp;reference=", versificationForVersion.getShortName(bb), "%20",
+                addUrl(siteMap, null, null, null, "?q=version=", book.getInitials(),
+                        "%7Creference=", versificationForVersion.getShortName(bb), ".",
                         Integer.toString(ii));
             }
         }

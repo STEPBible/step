@@ -3,9 +3,6 @@
 @import 'warning_messages';
 
 .passageOptionsGroup {
-  height: $summaryHeight;
-  overflow: hidden;
-
   //buttons to the right are above the middle overflow
   .btn-group.pull-right {
     z-index: 30;

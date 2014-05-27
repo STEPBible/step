@@ -325,7 +325,7 @@
 
     <%-- NOTE: do not include in prod web minifying and use minified versions otherwise --%>
     <%@include file="jsps/offlineJqueryJs.jsp" %>
-    <script src="libs/bootstrap.min.js"></script>
+    <script src="libs/bootstrap.js"></script>
 
     <script src="libs/sprintf-0.7-beta1.js" type="text/javascript"></script>
     <script src="libs/underscore-min.js" type="text/javascript"></script>

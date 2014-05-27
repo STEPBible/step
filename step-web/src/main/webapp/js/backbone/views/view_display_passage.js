@@ -364,6 +364,8 @@ var PassageDisplayView = DisplayView.extend({
                                     containment: 'body',
                                     handle: selector
                                 });
+
+                                step.util.ui.addStrongHandlers(self.model.get("passageId"), tooltip);
                             }
                         }
                     });

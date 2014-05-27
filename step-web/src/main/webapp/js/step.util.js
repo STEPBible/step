@@ -922,7 +922,8 @@ step.util = {
                     var morph = $(hoverContext).attr('morph');
                     new QuickLexicon({
                         strong: strong, morph: morph, target: hoverContext,
-                        position: ev.pageY / $(window).height(), touchEvent: true
+                        position: ev.pageY / $(window).height(), touchEvent: true,
+                        passageId: passageId
                     });
                 });
             }).on("touchend", function () {
@@ -951,7 +952,8 @@ step.util = {
                         //do the quick lexicon
                         new QuickLexicon({
                             strong: strong, morph: morph,
-                            target: hoverContext, position: ev.pageY / $(window).height(), touchEvent: false
+                            target: hoverContext, position: ev.pageY / $(window).height(), touchEvent: false,
+                            passageId: passageId
                         });
                     }, MOUSE_PAUSE, 'show-quick-lexicon');
                 });

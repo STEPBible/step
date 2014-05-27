@@ -263,7 +263,6 @@ var MainSearchView = Backbone.View.extend({
     _addVersionHandlers: function (tokens) {
         var self = this;
         $(tokens).filter(".versionItem").click(function (ev) {
-            self._markItemForReplacing(ev, $(this));
             self.pickBible();
         });
     },

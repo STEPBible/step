@@ -27,7 +27,17 @@
   top: 3px !important;
 }
 
+.select2-dropdown-open ul {
+  white-space: normal  !important;
+  max-height: 70% !important;
+}
+
 .select2-container-multi .select2-choices {
+  white-space: nowrap;
+  overflow: hidden;
+  height: 35px;
+  max-height: 30px;
+
   border-radius: 3 0 0 3 !important;
   .select2-search-choice {
     margin: 5px 0 2px 5px;
@@ -50,6 +60,7 @@
 .select2-container {
   border: 0px !important;
 }
+
 
 ul.select2-parent-no-results {
   @include multi-column(1);

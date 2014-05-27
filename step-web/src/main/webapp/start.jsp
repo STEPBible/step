@@ -110,7 +110,7 @@
                             <div class="form-group">
                                 <div class="input-group">
                                     <input id="masterSearch" type="text" class="form-control input-sm" placeholder="<fmt:message key="search_placeholder" />">
-                                    <span class="input-group-btn">
+                                    <span class="input-group-btn findButton">
                                       <button class="find btn btn-default btn-danger btn-sm" type="button"><fmt:message key="find" /></button>
                                     </span>
                                 </div>

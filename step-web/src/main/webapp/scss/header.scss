@@ -33,13 +33,18 @@
   }
 
   .navbar-brand {
+
     @media screen and (min-width: $stepXSBootstrap) {
       padding-left: 50px;
     }
     padding-bottom: 0px;
     padding-top: 5px;
     height: $header_height;
-    
+
+    //find button to be aligned to top
+    span.findButton {
+      vertical-align: top;
+    }
     .title {
       margin-right: 10px;
       float: left;

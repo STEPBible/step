@@ -549,6 +549,7 @@ FONT.usg {
 .neut { color: black; }   
 
 .draggable-tooltip {
+    z-index: 10001 !important;
 	border-color: darkgrey;
     border-top: solid 2 darkgrey;
 }

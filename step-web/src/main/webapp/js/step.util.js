@@ -462,6 +462,8 @@ step.util = {
             .find(".passageContent").remove();
         newColumn.find(".argSummary").remove();
         newColumn.find(".resultsLabel").html("");
+        newColumn.find(".infoIcon").attr("title", "").data("content", "").hide();
+        newColumn.find(".popover").remove();
 
         var allColumns = columns.add(newColumn);
         this.refreshColumnSize(allColumns);

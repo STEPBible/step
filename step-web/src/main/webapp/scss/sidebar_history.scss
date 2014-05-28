@@ -2,6 +2,10 @@
 @import 'mixins';
 
 #history {
+  ul.list-group {
+    box-shadow: none;
+    -webkit-box-shadow: none;
+  }
   .list-group-item {
     border: none;
     padding: 1px 0px;

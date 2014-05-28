@@ -99,11 +99,20 @@ var ViewHistory = Backbone.View.extend({
     },
     _insertBookmark: function(model, item) {
         if(model.get("favourite")) {
-            this.list.find("li:has([data-favourite='true']):last");
-            this.list.append(item);
+           var firstRecent =  this.list.find("li:has([data-favourite='true']):first");
+            if(firstRecent.length > 0) {
+                item.insertBefore(firstRecent);
+            } else {
+                this.list.filter(".list-group:first").append(item);
+            }
+
         } else {
             var firstRecent = this.list.find("li:has([data-favourite='false']):first");
-            item.insertBefore(firstRecent);
+            if(firstRecent.length > 0) {
+                item.insertBefore(firstRecent);
+            } else {
+                this.list.filter(".list-group:last").append(item);
+            }
         }    
     },
     _findByModel: function(model) {

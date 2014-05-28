@@ -344,7 +344,8 @@ var StepRouter = Backbone.Router.extend({
         var historyModel = new HistoryModel({
             args: normalizedArgs,
             lastAccessed: new Date().getTime(),
-            searchTokens: query.searchTokens
+            searchTokens: query.searchTokens,
+            id: step.util.guid()
         });
         step.bookmarks.add(historyModel);
         historyModel.save();

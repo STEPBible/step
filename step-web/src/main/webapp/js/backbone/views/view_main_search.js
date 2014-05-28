@@ -99,7 +99,10 @@ var MainSearchView = Backbone.View.extend({
                         self._removeSpecificContext(EXAMPLE_DATA);
                     }
 
-                    return url + "/" + encodeURIComponent(contextArgs);
+                    var lang = step.state.language();
+                    var langParam = step.util.isBlank(lang) ? "" : "?lang=" + lang;
+
+                    return url + "/" + encodeURIComponent(contextArgs) + langParam;
                 },
                 dataType: "json",
                 quietMillis: KEY_PAUSE,

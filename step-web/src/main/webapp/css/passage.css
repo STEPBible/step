@@ -394,7 +394,7 @@ H2.xgen ul {
 
 H2.heading, input.heading {
 	color: #111;
-	font-weight: normal;
+	font-weight: bold;
     margin: 15px 0 10px 0;
     line-height: 23px;
 }
@@ -405,7 +405,7 @@ input.heading {
 }
 
 H2.heading {
-    font-size: 150%;
+    font-size: 100%;
 }
 
 div.margin {

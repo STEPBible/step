@@ -134,6 +134,9 @@ var SearchDisplayView = DisplayView.extend({
         results.find(".verseNumber").parent().click(function (ev) {
             //now go to a new place. Let's be crazy about it as well, and simply chop off the last part
             var verseRef = $(this).attr("name");
+            if(verseRef == null) {
+                verseRef = $(this).closest("[name]").attr("name");
+            }
 
             var callback = null;
             if(masterVersion) {

@@ -627,13 +627,13 @@ var PassageMenuView = Backbone.View.extend({
     },
     updateVisibleCloseButton: function () {
         var shouldShow = $(".column").not(".examplesColumn").length > 1;
-        this.$el.find(".closeColumn").toggle(shouldShow);
-        if (!shouldShow) {
-            //make sure it's not the last button
-            this.$el.find(".closeColumn").insertBefore(this.$el.find(".openNewPanel"));
-        } else {
-            //ensure last element
-            this.$el.find(".openNewPanel").insertBefore(this.$el.find(".closeColumn"));
-        }
+        this.$el.find(".closeColumn").toggleClass("disabled", !shouldShow);
+//        if (!shouldShow) {
+//            make sure it's not the last button
+//            this.$el.find(".closeColumn").insertBefore(this.$el.find(".openNewPanel"));
+//        } else {
+//            ensure last element
+//            this.$el.find(".openNewPanel").insertBefore(this.$el.find(".closeColumn"));
+//        }
     }
 });

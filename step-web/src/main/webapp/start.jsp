@@ -154,11 +154,11 @@
                                     </div>
                                     
                                     <%--  this button starts hidden as there is only 1 column showing --%>
-                                    <button class="btn btn-default btn-sm closeColumn" title="<fmt:message key="close" />" type="button" style="display: none">
-                                        <span class="glyphicon glyphicon-remove"></span>
-                                    </button>
                                     <button class="btn btn-default btn-sm openNewPanel" title="<fmt:message key="open_in_new_panel" />">
                                         <span class="glyphicon glyphicon-plus"></span>
+                                    </button>
+                                    <button class="btn btn-default btn-sm closeColumn disabled" title="<fmt:message key="close" />" type="button">
+                                        <span class="glyphicon glyphicon-remove"></span>
                                     </button>
                                 </div>
                                 <div class="resultsLabel pull-right">

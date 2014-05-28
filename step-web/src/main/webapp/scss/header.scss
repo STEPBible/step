@@ -38,7 +38,7 @@
   .navbar-brand {
 
     @media screen and (min-width: $stepXSBootstrap) {
-      padding-left: 50px;
+      padding-left: 40px;
     }
     padding-bottom: 0px;
     padding-top: 5px;
@@ -49,7 +49,7 @@
       vertical-align: top;
     }
     .title {
-      margin-right: 10px;
+      margin-right: 20px;
       float: left;
       & > a {
         color: white !important;

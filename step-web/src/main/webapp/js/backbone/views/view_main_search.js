@@ -234,6 +234,7 @@ var MainSearchView = Backbone.View.extend({
             }).bind('sortupdate', function() {
             //Triggered when the user stopped sorting and the DOM position has changed.
                 self.masterSearch.select2("onSortEnd");
+                self._reEvaluateMasterVersion();
         });
         this.masterSearch.on('change', function() {
             self.masterSearch.html(self.masterSearch.val());

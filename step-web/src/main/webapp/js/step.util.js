@@ -1055,13 +1055,13 @@ step.util = {
             }
             return features;
         },
-        enhanceVerseNumbers: function (passageId, passageContent, version) {
+        enhanceVerseNumbers: function (passageId, passageContent, version, isSearch) {
             $(".verseNumber", passageContent).closest("a").mouseenter(function () {
-                step.util.ui._addSubjectAndRelatedWordsPopup(passageId, $(this), version);
+                step.util.ui._addSubjectAndRelatedWordsPopup(passageId, $(this), version, isSearch);
             });
         },
 
-        _addSubjectAndRelatedWordsPopup: function (passageId, element, version) {
+        _addSubjectAndRelatedWordsPopup: function (passageId, element, version, isSearch) {
             var reference = element.attr("name");
             var self = this;
 
@@ -1099,7 +1099,7 @@ step.util = {
                                         '</div>' +
                                         '<div class="verseVocabLinks"><a href="javascript:void(0)" class="relatedVerses"><%= __s.see_related_verses %></a> ' +
                                         '<a href="javascript:void(0)" class="relatedSubjects"><%= __s.see_related_subjects%></a> ' +
-                                        '<a href="javascript:void(0)" class="wordCloud"><%= __s.word_cloud %></a></div>';
+                                        '<% if(isSearch) { %><a href="javascript:void(0)" class="verseInContext"><%= __s.see_verse_in_context %></a><% } %></div>';
 
                                     var rows = [];
                                     for (var key in data.strongData) {
@@ -1117,14 +1117,17 @@ step.util = {
                                     var templatedTable = $(_.template(template)({
                                         rows: rows,
                                         ot: data.ot,
-                                        data: data
+                                        data: data,
+                                        isSearch: isSearch
                                     }));
 
                                     templatedTable.find(".definition").click(function () {
+                                        step.util.trackAnalytics('verseVocab', 'definition');
                                         self.showDef($(this).parent().data("strong"));
                                     });
 
                                     templatedTable.find(".bookCount").click(function () {
+                                        step.util.trackAnalytics('verseVocab', 'bookCount');
                                         var bookKey = key.substring(0, key.indexOf('.'));
                                         var args = "reference=" + encodeURIComponent(bookKey) + "|strong=" + encodeURIComponent($(this).parent().data("strong"));
                                         //make this the active passage
@@ -1132,6 +1135,7 @@ step.util = {
                                         step.router.navigatePreserveVersions(args);
                                     });
                                     templatedTable.find(".bibleCount").click(function () {
+                                        step.util.trackAnalytics('verseVocab', 'bibleCount');
                                         var args = "strong=" + encodeURIComponent($(this).parent().data("strong"));
                                         //make this the active passage
                                         step.util.createNewLinkedColumn(passageId);
@@ -1139,25 +1143,20 @@ step.util = {
                                     });
 
                                     templatedTable.find(".relatedVerses").click(function () {
+                                        step.util.trackAnalytics('verseVocab', 'relatedVerses');
                                         step.util.createNewLinkedColumn(passageId);
                                         step.router.navigatePreserveVersions(RELATED_VERSES + "=" + encodeURIComponent(key));
                                     });
 
                                     templatedTable.find(".relatedSubjects").click(function () {
+                                        step.util.trackAnalytics('verseVocab', 'relatedSubjects');
                                         step.util.createNewLinkedColumn(passageId);
                                         step.router.navigatePreserveVersions(TOPIC_BY_REF + "=" + encodeURIComponent(key));
                                     });
 
-                                    templatedTable.find(".wordCloud").click(function () {
-                                        //get chapter key...
-                                        step.util.createNewLinkedColumn(passageId);
-                                        var lastDot = key.lastIndexOf(".");
-                                        if (lastDot != -1) {
-                                            step.util.ui.openStats(key.substring(0, lastDot));
-                                        } else {
-                                            step.util.ui.openStats(key);
-                                        }
-
+                                    templatedTable.find(".verseInContext").click(function () {
+                                        step.util.trackAnalytics('verseVocab', 'verseInContext');
+                                        element.trigger("click");
                                     });
 
                                     api.set('content.text', templatedTable);

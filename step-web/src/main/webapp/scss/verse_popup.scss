@@ -3,7 +3,7 @@
 .versePopup {
   max-width: 650px !important;
   .heading {
-    padding: 0px;
+    padding: 0 0 5 0;
   }
   a {
     font-size: $defaultFontSize;
@@ -17,9 +17,18 @@
   .vocabTable {
     display: inline-table !important;
     overflow: auto;
+    [data-strong] {
+      white-space: nowrap;
+      a {
+        padding-bottom: 5px;
+      }
+    }
     .even {
       border-left: solid 1 lightgrey;
       padding-left: 20px;
+    }
+    .definition {
+      overflow: hidden;
     }
   }
 

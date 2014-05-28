@@ -217,6 +217,10 @@ span.verseStart {
 	clear: left;
 }
 
+span.verseStart > a {
+    display: inline-block;
+}
+
 .rtl span.verseStart {
 	clear: right;
 }

@@ -230,19 +230,21 @@ var SidebarView = Backbone.View.extend({
     },
     renderMorphItem: function (panel, info, title, param) {
         if(info && param && info[param]) {
-            panel.append();
-            panel.append($("<h3>").append(title)).append(this.replaceEmphasis(info[param]));
+            var value = $("<span>" + this.replaceEmphasis(info[param]) + "</span>");
+            panel.append($("<h3>").append(title)).append(value);
 
             if(info[param + "Explained"] || param == 'wordCase' && info["caseExplained"]) {
                 var explanation = info[param + "Explained"] || param == 'wordCase' && info["caseExplained"];
-                panel.append(" ");
-                panel.append($("<span class='grammarExplained'>").append("(" + this.replaceEmphasis(explanation) + ")"));
+                value.attr("title", this.stripEmphasis(explanation));
             }
             panel.append("<br />");
         }
     },
     replaceEmphasis: function(str) {
-        return (str || "").replace(/_([^_]*)_/g, "<em>$1</em>")
+        return (str || "").replace(/_([^_]*)_/g, "<em>$1</em>");
+    },
+    stripEmphasis: function(str) {
+        return (str || "").replace(/_([^_]*)_/g, "");
     },
     _createTabHeadersContainer: function () {
         var template = '<ul class="nav nav-tabs">' +

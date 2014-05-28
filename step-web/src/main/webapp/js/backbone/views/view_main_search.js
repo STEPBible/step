@@ -33,7 +33,7 @@ var MainSearchView = Backbone.View.extend({
                 var id = entry.itemType + "-";
                 switch (entry.itemType) {
                     case REFERENCE:
-                        id += entry.item.fullName;
+                        id += entry.item.fullName + step.util.guid();
                         break;
                     case VERSION:
                         id += entry.item.shortInitials;
@@ -204,6 +204,7 @@ var MainSearchView = Backbone.View.extend({
             }
             self._reEvaluateMasterVersion();
             container.find("input").val("");
+            self._removeSpecificContext([REFERENCE, VERSION, LIMIT]);
         }).on("select2-opening", function (event) {
             //remove any context that has references
             if (!self.ignoreOpeningEvent) {

@@ -221,26 +221,33 @@ public final class JSwordUtils {
      * @return true if the key is present in the master book
      */
     public static boolean containsAny(Book master, Key k) {
+        if(k.isEmpty()) {
+            return false;
+        }
+
         if(!(master instanceof AbstractPassageBook)) {
             return master.contains(k);
         }
 
         final Set<BibleBook> books = ((AbstractPassageBook) master).getBibleBooks();
-        final Verse firstVerse = KeyUtil.getVerse(k);
-        if(!books.contains(firstVerse.getBook())) {
-            //the books of the module do not contain the book referred to by the verse
+        try {
+            final Verse firstVerse = KeyUtil.getVerse(k);
+            if (!books.contains(firstVerse.getBook())) {
+                //the books of the module do not contain the book referred to by the verse
+                return false;
+            }
+
+            //we're still here, so the books do exist
+            //so let's now examine the keys one by one
+            Iterator<Key> keys = k.iterator();
+            while (keys.hasNext()) {
+                if (master.contains(keys.next())) {
+                    return true;
+                }
+            }
+        } catch(ArrayIndexOutOfBoundsException a) {
             return false;
         }
-
-        //we're still here, so the books do exist
-        //so let's now examine the keys one by one
-        Iterator<Key> keys = k.iterator();
-        while(keys.hasNext()) {
-            if(master.contains(keys.next())) {
-                return true;
-            }
-        }
-
         return false;
     }
 }

@@ -12,7 +12,7 @@
   &>div {
     padding:10px;
     background: $quickLexiconColour;
-    color:#F3E3E3;
+    color: $quickLexiconFontColour;
     opacity:.95;
     text-shadow:0 -1px 0 rgba(0,0,0,.2);
     line-height:22px;
@@ -22,7 +22,7 @@
   }
 
   h1 {
-    color: white;
+    color: black;
     display: inline-block;
     clear: left;
     margin-top: 5px;

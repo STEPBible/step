@@ -11,12 +11,13 @@
 
 .relatedWordEmphasisHover {
   text-decoration: underline;
-  background-color: rgba($hoverColor, 0.2);
+  background-color: rgba($quickLexiconColour, 0.2);
+  color: $quickLexiconFontColour;
 }
 span[strong]:hover {
   cursor: pointer;
-  background-color: $hoverColor;
-  color: white;
+  background-color: $quickLexiconColour;
+  color: $quickLexiconFontColour;
 }
 
 .lexiconFocus {
@@ -24,8 +25,8 @@ span[strong]:hover {
 }
 
 .primaryLightBg {
-  background-color: $hoverColor !important;
-  color: $hoverColorText;
+  background-color: $quickLexiconColour !important;
+  color: $quickLexiconFontColour;
 }
 
 .secondaryBackground {

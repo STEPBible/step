@@ -55,9 +55,8 @@ import static com.tyndalehouse.step.core.utils.StringUtils.split;
 public class IndividualSearch {
     public static final Pattern MAIN_RANGE = Pattern.compile("(\\+\\[([^\\]]+)\\])");
     private static final char RELATED_WORDS = '~';
-
-    private static final Pattern IN_VERSIONS = Pattern
-            .compile("in ?\\(([^)]+)\\)$", Pattern.CASE_INSENSITIVE);
+    private static final Pattern OR_UPPERCASING = Pattern.compile("\\bor\\b", Pattern.CASE_INSENSITIVE);
+    private static final Pattern AND_UPPERCASING = Pattern.compile("\\band\\b", Pattern.CASE_INSENSITIVE);
 
     private static final Pattern SUB_RANGE = Pattern.compile("\\{([^}]+)\\}");
     private static final Pattern ORIGINAL_FILTER = Pattern.compile(" where original is \\(([^)]+)\\)");
@@ -100,11 +99,12 @@ public class IndividualSearch {
         } else if (type == SearchType.TEXT) {
             //TODO: this is a hack because we need to revisit the parsing of searches
             this.secondaryRange = mainRange;
-            this.originalQuery = this.query = query;
+            this.originalQuery = this.query = transformToTextQuery(query);
         } else {
             this.originalQuery = this.query = query;
         }
     }
+
 
     /**
      * Initialises the search from the query string.
@@ -116,8 +116,8 @@ public class IndividualSearch {
         this.secondaryRange = restriction;
         this.versions = versions;
         if (query.startsWith(TEXT)) {
+            this.query = transformToTextQuery(query.substring(TEXT.length()));
             this.type = SearchType.TEXT;
-            this.query = query.substring(TEXT.length());
         } else if (query.startsWith(SUBJECT)) {
             parseSubjectSearch(query.substring(SUBJECT.length()));
         } else if (query.startsWith(ORIGINAL)) {
@@ -130,7 +130,7 @@ public class IndividualSearch {
             this.query = query.substring(TIMELINE_REFERENCE.length());
         } else {
             // default to JSword and hope for the best, but warn
-            this.query = query;
+            this.query = transformToTextQuery(query);
             this.type = SearchType.TEXT;
         }
         if (isBlank(this.query)) {
@@ -143,6 +143,13 @@ public class IndividualSearch {
                 new Object[]{this.type, query, this.subRange, this.mainRange});
     }
 
+    /**
+     * @param query the query itself
+     * @return the text query that should be run
+     */
+    private String transformToTextQuery(final String query) {
+        return AND_UPPERCASING.matcher(OR_UPPERCASING.matcher(query).replaceAll("OR")).replaceAll("AND");
+    }
 
     /**
      * Parses the query to be the correct original search

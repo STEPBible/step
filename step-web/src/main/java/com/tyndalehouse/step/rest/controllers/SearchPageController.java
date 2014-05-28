@@ -27,12 +27,14 @@ import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 
 /**
  * @author chrisburrell
  */
 @Singleton
 public class SearchPageController extends HttpServlet {
+    private static final Pattern COMMA_SEPARATORS = Pattern.compile(",");
     private static String DEV_TOKEN = "UA-36285759-2";
     private static String LIVE_TOKEN = "UA-36285759-1";
     private static Logger LOGGER = LoggerFactory.getLogger(SearchPageController.class);
@@ -115,6 +117,7 @@ public class SearchPageController extends HttpServlet {
                 .getDisplayLanguage(userLocale)).replace("\"", ""));
         req.setAttribute("versions", objectMapper.get().writeValueAsString(modules.getAllModules()));
         req.setAttribute("searchType", data.getSearchType().name());
+        req.setAttribute("versionList", getVersionList(data.getMasterVersion(), data.getExtraVersions()));
 
         //specific to passages
         if (data instanceof OsisWrapper) {
@@ -138,6 +141,33 @@ public class SearchPageController extends HttpServlet {
 
         //set the analytics token
         req.setAttribute("analyticsToken", Boolean.TRUE.equals(Boolean.getBoolean("step.development")) ? DEV_TOKEN : LIVE_TOKEN);
+    }
+
+    /**
+     * Returns a list of versions used in the search
+     *
+     *
+     * @param masterVersion the first version
+     * @param extraVersions the extra versions
+     * @return the properly formatted list
+     */
+    private String[] getVersionList(final String masterVersion, final String extraVersions) {
+        if (StringUtils.isBlank(masterVersion)) {
+            return new String[0];
+        }
+
+        if (StringUtils.isBlank(extraVersions)) {
+            return new String[] { masterVersion} ;
+        }
+
+        final String[] extras = StringUtils.split(extraVersions, ",");
+        final String[] allVersions = new String[extras.length + 1];
+        allVersions[0] = masterVersion;
+        int ii = 1;
+        for(String e : extras) {
+            allVersions[ii++] = e;
+        }
+        return allVersions;
     }
 
     /**

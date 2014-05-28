@@ -997,6 +997,28 @@ step.util = {
             passageContent.empty();
             passageContent.append(passageHtml);
             parent.append(passageContent);
+            passageContent.append(this.getCopyrightInfo());
+        },
+        getCopyrightInfo: function() {
+            var model = step.util.activePassage();
+            var message = __s.copyright_information_list;
+            if(model.get("masterVersion") != null) {
+                message += " " + this._getCopyrightLink(model.get("masterVersion"));
+            }
+
+            if(!step.util.isBlank(model.get("extraVersions"))) {
+                var v = (model.get("extraVersions").split(",")) || [];
+                for(var version in v) {
+                    if(!step.util.isBlank(v)) {
+                        message += ",";
+                        message += this._getCopyrightLink(v);
+                    }
+                }
+            }
+            return "<div class='copyrightInfo'>" + message + "<div>";
+        },
+        _getCopyrightLink: function(v) {
+            return "<a href='/version.jsp?version=" + v + "' target='_new'>" + v + "</a>";
         },
         /**
          * Takes in the selector for identifying each group element. Then selects children(), and iterates

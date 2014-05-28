@@ -35,7 +35,7 @@
       height: 100%;
       padding-bottom: $topSectionHeight;
       &> span {
-        height: 100%;
+        @include scrollableContainerHeight;
         padding-bottom: $topSectionHeight;
         display: block;
         overflow-y: auto;
@@ -44,7 +44,7 @@
 
     .passageContentHolder {
       overflow-y: auto;
-      height: 100%;
+      @include scrollableContainerHeight;
     }
 
     .passageText .popover {
@@ -83,6 +83,15 @@
           &:hover {
             color: gray;
           }
+      }
+      .copyrightInfo {
+        position: absolute;
+        bottom: 5;
+        font-size: 11px;
+        color: darkgrey;
+        @media screen and (max-height: 300px) {
+          display: none;
+        }
       }
     }
   }

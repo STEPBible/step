@@ -1,5 +1,12 @@
 @import 'template_variables';
 
+@mixin canonicalHeading {
+  font-style: italic;
+  font-weight: normal;
+  color: rgb(51, 51, 51);
+  font-size: $defaultFontSize;
+}
+
 @mixin divider-left {
   border-left: 1px solid $dividerColor;
   padding:0 15px 0;
@@ -8,6 +15,29 @@
 
 @mixin padding-from-header {
   padding: $paddingFromHeader;
+}
+
+@mixin scrollableContainerHeight {
+  @media screen and (min-height: 000px) {
+    height: 100%;
+  }
+  @media screen and (min-height: 300px) {
+    height: 94%;
+  }
+  @media screen and (min-height: 400px) {
+    height: 95%;
+  }
+  @media screen and (min-height: 500px) {
+    height: 96%;
+  }
+  @media screen and (min-height: 600px) {
+    height: 97%;
+  }
+  @media screen and (min-height: 700px) {
+    height: 98%;
+  }
+
+
 }
 
 // Vertical height creates a class called .className where maxHeight is set to 400, 600, 900 depending on screen size

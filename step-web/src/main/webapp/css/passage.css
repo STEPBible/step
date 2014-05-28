@@ -348,15 +348,7 @@ H3.heading  {
 	font-weight: bold;
 }
 
-/* Deal with canonical titles as well */
-h3.canonicalHeading {
-    color: black;
-}
 
-h3.psalmHeading {
-    color: black;
-    font-variant: small-caps;
-}
 
 H4.heading  {
 	font-size: 100%;
@@ -561,16 +553,14 @@ FONT.usg {
 .draggable-tooltip .ui-tooltip-titlebar {
     cursor: move;
     color: #33339F;
-/*     width: 100%; */
     padding: 5px 0px;
 }
 
 .draggable-tooltip .qtip-titlebar {
-	padding: 4px 26px 5px 10px;
+	padding: 4px 26px 4px 10px;
 
-
-	background: #F3E5B4;
-	color: #991C32;
+	background-color: black;
+	color: white;
 	font-weight: bold;
     cursor: pointer;
 }
@@ -578,10 +568,6 @@ FONT.usg {
 .ui-tooltip-content {
  	max-height: 400px;
 	overflow: auto;
-}
-
-.draggable-tooltip .qtip-content {
-	background-color: white;
 }
 
 .qtip-content {

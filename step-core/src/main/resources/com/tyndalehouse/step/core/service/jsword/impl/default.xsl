@@ -36,6 +36,7 @@
   xmlns:jsword="http://xml.apache.org/xalan/java"
   xmlns:interleaving="xalan://com.tyndalehouse.step.core.xsl.impl.InterleavingProviderImpl"
   xmlns:conversion="xalan://com.tyndalehouse.step.core.utils.StringConversionUtils"
+  xmlns:jswordUtils="xalan://com.tyndalehouse.step.core.utils.JSwordUtils"
   xmlns:url="http://whatever/java/java.net.URLEncoder"
   xmlns:stringUtils="xalan://com.tyndalehouse.step.core.utils.StringUtils"
   extension-element-prefixes="jsword interleaving conversion url stringUtils">
@@ -371,7 +372,7 @@
 
   <xsl:template match="verse" mode="print-cross-references">
     <xsl:if test=".//note[@type = 'crossReference']">
-      <xsl:variable name="passage" select="jsword:getValidKey($keyf, $versification, @osisID)"/>
+      <xsl:variable name="passage" select="jswordUtils:getSafeKey($versification, @osisID)"/>
       <a href="#{substring-before(concat(@osisID, ' '), ' ')}">
         <xsl:value-of select="jsword:getName($passage)"/>
       </a>
@@ -382,7 +383,7 @@
 
   <xsl:template match="verse" mode="print-notes">
     <xsl:if test=".//note[not(@type) or not(@type = 'x-strongsMarkup')]">
-      <xsl:variable name="passage" select="jsword:getValidKey($keyf, $versification, @osisID)"/>
+      <xsl:variable name="passage" select="jswordUtils:getSafeKey($versification, @osisID)"/>
       <a href="#{substring-before(concat(@osisID, ' '), ' ')}">
         <xsl:value-of select="jsword:getName($passage)"/>
       </a>
@@ -479,7 +480,7 @@
 		      <xsl:variable name="versenum">
 		        <xsl:choose>
 		          <xsl:when test="$BCVNum = 'true'">
-				      <xsl:variable name="passage" select="jsword:getValidKey($keyf, $versification, @osisID)"/>
+				      <xsl:variable name="passage" select="jswordUtils:getSafeKey($versification, @osisID)"/>
 		              <xsl:value-of select="jsword:getName($passage)"/>
 		          </xsl:when>
 		          <xsl:when test="$CVNum = 'true'">
@@ -983,10 +984,10 @@
   </xsl:template>
 
     <xsl:template match="title" mode="print-cross-references">
-        <xsl:variable name="crossRef" select=".//note" />
+        <xsl:variable name="crossRef" select=".//note[@type = 'crossReference']" />
         <xsl:if test="$crossRef">
             <xsl:variable name="osisID" select="concat(substring-before(.//note[@type = 'crossReference'][1]/@osisID, '.'), '.', substring-before(substring-after($crossRef[1]/@osisID, '.'), '.'))" />
-            <xsl:variable name="passage" select="jsword:getValidKey($keyf, $versification, $osisID)"/>
+            <xsl:variable name="passage" select="jswordUtils:getSafeKey($versification, $osisID)"/>
             <a href="#{substring-before(concat($osisID, ' '), ' ')}">
                 <xsl:value-of select="jsword:getName($passage)"/>
             </a>
@@ -997,7 +998,7 @@
 
   <!--=======================================================================-->
   <xsl:template match="reference">
-        <xsl:variable name="passage" select="jsword:getValidKey($keyf, $versification, @osisRef)"/>
+        <xsl:variable name="passage" select="jswordUtils:getSafeKey($versification, @osisRef)"/>
         <xsl:variable name="passageKey" select="jsword:getName($passage)" />  
         <xsl:variable name="encodedPassageKey" select="url:encode($passageKey)"/>
 
@@ -1009,7 +1010,7 @@
   </xsl:template>
   
   <xsl:template match="reference" mode="jesus">
-        <xsl:variable name="passage" select="jsword:getValidKey($keyf, $versification, @osisRef)"/>
+        <xsl:variable name="passage" select="jswordUtils:getSafeKey($versification, @osisRef)"/>
       <xsl:variable name="passageKey" select="jsword:getName($passage)" />
       <xsl:variable name="encodedPassageKey" select="url:encode($passageKey)"/>
 

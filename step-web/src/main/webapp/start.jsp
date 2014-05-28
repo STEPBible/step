@@ -267,6 +267,7 @@
                                         </span>
                                     </c:otherwise>
                                 </c:choose>
+                                <search:copyrightinfo />
                             </div>
                         </div>
                     </div>

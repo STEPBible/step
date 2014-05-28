@@ -217,7 +217,7 @@ var PassageDisplayView = DisplayView.extend({
          */
         _doInlineNotes: function (passageContent) {
             var self = this;
-            var notes = $(".verse .note", passageContent).has(".inlineNote");
+            var notes = $(".verse .note, h2 .note, h3 .note", passageContent).has(".inlineNote");
             for (var i = 0; i < notes.length; i++) {
                 var item = notes.get(i);
                 var link = $("a", item);
@@ -318,7 +318,7 @@ var PassageDisplayView = DisplayView.extend({
                 require(["qtip", "drag"], function () {
                     item.qtip({
                         position: { my: "top " + myPosition, at: "top " + atPosition, viewport: $(window) },
-                        style: { tip: false, classes: 'draggable-tooltip', width: { min: 800, max: 800} },
+                        style: { tip: false, classes: 'draggable-tooltip xrefPopup', width: { min: 800, max: 800} },
                         show: { event: 'click' }, hide: { event: 'click' },
                         content: {
                             text: function (event, api) {
@@ -349,7 +349,7 @@ var PassageDisplayView = DisplayView.extend({
                                 $(api.elements.titlebar)
                                     .prepend($('<span class="glyphicon glyphicon-new-window openRefInColumn"></span>')
                                         .click(function () {
-                                            step.util.createNewLinkedColumnWithScroll(self.model.get("passageId"), api.get("content.osisId"), true);
+                                            step.util.createNewLinkedColumnWithScroll(self.model.get("passageId"), api.get("content.osisId"), true, null, event);
                                         })).prepend($('<button type="button" class="close" aria-hidden="true">&times;</button>').click(function () {
                                         api.hide();
                                     }));
@@ -382,7 +382,7 @@ var PassageDisplayView = DisplayView.extend({
          * @private
          */
         _doNonInlineNotes: function (passageContent) {
-            var verseNotes = $(".verse .note, h3 .note", passageContent);
+            var verseNotes = $(".verse .note, h3 .note, h2 .note", passageContent);
             var nonInlineNotes = verseNotes.not(verseNotes.has(".inlineNote"));
 
             for (var i = 0; i < nonInlineNotes.length; i++) {

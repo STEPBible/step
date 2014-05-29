@@ -79,6 +79,25 @@ h4.lexicalGrouping {
     margin-left: 15px;
   }
 
+  .sortOptions {
+    display: inline-block;
+    a {
+      font-weight: normal;
+      text-decoration: none;
+      margin: 0 2 0 3;
+      &:hover {
+        text-decoration: underline;
+      }
+      &.active {
+        font-weight: bold;
+        cursor: default;
+        &:hover {
+          text-decoration: none;
+        }
+      }
+    }
+  }
+
   .panel-body {
     padding: 5px;
   }

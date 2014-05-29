@@ -177,7 +177,6 @@ var PassageMenuView = Backbone.View.extend({
         this._updateDisplayModeOptions(masterVersion);
         this._updateDisplayOptions();
         this._updateSearchOptions();
-        this._updateSortOptions();
     },
     /**
      * Obtains the options available in the masterVersion.
@@ -222,19 +221,6 @@ var PassageMenuView = Backbone.View.extend({
     },
     _updateSearchOptions: function () {
 
-    },
-    _updateSortOptions: function() {
-        var sortOptions = this.$el.find(".sortOptions");
-        //we will only ever show the sort options, if multiple strong numbers are searched for,
-        //as well as being a word search
-        var searchType = this.model.get("searchType");
-        if((searchType == "ORIGINAL_MEANING" ||
-            searchType == "ORIGINAL_GREEK_RELATED" ||
-            searchType == "ORIGINAL_HEBREW_RELATED") && (this.model.get("strongHighlights") || []).length > 1) {
-            sortOptions.toggle(true);   
-        } else {
-            sortOptions.toggle(false);
-        }
     },
     _updateDisplayModeOptions: function (masterVersion) {
         //set the current display mode.
@@ -289,12 +275,10 @@ var PassageMenuView = Backbone.View.extend({
 
         this.displayOptions = this._createDisplayOptions();
         this.otherOptions = this._createSearchOptions();
-        this.wordSearchOptions = this._createWordSortOptions();
         dropdownContainer
             .append(this.displayOptions)
             .append(_.template("<h1><%= __s.general_options %></h1>")())
-            .append(this.otherOptions)
-            .append(this.wordSearchOptions);
+            .append(this.otherOptions);
 
         var shareDropdownMenu = $("<div>").addClass("dropdown-menu pull-right").attr("role", "menu");
 
@@ -335,24 +319,6 @@ var PassageMenuView = Backbone.View.extend({
     },
     getContextLabel: function (context) {
         return sprintf(__s.search_context, context);
-    },
-    _createWordSortOptions: function () {
-        var container = $('<span class="sortOptions"></span>').append($("<h1>").append(__s.word_search_sort_options));
-        var dropdown = $("<ul></ul>");
-        dropdown.append($("<li>").append(this._createLink('false', __s.scripture, __s.scripture_help)));
-        dropdown.append($("<li>").append(this._createLink(VOCAB_SORT, __s.vocabulary, __s.vocabulary_help)));
-
-        var currentOrder = this.model.get("order") || "false";
-        this._setVisible(dropdown.find("[data-value='" + currentOrder + "']"), true);
-        
-        var self = this;
-        this._addTickHandlers(dropdown.find("a"), true, function (el) {
-            //need to trigger new search after setting value of model 
-            var orderCode = el.attr("data-value");
-            self.model.save({ order: orderCode, pageNumber: 1 });
-        });
-        container.append(dropdown);
-        return container;
     },
     _createSearchOptions: function () {
         var dropdown = $("<ul></ul>")

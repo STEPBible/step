@@ -21,9 +21,19 @@ var WordDisplayView = TextDisplayView.extend({
         var self = this;
         var toolbarContainer = this.$el.find(".originalWordSearchToolbar");
 
+        toolbarContainer.find(".sortOptions a").on('click', function (ev) {
+            //need to trigger new search after setting value of model
+            var orderCode = $(this).attr("data-value");
+            self.model.save({ order: orderCode, pageNumber: 1 });
+            ev.stopImmediatePropagation();
+        });
+
         toolbarContainer.find("li").hover(
             function(){
-                $(this).find(">a").append("<span class='untick' href='javascript:void(0)'>&nbsp;&nbsp;" + __s.this_entry_untick + "</span> ");
+                $(this).find(">a").each(function() {
+                    var el = $(this);
+                    el.append("<span class='untick' href='javascript:void(0)'>&nbsp;&nbsp;" + (el.find(".active").length > 0 ?  __s.this_entry_untick : __s.this_entry_tick) + "</span> ");
+                });
                 var untickAll = $("<a class='thisOnly' href='javascript:void(0)'>" + __s.this_entry_only + "</a>");
                 untickAll.on('click', function() {
                     toolbarContainer.find(".active").removeClass("active");
@@ -36,7 +46,7 @@ var WordDisplayView = TextDisplayView.extend({
             }
         );
 
-        toolbarContainer.find("a").click(function () {
+        toolbarContainer.find("li > a").click(function () {
             var thisEl = $(this).closest("li");
             var okIcon = thisEl.find(".glyphicon-ok");
             if (okIcon.hasClass("active")) {
@@ -119,6 +129,17 @@ var WordDisplayView = TextDisplayView.extend({
         //render bar
         var passageId = this.model.get("passageId");
         var panel = step.util.ui.addCollapsiblePanel(__s.lexicon_related_words, "lexicalGrouping", "#relatedWords-" + passageId);
+
+        //add sort to toolbar
+        var vocabActive = this.model.get("order") == VOCAB_SORT;
+        var sortBar = $('<span class="sortOptions pull-right">' +
+            '<span>' + __s.word_search_sort_options + '</span>' +
+            '<a href="javascript:void(0)" data-value="' + SCRIPTURE_SORT + ' title="' + __s.scripture_help +  '" class="' + (vocabActive ? "" : "active") +'">' + __s.scripture + '</a> | ' +
+            '<a href="javascript:void(0)" data-value="'+ VOCAB_SORT + '" title="' + __s.vocabulary_help + '" class="' + (vocabActive ? "active" : "") +  '">' + __s.vocabulary + '</a>' +
+            '</span>');
+
+        panel.find("h4").append(sortBar);
+
         panel.append(this._renderToolbar())
         element.append(panel);
         //allow for chaining
@@ -130,6 +151,7 @@ var WordDisplayView = TextDisplayView.extend({
         var values = this.options.model.get("strongHighlights") || [];
         var toolbar = $("<ul>");
         var toolbarContainer = $("<div class='panel-body panel-collapse collapse'></div>").attr("id", "relatedWords-" + passageId);
+
 
         var self = this;
         $.each(definitions, function (i, item) {

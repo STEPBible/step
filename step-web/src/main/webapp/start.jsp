@@ -16,6 +16,7 @@
     Config.set(session, Config.FMT_LOCALE, locale.getLanguage());
     AppManagerService appManager = injector.getInstance(AppManagerService.class);
 %>
+
 <fmt:setBundle basename="HtmlBundle" scope="request" />
 <!DOCTYPE html  xmlns:fb="http://ogp.me/ns/fb#">
 <html>
@@ -120,7 +121,7 @@
                 </div>
             </div>
         </div>
-    
+
         <div class="mainPanel row row-offcanvas">
             <div class="" id='columnHolder'>
                 <div class="col-sm-6 col-xs-12 column">
@@ -182,7 +183,16 @@
                                                 <div class="originalWordSearchToolbar">
                                                     <div class="panel panel-default">
                                                         <div class="panel-heading">
-                                                            <h4 data-toggle="collapse" href="#relatedWords" class="panel-title lexicalGrouping"><span class="glyphicon glyphicon-plus"></span><fmt:message key="lexicon_related_words" /></h4>
+                                                            <h4 data-toggle="collapse" href="#relatedWords" class="panel-title lexicalGrouping"><span class="glyphicon glyphicon-plus"></span><fmt:message key="lexicon_related_words" />
+                                                            <span class="pull-right sortOptions">
+                                                                <span>Sort by </span>
+                                                                <fmt:bundle basename="InteractiveBundle">
+                                                                    <fmt:message key="scripture_help" var="scriptureHelp" />
+                                                                    <fmt:message key="vocabulary_help" var="vocabularyHelp"  />
+                                                                    <a data-value="SCRIPTURE_SORT" class="${ (empty param.sort or sort eq 'false' or not (param.sort  eq 'VOCABULARY')) ? 'active' : '' }" href="javascript:void(0)" title="${scriptureHelp}"><fmt:message key="scripture" /></a> |
+                                                                    <a data-value="VOCABULARY" class="${param.sort eq 'VOCABULARY' ?  'active' : '' }" href="javascript:void(0)" title="${vocabularyHelp}"><fmt:message key="vocabulary" /></a></span>
+                                                                </fmt:bundle>
+                                                            </h4>
                                                         </div>
                                                             <div id="relatedWords" class="panel-body panel-collapse collapse">
                                                                 <ul class="panel-collapse"style="height: auto;">

@@ -1009,9 +1009,9 @@ step.util = {
             if(!step.util.isBlank(model.get("extraVersions"))) {
                 var v = (model.get("extraVersions").split(",")) || [];
                 for(var version in v) {
-                    if(!step.util.isBlank(v)) {
+                    if(!step.util.isBlank(v[version])) {
                         message += ",";
-                        message += this._getCopyrightLink(v);
+                        message += this._getCopyrightLink(v[version]);
                     }
                 }
             }

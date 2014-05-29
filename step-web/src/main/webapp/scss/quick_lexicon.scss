@@ -8,13 +8,30 @@
   padding: 0 4 2 4;
   width: 100%;
   z-index: 40;
-  
+
+  br {
+    display: inline;
+    margin-left: 10px;
+    content: ' ';
+  }
+  .shortDef {
+    line-height: 18px;
+  }
+  .mediumDef {
+    line-height: 18px;
+    max-height: 36px;
+    margin-top: 20px;
+    overflow: hidden;
+    &:after {
+      content: '...';
+    }
+  }
+
   &>div {
     padding:10px;
     background: $quickLexiconColour;
     color: $quickLexiconFontColour;
     opacity:.95;
-    text-shadow:0 -1px 0 rgba(0,0,0,.2);
     line-height:22px;
 
     // Need a min height because Chrome has a hover bar that tells you where the link will go if you click it.

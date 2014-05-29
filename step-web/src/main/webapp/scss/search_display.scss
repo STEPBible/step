@@ -72,6 +72,12 @@ h4.lexicalGrouping {
 .originalWordSearchToolbar {
   clear: both;
   padding-top: 5px;
+  .thisOnly, .untick {
+    font-size: 10px;
+  }
+  .thisOnly {
+    margin-left: 15px;
+  }
 
   .panel-body {
     padding: 5px;

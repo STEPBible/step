@@ -178,7 +178,7 @@
                                     <c:otherwise>
                                         <span>
                                             <%-- Do toolbar for original word search --%>
-                                            <c:if test="${ ('ORIGINAL_GREEK_RELATED' eq searchType or 'ORIGINAL_HEBREW_RELATED' eq searchType) and fn:length(definitions) gt 0  }">
+                                            <c:if test="${ ('ORIGINAL_GREEK_RELATED' eq searchType or 'ORIGINAL_HEBREW_RELATED' eq searchType or 'ORIGINAL_MEANING' eq searchType) and fn:length(definitions) gt 0  }">
                                                 <div class="originalWordSearchToolbar">
                                                     <div class="panel panel-default">
                                                         <div class="panel-heading">

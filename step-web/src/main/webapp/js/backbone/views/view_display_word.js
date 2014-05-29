@@ -20,7 +20,22 @@ var WordDisplayView = TextDisplayView.extend({
     _doSpecificSearchHandlers: function () {
         var self = this;
         var toolbarContainer = this.$el.find(".originalWordSearchToolbar");
-        
+
+        toolbarContainer.find("li").hover(
+            function(){
+                $(this).find(">a").append("<span class='untick' href='javascript:void(0)'>&nbsp;&nbsp;" + __s.this_entry_untick + "</span> ");
+                var untickAll = $("<a class='thisOnly' href='javascript:void(0)'>" + __s.this_entry_only + "</a>");
+                untickAll.on('click', function() {
+                    toolbarContainer.find(".active").removeClass("active");
+                    $(this).closest("li").find("a:first").trigger("click");
+                });
+                $(this).append(untickAll);
+            },
+            function() {
+                $(this).find(".thisOnly, .untick").remove();
+            }
+        );
+
         toolbarContainer.find("a").click(function () {
             var thisEl = $(this).closest("li");
             var okIcon = thisEl.find(".glyphicon-ok");

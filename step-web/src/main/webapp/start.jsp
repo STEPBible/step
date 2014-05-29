@@ -308,9 +308,14 @@
             <div class="sidebar-offcanvas" id="sidebar" role="navigation"></div>
         </div>
     </div>
-    
+
     <%-- Feedback form button--%>
-    <button class="btn btn-primary btn-xs" id="raiseSupportTrigger" data-toggle="modal" data-target="#raiseSupport"><fmt:message key="help_feedback" /></button>
+    <span id="supportContainer">
+        <button id="stepDisclaimer" type="button" class="btn btn-danger btn-xs" data-container="body" data-trigger="hover focus" data-toggle="popover" data-placement="top" data-content="<fmt:message key="step_disclaimer" />"/>
+            BETA
+        </button>
+        <button class="btn btn-primary btn-xs" id="raiseSupportTrigger" data-toggle="modal" data-target="#raiseSupport"><fmt:message key="help_feedback" /></button>
+    </span>
     <%
         if(request.getParameter("lang") == null) {
     %>

@@ -1,11 +1,18 @@
 @import 'template_variables';
 
-#raiseSupportTrigger {
+#supportContainer {
   z-index: 10;
   position: absolute;
   bottom: 0px;
   right: 0px;
-  border-radius: 3 0 0 0;
+
+  #raiseSupportTrigger {
+    border-radius: 3 0 0 0;
+  }
+
+  #stepDisclaimer {
+    border-radius: 3 0 0 0;
+  }
 }
 
 #raiseSupport .modal-body {

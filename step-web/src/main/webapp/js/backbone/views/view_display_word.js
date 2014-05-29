@@ -46,11 +46,12 @@ var WordDisplayView = TextDisplayView.extend({
             }
         );
 
-        toolbarContainer.find("li > a").click(function () {
+        toolbarContainer.find("li > a").click(function (ev) {
             var thisEl = $(this).closest("li");
             var okIcon = thisEl.find(".glyphicon-ok");
             if (okIcon.hasClass("active")) {
                 okIcon.removeClass("active");
+                ev.stopImmediatePropagation();
             } else {
                 okIcon.addClass("active");
             }

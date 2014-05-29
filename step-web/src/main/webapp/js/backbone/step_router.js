@@ -212,10 +212,17 @@ var StepRouter = Backbone.Router.extend({
             }
 
             if (searchType == 'PASSAGE') {
-                step.util.trackAnalytics("search", "reference", passageModel.get("osisId"));
+                step.util.trackAnalytics("search", "passage", passageModel.get("osisId"));
             } else {
                 if (passageModel.get("query") != null) {
                     step.util.trackAnalytics("search", "query", passageModel.get("query"));
+                }
+            }
+
+            var searchTokens = passageModel.get("searchTokens") || [];
+            for(var i = 0; i < searchTokens.length; i++) {
+                if(searchTokens[i].tokenType && searchTokens[i].token) {
+                    step.util.trackAnalytics("search", searchTokens[i].tokenType, searchTokens[i].token);
                 }
             }
         }

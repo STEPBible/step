@@ -447,6 +447,12 @@ step.util = {
                 step.util.activePassageId(activePassageModel.get("linked"));
                 return;
             }
+        } else {
+            //if the panel is not required to be linked, then unlink any panel that is currently linked
+            var linkedModelId = activePassageModel.get("linked")
+            if(linkedModelId) {
+                step.util.unlink(linkedModelId);
+            }
         }
 
         var columnHolder = $("#columnHolder");
@@ -455,6 +461,7 @@ step.util = {
         var newColumn = activeColumn.clone();
 
         var passageId;
+        var newPassageId;
         if (!model) {
             //create new
             newPassageId = parseInt(step.passages.max(function (p) {
@@ -514,7 +521,7 @@ step.util = {
         var linkedPassageIds = [];
         for (var i = 0; i < models.length; i++) {
             linkedPassageIds.push(models[i].get("passageId"));
-            models[i].save({ linked: null });
+            models[i].save({ linked: null }, {silent: true });
         }
         step.util.getPassageContainer(newPassageId).find(".linkPanel").remove();
         return linkedPassageIds;

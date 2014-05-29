@@ -485,9 +485,18 @@ var MainSearchView = Backbone.View.extend({
         }
         this._setData(versions);
     },
+    _trackSearch: function(options) {
+          if(!options) {
+              return;
+          }
+
+
+
+    },
     search: function () {
         console.log("Searching...");
         var options = this.masterSearch.select2("data");
+        this._trackSearch(options);
         var args = "";
         for (var ii = 0; ii < options.length; ii++) {
             if (args.length != 0) {

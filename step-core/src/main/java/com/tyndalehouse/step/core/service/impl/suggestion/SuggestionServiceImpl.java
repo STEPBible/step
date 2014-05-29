@@ -99,9 +99,9 @@ public class SuggestionServiceImpl implements SuggestionService {
             final List<? extends PopularSuggestion> suggestions = searchService.convertToSuggestions(docs, extraDocs);
 
             final SingleSuggestionsSummary singleTypeSummary = new SingleSuggestionsSummary();
+            setSuggestionsAndExamples(singleTypeSummary, suggestions, groupTotal);
             fillInTotalHits(o, extraDocs.length, singleTypeSummary);
 
-            setSuggestionsAndExamples(singleTypeSummary, suggestions, groupTotal);
             singleTypeSummary.setSearchType(query.getKey());
             results.put(query.getKey(), singleTypeSummary);
         }
@@ -145,10 +145,12 @@ public class SuggestionServiceImpl implements SuggestionService {
     }
 
     private void fillInTotalHits(final Object collector, int alreadyCollected, final SingleSuggestionsSummary singleTypeSummary) {
+        int numExamples = singleTypeSummary.getExtraExamples() != null ? singleTypeSummary.getExtraExamples().size() : 0;
+
         if (collector instanceof TopFieldCollector) {
-            singleTypeSummary.setMoreResults(((TopFieldCollector) collector).getTotalHits() - alreadyCollected);
+            singleTypeSummary.setMoreResults(((TopFieldCollector) collector).getTotalHits() - alreadyCollected + numExamples);
         } else if (collector instanceof TermsAndMaxCount) {
-            singleTypeSummary.setMoreResults(((TermsAndMaxCount) collector).getTotalCount() - alreadyCollected);
+            singleTypeSummary.setMoreResults(((TermsAndMaxCount) collector).getTotalCount() - alreadyCollected + numExamples);
         } else {
             throw new StepInternalException("Unsupported collector");
         }

@@ -204,20 +204,17 @@ h2.heading {
     margin-bottom: 0;
   }
   &.x-acrostic {
-    font-style: normal;
-    font-weight: bold;
-    margin-left: 10px;
-    margin-bottom: 0px;
+    @include canonicalHeading;
+    margin-bottom: 0;
+    margin-left: 20px;
   }
 }
 
 h3 {
   &.canonicalHeading.acrostic {
-    font-style: normal;
-    font-weight: bold;
-    margin-left: 10px;
-    margin-bottom: 0px;
-    color: #111;
+    @include canonicalHeading;
+    margin-bottom: 0;
+    margin-left: 20px;
   }
 }
 

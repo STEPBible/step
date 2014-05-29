@@ -81,15 +81,18 @@ h4.lexicalGrouping {
 
   .sortOptions {
     display: inline-block;
+    font-weight: normal;
+
+    
     a {
-      font-weight: normal;
+      font-weight: bold;
       text-decoration: none;
       margin: 0 2 0 3;
       &:hover {
         text-decoration: underline;
       }
       &.active {
-        font-weight: bold;
+        color: grey;
         cursor: default;
         &:hover {
           text-decoration: none;
